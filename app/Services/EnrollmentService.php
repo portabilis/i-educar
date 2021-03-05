@@ -9,13 +9,13 @@ use App\Exceptions\Enrollment\EnrollDateBeforeAcademicYearException;
 use App\Exceptions\Enrollment\ExistsActiveEnrollmentException;
 use App\Exceptions\Enrollment\ExistsActiveEnrollmentSameTimeException;
 use App\Exceptions\Enrollment\NoVacancyException;
+use App\Exceptions\Enrollment\PreviousCancellationDateException;
 use App\Exceptions\Enrollment\PreviousEnrollCancellationDateException;
 use App\Exceptions\Enrollment\PreviousEnrollDateException;
-use App\Exceptions\Enrollment\PreviousCancellationDateException;
 use App\Exceptions\Enrollment\PreviousEnrollRegistrationDateException;
+use App\Models\LegacyEnrollment;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClass;
-use App\Models\LegacyEnrollment;
 use App\Services\SchoolClass\AvailableTimeService;
 use App\User;
 use Carbon\Carbon;
@@ -63,6 +63,7 @@ class EnrollmentService
     private function getAvailableTimeService()
     {
         $availableTimeService = new AvailableTimeService();
+
         return $availableTimeService->onlySchoolClassesInformedOnCensus();
     }
 
@@ -71,9 +72,9 @@ class EnrollmentService
      *
      * @param int $enrollment ID da enturmação
      *
+     * @throws ModelNotFoundException
      * @return LegacyEnrollment $enrollment
      *
-     * @throws ModelNotFoundException
      */
     public function find($enrollment)
     {
@@ -134,11 +135,11 @@ class EnrollmentService
      * @param LegacyEnrollment $enrollment ID da enturmação
      * @param DateTime         $date       Data do cancelamento
      *
-     * @return bool
-     *
      * @throws PreviousCancellationDateException
      * @throws ModelNotFoundException
      * @throws Throwable
+     * @return bool
+     *
      */
     public function cancelEnrollment(LegacyEnrollment $enrollment, DateTime $date)
     {
@@ -182,12 +183,12 @@ class EnrollmentService
      * @param LegacySchoolClass  $schoolClass
      * @param DateTime           $date
      *
-     * @return LegacyEnrollment
-     *
      * @throws NoVacancyException
      * @throws ExistsActiveEnrollmentException
      * @throws PreviousEnrollDateException
      * @throws Throwable
+     * @return LegacyEnrollment
+     *
      */
     public function enroll(
         LegacyRegistration $registration,
@@ -254,6 +255,7 @@ class EnrollmentService
      * Atualiza o campo transferido na enturmação para TRUE
      *
      * @param LegacyEnrollment $enrollment
+     *
      * @throws Throwable
      */
     public function markAsTransferred(LegacyEnrollment $enrollment)
@@ -266,6 +268,7 @@ class EnrollmentService
      * Atualiza o campo remanejado na enturmação para TRUE
      *
      * @param LegacyEnrollment $enrollment
+     *
      * @throws Throwable
      */
     public function markAsRelocated(LegacyEnrollment $enrollment)
@@ -278,6 +281,7 @@ class EnrollmentService
      * Atualiza o campo reclassificado na enturmação para TRUE
      *
      * @param LegacyEnrollment $enrollment
+     *
      * @throws Throwable
      */
     public function markAsReclassified(LegacyEnrollment $enrollment)
@@ -290,6 +294,7 @@ class EnrollmentService
      * Atualiza o campo abandono na enturmação para TRUE
      *
      * @param LegacyEnrollment $enrollment
+     *
      * @throws Throwable
      */
     public function markAsAbandoned(LegacyEnrollment $enrollment)
@@ -302,6 +307,7 @@ class EnrollmentService
      * Atualiza o campo falecido na enturmação para TRUE
      *
      * @param LegacyEnrollment $enrollment
+     *
      * @throws Throwable
      */
     public function markAsDeceased(LegacyEnrollment $enrollment)
@@ -315,6 +321,7 @@ class EnrollmentService
      * ou data base vazia
      *
      * @param LegacyRegistration $registration
+     *
      * @return LegacyEnrollment|void
      */
     public function getPreviousEnrollmentAccordingToRelocationDate(LegacyRegistration $registration)
@@ -357,7 +364,7 @@ class EnrollmentService
      * remanejado devem ser atualizados subtraindo 1
      *
      * @param LegacyEnrollment $enrollment
-     * @param DateTime $date
+     * @param DateTime         $date
      */
     public function reorderSchoolClass(LegacyEnrollment $enrollment)
     {
@@ -372,7 +379,7 @@ class EnrollmentService
             ->each(function (LegacyEnrollment $enrollment) {
                 $enrollment->sequencial_fechamento -= 1;
                 $enrollment->save();
-        });
+            });
 
         $enrollment->sequencial_fechamento = 9999;
         $enrollment->save();
@@ -388,7 +395,7 @@ class EnrollmentService
     {
         $relocationDate = $enrollment->schoolClass->school->institution->relocation_date;
 
-        if(!$relocationDate || $enrollment->data_exclusao < $relocationDate) {
+        if (!$relocationDate || $enrollment->data_exclusao < $relocationDate) {
             $this->reorderSchoolClass($enrollment);
         }
     }
@@ -398,7 +405,8 @@ class EnrollmentService
      * ou se a data informada é antes da database
      *
      * @param LegacyEnrollment $enrollment
-     * @param DateTime $date
+     * @param DateTime         $date
+     *
      * @return bool
      */
     private function withoutRelocationDateOrDateIsAfter($enrollment, $date)

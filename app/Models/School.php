@@ -32,7 +32,8 @@ class School extends Model
     /**
      * Retorna os dias da semana em um array
      *
-     * @param  string  $value
+     * @param string $value
+     *
      * @return array|null
      */
     public function getDiasSemanaAttribute($value)
@@ -47,7 +48,8 @@ class School extends Model
     /**
      * Seta os dias da semana transformando um array em uma string
      *
-     * @param  array  $values
+     * @param array $values
+     *
      * @return void
      */
     public function setDiasSemanaAttribute($values)

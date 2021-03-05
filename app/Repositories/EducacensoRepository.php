@@ -58,8 +58,9 @@ class EducacensoRepository
     }
 
     /**
-     * @param $sql
+     * @param       $sql
      * @param array $params
+     *
      * @return array
      */
     protected function fetchPreparedQuery($sql, $params = [])
@@ -70,6 +71,7 @@ class EducacensoRepository
     /**
      * @param $school
      * @param $year
+     *
      * @return array
      */
     public function getDataForRecord00($school, $year)
@@ -181,6 +183,7 @@ SQL;
 
     /**
      * @param $school
+     *
      * @return array
      */
     public function getDataForRecord10($school)
@@ -305,6 +308,7 @@ SQL;
 
     /**
      * @param $school
+     *
      * @return array
      */
     public function getDataForRecord40($school)
@@ -317,6 +321,7 @@ SQL;
     /**
      * @param $school
      * @param $year
+     *
      * @return array
      */
     public function getDataForRecord20($school, $year)
@@ -329,6 +334,7 @@ SQL;
     /**
      * @param $classroomId
      * @param $disciplineIds
+     *
      * @return array
      */
     public function getDisciplinesWithoutTeacher($classroomId, $disciplineIds)

@@ -5,13 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\LegacyDisciplineExemption;
 use App\Process;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
 use Illuminate\View\View;
 
 class ExemptionListController extends Controller
 {
     /**
      * @param Request $request
+     *
      * @return View
      */
     public function index(Request $request)

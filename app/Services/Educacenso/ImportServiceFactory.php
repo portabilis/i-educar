@@ -12,8 +12,9 @@ class ImportServiceFactory
     /**
      * Intancia um service de importação
      *
-     * @param $year
+     * @param          $year
      * @param DateTime $registrationDate
+     *
      * @return ImportService
      */
     public static function createImportService($year, $registrationDate)
@@ -31,6 +32,7 @@ class ImportServiceFactory
      * Retorna o service de importação de acordo com o ano informado
      *
      * @param $year
+     *
      * @return string
      */
     private static function getClassByYear($year)

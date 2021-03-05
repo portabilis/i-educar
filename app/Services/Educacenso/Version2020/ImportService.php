@@ -8,7 +8,6 @@ use App\Services\Educacenso\Version2019\Registro00Import;
 use App\Services\Educacenso\Version2019\Registro20Import;
 use App\Services\Educacenso\Version2019\Registro50Import;
 use App\Services\Educacenso\Version2019\Registro60Import;
-use Illuminate\Http\UploadedFile;
 
 class ImportService extends GeneralImportService
 {
@@ -26,6 +25,7 @@ class ImportService extends GeneralImportService
      * Retorna o nome da escola a partir da string do arquivo de importação
      *
      * @param $school
+     *
      * @return string
      */
     public function getSchoolNameByFile($school)
@@ -39,6 +39,7 @@ class ImportService extends GeneralImportService
      * Retorna a classe responsável por importar o registro da linha
      *
      * @param $lineId
+     *
      * @return RegistroImportInterface
      */
     public function getRegistroById($lineId)

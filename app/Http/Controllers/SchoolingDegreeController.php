@@ -7,7 +7,7 @@ use App\Models\LegacySchoolingDegree;
 class SchoolingDegreeController extends Controller
 {
     /**
-     * @param LegacySchoolingDegree  $schoolingDegree
+     * @param LegacySchoolingDegree $schoolingDegree
      *
      * @return View
      */

@@ -12,13 +12,13 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 /**
  * LegacyRegistration
  *
- * @property int $id
- * @property boolean isTransferred
- * @property boolean isAbandoned
- * @property LegacyStudentAbsence studentAbsence
- * @property LegacyStudentScore studentScore
+ * @property int                      $id
+ * @property boolean                  isTransferred
+ * @property boolean                  isAbandoned
+ * @property LegacyStudentAbsence     studentAbsence
+ * @property LegacyStudentScore       studentScore
  * @property LegacyStudentDescriptive studentDescriptive
- * @property LegacyCourse course
+ * @property LegacyCourse             course
  *
  */
 class LegacyRegistration extends Model
@@ -109,10 +109,11 @@ class LegacyRegistration extends Model
 
     /**
      * Relação com a série.
-     * @return BelongsTo
      *
      * @deprecated
      * @see grade()
+     * @return BelongsTo
+     *
      */
     public function level()
     {

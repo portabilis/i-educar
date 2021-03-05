@@ -13,7 +13,9 @@ class EnrollDateAfterAcademicYearException extends RangeException
         $message = 'A data de enturmação %s é posterior ao fim do ano acadêmico %s.';
 
         $message = sprintf(
-            $message, $date->format('d/m/Y'), $schoolClass->end_academic_year->format('d/m/Y')
+            $message,
+            $date->format('d/m/Y'),
+            $schoolClass->end_academic_year->format('d/m/Y')
         );
 
         parent::__construct($message);

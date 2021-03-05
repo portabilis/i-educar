@@ -17,8 +17,9 @@ class EducacensoImportRegistrationDate implements Rule
      * Verifica se o ano da data de entrada da matrícula é
      * menor ou igual ao ano selecionado no filtro
      *
-     * @param  string  $attribute
-     * @param  mixed  $value
+     * @param string $attribute
+     * @param mixed  $value
+     *
      * @return bool
      */
     public function passes($attribute, $value)

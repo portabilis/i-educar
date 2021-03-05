@@ -15,6 +15,7 @@ class UpdateRegistrationStatusRequest extends FormRequest
     public function rules()
     {
         $rules = $this->getTransferValidations();
+
         return array_merge($rules, [
             'ano' => [
                 'required',
