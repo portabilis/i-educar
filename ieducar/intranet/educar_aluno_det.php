@@ -11,16 +11,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Aluno');
-        $this->processoAp = 578;
-    }
-}
-
-class indice extends clsDetalhe
+return new class extends clsDetalhe
 {
     public $titulo;
     public $cod_aluno;
@@ -595,7 +586,6 @@ class indice extends clsDetalhe
         // "bloquear_cadastro_aluno" da instituição.
 
         if ($this->obj_permissao->permissao_cadastra(578, $this->pessoa_logada, 7)) {
-
             $bloquearCadastroAluno = dbBool($configuracoes['bloquear_cadastro_aluno']);
 
             if ($bloquearCadastroAluno == false) {
@@ -857,7 +847,7 @@ class indice extends clsDetalhe
             $this->addDetalhe(['Possui telefone', $reg['telefone']]);
 
             $recursosTecnlogicos = json_decode($reg['recursos_tecnologicos']);
-            $recursosTecnlogicos = implode(", ", $recursosTecnlogicos);
+            $recursosTecnlogicos = implode(', ', $recursosTecnlogicos);
             $this->addDetalhe(['Possui acesso à recursos técnologicos?', $recursosTecnlogicos]);
 
             $this->addDetalhe(['Quantidade de pessoas', $reg['quant_pessoas']]);
@@ -955,17 +945,14 @@ class indice extends clsDetalhe
         }
 
         return $this->urlPresigner;
+
     }
-}
 
-// Instancia o objeto da página
-$pagina = new clsIndexBase();
+    public function Formular()
+    {
+        $this->title = "i-Educar - Aluno";
+        $this->processoAp = 578;
+    }
+};
 
-// Instancia o objeto de conteúdo
-$miolo = new indice();
 
-// Passa o conteúdo para a página
-$pagina->addForm($miolo);
-
-// Gera o HTML
-$pagina->MakeAll();

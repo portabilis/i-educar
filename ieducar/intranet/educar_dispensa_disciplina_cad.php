@@ -5,16 +5,7 @@ use App\Models\LegacyRegistration;
 use App\Services\Exemption\ExemptionService;
 
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Dispensa Componente Curricular');
-        $this->processoAp = 578;
-    }
-}
-
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -94,9 +85,10 @@ class indice extends clsCadastro
 
         $this->nome_url_cancelar = 'Cancelar';
 
-        $this->breadcrumb('Dispensa de componentes curriculares',['educar_index.php' => 'Escola']);
+        $this->breadcrumb('Dispensa de componentes curriculares', ['educar_index.php' => 'Escola']);
         $this->modoEdicao = $retorno == 'Editar';
         $this->loadAssets();
+
         return $retorno;
     }
 
@@ -118,7 +110,7 @@ class indice extends clsCadastro
         $this->ref_cod_instituicao = $det_escola['ref_cod_instituicao'];
 
         $obj_matricula_turma = new clsPmieducarMatriculaTurma();
-        $lst_matricula_turma = $obj_matricula_turma->lista($this->ref_cod_matricula, null, null, null, null, null, null, null, 1, $this->ref_cod_serie, null, $this->ref_cod_escola );
+        $lst_matricula_turma = $obj_matricula_turma->lista($this->ref_cod_matricula, null, null, null, null, null, null, null, 1, $this->ref_cod_serie, null, $this->ref_cod_escola);
 
         if (is_array($lst_matricula_turma)) {
             $det = array_shift($lst_matricula_turma);
@@ -149,10 +141,10 @@ class indice extends clsCadastro
         // Seleciona os componentes curriculares da turma
         try {
             $componentes = App_Model_IedFinder::getComponentesTurma(
-            $this->ref_cod_serie,
-            $this->ref_cod_escola,
-            $this->ref_cod_turma
-        );
+                $this->ref_cod_serie,
+                $this->ref_cod_escola,
+                $this->ref_cod_turma
+            );
         } catch (App_Model_Exception $e) {
             $this->mensagem = $e->getMessage();
 
@@ -231,8 +223,9 @@ class indice extends clsCadastro
         $exemptionService->createExemptionByDisciplineArray($registration, $this->componentecurricular, $this->ref_cod_tipo_dispensa, $this->observacao, $this->etapa);
 
         if (count($exemptionService->disciplinasNaoExistentesNaSerieDaEscola) > 0) {
-            $disciplinas = implode(", ", $disciplinasNaoExistentesNaSerieDaEscola);
+            $disciplinas = implode(', ', $disciplinasNaoExistentesNaSerieDaEscola);
             $this->mensagem = "O(s) componente(s):<b>{$disciplinas}</b>. não está(ão) habilitado(s) na série da escola.";
+
             return false;
         }
 
@@ -240,7 +233,6 @@ class indice extends clsCadastro
 
         $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
         $this->simpleRedirect('educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
-
     }
 
     public function Editar()
@@ -295,8 +287,6 @@ class indice extends clsCadastro
 
         return false;
     }
-
-
 
     public function montaEtapas()
     {
@@ -404,17 +394,14 @@ class indice extends clsCadastro
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+
     }
-}
 
-// Instancia objeto de página
-$pagina = new clsIndexBase();
+    public function Formular()
+    {
+        $this->title = "i-Educar - Dispensa Componente Curricular";
+        $this->processoAp = 578;
+    }
+};
 
-// Instancia objeto de conteúdo
-$miolo = new indice();
 
-// Atribui o conteúdo à  página
-$pagina->addForm($miolo);
-
-// Gera o código HTML
-$pagina->MakeAll();

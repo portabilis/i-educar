@@ -3,16 +3,7 @@
 use iEducar\Modules\Reports\QueryFactory\MovimentoGeralQueryFactory;
 
 
-class clsIndex extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Consulta de movimento geral');
-        $this->processoAp = 9998900;
-    }
-}
-
-class indice extends clsListagem
+return new class extends clsListagem
 {
     public function Gerar()
     {
@@ -48,7 +39,7 @@ class indice extends clsListagem
 
         $this->titulo = 'Parâmetros';
         $this->acao = 'go("/intranet/educar_consulta_movimento_geral.php")';
-        $this->nome_acao = "Nova consulta";
+        $this->nome_acao = 'Nova consulta';
         $cursos = [];
 
         if (empty($params['curso'])) {
@@ -185,10 +176,14 @@ JS;
 
         Portabilis_View_Helper_Application::embedJavascript($this, $tableScript, false);
         Portabilis_View_Helper_Application::loadJavascript($this, ['/intranet/scripts/consulta_movimentos.js']);
-    }
-}
 
-$pagina = new clsIndex();
-$miolo = new indice();
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+    }
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Consulta de movimento geral";
+        $this->processoAp = 9998900;
+    }
+};
+
+

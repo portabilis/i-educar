@@ -1,80 +1,64 @@
 <?php
 
 
-class clsIndexBase extends clsBase
-{
-    function Formular()
-    {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Projeto" );
-        $this->processoAp = "21250";
-    }
-}
-
-class indice extends clsDetalhe
+return new class extends clsDetalhe
 {
     /**
      * Titulo no topo da pagina
      *
      * @var int
      */
-    var $titulo;
+    public $titulo;
 
-    var $cod_projeto;
-    var $nome;
-    var $observacao;
+    public $cod_projeto;
+    public $nome;
+    public $observacao;
 
-    function Gerar()
+    public function Gerar()
     {
-        $this->titulo = "Projeto - Detalhe";
+        $this->titulo = 'Projeto - Detalhe';
 
+        $this->cod_projeto=$_GET['cod_projeto'];
 
-        $this->cod_projeto=$_GET["cod_projeto"];
-
-        $tmp_obj = new clsPmieducarProjeto( $this->cod_projeto );
+        $tmp_obj = new clsPmieducarProjeto($this->cod_projeto);
         $registro = $tmp_obj->detalhe();
 
-        if( ! $registro )
-        {
+        if (! $registro) {
             $this->simpleRedirect('educar_projeto_lst.php');
         }
 
-        if( $registro["cod_projeto"] )
-        {
-            $this->addDetalhe( array( "C&oacute;digo projeto", "{$registro["cod_projeto"]}") );
+        if ($registro['cod_projeto']) {
+            $this->addDetalhe([ 'C&oacute;digo projeto', "{$registro['cod_projeto']}"]);
         }
-        if( $registro["nome"] )
-        {
-            $this->addDetalhe( array( "Nome do projeto", "{$registro["nome"]}") );
+        if ($registro['nome']) {
+            $this->addDetalhe([ 'Nome do projeto', "{$registro['nome']}"]);
         }
-        if( $registro["observacao"] )
-        {
-            $this->addDetalhe( array( "Observa&ccedil;&atilde;o", nl2br("{$registro["observacao"]}")) );
+        if ($registro['observacao']) {
+            $this->addDetalhe([ 'Observa&ccedil;&atilde;o', nl2br("{$registro['observacao']}")]);
         }
 
         //** Verificacao de permissao para cadastro
         $obj_permissao = new clsPermissoes();
 
-        if($obj_permissao->permissao_cadastra(21250, $this->pessoa_logada,3))
-        {
-            $this->url_novo = "educar_projeto_cad.php";
-            $this->url_editar = "educar_projeto_cad.php?cod_projeto={$registro["cod_projeto"]}";
+        if ($obj_permissao->permissao_cadastra(21250, $this->pessoa_logada, 3)) {
+            $this->url_novo = 'educar_projeto_cad.php';
+            $this->url_editar = "educar_projeto_cad.php?cod_projeto={$registro['cod_projeto']}";
         }
         //**
-        $this->url_cancelar = "educar_projeto_lst.php";
-        $this->largura = "100%";
+        $this->url_cancelar = 'educar_projeto_lst.php';
+        $this->largura = '100%';
 
         $this->breadcrumb('Detalhe do projeto', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
-    }
-}
 
-// cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
-$miolo = new indice();
-// adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
-// gera o html
-$pagina->MakeAll();
-?>
+    }
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Projeto";
+        $this->processoAp = '21250';
+    }
+};
+
+

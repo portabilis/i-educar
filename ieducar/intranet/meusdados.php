@@ -1,16 +1,7 @@
 <?php
 
 
-class clsIndex extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . 'Configurações - Meus dados');
-        $this->processoAp = '0';
-    }
-}
-
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $nome;
 
@@ -357,10 +348,14 @@ class indice extends clsCadastro
             $obj = new clsCadastroFisicaFoto($id);
             $obj->excluir();
         }
-    }
-}
 
-$pagina = new clsIndex();
-$miolo = new indice();
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+    }
+
+    public function Formular()
+    {
+        $this->title = "Configurações - Meus dados";
+        $this->processoAp = '0';
+    }
+};
+
+

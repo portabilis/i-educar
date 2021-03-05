@@ -1,46 +1,32 @@
 <?php
 
-
-class clsIndexBase extends clsBase
-{
-    function Formular()
-    {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Infra Predio" );
-        $this->processoAp = "567";
-        $this->renderMenu = false;
-        $this->renderMenuSuspenso = false;
-    }
-}
-
-class indice extends clsCadastro
-{
+return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
-    var $cod_infra_predio;
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $ref_cod_escola;
-    var $nm_predio;
-    var $desc_predio;
-    var $endereco;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
+    public $cod_infra_predio;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $ref_cod_escola;
+    public $nm_predio;
+    public $desc_predio;
+    public $endereco;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
 
-    function Inicializar()
+    public function Inicializar()
     {
-        $retorno = "Novo";
+        $retorno = 'Novo';
 
-
-        $this->cod_infra_predio=$_GET["cod_infra_predio"];
+        $this->cod_infra_predio=$_GET['cod_infra_predio'];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 567, $this->pessoa_logada,7, "educar_infra_predio_lst.php" );
+        $obj_permissoes->permissao_cadastra(567, $this->pessoa_logada, 7, 'educar_infra_predio_lst.php');
 
 //      if( is_numeric( $this->cod_infra_predio ) )
 //      {
@@ -65,46 +51,37 @@ class indice extends clsCadastro
 //          }
 //      }
 //      $this->url_cancelar = ($retorno == "Editar") ? "educar_infra_predio_det.php?cod_infra_predio={$registro["cod_infra_predio"]}" : "educar_infra_predio_lst.php";
-        $this->nome_url_cancelar = "Cancelar";
-        $this->script_cancelar = "window.parent.fechaExpansivel(\"div_dinamico_\"+(parent.DOM_divs.length-1));";
+        $this->nome_url_cancelar = 'Cancelar';
+        $this->script_cancelar = 'window.parent.fechaExpansivel("div_dinamico_"+(parent.DOM_divs.length-1));';
 //      die();
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
         // primary keys
-        $this->campoOculto( "cod_infra_predio", $this->cod_infra_predio );
+        $this->campoOculto('cod_infra_predio', $this->cod_infra_predio);
 
-        if ($_GET['precisa_lista'])
-        {
+        if ($_GET['precisa_lista']) {
             $obrigatorio = true;
             $get_escola  = true;
-            include("include/pmieducar/educar_campo_lista.php");
-        }
-        else
-        {
-            $this->campoOculto("ref_cod_escola", $this->ref_cod_escola);
+            include('include/pmieducar/educar_campo_lista.php');
+        } else {
+            $this->campoOculto('ref_cod_escola', $this->ref_cod_escola);
         }
         // text
-        $this->campoTexto( "nm_predio", "Nome Prédio", $this->nm_predio, 30, 255, true );
-        $this->campoMemo( "desc_predio", "Descrição Prédio", $this->desc_predio, 60, 10, false );
-        $this->campoMemo( "endereco", "Endereço", $this->endereco, 60, 2, true );
-
-
-
-
+        $this->campoTexto('nm_predio', 'Nome Prédio', $this->nm_predio, 30, 255, true);
+        $this->campoMemo('desc_predio', 'Descrição Prédio', $this->desc_predio, 60, 10, false);
+        $this->campoMemo('endereco', 'Endereço', $this->endereco, 60, 2, true);
     }
 
-    function Novo()
+    public function Novo()
     {
 
 //      die($this->ref_cod_escola);
-        $obj = new clsPmieducarInfraPredio( $this->cod_infra_predio, $this->pessoa_logada, $this->pessoa_logada, $this->ref_cod_escola, $this->nm_predio, $this->desc_predio, $this->endereco, null, null, 1 );
+        $obj = new clsPmieducarInfraPredio($this->cod_infra_predio, $this->pessoa_logada, $this->pessoa_logada, $this->ref_cod_escola, $this->nm_predio, $this->desc_predio, $this->endereco, null, null, 1);
         $cadastrou = $obj->cadastra();
-        if( $cadastrou )
-        {
-
+        if ($cadastrou) {
             echo "<script>
                         if (parent.document.getElementById('ref_cod_infra_predio').disabled)
                             parent.document.getElementById('ref_cod_infra_predio').options[0] = new Option('Selecione um prédio', '', false, false);
@@ -114,47 +91,37 @@ class indice extends clsCadastro
                         window.parent.fechaExpansivel('div_dinamico_'+(parent.DOM_divs.length-1));
                     </script>";
             die();
+
             return true;
         }
 
-        $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
 
         return false;
     }
 
-    function Editar()
+    public function Editar()
     {
     }
 
-    function Excluir()
+    public function Excluir()
     {
     }
-}
 
-// cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
-$miolo = new indice();
-// adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
-// gera o html
-$pagina->MakeAll();
-?>
-<script>
-
-<?php
-
-if (!$_GET['precisa_lista'])
-{
-?>
-    Event.observe(window, 'load', Init, false);
-
-    function Init()
+    public function makeExtra()
     {
-        $('ref_cod_escola').value = parent.document.getElementById('ref_cod_escola').value;
-//      alert($F('ref_cod_escola'));
+        if (! $_GET['precisa_lista']) {
+            return file_get_contents(__DIR__ . '/scripts/extra/educar-infra-predio-cad-pop.js');
+        }
+
+        return '';
     }
 
-<?php } ?>
-
-</script>
+    public function Formular()
+    {
+        $this->title = 'i-Educar - Infra Predio';
+        $this->processoAp = '567';
+        $this->renderMenu = false;
+        $this->renderMenuSuspenso = false;
+    }
+};

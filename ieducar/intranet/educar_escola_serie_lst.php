@@ -1,17 +1,8 @@
 <?php
 
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Séries da escola');
 
-        $this->processoAp = 585;
-    }
-}
-
-class indice extends clsListagem
+return new class extends clsListagem
 {
     public $limite;
     public $offset;
@@ -139,11 +130,15 @@ class indice extends clsListagem
         $this->breadcrumb('Séries da escola', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
+
     }
-}
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
+    public function Formular()
+    {
+        $this->title = "i-Educar - Séries da escola";
 
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+        $this->processoAp = 585;
+    }
+};
+
+

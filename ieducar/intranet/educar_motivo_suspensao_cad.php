@@ -1,65 +1,52 @@
 <?php
 
 
-class clsIndexBase extends clsBase
-{
-    function Formular()
-    {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Motivo Suspens&atilde;o" );
-        $this->processoAp = "607";
-    }
-}
-
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
-    var $cod_motivo_suspensao;
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $nm_motivo;
-    var $descricao;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
-    var $ref_cod_biblioteca;
+    public $cod_motivo_suspensao;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $nm_motivo;
+    public $descricao;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $ref_cod_biblioteca;
 
-    function Inicializar()
+    public function Inicializar()
     {
-        $retorno = "Novo";
+        $retorno = 'Novo';
 
-
-        $this->cod_motivo_suspensao=$_GET["cod_motivo_suspensao"];
+        $this->cod_motivo_suspensao=$_GET['cod_motivo_suspensao'];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 607, $this->pessoa_logada, 11,  "educar_motivo_suspensao_lst.php" );
+        $obj_permissoes->permissao_cadastra(607, $this->pessoa_logada, 11, 'educar_motivo_suspensao_lst.php');
 
-        if( is_numeric( $this->cod_motivo_suspensao ) )
-        {
-
-            $obj = new clsPmieducarMotivoSuspensao( $this->cod_motivo_suspensao );
+        if (is_numeric($this->cod_motivo_suspensao)) {
+            $obj = new clsPmieducarMotivoSuspensao($this->cod_motivo_suspensao);
             $registro  = $obj->detalhe();
-            if( $registro )
-            {
-                foreach( $registro AS $campo => $val )  // passa todos os valores obtidos no registro para atributos do objeto
+            if ($registro) {
+                foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
+                }
 
-                if( $obj_permissoes->permissao_excluir( 607, $this->pessoa_logada, 11 ) )
-                {
+                if ($obj_permissoes->permissao_excluir(607, $this->pessoa_logada, 11)) {
                     $this->fexcluir = true;
                 }
-                $retorno = "Editar";
+                $retorno = 'Editar';
             }
         }
-        $this->url_cancelar = ($retorno == "Editar") ? "educar_motivo_suspensao_det.php?cod_motivo_suspensao={$registro["cod_motivo_suspensao"]}" : "educar_motivo_suspensao_lst.php";
-        $this->nome_url_cancelar = "Cancelar";
+        $this->url_cancelar = ($retorno == 'Editar') ? "educar_motivo_suspensao_det.php?cod_motivo_suspensao={$registro['cod_motivo_suspensao']}" : 'educar_motivo_suspensao_lst.php';
+        $this->nome_url_cancelar = 'Cancelar';
 
-        $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+        $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
         $this->breadcrumb($nomeMenu . ' motivo de suspensão', [
             url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
@@ -68,81 +55,77 @@ class indice extends clsCadastro
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
         // primary keys
-        $this->campoOculto( "cod_motivo_suspensao", $this->cod_motivo_suspensao );
+        $this->campoOculto('cod_motivo_suspensao', $this->cod_motivo_suspensao);
 
-    //foreign keys
-    $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'biblioteca'));
+        //foreign keys
+        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'biblioteca']);
 
         // text
-        $this->campoTexto( "nm_motivo", "Motivo Suspens&atilde;o", $this->nm_motivo, 30, 255, true );
-        $this->campoMemo( "descricao", "Descri&ccedil;&atilde;o", $this->descricao, 60, 5, false );
+        $this->campoTexto('nm_motivo', 'Motivo Suspens&atilde;o', $this->nm_motivo, 30, 255, true);
+        $this->campoMemo('descricao', 'Descri&ccedil;&atilde;o', $this->descricao, 60, 5, false);
     }
 
-    function Novo()
+    public function Novo()
     {
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 607, $this->pessoa_logada, 11,  "educar_motivo_suspensao_lst.php" );
+        $obj_permissoes->permissao_cadastra(607, $this->pessoa_logada, 11, 'educar_motivo_suspensao_lst.php');
 
-        $obj = new clsPmieducarMotivoSuspensao( null, null, $this->pessoa_logada, $this->nm_motivo, $this->descricao, null, null, 1, $this->ref_cod_biblioteca );
+        $obj = new clsPmieducarMotivoSuspensao(null, null, $this->pessoa_logada, $this->nm_motivo, $this->descricao, null, null, 1, $this->ref_cod_biblioteca);
         $this->cod_motivo_suspensao = $cadastrou = $obj->cadastra();
-        if( $cadastrou )
-        {
-      $obj->cod_motivo_suspensao = $this->cod_motivo_suspensao;
-            $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
+        if ($cadastrou) {
+            $obj->cod_motivo_suspensao = $this->cod_motivo_suspensao;
+            $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
             $this->simpleRedirect('educar_motivo_suspensao_lst.php');
         }
 
-        $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
 
         return false;
     }
 
-    function Editar()
+    public function Editar()
     {
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 607, $this->pessoa_logada, 11,  "educar_motivo_suspensao_lst.php" );
+        $obj_permissoes->permissao_cadastra(607, $this->pessoa_logada, 11, 'educar_motivo_suspensao_lst.php');
 
         $obj = new clsPmieducarMotivoSuspensao($this->cod_motivo_suspensao, $this->pessoa_logada, null, $this->nm_motivo, $this->descricao, null, null, 1, $this->ref_cod_biblioteca);
         $editou = $obj->edita();
-        if( $editou )
-        {
-            $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
+        if ($editou) {
+            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_motivo_suspensao_lst.php');
         }
 
-        $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
 
         return false;
     }
 
-    function Excluir()
+    public function Excluir()
     {
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_excluir( 607, $this->pessoa_logada, 11,  "educar_motivo_suspensao_lst.php" );
+        $obj_permissoes->permissao_excluir(607, $this->pessoa_logada, 11, 'educar_motivo_suspensao_lst.php');
 
-        $obj = new clsPmieducarMotivoSuspensao($this->cod_motivo_suspensao, $this->pessoa_logada, null,null,null,null,null, 0);
+        $obj = new clsPmieducarMotivoSuspensao($this->cod_motivo_suspensao, $this->pessoa_logada, null, null, null, null, null, 0);
         $excluiu = $obj->excluir();
-        if( $excluiu )
-        {
-            $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
+        if ($excluiu) {
+            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_motivo_suspensao_lst.php');
         }
 
-        $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
 
         return false;
-    }
-}
 
-// cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
-$miolo = new indice();
-// adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
-// gera o html
-$pagina->MakeAll();
-?>
+    }
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Motivo Suspens&atilde;o";
+        $this->processoAp = '607';
+    }
+};
+
+

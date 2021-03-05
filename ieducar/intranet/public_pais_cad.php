@@ -4,16 +4,8 @@ use App\Models\Country;
 use iEducar\Legacy\InteractWithDatabase;
 
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} Pais");
-        $this->processoAp = '753';
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     use InteractWithDatabase;
 
@@ -99,11 +91,14 @@ class indice extends clsCadastro
     public function Excluir()
     {
         return $this->delete($this->idpais);
+
     }
-}
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
+    public function Formular()
+    {
+        $this->title = "Pais";
+        $this->processoAp = '753';
+    }
+};
 
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+

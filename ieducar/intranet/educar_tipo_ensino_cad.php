@@ -1,106 +1,94 @@
 <?php
 
 
-class clsIndexBase extends clsBase
-{
-    function Formular()
-    {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo Ensino" );
-        $this->processoAp = "558";
-    }
-}
-
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
-    var $cod_tipo_ensino;
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $nm_tipo;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
-    var $atividade_complementar;
+    public $cod_tipo_ensino;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $nm_tipo;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $atividade_complementar;
 
-    var $ref_cod_instituicao;
+    public $ref_cod_instituicao;
 
-    function Inicializar()
+    public function Inicializar()
     {
-        $retorno = "Novo";
-
+        $retorno = 'Novo';
 
         //** Verificacao de permissao para exclusao
         $obj_permissao = new clsPermissoes();
 
-        $obj_permissao->permissao_cadastra(558, $this->pessoa_logada,7,"educar_tipo_ensino_lst.php");
+        $obj_permissao->permissao_cadastra(558, $this->pessoa_logada, 7, 'educar_tipo_ensino_lst.php');
         //**
 
-        $this->cod_tipo_ensino=$_GET["cod_tipo_ensino"];
+        $this->cod_tipo_ensino=$_GET['cod_tipo_ensino'];
 
-        if( is_numeric( $this->cod_tipo_ensino ) )
-        {
-
-            $obj = new clsPmieducarTipoEnsino($this->cod_tipo_ensino,null,null,null,null,null,1);
-            if(!$registro = $obj->detalhe()){
+        if (is_numeric($this->cod_tipo_ensino)) {
+            $obj = new clsPmieducarTipoEnsino($this->cod_tipo_ensino, null, null, null, null, null, 1);
+            if (!$registro = $obj->detalhe()) {
                 $this->simpleRedirect('educar_tipo_ensino_lst.php');
             }
 
-            if(!$registro["ativo"] )
+            if (!$registro['ativo']) {
                 $this->simpleRedirect('educar_tipo_ensino_lst.php');
+            }
 
-            if( $registro )
-            {
-                foreach( $registro AS $campo => $val )  // passa todos os valores obtidos no registro para atributos do objeto
+            if ($registro) {
+                foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
+                }
 
                 //** verificao de permissao para exclusao
-                $this->fexcluir = $obj_permissao->permissao_excluir(558,$this->pessoa_logada,7);
+                $this->fexcluir = $obj_permissao->permissao_excluir(558, $this->pessoa_logada, 7);
                 //**
 
-                $retorno = "Editar";
+                $retorno = 'Editar';
             }
             $this->atividade_complementar = dbBool($this->atividade_complementar);
         }
-        $this->url_cancelar = ($retorno == "Editar") ? "educar_tipo_ensino_det.php?cod_tipo_ensino={$registro["cod_tipo_ensino"]}" : "educar_tipo_ensino_lst.php";
+        $this->url_cancelar = ($retorno == 'Editar') ? "educar_tipo_ensino_det.php?cod_tipo_ensino={$registro['cod_tipo_ensino']}" : 'educar_tipo_ensino_lst.php';
 
-        $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+        $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
         $this->breadcrumb($nomeMenu . ' tipo de ensino', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
 
-        $this->nome_url_cancelar = "Cancelar";
+        $this->nome_url_cancelar = 'Cancelar';
 
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
         // primary keys
-        $this->campoOculto( "cod_tipo_ensino", $this->cod_tipo_ensino );
+        $this->campoOculto('cod_tipo_ensino', $this->cod_tipo_ensino);
 
         // foreign keys
         $get_escola = false;
         $obrigatorio = true;
-        include("include/pmieducar/educar_campo_lista.php");
+        include('include/pmieducar/educar_campo_lista.php');
         // text
-        $this->campoTexto( "nm_tipo", "Tipo de Ensino", $this->nm_tipo, 30, 255, true );
+        $this->campoTexto('nm_tipo', 'Tipo de Ensino', $this->nm_tipo, 30, 255, true);
 
-        $this->campoCheck("atividade_complementar", "Atividade complementar", $this->atividade_complementar );
+        $this->campoCheck('atividade_complementar', 'Atividade complementar', $this->atividade_complementar);
 
         // data
-
     }
 
-    function Novo()
+    public function Novo()
     {
-        $this->atividade_complementar = is_null($this->atividade_complementar) ? FALSE : TRUE;
+        $this->atividade_complementar = is_null($this->atividade_complementar) ? false : true;
 
         $obj = new clsPmieducarTipoEnsino();
         $obj->ref_usuario_cad        = $this->pessoa_logada;
@@ -109,20 +97,19 @@ class indice extends clsCadastro
         $obj->ref_cod_instituicao    = $this->ref_cod_instituicao;
         $obj->atividade_complementar = $this->atividade_complementar;
         $cadastrou = $obj->cadastra();
-        if( $cadastrou )
-        {
-            $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
+        if ($cadastrou) {
+            $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
             $this->simpleRedirect('educar_tipo_ensino_lst.php');
         }
 
-        $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
 
         return false;
     }
 
-    function Editar()
+    public function Editar()
     {
-        $this->atividade_complementar = is_null($this->atividade_complementar) ? FALSE : TRUE;
+        $this->atividade_complementar = is_null($this->atividade_complementar) ? false : true;
 
         $obj = new clsPmieducarTipoEnsino();
         $obj->cod_tipo_ensino        = $this->cod_tipo_ensino;
@@ -133,39 +120,36 @@ class indice extends clsCadastro
         $obj->atividade_complementar = $this->atividade_complementar;
 
         $editou = $obj->edita();
-        if( $editou )
-        {
-            $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
+        if ($editou) {
+            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_tipo_ensino_lst.php');
         }
 
-        $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
 
         return false;
     }
 
-    function Excluir()
+    public function Excluir()
     {
         $obj = new clsPmieducarTipoEnsino($this->cod_tipo_ensino, $this->pessoa_logada, null, $this->nm_tipo, null, null, 0);
         $excluiu = $obj->excluir();
-        if( $excluiu )
-        {
-            $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
+        if ($excluiu) {
+            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_tipo_ensino_lst.php');
         }
 
-        $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
 
         return false;
-    }
-}
 
-// cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
-$miolo = new indice();
-// adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
-// gera o html
-$pagina->MakeAll();
-?>
+    }
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Tipo Ensino";
+        $this->processoAp = '558';
+    }
+};
+
+

@@ -4,16 +4,7 @@ use App\Models\LegacySchoolClass;
 use App\Services\SchoolClassService;
 
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Consulta de movimento mensal');
-        $this->processoAp = 9998910;
-    }
-}
-
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     const PROCESSO_AP = 9998910;
 
@@ -64,8 +55,8 @@ class indice extends clsCadastro
 
     public function Gerar()
     {
-        $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola'));
-        $this->inputsHelper()->dynamic(array('curso', 'serie', 'turma'), array('required' => false));
+        $this->inputsHelper()->dynamic(['ano', 'instituicao', 'escola']);
+        $this->inputsHelper()->dynamic(['curso', 'serie', 'turma'], ['required' => false]);
 
         $options = [
             'label' => 'Modalidade',
@@ -86,7 +77,7 @@ class indice extends clsCadastro
                 ->with('calendars', $calendars)
         );
 
-        $this->inputsHelper()->dynamic(array('dataInicial', 'dataFinal'));
+        $this->inputsHelper()->dynamic(['dataInicial', 'dataFinal']);
 
         Portabilis_View_Helper_Application::loadJavascript($this, [
             '/modules/Portabilis/Assets/Plugins/Chosen/chosen.jquery.min.js',
@@ -139,6 +130,7 @@ class indice extends clsCadastro
         $schoolClass = $this->getSchoolClass();
 
         $schoolClassService = new SchoolClassService();
+
         return $schoolClassService->getCalendars($schoolClass);
     }
 
@@ -163,11 +155,14 @@ class indice extends clsCadastro
                 $query->where('ref_cod_curso', $this->getQueryString('ref_cod_curso'));
             })
             ->get(['cod_turma'])->pluck('cod_turma')->all();
+
     }
-}
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
+    public function Formular()
+    {
+        $this->title = "i-Educar - Consulta de movimento mensal";
+        $this->processoAp = 9998910;
+    }
+};
 
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+

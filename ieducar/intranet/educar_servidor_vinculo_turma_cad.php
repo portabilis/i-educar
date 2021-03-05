@@ -2,7 +2,6 @@
 
 use App\Models\Employee;
 use App\Models\LegacyInstitution;
-use App\Models\LegacySchoolClass;
 use App\Services\iDiarioService;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\Educacenso\Model\TipoMediacaoDidaticoPedagogico;
@@ -10,16 +9,7 @@ use iEducar\Modules\Servidores\Model\FuncaoExercida;
 use iEducar\Support\View\SelectOptions;
 
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' Servidores - Servidor vínculo turma');
-        $this->processoAp = 635;
-    }
-}
-
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $pessoa_logada;
 
@@ -331,6 +321,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = 'Não é possível cadastrar o vínculo pois o servidor não está alocado na escola selecionada.';
+
         return false;
     }
 
@@ -350,16 +341,19 @@ class indice extends clsCadastro
 
         if ($turma['tipo_mediacao_didatico_pedagogico'] == TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA && !in_array($this->funcao_exercida, $funcoesEad)) {
             $this->mensagem = 'O campo: <b>Função exercida</b> deve ser <b>Docente titular</b> ou <b>Docente tutor</b>, quando o campo: <b>Tipo de mediação didático-pedagógica</b> da turma for: <b>Educação a Distância</b>.';
+
             return false;
         }
 
         if ($turma['tipo_atendimento'] != TipoAtendimentoTurma::ESCOLARIZACAO && $this->funcao_exercida == FuncaoExercida::AUXILIAR_EDUCACIONAL) {
             $this->mensagem = 'O campo: <b>Função exercida</b> não pode ser: <b>Auxiliar/Assistente Educacional</b> quando o tipo de atendimento da turma for: <b>' . TipoAtendimentoTurma::getDescriptiveValues()[$turma['tipo_atendimento']] . '</b>';
+
             return false;
         }
 
         if ($turma['tipo_atendimento'] != TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR && $this->funcao_exercida == FuncaoExercida::MONITOR_ATIVIDADE_COMPLEMENTAR) {
             $this->mensagem = 'O campo: <b>Função exercida</b> não pode ser: <b> Profissional/Monitor de Atividade Complementar </b> quando o tipo de atendimento da turma for: <b>' . TipoAtendimentoTurma::getDescriptiveValues()[$turma['tipo_atendimento']] . '</b>';
+
             return false;
         }
 
@@ -371,6 +365,7 @@ class indice extends clsCadastro
      *
      * @param integer $professorId
      * @param integer $turmaId
+     *
      * @return bool
      */
     private function existeLancamentoIDiario($professorId, $turmaId)
@@ -387,17 +382,14 @@ class indice extends clsCadastro
         }
 
         return false;
+
     }
-}
 
-// Instancia objeto de página
-$pagina = new clsIndexBase();
+    public function Formular()
+    {
+        $this->title = "Servidores - Servidor vínculo turma";
+        $this->processoAp = 635;
+    }
+};
 
-// Instancia objeto de conteúdo
-$miolo = new indice();
 
-// Atribui o conteúdo à  página
-$pagina->addForm($miolo);
-
-// Gera o código HTML
-$pagina->MakeAll();

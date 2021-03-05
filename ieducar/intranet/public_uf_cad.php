@@ -6,16 +6,8 @@ use iEducar\Legacy\SelectOptions;
 use Illuminate\Support\Str;
 
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} Uf");
-        $this->processoAp = 754;
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     use InteractWithDatabase, SelectOptions;
 
@@ -146,11 +138,14 @@ class indice extends clsCadastro
         }
 
         return $this->delete($this->id);
+
     }
-}
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
+    public function Formular()
+    {
+        $this->title = "Uf";
+        $this->processoAp = 754;
+    }
+};
 
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+

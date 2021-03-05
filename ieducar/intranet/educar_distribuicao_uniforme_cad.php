@@ -1,17 +1,6 @@
 <?php
 
-
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Distribui&ccedil;&atilde;o de uniforme");
-        $this->processoAp = 578;
-    }
-}
-
-class indice extends clsCadastro
-{
+return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -82,7 +71,6 @@ class indice extends clsCadastro
         $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, "educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
 
         if (is_numeric($this->ref_cod_aluno) && is_numeric($this->cod_distribuicao_uniforme)) {
-
             $obj = new clsPmieducarDistribuicaoUniforme($this->cod_distribuicao_uniforme);
 
             $registro  = $obj->detalhe();
@@ -170,7 +158,6 @@ class indice extends clsCadastro
             'max_length'  => 10,
             'size' => 10
         ]);
-
 
         $this->inputsHelper()->integer('camiseta_curta_qtd', [
             'required' => false,
@@ -467,51 +454,15 @@ class indice extends clsCadastro
 
         return false;
     }
-}
 
-$pagina = new clsIndexBase();
-$pagina->addForm(new indice());
-$pagina->MakeAll();
-
-?>
-
-<script type="text/javascript">
-    function bloqueiaCamposQuantidade(){
-        $j('#agasalho_qtd').val('').attr('disabled', 'disabled');
-        $j('#camiseta_curta_qtd').val('').attr('disabled', 'disabled');
-        $j('#camiseta_longa_qtd').val('').attr('disabled', 'disabled');
-        $j('#camiseta_infantil_qtd').val('').attr('disabled', 'disabled');
-        $j('#calca_jeans_qtd').val('').attr('disabled', 'disabled');
-        $j('#meias_qtd').val('').attr('disabled', 'disabled');
-        $j('#saia_qtd').val('').attr('disabled', 'disabled');
-        $j('#bermudas_tectels_qtd').val('').attr('disabled', 'disabled');
-        $j('#bermudas_coton_qtd').val('').attr('disabled', 'disabled');
-        $j('#tenis_qtd').val('').attr('disabled', 'disabled');
-        return true;
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-distribuicao-uniforme-cad.js');
     }
 
-    function liberaCamposQuantidade(){
-        $j('#agasalho_qtd').removeAttr('disabled');
-        $j('#camiseta_curta_qtd').removeAttr('disabled');
-        $j('#camiseta_longa_qtd').removeAttr('disabled');
-        $j('#camiseta_infantil_qtd').removeAttr('disabled');
-        $j('#calca_jeans_qtd').removeAttr('disabled');
-        $j('#meias_qtd').removeAttr('disabled');
-        $j('#saia_qtd').removeAttr('disabled');
-        $j('#bermudas_tectels_qtd').removeAttr('disabled');
-        $j('#bermudas_coton_qtd').removeAttr('disabled');
-        $j('#tenis_qtd').removeAttr('disabled');
+    public function Formular()
+    {
+        $this->title = 'i-Educar - Distribui&ccedil;&atilde;o de uniforme';
+        $this->processoAp = 578;
     }
-
-    $j(document).ready(function(){
-        if($j('#kit_completo').is(':checked'))
-            bloqueiaCamposQuantidade();
-
-        $j('#kit_completo').on('change', function(){
-            if($j('#kit_completo').is(':checked'))
-                bloqueiaCamposQuantidade();
-            else
-                liberaCamposQuantidade();
-        });
-    })
-</script>
+};

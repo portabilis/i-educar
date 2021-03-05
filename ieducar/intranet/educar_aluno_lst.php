@@ -1,16 +1,8 @@
 <?php
 
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Aluno");
-        $this->processoAp = '578';
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     /**
      * Titulo no topo da pagina
@@ -236,14 +228,14 @@ class indice extends clsListagem
         Portabilis_View_Helper_Application::loadJavascript($this, ['/intranet/scripts/exporter.js']);
 
         $this->breadcrumb('Alunos', ['/intranet/educar_index.php' => 'Escola']);
-    }
-}
 
-// cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
-$miolo = new indice();
-// adiciona o conteudo na clsBase
-$pagina->addForm($miolo);
-// gera o html
-$pagina->MakeAll();
+    }
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Aluno";
+        $this->processoAp = '578';
+    }
+};
+
+

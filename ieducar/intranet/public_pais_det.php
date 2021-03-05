@@ -4,16 +4,8 @@ use App\Models\Country;
 use iEducar\Legacy\InteractWithDatabase;
 
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} Pais");
-        $this->processoAp = 753;
-    }
-}
 
-class indice extends clsDetalhe
+return new class extends clsDetalhe
 {
     use InteractWithDatabase;
 
@@ -56,11 +48,14 @@ class indice extends clsDetalhe
         $this->breadcrumb('Detalhe do país', [
             url('intranet/educar_enderecamento_index.php') => 'Endereçamento',
         ]);
+
     }
-}
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
+    public function Formular()
+    {
+        $this->title = "Pais";
+        $this->processoAp = 753;
+    }
+};
 
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+
