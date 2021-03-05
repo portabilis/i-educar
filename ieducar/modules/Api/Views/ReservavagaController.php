@@ -1,6 +1,5 @@
 <?php
 
-
 class ReservavagaController extends ApiCoreController
 {
     protected function permiteMultiplasReservas()

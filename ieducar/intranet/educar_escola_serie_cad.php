@@ -8,10 +8,7 @@ use App\Services\iDiarioService;
 use App\Services\SchoolLevelsService;
 use Illuminate\Support\Arr;
 
-
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $ref_cod_escola_;
     public $ref_cod_serie;
     public $ref_cod_serie_;
@@ -862,14 +859,11 @@ return new class extends clsCadastro
         }
 
         return null;
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Escola Série";
+        $this->title = 'i-Educar - Escola Série';
         $this->processoAp = 585;
     }
 };
-
-

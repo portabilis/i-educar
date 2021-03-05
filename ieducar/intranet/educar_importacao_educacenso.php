@@ -2,10 +2,7 @@
 
 ini_set('max_execution_time', 0);
 
-
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $arquivo;
@@ -68,13 +65,11 @@ return new class extends clsCadastro
     public function Editar()
     {
         return;
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Importação educacenso";
+        $this->title = 'i-Educar - Importação educacenso';
         $this->processoAp = 9998849;
     }
 };
-

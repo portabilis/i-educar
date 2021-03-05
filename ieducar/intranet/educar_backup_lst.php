@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -89,13 +87,11 @@ return new class extends clsListagem
         $this->breadcrumb('Backups', [
             url('intranet/educar_configuracoes_index.php') => 'Configurações',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "Backups";
+        $this->title = 'Backups';
         $this->processoAp = '9998858';
     }
 };
-

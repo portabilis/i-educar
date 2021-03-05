@@ -1,8 +1,6 @@
 <?php
 
 use iEducar\Legacy\Model;
-use Illuminate\Support\Facades\Session;
-
 
 class clsPmieducarReservas extends Model
 {
@@ -24,16 +22,16 @@ class clsPmieducarReservas extends Model
         $this->_campos_lista = $this->_todos_campos = 'r.cod_reserva, r.ref_usuario_libera, r.ref_usuario_cad, r.ref_cod_cliente, r.data_reserva, r.data_prevista_disponivel, r.data_retirada, r.ref_cod_exemplar, r.ativo';
 
         if (is_numeric($ref_cod_exemplar)) {
-                    $this->ref_cod_exemplar = $ref_cod_exemplar;
+            $this->ref_cod_exemplar = $ref_cod_exemplar;
         }
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
         if (is_numeric($ref_usuario_libera)) {
-                    $this->ref_usuario_libera = $ref_usuario_libera;
+            $this->ref_usuario_libera = $ref_usuario_libera;
         }
         if (is_numeric($ref_cod_cliente)) {
-                    $this->ref_cod_cliente = $ref_cod_cliente;
+            $this->ref_cod_cliente = $ref_cod_cliente;
         }
 
         if (is_numeric($cod_reserva)) {

@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     public $titulo;
 
     public $ref_cod_matricula;
@@ -142,14 +140,11 @@ return new class extends clsDetalhe
         $this->breadcrumb('Dispensa de componentes curriculares', [
         url('intranet/educar_index.php') => 'Escola',
     ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Dispensa Componente Curricular";
+        $this->title = 'i-Educar - Dispensa Componente Curricular';
         $this->processoAp = 578;
     }
 };
-
-

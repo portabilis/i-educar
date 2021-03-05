@@ -3,10 +3,8 @@
 use App\Models\LegacyRegistration;
 use Illuminate\Support\Str;
 
-
 class MatriculaController extends ApiCoreController
 {
-
     protected function canGetMatriculas()
     {
         return $this->validatesId('escola') &&
@@ -492,7 +490,7 @@ class MatriculaController extends ApiCoreController
             $params = [$sequencial, $matriculaId];
             $this->fetchPreparedQuery($sql, $params);
 
-            $instituicaoId = (new clsBanco)->unicoCampo("select cod_instituicao from pmieducar.instituicao where ativo = 1 order by cod_instituicao asc limit 1;");
+            $instituicaoId = (new clsBanco)->unicoCampo('select cod_instituicao from pmieducar.instituicao where ativo = 1 order by cod_instituicao asc limit 1;');
 
             $fakeRequest = new CoreExt_Controller_Request(['data' => [
                 'oper' => 'post',
@@ -623,6 +621,7 @@ class MatriculaController extends ApiCoreController
                 $lastenrollment = $enrollment->lastEnrollment;
                 $lastenrollment->data_exclusao = $data_saida;
                 $lastenrollment->save();
+
                 return $this->messenger->append('Data de saida atualizada com sucesso.', 'success');
             }
         }
@@ -658,7 +657,7 @@ class MatriculaController extends ApiCoreController
                             $enturmacao->marcaAlunoTransferido();
                         } elseif ($situacaoNova == App_Model_MatriculaSituacao::ABANDONO) {
                             $enturmacao->marcaAlunoAbandono();
-                        }elseif ($situacaoNova == App_Model_MatriculaSituacao::FALECIDO) {
+                        } elseif ($situacaoNova == App_Model_MatriculaSituacao::FALECIDO) {
                             $enturmacao->marcaAlunoFalecido();
                         }
                     }
@@ -813,7 +812,7 @@ class MatriculaController extends ApiCoreController
         $params = [];
 
         if ($modified) {
-            $where = " AND dd.updated_at >= $1";
+            $where = ' AND dd.updated_at >= $1';
             $params[] = $modified;
         }
 

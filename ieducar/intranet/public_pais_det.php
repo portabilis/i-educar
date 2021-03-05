@@ -3,10 +3,7 @@
 use App\Models\Country;
 use iEducar\Legacy\InteractWithDatabase;
 
-
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     use InteractWithDatabase;
 
     public $idpais;
@@ -48,14 +45,11 @@ return new class extends clsDetalhe
         $this->breadcrumb('Detalhe do país', [
             url('intranet/educar_enderecamento_index.php') => 'Endereçamento',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "Pais";
+        $this->title = 'Pais';
         $this->processoAp = 753;
     }
 };
-
-

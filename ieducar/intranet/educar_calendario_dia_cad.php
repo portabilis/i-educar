@@ -3,9 +3,7 @@
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $ref_cod_calendario_ano_letivo;
@@ -443,14 +441,11 @@ return new class extends clsCadastro
         $this->mensagem = 'Exclusão não realizada. <br />';
 
         return false;
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Calendário Dia";
+        $this->title = 'i-Educar - Calendário Dia';
         $this->processoAp = 620;
     }
 };
-
-

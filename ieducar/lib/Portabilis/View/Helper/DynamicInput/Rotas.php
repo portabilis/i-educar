@@ -1,6 +1,5 @@
 <?php
 
-
 class Portabilis_View_Helper_DynamicInput_Rotas extends Portabilis_View_Helper_DynamicInput_CoreSelect
 {
     protected function inputName()

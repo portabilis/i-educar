@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\RegistrationEvent;
 use App\Exceptions\Transfer\TransferException;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
@@ -8,12 +9,8 @@ use App\Services\SchoolClass\AvailableTimeService;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
-use App\Events\RegistrationEvent;
 
-
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $cod_matricula;
@@ -424,7 +421,7 @@ return new class extends clsCadastro
         }
 
         if (is_array($anoLetivoEmAndamentoEscola)) {
-                        $db = new clsBanco();
+            $db = new clsBanco();
 
             $db->Consulta("SELECT ref_ref_cod_serie, ref_cod_curso
                              FROM pmieducar.matricula
@@ -472,7 +469,6 @@ return new class extends clsCadastro
                     $cursoDeAtividadeComplementar = $cursoADeferir->cursoDeAtividadeComplementar();
 
                     if (($mesmoCursoAno || config('legacy.app.matricula.multiplas_matriculas') == 0) && !$cursoDeAtividadeComplementar) {
-
                         $serie = new clsPmieducarSerie($m['ref_ref_cod_serie'], null, null, $m['ref_cod_curso']);
                         $serie = $serie->detalhe();
 
@@ -941,6 +937,7 @@ return new class extends clsCadastro
 
             if (!empty($this->ref_cod_turma) && $validarCamposEducacenso && !$this->availableTimeService()->isAvailable($this->ref_cod_aluno, $this->ref_cod_turma)) {
                 $this->mensagem = 'O aluno já está matriculado em uma turma com esse horário.';
+
                 return false;
             }
 
@@ -964,7 +961,7 @@ return new class extends clsCadastro
                 if ($this->situacaoUltimaMatricula == $this->transferido &&
                     $this->serieUltimaMatricula == $this->ref_cod_serie &&
                     $this->anoUltimaMatricula == $this->ano
-                )  {
+                ) {
                     /** @var LegacyRegistration $registration */
 
                     $registration = LegacyRegistration::find($this->cod_matricula);
@@ -1512,7 +1509,8 @@ return new class extends clsCadastro
         return count($lst_mt);
     }
 
-    private function availableTimeService() {
+    private function availableTimeService()
+    {
         if (empty($this->availableTimeService)) {
             $this->availableTimeService = new AvailableTimeService();
         }
@@ -1520,14 +1518,11 @@ return new class extends clsCadastro
         $this->availableTimeService->onlySchoolClassesInformedOnCensus();
 
         return $this->availableTimeService;
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Matrícula";
+        $this->title = 'i-Educar - Matrícula';
         $this->processoAp = 578;
     }
 };
-
-

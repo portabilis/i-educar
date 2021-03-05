@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     public $titulo;
 
     public $id;
@@ -124,14 +122,11 @@ return new class extends clsDetalhe
         $this->breadcrumb('Detalhe do vínculo', [
         url('intranet/educar_servidores_index.php') => 'Servidores',
     ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "Servidores - Servidor Formação";
+        $this->title = 'Servidores - Servidor Formação';
         $this->processoAp = 635;
     }
 };
-
-

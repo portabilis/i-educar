@@ -1,6 +1,5 @@
 <?php
 
-
 class Portabilis_View_Helper_Input_Resource_SimpleSearchIes extends Portabilis_View_Helper_Input_SimpleSearch
 {
     protected function resourceValue($id)

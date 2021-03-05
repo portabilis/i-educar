@@ -1,9 +1,7 @@
 <?php
 
-
 class PessoajController extends ApiCoreController
 {
-
     protected function sqlsForNumericSearch()
     {
         $sqls[] = 'select distinct idpes as id, nome as name from

@@ -153,14 +153,11 @@ return new class extends clsCadastro {
         }
 
         return $arrayEnturmacoes;
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Tipo do AEE do aluno";
+        $this->title = 'i-Educar - Tipo do AEE do aluno';
         $this->processoAp = '578';
     }
 };
-
-

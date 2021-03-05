@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $cod_compensado;
@@ -32,11 +30,11 @@ return new class extends clsCadastro
             $this->pessoa_logada,
             7,
             sprintf(
-          'educar_falta_atraso_det.php?ref_cod_servidor=%d&ref_cod_escola=%d&ref_cod_instituicao=%d',
-          $this->ref_cod_servidor,
-          $this->ref_cod_escola,
-          $this->ref_cod_instituicao
-      )
+                'educar_falta_atraso_det.php?ref_cod_servidor=%d&ref_cod_escola=%d&ref_cod_instituicao=%d',
+                $this->ref_cod_servidor,
+                $this->ref_cod_escola,
+                $this->ref_cod_instituicao
+            )
         );
 
         if (is_numeric($this->cod_compensado)) {
@@ -145,11 +143,11 @@ return new class extends clsCadastro
             $this->pessoa_logada,
             7,
             sprintf(
-          'educar_falta_atraso_det.php?ref_cod_servidor=%d&ref_cod_escola=%d&ref_cod_instituicao=%d',
-          $this->ref_cod_servidor,
-          $this->ref_cod_escola,
-          $this->ref_cod_instituicao
-      )
+                'educar_falta_atraso_det.php?ref_cod_servidor=%d&ref_cod_escola=%d&ref_cod_instituicao=%d',
+                $this->ref_cod_servidor,
+                $this->ref_cod_escola,
+                $this->ref_cod_instituicao
+            )
         );
 
         // Transforma a data para o formato aceito pelo banco
@@ -195,11 +193,11 @@ return new class extends clsCadastro
             $this->pessoa_logada,
             7,
             sprintf(
-          'educar_falta_atraso_det.php?ref_cod_servidor=%d&ref_cod_escola=%d&ref_cod_instituicao=%d',
-          $this->ref_cod_servidor,
-          $this->ref_cod_escola,
-          $this->ref_cod_instituicao
-      )
+                'educar_falta_atraso_det.php?ref_cod_servidor=%d&ref_cod_escola=%d&ref_cod_instituicao=%d',
+                $this->ref_cod_servidor,
+                $this->ref_cod_escola,
+                $this->ref_cod_instituicao
+            )
         );
 
         // Transforma a data para o formato aceito pelo banco
@@ -230,14 +228,11 @@ return new class extends clsCadastro
         $this->mensagem = 'Exclusão não realizada.<br />';
 
         return false;
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Falta Atraso Compensado";
+        $this->title = 'i-Educar - Falta Atraso Compensado';
         $this->processoAp = 635;
     }
 };
-
-

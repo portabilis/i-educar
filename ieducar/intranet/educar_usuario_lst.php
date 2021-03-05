@@ -3,10 +3,7 @@
 use App\User;
 use Illuminate\Support\Facades\Auth;
 
-
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     public function Gerar()
     {
         $this->titulo = 'Usuários';
@@ -143,14 +140,11 @@ return new class extends clsListagem
         $this->breadcrumb('Usuários', [
             url('intranet/educar_configuracoes_index.php') => 'Configurações',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "Usu&aacute;rios!";
+        $this->title = 'Usu&aacute;rios!';
         $this->processoAp = '555';
     }
 };
-
-

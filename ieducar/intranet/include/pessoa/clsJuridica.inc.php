@@ -1,8 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Session;
-
-
 class clsJuridica
 {
     public $idpes;
@@ -23,8 +20,6 @@ class clsJuridica
      */
     public function __construct($idpes = false, $cnpj = false, $fantasia = false, $insc_estadual = false, $capital_social = false, $idpes_cad = false, $idpes_rev = false)
     {
-
-
         $objPessoa = new clsPessoa_($idpes);
         if ($objPessoa->detalhe()) {
             $this->idpes = $idpes;
@@ -94,7 +89,7 @@ class clsJuridica
 
         if (is_numeric($this->idpes) && is_numeric($this->idpes_rev)) {
             $set = [];
-            if (is_string($this->fantasia)){
+            if (is_string($this->fantasia)) {
                 $fantasia = $db->escapeString($this->fantasia);
                 $set[] = " fantasia = '{$fantasia}' ";
             }

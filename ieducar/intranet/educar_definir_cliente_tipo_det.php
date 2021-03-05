@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     /**
      * Titulo no topo da pagina
      *
@@ -89,14 +87,11 @@ return new class extends clsDetalhe
 
         $this->url_cancelar = 'educar_definir_cliente_tipo_lst.php';
         $this->largura = '100%';
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Cliente";
+        $this->title = 'i-Educar - Cliente';
         $this->processoAp = '623';
     }
 };
-
-

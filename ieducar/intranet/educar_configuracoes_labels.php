@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
     public $ref_cod_instituicao;
     public $custom_labels;
@@ -70,13 +68,11 @@ return new class extends clsCadastro
         $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
 
         return false;
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Customiza&ccedil;&atilde;o de labels";
+        $this->title = 'i-Educar - Customiza&ccedil;&atilde;o de labels';
         $this->processoAp = 9998869;
     }
 };
-

@@ -3,9 +3,7 @@
 #error_reporting(E_ALL);
 #ini_set("display_errors", 1);
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -212,14 +210,11 @@ return new class extends clsCadastro
         $sequencial = $exemplar->getProximoSequencialObra($this->ref_cod_acervo);
 
         return $sequencial;
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Exemplar";
+        $this->title = 'i-Educar - Exemplar';
         $this->processoAp = '606';
     }
 };
-
-

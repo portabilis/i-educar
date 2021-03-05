@@ -1,6 +1,5 @@
 <?php
 
-
 header('Content-type: text/xml; charset=UTF-8');
 
 Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();

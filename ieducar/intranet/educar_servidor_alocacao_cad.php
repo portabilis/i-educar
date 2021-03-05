@@ -1,9 +1,6 @@
 <?php
 
-
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
     public $cod_servidor_alocacao;
     public $ref_ref_cod_instituicao;
@@ -354,14 +351,11 @@ return new class extends clsCadastro
         }
 
         return $total;
-
     }
 
     public function Formular()
     {
-        $this->title = "Servidores - Servidor Alocação";
+        $this->title = 'Servidores - Servidor Alocação';
         $this->processoAp = 635;
     }
 };
-
-

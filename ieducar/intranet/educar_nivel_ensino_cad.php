@@ -3,9 +3,7 @@
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -120,14 +118,11 @@ return new class extends clsCadastro
         $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
 
         return false;
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - N&iacute;vel Ensino";
+        $this->title = 'i-Educar - N&iacute;vel Ensino';
         $this->processoAp = '571';
     }
 };
-
-

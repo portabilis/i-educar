@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarDisciplinaDisciplinaTopico extends Model
 {
     public $ref_ref_cod_disciplina;
@@ -19,12 +18,12 @@ class clsPmieducarDisciplinaDisciplinaTopico extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_ref_cod_disciplina, ref_ref_ref_cod_escola, ref_ref_ref_cod_serie, ref_cod_disciplina_topico';
 
         if (is_numeric($ref_cod_disciplina_topico)) {
-                    $this->ref_cod_disciplina_topico = $ref_cod_disciplina_topico;
+            $this->ref_cod_disciplina_topico = $ref_cod_disciplina_topico;
         }
         if (is_numeric($ref_ref_ref_cod_serie) && is_numeric($ref_ref_ref_cod_escola) && is_numeric($ref_ref_cod_disciplina)) {
-                    $this->ref_ref_ref_cod_serie = $ref_ref_ref_cod_serie;
-                    $this->ref_ref_ref_cod_escola = $ref_ref_ref_cod_escola;
-                    $this->ref_ref_cod_disciplina = $ref_ref_cod_disciplina;
+            $this->ref_ref_ref_cod_serie = $ref_ref_ref_cod_serie;
+            $this->ref_ref_ref_cod_escola = $ref_ref_ref_cod_escola;
+            $this->ref_ref_cod_disciplina = $ref_ref_cod_disciplina;
         }
     }
 

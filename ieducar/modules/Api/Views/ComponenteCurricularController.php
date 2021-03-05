@@ -2,88 +2,92 @@
 
 use App\Models\MigratedDiscipline;
 
-
 class ComponenteCurricularController extends ApiCoreController
 {
-  // search options
+    // search options
 
-  protected function searchOptions() {
-    return array('namespace' => 'modules', 'idAttr' => 'id');
-  }
-
-  // subescreve para pesquisar %query%, e nao query% como por padrão
-  protected function sqlsForStringSearch() {
-    return "select distinct id, nome as name from modules.componente_curricular
-            where lower((nome)) like '%'||lower(($1))||'%' order by nome limit 15";
-  }
-
-  // subscreve formatResourceValue para não adicionar 'id -' a frente do resultado
-  protected function formatResourceValue($resource) {
-    return mb_strtoupper($resource['name'], 'UTF-8');
-  }
-
-  function getComponentesCurricularesSearch(){
-
-    $sql = 'SELECT componente_curricular_id FROM modules.professor_turma_disciplina WHERE professor_turma_id = $1';
-
-    $array = array();
-
-    $resources = Portabilis_Utils_Database::fetchPreparedQuery($sql, array( 'params' => array($this->getRequest()->id) ));
-
-    foreach ($resources as $reg) {
-      $array[] = $reg['componente_curricular_id'];
+    protected function searchOptions()
+    {
+        return ['namespace' => 'modules', 'idAttr' => 'id'];
     }
 
-    return array('componentecurricular' => $array);
-  }
+    // subescreve para pesquisar %query%, e nao query% como por padrão
+    protected function sqlsForStringSearch()
+    {
+        return 'select distinct id, nome as name from modules.componente_curricular
+            where lower((nome)) like \'%\'||lower(($1))||\'%\' order by nome limit 15';
+    }
 
-  function canGetComponentesCurriculares(){
-    return  $this->validatesPresenceOf('instituicao_id');
-  }
+    // subscreve formatResourceValue para não adicionar 'id -' a frente do resultado
+    protected function formatResourceValue($resource)
+    {
+        return mb_strtoupper($resource['name'], 'UTF-8');
+    }
 
-  function canGetComponentesCurricularesPorEscolaSerieAno(){
-    return $this->validatesPresenceOf('escola_id') &&
+    public function getComponentesCurricularesSearch()
+    {
+        $sql = 'SELECT componente_curricular_id FROM modules.professor_turma_disciplina WHERE professor_turma_id = $1';
+
+        $array = [];
+
+        $resources = Portabilis_Utils_Database::fetchPreparedQuery($sql, [ 'params' => [$this->getRequest()->id] ]);
+
+        foreach ($resources as $reg) {
+            $array[] = $reg['componente_curricular_id'];
+        }
+
+        return ['componentecurricular' => $array];
+    }
+
+    public function canGetComponentesCurriculares()
+    {
+        return  $this->validatesPresenceOf('instituicao_id');
+    }
+
+    public function canGetComponentesCurricularesPorEscolaSerieAno()
+    {
+        return $this->validatesPresenceOf('escola_id') &&
             $this->validatesPresenceOf('serie_id') &&
             $this->validatesPresenceOf('ano');
-  }
+    }
 
-  function getComponentesCurriculares(){
-    if($this->canGetComponentesCurriculares()){
+    public function getComponentesCurriculares()
+    {
+        if ($this->canGetComponentesCurriculares()) {
+            $instituicaoId = $this->getRequest()->instituicao_id;
+            $areaConhecimentoId = $this->getRequest()->area_conhecimento_id;
+            $modified = $this->getRequest()->modified;
 
-      $instituicaoId = $this->getRequest()->instituicao_id;
-      $areaConhecimentoId = $this->getRequest()->area_conhecimento_id;
-      $modified = $this->getRequest()->modified;
+            $where = '';
+            $params = [$instituicaoId];
 
-      $where = '';
-      $params = [$instituicaoId];
+            if ($areaConhecimentoId) {
+                $wheres[] = 'area_conhecimento_id = '. $areaConhecimentoId;
+            }
 
-      if ($areaConhecimentoId) {
-          $wheres[] = 'area_conhecimento_id = '. $areaConhecimentoId;
-      }
+            if ($modified) {
+                $params[] = $modified;
+                $wheres[] = 'componente_curricular.updated_at >= $2';
+            }
 
-      if ($modified) {
-          $params[] = $modified;
-          $wheres[] = 'componente_curricular.updated_at >= $2';
-      }
+            if (count($wheres)) {
+                $where = ' AND ' . implode(' AND ', $wheres);
+            }
 
-      if (count($wheres)) {
-          $where = ' AND ' . implode(' AND ', $wheres);
-      }
-
-      $sql = 'SELECT componente_curricular.id, componente_curricular.nome, area_conhecimento_id, area_conhecimento.nome AS nome_area, ordenamento, componente_curricular.updated_at
+            $sql = 'SELECT componente_curricular.id, componente_curricular.nome, area_conhecimento_id, area_conhecimento.nome AS nome_area, ordenamento, componente_curricular.updated_at
                 FROM modules.componente_curricular
                INNER JOIN modules.area_conhecimento ON (area_conhecimento.id = componente_curricular.area_conhecimento_id)
                 WHERE componente_curricular.instituicao_id = $1
                 ' . $where . '
                 ORDER BY componente_curricular.updated_at, componente_curricular.nome ';
-      $disciplinas = $this->fetchPreparedQuery($sql, $params);
+            $disciplinas = $this->fetchPreparedQuery($sql, $params);
 
-      $attrs = array('id', 'nome', 'area_conhecimento_id', 'nome_area', 'ordenamento', 'updated_at');
-      $disciplinas = Portabilis_Array_Utils::filterSet($disciplinas, $attrs);
+            $attrs = ['id', 'nome', 'area_conhecimento_id', 'nome_area', 'ordenamento', 'updated_at'];
+            $disciplinas = Portabilis_Array_Utils::filterSet($disciplinas, $attrs);
 
-      return array('disciplinas' => $disciplinas);
+            return ['disciplinas' => $disciplinas];
+        }
     }
-  }
 
     private function getComponentesCurricularesMigrados()
     {
@@ -95,36 +99,36 @@ class ComponenteCurricularController extends ApiCoreController
             $query->where('created_at', '>=', $modified);
         }
 
-        return array('disciplinas' => $query->get());
+        return ['disciplinas' => $query->get()];
     }
 
-function getComponentesCurricularesPorSerie(){
-    if($this->canGetComponentesCurriculares()){
+    public function getComponentesCurricularesPorSerie()
+    {
+        if ($this->canGetComponentesCurriculares()) {
+            $instituicaoId = $this->getRequest()->instituicao_id;
+            $serieId       = $this->getRequest()->serie_id;
 
-      $instituicaoId = $this->getRequest()->instituicao_id;
-      $serieId       = $this->getRequest()->serie_id;
-
-      $sql = 'SELECT componente_curricular.id, componente_curricular.nome, carga_horaria::int, tipo_nota, array_to_json(componente_curricular_ano_escolar.anos_letivos) anos_letivos, area_conhecimento_id, area_conhecimento.nome AS nome_area
+            $sql = 'SELECT componente_curricular.id, componente_curricular.nome, carga_horaria::int, tipo_nota, array_to_json(componente_curricular_ano_escolar.anos_letivos) anos_letivos, area_conhecimento_id, area_conhecimento.nome AS nome_area
                 FROM modules.componente_curricular
                INNER JOIN modules.componente_curricular_ano_escolar ON (componente_curricular_ano_escolar.componente_curricular_id = componente_curricular.id)
                INNER JOIN modules.area_conhecimento ON (area_conhecimento.id = componente_curricular.area_conhecimento_id)
                 WHERE componente_curricular.instituicao_id = $1
                   AND ano_escolar_id = ' . $serieId . '
                 ORDER BY nome ';
-      $disciplinas = $this->fetchPreparedQuery($sql, array($instituicaoId));
+            $disciplinas = $this->fetchPreparedQuery($sql, [$instituicaoId]);
 
-      $attrs = array('id', 'nome', 'anos_letivos', 'carga_horaria', 'tipo_nota', 'area_conhecimento_id', 'nome_area');
-      $disciplinas = Portabilis_Array_Utils::filterSet($disciplinas, $attrs);
+            $attrs = ['id', 'nome', 'anos_letivos', 'carga_horaria', 'tipo_nota', 'area_conhecimento_id', 'nome_area'];
+            $disciplinas = Portabilis_Array_Utils::filterSet($disciplinas, $attrs);
 
-        foreach ($disciplinas as &$disciplina) {
-            $disciplina['anos_letivos'] = json_decode($disciplina['anos_letivos']);
+            foreach ($disciplinas as &$disciplina) {
+                $disciplina['anos_letivos'] = json_decode($disciplina['anos_letivos']);
+            }
+
+            return ['disciplinas' => $disciplinas];
         }
-
-        return array('disciplinas' => $disciplinas);
     }
-  }
 
-    function getComponentesCurricularesPorEscolaSerieAno()
+    public function getComponentesCurricularesPorEscolaSerieAno()
     {
         if ($this->canGetComponentesCurricularesPorEscolaSerieAno()) {
             $escolaId = $this->getRequest()->escola_id;
@@ -132,7 +136,7 @@ function getComponentesCurricularesPorSerie(){
             $ano       = $this->getRequest()->ano;
             $componentes = App_Model_IedFinder::getEscolaSerieDisciplina($serieId, $escolaId, null, null, null, true, $ano);
             $componentesCurriculares = [];
-            $componentesCurriculares = array_map( function ($componente) {
+            $componentesCurriculares = array_map(function ($componente) {
                 return [
                     'id' => $componente->id,
                     'nome' => $componente->nome,
@@ -145,13 +149,14 @@ function getComponentesCurricularesPorSerie(){
         }
     }
 
-    protected function getComponentesCurricularesForMultipleSearch() {
-    if ($this->canGetComponentesCurriculares()) {
-      $turmaId       = $this->getRequest()->turma_id;
-      $ano           = $this->getRequest()->ano;
-      $areaConhecimentoId           = $this->getRequest()->area_conhecimento_id;
+    protected function getComponentesCurricularesForMultipleSearch()
+    {
+        if ($this->canGetComponentesCurriculares()) {
+            $turmaId       = $this->getRequest()->turma_id;
+            $ano           = $this->getRequest()->ano;
+            $areaConhecimentoId           = $this->getRequest()->area_conhecimento_id;
 
-      $sql = "SELECT cc.id,
+            $sql = 'SELECT cc.id,
                        cc.nome
                   FROM pmieducar.turma
                  INNER JOIN modules.componente_curricular_turma cct ON (cct.turma_id = turma.cod_turma
@@ -161,22 +166,22 @@ function getComponentesCurricularesPorSerie(){
                  INNER JOIN pmieducar.escola_ano_letivo al ON (al.ref_cod_escola = turma.ref_ref_cod_escola)
                  WHERE turma.cod_turma = $1
                    AND cc.id <> COALESCE(turma.ref_cod_disciplina_dispensada,0)
-                   AND al.ano = $2 ";
-      $params = [$turmaId, $ano];
+                   AND al.ano = $2 ';
+            $params = [$turmaId, $ano];
 
-      if ($areaConhecimentoId) {
-        $sql .= " AND area_conhecimento_id IN ({$areaConhecimentoId}) ";
-      }
+            if ($areaConhecimentoId) {
+                $sql .= " AND area_conhecimento_id IN ({$areaConhecimentoId}) ";
+            }
 
-      $sql .= ' ORDER BY ac.secao,
+            $sql .= ' ORDER BY ac.secao,
                           ac.nome,
                           cc.ordenamento,
                           cc.nome ';
 
-      $componentesCurriculares = $this->fetchPreparedQuery($sql, $params);
+            $componentesCurriculares = $this->fetchPreparedQuery($sql, $params);
 
-      if(count($componentesCurriculares) < 1){
-        $sql = "SELECT cc.id,
+            if (count($componentesCurriculares) < 1) {
+                $sql = 'SELECT cc.id,
                        cc.nome
                   FROM pmieducar.turma AS t
                 INNER JOIN pmieducar.escola_serie_disciplina esd ON (esd.ref_ref_cod_escola = t.ref_ref_cod_escola
@@ -191,43 +196,45 @@ function getComponentesCurricularesPorSerie(){
                   AND $2 = ANY(esd.anos_letivos)
                   AND t.ativo = 1
                   AND cc.id <> COALESCE(t.ref_cod_disciplina_dispensada,0)
-                  ";
+                  ';
 
-        $params = [$turmaId, $ano];
+                $params = [$turmaId, $ano];
 
-        if ($areaConhecimentoId) {
-          $sql .= " AND area_conhecimento_id IN ({$areaConhecimentoId}) ";
-        }
-        $sql .= ' ORDER BY ac.secao,
+                if ($areaConhecimentoId) {
+                    $sql .= " AND area_conhecimento_id IN ({$areaConhecimentoId}) ";
+                }
+                $sql .= ' ORDER BY ac.secao,
                          ac.nome,
                          cc.ordenamento,
                          cc.nome ';
 
-        $componentesCurriculares = $this->fetchPreparedQuery($sql, $params);
-      }
+                $componentesCurriculares = $this->fetchPreparedQuery($sql, $params);
+            }
 
-      $componentesCurriculares = Portabilis_Array_Utils::setAsIdValue($componentesCurriculares, 'id', 'nome');
+            $componentesCurriculares = Portabilis_Array_Utils::setAsIdValue($componentesCurriculares, 'id', 'nome');
 
-      return array('options' => $componentesCurriculares);
+            return ['options' => $componentesCurriculares];
+        }
     }
-  }
 
-  public function Gerar() {
-    if ($this->isRequestFor('get', 'componente_curricular-search'))
-      $this->appendResponse($this->search());
-    elseif ($this->isRequestFor('get', 'componentecurricular-search'))
-      $this->appendResponse($this->getComponentesCurricularesSearch());
-    elseif ($this->isRequestFor('get', 'componentes-curriculares'))
-      $this->appendResponse($this->getComponentesCurriculares());
-    elseif ($this->isRequestFor('get', 'componentes-curriculares-serie'))
-      $this->appendResponse($this->getComponentesCurricularesPorSerie());
-    elseif ($this->isRequestFor('get', 'componentes-curriculares-escola-serie-ano'))
-      $this->appendResponse($this->getComponentesCurricularesPorEscolaSerieAno());
-    elseif($this->isRequestFor('get', 'componentes-curriculares-for-multiple-search'))
-      $this->appendResponse($this->getComponentesCurricularesForMultipleSearch());
-    elseif($this->isRequestFor('get', 'componentes-curriculares-migrados'))
-      $this->appendResponse($this->getComponentesCurricularesMigrados());
-    else
-      $this->notImplementedOperationError();
-  }
+    public function Gerar()
+    {
+        if ($this->isRequestFor('get', 'componente_curricular-search')) {
+            $this->appendResponse($this->search());
+        } elseif ($this->isRequestFor('get', 'componentecurricular-search')) {
+            $this->appendResponse($this->getComponentesCurricularesSearch());
+        } elseif ($this->isRequestFor('get', 'componentes-curriculares')) {
+            $this->appendResponse($this->getComponentesCurriculares());
+        } elseif ($this->isRequestFor('get', 'componentes-curriculares-serie')) {
+            $this->appendResponse($this->getComponentesCurricularesPorSerie());
+        } elseif ($this->isRequestFor('get', 'componentes-curriculares-escola-serie-ano')) {
+            $this->appendResponse($this->getComponentesCurricularesPorEscolaSerieAno());
+        } elseif ($this->isRequestFor('get', 'componentes-curriculares-for-multiple-search')) {
+            $this->appendResponse($this->getComponentesCurricularesForMultipleSearch());
+        } elseif ($this->isRequestFor('get', 'componentes-curriculares-migrados')) {
+            $this->appendResponse($this->getComponentesCurricularesMigrados());
+        } else {
+            $this->notImplementedOperationError();
+        }
+    }
 }

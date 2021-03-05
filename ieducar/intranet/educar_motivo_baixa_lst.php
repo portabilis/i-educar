@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -115,13 +113,11 @@ return new class extends clsListagem
         $this->breadcrumb('Listagem de motivos de baixa', [
             url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Motivo Baixa";
+        $this->title = 'i-Educar - Motivo Baixa';
         $this->processoAp = '600';
     }
 };
-

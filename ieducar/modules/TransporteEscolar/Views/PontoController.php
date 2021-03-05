@@ -2,7 +2,6 @@
 
 use iEducar\Modules\Addressing\LegacyAddressingFields;
 
-
 class PontoController extends Portabilis_Controller_Page_EditController
 {
     use LegacyAddressingFields;

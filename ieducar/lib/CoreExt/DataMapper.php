@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Session;
-
 abstract class CoreExt_DataMapper
 {
     /**
@@ -540,7 +538,6 @@ abstract class CoreExt_DataMapper
         $sql = $this->_getFindAllStatment($columns, $where, $orderBy);
 
         if ($this->_getDbAdapter()->execPreparedQuery($sql, $params) != false) {
-
             while ($this->_getDbAdapter()->ProximoRegistro()) {
                 $list[] = $this->_createEntityObject($this->_getDbAdapter()->Tupla());
             }

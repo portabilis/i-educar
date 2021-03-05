@@ -1,9 +1,6 @@
 <?php
 
-
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $ano;
@@ -64,13 +61,11 @@ return new class extends clsCadastro
 
         $this->nome_url_sucesso = 'Exportar';
         $this->acao_enviar      = ' ';
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Nova exporta&ccedil;&atilde;o";
+        $this->title = 'i-Educar - Nova exporta&ccedil;&atilde;o';
         $this->processoAp = 999869;
     }
 };
-

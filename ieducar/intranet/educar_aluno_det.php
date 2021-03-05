@@ -10,9 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     public $titulo;
     public $cod_aluno;
     public $ref_idpes_responsavel;
@@ -945,14 +943,11 @@ return new class extends clsDetalhe
         }
 
         return $this->urlPresigner;
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Aluno";
+        $this->title = 'i-Educar - Aluno';
         $this->processoAp = 578;
     }
 };
-
-

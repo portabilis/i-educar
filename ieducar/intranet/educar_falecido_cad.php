@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -119,14 +117,11 @@ return new class extends clsCadastro
         $this->mensagem = 'A alteração não pode ser realizado.<br>';
 
         return false;
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Transfer&ecirc;ncia Solicita&ccedil;&atilde;o";
+        $this->title = 'i-Educar - Transfer&ecirc;ncia Solicita&ccedil;&atilde;o';
         $this->processoAp = '578';
     }
 };
-
-

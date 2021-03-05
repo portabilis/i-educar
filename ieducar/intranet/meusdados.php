@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $nome;
 
     public $ddd_telefone;
@@ -348,14 +346,11 @@ return new class extends clsCadastro
             $obj = new clsCadastroFisicaFoto($id);
             $obj->excluir();
         }
-
     }
 
     public function Formular()
     {
-        $this->title = "Configurações - Meus dados";
+        $this->title = 'Configurações - Meus dados';
         $this->processoAp = '0';
     }
 };
-
-

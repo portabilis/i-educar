@@ -16,10 +16,7 @@ use iEducar\Modules\Educacenso\Data\Registro30 as Registro30Data;
 use iEducar\Modules\Educacenso\Data\Registro40 as Registro40Data;
 use iEducar\Modules\Educacenso\Data\Registro50 as Registro50Data;
 use iEducar\Modules\Educacenso\Data\Registro60 as Registro60Data;
-use iEducar\Modules\Educacenso\Deficiencia\DeficienciaMultiplaAluno;
-use iEducar\Modules\Educacenso\Deficiencia\DeficienciaMultiplaProfessor;
 use iEducar\Modules\Educacenso\Deficiencia\MapeamentoDeficienciasAluno;
-use iEducar\Modules\Educacenso\Deficiencia\ValueDeficienciaMultipla;
 use iEducar\Modules\Educacenso\ExportRule\CargoGestor;
 use iEducar\Modules\Educacenso\ExportRule\ComponentesCurriculares;
 use iEducar\Modules\Educacenso\ExportRule\CriterioAcessoGestor;
@@ -37,98 +34,99 @@ use iEducar\Modules\Educacenso\ExportRule\TransporteEscolarPublico;
 use iEducar\Modules\Educacenso\ExportRule\TurmaMulti;
 use iEducar\Modules\Educacenso\ExportRule\VeiculoTransporte;
 use iEducar\Modules\Educacenso\Formatters;
-use iEducar\Modules\Educacenso\ValueTurmaMaisEducacao;
-use Illuminate\Support\Facades\Session;
-
 
 /**
  * Class EducacensoExportController
+ *
  * @deprecated Essa versão da API pública será descontinuada
  */
 class EducacensoExportController extends ApiCoreController
 {
     use Formatters;
 
-    var $ref_cod_escola;
-    var $ref_cod_escola_;
-    var $ref_cod_serie;
-    var $ref_cod_serie_;
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $hora_inicial;
-    var $hora_final;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
-    var $hora_inicio_intervalo;
-    var $hora_fim_intervalo;
-    var $hora_fim_intervalo_;
+    public $ref_cod_escola;
+    public $ref_cod_escola_;
+    public $ref_cod_serie;
+    public $ref_cod_serie_;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $hora_inicial;
+    public $hora_final;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $hora_inicio_intervalo;
+    public $hora_fim_intervalo;
+    public $hora_fim_intervalo_;
 
-    var $ano;
-    var $ref_cod_instituicao;
-    var $msg = "";
-    var $error = false;
+    public $ano;
+    public $ref_cod_instituicao;
+    public $msg = '';
+    public $error = false;
 
-    var $turma_presencial_ou_semi;
+    public $turma_presencial_ou_semi;
 
     const TECNOLOGO = 1;
     const LICENCIATURA = 2;
     const BACHARELADO = 3;
 
-
     protected function educacensoExport()
     {
-
         $escola = $this->getRequest()->escola;
         $ano = $this->getRequest()->ano;
         $data_ini = $this->getRequest()->data_ini;
         $data_fim = $this->getRequest()->data_fim;
 
-        $conteudo = $this->exportaDadosCensoPorEscola($escola,
+        $conteudo = $this->exportaDadosCensoPorEscola(
+            $escola,
             $ano,
             Portabilis_Date_Utils::brToPgSQL($data_ini),
-            Portabilis_Date_Utils::brToPgSQL($data_fim));
+            Portabilis_Date_Utils::brToPgSQL($data_fim)
+        );
 
         if ($this->error) {
-            return array(
-                "error" => true,
-                "mensagem" => $this->msg
-            );
+            return [
+                'error' => true,
+                'mensagem' => $this->msg
+            ];
         }
 
-        return array('conteudo' => $conteudo);
+        return ['conteudo' => $conteudo];
     }
 
     protected function educacensoExportFase2()
     {
-
         $escola = $this->getRequest()->escola;
         $ano = $this->getRequest()->ano;
         $data_ini = $this->getRequest()->data_ini;
         $data_fim = $this->getRequest()->data_fim;
 
-        $conteudo = $this->exportaDadosCensoPorEscolaFase2($escola,
+        $conteudo = $this->exportaDadosCensoPorEscolaFase2(
+            $escola,
             $ano,
             Portabilis_Date_Utils::brToPgSQL($data_ini),
-            Portabilis_Date_Utils::brToPgSQL($data_fim));
+            Portabilis_Date_Utils::brToPgSQL($data_fim)
+        );
 
         if ($this->error) {
-            return array(
-                "error" => true,
-                "mensagem" => $this->msg
-            );
+            return [
+                'error' => true,
+                'mensagem' => $this->msg
+            ];
         }
 
-        return array('conteudo' => $conteudo);
+        return ['conteudo' => $conteudo];
     }
 
     protected function exportaDadosCensoPorEscola($escolaId, $ano, $data_ini, $data_fim)
     {
-
-
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(846, $this->pessoa_logada, 7,
-            'educar_index.php');
+        $obj_permissoes->permissao_cadastra(
+            846,
+            $this->pessoa_logada,
+            7,
+            'educar_index.php'
+        );
         $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
         $continuaExportacao = true;
         $export = $this->exportaDadosRegistro00($escolaId, $ano, $continuaExportacao);
@@ -147,16 +145,19 @@ class EducacensoExportController extends ApiCoreController
         }
 
         $export .= $this->exportaDadosRegistro99();
+
         return $export;
     }
 
     protected function exportaDadosCensoPorEscolaFase2($escolaId, $ano, $data_ini, $data_fim)
     {
-
-
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(846, $this->pessoa_logada, 7,
-            'educar_index.php');
+        $obj_permissoes->permissao_cadastra(
+            846,
+            $this->pessoa_logada,
+            7,
+            'educar_index.php'
+        );
         $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
 
         $export = $this->exportaDadosRegistro89($escolaId);
@@ -205,8 +206,10 @@ class EducacensoExportController extends ApiCoreController
                       AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
                       LIMIT 1) IS NOT NULL';
 
-        return Portabilis_Utils_Database::fetchPreparedQuery($sql,
-            array('params' => array($escolaId, $ano, $data_ini, $data_fim)));
+        return Portabilis_Utils_Database::fetchPreparedQuery(
+            $sql,
+            ['params' => [$escolaId, $ano, $data_ini, $data_fim]]
+        );
     }
 
     protected function getMatriculasTurma($escolaId, $ano, $data_ini, $data_fim, $turmaId)
@@ -228,8 +231,11 @@ class EducacensoExportController extends ApiCoreController
          AND mt.ref_cod_turma = $5
          AND m.ativo = 1
     ';
-        return Portabilis_Utils_Database::fetchPreparedQuery($sql,
-            array('params' => array($escolaId, $ano, $data_ini, $data_fim, $turmaId)));
+
+        return Portabilis_Utils_Database::fetchPreparedQuery(
+            $sql,
+            ['params' => [$escolaId, $ano, $data_ini, $data_fim, $turmaId]]
+        );
     }
 
     protected function getMatriculasTurmaAposData($escolaId, $ano, $data_ini, $data_fim, $turmaId)
@@ -254,7 +260,8 @@ class EducacensoExportController extends ApiCoreController
         AND i.data_educacenso IS NOT NULL
         AND m.ativo = 1
     ';
-        return Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $turmaId)));
+
+        return Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => [$escolaId, $ano, $turmaId]]);
     }
 
     protected function exportaDadosRegistro00($escolaId, $ano, &$continuaExportacao)
@@ -342,7 +349,7 @@ class EducacensoExportController extends ApiCoreController
         $registro20 = new Registro20Data($educacensoRepository, $registro20Model);
         $data = $registro20->getExportFormatData($escolaId, $ano);
 
-        return implode(PHP_EOL, array_map(function($record) {
+        return implode(PHP_EOL, array_map(function ($record) {
             return ArrayToCenso::format($record);
         }, $data)) . PHP_EOL;
     }
@@ -621,12 +628,12 @@ class EducacensoExportController extends ApiCoreController
 
     protected function exportaDadosRegistro99()
     {
-        return "99|";
+        return '99|';
     }
 
     protected function exportaDadosRegistro89($escolaId)
     {
-        $sql = "SELECT '89' AS r89s1,
+        $sql = 'SELECT \'89\' AS r89s1,
                    educacenso_cod_escola.cod_escola_inep AS r89s2,
                    gestor_f.cpf AS r89s3,
                    gestor_p.nome AS r89s4,
@@ -636,15 +643,15 @@ class EducacensoExportController extends ApiCoreController
               LEFT JOIN modules.educacenso_cod_escola ON (educacenso_cod_escola.cod_escola = escola.cod_escola)
               LEFT JOIN cadastro.fisica gestor_f ON (gestor_f.idpes = escola.ref_idpes_gestor)
               LEFT JOIN cadastro.pessoa gestor_p ON (gestor_p.idpes = escola.ref_idpes_gestor)
-             WHERE escola.cod_escola = $1";
+             WHERE escola.cod_escola = $1';
 
         $numeroRegistros = 6;
         $return = '';
 
-        extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array(
+        extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, [
             'return_only' => 'first-row',
-            'params' => array($escolaId)
-        )));
+            'params' => [$escolaId]
+        ]));
 
         $r89s3 = $this->cpfToCenso($r89s3);
         $r89s4 = $this->convertStringToAlpha($r89s4);
@@ -654,7 +661,7 @@ class EducacensoExportController extends ApiCoreController
             $return .= ${'r89s' . $i} . '|';
         }
 
-        $return = substr_replace($return, "", -1);
+        $return = substr_replace($return, '', -1);
         $return .= "\n";
 
         return $return;
@@ -662,8 +669,7 @@ class EducacensoExportController extends ApiCoreController
 
     protected function exportaDadosRegistro90($escolaId, $turmaId, $matriculaId)
     {
-
-        $sql = "SELECT '90' AS r90s1,
+        $sql = 'SELECT \'90\' AS r90s1,
                    educacenso_cod_escola.cod_escola_inep AS r90s2,
                    educacenso_cod_aluno.cod_aluno_inep AS r90s5,
                    matricula.ref_cod_aluno AS r90s6,
@@ -673,15 +679,15 @@ class EducacensoExportController extends ApiCoreController
             INNER JOIN modules.educacenso_cod_escola ON (escola.cod_escola = educacenso_cod_escola.cod_escola)
              LEFT JOIN modules.educacenso_cod_aluno ON (educacenso_cod_aluno.cod_aluno = matricula.ref_cod_aluno)
             WHERE escola.cod_escola = $1
-              AND matricula.cod_matricula = $2";
+              AND matricula.cod_matricula = $2';
 
         $numeroRegistros = 8;
         $return = '';
 
-        extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array(
+        extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, [
             'return_only' => 'first-row',
-            'params' => array($escolaId, $matriculaId)
-        )));
+            'params' => [$escolaId, $matriculaId]
+        ]));
 
         $turma = new clsPmieducarTurma($turmaId);
         $inep = $turma->getInep();
@@ -724,7 +730,7 @@ class EducacensoExportController extends ApiCoreController
             $return .= ${'r90s' . $i} . '|';
         }
 
-        $return = substr_replace($return, "", -1);
+        $return = substr_replace($return, '', -1);
         $return .= "\n";
 
         return $return;
@@ -732,8 +738,7 @@ class EducacensoExportController extends ApiCoreController
 
     protected function exportaDadosRegistro91($escolaId, $turmaId, $matriculaId)
     {
-
-        $sql = "SELECT '91' AS r91s1,
+        $sql = 'SELECT \'91\' AS r91s1,
                    educacenso_cod_escola.cod_escola_inep AS r91s2,
                    educacenso_cod_aluno.cod_aluno_inep AS r91s5,
                    matricula.ref_cod_aluno AS r91s6,
@@ -745,15 +750,15 @@ class EducacensoExportController extends ApiCoreController
              LEFT JOIN modules.educacenso_cod_aluno ON (educacenso_cod_aluno.cod_aluno = matricula.ref_cod_aluno)
             INNER JOIN pmieducar.curso ON (curso.cod_curso = matricula.ref_cod_curso)
             WHERE escola.cod_escola = $1
-              AND matricula.cod_matricula = $2";
+              AND matricula.cod_matricula = $2';
 
         $numeroRegistros = 11;
         $return = '';
 
-        extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array(
+        extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, [
             'return_only' => 'first-row',
-            'params' => array($escolaId, $matriculaId)
-        )));
+            'params' => [$escolaId, $matriculaId]
+        ]));
 
         $turma = new clsPmieducarTurma($turmaId);
         $inep = $turma->getInep();
@@ -767,7 +772,7 @@ class EducacensoExportController extends ApiCoreController
         $anoConcluinte = $serie['concluinte'] == 2;
         $etapaEducacenso = $turma['etapa_educacenso'];
 
-        $etapasValidasEducacenso = array(3, 12, 13, 22, 23, 24, 56, 64, 72);
+        $etapasValidasEducacenso = [3, 12, 13, 22, 23, 24, 56, 64, 72];
 
         $tipoMediacaoDidaticoPedagogico = $turma['tipo_mediacao_didatico_pedagogico'];
 
@@ -804,7 +809,7 @@ class EducacensoExportController extends ApiCoreController
             $return .= ${'r91s' . $i} . '|';
         }
 
-        $return = substr_replace($return, "", -1);
+        $return = substr_replace($return, '', -1);
         $return .= "\n";
 
         return $return;
@@ -826,6 +831,7 @@ class EducacensoExportController extends ApiCoreController
      *
      * @param $grauAcademico
      * @param $situacao
+     *
      * @return bool
      */
     private function isCursoSuperiorBachareladoOuTecnologoCompleto($grauAcademico, $situacao): bool

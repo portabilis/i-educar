@@ -1,6 +1,5 @@
 <?php
 
-
 interface CoreExt_Validate_Interface extends CoreExt_Configurable
 {
     /**

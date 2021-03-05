@@ -3,9 +3,7 @@
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     public $titulo;
 
     public $cod_serie_vaga;
@@ -84,14 +82,11 @@ return new class extends clsDetalhe
         $this->breadcrumb('Detalhe de vagas da série', [
         url('intranet/educar_index.php') => 'Escola',
     ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Vagas por série";
+        $this->title = 'i-Educar - Vagas por série';
         $this->processoAp = 21253;
     }
 };
-
-

@@ -1,6 +1,5 @@
 <?php
 
-
 class Portabilis_View_Helper_Input_Select extends Portabilis_View_Helper_Input_Core
 {
     public function select($attrName, $options = [])

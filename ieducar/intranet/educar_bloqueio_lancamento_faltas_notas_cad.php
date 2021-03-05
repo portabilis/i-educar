@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $cod_bloqueio;
@@ -171,14 +169,11 @@ return new class extends clsCadastro
         $this->mensagem = 'Exclus&atilde;o nÃ£o realizada.<br />';
 
         return false;
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Bloqueio de lanÃ§amento de notas e faltas por etapa";
+        $this->title = 'i-Educar - Bloqueio de lanÃ§amento de notas e faltas por etapa';
         $this->processoAp = 999848;
     }
 };
-
-

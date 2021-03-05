@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     public function Gerar()
     {
         $this->titulo = 'Vínculos';
@@ -54,14 +52,11 @@ return new class extends clsListagem
         $this->nome_acao = 'Novo';
 
         $this->breadcrumb('Listagem de v&iacute;nculos');
-
     }
 
     public function Formular()
     {
-        $this->title = "Vínculo Funcionários!";
+        $this->title = 'Vínculo Funcionários!';
         $this->processoAp = '190';
     }
 };
-
-

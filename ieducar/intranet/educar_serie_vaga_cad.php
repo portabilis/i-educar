@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $cod_serie_vaga;
@@ -160,14 +158,11 @@ return new class extends clsCadastro
         $this->mensagem = 'Exclus&atilde;o nÃ£o realizada.<br />';
 
         return false;
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Vagas por sÃ©rie";
+        $this->title = 'i-Educar - Vagas por sÃ©rie';
         $this->processoAp = 21253;
     }
 };
-
-

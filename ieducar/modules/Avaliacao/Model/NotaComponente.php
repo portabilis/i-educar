@@ -1,7 +1,5 @@
 <?php
 
-
-
 /**
  * Class Avaliacao_Model_NotaComponente
  */

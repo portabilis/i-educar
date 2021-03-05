@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $cod_rota;
 
     public function Inicializar()
@@ -38,14 +36,11 @@ return new class extends clsCadastro
 
     public function Excluir()
     {
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Itinerário";
+        $this->title = 'i-Educar - Itinerário';
         $this->processoAp = '21238';
     }
 };
-
-

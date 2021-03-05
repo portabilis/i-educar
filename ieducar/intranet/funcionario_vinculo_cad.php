@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $nm_vinculo;
     public $cod_vinculo;
     public $abreviatura;
@@ -115,14 +113,11 @@ return new class extends clsCadastro
         $count = (int)$this->db->CampoUnico($sql);
 
         return $count > 0;
-
     }
 
     public function Formular()
     {
-        $this->title = "Vínculo Funcionários!";
+        $this->title = 'Vínculo Funcionários!';
         $this->processoAp = '190';
     }
 };
-
-

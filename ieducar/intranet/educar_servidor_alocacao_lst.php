@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     public $pessoa_logada;
     public $titulo;
     public $limite;
@@ -163,14 +161,11 @@ return new class extends clsListagem
         $this->breadcrumb('Registro de alocações do servidor', [
             url('intranet/educar_servidores_index.php') => 'Servidores',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "Servidores - Servidor";
+        $this->title = 'Servidores - Servidor';
         $this->processoAp = 635;
     }
 };
-
-

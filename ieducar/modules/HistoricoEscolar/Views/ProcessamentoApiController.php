@@ -2,9 +2,6 @@
 
 use Illuminate\Support\Facades\DB;
 
-
-
-
 // TODO migrar classe novo padrao api controller
 class ProcessamentoApiController extends Core_Controller_Page_EditController
 {
@@ -108,14 +105,21 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
     protected function requiresLogin($raiseExceptionOnEmpty)
     {
-        return $this->validatesPresenceOf(\Illuminate\Support\Facades\Auth::id(), '', $raiseExceptionOnEmpty,
-            'Usuário deve estar logado');
+        return $this->validatesPresenceOf(
+            \Illuminate\Support\Facades\Auth::id(),
+            '',
+            $raiseExceptionOnEmpty,
+            'Usuário deve estar logado'
+        );
     }
 
     protected function validatesPresenceOfInstituicaoId($raiseExceptionOnEmpty)
     {
-        return $this->validatesPresenceOf($this->getRequest()->instituicao_id, 'instituicao_id',
-            $raiseExceptionOnEmpty);
+        return $this->validatesPresenceOf(
+            $this->getRequest()->instituicao_id,
+            'instituicao_id',
+            $raiseExceptionOnEmpty
+        );
     }
 
     protected function validatesPresenceOfEscolaId($raiseExceptionOnEmpty)
@@ -130,8 +134,13 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
     protected function validatesPresenceOfSerieId($raiseExceptionOnEmpty, $addMsgOnEmpty = true)
     {
-        return $this->validatesPresenceOf($this->getRequest()->serie_id, 'serie_id', $raiseExceptionOnEmpty, '',
-            $addMsgOnEmpty);
+        return $this->validatesPresenceOf(
+            $this->getRequest()->serie_id,
+            'serie_id',
+            $raiseExceptionOnEmpty,
+            '',
+            $addMsgOnEmpty
+        );
     }
 
     protected function validatesPresenceOfAno($raiseExceptionOnEmpty)
@@ -165,10 +174,18 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
     protected function validatesPresenceAndValueInDbOfGradeCursoId($raiseExceptionOnError)
     {
-        return $this->validatesPresenceOf($this->getRequest()->grade_curso_id, 'grade_curso_id',
-                $raiseExceptionOnError) &&
-            $this->validatesValueIsInBd('id', $this->getRequest()->grade_curso_id, 'pmieducar', 'historico_grade_curso',
-                $raiseExceptionOnError);
+        return $this->validatesPresenceOf(
+            $this->getRequest()->grade_curso_id,
+            'grade_curso_id',
+            $raiseExceptionOnError
+        ) &&
+            $this->validatesValueIsInBd(
+                'id',
+                $this->getRequest()->grade_curso_id,
+                'pmieducar',
+                'historico_grade_curso',
+                $raiseExceptionOnError
+            );
     }
 
     protected function validatesPresenceOfDiasLetivos($raiseExceptionOnEmpty)
@@ -192,8 +209,12 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
         if ($result) {
             $expectedAtts = ['matriculas', 'processamento', 'historico'];
-            $result = $this->validatesValueInSetOf($this->getRequest()->att, $expectedAtts, 'att',
-                $raiseExceptionOnError);
+            $result = $this->validatesValueInSetOf(
+                $this->getRequest()->att,
+                $expectedAtts,
+                'att',
+                $raiseExceptionOnError
+            );
         }
 
         return $result;
@@ -205,8 +226,12 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
         if ($result) {
             $expectedOpers = ['post', 'get', 'delete'];
-            $result = $this->validatesValueInSetOf($this->getRequest()->oper, $expectedOpers, 'oper',
-                $raiseExceptionOnError);
+            $result = $this->validatesValueInSetOf(
+                $this->getRequest()->oper,
+                $expectedOpers,
+                'oper',
+                $raiseExceptionOnError
+            );
         }
 
         return $result;
@@ -214,13 +239,20 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
     protected function validatesPresenceAndValueInSetOfExtraCurricular($raiseExceptionOnError)
     {
-        $result = $this->validatesPresenceOf($this->getRequest()->extra_curricular, 'extra_curricular',
-            $raiseExceptionOnError);
+        $result = $this->validatesPresenceOf(
+            $this->getRequest()->extra_curricular,
+            'extra_curricular',
+            $raiseExceptionOnError
+        );
 
         if ($result) {
             $expectedOpers = [0, 1];
-            $result = $this->validatesValueInSetOf($this->getRequest()->extra_curricular, $expectedOpers,
-                'extra_curricular', $raiseExceptionOnError);
+            $result = $this->validatesValueInSetOf(
+                $this->getRequest()->extra_curricular,
+                $expectedOpers,
+                'extra_curricular',
+                $raiseExceptionOnError
+            );
         }
 
         return $result;
@@ -229,12 +261,18 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     protected function validatesPresenceAndValueOfPercentualFrequencia($raiseExceptionOnError)
     {
         $name = 'percentual_frequencia';
-        $isValid = $this->validatesPresenceOf($this->getRequest()->percentual_frequencia, $name,
-            $raiseExceptionOnError);
+        $isValid = $this->validatesPresenceOf(
+            $this->getRequest()->percentual_frequencia,
+            $name,
+            $raiseExceptionOnError
+        );
 
         if ($isValid && $this->getRequest()->percentual_frequencia != 'buscar-boletim') {
-            $isValid = $this->validatesValueIsNumeric($this->getRequest()->percentual_frequencia, $name,
-                $raiseExceptionOnError);
+            $isValid = $this->validatesValueIsNumeric(
+                $this->getRequest()->percentual_frequencia,
+                $name,
+                $raiseExceptionOnError
+            );
         }
 
         return $isValid;
@@ -263,16 +301,25 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         $isValid = $this->validatesPresenceOf($this->getRequest()->disciplinas, $name, $raiseExceptionOnError);
 
         if ($isValid && $this->getRequest()->disciplinas != 'buscar-boletim') {
-            $isValid = $this->validatesValueIsArray($this->getRequest()->disciplinas, 'disciplinas',
-                $raiseExceptionOnError);
+            $isValid = $this->validatesValueIsArray(
+                $this->getRequest()->disciplinas,
+                'disciplinas',
+                $raiseExceptionOnError
+            );
             if ($isValid) {
                 foreach ($this->getRequest()->disciplinas as $disciplina) {
-                    $isValid = $this->validatesPresenceOf($disciplina['nome'], 'nome (para todas disciplinas)',
-                        $raiseExceptionOnError);
+                    $isValid = $this->validatesPresenceOf(
+                        $disciplina['nome'],
+                        'nome (para todas disciplinas)',
+                        $raiseExceptionOnError
+                    );
 
                     if ($isValid && isset($disciplina['falta']) && trim($disciplina['falta']) != '') {
-                        $isValid = $this->validatesValueIsNumeric($disciplina['falta'],
-                            'falta (para todas disciplinas)', $raiseExceptionOnError);
+                        $isValid = $this->validatesValueIsNumeric(
+                            $disciplina['falta'],
+                            'falta (para todas disciplinas)',
+                            $raiseExceptionOnError
+                        );
                     }
                 }
             }
@@ -288,8 +335,12 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
         if ($isValid) {
             $expectedOpers = ['buscar-matricula', 'aprovado', 'reprovado', 'em-andamento', 'transferido', 'reclassificado', 'abandono'];
-            $isValid = $this->validatesValueInSetOf($this->getRequest()->situacao, $expectedOpers, $name,
-                $raiseExceptionOnError);
+            $isValid = $this->validatesValueInSetOf(
+                $this->getRequest()->situacao,
+                $expectedOpers,
+                $name,
+                $raiseExceptionOnError
+            );
         }
 
         return $isValid;
@@ -298,8 +349,13 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     /* esta funcao só pode ser chamada após setar $this->getService() */
     protected function validatesPresenceOfComponenteCurricularId($raiseExceptionOnEmpty, $addMsgOnEmpty = true)
     {
-        return $this->validatesPresenceOf($this->getRequest()->componente_curricular_id, 'componente_curricular_id',
-            $raiseExceptionOnEmpty, $msg = '', $addMsgOnEmpty);
+        return $this->validatesPresenceOf(
+            $this->getRequest()->componente_curricular_id,
+            'componente_curricular_id',
+            $raiseExceptionOnEmpty,
+            $msg = '',
+            $addMsgOnEmpty
+        );
     }
 
     protected function canAcceptRequest()
@@ -341,8 +397,10 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             $sql = 'select 1 from pmieducar.matricula where cod_matricula = $1 and ativo = 1';
 
             if (!Portabilis_Utils_Database::selectField($sql, $this->getRequest()->matricula_id)) {
-                $this->appendMsg("A matricula {$this->getRequest()->matricula_id} não existe ou esta desativa",
-                    'error');
+                $this->appendMsg(
+                    "A matricula {$this->getRequest()->matricula_id} não existe ou esta desativa",
+                    'error'
+                );
                 $canPost = false;
             }
         }
@@ -778,11 +836,12 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                 }
             }
             if ($processarMediaGeral) {
-                $componentesCurriculares['media_geral'] = $this->insereComponenteMediaGeral($historicoSequencial,
-                    $alunoId);
+                $componentesCurriculares['media_geral'] = $this->insereComponenteMediaGeral(
+                    $historicoSequencial,
+                    $alunoId
+                );
             }
         } else {
-
             $i = 0;
 
             foreach ($this->getRequest()->disciplinas as $disciplina) {
@@ -1036,10 +1095,17 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                     $matricula['nome_curso'] = $this->toUtf8($aluno['nm_curso']);
                     $matricula['nome_serie'] = $this->toUtf8($this->getNomeSerie($aluno['ref_ref_cod_serie']));
                     $matricula['nome_turma'] = $this->toUtf8($aluno['nm_turma']);
-                    $matricula['situacao_historico'] = $this->getSituacaoHistorico($aluno['ref_cod_aluno'],
-                        $this->getRequest()->ano, $matriculaId, $reload = true);
-                    $matricula['link_to_historico'] = $this->getLinkToHistorico($aluno['ref_cod_aluno'],
-                        $this->getRequest()->ano, $matriculaId);
+                    $matricula['situacao_historico'] = $this->getSituacaoHistorico(
+                        $aluno['ref_cod_aluno'],
+                        $this->getRequest()->ano,
+                        $matriculaId,
+                        $reload = true
+                    );
+                    $matricula['link_to_historico'] = $this->getLinkToHistorico(
+                        $aluno['ref_cod_aluno'],
+                        $this->getRequest()->ano,
+                        $matriculaId
+                    );
                     $matriculas[] = $matricula;
                 }
             }
@@ -1067,14 +1133,15 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         try {
             $this->getService()->save();
         } catch (CoreExt_Service_Exception $e) {
-
         }
     }
 
     /**
      * @param bool $raiseExceptionOnErrors
      * @param bool $appendMsgOnErrors
+     *
      * @return Avaliacao_Service_Boletim|null
+     *
      * @throws Exception
      */
     protected function getService($raiseExceptionOnErrors = false, $appendMsgOnErrors = true)
@@ -1127,8 +1194,11 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
                 return true;
             } catch (Exception $e) {
-                $this->appendMsg('Exception ao instanciar serviço boletim: ' . $e->getMessage(), 'error',
-                    $encodeToUtf8 = true);
+                $this->appendMsg(
+                    'Exception ao instanciar serviço boletim: ' . $e->getMessage(),
+                    'error',
+                    $encodeToUtf8 = true
+                );
             }
         }
 

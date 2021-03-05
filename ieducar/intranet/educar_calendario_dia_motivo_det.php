@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     /**
      * Titulo no topo da pagina
      *
@@ -79,14 +77,11 @@ return new class extends clsDetalhe
         $this->breadcrumb('Detalhe do motivo de dias do calendário', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Calend&aacute;rio Dia Motivo";
+        $this->title = 'i-Educar - Calend&aacute;rio Dia Motivo';
         $this->processoAp = '576';
     }
 };
-
-

@@ -1,6 +1,5 @@
 <?php
 
-
 class clsOcupacao
 {
     public $idocup;

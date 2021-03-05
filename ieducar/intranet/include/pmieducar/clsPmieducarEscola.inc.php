@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarEscola extends Model
 {
     public $cod_escola;
@@ -178,15 +177,15 @@ class clsPmieducarEscola extends Model
           ';
 
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
 
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
 
         if (is_numeric($ref_cod_instituicao)) {
-                    $this->ref_cod_instituicao = $ref_cod_instituicao;
+            $this->ref_cod_instituicao = $ref_cod_instituicao;
         }
 
         if (is_numeric($zona_localizacao)) {
@@ -194,11 +193,11 @@ class clsPmieducarEscola extends Model
         }
 
         if (is_numeric($ref_cod_escola_rede_ensino)) {
-                    $this->ref_cod_escola_rede_ensino = $ref_cod_escola_rede_ensino;
+            $this->ref_cod_escola_rede_ensino = $ref_cod_escola_rede_ensino;
         }
 
         if (is_numeric($ref_idpes)) {
-                    $this->ref_idpes = $ref_idpes;
+            $this->ref_idpes = $ref_idpes;
         }
 
         if (is_numeric($cod_escola)) {

@@ -1,9 +1,6 @@
 <?php
 
-
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Titulo no topo da pagina
      *
@@ -228,14 +225,11 @@ return new class extends clsListagem
         Portabilis_View_Helper_Application::loadJavascript($this, ['/intranet/scripts/exporter.js']);
 
         $this->breadcrumb('Alunos', ['/intranet/educar_index.php' => 'Escola']);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Aluno";
+        $this->title = 'i-Educar - Aluno';
         $this->processoAp = '578';
     }
 };
-
-

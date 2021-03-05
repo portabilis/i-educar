@@ -8,9 +8,7 @@ use iEducar\Modules\Educacenso\Model\TipoMediacaoDidaticoPedagogico;
 use iEducar\Modules\Servidores\Model\FuncaoExercida;
 use iEducar\Support\View\SelectOptions;
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $id;
@@ -382,14 +380,11 @@ return new class extends clsCadastro
         }
 
         return false;
-
     }
 
     public function Formular()
     {
-        $this->title = "Servidores - Servidor vínculo turma";
+        $this->title = 'Servidores - Servidor vínculo turma';
         $this->processoAp = 635;
     }
 };
-
-

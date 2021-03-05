@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     public $pessoa_logada;
     public $titulo;
     public $limite;
@@ -168,14 +166,11 @@ return new class extends clsListagem
         $this->breadcrumb('Disciplinas de dependência', [
         url('intranet/educar_index.php') => 'Escola',
     ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Disciplina de dependência";
+        $this->title = 'i-Educar - Disciplina de dependência';
         $this->processoAp = 578;
     }
 };
-
-

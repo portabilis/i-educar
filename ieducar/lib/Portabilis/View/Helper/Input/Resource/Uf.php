@@ -3,7 +3,6 @@
 use App\Models\Country;
 use App\Models\State;
 
-
 class Portabilis_View_Helper_Input_Resource_Uf extends Portabilis_View_Helper_Input_CoreSelect
 {
     protected function inputOptions($options)

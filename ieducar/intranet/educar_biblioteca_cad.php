@@ -2,9 +2,7 @@
 
 use Illuminate\Support\Facades\Session;
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $cod_biblioteca;
     public $ref_cod_instituicao;
     public $ref_cod_escola;

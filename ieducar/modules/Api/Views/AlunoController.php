@@ -1,22 +1,18 @@
 <?php
 
 use App\Models\Educacenso\Registro30;
-use App\Models\LegacyDeficiency;
 use App\Models\Individual;
+use App\Models\LegacyDeficiency;
 use App\Models\LogUnification;
-use iEducar\Modules\Educacenso\Model\Deficiencias;
+use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
 use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
 use iEducar\Modules\Educacenso\Validator\InepExamValidator;
-use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
 use iEducar\Modules\Educacenso\Validator\NisValidator;
 use iEducar\Modules\People\CertificateType;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
-
 
 class AlunoController extends ApiCoreController
 {
-
     protected $_processoAp = 578;
     protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
 
@@ -253,6 +249,7 @@ class AlunoController extends ApiCoreController
             return true;
         } else {
             $this->messenger->append($validator->getMessage());
+
             return false;
         }
     }
@@ -275,6 +272,7 @@ class AlunoController extends ApiCoreController
         }
 
         $this->messenger->append($validator->getMessage());
+
         return false;
     }
 
@@ -290,10 +288,11 @@ class AlunoController extends ApiCoreController
         }
 
         $this->messenger->append($validator->getMessage());
+
         return false;
     }
 
-        /**
+    /**
      * @return bool
      */
     private function validateTechnologicalResources()
@@ -302,6 +301,7 @@ class AlunoController extends ApiCoreController
 
         if (in_array('Nenhum', $technologicalResources) && count($technologicalResources) > 1) {
             $this->messenger->append('Não é possível informar mais de uma opção no campo: <strong>Possui acesso à recursos tecnológicos?</strong>, quando a opção: <b>Nenhum</b> estiver selecionada.');
+
             return false;
         }
 
@@ -325,6 +325,7 @@ class AlunoController extends ApiCoreController
         }
 
         $this->messenger->append($validator->getMessage());
+
         return false;
     }
 
@@ -1236,7 +1237,6 @@ class AlunoController extends ApiCoreController
     protected function getTodosAlunos()
     {
         if ($this->canGetTodosAlunos()) {
-
             $modified = $this->getRequest()->modified;
             $escola = $this->getRequest()->escola;
             $ano = $this->getRequest()->ano ?? null;
@@ -1265,7 +1265,7 @@ class AlunoController extends ApiCoreController
             }
 
             if ($cursando) {
-                $whereCursando = " AND aprovado = 3";
+                $whereCursando = ' AND aprovado = 3';
             }
 
             $sql = "
@@ -1502,6 +1502,7 @@ class AlunoController extends ApiCoreController
 
         if (!empty($maeId) && !empty($paiId) && $maeId == $paiId) {
             $this->messenger->append('Não é possível informar a mesma pessoa para Pai e Mãe.');
+
             return false;
         }
 
@@ -1999,7 +2000,7 @@ class AlunoController extends ApiCoreController
 
         $unificationsQuery = LogUnification::query();
         $unificationsQuery->whereHas('studentMain', function ($studentQuery) use ($arrayEscola) {
-            $studentQuery->whereHas('registrations', function ($registrationsQuery) use ($arrayEscola){
+            $studentQuery->whereHas('registrations', function ($registrationsQuery) use ($arrayEscola) {
                 $registrationsQuery->whereIn('school_id', $arrayEscola);
             });
         });

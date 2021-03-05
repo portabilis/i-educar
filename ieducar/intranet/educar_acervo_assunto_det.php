@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     /**
      * Titulo no topo da pagina
      *
@@ -51,14 +49,11 @@ return new class extends clsDetalhe
         $this->breadcrumb('Listagem de assuntos', [
             url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Acervo Assunto";
+        $this->title = 'i-Educar - Acervo Assunto';
         $this->processoAp = '592';
     }
 };
-
-

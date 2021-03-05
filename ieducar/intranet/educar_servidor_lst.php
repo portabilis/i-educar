@@ -2,10 +2,7 @@
 
 use App\Models\LegacyIndividual;
 
-
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     public $limite;
     public $offset;
     public $cod_servidor;
@@ -154,14 +151,11 @@ return new class extends clsListagem
         $this->breadcrumb('Funções do servidor', [
             url('intranet/educar_servidores_index.php') => 'Servidores',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Servidor";
+        $this->title = 'i-Educar - Servidor';
         $this->processoAp = 635;
     }
 };
-
-

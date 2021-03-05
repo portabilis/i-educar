@@ -1,8 +1,6 @@
 <?php
 
 use iEducar\Legacy\Model;
-use Illuminate\Support\Facades\Session;
-
 
 class clsPmieducarMatriculaTurma extends Model
 {
@@ -46,19 +44,19 @@ class clsPmieducarMatriculaTurma extends Model
         $this->_campos_lista = $this->_todos_campos = 'mt.ref_cod_matricula, mt.abandono, mt.reclassificado, mt.remanejado, mt.transferido, mt.falecido, mt.ref_cod_turma, mt.etapa_educacenso, mt.turma_unificada, mt.ref_usuario_exc, mt.ref_usuario_cad, mt.data_cadastro, mt.data_exclusao, mt.ativo, mt.sequencial, mt.data_enturmacao, mt.turno_id, mt.tipo_atendimento, (SELECT pes.nome FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome, (SELECT (pes.nome) FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome_ascii';
 
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
 
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
 
         if (is_numeric($ref_cod_turma)) {
-                    $this->ref_cod_turma = $ref_cod_turma;
+            $this->ref_cod_turma = $ref_cod_turma;
         }
 
         if (is_numeric($ref_cod_matricula)) {
-                    $this->ref_cod_matricula = $ref_cod_matricula;
+            $this->ref_cod_matricula = $ref_cod_matricula;
         }
 
         if (!empty($data_cadastro)) {
@@ -78,7 +76,7 @@ class clsPmieducarMatriculaTurma extends Model
         }
 
         if (is_numeric($ref_cod_turma_transf)) {
-                    $this->ref_cod_turma_transf = $ref_cod_turma_transf;
+            $this->ref_cod_turma_transf = $ref_cod_turma_transf;
         }
 
         if (is_numeric($sequencial)) {
@@ -435,7 +433,7 @@ class clsPmieducarMatriculaTurma extends Model
         if (is_numeric($int_ativo)) {
             if ($int_ativo == 1) {
                 $filtros .= "{$whereAnd} mt.ativo = '1'";
-                $whereAnd = " AND ";
+                $whereAnd = ' AND ';
             } elseif ($int_ativo == 2) {
                 $filtros .= "{$whereAnd}
                     (
@@ -455,10 +453,10 @@ class clsPmieducarMatriculaTurma extends Model
                         )
                     )
                 ";
-                $whereAnd = " AND ";
+                $whereAnd = ' AND ';
             } else {
                 $filtros .= "{$whereAnd} mt.ativo = '0'";
-                $whereAnd = " AND ";
+                $whereAnd = ' AND ';
             }
         }
 

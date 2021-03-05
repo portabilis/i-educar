@@ -1,6 +1,5 @@
 <?php
 
-
 class Portabilis_View_Helper_Input_Resource_TurmaTurno extends Portabilis_View_Helper_Input_CoreSelect
 {
     protected function inputOptions($options)

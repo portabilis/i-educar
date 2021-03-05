@@ -1,9 +1,6 @@
 <?php
 
-
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     public $cod_modulo;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -92,14 +89,11 @@ return new class extends clsDetalhe
         $this->breadcrumb('Detalhe da etapa', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Etapa";
+        $this->title = 'i-Educar - Etapa';
         $this->processoAp = '584';
     }
 };
-
-

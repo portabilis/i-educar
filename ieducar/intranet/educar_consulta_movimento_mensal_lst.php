@@ -2,9 +2,7 @@
 
 use iEducar\Modules\Reports\QueryFactory\MovimentoMensalQueryFactory;
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     public function Gerar()
     {
         $params = [];
@@ -261,14 +259,11 @@ JS;
 
         Portabilis_View_Helper_Application::embedJavascript($this, $tableScript, false);
         Portabilis_View_Helper_Application::loadJavascript($this, ['/intranet/scripts/consulta_movimentos.js']);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Consulta de movimento mensal";
+        $this->title = 'i-Educar - Consulta de movimento mensal';
         $this->processoAp = 9998910;
     }
 };
-
-

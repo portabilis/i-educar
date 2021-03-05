@@ -4,9 +4,7 @@ use App\Models\District;
 use iEducar\Legacy\InteractWithDatabase;
 use iEducar\Legacy\SelectOptions;
 
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     use InteractWithDatabase, SelectOptions;
 
     public $idmun;
@@ -64,14 +62,11 @@ return new class extends clsDetalhe
         $this->breadcrumb('Detalhe do distrito', [
             url('intranet/educar_enderecamento_index.php') => 'Endereçamento',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "Distrito";
+        $this->title = 'Distrito';
         $this->processoAp = 759;
     }
 };
-
-

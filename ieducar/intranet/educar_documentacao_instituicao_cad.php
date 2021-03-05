@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -46,14 +44,11 @@ return new class extends clsCadastro
 
         $this->array_botao[] = 'Voltar';
         $this->array_botao_url_script[] = 'go(\'educar_instituicao_lst.php\')';
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Documentação padrão";
+        $this->title = 'i-Educar - Documentação padrão';
         $this->processoAp = '578';
     }
 };
-
-

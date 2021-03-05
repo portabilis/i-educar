@@ -2,11 +2,7 @@
 
 use iEducar\Modules\Addressing\LegacyAddressingFields;
 
-
-
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     use LegacyAddressingFields;
 
     // Dados do Juridico
@@ -333,7 +329,6 @@ return new class extends clsCadastro
         $this->saveAddress($this->cod_pessoa_fj);
 
         $this->simpleRedirect('empresas_lst.php');
-
     }
 
     public function Excluir()
@@ -400,14 +395,11 @@ return new class extends clsCadastro
         }
 
         return true;
-
     }
 
     public function Formular()
     {
-        $this->title = "Empresas!";
+        $this->title = 'Empresas!';
         $this->processoAp = 41;
     }
 };
-
-

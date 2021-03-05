@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsModulesItinerarioTransporteEscolar extends Model
 {
     public $cod_itinerario_transporte_escolar;
@@ -15,8 +14,7 @@ class clsModulesItinerarioTransporteEscolar extends Model
 
     public function __construct(
         $cod_itinerario_transporte_escolar = null,
-        $ref_cod_rota_transporte_escolar = null
-        ,
+        $ref_cod_rota_transporte_escolar = null,
         $seq = null,
         $ref_cod_ponto_transporte_escolar = null,
         $ref_cod_veiculo = null,

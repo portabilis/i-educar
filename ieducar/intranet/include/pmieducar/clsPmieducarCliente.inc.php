@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarCliente extends Model
 {
     public $cod_cliente;
@@ -35,13 +34,13 @@ class clsPmieducarCliente extends Model
         $this->_campos_lista = $this->_todos_campos = 'c.cod_cliente, c.ref_usuario_exc, c.ref_usuario_cad, c.ref_idpes, c.login, c.senha, c.data_cadastro, c.data_exclusao, c.ativo, c.observacoes';
 
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
         if (is_numeric($ref_idpes)) {
-                    $this->ref_idpes = $ref_idpes;
+            $this->ref_idpes = $ref_idpes;
         }
 
         if (is_numeric($cod_cliente)) {

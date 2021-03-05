@@ -3,10 +3,7 @@
 use App\Models\Country;
 use iEducar\Legacy\InteractWithDatabase;
 
-
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     use InteractWithDatabase;
 
     public $__limite;
@@ -69,14 +66,11 @@ return new class extends clsListagem
         $this->breadcrumb('Listagem de países', [
             url('intranet/educar_enderecamento_index.php') => 'Endereçamento',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "Pais";
+        $this->title = 'Pais';
         $this->processoAp = 753;
     }
 };
-
-

@@ -24,86 +24,101 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Avaliacao
  * @subpackage  Modules
+ *
  * @since   Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
-
 
 /**
  * MatriculaTransferidoController class.
  *
  * @author     Maurício Citadini Biléssimo <mauricio@portabilis.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class TransferidoController extends ApiCoreController
 {
-
-  protected function canGetTransferido() {
-    return $this->validatesId('turma') &&
+    protected function canGetTransferido()
+    {
+        return $this->validatesId('turma') &&
            $this->validatesPresenceOf('ano');
-  }
-
-  protected function getTransferido() {
-    if ($this->canGetTransferido()) {
-      $matriculas = new clsPmieducarMatricula();
-      $matriculas->setOrderby("sequencial_fechamento , translate(nome,'".Portabilis_String_Utils::toLatin1(åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ)."', '".Portabilis_String_Utils::toLatin1(aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN)."') ");
-      $matriculas = $matriculas->lista_transferidos(NULL,
-                                       NULL,
-                                       $this->getRequest()->escola_id,
-                                       $this->getRequest()->serie_id,
-                                       NULL,
-                                       NULL,
-                                       $this->getRequest()->aluno_id,
-                                       '4',
-                                       NULL,
-                                       NULL,
-                                       NULL,
-                                       NULL,
-                                       $ativo = 1,
-                                       $this->getRequest()->ano,
-                                       NULL,
-                                       $this->getRequest()->instituicao_id,
-                                       NULL,
-                                       NULL,
-                                       NULL,
-                                       NULL,
-                                       NULL,
-                                       NULL,
-                                       NULL,
-                                       NULL,
-                                       $this->getRequest()->curso_id,
-                                       NULL,
-                                       $this->getRequest()->matricula_id,
-                                       NULL,
-                                       NULL,
-                                       NULL,
-                                       NULL,
-                                       $this->getRequest()->turma_id,
-                                       NULL,
-                                       false); // Mostra alunos em abandono/transferidos se não existir nenhuma matricula_turma ativa pra outra turma
-
-      $options = array();
-
-      foreach ($matriculas as $matricula)
-        $options['__' . $matricula['cod_matricula']] = $this->toUtf8($matricula['nome']);
-
-      return array('options' => $options);
     }
-  }
 
-  public function Gerar() {
-    if ($this->isRequestFor('get', 'transferidos'))
-      $this->appendResponse($this->getTransferido());
-    else
-      $this->notImplementedOperationError();
-  }
+    protected function getTransferido()
+    {
+        if ($this->canGetTransferido()) {
+            $matriculas = new clsPmieducarMatricula();
+            $matriculas->setOrderby('sequencial_fechamento , translate(nome,\''.Portabilis_String_Utils::toLatin1(åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ).'\', \''.Portabilis_String_Utils::toLatin1(aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN).'\') ');
+            $matriculas = $matriculas->lista_transferidos(
+                null,
+                null,
+                $this->getRequest()->escola_id,
+                $this->getRequest()->serie_id,
+                null,
+                null,
+                $this->getRequest()->aluno_id,
+                '4',
+                null,
+                null,
+                null,
+                null,
+                $ativo = 1,
+                $this->getRequest()->ano,
+                null,
+                $this->getRequest()->instituicao_id,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                $this->getRequest()->curso_id,
+                null,
+                $this->getRequest()->matricula_id,
+                null,
+                null,
+                null,
+                null,
+                $this->getRequest()->turma_id,
+                null,
+                false
+            ); // Mostra alunos em abandono/transferidos se não existir nenhuma matricula_turma ativa pra outra turma
+
+            $options = [];
+
+            foreach ($matriculas as $matricula) {
+                $options['__' . $matricula['cod_matricula']] = $this->toUtf8($matricula['nome']);
+            }
+
+            return ['options' => $options];
+        }
+    }
+
+    public function Gerar()
+    {
+        if ($this->isRequestFor('get', 'transferidos')) {
+            $this->appendResponse($this->getTransferido());
+        } else {
+            $this->notImplementedOperationError();
+        }
+    }
 }

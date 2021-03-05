@@ -1,6 +1,5 @@
 <?php
 
-
 class CoreExt_Controller_Front extends CoreExt_Controller_Abstract
 {
     /**
@@ -127,7 +126,7 @@ class CoreExt_Controller_Front extends CoreExt_Controller_Abstract
     public function getView()
     {
         if (is_null($this->_view)) {
-                        $this->setView(new CoreExt_View());
+            $this->setView(new CoreExt_View());
         }
 
         return $this->_view;

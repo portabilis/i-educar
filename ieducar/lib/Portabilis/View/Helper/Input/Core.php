@@ -1,6 +1,5 @@
 <?php
 
-
 class Portabilis_View_Helper_Input_Core
 {
     public function __construct($viewInstance, $inputsHelper)

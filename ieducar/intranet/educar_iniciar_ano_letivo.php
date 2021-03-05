@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -136,14 +134,11 @@ return new class extends clsCadastro
                     window.location = 'educar_escola_det.php?cod_escola={$this->ref_cod_escola}#ano_letivo';
                   </script>";
         }
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Iniciar/Finalizar Ano Letivo";
+        $this->title = 'i-Educar - Iniciar/Finalizar Ano Letivo';
         $this->processoAp = '561';
     }
 };
-
-

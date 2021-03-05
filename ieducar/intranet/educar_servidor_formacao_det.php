@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     public $titulo;
 
     public $cod_formacao;
@@ -113,14 +111,11 @@ return new class extends clsDetalhe
         );
 
         $this->largura = '100%';
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Servidor Formação";
+        $this->title = 'i-Educar - Servidor Formação';
         $this->processoAp = 635;
     }
 };
-
-

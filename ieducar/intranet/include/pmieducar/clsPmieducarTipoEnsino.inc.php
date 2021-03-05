@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarTipoEnsino extends Model
 {
     public $cod_tipo_ensino;
@@ -41,14 +40,14 @@ class clsPmieducarTipoEnsino extends Model
                                                        atividade_complementar';
 
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
 
         if (is_numeric($ref_cod_instituicao)) {
-                    $this->ref_cod_instituicao = $ref_cod_instituicao;
+            $this->ref_cod_instituicao = $ref_cod_instituicao;
         }
 
         if (is_numeric($cod_tipo_ensino)) {

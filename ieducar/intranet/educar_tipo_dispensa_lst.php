@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -118,13 +116,11 @@ return new class extends clsListagem
         $this->breadcrumb('Listagem de tipos de dispensa', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Tipo Dispensa";
+        $this->title = 'i-Educar - Tipo Dispensa';
         $this->processoAp = '577';
     }
 };
-

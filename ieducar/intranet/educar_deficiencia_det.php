@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     /**
      * Titulo no topo da pagina
      *
@@ -40,14 +38,11 @@ return new class extends clsDetalhe
         $this->breadcrumb('Detalhe da deficiência', [
             url('intranet/educar_pessoas_index.php') => 'Pessoas',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Defici&ecirc;ncia";
+        $this->title = 'i-Educar - Defici&ecirc;ncia';
         $this->processoAp = '631';
     }
 };
-
-

@@ -3,9 +3,7 @@
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     /**
      * Titulo no topo da pagina
      *
@@ -68,14 +66,11 @@ return new class extends clsDetalhe
         $this->breadcrumb('Detalhe do motivo de afastamento', [
             url('intranet/educar_servidores_index.php') => 'Servidores',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "Servidores - Motivo Afastamento";
+        $this->title = 'Servidores - Motivo Afastamento';
         $this->processoAp = '633';
     }
 };
-
-

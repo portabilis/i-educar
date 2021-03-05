@@ -4,9 +4,7 @@ use App\Models\LegacyDisciplineExemption;
 use App\Models\LegacyRegistration;
 use App\Services\Exemption\ExemptionService;
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $ref_usuario_exc;
     public $ref_usuario_cad;
     public $ref_cod_tipo_dispensa;
@@ -394,14 +392,11 @@ return new class extends clsCadastro
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Dispensa Componente Curricular";
+        $this->title = 'i-Educar - Dispensa Componente Curricular';
         $this->processoAp = 578;
     }
 };
-
-

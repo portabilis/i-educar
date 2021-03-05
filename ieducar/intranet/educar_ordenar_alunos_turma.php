@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
     public $cod_turma;
 
@@ -65,13 +63,11 @@ return new class extends clsCadastro
     public function Excluir()
     {
         return false;
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - S&eacute;rie";
+        $this->title = 'i-Educar - S&eacute;rie';
         $this->processoAp = '586';
     }
 };
-

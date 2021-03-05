@@ -206,9 +206,11 @@ class clsCadastroEscolaridade extends Model
      *  vai retorna uma lista de idpes que possuem vínculo
      *
      * @return array|bool
+     *
      * @throws Exception
      */
-    public function findUsages() {
+    public function findUsages()
+    {
         if (! is_numeric($this->idesco)) {
             return false;
         }

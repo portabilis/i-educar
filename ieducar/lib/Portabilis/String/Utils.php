@@ -1,6 +1,5 @@
 <?php
 
-
 class Portabilis_String_Utils
 {
     protected static function mergeOptions($options, $defaultOptions)

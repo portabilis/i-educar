@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarExemplarTipo extends Model
 {
     public $cod_exemplar_tipo;
@@ -24,13 +23,13 @@ class clsPmieducarExemplarTipo extends Model
         $this->_campos_lista = $this->_todos_campos = 'et.cod_exemplar_tipo, et.ref_cod_biblioteca, et.ref_usuario_exc, et.ref_usuario_cad, et.nm_tipo, et.descricao, et.data_cadastro, et.data_exclusao, et.ativo';
 
         if (is_numeric($ref_cod_biblioteca)) {
-                    $this->ref_cod_biblioteca = $ref_cod_biblioteca;
+            $this->ref_cod_biblioteca = $ref_cod_biblioteca;
         }
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
 
         if (is_numeric($cod_exemplar_tipo)) {

@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     public $pessoa_logada;
     public $titulo;
     public $limite;
@@ -108,14 +106,11 @@ return new class extends clsListagem
         $this->breadcrumb('Listagem de bloqueio de lan&ccedil;amento de notas e faltas por etapa', [
         url('intranet/educar_index.php') => 'Escola',
     ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Bloqueio de lanÃ§amento de notas e faltas por etapa";
+        $this->title = 'i-Educar - Bloqueio de lanÃ§amento de notas e faltas por etapa';
         $this->processoAp = 999848;
     }
 };
-
-

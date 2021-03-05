@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarProjeto extends Model
 {
     public $cod_projeto;

@@ -1,6 +1,5 @@
 <?php
 
-
 class PaisController extends ApiCoreController
 {
 

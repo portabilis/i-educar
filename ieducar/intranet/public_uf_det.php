@@ -3,10 +3,7 @@
 use App\Models\State;
 use iEducar\Legacy\InteractWithDatabase;
 
-
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     use InteractWithDatabase;
 
     public $id;
@@ -64,14 +61,11 @@ return new class extends clsDetalhe
         $this->breadcrumb('Detalhe da UF', [
             url('intranet/educar_enderecamento_index.php') => 'Endereçamento',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "Uf";
+        $this->title = 'Uf';
         $this->processoAp = 754;
     }
 };
-
-

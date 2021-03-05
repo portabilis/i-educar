@@ -1,6 +1,5 @@
 <?php
 
-
 class Usuario_Model_UsuarioDataMapper extends CoreExt_DataMapper
 {
     protected $_entityClass = 'Usuario_Model_Usuario';

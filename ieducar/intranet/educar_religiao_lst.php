@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -99,13 +97,11 @@ return new class extends clsListagem
         $this->breadcrumb('Listagem de religiões', [
             url('intranet/educar_pessoas_index.php') => 'Pessoas',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Religiao";
+        $this->title = 'i-Educar - Religiao';
         $this->processoAp = '579';
     }
 };
-

@@ -4,9 +4,7 @@ use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $ref_pessoa;
 
     //dados do funcionario
@@ -446,14 +444,11 @@ return new class extends clsCadastro
         }
 
         return false;
-
     }
 
     public function Formular()
     {
-        $this->title = "Cadastro de usuários";
+        $this->title = 'Cadastro de usuários';
         $this->processoAp = 555;
     }
 };
-
-

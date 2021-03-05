@@ -2,9 +2,7 @@
 
 use App\Models\State;
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -160,14 +158,11 @@ return new class extends clsCadastro
         $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
 
         return false;
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Editora";
+        $this->title = 'i-Educar - Editora';
         $this->processoAp = '595';
     }
 };
-
-

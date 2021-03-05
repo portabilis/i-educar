@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -163,14 +161,11 @@ return new class extends clsCadastro
     {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir(578, $this->pessoa_logada, 7, "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Transfer&ecirc;ncia Solicita&ccedil;&atilde;o";
+        $this->title = 'i-Educar - Transfer&ecirc;ncia Solicita&ccedil;&atilde;o';
         $this->processoAp = '578';
     }
 };
-
-

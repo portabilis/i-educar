@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -137,13 +135,11 @@ return new class extends clsListagem
         $this->breadcrumb('Listagem de bibliotecas', [
             url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Biblioteca";
+        $this->title = 'i-Educar - Biblioteca';
         $this->processoAp = '591';
     }
 };
-

@@ -3,9 +3,7 @@
 use App\Models\LegacySchoolClass;
 use App\Services\SchoolClassService;
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     const PROCESSO_AP = 9998910;
 
     public $ano;
@@ -155,14 +153,11 @@ return new class extends clsCadastro
                 $query->where('ref_cod_curso', $this->getQueryString('ref_cod_curso'));
             })
             ->get(['cod_turma'])->pluck('cod_turma')->all();
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Consulta de movimento mensal";
+        $this->title = 'i-Educar - Consulta de movimento mensal';
         $this->processoAp = 9998910;
     }
 };
-
-

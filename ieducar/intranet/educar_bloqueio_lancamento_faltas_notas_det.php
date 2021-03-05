@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     public $titulo;
 
     public $cod_bloqueio;
@@ -68,14 +66,11 @@ return new class extends clsDetalhe
         $this->breadcrumb('Detalhe de bloqueio de lançamento de notas e faltas por etapa', [
         url('intranet/educar_index.php') => 'Escola',
     ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Bloqueio de lanÃ§amento de notas e faltas por etapa";
+        $this->title = 'i-Educar - Bloqueio de lanÃ§amento de notas e faltas por etapa';
         $this->processoAp = 999848;
     }
 };
-
-

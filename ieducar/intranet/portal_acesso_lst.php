@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -132,13 +130,11 @@ return new class extends clsListagem
         $this->nome_acao = 'Novo';
 
         $this->largura = '100%';
-
     }
 
     public function Formular()
     {
-        $this->title = "Acesso";
+        $this->title = 'Acesso';
         $this->processoAp = '666';
     }
 };
-

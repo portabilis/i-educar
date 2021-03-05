@@ -1,6 +1,5 @@
 <?php
 
-
 class Portabilis_View_Helper_DynamicInput_EscolaDestinoTransporteEscolar extends Portabilis_View_Helper_DynamicInput_CoreSelect
 {
     protected function inputOptions($options)

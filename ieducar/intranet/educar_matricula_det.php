@@ -3,9 +3,7 @@
 use App\Process;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     public $titulo;
 
     public $ref_cod_matricula;
@@ -445,14 +443,11 @@ return new class extends clsDetalhe
         $db = new clsBanco();
 
         return $db->CampoUnico($sql);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Matrícula";
+        $this->title = 'i-Educar - Matrícula';
         $this->processoAp = 578;
     }
 };
-
-

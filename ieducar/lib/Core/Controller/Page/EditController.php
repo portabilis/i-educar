@@ -1,6 +1,5 @@
 <?php
 
-
 abstract class Core_Controller_Page_EditController extends clsCadastro implements Core_Controller_Page_Validatable
 {
     /**
@@ -253,7 +252,7 @@ abstract class Core_Controller_Page_EditController extends clsCadastro implement
     public function getClsPermissoes()
     {
         if (is_null($this->_clsPermissoes)) {
-                        $this->setClsPermissoes(new clsPermissoes());
+            $this->setClsPermissoes(new clsPermissoes());
         }
 
         return $this->_clsPermissoes;

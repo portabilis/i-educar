@@ -2,9 +2,7 @@
 
 use iEducar\Support\View\SelectOptions;
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     /**
      * Referência a usuário da sessão
      *
@@ -138,14 +136,11 @@ return new class extends clsCadastro
         $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
-
     }
 
     public function Formular()
     {
-        $this->title = "Servidores - Escolaridade";
+        $this->title = 'Servidores - Escolaridade';
         $this->processoAp = '632';
     }
 };
-
-

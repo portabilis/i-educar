@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -105,13 +103,11 @@ return new class extends clsListagem
         $this->breadcrumb('Tipos de benefício do aluno', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Benefício do aluno";
+        $this->title = 'i-Educar - Benefício do aluno';
         $this->processoAp = '581';
     }
 };
-

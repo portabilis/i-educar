@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $ref_cod_escola;
@@ -105,14 +103,11 @@ return new class extends clsCadastro
         );
 
         $this->simpleRedirect($url);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Escola Ano Letivo";
+        $this->title = 'i-Educar - Escola Ano Letivo';
         $this->processoAp = 561;
     }
 };
-
-

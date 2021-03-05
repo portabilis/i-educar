@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarAlunoHistoricoAlturaPeso extends Model
 {
     public $ref_cod_aluno;

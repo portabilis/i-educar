@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     public $titulo;
 
     public $cod_serie;
@@ -154,14 +152,11 @@ SQL;
         }
 
         return join('<br>', $html);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - S&eacute;rie";
+        $this->title = 'i-Educar - S&eacute;rie';
         $this->processoAp = '583';
     }
 };
-
-

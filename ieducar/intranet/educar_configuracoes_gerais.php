@@ -2,10 +2,7 @@
 
 use Illuminate\Support\Facades\Cache;
 
-
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $ref_cod_instituicao;
@@ -304,13 +301,11 @@ return new class extends clsCadastro
         $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
 
         return false;
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Configura&ccedil;&otilde;es gerais";
+        $this->title = 'i-Educar - Configura&ccedil;&otilde;es gerais';
         $this->processoAp = 999873;
     }
 };
-

@@ -1,9 +1,6 @@
 <?php
 
-
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Quantidade de registros a ser apresentada em cada pagina
      *
@@ -119,14 +116,11 @@ return new class extends clsListagem
         $this->breadcrumb('Listagem de etapas', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Etapa";
+        $this->title = 'i-Educar - Etapa';
         $this->processoAp = '584';
     }
 };
-
-

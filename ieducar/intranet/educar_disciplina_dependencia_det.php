@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     public $titulo;
 
     public $ref_cod_matricula;
@@ -126,14 +124,11 @@ return new class extends clsDetalhe
         $this->breadcrumb('Disciplinas de dependência', [
         url('intranet/educar_index.php') => 'Escola',
     ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Disciplina depend&ecirc;ncia";
+        $this->title = 'i-Educar - Disciplina depend&ecirc;ncia';
         $this->processoAp = 578;
     }
 };
-
-

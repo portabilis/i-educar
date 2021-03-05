@@ -3,10 +3,7 @@
 use App\Models\Country;
 use iEducar\Legacy\InteractWithDatabase;
 
-
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     use InteractWithDatabase;
 
     public $idpais;
@@ -91,14 +88,11 @@ return new class extends clsCadastro
     public function Excluir()
     {
         return $this->delete($this->idpais);
-
     }
 
     public function Formular()
     {
-        $this->title = "Pais";
+        $this->title = 'Pais';
         $this->processoAp = '753';
     }
 };
-
-

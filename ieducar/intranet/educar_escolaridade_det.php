@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     /**
      * Referência a usuário da sessão
      *
@@ -49,14 +47,11 @@ return new class extends clsDetalhe
         $this->breadcrumb('Detalhe da escolaridade', [
         url('intranet/educar_servidores_index.php') => 'Servidores',
     ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "Servidores - Escolaridade";
+        $this->title = 'Servidores - Escolaridade';
         $this->processoAp = '632';
     }
 };
-
-
