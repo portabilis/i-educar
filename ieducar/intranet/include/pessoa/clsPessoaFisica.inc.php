@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
-
 
 class clsPessoaFisica extends clsPessoaFj
 {
@@ -520,7 +518,6 @@ class clsPessoaFisica extends clsPessoaFj
     public function excluir()
     {
         if ($this->idpes) {
-
             $this->pessoa_logada = Auth::id();
             $db = new clsBanco();
             $excluir = $db->Consulta('UPDATE cadastro.fisica SET ativo = 0 WHERE idpes = ' . $this->idpes);

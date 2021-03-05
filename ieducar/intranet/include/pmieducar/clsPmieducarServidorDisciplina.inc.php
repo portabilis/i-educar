@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarServidorDisciplina extends Model
 {
     public $ref_cod_disciplina;

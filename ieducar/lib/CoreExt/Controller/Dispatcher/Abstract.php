@@ -1,6 +1,5 @@
 <?php
 
-
 abstract class CoreExt_Controller_Dispatcher_Abstract implements CoreExt_Controller_Dispatcher_Interface, CoreExt_Configurable
 {
     /**
@@ -88,7 +87,7 @@ abstract class CoreExt_Controller_Dispatcher_Abstract implements CoreExt_Control
     public function getRequest()
     {
         if (is_null($this->_request)) {
-                        $this->setRequest(new CoreExt_Controller_Request());
+            $this->setRequest(new CoreExt_Controller_Request());
         }
 
         return $this->_request;

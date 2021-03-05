@@ -1,8 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Session;
-
-
 class Core_Controller_Page_ViewController extends clsDetalhe implements Core_View_Tabulable
 {
     /**
@@ -94,7 +91,6 @@ class Core_Controller_Page_ViewController extends clsDetalhe implements Core_Vie
      */
     public function getClsPermissoes()
     {
-
         return new clsPermissoes();
     }
 

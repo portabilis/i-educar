@@ -31,7 +31,7 @@ class iDiarioService
 
     /**
      * @param LegacyInstitution $institution
-     * @param Client $http
+     * @param Client            $http
      *
      * @return void
      */
@@ -63,7 +63,7 @@ class iDiarioService
                 'year' => $year,
                 'step_number' => $step
             ]);
-            $body = trim((string)$response->getBody());
+            $body = trim((string) $response->getBody());
 
             if ($body === 'true') {
                 return true;
@@ -89,7 +89,7 @@ class iDiarioService
                 'year' => $year,
                 'step_number' => $step
             ]);
-            $body = trim((string)$response->getBody());
+            $body = trim((string) $response->getBody());
 
             if ($body === 'true') {
                 return true;
@@ -105,7 +105,7 @@ class iDiarioService
     {
         try {
             $response = $this->get('/api/v2/teacher_classrooms/has_activities', ['teacher_id' => $teacherId, 'classroom_id' => $classroomId]);
-            $body = trim((string)$response->getBody());
+            $body = trim((string) $response->getBody());
 
             if ($body === 'true') {
                 return true;
@@ -125,7 +125,7 @@ class iDiarioService
         ];
         try {
             $response = $this->get('/api/v2/discipline_activity', $data);
-            $body = trim((string)$response->getBody());
+            $body = trim((string) $response->getBody());
 
             if ($body === 'true') {
                 return true;
@@ -139,7 +139,7 @@ class iDiarioService
 
     /**
      * @param string $path
-     * @param array $query
+     * @param array  $query
      *
      * @return mixed
      */

@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App_Model_MatriculaSituacao;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateSchoolClassReportCardRequest extends FormRequest

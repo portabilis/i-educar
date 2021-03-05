@@ -12,4 +12,4 @@ foreach (Session::all() as $key => $value) {
 Session::save();
 Session::start();
 
-echo "";
+echo '';

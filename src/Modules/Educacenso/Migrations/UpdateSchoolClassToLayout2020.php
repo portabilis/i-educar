@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\DB;
 
 class UpdateSchoolClassToLayout2020 implements EducacensoMigrationInterface
 {
-
     public static function execute()
     {
         DB::unprepared('UPDATE pmieducar.turma

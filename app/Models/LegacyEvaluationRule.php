@@ -89,7 +89,7 @@ class LegacyEvaluationRule extends Model
     /**
      * @return bool
      */
-    public function isSpecificRetake ()
+    public function isSpecificRetake()
     {
         return $this->tipo_recuperacao_paralela == self::PARALLEL_REMEDIAL_PER_SPECIFIC_STAGE;
     }

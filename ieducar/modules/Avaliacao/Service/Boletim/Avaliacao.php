@@ -333,6 +333,7 @@ trait Avaliacao_Service_Boletim_Avaliacao
 
     /**
      * @param array $faltasGeraisCiclo
+     *
      * @return $this
      */
     public function setFaltasGeraisCiclo(array $faltasGeraisCiclo)
@@ -352,9 +353,9 @@ trait Avaliacao_Service_Boletim_Avaliacao
         return $this->_faltasComponentesCiclo;
     }
 
-
     /**
      * @param array $faltasComponentesCiclo
+     *
      * @return $this
      */
     public function setFaltasComponentesCiclo(array $faltasComponentesCiclo)

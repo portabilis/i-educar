@@ -104,6 +104,7 @@ SQL;
     public function createAuditTriggers()
     {
         foreach ($this->getAuditedTables() as $table) {
+            $this->dropAuditTrigger($table);
             $this->createAuditTrigger($table);
         }
     }

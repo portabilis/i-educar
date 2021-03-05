@@ -1,8 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Session;
-
-
 class clsFisicaCpf
 {
     public $idpes;

@@ -1,6 +1,5 @@
 <?php
 
-
 class Portabilis_View_Helper_DynamicInput_PesquisaAluno extends Portabilis_View_Helper_DynamicInput_Core
 {
     protected function inputValue($id = null)

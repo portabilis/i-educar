@@ -1,6 +1,5 @@
 <?php
 
-
 class Transporte_Model_Aluno extends CoreExt_Entity
 {
     protected $_data = [
@@ -27,7 +26,6 @@ class Transporte_Model_Aluno extends CoreExt_Entity
 
     public function getDefaultValidatorCollection()
     {
-
         $responsavel = Transporte_Model_Responsavel::getInstance();
 
         return [

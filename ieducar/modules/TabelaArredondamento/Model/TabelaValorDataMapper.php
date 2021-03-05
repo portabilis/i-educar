@@ -1,6 +1,5 @@
 <?php
 
-
 class TabelaArredondamento_Model_TabelaValorDataMapper extends CoreExt_DataMapper
 {
     protected $_entityClass = 'TabelaArredondamento_Model_TabelaValor';

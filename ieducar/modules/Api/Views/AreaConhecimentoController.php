@@ -1,9 +1,7 @@
 <?php
 
-
 class AreaConhecimentoController extends ApiCoreController
 {
-
     public function canGetAreasDeConhecimento()
     {
         return $this->validatesPresenceOf('instituicao_id');

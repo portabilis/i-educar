@@ -42,15 +42,15 @@ class LegacyOrganization extends Model
     public $timestamps = false;
 
     /**
-    * @inheritDoc
-    */
+     * @inheritDoc
+     */
     protected static function boot()
     {
         parent::boot();
 
         static::creating(function ($model) {
             if (config('legacy.app.uppercase_names')) {
-                $model->fantasia =  Str::upper($model->fantasia);
+                $model->fantasia = Str::upper($model->fantasia);
             }
         });
     }

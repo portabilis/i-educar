@@ -1,6 +1,5 @@
 <?php
 
-
 class ProcessamentoController extends Portabilis_Controller_Page_ListController
 {
     protected $_dataMapper = 'Avaliacao_Model_NotaAlunoDataMapper';

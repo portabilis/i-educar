@@ -19,7 +19,6 @@ class FormulaTest extends TestCase
     {
         parent::setUp();
 
-
         $this->formula = new FormulaMedia_Model_Formula();
     }
 

@@ -1,6 +1,5 @@
 <?php
 
-
 interface CoreExt_Controller_Interface extends CoreExt_Configurable
 {
     /**

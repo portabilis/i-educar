@@ -1,17 +1,6 @@
 <?php
 
-
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Matricula Turma');
-        $this->processoAp = 578;
-    }
-}
-
-class indice extends clsListagem
-{
+return new class extends clsListagem {
     public $pessoa_logada;
     public $titulo;
     public $limite;
@@ -321,31 +310,15 @@ class indice extends clsListagem
             url('intranet/educar_index.php') => 'Escola',
         ]);
     }
-}
 
-// Instancia objeto de página
-$pagina = new clsIndexBase();
-
-// Instancia objeto de conteúdo
-$miolo = new indice();
-
-// Atribui o conteúdo à  página
-$pagina->addForm($miolo);
-
-// Gera o código HTML
-$pagina->MakeAll();
-?>
-<script type="text/javascript">
-    function enturmar(ref_cod_escola, ref_cod_serie, ref_cod_matricula, ref_cod_turma, ano_letivo) {
-        document.formcadastro.method = 'post';
-        document.formcadastro.action = 'educar_matricula_turma_det.php';
-
-        document.formcadastro.ref_cod_escola.value = ref_cod_escola;
-        document.formcadastro.ref_cod_serie.value = ref_cod_serie;
-        document.formcadastro.ref_cod_matricula.value = ref_cod_matricula;
-        document.formcadastro.ref_cod_turma.value = ref_cod_turma;
-        document.formcadastro.ano_letivo.value = ano_letivo;
-
-        document.formcadastro.submit();
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-matricula-turma-lst.js');
     }
-</script>
+
+    public function Formular()
+    {
+        $this->title = 'i-Educar - Matricula Turma';
+        $this->processoAp = 578;
+    }
+};

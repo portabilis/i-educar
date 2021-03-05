@@ -18,7 +18,8 @@ class BirthDateValidator implements EducacensoValidator
     public function isValid(): bool
     {
         if ($this->birthDateGreaterThanToday()) {
-            $this->message = "Informe uma data de nascimento menor que o dia de hoje.";
+            $this->message = 'Informe uma data de nascimento menor que o dia de hoje.';
+
             return false;
         }
 

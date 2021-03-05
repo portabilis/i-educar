@@ -15,10 +15,10 @@ class AddForeignKeysInCadastroFisicaFotoTable extends Migration
     {
         Schema::table('cadastro.fisica_foto', function (Blueprint $table) {
             $table->foreign('idpes')
-               ->references('idpes')
-               ->on('cadastro.pessoa')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('idpes')
+                ->on('cadastro.pessoa')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

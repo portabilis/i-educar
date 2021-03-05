@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Session;
 
-
 class Portabilis_View_Helper_DynamicInput_EscolaObrigatorioParaNivelEscolar extends Portabilis_View_Helper_DynamicInput_Escola
 {
     public function EscolaObrigatorioParaNivelEscolar($options = [])

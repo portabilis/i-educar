@@ -15,53 +15,53 @@ class AddForeignKeysInPmieducarServidorTable extends Migration
     {
         Schema::table('pmieducar.servidor', function (Blueprint $table) {
             $table->foreign('ref_idesco')
-               ->references('idesco')
-               ->on('cadastro.escolaridade')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('idesco')
+                ->on('cadastro.escolaridade')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_subnivel')
-               ->references('cod_subnivel')
-               ->on('pmieducar.subnivel')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_subnivel')
+                ->on('pmieducar.subnivel')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_instituicao')
-               ->references('cod_instituicao')
-               ->on('pmieducar.instituicao')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_instituicao')
+                ->on('pmieducar.instituicao')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('instituicao_curso_superior_3')
-               ->references('id')
-               ->on('modules.educacenso_ies');
+                ->references('id')
+                ->on('modules.educacenso_ies');
 
             $table->foreign('instituicao_curso_superior_2')
-               ->references('id')
-               ->on('modules.educacenso_ies');
+                ->references('id')
+                ->on('modules.educacenso_ies');
 
             $table->foreign('instituicao_curso_superior_1')
-               ->references('id')
-               ->on('modules.educacenso_ies');
+                ->references('id')
+                ->on('modules.educacenso_ies');
 
             $table->foreign('cod_servidor')
-               ->references('idpes')
-               ->on('cadastro.pessoa');
+                ->references('idpes')
+                ->on('cadastro.pessoa');
 
             $table->foreign('codigo_curso_superior_3')
-               ->references('id')
-               ->on('modules.educacenso_curso_superior')
-               ->onDelete('set null');
+                ->references('id')
+                ->on('modules.educacenso_curso_superior')
+                ->onDelete('set null');
 
             $table->foreign('codigo_curso_superior_2')
-               ->references('id')
-               ->on('modules.educacenso_curso_superior')
-               ->onDelete('set null');
+                ->references('id')
+                ->on('modules.educacenso_curso_superior')
+                ->onDelete('set null');
 
             $table->foreign('codigo_curso_superior_1')
-               ->references('id')
-               ->on('modules.educacenso_curso_superior')
-               ->onDelete('set null');
+                ->references('id')
+                ->on('modules.educacenso_curso_superior')
+                ->onDelete('set null');
         });
     }
 

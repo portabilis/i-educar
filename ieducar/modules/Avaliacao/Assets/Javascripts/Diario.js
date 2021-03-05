@@ -1141,8 +1141,9 @@ function handleSearch($resultTable, dataResponse) {
 
     if ((!componenteCurricularSelected) && (showBotaoReplicarNotas))
       criaBotaoReplicarNotasPorArea(value.componentes_curriculares);
-
-    initSummernote('parecer-matricula-'+value.matricula_id+'-cc-'+value.componentes_curriculares[0].id);
+    if(value.componentes_curriculares.lenght > 0) {
+      initSummernote('parecer-matricula-' + value.matricula_id + '-cc-' + value.componentes_curriculares[0].id);
+    }
   });
   // seta colspan [th, td].aluno quando exibe nota exame
   if (useNota &&

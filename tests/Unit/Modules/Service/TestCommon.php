@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Avaliacao_Service_TestCommon abstract class.
  *
@@ -195,9 +194,9 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     /**
      * Getter. Retorna o array de opções para a inicialização do service.
      *
-     * @return array
-     *
      * @throws Exception
+     *
+     * @return array
      */
     protected function _getServiceOptions()
     {
@@ -244,9 +243,9 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
      *
      * @param string $namespace
      *
-     * @return mixed
-     *
      * @throws Exception
+     *
+     * @return mixed
      */
     protected function _getConfigOptions($namespace)
     {
@@ -287,9 +286,9 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
      * @param string $namespace
      * @param string $key
      *
-     * @return mixed
-     *
      * @throws Exception
+     *
+     * @return mixed
      */
     protected function _getConfigOption($namespace, $key)
     {
@@ -395,9 +394,9 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
      *
      * TODO: Condicionar o retorno de 'Rc' caso exista recuperação na Regra
      *
-     * @return array
-     *
      * @throws Exception
+     *
+     * @return array
      */
     protected function _getEtapasPossiveis()
     {
@@ -473,9 +472,9 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     }
 
     /**
-     * @return Avaliacao_Model_NotaAluno
-     *
      * @throws Exception
+     *
+     * @return Avaliacao_Model_NotaAluno
      */
     protected function _getNotaAluno()
     {
@@ -483,15 +482,15 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
         return [
             'instance' => new Avaliacao_Model_NotaAluno([
-            'id' => 1,
-            'matricula' => $matricula
-        ])];
+                'id' => 1,
+                'matricula' => $matricula
+            ])];
     }
 
     /**
-     * @return array
-     *
      * @throws Exception
+     *
+     * @return array
      */
     protected function _getFaltaAluno()
     {
@@ -499,16 +498,16 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
         return [
             'instance' => new Avaliacao_Model_FaltaAluno([
-            'id' => 1,
-            'matricula' => $matricula,
-            'tipoFalta' => $this->_getRegraOption('tipoPresenca')
-        ])];
+                'id' => 1,
+                'matricula' => $matricula,
+                'tipoFalta' => $this->_getRegraOption('tipoPresenca')
+            ])];
     }
 
     /**
-     * @return array
-     *
      * @throws Exception
+     *
+     * @return array
      */
     protected function _getParecerDescritivoAluno()
     {
@@ -516,16 +515,16 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
         return [
             'instance' => new Avaliacao_Model_ParecerDescritivoAluno([
-            'id' => 1,
-            'matricula' => $matricula,
-            'parecerDescritivo' => $this->_getRegraOption('parecerDescritivo')
-        ])];
+                'id' => 1,
+                'matricula' => $matricula,
+                'parecerDescritivo' => $this->_getRegraOption('parecerDescritivo')
+            ])];
     }
 
     /**
-     * @return $this
-     *
      * @throws Exception
+     *
+     * @return $this
      */
     protected function _setUpMatriculaMock()
     {
@@ -603,9 +602,9 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     }
 
     /**
-     * @return $this
-     *
      * @throws Exception
+     *
+     * @return $this
      */
     protected function _setUpMatriculaTurmaMock()
     {
@@ -627,9 +626,9 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     }
 
     /**
-     * @return $this
-     *
      * @throws Exception
+     *
+     * @return $this
      */
     protected function _setUpSerieMock()
     {
@@ -650,9 +649,9 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     }
 
     /**
-     * @return $this
-     *
      * @throws Exception
+     *
+     * @return $this
      */
     protected function _setUpCursoMock()
     {
@@ -673,9 +672,9 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     }
 
     /**
-     * @return $this
-     *
      * @throws Exception
+     *
+     * @return $this
      */
     protected function _setUpEscolaAnoLetivo()
     {
@@ -697,9 +696,9 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     }
 
     /**
-     * @return $this
-     *
      * @throws Exception
+     *
+     * @return $this
      */
     protected function _setUpAnoLetivoModulo()
     {
@@ -721,9 +720,9 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     }
 
     /**
-     * @return $this
-     *
      * @throws Exception
+     *
+     * @return $this
      */
     protected function _setUpModulo()
     {
@@ -739,9 +738,9 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     }
 
     /**
-     * @return $this
-     *
      * @throws Exception
+     *
+     * @return $this
      */
     protected function _setUpEscolaSerieDisciplinaMock()
     {
@@ -762,9 +761,8 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     }
 
     /**
-     * @return $this
-     *
      * @throws Exception
+     * @return $this
      */
     protected function _setUpDispensaDisciplinaMock()
     {
@@ -816,7 +814,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     protected function _setRegraOption($key, $value)
     {
         if (!array_key_exists($key, $this->_regraOptions)) {
-                        throw new CoreExt_Exception_InvalidArgumentException('regraOption:' . $key);
+            throw new CoreExt_Exception_InvalidArgumentException('regraOption:' . $key);
         }
 
         $this->_regraOptions[$key] = $value;
@@ -834,7 +832,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     protected function _getRegraOption($key)
     {
         if (!array_key_exists($key, $this->_regraOptions)) {
-                        throw new CoreExt_Exception_InvalidArgumentException('regraOption: ' . $key);
+            throw new CoreExt_Exception_InvalidArgumentException('regraOption: ' . $key);
         }
 
         return $this->_regraOptions[$key];

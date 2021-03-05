@@ -1,6 +1,5 @@
 <?php
 
-
 class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
 {
     protected $_entityClass = 'RegraAvaliacao_Model_Regra';
@@ -78,7 +77,7 @@ class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
     public function getFormulaDataMapper()
     {
         if (is_null($this->_formulaDataMapper)) {
-                        $this->setFormulaDataMapper(new FormulaMedia_Model_FormulaDataMapper());
+            $this->setFormulaDataMapper(new FormulaMedia_Model_FormulaDataMapper());
         }
 
         return $this->_formulaDataMapper;
@@ -106,7 +105,7 @@ class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
     public function getTabelaDataMapper()
     {
         if (is_null($this->_tabelaDataMapper)) {
-                        $this->setTabelaDataMapper(
+            $this->setTabelaDataMapper(
                 new TabelaArredondamento_Model_TabelaDataMapper()
             );
         }
@@ -196,7 +195,7 @@ class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
     public function getRegraRecuperacaoDataMapper()
     {
         if (is_null($this->_regraRecuperacaoDataMapper)) {
-                        $this->setRegraRecuperacaoDataMapper(
+            $this->setRegraRecuperacaoDataMapper(
                 new RegraAvaliacao_Model_RegraRecuperacaoDataMapper()
             );
         }

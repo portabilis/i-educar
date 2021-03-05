@@ -1,9 +1,7 @@
 <?php
 
-
 class RegraAvaliacao_Model_RegraRecuperacaoDataMapper extends CoreExt_DataMapper
 {
-
     protected $_entityClass = 'RegraAvaliacao_Model_RegraRecuperacao';
     protected $_tableName = 'regra_avaliacao_recuperacao';
     protected $_tableSchema = 'modules';

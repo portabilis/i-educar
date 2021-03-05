@@ -1,6 +1,5 @@
 <?php
 
-
 class AreaConhecimento_Model_AreaDataMapper extends CoreExt_DataMapper
 {
     protected $_entityClass = 'AreaConhecimento_Model_Area';

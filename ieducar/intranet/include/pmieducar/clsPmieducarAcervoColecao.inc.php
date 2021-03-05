@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarAcervoColecao extends Model
 {
     public $cod_acervo_colecao;
@@ -29,10 +28,10 @@ class clsPmieducarAcervoColecao extends Model
         $this->_campos_lista = $this->_todos_campos = 'cod_acervo_colecao, ref_usuario_exc, ref_usuario_cad, nm_colecao, descricao, data_cadastro, data_exclusao, ativo, ref_cod_biblioteca';
 
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
 
         if (is_numeric($ref_cod_biblioteca)) {

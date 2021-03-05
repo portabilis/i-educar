@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarHabilitacaoCurso extends Model
 {
     public $ref_cod_habilitacao;
@@ -17,10 +16,10 @@ class clsPmieducarHabilitacaoCurso extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_cod_habilitacao, ref_cod_curso';
 
         if (is_numeric($ref_cod_curso)) {
-                    $this->ref_cod_curso = $ref_cod_curso;
+            $this->ref_cod_curso = $ref_cod_curso;
         }
         if (is_numeric($ref_cod_habilitacao)) {
-                    $this->ref_cod_habilitacao = $ref_cod_habilitacao;
+            $this->ref_cod_habilitacao = $ref_cod_habilitacao;
         }
     }
 

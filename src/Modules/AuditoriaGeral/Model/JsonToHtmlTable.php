@@ -1,6 +1,7 @@
 <?php
 
 namespace iEducar\Modules\AuditoriaGeral\Model;
+
 use Portabilis_Date_Utils;
 
 trait JsonToHtmlTable

@@ -16,7 +16,7 @@ abstract class BaseModifier
 
     /**
      * @param string $templateName
-     * @param array $args
+     * @param array  $args
      *
      * @return void
      */

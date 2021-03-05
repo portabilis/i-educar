@@ -6,7 +6,7 @@ use App\Models\Educacenso\Registro40;
 
 class Registro40Model extends Registro40
 {
-    public function hydrateModel(array $arrayColumns) : void
+    public function hydrateModel(array $arrayColumns): void
     {
         array_unshift($arrayColumns, null);
         unset($arrayColumns[0]);

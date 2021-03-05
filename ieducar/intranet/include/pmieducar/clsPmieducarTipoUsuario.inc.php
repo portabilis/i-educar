@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarTipoUsuario extends Model
 {
     public $cod_tipo_usuario;

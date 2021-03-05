@@ -2,7 +2,6 @@
 
 namespace iEducar\Modules\Educacenso\ExportRule;
 
-
 use App\Models\Educacenso\Registro30;
 use App\Models\Educacenso\RegistroEducacenso;
 
@@ -10,6 +9,7 @@ class RegrasEspecificasRegistro30 implements EducacensoExportRule
 {
     /**
      * @param Registro30 $registro30
+     *
      * @return RegistroEducacenso
      */
     public static function handle(RegistroEducacenso $registro30): RegistroEducacenso

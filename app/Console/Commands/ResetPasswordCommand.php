@@ -65,6 +65,5 @@ class ResetPasswordCommand extends Command
                 LegacyPerson::find($employee->getKey())->name
             );
         }
-
     }
 }

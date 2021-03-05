@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsModulesMotorista extends Model
 {
     public $cod_motorista;

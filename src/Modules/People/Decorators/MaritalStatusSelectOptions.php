@@ -10,7 +10,7 @@ class MaritalStatusSelectOptions
     {
         $options = MaritalStatusSelectOptions::getDescriptiveValues();
 
-        return array_merge(['' => "Estado civil"], $options);
+        return array_merge(['' => 'Estado civil'], $options);
     }
 
     public static function getDescriptiveValues()
@@ -25,5 +25,4 @@ class MaritalStatusSelectOptions
             MaritalStatus::UNINFORMED => 'Não informado',
         ];
     }
-
 }

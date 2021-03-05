@@ -2,7 +2,6 @@
 
 use App\Models\LegacyEvaluationRule;
 
-
 class RegraAvaliacao_Model_TipoRecuperacaoParalela extends CoreExt_Enum
 {
     const NAO_USAR = LegacyEvaluationRule::PARALLEL_REMEDIAL_NONE;

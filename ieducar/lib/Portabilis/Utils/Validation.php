@@ -1,6 +1,5 @@
 <?php
 
-
 class Portabilis_Utils_Validation
 {
     public static function validatesCpf($cpf)

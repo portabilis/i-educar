@@ -27,7 +27,6 @@ class LegacyDisciplineDescriptiveOpinion extends Model
      */
     public $timestamps = false;
 
-
     /**
      * @return BelongsTo
      */

@@ -1,6 +1,5 @@
 <?php
 
-
 class Portabilis_View_Helper_Input_Resource_SimpleSearchProjeto extends Portabilis_View_Helper_Input_SimpleSearch
 {
     public function simpleSearchProjeto($attrName, $options = [])

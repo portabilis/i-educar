@@ -1,6 +1,5 @@
 <?php
 
-
 class Portabilis_View_Helper_DynamicInput_AreaConhecimento extends Portabilis_View_Helper_DynamicInput_CoreSelect
 {
     protected function inputName()

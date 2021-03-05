@@ -7,5 +7,4 @@ interface EducacensoValidator
     public function isValid(): bool;
 
     public function getMessage();
-
 }

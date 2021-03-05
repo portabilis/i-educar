@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarDistribuicaoUniforme extends Model
 {
     public $cod_distribuicao_uniforme;

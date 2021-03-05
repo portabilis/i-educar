@@ -1,92 +1,77 @@
 <?php
 
-
-class clsIndexBase extends clsBase
-{
-    function Formular()
-    {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Motivo Suspens&atilde;o" );
-        $this->processoAp = "607";
-    }
-}
-
-class indice extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
     /**
      * Titulo no topo da pagina
      *
      * @var int
      */
-    var $titulo;
+    public $titulo;
 
     /**
      * Quantidade de registros a ser apresentada em cada pagina
      *
      * @var int
      */
-    var $limite;
+    public $limite;
 
     /**
      * Inicio dos registros a serem exibidos (limit)
      *
      * @var int
      */
-    var $offset;
+    public $offset;
 
-    var $cod_motivo_suspensao;
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $nm_motivo;
-    var $descricao;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
-    var $ref_cod_biblioteca;
+    public $cod_motivo_suspensao;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $nm_motivo;
+    public $descricao;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $ref_cod_biblioteca;
 
-    function Gerar()
+    public function Gerar()
     {
-        $this->titulo = "Motivo Suspens&atilde;o - Listagem";
+        $this->titulo = 'Motivo Suspens&atilde;o - Listagem';
 
-        foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ( $val === "" ) ? null: $val;
+        foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
+            $this->$var = ($val === '') ? null: $val;
+        }
 
-
-
-        $this->addCabecalhos( array(
-            "Motivo Suspens&atilde;o",
-            "Biblioteca"
-        ) );
-
+        $this->addCabecalhos([
+            'Motivo Suspens&atilde;o',
+            'Biblioteca'
+        ]);
 
         $get_escola = true;
         $get_biblioteca = true;
-        $get_cabecalho = "lista_busca";
-        include("include/pmieducar/educar_campo_lista.php");
+        $get_cabecalho = 'lista_busca';
+        include('include/pmieducar/educar_campo_lista.php');
 
         // outros Filtros
-        $this->campoTexto( "nm_motivo", "Motivo Suspens&atilde;o", $this->nm_motivo, 30, 255, false );
-
+        $this->campoTexto('nm_motivo', 'Motivo Suspens&atilde;o', $this->nm_motivo, 30, 255, false);
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-        if(!is_numeric($this->ref_cod_biblioteca))
-        {
+        if (!is_numeric($this->ref_cod_biblioteca)) {
             $obj_bib_user = new clsPmieducarBibliotecaUsuario();
             $this->ref_cod_biblioteca = $obj_bib_user->listaBibliotecas($this->pessoa_logada);
         }
 
         $obj_motivo_suspensao = new clsPmieducarMotivoSuspensao();
-        $obj_motivo_suspensao->setOrderby( "nm_motivo ASC" );
-        $obj_motivo_suspensao->setLimite( $this->limite, $this->offset );
+        $obj_motivo_suspensao->setOrderby('nm_motivo ASC');
+        $obj_motivo_suspensao->setLimite($this->limite, $this->offset);
 
         $lista = $obj_motivo_suspensao->lista(
             null,
@@ -105,41 +90,34 @@ class indice extends clsListagem
         $total = $obj_motivo_suspensao->_total;
 
         // monta a lista
-        if( is_array( $lista ) && count( $lista ) )
-        {
-            foreach ( $lista AS $registro )
-            {
-
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
                 $obj_biblioteca = new clsPmieducarBiblioteca($registro['ref_cod_biblioteca']);
                 $det_biblioteca = $obj_biblioteca->detalhe();
                 $registro['ref_cod_biblioteca'] = $det_biblioteca['nm_biblioteca'];
-                $this->addLinhas( array(
-                    "<a href=\"educar_motivo_suspensao_det.php?cod_motivo_suspensao={$registro["cod_motivo_suspensao"]}\">{$registro["nm_motivo"]}</a>",
-                    "<a href=\"educar_motivo_suspensao_det.php?cod_motivo_suspensao={$registro["cod_motivo_suspensao"]}\">{$registro["ref_cod_biblioteca"]}</a>"
-                ) );
+                $this->addLinhas([
+                    "<a href=\"educar_motivo_suspensao_det.php?cod_motivo_suspensao={$registro['cod_motivo_suspensao']}\">{$registro['nm_motivo']}</a>",
+                    "<a href=\"educar_motivo_suspensao_det.php?cod_motivo_suspensao={$registro['cod_motivo_suspensao']}\">{$registro['ref_cod_biblioteca']}</a>"
+                ]);
             }
         }
-        $this->addPaginador2( "educar_motivo_suspensao_lst.php", $total, $_GET, $this->nome, $this->limite );
+        $this->addPaginador2('educar_motivo_suspensao_lst.php', $total, $_GET, $this->nome, $this->limite);
         $obj_permissoes = new clsPermissoes();
-        if( $obj_permissoes->permissao_cadastra( 607, $this->pessoa_logada, 11 ) )
-        {
-            $this->acao = "go(\"educar_motivo_suspensao_cad.php\")";
-            $this->nome_acao = "Novo";
+        if ($obj_permissoes->permissao_cadastra(607, $this->pessoa_logada, 11)) {
+            $this->acao = 'go("educar_motivo_suspensao_cad.php")';
+            $this->nome_acao = 'Novo';
         }
 
-        $this->largura = "100%";
+        $this->largura = '100%';
 
         $this->breadcrumb('Listagem de motivos de de suspensão', [
             url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
         ]);
     }
-}
-// cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
-$miolo = new indice();
-// adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
-// gera o html
-$pagina->MakeAll();
-?>
+
+    public function Formular()
+    {
+        $this->title = 'i-Educar - Motivo Suspens&atilde;o';
+        $this->processoAp = '607';
+    }
+};

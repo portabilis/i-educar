@@ -244,6 +244,7 @@ class LegacySchoolClass extends Model
         if (is_string($value)) {
             $value = explode(',', str_replace(['{', '}'], '', $value));
         }
+
         return $value;
     }
 

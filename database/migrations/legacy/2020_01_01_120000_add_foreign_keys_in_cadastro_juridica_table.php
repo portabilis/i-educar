@@ -15,18 +15,18 @@ class AddForeignKeysInCadastroJuridicaTable extends Migration
     {
         Schema::table('cadastro.juridica', function (Blueprint $table) {
             $table->foreign('idpes_rev')
-               ->references('idpes')
-               ->on('cadastro.pessoa')
-               ->onDelete('set null');
+                ->references('idpes')
+                ->on('cadastro.pessoa')
+                ->onDelete('set null');
 
             $table->foreign('idpes_cad')
-               ->references('idpes')
-               ->on('cadastro.pessoa')
-               ->onDelete('set null');
+                ->references('idpes')
+                ->on('cadastro.pessoa')
+                ->onDelete('set null');
 
             $table->foreign('idpes')
-               ->references('idpes')
-               ->on('cadastro.pessoa');
+                ->references('idpes')
+                ->on('cadastro.pessoa');
         });
     }
 

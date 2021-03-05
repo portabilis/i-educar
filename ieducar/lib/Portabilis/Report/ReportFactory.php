@@ -1,6 +1,5 @@
 <?php
 
-
 abstract class Portabilis_Report_ReportFactory
 {
     /**

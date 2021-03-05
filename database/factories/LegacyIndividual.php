@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factory;
 
 $factory->define(LegacyIndividual::class, function (Faker $faker) {
     return [
-        'idpes' => function() {
+        'idpes' => function () {
             return factory(LegacyPerson::class)->create()->idpes;
         },
         'origem_gravacao' => 'U',

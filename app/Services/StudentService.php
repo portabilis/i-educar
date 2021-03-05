@@ -9,8 +9,9 @@ class StudentService
     /**
      * Verifica se o aluno tem alguma matricula em andamento
      *
-     * @param int $studentId
+     * @param int      $studentId
      * @param int|null $levelId
+     *
      * @return boolean
      */
     public function hasInProgressRegistration($studentId, $levelId = null)

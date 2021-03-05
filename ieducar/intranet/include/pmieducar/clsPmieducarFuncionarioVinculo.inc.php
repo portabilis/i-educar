@@ -1,6 +1,5 @@
 <?php
 
-
 class clsPmieducarFuncionarioVinculo
 {
     public function lista()

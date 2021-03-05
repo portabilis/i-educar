@@ -163,7 +163,8 @@ class MovimentoMensalQueryFactory extends QueryFactory
             nm_turma;
 SQL;
 
-    public function getData(){
+    public function getData()
+    {
         $data = parent::getData();
 
         foreach ($data as $k => $v) {

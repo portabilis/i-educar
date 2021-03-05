@@ -1,6 +1,5 @@
 <?php
 
-
 class TabelaArredondamento_Model_TipoArredondamentoMedia extends CoreExt_Enum
 {
     const NAO_ARREDONDAR = 0;

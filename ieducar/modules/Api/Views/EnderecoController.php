@@ -2,10 +2,8 @@
 
 use Illuminate\Support\Facades\Gate;
 
-
 class EnderecoController extends ApiCoreController
 {
-
     protected function getPrimeiroEnderecoCep()
     {
         $cep = idFederal2int($this->getRequest()->cep);

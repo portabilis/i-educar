@@ -8,9 +8,9 @@ use App\Models\LegacySchoolClass;
 use App\Services\EnrollmentService;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Throwable;
-use Illuminate\Support\Facades\DB;
 
 class EnrollmentController extends Controller
 {
@@ -71,12 +71,14 @@ class EnrollmentController extends Controller
                 $enrollmentService->cancelEnrollment($enrollment, $date);
             } catch (Throwable $throwable) {
                 DB::rollback();
+
                 return redirect()->back()->with('error', $throwable->getMessage());
             }
         }
 
         if ($request->input('is_cancellation')) {
             DB::commit();
+
             return redirect('/intranet/educar_matricula_det.php?cod_matricula=' . $registration->id)->with('success', 'Enturmação feita com sucesso.');
         }
 
@@ -93,6 +95,7 @@ class EnrollmentController extends Controller
             $enrollmentService->enroll($registration, $schoolClass, $date);
         } catch (Throwable $throwable) {
             DB::rollback();
+
             return redirect()->back()->with('error', $throwable->getMessage());
         }
 

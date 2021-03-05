@@ -1,6 +1,5 @@
 <?php
 
-
 class CustomLabel
 {
     protected static $instance;

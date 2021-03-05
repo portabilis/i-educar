@@ -1,6 +1,5 @@
 <?php
 
-
 class clsOrgaoEmissorRg
 {
     public $idorg_rg;
@@ -72,6 +71,7 @@ class clsOrgaoEmissorRg
             $objDocumento = new clsDocumento(false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, $this->idorg_rg);
             if (!count($objDocumento->lista(false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, $this->idorg_rg))) {
                 $db = new clsBanco();
+
                 return true;
             }
         }

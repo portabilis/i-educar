@@ -1,6 +1,5 @@
 <?php
 
-
 class CoreExt_Controller_Request implements CoreExt_Controller_Request_Interface
 {
     protected $_options = [
@@ -163,7 +162,6 @@ class CoreExt_Controller_Request implements CoreExt_Controller_Request_Interface
     public function getBaseurl()
     {
         if (is_null($this->_getOption('baseurl'))) {
-
             $url = CoreExt_View_Helper_UrlHelper::url(
                 $this->get('REQUEST_URI'),
                 ['absolute' => true, 'components' => CoreExt_View_Helper_UrlHelper::URL_HOST]

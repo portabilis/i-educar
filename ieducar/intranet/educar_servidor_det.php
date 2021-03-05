@@ -1,20 +1,17 @@
 <?php
 
+use App\Models\Employee;
+
 use App\Models\EmployeeWithdrawal;
 use App\Support\View\Employee\EmployeeReturn;
 use Illuminate\Support\Facades\DB;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' Servidores - Servidor');
-        $this->processoAp = 635;
-    }
-}
+return new class extends clsDetalhe {
+    public $titulo;
 
-class indice extends clsDetalhe
-{
+    /**
+     * Atributos de dados
+     */
     public $cod_servidor = null;
     public $ref_idesco = null;
     public $ref_cod_funcao = null;
@@ -375,29 +372,18 @@ class indice extends clsDetalhe
             ->exists();
     }
 
-}
+    public function makeExtra()
+    {
+        return str_replace(
+            ['#cod_servidor','#ref_cod_instituicao'],
+            [$_GET['cod_servidor'],$_GET['ref_cod_instituicao']],
+            file_get_contents(__DIR__ . '/scripts/extra/educar-servidor-det.js')
+        );
+    }
 
-// Instancia o objeto da página
-$pagina = new clsIndexBase();
-
-// Instancia o objeto de conteúdo
-$miolo = new indice();
-
-// Passa o conteúdo para a página
-$pagina->addForm($miolo);
-
-// Gera o HTML
-$pagina->MakeAll();
-?>
-<script type="text/javascript">
-function trocaDisplay(id) {
-    var element = document.getElementById(id);
-    element.style.display = (element.style.display == 'none') ? 'inline' : 'none';
-}
-
-function popless() {
-    var campoServidor = <?=$_GET['cod_servidor'];?>;
-    var campoInstituicao = <?=$_GET['ref_cod_instituicao'];?>;
-    pesquisa_valores_popless('educar_servidor_nivel_cad.php?ref_cod_servidor=' + campoServidor + '&ref_cod_instituicao=' + campoInstituicao, '');
-}
-</script>
+    public function Formular()
+    {
+        $this->title = 'Servidores - Servidor';
+        $this->processoAp = 635;
+    }
+};

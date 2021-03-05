@@ -1,6 +1,5 @@
 <?php
 
-
 abstract class CoreExt_Validate_Abstract implements CoreExt_Validate_Interface
 {
     /**

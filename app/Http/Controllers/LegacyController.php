@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use clsBase;
 use Exception;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
@@ -91,7 +92,14 @@ class LegacyController extends Controller
     private function loadFileOrAbort($filename)
     {
         try {
-            require $filename;
+            $viewToRender = require $filename;
+
+            if (is_object($viewToRender)) {
+                $class = $this->processProperty($viewToRender);
+
+                $class->addForm($viewToRender);
+                $class->MakeAll();
+            }
 
             return;
         } catch (HttpResponseException $exception) {
@@ -130,6 +138,38 @@ class LegacyController extends Controller
         }
 
         throw $exception;
+    }
+
+    /**
+     * @param object $viewToRender
+     *
+     * @return clsBase
+     */
+    private function processProperty(object $viewToRender): clsBase
+    {
+        $class = new clsBase();
+
+        if (method_exists($viewToRender, 'Formular')) {
+            $viewToRender->Formular();
+        }
+
+        if (property_exists($viewToRender, 'title')) {
+            $class->SetTitulo($viewToRender->title);
+        }
+
+        if (property_exists($viewToRender, 'processoAp')) {
+            $class->processoAp = $viewToRender->processoAp;
+        }
+
+        if (property_exists($viewToRender, 'renderMenu')) {
+            $class->renderMenu = $viewToRender->renderMenu;
+        }
+
+        if (property_exists($viewToRender, 'renderMenuSuspenso')) {
+            $class->renderMenuSuspenso = $viewToRender->renderMenuSuspenso;
+        }
+
+        return $class;
     }
 
     /**

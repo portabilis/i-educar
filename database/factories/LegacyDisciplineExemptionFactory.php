@@ -18,7 +18,7 @@ $factory->define(LegacyDisciplineExemption::class, function (Faker $faker) {
         'ref_cod_disciplina' => factory(LegacyDiscipline::class)->create(),
         'ref_cod_escola' => factory(LegacySchool::class)->create(),
         'ref_cod_serie' => factory(LegacyLevel::class)->create(),
-        'ref_cod_tipo_dispensa' =>  factory(LegacyExemptionType::class)->create(),
+        'ref_cod_tipo_dispensa' => factory(LegacyExemptionType::class)->create(),
         'ref_usuario_cad' => factory(LegacyUser::class)->state('unique')->make(),
         'data_cadastro' => now(),
         'ativo' => 1,

@@ -3,7 +3,6 @@
 use App\Models\PersonHasPlace;
 use iEducar\Legacy\Model;
 
-
 class clsPessoaFj extends Model
 {
     public $idpes;

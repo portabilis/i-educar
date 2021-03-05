@@ -1,6 +1,5 @@
 <?php
 
-
 class Portabilis_View_Helper_Input_Resource_SimpleSearchAluno extends Portabilis_View_Helper_Input_SimpleSearch
 {
     public function simpleSearchAluno($attrName = '', $options = [])

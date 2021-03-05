@@ -1,6 +1,5 @@
 <?php
 
-
 $configuracoes = new clsPmieducarConfiguracoesGerais();
 $configuracoes = $configuracoes->detalhe();
 $reason = $configuracoes['ieducar_suspension_message'];
@@ -54,11 +53,11 @@ $reason = $configuracoes['ieducar_suspension_message'];
       <div class="content">
         <h1>Acesso suspenso</h1>
         <p class="explanation">
-          <?PHP
-            if(!empty($reason)){
-              echo $reason;
-            }else{
-              echo "Desculpe, o sistema está temporariamente indisponível. Contate o responsável pelo sistema em seu município. Obrigado pela compreensão.";
+          <?php
+            if (!empty($reason)) {
+                echo $reason;
+            } else {
+                echo 'Desculpe, o sistema está temporariamente indisponível. Contate o responsável pelo sistema em seu município. Obrigado pela compreensão.';
             }
           ?>
         </p>

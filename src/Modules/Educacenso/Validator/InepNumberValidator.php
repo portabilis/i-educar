@@ -2,9 +2,6 @@
 
 namespace iEducar\Modules\Educacenso\Validator;
 
-use iEducar\Modules\Educacenso\Model\Deficiencias;
-use iEducar\Modules\Educacenso\Model\RecursosRealizacaoProvas;
-
 class InepNumberValidator implements EducacensoValidator
 {
     private $number;
@@ -25,7 +22,6 @@ class InepNumberValidator implements EducacensoValidator
 
         return strlen($this->number) == 12;
     }
-
 
     public function getMessage()
     {

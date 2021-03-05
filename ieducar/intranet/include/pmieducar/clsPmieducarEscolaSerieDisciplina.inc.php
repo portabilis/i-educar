@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarEscolaSerieDisciplina extends Model
 {
     public $ref_ref_cod_serie;
@@ -41,8 +40,8 @@ class clsPmieducarEscolaSerieDisciplina extends Model
         }
 
         if (is_numeric($ref_ref_cod_escola) && is_numeric($ref_ref_cod_serie)) {
-                    $this->ref_ref_cod_escola = $ref_ref_cod_escola;
-                    $this->ref_ref_cod_serie = $ref_ref_cod_serie;
+            $this->ref_ref_cod_escola = $ref_ref_cod_escola;
+            $this->ref_ref_cod_serie = $ref_ref_cod_serie;
         } else {
             $this->ref_ref_cod_serie = $ref_ref_cod_serie;
         }

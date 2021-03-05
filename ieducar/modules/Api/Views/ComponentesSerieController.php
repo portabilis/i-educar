@@ -7,7 +7,6 @@ use App\Models\LegacySchoolGradeDiscipline;
 use App\Services\CheckPostedDataService;
 use App\Services\iDiarioService;
 
-
 class ComponentesSerieController extends ApiCoreController
 {
     public function atualizaComponentesDaSerie()
@@ -138,7 +137,7 @@ class ComponentesSerieController extends ApiCoreController
         $arrayComponentes = $this->handleComponentesArray($componentes);
         $escolas = $this->getEscolasSerieBySerie($serieId);
 
-        $escolas = array_map(function ($item){
+        $escolas = array_map(function ($item) {
             return $item['ref_cod_escola'];
         }, $escolas);
 
@@ -152,7 +151,7 @@ class ComponentesSerieController extends ApiCoreController
         $componentes = json_decode($this->getRequest()->componentes, false);
         $arrayComponentes = $this->handleComponentesArray($componentes);
 
-        $escolas = array_map(function ($item){
+        $escolas = array_map(function ($item) {
             return $item->id;
         }, $escolas);
 
@@ -167,12 +166,20 @@ class ComponentesSerieController extends ApiCoreController
 
         foreach ($escolas as $escola) {
             foreach ($componentes as $componente) {
-                $objEscolaSerieDisciplina = new clsPmieducarEscolaSerieDisciplina($serieId, $escola,
-                    $componente['id'], null, null, null, null, $componente['anos_letivos']);
+                $objEscolaSerieDisciplina = new clsPmieducarEscolaSerieDisciplina(
+                    $serieId,
+                    $escola,
+                    $componente['id'],
+                    null,
+                    null,
+                    null,
+                    null,
+                    $componente['anos_letivos']
+                );
 
                 $escolaSerieDisciplina = $objEscolaSerieDisciplina->detalhe();
 
-                if ($escolaSerieDisciplina === false){
+                if ($escolaSerieDisciplina === false) {
                     $objEscolaSerieDisciplina->cadastra();
                     continue;
                 }
@@ -341,7 +348,7 @@ class ComponentesSerieController extends ApiCoreController
                 ->active()
                 ->orderBy('data_cadastro', 'desc')
                 ->get()
-                ->map(function ($item){
+                ->map(function ($item) {
                     /** @var LegacyDisciplineExemption $item */
                     return [
                         'idMatricula' => $item->registration->getKey(),

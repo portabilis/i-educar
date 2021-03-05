@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class LegacySchoolStage
+ *
  * @package App\Models
  * todo Verificar duplicidade com LegacyAcademicYearStage
  */

@@ -15,16 +15,16 @@ class AddForeignKeysInModulesMotoristaTable extends Migration
     {
         Schema::table('modules.motorista', function (Blueprint $table) {
             $table->foreign('ref_idpes')
-               ->references('idpes')
-               ->on('cadastro.fisica')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('idpes')
+                ->on('cadastro.fisica')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_empresa_transporte_escolar')
-               ->references('cod_empresa_transporte_escolar')
-               ->on('modules.empresa_transporte_escolar')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_empresa_transporte_escolar')
+                ->on('modules.empresa_transporte_escolar')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 
