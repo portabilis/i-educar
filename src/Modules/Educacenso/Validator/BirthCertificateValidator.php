@@ -50,7 +50,8 @@ class BirthCertificateValidator implements EducacensoValidator
         $shouldBeNumericDigits = substr($this->birthCertificate, 0, 30);
         $shouldBeNumericOrXDigits = substr($this->birthCertificate, 30, 30);
 
-        return ctype_digit($shouldBeNumericDigits) && preg_match('/^[0-9, X]*$/', $shouldBeNumericOrXDigits);;
+        return ctype_digit($shouldBeNumericDigits) && preg_match('/^[0-9, X]*$/', $shouldBeNumericOrXDigits);
+        ;
     }
 
     /**
