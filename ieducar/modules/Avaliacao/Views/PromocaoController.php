@@ -1,8 +1,5 @@
 <?php
 
-#error_reporting(E_ALL);
-#ini_set("display_errors", 1);
-
 // TODO migrar para novo padrao
 
 class PromocaoController extends Portabilis_Controller_Page_ListController
