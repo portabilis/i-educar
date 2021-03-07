@@ -5,16 +5,6 @@ return new class extends clsCadastro {
     public $ref_cod_aluno;
     public $etapas_educacenso;
 
-    public function Formular()
-    {
-        $this->nome_url_cancelar = 'Voltar';
-        $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->cod_matricula}";
-
-        $this->breadcrumb('Etapa do aluno', [
-            url('intranet/educar_index.php') => 'Escola',
-        ]);
-    }
-
     public function Inicializar()
     {
         $this->cod_matricula = $_GET['ref_cod_matricula'];
@@ -28,6 +18,13 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
+        $this->nome_url_cancelar = 'Voltar';
+        $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->cod_matricula}";
+
+        $this->breadcrumb('Etapa do aluno', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
+
         $this->campoOculto('cod_matricula', $this->cod_matricula);
         $this->campoOculto('ref_cod_aluno', $this->ref_cod_aluno);
 
