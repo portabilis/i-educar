@@ -228,7 +228,7 @@ class App_Unificacao_Base
         $sSqlExtra = '';
 
         if ($tableName === 'pmieducar.servidor_afastamento') {
-            $sSqlExtra = ', sequencial = (
+            $sSqlExtra .= ', sequencial = (
                 select
                 max(sequencial)+1
                 from pmieducar.servidor_afastamento
