@@ -42,7 +42,7 @@ class App_Unificacao_Base
             $this->processaChavesManterTodosVinculos();
             $this->habilitaTodasTriggers();
         } catch (Exception $e) {
-            throw new Exception('Não foi possível realizar este processo de unificação. Por favor, entre em contato com o suporte.'.$e->getMessage());
+            throw new Exception('Não foi possível realizar este processo de unificação. Por favor, entre em contato com o suporte.');
         }
     }
 
