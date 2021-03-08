@@ -4,7 +4,6 @@ namespace App\Models\Exporter\Builders;
 
 use App\Support\Database\JoinableBuilder;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Query\JoinClause;
 
 class StudentEloquentBuilder extends Builder

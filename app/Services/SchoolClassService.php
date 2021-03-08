@@ -2,11 +2,9 @@
 
 namespace App\Services;
 
-use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacyLevel;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassStage;
-use iEducar\Modules\SchoolClass\Period;
 use Illuminate\Support\Facades\DB;
 
 class SchoolClassService
@@ -67,12 +65,12 @@ class SchoolClassService
         return true;
     }
 
-
     /**
      * Retorna o array com os calendários letivos das turmas informadas
      * Data inicial da primeira etapa e data final da última etapa
      *
      * @param array $schoolClassId
+     *
      * @return array|null
      */
     public function getCalendars(array $schoolClassId)

@@ -1,6 +1,5 @@
 <?php
 
-
 class MotoristaController extends Portabilis_Controller_Page_EditController
 {
     protected $_dataMapper = 'Usuario_Model_FuncionarioDataMapper';

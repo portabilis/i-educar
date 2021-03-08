@@ -1,6 +1,5 @@
 <?php
 
-
 class ProjetoController extends ApiCoreController
 {
     protected function searchOptions()

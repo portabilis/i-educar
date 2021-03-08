@@ -1,6 +1,5 @@
 <?php
 
-
 abstract class CoreExt_Session_Storage_Abstract implements CoreExt_Session_Storage_Interface, Countable
 {
     /**

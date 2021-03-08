@@ -1,6 +1,5 @@
 <?php
 
-
 class App_Model_SimNao extends CoreExt_Enum
 {
     const NAO = 0;

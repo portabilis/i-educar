@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * LegacyCourse
  *
- * @property string $name Nome do curso
+ * @property string        $name Nome do curso
  * @property LegacyGrade[] grades
  */
 class LegacyCourse extends Model
@@ -82,6 +82,7 @@ class LegacyCourse extends Model
 
     /**
      * @param Builder $query
+     *
      * @return Builder
      */
     public function scopeIsEja($query)

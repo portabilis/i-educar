@@ -1,9 +1,8 @@
 <?php
 
-header('Content-type: text/xml');
+   header('Content-type: text/xml');
 
-
-Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
+   Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
 if (is_numeric($_GET['inst'])) {

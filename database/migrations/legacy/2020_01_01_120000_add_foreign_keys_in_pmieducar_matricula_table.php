@@ -15,38 +15,38 @@ class AddForeignKeysInPmieducarMatriculaTable extends Migration
     {
         Schema::table('pmieducar.matricula', function (Blueprint $table) {
             $table->foreign('ref_ref_cod_serie')
-               ->references('cod_serie')
-               ->on('pmieducar.serie')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_serie')
+                ->on('pmieducar.serie')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_ref_cod_escola')
-               ->references('cod_escola')
-               ->on('pmieducar.escola')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_escola')
+                ->on('pmieducar.escola')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_reserva_vaga')
-               ->references('cod_reserva_vaga')
-               ->on('pmieducar.reserva_vaga')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_reserva_vaga')
+                ->on('pmieducar.reserva_vaga')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_curso')
-               ->references('cod_curso')
-               ->on('pmieducar.curso')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_curso')
+                ->on('pmieducar.curso')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_aluno')
-               ->references('cod_aluno')
-               ->on('pmieducar.aluno')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_aluno')
+                ->on('pmieducar.aluno')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_abandono_tipo')
-               ->references('cod_abandono_tipo')
-               ->on('pmieducar.abandono_tipo');
+                ->references('cod_abandono_tipo')
+                ->on('pmieducar.abandono_tipo');
         });
     }
 

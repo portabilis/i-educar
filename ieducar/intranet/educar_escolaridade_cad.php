@@ -1,19 +1,8 @@
 <?php
 
-
 use iEducar\Support\View\SelectOptions;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' Servidores - Escolaridade');
-        $this->processoAp = '632';
-    }
-}
-
-class indice extends clsCadastro
-{
+return new class extends clsCadastro {
     /**
      * Referência a usuário da sessão
      *
@@ -134,6 +123,7 @@ class indice extends clsCadastro
 
         if ($obj->findUsages()) {
             $this->mensagem = 'Exclusão não realizada - Ainda existe vínculos.<br>';
+
             return false;
         }
 
@@ -147,16 +137,10 @@ class indice extends clsCadastro
 
         return false;
     }
-}
 
-// Instancia objeto de página
-$pagina = new clsIndexBase();
-
-// Instancia objeto de conteúdo
-$miolo = new indice();
-
-// Atribui o conteúdo à página
-$pagina->addForm($miolo);
-
-// Gera o código HTML
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->title = 'Servidores - Escolaridade';
+        $this->processoAp = '632';
+    }
+};

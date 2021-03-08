@@ -15,10 +15,10 @@ class AddForeignKeysInModulesNotaExameTable extends Migration
     {
         Schema::table('modules.nota_exame', function (Blueprint $table) {
             $table->foreign('ref_cod_matricula')
-               ->references('cod_matricula')
-               ->on('pmieducar.matricula')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_matricula')
+                ->on('pmieducar.matricula')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

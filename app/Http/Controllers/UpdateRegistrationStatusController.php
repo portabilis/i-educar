@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateRegistrationStatusRequest;
 use App\Models\LegacyRegistration;
-use App\Models\LegacyTransferType;
 use App\Process;
 use App\Services\RegistrationService;
-use App_Model_MatriculaSituacao;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -16,6 +14,7 @@ class UpdateRegistrationStatusController extends Controller
 {
     /**
      * @param Request $request
+     *
      * @return View
      */
     public function index(Request $request)
@@ -33,7 +32,8 @@ class UpdateRegistrationStatusController extends Controller
      * Atualiza a situação das matrículas de acordo com o filtro
      *
      * @param UpdateRegistrationStatusRequest $request
-     * @param RegistrationService $registrationService
+     * @param RegistrationService             $registrationService
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function updateStatus(UpdateRegistrationStatusRequest $request, RegistrationService $registrationService)
@@ -66,8 +66,7 @@ class UpdateRegistrationStatusController extends Controller
         $query->where('aprovado', $request->get('situacao'));
 
         $query->join('pmieducar.matricula_turma', 'matricula.cod_matricula', '=', 'matricula_turma.ref_cod_matricula')
-              ->where('matricula_turma.ativo', 1);
-
+            ->where('matricula_turma.ativo', 1);
 
         $registrations = $query->get();
 

@@ -2,7 +2,6 @@
 
 use App\Models\District;
 
-
 class Portabilis_View_Helper_Input_Resource_SimpleSearchDistrito extends Portabilis_View_Helper_Input_SimpleSearch
 {
     public function simpleSearchDistrito($attrName, $options = [])

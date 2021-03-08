@@ -1,6 +1,5 @@
 <?php
 
-
 class EducacensoOrgaoRegionalController extends ApiCoreController
 {
     protected function getOrgaosRegionais()

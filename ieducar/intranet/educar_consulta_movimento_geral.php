@@ -1,17 +1,6 @@
 <?php
 
-
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Consulta de movimento geral');
-        $this->processoAp = 9998900;
-    }
-}
-
-class indice extends clsCadastro
-{
+return new class extends clsCadastro {
     const PROCESSO_AP = 9998900;
 
     public $ano;
@@ -76,10 +65,10 @@ class indice extends clsCadastro
 
         $this->simpleRedirect($url);
     }
-}
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
-
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->title = 'i-Educar - Consulta de movimento geral';
+        $this->processoAp = 9998900;
+    }
+};

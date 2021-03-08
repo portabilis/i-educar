@@ -1,6 +1,5 @@
 <?php
 
-
 class AreaConhecimento_Model_Area extends CoreExt_Entity
 {
     protected $_data = [

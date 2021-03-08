@@ -334,6 +334,7 @@ abstract class clsBancoSQL_
      * @param bool   $forceUseWritePdo Força o uso da conexão de escrita
      *
      * @throws Exception
+     *
      * @return bool|resource FALSE em caso de erro ou o identificador da consulta
      *                       em caso de sucesso.
      *

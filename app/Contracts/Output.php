@@ -11,6 +11,7 @@ interface Output
 
     /**
      * Inicia a indicação de progresso
+     *
      * @param $count
      */
     public function progressStart($max);

@@ -1,6 +1,5 @@
 <?php
 
-
 class PaisSemBrasilController extends ApiCoreController
 {
     protected function searchOptions()

@@ -1,8 +1,6 @@
 <?php
 
 use iEducar\Legacy\Model;
-use Illuminate\Support\Facades\Session;
-
 
 class clsPmieducarExemplar extends Model
 {
@@ -32,22 +30,22 @@ class clsPmieducarExemplar extends Model
         $this->_campos_lista = $this->_todos_campos = 'e.cod_exemplar, e.ref_cod_fonte, e.ref_cod_motivo_baixa, e.ref_cod_acervo, e.ref_cod_situacao, e.ref_usuario_exc, e.ref_usuario_cad, e.permite_emprestimo, e.preco, e.data_cadastro, e.data_exclusao, e.ativo, e.data_aquisicao, e.tombo, e.sequencial, e.data_baixa_exemplar';
 
         if (is_numeric($ref_cod_fonte)) {
-                    $this->ref_cod_fonte = $ref_cod_fonte;
+            $this->ref_cod_fonte = $ref_cod_fonte;
         }
         if (is_numeric($ref_cod_motivo_baixa)) {
-                    $this->ref_cod_motivo_baixa = $ref_cod_motivo_baixa;
+            $this->ref_cod_motivo_baixa = $ref_cod_motivo_baixa;
         }
         if (is_numeric($ref_cod_acervo)) {
-                    $this->ref_cod_acervo = $ref_cod_acervo;
+            $this->ref_cod_acervo = $ref_cod_acervo;
         }
         if (is_numeric($ref_cod_situacao)) {
-                    $this->ref_cod_situacao = $ref_cod_situacao;
+            $this->ref_cod_situacao = $ref_cod_situacao;
         }
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
 
         if (is_numeric($cod_exemplar)) {

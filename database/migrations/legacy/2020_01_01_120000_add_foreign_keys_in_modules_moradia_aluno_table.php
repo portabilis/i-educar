@@ -15,10 +15,10 @@ class AddForeignKeysInModulesMoradiaAlunoTable extends Migration
     {
         Schema::table('modules.moradia_aluno', function (Blueprint $table) {
             $table->foreign('ref_cod_aluno')
-               ->references('cod_aluno')
-               ->on('pmieducar.aluno')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_aluno')
+                ->on('pmieducar.aluno')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

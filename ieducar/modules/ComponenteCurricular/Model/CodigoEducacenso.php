@@ -2,7 +2,6 @@
 
 use iEducar\Support\DescriptionValue;
 
-
 class ComponenteCurricular_Model_CodigoEducacenso extends CoreExt_Enum
 {
     use DescriptionValue;

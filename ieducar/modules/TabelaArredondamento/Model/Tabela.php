@@ -1,6 +1,5 @@
 <?php
 
-
 class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
 {
     protected $_data = [
@@ -36,7 +35,7 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
     public function getDataMapper()
     {
         if (is_null($this->_dataMapper)) {
-                        $this->setDataMapper(new TabelaArredondamento_Model_TabelaDataMapper());
+            $this->setDataMapper(new TabelaArredondamento_Model_TabelaDataMapper());
         }
 
         return parent::getDataMapper();

@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarNotaAluno extends Model
 {
     public $cod_nota_aluno;
@@ -31,25 +30,25 @@ class clsPmieducarNotaAluno extends Model
         $this->_campos_lista = $this->_todos_campos = 'cod_nota_aluno, ref_sequencial, ref_ref_cod_tipo_avaliacao, ref_cod_serie, ref_cod_escola, ref_cod_disciplina, ref_cod_matricula, ref_usuario_exc, ref_usuario_cad, data_cadastro, data_exclusao, ativo, modulo, ref_cod_curso_disciplina, nota';
 
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
         if (is_numeric($ref_ref_cod_tipo_avaliacao) && is_numeric($ref_sequencial)) {
-                    $this->ref_ref_cod_tipo_avaliacao = $ref_ref_cod_tipo_avaliacao;
-                    $this->ref_sequencial = $ref_sequencial;
+            $this->ref_ref_cod_tipo_avaliacao = $ref_ref_cod_tipo_avaliacao;
+            $this->ref_sequencial = $ref_sequencial;
         }
         if (is_numeric($ref_cod_matricula)) {
-                    $this->ref_cod_matricula = $ref_cod_matricula;
+            $this->ref_cod_matricula = $ref_cod_matricula;
         }
         if (is_numeric($ref_cod_curso_disciplina)) {
-                    $this->ref_cod_curso_disciplina = $ref_cod_curso_disciplina;
+            $this->ref_cod_curso_disciplina = $ref_cod_curso_disciplina;
         }
         if (is_numeric($ref_cod_disciplina) && is_numeric($ref_cod_escola) && is_numeric($ref_cod_serie)) {
-                    $this->ref_cod_disciplina = $ref_cod_disciplina;
-                    $this->ref_cod_escola = $ref_cod_escola;
-                    $this->ref_cod_serie = $ref_cod_serie;
+            $this->ref_cod_disciplina = $ref_cod_disciplina;
+            $this->ref_cod_escola = $ref_cod_escola;
+            $this->ref_cod_serie = $ref_cod_serie;
         }
 
         if (is_numeric($cod_nota_aluno)) {
@@ -480,6 +479,7 @@ class clsPmieducarNotaAluno extends Model
                  * ao fazer a media e essa nota estiver abaixo nao
                  * pode ser feito o arredondamento, somente se estiver
                  *  acima da media deixando o aluno em exame
+                 *
                  * @author Haissam
                  *
                  */
@@ -1162,7 +1162,6 @@ class clsPmieducarNotaAluno extends Model
      * @param int $ultimo_modulo
      *
      * @return int
-     *
      */
     public function getUltimaNotaModulo($cod_matricula, $cod_disciplina, $cod_serie, $ultimo_modulo)
     {

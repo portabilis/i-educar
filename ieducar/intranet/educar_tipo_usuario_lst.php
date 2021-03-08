@@ -1,17 +1,6 @@
 <?php
 
-
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Tipo Usuario");
-        $this->processoAp = '554';
-    }
-}
-
-class indice extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -133,9 +122,10 @@ class indice extends clsListagem
             url('intranet/educar_configuracoes_index.php') => 'Configurações',
         ]);
     }
-}
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->title = 'i-Educar - Tipo Usuario';
+        $this->processoAp = '554';
+    }
+};

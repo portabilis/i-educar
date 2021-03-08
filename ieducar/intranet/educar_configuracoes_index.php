@@ -1,35 +1,18 @@
 <?php
 
-$desvio_diretorio = "";
-
-class clsIndex extends clsBase
-{
-
-    function Formular()
+return new class {
+    public function RenderHTML()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar" );
+        return '
+                <table width=\'100%\' height=\'100%\'>
+                    <tr align=center valign=\'top\'><td></td></tr>
+                </table>
+                ';
+    }
+
+    public function Formular()
+    {
+        $this->title = 'i-Educar';
         $this->processoAp = 25;
     }
-}
-
-class indice
-{
-    function RenderHTML()
-    {
-        return "
-                <table width='100%' height='100%'>
-                    <tr align=center valign='top'><td></td></tr>
-                </table>
-                ";
-    }
-}
-
-
-$pagina = new clsIndex();
-
-$miolo = new indice();
-$pagina->addForm( $miolo );
-
-$pagina->MakeAll();
-
-?>
+};

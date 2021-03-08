@@ -14,7 +14,6 @@ use iEducar\Modules\Stages\Exceptions\MissingStagesException;
 use iEducar\Modules\Stages\Exceptions\StagesNotInformedByCoordinatorException;
 use iEducar\Modules\Stages\Exceptions\StagesNotInformedByTeacherException;
 
-
 class Avaliacao_Service_Boletim implements CoreExt_Configurable
 {
     use Avaliacao_Service_Boletim_Acessores;
@@ -2280,7 +2279,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         }
 
         if (!is_numeric($nota)) {
-                        throw new CoreExt_Exception_InvalidArgumentException(sprintf(
+            throw new CoreExt_Exception_InvalidArgumentException(sprintf(
                 'O parâmetro $nota ("%s") não é um valor numérico.',
                 $nota
             ));
@@ -2348,7 +2347,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         }
 
         if (!is_numeric($media)) {
-                        throw new CoreExt_Exception_InvalidArgumentException(sprintf(
+            throw new CoreExt_Exception_InvalidArgumentException(sprintf(
                 'O parâmetro $media ("%s") não é um valor numérico.',
                 $media
             ));
@@ -2798,7 +2797,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         }
 
         if ($exceptionMsg) {
-                        throw new CoreExt_Service_Exception($exceptionMsg);
+            throw new CoreExt_Service_Exception($exceptionMsg);
         }
 
         return $this->_updateMatricula($this->getOption('matricula'), $this->getOption('usuario'), $novaSituacaoMatricula);
@@ -2924,7 +2923,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      */
     protected function _updateNotaComponenteMedia()
     {
-                $this->_loadNotas(false);
+        $this->_loadNotas(false);
 
         $etapa = 1;
 

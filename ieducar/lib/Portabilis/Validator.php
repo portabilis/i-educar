@@ -1,6 +1,5 @@
 <?php
 
-
 class Portabilis_Validator
 {
     public function __construct(&$messenger)

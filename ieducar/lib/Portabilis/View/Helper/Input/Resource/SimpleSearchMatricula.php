@@ -1,6 +1,5 @@
 <?php
 
-
 class Portabilis_View_Helper_Input_Resource_SimpleSearchMatricula extends Portabilis_View_Helper_Input_SimpleSearch
 {
     public function simpleSearchMatricula($attrName = '', $options = [])

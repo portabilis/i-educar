@@ -1,6 +1,5 @@
 <?php
 
-
 class Portabilis_Business_Professor
 {
     public static function isProfessor($instituicaoId, $userId)
@@ -45,6 +44,7 @@ class Portabilis_Business_Professor
         }
 
         $funcoes = self::fetchPreparedQuery($sql);
+
         return count($funcoes) == 1 && $funcoes[0]['professor'];
     }
 

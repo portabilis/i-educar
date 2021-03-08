@@ -2,7 +2,6 @@
 
 use App\Models\LegacySchoolingDegree;
 
-
 class Portabilis_View_Helper_DynamicInput_Escolaridade extends Portabilis_View_Helper_DynamicInput_CoreSelect
 {
     protected function inputValue($value = null)

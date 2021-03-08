@@ -1,6 +1,5 @@
 <?php
 
-
 class Portabilis_View_Helper_Input_Integer extends Portabilis_View_Helper_Input_Numeric
 {
     protected function fixupValidation($inputOptions)

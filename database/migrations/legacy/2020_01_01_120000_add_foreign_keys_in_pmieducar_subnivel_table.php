@@ -15,16 +15,16 @@ class AddForeignKeysInPmieducarSubnivelTable extends Migration
     {
         Schema::table('pmieducar.subnivel', function (Blueprint $table) {
             $table->foreign('ref_cod_subnivel_anterior')
-               ->references('cod_subnivel')
-               ->on('pmieducar.subnivel')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_subnivel')
+                ->on('pmieducar.subnivel')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_nivel')
-               ->references('cod_nivel')
-               ->on('pmieducar.nivel')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_nivel')
+                ->on('pmieducar.nivel')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

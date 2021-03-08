@@ -19,7 +19,8 @@ class NameValidator implements EducacensoValidator
     public function isValid(): bool
     {
         if ($this->hasFourRepeatedCharaters()) {
-            $this->message = "Nome não pode ter a repetição de 4 caracteres seguidos.";
+            $this->message = 'Nome não pode ter a repetição de 4 caracteres seguidos.';
+
             return false;
         }
 

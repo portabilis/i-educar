@@ -1,6 +1,5 @@
 <?php
 
-
 class App_Model_TipoMediacaoDidaticoPedagogico extends CoreExt_Enum
 {
     const PRESENCIAL = 1;

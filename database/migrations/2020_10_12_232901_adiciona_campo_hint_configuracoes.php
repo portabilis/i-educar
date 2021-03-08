@@ -13,7 +13,7 @@ class AdicionaCampoHintConfiguracoes extends Migration
      */
     public function up()
     {
-        Schema::table('public.settings', function(Blueprint $table) {
+        Schema::table('public.settings', function (Blueprint $table) {
             $table->string('hint')->nullable();
         });
     }
@@ -25,7 +25,7 @@ class AdicionaCampoHintConfiguracoes extends Migration
      */
     public function down()
     {
-        Schema::table('public.settings', function(Blueprint $table) {
+        Schema::table('public.settings', function (Blueprint $table) {
             $table->dropColumn('hint');
         });
     }

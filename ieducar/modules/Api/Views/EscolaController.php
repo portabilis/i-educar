@@ -2,7 +2,6 @@
 
 use App\Models\LegacySchool;
 
-
 class EscolaController extends ApiCoreController
 {
     protected $_processoAp = 561;

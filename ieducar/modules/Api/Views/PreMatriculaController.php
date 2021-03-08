@@ -4,7 +4,6 @@ use App\Models\City;
 use iEducar\Modules\Addressing\LegacyAddressingFields;
 use Illuminate\Support\Str;
 
-
 class PreMatriculaController extends ApiCoreController
 {
     use LegacyAddressingFields;
@@ -476,7 +475,7 @@ class PreMatriculaController extends ApiCoreController
             $pessoa->edita();
         }
 
-        $telefone = str_replace(["-", "(", ")", " "], "", $telefone);
+        $telefone = str_replace(['-', '(', ')', ' '], '', $telefone);
 
         $ddd_telefone = substr($telefone, 0, 2);
         $telefone = substr($telefone, 2);
@@ -485,8 +484,7 @@ class PreMatriculaController extends ApiCoreController
 
         if ($telefoneObj->detalhe()) {
             $results = $telefoneObj->edita();
-        }
-        else {
+        } else {
             $results = $telefoneObj->cadastra();
         }
 
@@ -508,7 +506,7 @@ class PreMatriculaController extends ApiCoreController
             $pessoaId = $pessoa->cadastra();
         }
 
-        $telefone = str_replace(["-", "(", ")", " "], "", $telefone);
+        $telefone = str_replace(['-', '(', ')', ' '], '', $telefone);
 
         $ddd_telefone = substr($telefone, 0, 2);
         $telefone = substr($telefone, 2);
@@ -517,8 +515,7 @@ class PreMatriculaController extends ApiCoreController
 
         if ($telefoneObj->detalhe()) {
             $results = $telefoneObj->edita();
-        }
-        else {
+        } else {
             $results = $telefoneObj->cadastra();
         }
 

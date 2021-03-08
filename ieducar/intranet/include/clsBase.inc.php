@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
-
 class clsBase
 {
     public $titulo = 'Prefeitura Municipal';
@@ -54,6 +53,15 @@ class clsBase
                 $corpo = $form->getPrependedOutput() . $corpo;
             }
 
+            /**
+            * Insere o HTML/JS Extras que estão nas views
+            */
+            if (method_exists($form, 'makeExtra')) {
+                $corpo .= '<script>';
+                $corpo .= $form->makeExtra();
+                $corpo .= '</script>';
+            }
+
             if (method_exists($form, 'getAppendedOutput')) {
                 $corpo = $corpo . $form->getAppendedOutput();
             }
@@ -69,12 +77,12 @@ class clsBase
 
     public function CadastraAcesso()
     {
-        if (Session::get('marcado') != "private") {
-            $ip = empty($_SERVER['REMOTE_ADDR']) ? "NULL" : $_SERVER['REMOTE_ADDR'];
-            $ip_de_rede = empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? "NULL" : $_SERVER['HTTP_X_FORWARDED_FOR'];
+        if (Session::get('marcado') != 'private') {
+            $ip = empty($_SERVER['REMOTE_ADDR']) ? 'NULL' : $_SERVER['REMOTE_ADDR'];
+            $ip_de_rede = empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? 'NULL' : $_SERVER['HTTP_X_FORWARDED_FOR'];
             $id_pessoa = \Illuminate\Support\Facades\Auth::id();
 
-            $logAcesso = new clsLogAcesso(FALSE, $ip, $ip_de_rede, $id_pessoa);
+            $logAcesso = new clsLogAcesso(false, $ip, $ip_de_rede, $id_pessoa);
             $logAcesso->cadastra();
 
             Session::put('marcado', 'private');

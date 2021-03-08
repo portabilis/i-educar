@@ -1,6 +1,5 @@
 <?php
 
-
 class EtapasController extends ApiCoreController
 {
     protected function getEtapasEspecificas()

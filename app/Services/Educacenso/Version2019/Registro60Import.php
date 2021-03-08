@@ -11,7 +11,6 @@ use App\Models\LegacySchoolClass;
 use App\Models\LegacyStudent;
 use App\Models\LegacyStudentTransport;
 use App\Models\SchoolClassInep;
-use App\Models\Student;
 use App\Models\StudentInep;
 use App\Services\Educacenso\RegistroImportInterface;
 use App\User;
@@ -32,7 +31,6 @@ class Registro60Import implements RegistroImportInterface
      */
     private $user;
 
-
     /**
      * @var int
      */
@@ -52,8 +50,9 @@ class Registro60Import implements RegistroImportInterface
      * Faz a importação dos dados a partir da linha do arquivo
      *
      * @param RegistroEducacenso $model
-     * @param int $year
-     * @param $user
+     * @param int                $year
+     * @param                    $user
+     *
      * @return void
      */
     public function import(RegistroEducacenso $model, $year, $user)
@@ -99,21 +98,23 @@ class Registro60Import implements RegistroImportInterface
         return StudentInep::where('cod_aluno_inep', $this->model->inepAluno)->first()->student ?? null;
     }
 
-
     /**
      * @param $arrayColumns
+     *
      * @return Registro50|RegistroEducacenso
      */
     public static function getModel($arrayColumns)
     {
         $registro = new Registro60();
         $registro->hydrateModel($arrayColumns);
+
         return $registro;
     }
 
     /**
      * @param LegacySchoolClass $schoolClass
-     * @param LegacyStudent $student
+     * @param LegacyStudent     $student
+     *
      * @return LegacyRegistration
      */
     private function getOrCreateRegistration(LegacySchoolClass $schoolClass, LegacyStudent $student)
@@ -138,8 +139,9 @@ class Registro60Import implements RegistroImportInterface
     }
 
     /**
-     * @param LegacySchoolClass $schoolClass
+     * @param LegacySchoolClass  $schoolClass
      * @param LegacyRegistration $registration
+     *
      * @return LegacyEnrollment
      */
     private function getOrCreateEnrollment(LegacySchoolClass $schoolClass, LegacyRegistration $registration)
@@ -223,6 +225,7 @@ class Registro60Import implements RegistroImportInterface
 
     /**
      * @param $array
+     *
      * @return string
      */
     private function getPostgresIntegerArray($array)
@@ -238,7 +241,7 @@ class Registro60Import implements RegistroImportInterface
         LegacyStudentTransport::updateOrCreate(
             ['aluno_id' => $student->getKey()],
             [
-                'responsavel' => (int)$this->model->poderPublicoResponsavelTransporte,
+                'responsavel' => (int) $this->model->poderPublicoResponsavelTransporte,
                 'user_id' => $this->user->getKey(),
             ]
         );
@@ -247,8 +250,6 @@ class Registro60Import implements RegistroImportInterface
         $student->veiculo_transporte_escolar = $this->getArrayVeiculoTransporte();
 
         $student->save();
-
-
     }
 
     private function getArrayVeiculoTransporte()

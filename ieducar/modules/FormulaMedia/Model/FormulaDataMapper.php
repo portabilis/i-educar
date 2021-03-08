@@ -1,6 +1,5 @@
 <?php
 
-
 class FormulaMedia_Model_FormulaDataMapper extends CoreExt_DataMapper
 {
     protected $_entityClass = 'FormulaMedia_Model_Formula';

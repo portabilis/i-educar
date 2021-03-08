@@ -52,15 +52,18 @@ class StageScoreCalculationServiceTest extends TestCase
         $expected3 = 6;
 
         $result1 = $this->service->calculateAverageBetweenScoreAndRemedial(
-            $score1, $remedial1
+            $score1,
+            $remedial1
         );
 
         $result2 = $this->service->calculateAverageBetweenScoreAndRemedial(
-            $score2, $remedial2
+            $score2,
+            $remedial2
         );
 
         $result3 = $this->service->calculateAverageBetweenScoreAndRemedial(
-            $score3, $remedial3
+            $score3,
+            $remedial3
         );
 
         $this->assertEquals($expected1, $result1);
@@ -95,15 +98,18 @@ class StageScoreCalculationServiceTest extends TestCase
         $expected3 = 6;
 
         $result1 = $this->service->calculateSumScore(
-            $score1, $remedial1
+            $score1,
+            $remedial1
         );
 
         $result2 = $this->service->calculateSumScore(
-            $score2, $remedial2
+            $score2,
+            $remedial2
         );
 
         $result3 = $this->service->calculateSumScore(
-            $score3, $remedial3
+            $score3,
+            $remedial3
         );
 
         $this->assertEquals($expected1, $result1);
@@ -135,15 +141,18 @@ class StageScoreCalculationServiceTest extends TestCase
         $expected3 = 6;
 
         $result1 = $this->service->calculateRemedial(
-            $score1, $remedial1
+            $score1,
+            $remedial1
         );
 
         $result2 = $this->service->calculateRemedial(
-            $score2, $remedial2
+            $score2,
+            $remedial2
         );
 
         $result3 = $this->service->calculateRemedial(
-            $score3, $remedial3
+            $score3,
+            $remedial3
         );
 
         $this->assertEquals($expected1, $result1);

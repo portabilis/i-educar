@@ -10,7 +10,7 @@ class ExportQuery
 {
     private $query;
 
-    public function query(array $filters) : Builder
+    public function query(array $filters): Builder
     {
         $this->query = LegacyRegistration::query();
         $this->select();
@@ -20,7 +20,7 @@ class ExportQuery
         return $this->query;
     }
 
-    private function select() : void
+    private function select(): void
     {
         $this->query->select(
             [
@@ -38,7 +38,7 @@ class ExportQuery
         );
     }
 
-    private function join() : void
+    private function join(): void
     {
         $this->query->join('pmieducar.aluno', 'aluno.cod_aluno', 'matricula.ref_cod_aluno');
         $this->query->join('cadastro.fisica', 'fisica.idpes', 'aluno.ref_idpes');
@@ -57,7 +57,7 @@ class ExportQuery
         $this->query->leftJoin('cadastro.fisica as fisica_responsavel', 'fisica_responsavel.idpes', 'fisica.idpes_responsavel');
     }
 
-    private function filter(array $filters) : void
+    private function filter(array $filters): void
     {
         $this->query->where('escola.ref_cod_instituicao', $filters['ref_cod_instituicao']);
         $this->query->where('matricula.ano', $filters['ano']);

@@ -17,7 +17,9 @@ class NoVacancyException extends RuntimeException
         $message = 'Não há vagas na turma "%s" #%s.';
 
         $message = sprintf(
-            $message, $schoolClass->name, $schoolClass->id
+            $message,
+            $schoolClass->name,
+            $schoolClass->id
         );
 
         parent::__construct($message);

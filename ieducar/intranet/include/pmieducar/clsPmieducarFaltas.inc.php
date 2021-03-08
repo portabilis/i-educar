@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarFaltas extends Model
 {
     public $ref_cod_matricula;
@@ -20,10 +19,10 @@ class clsPmieducarFaltas extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_cod_matricula, sequencial, ref_usuario_cad, falta, data_cadastro';
 
         if (is_numeric($ref_cod_matricula)) {
-                    $this->ref_cod_matricula = $ref_cod_matricula;
+            $this->ref_cod_matricula = $ref_cod_matricula;
         }
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
 
         if (is_numeric($sequencial)) {

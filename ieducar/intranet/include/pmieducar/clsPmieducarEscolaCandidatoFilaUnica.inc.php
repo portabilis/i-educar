@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarEscolaCandidatoFilaUnica extends Model
 {
     public $ref_cod_candidato_fila_unica;

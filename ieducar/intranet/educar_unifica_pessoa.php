@@ -3,19 +3,8 @@
 use App\Models\Individual;
 use App\Models\LogUnification;
 use iEducar\Modules\Unification\PersonLogUnification;
-use Illuminate\Support\Facades\DB;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Unificação de pessoas');
-        $this->processoAp = '9998878';
-    }
-}
-
-class indice extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $tabela_pessoas = [];
@@ -23,9 +12,12 @@ class indice extends clsCadastro
 
     public function Formular()
     {
+        $this->titulo = 'i-Educar - Unificação de pessoas';
+        $this->processoAp = '9998878';
+
         $this->breadcrumb('Unificação de pessoas', [
-        url('intranet/educar_index.php') => 'Escola',
-    ]);
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 
     public function Inicializar()
@@ -89,21 +81,20 @@ class indice extends clsCadastro
 
             return false;
         }
-        DB::beginTransaction();
+
         $unificationId = $this->createLog($codPessoaPrincipal, $codPessoas, $this->pessoa_logada);
         $unificador = new App_Unificacao_Pessoa($codPessoaPrincipal, $codPessoas, $this->pessoa_logada, new clsBanco(), $unificationId);
 
         try {
             $unificador->unifica();
-        } catch (Exception $exception) {
+        } catch (CoreExt_Exception $exception) {
             $this->mensagem = $exception->getMessage();
-            DB::rollBack();
+
             return false;
         }
 
         $this->mensagem = '<span>Pessoas unificadas com sucesso.</span>';
 
-        DB::commit();
         return true;
     }
 
@@ -127,7 +118,7 @@ class indice extends clsCadastro
      * @param integer[] $duplicatesId
      *
      * @return string[]
-    */
+     */
     private function getNamesOfUnifiedPeople($duplicatesId)
     {
         $names = [];
@@ -138,102 +129,9 @@ class indice extends clsCadastro
 
         return $names;
     }
-}
 
-// Instancia objeto de página
-$pagina = new clsIndexBase();
-
-// Instancia objeto de conteúdo
-$miolo = new indice();
-
-// Atribui o conteúdo à  página
-$pagina->addForm($miolo);
-
-// Gera o código HTML
-$pagina->MakeAll();
-?>
-<script type="text/javascript">
-
-  var handleSelect = function(event, ui){
-    $j(event.target).val(ui.item.label);
-    return false;
-  };
-
-  var search = function(request, response) {
-    var searchPath = '/module/Api/Pessoa?oper=get&resource=pessoa-search';
-    var params     = { query : request.term };
-
-    $j.get(searchPath, params, function(dataResponse) {
-      simpleSearch.handleSearch(dataResponse, response);
-    });
-  };
-
-  function setAutoComplete() {
-    $j.each($j('input[id^="pessoa_duplicada"]'), function(index, field) {
-
-      $j(field).autocomplete({
-        source    : search,
-        select    : handleSelect,
-        minLength : 1,
-        autoFocus : true
-      });
-
-    });
-  }
-
-  setAutoComplete();
-
-  // bind events
-
-  var $addPontosButton = $j('#btn_add_tab_add_1');
-
-  $addPontosButton.click(function(){
-    setAutoComplete();
-  });
-
-$j('#btn_enviar').val('Unificar');
-
-  function showConfirmationMessage() {
-      makeDialog({
-          content: 'O processo de unificação de pessoas não poderá ser desfeito. Deseja continuar?',
-          title: 'Atenção!',
-          maxWidth: 860,
-          width: 860,
-          close: function () {
-              $j('#dialog-container').dialog('destroy');
-          },
-          buttons: [{
-              text: 'Confirmar',
-              click: function () {
-                  acao();
-                  $j('#dialog-container').dialog('destroy');
-              }
-          }, {
-              text: 'Cancelar',
-              click: function () {
-                  $j('#dialog-container').dialog('destroy');
-              }
-          }]
-      });
-  }
-
-  function makeDialog(params) {
-      var container = $j('#dialog-container');
-
-      if (container.length < 1) {
-          $j('body').append('<div id="dialog-container" style="width: 500px;"></div>');
-          container = $j('#dialog-container');
-      }
-
-      if (container.hasClass('ui-dialog-content')) {
-          container.dialog('destroy');
-      }
-
-      container.empty();
-      container.html(params.content);
-
-      delete params['content'];
-
-      container.dialog(params);
-  }
-</script>
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-unifica-pessoa.js');
+    }
+};

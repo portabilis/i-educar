@@ -15,16 +15,16 @@ class AddForeignKeysInCadastroReligiaoTable extends Migration
     {
         Schema::table('cadastro.religiao', function (Blueprint $table) {
             $table->foreign('idpes_exc')
-               ->references('idpes')
-               ->on('cadastro.fisica')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('idpes')
+                ->on('cadastro.fisica')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('idpes_cad')
-               ->references('idpes')
-               ->on('cadastro.fisica')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('idpes')
+                ->on('cadastro.fisica')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

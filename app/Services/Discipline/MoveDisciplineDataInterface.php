@@ -11,6 +11,7 @@ interface MoveDisciplineDataInterface
      * @param integer $disciplineTo
      * @param integer $year
      * @param integer $gradeId
+     *
      * @return integer
      */
     public function moveData($disciplineFrom, $disciplineTo, $year, $gradeId);

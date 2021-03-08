@@ -87,7 +87,6 @@ class ExemptionTest extends TestCase
         $response = $this->postScoreForStages($score, $disciplines[1]);
         $this->assertEquals('Aprovado', $response->situacao);
 
-
         $this->assertEquals(App_Model_MatriculaSituacao::APROVADO, $registration->refresh()->aprovado);
     }
 
@@ -175,7 +174,6 @@ class ExemptionTest extends TestCase
         $response = $this->postScoreForStages($score, $disciplines[1]);
         $this->assertEquals('Aprovado', $response->situacao);
 
-
         // Dispensa a ultima etapa da primeira disciplina
         /** @var LegacyDisciplineExemption $dispensa */
         $dispensa = factory(LegacyDisciplineExemption::class)->create([
@@ -205,5 +203,4 @@ class ExemptionTest extends TestCase
 
         $this->assertEquals(App_Model_MatriculaSituacao::APROVADO, $registration->refresh()->aprovado);
     }
-
 }

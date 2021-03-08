@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsModulesPessoaTransporte extends Model
 {
     public $cod_pessoa_transporte;

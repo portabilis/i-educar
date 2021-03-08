@@ -11,8 +11,9 @@ interface RegistroImportInterface
      * Faz a importação dos dados a partir do model que representa o registro do educacenso
      *
      * @param RegistroEducacenso $model
-     * @param int $year
-     * @param User $user
+     * @param int                $year
+     * @param User               $user
+     *
      * @return void
      */
     public function import(RegistroEducacenso $model, $year, User $user);
@@ -21,6 +22,7 @@ interface RegistroImportInterface
      * Returna um model representando os dados do registro
      *
      * @param $arrayColumns
+     *
      * @return RegistroEducacenso
      */
     public static function getModel($arrayColumns);

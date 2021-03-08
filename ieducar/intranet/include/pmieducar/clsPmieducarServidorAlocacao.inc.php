@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarServidorAlocacao extends Model
 {
     public $cod_servidor_alocacao;

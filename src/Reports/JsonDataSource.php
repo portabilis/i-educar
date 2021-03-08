@@ -40,9 +40,9 @@ trait JsonDataSource
     /**
      * Retorna o SQL para buscar os dados que serão adicionados ao cabeçalho.
      *
-     * @return string
-     *
      * @throws Exception
+     *
+     * @return string
      */
     public function getSqlHeaderReport()
     {
@@ -104,9 +104,9 @@ trait JsonDataSource
     /**
      * Retorna o SQL para buscar os dados do relatório principal.
      *
-     * @return string
-     *
      * @throws Exception
+     *
+     * @return string
      */
     public function getSqlMainReport()
     {

@@ -75,15 +75,15 @@ class TurmaController extends ApiCoreController
     {
         $codTurma = $this->getRequest()->id;
         $parametros = [$codTurma];
-        $sql = "
+        $sql = '
             SELECT
                 cod_matricula,
                 sequencial_fechamento,
                 sequencial,
                 relatorio.get_texto_sem_caracter_especial(pessoa.nome) AS aluno,
                 data_enturmacao,
-                CASE WHEN dependencia THEN to_char(data_enturmacao,'mmdd')::int ELSE 0 END as ord_dependencia,
-                CASE WHEN to_char(instituicao.data_base_remanejamento,'mmdd') is not null and to_char(data_enturmacao,'mmdd') > to_char(instituicao.data_base_remanejamento,'mmdd') THEN to_char(data_enturmacao,'mmdd')::int ELSE 0 END as data_aluno_order
+                CASE WHEN dependencia THEN to_char(data_enturmacao,\'mmdd\')::int ELSE 0 END as ord_dependencia,
+                CASE WHEN to_char(instituicao.data_base_remanejamento,\'mmdd\') is not null and to_char(data_enturmacao,\'mmdd\') > to_char(instituicao.data_base_remanejamento,\'mmdd\') THEN to_char(data_enturmacao,\'mmdd\')::int ELSE 0 END as data_aluno_order
             FROM pmieducar.matricula_turma
             INNER JOIN pmieducar.instituicao On (instituicao.ativo = 1)
             INNER JOIN pmieducar.matricula ON (matricula.cod_matricula = matricula_turma.ref_cod_matricula)
@@ -103,7 +103,7 @@ class TurmaController extends ApiCoreController
                     END
                 )
             ORDER BY ord_dependencia, data_aluno_order, aluno;
-        ";
+        ';
 
         $alunos = $this->fetchPreparedQuery($sql, $parametros);
         $attrs = [
@@ -126,14 +126,14 @@ class TurmaController extends ApiCoreController
                 $key + 1
             ];
 
-            $sql = "
+            $sql = '
                 UPDATE pmieducar.matricula_turma
                 SET sequencial_fechamento = $5
                 WHERE matricula_turma.ref_cod_turma = $1
                 AND matricula_turma.ref_cod_matricula = $2
                 AND sequencial_fechamento = $3
                 AND sequencial = $4
-            ";
+            ';
 
             $this->fetchPreparedQuery($sql, $parametros);
         }

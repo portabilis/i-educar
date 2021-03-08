@@ -29,6 +29,7 @@ class Registro30 extends AbstractRegistro
 
     /**
      * @param $schoolId
+     *
      * @return Registro30Model[]
      */
     public function getData($schoolId)
@@ -73,7 +74,7 @@ class Registro30 extends AbstractRegistro
 
     /**
      * @param ItemOfRegistro30[] $array
-     * @param string $type
+     * @param string             $type
      */
     public function setArrayDataByType($array, $type)
     {
@@ -103,8 +104,10 @@ class Registro30 extends AbstractRegistro
 
     /**
      * @param $escolaId
-     * @return Registro30Model[]
+     *
      * @throws \Exception
+     *
+     * @return Registro30Model[]
      */
     public function getExportFormatData($escolaId)
     {

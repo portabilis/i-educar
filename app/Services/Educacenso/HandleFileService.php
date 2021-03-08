@@ -29,13 +29,14 @@ class HandleFileService
 
     /**
      * @param ImportService $yearImportService
-     * @param User $user
+     * @param User          $user
      */
     public function __construct(ImportService $yearImportService, User $user)
     {
         $this->yearImportService = $yearImportService;
         $this->user = $user;
     }
+
     /**
      * Processa o arquivo de importação do censo
      *

@@ -18,7 +18,7 @@ class EvaluationRuleNotDefinedInLevel extends Exception
     public function __construct($levelId)
     {
         parent::__construct(
-            "Regra de avaliação não informada na série para o ano letivo informado.",
+            'Regra de avaliação não informada na série para o ano letivo informado.',
             Error::EVALUATION_RULE_NOT_DEFINED_IN_LEVEL
         );
 

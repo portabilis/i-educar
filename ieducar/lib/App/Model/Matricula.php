@@ -1,6 +1,5 @@
 <?php
 
-
 class App_Model_Matricula
 {
     /**

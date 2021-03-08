@@ -68,7 +68,6 @@ SQL;
 
     /**
      * @deprecated
-     *
      * @see DropForeignKey::dropForeignKeysThatReferences()
      *
      * @param string $table

@@ -9,7 +9,6 @@ use iEducar\Modules\Educacenso\Model\TipoMediacaoDidaticoPedagogico;
 
 class ValueTurmaMaisEducacao implements ValueInterface
 {
-
     private $dependenciaAdministrativa;
     private $tipoAtendimento;
     private $modalidade;
