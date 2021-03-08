@@ -90,6 +90,7 @@ return new class extends clsCadastro {
 
         try {
             $unificador->unifica();
+            DB::commit();
         } catch (CoreExt_Exception $exception) {
             $this->mensagem = $exception->getMessage();
             DB::rollBack();
@@ -97,7 +98,6 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = '<span>Pessoas unificadas com sucesso.</span>';
-        DB::commit();
         return true;
     }
 

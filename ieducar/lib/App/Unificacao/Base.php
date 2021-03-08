@@ -220,7 +220,7 @@ class App_Unificacao_Base
     }
 
     /**
-     * @param $table_name string
+     * @param $tableName string
      * @return string
      */
     private function buildSqlExtraBeforeUnification(string $tableName)
