@@ -1357,7 +1357,7 @@ class clsPmieducarTurma extends Model
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
-        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} t LEFT JOIN pmieducar.turma_serie ts ON (ts.turma_id  = T.cod_turma) LEFT JOIN {$this->_schema}serie s ON (s.cod_serie = COALESCE(ts.serie_id, T.ref_ref_cod_serie)), {$this->_schema}curso c , {$this->_schema}instituicao i {$filtros}");
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} t LEFT JOIN pmieducar.turma_serie ts ON (ts.turma_id  = t.cod_turma) LEFT JOIN {$this->_schema}serie s ON (s.cod_serie = COALESCE(ts.serie_id, t.ref_ref_cod_serie)), {$this->_schema}curso c , {$this->_schema}instituicao i {$filtros}");
 
         $db->Consulta($sql);
 
