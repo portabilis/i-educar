@@ -1,6 +1,5 @@
 <?php
 
-
 class clsPessoaJuridica extends clsPessoaFj
 {
     public $idpes;

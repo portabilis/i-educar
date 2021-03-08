@@ -62,6 +62,7 @@ class SplitFileService
 
     /**
      * @param string $line
+     *
      * @return bool
      */
     private function isNewSchoolLine($line)

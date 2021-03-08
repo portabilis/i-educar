@@ -15,9 +15,9 @@ class AddForeignKeysInModulesMediaGeralTable extends Migration
     {
         Schema::table('modules.media_geral', function (Blueprint $table) {
             $table->foreign('nota_aluno_id')
-               ->references('id')
-               ->on('modules.nota_aluno')
-               ->onDelete('cascade');
+                ->references('id')
+                ->on('modules.nota_aluno')
+                ->onDelete('cascade');
         });
     }
 

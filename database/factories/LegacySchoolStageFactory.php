@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Factory;
 /** @var Factory $factory */
 
 $factory->define(LegacySchoolStage::class, function (Faker $faker) {
-
     $schoolAcademicYear = factory(LegacySchoolAcademicYear::class)->create();
     $stageType = factory(LegacyStageType::class)->state('unique')->make();
 

@@ -1,6 +1,5 @@
 <?php
 
-
 class InstituicaoDocumentacaoController extends ApiCoreController
 {
     protected function insertDocuments()

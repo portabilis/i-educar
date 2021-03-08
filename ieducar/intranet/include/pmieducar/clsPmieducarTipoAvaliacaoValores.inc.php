@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarTipoAvaliacaoValores extends Model
 {
     public $ref_cod_tipo_avaliacao;
@@ -22,7 +21,7 @@ class clsPmieducarTipoAvaliacaoValores extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_cod_tipo_avaliacao, sequencial, nome, valor, valor_min, valor_max,ativo';
 
         if (is_numeric($ref_cod_tipo_avaliacao)) {
-                    $this->ref_cod_tipo_avaliacao = $ref_cod_tipo_avaliacao;
+            $this->ref_cod_tipo_avaliacao = $ref_cod_tipo_avaliacao;
         }
 
         if (is_numeric($sequencial)) {

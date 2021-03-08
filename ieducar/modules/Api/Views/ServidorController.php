@@ -208,6 +208,7 @@ class ServidorController extends ApiCoreController
                 } elseif (is_string($vinculo['disciplinas'])) {
                     $vinculo['disciplinas'] = explode(',', $vinculo['disciplinas']);
                 }
+
                 return $vinculo;
             }, $vinculos);
 
@@ -275,6 +276,7 @@ class ServidorController extends ApiCoreController
             return true;
         } else {
             $this->messenger->append($validator->getMessage());
+
             return false;
         }
     }

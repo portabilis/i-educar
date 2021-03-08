@@ -1,17 +1,6 @@
 <?php
 
-
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Matrículas Turmas");
-        $this->processoAp = '659';
-    }
-}
-
-class indice extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Titulo no topo da pagina
      *
@@ -172,27 +161,15 @@ class indice extends clsListagem
             'educar_index.php' => 'Escola',
         ]);
     }
-}
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-matriculas-turma-lst.js');
+    }
 
-$pagina->addForm($miolo);
-$pagina->MakeAll();
-?>
-
-<script>
-
-    document.getElementById('ref_cod_escola').onchange = function () {
-        getEscolaCurso();
-    };
-
-    document.getElementById('ref_cod_curso').onchange = function () {
-        getEscolaCursoSerie();
-    };
-
-    document.getElementById('ref_ref_cod_serie').onchange = function () {
-        getTurma();
-    };
-
-</script>
+    public function Formular()
+    {
+        $this->title = 'i-Educar - Matrículas Turmas';
+        $this->processoAp = '659';
+    }
+};

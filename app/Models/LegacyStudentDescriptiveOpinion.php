@@ -27,7 +27,6 @@ class LegacyStudentDescriptiveOpinion extends Model
      */
     public $timestamps = false;
 
-
     /**
      * @return BelongsTo
      */

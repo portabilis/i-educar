@@ -1,6 +1,5 @@
 <?php
 
-
 class clsPmieducarConfiguracoesGerais
 {
     public $ref_cod_instituicao;

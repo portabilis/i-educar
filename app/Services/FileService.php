@@ -42,7 +42,7 @@ class FileService
                 'original_name' => $originalName,
                 'extension' => $extension,
             ]);
-    
+
             FileRelation::create([
                 'type' => $typeFileRelation,
                 'relation_id' => $relationId,
@@ -78,7 +78,7 @@ class FileService
                 FileRelation::destroy($filesRelation);
                 File::destroy($deletedFile);
                 DB::commit();
-            } catch(Throwable $e) {
+            } catch (Throwable $e) {
                 DB::rollBack();
             }
         }

@@ -54,7 +54,7 @@ class NotificationService
      */
     public function createByUserLevel($level, $text, $link, $type)
     {
-        $users = LegacyUser::whereHas('type', function($typeQuery) use ($level) {
+        $users = LegacyUser::whereHas('type', function ($typeQuery) use ($level) {
             $typeQuery->where('nivel', $level);
         })->get();
 

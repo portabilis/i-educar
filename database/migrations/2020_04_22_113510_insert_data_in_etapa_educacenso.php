@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 class InsertDataInEtapaEducacenso extends Migration
 {
@@ -13,7 +13,7 @@ class InsertDataInEtapaEducacenso extends Migration
     public function up()
     {
         DB::unprepared(
-            file_get_contents(database_path("sqls/inserts/public.etapa_educacenso.sql"))
+            file_get_contents(database_path('sqls/inserts/public.etapa_educacenso.sql'))
         );
     }
 

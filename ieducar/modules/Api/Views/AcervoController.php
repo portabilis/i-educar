@@ -1,9 +1,7 @@
 <?php
 
-
 class AcervoController extends ApiCoreController
 {
-
     protected function searchOptions()
     {
         $biblioteca_id = $this->getRequest()->biblioteca_id

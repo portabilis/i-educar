@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarBloqueioLancamentoFaltasNotas extends Model
 {
     public $cod_bloqueio;

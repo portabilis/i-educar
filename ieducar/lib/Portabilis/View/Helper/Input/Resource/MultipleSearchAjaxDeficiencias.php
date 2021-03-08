@@ -1,6 +1,5 @@
 <?php
 
-
 class Portabilis_View_Helper_Input_Resource_MultipleSearchAjaxDeficiencias extends Portabilis_View_Helper_Input_MultipleSearchAjax
 {
     public function multipleSearchDeficiencias($attrName, $options = [])

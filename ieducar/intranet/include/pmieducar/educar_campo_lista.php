@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Session;
-
 $pessoa_logada = \Illuminate\Support\Facades\Auth::id();
 
 if (!isset($exibe_campo_lista_curso_escola)) {
@@ -292,7 +290,7 @@ if (isset($get_cabecalho)) {
 <script type='text/javascript'>
 <?php
 if ($nivel_usuario == 1 || $nivel_usuario == 2 || $cad_usuario) {
-?>
+    ?>
 var before_getEscola;
 var after_getEscola;
 
@@ -305,16 +303,16 @@ function getEscola() {
 }
 <?php
 if ($get_escola && $get_biblioteca) {
-?>
+        ?>
 function getDuploEscolaBiblioteca() {
     getEscola();
     getBiblioteca(1);
 }
 <?php
-}
+    }
 }
 if ($get_curso && $sem_padrao && !$get_matricula) {
-?>
+    ?>
 function getCurso() {
     var campoCurso = document.getElementById('ref_cod_curso');
     var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
@@ -349,7 +347,7 @@ function atualizaLstCurso(xml) {
 }
 <?php
 } elseif ($get_curso && !$get_matricula) {
-?>
+        ?>
 function getCurso() {
     var campoCurso = document.getElementById('ref_cod_curso');
     var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
@@ -383,9 +381,9 @@ function atualizaLstCurso(xml) {
     }
 }
 <?php
-}
+    }
 if ($get_escola && $get_curso && $get_matricula) {
-?>
+    ?>
 function getMatricula() {
     getEscola();
     getCursoMatricula();
@@ -393,7 +391,7 @@ function getMatricula() {
 <?php
 }
 if ($get_escola && $get_curso && !$get_matricula) {
-?>
+    ?>
 function getDuploEscolaCurso() {
     getEscola();
     getCurso();
@@ -402,7 +400,7 @@ function getDuploEscolaCurso() {
 }
 //if ( $get_escola_curso )
 if ($get_curso) {
-?>
+    ?>
 function getEscolaCurso() {
     var campoCurso = document.getElementById('ref_cod_curso');
     if (document.getElementById('ref_cod_escola')) {
@@ -446,7 +444,7 @@ function atualizaLstEscolaCurso(xml) {
 <?php
 }
 if ($get_escola_curso_serie && $get_matricula && $_GET['ref_cod_aluno']) {
-// tah matriculando o aluno, seleciona as series que ele pode se matricular?
+    // tah matriculando o aluno, seleciona as series que ele pode se matricular?
 ?>
 function getEscolaCursoSerie() {
     var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
@@ -488,7 +486,7 @@ function atualizaLstSerieMatricula(xml) {
 <?php
 }
 if ($get_escola_curso_serie && !$get_matricula) {
-?>
+    ?>
 function getEscolaCursoSerie() {
     var campoCurso = document.getElementById('ref_cod_curso').value;
     if (document.getElementById('ref_cod_escola')) {
@@ -528,7 +526,7 @@ function atualizaLstEscolaCursoSerie(xml) {
 <?php
 }
 if ($get_serie && $get_escola_serie) {
-// lista todas as series que nao estao associadas a essa escola
+    // lista todas as series que nao estao associadas a essa escola
 ?>
 function getSerie() {
     var campoCurso = document.getElementById('ref_cod_curso').value;
@@ -572,7 +570,7 @@ function atualizaLstSerie(xml) {
 <?php
 }
 if ($get_serie && !$get_escola_serie || $exibe_get_serie) {
-?>
+    ?>
 function getSerie() {
     var campoCurso = document.getElementById('ref_cod_curso').value;
     var campoSerie = document.getElementById('ref_cod_serie');
@@ -612,7 +610,7 @@ function atualizaLstSerie(xml) {
 <?php
 }
 if ($get_biblioteca) {
-?>
+    ?>
 function getBiblioteca(flag) {
     var campoBiblioteca = document.getElementById('ref_cod_biblioteca');
     campoBiblioteca.length = 1;
@@ -646,7 +644,7 @@ function atualizaLstBiblioteca(xml) {
 <?php
 }
 if ($get_cliente_tipo) {
-?>
+    ?>
 function getClienteTipo() {
     var campoBiblioteca = document.getElementById('ref_cod_biblioteca').value;
     var campoClienteTipo = document.getElementById('ref_cod_cliente_tipo');
@@ -684,7 +682,7 @@ function atualizaLstClienteTipo(xml) {
 <?php
 }
 if ($get_funcao) {
-?>
+    ?>
 function getFuncao() {
     var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
     var campoFuncao = document.getElementById('ref_cod_funcao');
@@ -719,7 +717,7 @@ function atualizaLstFuncao(xml) {
 <?php
 }
 if ($get_turma) {
-?>
+    ?>
 function getTurma() {
     var campoEscola = document.getElementById('ref_cod_escola').value;
     var campoSerie = document.getElementById('ref_ref_cod_serie').value;
@@ -808,7 +806,7 @@ function limpaCampos(nivel) {
 
 <?php
 if ($get_semestre) {
-?>
+    ?>
 
 function verifica_curso() {
     var ref_cod_curso = document.getElementById('ref_cod_curso').value;

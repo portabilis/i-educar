@@ -2,19 +2,7 @@
 
 use iEducar\Modules\Addressing\LegacyAddressingFields;
 
-$desvio_diretorio = '';
-
-class clsIndex extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} Empresas!");
-        $this->processoAp = 41;
-    }
-}
-
-class indice extends clsCadastro
-{
+return new class extends clsCadastro {
     use LegacyAddressingFields;
 
     // Dados do Juridico
@@ -341,7 +329,6 @@ class indice extends clsCadastro
         $this->saveAddress($this->cod_pessoa_fj);
 
         $this->simpleRedirect('empresas_lst.php');
-
     }
 
     public function Excluir()
@@ -409,11 +396,10 @@ class indice extends clsCadastro
 
         return true;
     }
-}
 
-$pagina = new clsIndex();
-
-$miolo = new indice();
-$pagina->addForm($miolo);
-
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->title = 'Empresas!';
+        $this->processoAp = 41;
+    }
+};

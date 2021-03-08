@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarDisciplinaDependencia extends Model
 {
     public $ref_cod_matricula;
@@ -37,7 +36,7 @@ class clsPmieducarDisciplinaDependencia extends Model
         if (is_numeric($ref_cod_disciplina) && is_numeric($ref_cod_escola) &&
             is_numeric($ref_cod_serie)
         ) {
-                        $anoEscolarMapper = new ComponenteCurricular_Model_AnoEscolarDataMapper();
+            $anoEscolarMapper = new ComponenteCurricular_Model_AnoEscolarDataMapper();
             $componenteAnos = $anoEscolarMapper->findAll([], [
                 'componenteCurricular' => $ref_cod_disciplina,
                 'anoEscolar' => $ref_cod_serie

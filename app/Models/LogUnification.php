@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use iEducar\Modules\Unification\LogUnificationTypeInterface;
 use Exception;
+use iEducar\Modules\Unification\LogUnificationTypeInterface;
 use iEducar\Modules\Unification\PersonLogUnification;
 use iEducar\Modules\Unification\StudentLogUnification;
 use Illuminate\Database\Eloquent\Builder;
@@ -72,6 +72,7 @@ class LogUnification extends Model
 
     /**
      * @param $value
+     *
      * @return mixed
      */
     public function getDuplicatesIdAttribute($value)
@@ -80,8 +81,9 @@ class LogUnification extends Model
     }
 
     /**
-     * @return string
      * @throws Exception
+     *
+     * @return string
      */
     public function getMainName()
     {
@@ -89,8 +91,9 @@ class LogUnification extends Model
     }
 
     /**
-     * @return array
      * @throws Exception
+     *
+     * @return array
      */
     public function getDuplicatesName()
     {
@@ -98,8 +101,9 @@ class LogUnification extends Model
     }
 
     /**
-     * @return LogUnificationTypeInterface
      * @throws Exception
+     *
+     * @return LogUnificationTypeInterface
      */
     public function getAdapter()
     {
@@ -115,7 +119,8 @@ class LogUnification extends Model
     }
 
     /**
-     * @param  Builder  $query
+     * @param Builder $query
+     *
      * @return Builder
      */
     public function scopeStudent($query)
@@ -124,7 +129,8 @@ class LogUnification extends Model
     }
 
     /**
-     * @param  Builder  $query
+     * @param Builder $query
+     *
      * @return Builder
      */
     public function scopePerson($query)

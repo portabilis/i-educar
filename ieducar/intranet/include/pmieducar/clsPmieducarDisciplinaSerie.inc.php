@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarDisciplinaSerie extends Model
 {
     public $ref_cod_disciplina;
@@ -18,10 +17,10 @@ class clsPmieducarDisciplinaSerie extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_cod_disciplina, ref_cod_serie, ativo';
 
         if (is_numeric($ref_cod_serie)) {
-                    $this->ref_cod_serie = $ref_cod_serie;
+            $this->ref_cod_serie = $ref_cod_serie;
         }
         if (is_numeric($ref_cod_disciplina)) {
-                    $this->ref_cod_disciplina = $ref_cod_disciplina;
+            $this->ref_cod_disciplina = $ref_cod_disciplina;
         }
 
         if (is_numeric($ativo)) {

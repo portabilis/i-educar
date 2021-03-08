@@ -2,32 +2,18 @@
 
 use App\Models\LegacyIndividual;
 use App\Models\LegacyInstitution;
+use App\Services\FileService;
 use App\Services\UrlPresigner;
 use iEducar\Modules\Addressing\LegacyAddressingFields;
-use iEducar\Modules\Educacenso\Validator\NameValidator;
-use iEducar\Modules\Educacenso\Validator\BirthDateValidator;
-use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
-use iEducar\Modules\Educacenso\Validator\NisValidator;
-use iEducar\Modules\Educacenso\Validator\DifferentiatedLocationValidator;
 use iEducar\Modules\Educacenso\Model\PaisResidencia;
+use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
+use iEducar\Modules\Educacenso\Validator\BirthDateValidator;
+use iEducar\Modules\Educacenso\Validator\DifferentiatedLocationValidator;
+use iEducar\Modules\Educacenso\Validator\NameValidator;
+use iEducar\Modules\Educacenso\Validator\NisValidator;
 use iEducar\Support\View\SelectOptions;
-use App\Services\FileService;
 
-
-
-
-
-class clsIndex extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' Pessoas Físicas - Cadastro');
-        $this->processoAp = 43;
-    }
-}
-
-class indice extends clsCadastro
-{
+return new class extends clsCadastro {
     use LegacyAddressingFields;
 
     public $cod_pessoa_fj;
@@ -143,7 +129,6 @@ class indice extends clsCadastro
             $this->estado_civil_id = $this->estado_civil->ideciv;
             $this->pais_origem_id = $this->pais_origem;
             $this->naturalidade_id = $this->naturalidade;
-
         }
 
         $this->fexcluir = $obj_permissoes->permissao_excluir(
@@ -1022,6 +1007,7 @@ class indice extends clsCadastro
         $validator = new NameValidator($this->nm_pessoa);
         if (!$validator->isValid()) {
             $this->mensagem = $validator->getMessage();
+
             return false;
         }
 
@@ -1033,6 +1019,7 @@ class indice extends clsCadastro
         $validator = new DifferentiatedLocationValidator($this->localizacao_diferenciada, $this->zona_localizacao_censo);
         if (!$validator->isValid()) {
             $this->mensagem = $validator->getMessage();
+
             return false;
         }
 
@@ -1044,6 +1031,7 @@ class indice extends clsCadastro
         $validator = new BirthDateValidator(Portabilis_Date_Utils::brToPgSQL($this->data_nasc));
         if (!$validator->isValid()) {
             $this->mensagem = $validator->getMessage();
+
             return false;
         }
 
@@ -1145,6 +1133,7 @@ class indice extends clsCadastro
             $validator = new BirthCertificateValidator($this->certidao_nascimento, Portabilis_Date_Utils::brToPgSQL($this->data_nasc));
             if (!$validator->isValid()) {
                 $this->mensagem = $validator->getMessage();
+
                 return false;
             }
         }
@@ -1163,6 +1152,7 @@ class indice extends clsCadastro
         $validator = new NisValidator($this->nis_pis_pasep ?? '');
         if (!$validator->isValid()) {
             $this->mensagem = $validator->getMessage();
+
             return false;
         }
 
@@ -1421,16 +1411,10 @@ class indice extends clsCadastro
             $fileService->deleteFiles($deletedFiles);
         }
     }
-}
 
-// Instancia objeto de página
-$pagina = new clsIndex();
-
-// Instancia objeto de conteúdo
-$miolo = new indice();
-
-// Atribui o conteúdo à página
-$pagina->addForm($miolo);
-
-// Gera o código HTML
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->title = 'Pessoas Físicas - Cadastro';
+        $this->processoAp = 43;
+    }
+};

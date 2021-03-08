@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Auth;
 
-
 class clsModulesAuditoriaNota
 {
     public $notaAntiga;

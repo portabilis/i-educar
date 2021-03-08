@@ -21,11 +21,13 @@ class BirthCertificateValidator implements EducacensoValidator
     {
         if (!$this->validateCertificateLength() || !$this->validateCertificateDigits()) {
             $this->message = 'O campo: Tipo certidão civil (novo formato) possui valor inválido';
+
             return false;
         }
 
         if (!$this->validateCertificateYear()) {
             $this->message = 'O campo: Tipo certidão civil (novo formato) foi preenchido com o ano inválido. O número localizado nas posições de 11 a 14, não pode ser anterior ao ano de nascimento e nem posterior ao ano corrente';
+
             return false;
         }
 
@@ -48,7 +50,8 @@ class BirthCertificateValidator implements EducacensoValidator
         $shouldBeNumericDigits = substr($this->birthCertificate, 0, 30);
         $shouldBeNumericOrXDigits = substr($this->birthCertificate, 30, 30);
 
-        return ctype_digit($shouldBeNumericDigits) && preg_match('/^[0-9, X]*$/', $shouldBeNumericOrXDigits);;
+        return ctype_digit($shouldBeNumericDigits) && preg_match('/^[0-9, X]*$/', $shouldBeNumericOrXDigits);
+        ;
     }
 
     /**

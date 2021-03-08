@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Educacenso\Validator;
 
-use iEducar\Modules\Educacenso\Validator\DifferentiatedLocationValidator;
-use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaPessoa;
 use App_Model_ZonaLocalizacao;
+use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaPessoa;
+use iEducar\Modules\Educacenso\Validator\DifferentiatedLocationValidator;
 use Tests\TestCase;
 
 class DifferentiatedLocationValidatorTest extends TestCase

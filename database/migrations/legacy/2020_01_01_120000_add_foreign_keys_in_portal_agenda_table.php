@@ -15,22 +15,22 @@ class AddForeignKeysInPortalAgendaTable extends Migration
     {
         Schema::table('portal.agenda', function (Blueprint $table) {
             $table->foreign('ref_ref_cod_pessoa_own')
-               ->references('ref_cod_pessoa_fj')
-               ->on('portal.funcionario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('ref_cod_pessoa_fj')
+                ->on('portal.funcionario')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_ref_cod_pessoa_exc')
-               ->references('ref_cod_pessoa_fj')
-               ->on('portal.funcionario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('ref_cod_pessoa_fj')
+                ->on('portal.funcionario')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_ref_cod_pessoa_cad')
-               ->references('ref_cod_pessoa_fj')
-               ->on('portal.funcionario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('ref_cod_pessoa_fj')
+                ->on('portal.funcionario')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

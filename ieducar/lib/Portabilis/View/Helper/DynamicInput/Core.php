@@ -1,6 +1,5 @@
 <?php
 
-
 class Portabilis_View_Helper_DynamicInput_Core extends Portabilis_View_Helper_Input_Core
 {
     protected function loadCoreAssets()

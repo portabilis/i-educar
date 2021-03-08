@@ -1,8 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Session;
-
-
 class Core_Controller_Page_ListController extends clsListagem implements Core_View_Tabulable
 {
     /**

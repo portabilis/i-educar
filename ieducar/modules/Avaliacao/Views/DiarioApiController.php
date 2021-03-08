@@ -11,11 +11,7 @@ use iEducar\Modules\Stages\Exceptions\MissingStagesException;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
-
-
-
 
 class DiarioApiController extends ApiCoreController
 {
@@ -1256,7 +1252,7 @@ class DiarioApiController extends ApiCoreController
             throw new Exception('Não foi possível obter a área de conhecimento pois não foi recebido o id do componente curricular.');
         }
 
-                $mapper = new ComponenteCurricular_Model_ComponenteDataMapper();
+        $mapper = new ComponenteCurricular_Model_ComponenteDataMapper();
 
         $where = ['id' => $componenteCurricularId];
 

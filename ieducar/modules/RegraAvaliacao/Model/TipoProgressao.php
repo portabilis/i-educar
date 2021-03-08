@@ -1,9 +1,7 @@
 <?php
 
-
 class RegraAvaliacao_Model_TipoProgressao extends CoreExt_Enum
 {
-
     const CONTINUADA = 1;
     const NAO_CONTINUADA_MEDIA_PRESENCA = 2;
     const NAO_CONTINUADA_SOMENTE_MEDIA = 3;

@@ -11,6 +11,7 @@ class StudentLogUnification implements LogUnificationTypeInterface
 {
     /**
      * @param LogUnification $logUnification
+     *
      * @return string
      */
     public function getMainPersonName(LogUnification $logUnification)
@@ -24,6 +25,7 @@ class StudentLogUnification implements LogUnificationTypeInterface
 
     /**
      * @param LogUnification $logUnification
+     *
      * @return array
      */
     public function getDuplicatedPeopleName(LogUnification $logUnification)

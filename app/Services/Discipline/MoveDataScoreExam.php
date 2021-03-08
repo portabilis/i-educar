@@ -2,7 +2,6 @@
 
 namespace App\Services\Discipline;
 
-use App\Models\LegacyDisciplineScoreAverage;
 use App\Models\LegacyScoreExam;
 use Illuminate\Database\Eloquent\Builder;
 

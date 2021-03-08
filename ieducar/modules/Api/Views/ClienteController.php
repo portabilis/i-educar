@@ -1,6 +1,5 @@
 <?php
 
-
 class ClienteController extends ApiCoreController
 {
 

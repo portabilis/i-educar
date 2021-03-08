@@ -1,6 +1,5 @@
 <?php
 
-
 class UsuarioExportController extends ApiCoreController
 {
     protected function exportUsers()

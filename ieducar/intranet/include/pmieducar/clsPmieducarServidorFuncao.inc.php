@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarServidorFuncao extends Model
 {
     public $cod_servidor_funcao;
@@ -20,11 +19,11 @@ class clsPmieducarServidorFuncao extends Model
         $this->_campos_lista = $this->_todos_campos = ' cod_servidor_funcao, ref_ref_cod_instituicao, ref_cod_servidor, ref_cod_funcao, matricula';
 
         if (is_numeric($ref_cod_funcao)) {
-                    $this->ref_cod_funcao = $ref_cod_funcao;
+            $this->ref_cod_funcao = $ref_cod_funcao;
         }
         if (is_numeric($ref_cod_servidor) && is_numeric($ref_ref_cod_instituicao)) {
-                    $this->ref_cod_servidor = $ref_cod_servidor;
-                    $this->ref_ref_cod_instituicao = $ref_ref_cod_instituicao;
+            $this->ref_cod_servidor = $ref_cod_servidor;
+            $this->ref_ref_cod_instituicao = $ref_ref_cod_instituicao;
 
             if (is_string($matricula)) {
                 $this->matricula = $matricula;
@@ -91,7 +90,7 @@ class clsPmieducarServidorFuncao extends Model
         if (empty($this->matricula)) {
             $set[] = 'matricula = NULL';
         } elseif (is_string($this->matricula)) {
-            $set[] = "matricula = '". $this->matricula ."'";
+            $set[] = 'matricula = \''. $this->matricula .'\'';
         }
 
         if (is_numeric($this->ref_cod_funcao)) {

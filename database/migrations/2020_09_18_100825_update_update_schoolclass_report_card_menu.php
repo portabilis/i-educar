@@ -16,7 +16,6 @@ class UpdateUpdateSchoolclassReportCardMenu extends Migration
         DB::table('menus')
             ->where('process', Process::UPDATE_SCHOOL_CLASS_REPORT_CARD)
             ->update(['title' => 'Atualização de boletins em lote']);
-
     }
 
     /**

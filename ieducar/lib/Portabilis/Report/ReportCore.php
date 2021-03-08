@@ -2,7 +2,6 @@
 
 use iEducar\Reports\BaseModifier;
 
-
 abstract class Portabilis_Report_ReportCore
 {
     /**

@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarBibliotecaUsuario extends Model
 {
     public $ref_cod_biblioteca;

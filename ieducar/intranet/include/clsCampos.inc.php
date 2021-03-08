@@ -1,6 +1,5 @@
 <?php
 
-
 class clsCampos extends Core_Controller_Page_Abstract
 {
     public $campos = [];

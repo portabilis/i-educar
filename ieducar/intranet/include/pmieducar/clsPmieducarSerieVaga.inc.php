@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarSerieVaga extends Model
 {
     public $cod_serie_vaga;

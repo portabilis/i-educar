@@ -1,6 +1,5 @@
 <?php
 
-
 abstract class CoreExt_Enum extends CoreExt_Singleton implements ArrayAccess
 {
     /**
@@ -87,7 +86,7 @@ abstract class CoreExt_Enum extends CoreExt_Singleton implements ArrayAccess
      */
     public function offsetUnset($offset)
     {
-                throw new CoreExt_Exception('Um "' . get_class($this) . '" é um objeto read-only.');
+        throw new CoreExt_Exception('Um "' . get_class($this) . '" é um objeto read-only.');
     }
 
     /**
@@ -104,7 +103,7 @@ abstract class CoreExt_Enum extends CoreExt_Singleton implements ArrayAccess
      */
     public function offsetSet($offset, $value)
     {
-                throw new CoreExt_Exception('Um "' . get_class($this) . '" é um objeto read-only.');
+        throw new CoreExt_Exception('Um "' . get_class($this) . '" é um objeto read-only.');
     }
 
     /**

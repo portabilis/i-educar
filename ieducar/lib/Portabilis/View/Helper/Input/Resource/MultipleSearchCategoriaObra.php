@@ -1,6 +1,5 @@
 <?php
 
-
 class Portabilis_View_Helper_Input_Resource_MultipleSearchCategoriaObra extends Portabilis_View_Helper_Input_MultipleSearch
 {
     protected function getOptions($resources)

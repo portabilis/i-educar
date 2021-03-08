@@ -44,10 +44,10 @@ class NewUserMail extends Mailable
     /**
      * Create a new message instance.
      *
-     * @param string $email
-     * @param string $username
-     * @param string $password
-     * @param string $name
+     * @param string      $email
+     * @param string      $username
+     * @param string      $password
+     * @param string      $name
      * @param string|null $url
      */
     public function __construct($email, $username, $password, $name, $url = null)

@@ -13,7 +13,7 @@ class FileController extends Controller
         $file = $request->file('file');
         try {
             $url = $fileService->upload($file);
-        } catch(Throwable $e) {
+        } catch (Throwable $e) {
             return [
                 'error' => $e->getMessage()
             ];

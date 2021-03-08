@@ -1,6 +1,5 @@
 <?php
 
-
 class VeiculoController extends ApiCoreController
 {
     protected $_processoAp = 578; //verificar
@@ -12,7 +11,7 @@ class VeiculoController extends ApiCoreController
         $nome = $this->fetchPreparedQuery($sql, $id, false, 'first-field');
 
         return $this->toUtf8($nome, ['transform' => true]);
-  }
+    }
 
     protected function loadNomeMotorista($id)
     {
@@ -226,7 +225,7 @@ class VeiculoController extends ApiCoreController
 
                 die();
             }
-        // update
+            // update
         } elseif ($this->isRequestFor('put', 'veiculo')) {
             $this->appendResponse($this->put());
         } else {

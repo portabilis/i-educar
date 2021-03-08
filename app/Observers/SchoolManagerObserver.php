@@ -10,11 +10,11 @@ class SchoolManagerObserver
      * Handle the school manager "created" event.
      *
      * @param SchoolManager $schoolManager
+     *
      * @return void
      */
     public function created(SchoolManager $schoolManager)
     {
-
         if (!$schoolManager->isChief()) {
             return;
         }
@@ -26,6 +26,7 @@ class SchoolManagerObserver
      * Handle the school manager "deleted" event.
      *
      * @param SchoolManager $schoolManager
+     *
      * @return void
      */
     public function deleted(SchoolManager $schoolManager)
@@ -39,9 +40,9 @@ class SchoolManagerObserver
 
     /**
      * @param SchoolManager $schoolManager
-     * @param $individualId
-     * @param $roleId
-     * @param $managerEmail
+     * @param               $individualId
+     * @param               $roleId
+     * @param               $managerEmail
      */
     private function updateManagerDataSchool(SchoolManager $schoolManager, $individualId, $roleId, $managerEmail)
     {
@@ -51,5 +52,4 @@ class SchoolManagerObserver
         $school->email_gestor = $managerEmail;
         $school->save();
     }
-
 }

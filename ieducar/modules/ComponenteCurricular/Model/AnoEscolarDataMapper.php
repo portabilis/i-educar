@@ -1,6 +1,5 @@
 <?php
 
-
 class ComponenteCurricular_Model_AnoEscolarDataMapper extends CoreExt_DataMapper
 {
     protected $_entityClass = 'ComponenteCurricular_Model_AnoEscolar';
@@ -49,7 +48,7 @@ class ComponenteCurricular_Model_AnoEscolarDataMapper extends CoreExt_DataMapper
     public function getComponenteDataMapper()
     {
         if (is_null($this->_componenteDataMapper)) {
-                        $this->_componenteDataMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
+            $this->_componenteDataMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
         }
 
         return $this->_componenteDataMapper;
@@ -115,7 +114,7 @@ class ComponenteCurricular_Model_AnoEscolarDataMapper extends CoreExt_DataMapper
             $id = $componenteAnoEscolar->get('componenteCurricular');
             $list[$id] = $this->getComponenteDataMapper()->find(
                 $componenteAnoEscolar->get('componenteCurricular')
-              );
+            );
             $list[$id]->cargaHoraria = $componenteAnoEscolar->cargaHoraria;
         }
 

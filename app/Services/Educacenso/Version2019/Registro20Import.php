@@ -53,8 +53,9 @@ class Registro20Import implements RegistroImportInterface
      * Faz a importação dos dados a partir da linha do arquivo
      *
      * @param RegistroEducacenso $model
-     * @param int $year
-     * @param $user
+     * @param int                $year
+     * @param                    $user
+     *
      * @return void
      */
     public function import(RegistroEducacenso $model, $year, $user)
@@ -84,8 +85,8 @@ class Registro20Import implements RegistroImportInterface
         $course = $this->getOrCreateCourse($school);
         $level = $this->getOrCreateLevel($school, $course);
 
-        $horaInicial = sprintf("%02d:%02d:00", intval($model->horaInicial), intval($model->horaInicialMinuto));
-        $horaFinal = sprintf("%02d:%02d:00", intval($model->horaFinal), intval($model->horaFinalMinuto));
+        $horaInicial = sprintf('%02d:%02d:00', intval($model->horaInicial), intval($model->horaInicialMinuto));
+        $horaFinal = sprintf('%02d:%02d:00', intval($model->horaFinal), intval($model->horaFinalMinuto));
 
         $schoolClass = LegacySchoolClass::create(
             [
@@ -131,6 +132,7 @@ class Registro20Import implements RegistroImportInterface
 
     /**
      * @param $disciplineId
+     *
      * @return LegacyDiscipline
      */
     private function createDiscipline($disciplineId)
@@ -277,12 +279,14 @@ class Registro20Import implements RegistroImportInterface
 
     /**
      * @param $arrayColumns
+     *
      * @return Registro10|RegistroEducacenso
      */
     public static function getModel($arrayColumns)
     {
         $registro = new Registro20();
         $registro->hydrateModel($arrayColumns);
+
         return $registro;
     }
 
@@ -308,6 +312,7 @@ class Registro20Import implements RegistroImportInterface
 
     /**
      * @param LegacySchool $school
+     *
      * @return LegacyCourse
      */
     private function getOrCreateCourse(LegacySchool $school)
@@ -396,6 +401,7 @@ class Registro20Import implements RegistroImportInterface
     /**
      * @param LegacySchool $school
      * @param LegacyCourse $course
+     *
      * @return LegacyLevel
      */
     private function getOrCreateLevel(LegacySchool $school, LegacyCourse $course)
@@ -479,8 +485,8 @@ class Registro20Import implements RegistroImportInterface
     public function getDataAtividadeCompementar()
     {
         return [
-            'curso' => "Atividade complementar",
-            'serie' => "Atividade complementar",
+            'curso' => 'Atividade complementar',
+            'serie' => 'Atividade complementar',
             'etapa' => 1,
             'etapas' => 1,
             'nivel' => 'Outros'
@@ -493,8 +499,8 @@ class Registro20Import implements RegistroImportInterface
     public function getDataAee()
     {
         return [
-            'curso' => "Atendimento educacional especializado (AEE)",
-            'serie' => "Atendimento educacional especializado (AEE)",
+            'curso' => 'Atendimento educacional especializado (AEE)',
+            'serie' => 'Atendimento educacional especializado (AEE)',
             'etapa' => 1,
             'etapas' => 1,
             'nivel' => 'Outros'
@@ -503,369 +509,370 @@ class Registro20Import implements RegistroImportInterface
 
     /**
      * @param integer $etapa
+     *
      * @return array
      */
     public function getDataByEtapaEducacenso($etapa)
     {
         $arrayData = [
             1 => [
-                'curso' => "Educação Infantil",
-                'serie' => "Creche (0 a 3 anos)",
+                'curso' => 'Educação Infantil',
+                'serie' => 'Creche (0 a 3 anos)',
                 'etapa' => 1,
                 'etapas' => 3,
                 'nivel' => 'Infantil'
             ],
             2 => [
-                'curso' => "Educação Infantil",
-                'serie' => "Pré-escola (4 e 5 anos)",
+                'curso' => 'Educação Infantil',
+                'serie' => 'Pré-escola (4 e 5 anos)',
                 'etapa' => 2,
                 'etapas' => 3,
                 'nivel' => 'Infantil'
             ],
             3 => [
-                'curso' => "Educação Infantil",
-                'serie' => "Unificada (0 a 5 anos)",
+                'curso' => 'Educação Infantil',
+                'serie' => 'Unificada (0 a 5 anos)',
                 'etapa' => 3,
                 'etapas' => 3,
                 'nivel' => 'Infantil'
             ],
             4 => [
-                'curso' => "Ensino Fundamental de 8 anos",
-                'serie' => "1ª Série",
+                'curso' => 'Ensino Fundamental de 8 anos',
+                'serie' => '1ª Série',
                 'etapa' => 1,
                 'etapas' => 8,
                 'nivel' => 'Fundamental'
             ],
             5 => [
-                'curso' => "Ensino Fundamental de 8 anos",
-                'serie' => "2ª Série",
+                'curso' => 'Ensino Fundamental de 8 anos',
+                'serie' => '2ª Série',
                 'etapa' => 2,
                 'etapas' => 8,
                 'nivel' => 'Fundamental'
             ],
             6 => [
-                'curso' => "Ensino Fundamental de 8 anos",
-                'serie' => "3ª Série",
+                'curso' => 'Ensino Fundamental de 8 anos',
+                'serie' => '3ª Série',
                 'etapa' => 3,
                 'etapas' => 8,
                 'nivel' => 'Fundamental'
             ],
             7 => [
-                'curso' => "Ensino Fundamental de 8 anos",
-                'serie' => "4ª Série",
+                'curso' => 'Ensino Fundamental de 8 anos',
+                'serie' => '4ª Série',
                 'etapa' => 4,
                 'etapas' => 8,
                 'nivel' => 'Fundamental'
             ],
             8 => [
-                'curso' => "Ensino Fundamental de 8 anos",
-                'serie' => "5ª Série",
+                'curso' => 'Ensino Fundamental de 8 anos',
+                'serie' => '5ª Série',
                 'etapa' => 5,
                 'etapas' => 8,
                 'nivel' => 'Fundamental'
             ],
             9 => [
-                'curso' => "Ensino Fundamental de 8 anos",
-                'serie' => "6ª Série",
+                'curso' => 'Ensino Fundamental de 8 anos',
+                'serie' => '6ª Série',
                 'etapa' => 6,
                 'etapas' => 8,
                 'nivel' => 'Fundamental'
             ],
             10 => [
-                'curso' => "Ensino Fundamental de 8 anos",
-                'serie' => "7ª Série",
+                'curso' => 'Ensino Fundamental de 8 anos',
+                'serie' => '7ª Série',
                 'etapa' => 7,
                 'etapas' => 8,
                 'nivel' => 'Fundamental'
             ],
             11 => [
-                'curso' => "Ensino Fundamental de 8 anos",
-                'serie' => "8ª Série",
+                'curso' => 'Ensino Fundamental de 8 anos',
+                'serie' => '8ª Série',
                 'etapa' => 8,
                 'etapas' => 8,
                 'nivel' => 'Fundamental'
             ],
             12 => [
-                'curso' => "Ensino Fundamental de 8 anos - Multi",
-                'serie' => "Multi",
+                'curso' => 'Ensino Fundamental de 8 anos - Multi',
+                'serie' => 'Multi',
                 'etapa' => 1,
                 'etapas' => 1,
                 'nivel' => 'Fundamental'
             ],
             13 => [
-                'curso' => "Ensino Fundamental de 8 anos - Correção de Fluxo",
-                'serie' => "Correção de Fluxo",
+                'curso' => 'Ensino Fundamental de 8 anos - Correção de Fluxo',
+                'serie' => 'Correção de Fluxo',
                 'etapa' => 1,
                 'etapas' => 1,
                 'nivel' => 'Fundamental'
             ],
             14 => [
-                'curso' => "Ensino Fundamental de 9 anos",
-                'serie' => "1º Ano",
+                'curso' => 'Ensino Fundamental de 9 anos',
+                'serie' => '1º Ano',
                 'etapa' => 1,
                 'etapas' => 9,
                 'nivel' => 'Fundamental'
             ],
             15 => [
-                'curso' => "Ensino Fundamental de 9 anos",
-                'serie' => "2º Ano",
+                'curso' => 'Ensino Fundamental de 9 anos',
+                'serie' => '2º Ano',
                 'etapa' => 2,
                 'etapas' => 9,
                 'nivel' => 'Fundamental'
             ],
             16 => [
-                'curso' => "Ensino Fundamental de 9 anos",
-                'serie' => "3º Ano",
+                'curso' => 'Ensino Fundamental de 9 anos',
+                'serie' => '3º Ano',
                 'etapa' => 3,
                 'etapas' => 9,
                 'nivel' => 'Fundamental'
             ],
             17 => [
-                'curso' => "Ensino Fundamental de 9 anos",
-                'serie' => "4º Ano",
+                'curso' => 'Ensino Fundamental de 9 anos',
+                'serie' => '4º Ano',
                 'etapa' => 4,
                 'etapas' => 9,
                 'nivel' => 'Fundamental'
             ],
             18 => [
-                'curso' => "Ensino Fundamental de 9 anos",
-                'serie' => "5º Ano",
+                'curso' => 'Ensino Fundamental de 9 anos',
+                'serie' => '5º Ano',
                 'etapa' => 5,
                 'etapas' => 9,
                 'nivel' => 'Fundamental'
             ],
             19 => [
-                'curso' => "Ensino Fundamental de 9 anos",
-                'serie' => "6º Ano",
+                'curso' => 'Ensino Fundamental de 9 anos',
+                'serie' => '6º Ano',
                 'etapa' => 6,
                 'etapas' => 9,
                 'nivel' => 'Fundamental'
             ],
             20 => [
-                'curso' => "Ensino Fundamental de 9 anos",
-                'serie' => "7º Ano",
+                'curso' => 'Ensino Fundamental de 9 anos',
+                'serie' => '7º Ano',
                 'etapa' => 7,
                 'etapas' => 9,
                 'nivel' => 'Fundamental'
             ],
             21 => [
-                'curso' => "Ensino Fundamental de 9 anos",
-                'serie' => "8º Ano",
+                'curso' => 'Ensino Fundamental de 9 anos',
+                'serie' => '8º Ano',
                 'etapa' => 8,
                 'etapas' => 9,
                 'nivel' => 'Fundamental'
             ],
             22 => [
-                'curso' => "Ensino Fundamental de 9 anos - Multi",
-                'serie' => "Multi",
+                'curso' => 'Ensino Fundamental de 9 anos - Multi',
+                'serie' => 'Multi',
                 'etapa' => 1,
                 'etapas' => 1,
                 'nivel' => 'Fundamental'
             ],
             41 => [
-                'curso' => "Ensino Fundamental de 9 anos",
-                'serie' => "9º Ano",
+                'curso' => 'Ensino Fundamental de 9 anos',
+                'serie' => '9º Ano',
                 'etapa' => 9,
                 'etapas' => 9,
                 'nivel' => 'Fundamental'
             ],
             23 => [
-                'curso' => "Ensino Fundamental de 9 anos - Correção de Fluxo",
-                'serie' => "Correção de Fluxo",
+                'curso' => 'Ensino Fundamental de 9 anos - Correção de Fluxo',
+                'serie' => 'Correção de Fluxo',
                 'etapa' => 1,
                 'etapas' => 1,
                 'nivel' => 'Fundamental'
             ],
             24 => [
-                'curso' => "Ensino Fundamental de 8 e 9 anos",
-                'serie' => "Multi 8 e 9 anos",
+                'curso' => 'Ensino Fundamental de 8 e 9 anos',
+                'serie' => 'Multi 8 e 9 anos',
                 'etapa' => 1,
                 'etapas' => 1,
                 'nivel' => 'Fundamental'
             ],
             56 => [
-                'curso' => "Educação Infantil e Ensino Fundamental (8 e 9 anos)",
-                'serie' => "Multietapa",
+                'curso' => 'Educação Infantil e Ensino Fundamental (8 e 9 anos)',
+                'serie' => 'Multietapa',
                 'etapa' => 1,
                 'etapas' => 1,
                 'nivel' => 'Fundamental'
             ],
             25 => [
-                'curso' => "Ensino Médio",
-                'serie' => "1ª Série",
+                'curso' => 'Ensino Médio',
+                'serie' => '1ª Série',
                 'etapa' => 1,
                 'etapas' => 4,
                 'nivel' => 'Médio'
             ],
             26 => [
-                'curso' => "Ensino Médio",
-                'serie' => "2ª Série",
+                'curso' => 'Ensino Médio',
+                'serie' => '2ª Série',
                 'etapa' => 2,
                 'etapas' => 4,
                 'nivel' => 'Médio'
             ],
             27 => [
-                'curso' => "Ensino Médio",
-                'serie' => "3ª Série",
+                'curso' => 'Ensino Médio',
+                'serie' => '3ª Série',
                 'etapa' => 3,
                 'etapas' => 4,
                 'nivel' => 'Médio'
             ],
             28 => [
-                'curso' => "Ensino Médio",
-                'serie' => "4ª Série",
+                'curso' => 'Ensino Médio',
+                'serie' => '4ª Série',
                 'etapa' => 4,
                 'etapas' => 4,
                 'nivel' => 'Médio'
             ],
             29 => [
-                'curso' => "Ensino Médio Não-seriado",
-                'serie' => "Não Seriada",
+                'curso' => 'Ensino Médio Não-seriado',
+                'serie' => 'Não Seriada',
                 'etapa' => 1,
                 'etapas' => 1,
                 'nivel' => 'Médio'
             ],
             30 => [
-                'curso' => "Ensino Médio Integrado",
-                'serie' => "Integrado 1ª Série",
+                'curso' => 'Ensino Médio Integrado',
+                'serie' => 'Integrado 1ª Série',
                 'etapa' => 1,
                 'etapas' => 4,
                 'nivel' => 'Médio'
             ],
             31 => [
-                'curso' => "Ensino Médio Integrado",
-                'serie' => "Integrado 2ª Série",
+                'curso' => 'Ensino Médio Integrado',
+                'serie' => 'Integrado 2ª Série',
                 'etapa' => 2,
                 'etapas' => 4,
                 'nivel' => 'Médio'
             ],
             32 => [
-                'curso' => "Ensino Médio Integrado",
-                'serie' => "Integrado 3ª Série",
+                'curso' => 'Ensino Médio Integrado',
+                'serie' => 'Integrado 3ª Série',
                 'etapa' => 3,
                 'etapas' => 4,
                 'nivel' => 'Médio'
             ],
             33 => [
-                'curso' => "Ensino Médio Integrado",
-                'serie' => "Integrado 4ª Série",
+                'curso' => 'Ensino Médio Integrado',
+                'serie' => 'Integrado 4ª Série',
                 'etapa' => 4,
                 'etapas' => 4,
                 'nivel' => 'Médio'
             ],
-            34 => ['curso' => "Ensino Médio Integrado Não-Seriado",
-                'serie' => "Integrado Não Seriada",
+            34 => ['curso' => 'Ensino Médio Integrado Não-Seriado',
+                'serie' => 'Integrado Não Seriada',
                 'etapa' => 1,
                 'etapas' => 1,
                 'nivel' => 'Médio'
             ],
-            74 => ['curso' => "Ensino Médio Integrado Não-Seriado",
-                'serie' => "EJA",
+            74 => ['curso' => 'Ensino Médio Integrado Não-Seriado',
+                'serie' => 'EJA',
                 'etapa' => 1,
                 'etapas' => 1,
                 'nivel' => 'Médio'
             ],
             35 => [
-                'curso' => "Ensino Médio - Magistério",
-                'serie' => "Normal/Magistério 1ª Série",
+                'curso' => 'Ensino Médio - Magistério',
+                'serie' => 'Normal/Magistério 1ª Série',
                 'etapa' => 1,
                 'etapas' => 4,
                 'nivel' => 'Médio'
             ],
             36 => [
-                'curso' => "Ensino Médio - Magistério",
-                'serie' => "Normal/Magistério 2ª Série",
+                'curso' => 'Ensino Médio - Magistério',
+                'serie' => 'Normal/Magistério 2ª Série',
                 'etapa' => 2,
                 'etapas' => 4,
                 'nivel' => 'Médio'
             ],
             37 => [
-                'curso' => "Ensino Médio - Magistério",
-                'serie' => "Normal/Magistério 3ª Série",
+                'curso' => 'Ensino Médio - Magistério',
+                'serie' => 'Normal/Magistério 3ª Série',
                 'etapa' => 3,
                 'etapas' => 4,
                 'nivel' => 'Médio'
             ],
             38 => [
-                'curso' => "Ensino Médio - Magistério",
-                'serie' => "Normal/Magistério 4ª Série",
+                'curso' => 'Ensino Médio - Magistério',
+                'serie' => 'Normal/Magistério 4ª Série',
                 'etapa' => 4,
                 'etapas' => 4,
                 'nivel' => 'Médio'
             ],
             39 => [
-                'curso' => "Educação Profissional (Concomitante)",
-                'serie' => "Não-seriado",
+                'curso' => 'Educação Profissional (Concomitante)',
+                'serie' => 'Não-seriado',
                 'etapa' => 1,
                 'etapas' => 1,
                 'nivel' => 'Médio'
             ],
             40 => [
-                'curso' => "Educação Profissional (Subseqüente)",
-                'serie' => "Não-seriado",
+                'curso' => 'Educação Profissional (Subseqüente)',
+                'serie' => 'Não-seriado',
                 'etapa' => 1,
                 'etapas' => 1,
                 'nivel' => 'Médio'
             ],
             64 => [
-                'curso' => "Educação Profissional (Subseqüente)",
-                'serie' => "Curso técnico misto",
+                'curso' => 'Educação Profissional (Subseqüente)',
+                'serie' => 'Curso técnico misto',
                 'etapa' => 1,
                 'etapas' => 1,
                 'nivel' => 'Médio'
             ],
             69 => [
-                'curso' => "EJA - Ensino fundamental",
-                'serie' => "Anos iniciais",
+                'curso' => 'EJA - Ensino fundamental',
+                'serie' => 'Anos iniciais',
                 'etapa' => 1,
                 'etapas' => 1,
                 'nivel' => 'EJA'
             ],
             70 => [
-                'curso' => "EJA - Ensino fundamental",
-                'serie' => "Anos finais",
+                'curso' => 'EJA - Ensino fundamental',
+                'serie' => 'Anos finais',
                 'etapa' => 1,
                 'etapas' => 1,
                 'nivel' => 'EJA'
             ],
             72 => [
-                'curso' => "EJA - Ensino fundamental",
-                'serie' => "Anos iniciais e anos finais",
+                'curso' => 'EJA - Ensino fundamental',
+                'serie' => 'Anos iniciais e anos finais',
                 'etapa' => 1,
                 'etapas' => 1,
                 'nivel' => 'EJA'
             ],
             65 => [
-                'curso' => "EJA - Ensino fundamental",
-                'serie' => "Projovem Urbano",
+                'curso' => 'EJA - Ensino fundamental',
+                'serie' => 'Projovem Urbano',
                 'etapa' => 1,
                 'etapas' => 1,
                 'nivel' => 'EJA'
             ],
             71 => [
-                'curso' => "EJA - Ensino médio",
-                'serie' => "Ensino médio",
+                'curso' => 'EJA - Ensino médio',
+                'serie' => 'Ensino médio',
                 'etapa' => 1,
                 'etapas' => 1,
                 'nivel' => 'EJA'
             ],
             67 => [
-                'curso' => "EJA - Ensino médio",
-                'serie' => "Ensino médio",
+                'curso' => 'EJA - Ensino médio',
+                'serie' => 'Ensino médio',
                 'etapa' => 1,
                 'etapas' => 1,
                 'nivel' => 'FIC'
             ],
             73 => [
-                'curso' => "EJA - Ensino médio",
-                'serie' => "Ensino médio",
+                'curso' => 'EJA - Ensino médio',
+                'serie' => 'Ensino médio',
                 'etapa' => 1,
                 'etapas' => 1,
                 'nivel' => 'FIC'
             ],
             68 => [
-                'curso' => "EJA - Ensino médio",
-                'serie' => "Ensino médio",
+                'curso' => 'EJA - Ensino médio',
+                'serie' => 'Ensino médio',
                 'etapa' => 1,
                 'etapas' => 1,
                 'nivel' => 'FIC'
@@ -877,6 +884,7 @@ class Registro20Import implements RegistroImportInterface
 
     /**
      * @param $array
+     *
      * @return string
      */
     private function getPostgresIntegerArray($array)
@@ -933,12 +941,12 @@ class Registro20Import implements RegistroImportInterface
             'cod_turma_inep' => $this->model->inepTurma,
             'created_at' => now(),
         ]);
-
     }
 
     /**
-     * @param $levelData
+     * @param              $levelData
      * @param LegacyCourse $course
+     *
      * @return
      */
     private function createLevel($levelData, $course)
@@ -955,13 +963,13 @@ class Registro20Import implements RegistroImportInterface
             'ativo' => 1,
             'intervalo' => 1,
         ]);
-
     }
 
     /**
      * @param LegacyEducationLevel $educationLevel
-     * @param LegacyEducationType $educationType
-     * @param array $courseData
+     * @param LegacyEducationType  $educationType
+     * @param array                $courseData
+     *
      * @return LegacyCourse
      */
     private function createCourse($educationLevel, $educationType, $courseData)
@@ -988,8 +996,10 @@ class Registro20Import implements RegistroImportInterface
      *
      * @param $horaInicial
      * @param $horaFinal
-     * @return string|null
+     *
      * @throws Exception
+     *
+     * @return string|null
      */
     private function getTurno($horaInicial, $horaFinal)
     {
@@ -998,6 +1008,7 @@ class Registro20Import implements RegistroImportInterface
         }
 
         $service = new PeriodService();
+
         return $service->getPeriodByTime($horaInicial, $horaFinal);
     }
 }

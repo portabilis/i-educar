@@ -6,7 +6,6 @@ use App\Models\Exporter\Builders\StudentEloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 
 class Student extends Model
 {

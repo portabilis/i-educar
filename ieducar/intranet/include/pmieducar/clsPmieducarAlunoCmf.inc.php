@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarAlunoCMF extends Model
 {
     public function __construct()

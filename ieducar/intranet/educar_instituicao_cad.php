@@ -3,18 +3,7 @@
 use App\Menu;
 use App\Models\State;
 
-
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Instituição");
-        $this->processoAp = '559';
-    }
-}
-
-class indice extends clsCadastro
-{
+return new class extends clsCadastro {
     public $cod_instituicao;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -455,50 +444,15 @@ class indice extends clsCadastro
     {
         $this->simpleRedirect('educar_instituicao_lst.php');
     }
-}
 
-// cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
-$miolo = new indice();
-// adiciona o conteudo na clsBase
-$pagina->addForm($miolo);
-// gera o html
-$pagina->MakeAll();
-?>
-<script type="text/javascript">
-
-    let populaOrgaoRegional = data => {
-        $j('#orgao_regional').append(
-            $j('<option/>').text('Selecione').val('')
-        );
-        if (data.orgaos) {
-            $j.each(data.orgaos, function(){
-                $j('#orgao_regional').append(
-                    $j('<option/>').text(this.codigo).val(this.codigo)
-                );
-            });
-        }
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-instituicao-cad.js');
     }
 
-    $j('#ref_sigla_uf').on('change', function(){
-        let sigla_uf = this.value;
-        $j('#orgao_regional').html('');
-        if (sigla_uf) {
-            let parametros = {
-                oper: 'get',
-                resource: 'orgaos_regionais',
-                sigla_uf: sigla_uf
-            };
-            let link = '../module/Api/EducacensoOrgaoRegional';
-            $j.getJSON(link, parametros)
-            .done(populaOrgaoRegional);
-        } else {
-            $j('#orgao_regional').html('<option value="" selected>Selecione uma UF</option>');
-        }
-    });
-
-    $j('#data_base').mask("99/99");
-    $j('#data_fechamento').mask("99/99");
-
-</script>
+    public function Formular()
+    {
+        $this->title = 'i-Educar - Instituição';
+        $this->processoAp = '559';
+    }
+};

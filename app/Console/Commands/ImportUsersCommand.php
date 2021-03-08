@@ -2,12 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Services\Discipline\MoveDisciplineDataService;
 use App\Services\ImportUsersService;
 use iEducar\Support\Output\CommandOutput;
 use Illuminate\Console\Command;
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ImportUsersCommand extends Command

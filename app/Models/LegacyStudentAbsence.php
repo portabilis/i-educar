@@ -27,7 +27,6 @@ class LegacyStudentAbsence extends Model
      */
     public $timestamps = false;
 
-
     /**
      * @return BelongsTo
      */
@@ -48,7 +47,7 @@ class LegacyStudentAbsence extends Model
         return $this->hasMany(LegacyGeneralAbsence::class, 'falta_aluno_id');
     }
 
-        /**
+    /**
      * @return HasMany
      */
     public function absencesByDiscipline()

@@ -2,9 +2,7 @@
 
 namespace iEducar\Modules\Educacenso\Data;
 
-use App\Models\Educacenso\Registro10 as Registro10Model;
 use iEducar\Modules\Educacenso\Formatters;
-use Portabilis_Date_Utils;
 use Portabilis_Utils_Database;
 
 class Registro20 extends AbstractRegistro
@@ -19,6 +17,7 @@ class Registro20 extends AbstractRegistro
     /**
      * @param $escola
      * @param $year
+     *
      * @return array
      */
     public function getData($school, $year)
@@ -37,6 +36,7 @@ class Registro20 extends AbstractRegistro
     /**
      * @param $escola
      * @param $year
+     *
      * @return array
      */
     public function getExportFormatData($escola, $year)
@@ -54,6 +54,7 @@ class Registro20 extends AbstractRegistro
 
     /**
      * @param $Registro20Model
+     *
      * @return array
      */
     public function getRecordExportData($record)
@@ -65,7 +66,7 @@ class Registro20 extends AbstractRegistro
             '20', //  1
             $record->codigoEscolaInep, //  2 Código de escola - Inep
             $record->codTurma, //  3 Código da Turma na Entidade/Escola
-            '' , //  4 Código da Turma - Inep
+            '', //  4 Código da Turma - Inep
             $this->convertStringToCenso($record->nomeTurma), //  5 Nome da Turma
             $record->tipoMediacaoDidaticoPedagogico, //  6 Tipo de mediação didático-pedagógica
             $record->presencial() ? ($record->horaInicial ? substr($record->horaInicial, 0, 2) : '') : '', //  7 Hora Inicial - Hora
@@ -124,6 +125,7 @@ class Registro20 extends AbstractRegistro
     /**
      * @param $schoolClassId
      * @param $disciplineIds
+     *
      * @return array
      */
     public function getDisciplinesWithoutTeacher($schoolClassId, $disciplineIds)

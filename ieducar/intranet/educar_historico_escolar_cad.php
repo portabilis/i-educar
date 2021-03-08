@@ -3,18 +3,7 @@
 use App\Models\Country;
 use App\Models\State;
 
-
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Hist&oacute;rico Escolar");
-        $this->processoAp = '578';
-    }
-}
-
-class indice extends clsCadastro
-{
+return new class extends clsCadastro {
     public $ref_cod_aluno;
 
     public $sequencial;
@@ -213,14 +202,14 @@ class indice extends clsCadastro
 
         $this->campoTexto('nm_curso', 'Curso', $this->nm_curso, 30, 255, false, false, false, _cl('historico.cadastro.curso_detalhe'));
 
-        $opcoesGradeCurso = getOpcoesGradeCurso();
+        $opcoesGradeCurso = $this->getOpcoesGradeCurso();
         $this->campoLista('historico_grade_curso_id', 'Grade curso', $opcoesGradeCurso, $this->historico_grade_curso_id);
 
         $this->campoTexto('nm_serie', _cl('historico.cadastro.serie'), $this->nm_serie, 30, 255, true);
         $this->campoCheck('dependencia', 'Histórico de dependência', $this->dependencia);
         $this->campoNumero('ano', 'Ano', $this->ano, 4, 4, true);
 
-        if (validaControlePosicaoHistorico()) {
+        if ($this->validaControlePosicaoHistorico()) {
             $this->campoNumero('posicao', 'Posição', $this->posicao, 1, 1, true, 'Informe a coluna equivalente a série/ano/etapa a qual o histórico pertence. Ex.: 1º ano informe 1, 2º ano informe 2');
         }
 
@@ -514,34 +503,34 @@ class indice extends clsCadastro
 
         return $valorPermitirCargaHoraria;
     }
-}
 
-function getOpcoesGradeCurso()
-{
-    $db = new clsBanco();
-    $sql = 'select * from pmieducar.historico_grade_curso where ativo = 1';
-    $db->Consulta($sql);
+    public function getOpcoesGradeCurso()
+    {
+        $db = new clsBanco();
+        $sql = 'select * from pmieducar.historico_grade_curso where ativo = 1';
+        $db->Consulta($sql);
 
-    $opcoes = ['' => 'Selecione'];
-    while ($db->ProximoRegistro()) {
-        $record = $db->Tupla();
-        $opcoes[$record['id']] = $record['descricao_etapa'];
+        $opcoes = ['' => 'Selecione'];
+        while ($db->ProximoRegistro()) {
+            $record = $db->Tupla();
+            $opcoes[$record['id']] = $record['descricao_etapa'];
+        }
+
+        return $opcoes;
     }
 
-    return $opcoes;
-}
+    public function validaControlePosicaoHistorico()
+    {
+        $obj = new clsPmieducarInstituicao;
+        //Busca instituicao ativa
+        $lst = $obj->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, 1);
 
-function validaControlePosicaoHistorico()
-{
-    $obj = new clsPmieducarInstituicao;
-    //Busca instituicao ativa
-    $lst = $obj->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, 1);
+        return dbBool($lst[0]['controlar_posicao_historicos']);
+    }
 
-    return dbBool($lst[0]['controlar_posicao_historicos']);
-}
-
-$pagina = new clsIndexBase();
-$miolo = new indice();
-
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->title = 'i-Educar - Histórico Escolar';
+        $this->processoAp = '578';
+    }
+};

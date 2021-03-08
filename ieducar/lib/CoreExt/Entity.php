@@ -1,6 +1,5 @@
 <?php
 
-
 abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
 {
     /**
@@ -193,7 +192,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
             // estado (o valor corrente, por ser um Enum!), aceitamos apenas
             // instâncias de CoreExt_Entity como parâmetro
             elseif (!($val instanceof CoreExt_Entity)) {
-                                throw new CoreExt_Exception_InvalidArgumentException(
+                throw new CoreExt_Exception_InvalidArgumentException(
                     'O argumento passado para o atributo "' . $key
                     . '" é inválido. Apenas os tipos "int" e "CoreExt_Entity" são suportados.'
                 );
@@ -202,7 +201,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
 
         // Se o atributo não existir, lança exceção
         if (!array_key_exists($key, $this->_data)) {
-                        throw new CoreExt_Exception_InvalidArgumentException(
+            throw new CoreExt_Exception_InvalidArgumentException(
                 'A propriedade ' . $key . ' não existe em ' . __CLASS__ . '.'
             );
         }
@@ -368,7 +367,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
     public function setReference($key, $data)
     {
         if (!array_key_exists($key, $this->_data)) {
-                        throw new CoreExt_Exception_InvalidArgumentException(
+            throw new CoreExt_Exception_InvalidArgumentException(
                 'Somente é possível ' . 'criar referências para atributos da classe.'
             );
         }
@@ -379,7 +378,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
         $passedOptions = array_keys($data);
 
         if (0 < count($diff = array_diff($passedOptions, $options))) {
-                        throw new CoreExt_Exception_InvalidArgumentException('' . implode(', ', $diff));
+            throw new CoreExt_Exception_InvalidArgumentException('' . implode(', ', $diff));
         }
 
         if (!array_key_exists($key, $this->_references)) {
@@ -430,7 +429,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
     public function setReferenceClass($key, $class)
     {
         if (!is_string($class) && !($class instanceof CoreExt_DataMapper || $class instanceof CoreExt_Enum)) {
-                        throw new CoreExt_Exception_InvalidArgumentException(
+            throw new CoreExt_Exception_InvalidArgumentException(
                 'Uma classe de referência '
                 . ' precisa ser especificada pelo seu nome (string), ou, uma instância de CoreExt_DataMapper ou CoreExt_Enum.'
             );
@@ -635,7 +634,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
     {
         if (!is_null($instance)) {
             if (!($instance instanceof $class)) {
-                                throw new CoreExt_Exception_InvalidArgumentException(
+                throw new CoreExt_Exception_InvalidArgumentException(
                     'A instância ' . 'passada como argumento precisa ser uma instância de "' . $class . '".'
                 );
             }
@@ -935,7 +934,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
         }
 
         if (!is_subclass_of($validatorClassName, 'CoreExt_Validate_Abstract')) {
-                        throw new CoreExt_Exception_InvalidArgumentException(
+            throw new CoreExt_Exception_InvalidArgumentException(
                 'A classe "'
                 . $validatorClassName . '" não é uma subclasse de CoreExt_Validate_Abstract'
                 . ' e por isso não pode ser usada como classe de validação.'

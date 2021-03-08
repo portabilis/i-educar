@@ -53,8 +53,9 @@ class Registro00Import implements RegistroImportInterface
      * Faz a importação dos dados a partir da linha do arquivo
      *
      * @param RegistroEducacenso $model
-     * @param int $year
-     * @param $user
+     * @param int                $year
+     * @param                    $user
+     *
      * @return void
      */
     public function import(RegistroEducacenso $model, $year, $user)
@@ -205,7 +206,6 @@ class Registro00Import implements RegistroImportInterface
             ]);
         }
 
-
         if ($this->model->telefoneOutro) {
             LegacyPhone::create([
                 'idpes' => $school->ref_idpes,
@@ -332,6 +332,7 @@ class Registro00Import implements RegistroImportInterface
     {
         $registro = new Registro00();
         $registro->hydrateModel($arrayColumns);
+
         return $registro;
     }
 }

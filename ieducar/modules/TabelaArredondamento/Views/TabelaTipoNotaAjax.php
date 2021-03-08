@@ -1,6 +1,5 @@
 <?php
 
-
 $tabelas = [];
 
 if (isset($_GET['tipoNota'])) {

@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarInfraPredioComodo extends Model
 {
     public $cod_infra_predio_comodo;
@@ -27,16 +26,16 @@ class clsPmieducarInfraPredioComodo extends Model
         $this->_campos_lista = $this->_todos_campos = 'ipc.cod_infra_predio_comodo, ipc.ref_usuario_exc, ipc.ref_usuario_cad, ipc.ref_cod_infra_comodo_funcao, ipc.ref_cod_infra_predio, ipc.nm_comodo, ipc.desc_comodo, ipc.area, ipc.data_cadastro, ipc.data_exclusao, ipc.ativo';
 
         if (is_numeric($ref_cod_infra_comodo_funcao)) {
-                    $this->ref_cod_infra_comodo_funcao = $ref_cod_infra_comodo_funcao;
+            $this->ref_cod_infra_comodo_funcao = $ref_cod_infra_comodo_funcao;
         }
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
         if (is_numeric($ref_cod_infra_predio)) {
-                    $this->ref_cod_infra_predio = $ref_cod_infra_predio;
+            $this->ref_cod_infra_predio = $ref_cod_infra_predio;
         }
 
         if (is_numeric($cod_infra_predio_comodo)) {

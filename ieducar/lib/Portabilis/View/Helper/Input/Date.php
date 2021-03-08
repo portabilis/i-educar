@@ -1,6 +1,5 @@
 <?php
 
-
 class Portabilis_View_Helper_Input_Date extends Portabilis_View_Helper_Input_Core
 {
     public function date($attrName, $options = [])

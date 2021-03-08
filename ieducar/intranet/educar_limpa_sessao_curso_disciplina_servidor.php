@@ -10,4 +10,4 @@ Session::forget([
 Session::save();
 Session::start();
 
-echo "";
+echo '';

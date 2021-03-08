@@ -79,7 +79,6 @@ class EducacensoController extends Controller
         }
 
         if ($record == '50') {
-
             $paginate = $repository->getBuilderForRecord50($year, $school)
                 ->paginate();
 

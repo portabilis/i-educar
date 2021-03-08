@@ -1,6 +1,5 @@
 <?php
 
-
 class AnoController extends Core_Controller_Page_EditController
 {
     protected $_dataMapper = 'ComponenteCurricular_Model_AnoEscolarDataMapper';

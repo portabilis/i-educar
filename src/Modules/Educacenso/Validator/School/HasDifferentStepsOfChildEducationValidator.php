@@ -19,7 +19,8 @@ class HasDifferentStepsOfChildEducationValidator implements EducacensoValidator
      */
     public function isValid(): bool
     {
-        $childrenEducationSteps = [1,2,3];
+        $childrenEducationSteps = [1, 2, 3];
+
         return LegacySchoolClass::where('ref_ref_cod_escola', $this->school)
             ->whereNotIn('etapa_educacenso', $childrenEducationSteps)
             ->exists();
@@ -30,7 +31,6 @@ class HasDifferentStepsOfChildEducationValidator implements EducacensoValidator
      */
     public function getMessage()
     {
-        return "Não existem turmas diferentes de Educação infantil nesta escola";
+        return 'Não existem turmas diferentes de Educação infantil nesta escola';
     }
-
 }

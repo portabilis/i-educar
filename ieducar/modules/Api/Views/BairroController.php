@@ -2,7 +2,6 @@
 
 use App\Models\Place;
 
-
 class BairroController extends ApiCoreController
 {
     protected function getNeighborhoods()

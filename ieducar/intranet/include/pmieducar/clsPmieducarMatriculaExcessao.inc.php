@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarMatriculaExcessao extends Model
 {
     public $cod_aluno_excessao;
@@ -25,14 +24,14 @@ class clsPmieducarMatriculaExcessao extends Model
         $this->_campos_lista = $this->_todos_campos = 'cod_aluno_excessao, ref_cod_matricula, ref_cod_turma, ref_sequencial, ref_cod_serie, ref_cod_escola, ref_cod_disciplina, reprovado_faltas, precisa_exame, permite_exame';
 
         if (is_numeric($ref_cod_serie) && is_numeric($ref_cod_escola) && is_numeric($ref_cod_disciplina)) {
-                    $this->ref_cod_serie = $ref_cod_serie;
-                    $this->ref_cod_escola = $ref_cod_escola;
-                    $this->ref_cod_disciplina = $ref_cod_disciplina;
+            $this->ref_cod_serie = $ref_cod_serie;
+            $this->ref_cod_escola = $ref_cod_escola;
+            $this->ref_cod_disciplina = $ref_cod_disciplina;
         }
         if (is_numeric($ref_cod_matricula) && is_numeric($ref_cod_turma) && is_numeric($ref_sequencial)) {
-                    $this->ref_cod_matricula = $ref_cod_matricula;
-                    $this->ref_cod_turma = $ref_cod_turma;
-                    $this->ref_sequencial = $ref_sequencial;
+            $this->ref_cod_matricula = $ref_cod_matricula;
+            $this->ref_cod_turma = $ref_cod_turma;
+            $this->ref_sequencial = $ref_sequencial;
         }
 
         if (is_numeric($cod_aluno_excessao)) {

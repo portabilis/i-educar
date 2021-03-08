@@ -2,7 +2,6 @@
 
 namespace App\Support\Database;
 
-
 trait Connections
 {
     public function getConnections()

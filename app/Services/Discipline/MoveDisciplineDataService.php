@@ -89,11 +89,13 @@ class MoveDisciplineDataService implements ToCollection
 
     /**
      * @param MoveDisciplineDataInterface $moveDataServices
+     *
      * @return MoveDisciplineDataService
      */
     public function setMoveDataService(MoveDisciplineDataInterface $moveDataServices): MoveDisciplineDataService
     {
         $this->moveDataServices[] = $moveDataServices;
+
         return $this;
     }
 
@@ -102,13 +104,14 @@ class MoveDisciplineDataService implements ToCollection
      *
      * @param integer $disciplineFrom
      * @param integer $disciplineTo
-     * @param string $copier
+     * @param string  $copier
      * @param integer $updatedResources
      */
     private function addInfoMessage($disciplineFrom, $disciplineTo, $copier, $updatedResources)
     {
         $this->messages[$copier][] =
-            sprintf('%s recursos atualizados do componente %s para %s',
+            sprintf(
+                '%s recursos atualizados do componente %s para %s',
                 $updatedResources,
                 $disciplineFrom,
                 $disciplineTo

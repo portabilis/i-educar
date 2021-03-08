@@ -1,6 +1,5 @@
 <?php
 
-
 class clsFuncionario extends clsPessoaFisica
 {
     public $idpes;
