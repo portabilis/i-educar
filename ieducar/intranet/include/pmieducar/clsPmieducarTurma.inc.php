@@ -1201,7 +1201,7 @@ class clsPmieducarTurma extends Model
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_ref_ref_cod_serie)) {
-            $filtros .= "{$whereAnd} COALESCE(ts.serie_id, T.ref_ref_cod_serie) = '{$int_ref_ref_cod_serie}'";
+            $filtros .= "{$whereAnd} COALESCE(ts.serie_id, t.ref_ref_cod_serie) = '{$int_ref_ref_cod_serie}'";
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_ref_ref_cod_escola)) {
