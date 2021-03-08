@@ -34,7 +34,6 @@ class App_Unificacao_Base
     {
         try {
             $this->validaParametros();
-
             $this->desabilitaTodasTriggers();
             $this->habilitaTriggersNecessarias();
             $this->processaChavesDeletarDuplicados();
@@ -80,13 +79,13 @@ class App_Unificacao_Base
         foreach ($this->chavesManterTodosVinculos as $key => $value) {
             $oldKeys = explode(',', $stringCodigosDuplicados);
             $this->storeLogOldDataByKeys($oldKeys, $value['tabela'], $value['coluna']);
-            $sSqlExtra = $this->buildSqlExtraBeforeUnification($value['tabela']);
+            $addSql = $this->buildSqlExtraBeforeUnification($value['tabela']);
 
             $this->db->Consulta(
                 "
                     UPDATE {$value['tabela']}
                     SET {$value['coluna']} = {$this->codigoUnificador}
-                    {$sSqlExtra}
+                    {$addSql}
                     WHERE {$value['coluna']} IN ({$stringCodigosDuplicados})
                 "
             );
@@ -225,16 +224,16 @@ class App_Unificacao_Base
      */
     private function buildSqlExtraBeforeUnification(string $tableName)
     {
-        $sSqlExtra = '';
+        $addSql = '';
 
         if ($tableName === 'pmieducar.servidor_afastamento') {
-            $sSqlExtra .= ', sequencial = (
+            $addSql .= ', sequencial = (
                 select
                 max(sequencial)+1
                 from pmieducar.servidor_afastamento
                 where ref_cod_servidor = ' . $this->codigoUnificador . '
                 ) ';
         }
-        return $sSqlExtra;
+        return $addSql;
     }
 }
