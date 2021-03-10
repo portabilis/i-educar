@@ -39,6 +39,11 @@ class CopyAbsenceService implements CopyRegistrationData
     public function copy(LegacyRegistration $newRegistration, LegacyRegistration $oldRegistration)
     {
         $newEvaluationRule = $this->service->getEvaluationRule($newRegistration);
+
+        if (!$newEvaluationRule) {
+            throw new MissingAbsenceType();
+        }
+
         $oldEvaluationRule = $this->service->getEvaluationRule($oldRegistration);
 
         if (!$this->compatibleAbsenceType($newEvaluationRule, $oldEvaluationRule)) {
