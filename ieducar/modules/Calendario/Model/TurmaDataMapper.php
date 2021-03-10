@@ -1,6 +1,5 @@
 <?php
 
-
 class Calendario_Model_TurmaDataMapper extends CoreExt_DataMapper
 {
     protected $_entityClass = 'Calendario_Model_Turma';

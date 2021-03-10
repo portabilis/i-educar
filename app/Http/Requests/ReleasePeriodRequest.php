@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App_Model_MatriculaSituacao;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ReleasePeriodRequest extends FormRequest
@@ -23,8 +22,8 @@ class ReleasePeriodRequest extends FormRequest
             'escola' => 'required',
             'stage_type' => 'required',
             'stage' => 'required',
-            "start_date.*"  => "required|date_format:d/m/Y|distinct|min:1",
-            "end_date.*"  => "required|date_format:d/m/Y|distinct|min:1",
+            'start_date.*' => 'required|date_format:d/m/Y|distinct|min:1',
+            'end_date.*' => 'required|date_format:d/m/Y|distinct|min:1',
         ];
     }
 

@@ -24,7 +24,8 @@ class GrantPermissionEducacensoConsult extends Migration
                    AND NOT EXISTS(
                      SELECT 1 FROM pmieducar.menu_tipo_usuario mtu
                      WHERE mtu.ref_cod_tipo_usuario = menu_tipo_usuario.ref_cod_tipo_usuario
-                       AND mtu.menu_id = (SELECT id FROM public.menus WHERE process = 847 LIMIT 1))');
+                       AND mtu.menu_id = (SELECT id FROM public.menus WHERE process = 847 LIMIT 1))'
+        );
     }
 
     /**

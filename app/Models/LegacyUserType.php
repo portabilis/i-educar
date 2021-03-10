@@ -16,7 +16,6 @@ use Illuminate\Support\Collection as SupportCollection;
  * @property string            $description
  * @property int               $level
  * @property bool              $active
- *
  * @property Collection|Menu[] $menus
  * @property Collection|User[] $users
  */

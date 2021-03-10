@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Menu;
 use iEducar\Support\Navigation\Breadcrumb;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 
@@ -20,7 +20,7 @@ class Controller extends BaseController
     /**
      * Set the breadcrumbs of the action
      *
-     * @param $currentPage
+     * @param       $currentPage
      * @param array $pages
      *
      * @return $this

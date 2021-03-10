@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarEscolaUsuario extends Model
 {
     public $id;

@@ -15,6 +15,7 @@ class EmployeeGraduation extends Model
         'college_id',
         'discipline_id',
     ];
+
     /**
      * @return BelongsTo
      */
@@ -27,7 +28,8 @@ class EmployeeGraduation extends Model
      * Filtra pelo ID do servidor
      *
      * @param Builder $query
-     * @param $employeeId
+     * @param         $employeeId
+     *
      * @return Builder
      */
     public function scopeOfEmployee($query, $employeeId)

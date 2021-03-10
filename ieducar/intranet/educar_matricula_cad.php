@@ -1,5 +1,7 @@
 <?php
 
+use App\Events\RegistrationEvent;
+use App\Exceptions\Registration\RegistrationException;
 use App\Exceptions\Transfer\TransferException;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
@@ -7,21 +9,10 @@ use App\Services\PromotionService;
 use App\Services\SchoolClass\AvailableTimeService;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
-use App\Events\RegistrationEvent;
 
-
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Matrícula');
-        $this->processoAp = 578;
-    }
-}
-
-class indice extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $cod_matricula;
@@ -432,7 +423,7 @@ class indice extends clsCadastro
         }
 
         if (is_array($anoLetivoEmAndamentoEscola)) {
-                        $db = new clsBanco();
+            $db = new clsBanco();
 
             $db->Consulta("SELECT ref_ref_cod_serie, ref_cod_curso
                              FROM pmieducar.matricula
@@ -480,7 +471,6 @@ class indice extends clsCadastro
                     $cursoDeAtividadeComplementar = $cursoADeferir->cursoDeAtividadeComplementar();
 
                     if (($mesmoCursoAno || config('legacy.app.matricula.multiplas_matriculas') == 0) && !$cursoDeAtividadeComplementar) {
-
                         $serie = new clsPmieducarSerie($m['ref_ref_cod_serie'], null, null, $m['ref_cod_curso']);
                         $serie = $serie->detalhe();
 
@@ -949,6 +939,7 @@ class indice extends clsCadastro
 
             if (!empty($this->ref_cod_turma) && $validarCamposEducacenso && !$this->availableTimeService()->isAvailable($this->ref_cod_aluno, $this->ref_cod_turma)) {
                 $this->mensagem = 'O aluno já está matriculado em uma turma com esse horário.';
+
                 return false;
             }
 
@@ -972,7 +963,7 @@ class indice extends clsCadastro
                 if ($this->situacaoUltimaMatricula == $this->transferido &&
                     $this->serieUltimaMatricula == $this->ref_cod_serie &&
                     $this->anoUltimaMatricula == $this->ano
-                )  {
+                ) {
                     /** @var LegacyRegistration $registration */
 
                     $registration = LegacyRegistration::find($this->cod_matricula);
@@ -982,7 +973,12 @@ class indice extends clsCadastro
                     } catch (TransferException $exception) {
                         $this->mensagem = 'Não foi possível copiar os dados da matrícula antiga. ' . $exception->getMessage();
 
-                        DB::commit();
+                        DB::rollBack();
+                        $this->simpleRedirect('educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
+                    } catch (RegistrationException $exception) {
+                        $this->mensagem = 'Não é possível concluir a matrícula. ' . $exception->getMessage();
+
+                        DB::rollBack();
                         $this->simpleRedirect('educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
                     }
 
@@ -1520,7 +1516,8 @@ class indice extends clsCadastro
         return count($lst_mt);
     }
 
-    private function availableTimeService() {
+    private function availableTimeService()
+    {
         if (empty($this->availableTimeService)) {
             $this->availableTimeService = new AvailableTimeService();
         }
@@ -1529,10 +1526,10 @@ class indice extends clsCadastro
 
         return $this->availableTimeService;
     }
-}
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
-
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->title = 'i-Educar - Matrícula';
+        $this->processoAp = 578;
+    }
+};

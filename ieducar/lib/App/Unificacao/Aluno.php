@@ -3,7 +3,6 @@
 use App\Models\LogUnificationOldData;
 use Illuminate\Support\Facades\DB;
 
-
 class App_Unificacao_Aluno
 {
     public static function unifica($codAlunoPrincipal, $codAlunos, $codPessoa, clsBanco $db, $unificationId)

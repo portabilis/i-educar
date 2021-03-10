@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarMatricula extends Model
 {
     public $cod_matricula;
@@ -80,23 +79,23 @@ class clsPmieducarMatricula extends Model
         $this->_campos_lista = $this->_todos_campos = 'm.cod_matricula, m.ref_cod_reserva_vaga, m.ref_ref_cod_escola, m.ref_ref_cod_serie, m.ref_usuario_exc, m.ref_usuario_cad, m.ref_cod_aluno, m.aprovado, m.data_cadastro, m.data_exclusao, m.ativo, m.ano, m.ultima_matricula, m.modulo,formando,descricao_reclassificacao,matricula_reclassificacao, m.ref_cod_curso,m.matricula_transferencia,m.semestre, m.data_matricula, m.data_cancel, m.ref_cod_abandono_tipo, m.turno_pre_matricula, m.dependencia, data_saida_escola';
 
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
 
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
 
         if (is_numeric($ref_cod_reserva_vaga)) {
-                    $this->ref_cod_reserva_vaga = $ref_cod_reserva_vaga;
+            $this->ref_cod_reserva_vaga = $ref_cod_reserva_vaga;
         }
 
         if (is_numeric($ref_cod_aluno)) {
-                    $this->ref_cod_aluno = $ref_cod_aluno;
+            $this->ref_cod_aluno = $ref_cod_aluno;
         }
 
         if (is_numeric($ref_cod_curso)) {
-                    $this->ref_cod_curso = $ref_cod_curso;
+            $this->ref_cod_curso = $ref_cod_curso;
         }
 
         if (is_numeric($cod_matricula)) {
@@ -1287,6 +1286,7 @@ class clsPmieducarMatricula extends Model
      * Seta a matricula para abandono e seta a observação passada por parâmetro
      *
      * @return boolean
+     *
      * @author lucassch
      *
      */
@@ -1295,7 +1295,7 @@ class clsPmieducarMatricula extends Model
         if (is_numeric($this->cod_matricula)) {
             if (trim($obs) == '') {
                 $obs = 'Não informado';
-            }elseif (is_string($obs)){
+            } elseif (is_string($obs)) {
                 $obs = pg_escape_string($obs);
             }
 
@@ -1319,7 +1319,7 @@ class clsPmieducarMatricula extends Model
         if (is_numeric($this->cod_matricula)) {
             if (trim($observacao) == '' || is_null($observacao)) {
                 $observacao = 'Não informado';
-            }else {
+            } else {
                 $observacao = pg_escape_string($observacao);
             }
 

@@ -2,18 +2,7 @@
 
 use App\Models\LegacyIndividual;
 
-
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor');
-        $this->processoAp = 635;
-    }
-}
-
-class indice extends clsListagem
-{
+return new class extends clsListagem {
     public $limite;
     public $offset;
     public $cod_servidor;
@@ -163,9 +152,10 @@ class indice extends clsListagem
             url('intranet/educar_servidores_index.php') => 'Servidores',
         ]);
     }
-}
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->title = 'i-Educar - Servidor';
+        $this->processoAp = 635;
+    }
+};

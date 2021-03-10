@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\Models\LegacySchoolClass;
 use App\Services\SchoolClass\PeriodService;
-use App_Model_TipoMediacaoDidaticoPedagogico;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 

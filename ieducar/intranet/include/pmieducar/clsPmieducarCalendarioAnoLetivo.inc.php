@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarCalendarioAnoLetivo extends Model
 {
     public $cod_calendario_ano_letivo;
@@ -23,13 +22,13 @@ class clsPmieducarCalendarioAnoLetivo extends Model
         $this->_campos_lista = $this->_todos_campos = 'cod_calendario_ano_letivo, ref_cod_escola, ref_usuario_exc, ref_usuario_cad, ano, data_cadastra, data_exclusao, ativo';/*, inicio_ano_letivo, termino_ano_letivo";*/
 
         if (is_numeric($ref_cod_escola)) {
-                    $this->ref_cod_escola = $ref_cod_escola;
+            $this->ref_cod_escola = $ref_cod_escola;
         }
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
 
         if (is_numeric($cod_calendario_ano_letivo)) {

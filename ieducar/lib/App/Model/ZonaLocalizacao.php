@@ -1,6 +1,5 @@
 <?php
 
-
 class App_Model_ZonaLocalizacao extends CoreExt_Enum
 {
     const URBANA = 1;

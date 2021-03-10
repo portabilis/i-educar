@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class LegacyDisciplineExemption
+ *
  * @property LegacyRegistration $registration
  */
 class LegacyExemptionType extends Model

@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * App_Model_NivelAcesso class.
  *

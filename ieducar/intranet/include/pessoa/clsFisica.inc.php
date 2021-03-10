@@ -3,9 +3,7 @@
 use App\Models\LegacyPerson;
 use iEducar\Modules\Educacenso\Model\Nacionalidade;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
-
 
 class clsFisica
 {
@@ -111,7 +109,6 @@ class clsFisica
         $horario_final_trabalho = false,
         $nome_social = false
     ) {
-
         $objPessoa = new clsPessoa_($idpes);
         if ($objPessoa->detalhe()) {
             $this->idpes  = $idpes;

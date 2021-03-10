@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Password;
 
 class PasswordController extends Controller
@@ -24,9 +23,11 @@ class PasswordController extends Controller
         $request->request->add(['token' => $token]);
 
         $response = $this->broker()->reset(
-            $this->credentials($request), function ($user, $password) {
-            $this->resetPassword($user, $password);
-        });
+            $this->credentials($request),
+            function ($user, $password) {
+                $this->resetPassword($user, $password);
+            }
+        );
 
         if ($response == Password::PASSWORD_RESET) {
             $employee = $user->employee;
@@ -70,7 +71,10 @@ class PasswordController extends Controller
     protected function credentials(Request $request)
     {
         return $request->only(
-            'login', 'password', 'password_confirmation', 'token'
+            'login',
+            'password',
+            'password_confirmation',
+            'token'
         );
     }
 }

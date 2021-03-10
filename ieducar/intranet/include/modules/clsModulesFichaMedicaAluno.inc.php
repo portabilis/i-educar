@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsModulesFichaMedicaAluno extends Model
 {
     public $ref_cod_aluno;

@@ -1,9 +1,7 @@
 <?php
 
-
 class LogradouroController extends ApiCoreController
 {
-
     protected function searchOptions()
     {
         $municipioId = $this->getRequest()->municipio_id ? $this->getRequest()->municipio_id : 0;

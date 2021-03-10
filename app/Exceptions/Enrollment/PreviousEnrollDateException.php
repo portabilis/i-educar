@@ -19,7 +19,9 @@ class PreviousEnrollDateException extends RuntimeException
         $message = 'A data de enturmação %s é anterior a data de saída %s da última enturmação.';
 
         $message = sprintf(
-            $message, $date->format('d/m/Y'), $lastEnrollment->date_departed->format('d/m/Y')
+            $message,
+            $date->format('d/m/Y'),
+            $lastEnrollment->date_departed->format('d/m/Y')
         );
 
         parent::__construct($message);

@@ -1,6 +1,5 @@
 <?php
 
-
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
@@ -57,6 +56,7 @@ class clsPermissoes
      * @param bool   $int_verifica_usuario_biblioteca TRUE para verificar se o usuário possui cadastro em alguma biblioteca
      *
      * @return bool|void
+     *
      * @deprecated
      *
      */

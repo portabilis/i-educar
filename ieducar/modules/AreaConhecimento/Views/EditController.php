@@ -1,6 +1,5 @@
 <?php
 
-
 class EditController extends Core_Controller_Page_EditController
 {
     protected $_dataMapper = 'AreaConhecimento_Model_AreaDataMapper';

@@ -2,11 +2,11 @@
 
 namespace App\Support\View;
 
+use App\Setting;
 use App\Support\View\Settings\Inputs\BooleanInput;
 use App\Support\View\Settings\Inputs\FloatInput;
 use App\Support\View\Settings\Inputs\IntegerInput;
 use App\Support\View\Settings\Inputs\StringInput;
-use App\Setting;
 
 class SettingView
 {

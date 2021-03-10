@@ -1,6 +1,5 @@
 <?php
 
-
 class Portabilis_Utils_Float
 {
     protected static function mergeOptions($options, $defaultOptions)

@@ -106,7 +106,7 @@ class SchoolHistory
     {
         $lines = [];
         foreach ($student as $discipline) {
-            $lines[] = (array)$discipline;
+            $lines[] = (array) $discipline;
         }
 
         return $lines;
@@ -169,7 +169,7 @@ class SchoolHistory
     public function getFormattedScore($score)
     {
         if (is_numeric($score)) {
-            $score = str_replace(".", ",", $score);
+            $score = str_replace('.', ',', $score);
         }
 
         if ($this->formatScoresGreaterThanTen && $score > 10) {

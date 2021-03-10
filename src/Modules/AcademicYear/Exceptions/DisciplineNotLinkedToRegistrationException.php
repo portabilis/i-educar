@@ -7,11 +7,11 @@ use iEducar\Support\Exceptions\Exception;
 
 class DisciplineNotLinkedToRegistrationException extends Exception
 {
-
     public function __construct($schoolId, $disciplineId, $academicYearId, $levelId)
     {
         parent::__construct(
-             "O componente curricular". $disciplineId ." não está vinculado ao ano letivo ". $academicYearId ." da série ". $levelId ." da escola ". $schoolId, Error::DISCIPLINE_NOT_ENROLLED_IN_SCHOOL_LEVELS
+            'O componente curricular' . $disciplineId . ' não está vinculado ao ano letivo ' . $academicYearId . ' da série ' . $levelId . ' da escola ' . $schoolId,
+            Error::DISCIPLINE_NOT_ENROLLED_IN_SCHOOL_LEVELS
         );
 
         $this->enrollmentId = $enrollmentId;
@@ -35,6 +35,5 @@ class DisciplineNotLinkedToRegistrationException extends Exception
             'academicYear_code' => $this->academicYearId,
             'level_code' => $this->levelId,
         ];
-
     }
 }

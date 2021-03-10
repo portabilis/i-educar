@@ -4,7 +4,7 @@ use App\Models\LegacyLevel;
 use App\Models\LegacyRegistration;
 use PHPUnit\Framework\MockObject\MockObject;
 
-require_once __DIR__.'/TestCommon.php';
+require_once __DIR__ . '/TestCommon.php';
 
 /**
  * Class AvaliacaoServiceSituacaoTest
@@ -13,7 +13,7 @@ class AvaliacaoServiceSituacaoTest extends Avaliacao_Service_TestCommon
 {
     public function testSituacaoAluno()
     {
-        $nota  = new \stdClass();
+        $nota = new \stdClass();
         $falta = new \stdClass();
 
         /** @var MockObject|Avaliacao_Service_Boletim $service */
@@ -65,29 +65,29 @@ class AvaliacaoServiceSituacaoTest extends Avaliacao_Service_TestCommon
         // Possibilidades do retorno do objeto
         $expected = [
             1 => [  //Aprova Andame Retido Recupe
-                1 => [false, true,  false, false],
-                2 => [true,  false, false, false],
-                3 => [true,  false, true,  false]
+                1 => [false, true, false, false],
+                2 => [true, false, false, false],
+                3 => [true, false, true, false]
             ],
             2 => [
-                1 => [false, true,  false, true],
-                2 => [true,  false, false, true],
-                3 => [true,  false, true,  true]
+                1 => [false, true, false, true],
+                2 => [true, false, false, true],
+                3 => [true, false, true, true]
             ],
             3 => [
-                1 => [false, true,  false, false],
-                2 => [false, true,  false, false],
-                3 => [false, false, true,  false]
+                1 => [false, true, false, false],
+                2 => [false, true, false, false],
+                3 => [false, false, true, false]
             ],
             4 => [
-                1 => [false, true,  false, true],
-                2 => [false, true,  false, true],
-                3 => [false, true,  true,  true]
+                1 => [false, true, false, true],
+                2 => [false, true, false, true],
+                3 => [false, true, true, true]
             ],
             5 => [
-                1 => [false, true,  false, false],
+                1 => [false, true, false, false],
                 2 => [false, false, false, false],
-                3 => [false, false, true,  false]
+                3 => [false, false, true, false]
             ]
         ];
 

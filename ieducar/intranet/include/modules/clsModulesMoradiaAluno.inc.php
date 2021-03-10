@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsModulesMoradiaAluno extends Model
 {
     public $ref_cod_aluno;

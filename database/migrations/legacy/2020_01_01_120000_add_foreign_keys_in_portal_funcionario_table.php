@@ -15,16 +15,16 @@ class AddForeignKeysInPortalFuncionarioTable extends Migration
     {
         Schema::table('portal.funcionario', function (Blueprint $table) {
             $table->foreign('ref_ref_cod_pessoa_fj')
-               ->references('ref_cod_pessoa_fj')
-               ->on('portal.funcionario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('ref_cod_pessoa_fj')
+                ->on('portal.funcionario')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_pessoa_fj')
-               ->references('idpes')
-               ->on('cadastro.fisica')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('idpes')
+                ->on('cadastro.fisica')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

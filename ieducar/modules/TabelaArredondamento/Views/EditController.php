@@ -1,6 +1,5 @@
 <?php
 
-
 class EditController extends Core_Controller_Page_EditController
 {
     protected $_dataMapper = 'TabelaArredondamento_Model_TabelaDataMapper';
@@ -575,6 +574,7 @@ class EditController extends Core_Controller_Page_EditController
 
         if ($repeatedValues) {
             $this->mensagem = 'Erro no formulário. Os valores devem ser diferentes entre os tipos de conceitos.';
+
             return false;
         }
 
@@ -582,15 +582,16 @@ class EditController extends Core_Controller_Page_EditController
         ksort($values);
         $prevMax = -1;
 
-        foreach ($values as $minValue => $maxValue){
-
+        foreach ($values as $minValue => $maxValue) {
             if ($minValue > $maxValue) {
                 $this->mensagem = 'Erro no formulário. Valor mínimo não pode ser maior que valor máximo dentro do mesmo conceito.';
+
                 return false;
             }
 
             if ($minValue <= $prevMax) {
                 $this->mensagem = 'Erro no formulário. Números preenchidos fora do alcance.';
+
                 return false;
             }
 

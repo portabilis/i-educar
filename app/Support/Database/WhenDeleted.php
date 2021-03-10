@@ -129,7 +129,6 @@ trait WhenDeleted
             END;
             $$;
         ";
-
     }
 
     /**

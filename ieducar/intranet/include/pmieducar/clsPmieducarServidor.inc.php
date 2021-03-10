@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarServidor extends Model
 {
     public $cod_servidor;
@@ -879,6 +878,7 @@ class clsPmieducarServidor extends Model
      * @return array Array associativo com a primeira chave sendo o código da
      *               função. O array interno contém o nome da função e se a função desempenha
      *               um papel de professor
+     *
      * @since   Método disponível desde a versão 1.0.2
      *
      */
@@ -914,6 +914,7 @@ class clsPmieducarServidor extends Model
      *
      * @return array|bool Array com códigos das disciplinas ordenados ou FALSE
      *                    caso o servidor não tenha disciplinas
+     *
      * @since   Método disponível desde a versão 1.0.2
      *
      */
@@ -952,6 +953,7 @@ class clsPmieducarServidor extends Model
      *                            informado, usa o código disponível no objeto atual
      *
      * @return array|bool (codServidor => (int), codInstituicao => (int))
+     *
      * @since   Método disponível desde a versão 1.2.0
      *
      */
@@ -981,6 +983,7 @@ class clsPmieducarServidor extends Model
      *
      * @return array|bool Array com códigos das disciplinas ordenados ou FALSE
      *                    caso o servidor não tenha disciplinas
+     *
      * @since   Método disponível desde a versão 1.0.2
      *
      */
@@ -1027,6 +1030,7 @@ class clsPmieducarServidor extends Model
      * @return array|bool Array associativo com os índices nm_escola, nm_curso,
      *                    nm_serie, nm_turma, nome (componente curricular), dia_semana,
      *                    qhh.hora_inicial e hora_final.
+     *
      * @since   Método disponível desde a versão 1.0.2
      *
      */
@@ -1091,6 +1095,7 @@ class clsPmieducarServidor extends Model
      * por um dos itens que tenha o índice professor igual a 1.
      *
      * @return bool TRUE caso o servidor desempenhe a função de professor
+     *
      * @since   Método disponível desde a versão 1.0.2
      *
      */

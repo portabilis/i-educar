@@ -39,7 +39,7 @@ abstract class CoreExt_Singleton
      */
     public static function getInstance()
     {
-                throw new CoreExt_Exception('É necessário sobrescrever o método "getInstance()" de CoreExt_Singleton.');
+        throw new CoreExt_Exception('É necessário sobrescrever o método "getInstance()" de CoreExt_Singleton.');
     }
 
     /**

@@ -1,6 +1,5 @@
 <?php
 
-
 class EditController extends Core_Controller_Page_EditController
 {
     protected $_dataMapper = 'ComponenteCurricular_Model_ComponenteDataMapper';
@@ -62,7 +61,7 @@ class EditController extends Core_Controller_Page_EditController
 
         $nomeMenu = $this->getRequest()->id == null ? 'Cadastrar' : 'Editar';
 
-        $this->breadcrumb( "$nomeMenu componente curricular", [
+        $this->breadcrumb("$nomeMenu componente curricular", [
             url('intranet/educar_index.php') => 'Escola',
         ]);
     }

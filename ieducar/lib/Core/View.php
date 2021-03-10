@@ -1,6 +1,5 @@
 <?php
 
-
 class Core_View extends clsBase
 {
     /**

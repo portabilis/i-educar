@@ -2,7 +2,6 @@
 
 use iEducar\Support\Exceptions\Exception as iEducarException;
 
-
 class ApiCoreController extends Core_Controller_Page_EditController
 {
     // variaveis usadas apenas em formulários, desnecesário subescrever nos filhos.
@@ -245,7 +244,6 @@ class ApiCoreController extends Core_Controller_Page_EditController
                 'message' => $exception->getMessage(),
                 'extra' => $exception->getExtraInfo(),
             ]);
-
         } catch (Exception $e) {
             $this->messenger->append('Exception: ' . $e->getMessage(), 'error', $encodeToUtf8 = true);
         }

@@ -1,6 +1,5 @@
 <?php
 
-
 class CoreExt_Controller_Dispatcher_Strategy_FrontStrategy extends CoreExt_Controller_Dispatcher_Abstract implements CoreExt_Controller_Dispatcher_Strategy_Interface
 {
     /**
@@ -45,7 +44,6 @@ class CoreExt_Controller_Dispatcher_Strategy_FrontStrategy extends CoreExt_Contr
      */
     public function dispatch()
     {
-
         throw new CoreExt_Controller_Dispatcher_Exception('Método CoreExt_Controller_Strategy_FrontStrategy::dispatch() não implementado.');
     }
 }

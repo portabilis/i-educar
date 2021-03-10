@@ -1,6 +1,5 @@
 <?php
 
-
 class TurmaController extends ApiCoreController
 {
     protected function canGetTurmas()
@@ -37,10 +36,10 @@ class TurmaController extends ApiCoreController
                 $turmas = Portabilis_Business_Professor::turmasAlocado($instituicaoId, $escolaId, $serieId, $userId);
             } else {
                 if (is_numeric($ano)) {
-                    $sql = "
+                    $sql = '
                         SELECT
                             cod_turma AS id,
-                            nm_turma || ' - ' || COALESCE(ano::varchar,'SEM ANO') AS nome
+                            nm_turma || \' - \' || COALESCE(ano::varchar,\'SEM ANO\') AS nome
                         FROM pmieducar.turma
                         WHERE ref_ref_cod_escola = $1
                         AND (
@@ -48,26 +47,26 @@ class TurmaController extends ApiCoreController
                             OR ref_ref_cod_serie_mult = $2
                         )
                         AND ativo = 1
-                        AND visivel != 'f'
+                        AND visivel != \'f\'
                         AND turma.ano = $3
                         ORDER BY nm_turma asc
-                    ";
+                    ';
 
                     $turmas = $this->fetchPreparedQuery($sql, [$escolaId, $serieId, $ano]);
                 } else {
-                    $sql = "
+                    $sql = '
                         SELECT
                             cod_turma AS id,
-                            nm_turma || ' - ' || COALESCE(ano::varchar,'SEM ANO') AS nome
+                            nm_turma || \' - \' || COALESCE(ano::varchar,\'SEM ANO\') AS nome
                         FROM pmieducar.turma
                         WHERE ref_ref_cod_escola = $1
                         AND (
                             ref_ref_cod_serie = $2
                             OR ref_ref_cod_serie_mult = $2
                         ) and ativo = 1
-                        AND visivel != 'f'
+                        AND visivel != \'f\'
                         ORDER BY nm_turma asc
-                    ";
+                    ';
 
                     $turmas = $this->fetchPreparedQuery($sql, [$escolaId, $serieId]);
                 }

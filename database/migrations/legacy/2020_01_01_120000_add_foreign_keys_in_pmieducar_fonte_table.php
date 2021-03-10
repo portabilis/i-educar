@@ -15,10 +15,10 @@ class AddForeignKeysInPmieducarFonteTable extends Migration
     {
         Schema::table('pmieducar.fonte', function (Blueprint $table) {
             $table->foreign('ref_cod_biblioteca')
-               ->references('cod_biblioteca')
-               ->on('pmieducar.biblioteca')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_biblioteca')
+                ->on('pmieducar.biblioteca')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

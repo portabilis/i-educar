@@ -1,6 +1,5 @@
 <?php
 
-
 class Portabilis_View_Helper_Input_Ano extends Portabilis_View_Helper_Input_Core
 {
     protected function inputValue($value = null)

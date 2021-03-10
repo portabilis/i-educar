@@ -6,18 +6,7 @@ use App\Models\LegacyTransferRequest;
 use App\Services\PromotionService;
 use Illuminate\Support\Facades\DB;
 
-
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Transferência Solicitação");
-        $this->processoAp = '578';
-    }
-}
-
-class indice extends clsCadastro
-{
+return new class extends clsCadastro {
     public $cod_transferencia_solicitacao;
 
     public $ref_cod_transferencia_tipo;
@@ -98,7 +87,6 @@ class indice extends clsCadastro
             }
 
             $this->Excluir();
-
         }
 
         $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}";
@@ -179,7 +167,6 @@ class indice extends clsCadastro
         $this->campoLista('ref_cod_transferencia_tipo', 'Motivo', $opcoesMotivo, $this->ref_cod_transferencia_tipo);
         $this->inputsHelper()->date('data_cancel', ['label' => 'Data', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')]);
         $this->campoMemo('observacao', 'Observação', $this->observacao, 60, 5, false);
-
     }
 
     public function Novo()
@@ -249,7 +236,7 @@ class indice extends clsCadastro
         }
         clsPmieducarHistoricoEscolar::gerarHistoricoTransferencia($this->ref_cod_matricula, $this->pessoa_logada);
 
-        if($this->escola_em_outro_municipio === 'on'){
+        if ($this->escola_em_outro_municipio === 'on') {
             $this->ref_cod_escola = null;
         } else {
             $this->escola_destino_externa = null;
@@ -278,7 +265,7 @@ class indice extends clsCadastro
                 try {
                     (new Avaliacao_Model_NotaComponenteMediaDataMapper())
                         ->updateSituation($notaAlunoId, App_Model_MatriculaSituacao::TRANSFERIDO);
-                } catch(\Throwable $exception) {
+                } catch (\Throwable $exception) {
                     DB::rollback();
                 }
             }
@@ -324,10 +311,10 @@ class indice extends clsCadastro
 
         return false;
     }
-}
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
-
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->title = 'i-Educar - Transferência Solicitação';
+        $this->processoAp = '578';
+    }
+};

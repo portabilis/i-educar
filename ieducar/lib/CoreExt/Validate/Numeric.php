@@ -1,6 +1,5 @@
 <?php
 
-
 class CoreExt_Validate_Numeric extends CoreExt_Validate_Abstract
 {
     /**

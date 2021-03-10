@@ -2,18 +2,7 @@
 
 use App\Models\PersonHasPlace;
 
-
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Escola");
-        $this->processoAp = '561';
-    }
-}
-
-class indice extends clsDetalhe
-{
+return new class extends clsDetalhe {
     public $cod_escola;
     public $ref_usuario_cad;
     public $ref_usuario_exc;
@@ -300,24 +289,15 @@ class indice extends clsDetalhe
 
         return $existe == true ? $tabela : false;
     }
-}
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
-
-$pagina->addForm($miolo);
-$pagina->MakeAll();
-
-?>
-<script>
-  function preencheForm (ano, escola, acao) {
-    if (!confirm('Deseja realmente \'' + acao.substr(0, 1).toUpperCase() + acao.substr(1) + '\' o ano letivo?')) {
-      return false;
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-escola-det.js');
     }
 
-    document.acao_ano_letivo.ano.value = ano;
-    document.acao_ano_letivo.ref_cod_escola.value = escola;
-    document.acao_ano_letivo.tipo_acao.value = acao;
-    document.acao_ano_letivo.submit();
-  }
-</script>
+    public function Formular()
+    {
+        $this->title = 'i-Educar - Escola';
+        $this->processoAp = '561';
+    }
+};

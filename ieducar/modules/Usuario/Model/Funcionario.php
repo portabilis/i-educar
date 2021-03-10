@@ -1,6 +1,5 @@
 <?php
 
-
 class Usuario_Model_Funcionario extends CoreExt_Entity
 {
     protected $_data = [
@@ -20,7 +19,7 @@ class Usuario_Model_Funcionario extends CoreExt_Entity
     public function getDataMapper()
     {
         if (is_null($this->_dataMapper)) {
-                        $this->setDataMapper(new Usuario_Model_FuncionarioDataMapper());
+            $this->setDataMapper(new Usuario_Model_FuncionarioDataMapper());
         }
 
         return parent::getDataMapper();

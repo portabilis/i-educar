@@ -11,7 +11,6 @@ use App\Models\LegacyPerson;
 use App\Models\LegacyUser;
 use App\Models\LegacyUserType;
 use App\Support\Database\Connections;
-use App\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -39,8 +38,8 @@ class ImportUsersService implements ToCollection
 
     /**
      * @param Output $output
-     * @param bool $multiTenant
-     * @param bool $forceResetPassword
+     * @param bool   $multiTenant
+     * @param bool   $forceResetPassword
      */
     public function __construct(Output $output, $multiTenant = false, $forceResetPassword = false)
     {
@@ -78,10 +77,11 @@ class ImportUsersService implements ToCollection
      * Cria um usuário a partir do nome, matrícula e senha informados
      *
      * @param string $name
-     * @param string $user Matrícula
+     * @param string $user               Matrícula
      * @param string $password
      * @param string $email
-     * @param bool $forceResetPassword
+     * @param bool   $forceResetPassword
+     *
      * @return
      */
     public function createUser($name, $user, $password, $email, $forceResetPassword)
@@ -101,12 +101,13 @@ class ImportUsersService implements ToCollection
     }
 
     /**
-     * @param string $name
-     * @param string $user
-     * @param string $password
-     * @param string $email
-     * @param bool $forceResetPassword
+     * @param string      $name
+     * @param string      $user
+     * @param string      $password
+     * @param string      $email
+     * @param bool        $forceResetPassword
      * @param string|null $connection
+     *
      * @return LegacyUser|null
      */
     private function createUserByConnection(string $name, string $user, string $password, string $email, bool $forceResetPassword, $connection = null)
@@ -115,7 +116,7 @@ class ImportUsersService implements ToCollection
             DB::setDefaultConnection($connection);
         }
 
-        if ($this->loginExists($user)){
+        if ($this->loginExists($user)) {
             $message = sprintf('O usuário %s não pode ser criado a matrícula já está em uso', $user);
 
             if ($connection) {
@@ -123,6 +124,7 @@ class ImportUsersService implements ToCollection
             }
 
             $this->output->info($message);
+
             return;
         }
 
@@ -166,7 +168,7 @@ class ImportUsersService implements ToCollection
      * @param string $email
      * @param string $username
      * @param string $password
-     * @param $name
+     * @param        $name
      */
     public function sendPasswordEmail($email, $username, $password, $name)
     {

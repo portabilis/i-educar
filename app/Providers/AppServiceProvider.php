@@ -40,9 +40,9 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Load legacy bootstrap application.
      *
-     * @return void
-     *
      * @throws Exception
+     *
+     * @return void
      */
     private function loadLegacyBootstrap()
     {
@@ -53,9 +53,9 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      *
-     * @return void
-     *
      * @throws Exception
+     *
+     * @return void
      */
     public function boot()
     {

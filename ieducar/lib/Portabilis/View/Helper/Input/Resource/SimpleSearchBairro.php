@@ -1,6 +1,5 @@
 <?php
 
-
 class Portabilis_View_Helper_Input_Resource_SimpleSearchBairro extends Portabilis_View_Helper_Input_SimpleSearch
 {
     public function simpleSearchBairro($attrName, $options = [])

@@ -4,15 +4,13 @@ use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineAcademicYear;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolClass;
-use App\Models\LegacySchoolingDegree;
 use App\Models\LegacySchoolClassStage;
 use App\Models\LegacySchoolStage;
-use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
 use iEducar\Modules\AcademicYear\Exceptions\DisciplineNotLinkedToRegistrationException;
+use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
 use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotDefinedInLevel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
-
 
 class App_Model_IedFinder extends CoreExt_Entity
 {
@@ -568,7 +566,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         $ano = null
     ) {
         if (is_null($mapper)) {
-                        $mapper = new ComponenteCurricular_Model_TurmaDataMapper();
+            $mapper = new ComponenteCurricular_Model_TurmaDataMapper();
         }
 
         $where = ['turma' => $turma];
@@ -597,7 +595,7 @@ class App_Model_IedFinder extends CoreExt_Entity
                 $ano
             );
 
-            foreach($componentesTurma as $key => $componente) {
+            foreach ($componentesTurma as $key => $componente) {
                 if ($componente->id == $disciplinaDispensada) {
                     unset($componentesTurma[$key]);
                 }
@@ -682,6 +680,7 @@ class App_Model_IedFinder extends CoreExt_Entity
                     return $componente->cargaHoraria;
                 }
             }
+
             return null;
         };
 
@@ -859,7 +858,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         $possuiDeficiencia = self::verificaSePossuiDeficiencia($matricula['ref_cod_aluno']);
 
         if (is_null($mapper)) {
-                        $mapper = new RegraAvaliacao_Model_RegraDataMapper();
+            $mapper = new RegraAvaliacao_Model_RegraDataMapper();
         }
 
         if (dbBool($matricula['escola_utiliza_regra_diferenciada']) && is_numeric($matricula['serie_regra_avaliacao_diferenciada_id'])) {
@@ -901,7 +900,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         $escola = self::getEscola($turma['ref_ref_cod_escola']);
 
         if (is_null($mapper)) {
-                        $mapper = new RegraAvaliacao_Model_RegraDataMapper();
+            $mapper = new RegraAvaliacao_Model_RegraDataMapper();
         }
 
         if (dbBool($escola['utiliza_regra_diferenciada']) && is_numeric($serie['regra_avaliacao_diferenciada_id'])) {

@@ -4,7 +4,6 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Log;
 
-
 class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_ReportFactory
 {
     /**

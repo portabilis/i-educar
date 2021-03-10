@@ -1,6 +1,5 @@
 <?php
 
-
 class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract
 {
     protected $_header = [];

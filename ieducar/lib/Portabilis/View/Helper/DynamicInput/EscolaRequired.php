@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Session;
 
-
 class Portabilis_View_Helper_DynamicInput_EscolaRequired extends Portabilis_View_Helper_DynamicInput_Escola
 {
     public function escolaRequired($options = [])

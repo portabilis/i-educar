@@ -15,16 +15,16 @@ class AddForeignKeysInCadastroFisicaRacaTable extends Migration
     {
         Schema::table('cadastro.fisica_raca', function (Blueprint $table) {
             $table->foreign('ref_idpes')
-               ->references('idpes')
-               ->on('cadastro.fisica')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('idpes')
+                ->on('cadastro.fisica')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_raca')
-               ->references('cod_raca')
-               ->on('cadastro.raca')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_raca')
+                ->on('cadastro.raca')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

@@ -12,7 +12,7 @@ class GlobalAverageService
         $evaluationRule = App_Model_IedFinder::getRegraAvaliacaoPorMatricula($registration->getKey());
 
         if ($this->isGlobalScore($evaluationRule)) {
-            return  $this->getAverageGlobalScore($registration);
+            return $this->getAverageGlobalScore($registration);
         }
 
         return $this->getAverage($registration);

@@ -1,8 +1,8 @@
 <?php
 
 use App\Menu;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 class RemoveDuplicatedLibraryMenu extends Migration
 {

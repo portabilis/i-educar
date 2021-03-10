@@ -1,6 +1,5 @@
 <?php
 
-
 class Avaliacao_Model_FaltaGeralDataMapper extends Avaliacao_Model_FaltaAbstractDataMapper
 {
     protected $_entityClass = 'Avaliacao_Model_FaltaGeral';

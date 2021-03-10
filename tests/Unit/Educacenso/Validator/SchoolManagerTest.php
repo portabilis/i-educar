@@ -94,6 +94,7 @@ class SchoolManagerTest extends TestCase
         $valueObject->accessCriteriaDescription = $faker->word;
         $valueObject->linkTypeId = $faker->randomNumber(1);
         $valueObject->isChief = $faker->boolean;
+
         return $valueObject;
     }
 }

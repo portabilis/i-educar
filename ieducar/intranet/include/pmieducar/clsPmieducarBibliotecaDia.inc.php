@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarBibliotecaDia extends Model
 {
     public $ref_cod_biblioteca;
@@ -17,7 +16,7 @@ class clsPmieducarBibliotecaDia extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_cod_biblioteca, dia';
 
         if (is_numeric($ref_cod_biblioteca)) {
-                    $this->ref_cod_biblioteca = $ref_cod_biblioteca;
+            $this->ref_cod_biblioteca = $ref_cod_biblioteca;
         }
 
         if (is_numeric($dia)) {

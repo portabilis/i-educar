@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsModulesPontoTransporteEscolar extends Model
 {
     public $cod_ponto_transporte_escolar;

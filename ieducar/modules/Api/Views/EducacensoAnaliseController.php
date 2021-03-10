@@ -6,8 +6,8 @@ use App\Models\Educacenso\Registro20;
 use App\Models\Educacenso\Registro30;
 use App\Models\Educacenso\Registro40;
 use App\Models\Educacenso\Registro50;
-use App\Models\Individual;
 use App\Models\Educacenso\Registro60;
+use App\Models\Individual;
 use App\Models\LegacyInstitution;
 use App\Models\LegacySchool;
 use App\Models\School;
@@ -16,9 +16,9 @@ use App\Services\SchoolClass\AvailableTimeService;
 use iEducar\Modules\Educacenso\Analysis\Register30CommonDataAnalysis;
 use iEducar\Modules\Educacenso\Analysis\Register30ManagerDataAnalysis;
 use iEducar\Modules\Educacenso\Analysis\Register30StudentDataAnalysis;
-use iEducar\Modules\Educacenso\Analysis\Register30TeacherDataAnalysis;
 use iEducar\Modules\Educacenso\Analysis\Register30TeacherAndManagerDataAnalysis;
 use iEducar\Modules\Educacenso\Analysis\Register30TeacherAndStudentDataAnalysis;
+use iEducar\Modules\Educacenso\Analysis\Register30TeacherDataAnalysis;
 use iEducar\Modules\Educacenso\Data\Registro00 as Registro00Data;
 use iEducar\Modules\Educacenso\Data\Registro10 as Registro10Data;
 use iEducar\Modules\Educacenso\Data\Registro20 as Registro20Data;
@@ -26,10 +26,12 @@ use iEducar\Modules\Educacenso\Data\Registro30 as Registro30Data;
 use iEducar\Modules\Educacenso\Data\Registro40 as Registro40Data;
 use iEducar\Modules\Educacenso\Data\Registro50 as Registro50Data;
 use iEducar\Modules\Educacenso\Data\Registro60 as Registro60Data;
+use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\LinguaMinistrada;
+use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
 use iEducar\Modules\Educacenso\Model\MantenedoraDaEscolaPrivada;
-use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
+use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
 use iEducar\Modules\Educacenso\Model\Regulamentacao;
 use iEducar\Modules\Educacenso\Model\SchoolManagerAccessCriteria;
 use iEducar\Modules\Educacenso\Model\SchoolManagerRole;
@@ -38,14 +40,9 @@ use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\Educacenso\Model\TipoMediacaoDidaticoPedagogico;
 use iEducar\Modules\Educacenso\Validator\CnpjMantenedoraPrivada;
 use iEducar\Modules\Educacenso\Validator\InepNumberValidator;
-use iEducar\Modules\Educacenso\Validator\SchoolManagers;
 use iEducar\Modules\Educacenso\Validator\Telefone;
 use iEducar\Modules\Servidores\Model\FuncaoExercida;
-use iEducar\Modules\ValueObjects\SchoolManagerValueObject;
 use Illuminate\Support\Facades\DB;
-use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
-use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
-
 
 /**
  * @deprecated Essa versão da API pública será descontinuada
@@ -367,7 +364,6 @@ class EducacensoAnaliseController extends ApiCoreController
                 'fail' => true
             ];
         }
-
 
         if ($escola->predioCompartilhadoOutraEscola == 1 && empty($escola->codigoInepEscolaCompartilhada)) {
             $mensagem[] = [
@@ -731,7 +727,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verificamos que a turma {$nomeTurma} não possui nenhum docente vinculado.",
                     'path' => '(Servidores > Cadastros > Servidores)',
-                    'linkPath' => "/intranet/educar_servidor_lst.php",
+                    'linkPath' => '/intranet/educar_servidor_lst.php',
                     'fail' => true
                 ];
             }
@@ -740,7 +736,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verificamos que a turma {$nomeTurma} não possui nenhum Docente ou Docente titular - coordenador de tutoria (de módulo ou disciplina) - EAD vinculado.",
                     'path' => '(Servidores > Cadastros > Servidores)',
-                    'linkPath' => "/intranet/educar_servidor_lst.php",
+                    'linkPath' => '/intranet/educar_servidor_lst.php',
                     'fail' => true
                 ];
             }
@@ -749,7 +745,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} possui valor inválido. Verificamos que a turma {$nomeTurma} possui vínculo apenas com docente(s): Tradutor(es)-Intérprete(s) de Libras ou Docente(s) tutor(es) - Auxiliar(es) (de módulo ou disciplina) - EAD.",
                     'path' => '(Servidores > Cadastros > Servidores)',
-                    'linkPath' => "/intranet/educar_servidor_lst.php",
+                    'linkPath' => '/intranet/educar_servidor_lst.php',
                     'fail' => true
                 ];
             }
@@ -758,7 +754,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} possui valor inválido. Verificamos que a turma {$nomeTurma} possui vínculo com docente(s): Tradutor(es)-Intérprete(s) de Libras, porém não possui nenhum aluno(a) ou outro profissional escolar em sala de aula com surdez, deficiência auditiva ou surdocegueira.",
                     'path' => '(Servidores > Cadastros > Servidores)',
-                    'linkPath' => "/intranet/educar_servidor_lst.php",
+                    'linkPath' => '/intranet/educar_servidor_lst.php',
                     'fail' => true
                 ];
             }
@@ -788,14 +784,13 @@ class EducacensoAnaliseController extends ApiCoreController
                     'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
                     'fail' => true
                 ];
-            } else if (!empty($turma->horaInicial) && !empty($turma->horaFinal) && !$turma->horarioFuncionamentoValido()) {
+            } elseif (!empty($turma->horaInicial) && !empty($turma->horaFinal) && !$turma->horarioFuncionamentoValido()) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} possui valor inválido. Verifique se o horário da turma {$nomeTurma} foi preenchido com um valor válido.",
                     'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados gerais > Seção: Horário de funcionamento da turma)',
                     'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
                     'fail' => true
                 ];
-
             }
 
             if (empty(array_filter($turma->diasSemana)) && $turma->tipoMediacaoDidaticoPedagogico == App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL) {
@@ -934,7 +929,6 @@ class EducacensoAnaliseController extends ApiCoreController
                         break;
                 }
 
-
                 if (!$valid) {
                     $descricaoTipoMediacao = (App_Model_TipoMediacaoDidaticoPedagogico::getInstance()->getEnums())[$turma->tipoMediacaoDidaticoPedagogico];
                     $mensagem[] = [
@@ -945,7 +939,7 @@ class EducacensoAnaliseController extends ApiCoreController
                     ];
                 }
 
-                if (in_array($turma->localFuncionamentoDiferenciado, [App_Model_LocalFuncionamentoDiferenciado::UNIDADE_ATENDIMENTO_SOCIOEDUCATIVO, App_Model_LocalFuncionamentoDiferenciado::UNIDADE_PRISIONAL]) && in_array($turma->etapaEducacenso, [1, 2, 3, 56]) ) {
+                if (in_array($turma->localFuncionamentoDiferenciado, [App_Model_LocalFuncionamentoDiferenciado::UNIDADE_ATENDIMENTO_SOCIOEDUCATIVO, App_Model_LocalFuncionamentoDiferenciado::UNIDADE_PRISIONAL]) && in_array($turma->etapaEducacenso, [1, 2, 3, 56])) {
                     $descricaoLocalDiferenciado = $turma->getLocalFuncionamentoDiferenciadoDescription();
                     $mensagem[] = [
                         'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola}  possui valor inválido. Verificamos que o local de funcionamento diferenciado da turma {$nomeTurma} é {$descricaoLocalDiferenciado}, portanto a etapa de ensino não pode ser nenhuma das seguintes opções: 1, 2, 3 ou 56.",
@@ -996,7 +990,7 @@ class EducacensoAnaliseController extends ApiCoreController
                     $mensagem[] = [
                         'text' => $educacaoDistancia ? "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verificamos que o tipo de mediação da turma {$nomeTurma} é educação a distância, portanto a disciplina {$discipline->nome} deve possuir um docente vinculado." : "<span class='avisos-educacenso'><b>Aviso não impeditivo:</b> Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. A disciplina {$discipline->nome} da turma {$nomeTurma} não possui docente vinculado, portanto será exportada como: 2 (Sim, oferece disciplina sem docente vinculado).</span>",
                         'path' => '(Servidores > Cadastros > Servidores)',
-                        'linkPath' => "/intranet/educar_servidor_lst.php",
+                        'linkPath' => '/intranet/educar_servidor_lst.php',
                         'fail' => $educacaoDistancia
                     ];
                 }
@@ -1073,9 +1067,9 @@ class EducacensoAnaliseController extends ApiCoreController
         $mensagem = [];
 
         $mensagem[] = [
-            'text' => "<span class='avisos-educacenso'><b>Aviso não impeditivo:</b> O campo: País de residência possui valor padrão: Brasil. Certifique-se que os(as) alunos(as) ou docentes residentes de outro país, que não seja Brasil, possuam o País de residência informado corretamente.</span>",
+            'text' => '<span class=\'avisos-educacenso\'><b>Aviso não impeditivo:</b> O campo: País de residência possui valor padrão: Brasil. Certifique-se que os(as) alunos(as) ou docentes residentes de outro país, que não seja Brasil, possuam o País de residência informado corretamente.</span>',
             'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: País de residência)',
-            'linkPath' => "/intranet/atendidos_lst.php",
+            'linkPath' => '/intranet/atendidos_lst.php',
             'fail' => false
         ];
 
@@ -1083,7 +1077,7 @@ class EducacensoAnaliseController extends ApiCoreController
             $mensagem[] = [
                 'text' => "Dados para formular o registro 30 da escola {$pessoas[0]->nomeEscola} não encontrados. Verifique se a(s) raça(s) do educacenso foi(ram) informada(s).",
                 'path' => '(Pessoas > Cadastros > Tipos > Tipos de cor ou raça)',
-                'linkPath' => "/intranet/educar_raca_lst.php",
+                'linkPath' => '/intranet/educar_raca_lst.php',
                 'fail' => true
             ];
         }
@@ -1092,7 +1086,7 @@ class EducacensoAnaliseController extends ApiCoreController
             $mensagem[] = [
                 'text' => "Dados para formular o registro 30 da escola {$pessoas[0]->nomeEscola} não encontrados. Verifique se a(s) deficiência(s) do educacenso foi(ram) informada(s).",
                 'path' => '(Pessoas > Cadastros > Tipos > Tipos de deficiência)',
-                'linkPath' => "/intranet/educar_deficiencia_lst.php",
+                'linkPath' => '/intranet/educar_deficiencia_lst.php',
                 'fail' => true
             ];
         }
@@ -1156,7 +1150,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
         $mensagem = [];
         if (count($gestores) > 3) {
-                $mensagem[] = [
+            $mensagem[] = [
                     'text' => "Dados para formular o registro 40 da escola {$nomeEscola} possui valor inválido. A escola não pode ter mais de 3 gestores escolares.",
                     'path' => '(Escola > Cadastros > Escolas > Editar > Aba: dados gerais > Tabela Gestores escolares)',
                     'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
@@ -1245,7 +1239,6 @@ class EducacensoAnaliseController extends ApiCoreController
                 ];
             }
 
-
             if (!(new InepNumberValidator($gestor->inepGestor))->isValid()) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 40 da escola {$nomeEscola}  possui valor inválido. Verifique se o código INEP do gestor {$nomeGestor} possui 12 dígitos.",
@@ -1274,6 +1267,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
         if (empty($docentes)) {
             $this->messenger->append('Nenhum docente encontrado.');
+
             return ['title' => 'Análise exportação - Registro 50'];
         }
 
@@ -1423,7 +1417,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 ];
             }
 
-            if ((!$aluno->veiculoTransporteEscolar )&& $aluno->veiculoTransporteEscolarRequired()) {
+            if ((!$aluno->veiculoTransporteEscolar)&& $aluno->veiculoTransporteEscolarRequired()) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 60 da escola {$nomeEscola} não encontrados. Verifique se o tipo de veículo do transporte escolar público utilizado pelo(a) aluno(a) {$nomeAluno} foi informado.",
                     'path' => '(Escola > Cadastros > Alunos > Editar > Aba: Dados Pessoais > Campo: Veículo utilizado)',
@@ -1681,7 +1675,7 @@ class EducacensoAnaliseController extends ApiCoreController
             $this->appendResponse($this->analisaEducacensoRegistro90());
         } elseif ($this->isRequestFor('get', 'registro-91')) {
             $this->appendResponse($this->analisaEducacensoRegistro91());
-        }  elseif ($this->isRequestFor('get', 'school-is-active')) {
+        } elseif ($this->isRequestFor('get', 'school-is-active')) {
             $this->appendResponse($this->schoolIsActive());
         } else {
             $this->notImplementedOperationError();

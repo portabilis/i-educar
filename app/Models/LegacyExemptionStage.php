@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class LegacyDisciplineExemption
+ *
  * @property LegacyRegistration $registration
  */
 class LegacyExemptionStage extends Model

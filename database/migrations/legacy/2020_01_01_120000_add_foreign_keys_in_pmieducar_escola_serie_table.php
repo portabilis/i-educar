@@ -15,16 +15,16 @@ class AddForeignKeysInPmieducarEscolaSerieTable extends Migration
     {
         Schema::table('pmieducar.escola_serie', function (Blueprint $table) {
             $table->foreign('ref_cod_serie')
-               ->references('cod_serie')
-               ->on('pmieducar.serie')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_serie')
+                ->on('pmieducar.serie')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_escola')
-               ->references('cod_escola')
-               ->on('pmieducar.escola')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_escola')
+                ->on('pmieducar.escola')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

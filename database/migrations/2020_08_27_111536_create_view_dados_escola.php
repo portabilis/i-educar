@@ -2,7 +2,6 @@
 
 use App\Support\Database\AsView;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Support\Facades\Schema;
 
 class CreateViewDadosEscola extends Migration
 {

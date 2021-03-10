@@ -1,6 +1,5 @@
 <?php
 
-
 class CoreExt_Validate_NumericTest extends PHPUnit\Framework\TestCase
 {
     protected $_validator = null;

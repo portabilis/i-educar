@@ -3,13 +3,11 @@
 namespace App\Events;
 
 use App\Models\Notification;
-use App\Models\NotificationType;
 use Illuminate\Broadcasting\Channel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
 
 class NotificationEvent implements ShouldBroadcast
 {
@@ -29,7 +27,7 @@ class NotificationEvent implements ShouldBroadcast
      * Create a new event instance.
      *
      * @param Notification $notification
-     * @param string $tenant
+     * @param string       $tenant
      */
     public function __construct(Notification $notification, $tenant)
     {

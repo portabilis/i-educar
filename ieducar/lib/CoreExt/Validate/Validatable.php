@@ -1,6 +1,5 @@
 <?php
 
-
 interface CoreExt_Validate_Validatable
 {
     /**

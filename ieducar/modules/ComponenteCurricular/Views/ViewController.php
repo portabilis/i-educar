@@ -1,6 +1,5 @@
 <?php
 
-
 class ViewController extends Core_Controller_Page_ViewController
 {
     protected $_dataMapper = 'ComponenteCurricular_Model_ComponenteDataMapper';

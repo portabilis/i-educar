@@ -1,66 +1,18 @@
 <?php
 
-/**
- * i-Educar - Sistema de gestão escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *                     <ctima@itajai.sc.gov.br>
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
- *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
- * do GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
- *
- * @category    i-Educar
- *
- * @license     @@license@@
- *
- * @package     Avaliacao
- * @subpackage  UnitTests
- *
- * @since       Arquivo disponível desde a versão 1.1.0
- *
- * @version     $Id$
- */
 
 use PHPUnit\Framework\MockObject\MockObject;
 
-/**
- * Avaliacao_Service_PromocaoAlunoTest class.
- *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
- *
- * @category    i-Educar
- *
- * @license     @@license@@
- *
- * @package     Avaliacao
- * @subpackage  UnitTests
- *
- * @since       Classe disponível desde a versão 1.1.0
- *
- * @version     @@package_version@@
- */
+
 class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
 {
     protected function _setUpRegraAvaliacaoMock($tipoProgressao)
     {
         $mock = $this->getCleanMock('RegraAvaliacao_Model_Regra');
         $mock
-         ->method('get')
-         ->with('tipoProgressao')
-         ->willReturn($tipoProgressao);
+            ->method('get')
+            ->with('tipoProgressao')
+            ->willReturn($tipoProgressao);
 
         return $mock;
     }
@@ -68,8 +20,8 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
     public function testPromoverAlunoLancaExcecaoCasoSituacaoEstejaEmAndamento()
     {
         $situacao = new stdClass();
-        $situacao->aprovado    = true;
-        $situacao->andamento   = true;
+        $situacao->aprovado = true;
+        $situacao->andamento = true;
         $situacao->recuperacao = false;
         $situacao->retidoFalta = false;
 
@@ -107,8 +59,8 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
     public function testPromoverAlunoAutomaticamenteProgressaoContinuada()
     {
         $situacao = new stdClass();
-        $situacao->aprovado    = true;
-        $situacao->andamento   = false;
+        $situacao->aprovado = true;
+        $situacao->andamento = false;
         $situacao->recuperacao = false;
         $situacao->retidoFalta = false;
 
@@ -146,14 +98,14 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
     public function testPromoverAlunoAutomaticamenteProgressaoNaoContinuadaAutoMediaPresenca()
     {
         $situacao = new stdClass();
-        $situacao->aprovado    = true;
-        $situacao->andamento   = false;
+        $situacao->aprovado = true;
+        $situacao->andamento = false;
         $situacao->recuperacao = false;
         $situacao->retidoFalta = false;
         $situacao->aprovadoComDependencia = false;
 
         $codMatricula = $this->_getConfigOption('matricula', 'cod_matricula');
-        $codUsuario   = $this->_getConfigOption('usuario', 'cod_usuario');
+        $codUsuario = $this->_getConfigOption('usuario', 'cod_usuario');
 
         /** @var Avaliacao_Service_Boletim|MockObject $service */
         $service = $this
@@ -188,13 +140,13 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
     public function testReprovarAlunoAutomaticamenteProgressaoNaoContinuadaAutoMediaPresenca()
     {
         $situacao = new stdClass();
-        $situacao->aprovado    = true;
-        $situacao->andamento   = false;
+        $situacao->aprovado = true;
+        $situacao->andamento = false;
         $situacao->recuperacao = false;
         $situacao->retidoFalta = true;
 
         $codMatricula = $this->_getConfigOption('matricula', 'cod_matricula');
-        $codUsuario   = $this->_getConfigOption('usuario', 'cod_usuario');
+        $codUsuario = $this->_getConfigOption('usuario', 'cod_usuario');
 
         /** @var Avaliacao_Service_Boletim|MockObject $service */
         $service = $this
@@ -227,14 +179,14 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
     public function testPromoverAlunoAutomaticamenteProgressaoNaoContinuadaAutoMedia()
     {
         $situacao = new stdClass();
-        $situacao->aprovado    = true;
-        $situacao->andamento   = false;
+        $situacao->aprovado = true;
+        $situacao->andamento = false;
         $situacao->recuperacao = false;
         $situacao->retidoFalta = true;  // Não considera retenção por falta
         $situacao->aprovadoComDependencia = false;
 
         $codMatricula = $this->_getConfigOption('matricula', 'cod_matricula');
-        $codUsuario   = $this->_getConfigOption('usuario', 'cod_usuario');
+        $codUsuario = $this->_getConfigOption('usuario', 'cod_usuario');
 
         // Mock para RegraAvaliacao_Model_Regra
         /** @var Avaliacao_Service_Boletim|MockObject $service */
@@ -270,13 +222,13 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
     public function testPromoverAlunoManualmenteProgressaoNaoContinuada()
     {
         $situacao = new stdClass();
-        $situacao->aprovado    = false; // Reprovado por nota
-        $situacao->andamento   = false;
+        $situacao->aprovado = false; // Reprovado por nota
+        $situacao->andamento = false;
         $situacao->recuperacao = false;
         $situacao->retidoFalta = false;
 
         $codMatricula = $this->_getConfigOption('matricula', 'cod_matricula');
-        $codUsuario   = $this->_getConfigOption('usuario', 'cod_usuario');
+        $codUsuario = $this->_getConfigOption('usuario', 'cod_usuario');
 
         /** @var Avaliacao_Service_Boletim|MockObject $service */
         $service = $this
@@ -311,13 +263,13 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
     public function testReprovarAlunoManualmenteProgressaoNaoContinuada()
     {
         $situacao = new stdClass();
-        $situacao->aprovado    = false; // Reprovado por nota
-        $situacao->andamento   = false;
+        $situacao->aprovado = false; // Reprovado por nota
+        $situacao->andamento = false;
         $situacao->recuperacao = false;
         $situacao->retidoFalta = false;
 
         $codMatricula = $this->_getConfigOption('matricula', 'cod_matricula');
-        $codUsuario   = $this->_getConfigOption('usuario', 'cod_usuario');
+        $codUsuario = $this->_getConfigOption('usuario', 'cod_usuario');
 
         /** @var Avaliacao_Service_Boletim|MockObject $service */
         $service = $this
@@ -352,8 +304,8 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
     public function testSaveBoletim()
     {
         $situacao = new stdClass();
-        $situacao->aprovado    = true;
-        $situacao->andamento   = false;
+        $situacao->aprovado = true;
+        $situacao->andamento = false;
         $situacao->recuperacao = false;
         $situacao->retidoFalta = false;
 
@@ -385,7 +337,7 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
             $service->save();
         } catch (Exception $e) {
             $this->fail('O método "->save()" não deveria ter lançado exceção com o '
-                  . 'cenário de teste configurado.');
+                . 'cenário de teste configurado.');
         }
 
         self::assertTrue(true, 'O método "->save()" foi executado com sucesso');
@@ -394,13 +346,13 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
     public function testIntegracaoMatriculaPromoverAluno()
     {
         $situacao = new stdClass();
-        $situacao->aprovado    = true;
-        $situacao->andamento   = false;
+        $situacao->aprovado = true;
+        $situacao->andamento = false;
         $situacao->recuperacao = false;
         $situacao->retidoFalta = false;
 
         $codMatricula = $this->_getConfigOption('matricula', 'cod_matricula');
-        $codUsuario   = $this->_getConfigOption('usuario', 'cod_usuario');
+        $codUsuario = $this->_getConfigOption('usuario', 'cod_usuario');
 
         /** @var Avaliacao_Service_Boletim|MockObject $service */
         $service = $this

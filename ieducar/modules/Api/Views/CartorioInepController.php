@@ -1,6 +1,5 @@
 <?php
 
-
 class CartorioInepController extends ApiCoreController
 {
 

@@ -2,17 +2,15 @@
 
 namespace App\Jobs;
 
-use App\Models\EducacensoImport as EducacensoImportModel;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyUserType;
 use App\Models\NotificationType;
-use App\Services\Educacenso\ImportServiceFactory;
 use App\Services\NotificationService;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -39,8 +37,10 @@ class CheckInstitutionConfigurationsJob implements ShouldQueue
      * Execute the job.
      *
      * @param NotificationService $notificationsService
-     * @return void
+     *
      * @throws Throwable
+     *
+     * @return void
      */
     public function handle(NotificationService $notificationsService)
     {

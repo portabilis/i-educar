@@ -3,18 +3,7 @@
 use App\Process;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 
-
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Matrícula');
-        $this->processoAp = 578;
-    }
-}
-
-class indice extends clsDetalhe
-{
+return new class extends clsDetalhe {
     public $titulo;
 
     public $ref_cod_matricula;
@@ -248,7 +237,7 @@ class indice extends clsDetalhe
             $this->addDetalhe(['Observação', $observacaoAbandono]);
         }
 
-        if ($registro['aprovado'] == App_Model_MatriculaSituacao::RECLASSIFICADO){
+        if ($registro['aprovado'] == App_Model_MatriculaSituacao::RECLASSIFICADO) {
             $this->addDetalhe(['Descrição', $this->getDescription($registro['descricao_reclassificacao'])]);
         }
 
@@ -455,10 +444,10 @@ class indice extends clsDetalhe
 
         return $db->CampoUnico($sql);
     }
-}
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
-
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->title = 'i-Educar - Matrícula';
+        $this->processoAp = 578;
+    }
+};

@@ -8,7 +8,6 @@ use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
 use iEducar\Modules\Educacenso\Validator\InepExamValidator;
-use Illuminate\Support\Facades\DB;
 use Portabilis_Utils_Database;
 
 class Register30StudentDataAnalysis implements AnalysisInterface
@@ -100,7 +99,6 @@ class Register30StudentDataAnalysis implements AnalysisInterface
                 'fail' => true
             ];
         }
-
     }
 
     public function getMessages(): array

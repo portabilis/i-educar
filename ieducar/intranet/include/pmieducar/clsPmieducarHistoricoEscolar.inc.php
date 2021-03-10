@@ -3,8 +3,6 @@
 use App\Models\LegacyRegistration;
 use App\Services\GlobalAverageService;
 use iEducar\Legacy\Model;
-use Illuminate\Support\Facades\Session;
-
 
 class clsPmieducarHistoricoEscolar extends Model
 {
@@ -42,19 +40,19 @@ class clsPmieducarHistoricoEscolar extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_cod_aluno, sequencial, ref_usuario_exc, ref_usuario_cad, ano, carga_horaria, dias_letivos, escola, escola_cidade, escola_uf, observacao, aprovado, data_cadastro, data_exclusao, ativo, faltas_globalizadas, ref_cod_instituicao, nm_serie, origem, extra_curricular, ref_cod_matricula, frequencia, registro, livro, folha, nm_curso, historico_grade_curso_id, aceleracao, ref_cod_escola, dependencia, posicao';
 
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
         if (is_numeric($ref_cod_aluno)) {
-                    $this->ref_cod_aluno = $ref_cod_aluno;
+            $this->ref_cod_aluno = $ref_cod_aluno;
         }
         if (is_numeric($ref_cod_instituicao)) {
-                    $this->ref_cod_instituicao = $ref_cod_instituicao;
+            $this->ref_cod_instituicao = $ref_cod_instituicao;
         }
         if (is_numeric($ref_cod_matricula)) {
-                    $this->ref_cod_matricula = $ref_cod_matricula;
+            $this->ref_cod_matricula = $ref_cod_matricula;
         }
 
         if (is_numeric($sequencial)) {
@@ -886,7 +884,8 @@ class clsPmieducarHistoricoEscolar extends Model
         }
     }
 
-    private function arredondaNota($codMatricula, $nota, $tipoNota) {
+    private function arredondaNota($codMatricula, $nota, $tipoNota)
+    {
         $regraAvaliacao = App_Model_IedFinder::getRegraAvaliacaoPorMatricula(
             $codMatricula
         );

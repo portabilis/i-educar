@@ -6,10 +6,9 @@ use App\Contracts\Output;
 
 class NullOutput implements Output
 {
-
     public function progressAdvance()
     {
-       return;
+        return;
     }
 
     public function info($message)

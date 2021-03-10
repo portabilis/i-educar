@@ -1,6 +1,5 @@
 <?php
 
-
 class MotoristaController extends ApiCoreController
 {
     protected $_processoAp = 578; //verificar

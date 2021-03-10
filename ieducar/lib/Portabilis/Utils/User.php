@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Session;
-
 class Portabilis_Utils_User
 {
     public static $_currentUserId;

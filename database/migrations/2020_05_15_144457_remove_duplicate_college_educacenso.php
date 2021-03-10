@@ -12,7 +12,7 @@ class RemoveDuplicateCollegeEducacenso extends Migration
      */
     public function up()
     {
-        DB::statement("
+        DB::statement('
             DELETE FROM modules.educacenso_ies
             WHERE ies_id IN (
                 5812, 5813, 5815, 5816, 4539, 3316, 1143, 5007, 5353, 14236, 3461, 3474, 3484, 4994, 4930,
@@ -30,7 +30,7 @@ class RemoveDuplicateCollegeEducacenso extends Migration
                 5279, 4783, 4448, 5597, 4180, 5140, 5563, 4074, 3370, 4905, 22022, 2061, 18049, 5089, 4215,
                 4937, 5436, 11817, 21492, 5226, 486, 14201, 5463, 5410, 5414, 16881, 5588, 3198, 17952, 5551, 1338
             );
-        ");
+        ');
     }
 
     /**

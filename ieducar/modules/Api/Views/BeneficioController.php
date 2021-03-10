@@ -1,6 +1,5 @@
 <?php
 
-
 class BeneficioController extends ApiCoreController
 {
 

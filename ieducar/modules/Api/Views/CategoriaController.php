@@ -1,9 +1,7 @@
 <?php
 
-
 class CategoriaController extends ApiCoreController
 {
-
     protected function getCategorias()
     {
         $obj = new clsPmieducarCategoriaAcervo();

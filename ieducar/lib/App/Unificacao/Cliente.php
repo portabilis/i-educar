@@ -1,6 +1,5 @@
 <?php
 
-
 class App_Unificacao_Cliente extends App_Unificacao_Base
 {
     protected $chavesManterPrimeiroVinculo = [
