@@ -8,7 +8,7 @@ class MatriculaController extends ApiCoreController
     protected function canGetMatriculas()
     {
         return $this->validatesId('escola') &&
-           $this->validatesId('aluno');
+            $this->validatesId('aluno');
     }
 
     protected function canDeleteAbandono()
@@ -102,9 +102,9 @@ class MatriculaController extends ApiCoreController
      * Método para possibilitar a busca apenas de alunos transferidos, será
      * substituído em futuras versões.
      *
+     * @return array
      * @deprecated
      *
-     * @return array
      */
     public function getTransferredRegistrations()
     {
@@ -122,7 +122,7 @@ class MatriculaController extends ApiCoreController
                     $builder->where('nome', 'ilike', '%' . $query . '%');
                 }
             )
-            ->where('aprovado', 4)
+            ->where('aprovado', App_Model_MatriculaSituacao::TRANSFERIDO)
             ->where('ano', $year)
             ->limit(15);
 
@@ -185,8 +185,16 @@ class MatriculaController extends ApiCoreController
 
         $dadosMatricula = $this->fetchPreparedQuery($sql, $matriculaId, false, 'first-row');
 
-        $attrs = ['id', 'aluno_id', 'ano', 'instituicao_id', 'escola_id',
-            'curso_id', 'serie_id', 'turma_id'];
+        $attrs = [
+            'id',
+            'aluno_id',
+            'ano',
+            'instituicao_id',
+            'escola_id',
+            'curso_id',
+            'serie_id',
+            'turma_id'
+        ];
 
         return Portabilis_Array_Utils::filter($dadosMatricula, $attrs);
     }
@@ -497,14 +505,20 @@ class MatriculaController extends ApiCoreController
             $params = [$sequencial, $matriculaId];
             $this->fetchPreparedQuery($sql, $params);
 
-            $instituicaoId = (new clsBanco)->unicoCampo('select cod_instituicao from pmieducar.instituicao where ativo = 1 order by cod_instituicao asc limit 1;');
+            $instituicaoId = (new clsBanco)->unicoCampo(
+                'select cod_instituicao from pmieducar.instituicao where ativo = 1 order by cod_instituicao asc limit 1;'
+            );
 
-            $fakeRequest = new CoreExt_Controller_Request(['data' => [
-                'oper' => 'post',
-                'resource' => 'promocao',
-                'instituicao_id' => $instituicaoId,
-                'matricula_id' => $matriculaId
-            ]]);
+            $fakeRequest = new CoreExt_Controller_Request(
+                [
+                    'data' => [
+                        'oper' => 'post',
+                        'resource' => 'promocao',
+                        'instituicao_id' => $instituicaoId,
+                        'matricula_id' => $matriculaId
+                    ]
+                ]
+            );
 
             $promocaoApi = new PromocaoApiController();
 
@@ -582,7 +596,10 @@ class MatriculaController extends ApiCoreController
     protected function validaDataEntrada()
     {
         if (!Portabilis_Date_Utils::validaData($this->getRequest()->data_entrada)) {
-            $this->messenger->append('Valor inválido para data de entrada ' . $this->getRequest()->data_entrada, 'error');
+            $this->messenger->append(
+                'Valor inválido para data de entrada ' . $this->getRequest()->data_entrada,
+                'error'
+            );
 
             return false;
         } else {
@@ -633,6 +650,7 @@ class MatriculaController extends ApiCoreController
             }
         }
     }
+
     protected function postSituacao()
     {
         if ($this->validatesPresenceOf('matricula_id') && $this->validatesPresenceOf('nova_situacao')) {
@@ -654,7 +672,17 @@ class MatriculaController extends ApiCoreController
             ) {
                 if ($enturmacoes) {
                     foreach ($enturmacoes as $enturmacao) {
-                        $enturmacao = new clsPmieducarMatriculaTurma($matriculaId, $enturmacao['ref_cod_turma'], 1, null, null, date('Y-m-d H:i:s'), 0, null, $enturmacao['sequencial']);
+                        $enturmacao = new clsPmieducarMatriculaTurma(
+                            $matriculaId,
+                            $enturmacao['ref_cod_turma'],
+                            1,
+                            null,
+                            null,
+                            date('Y-m-d H:i:s'),
+                            0,
+                            null,
+                            $enturmacao['sequencial']
+                        );
 
                         if (!$enturmacao->edita()) {
                             return false;
