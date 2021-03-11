@@ -2,7 +2,6 @@
 
 namespace iEducar\Modules\Unification;
 
-use App\Models\Individual;
 use App\Models\LogUnification;
 use App\Models\LogUnificationOldData;
 use App\Models\Student;
