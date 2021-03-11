@@ -114,16 +114,23 @@ class MatriculaController extends ApiCoreController
 
         $query = str_replace('-', ' ', Str::slug($query));
 
-        $registrations = LegacyRegistration::query()
+        $queryBuilder = LegacyRegistration::query()
             ->with('student.person')
-            ->whereHas('student.person', function ($builder) use ($query) {
-                $builder->where('nome', 'ilike', '%' . $query . '%');
-            })
+            ->whereHas(
+                'student.person',
+                function ($builder) use ($query) {
+                    $builder->where('nome', 'ilike', '%' . $query . '%');
+                }
+            )
             ->where('aprovado', 4)
             ->where('ano', $year)
-            ->where('ref_ref_cod_escola', $school)
-            ->limit(15)
-            ->get();
+            ->limit(15);
+
+        if (!empty($school)) {
+            $queryBuilder->where('ref_ref_cod_escola', $school);
+        }
+
+        $registrations = $queryBuilder->get();
 
         $transfers = [];
 
