@@ -126,7 +126,7 @@ class MatriculaController extends ApiCoreController
             ->where('ano', $year)
             ->limit(15);
 
-        if (!empty($school)) {
+        if ($school) {
             $queryBuilder->where('ref_ref_cod_escola', $school);
         }
 
