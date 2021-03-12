@@ -390,7 +390,7 @@ return new class extends clsCadastro {
         $this->frequencia = $this->fixupFrequencia($this->frequencia);
 
         if ($this->cb_faltas_globalizadas !== 'on') {
-            $this->faltas_globalizadas = 'NULL';
+            $this->faltas_globalizadas = '';
         }
 
         $this->aceleracao = is_null($this->aceleracao) ? 0 : 1;
