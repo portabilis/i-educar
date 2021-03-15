@@ -949,7 +949,7 @@ class MatriculaController extends ApiCoreController
         } elseif ($this->isRequestFor('get', 'frequencia')) {
             $this->appendResponse($this->getFrequencia());
         } elseif ($this->isRequestFor('get', 'matricula-search')) {
-            $this->appendResponse($this->getTransferredRegistrations());
+            $this->appendResponse($this->search());
         } elseif ($this->isRequestFor('get', 'matricula-transferida')) {
             $this->appendResponse($this->getTransferredRegistrations());
         } elseif ($this->isRequestFor('get', 'movimentacao-enturmacao')) {
