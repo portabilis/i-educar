@@ -112,8 +112,6 @@ class MatriculaController extends ApiCoreController
         $school = $this->getRequest()->escola_id;
         $query = $this->getRequest()->query;
 
-        $query = str_replace('-', ' ', Str::slug($query));
-
         $queryBuilder = LegacyRegistration::query()
             ->with('student.person')
             ->whereHas(
