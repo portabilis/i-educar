@@ -119,7 +119,7 @@ class MatriculaController extends ApiCoreController
             ->whereHas(
                 'student.person',
                 function ($builder) use ($query) {
-                    $builder->where('nome', 'ilike', '%' . $query . '%');
+                    $builder->where('slug', 'ilike', '%' . $query . '%');
                 }
             )
             ->where('aprovado', App_Model_MatriculaSituacao::TRANSFERIDO)
