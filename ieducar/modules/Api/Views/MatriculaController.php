@@ -112,12 +112,14 @@ class MatriculaController extends ApiCoreController
         $school = $this->getRequest()->escola_id;
         $query = $this->getRequest()->query;
 
+        $query = str_replace('-', ' ', Str::slug($query));
+
         $queryBuilder = LegacyRegistration::query()
             ->with('student.person')
             ->whereHas(
                 'student.person',
                 function ($builder) use ($query) {
-                    $builder->where('nome', 'ilike', '%' . $query . '%');
+                    $builder->where('slug', 'ilike', '%' . $query . '%');
                 }
             )
             ->where('aprovado', App_Model_MatriculaSituacao::TRANSFERIDO)
@@ -947,7 +949,7 @@ class MatriculaController extends ApiCoreController
         } elseif ($this->isRequestFor('get', 'frequencia')) {
             $this->appendResponse($this->getFrequencia());
         } elseif ($this->isRequestFor('get', 'matricula-search')) {
-            $this->appendResponse($this->search());
+            $this->appendResponse($this->getTransferredRegistrations());
         } elseif ($this->isRequestFor('get', 'matricula-transferida')) {
             $this->appendResponse($this->getTransferredRegistrations());
         } elseif ($this->isRequestFor('get', 'movimentacao-enturmacao')) {
