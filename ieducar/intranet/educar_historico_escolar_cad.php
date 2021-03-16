@@ -389,8 +389,10 @@ return new class extends clsCadastro {
         $this->carga_horaria = is_numeric($this->carga_horaria) ? (int) $this->carga_horaria : $this->carga_horaria;
         $this->frequencia = $this->fixupFrequencia($this->frequencia);
 
+        $faltasGlobalizadas = $this->faltas_globalizadas;
+
         if ($this->cb_faltas_globalizadas !== 'on') {
-            $this->faltas_globalizadas = 'NULL';
+            $faltasGlobalizadas = 'NULL';
         }
 
         $this->aceleracao = is_null($this->aceleracao) ? 0 : 1;
@@ -413,7 +415,7 @@ return new class extends clsCadastro {
             null,
             null,
             1,
-            $this->faltas_globalizadas,
+            $faltasGlobalizadas,
             $this->ref_cod_instituicao,
             1,
             $this->extra_curricular,

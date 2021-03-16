@@ -1,6 +1,7 @@
 <?php
 
 use App\Events\RegistrationEvent;
+use App\Exceptions\Registration\RegistrationException;
 use App\Exceptions\Transfer\TransferException;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
@@ -8,6 +9,7 @@ use App\Services\PromotionService;
 use App\Services\SchoolClass\AvailableTimeService;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 return new class extends clsCadastro {
@@ -971,7 +973,12 @@ return new class extends clsCadastro {
                     } catch (TransferException $exception) {
                         $this->mensagem = 'Não foi possível copiar os dados da matrícula antiga. ' . $exception->getMessage();
 
-                        DB::commit();
+                        DB::rollBack();
+                        $this->simpleRedirect('educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
+                    } catch (RegistrationException $exception) {
+                        $this->mensagem = 'Não é possível concluir a matrícula. ' . $exception->getMessage();
+
+                        DB::rollBack();
                         $this->simpleRedirect('educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
                     }
 
