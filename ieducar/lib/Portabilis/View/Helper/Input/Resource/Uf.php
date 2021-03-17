@@ -3,8 +3,6 @@
 use App\Models\Country;
 use App\Models\State;
 
-require_once 'lib/Portabilis/View/Helper/Input/CoreSelect.php';
-
 class Portabilis_View_Helper_Input_Resource_Uf extends Portabilis_View_Helper_Input_CoreSelect
 {
     protected function inputOptions($options)

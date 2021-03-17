@@ -1,9 +1,6 @@
 <?php
 
 use iEducar\Legacy\Model;
-use Illuminate\Support\Facades\Session;
-
-require_once 'include/pmieducar/geral.inc.php';
 
 class clsPmieducarAnoLetivoModulo extends Model
 {
@@ -37,12 +34,12 @@ class clsPmieducarAnoLetivoModulo extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_ano, ref_ref_cod_escola, sequencial, ref_cod_modulo, data_inicio, data_fim, dias_letivos';
 
         if (is_numeric($ref_cod_modulo)) {
-                    $this->ref_cod_modulo = $ref_cod_modulo;
+            $this->ref_cod_modulo = $ref_cod_modulo;
         }
 
         if (is_numeric($ref_ref_cod_escola) && is_numeric($ref_ano)) {
-                    $this->ref_ref_cod_escola = $ref_ref_cod_escola;
-                    $this->ref_ano = $ref_ano;
+            $this->ref_ref_cod_escola = $ref_ref_cod_escola;
+            $this->ref_ano = $ref_ano;
         }
 
         if (is_numeric($sequencial)) {
@@ -124,7 +121,7 @@ class clsPmieducarAnoLetivoModulo extends Model
                 $this->ref_ref_cod_escola,
                 $this->ref_ano,
                 null,
-                Session::get('id_pessoa'),
+                \Illuminate\Support\Facades\Auth::id(),
                 null,
                 null,
                 null,

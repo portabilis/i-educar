@@ -1,21 +1,6 @@
 <?php
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsDetalhe.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Matricula Turma');
-        $this->processoAp = 578;
-    }
-}
-
-class indice extends clsDetalhe
-{
+return new class extends clsDetalhe {
     public $titulo;
     public $ref_cod_matricula;
     public $ref_cod_turma;
@@ -188,7 +173,7 @@ class indice extends clsDetalhe
 
         $this->addDetalhe(['<b>Turma selecionada</b>', '<b>' . $registro['nm_turma'] . '</b>']);
 
-        $objTurma = new clsPmiEducarTurma($this->ref_cod_turma);
+        $objTurma = new clsPmieducarTurma($this->ref_cod_turma);
 
         $capacidadeMaximaAlunosSala = $objTurma->maximoAlunosSala();
 
@@ -272,9 +257,10 @@ class indice extends clsDetalhe
             $jsEnturmacao = 'if (!confirm("Confirma a enturmação?")) return false;';
         }
 
-        $script = sprintf('
+        $script = sprintf(
+            '
             <script type="text/javascript">
-            
+
                 function enturmar(ref_cod_matricula, ref_cod_turma_destino, tipo){
                   var data = $j("#data_enturmacao").val();
                   var array_data = data.split("/");
@@ -283,9 +269,9 @@ class indice extends clsDetalhe
                     alert("Informe a data corretamente");
                     return false;
                   }
-                
+
                   document.formcadastro.ref_cod_turma_origem.value = "";
-                
+
                   if(tipo == "transferir") {
                     var turmaOrigemId = document.getElementById("ref_cod_turma_origem");
                     if (turmaOrigemId && turmaOrigemId.value)
@@ -295,15 +281,15 @@ class indice extends clsDetalhe
                       return false;
                     }
                   }
-                
+
                   %s
-                
+
                   document.formcadastro.ref_cod_matricula.value = ref_cod_matricula;
                   document.formcadastro.ref_cod_turma_destino.value = ref_cod_turma_destino;
                   document.formcadastro.data_enturmacao.value = document.getElementById("data_enturmacao").value;
                   document.formcadastro.submit();
                 }
-                
+
                 function IsDate(day, month, year) {
                   var date = new Date();
                   var blnRet = false;
@@ -319,19 +305,20 @@ class indice extends clsDetalhe
                   }
                   return blnRet;
                 }
-                
+
                 function removerEnturmacao(ref_cod_matricula, ref_cod_turma_destino, data_enturmacao) {
-                
+
                   if (! confirm("Confirma remoção da enturmação?"))
                     return false;
-                
+
                   document.formcadastro.ref_cod_turma_origem.value = "remover-enturmacao-destino";
                   document.formcadastro.ref_cod_matricula.value = ref_cod_matricula;
                   document.formcadastro.ref_cod_turma_destino.value = ref_cod_turma_destino;
                   document.formcadastro.submit();
                 }
-            
-            </script>', $jsEnturmacao
+
+            </script>',
+            $jsEnturmacao
         );
 
         print $script;
@@ -379,16 +366,10 @@ class indice extends clsDetalhe
 
         return $escolaSerie->detalhe();
     }
-}
 
-// Instancia objeto de página
-$pagina = new clsIndexBase();
-
-// Instancia objeto de conteúdo
-$miolo = new indice();
-
-// Atribui o conteúdo à  página
-$pagina->addForm($miolo);
-
-// Gera o código HTML
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->title = 'i-Educar - Matricula Turma';
+        $this->processoAp = 578;
+    }
+};

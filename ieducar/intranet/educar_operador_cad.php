@@ -1,161 +1,126 @@
 <?php
 
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
-
-class clsIndexBase extends clsBase
-{
-    function Formular()
-    {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Operador" );
-        $this->processoAp = "589";
-    }
-}
-
-class indice extends clsCadastro
-{
+return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
-    var $cod_operador;
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $nome;
-    var $valor;
-    var $fim_sentenca;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
+    public $cod_operador;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $nome;
+    public $valor;
+    public $fim_sentenca;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
 
-    function Inicializar()
+    public function Inicializar()
     {
-        $retorno = "Novo";
+        $retorno = 'Novo';
 
-
-        $this->cod_operador=$_GET["cod_operador"];
+        $this->cod_operador=$_GET['cod_operador'];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 589, $this->pessoa_logada, 0,  "educar_operador_lst.php", true );
+        $obj_permissoes->permissao_cadastra(589, $this->pessoa_logada, 0, 'educar_operador_lst.php', true);
 
-        if( is_numeric( $this->cod_operador ) )
-        {
-
-            $obj = new clsPmieducarOperador( $this->cod_operador );
+        if (is_numeric($this->cod_operador)) {
+            $obj = new clsPmieducarOperador($this->cod_operador);
             $registro  = $obj->detalhe();
-            if( $registro )
-            {
-                foreach( $registro AS $campo => $val )  // passa todos os valores obtidos no registro para atributos do objeto
+            if ($registro) {
+                foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
-                $this->data_cadastro = dataFromPgToBr( $this->data_cadastro );
-                $this->data_exclusao = dataFromPgToBr( $this->data_exclusao );
+                }
+                $this->data_cadastro = dataFromPgToBr($this->data_cadastro);
+                $this->data_exclusao = dataFromPgToBr($this->data_exclusao);
 
                 $obj_permissoes = new clsPermissoes();
-                if( $obj_permissoes->permissao_excluir( 589, $this->pessoa_logada, 0, null, true ) )
-                {
+                if ($obj_permissoes->permissao_excluir(589, $this->pessoa_logada, 0, null, true)) {
                     $this->fexcluir = true;
                 }
 
-                $retorno = "Editar";
+                $retorno = 'Editar';
             }
         }
-        $this->url_cancelar = ($retorno == "Editar") ? "educar_operador_det.php?cod_operador={$registro["cod_operador"]}" : "educar_operador_lst.php";
-        $this->nome_url_cancelar = "Cancelar";
+        $this->url_cancelar = ($retorno == 'Editar') ? "educar_operador_det.php?cod_operador={$registro['cod_operador']}" : 'educar_operador_lst.php';
+        $this->nome_url_cancelar = 'Cancelar';
+
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
         // primary keys
-        $this->campoOculto( "cod_operador", $this->cod_operador );
+        $this->campoOculto('cod_operador', $this->cod_operador);
 
         // foreign keys
 
         // text
-        $this->campoTexto( "nome", "Nome", $this->nome, 30, 255, true );
-        $this->campoMemo( "valor", "Valor", $this->valor, 60, 10, true );
-        $opcoes = array( "Não", "Sim" );
-        $this->campoLista( "fim_sentenca", "Fim Sentenca", $opcoes, $this->fim_sentenca );
+        $this->campoTexto('nome', 'Nome', $this->nome, 30, 255, true);
+        $this->campoMemo('valor', 'Valor', $this->valor, 60, 10, true);
+        $opcoes = [ 'Não', 'Sim' ];
+        $this->campoLista('fim_sentenca', 'Fim Sentenca', $opcoes, $this->fim_sentenca);
 
         // data
-
     }
 
-    function Novo()
+    public function Novo()
     {
-
-
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 589, $this->pessoa_logada, 0,  "educar_operador_lst.php", true );
+        $obj_permissoes->permissao_cadastra(589, $this->pessoa_logada, 0, 'educar_operador_lst.php', true);
 
-
-        $obj = new clsPmieducarOperador( $this->cod_operador, $this->pessoa_logada, $this->pessoa_logada, $this->nome, $this->valor, $this->fim_sentenca, $this->data_cadastro, $this->data_exclusao, $this->ativo );
+        $obj = new clsPmieducarOperador($this->cod_operador, $this->pessoa_logada, $this->pessoa_logada, $this->nome, $this->valor, $this->fim_sentenca, $this->data_cadastro, $this->data_exclusao, $this->ativo);
         $cadastrou = $obj->cadastra();
-        if( $cadastrou )
-        {
-            $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
+        if ($cadastrou) {
+            $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
             $this->simpleRedirect('educar_nivel_ensino_lst.php');
         }
 
-        $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
 
         return false;
     }
 
-    function Editar()
+    public function Editar()
     {
-
-
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 589, $this->pessoa_logada, 0,  "educar_operador_lst.php", true );
-
+        $obj_permissoes->permissao_cadastra(589, $this->pessoa_logada, 0, 'educar_operador_lst.php', true);
 
         $obj = new clsPmieducarOperador($this->cod_operador, $this->pessoa_logada, $this->pessoa_logada, $this->nome, $this->valor, $this->fim_sentenca, $this->data_cadastro, $this->data_exclusao, $this->ativo);
         $editou = $obj->edita();
-        if( $editou )
-        {
-            $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
+        if ($editou) {
+            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_operador_lst.php');
         }
 
-        $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
 
         return false;
     }
 
-    function Excluir()
+    public function Excluir()
     {
-
-
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_excluir( 589, $this->pessoa_logada, 0,  "educar_operador_lst.php", true );
-
+        $obj_permissoes->permissao_excluir(589, $this->pessoa_logada, 0, 'educar_operador_lst.php', true);
 
         $obj = new clsPmieducarOperador($this->cod_operador, $this->pessoa_logada, $this->pessoa_logada, $this->nome, $this->valor, $this->fim_sentenca, $this->data_cadastro, $this->data_exclusao, 0);
         $excluiu = $obj->excluir();
-        if( $excluiu )
-        {
-            $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
+        if ($excluiu) {
+            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_operador_lst.php');
         }
 
-        $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
 
         return false;
     }
-}
 
-// cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
-$miolo = new indice();
-// adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
-// gera o html
-$pagina->MakeAll();
-?>
+    public function Formular()
+    {
+        $this->title = 'i-Educar - Operador';
+        $this->processoAp = '589';
+    }
+};

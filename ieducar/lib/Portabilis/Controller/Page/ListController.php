@@ -1,9 +1,5 @@
 <?php
 
-require_once 'Core/Controller/Page/ListController.php';
-require_once 'lib/Portabilis/View/Helper/Application.php';
-require_once 'lib/Portabilis/View/Helper/Inputs.php';
-
 class Portabilis_Controller_Page_ListController extends Core_Controller_Page_ListController
 {
     protected $backwardCompatibility = false;

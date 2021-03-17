@@ -1,11 +1,7 @@
 <?php
 
-require_once 'Core/Controller/Page/ListController.php';
-require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
-
 class IndexController extends Core_Controller_Page_ListController
 {
-
     protected $_dataMapper = 'RegraAvaliacao_Model_RegraDataMapper';
     protected $_titulo = 'Listagem de regras de avaliação';
     protected $_processoAp = 947;

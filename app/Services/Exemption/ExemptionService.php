@@ -2,12 +2,6 @@
 
 namespace App\Services\Exemption;
 
-require_once __DIR__ . '/../../../ieducar/modules/Avaliacao/Model/NotaAlunoDataMapper.php';
-require_once __DIR__ . '/../../../ieducar/modules/Avaliacao/Model/NotaComponenteDataMapper.php';
-require_once __DIR__ . '/../../../ieducar/modules/Avaliacao/Model/FaltaAlunoDataMapper.php';
-require_once __DIR__ . '/../../../ieducar/modules/Avaliacao/Model/FaltaComponenteDataMapper.php';
-require_once __DIR__ . '/../../../ieducar/modules/Avaliacao/Views/PromocaoApiController.php';
-
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineExemption;
 use App\Models\LegacyRegistration;
@@ -60,9 +54,9 @@ class ExemptionService
         $disciplineArray,
         $exemptionTypeId,
         $description,
-        $stages)
-    {
-        foreach($disciplineArray as $discipline) {
+        $stages
+    ) {
+        foreach ($disciplineArray as $discipline) {
             $this->createExemption($registration, $discipline, $exemptionTypeId, $description, $stages);
         }
     }
@@ -73,6 +67,7 @@ class ExemptionService
 
         if (!$this->existeComponenteSerie($registration->ref_ref_cod_serie, $registration->ref_ref_cod_escola, $disciplineId)) {
             $this->disciplinasNaoExistentesNaSerieDaEscola[] = $this->nomeDisciplina($disciplineId);
+
             return;
         }
 
@@ -84,6 +79,7 @@ class ExemptionService
             $this->cadastraEtapasDaDispensa($exemption, $stages);
             $exemption->batch = $this->isBatch;
             $exemption->save();
+
             return;
         }
 
@@ -227,12 +223,12 @@ class ExemptionService
         $totalEtapas['total'] = LegacySchoolStage::query()->where($where)->count();
         $arrayEtapas = [];
 
-        for ($i = 1; $i <= $totalEtapas['total']; $i++)
-        {
+        for ($i = 1; $i <= $totalEtapas['total']; $i++) {
             $arrayEtapas[$i] = strval($i);
         }
 
         $arrayEtapas = array_diff($arrayEtapas, $stages);
+
         return max($arrayEtapas);
     }
 }

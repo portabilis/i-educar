@@ -3,9 +3,6 @@
 use iEducar\Legacy\Model;
 use Illuminate\Support\Facades\Cache;
 
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'Portabilis/Utils/Database.php';
-
 class clsPmieducarTurma extends Model
 {
     const TURNO_MATUTINO = 1;
@@ -69,25 +66,25 @@ class clsPmieducarTurma extends Model
         t.parecer_3_etapa, t.parecer_4_etapa, t.nao_informar_educacenso, t.tipo_mediacao_didatico_pedagogico, t.dias_semana, t.atividades_complementares, t.atividades_aee, t.local_funcionamento_diferenciado ';
 
         if (is_numeric($ref_cod_turma_tipo)) {
-                    $this->ref_cod_turma_tipo = $ref_cod_turma_tipo;
+            $this->ref_cod_turma_tipo = $ref_cod_turma_tipo;
         }
         if (is_numeric($ref_ref_cod_escola) && is_numeric($ref_ref_cod_serie)) {
-                    $this->ref_ref_cod_escola = $ref_ref_cod_escola;
-                    $this->ref_ref_cod_serie = $ref_ref_cod_serie;
+            $this->ref_ref_cod_escola = $ref_ref_cod_escola;
+            $this->ref_ref_cod_serie = $ref_ref_cod_serie;
         }
         if (is_numeric($ref_cod_infra_predio_comodo)) {
-                    $this->ref_cod_infra_predio_comodo = $ref_cod_infra_predio_comodo;
+            $this->ref_cod_infra_predio_comodo = $ref_cod_infra_predio_comodo;
         }
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
 
         if (is_numeric($ref_cod_regente) && is_numeric($ref_cod_instituicao_regente)) {
-                    $this->ref_cod_regente = $ref_cod_regente;
-                    $this->ref_cod_instituicao_regente = $ref_cod_instituicao_regente;
+            $this->ref_cod_regente = $ref_cod_regente;
+            $this->ref_cod_instituicao_regente = $ref_cod_instituicao_regente;
         }
 
         if (is_numeric($cod_turma)) {
@@ -128,11 +125,11 @@ class clsPmieducarTurma extends Model
         }
 
         if (is_numeric($ref_cod_instituicao)) {
-                    $this->ref_cod_instituicao = $ref_cod_instituicao;
+            $this->ref_cod_instituicao = $ref_cod_instituicao;
         }
 
         if (is_numeric($ref_cod_curso)) {
-                    $this->ref_cod_curso = $ref_cod_curso;
+            $this->ref_cod_curso = $ref_cod_curso;
         }
 
         if ((is_numeric($ref_ref_cod_escola_mult) && is_numeric($ref_ref_cod_serie_mult)) || is_null($ref_ref_cod_serie_mult)) {
@@ -140,8 +137,8 @@ class clsPmieducarTurma extends Model
                 $this->ref_ref_cod_escola_mult = '';
                 $this->ref_ref_cod_serie_mult = '';
             } else {
-                    $this->ref_ref_cod_escola_mult = $ref_ref_cod_escola_mult;
-                    $this->ref_ref_cod_serie_mult = $ref_ref_cod_serie_mult;
+                $this->ref_ref_cod_escola_mult = $ref_ref_cod_escola_mult;
+                $this->ref_ref_cod_serie_mult = $ref_ref_cod_serie_mult;
             }
         }
         if (is_bool($visivel)) {
@@ -1657,7 +1654,7 @@ class clsPmieducarTurma extends Model
     public function maximoAlunosSala()
     {
         $detTurma = $this->detalhe();
-        $objInstituicao = new clsPmiEducarInstituicao($detTurma['ref_cod_instituicao']);
+        $objInstituicao = new clsPmieducarInstituicao($detTurma['ref_cod_instituicao']);
         $detInstituicao = $objInstituicao->detalhe();
         $controlaEspacoUtilizacaoAluno = $detInstituicao['controlar_espaco_utilizacao_aluno'];
         //se o parametro de controle de utilização de espaço estiver setado como verdadeiro
@@ -1666,7 +1663,7 @@ class clsPmieducarTurma extends Model
             $quantidadeAlunosPorMetroQuadrado = $detInstituicao['quantidade_alunos_metro_quadrado'];
             $codSalaUtilizada = $detTurma['ref_cod_infra_predio_comodo'];
 
-            $objInfraPredioComodo = new clsPmiEducarInfraPredioComodo($codSalaUtilizada);
+            $objInfraPredioComodo = new clsPmieducarInfraPredioComodo($codSalaUtilizada);
             $detInfraPredioComodo = $objInfraPredioComodo->detalhe();
             $areaSala = $detInfraPredioComodo['area'];
 
@@ -1694,6 +1691,7 @@ class clsPmieducarTurma extends Model
             $sql = 'SELECT ref_cod_disciplina_dispensada as disciplina_dispensada FROM pmieducar.turma WHERE cod_turma = $1';
 
             $params = ['params' => $turmaId, 'return_only' => 'first-field'];
+
             return Portabilis_Utils_Database::fetchPreparedQuery($sql, $params) ?? 'null';
         });
 

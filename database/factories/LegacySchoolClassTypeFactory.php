@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Factory;
 /** @var Factory $factory */
 
 $factory->define(LegacySchoolClassType::class, function (Faker $faker) {
-
     $name = $faker->colorName;
     $abbreviation = mb_substr($faker->colorName, 0, 5);
 
@@ -23,7 +22,6 @@ $factory->define(LegacySchoolClassType::class, function (Faker $faker) {
 });
 
 $factory->state(LegacySchoolClassType::class, 'unique', function () {
-
     $schoolClassType = LegacySchoolClassType::query()->first();
 
     if (empty($schoolClassType)) {

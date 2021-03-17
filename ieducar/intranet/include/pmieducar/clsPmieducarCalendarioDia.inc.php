@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsPmieducarCalendarioDia extends Model
 {
     public $ref_cod_calendario_ano_letivo;
@@ -26,18 +24,18 @@ class clsPmieducarCalendarioDia extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_cod_calendario_ano_letivo, mes, dia, ref_usuario_exc, ref_usuario_cad, ref_cod_calendario_dia_motivo, descricao, data_cadastro, data_exclusao, ativo';
 
         if (is_numeric($ref_cod_calendario_dia_motivo)) {
-                    $this->ref_cod_calendario_dia_motivo = $ref_cod_calendario_dia_motivo;
+            $this->ref_cod_calendario_dia_motivo = $ref_cod_calendario_dia_motivo;
         } elseif ($ref_cod_calendario_dia_motivo = 'NULL') {
             $this->ref_cod_calendario_dia_motivo = $ref_cod_calendario_dia_motivo;
         }
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
         if (is_numeric($ref_cod_calendario_ano_letivo)) {
-                    $this->ref_cod_calendario_ano_letivo = $ref_cod_calendario_ano_letivo;
+            $this->ref_cod_calendario_ano_letivo = $ref_cod_calendario_ano_letivo;
         }
 
         if (is_numeric($mes)) {

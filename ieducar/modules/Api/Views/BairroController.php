@@ -2,10 +2,6 @@
 
 use App\Models\Place;
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'lib/Portabilis/Array/Utils.php';
-require_once 'intranet/include/clsBanco.inc.php';
-
 class BairroController extends ApiCoreController
 {
     protected function getNeighborhoods()

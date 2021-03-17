@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsPmieducarInfraPredio extends Model
 {
     public $cod_infra_predio;
@@ -30,13 +28,13 @@ class clsPmieducarInfraPredio extends Model
         $this->_campos_lista = str_replace(',', ', predio.', $this->_campos_lista);
 
         if (is_numeric($ref_cod_escola)) {
-                    $this->ref_cod_escola = $ref_cod_escola;
+            $this->ref_cod_escola = $ref_cod_escola;
         }
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
 
         if (is_numeric($cod_infra_predio)) {

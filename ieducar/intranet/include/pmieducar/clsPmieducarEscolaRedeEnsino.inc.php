@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsPmieducarEscolaRedeEnsino extends Model
 {
     public $cod_escola_rede_ensino;
@@ -24,10 +22,10 @@ class clsPmieducarEscolaRedeEnsino extends Model
         $this->_campos_lista = $this->_todos_campos = 'cod_escola_rede_ensino, ref_usuario_exc, ref_usuario_cad, nm_rede, data_cadastro, data_exclusao, ativo, ref_cod_instituicao';
 
         if (is_numeric($ref_cod_instituicao)) {
-                    $this->ref_cod_instituicao = $ref_cod_instituicao;
+            $this->ref_cod_instituicao = $ref_cod_instituicao;
         }
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
 
         if (is_numeric($cod_escola_rede_ensino)) {

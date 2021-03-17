@@ -1,9 +1,6 @@
 <?php
 
 use iEducar\Legacy\Model;
-use Illuminate\Support\Facades\Session;
-
-require_once 'include/pmieducar/geral.inc.php';
 
 class clsModulesProfessorTurma extends Model
 {
@@ -26,8 +23,6 @@ class clsModulesProfessorTurma extends Model
     public $turno_id;
 
     public $codUsuario;
-
-    public $pessoa_logada;
 
     /**
      * Construtor.
@@ -55,8 +50,6 @@ class clsModulesProfessorTurma extends Model
     ) {
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}professor_turma";
-
-        $this->pessoa_logada = Session::get('id_pessoa');
 
         $this->_campos_lista = $this->_todos_campos = ' pt.id, pt.ano, pt.instituicao_id, pt.servidor_id, pt.turma_id, pt.funcao_exercida, pt.tipo_vinculo, pt.permite_lancar_faltas_componente, pt.turno_id';
 
@@ -294,8 +287,8 @@ class clsModulesProfessorTurma extends Model
         $tipo_vinculo = null
     ) {
         $sql = "
-            
-            SELECT 
+
+            SELECT
                 {$this->_campos_lista},
                 t.nm_turma,
                 t.cod_turma as ref_cod_turma,

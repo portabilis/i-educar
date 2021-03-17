@@ -3,23 +3,23 @@
 namespace App\Models\Educacenso;
 
 use iEducar\Modules\Educacenso\Model\AreasExternas;
-use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
-use iEducar\Modules\Educacenso\Model\TratamentoLixo;
-use iEducar\Modules\Educacenso\Model\RecursosAcessibilidade;
-use iEducar\Modules\Educacenso\Model\UsoInternet;
+use iEducar\Modules\Educacenso\Model\Banheiros;
 use iEducar\Modules\Educacenso\Model\Dormitorios;
 use iEducar\Modules\Educacenso\Model\Equipamentos;
 use iEducar\Modules\Educacenso\Model\EquipamentosAcessoInternet;
 use iEducar\Modules\Educacenso\Model\InstrumentosPedagogicos;
-use iEducar\Modules\Educacenso\Model\ReservaVagasCotas;
-use iEducar\Modules\Educacenso\Model\RedeLocal;
-use iEducar\Modules\Educacenso\Model\SalasAtividades;
-use iEducar\Modules\Educacenso\Model\SalasGerais;
-use iEducar\Modules\Educacenso\Model\SalasFuncionais;
-use iEducar\Modules\Educacenso\Model\Banheiros;
 use iEducar\Modules\Educacenso\Model\Laboratorios;
+use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\OrganizacaoEnsino;
 use iEducar\Modules\Educacenso\Model\OrgaosColegiados;
+use iEducar\Modules\Educacenso\Model\RecursosAcessibilidade;
+use iEducar\Modules\Educacenso\Model\RedeLocal;
+use iEducar\Modules\Educacenso\Model\ReservaVagasCotas;
+use iEducar\Modules\Educacenso\Model\SalasAtividades;
+use iEducar\Modules\Educacenso\Model\SalasFuncionais;
+use iEducar\Modules\Educacenso\Model\SalasGerais;
+use iEducar\Modules\Educacenso\Model\TratamentoLixo;
+use iEducar\Modules\Educacenso\Model\UsoInternet;
 use iEducar\Modules\Educacenso\Validator\School\HasDifferentStepsOfChildEducationValidator;
 
 class Registro10 extends Registro10Fields
@@ -300,7 +300,7 @@ class Registro10 extends Registro10Fields
 
     /**
      * Sempre retona true quando alguma opção de banheiro for preenchida
-     * 
+     *
      * @return bool
      */
     public function banheirosBanheiro()
@@ -778,7 +778,6 @@ class Registro10 extends Registro10Fields
      */
     public function quantidadeProfissionaisPreenchida()
     {
-
         return $this->qtdSecretarioEscolar ||
             $this->qtdAuxiliarAdministrativo ||
             $this->qtdApoioPedagogico ||
@@ -909,6 +908,7 @@ class Registro10 extends Registro10Fields
     public function HasDifferentStepsOfChildEducation()
     {
         $hasDifferentStepsOfChildEducation = new HasDifferentStepsOfChildEducationValidator($this->codEscola);
+
         return $hasDifferentStepsOfChildEducation->isValid();
     }
 

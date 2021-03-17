@@ -1,9 +1,5 @@
 <?php
 
-
-require_once 'CoreExt/Entity.php';
-require_once 'Avaliacao/Model/Etapa.php';
-
 /**
  * Class Avaliacao_Model_NotaComponente
  */

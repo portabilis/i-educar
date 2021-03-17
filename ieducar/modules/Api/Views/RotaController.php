@@ -1,13 +1,5 @@
 <?php
 
-require_once 'include/modules/clsModulesPessoaTransporte.inc.php';
-require_once 'include/modules/clsModulesRotaTransporteEscolar.inc.php';
-require_once 'include/modules/clsModulesItinerarioTransporteEscolar.inc.php';
-require_once 'Portabilis/Controller/ApiCoreController.php';
-require_once 'Portabilis/Array/Utils.php';
-require_once 'Portabilis/String/Utils.php';
-require_once 'Portabilis/Date/Utils.php';
-
 class RotaController extends ApiCoreController
 {
     protected $_processoAp = 21238; //verificar

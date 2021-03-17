@@ -1,7 +1,5 @@
 <?php
 
-require_once 'CoreExt/Enum.php';
-
 class App_Model_SimNao extends CoreExt_Enum
 {
     const NAO = 0;

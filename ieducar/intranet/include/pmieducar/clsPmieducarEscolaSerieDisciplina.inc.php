@@ -2,9 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
-
 class clsPmieducarEscolaSerieDisciplina extends Model
 {
     public $ref_ref_cod_serie;
@@ -43,8 +40,8 @@ class clsPmieducarEscolaSerieDisciplina extends Model
         }
 
         if (is_numeric($ref_ref_cod_escola) && is_numeric($ref_ref_cod_serie)) {
-                    $this->ref_ref_cod_escola = $ref_ref_cod_escola;
-                    $this->ref_ref_cod_serie = $ref_ref_cod_serie;
+            $this->ref_ref_cod_escola = $ref_ref_cod_escola;
+            $this->ref_ref_cod_serie = $ref_ref_cod_serie;
         } else {
             $this->ref_ref_cod_serie = $ref_ref_cod_serie;
         }
@@ -221,11 +218,6 @@ class clsPmieducarEscolaSerieDisciplina extends Model
 
         $campos = '';
         $join = '';
-        if ($boo_nome_disc) {
-            $join = ',pmieducar.disciplina';
-            $whereAnd = ' WHERE ref_cod_disciplina = cod_disciplina AND disciplina.ativo = 1 AND ';
-            $campos = ',disciplina.nm_disciplina';
-        }
 
         $sql = "SELECT {$this->_campos_lista}{$campos} FROM {$this->_tabela}{$join}";
         $filtros = '';

@@ -2,8 +2,8 @@
 
 namespace iEducar\Modules\Educacenso\Validator;
 
-use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaPessoa;
 use App_Model_ZonaLocalizacao;
+use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaPessoa;
 
 class DifferentiatedLocationValidator implements EducacensoValidator
 {

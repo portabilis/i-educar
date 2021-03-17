@@ -1,29 +1,12 @@
 <?php
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsDetalhe.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Etapa");
-        $this->processoAp = '584';
-    }
-}
-
-class indice extends clsDetalhe
-{
+return new class extends clsDetalhe {
     public $cod_modulo;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
     public $nm_tipo;
     public $descricao;
     public $num_etapas;
-    public $num_meses;
-    public $num_semanas;
     public $data_cadastro;
     public $data_exclusao;
     public $ativo;
@@ -107,9 +90,10 @@ class indice extends clsDetalhe
             url('intranet/educar_index.php') => 'Escola',
         ]);
     }
-}
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->title = 'i-Educar - Etapa';
+        $this->processoAp = '584';
+    }
+};

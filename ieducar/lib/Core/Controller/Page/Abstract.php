@@ -4,12 +4,6 @@ use App\User;
 use iEducar\Modules\Navigation\Breadcrumb;
 use Illuminate\Support\Facades\Auth;
 
-require_once 'CoreExt/Controller/Abstract.php';
-require_once 'Core/Controller/Page/Interface.php';
-require_once 'Core/Controller/Page/Exception.php';
-require_once 'CoreExt/Configurable.php';
-require_once 'CoreExt/Exception/InvalidArgumentException.php';
-
 abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract implements Core_Controller_Page_Interface
 {
     /**
@@ -116,8 +110,8 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
      */
     public function __construct()
     {
-        $this->_options['id_usuario'] = $this->getSession()->id_pessoa;
-        $this->pessoa_logada = $this->getSession()->id_pessoa ?? null;
+        $this->_options['id_usuario'] = Auth::id();
+        $this->pessoa_logada          = Auth::id();
     }
 
     /**
@@ -494,7 +488,6 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
      */
     public function generate(CoreExt_Controller_Page_Interface $instance)
     {
-        require_once 'Core/View.php';
         Core_View::generate($instance);
     }
 

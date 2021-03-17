@@ -46,6 +46,7 @@ class Telefone implements EducacensoValidator
 
         if ($quantidadeDeDigitos < 8 || $quantidadeDeDigitos > 9) {
             $this->message[] = "O campo: {$this->nomeCampo} deve possuir de 8 a 9 números";
+
             return false;
         }
 
@@ -62,6 +63,7 @@ class Telefone implements EducacensoValidator
 
         if ($quantidadeDeDigitos == 9 && $primeiroDigito != 9) {
             $this->message[] = "No campo: {$this->nomeCampo} o primeiro dígito deve ser o número 9";
+
             return false;
         }
 
@@ -77,6 +79,7 @@ class Telefone implements EducacensoValidator
 
         if ($possuiTodosOsDigitosRepetidos) {
             $this->message[] = "Os números do campo: {$this->nomeCampo} não podem ser todos repetidos";
+
             return false;
         }
 

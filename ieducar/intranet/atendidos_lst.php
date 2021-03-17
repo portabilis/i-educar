@@ -1,20 +1,6 @@
 <?php
-$desvio_diretorio = '';
-require_once('include/clsBase.inc.php');
-require_once('include/clsListagem.inc.php');
-require_once('include/clsBanco.inc.php');
 
-class clsIndex extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo('Pessoas Físicas');
-        $this->processoAp = '43';
-    }
-}
-
-class indice extends clsListagem
-{
+return new class extends clsListagem {
     public function Gerar()
     {
         $this->titulo = 'Pessoas Físicas';
@@ -62,11 +48,10 @@ class indice extends clsListagem
 
         $this->breadcrumb('Pessoa física', ['educar_pessoas_index.php' => 'Pessoas']);
     }
-}
 
-$pagina = new clsIndex();
-
-$miolo = new indice();
-$pagina->addForm($miolo);
-
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->title = 'Pessoas Físicas';
+        $this->processoAp = '43';
+    }
+};

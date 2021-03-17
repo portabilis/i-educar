@@ -2,9 +2,9 @@
 
 namespace App\Exceptions\Enrollment;
 
+use App\Models\LegacyEnrollment;
 use DateTime;
 use RuntimeException;
-use App\Models\LegacyEnrollment;
 
 class PreviousCancellationDateException extends RuntimeException
 {
@@ -20,7 +20,9 @@ class PreviousCancellationDateException extends RuntimeException
         $message = 'A data de saída %s deve ser maior que a data de enturmação %s.';
 
         $message = sprintf(
-            $message, $cancellationDate->format('d/m/Y'), $enrollment->date->format('d/m/Y')
+            $message,
+            $cancellationDate->format('d/m/Y'),
+            $enrollment->date->format('d/m/Y')
         );
 
         parent::__construct($message);

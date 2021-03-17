@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsPmieducarReservaVaga extends Model
 {
     public $cod_reserva_vaga;
@@ -53,20 +51,20 @@ class clsPmieducarReservaVaga extends Model
         $this->_campos_lista = $this->_todos_campos = 'rv.cod_reserva_vaga, rv.ref_ref_cod_escola, rv.ref_ref_cod_serie, rv.ref_usuario_exc, rv.ref_usuario_cad, rv.ref_cod_aluno, rv.data_cadastro, rv.data_exclusao, rv.ativo, rv.nm_aluno, rv.cpf_responsavel';
 
         if (is_numeric($ref_ref_cod_serie) && is_numeric($ref_ref_cod_escola)) {
-                    $this->ref_ref_cod_serie = $ref_ref_cod_serie;
-                    $this->ref_ref_cod_escola = $ref_ref_cod_escola;
+            $this->ref_ref_cod_serie = $ref_ref_cod_serie;
+            $this->ref_ref_cod_escola = $ref_ref_cod_escola;
         }
 
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
 
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
 
         if (is_numeric($ref_cod_aluno)) {
-                    $this->ref_cod_aluno = $ref_cod_aluno;
+            $this->ref_cod_aluno = $ref_cod_aluno;
         }
 
         if (is_numeric($cod_reserva_vaga)) {
@@ -235,6 +233,7 @@ class clsPmieducarReservaVaga extends Model
      * Retorna uma lista de registros filtrados de acordo com os parâmetros.
      *
      * @return array|bool Retorna um array com registro(s) ou FALSE em caso de erro.
+     *
      * @var int    $int_cod_reserva_vaga
      * @var int    $int_ref_ref_cod_escola
      * @var int    $int_ref_ref_cod_serie

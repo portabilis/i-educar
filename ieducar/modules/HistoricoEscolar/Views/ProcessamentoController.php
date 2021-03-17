@@ -1,8 +1,5 @@
 <?php
 
-require_once 'Portabilis/Controller/Page/ListController.php';
-require_once 'Portabilis/Utils/CustomLabel.php';
-
 class ProcessamentoController extends Portabilis_Controller_Page_ListController
 {
     protected $_dataMapper = 'Avaliacao_Model_NotaAlunoDataMapper';
@@ -19,7 +16,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
 
         parent::_preRender();
 
-        $this->breadcrumb('Processamento de hist&oacute;rico escolar', [
+        $this->breadcrumb('Processamento de histórico escolar', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
     }
@@ -56,13 +53,13 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
 
         $this->campoCheck(
             'alunos_dependencia',
-            'Processar somente hist&oacute;ricos de depend&ecirc;ncias',
+            'Processar somente históricos de dependências',
             null,
             null,
             false,
             false,
             false,
-            'Marque esta op&ccedil;&atilde;o para trazer somente alunos que possuem alguma depend&ecirc;ncia.'
+            'Marque esta opção para trazer somente alunos que possuem alguma dependência.'
         );
 
         $usaCargaHorariaComponente = [

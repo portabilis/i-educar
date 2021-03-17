@@ -9,27 +9,13 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
-require_once 'include/clsBanco.inc.php';
-require_once 'include/clsLogAcesso.inc.php';
-require_once 'include/Geral.inc.php';
-require_once 'include/funcoes.inc.php';
-require_once 'Portabilis/Utils/Database.php';
-require_once 'Portabilis/Utils/User.php';
-require_once 'Portabilis/String/Utils.php';
-require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
-
 class clsBase
 {
     public $titulo = 'Prefeitura Municipal';
     public $clsForm = [];
-    public $bodyscript = null;
     public $processoAp;
-    public $refresh = false;
     public $renderMenu = true;
     public $renderMenuSuspenso = true;
-    public $renderBanner = true;
-    public $estilos;
-    public $scripts;
     public $_instituicao;
 
     public function __construct()
@@ -39,22 +25,12 @@ class clsBase
 
     public function SetTitulo($titulo)
     {
-        $this->titulo = $titulo;
+        $this->titulo = html_entity_decode($titulo);
     }
 
     public function AddForm($form)
     {
         $this->clsForm[] = $form;
-    }
-
-    public function addEstilo($estilo_nome)
-    {
-        $this->estilos[$estilo_nome] = $estilo_nome;
-    }
-
-    public function addScript($script_nome)
-    {
-        $this->scripts[$script_nome] = $script_nome;
     }
 
     public function verificaPermissao()
@@ -77,6 +53,21 @@ class clsBase
                 $corpo = $form->getPrependedOutput() . $corpo;
             }
 
+            /**
+            * Insere o HTML/JS Extras que estão nas views
+            */
+            if (method_exists($form, 'makeExtra')) {
+                $corpo .= '<script>';
+                $corpo .= $form->makeExtra();
+                $corpo .= '</script>';
+            }
+
+            if (method_exists($form, 'makeCss')) {
+                $corpo .= '<style>';
+                $corpo .= $form->makeCss();
+                $corpo .= '</style>';
+            }
+
             if (method_exists($form, 'getAppendedOutput')) {
                 $corpo = $corpo . $form->getAppendedOutput();
             }
@@ -92,12 +83,12 @@ class clsBase
 
     public function CadastraAcesso()
     {
-        if (Session::get('marcado') != "private") {
-            $ip = empty($_SERVER['REMOTE_ADDR']) ? "NULL" : $_SERVER['REMOTE_ADDR'];
-            $ip_de_rede = empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? "NULL" : $_SERVER['HTTP_X_FORWARDED_FOR'];
-            $id_pessoa = Session::get('id_pessoa');
+        if (Session::get('marcado') != 'private') {
+            $ip = empty($_SERVER['REMOTE_ADDR']) ? 'NULL' : $_SERVER['REMOTE_ADDR'];
+            $ip_de_rede = empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? 'NULL' : $_SERVER['HTTP_X_FORWARDED_FOR'];
+            $id_pessoa = \Illuminate\Support\Facades\Auth::id();
 
-            $logAcesso = new clsLogAcesso(FALSE, $ip, $ip_de_rede, $id_pessoa);
+            $logAcesso = new clsLogAcesso(false, $ip, $ip_de_rede, $id_pessoa);
             $logAcesso->cadastra();
 
             Session::put('marcado', 'private');

@@ -1,8 +1,5 @@
 <?php
 
-require_once 'include/clsBanco.inc.php';
-require_once 'include/Geral.inc.php';
-
 class clsFuncionario extends clsPessoaFisica
 {
     public $idpes;
@@ -38,7 +35,7 @@ class clsFuncionario extends clsPessoaFisica
         $this->data_expiracao = $data_expiracao;
         $this->ref_cod_funcionario_vinculo = $ref_cod_funcionario_vinculo;
         $this->email = $email;
-        $this->_campos_lista = ' 
+        $this->_campos_lista = '
             f.ref_cod_pessoa_fj,
             f.matricula,
             f.matricula_interna,

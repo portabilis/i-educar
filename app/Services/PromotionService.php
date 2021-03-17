@@ -34,7 +34,8 @@ class PromotionService
                     'serie' => $this->enrollment->schoolClass->ref_ref_cod_serie,
                     'turma' => $this->enrollment->ref_cod_turma
                 ]
-            ]);
+            ]
+        );
 
         $promocaoApi = new PromocaoApiController();
         $promocaoApi->setRequest($fakeRequest);

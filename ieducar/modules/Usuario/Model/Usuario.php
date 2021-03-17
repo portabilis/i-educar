@@ -1,9 +1,5 @@
 <?php
 
-require_once 'CoreExt/Entity.php';
-require_once 'App/Model/IedFinder.php';
-require_once 'CoreExt/Validate/Email.php';
-
 class Usuario_Model_Usuario extends CoreExt_Entity
 {
     protected $_data = [
@@ -21,7 +17,6 @@ class Usuario_Model_Usuario extends CoreExt_Entity
     public function getDataMapper()
     {
         if (is_null($this->_dataMapper)) {
-            require_once 'Usuario/Model/UsuarioDataMapper.php';
             $this->setDataMapper(new Usuario_Model_UsuarioDataMapper());
         }
 

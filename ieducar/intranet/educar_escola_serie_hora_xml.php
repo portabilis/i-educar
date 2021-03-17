@@ -2,17 +2,14 @@
 
 header('Content-type: text/xml; encoding=');
 
-require_once 'include/clsBanco.inc.php';
-require_once 'include/funcoes.inc.php';
-require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
-
 Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
 
 if (is_numeric($_GET['esc']) && is_numeric($_GET['ser'])) {
     $db = new clsBanco();
-    $db->Consulta('
+    $db->Consulta(
+        '
         SELECT to_char(hora_inicial,\'hh24:mi\'), to_char(hora_final,\'hh24:mi\'), '
         . 'to_char(hora_inicio_intervalo,\'hh24:mi\'), to_char(hora_fim_intervalo,\'hh24:mi\') '
         . "FROM pmieducar.escola_serie WHERE ref_cod_escola = '{$_GET['esc']}' AND "

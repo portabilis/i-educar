@@ -5,11 +5,6 @@ use iEducar\Support\Navigation\Breadcrumb;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
-require_once 'include/clsCampos.inc.php';
-require_once 'Portabilis/View/Helper/Application.php';
-require_once 'Portabilis/View/Helper/Inputs.php';
-require_once 'Portabilis/Utils/User.php';
-
 class clsCadastro extends clsCampos
 {
     public $target = '_self';
@@ -133,38 +128,37 @@ class clsCadastro extends clsCampos
         }
     }
 
-
-    function Inicializar()
+    public function Inicializar()
     {
     }
 
-    function Formular()
+    public function Formular()
     {
     }
 
-    function Novo()
+    public function Novo()
     {
-        return FALSE;
+        return false;
     }
 
-    function Editar()
+    public function Editar()
     {
-        return FALSE;
+        return false;
     }
 
-    function Excluir()
+    public function Excluir()
     {
-        return FALSE;
+        return false;
     }
 
-    function ExcluirImg()
+    public function ExcluirImg()
     {
-        return FALSE;
+        return false;
     }
 
-    function Gerar()
+    public function Gerar()
     {
-        return FALSE;
+        return false;
     }
 
     protected function setFlashMessage()
@@ -507,7 +501,7 @@ class clsCadastro extends clsCampos
             $retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='javascript: $this->acao' value=' $this->nome_acao '>&nbsp;";
         }
         if (!empty($this->url_cancelar) || !empty($this->script_cancelar)) {
-            $retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='javascript: $this->script_cancelar go( \"$this->url_cancelar\" );' value=' $this->nome_url_cancelar '>&nbsp;";
+            $retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='javascript: $this->script_cancelar goOrClose( \"$this->url_cancelar\" );' value=' $this->nome_url_cancelar '>&nbsp;";
         }
         if (!empty($this->url_copiar_enturmacoes)) {
             $retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='javascript: go( \"$this->url_copiar_enturmacoes\" );' value=' $this->nome_url_copiar_enturmacoes '>&nbsp;";

@@ -1,29 +1,10 @@
 <?php
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsDetalhe.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pessoa/clsCadastroRaca.inc.php';
-require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
-require_once 'include/pessoa/clsCadastroFisicaRaca.inc.php';
-
-require_once 'App/Model/ZonaLocalizacao.php';
-
 use App\Models\LegacyIndividual;
 use App\Services\FileService;
 use App\Services\UrlPresigner;
 
-class clsIndex extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' Pessoa');
-        $this->processoAp = 43;
-    }
-}
-
-class indice extends clsDetalhe
-{
+return new class extends clsDetalhe {
     public function Gerar()
     {
         $this->titulo = 'Detalhe da Pessoa';
@@ -181,16 +162,10 @@ class indice extends clsDetalhe
 
         $this->breadcrumb('Pessoa física', ['educar_pessoas_index.php' => 'Pessoas']);
     }
-}
 
-// Instancia objeto de página
-$pagina = new clsIndex();
-
-// Instancia objeto de conteúdo
-$miolo = new indice();
-
-// Atribui o conteúdo à página
-$pagina->addForm($miolo);
-
-// Gera o código HTML
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->title = 'Pessoa';
+        $this->processoAp = 43;
+    }
+};

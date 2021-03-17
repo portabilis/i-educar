@@ -1,7 +1,5 @@
 <?php
 
-require_once 'CoreExt/Controller/Abstract.php';
-
 class CoreExt_Controller_Front extends CoreExt_Controller_Abstract
 {
     /**
@@ -128,7 +126,6 @@ class CoreExt_Controller_Front extends CoreExt_Controller_Abstract
     public function getView()
     {
         if (is_null($this->_view)) {
-            require_once 'CoreExt/View.php';
             $this->setView(new CoreExt_View());
         }
 
@@ -162,13 +159,11 @@ class CoreExt_Controller_Front extends CoreExt_Controller_Abstract
     {
         switch ($this->getOption('controller_type')) {
             case 1:
-                require_once 'CoreExt/Controller/Dispatcher/Strategy/FrontStrategy.php';
-                $strategy = 'CoreExt_Controller_Dispatcher_Strategy_FrontStrategy';
+                                $strategy = 'CoreExt_Controller_Dispatcher_Strategy_FrontStrategy';
                 break;
 
             case 2:
-                require_once 'CoreExt/Controller/Dispatcher/Strategy/PageStrategy.php';
-                $strategy = 'CoreExt_Controller_Dispatcher_Strategy_PageStrategy';
+                                $strategy = 'CoreExt_Controller_Dispatcher_Strategy_PageStrategy';
                 break;
         }
 

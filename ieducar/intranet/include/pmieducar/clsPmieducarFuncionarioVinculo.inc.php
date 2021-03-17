@@ -1,7 +1,5 @@
 <?php
 
-require_once 'include/clsBanco.inc.php';
-
 class clsPmieducarFuncionarioVinculo
 {
     public function lista()

@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsPmieducarDisciplinaTopico extends Model
 {
     public $cod_disciplina_topico;
@@ -24,10 +22,10 @@ class clsPmieducarDisciplinaTopico extends Model
         $this->_campos_lista = $this->_todos_campos = 'cod_disciplina_topico, ref_usuario_exc, ref_usuario_cad, nm_topico, desc_topico, data_cadastro, data_exclusao, ativo';
 
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
 
         if (is_numeric($cod_disciplina_topico)) {

@@ -2,8 +2,6 @@
 
 use Illuminate\Support\Facades\Auth;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsModulesAuditoriaNota
 {
     public $notaAntiga;

@@ -1,12 +1,7 @@
 <?php
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'lib/Portabilis/Array/Utils.php';
-require_once 'lib/Portabilis/String/Utils.php';
-
 class PessoajController extends ApiCoreController
 {
-
     protected function sqlsForNumericSearch()
     {
         $sqls[] = 'select distinct idpes as id, nome as name from

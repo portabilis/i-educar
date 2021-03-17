@@ -43,6 +43,7 @@ class ReCaptchaV3 implements Rule
      * Retorna o score do recaptcha
      *
      * @param $response
+     *
      * @return float
      */
     private function getScore($response)

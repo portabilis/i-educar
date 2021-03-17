@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class SebExportRequest extends FormRequest
 {
-    public function rules() : array
+    public function rules(): array
     {
         return [
             'ano' => [
@@ -17,7 +17,7 @@ class SebExportRequest extends FormRequest
         ];
     }
 
-    public function messages() : array
+    public function messages(): array
     {
         return [
             'ano.required' => 'O ano é obrigatório.',

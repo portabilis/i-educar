@@ -1,7 +1,5 @@
 <?php
 
-require_once 'CoreExt/Validate/Numeric.php';
-
 class CoreExt_Validate_NumericTest extends PHPUnit\Framework\TestCase
 {
     protected $_validator = null;

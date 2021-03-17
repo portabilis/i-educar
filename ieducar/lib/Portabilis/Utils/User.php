@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Session;
-
 class Portabilis_Utils_User
 {
     public static $_currentUserId;
@@ -11,7 +9,7 @@ class Portabilis_Utils_User
     public static function currentUserId()
     {
         if (empty(self::$_currentUserId)) {
-            self::$_currentUserId = Session::get('id_pessoa');
+            self::$_currentUserId = \Illuminate\Support\Facades\Auth::id();
         }
 
         return self::$_currentUserId;

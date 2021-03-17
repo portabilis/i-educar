@@ -4,9 +4,6 @@ use App\Exceptions\SchoolClass\HasDataInDiario;
 use App\Models\LegacyDiscipline;
 use App\Services\iDiarioService;
 
-require_once 'CoreExt/DataMapper.php';
-require_once 'ComponenteCurricular/Model/Turma.php';
-
 class ComponenteCurricular_Model_TurmaDataMapper extends CoreExt_DataMapper
 {
     protected $_entityClass = 'ComponenteCurricular_Model_Turma';
@@ -60,11 +57,12 @@ class ComponenteCurricular_Model_TurmaDataMapper extends CoreExt_DataMapper
      *
      *
      *
-     * @param int $anoEscolar O código do ano escolar/série.
-     * @param int $escola O código da escola.
-     * @param int $turma O código da turma.
-     * @param array $componentes (id => integer, cargaHoraria => float|null)
+     * @param int                 $anoEscolar     O código do ano escolar/série.
+     * @param int                 $escola         O código da escola.
+     * @param int                 $turma          O código da turma.
+     * @param array               $componentes    (id => integer, cargaHoraria => float|null)
      * @param iDiarioService|null $iDiarioService
+     *
      * @throws CoreExt_DataMapper_Exception
      */
     public function bulkUpdate($anoEscolar, $escola, $turma, array $componentes, $iDiarioService = null)

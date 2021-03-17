@@ -2,9 +2,7 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
-class clsPmiEducarAbandonoTipo extends Model
+class clsPmieducarAbandonoTipo extends Model
 {
     public $cod_abandono_tipo;
     public $ref_cod_instituicao;
@@ -24,13 +22,13 @@ class clsPmiEducarAbandonoTipo extends Model
         $this->_campos_lista = $this->_todos_campos = 'tt.cod_abandono_tipo, tt.ref_usuario_exc, tt.ref_usuario_cad, tt.nome, tt.data_cadastro, tt.data_exclusao, tt.ativo, tt.ref_cod_instituicao';
 
         if (is_numeric($ref_cod_instituicao)) {
-                    $this->ref_cod_instituicao = $ref_cod_instituicao;
+            $this->ref_cod_instituicao = $ref_cod_instituicao;
         }
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
 
         if (is_numeric($cod_abandono_tipo)) {

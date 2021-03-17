@@ -1,8 +1,5 @@
 <?php
 
-require_once 'CoreExt/DataMapper.php';
-require_once 'Transporte/Model/Aluno.php';
-
 class Transporte_Model_AlunoDataMapper extends CoreExt_DataMapper
 {
     protected $_entityClass = 'Transporte_Model_Aluno';

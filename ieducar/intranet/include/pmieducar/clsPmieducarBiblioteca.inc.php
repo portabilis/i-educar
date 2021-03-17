@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsPmieducarBiblioteca extends Model
 {
     public $cod_biblioteca;
@@ -63,10 +61,10 @@ class clsPmieducarBiblioteca extends Model
                                                                                                      bloqueia_emprestimo_em_atraso';
 
         if (is_numeric($ref_cod_instituicao)) {
-                    $this->ref_cod_instituicao = $ref_cod_instituicao;
+            $this->ref_cod_instituicao = $ref_cod_instituicao;
         }
         if (is_numeric($ref_cod_escola)) {
-                    $this->ref_cod_escola = $ref_cod_escola;
+            $this->ref_cod_escola = $ref_cod_escola;
         }
 
         if (is_numeric($cod_biblioteca)) {

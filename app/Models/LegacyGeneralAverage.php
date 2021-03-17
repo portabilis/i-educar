@@ -27,7 +27,6 @@ class LegacyGeneralAverage extends Model
      */
     public $timestamps = false;
 
-
     /**
      * @return BelongsTo
      */

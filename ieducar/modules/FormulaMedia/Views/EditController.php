@@ -1,31 +1,27 @@
 <?php
 
-require_once 'Core/Controller/Page/EditController.php';
-require_once 'FormulaMedia/Model/FormulaDataMapper.php';
-require_once 'FormulaMedia/Validate/Formula.php';
-
 use App\Models\LegacyExamRule;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 class EditController extends Core_Controller_Page_EditController
 {
-  protected $_dataMapper        = 'FormulaMedia_Model_FormulaDataMapper';
-  protected $_titulo            = 'Cadastro de fórmula de cálculo de média';
-  protected $_processoAp        = 948;
-  protected $_nivelAcessoOption = App_Model_NivelAcesso::INSTITUCIONAL;
-  protected $_saveOption        = TRUE;
-  protected $_deleteOption      = TRUE;
+    protected $_dataMapper        = 'FormulaMedia_Model_FormulaDataMapper';
+    protected $_titulo            = 'Cadastro de fórmula de cálculo de média';
+    protected $_processoAp        = 948;
+    protected $_nivelAcessoOption = App_Model_NivelAcesso::INSTITUCIONAL;
+    protected $_saveOption        = true;
+    protected $_deleteOption      = true;
 
-  protected $_formMap = array(
-    'instituicao' => array(
+    protected $_formMap = [
+    'instituicao' => [
       'label'  => 'Instituição',
       'help'   => ''
-    ),
-    'nome' => array(
+    ],
+    'nome' => [
       'label'  => 'Nome',
       'help'   => ''
-    ),
-    'formulaMedia' => array(
+    ],
+    'formulaMedia' => [
       'label'  => 'Fórmula de média final',
       'help'   => 'A fórmula de cálculo.<br />
                    Variáveis disponíveis:<br />
@@ -42,66 +38,99 @@ class EditController extends Core_Controller_Page_EditController
                    &middot; < > ? :
                    A variável "Rc" está disponível apenas<br />
                    quando Tipo de fórmula for "Recuperação".'
-    ),
-    'tipoFormula' => array(
+    ],
+    'tipoFormula' => [
       'label'  => 'Tipo de fórmula',
       'help'   => ''
-    ),
-    'substituiMenorNotaRc' => array(
+    ],
+    'substituiMenorNotaRc' => [
       'label'  => 'Substitui menor nota por recuperação ',
       'help'   => 'Substitui menor nota (En) por nota de recuperação (Rc) em ordem descrescente.<br/>
                    Somente substitui quando Rc é maior que En.
                    Ex: E1 = 2, E2 = 3, E3 = 2, Rc = 5.
                    Na fórmula será considerado: E1 = 2, E2 = 3, E3 = 5, Rc = 5.'
-    )
-  );
+    ]
+  ];
 
-  function _preRender(){
-    Portabilis_View_Helper_Application::loadJavascript($this, '/modules/FormulaMedia/Assets/Javascripts/FormulaMedia.js');
+    public function _preRender()
+    {
+        Portabilis_View_Helper_Application::loadJavascript($this, '/modules/FormulaMedia/Assets/Javascripts/FormulaMedia.js');
 
-    $nomeMenu = $this->getRequest()->id == null ? "Cadastrar" : "Editar";
+        $nomeMenu = $this->getRequest()->id == null ? 'Cadastrar' : 'Editar';
 
-      $this->breadcrumb("$nomeMenu fórmula de média", [
+        $this->breadcrumb("$nomeMenu fórmula de média", [
           url('intranet/educar_index.php') => 'Escola',
       ]);
-  }
+    }
 
-  /**
-   * @see clsCadastro#Gerar()
-   */
-  public function Gerar()
-  {
-    $this->campoOculto('id', $this->getEntity()->id);
+    /**
+     * @see clsCadastro#Gerar()
+     */
+    public function Gerar()
+    {
+        $this->campoOculto('id', $this->getEntity()->id);
 
-    // Instituição
-    $instituicoes = App_Model_IedFinder::getInstituicoes();
-    $this->campoLista('instituicao', $this->_getLabel('instituicao'),
-      $instituicoes, $this->getEntity()->instituicao);
+        // Instituição
+        $instituicoes = App_Model_IedFinder::getInstituicoes();
+        $this->campoLista(
+            'instituicao',
+            $this->_getLabel('instituicao'),
+            $instituicoes,
+            $this->getEntity()->instituicao
+        );
 
-    // Nome
-    $this->campoTexto('nome', $this->_getLabel('nome'), $this->getEntity()->nome,
-      40, 50, TRUE, FALSE, FALSE, $this->_getHelp('nome'));
+        // Nome
+        $this->campoTexto(
+            'nome',
+            $this->_getLabel('nome'),
+            $this->getEntity()->nome,
+            40,
+            50,
+            true,
+            false,
+            false,
+            $this->_getHelp('nome')
+        );
 
-    // Fórmula de média
-    $this->campoTexto('formulaMedia', $this->_getLabel('formulaMedia'),
-      $this->getEntity()->formulaMedia, 40, 200, TRUE, FALSE, FALSE,
-      $this->_getHelp('formulaMedia'));
+        // Fórmula de média
+        $this->campoTexto(
+            'formulaMedia',
+            $this->_getLabel('formulaMedia'),
+            $this->getEntity()->formulaMedia,
+            40,
+            200,
+            true,
+            false,
+            false,
+            $this->_getHelp('formulaMedia')
+        );
 
-    // Substitui menor nota
-    $this->campoCheck('substituiMenorNotaRc', $this->_getLabel('substituiMenorNotaRc'),
-      $this->getEntity()->substituiMenorNotaRc, '', FALSE, FALSE, FALSE,
-      $this->_getHelp('substituiMenorNotaRc'));
+        // Substitui menor nota
+        $this->campoCheck(
+            'substituiMenorNotaRc',
+            $this->_getLabel('substituiMenorNotaRc'),
+            $this->getEntity()->substituiMenorNotaRc,
+            '',
+            false,
+            false,
+            false,
+            $this->_getHelp('substituiMenorNotaRc')
+        );
 
-    // Fórmula de recuperação
-    /*$this->campoTexto('formulaRecuperacao', $this->_getLabel('formulaRecuperacao'),
-      $this->getEntity()->formulaRecuperacao, 40, 50, TRUE, FALSE, FALSE,
-      $this->_getHelp('formulaRecuperacao'));*/
+        // Fórmula de recuperação
+        /*$this->campoTexto('formulaRecuperacao', $this->_getLabel('formulaRecuperacao'),
+          $this->getEntity()->formulaRecuperacao, 40, 50, TRUE, FALSE, FALSE,
+          $this->_getHelp('formulaRecuperacao'));*/
 
-    // Tipo de fórmula
-    $tipoFormula = FormulaMedia_Model_TipoFormula::getInstance();
-    $this->campoRadio('tipoFormula', $this->_getLabel('tipoFormula'),
-      $tipoFormula->getEnums(), $this->getEntity()->get('tipoFormula'));
-  }
+        // Tipo de fórmula
+        $tipoFormula = FormulaMedia_Model_TipoFormula::getInstance();
+        $this->campoRadio(
+            'tipoFormula',
+            $this->_getLabel('tipoFormula'),
+            $tipoFormula->getEnums(),
+            $this->getEntity()->get('tipoFormula')
+        );
+    }
 
     private function usedInExamRule()
     {
@@ -122,6 +151,7 @@ class EditController extends Core_Controller_Page_EditController
     {
         if ($this->usedInExamRule()) {
             $this->mensagem = 'Não foi possível excluir a fórmula de cálculo de média, pois a mesma possui vínculo com regras de avaliação.';
+
             return false;
         }
 
@@ -136,50 +166,51 @@ class EditController extends Core_Controller_Page_EditController
         return true;
     }
 
+    /**
+     * Implementa uma rotina de criação ou atualização de registro padrão para
+     * uma instância de CoreExt_Entity que use um campo identidade.
+     *
+     * @return bool
+     *
+     * @todo Atualizar todas as Exception de CoreExt_Validate, para poder ter
+     *   certeza que o erro ocorrido foi gerado de alguma camada diferente, como
+     *   a de conexão com o banco de dados.
+     */
+    protected function _save()
+    {
+        $data = [];
 
-  /**
-   * Implementa uma rotina de criação ou atualização de registro padrão para
-   * uma instância de CoreExt_Entity que use um campo identidade.
-   * @return bool
-   * @todo Atualizar todas as Exception de CoreExt_Validate, para poder ter
-   *   certeza que o erro ocorrido foi gerado de alguma camada diferente, como
-   *   a de conexão com o banco de dados.
-   */
-  protected function _save()
-  {
-    $data = array();
+        foreach ($_POST as $key => $val) {
+            if (array_key_exists($key, $this->_formMap)) {
+                $data[$key] = $val;
+            }
+        }
 
-    foreach ($_POST as $key => $val) {
-      if (array_key_exists($key, $this->_formMap)) {
-        $data[$key] = $val;
-      }
-    }
+        //fixup for checkbox nota geral
+        if (!isset($data['substituiMenorNotaRc'])) {
+            $data['substituiMenorNotaRc'] = '0';
+        }
 
-    //fixup for checkbox nota geral
-    if(!isset($data['substituiMenorNotaRc'])){
-      $data['substituiMenorNotaRc'] = '0';
-    }
+        // Verifica pela existência do field identity
+        if (isset($this->getRequest()->id) && 0 < $this->getRequest()->id) {
+            $entity = $this->setEntity($this->getDataMapper()->find($this->getRequest()->id));
+        }
 
-    // Verifica pela existência do field identity
-    if (isset($this->getRequest()->id) && 0 < $this->getRequest()->id) {
-      $entity = $this->setEntity($this->getDataMapper()->find($this->getRequest()->id));
-    }
+        if (isset($entity)) {
+            $this->getEntity()->setOptions($data);
+        } else {
+            $this->setEntity($this->getDataMapper()->createNewEntityInstance($data));
+        }
 
-    if (isset($entity)) {
-      $this->getEntity()->setOptions($data);
-    }
-    else {
-      $this->setEntity($this->getDataMapper()->createNewEntityInstance($data));
-    }
+        try {
+            $this->getDataMapper()->save($this->getEntity());
 
-    try {
-      $this->getDataMapper()->save($this->getEntity());
-      return TRUE;
+            return true;
+        } catch (Exception $e) {
+            // TODO: ver @todo do docblock
+            $this->mensagem = 'Erro no preenchimento do formulário. ';
+
+            return false;
+        }
     }
-    catch (Exception $e) {
-      // TODO: ver @todo do docblock
-      $this->mensagem = 'Erro no preenchimento do formulário. ';
-      return FALSE;
-    }
-  }
 }

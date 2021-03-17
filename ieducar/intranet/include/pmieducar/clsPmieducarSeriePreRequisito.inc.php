@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsPmieducarSeriePreRequisito extends Model
 {
     public $ref_cod_pre_requisito;
@@ -20,13 +18,13 @@ class clsPmieducarSeriePreRequisito extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_cod_pre_requisito, ref_cod_operador, ref_cod_serie, valor';
 
         if (is_numeric($ref_cod_serie)) {
-                    $this->ref_cod_serie = $ref_cod_serie;
+            $this->ref_cod_serie = $ref_cod_serie;
         }
         if (is_numeric($ref_cod_operador)) {
-                    $this->ref_cod_operador = $ref_cod_operador;
+            $this->ref_cod_operador = $ref_cod_operador;
         }
         if (is_numeric($ref_cod_pre_requisito)) {
-                    $this->ref_cod_pre_requisito = $ref_cod_pre_requisito;
+            $this->ref_cod_pre_requisito = $ref_cod_pre_requisito;
         }
 
         if (is_string($valor)) {

@@ -1,9 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/View/Helper/Input/SimpleSearch.php';
-require_once 'lib/Portabilis/Utils/Database.php';
-require_once 'lib/Portabilis/String/Utils.php';
-
 class Portabilis_View_Helper_Input_Resource_SimpleSearchPaisSemBrasil extends Portabilis_View_Helper_Input_SimpleSearch
 {
     protected function resourceValue($id)

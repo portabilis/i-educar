@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/portal/geral.inc.php';
-
 class clsPortalFuncionario extends Model
 {
     public $ref_cod_pessoa_fj;

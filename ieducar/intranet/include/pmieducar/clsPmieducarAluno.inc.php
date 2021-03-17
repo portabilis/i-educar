@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsPmieducarAluno extends Model
 {
     public $cod_aluno;
@@ -77,11 +75,11 @@ class clsPmieducarAluno extends Model
         a.parentesco_tres, a.autorizado_tres, a.parentesco_quatro, a.autorizado_quatro, a.parentesco_cinco, a.autorizado_cinco, a.url_documento::text, a.emancipado';
 
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
 
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
 
         if (is_numeric($ref_idpes)) {
@@ -201,7 +199,7 @@ class clsPmieducarAluno extends Model
 
             if ($this->emancipado) {
                 $campos .= "{$gruda}emancipado";
-                $valores .= "{$gruda}TRUE";
+                $valores .= "{$gruda}true";
                 $gruda = ', ';
             }
 
@@ -1196,7 +1194,7 @@ class clsPmieducarAluno extends Model
                     $det_fisica = $obj_fisica->detalhe();
 
                     $registro['nome_responsavel'] = $det_ref_idpes['nome'];
-                    $registro['cpf_responsavel'] = $det_fisica['cpf'] ? int2CPF($det_fisica['cpf']) : "Não informado";
+                    $registro['cpf_responsavel'] = $det_fisica['cpf'] ? int2CPF($det_fisica['cpf']) : 'Não informado';
                 }
             }
 
@@ -1215,7 +1213,7 @@ class clsPmieducarAluno extends Model
                     $det_fisica = $obj_fisica->detalhe();
 
                     $registro['nome_responsavel'] = $det_ref_idpes['nome'];
-                    $registro['cpf_responsavel'] = $det_fisica['cpf'] ? int2CPF($det_fisica['cpf']) : "Não informado";
+                    $registro['cpf_responsavel'] = $det_fisica['cpf'] ? int2CPF($det_fisica['cpf']) : 'Não informado';
                 }
             }
 
@@ -1234,7 +1232,7 @@ class clsPmieducarAluno extends Model
                     $det_fisica = $obj_fisica->detalhe();
 
                     $registro['nome_responsavel'] = $det_ref_idpes['nome'];
-                    $registro['cpf_responsavel'] = $det_fisica['cpf'] ? int2CPF($det_fisica['cpf']) : "Não informado";
+                    $registro['cpf_responsavel'] = $det_fisica['cpf'] ? int2CPF($det_fisica['cpf']) : 'Não informado';
                 }
             }
 
@@ -1254,8 +1252,8 @@ class clsPmieducarAluno extends Model
                     $det_pai = $obj_pai->detalhe();
 
                     $registro['nome_responsavel'] = $det_pai['nome'] . ', ' . $det_mae['nome'];
-                    $cpfPai = $fisica_pai['cpf'] ? int2CPF($fisica_pai['cpf']) : "Não informado";
-                    $cpfMae = $fisica_mae['cpf'] ? int2CPF($fisica_mae['cpf']) : "não informado";
+                    $cpfPai = $fisica_pai['cpf'] ? int2CPF($fisica_pai['cpf']) : 'Não informado';
+                    $cpfMae = $fisica_mae['cpf'] ? int2CPF($fisica_mae['cpf']) : 'não informado';
                     $registro['cpf_responsavel'] = $cpfPai . ', ' . $cpfMae;
                 }
             }

@@ -10,31 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsDetalhe.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'include/modules/clsModulesFichaMedicaAluno.inc.php';
-require_once 'include/modules/clsModulesMoradiaAluno.inc.php';
-require_once 'App/Model/ZonaLocalizacao.php';
-require_once 'Educacenso/Model/AlunoDataMapper.php';
-require_once 'Transporte/Model/AlunoDataMapper.php';
-require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
-require_once 'Portabilis/View/Helper/Application.php';
-require_once 'Portabilis/Utils/CustomLabel.php';
-require_once 'lib/Portabilis/Date/Utils.php';
-
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Aluno');
-        $this->processoAp = 578;
-    }
-}
-
-class indice extends clsDetalhe
-{
+return new class extends clsDetalhe {
     public $titulo;
     public $cod_aluno;
     public $ref_idpes_responsavel;
@@ -105,7 +81,7 @@ class indice extends clsDetalhe
                 $caminhoFoto = $detalheFoto['caminho'];
             }
 
-            $registro['nome_aluno'] = strtoupper($det_pessoa_fj['nome']);
+            $registro['nome_aluno'] = mb_strtoupper($det_pessoa_fj['nome']);
             $registro['cpf'] = int2IdFederal($det_fisica['cpf']);
             $registro['data_nasc'] = Portabilis_Date_Utils::pgSQLToBr($det_fisica['data_nasc']);
 
@@ -303,7 +279,7 @@ class indice extends clsDetalhe
         }
 
         if ($det_fisica['nome_social']) {
-            $this->addDetalhe(['Nome Social', strtoupper($det_fisica['nome_social'])]);
+            $this->addDetalhe(['Nome Social', mb_strtoupper($det_fisica['nome_social'])]);
         }
 
         if (idFederal2int($registro['cpf'])) {
@@ -608,7 +584,6 @@ class indice extends clsDetalhe
         // "bloquear_cadastro_aluno" da instituição.
 
         if ($this->obj_permissao->permissao_cadastra(578, $this->pessoa_logada, 7)) {
-
             $bloquearCadastroAluno = dbBool($configuracoes['bloquear_cadastro_aluno']);
 
             if ($bloquearCadastroAluno == false) {
@@ -623,6 +598,26 @@ class indice extends clsDetalhe
                 sprintf('go("educar_historico_escolar_lst.php?ref_cod_aluno=%d");', $registro['cod_aluno']),
                 sprintf('go("educar_distribuicao_uniforme_lst.php?ref_cod_aluno=%d");', $registro['cod_aluno'])
             ];
+
+            if ($titulo = config('legacy.app.alunos.sistema_externo.titulo')) {
+                $link = config('legacy.app.alunos.sistema_externo.link');
+                $token = config('legacy.app.alunos.sistema_externo.token');
+
+                $link = "go(\"{$link}\")";
+
+                $link = str_replace([
+                    '@aluno',
+                    '@usuario',
+                    '@token',
+                ], [
+                    $registro['cod_aluno'],
+                    $this->user()->getKey(),
+                    $token,
+                ], $link);
+
+                array_unshift($this->array_botao, $titulo);
+                array_unshift($this->array_botao_url_script, $link);
+            }
         }
 
         $objFichaMedica = new clsModulesFichaMedicaAluno($this->cod_aluno);
@@ -850,7 +845,7 @@ class indice extends clsDetalhe
             $this->addDetalhe(['Possui telefone', $reg['telefone']]);
 
             $recursosTecnlogicos = json_decode($reg['recursos_tecnologicos']);
-            $recursosTecnlogicos = implode(", ", $recursosTecnlogicos);
+            $recursosTecnlogicos = implode(', ', $recursosTecnlogicos);
             $this->addDetalhe(['Possui acesso à recursos técnologicos?', $recursosTecnlogicos]);
 
             $this->addDetalhe(['Quantidade de pessoas', $reg['quant_pessoas']]);
@@ -949,16 +944,10 @@ class indice extends clsDetalhe
 
         return $this->urlPresigner;
     }
-}
 
-// Instancia o objeto da página
-$pagina = new clsIndexBase();
-
-// Instancia o objeto de conteúdo
-$miolo = new indice();
-
-// Passa o conteúdo para a página
-$pagina->addForm($miolo);
-
-// Gera o HTML
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->title = 'i-Educar - Aluno';
+        $this->processoAp = 578;
+    }
+};

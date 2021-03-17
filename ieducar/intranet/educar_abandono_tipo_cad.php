@@ -1,89 +1,48 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de ItajaÃ­                              *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software PÃºblico Livre e Brasileiro                   *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de ItajaÃ­            *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou  *
-    *   modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme  *
-    *   publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da    *
-    *   LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.     *
-    *                                                                        *
-    *   Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM  *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-    *
-    *   ZAÃÃO  ou  de ADEQUAÃÃO A QUALQUER PROPÃSITO EM PARTICULAR. Con-     *
-    *   sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.   *
-    *                                                                        *
-    *   VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU     *
-    *   junto  com  este  programa. Se nÃ£o, escreva para a Free Software    *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once ("include/pmieducar/geral.inc.php");
-
-class clsIndexBase extends clsBase
-{
-    function Formular()
-    {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Motivo Abandono" );
-        $this->processoAp = "950";
-    }
-}
-
-class indice extends clsCadastro
-{
+return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
-    var $cod_abandono_tipo;
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $nome;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
-    var $ref_cod_instituicao;
+    public $cod_abandono_tipo;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $nome;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $ref_cod_instituicao;
 
-    function Inicializar()
+    public function Inicializar()
     {
-        $retorno = "Novo";
+        $retorno = 'Novo';
 
-        $this->cod_abandono_tipo=$_GET["cod_abandono_tipo"];
+        $this->cod_abandono_tipo=$_GET['cod_abandono_tipo'];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 950, $this->pessoa_logada, 7, "educar_abandono_tipo_lst.php" );
+        $obj_permissoes->permissao_cadastra(950, $this->pessoa_logada, 7, 'educar_abandono_tipo_lst.php');
 
-        if( is_numeric( $this->cod_abandono_tipo ) )
-        {
-            $obj = new clsPmiEducarAbandonoTipo();
-            $lst  = $obj->lista( $this->cod_abandono_tipo );
+        if (is_numeric($this->cod_abandono_tipo)) {
+            $obj = new clsPmieducarAbandonoTipo();
+            $lst  = $obj->lista($this->cod_abandono_tipo);
             $registro  = array_shift($lst);
-            if( $registro )
-            {
-                foreach( $registro AS $campo => $val )  // passa todos os valores obtidos no registro para atributos do objeto
+            if ($registro) {
+                foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
+                }
 
-                $this->fexcluir = $obj_permissoes->permissao_excluir( 950, $this->pessoa_logada,7 );
-                $retorno = "Editar";
+                $this->fexcluir = $obj_permissoes->permissao_excluir(950, $this->pessoa_logada, 7);
+                $retorno = 'Editar';
             }
         }
-        $this->url_cancelar = ($retorno == "Editar") ? "educar_abandono_tipo_det.php?cod_abandono_tipo={$registro["cod_abandono_tipo"]}" : "educar_abandono_tipo_lst.php";
-        $this->nome_url_cancelar = "Cancelar";
+        $this->url_cancelar = ($retorno == 'Editar') ? "educar_abandono_tipo_det.php?cod_abandono_tipo={$registro['cod_abandono_tipo']}" : 'educar_abandono_tipo_lst.php';
+        $this->nome_url_cancelar = 'Cancelar';
 
-        $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+        $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
         $this->breadcrumb($nomeMenu . ' tipo de abandono', [
             url('intranet/educar_index.php') => 'Escola',
@@ -92,80 +51,75 @@ class indice extends clsCadastro
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
         // primary keys
-        $this->campoOculto( "cod_abandono_tipo", $this->cod_abandono_tipo );
+        $this->campoOculto('cod_abandono_tipo', $this->cod_abandono_tipo);
 
         $obrigatorio = true;
-        include("include/pmieducar/educar_campo_lista.php");
+        include('include/pmieducar/educar_campo_lista.php');
 
         // text
-        $this->campoTexto( "nome", "Motivo Abandono", $this->nome, 30, 255, true );
+        $this->campoTexto('nome', 'Motivo Abandono', $this->nome, 30, 255, true);
     }
 
-    function Novo()
+    public function Novo()
     {
-        $obj = new clsPmiEducarAbandonoTipo( null,
-                                             null,
-                                             $this->pessoa_logada,
-                                             $this->nome,
-                                             null,
-                                             null,
-                                             1,
-                                             $this->ref_cod_instituicao );
+        $obj = new clsPmieducarAbandonoTipo(
+            null,
+            null,
+            $this->pessoa_logada,
+            $this->nome,
+            null,
+            null,
+            1,
+            $this->ref_cod_instituicao
+        );
         $cadastrou = $obj->cadastra();
-        if( $cadastrou )
-        {
-            $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
+        if ($cadastrou) {
+            $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
 
             $this->simpleRedirect('educar_abandono_tipo_lst.php');
         }
 
-        $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
 
         return false;
     }
 
-    function Editar()
+    public function Editar()
     {
-        $obj = new clsPmiEducarAbandonoTipo( $this->cod_abandono_tipo,$this->pessoa_logada,null,$this->nome,null,null,1,$this->ref_cod_instituicao );
+        $obj = new clsPmieducarAbandonoTipo($this->cod_abandono_tipo, $this->pessoa_logada, null, $this->nome, null, null, 1, $this->ref_cod_instituicao);
         $editou = $obj->edita();
-        if( $editou )
-        {
-            $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
+        if ($editou) {
+            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
 
             $this->simpleRedirect('educar_abandono_tipo_lst.php');
         }
 
-        $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
 
         return false;
     }
 
-    function Excluir()
+    public function Excluir()
     {
-        $obj = new clsPmiEducarAbandonoTipo( $this->cod_abandono_tipo, $this->pessoa_logada, null, null, null, null, null, 0);
+        $obj = new clsPmieducarAbandonoTipo($this->cod_abandono_tipo, $this->pessoa_logada, null, null, null, null, null, 0);
         $excluiu = $obj->excluir();
-        if( $excluiu )
-        {
-            $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
+        if ($excluiu) {
+            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
 
             $this->simpleRedirect('educar_abandono_tipo_lst.php');
         }
 
-        $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
 
         return false;
     }
-}
 
-// cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
-$miolo = new indice();
-// adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
-// gera o html
-$pagina->MakeAll();
-?>
+    public function Formular()
+    {
+        $this->title = 'i-Educar - Motivo Abandono';
+        $this->processoAp = '950';
+    }
+};

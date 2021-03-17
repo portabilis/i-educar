@@ -1,8 +1,5 @@
 <?php
 
-require_once 'Core/Controller/Page/ListController.php';
-require_once 'AreaConhecimento/Model/AreaDataMapper.php';
-
 class IndexController extends Core_Controller_Page_ListController
 {
     protected $_dataMapper = 'AreaConhecimento_Model_AreaDataMapper';

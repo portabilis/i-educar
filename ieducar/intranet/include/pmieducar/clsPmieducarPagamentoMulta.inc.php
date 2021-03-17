@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsPmieducarPagamentoMulta extends Model
 {
     public $cod_pagamento_multa;
@@ -22,10 +20,10 @@ class clsPmieducarPagamentoMulta extends Model
         $this->_campos_lista = $this->_todos_campos = 'cod_pagamento_multa, ref_usuario_cad, ref_cod_cliente, valor_pago, data_cadastro, ref_cod_biblioteca';
 
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
         if (is_numeric($ref_cod_cliente)) {
-                    $this->ref_cod_cliente = $ref_cod_cliente;
+            $this->ref_cod_cliente = $ref_cod_cliente;
         }
 
         if (is_numeric($cod_pagamento_multa)) {
@@ -38,7 +36,7 @@ class clsPmieducarPagamentoMulta extends Model
             $this->data_cadastro = $data_cadastro;
         }
         if (is_numeric($ref_cod_biblioteca)) {
-                    $this->ref_cod_biblioteca = $ref_cod_biblioteca;
+            $this->ref_cod_biblioteca = $ref_cod_biblioteca;
         }
     }
 

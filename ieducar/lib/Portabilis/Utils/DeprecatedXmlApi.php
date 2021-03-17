@@ -1,7 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/Utils/User.php';
-
 class Portabilis_Utils_DeprecatedXmlApi
 {
     public static function returnEmptyQueryUnlessUserIsLoggedIn($xmlns = 'sugestoes', $rootNodeName = 'query')

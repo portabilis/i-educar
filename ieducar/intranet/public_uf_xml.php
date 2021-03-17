@@ -4,8 +4,6 @@ use App\Models\State;
 
 header('Content-type: text/xml; charset=UTF-8');
 
-require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
-
 $id = $_GET['pais'] ?? null;
 $abbreviation = $_GET['abbreviation'] ?? null;
 

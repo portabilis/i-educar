@@ -1,7 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/View/Helper/Input/Core.php';
-
 class Portabilis_View_Helper_Input_TextArea extends Portabilis_View_Helper_Input_Core
 {
     public function textArea($attrName, $options = [])
@@ -35,10 +33,9 @@ class Portabilis_View_Helper_Input_TextArea extends Portabilis_View_Helper_Input
         $this->fixupPlaceholder($inputOptions);
 
         if ($inputOptions['max_length'] > 0) {
-
             $this->loadAssets();
 
-            if(empty($inputOptions['max_length_plugin_options']['max'])){
+            if (empty($inputOptions['max_length_plugin_options']['max'])) {
                 $inputOptions['max_length_plugin_options']['max'] = $inputOptions['max_length'];
             }
 
@@ -67,7 +64,6 @@ class Portabilis_View_Helper_Input_TextArea extends Portabilis_View_Helper_Input
 
     protected function js($elementId, $options = [])
     {
-
         $objectOptions = json_encode($options);
 
         $js = "
@@ -79,7 +75,7 @@ class Portabilis_View_Helper_Input_TextArea extends Portabilis_View_Helper_Input
 
     protected function css()
     {
-        $css = "
+        $css = '
             .maxlength-feedback {
                     display: table;
                     margin: 0;
@@ -95,7 +91,7 @@ class Portabilis_View_Helper_Input_TextArea extends Portabilis_View_Helper_Input
                     text-align: center;
                     border-radius: 3px;
             }
-        ";
+        ';
         Portabilis_View_Helper_Application::embedStylesheet($this->viewInstance, $css);
     }
 }

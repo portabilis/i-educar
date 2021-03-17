@@ -1,7 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/Report/ReportFactory.php';
-
 use JasperPHP\JasperPHP;
 
 class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportFactory

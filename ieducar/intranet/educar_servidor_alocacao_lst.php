@@ -1,23 +1,6 @@
 <?php
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsListagem.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-
-require_once 'CoreExt/View/Helper/UrlHelper.php';
-
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' Servidores - Servidor');
-        $this->processoAp = 635;
-    }
-}
-
-class indice extends clsListagem
-{
+return new class extends clsListagem {
     public $pessoa_logada;
     public $titulo;
     public $limite;
@@ -49,15 +32,15 @@ class indice extends clsListagem
         }
 
         $this->addCabecalhos([
-      'Escola',
-      'Função',
-      'Ano',
-      'Período',
-      'Carga horária',
-      'Data admissão',
-      'Data saída',
-      'Vínculo'
-    ]);
+            'Escola',
+            'Função',
+            'Ano',
+            'Período',
+            'Carga horária',
+            'Data admissão',
+            'Data saída',
+            'Vínculo'
+        ]);
 
         $fisica = new clsPessoaFisica($this->ref_cod_servidor);
         $fisica = $fisica->detalhe();
@@ -75,7 +58,7 @@ class indice extends clsListagem
         // Paginador
         $this->limite = 20;
         $this->offset = ($_GET['pagina_' . $this->nome]) ?
-      $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
+            $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
 
         $obj_servidor_alocacao = new clsPmieducarServidorAlocacao();
 
@@ -120,9 +103,9 @@ class indice extends clsListagem
             foreach ($lista as $registro) {
                 $path = 'educar_servidor_alocacao_det.php';
                 $options = [
-          'query' => [
-            'cod_servidor_alocacao' => $registro['cod_servidor_alocacao'],
-        ]];
+                    'query' => [
+                        'cod_servidor_alocacao' => $registro['cod_servidor_alocacao'],
+                    ]];
 
                 //Escola
                 $escola = new clsPmieducarEscola($registro['ref_cod_escola']);
@@ -147,14 +130,14 @@ class indice extends clsListagem
                 $funcionarioVinculo = $funcionarioVinculo->getNomeVinculo($registro['ref_cod_funcionario_vinculo']);
 
                 $this->addLinhas([
-                        $url->l($escola['nome'], $path, $options),
-                        $url->l($funcao['nm_funcao'], $path, $options),
-                        $url->l($registro['ano'], $path, $options),
-                        $url->l($periodo[$registro['periodo']], $path, $options),
-                        $url->l($horas =  substr($registro['carga_horaria'], 0, - 3), $path, $options),
-                        $url->l(Portabilis_Date_Utils::pgSQLToBr($registro['data_admissao']), $path, $options),
-                        $url->l(Portabilis_Date_Utils::pgSQLToBr($registro['data_saida']), $path, $options),
-                        $url->l($funcionarioVinculo, $path, $options),
+                    $url->l($escola['nome'], $path, $options),
+                    $url->l($funcao['nm_funcao'], $path, $options),
+                    $url->l($registro['ano'], $path, $options),
+                    $url->l($periodo[$registro['periodo']], $path, $options),
+                    $url->l($horas =  substr($registro['carga_horaria'], 0, - 3), $path, $options),
+                    $url->l(Portabilis_Date_Utils::pgSQLToBr($registro['data_admissao']), $path, $options),
+                    $url->l(Portabilis_Date_Utils::pgSQLToBr($registro['data_saida']), $path, $options),
+                    $url->l($funcionarioVinculo, $path, $options),
                 ]);
             }
         }
@@ -176,19 +159,13 @@ class indice extends clsListagem
         $this->largura = '100%';
 
         $this->breadcrumb('Registro de alocações do servidor', [
-        url('intranet/educar_servidores_index.php') => 'Servidores',
-    ]);
+            url('intranet/educar_servidores_index.php') => 'Servidores',
+        ]);
     }
-}
 
-// Instancia objeto de página
-$pagina = new clsIndexBase();
-
-// Instancia objeto de conteúdo
-$miolo = new indice();
-
-// Atribui o conteúdo à  página
-$pagina->addForm($miolo);
-
-// Gera o código HTML
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->title = 'Servidores - Servidor';
+        $this->processoAp = 635;
+    }
+};

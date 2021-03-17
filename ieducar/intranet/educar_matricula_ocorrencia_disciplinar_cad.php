@@ -1,22 +1,6 @@
 <?php
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'Portabilis/Date/Utils.php';
-require_once 'modules/Api/Model/ApiExternaController.php';
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Ocorr&ecirc;ncia Disciplinar");
-        $this->processoAp = '578';
-    }
-}
-
-class indice extends clsCadastro
-{
+return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -306,13 +290,10 @@ class indice extends clsCadastro
 
         return strlen($instituicao['url_novo_educacao']) > 0;
     }
-}
 
-// cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
-$miolo = new indice();
-// adiciona o conteudo na clsBase
-$pagina->addForm($miolo);
-// gera o html
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->title = 'i-Educar - Ocorr&ecirc;ncia Disciplinar';
+        $this->processoAp = '578';
+    }
+};

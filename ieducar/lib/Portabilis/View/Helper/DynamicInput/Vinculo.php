@@ -1,8 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
-require_once 'lib/Portabilis/Utils/Database.php';
-
 class Portabilis_View_Helper_DynamicInput_Vinculo extends Portabilis_View_Helper_DynamicInput_CoreSelect
 {
     protected function inputOptions($options)

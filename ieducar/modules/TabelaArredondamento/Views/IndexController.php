@@ -1,8 +1,5 @@
 <?php
 
-require_once 'Core/Controller/Page/ListController.php';
-require_once 'TabelaArredondamento/Model/TabelaDataMapper.php';
-
 class IndexController extends Core_Controller_Page_ListController
 {
     protected $_dataMapper = 'TabelaArredondamento_Model_TabelaDataMapper';

@@ -14,7 +14,7 @@ class ExportService
         $this->converter = $converter;
     }
 
-    public function export(array $filters) : string
+    public function export(array $filters): string
     {
         $export = '';
         foreach ($this->records($filters) as $record) {
@@ -24,7 +24,7 @@ class ExportService
         return $export;
     }
 
-    private function makeLine($record) : string
+    private function makeLine($record): string
     {
         $line = "{$record->ano};";
         $line .= "{$record->inep_escola};";
@@ -57,12 +57,12 @@ class ExportService
         return substr($line, 0, -1);
     }
 
-    private function convertEducacensoStep(int $educacensoStep) : string
+    private function convertEducacensoStep(int $educacensoStep): string
     {
         return $this->converter->convert($educacensoStep);
     }
 
-    private function records(array $filters) : Collection
+    private function records(array $filters): Collection
     {
         return (new ExportQuery())->query($filters)->get();
     }

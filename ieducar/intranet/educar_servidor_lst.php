@@ -2,23 +2,7 @@
 
 use App\Models\LegacyIndividual;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsListagem.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'CoreExt/View/Helper/UrlHelper.php';
-
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor');
-        $this->processoAp = 635;
-    }
-}
-
-class indice extends clsListagem
-{
+return new class extends clsListagem {
     public $limite;
     public $offset;
     public $cod_servidor;
@@ -168,9 +152,10 @@ class indice extends clsListagem
             url('intranet/educar_servidores_index.php') => 'Servidores',
         ]);
     }
-}
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->title = 'i-Educar - Servidor';
+        $this->processoAp = 635;
+    }
+};

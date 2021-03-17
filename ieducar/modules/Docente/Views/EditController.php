@@ -2,11 +2,6 @@
 
 use App\Models\State;
 
-require_once 'Core/Controller/Page/EditController.php';
-require_once 'Educacenso/Model/CursoSuperiorDataMapper.php';
-require_once 'Educacenso/Model/IesDataMapper.php';
-require_once 'Docente/Model/LicenciaturaDataMapper.php';
-
 class EditController extends Core_Controller_Page_EditController
 {
     protected $_dataMapper        = 'Docente_Model_LicenciaturaDataMapper';
@@ -113,7 +108,7 @@ class EditController extends Core_Controller_Page_EditController
         $opcoes = array_combine($opcoes, $opcoes);
 
         $this->campoLista(
-      'anoConclusao',
+            'anoConclusao',
             $this->_getLabel('anoConclusao'),
             $opcoes,
             $this->getEntity()->anoConclusao
@@ -144,7 +139,7 @@ class EditController extends Core_Controller_Page_EditController
         $opcoes[$ies->id] = $ies->nome;
 
         $this->campoLista(
-      'ies',
+            'ies',
             $this->_getLabel('ies'),
             $opcoes,
             $this->getEntity()->ies->id

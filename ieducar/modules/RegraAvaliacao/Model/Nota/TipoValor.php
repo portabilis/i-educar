@@ -1,10 +1,7 @@
 <?php
 
-require_once 'CoreExt/Enum.php';
-
 class RegraAvaliacao_Model_Nota_TipoValor extends CoreExt_Enum
 {
-
     const NENHUM = 0;
     const NUMERICA = 1;
     const CONCEITUAL = 2;

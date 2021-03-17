@@ -37,11 +37,11 @@ class CheckPostedDataService
     {
         return LegacyStudentAbsence::query()
             ->whereHas('registration', function ($queryRegistration) use ($schoolClass) {
-                $queryRegistration->whereHas('enrollments', function ($queryEnrollments) use ($schoolClass){
+                $queryRegistration->whereHas('enrollments', function ($queryEnrollments) use ($schoolClass) {
                     $queryEnrollments->whereIn('ref_cod_turma', $schoolClass);
                 });
             })
-            ->whereHas('absencesByDiscipline', function($queryAbsencesByDiscipline) use ($discipline) {
+            ->whereHas('absencesByDiscipline', function ($queryAbsencesByDiscipline) use ($discipline) {
                 $queryAbsencesByDiscipline
                     ->where('componente_curricular_id', $discipline);
             })
@@ -52,11 +52,11 @@ class CheckPostedDataService
     {
         return LegacyStudentScore::query()
             ->whereHas('registration', function ($queryRegistration) use ($schoolClass) {
-                $queryRegistration->whereHas('enrollments', function ($queryEnrollments) use ($schoolClass){
+                $queryRegistration->whereHas('enrollments', function ($queryEnrollments) use ($schoolClass) {
                     $queryEnrollments->whereIn('ref_cod_turma', $schoolClass);
                 });
             })
-            ->whereHas('scoreByDiscipline', function ($queryScoreByDiscipline) use ($discipline){
+            ->whereHas('scoreByDiscipline', function ($queryScoreByDiscipline) use ($discipline) {
                 $queryScoreByDiscipline
                     ->where('componente_curricular_id', $discipline);
             })
@@ -67,11 +67,11 @@ class CheckPostedDataService
     {
         return LegacyStudentDescriptiveOpinion::query()
             ->whereHas('registration', function ($queryRegistration) use ($schoolClass) {
-                $queryRegistration->whereHas('enrollments', function ($queryEnrollments) use ($schoolClass){
+                $queryRegistration->whereHas('enrollments', function ($queryEnrollments) use ($schoolClass) {
                     $queryEnrollments->whereIn('ref_cod_turma', $schoolClass);
                 });
             })
-            ->whereHas('descriptiveOpinionByDiscipline', function ($queryDescriptiveOpinionByDiscipline) use ($discipline){
+            ->whereHas('descriptiveOpinionByDiscipline', function ($queryDescriptiveOpinionByDiscipline) use ($discipline) {
                 $queryDescriptiveOpinionByDiscipline
                     ->where('componente_curricular_id', $discipline);
             })

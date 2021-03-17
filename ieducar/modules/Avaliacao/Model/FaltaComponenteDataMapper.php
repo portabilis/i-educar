@@ -1,8 +1,5 @@
 <?php
 
-require_once 'Avaliacao/Model/FaltaAbstractDataMapper.php';
-require_once 'Avaliacao/Model/FaltaComponente.php';
-
 class Avaliacao_Model_FaltaComponenteDataMapper extends Avaliacao_Model_FaltaAbstractDataMapper
 {
     protected $_entityClass = 'Avaliacao_Model_FaltaComponente';

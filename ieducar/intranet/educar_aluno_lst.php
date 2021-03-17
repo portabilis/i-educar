@@ -1,23 +1,6 @@
 <?php
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsListagem.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'Educacenso/Model/AlunoDataMapper.php';
-require_once 'Portabilis/Utils/CustomLabel.php';
-
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Aluno");
-        $this->processoAp = '578';
-    }
-}
-
-class indice extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Titulo no topo da pagina
      *
@@ -192,7 +175,7 @@ class indice extends clsListagem
             // responsavel
             $aluno->cod_aluno = $registro['cod_aluno'];
             $responsavel = $aluno->getResponsavelAluno();
-            $nomeResponsavel = strtoupper($responsavel['nome_responsavel']);
+            $nomeResponsavel = mb_strtoupper($responsavel['nome_responsavel']);
 
             if (!$configuracoes['mostrar_codigo_inep_aluno']) {
                 $linhas = [
@@ -243,13 +226,10 @@ class indice extends clsListagem
 
         $this->breadcrumb('Alunos', ['/intranet/educar_index.php' => 'Escola']);
     }
-}
 
-// cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
-$miolo = new indice();
-// adiciona o conteudo na clsBase
-$pagina->addForm($miolo);
-// gera o html
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->title = 'i-Educar - Aluno';
+        $this->processoAp = '578';
+    }
+};

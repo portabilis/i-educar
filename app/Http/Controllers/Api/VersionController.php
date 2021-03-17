@@ -24,6 +24,7 @@ class VersionController extends Controller
 
         return trim($process->getOutput());
     }
+
     /**
      * Return version data.
      *

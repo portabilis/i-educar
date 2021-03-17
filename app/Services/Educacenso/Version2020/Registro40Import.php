@@ -7,38 +7,19 @@ use App\Models\Educacenso\RegistroEducacenso;
 use App\Models\Employee;
 use App\Models\EmployeeInep;
 use App\Models\LegacyInstitution;
-use App\Models\LegacySchool;
-use App\Models\LegacyStudent;
-use App\Models\SchoolInep;
 use App\Models\SchoolManager;
-use App\Services\Educacenso\RegistroImportInterface;
 use App\Services\Educacenso\Version2019\Registro40Import as Registro40Import2019;
 use App\Services\Educacenso\Version2020\Models\Registro40Model;
-use App\User;
 
 class Registro40Import extends Registro40Import2019
 {
     /**
-     * @var Registro40
-     */
-    private $model;
-
-    /**
-     * @var User
-     */
-    private $user;
-
-    /**
-     * @var LegacyInstitution
-     */
-    private $institution;
-
-    /**
      * Faz a importação dos dados a partir da linha do arquivo
      *
      * @param RegistroEducacenso $model
-     * @param int $year
-     * @param $user
+     * @param int                $year
+     * @param                    $user
+     *
      * @return void
      */
     public function import(RegistroEducacenso $model, $year, $user)
@@ -57,19 +38,21 @@ class Registro40Import extends Registro40Import2019
 
     /**
      * @param $arrayColumns
+     *
      * @return Registro40|RegistroEducacenso
      */
     public static function getModel($arrayColumns)
     {
         $registro = new Registro40Model();
         $registro->hydrateModel($arrayColumns);
+
         return $registro;
     }
 
     /**
      * @return Employee|null
      */
-    private function getEmployee() : ?Employee
+    private function getEmployee(): ?Employee
     {
         $inepNumber = $this->model->inepGestor;
         if (empty($inepNumber)) {
@@ -87,9 +70,10 @@ class Registro40Import extends Registro40Import2019
 
     /**
      * @param Employee $employee
+     *
      * @return void
      */
-    private function createOrUpdateManager(Employee $employee) : void
+    private function createOrUpdateManager(Employee $employee): void
     {
         $school = $this->getSchool();
 

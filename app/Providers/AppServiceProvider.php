@@ -6,7 +6,6 @@ use App\Models\LegacyInstitution;
 use App\Providers\Postgres\DatabaseServiceProvider;
 use App\Services\CacheManager;
 use App\Services\StudentUnificationService;
-use Barryvdh\Debugbar\ServiceProvider as DebugbarServiceProvider;
 use Exception;
 use iEducar\Modules\ErrorTracking\HoneyBadgerTracker;
 use iEducar\Modules\ErrorTracking\Tracker;
@@ -20,28 +19,10 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
-use Laravel\Dusk\DuskServiceProvider;
-use Laravel\Dusk\ElementResolver;
 use Laravel\Telescope\TelescopeServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Add custom methods in ElementResolver class used by Laravel Dusk.
-     *
-     * @return void
-     */
-    private function customElementResolver()
-    {
-        ElementResolver::macro('findByText', function ($text, $tag) {
-            foreach ($this->all($tag) as $element) {
-                if (Str::contains($element->getText(), $text)) {
-                    return $element;
-                }
-            }
-        });
-    }
-
     /**
      * Load migrations from other repositories or packages.
      *
@@ -59,9 +40,9 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Load legacy bootstrap application.
      *
-     * @return void
-     *
      * @throws Exception
+     *
+     * @return void
      */
     private function loadLegacyBootstrap()
     {
@@ -72,16 +53,12 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      *
-     * @return void
-     *
      * @throws Exception
+     *
+     * @return void
      */
     public function boot()
     {
-        if ($this->app->environment('development', 'dusk', 'local', 'testing')) {
-            $this->customElementResolver();
-        }
-
         if ($this->app->runningInConsole()) {
             $this->loadLegacyMigrations();
         }
@@ -137,6 +114,8 @@ class AppServiceProvider extends ServiceProvider
                 }
             });
         });
+
+        Paginator::useBootstrap();
     }
 
     /**
@@ -149,10 +128,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->register(RepositoryServiceProvider::class);
         $this->app->singleton(Breadcrumb::class);
 
-        if ($this->app->environment('development', 'dusk', 'local', 'testing')) {
-            $this->app->register(DuskServiceProvider::class);
+        if ($this->app->environment('development', 'local', 'testing')) {
             $this->app->register(TelescopeServiceProvider::class);
-            $this->app->register(DebugbarServiceProvider::class);
         }
 
         $this->app->bind(Tracker::class, HoneyBadgerTracker::class);

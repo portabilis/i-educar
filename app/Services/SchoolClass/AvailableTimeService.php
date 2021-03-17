@@ -48,7 +48,6 @@ class AvailableTimeService
                 if ($this->enrollmentDate) {
                     $enrollmentsQuery->where('data_enturmacao', '<', $this->enrollmentDate->format('Y-m-d'));
                 }
-
             });
 
         if ($this->onlySchoolClassesInformedOnCensus) {
@@ -135,7 +134,6 @@ class AvailableTimeService
         if (!$this->hasDates($schoolClass) || !$this->hasDates($otherSchoolClass)) {
             return false;
         }
-
 
         // Valida se o início e fim do ano letivo da turma de destino não está
         // entre o período de início e fim da turma da outra enturmação.

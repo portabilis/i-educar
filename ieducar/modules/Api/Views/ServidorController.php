@@ -2,9 +2,6 @@
 use App\Models\LegacyDeficiency;
 use App\Models\LogUnification;
 use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'lib/Portabilis/Array/Utils.php';
-require_once 'intranet/include/clsBanco.inc.php';
 
 class ServidorController extends ApiCoreController
 {
@@ -211,6 +208,7 @@ class ServidorController extends ApiCoreController
                 } elseif (is_string($vinculo['disciplinas'])) {
                     $vinculo['disciplinas'] = explode(',', $vinculo['disciplinas']);
                 }
+
                 return $vinculo;
             }, $vinculos);
 
@@ -278,6 +276,7 @@ class ServidorController extends ApiCoreController
             return true;
         } else {
             $this->messenger->append($validator->getMessage());
+
             return false;
         }
     }

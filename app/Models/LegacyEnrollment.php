@@ -130,7 +130,6 @@ class LegacyEnrollment extends Model
         return $this->belongsTo(LegacySchoolClass::class, 'ref_cod_turma');
     }
 
-
     /**
      * Retorna o turno do aluno.
      *

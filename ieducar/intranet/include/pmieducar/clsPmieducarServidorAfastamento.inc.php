@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsPmieducarServidorAfastamento extends Model
 {
     public $ref_cod_servidor;
@@ -27,16 +25,16 @@ class clsPmieducarServidorAfastamento extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_cod_servidor, sequencial, ref_cod_motivo_afastamento, ref_usuario_exc, ref_usuario_cad, data_cadastro, data_exclusao, data_retorno, data_saida, ativo, id';
 
         if (is_numeric($ref_cod_motivo_afastamento)) {
-                    $this->ref_cod_motivo_afastamento = $ref_cod_motivo_afastamento;
+            $this->ref_cod_motivo_afastamento = $ref_cod_motivo_afastamento;
         }
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
         if (is_numeric($ref_cod_servidor)) {
-                    $this->ref_cod_servidor = $ref_cod_servidor;
+            $this->ref_cod_servidor = $ref_cod_servidor;
         }
 
         if (is_numeric($sequencial)) {
@@ -58,7 +56,7 @@ class clsPmieducarServidorAfastamento extends Model
             $this->ativo = $ativo;
         }
         if (is_numeric($ref_cod_instituicao)) {
-                    $this->ref_cod_instituicao = $ref_cod_instituicao;
+            $this->ref_cod_instituicao = $ref_cod_instituicao;
         }
     }
 

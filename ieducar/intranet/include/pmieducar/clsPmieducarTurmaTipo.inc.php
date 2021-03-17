@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsPmieducarTurmaTipo extends Model
 {
     public $cod_turma_tipo;
@@ -25,13 +23,13 @@ class clsPmieducarTurmaTipo extends Model
         $this->_campos_lista = $this->_todos_campos = 'cod_turma_tipo, ref_usuario_exc, ref_usuario_cad, nm_tipo, sgl_tipo, data_cadastro, data_exclusao, ativo, ref_cod_instituicao';
 
         if (is_numeric($ref_cod_instituicao)) {
-                    $this->ref_cod_instituicao = $ref_cod_instituicao;
+            $this->ref_cod_instituicao = $ref_cod_instituicao;
         }
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
 
         if (is_numeric($cod_turma_tipo)) {
@@ -62,7 +60,6 @@ class clsPmieducarTurmaTipo extends Model
     public function cadastra()
     {
         if (is_numeric($this->ref_usuario_cad) && is_string($this->nm_tipo) && is_string($this->sgl_tipo) && is_numeric($this->ref_cod_instituicao)) {
-
             $db = new clsBanco();
 
             $campos = '';

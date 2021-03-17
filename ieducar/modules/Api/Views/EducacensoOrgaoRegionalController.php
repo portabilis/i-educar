@@ -1,8 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'lib/Portabilis/Array/Utils.php';
-
 class EducacensoOrgaoRegionalController extends ApiCoreController
 {
     protected function getOrgaosRegionais()

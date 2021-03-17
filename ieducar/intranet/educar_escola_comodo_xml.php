@@ -1,18 +1,13 @@
 <?php
 
-    header( 'Content-type: text/xml' );
+    header('Content-type: text/xml');
 
-    require_once( "include/clsBanco.inc.php" );
-    require_once( "include/funcoes.inc.php" );
-
-  require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
-  Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
+    Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
     echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
-    if( is_numeric( $_GET["esc"] ) )
-    {
+    if (is_numeric($_GET['esc'])) {
         $db = new clsBanco();
-        $db->Consulta( "
+        $db->Consulta("
         SELECT
             cod_infra_predio_comodo,
             i.nm_predio || ' - ' || c.nm_comodo
@@ -20,18 +15,16 @@
             pmieducar.infra_predio i,
             pmieducar.infra_predio_comodo c
         WHERE
-            i.ref_cod_escola = '{$_GET["esc"]}'
+            i.ref_cod_escola = '{$_GET['esc']}'
             AND i.cod_infra_predio = c.ref_cod_infra_predio
             AND i.ativo = 1
             AND c.ativo = 1
         ORDER BY nm_predio ASC, nm_comodo ASC
-        " );
-        while ( $db->ProximoRegistro() )
-        {
-            list( $cod, $nome ) = $db->Tupla();
+        ");
+        while ($db->ProximoRegistro()) {
+            list($cod, $nome) = $db->Tupla();
             echo "  <item>{$cod}</item>\n";
             echo "  <item>{$nome}</item>\n";
         }
     }
-    echo "</query>";
-?>
+    echo '</query>';

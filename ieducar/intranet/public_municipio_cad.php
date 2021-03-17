@@ -4,25 +4,7 @@ use App\Models\City;
 use iEducar\Legacy\InteractWithDatabase;
 use iEducar\Legacy\SelectOptions;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/public/geral.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'App/Model/Pais.php';
-require_once 'App/Model/NivelAcesso.php';
-
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' Município');
-        $this->processoAp = 755;
-    }
-}
-
-class indice extends clsCadastro
-{
+return new class extends clsCadastro {
     use InteractWithDatabase, SelectOptions;
 
     public $idmun;
@@ -130,45 +112,15 @@ class indice extends clsCadastro
 
         return $this->delete($this->idmun);
     }
-}
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
-
-$pagina->addForm($miolo);
-$pagina->MakeAll();
-
-?>
-
-<script type="text/javascript">
-document.getElementById('idpais').onchange = function () {
-  var campoPais = document.getElementById('idpais').value;
-
-  var campoUf = document.getElementById('iduf');
-  campoUf.length = 1;
-  campoUf.disabled = true;
-  campoUf.options[0].text = 'Carregando estado...';
-
-  var xml_uf = new ajax(getUf);
-  xml_uf.envia('public_uf_xml.php?pais=' + campoPais);
-};
-
-function getUf(xml_uf) {
-  var campoUf = document.getElementById('iduf');
-  var DOM_array = xml_uf.getElementsByTagName('estado');
-
-  if (DOM_array.length) {
-    campoUf.length = 1;
-    campoUf.options[0].text = 'Selecione um estado';
-    campoUf.disabled = false;
-
-    for (var i = 0; i < DOM_array.length; i++) {
-      campoUf.options[campoUf.options.length] = new Option(
-        DOM_array[i].firstChild.data, DOM_array[i].getAttribute('id'),
-        false, false);
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/public-municipio-cad.js');
     }
-  } else {
-    campoUf.options[0].text = 'O pais não possui nenhum estado';
-  }
-}
-</script>
+
+    public function Formular()
+    {
+        $this->title = 'Município';
+        $this->processoAp = 755;
+    }
+};

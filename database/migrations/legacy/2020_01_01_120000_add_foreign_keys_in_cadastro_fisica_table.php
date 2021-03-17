@@ -15,55 +15,55 @@ class AddForeignKeysInCadastroFisicaTable extends Migration
     {
         Schema::table('cadastro.fisica', function (Blueprint $table) {
             $table->foreign('idpes_rev')
-               ->references('idpes')
-               ->on('cadastro.pessoa')
-               ->onDelete('set null');
+                ->references('idpes')
+                ->on('cadastro.pessoa')
+                ->onDelete('set null');
 
             $table->foreign('idpes_cad')
-               ->references('idpes')
-               ->on('cadastro.pessoa')
-               ->onDelete('set null');
+                ->references('idpes')
+                ->on('cadastro.pessoa')
+                ->onDelete('set null');
 
             $table->foreign('idpes_responsavel')
-               ->references('idpes')
-               ->on('cadastro.pessoa')
-               ->onDelete('set null');
+                ->references('idpes')
+                ->on('cadastro.pessoa')
+                ->onDelete('set null');
 
             $table->foreign('idpes_pai')
-               ->references('idpes')
-               ->on('cadastro.pessoa')
-               ->onDelete('set null');
+                ->references('idpes')
+                ->on('cadastro.pessoa')
+                ->onDelete('set null');
 
             $table->foreign('idpes_mae')
-               ->references('idpes')
-               ->on('cadastro.pessoa')
-               ->onDelete('set null');
+                ->references('idpes')
+                ->on('cadastro.pessoa')
+                ->onDelete('set null');
 
             $table->foreign('idpes_con')
-               ->references('idpes')
-               ->on('cadastro.pessoa')
-               ->onDelete('set null');
+                ->references('idpes')
+                ->on('cadastro.pessoa')
+                ->onDelete('set null');
 
             $table->foreign('idpes')
-               ->references('idpes')
-               ->on('cadastro.pessoa')
-               ->onDelete('restrict');
+                ->references('idpes')
+                ->on('cadastro.pessoa')
+                ->onDelete('restrict');
 
             $table->foreign('idocup')
-               ->references('idocup')
-               ->on('cadastro.ocupacao');
+                ->references('idocup')
+                ->on('cadastro.ocupacao');
 
             $table->foreign('ideciv')
-               ->references('ideciv')
-               ->on('cadastro.estado_civil');
+                ->references('ideciv')
+                ->on('cadastro.estado_civil');
 
             $table->foreign('idesco')
-               ->references('idesco')
-               ->on('cadastro.escolaridade');
+                ->references('idesco')
+                ->on('cadastro.escolaridade');
 
             $table->foreign('ref_cod_religiao')
-               ->references('cod_religiao')
-               ->on('pmieducar.religiao');
+                ->references('cod_religiao')
+                ->on('pmieducar.religiao');
         });
     }
 

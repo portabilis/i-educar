@@ -1,19 +1,9 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar');
-        $this->processoAp = '845';
-    }
-}
-
 use App\Models\LegacyInstitution;
 use Illuminate\Support\Facades\Session;
 
-class indice extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $data_matricula;
@@ -194,7 +184,7 @@ class indice extends clsCadastro
         foreach ($lstMatricula as $matricula) {
             $alunoInep = $objAluno->verificaInep($matricula['ref_cod_aluno']);
             if (!$alunoInep && $exigeInep) {
-                $alunosSemInep[] = strtoupper($matricula['nome']);
+                $alunosSemInep[] = mb_strtoupper($matricula['nome']);
             }
         }
 
@@ -209,7 +199,7 @@ class indice extends clsCadastro
         $alunos = [];
 
         foreach ($alunosComSaidaDaEscola as $a) {
-            $alunos[] = strtoupper($a['nome']);
+            $alunos[] = mb_strtoupper($a['nome']);
         }
 
         return $alunos;
@@ -370,10 +360,10 @@ class indice extends clsCadastro
 
         return false;
     }
-}
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
-
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->titulo = 'i-Educar';
+        $this->processoAp = '845';
+    }
+};

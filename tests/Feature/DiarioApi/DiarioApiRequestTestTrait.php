@@ -6,7 +6,6 @@ use App\Models\LegacyDiscipline;
 use App\Models\LegacyEnrollment;
 use App\User;
 use Illuminate\Foundation\Testing\TestResponse;
-use Illuminate\Http\Request;
 
 trait DiarioApiRequestTestTrait
 {
@@ -15,6 +14,7 @@ trait DiarioApiRequestTestTrait
      * @param $disciplineId
      * @param $stage
      * @param $score
+     *
      * @return array
      */
     public function postAbsence($enrollment, $disciplineId, $stage, $score)
@@ -164,8 +164,9 @@ trait DiarioApiRequestTestTrait
     /**
      * Recebe um array com as etapas e quantidade de faltas e retorna o response da ultima chamada
      *
-     * @param array $absences
+     * @param array            $absences
      * @param LegacyDiscipline $discipline
+     *
      * @return array|null
      */
     private function postAbsenceForStages(array $absences, $discipline)
@@ -182,8 +183,9 @@ trait DiarioApiRequestTestTrait
     /**
      * Recebe um array com as etapas e quantidade de notas e retorna o response da ultima chamada
      *
-     * @param array $scores
+     * @param array            $scores
      * @param LegacyDiscipline $discipline
+     *
      * @return array|null
      */
     private function postScoreForStages(array $scores, $discipline)

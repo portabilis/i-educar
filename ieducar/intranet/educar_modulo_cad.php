@@ -2,22 +2,7 @@
 
 use App\Models\LegacyStageType;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Etapa");
-        $this->processoAp = '584';
-    }
-}
-
-class indice extends clsCadastro
-{
+return new class extends clsCadastro {
     public $cod_modulo;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -106,6 +91,7 @@ class indice extends clsCadastro
 
         if (LegacyStageType::alreadyExists($this->nm_tipo, $this->num_etapas)) {
             $this->mensagem = 'Já existe um registro cadastrado com o mesmo nome e o mesmo número de etapa(s).<br>';
+
             return false;
         }
 
@@ -128,6 +114,7 @@ class indice extends clsCadastro
 
         if (LegacyStageType::alreadyExists($this->nm_tipo, $this->num_etapas, $this->cod_modulo)) {
             $this->mensagem = 'Já existe um registro cadastrado com o mesmo nome e o mesmo número de etapa(s).<br>';
+
             return false;
         }
 
@@ -196,9 +183,10 @@ class indice extends clsCadastro
 
         return true;
     }
-}
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->title = 'i-Educar - Etapa';
+        $this->processoAp = '584';
+    }
+};

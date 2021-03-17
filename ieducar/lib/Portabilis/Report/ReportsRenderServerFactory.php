@@ -4,8 +4,6 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Log;
 
-require_once 'lib/Portabilis/Report/ReportFactory.php';
-
 class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_ReportFactory
 {
     /**

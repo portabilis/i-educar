@@ -1,7 +1,5 @@
 <?php
 
-require_once 'include/clsBase.inc.php';
-
 class Core_View extends clsBase
 {
     /**

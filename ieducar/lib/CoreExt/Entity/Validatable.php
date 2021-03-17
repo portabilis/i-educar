@@ -1,7 +1,5 @@
 <?php
 
-require_once 'CoreExt/Validate/Validatable.php';
-
 interface CoreExt_Entity_Validatable extends CoreExt_Validate_Validatable
 {
     /**

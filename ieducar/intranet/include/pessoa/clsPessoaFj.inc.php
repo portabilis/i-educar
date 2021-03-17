@@ -3,8 +3,6 @@
 use App\Models\PersonHasPlace;
 use iEducar\Legacy\Model;
 
-require_once 'include/clsBanco.inc.php';
-
 class clsPessoaFj extends Model
 {
     public $idpes;

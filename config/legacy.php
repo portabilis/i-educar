@@ -51,7 +51,6 @@ return [
     'migrations' => [
         database_path('migrations/extras'),
         database_path('migrations/legacy'),
-        base_path('ieducar/modules/Reports/database/migrations'),
     ],
 
     'env' => env('LEGACY_ENV', 'local'),
@@ -141,7 +140,12 @@ return [
             'nao_apresentar_campo_alfabetizado' => '0',
             'codigo_sistema' => 'Código sistema',
             'mostrar_codigo_sistema' => '1',
-            'obrigar_recursos_tecnologicos' => '0'
+            'obrigar_recursos_tecnologicos' => '0',
+            'sistema_externo' => [
+                'titulo' => null,
+                'link' => null,
+                'token' => null,
+            ],
         ],
         'fisica' => [
             'exigir_cartao_sus' => false,

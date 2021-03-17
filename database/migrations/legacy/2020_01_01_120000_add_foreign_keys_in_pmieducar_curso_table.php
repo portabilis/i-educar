@@ -15,28 +15,28 @@ class AddForeignKeysInPmieducarCursoTable extends Migration
     {
         Schema::table('pmieducar.curso', function (Blueprint $table) {
             $table->foreign('ref_cod_tipo_regime')
-               ->references('cod_tipo_regime')
-               ->on('pmieducar.tipo_regime')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_tipo_regime')
+                ->on('pmieducar.tipo_regime')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_tipo_ensino')
-               ->references('cod_tipo_ensino')
-               ->on('pmieducar.tipo_ensino')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_tipo_ensino')
+                ->on('pmieducar.tipo_ensino')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_nivel_ensino')
-               ->references('cod_nivel_ensino')
-               ->on('pmieducar.nivel_ensino')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_nivel_ensino')
+                ->on('pmieducar.nivel_ensino')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_instituicao')
-               ->references('cod_instituicao')
-               ->on('pmieducar.instituicao')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_instituicao')
+                ->on('pmieducar.instituicao')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

@@ -4,17 +4,13 @@ use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineAcademicYear;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolClass;
-use App\Models\LegacySchoolingDegree;
 use App\Models\LegacySchoolClassStage;
 use App\Models\LegacySchoolStage;
-use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
 use iEducar\Modules\AcademicYear\Exceptions\DisciplineNotLinkedToRegistrationException;
+use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
 use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotDefinedInLevel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
-
-require_once 'CoreExt/Entity.php';
-require_once 'App/Model/Exception.php';
 
 class App_Model_IedFinder extends CoreExt_Entity
 {
@@ -89,7 +85,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         $escolas = [];
 
         foreach ($_escolas->lista(null, null, null, $instituicaoId) as $escola) {
-            $escolas[$escola['cod_escola']] = $escola['nome'];
+            $escolas[$escola['cod_escola']] = mb_strtoupper($escola['nome']);
         }
 
         return $escolas;
@@ -570,7 +566,6 @@ class App_Model_IedFinder extends CoreExt_Entity
         $ano = null
     ) {
         if (is_null($mapper)) {
-            require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
             $mapper = new ComponenteCurricular_Model_TurmaDataMapper();
         }
 
@@ -600,7 +595,7 @@ class App_Model_IedFinder extends CoreExt_Entity
                 $ano
             );
 
-            foreach($componentesTurma as $key => $componente) {
+            foreach ($componentesTurma as $key => $componente) {
                 if ($componente->id == $disciplinaDispensada) {
                     unset($componentesTurma[$key]);
                 }
@@ -685,6 +680,7 @@ class App_Model_IedFinder extends CoreExt_Entity
                     return $componente->cargaHoraria;
                 }
             }
+
             return null;
         };
 
@@ -862,7 +858,6 @@ class App_Model_IedFinder extends CoreExt_Entity
         $possuiDeficiencia = self::verificaSePossuiDeficiencia($matricula['ref_cod_aluno']);
 
         if (is_null($mapper)) {
-            require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
             $mapper = new RegraAvaliacao_Model_RegraDataMapper();
         }
 
@@ -905,7 +900,6 @@ class App_Model_IedFinder extends CoreExt_Entity
         $escola = self::getEscola($turma['ref_ref_cod_escola']);
 
         if (is_null($mapper)) {
-            require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
             $mapper = new RegraAvaliacao_Model_RegraDataMapper();
         }
 

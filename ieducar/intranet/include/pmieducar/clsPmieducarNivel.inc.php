@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsPmieducarNivel extends Model
 {
     public $cod_nivel;
@@ -26,16 +24,16 @@ class clsPmieducarNivel extends Model
         $this->_campos_lista = $this->_todos_campos = 'cod_nivel, ref_cod_categoria_nivel, ref_usuario_exc, ref_usuario_cad, ref_cod_nivel_anterior, nm_nivel, salario_base, data_cadastro, data_exclusao, ativo';
 
         if (is_numeric($ref_cod_categoria_nivel)) {
-                    $this->ref_cod_categoria_nivel = $ref_cod_categoria_nivel;
+            $this->ref_cod_categoria_nivel = $ref_cod_categoria_nivel;
         }
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
         if (is_numeric($ref_cod_nivel_anterior)) {
-                    $this->ref_cod_nivel_anterior = $ref_cod_nivel_anterior;
+            $this->ref_cod_nivel_anterior = $ref_cod_nivel_anterior;
         }
 
         if (is_numeric($cod_nivel)) {
@@ -356,7 +354,7 @@ class clsPmieducarNivel extends Model
 
             $resultado = [];
 
-            if ($db->Num_Linhas()) {
+            if ($db->numLinhas()) {
                 $db->ProximoRegistro();
 
                 $registro = $db->Tupla();

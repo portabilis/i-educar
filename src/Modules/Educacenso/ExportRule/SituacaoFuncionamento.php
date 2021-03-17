@@ -6,11 +6,11 @@ use App\Models\Educacenso\Registro00;
 use App\Models\Educacenso\RegistroEducacenso;
 use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento as SituacaoFuncionamentoModel;
 
-
 class SituacaoFuncionamento implements EducacensoExportRule
 {
     /**
      * @param Registro00 $registro00
+     *
      * @return RegistroEducacenso
      */
     public static function handle(RegistroEducacenso $registro00): RegistroEducacenso

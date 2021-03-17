@@ -1,9 +1,5 @@
 <?php
 
-require_once 'CoreExt/DataMapper.php';
-require_once 'TabelaArredondamento/Model/TabelaValor.php';
-require_once 'App/Model/IedFinder.php';
-
 class TabelaArredondamento_Model_TabelaValorDataMapper extends CoreExt_DataMapper
 {
     protected $_entityClass = 'TabelaArredondamento_Model_TabelaValor';

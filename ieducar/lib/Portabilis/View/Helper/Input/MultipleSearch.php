@@ -1,7 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/View/Helper/Input/Core.php';
-
 class Portabilis_View_Helper_Input_MultipleSearch extends Portabilis_View_Helper_Input_Core
 {
     public function multipleSearch($objectName, $attrName, $options = [])

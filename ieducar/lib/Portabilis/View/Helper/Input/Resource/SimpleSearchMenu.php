@@ -1,7 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/View/Helper/Input/SimpleSearch.php';
-
 class Portabilis_View_Helper_Input_Resource_SimpleSearchMenu extends Portabilis_View_Helper_Input_SimpleSearch
 {
     public function simpleSearchMenu($attrName = '', $options = [])

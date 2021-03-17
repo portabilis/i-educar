@@ -1,7 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/Array/Utils.php';
-
 class Portabilis_Utils_Database
 {
     public static $_db;
@@ -97,6 +95,6 @@ class Portabilis_Utils_Database
 
     public static function pgArrayToArray($value): array
     {
-        return !empty($value) ? explode(',', str_replace(array('{', "}"), '', $value)) : [];
+        return !empty($value) ? explode(',', str_replace(['{', '}'], '', $value)) : [];
     }
 }

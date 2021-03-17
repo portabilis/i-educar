@@ -1,7 +1,5 @@
 <?php
 
-require_once 'CoreExt/Enum.php';
-
 class App_Model_NivelTipoUsuario extends CoreExt_Enum
 {
     const POLI_INSTITUCIONAL = 1;

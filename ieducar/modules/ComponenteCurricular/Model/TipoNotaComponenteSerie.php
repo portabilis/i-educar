@@ -1,7 +1,5 @@
 <?php
 
-require_once 'CoreExt/Enum.php';
-
 class ComponenteSerie_Model_TipoNota extends CoreExt_Enum
 {
     const NUMERICA = 1;

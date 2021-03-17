@@ -13,11 +13,13 @@ class SplitFileServiceTest extends TestCase
      * Instancia o service que faz o split do arquivo
      *
      * @param $fileName
+     *
      * @return SplitFileService
      */
     public function getService($fileName)
     {
         $file = new UploadedFile(base_path('tests/Unit/assets/Educacenso/' . $fileName), $fileName);
+
         return new SplitFileService($file);
     }
 
@@ -55,6 +57,7 @@ class SplitFileServiceTest extends TestCase
      * Retorna o tamanho de um generator
      *
      * @param Generator $generator
+     *
      * @return int
      */
     private function countGenerator(Generator $generator)

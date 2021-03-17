@@ -1,8 +1,5 @@
 <?php
 
-require_once 'Portabilis/View/Helper/Input/Core.php';
-require_once 'Portabilis/Date/Utils.php';
-
 class Portabilis_View_Helper_Input_Date extends Portabilis_View_Helper_Input_Core
 {
     public function date($attrName, $options = [])
@@ -54,7 +51,7 @@ class Portabilis_View_Helper_Input_Date extends Portabilis_View_Helper_Input_Cor
             var $input = $j(\'#' . $id . "');
             $sizeFixup
             $disableFixup
-            
+
             \$input.change(function(){
                 if (this.value == '') {
                     return true;

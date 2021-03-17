@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsPmieducarSequenciaSerie extends Model
 {
     public $ref_serie_origem;
@@ -23,16 +21,16 @@ class clsPmieducarSequenciaSerie extends Model
         $this->_campos_lista = $this->_todos_campos = 'ss.ref_serie_origem, ss.ref_serie_destino, ss.ref_usuario_exc, ss.ref_usuario_cad, ss.data_cadastro, ss.data_exclusao, ss.ativo';
 
         if (is_numeric($ref_serie_destino)) {
-                    $this->ref_serie_destino = $ref_serie_destino;
+            $this->ref_serie_destino = $ref_serie_destino;
         }
         if (is_numeric($ref_serie_origem)) {
-                    $this->ref_serie_origem = $ref_serie_origem;
+            $this->ref_serie_origem = $ref_serie_origem;
         }
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
 
         if (is_string($data_cadastro)) {

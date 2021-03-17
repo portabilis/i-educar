@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsPmieducarReligiao extends Model
 {
     public $cod_religiao;
@@ -23,10 +21,10 @@ class clsPmieducarReligiao extends Model
         $this->_campos_lista = $this->_todos_campos = 'cod_religiao, ref_usuario_exc, ref_usuario_cad, nm_religiao, data_cadastro, data_exclusao, ativo';
 
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
 
         if (is_numeric($cod_religiao)) {

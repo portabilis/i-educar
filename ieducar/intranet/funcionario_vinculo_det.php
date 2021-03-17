@@ -1,20 +1,6 @@
 <?php
 
-require_once('include/clsBase.inc.php');
-require_once('include/clsDetalhe.inc.php');
-require_once('include/clsBanco.inc.php');
-
-class clsIndex extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} Vínculo Funcionários");
-        $this->processoAp = '190';
-    }
-}
-
-class indice extends clsDetalhe
-{
+return new class extends clsDetalhe {
     public $cod_usuario;
 
     public function Gerar()
@@ -42,11 +28,10 @@ class indice extends clsDetalhe
 
         $this->breadcrumb('Detalhe do v&iacute;nculo');
     }
-}
 
-$pagina = new clsIndex();
-
-$miolo = new indice();
-$pagina->addForm($miolo);
-
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->title = 'Vínculo Funcionários';
+        $this->processoAp = '190';
+    }
+};

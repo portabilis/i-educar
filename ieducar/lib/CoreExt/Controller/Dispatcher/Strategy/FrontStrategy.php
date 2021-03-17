@@ -1,8 +1,5 @@
 <?php
 
-require_once 'CoreExt/Controller/Dispatcher/Abstract.php';
-require_once 'CoreExt/Controller/Dispatcher/Strategy/Interface.php';
-
 class CoreExt_Controller_Dispatcher_Strategy_FrontStrategy extends CoreExt_Controller_Dispatcher_Abstract implements CoreExt_Controller_Dispatcher_Strategy_Interface
 {
     /**
@@ -47,8 +44,6 @@ class CoreExt_Controller_Dispatcher_Strategy_FrontStrategy extends CoreExt_Contr
      */
     public function dispatch()
     {
-        require_once 'CoreExt/Controller/Dispatcher/Exception.php';
-
         throw new CoreExt_Controller_Dispatcher_Exception('Método CoreExt_Controller_Strategy_FrontStrategy::dispatch() não implementado.');
     }
 }

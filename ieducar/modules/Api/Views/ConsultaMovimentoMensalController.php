@@ -1,16 +1,14 @@
 <?php
 
-use iEducar\Modules\Reports\QueryFactory\MovimentoMensalMatIniQueryFactory;
-use iEducar\Modules\Reports\QueryFactory\MovimentoMensalMatTransfQueryFactory;
 use iEducar\Modules\Reports\QueryFactory\MovimentoMensalMatAbandQueryFactory;
 use iEducar\Modules\Reports\QueryFactory\MovimentoMensalMatAdmitQueryFactory;
 use iEducar\Modules\Reports\QueryFactory\MovimentoMensalMatFalecidoQueryFactory;
-use iEducar\Modules\Reports\QueryFactory\MovimentoMensalMatReclassificadosQueryFactory;
+use iEducar\Modules\Reports\QueryFactory\MovimentoMensalMatIniQueryFactory;
 use iEducar\Modules\Reports\QueryFactory\MovimentoMensalMatReclassificadoseQueryFactory;
+use iEducar\Modules\Reports\QueryFactory\MovimentoMensalMatReclassificadosQueryFactory;
+use iEducar\Modules\Reports\QueryFactory\MovimentoMensalMatTransfQueryFactory;
 use iEducar\Modules\Reports\QueryFactory\MovimentoMensalMatTrocaeQueryFactory;
 use iEducar\Modules\Reports\QueryFactory\MovimentoMensalMatTrocasQueryFactory;
-
-require_once 'ConsultaBaseController.php';
 
 class ConsultaMovimentoMensalController extends ConsultaBaseController
 {

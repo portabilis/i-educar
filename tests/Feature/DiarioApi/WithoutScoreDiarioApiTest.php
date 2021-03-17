@@ -7,7 +7,6 @@ use App_Model_MatriculaSituacao;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
-
 class WithoutScoreDiarioApiTest extends TestCase
 {
     use DatabaseTransactions, DiarioApiRequestTestTrait, DiarioApiFakeDataTestTrait;

@@ -52,8 +52,9 @@ class Registro10Import implements RegistroImportInterface
      * Faz a importação dos dados a partir da linha do arquivo
      *
      * @param RegistroEducacenso $model
-     * @param int $year
-     * @param $user
+     * @param int                $year
+     * @param                    $user
+     *
      * @return void
      */
     public function import(RegistroEducacenso $model, $year, $user)
@@ -144,12 +145,14 @@ class Registro10Import implements RegistroImportInterface
 
     /**
      * @param $arrayColumns
+     *
      * @return Registro10|RegistroEducacenso
      */
     public static function getModel($arrayColumns)
     {
         $registro = new Registro10Model();
         $registro->hydrateModel($arrayColumns);
+
         return $registro;
     }
 
@@ -545,13 +548,13 @@ class Registro10Import implements RegistroImportInterface
     {
         return !empty(array_filter(
             [
-                str_replace(['{','}'], '', $school->salas_gerais),
-                str_replace(['{','}'], '', $school->salas_funcionais),
-                str_replace(['{','}'], '', $school->banheiros),
-                str_replace(['{','}'], '', $school->laboratorios),
-                str_replace(['{','}'], '', $school->salas_atividades),
-                str_replace(['{','}'], '', $school->dormitorios),
-                str_replace(['{','}'], '', $school->areas_externas),
+                str_replace(['{', '}'], '', $school->salas_gerais),
+                str_replace(['{', '}'], '', $school->salas_funcionais),
+                str_replace(['{', '}'], '', $school->banheiros),
+                str_replace(['{', '}'], '', $school->laboratorios),
+                str_replace(['{', '}'], '', $school->salas_atividades),
+                str_replace(['{', '}'], '', $school->dormitorios),
+                str_replace(['{', '}'], '', $school->areas_externas),
             ]
         ));
     }
@@ -607,9 +610,9 @@ class Registro10Import implements RegistroImportInterface
             $arrayUsoInternet[] = UsoInternet::ALUNOS;
         }
 
-         if ($this->model->acessoInternetComunidade) {
-             $arrayUsoInternet[] = UsoInternet::COMUNIDADE;
-         }
+        if ($this->model->acessoInternetComunidade) {
+            $arrayUsoInternet[] = UsoInternet::COMUNIDADE;
+        }
 
         return $this->getPostgresIntegerArray($arrayUsoInternet);
     }

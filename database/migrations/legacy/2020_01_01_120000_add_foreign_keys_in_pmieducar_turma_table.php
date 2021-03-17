@@ -15,56 +15,56 @@ class AddForeignKeysInPmieducarTurmaTable extends Migration
     {
         Schema::table('pmieducar.turma', function (Blueprint $table) {
             $table->foreign('turma_turno_id')
-               ->references('id')
-               ->on('pmieducar.turma_turno')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('id')
+                ->on('pmieducar.turma_turno')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_turma_tipo')
-               ->references('cod_turma_tipo')
-               ->on('pmieducar.turma_tipo')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_turma_tipo')
+                ->on('pmieducar.turma_tipo')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign(['ref_ref_cod_escola', 'ref_ref_cod_serie'])
-               ->references(['ref_cod_escola', 'ref_cod_serie'])
-               ->on('pmieducar.escola_serie')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references(['ref_cod_escola', 'ref_cod_serie'])
+                ->on('pmieducar.escola_serie')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign(['ref_cod_regente', 'ref_cod_instituicao_regente'])
-               ->references(['cod_servidor', 'ref_cod_instituicao'])
-               ->on('pmieducar.servidor')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references(['cod_servidor', 'ref_cod_instituicao'])
+                ->on('pmieducar.servidor')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_instituicao')
-               ->references('cod_instituicao')
-               ->on('pmieducar.instituicao')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_instituicao')
+                ->on('pmieducar.instituicao')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_infra_predio_comodo')
-               ->references('cod_infra_predio_comodo')
-               ->on('pmieducar.infra_predio_comodo')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_infra_predio_comodo')
+                ->on('pmieducar.infra_predio_comodo')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_curso')
-               ->references('cod_curso')
-               ->on('pmieducar.curso')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_curso')
+                ->on('pmieducar.curso')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign(['ref_ref_cod_serie_mult', 'ref_ref_cod_escola_mult'])
-               ->references(['ref_cod_serie', 'ref_cod_escola'])
-               ->on('pmieducar.escola_serie')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references(['ref_cod_serie', 'ref_cod_escola'])
+                ->on('pmieducar.escola_serie')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_disciplina_dispensada')
-               ->references('id')
-               ->on('modules.componente_curricular');
+                ->references('id')
+                ->on('modules.componente_curricular');
         });
     }
 

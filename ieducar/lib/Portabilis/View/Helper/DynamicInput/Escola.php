@@ -1,9 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
-require_once 'Portabilis/Business/Professor.php';
-require_once 'App/Model/NivelTipoUsuario.php';
-
 class Portabilis_View_Helper_DynamicInput_Escola extends Portabilis_View_Helper_DynamicInput_CoreSelect
 {
     protected function inputValue($value = null)
@@ -49,7 +45,7 @@ class Portabilis_View_Helper_DynamicInput_Escola extends Portabilis_View_Helper_
     public function escola($options = [])
     {
         $this->select($options);
-        Portabilis_View_Helper_Application::loadChosenLib($this->viewInstance); 
+        Portabilis_View_Helper_Application::loadChosenLib($this->viewInstance);
         Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/modules/DynamicInput/Assets/Javascripts/Escola.js');
     }
 }

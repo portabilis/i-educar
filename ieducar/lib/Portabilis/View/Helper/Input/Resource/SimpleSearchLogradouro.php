@@ -1,9 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/View/Helper/Input/SimpleSearch.php';
-require_once 'lib/Portabilis/Utils/Database.php';
-require_once 'lib/Portabilis/String/Utils.php';
-
 class Portabilis_View_Helper_Input_Resource_SimpleSearchLogradouro extends Portabilis_View_Helper_Input_SimpleSearch
 {
     public function simpleSearchLogradouro($attrName, $options = [])
@@ -24,10 +20,10 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchLogradouro extends Porta
     {
         if ($id) {
             $sql = '
-                select nome, descricao as tipo_logradouro 
-                from public.logradouro l 
-                left join urbano.tipo_logradouro tl 
-                on (l.idtlog = tl.idtlog) 
+                select nome, descricao as tipo_logradouro
+                from public.logradouro l
+                left join urbano.tipo_logradouro tl
+                on (l.idtlog = tl.idtlog)
                 where idlog = $1
             ';
 

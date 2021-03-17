@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-require_once 'Reports/Tipos/TipoBoletim.php';
-
 use App\Http\Requests\UpdateSchoolClassReportCardRequest;
 use App\Models\LegacySchoolClass;
 use App\Process;

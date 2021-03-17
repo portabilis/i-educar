@@ -3,9 +3,6 @@
 namespace Tests\Feature\DiarioApi;
 
 use App\Models\LegacyEnrollment;
-use App\Models\LegacyEvaluationRule;
-use App\Models\LegacyRoundingTable;
-use App\Models\LegacyValueRoundingTable;
 use App_Model_MatriculaSituacao;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;

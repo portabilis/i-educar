@@ -1,7 +1,5 @@
 <?php
 
-require_once 'CoreExt/Configurable.php';
-
 interface CoreExt_Controller_Interface extends CoreExt_Configurable
 {
     /**

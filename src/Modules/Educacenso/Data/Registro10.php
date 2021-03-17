@@ -4,7 +4,6 @@ namespace iEducar\Modules\Educacenso\Data;
 
 use App\Models\Educacenso\Registro10 as Registro10Model;
 use iEducar\Modules\Educacenso\Formatters;
-use Portabilis_Date_Utils;
 use Portabilis_Utils_Database;
 
 class Registro10 extends AbstractRegistro
@@ -18,6 +17,7 @@ class Registro10 extends AbstractRegistro
 
     /**
      * @param $escola
+     *
      * @return Registro10Model
      */
     public function getData($escola)
@@ -88,9 +88,9 @@ class Registro10 extends AbstractRegistro
             $data->laboratoriosCiencias() ?: 0, // 53
             $data->laboratoriosInformatica() ?: 0, // 54
             $data->areasExternasParqueInfantil() ?: 0, // 55
-            $data->areasExternasPatioCoberto() ?:0, // 56
-            $data->areasExternasPatioDescoberto() ?:0, // 57
-            $data->areasExternasPiscina() ?:0, // 58
+            $data->areasExternasPatioCoberto() ?: 0, // 56
+            $data->areasExternasPatioDescoberto() ?: 0, // 57
+            $data->areasExternasPiscina() ?: 0, // 58
             $data->areasExternasQuadraCoberta() ?: 0, // 59
             $data->areasExternasQuadraDescoberta() ?: 0, // 60
             $data->salasFuncionaisRefeitorio() ?: 0, // 61
@@ -139,8 +139,8 @@ class Registro10 extends AbstractRegistro
             $data->usoInternetAlunos() ?: 0, // 104
             $data->usoInternetComunidade() ?: 0, // 105
             $data->usoInternetNaoPossui() ?: 0, // 106
-            $data->equipamentosAcessoInternetComputadorMesa() ?: 0 , // 107
-            $data->equipamentosAcessoInternetDispositivosPessoais() ?: 0 , // 108
+            $data->equipamentosAcessoInternetComputadorMesa() ?: 0, // 107
+            $data->equipamentosAcessoInternetDispositivosPessoais() ?: 0, // 108
             $data->usoInternetNaoPossui() ? null : ($data->acessoInternet ?: 0), // 109
             ($data->possuiComputadores() || $data->possuiComputadoresDeMesaTabletsEPortateis()) ? ($data->redeLocalACabo() ?: 0) : null, // 110
             ($data->possuiComputadores() || $data->possuiComputadoresDeMesaTabletsEPortateis()) ? ($data->redeLocalWireless() ?: 0) : null, // 111
@@ -227,7 +227,7 @@ class Registro10 extends AbstractRegistro
         $data->organizacaoEnsino = Portabilis_Utils_Database::pgArrayToArray($data->organizacaoEnsino);
         $data->instrumentosPedagogicos = Portabilis_Utils_Database::pgArrayToArray($data->instrumentosPedagogicos);
         $data->codigoLinguaIndigena = Portabilis_Utils_Database::pgArrayToArray($data->codigoLinguaIndigena);
-        $data->nomeEscola = strtoupper($data->nomeEscola);
+        $data->nomeEscola = mb_strtoupper($data->nomeEscola);
 
         return $data;
     }

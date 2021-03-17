@@ -6,5 +6,4 @@ use Throwable;
 
 interface ImportException extends Throwable
 {
-
 }

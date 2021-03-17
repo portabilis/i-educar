@@ -1,9 +1,6 @@
 <?php
 
 use iEducar\Legacy\Model;
-use Illuminate\Support\Facades\Session;
-
-require_once 'include/pmieducar/geral.inc.php';
 
 class clsModulesPessoaTransporte extends Model
 {
@@ -14,7 +11,6 @@ class clsModulesPessoaTransporte extends Model
     public $ref_idpes_destino;
     public $observacao;
     public $turno;
-    public $pessoa_logada;
 
     /**
      * Construtor.
@@ -31,8 +27,6 @@ class clsModulesPessoaTransporte extends Model
         $db = new clsBanco();
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}pessoa_transporte";
-
-        $this->pessoa_logada = Session::get('id_pessoa');
 
         $this->_campos_lista = $this->_todos_campos = 'cod_pessoa_transporte, ref_cod_rota_transporte_escolar,
                                                   ref_idpes, ref_cod_ponto_transporte_escolar, ref_idpes_destino, observacao, turno';

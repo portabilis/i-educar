@@ -2,8 +2,6 @@
 
 use Tests\TestCase;
 
-require_once 'include/pmieducar/clsPmieducarQuadroHorarioHorarios.inc.php';
-
 class ClsPmieducarQuadroHorarioHorariosTest extends TestCase
 {
     /**

@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsPmieducarCurso extends Model
 {
     public $cod_curso;
@@ -65,27 +63,27 @@ class clsPmieducarCurso extends Model
         $this->_campos_lista = $this->_todos_campos = 'cod_curso, ref_usuario_cad, ref_cod_tipo_regime, ref_cod_nivel_ensino, ref_cod_tipo_ensino, nm_curso, sgl_curso, qtd_etapas, carga_horaria, ato_poder_publico, objetivo_curso, publico_alvo, data_cadastro, data_exclusao, ativo, ref_usuario_exc, ref_cod_instituicao, padrao_ano_escolar, hora_falta, multi_seriado, modalidade_curso, importar_curso_pre_matricula';
 
         if (is_numeric($ref_cod_instituicao)) {
-                    $this->ref_cod_instituicao = $ref_cod_instituicao;
+            $this->ref_cod_instituicao = $ref_cod_instituicao;
         }
 
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
 
         if (is_numeric($ref_cod_tipo_regime)) {
-                    $this->ref_cod_tipo_regime = $ref_cod_tipo_regime;
+            $this->ref_cod_tipo_regime = $ref_cod_tipo_regime;
         }
 
         if (is_numeric($ref_cod_nivel_ensino)) {
-                    $this->ref_cod_nivel_ensino = $ref_cod_nivel_ensino;
+            $this->ref_cod_nivel_ensino = $ref_cod_nivel_ensino;
         }
 
         if (is_numeric($ref_cod_tipo_ensino)) {
-                    $this->ref_cod_tipo_ensino = $ref_cod_tipo_ensino;
+            $this->ref_cod_tipo_ensino = $ref_cod_tipo_ensino;
         }
 
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
 
         if (is_numeric($cod_curso)) {

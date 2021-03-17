@@ -7,31 +7,11 @@ use App\Models\LegacyRemedialRule;
 use App\Models\LegacySchoolClass;
 use App\Process;
 use App\Services\ReleasePeriodService;
-use Cocur\Slugify\Slugify;
 use iEducar\Modules\Stages\Exceptions\MissingStagesException;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
-
-require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
-require_once 'Avaliacao/Model/NotaGeralDataMapper.php';
-require_once 'Avaliacao/Service/Boletim.php';
-require_once 'App/Model/MatriculaSituacao.php';
-require_once 'RegraAvaliacao/Model/TipoPresenca.php';
-require_once 'RegraAvaliacao/Model/TipoParecerDescritivo.php';
-
-require_once 'include/pmieducar/clsPmieducarTurma.inc.php';
-require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
-require_once 'include/pmieducar/clsPmieducarBloqueioLancamentoFaltasNotas.inc.php';
-require_once 'include/modules/clsModulesAuditoriaNota.inc.php';
-require_once 'include/modules/clsModulesNotaExame.inc.php';
-
-require_once 'Portabilis/Controller/ApiCoreController.php';
-require_once 'Portabilis/Array/Utils.php';
-require_once 'Portabilis/String/Utils.php';
-require_once 'Portabilis/Object/Utils.php';
 
 class DiarioApiController extends ApiCoreController
 {
@@ -1039,7 +1019,7 @@ class DiarioApiController extends ApiCoreController
             try {
                 $params = [
                     'matricula' => $matriculaId,
-                    'usuario' => $this->getSession()->id_pessoa,
+                    'usuario' => \Illuminate\Support\Facades\Auth::id(),
                     'componenteCurricularId' => $this->getRequest()->componente_curricular_id,
                     'turmaId' => $this->getRequest()->turma_id,
                 ];
@@ -1179,8 +1159,6 @@ class DiarioApiController extends ApiCoreController
         $turmaId = $this->getRequest()->turma_id;
         $situacoes = $this->getSituacaoComponentes();
 
-        $slugify = new Slugify();
-
         foreach ($_componentesCurriculares as $_componente) {
             $componente = [];
             $componenteId = $_componente->get('id');
@@ -1228,8 +1206,8 @@ class DiarioApiController extends ApiCoreController
             //criando chave para ordenamento temporário
             //área de conhecimento + componente curricular
 
-            $componente['ordem_nome_area_conhecimento'] = $slugify->slugify($nomeArea);
-            $componente['ordem_componente_curricular'] = $slugify->slugify($_componente->get('nome'));
+            $componente['ordem_nome_area_conhecimento'] = Str::slug($nomeArea);
+            $componente['ordem_componente_curricular'] = Str::slug($_componente->get('nome'));
             $componentesCurriculares[] = $componente;
         }
 
@@ -1274,7 +1252,6 @@ class DiarioApiController extends ApiCoreController
             throw new Exception('Não foi possível obter a área de conhecimento pois não foi recebido o id do componente curricular.');
         }
 
-        require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
         $mapper = new ComponenteCurricular_Model_ComponenteDataMapper();
 
         $where = ['id' => $componenteCurricularId];
@@ -1784,7 +1761,7 @@ class DiarioApiController extends ApiCoreController
 
     public function canChange()
     {
-        $user = $this->getSession()->id_pessoa;
+        $user = \Illuminate\Support\Facades\Auth::id();
         $processoAp = $this->_processoAp;
         $obj_permissao = new clsPermissoes();
 
@@ -1808,8 +1785,6 @@ class DiarioApiController extends ApiCoreController
 
     public function canPostSituacaoAndNota()
     {
-        $this->pessoa_logada = Session::get('id_pessoa');
-
         $acesso = new clsPermissoes();
 
         return $acesso->permissao_cadastra(630, $this->pessoa_logada, 7, null, true);

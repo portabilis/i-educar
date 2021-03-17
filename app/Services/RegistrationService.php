@@ -71,7 +71,7 @@ class RegistrationService
      * Atualiza a situação de uma matrícula
      *
      * @param LegacyRegistration $registration
-     * @param array $data
+     * @param array              $data
      */
     public function updateStatus(LegacyRegistration $registration, $data)
     {
@@ -84,7 +84,7 @@ class RegistrationService
     }
 
     /**
-     * @param array $data
+     * @param array              $data
      * @param LegacyRegistration $registration
      */
     private function checkUpdatedStatusAction($data, LegacyRegistration $registration)
@@ -144,6 +144,7 @@ class RegistrationService
 
     /**
      * @param LegacyRegistration $registration
+     *
      * @return LegacyEnrollment
      */
     private function getActiveEnrollments(LegacyRegistration $registration)
@@ -152,9 +153,9 @@ class RegistrationService
     }
 
     /**
-     * @param string $date
-     * @param integer $type
-     * @param string $comments
+     * @param string             $date
+     * @param integer            $type
+     * @param string             $comments
      * @param LegacyRegistration $registration
      */
     private function createTransferRequest($date, $type, $comments, $registration)
@@ -174,7 +175,7 @@ class RegistrationService
      * Atualiza a data de entrada de uma matrícula
      *
      * @param LegacyRegistration $registration
-     * @param DateTime $date
+     * @param DateTime           $date
      */
     public function updateRegistrationDate(LegacyRegistration $registration, DateTime $date)
     {
@@ -190,14 +191,18 @@ class RegistrationService
      * Atualiza a date de enturmação de todas as enturmações de uma matrícula
      *
      * @param LegacyRegistration $registration
-     * @param DateTime $date
-     * @param boolean $relocated
+     * @param DateTime           $date
+     * @param boolean            $relocated
      */
     public function updateEnrollmentsDate(LegacyRegistration $registration, DateTime $date, $relocated)
     {
         $date = $date->format('Y-m-d');
 
         $enrollment = $registration->lastEnrollment;
+
+        if (empty($enrollment)) {
+            return;
+        }
 
         if (!$relocated && $enrollment->remanejado) {
             return;

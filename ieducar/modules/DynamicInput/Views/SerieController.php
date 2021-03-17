@@ -1,11 +1,7 @@
 <?php
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'Portabilis/Business/Professor.php';
-
 class SerieController extends ApiCoreController
 {
-
     protected function canGetSeries()
     {
         return $this->validatesId('instituicao') &&
@@ -15,7 +11,7 @@ class SerieController extends ApiCoreController
     protected function getSeries()
     {
         if ($this->canGetSeries()) {
-            $userId = $this->getSession()->id_pessoa;
+            $userId = \Illuminate\Support\Facades\Auth::id();
             $instituicaoId = $this->getRequest()->instituicao_id;
             $escolaId = $this->getRequest()->escola_id;
             $cursoId = $this->getRequest()->curso_id;
@@ -33,13 +29,13 @@ class SerieController extends ApiCoreController
                 $resources = App_Model_IedFinder::getSeries($instituicaoId = null, null, $cursoId, $ano);
             }
 
-            $options = array();
+            $options = [];
 
             foreach ($resources as $serieId => $serie) {
                 $options['__' . $serieId] = $this->toUtf8($serie);
             }
 
-            return array('options' => $options);
+            return ['options' => $options];
         }
     }
 
@@ -50,6 +46,5 @@ class SerieController extends ApiCoreController
         } else {
             $this->notImplementedOperationError();
         }
-
     }
 }

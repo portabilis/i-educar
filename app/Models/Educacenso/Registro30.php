@@ -2,14 +2,13 @@
 
 namespace App\Models\Educacenso;
 
-
 use iEducar\Modules\Educacenso\Model\Deficiencias;
 
 class Registro30 implements RegistroEducacenso
 {
-    CONST TIPO_MANAGER = 'manager';
-    CONST TIPO_TEACHER = 'teacher';
-    CONST TIPO_STUDENT = 'student';
+    const TIPO_MANAGER = 'manager';
+    const TIPO_TEACHER = 'teacher';
+    const TIPO_STUDENT = 'student';
 
     public $tipos = [];
 
@@ -271,6 +270,7 @@ class Registro30 implements RegistroEducacenso
      * Remove "Altas habilidades/Superdotação" do array de deficiências informado
      *
      * @param $arrayDeficiencias
+     *
      * @return string
      */
     public static function removeAltasHabilidadesArrayDeficiencias($arrayDeficiencias)

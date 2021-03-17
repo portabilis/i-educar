@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsPmieducarPessoaEduc extends Model
 {
     public $cod_pessoa_educ;
@@ -31,19 +29,19 @@ class clsPmieducarPessoaEduc extends Model
         $this->_campos_lista = $this->_todos_campos = 'cod_pessoa_educ, ref_idpes_responsavel, ref_idpais_origem, ref_idmun_natural, ref_usuario_exc, ref_usuario_cad, nome, url, email, data_nascimento, sexo, nacionalidade, data_cadastro, data_exclusao, ativo';
 
         if (is_numeric($ref_idpes_responsavel)) {
-                    $this->ref_idpes_responsavel = $ref_idpes_responsavel;
+            $this->ref_idpes_responsavel = $ref_idpes_responsavel;
         }
         if (is_numeric($ref_idpais_origem)) {
-                    $this->ref_idpais_origem = $ref_idpais_origem;
+            $this->ref_idpais_origem = $ref_idpais_origem;
         }
         if (is_numeric($ref_idmun_natural)) {
-                    $this->ref_idmun_natural = $ref_idmun_natural;
+            $this->ref_idmun_natural = $ref_idmun_natural;
         }
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
 
         if (is_numeric($cod_pessoa_educ)) {

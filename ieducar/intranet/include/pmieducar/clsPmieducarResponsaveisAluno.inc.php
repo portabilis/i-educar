@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once('include/pmieducar/geral.inc.php');
-
 class clsPmieducarResponsaveisAluno extends Model
 {
     public $ref_cod_aluno;

@@ -2,22 +2,7 @@
 
 use iEducar\Modules\Addressing\LegacyAddressingFields;
 
-$desvio_diretorio = '';
-require_once('include/clsBase.inc.php');
-require_once('include/clsCadastro.inc.php');
-require_once('include/clsBanco.inc.php');
-
-class clsIndex extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} Empresas!");
-        $this->processoAp = 41;
-    }
-}
-
-class indice extends clsCadastro
-{
+return new class extends clsCadastro {
     use LegacyAddressingFields;
 
     // Dados do Juridico
@@ -116,7 +101,7 @@ class indice extends clsCadastro
             $this->campoTexto('razao_social', 'Raz&atilde;o Social', $this->razao_social, '50', '255', true);
             $this->campoTexto('capital_social', 'Capital Social', $this->capital_social, '50', '255');
 
-            $nivelUsuario = (new clsPermissoes)->nivel_acesso($this->getSession()->id_pessoa);
+            $nivelUsuario = (new clsPermissoes)->nivel_acesso(\Illuminate\Support\Facades\Auth::id());
             if (!$this->cod_pessoa_fj || $nivelUsuario > App_Model_NivelTipoUsuario::INSTITUCIONAL) {
                 $this->campoRotulo('cnpj_', 'CNPJ', $this->cnpj);
                 $this->campoOculto('cnpj', $this->cnpj);
@@ -344,7 +329,6 @@ class indice extends clsCadastro
         $this->saveAddress($this->cod_pessoa_fj);
 
         $this->simpleRedirect('empresas_lst.php');
-
     }
 
     public function Excluir()
@@ -412,11 +396,10 @@ class indice extends clsCadastro
 
         return true;
     }
-}
 
-$pagina = new clsIndex();
-
-$miolo = new indice();
-$pagina->addForm($miolo);
-
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->title = 'Empresas!';
+        $this->processoAp = 41;
+    }
+};

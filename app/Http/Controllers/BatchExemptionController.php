@@ -18,6 +18,7 @@ class BatchExemptionController extends Controller
 {
     /**
      * @param Request $request
+     *
      * @return View
      */
     public function index(Request $request)
@@ -52,7 +53,7 @@ class BatchExemptionController extends Controller
         $exemptionService->keepAbsences = (bool) $request->get('manter_frequencias', false);
         $batchExemptionService = new BatchExemptionService($exemptionService);
 
-        foreach($registrations as $registration) {
+        foreach ($registrations as $registration) {
             $batchExemptionService->addRegistration(
                 $registration,
                 $request->get('ref_cod_componente_curricular'),
@@ -99,7 +100,7 @@ class BatchExemptionController extends Controller
             $query->where('aprovado', $request->get('situacao'));
         }
 
-        $query->whereHas('enrollments', function($enrollmentQuery) {
+        $query->whereHas('enrollments', function ($enrollmentQuery) {
             $enrollmentQuery->where('ativo', 1);
         });
 

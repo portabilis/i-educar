@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsPmieducarTipoDispensa extends Model
 {
     public $cod_tipo_dispensa;
@@ -25,10 +23,10 @@ class clsPmieducarTipoDispensa extends Model
         $this->_campos_lista = $this->_todos_campos = 'td.cod_tipo_dispensa, td.ref_usuario_exc, td.ref_usuario_cad, td.nm_tipo, td.descricao, td.data_cadastro, td.data_exclusao, td.ativo, td.ref_cod_instituicao';
 
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
 
         if (is_numeric($cod_tipo_dispensa)) {
@@ -51,7 +49,7 @@ class clsPmieducarTipoDispensa extends Model
         }
 
         if (is_numeric($ref_cod_instituicao)) {
-                    $this->ref_cod_instituicao = $ref_cod_instituicao;
+            $this->ref_cod_instituicao = $ref_cod_instituicao;
         }
     }
 

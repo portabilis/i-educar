@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsPmieducarHistoricoDisciplinas extends Model
 {
     public $sequencial;
@@ -56,8 +54,8 @@ class clsPmieducarHistoricoDisciplinas extends Model
         ]);
 
         if (is_numeric($ref_ref_cod_aluno) && is_numeric($ref_sequencial)) {
-                    $this->ref_ref_cod_aluno = $ref_ref_cod_aluno;
-                    $this->ref_sequencial = $ref_sequencial;
+            $this->ref_ref_cod_aluno = $ref_ref_cod_aluno;
+            $this->ref_sequencial = $ref_sequencial;
         }
 
         if (is_numeric($sequencial)) {

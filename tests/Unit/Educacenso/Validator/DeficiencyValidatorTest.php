@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Educacenso\Validator;
 
-use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
 use iEducar\Modules\Educacenso\Model\Deficiencias;
+use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
 use Tests\TestCase;
 
 class DeficiencyValidatorTest extends TestCase
@@ -129,7 +129,7 @@ class DeficiencyValidatorTest extends TestCase
     {
         $descriptions = Deficiencias::getDescriptiveValues();
 
-        $descriptions = array_filter($descriptions, function($key) use ($values){
+        $descriptions = array_filter($descriptions, function ($key) use ($values) {
             return in_array($key, $values);
         }, ARRAY_FILTER_USE_KEY);
 

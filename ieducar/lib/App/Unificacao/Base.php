@@ -32,14 +32,17 @@ class App_Unificacao_Base
 
     public function unifica()
     {
-        $this->validaParametros();
-
-        $this->desabilitaTodasTriggers();
-        $this->habilitaTriggersNecessarias();
-        $this->processaChavesDeletarDuplicados();
-        $this->processaChavesManterPrimeiroVinculo();
-        $this->processaChavesManterTodosVinculos();
-        $this->habilitaTodasTriggers();
+        try {
+            $this->validaParametros();
+            $this->desabilitaTodasTriggers();
+            $this->habilitaTriggersNecessarias();
+            $this->processaChavesDeletarDuplicados();
+            $this->processaChavesManterPrimeiroVinculo();
+            $this->processaChavesManterTodosVinculos();
+            $this->habilitaTodasTriggers();
+        } catch (Exception $e) {
+            throw new Exception('Não foi possível realizar este processo de unificação. Por favor, entre em contato com o suporte.');
+        }
     }
 
     protected function processaChavesDeletarDuplicados()
@@ -76,11 +79,13 @@ class App_Unificacao_Base
         foreach ($this->chavesManterTodosVinculos as $key => $value) {
             $oldKeys = explode(',', $stringCodigosDuplicados);
             $this->storeLogOldDataByKeys($oldKeys, $value['tabela'], $value['coluna']);
+            $addSql = $this->buildSqlExtraBeforeUnification($value['tabela']);
 
             $this->db->Consulta(
                 "
                     UPDATE {$value['tabela']}
                     SET {$value['coluna']} = {$this->codigoUnificador}
+                    {$addSql}
                     WHERE {$value['coluna']} IN ({$stringCodigosDuplicados})
                 "
             );
@@ -183,10 +188,10 @@ class App_Unificacao_Base
      */
     private function storeLogOldDataByKeys($oldKeys, $table, $columnKey)
     {
-        foreach($oldKeys as $key) {
+        foreach ($oldKeys as $key) {
             $data = $this->getOldData($table, $columnKey, $key);
 
-            if ($data->isEmpty()){
+            if ($data->isEmpty()) {
                 continue;
             }
 
@@ -205,10 +210,30 @@ class App_Unificacao_Base
      * @param $table
      * @param $key
      * @param $value
+     *
      * @return \Illuminate\Support\Collection
      */
     private function getOldData($table, $key, $value)
     {
         return DB::table($table)->whereIn($key, [$value])->get();
+    }
+
+    /**
+     * @param $tableName string
+     * @return string
+     */
+    private function buildSqlExtraBeforeUnification(string $tableName)
+    {
+        $addSql = '';
+
+        if ($tableName === 'pmieducar.servidor_afastamento') {
+            $addSql .= ', sequencial = (
+                select
+                max(sequencial)+1
+                from pmieducar.servidor_afastamento
+                where ref_cod_servidor = ' . $this->codigoUnificador . '
+                ) ';
+        }
+        return $addSql;
     }
 }

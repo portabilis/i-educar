@@ -1,13 +1,5 @@
 <?php
 
-require_once 'include/modules/clsModulesItinerarioTransporteEscolar.inc.php';
-require_once 'include/modules/clsModulesVeiculo.inc.php';
-require_once 'Portabilis/Controller/ApiCoreController.php';
-require_once 'Portabilis/Array/Utils.php';
-require_once 'Portabilis/String/Utils.php';
-require_once 'Portabilis/Array/Utils.php';
-require_once 'Portabilis/Date/Utils.php';
-
 class VeiculoController extends ApiCoreController
 {
     protected $_processoAp = 578; //verificar
@@ -19,7 +11,7 @@ class VeiculoController extends ApiCoreController
         $nome = $this->fetchPreparedQuery($sql, $id, false, 'first-field');
 
         return $this->toUtf8($nome, ['transform' => true]);
-  }
+    }
 
     protected function loadNomeMotorista($id)
     {
@@ -233,7 +225,7 @@ class VeiculoController extends ApiCoreController
 
                 die();
             }
-        // update
+            // update
         } elseif ($this->isRequestFor('put', 'veiculo')) {
             $this->appendResponse($this->put());
         } else {

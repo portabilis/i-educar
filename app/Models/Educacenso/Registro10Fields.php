@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Models\Educacenso;
-
 
 class Registro10Fields implements RegistroEducacenso
 {
@@ -740,5 +738,4 @@ class Registro10Fields implements RegistroEducacenso
     public $orgaoColegiadoGremio;
     public $orgaoColegiadoOutros;
     public $orgaoColegiadoNaoExiste;
-
 }

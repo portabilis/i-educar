@@ -1,7 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/View/Helper/Input/Ano.php';
-
 /**
  * Mover referencias de $this->inputsHelper()->dynamic('ano'); para $this->inputsHelper()->input('ano');
  *

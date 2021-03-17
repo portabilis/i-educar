@@ -15,16 +15,10 @@ class AddForeignKeysInPmieducarFaltaAlunoTable extends Migration
     {
         Schema::table('pmieducar.falta_aluno', function (Blueprint $table) {
             $table->foreign(['ref_cod_serie', 'ref_cod_escola', 'ref_cod_disciplina'])
-               ->references(['ref_ref_cod_serie', 'ref_ref_cod_escola', 'ref_cod_disciplina'])
-               ->on('pmieducar.escola_serie_disciplina')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
-
-            $table->foreign('ref_cod_curso_disciplina')
-               ->references('cod_disciplina')
-               ->on('pmieducar.disciplina')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references(['ref_ref_cod_serie', 'ref_ref_cod_escola', 'ref_cod_disciplina'])
+                ->on('pmieducar.escola_serie_disciplina')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 
@@ -37,7 +31,6 @@ class AddForeignKeysInPmieducarFaltaAlunoTable extends Migration
     {
         Schema::table('pmieducar.falta_aluno', function (Blueprint $table) {
             $table->dropForeign(['ref_cod_serie', 'ref_cod_escola', 'ref_cod_disciplina']);
-            $table->dropForeign(['ref_cod_curso_disciplina']);
         });
     }
 }

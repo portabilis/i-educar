@@ -34,7 +34,6 @@ trait Avaliacao_Service_Boletim_RegraAvaliacao
 
     /**
      * @deprecated
-     *
      * @see Avaliacao_Service_Boletim_RegraAvaliacao::getRegraAvaliacao()
      *
      * @return RegraAvaliacao_Model_Regra

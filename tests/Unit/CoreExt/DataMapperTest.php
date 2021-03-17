@@ -1,8 +1,5 @@
 <?php
 
-require_once __DIR__ . '/_stub/EntityDataMapper.php';
-require_once __DIR__ . '/_stub/EntityCompoundDataMapper.php';
-
 class CoreExt_DataMapperTest extends UnitBaseTest
 {
     /**

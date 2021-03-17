@@ -1,8 +1,5 @@
 <?php
 
-require_once 'CoreExt/Controller/Dispatcher/Interface.php';
-require_once 'CoreExt/Configurable.php';
-
 abstract class CoreExt_Controller_Dispatcher_Abstract implements CoreExt_Controller_Dispatcher_Interface, CoreExt_Configurable
 {
     /**
@@ -90,7 +87,6 @@ abstract class CoreExt_Controller_Dispatcher_Abstract implements CoreExt_Control
     public function getRequest()
     {
         if (is_null($this->_request)) {
-            require_once 'CoreExt/Controller/Request.php';
             $this->setRequest(new CoreExt_Controller_Request());
         }
 

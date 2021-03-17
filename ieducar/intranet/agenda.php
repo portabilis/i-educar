@@ -1,53 +1,9 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de ItajaÃ­                              *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software PÃºblico Livre e Brasileiro                   *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de ItajaÃ­            *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou  *
-    *   modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme  *
-    *   publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da    *
-    *   LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.     *
-    *                                                                        *
-    *   Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM  *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-    *
-    *   ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-    *
-    *   sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.   *
-    *                                                                        *
-    *   VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU     *
-    *   junto  com  este  programa. Se nÃ£o, escreva para a Free Software    *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Session;
 
-require_once('include/clsBase.inc.php');
-require_once('include/clsBanco.inc.php');
-require_once('include/clsAgenda.inc.php');
-//require_once ("include/juris/jurisGeral.inc.php");
-require_once('agenda_calendario.php');
-
-class clsIndex extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} Agenda Particular");
-        $this->processoAp = '0';
-        $this->addEstilo('agenda');
-        $this->addScript('agenda');
-    }
-}
-
-class indice extends clsCadastro
-{
+return new class extends clsCadastro {
     public $agenda;
     public $editor;
     public $compromissos;
@@ -67,7 +23,7 @@ class indice extends clsCadastro
         $db = new clsBanco();
         $db2 = new clsBanco();
         // inicializacao de variaveis
-        $this->editor = Session::get('id_pessoa');
+        $this->editor = \Illuminate\Support\Facades\Auth::id();
 
         Portabilis_View_Helper_Application::loadJavascript($this, '/intranet/scripts/agenda.js');
         Portabilis_View_Helper_Application::loadStylesheet($this, '/intranet/styles/agenda.css');
@@ -192,7 +148,7 @@ class indice extends clsCadastro
                                     </td>
                                     <td class=\"data-info\" title=\"Dia: {$this->arr_data_atual[0]} de {$mesesArr[$this->arr_data_atual[1]]} de {$this->arr_data_atual[2]}\" align=\"center\">
                                         <span class=\"data1\">{$this->arr_data_atual[0]}<br></span>
-                                        <span class=\"data2\">" . strtoupper(substr($mesesArr[$this->arr_data_atual[1]], 0, 3)) . "<br>
+                                        <span class=\"data2\">" . mb_strtoupper(substr($mesesArr[$this->arr_data_atual[1]], 0, 3)) . "<br>
                                         <span class=\"data3\">{$this->arr_data_atual[2]}</span></td>
                                     <td class=\"arrow-dia\" rowspan=\"2\" valign=\"middle\">
                                         <a href=\"{$this->scriptNome}?cod_agenda={$this->agenda}&time={$this->time_amanha}\">
@@ -386,7 +342,7 @@ class indice extends clsCadastro
 
             // verifica se o compromisso eh mesmo dessa agenda
             $db->Consulta("SELECT 1 FROM portal.agenda_compromisso WHERE ref_cod_agenda = '{$this->agenda}' AND cod_agenda_compromisso = '{$_GET['versoes']}'");
-            if ($db->Num_Linhas()) {
+            if ($db->numLinhas()) {
                 // seleciona as versoes desse compromisso
                 $db->Consulta("SELECT versao, ref_ref_cod_pessoa_cad, ativo, data_inicio, titulo, descricao, importante, publico, data_cadastro, data_fim FROM portal.agenda_compromisso WHERE cod_agenda_compromisso = '{$_GET['versoes']}' ORDER BY versao DESC");
                 while ($db->ProximoRegistro()) {
@@ -484,10 +440,10 @@ class indice extends clsCadastro
 
         return $conteudo;
     }
-}
-$pagina = new clsIndex();
 
-$miolo = new indice();
-$pagina->addForm($miolo);
-
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->titulo = 'Agenda Particular';
+        $this->processoAp = '0';
+    }
+};

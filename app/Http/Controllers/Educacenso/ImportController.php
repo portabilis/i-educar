@@ -23,7 +23,8 @@ class ImportController extends Controller
         try {
             $yearImportService = ImportServiceFactory::createImportService(
                 $request->get('ano'),
-                DateTime::createFromFormat('d/m/Y', $request->get('data_entrada_matricula')));
+                DateTime::createFromFormat('d/m/Y', $request->get('data_entrada_matricula'))
+            );
 
             $importFileService = new HandleFileService($yearImportService, Auth::user());
 
@@ -37,6 +38,7 @@ class ImportController extends Controller
 
     /**
      * @param Request $request
+     *
      * @return View
      */
     public function index(Request $request)

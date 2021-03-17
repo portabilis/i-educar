@@ -1,22 +1,6 @@
 <?php
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsListagem.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Séries da escola');
-
-        $this->processoAp = 585;
-    }
-}
-
-class indice extends clsListagem
-{
+return new class extends clsListagem {
     public $limite;
     public $offset;
     public $ref_cod_serie;
@@ -144,10 +128,11 @@ class indice extends clsListagem
             url('intranet/educar_index.php') => 'Escola',
         ]);
     }
-}
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
+    public function Formular()
+    {
+        $this->title = 'i-Educar - Séries da escola';
 
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+        $this->processoAp = 585;
+    }
+};

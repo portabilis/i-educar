@@ -1,4 +1,4 @@
-name: tests
+name: Tests
 
 on:
   push:
@@ -6,12 +6,11 @@ on:
       - 2.*
       - master
   pull_request:
-    branches:
-      - 2.*
-      - master
 
 jobs:
   default:
+
+    name: Unit, Integration and Pages
 
     runs-on: ubuntu-latest
 
@@ -33,7 +32,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:9.5
+        image: postgres
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -53,3 +52,7 @@ jobs:
         run: vendor/bin/phpunit
       - name: Integration tests
         run: vendor/bin/phpunit --testsuite=Diario
+      - name: Page tests
+        run: |
+          php artisan legacy:create:tests
+          php artisan test --parallel --testsuite Pages

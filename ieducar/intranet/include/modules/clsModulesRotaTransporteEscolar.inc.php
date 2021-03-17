@@ -1,9 +1,6 @@
 <?php
 
 use iEducar\Legacy\Model;
-use Illuminate\Support\Facades\Session;
-
-require_once 'include/pmieducar/geral.inc.php';
 
 class clsModulesRotaTransporteEscolar extends Model
 {
@@ -16,15 +13,12 @@ class clsModulesRotaTransporteEscolar extends Model
     public $km_npav;
     public $ref_cod_empresa_transporte_escolar;
     public $tercerizado;
-    public $pessoa_logada;
 
     public function __construct($cod_rota_transporte_escolar = null, $ref_idpes_destino = null, $descricao = null, $ano = null, $tipo_rota = null, $km_pav = null, $km_npav = null, $ref_cod_empresa_transporte_escolar = null, $tercerizado = null)
     {
         $db = new clsBanco();
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}rota_transporte_escolar";
-
-        $this->pessoa_logada = Session::get('id_pessoa');
 
         $this->_campos_lista = $this->_todos_campos = ' cod_rota_transporte_escolar, ref_idpes_destino, descricao, ano, tipo_rota, km_pav, km_npav, ref_cod_empresa_transporte_escolar, tercerizado';
 

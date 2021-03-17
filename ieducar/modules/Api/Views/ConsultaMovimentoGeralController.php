@@ -1,16 +1,14 @@
 <?php
 
-use iEducar\Modules\Reports\QueryFactory\MovimentoGeralAlunosAdmitidosQueryFactory;
-use iEducar\Modules\Reports\QueryFactory\MovimentoGeralAlunosEdInfIntQueryFactory;
-use iEducar\Modules\Reports\QueryFactory\MovimentoGeralAlunosAnosQueryFactory;
-use iEducar\Modules\Reports\QueryFactory\MovimentoGeralAlunosEdInfParcQueryFactory;
 use iEducar\Modules\Reports\QueryFactory\MovimentoGeralAlunosAbandonosQueryFactory;
-use iEducar\Modules\Reports\QueryFactory\MovimentoGeralAlunosTransferidosQueryFactory;
-use iEducar\Modules\Reports\QueryFactory\MovimentoGeralAlunosRemQueryFactory;
-use iEducar\Modules\Reports\QueryFactory\MovimentoGeralAlunosReclaQueryFactory;
+use iEducar\Modules\Reports\QueryFactory\MovimentoGeralAlunosAdmitidosQueryFactory;
+use iEducar\Modules\Reports\QueryFactory\MovimentoGeralAlunosAnosQueryFactory;
+use iEducar\Modules\Reports\QueryFactory\MovimentoGeralAlunosEdInfIntQueryFactory;
+use iEducar\Modules\Reports\QueryFactory\MovimentoGeralAlunosEdInfParcQueryFactory;
 use iEducar\Modules\Reports\QueryFactory\MovimentoGeralAlunosObitoQueryFactory;
-
-require_once 'ConsultaBaseController.php';
+use iEducar\Modules\Reports\QueryFactory\MovimentoGeralAlunosReclaQueryFactory;
+use iEducar\Modules\Reports\QueryFactory\MovimentoGeralAlunosRemQueryFactory;
+use iEducar\Modules\Reports\QueryFactory\MovimentoGeralAlunosTransferidosQueryFactory;
 
 class ConsultaMovimentoGeralController extends ConsultaBaseController
 {

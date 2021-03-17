@@ -1,9 +1,5 @@
 <?php
 
-require_once 'Core/Controller/Page/EditController.php';
-require_once 'AreaConhecimento/Model/AreaDataMapper.php';
-require_once '../intranet/include/clsBanco.inc.php';
-
 class EditController extends Core_Controller_Page_EditController
 {
     protected $_dataMapper = 'AreaConhecimento_Model_AreaDataMapper';

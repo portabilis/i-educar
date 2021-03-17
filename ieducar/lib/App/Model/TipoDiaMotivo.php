@@ -1,7 +1,5 @@
 <?php
 
-require_once 'CoreExt/Enum.php';
-
 class App_Model_TipoDiaMotivo extends CoreExt_Enum
 {
     const DIA_LETIVO = 'l';

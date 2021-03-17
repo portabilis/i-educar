@@ -1,9 +1,5 @@
 <?php
 
-require_once 'Portabilis/Controller/Page/ListController.php';
-require_once 'lib/Portabilis/View/Helper/Application.php';
-require_once 'Portabilis/Business/Professor.php';
-
 class DiarioController extends Portabilis_Controller_Page_ListController
 {
     protected $_titulo = 'Lançamento por turma';

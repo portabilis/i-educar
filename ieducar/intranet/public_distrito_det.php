@@ -4,22 +4,7 @@ use App\Models\District;
 use iEducar\Legacy\InteractWithDatabase;
 use iEducar\Legacy\SelectOptions;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsDetalhe.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/public/geral.inc.php';
-
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' Distrito');
-        $this->processoAp = 759;
-    }
-}
-
-class indice extends clsDetalhe
-{
+return new class extends clsDetalhe {
     use InteractWithDatabase, SelectOptions;
 
     public $idmun;
@@ -78,10 +63,10 @@ class indice extends clsDetalhe
             url('intranet/educar_enderecamento_index.php') => 'Endereçamento',
         ]);
     }
-}
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
-
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->title = 'Distrito';
+        $this->processoAp = 759;
+    }
+};

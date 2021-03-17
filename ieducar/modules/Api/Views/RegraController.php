@@ -1,11 +1,7 @@
 <?php
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'lib/Portabilis/Array/Utils.php';
-
 class RegraController extends ApiCoreController
 {
-
     protected function canGetTabelasDeArredondamento()
     {
         return $this->validatesPresenceOf('instituicao_id');
@@ -264,12 +260,12 @@ class RegraController extends ApiCoreController
 
         if ($modified) {
             $params[] = $modified;
-            $modified = " AND updated_at >= $2";
+            $modified = ' AND updated_at >= $2';
         }
 
         $sql = "
             (
-                SELECT 
+                SELECT
                     serie_id,
                     regra_avaliacao_id,
                     regra_avaliacao_diferenciada_id,
@@ -280,9 +276,9 @@ class RegraController extends ApiCoreController
                 WHERE ano_letivo = $1
                 {$modified}
             )
-            UNION 
+            UNION
             (
-                SELECT 
+                SELECT
                     serie_id,
                     regra_avaliacao_id,
                     regra_avaliacao_diferenciada_id,

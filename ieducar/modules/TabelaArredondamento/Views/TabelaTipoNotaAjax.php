@@ -1,8 +1,5 @@
 <?php
 
-require_once 'include/clsBanco.inc.php';
-require_once 'TabelaArredondamento/Model/TabelaDataMapper.php';
-
 $tabelas = [];
 
 if (isset($_GET['tipoNota'])) {

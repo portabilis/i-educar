@@ -2,8 +2,6 @@
 
 use iEducar\Support\DescriptionValue;
 
-require_once 'CoreExt/Enum.php';
-
 class ComponenteCurricular_Model_CodigoEducacenso extends CoreExt_Enum
 {
     use DescriptionValue;
