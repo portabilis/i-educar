@@ -16,7 +16,6 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Telescope\TelescopeServiceProvider;
@@ -73,9 +72,6 @@ class AppServiceProvider extends ServiceProvider
 
             return $keyValueArray;
         });
-
-        // https://laravel.com/docs/5.5/migrations#indexes
-        Schema::defaultStringLength(191);
 
         Paginator::defaultView('vendor.pagination.default');
 

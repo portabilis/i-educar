@@ -4,6 +4,7 @@ namespace App\Providers\Postgres;
 
 use Illuminate\Database\Connection;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use PDO;
 
@@ -18,6 +19,9 @@ class DatabaseServiceProvider extends ServiceProvider
     {
         Connection::resolverFor('pgsql', function ($connection, $database, $prefix, $config) {
             $connection = new PostgresConnection($connection, $database, $prefix, $config);
+
+            // https://laravel.com/docs/migrations#index-lengths-mysql-mariadb
+            Schema::defaultStringLength(191);
 
             $connection->getPdo()->exec('SET search_path = "$user", public, portal, cadastro, pmieducar, urbano, modules;');
 
