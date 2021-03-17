@@ -15,8 +15,6 @@ class CreatePmieducarCursoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.curso_cod_curso_seq
                     START WITH 0
                     INCREMENT BY 1
@@ -48,7 +46,7 @@ class CreatePmieducarCursoTable extends Migration
                     modalidade_curso integer,
 	                updated_at timestamp NULL DEFAULT now()
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.curso
                     ADD CONSTRAINT curso_pkey PRIMARY KEY (cod_curso);
 

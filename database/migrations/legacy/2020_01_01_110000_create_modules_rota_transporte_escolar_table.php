@@ -15,8 +15,6 @@ class CreateModulesRotaTransporteEscolarTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-
                 CREATE SEQUENCE modules.rota_transporte_escolar_seq
                     START WITH 1
                     INCREMENT BY 1

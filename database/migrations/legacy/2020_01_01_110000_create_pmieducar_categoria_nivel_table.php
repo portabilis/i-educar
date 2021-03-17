@@ -15,8 +15,6 @@ class CreatePmieducarCategoriaNivelTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-                
                 CREATE SEQUENCE pmieducar.categoria_nivel_cod_categoria_nivel_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -33,7 +31,7 @@ class CreatePmieducarCategoriaNivelTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo boolean DEFAULT true NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.categoria_nivel
                     ADD CONSTRAINT categoria_nivel_pkey PRIMARY KEY (cod_categoria_nivel);
 

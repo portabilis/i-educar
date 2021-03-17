@@ -15,8 +15,6 @@ class CreatePmieducarServidorFormacaoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-
                 CREATE SEQUENCE pmieducar.servidor_formacao_cod_formacao_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -37,7 +35,7 @@ class CreatePmieducarServidorFormacaoTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.servidor_formacao
                     ADD CONSTRAINT servidor_formacao_pkey PRIMARY KEY (cod_formacao);
 
