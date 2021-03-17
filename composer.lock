@@ -64,16 +64,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.174.1",
+            "version": "3.174.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "b481fd0dab83b9ed6eab35279e1a43e3a875c87e"
+                "reference": "80cc136f47fa808032f411fff70e26f461852510"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/b481fd0dab83b9ed6eab35279e1a43e3a875c87e",
-                "reference": "b481fd0dab83b9ed6eab35279e1a43e3a875c87e",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/80cc136f47fa808032f411fff70e26f461852510",
+                "reference": "80cc136f47fa808032f411fff70e26f461852510",
                 "shasum": ""
             },
             "require": {
@@ -148,9 +148,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.174.1"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.174.2"
             },
-            "time": "2021-03-16T18:18:56+00:00"
+            "time": "2021-03-17T18:13:11+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -409,16 +409,16 @@
         },
         {
             "name": "dex/composer-plug-and-play",
-            "version": "0.2.0",
+            "version": "0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/edersoares/composer-plug-and-play.git",
-                "reference": "90660dcb1131d4c2236ee6c50ad9caa50995bfa5"
+                "reference": "ad2cb2eb24a8390f32f17c2ed1bd7324260292cf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/edersoares/composer-plug-and-play/zipball/90660dcb1131d4c2236ee6c50ad9caa50995bfa5",
-                "reference": "90660dcb1131d4c2236ee6c50ad9caa50995bfa5",
+                "url": "https://api.github.com/repos/edersoares/composer-plug-and-play/zipball/ad2cb2eb24a8390f32f17c2ed1bd7324260292cf",
+                "reference": "ad2cb2eb24a8390f32f17c2ed1bd7324260292cf",
                 "shasum": ""
             },
             "require": {
@@ -453,9 +453,9 @@
             "description": "Plug and play packages for Composer",
             "support": {
                 "issues": "https://github.com/edersoares/composer-plug-and-play/issues",
-                "source": "https://github.com/edersoares/composer-plug-and-play/tree/0.2.0"
+                "source": "https://github.com/edersoares/composer-plug-and-play/tree/0.3.0"
             },
-            "time": "2021-01-05T21:12:34+00:00"
+            "time": "2021-03-17T21:49:00+00:00"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",
