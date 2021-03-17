@@ -5,10 +5,17 @@ namespace App\Services;
 use App\Models\LegacyLevel;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassStage;
+use App\Rules\CanCreateTurma;
+use App\Rules\CheckAlternativeReportCardExists;
+use App\Rules\CheckMandatoryCensoFields;
+use App\Rules\CheckSchoolClassExistsByName;
+use App\Rules\ExistsPeriod;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class SchoolClassService
 {
+
     /**
      * Retorna se o nome está disponível para cadastro. Ignora a turma com ID
      * caso seja informado.
@@ -19,6 +26,9 @@ class SchoolClassService
      * @param int      $school       ID da escola
      * @param int      $academicYear Ano letivo
      * @param int|null $idToIgnore   ID da turma que deve ser ignorado (opcional)
+     *
+     * @deprecated
+     * @see CheckSchoolClassExistsByName
      *
      * @return bool
      */
@@ -46,8 +56,11 @@ class SchoolClassService
      * Valida se é obrigatório preencher o boletim diferenciado da turma.
      * Caso a série tenha regra de avaliação diferenciada configurada
      *
-     * @param integer $levelId
-     * @param integer $academicYear
+     * @param int $levelId
+     * @param int $academicYear
+     *
+     * @deprecated
+     * @see CheckAlternativeReportCardExists
      *
      * @return bool
      */
@@ -83,5 +96,39 @@ class SchoolClassService
             ->distinct()
             ->whereIn('ref_cod_turma', $schoolClassId)
             ->get();
+    }
+
+    /**
+     * @param LegacySchoolClass $schoolClass
+     *
+     * @return LegacySchoolClass
+     *
+     * @throws ValidationException
+     */
+    public function storeSchoolClass(LegacySchoolClass $schoolClass)
+    {
+        $this->validate($schoolClass);
+        $schoolClass->save();
+
+        return $schoolClass;
+    }
+
+    /**
+     * @param LegacySchoolClass $schoolClass
+     *
+     * @throws ValidationException
+     */
+    private function validate(LegacySchoolClass $schoolClass)
+    {
+        validator(
+            [$schoolClass],
+            [
+                new CanCreateTurma(),
+                new ExistsPeriod(),
+                new CheckMandatoryCensoFields(),
+                new CheckSchoolClassExistsByName(),
+                new CheckAlternativeReportCardExists()
+            ]
+        )->validate();
     }
 }

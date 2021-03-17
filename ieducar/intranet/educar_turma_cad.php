@@ -2,10 +2,13 @@
 
 use App\Exceptions\SchoolClass\DisciplinesValidationException;
 use App\Models\LegacyCourse;
+use App\Models\LegacyDisciplineSchoolClass;
 use App\Models\LegacySchoolClass;
+use App\Models\LegacySchoolCourse;
 use App\Models\School;
 use App\Services\iDiarioService;
 use App\Services\SchoolClass\ExemptedDisciplineLinksRemover;
+use App\Services\SchoolClass\MultiGradesService;
 use App\Services\SchoolClassService;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Support\View\SelectOptions;
@@ -14,10 +17,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use RuntimeException;
 use Throwable;
-use App\Models\LegacySchoolCourse;
-use App\Models\LegacyDisciplineSchoolClass;
-use App\Services\SchoolClass\MultiGradesService;
-
 
 return new class extends clsCadastro {
     public $pessoa_logada;
@@ -259,14 +258,9 @@ return new class extends clsCadastro {
 
         $this->inputsHelper()->dynamic('instituicao', ['value' => $this->ref_cod_instituicao, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('escola', ['value' => $this->ref_cod_escola, 'disabled' => $desabilitado]);
-        $this->campoCheck(
-            'multiseriada',
-            'Multisseriada',
-            $this->multiseriada,
-            '',
-            false,
-            false
-        );
+
+        $multiseriada = isset($this->multiseriada) ? 1 : 0;
+        $this->campoCheck('multiseriada', 'Multisseriada', $multiseriada);
 
         $opcoesCursos = [
             null => 'Selecione um curso',
@@ -286,11 +280,11 @@ return new class extends clsCadastro {
         $tiposBoletim = Portabilis_Array_Utils::insertIn(null, 'Selecione um modelo', $tiposBoletim);
 
         $this->campoTabelaInicio('turma_serie', 'Séries da turma', ['Curso', 'Série', 'Boletim', 'Boletim diferenciado'], $this->turma_serie);
-            $this->campoLista('mult_curso_id', 'Curso', $opcoesCursos, $this->mult_curso_id, 'atualizaInformacoesComBaseNoCurso(this)');
-            $this->campoLista('mult_serie_id', 'Série', ['Selecione uma série'], $this->mult_serie_id, 'atualizaInformacoesComBaseNaSerie()');
-            $this->campoLista('mult_boletim_id', 'Boletim', $tiposBoletim, $this->mult_boletim_id);
-            $this->campoLista('mult_boletim_diferenciado_id', 'Boletim diferenciado', $tiposBoletim, $this->mult_boletim_diferenciado_id, null, null, null, null, null, false);
-            $this->campoOculto('mult_padrao_ano_escolar', $this->mult_padrao_ano_escolar);
+        $this->campoLista('mult_curso_id', 'Curso', $opcoesCursos, $this->mult_curso_id, 'atualizaInformacoesComBaseNoCurso(this)');
+        $this->campoLista('mult_serie_id', 'Série', ['Selecione uma série'], $this->mult_serie_id, 'atualizaInformacoesComBaseNaSerie()');
+        $this->campoLista('mult_boletim_id', 'Boletim', $tiposBoletim, $this->mult_boletim_id);
+        $this->campoLista('mult_boletim_diferenciado_id', 'Boletim diferenciado', $tiposBoletim, $this->mult_boletim_diferenciado_id, null, null, null, null, null, false);
+        $this->campoOculto('mult_padrao_ano_escolar', $this->mult_padrao_ano_escolar);
         $this->campoTabelaFim();
 
         $this->inputsHelper()->dynamic('curso', ['value' => $this->ref_cod_curso, 'disabled' => $desabilitado]);
@@ -593,6 +587,8 @@ return new class extends clsCadastro {
         $this->campoOculto('padrao_ano_escolar', $this->padrao_ano_escolar);
 
         $this->acao_enviar = 'valida()';
+            $this->acao_executa_submit = false;
+        $this->acao_executa_submit_ajax = true;
 
         $this->inputsHelper()->integer('codigo_inep_educacenso', ['label' => 'Código INEP',
             'label_hint' => 'Somente números',
@@ -1036,11 +1032,12 @@ return new class extends clsCadastro {
         if ($mudouParaMultisseriada && $naoManteveSerieOriginal && $possuiAlunosVinculados) {
             DB::rollBack();
             $this->mensagem = 'Não foi possível alterar a turma para ser multisseriada, pois a série original possui matrículas vinculadas.';
+
             return false;
         }
 
         try {
-             if ($this->multiseriada) {
+            if ($this->multiseriada) {
                 $service->storeSchoolClassGrade($schoolClass, $schoolClassGrades);
             }
 

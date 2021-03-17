@@ -252,7 +252,7 @@ function valida() {
   }
 }
 
-function valida_xml(xml) {
+function valida_xml(xml, submitForm = true) {
   var DOM_turma_sala = new Array();
 
   if (xml != null) {
@@ -422,4 +422,25 @@ function disableInputsDisciplinas() {
   $j('#disciplinas').find('.check-disciplina').each(function () {
     $j(this).trigger('change');
   });
+}
+
+function doAjax() {
+  console.log($j('#multiseriada').is(':checked'));
+  const settings = {
+    url: "/turma",
+    data: $j("#formcadastro").serialize(),
+    cache: false,
+    type: 'POST',
+    dataType: 'json',
+    beforeSend: function () {
+      console.log('loading');
+    },
+    success: function (data) {
+      console.log(data);
+    },
+    error: function (data){
+      console.log(data);
+    },
+  };
+  $j.ajax(settings);
 }
