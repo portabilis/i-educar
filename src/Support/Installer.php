@@ -36,6 +36,7 @@ class Installer
     protected $commandsMap = [
         'key' => 'key:generate',
         'link' => 'legacy:link',
+        'reports-link' => 'community:reports:link',
         'migrate' => 'migrate --force',
         'password' => 'admin:password',
         'reports' => 'reports:install --no-compile',
