@@ -1,9 +1,7 @@
 <?php
 
-use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassGrade;
 use App\Services\iDiarioService;
-use App\Services\SchoolClass\MultiGradesService;
 
 return new class extends clsCadastro {
     public $pessoa_logada;
@@ -539,7 +537,7 @@ return new class extends clsCadastro {
             $this->copiarComponenteCurricularTurma($turmaOrigem['cod_turma'], $turmaDestinoId);
             $this->copiarModulosTurma($turmaOrigem['cod_turma'], $turmaDestinoId, $anoOrigem, $anoDestino);
 
-            if ((int) $turmaOrigem['multiseriada'] === 1) {
+            if ($turmaOrigem['multiseriada'] === 1) {
                 $this->criarTurmaMultisseriada($turmaOrigem, $turmaDestinoId);
             }
         }
@@ -550,24 +548,20 @@ return new class extends clsCadastro {
         /** @var LegacySchoolClassGrade[] $turmasSeries */
         $turmasSeries = LegacySchoolClassGrade::query()
             ->where('escola_id', $turmaOrigem['ref_ref_cod_escola'])
-            ->where('turma)id', $turmaOrigem['cod_turma'])
+            ->where('turma_id', $turmaOrigem['cod_turma'])
+            ->get()
         ;
 
         foreach ($turmasSeries as $turmaSerie) {
-            $schoolClassGrade[] = [
-                'escola_id' => $turmaOrigem['ref_ref_cod_escola'],
-                'serie_id' => $turmaSerie->serie_id,
-                'turma_id' => $turmaDestinoId,
-                'boletim_id' => $turmaSerie->boletim_id,
-                'boletim_diferenciado_id' => $turmaSerie->boletim_diferenciado_id,
-            ];
+            $newTurmaSerie = new LegacySchoolClassGrade();
 
-            /** @var LegacySchoolClass $schoolClass */
-            $schoolClass = LegacySchoolClass::query()->find($turmaDestinoId);
+            $newTurmaSerie->escola_id = $turmaOrigem['ref_ref_cod_escola'];
+            $newTurmaSerie->serie_id = $turmaSerie->serie_id;
+            $newTurmaSerie->turma_id = $turmaDestinoId;
+            $newTurmaSerie->boletim_id = $turmaSerie->boletim_id;
+            $newTurmaSerie->boletim_diferenciado_id = $turmaSerie->boletim_diferenciado_id;
 
-            $service = new MultiGradesService();
-
-            $service->storeSchoolClassGrade($schoolClass, $schoolClassGrade);
+            $newTurmaSerie->save();
         }
     }
 
