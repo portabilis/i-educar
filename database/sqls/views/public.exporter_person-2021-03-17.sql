@@ -23,9 +23,10 @@ AS SELECT p.idpes AS id,
         when 3 then 'Estrangeira'::varchar
     else ''::varchar
 end as nationality,
-    ci."name" as birthplace
+    ci."name"||' - '||st.abbreviation as birthplace
    FROM cadastro.pessoa p
      JOIN cadastro.fisica f ON f.idpes = p.idpes
      LEFT JOIN cadastro.documento d ON d.idpes = p.idpes
      LEFT JOIN public.cities ci ON ci.id = f.idmun_nascimento
+     LEFT JOIN public.states st on ci.state_id = st.id
   WHERE true AND f.ativo = 1;
