@@ -70,6 +70,7 @@ class ComponenteCurricularController extends ApiCoreController
                         AND cct.turma_id = turma.cod_turma
                         AND cct.componente_curricular_id = cc.id
                         AND al.ano = $2
+                        AND turma.multiseriada != 1
                         AND turma.ref_ref_cod_escola = al.ref_cod_escola
                         AND cc.area_conhecimento_id = ac.id
                         AND (turma.ref_cod_disciplina_dispensada <> cc.id OR turma.ref_cod_disciplina_dispensada is null)
