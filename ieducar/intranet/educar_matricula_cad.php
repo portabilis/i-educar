@@ -968,13 +968,12 @@ return new class extends clsCadastro {
 
                     $registration = LegacyRegistration::find($this->cod_matricula);
 
+                    $mensagem = '';
+
                     try {
                         event(new RegistrationEvent($registration));
                     } catch (TransferException $exception) {
-                        $this->mensagem = 'Não foi possível copiar os dados da matrícula antiga. ' . $exception->getMessage();
-
-                        DB::rollBack();
-                        $this->simpleRedirect('educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
+                        $mensagem = 'Não foi possível copiar os dados da matrícula antiga. ' . $exception->getMessage();
                     } catch (RegistrationException $exception) {
                         $this->mensagem = 'Não é possível concluir a matrícula. ' . $exception->getMessage();
 
@@ -986,7 +985,7 @@ return new class extends clsCadastro {
                     $promocao->fakeRequest();
                 }
 
-                $this->mensagem = 'Cadastro efetuado com sucesso.<br />';
+                $this->mensagem = 'Cadastro efetuado com sucesso.<br />' . $mensagem;
 
                 DB::commit();
                 $this->simpleRedirect('educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
