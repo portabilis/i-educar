@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Hash;
+
 return new class extends clsCadastro {
     public $nome;
 
@@ -232,8 +234,10 @@ return new class extends clsCadastro {
         $funcionario->atualizou_cadastro = 1;
         $funcionario->email = $this->email;
 
-        if ($this->senha_old != $this->senha) {
-            $funcionario->senha = md5($this->senha);
+        $senha_old = urldecode($this->senha_old);
+
+        if ($senha_old != $this->senha) {
+            $funcionario->senha = Hash::make($this->senha);
         }
 
         $funcionario->edita();
