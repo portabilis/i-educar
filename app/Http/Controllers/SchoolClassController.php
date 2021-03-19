@@ -29,10 +29,10 @@ class SchoolClassController extends Controller
             $schoolClass = $schoolClassService->storeSchoolClass($schoolClassToStore);
 
             $codTurma = $schoolClass->cod_turma;
-            $codEscola = $request->get('codEscola');
-            $codSerie = $request->get('codSerie');
+            $codEscola = $schoolClass->ref_ref_cod_escola;
+            $codSerie = $schoolClass->ref_ref_cod_serie;
 
-            $disciplinas = $request->get('disciplinas_');
+            $disciplinas = $request->get('disciplinas');
             $cargaHoraria = $request->get('carga_horaria');
             $usarComponente = $request->get('usar_componente');
             $docenteVinculado = $request->get('docente_vinculado');
@@ -67,11 +67,14 @@ class SchoolClassController extends Controller
                 );
             }
 
-            $schoolClassInepService->store(
-                (
-                    new SchoolClassInep(['cod_turma' => $codTurma, 'cod_turma_inep' => $codigoInepEducacenso])
-                )
-            );
+            if ($codigoInepEducacenso) {
+                $schoolClassInepService->store((new SchoolClassInep(
+                    [
+                        'cod_turma' => $codTurma,
+                        'cod_turma_inep' => $codigoInepEducacenso
+                    ]
+                )));
+            }
             DB::commit();
         } catch (ValidationException $ex) {
             DB::rollBack();
@@ -92,9 +95,13 @@ class SchoolClassController extends Controller
     private function prepareSchoolClassDataToStore(Request $request)
     {
         $params = $request->all();
-        $legacySchoolClass = new LegacySchoolClass(['cod_turma' => $params['cod_turma']]);
+        $legacySchoolClass = new LegacySchoolClass();
+        if (!empty($params['cod_turma'])) {
+            $legacySchoolClass = LegacySchoolClass::find($params['cod_turma']);
+        }
         $pessoaLogada = $request->user()->id;
 
+        $arrLegacySchoolClass = $legacySchoolClass->toArray();
         if (isset($params['dias_semana'])) {
             $params['dias_semana'] = '{' . implode(',', $params['dias_semana']) . '}';
         } else {
@@ -130,6 +137,9 @@ class SchoolClassController extends Controller
             $params['ref_usuario_cad'] = $pessoaLogada;
             $params['data_cadastro'] = now();
             $params['ref_usuario_exc'] = null;
+            $params['ref_ref_cod_serie'] = $params['ref_cod_serie'];
+            $params['ref_ref_cod_escola'] = $params['ref_cod_escola'];
+            $params['ano'] = $params['ano_letivo'];
         } else {
             $params['ref_usuario_exc'] = $pessoaLogada;
         }
@@ -145,13 +155,6 @@ class SchoolClassController extends Controller
         } else {
             $params['multiseriada'] = 0;
         }
-
-        $params['ref_ref_cod_serie'] = $params['ref_cod_serie'];
-        $params['ref_ref_cod_escola'] = $params['ref_cod_escola'];
-        $params['ano'] = $params['ano_letivo'];
-        unset($params['ref_cod_serie']);
-        unset($params['ref_cod_escola']);
-        unset($params['ano_letivo']);
 
         $params['ativo'] = 1;
 
@@ -169,34 +172,36 @@ class SchoolClassController extends Controller
         $usarComponente,
         $docente
     ) {
-        $mapper = new ComponenteCurricular_Model_TurmaDataMapper();
+        if ($componentes) {
+            $mapper = new ComponenteCurricular_Model_TurmaDataMapper();
 
-        $componentesTurma = [];
+            $componentesTurma = [];
 
-        foreach ($componentes as $key => $value) {
-            $carga = isset($usarComponente[$key]) ?
-                null : $cargaHoraria[$key];
+            foreach ($componentes as $key => $value) {
+                $carga = isset($usarComponente[$key]) ?
+                    null : $cargaHoraria[$key];
 
-            $docente_ = isset($docente[$key]) ?
-                1 : 0;
+                $docente_ = isset($docente[$key]) ?
+                    1 : 0;
 
-            $etapasEspecificas = isset($this->etapas_especificas[$key]) ?
-                1 : 0;
+                $etapasEspecificas = isset($this->etapas_especificas[$key]) ?
+                    1 : 0;
 
-            $etapasUtilizadas = ($etapasEspecificas == 1) ? $this->etapas_utilizadas[$key] : null;
+                $etapasUtilizadas = ($etapasEspecificas == 1) ? $this->etapas_utilizadas[$key] : null;
 
-            $componentesTurma[] = [
-                'id' => $value,
-                'cargaHoraria' => $carga,
-                'docenteVinculado' => $docente_,
-                'etapasEspecificas' => $etapasEspecificas,
-                'etapasUtilizadas' => $etapasUtilizadas
-            ];
+                $componentesTurma[] = [
+                    'id' => $value,
+                    'cargaHoraria' => $carga,
+                    'docenteVinculado' => $docente_,
+                    'etapasEspecificas' => $etapasEspecificas,
+                    'etapasUtilizadas' => $etapasUtilizadas
+                ];
+            }
+
+            $idiarioService = $this->getIdiarioService();
+
+            $mapper->bulkUpdate($codSerie, $codEscola, $codTurma, $componentesTurma, $idiarioService);
         }
-
-        $idiarioService = $this->getIdiarioService();
-
-        $mapper->bulkUpdate($codSerie, $codEscola, $codTurma, $componentesTurma, $idiarioService);
     }
 
     /**

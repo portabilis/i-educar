@@ -259,8 +259,7 @@ return new class extends clsCadastro {
         $this->inputsHelper()->dynamic('instituicao', ['value' => $this->ref_cod_instituicao, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('escola', ['value' => $this->ref_cod_escola, 'disabled' => $desabilitado]);
 
-        $multiseriada = isset($this->multiseriada) ? 1 : 0;
-        $this->campoCheck('multiseriada', 'Multisseriada', $multiseriada);
+        $this->campoCheck('multiseriada', 'Multisseriada', $this->multiseriada);
 
         $opcoesCursos = [
             null => 'Selecione um curso',
@@ -587,7 +586,7 @@ return new class extends clsCadastro {
         $this->campoOculto('padrao_ano_escolar', $this->padrao_ano_escolar);
 
         $this->acao_enviar = 'valida()';
-            $this->acao_executa_submit = false;
+        $this->acao_executa_submit = false;
         $this->acao_executa_submit_ajax = true;
 
         $this->inputsHelper()->integer('codigo_inep_educacenso', ['label' => 'Código INEP',
@@ -912,7 +911,7 @@ return new class extends clsCadastro {
                 ];
             }
 
-            $service = new MultiGradesService;
+            $service = new MultiGradesService();
 
             try {
                 $service->storeSchoolClassGrade($schoolClass, $schoolClassGrades);
