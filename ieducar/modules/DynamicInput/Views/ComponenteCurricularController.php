@@ -39,6 +39,7 @@ class ComponenteCurricularController extends ApiCoreController
         if ($this->canGetComponentesCurriculares()) {
             $userId = \Illuminate\Support\Facades\Auth::id();
             $instituicaoId = $this->getRequest()->instituicao_id;
+            $serieId = $this->getRequest()->serie_id;
             $turmaId = $this->getRequest()->turma_id;
             $ano = $this->getRequest()->ano;
             $etapa = $this->getRequest()->etapa;
@@ -102,7 +103,7 @@ class ComponenteCurricularController extends ApiCoreController
                         INNER JOIN modules.area_conhecimento ac on (cc.area_conhecimento_id = ac.id)
                         INNER JOIN pmieducar.escola_ano_letivo al on (esd.ref_ref_cod_escola = al.ref_cod_escola)
                         WHERE t.cod_turma = $1
-                            AND esd.ref_ref_cod_serie = t.ref_ref_cod_serie
+                            AND esd.ref_ref_cod_serie = $4
                             AND al.ano = $2
                             AND t.ativo = 1
                             AND esd.ativo = 1
@@ -123,7 +124,7 @@ class ComponenteCurricularController extends ApiCoreController
                             cc.nome
                     ';
 
-                    $componentesCurriculares = $this->fetchPreparedQuery($sql, [$turmaId, $ano, $etapa]);
+                    $componentesCurriculares = $this->fetchPreparedQuery($sql, [$turmaId, $ano, $etapa, $serieId]);
                 }
             }
 
