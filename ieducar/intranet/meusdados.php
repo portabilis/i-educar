@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Hash;
+
 return new class extends clsCadastro {
     public $nome;
 
@@ -33,10 +35,6 @@ return new class extends clsCadastro {
 
     public $file_delete;
 
-    public $caminho_det;
-
-    public $caminho_lst;
-
     public function Inicializar()
     {
         $retorno = 'Novo';
@@ -46,14 +44,11 @@ return new class extends clsCadastro {
 
         if ($pessoaFisica) {
             $this->nome = $pessoaFisica['nome'];
-
-            if ($pessoaFisica) {
-                $this->ddd_telefone = $pessoaFisica['ddd_1'];
-                $this->telefone = $pessoaFisica['fone_1'];
-                $this->ddd_celular = $pessoaFisica['ddd_mov'];
-                $this->celular = $pessoaFisica['fone_mov'];
-                $this->sexo = $pessoaFisica['sexo'];
-            }
+            $this->ddd_telefone = $pessoaFisica['ddd_1'];
+            $this->telefone = $pessoaFisica['fone_1'];
+            $this->ddd_celular = $pessoaFisica['ddd_mov'];
+            $this->celular = $pessoaFisica['fone_mov'];
+            $this->sexo = $pessoaFisica['sexo'];
 
             $funcionario = new clsPortalFuncionario($this->pessoa_logada);
             $funcionario = $funcionario->detalhe();
@@ -92,12 +87,10 @@ return new class extends clsCadastro {
             if (count($detalheFoto)) {
                 $foto = $detalheFoto['caminho'];
             }
-        } else {
-            $foto = false;
         }
 
         if ($foto) {
-            $this->campoRotulo('fotoAtual_', 'Foto atual', '<img height="117" src="' .$foto. '"/>');
+            $this->campoRotulo('fotoAtual_', 'Foto atual', '<img height="117" src="' . $foto . '"/>');
             $this->inputsHelper()->checkbox('file_delete', ['label' => 'Excluir a foto']);
             $this->campoArquivo('file', 'Trocar foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho m&aacute;ximo: 150KB</span>');
         } else {
@@ -241,8 +234,10 @@ return new class extends clsCadastro {
         $funcionario->atualizou_cadastro = 1;
         $funcionario->email = $this->email;
 
-        if ($this->senha_old != $this->senha) {
-            $funcionario->senha = md5($this->senha);
+        $senha_old = urldecode($this->senha_old);
+
+        if ($senha_old != $this->senha) {
+            $funcionario->senha = Hash::make($this->senha);
         }
 
         $funcionario->edita();
@@ -313,8 +308,6 @@ return new class extends clsCadastro {
 
                 return false;
             }
-
-            return false;
         } else {
             $this->objPhoto = null;
 
