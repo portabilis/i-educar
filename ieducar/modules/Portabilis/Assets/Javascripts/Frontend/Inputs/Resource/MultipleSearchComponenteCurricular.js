@@ -19,7 +19,8 @@
           serie_id : $serieField.val(),
           turma_id : $turmaField.val(),
           ano : $anoField.val(),
-          instituicao_id: $instituicaoField.val()
+          instituicao_id: $instituicaoField.val(),
+          allDisciplinesMulti : allDisciplinesMulti,
         });
 
         var options = {
@@ -49,6 +50,7 @@
         turma_id  : $turmaField.val(),
         ano: $anoField.val(),
         instituicao_id: $instituicaoField.val(),
+        allDisciplinesMulti : allDisciplinesMulti,
         area_conhecimento_id: areaConhecimento
       });
  
