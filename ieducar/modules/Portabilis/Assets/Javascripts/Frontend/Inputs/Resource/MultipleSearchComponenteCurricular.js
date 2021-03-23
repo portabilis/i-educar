@@ -1,5 +1,6 @@
 (function($){
   $(document).ready(function(){
+    var $serieField = $('#ref_cod_serie');
     var $turmaField = $('#ref_cod_turma');
     var $anoField  = $('#ano');
     var $componenteCurricularField = $('#componentecurricular');
@@ -15,6 +16,7 @@
       if ($turmaField.val()) {
 
         var urlForGetComponenteCurricular = getResourceUrlBuilder.buildUrl('/module/Api/ComponenteCurricular', 'componentes-curriculares-for-multiple-search', {
+          serie_id : $serieField.val(),
           turma_id : $turmaField.val(),
           ano : $anoField.val(),
           instituicao_id: $instituicaoField.val()
@@ -43,6 +45,7 @@
         return false;
       }
       urlForGetAreaConhecimento = getResourceUrlBuilder.buildUrl('/module/Api/ComponenteCurricular', 'componentes-curriculares-for-multiple-search', {
+        serie_id  : $serieField.val(),
         turma_id  : $turmaField.val(),
         ano: $anoField.val(),
         instituicao_id: $instituicaoField.val(),

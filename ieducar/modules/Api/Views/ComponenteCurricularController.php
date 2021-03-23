@@ -152,9 +152,10 @@ class ComponenteCurricularController extends ApiCoreController
     protected function getComponentesCurricularesForMultipleSearch()
     {
         if ($this->canGetComponentesCurriculares()) {
-            $turmaId       = $this->getRequest()->turma_id;
-            $ano           = $this->getRequest()->ano;
-            $areaConhecimentoId           = $this->getRequest()->area_conhecimento_id;
+            $serieId = $this->getRequest()->serie_id;
+            $turmaId = $this->getRequest()->turma_id;
+            $ano = $this->getRequest()->ano;
+            $areaConhecimentoId = $this->getRequest()->area_conhecimento_id;
 
             $sql = 'SELECT cc.id,
                        cc.nome
@@ -182,10 +183,10 @@ class ComponenteCurricularController extends ApiCoreController
 
             if (count($componentesCurriculares) < 1) {
                 $sql = 'SELECT cc.id,
-                       cc.nome
+                       cc.nome  
                   FROM pmieducar.turma AS t
                 INNER JOIN pmieducar.escola_serie_disciplina esd ON (esd.ref_ref_cod_escola = t.ref_ref_cod_escola
-                                                                 AND esd.ref_ref_cod_serie = t.ref_ref_cod_serie
+                                                                 AND esd.ref_ref_cod_serie = coalesce($3, t.ref_ref_cod_serie)
                                                                  AND esd.ativo = 1)
                 INNER JOIN modules.componente_curricular cc ON (cc.id = esd.ref_cod_disciplina)
                 INNER JOIN modules.area_conhecimento ac ON (ac.id = cc.area_conhecimento_id)
@@ -198,7 +199,7 @@ class ComponenteCurricularController extends ApiCoreController
                   AND cc.id <> COALESCE(t.ref_cod_disciplina_dispensada,0)
                   ';
 
-                $params = [$turmaId, $ano];
+                $params = [$turmaId, $ano, $serieId];
 
                 if ($areaConhecimentoId) {
                     $sql .= " AND area_conhecimento_id IN ({$areaConhecimentoId}) ";
