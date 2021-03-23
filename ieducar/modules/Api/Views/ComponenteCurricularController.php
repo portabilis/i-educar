@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\MigratedDiscipline;
+use Illuminate\Support\Facades\DB;
 
 class ComponenteCurricularController extends ApiCoreController
 {
@@ -156,6 +157,15 @@ class ComponenteCurricularController extends ApiCoreController
             $turmaId = $this->getRequest()->turma_id;
             $ano = $this->getRequest()->ano;
             $areaConhecimentoId = $this->getRequest()->area_conhecimento_id;
+            $allDisciplinesMulti = $this->getRequest()->allDisciplinesMulti;
+
+            if ($allDisciplinesMulti) {
+                $componentes = $this->getComponentesTurmaMulti($turmaId, $areaConhecimentoId);
+            }
+
+            if (count($componentes) > 0) {
+                return ['options' => $componentes];
+            }
 
             $sql = 'SELECT cc.id,
                        cc.nome
@@ -216,6 +226,33 @@ class ComponenteCurricularController extends ApiCoreController
 
             return ['options' => $componentesCurriculares];
         }
+    }
+
+    private function getComponentesTurmaMulti($turmaId, $areaConhecimentoId) {
+        $query = DB::table('pmieducar.turma as t')
+        ->select('cc.id', 'cc.nome')
+        ->join('pmieducar.turma_serie as ts', 'ts.turma_id', '=', 't.cod_turma')
+        ->join('pmieducar.escola_serie as es', function($join) {
+            $join->on('es.ref_cod_serie', '=', 'ts.serie_id');
+            $join->on('es.ref_cod_escola', '=', 't.ref_ref_cod_escola');
+        })
+        ->join('pmieducar.escola_serie_disciplina as esd', function($join) {
+            $join->on('esd.ref_ref_cod_serie', '=', 'es.ref_cod_serie');
+            $join->on('esd.ref_ref_cod_escola', '=', 'es.ref_cod_escola');
+        })
+        ->join('modules.componente_curricular as cc', 'cc.id', '=', 'esd.ref_cod_disciplina')
+        ->where('t.cod_turma', $turmaId)
+        ->whereRaw('t.ano = ANY(esd.anos_letivos)')
+        ->where('t.multiseriada', 1);
+
+        if ($areaConhecimentoId) {
+            $query->where('cc.area_conhecimento_id', $areaConhecimentoId);
+        }
+
+        return $query->distinct()
+            ->get()
+            ->pluck('nome', 'id')
+            ->toArray();
     }
 
     public function Gerar()
