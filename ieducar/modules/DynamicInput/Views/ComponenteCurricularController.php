@@ -139,6 +139,7 @@ class ComponenteCurricularController extends ApiCoreController
         if ($this->canGetComponentesCurriculares()) {
             $userId = \Illuminate\Support\Facades\Auth::id();
             $instituicaoId = $this->getRequest()->instituicao_id;
+            $serieId = $this->getRequest()->serie_id;
             $turmaId = $this->getRequest()->turma_id;
             $ano = $this->getRequest()->ano;
 
@@ -192,7 +193,7 @@ class ComponenteCurricularController extends ApiCoreController
                             pmieducar.escola_ano_letivo as al
                         WHERE t.cod_turma = $1
                             AND esd.ref_ref_cod_escola = t.ref_ref_cod_escola
-                            AND esd.ref_ref_cod_serie = t.ref_ref_cod_serie
+                            AND esd.ref_ref_cod_serie = coalesce($3, t.ref_ref_cod_serie)
                             AND esd.ref_cod_disciplina = cc.id
                             AND al.ano = $2
                             AND esd.ref_ref_cod_escola = al.ref_cod_escola
@@ -208,7 +209,7 @@ class ComponenteCurricularController extends ApiCoreController
                             cc.nome
                     ';
 
-                    $componentesCurriculares = $this->fetchPreparedQuery($sql, [$turmaId, $ano]);
+                    $componentesCurriculares = $this->fetchPreparedQuery($sql, [$turmaId, $ano, $serieId]);
                 }
             }
 
