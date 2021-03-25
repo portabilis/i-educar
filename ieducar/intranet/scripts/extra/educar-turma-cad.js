@@ -424,8 +424,17 @@ function disableInputsDisciplinas() {
   });
 }
 
+$j("#multiseriada").on('change', function () {
+  let checked = $j(this).is(':checked') ? 1 : 0;
+  $j(this).val(checked);
+});
+
+// function excluir() {
+//   console.log('aqui');
+// }
+
 function doAjax() {
-  console.log($j('#multiseriada').is(':checked'));
+
   const settings = {
     url: "/turma",
     data: $j("#formcadastro").serialize(),
@@ -433,14 +442,18 @@ function doAjax() {
     type: 'POST',
     dataType: 'json',
     beforeSend: function () {
-      console.log('loading');
-    },
-    success: function (data) {
-      console.log(data);
-    },
-    error: function (data){
-      console.log(data);
-    },
+      buttonUtils.loading('btn_enviar');
+    }
   };
-  $j.ajax(settings);
+  $j.ajax(settings)
+    .done(function (){
+      windowUtils.redirect('educar_turma_lst.php');
+    })
+    .fail(function ({responseText}) {
+      let jsonResponse = JSON.parse(responseText);
+      messageUtils.error(jsonResponse.msg);
+    })
+    .always(function (){
+      buttonUtils.reset('btn_enviar', 'Salvar');
+  });
 }

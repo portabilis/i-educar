@@ -17,11 +17,12 @@ class ExistsPeriod implements Rule
      */
     public function passes($attribute, $value)
     {
-        $dataInicio = $value->data_inicio;
-        $possuiModulosInformados = (count($dataInicio) > 1 || $dataInicio[0] != '');
+        if (!$value->course->is_standard_calendar) {
+            $stage = $value->stages()->first();
 
-        if (!$possuiModulosInformados) {
-            return false;
+            if (!isset($stage->data_inicio)) {
+                return false;
+            }
         }
 
         return true;

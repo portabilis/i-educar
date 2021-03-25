@@ -259,7 +259,8 @@ return new class extends clsCadastro {
         $this->inputsHelper()->dynamic('instituicao', ['value' => $this->ref_cod_instituicao, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('escola', ['value' => $this->ref_cod_escola, 'disabled' => $desabilitado]);
 
-        $this->campoCheck('multiseriada', 'Multisseriada', $this->multiseriada);
+        $multiseriada = isset($this->multiseriada) ? 1 : 0;
+        $this->campoCheck('multiseriada', 'Multisseriada', $multiseriada);
 
         $opcoesCursos = [
             null => 'Selecione um curso',
@@ -911,7 +912,7 @@ return new class extends clsCadastro {
                 ];
             }
 
-            $service = new MultiGradesService();
+            $service = new MultiGradesService;
 
             try {
                 $service->storeSchoolClassGrade($schoolClass, $schoolClassGrades);
@@ -1147,9 +1148,9 @@ return new class extends clsCadastro {
     protected function validaCampoTipoAtendimento()
     {
         if ($this->tipo_atendimento != 0 && in_array($this->tipo_mediacao_didatico_pedagogico, [
-            App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL,
-            App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA
-        ])) {
+                App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL,
+                App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA
+            ])) {
             $this->mensagem = 'O campo: Tipo de atendimento deve ser: Escolarização quando o campo: Tipo de mediação didático-pedagógica for: Semipresencial ou Educação a Distância.';
 
             return false;

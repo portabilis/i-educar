@@ -17,9 +17,9 @@ class CheckAlternativeReportCardExists implements Rule
      */
     public function passes($attribute, $value)
     {
-        $levelId = $value['ref_cod_serie'];
-        $academicYear = $value['ano_letivo'];
-        $alternativeReportCard = $value['tipo_boletim_diferenciado'];
+        $levelId = $value->ref_ref_cod_serie;
+        $academicYear = $value->ano;
+        $alternativeReportCard = $value->tipo_boletim_diferenciado;
 
         if ($alternativeReportCard) {
             return true;

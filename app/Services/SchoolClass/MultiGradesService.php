@@ -2,12 +2,12 @@
 
 namespace App\Services\SchoolClass;
 
-use App\Models\LegacySchoolClassGrade;
 use App\Models\LegacySchoolClass;
+use App\Models\LegacySchoolClassGrade;
 use App\Rules\DuplicateMultiGrades;
+use App\Rules\ExistsEnrollmentsInSchoolClassGrades;
 use App\Rules\IncompatibleAbsenceType;
 use App\Rules\IncompatibleDescriptiveOpinion;
-use App\Rules\ExistsEnrollmentsInSchoolClassGrades;
 
 class MultiGradesService
 {
@@ -32,7 +32,7 @@ class MultiGradesService
                 new ExistsEnrollmentsInSchoolClassGrades(),
             ],
         ], [
-            'grades.min' => 'Você deve selecionar pelo menos 2 séries em turmas multisseriadas',
+            'grades.min' => 'Você deve selecionar pelo menos 2 séries em turmas multisseriadas.',
         ])->validate();
     }
 
@@ -57,7 +57,8 @@ class MultiGradesService
         $this->saveSchoolClassGrade($schoolClass, $schoolClassGrades);
     }
 
-    public function deleteAllGradesOfSchoolClass(LegacySchoolClass $schoolClass, $excludeGrades) {
+    public function deleteAllGradesOfSchoolClass(LegacySchoolClass $schoolClass, $excludeGrades)
+    {
         $query = LegacySchoolClassGrade::query()
             ->where('turma_id', $schoolClass->getKey());
 
@@ -102,7 +103,7 @@ class MultiGradesService
             ->get()
             ->pluck('serie_id')
             ->toArray();
-        
+
         return array_diff($oldGrades, $newGrades);
     }
 }

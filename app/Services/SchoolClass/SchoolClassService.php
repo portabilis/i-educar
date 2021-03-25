@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\SchoolClass;
 
 use App\Models\LegacyLevel;
 use App\Models\LegacySchoolClass;
@@ -27,15 +27,15 @@ class SchoolClassService
      * @param int      $academicYear Ano letivo
      * @param int|null $idToIgnore   ID da turma que deve ser ignorado (opcional)
      *
-     * @deprecated
-     * @see CheckSchoolClassExistsByName
-     *
      * @return bool
+     *
+     * @see CheckSchoolClassExistsByName
+     * @deprecated
      */
     public function isAvailableName($name, $course, $level, $school, $academicYear, $idToIgnore = null)
     {
         $query = LegacySchoolClass::query()
-            ->where('nm_turma', (string) $name)
+            ->where('nm_turma', (string)$name)
             ->where('ref_ref_cod_serie', $level)
             ->where('ref_cod_curso', $course)
             ->where('ref_ref_cod_escola', $school)
@@ -59,10 +59,10 @@ class SchoolClassService
      * @param int $levelId
      * @param int $academicYear
      *
-     * @deprecated
-     * @see CheckAlternativeReportCardExists
-     *
      * @return bool
+     *
+     * @see CheckAlternativeReportCardExists
+     * @deprecated
      */
     public function isRequiredAlternativeReportCard($levelId, $academicYear): bool
     {
@@ -121,13 +121,14 @@ class SchoolClassService
     private function validate(LegacySchoolClass $schoolClass)
     {
         validator(
-            [$schoolClass],
+            ['schoolClass' => $schoolClass],
             [
-                new CanCreateTurma(),
-                new ExistsPeriod(),
-                new CheckMandatoryCensoFields(),
-                new CheckSchoolClassExistsByName(),
-                new CheckAlternativeReportCardExists()
+                'schoolClass' => [
+                    new CanCreateTurma(),
+                    new CheckMandatoryCensoFields(),
+                    new CheckSchoolClassExistsByName(),
+                    new CheckAlternativeReportCardExists()
+                ]
             ]
         )->validate();
     }

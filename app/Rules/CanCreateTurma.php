@@ -21,7 +21,7 @@ class CanCreateTurma implements Rule
         $escolaId = $value->ref_ref_cod_escola;
         $serieId = $value->ref_ref_cod_serie;
         $turnoId = $value->turma_turno_id;
-        $anoLetivo = $value->ano_letivo;
+        $anoLetivo = $value->ano;
 
         $schoolGrade = LegacySchoolGrade::query()
             ->where('ref_cod_escola', $escolaId)

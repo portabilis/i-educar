@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\LegacySchoolClass;
-use App\Models\SchoolClassInep;
 use App\Services\iDiarioService;
 use App\Services\SchoolClass\MultiGradesService;
+use App\Services\SchoolClass\SchoolClassService;
 use App\Services\SchoolClassInepService;
-use App\Services\SchoolClassService;
+use App\Services\SchoolClassStageService;
 use ComponenteCurricular_Model_TurmaDataMapper;
 use Exception;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
@@ -17,11 +17,29 @@ use Illuminate\Validation\ValidationException;
 
 class SchoolClassController extends Controller
 {
+    public function index()
+    {
+        return [];
+    }
+
     public function store(Request $request)
     {
-        $response = ['msg' => 'Edição efetuada com sucesso.', 'redirect' => 'educar_turma_lst.php'];
+        $response = ['msg' => 'Edição efetuada com sucesso.'];
         $schoolClassService = new SchoolClassService();
         $schoolClassInepService = new SchoolClassInepService();
+        $schoolClassStageService = new SchoolClassStageService();
+
+        $codModulo = $request->get('ref_cod_modulo');
+        $diasLetivos = $request->get('dias_letivos');
+        $datasFimModulos = $request->get('data_fim');
+        $datasInicioModulos = $request->get('data_inicio');
+
+        $disciplinas = $request->get('disciplinas');
+        $cargaHoraria = $request->get('carga_horaria');
+        $usarComponente = $request->get('usar_componente');
+        $docenteVinculado = $request->get('docente_vinculado');
+        $codigoInepEducacenso = $request->get('codigo_inep_educacenso');
+
         try {
             DB::beginTransaction();
 
@@ -29,16 +47,10 @@ class SchoolClassController extends Controller
             $schoolClass = $schoolClassService->storeSchoolClass($schoolClassToStore);
 
             $codTurma = $schoolClass->cod_turma;
-            $codEscola = $schoolClass->ref_ref_cod_escola;
             $codSerie = $schoolClass->ref_ref_cod_serie;
+            $codEscola = $schoolClass->ref_ref_cod_escola;
 
-            $disciplinas = $request->get('disciplinas');
-            $cargaHoraria = $request->get('carga_horaria');
-            $usarComponente = $request->get('usar_componente');
-            $docenteVinculado = $request->get('docente_vinculado');
-            $codigoInepEducacenso = $request->get('codigo_inep_educacenso');
-
-            if ($request->has('multiseriada')) {
+            if ($schoolClass->multiseriada) {
                 $multSerieId = $request->get('mult_serie_id');
                 $multBoletimId = $request->get('mult_boletim_id');
                 $multBoletimDiferenciadoId = $request->get('mult_boletim_diferenciado_id');
@@ -68,21 +80,28 @@ class SchoolClassController extends Controller
             }
 
             if ($codigoInepEducacenso) {
-                $schoolClassInepService->store((new SchoolClassInep(
-                    [
-                        'cod_turma' => $codTurma,
-                        'cod_turma_inep' => $codigoInepEducacenso
-                    ]
-                )));
+                $schoolClassInepService->store($codTurma, $codigoInepEducacenso);
+            } else {
+                $schoolClassInepService->delete($codTurma);
             }
+
+            $schoolClassStageService->store(
+                $schoolClass,
+                $datasInicioModulos,
+                $datasFimModulos,
+                $diasLetivos,
+                $codModulo
+            );
+
             DB::commit();
         } catch (ValidationException $ex) {
             DB::rollBack();
 
-            return response()->json(['msg' => $ex->validator->errors()->first()], 500);
+            return response()->json(['msg' => $ex->validator->errors()->first()], 422);
         } catch (Exception $ex) {
             return response()->json(['msg' => $ex->getMessage()], 500);
         }
+        session()->flash('success', 'Edição efetuada com sucesso.');
 
         return response()->json($response);
     }
@@ -101,7 +120,6 @@ class SchoolClassController extends Controller
         }
         $pessoaLogada = $request->user()->id;
 
-        $arrLegacySchoolClass = $legacySchoolClass->toArray();
         if (isset($params['dias_semana'])) {
             $params['dias_semana'] = '{' . implode(',', $params['dias_semana']) . '}';
         } else {
@@ -148,12 +166,6 @@ class SchoolClassController extends Controller
             $params['nao_informar_educacenso'] = 1;
         } else {
             $params['nao_informar_educacenso'] = 0;
-        }
-
-        if (isset($params['multiseriada'])) {
-            $params['multiseriada'] = 1;
-        } else {
-            $params['multiseriada'] = 0;
         }
 
         $params['ativo'] = 1;

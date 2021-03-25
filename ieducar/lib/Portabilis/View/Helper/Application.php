@@ -109,11 +109,6 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract
 
     public static function embedJavascriptToFixupFieldsWidth($viewInstance)
     {
-        Portabilis_View_Helper_Application::loadJavascript(
-            $viewInstance,
-            '/modules/Portabilis/Assets/Javascripts/Utils.js'
-        );
-
         Portabilis_View_Helper_Application::embedJavascript(
             $viewInstance,
             'fixupFieldsWidth();',
