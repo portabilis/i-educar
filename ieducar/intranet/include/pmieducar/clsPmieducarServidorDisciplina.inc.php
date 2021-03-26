@@ -294,7 +294,7 @@ class clsPmieducarServidorDisciplina extends Model
             is_numeric($this->ref_cod_servidor)) {
             $where = '';
 
-            if (is_array($funcao)) {
+            if (is_array($funcao) && count($funcao)) {
                 $funcao = implode(',', $funcao);
                 $where = "AND ref_cod_funcao in ({$funcao})";
             }
