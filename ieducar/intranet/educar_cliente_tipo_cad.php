@@ -220,6 +220,11 @@ return new class extends clsCadastro {
         return file_get_contents(__DIR__ . '/scripts/extra/educar-cliente-tipo-cad.js');
     }
 
+    public function makeCss()
+    {
+        return file_get_contents(__DIR__ . '/styles/extra/educar-cliente-tipo-cad.css');
+    }
+
     public function Formular()
     {
         $this->title = 'i-Educar - Tipo Cliente';

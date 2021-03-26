@@ -16,7 +16,7 @@ class StudentLogUnification implements LogUnificationTypeInterface
      */
     public function getMainPersonName(LogUnification $logUnification)
     {
-        if ($logUnification->main) {
+        if (isset($logUnification->main->individual)) {
             return $logUnification->main->individual->real_name;
         }
 

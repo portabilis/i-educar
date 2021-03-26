@@ -62,6 +62,12 @@ class clsBase
                 $corpo .= '</script>';
             }
 
+            if (method_exists($form, 'makeCss')) {
+                $corpo .= '<style>';
+                $corpo .= $form->makeCss();
+                $corpo .= '</style>';
+            }
+
             if (method_exists($form, 'getAppendedOutput')) {
                 $corpo = $corpo . $form->getAppendedOutput();
             }

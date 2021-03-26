@@ -3,6 +3,7 @@
 use App\Models\Individual;
 use App\Models\LogUnification;
 use iEducar\Modules\Unification\PersonLogUnification;
+use Illuminate\Support\Facades\DB;
 
 return new class extends clsCadastro {
     public $pessoa_logada;
@@ -82,19 +83,21 @@ return new class extends clsCadastro {
             return false;
         }
 
+        DB::beginTransaction();
+
         $unificationId = $this->createLog($codPessoaPrincipal, $codPessoas, $this->pessoa_logada);
         $unificador = new App_Unificacao_Pessoa($codPessoaPrincipal, $codPessoas, $this->pessoa_logada, new clsBanco(), $unificationId);
 
         try {
             $unificador->unifica();
+            DB::commit();
         } catch (CoreExt_Exception $exception) {
             $this->mensagem = $exception->getMessage();
-
+            DB::rollBack();
             return false;
         }
 
         $this->mensagem = '<span>Pessoas unificadas com sucesso.</span>';
-
         return true;
     }
 

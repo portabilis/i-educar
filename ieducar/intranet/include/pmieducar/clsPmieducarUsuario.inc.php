@@ -278,6 +278,7 @@ class clsPmieducarUsuario extends Model
         $sql = 'SELECT p.nome,
                        f.matricula,
                        f.email,
+                       fi.cpf,
                        CASE
                            WHEN f.ativo = 1 THEN \'Ativo\'
                            ELSE \'Inativo\'
@@ -289,6 +290,7 @@ class clsPmieducarUsuario extends Model
             (is_numeric($int_ref_cod_escola) ? " AND ref_cod_escola = '{$int_ref_cod_escola}'" : '') . ") AS nm_escola
                   FROM {$this->_tabela} u
                   INNER JOIN cadastro.pessoa p ON (p.idpes = u.cod_usuario)
+                  LEFT JOIN cadastro.fisica fi ON (fi.idpes = p.idpes)
                   INNER JOIN portal.funcionario f ON (f.ref_cod_pessoa_fj = p.idpes)
                   INNER JOIN pmieducar.tipo_usuario tu ON (tu.cod_tipo_usuario = u.ref_cod_tipo_usuario AND tu.ativo = 1)
                   INNER JOIN pmieducar.instituicao i ON (i.cod_instituicao = u.ref_cod_instituicao)";
