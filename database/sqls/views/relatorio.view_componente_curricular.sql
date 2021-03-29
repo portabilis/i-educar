@@ -1,9 +1,9 @@
 CREATE OR REPLACE VIEW relatorio.view_componente_curricular AS
 (
     SELECT
-		cc.id,
+        cc.id,
         t.cod_turma,
-		coalesce(ts.serie_id, t.ref_ref_cod_serie) AS cod_serie,
+        coalesce(ts.serie_id, t.ref_ref_cod_serie) AS cod_serie,
         cc.nome,
         cc.abreviatura,
         cc.ordenamento,
