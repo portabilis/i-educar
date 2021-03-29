@@ -27,6 +27,6 @@ class ModificaViewComponentes extends Migration
     public function down()
     {
         $this->dropView('relatorio.view_componente_curricular');
-        $this->createView('relatorio.view_componente_curricular');
+        $this->createView('relatorio.view_componente_curricular', '2019-06-29');
     }
 }
