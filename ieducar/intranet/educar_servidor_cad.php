@@ -138,8 +138,11 @@ return new class extends clsCadastro {
 
                 if ($lst_servidor_disciplina) {
                     foreach ($lst_servidor_disciplina as $disciplina) {
-                        $this->cursos_disciplina[$disciplina['ref_cod_curso']][$disciplina['ref_cod_disciplina']] = $disciplina['ref_cod_disciplina'];
+                        $funcoes[$disciplina['ref_cod_funcao']][$disciplina['ref_cod_curso']][] = $disciplina['ref_cod_disciplina'];
                     }
+
+                    // Armazena na sessão para permitir a alteração via modal
+                    Session::put("servant:{$this->cod_servidor}", $funcoes);
                 }
 
                 if (is_string($this->pos_graduacao)) {
@@ -150,19 +153,13 @@ return new class extends clsCadastro {
                     $this->curso_formacao_continuada = explode(',', str_replace(['{', '}'], '', $this->curso_formacao_continuada));
                 }
 
-                if (Session::get('cod_servidor') == $this->cod_servidor) {
-                    Session::put('cursos_disciplina', $this->cursos_disciplina);
-                } else {
-                    Session::forget('cursos_disciplina');
-                }
-
                 $retorno = 'Editar';
             }
         }
 
         $this->url_cancelar = ($retorno == 'Editar') ?
-        "educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}" :
-        'educar_servidor_lst.php';
+            "educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}" :
+            'educar_servidor_lst.php';
 
         $this->nome_url_cancelar = 'Cancelar';
 
@@ -276,14 +273,14 @@ return new class extends clsCadastro {
             'funcao',
             'Funções Servidor',
             [
-            'Função',
-            'Componentes Curriculares',
-            'Cursos',
-            'Matrícula'],
+                'Função',
+                'Componentes Curriculares',
+                'Cursos',
+                'Matrícula'],
             ($this->ref_cod_funcao)
         );
 
-        $funcao = 'popless()';
+        $funcao = 'popless(this)';
 
         $this->campoLista('ref_cod_funcao', 'Função', $opcoes, $this->ref_cod_funcao, 'funcaoChange(this)', '', '', '');
 
@@ -343,7 +340,7 @@ return new class extends clsCadastro {
             false
         );
 
-        $this->inputsHelper()->checkbox('multi_seriado', [ 'label' => 'Multisseriado', 'value' => $this->multi_seriado]);
+        $this->inputsHelper()->checkbox('multi_seriado', ['label' => 'Multisseriado', 'value' => $this->multi_seriado]);
 
         // Dados do docente no Inep/Educacenso.
         if ($this->docente) {
@@ -386,7 +383,7 @@ return new class extends clsCadastro {
 
         $this->inputsHelper()->select('tipo_ensino_medio_cursado', $options);
 
-        $helperOptions = ['objectName'  => 'pos_graduacao'];
+        $helperOptions = ['objectName' => 'pos_graduacao'];
         $options = [
             'label' => 'Pós-Graduações concluídas',
             'required' => false,
@@ -402,7 +399,7 @@ return new class extends clsCadastro {
         ];
         $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-        $helperOptions = ['objectName'  => 'curso_formacao_continuada'];
+        $helperOptions = ['objectName' => 'curso_formacao_continuada'];
         $options = [
             'label' => 'Outros cursos de formação continuada (Mínimo de 80 horas)',
             'required' => $obrigarCamposCenso,
@@ -472,8 +469,8 @@ JS;
         $this->ref_cod_instituicao = (int) $this->ref_cod_instituicao;
 
         $timesep = explode(':', $this->carga_horaria);
-        $hour    = $timesep[0] + ((int) ($timesep[1] / 60));
-        $min     = abs(((int) ($timesep[1] / 60)) - ($timesep[1] / 60)) . '<br>';
+        $hour = $timesep[0] + ((int) ($timesep[1] / 60));
+        $min = abs(((int) ($timesep[1] / 60)) - ($timesep[1] / 60)) . '<br>';
 
         $this->carga_horaria = $hour + $min;
         $this->carga_horaria = $hour + $min;
@@ -485,7 +482,7 @@ JS;
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, 'educar_servidor_lst.php');
 
-        $obj   = new clsPmieducarServidor($this->cod_servidor, null, null, null, null, null, null, $this->ref_cod_instituicao);
+        $obj = new clsPmieducarServidor($this->cod_servidor, null, null, null, null, null, null, $this->ref_cod_instituicao);
 
         if ($obj->detalhe()) {
             $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
@@ -765,8 +762,7 @@ JS;
 
     public function cadastraFuncoes()
     {
-        $cursos_disciplina = Session::get('cursos_disciplina');
-        $cursos_servidor = Session::get('cursos_servidor');
+        $funcoes = Session::get("servant:{$this->cod_servidor}", []);
         $existe_funcao_professor = false;
 
         $listFuncoesCadastradas = [];
@@ -785,7 +781,10 @@ JS;
                 if ($obj_servidor_funcao->existe()) {
                     $this->atualizaFuncao($obj_servidor_funcao, $funcao, $this->matricula[$k]);
                 } else {
-                    $this->cadastraFuncao($funcao, $this->matricula[$k]);
+                    $cod_servidor_funcao = $this->cadastraFuncao($funcao, $this->matricula[$k]);
+
+                    $funcoes[$cod_servidor_funcao] = $funcoes['new_' . $k];
+                    unset($funcoes['new_' . $k]);
                 }
 
                 if (empty($cod_servidor_funcao)) {
@@ -796,35 +795,44 @@ JS;
                 array_push($listFuncoesCadastradas, $cod_servidor_funcao);
             }
         }
+
         $this->excluiFuncoesRemovidas($listFuncoesCadastradas);
+
         if (!$existe_funcao_professor) {
-            $this->excluiDisciplinas();
+            $this->excluiDisciplinas(array_keys($funcoes));
             $this->excluiCursos();
         }
 
-        if ($existe_funcao_professor) {
-            if ($cursos_disciplina) {
-                $this->excluiDisciplinas();
-                foreach ($cursos_disciplina as $curso => $disciplinas) {
-                    if ($disciplinas) {
-                        foreach ($disciplinas as $disciplina) {
-                            $obj_servidor_disciplina = new clsPmieducarServidorDisciplina(
-                                $disciplina,
-                                $this->ref_cod_instituicao,
-                                $this->cod_servidor,
-                                $curso
-                            );
+        $cursos_servidor = [];
 
-                            if (!$obj_servidor_disciplina->existe()) {
-                                $obj_servidor_disciplina->cadastra();
-                            }
+        if ($existe_funcao_professor) {
+            $this->excluiDisciplinas(array_keys($funcoes));
+
+            foreach ($funcoes as $funcao => $cursos) {
+                foreach ($cursos as $curso => $disciplinas) {
+                    $cursos_servidor[] = $curso;
+
+                    foreach ($disciplinas as $disciplina) {
+                        $obj_servidor_disciplina = new clsPmieducarServidorDisciplina(
+                            $disciplina,
+                            $this->ref_cod_instituicao,
+                            $this->cod_servidor,
+                            $curso,
+                            $funcao
+                        );
+
+                        if (!$obj_servidor_disciplina->existe()) {
+                            $obj_servidor_disciplina->cadastra();
                         }
                     }
                 }
+
+                $cursos_servidor = array_unique($cursos_servidor);
             }
 
             if ($cursos_servidor) {
                 $this->excluiCursos();
+
                 foreach ($cursos_servidor as $curso) {
                     $obj_curso_servidor = new clsPmieducarServidorCursoMinistra($curso, $this->ref_cod_instituicao, $this->cod_servidor);
 
@@ -859,13 +867,14 @@ JS;
     public function cadastraFuncao($funcao, $matricula)
     {
         $obj_servidor_funcao = new clsPmieducarServidorFuncao($this->ref_cod_instituicao, $this->cod_servidor, $funcao, $matricula);
-        $obj_servidor_funcao->cadastra();
+
+        return $obj_servidor_funcao->cadastra();
     }
 
-    public function excluiDisciplinas()
+    public function excluiDisciplinas($funcao)
     {
         $obj_servidor_disciplina = new clsPmieducarServidorDisciplina(null, $this->ref_cod_instituicao, $this->cod_servidor);
-        $obj_servidor_disciplina->excluirTodos();
+        $obj_servidor_disciplina->excluirTodos($funcao);
     }
 
     public function excluiCursos()
