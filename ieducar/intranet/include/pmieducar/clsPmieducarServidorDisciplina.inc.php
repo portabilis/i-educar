@@ -8,18 +8,20 @@ class clsPmieducarServidorDisciplina extends Model
     public $ref_ref_cod_instituicao;
     public $ref_cod_servidor;
     public $ref_cod_curso;
+    public $ref_cod_funcao;
 
     public function __construct(
         $ref_cod_disciplina = null,
         $ref_ref_cod_instituicao = null,
         $ref_cod_servidor = null,
-        $ref_cod_curso = null
+        $ref_cod_curso = null,
+        $ref_cod_funcao = null
     ) {
         $db = new clsBanco();
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'servidor_disciplina';
 
-        $this->_campos_lista = $this->_todos_campos = 'ref_cod_disciplina, ref_ref_cod_instituicao, ref_cod_servidor, ref_cod_curso';
+        $this->_campos_lista = $this->_todos_campos = 'ref_cod_disciplina, ref_ref_cod_instituicao, ref_cod_servidor, ref_cod_curso, ref_cod_funcao';
 
         if (is_numeric($ref_cod_servidor) && is_numeric($ref_ref_cod_instituicao)) {
             $servidor = new clsPmieducarServidor(
@@ -55,12 +57,17 @@ class clsPmieducarServidorDisciplina extends Model
                 $this->ref_cod_curso = $ref_cod_curso;
             }
         }
+
+        if (is_numeric($ref_cod_funcao)) {
+            $this->ref_cod_funcao = $ref_cod_funcao;
+        }
     }
 
     /**
      * Cria um novo registro.
      *
      * @return bool
+     * @throws Exception
      */
     public function cadastra()
     {
@@ -99,6 +106,11 @@ class clsPmieducarServidorDisciplina extends Model
                 $gruda = ', ';
             }
 
+            if (is_numeric($this->ref_cod_funcao)) {
+                $campos .= "{$gruda}ref_cod_funcao";
+                $valores .= "{$gruda}'{$this->ref_cod_funcao}'";
+            }
+
             $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
 
             return true;
@@ -111,6 +123,7 @@ class clsPmieducarServidorDisciplina extends Model
      * Edita os dados de um registro.
      *
      * @return bool
+     * @throws Exception
      */
     public function edita()
     {
@@ -136,12 +149,14 @@ class clsPmieducarServidorDisciplina extends Model
      * Retorna uma lista de registros filtrados de acordo com os parâmetros.
      *
      * @return array
+     * @throws Exception
      */
     public function lista(
         $int_ref_cod_disciplina = null,
         $int_ref_ref_cod_instituicao = null,
         $int_ref_cod_servidor = null,
-        $int_ref_cod_curso = null
+        $int_ref_cod_curso = null,
+        $int_ref_cod_funcao = null
     ) {
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = '';
@@ -165,6 +180,11 @@ class clsPmieducarServidorDisciplina extends Model
 
         if (is_numeric($int_ref_cod_curso)) {
             $filtros .= "{$whereAnd} ref_cod_curso = '{$int_ref_cod_curso}'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_ref_cod_funcao)) {
+            $filtros .= "{$whereAnd} (ref_cod_funcao = '{$int_ref_cod_funcao}' OR ref_cod_funcao is null)";
             $whereAnd = ' AND ';
         }
 
@@ -202,6 +222,7 @@ class clsPmieducarServidorDisciplina extends Model
      * Retorna um array com os dados de um registro.
      *
      * @return array
+     * @throws Exception
      */
     public function detalhe()
     {
@@ -224,6 +245,7 @@ class clsPmieducarServidorDisciplina extends Model
      * Retorna um array com os dados de um registro.
      *
      * @return array
+     * @throws Exception
      */
     public function existe()
     {
@@ -262,14 +284,22 @@ class clsPmieducarServidorDisciplina extends Model
     /**
      * Exclui todos os registros de disciplinas de um servidor.
      *
+     * @param null $funcao
      * @return bool
+     * @throws Exception
      */
-    public function excluirTodos()
+    public function excluirTodos($funcao = null)
     {
         if (is_numeric($this->ref_ref_cod_instituicao) &&
             is_numeric($this->ref_cod_servidor)) {
+            $where = '';
+
+            if (is_array($funcao) && count($funcao)) {
+                $funcao = implode(',', $funcao);
+                $where = "AND ref_cod_funcao in ({$funcao})";
+            }
             $db = new clsBanco();
-            $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_ref_cod_instituicao = '{$this->ref_ref_cod_instituicao}' AND ref_cod_servidor = '{$this->ref_cod_servidor}'");
+            $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_ref_cod_instituicao = '{$this->ref_ref_cod_instituicao}' AND ref_cod_servidor = '{$this->ref_cod_servidor}' {$where}");
 
             return true;
         }

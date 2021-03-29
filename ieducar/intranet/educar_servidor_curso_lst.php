@@ -21,7 +21,7 @@ return new class extends clsCadastro {
     {
         $retorno = 'Novo';
 
-        $this->cod_servidor        = $_GET['ref_cod_servidor'];
+        $this->cod_servidor = $_GET['ref_cod_servidor'];
         $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
 
         $obj_permissoes = new clsPermissoes();
@@ -40,7 +40,7 @@ return new class extends clsCadastro {
                 $this->ref_cod_instituicao
             );
 
-            $registro  = $obj->detalhe();
+            $registro = $obj->detalhe();
 
             if ($registro) {
                 $retorno = 'Editar';
@@ -150,9 +150,9 @@ return new class extends clsCadastro {
         }
 
         Session::put([
-        'cursos_servidor' => $curso_servidor,
-        'cod_servidor' => $this->cod_servidor,
-    ]);
+            'cursos_servidor' => $curso_servidor,
+            'cod_servidor' => $this->cod_servidor,
+        ]);
         Session::save();
         Session::start();
 
