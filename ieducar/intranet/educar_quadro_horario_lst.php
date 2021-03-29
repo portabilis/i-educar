@@ -23,6 +23,8 @@ return new class {
 
     public function renderHTML()
     {
+        $this->pessoa_logada = \Illuminate\Support\Facades\Auth::id();
+
         $retorno = '';
 
         $obj_permissoes = new clsPermissoes();
