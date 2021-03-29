@@ -294,7 +294,7 @@ class clsPmieducarServidorDisciplina extends Model
             is_numeric($this->ref_cod_servidor)) {
             $where = '';
 
-            if (is_array($funcao)) {
+            if (is_array($funcao) && count($funcao)) {
                 if ($funcao[0] === '') {
                     // Evita problemas onde a função na tabela pmieducar.servidor_disciplina está `null`
                 } else {
