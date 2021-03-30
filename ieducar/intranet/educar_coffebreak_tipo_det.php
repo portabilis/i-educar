@@ -57,7 +57,7 @@ return new class extends clsDetalhe {
         $this->largura = '100%';
     }
 
-    public function Formular(): bool
+    public function Formular()
     {
         $this->titulo = 'i-Educar - Coffebreak Tipo';
         $this->processoAp = '564';
