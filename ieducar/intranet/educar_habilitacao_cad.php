@@ -123,7 +123,7 @@ return new class extends clsCadastro {
         return false;
     }
 
-    public function Formular(): bool
+    public function Formular()
     {
         $this->titulo = 'i-Educar - Habilita&ccedil;&atilde;o';
         $this->processoAp = '573';
