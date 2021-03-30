@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\RelocationDate;
 
 use DateTime;
 
@@ -8,7 +8,7 @@ class RelocationDateService
 {
     protected $repository;
 
-    public function __construct(HasRelocationDate $repository)
+    public function __construct(RelocationDateProvider $repository)
     {
         $this->repository = $repository;
     }

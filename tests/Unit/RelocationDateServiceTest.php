@@ -2,8 +2,8 @@
 
 namespace Tests\Unit;
 
-use App\Services\HasRelocationDate;
-use App\Services\RelocationDateService;
+use App\Services\RelocationDate\RelocationDateProvider;
+use App\Services\RelocationDate\RelocationDateService;
 use PHPUnit\Framework\TestCase;
 
 class RelocationDateServiceTest extends TestCase
@@ -15,7 +15,7 @@ class RelocationDateServiceTest extends TestCase
      */
     public function testRelocationDateWhenNull()
     {
-        $institution = $this->getMockBuilder(HasRelocationDate::class)
+        $institution = $this->getMockBuilder(RelocationDateProvider::class)
             ->getMock();
 
         $institution->expects($this->any())
@@ -28,7 +28,7 @@ class RelocationDateServiceTest extends TestCase
 
     public function testRelocationDateWhenDefined()
     {
-        $institution = $this->getMockBuilder(HasRelocationDate::class)
+        $institution = $this->getMockBuilder(RelocationDateProvider::class)
             ->getMock();
 
         $institution->expects($this->any())
@@ -41,7 +41,7 @@ class RelocationDateServiceTest extends TestCase
 
     public function testRelocationDateWhenDefinedWithDifferentYears()
     {
-        $institution = $this->getMockBuilder(HasRelocationDate::class)
+        $institution = $this->getMockBuilder(RelocationDateProvider::class)
             ->getMock();
 
         $institution->expects($this->any())
@@ -54,7 +54,7 @@ class RelocationDateServiceTest extends TestCase
 
     public function testRelocationDateWhenDefinedWithLeapYear()
     {
-        $institution = $this->getMockBuilder(HasRelocationDate::class)
+        $institution = $this->getMockBuilder(RelocationDateProvider::class)
             ->getMock();
 
         $institution->expects($this->any())

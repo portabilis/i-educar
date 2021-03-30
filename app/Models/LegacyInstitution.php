@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Services\HasRelocationDate;
+use App\Services\RelocationDate\RelocationDateProvider;
 use DateTime;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property DateTime $relocation_date Data base para remanejamento
  * @property DateTime $educacenso_date Data de corte do Educacenso
  */
-class LegacyInstitution extends Model implements HasRelocationDate
+class LegacyInstitution extends Model implements RelocationDateProvider
 {
     /**
      * @var string
