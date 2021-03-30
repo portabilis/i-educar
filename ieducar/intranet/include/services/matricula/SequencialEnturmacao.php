@@ -68,8 +68,6 @@ class SequencialEnturmacao
 
             return $sequencialNovoAluno;
         }
-
-        return $sequencialNovoAluno;
     }
 
     public function ordenaSequencialExcluiMatricula()
@@ -399,16 +397,19 @@ class SequencialEnturmacao
         $date = $this->schoolClass->school->institution->relocation_date;
         if ($date) {
             $date = substr($this->dataEnturmacao, 0, 4) . $date->format('-m-d');
+
+            $newDate = new DateTime($date);
+            $day = $newDate->format('d');
+            $month = $newDate->format('n');
+
+            if (date('L', $newDate->getTimestamp()) == 1 && $month == 2 && $day == '29') {
+                return $newDate->modify('-1 day')->format('Y-m-d');
+            }
+
+            return $newDate->format('Y-m-d');
         }
 
-        $newDate = new DateTime($date);
-        $day = $newDate->format('d');
-
-        if (date('L', $newDate->getTimestamp()) == 0 && $day == '29') {
-            return $newDate->modify('-1 day')->format('Y-m-d');
-        }
-
-        return $newDate->format('Y-m-d');
+        return null;
     }
 
     public function existeMatriculaTurma()
