@@ -40,6 +40,8 @@ return new class extends clsCadastro {
 
     public $data_matricula;
 
+    public $observacoes;
+
     public $ref_cod_instituicao;
 
     public $ref_cod_curso;
@@ -155,6 +157,7 @@ return new class extends clsCadastro {
 
         $this->inputsHelper()->dynamic(['ano', 'instituicao', 'escola', 'curso', 'serie', 'turma']);
         $this->inputsHelper()->date('data_matricula', ['label' => Portabilis_String_Utils::toLatin1('Data da matrícula'), 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')]);
+        $this->inputsHelper()->textArea('observacoes', ['required' => false]);
         $this->inputsHelper()->hidden('ano_em_andamento', ['value' => '1']);
 
         if (config('legacy.app.matricula.dependencia') == 1) {
