@@ -874,7 +874,10 @@ return new class extends clsCadastro {
                 $this->ref_cod_curso,
                 null,
                 $this->semestre,
-                $this->data_matricula
+                $this->data_matricula,
+                null,
+                null,
+                $this->observacoes
             );
 
             $dataMatriculaObj = new \DateTime($this->data_matricula);
