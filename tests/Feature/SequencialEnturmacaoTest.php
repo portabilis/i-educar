@@ -59,7 +59,11 @@ class SequencialEnturmacaoTest extends TestCase
         ]);
 
         //Garante que o aluno será o último
-        $registration3->student->individual->person->nome = 'zzzz';
+        $registration1->student->individual->person->nome = 'Aaa';
+        $registration1->student->individual->person->save();
+        $registration2->student->individual->person->nome = 'Bbb';
+        $registration2->student->individual->person->save();
+        $registration3->student->individual->person->nome = 'Zzz';
         $registration3->student->individual->person->save();
         $sequencialEnturmacao = new SequencialEnturmacao($registration3->cod_matricula, $schoolClass->cod_turma, date('Y-m-d'));
         $sequencial = $sequencialEnturmacao->ordenaSequencialNovaMatricula();

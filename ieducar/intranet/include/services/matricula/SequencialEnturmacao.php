@@ -261,7 +261,6 @@ class SequencialEnturmacao
                  END)";
 
         return DB::selectOne($sql)->sequencial;
-        ;
     }
 
     private function sequencialAlunoOrdemAlfabetica()
@@ -301,10 +300,11 @@ class SequencialEnturmacao
         $novoSequencial = 0;
 
         foreach ($alunos as $sequencial => $nome) {
-            $novoSequencial++;
             if ($sequencial == 'novo-aluno') {
+                $novoSequencial++;
                 break;
             }
+            $novoSequencial = $sequencial;
         }
 
         return $novoSequencial;
