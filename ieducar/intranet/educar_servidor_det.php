@@ -21,7 +21,6 @@ return new class extends clsDetalhe {
     public $ativo = null;
     public $ref_cod_instituicao = null;
     public $alocacao_array = [];
-    public $is_professor = false;
 
     /**
      * Implementação do método Gerar()
@@ -321,7 +320,7 @@ return new class extends clsDetalhe {
                 $this->array_botao_url_script[] = "go(\"educar_servidor_afastamento_cad.php?{$get_padrao}&sequencial={$afastamento}&retornar_servidor=" . EmployeeReturn::SIM . '");';
             }
 
-            if ($this->validateTeacher($this->cod_servidor)) {
+            if ($this->isTeacher($this->cod_servidor)) {
                 $this->array_botao[] = 'Vincular professor a turmas';
                 $this->array_botao_url_script[] = "go(\"educar_servidor_vinculo_turma_lst.php?{$get_padrao}\");";
             }
@@ -360,14 +359,12 @@ return new class extends clsDetalhe {
             ->get();
     }
 
-    private function validateTeacher($cod_servidor)
+    private function isTeacher($cod_servidor)
     {
-        return DB::table('pmieducar.servidor_alocacao')
-            ->select(DB::raw('funcao.professor'))
-            ->join('pmieducar.servidor_funcao', 'servidor_funcao.ref_cod_servidor', 'servidor_alocacao.ref_cod_servidor')
+        return DB::table('pmieducar.servidor_funcao')
             ->join('pmieducar.funcao', 'funcao.cod_funcao', 'servidor_funcao.ref_cod_funcao')
-            ->where([['servidor_alocacao.ref_cod_servidor', '=', $cod_servidor],
-                ['funcao.professor', '=', 1]])
+            ->where('servidor_funcao.ref_cod_servidor', $cod_servidor)
+            ->where('funcao.professor', 1)
             ->exists();
     }
 
