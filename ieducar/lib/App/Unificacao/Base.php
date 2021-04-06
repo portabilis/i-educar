@@ -40,8 +40,8 @@ class App_Unificacao_Base
             $this->processaChavesManterPrimeiroVinculo();
             $this->processaChavesManterTodosVinculos();
             $this->habilitaTodasTriggers();
-        } catch (Exception $e) {
-            throw new Exception('Não foi possível realizar este processo de unificação. Por favor, entre em contato com o suporte.');
+        } catch (CoreExt_Exception $e) {
+            throw new CoreExt_Exception('Não foi possível realizar este processo de unificação. Por favor, entre em contato com o suporte. '.$e->getMessage());
         }
     }
 
@@ -52,22 +52,27 @@ class App_Unificacao_Base
         foreach ($this->chavesDeletarDuplicados as $key => $value) {
             $oldKeys = explode(',', $stringCodigosDuplicados);
             $this->storeLogOldDataByKeys($oldKeys, $value['tabela'], $value['coluna']);
-
             try {
-                $this->db->Consulta(
+                $this->db->Consulta("SELECT 1 FROM {$value['tabela']} WHERE {$value['coluna']} IN ({$stringCodigosDuplicados})");
+
+                if ($this->db->ProximoRegistro()) {
+                    $this->db->Consulta(
+                        "
+                        DELETE FROM {$value['tabela']}
+                        WHERE {$value['coluna']} IN ({$stringCodigosDuplicados})
                     "
+                    );
+                } else {
+                    $this->db->Consulta(
+                        "
                         UPDATE {$value['tabela']}
                         SET {$value['coluna']} = {$this->codigoUnificador}
                         WHERE {$value['coluna']} IN ({$stringCodigosDuplicados})
                     "
-                );
+                    );
+                }
             } catch (Exception $e) {
-                $this->db->Consulta(
-                    "
-                        DELETE FROM {$value['tabela']}
-                        WHERE {$value['coluna']} IN ({$stringCodigosDuplicados})
-                    "
-                );
+                throw new Exception('Erro ao deletar registros duplicados. Por favor, entre em contato com suporte.');
             }
         }
     }
@@ -220,6 +225,7 @@ class App_Unificacao_Base
 
     /**
      * @param $tableName string
+     *
      * @return string
      */
     private function buildSqlExtraBeforeUnification(string $tableName)
@@ -234,6 +240,7 @@ class App_Unificacao_Base
                 where ref_cod_servidor = ' . $this->codigoUnificador . '
                 ) ';
         }
+
         return $addSql;
     }
 }
