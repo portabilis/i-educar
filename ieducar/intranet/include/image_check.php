@@ -1,5 +1,6 @@
 <?php
 
+use App\Services\UrlPresigner;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
 
@@ -62,7 +63,9 @@ class PictureController
         $tenant = config('legacy.app.database.dbname');
 
         if (Storage::put($tenant, $file)) {
-            return Storage::url($file->hashName($tenant));
+            $url = Storage::url($file->hashName($tenant));
+            $presigner = new UrlPresigner();
+            return $presigner->getPresignedUrl($url);
         } else {
             $this->errorMessage = 'Ocorreu um erro no servidor ao enviar foto. Tente novamente.';
 
