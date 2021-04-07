@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Models\LegacyIndividual;
 use App\Models\LegacyInstitution;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacyStudent;
@@ -49,6 +50,11 @@ class LoginLegacySession
     private function getLoggedUserInfo($user)
     {
         $institution = app(LegacyInstitution::class);
+        $individual = new LegacyIndividual(['idpes' => $user->cod_usuario]);
+
+        $picture = $individual->picture()->first()
+            ? $individual->picture()->first()->caminho
+            : url('intranet/imagens/user-perfil.png');
 
         try {
             $createdAt = Carbon::create($user->created_at)->getTimestamp();
@@ -68,6 +74,7 @@ class LoginLegacySession
             'students_count' => $this->getStudentsCount(),
             'teachers_count' => $this->getTeachersCount(),
             'classes_count' => $this->getClassesCount(),
+            'picture' => $picture
         ];
     }
 

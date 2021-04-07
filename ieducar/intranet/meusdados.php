@@ -1,5 +1,7 @@
 <?php
 
+use App\Services\UrlPresigner;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
 
 return new class extends clsCadastro {
@@ -90,7 +92,7 @@ return new class extends clsCadastro {
         }
 
         if ($foto) {
-            $this->campoRotulo('fotoAtual_', 'Foto atual', '<img height="117" src="' . $foto . '"/>');
+            $this->campoRotulo('fotoAtual_', 'Foto atual', '<img height="117" src="' . (new UrlPresigner())->getPresignedUrl($foto) . '"/>');
             $this->inputsHelper()->checkbox('file_delete', ['label' => 'Excluir a foto']);
             $this->campoArquivo('file', 'Trocar foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho m&aacute;ximo: 150KB</span>');
         } else {
@@ -318,6 +320,7 @@ return new class extends clsCadastro {
     //envia foto e salva caminha no banco
     public function savePhoto($id)
     {
+        $caminhoFoto = '';
         if ($this->objPhoto != null) {
             $caminhoFoto = $this->objPhoto->sendPicture();
             if ($caminhoFoto != '') {
@@ -328,8 +331,6 @@ return new class extends clsCadastro {
                 } else {
                     $obj->cadastra();
                 }
-
-                return true;
             } else {
                 echo '<script>alert(\'Foto não salva.\')</script>';
 
@@ -339,6 +340,12 @@ return new class extends clsCadastro {
             $obj = new clsCadastroFisicaFoto($id);
             $obj->excluir();
         }
+
+        $loggedUser = session('logged_user');
+        $loggedUser->picture = $caminhoFoto;
+        Session::put('logged_user', $loggedUser);
+
+        return true;
     }
 
     public function Formular()
