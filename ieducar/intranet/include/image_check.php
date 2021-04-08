@@ -18,41 +18,42 @@ class PictureController
         $maxHeight = null,
         $maxSize = null,
         $suportedExtensions = null
-    ) {
+    )
+    {
         $this->imageFile = $imageFile;
 
-        if ($maxWidth!=null) {
+        if ($maxWidth != null) {
             $this->maxWidth = $maxWidth;
         } else {
             $this->maxWidth = 500;
         }
 
-        if ($maxHeight!=null) {
+        if ($maxHeight != null) {
             $this->maxHeight = $maxHeight;
         } else {
             $this->maxHeight = 500;
         }
 
-        if ($maxSize!=null) {
+        if ($maxSize != null) {
             $this->maxSize = $maxSize;
         } else {
-            $this->maxSize = 2048*1024;
+            $this->maxSize = 2048 * 1024;
         }
 
         if ($suportedExtensions != null) {
             $this->suportedExtensions = $suportedExtensions;
         } else {
-            $this->suportedExtensions = ['jpeg','jpg','gif','png'];
+            $this->suportedExtensions = ['jpeg', 'jpg', 'gif', 'png'];
         }
     }
 
     /**
-    * Envia imagem caso seja vÃ¡lida e retorna caminho
-    *
-    * @author Lucas Schmoeller da Silva - lucas@portabilis.com
-    *
-    * @return String
-    */
+     * Envia imagem caso seja vÃ¡lida e retorna caminho
+     *
+     * @return String
+     * @author Lucas Schmoeller da Silva - lucas@portabilis.com
+     *
+     */
     public function sendPicture()
     {
         $tmp = $this->imageFile['tmp_name'];
@@ -71,16 +72,14 @@ class PictureController
     }
 
     /**
-    * Verifica se a imagem Ã© vÃ¡lida
-    *
-    * @author Lucas Schmoeller da Silva - lucas@portabilis.com
-    *
-    * @return boolean
-    */
+     * Verifica se a imagem Ã© vÃ¡lida
+     *
+     * @return boolean
+     * @author Lucas Schmoeller da Silva - lucas@portabilis.com
+     *
+     */
     public function validatePicture()
     {
-        $msg='';
-
         $name = $this->imageFile['name'];
         $size = $this->imageFile['size'];
         $ext = $this->getExtension($name);
@@ -106,18 +105,15 @@ class PictureController
 
             return false;
         }
-
-        $this->errorMessage = 'Imagem inv&aacute;lida.';
-
-        return false;
     }
+
     /**
-    * Retorna a mensagem de erro
-    *
-    * @author Lucas Schmoeller da Silva - lucas@portabilis.com
-    *
-    * @return String
-    */
+     * Retorna a mensagem de erro
+     *
+     * @return String
+     * @author Lucas Schmoeller da Silva - lucas@portabilis.com
+     *
+     */
     public function getErrorMessage()
     {
         return $this->errorMessage;
@@ -130,7 +126,7 @@ class PictureController
             return '';
         }
         $l = strlen($name) - $i;
-        $ext = substr($name, $i+1, $l);
+        $ext = substr($name, $i + 1, $l);
 
         return $ext;
     }

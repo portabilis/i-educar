@@ -386,3 +386,11 @@ a:hover {
 .vue-template {
   display: none;
 }
+
+.avatar-35 {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  object-fit: cover;
+  vertical-align: middle;
+}
