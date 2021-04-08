@@ -6,6 +6,7 @@ use App\Models\LegacyIndividual;
 use App\Models\LegacyInstitution;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacyStudent;
+use App\Services\UrlPresigner;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -53,7 +54,7 @@ class LoginLegacySession
         $individual = new LegacyIndividual(['idpes' => $user->cod_usuario]);
 
         $picture = $individual->picture()->first()
-            ? $individual->picture()->first()->caminho
+            ? (new UrlPresigner())->getPresignedUrl($individual->picture()->first()->caminho)
             : url('intranet/imagens/user-perfil.png');
 
         try {
