@@ -87,13 +87,15 @@ class LoginLegacySession
      */
     public function handle($event)
     {
+        $loggedUser = $this->getLoggedUserInfo($event->user);
         Session::put([
             'itj_controle' => 'logado',
             'id_pessoa' => $event->user->id,
             'pessoa_setor' => $event->user->employee->department_id,
             'tipo_menu' => $event->user->employee->menu_type,
             'nivel' => $event->user->type->level,
-            'logged_user' => $this->getLoggedUserInfo($event->user),
+            'logged_user' => $loggedUser,
+            'logged_user_picture' => $loggedUser->picture
         ]);
     }
 }

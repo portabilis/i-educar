@@ -1,8 +1,8 @@
 <?php
 
 use App\Services\UrlPresigner;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 
 return new class extends clsCadastro {
     public $nome;
@@ -320,7 +320,7 @@ return new class extends clsCadastro {
     //envia foto e salva caminha no banco
     public function savePhoto($id)
     {
-        $caminhoFoto = '';
+        $caminhoFoto = url('intranet/imagens/user-perfil.png');
         if ($this->objPhoto != null) {
             $caminhoFoto = $this->objPhoto->sendPicture();
             if ($caminhoFoto != '') {
@@ -336,14 +336,14 @@ return new class extends clsCadastro {
 
                 return false;
             }
+            $caminhoFoto = (new UrlPresigner())->getPresignedUrl($caminhoFoto);
         } elseif ($this->file_delete == 'on') {
             $obj = new clsCadastroFisicaFoto($id);
             $obj->excluir();
         }
 
-        $loggedUser = session('logged_user');
-        $loggedUser->picture = $caminhoFoto;
-        Session::put('logged_user', $loggedUser);
+        Session::put('logged_user_picture', $caminhoFoto);
+        Session::save();
 
         return true;
     }

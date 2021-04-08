@@ -157,9 +157,10 @@
     </noscript>
     <!-- End Google Tag Manager (noscript) -->
 @endif
-
+<?php
+//dd(session('logged_user_picture'));
+?>
 <div id="DOM_expansivel" class="DOM_expansivel"></div>
-@inject('service', 'App\Services\UrlPresigner')
 <table summary="" class='tabelanum1' id="tablenum1" border='0' cellspacing='0' cellpadding='0'>
     <tr id="topo" class="topo">
         <td colspan="2">
@@ -178,7 +179,7 @@
                         </div>
                     </div>
                     <a href="{{ url('intranet/meusdados.php') }}" class="avatar" title="Meus dados">
-                        <img class="avatar-35" src="{{ $service->getPresignedUrl($loggedUser->picture) }}" alt="Perfil">
+                        <img class="avatar-35" src="{{ session('logged_user_picture') }}" alt="Perfil">
                     </a>
                     <div class="dropdown notifications">
                         <div class="dropbtn notifications">
