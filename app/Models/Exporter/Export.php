@@ -3,6 +3,7 @@
 namespace App\Models\Exporter;
 
 use App\Exports\EloquentExporter;
+use App\Services\UrlPresigner;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -136,5 +137,10 @@ class Export extends Model
                     break;
             }
         }
+    }
+
+    public function getUrl()
+    {
+        return (new UrlPresigner())->getPresignedUrl($this->url);
     }
 }
