@@ -103,6 +103,7 @@ class MatriculaController extends ApiCoreController
      * substituído em futuras versões.
      *
      * @return array
+     *
      * @deprecated
      *
      */
@@ -136,7 +137,7 @@ class MatriculaController extends ApiCoreController
 
         foreach ($registrations as $registration) {
             $codAluno = $registration->student->cod_aluno;
-            $nome = $registration->student->person->nome;
+            $nome = mb_strtoupper($registration->student->person->nome);
             $transfers[$registration->cod_matricula] = "({$codAluno}) {$nome}";
         }
 
