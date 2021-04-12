@@ -6,7 +6,6 @@ use App\Exports\EloquentExporter;
 use App\Models\Exporter\Export;
 use App\Models\NotificationType;
 use App\Services\NotificationService;
-use App\Services\UrlPresigner;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Contracts\Queue\ShouldQueue;
