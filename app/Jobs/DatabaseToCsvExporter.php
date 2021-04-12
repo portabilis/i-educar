@@ -123,7 +123,7 @@ class DatabaseToCsvExporter implements ShouldQueue
 
         Storage::disk($sftp)->delete("/tmp/{$file}");
 
-        $url = (new UrlPresigner())->getPresignedUrl($this->transformTenantUrl($filename));
+        $url = $this->transformTenantUrl($filename);
 
         $notification->createByUser(
             $this->export->user_id,
