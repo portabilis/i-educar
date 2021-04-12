@@ -1064,8 +1064,12 @@ return new class extends clsCadastro {
             $obj->excluir();
         }
 
-        Session::put('logged_user_picture', $caminhoFoto);
-        Session::save();
+        $loggedUser = session('logged_user');
+
+        if ($loggedUser->personId == $id) {
+            Session::put('logged_user_picture', $caminhoFoto);
+            Session::save();
+        }
 
         return true;
     }
