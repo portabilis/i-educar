@@ -1,6 +1,6 @@
 @extends('layout.default')
 
-@inject('presigner', 'NotificationUrlPresigner')
+@inject('presigner', 'App\Services\NotificationUrlPresigner')
 
 @push('styles')
     <link rel="stylesheet" type="text/css" href="{{ Asset::get('css/ieducar.css') }}"/>
