@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Notification;
 use App\Process;
-use App\Services\UrlPresigner;
+use App\Services\NotificationUrlPresigner;
 use App\User;
 use iEducar\Modules\Notifications\Status;
 use Illuminate\Http\Request;
@@ -66,7 +66,7 @@ class NotificationController extends Controller
             ->update(['read_at' => now()]);
     }
 
-    public function getByLoggedUser(User $user, UrlPresigner $presigner)
+    public function getByLoggedUser(User $user, NotificationUrlPresigner $presigner)
     {
         $limit = $this->getLimit($user);
 
@@ -77,7 +77,7 @@ class NotificationController extends Controller
             ->orderBy('created_at', 'desc')
             ->get()
             ->map(function ($notification) use ($presigner) {
-                $notification->link = $presigner->getPresignedUrl($notification->link);
+                $notification->link = $presigner->getNotificationUrl($notification->link);
 
                 return $notification;
             });
