@@ -21,6 +21,11 @@ class NotificationEvent implements ShouldBroadcast
     /**
      * @var string
      */
+    private $url;
+
+    /**
+     * @var string
+     */
     private $tenant;
 
     /**
@@ -28,10 +33,12 @@ class NotificationEvent implements ShouldBroadcast
      *
      * @param Notification $notification
      * @param string       $tenant
+     * @param string       $url
      */
-    public function __construct(Notification $notification, $tenant)
+    public function __construct(Notification $notification, $url, $tenant)
     {
         $this->notification = $notification;
+        $this->url = $url;
         $this->tenant = $tenant;
     }
 
