@@ -21,7 +21,7 @@ class NotificationEvent implements ShouldBroadcast
     /**
      * @var string
      */
-    private $url;
+    public $url;
 
     /**
      * @var string
