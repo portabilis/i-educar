@@ -77,7 +77,7 @@ class NotificationController extends Controller
             ->orderBy('created_at', 'desc')
             ->get()
             ->map(function ($notification) use ($presigner) {
-                $notification->link = $presigner->getNotificationUrl($notification->link);
+                $notification->link = $presigner->getNotificationUrl($notification);
 
                 return $notification;
             });
