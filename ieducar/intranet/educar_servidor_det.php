@@ -83,7 +83,8 @@ return new class extends clsDetalhe {
             null,
             null,
             1,
-            date('Y')
+            date('Y'),
+            true
         );
 
         if ($lista) {
