@@ -24,7 +24,7 @@ select
         when 3 then 'Estrangeira'::varchar
         else 'Não informado'::varchar
     end as nationality,
-    COALESCE( ci."name"||' - '||st.abbreviation , 'Não informado') as birthplace
+    COALESCE(ci."name" || '/' || st.abbreviation, 'Não informado') as birthplace
 from cadastro.pessoa p
 inner join cadastro.fisica f on f.idpes = p.idpes
 left join cadastro.documento d on d.idpes = p.idpes
