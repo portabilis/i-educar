@@ -27,4 +27,12 @@ class Notification extends Model
     {
         return $this->belongsTo(NotificationType::class);
     }
+
+    public function needsPresignerUrl()
+    {
+        return in_array($this->type_id, [
+            NotificationType::EXPORT_STUDENT,
+            NotificationType::EXPORT_TEACHER,
+        ]);
+    }
 }
