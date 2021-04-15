@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class AddModalidadeEnsinoInMatricula extends Migration
@@ -13,11 +14,9 @@ class AddModalidadeEnsinoInMatricula extends Migration
      */
     public function up()
     {
-        if (! Schema::hasColumn('matricula', 'modalidade_ensino')) {
-            Schema::table('matricula', function (Blueprint $table) {
-                $table->integer('modalidade_ensino')->nullable();
-            });
-        }
+        DB::unprepared(
+            'ALTER TABLE pmieducar.matricula ADD COLUMN IF NOT EXISTS modalidade_ensino smallint DEFAULT (3)::smallint;'
+        );
     }
 
     /**
