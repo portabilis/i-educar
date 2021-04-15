@@ -42,6 +42,7 @@ class clsPmieducarMatricula extends Model
     public $observacoes;
     public $turno_pre_matricula;
     public $dependencia;
+    public $modalidade_ensino;
 
     /**
      * caso seja a primeira matricula do aluno
@@ -335,6 +336,11 @@ class clsPmieducarMatricula extends Model
                 $gruda = ', ';
             }
 
+            if (is_numeric($this->modalidade_ensino)) {
+                $campos .= "{$gruda}modalidade_ensino";
+                $valores .= "{$gruda}'{$this->modalidade_ensino}'";
+            }
+
             $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
             $this->cod_matricula = $db->InsertId("{$this->_tabela}_cod_matricula_seq");
 
@@ -486,6 +492,11 @@ class clsPmieducarMatricula extends Model
                 $gruda = ', ';
             } elseif (is_null($this->data_exclusao)) {
                 $set .= "{$gruda}data_exclusao = NULL";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->modalidade_ensino)) {
+                $set .= "{$gruda}modalidade_ensino = '{$this->modalidade_ensino}'";
                 $gruda = ', ';
             }
 
