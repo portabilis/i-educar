@@ -40,7 +40,7 @@ return new class extends clsCadastro {
             'modalidade_ensino',
             'Modalidade de ensino:',
             clsPmieducarMatricula::MODELOS_DE_ENSINO,
-            $this->matricula['cod_matricula'],
+            $this->matricula['modalidade_ensino'],
             '',
             false,
             '',
@@ -52,19 +52,13 @@ return new class extends clsCadastro {
 
     public function Editar()
     {
-
-
-
-//        $this->validaPermissao();
-//        $this->validaParametros();
+        $this->validaPermissao();
 
         try {
-            $matricula = new clsPmieducarMatricula($this->cod_matricula);
+            $matricula = (new clsPmieducarMatricula($this->cod_matricula));
             $matricula->modalidade_ensino = (int) $this->modalidade_ensino;
             $matricula->edita();
         } catch (Exception $exception) {
-
-            dd($exception->getMessage());
             $this->mensagem = 'Erro ao atualizar a modalidade de ensino.';
 
             return false;
