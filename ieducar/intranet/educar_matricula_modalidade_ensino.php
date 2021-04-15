@@ -40,7 +40,7 @@ return new class extends clsCadastro {
             'modalidade_ensino',
             'Modalidade de ensino:',
             clsPmieducarMatricula::MODELOS_DE_ENSINO,
-            $this->matricula['modalidade_ensino'],
+            (int) $this->matricula['modalidade_ensino'],
             '',
             false,
             '',
@@ -65,6 +65,8 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Modalidade de ensino atualizado com sucesso.';
+
+        $this->matricula = $matricula->detalhe();
 
         return true;
     }
