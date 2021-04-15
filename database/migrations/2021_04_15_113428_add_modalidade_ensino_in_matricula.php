@@ -13,9 +13,11 @@ class AddModalidadeEnsinoInMatricula extends Migration
      */
     public function up()
     {
-        Schema::table('matricula', function (Blueprint $table) {
-            $table->integer('modalidade_ensino')->nullable();
-        });
+        if (! Schema::hasColumn('matricula', 'modalidade_ensino')) {
+            Schema::table('matricula', function (Blueprint $table) {
+                $table->integer('modalidade_ensino')->nullable();
+            });
+        }
     }
 
     /**
