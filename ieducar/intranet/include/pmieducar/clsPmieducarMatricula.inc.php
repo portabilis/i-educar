@@ -12,9 +12,9 @@ class clsPmieducarMatricula extends Model
 
     public const MODELOS_DE_ENSINO = [
           self::MODELO_PRESENCIAL => 'Presencial' ,
-          self::MODELO_EAD => 'Modelo EAD (Completamente a distancia)' ,
-          self::MODELO_SEMIPRESENCIAL => 'Modelo Semipresencial (Hibrido, aulas presenciais e a distancia)' ,
-          self::MODELO_OFF_LINE => 'Modelo Off-line (A distancia com materiais impressos)' ,
+          self::MODELO_SEMIPRESENCIAL => 'Semipresencial' ,
+          self::MODELO_EAD => 'EAD' ,
+          self::MODELO_OFF_LINE => 'Off-line' ,
     ];
 
     public $cod_matricula;
