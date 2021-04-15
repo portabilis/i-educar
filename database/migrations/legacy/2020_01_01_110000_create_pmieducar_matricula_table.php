@@ -51,7 +51,8 @@ class CreatePmieducarMatriculaTable extends Migration
                     dependencia boolean DEFAULT false,
                     saida_escola boolean DEFAULT false,
                     data_saida_escola date,
-	                updated_at timestamp NULL DEFAULT now()
+	                updated_at timestamp NULL DEFAULT now(),
+	                modalidade_ensino smallint DEFAULT (3)::smallint
                 );
 
                 ALTER TABLE ONLY pmieducar.matricula
