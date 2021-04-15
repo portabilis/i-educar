@@ -4,6 +4,19 @@ use iEducar\Legacy\Model;
 
 class clsPmieducarMatricula extends Model
 {
+
+    public const MODELO_SEMIPRESENCIAL = 0;
+    public const MODELO_EAD = 1;
+    public const MODELO_OFF_LINE = 2;
+    public const MODELO_PRESENCIAL = 3;
+
+    public const MODELOS_DE_ENSINO = [
+          self::MODELO_PRESENCIAL => 'Presencial' ,
+          self::MODELO_EAD => 'Modelo EAD (Completamente a distancia)' ,
+          self::MODELO_SEMIPRESENCIAL => 'Modelo Semipresencial (Hibrido, aulas presenciais e a distancia)' ,
+          self::MODELO_OFF_LINE => 'Modelo Off-line (A distancia com materiais impressos)' ,
+    ];
+
     public $cod_matricula;
     public $ref_cod_reserva_vaga;
     public $ref_ref_cod_escola;
