@@ -152,7 +152,10 @@ return new class extends clsListagem {
         $obj_permissoes = new clsPermissoes();
 
         if ($obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7)) {
-            $this->array_botao[] = 'Novo';
+            $this->array_botao[] = [
+                'name' => 'Novo',
+                'css-extra' => 'btn-green'
+            ];
 
             $this->array_botao_url[] = sprintf(
                 'educar_falta_atraso_cad.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
