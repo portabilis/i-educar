@@ -14,9 +14,12 @@ class AddModalidadeEnsinoInMatricula extends Migration
      */
     public function up()
     {
-        DB::unprepared(
-            'ALTER TABLE pmieducar.matricula ADD COLUMN IF NOT EXISTS modalidade_ensino smallint DEFAULT (3)::smallint;'
-        );
+        Schema::table('matricula', function (Blueprint $table) {
+            $table
+                ->smallInteger('modalidade_ensino')
+                ->default(3)
+            ;
+        });
     }
 
     /**
