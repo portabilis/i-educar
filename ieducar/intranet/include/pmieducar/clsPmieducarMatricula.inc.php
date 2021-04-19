@@ -4,7 +4,6 @@ use iEducar\Legacy\Model;
 
 class clsPmieducarMatricula extends Model
 {
-
     public const MODELO_SEMIPRESENCIAL = 0;
     public const MODELO_EAD = 1;
     public const MODELO_OFF_LINE = 2;
