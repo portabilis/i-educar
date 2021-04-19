@@ -31,7 +31,7 @@ return new class extends clsCadastro {
 
         $this->breadcrumb('Modalidade de ensino', [
             $_SERVER['SERVER_NAME'] . '/intranet' => 'Início',
-            'educar_index.php' => 'Escola',
+            url('intranet/educar_index.php') => 'Escola',
         ]);
 
         $this->campoRotulo('nm_aluno', 'Aluno', $this->matricula['nome']);
