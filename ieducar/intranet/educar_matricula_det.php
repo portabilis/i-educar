@@ -306,7 +306,7 @@ return new class extends clsDetalhe {
                 $this->array_botao[] = _cl('matricula.detalhe.enturmar');
                 $this->array_botao_url_script[] = "go(\"educar_matricula_turma_lst.php?ref_cod_matricula={$registro['cod_matricula']}&ano_letivo={$registro['ano']}\")";
 
-                $this->array_botao[] = _cl('Modalidade de ensino');
+                $this->array_botao[] = 'Modalidade de ensino';
                 $this->array_botao_url_script[] = "go(\"educar_matricula_modalidade_ensino.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
 
                 $this->array_botao[] = 'Abandono';
