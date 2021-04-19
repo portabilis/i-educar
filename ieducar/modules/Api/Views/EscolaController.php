@@ -498,9 +498,10 @@ class EscolaController extends ApiCoreController
           fone_pessoa.ddd as ddd,
           fone_pessoa.fone as fone,
           pessoa_responsavel.nome as nome_responsavel,
-          educacenso_cod_escola.cod_escola_inep as inep
+          educacenso_cod_escola.cod_escola_inep as inep,
+          escola.ativo
          from pmieducar.escola
-        inner join cadastro.juridica on(escola.ref_idpes = juridica.idpes)
+         inner join cadastro.juridica on(escola.ref_idpes = juridica.idpes)
          left join cadastro.pessoa on(juridica.idpes = pessoa.idpes)
          left join cadastro.pessoa pessoa_responsavel on(escola.ref_idpes_gestor = pessoa_responsavel.idpes)
          left join cadastro.fone_pessoa on(fone_pessoa.idpes = pessoa.idpes and fone_pessoa.tipo = 1)
@@ -510,8 +511,7 @@ class EscolaController extends ApiCoreController
          left join public.uf on(municipio.sigla_uf = uf.sigla_uf)
          left join public.bairro on(endereco_pessoa.idbai = bairro.idbai and municipio.idmun = bairro.idmun)
          left join public.pais on(uf.idpais = pais.idpais)
-         left join modules.educacenso_cod_escola on (educacenso_cod_escola.cod_escola = escola.cod_escola)
-        where escola.ativo = 1';
+         left join modules.educacenso_cod_escola on (educacenso_cod_escola.cod_escola = escola.cod_escola)';
 
         $escolas = $this->fetchPreparedQuery($sql);
 
@@ -529,7 +529,24 @@ class EscolaController extends ApiCoreController
                 $escola['nome_responsavel'] = Portabilis_String_Utils::toUtf8($escola['nome_responsavel']);
             }
 
-            $attrs = ['cod_escola', 'nome', 'cep', 'numero', 'complemento', 'logradouro', 'bairro', 'municipio', 'uf', 'pais', 'email', 'ddd', 'fone', 'nome_responsavel', 'inep'];
+            $attrs = [
+                'cod_escola',
+                'nome',
+                'cep',
+                'numero',
+                'complemento',
+                'logradouro',
+                'bairro',
+                'municipio',
+                'uf',
+                'pais',
+                'email',
+                'ddd',
+                'fone',
+                'nome_responsavel',
+                'inep',
+                'ativo'
+            ];
 
             return [ 'escolas' => Portabilis_Array_Utils::filterSet($escolas, $attrs)];
         }
