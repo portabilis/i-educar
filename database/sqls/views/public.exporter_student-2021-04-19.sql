@@ -38,7 +38,12 @@ SELECT p.id,
     array_to_string(ARRAY( SELECT json_array_elements_text(ma.recursos_tecnologicos) AS json_array_elements_text), ';'::text) AS technological_resources,
     p.nationality,
     p.birthplace,
-    m.modalidade_ensino
+    CASE m.modalidade_ensino
+        WHEN 0 THEN 'Semipresencial'::varchar
+        WHEN 1 THEN 'EAD'::varchar
+        WHEN 2 THEN 'Off-line'::varchar
+        ELSE 'Presencial'::varchar
+    END AS modalidade_ensino
 FROM exporter_person p
  JOIN pmieducar.aluno a ON p.id = a.ref_idpes::numeric
  JOIN pmieducar.matricula m ON m.ref_cod_aluno = a.cod_aluno
