@@ -209,4 +209,10 @@ return new class extends clsListagem {
     {
         return file_get_contents(__DIR__ . '/scripts/extra/educar-sequencia-serie-lst.js');
     }
+
+    public function Formular()
+    {
+        $this->title = 'i-Educar - Sequência Enturmação';
+        $this->processoAp = 587;
+    }
 };
