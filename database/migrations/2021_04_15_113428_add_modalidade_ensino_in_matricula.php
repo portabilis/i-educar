@@ -15,10 +15,7 @@ class AddModalidadeEnsinoInMatricula extends Migration
     public function up()
     {
         Schema::table('matricula', function (Blueprint $table) {
-            $table
-                ->smallInteger('modalidade_ensino')
-                ->default(3)
-            ;
+            $table->smallInteger('modalidade_ensino')->default(3);
         });
     }
 
