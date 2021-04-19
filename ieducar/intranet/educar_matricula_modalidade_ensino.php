@@ -30,7 +30,7 @@ return new class extends clsCadastro {
         $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->cod_matricula}";
 
         $this->breadcrumb('Modalidade de ensino', [
-            $_SERVER['SERVER_NAME'] . '/intranet' => 'Início',
+            url('/') => 'Início',
             url('intranet/educar_index.php') => 'Escola',
         ]);
 
