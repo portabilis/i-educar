@@ -844,7 +844,7 @@ class AlunoController extends ApiCoreController
         $sql = '
             SELECT historico_grade_curso_id as id
             FROM pmieducar.historico_escolar
-            WHERE ref_cod_aluno = $1
+            WHERE ref_cod_aluno = $1 AND ativo = 1
             ORDER BY sequencial DESC LIMIT 1
         ';
 
