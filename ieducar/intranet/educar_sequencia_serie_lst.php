@@ -1,34 +1,9 @@
 <?php
 
 return new class extends clsListagem {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
-    public $pessoa_logada;
 
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
-    public $titulo;
-
-    /**
-     * Quantidade de registros a ser apresentada em cada pagina
-     *
-     * @var int
-     */
     public $limite;
-
-    /**
-     * Inicio dos registros a serem exibidos (limit)
-     *
-     * @var int
-     */
     public $offset;
-
     public $ref_serie_origem;
     public $ref_serie_destino;
     public $ref_curso_origem;
@@ -38,7 +13,6 @@ return new class extends clsListagem {
     public $data_cadastro;
     public $data_exclusao;
     public $ativo;
-
     public $ref_cod_instituicao;
 
     public function Gerar()
