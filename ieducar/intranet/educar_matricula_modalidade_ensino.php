@@ -81,7 +81,7 @@ return new class extends clsCadastro {
     {
         $matricula = (new clsPmieducarMatricula($this->cod_matricula))->detalhe();
 
-        if (!$matricula) {
+        if (empty($matricula)) {
             $this->simpleRedirect("educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
         }
 
