@@ -1178,7 +1178,7 @@ class clsPmieducarTurma extends Model
     {
         $db = new clsBanco();
 
-        $sql = "SELECT {$this->_campos_lista},c.nm_curso,array_agg(s.nm_serie ORDER BY s.nm_serie) AS nm_serie,i.nm_instituicao FROM {$this->_tabela} t LEFT JOIN pmieducar.turma_serie ts ON (ts.turma_id  = t.cod_turma) LEFT JOIN {$this->_schema}serie s ON (s.cod_serie = COALESCE(ts.serie_id, t.ref_ref_cod_serie)), {$this->_schema}curso c, {$this->_schema}instituicao i ";
+        $sql = "SELECT {$this->_campos_lista},c.nm_curso,textcat_all(s.nm_serie ORDER BY s.nm_serie) AS nm_serie,i.nm_instituicao FROM {$this->_tabela} t LEFT JOIN pmieducar.turma_serie ts ON (ts.turma_id  = t.cod_turma) LEFT JOIN {$this->_schema}serie s ON (s.cod_serie = COALESCE(ts.serie_id, t.ref_ref_cod_serie)), {$this->_schema}curso c, {$this->_schema}instituicao i ";
         $filtros = '';
 
         $whereAnd = ' WHERE t.ref_cod_curso = c.cod_curso AND c.ref_cod_instituicao = i.cod_instituicao AND ';
