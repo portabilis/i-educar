@@ -496,7 +496,7 @@ return new class extends clsCadastro {
 
         $this->inputsHelper()->turmaTurno();
 
-        $this->campoLista('tipo_boletim', 'Modelo relat&oacute;rio boletim', $tiposBoletim, $this->tipo_boletim);
+        $this->campoLista('tipo_boletim', 'Modelo relat&oacute;rio boletim', $tiposBoletim, $this->tipo_boletim, '', false, '', '', false, false);
         $this->campoLista('tipo_boletim_diferenciado', 'Modelo relat&oacute;rio boletim diferenciado', $tiposBoletim, $this->tipo_boletim_diferenciado, '', false, '', '', false, false);
 
         $this->montaListaComponentesSerieEscola();
