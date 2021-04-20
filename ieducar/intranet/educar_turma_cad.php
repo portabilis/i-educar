@@ -9,7 +9,7 @@ use App\Models\School;
 use App\Services\iDiarioService;
 use App\Services\SchoolClass\ExemptedDisciplineLinksRemover;
 use App\Services\SchoolClass\MultiGradesService;
-use App\Services\SchoolClassService;
+use App\Services\SchoolClass\SchoolClassService;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Support\View\SelectOptions;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -79,7 +79,7 @@ return new class extends clsCadastro {
         4 => 'Quarta',
         5 => 'Quinta',
         6 => 'Sexta',
-        7 => 'S&aacute;bado'
+        7 => 'Sábado'
     ];
     public $nao_informar_educacenso;
     public $ano_letivo;
@@ -422,7 +422,7 @@ return new class extends clsCadastro {
 
         $this->campoTexto('sgl_turma', _cl('turma.detalhe.sigla'), $this->sgl_turma, 15, 15, false);
 
-        $this->campoNumero('max_aluno', 'M&aacute;ximo de Alunos', $this->max_aluno, 3, 3, true);
+        $this->campoNumero('max_aluno', 'Máximo de Alunos', $this->max_aluno, 3, 3, true);
 
         unset($opcoes);
         if (!is_null($this->ref_cod_serie)) {
@@ -495,8 +495,8 @@ return new class extends clsCadastro {
 
         $this->inputsHelper()->turmaTurno();
 
-        $this->campoLista('tipo_boletim', 'Modelo relat&oacute;rio boletim', $tiposBoletim, $this->tipo_boletim, '', false, '', '', false, false);
-        $this->campoLista('tipo_boletim_diferenciado', 'Modelo relat&oacute;rio boletim diferenciado', $tiposBoletim, $this->tipo_boletim_diferenciado, '', false, '', '', false, false);
+        $this->campoLista('tipo_boletim', 'Modelo relatório boletim', $tiposBoletim, $this->tipo_boletim, '', false, '', '', false, false);
+        $this->campoLista('tipo_boletim_diferenciado', 'Modelo relatório boletim diferenciado', $tiposBoletim, $this->tipo_boletim_diferenciado, '', false, '', '', false, false);
 
         $this->montaListaComponentesSerieEscola();
 
@@ -583,7 +583,7 @@ return new class extends clsCadastro {
 
         $this->campoTabelaInicio('turma_modulo', 'Etapas', ['Data inicial', 'Data final', 'Dias Letivos'], $this->turma_modulo);
 
-        $this->campoData('data_inicio', 'Data In&iacute;cio', $this->data_inicio, false);
+        $this->campoData('data_inicio', 'Data Início', $this->data_inicio, false);
         $this->campoData('data_fim', 'Data Fim', $this->data_fim, false);
         $this->campoTexto('dias_letivos', 'Dias Letivos', $this->dias_letivos_, 9);
 
@@ -802,13 +802,13 @@ return new class extends clsCadastro {
                 $disciplinas .= sprintf('<tr align="left"><td>%s</td></tr>', $conteudo);
                 $disciplinas .= '</table>';
             } else {
-                $disciplinas = 'A s&eacute;rie/ano escolar n&atilde;o possui componentes curriculares cadastrados.';
+                $disciplinas = 'A série/ano escolar não possui componentes curriculares cadastrados.';
             }
         }
 
         $help = [];
 
-        $label = 'Componentes curriculares definidos em s&eacute;ries da escola';
+        $label = 'Componentes curriculares definidos em séries da escola';
 
         if ($this->multiseriada && !$existeComponentesNaTurma) {
             $label = 'Os componentes curriculares de turmas multisseriadas devem ser definidos em suas respectivas Séries (Escola > Cadastros > Séries da escola)';
@@ -1608,7 +1608,7 @@ return new class extends clsCadastro {
         );
 
         if ($obj->possuiAlunosVinculados()) {
-            $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.';
+            $this->mensagem = 'Exclusão não realizada.';
 
             return false;
         }
@@ -1626,13 +1626,13 @@ return new class extends clsCadastro {
                     new RedirectResponse('educar_turma_lst.php')
                 );
             } else {
-                $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.';
+                $this->mensagem = 'Exclusão não realizada.';
 
                 return false;
             }
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.';
+        $this->mensagem = 'Exclusão não realizada.';
 
         return false;
     }
@@ -1685,7 +1685,7 @@ return new class extends clsCadastro {
                     return false;
                 } elseif ($turma['max_aluno'] - $countMatriculas > 0) {
                     $vagas = $turma['max_aluno'] - $countMatriculas;
-                    $this->mensagem = "N&atilde;o &eacute; possivel cadastrar turmas, pois ainda existem $vagas vagas em aberto na turma '{$turma['nm_turma']}' desta serie e turno.\n\nTal limita&ccedil;&atilde;o ocorre devido defini&ccedil;&atilde;o feita para esta escola e s&eacute;rie.";
+                    $this->mensagem = "Não é possivel cadastrar turmas, pois ainda existem $vagas vagas em aberto na turma '{$turma['nm_turma']}' desta serie e turno.\n\nTal limita&ccedil;ão ocorre devido defini&ccedil;ão feita para esta escola e série.";
 
                     return false;
                 }
