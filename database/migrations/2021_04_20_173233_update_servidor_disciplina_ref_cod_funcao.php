@@ -17,7 +17,7 @@ class UpdateServidorDisciplinaRefCodFuncao extends Migration
                 (
                     SELECT f.cod_funcao
                     FROM pmieducar.servidor_funcao sf
-                    INNE JOIN pmieducar.funcao f
+                    INNER JOIN pmieducar.funcao f
                     ON f.cod_funcao = sf.ref_cod_funcao
                     WHERE TRUE
                     AND f.professor = 1
