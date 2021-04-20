@@ -17,11 +17,6 @@ use Illuminate\Validation\ValidationException;
 
 class SchoolClassController extends Controller
 {
-    public function index()
-    {
-        return [];
-    }
-
     public function store(Request $request)
     {
         $response = ['msg' => 'Edição efetuada com sucesso.'];
@@ -85,13 +80,15 @@ class SchoolClassController extends Controller
                 $schoolClassInepService->delete($codTurma);
             }
 
-            $schoolClassStageService->store(
-                $schoolClass,
-                $datasInicioModulos,
-                $datasFimModulos,
-                $diasLetivos,
-                $codModulo
-            );
+            if ($datasInicioModulos[0] && $datasFimModulos[0]) {
+                $schoolClassStageService->store(
+                    $schoolClass,
+                    $datasInicioModulos,
+                    $datasFimModulos,
+                    $diasLetivos,
+                    $codModulo
+                );
+            }
 
             DB::commit();
         } catch (ValidationException $ex) {
@@ -115,6 +112,7 @@ class SchoolClassController extends Controller
             DB::beginTransaction();
             $schoolClassToDelete = LegacySchoolClass::find($request->get('cod_turma'));
             $schoolClassService->deleteSchoolClass($schoolClassToDelete);
+            DB::commit();
         } catch (ValidationException $ex) {
             DB::rollBack();
 
@@ -204,7 +202,8 @@ class SchoolClassController extends Controller
         $cargaHoraria,
         $usarComponente,
         $docente
-    ) {
+    )
+    {
         if ($componentes) {
             $mapper = new ComponenteCurricular_Model_TurmaDataMapper();
 

@@ -2,8 +2,11 @@
 
 namespace App\Rules;
 
+use App\Services\iDiarioService;
+use Dotenv\Exception\ValidationException;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Facades\DB;
+use RuntimeException;
 
 class CheckGradesAndAbsencesInStageExists implements Rule
 {
@@ -80,7 +83,7 @@ class CheckGradesAndAbsencesInStageExists implements Rule
 
             foreach ($etapas as $etapa) {
                 if ($iDiarioService->getStepActivityByClassroom($turmaId, $anoTurma, $etapa)) {
-                    throw new RuntimeException('Não foi possível remover uma das etapas pois existem notas ou faltas lançadas no diário online.');
+                    throw new ValidationException('Não foi possível remover uma das etapas pois existem notas ou faltas lançadas no diário online.');
                 }
             }
         }

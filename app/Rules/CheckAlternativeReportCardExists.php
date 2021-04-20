@@ -30,7 +30,7 @@ class CheckAlternativeReportCardExists implements Rule
             ->get()
             ->first();
 
-        if (empty($evaluationRule->regra_diferenciada_id)) {
+        if (!empty($evaluationRule->regra_diferenciada_id)) {
             return false;
         }
 

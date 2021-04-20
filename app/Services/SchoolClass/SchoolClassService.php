@@ -124,6 +124,9 @@ class SchoolClassService
                 ]
             ]
         )->validate();
+
+        $schoolClass->ativo = 0;
+        $schoolClass->save();
     }
 
     /**

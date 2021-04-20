@@ -3,7 +3,6 @@
 namespace App\Rules;
 
 use App\Models\LegacySchoolClass;
-use App\Services\SchoolClassService;
 use Illuminate\Contracts\Validation\Rule;
 
 class CheckSchoolClassExistsByName implements Rule
