@@ -28,7 +28,7 @@ class CanCreateTurma implements Rule
             ->where('ref_cod_serie', $serieId)
             ->first();
 
-        if ($schoolGrade->bloquear_cadastro_turma_para_serie_com_vagas == 1) {
+        if ($schoolGrade && $schoolGrade->bloquear_cadastro_turma_para_serie_com_vagas == 1) {
             $schoolClasses = LegacySchoolClass::query()
                 ->where('ref_ref_cod_serie', $serieId)
                 ->where('ref_ref_cod_escola', $escolaId)
