@@ -8,6 +8,7 @@ use App\Rules\DuplicateMultiGrades;
 use App\Rules\IncompatibleAbsenceType;
 use App\Rules\IncompatibleDescriptiveOpinion;
 use App\Rules\ExistsEnrollmentsInSchoolClassGrades;
+use App\Rules\RequiredAlternativeReportCard;
 
 class MultiGradesService
 {
@@ -27,6 +28,7 @@ class MultiGradesService
                 new DuplicateMultiGrades(),
                 new IncompatibleAbsenceType(),
                 new IncompatibleDescriptiveOpinion(),
+                new RequiredAlternativeReportCard(),
             ],
             'grades_delete' => [
                 new ExistsEnrollmentsInSchoolClassGrades(),

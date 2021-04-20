@@ -886,7 +886,7 @@ return new class extends clsCadastro {
             return false;
         }
 
-        if (!$this->temBoletimDiferenciado($this->ref_cod_serie, $this->ano_letivo, $this->tipo_boletim_diferenciado)) {
+        if (!$this->temBoletimDiferenciado($this->ref_cod_serie, $this->ano_letivo, $this->tipo_boletim_diferenciado) && $this->multiseriada == 0) {
             $this->mensagem = 'O campo \'<b>Boletim diferenciado</b>\' é obrigatório quando a regra de avaliação da série possui regra diferenciada definida.';
 
             return false;
@@ -995,7 +995,7 @@ return new class extends clsCadastro {
             return false;
         }
 
-        if (!$this->temBoletimDiferenciado($dadosTurma['ref_ref_cod_serie'], $dadosTurma['ano'], $this->tipo_boletim_diferenciado)) {
+        if (!$this->temBoletimDiferenciado($dadosTurma['ref_ref_cod_serie'], $dadosTurma['ano'], $this->tipo_boletim_diferenciado) && $this->multiseriada == 0) {
             $this->mensagem = 'O campo \'<b>Boletim diferenciado</b>\' é obrigatório quando a regra de avaliação da série possui regra diferenciada definida.';
 
             return false;
