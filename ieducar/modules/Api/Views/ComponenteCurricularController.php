@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\MigratedDiscipline;
+use Illuminate\Support\Facades\DB;
 
 class ComponenteCurricularController extends ApiCoreController
 {
@@ -152,9 +153,19 @@ class ComponenteCurricularController extends ApiCoreController
     protected function getComponentesCurricularesForMultipleSearch()
     {
         if ($this->canGetComponentesCurriculares()) {
-            $turmaId       = $this->getRequest()->turma_id;
-            $ano           = $this->getRequest()->ano;
-            $areaConhecimentoId           = $this->getRequest()->area_conhecimento_id;
+            $serieId = $this->getRequest()->serie_id;
+            $turmaId = $this->getRequest()->turma_id;
+            $ano = $this->getRequest()->ano;
+            $areaConhecimentoId = $this->getRequest()->area_conhecimento_id;
+            $allDisciplinesMulti = $this->getRequest()->allDisciplinesMulti;
+
+            if ($allDisciplinesMulti) {
+                $componentes = $this->getComponentesTurmaMulti($turmaId, $areaConhecimentoId);
+            }
+
+            if (count($componentes) > 0) {
+                return ['options' => $componentes];
+            }
 
             $sql = 'SELECT cc.id,
                        cc.nome
@@ -182,10 +193,10 @@ class ComponenteCurricularController extends ApiCoreController
 
             if (count($componentesCurriculares) < 1) {
                 $sql = 'SELECT cc.id,
-                       cc.nome
+                       cc.nome  
                   FROM pmieducar.turma AS t
                 INNER JOIN pmieducar.escola_serie_disciplina esd ON (esd.ref_ref_cod_escola = t.ref_ref_cod_escola
-                                                                 AND esd.ref_ref_cod_serie = t.ref_ref_cod_serie
+                                                                 AND esd.ref_ref_cod_serie = coalesce($3, t.ref_ref_cod_serie)
                                                                  AND esd.ativo = 1)
                 INNER JOIN modules.componente_curricular cc ON (cc.id = esd.ref_cod_disciplina)
                 INNER JOIN modules.area_conhecimento ac ON (ac.id = cc.area_conhecimento_id)
@@ -198,7 +209,7 @@ class ComponenteCurricularController extends ApiCoreController
                   AND cc.id <> COALESCE(t.ref_cod_disciplina_dispensada,0)
                   ';
 
-                $params = [$turmaId, $ano];
+                $params = [$turmaId, $ano, $serieId];
 
                 if ($areaConhecimentoId) {
                     $sql .= " AND area_conhecimento_id IN ({$areaConhecimentoId}) ";
@@ -215,6 +226,33 @@ class ComponenteCurricularController extends ApiCoreController
 
             return ['options' => $componentesCurriculares];
         }
+    }
+
+    private function getComponentesTurmaMulti($turmaId, $areaConhecimentoId) {
+        $query = DB::table('pmieducar.turma as t')
+        ->select('cc.id', 'cc.nome')
+        ->join('pmieducar.turma_serie as ts', 'ts.turma_id', '=', 't.cod_turma')
+        ->join('pmieducar.escola_serie as es', function($join) {
+            $join->on('es.ref_cod_serie', '=', 'ts.serie_id');
+            $join->on('es.ref_cod_escola', '=', 't.ref_ref_cod_escola');
+        })
+        ->join('pmieducar.escola_serie_disciplina as esd', function($join) {
+            $join->on('esd.ref_ref_cod_serie', '=', 'es.ref_cod_serie');
+            $join->on('esd.ref_ref_cod_escola', '=', 'es.ref_cod_escola');
+        })
+        ->join('modules.componente_curricular as cc', 'cc.id', '=', 'esd.ref_cod_disciplina')
+        ->where('t.cod_turma', $turmaId)
+        ->whereRaw('t.ano = ANY(esd.anos_letivos)')
+        ->where('t.multiseriada', 1);
+
+        if ($areaConhecimentoId) {
+            $query->where('cc.area_conhecimento_id', $areaConhecimentoId);
+        }
+
+        return $query->distinct()
+            ->get()
+            ->pluck('nome', 'id')
+            ->toArray();
     }
 
     public function Gerar()

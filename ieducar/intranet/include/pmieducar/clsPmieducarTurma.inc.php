@@ -956,7 +956,7 @@ class clsPmieducarTurma extends Model
      *
      * @return array
      */
-    public function lista($int_cod_turma = null, z $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_ref_cod_serie = null, $int_ref_ref_cod_escola = null, $int_ref_cod_infra_predio_comodo = null, $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_turma_tipo = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null, $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = null, $int_ref_cod_instituicao = null, $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null, $bool_verifica_serie_multiseriada = false, $bool_tem_alunos_aguardando_nota = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null, $somenteAnoLetivoEmAndamento = false)
+    public function lista($int_cod_turma = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_ref_cod_serie = null, $int_ref_ref_cod_escola = null, $int_ref_cod_infra_predio_comodo = null, $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_turma_tipo = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null, $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = null, $int_ref_cod_instituicao = null, $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null, $bool_verifica_serie_multiseriada = false, $bool_tem_alunos_aguardando_nota = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null, $somenteAnoLetivoEmAndamento = false)
     {
         $db = new clsBanco();
 
@@ -978,12 +978,16 @@ class clsPmieducarTurma extends Model
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_ref_ref_cod_serie)) {
-            $mult = '';
-            if ($bool_verifica_serie_multiseriada == true) {
-                $mult = " OR  t.ref_ref_cod_serie_mult = '{$int_ref_ref_cod_serie}' ";
-            }
-
-            $filtros .= "{$whereAnd} ( t.ref_ref_cod_serie = '{$int_ref_ref_cod_serie}' $mult )";
+            $filtros .= "{$whereAnd}
+                CASE
+                    WHEN multiseriada = 1 THEN EXISTS (
+                        SELECT 1
+                        FROM pmieducar.turma_serie ts
+                        WHERE ts.turma_id = t.cod_turma
+                        AND ts.serie_id = {$int_ref_ref_cod_serie}
+                    )
+                    ELSE t.ref_ref_cod_serie = {$int_ref_ref_cod_serie}
+                END";
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_ref_ref_cod_escola)) {
@@ -1084,14 +1088,6 @@ class clsPmieducarTurma extends Model
         }
         if (is_numeric($int_ref_cod_curso)) {
             $filtros .= "{$whereAnd} t.ref_cod_curso = '{$int_ref_cod_curso}'";
-            $whereAnd = ' AND ';
-        }
-        if (is_numeric($int_ref_ref_cod_escola_mult)) {
-            $filtros .= "{$whereAnd} t.ref_ref_cod_escola_mult = '{$int_ref_ref_cod_escola_mult}'";
-            $whereAnd = ' AND ';
-        }
-        if (is_numeric($int_ref_ref_cod_serie_mult)) {
-            $filtros .= "{$whereAnd} t.ref_ref_cod_serie_mult = '{$int_ref_ref_cod_serie_mult}'";
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_qtd_min_alunos_matriculados)) {
@@ -1309,14 +1305,6 @@ class clsPmieducarTurma extends Model
             $filtros .= "{$whereAnd} t.ref_cod_curso = '{$int_ref_cod_curso}'";
             $whereAnd = ' AND ';
         }
-        if (is_numeric($int_ref_ref_cod_escola_mult)) {
-            $filtros .= "{$whereAnd} t.ref_ref_cod_escola_mult = '{$int_ref_ref_cod_escola_mult}'";
-            $whereAnd = ' AND ';
-        }
-        if (is_numeric($int_ref_ref_cod_serie_mult)) {
-            $filtros .= "{$whereAnd} t.int_ref_ref_cod_serie_mult = '{$int_ref_ref_cod_serie_mult}'";
-            $whereAnd = ' AND ';
-        }
         if (is_numeric($int_qtd_min_alunos_matriculados)) {
             $filtros .= "{$whereAnd} (SELECT COUNT(0) FROM pmieducar.matricula_turma WHERE ref_cod_turma = t.cod_turma) >= '{$int_qtd_min_alunos_matriculados}' ";
             $whereAnd = ' AND ';
@@ -1406,7 +1394,16 @@ class clsPmieducarTurma extends Model
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_ref_ref_cod_serie)) {
-            $filtros .= "{$whereAnd} t.ref_ref_cod_serie = '{$int_ref_ref_cod_serie}'";
+            $filtros .= "{$whereAnd}
+                CASE
+                    WHEN multiseriada = 1 THEN EXISTS (
+                        SELECT 1
+                        FROM pmieducar.turma_serie ts
+                        WHERE ts.turma_id = t.cod_turma
+                        AND ts.serie_id = {$int_ref_ref_cod_serie}
+                    )
+                    ELSE t.ref_ref_cod_serie = {$int_ref_ref_cod_serie}
+                END";
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_ref_ref_cod_escola)) {
@@ -1512,14 +1509,6 @@ class clsPmieducarTurma extends Model
         }
         if (is_numeric($int_ref_cod_curso)) {
             $filtros .= "{$whereAnd} t.ref_cod_curso = '{$int_ref_cod_curso}'";
-            $whereAnd = ' AND ';
-        }
-        if (is_numeric($int_ref_ref_cod_escola_mult)) {
-            $filtros .= "{$whereAnd} t.ref_ref_cod_escola_mult = '{$int_ref_ref_cod_escola_mult}'";
-            $whereAnd = ' AND ';
-        }
-        if (is_numeric($int_ref_ref_cod_serie_mult)) {
-            $filtros .= "{$whereAnd} t.int_ref_ref_cod_serie_mult = '{$int_ref_ref_cod_serie_mult}'";
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_qtd_min_alunos_matriculados)) {

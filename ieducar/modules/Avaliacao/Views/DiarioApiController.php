@@ -852,6 +852,7 @@ class DiarioApiController extends ApiCoreController
                         );
 
                         $query->whereHas('registration', function ($query) {
+                            $query->where('ref_ref_cod_serie', $this->getRequest()->ref_cod_serie);
                             $query->whereHas('student', function ($query) {
                                 $query->where('ativo', 1);
                             });
