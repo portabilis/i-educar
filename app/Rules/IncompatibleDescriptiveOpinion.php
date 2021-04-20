@@ -5,6 +5,7 @@ namespace App\Rules;
 use App\Models\LegacyEvaluationRuleGradeYear;
 use App\Models\LegacySchoolClass;
 use Illuminate\Contracts\Validation\Rule;
+use RegraAvaliacao_Model_TipoParecerDescritivo;
 
 class IncompatibleDescriptiveOpinion implements Rule
 {
@@ -31,8 +32,11 @@ class IncompatibleDescriptiveOpinion implements Rule
                 return $model->evaluationRule->parecer_descritivo;
             })
             ->toArray();
+        
+        // Ignora regra que não usa parecer descritivo
+        $descriptiveOpinionType = array_diff($descriptiveOpinionType, [RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM]);
 
-        return count(array_unique($descriptiveOpinionType)) === 1;
+        return count(array_unique($descriptiveOpinionType)) > 1;
     }
 
     /**
