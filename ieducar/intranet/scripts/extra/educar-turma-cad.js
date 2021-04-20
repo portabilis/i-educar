@@ -252,7 +252,7 @@ function valida() {
   }
 }
 
-function valida_xml(xml, submitForm = true) {
+function valida_xml(xml) {
   var DOM_turma_sala = new Array();
 
   if (xml != null) {
