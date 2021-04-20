@@ -429,9 +429,30 @@ $j("#multiseriada").on('change', function () {
   $j(this).val(checked);
 });
 
-// function excluir() {
-//   console.log('aqui');
-// }
+function excluirAjax() {
+  console.log('aqui');
+  const settings = {
+    url: "/turma",
+    data: $j("#formcadastro").serialize(),
+    cache: false,
+    type: 'delete',
+    dataType: 'json',
+    beforeSend: function () {
+      buttonUtils.loading('btn_excluir');
+    }
+  };
+  $j.ajax(settings)
+    .done(function (){
+      windowUtils.redirect('educar_turma_lst.php');
+    })
+    .fail(function ({responseText}) {
+      let jsonResponse = JSON.parse(responseText);
+      messageUtils.error(jsonResponse.msg);
+    })
+    .always(function (){
+      buttonUtils.reset('btn_excluir', 'Excluir');
+    });
+}
 
 function doAjax() {
 

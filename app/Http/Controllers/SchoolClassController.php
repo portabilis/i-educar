@@ -101,7 +101,28 @@ class SchoolClassController extends Controller
         } catch (Exception $ex) {
             return response()->json(['msg' => $ex->getMessage()], 500);
         }
-        session()->flash('success', 'Edição efetuada com sucesso.');
+        session()->flash('success', $response['msg']);
+
+        return response()->json($response);
+    }
+
+    public function delete(Request $request)
+    {
+        $response = ['msg' => 'Exclusão efetuada com sucesso.'];
+        $schoolClassService = new SchoolClassService();
+
+        try {
+            DB::beginTransaction();
+            $schoolClassToDelete = LegacySchoolClass::find($request->get('cod_turma'));
+            $schoolClassService->deleteSchoolClass($schoolClassToDelete);
+        } catch (ValidationException $ex) {
+            DB::rollBack();
+
+            return response()->json(['msg' => $ex->validator->errors()->first()], 422);
+        } catch (Exception $ex) {
+            return response()->json(['msg' => $ex->getMessage()], 500);
+        }
+        session()->flash('success', $response['msg']);
 
         return response()->json($response);
     }

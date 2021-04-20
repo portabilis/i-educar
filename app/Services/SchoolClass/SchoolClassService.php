@@ -6,6 +6,7 @@ use App\Models\LegacyLevel;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassStage;
 use App\Rules\CanCreateTurma;
+use App\Rules\CanDeleteTurma;
 use App\Rules\CheckAlternativeReportCardExists;
 use App\Rules\CheckMandatoryCensoFields;
 use App\Rules\CheckSchoolClassExistsByName;
@@ -111,6 +112,18 @@ class SchoolClassService
         $schoolClass->save();
 
         return $schoolClass;
+    }
+
+    public function deleteSchoolClass(LegacySchoolClass $schoolClass)
+    {
+        validator(
+            ['schoolClass' => $schoolClass],
+            [
+                'schoolClass' => [
+                    new CanDeleteTurma()
+                ]
+            ]
+        )->validate();
     }
 
     /**

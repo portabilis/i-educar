@@ -95,6 +95,9 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(586, $this->pessoa_logada, 7, 'educar_turma_lst.php');
 
+        //Define que esta tela executa suas ações atraves de requisições ajax
+        $this->acao_executa_submit_ajax = true;
+
         if (is_numeric($this->cod_turma)) {
             $obj_turma = new clsPmieducarTurma($this->cod_turma);
             $registro = $obj_turma->detalhe();
@@ -138,6 +141,8 @@ return new class extends clsCadastro {
 
                 if ($possuiAlunosVinculados) {
                     $this->script_excluir = 'excluir_turma_com_matriculas();';
+                } elseif ($this->acao_executa_submit_ajax) {
+                    $this->script_excluir = 'excluirAjax();';
                 }
 
                 $this->fexcluir = $obj_permissoes->permissao_excluir(
@@ -588,7 +593,6 @@ return new class extends clsCadastro {
 
         $this->acao_enviar = 'valida()';
         $this->acao_executa_submit = false;
-        $this->acao_executa_submit_ajax = true;
 
         $this->inputsHelper()->integer('codigo_inep_educacenso', ['label' => 'Código INEP',
             'label_hint' => 'Somente números',
@@ -912,7 +916,7 @@ return new class extends clsCadastro {
                 ];
             }
 
-            $service = new MultiGradesService;
+            $service = new MultiGradesService();
 
             try {
                 $service->storeSchoolClassGrade($schoolClass, $schoolClassGrades);
