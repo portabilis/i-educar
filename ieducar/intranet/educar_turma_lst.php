@@ -173,7 +173,9 @@ return new class extends clsListagem {
                 }
 
                 if ($registro['nm_serie']) {
-                    $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro['cod_turma']}\">{$registro['nm_serie']}</a>";
+                    $nomeSerie = str_replace(['{', '}', '"'], '', $registro['nm_serie']);
+                    $nomeSerie = str_replace(',', ', ', $nomeSerie);
+                    $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro['cod_turma']}\">{$nomeSerie}</a>";
                 } else {
                     $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro['cod_turma']}\">-</a>";
                 }

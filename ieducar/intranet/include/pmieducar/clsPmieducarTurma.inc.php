@@ -1178,7 +1178,7 @@ class clsPmieducarTurma extends Model
     {
         $db = new clsBanco();
 
-        $sql = "SELECT {$this->_campos_lista},c.nm_curso,s.nm_serie,i.nm_instituicao FROM {$this->_tabela} t LEFT JOIN pmieducar.turma_serie ts ON (ts.turma_id  = t.cod_turma) LEFT JOIN {$this->_schema}serie s ON (s.cod_serie = COALESCE(ts.serie_id, t.ref_ref_cod_serie)), {$this->_schema}curso c, {$this->_schema}instituicao i ";
+        $sql = "SELECT {$this->_campos_lista},c.nm_curso,array_agg(s.nm_serie ORDER BY s.nm_serie) AS nm_serie,i.nm_instituicao FROM {$this->_tabela} t LEFT JOIN pmieducar.turma_serie ts ON (ts.turma_id  = t.cod_turma) LEFT JOIN {$this->_schema}serie s ON (s.cod_serie = COALESCE(ts.serie_id, t.ref_ref_cod_serie)), {$this->_schema}curso c, {$this->_schema}instituicao i ";
         $filtros = '';
 
         $whereAnd = ' WHERE t.ref_cod_curso = c.cod_curso AND c.ref_cod_instituicao = i.cod_instituicao AND ';
@@ -1342,7 +1342,7 @@ class clsPmieducarTurma extends Model
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
-        $sql .= $filtros . $this->getOrderby() . $this->getLimite();
+        $sql .= $filtros . $this->getGroupByLista2() . $this->getOrderby() . $this->getLimite();
 
         $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} t LEFT JOIN pmieducar.turma_serie ts ON (ts.turma_id  = t.cod_turma) LEFT JOIN {$this->_schema}serie s ON (s.cod_serie = COALESCE(ts.serie_id, t.ref_ref_cod_serie)), {$this->_schema}curso c , {$this->_schema}instituicao i {$filtros}");
 
@@ -1727,5 +1727,55 @@ class clsPmieducarTurma extends Model
 
             return Portabilis_Utils_Database::fetchPreparedQuery($sql, $params);
         }
+    }
+
+    private function getGroupByLista2() {
+        return "
+            GROUP BY
+                t.cod_turma,
+                t.ref_usuario_exc,
+                t.ref_usuario_cad,
+                t.ref_ref_cod_serie,
+                t.ref_ref_cod_escola,
+                t.ref_cod_infra_predio_comodo,
+                t.nm_turma,
+                t.sgl_turma,
+                t.max_aluno,
+                t.multiseriada,
+                t.data_cadastro,
+                t.data_exclusao,
+                t.ativo,
+                t.ref_cod_turma_tipo,
+                t.hora_inicial,
+                t.hora_final,
+                t.hora_inicio_intervalo,
+                t.hora_fim_intervalo,
+                t.ref_cod_regente,
+                t.ref_cod_instituicao_regente,t.ref_cod_instituicao,
+                t.ref_cod_curso,
+                t.ref_ref_cod_serie_mult,
+                t.ref_ref_cod_escola_mult,
+                t.visivel,
+                t.turma_turno_id,
+                t.tipo_boletim,
+                t.tipo_boletim_diferenciado,
+                t.ano,
+                t.tipo_atendimento,
+                t.cod_curso_profissional,
+                t.etapa_educacenso,
+                t.ref_cod_disciplina_dispensada,
+                t.parecer_1_etapa,
+                t.parecer_2_etapa,
+                t.parecer_3_etapa,
+                t.parecer_4_etapa,
+                t.nao_informar_educacenso,
+                t.tipo_mediacao_didatico_pedagogico,
+                t.dias_semana,
+                t.atividades_complementares,
+                t.atividades_aee,
+                t.local_funcionamento_diferenciado,
+                c.nm_curso,
+                i.nm_instituicao
+        ";
     }
 }
