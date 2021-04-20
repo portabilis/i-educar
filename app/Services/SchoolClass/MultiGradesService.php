@@ -32,7 +32,7 @@ class MultiGradesService
                 new ExistsEnrollmentsInSchoolClassGrades(),
             ],
         ], [
-            'grades.min' => 'Você deve selecionar pelo menos 2 séries em turmas multisseriadas',
+            'grades.min' => 'Você deve selecionar pelo menos 2 séries em turmas multisseriadas.',
         ])->validate();
     }
 
