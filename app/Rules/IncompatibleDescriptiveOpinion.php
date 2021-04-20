@@ -31,8 +31,11 @@ class IncompatibleDescriptiveOpinion implements Rule
                 return $model->evaluationRule->parecer_descritivo;
             })
             ->toArray();
+        
+        // Ignora regra que não usa parecer descritivo cujo valor é 0
+        $descriptiveOpinionType = array_diff($descriptiveOpinionType, [0]);
 
-        return count(array_unique($descriptiveOpinionType)) === 1;
+        return count(array_unique($descriptiveOpinionType)) > 1;
     }
 
     /**
