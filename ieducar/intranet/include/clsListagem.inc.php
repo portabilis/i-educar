@@ -32,6 +32,8 @@ class clsListagem extends clsCampos
     public $funcAcao = '';
     public $funcAcaoNome = '';
     public $appendInTop = false;
+    // Para adicionar uma classe CSS extra no botão configure o valor do
+    // $this->array_botao como um array ex: $this->array_botao[] = ['name' => 'Novo', 'css-extra' => 'btn-green'];
     public $array_botao;
     public $array_botao_url;
     public $array_botao_script;
@@ -555,8 +557,27 @@ HTML;
                 //$retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='". $this->array_botao_script[$i]."' value='".$this->array_botao[$i]."'>&nbsp;\n";
             }
         } elseif (is_array($this->array_botao)) {
-            for ($i = 0; $i < count($this->array_botao); $i++) {
-                $retorno .= '&nbsp;<input type=\'button\' class=\'botaolistagem\' onclick=\'javascript:go( "'.$this->array_botao_url[$i].'" );\' value=\''.$this->array_botao[$i]."'>&nbsp;\n";
+
+            $count = count($this->array_botao);
+            for ($i = 0; $i < $count; $i++) {
+
+                $url = $this->array_botao_url[$i];
+
+                // Valores podem mudar de acordo com a construção do $this->array_botao
+                $extraCssClass = 'botaolistagem';
+                $value = $this->array_botao[$i];
+
+                if (is_array($this->array_botao[$i])) {
+                    if (array_key_exists('css-extra', $this->array_botao[$i])) {
+                        $extraCssClass .= ' ' . $this->array_botao[$i]['css-extra'];
+                    }
+
+                    if (array_key_exists('name', $this->array_botao[$i])) {
+                        $value = ' ' . $this->array_botao[$i]['name'];
+                    }
+                }
+
+                $retorno .= '&nbsp;<input type=\'button\' class=\''. $extraCssClass . '\' onclick=\'javascript:go( "'.$url.'" );\' value=\''.$value."'>&nbsp;\n";
             }
         }
 

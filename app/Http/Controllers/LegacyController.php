@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use clsBase;
+use CoreExt_Exception_FileNotFoundException;
 use Exception;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
@@ -109,13 +109,12 @@ class LegacyController extends Controller
             // interna que será a resposta devolvida pela aplicação.
 
             throw $exception;
-        } catch (ValidationException $exception) {
+        } catch (CoreExt_Exception_FileNotFoundException $exception) {
 
-            // Trata as exceções geradas pela validação do Laravel.
-            // Nesse caso a exception será lançada e o próprio framework fará o redirect
-            // e tratamento das mensagens de erro
+            // Caso a página não seja encontrada no módulo legado, lança um erro 404
+            // ao invés de 500
 
-            throw $exception;
+            throw new NotFoundHttpException($exception->getMessage(), $exception);
         } catch (Exception $exception) {
 
             // A maioria das vezes será pega a Exception neste catch, apenas

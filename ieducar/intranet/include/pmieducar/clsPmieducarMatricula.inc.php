@@ -26,6 +26,7 @@ class clsPmieducarMatricula extends Model
     public $semestre;
     public $data_matricula;
     public $data_cancel;
+    public $observacoes;
     public $turno_pre_matricula;
     public $dependencia;
 
@@ -69,7 +70,8 @@ class clsPmieducarMatricula extends Model
         $semestre = null,
         $data_matricula = null,
         $data_cancel = null,
-        $ref_cod_abandono = null
+        $ref_cod_abandono = null,
+        $observacoes = false
     ) {
         $db = new clsBanco();
         $this->db = $db;
@@ -165,6 +167,8 @@ class clsPmieducarMatricula extends Model
         if (is_string($data_cancel)) {
             $this->data_cancel = $data_cancel;
         }
+
+        $this->observacoes = $observacoes;
     }
 
     /**
@@ -297,6 +301,13 @@ class clsPmieducarMatricula extends Model
             if (is_string($this->data_cancel)) {
                 $campos .= "{$gruda}data_cancel";
                 $valores .= "{$gruda}'{$this->data_cancel}'";
+                $gruda = ', ';
+            }
+
+            if (is_string($this->observacoes)) {
+                $observacoes = $db->escapeString($this->observacoes);
+                $campos .= "{$gruda}observacoes";
+                $valores .= "{$gruda}'{$observacoes}'";
                 $gruda = ', ';
             }
 
@@ -463,6 +474,13 @@ class clsPmieducarMatricula extends Model
             } elseif (is_null($this->data_exclusao)) {
                 $set .= "{$gruda}data_exclusao = NULL";
                 $gruda = ', ';
+            }
+
+            if (is_string($this->observacoes)) {
+                $observacoes = $db->escapeString($this->observacoes);
+                $set .= "{$gruda}observacoes = '{$observacoes}'";
+            } elseif ($this->observacoes !== false) {
+                $set .= "{$gruda}observacoes = NULL";
             }
 
             if ($set) {

@@ -118,7 +118,10 @@ return new class extends clsListagem {
         if ($obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7)) {
             //$this->array_botao_url[] = "educar_avaliacao_desempenho_cad.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_ref_cod_instituicao={$this->ref_ref_cod_instituicao}";
             $this->array_botao_url[] = "educar_avaliacao_desempenho_cad.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_ref_cod_instituicao={$this->ref_ref_cod_instituicao}";
-            $this->array_botao[] = 'Novo';
+            $this->array_botao[] = [
+                'name' => 'Novo',
+                'css-extra' => 'btn-green'
+            ];
         }
 
         $this->array_botao_url[] = "educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_ref_cod_instituicao}";

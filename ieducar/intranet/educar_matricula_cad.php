@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 return new class extends clsCadastro {
-    public $pessoa_logada;
 
     public $cod_matricula;
 
@@ -40,6 +39,8 @@ return new class extends clsCadastro {
     public $ano;
 
     public $data_matricula;
+
+    public $observacoes;
 
     public $ref_cod_instituicao;
 
@@ -148,33 +149,15 @@ return new class extends clsCadastro {
                 $this->nm_aluno = $det_aluno['nome_aluno'];
                 $this->campoRotulo('nm_aluno', 'Aluno', $this->nm_aluno);
             }
-
-            /*
-             * Verifica se existem matrículas para o aluno para apresentar o campo
-             * transferência, necessário para o relatório de movimentação mensal.
-             */
-            $obj_matricula = new clsPmieducarMatricula();
-
-            $lst_matricula = $obj_matricula->lista(
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                $this->ref_cod_aluno
-            );
         }
 
         if ($this->ref_cod_turma_copiar_enturmacoes) {
             $this->nome_url_sucesso = Portabilis_String_Utils::toLatin1('Gravar enturmações');
         }
-        // inputs
-
-        $anoLetivoHelperOptions = ['situacoes' => ['em_andamento', 'nao_iniciado']];
 
         $this->inputsHelper()->dynamic(['ano', 'instituicao', 'escola', 'curso', 'serie', 'turma']);
         $this->inputsHelper()->date('data_matricula', ['label' => Portabilis_String_Utils::toLatin1('Data da matrícula'), 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')]);
+        $this->inputsHelper()->textArea('observacoes', ['required' => false, 'label' => 'Observações']);
         $this->inputsHelper()->hidden('ano_em_andamento', ['value' => '1']);
 
         if (config('legacy.app.matricula.dependencia') == 1) {
@@ -212,7 +195,7 @@ return new class extends clsCadastro {
 
     private function getEnturmacoesNaTurma($turma)
     {
-        return (array)Portabilis_Utils_Database::fetchPreparedQuery("
+        return (array) Portabilis_Utils_Database::fetchPreparedQuery("
             select *
             from pmieducar.matricula_turma
             where ref_cod_turma = {$turma}
@@ -222,7 +205,7 @@ return new class extends clsCadastro {
 
     private function getMaximoAlunosNaTurma($turma)
     {
-        return (int)(new clsBanco())->CampoUnico("
+        return (int) (new clsBanco())->CampoUnico("
             select max_aluno
             from pmieducar.turma
             where cod_turma = $turma
@@ -891,7 +874,10 @@ return new class extends clsCadastro {
                 $this->ref_cod_curso,
                 null,
                 $this->semestre,
-                $this->data_matricula
+                $this->data_matricula,
+                null,
+                null,
+                $this->observacoes
             );
 
             $dataMatriculaObj = new \DateTime($this->data_matricula);
@@ -1465,7 +1451,7 @@ return new class extends clsCadastro {
                    AND turno_pre_matricula = $5
                    AND aprovado = 11 ';
 
-        return (int)Portabilis_Utils_Database::selectField($sql, [$this->ano, $this->ref_cod_escola, $this->ref_cod_curso, $this->ref_cod_serie, $det_t['turma_turno_id']]);
+        return (int) Portabilis_Utils_Database::selectField($sql, [$this->ano, $this->ref_cod_escola, $this->ref_cod_curso, $this->ref_cod_serie, $det_t['turma_turno_id']]);
     }
 
     public function _getQtdMatriculaTurno()
