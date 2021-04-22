@@ -430,7 +430,6 @@ $j("#multiseriada").on('change', function () {
 });
 
 function excluirAjax() {
-  console.log('aqui');
   const settings = {
     url: "/turma",
     data: $j("#formcadastro").serialize(),

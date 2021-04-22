@@ -33,6 +33,8 @@ class SchoolClassController extends Controller
         $cargaHoraria = $request->get('carga_horaria');
         $usarComponente = $request->get('usar_componente');
         $docenteVinculado = $request->get('docente_vinculado');
+        $etapasUtilizadas = $request->get('etapas_utilizadas');
+        $etapasEspecificas = $request->get('etapas_especificas');
         $codigoInepEducacenso = $request->get('codigo_inep_educacenso');
 
         try {
@@ -70,7 +72,9 @@ class SchoolClassController extends Controller
                     $disciplinas,
                     $cargaHoraria,
                     $usarComponente,
-                    $docenteVinculado
+                    $docenteVinculado,
+                    $etapasUtilizadas,
+                    $etapasEspecificas
                 );
             }
 
@@ -181,12 +185,9 @@ class SchoolClassController extends Controller
             $params['ref_usuario_exc'] = $pessoaLogada;
         }
 
-        if (isset($params['nao_informar_educacenso']) && $params['nao_informar_educacenso'] == 'on') {
-            $params['nao_informar_educacenso'] = 1;
-        } else {
-            $params['nao_informar_educacenso'] = 0;
-        }
-
+        $value = array_key_exists('nao_informar_educacenso', $params)
+        && $params['nao_informar_educacenso'] === 'on' ? 1 : 0;
+        $params['nao_informar_educacenso'] = $value;
         $params['ativo'] = 1;
 
         $legacySchoolClass->fill($params);
@@ -201,9 +202,10 @@ class SchoolClassController extends Controller
         $componentes,
         $cargaHoraria,
         $usarComponente,
-        $docente
-    )
-    {
+        $docente,
+        $etapasUtilizadas,
+        $etapasEspecificas
+    ){
         if ($componentes) {
             $mapper = new ComponenteCurricular_Model_TurmaDataMapper();
 
@@ -216,23 +218,23 @@ class SchoolClassController extends Controller
                 $docente_ = isset($docente[$key]) ?
                     1 : 0;
 
-                $etapasEspecificas = isset($this->etapas_especificas[$key]) ?
+                $hasEspecifica = isset($etapasEspecificas[$key]) ?
                     1 : 0;
 
-                $etapasUtilizadas = ($etapasEspecificas == 1) ? $this->etapas_utilizadas[$key] : null;
+                $etapaUtilizada = ($hasEspecifica == 1) ? $etapasUtilizadas[$key] : null;
 
                 $componentesTurma[] = [
                     'id' => $value,
                     'cargaHoraria' => $carga,
                     'docenteVinculado' => $docente_,
-                    'etapasEspecificas' => $etapasEspecificas,
-                    'etapasUtilizadas' => $etapasUtilizadas
+                    'etapasEspecificas' => $hasEspecifica,
+                    'etapasUtilizadas' => $etapaUtilizada
                 ];
             }
 
-            $idiarioService = $this->getIdiarioService();
+            $iDiarioService = $this->getIdiarioService();
 
-            $mapper->bulkUpdate($codSerie, $codEscola, $codTurma, $componentesTurma, $idiarioService);
+            $mapper->bulkUpdate($codSerie, $codEscola, $codTurma, $componentesTurma, $iDiarioService);
         }
     }
 
