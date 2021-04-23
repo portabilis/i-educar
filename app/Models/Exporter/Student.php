@@ -78,6 +78,7 @@ class Student extends Model
                 'phones.phones' => 'Telefones',
                 'benefits.benefits' => 'Benefícios',
                 'disabilities.disabilities' => 'Deficiências',
+                'modalidade_ensino' => 'Modalidade de ensino cursada',
                 'technological_resources' => 'Recursos tecnológicos',
             ],
             'Endereço' => [
