@@ -48,7 +48,7 @@ class ReCaptchaV3 implements Rule
      */
     private function getScore($response)
     {
-        return json_decode($response->getBody()->getContents(), true)['score'];
+        return json_decode($response->getBody()->getContents(), true)['score'] ?? 0;
     }
 
     /**

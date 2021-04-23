@@ -9,7 +9,7 @@ return new class extends clsCadastro {
     public function Formular()
     {
         $this->title = 'i-Educar - Modalidade de ensino';
-        $this->processoAp = 57800;
+        $this->processoAp = 578;
     }
 
     public function Inicializar()

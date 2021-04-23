@@ -84,7 +84,8 @@ class clsPmieducarMatricula extends Model
         $data_matricula = null,
         $data_cancel = null,
         $ref_cod_abandono = null,
-        $observacoes = false
+        $observacoes = false,
+        $modalidadeEnsino = self::MODELO_PRESENCIAL
     ) {
         $db = new clsBanco();
         $this->db = $db;
@@ -182,6 +183,7 @@ class clsPmieducarMatricula extends Model
         }
 
         $this->observacoes = $observacoes;
+        $this->modalidade_ensino = $modalidadeEnsino;
     }
 
     /**
