@@ -27,6 +27,7 @@ return new class extends clsCadastro {
     public $ref_cod_instituicao;
     public $ref_cod_curso;
     public $ref_cod_escola;
+    public $modalidade_ensino;
 
     public $ref_ref_cod_serie_antiga;
 
