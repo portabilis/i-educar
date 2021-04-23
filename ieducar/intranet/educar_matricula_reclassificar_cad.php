@@ -205,23 +205,24 @@ return new class extends clsCadastro {
         if (!$cadastrou) {
             echo "<script>alert('Erro ao reclassificar matrícula'); window.location='educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}';</script>";
             die('Erro ao reclassificar matrícula');
-        } else {
-            /**
-             * desativa todas as enturmacoes da matricula anterior
-             */
-            $obj_matricula_turma = new clsPmieducarMatriculaTurma($this->cod_matricula);
-            if (!$obj_matricula_turma->reclassificacao($this->data_cancel)) {
-                echo "<script>alert('Erro ao desativar enturmações da matrícula: {$this->cod_matricula}\nContate o administrador do sistema informando a matrícula!');</script>";
-            }
+        }
 
-            $notaAluno = (new Avaliacao_Model_NotaAlunoDataMapper())
-                ->findAll(['id'], ['matricula_id' => $this->cod_matricula])[0];
+        /**
+         * desativa todas as enturmacoes da matricula anterior
+         */
+        $obj_matricula_turma = new clsPmieducarMatriculaTurma($this->cod_matricula);
+        if (!$obj_matricula_turma->reclassificacao($this->data_cancel)) {
+            echo "<script>alert('Erro ao desativar enturmações da matrícula: {$this->cod_matricula}\nContate o administrador do sistema informando a matrícula!');</script>";
+        }
 
-            if (!is_null($notaAluno)) {
-                $notaAlunoId = $notaAluno->get('id');
-                (new Avaliacao_Model_NotaComponenteMediaDataMapper())
-                    ->updateSituation($notaAlunoId, App_Model_MatriculaSituacao::RECLASSIFICADO);
-            }
+        $notaAluno = (new Avaliacao_Model_NotaAlunoDataMapper())
+            ->findAll(['id'], ['matricula_id' => $this->cod_matricula])[0];
+
+        if (!is_null($notaAluno)) {
+            $notaAlunoId = $notaAluno->get('id');
+            (new Avaliacao_Model_NotaComponenteMediaDataMapper())
+                ->updateSituation($notaAlunoId, App_Model_MatriculaSituacao::RECLASSIFICADO);
+        }
 
             //window.location='educar_matricula_det.php?cod_matricula={$this->cod_matricula}&ref_cod_aluno={$this->ref_cod_aluno}';
             echo "<script>alert('Reclassificação realizada com sucesso!\\nO Código da nova matrícula é: $cadastrou.');
