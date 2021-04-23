@@ -5,7 +5,7 @@ namespace App\Services\SchoolClass;
 use App\Models\LegacyLevel;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassStage;
-use App\Rules\CanCreateTurma;
+use App\Rules\CanCreateSchoolClass;
 use App\Rules\CanDeleteTurma;
 use App\Rules\CheckAlternativeReportCardExists;
 use App\Rules\CheckMandatoryCensoFields;
@@ -140,7 +140,7 @@ class SchoolClassService
             ['schoolClass' => $schoolClass],
             [
                 'schoolClass' => [
-                    new CanCreateTurma(),
+                    new CanCreateSchoolClass(),
                     new CheckMandatoryCensoFields(),
                     new CheckSchoolClassExistsByName(),
                     new CheckAlternativeReportCardExists()

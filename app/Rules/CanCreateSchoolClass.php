@@ -6,7 +6,7 @@ use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolGrade;
 use Illuminate\Contracts\Validation\Rule;
 
-class CanCreateTurma implements Rule
+class CanCreateSchoolClass implements Rule
 {
     /**
      * Determine if the validation rule passes.
