@@ -132,13 +132,11 @@ return new class extends clsCadastro {
                 return false;
                 die();
             }
-        } else {
-            if (substr($det_matricula['data_matricula'], 0, 10) > $this->data_cancel) {
-                $this->mensagem = 'Data de abandono não pode ser inferior a data da matrícula.<br>';
+        } elseif (substr($det_matricula['data_matricula'], 0, 10) > $this->data_cancel) {
+            $this->mensagem = 'Data de abandono não pode ser inferior a data da matrícula.<br>';
 
-                return false;
-                die();
-            }
+            return false;
+            die();
         }
 
         if (!$det_matricula || $det_matricula['aprovado'] != 3) {
