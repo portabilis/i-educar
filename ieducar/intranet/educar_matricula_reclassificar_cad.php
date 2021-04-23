@@ -224,12 +224,10 @@ return new class extends clsCadastro {
                 ->updateSituation($notaAlunoId, App_Model_MatriculaSituacao::RECLASSIFICADO);
         }
 
-            //window.location='educar_matricula_det.php?cod_matricula={$this->cod_matricula}&ref_cod_aluno={$this->ref_cod_aluno}';
-            echo "<script>alert('Reclassificação realizada com sucesso!\\nO Código da nova matrícula é: $cadastrou.');
-            window.location='educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}';
-            </script>";
-            die('Reclassificação realizada com sucesso!');
-        }
+        echo "<script>alert('Reclassificação realizada com sucesso!\\nO Código da nova matrícula é: $cadastrou.');
+        window.location='educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}';
+        </script>";
+        die('Reclassificação realizada com sucesso!');
     }
 
     public function Excluir()
