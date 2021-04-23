@@ -50,7 +50,7 @@ class CanCreateSchoolClass implements Rule
                 $maxAlunos = $schoolClass->max_aluno;
                 if (($maxAlunos - $countMatriculas) > 0) {
                     $vagas = $schoolClass->max_aluno - $countMatriculas;
-                    $this->message = "Não é possivel cadastrar turmas, pois ainda existem {$vagas} vagas em aberto na turma '{$schoolClass->nm_turma}' desta serie e turno. Tal limitação ocorre devido definição feita para estaescola e série.";
+                    $this->message = "Não é possivel cadastrar turmas, pois ainda existem {$vagas} vagas em aberto na turma '{$schoolClass->nm_turma}' desta serie e turno. Tal limitação ocorre devido definição feita para estae scola e série.";
 
                     return false;
                 }
