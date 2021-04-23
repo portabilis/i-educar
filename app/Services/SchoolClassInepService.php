@@ -14,14 +14,11 @@ class SchoolClassInepService
      */
     public function store($codTurma, $codigoInepEducacenso)
     {
-        $schoolClassInep = SchoolClassInep::firstOrNew(['cod_turma' => $codTurma]);
-
-        $schoolClassInep->cod_turma = $codTurma;
-        $schoolClassInep->cod_turma_inep = $codigoInepEducacenso;
-
-        $schoolClassInep->save();
-
-        return $schoolClassInep;
+        return SchoolClassInep::updateOrCreate([
+            'cod_turma' => $codTurma,
+        ], [
+            'cod_turma_inep' => $codigoInepEducacenso,
+        ]);
     }
 
     public function delete($codTurma)
