@@ -221,7 +221,8 @@ class LegacyCreateTestsCommand extends Command
             'educar_subniveis_cad.php',
             'educar_coffebreak_tipo_lst.php',
             'transporte_itinerario_del.php',
-            'educar_turma_cad.php'
+            'educar_turma_cad.php',
+            'educar_matricula_modalidade_ensino.php'
         ];
     }
 
