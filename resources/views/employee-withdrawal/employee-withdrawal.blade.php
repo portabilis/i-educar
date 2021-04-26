@@ -10,6 +10,7 @@
                     <th>Data de retorno</th>
                     <th>Documentos</th>
                     <th>Editar</th>
+                    <th>Excluir</th>
                 </tr>
                 @if(isset($withdrawals))
                     @foreach($withdrawals as $withdrawal)
@@ -25,13 +26,19 @@
                             @endforeach
                             </td>
                             <td align="center">
-                                @if($withdrawal->ativo == 1)
-                                    <a href="educar_servidor_afastamento_cad.php?ref_cod_servidor={{$withdrawal->ref_cod_servidor}}&sequencial={{$withdrawal->sequencial}}&ref_cod_instituicao={{$withdrawal->ref_ref_cod_instituicao}}">Editar</a> 
+                                @if($isAllowedModify)
+                                    <a class="fa fa-pencil" href="educar_servidor_afastamento_cad.php?ref_cod_servidor={{$withdrawal->ref_cod_servidor}}&sequencial={{$withdrawal->sequencial}}&ref_cod_instituicao={{$withdrawal->ref_ref_cod_instituicao}}"></a>
                                 @else
                                     <i class="fa fa-ban" aria-hidden="true"></i>
                                 @endif
                             </td>
-                        </div>
+                            <td align="center">
+                                @if($isAllowedModify)
+                                    <a onclick="modalExcluir({{$withdrawal->id}});"><i class="fa fa-trash-o cursor" ></i></a>
+                                @else
+                                    <i class="fa fa-ban" aria-hidden="true"></i>
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
                 @endif
@@ -76,6 +83,10 @@
 
 .table-detail tbody tr:nth-child(even) {
   background-color: #ffffff;
+}
+
+.cursor {
+    cursor: pointer;
 }
 
 </style>
