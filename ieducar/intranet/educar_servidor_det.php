@@ -320,7 +320,7 @@ return new class extends clsDetalhe {
             }
         }
 
-        $withdrawals = EmployeeWithdrawal::query()->where('ref_cod_servidor', $this->cod_servidor)->get();
+        $withdrawals = EmployeeWithdrawal::query()->where(['ref_cod_servidor' => $this->cod_servidor, 'ativo' => 0])->get();
 
         if (count($withdrawals) > 0) {
             $this->addHtml(view('employee-withdrawal.employee-withdrawal', ['withdrawals' => $withdrawals, 'isAllowedModify' => $isAllowedModify])->render());
