@@ -220,8 +220,12 @@ function onDataSaidaChange(matricula_id, key, campo){
 
 }
 
-var handlePostDataSaida = function(dataresponse){
-  handleMessages(dataresponse.msgs);
+const handlePostDataSaida = function(dataresponse){
+  if(dataresponse.any_error_msg) {
+    buildAlert(dataresponse.msgs[0].msg);
+  } else {
+    handleMessages(dataresponse.msgs);
+  }
 }
 
 var getMatriculas = function() {
@@ -237,6 +241,45 @@ var getMatriculas = function() {
   };
 
   getResource(options);
+}
+
+const buildAlert = function (msg) {
+  const modalSettings = {
+    content: msg,
+    title: 'Atenção!',
+    maxWidth: 860,
+    width: 860,
+    modal: true,
+    classes: {
+      "ui-dialog-titlebar": 'ui-state-error'
+    },
+    close: function () {
+      $j(this).dialog('destroy');
+    },
+    buttons: [{
+      text: 'Fechar',
+      click: function () {
+        $j(this).dialog("close");
+      }
+    }]
+  }
+
+  let container = $j('#dialog-container');
+
+  if (container.length < 1) {
+    $j('body').append('<div id="dialog-container" style="width: 500px;"></div>');
+    container = $j('#dialog-container');
+  }
+
+  if (container.hasClass('ui-dialog-content')) {
+    container.dialog('destroy');
+  }
+
+  container.empty();
+  container.html(modalSettings.content);
+
+  delete modalSettings['content'];
+  container.dialog(modalSettings);
 }
 
 $j('.tableDetalheLinhaSeparador').closest('tr').attr('id','stop');
