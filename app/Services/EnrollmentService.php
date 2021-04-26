@@ -16,6 +16,7 @@ use App\Exceptions\Enrollment\PreviousEnrollRegistrationDateException;
 use App\Models\LegacyEnrollment;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClass;
+use App\Rules\CanChangeExitDate;
 use App\Services\SchoolClass\AvailableTimeService;
 use App\User;
 use Carbon\Carbon;
@@ -414,5 +415,34 @@ class EnrollmentService
         $relocationDate = $enrollment->schoolClass->school->institution->relocation_date;
 
         return !$relocationDate || $date >= $relocationDate;
+    }
+
+    /**
+     * @param LegacyEnrollment $enrollment
+     * @param DateTime $exitDate
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function updateExitDate(LegacyEnrollment $enrollment, DateTime $exitDate)
+    {
+        $studentId = $enrollment->registration()
+            ->first()
+            ->student()
+            ->first()
+            ->cod_aluno;
+        validator(
+            [
+                'data' =>
+                    [
+                        'student_id' => $studentId,
+                        'exit_date' => $exitDate
+                    ]
+            ],
+            [
+                'data' => [new CanChangeExitDate()]
+            ]
+        )->validate();
+
+        $enrollment->data_exclusao = $exitDate->format('Y-m-d');
+        $enrollment->save();
     }
 }
