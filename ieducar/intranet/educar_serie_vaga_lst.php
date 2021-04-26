@@ -126,7 +126,10 @@ return new class extends clsListagem {
 
         if ($obj_permissoes->permissao_cadastra(21253, $this->pessoa_logada, 7)) {
             $this->array_botao_url[] = 'educar_serie_vaga_cad.php';
-            $this->array_botao[]     = 'Novo';
+            $this->array_botao[] = [
+                'name' => 'Novo',
+                'css-extra' => 'btn-green'
+            ];
         }
 
         $this->largura = '100%';

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacySchoolHistory;
 use App\Models\LogUnificationOldData;
 use Illuminate\Support\Facades\DB;
 
@@ -9,38 +10,30 @@ class App_Unificacao_Aluno
     {
         self::validaParametros($codAlunoPrincipal, $codAlunos, $codPessoa);
 
+        $maxSequencialAlunoPrincipal = LegacySchoolHistory::query()
+            ->where('ref_cod_aluno', $codAlunoPrincipal)
+            ->max('sequencial') ?? 0;
+
         $codAlunosString = implode(',', $codAlunos);
 
         self::logData($codAlunos, $unificationId);
 
         foreach ($codAlunos as $codAluno) {
-            DB::statement(
-                "
+            DB::statement("
                 UPDATE pmieducar.historico_escolar
                 SET
                     ref_cod_aluno = {$codAlunoPrincipal},
-                    sequencial = he.seq+he.max_seq
-                FROM
-                (
-                    SELECT
-                        ref_cod_aluno AS aluno,
-                        sequencial AS seq,
-                        COALESCE
-                        (
-                            (
-                                SELECT max(sequencial)
-                                FROM pmieducar.historico_escolar
-                                WHERE ref_cod_aluno = {$codAlunoPrincipal}
-                            ),
-                            0
-                        ) AS max_seq
-                    FROM pmieducar.historico_escolar
-                    WHERE ref_cod_aluno = {$codAluno}
-                ) AS he
-                WHERE sequencial = he.seq
-                AND ref_cod_aluno = he.aluno
-            "
-            );
+                    sequencial = sequencial + {$maxSequencialAlunoPrincipal}
+                WHERE ref_cod_aluno = {$codAluno};
+            ");
+
+            DB::statement("
+                UPDATE pmieducar.historico_disciplinas
+                SET
+                    ref_ref_cod_aluno = {$codAlunoPrincipal},
+                    ref_sequencial = ref_sequencial + {$maxSequencialAlunoPrincipal}
+                WHERE ref_ref_cod_aluno = {$codAluno};
+            ");
         }
 
         DB::statement("UPDATE pmieducar.matricula SET ref_cod_aluno = {$codAlunoPrincipal} where ref_cod_aluno in ({$codAlunosString})");

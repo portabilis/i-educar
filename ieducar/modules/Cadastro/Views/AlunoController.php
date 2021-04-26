@@ -70,11 +70,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             'help' => '',
         ],
 
-        'responsavel' => [
-            'label' => 'Responsável',
-            'help' => '',
-        ],
-
         'alfabetizado' => [
             'label' => 'Alfabetizado',
             'help' => '',

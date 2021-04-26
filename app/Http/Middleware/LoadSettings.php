@@ -33,11 +33,10 @@ class LoadSettings
      */
     private function getDatabaseConfig()
     {
-        $connections = config('database.connections');
-        $config = $connections[DB::getDefaultConnection()];
+        $config = DB::connection()->getConfig();
 
         return [
-            'legacy.app.database.hostname' => $config['read']['host'][0] ?? $config['host'],
+            'legacy.app.database.hostname' => $config['host'],
             'legacy.app.database.port' => $config['port'],
             'legacy.app.database.dbname' => $config['database'],
             'legacy.app.database.username' => $config['username'],

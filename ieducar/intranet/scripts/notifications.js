@@ -1,13 +1,14 @@
 function startListenChannel(notificationsChannel) {
   window.Echo.channel(notificationsChannel).listen('NotificationEvent', (e) => {
     let notification = e.notification;
+    let url = e.url;
     let unread = notification.read_at == null;
     let className = unread ? 'unread' : 'read';
     let dateObj = new Date(notification.created_at);
     let dateString = dateObj.toLocaleString('pt-BR');
 
     $j('.dropdown-content-notifications .notifications-bar').after(`
-      <a href="` + notification.link + `" onclick="markAsRead(this)" data-id="` + notification.id + `" class="` +className+ `" target="_blank">
+      <a href="` + url + `" onclick="markAsRead(this)" data-id="` + notification.id + `" class="` +className+ `" target="_blank">
         <p>` + notification.text  + `</p>
         <p class="date-notification"> ` + dateString + `</p>
       </a>`);
