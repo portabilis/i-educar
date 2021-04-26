@@ -36,7 +36,7 @@ class IncompatibleDescriptiveOpinion implements Rule
         // Ignora regra que não usa parecer descritivo
         $descriptiveOpinionType = array_diff($descriptiveOpinionType, [RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM]);
 
-        return count(array_unique($descriptiveOpinionType)) > 1;
+        return count(array_unique($descriptiveOpinionType)) <= 1;
     }
 
     /**
