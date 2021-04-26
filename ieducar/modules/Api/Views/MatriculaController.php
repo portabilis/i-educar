@@ -647,9 +647,12 @@ class MatriculaController extends ApiCoreController
             $lastEnrollment = $legacyRegistration->lastEnrollment()->first();
             app(RegistrationService::class)->updateCancelDate($legacyRegistration, $exitDate);
             app(EnrollmentService::class)->updateExitDate($lastEnrollment, $exitDate);
-        } catch (ValidationException | Exception $ex) {
+        } catch (ValidationException $ex) {
             DB::rollBack();
-            return $this->messenger->append('Não foi possível alterar a data de saída desta matrícula: '.$ex->validator->errors()->first(), 'error');
+            return $this->messenger->append('Não foi possível alterar a data de saída desta matrícula. '.$ex->validator->errors()->first(), 'error');
+        } catch (Exception $ex) {
+            DB::rollBack();
+            return $this->messenger->append('Ocorreu um erro desconhecido ao tentar alterar a data de saída. Por favor entre em contato com o suporte.', 'error');
         }
         DB::commit();
         return $this->messenger->append('Data de saida atualizada com sucesso.', 'success');
