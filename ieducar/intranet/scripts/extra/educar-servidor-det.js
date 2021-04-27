@@ -56,6 +56,10 @@ function modalExcluir(id) {
               if (dataResponse.error) {
                 messageUtils.error(dataResponse.message);
               } else {
+                $j('#'+ id).remove();
+                if ($j('#historico_afastamento tr').length === 1) {
+                  $j('#tr_historico_afastamento').remove();
+                }
                 messageUtils.success('Afastamentos do servidor removido com sucesso');
               }
             },
