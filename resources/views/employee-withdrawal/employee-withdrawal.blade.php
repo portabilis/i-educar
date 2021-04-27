@@ -3,7 +3,7 @@
     <td class="formmdtd" valign="top"><span class="form">Histórico de afastamentos</span></td>
     <td class="formmdtd" valign="top">
         <span class="form">
-            <table class="table-detail">
+            <table id="historico_afastamento" class="table-detail">
                 <tr>
                     <th>Motivo</th>
                     <th>Data de afastamento</th>
@@ -14,7 +14,7 @@
                 </tr>
                 @if(isset($withdrawals))
                     @foreach($withdrawals as $withdrawal)
-                        <tr>
+                        <tr id="{{$withdrawal->id}}">
                             <td> {{$withdrawal->reason->nm_motivo}} </td>
                             <td> {{$withdrawal->data_saida->format('d/m/Y')}} </td>
                             <td> @if($withdrawal->data_retorno) {{$withdrawal->data_retorno->format('d/m/Y')}} @endif </td>
