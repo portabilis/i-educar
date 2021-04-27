@@ -255,6 +255,7 @@ const buildAlert = function (msg) {
     },
     close: function () {
       $j(this).dialog('destroy');
+      window.location.reload()
     },
     buttons: [{
       text: 'Fechar',
