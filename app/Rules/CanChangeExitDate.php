@@ -53,7 +53,7 @@ class CanChangeExitDate implements Rule
         return 'Existem lançamentos no i-Diário: <br><br>'.$this->msg;
     }
 
-    private function nomeDisciplina($disciplinaId)
+    private function getDisciplineNameById($disciplinaId)
     {
         return LegacyDiscipline::find($disciplinaId)->nome;
     }
@@ -73,7 +73,7 @@ class CanChangeExitDate implements Rule
                 $disciplinesName = [];
                 $contDisciplines = count($activityType->disciplines);
                 for ($i = 0; $i < $contDisciplines; $i++){
-                    $disciplinesName[] = $this->nomeDisciplina($activityType->disciplines[$i]);
+                    $disciplinesName[] = $this->getDisciplineNameById($activityType->disciplines[$i]);
                     if($i === 4) {
                         break;
                     }
