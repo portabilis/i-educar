@@ -330,7 +330,7 @@ var modalLoadingUtils = {
       modalLoadingCommon = $j('#modal_loading_common');
     }
     modalLoadingCommon.attr('title', title);
-    modalLoadingCommon.append(text);
+    modalLoadingCommon.html(text);
     modalLoadingCommon.dialog({modal: true});
   },
 
