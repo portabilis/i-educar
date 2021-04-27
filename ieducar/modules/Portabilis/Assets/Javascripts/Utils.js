@@ -321,3 +321,21 @@ var handleMessages = messageUtils.handleMessages;
 
   }); // ready
 })(jQuery);
+var modalLoadingCommon = $j('#modal_loading_common');
+var modalLoadingUtils = {
+  show: function (title = 'Aguarde', text = 'Processando requisição...') {
+
+    if (modalLoadingCommon.length < 1) {
+      $j('body').append('<div id="modal_loading_common" style="width: 500px;"></div>');
+      modalLoadingCommon = $j('#modal_loading_common');
+    }
+    modalLoadingCommon.attr('title', title);
+    modalLoadingCommon.append(text);
+    modalLoadingCommon.dialog({modal: true});
+  },
+
+  hide: function (){
+    modalLoadingCommon.dialog("close");
+    modalLoadingCommon.dialog('destroy');
+  }
+}
