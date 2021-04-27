@@ -33,12 +33,14 @@ class CanChangeExitDate implements Rule
     public function passes($attribute, $value)
     {
         $iDiarioService = $this->getIdiarioService();
-        $studentActivity = $iDiarioService->getStudentActivity($value['student_id'], $value['exit_date']);
-        $hasActivity = count($studentActivity['student_activity']) > 0;
+        if ($iDiarioService) {
+            $studentActivity = $iDiarioService->getStudentActivity($value['student_id'], $value['exit_date']);
+            $hasActivity = count($studentActivity['student_activity']) > 0;
 
-        if ($hasActivity) {
-            $this->msg = $this->buildHtmlMessage($studentActivity);
-            return false;
+            if ($hasActivity) {
+                $this->msg = $this->buildHtmlMessage($studentActivity);
+                return false;
+            }
         }
         return true;
     }
