@@ -423,11 +423,7 @@ class EnrollmentService
      */
     public function updateExitDate(LegacyEnrollment $enrollment, DateTime $exitDate)
     {
-        $studentId = $enrollment->registration()
-            ->first()
-            ->student()
-            ->first()
-            ->cod_aluno;
+        $studentId = $enrollment->getStudentId();
         validator(
             [
                 'data' =>
