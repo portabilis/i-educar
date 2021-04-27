@@ -204,16 +204,22 @@ var handlePostDataEntrada = function(dataresponse){
 function onDataSaidaChange(matricula_id, key, campo){
 
   if(key.keyCode == 13 || key.keyCode == 9 || (typeof key.keyCode == "undefined")){
-    var data = {
+    const data = {
       matricula_id : matricula_id,
       data_saida : campo.val()
     };
 
-    var options = {
+    const options = {
       url      : postResourceUrlBuilder.buildUrl('/module/Api/matricula', 'data-saida'),
       dataType : 'json',
       data     : data,
-      success  : handlePostDataSaida
+      success  : handlePostDataSaida,
+      beforeSend: function (){
+        modalLoadingUtils.show();
+      },
+      complete: function () {
+        modalLoadingUtils.hide();
+      }
     };
     postResource(options);
   }
@@ -221,7 +227,7 @@ function onDataSaidaChange(matricula_id, key, campo){
 }
 
 const handlePostDataSaida = function(dataresponse){
-  if(dataresponse.any_error_msg) {
+  if(dataresponse && dataresponse.any_error_msg) {
     buildAlert(dataresponse.msgs[0].msg);
   } else {
     handleMessages(dataresponse.msgs);
