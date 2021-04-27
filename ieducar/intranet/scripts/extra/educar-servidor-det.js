@@ -39,6 +39,7 @@ function modalExcluir(id) {
       title: 'Atenção!',
       maxWidth: 860,
       width: 860,
+      modal: true,
       close: function () {
         $j(this).dialog('destroy');
       },
