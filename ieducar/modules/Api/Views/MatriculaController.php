@@ -655,7 +655,7 @@ class MatriculaController extends ApiCoreController
             return $this->messenger->append('Ocorreu um erro desconhecido ao tentar alterar a data de saída. Por favor entre em contato com o suporte.', 'error');
         }
         DB::commit();
-        return $this->messenger->append('Data de saida atualizada com sucesso.', 'success');
+        return $this->messenger->append('Data de saída atualizada com sucesso.', 'success');
     }
 
     protected function postSituacao()
