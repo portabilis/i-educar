@@ -161,4 +161,9 @@ class LegacyEnrollment extends Model
     {
         return $this->belongsTo(User::class, 'ref_usuario_exc');
     }
+
+    public function getStudentId()
+    {
+        return $this->registration->student->cod_aluno;
+    }
 }
