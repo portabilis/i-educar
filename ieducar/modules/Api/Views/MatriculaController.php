@@ -708,7 +708,7 @@ class MatriculaController extends ApiCoreController
             } elseif ($situacaoNova == App_Model_MatriculaSituacao::APROVADO || $situacaoNova == App_Model_MatriculaSituacao::EM_ANDAMENTO || $situacaoNova == App_Model_MatriculaSituacao::REPROVADO) {
                 $matriculaTurma = new clsPmieducarMatriculaTurma();
                 $enturmacoesParaAtivar = $matriculaTurma->lista($matriculaId);
-                if (! empty($enturmacoesParaAtivar)) {
+                if (!empty($enturmacoesParaAtivar)) {
                     $params = [$matriculaId];
                     $sql = 'SELECT sequencial as codigo FROM pmieducar.matricula_turma where ref_cod_matricula = $1 order by ativo desc, sequencial desc limit 1';
                     $sequencial = $this->fetchPreparedQuery($sql, $params, false, 'first-field');
