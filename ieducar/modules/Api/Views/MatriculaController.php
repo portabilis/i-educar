@@ -713,7 +713,7 @@ class MatriculaController extends ApiCoreController
                     $sql = 'SELECT sequencial as codigo FROM pmieducar.matricula_turma where ref_cod_matricula = $1 order by ativo desc, sequencial desc limit 1';
                     $sequencial = $this->fetchPreparedQuery($sql, $params, false, 'first-field');
 
-                    $sql = 'UPDATE pmieducar.matricula_turma set ativo = 1, transferido = false, remanejado = false, abandono = false, reclassificado = false where sequencial = $1 and ref_cod_matricula = $2';
+                    $sql = 'UPDATE pmieducar.matricula_turma set ativo = 1, transferido = false, remanejado = false, abandono = false, reclassificado = false, data_exclusao = null where sequencial = $1 and ref_cod_matricula = $2';
 
                     $params = [$sequencial, $matriculaId];
                     $this->fetchPreparedQuery($sql, $params);
