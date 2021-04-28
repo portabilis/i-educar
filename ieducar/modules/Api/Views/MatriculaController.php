@@ -718,6 +718,8 @@ class MatriculaController extends ApiCoreController
                     $params = [$sequencial, $matriculaId];
                     $this->fetchPreparedQuery($sql, $params);
                 }
+
+                $matricula->data_cancel = null;
             }
 
             $matricula->aprovado = $this->getRequest()->nova_situacao;
