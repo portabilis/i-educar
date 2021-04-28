@@ -131,8 +131,9 @@ class clsPmieducarTransferenciaSolicitacao extends Model
                 $gruda = ', ';
             }
             if (is_string($this->escola_destino_externa)) {
+                $escolaDestinoExterna = $db->escapeString($this->escola_destino_externa);
                 $campos .= "{$gruda}escola_destino_externa";
-                $valores .= "{$gruda}'{$this->escola_destino_externa}'";
+                $valores .= "{$gruda}'{$escolaDestinoExterna}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->ref_cod_escola_destino)) {
