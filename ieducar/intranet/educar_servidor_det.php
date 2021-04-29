@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\EmployeeWithdrawal;
+use App\Models\LegacyUserType;
 use App\Support\View\Employee\EmployeeReturn;
 use Illuminate\Support\Facades\DB;
 
@@ -322,8 +323,19 @@ return new class extends clsDetalhe {
 
         $withdrawals = EmployeeWithdrawal::query()->where(['ref_cod_servidor' => $this->cod_servidor, 'data_exclusao' => null])->get();
 
+        $nivel_acesso  = (new clsPermissoes())->nivel_acesso($this->pessoa_logada);
+
+        $isAllowedRemove = in_array($nivel_acesso, [LegacyUserType::LEVEL_ADMIN, LegacyUserType::LEVEL_INSTITUTIONAL], true);
+
         if (count($withdrawals) > 0) {
-            $this->addHtml(view('employee-withdrawal.employee-withdrawal', ['withdrawals' => $withdrawals, 'isAllowedModify' => $isAllowedModify])->render());
+            $this->addHtml(view(
+                'employee-withdrawal.employee-withdrawal',
+                [
+                    'withdrawals' => $withdrawals,
+                    'isAllowedRemove' => $isAllowedRemove,
+                    'isAllowedModify' => $isAllowedModify
+                ]
+            )->render());
         }
 
         $this->url_cancelar = 'educar_servidor_lst.php';
