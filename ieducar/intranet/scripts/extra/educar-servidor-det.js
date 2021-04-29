@@ -1,3 +1,7 @@
+$j(function () {
+  $j('[data-toggle="tooltip"]').tooltip()
+})
+
 function trocaDisplay(id) {
   let element = document.getElementById(id);
   element.style.display = (element.style.display == 'none') ? 'inline' : 'none';
@@ -78,3 +82,5 @@ function modalExcluir(id) {
       }]
     });
 }
+
+

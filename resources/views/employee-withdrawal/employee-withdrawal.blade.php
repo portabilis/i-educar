@@ -27,14 +27,14 @@
                             </td>
                             <td align="center">
                                 @if($isAllowedModify)
-                                    <a class="fa fa-pencil" href="educar_servidor_afastamento_cad.php?ref_cod_servidor={{$withdrawal->ref_cod_servidor}}&sequencial={{$withdrawal->sequencial}}&ref_cod_instituicao={{$withdrawal->ref_ref_cod_instituicao}}"></a>
+                                    <a data-toggle="tooltip" title="Editar histórico"class="fa fa-pencil" href="educar_servidor_afastamento_cad.php?ref_cod_servidor={{$withdrawal->ref_cod_servidor}}&sequencial={{$withdrawal->sequencial}}&ref_cod_instituicao={{$withdrawal->ref_ref_cod_instituicao}}"></a>
                                 @else
                                     <i class="fa fa-ban" aria-hidden="true"></i>
                                 @endif
                             </td>
                             <td align="center">
                                 @if($isAllowedModify)
-                                    <a onclick="modalExcluir({{$withdrawal->id}});"><i class="fa fa-trash-o cursor" ></i></a>
+                                    <a data-toggle="tooltip" title="Excluir histórico" onclick="modalExcluir({{$withdrawal->id}});"><i class="fa fa-trash-o cursor" ></i></a>
                                 @else
                                     <i class="fa fa-ban" aria-hidden="true"></i>
                                 @endif
