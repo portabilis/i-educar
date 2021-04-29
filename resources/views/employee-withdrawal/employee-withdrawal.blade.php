@@ -33,7 +33,7 @@
                                 @endif
                             </td>
                             <td align="center">
-                                @if($isAllowedModify)
+                                @if($isAllowedRemove)
                                     <a data-toggle="tooltip" title="Excluir histórico" onclick="modalExcluir({{$withdrawal->id}});"><i class="fa fa-trash-o cursor" ></i></a>
                                 @else
                                     <i class="fa fa-ban" aria-hidden="true"></i>
