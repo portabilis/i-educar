@@ -32,7 +32,7 @@ function makeDialog (params) {
 
 function modalExcluir(id) {
 
-  let content = 'O histórico de afastamento selecionando será removido. Deseja prosseguir?';
+  let content = 'O histórico de afastamento selecionado será removido. Deseja prosseguir?';
 
   makeDialog({
       content: content,
