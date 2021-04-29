@@ -17,6 +17,7 @@ return new class extends clsCadastro {
             if ($matriculasTurma) {
                 foreach ($matriculasTurma as $campo => $val) {
                     $this->campoTexto('nome_aluno_' . $val['ref_cod_matricula'], '', $val['nome'], 60, false, false, false, true, '', '', '', '', true);
+                    $this->campoTexto('situacao_' . $val['ref_cod_matricula'], '', $val['situacao'], 20, false, false, false, true, '', '', '', '', true);
                     $matricula = $val['ref_cod_matricula'];
                     $this->campoTexto("sequencia[$matricula]", '', ($val['sequencial_fechamento']), 5, null, false, false, false);
                 }
