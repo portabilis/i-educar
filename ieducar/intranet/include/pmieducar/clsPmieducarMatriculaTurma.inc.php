@@ -1081,17 +1081,6 @@ class clsPmieducarMatriculaTurma extends Model
               JOIN pmieducar.escola ON escola.cod_escola = matricula.ref_ref_cod_escola
               JOIN pmieducar.instituicao ON escola.ref_cod_instituicao = instituicao.cod_instituicao
               WHERE matricula.ativo = 1
-                AND (CASE WHEN matricula_turma.ativo = 1 THEN TRUE
-                    WHEN matricula_turma.transferido THEN TRUE
-                    WHEN matricula_turma.falecido THEN TRUE
-                    WHEN matricula.dependencia THEN TRUE
-                    WHEN matricula_turma.abandono THEN TRUE
-                    WHEN matricula_turma.reclassificado THEN TRUE
-                    WHEN matricula_turma.remanejado
-                        AND instituicao.data_base_remanejamento IS NOT NULL
-                        AND matricula_turma.data_exclusao::date > instituicao.data_base_remanejamento
-                    THEN TRUE
-                    ELSE FALSE END)
                 AND matricula_turma.ref_cod_turma = {$codTurma}
                 AND CASE WHEN matricula_turma.ativo = 1 THEN
                     TRUE
@@ -1102,10 +1091,10 @@ class clsPmieducarMatriculaTurma extends Model
                         JOIN pmieducar.matricula m ON m.cod_matricula = mt.ref_cod_matricula
                         WHERE m.ref_cod_aluno = aluno.cod_aluno
                         AND mt.ref_cod_turma = matricula_turma.ref_cod_turma
-                        AND mt.ativo = 1
                     )
                 END
                 ORDER BY sequencial_fechamento, nome";
+
 
         $db->Consulta($sql);
 
