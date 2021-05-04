@@ -246,7 +246,7 @@ class ComponenteCurricularController extends ApiCoreController
         ->whereRaw('t.ano = ANY(esd.anos_letivos)')
         ->where('t.multiseriada', 1);
 
-        if ($areaConhecimentoId) {
+        if (count(array_filter($areaConhecimentoId)) > 0) {
             $query->whereIn('cc.area_conhecimento_id', $areaConhecimentoId);
         }
 
