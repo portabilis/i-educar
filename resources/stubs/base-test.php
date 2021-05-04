@@ -13,6 +13,7 @@ class BaseTestName extends TestCase
 
     public function testSuccessResponse()
     {
+        $this->withoutMiddleware();
         $this->get(self::ROUTE)->assertSuccessful();
     }
 }
