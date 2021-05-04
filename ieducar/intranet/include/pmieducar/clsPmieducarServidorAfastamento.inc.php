@@ -155,8 +155,6 @@ class clsPmieducarServidorAfastamento extends Model
                 $set .= "{$gruda}data_cadastro = '{$this->data_cadastro}'";
                 $gruda = ', ';
             }
-            $set .= "{$gruda}data_exclusao = NOW()";
-            $gruda = ', ';
             if (is_string($this->data_retorno) && $this->data_retorno != '') {
                 $set .= "{$gruda}data_retorno = '{$this->data_retorno}'";
                 $gruda = ', ';
