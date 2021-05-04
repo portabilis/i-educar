@@ -705,7 +705,14 @@ class MatriculaController extends ApiCoreController
                     (new Avaliacao_Model_NotaComponenteMediaDataMapper())
                         ->updateSituation($notaAluno->get('id'), $situacaoNova);
                 }
-            } elseif ($situacaoNova == App_Model_MatriculaSituacao::APROVADO || $situacaoNova == App_Model_MatriculaSituacao::EM_ANDAMENTO || $situacaoNova == App_Model_MatriculaSituacao::REPROVADO) {
+            } elseif (
+                $situacaoNova == App_Model_MatriculaSituacao::APROVADO ||
+                $situacaoNova == App_Model_MatriculaSituacao::EM_ANDAMENTO ||
+                $situacaoNova == App_Model_MatriculaSituacao::REPROVADO ||
+                $situacaoNova == App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA ||
+                $situacaoNova == App_Model_MatriculaSituacao::APROVADO_PELO_CONSELHO ||
+                $situacaoNova == App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS
+            ) {
                 $matriculaTurma = new clsPmieducarMatriculaTurma();
                 $enturmacoesParaAtivar = $matriculaTurma->lista($matriculaId);
                 if (!empty($enturmacoesParaAtivar)) {
