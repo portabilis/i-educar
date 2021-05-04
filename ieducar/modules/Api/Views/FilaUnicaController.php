@@ -106,16 +106,7 @@ class FilaUnicaController extends ApiCoreController
         $aluno = $this->getRequest()->aluno_id;
 
         if ($aluno && $anoLetivo) {
-            $sql = 'SELECT ref_cod_aluno AS cod_aluno,
-                           cod_candidato_fila_unica AS cod_candidato
-                      FROM pmieducar.candidato_fila_unica
-                     WHERE ativo = 1
-                       AND ano_letivo = $1
-                       AND ref_cod_aluno = $2';
-
-            $matricula = $this->fetchPreparedQuery($sql, [$anoLetivo, $aluno], false, 'first-line');
-
-            return $matricula;
+            return (new clsPmieducarMatricula)->matriculaAlunoAndamento($aluno, $anoLetivo, false);
         }
 
         return false;
