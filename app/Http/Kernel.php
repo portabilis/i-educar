@@ -41,13 +41,13 @@ class Kernel extends HttpKernel
 
         'api' => [
             'bindings',
-            'throttle:20,1',
+            'throttle:60,1',
         ],
 
         'api:rest' => [
             'bindings',
             \App\Http\Middleware\CheckToken::class,
-            'throttle:20,1',
+            'throttle:60,1',
         ],
     ];
 
