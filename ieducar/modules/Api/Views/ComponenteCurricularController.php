@@ -229,6 +229,7 @@ class ComponenteCurricularController extends ApiCoreController
     }
 
     private function getComponentesTurmaMulti($turmaId, $areaConhecimentoId) {
+        $areaConhecimentoId = explode(',', $areaConhecimentoId);
         $query = DB::table('pmieducar.turma as t')
         ->select('cc.id', 'cc.nome')
         ->join('pmieducar.turma_serie as ts', 'ts.turma_id', '=', 't.cod_turma')
@@ -246,7 +247,7 @@ class ComponenteCurricularController extends ApiCoreController
         ->where('t.multiseriada', 1);
 
         if ($areaConhecimentoId) {
-            $query->where('cc.area_conhecimento_id', $areaConhecimentoId);
+            $query->whereIn('cc.area_conhecimento_id', $areaConhecimentoId);
         }
 
         return $query->distinct()
