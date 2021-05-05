@@ -293,15 +293,21 @@ class clsModulesProfessorTurma extends Model
                 t.nm_turma,
                 t.cod_turma as ref_cod_turma,
                 t.ref_ref_cod_serie as ref_cod_serie,
-                s.nm_serie,
+                textcat_all(s.nm_serie) AS nm_serie,
                 t.ref_cod_curso,
                 c.nm_curso,
                 t.ref_ref_cod_escola as ref_cod_escola,
                 p.nome as nm_escola
             FROM {$this->_tabela} pt
         ";
-        $filtros = ' , pmieducar.turma t, pmieducar.serie s, pmieducar.curso c, pmieducar.escola e, cadastro.pessoa p WHERE pt.turma_id = t.cod_turma AND t.ref_ref_cod_serie = s.cod_serie AND s.ref_cod_curso = c.cod_curso
-                  AND t.ref_ref_cod_escola = e.cod_escola AND e.ref_idpes = p.idpes ';
+        $filtros = '
+            JOIN pmieducar.turma t ON pt.turma_id = t.cod_turma
+            LEFT JOIN pmieducar.turma_serie ts ON ts.turma_id = t.cod_turma
+            JOIN pmieducar.serie s ON s.cod_serie = coalesce(ts.serie_id, t.ref_ref_cod_serie)
+            JOIN pmieducar.curso c ON s.ref_cod_curso = c.cod_curso
+            JOIN pmieducar.escola e ON t.ref_ref_cod_escola = e.cod_escola
+            JOIN cadastro.pessoa p ON e.ref_idpes = p.idpes
+        WHERE true ';
 
         $whereAnd = ' AND ';
 
@@ -360,7 +366,15 @@ class clsModulesProfessorTurma extends Model
         $countCampos = count(explode(',', $this->_campos_lista)) + 8;
         $resultado = [];
 
-        $sql .= $filtros . $this->getOrderby() . $this->getLimite();
+        $groupBy = '
+            GROUP BY
+                pt.id,
+                t.cod_turma,
+                c.nm_curso,
+                p.nome
+        ';
+
+        $sql .= $filtros . $groupBy . $this->getOrderby() . $this->getLimite();
 
         $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} pt {$filtros}");
 
