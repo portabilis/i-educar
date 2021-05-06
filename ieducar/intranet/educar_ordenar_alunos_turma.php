@@ -52,10 +52,9 @@ return new class extends clsCadastro {
         foreach ($this->sequencia as $matriculaTurmaId => $sequencial) {
             Portabilis_Utils_Database::fetchPreparedQuery(
                 'UPDATE pmieducar.matricula_turma
-                                                                   SET sequencial_fechamento = $1
-                                                                 WHERE ref_cod_matricula = $2
-                                                                   AND ref_cod_turma = $3',
-                ['params' => [$sequencial, $matricula, $cod_turma]]
+                       SET sequencial_fechamento = $1
+                     WHERE id = $2',
+                ['params' => [$sequencial, $matriculaTurmaId]]
             );
         }
 
