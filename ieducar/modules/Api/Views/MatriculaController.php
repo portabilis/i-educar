@@ -103,6 +103,7 @@ class MatriculaController extends ApiCoreController
      * substituído em futuras versões.
      *
      * @return array
+     *
      * @deprecated
      *
      */
@@ -119,7 +120,17 @@ class MatriculaController extends ApiCoreController
             ->whereHas(
                 'student.person',
                 function ($builder) use ($query) {
-                    $builder->where('slug', 'ilike', '%' . $query . '%');
+                    $builder
+                        ->where('slug', 'ilike', '%' . $query . '%')
+                        ->orWhere('ref_cod_aluno', 'like', '%' . $query . '%')
+                        ->orWhere('cod_matricula', 'like', '%' . $query . '%')
+                        ->withCasts(
+                            [
+                                'ref_cod_aluno' => 'string',
+                                'cod_matricula' => 'string',
+                            ]
+                        )
+                    ;
                 }
             )
             ->where('aprovado', App_Model_MatriculaSituacao::TRANSFERIDO)
@@ -136,7 +147,7 @@ class MatriculaController extends ApiCoreController
 
         foreach ($registrations as $registration) {
             $codAluno = $registration->student->cod_aluno;
-            $nome = $registration->student->person->nome;
+            $nome = mb_strtoupper($registration->student->person->nome);
             $transfers[$registration->cod_matricula] = "({$codAluno}) {$nome}";
         }
 
