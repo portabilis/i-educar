@@ -48,9 +48,9 @@ return new class extends clsCadastro {
 
     public function Editar()
     {
-        $cod_turma = $_GET['cod_turma'];
-        foreach ($this->sequencia as $matricula => $sequencial) {
-            $retorno = Portabilis_Utils_Database::fetchPreparedQuery(
+
+        foreach ($this->sequencia as $matriculaTurmaId => $sequencial) {
+            Portabilis_Utils_Database::fetchPreparedQuery(
                 'UPDATE pmieducar.matricula_turma
                                                                    SET sequencial_fechamento = $1
                                                                  WHERE ref_cod_matricula = $2
@@ -58,7 +58,8 @@ return new class extends clsCadastro {
                 ['params' => [$sequencial, $matricula, $cod_turma]]
             );
         }
-        $this->simpleRedirect("educar_turma_det.php?cod_turma={$cod_turma}");
+
+        $this->simpleRedirect("educar_turma_det.php?cod_turma={$_GET['cod_turma']}");
     }
 
     public function Excluir()
