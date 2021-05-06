@@ -716,17 +716,28 @@ class MatriculaController extends ApiCoreController
                     (new Avaliacao_Model_NotaComponenteMediaDataMapper())
                         ->updateSituation($notaAluno->get('id'), $situacaoNova);
                 }
-            } elseif ($situacaoNova == App_Model_MatriculaSituacao::APROVADO || $situacaoNova == App_Model_MatriculaSituacao::EM_ANDAMENTO || $situacaoNova == App_Model_MatriculaSituacao::REPROVADO) {
-                if ($enturmacoes) {
+            } elseif (
+                $situacaoNova == App_Model_MatriculaSituacao::APROVADO ||
+                $situacaoNova == App_Model_MatriculaSituacao::EM_ANDAMENTO ||
+                $situacaoNova == App_Model_MatriculaSituacao::REPROVADO ||
+                $situacaoNova == App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA ||
+                $situacaoNova == App_Model_MatriculaSituacao::APROVADO_PELO_CONSELHO ||
+                $situacaoNova == App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS
+            ) {
+                $matriculaTurma = new clsPmieducarMatriculaTurma();
+                $enturmacoesParaAtivar = $matriculaTurma->lista($matriculaId);
+                if (!empty($enturmacoesParaAtivar)) {
                     $params = [$matriculaId];
                     $sql = 'SELECT sequencial as codigo FROM pmieducar.matricula_turma where ref_cod_matricula = $1 order by ativo desc, sequencial desc limit 1';
                     $sequencial = $this->fetchPreparedQuery($sql, $params, false, 'first-field');
 
-                    $sql = 'UPDATE pmieducar.matricula_turma set ativo = 1, transferido = false, remanejado = false, abandono = false, reclassificado = false where sequencial = $1 and ref_cod_matricula = $2';
+                    $sql = 'UPDATE pmieducar.matricula_turma set ativo = 1, transferido = false, remanejado = false, abandono = false, reclassificado = false, data_exclusao = null where sequencial = $1 and ref_cod_matricula = $2';
 
                     $params = [$sequencial, $matriculaId];
                     $this->fetchPreparedQuery($sql, $params);
                 }
+
+                $matricula->data_cancel = null;
             }
 
             $matricula->aprovado = $this->getRequest()->nova_situacao;
