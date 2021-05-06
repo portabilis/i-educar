@@ -1071,33 +1071,33 @@ class clsPmieducarMatriculaTurma extends Model
     public function listaPorSequencial($codTurma)
     {
         $db = new clsBanco();
-        $sql = "SELECT nome,
-                    sequencial_fechamento,
-                    ref_cod_matricula,
-                    relatorio.view_situacao_relatorios.texto_situacao situacao
-                FROM cadastro.pessoa
-              INNER JOIN pmieducar.aluno ON (aluno.ref_idpes = pessoa.idpes)
-              INNER JOIN pmieducar.matricula ON (matricula.ref_cod_aluno = aluno.cod_aluno)
-              INNER JOIN pmieducar.matricula_turma ON (matricula_turma.ref_cod_matricula = matricula.cod_matricula)
-              INNER JOIN pmieducar.escola ON escola.cod_escola = matricula.ref_ref_cod_escola
-              INNER JOIN pmieducar.instituicao ON escola.ref_cod_instituicao = instituicao.cod_instituicao
-              INNER JOIN relatorio.view_situacao_relatorios ON (view_situacao_relatorios.cod_matricula = matricula.cod_matricula
-                AND view_situacao_relatorios.cod_turma = matricula_turma.ref_cod_turma
-                AND matricula_turma.sequencial = view_situacao_relatorios.sequencial)
-              WHERE matricula.ativo = 1
-                AND matricula_turma.ref_cod_turma = {$codTurma}
-                AND CASE WHEN matricula_turma.ativo = 1 THEN
-                    TRUE
-                ELSE
-                    NOT EXISTS (
-                        SELECT 1
-                        FROM pmieducar.matricula_turma mt
-                        JOIN pmieducar.matricula m ON m.cod_matricula = mt.ref_cod_matricula
-                        WHERE m.ref_cod_aluno = aluno.cod_aluno
-                        AND mt.ref_cod_turma = matricula_turma.ref_cod_turma
-                    )
-                END
-                ORDER BY sequencial_fechamento, nome";
+        $sql = "
+        SELECT
+            nome,
+            sequencial_fechamento,
+            ref_cod_matricula,
+            relatorio.view_situacao_relatorios.texto_situacao situacao,
+            matricula_turma.id
+        FROM
+            cadastro.pessoa
+            INNER JOIN pmieducar.aluno ON ( aluno.ref_idpes = pessoa.idpes )
+            INNER JOIN pmieducar.matricula ON ( matricula.ref_cod_aluno = aluno.cod_aluno )
+            INNER JOIN pmieducar.matricula_turma ON ( matricula_turma.ref_cod_matricula = matricula.cod_matricula )
+            INNER JOIN pmieducar.escola ON escola.cod_escola = matricula.ref_ref_cod_escola
+            INNER JOIN pmieducar.instituicao ON escola.ref_cod_instituicao = instituicao.cod_instituicao
+            INNER JOIN relatorio.view_situacao_relatorios ON ( view_situacao_relatorios.cod_matricula = matricula.cod_matricula AND view_situacao_relatorios.cod_turma = matricula_turma.ref_cod_turma AND matricula_turma.sequencial = view_situacao_relatorios.sequencial )
+        WHERE
+            matricula_turma.ref_cod_turma = {$codTurma}
+        GROUP BY
+          ref_cod_matricula,
+            sequencial_fechamento,
+            nome,
+            relatorio.view_situacao_relatorios.texto_situacao,
+            matricula_turma.id
+
+        ORDER BY
+            sequencial_fechamento,
+        nome";
 
 
         $db->Consulta($sql);
