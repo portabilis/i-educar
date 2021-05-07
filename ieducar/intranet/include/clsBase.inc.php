@@ -53,20 +53,7 @@ class clsBase
                 $corpo = $form->getPrependedOutput() . $corpo;
             }
 
-            /**
-            * Insere o HTML/JS Extras que estão nas views
-            */
-            if (method_exists($form, 'makeExtra')) {
-                $corpo .= '<script>';
-                $corpo .= $form->makeExtra();
-                $corpo .= '</script>';
-            }
-
-            if (method_exists($form, 'makeCss')) {
-                $corpo .= '<style>';
-                $corpo .= $form->makeCss();
-                $corpo .= '</style>';
-            }
+            $corpo .= $this->assets($form);
 
             if (method_exists($form, 'getAppendedOutput')) {
                 $corpo = $corpo . $form->getAppendedOutput();
@@ -97,6 +84,25 @@ class clsBase
         }
     }
 
+    public function assets($form)
+    {
+        $html = '';
+
+        if (method_exists($form, 'makeExtra')) {
+            $html .= '<script>';
+            $html .= $form->makeExtra();
+            $html .= '</script>';
+        }
+
+        if (method_exists($form, 'makeCss')) {
+            $html .= '<style>';
+            $html .= $form->makeCss();
+            $html .= '</style>';
+        }
+
+        return $html;
+    }
+
     public function MakeAll()
     {
         $this->Formular();
@@ -125,6 +131,7 @@ class clsBase
         } else {
             foreach ($this->clsForm as $form) {
                 $saida_geral .= $form->RenderHTML();
+                $saida_geral .= $this->assets($form);
             }
         }
 

@@ -615,6 +615,7 @@ class clsPmieducarCandidatoFilaUnica extends Model
             $db = new clsBanco();
             $db->Consulta("SELECT {$this->_todos_campos},
                                   (cfu.ano_letivo || to_char(cfu.cod_candidato_fila_unica, 'fm00000000')) AS protocolo,
+                                  cfu.ref_cod_matricula,
                                   p.nome,
                                   f.data_nasc,
                                   f.sexo,

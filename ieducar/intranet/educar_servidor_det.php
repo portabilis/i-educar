@@ -1,25 +1,21 @@
 <?php
 
-use App\Models\Employee;
 use App\Models\EmployeeWithdrawal;
+use App\Models\LegacyUserType;
 use App\Support\View\Employee\EmployeeReturn;
+use Illuminate\Support\Facades\DB;
 
 return new class extends clsDetalhe {
     public $titulo;
-
-    /**
-     * Atributos de dados
-     */
-    public $cod_servidor = null;
-    public $ref_idesco = null;
-    public $ref_cod_funcao = null;
-    public $carga_horaria = null;
-    public $data_cadastro = null;
-    public $data_exclusao = null;
-    public $ativo = null;
-    public $ref_cod_instituicao = null;
+    public $cod_servidor;
+    public $ref_idesco;
+    public $ref_cod_funcao;
+    public $carga_horaria;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $ref_cod_instituicao;
     public $alocacao_array = [];
-    public $is_professor = false;
 
     /**
      * Implementação do método Gerar()
@@ -28,14 +24,14 @@ return new class extends clsDetalhe {
     {
         $this->titulo = 'Servidor - Detalhe';
 
-        $this->cod_servidor        = $_GET['cod_servidor'];
-        $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
+        $this->cod_servidor = (int) $_GET['cod_servidor'];
+        $this->ref_cod_instituicao = (int) $_GET['ref_cod_instituicao'];
 
         $tmp_obj = new clsPmieducarServidor($this->cod_servidor, null, null, null, null, null, null, $this->ref_cod_instituicao);
 
         $registro = $tmp_obj->detalhe();
 
-        if (!$registro) {
+        if (empty($registro)) {
             $this->simpleRedirect('educar_servidor_lst.php');
         }
 
@@ -50,12 +46,12 @@ return new class extends clsDetalhe {
         $registro['ref_cod_funcao'] = $det_ref_cod_funcao['nm_funcao'];
 
         // Nome
-        $obj_cod_servidor      = new clsFuncionario($registro['cod_servidor']);
-        $det_cod_servidor      = $obj_cod_servidor->detalhe();
+        $obj_cod_servidor = new clsFuncionario($registro['cod_servidor']);
+        $det_cod_servidor = $obj_cod_servidor->detalhe();
         $registro['matricula'] = $det_cod_servidor['matricula'];
 
-        $obj_cod_servidor      = new clsPessoaFisica($registro['cod_servidor']);
-        $det_cod_servidor      = $obj_cod_servidor->detalhe();
+        $obj_cod_servidor = new clsPessoaFisica($registro['cod_servidor']);
+        $det_cod_servidor = $obj_cod_servidor->detalhe();
         $registro['nome'] = $det_cod_servidor['nome'];
 
         // Instituição
@@ -131,7 +127,7 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['ref_cod_instituicao']) {
-            $this->addDetalhe([ 'Instituição', $registro['ref_cod_instituicao']]);
+            $this->addDetalhe(['Instituição', $registro['ref_cod_instituicao']]);
         }
 
         if ($registro['ref_idesco']) {
@@ -151,110 +147,15 @@ return new class extends clsDetalhe {
 
         $this->addDetalhe(
             [
-        'Multisseriado',
-        dbBool($registro['multi_seriado']) ? 'Sim' : 'Não'
-      ]
+                'Multisseriado',
+                dbBool($registro['multi_seriado']) ? 'Sim' : 'Não'
+            ]
         );
 
-        $obj_funcao = new clsPmieducarServidorFuncao();
-        $lst_funcao = $obj_funcao->lista($this->ref_cod_instituicao, $this->cod_servidor);
+        $serverfunction = $this->getEmployeeFunctions($this->cod_servidor);
 
-        if ($lst_funcao) {
-            $tabela .= '
-        <table cellspacing=\'0\' cellpadding=\'0\' border=\'0\'>
-          <tr bgcolor=\'#ccdce6\' align=\'center\'>
-            <td width=\'150\'>Função</td>
-            <td width=\'150\'>Matrícula</td>
-          </tr>';
-
-            $class = 'formlttd';
-
-            $tab_disc = null;
-
-            $employee = Employee::findOrFail($this->cod_servidor);
-            $disciplines = $employee->disciplines;
-
-            if ($disciplines) {
-                $tab_disc .= '<table cellspacing=\'0\' cellpadding=\'0\' width=\'200\' border=\'0\'';
-
-                $class2 = $class2 == 'formlttd' ? 'formmdtd' : 'formlttd' ;
-                $tab_disc .= '
-          <tr>
-            <td bgcolor=\'#ccdce6\' align=\'center\'>Componentes Curriculares</td>
-          </tr>';
-
-                $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
-                foreach ($disciplines as $discipline) {
-                    $tab_disc .= "
-            <tr class='$class2' align='center'>
-              <td align='left'>{$discipline->name}</td>
-            </tr>";
-
-                    $class2 = $class2 == 'formlttd' ? 'formmdtd' : 'formlttd' ;
-                }
-
-                $tab_disc .= '</table>';
-            }
-
-            $obj_servidor_curso = new clsPmieducarServidorCursoMinistra();
-            $lst_servidor_curso = $obj_servidor_curso->lista(null, $this->ref_cod_instituicao, $this->cod_servidor);
-
-            if ($lst_servidor_curso) {
-                $tab_curso .= '<table cellspacing=\'0\' cellpadding=\'0\' width=\'200\' border=\'0\'';
-
-                $class2 = $class2 == 'formlttd' ? 'formmdtd' : 'formlttd' ;
-                $tab_curso .= '
-          <tr>
-            <td bgcolor=\'#ccdce6\' align=\'center\'>Cursos Ministrados</td>
-          </tr>';
-
-                foreach ($lst_servidor_curso as $curso) {
-                    $obj_curso = new clsPmieducarCurso($curso['ref_cod_curso']);
-                    $det_curso = $obj_curso->detalhe();
-
-                    $tab_curso .= "
-            <tr class='$class2' align='center'>
-              <td align='left'>{$det_curso['nm_curso']}</td>
-            </tr>";
-
-                    $class2 = $class2 == 'formlttd' ? 'formmdtd' : 'formlttd' ;
-                }
-
-                $tab_curso .= '</table>';
-            }
-
-            foreach ($lst_funcao as $funcao) {
-                $obj_funcao = new clsPmieducarFuncao($funcao['ref_cod_funcao']);
-                $det_funcao = $obj_funcao->detalhe();
-
-                $tabela .= "
-          <tr class='$class' align='left'>
-            <td><b>{$det_funcao['nm_funcao']}</b></td>
-            <td align='center'>{$funcao['matricula']}</td>
-          </tr>";
-                if (!$this->is_professor) {
-                    $this->is_professor = (bool) $det_funcao['professor'];
-                }
-
-                $class = $class == 'formlttd' ? 'formmdtd' : 'formlttd' ;
-            }
-
-            if ($tab_curso) {
-                $tabela .= "
-          <tr class='$class' align='center'>
-            <td style='padding:5px'>$tab_curso</td>
-          </tr>";
-            }
-
-            if ($tab_disc) {
-                $tabela .= "
-          <tr class='$class' align='center'>
-            <td style='padding:5px'>$tab_disc</td>
-          </tr>";
-            }
-
-            $tabela .= '</table>';
-            $this->addDetalhe(['Função', '<a href=\'javascript:trocaDisplay("det_f");\' >Mostrar detalhe</a><div id=\'det_f\' name=\'det_f\' style=\'display:none;\'>'.$tabela.'</div>']);
+        if (count($serverfunction) > 0) {
+            $this->addDetalhe(view('server-role.server-role', ['serverfunction' => $serverfunction])->render());
         }
 
         $tabela = null;
@@ -264,22 +165,22 @@ return new class extends clsDetalhe {
          */
         if ($registro['carga_horaria']) {
             $cargaHoraria = $registro['carga_horaria'];
-            $horas   = (int)$cargaHoraria;
+            $horas = (int) $cargaHoraria;
             $minutos = round(($cargaHoraria - $horas) * 60);
             $cargaHoraria = sprintf('%02d:%02d', $horas, $minutos);
             $this->addDetalhe(['Carga Horária', $cargaHoraria]);
         }
 
         $dias_da_semana = [
-      '' => 'Selecione',
-      1  => 'Domingo',
-      2  => 'Segunda',
-      3  => 'Terça',
-      4  => 'Quarta',
-      5  => 'Quinta',
-      6  => 'Sexta',
-      7  => 'Sábado'
-    ];
+            '' => 'Selecione',
+            1 => 'Domingo',
+            2 => 'Segunda',
+            3 => 'Terça',
+            4 => 'Quarta',
+            5 => 'Quinta',
+            6 => 'Sexta',
+            7 => 'Sábado'
+        ];
 
         if ($this->alocacao_array) {
             $tabela .= '
@@ -293,19 +194,19 @@ return new class extends clsDetalhe {
             $class = 'formlttd';
             foreach ($this->alocacao_array as $alocacao) {
                 switch ($alocacao['periodo']) {
-          case 1:
-            $nm_periodo = 'Matutino';
+                    case 1:
+                        $nm_periodo = 'Matutino';
 
-            break;
-          case 2:
-            $nm_periodo = 'Vespertino';
+                        break;
+                    case 2:
+                        $nm_periodo = 'Vespertino';
 
-            break;
-          case 3:
-            $nm_periodo = 'Noturno';
+                        break;
+                    case 3:
+                        $nm_periodo = 'Noturno';
 
-            break;
-        }
+                        break;
+                }
 
                 $tabela .= "
           <tr class='$class' align='center'>
@@ -320,7 +221,7 @@ return new class extends clsDetalhe {
             $tabela .= '</table>';
 
             $this->addDetalhe(['Horários de trabalho',
-        '<a href=\'javascript:trocaDisplay("det_pree");\' >Mostrar detalhe</a><div id=\'det_pree\' name=\'det_pree\' style=\'display:none;\'>'.$tabela.'</div>']);
+                '<a href=\'javascript:trocaDisplay("det_pree");\' >Mostrar detalhe</a><div id=\'det_pree\' name=\'det_pree\' style=\'display:none;\'>' . $tabela . '</div>']);
         }
 
         // Horários do professor
@@ -370,36 +271,24 @@ return new class extends clsDetalhe {
             $tabela .= '</table>';
 
             $this->addDetalhe([
-        'Horários de aula',
-        '<a href=\'javascript:trocaDisplay("horarios");\' >Mostrar detalhes</a>' .
-        '<div id=\'horarios\' name=\'det_pree\' style=\'display:none;\'>' . $tabela . '</div>'
-      ]);
+                'Horários de aula',
+                '<a href=\'javascript:trocaDisplay("horarios");\' >Mostrar detalhes</a>' .
+                '<div id=\'horarios\' name=\'det_pree\' style=\'display:none;\'>' . $tabela . '</div>'
+            ]);
         }
 
-        $obj_permissoes = new clsPermissoes();
-        if ($obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7)) {
-            $this->url_novo   = 'educar_servidor_cad.php';
+        $isAllowedModify = (new clsPermissoes())->permissao_cadastra(635, $this->pessoa_logada, 7);
+        if ($isAllowedModify) {
+            $this->url_novo = 'educar_servidor_cad.php';
             $this->url_editar = "educar_servidor_cad.php?cod_servidor={$registro['cod_servidor']}&ref_cod_instituicao={$this->ref_cod_instituicao}";
 
-            $get_padrao ="ref_cod_servidor={$registro['cod_servidor']}&ref_cod_instituicao={$this->ref_cod_instituicao}";
+            $get_padrao = "ref_cod_servidor={$registro['cod_servidor']}&ref_cod_instituicao={$this->ref_cod_instituicao}";
 
             $this->array_botao = [];
             $this->array_botao_url_script = [];
 
             $this->array_botao[] = 'Avaliação de Desempenho';
             $this->array_botao_url_script[] = "go(\"educar_avaliacao_desempenho_lst.php?{$get_padrao}\");";
-            /***************************************************************************************************************
-             *** Avaliando remoção pois será criado aba nova no próprio cadastro/edit do servidor com informações de cursos
-             *** e escolaridade normalizados pelo censo
-             ***************************************************************************************************************
-            $this->array_botao[] = 'Formação';
-            $this->array_botao_url_script[] = "go(\"educar_servidor_formacao_lst.php?{$get_padrao}\");";
-
-            $this->array_botao[] = 'Cursos superiores/Licenciaturas';
-            $this->array_botao_url_script[] = sprintf(
-              "go(\"../module/Docente/index?servidor=%d&instituicao=%d\");",
-              $registro['cod_servidor'], $this->ref_cod_instituicao
-            );*/
 
             $this->array_botao[] = 'Faltas/Atrasos';
             $this->array_botao_url_script[] = "go(\"educar_falta_atraso_lst.php?{$get_padrao}\");";
@@ -409,26 +298,6 @@ return new class extends clsDetalhe {
 
             $this->array_botao[] = 'Alterar Nível';
             $this->array_botao_url_script[] = 'popless();';
-
-            $obj_servidor_alocacao = new clsPmieducarServidorAlocacao();
-            $lista_alocacao = $obj_servidor_alocacao->lista(
-                null,
-                $this->ref_cod_instituicao,
-                null,
-                null,
-                null,
-                $this->cod_servidor,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                1
-            );
 
             if ($lista) {
                 $this->array_botao[] = 'Substituir Horário Servidor';
@@ -446,24 +315,63 @@ return new class extends clsDetalhe {
                 $this->array_botao_url_script[] = "go(\"educar_servidor_afastamento_cad.php?{$get_padrao}&sequencial={$afastamento}&retornar_servidor=" . EmployeeReturn::SIM . '");';
             }
 
-            if ($this->is_professor) {
+            if ($this->isTeacher($this->cod_servidor)) {
                 $this->array_botao[] = 'Vincular professor a turmas';
                 $this->array_botao_url_script[] = "go(\"educar_servidor_vinculo_turma_lst.php?{$get_padrao}\");";
             }
         }
 
-        $withdrawals = EmployeeWithdrawal::query()->where('ref_cod_servidor', $this->cod_servidor)->get();
+        $withdrawals = EmployeeWithdrawal::query()->where(['ref_cod_servidor' => $this->cod_servidor, 'data_exclusao' => null])->get();
+
+        $nivel_acesso  = (new clsPermissoes())->nivel_acesso($this->pessoa_logada);
+
+        $isAllowedRemove = in_array($nivel_acesso, [LegacyUserType::LEVEL_ADMIN, LegacyUserType::LEVEL_INSTITUTIONAL], true);
 
         if (count($withdrawals) > 0) {
-            $this->addHtml(view('employee-withdrawal.employee-withdrawal', ['withdrawals' => $withdrawals])->render());
+            $this->addHtml(view(
+                'employee-withdrawal.employee-withdrawal',
+                [
+                    'withdrawals' => $withdrawals,
+                    'isAllowedRemove' => $isAllowedRemove,
+                    'isAllowedModify' => $isAllowedModify
+                ]
+            )->render());
         }
 
         $this->url_cancelar = 'educar_servidor_lst.php';
         $this->largura = '100%';
 
         $this->breadcrumb('Funções do servidor', [
-        url('intranet/educar_servidores_index.php') => 'Servidores',
-    ]);
+            url('intranet/educar_servidores_index.php') => 'Servidores',
+        ]);
+    }
+
+    /**
+     * @param $cod_servidor
+     *
+     * @return mixed
+     */
+    private function getEmployeeFunctions($cod_servidor)
+    {
+        return DB::table('pmieducar.servidor_funcao')
+            ->select(DB::raw('nm_funcao, pmieducar.servidor_funcao.matricula, nm_curso, array_to_string(array_agg(componente_curricular.nome), \'; \') as nome, funcao.professor'))
+            ->join('pmieducar.funcao', 'funcao.cod_funcao', 'servidor_funcao.ref_cod_funcao')
+            ->leftJoin('pmieducar.servidor_disciplina', 'servidor_disciplina.ref_cod_funcao', 'servidor_funcao.cod_servidor_funcao')
+            ->leftJoin('modules.componente_curricular', 'componente_curricular.id', 'servidor_disciplina.ref_cod_disciplina')
+            ->leftJoin('pmieducar.curso', 'curso.cod_curso', 'servidor_disciplina.ref_cod_curso')
+            ->where([['servidor_funcao.ref_cod_servidor', $cod_servidor]])
+            ->groupBy('professor', 'nm_funcao', 'pmieducar.servidor_funcao.matricula', 'nm_curso')
+            ->orderBy('matricula', 'asc')
+            ->get();
+    }
+
+    private function isTeacher($cod_servidor)
+    {
+        return DB::table('pmieducar.servidor_funcao')
+            ->join('pmieducar.funcao', 'funcao.cod_funcao', 'servidor_funcao.ref_cod_funcao')
+            ->where('servidor_funcao.ref_cod_servidor', $cod_servidor)
+            ->where('funcao.professor', 1)
+            ->exists();
     }
 
     public function makeExtra()
