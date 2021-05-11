@@ -126,26 +126,27 @@ return new class extends clsCadastro {
         $this->insc_est = idFederal2int($this->insc_est);
         $this->idpes_cad = $this->pessoa_logada;
 
-            $objPessoa = new clsPessoa_(
-                false,
-                $this->razao_social,
-                $this->idpes_cad,
-                $this->url,
-                'J',
-                false,
-                false,
-                $this->email
-            );
-            $this->cod_pessoa_fj = $objPessoa->cadastra();
+        $objPessoa = new clsPessoa_(
+            false,
+            $this->razao_social,
+            $this->idpes_cad,
+            $this->url,
+            'J',
+            false,
+            false,
+            $this->email
+        );
 
-            $objJuridica = new clsJuridica(
-                $this->cod_pessoa_fj,
-                $this->cnpj,
-                $this->fantasia,
-                $this->insc_est,
-                $this->capital_social
-            );
-            $objJuridica->cadastra();
+        $this->cod_pessoa_fj = $objPessoa->cadastra();
+
+        (new clsJuridica(
+           $this->cod_pessoa_fj,
+           $this->cnpj,
+           $this->fantasia,
+           $this->insc_est,
+           $this->capital_social
+        ))->cadastra();
+
 
             if ($this->telefone_1) {
                 $this->telefone_1 = str_replace('-', '', $this->telefone_1);
