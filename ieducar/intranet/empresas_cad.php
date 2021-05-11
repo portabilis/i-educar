@@ -81,34 +81,32 @@ return new class extends clsCadastro {
     {
         $this->url_cancelar = ($this->retorno === 'Editar') ? "empresas_det.php?cod_empresa={$this->cod_pessoa_fj}" : 'empresas_lst.php';
 
-            $this->campoOculto('cod_pessoa_fj', $this->cod_pessoa_fj);
-            $this->campoOculto('idpes_cad', $this->idpes_cad);
+        $this->campoOculto('cod_pessoa_fj', $this->cod_pessoa_fj);
+        $this->campoOculto('idpes_cad', $this->idpes_cad);
 
-            // Dados da Empresa
-            $this->campoTexto('fantasia', 'Nome Fantasia', $this->fantasia, '50', '255', true);
-            $this->campoTexto('razao_social', 'Raz&atilde;o Social', $this->razao_social, '50', '255', true);
-            $this->campoTexto('capital_social', 'Capital Social', $this->capital_social, '50', '255');
+        // Dados da Empresa
+        $this->campoTexto('fantasia', 'Nome Fantasia', $this->fantasia, '50', '255', true);
+        $this->campoTexto('razao_social', 'Raz&atilde;o Social', $this->razao_social, '50', '255', true);
+        $this->campoTexto('capital_social', 'Capital Social', $this->capital_social, '50', '255');
 
-            if ((new clsPermissoes)->nivel_acesso(Auth::id()) > App_Model_NivelTipoUsuario::INSTITUCIONAL) {
-                $this->campoRotulo('cnpj_', 'CNPJ', $this->cnpj);
-                $this->campoOculto('cnpj', $this->cnpj);
-            } else {
-                $this->campoCnpj('cnpj', 'CNPJ', $this->cnpj);
-            }
+        if ((new clsPermissoes)->nivel_acesso(Auth::id()) > App_Model_NivelTipoUsuario::INSTITUCIONAL) {
+            $this->campoRotulo('cnpj_', 'CNPJ', $this->cnpj);
+            $this->campoOculto('cnpj', $this->cnpj);
+        } else {
+            $this->campoCnpj('cnpj', 'CNPJ', $this->cnpj);
+        }
 
-            $this->viewAddress();
+        $this->viewAddress();
 
-            $this->inputTelefone('1', 'Telefone 1');
-            $this->inputTelefone('2', 'Telefone 2');
-            $this->inputTelefone('mov', 'Celular');
-            $this->inputTelefone('fax', 'Fax');
+        $this->inputTelefone('1', 'Telefone 1');
+        $this->inputTelefone('2', 'Telefone 2');
+        $this->inputTelefone('mov', 'Celular');
+        $this->inputTelefone('fax', 'Fax');
 
-            // Dados da Empresa
-
-            $this->campoTexto('url', 'Site', $this->url, '50', '255');
-            $this->campoTexto('email', 'E-mail', $this->email, '50', '255');
-            $this->campoTexto('insc_est', 'Inscrição Estadual', $this->insc_est, '20', '30');
-//        }
+        // Dados da Empresa
+        $this->campoTexto('url', 'Site', $this->url, '50', '255');
+        $this->campoTexto('email', 'E-mail', $this->email, '50', '255');
+        $this->campoTexto('insc_est', 'Inscrição Estadual', $this->insc_est, '20', '30');
 
         Portabilis_View_Helper_Application::loadJavascript($this, [
             '/modules/Cadastro/Assets/Javascripts/Addresses.js',
