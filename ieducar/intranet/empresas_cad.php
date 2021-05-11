@@ -115,15 +115,16 @@ return new class extends clsCadastro {
 
     public function Novo()
     {
-        $this->cnpj = idFederal2int(urldecode($this->cnpj));
-        $objJuridica = new clsJuridica(false, $this->cnpj);
-        $detalhJuridica = $objJuridica->detalhe();
+        $this->cnpj = empty($this->cnpj) ? null : idFederal2int(urldecode($this->cnpj));
 
-        dd($detalhJuridica);
-        if (!$detalhJuridica) {
-            $this->insc_est = idFederal2int($this->insc_est);
+        $contemPessoaJuridica = (new clsJuridica(false, $this->cnpj))->detalhe();
+        if ($this->cnpj !== null && $contemPessoaJuridica) {
+            $this->mensagem = 'Já existe uma empresa cadastrada com este CNPJ.';
+            return false;
+        }
 
-            $this->idpes_cad = $this->pessoa_logada;
+        $this->insc_est = idFederal2int($this->insc_est);
+        $this->idpes_cad = $this->pessoa_logada;
 
             $objPessoa = new clsPessoa_(
                 false,
