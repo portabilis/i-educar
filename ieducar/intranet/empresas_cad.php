@@ -148,67 +148,51 @@ return new class extends clsCadastro {
         ))->cadastra();
 
 
-            if ($this->telefone_1) {
-                $this->telefone_1 = str_replace('-', '', $this->telefone_1);
-                $this->telefone_1 = trim($this->telefone_1);
-                if (is_numeric($this->telefone_1) && (strlen($this->telefone_1) < 12)) {
-                    $objTelefone = new clsPessoaTelefone(
-                        $this->cod_pessoa_fj,
-                        1,
-                        $this->telefone_1,
-                        $this->ddd_telefone_1
-                    );
-                    $objTelefone->cadastra();
-                }
-            }
-            if ($this->telefone_2) {
-                $this->telefone_2 = str_replace('-', '', $this->telefone_2);
-                $this->telefone_2 = trim($this->telefone_2);
-                if (is_numeric($this->telefone_2) && (strlen($this->telefone_2) < 12)) {
-                    $objTelefone = new clsPessoaTelefone(
-                        $this->cod_pessoa_fj,
-                        2,
-                        $this->telefone_2,
-                        $this->ddd_telefone_2
-                    );
-                    $objTelefone->cadastra();
-                }
-            }
-            if ($this->telefone_mov) {
-                $this->telefone_mov = str_replace('-', '', $this->telefone_mov);
-                $this->telefone_mov = trim($this->telefone_mov);
-                if (is_numeric($this->telefone_mov) && (strlen($this->telefone_mov) < 12)) {
-                    $objTelefone = new clsPessoaTelefone(
-                        $this->cod_pessoa_fj,
-                        3,
-                        $this->telefone_mov,
-                        $this->ddd_telefone_mov
-                    );
-                    $objTelefone->cadastra();
-                }
-            }
-            if ($this->telefone_fax) {
-                $this->telefone_fax = str_replace('-', '', $this->telefone_fax);
-                $this->telefone_fax = trim($this->telefone_fax);
-                if (is_numeric($this->telefone_fax) && (strlen($this->telefone_fax) < 12)) {
-                    $objTelefone = new clsPessoaTelefone(
-                        $this->cod_pessoa_fj,
-                        4,
-                        $this->telefone_fax,
-                        $this->ddd_telefone_fax
-                    );
-                    $objTelefone->cadastra();
-                }
-            }
-
-            $this->saveAddress($this->cod_pessoa_fj);
-
-            $this->simpleRedirect('empresas_lst.php');
+        if ($this->telefone_1) {
+            $this->cadastraTelefone($this->cod_pessoa_fj,1, $this->telefone_1, $this->ddd_telefone_1);
         }
 
-        $this->mensagem = 'Já existe uma empresa cadastrada com este CNPJ.';
+        if ($this->telefone_2) {
+            $this->cadastraTelefone($this->cod_pessoa_fj, 2,$this->telefone_2, $this->ddd_telefone_2);
+        }
 
-        return false;
+        if ($this->telefone_mov) {
+            $this->cadastraTelefone($this->cod_pessoa_fj, 3,$this->telefone_mov, $this->ddd_telefone_mov);
+        }
+
+        if ($this->telefone_fax) {
+            $this->cadastraTelefone($this->cod_pessoa_fj, 4,$this->telefone_fax, $this->ddd_telefone_fax);
+        }
+
+        $this->saveAddress($this->cod_pessoa_fj);
+
+        $this->simpleRedirect('empresas_lst.php');
+
+        return true;
+    }
+
+    private function cadastraTelefone($codPessoaJuridica, $tipo, $telefone, $dddTelefone)
+    {
+        $telefone = $this->limpaDadosTelefone($telefone);
+
+        if ($this->validaDadosTelefone($telefone)) {
+            (new clsPessoaTelefone(
+                $codPessoaJuridica,
+                $tipo,
+                $telefone,
+                $dddTelefone
+            ))->cadastra();
+        }
+    }
+
+    private function limpaDadosTelefone($telefone)
+    {
+        return trim(str_replace('-', '', $telefone));
+    }
+
+    private function validaDadosTelefone($telefone)
+    {
+        return is_numeric($telefone) && (strlen($telefone) < 12);
     }
 
     public function Editar()
