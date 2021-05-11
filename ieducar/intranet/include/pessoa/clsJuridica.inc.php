@@ -66,6 +66,20 @@ class clsJuridica
                 $valores .= ", '{$this->capital_social}' ";
             }
 
+            /**
+             * Quando o CNPJ é null é preciso montar um insert específico por conta da concatenação com NULL
+             */
+            if ($this->cnpj === null) {
+
+                $db->Consulta("INSERT INTO {$this->schema}.{$this->tabela} (idpes, cnpj, origem_gravacao, data_cad, operacao, idpes_cad $campos) VALUES ($this->idpes, null, 'M', NOW(), 'I', '$this->idpes_cad' $valores)");
+
+                if ($this->idpes) {
+                    $this->detalhe();
+                }
+
+                return true;
+            }
+
             $db->Consulta("INSERT INTO {$this->schema}.{$this->tabela} (idpes, cnpj, origem_gravacao, data_cad, operacao, idpes_cad $campos) VALUES ($this->idpes, '$this->cnpj', 'M', NOW(), 'I', '$this->idpes_cad' $valores)");
 
             if ($this->idpes) {
