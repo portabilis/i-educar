@@ -1,6 +1,7 @@
 <?php
 
 use iEducar\Modules\Addressing\LegacyAddressingFields;
+use Illuminate\Support\Facades\Auth;
 
 return new class extends clsCadastro {
     use LegacyAddressingFields;
@@ -51,9 +52,6 @@ return new class extends clsCadastro {
             $this->busca_empresa = true;
             $objPessoaJuridica = new clsPessoaJuridica($this->cod_pessoa_fj);
             $detalhePessoaJuridica = $objPessoaJuridica->detalhe();
-            //echo "<pre>";
-            //print_r($detalhePessoaJuridica);
-            //die();
             $this->email = $detalhePessoaJuridica['email'];
             $this->url = $detalhePessoaJuridica['url'];
             $this->insc_est = $detalhePessoaJuridica['insc_estadual'];
@@ -88,10 +86,10 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
-        if (!$this->busca_empresa) {
-            $this->campoCnpj('busca_empresa', 'CNPJ', $this->busca_empresa, true);
-        } else {
-            $this->url_cancelar = ($this->retorno == 'Editar') ? "empresas_det.php?cod_empresa={$this->cod_pessoa_fj}" : 'empresas_lst.php';
+//        if (!$this->busca_empresa) {
+//            $this->campoCnpj('busca_empresa', 'CNPJ', $this->busca_empresa, true);
+//        } else {
+            $this->url_cancelar = ($this->retorno === 'Editar') ? "empresas_det.php?cod_empresa={$this->cod_pessoa_fj}" : 'empresas_lst.php';
 
             $this->campoOculto('cod_pessoa_fj', $this->cod_pessoa_fj);
             $this->campoOculto('idpes_cad', $this->idpes_cad);
@@ -101,12 +99,11 @@ return new class extends clsCadastro {
             $this->campoTexto('razao_social', 'Raz&atilde;o Social', $this->razao_social, '50', '255', true);
             $this->campoTexto('capital_social', 'Capital Social', $this->capital_social, '50', '255');
 
-            $nivelUsuario = (new clsPermissoes)->nivel_acesso(\Illuminate\Support\Facades\Auth::id());
-            if (!$this->cod_pessoa_fj || $nivelUsuario > App_Model_NivelTipoUsuario::INSTITUCIONAL) {
+            if ((new clsPermissoes)->nivel_acesso(Auth::id()) > App_Model_NivelTipoUsuario::INSTITUCIONAL) {
                 $this->campoRotulo('cnpj_', 'CNPJ', $this->cnpj);
                 $this->campoOculto('cnpj', $this->cnpj);
             } else {
-                $this->campoCnpj('cnpj', 'CNPJ', $this->cnpj, true);
+                $this->campoCnpj('cnpj', 'CNPJ', $this->cnpj);
             }
 
             $this->viewAddress();
@@ -118,10 +115,10 @@ return new class extends clsCadastro {
 
             // Dados da Empresa
 
-            $this->campoTexto('url', 'Site', $this->url, '50', '255', false);
-            $this->campoTexto('email', 'E-mail', $this->email, '50', '255', false);
-            $this->campoTexto('insc_est', 'Inscri&ccedil;&atilde;o Estadual', $this->insc_est, '20', '30', false);
-        }
+            $this->campoTexto('url', 'Site', $this->url, '50', '255');
+            $this->campoTexto('email', 'E-mail', $this->email, '50', '255');
+            $this->campoTexto('insc_est', 'Inscrição Estadual', $this->insc_est, '20', '30');
+//        }
 
         Portabilis_View_Helper_Application::loadJavascript($this, [
             '/modules/Cadastro/Assets/Javascripts/Addresses.js',
@@ -133,6 +130,8 @@ return new class extends clsCadastro {
         $this->cnpj = idFederal2int(urldecode($this->cnpj));
         $objJuridica = new clsJuridica(false, $this->cnpj);
         $detalhJuridica = $objJuridica->detalhe();
+
+        dd($detalhJuridica);
         if (!$detalhJuridica) {
             $this->insc_est = idFederal2int($this->insc_est);
 
