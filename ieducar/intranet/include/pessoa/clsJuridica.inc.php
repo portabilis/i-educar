@@ -49,7 +49,7 @@ class clsJuridica
     {
         $db = new clsBanco();
 
-        if (is_numeric($this->idpes) && is_numeric($this->cnpj) && is_numeric($this->idpes_cad)) {
+        if (is_numeric($this->idpes) && is_numeric($this->idpes_cad)) {
             $campos = '';
             $valores = '';
             if ($this->fantasia) {
