@@ -20,10 +20,10 @@ return new class extends clsDetalhe {
         $this->addDetalhe(['Bairro', $nm_bairro]);
         $this->addDetalhe(['Cidade', $cidade]);
 
-        $this->addDetalhe(['Telefone 1', "({$ddd_telefone_1}) {$telefone_1}"]);
-        $this->addDetalhe(['Telefone 2', "({$ddd_telefone_2}) {$telefone_2}"]);
-        $this->addDetalhe(['Celular', "({$ddd_telefone_mov}) {$telefone_mov}"]);
-        $this->addDetalhe(['Fax', "({$ddd_telefone_fax}) {$telefone_fax}"]);
+        $this->addDetalhe(['Telefone 1', $this->preparaTelefone($ddd_telefone_1, $telefone_1)]);
+        $this->addDetalhe(['Telefone 2', $this->preparaTelefone($ddd_telefone_2, $telefone_2)]);
+        $this->addDetalhe(['Celular', $this->preparaTelefone( $ddd_telefone_mov, $telefone_mov)]);
+        $this->addDetalhe(['Fax', $this->preparaTelefone($ddd_telefone_fax, $telefone_fax)]);
 
         $this->addDetalhe(['Site', $http]);
         $this->addDetalhe(['E-mail', $email]);
@@ -48,6 +48,11 @@ return new class extends clsDetalhe {
         $this->breadcrumb('Detalhe da pessoa jurídica', [
             url('intranet/educar_pessoas_index.php') => 'Pessoas',
         ]);
+    }
+
+    private function preparaTelefone($ddd, $telefone)
+    {
+        return !empty($telefone) ?  "({$ddd}) {$telefone}" : "";
     }
 
     public function Formular()
