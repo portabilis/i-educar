@@ -79,10 +79,7 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
-//        if (!$this->busca_empresa) {
-//            $this->campoCnpj('busca_empresa', 'CNPJ', $this->busca_empresa, true);
-//        } else {
-            $this->url_cancelar = ($this->retorno === 'Editar') ? "empresas_det.php?cod_empresa={$this->cod_pessoa_fj}" : 'empresas_lst.php';
+        $this->url_cancelar = ($this->retorno === 'Editar') ? "empresas_det.php?cod_empresa={$this->cod_pessoa_fj}" : 'empresas_lst.php';
 
             $this->campoOculto('cod_pessoa_fj', $this->cod_pessoa_fj);
             $this->campoOculto('idpes_cad', $this->idpes_cad);
