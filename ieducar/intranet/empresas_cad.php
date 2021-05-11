@@ -36,8 +36,7 @@ return new class extends clsCadastro {
 
     public function Inicializar()
     {
-        $this->busca_empresa = $_POST['busca_empresa'];
-        $this->cod_pessoa_fj = $_GET['idpes'];
+        $this->cod_pessoa_fj = is_numeric($_GET['idpes']) ? (int) $_GET['idpes'] : null;
         $this->idpes_cad = $this->pessoa_logada;
 
         if ($this->busca_empresa) {
