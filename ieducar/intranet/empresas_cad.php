@@ -39,13 +39,7 @@ return new class extends clsCadastro {
         $this->cod_pessoa_fj = is_numeric($_GET['idpes']) ? (int) $_GET['idpes'] : null;
         $this->idpes_cad = $this->pessoa_logada;
 
-        if ($this->busca_empresa) {
-            $this->cnpj = $this->busca_empresa;
-            $this->busca_empresa = idFederal2int($this->busca_empresa);
-            $this->retorno = 'Novo';
-            $objPessoa = new clsPessoaJuridica();
-            list($this->cod_pessoa_fj) = $objPessoa->queryRapidaCNPJ($this->busca_empresa, 'idpes');
-        }
+        $this->retorno = 'Novo';
 
         if ($this->cod_pessoa_fj) {
             $this->busca_empresa = true;
