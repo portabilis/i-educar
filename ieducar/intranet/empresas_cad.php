@@ -68,7 +68,7 @@ return new class extends clsCadastro {
 
         $this->nome_url_cancelar = 'Cancelar';
 
-        $nomeMenu = $this->retorno == 'Editar' ? $this->retorno : 'Cadastrar';
+        $nomeMenu = $this->retorno === 'Editar' ? $this->retorno : 'Cadastrar';
 
         $this->breadcrumb("{$nomeMenu} pessoa jurídica", [
             url('intranet/educar_pessoas_index.php') => 'Pessoas',
