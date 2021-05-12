@@ -28,7 +28,7 @@ return new class extends clsDetalhe {
         $this->addDetalhe(['Nome fantasia', $registro['nome_empresa']]);
         $this->addDetalhe(['Nome do responsável', $registro['nome_responsavel']]);
         $this->addDetalhe(['CNPJ', empty($id_federal) ? '' : int2CNPJ($id_federal)]);
-        $this->addDetalhe(['Endere&ccedil;o', $endereco]);
+        $this->addDetalhe(['Endereço', $endereco]);
         $this->addDetalhe(['CEP', $cep]);
         $this->addDetalhe(['Bairro', $nm_bairro]);
         $this->addDetalhe(['Cidade', $cidade]);
@@ -50,8 +50,9 @@ return new class extends clsDetalhe {
         if (! $ins_est) {
             $ins_est = 'isento';
         }
-        $this->addDetalhe(['Inscri&ccedil;&atilde;o estadual', $ins_est]);
-        $this->addDetalhe(['Observa&ccedil;&atilde;o', $registro['observacao']]);
+
+        $this->addDetalhe(['Inscrição estadual', $ins_est]);
+        $this->addDetalhe(['Observação', $registro['observacao']]);
         $this->url_cancelar = 'transporte_empresa_lst.php';
 
         $obj_permissao = new clsPermissoes();
