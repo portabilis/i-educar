@@ -27,7 +27,7 @@ return new class extends clsDetalhe {
         $this->addDetalhe(['Código da empresa', $cod_empresa_transporte_escolar]);
         $this->addDetalhe(['Nome fantasia', $registro['nome_empresa']]);
         $this->addDetalhe(['Nome do responsável', $registro['nome_responsavel']]);
-        $this->addDetalhe(['CNPJ', int2CNPJ($id_federal)]);
+        $this->addDetalhe(['CNPJ', empty($id_federal) ? '' : int2CNPJ($id_federal)]);
         $this->addDetalhe(['Endere&ccedil;o', $endereco]);
         $this->addDetalhe(['CEP', $cep]);
         $this->addDetalhe(['Bairro', $nm_bairro]);
