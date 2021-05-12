@@ -100,7 +100,19 @@ class FilaUnicaController extends ApiCoreController
         $aluno = $this->getRequest()->aluno_id;
 
         if ($aluno && $anoLetivo) {
-            return (new clsPmieducarMatricula)->matriculaAlunoAndamento($aluno, $anoLetivo, false);
+            $legacySingleQueueCandidate= LegacySingleQueueCandidate::query()
+                ->where([
+                    'ativo'=> 1,
+                    'ano_letivo' => $anoLetivo,
+                    'ref_cod_aluno' => $aluno])
+                ->select('ref_cod_aluno AS cod_aluno', 'cod_candidato_fila_unica AS cod_candidato')
+                ->get()
+                ->first()
+            ;
+
+            if ($legacySingleQueueCandidate instanceof LegacySingleQueueCandidate) {
+                return $legacySingleQueueCandidate->toArray();
+            }
         }
 
         return false;
