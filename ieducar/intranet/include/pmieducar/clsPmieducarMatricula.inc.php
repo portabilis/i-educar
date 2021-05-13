@@ -1447,6 +1447,30 @@ class clsPmieducarMatricula extends Model
         return false;
     }
 
+    public function matriculaAlunoAndamento($aluno, $anoLetivo, $showErrors = true)
+    {
+        if ($aluno && $anoLetivo) {
+            $sql = 'SELECT cod_matricula,
+                           ref_cod_aluno AS cod_aluno
+                      FROM pmieducar.matricula
+                     WHERE ativo = 1
+                       AND aprovado = 3
+                       AND ano = $1
+                       AND ref_cod_aluno = $2';
+
+            $options = [
+                'params' => [$anoLetivo, $aluno],
+                'show_errors' => !$showErrors,
+                'return_only' => 'first-line',
+                'messenger' => ''
+            ];
+
+            return Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
+        }
+
+        return false;
+    }
+
     public function getTotalAlunosEscola(
         $cod_escola,
         $cod_curso,
