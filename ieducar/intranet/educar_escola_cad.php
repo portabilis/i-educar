@@ -214,8 +214,10 @@ return new class extends clsCadastro {
         $this->sem_cnpj = false;
 
         // cadastro Novo sem CNPJ
-        if (is_numeric($_POST['sem_cnpj']) && !$this->cod_escola) {
+        if (is_numeric($_POST['pessoaj_id']) && !$this->cod_escola) {
             $this->sem_cnpj = true;
+            $this->pessoaj_idpes = (int) $_POST['pessoaj_id'];
+            $this->pessoaj_id = (int) $_POST['pessoaj_id'];
             $retorno = 'Novo';
         } // cadastro Novo com CNPJ
         elseif ($_POST['cnpj']) {
