@@ -520,7 +520,11 @@ $j(document).ready(function() {
   $j('#longitude').on('change', verificaLatitudeLongitude);
 });
 
-document.getElementById('cnpj').readOnly = true;
+const cnpj = document.getElementById('cnpj');
+
+if (cnpj !== null) {
+  document.getElementById('cnpj').readOnly = true;
+}
 
 function getRedeEnsino(xml_escola_rede_ensino)
 {
