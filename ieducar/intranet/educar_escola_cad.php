@@ -474,12 +474,12 @@ return new class extends clsCadastro {
             $parametros->setPessoaTela('frame');
             $this->campoOculto('sem_cnpj', '');
             $parametros->setCodSistema(13);
-            $parametros->adicionaCampoTexto('cnpj', 'cnpj');
-            $this->campoCnpjPesq('cnpj', 'CNPJ', $this->cnpj, 'pesquisa_pessoa_lst.php', $parametros->serializaCampos(), true);
+            $this->inputsHelper()->simpleSearchPessoaj('idpes', ['label'=> 'Pessoa Jurídica']);
             $this->acao_enviar = false;
             $this->url_cancelar = false;
             $this->array_botao = ['Continuar', 'Cancelar'];
-            $this->array_botao_url_script = ['obj = document.getElementById(\'cnpj\');if(obj.value != \'\' ) { acao(); } else { acao(); }', 'go(\'educar_escola_lst.php\');'];
+            $this->array_botao_url_script = ['obj = document.getElementById(\'pessoaj_idpes\');if(obj.value != \'\' ) {
+                document.getElementById(\'tipoacao\').value = \'\'; acao(); } else { acao(); }', 'go(\'educar_escola_lst.php\');'];
         } else {
             $this->inputsHelper()->integer('escola_inep_id', ['label' => 'Código INEP', 'placeholder' => 'INEP', 'required' => $obrigarCamposCenso, 'max_length' => 8, 'label_hint' => 'Somente números']);
 
