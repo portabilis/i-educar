@@ -181,6 +181,8 @@ return new class extends clsCadastro {
     public $qtd_vice_diretor;
     public $qtd_orientador_comunitario;
     public $iddis;
+    public  $pessoaj_idpes;
+    public  $pessoaj_id;
 
     private $inputsRecursos = [
         'qtd_secretario_escolar' => 'Secretário(a) escolar',
