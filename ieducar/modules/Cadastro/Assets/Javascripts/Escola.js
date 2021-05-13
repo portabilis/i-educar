@@ -198,7 +198,7 @@ function changePossuiDependencias() {
 //abas
 
 // hide nos campos das outras abas (deixando só os campos da primeira aba)
-if (!$j('#cnpj').is(':visible')){
+if (!$j('#pessoaj_idpes').is(':visible')){
 
   $j('td .formdktd:first').append('<div id="tabControl"><ul><li><div id="tab1" class="escolaTab"> <span class="tabText">Dados gerais</span></div></li><li><div id="tab2" class="escolaTab"> <span class="tabText">Infraestrutura</span></div></li><li><div id="tab3" class="escolaTab"> <span class="tabText">Depend\u00eancias</span></div></li><li><div id="tab4" class="escolaTab"> <span class="tabText">Equipamentos</span></div></li><li><div id="tab5" class="escolaTab"> <span class="tabText">Recursos</span></div></li><li><div id="tab6" class="escolaTab"> <span class="tabText">Dados do ensino</span></div></li></ul></div>');
   $j('td .formdktd b').remove();
