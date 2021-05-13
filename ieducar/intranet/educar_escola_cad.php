@@ -463,6 +463,7 @@ return new class extends clsCadastro {
         $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
 
         $this->campoOculto('obrigar_campos_censo', (int) $obrigarCamposCenso);
+        $this->campoOculto('pessoaj_id_oculto', $this->pessoaj_id);
 
         if (!$this->sem_cnpj && !$this->com_cnpj) {
             $parametros = new clsParametrosPesquisas();
