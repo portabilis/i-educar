@@ -1504,25 +1504,11 @@ return new class extends clsCadastro {
 
         $cod_escola = $this->cadastraEscola((int)$this->pessoaj_id_oculto);
 
-                    $cod_escola = $cadastrou1 = $obj->cadastra();
-
-                    if ($cadastrou1) {
-                        $escola = new clsPmieducarEscola($cod_escola);
-                        $escola = $escola->detalhe();
         if ($cod_escola === false) {
             return false;
         }
 
-                        $objTelefone = new clsPessoaTelefone($this->ref_idpes);
-                        $objTelefone->excluiTodos();
-                        $objTelefone = new clsPessoaTelefone($this->ref_idpes, 1, str_replace('-', '', $this->p_telefone_1), $this->p_ddd_telefone_1);
-                        $objTelefone->cadastra();
-                        $objTelefone = new clsPessoaTelefone($this->ref_idpes, 2, str_replace('-', '', $this->p_telefone_2), $this->p_ddd_telefone_2);
-                        $objTelefone->cadastra();
-                        $objTelefone = new clsPessoaTelefone($this->ref_idpes, 3, str_replace('-', '', $this->p_telefone_mov), $this->p_ddd_telefone_mov);
-                        $objTelefone->cadastra();
-                        $objTelefone = new clsPessoaTelefone($this->ref_idpes, 4, str_replace('-', '', $this->p_telefone_fax), $this->p_ddd_telefone_fax);
-                        $objTelefone->cadastra();
+        $this->processaTelefones($this->pessoaj_id_oculto);
 
                         $this->saveAddress($this->ref_idpes);
 
@@ -1758,9 +1744,17 @@ return new class extends clsCadastro {
                     foreach ($this->escola_curso as $campo) {
                         $curso_escola = new clsPmieducarEscolaCurso($cadastrou, $campo, null, $this->pessoa_logada, null, null, 1, $this->escola_curso_autorizacao[$campo], $this->escola_curso_anos_letivos[$campo]);
                         $cadastrou_ = $curso_escola->cadastra();
+    private function processaTelefones($idpes)
+    {
+        $objTelefone = new clsPessoaTelefone($idpes);
+        $objTelefone->excluiTodos();
 
                         if (!$cadastrou_) {
                             $this->mensagem = 'Cadastro não realizado.<br>';
+        $this->cadastraTelefone($idpes, 1, str_replace('-', '', $this->p_telefone_1), $this->p_ddd_telefone_1);
+        $this->cadastraTelefone($idpes, 2, str_replace('-', '', $this->p_telefone_2), $this->p_ddd_telefone_2);
+        $this->cadastraTelefone($idpes, 3, str_replace('-', '', $this->p_telefone_mov), $this->p_ddd_telefone_mov);
+        $this->cadastraTelefone($idpes,4, str_replace('-', '', $this->p_telefone_fax), $this->p_ddd_telefone_fax);
 
                             return false;
                         }
@@ -1770,6 +1764,10 @@ return new class extends clsCadastro {
                 }
                 $this->saveInep($escola['cod_escola']);
                 //-----------------------FIM CADASTRA CURSO------------------------//
+    private function cadastraTelefone($idpes,$tipo,$telefone, $ddd)
+    {
+        return (new clsPessoaTelefone($idpes, $tipo, $telefone, $ddd, $this->pessoa_logada))->cadastra();
+    }
 
                 $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
 
