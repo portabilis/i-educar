@@ -38,6 +38,7 @@ use iEducar\Modules\ValueObjects\SchoolManagerValueObject;
 use iEducar\Support\View\SelectOptions;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 
 return new class extends clsCadastro {
     use LegacyAddressingFields;
