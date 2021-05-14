@@ -1502,98 +1502,7 @@ return new class extends clsCadastro {
         $this->bloquear_lancamento_diario_anos_letivos_encerrados = is_null($this->bloquear_lancamento_diario_anos_letivos_encerrados) ? 0 : 1;
         $this->utiliza_regra_diferenciada = !is_null($this->utiliza_regra_diferenciada);
 
-        if ($this->com_cnpj) {
-            $objPessoa = new clsPessoa_(false, $this->fantasia, $this->pessoa_logada, $this->p_http, 'J', false, false, $this->p_email);
-            $this->ref_idpes = $objPessoa->cadastra();
-
-            if ($this->ref_idpes) {
-                $obj_pes_juridica = new clsJuridica($this->ref_idpes, $this->cnpj, $this->fantasia, false, false, $this->pessoa_logada);
-                $cadastrou = $obj_pes_juridica->cadastra();
-
-                if ($cadastrou) {
-                    $obj = new clsPmieducarEscola(null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->zona_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, null, $this->bloquear_lancamento_diario_anos_letivos_encerrados);
-                    $obj->situacao_funcionamento = $this->situacao_funcionamento;
-                    $obj->dependencia_administrativa = $this->dependencia_administrativa;
-                    $obj->orgao_vinculado_escola = $orgao_vinculado_escola;
-                    $obj->latitude = $this->latitude;
-                    $obj->longitude = $this->longitude;
-                    $obj->regulamentacao = $this->regulamentacao;
-                    $obj->ref_idpes_gestor = $this->gestor_id;
-                    $obj->cargo_gestor = $this->cargo_gestor;
-                    $obj->email_gestor = $this->email_gestor;
-                    $obj->local_funcionamento = $local_funcionamento;
-                    $obj->condicao = $this->condicao;
-                    $obj->predio_compartilhado_outra_escola = $this->predio_compartilhado_outra_escola;
-                    $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
-                    $obj->codigo_inep_escola_compartilhada2 = $this->codigo_inep_escola_compartilhada2;
-                    $obj->codigo_inep_escola_compartilhada3 = $this->codigo_inep_escola_compartilhada3;
-                    $obj->codigo_inep_escola_compartilhada4 = $this->codigo_inep_escola_compartilhada4;
-                    $obj->codigo_inep_escola_compartilhada5 = $this->codigo_inep_escola_compartilhada5;
-                    $obj->codigo_inep_escola_compartilhada6 = $this->codigo_inep_escola_compartilhada6;
-                    $obj->agua_potavel_consumo = $this->agua_potavel_consumo;
-                    $obj->abastecimento_agua = $abastecimento_agua;
-                    $obj->abastecimento_energia = $abastecimento_energia;
-                    $obj->esgoto_sanitario = $esgoto_sanitario;
-                    $obj->destinacao_lixo = $destinacao_lixo;
-                    $obj->tratamento_lixo = $tratamento_lixo;
-                    $obj->alimentacao_escolar_alunos = $this->alimentacao_escolar_alunos;
-                    $obj->compartilha_espacos_atividades_integracao = $this->compartilha_espacos_atividades_integracao;
-                    $obj->usa_espacos_equipamentos_atividades_regulares = $this->usa_espacos_equipamentos_atividades_regulares;
-                    $obj->salas_funcionais = $salas_funcionais;
-                    $obj->salas_gerais = $salas_gerais;
-                    $obj->banheiros = $banheiros;
-                    $obj->laboratorios = $laboratorios;
-                    $obj->salas_atividades = $salas_atividades;
-                    $obj->dormitorios = $dormitorios;
-                    $obj->areas_externas = $areas_externas;
-                    $obj->recursos_acessibilidade = $recursos_acessibilidade;
-                    $obj->possui_dependencias = $this->possui_dependencias;
-                    $obj->numero_salas_utilizadas_dentro_predio = $this->numero_salas_utilizadas_dentro_predio;
-                    $obj->numero_salas_utilizadas_fora_predio = $this->numero_salas_utilizadas_fora_predio;
-                    $obj->numero_salas_climatizadas = $this->numero_salas_climatizadas;
-                    $obj->numero_salas_acessibilidade = $this->numero_salas_acessibilidade;
-                    $obj->total_funcionario = $this->total_funcionario;
-                    $obj->atendimento_aee = $this->atendimento_aee;
-                    $obj->fundamental_ciclo = $this->fundamental_ciclo;
-                    $obj->organizacao_ensino = $organizacao_ensino;
-                    $obj->instrumentos_pedagogicos = $instrumentos_pedagogicos;
-                    $obj->orgaos_colegiados = $orgaos_colegiados;
-                    $obj->exame_selecao_ingresso = $this->exame_selecao_ingresso;
-                    $obj->reserva_vagas_cotas = $reserva_vagas_cotas;
-                    $obj->projeto_politico_pedagogico = $this->projeto_politico_pedagogico;
-                    $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
-                    $obj->educacao_indigena = $this->educacao_indigena;
-                    $obj->lingua_ministrada = $this->lingua_ministrada;
-                    $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
-                    $obj->codigo_lingua_indigena = $codigo_lingua_indigena;
-                    $obj->equipamentos = $equipamentos;
-                    $obj->uso_internet = $uso_internet;
-                    $obj->rede_local = $rede_local;
-                    $obj->equipamentos_acesso_internet = $equipamentos_acesso_internet;
-                    $obj->quantidade_computadores_alunos_mesa = $this->quantidade_computadores_alunos_mesa;
-                    $obj->quantidade_computadores_alunos_portateis = $this->quantidade_computadores_alunos_portateis;
-                    $obj->quantidade_computadores_alunos_tablets = $this->quantidade_computadores_alunos_tablets;
-                    $obj->lousas_digitais = $this->lousas_digitais;
-                    $obj->televisoes = $this->televisoes;
-                    $obj->dvds = $this->dvds;
-                    $obj->aparelhos_de_som = $this->aparelhos_de_som;
-                    $obj->projetores_digitais = $this->projetores_digitais;
-                    $obj->acesso_internet = $this->acesso_internet;
-                    $obj->ato_criacao = $this->ato_criacao;
-                    $obj->ato_autorizativo = $this->ato_autorizativo;
-                    $obj->ref_idpes_secretario_escolar = $this->secretario_id;
-                    $obj->unidade_vinculada_outra_instituicao = $this->unidade_vinculada_outra_instituicao;
-                    $obj->inep_escola_sede = $this->inep_escola_sede;
-                    $obj->codigo_ies = $this->codigo_ies_id;
-                    $obj->categoria_escola_privada = $this->categoria_escola_privada;
-                    $obj->conveniada_com_poder_publico = $this->conveniada_com_poder_publico;
-                    $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
-                    $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
-                    $obj->esfera_administrativa = $this->esfera_administrativa;
-                    $obj->iddis = (int)$this->district_id;
-                    foreach ($this->inputsRecursos as $key => $value) {
-                        $obj->{$key} = $this->{$key};
-                    }
+        $cod_escola = $this->cadastraEscola((int)$this->pessoaj_id_oculto);
 
                     $cod_escola = $cadastrou1 = $obj->cadastra();
 
@@ -1752,6 +1661,95 @@ return new class extends clsCadastro {
                 $this->escola_curso = unserialize(urldecode($this->escola_curso));
                 $this->escola_curso_autorizacao = unserialize(urldecode($this->escola_curso_autorizacao));
                 $this->escola_curso_anos_letivos = unserialize(urldecode($this->escola_curso_anos_letivos));
+    private function constroiObjetoEscola($pessoaj_id_oculto): clsPmieducarEscola
+    {
+        $obj = new clsPmieducarEscola(null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->zona_localizacao, $this->ref_cod_escola_rede_ensino,$pessoaj_id_oculto, $this->sigla, null, null, 1, null, $this->bloquear_lancamento_diario_anos_letivos_encerrados);
+
+        $obj->situacao_funcionamento = $this->situacao_funcionamento;
+        $obj->dependencia_administrativa = $this->dependencia_administrativa;
+        $obj->orgao_vinculado_escola = $this->orgao_vinculado_escola;
+        $obj->latitude = $this->latitude;
+        $obj->longitude = $this->longitude;
+        $obj->regulamentacao = $this->regulamentacao;
+        $obj->ref_idpes_gestor = $this->gestor_id;
+        $obj->cargo_gestor = $this->cargo_gestor;
+        $obj->email_gestor = $this->email_gestor;
+        $obj->local_funcionamento = $this->local_funcionamento;
+        $obj->condicao = $this->condicao;
+        $obj->predio_compartilhado_outra_escola = $this->predio_compartilhado_outra_escola;
+        $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
+        $obj->codigo_inep_escola_compartilhada2 = $this->codigo_inep_escola_compartilhada2;
+        $obj->codigo_inep_escola_compartilhada3 = $this->codigo_inep_escola_compartilhada3;
+        $obj->codigo_inep_escola_compartilhada4 = $this->codigo_inep_escola_compartilhada4;
+        $obj->codigo_inep_escola_compartilhada5 = $this->codigo_inep_escola_compartilhada5;
+        $obj->codigo_inep_escola_compartilhada6 = $this->codigo_inep_escola_compartilhada6;
+        $obj->agua_potavel_consumo = $this->agua_potavel_consumo;
+        $obj->abastecimento_agua = $this->abastecimento_agua;
+        $obj->abastecimento_energia = $this->abastecimento_energia;
+        $obj->esgoto_sanitario = $this->esgoto_sanitario;
+        $obj->destinacao_lixo = $this->destinacao_lixo;
+        $obj->tratamento_lixo = $this->tratamento_lixo;
+        $obj->alimentacao_escolar_alunos = $this->alimentacao_escolar_alunos;
+        $obj->compartilha_espacos_atividades_integracao = $this->compartilha_espacos_atividades_integracao;
+        $obj->usa_espacos_equipamentos_atividades_regulares = $this->usa_espacos_equipamentos_atividades_regulares;
+        $obj->salas_funcionais = $this->salas_funcionais;
+        $obj->salas_gerais = $this->salas_gerais;
+        $obj->banheiros = $this->banheiros;
+        $obj->laboratorios = $this->laboratorios;
+        $obj->salas_atividades = $this->salas_atividades;
+        $obj->dormitorios = $this->dormitorios;
+        $obj->areas_externas = $this->areas_externas;
+        $obj->recursos_acessibilidade = $this->recursos_acessibilidade;
+        $obj->possui_dependencias = $this->possui_dependencias;
+        $obj->numero_salas_utilizadas_dentro_predio = $this->numero_salas_utilizadas_dentro_predio;
+        $obj->numero_salas_utilizadas_fora_predio = $this->numero_salas_utilizadas_fora_predio;
+        $obj->numero_salas_climatizadas = $this->numero_salas_climatizadas;
+        $obj->numero_salas_acessibilidade = $this->numero_salas_acessibilidade;
+        $obj->total_funcionario = $this->total_funcionario;
+        $obj->atendimento_aee = $this->atendimento_aee;
+        $obj->fundamental_ciclo = $this->fundamental_ciclo;
+        $obj->organizacao_ensino = $this->organizacao_ensino;
+        $obj->instrumentos_pedagogicos = $this->instrumentos_pedagogicos;
+        $obj->orgaos_colegiados = $this->orgaos_colegiados;
+        $obj->exame_selecao_ingresso = $this->exame_selecao_ingresso;
+        $obj->reserva_vagas_cotas = $this->reserva_vagas_cotas;
+        $obj->projeto_politico_pedagogico = $this->projeto_politico_pedagogico;
+        $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
+        $obj->educacao_indigena = $this->educacao_indigena;
+        $obj->lingua_ministrada = $this->lingua_ministrada;
+        $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
+        $obj->equipamentos = $this->equipamentos;
+        $obj->uso_internet = $this->uso_internet;
+        $obj->rede_local = $this->rede_local;
+        $obj->equipamentos_acesso_internet = $this->equipamentos_acesso_internet;
+        $obj->quantidade_computadores_alunos_mesa = $this->quantidade_computadores_alunos_mesa;
+        $obj->quantidade_computadores_alunos_portateis = $this->quantidade_computadores_alunos_portateis;
+        $obj->quantidade_computadores_alunos_tablets = $this->quantidade_computadores_alunos_tablets;
+        $obj->lousas_digitais = $this->lousas_digitais;
+        $obj->televisoes = $this->televisoes;
+        $obj->dvds = $this->dvds;
+        $obj->aparelhos_de_som = $this->aparelhos_de_som;
+        $obj->projetores_digitais = $this->projetores_digitais;
+        $obj->acesso_internet = $this->acesso_internet;
+        $obj->ato_criacao = $this->ato_criacao;
+        $obj->ato_autorizativo = $this->ato_autorizativo;
+        $obj->ref_idpes_secretario_escolar = $this->secretario_id;
+        $obj->unidade_vinculada_outra_instituicao = $this->unidade_vinculada_outra_instituicao;
+        $obj->inep_escola_sede = $this->inep_escola_sede;
+        $obj->codigo_ies = $this->codigo_ies_id;
+        $obj->categoria_escola_privada = $this->categoria_escola_privada;
+        $obj->conveniada_com_poder_publico = $this->conveniada_com_poder_publico;
+        $obj->mantenedora_escola_privada = $this->mantenedora_escola_privada;
+        $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
+        $obj->esfera_administrativa = $this->esfera_administrativa;
+        $obj->iddis = (int)$this->district_id;
+
+        foreach ($this->inputsRecursos as $key => $value) {
+            $obj->{$key} = $this->{$key};
+        }
+
+        return $obj;
+    }
 
                 if ($this->escola_curso) {
                     foreach ($this->escola_curso as $campo) {
