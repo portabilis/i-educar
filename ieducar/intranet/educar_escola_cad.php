@@ -1512,10 +1512,7 @@ return new class extends clsCadastro {
 
         $this->saveAddress($this->ref_idpes);
 
-                        //-----------------------CADASTRA CURSO------------------------//
-                        $this->escola_curso = unserialize(urldecode($this->escola_curso));
-                        $this->escola_curso_autorizacao = unserialize(urldecode($this->escola_curso_autorizacao));
-                        $this->escola_curso_anos_letivos = unserialize(urldecode($this->escola_curso_anos_letivos));
+        $this->cadastraEscolaCurso($cod_escola);
 
                         if ($this->escola_curso) {
                             foreach ($this->escola_curso as $campo) {
@@ -1529,17 +1526,23 @@ return new class extends clsCadastro {
                                 }
                             }
 
-                            $this->storeManagers($cod_escola);
-                        }
-                        //-----------------------FIM CADASTRA CURSO------------------------//
-                    } else {
-                        $this->mensagem = 'Cadastro não realizado (clsPmieducarEscola).<br>';
+    private function cadastraEscolaCurso($cod_escola)
+    {
+        $this->escola_curso = unserialize(urldecode($this->escola_curso), ['stdclass']);
+        $this->escola_curso_autorizacao = unserialize(urldecode($this->escola_curso_autorizacao), ['stdclass']);
+        $this->escola_curso_anos_letivos = unserialize(urldecode($this->escola_curso_anos_letivos), ['stdclass']);
 
                         return false;
                     }
                 } else {
                     $this->mensagem = 'Cadastro não realizado (clsJuridica).<br>';
+        if ($this->escola_curso) {
+            foreach ($this->escola_curso as $campo) {
+                $curso_escola = new clsPmieducarEscolaCurso($cod_escola, $campo, null, $this->pessoa_logada, null, null, 1, $this->escola_curso_autorizacao[$campo], $this->escola_curso_anos_letivos[$campo]);
+                $cadastrou_ = $curso_escola->cadastra();
 
+                if (!$cadastrou_) {
+                    $this->mensagem = 'Cadastro não realizado.<br>';
                     return false;
                 }
 
