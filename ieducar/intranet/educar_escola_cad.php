@@ -1509,6 +1509,9 @@ return new class extends clsCadastro {
                     if ($cadastrou1) {
                         $escola = new clsPmieducarEscola($cod_escola);
                         $escola = $escola->detalhe();
+        if ($cod_escola === false) {
+            return false;
+        }
 
                         $objTelefone = new clsPessoaTelefone($this->ref_idpes);
                         $objTelefone->excluiTodos();
