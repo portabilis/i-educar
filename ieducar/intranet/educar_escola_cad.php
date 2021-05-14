@@ -1655,11 +1655,6 @@ return new class extends clsCadastro {
     {
         $escola = $this->constroiObjetoEscola($pessoaj_id_oculto);
 
-                throw new HttpResponseException(
-                    new RedirectResponse('educar_escola_lst.php')
-                );
-            } else {
-                $this->mensagem = 'Cadastro não realizado (clsPmieducarEscola).<br>';
         $cod_escola =  $escola->cadastra();
 
         if ($cod_escola === false) {
