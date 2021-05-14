@@ -1510,7 +1510,7 @@ return new class extends clsCadastro {
 
         $this->processaTelefones($this->pessoaj_id_oculto);
 
-                        $this->saveAddress($this->ref_idpes);
+        $this->saveAddress($this->ref_idpes);
 
                         //-----------------------CADASTRA CURSO------------------------//
                         $this->escola_curso = unserialize(urldecode($this->escola_curso));
