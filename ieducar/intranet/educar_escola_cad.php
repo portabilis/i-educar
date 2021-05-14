@@ -1518,13 +1518,19 @@ return new class extends clsCadastro {
                             foreach ($this->escola_curso as $campo) {
                                 $curso_escola = new clsPmieducarEscolaCurso($cadastrou1, $campo, null, $this->pessoa_logada, null, null, 1, $this->escola_curso_autorizacao[$campo], $this->escola_curso_anos_letivos[$campo]);
                                 $cadastrou_ = $curso_escola->cadastra();
+        $this->saveInep($cod_escola);
 
                                 if (!$cadastrou_) {
                                     $this->mensagem = 'Cadastro não realizado.<br>';
+        $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
 
                                     return false;
                                 }
                             }
+        throw new HttpResponseException(
+            new RedirectResponse('educar_escola_lst.php')
+        );
+    }
 
     private function cadastraEscolaCurso($cod_escola)
     {
@@ -1648,6 +1654,9 @@ return new class extends clsCadastro {
             if ($cadastrou) {
                 $escola = new clsPmieducarEscola($cod_escola);
                 $escola = $escola->detalhe();
+            $this->storeManagers($cod_escola);
+        }
+    }
 
                 //-----------------------CADASTRA CURSO------------------------//
                 $this->escola_curso = unserialize(urldecode($this->escola_curso));
@@ -1762,6 +1771,7 @@ return new class extends clsCadastro {
                             return false;
                         }
                     }
+    }
 
                     $this->storeManagers($cod_escola);
                 }
@@ -1773,16 +1783,30 @@ return new class extends clsCadastro {
     }
 
                 $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+    public function cadastraEscola(int $pessoaj_id_oculto)
+    {
+        $escola = $this->constroiObjetoEscola($pessoaj_id_oculto);
 
                 throw new HttpResponseException(
                     new RedirectResponse('educar_escola_lst.php')
                 );
             } else {
                 $this->mensagem = 'Cadastro não realizado (clsPmieducarEscola).<br>';
+        $cod_escola =  $escola->cadastra();
 
                 return false;
             }
+        if ($cod_escola === false) {
+            $this->mensagem = 'Cadastro não realizado<br>';
+            return false;
         }
+
+        return $cod_escola;
+    }
+
+    /**
+     * Coloca os dados disponíveis no objeto da classe para serem lidos no @method cadastraEscola()
+     */
     public function preparaDados()
     {
         $this->orgao_vinculado_escola = implode(',', $this->orgao_vinculado_escola);
