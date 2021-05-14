@@ -1487,6 +1487,18 @@ return new class extends clsCadastro {
             return false;
         }
 
+        if (! property_exists($this, 'pessoaj_id_oculto') ||
+            ! is_int((int)$this->pessoaj_id_oculto)
+        ) {
+            throw new \iEducar\Support\Exceptions\Exception('Erro ao selecionar a pessoa jurídica');
+        }
+
+        $pessoaJuridica = (new clsJuridica((int)$this->pessoaj_id_oculto))->detalhe();
+
+        if ($pessoaJuridica === false) {
+            throw new \iEducar\Support\Exceptions\Exception('Pessoa jurídica não encontrada');
+        }
+
         $this->bloquear_lancamento_diario_anos_letivos_encerrados = is_null($this->bloquear_lancamento_diario_anos_letivos_encerrados) ? 0 : 1;
         $this->utiliza_regra_diferenciada = !is_null($this->utiliza_regra_diferenciada);
 
