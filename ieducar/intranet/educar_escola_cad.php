@@ -1475,13 +1475,8 @@ return new class extends clsCadastro {
 
         $this->validateManagersRules();
 
-        for ($i = 1; $i <= 6; $i++) {
-            $seq = $i == 1 ? '' : $i;
-            $campo = 'codigo_inep_escola_compartilhada'.$seq;
-            $ret = $this->validaDigitosInepEscola($this->$campo, 'Código da escola que compartilha o prédio '.$i);
-            if (!$ret) {
-                return false;
-            }
+        if (!$this->validaDigitosInepEscolaCompartilhada()) {
+            return false;
         }
 
         if (!$this->validaOpcoesUnicasMultipleSearch()) {
@@ -1522,6 +1517,18 @@ return new class extends clsCadastro {
         throw new HttpResponseException(
             new RedirectResponse('educar_escola_lst.php')
         );
+    }
+
+    private function validaDigitosInepEscolaCompartilhada() {
+        for ($i = 1; $i <= 6; $i++) {
+            $seq = $i == 1 ? '' : $i;
+            $campo = 'codigo_inep_escola_compartilhada'.$seq;
+            $ret = $this->validaDigitosInepEscola($this->$campo, 'Código da escola que compartilha o prédio '.$i);
+            if (!$ret) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private function cadastraEscolaCurso($cod_escola)
