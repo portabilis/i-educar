@@ -319,6 +319,18 @@ return new class extends clsCadastro {
             );
         }
 
+        $this->inicializaDados();
+
+        $this->url_cancelar = ($retorno == 'Editar') ? "educar_escola_det.php?cod_escola={$registro['cod_escola']}" : 'educar_escola_lst.php';
+
+        $this->breadcrumb('Escola', ['educar_index.php' => 'Escola']);
+        $this->nome_url_cancelar = 'Cancelar';
+
+        return $retorno;
+    }
+
+    private function inicializaDados()
+    {
         if ($this->cnpj_mantenedora_principal) {
             $this->cnpj_mantenedora_principal = int2CNPJ($this->cnpj_mantenedora_principal);
         }
@@ -422,13 +434,6 @@ return new class extends clsCadastro {
         if (is_string($this->codigo_lingua_indigena)) {
             $this->codigo_lingua_indigena = explode(',', str_replace(['{', '}'], '', $this->codigo_lingua_indigena));
         }
-
-        $this->url_cancelar = ($retorno == 'Editar') ? "educar_escola_det.php?cod_escola={$registro['cod_escola']}" : 'educar_escola_lst.php';
-
-        $this->breadcrumb('Escola', ['educar_index.php' => 'Escola']);
-        $this->nome_url_cancelar = 'Cancelar';
-
-        return $retorno;
     }
 
     private function pessoaJuridicaContemEscola($pessoaj_id): bool
