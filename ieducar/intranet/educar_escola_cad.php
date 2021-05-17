@@ -1767,6 +1767,7 @@ return new class extends clsCadastro {
             return false;
         }
 
+        $this->storeManagers($this->cod_escola);
 
 
 
