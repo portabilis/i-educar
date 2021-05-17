@@ -804,15 +804,15 @@ return new class extends clsCadastro {
             $this->addSchoolManagersTable();
 
             if ($_POST['escola_curso']) {
-                $this->escola_curso = unserialize(urldecode($_POST['escola_curso']));
+                $this->escola_curso = unserialize(urldecode($_POST['escola_curso']),['stdclass']);
             }
 
             if ($_POST['escola_curso_autorizacao']) {
-                $this->escola_curso_autorizacao = unserialize(urldecode($_POST['escola_curso_autorizacao']));
+                $this->escola_curso_autorizacao = unserialize(urldecode($_POST['escola_curso_autorizacao']),['stdclass']);
             }
 
             if ($_POST['escola_curso_anos_letivos']) {
-                $this->escola_curso_anos_letivos = unserialize(urldecode($_POST['escola_curso_anos_letivos']));
+                $this->escola_curso_anos_letivos = unserialize(urldecode($_POST['escola_curso_anos_letivos']), ['stdclass']);
             }
 
             if (is_numeric($this->cod_escola) && !$_POST) {
