@@ -1761,6 +1761,7 @@ return new class extends clsCadastro {
 
         $this->processaTelefones($this->ref_idpes);
 
+        $this->saveAddress($this->ref_idpes);
 
 
 
