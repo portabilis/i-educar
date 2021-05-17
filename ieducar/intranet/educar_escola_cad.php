@@ -488,21 +488,20 @@ return new class extends clsCadastro {
                 }
             }
 
-            if ($this->sem_cnpj) {
-                $this->campoOculto('sem_cnpj', $this->sem_cnpj);
+            if ($this->ref_idpes) {
+
                 $this->p_ddd_telefone_1 = ($this->p_ddd_telefone_1 == null) ? '' : $this->p_ddd_telefone_1;
                 $this->p_ddd_telefone_fax = ($this->p_ddd_telefone_fax == null) ? '' : $this->p_ddd_telefone_fax;
 
-                if ($this->ref_idpes) {
-                    $objTemp = new clsPessoaJuridica($this->ref_idpes);
-                    $detalhe = $objTemp->detalhe();
-                }
+                $objTemp = new clsPessoaJuridica($this->ref_idpes);
+                $objTemp->detalhe();
+
                 $this->campoOculto('cod_escola', $this->cod_escola);
                 $this->campoTexto('fantasia', 'Escola', $this->fantasia, 30, 255, true);
                 $this->campoTexto('sigla', 'Sigla', $this->sigla, 30, 255, true);
                 $nivel = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
-                if ($nivel == 1) {
+                if ($nivel === 1) {
                     $cabecalhos[] = 'Instituicao';
                     $objInstituicao = new clsPmieducarInstituicao();
                     $opcoes = ['' => 'Selecione'];
