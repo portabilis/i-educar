@@ -2031,11 +2031,12 @@ return new class extends clsCadastro {
             throw new HttpResponseException(
                 new RedirectResponse('educar_escola_lst.php')
             );
+        if ($excluiu === false) {
+            $this->mensagem = 'Exclusão não realizada.<br>';
+            return false;
         }
 
-        $this->mensagem = 'Exclusão não realizada.<br>';
 
-        return false;
     }
     protected function inputTelefone($type, $typeLabel = '')
     {
