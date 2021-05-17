@@ -291,7 +291,7 @@ return new class extends clsCadastro {
             $objJuridica = new clsPessoaJuridica(false, idFederal2int($_POST['cnpj']));
             $det = $objJuridica->detalhe();
             $objPessoa = new clsPessoaFj($det['idpes']);
-            list(
+            [
                 $this->p_ddd_telefone_1,
                 $this->p_telefone_1,
                 $this->p_ddd_telefone_2,
@@ -303,7 +303,7 @@ return new class extends clsCadastro {
                 $this->p_email,
                 $this->p_http,
                 $this->tipo_pessoa
-            ) = $objPessoa->queryRapida(
+            ] = $objPessoa->queryRapida(
                 $det['idpes'],
                 'ddd_1',
                 'fone_1',
