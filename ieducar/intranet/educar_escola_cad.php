@@ -2727,7 +2727,9 @@ return new class extends clsCadastro {
                 $this->mensagem = "O campo: <b>{$label}</b> não pode ser preenchido com 0";
 
                 return false;
-            } elseif ((int) $this->{$key} > 0) {
+            }
+
+            if ((int) $this->{$key} > 0) {
                 $algumCampoPreenchido = true;
             }
         }
