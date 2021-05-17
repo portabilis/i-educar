@@ -222,8 +222,8 @@ return new class extends clsCadastro {
             }
 
             $this->sem_cnpj = true;
-            $this->pessoaj_idpes = (int) $_POST['pessoaj_id'];
-            $this->pessoaj_id = (int) $_POST['pessoaj_id'];
+            $this->pessoaj_idpes = $pessoaJuridicaId;
+            $this->pessoaj_id = $pessoaJuridicaId;
             $retorno = 'Novo';
         } // cadastro Novo com CNPJ
         elseif ($_POST['cnpj']) {
