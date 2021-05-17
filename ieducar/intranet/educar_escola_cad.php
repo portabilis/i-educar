@@ -1527,8 +1527,13 @@ return new class extends clsCadastro {
         return true;
     }
 
-    private function cadastraEscolaCurso($cod_escola)
+    private function cadastraEscolaCurso($cod_escola, $excluirEscolaCursos = false)
     {
+        if ($excluirEscolaCursos === true) {
+            $obj = new clsPmieducarEscolaCurso($this->cod_escola);
+            $excluiu = $obj->excluirTodos();
+        }
+
         $this->escola_curso = unserialize(urldecode($this->escola_curso), ['stdclass']);
         $this->escola_curso_autorizacao = unserialize(urldecode($this->escola_curso_autorizacao), ['stdclass']);
         $this->escola_curso_anos_letivos = unserialize(urldecode($this->escola_curso_anos_letivos), ['stdclass']);
