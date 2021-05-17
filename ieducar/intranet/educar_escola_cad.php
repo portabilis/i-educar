@@ -1555,9 +1555,13 @@ return new class extends clsCadastro {
         return true;
     }
 
-    private function constroiObjetoEscola($pessoaj_id_oculto): clsPmieducarEscola
+    private function constroiObjetoEscola($pessoaj_id_oculto, $escola = null): clsPmieducarEscola
     {
-        $obj = new clsPmieducarEscola(null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->zona_localizacao, $this->ref_cod_escola_rede_ensino,$pessoaj_id_oculto, $this->sigla, null, null, 1, null, $this->bloquear_lancamento_diario_anos_letivos_encerrados);
+        if($escola instanceof clsPmieducarEscola) {
+            $obj = $escola;
+        } else {
+            $obj = new clsPmieducarEscola(null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->zona_localizacao, $this->ref_cod_escola_rede_ensino,$pessoaj_id_oculto, $this->sigla, null, null, 1, null, $this->bloquear_lancamento_diario_anos_letivos_encerrados);
+        }
 
         $obj->situacao_funcionamento = $this->situacao_funcionamento;
         $obj->dependencia_administrativa = $this->dependencia_administrativa;
