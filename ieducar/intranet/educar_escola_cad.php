@@ -1752,12 +1752,15 @@ return new class extends clsCadastro {
 
         $escola = $this->constroiObjetoEscola($this->ref_idpes, $obj);
 
-            $this->cod_escola = $editou = $obj->cadastra();
+        $edita = $escola->edita();
 
             if ($this->cod_escola) {
                 $obj = new clsPmieducarEscola($this->cod_escola);
                 $escolaDetAtual = $obj->detalhe();
             }
+        if ($edita === false) {
+            $this->mensagem = 'Edição não efetuada.<br>';
+            return false;
         }
 
         if ($editou) {
