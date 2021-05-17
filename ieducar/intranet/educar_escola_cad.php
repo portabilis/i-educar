@@ -1759,6 +1759,7 @@ return new class extends clsCadastro {
             return false;
         }
 
+        $this->processaTelefones($this->ref_idpes);
 
 
 
