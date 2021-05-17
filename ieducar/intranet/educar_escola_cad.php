@@ -216,6 +216,11 @@ return new class extends clsCadastro {
 
         // cadastro Novo sem CNPJ
         if (is_numeric($_POST['pessoaj_id']) && !$this->cod_escola) {
+            $pessoaJuridicaId = (int) $_POST['pessoaj_id'];
+            if (!$this->pessoaJuridicaContemEscola($pessoaJuridicaId)) {
+                return false;
+            }
+
             $this->sem_cnpj = true;
             $this->pessoaj_idpes = (int) $_POST['pessoaj_id'];
             $this->pessoaj_id = (int) $_POST['pessoaj_id'];
@@ -443,6 +448,24 @@ return new class extends clsCadastro {
         $this->nome_url_cancelar = 'Cancelar';
 
         return $retorno;
+    }
+
+    private function pessoaJuridicaContemEscola($pessoaj_id): bool
+    {
+        $escola = (new clsPmieducarEscola())->lista(null, null, null, null, null, null, $pessoaj_id);
+
+        if (count($escola) > 0) {
+            $current = current($escola);
+
+            if (is_array($current) &&
+                array_key_exists('cod_escola', $current) &&
+                is_numeric($current['cod_escola'])) {
+                $this->mensagem = "Escola já criada, para editar clique aqui: <a href=\"educar_escola_cad.php?cod_escola={$current['cod_escola']}\"> aqui.</a>";
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public function Gerar()
