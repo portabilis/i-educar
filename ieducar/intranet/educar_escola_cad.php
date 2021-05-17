@@ -214,7 +214,6 @@ return new class extends clsCadastro {
 
         $this->sem_cnpj = false;
 
-        // cadastro Novo sem CNPJ
         if (is_numeric($_POST['pessoaj_id']) && !$this->cod_escola) {
             $pessoaJuridicaId = (int) $_POST['pessoaj_id'];
             if (!$this->pessoaJuridicaContemEscola($pessoaJuridicaId)) {
@@ -225,27 +224,8 @@ return new class extends clsCadastro {
             $this->pessoaj_idpes = $pessoaJuridicaId;
             $this->pessoaj_id = $pessoaJuridicaId;
             $retorno = 'Novo';
-        } // cadastro Novo com CNPJ
-        elseif ($_POST['cnpj']) {
-            $this->com_cnpj = true;
-            $obj_juridica = new clsPessoaJuridica();
-            $lst_juridica = $obj_juridica->lista(idFederal2int($_POST['cnpj']));
-            // caso exista o CNPJ na BD
-            if (is_array($lst_juridica)) {
-                $retorno = 'Editar';
-                $det_juridica = array_shift($lst_juridica);
-                $this->ref_idpes = $det_juridica['idpes'];
-                $obj = new clsPmieducarEscola();
-                $lst_escola = $obj->lista(null, null, null, null, null, null, $this->ref_idpes, null, null, null, 1);
-                if (is_array($lst_escola)) {
-                    $registro = array_shift($lst_escola);
-                    $this->cod_escola = $registro['cod_escola'];
-                }
-            } // caso nao exista o CNPJ
-            else {
-                $retorno = 'Editar';
-            }
-        } // cadastro Editar
+        }
+
         if (is_numeric($this->cod_escola) && !$_POST['passou']) {
             $obj = new clsPmieducarEscola($this->cod_escola);
             $registro = $obj->detalhe();
