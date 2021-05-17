@@ -2025,18 +2025,16 @@ return new class extends clsCadastro {
         $obj->detalhe();
         $excluiu = $obj->excluir();
 
-        if ($excluiu) {
-            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
-
-            throw new HttpResponseException(
-                new RedirectResponse('educar_escola_lst.php')
-            );
         if ($excluiu === false) {
             $this->mensagem = 'Exclusão não realizada.<br>';
             return false;
         }
 
+        $this->mensagem = 'Exclusão efetuada com sucesso.<br>';
 
+        throw new HttpResponseException(
+            new RedirectResponse('educar_escola_lst.php')
+        );
     }
     protected function inputTelefone($type, $typeLabel = '')
     {
