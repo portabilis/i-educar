@@ -1771,7 +1771,11 @@ return new class extends clsCadastro {
 
         $this->saveInep($this->cod_escola);
 
+        $this->mensagem = 'Edição efetuada com sucesso.<br>';
 
+        throw new HttpResponseException(
+            new RedirectResponse('educar_escola_lst.php')
+        );
     }
 
     public function Excluir()
