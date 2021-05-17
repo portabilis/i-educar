@@ -1763,6 +1763,9 @@ return new class extends clsCadastro {
 
         $this->saveAddress($this->ref_idpes);
 
+        if (!$this->cadastraEscolaCurso($this->cod_escola,true)) {
+            return false;
+        }
 
 
 
