@@ -232,6 +232,7 @@ return new class extends clsCadastro {
 
             if ($registro['ref_idpes']) {
                 $this->com_cnpj = true;
+                $this->pessoaj_id = $registro['ref_idpes'];
             } else {
                 $this->sem_cnpj = true;
             }
