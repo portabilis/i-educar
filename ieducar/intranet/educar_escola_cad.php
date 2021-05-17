@@ -1754,108 +1754,17 @@ return new class extends clsCadastro {
 
         $edita = $escola->edita();
 
-            if ($this->cod_escola) {
-                $obj = new clsPmieducarEscola($this->cod_escola);
-                $escolaDetAtual = $obj->detalhe();
-            }
         if ($edita === false) {
             $this->mensagem = 'Edição não efetuada.<br>';
             return false;
         }
 
-        if ($editou) {
-            if ($this->com_cnpj) {
-                $objPessoa = new clsPessoa_($this->ref_idpes, null, false, $this->p_http, false, $this->pessoa_logada, date('Y-m-d H:i:s', time()), $this->p_email);
-                $editou1 = $objPessoa->edita();
 
-                if ($editou1) {
-                    $obj_pes_juridica = new clsJuridica($this->ref_idpes, $this->cnpj, $this->fantasia, false, false, false, $this->pessoa_logada);
-                    $editou2 = $obj_pes_juridica->edita();
 
-                    if ($editou2) {
-                        $objTelefone = new clsPessoaTelefone($this->ref_idpes);
-                        $objTelefone->excluiTodos();
-                        $objTelefone = new clsPessoaTelefone($this->ref_idpes, 1, str_replace('-', '', $this->p_telefone_1), $this->p_ddd_telefone_1);
-                        $objTelefone->cadastra();
-                        $objTelefone = new clsPessoaTelefone($this->ref_idpes, 2, str_replace('-', '', $this->p_telefone_2), $this->p_ddd_telefone_2);
-                        $objTelefone->cadastra();
-                        $objTelefone = new clsPessoaTelefone($this->ref_idpes, 3, str_replace('-', '', $this->p_telefone_mov), $this->p_ddd_telefone_mov);
-                        $objTelefone->cadastra();
-                        $objTelefone = new clsPessoaTelefone($this->ref_idpes, 4, str_replace('-', '', $this->p_telefone_fax), $this->p_ddd_telefone_fax);
-                        $objTelefone->cadastra();
 
-                        $this->saveAddress($this->ref_idpes);
 
-                        //-----------------------EDITA CURSO------------------------//
-                        $this->escola_curso = unserialize(urldecode($this->escola_curso));
-                        $this->escola_curso_autorizacao = unserialize(urldecode($this->escola_curso_autorizacao));
-                        $this->escola_curso_anos_letivos = unserialize(urldecode($this->escola_curso_anos_letivos));
-                        $obj = new clsPmieducarEscolaCurso($this->cod_escola);
-                        $excluiu = $obj->excluirTodos();
 
-                        if ($excluiu) {
-                            if ($this->escola_curso) {
-                                foreach ($this->escola_curso as $campo) {
-                                    $obj = new clsPmieducarEscolaCurso($this->cod_escola, $campo, null, $this->pessoa_logada, null, null, 1, $this->escola_curso_autorizacao[$campo], $this->escola_curso_anos_letivos[$campo]);
-                                    $cadastrou_ = $obj->cadastra();
 
-                                    if (!$cadastrou_) {
-                                        $this->mensagem = 'Edição não realizada.<br>';
-
-                                        return false;
-                                    }
-                                }
-                            }
-                        }
-
-                        $this->storeManagers($this->cod_escola);
-
-                        $this->saveInep($this->cod_escola);
-                        //-----------------------FIM EDITA CURSO------------------------//
-                        $this->mensagem .= 'Edição efetuada com sucesso.<br>';
-
-                        throw new HttpResponseException(
-                            new RedirectResponse('educar_escola_lst.php')
-                        );
-                    }
-                }
-            } elseif ($this->sem_cnpj) {
-                //-----------------------EDITA CURSO------------------------//
-                $this->escola_curso = unserialize(urldecode($this->escola_curso));
-                $this->escola_curso_autorizacao = unserialize(urldecode($this->escola_curso_autorizacao));
-                $this->escola_curso_anos_letivos = unserialize(urldecode($this->escola_curso_anos_letivos));
-                $obj = new clsPmieducarEscolaCurso($this->cod_escola);
-                $excluiu = $obj->excluirTodos();
-
-                if ($excluiu) {
-                    if ($this->escola_curso) {
-                        foreach ($this->escola_curso as $campo) {
-                            $obj = new clsPmieducarEscolaCurso($this->cod_escola, $campo, null, $this->pessoa_logada, null, null, 1, $this->escola_curso_autorizacao[$campo], $this->escola_curso_anos_letivos[$campo]);
-                            $cadastrou_ = $obj->cadastra();
-                            if (!$cadastrou_) {
-                                $this->mensagem = 'Edição não realizada.<br>';
-
-                                return false;
-                            }
-                        }
-                    }
-                }
-
-                $this->storeManagers($this->cod_escola);
-
-                $this->saveInep($this->cod_escola);
-                //-----------------------FIM EDITA CURSO------------------------//
-                $this->mensagem .= 'Edição efetuada com sucesso.<br>';
-
-                throw new HttpResponseException(
-                    new RedirectResponse('educar_escola_lst.php')
-                );
-            }
-        }
-
-        $this->mensagem = 'Edição não realizada.<br>';
-
-        return false;
     }
 
     public function Excluir()
