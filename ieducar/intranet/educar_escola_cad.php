@@ -1769,6 +1769,7 @@ return new class extends clsCadastro {
 
         $this->storeManagers($this->cod_escola);
 
+        $this->saveInep($this->cod_escola);
 
 
     }
