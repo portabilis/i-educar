@@ -467,15 +467,6 @@ return new class extends clsCadastro {
         $this->campoOculto('pessoaj_id_oculto', $this->pessoaj_id);
 
         if (!$this->sem_cnpj && !$this->com_cnpj) {
-            $parametros = new clsParametrosPesquisas();
-            $parametros->setSubmit(1);
-            $parametros->setPessoa('J');
-            $parametros->setPessoaCampo('sem_cnpj');
-            $parametros->setPessoaNovo('S');
-            $parametros->setPessoaCPF('N');
-            $parametros->setPessoaTela('frame');
-            $this->campoOculto('sem_cnpj', '');
-            $parametros->setCodSistema(13);
             $this->inputsHelper()->simpleSearchPessoaj('idpes', ['label'=> 'Pessoa Jurídica']);
             $this->acao_enviar = false;
             $this->url_cancelar = false;
@@ -572,7 +563,8 @@ return new class extends clsCadastro {
                 $this->campoTexto('p_email', 'E-mail', $this->p_email, '50', '100', false);
             }
 
-            if ($this->com_cnpj) {
+            if ($this->pessoaj_id) {
+
                 $this->campoOculto('com_cnpj', $this->com_cnpj);
 
                 if (!$this->cod_escola) {
@@ -581,7 +573,8 @@ return new class extends clsCadastro {
                     $this->cnpj = int2IdFederal($this->cnpj);
                 }
 
-                $objJuridica = new clsPessoaJuridica(false, idFederal2int($this->cnpj));
+                $objJuridica = new clsPessoaJuridica($this->pessoaj_id);
+
                 $det = $objJuridica->detalhe();
                 $this->ref_idpes = $det['idpes'];
 
@@ -1551,6 +1544,8 @@ return new class extends clsCadastro {
 
             $this->storeManagers($cod_escola);
         }
+
+        return true;
     }
 
     private function constroiObjetoEscola($pessoaj_id_oculto): clsPmieducarEscola
@@ -1784,7 +1779,7 @@ return new class extends clsCadastro {
             $obj->ref_idpes_gestor = $this->gestor_id;
             $obj->cargo_gestor = $this->cargo_gestor;
             $obj->email_gestor = $this->email_gestor;
-            $obj->local_funcionamento = $local_funcionamento;
+                $obj->local_funcionamento = $local_funcionamento;
             $obj->condicao = $this->condicao;
             $obj->predio_compartilhado_outra_escola = $this->predio_compartilhado_outra_escola;
             $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
