@@ -1706,6 +1706,8 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7, 'educar_escola_lst.php');
 
+        $this->preparaDados();
+
         if (!$this->validaDigitosInepEscola($this->escola_inep_id, 'Código INEP')) {
             return false;
         }
@@ -1732,32 +1734,6 @@ return new class extends clsCadastro {
                 return false;
             }
         }
-
-        $orgao_vinculado_escola = implode(',', $this->orgao_vinculado_escola);
-        $mantenedora_escola_privada = implode(',', $this->mantenedora_escola_privada);
-        $local_funcionamento = implode(',', $this->local_funcionamento);
-        $abastecimento_agua = implode(',', $this->abastecimento_agua);
-        $abastecimento_energia = implode(',', $this->abastecimento_energia);
-        $esgoto_sanitario = implode(',', $this->esgoto_sanitario);
-        $destinacao_lixo = implode(',', $this->destinacao_lixo);
-        $tratamento_lixo = implode(',', $this->tratamento_lixo);
-        $salas_funcionais = implode(',', $this->salas_funcionais);
-        $salas_gerais = implode(',', $this->salas_gerais);
-        $banheiros = implode(',', $this->banheiros);
-        $laboratorios = implode(',', $this->laboratorios);
-        $salas_atividades = implode(',', $this->salas_atividades);
-        $dormitorios = implode(',', $this->dormitorios);
-        $areas_externas = implode(',', $this->areas_externas);
-        $recursos_acessibilidade = implode(',', $this->recursos_acessibilidade);
-        $equipamentos = implode(',', $this->equipamentos);
-        $uso_internet = implode(',', $this->uso_internet);
-        $rede_local = implode(',', $this->rede_local);
-        $equipamentos_acesso_internet = implode(',', $this->equipamentos_acesso_internet);
-        $organizacao_ensino = implode(',', $this->organizacao_ensino);
-        $instrumentos_pedagogicos = implode(',', $this->instrumentos_pedagogicos);
-        $orgaos_colegiados = implode(',', $this->orgaos_colegiados);
-        $reserva_vagas_cotas = implode(',', $this->reserva_vagas_cotas);
-        $codigo_lingua_indigena = implode(',', $this->codigo_lingua_indigena);
 
         if (!$this->validaOpcoesUnicasMultipleSearch()) {
             return false;
