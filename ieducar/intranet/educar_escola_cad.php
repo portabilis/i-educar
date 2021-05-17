@@ -1519,7 +1519,8 @@ return new class extends clsCadastro {
         );
     }
 
-    private function validaDigitosInepEscolaCompartilhada() {
+    private function validaDigitosInepEscolaCompartilhada()
+    {
         for ($i = 1; $i <= 6; $i++) {
             $seq = $i == 1 ? '' : $i;
             $campo = 'codigo_inep_escola_compartilhada'.$seq;
