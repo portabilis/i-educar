@@ -2022,7 +2022,7 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 3, 'educar_escola_lst.php');
         $obj = new clsPmieducarEscola($this->cod_escola, null, $this->pessoa_logada, null, null, null, null, null, null, null, 0);
-        $escola = $obj->detalhe();
+        $obj->detalhe();
         $excluiu = $obj->excluir();
 
         if ($excluiu) {
