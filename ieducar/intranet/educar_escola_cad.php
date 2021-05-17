@@ -1501,7 +1501,9 @@ return new class extends clsCadastro {
 
         $this->saveAddress($this->ref_idpes);
 
-        $this->cadastraEscolaCurso($cod_escola);
+        if (!$this->cadastraEscolaCurso($cod_escola, false)) {
+            return false;
+        }
 
         $this->saveInep($cod_escola);
 
