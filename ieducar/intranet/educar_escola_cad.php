@@ -446,7 +446,7 @@ return new class extends clsCadastro {
             if (is_array($current) &&
                 array_key_exists('cod_escola', $current) &&
                 is_numeric($current['cod_escola'])) {
-                $this->mensagem = "Escola já criada, para editar clique aqui: <a href=\"educar_escola_cad.php?cod_escola={$current['cod_escola']}\"> aqui.</a>";
+                $this->mensagem = "Escola criada, para<a href=\"educar_escola_cad.php?cod_escola={$current['cod_escola']}\"> editar clique aqui.</a>";
                 return false;
             }
         }
