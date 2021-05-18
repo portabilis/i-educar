@@ -1,5 +1,7 @@
 <?php
 
+use iEducar\Support\View\SelectOptions;
+
 return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -63,8 +65,15 @@ return new class extends clsCadastro {
         $obrigatorio = true;
         include('include/pmieducar/educar_campo_lista.php');
 
-        // text
-        $this->campoTexto('nm_tipo', 'Tipo Dispensa', $this->nm_tipo, 30, 255, true);
+        $this->campoTexto('nm_tipo', 'Dispensa', $this->nm_tipo, 33, 255, true);
+        $options = [
+            'label' => 'Tipo de dispensa',
+            'resources' => SelectOptions::exemptionsTypeOptions(),
+            'required' => true,
+            'value' => $this->tipo ?? 1
+
+        ];
+        $this->inputsHelper()->select('tipo', $options);
         $this->campoMemo('descricao', 'Descrição', $this->descricao, 60, 5, false);
     }
 
