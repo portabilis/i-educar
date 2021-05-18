@@ -14,7 +14,7 @@ return new class extends clsDetalhe {
 
         $this->addDetalhe(['Raz&atilde;o Social', $razao_social]);
         $this->addDetalhe(['Nome Fantasia', $nm_pessoa]);
-        $this->addDetalhe(['CNPJ', int2CNPJ($id_federal)]);
+        $this->addDetalhe(['CNPJ', empty($id_federal) ? '' : int2CNPJ($id_federal)]);
         $this->addDetalhe(['Endere&ccedil;o', $endereco]);
         $this->addDetalhe(['CEP', $cep]);
         $this->addDetalhe(['Bairro', $nm_bairro]);
