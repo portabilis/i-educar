@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\City;
 use App\Models\EmployeeInep;
 use App\Models\LegacyPerson;
 use App\Models\SchoolManager;
@@ -2285,6 +2286,23 @@ return new class extends clsCadastro {
 
                 return false;
             }
+        }
+
+        $cidyId = $this->city_id;
+        $cityIBGE = City::query()
+            ->whereKey($cidyId)
+            ->get()
+            ->pluck('ibge_code')
+            ->first();
+
+        /**
+         * Se o campo "Município" for: Brasília
+         * este campo deve NÃO deve ser Municipal
+         */
+        if ($cityIBGE == 5300108 && $esferaAdministrativa == EsferaAdministrativa::MUNICIPAL) {
+            $this->mensagem = $mensagem;
+
+            return false;
         }
 
         return true;
