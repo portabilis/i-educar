@@ -16,13 +16,24 @@ class clsPmieducarTipoDispensa extends Model
     public $ref_cod_instituicao;
     public $tipo;
 
-    public function __construct($cod_tipo_dispensa = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_tipo = null, $descricao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_instituicao = null, $tipo = ExemptionType::DISPENSA_COMPONENTES)
-    {
+    public function __construct(
+        $cod_tipo_dispensa = null,
+        $ref_usuario_exc = null,
+        $ref_usuario_cad = null,
+        $nm_tipo = null,
+        $descricao = null,
+        $data_cadastro = null,
+        $data_exclusao = null,
+        $ativo = null,
+        $ref_cod_instituicao = null,
+        $tipo = ExemptionType::DISPENSA_COMPONENTES
+    ){
         $db = new clsBanco();
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}tipo_dispensa";
 
-        $this->_campos_lista = $this->_todos_campos = 'td.cod_tipo_dispensa, td.ref_usuario_exc, td.ref_usuario_cad, td.nm_tipo, td.descricao, td.data_cadastro, td.data_exclusao, td.ativo, td.ref_cod_instituicao, td.tipo';
+        $this->_todos_campos = 'td.cod_tipo_dispensa, td.ref_usuario_exc, td.ref_usuario_cad, td.nm_tipo, td.descricao, td.data_cadastro, td.data_exclusao, td.ativo, td.ref_cod_instituicao, td.tipo';
+        $this->_campos_lista = $this->_todos_campos;
 
         if (is_numeric($ref_usuario_exc)) {
             $this->ref_usuario_exc = $ref_usuario_exc;
@@ -49,11 +60,9 @@ class clsPmieducarTipoDispensa extends Model
         if (is_numeric($ativo)) {
             $this->ativo = $ativo;
         }
-
         if (is_numeric($ref_cod_instituicao)) {
             $this->ref_cod_instituicao = $ref_cod_instituicao;
         }
-
         $this->tipo = $tipo;
     }
 
@@ -107,7 +116,6 @@ class clsPmieducarTipoDispensa extends Model
 
             return $db->InsertId("{$this->_tabela}_cod_tipo_dispensa_seq");
         }
-
         return false;
     }
 
@@ -156,14 +164,11 @@ class clsPmieducarTipoDispensa extends Model
                 $set .= "{$gruda}ref_cod_instituicao = '{$this->ref_cod_instituicao}'";
                 $gruda = ', ';
             }
-
             if ($set) {
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_tipo_dispensa = '{$this->cod_tipo_dispensa}'");
-
                 return true;
             }
         }
-
         return false;
     }
 
@@ -172,8 +177,20 @@ class clsPmieducarTipoDispensa extends Model
      *
      * @return array
      */
-    public function lista($int_cod_tipo_dispensa = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_tipo = null, $str_descricao = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_instituicao = null, $tipo = null)
-    {
+    public function lista(
+        $int_cod_tipo_dispensa = null,
+        $int_ref_usuario_exc = null,
+        $int_ref_usuario_cad = null,
+        $str_nm_tipo = null,
+        $str_descricao = null,
+        $date_data_cadastro_ini = null,
+        $date_data_cadastro_fim = null,
+        $date_data_exclusao_ini = null,
+        $date_data_exclusao_fim = null,
+        $int_ativo = null,
+        $int_ref_cod_instituicao = null,
+        $tipo = null
+    ){
         $db = new clsBanco();
 
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela} td, {$this->_schema}instituicao i";
@@ -229,13 +246,11 @@ class clsPmieducarTipoDispensa extends Model
             $filtros .= "{$whereAnd} i.cod_instituicao = '{$int_ref_cod_instituicao}'";
             $whereAnd = ' AND ';
         }
-
         if(is_array($tipo)){
             $tipos = implode(',', $tipo);
             $filtros .= "{$whereAnd} td.tipo in ({$tipos})";
             $whereAnd = ' AND ';
         }
-
         if(is_numeric($tipo)){
             $filtros .= "{$whereAnd} td.tipo = '{$tipo}'";
             $whereAnd = ' AND ';
@@ -266,7 +281,6 @@ class clsPmieducarTipoDispensa extends Model
         if (count($resultado)) {
             return $resultado;
         }
-
         return false;
     }
 
@@ -284,7 +298,6 @@ class clsPmieducarTipoDispensa extends Model
 
             return $db->Tupla();
         }
-
         return false;
     }
 
@@ -302,7 +315,6 @@ class clsPmieducarTipoDispensa extends Model
 
             return $db->Tupla();
         }
-
         return false;
     }
 
@@ -318,7 +330,6 @@ class clsPmieducarTipoDispensa extends Model
 
             return $this->edita();
         }
-
         return false;
     }
 }
