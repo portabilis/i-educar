@@ -19,6 +19,7 @@ return new class extends clsCadastro {
     public $data_exclusao;
     public $ativo;
     public $ref_cod_instituicao;
+    public $tipo;
 
     public function Inicializar()
     {
@@ -79,7 +80,7 @@ return new class extends clsCadastro {
 
     public function Novo()
     {
-        $obj = new clsPmieducarTipoDispensa(null, null, $this->pessoa_logada, $this->nm_tipo, $this->descricao, null, null, 1, $this->ref_cod_instituicao);
+        $obj = new clsPmieducarTipoDispensa(null, null, $this->pessoa_logada, $this->nm_tipo, $this->descricao, null, null, 1, $this->ref_cod_instituicao, $this->tipo);
         $cadastrou = $obj->cadastra();
         if ($cadastrou) {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
@@ -93,7 +94,7 @@ return new class extends clsCadastro {
 
     public function Editar()
     {
-        $obj = new clsPmieducarTipoDispensa($this->cod_tipo_dispensa, $this->pessoa_logada, null, $this->nm_tipo, $this->descricao, null, null, 1, $this->ref_cod_instituicao);
+        $obj = new clsPmieducarTipoDispensa($this->cod_tipo_dispensa, $this->pessoa_logada, null, $this->nm_tipo, $this->descricao, null, null, 1, $this->ref_cod_instituicao, $this->tipo);
         $editou = $obj->edita();
         if ($editou) {
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
