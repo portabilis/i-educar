@@ -195,6 +195,9 @@ function changePossuiDependencias() {
     $j("#salas_gerais,#salas_funcionais,#banheiros,#laboratorios,#salas_atividades,#dormitorios,#areas_externas").trigger("chosen:updated");
 }
 
+const link = '<span> Caso não encontre a pessoa jurídica, cadastre em </span><a href="empresas_cad.php" target="_blank">Pessoas > Cadastros > Pessoa jurídica.</a>'
+$j('#pessoaj_idpes').after(link)
+
 //abas
 
 // hide nos campos das outras abas (deixando só os campos da primeira aba)
