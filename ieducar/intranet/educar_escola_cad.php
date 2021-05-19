@@ -226,6 +226,8 @@ return new class extends clsCadastro {
             $this->pessoaj_idpes = $pessoaJuridicaId;
             $this->pessoaj_id = $pessoaJuridicaId;
             $this->ref_idpes = $pessoaJuridicaId;
+
+            $this->loadAddress($this->pessoaj_id);
             $this->carregaDadosContato($this->ref_idpes);
             $retorno = 'Novo';
         }
@@ -242,6 +244,18 @@ return new class extends clsCadastro {
 
 
             $this->pesquisaPessoaJuridica = false;
+
+            $this->carregaCamposComDadosDaEscola($registro);
+
+            $objJuridica = (new clsPessoaJuridica($this->ref_idpes))->detalhe();
+            $this->cnpj = int2CNPJ($objJuridica['cnpj']);
+
+            $this->fexcluir = $obj_permissoes->permissao_excluir(561, $this->pessoa_logada, 3);
+
+            $this->loadAddress($this->ref_idpes);
+            $this->carregaDadosContato($this->ref_idpes);
+
+            $retorno = 'Editar';
         }
 
         $this->inicializaDados();
