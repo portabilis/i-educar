@@ -483,8 +483,6 @@ return new class extends clsCadastro {
             $this->carregaDadosDoPost();
 
 
-                $this->p_ddd_telefone_1 = ($this->p_ddd_telefone_1 == null) ? '' : $this->p_ddd_telefone_1;
-                $this->p_ddd_telefone_fax = ($this->p_ddd_telefone_fax == null) ? '' : $this->p_ddd_telefone_fax;
 
                 $objTemp = new clsPessoaJuridica($this->ref_idpes);
                 $objTemp->detalhe();
@@ -633,7 +631,6 @@ return new class extends clsCadastro {
                 }
 
                 $this->campoLista('ref_cod_escola_rede_ensino', 'Rede Ensino', $opcoes, $this->ref_cod_escola_rede_ensino, '', false, '', $script);
-                $opcoes = ['' => 'Selecione'];
 
                 $zonas = App_Model_ZonaLocalizacao::getInstance();
                 $zonas = [null => 'Selecione'] + $zonas->getEnums();
