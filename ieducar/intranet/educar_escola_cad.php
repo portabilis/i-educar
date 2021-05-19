@@ -184,6 +184,7 @@ return new class extends clsCadastro {
     public $iddis;
     public  $pessoaj_idpes;
     public  $pessoaj_id;
+    public bool $pesquisaPessoaJuridica = true;
 
     public $inputsRecursos = [
         'qtd_secretario_escolar' => 'Secretário(a) escolar',
@@ -213,6 +214,7 @@ return new class extends clsCadastro {
         $this->cod_escola = $this->getQueryString('cod_escola');
 
         $this->sem_cnpj = false;
+        $this->pesquisaPessoaJuridica = true;
 
         if (is_numeric($_POST['pessoaj_id']) && !$this->cod_escola) {
             $pessoaJuridicaId = (int) $_POST['pessoaj_id'];
@@ -223,6 +225,7 @@ return new class extends clsCadastro {
             $this->sem_cnpj = true;
             $this->pessoaj_idpes = $pessoaJuridicaId;
             $this->pessoaj_id = $pessoaJuridicaId;
+            $this->ref_idpes = $pessoaJuridicaId;
             $retorno = 'Novo';
         }
 
@@ -317,6 +320,7 @@ return new class extends clsCadastro {
                 'url',
                 'tipo'
             );
+            $this->pesquisaPessoaJuridica = false;
         }
 
         $this->inicializaDados();
@@ -475,7 +479,7 @@ return new class extends clsCadastro {
         $this->campoOculto('obrigar_campos_censo', (int) $obrigarCamposCenso);
         $this->campoOculto('pessoaj_id_oculto', $this->pessoaj_id);
 
-        if (!$this->sem_cnpj && !$this->com_cnpj) {
+        if ($this->pesquisaPessoaJuridica) {
             $this->inputsHelper()->simpleSearchPessoaj('idpes', ['label'=> 'Pessoa Jurídica']);
             $this->acao_enviar = false;
             $this->url_cancelar = false;
