@@ -1799,7 +1799,7 @@ return new class extends clsCadastro {
             'placeholder' => 'DDD',
             'value' => $this->{"p_ddd_telefone_{$type}"},
             'max_length' => 3,
-            'size' => 3,
+            'size' => 4,
             'inline' => true,
         ];
         $this->inputsHelper()->integer("p_ddd_telefone_{$type}", $options);
