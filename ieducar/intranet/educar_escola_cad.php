@@ -244,8 +244,6 @@ return new class extends clsCadastro {
                 );
             }
 
-          //  $this->com_cnpj = true;
-
             $this->pesquisaPessoaJuridica = false;
 
             $this->carregaCamposComDadosDaEscola($registro);
