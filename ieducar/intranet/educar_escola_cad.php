@@ -32,6 +32,7 @@ use iEducar\Modules\Educacenso\Model\SalasFuncionais;
 use iEducar\Modules\Educacenso\Model\SalasGerais;
 use iEducar\Modules\Educacenso\Model\TratamentoLixo;
 use iEducar\Modules\Educacenso\Model\UsoInternet;
+use iEducar\Modules\Educacenso\Validator\AdministrativeDomainValidator;
 use iEducar\Modules\Educacenso\Validator\School\HasDifferentStepsOfChildEducationValidator;
 use iEducar\Modules\Educacenso\Validator\SchoolManagers;
 use iEducar\Modules\Educacenso\Validator\Telefone;
@@ -2234,60 +2235,6 @@ return new class extends clsCadastro {
 
     protected function validaEsferaAdministrativa()
     {
-        if ($this->regulamentacao == Regulamentacao::NAO) {
-            return true;
-        }
-
-        $esferaAdministrativa = $this->esfera_administrativa;
-        $dependenciaAdministrativa = $this->dependencia_administrativa;
-        $mensagem = 'O campo: Esfera administrativa do conselho ou órgão responsável pela Regulamentação/Autorização, foi preenchido com um valor incorreto';
-
-        if ($this->regulamentacao != Regulamentacao::NAO && empty($esferaAdministrativa)) {
-            $this->mensagem = $mensagem;
-
-            return false;
-        }
-
-        /**
-         * Se o campo "dependência administrativa" for:
-         * 2 (Estadual) este campo também deve ser 2
-         */
-        if ($dependenciaAdministrativa == DependenciaAdministrativaEscola::ESTADUAL) {
-            if ($esferaAdministrativa != EsferaAdministrativa::ESTADUAL) {
-                $this->mensagem = $mensagem;
-
-                return false;
-            }
-        }
-        /**
-         * Se o campo "dependência administrativa" for:
-         * 1 (Federal) este campo deve ser 1 ou 2
-         */
-        if ($dependenciaAdministrativa == DependenciaAdministrativaEscola::FEDERAL) {
-            if (
-                $esferaAdministrativa != EsferaAdministrativa::FEDERAL &&
-                $esferaAdministrativa != EsferaAdministrativa::ESTADUAL
-            ) {
-                $this->mensagem = $mensagem;
-
-                return false;
-            }
-        }
-        /**
-         * Se o campo "dependência administrativa" for:
-         * 3 (Municipal) este campo deve ser 2 ou 3
-         */
-        if ($dependenciaAdministrativa == DependenciaAdministrativaEscola::MUNICIPAL) {
-            if (
-                $esferaAdministrativa != EsferaAdministrativa::ESTADUAL &&
-                $esferaAdministrativa != EsferaAdministrativa::MUNICIPAL
-            ) {
-                $this->mensagem = $mensagem;
-
-                return false;
-            }
-        }
-
         $cidyId = $this->city_id;
         $cityIBGE = City::query()
             ->whereKey($cidyId)
@@ -2295,13 +2242,15 @@ return new class extends clsCadastro {
             ->pluck('ibge_code')
             ->first();
 
-        /**
-         * Se o campo "Município" for: Brasília
-         * este campo deve NÃO deve ser Municipal
-         */
-        if ($cityIBGE == 5300108 && $esferaAdministrativa == EsferaAdministrativa::MUNICIPAL) {
-            $this->mensagem = $mensagem;
+        $esferaAdministrativaValidator = (new AdministrativeDomainValidator(
+            $this->esfera_administrativa,
+            $this->regulamentacao,
+            $this->dependencia_administrativa,
+            $cityIBGE
+        ));
 
+        if (! $esferaAdministrativaValidator->isValid()) {
+            $this->mensagem = $esferaAdministrativaValidator->getMessage();
             return false;
         }
 
