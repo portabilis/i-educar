@@ -222,6 +222,7 @@ return new class extends clsCadastro {
                 return false;
             }
 
+            $this->pesquisaPessoaJuridica = false;
             $this->sem_cnpj = true;
             $this->pessoaj_idpes = $pessoaJuridicaId;
             $this->pessoaj_id = $pessoaJuridicaId;
