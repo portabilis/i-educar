@@ -230,6 +230,7 @@ return new class extends clsCadastro {
 
             $this->loadAddress($this->pessoaj_id);
             $this->carregaDadosContato($this->ref_idpes);
+
             $retorno = 'Novo';
         }
 
@@ -283,6 +284,7 @@ return new class extends clsCadastro {
         $this->secretario_id = $registro['ref_idpes_secretario_escolar'];
         $this->fantasia = $registro['nome'];
     }
+
     private function carregaDadosContato($idpes)
     {
         $objPessoa = new clsPessoaFj($idpes);
@@ -483,193 +485,185 @@ return new class extends clsCadastro {
 
             $this->carregaDadosDoPost();
 
+            $objTemp = new clsPessoaJuridica($this->ref_idpes);
+            $objTemp->detalhe();
 
+            $this->campoOculto('cod_escola', $this->cod_escola);
+            $this->campoTexto('fantasia', 'Escola', $this->fantasia, 30, 255, true);
+            $this->campoTexto('sigla', 'Sigla', $this->sigla, 30, 255, true);
+            $nivel = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
-                $objTemp = new clsPessoaJuridica($this->ref_idpes);
-                $objTemp->detalhe();
+            if ($nivel === 1) {
+                $cabecalhos[] = 'Instituicao';
+                $objInstituicao = new clsPmieducarInstituicao();
+                $opcoes = ['' => 'Selecione'];
+                $objInstituicao->setOrderby('nm_instituicao ASC');
+                $lista = $objInstituicao->lista();
 
-                $this->campoOculto('cod_escola', $this->cod_escola);
-                $this->campoTexto('fantasia', 'Escola', $this->fantasia, 30, 255, true);
-                $this->campoTexto('sigla', 'Sigla', $this->sigla, 30, 255, true);
-                $nivel = $obj_permissoes->nivel_acesso($this->pessoa_logada);
-
-                if ($nivel === 1) {
-                    $cabecalhos[] = 'Instituicao';
-                    $objInstituicao = new clsPmieducarInstituicao();
-                    $opcoes = ['' => 'Selecione'];
-                    $objInstituicao->setOrderby('nm_instituicao ASC');
-                    $lista = $objInstituicao->lista();
-
-                    if (is_array($lista)) {
-                        foreach ($lista as $linha) {
-                            $opcoes[$linha['cod_instituicao']] = $linha['nm_instituicao'];
-                        }
-                    }
-
-                    $this->campoLista('ref_cod_instituicao', 'Instituição', $opcoes, $this->ref_cod_instituicao);
-                } else {
-                    $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
-
-                    if ($this->ref_cod_instituicao) {
-                        $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
-                    } else {
-                        die('Usuário não é do nivel poli-institucional e não possui uma instituição');
+                if (is_array($lista)) {
+                    foreach ($lista as $linha) {
+                        $opcoes[$linha['cod_instituicao']] = $linha['nm_instituicao'];
                     }
                 }
 
-                $opcoes = ['' => 'Selecione'];
-
-                // EDITAR
-                $script = 'javascript:showExpansivelIframe(520, 120, \'educar_escola_rede_ensino_cad_pop.php\');';
+                $this->campoLista('ref_cod_instituicao', 'Instituição', $opcoes, $this->ref_cod_instituicao);
+            } else {
+                $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
 
                 if ($this->ref_cod_instituicao) {
-                    $objTemp = new clsPmieducarEscolaRedeEnsino();
-                    $lista = $objTemp->lista(null, null, null, null, null, null, null, null, 1, $this->ref_cod_instituicao);
-            $display = "'display: none;'";
+                    $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
+                } else {
+                    die('Usuário não é do nivel poli-institucional e não possui uma instituição');
+                }
+            }
 
-                    if (is_array($lista) && count($lista)) {
-                        foreach ($lista as $registro) {
-                            $opcoes["{$registro['cod_escola_rede_ensino']}"] = "{$registro['nm_rede']}";
-                        }
+            $opcoes = ['' => 'Selecione'];
+
+            // EDITAR
+            $script = 'javascript:showExpansivelIframe(520, 120, \'educar_escola_rede_ensino_cad_pop.php\');';
+            $display = "'display: none;'";
+            if ($this->ref_cod_instituicao) {
+                $objTemp = new clsPmieducarEscolaRedeEnsino();
+                $lista = $objTemp->lista(null, null, null, null, null, null, null, null, 1, $this->ref_cod_instituicao);
+
+                if (is_array($lista) && count($lista)) {
+                    foreach ($lista as $registro) {
+                        $opcoes["{$registro['cod_escola_rede_ensino']}"] = "{$registro['nm_rede']}";
                     }
                 }
 
-                $this->campoLista('ref_cod_escola_rede_ensino', 'Rede Ensino', $opcoes, $this->ref_cod_escola_rede_ensino, '', false, '', $script);
-
-                $zonas = App_Model_ZonaLocalizacao::getInstance();
-                $zonas = [null => 'Selecione'] + $zonas->getEnums();
                 $display = "'display: '';'";
+            }
 
-                $options = [
-                    'label' => 'Zona localização',
-                    'value' => $this->zona_localizacao,
-                    'resources' => $zonas,
-                    'required' => true,
-                ];
             $script = "<img id='img_rede_ensino' style={$display}  src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
 
-                $this->inputsHelper()->select('zona_localizacao', $options);
+            $this->campoLista('ref_cod_escola_rede_ensino', 'Rede Ensino', $opcoes, $this->ref_cod_escola_rede_ensino, '', false, '', $script);
 
-                $this->campoTexto('p_ddd_telefone_1', 'DDD Telefone 1', $this->p_ddd_telefone_1, '2', '2', false);
-                $this->campoTexto('p_telefone_1', 'Telefone 1', $this->p_telefone_1, '10', '15', false);
-                $this->campoTexto('p_ddd_telefone_fax', 'DDD Fax', $this->p_ddd_telefone_fax, '2', '2', false);
-                $this->campoTexto('p_telefone_fax', 'Fax', $this->p_telefone_fax, '10', '15', false);
-                $this->campoTexto('p_email', 'E-mail', $this->p_email, '50', '100', false);
+            $zonas = App_Model_ZonaLocalizacao::getInstance();
+            $zonas = [null => 'Selecione'] + $zonas->getEnums();
 
+            $options = [
+                'label' => 'Zona localização',
+                'value' => $this->zona_localizacao,
+                'resources' => $zonas,
+                'required' => true,
+            ];
 
-                $this->campoOculto('com_cnpj', $this->com_cnpj);
+            $this->inputsHelper()->select('zona_localizacao', $options);
 
-                if (!$this->cod_escola) {
-                    $this->cnpj = urldecode($_POST['cnpj']);
-                    $this->cnpj = idFederal2int($this->cnpj);
-                    $this->cnpj = int2IdFederal($this->cnpj);
-                }
+            $this->campoOculto('com_cnpj', $this->com_cnpj);
 
-                $objJuridica = new clsPessoaJuridica($this->pessoaj_id);
+            if (!$this->cod_escola) {
+                $this->cnpj = urldecode($_POST['cnpj']);
+                $this->cnpj = idFederal2int($this->cnpj);
+                $this->cnpj = empty($this->cnpj) ? $this->cnpj : int2IdFederal($this->cnpj);
+            }
 
-                $det = $objJuridica->detalhe();
-                $this->ref_idpes = $det['idpes'];
+            $objJuridica = new clsPessoaJuridica($this->pessoaj_id);
 
-                if (!$this->fantasia) {
-                    $this->fantasia = $det['fantasia'];
-                }
+            $det = $objJuridica->detalhe();
+            $this->ref_idpes = $det['idpes'];
 
-                if ($this->passou) {
-                    $this->cnpj = (is_numeric($this->cnpj)) ? $this->cnpj : idFederal2int($this->cnpj);
-                    $this->cnpj = int2IdFederal($this->cnpj);
-                }
+            if (!$this->fantasia) {
+                $this->fantasia = $det['fantasia'];
+            }
 
-                $this->campoRotulo('cnpj_', 'CNPJ', $this->cnpj);
-                $this->campoOculto('cnpj', idFederal2int($this->cnpj));
-                $this->campoOculto('ref_idpes', $this->ref_idpes);
-                $this->campoOculto('cod_escola', $this->cod_escola);
-                $this->campoTexto('fantasia', 'Escola', $this->fantasia, 30, 255, true);
-                $this->campoTexto('sigla', 'Sigla', $this->sigla, 30, 20, true);
-                $nivel = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+            if ($this->passou) {
+                $this->cnpj = (is_numeric($this->cnpj)) ? $this->cnpj : idFederal2int($this->cnpj);
+                $this->cnpj = int2IdFederal($this->cnpj);
+            }
 
-                if ($nivel == 1) {
-                    $cabecalhos[] = 'Instituicao';
-                    $objInstituicao = new clsPmieducarInstituicao();
-                    $opcoes = ['' => 'Selecione'];
-                    $objInstituicao->setOrderby('nm_instituicao ASC');
-                    $lista = $objInstituicao->lista();
+            $this->campoRotulo('cnpj_', 'CNPJ', $this->cnpj);
+            $this->campoOculto('cnpj', idFederal2int($this->cnpj));
+            $this->campoOculto('ref_idpes', $this->ref_idpes);
+            $this->campoOculto('cod_escola', $this->cod_escola);
+            $this->campoTexto('fantasia', 'Escola', $this->fantasia, 30, 255, true);
+            $this->campoTexto('sigla', 'Sigla', $this->sigla, 30, 20, true);
+            $nivel = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
-                    if (is_array($lista)) {
-                        foreach ($lista as $linha) {
-                            $opcoes[$linha['cod_instituicao']] = $linha['nm_instituicao'];
-                        }
-                    }
-
-                    $this->campoLista('ref_cod_instituicao', 'Instituicao', $opcoes, $this->ref_cod_instituicao);
-                } else {
-                    $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
-
-                    if ($this->ref_cod_instituicao) {
-                        $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
-                    } else {
-                        die('Usuário não é do nivel poli-institucional e não possui uma instituição');
-                    }
-                }
-
+            if ($nivel == 1) {
+                $cabecalhos[] = 'Instituicao';
+                $objInstituicao = new clsPmieducarInstituicao();
                 $opcoes = ['' => 'Selecione'];
+                $objInstituicao->setOrderby('nm_instituicao ASC');
+                $lista = $objInstituicao->lista();
 
-                // EDITAR
-                $script = 'javascript:showExpansivelIframe(520, 120, \'educar_escola_rede_ensino_cad_pop.php\');';
-                if ($this->ref_cod_instituicao) {
-                    $objTemp = new clsPmieducarEscolaRedeEnsino();
-                    $lista = $objTemp->lista(null, null, null, null, null, null, null, null, 1, $this->ref_cod_instituicao);
-
-                    if (is_array($lista) && count($lista)) {
-                        foreach ($lista as $registro) {
-                            $opcoes["{$registro['cod_escola_rede_ensino']}"] = "{$registro['nm_rede']}";
-                        }
+                if (is_array($lista)) {
+                    foreach ($lista as $linha) {
+                        $opcoes[$linha['cod_instituicao']] = $linha['nm_instituicao'];
                     }
-
-                    $script = "<img id='img_rede_ensino' style='display:\'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
-                } else {
-                    $script = "<img id='img_rede_ensino' style='display: none;'  src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
                 }
 
-                $this->campoLista('ref_cod_escola_rede_ensino', 'Rede Ensino', $opcoes, $this->ref_cod_escola_rede_ensino, '', false, '', $script);
+                $this->campoLista('ref_cod_instituicao', 'Instituicao', $opcoes, $this->ref_cod_instituicao);
+            } else {
+                $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
 
-                $zonas = App_Model_ZonaLocalizacao::getInstance();
-                $zonas = [null => 'Selecione'] + $zonas->getEnums();
+                if ($this->ref_cod_instituicao) {
+                    $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
+                } else {
+                    die('Usuário não é do nivel poli-institucional e não possui uma instituição');
+                }
+            }
 
-                $options = [
-                    'label' => 'Zona localização',
-                    'value' => $this->zona_localizacao,
-                    'resources' => $zonas,
-                    'required' => true,
-                ];
+            $opcoes = ['' => 'Selecione'];
 
-                $this->inputsHelper()->select('zona_localizacao', $options);
+            // EDITAR
+            $script = 'javascript:showExpansivelIframe(520, 120, \'educar_escola_rede_ensino_cad_pop.php\');';
+            if ($this->ref_cod_instituicao) {
+                $objTemp = new clsPmieducarEscolaRedeEnsino();
+                $lista = $objTemp->lista(null, null, null, null, null, null, null, null, 1, $this->ref_cod_instituicao);
 
-                $resources = SelectOptions::localizacoesDiferenciadasEscola();
-                $options = ['label' => 'Localização diferenciada da escola', 'resources' => $resources, 'value' => $this->localizacao_diferenciada, 'required' => $obrigarCamposCenso, 'size' => 70];
-                $this->inputsHelper()->select('localizacao_diferenciada', $options);
+                if (is_array($lista) && count($lista)) {
+                    foreach ($lista as $registro) {
+                        $opcoes["{$registro['cod_escola_rede_ensino']}"] = "{$registro['nm_rede']}";
+                    }
+                }
 
-                $this->viewAddress();
+                $script = "<img id='img_rede_ensino' style='display:\'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
+            } else {
+                $script = "<img id='img_rede_ensino' style='display: none;'  src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
+            }
 
-                $this->inputsHelper()->simpleSearchDistrito('district', [
-                    'required' => $obrigarCamposCenso,
-                    'label' => 'Distrito',
-                ], [
-                    'objectName' => 'district',
-                    'hiddenInputOptions' => [
-                        'options' => [
-                            'value' => $this->iddis ?? $this->district_id,
-                        ],
+            $this->campoLista('ref_cod_escola_rede_ensino', 'Rede Ensino', $opcoes, $this->ref_cod_escola_rede_ensino, '', false, '', $script);
+
+            $zonas = App_Model_ZonaLocalizacao::getInstance();
+            $zonas = [null => 'Selecione'] + $zonas->getEnums();
+
+            $options = [
+                'label' => 'Zona localização',
+                'value' => $this->zona_localizacao,
+                'resources' => $zonas,
+                'required' => true,
+            ];
+
+            $this->inputsHelper()->select('zona_localizacao', $options);
+
+            $resources = SelectOptions::localizacoesDiferenciadasEscola();
+            $options = ['label' => 'Localização diferenciada da escola', 'resources' => $resources, 'value' => $this->localizacao_diferenciada, 'required' => $obrigarCamposCenso, 'size' => 70];
+            $this->inputsHelper()->select('localizacao_diferenciada', $options);
+
+            $this->viewAddress();
+
+            $this->inputsHelper()->simpleSearchDistrito('district', [
+                'required' => $obrigarCamposCenso,
+                'label' => 'Distrito',
+            ], [
+                'objectName' => 'district',
+                'hiddenInputOptions' => [
+                    'options' => [
+                        'value' => $this->iddis ?? $this->district_id,
                     ],
-                ]);
+                ],
+            ]);
 
-                $this->inputTelefone('1', 'Telefone 1');
-                $this->inputTelefone('2', 'Telefone 2');
-                $this->inputTelefone('mov', 'Celular');
-                $this->inputTelefone('fax', 'Fax');
-                $this->campoTexto('p_email', 'E-mail', $this->p_email, '50', '100', false);
-                $this->campoTexto('p_http', 'Site/Blog/Rede social', $this->p_http, '50', '255', false);
-                $this->passou = true;
-                $this->campoOculto('passou', $this->passou);
+            $this->inputTelefone('1', 'Telefone 1');
+            $this->inputTelefone('2', 'Telefone 2');
+            $this->inputTelefone('mov', 'Celular');
+            $this->inputTelefone('fax', 'Fax');
+            $this->campoTexto('p_email', 'E-mail', $this->p_email, '50', '100', false);
+            $this->campoTexto('p_http', 'Site/Blog/Rede social', $this->p_http, '50', '255', false);
+            $this->passou = true;
+            $this->campoOculto('passou', $this->passou);
 
             $this->inputsHelper()->numeric('latitude', ['max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->latitude, 'label_hint' => 'São aceito somente números, ponto "." e hífen "-"']);
             $this->inputsHelper()->numeric('longitude', ['max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->longitude, 'label_hint' => 'São aceito somente números, ponto "." e hífen "-"']);
@@ -741,36 +735,49 @@ return new class extends clsCadastro {
             ];
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-            $resources = ['' => 'Selecione',
+            $resources = [
+                '' => 'Selecione',
                 1 => 'Particular',
                 2 => 'Comunitária',
                 3 => 'Confessional',
-                4 => 'Filantrópica'];
-            $options = ['label' => 'Categoria da escola privada',
+                4 => 'Filantrópica'
+            ];
+
+            $options = [
+                'label' => 'Categoria da escola privada',
                 'resources' => $resources,
                 'value' => $this->categoria_escola_privada,
                 'required' => false,
-                'size' => 70];
+                'size' => 70
+            ];
+
             $this->inputsHelper()->select('categoria_escola_privada', $options);
 
-            $resources = ['' => 'Selecione',
+            $resources = [
+                '' => 'Selecione',
                 1 => 'Estadual',
                 2 => 'Municipal',
-                3 => 'Estadual e Municipal'];
-            $options = ['label' => 'Conveniada com poder público',
+                3 => 'Estadual e Municipal'
+            ];
+
+            $options = [
+                'label' => 'Conveniada com poder público',
                 'resources' => $resources,
                 'value' => $this->conveniada_com_poder_publico,
                 'required' => false,
-                'size' => 70];
-            $this->inputsHelper()->select('conveniada_com_poder_publico', $options);
+                'size' => 70
+            ];
 
+            $this->inputsHelper()->select('conveniada_com_poder_publico', $options);
             $this->campoCnpj('cnpj_mantenedora_principal', 'CNPJ da mantenedora principal da escola privada', $this->cnpj_mantenedora_principal);
 
             $hiddenInputOptions = ['options' => ['value' => $this->secretario_id]];
             $helperOptions = ['objectName' => 'secretario', 'hiddenInputOptions' => $hiddenInputOptions];
-            $options = ['label' => 'Secretário escolar',
+            $options = [
+                'label' => 'Secretário escolar',
                 'size' => 50,
-                'required' => false];
+                'required' => false
+            ];
             $this->inputsHelper()->simpleSearchPessoa('nome', $options, $helperOptions);
 
             $resources = SelectOptions::esferasAdministrativasEscola();
