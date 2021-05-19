@@ -472,6 +472,7 @@ return new class extends clsCadastro {
 
         $this->campoOculto('obrigar_campos_censo', (int) $obrigarCamposCenso);
         $this->campoOculto('pessoaj_id_oculto', $this->pessoaj_id);
+        $this->campoOculto('pessoaj_id', $this->pessoaj_id);
 
         if ($this->pesquisaPessoaJuridica) {
             $this->inputsHelper()->simpleSearchPessoaj('idpes', ['label'=> 'Pessoa Jurídica']);
