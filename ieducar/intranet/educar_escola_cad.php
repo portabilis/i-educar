@@ -434,7 +434,7 @@ return new class extends clsCadastro {
         }
     }
 
-    private function pessoaJuridicaContemEscola($pessoaj_id): bool
+    private function pessoaJuridicaContemEscola($pessoaj_id)
     {
         $escola = (new clsPmieducarEscola())->lista(null, null, null, null, null, null, $pessoaj_id);
 
