@@ -230,16 +230,10 @@ return new class extends clsCadastro {
             $retorno = 'Novo';
         }
 
-        if (is_numeric($this->cod_escola) && !$_POST['passou']) {
         if (is_numeric($this->cod_escola)) {
             $obj = new clsPmieducarEscola($this->cod_escola);
             $registro = $obj->detalhe();
 
-            if ($registro['ref_idpes']) {
-                $this->com_cnpj = true;
-                $this->pessoaj_id = $registro['ref_idpes'];
-            } else {
-                $this->sem_cnpj = true;
             if ($registro === false) {
                 throw new HttpResponseException(
                     new RedirectResponse('educar_escola_lst.php')
