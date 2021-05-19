@@ -226,6 +226,7 @@ return new class extends clsCadastro {
             $this->pessoaj_idpes = $pessoaJuridicaId;
             $this->pessoaj_id = $pessoaJuridicaId;
             $this->ref_idpes = $pessoaJuridicaId;
+            $this->carregaDadosContato($this->ref_idpes);
             $retorno = 'Novo';
         }
 
@@ -248,68 +249,6 @@ return new class extends clsCadastro {
                 $this->fexcluir = $obj_permissoes->permissao_excluir(561, $this->pessoa_logada, 3);
                 $retorno = 'Editar';
 
-                if ($registro['tipo_cadastro'] == 1) {
-                    $objJuridica = new clsPessoaJuridica(false, idFederal2int($this->cnpj));
-                    $det = $objJuridica->detalhe();
-                    $objPessoa = new clsPessoaFj($det['idpes']);
-                    list(
-                        $this->p_ddd_telefone_1,
-                        $this->p_telefone_1,
-                        $this->p_ddd_telefone_2,
-                        $this->p_telefone_2,
-                        $this->p_ddd_telefone_mov,
-                        $this->p_telefone_mov,
-                        $this->p_ddd_telefone_fax,
-                        $this->p_telefone_fax,
-                        $this->p_email,
-                        $this->p_http,
-                        $this->tipo_pessoa
-                    ) = $objPessoa->queryRapida(
-                        $det['idpes'],
-                        'ddd_1',
-                        'fone_1',
-                        'ddd_2',
-                        'fone_2',
-                        'ddd_mov',
-                        'fone_mov',
-                        'ddd_fax',
-                        'fone_fax',
-                        'email',
-                        'url',
-                        'tipo'
-                    );
-                }
-            }
-        } elseif ($_POST['cnpj'] && !$_POST['passou']) {
-            $objJuridica = new clsPessoaJuridica(false, idFederal2int($_POST['cnpj']));
-            $det = $objJuridica->detalhe();
-            $objPessoa = new clsPessoaFj($det['idpes']);
-            [
-                $this->p_ddd_telefone_1,
-                $this->p_telefone_1,
-                $this->p_ddd_telefone_2,
-                $this->p_telefone_2,
-                $this->p_ddd_telefone_mov,
-                $this->p_telefone_mov,
-                $this->p_ddd_telefone_fax,
-                $this->p_telefone_fax,
-                $this->p_email,
-                $this->p_http,
-                $this->tipo_pessoa
-            ] = $objPessoa->queryRapida(
-                $det['idpes'],
-                'ddd_1',
-                'fone_1',
-                'ddd_2',
-                'fone_2',
-                'ddd_mov',
-                'fone_mov',
-                'ddd_fax',
-                'fone_fax',
-                'email',
-                'url',
-                'tipo'
-            );
             $this->pesquisaPessoaJuridica = false;
         }
 
@@ -335,6 +274,36 @@ return new class extends clsCadastro {
         $this->gestor_id = $registro['ref_idpes_gestor'];
         $this->secretario_id = $registro['ref_idpes_secretario_escolar'];
         $this->fantasia = $registro['nome'];
+    }
+    private function carregaDadosContato($idpes)
+    {
+        $objPessoa = new clsPessoaFj($idpes);
+        [
+            $this->p_ddd_telefone_1,
+            $this->p_telefone_1,
+            $this->p_ddd_telefone_2,
+            $this->p_telefone_2,
+            $this->p_ddd_telefone_mov,
+            $this->p_telefone_mov,
+            $this->p_ddd_telefone_fax,
+            $this->p_telefone_fax,
+            $this->p_email,
+            $this->p_http,
+            $this->tipo_pessoa
+        ] = $objPessoa->queryRapida(
+            $idpes,
+            'ddd_1',
+            'fone_1',
+            'ddd_2',
+            'fone_2',
+            'ddd_mov',
+            'fone_mov',
+            'ddd_fax',
+            'fone_fax',
+            'email',
+            'url',
+            'tipo'
+        );
     }
     private function inicializaDados()
     {
