@@ -482,7 +482,6 @@ return new class extends clsCadastro {
 
             $this->carregaDadosDoPost();
 
-            if ($this->ref_idpes) {
 
                 $this->p_ddd_telefone_1 = ($this->p_ddd_telefone_1 == null) ? '' : $this->p_ddd_telefone_1;
                 $this->p_ddd_telefone_fax = ($this->p_ddd_telefone_fax == null) ? '' : $this->p_ddd_telefone_fax;
@@ -558,9 +557,7 @@ return new class extends clsCadastro {
                 $this->campoTexto('p_ddd_telefone_fax', 'DDD Fax', $this->p_ddd_telefone_fax, '2', '2', false);
                 $this->campoTexto('p_telefone_fax', 'Fax', $this->p_telefone_fax, '10', '15', false);
                 $this->campoTexto('p_email', 'E-mail', $this->p_email, '50', '100', false);
-            }
 
-            if ($this->pessoaj_id) {
 
                 $this->campoOculto('com_cnpj', $this->com_cnpj);
 
@@ -676,7 +673,6 @@ return new class extends clsCadastro {
                 $this->campoTexto('p_http', 'Site/Blog/Rede social', $this->p_http, '50', '255', false);
                 $this->passou = true;
                 $this->campoOculto('passou', $this->passou);
-            }
 
             $this->inputsHelper()->numeric('latitude', ['max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->latitude, 'label_hint' => 'São aceito somente números, ponto "." e hífen "-"']);
             $this->inputsHelper()->numeric('longitude', ['max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->longitude, 'label_hint' => 'São aceito somente números, ponto "." e hífen "-"']);
