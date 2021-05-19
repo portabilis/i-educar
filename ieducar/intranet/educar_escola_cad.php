@@ -231,6 +231,7 @@ return new class extends clsCadastro {
         }
 
         if (is_numeric($this->cod_escola) && !$_POST['passou']) {
+        if (is_numeric($this->cod_escola)) {
             $obj = new clsPmieducarEscola($this->cod_escola);
             $registro = $obj->detalhe();
 
@@ -239,15 +240,12 @@ return new class extends clsCadastro {
                 $this->pessoaj_id = $registro['ref_idpes'];
             } else {
                 $this->sem_cnpj = true;
+            if ($registro === false) {
+                throw new HttpResponseException(
+                    new RedirectResponse('educar_escola_lst.php')
+                );
             }
 
-
-                $this->loadAddress($this->ref_idpes);
-                $objJuridica = new clsPessoaJuridica($this->ref_idpes);
-                $det = $objJuridica->detalhe();
-                $this->cnpj = int2CNPJ($det['cnpj']);
-                $this->fexcluir = $obj_permissoes->permissao_excluir(561, $this->pessoa_logada, 3);
-                $retorno = 'Editar';
 
             $this->pesquisaPessoaJuridica = false;
         }
