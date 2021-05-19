@@ -242,6 +242,7 @@ return new class extends clsCadastro {
                 );
             }
 
+          //  $this->com_cnpj = true;
 
             $this->pesquisaPessoaJuridica = false;
 
@@ -311,6 +312,18 @@ return new class extends clsCadastro {
             'tipo'
         );
     }
+
+    private function carregaDadosDoPost()
+    {
+        if ($_POST) {
+            foreach ($_POST as $campo => $val) {
+                if ($campo !== 'tipoacao' && $campo !== 'sem_cnpj') {
+                    $this->$campo = ($this->$campo) ?: $val;
+                }
+            }
+        }
+    }
+
     private function inicializaDados()
     {
         if ($this->cnpj_mantenedora_principal) {
@@ -467,13 +480,7 @@ return new class extends clsCadastro {
         } else {
             $this->inputsHelper()->integer('escola_inep_id', ['label' => 'Código INEP', 'placeholder' => 'INEP', 'required' => $obrigarCamposCenso, 'max_length' => 8, 'label_hint' => 'Somente números']);
 
-            if ($_POST) {
-                foreach ($_POST as $campo => $val) {
-                    if ($campo != 'tipoacao' && $campo != 'sem_cnpj') {
-                        $this->$campo = ($this->$campo) ? $this->$campo : $val;
-                    }
-                }
-            }
+            $this->carregaDadosDoPost();
 
             if ($this->ref_idpes) {
 
