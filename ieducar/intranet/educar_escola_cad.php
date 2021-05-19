@@ -1553,7 +1553,7 @@ return new class extends clsCadastro {
         return true;
     }
 
-    private function constroiObjetoEscola($pessoaj_id_oculto, $escola = null): clsPmieducarEscola
+    private function constroiObjetoEscola($pessoaj_id_oculto, $escola = null)
     {
         if($escola instanceof clsPmieducarEscola) {
             $obj = $escola;
