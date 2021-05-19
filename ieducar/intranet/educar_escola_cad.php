@@ -1504,6 +1504,8 @@ return new class extends clsCadastro {
 
         $this->saveInep($cod_escola);
 
+        $this->atualizaNomePessoaJuridica($this->ref_idpes);
+
         $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
 
         throw new HttpResponseException(
@@ -1767,11 +1769,18 @@ return new class extends clsCadastro {
 
         $this->saveInep($this->cod_escola);
 
+        $this->atualizaNomePessoaJuridica($this->ref_idpes);
+
         $this->mensagem = 'Edição efetuada com sucesso.<br>';
 
         throw new HttpResponseException(
             new RedirectResponse('educar_escola_lst.php')
         );
+    }
+
+    private function atualizaNomePessoaJuridica($idpes)
+    {
+        (new clsJuridica($idpes, null, $this->fantasia))->edita();
     }
 
     public function Excluir()
