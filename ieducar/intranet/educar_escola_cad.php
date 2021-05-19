@@ -524,22 +524,20 @@ return new class extends clsCadastro {
                 if ($this->ref_cod_instituicao) {
                     $objTemp = new clsPmieducarEscolaRedeEnsino();
                     $lista = $objTemp->lista(null, null, null, null, null, null, null, null, 1, $this->ref_cod_instituicao);
+            $display = "'display: none;'";
 
                     if (is_array($lista) && count($lista)) {
                         foreach ($lista as $registro) {
                             $opcoes["{$registro['cod_escola_rede_ensino']}"] = "{$registro['nm_rede']}";
                         }
                     }
-
-                    $script = "<img id='img_rede_ensino' style='display: \'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
-                } else {
-                    $script = "<img id='img_rede_ensino' style='display: none;'  src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
                 }
 
                 $this->campoLista('ref_cod_escola_rede_ensino', 'Rede Ensino', $opcoes, $this->ref_cod_escola_rede_ensino, '', false, '', $script);
 
                 $zonas = App_Model_ZonaLocalizacao::getInstance();
                 $zonas = [null => 'Selecione'] + $zonas->getEnums();
+                $display = "'display: '';'";
 
                 $options = [
                     'label' => 'Zona localização',
@@ -547,6 +545,7 @@ return new class extends clsCadastro {
                     'resources' => $zonas,
                     'required' => true,
                 ];
+            $script = "<img id='img_rede_ensino' style={$display}  src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
 
                 $this->inputsHelper()->select('zona_localizacao', $options);
 
