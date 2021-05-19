@@ -240,18 +240,8 @@ return new class extends clsCadastro {
                 $this->sem_cnpj = true;
             }
 
-            if ($registro) {
-                foreach ($registro as $campo => $val) {
-                    // passa todos os valores obtidos no registro para atributos do objeto
-                    $this->$campo = $val;
-                }
 
                 $this->loadAddress($this->ref_idpes);
-
-                $this->gestor_id = $registro['ref_idpes_gestor'];
-                $this->secretario_id = $registro['ref_idpes_secretario_escolar'];
-
-                $this->fantasia = $registro['nome'];
                 $objJuridica = new clsPessoaJuridica($this->ref_idpes);
                 $det = $objJuridica->detalhe();
                 $this->cnpj = int2CNPJ($det['cnpj']);
@@ -333,6 +323,19 @@ return new class extends clsCadastro {
         return $retorno;
     }
 
+    private function carregaCamposComDadosDaEscola($registro)
+    {
+        $this->pessoaj_id = $registro['ref_idpes'];
+
+        foreach ($registro as $campo => $val) {
+            // passa todos os valores obtidos no registro para atributos do objeto
+            $this->$campo = $val;
+        }
+
+        $this->gestor_id = $registro['ref_idpes_gestor'];
+        $this->secretario_id = $registro['ref_idpes_secretario_escolar'];
+        $this->fantasia = $registro['nome'];
+    }
     private function inicializaDados()
     {
         if ($this->cnpj_mantenedora_principal) {
