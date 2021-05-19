@@ -536,6 +536,8 @@ class clsPmieducarServidor extends Model
           FROM pmieducar.servidor_alocacao a
           WHERE $where
           AND a.periodo = 1
+          AND a.ano = $ano_alocacao
+          AND (a.data_saida > now() or a.data_saida is null)
           AND a.carga_horaria >= COALESCE(
           (SELECT SUM(qhh.hora_final - qhh.hora_inicial)
             FROM pmieducar.quadro_horario_horarios qhh
@@ -569,6 +571,8 @@ class clsPmieducarServidor extends Model
       {$whereAnd} (s.cod_servidor NOT IN (SELECT a.ref_cod_servidor
               FROM pmieducar.servidor_alocacao a
               WHERE $where
+              AND a.ano = $ano_alocacao
+              AND (a.data_saida > now() or a.data_saida is null)
               AND a.periodo = 1) OR s.multi_seriado )";
                     }
                 }
@@ -580,6 +584,8 @@ class clsPmieducarServidor extends Model
                 FROM pmieducar.servidor_alocacao a
                 WHERE $where
                 AND a.periodo = 2
+                AND a.ano = $ano_alocacao
+                AND (a.data_saida > now() or a.data_saida is null)
                 AND a.carga_horaria >= COALESCE(
                   (SELECT SUM( qhh.hora_final - qhh.hora_inicial )
                   FROM pmieducar.quadro_horario_horarios qhh
@@ -625,6 +631,8 @@ class clsPmieducarServidor extends Model
       {$whereAnd} (s.cod_servidor NOT IN ( SELECT a.ref_cod_servidor
               FROM pmieducar.servidor_alocacao a
               WHERE $where
+              AND a.ano = $ano_alocacao
+              AND (a.data_saida > now() or a.data_saida is null)
               AND a.periodo = 2 ) OR s.multi_seriado) ";
                     }
                 }
@@ -635,6 +643,8 @@ class clsPmieducarServidor extends Model
               FROM pmieducar.servidor_alocacao a
               WHERE $where
               AND a.periodo = 3
+              AND a.ano = $ano_alocacao
+              AND (a.data_saida > now() or a.data_saida is null)
               AND a.carga_horaria >= COALESCE(
               (SELECT SUM(qhh.hora_final - qhh.hora_inicial)
                 FROM pmieducar.quadro_horario_horarios qhh
@@ -669,6 +679,8 @@ class clsPmieducarServidor extends Model
             SELECT a.ref_cod_servidor
               FROM pmieducar.servidor_alocacao a
               WHERE $where
+              AND a.ano = $ano_alocacao
+              AND (a.data_saida > now() or a.data_saida is null)
               AND a.periodo = 3 ) OR s.multi_seriado) ";
                     }
                 }

@@ -457,7 +457,8 @@ class clsPmieducarServidorAlocacao extends Model
         $int_periodo = null,
         $bool_busca_nome = false,
         $boo_professor = null,
-        $ano = null
+        $ano = null,
+        $desconsiderarAlocacoesComDataDeSaida = false
     ) {
         $filtros = '';
         $whereAnd = ' WHERE ';
@@ -553,6 +554,11 @@ class clsPmieducarServidorAlocacao extends Model
         if (is_bool($boo_professor)) {
             $not = $boo_professor ? '=' : '!=';
             $filtros .= "{$whereAnd} EXISTS(SELECT 1 FROM pmieducar.servidor_funcao,pmieducar.funcao WHERE ref_cod_servidor_funcao = cod_funcao AND ref_cod_servidor = sa.ref_cod_servidor AND sa.ref_ref_cod_instituicao = ref_ref_cod_instituicao AND professor $not 1)";
+        }
+
+        if (is_bool($desconsiderarAlocacoesComDataDeSaida) && $desconsiderarAlocacoesComDataDeSaida) {
+            $filtros .= "{$whereAnd} (sa.data_saida > now() or sa.data_saida is null)";
+            $whereAnd = ' AND ';
         }
 
         $db = new clsBanco();

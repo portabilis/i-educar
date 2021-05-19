@@ -36,6 +36,7 @@ class Installer
     protected $commandsMap = [
         'key' => 'key:generate',
         'link' => 'legacy:link',
+        'reports-link' => 'community:reports:link',
         'migrate' => 'migrate --force',
         'password' => 'admin:password',
         'reports' => 'reports:install --no-compile',
@@ -193,11 +194,11 @@ class Installer
     {
         $dsn = sprintf(
             'pgsql:host=%s;port=%s;dbname=%s;user=%s;password=%s',
-            getenv('DB_HOST'),
-            getenv('DB_PORT'),
-            getenv('DB_DATABASE'),
-            getenv('DB_USERNAME'),
-            getenv('DB_PASSWORD')
+            env('DB_HOST'),
+            env('DB_PORT'),
+            env('DB_DATABASE'),
+            env('DB_USERNAME'),
+            env('DB_PASSWORD')
         );
 
         return new \PDO($dsn);
