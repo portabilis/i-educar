@@ -165,7 +165,7 @@ span.error_notice {
 
 .topo .dropbtn:hover,
 .dropdown:hover .dropbtn{
-  background-image: url('/intranet/imagens/arrow-up.png');
+  background-image: url('../imagens/arrow-up.png');
   background-repeat: no-repeat;
   background-position: center right;
 }
