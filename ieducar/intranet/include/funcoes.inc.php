@@ -30,7 +30,7 @@ function idFederal2int($str)
 {
     $id_federal = str_replace('.', '', str_replace('-', '', str_replace('/', '', $str)));
 
-    return preg_replace('/^0+/', '', $id_federal);
+    return str_replace(' ', '', ltrim($id_federal, '0'));
 }
 
 function int2CPF($int)
