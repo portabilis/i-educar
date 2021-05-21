@@ -65,7 +65,8 @@ return new class extends clsCadastro {
         $options = [
             'label' => 'Deficiência educacenso',
             'resources' => SelectOptions::educacensoDeficiencies(),
-            'value' => $this->deficiencia_educacenso
+            'value' => $this->deficiencia_educacenso,
+            'label_hint' => 'Deficiências definidas como "Outras" não serão exportadas no arquivo do Censo',
         ];
 
         $this->inputsHelper()->select('deficiencia_educacenso', $options);
