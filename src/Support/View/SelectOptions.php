@@ -17,6 +17,7 @@ use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaPessoa;
 use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento;
 use iEducar\Modules\Educacenso\Model\TipoEnsinoMedioCursado;
 use iEducar\Modules\Educacenso\Model\UnidadeVinculadaComOutraInstituicao;
+use iEducar\Modules\School\Model\ActiveSearch;
 use iEducar\Modules\School\Model\ExemptionType;
 use iEducar\Modules\Servidores\Model\FuncaoExercida;
 use iEducar\Modules\Servidores\Model\TipoVinculo;
@@ -208,5 +209,14 @@ class SelectOptions
     public static function exemptionsTypeOptions()
     {
         return ExemptionType::getDescriptiveValues();
+    }
+
+    /**
+     * Retorna as opções disponíveis para os tipos de dispensa
+     * @return string[]
+     */
+    public static function activeSearchResultOptions()
+    {
+        return ActiveSearch::getDescriptiveValues();
     }
 }
