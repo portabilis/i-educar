@@ -15,7 +15,7 @@ class RemoveEducacensoEis extends Migration
     public function up()
     {
         DB::statement("
-            DELETE FROM modules.educaceso_ies WHERE ies_id IN (
+            DELETE FROM modules.educacenso_ies  WHERE ies_id IN (
                 302,722,723,839,840,891,1066,1124,1212,1226,1437,1442,1668,1692,1706,1707,1731,1767,1858,2146,2168,2243,
                 2245,2791,2794,2891,2974,3776,3784,3788,4631,5066,5216,5317,12847,14002,18290,18642,18714,18716,19049,
                 19050,19208,19332,19342,19375,19405,19733,19735,20612,21421,21614,21676,21932,22126,22127,22129,22134,
