@@ -3,6 +3,7 @@
 use App\Models\LegacyDisciplineExemption;
 use App\Models\LegacyRegistration;
 use App\Services\Exemption\ExemptionService;
+use iEducar\Modules\School\Model\ExemptionType;
 
 return new class extends clsCadastro {
     public $ref_usuario_exc;
@@ -165,11 +166,19 @@ return new class extends clsCadastro {
 
         $objTemp = new clsPmieducarTipoDispensa();
 
-        if ($this->ref_cod_instituicao) {
-            $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, 1, $this->ref_cod_instituicao);
-        } else {
-            $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, 1);
-        }
+       $lista = $objTemp->lista(null,
+           null,
+           null,
+           null,
+           null,
+           null,
+           null,
+           null,
+           null,
+           1,
+           $this->ref_cod_instituicao,
+           ExemptionType::DISPENSA_COMPONENTES
+       );
 
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
