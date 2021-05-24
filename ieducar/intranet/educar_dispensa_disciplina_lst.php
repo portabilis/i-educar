@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\LegacyDisciplineExemption;
+use iEducar\Modules\School\Model\ExemptionType;
+
 return new class extends clsListagem {
     public $pessoa_logada;
     public $titulo;
@@ -104,7 +107,9 @@ return new class extends clsListagem {
 
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
-                $opcoes[$registro['cod_tipo_dispensa']] = $registro['nm_tipo'];
+                if ($registro['tipo'] != ExemptionType::DISPENSA_BUSCA_ATIVA) {
+                    $opcoes[$registro['cod_tipo_dispensa']] = $registro['nm_tipo'];
+                }
             }
         }
 
@@ -155,33 +160,35 @@ return new class extends clsListagem {
         $this->offset = $_GET['pagina_' . $this->nome] ?
       $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
 
-        $obj_dispensa_disciplina = new clsPmieducarDispensaDisciplina();
-        $obj_dispensa_disciplina->setOrderby('data_cadastro ASC');
-        $obj_dispensa_disciplina->setLimite($this->limite, $this->offset);
+        $legagyDisciplineExemption = LegacyDisciplineExemption::query()
+            ->select('dispensa_disciplina.*')
+            ->join('pmieducar.tipo_dispensa', 'ref_cod_tipo_dispensa', '=', 'cod_tipo_dispensa')
+            ->where('ref_cod_matricula', $this->ref_cod_matricula)
+            ->where('dispensa_disciplina.ativo', 1)
+            ->whereNotIn('tipo', [ExemptionType::DISPENSA_BUSCA_ATIVA])
+            ->orderBy('dispensa_disciplina.data_cadastro')
+            ->limit($this->limite)
+            ->offset($this->offset);
 
-        $lista = $obj_dispensa_disciplina->lista(
-            $this->ref_cod_matricula,
-            null,
-            null,
-            $this->ref_cod_disciplina,
-            null,
-            null,
-            $this->ref_cod_tipo_dispensa,
-            null,
-            null,
-            null,
-            null,
-            1
-        );
+        if($this->ref_cod_tipo_dispensa){
+            $legagyDisciplineExemption->where('ref_cod_tipo_dispensa', $this->ref_cod_tipo_dispensa);
+        }
 
-        $total = $obj_dispensa_disciplina->_total;
+        if($this->ref_cod_disciplina){
+            $legagyDisciplineExemption->where('ref_cod_disciplina', $this->ref_cod_disciplina);
+        }
+
+        $disciplineExemptions = $legagyDisciplineExemption->get()->toArray();
+
+        $total = count($disciplineExemptions);
 
         // Mapper de componente curricular
         $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
 
         // monta a lista
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
+        if ($total > 0) {
+            foreach ($disciplineExemptions as $registro) {
+
                 // muda os campos data
                 $registro['data_cadastro_time'] = strtotime(substr($registro['data_cadastro'], 0, 16));
                 $registro['data_cadastro_br']   = date('d/m/Y', $registro['data_cadastro_time']);
@@ -189,25 +196,27 @@ return new class extends clsListagem {
                 // Tipo da dispensa
                 $obj_ref_cod_tipo_dispensa = new clsPmieducarTipoDispensa($registro['ref_cod_tipo_dispensa']);
                 $det_ref_cod_tipo_dispensa = $obj_ref_cod_tipo_dispensa->detalhe();
-                $registro['ref_cod_tipo_dispensa'] = $det_ref_cod_tipo_dispensa['nm_tipo'];
+                $registro['nome_tipo_dispensa'] = $det_ref_cod_tipo_dispensa['nm_tipo'];
 
                 // Componente curricular
                 $componente = $componenteMapper->find($registro['ref_cod_disciplina']);
 
                 // Dados para a url
                 $url     = 'educar_dispensa_disciplina_det.php';
-                $options = ['query' => [
-          'ref_cod_matricula'  => $registro['ref_cod_matricula'],
-          'ref_cod_serie'      => $registro['ref_cod_serie'],
-          'ref_cod_escola'     => $registro['ref_cod_escola'],
-          'ref_cod_disciplina' => $registro['ref_cod_disciplina']
-        ]];
-
+                $options = [
+                    'query' => [
+                        'ref_cod_matricula'  => $registro['ref_cod_matricula'],
+                        'ref_cod_serie'      => $registro['ref_cod_serie'],
+                        'ref_cod_escola'     => $registro['ref_cod_escola'],
+                        'ref_cod_disciplina' => $registro['ref_cod_disciplina'],
+                        'ref_cod_tipo_dispensa' => $registro['ref_cod_tipo_dispensa']
+                    ]
+                ];
                 $this->addLinhas([
-          $urlHelper->l($componente->nome, $url, $options),
-          $urlHelper->l($registro['ref_cod_tipo_dispensa'], $url, $options),
-          $urlHelper->l($registro['data_cadastro_br'], $url, $options)
-        ]);
+                    $urlHelper->l($componente->nome, $url, $options),
+                    $urlHelper->l($registro['nome_tipo_dispensa'], $url, $options),
+                    $urlHelper->l($registro['data_cadastro_br'], $url, $options)
+                ]);
             }
         }
 
