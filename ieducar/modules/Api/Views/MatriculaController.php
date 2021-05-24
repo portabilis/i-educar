@@ -880,16 +880,20 @@ class MatriculaController extends ApiCoreController
                     dd.ref_cod_disciplina AS disciplina_id,
                     string_agg(CAST(de.etapa AS VARCHAR), ',') AS etapas,
                     dd.updated_at,
-                    null as deleted_at
+                    null as deleted_at,
+                    tipo as exemption_type,
+                    nm_tipo as exemption_type_alias
                 FROM pmieducar.dispensa_disciplina AS dd
                 INNER JOIN pmieducar.matricula m
                 ON m.cod_matricula = dd.ref_cod_matricula
+                INNER JOIN pmieducar.tipo_dispensa td
+                on td.cod_tipo_dispensa = dd.ref_cod_tipo_dispensa
                 LEFT JOIN pmieducar.dispensa_etapa de
                 ON de.ref_cod_dispensa = dd.cod_dispensa
                 WHERE dd.ativo = 1
                 AND m.ref_ref_cod_escola IN ({$escola})
                 {$where}
-                GROUP BY dd.ref_cod_matricula, dd.ref_cod_disciplina, dd.updated_at
+                GROUP BY dd.ref_cod_matricula, dd.ref_cod_disciplina, dd.updated_at, td.tipo, td.nm_tipo
             )
             UNION ALL
             (
@@ -898,16 +902,20 @@ class MatriculaController extends ApiCoreController
                     dd.ref_cod_disciplina AS disciplina_id,
                     string_agg(CAST(de.etapa AS VARCHAR), ',') AS etapas,
                     dd.updated_at,
-                    dd.deleted_at
+                    dd.deleted_at,
+                    tipo as exemption_type,
+                    nm_tipo as exemption_type_alias
                 FROM pmieducar.dispensa_disciplina_excluidos AS dd
                 INNER JOIN pmieducar.matricula m
                 ON m.cod_matricula = dd.ref_cod_matricula
+                INNER JOIN pmieducar.tipo_dispensa td
+                on td.cod_tipo_dispensa = dd.ref_cod_tipo_dispensa
                 LEFT JOIN pmieducar.dispensa_etapa de
                 ON de.ref_cod_dispensa = dd.cod_dispensa
                 WHERE dd.ativo = 1
                 AND m.ref_ref_cod_escola IN ({$escola})
                 {$where}
-                GROUP BY dd.ref_cod_matricula, dd.ref_cod_disciplina, dd.updated_at, dd.deleted_at
+                GROUP BY dd.ref_cod_matricula, dd.ref_cod_disciplina, dd.updated_at, dd.deleted_at, td.tipo, td.nm_tipo
             )
             order by updated_at
         ";
