@@ -16,6 +16,7 @@ class ActiveSearch
     public static function getDescriptiveValues(): array
     {
         return [
+            self::ACTIVE_SEARCH_IN_PROGRESS_RESULT => 'Em andamento',
             self::ACTIVE_SEARCH_ABANDONMENT_RESULT => 'Abandono',
             self::ACTIVE_SEARCH_WITH_ABSENCE_RESULT => 'Retorno com ausência justificada',
             self::ACTIVE_SEARCH_WITHOUT_ABSENCE_RESULT => 'Retorno sem ausência justificada',
