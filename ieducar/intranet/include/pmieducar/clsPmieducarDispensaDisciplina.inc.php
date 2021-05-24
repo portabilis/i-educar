@@ -16,6 +16,8 @@ class clsPmieducarDispensaDisciplina extends Model
     public $ativo;
     public $observacao;
     public $cod_dispensa;
+    public $data_fim;
+    public $resultado_busca_ativa;
 
     public function __construct(
         $ref_cod_matricula = null,
@@ -29,7 +31,9 @@ class clsPmieducarDispensaDisciplina extends Model
         $data_exclusao = null,
         $ativo = null,
         $observacao = null,
-        $cod_dispensa = null
+        $cod_dispensa = null,
+        $data_fim = null,
+        $resultado_busca_ativa = null
     ) {
         $db = new clsBanco();
         $this->_schema = 'pmieducar.';
@@ -47,7 +51,9 @@ class clsPmieducarDispensaDisciplina extends Model
             data_exclusao,
             ativo,
             observacao,
-            cod_dispensa
+            cod_dispensa,
+            data_fim,
+            resultado_busca_ativa
         ';
 
         if (is_numeric($ref_usuario_exc)) {
@@ -111,6 +117,12 @@ class clsPmieducarDispensaDisciplina extends Model
         if (is_numeric($cod_dispensa)) {
             $this->cod_dispensa = $cod_dispensa;
         }
+
+        if (is_string($data_fim)) {
+            $this->data_fim = $data_fim;
+        }
+
+        $this->resultado_busca_ativa = $resultado_busca_ativa ?? 'null';
     }
 
     /**
@@ -174,11 +186,20 @@ class clsPmieducarDispensaDisciplina extends Model
             $valores .= "{$gruda}'1'";
             $gruda = ', ';
 
+            $campos .= "{$gruda}resultado_busca_ativa";
+            $valores .= "{$gruda}{$this->resultado_busca_ativa}";
+            $gruda = ', ';
+
             if (is_string($this->observacao)) {
                 $observacao = $db->escapeString($this->observacao);
                 $campos .= "{$gruda}observacao";
                 $valores .= "{$gruda}'{$observacao}'";
                 $gruda = ', ';
+            }
+
+            if (is_string($this->data_fim)) {
+                $campos .= "{$gruda}data_fim";
+                $valores .= "{$gruda}'{$this->data_fim}'";
             }
 
             $sql = "INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)";
@@ -229,6 +250,9 @@ class clsPmieducarDispensaDisciplina extends Model
             $set .= "{$gruda}data_exclusao = NOW()";
             $gruda = ', ';
 
+            $set .= "{$gruda}resultado_busca_ativa = {$this->resultado_busca_ativa}";
+            $gruda = ', ';
+
             if (is_numeric($this->ativo)) {
                 $set .= "{$gruda}ativo = '{$this->ativo}'";
                 $gruda = ', ';
@@ -238,6 +262,10 @@ class clsPmieducarDispensaDisciplina extends Model
                 $observacao = $db->escapeString($this->observacao);
                 $set .= "{$gruda}observacao = '{$observacao}'";
                 $gruda = ', ';
+            }
+
+            if (is_string($this->data_fim)) {
+                $set .= "{$gruda}data_fim = '{$this->data_fim}'";
             }
 
             if ($set) {
