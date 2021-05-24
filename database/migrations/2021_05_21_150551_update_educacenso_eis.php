@@ -15,94 +15,96 @@ class UpdateEducacensoEis extends Migration
     public function up()
     {
         DB::statement("
-            UPDATE public.employee_graduations
+            UPDATE PUBLIC.employee_graduations
             SET college_id = (
-                CASE college_id
-                    WHEN 302 THEN 19257
-                    WHEN 722 THEN 721
-                    WHEN 723 THEN 721
-                    WHEN 839 THEN 1498
-                    WHEN 840 THEN 1498
-                    WHEN 891 THEN 1818
-                    WHEN 1066 THEN 2148
-                    WHEN 1124 THEN 3588
-                    WHEN 1212 THEN 721
-                    WHEN 1226 THEN 2132
-                    WHEN 1437 THEN 707
-                    WHEN 1442 THEN 1587
-                    WHEN 1668 THEN 1818
-                    WHEN 1692 THEN 707
-                    WHEN 1706 THEN 2566
-                    WHEN 1707 THEN 2566
-                    WHEN 1731 THEN 2973
-                    WHEN 1767 THEN 1587
-                    WHEN 1858 THEN 3588
-                    WHEN 2146 THEN 2132
-                    WHEN 2168 THEN 2149
-                    WHEN 2243 THEN 1462
-                    WHEN 2245 THEN 1498
-                    WHEN 2791 THEN 2973
-                    WHEN 2794 THEN 781
-                    WHEN 2891 THEN 3186
-                    WHEN 2974 THEN 2973
-                    WHEN 3776 THEN 1996
-                    WHEN 3784 THEN 2908
-                    WHEN 3788 THEN 2241
-                    WHEN 4631 THEN 2082
-                    WHEN 5066 THEN 13684
-                    WHEN 5216 THEN 4655
-                    WHEN 5317 THEN 448
-                    WHEN 12847 THEN 1657
-                    WHEN 14002 THEN 1805
-                    WHEN 18290 THEN 17632
-                    WHEN 18642 THEN 383
-                    WHEN 18714 THEN 18147
-                    WHEN 18716 THEN 17632
-                    WHEN 19049 THEN 18979
-                    WHEN 19050 THEN 2537
-                    WHEN 19208 THEN 2537
-                    WHEN 19332 THEN 13982
-                    WHEN 19342 THEN 4135
-                    WHEN 19375 THEN 17632
-                    WHEN 19405 THEN 17632
-                    WHEN 19733 THEN 18147
-                    WHEN 19735 THEN 17632
-                    WHEN 20612 THEN 2885
-                    WHEN 21421 THEN 1055
-                    WHEN 21614 THEN 17632
-                    WHEN 21676 THEN 1988
-                    WHEN 21932 THEN 21931
-                    WHEN 22126 THEN 19323
-                    WHEN 22127 THEN 19260
-                    WHEN 22129 THEN 19781
-                    WHEN 22134 THEN 19786
-                    WHEN 22135 THEN 20587
-                    WHEN 22136 THEN 21687
-                    WHEN 22140 THEN 20588
-                    WHEN 22143 THEN 21238
-                    WHEN 22149 THEN 21693
-                    WHEN 22150 THEN 19785
-                    WHEN 22151 THEN 21552
-                    WHEN 22152 THEN 21553
-                    WHEN 22153 THEN 19780
-                    WHEN 22157 THEN 21886
-                    WHEN 22169 THEN 21834
-                    WHEN 22170 THEN 21833
-                    WHEN 22225 THEN 19298
-                    WHEN 22226 THEN 19783
-                    WHEN 22227 THEN 21280
-                    WHEN 22228 THEN 21900
-                    WHEN 22229 THEN 21554
-                    WHEN 22235 THEN 21903
+                CASE ies.ies_id
+                    WHEN 302 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 19257)
+                    WHEN 722 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 721)
+                    WHEN 723 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 721)
+                    WHEN 839 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 1498)
+                    WHEN 840 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 1498)
+                    WHEN 891 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 1818)
+                    WHEN 1066 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 2148)
+                    WHEN 1124 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 3588)
+                    WHEN 1212 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 721)
+                    WHEN 1226 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 2132)
+                    WHEN 1437 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 707)
+                    WHEN 1442 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 1587)
+                    WHEN 1668 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 1818)
+                    WHEN 1692 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 707)
+                    WHEN 1706 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 2566)
+                    WHEN 1707 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 2566)
+                    WHEN 1731 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 2973)
+                    WHEN 1767 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 1587)
+                    WHEN 1858 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 3588)
+                    WHEN 2146 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 2132)
+                    WHEN 2168 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 2149)
+                    WHEN 2243 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 1462)
+                    WHEN 2245 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 1498)
+                    WHEN 2791 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 2973)
+                    WHEN 2794 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 781)
+                    WHEN 2891 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 3186)
+                    WHEN 2974 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 2973)
+                    WHEN 3776 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 1996)
+                    WHEN 3784 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 2908)
+                    WHEN 3788 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 2241)
+                    WHEN 4631 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 2082)
+                    WHEN 5066 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 13684)
+                    WHEN 5216 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 4655)
+                    WHEN 5317 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 448)
+                    WHEN 12847 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 1657)
+                    WHEN 14002 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 1805)
+                    WHEN 18290 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 17632)
+                    WHEN 18642 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 383)
+                    WHEN 18714 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 18147)
+                    WHEN 18716 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 17632)
+                    WHEN 19049 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 18979)
+                    WHEN 19050 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 2537)
+                    WHEN 19208 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 2537)
+                    WHEN 19332 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 13982)
+                    WHEN 19342 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 4135)
+                    WHEN 19375 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 17632)
+                    WHEN 19405 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 17632)
+                    WHEN 19733 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 18147)
+                    WHEN 19735 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 17632)
+                    WHEN 20612 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 2885)
+                    WHEN 21421 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 1055)
+                    WHEN 21614 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 17632)
+                    WHEN 21676 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 1988)
+                    WHEN 21932 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 21931)
+                    WHEN 22126 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 19323)
+                    WHEN 22127 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 19260)
+                    WHEN 22129 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 19781)
+                    WHEN 22134 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 19786)
+                    WHEN 22135 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 20587)
+                    WHEN 22136 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 21687)
+                    WHEN 22140 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 20588)
+                    WHEN 22143 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 21238)
+                    WHEN 22149 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 21693)
+                    WHEN 22150 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 19785)
+                    WHEN 22151 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 21552)
+                    WHEN 22152 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 21553)
+                    WHEN 22153 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 19780)
+                    WHEN 22157 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 21886)
+                    WHEN 22169 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 21834)
+                    WHEN 22170 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 21833)
+                    WHEN 22225 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 19298)
+                    WHEN 22226 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 19783)
+                    WHEN 22227 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 21280)
+                    WHEN 22228 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 21900)
+                    WHEN 22229 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 21554)
+                    WHEN 22235 THEN (SELECT id FROM modules.educacenso_ies WHERE educacenso_ies.ies_id = 21903)
                 END
-            )
-            WHERE college_id in (
-                 302,722,723,839,840,891,1066,1124,1212,1226,1437,1442,1668,1692,1706,1707,1731,1767,
-                 1858,2146,2168,2243,2245,2791,2794,2891,2974,3776,3784,3788,4631,5066,5216,5317,12847,
-                 14002,18290,18642,18714,18716,19049,19050,19208,19332,19342,19375,19405,19733,19735,
-                 20612,21421,21614,21676,21932,22126,22127,22129,22134,22135,22136,22140,22143,22149,
-                 22150,22151,22152,22153,22157,22169,22170,22225,22226,22227,22228,22229,22235
-            )
+                )
+            FROM
+                modules.educacenso_ies AS ies
+            WHERE ies.ies_id IN (302,722,723,839,840,891,1066,1124,1212,1226,1437,1442,1668,1692,1706,1707,1731,1767,
+                             1858,2146,2168,2243,2245,2791,2794,2891,2974,3776,3784,3788,4631,5066,5216,5317,12847,
+                             14002,18290,18642,18714,18716,19049,19050,19208,19332,19342,19375,19405,19733,19735,
+                             20612,21421,21614,21676,21932,22126,22127,22129,22134,22135,22136,22140,22143,22149,
+                             22150,22151,22152,22153,22157,22169,22170,22225,22226,22227,22228,22229,22235)
+            AND ies.id = employee_graduations.college_id;
+
         ");
     }
 
