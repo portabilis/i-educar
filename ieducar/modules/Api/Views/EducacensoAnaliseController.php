@@ -220,6 +220,20 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
+        if ($escola->situacaoFuncionamento == SituacaoFuncionamento::EM_ATIVIDADE &&
+            $escola->dependenciaAdministrativa == DependenciaAdministrativaEscola::PRIVADA &&
+            empty($escola->cnpjEscolaPrivada)
+        ) {
+            $idpesEscola = School::find($codEscola)->ref_idpes;
+
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se CNPJ da escola foi informado.",
+                'path' => '(Pessoas > Cadastros > Pessoas jurídicas > Editar > Campo: CNPJ)',
+                'linkPath' => "/intranet/empresas_cad.php?idpes={$idpesEscola}",
+                'fail' => true
+            ];
+        }
+
         if (!$escola->esferaAdministrativa && ($escola->regulamentacao == Regulamentacao::SIM || $escola->regulamentacao == Regulamentacao::EM_TRAMITACAO)) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a escola é regulamentada ou está em tramitação pelo conselho/órgão, portanto é necessário informar qual a esfera administrativa;",
