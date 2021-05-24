@@ -29,6 +29,7 @@ return new class extends clsCadastro {
 
         $this->ref_cod_disciplina = $this->getQueryString('ref_cod_disciplina');
         $this->ref_cod_matricula  = $this->getQueryString('ref_cod_matricula');
+        $this->ref_cod_tipo_dispensa  = $this->getQueryString('ref_cod_tipo_dispensa');
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, 'educar_dispensa_disciplina_lst.php?ref_ref_cod_matricula=' . $this->ref_cod_matricula);
@@ -44,12 +45,17 @@ return new class extends clsCadastro {
         }
 
         if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_serie) &&
-            is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_disciplina)) {
+            is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_disciplina) &&
+            is_numeric($this->ref_cod_tipo_dispensa)
+        ) {
             $obj = new clsPmieducarDispensaDisciplina(
                 $this->ref_cod_matricula,
                 $this->ref_cod_serie,
                 $this->ref_cod_escola,
-                $this->ref_cod_disciplina
+                $this->ref_cod_disciplina,
+                null,
+                null,
+                $this->ref_cod_tipo_dispensa
             );
 
             $registro  = $obj->detalhe();
@@ -74,11 +80,12 @@ return new class extends clsCadastro {
 
         $this->url_cancelar = $retorno == 'Editar' ?
         sprintf(
-            'educar_dispensa_disciplina_det.php?ref_cod_matricula=%d&ref_cod_serie=%d&ref_cod_escola=%d&ref_cod_disciplina=%d',
+            'educar_dispensa_disciplina_det.php?ref_cod_matricula=%d&ref_cod_serie=%d&ref_cod_escola=%d&ref_cod_disciplina=%d&ref_cod_tipo_dispensa=%d',
             $registro['ref_cod_matricula'],
             $registro['ref_cod_serie'],
             $registro['ref_cod_escola'],
-            $registro['ref_cod_disciplina']
+            $registro['ref_cod_disciplina'],
+            $registro['ref_cod_tipo_dispensa']
         ) :
             'educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula;
 
