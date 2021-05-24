@@ -12,7 +12,7 @@ class AdministrativeDomainValidator implements EducacensoValidator
     private $regulations;
     private $administrativeDependence;
     private $cityIbgeCode;
-    const BRASILIA = 5300108;
+    private const BRASILIA = 5300108;
 
     public function __construct(
         $administrativeDomain,
