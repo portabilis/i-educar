@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\User;
+use iEducar\Modules\School\Model\ExemptionType;
+use iEducar\Support\Exceptions\Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -40,12 +42,15 @@ class LegacyDisciplineExemption extends Model
         'observacao',
         'cod_dispensa',
         'updated_at',
+        'data_fim',
+        'resultado_busca_ativa'
     ];
 
     protected $dates = [
         'data_cadastro',
         'data_exclusao',
-        'updated_at'
+        'updated_at',
+        'data_fim'
     ];
 
     /**
@@ -105,5 +110,13 @@ class LegacyDisciplineExemption extends Model
     public function getDateFormat()
     {
         return 'Y-m-d H:i:s.u';
+    }
+
+    /**
+     * Retorna se a dispensa é de busca ativa
+     */
+    public function isActiveSearch()
+    {
+        return $this->type()->tipo === ExemptionType::DISPENSA_BUSCA_ATIVA;
     }
 }
