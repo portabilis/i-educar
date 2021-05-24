@@ -2122,6 +2122,8 @@ function canShowParentsFields() {
                 $j('#neighborhood').removeAttr('disabled');
                 $j('#address').removeAttr('disabled');
                 $j('#zona_localizacao').removeAttr('disabled');
+                $j('#number').removeAttr('disabled');
+                $j('#complement').removeAttr('disabled');
                 $j('#address').val(person_details.address);
                 $j('#number').val(person_details.number);
                 $j('#complement').val(person_details.complement);

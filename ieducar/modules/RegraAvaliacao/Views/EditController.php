@@ -1,6 +1,7 @@
 <?php
 
 use iEducar\Modules\EvaluationRules\Models\ParallelRemedialCalculationType;
+use Illuminate\Support\Facades\DB;
 
 class EditController extends Core_Controller_Page_EditController
 {
@@ -972,28 +973,33 @@ class EditController extends Core_Controller_Page_EditController
                 }
             }
         }
-
-        // Persiste
-        foreach ($insert as $regraRecuperacao) {
-            // Atribui uma tabela de arredondamento a instância de tabela valor
-            $regraRecuperacao->regraAvaliacao = $entity;
-
-            if ($regraRecuperacao->isValid()) {
-                $this->getDataMapper()
-                    ->getRegraRecuperacaoDataMapper()
-                    ->save($regraRecuperacao);
-            } else {
-                $this->mensagem .= 'Erro no formulário';
-
-                return false;
-            }
-        }
-
         try {
-            $entity = $this->getDataMapper()->save($this->getEntity());
+            DB::beginTransaction();
+
+            if (isset($entity)) {
+                $this->getDataMapper()->save($this->getEntity());
+                $regraAvaliacaoId = $entity->id;
+            } else {
+                $entity = $this->getDataMapper()->save($this->getEntity());
+                $regraAvaliacaoId = $entity->fetch()['id'];
+            }
+            // Persiste
+            foreach ($insert as $regraRecuperacao) {
+                // Atribui uma tabela de arredondamento a instância de tabela valor
+                $regraRecuperacao->regraAvaliacao = $regraAvaliacaoId;
+
+                if ($regraRecuperacao->isValid()) {
+                    $this->getDataMapper()
+                        ->getRegraRecuperacaoDataMapper()
+                        ->save($regraRecuperacao);
+                } else {
+                    throw new Exception('Erro no preenchimento dos campos de Recuperações específicas.');
+                }
+            }
+            DB::commit();
         } catch (Exception $e) {
-            // TODO: ver @todo do docblock
-            $this->mensagem .= 'Erro no preenchimento do formulário. ';
+            $this->mensagem .= 'Erro no preenchimento do formulário. '.$e->getMessage();
+            DB::rollBack();
 
             return false;
         }

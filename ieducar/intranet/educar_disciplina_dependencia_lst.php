@@ -155,7 +155,10 @@ return new class extends clsListagem {
 
         if ($obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7)) {
             $this->array_botao_url[] = 'educar_disciplina_dependencia_cad.php?ref_cod_matricula=' . $this->ref_cod_matricula;
-            $this->array_botao[]     = 'Novo';
+            $this->array_botao[] = [
+                'name' => 'Novo',
+                'css-extra' => 'btn-green'
+            ];
         }
 
         $this->array_botao_url[] = 'educar_matricula_det.php?cod_matricula=' . $this->ref_cod_matricula;

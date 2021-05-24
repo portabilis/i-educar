@@ -73,9 +73,12 @@ class Student extends Model
                 'school_class_stage' => 'Etapa Educacenso',
             ],
             'Informações' => [
+                'nationality' => 'Nacionalidade',
+                'birthplace' => 'Naturalidade',
                 'phones.phones' => 'Telefones',
                 'benefits.benefits' => 'Benefícios',
                 'disabilities.disabilities' => 'Deficiências',
+                'modalidade_ensino' => 'Modalidade de ensino cursada',
                 'technological_resources' => 'Recursos tecnológicos',
             ],
             'Endereço' => [

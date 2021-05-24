@@ -4,6 +4,18 @@ use iEducar\Legacy\Model;
 
 class clsPmieducarMatricula extends Model
 {
+    public const MODELO_SEMIPRESENCIAL = 0;
+    public const MODELO_EAD = 1;
+    public const MODELO_OFF_LINE = 2;
+    public const MODELO_PRESENCIAL = 3;
+
+    public const MODELOS_DE_ENSINO = [
+          self::MODELO_PRESENCIAL => 'Presencial' ,
+          self::MODELO_SEMIPRESENCIAL => 'Semipresencial' ,
+          self::MODELO_EAD => 'EAD' ,
+          self::MODELO_OFF_LINE => 'Off-line' ,
+    ];
+
     public $cod_matricula;
     public $ref_cod_reserva_vaga;
     public $ref_ref_cod_escola;
@@ -26,8 +38,10 @@ class clsPmieducarMatricula extends Model
     public $semestre;
     public $data_matricula;
     public $data_cancel;
+    public $observacoes;
     public $turno_pre_matricula;
     public $dependencia;
+    public $modalidade_ensino;
 
     /**
      * caso seja a primeira matricula do aluno
@@ -69,14 +83,16 @@ class clsPmieducarMatricula extends Model
         $semestre = null,
         $data_matricula = null,
         $data_cancel = null,
-        $ref_cod_abandono = null
+        $ref_cod_abandono = null,
+        $observacoes = false,
+        $modalidadeEnsino = self::MODELO_PRESENCIAL
     ) {
         $db = new clsBanco();
         $this->db = $db;
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'matricula';
 
-        $this->_campos_lista = $this->_todos_campos = 'm.cod_matricula, m.ref_cod_reserva_vaga, m.ref_ref_cod_escola, m.ref_ref_cod_serie, m.ref_usuario_exc, m.ref_usuario_cad, m.ref_cod_aluno, m.aprovado, m.data_cadastro, m.data_exclusao, m.ativo, m.ano, m.ultima_matricula, m.modulo,formando,descricao_reclassificacao,matricula_reclassificacao, m.ref_cod_curso,m.matricula_transferencia,m.semestre, m.data_matricula, m.data_cancel, m.ref_cod_abandono_tipo, m.turno_pre_matricula, m.dependencia, data_saida_escola';
+        $this->_campos_lista = $this->_todos_campos = 'm.cod_matricula, m.ref_cod_reserva_vaga, m.ref_ref_cod_escola, m.ref_ref_cod_serie, m.ref_usuario_exc, m.ref_usuario_cad, m.ref_cod_aluno, m.aprovado, m.data_cadastro, m.data_exclusao, m.ativo, m.ano, m.ultima_matricula, m.modulo,formando,descricao_reclassificacao,matricula_reclassificacao, m.ref_cod_curso,m.matricula_transferencia,m.semestre, m.data_matricula, m.data_cancel, m.ref_cod_abandono_tipo, m.turno_pre_matricula, m.dependencia, data_saida_escola, m.modalidade_ensino';
 
         if (is_numeric($ref_usuario_exc)) {
             $this->ref_usuario_exc = $ref_usuario_exc;
@@ -165,6 +181,9 @@ class clsPmieducarMatricula extends Model
         if (is_string($data_cancel)) {
             $this->data_cancel = $data_cancel;
         }
+
+        $this->observacoes = $observacoes;
+        $this->modalidade_ensino = $modalidadeEnsino;
     }
 
     /**
@@ -300,6 +319,13 @@ class clsPmieducarMatricula extends Model
                 $gruda = ', ';
             }
 
+            if (is_string($this->observacoes)) {
+                $observacoes = $db->escapeString($this->observacoes);
+                $campos .= "{$gruda}observacoes";
+                $valores .= "{$gruda}'{$observacoes}'";
+                $gruda = ', ';
+            }
+
             if (is_numeric($this->turno_pre_matricula)) {
                 $campos .= "{$gruda}turno_pre_matricula";
                 $valores .= "{$gruda}'{$this->turno_pre_matricula}'";
@@ -309,6 +335,11 @@ class clsPmieducarMatricula extends Model
                 $campos .= "{$gruda}dependencia";
                 $valores .= "{$gruda}true ";
                 $gruda = ', ';
+            }
+
+            if (is_numeric($this->modalidade_ensino)) {
+                $campos .= "{$gruda}modalidade_ensino";
+                $valores .= "{$gruda}'{$this->modalidade_ensino}'";
             }
 
             $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
@@ -463,6 +494,18 @@ class clsPmieducarMatricula extends Model
             } elseif (is_null($this->data_exclusao)) {
                 $set .= "{$gruda}data_exclusao = NULL";
                 $gruda = ', ';
+            }
+
+            if (is_numeric($this->modalidade_ensino)) {
+                $set .= "{$gruda}modalidade_ensino = '{$this->modalidade_ensino}'";
+                $gruda = ', ';
+            }
+
+            if (is_string($this->observacoes)) {
+                $observacoes = $db->escapeString($this->observacoes);
+                $set .= "{$gruda}observacoes = '{$observacoes}'";
+            } elseif ($this->observacoes !== false) {
+                $set .= "{$gruda}observacoes = NULL";
             }
 
             if ($set) {
@@ -1399,6 +1442,30 @@ class clsPmieducarMatricula extends Model
             $db->Consulta($consulta);
 
             return true;
+        }
+
+        return false;
+    }
+
+    public function matriculaAlunoAndamento($aluno, $anoLetivo, $showErrors = true)
+    {
+        if ($aluno && $anoLetivo) {
+            $sql = 'SELECT cod_matricula,
+                           ref_cod_aluno AS cod_aluno
+                      FROM pmieducar.matricula
+                     WHERE ativo = 1
+                       AND aprovado = 3
+                       AND ano = $1
+                       AND ref_cod_aluno = $2';
+
+            $options = [
+                'params' => [$anoLetivo, $aluno],
+                'show_errors' => !$showErrors,
+                'return_only' => 'first-line',
+                'messenger' => ''
+            ];
+
+            return Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
         }
 
         return false;

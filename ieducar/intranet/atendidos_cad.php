@@ -12,6 +12,7 @@ use iEducar\Modules\Educacenso\Validator\DifferentiatedLocationValidator;
 use iEducar\Modules\Educacenso\Validator\NameValidator;
 use iEducar\Modules\Educacenso\Validator\NisValidator;
 use iEducar\Support\View\SelectOptions;
+use Illuminate\Support\Facades\Session;
 
 return new class extends clsCadastro {
     use LegacyAddressingFields;
@@ -1041,28 +1042,36 @@ return new class extends clsCadastro {
     //envia foto e salva caminha no banco
     protected function savePhoto($id)
     {
-        if ($this->objPhoto!=null) {
+        $caminhoFoto = url('intranet/imagens/user-perfil.png');
+        if ($this->objPhoto != null) {
             $caminhoFoto = $this->objPhoto->sendPicture();
-            if ($caminhoFoto!='') {
-                //new clsCadastroFisicaFoto($id)->exclui();
+            if ($caminhoFoto != '') {
                 $obj = new clsCadastroFisicaFoto($id, $caminhoFoto);
                 $detalheFoto = $obj->detalhe();
-                if (is_array($detalheFoto) && count($detalheFoto)>0) {
+                if (is_array($detalheFoto) && count($detalheFoto) > 0) {
                     $obj->edita();
                 } else {
                     $obj->cadastra();
                 }
-
-                return true;
             } else {
                 echo '<script>alert(\'Foto não salva.\')</script>';
 
                 return false;
             }
+            $caminhoFoto = (new UrlPresigner())->getPresignedUrl($caminhoFoto);
         } elseif ($this->file_delete == 'on') {
             $obj = new clsCadastroFisicaFoto($id);
             $obj->excluir();
         }
+
+        $loggedUser = session('logged_user');
+
+        if ($loggedUser->personId == $id) {
+            Session::put('logged_user_picture', $caminhoFoto);
+            Session::save();
+        }
+
+        return true;
     }
 
     // Retorna true caso a foto seja válida
@@ -1303,8 +1312,8 @@ return new class extends clsCadastro {
         );
 
         $documentos->sigla_uf_cert_civil = $_REQUEST['uf_emissao_certidao_civil'];
-        $documentos->cartorio_cert_civil = addslashes($_REQUEST['cartorio_emissao_certidao_civil']);
-        $documentos->passaporte = addslashes($_REQUEST['passaporte']);
+        $documentos->cartorio_cert_civil = pg_escape_string($_REQUEST['cartorio_emissao_certidao_civil']);
+        $documentos->passaporte = pg_escape_string($_REQUEST['passaporte']);
 
         // carteira de trabalho
 

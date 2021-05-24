@@ -2,6 +2,7 @@
 
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClass;
+use App\Services\RelocationDate\RelocationDateService;
 use Illuminate\Support\Facades\DB;
 
 class SequencialEnturmacao
@@ -20,6 +21,11 @@ class SequencialEnturmacao
      */
     private $schoolClass;
 
+    /**
+     * @var RelocationDateService
+     */
+    private $relocationDateService;
+
     public function __construct($refCodMatricula, $refCodTurma, $dataEnturmacao)
     {
         $this->refCodMatricula = $refCodMatricula;
@@ -28,11 +34,12 @@ class SequencialEnturmacao
 
         $this->registration = LegacyRegistration::findOrFail($refCodMatricula);
         $this->schoolClass = LegacySchoolClass::findOrFail($refCodTurma);
+        $this->relocationDateService = new RelocationDateService($this->schoolClass->school->institution);
     }
 
     public function ordenaSequencialNovaMatricula()
     {
-        $relocationDate = $this->getRelocationDate();
+        $relocationDate = $this->relocationDateService->getRelocationDate($this->dataEnturmacao);
         $sequencialFechamento = $this->existeMatriculaTurma();
 
         if ($sequencialFechamento) {
@@ -68,8 +75,6 @@ class SequencialEnturmacao
 
             return $sequencialNovoAluno;
         }
-
-        return $sequencialNovoAluno;
     }
 
     public function ordenaSequencialExcluiMatricula()
@@ -118,7 +123,7 @@ class SequencialEnturmacao
 
     private function sequencialAlunoAntesData()
     {
-        $relocationDate = $this->getRelocationDate();
+        $relocationDate = $this->relocationDateService->getRelocationDate($this->dataEnturmacao);
 
         $sql = "SELECT MAX(sequencial_fechamento) + 1 as sequencial
                 FROM pmieducar.matricula_turma
@@ -256,7 +261,6 @@ class SequencialEnturmacao
                  END)";
 
         return DB::selectOne($sql)->sequencial;
-        ;
     }
 
     private function sequencialAlunoOrdemAlfabetica()
@@ -300,7 +304,7 @@ class SequencialEnturmacao
                 $novoSequencial++;
                 break;
             }
-            $novoSequencial = $sequencial++;
+            $novoSequencial = $sequencial;
         }
 
         return $novoSequencial;
@@ -366,7 +370,7 @@ class SequencialEnturmacao
             }
         }
 
-        if ($dataBaseRemanejamento = $this->getRelocationDate()) {
+        if ($dataBaseRemanejamento = $this->relocationDateService->getRelocationDate($this->dataEnturmacao)) {
             if (strtotime($dataBaseRemanejamento) < strtotime($this->dataEnturmacao)) {
                 $enturmarPorUltimo = true;
             }
@@ -392,23 +396,6 @@ class SequencialEnturmacao
     public function matriculaDependencia()
     {
         return $this->registration->is_dependency;
-    }
-
-    public function getRelocationDate()
-    {
-        $date = $this->schoolClass->school->institution->relocation_date;
-        if ($date) {
-            $date = substr($this->dataEnturmacao, 0, 4) . $date->format('-m-d');
-        }
-
-        $newDate = new DateTime($date);
-        $day = $newDate->format('d');
-
-        if (date('L', $newDate->getTimestamp()) == 0 && $day == '29') {
-            return $newDate->modify('-1 day')->format('Y-m-d');
-        }
-
-        return $newDate->format('Y-m-d');
     }
 
     public function existeMatriculaTurma()

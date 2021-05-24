@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\LegacySingleQueueCandidate;
+use Illuminate\Support\Facades\Auth;
+
 class FilaUnicaController extends ApiCoreController
 {
     protected function getDadosAluno()
@@ -85,16 +88,7 @@ class FilaUnicaController extends ApiCoreController
         $aluno = $this->getRequest()->aluno_id;
 
         if ($aluno && $anoLetivo) {
-            $sql = 'SELECT cod_matricula,
-                           ref_cod_aluno AS cod_aluno
-                      FROM pmieducar.matricula
-                     WHERE ativo = 1
-                       AND aprovado = 3
-                       AND ano = $1
-                       AND ref_cod_aluno = $2';
-            $matricula = $this->fetchPreparedQuery($sql, [$anoLetivo, $aluno], false, 'first-line');
-
-            return $matricula;
+            return (new clsPmieducarMatricula)->matriculaAlunoAndamento($aluno, $anoLetivo, false);
         }
 
         return false;
@@ -106,16 +100,19 @@ class FilaUnicaController extends ApiCoreController
         $aluno = $this->getRequest()->aluno_id;
 
         if ($aluno && $anoLetivo) {
-            $sql = 'SELECT ref_cod_aluno AS cod_aluno,
-                           cod_candidato_fila_unica AS cod_candidato
-                      FROM pmieducar.candidato_fila_unica
-                     WHERE ativo = 1
-                       AND ano_letivo = $1
-                       AND ref_cod_aluno = $2';
+            $legacySingleQueueCandidate= LegacySingleQueueCandidate::query()
+                ->where([
+                    'ativo'=> 1,
+                    'ano_letivo' => $anoLetivo,
+                    'ref_cod_aluno' => $aluno])
+                ->select('ref_cod_aluno AS cod_aluno', 'cod_candidato_fila_unica AS cod_candidato')
+                ->get()
+                ->first()
+            ;
 
-            $matricula = $this->fetchPreparedQuery($sql, [$anoLetivo, $aluno], false, 'first-line');
-
-            return $matricula;
+            if ($legacySingleQueueCandidate instanceof LegacySingleQueueCandidate) {
+                return $legacySingleQueueCandidate->toArray();
+            }
         }
 
         return false;
@@ -239,7 +236,7 @@ class FilaUnicaController extends ApiCoreController
     protected function getMontaSelectEscolasCandidato()
     {
         $cod_candidato_fila_unica = $this->getRequest()->cod_candidato_fila_unica;
-        $userId = \Illuminate\Support\Facades\Auth::id();
+        $userId = Auth::id();
         $nivelAcesso = $this->getNivelAcesso();
         $acessoEscolar = $nivelAcesso == 4;
 
