@@ -86,7 +86,7 @@ class ActiveSearchExemptionService
         $startDate = null,
         $endDate = null,
         $activeSearchResult = null
-    ){
+    ) {
         return (new LegacyDisciplineExemption())->fill(
             [
                 'ref_cod_matricula' => $registration->getKey(),
