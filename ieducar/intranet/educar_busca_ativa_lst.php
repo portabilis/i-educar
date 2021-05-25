@@ -105,7 +105,7 @@ return new class extends clsListagem {
         $total = count($activeSearchExemptions);
 
         // monta a lista
-        if (count($activeSearchExemptions) > 0) {
+        if ($total  > 0) {
             foreach ($activeSearchExemptions as $activeSearchExemption) {
 
                 // muda os campos data
