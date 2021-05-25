@@ -165,7 +165,7 @@ return new class extends clsListagem {
             ->join('pmieducar.tipo_dispensa', 'ref_cod_tipo_dispensa', '=', 'cod_tipo_dispensa')
             ->where('ref_cod_matricula', $this->ref_cod_matricula)
             ->where('dispensa_disciplina.ativo', 1)
-            ->whereNotIn('tipo', [ExemptionType::DISPENSA_BUSCA_ATIVA])
+            ->where('tipo','!=', ExemptionType::DISPENSA_BUSCA_ATIVA)
             ->orderBy('dispensa_disciplina.data_cadastro')
             ->limit($this->limite)
             ->offset($this->offset);
