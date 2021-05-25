@@ -86,7 +86,7 @@ return new class extends clsCadastro {
 
         // Dados da Empresa
         $this->campoTexto('fantasia', 'Nome Fantasia', $this->fantasia, '50', '255', true);
-        $this->campoTexto('razao_social', 'Raz&atilde;o Social', $this->razao_social, '50', '255', true);
+        $this->campoTexto('razao_social', 'Razão Social', $this->razao_social, '50', '255', true);
         $this->campoTexto('capital_social', 'Capital Social', $this->capital_social, '50', '255');
 
         if ((new clsPermissoes)->nivel_acesso(Auth::id()) > App_Model_NivelTipoUsuario::INSTITUCIONAL) {
