@@ -70,20 +70,16 @@ class clsJuridica
              * Quando o CNPJ é null é preciso montar um insert específico por conta da concatenação com NULL
              */
             if ($this->cnpj === null) {
+                $sql = "INSERT INTO {$this->schema}.{$this->tabela} (idpes, cnpj, origem_gravacao, data_cad, operacao, idpes_cad $campos) VALUES ($this->idpes, null, 'M', NOW(), 'I', '$this->idpes_cad' $valores)";
 
-                $db->Consulta("INSERT INTO {$this->schema}.{$this->tabela} (idpes, cnpj, origem_gravacao, data_cad, operacao, idpes_cad $campos) VALUES ($this->idpes, null, 'M', NOW(), 'I', '$this->idpes_cad' $valores)");
-
-                if ($this->idpes) {
-                    $this->detalhe();
-                }
-
-                return true;
+            } else {
+                $sql = "INSERT INTO {$this->schema}.{$this->tabela} (idpes, cnpj, origem_gravacao, data_cad, operacao, idpes_cad $campos) VALUES ($this->idpes, '$this->cnpj', 'M', NOW(), 'I', '$this->idpes_cad' $valores)";
             }
 
-            $db->Consulta("INSERT INTO {$this->schema}.{$this->tabela} (idpes, cnpj, origem_gravacao, data_cad, operacao, idpes_cad $campos) VALUES ($this->idpes, '$this->cnpj', 'M', NOW(), 'I', '$this->idpes_cad' $valores)");
+            $db->Consulta($sql);
 
             if ($this->idpes) {
-                $detalhe = $this->detalhe();
+                $this->detalhe();
             }
 
             return true;
