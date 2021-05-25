@@ -1,6 +1,7 @@
 <?php
 
 use iEducar\Legacy\Model;
+use iEducar\Modules\School\Model\ExemptionType;
 
 class clsPmieducarDispensaDisciplina extends Model
 {
@@ -410,12 +411,29 @@ class clsPmieducarDispensaDisciplina extends Model
         $int_etapa = null,
         $ignorarDispensasParciais = false
     ) {
-        $sql = "SELECT {$this->_campos_lista}, etapa
+        $sql = "SELECT
+                    ref_cod_matricula,
+                    ref_cod_serie,
+                    ref_cod_escola,
+                    ref_cod_disciplina,
+                    dispensa_disciplina.ref_usuario_exc,
+                    dispensa_disciplina.ref_usuario_cad,
+                    ref_cod_tipo_dispensa,
+                    dispensa_disciplina.data_cadastro,
+                    dispensa_disciplina.data_exclusao,
+                    dispensa_disciplina.ativo,
+                    observacao,
+                    cod_dispensa,
+                    data_fim,
+                    resultado_busca_ativa,
+                    etapa
                   FROM {$this->_tabela}
-                 INNER JOIN pmieducar.dispensa_etapa ON (dispensa_etapa.ref_cod_dispensa = dispensa_disciplina.cod_dispensa)";
+                 INNER JOIN pmieducar.dispensa_etapa ON (dispensa_etapa.ref_cod_dispensa = dispensa_disciplina.cod_dispensa)
+                 INNER JOIN pmieducar.tipo_dispensa ON (tipo_dispensa.cod_tipo_dispensa = dispensa_disciplina.ref_cod_tipo_dispensa)
+                 ";
         $filtros = '';
 
-        $whereAnd = ' WHERE ';
+        $whereAnd = ' WHERE tipo_dispensa.tipo != ' . ExemptionType::DISPENSA_BUSCA_ATIVA . ' AND ';
 
         if (is_numeric($int_ref_cod_matricula)) {
             $filtros .= "{$whereAnd} ref_cod_matricula = '{$int_ref_cod_matricula}'";
@@ -484,6 +502,7 @@ class clsPmieducarDispensaDisciplina extends Model
         $this->_total = $db->CampoUnico("SELECT COUNT(0)
                                        FROM {$this->_tabela}
                                       INNER JOIN pmieducar.dispensa_etapa ON (dispensa_etapa.ref_cod_dispensa = dispensa_disciplina.cod_dispensa)
+                                      INNER JOIN pmieducar.tipo_dispensa ON (tipo_dispensa.cod_tipo_dispensa = dispensa_disciplina.ref_cod_tipo_dispensa)
                                       {$filtros}");
         $db->Consulta($sql);
 
