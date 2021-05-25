@@ -60,7 +60,7 @@ class ActiveSearchExemptionService
         $startDate = null,
         $endDate = null,
         $activeSearchResult = null
-    ){
+    ) {
         $legacyDisciplineExemption = $this->handleExemptionObject(
             $registration,
             $disciplineId,
