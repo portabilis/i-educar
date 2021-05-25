@@ -140,11 +140,13 @@ class clsPmieducarUsuario extends Model
                 $set .= "{$gruda}data_cadastro = '{$this->data_cadastro}'";
                 $gruda = ', ';
             }
-            $set .= "{$gruda}data_exclusao = NOW()";
-            $gruda = ', ';
+
             if (is_numeric($this->ativo)) {
                 $set .= "{$gruda}ativo = '{$this->ativo}'";
                 $gruda = ', ';
+
+                $dataExclusao = $this->ativo === 1 ? "{$gruda}data_exclusao = null" : "{$gruda}data_exclusao = NOW()";
+                $set .= $dataExclusao;
             }
 
             if ($set) {
