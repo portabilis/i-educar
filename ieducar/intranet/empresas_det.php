@@ -12,10 +12,10 @@ return new class extends clsDetalhe {
         $endereco = "$idtlog $endereco";
         $db = new clsBanco();
 
-        $this->addDetalhe(['Raz&atilde;o Social', $razao_social]);
+        $this->addDetalhe(['Razão Social', $razao_social]);
         $this->addDetalhe(['Nome Fantasia', $nm_pessoa]);
         $this->addDetalhe(['CNPJ', empty($id_federal) ? '' : int2CNPJ($id_federal)]);
-        $this->addDetalhe(['Endere&ccedil;o', $endereco]);
+        $this->addDetalhe(['Endereço', $endereco]);
         $this->addDetalhe(['CEP', $cep]);
         $this->addDetalhe(['Bairro', $nm_bairro]);
         $this->addDetalhe(['Cidade', $cidade]);
@@ -31,7 +31,7 @@ return new class extends clsDetalhe {
         if (! $ins_est) {
             $ins_est = 'isento';
         }
-        $this->addDetalhe(['Inscri&ccedil;&atilde;o Estadual', $ins_est]);
+        $this->addDetalhe(['Inscrição Estadual', $ins_est]);
         $this->addDetalhe(['Capital Social', $capital_social]);
 
         $obj_permissao = new clsPermissoes();
