@@ -190,7 +190,7 @@ class clsPmieducarTipoDispensa extends Model
         $int_ativo = null,
         $int_ref_cod_instituicao = null,
         $tipo = null
-    ){
+    ) {
         $db = new clsBanco();
 
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela} td, {$this->_schema}instituicao i";
