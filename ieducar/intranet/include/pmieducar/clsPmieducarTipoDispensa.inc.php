@@ -27,7 +27,7 @@ class clsPmieducarTipoDispensa extends Model
         $ativo = null,
         $ref_cod_instituicao = null,
         $tipo = ExemptionType::DISPENSA_COMPONENTES
-    ){
+    ) {
         $db = new clsBanco();
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}tipo_dispensa";
