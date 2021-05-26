@@ -1,6 +1,15 @@
+ajustaTabelaDePessoasUnificadas();
 
+$j('#btn_add_tab_add_1').click(function(){
+  ajustaTabelaDePessoasUnificadas();
+});
 
-  var handleSelect = function(event, ui){
+function ajustaTabelaDePessoasUnificadas() {
+  $j('a[id^="link_remove["').empty().text('EXCLUIR');
+  $j('input[id^="pessoa_duplicada["').attr("placeholder", "Informe nome, código, CPF ou RG da pessoa");
+}
+
+var handleSelect = function(event, ui){
   $j(event.target).val(ui.item.label);
   return false;
 };
@@ -37,7 +46,7 @@
   setAutoComplete();
 });
 
-  $j('#btn_enviar').val('Unificar');
+  $j('#btn_enviar').val('Carregar dados');
 
   function showConfirmationMessage() {
   makeDialog({

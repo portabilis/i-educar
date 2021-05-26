@@ -1,0 +1,7 @@
+#tr_tabela_pessoas_cab {
+    display: none;
+}
+
+#tabela_pessoas.tabela-adicao td {
+    padding: 5px 8px !important;
+}

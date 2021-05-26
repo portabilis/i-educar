@@ -40,10 +40,13 @@ return new class extends clsCadastro {
     {
         $this->acao_enviar = 'showConfirmationMessage()';
         $this->inputsHelper()->dynamic('ano', ['required' => false, 'max_length' => 4]);
-        $this->inputsHelper()->simpleSearchPessoa(null, ['label' => 'Pessoa principal' ]);
-        $this->campoTabelaInicio('tabela_pessoas', '', ['Pessoa duplicada'], $this->tabela_pessoas);
-        $this->campoTexto('pessoa_duplicada', 'Pessoa duplicada', $this->pessoa_duplicada, 50, 255, false, true, false, '', '', '', 'onfocus');
+        $this->campoTabelaInicio('tabela_pessoas', '', ['Pessoa duplicada', 'Campo Pessoa duplicada'], $this->tabela_pessoas);
+            $this->campoRotulo('pessoa_label', '', 'Pessoa física a ser unificada <span class="campo_obrigatorio">*</span>');
+            $this->campoTexto('pessoa_duplicada', 'Pessoa duplicada', $this->pessoa_duplicada, 50, 255, false, true, false, '', '', '', 'onfocus');
         $this->campoTabelaFim();
+
+        $styles = ['/modules/Cadastro/Assets/Stylesheets/UnificaPessoa.css'];
+        Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
     }
 
     public function Novo()
