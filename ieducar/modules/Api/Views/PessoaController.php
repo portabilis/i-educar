@@ -635,6 +635,52 @@ class PessoaController extends ApiCoreController
         return $fisica;
     }
 
+    protected function dadosUnificacaoPessoa()
+    {
+        $pessoasIds = $this->getRequest()->pessoas_ids ?? 0;
+
+        $sql = 'SELECT
+                CASE
+                    WHEN cod_aluno IS NOT NULL THEN \'Aluno\'
+                    WHEN cod_servidor IS NOT NULL THEN \'Servidor\'
+                    ELSE \'Sem vínculo\'
+                END AS vinculo,
+                p.nome,
+                COALESCE(to_char(f.data_nasc, \'dd/mm/yyyy\'), \'Não consta\') AS data_nascimento,
+                CASE f.sexo
+                    WHEN \'M\' THEN \'Masculino\'
+                    WHEN \'F\' THEN \'Feminino\'
+                    ELSE \'Não consta\'
+                END AS sexo,
+                COALESCE(f.cpf::varchar, \'Não consta\') AS cpf,
+                COALESCE(d.rg, \'Não consta\') AS rg,
+                COALESCE(pm.nome, \'Não consta\') AS pessoa_mae
+            FROM cadastro.pessoa p
+            JOIN cadastro.fisica f ON f.idpes = p.idpes
+            LEFT JOIN cadastro.documento d ON d.idpes = f.idpes
+            LEFT JOIN pmieducar.aluno a ON a.ref_idpes = p.idpes
+            LEFT JOIN pmieducar.servidor s ON s.cod_servidor = p.idpes
+            LEFT JOIN cadastro.pessoa pm ON pm.idpes = f.idpes_mae
+            WHERE p.idpes IN (' . $pessoasIds . ');
+        ';
+
+        $pessoas = $this->fetchPreparedQuery($sql, [], false);
+
+        $attrs = [
+            'vinculo',
+            'nome',
+            'data_nascimento',
+            'sexo',
+            'cpf',
+            'rg',
+            'pessoa_mae',
+        ];
+
+        return [
+            'pessoas' => Portabilis_Array_Utils::filterSet($pessoas, $attrs)
+        ];
+    }
+
     public function Gerar()
     {
         if ($this->isRequestFor('get', 'pessoa-search')) {
@@ -651,6 +697,8 @@ class PessoaController extends ApiCoreController
             $this->appendResponse($this->loadPessoaParent());
         } elseif ($this->isRequestFor('get', 'reativarPessoa')) {
             $this->appendResponse($this->reativarPessoa());
+        } elseif ($this->isRequestFor('get', 'dadosUnificacaoPessoa')) {
+            $this->appendResponse($this->dadosUnificacaoPessoa());
         } else {
             $this->notImplementedOperationError();
         }
