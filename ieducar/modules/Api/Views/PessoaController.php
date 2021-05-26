@@ -640,6 +640,7 @@ class PessoaController extends ApiCoreController
         $pessoasIds = $this->getRequest()->pessoas_ids ?? 0;
 
         $sql = 'SELECT
+                p.idpes,
                 CASE
                     WHEN cod_aluno IS NOT NULL THEN \'Aluno\'
                     WHEN cod_servidor IS NOT NULL THEN \'Servidor\'
@@ -667,6 +668,7 @@ class PessoaController extends ApiCoreController
         $pessoas = $this->fetchPreparedQuery($sql, [], false);
 
         $attrs = [
+            'idpes',
             'vinculo',
             'nome',
             'data_nascimento',
