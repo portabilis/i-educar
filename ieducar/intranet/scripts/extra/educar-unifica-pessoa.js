@@ -9,6 +9,73 @@ function ajustaTabelaDePessoasUnificadas() {
   $j('input[id^="pessoa_duplicada["').attr("placeholder", "Informe nome, código, CPF ou RG da pessoa");
 }
 
+function carregaDadosPessoas() {
+  let pessoas_duplicadas = [];
+
+  $j('input[id^="pessoa_duplicada["').each(function(id, input) {
+    pessoas_duplicadas.push(input.value.split(' ')[0]);
+  });
+
+  var url = getResourceUrlBuilder.buildUrl(
+    '/module/Api/Pessoa',
+    'dadosUnificacaoPessoa',
+    {
+      pessoas_ids : pessoas_duplicadas
+    }
+  );
+
+  var options = {
+    url      : url,
+    dataType : 'json',
+    success  : function(response) {
+      listaDadosPessoasUnificadas(response);
+    }
+  };
+
+  getResources(options);
+}
+
+function listaDadosPessoasUnificadas(response) {
+  $j('<h2 class="unifica_pessoa_h2">Seleciona a pessoa que tenha preferencialmente vínculo(s) e com dados relavantes mais completos.</h2>').insertBefore($j('.linhaBotoes'));
+  $j('<tr id="lista_dados_pessoas_unificadas"></tr>').insertBefore($j('.linhaBotoes'));
+
+  let html = `
+    <td colspan="2">
+    <table id="tabela_pessoas_unificadas">
+      <tr class="tr_title">
+        <td>Principal</td>
+        <td>Vinculo</td>
+        <td>Nome</td>
+        <td>Nascimento</td>
+        <td>Sexo</td>
+        <td>CPF</td>
+        <td>RG</td>
+        <td>Pessoa Mãe</td>
+        <td>Ação</td>
+      </tr>
+  `;
+
+  response.pessoas.each(function(value, id) {
+    html += '<tr id="' + value.idpes + '" class="linha_listagem">';
+    html += '<td><input type="checkbox" id="' + value.idpes + '"</td>';
+    html += '<td>'+ value.vinculo +'</td>';
+    html += '<td>'+ value.nome +'</td>';
+    html += '<td>'+ value.data_nascimento +'</td>';
+    html += '<td>'+ value.sexo +'</td>';
+    html += '<td>'+ value.cpf +'</td>';
+    html += '<td>'+ value.rg +'</td>';
+    html += '<td>'+ value.pessoa_mae +'</td>';
+    html += '<td><a onclick="removePessoa(this)">EXCLUIR</a></td>';
+    html += '</tr>';
+  });
+
+  html += '</table></td>';
+
+  console.log(html);
+
+  $j('#lista_dados_pessoas_unificadas').html(html);
+} 
+
 var handleSelect = function(event, ui){
   $j(event.target).val(ui.item.label);
   return false;
