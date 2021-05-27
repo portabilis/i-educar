@@ -1,8 +1,13 @@
+adicionaMaisUmaLinhaNaTabela();
 ajustaTabelaDePessoasUnificadas();
 
 $j('#btn_add_tab_add_1').click(function(){
   ajustaTabelaDePessoasUnificadas();
 });
+
+function adicionaMaisUmaLinhaNaTabela() {
+  tab_add_1.addRow();
+}
 
 function ajustaTabelaDePessoasUnificadas() {
   $j('a[id^="link_remove["').empty().text('EXCLUIR');
