@@ -60,6 +60,34 @@ return new class extends clsCadastro {
 
         return $principal > 1;
     }
+
+    private function validaSeExisteUmaPessoaPrincipal($pessoas)
+    {
+        foreach ($pessoas as $pessoa) {
+            if ($pessoa['pessoa_principal'] === true) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function validaSemTemItensDuplicados($pessoas)
+    {
+        $temp = [];
+        foreach($pessoas as $val) {
+            $idpes = (int) $val['idpes'];
+            if (! in_array($idpes, $temp, true))  {
+                $temp[] = $idpes;
+                continue;
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
     public function Novo()
     {
         $obj_permissoes = new clsPermissoes();
@@ -96,6 +124,10 @@ return new class extends clsCadastro {
 
         if (!count($codPessoas)) {
             $this->mensagem = 'Informe no mínimo um pessoa para unificação.<br />';
+        if ($this->validaSeExisteMaisDeUmaPessoaPrincipal($pessoas)) {
+            $this->mensagem = 'Não pode haver mais de uma pessoa principal';
+            return false;
+        }
 
             return false;
         }
