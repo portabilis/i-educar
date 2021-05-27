@@ -49,6 +49,17 @@ return new class extends clsCadastro {
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
     }
 
+    private function validaSeExisteMaisDeUmaPessoaPrincipal($pessoas)
+    {
+        $principal = 0;
+        foreach ($pessoas as $pessoa) {
+            if ($pessoa['pessoa_principal'] === true) {
+                $principal ++;
+            }
+        }
+
+        return $principal > 1;
+    }
     public function Novo()
     {
         $obj_permissoes = new clsPermissoes();
@@ -78,6 +89,9 @@ return new class extends clsCadastro {
             }
 
             $codPessoas[] = (int) $explode[0];
+        if (! $this->validaSeExisteUmaPessoaPrincipal($pessoas)) {
+            $this->mensagem = 'Pessoa principal não informada';
+            return false;
         }
 
         if (!count($codPessoas)) {
