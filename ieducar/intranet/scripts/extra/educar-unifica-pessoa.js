@@ -175,7 +175,7 @@ var handleSelect = function(event, ui){
     buttons: [{
       text: 'Confirmar',
       click: function () {
-        acao();
+        enviaDados();
         $j('#dialog-container').dialog('destroy');
       }
     }, {
@@ -186,6 +186,37 @@ var handleSelect = function(event, ui){
     }]
   });
 }
+
+  function  enviaDados() {
+
+    let dados = [];
+    const formData = document.createElement('form');
+    formData.method = 'post';
+    formData.action = 'educar_unifica_pessoa.php';
+
+    $j('#tabela_pessoas_unificadas .linha_listagem').each(function(id, input) {
+      let isChecked = $j('#check_principal_'+ input.id).is(':checked');
+      let pessoaParaUnificar = {};
+      pessoaParaUnificar.idpes = input.id;
+      pessoaParaUnificar.pessoa_principal = isChecked;
+      dados.push(pessoaParaUnificar);
+    });
+
+    const acao = document.createElement('input');
+    acao.type = 'hidden';
+    acao.name = 'tipoacao';
+    acao.value = 'Novo';
+    formData.appendChild(acao);
+
+    const hiddenField = document.createElement('input');
+    hiddenField.type = 'hidden';
+    hiddenField.name = 'pessoas';
+    hiddenField.value = JSON.stringify(dados);
+    formData.appendChild(hiddenField);
+
+    document.body.appendChild(formData);
+    formData.submit();
+  }
 
   function makeDialog(params) {
   var container = $j('#dialog-container');
