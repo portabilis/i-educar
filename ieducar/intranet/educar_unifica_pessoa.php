@@ -115,6 +115,10 @@ return new class extends clsCadastro {
 
                 return false;
             }
+        if (! $this->validaDadodUnificacao($pessoas)) {
+            $this->mensagem = 'Erro ao processar os dados, recarregue a tela e tente novamente!';
+            return false;
+        }
 
             $codPessoas[] = (int) $explode[0];
         if (! $this->validaSeExisteUmaPessoaPrincipal($pessoas)) {
@@ -150,6 +154,16 @@ return new class extends clsCadastro {
         return true;
     }
 
+    private function validaDadodUnificacao($pessoa)
+    {
+        foreach ($pessoa as $item) {
+            if (! array_key_exists('idpes',$item) || !array_key_exists('pessoa_principal',$item)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
     private function createLog($mainId, $duplicatesId, $createdBy)
     {
         $log = new LogUnification();
