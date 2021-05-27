@@ -111,6 +111,7 @@ return new class extends clsCadastro {
         //Monta um array com o código dos pessoas selecionados na tabela
         foreach ($this->pessoa_duplicada as $key => $value) {
             $explode = explode(' ', $value);
+        $pessoas = json_decode($this->pessoas, true, 512, JSON_THROW_ON_ERROR);
 
             if ($explode[0] == $codPessoaPrincipal) {
                 $this->mensagem = 'Impossivel de unificar pessoas iguais.<br />';
