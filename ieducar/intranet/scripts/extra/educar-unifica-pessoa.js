@@ -65,7 +65,7 @@ function listaDadosPessoasUnificadas(response) {
 
   response.pessoas.each(function(value, id) {
     html += '<tr id="' + value.idpes + '" class="linha_listagem">';
-    html += '<td><input type="checkbox" id="' + value.idpes + '"</td>';
+    html += '<td><input type="checkbox" class="check_principal" id="check_principal_' + value.idpes + '"</td>';
     html += '<td>'+ value.vinculo +'</td>';
     html += '<td>'+ value.nome +'</td>';
     html += '<td>'+ value.data_nascimento +'</td>';
@@ -95,6 +95,22 @@ function listaDadosPessoasUnificadas(response) {
   htmlBotao += '<input type="button" class="btn-green botaolistagem" onclick="showConfirmationMessage();" value="Unificar pessoas da lista" autocomplete="off">';
   $j('.linhaBotoes td').html(htmlBotao);
 
+  uniqueCheck()
+}
+
+function uniqueCheck() {
+  const checkbox = document.querySelectorAll('input.check_principal')
+  checkbox.forEach(element => {
+    element.addEventListener('click', handleClick.bind(event,checkbox));
+  });
+}
+
+function handleClick(checkbox, event) {
+  checkbox.forEach(element => {
+    if (event.currentTarget.id !== element.id) {
+      element.checked = false;
+    }
+  });
 }
 
 function removePessoa(idpes) {
