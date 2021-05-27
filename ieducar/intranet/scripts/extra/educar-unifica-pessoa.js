@@ -96,8 +96,12 @@ function listaDadosPessoasUnificadas(response) {
 function removePessoa(idpes) {
   trClose = $j('#' + idpes);
   trClose.fadeOut(400, function() {
-    trClose.remove();  
+    trClose.remove();
   });
+}
+
+function voltar() {
+  window.location.href = "/unificacao-pessoa";
 }
 
 var handleSelect = function(event, ui){
