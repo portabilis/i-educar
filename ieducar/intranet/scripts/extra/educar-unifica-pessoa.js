@@ -41,6 +41,35 @@ function carregaDadosPessoas() {
 }
 
 function listaDadosPessoasUnificadas(response) {
+  montaTabela(response);
+  adicionaSeparador();
+  adicionaCheckboxConfirmacao();
+  adicionaBotoes();
+  uniqueCheck();
+}
+
+function adicionaBotoes() {
+  let htmlBotao = '<input type="button" class="botaolistagem" onclick="voltar();" value="Voltar" autocomplete="off">';
+  htmlBotao += '<input type="button" class="btn-green botaolistagem" onclick="showConfirmationMessage();" value="Unificar pessoas da lista" autocomplete="off">';
+  $j('.linhaBotoes td').html(htmlBotao);
+}
+
+function adicionaSeparador() {
+  $j('<tr class="lista_pessoas_unificadas_hr"><td class="tableDetalheLinhaSeparador" colspan="2"></td></tr>').insertAfter($j('#lista_dados_pessoas_unificadas'));
+}
+
+function adicionaCheckboxConfirmacao() {
+  $j('<tr id="tr_confirma_dados_unificacao"></tr>').insertAfter($j('.lista_pessoas_unificadas_hr'));
+
+  let htmlCheckbox = '<td colspan="2">'
+  htmlCheckbox += '<input id="check_confirma_dados_unificacao" type="checkbox" />';
+  htmlCheckbox += '<label for="check_confirma_dados_unificacao">Confirmo a análise de que são a mesma pessoa, levando <br> em conta a possibilidade de gêmeos cadastrados.</label>';
+  htmlCheckbox += '</td>';
+
+  $j('#tr_confirma_dados_unificacao').html(htmlCheckbox);
+}
+
+function montaTabela(response) {
   $j(`
     <tr>
       <td colspan="2">
@@ -85,22 +114,6 @@ function listaDadosPessoasUnificadas(response) {
   html += '</table></td>';
 
   $j('#lista_dados_pessoas_unificadas').html(html);
-  $j('<tr class="lista_pessoas_unificadas_hr"><td class="tableDetalheLinhaSeparador" colspan="2"></td></tr>').insertAfter($j('#lista_dados_pessoas_unificadas'));
-
-  $j('<tr id="tr_confirma_dados_unificacao"></tr>').insertAfter($j('.lista_pessoas_unificadas_hr'));
-
-  let htmlCheckbox = '<td colspan="2">'
-  htmlCheckbox += '<input id="check_confirma_dados_unificacao" type="checkbox" />';
-  htmlCheckbox += '<label for="check_confirma_dados_unificacao">Confirmo a análise de que são a mesma pessoa, levando <br> em conta a possibilidade de gêmeos cadastrados.</label>';
-  htmlCheckbox += '</td>';
-
-  $j('#tr_confirma_dados_unificacao').html(htmlCheckbox);
-
-  let htmlBotao = '<input type="button" class="botaolistagem" onclick="voltar();" value="Voltar" autocomplete="off">';
-  htmlBotao += '<input type="button" class="btn-green botaolistagem" onclick="showConfirmationMessage();" value="Unificar pessoas da lista" autocomplete="off">';
-  $j('.linhaBotoes td').html(htmlBotao);
-
-  uniqueCheck()
 }
 
 function uniqueCheck() {
@@ -126,7 +139,6 @@ function removePessoa(idpes) {
 }
 
 function voltar() {
-  window.location.href = "/unificacao-pessoa";
   document.location.reload(true);
 }
 
