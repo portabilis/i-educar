@@ -36,4 +36,8 @@ tr.linha_listagem td {
 
 tr.linha_listagem:nth-child(even) {
     background-color: #f5f9fd;
-  }
+}
+
+.link_remove {
+    cursor: pointer;
+}

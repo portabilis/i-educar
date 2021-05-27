@@ -65,16 +65,21 @@ function listaDadosPessoasUnificadas(response) {
     html += '<td>'+ value.cpf +'</td>';
     html += '<td>'+ value.rg +'</td>';
     html += '<td>'+ value.pessoa_mae +'</td>';
-    html += '<td><a onclick="removePessoa(this)">EXCLUIR</a></td>';
+    html += '<td><a class="link_remove" onclick="removePessoa(' + value.idpes + ')">EXCLUIR</a></td>';
     html += '</tr>';
   });
 
   html += '</table></td>';
 
-  console.log(html);
-
   $j('#lista_dados_pessoas_unificadas').html(html);
-} 
+}
+
+function removePessoa(idpes) {
+  trClose = $j('#' + idpes);
+  trClose.fadeOut(400, function() {
+    trClose.remove();  
+  });
+}
 
 var handleSelect = function(event, ui){
   $j(event.target).val(ui.item.label);
