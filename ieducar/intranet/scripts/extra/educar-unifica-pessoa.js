@@ -122,6 +122,7 @@ function removePessoa(idpes) {
 
 function voltar() {
   window.location.href = "/unificacao-pessoa";
+  document.location.reload(true);
 }
 
 var handleSelect = function(event, ui){
