@@ -112,6 +112,10 @@ return new class extends clsCadastro {
 
             if ($explode[0] == $codPessoaPrincipal) {
                 $this->mensagem = 'Impossivel de unificar pessoas iguais.<br />';
+        if (count($pessoas) <= 2) {
+            $this->mensagem = 'Informe no mínimo um pessoa para unificação.<br />';
+            return false;
+        }
 
                 return false;
             }
