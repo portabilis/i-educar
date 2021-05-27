@@ -72,6 +72,7 @@ function listaDadosPessoasUnificadas(response) {
   html += '</table></td>';
 
   $j('#lista_dados_pessoas_unificadas').html(html);
+  $j('<tr><td class="tableDetalheLinhaSeparador" colspan="2"></td></tr>').insertAfter($j('#lista_dados_pessoas_unificadas'));
 }
 
 function removePessoa(idpes) {
