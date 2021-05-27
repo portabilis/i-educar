@@ -91,6 +91,10 @@ function listaDadosPessoasUnificadas(response) {
 
   $j('#tr_confirma_dados_unificacao').html(htmlCheckbox);
 
+  let htmlBotao = '<input type="button" class="botaolistagem" onclick="voltar();" value="Voltar" autocomplete="off">';
+  htmlBotao += '<input type="button" class="btn-green botaolistagem" onclick="showConfirmationMessage();" value="Unificar pessoas da lista" autocomplete="off">';
+  $j('.linhaBotoes td').html(htmlBotao);
+
 }
 
 function removePessoa(idpes) {

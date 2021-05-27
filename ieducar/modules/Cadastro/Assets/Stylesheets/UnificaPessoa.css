@@ -51,3 +51,7 @@ tr.linha_listagem:nth-child(even) {
     font-size: 12px;
     padding: 20px 0px;
 }
+
+.linhaBotoes td input {
+    margin: 0px 4px;
+}
