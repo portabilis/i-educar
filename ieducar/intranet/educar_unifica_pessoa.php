@@ -136,6 +136,7 @@ return new class extends clsCadastro {
             return false;
         }
 
+        $codPessoaPrincipal = $this->buscaPessoaPrincipal($pessoas);
         DB::beginTransaction();
 
         $unificationId = $this->createLog($codPessoaPrincipal, $codPessoas, $this->pessoa_logada);
@@ -164,6 +165,13 @@ return new class extends clsCadastro {
 
         return true;
     }
+    private function buscaPessoaPrincipal($pessoas)
+    {
+        return current(array_values(array_filter($pessoas,
+                static fn ($pessoas) => $pessoas['pessoa_principal'] === true)
+        ))['idpes'];
+    }
+
     private function createLog($mainId, $duplicatesId, $createdBy)
     {
         $log = new LogUnification();
