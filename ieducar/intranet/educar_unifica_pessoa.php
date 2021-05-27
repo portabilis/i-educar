@@ -98,43 +98,27 @@ return new class extends clsCadastro {
             'index.php'
         );
 
-        $codPessoaPrincipal = (int) $this->pessoa_id;
-
-        if (!$codPessoaPrincipal) {
-            return;
         if (! property_exists($this,'pessoas')) {
             $this->simpleRedirect('index.php');
         }
 
-        $codPessoas = [];
-
-        //Monta um array com o código dos pessoas selecionados na tabela
-        foreach ($this->pessoa_duplicada as $key => $value) {
-            $explode = explode(' ', $value);
         $pessoas = json_decode($this->pessoas, true, 512, JSON_THROW_ON_ERROR);
 
-            if ($explode[0] == $codPessoaPrincipal) {
-                $this->mensagem = 'Impossivel de unificar pessoas iguais.<br />';
         if (count($pessoas) <= 2) {
             $this->mensagem = 'Informe no mínimo um pessoa para unificação.<br />';
             return false;
         }
 
-                return false;
-            }
         if (! $this->validaDadodUnificacao($pessoas)) {
             $this->mensagem = 'Erro ao processar os dados, recarregue a tela e tente novamente!';
             return false;
         }
 
-            $codPessoas[] = (int) $explode[0];
         if (! $this->validaSeExisteUmaPessoaPrincipal($pessoas)) {
             $this->mensagem = 'Pessoa principal não informada';
             return false;
         }
 
-        if (!count($codPessoas)) {
-            $this->mensagem = 'Informe no mínimo um pessoa para unificação.<br />';
         if ($this->validaSeExisteMaisDeUmaPessoaPrincipal($pessoas)) {
             $this->mensagem = 'Não pode haver mais de uma pessoa principal';
             return false;
