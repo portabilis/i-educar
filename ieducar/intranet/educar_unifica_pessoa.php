@@ -140,6 +140,8 @@ return new class extends clsCadastro {
             return false;
         }
 
+        if (! $this->validaSemTemItensDuplicados($pessoas)) {
+            $this->mensagem = 'Erro ao tentar unificar Pessoas, foi inserido cadastro duplicados';
             return false;
         }
 
