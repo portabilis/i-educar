@@ -102,6 +102,8 @@ return new class extends clsCadastro {
 
         if (!$codPessoaPrincipal) {
             return;
+        if (! property_exists($this,'pessoas')) {
+            $this->simpleRedirect('index.php');
         }
 
         $codPessoas = [];
