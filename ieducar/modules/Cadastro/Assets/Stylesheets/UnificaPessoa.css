@@ -1,5 +1,9 @@
 .unifica_pessoa_h2 {
     font-size: 14px;
+    margin: 0;
+    padding: 8px;
+    margin-top: 20px;
+    margin-bottom: -4px;
 }
 
 #tr_tabela_pessoas_cab {

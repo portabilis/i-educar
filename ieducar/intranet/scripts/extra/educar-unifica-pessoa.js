@@ -36,7 +36,15 @@ function carregaDadosPessoas() {
 }
 
 function listaDadosPessoasUnificadas(response) {
-  $j('<h2 class="unifica_pessoa_h2">Seleciona a pessoa que tenha preferencialmente vínculo(s) e com dados relavantes mais completos.</h2>').insertBefore($j('.linhaBotoes'));
+  $j(`
+    <tr>
+      <td colspan="2">
+        <h2 class="unifica_pessoa_h2">
+          Seleciona a pessoa que tenha preferencialmente vínculo(s) e com dados relavantes mais completos.
+        </h2>
+      </td>
+    </tr>
+  `).insertBefore($j('.linhaBotoes'));
   $j('<tr id="lista_dados_pessoas_unificadas"></tr>').insertBefore($j('.linhaBotoes'));
 
   let html = `
