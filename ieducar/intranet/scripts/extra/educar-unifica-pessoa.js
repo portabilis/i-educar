@@ -80,7 +80,17 @@ function listaDadosPessoasUnificadas(response) {
   html += '</table></td>';
 
   $j('#lista_dados_pessoas_unificadas').html(html);
-  $j('<tr><td class="tableDetalheLinhaSeparador" colspan="2"></td></tr>').insertAfter($j('#lista_dados_pessoas_unificadas'));
+  $j('<tr class="lista_pessoas_unificadas_hr"><td class="tableDetalheLinhaSeparador" colspan="2"></td></tr>').insertAfter($j('#lista_dados_pessoas_unificadas'));
+
+  $j('<tr id="tr_confirma_dados_unificacao"></tr>').insertAfter($j('.lista_pessoas_unificadas_hr'));
+
+  let htmlCheckbox = '<td colspan="2">'
+  htmlCheckbox += '<input id="check_confirma_dados_unificacao" type="checkbox" />';
+  htmlCheckbox += '<label for="check_confirma_dados_unificacao">Confirmo a análise de que são a mesma pessoa, levando <br> em conta a possibilidade de gêmeos cadastrados.</label>';
+  htmlCheckbox += '</td>';
+
+  $j('#tr_confirma_dados_unificacao').html(htmlCheckbox);
+
 }
 
 function removePessoa(idpes) {

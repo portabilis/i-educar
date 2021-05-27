@@ -45,3 +45,9 @@ tr.linha_listagem:nth-child(even) {
 .link_remove {
     cursor: pointer;
 }
+
+#tr_confirma_dados_unificacao td {
+    text-align: center;
+    font-size: 12px;
+    padding: 20px 0px;
+}
