@@ -9,7 +9,6 @@ use App\Models\LegacySchoolStage;
 use iEducar\Modules\AcademicYear\Exceptions\DisciplineNotLinkedToRegistrationException;
 use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
 use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotDefinedInLevel;
-use iEducar\Modules\School\Model\ExemptionType;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
@@ -1535,16 +1534,11 @@ class App_Model_IedFinder extends CoreExt_Entity
             FROM pmieducar.dispensa_disciplina
             JOIN pmieducar.dispensa_etapa
             ON dispensa_disciplina.cod_dispensa = dispensa_etapa.ref_cod_dispensa
-            INNER JOIN pmieducar.tipo_dispensa
-            ON (tipo_dispensa.cod_tipo_dispensa = dispensa_disciplina.ref_cod_tipo_dispensa)
             WHERE ref_cod_matricula = $1
-            AND tipo_dispensa.tipo != $2
             order by etapa
         ';
 
-        $query = Portabilis_Utils_Database::fetchPreparedQuery($sql,
-            ['params' => [$enrollmentId, ExemptionType::DISPENSA_BUSCA_ATIVA]]
-        );
+        $query = Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => [$enrollmentId]]);
 
         foreach ($query as $stage) {
             $stages[$stage['ref_cod_disciplina']][] = $stage['etapa'];
