@@ -24,6 +24,7 @@ const BuscaAtiva = (function () {
   const showTipoRetornoBusca = function (){
     resultado_busca_ativa.attr('disabled', false);
     resultado_busca_ativa.closest('tr').show();
+    resultado_busca_ativa.removeAttr('style');
   }
   return {
     init,

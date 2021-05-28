@@ -17,7 +17,7 @@ use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaPessoa;
 use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento;
 use iEducar\Modules\Educacenso\Model\TipoEnsinoMedioCursado;
 use iEducar\Modules\Educacenso\Model\UnidadeVinculadaComOutraInstituicao;
-use iEducar\Modules\School\Model\ActiveSearch;
+use iEducar\Modules\School\Model\ActiveLooking;
 use iEducar\Modules\School\Model\ExemptionType;
 use iEducar\Modules\Servidores\Model\FuncaoExercida;
 use iEducar\Modules\Servidores\Model\TipoVinculo;
@@ -217,6 +217,6 @@ class SelectOptions
      */
     public static function activeSearchResultOptions()
     {
-        return ActiveSearch::getDescriptiveValues();
+        return ActiveLooking::getDescriptiveValues();
     }
 }
