@@ -206,15 +206,6 @@ class SelectOptions
      * Retorna as opções disponíveis para os tipos de dispensa
      * @return string[]
      */
-    public static function exemptionsTypeOptions()
-    {
-        return ExemptionType::getDescriptiveValues();
-    }
-
-    /**
-     * Retorna as opções disponíveis para os tipos de dispensa
-     * @return string[]
-     */
     public static function activeSearchResultOptions()
     {
         return ActiveLooking::getDescriptiveValues();
