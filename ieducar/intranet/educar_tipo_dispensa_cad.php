@@ -1,7 +1,5 @@
 <?php
 
-use iEducar\Support\View\SelectOptions;
-
 return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -19,7 +17,6 @@ return new class extends clsCadastro {
     public $data_exclusao;
     public $ativo;
     public $ref_cod_instituicao;
-    public $tipo;
 
     public function Inicializar()
     {
@@ -66,21 +63,14 @@ return new class extends clsCadastro {
         $obrigatorio = true;
         include('include/pmieducar/educar_campo_lista.php');
 
-        $this->campoTexto('nm_tipo', 'Dispensa', $this->nm_tipo, 33, 255, true);
-        $options = [
-            'label' => 'Tipo de dispensa',
-            'resources' => SelectOptions::exemptionsTypeOptions(),
-            'required' => true,
-            'value' => $this->tipo ?? 1
-
-        ];
-        $this->inputsHelper()->select('tipo', $options);
+        // text
+        $this->campoTexto('nm_tipo', 'Tipo Dispensa', $this->nm_tipo, 30, 255, true);
         $this->campoMemo('descricao', 'Descrição', $this->descricao, 60, 5, false);
     }
 
     public function Novo()
     {
-        $obj = new clsPmieducarTipoDispensa(null, null, $this->pessoa_logada, $this->nm_tipo, $this->descricao, null, null, 1, $this->ref_cod_instituicao, $this->tipo);
+        $obj = new clsPmieducarTipoDispensa(null, null, $this->pessoa_logada, $this->nm_tipo, $this->descricao, null, null, 1, $this->ref_cod_instituicao);
         $cadastrou = $obj->cadastra();
         if ($cadastrou) {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
@@ -94,7 +84,7 @@ return new class extends clsCadastro {
 
     public function Editar()
     {
-        $obj = new clsPmieducarTipoDispensa($this->cod_tipo_dispensa, $this->pessoa_logada, null, $this->nm_tipo, $this->descricao, null, null, 1, $this->ref_cod_instituicao, $this->tipo);
+        $obj = new clsPmieducarTipoDispensa($this->cod_tipo_dispensa, $this->pessoa_logada, null, $this->nm_tipo, $this->descricao, null, null, 1, $this->ref_cod_instituicao);
         $editou = $obj->edita();
         if ($editou) {
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';

@@ -298,10 +298,7 @@ return new class extends clsDetalhe {
                     $this->array_botao_url_script[] = "go(\"educar_dispensa_disciplina_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
                 }
 
-                if (
-                    $registro['aprovado'] == App_Model_MatriculaSituacao::EM_ANDAMENTO &&
-                    $this->hasActiveSearchExemptionType()
-                ) {
+                if ($registro['aprovado'] == App_Model_MatriculaSituacao::EM_ANDAMENTO) {
                     $this->array_botao[] = 'Busca Ativa';
                     $this->array_botao_url_script[] = "go(\"educar_busca_ativa_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
                 }
@@ -462,13 +459,5 @@ return new class extends clsDetalhe {
     {
         $this->title = 'i-Educar - Matrícula';
         $this->processoAp = 578;
-    }
-
-    private function hasActiveSearchExemptionType()
-    {
-        return LegacyExemptionType::query()
-            ->where('tipo', ExemptionType::DISPENSA_BUSCA_ATIVA)
-            ->where('ativo', 1)
-            ->first();
     }
 };

@@ -3,7 +3,6 @@
 use App\Models\LegacyDisciplineExemption;
 use App\Models\LegacyRegistration;
 use App\Services\Exemption\ExemptionService;
-use iEducar\Modules\School\Model\ExemptionType;
 
 return new class extends clsCadastro {
     public $ref_usuario_exc;
@@ -29,7 +28,6 @@ return new class extends clsCadastro {
 
         $this->ref_cod_disciplina = $this->getQueryString('ref_cod_disciplina');
         $this->ref_cod_matricula  = $this->getQueryString('ref_cod_matricula');
-        $this->ref_cod_tipo_dispensa  = $this->getQueryString('ref_cod_tipo_dispensa');
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, 'educar_dispensa_disciplina_lst.php?ref_ref_cod_matricula=' . $this->ref_cod_matricula);
@@ -45,17 +43,12 @@ return new class extends clsCadastro {
         }
 
         if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_serie) &&
-            is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_disciplina) &&
-            is_numeric($this->ref_cod_tipo_dispensa)
-        ) {
+            is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_disciplina)) {
             $obj = new clsPmieducarDispensaDisciplina(
                 $this->ref_cod_matricula,
                 $this->ref_cod_serie,
                 $this->ref_cod_escola,
-                $this->ref_cod_disciplina,
-                null,
-                null,
-                $this->ref_cod_tipo_dispensa
+                $this->ref_cod_disciplina
             );
 
             $registro  = $obj->detalhe();
@@ -79,14 +72,13 @@ return new class extends clsCadastro {
         }
 
         $this->url_cancelar = $retorno == 'Editar' ?
-        sprintf(
-            'educar_dispensa_disciplina_det.php?ref_cod_matricula=%d&ref_cod_serie=%d&ref_cod_escola=%d&ref_cod_disciplina=%d&ref_cod_tipo_dispensa=%d',
-            $registro['ref_cod_matricula'],
-            $registro['ref_cod_serie'],
-            $registro['ref_cod_escola'],
-            $registro['ref_cod_disciplina'],
-            $registro['ref_cod_tipo_dispensa']
-        ) :
+            sprintf(
+                'educar_dispensa_disciplina_det.php?ref_cod_matricula=%d&ref_cod_serie=%d&ref_cod_escola=%d&ref_cod_disciplina=%d',
+                $registro['ref_cod_matricula'],
+                $registro['ref_cod_serie'],
+                $registro['ref_cod_escola'],
+                $registro['ref_cod_disciplina']
+            ) :
             'educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula;
 
         $this->nome_url_cancelar = 'Cancelar';
@@ -173,19 +165,11 @@ return new class extends clsCadastro {
 
         $objTemp = new clsPmieducarTipoDispensa();
 
-       $lista = $objTemp->lista(null,
-           null,
-           null,
-           null,
-           null,
-           null,
-           null,
-           null,
-           null,
-           1,
-           $this->ref_cod_instituicao,
-           ExemptionType::DISPENSA_COMPONENTES
-       );
+        if ($this->ref_cod_instituicao) {
+            $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, 1, $this->ref_cod_instituicao);
+        } else {
+            $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, 1);
+        }
 
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
