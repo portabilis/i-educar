@@ -1,12 +1,10 @@
 <?php
 
 use App\Models\LegacyActiveLooking;
-use App\Models\LegacyDisciplineExemption;
-use App\Models\LegacyExemptionType;
 use App\Models\LegacyRegistration;
+use App\Process;
 use App\Services\Exemption\ActiveLookingService;
 use iEducar\Modules\School\Model\ActiveLooking;
-use iEducar\Modules\School\Model\ExemptionType;
 use iEducar\Support\View\SelectOptions;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -41,7 +39,7 @@ return new class extends clsCadastro {
         $this->id = $this->getQueryString('id');
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
+        $obj_permissoes->permissao_cadastra(Process::ACTIVE_LOOKING, $this->pessoa_logada, 7, "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
 
         if (empty($this->ref_cod_matricula)) {
             $this->simpleRedirect('educar_matricula_lst.php');
@@ -52,13 +50,14 @@ return new class extends clsCadastro {
 
         if (isset($this->id)) {
             $this->campoOculto('id', $this->id);
-            $legacyActiveLookings = LegacyActiveLooking::find($this->id)->get()->first();
+            $legacyActiveLookings = LegacyActiveLooking::find($this->id);
+
             if ($legacyActiveLookings) {
                 foreach ($legacyActiveLookings->toArray() as $campo => $val) {
                     $this->$campo = $val;
                 }
                 $obj_permissoes = new clsPermissoes();
-                if ($obj_permissoes->permissao_excluir(578, $this->pessoa_logada, 7)) {
+                if ($obj_permissoes->permissao_excluir(Process::ACTIVE_LOOKING, $this->pessoa_logada, 7)) {
                     $this->fexcluir = true;
                 }
                 $retorno = 'Editar';
@@ -68,11 +67,6 @@ return new class extends clsCadastro {
         $this->breadcrumb('Registro do busca ativa', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
-
-        $this->url_cancelar = 'educar_busca_ativa_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula;
-        $this->nome_url_cancelar = 'Cancelar';
-
-        $this->loadAssets();
 
         return $retorno;
     }
@@ -119,13 +113,19 @@ return new class extends clsCadastro {
             'placeholder' => '',
             'required' => false
         ];
-        $this->inputsHelper()->textArea('observacao', $textAreaSettings);
+        $this->inputsHelper()->textArea('observacoes', $textAreaSettings);
+
+        $this->url_cancelar = 'educar_busca_ativa_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula;
+        $this->nome_url_cancelar = 'Cancelar';
+
+        $this->loadAssets();
+
     }
 
     public function Novo()
     {
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
+        $obj_permissoes->permissao_cadastra(Process::ACTIVE_LOOKING, $this->pessoa_logada, 7, "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
 
         $legacyRegistration = LegacyRegistration::findOrFail($this->ref_cod_matricula);
         $this->redirectIf(!$legacyRegistration, 'educar_matricula_lst.php');
@@ -167,7 +167,7 @@ return new class extends clsCadastro {
     public function Excluir()
     {
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_excluir(578, $this->pessoa_logada, 7, "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
+        $obj_permissoes->permissao_excluir(Process::ACTIVE_LOOKING, $this->pessoa_logada, 7, "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
 
 
         $activeLookingService = new ActiveLookingService();
@@ -215,6 +215,7 @@ return new class extends clsCadastro {
             $this->data_fim = Carbon::createFromFormat('d/m/Y', $this->data_fim)->format('Y-m-d');
         } else {
             $this->data_fim = null;
+            $this->resultado_busca_ativa = null;
         }
         $this->resultado_busca_ativa = empty($this->resultado_busca_ativa) ? ActiveLooking::ACTIVE_LOOKING_IN_PROGRESS_RESULT : $this->resultado_busca_ativa;
 
@@ -223,7 +224,7 @@ return new class extends clsCadastro {
                 'ref_cod_matricula' => $this->ref_cod_matricula,
                 'data_inicio' => $this->data_inicio,
                 'data_fim' => $this->data_fim,
-                'observacoes' => $this->observacao,
+                'observacoes' => $this->observacoes,
                 'resultado_busca_ativa' => $this->resultado_busca_ativa
             ]
         );

@@ -298,8 +298,8 @@ return new class extends clsDetalhe {
                     $this->array_botao_url_script[] = "go(\"educar_dispensa_disciplina_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
                 }
 
-                if ($registro['aprovado'] == App_Model_MatriculaSituacao::EM_ANDAMENTO) {
-                    $this->array_botao[] = 'Busca Ativa';
+                if ($registro['aprovado'] == App_Model_MatriculaSituacao::EM_ANDAMENTO && $this->permissao_busca_ativa()) {
+                    $this->array_botao[] = 'Busca ativa';
                     $this->array_botao_url_script[] = "go(\"educar_busca_ativa_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
                 }
 
@@ -434,6 +434,13 @@ return new class extends clsDetalhe {
         $acesso = new clsPermissoes();
 
         return $acesso->permissao_excluir(627, $this->pessoa_logada, 7, null, true);
+    }
+
+    public function permissao_busca_ativa()
+    {
+        $acesso = new clsPermissoes();
+
+        return $acesso->permissao_cadastra(Process::ACTIVE_LOOKING, $this->pessoa_logada, 7, null, true);
     }
 
     public function permissaoReclassificar()

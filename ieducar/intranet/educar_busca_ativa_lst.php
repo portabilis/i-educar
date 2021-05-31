@@ -1,11 +1,9 @@
 <?php
 
 use App\Models\LegacyActiveLooking;
-use App\Models\LegacyDisciplineExemption;
-use App\Models\LegacyEnrollment;
 use App\Models\LegacyRegistration;
+use App\Process;
 use iEducar\Modules\School\Model\ActiveLooking;
-use iEducar\Modules\School\Model\ExemptionType;
 
 return new class extends clsListagem {
     public $pessoa_logada;
@@ -34,7 +32,7 @@ return new class extends clsListagem {
 
         $ref_cod_matricula = $this->getQueryString('ref_cod_matricula');
 
-        $this->titulo = 'Busca Ativa - Listagem';
+        $this->titulo = 'Busca ativa - Listagem';
 
         // passa todos os valores obtidos no GET para atributos do objeto
         foreach ($_GET as $var => $val) {
@@ -116,7 +114,7 @@ return new class extends clsListagem {
 
         $obj_permissoes = new clsPermissoes();
 
-        if ($obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7) && $legacyRegistration->aprovado == App_Model_MatriculaSituacao::EM_ANDAMENTO) {
+        if ($obj_permissoes->permissao_cadastra(Process::ACTIVE_LOOKING, $this->pessoa_logada, 7) && $legacyRegistration->aprovado == App_Model_MatriculaSituacao::EM_ANDAMENTO) {
             $this->array_botao_url[] = 'educar_busca_ativa_cad.php?ref_cod_matricula=' . $this->ref_cod_matricula;
             $this->array_botao[] = [
                 'name' => 'Novo',
@@ -129,14 +127,14 @@ return new class extends clsListagem {
 
         $this->largura = '100%';
 
-        $this->breadcrumb('Busca Ativa', [
+        $this->breadcrumb('Busca ativa', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
     }
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Busca Ativa';
-        $this->processoAp = 578;
+        $this->title = 'i-Educar - Busca ativa';
+        $this->processoAp = Process::ACTIVE_LOOKING;
     }
 };
