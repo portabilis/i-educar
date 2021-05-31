@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyActiveLooking;
 use App\Models\LegacyRegistration;
 use Illuminate\Support\Str;
 
@@ -968,6 +969,28 @@ class MatriculaController extends ApiCoreController
         return $this->validatesPresenceOf('ano');
     }
 
+    protected function getBuscaAtiva()
+    {
+        $ano = $this->getRequest()->ano;
+        $escola = $this->getRequest()->escola;
+        $modified = $this->getRequest()->modified;
+
+        $legacyActiveLooking = LegacyActiveLooking::withTrashed()
+            ->query()
+            ->select('busca_ativa.*')
+            ->join('pmieducar.matricula', 'ref_cod_matricula', '=', 'cod_matricula')
+            ->where('updated_at', '>=', $modified)
+            ->where('ano', $ano);
+
+        if (!empty($escola)) {
+            $legacyActiveLooking->whereIn('ref_ref_cod_escola', explode(',', $escola));
+        }
+
+        $buscaAtiva = $legacyActiveLooking->get()->toArray();
+
+        return ['busca_ativa' => $buscaAtiva];
+    }
+
     public function Gerar()
     {
         if ($this->isRequestFor('get', 'matricula')) {
@@ -1004,6 +1027,8 @@ class MatriculaController extends ApiCoreController
             $this->appendResponse($this->getDispensaDisciplina());
         } elseif ($this->isRequestFor('get', 'enturmacoes-excluidas')) {
             $this->appendResponse($this->getEnturmacoesExcluidas());
+        } elseif ($this->isRequestFor('get', 'busca-ativa')) {
+            $this->appendResponse($this->getBuscaAtiva());
         } else {
             $this->notImplementedOperationError();
         }
