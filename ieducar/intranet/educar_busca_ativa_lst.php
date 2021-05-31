@@ -11,17 +11,7 @@ return new class extends clsListagem {
     public $limite;
     public $offset;
     public $ref_cod_matricula;
-    public $ref_cod_serie;
-    public $ref_cod_escola;
-    public $ref_cod_disciplina;
-    public $ref_usuario_exc;
-    public $ref_usuario_cad;
-    public $ref_cod_tipo_dispensa;
     public $data_inicio;
-    public $data_exclusao;
-    public $ativo;
-    public $observacao;
-    public $ref_sequencial;
     public $ref_cod_instituicao;
     public $ref_cod_turma;
 
@@ -29,9 +19,7 @@ return new class extends clsListagem {
     {
         // Helper para url
         $urlHelper = CoreExt_View_Helper_UrlHelper::getInstance();
-
         $ref_cod_matricula = $this->getQueryString('ref_cod_matricula');
-
         $this->titulo = 'Busca ativa - Listagem';
 
         // passa todos os valores obtidos no GET para atributos do objeto
@@ -44,15 +32,8 @@ return new class extends clsListagem {
         }
 
         $legacyRegistration = LegacyRegistration::find($ref_cod_matricula);
-
-        $this->ref_cod_instituicao = $legacyRegistration->ref_cod_instituicao;
-        $this->ref_cod_escola = $legacyRegistration->ref_ref_cod_escola;
-        $this->ref_cod_serie = $legacyRegistration->ref_ref_cod_serie;
-
         $legacyEnrollment = $legacyRegistration->lastEnrollment()->first();
-
         $this->ref_cod_turma = $legacyEnrollment->ref_cod_turma;
-        $this->ref_sequencial = $legacyEnrollment->sequencial;
 
         $this->addCabecalhos([
             'Data de início',
