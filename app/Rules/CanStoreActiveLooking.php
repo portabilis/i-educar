@@ -39,14 +39,15 @@ class CanStoreActiveLooking implements Rule
 	                ELSE '{$legacyActiveLooking->getStartDate()}'::date between data_inicio and data_fim END
                 )
             ")
-            ->where('ativo', 1);
+            ->where('ativo', 1)
+            ->where('ref_cod_matricula', $legacyRegistration->cod_matricula);
 
         if ($legacyActiveLooking->id){
             $activeLookingInSameDate->where('id', '<>', $legacyActiveLooking->id);
         }
 
         if ($activeLookingInSameDate->exists()){
-            $this->msg = 'Já existe uma busca ativa lançada para as etapas selecionadas.';
+            $this->msg = 'Já existe uma busca ativa lançada para o período selecionado.';
             return false;
         }
 
