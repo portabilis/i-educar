@@ -17,8 +17,13 @@ function ajustaTabelaDePessoasUnificadas() {
 function carregaDadosPessoas() {
   let pessoas_duplicadas = [];
 
+  $j('#adicionar_linha').hide();
   $j('input[id^="pessoa_duplicada["').each(function(id, input) {
     pessoas_duplicadas.push(input.value.split(' ')[0]);
+  });
+
+  $j('.tr_tabela_pessoas td a').each(function(id, input) {
+    input.remove();
   });
 
   var url = getResourceUrlBuilder.buildUrl(
@@ -132,9 +137,41 @@ function handleClick(checkbox, event) {
 }
 
 function removePessoa(idpes) {
-  trClose = $j('#' + idpes);
+  if ($j('#tabela_pessoas_unificadas tr').length === 3) {
+    confirmaRemocaoPessoaUnificacao();
+    return;
+  }
+  removeTr(idpes);
+}
+
+function removeTr(idpes) {
+  let trClose = $j('#' + idpes);
   trClose.fadeOut(400, function() {
     trClose.remove();
+  });
+}
+
+function confirmaRemocaoPessoaUnificacao() {
+  makeDialog({
+    content: 'É necessário ao menos 2 pessoas para a unificação, ao confirmar o processo vai ser reiniciado, Deseja prosseguir?',
+    title: 'Atenção!',
+    maxWidth: 860,
+    width: 860,
+    close: function () {
+      $j('#dialog-container').dialog('destroy');
+    },
+    buttons: [{
+      text: 'Confirmar',
+      click: function () {
+        voltar();
+        $j('#dialog-container').dialog('destroy');
+      }
+    }, {
+      text: 'Cancelar',
+      click: function () {
+        $j('#dialog-container').dialog('destroy');
+      }
+    }]
   });
 }
 
