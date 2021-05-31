@@ -966,11 +966,16 @@ class MatriculaController extends ApiCoreController
         $escola = $this->getRequest()->escola;
         $modified = $this->getRequest()->modified;
 
+
         $legacyActiveLooking = LegacyActiveLooking::withTrashed()
-            ->query()
             ->select('busca_ativa.*')
+            ->selectRaw("CASE resultado_busca_ativa
+                                  WHEN 1 THEN 'Abandono'::varchar
+                                  WHEN 3 THEN 'Retorno com ausência justificada'::varchar
+                                  WHEN 4 THEN 'Retorno sem ausência justificada'::varchar
+                                  ELSE 'Em andamento'::varchar END AS resulta_busca_ativa_text")
             ->join('pmieducar.matricula', 'ref_cod_matricula', '=', 'cod_matricula')
-            ->where('updated_at', '>=', $modified)
+            ->where('busca_ativa.updated_at', '>=', $modified)
             ->where('ano', $ano);
 
         if (!empty($escola)) {
