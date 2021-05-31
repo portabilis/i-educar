@@ -208,6 +208,8 @@ class SelectOptions
      */
     public static function activeSearchResultOptions()
     {
-        return ActiveLooking::getDescriptiveValues();
+        $options = ActiveLooking::getDescriptiveValues();
+        unset($options[ActiveLooking::ACTIVE_LOOKING_IN_PROGRESS_RESULT]);
+        return $options;
     }
 }
