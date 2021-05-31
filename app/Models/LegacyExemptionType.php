@@ -29,7 +29,7 @@ class LegacyExemptionType extends Model
         'data_cadastro',
         'data_exclusao',
         'ativo',
-        'ref_cod_instituicao'
+        'ref_cod_instituicao',
     ];
 
     /**
