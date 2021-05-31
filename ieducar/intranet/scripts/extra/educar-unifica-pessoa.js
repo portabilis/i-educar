@@ -51,11 +51,23 @@ function listaDadosPessoasUnificadas(response) {
   adicionaCheckboxConfirmacao();
   adicionaBotoes();
   uniqueCheck();
+  habilitaUnificar();
+}
+
+function habilitaUnificar() {
+ let checked =  $j('#check_confirma_dados_unificacao').is(':checked');
+
+ $j('#unifica_pessoa').prop('disabled', !checked);
+ if (checked === false) {
+   $j('#unifica_pessoa').removeClass('btn-green');
+   return;
+ }
+ $j('#unifica_pessoa').addClass('btn-green');
 }
 
 function adicionaBotoes() {
   let htmlBotao = '<input type="button" class="botaolistagem" onclick="voltar();" value="Voltar" autocomplete="off">';
-  htmlBotao += '<input type="button" class="btn-green botaolistagem" onclick="showConfirmationMessage();" value="Unificar pessoas da lista" autocomplete="off">';
+  htmlBotao += '<input id="unifica_pessoa" type="button" class="botaolistagem" onclick="showConfirmationMessage();" value="Unificar pessoas da lista" autocomplete="off">';
   $j('.linhaBotoes td').html(htmlBotao);
 }
 
@@ -67,7 +79,7 @@ function adicionaCheckboxConfirmacao() {
   $j('<tr id="tr_confirma_dados_unificacao"></tr>').insertAfter($j('.lista_pessoas_unificadas_hr'));
 
   let htmlCheckbox = '<td colspan="2">'
-  htmlCheckbox += '<input id="check_confirma_dados_unificacao" type="checkbox" />';
+  htmlCheckbox += '<input onchange="habilitaUnificar()" id="check_confirma_dados_unificacao" type="checkbox" />';
   htmlCheckbox += '<label for="check_confirma_dados_unificacao">Confirmo a análise de que são a mesma pessoa, levando <br> em conta a possibilidade de gêmeos cadastrados.</label>';
   htmlCheckbox += '</td>';
 
