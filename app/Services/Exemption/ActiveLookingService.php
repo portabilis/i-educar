@@ -25,8 +25,6 @@ class ActiveLookingService
 
     public function delete(LegacyActiveLooking $activeLooking)
     {
-        $activeLooking->ativo = 0;
-        $activeLooking->data_exclusao = now()->format('Y-m-d');
-        $activeLooking->save();
+        $activeLooking->delete();
     }
 }

@@ -66,7 +66,6 @@ return new class extends clsListagem {
 
         $legacyActiveLookings = LegacyActiveLooking::query()
             ->where('ref_cod_matricula', $this->ref_cod_matricula)
-            ->where('ativo', 1)
             ->orderBy('id', 'DESC')
             ->limit($this->limite)
             ->offset($this->offset)

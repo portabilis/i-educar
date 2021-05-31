@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class LegacyActiveLooking
@@ -13,6 +14,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class LegacyActiveLooking extends Model
 {
+    use SoftDeletes;
+
     /**
      * @var string
      */
@@ -28,11 +31,10 @@ class LegacyActiveLooking extends Model
         'ref_cod_matricula',
         'data_inicio',
         'data_fim',
-        'ativo',
-        'data_exclusao',
         'observacoes',
         'resultado_busca_ativa',
-        'updated_at'
+        'updated_at',
+        'deleted_at'
     ];
 
     protected $dates = [
@@ -45,7 +47,7 @@ class LegacyActiveLooking extends Model
     /**
      * @var bool
      */
-    public $timestamps = false;
+    public $timestamps = true;
 
     /**
      * Relação com a matrícula.

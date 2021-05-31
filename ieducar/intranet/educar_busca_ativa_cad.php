@@ -20,6 +20,7 @@ return new class extends clsCadastro {
 
     public $id;
     public $ref_cod_matricula;
+    public $ref_cod_aluno;
     public $data_inicio;
     public $data_fim;
     public $ativo;
@@ -38,14 +39,16 @@ return new class extends clsCadastro {
         $this->ref_cod_matricula = $this->getQueryString('ref_cod_matricula');
         $this->id = $this->getQueryString('id');
 
-        $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(Process::ACTIVE_LOOKING, $this->pessoa_logada, 7, "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
-
         if (empty($this->ref_cod_matricula)) {
             $this->simpleRedirect('educar_matricula_lst.php');
         }
 
         $legacyRegistration = LegacyRegistration::find($this->ref_cod_matricula);
+        $this->ref_cod_aluno = $legacyRegistration->ref_cod_aluno;
+
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_cadastra(Process::ACTIVE_LOOKING, $this->pessoa_logada, 7, "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
+
         $this->redirectIf(!$legacyRegistration, 'educar_matricula_lst.php');
 
         if (isset($this->id)) {
@@ -129,7 +132,7 @@ return new class extends clsCadastro {
 
         $legacyRegistration = LegacyRegistration::findOrFail($this->ref_cod_matricula);
         $this->redirectIf(!$legacyRegistration, 'educar_matricula_lst.php');
-
+        $this->ref_cod_aluno = $legacyRegistration->ref_cod_aluno;
         $activeLookingService = new ActiveLookingService();
         $legacyActiveLooking = $this->buildObjectBeforeStore();
 
@@ -148,10 +151,11 @@ return new class extends clsCadastro {
             return false;
         }
         DB::commit();
-        $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
+        $this->mensagem = 'Cadastro efetuado com sucesso.<br />';
 
-        if ($this->resultado_busca_ativa === ActiveLooking::ACTIVE_LOOKING_ABANDONMENT_RESULT) {
+        if ($this->resultado_busca_ativa == ActiveLooking::ACTIVE_LOOKING_ABANDONMENT_RESULT) {
             $this->simpleRedirect('educar_abandono_cad.php?ref_cod_matricula=' . $this->ref_cod_matricula . '&ref_cod_aluno=' . $this->ref_cod_aluno);
+            return true;
         }
 
         $this->simpleRedirect('educar_busca_ativa_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
@@ -168,7 +172,6 @@ return new class extends clsCadastro {
     {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir(Process::ACTIVE_LOOKING, $this->pessoa_logada, 7, "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
-
 
         $activeLookingService = new ActiveLookingService();
         $legacyActiveLooking = $this->buildObjectBeforeStore();
