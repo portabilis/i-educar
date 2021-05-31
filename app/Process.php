@@ -38,5 +38,5 @@ class Process
     public const MENU_SCHOOL_TOOLS = 999926;
     public const EDUCACENSO_IMPORTACOES = 9998848;
     public const CONSULTAS = 9998890;
-    public const BUSCA_ATIVA = 9998921;
+    public const ACTIVE_LOOKING = 9998921;
 }
