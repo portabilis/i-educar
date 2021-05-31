@@ -10,6 +10,10 @@
     display: none;
 }
 
+.tabela-adicao .tr_tabela_pessoas:nth-of-type(-n+4) td a {
+  display: none;
+}
+
 #tabela_pessoas.tabela-adicao td {
     padding: 5px 8px !important;
 }
