@@ -1,6 +1,6 @@
 const BuscaAtiva = (function () {
 
-  const data_inicio = $j('#data_cadastro');
+  const data_inicio = $j('#data_inicio');
   const data_fim = $j('#data_fim');
   const resultado_busca_ativa = $j('#resultado_busca_ativa');
 
