@@ -24,17 +24,14 @@ return new class extends clsDetalhe {
         $this->ref_cod_disciplina = $_GET['ref_cod_disciplina'];
         $this->ref_cod_matricula  = $_GET['ref_cod_matricula'];
         $this->ref_cod_serie      = $_GET['ref_cod_serie'];
-        $this->ref_cod_tipo_dispensa = $_GET['ref_cod_tipo_dispensa'];
+        $this->ref_cod_disciplina = $_GET['ref_cod_disciplina'];
         $this->ref_cod_escola     = $_GET['ref_cod_escola'];
 
         $tmp_obj = new clsPmieducarDispensaDisciplina(
             $this->ref_cod_matricula,
             $this->ref_cod_serie,
             $this->ref_cod_escola,
-            $this->ref_cod_disciplina,
-            null,
-            null,
-            $this->ref_cod_tipo_dispensa
+            $this->ref_cod_disciplina
         );
 
         $registro = $tmp_obj->detalhe();
@@ -131,10 +128,9 @@ return new class extends clsDetalhe {
                 $this->ref_cod_matricula
             );
             $this->url_editar = sprintf(
-                'educar_dispensa_disciplina_cad.php?ref_cod_matricula=%d&ref_cod_disciplina=%d&ref_cod_tipo_dispensa=%d',
+                'educar_dispensa_disciplina_cad.php?ref_cod_matricula=%d&ref_cod_disciplina=%d',
                 $registro['ref_cod_matricula'],
-                $registro['ref_cod_disciplina'],
-                $this->ref_cod_tipo_dispensa
+                $registro['ref_cod_disciplina']
             );
         }
 
@@ -142,8 +138,8 @@ return new class extends clsDetalhe {
         $this->largura      = '100%';
 
         $this->breadcrumb('Dispensa de componentes curriculares', [
-        url('intranet/educar_index.php') => 'Escola',
-    ]);
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 
     public function Formular()
