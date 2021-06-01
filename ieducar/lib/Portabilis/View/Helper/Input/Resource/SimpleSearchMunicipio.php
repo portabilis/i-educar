@@ -7,11 +7,9 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchMunicipio extends Portab
         if ($id) {
             $sql = 'select nome, sigla_uf from public.municipio where idmun = $1';
             $options = ['params' => $id, 'return_only' => 'first-row'];
-            $municipio = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
-            $nome = $municipio['nome'];
-            $siglaUf = $municipio['sigla_uf'];
+            $query = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
 
-            return Portabilis_String_Utils::toLatin1($nome, ['transform' => true, 'escape' => false]) . " ($siglaUf)";
+            return $query['nome']  . " ({$query['sigla_uf']})";
         }
     }
 

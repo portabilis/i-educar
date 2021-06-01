@@ -25,7 +25,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchBairro extends Portabili
             $nome = $municipio['nome'];
             $zona = ($municipio['zona_localizacao'] == 1 ? 'Urbana' : 'Rural');
 
-            return Portabilis_String_Utils::toLatin1($nome, ['transform' => true, 'escape' => false]) . " / Zona $zona";
+            return $nome . " / Zona $zona";
         }
     }
 
