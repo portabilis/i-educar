@@ -21,13 +21,10 @@ class LegacyActiveLooking extends Model
      */
     protected $table = 'pmieducar.busca_ativa';
 
-    protected $primaryKey = 'id';
-
     /**
      * @var array
      */
     protected $fillable = [
-        'id',
         'ref_cod_matricula',
         'data_inicio',
         'data_fim',
@@ -45,11 +42,6 @@ class LegacyActiveLooking extends Model
     ];
 
     /**
-     * @var bool
-     */
-    public $timestamps = true;
-
-    /**
      * Relação com a matrícula.
      *
      * @return BelongsTo
@@ -57,15 +49,5 @@ class LegacyActiveLooking extends Model
     public function registration()
     {
         return $this->belongsTo(LegacyRegistration::class, 'ref_cod_matricula');
-    }
-
-    public function getStartDate()
-    {
-        return $this->data_inicio->format('Y-m-d');
-    }
-
-    public function getEndDate()
-    {
-        return $this->data_fim->format('Y-m-d');
     }
 }
