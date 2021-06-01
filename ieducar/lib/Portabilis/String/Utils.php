@@ -64,19 +64,6 @@ class Portabilis_String_Utils
         return $str;
     }
 
-    /**
-     * @deprecated
-     *
-     * @param string $str
-     * @param array  $options
-     *
-     * @return string
-     */
-    public static function toLatin1($str, $options = [])
-    {
-        return $str;
-    }
-
     public static function unaccent($str)
     {
         $fromEncoding = Portabilis_String_Utils::encoding($str);
