@@ -979,9 +979,7 @@ class MatriculaController extends ApiCoreController
             ->where('busca_ativa.updated_at', '>=', $modified)
             ->where('ano', $ano);
 
-        if (empty($escola)) {
-
-        } else {
+        if ($escola) {
             $legacyActiveLooking->whereIn('ref_ref_cod_escola', explode(',', $escola));
         }
 
