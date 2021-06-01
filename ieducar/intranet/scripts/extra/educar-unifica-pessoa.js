@@ -52,24 +52,72 @@ function listaDadosPessoasUnificadas(response) {
   adicionaCheckboxConfirmacao();
   adicionaBotoes();
   uniqueCheck();
-  habilitaUnificar();
+  desabilitaBotaoUnificar();
 }
 
 function disabilitaSearchInputs() {
   $j('input[id^="pessoa_duplicada["').prop('disabled', true);
 }
 
-function habilitaUnificar() {
- let checked =  $j('#check_confirma_dados_unificacao').is(':checked');
+function confirmaAnalise() {
+  let checked = $j('#check_confirma_dados_unificacao').is(':checked');
+  if (existePessoaPrincipal() && checked) {
+    habilitaBotaoUnificar();
+    return;
+  }
+  
+  if (checked) {
+    desabilitaBotaoUnificar();
+    modalExigePessoaPrincipal();
+    return;
+  }
 
- $j('#unifica_pessoa').prop('disabled', !checked);
- if (checked === false) {
-   $j('#unifica_pessoa').removeClass('btn-green');
-   $j('#unifica_pessoa').addClass('btn-disabled');
-   return;
- }
- $j('#unifica_pessoa').addClass('btn-green');
- $j('#unifica_pessoa').removeClass('btn-disabled');
+  desabilitaBotaoUnificar();
+}
+
+function habilitaBotaoUnificar() {
+  $j('#unifica_pessoa').prop('disabled', false);
+  $j('#unifica_pessoa').addClass('btn-green');
+  $j('#unifica_pessoa').removeClass('btn-disabled');
+}
+
+function desabilitaBotaoUnificar() {
+  $j('#unifica_pessoa').prop('disabled', true);
+  $j('#unifica_pessoa').removeClass('btn-green');
+  $j('#unifica_pessoa').addClass('btn-disabled');
+}
+
+function existePessoaPrincipal() {
+  let existePessoaPrincipal = false;
+  const checkbox = document.querySelectorAll('input.check_principal')
+  checkbox.forEach(element => {
+    if (element.checked == true) {
+      existePessoaPrincipal = true;
+    }
+  });
+
+  return existePessoaPrincipal;
+}
+
+
+function modalExigePessoaPrincipal() {
+  makeDialog({
+    content: 'Você precisa definir uma pessoa como principal.',
+    title: 'Atenção!',
+    maxWidth: 860,
+    width: 860,
+    close: function () {
+      $j('#check_confirma_dados_unificacao').prop('checked', false);
+      $j('#dialog-container').dialog('destroy');
+    },
+    buttons: [{
+      text: 'Ok',
+      click: function () {
+        $j('#check_confirma_dados_unificacao').prop('checked', false);
+        $j('#dialog-container').dialog('destroy');
+      }
+    },]
+  });
 }
 
 function adicionaBotoes() {
@@ -86,7 +134,7 @@ function adicionaCheckboxConfirmacao() {
   $j('<tr id="tr_confirma_dados_unificacao"></tr>').insertAfter($j('.lista_pessoas_unificadas_hr'));
 
   let htmlCheckbox = '<td colspan="2">'
-  htmlCheckbox += '<input onchange="habilitaUnificar()" id="check_confirma_dados_unificacao" type="checkbox" />';
+  htmlCheckbox += '<input onchange="confirmaAnalise()" id="check_confirma_dados_unificacao" type="checkbox" />';
   htmlCheckbox += '<label for="check_confirma_dados_unificacao">Confirmo a análise de que são a mesma pessoa, levando <br> em conta a possibilidade de gêmeos cadastrados.</label>';
   htmlCheckbox += '</td>';
 
@@ -149,6 +197,7 @@ function uniqueCheck() {
 
 function handleClick(checkbox, event) {
   checkbox.forEach(element => {
+    confirmaAnalise();
     if (event.currentTarget.id !== element.id) {
       element.checked = false;
     }
