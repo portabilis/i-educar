@@ -506,8 +506,6 @@ class ApiCoreController extends Core_Controller_Page_EditController
             $sqls = $this->sqlsForNumericSearch();
             $params = $this->sqlParams($numericQuery);
         } else {
-            $query = Portabilis_String_Utils::toLatin1($query, ['escape' => false]);
-
             $sqls = $this->sqlsForStringSearch();
             $params = $this->sqlParams($query);
         }

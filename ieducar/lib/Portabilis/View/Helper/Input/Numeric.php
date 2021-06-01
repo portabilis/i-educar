@@ -51,7 +51,6 @@ class Portabilis_View_Helper_Input_Numeric extends Portabilis_View_Helper_Input_
         ];
 
         $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
-        $inputOptions['label'] = Portabilis_String_Utils::toLatin1($inputOptions['label'], ['escape' => false]);
 
         call_user_func_array([$this->viewInstance, 'campoNumero'], $inputOptions);
 
