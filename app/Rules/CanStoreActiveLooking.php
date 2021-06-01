@@ -4,7 +4,6 @@ namespace App\Rules;
 
 use App\Models\LegacyActiveLooking;
 use Illuminate\Contracts\Validation\Rule;
-use Illuminate\Support\Carbon;
 
 class CanStoreActiveLooking implements Rule
 {
