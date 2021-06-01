@@ -532,7 +532,7 @@ class PessoaController extends ApiCoreController
     {
         $pessoa = new clsPessoa_();
         $pessoa->idpes = $pessoaId;
-        $pessoa->nome = Portabilis_String_Utils::toLatin1($this->getRequest()->nome);
+        $pessoa->nome = $this->getRequest()->nome;
 
         $sql = 'select 1 from cadastro.pessoa WHERE idpes = $1 limit 1';
 
