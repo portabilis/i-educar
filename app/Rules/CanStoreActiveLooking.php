@@ -8,7 +8,7 @@ use Illuminate\Support\Carbon;
 
 class CanStoreActiveLooking implements Rule
 {
-    public $msg;
+    private $msg;
 
     public function passes($attribute, $value)
     {
