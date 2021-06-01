@@ -17,7 +17,6 @@ function ajustaTabelaDePessoasUnificadas() {
 function carregaDadosPessoas() {
   let pessoas_duplicadas = [];
 
-  $j('#adicionar_linha').hide();
   $j('input[id^="pessoa_duplicada["').each(function(id, input) {
     pessoas_duplicadas.push(input.value.split(' ')[0]);
   });
@@ -38,11 +37,46 @@ function carregaDadosPessoas() {
     url      : url,
     dataType : 'json',
     success  : function(response) {
+      if (exitemPessoasDuplicadas()) {
+        modalAjustePessoasUnificadas();
+        return;
+      }
+      $j('#adicionar_linha').hide();
       listaDadosPessoasUnificadas(response);
     }
   };
 
   getResources(options);
+}
+
+function exitemPessoasDuplicadas() {
+  let pessoas = [];
+
+  $j('input[id^="pessoa_duplicada["').each(function(id, input) {
+    pessoas.push(input.value.split(' ')[0]);
+  });
+
+  let pessoasSemDuplicidade = [...new Set(pessoas)];
+
+  return pessoas.length != pessoasSemDuplicidade.length;
+}
+
+function modalAjustePessoasUnificadas() {
+  makeDialog({
+    content: 'Selecione pessoas diferentes.',
+    title: 'Atenção!',
+    maxWidth: 400,
+    width: 400,
+    close: function () {
+      $j('#dialog-container').dialog('destroy');
+    },
+    buttons: [{
+      text: 'Ok',
+      click: function () {
+        $j('#dialog-container').dialog('destroy');
+      }
+    },]
+  });
 }
 
 function listaDadosPessoasUnificadas(response) {
