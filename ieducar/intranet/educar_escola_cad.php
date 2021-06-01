@@ -1855,7 +1855,7 @@ return new class extends clsCadastro {
         $this->utiliza_regra_diferenciada = !is_null($this->utiliza_regra_diferenciada);
         $obj = new clsPmieducarEscola($this->cod_escola);
         $escolaDetAntigo = $obj->detalhe();
-
+        $this->ref_idpes = $escolaDetAntigo['ref_idpes'];
         if ($this->cod_escola) {
             $obj = new clsPmieducarEscola($this->cod_escola, null, $this->pessoa_logada, $this->ref_cod_instituicao, $this->zona_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, $this->bloquear_lancamento_diario_anos_letivos_encerrados, $this->utiliza_regra_diferenciada);
             $obj->dependencia_administrativa = $this->dependencia_administrativa;
