@@ -77,7 +77,7 @@ class RotaController extends Portabilis_Controller_Page_EditController
 
         // ano
         $options = [
-            'label' => Portabilis_String_Utils::toLatin1($this->_getLabel('ano')),
+            'label' => $this->_getLabel('ano'),
             'required' => true,
             'size' => 5,
             'max_length' => 4
@@ -95,7 +95,7 @@ class RotaController extends Portabilis_Controller_Page_EditController
 
         // descricao
         $options = [
-            'label' => Portabilis_String_Utils::toLatin1($this->_getLabel('desc')),
+            'label' => $this->_getLabel('desc'),
             'required' => true,
             'size' => 50,
             'max_length' => 50
