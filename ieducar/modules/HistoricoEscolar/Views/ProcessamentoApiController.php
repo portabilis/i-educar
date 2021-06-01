@@ -968,7 +968,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     {
         $sql = 'select nm_serie from pmieducar.serie where cod_serie = $1';
 
-        return Portabilis_String_Utils::toLatin1(Portabilis_Utils_Database::selectField($sql, $serieId));
+        return Portabilis_Utils_Database::selectField($sql, $serieId);
     }
 
     protected function getSequencial($alunoId, $ano, $matriculaId)
