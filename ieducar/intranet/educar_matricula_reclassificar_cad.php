@@ -27,6 +27,7 @@ return new class extends clsCadastro {
     public $ref_cod_instituicao;
     public $ref_cod_curso;
     public $ref_cod_escola;
+    public $modalidade_ensino;
 
     public $ref_ref_cod_serie_antiga;
 
@@ -131,20 +132,37 @@ return new class extends clsCadastro {
                 return false;
                 die();
             }
-        } else {
-            if (substr($det_matricula['data_matricula'], 0, 10) > $this->data_cancel) {
-                $this->mensagem = 'Data de abandono não pode ser inferior a data da matrícula.<br>';
+        } elseif (substr($det_matricula['data_matricula'], 0, 10) > $this->data_cancel) {
+            $this->mensagem = 'Data de abandono não pode ser inferior a data da matrícula.<br>';
 
-                return false;
-                die();
-            }
+            return false;
+            die();
         }
 
         if (!$det_matricula || $det_matricula['aprovado'] != 3) {
             $this->simpleRedirect("educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
         }
 
-        $obj_matricula = new clsPmieducarMatricula($this->cod_matricula, null, null, null, $this->pessoa_logada, null, null, 5, null, null, 1, null, 0, null, null, $this->descricao_reclassificacao);
+        $obj_matricula = new clsPmieducarMatricula(
+            $this->cod_matricula,
+            null,
+            null,
+            null,
+            $this->pessoa_logada,
+            null,
+            null,
+            5,
+            null,
+            null,
+            1,
+            null,
+            0,
+            null,
+            null,
+            $this->descricao_reclassificacao,
+            $det_matricula['modalidade_ensino']
+        );
+
         $obj_matricula->data_cancel = $this->data_cancel;
         if (!$obj_matricula->edita()) {
             echo "<script>alert('Erro ao reclassificar matrícula'); window.location='educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}';</script>";
@@ -153,37 +171,63 @@ return new class extends clsCadastro {
         $obj_serie = new clsPmieducarSerie($this->ref_ref_cod_serie);
         $det_serie = $obj_serie->detalhe();
 
-        $obj_matricula = new clsPmieducarMatricula(null, null, $this->ref_cod_escola, $this->ref_ref_cod_serie, null, $this->pessoa_logada, $this->ref_cod_aluno, 3, null, null, 1, $det_matricula['ano'], 1, null, null, null, 1, $det_serie['ref_cod_curso']);
+        $obj_matricula = new clsPmieducarMatricula(
+            null,
+            null,
+            $this->ref_cod_escola,
+            $this->ref_ref_cod_serie,
+            null,
+            $this->pessoa_logada,
+            $this->ref_cod_aluno,
+            3,
+            null,
+            null,
+            1,
+            $det_matricula['ano'],
+            1,
+            null,
+            null,
+            null,
+            1,
+            $det_serie['ref_cod_curso'],
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            $det_matricula['modalidade_ensino']
+        );
+
         $obj_matricula->data_matricula = $this->data_cancel;
         $cadastrou = $obj_matricula->cadastra();
 
         if (!$cadastrou) {
             echo "<script>alert('Erro ao reclassificar matrícula'); window.location='educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}';</script>";
             die('Erro ao reclassificar matrícula');
-        } else {
-            /**
-             * desativa todas as enturmacoes da matricula anterior
-             */
-            $obj_matricula_turma = new clsPmieducarMatriculaTurma($this->cod_matricula);
-            if (!$obj_matricula_turma->reclassificacao($this->data_cancel)) {
-                echo "<script>alert('Erro ao desativar enturmações da matrícula: {$this->cod_matricula}\nContate o administrador do sistema informando a matrícula!');</script>";
-            }
-
-            $notaAluno = (new Avaliacao_Model_NotaAlunoDataMapper())
-                ->findAll(['id'], ['matricula_id' => $this->cod_matricula])[0];
-
-            if (!is_null($notaAluno)) {
-                $notaAlunoId = $notaAluno->get('id');
-                (new Avaliacao_Model_NotaComponenteMediaDataMapper())
-                    ->updateSituation($notaAlunoId, App_Model_MatriculaSituacao::RECLASSIFICADO);
-            }
-
-            //window.location='educar_matricula_det.php?cod_matricula={$this->cod_matricula}&ref_cod_aluno={$this->ref_cod_aluno}';
-            echo "<script>alert('Reclassificação realizada com sucesso!\\nO Código da nova matrícula é: $cadastrou.');
-            window.location='educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}';
-            </script>";
-            die('Reclassificação realizada com sucesso!');
         }
+
+        /**
+         * desativa todas as enturmacoes da matricula anterior
+         */
+        $obj_matricula_turma = new clsPmieducarMatriculaTurma($this->cod_matricula);
+        if (!$obj_matricula_turma->reclassificacao($this->data_cancel)) {
+            echo "<script>alert('Erro ao desativar enturmações da matrícula: {$this->cod_matricula}\nContate o administrador do sistema informando a matrícula!');</script>";
+        }
+
+        $notaAluno = (new Avaliacao_Model_NotaAlunoDataMapper())
+            ->findAll(['id'], ['matricula_id' => $this->cod_matricula])[0];
+
+        if (!is_null($notaAluno)) {
+            $notaAlunoId = $notaAluno->get('id');
+            (new Avaliacao_Model_NotaComponenteMediaDataMapper())
+                ->updateSituation($notaAlunoId, App_Model_MatriculaSituacao::RECLASSIFICADO);
+        }
+
+        echo "<script>alert('Reclassificação realizada com sucesso!\\nO Código da nova matrícula é: $cadastrou.');
+        window.location='educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}';
+        </script>";
+        die('Reclassificação realizada com sucesso!');
     }
 
     public function Excluir()

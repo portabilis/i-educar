@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\EmployeeWithdrawalController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,3 +27,5 @@ Route::group([
 
 Route::get('/school-class/calendars', 'Api\SchoolClassController@getCalendars');
 Route::get('/school-class/stages/{schoolClass}', 'Api\SchoolClassController@getStages');
+
+Route::delete('/employee-withdrawal/{id}', [EmployeeWithdrawalController::class, 'remove']);

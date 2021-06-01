@@ -3,6 +3,7 @@
 
     var $escolaField = getElementFor('escola');
     var $serieField = getElementFor('serie');
+    var $anoField = getElementFor('ano');
     var $componenteCurricularField = getElementFor('componente_curricular');
 
     var handleGetComponentesCurriculares = function (response) {
@@ -18,7 +19,8 @@
 
         var data = {
           escola: $escolaField.attr('value'),
-          serie: $serieField.attr('value')
+          serie: $serieField.attr('value'),
+          ano: $anoField.attr('value')
         };
 
         var urlForGetComponentesCurriculares = getResourceUrlBuilder.buildUrl(
