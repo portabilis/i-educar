@@ -1,11 +1,7 @@
 <?php
 
 return new class extends clsCadastro {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
+
     public $pessoa_logada;
 
     public $cod_tipo_dispensa;
@@ -41,9 +37,9 @@ return new class extends clsCadastro {
                 $retorno = 'Editar';
             }
         }
-        $this->url_cancelar = ($retorno == 'Editar') ? "educar_tipo_dispensa_det.php?cod_tipo_dispensa={$registro['cod_tipo_dispensa']}" : 'educar_tipo_dispensa_lst.php';
+        $this->url_cancelar = ($retorno === 'Editar') ? "educar_tipo_dispensa_det.php?cod_tipo_dispensa={$registro['cod_tipo_dispensa']}" : 'educar_tipo_dispensa_lst.php';
 
-        $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
+        $nomeMenu = $retorno === 'Editar' ? $retorno : 'Cadastrar';
 
         $this->breadcrumb($nomeMenu . ' tipo de dispensa', [
             url('intranet/educar_index.php') => 'Escola',
