@@ -91,7 +91,7 @@ return new class extends clsCadastro {
         }
 
         if ($this->ref_cod_turma_copiar_enturmacoes) {
-            $this->nome_url_sucesso = Portabilis_String_Utils::toLatin1('Gravar enturmações');
+            $this->nome_url_sucesso = 'Gravar enturmações';
             $url = route('enrollments.batch.enroll.index', ['schoolClass' => $this->ref_cod_turma_copiar_enturmacoes]);
         } else {
             $url = 'educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno;
@@ -152,11 +152,11 @@ return new class extends clsCadastro {
         }
 
         if ($this->ref_cod_turma_copiar_enturmacoes) {
-            $this->nome_url_sucesso = Portabilis_String_Utils::toLatin1('Gravar enturmações');
+            $this->nome_url_sucesso ='Gravar enturmações';
         }
 
         $this->inputsHelper()->dynamic(['ano', 'instituicao', 'escola', 'curso', 'serie', 'turma']);
-        $this->inputsHelper()->date('data_matricula', ['label' => Portabilis_String_Utils::toLatin1('Data da matrícula'), 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')]);
+        $this->inputsHelper()->date('data_matricula', ['label' => 'Data da matrícula', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')]);
         $this->inputsHelper()->textArea('observacoes', ['required' => false, 'label' => 'Observações']);
         $this->inputsHelper()->hidden('ano_em_andamento', ['value' => '1']);
 
@@ -164,7 +164,7 @@ return new class extends clsCadastro {
             $this->inputsHelper()->checkbox(
                 'dependencia',
                 [
-                    'label' => Portabilis_String_Utils::toLatin1('Matrícula de dependência?'),
+                    'label' => 'Matrícula de dependência?',
                     'value' => $this->dependencia
                 ]
             );
@@ -343,11 +343,11 @@ return new class extends clsCadastro {
         }
 
         if ($this->verificaAlunoFalecido()) {
-            $this->mensagem = Portabilis_String_Utils::toLatin1('Não é possível matricular alunos falecidos.');
+            $this->mensagem = 'Não é possível matricular alunos falecidos.';
         }
 
         if (!$this->permiteMatriculaSerieDestino() && $this->bloqueiaMatriculaSerieNaoSeguinte()) {
-            $this->mensagem = Portabilis_String_Utils::toLatin1('Não é possível matricular alunos em séries fora da sequência de enturmação.');
+            $this->mensagem = 'Não é possível matricular alunos em séries fora da sequência de enturmação.';
 
             return false;
         }
@@ -363,7 +363,7 @@ return new class extends clsCadastro {
             $bairro_aluno = $db->CampoUnico("select Upper(nome) from public.bairro where idbai = (select idbai from cadastro.endereco_pessoa where idpes = (select ref_idpes from pmieducar.aluno where cod_aluno = {$this->ref_cod_aluno}))");
 
             if (strcasecmp($bairro_aluno, $bairro_escola) != 0) {
-                $this->mensagem = Portabilis_String_Utils::toLatin1('O aluno deve morar no mesmo bairro da escola');
+                $this->mensagem = 'O aluno deve morar no mesmo bairro da escola';
 
                 return false;
             }
@@ -521,12 +521,12 @@ return new class extends clsCadastro {
                 $dentroPeriodoCorte = $serie->verificaPeriodoCorteEtarioDataNascimento($detPes['data_nasc'], $this->ano);
 
                 if ($bloquearMatriculaFaixaEtaria && !$dentroPeriodoCorte) {
-                    $this->mensagem = Portabilis_String_Utils::toLatin1('Não foi possível realizar a matrícula, pois a idade do aluno está fora da faixa etária da série');
+                    $this->mensagem = 'Não foi possível realizar a matrícula, pois a idade do aluno está fora da faixa etária da série');
 
                     return false;
                 } elseif ($alertaFaixaEtaria && !$dentroPeriodoCorte) {
                     echo '<script type="text/javascript">
-                        var msg = \'' . Portabilis_String_Utils::toLatin1('A idade do aluno encontra-se fora da faixa etária pré-definida na série, deseja continuar com a matrícula?') . '\';
+                        var msg = \'' . 'A idade do aluno encontra-se fora da faixa etária pré-definida na série, deseja continuar com a matrícula?' . '\';
                         if (!confirm(msg)) {
                           window.location = \'educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno . '\';
                         } else {
@@ -826,7 +826,7 @@ return new class extends clsCadastro {
 
                 if (($countEscolasDiferentes > 0) && (!$reloadReserva)) {
                     echo '<script type="text/javascript">
-                      var msg = \'' . Portabilis_String_Utils::toLatin1('O aluno possui uma reserva de vaga em outra escola, deseja matricula-lo assim mesmo?') . '\';
+                      var msg = \'' . 'O aluno possui uma reserva de vaga em outra escola, deseja matricula-lo assim mesmo?' . '\';
                       if (!confirm(msg)) {
                         window.location = \'educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno . '\';
                       } else {
@@ -981,7 +981,7 @@ return new class extends clsCadastro {
 
             return false;
         } else {
-            $this->mensagem = Portabilis_String_Utils::toLatin1('O ano (letivo) selecionado não está em andamento na escola selecionada.<br />');
+            $this->mensagem = 'O ano (letivo) selecionado não está em andamento na escola selecionada.<br />';
 
             return false;
         }
@@ -1020,7 +1020,7 @@ return new class extends clsCadastro {
                                                             WHERE serie.cod_serie = {$this->ref_cod_serie}");
 
         if ($matriculasDependencia >= $matriculasDependenciaPermitida) {
-            $this->mensagem = Portabilis_String_Utils::toLatin1("A regra desta série limita a quantidade de matrículas de dependência para {$matriculasDependenciaPermitida}.");
+            $this->mensagem = "A regra desta série limita a quantidade de matrículas de dependência para {$matriculasDependenciaPermitida}.";
 
             return false;
         }
@@ -1249,7 +1249,7 @@ return new class extends clsCadastro {
             );
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br />';
+        $this->mensagem = 'Exclusão não realizada.<br />';
 
         return false;
     }
@@ -1350,14 +1350,14 @@ return new class extends clsCadastro {
         if (!$dependencia) {
             // Caso quantidade de matrículas naquela turma seja maior ou igual que a capacidade da turma deve bloquear
             if ($this->_getQtdMatriculaTurma() >= $this->_getMaxAlunoTurma()) {
-                $this->mensagem = Portabilis_String_Utils::toLatin1('Não existem vagas disponíveis para essa turma!') . '<br/>';
+                $this->mensagem = 'Não existem vagas disponíveis para essa turma! <br/>';
 
                 return false;
             }
 
             // Caso a capacidade de alunos naquele turno seja menor ou igual ao ao número de alunos matrículados + alunos na reserva de vaga externa deve bloquear
             if ($this->_getMaxAlunoTurno() <= ($this->_getQtdAlunosFila() + $this->_getQtdMatriculaTurno())) {
-                $this->mensagem = Portabilis_String_Utils::toLatin1('Não existem vagas disponíveis para essa série/turno!') . '<br/>';
+                $this->mensagem = 'Não existem vagas disponíveis para essa série/turno! <br/>';
 
                 return false;
             }

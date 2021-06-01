@@ -896,10 +896,7 @@ return new class extends clsCadastro {
         //pela antiga interface do cadastro de alunos.
 
         if (! $parentId && $this->_aluno['nm_' . $parentType]) {
-            $nome = Portabilis_String_Utils::toLatin1(
-                $this->_aluno['nm_' . $parentType],
-                ['transform' => true, 'escape' => false]
-            );
+            $nome = $this->_aluno['nm_' . $parentType];
 
             $inputHint = '<br /><b>Dica:</b> Foi informado o nome "' . $nome .
             '" no cadastro de aluno,<br />tente pesquisar esta pessoa ' .

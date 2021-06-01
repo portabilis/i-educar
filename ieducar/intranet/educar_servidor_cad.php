@@ -430,7 +430,7 @@ return new class extends clsCadastro {
 
         $resources = [
             null => 'Selecione',
-            1 => Portabilis_String_Utils::toLatin1('Concluído'),
+            1 => 'Concluído',
             2 => 'Em andamento'
         ];
 
