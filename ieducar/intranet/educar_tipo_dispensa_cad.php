@@ -66,42 +66,48 @@ return new class extends clsCadastro {
     {
         $obj = new clsPmieducarTipoDispensa(null, null, $this->pessoa_logada, $this->nm_tipo, $this->descricao, null, null, 1, $this->ref_cod_instituicao);
         $cadastrou = $obj->cadastra();
-        if ($cadastrou) {
-            $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-            $this->simpleRedirect('educar_tipo_dispensa_lst.php');
+
+        if ($cadastrou === false) {
+            $this->mensagem = 'Cadastro não realizado.<br>';
+
+            return false;
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
-
-        return false;
+        $this->mensagem = 'Cadastro efetuado com sucesso.<br>';
+        $this->simpleRedirect('educar_tipo_dispensa_lst.php');
+        return true;
     }
 
     public function Editar()
     {
         $obj = new clsPmieducarTipoDispensa($this->cod_tipo_dispensa, $this->pessoa_logada, null, $this->nm_tipo, $this->descricao, null, null, 1, $this->ref_cod_instituicao);
         $editou = $obj->edita();
-        if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
-            $this->simpleRedirect('educar_tipo_dispensa_lst.php');
+
+        if ($editou === false) {
+            $this->mensagem = 'Edição não realizada.<br>';
+            return false;
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+        $this->simpleRedirect('educar_tipo_dispensa_lst.php');
 
-        return false;
+        return true;
     }
 
     public function Excluir()
     {
         $obj = new clsPmieducarTipoDispensa($this->cod_tipo_dispensa, $this->pessoa_logada, null, null, null, null, null, 0);
         $excluiu = $obj->excluir();
-        if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
-            $this->simpleRedirect('educar_tipo_dispensa_lst.php');
+
+        if ($excluiu === false) {
+            $this->mensagem = 'Exclusão não realizada.<br>';
+
+            return false;
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
-
-        return false;
+        $this->mensagem = 'Exclus&atilde;o efetuada com sucesso.<br>';
+        $this->simpleRedirect('educar_tipo_dispensa_lst.php');
+        return true;
     }
 
     public function Formular()
