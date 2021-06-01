@@ -868,6 +868,8 @@ return new class extends clsCadastro {
 
     public function Novo()
     {
+        $this->multiseriada = isset($this->multiseriada) ? 1 : 0;
+
         if (!$this->canCreateTurma($this->ref_cod_escola, $this->ref_cod_serie, $this->turma_turno_id)) {
             return false;
         }
@@ -894,7 +896,6 @@ return new class extends clsCadastro {
 
         $this->ref_cod_instituicao_regente = $this->ref_cod_instituicao;
 
-        $this->multiseriada = isset($this->multiseriada) ? 1 : 0;
         $this->visivel = isset($this->visivel);
 
         $objTurma = $this->montaObjetoTurma(null, $this->pessoa_logada);
