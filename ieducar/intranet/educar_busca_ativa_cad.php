@@ -138,9 +138,8 @@ return new class extends clsCadastro {
 
         try {
             DB::beginTransaction();
-
             $activeLookingService->store($legacyActiveLooking, $legacyRegistration);
-
+            DB::commit();
         } catch (ValidationException $e) {
             $this->mensagem = $e->validator->errors()->first();
             DB::rollBack();
@@ -150,7 +149,6 @@ return new class extends clsCadastro {
             DB::rollBack();
             return false;
         }
-        DB::commit();
         $this->mensagem = 'Cadastro efetuado com sucesso.<br />';
 
         if ($this->resultado_busca_ativa == ActiveLooking::ACTIVE_LOOKING_ABANDONMENT_RESULT) {
@@ -179,12 +177,12 @@ return new class extends clsCadastro {
         try {
             DB::beginTransaction();
             $activeLookingService->delete($legacyActiveLooking);
+            DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
             $this->mensagem = 'Exclusão não realizada.';
             return false;
         }
-        DB::commit();
 
         $this->mensagem = 'Exclusão efetuada com sucesso.';
         $this->simpleRedirect('educar_busca_ativa_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
@@ -207,10 +205,10 @@ return new class extends clsCadastro {
 
     private function buildObjectBeforeStore()
     {
-        if(!empty($this->id)){
-            $legacyActiveLooking = LegacyActiveLooking::find($this->id);
-        } else {
+        if(empty($this->id)){
             $legacyActiveLooking = new LegacyActiveLooking();
+        } else {
+            $legacyActiveLooking = LegacyActiveLooking::find($this->id);
         }
 
         $this->data_inicio = Carbon::createFromFormat('d/m/Y', $this->data_inicio)->format('Y-m-d');
