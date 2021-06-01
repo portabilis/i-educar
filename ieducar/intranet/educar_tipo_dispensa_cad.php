@@ -31,8 +31,6 @@ return new class extends clsCadastro {
                     $this->$campo = $val;
                 }
 
-                $this->ref_cod_instituicao = $det_ref_cod_escola['ref_cod_instituicao'];
-
                 $this->fexcluir = $obj_permissoes->permissao_excluir(577, $this->pessoa_logada, 7);
                 $retorno = 'Editar';
             }
