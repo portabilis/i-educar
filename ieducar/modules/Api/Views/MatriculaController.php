@@ -882,6 +882,7 @@ class MatriculaController extends ApiCoreController
                     string_agg(CAST(de.etapa AS VARCHAR), ',') AS etapas,
                     dd.updated_at,
                     null as deleted_at
+                FROM pmieducar.dispensa_disciplina AS dd
                 INNER JOIN pmieducar.matricula m
                 ON m.cod_matricula = dd.ref_cod_matricula
                 LEFT JOIN pmieducar.dispensa_etapa de
@@ -978,7 +979,9 @@ class MatriculaController extends ApiCoreController
             ->where('busca_ativa.updated_at', '>=', $modified)
             ->where('ano', $ano);
 
-        if (!empty($escola)) {
+        if (empty($escola)) {
+
+        } else {
             $legacyActiveLooking->whereIn('ref_ref_cod_escola', explode(',', $escola));
         }
 
