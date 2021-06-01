@@ -50,4 +50,14 @@ class LegacyActiveLooking extends Model
     {
         return $this->belongsTo(LegacyRegistration::class, 'ref_cod_matricula');
     }
+
+    public function getStartDate()
+    {
+        return $this->data_inicio ? $this->data_inicio->format('Y-m-d') : null;
+    }
+
+    public function getEndDate()
+    {
+        return $this->data_fim ? $this->data_fim->format('Y-m-d') : null;
+    }
 }
