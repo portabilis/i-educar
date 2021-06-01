@@ -46,12 +46,17 @@ function carregaDadosPessoas() {
 }
 
 function listaDadosPessoasUnificadas(response) {
+  disabilitaSearchInputs();
   montaTabela(response);
   adicionaSeparador();
   adicionaCheckboxConfirmacao();
   adicionaBotoes();
   uniqueCheck();
   habilitaUnificar();
+}
+
+function disabilitaSearchInputs() {
+  $j('input[id^="pessoa_duplicada["').prop('disabled', true);
 }
 
 function habilitaUnificar() {
