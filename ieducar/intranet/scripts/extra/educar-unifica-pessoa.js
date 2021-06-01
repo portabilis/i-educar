@@ -65,9 +65,11 @@ function habilitaUnificar() {
  $j('#unifica_pessoa').prop('disabled', !checked);
  if (checked === false) {
    $j('#unifica_pessoa').removeClass('btn-green');
+   $j('#unifica_pessoa').addClass('btn-disabled');
    return;
  }
  $j('#unifica_pessoa').addClass('btn-green');
+ $j('#unifica_pessoa').removeClass('btn-disabled');
 }
 
 function adicionaBotoes() {

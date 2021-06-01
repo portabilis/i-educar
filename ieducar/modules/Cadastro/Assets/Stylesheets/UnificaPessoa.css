@@ -59,3 +59,8 @@ tr.linha_listagem:nth-child(even) {
 .linhaBotoes td input {
     margin: 0px 4px;
 }
+
+.botaolistagem.btn-disabled {
+    background: rgb(233, 240, 248) !important;
+    cursor: not-allowed;
+}
