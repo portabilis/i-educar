@@ -208,7 +208,7 @@ return new class extends clsCadastro {
 
         $this->campoMonetario('carga_horaria', 'Carga Horária', $this->carga_horaria, 7, 7, true);
 
-        $this->campoNumero('dias_letivos', 'Dias letivos', $this->dias_letivos, 3, 3, true);
+        $this->campoNumero('dias_letivos', 'Dias letivos', $this->dias_letivos, 10, 10, true);
 
         $this->campoNumero('idade_ideal', 'Idade padrão', $this->idade_ideal, 2, 2, false);
 
