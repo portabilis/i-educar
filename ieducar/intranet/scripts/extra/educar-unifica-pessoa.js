@@ -21,10 +21,6 @@ function carregaDadosPessoas() {
     pessoas_duplicadas.push(input.value.split(' ')[0]);
   });
 
-  $j('.tr_tabela_pessoas td a').each(function(id, input) {
-    input.remove();
-  });
-
   var url = getResourceUrlBuilder.buildUrl(
     '/module/Api/Pessoa',
     'dadosUnificacaoPessoa',
@@ -117,6 +113,7 @@ function modalAjustePessoasUnificadas() {
 }
 
 function listaDadosPessoasUnificadas(response) {
+  removeExclusaoDePessoas();
   disabilitaSearchInputs();
   montaTabela(response);
   adicionaSeparador();
@@ -124,6 +121,12 @@ function listaDadosPessoasUnificadas(response) {
   adicionaBotoes();
   uniqueCheck();
   desabilitaBotaoUnificar();
+}
+
+function removeExclusaoDePessoas() {
+  $j('.tr_tabela_pessoas td a').each(function(id, input) {
+    input.remove();
+  });
 }
 
 function disabilitaSearchInputs() {
