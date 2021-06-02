@@ -36,6 +36,9 @@ var handleGetMatriculas = function(dataResponse) {
   try{
     handleMessages(dataResponse.msgs);
 
+    $j('#matriculas').remove();
+
+    fixupTabelaMatriculas();
 
     var $matriculasTable      = $j('#matriculas');
     var transferenciaEmAberto = false;
@@ -177,6 +180,7 @@ function onSituacaoChange(matricula_id, novaSituacao){
 
 var handlePostSituacao = function(dataresponse){
   handleMessages(dataresponse.msgs);
+  getMatriculas();
 }
 
 function onDataEntradaChange(matricula_id, key, campo){
