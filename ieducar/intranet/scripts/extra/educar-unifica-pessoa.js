@@ -51,6 +51,33 @@ function carregaDadosPessoas() {
   getResources(options);
 }
 
+function recarregaListaDePessoas() {
+  let pessoas_duplicadas = [];
+
+  $j('input[id^="pessoa_duplicada["').each(function(id, input) {
+    pessoas_duplicadas.push(input.value.split(' ')[0]);
+  });
+
+  var url = getResourceUrlBuilder.buildUrl(
+    '/module/Api/Pessoa',
+    'dadosUnificacaoPessoa',
+    {
+      pessoas_ids : pessoas_duplicadas
+    }
+  );
+
+  var options = {
+    url      : url,
+    dataType : 'json',
+    success  : function(response) {
+      montaTabela(response);
+      apresentaObservacoes(response.pessoas);
+    }
+  };
+
+  getResources(options);
+}
+
 function exiteMaisDeUmaPessoa() {
   let pessoas = [];
 
@@ -118,6 +145,7 @@ function listaDadosPessoasUnificadas(response) {
   disabilitaSearchInputs();
   montaTabela(response);
   adicionaSeparador();
+  apresentaObservacoes(response.pessoas);
   adicionaCheckboxConfirmacao();
   adicionaBotoes();
   uniqueCheck();
@@ -225,7 +253,7 @@ function adicionaSeparador() {
 }
 
 function adicionaCheckboxConfirmacao() {
-  $j('<tr id="tr_confirma_dados_unificacao"></tr>').insertAfter($j('.lista_pessoas_unificadas_hr'));
+  $j('<tr id="tr_confirma_dados_unificacao"></tr>').insertBefore($j('.linhaBotoes'));
 
   let htmlCheckbox = '<td colspan="2">'
   htmlCheckbox += '<input onchange="confirmaAnalise()" id="check_confirma_dados_unificacao" type="checkbox" />';
@@ -236,16 +264,19 @@ function adicionaCheckboxConfirmacao() {
 }
 
 function montaTabela(response) {
+  $j('tr#lista_dados_pessoas_unificadas').remove().animate({});
+  $j('tr#unifica_pessoa_titulo').remove().animate({});
+
+  $j('<tr id="lista_dados_pessoas_unificadas"></tr>').insertAfter($j('.tableDetalheLinhaSeparador').first().closest('tr')).hide().show('slow');
   $j(`
-    <tr>
+    <tr id="unifica_pessoa_titulo">
       <td colspan="2">
         <h2 class="unifica_pessoa_h2">
           Seleciona a pessoa que tenha preferencialmente vínculo(s) e com dados relavantes mais completos.
         </h2>
       </td>
     </tr>
-  `).insertBefore($j('.linhaBotoes'));
-  $j('<tr id="lista_dados_pessoas_unificadas"></tr>').insertBefore($j('.linhaBotoes'));
+  `).insertAfter($j('.tableDetalheLinhaSeparador').first().closest('tr')).hide().show('slow');
 
   let html = `
     <td colspan="2">
@@ -335,6 +366,39 @@ function confirmaRemocaoPessoaUnificacao() {
       }
     }]
   });
+}
+
+function apresentaObservacoes(pessoas) {
+  $j('#tr_observacoes').remove();
+  let alunos = 0;
+
+  pessoas.each(function(value, id) {
+    let vinculos = value.vinculo.split(', ');
+    if ($j.inArray('Aluno',vinculos) != -1) {
+      alunos++;
+    }
+  });
+
+  if (alunos > 1) {
+    $j('<tr id="tr_observacoes"></tr>').insertAfter($j('.lista_pessoas_unificadas_hr'));
+    htmlApresentaObservacoes();
+    return;
+  }
+}
+
+function htmlApresentaObservacoes() {
+  html = `
+    <td colspan="2">
+      <div>
+        Consta mais de um vínculo de aluno na lista de pessoas a serem unificadas, 
+        <a href="/intranet/educar_unifica_aluno.php" target="_new"><b>clique aqui</b></a> para fazer a Unificação de alunos antes de unificar as pessoas físicas. 
+        Após a unificação clique no botão abaixo para recarregar a listagem de pessoas. <br>
+        <a id="recarregar_lista" onclick="recarregaListaDePessoas()"><b>Recarregar lista</br></a>
+      </div>
+    </td>
+  `;
+
+  $j('#tr_observacoes').html(html);
 }
 
 function voltar() {

@@ -65,6 +65,30 @@ tr.linha_listagem:nth-child(even) {
     cursor: not-allowed;
 }
 
+.lista_pessoas_unificadas_hr hr {
+
+}
+
 tr a {
     color: #47728f;
+    cursor: pointer;
+}
+
+#tr_observacoes td div {
+    padding: 10px;
+    color: #FF4E4E;
+    background: #FFEEEE;
+    border-radius: 8px;
+    border: 1px solid;
+    font-size: 12px;
+    margin-top: 12px;
+}
+
+#tr_observacoes td div a#recarregar_lista {
+    display: inline-block;
+    background-color: rgba(255, 78, 78, .5);
+    color: #FFF;
+    padding: 5px 10px;
+    border-radius: 4px;
+    margin-top: 10px;
 }
