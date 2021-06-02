@@ -5,6 +5,8 @@ $j('#btn_add_tab_add_1').click(function(){
   ajustaTabelaDePessoasUnificadas();
 });
 
+var $quantidadeDeVinculosComAlunos = 0;
+
 function adicionaMaisUmaLinhaNaTabela() {
   tab_add_1.addRow();
 }
@@ -72,6 +74,8 @@ function recarregaListaDePessoas() {
     success  : function(response) {
       montaTabela(response);
       apresentaObservacoes(response.pessoas);
+      uniqueCheck();
+      $j('#check_confirma_dados_unificacao').prop('checked', false);
     }
   };
 
@@ -164,8 +168,12 @@ function disabilitaSearchInputs() {
 
 function confirmaAnalise() {
   let checked = $j('#check_confirma_dados_unificacao').is(':checked');
+
   if (existePessoaPrincipal() && checked) {
-    habilitaBotaoUnificar();
+    if ($quantidadeDeVinculosComAlunos <= 1) {
+      habilitaBotaoUnificar();
+    }
+
     return;
   }
   
@@ -378,6 +386,8 @@ function apresentaObservacoes(pessoas) {
       alunos++;
     }
   });
+
+  $quantidadeDeVinculosComAlunos = alunos;
 
   if (alunos > 1) {
     $j('<tr id="tr_observacoes"></tr>').insertAfter($j('.lista_pessoas_unificadas_hr'));
