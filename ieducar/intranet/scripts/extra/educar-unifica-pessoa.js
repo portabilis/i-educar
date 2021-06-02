@@ -113,6 +113,7 @@ function modalAjustePessoasUnificadas() {
 }
 
 function listaDadosPessoasUnificadas(response) {
+  modalAvisoComplementaDadosPessoa();
   removeExclusaoDePessoas();
   disabilitaSearchInputs();
   montaTabela(response);
@@ -173,7 +174,6 @@ function existePessoaPrincipal() {
   return existePessoaPrincipal;
 }
 
-
 function modalExigePessoaPrincipal() {
   makeDialog({
     content: 'Você precisa definir uma pessoa como principal.',
@@ -188,6 +188,26 @@ function modalExigePessoaPrincipal() {
       text: 'Ok',
       click: function () {
         $j('#check_confirma_dados_unificacao').prop('checked', false);
+        $j('#dialog-container').dialog('destroy');
+      }
+    },]
+  });
+}
+
+function modalAvisoComplementaDadosPessoa() {
+  makeDialog({
+    content: `Para complementar os dados da pessoa que selecionou como principal,
+    é necessário fazê-lo manualmente editando os dados da pessoa física antes da Unificação de Pessoas.
+    <b>Caso não faça essa complementação, os dados das pessoas físicas não selecionadas como principal serão perdidos.</b>`,
+    title: 'Atenção!',
+    maxWidth: 860,
+    width: 860,
+    close: function () {
+      $j('#dialog-container').dialog('destroy');
+    },
+    buttons: [{
+      text: 'Ok',
+      click: function () {
         $j('#dialog-container').dialog('destroy');
       }
     },]
