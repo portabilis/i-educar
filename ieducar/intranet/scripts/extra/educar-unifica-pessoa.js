@@ -37,16 +37,53 @@ function carregaDadosPessoas() {
     url      : url,
     dataType : 'json',
     success  : function(response) {
+      if (!exiteMaisDeUmaPessoa()) {
+        modalInformeMaisPessoas();
+        return;
+      }
+
       if (exitemPessoasDuplicadas()) {
         modalAjustePessoasUnificadas();
         return;
       }
+
       $j('#adicionar_linha').hide();
       listaDadosPessoasUnificadas(response);
     }
   };
 
   getResources(options);
+}
+
+function exiteMaisDeUmaPessoa() {
+  let pessoas = [];
+
+  $j('input[id^="pessoa_duplicada["').each(function(id, input) {
+    idpes = input.value.split(' ')[0];
+    if (idpes) {
+      pessoas.push(idpes);
+    }
+  });
+
+  return pessoas.length > 1;
+}
+
+function modalInformeMaisPessoas() {
+  makeDialog({
+    content: 'Informe pelo menos duas pessoas para unificar.',
+    title: 'Atenção!',
+    maxWidth: 400,
+    width: 400,
+    close: function () {
+      $j('#dialog-container').dialog('destroy');
+    },
+    buttons: [{
+      text: 'Ok',
+      click: function () {
+        $j('#dialog-container').dialog('destroy');
+      }
+    },]
+  });
 }
 
 function exitemPessoasDuplicadas() {
