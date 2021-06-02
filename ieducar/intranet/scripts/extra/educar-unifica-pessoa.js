@@ -247,7 +247,7 @@ function montaTabela(response) {
     html += '<tr id="' + value.idpes + '" class="linha_listagem">';
     html += '<td><input type="checkbox" class="check_principal" id="check_principal_' + value.idpes + '"</td>';
     html += '<td>'+ value.vinculo +'</td>';
-    html += '<td>'+ value.nome +'</td>';
+    html += '<td><a target="_new" href="/intranet/atendidos_det.php?cod_pessoa=' + value.idpes + '">'+ value.nome +'</a></td>';
     html += '<td>'+ value.data_nascimento +'</td>';
     html += '<td>'+ value.sexo +'</td>';
     html += '<td>'+ value.cpf +'</td>';

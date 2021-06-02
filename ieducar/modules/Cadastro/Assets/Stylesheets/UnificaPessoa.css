@@ -64,3 +64,7 @@ tr.linha_listagem:nth-child(even) {
     background: rgb(233, 240, 248) !important;
     cursor: not-allowed;
 }
+
+tr a {
+    color: #47728f;
+}
