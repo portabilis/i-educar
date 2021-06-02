@@ -659,8 +659,8 @@ class PessoaController extends ApiCoreController
             FROM cadastro.pessoa p
             JOIN cadastro.fisica f ON f.idpes = p.idpes
             LEFT JOIN cadastro.documento d ON d.idpes = f.idpes
-            LEFT JOIN pmieducar.aluno a ON a.ref_idpes = p.idpes
-            LEFT JOIN pmieducar.servidor s ON s.cod_servidor = p.idpes
+            LEFT JOIN pmieducar.aluno a ON a.ref_idpes = p.idpes AND a.ativo = 1
+            LEFT JOIN pmieducar.servidor s ON s.cod_servidor = p.idpes AND s.ativo = 1
             LEFT JOIN cadastro.pessoa pm ON pm.idpes = f.idpes_mae
             WHERE p.idpes IN (' . $pessoasIds . ');
         ';
