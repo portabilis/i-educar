@@ -110,7 +110,7 @@ return new class extends clsCadastro {
         $textAreaSettings = [
             'label' => 'Observação',
             'value' => $this->observacoes,
-            'max_length' => 300,
+            'max_length' => 900,
             'cols' => 60,
             'rows' => 5,
             'placeholder' => '',
