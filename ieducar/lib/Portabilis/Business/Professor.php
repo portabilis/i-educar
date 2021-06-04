@@ -165,7 +165,9 @@ class Portabilis_Business_Professor
             $sql = '
                 SELECT
                     s.cod_serie as id,
-                    s.nm_serie as nome
+                    CASE WHEN (s.descricao is not null or s.descricao <> \'\')
+                    THEN s.nm_serie||\' (\'||s.descricao||\')\'
+                    ELSE s.nm_serie END as nome
                 FROM pmieducar.quadro_horario qh
                 INNER JOIN pmieducar.quadro_horario_horarios qhh
                 ON (qh.cod_quadro_horario = qhh.ref_cod_quadro_horario)
