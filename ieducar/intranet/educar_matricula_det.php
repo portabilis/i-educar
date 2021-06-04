@@ -4,6 +4,8 @@ use App\Models\LegacyExemptionType;
 use App\Process;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\School\Model\ExemptionType;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 return new class extends clsDetalhe {
     public $titulo;
@@ -438,9 +440,14 @@ return new class extends clsDetalhe {
 
     public function permissao_busca_ativa()
     {
-        $acesso = new clsPermissoes();
+        $user = Auth::user();
+        $allow = Gate::allows('modify', Process::ACTIVE_LOOKING);
 
-        return $acesso->permissao_cadastra(Process::ACTIVE_LOOKING, $this->pessoa_logada, 7, null, true);
+        if ($user->isLibrary()) {
+            return false;
+        }
+
+        return $allow;
     }
 
     public function permissaoReclassificar()
