@@ -32,6 +32,7 @@ return new class extends clsCadastro {
     public $multi_seriado;
     public $modalidade_curso;
     public $importar_curso_pre_matricula;
+    public $descricao;
 
     public function Inicializar()
     {
@@ -255,7 +256,7 @@ return new class extends clsCadastro {
         $this->campoTexto('nm_curso', 'Curso', $this->nm_curso, 30, 255, true);
 
         $this->campoTexto('sgl_curso', 'Sigla Curso', $this->sgl_curso, 15, 15, false);
-
+        $this->campoTexto('descricao', 'Descrição', $this->descricao, 15, 50, false,false, '','Caso o campo seja preenchido a descrição será apresentada nas listagens e filtros de busca');
         $this->campoNumero('qtd_etapas', 'Quantidade Etapas', $this->qtd_etapas, 2, 2, true);
 
         if (is_numeric($this->hora_falta)) {
@@ -304,7 +305,7 @@ return new class extends clsCadastro {
 
         $this->campoOculto('excluir_', '');
         $qtd_habilitacao = 1;
-        $aux;
+        $aux = [];
 
         $this->campoQuebra();
         if ($this->habilitacao_curso) {
@@ -472,7 +473,8 @@ return new class extends clsCadastro {
                 $this->hora_falta,
                 null,
                 $this->multi_seriado,
-                $this->importar_curso_pre_matricula
+                $this->importar_curso_pre_matricula,
+                $this->descricao
             );
             $obj->modalidade_curso = $this->modalidade_curso;
 
@@ -550,7 +552,8 @@ return new class extends clsCadastro {
                 $this->hora_falta,
                 null,
                 $this->multi_seriado,
-                $this->importar_curso_pre_matricula
+                $this->importar_curso_pre_matricula,
+                $this->descricao
             );
             $obj->modalidade_curso = $this->modalidade_curso;
 
