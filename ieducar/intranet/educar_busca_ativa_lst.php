@@ -21,7 +21,7 @@ return new class extends clsListagem {
     {
         parent::__construct();
         $user = Auth::user();
-        $allow = Gate::allows('modify', Process::ACTIVE_LOOKING);
+        $allow = Gate::allows('view', Process::ACTIVE_LOOKING);
 
         if ($user->isLibrary() || !$allow) {
             $this->simpleRedirect('/intranet/index.php');

@@ -34,9 +34,8 @@ return new class extends clsCadastro {
         parent::__construct();
 
         $user = Auth::user();
-        $allow = Gate::allows('modify', Process::ACTIVE_LOOKING);
 
-        if ($user->isLibrary() || !$allow) {
+        if ($user->isLibrary()) {
             $this->simpleRedirect('/intranet/index.php');
             return false;
         }
@@ -141,6 +140,9 @@ return new class extends clsCadastro {
 
     public function Novo()
     {
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_cadastra(Process::ACTIVE_LOOKING, $this->pessoa_logada, 7, "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
+
         $legacyRegistration = LegacyRegistration::findOrFail($this->ref_cod_matricula);
         $this->redirectIf(!$legacyRegistration, 'educar_matricula_lst.php');
         $this->ref_cod_aluno = $legacyRegistration->ref_cod_aluno;
