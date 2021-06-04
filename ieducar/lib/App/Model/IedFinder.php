@@ -129,7 +129,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         $curso->cod_curso = $id;
         $curso = $curso->detalhe();
 
-        return $curso['nm_curso'];
+        return empty($curso['descricao']) ? $curso['nm_curso'] : "{$curso['nm_curso']} ({$curso['descricao']})";
     }
 
     /**

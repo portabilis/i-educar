@@ -109,7 +109,9 @@ class Portabilis_Business_Professor
             $sql = '
                 SELECT
                     c.cod_curso as id,
-                    c.nm_curso as nome
+                    CASE WHEN (c.descricao is not null or c.descricao <> \'\')
+                        THEN c.nm_curso||\' (\'||c.descricao||\')\'
+                    ELSE c.nm_curso END as nome
                 FROM pmieducar.quadro_horario qh
                 INNER JOIN pmieducar.quadro_horario_horarios qhh
                 ON (qh.cod_quadro_horario = qhh.ref_cod_quadro_horario)
@@ -131,7 +133,9 @@ class Portabilis_Business_Professor
             $sql = '
                 select
                     cod_curso as id,
-                    nm_curso as nome
+                    CASE WHEN (curso.descricao is not null or curso.descricao <> \'\')
+                        THEN curso.nm_curso||\' (\'||curso.descricao||\')\'
+                    ELSE curso.nm_curso END as nome
                 from
                     pmieducar.servidor_curso_ministra,
                     pmieducar.curso,
