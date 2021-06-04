@@ -441,7 +441,7 @@ return new class extends clsDetalhe {
     public function permissao_busca_ativa()
     {
         $user = Auth::user();
-        $allow = Gate::allows('modify', Process::ACTIVE_LOOKING);
+        $allow = Gate::allows('view', Process::ACTIVE_LOOKING);
 
         if ($user->isLibrary()) {
             return false;
