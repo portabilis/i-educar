@@ -367,7 +367,9 @@ class LegacyCreateTestsCommand extends Command
             'TransportePessoaDet',
             'TransportePontoDet',
             'TransporteRotaDet',
-            'TransporteVeiculoDet'
+            'TransporteVeiculoDet',
+            'EducarBuscaAtivaLstTest',
+            'EducarBuscaAtivaCadTest'
         ];
     }
 }
