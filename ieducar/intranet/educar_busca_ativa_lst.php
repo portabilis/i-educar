@@ -4,6 +4,8 @@ use App\Models\LegacyActiveLooking;
 use App\Models\LegacyRegistration;
 use App\Process;
 use iEducar\Modules\School\Model\ActiveLooking;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 return new class extends clsListagem {
     public $pessoa_logada;
@@ -14,6 +16,20 @@ return new class extends clsListagem {
     public $data_inicio;
     public $ref_cod_instituicao;
     public $ref_cod_turma;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $user = Auth::user();
+        $allow = Gate::allows('modify', Process::ACTIVE_LOOKING);
+
+        if ($user->isLibrary() || !$allow) {
+            $this->simpleRedirect('/intranet/index.php');
+            return false;
+        }
+
+        return true;
+    }
 
     public function Gerar()
     {

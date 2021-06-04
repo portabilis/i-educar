@@ -7,7 +7,9 @@ use App\Services\Exemption\ActiveLookingService;
 use iEducar\Modules\School\Model\ActiveLooking;
 use iEducar\Support\View\SelectOptions;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
 
 return new class extends clsCadastro {
@@ -27,6 +29,21 @@ return new class extends clsCadastro {
     public $observacoes;
     public $resultado_busca_ativa;
 
+    public function __construct()
+    {
+        parent::__construct();
+
+        $user = Auth::user();
+        $allow = Gate::allows('modify', Process::ACTIVE_LOOKING);
+
+        if ($user->isLibrary() || !$allow) {
+            $this->simpleRedirect('/intranet/index.php');
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * @var array
      */
@@ -45,9 +62,6 @@ return new class extends clsCadastro {
 
         $legacyRegistration = LegacyRegistration::find($this->ref_cod_matricula);
         $this->ref_cod_aluno = $legacyRegistration->ref_cod_aluno;
-
-        $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(Process::ACTIVE_LOOKING, $this->pessoa_logada, 7, "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
 
         $this->redirectIf(!$legacyRegistration, 'educar_matricula_lst.php');
 
@@ -127,9 +141,6 @@ return new class extends clsCadastro {
 
     public function Novo()
     {
-        $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(Process::ACTIVE_LOOKING, $this->pessoa_logada, 7, "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
-
         $legacyRegistration = LegacyRegistration::findOrFail($this->ref_cod_matricula);
         $this->redirectIf(!$legacyRegistration, 'educar_matricula_lst.php');
         $this->ref_cod_aluno = $legacyRegistration->ref_cod_aluno;
