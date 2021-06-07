@@ -4,6 +4,7 @@ use App\Models\EmployeeWithdrawal;
 use App\Services\FileService;
 use App\Services\UrlPresigner;
 use App\Support\View\Employee\EmployeeReturn;
+use Illuminate\Support\Carbon;
 
 return new class extends clsCadastro {
 
@@ -184,7 +185,7 @@ return new class extends clsCadastro {
         }
 
         // Se edição, mostra campo para entrar com data de retorno
-        if ($this->retornar_servidor == EmployeeReturn::SIM) {
+        if ($this->retornar_servidor == EmployeeReturn::SIM || $this->data_retorno) {
             $this->campoData('data_retorno', 'Data de Retorno', $this->data_retorno, false);
         }
 
@@ -534,6 +535,18 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, $urlPermite);
 
+        $exitDate = $this->data_saida ? dataToBanco($this->data_saida) : $this->data_saida;
+        $returnDate = $this->data_retorno ? dataToBanco($this->data_retorno) : $this->data_retorno;
+
+        if($exitDate){
+            $exitDate = Carbon::createFromFormat('Y-m-d',$exitDate);
+            $returnDate = Carbon::createFromFormat('Y-m-d',$returnDate);
+            if(!$this->validateDates($exitDate, $returnDate)){
+                $this->mensagem = 'A data de retorno não pode ser inferior à data de afastamento.';
+                return false;
+            }
+        }
+
         $obj = new clsPmieducarServidorAfastamento(
             $this->ref_cod_servidor,
             $this->sequencial,
@@ -542,8 +555,8 @@ return new class extends clsCadastro {
             null,
             null,
             null,
-            dataToBanco($this->data_retorno),
-            (int)($this->retornar_servidor == EmployeeReturn::SIM) ?: dataToBanco($this->data_saida),
+            $returnDate->format('Y-m-d'),
+            (int)($this->retornar_servidor == EmployeeReturn::SIM) ?: $exitDate->format('Y-m-d'),
             (int)($this->retornar_servidor == EmployeeReturn::SIM) ? 0 : null,
             $this->ref_cod_instituicao
         );
@@ -687,5 +700,13 @@ return new class extends clsCadastro {
     {
         $this->title = 'Servidores - Servidor Afastamento';
         $this->processoAp = '635';
+    }
+
+    private function validateDates(Carbon $exitDate, Carbon $returnDate)
+    {
+        if($returnDate->lt($exitDate)){
+            return false;
+        }
+        return true;
     }
 };
