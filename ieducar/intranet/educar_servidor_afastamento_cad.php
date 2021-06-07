@@ -534,8 +534,7 @@ return new class extends clsCadastro {
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, $urlPermite);
-
-        $exitDate = $this->data_saida ? dataToBanco($this->data_saida) : $this->data_saida;
+        $exitDate = $this->data_saida ? dataToBanco(str_replace('%2F','/', $this->data_saida)) : $this->data_saida;
         $returnDate = $this->data_retorno ? dataToBanco($this->data_retorno) : $this->data_retorno;
 
         if($exitDate){
