@@ -556,7 +556,7 @@ return new class extends clsCadastro {
             null,
             null,
             $returnDate->format('Y-m-d'),
-            (int)($this->retornar_servidor == EmployeeReturn::SIM) ?: $exitDate->format('Y-m-d'),
+            (int)($this->retornar_servidor == EmployeeReturn::SIM) ?: $exitDate,
             (int)($this->retornar_servidor == EmployeeReturn::SIM) ? 0 : null,
             $this->ref_cod_instituicao
         );
