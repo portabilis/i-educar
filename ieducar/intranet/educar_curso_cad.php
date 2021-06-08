@@ -256,7 +256,7 @@ return new class extends clsCadastro {
         $this->campoTexto('nm_curso', 'Curso', $this->nm_curso, 30, 255, true);
 
         $this->campoTexto('sgl_curso', 'Sigla Curso', $this->sgl_curso, 15, 15, false);
-        $this->campoTexto('descricao', 'Descrição', $this->descricao, 15, 50, false,false, '','Caso o campo seja preenchido a descrição será apresentada nas listagens e filtros de busca');
+        $this->campoTexto('descricao', 'Descrição', $this->descricao, 15, 50, false,false, '','Caso o campo seja preenchido, a descrição será apresentada nas listagens e filtros de busca');
         $this->campoNumero('qtd_etapas', 'Quantidade Etapas', $this->qtd_etapas, 2, 2, true);
 
         if (is_numeric($this->hora_falta)) {

@@ -142,7 +142,7 @@ return new class extends clsCadastro {
         include('include/pmieducar/educar_campo_lista.php');
 
         $this->campoTexto('nm_serie', 'Série', $this->nm_serie, 30, 255, true);
-        $this->campoTexto('descricao', 'Descrição', $this->descricao, 30, 50, false,false, '','Caso o campo seja preenchido a descrição será apresentada nas listagens e filtros de busca');
+        $this->campoTexto('descricao', 'Descrição', $this->descricao, 30, 50, false,false, '','Caso o campo seja preenchido, a descrição será apresentada nas listagens e filtros de busca');
 
         $opcoes = ['' => 'Selecione'];
 
