@@ -544,6 +544,7 @@ return new class extends clsCadastro {
                 $this->mensagem = 'A data de retorno não pode ser inferior à data de afastamento.';
                 return false;
             }
+            $exitDate = $exitDate->format('Y-m-d');
         }
 
         $obj = new clsPmieducarServidorAfastamento(
