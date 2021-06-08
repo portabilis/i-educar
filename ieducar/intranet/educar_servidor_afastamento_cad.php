@@ -704,9 +704,6 @@ return new class extends clsCadastro {
 
     private function validateDates(Carbon $exitDate, Carbon $returnDate)
     {
-        if($returnDate->lt($exitDate)){
-            return false;
-        }
-        return true;
+        return $returnDate->gte($exitDate);
     }
 };
