@@ -43,11 +43,11 @@ return new class extends clsCadastro {
         '' => 'Selecione',
         1  => 'Domingo',
         2  => 'Segunda',
-        3  => 'Ter&ccedil;a',
+        3  => 'Terça',
         4  => 'Quarta',
         5  => 'Quinta',
         6  => 'Sexta',
-        7  => 'S&aacute;bado'
+        7  => 'Sábado'
     ];
 
     /**
@@ -391,7 +391,7 @@ return new class extends clsCadastro {
         }
 
         if ($this->retornar_servidor != EmployeeReturn::SIM) {
-            $fileService = new FileService(new UrlPresigner);
+            $fileService = new FileService(new UrlPresigner());
             $files = $fileService->getFiles(EmployeeWithdrawal::find($this->id));
             $this->addHtml(view('uploads.upload', ['files' => $files])->render());
         }
@@ -488,7 +488,7 @@ return new class extends clsCadastro {
 
                         // Caso a atualização não tenha sucesso
                         if (!$obj_horario->edita()) {
-                            $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+                            $this->mensagem = 'Cadastro não realizado.<br>';
 
                             return false;
                         }
@@ -499,12 +499,12 @@ return new class extends clsCadastro {
                 $this->simpleRedirect("educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
             }
         } else {
-            $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+            $this->mensagem = 'Cadastro não realizado.<br>';
 
             return false;
         }
 
-        $fileService = new FileService(new UrlPresigner);
+        $fileService = new FileService(new UrlPresigner());
 
         if ($this->file_url) {
             $newFiles = json_decode($this->file_url);
@@ -611,7 +611,7 @@ return new class extends clsCadastro {
                         );
 
                         if (!$obj_horario->edita()) {
-                            $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+                            $this->mensagem = 'Cadastro não realizado.<br>';
 
                             return false;
                         }
@@ -619,7 +619,7 @@ return new class extends clsCadastro {
                 }
             }
 
-            $fileService = new FileService(new UrlPresigner);
+            $fileService = new FileService(new UrlPresigner());
 
             if ($this->file_url) {
                 $newFiles = json_decode($this->file_url);
@@ -640,11 +640,11 @@ return new class extends clsCadastro {
                 $fileService->deleteFiles($deletedFiles);
             }
 
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect("educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }
@@ -682,11 +682,11 @@ return new class extends clsCadastro {
         $excluiu = $obj->excluir();
 
         if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_servidor_afastamento_lst.php');
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }
