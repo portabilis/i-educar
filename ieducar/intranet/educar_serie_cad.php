@@ -35,6 +35,7 @@ return new class extends clsCadastro {
     public $bloquear_matricula_faixa_etaria;
     public $exigir_inep;
     public $importar_serie_pre_matricula;
+    public $descricao;
 
     public function Inicializar()
     {
@@ -141,6 +142,7 @@ return new class extends clsCadastro {
         include('include/pmieducar/educar_campo_lista.php');
 
         $this->campoTexto('nm_serie', 'Série', $this->nm_serie, 30, 255, true);
+        $this->campoTexto('descricao', 'Descrição', $this->descricao, 30, 50, false,false, '','Caso o campo seja preenchido, a descrição será apresentada nas listagens e filtros de busca');
 
         $opcoes = ['' => 'Selecione'];
 
@@ -308,7 +310,8 @@ return new class extends clsCadastro {
             !is_null($this->bloquear_matricula_faixa_etaria),
             $this->idade_ideal,
             !is_null($this->exigir_inep),
-            !is_null($this->importar_serie_pre_matricula)
+            !is_null($this->importar_serie_pre_matricula),
+            $this->descricao
         );
 
         $editou = $obj->edita();

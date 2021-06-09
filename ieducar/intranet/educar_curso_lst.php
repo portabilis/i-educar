@@ -37,7 +37,7 @@ return new class extends clsListagem {
 
         $lista_busca = [
       'Curso',
-      'N&iacute;vel Ensino',
+      'Nível Ensino',
       'Tipo Ensino'
     ];
 
@@ -104,7 +104,7 @@ return new class extends clsListagem {
 
         $this->campoLista(
             'ref_cod_nivel_ensino',
-            'N&iacute;vel Ensino',
+            'Nível Ensino',
             $opcoes,
             $this->ref_cod_nivel_ensino,
             null,
@@ -218,11 +218,13 @@ return new class extends clsListagem {
                 $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
                 $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
 
+                $nomeCurso = empty($registro['descricao']) ? $registro['nm_curso'] : "{$registro['nm_curso']} ({$registro['descricao']})";
+
                 $lista_busca = [
-          "<a href=\"educar_curso_det.php?cod_curso={$registro['cod_curso']}\">{$registro['nm_curso']}</a>",
-          "<a href=\"educar_curso_det.php?cod_curso={$registro['cod_curso']}\">{$registro['ref_cod_nivel_ensino']}</a>",
-          "<a href=\"educar_curso_det.php?cod_curso={$registro['cod_curso']}\">{$registro['ref_cod_tipo_ensino']}</a>"
-        ];
+                    "<a href=\"educar_curso_det.php?cod_curso={$registro['cod_curso']}\">{$nomeCurso}</a>",
+                    "<a href=\"educar_curso_det.php?cod_curso={$registro['cod_curso']}\">{$registro['ref_cod_nivel_ensino']}</a>",
+                    "<a href=\"educar_curso_det.php?cod_curso={$registro['cod_curso']}\">{$registro['ref_cod_tipo_ensino']}</a>"
+                ];
 
                 if ($nivel_usuario == 1) {
                     $lista_busca[] = "<a href=\"educar_curso_det.php?cod_curso={$registro['cod_curso']}\">{$registro['ref_cod_instituicao']}</a>";

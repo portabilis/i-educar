@@ -25,6 +25,7 @@ class clsPmieducarCurso extends Model
     public $hora_falta;
     public $modalidade_curso;
     public $importar_curso_pre_matricula;
+    public $descricao;
 
     public function __construct(
         $cod_curso = null,
@@ -54,13 +55,14 @@ class clsPmieducarCurso extends Model
         $hora_falta = null,
         $avaliacao_globalizada = null,
         $multi_seriado = null,
-        $importar_curso_pre_matricula = null
+        $importar_curso_pre_matricula = null,
+        $descricao = null
     ) {
         $db = new clsBanco();
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'curso';
 
-        $this->_campos_lista = $this->_todos_campos = 'cod_curso, ref_usuario_cad, ref_cod_tipo_regime, ref_cod_nivel_ensino, ref_cod_tipo_ensino, nm_curso, sgl_curso, qtd_etapas, carga_horaria, ato_poder_publico, objetivo_curso, publico_alvo, data_cadastro, data_exclusao, ativo, ref_usuario_exc, ref_cod_instituicao, padrao_ano_escolar, hora_falta, multi_seriado, modalidade_curso, importar_curso_pre_matricula';
+        $this->_campos_lista = $this->_todos_campos = 'cod_curso, ref_usuario_cad, ref_cod_tipo_regime, ref_cod_nivel_ensino, ref_cod_tipo_ensino, nm_curso, sgl_curso, qtd_etapas, carga_horaria, ato_poder_publico, objetivo_curso, publico_alvo, data_cadastro, data_exclusao, ativo, ref_usuario_exc, ref_cod_instituicao, padrao_ano_escolar, hora_falta, multi_seriado, modalidade_curso, importar_curso_pre_matricula, descricao';
 
         if (is_numeric($ref_cod_instituicao)) {
             $this->ref_cod_instituicao = $ref_cod_instituicao;
@@ -96,6 +98,10 @@ class clsPmieducarCurso extends Model
 
         if (is_string($sgl_curso)) {
             $this->sgl_curso = $sgl_curso;
+        }
+
+        if (is_string($descricao)) {
+            $this->descricao = $descricao;
         }
 
         if (is_numeric($qtd_etapas)) {
@@ -197,6 +203,13 @@ class clsPmieducarCurso extends Model
                 $gruda = ', ';
             }
 
+            if (is_string($this->descricao)) {
+                $descricao = $db->escapeString($this->descricao);
+                $campos .= "{$gruda}descricao";
+                $valores .= "{$gruda}'{$descricao}'";
+                $gruda = ', ';
+            }
+
             if (is_numeric($this->qtd_etapas)) {
                 $campos .= "{$gruda}qtd_etapas";
                 $valores .= "{$gruda}'{$this->qtd_etapas}'";
@@ -289,6 +302,7 @@ class clsPmieducarCurso extends Model
      */
     public function edita()
     {
+        $gruda = '';
         if (is_numeric($this->cod_curso) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
             $set = '';
@@ -322,6 +336,12 @@ class clsPmieducarCurso extends Model
             if (is_string($this->sgl_curso)) {
                 $sgl_curso = $db->escapeString($this->sgl_curso);
                 $set .= "{$gruda}sgl_curso = '{$sgl_curso}'";
+                $gruda = ', ';
+            }
+
+            if (is_string($this->descricao)) {
+                $descricao = $db->escapeString($this->descricao);
+                $set .= "{$gruda}descricao = '{$descricao}'";
                 $gruda = ', ';
             }
 
