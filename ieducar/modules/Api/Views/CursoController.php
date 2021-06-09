@@ -73,7 +73,7 @@ class CursoController extends ApiCoreController
                         cod_curso,
                         CASE WHEN (curso.descricao is not null or curso.descricao <> \'\')
                         THEN curso.nm_curso||\' (\'||curso.descricao||\')\'
-                        ELSE curso.nm_curso END as nm_curso
+                        ELSE curso.nm_curso END as nm_curso,
                         updated_at,
                         (
                             CASE ativo WHEN 1 THEN
