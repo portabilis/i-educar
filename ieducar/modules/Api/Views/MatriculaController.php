@@ -976,8 +976,11 @@ class MatriculaController extends ApiCoreController
                                   WHEN 4 THEN 'Retorno sem ausência justificada'::varchar
                                   ELSE 'Em andamento'::varchar END AS resulta_busca_ativa_text")
             ->join('pmieducar.matricula', 'ref_cod_matricula', '=', 'cod_matricula')
-            ->where('busca_ativa.updated_at', '>=', $modified)
             ->where('ano', $ano);
+
+        if($modified){
+            $legacyActiveLooking->where('busca_ativa.updated_at', '>=', $modified);
+        }
 
         if ($escola) {
             $legacyActiveLooking->whereIn('ref_ref_cod_escola', explode(',', $escola));
