@@ -21,7 +21,7 @@ class CheckAlternativeReportCardExists implements Rule
         $academicYear = $value->ano;
         $alternativeReportCard = $value->tipo_boletim_diferenciado;
 
-        if ($alternativeReportCard && $value->multiseriada == 0) {
+        if ($alternativeReportCard || $value->multiseriada == 1) {
             return true;
         }
 
