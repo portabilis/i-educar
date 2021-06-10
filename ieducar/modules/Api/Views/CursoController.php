@@ -29,7 +29,7 @@ class CursoController extends ApiCoreController
                 $sql = "
                     SELECT DISTINCT
                         c.cod_curso,
-                        CASE WHEN (c.descricao is not null or c.descricao <> '')
+                        CASE WHEN (c.descricao is not null and c.descricao <> '')
                         THEN c.nm_curso||' ('||c.descricao||')'
                         ELSE c.nm_curso END as nm_curso
                         (
@@ -71,7 +71,7 @@ class CursoController extends ApiCoreController
                 $sql = '
                     SELECT
                         cod_curso,
-                        CASE WHEN (curso.descricao is not null or curso.descricao <> \'\')
+                        CASE WHEN (curso.descricao is not null and curso.descricao <> \'\')
                         THEN curso.nm_curso||\' (\'||curso.descricao||\')\'
                         ELSE curso.nm_curso END as nm_curso,
                         updated_at,
