@@ -380,6 +380,7 @@ class MatriculaController extends ApiCoreController
                            ELSE FALSE
                        END AS apresentar_fora_da_data,
                        matricula_turma.turno_id,
+                       matricula.ref_ref_cod_serie AS serie_id,
                        null AS deleted_at
                   FROM pmieducar.matricula
             INNER JOIN pmieducar.escola
@@ -412,6 +413,7 @@ class MatriculaController extends ApiCoreController
                            ELSE FALSE
                        END AS apresentar_fora_da_data,
                        matricula_turma_excluidos.turno_id,
+                       matricula.ref_ref_cod_serie AS serie_id,
                        matricula_turma_excluidos.deleted_at
                   FROM pmieducar.matricula
             INNER JOIN pmieducar.escola
@@ -438,6 +440,7 @@ class MatriculaController extends ApiCoreController
                     'data_saida',
                     'apresentar_fora_da_data',
                     'turno_id',
+                    'serie_id',
                     'updated_at',
                     'deleted_at',
                 ];
