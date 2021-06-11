@@ -718,6 +718,11 @@ class EscolaController extends ApiCoreController
     protected function getEscolaSerieDisciplinasAnosLetivos()
     {
         $escolaId = $this->getRequest()->escola ?? 0;
+        $modified = $this->getRequest()->modified;
+
+        if ($modified) {
+            $whereModified = " WHERE updated_at >= '$modified' ";
+        }
 
         $sql = "
             SELECT
@@ -738,6 +743,7 @@ class EscolaController extends ApiCoreController
                         )
                     ) AS disciplinas_anos_letivos
                 FROM pmieducar.escola_serie_disciplina
+                $whereModified
                 GROUP BY
                 ref_ref_cod_escola,
                 ref_ref_cod_serie
