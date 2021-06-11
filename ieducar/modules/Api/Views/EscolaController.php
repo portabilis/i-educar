@@ -719,6 +719,7 @@ class EscolaController extends ApiCoreController
     {
         $escolaId = $this->getRequest()->escola ?? 0;
         $modified = $this->getRequest()->modified;
+        $whereModified = '';
 
         if ($modified) {
             $whereModified = " WHERE updated_at >= '$modified' ";
