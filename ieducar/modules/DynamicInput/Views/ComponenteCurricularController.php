@@ -230,8 +230,9 @@ class ComponenteCurricularController extends ApiCoreController
 
         $escola = $this->getRequest()->escola;
         $serie = $this->getRequest()->serie;
+        $ano = $this->getRequest()->ano ?: 0;
 
-        $componentesCurriculares = (new SchoolGradeDisciplineService)->getDisciplines($escola, $serie);
+        $componentesCurriculares = (new SchoolGradeDisciplineService)->getDisciplinesForYear($escola, $serie, $ano);
 
         $options = $this->agrupaComponentesCurriculares($componentesCurriculares->toArray());
 

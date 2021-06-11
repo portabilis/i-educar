@@ -173,6 +173,10 @@ var windowUtils = {
     options.options = optionsUtils.merge(defaultWindowOptions, options.options);
 
     window.open(url, options.name,  objectUtils.join(options.options)).focus();
+  },
+
+  redirect: function (url){
+    window.top.location = url;
   }
 };
 
@@ -321,3 +325,21 @@ var handleMessages = messageUtils.handleMessages;
 
   }); // ready
 })(jQuery);
+
+const buttonUtils = {
+  loading: function (elementId, textLoading = 'Aguarde...') {
+    if (document.getElementById(elementId)) {
+      document.getElementById(elementId).disabled = true;
+      document.getElementById(elementId).value = textLoading;
+      document.getElementById(elementId).className = 'botaolistagemdisabled';
+    }
+  },
+
+  reset: function (elementId, text){
+    if (document.getElementById(elementId)) {
+      document.getElementById(elementId).disabled = false;
+      document.getElementById(elementId).value = text;
+      document.getElementById(elementId).className = 'botaolistagem';
+    }
+  }
+}

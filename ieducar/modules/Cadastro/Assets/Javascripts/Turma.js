@@ -257,7 +257,7 @@ var preencheComponentesCurriculares = function(data) {
   var conteudo = '';
   let multisseriada = $j('#multiseriada').is(':checked');
 
-  if (componentesCurriculares.length && !multisseriada) {
+  if (componentesCurriculares && !multisseriada) {
     conteudo += `<tr>
                    <td> <span>Nome</span></td>
                    <td> <span>Abreviatura</span></td>

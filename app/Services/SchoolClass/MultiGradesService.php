@@ -59,7 +59,8 @@ class MultiGradesService
         $this->saveSchoolClassGrade($schoolClass, $schoolClassGrades);
     }
 
-    public function deleteAllGradesOfSchoolClass(LegacySchoolClass $schoolClass, $excludeGrades) {
+    public function deleteAllGradesOfSchoolClass(LegacySchoolClass $schoolClass, $excludeGrades)
+    {
         $query = LegacySchoolClassGrade::query()
             ->where('turma_id', $schoolClass->getKey());
 
@@ -104,7 +105,7 @@ class MultiGradesService
             ->get()
             ->pluck('serie_id')
             ->toArray();
-        
+
         return array_diff($oldGrades, $newGrades);
     }
 }

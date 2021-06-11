@@ -423,3 +423,57 @@ function disableInputsDisciplinas() {
     $j(this).trigger('change');
   });
 }
+
+$j("#multiseriada").on('change', function () {
+  let checked = $j(this).is(':checked') ? 1 : 0;
+  $j(this).val(checked);
+});
+
+function excluirAjax() {
+  const settings = {
+    url: "/turma",
+    data: $j("#formcadastro").serialize(),
+    cache: false,
+    type: 'delete',
+    dataType: 'json',
+    beforeSend: function () {
+      buttonUtils.loading('btn_excluir');
+    }
+  };
+  $j.ajax(settings)
+    .done(function (){
+      windowUtils.redirect('educar_turma_lst.php');
+    })
+    .fail(function ({responseText}) {
+      let jsonResponse = JSON.parse(responseText);
+      messageUtils.error(jsonResponse.msg);
+    })
+    .always(function (){
+      buttonUtils.reset('btn_excluir', 'Excluir');
+    });
+}
+
+function doAjax() {
+
+  const settings = {
+    url: "/turma",
+    data: $j("#formcadastro").serialize(),
+    cache: false,
+    type: 'POST',
+    dataType: 'json',
+    beforeSend: function () {
+      buttonUtils.loading('btn_enviar');
+    }
+  };
+  $j.ajax(settings)
+    .done(function (){
+      windowUtils.redirect('educar_turma_lst.php');
+    })
+    .fail(function ({responseText}) {
+      let jsonResponse = JSON.parse(responseText);
+      messageUtils.error(jsonResponse.msg);
+    })
+    .always(function (){
+      buttonUtils.reset('btn_enviar', 'Salvar');
+  });
+}

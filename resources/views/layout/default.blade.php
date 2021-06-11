@@ -294,8 +294,6 @@
     }
 </script>
 
-<script type='text/javascript' src='{{ Asset::get('/modules/Portabilis/Assets/Javascripts/Utils.js') }}'></script>
-
 <script type='text/javascript'>(function ($) {
     $(document).ready(function () {
             fixupFieldsWidth();

@@ -1,14 +1,21 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\SchoolClass;
 
 use App\Models\LegacyLevel;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassStage;
+use App\Rules\CanCreateSchoolClass;
+use App\Rules\CanDeleteTurma;
+use App\Rules\CheckAlternativeReportCardExists;
+use App\Rules\CheckMandatoryCensoFields;
+use App\Rules\CheckSchoolClassExistsByName;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class SchoolClassService
 {
+
     /**
      * Retorna se o nome está disponível para cadastro. Ignora a turma com ID
      * caso seja informado.
@@ -21,11 +28,14 @@ class SchoolClassService
      * @param int|null $idToIgnore   ID da turma que deve ser ignorado (opcional)
      *
      * @return bool
+     *
+     * @see CheckSchoolClassExistsByName
+     * @deprecated
      */
     public function isAvailableName($name, $course, $level, $school, $academicYear, $idToIgnore = null)
     {
         $query = LegacySchoolClass::query()
-            ->where('nm_turma', (string) $name)
+            ->where('nm_turma', (string)$name)
             ->where('ref_ref_cod_serie', $level)
             ->where('ref_cod_curso', $course)
             ->where('ref_ref_cod_escola', $school)
@@ -46,10 +56,13 @@ class SchoolClassService
      * Valida se é obrigatório preencher o boletim diferenciado da turma.
      * Caso a série tenha regra de avaliação diferenciada configurada
      *
-     * @param integer $levelId
-     * @param integer $academicYear
+     * @param int $levelId
+     * @param int $academicYear
      *
      * @return bool
+     *
+     * @see CheckAlternativeReportCardExists
+     * @deprecated
      */
     public function isRequiredAlternativeReportCard($levelId, $academicYear): bool
     {
@@ -83,5 +96,55 @@ class SchoolClassService
             ->distinct()
             ->whereIn('ref_cod_turma', $schoolClassId)
             ->get();
+    }
+
+    /**
+     * @param LegacySchoolClass $schoolClass
+     *
+     * @return LegacySchoolClass
+     *
+     * @throws ValidationException
+     */
+    public function storeSchoolClass(LegacySchoolClass $schoolClass)
+    {
+        $this->validate($schoolClass);
+        $schoolClass->save();
+
+        return $schoolClass;
+    }
+
+    public function deleteSchoolClass(LegacySchoolClass $schoolClass)
+    {
+        validator(
+            ['schoolClass' => $schoolClass],
+            [
+                'schoolClass' => [
+                    new CanDeleteTurma()
+                ]
+            ]
+        )->validate();
+
+        $schoolClass->ativo = 0;
+        $schoolClass->save();
+    }
+
+    /**
+     * @param LegacySchoolClass $schoolClass
+     *
+     * @throws ValidationException
+     */
+    private function validate(LegacySchoolClass $schoolClass)
+    {
+        validator(
+            ['schoolClass' => $schoolClass],
+            [
+                'schoolClass' => [
+                    new CanCreateSchoolClass(),
+                    new CheckMandatoryCensoFields(),
+                    new CheckSchoolClassExistsByName(),
+                    new CheckAlternativeReportCardExists()
+                ]
+            ]
+        )->validate();
     }
 }

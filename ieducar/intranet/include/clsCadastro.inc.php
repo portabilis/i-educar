@@ -45,6 +45,7 @@ class clsCadastro extends clsCampos
     public $sucesso;
     public $onSubmit = 'acao()';
     public $form_enctype;
+    public $acao_executa_submit_ajax = false;
 
     const NOVO = 'N';
     const EDITAR = 'E';
@@ -477,6 +478,8 @@ class clsCadastro extends clsCampos
       ';
 
             $retorno .= "\ndocument.$this->__nome.submit(); ";
+        } elseif ($this->acao_executa_submit_ajax) {
+            $retorno .= " \n doAjax(); \n";
         } else {
             $retorno .= " \n return true; \n";
         }

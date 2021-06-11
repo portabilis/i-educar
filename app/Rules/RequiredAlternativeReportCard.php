@@ -4,7 +4,7 @@ namespace App\Rules;
 
 use App\Models\LegacyGrade;
 use App\Models\LegacySchoolClass;
-use App\Services\SchoolClassService;
+use App\Services\SchoolClass\SchoolClassService;
 use Illuminate\Contracts\Validation\Rule;
 
 class RequiredAlternativeReportCard implements Rule
