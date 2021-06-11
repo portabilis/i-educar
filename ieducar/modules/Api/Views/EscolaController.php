@@ -717,7 +717,7 @@ class EscolaController extends ApiCoreController
 
     protected function getEscolaSerieDisciplinasAnosLetivos()
     {
-        $escolaId = $this->getRequest()->escola_id ?? 0;
+        $escolaId = $this->getRequest()->escola ?? 0;
 
         $sql = "
             SELECT
