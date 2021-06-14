@@ -59,7 +59,7 @@ return new class extends clsCadastro {
 
         // text
         $this->campoTexto('nm_tipo', 'Tipo Dispensa', $this->nm_tipo, 30, 255, true);
-        $this->campoMemo('descricao', 'Descri&ccedil;&atilde;o', $this->descricao, 60, 5, false);
+        $this->campoMemo('descricao', 'Descrição', $this->descricao, 60, 5, false);
     }
 
     public function Novo()
@@ -88,7 +88,7 @@ return new class extends clsCadastro {
             return false;
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+        $this->mensagem = 'Edição efetuada com sucesso.<br>';
         $this->simpleRedirect('educar_tipo_dispensa_lst.php');
 
         return true;
@@ -105,7 +105,7 @@ return new class extends clsCadastro {
             return false;
         }
 
-        $this->mensagem = 'Exclus&atilde;o efetuada com sucesso.<br>';
+        $this->mensagem = 'Exclusão efetuada com sucesso.<br>';
         $this->simpleRedirect('educar_tipo_dispensa_lst.php');
         return true;
     }

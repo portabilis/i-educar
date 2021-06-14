@@ -38,6 +38,7 @@ use iEducar\Modules\Educacenso\Model\SchoolManagerRole;
 use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\Educacenso\Model\TipoMediacaoDidaticoPedagogico;
+use iEducar\Modules\Educacenso\Validator\AdministrativeDomainValidator;
 use iEducar\Modules\Educacenso\Validator\CnpjMantenedoraPrivada;
 use iEducar\Modules\Educacenso\Validator\InepNumberValidator;
 use iEducar\Modules\Educacenso\Validator\Telefone;
@@ -229,6 +230,20 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
+        if (!(new AdministrativeDomainValidator(
+                $escola->esferaAdministrativa,
+                $escola->regulamentacao,
+                $escola->dependenciaAdministrativa,
+                $escola->codigoIbgeMunicipio
+            ))->isValid()) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} possui valor inválido. Verificamos que a esfera administrativa foi preenchida incorretamente.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais >  Campo: Esfera administrativa do conselho ou órgão responsável pela Regulamentação/Autorização)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
+        }
+
         if (!$escola->codigoInep) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se a escola possui o código INEP cadastrado.",
@@ -283,7 +298,7 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if ($escola->dependenciaAdministrativa == MantenedoraDaEscolaPrivada::INSTITUICOES_SIM_FINS_LUCRATIVOS && $escola->situacaoFuncionamento == Regulamentacao::SIM) {
+        if ($escola->dependenciaAdministrativa == DependenciaAdministrativaEscola::PRIVADA) {
             if (!$escola->categoriaEscolaPrivada) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a dependência administrativa da escola é privada, portanto é necessário informar qual a categoria desta unidade escolar.",

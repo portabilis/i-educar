@@ -13,6 +13,7 @@ class Deficiencias
     const DEFICIENCIA_INTELECTUAL = 7;
     const TRANSTORNO_ESPECTRO_AUTISTA = 25;
     const ALTAS_HABILIDADES_SUPERDOTACAO = 13;
+    const OUTRAS = 999;
 
     public static function getDescriptiveValues()
     {
@@ -26,6 +27,7 @@ class Deficiencias
             self::DEFICIENCIA_INTELECTUAL => 'Deficiência intelectual',
             self::TRANSTORNO_ESPECTRO_AUTISTA => 'Transtorno do espectro autista',
             self::ALTAS_HABILIDADES_SUPERDOTACAO => 'Altas habilidades/Superdotação',
+            self::OUTRAS => 'Outras',
         ];
     }
 }

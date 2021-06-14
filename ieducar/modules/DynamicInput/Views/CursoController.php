@@ -27,7 +27,8 @@ class CursoController extends ApiCoreController
                 $sql = '
                     SELECT
                         c.cod_curso as id,
-                        c.nm_curso as nome
+                        c.nm_curso as nome,
+                        c.descricao
                     FROM
                         pmieducar.curso c,
                         pmieducar.escola_curso ec
@@ -48,7 +49,8 @@ class CursoController extends ApiCoreController
 
             $options = [];
             foreach ($cursos as $curso) {
-                $options['__' . $curso['id']] = $this->toUtf8($curso['nome']);
+                $nomeCurso = empty($curso['descricao']) ? $curso['nome'] : "{$curso['nome']} ({$curso['descricao']})";
+                $options['__' . $curso['id']] = $nomeCurso;
             }
 
             return ['options' => $options];
