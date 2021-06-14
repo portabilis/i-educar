@@ -1788,13 +1788,13 @@ class clsCampos extends Core_Controller_Page_Abstract
 
     public function getCampoLista(
         $nome,
-        $id,
-        $acao,
         $valor,
         $default,
-        $complemento,
-        $desabilitado,
         $class,
+        $id = '',
+        $acao = '',
+        $complemento = '',
+        $desabilitado = false,
         $multiple = false
     ) {
         $id = $id ? $id : $nome;
@@ -1972,9 +1972,9 @@ class clsCampos extends Core_Controller_Page_Abstract
 
     public function getCampoData($nome, $id, $valor, $class, $tamanhovisivel, $tamanhomaximo, $disabled = false)
     {
-        $campoDisabled = '';
+        $disabled = '';
         if ($disabled !== false) {
-            $campoDisabled = 'disabled=\'disabled\'';
+            $disabled = 'disabled=\'disabled\'';
         }
 
         $id = $id ?: $nome;
