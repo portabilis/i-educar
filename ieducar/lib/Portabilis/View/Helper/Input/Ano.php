@@ -38,6 +38,6 @@ class Portabilis_View_Helper_Input_Ano extends Portabilis_View_Helper_Input_Core
 
         $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
 
-        call_user_func_array([$this->viewInstance, 'campoNumero'], $inputOptions);
+        $this->viewInstance->campoNumero(...array_values($inputOptions));
     }
 }

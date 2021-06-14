@@ -27,6 +27,6 @@ class Portabilis_View_Helper_Input_Select extends Portabilis_View_Helper_Input_C
         $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
         $inputOptions['label'] = Portabilis_String_Utils::toLatin1($inputOptions['label'], ['escape' => false]);
 
-        call_user_func_array([$this->viewInstance, 'campoLista'], $inputOptions);
+        $this->viewInstance->campoLista(...array_values($inputOptions));
     }
 }
