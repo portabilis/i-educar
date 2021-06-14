@@ -157,15 +157,11 @@ class CoreExt_Controller_Front extends CoreExt_Controller_Abstract
      */
     protected function _getControllerStrategy()
     {
-        switch ($this->getOption('controller_type')) {
-            case 1:
-                                $strategy = 'CoreExt_Controller_Dispatcher_Strategy_FrontStrategy';
-                break;
-
-            case 2:
-                                $strategy = 'CoreExt_Controller_Dispatcher_Strategy_PageStrategy';
-                break;
-        }
+        $strategy = match ($this->getOption('controller_type')) {
+            1 => 'CoreExt_Controller_Dispatcher_Strategy_FrontStrategy',
+            2 => 'CoreExt_Controller_Dispatcher_Strategy_PageStrategy',
+            default => throw new Exception('Parâmetro de controlador incorreto'),
+        };
 
         return new $strategy($this);
     }

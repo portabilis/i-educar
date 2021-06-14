@@ -344,25 +344,12 @@ class EditController extends Core_Controller_Page_EditController
 
         for ($i = 0; $i <= 9; $i++) {
             $valorNota = $valores[$i];
-            $acao = 0;
-
-            switch ($valorNota->acao) {
-                case 'Arredondar para o n&uacute;mero inteiro imediatamente inferior':
-                    $acao = 1;
-                    break;
-
-                case 'Arredondar para o n&uacute;mero inteiro imediatamente superior':
-                    $acao = 2;
-                    break;
-
-                case 'Arredondar para a casa decimal espec&iacute;fica':
-                    $acao = 3;
-                    break;
-
-                default:
-                    $acao = 0;
-                    break;
-            }
+            $acao = match ($valorNota->acao) {
+                'Arredondar para o n&uacute;mero inteiro imediatamente inferior' => 1,
+                'Arredondar para o n&uacute;mero inteiro imediatamente superior' => 2,
+                'Arredondar para a casa decimal espec&iacute;fica' => 3,
+                default => 0,
+            };
 
             $this->tabela_arredondamento_valor[$i][] = $valorNota->id;
             $this->tabela_arredondamento_valor[$i][] = $i;

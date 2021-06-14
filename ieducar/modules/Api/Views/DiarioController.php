@@ -367,19 +367,12 @@ class DiarioController extends ApiCoreController
     private function defineCampoTipoRecuperacao($matriculaId)
     {
         $regra = $this->getRegra($matriculaId);
-        $campoRecuperacao = '';
 
-        switch ($regra->get('tipoRecuperacaoParalela')) {
-            case RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPA:
-                $campoRecuperacao = 'notaRecuperacaoParalela';
-                break;
-
-            case RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPAS_ESPECIFICAS:
-                $campoRecuperacao = 'notaRecuperacaoEspecifica';
-                break;
-        }
-
-        return $campoRecuperacao;
+        return match ($regra->get('tipoRecuperacaoParalela')) {
+            RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPA => 'notaRecuperacaoParalela',
+            RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPAS_ESPECIFICAS => 'notaRecuperacaoEspecifica',
+            default => '',
+        };
     }
 
     protected function postFaltasPorComponente()
