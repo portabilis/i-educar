@@ -575,7 +575,7 @@ class clsCadastro extends clsCampos
     {
         try {
             $hasErrors = $this->hasErrors();
-        } catch (Core_Controller_Page_Exception $e) {
+        } catch (Core_Controller_Page_Exception) {
             return null;
         }
 

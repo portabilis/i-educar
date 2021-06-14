@@ -75,7 +75,7 @@ class DiarioController extends ApiCoreController
     {
         try {
             $this->serviceBoletim($turmaId, $alunoId)->save();
-        } catch (CoreExt_Service_Exception $e) {
+        } catch (CoreExt_Service_Exception) {
             // excecoes ignoradas :( pois servico lanca excecoes de alertas, que não são exatamente erros.
             // error_log('CoreExt_Service_Exception ignorada: ' . $e->getMessage());
         }
@@ -86,7 +86,7 @@ class DiarioController extends ApiCoreController
         try {
             $this->serviceBoletim($turmaId, $alunoId)->saveFaltas();
             $this->serviceBoletim($turmaId, $alunoId)->promover();
-        } catch (CoreExt_Service_Exception $e) {
+        } catch (CoreExt_Service_Exception) {
             //...
         }
     }

@@ -144,7 +144,7 @@ class PromocaoApiController extends ApiCoreController
         try {
             // FIXME #parameters
             $this->boletimService()->save();
-        } catch (CoreExt_Service_Exception $e) {
+        } catch (CoreExt_Service_Exception) {
             // excecoes ignoradas :( pois servico lanca excecoes de alertas, que não são exatamente erros.
             // error_log('CoreExt_Service_Exception ignorada: ' . $e->getMessage());
         }

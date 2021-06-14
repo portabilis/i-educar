@@ -371,7 +371,7 @@ return new class extends clsCadastro {
         try {
             /** @var iDiarioService $iDiarioService */
             $iDiarioService = app(iDiarioService::class);
-        } catch (RuntimeException $e) {
+        } catch (RuntimeException) {
             return false;
         }
 

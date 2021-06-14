@@ -286,7 +286,7 @@ class clsPmieducarTurmaModulo extends Model
             while ($db->ProximoRegistro()) {
                 $tupla[] = $db->Tupla();
             }
-        } catch (Throwable $throwable) {
+        } catch (Throwable) {
             return false;
         }
 
@@ -315,7 +315,7 @@ class clsPmieducarTurmaModulo extends Model
             while ($db->ProximoRegistro()) {
                 $tupla[] = $db->Tupla();
             }
-        } catch (Throwable $throwable) {
+        } catch (Throwable) {
             return false;
         }
 

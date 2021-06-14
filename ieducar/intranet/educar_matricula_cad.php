@@ -281,7 +281,7 @@ return new class extends clsCadastro {
         try {
             $enturmacoesNaTurmaDestino = $this->getEnturmacoesNaTurma($this->ref_cod_turma);
             $enturmacoesParaCopiar = $this->getEnturmacoesNaTurma($this->ref_cod_turma_copiar_enturmacoes);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->mensagem = 'Houve um erro ao buscar informações das turmas.';
 
             return false;

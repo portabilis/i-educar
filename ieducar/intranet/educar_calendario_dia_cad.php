@@ -67,7 +67,7 @@ return new class extends clsCadastro {
             $this->_getCalendarioTurmaDataMapper()->find($args);
 
             return true;
-        } catch (Exception $e) {
+        } catch (Exception) {
         }
 
         return false;

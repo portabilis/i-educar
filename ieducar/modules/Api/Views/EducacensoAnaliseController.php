@@ -961,7 +961,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
             try {
                 $componentes = $turma->componentes();
-            } catch (Throwable $exception) {
+            } catch (Throwable) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verifique se alguma disciplina da turma {$nomeTurma} foi informada",
                     'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados gerais > Seção: Componentes curriculares definidos em séries da escola)',

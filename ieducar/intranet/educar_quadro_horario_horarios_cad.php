@@ -194,7 +194,7 @@ return new class extends clsCadastro {
                 $this->ref_cod_escola,
                 $this->ref_cod_turma
             );
-        } catch (Exception $e) {
+        } catch (Exception) {
         }
 
         if (0 == count($componentesTurma)) {
@@ -595,7 +595,7 @@ return new class extends clsCadastro {
                     $this->ref_cod_escola,
                     $this->ref_cod_turma
                 );
-            } catch (Exception $e) {
+            } catch (Exception) {
             }
 
             foreach ($componentesTurma as $componente) {
@@ -715,7 +715,7 @@ return new class extends clsCadastro {
                     $this->ref_cod_escola,
                     $this->ref_cod_turma
                 );
-            } catch (Exception $e) {
+            } catch (Exception) {
             }
 
             foreach ($componentesTurma as $componente) {

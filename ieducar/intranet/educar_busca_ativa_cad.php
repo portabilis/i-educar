@@ -191,7 +191,7 @@ return new class extends clsCadastro {
             DB::beginTransaction();
             $activeLookingService->delete($legacyActiveLooking);
             DB::commit();
-        } catch (Exception $e) {
+        } catch (Exception) {
             DB::rollBack();
             $this->mensagem = 'Exclusão não realizada.';
             return false;

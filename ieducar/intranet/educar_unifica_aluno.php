@@ -85,7 +85,7 @@ return new class extends clsCadastro {
 
         try {
             DB::commit();
-        } catch (Throwable $throable) {
+        } catch (Throwable) {
             DB::rollBack();
             $this->mensagem = 'Não foi possível realizar a unificação';
 

@@ -364,7 +364,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             $this->requiresLogin(true);
             $this->validatesPresenceAndValueInSetOfAtt(true);
             $this->validatesPresenceAndValueInSetOfOper(true);
-        } catch (Exception $e) {
+        } catch (Exception) {
             return false;
         }
 
@@ -1132,7 +1132,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     {
         try {
             $this->getService()->save();
-        } catch (CoreExt_Service_Exception $e) {
+        } catch (CoreExt_Service_Exception) {
         }
     }
 
@@ -1169,7 +1169,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             if ($validatesPresenceOfMatriculaId) {
                 $this->validatesPresenceOfMatriculaId(true);
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
             return false;
         }
 

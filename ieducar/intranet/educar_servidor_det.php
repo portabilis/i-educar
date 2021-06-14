@@ -112,7 +112,7 @@ return new class extends clsDetalhe {
         $docenteInep = null;
         try {
             $docenteInep = $docenteMapper->find(['docente' => $registro['cod_servidor']]);
-        } catch (Exception $e) {
+        } catch (Exception) {
         }
 
         if (isset($docenteInep)) {
