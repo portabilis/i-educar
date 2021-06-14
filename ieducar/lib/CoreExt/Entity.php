@@ -923,7 +923,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
     public function validateIfEquals(
         $key,
         $value = null,
-        $validatorClassName = null,
+        $validatorClassName,
         array $equalsParams = [],
         array $notEqualsParams = []
     ) {
