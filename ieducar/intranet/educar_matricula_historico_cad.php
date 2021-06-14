@@ -56,41 +56,19 @@ return new class extends clsCadastro {
         $this->campoRotulo('nm_pessoa', 'Nome do Aluno', $enturmacao['nome']);
         $this->campoRotulo('sequencial', 'Sequencial', $enturmacao['sequencial']);
 
-        switch ($matricula['aprovado']) {
-            case 1:
-                $situacao = 'Aprovado';
-                break;
-            case 2:
-                $situacao = 'Reprovado';
-                break;
-            case 3:
-                $situacao = 'Cursando';
-                break;
-            case 4:
-                $situacao = 'Transferido';
-                break;
-            case 5:
-                $situacao = 'Reclassificado';
-                break;
-            case 6:
-                $situacao = 'Abandono';
-                break;
-            case 7:
-                $situacao = 'Em Exame';
-                break;
-            case 12:
-                $situacao = 'Aprovado com dependência';
-                break;
-            case 13:
-                $situacao = 'Aprovado pelo conselho';
-                break;
-            case 14:
-                $situacao = 'Reprovado por faltas';
-                break;
-            default:
-                $situacao = '';
-                break;
-        }
+        $situacao = match ($matricula['aprovado']) {
+            1 => 'Aprovado',
+            2 => 'Reprovado',
+            3 => 'Cursando',
+            4 => 'Transferido',
+            5 => 'Reclassificado',
+            6 => 'Abandono',
+            7 => 'Em Exame',
+            12 => 'Aprovado com dependência',
+            13 => 'Aprovado pelo conselho',
+            14 => 'Reprovado por faltas',
+            default => '',
+        };
 
         $required = false;
 
