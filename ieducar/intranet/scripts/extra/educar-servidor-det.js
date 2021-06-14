@@ -65,6 +65,7 @@ function modalExcluir(id) {
                   $j('#tr_historico_afastamento').remove();
                 }
                 messageUtils.success('Afastamento do servidor removido com sucesso');
+                location.reload();
               }
             },
             error: function () {
