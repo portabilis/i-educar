@@ -1788,13 +1788,13 @@ class clsCampos extends Core_Controller_Page_Abstract
 
     public function getCampoLista(
         $nome,
+        $id,
+        $acao,
         $valor,
         $default,
+        $complemento,
+        $desabilitado,
         $class,
-        $id = '',
-        $acao = '',
-        $complemento = '',
-        $desabilitado = false,
         $multiple = false
     ) {
         $id = $id ? $id : $nome;
