@@ -537,7 +537,7 @@ return new class extends clsCadastro {
         $exitDate = $this->data_saida ? dataToBanco(str_replace('%2F','/', $this->data_saida)) : $this->data_saida;
         $returnDate = $this->data_retorno ? dataToBanco($this->data_retorno) : $this->data_retorno;
 
-        if($exitDate){
+        if($exitDate && $returnDate){
             $exitDate = Carbon::createFromFormat('Y-m-d',$exitDate);
             $returnDate = Carbon::createFromFormat('Y-m-d',$returnDate);
             if(!$this->validateDates($exitDate, $returnDate)){
@@ -545,6 +545,7 @@ return new class extends clsCadastro {
                 return false;
             }
             $exitDate = $exitDate->format('Y-m-d');
+            $returnDate = $returnDate->format('Y-m-d');
         }
 
         $obj = new clsPmieducarServidorAfastamento(
@@ -555,7 +556,7 @@ return new class extends clsCadastro {
             null,
             null,
             null,
-            $returnDate->format('Y-m-d'),
+            $returnDate,
             (int)($this->retornar_servidor == EmployeeReturn::SIM) ?: $exitDate,
             (int)($this->retornar_servidor == EmployeeReturn::SIM) ? 0 : null,
             $this->ref_cod_instituicao
