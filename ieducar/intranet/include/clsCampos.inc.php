@@ -1788,13 +1788,13 @@ class clsCampos extends Core_Controller_Page_Abstract
 
     public function getCampoLista(
         $nome,
-        $id = '',
-        $acao = '',
         $valor,
         $default,
+        $class,
+        $id = '',
+        $acao = '',
         $complemento = '',
         $desabilitado = false,
-        $class,
         $multiple = false
     ) {
         $id = $id ? $id : $nome;
@@ -1844,13 +1844,13 @@ class clsCampos extends Core_Controller_Page_Abstract
 
     public function getCampoMonetario(
         $nome,
-        $id = '',
-        $valor = '',
+        $id,
+        $valor,
         $tamanhovisivel,
         $tamanhomaximo,
-        $disabled = false,
-        $descricao = '',
-        $descricao2 = '',
+        $disabled,
+        $descricao,
+        $descricao2,
         $class,
         $evento = 'onChange',
         $script = ''
@@ -1872,8 +1872,8 @@ class clsCampos extends Core_Controller_Page_Abstract
 
     public function getCampoHora(
         $nome,
-        $id = '',
-        $valor = '',
+        $id,
+        $valor,
         $class,
         $tamanhovisivel,
         $tamanhomaximo,
@@ -1892,9 +1892,9 @@ class clsCampos extends Core_Controller_Page_Abstract
         return "<span class=\"form\"> $valor</span>";
     }
 
-    public function getCampoCheck($nome, $id = '', $valor, $desc = '', $script = false, $disabled = false)
+    public function getCampoCheck($nome, $id, $valor, $desc = '', $script = false, $disabled = false)
     {
-        $id = $id ? $id : $nome;
+        $id = $id ?: $nome;
 
         $onClick = '';
 
@@ -1919,16 +1919,16 @@ class clsCampos extends Core_Controller_Page_Abstract
         return $retorno;
     }
 
-    public function getCampoCNPJ($nome, $id = '', $valor, $class, $tamanhovisivel, $tamanhomaximo)
+    public function getCampoCNPJ($nome, $id, $valor, $class, $tamanhovisivel, $tamanhomaximo)
     {
-        $id = $id ? $id : $nome;
+        $id = $id ?: $nome;
 
         return "<input onKeyPress=\"formataCNPJ(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$id}\" value=\"{$valor}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\">";
     }
 
-    public function getCampoCPF($nome, $id = '', $valor, $class, $tamanhovisivel, $tamanhomaximo, $disabled = false, $onChange = '')
+    public function getCampoCPF($nome, $id, $valor, $class, $tamanhovisivel, $tamanhomaximo, $disabled = false, $onChange = '')
     {
-        $id = $id ? $id : $nome;
+        $id = $id ?: $nome;
 
         if ($disabled) {
             $disabled = 'disabled=\'disabled\'';
@@ -1941,14 +1941,14 @@ class clsCampos extends Core_Controller_Page_Abstract
 
     public function getCampoIdFederal(
         $nome,
-        $id = '',
+        $id,
         $valor,
         $class,
         $tamanhovisivel,
         $tamanhomaximo,
         $disabled = false
     ) {
-        $id = $id ? $id : $nome;
+        $id = $id ?: $nome;
 
         if ($disabled) {
             $disabled = 'disabled=\'disabled\'';
@@ -1970,15 +1970,14 @@ class clsCampos extends Core_Controller_Page_Abstract
         return "<input name='$nome' id='$id' type='hidden' value='{$valor}'>\n";
     }
 
-    public function getCampoData($nome, $id = '', $valor, $class, $tamanhovisivel, $tamanhomaximo, $disabled = false)
+    public function getCampoData($nome, $id, $valor, $class, $tamanhovisivel, $tamanhomaximo, $disabled = false)
     {
-        if ($disabled) {
+        $disabled = '';
+        if ($disabled !== false) {
             $disabled = 'disabled=\'disabled\'';
-        } else {
-            $disabled = '';
         }
 
-        $id = $id ? $id : $nome;
+        $id = $id ?: $nome;
 
         return "<input onKeyPress=\"formataData(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$id}\" value=\"{$valor}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\" {$disabled}> \n";
     }
@@ -2013,12 +2012,12 @@ class clsCampos extends Core_Controller_Page_Abstract
      */
     public function getCampoTextoPesquisa(
         $nome,
-        $id = '',
+        $id,
         $valor,
         $class,
         $tamanhovisivel,
         $tamanhomaximo,
-        $disabled = false,
+        $disabled,
         $caminho,
         $campos_serializados = null,
         $descricao = null,
@@ -2031,7 +2030,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $disabled = '';
         }
 
-        $id = $id ? $id : $nome;
+        $id = $id ?: $nome;
 
         $retorno = "<input class='{$class}' type='text' name=\"{$nome}\" id=\"{$id}\" value=\"{$valor}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\" {$evento}='{$script}' {$disabled}> ";
 
