@@ -775,7 +775,7 @@ abstract class CoreExt_DataMapper
                 } else {
                     $instance->$key = $value;
                 }
-            } catch (CoreExt_Exception_InvalidArgumentException $e) {
+            } catch (CoreExt_Exception_InvalidArgumentException) {
                 //
             }
         }

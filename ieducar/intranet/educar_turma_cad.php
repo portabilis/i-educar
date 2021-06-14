@@ -681,7 +681,7 @@ return new class extends clsCadastro {
                     true,
                     $this->ano
                 );
-            } catch (Throwable $e) {
+            } catch (Throwable) {
                 return;
             }
 

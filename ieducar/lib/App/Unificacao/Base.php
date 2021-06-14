@@ -71,7 +71,7 @@ class App_Unificacao_Base
                     "
                     );
                 }
-            } catch (Exception $e) {
+            } catch (Exception) {
                 throw new Exception('Erro ao deletar registros duplicados. Por favor, entre em contato com suporte.');
             }
         }

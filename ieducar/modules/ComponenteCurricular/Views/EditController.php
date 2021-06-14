@@ -222,7 +222,7 @@ class EditController extends Core_Controller_Page_EditController
             $this->getDataMapper()->save($this->getEntity());
 
             return true;
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->mensagem = 'Erro no preenchimento do formulário. ';
 
             return false;

@@ -365,7 +365,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
     {
         try {
             $entity = $this->getEntityOf($dataMapper, $id);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $entity = null;
         }
 

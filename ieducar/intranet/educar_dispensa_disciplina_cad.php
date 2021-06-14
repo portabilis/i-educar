@@ -205,7 +205,7 @@ return new class extends clsCadastro {
                 null,
                 $disciplinaId
             );
-        } catch (Exception $e) {
+        } catch (Exception) {
             return false;
         }
 

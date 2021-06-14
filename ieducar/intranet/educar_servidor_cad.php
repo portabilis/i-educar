@@ -354,7 +354,7 @@ return new class extends clsCadastro {
             $docenteInep = null;
             try {
                 $docenteInep = $docenteMapper->find(['docente' => $this->cod_servidor]);
-            } catch (Exception $e) {
+            } catch (Exception) {
             }
         }
 

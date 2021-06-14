@@ -564,7 +564,7 @@ return new class extends clsDetalhe {
         $transporteAluno = null;
         try {
             $transporteAluno = $transporteMapper->find(['aluno' => $this->cod_aluno]);
-        } catch (Exception $e) {
+        } catch (Exception) {
         }
 
         $this->addDetalhe([
