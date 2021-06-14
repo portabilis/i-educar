@@ -377,7 +377,7 @@ return new class extends clsCadastro {
             $this->validaDDDTelefone($this->ddd_telefone_fax, $this->telefone_fax, 'Fax');
     }
 
-    protected function validaDDDTelefone($valorDDD = null, $valorTelefone = null, $nomeCampo)
+    protected function validaDDDTelefone($valorDDD, $valorTelefone, $nomeCampo)
     {
         $msgRequereTelefone = "O campo: {$nomeCampo}, deve ser preenchido quando o DDD estiver preenchido.";
         $msgRequereDDD = "O campo: DDD, deve ser preenchido quando o {$nomeCampo} estiver preenchido.";

@@ -159,7 +159,7 @@ class clsAgenda
         }
     }
 
-    public function cadastraCompromisso($cod_compromisso = false, $titulo, $descricao, $data, $hora_inicio, $hora_fim=false, $publico = false, $importante=false, $repetir_dias=false, $repetir_qtd=false, $tipo_compromisso = false)
+    public function cadastraCompromisso($cod_compromisso, $titulo, $descricao, $data, $hora_inicio, $hora_fim=false, $publico = false, $importante=false, $repetir_dias=false, $repetir_qtd=false, $tipo_compromisso = false)
     {
         $db = new clsBanco();
         $campos = '';

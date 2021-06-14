@@ -176,7 +176,7 @@ class PromocaoApiController extends ApiCoreController
         return $this->_boletimServices[$matriculaId];
     }
 
-    protected function getNota($etapa = null, $componenteCurricularId)
+    protected function getNota($etapa, $componenteCurricularId)
     {
         $notaComponente = $this->boletimService()->getNotaComponente($componenteCurricularId, $etapa);
 
