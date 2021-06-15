@@ -49,7 +49,7 @@ jobs:
       - name: Utiliza versão 2.1.14 do Composer
         run: composer self-update 2.1.14
       - name: Install Dependencies
-        run: composer new-install
+        run: composer new-install --ignore-platform-req php
       - name: Unit tests
         run: vendor/bin/phpunit
       - name: Integration tests
