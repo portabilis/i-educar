@@ -104,7 +104,7 @@ class CoreExt_Config_Ini extends CoreExt_Config
         foreach ($config as $section => $data) {
             $index = $section;
 
-            if (false !== strpos($section, self::COREEXT_CONFIG_INI_INHERITANCE_SEP)) {
+            if (str_contains($section, self::COREEXT_CONFIG_INI_INHERITANCE_SEP)) {
                 $sections = explode(self::COREEXT_CONFIG_INI_INHERITANCE_SEP, $section);
                 // Apenas uma herança por seção é permitida
                 if (count($sections) > 2) {
@@ -174,7 +174,7 @@ class CoreExt_Config_Ini extends CoreExt_Config
         $config = [];
 
         foreach ($entries as $key => $value) {
-            if (false !== strpos($key, self::COREEXT_CONFIG_INI_NAMESPACE_SEP)) {
+            if (str_contains($key, self::COREEXT_CONFIG_INI_NAMESPACE_SEP)) {
                 $keys = explode(self::COREEXT_CONFIG_INI_NAMESPACE_SEP, $key);
             } else {
                 $keys = (array) $key;
