@@ -849,7 +849,7 @@ return new class extends clsCadastro {
                     } else {
                         $obj_curso = new clsPmieducarCurso($curso);
                         $obj_curso_det = $obj_curso->detalhe();
-                        $nm_curso = $obj_curso_det['nm_curso'];
+                        $nm_curso = empty($obj_curso_det['descricao']) ? $obj_curso_det['nm_curso'] : "{$obj_curso_det['nm_curso']} ({$obj_curso_det['descricao']})";
                         $nm_autorizacao = $this->escola_curso_autorizacao[$curso];
                         $anosLetivos = $this->escola_curso_anos_letivos[$curso] ?: [];
                         $this->campoTextoInv("ref_cod_curso_{$curso}", '', $nm_curso, 50, 255, false, false, true);
@@ -880,7 +880,8 @@ return new class extends clsCadastro {
 
                 if (is_array($lista) && count($lista)) {
                     foreach ($lista as $registro) {
-                        $opcoes["{$registro['cod_curso']}"] = "{$registro['nm_curso']}";
+                        $nm_curso = empty($registro['descricao']) ? $registro['nm_curso'] : "{$registro['nm_curso']} ({$registro['descricao']})";
+                        $opcoes[$registro['cod_curso']] = $nm_curso;
                     }
                 }
             }
