@@ -1,6 +1,6 @@
 <?php
 
-abstract class CoreExt_View_Abstract
+abstract class CoreExt_View_Abstract implements \Stringable
 {
     /**
      * Conteúdo gerado pela execução de um controller.
@@ -40,7 +40,7 @@ abstract class CoreExt_View_Abstract
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getContents();
     }
