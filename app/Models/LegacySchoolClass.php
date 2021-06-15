@@ -257,6 +257,14 @@ class LegacySchoolClass extends Model
         return $this->hasMany(LegacySchoolClassStage::class, 'ref_cod_turma', 'cod_turma');
     }
 
+    /**
+     * @return HasMany
+     */
+    public function schoolClassStages()
+    {
+        return $this->hasMany(LegacySchoolClassStage::class, 'ref_cod_turma', 'cod_turma');
+    }
+
     public function multigrades()
     {
         return $this->hasMany(LegacySchoolClassGrade::class, 'turma_id');
