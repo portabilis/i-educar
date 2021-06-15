@@ -47,7 +47,7 @@ jobs:
           php-version: '8.0'
       - uses: actions/checkout@v2
       - name: Install Dependencies
-        run: composer new-install --ignore-platform-req php
+        run: composer new-install
       - name: Unit tests
         run: vendor/bin/phpunit
       - name: Integration tests
