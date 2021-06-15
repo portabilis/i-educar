@@ -462,7 +462,7 @@ class clsPmieducarExemplar extends Model
      *
      * @return array
      */
-    public function lista_com_acervos($int_cod_exemplar = null, $int_ref_cod_fonte = null, $int_ref_cod_motivo_baixa = null, $int_ref_cod_acervo = null, $int_ref_cod_situacao = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_permite_emprestimo = null, $int_preco = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $date_data_aquisicao_ini = null, $date_data_aquisicao_fim = null, $int_ref_exemplar_tipo = null, $str_titulo_livro = null, $int_ref_cod_biblioteca = null, $int_ref_cod_instituicao = null, $int_ref_cod_escola = null, $int_ref_cod_acervo_colecao = null, $int_ref_cod_acervo_editora = null, $tombo)
+    public function lista_com_acervos($int_cod_exemplar, $int_ref_cod_fonte, $int_ref_cod_motivo_baixa, $int_ref_cod_acervo, $int_ref_cod_situacao, $int_ref_usuario_exc, $int_ref_usuario_cad, $int_permite_emprestimo, $int_preco, $date_data_cadastro_ini, $date_data_cadastro_fim, $date_data_exclusao_ini, $date_data_exclusao_fim, $int_ativo, $date_data_aquisicao_ini, $date_data_aquisicao_fim, $int_ref_exemplar_tipo, $str_titulo_livro, $int_ref_cod_biblioteca, $int_ref_cod_instituicao, $int_ref_cod_escola, $int_ref_cod_acervo_colecao, $int_ref_cod_acervo_editora, $tombo)
     {
         $db = new clsBanco();
 
