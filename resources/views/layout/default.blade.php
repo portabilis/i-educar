@@ -7,6 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>i-Educar @if(isset($title)) - {!! $title !!} @endif</title>
+    <link rel="icon" type="image/x-icon" href="{{ Asset::get('svg/i-educar-fav.svg')}}">
 
     <script>
         dataLayer = [{
