@@ -747,7 +747,7 @@ class clsPmieducarHistoricoEscolar extends Model
         if (self::deveGerarHistorico($detMatricula['ref_cod_instituicao'])) {
             $dadosEscola = self::dadosEscola($detMatricula['ref_ref_cod_escola'], $detMatricula['ref_cod_instituicao']);
 
-            $grade_curso_id = strpos($detMatricula['nome_curso'], '8') !== false ? 1 : 2;
+            $grade_curso_id = str_contains($detMatricula['nome_curso'], '8') ? 1 : 2;
 
             $historicoEscolar = new clsPmieducarHistoricoEscolar(
                 $detMatricula['ref_cod_aluno'],
