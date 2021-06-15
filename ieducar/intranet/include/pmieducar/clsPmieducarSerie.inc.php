@@ -617,7 +617,7 @@ class clsPmieducarSerie extends Model
         $int_ref_cod_instituicao = null,
         $int_ativo = null
     ) {
-        $sql = "SELECT {$this->_campos_lista},
+        $sql = "SELECT {$this->_campos_lista}, s.descricao,
             c.ref_cod_instituicao FROM {$this->_tabela} s,
             {$this->_schema}curso c";
 
