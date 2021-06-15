@@ -89,9 +89,9 @@ return new class extends clsListagem {
         $obj_func->setOrderby('(nome) ASC');
         $obj_func->setLimite($limite, $iniciolimit);
         $lst_func = $obj_func->listaFuncionarioUsuario(
-            $_GET['matricula'],
-            $_GET['nm_pessoa'],
-            $_GET['matricula_interna'],
+            pg_escape_string($_GET['matricula']),
+            pg_escape_string($_GET['nm_pessoa']),
+            pg_escape_string($_GET['matricula_interna']),
             $this->ref_cod_escola,
             $this->ref_cod_instituicao,
             $this->ref_cod_tipo_usuario,
