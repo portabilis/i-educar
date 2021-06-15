@@ -1972,14 +1972,14 @@ class clsCampos extends Core_Controller_Page_Abstract
 
     public function getCampoData($nome, $id, $valor, $class, $tamanhovisivel, $tamanhomaximo, $disabled = false)
     {
-        $disabled = '';
+        $campoDisabled = '';
         if ($disabled !== false) {
-            $disabled = 'disabled=\'disabled\'';
+            $campoDisabled = 'disabled=\'disabled\'';
         }
 
         $id = $id ?: $nome;
 
-        return "<input onKeyPress=\"formataData(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$id}\" value=\"{$valor}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\" {$disabled}> \n";
+        return "<input onKeyPress=\"formataData(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$id}\" value=\"{$valor}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\" {$campoDisabled}> \n";
     }
 
     public function getCampoCep(
