@@ -82,12 +82,11 @@ return new class extends clsListagem {
             foreach ($lista as $registro) {
                 $obj_ref_cod_serie = new clsPmieducarSerie($registro['ref_cod_serie']);
                 $det_ref_cod_serie = $obj_ref_cod_serie->detalhe();
-                $nm_serie = $det_ref_cod_serie['nm_serie'];
+                $nm_serie = empty($det_ref_cod_serie['descricao']) ? $det_ref_cod_serie['nm_serie'] : "{$det_ref_cod_serie['nm_serie']} ({$det_ref_cod_serie['descricao']})";
 
                 $obj_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
                 $det_curso = $obj_curso->detalhe();
-                $registro['ref_cod_curso'] = $det_curso['nm_curso'];
-
+                $registro['ref_cod_curso'] = empty($det_curso['descricao']) ? $det_curso['nm_curso'] : "{$det_curso['nm_curso']} ({$det_curso['descricao']})";
                 $obj_ref_cod_escola = new clsPmieducarEscola($registro['ref_cod_escola']);
                 $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
                 $nm_escola = $det_ref_cod_escola['nome'];
