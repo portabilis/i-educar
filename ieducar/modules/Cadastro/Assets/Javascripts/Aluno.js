@@ -156,7 +156,7 @@ function montaUrlLaudoMedico() {
 
 function codigoInepInvalido() {
     aluno_inep_id.addClass('error');
-    messageUtils.error('O código INEP do aluno deve conter 12 dígitos, não iniciado com 0 (zero).');
+    messageUtils.error('O código INEP do aluno deve conter 12 dígitos.');
 }
 
 function certidaoNascimentoInvalida() {
