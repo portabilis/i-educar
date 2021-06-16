@@ -84,16 +84,18 @@ return new class extends clsListagem {
         // Pega detalhes de foreign_keys
                 $obj_ref_cod_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
                 $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
-                $registro['ref_cod_curso'] = $det_ref_cod_curso['nm_curso'];
+                $nomeCurso = empty($det_ref_cod_curso['descricao']) ? $det_ref_cod_curso['nm_curso'] : "{$det_ref_cod_curso['nm_curso']} ({$det_ref_cod_curso['descricao']})";
+                $registro['ref_cod_curso'] = $nomeCurso;
 
                 $obj_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
                 $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
                 $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
+                $nomeSerie = empty($registro['descricao']) ? $registro['nm_serie'] : "{$registro['nm_serie']} ({$registro['descricao']})";
 
                 $lista_busca = [
-          "<a href=\"educar_serie_det.php?cod_serie={$registro['cod_serie']}\">{$registro['nm_serie']}</a>",
-          "<a href=\"educar_serie_det.php?cod_serie={$registro['cod_serie']}\">{$registro['ref_cod_curso']}</a>"
-        ];
+                    "<a href=\"educar_serie_det.php?cod_serie={$registro['cod_serie']}\">{$nomeSerie}</a>",
+                    "<a href=\"educar_serie_det.php?cod_serie={$registro['cod_serie']}\">{$registro['ref_cod_curso']}</a>"
+                ];
 
                 if ($nivel_usuario == 1) {
                     $lista_busca[] = "<a href=\"educar_serie_det.php?cod_serie={$registro['cod_serie']}\">{$registro['ref_cod_instituicao']}</a>";
