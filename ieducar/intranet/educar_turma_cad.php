@@ -201,6 +201,8 @@ return new class extends clsCadastro {
         $this->campoOculto('cod_turma', $this->cod_turma);
         $this->campoOculto('ref_cod_escola_', $this->ref_cod_escola);
         $this->campoOculto('ano_letivo_', $this->ano);
+        $this->campoOculto('ref_cod_curso_', $this->ref_cod_curso);
+        $this->campoOculto('ref_cod_serie_', $this->ref_cod_serie);
         $this->campoOculto('dependencia_administrativa', $this->dependencia_administrativa);
         $this->campoOculto('modalidade_curso', $this->modalidade_curso);
         $this->campoOculto('retorno', $this->retorno);

@@ -178,11 +178,12 @@ class SchoolClassController extends Controller
             $params['ref_usuario_cad'] = $pessoaLogada;
             $params['data_cadastro'] = now();
             $params['ref_usuario_exc'] = null;
-            $params['ref_ref_cod_serie'] = $params['ref_cod_serie'];
-            $params['ref_ref_cod_escola'] = $params['ref_cod_escola'];
             $params['ano'] = $params['ano_letivo'];
         } else {
             $params['ref_usuario_exc'] = $pessoaLogada;
+            $params['ref_cod_curso'] = $params['ref_cod_curso_'];
+            $params['ref_ref_cod_serie'] = $params['ref_cod_serie_'];
+            $params['ref_ref_cod_escola'] = $params['ref_cod_escola_'];
         }
 
         $value = array_key_exists('nao_informar_educacenso', $params)
