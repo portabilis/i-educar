@@ -76,10 +76,12 @@ class MultiGradesService
 
     private function saveSchoolClassGrade(LegacySchoolClass $schoolClass, $schoolClassGrades)
     {
+        $escolaId = $schoolClass->getSchoolIdAttribute();
+
         foreach ($schoolClassGrades as $schoolClassGrade) {
             LegacySchoolClassGrade::query()->updateOrCreate([
                 'turma_id' => $schoolClass->getKey(),
-                'escola_id' => $schoolClass->school->getKey(),
+                'escola_id' => $escolaId,
                 'serie_id' => $schoolClassGrade['serie_id'],
             ], [
                 'boletim_id' => $schoolClassGrade['boletim_id'],
