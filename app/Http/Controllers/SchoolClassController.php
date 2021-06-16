@@ -179,6 +179,8 @@ class SchoolClassController extends Controller
             $params['data_cadastro'] = now();
             $params['ref_usuario_exc'] = null;
             $params['ano'] = $params['ano_letivo'];
+            $params['ref_ref_cod_serie'] = $params['ref_cod_serie'];
+            $params['ref_ref_cod_escola'] = $params['ref_cod_escola'];
         } else {
             $params['ref_usuario_exc'] = $pessoaLogada;
             $params['ref_cod_curso'] = $params['ref_cod_curso_'];
