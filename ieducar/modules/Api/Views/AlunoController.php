@@ -197,6 +197,19 @@ class AlunoController extends ApiCoreController
         return $this->validatesPresenceOf('aluno_id') && $this->validatesPresenceOf('cpf');
     }
 
+    protected function validateInepCode()
+    {
+        if ($this->getRequest()->aluno_inep_id) {
+            $inepCode = str_split($this->getRequest()->aluno_inep_id);
+
+            if(count($inepCode) !== 12 || $inepCode[0] === "0"){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     protected function canChange()
     {
         return (
@@ -214,11 +227,7 @@ class AlunoController extends ApiCoreController
         return (
             parent::canPost() &&
             $this->validatesUniquenessOfAlunoByPessoaId() &&
-            $this->validateDeficiencies() &&
-            $this->validateBirthCertificate() &&
-            $this->validateNis() &&
-            $this->validateInepExam() &&
-            $this->validateTechnologicalResources()
+            $this->canPut()
         );
     }
 
@@ -230,7 +239,8 @@ class AlunoController extends ApiCoreController
             $this->validateBirthCertificate()&&
             $this->validateNis()&&
             $this->validateInepExam()&&
-            $this->validateTechnologicalResources()
+            $this->validateTechnologicalResources()&&
+            $this->validateInepCode()
         );
     }
 
