@@ -17,7 +17,7 @@ class SchoolClassStageService
         int $stageId
     ) {
         $this->validate($schoolClass, $startDates);
-        $schoolClass->stages()->delete();
+        $schoolClass->schoolClassStages()->delete();
 
         $schoolClassStage = $this->buildSchoolClassStages($schoolClass, $startDates, $endDates, $schoolDays, $stageId);
 

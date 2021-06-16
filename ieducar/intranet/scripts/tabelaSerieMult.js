@@ -267,11 +267,13 @@ function defineSerieCursoPrincipal() {
     });
 
     $j('#ref_cod_curso').val(cursoPrincipal);
+    $j('#ref_cod_curso_').val(cursoPrincipal);
 
     $j.ajax({
         url:getEscolaCursoSerie(),
         success:function(){
             $j('#ref_cod_serie').val(seriePrincipal);
+            $j('#ref_cod_serie_').val(seriePrincipal);
         }
     })
 }
