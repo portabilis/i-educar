@@ -1,6 +1,8 @@
 var url = window.location.href;
 var modoCadastro = url.indexOf("id=") == -1;
 
+const aluno_inep_id = $j("#aluno_inep_id");
+
 if (modoCadastro) {
     $j("[name^=tr_historico_altura_peso]").remove();
 }
@@ -153,8 +155,8 @@ function montaUrlLaudoMedico() {
 }
 
 function codigoInepInvalido() {
-    $j('#aluno_inep_id').addClass('error');
-    messageUtils.error('O código INEP do aluno deve conter 12 dígitos');
+    aluno_inep_id.addClass('error');
+    messageUtils.error('O código INEP do aluno deve conter 12 dígitos, não iniciado com 0 (zero).');
 }
 
 function certidaoNascimentoInvalida() {
@@ -533,7 +535,7 @@ resourceOptions.handleGet = function (dataResponse) {
         $j('#projeto_turno\\[' + i + '\\]').val(object.projeto_turno);
     });
 
-    $j('#aluno_inep_id').val(dataResponse.aluno_inep_id);
+    aluno_inep_id.val(dataResponse.aluno_inep_id);
     $j('#aluno_estado_id').val(dataResponse.aluno_estado_id);
     $j('#codigo_sistema').val(dataResponse.codigo_sistema);
     tipo_resp = dataResponse.tipo_responsavel;
@@ -2610,3 +2612,11 @@ if ($j('#transporte_rota').length > 0) {
 
     $j('#rg').on('change', verificaObrigatoriedadeRg);
 }
+
+aluno_inep_id.on('keyup change', function () {
+  const value = $j(this).val().split('');
+  if(value[0] === '0'){
+    messageUtils.error('O código INEP não pode começar com o número 0 (zero).');
+    $j(this).val('');
+  }
+});
