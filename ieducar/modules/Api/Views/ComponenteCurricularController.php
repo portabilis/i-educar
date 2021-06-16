@@ -157,7 +157,7 @@ class ComponenteCurricularController extends ApiCoreController
             $turmaId = $this->getRequest()->turma_id;
             $ano = $this->getRequest()->ano;
             $areaConhecimentoId = $this->getRequest()->area_conhecimento_id;
-            $allDisciplinesMulti = $this->getRequest()->allDisciplinesMulti;
+            $allDisciplinesMulti = dbBool($this->getRequest()->allDisciplinesMulti);
 
             if ($allDisciplinesMulti) {
                 $componentes = $this->getComponentesTurmaMulti($turmaId, $areaConhecimentoId);
