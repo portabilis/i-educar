@@ -295,7 +295,7 @@ class clsModulesProfessorTurma extends Model
                 t.ref_ref_cod_serie as ref_cod_serie,
                 textcat_all(s.nm_serie) AS nm_serie,
                 t.ref_cod_curso,
-                c.nm_curso,
+                textcat_all(DISTINCT c.nm_curso) AS nm_curso,
                 t.ref_ref_cod_escola as ref_cod_escola,
                 p.nome as nm_escola
             FROM {$this->_tabela} pt
@@ -370,7 +370,6 @@ class clsModulesProfessorTurma extends Model
             GROUP BY
                 pt.id,
                 t.cod_turma,
-                c.nm_curso,
                 p.nome
         ';
 
