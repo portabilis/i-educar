@@ -224,24 +224,24 @@ class AlunoController extends ApiCoreController
 
     protected function canPost()
     {
-        return (
-            parent::canPost() &&
+        return parent::canPost() &&
             $this->validatesUniquenessOfAlunoByPessoaId() &&
-            $this->canPut()
-        );
+            $this->commonValidate();
     }
 
     protected function canPut()
     {
-        return (
-            parent::canPut() &&
-            $this->validateDeficiencies()&&
-            $this->validateBirthCertificate()&&
-            $this->validateNis()&&
-            $this->validateInepExam()&&
-            $this->validateTechnologicalResources()&&
-            $this->validateInepCode()
-        );
+        return parent::canPut() && $this->commonValidate();
+    }
+
+    protected function commonValidate(): bool
+    {
+        return $this->validateDeficiencies() &&
+            $this->validateNis() &&
+            $this->validateInepExam() &&
+            $this->validateTechnologicalResources() &&
+            $this->validateBirthCertificate() &&
+            $this->validateInepCode();
     }
 
     /**
