@@ -6,6 +6,7 @@ $j('#btn_add_tab_add_1').click(function(){
 });
 
 var $quantidadeDeVinculosComAlunos = 0;
+var $quantidadeDeVinculosComServidores = 0;
 
 function adicionaMaisUmaLinhaNaTabela() {
   tab_add_1.addRow();
@@ -304,8 +305,8 @@ function montaTabela(response) {
 
   response.pessoas.each(function(value, id) {
     html += '<tr id="' + value.idpes + '" class="linha_listagem">';
-    html += '<td><input type="checkbox" class="check_principal" id="check_principal_' + value.idpes + '"</td>';
-    html += '<td>'+ value.vinculo +'</td>';
+    html += '<td><input onclick="validaCheckPessoaPrincipal(this)" type="checkbox" class="check_principal" id="check_principal_' + value.idpes + '"</td>';
+    html += '<td id="vinculo_'+ value.idpes +'">'+ value.vinculo +'</td>';
     html += '<td><a target="_new" href="/intranet/atendidos_det.php?cod_pessoa=' + value.idpes + '">'+ value.nome +'</a></td>';
     html += '<td>'+ value.data_nascimento +'</td>';
     html += '<td>'+ value.sexo +'</td>';
@@ -327,6 +328,46 @@ function uniqueCheck() {
     element.addEventListener('click', handleClick.bind(event,checkbox));
   });
 }
+
+function validaCheckPessoaPrincipal(element) {
+  let idpes = element.id.replace(/[^\d]/g, '');
+
+  if (! $j('#' + element.id).is(':checked')) {
+    return;
+  }
+
+  if ($j('#vinculo_' + idpes).text() != 'Sem vínculo') {
+    return;
+  }
+
+  if ($quantidadeDeVinculosComAlunos > 0 || $quantidadeDeVinculosComServidores > 0) {
+    modalInformePessoaPrincipalComVinculo(element.id);
+    return;
+  }
+}
+
+function modalInformePessoaPrincipalComVinculo(checkId) {
+  makeDialog({
+    content: 'Seleciona uma pessoa com vínculo como principal.',
+    title: 'Atenção!',
+    maxWidth: 400,
+    width: 400,
+    close: function () {
+      $j('#'+checkId).prop('checked', false);
+      desabilitaBotaoUnificar();
+      $j('#dialog-container').dialog('destroy');
+    },
+    buttons: [{
+      text: 'Ok',
+      click: function () {
+        $j('#'+checkId).prop('checked', false);
+        desabilitaBotaoUnificar();
+        $j('#dialog-container').dialog('destroy');
+      }
+    },]
+  });
+}
+
 
 function handleClick(checkbox, event) {
   checkbox.forEach(element => {
@@ -376,20 +417,32 @@ function confirmaRemocaoPessoaUnificacao() {
   });
 }
 
-function apresentaObservacoes(pessoas) {
-  $j('#tr_observacoes').remove();
+function contabilizaVinculos(pessoas) {
   let alunos = 0;
+  let servidores = 0;
 
   pessoas.each(function(value, id) {
     let vinculos = value.vinculo.split(', ');
+
     if ($j.inArray('Aluno',vinculos) != -1) {
       alunos++;
+    }
+
+    if ($j.inArray('Servidor',vinculos) != -1) {
+      servidores++;
     }
   });
 
   $quantidadeDeVinculosComAlunos = alunos;
+  $quantidadeDeVinculosComServidores = servidores;
+}
 
-  if (alunos > 1) {
+function apresentaObservacoes(pessoas) {
+  $j('#tr_observacoes').remove();
+
+  contabilizaVinculos(pessoas);
+
+  if ($quantidadeDeVinculosComAlunos > 1) {
     $j('<tr id="tr_observacoes"></tr>').insertAfter($j('.lista_pessoas_unificadas_hr'));
     htmlApresentaObservacoes();
     return;
