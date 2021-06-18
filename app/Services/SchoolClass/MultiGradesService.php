@@ -7,6 +7,7 @@ use App\Models\LegacySchoolClass;
 use App\Rules\DuplicateMultiGrades;
 use App\Rules\IncompatibleAbsenceType;
 use App\Rules\IncompatibleDescriptiveOpinion;
+use App\Rules\IncompatibleRetakeType;
 use App\Rules\ExistsEnrollmentsInSchoolClassGrades;
 use App\Rules\RequiredAlternativeReportCard;
 
@@ -28,6 +29,7 @@ class MultiGradesService
                 new DuplicateMultiGrades(),
                 new IncompatibleAbsenceType(),
                 new IncompatibleDescriptiveOpinion(),
+                new IncompatibleRetakeType(),
                 new RequiredAlternativeReportCard(),
             ],
             'grades_delete' => [
