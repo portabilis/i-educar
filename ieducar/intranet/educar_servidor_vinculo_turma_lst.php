@@ -84,7 +84,7 @@ return new class extends clsListagem {
             $this->tipo_vinculo
         );
 
-        $total = $obj_vinculo->_total;
+        $total = count($lista);
 
         // UrlHelper
         $url  = CoreExt_View_Helper_UrlHelper::getInstance();
