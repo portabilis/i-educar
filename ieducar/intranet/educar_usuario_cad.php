@@ -378,10 +378,24 @@ return new class extends clsCadastro {
     {
         $msg = '';
 
-        if ($password == $matricula) {
-            $msg = 'Informe uma senha diferente da matricula.';
-        } elseif (strlen($password) < 8) {
-            $msg = 'Por favor informe uma senha segura, com pelo menos 8 caracteres.';
+        if (strlen($password) < 8) {
+            $msg .= 'Por favor informe uma senha mais segura, com pelo menos 8 caracteres.';
+        }
+
+        if (strrpos($password, $matricula)) {
+            $msg .= 'A senha informado é similar a sua matricula, informe outra senha.';
+        }
+
+        if (!preg_match('@[A-Z]@', $password) && !preg_match('@[a-z]@', $password)) {
+            $msg .='O campo senha deve conter pelo menos uma letra maiúscula e uma minúscula.';
+        }
+
+        if (!preg_match('@[0-9]@', $password)) {
+            $msg .='O campo senha deve conter pelo menos um número.';
+        }
+
+        if (preg_match('@[^\w]@', $password)) {
+            $msg .='O campo senha deve conter pelo menos um símbolo.';
         }
 
         if ($msg) {
