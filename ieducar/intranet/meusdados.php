@@ -174,28 +174,51 @@ return new class extends clsCadastro {
         $this->Editar();
     }
 
+    private function validatePasswordAccessRules($password, $confirmPassword, $email, $matricula): bool
+    {
+        $isValid = true;
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $this->mensagem .= 'Formato do e-mail inválido.';
+            $isValid = false;
+        }
+
+        if ($password !== $confirmPassword) {
+            $this->mensagem .= 'As senhas que você digitou não conferem.';
+            $isValid = false;
+        }
+
+        if (strlen($password) < 8) {
+            $this->mensagem .= 'Por favor informe uma senha mais segura, com pelo menos 8 caracteres.';
+            $isValid = false;
+        }
+
+        if (strrpos($password, $matricula)) {
+            $this->mensagem .= 'A senha informada é similar a sua matricula, informe outra senha.';
+            $isValid = false;
+        }
+
+        if (!preg_match('@[A-Z]@', $password) && !preg_match('@[a-z]@', $password)) {
+            $this->mensagem .='O campo senha deve conter pelo menos uma letra maiúscula e uma minúscula.';
+            $isValid = false;
+        }
+
+        if (!preg_match('@[0-9]@', $password)) {
+            $this->mensagem .='O campo senha deve conter pelo menos um número.';
+            $isValid = false;
+        }
+
+        if (preg_match('@[^\w]@', $password)) {
+            $this->mensagem .='O campo senha deve conter pelo menos um símbolo.';
+            $isValid = false;
+        }
+
+        return $isValid;
+    }
+
     public function Editar()
     {
-        if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
-            $this->mensagem = 'Formato do e-mail inválido.';
 
-            return false;
-        }
-        if ($this->senha != $this->senha_confirma) {
-            $this->mensagem = 'As senhas que você digitou não conferem.';
-
-            return false;
-        }
-
-        if (strlen($this->senha) < 8) {
-            $this->mensagem = 'Por favor informe uma senha mais segura, com pelo menos 8 caracteres.';
-
-            return false;
-        }
-
-        if (strrpos($this->senha, $this->matricula)) {
-            $this->mensagem = 'A senha informada &eacute; similar a sua matricula, informe outra senha.';
-
+        if (!$this->validatePasswordAccessRules($this->senha, $this->senha_confirma, $this->email, $this->matricula)) {
             return false;
         }
 
