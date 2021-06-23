@@ -29,14 +29,20 @@ class IncompatibleRetakeType implements Rule
             ->with('evaluationRule')
             ->get()
             ->map(function ($model) {
-                return $model->evaluationRule->tipo_recuperacao_paralela;
+                return [
+                    'formula_recuperacao_id' => $model->evaluationRule->formula_recuperacao_id,
+                    'tipo_recuperacao_paralela' => $model->evaluationRule->tipo_recuperacao_paralela,
+                ];
             })
             ->toArray();
 
-        // Ignora regra que não usa recuperação
-        $retakeType = array_diff($retakeType, [RegraAvaliacao_Model_TipoRecuperacaoParalela::NAO_USAR]);
+        $retakeFormula = array_filter(array_column($retakeType, 'formula_recuperacao_id'));
+        $parallelRetake = array_column($retakeType, 'tipo_recuperacao_paralela');
 
-        return count(array_unique($retakeType)) <= 1;
+        // Ignora regra que não usa recuperação
+        $parallelRetake = array_diff($parallelRetake, [RegraAvaliacao_Model_TipoRecuperacaoParalela::NAO_USAR]);
+
+        return count(array_unique($parallelRetake)) <= 1 && count(array_unique($retakeFormula)) <= 1;
     }
 
     /**
