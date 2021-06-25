@@ -524,7 +524,7 @@ function postFalta($faltaFieldElement) {
     $faltaFieldElement.val(parseInt($faltaFieldElement.val()).toString());
 
   if (validatesIfValueIsNumeric($faltaFieldElement.val(), $faltaFieldElement.attr('id')) &&
-      validatesIfNumericValueIsInRange($faltaFieldElement.val(), $faltaFieldElement.attr('id'), 0, 100)) {
+      validatesIfNumericValueIsInRange($faltaFieldElement.val(), $faltaFieldElement.attr('id'), 0, 8766)) {
 
     beforeChangeResource($faltaFieldElement);
 
