@@ -2,7 +2,9 @@
 
 namespace App\Listeners;
 
+use App\Services\DisableUsersWithDaysGoneSinceLastAccessService;
 use Illuminate\Auth\Events\Authenticated;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
@@ -25,12 +27,20 @@ class AuthenticatedUser
             ]);
         }
 
+        $this->validateUserExpirationPeriod($event->user);
+
         if ($event->user->isExpired()) {
             Auth::logout();
 
             throw ValidationException::withMessages([
-                $event->user->login => __('auth.inactive')
+                $event->user->login => __('auth.expired')
             ]);
         }
+    }
+
+    public function validateUserExpirationPeriod(Authenticatable $user)
+    {
+        $disableUsersWithDaysGoneSinceLastAccessService = app(DisableUsersWithDaysGoneSinceLastAccessService::class);
+        $disableUsersWithDaysGoneSinceLastAccessService->execute($user);
     }
 }
