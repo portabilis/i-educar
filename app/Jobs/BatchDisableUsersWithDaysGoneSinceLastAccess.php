@@ -30,7 +30,7 @@ class BatchDisableUsersWithDaysGoneSinceLastAccess implements ShouldQueue, Shoul
     public function handle(Repository $config)
     {
         DB::setDefaultConnection($this->databaseConnection);
-        $expirationPeriod = $config->get('legacy.app.user_accounts.default_password_expiration_period');
+        $expirationPeriod = $config->get('legacy.app.user_accounts.max_days_without_login_to_disable_user');
 
         if (empty($expirationPeriod) === false) {
             $this->disableUsersWithDaysGoneSinceLastAccess($expirationPeriod);
