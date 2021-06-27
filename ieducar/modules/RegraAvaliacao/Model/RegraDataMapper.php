@@ -28,6 +28,8 @@ class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
         'calculaMediaRecParalela' => 'calcula_media_rec_paralela',
         'notaMaximaGeral' => 'nota_maxima_geral',
         'notaMinimaGeral' => 'nota_minima_geral',
+        'faltaMaximaGeral' => 'falta_maxima_geral',
+        'faltaMinimaGeral' => 'falta_minima_geral',
         'notaMaximaExameFinal' => 'nota_maxima_exame_final',
         'qtdCasasDecimais' => 'qtd_casas_decimais',
         'notaGeralPorEtapa' => 'nota_geral_por_etapa',
