@@ -97,8 +97,8 @@ return new class extends clsCadastro {
             return false;
         }
 
-        if (! $this->validaDadodUnificacao($pessoas)) {
-            $this->mensagem = 'Erro ao processar os dados, recarregue a tela e tente novamente!';
+        if (! $this->validaDadosDaUnificacao($pessoas)) {
+            $this->mensagem = 'Dados enviados inválidos, recarregue a tela e tente novamente!';
             return false;
         }
 
