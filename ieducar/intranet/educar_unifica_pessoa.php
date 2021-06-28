@@ -6,8 +6,8 @@ use iEducar\Modules\Unification\PersonLogUnification;
 use Illuminate\Support\Facades\DB;
 
 return new class extends clsCadastro {
+    private $pessoas;
     public $pessoa_logada;
-
     public $tabela_pessoas = [];
     public $pessoa_duplicada;
 
@@ -98,7 +98,7 @@ return new class extends clsCadastro {
             'index.php'
         );
 
-        if (! property_exists($this,'pessoas')) {
+        if (empty($this->pessoas)) {
             $this->simpleRedirect('index.php');
         }
 
