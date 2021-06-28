@@ -162,9 +162,11 @@ return new class extends clsCadastro {
 
     private function buscaPessoaPrincipal($pessoas)
     {
-        return current(array_values(array_filter($pessoas,
+        $pessoas = array_values(array_filter($pessoas,
                 static fn ($pessoas) => $pessoas['pessoa_principal'] === true)
-        ))['idpes'];
+        );
+
+        return current($pessoas)['idpes'];
     }
 
     private function createLog($mainId, $duplicatesId, $createdBy)
