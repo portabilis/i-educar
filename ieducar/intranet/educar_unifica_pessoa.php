@@ -74,18 +74,10 @@ return new class extends clsCadastro {
 
     private function validaSemTemItensDuplicados($pessoas)
     {
-        $temp = [];
-        foreach($pessoas as $val) {
-            $idpes = (int) $val['idpes'];
-            if (! in_array($idpes, $temp, true))  {
-                $temp[] = $idpes;
-                continue;
-            }
+        $ids = array_map(fn($pessoa) => $pessoa['idpes'], $pessoas);
+        $ids = array_unique($ids);
 
-            return false;
-        }
-
-        return true;
+        return count($pessoas) === count($ids);
     }
 
     public function Novo()
