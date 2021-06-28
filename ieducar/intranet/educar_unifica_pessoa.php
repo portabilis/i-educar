@@ -141,7 +141,11 @@ return new class extends clsCadastro {
     private function validaDadosDaUnificacao($pessoa)
     {
         foreach ($pessoa as $item) {
-            if (! array_key_exists('idpes',$item) || !array_key_exists('pessoa_principal',$item)) {
+            if (! array_key_exists('idpes',$item)) {
+                return false;
+            }
+
+            if (! array_key_exists('pessoa_principal',$item)) {
                 return false;
             }
         }
