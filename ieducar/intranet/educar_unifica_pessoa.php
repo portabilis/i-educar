@@ -94,7 +94,12 @@ return new class extends clsCadastro {
             $this->simpleRedirect('index.php');
         }
 
-        $pessoas = json_decode($this->pessoas, true, 512, JSON_THROW_ON_ERROR);
+        try {
+            $pessoas = json_decode($this->pessoas, true, 512, JSON_THROW_ON_ERROR);
+        } catch (Exception) {
+            $this->mensagem = 'Informações inválidas para unificação';
+            return false;
+        }
 
         if (count($pessoas) <= 2) {
             $this->mensagem = 'Informe no mínimo um pessoa para unificação.<br />';
