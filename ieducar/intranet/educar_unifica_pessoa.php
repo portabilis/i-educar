@@ -58,13 +58,9 @@ return new class extends clsCadastro {
 
     private function validaSeExisteUmaPessoaPrincipal($pessoas)
     {
-        foreach ($pessoas as $pessoa) {
-            if ($pessoa['pessoa_principal'] === true) {
-                return true;
-            }
-        }
+        $pessoas = array_filter($pessoas, fn($pessoa) => $pessoa['pessoa_principal'] === true);
 
-        return false;
+        return count($pessoas) > 0;
     }
 
     private function validaSemTemItensDuplicados($pessoas)
