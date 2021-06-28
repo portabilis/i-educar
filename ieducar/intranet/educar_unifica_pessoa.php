@@ -92,7 +92,7 @@ return new class extends clsCadastro {
             return false;
         }
 
-        if (count($pessoas) <= 2) {
+        if (count($pessoas) < 2) {
             $this->mensagem = 'Informe no mínimo duas pessoa para unificação.<br />';
             return false;
         }
