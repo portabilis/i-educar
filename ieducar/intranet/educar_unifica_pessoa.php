@@ -51,14 +51,9 @@ return new class extends clsCadastro {
 
     private function validaSeExisteMaisDeUmaPessoaPrincipal($pessoas)
     {
-        $principal = 0;
-        foreach ($pessoas as $pessoa) {
-            if ($pessoa['pessoa_principal'] === true) {
-                $principal ++;
-            }
-        }
+        $pessoasPrincipais = array_filter($pessoas, fn($pessoa) => $pessoa['pessoa_principal'] === true);
 
-        return $principal > 1;
+        return count($pessoasPrincipais) > 1;
     }
 
     private function validaSeExisteUmaPessoaPrincipal($pessoas)
