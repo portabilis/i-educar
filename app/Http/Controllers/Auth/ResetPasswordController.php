@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Rules\IsValidPassword;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rules\Password;
 
 class ResetPasswordController extends Controller
 {
@@ -51,11 +51,7 @@ class ResetPasswordController extends Controller
                 [
                     'required',
                     'confirmed',
-                    Password::min(8)
-                        ->mixedCase()
-                        ->letters()
-                        ->numbers()
-                        ->symbols()
+                    new IsValidPassword()
                 ]
         ];
     }
