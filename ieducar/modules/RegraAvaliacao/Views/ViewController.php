@@ -36,6 +36,8 @@ class ViewController extends Core_Controller_Page_ViewController
         'Recuperação paralela' => 'tipoRecuperacaoParalela',
         'Nota máxima' => 'notaMaximaGeral',
         'Nota mínima' => 'notaMinimaGeral',
+        'Falta máxima' => 'faltaMaximaGeral',
+        'Falta mínima' => 'faltaMinimaGeral',
         'Nota máxima para exame final' => 'notaMaximaExameFinal',
         'Número máximo de casas decimais' => 'qtdCasasDecimais',
     ];
