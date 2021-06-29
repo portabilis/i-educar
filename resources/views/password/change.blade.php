@@ -2,7 +2,7 @@
 
 @section('content')
     <h2>Alterar senha</h2>
-    <p>Para sua segurança, sua senha deverá ser alterada no primeiro acesso</p>
+    <p>Para sua segurança, sua senha deverá ser alterada.</p>
     <form action="{{ route('post-change-password') }}" method="post">
 
         {{csrf_field()}}
