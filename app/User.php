@@ -294,6 +294,13 @@ class User extends Authenticatable
         }
         return null;
     }
+    public function getPasswordUpdatedDate(): ?Carbon
+    {
+        if ($this->employee()) {
+            return $this->employee->getPasswordUpdatedDate();
+        }
+        return null;
+    }
 
     public function getLastAccessDate(): Carbon
     {
@@ -325,6 +332,18 @@ class User extends Authenticatable
         return $daysGone;
     }
 
+    public function getDaysSinceLastPasswordUpdated(): int
+    {
+        $daysGone = 0;
+        $lastPasswordUpdatedDate = $this->getPasswordUpdatedDate();
+
+        $currentDate = Carbon::now();
+        if ($currentDate->gt($lastPasswordUpdatedDate)){
+            $daysGone = $currentDate->diffInDays($lastPasswordUpdatedDate);
+        }
+        return $daysGone;
+    }
+
     public function getActiveUsersNotAdmin()
     {
         return $this->query()
@@ -341,11 +360,5 @@ class User extends Authenticatable
         $this->employee->save();
         $this->ativo = 0;
         $this->save();
-    }
-
-    public function isPasswordExpirationPeriod()
-    {
-        $disableUsersWithDaysGoneSinceLastAccessService = new DisableUsersWithDaysGoneSinceLastAccessService();
-
     }
 }
