@@ -136,6 +136,8 @@ return new class extends clsCadastro {
                 $obj_servidor_disciplina = new clsPmieducarServidorDisciplina();
                 $lst_servidor_disciplina = $obj_servidor_disciplina->lista(null, $this->ref_cod_instituicao, $this->cod_servidor);
 
+                Session::forget("servant:{$this->cod_servidor}");
+
                 if ($lst_servidor_disciplina) {
                     foreach ($lst_servidor_disciplina as $disciplina) {
                         $funcoes[$disciplina['ref_cod_funcao']][$disciplina['ref_cod_curso']][] = $disciplina['ref_cod_disciplina'];
