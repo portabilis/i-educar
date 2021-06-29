@@ -1,9 +1,11 @@
 <?php
 
 use App\Models\LegacyEmployee;
+use App\Services\ChangeUserPasswordService;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 return new class extends clsCadastro {
     public $ref_pessoa;
@@ -273,20 +275,23 @@ return new class extends clsCadastro {
 
         // Ao editar não é necessário trocar a senha, então apenas quando algo
         // for informado é que a mesma será alterada.
-
-        $senha = null;
-        $data_troca_senha = null;
         if ($this->_senha) {
-            if (!$this->validatesPassword($this->matricula, $this->_senha)) {
+            $legacyEmployee = LegacyEmployee::find($this->ref_pessoa);
+            $legacyEmployee->setPasswordAttribute($this->_senha);
+
+            $changeUserPasswordService = app(ChangeUserPasswordService::class);
+            try {
+                $changeUserPasswordService->execute($legacyEmployee);
+            } catch (ValidationException $ex){
+                $this->mensagem = $ex->validator->errors()->first();
                 return false;
             }
-            $senha = Hash::make($this->_senha);
-            $data_troca_senha = 'NOW()';
+
         }
 
         $data_reativa_conta = $this->hasChangeStatusUser() && $this->ativo == '1' ? 'NOW()' : null;
 
-        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, $senha, $this->ativo, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, Portabilis_Date_Utils::brToPgSQL($this->data_expiracao), $data_troca_senha, $data_reativa_conta, $this->pessoa_logada, 0, 0, null, 0, null, $this->email, $this->matricula_interna);
+        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, null, $this->ativo, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, Portabilis_Date_Utils::brToPgSQL($this->data_expiracao), null, $data_reativa_conta, $this->pessoa_logada, 0, 0, null, 0, null, $this->email, $this->matricula_interna);
 
         if ($obj_funcionario->edita()) {
             if ($this->ref_cod_instituicao) {
@@ -370,39 +375,6 @@ return new class extends clsCadastro {
 
         if ($db->CampoUnico($sql) == '1') {
             $this->mensagem = "A matrícula '$matricula' já foi usada, por favor, informe outra.";
-
-            return false;
-        }
-
-        return true;
-    }
-
-    public function validatesPassword($matricula, $password)
-    {
-        $msg = '';
-
-        if (strlen($password) < 8) {
-            $msg .= 'Por favor informe uma senha mais segura, com pelo menos 8 caracteres.';
-        }
-
-        if (strrpos($password, $matricula)) {
-            $msg .= 'A senha informado é similar a sua matricula, informe outra senha.';
-        }
-
-        if (!preg_match('@[A-Z]@', $password) && !preg_match('@[a-z]@', $password)) {
-            $msg .='O campo senha deve conter pelo menos uma letra maiúscula e uma minúscula.';
-        }
-
-        if (!preg_match('@[0-9]@', $password)) {
-            $msg .='O campo senha deve conter pelo menos um número.';
-        }
-
-        if (preg_match('@[^\w]@', $password)) {
-            $msg .='O campo senha deve conter pelo menos um símbolo.';
-        }
-
-        if ($msg) {
-            $this->mensagem = $msg;
 
             return false;
         }

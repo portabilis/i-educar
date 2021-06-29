@@ -1,8 +1,10 @@
 <?php
 
+use App\Models\LegacyEmployee;
+use App\Services\ChangeUserPasswordService;
 use App\Services\UrlPresigner;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\ValidationException;
 
 return new class extends clsCadastro {
     public $nome;
@@ -217,11 +219,6 @@ return new class extends clsCadastro {
 
     public function Editar()
     {
-
-        if (!$this->validatePasswordAccessRules($this->senha, $this->senha_confirma, $this->email, $this->matricula)) {
-            return false;
-        }
-
         if (!$this->validatePhoto()) {
             return false;
         }
@@ -262,7 +259,17 @@ return new class extends clsCadastro {
         $senha_old = urldecode($this->senha_old);
 
         if ($senha_old != $this->senha) {
-            $funcionario->senha = Hash::make($this->senha);
+
+            $legacyEmployee = LegacyEmployee::find($this->pessoa_logada);
+            $legacyEmployee->setPasswordAttribute($this->senha);
+
+            $changeUserPasswordService = app(ChangeUserPasswordService::class);
+            try {
+                $changeUserPasswordService->execute($legacyEmployee);
+            } catch (ValidationException $ex){
+                $this->mensagem = $ex->validator->errors()->first();
+                return false;
+            }
         }
 
         $funcionario->edita();
