@@ -277,11 +277,9 @@ return new class extends clsCadastro {
         // for informado é que a mesma será alterada.
         if ($this->_senha) {
             $legacyEmployee = LegacyEmployee::find($this->ref_pessoa);
-            $legacyEmployee->setPasswordAttribute($this->_senha);
-
             $changeUserPasswordService = app(ChangeUserPasswordService::class);
             try {
-                $changeUserPasswordService->execute($legacyEmployee);
+                $changeUserPasswordService->execute($legacyEmployee, $this->_senha);
             } catch (ValidationException $ex){
                 $this->mensagem = $ex->validator->errors()->first();
                 return false;

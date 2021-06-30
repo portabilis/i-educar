@@ -259,13 +259,14 @@ return new class extends clsCadastro {
         $senha_old = urldecode($this->senha_old);
 
         if ($senha_old != $this->senha) {
-
+            if ($this->senha !== $this->senha_confirma) {
+                $this->mensagem = 'O campo de confirmação de senha deve ser igual ao campo da senha.';
+                return false;
+            }
             $legacyEmployee = LegacyEmployee::find($this->pessoa_logada);
-            $legacyEmployee->setPasswordAttribute($this->senha);
-
             $changeUserPasswordService = app(ChangeUserPasswordService::class);
             try {
-                $changeUserPasswordService->execute($legacyEmployee);
+                $changeUserPasswordService->execute($legacyEmployee, $this->senha);
             } catch (ValidationException $ex){
                 $this->mensagem = $ex->validator->errors()->first();
                 return false;
