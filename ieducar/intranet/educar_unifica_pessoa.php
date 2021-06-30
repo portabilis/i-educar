@@ -45,7 +45,9 @@ return new class extends clsCadastro {
         $this->campoTabelaFim();
 
         $styles = ['/modules/Cadastro/Assets/Stylesheets/UnificaPessoa.css'];
+        $scripts = ['/modules/Portabilis/Assets/Javascripts/ClientApi.js'];
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
+        Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
     }
 
     private function validaSeExisteMaisDeUmaPessoaPrincipal($pessoas)
