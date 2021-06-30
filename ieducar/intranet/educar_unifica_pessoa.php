@@ -39,7 +39,6 @@ return new class extends clsCadastro {
     public function Gerar()
     {
         $this->acao_enviar = 'carregaDadosPessoas()';
-        $this->inputsHelper()->dynamic('ano', ['required' => false, 'max_length' => 4]);
         $this->campoTabelaInicio('tabela_pessoas', '', ['Pessoa duplicada', 'Campo Pessoa duplicada'], $this->tabela_pessoas);
             $this->campoRotulo('pessoa_label', '', 'Pessoa física a ser unificada <span class="campo_obrigatorio">*</span>');
             $this->campoTexto('pessoa_duplicada', 'Pessoa duplicada', $this->pessoa_duplicada, 50, 255, false, true, false, '', '', '', 'onfocus');
