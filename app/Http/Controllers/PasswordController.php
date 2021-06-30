@@ -33,7 +33,7 @@ class PasswordController extends Controller
         if ($response == Password::PASSWORD_RESET) {
             $employee = $user->employee;
             $changeUserPasswordService = app(ChangeUserPasswordService::class);
-            $changeUserPasswordService->execute($employee);
+            $changeUserPasswordService->execute($employee, $request->get('password'));
 
             return $this->sendResetResponse($request, $response);
         }
