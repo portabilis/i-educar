@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\LegacyEmployee;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules\Password;
 
 class ChangeUserPasswordService
 {
@@ -19,17 +18,7 @@ class ChangeUserPasswordService
 
     public function validate(string $password)
     {
-        validator(
-            ['password' => $password],
-            [
-                'password' => [
-                    Password::min(8)
-                        ->mixedCase()
-                        ->letters()
-                        ->numbers()
-                        ->symbols()
-                ]
-            ]
-        )->validate();
+        $validateUserPasswordService = app(ValidateUserPasswordService::class);
+        $validateUserPasswordService->execute($password);
     }
 }

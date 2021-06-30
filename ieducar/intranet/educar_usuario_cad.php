@@ -2,9 +2,11 @@
 
 use App\Models\LegacyEmployee;
 use App\Services\ChangeUserPasswordService;
+use App\Services\ValidateUserPasswordService;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
 
 return new class extends clsCadastro {
@@ -221,7 +223,10 @@ return new class extends clsCadastro {
             return false;
         }
 
-        if (!$this->validatesPassword($this->matricula, $this->_senha)) {
+        try {
+            $this->validatesPassword($this->_senha);
+        } catch (ValidationException $ex) {
+            $this->mensagem = $ex->validator->errors()->first();
             return false;
         }
 
@@ -443,5 +448,11 @@ return new class extends clsCadastro {
     {
         $legacyEmployer = LegacyEmployee::find($this->ref_pessoa);
         return $legacyEmployer->ativo != $this->ativo;
+    }
+
+    public function validatesPassword($password)
+    {
+        $validateUserPasswordService = app(ValidateUserPasswordService::class);
+        $validateUserPasswordService->execute($password);
     }
 };
