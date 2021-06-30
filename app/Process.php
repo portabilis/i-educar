@@ -39,4 +39,7 @@ class Process
     public const EDUCACENSO_IMPORTACOES = 9998848;
     public const CONSULTAS = 9998890;
     public const ACTIVE_LOOKING = 9998921;
+    public const INDICATORS = 9998922;
+    public const STUDENTS_SCHOOLS_GEOLOCATION = 9998923;
+    public const PANEL_DIMENSION_SCHOOL_NETWORK = 9998924;
 }
