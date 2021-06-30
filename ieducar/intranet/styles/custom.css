@@ -615,7 +615,7 @@ table.calendar .dayLastMonth, .day{
 }
 
 table.calendar .day{
-  background-color: #e9f0f8 !;
+  background-color: #e9f0f8;
   cursor: pointer;
 }
 
@@ -1460,4 +1460,13 @@ a.btn-detalhes {
 
 #componentes_turma_cad td{
   padding: 5px;
+}
+.painel-geoloation-report {
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
 }
