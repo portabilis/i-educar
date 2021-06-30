@@ -132,6 +132,9 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
 
     Route::get('/dispensa-lote', 'BatchExemptionController@index')->middleware('can:modify:' . Process::BATCH_EXEMPTION)->name('batch-exemption.index');
     Route::post('/dispensa-lote', 'BatchExemptionController@exempt')->middleware('can:modify:' . Process::BATCH_EXEMPTION)->name('batch-exemption.exempt');
+
+    Route::get('/panel-dimension-school-network', 'IndicatorsController@panelDimensionSchoolNetwork')->name('panel-dimension-school-network.index');
+    Route::get('/students-schools-geolocation', 'IndicatorsController@studentsSchoolsGeolocation')->name('students-schools-geolocation.index');
 });
 
 Route::group(['namespace' => 'Exports', 'prefix' => 'exports'], function () {
