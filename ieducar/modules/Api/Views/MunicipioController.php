@@ -31,7 +31,14 @@ class MunicipioController extends ApiCoreController
     protected function search()
     {
         if ($this->canSearch()) {
-            $sql = <<<SQL
+            if (is_numeric($this->getRequest()->query)){
+                $where = 'AND idmun = :idmun';
+                $field = 'idmun';
+            } else {
+                $where = "AND LOWER(UNACCENT(nome)) LIKE '%' || LOWER(UNACCENT(:nome)) || '%'";
+                $field = 'nome';
+            }
+            $sql = "
                 SELECT
                     DISTINCT sigla_uf,
                     idmun AS id,
@@ -40,14 +47,13 @@ class MunicipioController extends ApiCoreController
                 FROM
                     public.municipio
                 WHERE TRUE
-                    AND LOWER(UNACCENT(nome)) LIKE '%' || LOWER(UNACCENT(:nome)) || '%'
+                    {$where}
                 ORDER BY
                     size,
                     nome
-                LIMIT 15
-SQL;
+                LIMIT 15";
 
-            $tmpResults = $this->fetchPreparedQuery($sql, ['nome' => trim($this->getRequest()->query)], false);
+            $tmpResults = $this->fetchPreparedQuery($sql, [$field => trim($this->getRequest()->query)], false);
             $results = [];
 
             foreach ($tmpResults as $result) {

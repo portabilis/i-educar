@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - 2.*
-      - master
+      - main
   pull_request:
 
 jobs:

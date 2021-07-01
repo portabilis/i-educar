@@ -29,7 +29,9 @@ class CursoController extends ApiCoreController
                 $sql = "
                     SELECT DISTINCT
                         c.cod_curso,
-                        c.nm_curso,
+                        CASE WHEN (c.descricao is not null and c.descricao <> '')
+                        THEN c.nm_curso||' ('||c.descricao||')'
+                        ELSE c.nm_curso END as nm_curso
                         (
                             CASE c.updated_at >= ec.updated_at WHEN TRUE THEN
                                 c.updated_at
@@ -69,7 +71,9 @@ class CursoController extends ApiCoreController
                 $sql = '
                     SELECT
                         cod_curso,
-                        nm_curso,
+                        CASE WHEN (curso.descricao is not null and curso.descricao <> \'\')
+                        THEN curso.nm_curso||\' (\'||curso.descricao||\')\'
+                        ELSE curso.nm_curso END as nm_curso,
                         updated_at,
                         (
                             CASE ativo WHEN 1 THEN
@@ -158,7 +162,9 @@ class CursoController extends ApiCoreController
         $instituicaoId = $this->getRequest()->instituicao_id;
 
         $sql = "SELECT cod_curso AS id,
-                   nm_curso AS nome
+                   CASE WHEN (curso.descricao is not null or curso.descricao <> '')
+                   THEN curso.nm_curso||' ('||curso.descricao||')'
+                   ELSE curso.nm_curso END as nome
               FROM pmieducar.curso
              INNER JOIN pmieducar.instituicao ON (instituicao.cod_instituicao = curso.ref_cod_instituicao)
              WHERE curso.ativo = 1

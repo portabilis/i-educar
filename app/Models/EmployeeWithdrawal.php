@@ -33,6 +33,11 @@ class EmployeeWithdrawal extends Model
     ];
 
     /**
+     * @var bool
+     */
+    public $timestamps = false;
+
+    /**
      * @return BelongsTo
      */
     public function employee()

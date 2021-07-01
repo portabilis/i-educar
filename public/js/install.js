@@ -121,6 +121,9 @@ if (installButton) {
               command: 'migrate',
               description: 'Executando migrações'
             }, {
+              command: 'reports-link',
+              description: 'Gerando symlinks dos relatórios'
+            }, {
               command: 'password',
               description: 'Definindo senha do admin',
               extra: password

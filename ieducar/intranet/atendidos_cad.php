@@ -1312,8 +1312,8 @@ return new class extends clsCadastro {
         );
 
         $documentos->sigla_uf_cert_civil = $_REQUEST['uf_emissao_certidao_civil'];
-        $documentos->cartorio_cert_civil = addslashes($_REQUEST['cartorio_emissao_certidao_civil']);
-        $documentos->passaporte = addslashes($_REQUEST['passaporte']);
+        $documentos->cartorio_cert_civil = pg_escape_string($_REQUEST['cartorio_emissao_certidao_civil']);
+        $documentos->passaporte = pg_escape_string($_REQUEST['passaporte']);
 
         // carteira de trabalho
 
