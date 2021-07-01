@@ -110,7 +110,7 @@ class CheckMandatoryCensoFields implements Rule
             if (!$this->validaCampoTipoAtendimento($params)) {
                 return false;
             }
-            if (!$this->validaCampoLocalFuncionamentoDiferenciado()) {
+            if (!$this->validaCampoLocalFuncionamentoDiferenciado($params)) {
                 return false;
             }
         }
@@ -120,9 +120,10 @@ class CheckMandatoryCensoFields implements Rule
 
     protected function validarCamposObrigatoriosCenso($refCodInstituicao)
     {
-        return (
-            new LegacyInstitution(['cod_instituicao' => $refCodInstituicao])
-        )->isMandatoryCensoFields();
+        return (new LegacyInstitution())::query()
+            ->find(['cod_instituicao' => $refCodInstituicao])
+            ->first()
+            ->isMandatoryCensoFields();
     }
 
     protected function validaCamposHorario($params)
