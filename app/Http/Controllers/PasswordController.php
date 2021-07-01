@@ -12,6 +12,11 @@ class PasswordController extends Controller
 {
     use ResetsPasswords;
 
+    public function __construct(ChangeUserPasswordService $changeUserPasswordService)
+    {
+        $this->changeUserPasswordService = $changeUserPasswordService;
+    }
+
     public function change(Request $request, User $user)
     {
         if ($request->isMethod('get')) {
@@ -32,9 +37,7 @@ class PasswordController extends Controller
 
         if ($response == Password::PASSWORD_RESET) {
             $employee = $user->employee;
-            $changeUserPasswordService = app(ChangeUserPasswordService::class);
-            $changeUserPasswordService->execute($employee, $request->get('password'));
-
+            $this->changeUserPasswordService->execute($employee, $request->get('password'));
             return $this->sendResetResponse($request, $response);
         }
 

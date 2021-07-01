@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\Auth;
 
 class CheckResetPassword
 {
+    public function __construct(ForceUserChangePasswordService $forceUserChangePasswordService)
+    {
+        $this->forceUserChangePasswordService = $forceUserChangePasswordService;
+    }
+
     /**
      * Handle an incoming request.
      *
@@ -37,7 +42,6 @@ class CheckResetPassword
 
     public function validateUserExpirationPassword(Authenticatable $user)
     {
-        $forceUserChangePasswordService = app(ForceUserChangePasswordService::class);
-        $forceUserChangePasswordService->execute($user);
+        $this->forceUserChangePasswordService->execute($user);
     }
 }
