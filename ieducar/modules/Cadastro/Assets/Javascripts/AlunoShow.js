@@ -207,7 +207,7 @@ var handlePostDataEntrada = function(dataresponse){
 
 function onDataSaidaChange(matricula_id, key, campo){
 
-  if(key.keyCode == 13 || key.keyCode == 9 || (typeof key.keyCode == "undefined")){
+  if((key.keyCode == 13 || key.keyCode == 9 || (typeof key.keyCode == "undefined")) && campo.val() !== ''){
     const data = {
       matricula_id : matricula_id,
       data_saida : campo.val()
