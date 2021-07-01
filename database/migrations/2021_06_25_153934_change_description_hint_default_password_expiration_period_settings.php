@@ -12,6 +12,7 @@ class ChangeDescriptionHintDefaultPasswordExpirationPeriodSettings extends Migra
         ], [
             'description' => 'Quantidade de dias para expiração automática de senhas',
             'hint' => 'A contagem será efetuada em dias corridos. Se o valor preenchido for zero (0) ou nenhum, não ocorrerá automatização',
+            'value' => 0
         ]);
     }
 
