@@ -110,7 +110,7 @@ class CheckMandatoryCensoFields implements Rule
             if (!$this->validaCampoTipoAtendimento($params)) {
                 return false;
             }
-            if (!$this->validaCampoLocalFuncionamentoDiferenciado()) {
+            if (!$this->validaCampoLocalFuncionamentoDiferenciado($params)) {
                 return false;
             }
         }
