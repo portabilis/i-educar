@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Rules\IsValidPassword;
+use App\Services\ChangeUserPasswordService;
+use App\User;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Password;
 
 class ResetPasswordController extends Controller
 {
@@ -34,8 +36,9 @@ class ResetPasswordController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(ChangeUserPasswordService $changeUserPasswordService)
     {
+        $this->changeUserPasswordService = $changeUserPasswordService;
         $this->middleware('guest');
     }
 
@@ -47,12 +50,7 @@ class ResetPasswordController extends Controller
         return [
             'token' => 'required',
             'login' => 'required',
-            'password' =>
-                [
-                    'required',
-                    'confirmed',
-                    new IsValidPassword()
-                ]
+            'password' => 'required|confirmed',
         ];
     }
 
@@ -64,7 +62,6 @@ class ResetPasswordController extends Controller
         return [
             'password.required' => 'O campo senha é obrigatório.',
             'password.confirmed' => 'As senhas não são iguais.',
-            'password.min' => 'A senha deve conter ao menos 8 caracteres.',
         ];
     }
 
@@ -79,5 +76,25 @@ class ResetPasswordController extends Controller
             'password_confirmation',
             'token'
         );
+    }
+
+    public function reset(Request $request, User $user)
+    {
+        $request->validate($this->rules(), $this->validationErrorMessages());
+
+        $response = $this->broker()->reset(
+            $this->credentials($request),
+            function ($user, $password) {
+                $this->resetPassword($user, $password);
+            }
+        );
+
+        if ($response == Password::PASSWORD_RESET) {
+            $employee = $user->employee;
+            $this->changeUserPasswordService->execute($employee, $request->get('password'));
+            return $this->sendResetResponse($request, $response);
+        }
+
+        return $this->sendResetFailedResponse($request, $response);
     }
 }
