@@ -197,7 +197,7 @@ class clsFuncionario extends clsPessoaFisica
         $filtros = '';
         $filtro_pessoa = false;
 
-        $whereAnd = ' WHERE u.ativo = 1 AND ';
+        $whereAnd = ' WHERE true AND ';
 
         if (is_string($str_matricula) && $str_matricula != '') {
             $filtros .= "{$whereAnd} (f.matricula) LIKE ('%{$str_matricula}%')";
@@ -237,6 +237,7 @@ class clsFuncionario extends clsPessoaFisica
 
         if (is_numeric($int_ativo)) {
             $filtros .= "{$whereAnd} f.ativo = '$int_ativo'";
+            $filtros .= "{$whereAnd} u.ativo = '$int_ativo'";
             $whereAnd = ' AND ';
         }
 
@@ -250,7 +251,7 @@ class clsFuncionario extends clsPessoaFisica
                                                                                 LEFT JOIN pmieducar.usuario u ON (u.cod_usuario = f.ref_cod_pessoa_fj)
                                                                                 LEFT JOIN pmieducar.tipo_usuario tu ON (u.ref_cod_tipo_usuario = tu.cod_tipo_usuario)
                                                                                 LEFT JOIN pmieducar.escola_usuario eu ON (eu.ref_cod_usuario = u.cod_usuario) {$filtros}");
-
+die($sql);
         $db->Consulta($sql);
 
         if ($countCampos > 1) {
