@@ -1,6 +1,6 @@
-@if ($breadcrumb !== null && $breadcrumb->getLegacy())
+@if ($breadcrumb ?? '' && $breadcrumb->getLegacy())
     {!! $breadcrumb->getLegacy() !!}
-@elseif ($breadcrumb !== null && $breadcrumb->currentPage())
+@elseif ($breadcrumb ?? '' && $breadcrumb->currentPage())
     <div class="breadcrumb">
         <a href="{{ route('home') }}" title="Ir para o Início">
             <i class="fa fa-home" aria-hidden="true"></i><span> Início</span>
