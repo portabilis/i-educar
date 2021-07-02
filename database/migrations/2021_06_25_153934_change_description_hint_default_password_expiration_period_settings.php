@@ -10,9 +10,15 @@ class ChangeDescriptionHintDefaultPasswordExpirationPeriodSettings extends Migra
         Setting::query()->updateOrInsert([
             'key' => 'legacy.app.user_accounts.default_password_expiration_period',
         ], [
-            'description' => 'Quantidade de dias para expiração automática de senhas',
+            'description' => 'Quantidade de dias para expirar automaticamente as senhas dos usuários ativos',
             'hint' => 'A contagem será efetuada em dias corridos. Se o valor preenchido for zero (0) ou nenhum, não ocorrerá automatização',
             'value' => 0
+        ]);
+
+        Setting::query()->updateOrInsert([
+            'key' => 'legacy.app.user_accounts.max_days_without_login_to_disable_user',
+        ], [
+            'description' => 'Quantidade de dias permitidos sem acessar o sistema para inativação automática de usuário',
         ]);
     }
 
