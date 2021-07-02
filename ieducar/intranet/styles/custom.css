@@ -1461,12 +1461,3 @@ a.btn-detalhes {
 #componentes_turma_cad td{
   padding: 5px;
 }
-.painel-geoloation-report {
-  height: 500px;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  align-content: center;
-  justify-content: center;
-  align-items: center;
-}
