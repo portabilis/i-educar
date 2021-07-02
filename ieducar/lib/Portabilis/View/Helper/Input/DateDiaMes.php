@@ -71,7 +71,7 @@ class Portabilis_View_Helper_Input_DateDiaMes extends Portabilis_View_Helper_Inp
                 const isValidDate = (Boolean(+newDate) && newDate.getDate() === day && (newDate.getMonth() + 1) === month);
 
                 if (! isValidDate){
-                    messageUtils.error('Informe data válida.', this);
+                    messageUtils.error('Informe uma data válida.', this);
                     this.value = '';
                 }
             });

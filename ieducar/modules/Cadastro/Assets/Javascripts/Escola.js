@@ -342,20 +342,6 @@ $j(document).ready(function() {
           return false;
       });
 
-      if($j('#dependencia_administrativa').val() == DEPENDENCIA_ADMINISTRATIVA.PRIVADA && $j('#situacao_funcionamento').val() == '1'){
-            $j('#categoria_escola_privada').prop('disabled', false);
-            $j('#conveniada_com_poder_publico').prop('disabled', false);
-            $j('#mantenedora_escola_privada').prop('disabled', false);
-            $j("#mantenedora_escola_privada").trigger("chosen:updated");
-            $j('#cnpj_mantenedora_principal').prop('disabled', false);
-        }else{
-            $j('#categoria_escola_privada').prop('disabled', true);
-            $j('#conveniada_com_poder_publico').prop('disabled', true);
-            $j('#mantenedora_escola_privada').prop('disabled', true);
-            $j("#mantenedora_escola_privada").trigger("chosen:updated");
-            $j('#cnpj_mantenedora_principal').prop('disabled', true);
-        }
-
         habilitarCampoUnidadeVinculada();
         mostrarCamposDaUnidadeVinculada();
         obrigarCamposDaUnidadeVinculada();
@@ -372,10 +358,30 @@ $j(document).ready(function() {
     $j('#categoria_escola_privada').makeUnrequired();
     $j('#conveniada_com_poder_publico').makeUnrequired();
     $j('#mantenedora_escola_privada').makeUnrequired();
+    $j('#categoria_escola_privada').prop('disabled', true);
+    $j('#conveniada_com_poder_publico').prop('disabled', true);
+    $j('#mantenedora_escola_privada').prop('disabled', true);
+    $j("#mantenedora_escola_privada").trigger("chosen:updated");
+    $j('#cnpj_mantenedora_principal').prop('disabled', true);
+
     if (obrigarCamposCenso && $j('#situacao_funcionamento').val() == '1' && $j('#dependencia_administrativa').val() == DEPENDENCIA_ADMINISTRATIVA.PRIVADA){
-      $j('#categoria_escola_privada').makeRequired();
       $j('#conveniada_com_poder_publico').makeRequired();
       $j('#mantenedora_escola_privada').makeRequired();
+    }
+
+    if ($j('#situacao_funcionamento').val() == '1' && $j('#dependencia_administrativa').val() == DEPENDENCIA_ADMINISTRATIVA.PRIVADA){
+      $j('#conveniada_com_poder_publico').prop('disabled', false);
+      $j('#mantenedora_escola_privada').prop('disabled', false);
+      $j("#mantenedora_escola_privada").trigger("chosen:updated");
+      $j('#cnpj_mantenedora_principal').prop('disabled', false);
+    }
+
+    if (obrigarCamposCenso && $j('#dependencia_administrativa').val() == DEPENDENCIA_ADMINISTRATIVA.PRIVADA){
+      $j('#categoria_escola_privada').makeRequired();
+    }
+
+    if ($j('#dependencia_administrativa').val() == DEPENDENCIA_ADMINISTRATIVA.PRIVADA){
+      $j('#categoria_escola_privada').prop('disabled', false);
     }
   }
 

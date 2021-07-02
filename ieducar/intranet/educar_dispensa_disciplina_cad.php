@@ -72,13 +72,13 @@ return new class extends clsCadastro {
         }
 
         $this->url_cancelar = $retorno == 'Editar' ?
-        sprintf(
-            'educar_dispensa_disciplina_det.php?ref_cod_matricula=%d&ref_cod_serie=%d&ref_cod_escola=%d&ref_cod_disciplina=%d',
-            $registro['ref_cod_matricula'],
-            $registro['ref_cod_serie'],
-            $registro['ref_cod_escola'],
-            $registro['ref_cod_disciplina']
-        ) :
+            sprintf(
+                'educar_dispensa_disciplina_det.php?ref_cod_matricula=%d&ref_cod_serie=%d&ref_cod_escola=%d&ref_cod_disciplina=%d',
+                $registro['ref_cod_matricula'],
+                $registro['ref_cod_serie'],
+                $registro['ref_cod_escola'],
+                $registro['ref_cod_disciplina']
+            ) :
             'educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula;
 
         $this->nome_url_cancelar = 'Cancelar';

@@ -129,7 +129,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         $curso->cod_curso = $id;
         $curso = $curso->detalhe();
 
-        return $curso['nm_curso'];
+        return empty($curso['descricao']) ? $curso['nm_curso'] : "{$curso['nm_curso']} ({$curso['descricao']})";
     }
 
     /**
@@ -275,7 +275,8 @@ class App_Model_IedFinder extends CoreExt_Entity
         $_series = [];
 
         foreach ($series as $serie) {
-            $_series[$serie['cod_serie']] = mb_strtoupper($serie['nm_serie'], 'UTF-8');
+            $nomeSerie = empty($serie['descricao']) ? $serie['nm_serie'] : "{$serie['nm_serie']} ({$serie['descricao']})";
+            $_series[$serie['cod_serie']] = mb_strtoupper($nomeSerie, 'UTF-8');
         }
 
         return $_series;

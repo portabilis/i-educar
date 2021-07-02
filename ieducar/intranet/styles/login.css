@@ -78,6 +78,11 @@ button.submit {
   cursor: pointer;
 }
 
+button.submit:disabled {
+  background-color: #7f7d7d !important;
+  cursor: not-allowed !important;;
+}
+
 #footer {
   margin-top: 10px;
   padding: 10px 0;
