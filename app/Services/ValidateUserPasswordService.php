@@ -22,7 +22,6 @@ class ValidateUserPasswordService
         try {
             $this->validate($newPassword, $oldPassword);
         } catch (ValidationException $ex){
-
             throw ValidationException::withMessages([
                 'password' => [
                     'A senha deve conter pelo menos ' .
