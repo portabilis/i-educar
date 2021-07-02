@@ -260,7 +260,7 @@ return new class extends clsCadastro {
 
         if ($senha_old != $this->senha) {
             if ($this->senha !== $this->senha_confirma) {
-                $this->mensagem = 'O campo de confirmação de senha deve ser igual ao campo da senha.';
+                $this->mensagem = 'O campo de confirmação de senha deve ser igual ao campo de confirmação da senha.';
                 return false;
             }
             $legacyEmployee = LegacyEmployee::find($this->pessoa_logada);
