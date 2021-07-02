@@ -289,7 +289,7 @@ class User extends Authenticatable
 
     public function getEnabledUserDate(): ?Carbon
     {
-        if ($this->employee()) {
+        if ($this->employee) {
             return $this->employee->getEnabledUserDate();
         }
         return null;
