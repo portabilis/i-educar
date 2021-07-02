@@ -8,7 +8,7 @@ use Illuminate\Validation\ValidationException;
 
 class ValidateUserPasswordService
 {
-    const MIN_LENGTH_PASSWORD = 8;
+    public const MIN_LENGTH_PASSWORD = 8;
 
     private $hash;
 
