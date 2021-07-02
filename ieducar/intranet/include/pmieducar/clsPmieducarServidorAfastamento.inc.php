@@ -13,7 +13,7 @@ class clsPmieducarServidorAfastamento extends Model
     public $data_exclusao;
     public $data_retorno;
     public $data_saida;
-    public $ativo;
+    public $ativo = 1;
     public $ref_cod_instituicao;
 
     public function __construct($ref_cod_servidor = null, $sequencial = null, $ref_cod_motivo_afastamento = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $data_cadastro = null, $data_exclusao = null, $data_retorno = null, $data_saida = null, $ativo = null, $ref_cod_instituicao = null)
@@ -155,8 +155,8 @@ class clsPmieducarServidorAfastamento extends Model
                 $set .= "{$gruda}data_cadastro = '{$this->data_cadastro}'";
                 $gruda = ', ';
             }
-            if (is_string($this->data_retorno) && $this->data_retorno != '') {
-                $set .= "{$gruda}data_retorno = '{$this->data_retorno}'";
+            if (is_string($this->data_retorno)) {
+                $set .= empty($this->data_retorno) ? "{$gruda}data_retorno = null" : "{$gruda}data_retorno = '{$this->data_retorno}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_saida)) {

@@ -25,6 +25,16 @@
     </script>
     <!-- End Google Tag Manager -->
 
+    @if($errors->count() && str_contains($errors->first(), 'errou a senha muitas vezes' ))
+    <script>
+        window.onload = function() {
+            document.getElementById("form-login-submit").disabled = true;
+            setTimeout(function () {
+                document.getElementById("form-login-submit").disabled = false;
+            }, 60000);
+        }
+    </script>
+    @endif
 </head>
 
 <body>
