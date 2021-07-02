@@ -4,10 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Services\ChangeUserPasswordService;
-use App\User;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Password;
 
 class ResetPasswordController extends Controller
 {
@@ -78,23 +76,9 @@ class ResetPasswordController extends Controller
         );
     }
 
-    public function reset(Request $request, User $user)
+    protected function setUserPassword($user, $password)
     {
-        $request->validate($this->rules(), $this->validationErrorMessages());
-
-        $response = $this->broker()->reset(
-            $this->credentials($request),
-            function ($user, $password) {
-                $this->resetPassword($user, $password);
-            }
-        );
-
-        if ($response == Password::PASSWORD_RESET) {
-            $employee = $user->employee;
-            $this->changeUserPasswordService->execute($employee, $request->get('password'));
-            return $this->sendResetResponse($request, $response);
-        }
-
-        return $this->sendResetFailedResponse($request, $response);
+        $employee = $user->employee;
+        $this->changeUserPasswordService->execute($employee, $password);
     }
 }

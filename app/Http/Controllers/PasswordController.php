@@ -36,8 +36,6 @@ class PasswordController extends Controller
         );
 
         if ($response == Password::PASSWORD_RESET) {
-            $employee = $user->employee;
-            $this->changeUserPasswordService->execute($employee, $request->get('password'));
             return $this->sendResetResponse($request, $response);
         }
 
@@ -80,5 +78,11 @@ class PasswordController extends Controller
             'password_confirmation',
             'token'
         );
+    }
+
+    protected function setUserPassword($user, $password)
+    {
+        $employee = $user->employee;
+        $this->changeUserPasswordService->execute($employee, $password);
     }
 }
