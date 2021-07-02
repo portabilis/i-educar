@@ -27,8 +27,7 @@ class ValidateUserPasswordService
                     'A senha deve conter pelo menos ' .
                     self::MIN_LENGTH_PASSWORD .
                     ' caracteres e uma combinação de letras maiúsculas e minúsculas, números e símbolos (!@#$%*).'
-                ],
-                'similar' => [$ex->validator->errors()->first()]
+                ]
             ]);
         } catch (\Exception $ex){
             throw ValidationException::withMessages([
