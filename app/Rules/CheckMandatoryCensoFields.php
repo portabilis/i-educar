@@ -177,7 +177,7 @@ class CheckMandatoryCensoFields implements Rule
                 $params->etapa_educacenso,
                 self::ETAPAS_ESPECIAL_SUBSTITUTIVAS
             )) {
-                $this->message = 'Quando a modalidade do curso é: Educação Especial - Modalidade Substitutiva, o campo: Etapa de ensino deve ser uma das seguintes opções:'
+                $this->message = 'Quando a modalidade do curso é: Educação especial, o campo: Etapa de ensino deve ser uma das seguintes opções:'
                     . implode(',', self::ETAPAS_ESPECIAL_SUBSTITUTIVAS) . '.';
 
                 return false;
