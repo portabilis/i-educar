@@ -1,0 +1,43 @@
+#tr_tabela_alunos_cab {
+    display: none;
+}
+
+.tabela-adicao .tr_tabela_alunos:nth-of-type(-n+4) td a {
+  display: none;
+}
+
+#tabela_alunos.tabela-adicao td {
+    padding: 5px 8px !important;
+}
+
+table#tabela_alunos_unificadas {
+    border-spacing: 0;
+    width: 100%;
+}
+
+#tabela_alunos_unificadas .tr_title {
+    background-color: #ccdce6;
+    font-family: "Open Sans";
+    font-size: 14px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.14;
+    color: #47728f;
+}
+
+#tabela_alunos_unificadas .tr_title td {
+    padding: 10px;
+}
+
+tr.linha_listagem td {
+    padding: 5px 10px;
+}
+
+tr.linha_listagem:nth-child(even) {
+    background-color: #f5f9fd;
+}
+
+.link_remove {
+    cursor: pointer;
+}

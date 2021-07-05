@@ -33,13 +33,13 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
-        $this->inputsHelper()->dynamic('ano', ['required' => false, 'max_length' => 4]);
-        $this->inputsHelper()->dynamic('instituicao', ['required' =>  false, 'show-select' => true]);
-        $this->inputsHelper()->dynamic('escola', ['required' =>  false, 'show-select' => true, 'value' => 0]);
-        $this->inputsHelper()->simpleSearchAluno(null, ['label' => 'Aluno principal' ]);
-        $this->campoTabelaInicio('tabela_alunos', '', ['Aluno duplicado'], $this->tabela_alunos);
-        $this->campoTexto('aluno_duplicado', 'Aluno duplicado', $this->aluno_duplicado, 50, 255, false, true, false, '', '', '', 'onfocus');
+        $this->campoTabelaInicio('tabela_alunos', '', ['Aluno duplicado', 'Campo aluno duplicado'], $this->tabela_alunos);
+            $this->campoRotulo('aluno_label', '', 'Pessoa aluno a ser unificada <span class="campo_obrigatorio">*</span>');
+            $this->campoTexto('aluno_duplicado', 'Aluno duplicado', $this->aluno_duplicado, 50, 255, false, true, false, '', '', '', 'onfocus');
         $this->campoTabelaFim();
+
+        $styles = ['/modules/Cadastro/Assets/Stylesheets/UnificaAluno.css'];
+        Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
     }
 
     public function Novo()
