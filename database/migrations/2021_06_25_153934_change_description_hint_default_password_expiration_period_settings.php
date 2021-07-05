@@ -20,6 +20,7 @@ class ChangeDescriptionHintDefaultPasswordExpirationPeriodSettings extends Migra
             'key' => 'legacy.app.user_accounts.max_days_without_login_to_disable_user',
         ], [
             'description' => 'Quantidade de dias permitidos sem acessar o sistema para inativação automática de usuário',
+            'hint' => 'A contagem será efetuada em dias corridos. Se o valor preenchido for zero (0), não ocorrerá automatização',
         ]);
     }
 
