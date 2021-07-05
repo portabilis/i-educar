@@ -639,6 +639,7 @@ return new class extends clsCadastro {
             '/modules/Cadastro/Assets/Javascripts/Turma.js',
             '/intranet/scripts/etapas.js',
             '/intranet/scripts/tabelaSerieMult.js',
+            '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
