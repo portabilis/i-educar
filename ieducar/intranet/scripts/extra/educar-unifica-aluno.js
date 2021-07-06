@@ -86,7 +86,7 @@ function montaTabelaDadosAluno(response) {
         <td>CPF</td>
         <td>RG</td>
         <td>Pessoa Mãe</td>
-        <td>Dados</td>
+        <td>Dados escolares</td>
         <td>Ação</td>
       </tr>
   `;
@@ -101,7 +101,7 @@ function montaTabelaDadosAluno(response) {
     html += '<td>'+ aluno.cpf +'</td>';
     html += '<td>'+ aluno.rg +'</td>';
     html += '<td>'+ aluno.mae_aluno +'</td>';
-    html += '<td><a onclick="visualizarDadosAlunos(' + aluno.codido + ')">Visualizar</a></td>';
+    html += '<td><a onclick="visualizarDadosAlunos(' + aluno.codigo + ', \'' + aluno.nome + '\')">Visualizar</a></td>';
     html += '<td><a class="link_remove" onclick="removeAluno(' + aluno.codigo + ')">EXCLUIR</a></td>';
     html += '</tr>';
   });
@@ -115,8 +115,24 @@ function validaCheckAlunoPrincipal(element) {
 
 }
 
-function visualizarDadosAlunos(codAluno) {
+function visualizarDadosAlunos(codAluno, nomeAluno) {
+  var url = getResourceUrlBuilder.buildUrl(
+    '/module/Api/Aluno',
+    'dadosMatriculasHistoricosAlunos',
+    {
+      aluno_id : codAluno
+    }
+  );
 
+  var options = {
+    url      : url,
+    dataType : 'json',
+    success  : function(response) {
+      modalMatriculasEHistoricos(response, nomeAluno);
+    }
+  };
+
+  getResources(options);
 }
 
 function removeAluno(codAluno) {
@@ -131,6 +147,84 @@ function removeExclusaoDeAlunos() {
 
 function disabilitaSearchInputs() {
   $j('input[id^="aluno_duplicado["').prop('disabled', true);
+}
+
+function modalMatriculasEHistoricos(response, nomeAluno) {
+  let content = contentMatriculasEHistoricos(response);
+  makeDialog({
+    content: content,
+    title: 'Dados escolares do aluno ' + nomeAluno,
+    width: '90%',
+    close: function () {
+      $j('#dialog-container').dialog('destroy');
+    },
+    buttons: [{
+      text: 'Ok',
+      click: function () {
+        $j('#dialog-container').dialog('destroy');
+      }
+    },]
+  });
+}
+
+function contentMatriculasEHistoricos(response) {
+  let html = '';
+  html += htmlTabelaMatriculas(response.matriculas);
+  html += htmlTabelaHistoricos(response.historicos);
+
+  return html;
+}
+
+function htmlTabelaMatriculas(matriculas) {
+  let html = '<h4>Matrículas</h4>';
+  html += '<table class="tabela-modal-dados-aluno">';
+  html += '<tr class="tabela-modal-dados-aluno-titulo">';
+  html += '<td>Ano</td>';
+  html += '<td>Escola</td>';
+  html += '<td>Curso</td>';
+  html += '<td>Serie</td>';
+  html += '<td>Turma</td>';
+  html += '</tr>';
+
+  matriculas.each(function(matricula, id) {
+    html += '<tr class="linha_listagem">';
+    html += '<td>' + matricula.ano + '</td>';
+    html += '<td>' + matricula.escola + '</td>';
+    html += '<td>' + matricula.curso + '</td>';
+    html += '<td>' + matricula.serie + '</td>';
+    html += '<td>' + matricula.turma + '</td>';
+    html += '</tr>';
+  });
+
+  html += '</table>';
+
+  return html;
+}
+
+function htmlTabelaHistoricos(historicos) {
+  let html = '<h4>Históricos escolares</h4>';
+  html += '<table class="tabela-modal-dados-aluno">';
+  html += '<tr class="tabela-modal-dados-aluno-titulo">';
+  html += '<td>Ano</td>';
+  html += '<td>Escola</td>';
+  html += '<td>Curso</td>';
+  html += '<td>Serie</td>';
+  html += '<td>Situação</td>';
+  html += '</tr>';
+
+  historicos.each(function(historico, id) {
+    html += '<tr class="linha_listagem">';
+    html += '<td>' + historico.ano + '</td>';
+    html += '<td>' + historico.escola + '</td>';
+    html += '<td>' + historico.curso + '</td>';
+    html += '<td>' + historico.serie + '</td>';
+    html += '<td>' + historico.situacao + '</td>';
+    html += '</tr>';
+  });
+
+  html += '</table>';
+
+  return html;
 }
 
 function defaultModal(message) {
