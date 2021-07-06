@@ -2018,6 +2018,44 @@ class AlunoController extends ApiCoreController
         return  ['unificacoes' => $unificationsQuery->get(['main_id', 'duplicates_id', 'created_at', 'active'])->all()];
     }
 
+    protected function dadosUnificacaoAlunos()
+    {
+        $alunosIds = $this->getRequest()->alunos_ids ?? 0;
+
+        $sql = "
+            SELECT
+                a.cod_aluno AS codigo,
+                p.nome AS nome,
+                coalesce(eca.cod_aluno_inep::varchar, 'Não consta') AS inep,
+                coalesce(to_char(f.data_nasc, 'dd/mm/yyyy'), 'Não consta') AS data_nascimento,
+                coalesce(f.cpf::varchar, 'Não consta') AS cpf,
+                coalesce(d.rg, 'Não consta') AS rg,
+                coalesce(relatorio.get_mae_aluno(a.cod_aluno), 'Não consta') AS mae_aluno
+            FROM pmieducar.aluno a
+            JOIN cadastro.pessoa p ON p.idpes = a.ref_idpes
+            JOIN cadastro.fisica f ON f.idpes = a.ref_idpes
+            LEFT JOIN cadastro.documento d ON d.idpes = a.ref_idpes
+            LEFT JOIN modules.educacenso_cod_aluno eca ON eca.cod_aluno = a.cod_aluno
+            WHERE a.cod_aluno IN ($alunosIds);
+        ";
+
+        $alunos = $this->fetchPreparedQuery($sql, [], false);
+
+        $attrs = [
+            'codigo',
+            'nome',
+            'inep',
+            'data_nascimento',
+            'cpf',
+            'rg',
+            'mae_aluno',
+        ];
+
+        return [
+            'alunos' => Portabilis_Array_Utils::filterSet($alunos, $attrs)
+        ];
+    }
+
     protected function canGetUnificacoes()
     {
         return $this->validatesPresenceOf('escola');
@@ -2053,6 +2091,8 @@ class AlunoController extends ApiCoreController
             $this->appendResponse($this->getNomeBairro());
         } elseif ($this->isRequestFor('get', 'unificacao-alunos')) {
             $this->appendResponse($this->getUnificacoes());
+        } elseif ($this->isRequestFor('get', 'dadosUnificacaoAlunos')) {
+            $this->appendResponse($this->dadosUnificacaoAlunos());
         } elseif ($this->isRequestFor('get', 'deve-habilitar-campo-recursos-prova-inep')) {
             $this->appendResponse($this->deveHabilitarCampoRecursosProvaInep());
         } elseif ($this->isRequestFor('get', 'deve-obrigar-laudo-medico')) {
