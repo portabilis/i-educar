@@ -3,6 +3,8 @@
 use App\Models\Educacenso\Registro30;
 use App\Models\Individual;
 use App\Models\LegacyDeficiency;
+use App\Models\LegacyRegistration;
+use App\Models\LegacySchoolHistory;
 use App\Models\LogUnification;
 use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
 use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
@@ -2056,6 +2058,51 @@ class AlunoController extends ApiCoreController
         ];
     }
 
+    protected function dadosMatriculasHistoricosAlunos()
+    {
+        $alunoId = $this->getRequest()->aluno_id;
+
+        if (empty($alunoId)) {
+            return;
+        }
+
+        $registrations = LegacyRegistration::query()
+            ->where('ref_cod_aluno', $alunoId)
+            ->with('school')
+            ->orderBy('ano')
+            ->get()
+            ->map(function ($registration) {
+                return [
+                    'ano' => $registration->ano,
+                    'escola' => $registration->school->name,
+                    'curso' => $registration->course->name,
+                    'serie' => $registration->grade->name,
+                    'turma' => $registration->lastEnrollment->schoolClass->name,
+                ];
+            })
+            ->toArray();
+
+        $schoolHistories = LegacySchoolHistory::query()
+            ->where('ref_cod_aluno', $alunoId)
+            ->get()
+            ->map(function ($schoolHistory) {
+                $situacao = App_Model_MatriculaSituacao::getInstance()->getValue($schoolHistory->aprovado);
+                return [
+                    'ano' => $schoolHistory->ano,
+                    'escola' => $schoolHistory->escola,
+                    'curso' => $schoolHistory->nm_curso,
+                    'serie' => $schoolHistory->nm_serie,
+                    'situacao' => $situacao,
+                ];
+            })
+            ->toArray();
+
+        return [
+            'matriculas' => $registrations,
+            'historicos' => $schoolHistories,
+        ];
+    }
+
     protected function canGetUnificacoes()
     {
         return $this->validatesPresenceOf('escola');
@@ -2093,6 +2140,8 @@ class AlunoController extends ApiCoreController
             $this->appendResponse($this->getUnificacoes());
         } elseif ($this->isRequestFor('get', 'dadosUnificacaoAlunos')) {
             $this->appendResponse($this->dadosUnificacaoAlunos());
+        } elseif ($this->isRequestFor('get', 'dadosMatriculasHistoricosAlunos')) {
+            $this->appendResponse($this->dadosMatriculasHistoricosAlunos());
         } elseif ($this->isRequestFor('get', 'deve-habilitar-campo-recursos-prova-inep')) {
             $this->appendResponse($this->deveHabilitarCampoRecursosProvaInep());
         } elseif ($this->isRequestFor('get', 'deve-obrigar-laudo-medico')) {
