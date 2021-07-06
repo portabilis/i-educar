@@ -57,6 +57,7 @@ function listaDadosAlunosUnificados(response) {
   removeExclusaoDeAlunos();
   disabilitaSearchInputs();
   montaTabelaDadosAluno(response);
+  uniqueCheck();
 }
 
 function montaTabelaDadosAluno(response) {
@@ -113,6 +114,21 @@ function montaTabelaDadosAluno(response) {
 
 function validaCheckAlunoPrincipal(element) {
 
+}
+
+function uniqueCheck() {
+  const checkbox = document.querySelectorAll('input.check_principal')
+  checkbox.forEach(element => {
+    element.addEventListener('click', handleClick.bind(event,checkbox));
+  });
+}
+
+function handleClick(checkbox, event) {
+  checkbox.forEach(element => {
+    if (event.currentTarget.id !== element.id) {
+      element.checked = false;
+    }
+  });
 }
 
 function visualizarDadosAlunos(codAluno, nomeAluno) {
