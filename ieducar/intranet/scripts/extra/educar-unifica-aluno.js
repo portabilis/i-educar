@@ -32,6 +32,105 @@ function carregaDadosAlunos() {
     defaultModal(message);
     return;
   }
+
+  var url = getResourceUrlBuilder.buildUrl(
+    '/module/Api/Aluno',
+    'dadosUnificacaoAlunos',
+    {
+      alunos_ids : alunos_duplicados
+    }
+  );
+
+  var options = {
+    url      : url,
+    dataType : 'json',
+    success  : function(response) {
+      $j('#adicionar_linha').hide();
+      listaDadosAlunosUnificados(response);
+    }
+  };
+
+  getResources(options);
+}
+
+function listaDadosAlunosUnificados(response) {
+  removeExclusaoDeAlunos();
+  disabilitaSearchInputs();
+  montaTabelaDadosAluno(response);
+}
+
+function montaTabelaDadosAluno(response) {
+  $j('tr#lista_dados_alunos_unificados').remove().animate({});
+  $j('tr#unifica_aluno_titulo').remove().animate({});
+
+  $j('<tr id="lista_dados_alunos_unificados"></tr>').insertAfter($j('.tableDetalheLinhaSeparador').first().closest('tr')).hide().show('slow');
+  $j(`
+    <tr id="unifica_aluno_titulo">
+      <td colspan="2">
+        <h2 class="unifica_pessoa_h2">
+          Selecione o aluno que tenha os dados relavantes mais completos.
+        </h2>
+      </td>
+    </tr>
+  `).insertAfter($j('.tableDetalheLinhaSeparador').first().closest('tr')).hide().show('slow');
+
+  let html = `
+    <td colspan="2">
+    <table id="tabela_alunos_unificados">
+      <tr class="tr_title">
+        <td>Principal</td>
+        <td>Código do aluno</td>
+        <td>Inep</td>
+        <td>Nome</td>
+        <td>Nascimento</td>
+        <td>CPF</td>
+        <td>RG</td>
+        <td>Pessoa Mãe</td>
+        <td>Dados</td>
+        <td>Ação</td>
+      </tr>
+  `;
+
+  response.alunos.each(function(aluno, id) {
+    html += '<tr id="' + aluno.codigo + '" class="linha_listagem">';
+    html += '<td><input onclick="validaCheckAlunoPrincipal(this)" type="checkbox" class="check_principal" id="check_principal_' + aluno.codigo + '"</td>';
+    html += '<td>'+ aluno.codigo +'</td>';
+    html += '<td>'+ aluno.inep +'</td>';
+    html += '<td><a target="_new" href="/intranet/educar_aluno_det.php?cod_aluno=' + aluno.codigo + '">'+ aluno.nome +'</a></td>';
+    html += '<td>'+ aluno.data_nascimento +'</td>';
+    html += '<td>'+ aluno.cpf +'</td>';
+    html += '<td>'+ aluno.rg +'</td>';
+    html += '<td>'+ aluno.mae_aluno +'</td>';
+    html += '<td><a onclick="visualizarDadosAlunos(' + aluno.codido + ')">Visualizar</a></td>';
+    html += '<td><a class="link_remove" onclick="removeAluno(' + aluno.codigo + ')">EXCLUIR</a></td>';
+    html += '</tr>';
+  });
+
+  html += '</table></td>';
+
+  $j('#lista_dados_alunos_unificados').html(html);
+}
+
+function validaCheckAlunoPrincipal(element) {
+
+}
+
+function visualizarDadosAlunos(codAluno) {
+
+}
+
+function removeAluno(codAluno) {
+
+}
+
+function removeExclusaoDeAlunos() {
+  $j('.tr_tabela_alunos td a').each(function(id, input) {
+    input.remove();
+  });
+}
+
+function disabilitaSearchInputs() {
+  $j('input[id^="aluno_duplicado["').prop('disabled', true);
 }
 
 function defaultModal(message) {
