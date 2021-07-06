@@ -25,14 +25,12 @@ return new class extends clsCadastro {
             url('intranet/educar_index.php') => 'Escola',
         ]);
 
-        $this->url_cancelar = route('student-log-unification.index');
-        $this->nome_url_cancelar = 'Cancelar';
-
         return $retorno;
     }
 
     public function Gerar()
     {
+        $this->acao_enviar = 'carregaDadosAlunos()';
         $this->campoTabelaInicio('tabela_alunos', '', ['Aluno duplicado', 'Campo aluno duplicado'], $this->tabela_alunos);
             $this->campoRotulo('aluno_label', '', 'Pessoa aluno a ser unificada <span class="campo_obrigatorio">*</span>');
             $this->campoTexto('aluno_duplicado', 'Aluno duplicado', $this->aluno_duplicado, 50, 255, false, true, false, '', '', '', 'onfocus');
@@ -40,6 +38,8 @@ return new class extends clsCadastro {
 
         $styles = ['/modules/Cadastro/Assets/Stylesheets/UnificaAluno.css'];
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
+        $scripts = ['/modules/Portabilis/Assets/Javascripts/ClientApi.js'];
+        Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
     }
 
     public function Novo()
