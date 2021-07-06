@@ -10,12 +10,12 @@
     padding: 5px 8px !important;
 }
 
-table#tabela_alunos_unificadas {
+table#tabela_alunos_unificados {
     border-spacing: 0;
     width: 100%;
 }
 
-#tabela_alunos_unificadas .tr_title {
+#tabela_alunos_unificados .tr_title {
     background-color: #ccdce6;
     font-family: "Open Sans";
     font-size: 14px;
@@ -26,7 +26,7 @@ table#tabela_alunos_unificadas {
     color: #47728f;
 }
 
-#tabela_alunos_unificadas .tr_title td {
+#tabela_alunos_unificados .tr_title td {
     padding: 10px;
 }
 
