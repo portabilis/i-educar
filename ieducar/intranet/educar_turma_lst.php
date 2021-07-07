@@ -158,6 +158,9 @@ return new class extends clsListagem {
                 $ref_cod_escola = $registro['ref_ref_cod_escola'] ;
                 $nm_escola = $det_ref_cod_escola['nome'];
 
+                $registro['nm_curso'] = empty($registro['descricao_curso']) ? $registro['nm_curso'] : "{$registro['nm_curso']} ({$registro['descricao_curso']})";
+                $registro['nm_serie'] = empty($registro['descricao_serie']) ? $registro['nm_serie'] : "{$registro['nm_serie']} ({$registro['descricao_serie']})";
+
                 $lista_busca = [
                     "<a href=\"educar_turma_det.php?cod_turma={$registro['cod_turma']}\">{$registro['ano']}</a>",
                     "<a href=\"educar_turma_det.php?cod_turma={$registro['cod_turma']}\">{$registro['nm_turma']}</a>"

@@ -138,8 +138,8 @@ return new class extends clsDetalhe {
         $this->largura      = '100%';
 
         $this->breadcrumb('Dispensa de componentes curriculares', [
-        url('intranet/educar_index.php') => 'Escola',
-    ]);
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 
     public function Formular()

@@ -4,6 +4,7 @@ use App\Models\EmployeeWithdrawal;
 use App\Services\FileService;
 use App\Services\UrlPresigner;
 use App\Support\View\Employee\EmployeeReturn;
+use Illuminate\Support\Carbon;
 
 return new class extends clsCadastro {
 
@@ -42,11 +43,11 @@ return new class extends clsCadastro {
         '' => 'Selecione',
         1  => 'Domingo',
         2  => 'Segunda',
-        3  => 'Ter&ccedil;a',
+        3  => 'Terça',
         4  => 'Quarta',
         5  => 'Quinta',
         6  => 'Sexta',
-        7  => 'S&aacute;bado'
+        7  => 'Sábado'
     ];
 
     /**
@@ -184,7 +185,7 @@ return new class extends clsCadastro {
         }
 
         // Se edição, mostra campo para entrar com data de retorno
-        if ($this->retornar_servidor == EmployeeReturn::SIM) {
+        if ($this->retornar_servidor == EmployeeReturn::SIM || $this->data_retorno) {
             $this->campoData('data_retorno', 'Data de Retorno', $this->data_retorno, false);
         }
 
@@ -390,7 +391,7 @@ return new class extends clsCadastro {
         }
 
         if ($this->retornar_servidor != EmployeeReturn::SIM) {
-            $fileService = new FileService(new UrlPresigner);
+            $fileService = new FileService(new UrlPresigner());
             $files = $fileService->getFiles(EmployeeWithdrawal::find($this->id));
             $this->addHtml(view('uploads.upload', ['files' => $files])->render());
         }
@@ -487,7 +488,7 @@ return new class extends clsCadastro {
 
                         // Caso a atualização não tenha sucesso
                         if (!$obj_horario->edita()) {
-                            $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+                            $this->mensagem = 'Cadastro não realizado.<br>';
 
                             return false;
                         }
@@ -498,12 +499,12 @@ return new class extends clsCadastro {
                 $this->simpleRedirect("educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
             }
         } else {
-            $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+            $this->mensagem = 'Cadastro não realizado.<br>';
 
             return false;
         }
 
-        $fileService = new FileService(new UrlPresigner);
+        $fileService = new FileService(new UrlPresigner());
 
         if ($this->file_url) {
             $newFiles = json_decode($this->file_url);
@@ -533,6 +534,19 @@ return new class extends clsCadastro {
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, $urlPermite);
+        $exitDate = $this->data_saida ? dataToBanco(str_replace('%2F','/', $this->data_saida)) : $this->data_saida;
+        $returnDate = $this->data_retorno ? dataToBanco($this->data_retorno) : $this->data_retorno;
+
+        if($exitDate && $returnDate){
+            $exitDate = Carbon::createFromFormat('Y-m-d',$exitDate);
+            $returnDate = Carbon::createFromFormat('Y-m-d',$returnDate);
+            if(!$this->validateDates($exitDate, $returnDate)){
+                $this->mensagem = 'A data de retorno não pode ser inferior à data de afastamento.';
+                return false;
+            }
+            $exitDate = $exitDate->format('Y-m-d');
+            $returnDate = $returnDate->format('Y-m-d');
+        }
 
         $obj = new clsPmieducarServidorAfastamento(
             $this->ref_cod_servidor,
@@ -542,8 +556,8 @@ return new class extends clsCadastro {
             null,
             null,
             null,
-            dataToBanco($this->data_retorno),
-            (int)($this->retornar_servidor == EmployeeReturn::SIM) ?: dataToBanco($this->data_saida),
+            $returnDate,
+            (int)($this->retornar_servidor == EmployeeReturn::SIM) ?: $exitDate,
             (int)($this->retornar_servidor == EmployeeReturn::SIM) ? 0 : null,
             $this->ref_cod_instituicao
         );
@@ -598,7 +612,7 @@ return new class extends clsCadastro {
                         );
 
                         if (!$obj_horario->edita()) {
-                            $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+                            $this->mensagem = 'Cadastro não realizado.<br>';
 
                             return false;
                         }
@@ -606,7 +620,7 @@ return new class extends clsCadastro {
                 }
             }
 
-            $fileService = new FileService(new UrlPresigner);
+            $fileService = new FileService(new UrlPresigner());
 
             if ($this->file_url) {
                 $newFiles = json_decode($this->file_url);
@@ -627,11 +641,11 @@ return new class extends clsCadastro {
                 $fileService->deleteFiles($deletedFiles);
             }
 
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect("educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }
@@ -669,11 +683,11 @@ return new class extends clsCadastro {
         $excluiu = $obj->excluir();
 
         if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_servidor_afastamento_lst.php');
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }
@@ -687,5 +701,10 @@ return new class extends clsCadastro {
     {
         $this->title = 'Servidores - Servidor Afastamento';
         $this->processoAp = '635';
+    }
+
+    private function validateDates(Carbon $exitDate, Carbon $returnDate)
+    {
+        return $returnDate->gte($exitDate);
     }
 };

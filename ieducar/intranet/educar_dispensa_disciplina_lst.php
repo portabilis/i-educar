@@ -75,10 +75,10 @@ return new class extends clsListagem {
         $this->campoOculto('ref_cod_turma', $this->ref_cod_turma);
 
         $this->addCabecalhos([
-      'Disciplina',
-      'Tipo Dispensa',
-      'Data Dispensa'
-    ]);
+            'Disciplina',
+            'Tipo Dispensa',
+            'Data Dispensa'
+        ]);
 
         // Filtros de Foreign Keys
         $opcoes = ['' => 'Selecione'];
@@ -153,7 +153,7 @@ return new class extends clsListagem {
         // Paginador
         $this->limite = 20;
         $this->offset = $_GET['pagina_' . $this->nome] ?
-      $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
+            $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
 
         $obj_dispensa_disciplina = new clsPmieducarDispensaDisciplina();
         $obj_dispensa_disciplina->setOrderby('data_cadastro ASC');
@@ -197,17 +197,17 @@ return new class extends clsListagem {
                 // Dados para a url
                 $url     = 'educar_dispensa_disciplina_det.php';
                 $options = ['query' => [
-          'ref_cod_matricula'  => $registro['ref_cod_matricula'],
-          'ref_cod_serie'      => $registro['ref_cod_serie'],
-          'ref_cod_escola'     => $registro['ref_cod_escola'],
-          'ref_cod_disciplina' => $registro['ref_cod_disciplina']
-        ]];
+                    'ref_cod_matricula'  => $registro['ref_cod_matricula'],
+                    'ref_cod_serie'      => $registro['ref_cod_serie'],
+                    'ref_cod_escola'     => $registro['ref_cod_escola'],
+                    'ref_cod_disciplina' => $registro['ref_cod_disciplina']
+                ]];
 
                 $this->addLinhas([
-          $urlHelper->l($componente->nome, $url, $options),
-          $urlHelper->l($registro['ref_cod_tipo_dispensa'], $url, $options),
-          $urlHelper->l($registro['data_cadastro_br'], $url, $options)
-        ]);
+                    $urlHelper->l($componente->nome, $url, $options),
+                    $urlHelper->l($registro['ref_cod_tipo_dispensa'], $url, $options),
+                    $urlHelper->l($registro['data_cadastro_br'], $url, $options)
+                ]);
             }
         }
 
@@ -235,8 +235,8 @@ return new class extends clsListagem {
         $this->largura = '100%';
 
         $this->breadcrumb('Dispensa de componentes curriculares', [
-        url('intranet/educar_index.php') => 'Escola',
-    ]);
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 
     public function Formular()

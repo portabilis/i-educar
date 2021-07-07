@@ -108,6 +108,14 @@ class EditController extends Core_Controller_Page_EditController
             'label' => 'Nota mínima geral',
             'help' => 'Informe o valor mínimo para notas no geral'
         ],
+        'faltaMaximaGeral' => [
+            'label' => 'Falta máxima geral',
+            'help' => 'Informe o valor máximo para faltas no geral'
+        ],
+        'faltaMinimaGeral' => [
+            'label' => 'Falta mínima geral',
+            'help' => 'Informe o valor mínimo para faltas no geral'
+        ],
         'notaMaximaExameFinal' => [
             'label' => 'Nota máxima exame final',
             'help' => 'Informe o valor máximo para nota do exame final'
@@ -585,6 +593,26 @@ class EditController extends Core_Controller_Page_EditController
             3,
             true,
             $this->_getHelp('notaMinimaGeral')
+        );
+
+        $this->campoNumero(
+            'faltaMaximaGeral',
+            $this->_getLabel('faltaMaximaGeral'),
+            $this->getEntity()->faltaMaximaGeral,
+            4,
+            4,
+            true,
+            $this->_getHelp('faltaMaximaGeral')
+        );
+
+        $this->campoNumero(
+            'faltaMinimaGeral',
+            $this->_getLabel('faltaMinimaGeral'),
+            $this->getEntity()->faltaMinimaGeral,
+            4,
+            4,
+            true,
+            $this->_getHelp('faltaMinimaGeral')
         );
 
         $this->campoNumero(

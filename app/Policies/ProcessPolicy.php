@@ -16,7 +16,7 @@ class ProcessPolicy
      *
      * @return bool
      */
-    public function view(User $user, $process)
+    public function view(User $user, $process = 0)
     {
         if (empty($process)) {
             return true;
