@@ -11,15 +11,13 @@ return new class extends clsCadastro {
 
     public function Inicializar()
     {
-        $retorno = 'Novo';
-
         $this->validaPermissaoDaPagina();
 
         $this->breadcrumb('Cadastrar unificação', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
 
-        return $retorno;
+        return 'Novo';
     }
 
     public function Gerar()
