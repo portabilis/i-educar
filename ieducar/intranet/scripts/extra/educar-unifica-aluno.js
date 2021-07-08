@@ -209,7 +209,18 @@ function visualizarDadosAlunos(codAluno, nomeAluno) {
 }
 
 function removeAluno(codAluno) {
+  if ($j('#tabela_alunos_unificados tr').length === 3) {
+    defaultModal('É necessário ao menos 2 alunos para a unificação.');
+    return;
+  }
+  removeTr(codAluno);
+}
 
+function removeTr(codAluno) {
+  let trClose = $j('#' + codAluno);
+  trClose.fadeOut(400, function() {
+    trClose.remove();
+  });
 }
 
 function adicionaBotoes() {
