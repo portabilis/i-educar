@@ -417,7 +417,7 @@ return new class extends clsCadastro {
         $resources = [
             null => 'Selecione',
             1 => 'Ensino regular',
-            2 => 'Educação Especial - Modalidade Substitutiva',
+            2 => 'Educação especial',
             3 => 'Educação de Jovens e Adultos (EJA)',
             4 => 'Educação profissional'
         ];

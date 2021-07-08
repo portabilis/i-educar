@@ -615,7 +615,7 @@ table.calendar .dayLastMonth, .day{
 }
 
 table.calendar .day{
-  background-color: #e9f0f8 !;
+  background-color: #e9f0f8;
   cursor: pointer;
 }
 
