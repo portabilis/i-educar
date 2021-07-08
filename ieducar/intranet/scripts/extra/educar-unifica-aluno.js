@@ -57,6 +57,7 @@ function listaDadosAlunosUnificados(response) {
   removeExclusaoDeAlunos();
   disabilitaSearchInputs();
   montaTabelaDadosAluno(response);
+  adicionaBotoes();
   uniqueCheck();
 }
 
@@ -153,6 +154,12 @@ function visualizarDadosAlunos(codAluno, nomeAluno) {
 
 function removeAluno(codAluno) {
 
+}
+
+function adicionaBotoes() {
+  let htmlBotao = '<input type="button" class="botaolistagem" onclick="voltar();" value="Voltar" autocomplete="off">';
+  htmlBotao += '<input id="unifica_pessoa" type="button" class="botaolistagem" onclick="showConfirmationMessage();" value="Unificar pessoas da lista" autocomplete="off">';
+  $j('.linhaBotoes td').html(htmlBotao);
 }
 
 function removeExclusaoDeAlunos() {

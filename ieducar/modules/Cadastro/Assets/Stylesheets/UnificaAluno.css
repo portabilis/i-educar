@@ -60,3 +60,7 @@ table.tabela-modal-dados-aluno {
 .tabela-modal-dados-aluno td {
     padding: 5px 10px;
 }
+
+.linhaBotoes td input {
+    margin: 10px 4px;
+}
