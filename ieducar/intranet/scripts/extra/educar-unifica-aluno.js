@@ -359,6 +359,61 @@ function ajustaTabelaDeAlunosUnificados() {
 });
 };
 
+function showConfirmationMessage() {
+  makeDialog({
+    content: 'Você está realizando uma unificação de alunos. Deseja continuar?',
+    title: 'Atenção!',
+    maxWidth: 860,
+    width: 860,
+    close: function () {
+      $j('#dialog-container').dialog('destroy');
+    },
+    buttons: [{
+      text: 'Confirmar',
+      click: function () {
+        enviaDados();
+        $j('#dialog-container').dialog('destroy');
+      }
+    }, {
+      text: 'Cancelar',
+      click: function () {
+        $j('#dialog-container').dialog('destroy');
+      }
+    }]
+  });
+}
+
+  function  enviaDados() {
+
+    let dados = [];
+    const formData = document.createElement('form');
+    formData.method = 'post';
+    formData.action = 'unificacao-aluno';
+
+    $j('#tabela_alunos_unificados .linha_listagem').each(function(id, input) {
+      let isChecked = $j('#check_principal_'+ input.id).is(':checked');
+      let alunoParaUnificar = {};
+      alunoParaUnificar.codAluno = input.id;
+      alunoParaUnificar.aluno_principal = isChecked;
+      dados.push(alunoParaUnificar);
+    });
+
+    const acao = document.createElement('input');
+    acao.type = 'hidden';
+    acao.name = 'tipoacao';
+    acao.value = 'Novo';
+    formData.appendChild(acao);
+
+    const hiddenField = document.createElement('input');
+    hiddenField.type = 'hidden';
+    hiddenField.name = 'alunos';
+    hiddenField.value = JSON.stringify(dados);
+    formData.appendChild(hiddenField);
+
+    document.body.appendChild(formData);
+    formData.submit();
+  }
+
 function modalAvisoComplementaDadosAluno() {
   makeDialog({
     content: `Para complementar os dados do aluno que selecionou como principal, 
