@@ -64,3 +64,9 @@ table.tabela-modal-dados-aluno {
 .linhaBotoes td input {
     margin: 10px 4px;
 }
+
+#tr_confirma_dados_unificacao td {
+    text-align: center;
+    font-size: 12px;
+    padding: 20px 0px;
+}
