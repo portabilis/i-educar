@@ -16,7 +16,7 @@ class ModalidadeCurso
     {
         return [
             self::ENSINO_REGULAR => 'Ensino regular',
-            self::EDUCACAO_ESPECIAL => 'Educação Especial - Modalidade Substitutiva',
+            self::EDUCACAO_ESPECIAL => 'Educação especial',
             self::EJA => 'Educação de Jovens e Adultos (EJA)',
             self::EDUCACAO_PROFISSIONAL => 'Educação profissional',
         ];

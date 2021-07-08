@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ChangeUserPasswordService;
 use App\User;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\Request;
@@ -10,6 +11,11 @@ use Illuminate\Support\Facades\Password;
 class PasswordController extends Controller
 {
     use ResetsPasswords;
+
+    public function __construct(ChangeUserPasswordService $changeUserPasswordService)
+    {
+        $this->changeUserPasswordService = $changeUserPasswordService;
+    }
 
     public function change(Request $request, User $user)
     {
@@ -30,10 +36,6 @@ class PasswordController extends Controller
         );
 
         if ($response == Password::PASSWORD_RESET) {
-            $employee = $user->employee;
-            $employee->force_reset_password = false;
-            $employee->save();
-
             return $this->sendResetResponse($request, $response);
         }
 
@@ -44,7 +46,7 @@ class PasswordController extends Controller
     {
         return [
             'login' => 'required',
-            'password' => 'required|confirmed|min:8',
+            'password' => 'required|confirmed',
         ];
     }
 
@@ -76,5 +78,11 @@ class PasswordController extends Controller
             'password_confirmation',
             'token'
         );
+    }
+
+    protected function setUserPassword($user, $password)
+    {
+        $employee = $user->employee;
+        $this->changeUserPasswordService->execute($employee, $password);
     }
 }

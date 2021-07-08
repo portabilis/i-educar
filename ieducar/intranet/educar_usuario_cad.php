@@ -1,8 +1,13 @@
 <?php
 
+use App\Models\LegacyEmployee;
+use App\Services\ChangeUserPasswordService;
+use App\Services\ValidateUserPasswordService;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
+use Illuminate\Validation\ValidationException;
 
 return new class extends clsCadastro {
     public $ref_pessoa;
@@ -218,7 +223,10 @@ return new class extends clsCadastro {
             return false;
         }
 
-        if (!$this->validatesPassword($this->matricula, $this->_senha)) {
+        try {
+            $this->validatesPassword($this->_senha);
+        } catch (ValidationException $ex) {
+            $this->mensagem = $ex->validator->errors()->first();
             return false;
         }
 
@@ -272,18 +280,21 @@ return new class extends clsCadastro {
 
         // Ao editar não é necessário trocar a senha, então apenas quando algo
         // for informado é que a mesma será alterada.
-
-        $senha = null;
-
         if ($this->_senha) {
-            if (!$this->validatesPassword($this->matricula, $this->_senha)) {
+            $legacyEmployee = LegacyEmployee::find($this->ref_pessoa);
+            $changeUserPasswordService = app(ChangeUserPasswordService::class);
+            try {
+                $changeUserPasswordService->execute($legacyEmployee, $this->_senha);
+            } catch (ValidationException $ex){
+                $this->mensagem = $ex->validator->errors()->first();
                 return false;
             }
 
-            $senha = Hash::make($this->_senha);
         }
 
-        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, $senha, $this->ativo, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, Portabilis_Date_Utils::brToPgSQL($this->data_expiracao), 'NOW()', 'NOW()', $this->pessoa_logada, 0, 0, null, 0, null, $this->email, $this->matricula_interna);
+        $data_reativa_conta = $this->hasChangeStatusUser() && $this->ativo == '1' ? 'NOW()' : null;
+
+        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, null, $this->ativo, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, Portabilis_Date_Utils::brToPgSQL($this->data_expiracao), null, $data_reativa_conta, $this->pessoa_logada, 0, 0, null, 0, null, $this->email, $this->matricula_interna);
 
         if ($obj_funcionario->edita()) {
             if ($this->ref_cod_instituicao) {
@@ -374,25 +385,6 @@ return new class extends clsCadastro {
         return true;
     }
 
-    public function validatesPassword($matricula, $password)
-    {
-        $msg = '';
-
-        if ($password == $matricula) {
-            $msg = 'Informe uma senha diferente da matricula.';
-        } elseif (strlen($password) < 8) {
-            $msg = 'Por favor informe uma senha segura, com pelo menos 8 caracteres.';
-        }
-
-        if ($msg) {
-            $this->mensagem = $msg;
-
-            return false;
-        }
-
-        return true;
-    }
-
     public function excluiTodosVinculosEscola($codUsuario)
     {
         $usuarioEscola = new clsPmieducarEscolaUsuario();
@@ -450,5 +442,17 @@ return new class extends clsCadastro {
     {
         $this->title = 'Cadastro de usuários';
         $this->processoAp = 555;
+    }
+
+    public function hasChangeStatusUser(): bool
+    {
+        $legacyEmployer = LegacyEmployee::find($this->ref_pessoa);
+        return $legacyEmployer->ativo != $this->ativo;
+    }
+
+    public function validatesPassword($password)
+    {
+        $validateUserPasswordService = app(ValidateUserPasswordService::class);
+        $validateUserPasswordService->execute($password);
     }
 };
