@@ -39,6 +39,7 @@ tr.linha_listagem:nth-child(even) {
 }
 
 #tabela_alunos_unificados a {
+    color: #47728f;
     cursor: pointer;
 }
 
