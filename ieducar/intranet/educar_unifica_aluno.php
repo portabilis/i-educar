@@ -13,13 +13,7 @@ return new class extends clsCadastro {
     {
         $retorno = 'Novo';
 
-        $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(
-            999847,
-            $this->pessoa_logada,
-            7,
-            'index.php'
-        );
+        $this->validaPermissaoDaPagina();
 
         $this->breadcrumb('Cadastrar unificação', [
             url('intranet/educar_index.php') => 'Escola',
@@ -42,36 +36,20 @@ return new class extends clsCadastro {
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
     }
 
-    public function Novo()
+    private function validaPermissaoDaPagina()
     {
-        $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(
+        (new clsPermissoes())
+            ->permissao_cadastra(
             999847,
             $this->pessoa_logada,
             7,
             'index.php'
         );
+    }
 
-        $cod_aluno_principal = (int) $this->aluno_id;
-
-        if (!$cod_aluno_principal) {
-            return;
-        }
-
-        $cod_alunos = [];
-
-        //Monta um array com o código dos alunos selecionados na tabela
-        foreach ($this->aluno_duplicado as $key => $value) {
-            $explode = explode(' ', $value);
-
-            if ($explode[0] == $cod_aluno_principal) {
-                $this->mensagem = 'Impossivel de unificar alunos iguais.<br />';
-
-                return false;
-            }
-
-            $cod_alunos[] = (int) $explode[0];
-        }
+    public function Novo()
+    {
+        $this->validaPermissaoDaPagina();
 
         if (!count($cod_alunos)) {
             $this->mensagem = 'Informe no mínimo um aluno para unificação.<br />';
