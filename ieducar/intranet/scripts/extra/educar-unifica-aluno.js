@@ -54,10 +54,12 @@ function carregaDadosAlunos() {
 }
 
 function listaDadosAlunosUnificados(response) {
+  modalAvisoComplementaDadosAluno();
   removeExclusaoDeAlunos();
   disabilitaSearchInputs();
   montaTabelaDadosAluno(response);
   adicionaBotoes();
+  adicionaCheckboxConfirmacao();
   uniqueCheck();
 }
 
@@ -96,13 +98,13 @@ function montaTabelaDadosAluno(response) {
   response.alunos.each(function(aluno, id) {
     html += '<tr id="' + aluno.codigo + '" class="linha_listagem">';
     html += '<td><input onclick="validaCheckAlunoPrincipal(this)" type="checkbox" class="check_principal" id="check_principal_' + aluno.codigo + '"</td>';
-    html += '<td>'+ aluno.codigo +'</td>';
-    html += '<td>'+ aluno.inep +'</td>';
-    html += '<td><a target="_new" href="/intranet/educar_aluno_det.php?cod_aluno=' + aluno.codigo + '">'+ aluno.nome +'</a></td>';
-    html += '<td>'+ aluno.data_nascimento +'</td>';
-    html += '<td>'+ aluno.cpf +'</td>';
-    html += '<td>'+ aluno.rg +'</td>';
-    html += '<td>'+ aluno.mae_aluno +'</td>';
+    html += '<td><a target="_new" href="/module/Cadastro/aluno?id=' + aluno.codigo + '">'+ aluno.codigo +'</a></td>';
+    html += '<td><a target="_new" href="/module/Cadastro/aluno?id=' + aluno.codigo + '">'+ aluno.inep +'</a></td>';
+    html += '<td><a target="_new" href="/module/Cadastro/aluno?id=' + aluno.codigo + '">'+ aluno.nome +'</a></td>';
+    html += '<td><a target="_new" href="/module/Cadastro/aluno?id=' + aluno.codigo + '">'+ aluno.data_nascimento +'</a></td>';
+    html += '<td><a target="_new" href="/module/Cadastro/aluno?id=' + aluno.codigo + '">'+ aluno.cpf +'</a></td>';
+    html += '<td><a target="_new" href="/module/Cadastro/aluno?id=' + aluno.codigo + '">'+ aluno.rg +'</a></td>';
+    html += '<td><a target="_new" href="/module/Cadastro/aluno?id=' + aluno.codigo + '">'+ aluno.mae_aluno +'</a></td>';
     html += '<td><a onclick="visualizarDadosAlunos(' + aluno.codigo + ', \'' + aluno.nome + '\')">Visualizar</a></td>';
     html += '<td><a class="link_remove" onclick="removeAluno(' + aluno.codigo + ')">EXCLUIR</a></td>';
     html += '</tr>';
@@ -111,6 +113,60 @@ function montaTabelaDadosAluno(response) {
   html += '</table></td>';
 
   $j('#lista_dados_alunos_unificados').html(html);
+}
+
+function adicionaCheckboxConfirmacao() {
+  $j('<tr id="tr_confirma_dados_unificacao"></tr>').insertBefore($j('.linhaBotoes'));
+
+  let htmlCheckbox = '<td colspan="2">'
+  htmlCheckbox += '<input onchange="confirmaAnalise()" id="check_confirma_dados_unificacao" type="checkbox" />';
+  htmlCheckbox += '<label for="check_confirma_dados_unificacao">Confirmo a análise de que são a mesma pessoa, levando <br> em conta a possibilidade de gêmeos cadastrados.</label>';
+  htmlCheckbox += '</td>';
+
+  $j('#tr_confirma_dados_unificacao').html(htmlCheckbox);
+}
+
+function confirmaAnalise() {
+  let checked = $j('#check_confirma_dados_unificacao').is(':checked');
+
+  if (existeAlunoPrincipal() && checked) {
+    habilitaBotaoUnificar();
+    return;
+  }
+
+  if (checked) {
+    desabilitaBotaoUnificar();
+    defaultModal('Você precisa definir um aluno como principal.');
+    $j('#check_confirma_dados_unificacao').prop('checked', false);
+    return;
+  }
+
+  desabilitaBotaoUnificar();
+  $j('#check_confirma_dados_unificacao').prop('checked', false);
+}
+
+function existeAlunoPrincipal() {
+  let existeAlunoPrincipal = false;
+  const checkbox = document.querySelectorAll('input.check_principal')
+  checkbox.forEach(element => {
+    if (element.checked == true) {
+      existeAlunoPrincipal = true;
+    }
+  });
+
+  return existeAlunoPrincipal;
+}
+
+function habilitaBotaoUnificar() {
+  $j('#unifica_pessoa').prop('disabled', false);
+  $j('#unifica_pessoa').addClass('btn-green');
+  $j('#unifica_pessoa').removeClass('btn-disabled');
+}
+
+function desabilitaBotaoUnificar() {
+  $j('#unifica_pessoa').prop('disabled', true);
+  $j('#unifica_pessoa').removeClass('btn-green');
+  $j('#unifica_pessoa').addClass('btn-disabled');
 }
 
 function validaCheckAlunoPrincipal(element) {
@@ -126,6 +182,7 @@ function uniqueCheck() {
 
 function handleClick(checkbox, event) {
   checkbox.forEach(element => {
+    confirmaAnalise();
     if (event.currentTarget.id !== element.id) {
       element.checked = false;
     }
@@ -153,13 +210,28 @@ function visualizarDadosAlunos(codAluno, nomeAluno) {
 }
 
 function removeAluno(codAluno) {
+  if ($j('#tabela_alunos_unificados tr').length === 3) {
+    defaultModal('É necessário ao menos 2 alunos para a unificação.');
+    return;
+  }
+  removeTr(codAluno);
+}
 
+function removeTr(codAluno) {
+  let trClose = $j('#' + codAluno);
+  trClose.fadeOut(400, function() {
+    trClose.remove();
+  });
 }
 
 function adicionaBotoes() {
   let htmlBotao = '<input type="button" class="botaolistagem" onclick="voltar();" value="Voltar" autocomplete="off">';
   htmlBotao += '<input id="unifica_pessoa" type="button" class="botaolistagem" onclick="showConfirmationMessage();" value="Unificar pessoas da lista" autocomplete="off">';
   $j('.linhaBotoes td').html(htmlBotao);
+}
+
+function voltar() {
+  document.location.reload(true);
 }
 
 function removeExclusaoDeAlunos() {
@@ -286,6 +358,82 @@ function ajustaTabelaDeAlunosUnificados() {
   simpleSearch.handleSearch(dataResponse, response);
 });
 };
+
+function showConfirmationMessage() {
+  makeDialog({
+    content: 'Você está realizando uma unificação de alunos. Deseja continuar?',
+    title: 'Atenção!',
+    maxWidth: 860,
+    width: 860,
+    close: function () {
+      $j('#dialog-container').dialog('destroy');
+    },
+    buttons: [{
+      text: 'Confirmar',
+      click: function () {
+        enviaDados();
+        $j('#dialog-container').dialog('destroy');
+      }
+    }, {
+      text: 'Cancelar',
+      click: function () {
+        $j('#dialog-container').dialog('destroy');
+      }
+    }]
+  });
+}
+
+  function  enviaDados() {
+
+    let dados = [];
+    const formData = document.createElement('form');
+    formData.method = 'post';
+    formData.action = 'unificacao-aluno';
+
+    $j('#tabela_alunos_unificados .linha_listagem').each(function(id, input) {
+      let isChecked = $j('#check_principal_'+ input.id).is(':checked');
+      let alunoParaUnificar = {};
+      alunoParaUnificar.codAluno = input.id;
+      alunoParaUnificar.aluno_principal = isChecked;
+      dados.push(alunoParaUnificar);
+    });
+
+    const acao = document.createElement('input');
+    acao.type = 'hidden';
+    acao.name = 'tipoacao';
+    acao.value = 'Novo';
+    formData.appendChild(acao);
+
+    const hiddenField = document.createElement('input');
+    hiddenField.type = 'hidden';
+    hiddenField.name = 'alunos';
+    hiddenField.value = JSON.stringify(dados);
+    formData.appendChild(hiddenField);
+
+    document.body.appendChild(formData);
+    formData.submit();
+  }
+
+function modalAvisoComplementaDadosAluno() {
+  makeDialog({
+    content: `Para complementar os dados do aluno que selecionou como principal, 
+    é necessário fazê-lo manualmente editando os dados do mesmo antes da Unificação de Alunos. 
+    <b>Caso não faça essa complementação, os dados dos alunos não selecionadas como principal serão perdidos, 
+    exceto matrículas e dados de histórico.<b>`,
+    title: 'Atenção!',
+    maxWidth: 860,
+    width: 860,
+    close: function () {
+      $j('#dialog-container').dialog('destroy');
+    },
+    buttons: [{
+      text: 'Ok',
+      click: function () {
+        $j('#dialog-container').dialog('destroy');
+      }
+    },]
+  });
+}
 
   function setAutoComplete() {
   $j.each($j('input[id^="aluno_duplicado"]'), function(index, field) {
