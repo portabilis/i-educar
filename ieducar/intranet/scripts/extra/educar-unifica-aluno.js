@@ -118,11 +118,54 @@ function adicionaCheckboxConfirmacao() {
   $j('<tr id="tr_confirma_dados_unificacao"></tr>').insertBefore($j('.linhaBotoes'));
 
   let htmlCheckbox = '<td colspan="2">'
-  htmlCheckbox += '<input id="check_confirma_dados_unificacao" type="checkbox" />';
+  htmlCheckbox += '<input onchange="confirmaAnalise()" id="check_confirma_dados_unificacao" type="checkbox" />';
   htmlCheckbox += '<label for="check_confirma_dados_unificacao">Confirmo a análise de que são a mesma pessoa, levando <br> em conta a possibilidade de gêmeos cadastrados.</label>';
   htmlCheckbox += '</td>';
 
   $j('#tr_confirma_dados_unificacao').html(htmlCheckbox);
+}
+
+function confirmaAnalise() {
+  let checked = $j('#check_confirma_dados_unificacao').is(':checked');
+
+  if (existeAlunoPrincipal() && checked) {
+    habilitaBotaoUnificar();
+    return;
+  }
+
+  if (checked) {
+    desabilitaBotaoUnificar();
+    defaultModal('Você precisa definir um aluno como principal.');
+    $j('#check_confirma_dados_unificacao').prop('checked', false);
+    return;
+  }
+
+  desabilitaBotaoUnificar();
+  $j('#check_confirma_dados_unificacao').prop('checked', false);
+}
+
+function existeAlunoPrincipal() {
+  let existeAlunoPrincipal = false;
+  const checkbox = document.querySelectorAll('input.check_principal')
+  checkbox.forEach(element => {
+    if (element.checked == true) {
+      existeAlunoPrincipal = true;
+    }
+  });
+
+  return existeAlunoPrincipal;
+}
+
+function habilitaBotaoUnificar() {
+  $j('#unifica_pessoa').prop('disabled', false);
+  $j('#unifica_pessoa').addClass('btn-green');
+  $j('#unifica_pessoa').removeClass('btn-disabled');
+}
+
+function desabilitaBotaoUnificar() {
+  $j('#unifica_pessoa').prop('disabled', true);
+  $j('#unifica_pessoa').removeClass('btn-green');
+  $j('#unifica_pessoa').addClass('btn-disabled');
 }
 
 function validaCheckAlunoPrincipal(element) {
@@ -138,6 +181,7 @@ function uniqueCheck() {
 
 function handleClick(checkbox, event) {
   checkbox.forEach(element => {
+    confirmaAnalise();
     if (event.currentTarget.id !== element.id) {
       element.checked = false;
     }
