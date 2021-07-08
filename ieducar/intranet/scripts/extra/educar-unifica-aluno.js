@@ -54,6 +54,7 @@ function carregaDadosAlunos() {
 }
 
 function listaDadosAlunosUnificados(response) {
+  modalAvisoComplementaDadosAluno();
   removeExclusaoDeAlunos();
   disabilitaSearchInputs();
   montaTabelaDadosAluno(response);
@@ -353,6 +354,27 @@ function ajustaTabelaDeAlunosUnificados() {
   simpleSearch.handleSearch(dataResponse, response);
 });
 };
+
+function modalAvisoComplementaDadosAluno() {
+  makeDialog({
+    content: `Para complementar os dados do aluno que selecionou como principal, 
+    é necessário fazê-lo manualmente editando os dados do mesmo antes da Unificação de Alunos. 
+    <b>Caso não faça essa complementação, os dados dos alunos não selecionadas como principal serão perdidos, 
+    exceto matrículas e dados de histórico.<b>`,
+    title: 'Atenção!',
+    maxWidth: 860,
+    width: 860,
+    close: function () {
+      $j('#dialog-container').dialog('destroy');
+    },
+    buttons: [{
+      text: 'Ok',
+      click: function () {
+        $j('#dialog-container').dialog('destroy');
+      }
+    },]
+  });
+}
 
   function setAutoComplete() {
   $j.each($j('input[id^="aluno_duplicado"]'), function(index, field) {
