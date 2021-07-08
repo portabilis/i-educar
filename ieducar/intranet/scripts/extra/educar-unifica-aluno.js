@@ -230,6 +230,10 @@ function adicionaBotoes() {
   $j('.linhaBotoes td').html(htmlBotao);
 }
 
+function voltar() {
+  document.location.reload(true);
+}
+
 function removeExclusaoDeAlunos() {
   $j('.tr_tabela_alunos td a').each(function(id, input) {
     input.remove();
