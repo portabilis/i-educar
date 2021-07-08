@@ -798,8 +798,6 @@ JS;
             }
         }
 
-        $this->excluiFuncoesRemovidas($listFuncoesCadastradas);
-
         if (!$existe_funcao_professor) {
             $this->excluiDisciplinas(array_keys($funcoes));
             $this->excluiCursos();
@@ -843,6 +841,13 @@ JS;
                     }
                 }
             }
+
+            $funcoesRemovidas = $funcoes;
+            foreach ($listFuncoesCadastradas as $funcao) {
+                unset($funcoesRemovidas[$funcao]);
+            }
+            $this->excluiDisciplinas(array_keys($funcoesRemovidas));
+            $this->excluiFuncoesRemovidas($listFuncoesCadastradas);
         }
     }
 
