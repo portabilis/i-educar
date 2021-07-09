@@ -51,27 +51,6 @@ return new class extends clsCadastro {
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
     }
 
-    private function validaSeExisteMaisDeUmaPessoaPrincipal($pessoas)
-    {
-        $pessoasPrincipais = array_filter($pessoas, fn($pessoa) => $pessoa['pessoa_principal'] === true);
-
-        return count($pessoasPrincipais) > 1;
-    }
-
-    private function validaSeExisteUmaPessoaPrincipal($pessoas)
-    {
-        $pessoas = array_filter($pessoas, fn($pessoa) => $pessoa['pessoa_principal'] === true);
-
-        return count($pessoas) > 0;
-    }
-
-    private function validaSemTemItensDuplicados($pessoas)
-    {
-        $ids = array_map(fn($pessoa) => $pessoa['idpes'], $pessoas);
-        $ids = array_unique($ids);
-
-        return count($pessoas) === count($ids);
-    }
 
     public function Novo()
     {
