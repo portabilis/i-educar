@@ -80,17 +80,17 @@ return new class extends clsCadastro {
 
         $validationData = new ValidationDataService();
 
-        if ($validationData->validateQuantityByKey($alunos,'aluno_principal', 0)) {
+        if (! $validationData->verifyQuantityByKey($alunos,'aluno_principal', 0)) {
             $this->mensagem = 'Aluno principal não informado';
             return false;
         }
 
-        if ($validationData->validateQuantityByKey($alunos,'aluno_principal', 1)) {
+        if ($validationData->verifyQuantityByKey($alunos,'aluno_principal', 1)) {
             $this->mensagem = 'Não pode haver mais de uma aluno principal';
             return false;
         }
 
-        if (! $validationData->validaSemTemItensDuplicados($alunos,'idpes')) {
+        if (! $validationData->verifyDataContainsDuplicatesByKey($alunos,'codAluno')) {
             $this->mensagem = 'Erro ao tentar unificar Alunos, foi inserido cadastro duplicados';
             return false;
         }
