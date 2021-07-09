@@ -127,6 +127,21 @@ class UpdateCategoriesInSettings extends Migration
                     WHEN \'legacy.app.template.vars.instituicao\' THEN 10
                     WHEN \'legacy.app.entity.name\' THEN 10
                     WHEN \'legacy.app.name\' THEN 10
+                    WHEN \'legacy.app.aws.awsacesskey\' THEN 11
+                    WHEN \'legacy.app.aws.bucketname\' THEN 11
+                    WHEN \'legacy.app.aws.awssecretkey\' THEN 11
+                    WHEN \'legacy.app.recaptcha_v3.private_key\' THEN 12
+                    WHEN \'legacy.app.recaptcha_v3.public_key\' THEN 12
+                    WHEN \'legacy.app.recaptcha_v3.minimum_score\' THEN 12
+                    WHEN \'legacy.app.mailer.smtp.from_email\' THEN 13
+                    WHEN \'legacy.app.mailer.smtp.auth\' THEN 13
+                    WHEN \'legacy.app.mailer.smtp.from_name\' THEN 13
+                    WHEN \'legacy.app.mailer.smtp.host\' THEN 13
+                    WHEN \'legacy.app.mailer.smtp.password\' THEN 13
+                    WHEN \'legacy.app.mailer.smtp.username\' THEN 13
+                    WHEN \'legacy.app.mailer.smtp.port\' THEN 13
+                    WHEN \'legacy.app.mailer.smtp.encryption\' THEN 13
+                    WHEN \'legacy.app.mailer.debug\' THEN 13
                     ELSE 1
                 END
             );

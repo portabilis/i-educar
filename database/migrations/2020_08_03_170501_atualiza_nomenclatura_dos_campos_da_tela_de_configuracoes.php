@@ -16,6 +16,8 @@ class AtualizaNomenclaturaDosCamposDaTelaDeConfiguracoes extends Migration
             UPDATE settings
             SET description = (
                 CASE key
+                    WHEN \'legacy.code\' THEN \'Habilitar código legado?\'
+                    WHEN \'legacy.display_errors\' THEN \'Exibir erros código legado?\'
                     WHEN \'legacy.apis.access_key\' THEN \'Chave de acesso ao iEducar\'
                     WHEN \'legacy.apis.secret_key\' THEN \'Chave secreta do iEducar\'
                     WHEN \'legacy.apis.educacao_token_header\' THEN \'Cabeçalho do Token da Api do i-Diário\'
@@ -32,13 +34,13 @@ class AtualizaNomenclaturaDosCamposDaTelaDeConfiguracoes extends Migration
                     WHEN \'legacy.app.aws.bucketname\' THEN \'AWS Bucket S3 para armazenar uploads\'
                     WHEN \'legacy.app.aws.awsacesskey\' THEN \'AWS Bucket S3 Acess Key\'
                     WHEN \'legacy.app.aws.awssecretkey\' THEN \'AWS Bucket S3 Secret Key\'
-                    WHEN \'legacy.app.database.dbname\' THEN \'Nome da database\'
+                    WHEN \'legacy.app.database.dbname\' THEN \'Nome do banco de dados\'
                     WHEN \'legacy.app.database.hostname\' THEN \'Host\'
                     WHEN \'legacy.app.database.password\' THEN \'Senha\'
                     WHEN \'legacy.app.database.port\' THEN \'Porta\'
                     WHEN \'legacy.app.database.username\' THEN \'Usuário\'
                     WHEN \'legacy.app.diario.nomenclatura_exame\' THEN \'Apresentar nota de exame como nota de conselho\'
-                    WHEN \'legacy.app.entity.name\' THEN \'Nome da entidade\'
+                    WHEN \'legacy.app.entity.name\' THEN \'Nome da instituição\'
                     WHEN \'legacy.app.faltas_notas.mostrar_botao_replicar\' THEN \'Permitir replicar notas conceituais por área de conhecimento\'
                     WHEN \'legacy.app.filaunica.criterios\' THEN \'Apresentar critérios no fila única\'
                     WHEN \'legacy.app.filaunica.current_year\' THEN \'Ano atual para consultar protocolos do fila única\'
@@ -113,7 +115,7 @@ class AtualizaNomenclaturaDosCamposDaTelaDeConfiguracoes extends Migration
                     WHEN \'legacy.app.mailer.smtp.from_name\' THEN \'Nome de Exibição\'
                     WHEN \'legacy.app.mailer.smtp.from_email\' THEN \'Endereço e-mail de saída\'
                     WHEN \'legacy.app.mailer.smtp.host\' THEN \'SMTP Host\'
-                    WHEN \'legacy.app.mailer.smtp.port\' THEN \'SPMT Porta\'
+                    WHEN \'legacy.app.mailer.smtp.port\' THEN \'SMTP Porta\'
                     WHEN \'legacy.app.mailer.smtp.auth\' THEN \'Autenticação (SSL/TLS)\'
                     WHEN \'legacy.app.mailer.smtp.username\' THEN \'SMTP Usuário\'
                     WHEN \'legacy.app.mailer.smtp.password\' THEN \'SMTP Senha\'
