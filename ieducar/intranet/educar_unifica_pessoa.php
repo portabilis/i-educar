@@ -2,6 +2,7 @@
 
 use App\Models\Individual;
 use App\Models\LogUnification;
+use App\Services\ValidationDataService;
 use iEducar\Modules\Unification\PersonLogUnification;
 use Illuminate\Support\Facades\DB;
 
@@ -103,17 +104,19 @@ return new class extends clsCadastro {
             return false;
         }
 
-        if (! $this->validaSeExisteUmaPessoaPrincipal($pessoas)) {
+        $validationData = new ValidationDataService();
+
+        if (! $validationData->verifyQuantityByKey($pessoas,'pessoa_principal', 0)) {
             $this->mensagem = 'Pessoa principal não informada';
             return false;
         }
 
-        if ($this->validaSeExisteMaisDeUmaPessoaPrincipal($pessoas)) {
+        if ($validationData->verifyQuantityByKey($pessoas, 'pessoa_principal', 1)) {
             $this->mensagem = 'Não pode haver mais de uma pessoa principal';
             return false;
         }
 
-        if (! $this->validaSemTemItensDuplicados($pessoas)) {
+        if (! $validationData->verifyDataContainsDuplicatesByKey($pessoas, 'idpes')) {
             $this->mensagem = 'Erro ao tentar unificar Pessoas, foi inserido cadastro duplicados';
             return false;
         }
