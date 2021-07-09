@@ -289,7 +289,6 @@ return new class extends clsCadastro {
                 $this->mensagem = $ex->validator->errors()->first();
                 return false;
             }
-
         }
 
         $data_reativa_conta = $this->hasChangeStatusUser() && $this->ativo == '1' ? 'NOW()' : null;
