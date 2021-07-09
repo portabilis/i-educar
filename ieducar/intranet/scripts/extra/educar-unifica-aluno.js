@@ -388,7 +388,7 @@ function showConfirmationMessage() {
     let dados = [];
     const formData = document.createElement('form');
     formData.method = 'post';
-    formData.action = 'unificacao-aluno';
+    formData.action = 'educar_unifica_aluno.php';
 
     $j('#tabela_alunos_unificados .linha_listagem').each(function(id, input) {
       let isChecked = $j('#check_principal_'+ input.id).is(':checked');
@@ -416,9 +416,9 @@ function showConfirmationMessage() {
 
 function modalAvisoComplementaDadosAluno() {
   makeDialog({
-    content: `Para complementar os dados do aluno que selecionou como principal, 
-    é necessário fazê-lo manualmente editando os dados do mesmo antes da Unificação de Alunos. 
-    <b>Caso não faça essa complementação, os dados dos alunos não selecionadas como principal serão perdidos, 
+    content: `Para complementar os dados do aluno que selecionou como principal,
+    é necessário fazê-lo manualmente editando os dados do mesmo antes da Unificação de Alunos.
+    <b>Caso não faça essa complementação, os dados dos alunos não selecionadas como principal serão perdidos,
     exceto matrículas e dados de histórico.<b>`,
     title: 'Atenção!',
     maxWidth: 860,
