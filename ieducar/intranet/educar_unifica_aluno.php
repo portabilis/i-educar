@@ -47,14 +47,14 @@ return new class extends clsCadastro {
         );
     }
 
-    private function validaDadosDaUnificacaoAluno($alunos)
+    private function validaDadosDaUnificacaoAluno($alunos): bool
     {
         foreach ($alunos as $item) {
-            if (! array_key_exists('idpes',$item)) {
+            if (! array_key_exists('codAluno',$item)) {
                 return false;
             }
 
-            if (! array_key_exists('pessoa_principal',$item)) {
+            if (! array_key_exists('aluno_principal',$item)) {
                 return false;
             }
         }
@@ -117,18 +117,18 @@ return new class extends clsCadastro {
 
     private function buscaIdesDasPessoasParaUnificar($pessoas)
     {
-        return array_map(static fn ($item) => (int) $item['idpes'],
-            array_filter($pessoas, static fn ($pessoas) => $pessoas['pessoa_principal'] === false)
-        );
+        return array_values(array_map(static fn ($item) => (int) $item['codAluno'],
+            array_filter($pessoas, static fn ($pessoas) => $pessoas['aluno_principal'] === false)
+        ));
     }
 
     private function buscaPessoaPrincipal($pessoas)
     {
         $pessoas = array_values(array_filter($pessoas,
-                static fn ($pessoas) => $pessoas['pessoa_principal'] === true)
+                static fn ($pessoas) => $pessoas['aluno_principal'] === true)
         );
 
-        return current($pessoas)['idpes'];
+        return (int) current($pessoas)['codAluno'];
     }
 
     private function createLog($mainId, $duplicatesId, $createdBy)
