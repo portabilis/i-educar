@@ -68,14 +68,14 @@ return new class extends clsCadastro {
             EDITAR
         */
         if (isset($_POST['agenda_rap_id'])) {
-            $objAgenda->edita_compromisso($_POST['agenda_rap_id'], $_POST['agenda_rap_titulo'], $_POST['agenda_rap_conteudo'], $_POST['agenda_rap_data'], $_POST['agenda_rap_hora'], $_POST['agenda_rap_horafim'], $_POST['agenda_rap_publico'], $_POST['agenda_rap_importante']);
+            $objAgenda->edita_compromisso($_POST['agenda_rap_id'], pg_escape_string($_POST['agenda_rap_titulo']), pg_escape_string($_POST['agenda_rap_conteudo']), $_POST['agenda_rap_data'], $_POST['agenda_rap_hora'], $_POST['agenda_rap_horafim'], $_POST['agenda_rap_publico'], $_POST['agenda_rap_importante']);
         }
 
         /*
             INSERIR
         */
         if (isset($_POST['novo_hora_inicio'])) {
-            $objAgenda->cadastraCompromisso(false, $_POST['novo_titulo'], $_POST['novo_descricao'], $_POST['novo_data'], $_POST['novo_hora_inicio'], $_POST['novo_hora_fim'], $_POST['novo_publico'], $_POST['novo_importante'], $_POST['novo_repetir_dias'], $_POST['novo_repetir_qtd']);
+            $objAgenda->cadastraCompromisso(false, pg_escape_string($_POST['novo_titulo']), pg_escape_string($_POST['novo_descricao']), $_POST['novo_data'], $_POST['novo_hora_inicio'], $_POST['novo_hora_fim'], $_POST['novo_publico'], $_POST['novo_importante'], $_POST['novo_repetir_dias'], $_POST['novo_repetir_qtd']);
         }
 
         /*
