@@ -95,8 +95,8 @@ return new class extends clsCadastro {
             return false;
         }
 
-        $cod_alunos = $this->buscaPessoaPrincipal($alunos);
-        $cod_aluno_principal = $this->buscaIdesDasPessoasParaUnificar($alunos);
+        $cod_aluno_principal = $this->buscaPessoaPrincipal($alunos);
+        $cod_alunos = $this->buscaIdesDasPessoasParaUnificar($alunos);
 
         DB::beginTransaction();
         $unificationId = $this->createLog($cod_aluno_principal, $cod_alunos, $this->pessoa_logada);
