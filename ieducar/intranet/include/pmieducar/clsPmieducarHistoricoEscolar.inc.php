@@ -875,6 +875,7 @@ class clsPmieducarHistoricoEscolar extends Model
             $mediaGeral = number_format($mediaGeral, 1, '.', ',');
 
             $sql = "INSERT INTO pmieducar.historico_disciplinas values ({$sequencial}, {$this->ref_cod_aluno}, {$this->sequencial}, 'Média Geral', {$mediaGeral});";
+            $sql = utf8_decode(utf8_encode($sql));
             $db = new clsBanco();
             $db->Consulta($sql);
 
