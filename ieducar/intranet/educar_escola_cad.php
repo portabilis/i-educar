@@ -560,6 +560,10 @@ return new class extends clsCadastro {
                 $this->cnpj = empty($this->cnpj) ? $this->cnpj : int2IdFederal($this->cnpj);
             }
 
+            if (empty($this->cnpj) && $objTemp->cnpj) {
+                $this->cnpj = $objTemp->cnpj;
+            }
+
             $objJuridica = new clsPessoaJuridica($this->pessoaj_id);
 
             $det = $objJuridica->detalhe();
@@ -574,7 +578,7 @@ return new class extends clsCadastro {
                 $this->cnpj = int2IdFederal($this->cnpj);
             }
 
-            $this->campoRotulo('cnpj_', 'CNPJ', $this->cnpj);
+            $this->campoRotulo('cnpj_', 'CNPJ', empty($this->cnpj) ? '' : int2CNPJ($this->cnpj));
             $this->campoOculto('cnpj', idFederal2int($this->cnpj));
             $this->campoOculto('ref_idpes', $this->ref_idpes);
             $this->campoOculto('cod_escola', $this->cod_escola);
