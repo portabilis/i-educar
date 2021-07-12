@@ -100,7 +100,7 @@ class PopulateSettingsTable extends Migration
             'legacy.report.portaria_aprovacao_pontos' => 'Resolução n° 12/2011 - CME Artigo 7° § ;2°;',
             'legacy.report.modelo_ficha_individual' => 'todos',
             'legacy.report.mostrar_relatorios' => null,
-            'legacy.report.logo_file_name' => 'brasao.png',
+            'legacy.report.logo_file_name' => 'brasil.png',
             'legacy.report.show_error_details' => true,
             'legacy.report.default_factory' => 'Portabilis_Report_ReportFactoryPHPJasper',
             'legacy.report.source_path' => '/var/www/ieducar/ieducar/modules/Reports/ReportSources/',
