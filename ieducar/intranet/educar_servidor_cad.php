@@ -843,10 +843,15 @@ JS;
             }
 
             $funcoesRemovidas = $funcoes;
+
             foreach ($listFuncoesCadastradas as $funcao) {
                 unset($funcoesRemovidas[$funcao]);
             }
-            $this->excluiDisciplinas(array_keys($funcoesRemovidas));
+
+            if (count($funcoesRemovidas) > 0) {
+                $this->excluiDisciplinas(array_keys($funcoesRemovidas));
+            }
+
             $this->excluiFuncoesRemovidas($listFuncoesCadastradas);
         }
     }
