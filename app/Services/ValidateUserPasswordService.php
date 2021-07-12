@@ -17,7 +17,7 @@ class ValidateUserPasswordService
         $this->hash = $hash;
     }
 
-    public function execute(string $newPassword, ?string $oldPassword)
+    public function execute(string $newPassword, string $oldPassword = null)
     {
         try {
             $this->validate($newPassword, $oldPassword);
@@ -36,7 +36,7 @@ class ValidateUserPasswordService
         }
     }
 
-    public function validate(string $newPassword, ?string $oldPassword)
+    public function validate(string $newPassword, $oldPassword = null)
     {
         if ($this->hash->check($newPassword, $oldPassword)){
             throw new \Exception('A senha informada foi usada recentemente. Por favor, escolha outra.');
