@@ -873,9 +873,10 @@ class clsPmieducarHistoricoEscolar extends Model
             $average = $service->getGlobalAverage($registration);
             $mediaGeral = $this->arredondaNota($registration->cod_matricula, $average, 2);
             $mediaGeral = number_format($mediaGeral, 1, '.', ',');
+            $mediaTexto = pg_escape_string('Média Geral');
 
-            $sql = "INSERT INTO pmieducar.historico_disciplinas values ({$sequencial}, {$this->ref_cod_aluno}, {$this->sequencial}, 'Média Geral', {$mediaGeral});";
-            $sql = utf8_decode(utf8_encode($sql));
+            $sql = "INSERT INTO pmieducar.historico_disciplinas values ({$sequencial}, {$this->ref_cod_aluno}, {$this->sequencial}, {$mediaTexto} , {$mediaGeral});";
+
             $db = new clsBanco();
             $db->Consulta($sql);
 
