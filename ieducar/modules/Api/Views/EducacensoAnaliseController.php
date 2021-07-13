@@ -227,7 +227,7 @@ class EducacensoAnaliseController extends ApiCoreController
             $idpesEscola = School::find($codEscola)->ref_idpes;
 
             $mensagem[] = [
-                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se CNPJ da escola foi informado.",
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se o CNPJ da escola foi informado. Quando a escola possui o tipo de 'Dependência administrativa' como 'Privada', deve ser informado CNPJ.",
                 'path' => '(Pessoas > Cadastros > Pessoas jurídicas > Editar > Campo: CNPJ)',
                 'linkPath' => "/intranet/empresas_cad.php?idpes={$idpesEscola}",
                 'fail' => true
