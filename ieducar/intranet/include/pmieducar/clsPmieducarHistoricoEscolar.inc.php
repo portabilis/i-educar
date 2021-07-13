@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 use App\Models\LegacyRegistration;
 use App\Services\GlobalAverageService;
