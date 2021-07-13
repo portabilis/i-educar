@@ -251,7 +251,10 @@ return new class extends clsCadastro {
             $this->carregaCamposComDadosDaEscola($registro);
 
             $objJuridica = (new clsPessoaJuridica($this->ref_idpes))->detalhe();
-            $this->cnpj = int2CNPJ($objJuridica['cnpj']);
+
+            if (validaCNPJ($objJuridica['cnpj'])) {
+                $this->cnpj = int2CNPJ($objJuridica['cnpj']);
+            }
 
             $this->fexcluir = $obj_permissoes->permissao_excluir(561, $this->pessoa_logada, 3);
 
