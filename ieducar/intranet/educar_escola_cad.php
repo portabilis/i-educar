@@ -576,12 +576,11 @@ return new class extends clsCadastro {
                 $this->fantasia = $det['fantasia'];
             }
 
-            if ($this->passou) {
-                $this->cnpj = (is_numeric($this->cnpj)) ? $this->cnpj : idFederal2int($this->cnpj);
-                $this->cnpj = int2IdFederal($this->cnpj);
+            if ($this->cnpj) {
+                $this->cnpj = (is_numeric($this->cnpj)) ? int2CNPJ($this->cnpj) : int2CNPJ(idFederal2int($this->cnpj));
             }
 
-            $this->campoRotulo('cnpj_', 'CNPJ', empty($this->cnpj) ? '' : int2CNPJ($this->cnpj));
+            $this->campoRotulo('cnpj_', 'CNPJ', $this->cnpj);
             $this->campoOculto('cnpj', idFederal2int($this->cnpj));
             $this->campoOculto('ref_idpes', $this->ref_idpes);
             $this->campoOculto('cod_escola', $this->cod_escola);
