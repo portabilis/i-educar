@@ -51,7 +51,7 @@ return new class extends clsCadastro {
             $this->capital_social = $detalhePessoaJuridica['capital_social'];
             $this->razao_social = $detalhePessoaJuridica['nome'];
             $this->fantasia = $detalhePessoaJuridica['fantasia'];
-            $this->cnpj = int2CNPJ($detalhePessoaJuridica['cnpj']);
+            $this->cnpj = validaCNPJ($detalhePessoaJuridica['cnpj']) ? int2CNPJ($detalhePessoaJuridica['cnpj']) : null;
             $this->ddd_telefone_1 = $detalhePessoaJuridica['ddd_1'];
             $this->telefone_1 = $detalhePessoaJuridica['fone_1'];
             $this->ddd_telefone_2 = $detalhePessoaJuridica['ddd_2'];
