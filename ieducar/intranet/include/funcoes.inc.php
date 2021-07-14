@@ -381,5 +381,5 @@ function validaDigitosCNPJ($cnpj): bool
     $digitoVerificador1 = $soma1 % 11 < 2 ? 0 : 11 - $soma1 % 11;
     $digitoVerificador2 = $soma2 % 11 < 2 ? 0 : 11 - $soma2 % 11;
 
-    return (($cnpj[12] === $digitoVerificador1) && ($cnpj[13] === $digitoVerificador2));
+    return (((int) $cnpj[12] === $digitoVerificador1) && ((int)$cnpj[13] === $digitoVerificador2));
 }
