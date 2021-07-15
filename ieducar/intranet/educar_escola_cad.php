@@ -40,6 +40,7 @@ use iEducar\Modules\ValueObjects\SchoolManagerValueObject;
 use iEducar\Support\View\SelectOptions;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 
 return new class extends clsCadastro {
     use LegacyAddressingFields;
@@ -183,8 +184,11 @@ return new class extends clsCadastro {
     public $qtd_vice_diretor;
     public $qtd_orientador_comunitario;
     public $iddis;
+    public  $pessoaj_idpes;
+    public  $pessoaj_id;
+    public bool $pesquisaPessoaJuridica = true;
 
-    private $inputsRecursos = [
+    public $inputsRecursos = [
         'qtd_secretario_escolar' => 'Secretário(a) escolar',
         'qtd_auxiliar_administrativo' => 'Auxiliares de secretaria ou auxiliares administrativos, atendentes',
         'qtd_apoio_pedagogico' => 'Profissionais de apoio e supervisão pedagógica: pedagogo(a), coordenador(a) pedagógico(a), orientador(a) educacional, supervisor(a) escolar e coordenador(a) de área de ensino',
@@ -212,124 +216,122 @@ return new class extends clsCadastro {
         $this->cod_escola = $this->getQueryString('cod_escola');
 
         $this->sem_cnpj = false;
+        $this->pesquisaPessoaJuridica = true;
 
-        // cadastro Novo sem CNPJ
-        if (is_numeric($_POST['sem_cnpj']) && !$this->cod_escola) {
-            $this->sem_cnpj = true;
-            $retorno = 'Novo';
-        } // cadastro Novo com CNPJ
-        elseif ($_POST['cnpj']) {
-            $this->com_cnpj = true;
-            $obj_juridica = new clsPessoaJuridica();
-            $lst_juridica = $obj_juridica->lista(idFederal2int($_POST['cnpj']));
-            // caso exista o CNPJ na BD
-            if (is_array($lst_juridica)) {
-                $retorno = 'Editar';
-                $det_juridica = array_shift($lst_juridica);
-                $this->ref_idpes = $det_juridica['idpes'];
-                $obj = new clsPmieducarEscola();
-                $lst_escola = $obj->lista(null, null, null, null, null, null, $this->ref_idpes, null, null, null, 1);
-                if (is_array($lst_escola)) {
-                    $registro = array_shift($lst_escola);
-                    $this->cod_escola = $registro['cod_escola'];
-                }
-            } // caso nao exista o CNPJ
-            else {
-                $retorno = 'Editar';
+        if (is_numeric($_POST['pessoaj_id']) && !$this->cod_escola) {
+            $pessoaJuridicaId = (int) $_POST['pessoaj_id'];
+            if (!$this->pessoaJuridicaContemEscola($pessoaJuridicaId)) {
+                return false;
             }
-        } // cadastro Editar
-        if (is_numeric($this->cod_escola) && !$_POST['passou']) {
+
+            $this->pesquisaPessoaJuridica = false;
+            $this->sem_cnpj = true;
+            $this->pessoaj_idpes = $pessoaJuridicaId;
+            $this->pessoaj_id = $pessoaJuridicaId;
+            $this->ref_idpes = $pessoaJuridicaId;
+
+            $this->loadAddress($this->pessoaj_id);
+            $this->carregaDadosContato($this->ref_idpes);
+
+            $retorno = 'Novo';
+        }
+
+        if (is_numeric($this->cod_escola)) {
             $obj = new clsPmieducarEscola($this->cod_escola);
             $registro = $obj->detalhe();
 
-            if ($registro['ref_idpes']) {
-                $this->com_cnpj = true;
-            } else {
-                $this->sem_cnpj = true;
+            if ($registro === false) {
+                throw new HttpResponseException(
+                    new RedirectResponse('educar_escola_lst.php')
+                );
             }
 
-            if ($registro) {
-                foreach ($registro as $campo => $val) {
-                    // passa todos os valores obtidos no registro para atributos do objeto
-                    $this->$campo = $val;
-                }
+            $this->pesquisaPessoaJuridica = false;
 
-                $this->loadAddress($this->ref_idpes);
+            $this->carregaCamposComDadosDaEscola($registro);
 
-                $this->gestor_id = $registro['ref_idpes_gestor'];
-                $this->secretario_id = $registro['ref_idpes_secretario_escolar'];
+            $objJuridica = (new clsPessoaJuridica($this->ref_idpes))->detalhe();
 
-                $this->fantasia = $registro['nome'];
-                $objJuridica = new clsPessoaJuridica($this->ref_idpes);
-                $det = $objJuridica->detalhe();
-                $this->cnpj = int2CNPJ($det['cnpj']);
-                $this->fexcluir = $obj_permissoes->permissao_excluir(561, $this->pessoa_logada, 3);
-                $retorno = 'Editar';
-
-                if ($registro['tipo_cadastro'] == 1) {
-                    $objJuridica = new clsPessoaJuridica(false, idFederal2int($this->cnpj));
-                    $det = $objJuridica->detalhe();
-                    $objPessoa = new clsPessoaFj($det['idpes']);
-                    list(
-                        $this->p_ddd_telefone_1,
-                        $this->p_telefone_1,
-                        $this->p_ddd_telefone_2,
-                        $this->p_telefone_2,
-                        $this->p_ddd_telefone_mov,
-                        $this->p_telefone_mov,
-                        $this->p_ddd_telefone_fax,
-                        $this->p_telefone_fax,
-                        $this->p_email,
-                        $this->p_http,
-                        $this->tipo_pessoa
-                    ) = $objPessoa->queryRapida(
-                        $det['idpes'],
-                        'ddd_1',
-                        'fone_1',
-                        'ddd_2',
-                        'fone_2',
-                        'ddd_mov',
-                        'fone_mov',
-                        'ddd_fax',
-                        'fone_fax',
-                        'email',
-                        'url',
-                        'tipo'
-                    );
-                }
+            if (validaCNPJ($objJuridica['cnpj'])) {
+                $this->cnpj = int2CNPJ($objJuridica['cnpj']);
             }
-        } elseif ($_POST['cnpj'] && !$_POST['passou']) {
-            $objJuridica = new clsPessoaJuridica(false, idFederal2int($_POST['cnpj']));
-            $det = $objJuridica->detalhe();
-            $objPessoa = new clsPessoaFj($det['idpes']);
-            list(
-                $this->p_ddd_telefone_1,
-                $this->p_telefone_1,
-                $this->p_ddd_telefone_2,
-                $this->p_telefone_2,
-                $this->p_ddd_telefone_mov,
-                $this->p_telefone_mov,
-                $this->p_ddd_telefone_fax,
-                $this->p_telefone_fax,
-                $this->p_email,
-                $this->p_http,
-                $this->tipo_pessoa
-            ) = $objPessoa->queryRapida(
-                $det['idpes'],
-                'ddd_1',
-                'fone_1',
-                'ddd_2',
-                'fone_2',
-                'ddd_mov',
-                'fone_mov',
-                'ddd_fax',
-                'fone_fax',
-                'email',
-                'url',
-                'tipo'
-            );
+
+            $this->fexcluir = $obj_permissoes->permissao_excluir(561, $this->pessoa_logada, 3);
+
+            $this->loadAddress($this->ref_idpes);
+            $this->carregaDadosContato($this->ref_idpes);
+
+            $retorno = 'Editar';
         }
 
+        $this->inicializaDados();
+
+        $this->url_cancelar = ($retorno == 'Editar') ? "educar_escola_det.php?cod_escola={$registro['cod_escola']}" : 'educar_escola_lst.php';
+
+        $this->breadcrumb('Escola', ['educar_index.php' => 'Escola']);
+        $this->nome_url_cancelar = 'Cancelar';
+
+        return $retorno;
+    }
+
+    private function carregaCamposComDadosDaEscola($registro)
+    {
+        $this->pessoaj_id = $registro['ref_idpes'];
+
+        foreach ($registro as $campo => $val) {
+            // passa todos os valores obtidos no registro para atributos do objeto
+            $this->$campo = $val;
+        }
+
+        $this->gestor_id = $registro['ref_idpes_gestor'];
+        $this->secretario_id = $registro['ref_idpes_secretario_escolar'];
+        $this->fantasia = $registro['nome'];
+    }
+
+    private function carregaDadosContato($idpes)
+    {
+        $objPessoa = new clsPessoaFj($idpes);
+        [
+            $this->p_ddd_telefone_1,
+            $this->p_telefone_1,
+            $this->p_ddd_telefone_2,
+            $this->p_telefone_2,
+            $this->p_ddd_telefone_mov,
+            $this->p_telefone_mov,
+            $this->p_ddd_telefone_fax,
+            $this->p_telefone_fax,
+            $this->p_email,
+            $this->p_http,
+            $this->tipo_pessoa
+        ] = $objPessoa->queryRapida(
+            $idpes,
+            'ddd_1',
+            'fone_1',
+            'ddd_2',
+            'fone_2',
+            'ddd_mov',
+            'fone_mov',
+            'ddd_fax',
+            'fone_fax',
+            'email',
+            'url',
+            'tipo'
+        );
+    }
+
+    private function carregaDadosDoPost()
+    {
+        if ($_POST) {
+            foreach ($_POST as $campo => $val) {
+                if ($campo !== 'tipoacao' && $campo !== 'sem_cnpj') {
+                    $this->$campo = ($this->$campo) ?: $val;
+                }
+            }
+        }
+    }
+
+    private function inicializaDados()
+    {
         if ($this->cnpj_mantenedora_principal) {
             $this->cnpj_mantenedora_principal = int2CNPJ($this->cnpj_mantenedora_principal);
         }
@@ -433,13 +435,24 @@ return new class extends clsCadastro {
         if (is_string($this->codigo_lingua_indigena)) {
             $this->codigo_lingua_indigena = explode(',', str_replace(['{', '}'], '', $this->codigo_lingua_indigena));
         }
+    }
 
-        $this->url_cancelar = ($retorno == 'Editar') ? "educar_escola_det.php?cod_escola={$registro['cod_escola']}" : 'educar_escola_lst.php';
+    private function pessoaJuridicaContemEscola($pessoaj_id)
+    {
+        $escola = (new clsPmieducarEscola())->lista(null, null, null, null, null, null, $pessoaj_id);
 
-        $this->breadcrumb('Escola', ['educar_index.php' => 'Escola']);
-        $this->nome_url_cancelar = 'Cancelar';
+        if (count($escola) > 0) {
+            $current = current($escola);
 
-        return $retorno;
+            if (is_array($current) &&
+                array_key_exists('cod_escola', $current) &&
+                is_numeric($current['cod_escola'])) {
+                $this->mensagem = "Escola criada, para<a href=\"educar_escola_cad.php?cod_escola={$current['cod_escola']}\"> editar clique aqui.</a>";
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public function Gerar()
@@ -461,228 +474,203 @@ return new class extends clsCadastro {
         $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
 
         $this->campoOculto('obrigar_campos_censo', (int) $obrigarCamposCenso);
+        $this->campoOculto('pessoaj_id_oculto', $this->pessoaj_id);
+        $this->campoOculto('pessoaj_id', $this->pessoaj_id);
 
-        if (!$this->sem_cnpj && !$this->com_cnpj) {
-            $parametros = new clsParametrosPesquisas();
-            $parametros->setSubmit(1);
-            $parametros->setPessoa('J');
-            $parametros->setPessoaCampo('sem_cnpj');
-            $parametros->setPessoaNovo('S');
-            $parametros->setPessoaCPF('N');
-            $parametros->setPessoaTela('frame');
-            $this->campoOculto('sem_cnpj', '');
-            $parametros->setCodSistema(13);
-            $parametros->adicionaCampoTexto('cnpj', 'cnpj');
-            $this->campoCnpjPesq('cnpj', 'CNPJ', $this->cnpj, 'pesquisa_pessoa_lst.php', $parametros->serializaCampos(), true);
+        if ($this->pesquisaPessoaJuridica) {
+            $this->inputsHelper()->simpleSearchPessoaj('idpes', ['label'=> 'Pessoa Jurídica']);
             $this->acao_enviar = false;
             $this->url_cancelar = false;
             $this->array_botao = ['Continuar', 'Cancelar'];
-            $this->array_botao_url_script = ['obj = document.getElementById(\'cnpj\');if(obj.value != \'\' ) { acao(); } else { acao(); }', 'go(\'educar_escola_lst.php\');'];
+            $this->array_botao_url_script = ['obj = document.getElementById(\'pessoaj_idpes\');if(obj.value != \'\' ) {
+                document.getElementById(\'tipoacao\').value = \'\'; acao(); } else { acao(); }', 'go(\'educar_escola_lst.php\');'];
         } else {
             $this->inputsHelper()->integer('escola_inep_id', ['label' => 'Código INEP', 'placeholder' => 'INEP', 'required' => $obrigarCamposCenso, 'max_length' => 8, 'label_hint' => 'Somente números']);
 
-            if ($_POST) {
-                foreach ($_POST as $campo => $val) {
-                    if ($campo != 'tipoacao' && $campo != 'sem_cnpj') {
-                        $this->$campo = ($this->$campo) ? $this->$campo : $val;
+            $this->carregaDadosDoPost();
+
+            $objTemp = new clsPessoaJuridica($this->ref_idpes);
+            $objTemp->detalhe();
+
+            $this->campoOculto('cod_escola', $this->cod_escola);
+            $this->campoTexto('fantasia', 'Escola', $this->fantasia, 30, 255, true);
+            $this->campoTexto('sigla', 'Sigla', $this->sigla, 30, 255, true);
+            $nivel = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+
+            if ($nivel === 1) {
+                $cabecalhos[] = 'Instituicao';
+                $objInstituicao = new clsPmieducarInstituicao();
+                $opcoes = ['' => 'Selecione'];
+                $objInstituicao->setOrderby('nm_instituicao ASC');
+                $lista = $objInstituicao->lista();
+
+                if (is_array($lista)) {
+                    foreach ($lista as $linha) {
+                        $opcoes[$linha['cod_instituicao']] = $linha['nm_instituicao'];
                     }
+                }
+
+                $this->campoLista('ref_cod_instituicao', 'Instituição', $opcoes, $this->ref_cod_instituicao);
+            } else {
+                $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
+
+                if ($this->ref_cod_instituicao) {
+                    $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
+                } else {
+                    die('Usuário não é do nivel poli-institucional e não possui uma instituição');
                 }
             }
 
-            if ($this->sem_cnpj) {
-                $this->campoOculto('sem_cnpj', $this->sem_cnpj);
-                $this->p_ddd_telefone_1 = ($this->p_ddd_telefone_1 == null) ? '' : $this->p_ddd_telefone_1;
-                $this->p_ddd_telefone_fax = ($this->p_ddd_telefone_fax == null) ? '' : $this->p_ddd_telefone_fax;
+            $opcoes = ['' => 'Selecione'];
 
-                if ($this->ref_idpes) {
-                    $objTemp = new clsPessoaJuridica($this->ref_idpes);
-                    $detalhe = $objTemp->detalhe();
-                }
-                $this->campoOculto('cod_escola', $this->cod_escola);
-                $this->campoTexto('fantasia', 'Escola', $this->fantasia, 30, 255, true);
-                $this->campoTexto('sigla', 'Sigla', $this->sigla, 30, 255, true);
-                $nivel = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+            // EDITAR
+            $script = 'javascript:showExpansivelIframe(520, 120, \'educar_escola_rede_ensino_cad_pop.php\');';
+            $display = "'display: none;'";
+            if ($this->ref_cod_instituicao) {
+                $objTemp = new clsPmieducarEscolaRedeEnsino();
+                $lista = $objTemp->lista(null, null, null, null, null, null, null, null, 1, $this->ref_cod_instituicao);
 
-                if ($nivel == 1) {
-                    $cabecalhos[] = 'Instituicao';
-                    $objInstituicao = new clsPmieducarInstituicao();
-                    $opcoes = ['' => 'Selecione'];
-                    $objInstituicao->setOrderby('nm_instituicao ASC');
-                    $lista = $objInstituicao->lista();
-
-                    if (is_array($lista)) {
-                        foreach ($lista as $linha) {
-                            $opcoes[$linha['cod_instituicao']] = $linha['nm_instituicao'];
-                        }
-                    }
-
-                    $this->campoLista('ref_cod_instituicao', 'Instituição', $opcoes, $this->ref_cod_instituicao);
-                } else {
-                    $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
-
-                    if ($this->ref_cod_instituicao) {
-                        $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
-                    } else {
-                        die('Usuário não é do nivel poli-institucional e não possui uma instituição');
+                if (is_array($lista) && count($lista)) {
+                    foreach ($lista as $registro) {
+                        $opcoes["{$registro['cod_escola_rede_ensino']}"] = "{$registro['nm_rede']}";
                     }
                 }
 
-                $opcoes = ['' => 'Selecione'];
-
-                // EDITAR
-                $script = 'javascript:showExpansivelIframe(520, 120, \'educar_escola_rede_ensino_cad_pop.php\');';
-
-                if ($this->ref_cod_instituicao) {
-                    $objTemp = new clsPmieducarEscolaRedeEnsino();
-                    $lista = $objTemp->lista(null, null, null, null, null, null, null, null, 1, $this->ref_cod_instituicao);
-
-                    if (is_array($lista) && count($lista)) {
-                        foreach ($lista as $registro) {
-                            $opcoes["{$registro['cod_escola_rede_ensino']}"] = "{$registro['nm_rede']}";
-                        }
-                    }
-
-                    $script = "<img id='img_rede_ensino' style='display: \'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
-                } else {
-                    $script = "<img id='img_rede_ensino' style='display: none;'  src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
-                }
-
-                $this->campoLista('ref_cod_escola_rede_ensino', 'Rede Ensino', $opcoes, $this->ref_cod_escola_rede_ensino, '', false, '', $script);
-
-                $zonas = App_Model_ZonaLocalizacao::getInstance();
-                $zonas = [null => 'Selecione'] + $zonas->getEnums();
-
-                $options = [
-                    'label' => 'Zona localização',
-                    'value' => $this->zona_localizacao,
-                    'resources' => $zonas,
-                    'required' => true,
-                ];
-
-                $this->inputsHelper()->select('zona_localizacao', $options);
-
-                $this->campoTexto('p_ddd_telefone_1', 'DDD Telefone 1', $this->p_ddd_telefone_1, '2', '2', false);
-                $this->campoTexto('p_telefone_1', 'Telefone 1', $this->p_telefone_1, '10', '15', false);
-                $this->campoTexto('p_ddd_telefone_fax', 'DDD Fax', $this->p_ddd_telefone_fax, '2', '2', false);
-                $this->campoTexto('p_telefone_fax', 'Fax', $this->p_telefone_fax, '10', '15', false);
-                $this->campoTexto('p_email', 'E-mail', $this->p_email, '50', '100', false);
+                $display = "'display: '';'";
             }
 
-            if ($this->com_cnpj) {
-                $this->campoOculto('com_cnpj', $this->com_cnpj);
+            $script = "<img id='img_rede_ensino' style={$display}  src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
 
-                if (!$this->cod_escola) {
-                    $this->cnpj = urldecode($_POST['cnpj']);
-                    $this->cnpj = idFederal2int($this->cnpj);
-                    $this->cnpj = int2IdFederal($this->cnpj);
-                }
+            $this->campoLista('ref_cod_escola_rede_ensino', 'Rede Ensino', $opcoes, $this->ref_cod_escola_rede_ensino, '', false, '', $script);
 
-                $objJuridica = new clsPessoaJuridica(false, idFederal2int($this->cnpj));
-                $det = $objJuridica->detalhe();
-                $this->ref_idpes = $det['idpes'];
+            $zonas = App_Model_ZonaLocalizacao::getInstance();
+            $zonas = [null => 'Selecione'] + $zonas->getEnums();
 
-                if (!$this->fantasia) {
-                    $this->fantasia = $det['fantasia'];
-                }
+            $options = [
+                'label' => 'Zona localização',
+                'value' => $this->zona_localizacao,
+                'resources' => $zonas,
+                'required' => true,
+            ];
 
-                if ($this->passou) {
-                    $this->cnpj = (is_numeric($this->cnpj)) ? $this->cnpj : idFederal2int($this->cnpj);
-                    $this->cnpj = int2IdFederal($this->cnpj);
-                }
+            $this->inputsHelper()->select('zona_localizacao', $options);
 
-                $this->campoRotulo('cnpj_', 'CNPJ', $this->cnpj);
-                $this->campoOculto('cnpj', idFederal2int($this->cnpj));
-                $this->campoOculto('ref_idpes', $this->ref_idpes);
-                $this->campoOculto('cod_escola', $this->cod_escola);
-                $this->campoTexto('fantasia', 'Escola', $this->fantasia, 30, 255, true);
-                $this->campoTexto('sigla', 'Sigla', $this->sigla, 30, 20, true);
-                $nivel = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+            $this->campoOculto('com_cnpj', $this->com_cnpj);
 
-                if ($nivel == 1) {
-                    $cabecalhos[] = 'Instituicao';
-                    $objInstituicao = new clsPmieducarInstituicao();
-                    $opcoes = ['' => 'Selecione'];
-                    $objInstituicao->setOrderby('nm_instituicao ASC');
-                    $lista = $objInstituicao->lista();
+            if (!$this->cod_escola) {
+                $this->cnpj = urldecode($_POST['cnpj']);
+                $this->cnpj = idFederal2int($this->cnpj);
+                $this->cnpj = empty($this->cnpj) ? $this->cnpj : int2IdFederal($this->cnpj);
+            }
 
-                    if (is_array($lista)) {
-                        foreach ($lista as $linha) {
-                            $opcoes[$linha['cod_instituicao']] = $linha['nm_instituicao'];
-                        }
-                    }
+            if (empty($this->cnpj) && $objTemp->cnpj) {
+                $this->cnpj = $objTemp->cnpj;
+            }
 
-                    $this->campoLista('ref_cod_instituicao', 'Instituicao', $opcoes, $this->ref_cod_instituicao);
-                } else {
-                    $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
+            $objJuridica = new clsPessoaJuridica($this->pessoaj_id);
 
-                    if ($this->ref_cod_instituicao) {
-                        $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
-                    } else {
-                        die('Usuário não é do nivel poli-institucional e não possui uma instituição');
-                    }
-                }
+            $det = $objJuridica->detalhe();
+            $this->ref_idpes = $det['idpes'];
 
+            if (!$this->fantasia) {
+                $this->fantasia = $det['fantasia'];
+            }
+
+            if ($this->cnpj) {
+                $this->cnpj = (is_numeric($this->cnpj)) ? int2CNPJ($this->cnpj) : int2CNPJ(idFederal2int($this->cnpj));
+            }
+
+            $this->campoRotulo('cnpj_', 'CNPJ', $this->cnpj);
+            $this->campoOculto('cnpj', idFederal2int($this->cnpj));
+            $this->campoOculto('ref_idpes', $this->ref_idpes);
+            $this->campoOculto('cod_escola', $this->cod_escola);
+            $this->campoTexto('fantasia', 'Escola', $this->fantasia, 30, 255, true);
+            $this->campoTexto('sigla', 'Sigla', $this->sigla, 30, 20, true);
+            $nivel = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+
+            if ($nivel == 1) {
+                $cabecalhos[] = 'Instituicao';
+                $objInstituicao = new clsPmieducarInstituicao();
                 $opcoes = ['' => 'Selecione'];
+                $objInstituicao->setOrderby('nm_instituicao ASC');
+                $lista = $objInstituicao->lista();
 
-                // EDITAR
-                $script = 'javascript:showExpansivelIframe(520, 120, \'educar_escola_rede_ensino_cad_pop.php\');';
+                if (is_array($lista)) {
+                    foreach ($lista as $linha) {
+                        $opcoes[$linha['cod_instituicao']] = $linha['nm_instituicao'];
+                    }
+                }
+
+                $this->campoLista('ref_cod_instituicao', 'Instituicao', $opcoes, $this->ref_cod_instituicao);
+            } else {
+                $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
+
                 if ($this->ref_cod_instituicao) {
-                    $objTemp = new clsPmieducarEscolaRedeEnsino();
-                    $lista = $objTemp->lista(null, null, null, null, null, null, null, null, 1, $this->ref_cod_instituicao);
-
-                    if (is_array($lista) && count($lista)) {
-                        foreach ($lista as $registro) {
-                            $opcoes["{$registro['cod_escola_rede_ensino']}"] = "{$registro['nm_rede']}";
-                        }
-                    }
-
-                    $script = "<img id='img_rede_ensino' style='display:\'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
+                    $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
                 } else {
-                    $script = "<img id='img_rede_ensino' style='display: none;'  src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
+                    die('Usuário não é do nivel poli-institucional e não possui uma instituição');
+                }
+            }
+
+            $opcoes = ['' => 'Selecione'];
+
+            // EDITAR
+            $script = 'javascript:showExpansivelIframe(520, 120, \'educar_escola_rede_ensino_cad_pop.php\');';
+            if ($this->ref_cod_instituicao) {
+                $objTemp = new clsPmieducarEscolaRedeEnsino();
+                $lista = $objTemp->lista(null, null, null, null, null, null, null, null, 1, $this->ref_cod_instituicao);
+
+                if (is_array($lista) && count($lista)) {
+                    foreach ($lista as $registro) {
+                        $opcoes["{$registro['cod_escola_rede_ensino']}"] = "{$registro['nm_rede']}";
+                    }
                 }
 
-                $this->campoLista('ref_cod_escola_rede_ensino', 'Rede Ensino', $opcoes, $this->ref_cod_escola_rede_ensino, '', false, '', $script);
-                $opcoes = ['' => 'Selecione'];
+                $script = "<img id='img_rede_ensino' style='display:\'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
+            } else {
+                $script = "<img id='img_rede_ensino' style='display: none;'  src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
+            }
 
-                $zonas = App_Model_ZonaLocalizacao::getInstance();
-                $zonas = [null => 'Selecione'] + $zonas->getEnums();
+            $this->campoLista('ref_cod_escola_rede_ensino', 'Rede Ensino', $opcoes, $this->ref_cod_escola_rede_ensino, '', false, '', $script);
 
-                $options = [
-                    'label' => 'Zona localização',
-                    'value' => $this->zona_localizacao,
-                    'resources' => $zonas,
-                    'required' => true,
-                ];
+            $zonas = App_Model_ZonaLocalizacao::getInstance();
+            $zonas = [null => 'Selecione'] + $zonas->getEnums();
 
-                $this->inputsHelper()->select('zona_localizacao', $options);
+            $options = [
+                'label' => 'Zona localização',
+                'value' => $this->zona_localizacao,
+                'resources' => $zonas,
+                'required' => true,
+            ];
 
-                $resources = SelectOptions::localizacoesDiferenciadasEscola();
-                $options = ['label' => 'Localização diferenciada da escola', 'resources' => $resources, 'value' => $this->localizacao_diferenciada, 'required' => $obrigarCamposCenso, 'size' => 70];
-                $this->inputsHelper()->select('localizacao_diferenciada', $options);
+            $this->inputsHelper()->select('zona_localizacao', $options);
 
-                $this->viewAddress();
+            $resources = SelectOptions::localizacoesDiferenciadasEscola();
+            $options = ['label' => 'Localização diferenciada da escola', 'resources' => $resources, 'value' => $this->localizacao_diferenciada, 'required' => $obrigarCamposCenso, 'size' => 70];
+            $this->inputsHelper()->select('localizacao_diferenciada', $options);
 
-                $this->inputsHelper()->simpleSearchDistrito('district', [
-                    'required' => $obrigarCamposCenso,
-                    'label' => 'Distrito',
-                ], [
-                    'objectName' => 'district',
-                    'hiddenInputOptions' => [
-                        'options' => [
-                            'value' => $this->iddis ?? $this->district_id,
-                        ],
+            $this->viewAddress();
+
+            $this->inputsHelper()->simpleSearchDistrito('district', [
+                'required' => $obrigarCamposCenso,
+                'label' => 'Distrito',
+            ], [
+                'objectName' => 'district',
+                'hiddenInputOptions' => [
+                    'options' => [
+                        'value' => $this->iddis ?? $this->district_id,
                     ],
-                ]);
+                ],
+            ]);
 
-                $this->inputTelefone('1', 'Telefone 1');
-                $this->inputTelefone('2', 'Telefone 2');
-                $this->inputTelefone('mov', 'Celular');
-                $this->inputTelefone('fax', 'Fax');
-                $this->campoTexto('p_email', 'E-mail', $this->p_email, '50', '100', false);
-                $this->campoTexto('p_http', 'Site/Blog/Rede social', $this->p_http, '50', '255', false);
-                $this->passou = true;
-                $this->campoOculto('passou', $this->passou);
-            }
+            $this->inputTelefone('1', 'Telefone 1');
+            $this->inputTelefone('2', 'Telefone 2');
+            $this->inputTelefone('mov', 'Celular');
+            $this->inputTelefone('fax', 'Fax');
+            $this->campoTexto('p_email', 'E-mail', $this->p_email, '50', '100', false);
+            $this->campoTexto('p_http', 'Site/Blog/Rede social', $this->p_http, '50', '255', false);
+            $this->passou = true;
+            $this->campoOculto('passou', $this->passou);
 
             $this->inputsHelper()->numeric('latitude', ['max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->latitude, 'label_hint' => 'São aceito somente números, ponto "." e hífen "-"']);
             $this->inputsHelper()->numeric('longitude', ['max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->longitude, 'label_hint' => 'São aceito somente números, ponto "." e hífen "-"']);
@@ -754,36 +742,49 @@ return new class extends clsCadastro {
             ];
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-            $resources = ['' => 'Selecione',
+            $resources = [
+                '' => 'Selecione',
                 1 => 'Particular',
                 2 => 'Comunitária',
                 3 => 'Confessional',
-                4 => 'Filantrópica'];
-            $options = ['label' => 'Categoria da escola privada',
+                4 => 'Filantrópica'
+            ];
+
+            $options = [
+                'label' => 'Categoria da escola privada',
                 'resources' => $resources,
                 'value' => $this->categoria_escola_privada,
                 'required' => false,
-                'size' => 70];
+                'size' => 70
+            ];
+
             $this->inputsHelper()->select('categoria_escola_privada', $options);
 
-            $resources = ['' => 'Selecione',
+            $resources = [
+                '' => 'Selecione',
                 1 => 'Estadual',
                 2 => 'Municipal',
-                3 => 'Estadual e Municipal'];
-            $options = ['label' => 'Conveniada com poder público',
+                3 => 'Estadual e Municipal'
+            ];
+
+            $options = [
+                'label' => 'Conveniada com poder público',
                 'resources' => $resources,
                 'value' => $this->conveniada_com_poder_publico,
                 'required' => false,
-                'size' => 70];
-            $this->inputsHelper()->select('conveniada_com_poder_publico', $options);
+                'size' => 70
+            ];
 
+            $this->inputsHelper()->select('conveniada_com_poder_publico', $options);
             $this->campoCnpj('cnpj_mantenedora_principal', 'CNPJ da mantenedora principal da escola privada', $this->cnpj_mantenedora_principal);
 
             $hiddenInputOptions = ['options' => ['value' => $this->secretario_id]];
             $helperOptions = ['objectName' => 'secretario', 'hiddenInputOptions' => $hiddenInputOptions];
-            $options = ['label' => 'Secretário escolar',
+            $options = [
+                'label' => 'Secretário escolar',
                 'size' => 50,
-                'required' => false];
+                'required' => false
+            ];
             $this->inputsHelper()->simpleSearchPessoa('nome', $options, $helperOptions);
 
             $resources = SelectOptions::esferasAdministrativasEscola();
@@ -799,15 +800,15 @@ return new class extends clsCadastro {
             $this->addSchoolManagersTable();
 
             if ($_POST['escola_curso']) {
-                $this->escola_curso = unserialize(urldecode($_POST['escola_curso']));
+                $this->escola_curso = unserialize(urldecode($_POST['escola_curso']),['stdclass']);
             }
 
             if ($_POST['escola_curso_autorizacao']) {
-                $this->escola_curso_autorizacao = unserialize(urldecode($_POST['escola_curso_autorizacao']));
+                $this->escola_curso_autorizacao = unserialize(urldecode($_POST['escola_curso_autorizacao']),['stdclass']);
             }
 
             if ($_POST['escola_curso_anos_letivos']) {
-                $this->escola_curso_anos_letivos = unserialize(urldecode($_POST['escola_curso_anos_letivos']));
+                $this->escola_curso_anos_letivos = unserialize(urldecode($_POST['escola_curso_anos_letivos']), ['stdclass']);
             }
 
             if (is_numeric($this->cod_escola) && !$_POST) {
@@ -1451,31 +1452,8 @@ return new class extends clsCadastro {
     {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 3, 'educar_escola_lst.php');
-        $orgao_vinculado_escola = implode(',', $this->orgao_vinculado_escola);
-        $mantenedora_escola_privada = implode(',', $this->mantenedora_escola_privada);
-        $local_funcionamento = implode(',', $this->local_funcionamento);
-        $abastecimento_agua = implode(',', $this->abastecimento_agua);
-        $abastecimento_energia = implode(',', $this->abastecimento_energia);
-        $esgoto_sanitario = implode(',', $this->esgoto_sanitario);
-        $destinacao_lixo = implode(',', $this->destinacao_lixo);
-        $tratamento_lixo = implode(',', $this->tratamento_lixo);
-        $salas_funcionais = implode(',', $this->salas_funcionais);
-        $salas_gerais = implode(',', $this->salas_gerais);
-        $banheiros = implode(',', $this->banheiros);
-        $laboratorios = implode(',', $this->laboratorios);
-        $salas_atividades = implode(',', $this->salas_atividades);
-        $dormitorios = implode(',', $this->dormitorios);
-        $areas_externas = implode(',', $this->areas_externas);
-        $recursos_acessibilidade = implode(',', $this->recursos_acessibilidade);
-        $equipamentos = implode(',', $this->equipamentos);
-        $uso_internet = implode(',', $this->uso_internet);
-        $rede_local = implode(',', $this->rede_local);
-        $equipamentos_acesso_internet = implode(',', $this->equipamentos_acesso_internet);
-        $organizacao_ensino = implode(',', $this->organizacao_ensino);
-        $instrumentos_pedagogicos = implode(',', $this->instrumentos_pedagogicos);
-        $orgaos_colegiados = implode(',', $this->orgaos_colegiados);
-        $reserva_vagas_cotas = implode(',', $this->reserva_vagas_cotas);
-        $codigo_lingua_indigena = implode(',', $this->codigo_lingua_indigena);
+
+        $this->preparaDados();
 
         if (!$this->validaDigitosInepEscola($this->escola_inep_id, 'Código INEP')) {
             return false;
@@ -1495,6 +1473,56 @@ return new class extends clsCadastro {
 
         $this->validateManagersRules();
 
+        if (!$this->validaDigitosInepEscolaCompartilhada()) {
+            return false;
+        }
+
+        if (!$this->validaOpcoesUnicasMultipleSearch()) {
+            return false;
+        }
+
+        if (! property_exists($this, 'pessoaj_id_oculto') ||
+            ! is_int((int)$this->pessoaj_id_oculto)
+        ) {
+            throw new \iEducar\Support\Exceptions\Exception('Erro ao selecionar a pessoa jurídica');
+        }
+
+        $pessoaJuridica = (new clsJuridica((int)$this->pessoaj_id_oculto))->detalhe();
+
+        if ($pessoaJuridica === false) {
+            throw new \iEducar\Support\Exceptions\Exception('Pessoa jurídica não encontrada');
+        }
+
+        $this->bloquear_lancamento_diario_anos_letivos_encerrados = is_null($this->bloquear_lancamento_diario_anos_letivos_encerrados) ? 0 : 1;
+        $this->utiliza_regra_diferenciada = !is_null($this->utiliza_regra_diferenciada);
+
+        $cod_escola = $this->cadastraEscola((int)$this->pessoaj_id_oculto);
+
+        if ($cod_escola === false) {
+            return false;
+        }
+
+        $this->processaTelefones($this->pessoaj_id_oculto);
+
+        $this->saveAddress($this->ref_idpes);
+
+        if (!$this->cadastraEscolaCurso($cod_escola, false)) {
+            return false;
+        }
+
+        $this->saveInep($cod_escola);
+
+        $this->atualizaNomePessoaJuridica($this->ref_idpes);
+
+        $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+
+        throw new HttpResponseException(
+            new RedirectResponse('educar_escola_lst.php')
+        );
+    }
+
+    private function validaDigitosInepEscolaCompartilhada()
+    {
         for ($i = 1; $i <= 6; $i++) {
             $seq = $i == 1 ? '' : $i;
             $campo = 'codigo_inep_escola_compartilhada'.$seq;
@@ -1503,293 +1531,191 @@ return new class extends clsCadastro {
                 return false;
             }
         }
+        return true;
+    }
 
-        if (!$this->validaOpcoesUnicasMultipleSearch()) {
+    private function cadastraEscolaCurso($cod_escola, $excluirEscolaCursos = false)
+    {
+        if ($excluirEscolaCursos === true) {
+            (new clsPmieducarEscolaCurso($this->cod_escola))->excluirTodos();
+        }
+
+        $this->escola_curso = unserialize(urldecode($this->escola_curso), ['stdclass']);
+        $this->escola_curso_autorizacao = unserialize(urldecode($this->escola_curso_autorizacao), ['stdclass']);
+        $this->escola_curso_anos_letivos = unserialize(urldecode($this->escola_curso_anos_letivos), ['stdclass']);
+
+        if ($this->escola_curso) {
+            foreach ($this->escola_curso as $campo) {
+                $curso_escola = new clsPmieducarEscolaCurso($cod_escola, $campo, null, $this->pessoa_logada, null, null, 1, $this->escola_curso_autorizacao[$campo], $this->escola_curso_anos_letivos[$campo]);
+                $cadastrou_ = $curso_escola->cadastra();
+
+                if (!$cadastrou_) {
+                    $this->mensagem = 'Cadastro não realizado.<br>';
+                    return false;
+                }
+            }
+
+            $this->storeManagers($cod_escola);
+        }
+
+        return true;
+    }
+
+    private function constroiObjetoEscola($pessoaj_id_oculto, $escola = null)
+    {
+        if($escola instanceof clsPmieducarEscola) {
+            $obj = $escola;
+        } else {
+            $obj = new clsPmieducarEscola(null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->zona_localizacao, $this->ref_cod_escola_rede_ensino,$pessoaj_id_oculto, $this->sigla, null, null, 1, null, $this->bloquear_lancamento_diario_anos_letivos_encerrados);
+        }
+
+        $obj->situacao_funcionamento = $this->situacao_funcionamento;
+        $obj->dependencia_administrativa = $this->dependencia_administrativa;
+        $obj->orgao_vinculado_escola = $this->orgao_vinculado_escola;
+        $obj->latitude = $this->latitude;
+        $obj->longitude = $this->longitude;
+        $obj->regulamentacao = $this->regulamentacao;
+        $obj->ref_idpes_gestor = $this->gestor_id;
+        $obj->cargo_gestor = $this->cargo_gestor;
+        $obj->email_gestor = $this->email_gestor;
+        $obj->local_funcionamento = $this->local_funcionamento;
+        $obj->condicao = $this->condicao;
+        $obj->predio_compartilhado_outra_escola = $this->predio_compartilhado_outra_escola;
+        $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
+        $obj->codigo_inep_escola_compartilhada2 = $this->codigo_inep_escola_compartilhada2;
+        $obj->codigo_inep_escola_compartilhada3 = $this->codigo_inep_escola_compartilhada3;
+        $obj->codigo_inep_escola_compartilhada4 = $this->codigo_inep_escola_compartilhada4;
+        $obj->codigo_inep_escola_compartilhada5 = $this->codigo_inep_escola_compartilhada5;
+        $obj->codigo_inep_escola_compartilhada6 = $this->codigo_inep_escola_compartilhada6;
+        $obj->agua_potavel_consumo = $this->agua_potavel_consumo;
+        $obj->abastecimento_agua = $this->abastecimento_agua;
+        $obj->abastecimento_energia = $this->abastecimento_energia;
+        $obj->esgoto_sanitario = $this->esgoto_sanitario;
+        $obj->destinacao_lixo = $this->destinacao_lixo;
+        $obj->tratamento_lixo = $this->tratamento_lixo;
+        $obj->alimentacao_escolar_alunos = $this->alimentacao_escolar_alunos;
+        $obj->compartilha_espacos_atividades_integracao = $this->compartilha_espacos_atividades_integracao;
+        $obj->usa_espacos_equipamentos_atividades_regulares = $this->usa_espacos_equipamentos_atividades_regulares;
+        $obj->salas_funcionais = $this->salas_funcionais;
+        $obj->salas_gerais = $this->salas_gerais;
+        $obj->banheiros = $this->banheiros;
+        $obj->laboratorios = $this->laboratorios;
+        $obj->salas_atividades = $this->salas_atividades;
+        $obj->dormitorios = $this->dormitorios;
+        $obj->areas_externas = $this->areas_externas;
+        $obj->recursos_acessibilidade = $this->recursos_acessibilidade;
+        $obj->possui_dependencias = $this->possui_dependencias;
+        $obj->numero_salas_utilizadas_dentro_predio = $this->numero_salas_utilizadas_dentro_predio;
+        $obj->numero_salas_utilizadas_fora_predio = $this->numero_salas_utilizadas_fora_predio;
+        $obj->numero_salas_climatizadas = $this->numero_salas_climatizadas;
+        $obj->numero_salas_acessibilidade = $this->numero_salas_acessibilidade;
+        $obj->total_funcionario = $this->total_funcionario;
+        $obj->atendimento_aee = $this->atendimento_aee;
+        $obj->fundamental_ciclo = $this->fundamental_ciclo;
+        $obj->organizacao_ensino = $this->organizacao_ensino;
+        $obj->instrumentos_pedagogicos = $this->instrumentos_pedagogicos;
+        $obj->orgaos_colegiados = $this->orgaos_colegiados;
+        $obj->exame_selecao_ingresso = $this->exame_selecao_ingresso;
+        $obj->reserva_vagas_cotas = $this->reserva_vagas_cotas;
+        $obj->projeto_politico_pedagogico = $this->projeto_politico_pedagogico;
+        $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
+        $obj->educacao_indigena = $this->educacao_indigena;
+        $obj->lingua_ministrada = $this->lingua_ministrada;
+        $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
+        $obj->equipamentos = $this->equipamentos;
+        $obj->uso_internet = $this->uso_internet;
+        $obj->rede_local = $this->rede_local;
+        $obj->equipamentos_acesso_internet = $this->equipamentos_acesso_internet;
+        $obj->quantidade_computadores_alunos_mesa = $this->quantidade_computadores_alunos_mesa;
+        $obj->quantidade_computadores_alunos_portateis = $this->quantidade_computadores_alunos_portateis;
+        $obj->quantidade_computadores_alunos_tablets = $this->quantidade_computadores_alunos_tablets;
+        $obj->lousas_digitais = $this->lousas_digitais;
+        $obj->televisoes = $this->televisoes;
+        $obj->dvds = $this->dvds;
+        $obj->aparelhos_de_som = $this->aparelhos_de_som;
+        $obj->projetores_digitais = $this->projetores_digitais;
+        $obj->acesso_internet = $this->acesso_internet;
+        $obj->ato_criacao = $this->ato_criacao;
+        $obj->ato_autorizativo = $this->ato_autorizativo;
+        $obj->ref_idpes_secretario_escolar = $this->secretario_id;
+        $obj->unidade_vinculada_outra_instituicao = $this->unidade_vinculada_outra_instituicao;
+        $obj->inep_escola_sede = $this->inep_escola_sede;
+        $obj->codigo_ies = $this->codigo_ies_id;
+        $obj->categoria_escola_privada = $this->categoria_escola_privada;
+        $obj->conveniada_com_poder_publico = $this->conveniada_com_poder_publico;
+        $obj->mantenedora_escola_privada = $this->mantenedora_escola_privada;
+        $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
+        $obj->esfera_administrativa = $this->esfera_administrativa;
+        $obj->iddis = (int)$this->district_id;
+
+        foreach ($this->inputsRecursos as $key => $value) {
+            $obj->{$key} = $this->{$key};
+        }
+
+        return $obj;
+    }
+
+    private function processaTelefones($idpes)
+    {
+        $objTelefone = new clsPessoaTelefone($idpes);
+        $objTelefone->excluiTodos();
+
+        $this->cadastraTelefone($idpes, 1, str_replace('-', '', $this->p_telefone_1), $this->p_ddd_telefone_1);
+        $this->cadastraTelefone($idpes, 2, str_replace('-', '', $this->p_telefone_2), $this->p_ddd_telefone_2);
+        $this->cadastraTelefone($idpes, 3, str_replace('-', '', $this->p_telefone_mov), $this->p_ddd_telefone_mov);
+        $this->cadastraTelefone($idpes,4, str_replace('-', '', $this->p_telefone_fax), $this->p_ddd_telefone_fax);
+
+    }
+
+    private function cadastraTelefone($idpes,$tipo,$telefone, $ddd)
+    {
+        return (new clsPessoaTelefone($idpes, $tipo, $telefone, $ddd, $this->pessoa_logada))->cadastra();
+    }
+
+    public function cadastraEscola(int $pessoaj_id_oculto)
+    {
+        $escola = $this->constroiObjetoEscola($pessoaj_id_oculto);
+
+        $cod_escola =  $escola->cadastra();
+
+        if ($cod_escola === false) {
+            $this->mensagem = 'Cadastro não realizado<br>';
             return false;
         }
 
-        $this->bloquear_lancamento_diario_anos_letivos_encerrados = is_null($this->bloquear_lancamento_diario_anos_letivos_encerrados) ? 0 : 1;
-        $this->utiliza_regra_diferenciada = !is_null($this->utiliza_regra_diferenciada);
+        return $cod_escola;
+    }
 
-        if ($this->com_cnpj) {
-            $objPessoa = new clsPessoa_(false, $this->fantasia, $this->pessoa_logada, $this->p_http, 'J', false, false, $this->p_email);
-            $this->ref_idpes = $objPessoa->cadastra();
-
-            if ($this->ref_idpes) {
-                $obj_pes_juridica = new clsJuridica($this->ref_idpes, $this->cnpj, $this->fantasia, false, false, $this->pessoa_logada);
-                $cadastrou = $obj_pes_juridica->cadastra();
-
-                if ($cadastrou) {
-                    $obj = new clsPmieducarEscola(null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->zona_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, null, $this->bloquear_lancamento_diario_anos_letivos_encerrados);
-                    $obj->situacao_funcionamento = $this->situacao_funcionamento;
-                    $obj->dependencia_administrativa = $this->dependencia_administrativa;
-                    $obj->orgao_vinculado_escola = $orgao_vinculado_escola;
-                    $obj->latitude = $this->latitude;
-                    $obj->longitude = $this->longitude;
-                    $obj->regulamentacao = $this->regulamentacao;
-                    $obj->ref_idpes_gestor = $this->gestor_id;
-                    $obj->cargo_gestor = $this->cargo_gestor;
-                    $obj->email_gestor = $this->email_gestor;
-                    $obj->local_funcionamento = $local_funcionamento;
-                    $obj->condicao = $this->condicao;
-                    $obj->predio_compartilhado_outra_escola = $this->predio_compartilhado_outra_escola;
-                    $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
-                    $obj->codigo_inep_escola_compartilhada2 = $this->codigo_inep_escola_compartilhada2;
-                    $obj->codigo_inep_escola_compartilhada3 = $this->codigo_inep_escola_compartilhada3;
-                    $obj->codigo_inep_escola_compartilhada4 = $this->codigo_inep_escola_compartilhada4;
-                    $obj->codigo_inep_escola_compartilhada5 = $this->codigo_inep_escola_compartilhada5;
-                    $obj->codigo_inep_escola_compartilhada6 = $this->codigo_inep_escola_compartilhada6;
-                    $obj->agua_potavel_consumo = $this->agua_potavel_consumo;
-                    $obj->abastecimento_agua = $abastecimento_agua;
-                    $obj->abastecimento_energia = $abastecimento_energia;
-                    $obj->esgoto_sanitario = $esgoto_sanitario;
-                    $obj->destinacao_lixo = $destinacao_lixo;
-                    $obj->tratamento_lixo = $tratamento_lixo;
-                    $obj->alimentacao_escolar_alunos = $this->alimentacao_escolar_alunos;
-                    $obj->compartilha_espacos_atividades_integracao = $this->compartilha_espacos_atividades_integracao;
-                    $obj->usa_espacos_equipamentos_atividades_regulares = $this->usa_espacos_equipamentos_atividades_regulares;
-                    $obj->salas_funcionais = $salas_funcionais;
-                    $obj->salas_gerais = $salas_gerais;
-                    $obj->banheiros = $banheiros;
-                    $obj->laboratorios = $laboratorios;
-                    $obj->salas_atividades = $salas_atividades;
-                    $obj->dormitorios = $dormitorios;
-                    $obj->areas_externas = $areas_externas;
-                    $obj->recursos_acessibilidade = $recursos_acessibilidade;
-                    $obj->possui_dependencias = $this->possui_dependencias;
-                    $obj->numero_salas_utilizadas_dentro_predio = $this->numero_salas_utilizadas_dentro_predio;
-                    $obj->numero_salas_utilizadas_fora_predio = $this->numero_salas_utilizadas_fora_predio;
-                    $obj->numero_salas_climatizadas = $this->numero_salas_climatizadas;
-                    $obj->numero_salas_acessibilidade = $this->numero_salas_acessibilidade;
-                    $obj->total_funcionario = $this->total_funcionario;
-                    $obj->atendimento_aee = $this->atendimento_aee;
-                    $obj->fundamental_ciclo = $this->fundamental_ciclo;
-                    $obj->organizacao_ensino = $organizacao_ensino;
-                    $obj->instrumentos_pedagogicos = $instrumentos_pedagogicos;
-                    $obj->orgaos_colegiados = $orgaos_colegiados;
-                    $obj->exame_selecao_ingresso = $this->exame_selecao_ingresso;
-                    $obj->reserva_vagas_cotas = $reserva_vagas_cotas;
-                    $obj->projeto_politico_pedagogico = $this->projeto_politico_pedagogico;
-                    $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
-                    $obj->educacao_indigena = $this->educacao_indigena;
-                    $obj->lingua_ministrada = $this->lingua_ministrada;
-                    $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
-                    $obj->codigo_lingua_indigena = $codigo_lingua_indigena;
-                    $obj->equipamentos = $equipamentos;
-                    $obj->uso_internet = $uso_internet;
-                    $obj->rede_local = $rede_local;
-                    $obj->equipamentos_acesso_internet = $equipamentos_acesso_internet;
-                    $obj->quantidade_computadores_alunos_mesa = $this->quantidade_computadores_alunos_mesa;
-                    $obj->quantidade_computadores_alunos_portateis = $this->quantidade_computadores_alunos_portateis;
-                    $obj->quantidade_computadores_alunos_tablets = $this->quantidade_computadores_alunos_tablets;
-                    $obj->lousas_digitais = $this->lousas_digitais;
-                    $obj->televisoes = $this->televisoes;
-                    $obj->dvds = $this->dvds;
-                    $obj->aparelhos_de_som = $this->aparelhos_de_som;
-                    $obj->projetores_digitais = $this->projetores_digitais;
-                    $obj->acesso_internet = $this->acesso_internet;
-                    $obj->ato_criacao = $this->ato_criacao;
-                    $obj->ato_autorizativo = $this->ato_autorizativo;
-                    $obj->ref_idpes_secretario_escolar = $this->secretario_id;
-                    $obj->unidade_vinculada_outra_instituicao = $this->unidade_vinculada_outra_instituicao;
-                    $obj->inep_escola_sede = $this->inep_escola_sede;
-                    $obj->codigo_ies = $this->codigo_ies_id;
-                    $obj->categoria_escola_privada = $this->categoria_escola_privada;
-                    $obj->conveniada_com_poder_publico = $this->conveniada_com_poder_publico;
-                    $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
-                    $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
-                    $obj->esfera_administrativa = $this->esfera_administrativa;
-                    $obj->iddis = (int)$this->district_id;
-                    foreach ($this->inputsRecursos as $key => $value) {
-                        $obj->{$key} = $this->{$key};
-                    }
-
-                    $cod_escola = $cadastrou1 = $obj->cadastra();
-
-                    if ($cadastrou1) {
-                        $escola = new clsPmieducarEscola($cod_escola);
-                        $escola = $escola->detalhe();
-
-                        $objTelefone = new clsPessoaTelefone($this->ref_idpes);
-                        $objTelefone->excluiTodos();
-                        $objTelefone = new clsPessoaTelefone($this->ref_idpes, 1, str_replace('-', '', $this->p_telefone_1), $this->p_ddd_telefone_1);
-                        $objTelefone->cadastra();
-                        $objTelefone = new clsPessoaTelefone($this->ref_idpes, 2, str_replace('-', '', $this->p_telefone_2), $this->p_ddd_telefone_2);
-                        $objTelefone->cadastra();
-                        $objTelefone = new clsPessoaTelefone($this->ref_idpes, 3, str_replace('-', '', $this->p_telefone_mov), $this->p_ddd_telefone_mov);
-                        $objTelefone->cadastra();
-                        $objTelefone = new clsPessoaTelefone($this->ref_idpes, 4, str_replace('-', '', $this->p_telefone_fax), $this->p_ddd_telefone_fax);
-                        $objTelefone->cadastra();
-
-                        $this->saveAddress($this->ref_idpes);
-
-                        //-----------------------CADASTRA CURSO------------------------//
-                        $this->escola_curso = unserialize(urldecode($this->escola_curso));
-                        $this->escola_curso_autorizacao = unserialize(urldecode($this->escola_curso_autorizacao));
-                        $this->escola_curso_anos_letivos = unserialize(urldecode($this->escola_curso_anos_letivos));
-
-                        if ($this->escola_curso) {
-                            foreach ($this->escola_curso as $campo) {
-                                $curso_escola = new clsPmieducarEscolaCurso($cadastrou1, $campo, null, $this->pessoa_logada, null, null, 1, $this->escola_curso_autorizacao[$campo], $this->escola_curso_anos_letivos[$campo]);
-                                $cadastrou_ = $curso_escola->cadastra();
-
-                                if (!$cadastrou_) {
-                                    $this->mensagem = 'Cadastro não realizado.<br>';
-
-                                    return false;
-                                }
-                            }
-
-                            $this->storeManagers($cod_escola);
-                        }
-                        //-----------------------FIM CADASTRA CURSO------------------------//
-                    } else {
-                        $this->mensagem = 'Cadastro não realizado (clsPmieducarEscola).<br>';
-
-                        return false;
-                    }
-                } else {
-                    $this->mensagem = 'Cadastro não realizado (clsJuridica).<br>';
-
-                    return false;
-                }
-
-                $this->saveInep($escola['cod_escola']);
-
-                $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-
-                throw new HttpResponseException(
-                    new RedirectResponse('educar_escola_lst.php')
-                );
-            } else {
-                $this->mensagem = 'Cadastro não realizado (clsPessoa_).<br>';
-
-                return false;
-            }
-        } elseif ($this->sem_cnpj) {
-            $obj = new clsPmieducarEscola(null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->zona_localizacao, $this->ref_cod_escola_rede_ensino, null, $this->sigla, null, null, 1, null, $this->bloquear_lancamento_diario_anos_letivos_encerrados, $this->utiliza_regra_diferenciada);
-            $obj->dependencia_administrativa = $this->dependencia_administrativa;
-            $obj->orgao_vinculado_escola = $orgao_vinculado_escola;
-            $obj->latitude = $this->latitude;
-            $obj->longitude = $this->longitude;
-            $obj->regulamentacao = $this->regulamentacao;
-            $obj->situacao_funcionamento = $this->situacao_funcionamento;
-            $obj->ref_idpes_gestor = $this->gestor_id;
-            $obj->cargo_gestor = $this->cargo_gestor;
-            $obj->email_gestor = $this->email_gestor;
-            $obj->local_funcionamento = $local_funcionamento;
-            $obj->condicao = $this->condicao;
-            $obj->predio_compartilhado_outra_escola = $this->predio_compartilhado_outra_escola;
-            $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
-            $obj->codigo_inep_escola_compartilhada2 = $this->codigo_inep_escola_compartilhada2;
-            $obj->codigo_inep_escola_compartilhada3 = $this->codigo_inep_escola_compartilhada3;
-            $obj->codigo_inep_escola_compartilhada4 = $this->codigo_inep_escola_compartilhada4;
-            $obj->codigo_inep_escola_compartilhada5 = $this->codigo_inep_escola_compartilhada5;
-            $obj->codigo_inep_escola_compartilhada6 = $this->codigo_inep_escola_compartilhada6;
-            $obj->agua_potavel_consumo = $this->agua_potavel_consumo;
-            $obj->abastecimento_agua = $abastecimento_agua;
-            $obj->abastecimento_energia = $abastecimento_energia;
-            $obj->esgoto_sanitario = $esgoto_sanitario;
-            $obj->destinacao_lixo = $destinacao_lixo;
-            $obj->tratamento_lixo = $tratamento_lixo;
-            $obj->alimentacao_escolar_alunos = $this->alimentacao_escolar_alunos;
-            $obj->compartilha_espacos_atividades_integracao = $this->compartilha_espacos_atividades_integracao;
-            $obj->usa_espacos_equipamentos_atividades_regulares = $this->usa_espacos_equipamentos_atividades_regulares;
-            $obj->salas_funcionais = $salas_funcionais;
-            $obj->salas_gerais = $salas_gerais;
-            $obj->banheiros = $banheiros;
-            $obj->laboratorios = $laboratorios;
-            $obj->salas_atividades = $salas_atividades;
-            $obj->dormitorios = $dormitorios;
-            $obj->areas_externas = $areas_externas;
-            $obj->recursos_acessibilidade = $recursos_acessibilidade;
-            $obj->possui_dependencias = $this->possui_dependencias;
-            $obj->numero_salas_utilizadas_dentro_predio = $this->numero_salas_utilizadas_dentro_predio;
-            $obj->numero_salas_utilizadas_fora_predio = $this->numero_salas_utilizadas_fora_predio;
-            $obj->numero_salas_climatizadas = $this->numero_salas_climatizadas;
-            $obj->numero_salas_acessibilidade = $this->numero_salas_acessibilidade;
-            $obj->total_funcionario = $this->total_funcionario;
-            $obj->atendimento_aee = $this->atendimento_aee;
-            $obj->fundamental_ciclo = $this->fundamental_ciclo;
-            $obj->organizacao_ensino = $this->organizacao_ensino;
-            $obj->instrumentos_pedagogicos = $this->instrumentos_pedagogicos;
-            $obj->orgaos_colegiados = $orgaos_colegiados;
-            $obj->exame_selecao_ingresso = $this->exame_selecao_ingresso;
-            $obj->reserva_vagas_cotas = $reserva_vagas_cotas;
-            $obj->projeto_politico_pedagogico = $this->projeto_politico_pedagogico;
-            $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
-            $obj->educacao_indigena = $this->educacao_indigena;
-            $obj->lingua_ministrada = $this->lingua_ministrada;
-            $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
-            $obj->codigo_lingua_indigena = $codigo_lingua_indigena;
-            $obj->equipamentos = $equipamentos;
-            $obj->uso_internet = $uso_internet;
-            $obj->rede_local = $rede_local;
-            $obj->equipamentos_acesso_internet = $equipamentos_acesso_internet;
-            $obj->quantidade_computadores_alunos_mesa = $this->quantidade_computadores_alunos_mesa;
-            $obj->quantidade_computadores_alunos_portateis = $this->quantidade_computadores_alunos_portateis;
-            $obj->quantidade_computadores_alunos_tablets = $this->quantidade_computadores_alunos_tablets;
-            $obj->lousas_digitais = $this->lousas_digitais;
-            $obj->televisoes = $this->televisoes;
-            $obj->dvds = $this->dvds;
-            $obj->aparelhos_de_som = $this->aparelhos_de_som;
-            $obj->projetores_digitais = $this->projetores_digitais;
-            $obj->acesso_internet = $this->acesso_internet;
-            $obj->ato_criacao = $this->ato_criacao;
-            $obj->ato_autorizativo = $this->ato_autorizativo;
-            $obj->ref_idpes_secretario_escolar = $this->secretario_id;
-            $obj->unidade_vinculada_outra_instituicao = $this->unidade_vinculada_outra_instituicao;
-            $obj->inep_escola_sede = $this->inep_escola_sede;
-            $obj->codigo_ies = $this->codigo_ies_id;
-            $obj->categoria_escola_privada = $this->categoria_escola_privada;
-            $obj->conveniada_com_poder_publico = $this->conveniada_com_poder_publico;
-            $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
-            $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
-            $obj->esfera_administrativa = $this->esfera_administrativa;
-            $obj->iddis = (int)$this->district_id;
-            foreach ($this->inputsRecursos as $key => $value) {
-                $obj->{$key} = $this->{$key};
-            }
-
-            $cod_escola = $cadastrou = $obj->cadastra();
-
-            if ($cadastrou) {
-                $escola = new clsPmieducarEscola($cod_escola);
-                $escola = $escola->detalhe();
-
-                //-----------------------CADASTRA CURSO------------------------//
-                $this->escola_curso = unserialize(urldecode($this->escola_curso));
-                $this->escola_curso_autorizacao = unserialize(urldecode($this->escola_curso_autorizacao));
-                $this->escola_curso_anos_letivos = unserialize(urldecode($this->escola_curso_anos_letivos));
-
-                if ($this->escola_curso) {
-                    foreach ($this->escola_curso as $campo) {
-                        $curso_escola = new clsPmieducarEscolaCurso($cadastrou, $campo, null, $this->pessoa_logada, null, null, 1, $this->escola_curso_autorizacao[$campo], $this->escola_curso_anos_letivos[$campo]);
-                        $cadastrou_ = $curso_escola->cadastra();
-
-                        if (!$cadastrou_) {
-                            $this->mensagem = 'Cadastro não realizado.<br>';
-
-                            return false;
-                        }
-                    }
-
-                    $this->storeManagers($cod_escola);
-                }
-                $this->saveInep($escola['cod_escola']);
-                //-----------------------FIM CADASTRA CURSO------------------------//
-
-                $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-
-                throw new HttpResponseException(
-                    new RedirectResponse('educar_escola_lst.php')
-                );
-            } else {
-                $this->mensagem = 'Cadastro não realizado (clsPmieducarEscola).<br>';
-
-                return false;
-            }
-        }
+    /**
+     * Coloca os dados disponíveis no objeto da classe para serem lidos no @method cadastraEscola()
+     */
+    public function preparaDados()
+    {
+        $this->orgao_vinculado_escola = implode(',', $this->orgao_vinculado_escola);
+        $this->mantenedora_escola_privada = implode(',', $this->mantenedora_escola_privada);
+        $this->local_funcionamento = implode(',', $this->local_funcionamento);
+        $this->abastecimento_agua = implode(',', $this->abastecimento_agua);
+        $this->abastecimento_energia = implode(',', $this->abastecimento_energia);
+        $this->esgoto_sanitario = implode(',', $this->esgoto_sanitario);
+        $this->destinacao_lixo = implode(',', $this->destinacao_lixo);
+        $this->tratamento_lixo = implode(',', $this->tratamento_lixo);
+        $this->salas_funcionais = implode(',', $this->salas_funcionais);
+        $this->salas_gerais = implode(',', $this->salas_gerais);
+        $this->banheiros = implode(',', $this->banheiros);
+        $this->laboratorios = implode(',', $this->laboratorios);
+        $this->salas_atividades = implode(',', $this->salas_atividades);
+        $this->dormitorios = implode(',', $this->dormitorios);
+        $this->areas_externas = implode(',', $this->areas_externas);
+        $this->recursos_acessibilidade = implode(',', $this->recursos_acessibilidade);
+        $this->equipamentos = implode(',', $this->equipamentos);
+        $this->uso_internet = implode(',', $this->uso_internet);
+        $this->rede_local = implode(',', $this->rede_local);
+        $this->equipamentos_acesso_internet = implode(',', $this->equipamentos_acesso_internet);
+        $this->organizacao_ensino = implode(',', $this->organizacao_ensino);
+        $this->instrumentos_pedagogicos = implode(',', $this->instrumentos_pedagogicos);
+        $this->orgaos_colegiados = implode(',', $this->orgaos_colegiados);
+        $this->reserva_vagas_cotas = implode(',', $this->reserva_vagas_cotas);
+        $this->codigo_lingua_indigena = implode(',', $this->codigo_lingua_indigena);
     }
 
     public function Editar()
@@ -1797,6 +1723,8 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7, 'educar_escola_lst.php');
 
+        $this->preparaDados();
+
         if (!$this->validaDigitosInepEscola($this->escola_inep_id, 'Código INEP')) {
             return false;
         }
@@ -1815,40 +1743,9 @@ return new class extends clsCadastro {
 
         $this->validateManagersRules();
 
-        for ($i = 1; $i <= 6; $i++) {
-            $seq = $i == 1 ? '' : $i;
-            $campo = 'codigo_inep_escola_compartilhada'.$seq;
-            $ret = $this->validaDigitosInepEscola($this->$campo, 'Código da escola que compartilha o prédio '.$i);
-            if (!$ret) {
-                return false;
-            }
+        if (!$this->validaDigitosInepEscolaCompartilhada()) {
+            return false;
         }
-
-        $orgao_vinculado_escola = implode(',', $this->orgao_vinculado_escola);
-        $mantenedora_escola_privada = implode(',', $this->mantenedora_escola_privada);
-        $local_funcionamento = implode(',', $this->local_funcionamento);
-        $abastecimento_agua = implode(',', $this->abastecimento_agua);
-        $abastecimento_energia = implode(',', $this->abastecimento_energia);
-        $esgoto_sanitario = implode(',', $this->esgoto_sanitario);
-        $destinacao_lixo = implode(',', $this->destinacao_lixo);
-        $tratamento_lixo = implode(',', $this->tratamento_lixo);
-        $salas_funcionais = implode(',', $this->salas_funcionais);
-        $salas_gerais = implode(',', $this->salas_gerais);
-        $banheiros = implode(',', $this->banheiros);
-        $laboratorios = implode(',', $this->laboratorios);
-        $salas_atividades = implode(',', $this->salas_atividades);
-        $dormitorios = implode(',', $this->dormitorios);
-        $areas_externas = implode(',', $this->areas_externas);
-        $recursos_acessibilidade = implode(',', $this->recursos_acessibilidade);
-        $equipamentos = implode(',', $this->equipamentos);
-        $uso_internet = implode(',', $this->uso_internet);
-        $rede_local = implode(',', $this->rede_local);
-        $equipamentos_acesso_internet = implode(',', $this->equipamentos_acesso_internet);
-        $organizacao_ensino = implode(',', $this->organizacao_ensino);
-        $instrumentos_pedagogicos = implode(',', $this->instrumentos_pedagogicos);
-        $orgaos_colegiados = implode(',', $this->orgaos_colegiados);
-        $reserva_vagas_cotas = implode(',', $this->reserva_vagas_cotas);
-        $codigo_lingua_indigena = implode(',', $this->codigo_lingua_indigena);
 
         if (!$this->validaOpcoesUnicasMultipleSearch()) {
             return false;
@@ -1856,285 +1753,42 @@ return new class extends clsCadastro {
 
         $this->bloquear_lancamento_diario_anos_letivos_encerrados = is_null($this->bloquear_lancamento_diario_anos_letivos_encerrados) ? 0 : 1;
         $this->utiliza_regra_diferenciada = !is_null($this->utiliza_regra_diferenciada);
-        $obj = new clsPmieducarEscola($this->cod_escola);
-        $escolaDetAntigo = $obj->detalhe();
-        $this->ref_idpes = empty($this->ref_idpes) ? $escolaDetAntigo['ref_idpes'] : $this->ref_idpes;
-        if ($this->cod_escola) {
-            $obj = new clsPmieducarEscola($this->cod_escola, null, $this->pessoa_logada, $this->ref_cod_instituicao, $this->zona_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, $this->bloquear_lancamento_diario_anos_letivos_encerrados, $this->utiliza_regra_diferenciada);
-            $obj->dependencia_administrativa = $this->dependencia_administrativa;
-            $obj->orgao_vinculado_escola = $orgao_vinculado_escola;
-            $obj->latitude = $this->latitude;
-            $obj->longitude = $this->longitude;
-            $obj->regulamentacao = $this->regulamentacao;
-            $obj->situacao_funcionamento = $this->situacao_funcionamento;
-            $obj->ref_idpes_gestor = $this->gestor_id;
-            $obj->cargo_gestor = $this->cargo_gestor;
-            $obj->email_gestor = $this->email_gestor;
-            $obj->local_funcionamento = $local_funcionamento;
-            $obj->condicao = $this->condicao;
-            $obj->predio_compartilhado_outra_escola = $this->predio_compartilhado_outra_escola;
-            $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
-            $obj->codigo_inep_escola_compartilhada2 = $this->codigo_inep_escola_compartilhada2;
-            $obj->codigo_inep_escola_compartilhada3 = $this->codigo_inep_escola_compartilhada3;
-            $obj->codigo_inep_escola_compartilhada4 = $this->codigo_inep_escola_compartilhada4;
-            $obj->codigo_inep_escola_compartilhada5 = $this->codigo_inep_escola_compartilhada5;
-            $obj->codigo_inep_escola_compartilhada6 = $this->codigo_inep_escola_compartilhada6;
-            $obj->agua_potavel_consumo = $this->agua_potavel_consumo;
-            $obj->abastecimento_agua = $abastecimento_agua;
-            $obj->abastecimento_energia = $abastecimento_energia;
-            $obj->esgoto_sanitario = $esgoto_sanitario;
-            $obj->destinacao_lixo = $destinacao_lixo;
-            $obj->tratamento_lixo = $tratamento_lixo;
-            $obj->alimentacao_escolar_alunos = $this->alimentacao_escolar_alunos;
-            $obj->compartilha_espacos_atividades_integracao = $this->compartilha_espacos_atividades_integracao;
-            $obj->usa_espacos_equipamentos_atividades_regulares = $this->usa_espacos_equipamentos_atividades_regulares;
-            $obj->salas_funcionais = $salas_funcionais;
-            $obj->salas_gerais = $salas_gerais;
-            $obj->banheiros = $banheiros;
-            $obj->laboratorios = $laboratorios;
-            $obj->salas_atividades = $salas_atividades;
-            $obj->dormitorios = $dormitorios;
-            $obj->areas_externas = $areas_externas;
-            $obj->recursos_acessibilidade = $recursos_acessibilidade;
-            $obj->possui_dependencias = $this->possui_dependencias;
-            $obj->numero_salas_utilizadas_dentro_predio = $this->numero_salas_utilizadas_dentro_predio;
-            $obj->numero_salas_utilizadas_fora_predio = $this->numero_salas_utilizadas_fora_predio;
-            $obj->numero_salas_climatizadas = $this->numero_salas_climatizadas;
-            $obj->numero_salas_acessibilidade = $this->numero_salas_acessibilidade;
-            $obj->total_funcionario = $this->total_funcionario;
-            $obj->atendimento_aee = $this->atendimento_aee;
-            $obj->fundamental_ciclo = $this->fundamental_ciclo;
-            $obj->organizacao_ensino = $organizacao_ensino;
-            $obj->instrumentos_pedagogicos = $instrumentos_pedagogicos;
-            $obj->orgaos_colegiados = $orgaos_colegiados;
-            $obj->exame_selecao_ingresso = $this->exame_selecao_ingresso;
-            $obj->reserva_vagas_cotas = $reserva_vagas_cotas;
-            $obj->projeto_politico_pedagogico = $this->projeto_politico_pedagogico;
-            $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
-            $obj->educacao_indigena = $this->educacao_indigena;
-            $obj->lingua_ministrada = $this->lingua_ministrada;
-            $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
-            $obj->codigo_lingua_indigena = $codigo_lingua_indigena;
-            $obj->equipamentos = $equipamentos;
-            $obj->uso_internet = $uso_internet;
-            $obj->rede_local = $rede_local;
-            $obj->equipamentos_acesso_internet = $equipamentos_acesso_internet;
-            $obj->quantidade_computadores_alunos_mesa = $this->quantidade_computadores_alunos_mesa;
-            $obj->quantidade_computadores_alunos_portateis = $this->quantidade_computadores_alunos_portateis;
-            $obj->quantidade_computadores_alunos_tablets = $this->quantidade_computadores_alunos_tablets;
-            $obj->lousas_digitais = $this->lousas_digitais;
-            $obj->televisoes = $this->televisoes;
-            $obj->dvds = $this->dvds;
-            $obj->aparelhos_de_som = $this->aparelhos_de_som;
-            $obj->projetores_digitais = $this->projetores_digitais;
-            $obj->acesso_internet = $this->acesso_internet;
-            $obj->ato_criacao = $this->ato_criacao;
-            $obj->ato_autorizativo = $this->ato_autorizativo;
-            $obj->ref_idpes_secretario_escolar = $this->secretario_id;
-            $obj->unidade_vinculada_outra_instituicao = $this->unidade_vinculada_outra_instituicao;
-            $obj->inep_escola_sede = $this->inep_escola_sede;
-            $obj->codigo_ies = $this->codigo_ies_id;
-            $obj->categoria_escola_privada = $this->categoria_escola_privada;
-            $obj->conveniada_com_poder_publico = $this->conveniada_com_poder_publico;
-            $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
-            $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
-            $obj->esfera_administrativa = $this->esfera_administrativa;
-            $obj->iddis = (int)$this->district_id;
-            foreach ($this->inputsRecursos as $key => $value) {
-                $obj->{$key} = $this->{$key};
-            }
 
-            $editou = $obj->edita();
+        $obj = new clsPmieducarEscola($this->cod_escola, null, $this->pessoa_logada, $this->ref_cod_instituicao, $this->zona_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, $this->bloquear_lancamento_diario_anos_letivos_encerrados, $this->utiliza_regra_diferenciada);
 
-            if ($editou) {
-                $escolaDetAtual = $obj->detalhe();
-            }
-        } else {
-            $obj = new clsPmieducarEscola(null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->zona_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, $this->bloquear_lancamento_diario_anos_letivos_encerrados, $this->utiliza_regra_diferenciada);
-            $obj->situacao_funcionamento = $this->situacao_funcionamento;
-            $obj->dependencia_administrativa = $this->dependencia_administrativa;
-            $obj->orgao_vinculado_escola = $orgao_vinculado_escola;
-            $obj->latitude = $this->latitude;
-            $obj->longitude = $this->longitude;
-            $obj->regulamentacao = $this->regulamentacao;
-            $obj->ref_idpes_gestor = $this->gestor_id;
-            $obj->cargo_gestor = $this->cargo_gestor;
-            $obj->email_gestor = $this->email_gestor;
-            $obj->local_funcionamento = $local_funcionamento;
-            $obj->condicao = $this->condicao;
-            $obj->predio_compartilhado_outra_escola = $this->predio_compartilhado_outra_escola;
-            $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
-            $obj->codigo_inep_escola_compartilhada2 = $this->codigo_inep_escola_compartilhada2;
-            $obj->codigo_inep_escola_compartilhada3 = $this->codigo_inep_escola_compartilhada3;
-            $obj->codigo_inep_escola_compartilhada4 = $this->codigo_inep_escola_compartilhada4;
-            $obj->codigo_inep_escola_compartilhada5 = $this->codigo_inep_escola_compartilhada5;
-            $obj->codigo_inep_escola_compartilhada6 = $this->codigo_inep_escola_compartilhada6;
-            $obj->agua_potavel_consumo = $this->agua_potavel_consumo;
-            $obj->abastecimento_agua = $abastecimento_agua;
-            $obj->abastecimento_energia = $abastecimento_energia;
-            $obj->esgoto_sanitario = $esgoto_sanitario;
-            $obj->destinacao_lixo = $destinacao_lixo;
-            $obj->tratamento_lixo = $tratamento_lixo;
-            $obj->alimentacao_escolar_alunos = $this->alimentacao_escolar_alunos;
-            $obj->compartilha_espacos_atividades_integracao = $this->compartilha_espacos_atividades_integracao;
-            $obj->usa_espacos_equipamentos_atividades_regulares = $this->usa_espacos_equipamentos_atividades_regulares;
-            $obj->salas_funcionais = $salas_funcionais;
-            $obj->salas_gerais = $salas_gerais;
-            $obj->banheiros = $banheiros;
-            $obj->laboratorios = $laboratorios;
-            $obj->salas_atividades = $salas_atividades;
-            $obj->dormitorios = $dormitorios;
-            $obj->areas_externas = $areas_externas;
-            $obj->recursos_acessibilidade = $recursos_acessibilidade;
-            $obj->possui_dependencias = $this->possui_dependencias;
-            $obj->numero_salas_utilizadas_dentro_predio = $this->numero_salas_utilizadas_dentro_predio;
-            $obj->numero_salas_utilizadas_fora_predio = $this->numero_salas_utilizadas_fora_predio;
-            $obj->numero_salas_climatizadas = $this->numero_salas_climatizadas;
-            $obj->numero_salas_acessibilidade = $this->numero_salas_acessibilidade;
-            $obj->total_funcionario = $this->total_funcionario;
-            $obj->atendimento_aee = $this->atendimento_aee;
-            $obj->fundamental_ciclo = $this->fundamental_ciclo;
-            $obj->organizacao_ensino = $organizacao_ensino;
-            $obj->instrumentos_pedagogicos = $instrumentos_pedagogicos;
-            $obj->orgaos_colegiados = $orgaos_colegiados;
-            $obj->exame_selecao_ingresso = $this->exame_selecao_ingresso;
-            $obj->reserva_vagas_cotas = $reserva_vagas_cotas;
-            $obj->projeto_politico_pedagogico = $this->projeto_politico_pedagogico;
-            $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
-            $obj->educacao_indigena = $this->educacao_indigena;
-            $obj->lingua_ministrada = $this->lingua_ministrada;
-            $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
-            $obj->codigo_lingua_indigena = $codigo_lingua_indigena;
-            $obj->equipamentos = $equipamentos;
-            $obj->uso_internet = $uso_internet;
-            $obj->rede_local = $rede_local;
-            $obj->equipamentos_acesso_internet = $equipamentos_acesso_internet;
-            $obj->quantidade_computadores_alunos_mesa = $this->quantidade_computadores_alunos_mesa;
-            $obj->quantidade_computadores_alunos_portateis = $this->quantidade_computadores_alunos_portateis;
-            $obj->quantidade_computadores_alunos_tablets = $this->quantidade_computadores_alunos_tablets;
-            $obj->lousas_digitais = $this->lousas_digitais;
-            $obj->televisoes = $this->televisoes;
-            $obj->dvds = $this->dvds;
-            $obj->aparelhos_de_som = $this->aparelhos_de_som;
-            $obj->projetores_digitais = $this->projetores_digitais;
-            $obj->acesso_internet = $this->acesso_internet;
-            $obj->ato_criacao = $this->ato_criacao;
-            $obj->ato_autorizativo = $this->ato_autorizativo;
-            $obj->ref_idpes_secretario_escolar = $this->secretario_id;
-            $obj->unidade_vinculada_outra_instituicao = $this->unidade_vinculada_outra_instituicao;
-            $obj->inep_escola_sede = $this->inep_escola_sede;
-            $obj->codigo_ies = $this->codigo_ies_id;
-            $obj->categoria_escola_privada = $this->categoria_escola_privada;
-            $obj->conveniada_com_poder_publico = $this->conveniada_com_poder_publico;
-            $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
-            $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
-            $obj->esfera_administrativa = $this->esfera_administrativa;
-            $obj->iddis = (int)$this->district_id;
-            foreach ($this->inputsRecursos as $key => $value) {
-                $obj->{$key} = $this->{$key};
-            }
+        $escola = $this->constroiObjetoEscola($this->ref_idpes, $obj);
 
-            $this->cod_escola = $editou = $obj->cadastra();
+        $edita = $escola->edita();
 
-            if ($this->cod_escola) {
-                $obj = new clsPmieducarEscola($this->cod_escola);
-                $escolaDetAtual = $obj->detalhe();
-            }
+        if ($edita === false) {
+            $this->mensagem = 'Edição não efetuada.<br>';
+            return false;
         }
 
-        if ($editou) {
-            if ($this->com_cnpj) {
-                $objPessoa = new clsPessoa_($this->ref_idpes, null, false, $this->p_http, false, $this->pessoa_logada, date('Y-m-d H:i:s', time()), $this->p_email);
-                $editou1 = $objPessoa->edita();
+        $this->processaTelefones($this->ref_idpes);
 
-                if ($editou1) {
-                    $obj_pes_juridica = new clsJuridica($this->ref_idpes, $this->cnpj, $this->fantasia, false, false, false, $this->pessoa_logada);
-                    $editou2 = $obj_pes_juridica->edita();
+        $this->saveAddress($this->ref_idpes);
 
-                    if ($editou2) {
-                        $objTelefone = new clsPessoaTelefone($this->ref_idpes);
-                        $objTelefone->excluiTodos();
-                        $objTelefone = new clsPessoaTelefone($this->ref_idpes, 1, str_replace('-', '', $this->p_telefone_1), $this->p_ddd_telefone_1);
-                        $objTelefone->cadastra();
-                        $objTelefone = new clsPessoaTelefone($this->ref_idpes, 2, str_replace('-', '', $this->p_telefone_2), $this->p_ddd_telefone_2);
-                        $objTelefone->cadastra();
-                        $objTelefone = new clsPessoaTelefone($this->ref_idpes, 3, str_replace('-', '', $this->p_telefone_mov), $this->p_ddd_telefone_mov);
-                        $objTelefone->cadastra();
-                        $objTelefone = new clsPessoaTelefone($this->ref_idpes, 4, str_replace('-', '', $this->p_telefone_fax), $this->p_ddd_telefone_fax);
-                        $objTelefone->cadastra();
-
-                        $this->saveAddress($this->ref_idpes);
-
-                        //-----------------------EDITA CURSO------------------------//
-                        $this->escola_curso = unserialize(urldecode($this->escola_curso));
-                        $this->escola_curso_autorizacao = unserialize(urldecode($this->escola_curso_autorizacao));
-                        $this->escola_curso_anos_letivos = unserialize(urldecode($this->escola_curso_anos_letivos));
-                        $obj = new clsPmieducarEscolaCurso($this->cod_escola);
-                        $excluiu = $obj->excluirTodos();
-
-                        if ($excluiu) {
-                            if ($this->escola_curso) {
-                                foreach ($this->escola_curso as $campo) {
-                                    $obj = new clsPmieducarEscolaCurso($this->cod_escola, $campo, null, $this->pessoa_logada, null, null, 1, $this->escola_curso_autorizacao[$campo], $this->escola_curso_anos_letivos[$campo]);
-                                    $cadastrou_ = $obj->cadastra();
-
-                                    if (!$cadastrou_) {
-                                        $this->mensagem = 'Edição não realizada.<br>';
-
-                                        return false;
-                                    }
-                                }
-                            }
-                        }
-
-                        $this->storeManagers($this->cod_escola);
-
-                        $this->saveInep($this->cod_escola);
-                        //-----------------------FIM EDITA CURSO------------------------//
-                        $this->mensagem .= 'Edição efetuada com sucesso.<br>';
-
-                        throw new HttpResponseException(
-                            new RedirectResponse('educar_escola_lst.php')
-                        );
-                    }
-                }
-            } elseif ($this->sem_cnpj) {
-                //-----------------------EDITA CURSO------------------------//
-                $this->escola_curso = unserialize(urldecode($this->escola_curso));
-                $this->escola_curso_autorizacao = unserialize(urldecode($this->escola_curso_autorizacao));
-                $this->escola_curso_anos_letivos = unserialize(urldecode($this->escola_curso_anos_letivos));
-                $obj = new clsPmieducarEscolaCurso($this->cod_escola);
-                $excluiu = $obj->excluirTodos();
-
-                if ($excluiu) {
-                    if ($this->escola_curso) {
-                        foreach ($this->escola_curso as $campo) {
-                            $obj = new clsPmieducarEscolaCurso($this->cod_escola, $campo, null, $this->pessoa_logada, null, null, 1, $this->escola_curso_autorizacao[$campo], $this->escola_curso_anos_letivos[$campo]);
-                            $cadastrou_ = $obj->cadastra();
-                            if (!$cadastrou_) {
-                                $this->mensagem = 'Edição não realizada.<br>';
-
-                                return false;
-                            }
-                        }
-                    }
-                }
-
-                $this->storeManagers($this->cod_escola);
-
-                $this->saveInep($this->cod_escola);
-                //-----------------------FIM EDITA CURSO------------------------//
-                $this->mensagem .= 'Edição efetuada com sucesso.<br>';
-
-                throw new HttpResponseException(
-                    new RedirectResponse('educar_escola_lst.php')
-                );
-            }
+        if (!$this->cadastraEscolaCurso($this->cod_escola,true)) {
+            return false;
         }
 
-        $this->mensagem = 'Edição não realizada.<br>';
+        $this->storeManagers($this->cod_escola);
 
-        return false;
+        $this->saveInep($this->cod_escola);
+
+        $this->atualizaNomePessoaJuridica($this->ref_idpes);
+
+        $this->mensagem = 'Edição efetuada com sucesso.<br>';
+
+        throw new HttpResponseException(
+            new RedirectResponse('educar_escola_lst.php')
+        );
+    }
+
+    private function atualizaNomePessoaJuridica($idpes)
+    {
+        (new clsJuridica($idpes, null, $this->fantasia))->edita();
     }
 
     public function Excluir()
@@ -2142,20 +1796,19 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 3, 'educar_escola_lst.php');
         $obj = new clsPmieducarEscola($this->cod_escola, null, $this->pessoa_logada, null, null, null, null, null, null, null, 0);
-        $escola = $obj->detalhe();
+        $obj->detalhe();
         $excluiu = $obj->excluir();
 
-        if ($excluiu) {
-            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
-
-            throw new HttpResponseException(
-                new RedirectResponse('educar_escola_lst.php')
-            );
+        if ($excluiu === false) {
+            $this->mensagem = 'Exclusão não realizada.<br>';
+            return false;
         }
 
-        $this->mensagem = 'Exclusão não realizada.<br>';
+        $this->mensagem = 'Exclusão efetuada com sucesso.<br>';
 
-        return false;
+        throw new HttpResponseException(
+            new RedirectResponse('educar_escola_lst.php')
+        );
     }
     protected function inputTelefone($type, $typeLabel = '')
     {
@@ -2170,7 +1823,7 @@ return new class extends clsCadastro {
             'placeholder' => 'DDD',
             'value' => $this->{"p_ddd_telefone_{$type}"},
             'max_length' => 3,
-            'size' => 3,
+            'size' => 4,
             'inline' => true,
         ];
         $this->inputsHelper()->integer("p_ddd_telefone_{$type}", $options);
@@ -2812,7 +2465,9 @@ return new class extends clsCadastro {
                 $this->mensagem = "O campo: <b>{$label}</b> não pode ser preenchido com 0";
 
                 return false;
-            } elseif ((int) $this->{$key} > 0) {
+            }
+
+            if ((int) $this->{$key} > 0) {
                 $algumCampoPreenchido = true;
             }
         }
