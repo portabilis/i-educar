@@ -26,7 +26,7 @@ return new class extends clsCadastro {
     {
         $this->acao_enviar = 'carregaDadosAlunos()';
         $this->campoTabelaInicio('tabela_alunos', '', ['Aluno duplicado', 'Campo aluno duplicado'], $this->tabela_alunos);
-            $this->campoRotulo('aluno_label', '', 'Pessoa aluno a ser unificada <span class="campo_obrigatorio">*</span>');
+            $this->campoRotulo('aluno_label', '', 'Aluno a ser unificado  <span class="campo_obrigatorio">*</span>');
             $this->campoTexto('aluno_duplicado', 'Aluno duplicado', $this->aluno_duplicado, 50, 255, false, true, false, '', '', '', 'onfocus');
         $this->campoTabelaFim();
 
@@ -50,11 +50,11 @@ return new class extends clsCadastro {
     private function validaDadosDaUnificacaoAluno($alunos): bool
     {
         foreach ($alunos as $item) {
-            if (! array_key_exists('codAluno',$item)) {
+            if (! array_key_exists('codAluno', $item) && ! isset($item['codAluno'])) {
                 return false;
             }
 
-            if (! array_key_exists('aluno_principal',$item)) {
+            if (! array_key_exists('aluno_principal', $item) && ! isset($item['aluno_principal'])) {
                 return false;
             }
         }
