@@ -97,7 +97,7 @@ function montaTabelaDadosAluno(response) {
 
   response.alunos.each(function(aluno, id) {
     html += '<tr id="' + aluno.codigo + '" class="linha_listagem">';
-    html += '<td><input onclick="validaCheckAlunoPrincipal(this)" type="checkbox" class="check_principal" id="check_principal_' + aluno.codigo + '"</td>';
+    html += '<td> type="checkbox" class="check_principal" id="check_principal_' + aluno.codigo + '"</td>';
     html += '<td><a target="_new" href="/module/Cadastro/aluno?id=' + aluno.codigo + '">'+ aluno.codigo +'</a></td>';
     html += '<td><a target="_new" href="/module/Cadastro/aluno?id=' + aluno.codigo + '">'+ aluno.inep +'</a></td>';
     html += '<td><a target="_new" href="/module/Cadastro/aluno?id=' + aluno.codigo + '">'+ aluno.nome +'</a></td>';
@@ -167,10 +167,6 @@ function desabilitaBotaoUnificar() {
   $j('#unifica_pessoa').prop('disabled', true);
   $j('#unifica_pessoa').removeClass('btn-green');
   $j('#unifica_pessoa').addClass('btn-disabled');
-}
-
-function validaCheckAlunoPrincipal(element) {
-
 }
 
 function uniqueCheck() {
@@ -277,7 +273,7 @@ function htmlTabelaMatriculas(matriculas) {
   html += '<td>Ano</td>';
   html += '<td>Escola</td>';
   html += '<td>Curso</td>';
-  html += '<td>Serie</td>';
+  html += '<td>Série</td>';
   html += '<td>Turma</td>';
   html += '</tr>';
 
