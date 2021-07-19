@@ -1268,7 +1268,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->select('recebe_escolarizacao_em_outro_espaco', $options);
 
         // Projetos
-        $this->campoTabelaInicio('projetos', 'Projetos', ['Projeto', 'Data inclusão'], 'Data desligamento', 'Turno');
+        $this->campoTabelaInicio('projetos', 'Projetos', ['Projeto', 'Data inclusão', 'Data desligamento', 'Turno']);
 
         $this->inputsHelper()->text('projeto_cod_projeto', ['required' => false]);
 
