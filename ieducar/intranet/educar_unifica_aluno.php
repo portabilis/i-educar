@@ -50,11 +50,11 @@ return new class extends clsCadastro {
     private function validaDadosDaUnificacaoAluno($alunos): bool
     {
         foreach ($alunos as $item) {
-            if (! array_key_exists('codAluno', $item) && ! isset($item['codAluno'])) {
+            if (! isset($item['codAluno'])) {
                 return false;
             }
 
-            if (! array_key_exists('aluno_principal', $item) && ! isset($item['aluno_principal'])) {
+            if (! isset($item['aluno_principal'])) {
                 return false;
             }
         }

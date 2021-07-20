@@ -97,7 +97,7 @@ function montaTabelaDadosAluno(response) {
 
   response.alunos.each(function(aluno, id) {
     html += '<tr id="' + aluno.codigo + '" class="linha_listagem">';
-    html += '<td> type="checkbox" class="check_principal" id="check_principal_' + aluno.codigo + '"</td>';
+    html += '<td><input type="checkbox" class="check_principal" id="check_principal_' + aluno.codigo + '"</td>';
     html += '<td><a target="_new" href="/module/Cadastro/aluno?id=' + aluno.codigo + '">'+ aluno.codigo +'</a></td>';
     html += '<td><a target="_new" href="/module/Cadastro/aluno?id=' + aluno.codigo + '">'+ aluno.inep +'</a></td>';
     html += '<td><a target="_new" href="/module/Cadastro/aluno?id=' + aluno.codigo + '">'+ aluno.nome +'</a></td>';
