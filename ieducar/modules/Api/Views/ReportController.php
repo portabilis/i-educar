@@ -1,8 +1,7 @@
 <?php
 
-# TODO remove-require
-require_once 'Reports/Reports/BoletimReport.php';
-require_once 'Reports/Reports/BoletimProfessorReport.php';
+require_once 'Reports/Reports/ReportCardReport.php';
+require_once 'Reports/Reports/TeacherReportCardReport.php';
 
 class ReportController extends ApiCoreController
 {
@@ -106,7 +105,7 @@ class ReportController extends ApiCoreController
     protected function getBoletimProfessor()
     {
         if ($this->canGetBoletimProfessor()) {
-            $boletimProfessorReport = new BoletimProfessorReport();
+            $boletimProfessorReport = new TeacherReportCardReport();
 
             $boletimProfessorReport->addArg('ano', (int)$this->getRequest()->ano);
             $boletimProfessorReport->addArg('instituicao', (int)$this->getRequest()->instituicao_id);
@@ -122,9 +121,6 @@ class ReportController extends ApiCoreController
             $configuracoes = new clsPmieducarConfiguracoesGerais();
             $configuracoes = $configuracoes->detalhe();
 
-            $modelo = $configuracoes['modelo_boletim_professor'];
-
-            $boletimProfessorReport->addArg('modelo', $modelo);
             $boletimProfessorReport->addArg('linha', 0);
             $boletimProfessorReport->addArg('SUBREPORT_DIR', config('legacy.report.source_path'));
 
