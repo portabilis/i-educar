@@ -50,7 +50,7 @@ class PopulateSettingsCategoriesTable extends Migration
             ],
             [
                 'id' => 6,
-                'name' => 'Recaptcha',
+                'name' => 'Recaptcha v2',
                 'enabled' => true,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
@@ -79,6 +79,27 @@ class PopulateSettingsCategoriesTable extends Migration
             [
                 'id' => 10,
                 'name' => 'Validações de sistema',
+                'enabled' => true,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ],
+            [
+                'id' => 11,
+                'name' => 'AWS - S3 Armazenamento',
+                'enabled' => true,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ],
+            [
+                'id' => 12,
+                'name' => 'Recaptcha v3',
+                'enabled' => true,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ],
+            [
+                'id' => 13,
+                'name' => 'SMTP - Configuração para envio de E-mail',
                 'enabled' => true,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
