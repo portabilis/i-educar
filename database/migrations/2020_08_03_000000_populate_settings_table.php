@@ -2,8 +2,6 @@
 
 use App\Setting;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
 class PopulateSettingsTable extends Migration
 {
@@ -112,11 +110,14 @@ class PopulateSettingsTable extends Migration
             'legacy.report.remote_factory.password' => null,
             'legacy.report.remote_factory.logo_name' => null,
         ];
-        
+
         collect($settings)->each(function ($value, $key) {
-            Setting::query()->updateOrCreate([
+            if (Setting::query()->where('key', $key)->exists()) {
+                return;
+            }
+
+            Setting::query()->create([
                 'key' => $key,
-            ], [
                 'value' => $value,
             ]);
         });
@@ -129,6 +130,6 @@ class PopulateSettingsTable extends Migration
      */
     public function down()
     {
-        DB::table('settings')->delete();
+        Setting::query()->truncate();
     }
 }
