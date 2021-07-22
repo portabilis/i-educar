@@ -1481,10 +1481,11 @@ return new class extends clsCadastro {
             return false;
         }
 
-        if (! property_exists($this, 'pessoaj_id_oculto') ||
+        if (! isset($this->pessoaj_id_oculto) ||
             ! is_int((int)$this->pessoaj_id_oculto)
         ) {
-            throw new \iEducar\Support\Exceptions\Exception('Erro ao selecionar a pessoa jurídica');
+            $this->mensagem = 'Erro ao selecionar a pessoa jurídica';
+            return false;
         }
 
         $pessoaJuridica = (new clsJuridica((int)$this->pessoaj_id_oculto))->detalhe();
