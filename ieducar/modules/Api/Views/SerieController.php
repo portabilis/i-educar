@@ -28,6 +28,7 @@ class SerieController extends ApiCoreController
             $sql = 'SELECT distinct
                     s.cod_serie,
                     s.nm_serie,
+                    s.descricao,
                     s.idade_ideal,
                     s.ref_cod_curso,
                     (
@@ -70,7 +71,8 @@ class SerieController extends ApiCoreController
             $series = $this->fetchPreparedQuery($sql, $params);
 
             foreach ($series as &$serie) {
-                $serie['nm_serie'] = mb_strtoupper($serie['nm_serie'], 'UTF-8');
+                $nomeSerie = empty($serie['descricao']) ? $serie['nm_serie'] : "{$serie['nm_serie']} ({$serie['descricao']})";
+                $serie['nm_serie'] = mb_strtoupper($nomeSerie, 'UTF-8');
             }
 
             $attrs = [
@@ -182,7 +184,7 @@ class SerieController extends ApiCoreController
     {
         $cursoId = $this->getRequest()->curso_id;
 
-        $sql = 'SELECT distinct s.cod_serie, s.nm_serie
+        $sql = 'SELECT distinct s.cod_serie, s.nm_serie, s.descricao
               FROM pmieducar.serie s
               WHERE s.ativo = 1
               AND s.ref_cod_curso = $1
@@ -192,7 +194,8 @@ class SerieController extends ApiCoreController
         $series = $this->fetchPreparedQuery($sql, $params);
 
         foreach ($series as &$serie) {
-            $serie['nm_serie'] = mb_strtoupper($serie['nm_serie'], 'UTF-8');
+            $nomeSerie = empty($serie['descricao']) ? $serie['nm_serie'] : "{$serie['nm_serie']} ({$serie['descricao']})";
+            $serie['nm_serie'] = mb_strtoupper($nomeSerie, 'UTF-8');
         }
 
         $attrs = [

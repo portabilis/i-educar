@@ -38,6 +38,7 @@ use iEducar\Modules\Educacenso\Model\SchoolManagerRole;
 use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\Educacenso\Model\TipoMediacaoDidaticoPedagogico;
+use iEducar\Modules\Educacenso\Validator\AdministrativeDomainValidator;
 use iEducar\Modules\Educacenso\Validator\CnpjMantenedoraPrivada;
 use iEducar\Modules\Educacenso\Validator\InepNumberValidator;
 use iEducar\Modules\Educacenso\Validator\Telefone;
@@ -220,9 +221,37 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
+        if ($escola->situacaoFuncionamento == SituacaoFuncionamento::EM_ATIVIDADE &&
+            $escola->dependenciaAdministrativa == DependenciaAdministrativaEscola::PRIVADA &&
+            empty($escola->cnpjEscolaPrivada)
+        ) {
+            $idpesEscola = School::find($codEscola)->ref_idpes;
+
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se o CNPJ da escola foi informado. Quando a escola possui o tipo de 'Dependência administrativa' como 'Privada', deve ser informado CNPJ.",
+                'path' => '(Pessoas > Cadastros > Pessoas jurídicas > Editar > Campo: CNPJ)',
+                'linkPath' => "/intranet/empresas_cad.php?idpes={$idpesEscola}",
+                'fail' => true
+            ];
+        }
+
         if (!$escola->esferaAdministrativa && ($escola->regulamentacao == Regulamentacao::SIM || $escola->regulamentacao == Regulamentacao::EM_TRAMITACAO)) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a escola é regulamentada ou está em tramitação pelo conselho/órgão, portanto é necessário informar qual a esfera administrativa;",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais >  Campo: Esfera administrativa do conselho ou órgão responsável pela Regulamentação/Autorização)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
+        }
+
+        if (!(new AdministrativeDomainValidator(
+                $escola->esferaAdministrativa,
+                $escola->regulamentacao,
+                $escola->dependenciaAdministrativa,
+                $escola->codigoIbgeMunicipio
+            ))->isValid()) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} possui valor inválido. Verificamos que a esfera administrativa foi preenchida incorretamente.",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais >  Campo: Esfera administrativa do conselho ou órgão responsável pela Regulamentação/Autorização)',
                 'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
                 'fail' => true
@@ -283,7 +312,7 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if ($escola->dependenciaAdministrativa == MantenedoraDaEscolaPrivada::INSTITUICOES_SIM_FINS_LUCRATIVOS && $escola->situacaoFuncionamento == Regulamentacao::SIM) {
+        if ($escola->dependenciaAdministrativa == DependenciaAdministrativaEscola::PRIVADA) {
             if (!$escola->categoriaEscolaPrivada) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a dependência administrativa da escola é privada, portanto é necessário informar qual a categoria desta unidade escolar.",

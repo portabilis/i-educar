@@ -13,7 +13,7 @@ function fixupTabelaMatriculas() {
   $j('<th>').html('Ano').appendTo($tr);
   $j('<th>').html(stringUtils.toUtf8('Situação')).appendTo($tr);
   $j('<th>').html('Turma').appendTo($tr);
-  $j('<th>').html('Enturma\u00e7\u00e3o anterior').appendTo($tr);
+  $j('<th>').html('Enturmação anterior').appendTo($tr);
   $j('<th>').html(stringUtils.toUtf8('Série')).appendTo($tr);
   $j('<th>').html('Curso').appendTo($tr);
   $j('<th>').html('Escola').appendTo($tr);
@@ -36,6 +36,9 @@ var handleGetMatriculas = function(dataResponse) {
   try{
     handleMessages(dataResponse.msgs);
 
+    $j('#matriculas').remove();
+
+    fixupTabelaMatriculas();
 
     var $matriculasTable      = $j('#matriculas');
     var transferenciaEmAberto = false;
@@ -177,6 +180,7 @@ function onSituacaoChange(matricula_id, novaSituacao){
 
 var handlePostSituacao = function(dataresponse){
   handleMessages(dataresponse.msgs);
+  getMatriculas();
 }
 
 function onDataEntradaChange(matricula_id, key, campo){

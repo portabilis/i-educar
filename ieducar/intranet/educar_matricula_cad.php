@@ -424,7 +424,10 @@ return new class extends clsCadastro {
             if (is_array($m) && count($m) && !$dependencia) {
                 $curso = $this->getCurso($this->ref_cod_curso);
 
-                if ($m['ref_ref_cod_serie'] == $this->ref_cod_serie) {
+                $cursoADeferir = new clsPmieducarCurso($this->ref_cod_curso);
+                $cursoDeAtividadeComplementar = $cursoADeferir->cursoDeAtividadeComplementar();
+
+                if ($m['ref_ref_cod_serie'] == $this->ref_cod_serie && !$cursoDeAtividadeComplementar) {
                     $this->mensagem = 'Este aluno j&aacute; est&aacute; matriculado nesta s&eacute;rie e curso, n&atilde;o &eacute; possivel matricular um aluno mais de uma vez na mesma s&eacute;rie.<br />';
 
                     return false;

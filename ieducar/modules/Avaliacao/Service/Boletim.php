@@ -1037,6 +1037,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         $totalComponentes = $this->getQtdComponentes($calcularSituacaoAluno);
 
+        if (empty($mediasComponenentesTotal) && count($componentesMatricula)) {
+            $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+        }
+
         if (!$calcularSituacaoAluno) {
             // Se não tiver nenhuma média ou a quantidade for diferente dos componentes
             // curriculares da matrícula, ainda está em andamento
