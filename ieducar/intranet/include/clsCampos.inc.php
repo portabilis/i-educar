@@ -1579,7 +1579,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                         $retorno .= "<select onchange=\"{$componente[5]}\" class='{$class}' name='{$nome}' id='{$nome}' {$componente[11]}>";
                         reset($componente[3]);
 
-                        while (list($chave, $texto) = each($componente[3])) {
+                        foreach ($componente[3] as $chave => $texto) {
                             $retorno .= "<option id=\"{$nome}_" . urlencode($chave) . '" value="' . urlencode($chave) . '"';
 
                             if ($chave == $componente[4]) {
