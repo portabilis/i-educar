@@ -152,14 +152,14 @@ class clsPessoaFisica extends clsPessoaFj
                 $tupla_fone = '';
             }
 
-            $tupla['ddd_1'] = $tupla_fone['ddd_1'];
-            $tupla['fone_1'] = $tupla_fone['fone_1'];
-            $tupla['ddd_2'] = $tupla_fone['ddd_2'];
-            $tupla['fone_2'] = $tupla_fone['fone_2'];
-            $tupla['ddd_mov'] = $tupla_fone['ddd_mov'];
-            $tupla['fone_mov'] = $tupla_fone['fone_mov'];
-            $tupla['ddd_fax'] = $tupla_fone['ddd_fax'];
-            $tupla['fone_fax'] = $tupla_fone['fone_fax'];
+            $tupla['ddd_1'] = $tupla_fone['ddd_1'] ?? null;
+            $tupla['fone_1'] = $tupla_fone['fone_1'] ?? null;
+            $tupla['ddd_2'] = $tupla_fone['ddd_2'] ?? null;
+            $tupla['fone_2'] = $tupla_fone['fone_2'] ?? null;
+            $tupla['ddd_mov'] = $tupla_fone['ddd_mov'] ?? null;
+            $tupla['fone_mov'] = $tupla_fone['fone_mov'] ?? null;
+            $tupla['ddd_fax'] = $tupla_fone['ddd_fax'] ?? null;
+            $tupla['fone_fax'] = $tupla_fone['fone_fax'] ?? null;
 
             $resultado[] = $tupla;
         }
