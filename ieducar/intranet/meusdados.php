@@ -88,7 +88,7 @@ return new class extends clsCadastro {
             $objFoto = new clsCadastroFisicaFoto($this->pessoa_logada);
             $detalheFoto = $objFoto->detalhe();
 
-            if (count($detalheFoto)) {
+            if ($detalheFoto !== false) {
                 $foto = $detalheFoto['caminho'];
             }
         }
