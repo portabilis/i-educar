@@ -110,7 +110,7 @@ return new class extends clsListagem {
         $obj_exemplar_emprestimo->setOrderby('data_retirada ASC');
         $obj_exemplar_emprestimo->setLimite($this->limite, $this->offset);
 
-        if ($this->situacao == EM_ATRASO) {
+        if ($this->situacao == self::EM_ATRASO) {
             $obj_exemplar_emprestimo->em_atraso = true;
         }
 
