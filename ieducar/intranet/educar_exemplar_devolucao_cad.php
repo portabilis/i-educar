@@ -101,7 +101,7 @@ return new class extends clsCadastro {
             }
         }
         // salva somente os dias que n se repetem ( dias de n funcionamento)
-        $biblioteca_dias_folga = array_diff($this->dias_da_semana, $biblioteca_dias_semana);
+        $biblioteca_dias_folga = array_diff($this->dias_da_semana, $biblioteca_dias_semana ?? []);
         // inverte as relacoes entre chaves e valores ( de $variavel["Sun"] => 1, para $variavel[1] => "Sun")
         $biblioteca_dias_folga = array_flip($biblioteca_dias_folga);
 
