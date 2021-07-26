@@ -52,7 +52,7 @@ class Portabilis_View_Helper_DynamicInput_BibliotecaPesquisaObra extends Portabi
 
         $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
 
-        call_user_func_array([$this->viewInstance, 'campoTexto'], $inputOptions);
+        $this->viewInstance->campoTexto(...array_values($inputOptions));
 
         $defaultHiddenInputOptions = [
             'id' => 'ref_cod_acervo',
@@ -61,7 +61,7 @@ class Portabilis_View_Helper_DynamicInput_BibliotecaPesquisaObra extends Portabi
 
         $hiddenInputOptions = $this->mergeOptions($options['hiddenInputOptions'], $defaultHiddenInputOptions);
 
-        call_user_func_array([$this->viewInstance, 'campoOculto'], $hiddenInputOptions);
+        $this->viewInstance->campoOculto(...array_values($hiddenInputOptions));
 
         // Ao selecionar obra, na pesquisa de obra é setado o value deste elemento
         $this->viewInstance->campoOculto('cod_biblioteca', '');

@@ -29,7 +29,7 @@ class Portabilis_View_Helper_Input_TextArea extends Portabilis_View_Helper_Input
 
         $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
 
-        call_user_func_array([$this->viewInstance, 'campoMemo'], $inputOptions);
+        $this->viewInstance->campoMemo(...array_values($inputOptions));
         $this->fixupPlaceholder($inputOptions);
 
         if ($inputOptions['max_length'] > 0) {
