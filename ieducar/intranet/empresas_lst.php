@@ -5,11 +5,11 @@ return new class extends clsListagem {
     {
         $this->titulo = 'Empresas';
 
-        $this->addCabecalhos([ 'Razão Social', 'Nome Fantasia' ]);
+        $this->addCabecalhos(['Razão Social', 'Nome Fantasia' ]);
 
-        $this->campoTexto('fantasia', 'Nome Fantasia', $_GET['fantasia'], '50', '255', true);
-        $this->campoTexto('razao_social', 'Razão Social', $_GET['razao_social'], '50', '255', true);
-        $this->campoCnpj('id_federal', 'CNPJ', $_GET['id_federal'], '50', '255', true);
+        $this->campoTexto('fantasia', 'Nome Fantasia', $_GET['fantasia'], '50', '255' );
+        $this->campoTexto('razao_social', 'Razão Social', $_GET['razao_social'], '50', '255');
+        $this->campoCnpj('id_federal', 'CNPJ', $_GET['id_federal'], '50');
 
         // Paginador
         $limite = 10;
