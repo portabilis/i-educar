@@ -1607,9 +1607,9 @@ class clsCampos extends Core_Controller_Page_Abstract
 
                     case 'listaDupla':
                         $retorno .= "<select onchange=\"{$componente[5]}\"  class='{$class}' name='{$nome}' id='{$nome}' {$componente[8]}>";
-                        reset($componente[3]);
 
-                        while (list($chave, $texto) = each($componente[3])) {
+                        reset($componente[3]);
+                        foreach ($componente[3] as $chave => $texto) {
                             $retorno .= '<option value="' . urlencode($chave) . '"';
 
                             if ($chave == $componente[4]) {
@@ -1618,6 +1618,7 @@ class clsCampos extends Core_Controller_Page_Abstract
 
                             $retorno .= ">$texto</option>";
                         }
+
 
                         $retorno .= '</select>';
                         $foiDuplo = true;
@@ -1645,11 +1646,11 @@ class clsCampos extends Core_Controller_Page_Abstract
                     case 'radio':
                         $primeiro = true;
 
-                        reset($componente[3]);
 
                         $retorno .= "<span onclick=\"{$componente[5]}\" >";
 
-                        while (list($chave, $texto) = each($componente[3])) {
+                        reset($componente[3]);
+                        foreach ($componente[3] as $chave => $texto) {
                             if ($primeiro) {
                                 $primeiro = false;
                                 $id = "id=\"{$nome}\"";
@@ -1808,11 +1809,10 @@ class clsCampos extends Core_Controller_Page_Abstract
         $retorno = "<select onchange=\"{$acao}\" class='{$class}' name='{$nome}' id='{$id}' {$desabilitado} $multiple>";
         $opt_open = false;
 
-        reset($valor);
-
         $adicionador_indice = null;
 
-        while (list($chave, $texto) = each($valor)) {
+        reset($valor);
+        foreach ($valor[3] as $chave => $texto) {
             if (substr($texto, 0, 9) == 'optgroup:') {
                 // optgroup
                 if ($opt_open) {

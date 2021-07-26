@@ -334,7 +334,7 @@ HTML;
 
             foreach ($this->cabecalho as $i => $texto) {
                 if (!empty($this->colunas)) {
-                    list($i, $fmt) = each($this->colunas);
+                    list($i, $fmt) = current($this->colunas);
                 } else {
                     $fmt = alTopLeft;
                 }
@@ -467,7 +467,7 @@ HTML;
             $campo_anterior = '';
             $md = true;
 
-            while (list($nome, $componente) = each($this->camposResultado)) {
+            foreach ($this->camposResultado as $nome => $componente) {
                 if ($componente[0] != 'oculto') {
                     $tipo = $componente[0];
                     $campo = $componente[1] . ':';
@@ -501,8 +501,7 @@ HTML;
                             $retorno .=  "<select class='form' name='$nome'>\n";
 
                             reset($componente[2]);
-
-                            while (list($chave, $texto) = each($componente[2])) {
+                            foreach ($componente[2] as $chave => $texto) {
                                 $retorno .=  '<option value=\'' . urlencode($chave) . '\'';
 
                                 if ($chave == $componente[3]) {
