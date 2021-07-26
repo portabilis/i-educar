@@ -1113,7 +1113,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                 $img = '<img src="/intranet/imagens/banco_imagens/excluirrr.png" border="0" alt="excluir" />';
                 $md2 = false;
 
-                if (!count($valores)) {
+                if (empty($valores)) {
                     $valores[0] = '';
                 }
 
@@ -1175,8 +1175,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                                     $lista = array_shift($array_valores_lista);
                                 }
 
-                                $lista = (sizeof($lista)) ?
-                                    $lista : $campo_[3];
+                                $lista = is_array($lista) && sizeof($lista) ? $lista : $campo_[3];
 
                                 $retorno .= $this->getCampoLista("{$nome}[{$key2}]", "{$nome}[$key2]", $campo_[5], $lista, $valor[$key], $campo_[7], $campo_[8], $class, $campo_[9]);
                                 break;
