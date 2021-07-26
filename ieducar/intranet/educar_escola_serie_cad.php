@@ -97,7 +97,7 @@ return new class extends clsCadastro {
         }
 
         arsort($anosLetivos);
-        $anoLetivoSelected = max($anosLetivos);
+        $anoLetivoSelected = empty($anoLetivoSelected) ? null : max($anosLetivos);
 
         if (request('ano_letivo')) {
             $anoLetivoSelected = request('ano_letivo');
@@ -173,7 +173,7 @@ return new class extends clsCadastro {
             'objectName' => 'anos_letivos'
         ];
 
-        $this->anos_letivos = array_values(array_intersect($this->anos_letivos, $this->getAnosLetivosDisponiveis()));
+        $this->anos_letivos = array_values(array_intersect($this->anos_letivos ?? [], $this->getAnosLetivosDisponiveis()));
 
         $options = [
             'label' => 'Anos letivos',
