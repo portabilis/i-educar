@@ -1073,6 +1073,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
             $lastStage = $this->getLastStage($matriculaId, $turmaId, $id);
 
+            if (empty($situacao->componentesCurriculares[$id])) {
+                $situacao->componentesCurriculares[$id] = new \stdClass();
+            }
+
             if ($this->getRegraAvaliacaoTipoProgressao() == RegraAvaliacao_Model_TipoProgressao::CONTINUADA) {
                 $getCountNotaCC = App_Model_IedFinder::verificaSeExisteNotasComponenteCurricular($matriculaId, $id);
 
@@ -1101,6 +1105,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
             if ($etapa == $lastStage && $media < $this->getRegraAvaliacaoMedia() && $this->hasRegraAvaliacaoFormulaRecuperacao() && $permiteSituacaoEmExame) {
                 // lets make some changes here >:)
+                if (empty($situacao->componentesCurriculares[$id])) {
+                    $situacao->componentesCurriculares[$id] = new \stdClass();
+                }
+
                 $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_EXAME;
 
                 if ($this->hasRegraAvaliacaoReprovacaoAutomatica()) {
