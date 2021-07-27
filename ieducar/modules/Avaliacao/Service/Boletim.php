@@ -1109,10 +1109,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
             if ($etapa == $lastStage && $media < $this->getRegraAvaliacaoMedia() && $this->hasRegraAvaliacaoFormulaRecuperacao() && $permiteSituacaoEmExame) {
                 // lets make some changes here >:)
-                if (empty($situacao->componentesCurriculares[$id])) {
-                    $situacao->componentesCurriculares[$id] = new \stdClass();
-                }
-
                 $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_EXAME;
 
                 if ($this->hasRegraAvaliacaoReprovacaoAutomatica()) {
