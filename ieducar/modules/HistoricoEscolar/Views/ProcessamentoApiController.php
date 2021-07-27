@@ -888,7 +888,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     protected function getFalta($situacaoFaltaComponenteCurricular = null)
     {
         if ($this->getRequest()->faltas == 'buscar-boletim') {
-            $cnsPresenca = RegraAvaliacao_Model_TipoPresenca;
+            $cnsPresenca = RegraAvaliacao_Model_TipoPresenca::class;
             $tpPresenca = $this->getService()->getRegra()->get('tipoPresenca');
 
             //retorna '' caso não exista situacaoFalta para o componente curricular,
