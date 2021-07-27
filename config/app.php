@@ -175,7 +175,7 @@ return [
         App\Providers\EventServiceProvider::class,
         // App\Providers\TelescopeServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        Tooleks\LaravelAssetVersion\Providers\AssetServiceProvider::class,
+        App\Providers\AssetServiceProvider::class,
         App\Providers\HorizonServiceProvider::class
     ],
 
@@ -228,8 +228,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-
-        'Asset' => Tooleks\LaravelAssetVersion\Facades\Asset::class,
+        'Asset' => App\Facades\Asset::class,
     ],
 
     'trackerror' => env('APP_TRACK_ERROR', false),
