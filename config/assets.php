@@ -33,4 +33,14 @@ return [
 
     'secure' => null,
 
+    /*
+    |--------------------------------------------------------------------------
+    | Auto Versioning
+    |--------------------------------------------------------------------------
+    |
+    | Automatically generate the version number on a per file basis using the
+    | config version numbers on external files
+    |
+    */
+    'auto' => true
 ];
