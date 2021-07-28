@@ -9,7 +9,7 @@ return new class extends clsListagem {
 
         $this->campoTexto('fantasia', 'Nome Fantasia', $_GET['fantasia'], '50', '255');
         $this->campoTexto('razao_social', 'Razão Social', $_GET['razao_social'], '50', '255');
-        $this->campoCnpj('id_federal', 'CNPJ', $_GET['id_federal'], '50');
+        $this->campoCnpj('id_federal', 'CNPJ', $_GET['id_federal']);
 
         // Paginador
         $limite = 10;
