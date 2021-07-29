@@ -613,7 +613,7 @@ class DiarioApiController extends ApiCoreController
     {
         if ($this->canPostParecer()) {
             $tpParecer = $this->serviceBoletim()->getRegra()->get('parecerDescritivo');
-            $cnsParecer = RegraAvaliacao_Model_TipoParecerDescritivo;
+            $cnsParecer = RegraAvaliacao_Model_TipoParecerDescritivo::class;
 
             if ($tpParecer == $cnsParecer::ETAPA_COMPONENTE || $tpParecer == $cnsParecer::ANUAL_COMPONENTE) {
                 $parecer = $this->getParecerComponente();
@@ -709,7 +709,7 @@ class DiarioApiController extends ApiCoreController
     protected function deleteFalta()
     {
         $canDelete = $this->canDeleteFalta();
-        $cnsPresenca = RegraAvaliacao_Model_TipoPresenca;
+        $cnsPresenca = RegraAvaliacao_Model_TipoPresenca::class;
         $tpPresenca = $this->serviceBoletim()->getRegra()->get('tipoPresenca');
 
         if ($canDelete && $tpPresenca == $cnsPresenca::POR_COMPONENTE) {
@@ -741,7 +741,7 @@ class DiarioApiController extends ApiCoreController
                 $this->messenger->append('Parecer descritivo matrícula ' . $this->getRequest()->matricula_id . ' inexistente ou já removido.', 'notice');
             } else {
                 $tpParecer = $this->serviceBoletim()->getRegra()->get('parecerDescritivo');
-                $cnsParecer = RegraAvaliacao_Model_TipoParecerDescritivo;
+                $cnsParecer = RegraAvaliacao_Model_TipoParecerDescritivo::class;
 
                 if ($tpParecer == $cnsParecer::ANUAL_COMPONENTE || $tpParecer == $cnsParecer::ETAPA_COMPONENTE) {
                     $this->serviceBoletim()->deleteParecer($this->getRequest()->etapa, $this->getRequest()->componente_curricular_id);
