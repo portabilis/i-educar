@@ -2,9 +2,6 @@
 
 use iEducar\Reports\Contracts\TeacherReportCard;
 
-require_once 'Reports/Reports/ReportCardReport.php';
-require_once 'Reports/Reports/TeacherReportCardReport.php';
-
 class ReportController extends ApiCoreController
 {
 
