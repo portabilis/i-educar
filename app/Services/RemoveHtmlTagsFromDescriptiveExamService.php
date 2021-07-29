@@ -17,13 +17,13 @@ class RemoveHtmlTagsFromDescriptiveExamService
 
     public function execute(Avaliacao_Model_ParecerDescritivoAbstract $descriptiveExam): string
     {
-        $FormattedDescriptiveExam = preg_replace(self::PATTERNS, '', $descriptiveExam->parecer);
+        $formattedDescriptiveExam = preg_replace(self::PATTERNS, '', $descriptiveExam->parecer);
 
-        if ($FormattedDescriptiveExam === null) {
+        if ($formattedDescriptiveExam === null) {
             throw new \Exception('Erro ao remover html tags dos pareceres descritivos');
         }
 
-        return $FormattedDescriptiveExam;
+        return $formattedDescriptiveExam;
     }
 
 }
