@@ -1,8 +1,9 @@
 <?php
 
-# TODO remove-require
-require_once 'Reports/Reports/BoletimReport.php';
-require_once 'Reports/Reports/BoletimProfessorReport.php';
+use iEducar\Reports\Contracts\TeacherReportCard;
+
+require_once 'Reports/Reports/ReportCardReport.php';
+require_once 'Reports/Reports/TeacherReportCardReport.php';
 
 class ReportController extends ApiCoreController
 {
@@ -106,7 +107,7 @@ class ReportController extends ApiCoreController
     protected function getBoletimProfessor()
     {
         if ($this->canGetBoletimProfessor()) {
-            $boletimProfessorReport = new BoletimProfessorReport();
+            $boletimProfessorReport = app(TeacherReportCard::class);
 
             $boletimProfessorReport->addArg('ano', (int)$this->getRequest()->ano);
             $boletimProfessorReport->addArg('instituicao', (int)$this->getRequest()->instituicao_id);
