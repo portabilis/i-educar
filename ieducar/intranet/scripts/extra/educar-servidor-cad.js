@@ -188,6 +188,77 @@ var handleGetInformacoesServidor = function (dataResponse) {
   $deficiencias.trigger('chosen:updated');
 };
 
+function desabilitaBotaoEnviar() {
+  $j('#btn_enviar').prop('disabled', true);
+  $j('#btn_enviar').removeClass('btn-green');
+  $j('#btn_enviar').addClass('btn-disabled');
+}
+
+function habilitaBotaoEnviar() {
+  $j('#btn_enviar').prop('disabled', false);
+  $j('#btn_enviar').removeClass('btn-disabled');
+  $j('#btn_enviar').addClass('btn-green');
+}
+
+let handleExisteServidor = function (dataResponse) {
+
+  if (dataResponse.exist === false) {
+    habilitaBotaoEnviar();
+    return;
+  }
+
+  if (dataResponse.exist === true) {
+    desabilitaBotaoEnviar();
+    let content = `<strong>Já existe um servidor</strong>`
+    content += `<br><br> Deseja redireciona para tela de detalhe ?`
+    makeDialog({
+        content: content,
+        title: 'Atenção!',
+        maxWidth: 860,
+        width: 860,
+        buttons: [{
+          text: 'Sim',
+          click: function () {
+            direcionaParaDetalhe(dataResponse);
+            $j(this).dialog('destroy');
+          }
+        }, {
+          text: 'Não',
+          click: function () {
+            $j(this).dialog('destroy');
+          }
+        }]
+      }
+    );
+  }
+};
+
+function direcionaParaDetalhe(dataResponse) {
+  window.setTimeout(
+    function() {
+      document.location = '/intranet/educar_servidor_det.php?cod_servidor=' + dataResponse.id + '&ref_cod_instituicao=1';
+      }, 300)
+  ;
+}
+
+function makeDialog (params) {
+  let container = $j('#dialog-container');
+  if (container.length < 1) {
+    $j('body').append('<div id="dialog-container" style="width: 400px;"></div>');
+    container = $j('#dialog-container');
+  }
+
+  if (container.hasClass('ui-dialog-content')) {
+    container.dialog('destroy');
+  }
+
+  container.empty();
+  container.html(params.content);
+  delete params['content'];
+
+  container.dialog(params);
+}
+
 function atualizaInformacoesServidor() {
 
   $j('#deficiencias').closest('tr').hide();
@@ -211,6 +282,24 @@ function atualizaInformacoesServidor() {
   }
 }
 
+function verificaExistenciaDoServidor() {
+
+  let servidor_id = $j('#cod_servidor').val();
+
+  if (servidor_id !== '') {
+    const data = {
+      servidor_id: servidor_id,
+    };
+    const options = {
+      url: getResourceUrlBuilder.buildUrl('/module/Api/pessoa', 'exist-servidor', {}),
+      dataType: 'json',
+      data: data,
+      success: handleExisteServidor,
+    };
+    getResources(options);
+  }
+}
+
 $j(document).ready(function () {
 
   atualizaInformacoesServidor();
@@ -220,4 +309,5 @@ $j(document).ready(function () {
   $j('#deficiencias_chzn input').css('height', '25px');
 
   $j('#cod_servidor').attr('onchange', 'atualizaInformacoesServidor();');
+  $j('#cod_servidor').attr('onchange', 'verificaExistenciaDoServidor();');
 });
