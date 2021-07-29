@@ -1,22 +1,17 @@
 <?php
 
 namespace Tests\Unit\Services;
-use App\Services\RemoveHtmlTagsFromDescriptiveExamService;
-use Avaliacao_Model_ParecerDescritivoComponente;
+use App\Services\RemoveHtmlTagsStringService;
 use Tests\TestCase;
 
-class RemoveHtmlTagsFromDescriptiveExamServiceTest extends TestCase
+class RemoveHtmlTagsServiceTest extends TestCase
 {
     /**
      * @dataProvider provideData
      */
-    public function testRemoveHtmlTag($text, $pattern)
+    public function testRemoveHtmlTag(string $text, string $pattern)
     {
-        $avaliacaoModelParecerDescritivoComponente = new Avaliacao_Model_ParecerDescritivoComponente([
-            'parecer' => $text,
-        ]);
-
-        $parecer = (new RemoveHtmlTagsFromDescriptiveExamService())->execute($avaliacaoModelParecerDescritivoComponente);
+        $parecer = (new RemoveHtmlTagsStringService())->execute($text);
         self::assertTrue(preg_match($pattern,$parecer) === 0);
     }
 
