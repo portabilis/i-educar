@@ -19,11 +19,6 @@ class DiarioApiController extends ApiCoreController
     protected $_processoAp = 642;
     protected $_currentMatriculaId;
 
-    protected function validatesValueOfAttValueIsInOpcoesNotas()
-    {
-        return true;
-    }
-
     protected function validatesCanChangeDiarioForAno()
     {
         $escola = App_Model_IedFinder::getEscola($this->getRequest()->escola_id);
@@ -324,7 +319,6 @@ class DiarioApiController extends ApiCoreController
     protected function canPostNota()
     {
         return $this->canPost() &&
-        $this->validatesValueOfAttValueIsInOpcoesNotas(false) &&
         $this->validatesPresenceOf('componente_curricular_id') &&
         $this->validatesRegraAvaliacaoHasNota() &&
         $this->validatesRegraAvaliacaoHasFormulaRecuperacao() &&
