@@ -635,8 +635,13 @@ class PessoaController extends ApiCoreController
 
     protected function isExistServant()
     {
-        $_servidor['exist'] = $this->existServant($this->getRequest()->servidor_id) === 1;
-        $_servidor['id'] = $this->getRequest()->servidor_id;
+        $id = (int) $this->getRequest()->servidor_id;
+        $exist = $this->existServant($id) === 1;
+
+        $_servidor['exist'] = $exist;
+        $_servidor['id'] = $id;
+        $_servidor['nome'] = $exist ? $this->loadPessoa($id)['nome'] : null;
+
         return $_servidor;
     }
 
