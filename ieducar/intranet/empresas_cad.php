@@ -115,7 +115,7 @@ return new class extends clsCadastro {
 
     public function Novo()
     {
-        if (! empty($this>$this->cnpj) && validaCNPJ($this->cnpj) === false) {
+        if (! empty($this->cnpj) && validaCNPJ($this->cnpj) === false) {
             $this->mensagem = 'CNPJ inválido';
             return false;
         }
@@ -202,7 +202,7 @@ return new class extends clsCadastro {
 
     public function Editar()
     {
-        if (! empty($this>$this->cnpj) && validaCNPJ($this->cnpj) === false) {
+        if (! empty($this->cnpj) && validaCNPJ($this->cnpj) === false) {
             $this->mensagem = 'CNPJ inválido';
             return false;
         }
