@@ -477,7 +477,7 @@ return new class extends clsCadastro {
         $this->campoOculto('pessoaj_id_oculto', $this->pessoaj_id);
         $this->campoOculto('pessoaj_id', $this->pessoaj_id);
 
-        if ($this->pesquisaPessoaJuridica) {
+        if (empty($this->cod_escola)) {
             $this->inputsHelper()->simpleSearchPessoaj('idpes', ['label'=> 'Pessoa Jurídica']);
             $this->acao_enviar = false;
             $this->url_cancelar = false;
