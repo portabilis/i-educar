@@ -115,7 +115,12 @@ return new class extends clsCadastro {
 
     public function Novo()
     {
-        $this->cnpj = empty($this->cnpj) ? null : idFederal2int(urldecode($this->cnpj));
+        if (validaCNPJ($this->cnpj) === false) {
+            $this->mensagem = 'CNPJ inválido';
+            return false;
+        }
+
+        $this->cnpj = validaCNPJ($this->cnpj) ? idFederal2int(urldecode($this->cnpj)) : null;
 
         $contemPessoaJuridica = (new clsJuridica(false, $this->cnpj))->detalhe();
         if ($this->cnpj !== null && $contemPessoaJuridica) {
@@ -197,7 +202,13 @@ return new class extends clsCadastro {
 
     public function Editar()
     {
-        $this->cnpj = idFederal2int(urldecode($this->cnpj));
+        if (validaCNPJ($this->cnpj) === false) {
+            $this->mensagem = 'CNPJ inválido';
+            return false;
+        }
+
+        $this->cnpj = validaCNPJ($this->cnpj) ? idFederal2int(urldecode($this->cnpj)) : false;
+
         $objJuridica = new clsJuridica(false, $this->cnpj);
 
         $detalhe = $objJuridica->detalhe();
