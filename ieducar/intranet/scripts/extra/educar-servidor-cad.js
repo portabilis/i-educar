@@ -209,8 +209,9 @@ let handleExisteServidor = function (dataResponse) {
 
   if (dataResponse.exist === true) {
     desabilitaBotaoEnviar();
-    let content = `<strong>Já existe um servidor</strong>`
-    content += `<br><br> Deseja redireciona para tela de detalhe ?`
+    let content = `<strong>Já existe um vínculo de servidor(a) para a pessoa `
+    content += dataResponse.nome + `</strong>`
+    content += `<br><br> Deseja redirecionar para a tela de detalhes do cadastro existente?`
     makeDialog({
         content: content,
         title: 'Atenção!',
