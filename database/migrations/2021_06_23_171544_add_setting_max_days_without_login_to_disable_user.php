@@ -1,10 +1,12 @@
 <?php
 
 use App\Setting;
+use App\Support\Database\SettingCategoryTrait;
 use Illuminate\Database\Migrations\Migration;
 
 class AddSettingMaxDaysWithoutLoginToDisableUser extends Migration
 {
+    use SettingCategoryTrait;
     /**
      * Run the migrations.
      *
@@ -18,7 +20,7 @@ class AddSettingMaxDaysWithoutLoginToDisableUser extends Migration
             'type' => 'integer',
             'description' => 'Quantidade de dias permitidos sem acessar o sistema para inativação automática de conta',
             'hint' => 'A contagem será efetuada em dias corridos. Se o valor preenchido for zero (0) ou nenhum, não ocorrerá automatização',
-            'setting_category_id' => 10,
+            'setting_category_id' => $this->getSettingCategoryIdByName('Validações de sistema'),
             'value' => 0,
         ]);
     }
