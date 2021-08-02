@@ -1,11 +1,13 @@
 <?php
 
+use App\Support\Database\SettingCategoryTrait;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 class AddForeignKeyInSettingsTable extends Migration
 {
+    use SettingCategoryTrait;
     /**
      * Run the migrations.
      *
@@ -13,8 +15,10 @@ class AddForeignKeyInSettingsTable extends Migration
      */
     public function up()
     {
-        Schema::table('settings', function (Blueprint $table) {
-            $table->integer('setting_category_id')->default(1);
+        $settingCategoryIdDefault = $this->getSettingCategoryIdByName('Sem categoria');
+        Schema::table('settings', function (Blueprint $table) use ($settingCategoryIdDefault) {
+
+            $table->integer('setting_category_id')->default($settingCategoryIdDefault);
             $table->foreign('setting_category_id')->on('settings_categories')->references('id');
         });
     }
