@@ -21,7 +21,10 @@ function carregaDadosPessoas() {
   let pessoas_duplicadas = [];
 
   $j('input[id^="pessoa_duplicada["').each(function(id, input) {
-    pessoas_duplicadas.push(input.value.split(' ')[0]);
+    let value = input.value.split(' ')[0];
+    if (value.length !== 0) {
+      pessoas_duplicadas.push(value);
+    }
   });
 
   var url = getResourceUrlBuilder.buildUrl(
@@ -116,14 +119,16 @@ function modalInformeMaisPessoas() {
 
 function exitemPessoasDuplicadas() {
   let pessoas = [];
-
   $j('input[id^="pessoa_duplicada["').each(function(id, input) {
-    pessoas.push(input.value.split(' ')[0]);
+    let value = input.value.split(' ')[0];
+    if (value.length !== 0) {
+      pessoas.push(value);
+    }
   });
 
   let pessoasSemDuplicidade = [...new Set(pessoas)];
 
-  return pessoas.length != pessoasSemDuplicidade.length;
+  return pessoas.length !== pessoasSemDuplicidade.length;
 }
 
 function modalAjustePessoasUnificadas() {
@@ -147,6 +152,7 @@ function modalAjustePessoasUnificadas() {
 function listaDadosPessoasUnificadas(response) {
   modalAvisoComplementaDadosPessoa();
   removeExclusaoDePessoas();
+  removeItensVazios();
   disabilitaSearchInputs();
   montaTabela(response);
   adicionaSeparador();
@@ -160,6 +166,15 @@ function listaDadosPessoasUnificadas(response) {
 function removeExclusaoDePessoas() {
   $j('.tr_tabela_pessoas td a').each(function(id, input) {
     input.remove();
+  });
+}
+
+function removeItensVazios() {
+  $j('input[id^="pessoa_duplicada["').each(function(id, input) {
+    let value = input.value.split(' ')[0];
+    if (value.length === 0) {
+      tab_add_1.removeRow(this);
+    }
   });
 }
 
