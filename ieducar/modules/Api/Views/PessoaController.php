@@ -641,11 +641,12 @@ class PessoaController extends ApiCoreController
 
         $sql = 'SELECT
                 p.idpes,
-                CASE
-                    WHEN cod_aluno IS NOT NULL THEN \'Aluno\'
-                    WHEN cod_servidor IS NOT NULL THEN \'Servidor\'
-                    ELSE \'Sem vínculo\'
-                END AS vinculo,
+                COALESCE(concat_ws(\', \',
+									CASE WHEN cod_servidor IS NOT NULL THEN \'Servidor(a)\' ELSE NULL end,
+									CASE WHEN cod_aluno IS NOT NULL THEN \'Aluno(a)\' ELSE NULL end,
+									CASE WHEN cod_usuario IS NOT NULL THEN \'Usuário(a)\' ELSE NULL end,
+									CASE WHEN responsavel.idpes IS NOT NULL THEN \'Responsável\' ELSE NULL end
+								), \'Sem vínculo\') vinculo,
                 p.nome,
                 COALESCE(to_char(f.data_nasc, \'dd/mm/yyyy\'), \'Não consta\') AS data_nascimento,
                 CASE f.sexo
@@ -662,6 +663,13 @@ class PessoaController extends ApiCoreController
             LEFT JOIN pmieducar.aluno a ON a.ref_idpes = p.idpes AND a.ativo = 1
             LEFT JOIN pmieducar.servidor s ON s.cod_servidor = p.idpes AND s.ativo = 1
             LEFT JOIN cadastro.pessoa pm ON pm.idpes = f.idpes_mae
+            LEFT JOIN pmieducar.usuario u on u.cod_usuario = p.idpes
+            LEFT JOIN LATERAL (
+                SELECT idpes FROM cadastro.fisica f1 WHERE exists (
+                    SELECT 1 FROM cadastro.fisica f2 WHERE f1.idpes IN (f2.idpes_pai, f2.idpes_mae, f2.idpes_responsavel)
+                ) AND f1.idpes = f.idpes
+            ) responsavel ON TRUE
+
             WHERE p.idpes IN (' . $pessoasIds . ');
         ';
 
