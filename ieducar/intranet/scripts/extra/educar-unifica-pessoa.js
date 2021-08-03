@@ -598,13 +598,13 @@ var handleSelect = function(event, ui){
   let container = $j('#dialog-container');
 
   if (container.length < 1) {
-  $j('body').append('<div id="dialog-container" style="width: 500px;"></div>');
-  container = $j('#dialog-container');
-}
+    $j('body').append('<div id="dialog-container" style="width: 500px;"></div>');
+    container = $j('#dialog-container');
+  }
 
   if (container.hasClass('ui-dialog-content')) {
-  container.dialog('destroy');
-}
+    container.dialog('destroy');
+  }
 
   container.empty();
   container.html(params.content);
