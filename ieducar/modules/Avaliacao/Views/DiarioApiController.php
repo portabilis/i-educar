@@ -1641,6 +1641,8 @@ class DiarioApiController extends ApiCoreController
             'nome' => $evaluationRule->nome,
             'nota_maxima_geral' => $evaluationRule->nota_maxima_geral,
             'nota_minima_geral' => $evaluationRule->nota_minima_geral,
+            'falta_maxima_geral' => $evaluationRule->falta_maxima_geral,
+            'falta_minima_geral' => $evaluationRule->falta_minima_geral,
             'nota_maxima_exame_final' => $evaluationRule->nota_maxima_exame_final,
             'qtd_casas_decimais' => $evaluationRule->qtd_casas_decimais,
             'regra_diferenciada_id' => $evaluationRule->regra_diferenciada_id,

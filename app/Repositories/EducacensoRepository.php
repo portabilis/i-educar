@@ -398,7 +398,14 @@ SQL;
                 CASE WHEN fisica.nacionalidade = 3 THEN pais.cod_ibge ELSE 76 END AS "paisNacionalidade",
                 municipio_nascimento.cod_ibge AS "municipioNascimento",
                 CASE WHEN
-                    true = (SELECT true FROM cadastro.fisica_deficiencia WHERE fisica_deficiencia.ref_idpes = fisica.idpes LIMIT 1) THEN 1
+                    true = (
+                        SELECT true
+                        FROM cadastro.fisica_deficiencia
+                        JOIN cadastro.deficiencia ON deficiencia.cod_deficiencia = fisica_deficiencia.ref_cod_deficiencia
+                        WHERE fisica_deficiencia.ref_idpes = fisica.idpes
+                        AND deficiencia.deficiencia_educacenso != 999
+                        LIMIT 1
+                    ) THEN 1
                     ELSE 0 END
                 AS "deficiencia",
                 1 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaCegueira",

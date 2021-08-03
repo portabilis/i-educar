@@ -197,6 +197,19 @@ class AlunoController extends ApiCoreController
         return $this->validatesPresenceOf('aluno_id') && $this->validatesPresenceOf('cpf');
     }
 
+    protected function validateInepCode()
+    {
+        if ($this->getRequest()->aluno_inep_id) {
+            $inepCode = str_split($this->getRequest()->aluno_inep_id);
+
+            if(count($inepCode) !== 12 || $inepCode[0] === "0"){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     protected function canChange()
     {
         return (
@@ -211,27 +224,24 @@ class AlunoController extends ApiCoreController
 
     protected function canPost()
     {
-        return (
-            parent::canPost() &&
+        return parent::canPost() &&
             $this->validatesUniquenessOfAlunoByPessoaId() &&
-            $this->validateDeficiencies() &&
-            $this->validateBirthCertificate() &&
-            $this->validateNis() &&
-            $this->validateInepExam() &&
-            $this->validateTechnologicalResources()
-        );
+            $this->commonValidate();
     }
 
     protected function canPut()
     {
-        return (
-            parent::canPut() &&
-            $this->validateDeficiencies()&&
-            $this->validateBirthCertificate()&&
-            $this->validateNis()&&
-            $this->validateInepExam()&&
-            $this->validateTechnologicalResources()
-        );
+        return parent::canPut() && $this->commonValidate();
+    }
+
+    protected function commonValidate(): bool
+    {
+        return $this->validateDeficiencies() &&
+            $this->validateNis() &&
+            $this->validateInepExam() &&
+            $this->validateTechnologicalResources() &&
+            $this->validateBirthCertificate() &&
+            $this->validateInepCode();
     }
 
     /**

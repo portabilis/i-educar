@@ -112,7 +112,6 @@ class EnrollmentService
     {
         return LegacyEnrollment::where('ref_cod_matricula', $registration->id)
             ->where('ref_cod_turma', '<>', $schoolClass->id)
-            ->active()
             ->with('schoolClass')
             ->get();
     }

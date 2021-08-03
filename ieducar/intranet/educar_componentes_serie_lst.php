@@ -62,8 +62,8 @@ return new class extends clsListagem {
         // Pega detalhes de foreign_keys
                 $obj_ref_cod_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
                 $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
-                $registro['ref_cod_curso'] = $det_ref_cod_curso['nm_curso'];
-
+                $registro['ref_cod_curso'] = empty($det_ref_cod_curso['descricao']) ? $det_ref_cod_curso['nm_curso'] : "{$det_ref_cod_curso['nm_curso']} ({$det_ref_cod_curso['descricao']})";
+                $registro['nm_serie'] = empty($registro['descricao']) ? $registro['nm_serie'] : "{$registro['nm_serie']} ({$registro['descricao']})";
                 $obj_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
                 $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
                 $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];

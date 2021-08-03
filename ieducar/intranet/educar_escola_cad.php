@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\City;
 use App\Models\EmployeeInep;
 use App\Models\LegacyPerson;
 use App\Models\SchoolManager;
@@ -31,6 +32,7 @@ use iEducar\Modules\Educacenso\Model\SalasFuncionais;
 use iEducar\Modules\Educacenso\Model\SalasGerais;
 use iEducar\Modules\Educacenso\Model\TratamentoLixo;
 use iEducar\Modules\Educacenso\Model\UsoInternet;
+use iEducar\Modules\Educacenso\Validator\AdministrativeDomainValidator;
 use iEducar\Modules\Educacenso\Validator\School\HasDifferentStepsOfChildEducationValidator;
 use iEducar\Modules\Educacenso\Validator\SchoolManagers;
 use iEducar\Modules\Educacenso\Validator\Telefone;
@@ -847,7 +849,7 @@ return new class extends clsCadastro {
                     } else {
                         $obj_curso = new clsPmieducarCurso($curso);
                         $obj_curso_det = $obj_curso->detalhe();
-                        $nm_curso = $obj_curso_det['nm_curso'];
+                        $nm_curso = empty($obj_curso_det['descricao']) ? $obj_curso_det['nm_curso'] : "{$obj_curso_det['nm_curso']} ({$obj_curso_det['descricao']})";
                         $nm_autorizacao = $this->escola_curso_autorizacao[$curso];
                         $anosLetivos = $this->escola_curso_anos_letivos[$curso] ?: [];
                         $this->campoTextoInv("ref_cod_curso_{$curso}", '', $nm_curso, 50, 255, false, false, true);
@@ -878,7 +880,8 @@ return new class extends clsCadastro {
 
                 if (is_array($lista) && count($lista)) {
                     foreach ($lista as $registro) {
-                        $opcoes["{$registro['cod_curso']}"] = "{$registro['nm_curso']}";
+                        $nm_curso = empty($registro['descricao']) ? $registro['nm_curso'] : "{$registro['nm_curso']} ({$registro['descricao']})";
+                        $opcoes[$registro['cod_curso']] = $nm_curso;
                     }
                 }
             }
@@ -1855,7 +1858,7 @@ return new class extends clsCadastro {
         $this->utiliza_regra_diferenciada = !is_null($this->utiliza_regra_diferenciada);
         $obj = new clsPmieducarEscola($this->cod_escola);
         $escolaDetAntigo = $obj->detalhe();
-
+        $this->ref_idpes = $this->ref_idpes ?? $escolaDetAntigo['ref_idpes'];
         if ($this->cod_escola) {
             $obj = new clsPmieducarEscola($this->cod_escola, null, $this->pessoa_logada, $this->ref_cod_instituicao, $this->zona_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, $this->bloquear_lancamento_diario_anos_letivos_encerrados, $this->utiliza_regra_diferenciada);
             $obj->dependencia_administrativa = $this->dependencia_administrativa;
@@ -2233,58 +2236,23 @@ return new class extends clsCadastro {
 
     protected function validaEsferaAdministrativa()
     {
-        if ($this->regulamentacao == Regulamentacao::NAO) {
-            return true;
-        }
+        $cidyId = $this->city_id;
+        $cityIBGE = City::query()
+            ->whereKey($cidyId)
+            ->get()
+            ->pluck('ibge_code')
+            ->first();
 
-        $esferaAdministrativa = $this->esfera_administrativa;
-        $dependenciaAdministrativa = $this->dependencia_administrativa;
-        $mensagem = 'O campo: Esfera administrativa do conselho ou órgão responsável pela Regulamentação/Autorização, foi preenchido com um valor incorreto';
+        $esferaAdministrativaValidator = (new AdministrativeDomainValidator(
+            $this->esfera_administrativa,
+            $this->regulamentacao,
+            $this->dependencia_administrativa,
+            $cityIBGE
+        ));
 
-        if ($this->regulamentacao != Regulamentacao::NAO && empty($esferaAdministrativa)) {
-            $this->mensagem = $mensagem;
-
+        if (! $esferaAdministrativaValidator->isValid()) {
+            $this->mensagem = $esferaAdministrativaValidator->getMessage();
             return false;
-        }
-
-        /**
-         * Se o campo "dependência administrativa" for:
-         * 2 (Estadual) este campo também deve ser 2
-         */
-        if ($dependenciaAdministrativa == DependenciaAdministrativaEscola::ESTADUAL) {
-            if ($esferaAdministrativa != EsferaAdministrativa::ESTADUAL) {
-                $this->mensagem = $mensagem;
-
-                return false;
-            }
-        }
-        /**
-         * Se o campo "dependência administrativa" for:
-         * 1 (Federal) este campo deve ser 1 ou 2
-         */
-        if ($dependenciaAdministrativa == DependenciaAdministrativaEscola::FEDERAL) {
-            if (
-                $esferaAdministrativa != EsferaAdministrativa::FEDERAL &&
-                $esferaAdministrativa != EsferaAdministrativa::ESTADUAL
-            ) {
-                $this->mensagem = $mensagem;
-
-                return false;
-            }
-        }
-        /**
-         * Se o campo "dependência administrativa" for:
-         * 3 (Municipal) este campo deve ser 2 ou 3
-         */
-        if ($dependenciaAdministrativa == DependenciaAdministrativaEscola::MUNICIPAL) {
-            if (
-                $esferaAdministrativa != EsferaAdministrativa::ESTADUAL &&
-                $esferaAdministrativa != EsferaAdministrativa::MUNICIPAL
-            ) {
-                $this->mensagem = $mensagem;
-
-                return false;
-            }
         }
 
         return true;
