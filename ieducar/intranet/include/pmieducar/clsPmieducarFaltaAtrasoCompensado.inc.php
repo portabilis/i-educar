@@ -409,8 +409,8 @@ class clsPmieducarFaltaAtrasoCompensado extends Model
      * @return array
      */
     public function ServidorHorasCompensadas(
-        $int_ref_cod_servidor = null,
-        $int_ref_cod_escola = null,
+        $int_ref_cod_servidor,
+        $int_ref_cod_escola,
         $int_ref_cod_instituicao
     ) {
         if (is_numeric($int_ref_cod_servidor)) {

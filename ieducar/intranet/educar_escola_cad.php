@@ -1481,10 +1481,11 @@ return new class extends clsCadastro {
             return false;
         }
 
-        if (! property_exists($this, 'pessoaj_id_oculto') ||
+        if (! isset($this->pessoaj_id_oculto) ||
             ! is_int((int)$this->pessoaj_id_oculto)
         ) {
-            throw new \iEducar\Support\Exceptions\Exception('Erro ao selecionar a pessoa jurídica');
+            $this->mensagem = 'Erro ao selecionar a pessoa jurídica';
+            return false;
         }
 
         $pessoaJuridica = (new clsJuridica((int)$this->pessoaj_id_oculto))->detalhe();
@@ -1964,7 +1965,7 @@ return new class extends clsCadastro {
         return true;
     }
 
-    protected function validaDDDTelefone($valorDDD = null, $valorTelefone = null, $nomeCampo)
+    protected function validaDDDTelefone($valorDDD, $valorTelefone, $nomeCampo)
     {
         $msgRequereTelefone = "O campo: {$nomeCampo}, deve ser preenchido quando o DDD estiver preenchido.";
         $msgRequereDDD = "O campo: DDD, deve ser preenchido quando o {$nomeCampo} estiver preenchido.";
