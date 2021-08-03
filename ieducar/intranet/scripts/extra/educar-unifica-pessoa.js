@@ -1,12 +1,18 @@
 adicionaMaisUmaLinhaNaTabela();
 ajustaTabelaDePessoasUnificadas();
+ajustarUiBotao();
 
-$j('#btn_add_tab_add_1').click(function(){
+function ajustarUiBotao () {
+  $j('#btn_add_tab_add_1').addClass('button_center');
+  document.getElementById("btn_add_tab_add_1").lastChild.textContent = 'ADICIONAR MAIS PESSOAS';
+}
+
+$j('#btn_add_tab_add_1').click(function() {
   ajustaTabelaDePessoasUnificadas();
 });
 
-var $quantidadeDeVinculosComAlunos = 0;
-var $quantidadeDeVinculosComServidores = 0;
+let $quantidadeDeVinculosComAlunos = 0;
+let $quantidadeDeVinculosComServidores = 0;
 
 function adicionaMaisUmaLinhaNaTabela() {
   tab_add_1.addRow();
