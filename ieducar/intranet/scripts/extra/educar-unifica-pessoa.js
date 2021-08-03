@@ -177,7 +177,7 @@ function confirmaAnalise() {
 
     return;
   }
-  
+
   if (checked) {
     desabilitaBotaoUnificar();
     modalExigePessoaPrincipal();
@@ -310,16 +310,23 @@ function montaTabela(response) {
     html += '<td><a target="_new" href="/intranet/atendidos_det.php?cod_pessoa=' + value.idpes + '">'+ value.nome +'</a></td>';
     html += '<td>'+ value.data_nascimento +'</td>';
     html += '<td>'+ value.sexo +'</td>';
-    html += '<td>'+ value.cpf +'</td>';
+    html += '<td>'+ addMascara(value.cpf) +'</td>';
     html += '<td>'+ value.rg +'</td>';
     html += '<td>'+ value.pessoa_mae +'</td>';
-    html += '<td><a class="link_remove" onclick="removePessoa(' + value.idpes + ')">EXCLUIR</a></td>';
+    html += '<td><a class="link_remove" onclick="removePessoa(' + value.idpes + ')"><b><u>EXCLUIR</u></b></a></td>';
     html += '</tr>';
   });
 
   html += '</table></td>';
 
   $j('#lista_dados_pessoas_unificadas').html(html);
+}
+
+function addMascara(value) {
+  if (value === 'Não consta') {
+    return value
+  }
+  return value.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
 }
 
 function uniqueCheck() {
@@ -453,8 +460,8 @@ function htmlApresentaObservacoes() {
   html = `
     <td colspan="2">
       <div>
-        Consta mais de um vínculo de aluno na lista de pessoas a serem unificadas, 
-        <a href="/intranet/educar_unifica_aluno.php" target="_new"><b>clique aqui</b></a> para fazer a Unificação de alunos antes de unificar as pessoas físicas. 
+        Consta mais de um vínculo de aluno na lista de pessoas a serem unificadas,
+        <a href="/intranet/educar_unifica_aluno.php" target="_new"><b>clique aqui</b></a> para fazer a Unificação de alunos antes de unificar as pessoas físicas.
         Após a unificação clique no botão abaixo para recarregar a listagem de pessoas. <br>
         <a id="recarregar_lista" onclick="recarregaListaDePessoas()"><b>Recarregar lista</br></a>
       </div>
