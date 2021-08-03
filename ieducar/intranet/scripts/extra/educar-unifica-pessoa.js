@@ -63,22 +63,33 @@ function carregaDadosPessoas() {
   getResources(options);
 }
 
-function recarregaListaDePessoas() {
+function pegaPessoasDaTabela() {
   let pessoas_duplicadas = [];
-
   $j('input[id^="pessoa_duplicada["').each(function(id, input) {
     pessoas_duplicadas.push(input.value.split(' ')[0]);
   });
 
-  var url = getResourceUrlBuilder.buildUrl(
+  return pessoas_duplicadas
+}
+
+function pegarPessoasParaUnificar() {
+  let pessoas_para_unificar = [];
+  $j('#tabela_pessoas_unificadas .linha_listagem').each(function(id, input) {
+    pessoas_para_unificar.push(input.id);
+  });
+  return pessoas_para_unificar;
+}
+
+function recarregaListaDePessoas(pessoas) {
+  let url = getResourceUrlBuilder.buildUrl(
     '/module/Api/Pessoa',
     'dadosUnificacaoPessoa',
     {
-      pessoas_ids : pessoas_duplicadas
+      pessoas_ids : pessoas
     }
   );
 
-  var options = {
+  let options = {
     url      : url,
     dataType : 'json',
     success  : function(response) {
@@ -424,6 +435,7 @@ function removeTr(idpes) {
   let trClose = $j('#' + idpes);
   trClose.fadeOut(400, function() {
     trClose.remove();
+    recarregaListaDePessoas(pegarPessoasParaUnificar())
   });
 }
 
@@ -458,11 +470,11 @@ function contabilizaVinculos(pessoas) {
   pessoas.each(function(value, id) {
     let vinculos = value.vinculo.split(', ');
 
-    if ($j.inArray('Aluno',vinculos) != -1) {
+    if ($j.inArray('Aluno(a)',vinculos) != -1) {
       alunos++;
     }
 
-    if ($j.inArray('Servidor',vinculos) != -1) {
+    if ($j.inArray('Servidor(a)',vinculos) != -1) {
       servidores++;
     }
   });
@@ -490,7 +502,7 @@ function htmlApresentaObservacoes() {
         Consta mais de um vínculo de aluno na lista de pessoas a serem unificadas,
         <a href="/intranet/educar_unifica_aluno.php" target="_new"><b>clique aqui</b></a> para fazer a Unificação de alunos antes de unificar as pessoas físicas.
         Após a unificação clique no botão abaixo para recarregar a listagem de pessoas. <br>
-        <a id="recarregar_lista" onclick="recarregaListaDePessoas()"><b>Recarregar lista</br></a>
+        <a id="recarregar_lista" onclick="recarregaListaDePessoas(pegaPessoasDaTabela())"><b>Recarregar lista</br></a>
       </div>
     </td>
   `;
