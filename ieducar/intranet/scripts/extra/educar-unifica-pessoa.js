@@ -326,6 +326,11 @@ function addMascara(value) {
   if (value === 'Não consta') {
     return value
   }
+
+  if (value.length === 10) { // Quando o CPF tem 0 na frente o i-educar remove.
+    value = '0' + value;
+  }
+
   return value.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
 }
 
