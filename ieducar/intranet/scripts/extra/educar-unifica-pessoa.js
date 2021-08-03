@@ -195,6 +195,7 @@ function confirmaAnalise() {
 
   if (checked) {
     desabilitaBotaoUnificar();
+    removeCheckConfirmaDados()
     modalExigePessoaPrincipal();
     return;
   }
@@ -226,6 +227,10 @@ function existePessoaPrincipal() {
   return existePessoaPrincipal;
 }
 
+function removeCheckConfirmaDados() {
+  $j('#check_confirma_dados_unificacao').prop('checked', false);
+}
+
 function modalExigePessoaPrincipal() {
   makeDialog({
     content: 'Você precisa definir uma pessoa como principal.',
@@ -233,13 +238,11 @@ function modalExigePessoaPrincipal() {
     maxWidth: 860,
     width: 860,
     close: function () {
-      $j('#check_confirma_dados_unificacao').prop('checked', false);
       $j('#dialog-container').dialog('destroy');
     },
     buttons: [{
       text: 'Ok',
       click: function () {
-        $j('#check_confirma_dados_unificacao').prop('checked', false);
         $j('#dialog-container').dialog('destroy');
       }
     },]
@@ -363,13 +366,13 @@ function validaCheckPessoaPrincipal(element) {
     return;
   }
 
-  if ($j('#vinculo_' + idpes).text() != 'Sem vínculo') {
+  if ($j('#vinculo_' + idpes).text() !== 'Sem vínculo') {
     return;
   }
 
   if ($quantidadeDeVinculosComAlunos > 0 || $quantidadeDeVinculosComServidores > 0) {
+    desabilitaBotaoUnificar();
     modalInformePessoaPrincipalComVinculo(element.id);
-    return;
   }
 }
 
@@ -381,14 +384,12 @@ function modalInformePessoaPrincipalComVinculo(checkId) {
     width: 400,
     close: function () {
       $j('#'+checkId).prop('checked', false);
-      desabilitaBotaoUnificar();
       $j('#dialog-container').dialog('destroy');
     },
     buttons: [{
       text: 'Ok',
       click: function () {
         $j('#'+checkId).prop('checked', false);
-        desabilitaBotaoUnificar();
         $j('#dialog-container').dialog('destroy');
       }
     },]
@@ -590,7 +591,11 @@ var handleSelect = function(event, ui){
   }
 
   function makeDialog(params) {
-  var container = $j('#dialog-container');
+    params.closeOnEscape = false;
+    params.draggable = false;
+    params.modal = true;
+
+  let container = $j('#dialog-container');
 
   if (container.length < 1) {
   $j('body').append('<div id="dialog-container" style="width: 500px;"></div>');
