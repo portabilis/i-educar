@@ -457,6 +457,9 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
+        $obj_permissoes = new clsPermissoes();
+        $this->fexcluir = $obj_permissoes->permissao_excluir(561, $this->pessoa_logada, 3);
+
         // assets
         $scripts = [
             '/modules/Portabilis/Assets/Javascripts/Utils.js',
@@ -468,8 +471,6 @@ return new class extends clsCadastro {
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
         $styles = ['/modules/Cadastro/Assets/Stylesheets/Escola.css'];
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
-
-        $obj_permissoes = new clsPermissoes();
 
         $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
 
@@ -1157,7 +1158,7 @@ return new class extends clsCadastro {
             ];
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-            $options = ['label' => 'Número de salas de aula utilizadas na escola dentro do prédio escolar', 'resources' => $resources, 'value' => $this->numero_salas_utilizadas_dentro_predio, 'required' => false, 'size' => 5, 'placeholder' => '', 'max_length' => 4];
+            $options = ['label' => 'Número de salas de aula utilizadas na escola dentro do prédio escolar', 'resources' => $resources, 'value' => $this->numero_salas_utilizadas_dentro_predio, 'required' => $obrigarCamposCenso, 'size' => 5, 'placeholder' => '', 'max_length' => 4];
             $this->inputsHelper()->integer('numero_salas_utilizadas_dentro_predio', $options);
 
             $options = ['label' => 'Número de salas de aula utilizadas na escola fora do prédio escolar', 'resources' => $resources, 'value' => $this->numero_salas_utilizadas_fora_predio, 'required' => false, 'size' => 5, 'placeholder' => '', 'max_length' => 4];
@@ -1445,6 +1446,10 @@ return new class extends clsCadastro {
                 ]
             ];
             $this->inputsHelper()->simpleSearchIes(null, $options, $helperOptions);
+
+            $this->breadcrumb('Escola', ['educar_index.php' => 'Escola']);
+            $this->url_cancelar = (!empty($this->cod_escola)) ? "educar_escola_det.php?cod_escola={$this->cod_escola}" : 'educar_escola_lst.php';
+            $this->nome_url_cancelar = 'Cancelar';
         }
     }
 
