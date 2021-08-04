@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "736818665d88c53ce757d8313001e048",
+    "content-hash": "a89a31af35325190cb33bfbb309ee975",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -64,16 +64,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.185.17",
+            "version": "3.185.18",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "3f639e8a6fff677f788700940a68dc138ea5da71"
+                "reference": "726d042a6e445557a5709735b494886d4f12025a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/3f639e8a6fff677f788700940a68dc138ea5da71",
-                "reference": "3f639e8a6fff677f788700940a68dc138ea5da71",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/726d042a6e445557a5709735b494886d4f12025a",
+                "reference": "726d042a6e445557a5709735b494886d4f12025a",
                 "shasum": ""
             },
             "require": {
@@ -148,9 +148,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.185.17"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.185.18"
             },
-            "time": "2021-07-20T18:19:09+00:00"
+            "time": "2021-07-21T18:18:25+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
