@@ -457,9 +457,6 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
-        $obj_permissoes = new clsPermissoes();
-        $this->fexcluir = $obj_permissoes->permissao_excluir(561, $this->pessoa_logada, 3);
-
         // assets
         $scripts = [
             '/modules/Portabilis/Assets/Javascripts/Utils.js',
@@ -486,6 +483,8 @@ return new class extends clsCadastro {
             $this->array_botao_url_script = ['obj = document.getElementById(\'pessoaj_idpes\');if(obj.value != \'\' ) {
                 document.getElementById(\'tipoacao\').value = \'\'; acao(); } else { acao(); }', 'go(\'educar_escola_lst.php\');'];
         } else {
+            $obj_permissoes = new clsPermissoes();
+            $this->fexcluir = $obj_permissoes->permissao_excluir(561, $this->pessoa_logada, 3);
             $this->inputsHelper()->integer('escola_inep_id', ['label' => 'Código INEP', 'placeholder' => 'INEP', 'required' => $obrigarCamposCenso, 'max_length' => 8, 'label_hint' => 'Somente números']);
 
             $this->carregaDadosDoPost();
