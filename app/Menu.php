@@ -260,27 +260,23 @@ class Menu extends Model
     {
         $key = $user->getMenuCacheKey();
         $client = config('legacy.app.database.dbname');
-        $cacheMenus = Cache::tags(['menus', $client])->get($key);
+
+        $cacheMenus = Cache::tags(['menus', $client, $key])->get($key);
 
         if ($cacheMenus !== null) {
             return $cacheMenus;
         }
 
         if ($user->isAdmin()) {
-
-            if ($key === null) {
-                return static::roots();
-            }
-
             $adminMenus = static::roots();
-            Cache::tags(['menus', $client])->put($key, $adminMenus, 15);
+            Cache::tags(['menus', $client, $key])->put($key, $adminMenus, 15);
             return $adminMenus;
         }
 
         $ids = $user->menu()->pluck('id')->sortBy('id')->toArray();
 
         $menus = self::getMenusByIds($ids);
-        Cache::tags(['menus', $client])->put($key, $menus, 15);
+        Cache::tags(['menus', $client, $key])->put($key, $menus, 15);
 
         return $menus;
     }

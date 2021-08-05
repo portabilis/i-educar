@@ -372,6 +372,6 @@ class User extends Authenticatable
             return null;
         }
 
-        return 'menu-' . config('legacy.app.database.dbname') . '-' . $this->type->cod_tipo_usuario;;
+        return 'menu-' . config('legacy.app.database.dbname') . '-' . $this->type->cod_tipo_usuario;
     }
 }
