@@ -258,7 +258,6 @@ class Menu extends Model
      */
     public static function user(User $user)
     {
-        dd(env('CACHE_TTL'));
         $key = $user->getMenuCacheKey();
         $client = config('legacy.app.database.dbname');
 
