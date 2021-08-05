@@ -361,4 +361,17 @@ class User extends Authenticatable
         $this->ativo = 0;
         $this->save();
     }
+
+    public function getMenuCacheKey()
+    {
+        if (config('legacy.app.database.dbname') === null) {
+            return null;
+        }
+
+        if ($this->type->cod_tipo_usuario === null) {
+            return null;
+        }
+
+        return 'menu-' . config('legacy.app.database.dbname') . '-' . $this->type->cod_tipo_usuario;;
+    }
 }

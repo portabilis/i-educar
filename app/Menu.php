@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Collection as LaravelCollection;
 
 /**
@@ -41,6 +42,54 @@ class Menu extends Model
         'process',
         'active',
     ];
+
+    private static function getMenusByIds($ids): Collection
+    {
+        return static::query()
+            ->with([
+                'children' => function ($query) use ($ids) {
+                    /** @var Builder $query */
+                    $query->whereNull('process');
+                    $query->orWhereIn('id', $ids);
+                    $query->orderBy('order');
+                    $query->with([
+                        'children' => function ($query) use ($ids) {
+                            /** @var Builder $query */
+                            $query->whereNull('process');
+                            $query->orWhereIn('id', $ids);
+                            $query->orderBy('order');
+                            $query->with([
+                                'children' => function ($query) use ($ids) {
+                                    /** @var Builder $query */
+                                    $query->whereNull('process');
+                                    $query->orWhereIn('id', $ids);
+                                    $query->orderBy('order');
+                                    $query->with([
+                                        'children' => function ($query) use ($ids) {
+                                            /** @var Builder $query */
+                                            $query->whereNull('process');
+                                            $query->orWhereIn('id', $ids);
+                                            $query->orderBy('order');
+                                            $query->with([
+                                                'children' => function ($query) use ($ids) {
+                                                    /** @var Builder $query */
+                                                    $query->whereNull('process');
+                                                    $query->orWhereIn('id', $ids);
+                                                    $query->orderBy('order');
+                                                }
+                                            ]);
+                                        }
+                                    ]);
+                                }
+                            ]);
+                        }
+                    ]);
+                }
+            ])
+            ->whereNull('parent_id')
+            ->orderBy('order')
+            ->get();
+    }
 
     /**
      * Indica se o menu é um link ou tem ao menos um link em seus submenus.
@@ -209,56 +258,31 @@ class Menu extends Model
      */
     public static function user(User $user)
     {
+        $key = $user->getMenuCacheKey();
+        $client = config('legacy.app.database.dbname');
+        $cacheMenus = Cache::tags(['menus', $client])->get($key);
+
+        if ($cacheMenus !== null) {
+            return $cacheMenus;
+        }
+
         if ($user->isAdmin()) {
-            return static::roots();
+
+            if ($key === null) {
+                return static::roots();
+            }
+
+            $adminMenus = static::roots();
+            Cache::tags(['menus', $client])->put($key, $adminMenus, 15);
+            return $adminMenus;
         }
 
         $ids = $user->menu()->pluck('id')->sortBy('id')->toArray();
 
-        return static::query()
-            ->with([
-                'children' => function ($query) use ($ids) {
-                    /** @var Builder $query */
-                    $query->whereNull('process');
-                    $query->orWhereIn('id', $ids);
-                    $query->orderBy('order');
-                    $query->with([
-                        'children' => function ($query) use ($ids) {
-                            /** @var Builder $query */
-                            $query->whereNull('process');
-                            $query->orWhereIn('id', $ids);
-                            $query->orderBy('order');
-                            $query->with([
-                                'children' => function ($query) use ($ids) {
-                                    /** @var Builder $query */
-                                    $query->whereNull('process');
-                                    $query->orWhereIn('id', $ids);
-                                    $query->orderBy('order');
-                                    $query->with([
-                                        'children' => function ($query) use ($ids) {
-                                            /** @var Builder $query */
-                                            $query->whereNull('process');
-                                            $query->orWhereIn('id', $ids);
-                                            $query->orderBy('order');
-                                            $query->with([
-                                                'children' => function ($query) use ($ids) {
-                                                    /** @var Builder $query */
-                                                    $query->whereNull('process');
-                                                    $query->orWhereIn('id', $ids);
-                                                    $query->orderBy('order');
-                                                }
-                                            ]);
-                                        }
-                                    ]);
-                                }
-                            ]);
-                        }
-                    ]);
-                }
-            ])
-            ->whereNull('parent_id')
-            ->orderBy('order')
-            ->get();
+        $menus = self::getMenusByIds($ids);
+        Cache::tags(['menus', $client])->put($key, $menus, 15);
+
+        return $menus;
     }
 
     /**
