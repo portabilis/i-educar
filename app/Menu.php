@@ -258,6 +258,7 @@ class Menu extends Model
      */
     public static function user(User $user)
     {
+        dd(env('CACHE_TTL'));
         $key = $user->getMenuCacheKey();
         $client = config('legacy.app.database.dbname');
 
@@ -269,14 +270,14 @@ class Menu extends Model
 
         if ($user->isAdmin()) {
             $adminMenus = static::roots();
-            Cache::tags(['menus', $client, $key])->put($key, $adminMenus, 15);
+            Cache::tags(['menus', $client, $key])->put($key, $adminMenus, env('CACHE_TTL',60));
             return $adminMenus;
         }
 
         $ids = $user->menu()->pluck('id')->sortBy('id')->toArray();
 
         $menus = self::getMenusByIds($ids);
-        Cache::tags(['menus', $client, $key])->put($key, $menus, 15);
+        Cache::tags(['menus', $client, $key])->put($key, $menus, env('CACHE_TTL', 60));
 
         return $menus;
     }
