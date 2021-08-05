@@ -10,6 +10,7 @@ use Illuminate\Database\Connection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 use Throwable;
 
@@ -55,8 +56,9 @@ class AccessLevelController extends Controller
         $userType->saveOrFail();
 
         $userType->menus()->syncWithoutDetaching($processes);
-    }
 
+        Cache::tags('menu-' . config('legacy.app.database.dbname') . '-' . $userType->cod_tipo_usuario)->flush();
+    }
     /**
      * @param Request $request
      *
