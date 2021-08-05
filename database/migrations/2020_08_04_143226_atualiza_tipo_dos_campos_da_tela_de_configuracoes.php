@@ -16,6 +16,8 @@ class AtualizaTipoDosCamposDaTelaDeConfiguracoes extends Migration
             UPDATE settings
             SET type = (
                 CASE key
+                    WHEN \'legacy.code\' THEN \'boolean\'
+                    WHEN \'legacy.display_errors\' THEN \'boolean\'
                     WHEN \'legacy.app.administrative_pending.exist\' THEN \'boolean\'
                     WHEN \'legacy.app.alunos.mostrar_codigo_sistema\' THEN \'boolean\'
                     WHEN \'legacy.app.alunos.laudo_medico_obrigatorio\' THEN \'boolean\'
@@ -51,8 +53,13 @@ class AtualizaTipoDosCamposDaTelaDeConfiguracoes extends Migration
                     WHEN \'legacy.report.modelo_atestado_transferencia_parauapebas\' THEN \'boolean\'
                     WHEN \'legacy.report.print_back_conclusion_certificate\' THEN \'boolean\'
                     WHEN \'legacy.report.show_error_details\' THEN \'boolean\'
+                    WHEN \'legacy.modules.error.send_notification_email\' THEN \'boolean\'
+                    WHEN \'legacy.modules.error.send_notification_email\' THEN \'boolean\'
                     WHEN \'legacy.modules.error.track\' THEN \'boolean\'
                     WHEN \'legacy.report.reservas_de_vagas_integrais_por_escola.renda_per_capita_order\' THEN \'boolean\'
+                    WHEN \'legacy.report.diario_classe.dias_temporarios\' THEN \'integer\'
+                    WHEN \'legacy.app.mailer.debug\' THEN \'boolean\'
+                    WHEN \'legacy.modules.error.notification_email\' THEN \'boolean\'
                     WHEN \'preregistration.active\' THEN \'boolean\'
                     WHEN \'preregistration.enabled\' THEN \'boolean\'
                     WHEN \'preregistration.ibge_code\' THEN \'integer\'

@@ -383,3 +383,14 @@ function validaDigitosCNPJ($cnpj): bool
 
     return (((int) $cnpj[12] === $digitoVerificador1) && ((int)$cnpj[13] === $digitoVerificador2));
 }
+
+function isEmptyDbArray($value): bool
+{
+    $value = explode(',', str_replace(['{', '}'], '', $value));
+    return empty($value[0]);
+}
+
+function isArrayEmpty($value): bool
+{
+    return is_array($value) && empty($value[0]);
+}

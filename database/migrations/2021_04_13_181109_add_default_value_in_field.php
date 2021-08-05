@@ -40,7 +40,7 @@ class AddDefaultValueInField extends Migration
     private function downViews()
     {
         $this->createView('public.exporter_person', '2021-03-17');
-        $this->createView('public.exporter_student', '2020-03-17');
+        $this->createView('public.exporter_student', '2021-03-17');
         $this->createView('public.exporter_social_assistance', '2020-05-07');
         $this->createView('public.exporter_teacher', '2020-04-07');
     }

@@ -5,14 +5,12 @@ return new class extends clsListagem {
     {
         $this->titulo = 'Pessoas Físicas';
 
-        $this->addCabecalhos([ 'Nome', 'CPF']);
-        $this->campoTexto('nm_pessoa', 'Nome', $this->getQueryString('nm_pessoa'), '50', '255', true);
-        $this->campoCpf('id_federal', 'CPF', $this->getQueryString('id_federal'), '50', '', true);
+        $this->addCabecalhos(['Nome', 'CPF']);
+        $this->campoTexto('nm_pessoa', 'Nome', $this->getQueryString('nm_pessoa'), '50', '255');
+        $this->campoCpf('id_federal', 'CPF', $this->getQueryString('id_federal'));
 
-        $where='';
         $par_nome = $this->getQueryString('nm_pessoa') ?: false;
         $par_id_federal = idFederal2Int($this->getQueryString('id_federal')) ?: false;
-        $dba = $db = new clsBanco();
 
         $objPessoa = new clsPessoaFisica();
 
