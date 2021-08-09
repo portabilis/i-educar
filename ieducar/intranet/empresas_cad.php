@@ -1,6 +1,7 @@
 <?php
 
 use iEducar\Modules\Addressing\LegacyAddressingFields;
+use Illuminate\Support\Facades\Auth;
 
 return new class extends clsCadastro {
     use LegacyAddressingFields;
@@ -35,32 +36,22 @@ return new class extends clsCadastro {
 
     public function Inicializar()
     {
-        $this->busca_empresa = $_POST['busca_empresa'];
-        $this->cod_pessoa_fj = $_GET['idpes'];
+        $this->cod_pessoa_fj = is_numeric($_GET['idpes']) ? (int) $_GET['idpes'] : null;
         $this->idpes_cad = $this->pessoa_logada;
 
-        if ($this->busca_empresa) {
-            $this->cnpj = $this->busca_empresa;
-            $this->busca_empresa = idFederal2int($this->busca_empresa);
-            $this->retorno = 'Novo';
-            $objPessoa = new clsPessoaJuridica();
-            list($this->cod_pessoa_fj) = $objPessoa->queryRapidaCNPJ($this->busca_empresa, 'idpes');
-        }
+        $this->retorno = 'Novo';
 
         if ($this->cod_pessoa_fj) {
             $this->busca_empresa = true;
             $objPessoaJuridica = new clsPessoaJuridica($this->cod_pessoa_fj);
             $detalhePessoaJuridica = $objPessoaJuridica->detalhe();
-            //echo "<pre>";
-            //print_r($detalhePessoaJuridica);
-            //die();
             $this->email = $detalhePessoaJuridica['email'];
             $this->url = $detalhePessoaJuridica['url'];
             $this->insc_est = $detalhePessoaJuridica['insc_estadual'];
             $this->capital_social = $detalhePessoaJuridica['capital_social'];
             $this->razao_social = $detalhePessoaJuridica['nome'];
             $this->fantasia = $detalhePessoaJuridica['fantasia'];
-            $this->cnpj = int2CNPJ($detalhePessoaJuridica['cnpj']);
+            $this->cnpj = validaCNPJ($detalhePessoaJuridica['cnpj']) ? int2CNPJ($detalhePessoaJuridica['cnpj']) : null;
             $this->ddd_telefone_1 = $detalhePessoaJuridica['ddd_1'];
             $this->telefone_1 = $detalhePessoaJuridica['fone_1'];
             $this->ddd_telefone_2 = $detalhePessoaJuridica['ddd_2'];
@@ -77,7 +68,7 @@ return new class extends clsCadastro {
 
         $this->nome_url_cancelar = 'Cancelar';
 
-        $nomeMenu = $this->retorno == 'Editar' ? $this->retorno : 'Cadastrar';
+        $nomeMenu = $this->retorno === 'Editar' ? $this->retorno : 'Cadastrar';
 
         $this->breadcrumb("{$nomeMenu} pessoa jurídica", [
             url('intranet/educar_pessoas_index.php') => 'Pessoas',
@@ -88,40 +79,34 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
-        if (!$this->busca_empresa) {
-            $this->campoCnpj('busca_empresa', 'CNPJ', $this->busca_empresa, true);
+        $this->url_cancelar = ($this->retorno === 'Editar') ? "empresas_det.php?cod_empresa={$this->cod_pessoa_fj}" : 'empresas_lst.php';
+
+        $this->campoOculto('cod_pessoa_fj', $this->cod_pessoa_fj);
+        $this->campoOculto('idpes_cad', $this->idpes_cad);
+
+        // Dados da Empresa
+        $this->campoTexto('fantasia', 'Nome Fantasia', $this->fantasia, '50', '255', true);
+        $this->campoTexto('razao_social', 'Razão Social', $this->razao_social, '50', '255', true);
+        $this->campoTexto('capital_social', 'Capital Social', $this->capital_social, '50', '255');
+
+        if ((new clsPermissoes)->nivel_acesso(Auth::id()) > App_Model_NivelTipoUsuario::INSTITUCIONAL) {
+            $this->campoRotulo('cnpj_', 'CNPJ', $this->cnpj);
+            $this->campoOculto('cnpj', $this->cnpj);
         } else {
-            $this->url_cancelar = ($this->retorno == 'Editar') ? "empresas_det.php?cod_empresa={$this->cod_pessoa_fj}" : 'empresas_lst.php';
-
-            $this->campoOculto('cod_pessoa_fj', $this->cod_pessoa_fj);
-            $this->campoOculto('idpes_cad', $this->idpes_cad);
-
-            // Dados da Empresa
-            $this->campoTexto('fantasia', 'Nome Fantasia', $this->fantasia, '50', '255', true);
-            $this->campoTexto('razao_social', 'Raz&atilde;o Social', $this->razao_social, '50', '255', true);
-            $this->campoTexto('capital_social', 'Capital Social', $this->capital_social, '50', '255');
-
-            $nivelUsuario = (new clsPermissoes)->nivel_acesso(\Illuminate\Support\Facades\Auth::id());
-            if (!$this->cod_pessoa_fj || $nivelUsuario > App_Model_NivelTipoUsuario::INSTITUCIONAL) {
-                $this->campoRotulo('cnpj_', 'CNPJ', $this->cnpj);
-                $this->campoOculto('cnpj', $this->cnpj);
-            } else {
-                $this->campoCnpj('cnpj', 'CNPJ', $this->cnpj, true);
-            }
-
-            $this->viewAddress();
-
-            $this->inputTelefone('1', 'Telefone 1');
-            $this->inputTelefone('2', 'Telefone 2');
-            $this->inputTelefone('mov', 'Celular');
-            $this->inputTelefone('fax', 'Fax');
-
-            // Dados da Empresa
-
-            $this->campoTexto('url', 'Site', $this->url, '50', '255', false);
-            $this->campoTexto('email', 'E-mail', $this->email, '50', '255', false);
-            $this->campoTexto('insc_est', 'Inscri&ccedil;&atilde;o Estadual', $this->insc_est, '20', '30', false);
+            $this->campoCnpj('cnpj', 'CNPJ', $this->cnpj);
         }
+
+        $this->viewAddress();
+
+        $this->inputTelefone('1', 'Telefone 1');
+        $this->inputTelefone('2', 'Telefone 2');
+        $this->inputTelefone('mov', 'Celular');
+        $this->inputTelefone('fax', 'Fax');
+
+        // Dados da Empresa
+        $this->campoTexto('url', 'Site', $this->url, '50', '255');
+        $this->campoTexto('email', 'E-mail', $this->email, '50', '255');
+        $this->campoTexto('insc_est', 'Inscrição Estadual', $this->insc_est, '20', '30');
 
         Portabilis_View_Helper_Application::loadJavascript($this, [
             '/modules/Cadastro/Assets/Javascripts/Addresses.js',
@@ -130,101 +115,100 @@ return new class extends clsCadastro {
 
     public function Novo()
     {
-        $this->cnpj = idFederal2int(urldecode($this->cnpj));
-        $objJuridica = new clsJuridica(false, $this->cnpj);
-        $detalhJuridica = $objJuridica->detalhe();
-        if (!$detalhJuridica) {
-            $this->insc_est = idFederal2int($this->insc_est);
-
-            $this->idpes_cad = $this->pessoa_logada;
-
-            $objPessoa = new clsPessoa_(
-                false,
-                $this->razao_social,
-                $this->idpes_cad,
-                $this->url,
-                'J',
-                false,
-                false,
-                $this->email
-            );
-            $this->cod_pessoa_fj = $objPessoa->cadastra();
-
-            $objJuridica = new clsJuridica(
-                $this->cod_pessoa_fj,
-                $this->cnpj,
-                $this->fantasia,
-                $this->insc_est,
-                $this->capital_social
-            );
-            $objJuridica->cadastra();
-
-            if ($this->telefone_1) {
-                $this->telefone_1 = str_replace('-', '', $this->telefone_1);
-                $this->telefone_1 = trim($this->telefone_1);
-                if (is_numeric($this->telefone_1) && (strlen($this->telefone_1) < 12)) {
-                    $objTelefone = new clsPessoaTelefone(
-                        $this->cod_pessoa_fj,
-                        1,
-                        $this->telefone_1,
-                        $this->ddd_telefone_1
-                    );
-                    $objTelefone->cadastra();
-                }
-            }
-            if ($this->telefone_2) {
-                $this->telefone_2 = str_replace('-', '', $this->telefone_2);
-                $this->telefone_2 = trim($this->telefone_2);
-                if (is_numeric($this->telefone_2) && (strlen($this->telefone_2) < 12)) {
-                    $objTelefone = new clsPessoaTelefone(
-                        $this->cod_pessoa_fj,
-                        2,
-                        $this->telefone_2,
-                        $this->ddd_telefone_2
-                    );
-                    $objTelefone->cadastra();
-                }
-            }
-            if ($this->telefone_mov) {
-                $this->telefone_mov = str_replace('-', '', $this->telefone_mov);
-                $this->telefone_mov = trim($this->telefone_mov);
-                if (is_numeric($this->telefone_mov) && (strlen($this->telefone_mov) < 12)) {
-                    $objTelefone = new clsPessoaTelefone(
-                        $this->cod_pessoa_fj,
-                        3,
-                        $this->telefone_mov,
-                        $this->ddd_telefone_mov
-                    );
-                    $objTelefone->cadastra();
-                }
-            }
-            if ($this->telefone_fax) {
-                $this->telefone_fax = str_replace('-', '', $this->telefone_fax);
-                $this->telefone_fax = trim($this->telefone_fax);
-                if (is_numeric($this->telefone_fax) && (strlen($this->telefone_fax) < 12)) {
-                    $objTelefone = new clsPessoaTelefone(
-                        $this->cod_pessoa_fj,
-                        4,
-                        $this->telefone_fax,
-                        $this->ddd_telefone_fax
-                    );
-                    $objTelefone->cadastra();
-                }
-            }
-
-            $this->saveAddress($this->cod_pessoa_fj);
-
-            $this->simpleRedirect('empresas_lst.php');
+        if (! empty($this->cnpj) && validaCNPJ($this->cnpj) === false) {
+            $this->mensagem = 'CNPJ inválido';
+            return false;
         }
 
-        $this->mensagem = 'Já existe uma empresa cadastrada com este CNPJ.';
+        $this->cnpj = validaCNPJ($this->cnpj) ? idFederal2int(urldecode($this->cnpj)) : null;
 
-        return false;
+        $contemPessoaJuridica = (new clsJuridica(false, $this->cnpj))->detalhe();
+        if ($this->cnpj !== null && $contemPessoaJuridica) {
+            $this->mensagem = 'Já existe uma empresa cadastrada com este CNPJ.';
+            return false;
+        }
+
+        $this->insc_est = idFederal2int($this->insc_est);
+        $this->idpes_cad = $this->pessoa_logada;
+
+        $objPessoa = new clsPessoa_(
+            false,
+            $this->razao_social,
+            $this->idpes_cad,
+            $this->url,
+            'J',
+            false,
+            false,
+            $this->email
+        );
+
+        $this->cod_pessoa_fj = $objPessoa->cadastra();
+
+        (new clsJuridica(
+           $this->cod_pessoa_fj,
+           $this->cnpj,
+           $this->fantasia,
+           $this->insc_est,
+           $this->capital_social
+        ))->cadastra();
+
+
+        if ($this->telefone_1) {
+            $this->cadastraTelefone($this->cod_pessoa_fj,1, $this->telefone_1, $this->ddd_telefone_1);
+        }
+
+        if ($this->telefone_2) {
+            $this->cadastraTelefone($this->cod_pessoa_fj, 2,$this->telefone_2, $this->ddd_telefone_2);
+        }
+
+        if ($this->telefone_mov) {
+            $this->cadastraTelefone($this->cod_pessoa_fj, 3,$this->telefone_mov, $this->ddd_telefone_mov);
+        }
+
+        if ($this->telefone_fax) {
+            $this->cadastraTelefone($this->cod_pessoa_fj, 4,$this->telefone_fax, $this->ddd_telefone_fax);
+        }
+
+        $this->saveAddress($this->cod_pessoa_fj);
+
+        $this->simpleRedirect('empresas_lst.php');
+
+        return true;
+    }
+
+    private function cadastraTelefone($codPessoaJuridica, $tipo, $telefone, $dddTelefone)
+    {
+        $telefone = $this->limpaDadosTelefone($telefone);
+
+        if ($this->validaDadosTelefone($telefone)) {
+            (new clsPessoaTelefone(
+                $codPessoaJuridica,
+                $tipo,
+                $telefone,
+                $dddTelefone
+            ))->cadastra();
+        }
+    }
+
+    private function limpaDadosTelefone($telefone)
+    {
+        return trim(str_replace('-', '', $telefone));
+    }
+
+    private function validaDadosTelefone($telefone)
+    {
+        return is_numeric($telefone) && (strlen($telefone) < 12);
     }
 
     public function Editar()
     {
-        $this->cnpj = idFederal2int(urldecode($this->cnpj));
+        if (! empty($this->cnpj) && validaCNPJ($this->cnpj) === false) {
+            $this->mensagem = 'CNPJ inválido';
+            return false;
+        }
+
+        $this->cnpj = validaCNPJ($this->cnpj) ? idFederal2int(urldecode($this->cnpj)) : false;
+
         $objJuridica = new clsJuridica(false, $this->cnpj);
 
         $detalhe = $objJuridica->detalhe();
@@ -377,7 +361,7 @@ return new class extends clsCadastro {
             $this->validaDDDTelefone($this->ddd_telefone_fax, $this->telefone_fax, 'Fax');
     }
 
-    protected function validaDDDTelefone($valorDDD = null, $valorTelefone = null, $nomeCampo)
+    protected function validaDDDTelefone($valorDDD, $valorTelefone, $nomeCampo)
     {
         $msgRequereTelefone = "O campo: {$nomeCampo}, deve ser preenchido quando o DDD estiver preenchido.";
         $msgRequereDDD = "O campo: DDD, deve ser preenchido quando o {$nomeCampo} estiver preenchido.";
@@ -399,7 +383,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'Empresas!';
+        $this->_titulo = 'Empresas!';
         $this->processoAp = 41;
     }
 };

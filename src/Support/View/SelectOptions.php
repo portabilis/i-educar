@@ -142,7 +142,7 @@ class SelectOptions
      */
     public static function locaisFuncionamentoEscola()
     {
-        return self::getDefaultOption() + LocalFuncionamento::getDescriptiveValues();
+        return LocalFuncionamento::getDescriptiveValues();
     }
 
     public static function tiposMediacaoDidaticoPedagogico()

@@ -136,6 +136,8 @@ return new class extends clsCadastro {
                 $obj_servidor_disciplina = new clsPmieducarServidorDisciplina();
                 $lst_servidor_disciplina = $obj_servidor_disciplina->lista(null, $this->ref_cod_instituicao, $this->cod_servidor);
 
+                Session::forget("servant:{$this->cod_servidor}");
+
                 if ($lst_servidor_disciplina) {
                     foreach ($lst_servidor_disciplina as $disciplina) {
                         $funcoes[$disciplina['ref_cod_funcao']][$disciplina['ref_cod_curso']][] = $disciplina['ref_cod_disciplina'];
@@ -469,7 +471,7 @@ JS;
         $this->ref_cod_instituicao = (int) $this->ref_cod_instituicao;
 
         $timesep = explode(':', $this->carga_horaria);
-        $hour = $timesep[0] + ((int) ($timesep[1] / 60));
+        $hour = (int) $timesep[0] + ((int) ($timesep[1] / 60));
         $min = abs(((int) ($timesep[1] / 60)) - ($timesep[1] / 60)) . '<br>';
 
         $this->carga_horaria = $hour + $min;
@@ -796,8 +798,6 @@ JS;
             }
         }
 
-        $this->excluiFuncoesRemovidas($listFuncoesCadastradas);
-
         if (!$existe_funcao_professor) {
             $this->excluiDisciplinas(array_keys($funcoes));
             $this->excluiCursos();
@@ -841,6 +841,18 @@ JS;
                     }
                 }
             }
+
+            $funcoesRemovidas = $funcoes;
+
+            foreach ($listFuncoesCadastradas as $funcao) {
+                unset($funcoesRemovidas[$funcao]);
+            }
+
+            if (count($funcoesRemovidas) > 0) {
+                $this->excluiDisciplinas(array_keys($funcoesRemovidas));
+            }
+
+            $this->excluiFuncoesRemovidas($listFuncoesCadastradas);
         }
     }
 

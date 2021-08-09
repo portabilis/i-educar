@@ -1467,3 +1467,8 @@ a.btn-detalhes {
   align-items: center !important;
   justify-content: center !important;
 }
+
+.btn-disabled#btn_enviar {
+  background: rgb(233, 240, 248) !important;
+  cursor: not-allowed;
+}

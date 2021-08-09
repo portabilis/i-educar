@@ -49,7 +49,7 @@ class clsJuridica
     {
         $db = new clsBanco();
 
-        if (is_numeric($this->idpes) && is_numeric($this->cnpj) && is_numeric($this->idpes_cad)) {
+        if (is_numeric($this->idpes) && is_numeric($this->idpes_cad)) {
             $campos = '';
             $valores = '';
             if ($this->fantasia) {
@@ -66,10 +66,20 @@ class clsJuridica
                 $valores .= ", '{$this->capital_social}' ";
             }
 
-            $db->Consulta("INSERT INTO {$this->schema}.{$this->tabela} (idpes, cnpj, origem_gravacao, data_cad, operacao, idpes_cad $campos) VALUES ($this->idpes, '$this->cnpj', 'M', NOW(), 'I', '$this->idpes_cad' $valores)");
+            /**
+             * Quando o CNPJ é null é preciso montar um insert específico por conta da concatenação com NULL
+             */
+            if ($this->cnpj === null) {
+                $sql = "INSERT INTO {$this->schema}.{$this->tabela} (idpes, cnpj, origem_gravacao, data_cad, operacao, idpes_cad $campos) VALUES ($this->idpes, null, 'M', NOW(), 'I', '$this->idpes_cad' $valores)";
+
+            } else {
+                $sql = "INSERT INTO {$this->schema}.{$this->tabela} (idpes, cnpj, origem_gravacao, data_cad, operacao, idpes_cad $campos) VALUES ($this->idpes, '$this->cnpj', 'M', NOW(), 'I', '$this->idpes_cad' $valores)";
+            }
+
+            $db->Consulta($sql);
 
             if ($this->idpes) {
-                $detalhe = $this->detalhe();
+                $this->detalhe();
             }
 
             return true;

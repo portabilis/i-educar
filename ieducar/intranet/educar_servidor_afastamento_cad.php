@@ -72,7 +72,7 @@ return new class extends clsCadastro {
         );
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, $urlPemite);
+        $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, $urlPermite);
 
         if (is_numeric($this->ref_cod_servidor) && is_numeric($this->sequencial) &&
             is_numeric($this->ref_cod_instituicao)) {

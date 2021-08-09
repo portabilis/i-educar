@@ -617,11 +617,30 @@ class PessoaController extends ApiCoreController
         return Portabilis_Utils_Database::selectField($sql, ['params' => [$servidorId]]);
     }
 
+    protected function existServant($servidorId)
+    {
+        $sql = 'SELECT 1 FROM pmieducar.servidor WHERE cod_servidor = $1';
+
+        return Portabilis_Utils_Database::selectField($sql, ['params' => [$servidorId]]);
+    }
+
     protected function getInfoServidor()
     {
         $servidorId = $this->getRequest()->servidor_id;
         $_servidor['inep'] = $this->getInep($servidorId);
         $_servidor['deficiencias'] = $this->loadDeficiencias($servidorId);
+
+        return $_servidor;
+    }
+
+    protected function isExistServant()
+    {
+        $id = (int) $this->getRequest()->servidor_id;
+        $exist = $this->existServant($id) === 1;
+
+        $_servidor['exist'] = $exist;
+        $_servidor['id'] = $id;
+        $_servidor['nome'] = $exist ? $this->loadPessoa($id)['nome'] : null;
 
         return $_servidor;
     }
@@ -709,6 +728,8 @@ class PessoaController extends ApiCoreController
             $this->appendResponse($this->post());
         } elseif ($this->isRequestFor('get', 'info-servidor')) {
             $this->appendResponse($this->getInfoServidor());
+        } elseif ($this->isRequestFor('get', 'exist-servidor')) {
+            $this->appendResponse($this->isExistServant());
         } elseif ($this->isRequestFor('post', 'pessoa-endereco')) {
             $this->appendResponse($this->createOrUpdateEndereco());
         } elseif ($this->isRequestFor('get', 'pessoa-parent')) {

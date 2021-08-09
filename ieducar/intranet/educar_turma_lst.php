@@ -81,7 +81,7 @@ return new class extends clsListagem {
             $this->ano = date('Y');
         }
 
-        $this->inputsHelper()->dynamic(['ano', 'instituicao', 'escola', 'curso', 'serie']);
+        $this->inputsHelper()->dynamic(['ano', 'instituicao', 'escola', 'curso', 'serie'], ['ano' => $this->ano]);
 
         $this->campoTexto('nm_turma', 'Turma', $this->nm_turma, 30, 255, false);
         $this->campoLista('visivel', 'Situação', ['' => 'Selecione', '1' => 'Ativo', '2' => 'Inativo'], $this->visivel, null, null, null, null, null, false);

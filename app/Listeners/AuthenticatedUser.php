@@ -10,6 +10,13 @@ use Illuminate\Validation\ValidationException;
 
 class AuthenticatedUser
 {
+    private $disableUsersWithDaysGoneSinceLastAccessService;
+
+    public function __construct(DisableUsersWithDaysGoneSinceLastAccessService $disableUsersWithDaysGoneSinceLastAccessService)
+    {
+        $this->disableUsersWithDaysGoneSinceLastAccessService = $disableUsersWithDaysGoneSinceLastAccessService;
+    }
+
     /**
      * Handle the event.
      *
@@ -40,7 +47,6 @@ class AuthenticatedUser
 
     public function validateUserExpirationPeriod(Authenticatable $user)
     {
-        $disableUsersWithDaysGoneSinceLastAccessService = app(DisableUsersWithDaysGoneSinceLastAccessService::class);
-        $disableUsersWithDaysGoneSinceLastAccessService->execute($user);
+        $this->disableUsersWithDaysGoneSinceLastAccessService->execute($user);
     }
 }

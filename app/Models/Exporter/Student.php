@@ -67,6 +67,7 @@ class Student extends Model
                 'grade' => 'Série',
                 'course' => 'Curso',
                 'registration_date' => 'Data da Matrícula',
+                'registration_out' => 'Data de saída da matrícula',
                 'year' => 'Ano',
                 'status_text' => 'Situação da Matrícula',
                 'period' => 'Turno',

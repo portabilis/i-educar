@@ -195,10 +195,13 @@ function changePossuiDependencias() {
     $j("#salas_gerais,#salas_funcionais,#banheiros,#laboratorios,#salas_atividades,#dormitorios,#areas_externas").trigger("chosen:updated");
 }
 
+const link = '<span> Caso não encontre a pessoa jurídica, cadastre em </span><a href="empresas_cad.php" target="_blank">Pessoas > Cadastros > Pessoas jurídicas.</a>';
+$j('#pessoaj_idpes').after(link);
+
 //abas
 
 // hide nos campos das outras abas (deixando só os campos da primeira aba)
-if (!$j('#cnpj').is(':visible')){
+if (!$j('#pessoaj_idpes').is(':visible')) {
 
   $j('td .formdktd:first').append('<div id="tabControl"><ul><li><div id="tab1" class="escolaTab"> <span class="tabText">Dados gerais</span></div></li><li><div id="tab2" class="escolaTab"> <span class="tabText">Infraestrutura</span></div></li><li><div id="tab3" class="escolaTab"> <span class="tabText">Depend\u00eancias</span></div></li><li><div id="tab4" class="escolaTab"> <span class="tabText">Equipamentos</span></div></li><li><div id="tab5" class="escolaTab"> <span class="tabText">Recursos</span></div></li><li><div id="tab6" class="escolaTab"> <span class="tabText">Dados do ensino</span></div></li></ul></div>');
   $j('td .formdktd b').remove();
@@ -526,7 +529,11 @@ $j(document).ready(function() {
   $j('#longitude').on('change', verificaLatitudeLongitude);
 });
 
-document.getElementById('cnpj').readOnly = true;
+const cnpj = document.getElementById('cnpj');
+
+if (cnpj !== null) {
+  document.getElementById('cnpj').readOnly = true;
+}
 
 function getRedeEnsino(xml_escola_rede_ensino)
 {

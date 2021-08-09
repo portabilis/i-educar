@@ -221,6 +221,20 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
+        if ($escola->situacaoFuncionamento == SituacaoFuncionamento::EM_ATIVIDADE &&
+            $escola->dependenciaAdministrativa == DependenciaAdministrativaEscola::PRIVADA &&
+            empty($escola->cnpjEscolaPrivada)
+        ) {
+            $idpesEscola = School::find($codEscola)->ref_idpes;
+
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se o CNPJ da escola foi informado. Quando a escola possui o tipo de 'Dependência administrativa' como 'Privada', deve ser informado CNPJ.",
+                'path' => '(Pessoas > Cadastros > Pessoas jurídicas > Editar > Campo: CNPJ)',
+                'linkPath' => "/intranet/empresas_cad.php?idpes={$idpesEscola}",
+                'fail' => true
+            ];
+        }
+
         if (!$escola->esferaAdministrativa && ($escola->regulamentacao == Regulamentacao::SIM || $escola->regulamentacao == Regulamentacao::EM_TRAMITACAO)) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a escola é regulamentada ou está em tramitação pelo conselho/órgão, portanto é necessário informar qual a esfera administrativa;",
@@ -1414,7 +1428,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 ];
             }
 
-            if (!$aluno->tipoAtendimentoMatricula && $aluno->tipoAtendimentoTurma == TipoAtendimentoTurma::AEE) {
+            if (isArrayEmpty($aluno->tipoAtendimentoMatricula) && $aluno->tipoAtendimentoTurma == TipoAtendimentoTurma::AEE) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 60 da escola {$nomeEscola} não encontrados. Verificamos que a turma {$nomeTurma} é de atendimento educacional especializado, portanto é necessário informar qual a tipo de atendimento do(a) aluno(a) {$nomeAluno}.",
                     'path' => '(Escola > Cadastros > Alunos > Visualizar > Tipo do AEE do aluno > Campo: Tipo de Atendimento Educacional Especializado do aluno na turma)',
@@ -1432,7 +1446,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 ];
             }
 
-            if ((!$aluno->veiculoTransporteEscolar)&& $aluno->veiculoTransporteEscolarRequired()) {
+            if (isArrayEmpty($aluno->veiculoTransporteEscolar) && $aluno->veiculoTransporteEscolarRequired()) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 60 da escola {$nomeEscola} não encontrados. Verifique se o tipo de veículo do transporte escolar público utilizado pelo(a) aluno(a) {$nomeAluno} foi informado.",
                     'path' => '(Escola > Cadastros > Alunos > Editar > Aba: Dados Pessoais > Campo: Veículo utilizado)',
