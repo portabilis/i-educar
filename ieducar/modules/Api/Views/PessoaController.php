@@ -641,12 +641,12 @@ class PessoaController extends ApiCoreController
 
         $sql = 'SELECT
                 p.idpes,
-                COALESCE(concat_ws(\', \',
-									CASE WHEN cod_aluno IS NOT NULL THEN \'Aluno(a)\' ELSE NULL end,
-									CASE WHEN responsavel.idpes IS NOT NULL THEN \'Responsável\' ELSE NULL end,
-									CASE WHEN cod_servidor IS NOT NULL THEN \'Servidor(a)\' ELSE NULL end,
-									CASE WHEN cod_usuario IS NOT NULL THEN \'Usuário(a)\' ELSE NULL end
-								), \'Sem vínculo\') vinculo,
+                concat_ws(\', \',
+                    CASE WHEN cod_aluno IS NOT NULL THEN \'Aluno(a)\' ELSE NULL end,
+                    CASE WHEN responsavel.idpes IS NOT NULL THEN \'Responsável\' ELSE NULL end,
+                    CASE WHEN cod_servidor IS NOT NULL THEN \'Servidor(a)\' ELSE NULL end,
+                    CASE WHEN cod_usuario IS NOT NULL THEN \'Usuário(a)\' ELSE NULL end
+                ) vinculo,
                 p.nome,
                 COALESCE(to_char(f.data_nasc, \'dd/mm/yyyy\'), \'Não consta\') AS data_nascimento,
                 CASE f.sexo
@@ -686,8 +686,16 @@ class PessoaController extends ApiCoreController
             'pessoa_mae',
         ];
 
+        $filters = Portabilis_Array_Utils::filterSet($pessoas, $attrs);
+
+        foreach ($filters as &$item) {
+            if (isset($item['vinculo']) && empty($item['vinculo'])) {
+                $item['vinculo'] = 'Sem vínculo';
+            }
+        }
+
         return [
-            'pessoas' => Portabilis_Array_Utils::filterSet($pessoas, $attrs)
+            'pessoas' => $filters
         ];
     }
 

@@ -385,9 +385,7 @@ function validaCheckPessoaPrincipal(element) {
     return;
   }
 
-  if ($j('#vinculo_' + idpes).text() !== 'Sem vínculo' ||
-      $j('#vinculo_' + idpes).text() !== ''
-  ) {
+  if ($j('#vinculo_' + idpes).text() !== 'Sem vínculo') {
     return;
   }
 
@@ -404,12 +402,16 @@ function modalInformePessoaPrincipalComVinculo(checkId) {
     maxWidth: 400,
     width: 400,
     close: function () {
+      desabilitaBotaoUnificar();
+      removeCheckConfirmaDados()
       $j('#'+checkId).prop('checked', false);
       $j('#dialog-container').dialog('destroy');
     },
     buttons: [{
       text: 'Ok',
       click: function () {
+        desabilitaBotaoUnificar();
+        removeCheckConfirmaDados()
         $j('#'+checkId).prop('checked', false);
         $j('#dialog-container').dialog('destroy');
       }
