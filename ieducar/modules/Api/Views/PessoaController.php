@@ -643,9 +643,9 @@ class PessoaController extends ApiCoreController
                 p.idpes,
                 COALESCE(concat_ws(\', \',
 									CASE WHEN cod_aluno IS NOT NULL THEN \'Aluno(a)\' ELSE NULL end,
-									CASE WHEN responsavel.idpes IS NOT NULL THEN \'Responsável\' ELSE NULL end
+									CASE WHEN responsavel.idpes IS NOT NULL THEN \'Responsável\' ELSE NULL end,
 									CASE WHEN cod_servidor IS NOT NULL THEN \'Servidor(a)\' ELSE NULL end,
-									CASE WHEN cod_usuario IS NOT NULL THEN \'Usuário(a)\' ELSE NULL end,
+									CASE WHEN cod_usuario IS NOT NULL THEN \'Usuário(a)\' ELSE NULL end
 								), \'Sem vínculo\') vinculo,
                 p.nome,
                 COALESCE(to_char(f.data_nasc, \'dd/mm/yyyy\'), \'Não consta\') AS data_nascimento,
