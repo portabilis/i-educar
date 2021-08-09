@@ -9,6 +9,8 @@ function ajustarUiBotao () {
 
 $j('#btn_add_tab_add_1').click(function() {
   ajustaTabelaDePessoasUnificadas();
+  $j('a[id^="link_remove["').css('font-weight', 'bold');
+  $j('a[id^="link_remove["').css('text-decoration', 'underline');
 });
 
 let $quantidadeDeVinculosComAlunos = 0;
@@ -383,7 +385,9 @@ function validaCheckPessoaPrincipal(element) {
     return;
   }
 
-  if ($j('#vinculo_' + idpes).text() !== 'Sem vínculo') {
+  if ($j('#vinculo_' + idpes).text() !== 'Sem vínculo' ||
+      $j('#vinculo_' + idpes).text() !== ''
+  ) {
     return;
   }
 
