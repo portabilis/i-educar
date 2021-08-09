@@ -670,7 +670,7 @@ class PessoaController extends ApiCoreController
                 ) AND f1.idpes = f.idpes
             ) responsavel ON TRUE
 
-            WHERE p.idpes IN (' . $pessoasIds . ') ORDER BY vinculo;
+            WHERE p.idpes IN (' . $pessoasIds . ') ORDER BY vinculo DESC;
         ';
 
         $pessoas = $this->fetchPreparedQuery($sql, [], false);
