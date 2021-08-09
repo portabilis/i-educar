@@ -40,8 +40,7 @@
         "nuwave/lighthouse": "^4.18",
         "phpoffice/phpspreadsheet": "^1.8",
         "predis/predis": "^1.1",
-        "swiftmailer/swiftmailer": "^6.2",
-        "tooleks/laravel-asset-version": "^1.0"
+        "swiftmailer/swiftmailer": "^6.2"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.7",
