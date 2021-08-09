@@ -6,7 +6,7 @@ use iEducar\Modules\Unification\PersonLogUnification;
 use Illuminate\Support\Facades\DB;
 
 return new class extends clsCadastro {
-    private $pessoas;
+    public $pessoas;
     public $pessoa_logada;
     public $tabela_pessoas = [];
     public $pessoa_duplicada;
