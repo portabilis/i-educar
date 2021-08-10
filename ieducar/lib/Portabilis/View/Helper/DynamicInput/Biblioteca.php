@@ -61,7 +61,7 @@ class Portabilis_View_Helper_DynamicInput_Biblioteca extends Portabilis_View_Hel
 
         $inputOptions['id'] = 'biblioteca_nome';
 
-        call_user_func_array([$this->viewInstance, 'campoRotulo'], $inputOptions);
+        $this->viewInstance->campoRotulo(...array_values($inputOptions));
     }
 
     public function biblioteca($options = [])

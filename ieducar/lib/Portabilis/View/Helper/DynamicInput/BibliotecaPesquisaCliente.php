@@ -36,7 +36,7 @@ class Portabilis_View_Helper_DynamicInput_BibliotecaPesquisaCliente extends Port
 
         $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
 
-        call_user_func_array([$this->viewInstance, 'campoTexto'], $inputOptions);
+        $this->viewInstance->campoTexto(...array_values($inputOptions));
 
         $defaultHiddenInputOptions = [
             'id' => 'ref_cod_cliente',
@@ -45,7 +45,7 @@ class Portabilis_View_Helper_DynamicInput_BibliotecaPesquisaCliente extends Port
 
         $hiddenInputOptions = $this->mergeOptions($options['hiddenInputOptions'], $defaultHiddenInputOptions);
 
-        call_user_func_array([$this->viewInstance, 'campoOculto'], $hiddenInputOptions);
+        $this->viewInstance->campoOculto(...array_values($hiddenInputOptions));
 
         Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, '
             var resetCliente = function(){

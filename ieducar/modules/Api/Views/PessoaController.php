@@ -617,11 +617,30 @@ class PessoaController extends ApiCoreController
         return Portabilis_Utils_Database::selectField($sql, ['params' => [$servidorId]]);
     }
 
+    protected function existServant($servidorId)
+    {
+        $sql = 'SELECT 1 FROM pmieducar.servidor WHERE cod_servidor = $1';
+
+        return Portabilis_Utils_Database::selectField($sql, ['params' => [$servidorId]]);
+    }
+
     protected function getInfoServidor()
     {
         $servidorId = $this->getRequest()->servidor_id;
         $_servidor['inep'] = $this->getInep($servidorId);
         $_servidor['deficiencias'] = $this->loadDeficiencias($servidorId);
+
+        return $_servidor;
+    }
+
+    protected function isExistServant()
+    {
+        $id = (int) $this->getRequest()->servidor_id;
+        $exist = $this->existServant($id) === 1;
+
+        $_servidor['exist'] = $exist;
+        $_servidor['id'] = $id;
+        $_servidor['nome'] = $exist ? $this->loadPessoa($id)['nome'] : null;
 
         return $_servidor;
     }
@@ -641,11 +660,12 @@ class PessoaController extends ApiCoreController
 
         $sql = 'SELECT
                 p.idpes,
-                CASE
-                    WHEN cod_aluno IS NOT NULL THEN \'Aluno\'
-                    WHEN cod_servidor IS NOT NULL THEN \'Servidor\'
-                    ELSE \'Sem vínculo\'
-                END AS vinculo,
+                concat_ws(\', \',
+                    CASE WHEN cod_aluno IS NOT NULL THEN \'Aluno(a)\' ELSE NULL end,
+                    CASE WHEN responsavel.idpes IS NOT NULL THEN \'Responsável\' ELSE NULL end,
+                    CASE WHEN cod_servidor IS NOT NULL THEN \'Servidor(a)\' ELSE NULL end,
+                    CASE WHEN cod_usuario IS NOT NULL THEN \'Usuário(a)\' ELSE NULL end
+                ) vinculo,
                 p.nome,
                 COALESCE(to_char(f.data_nasc, \'dd/mm/yyyy\'), \'Não consta\') AS data_nascimento,
                 CASE f.sexo
@@ -662,7 +682,14 @@ class PessoaController extends ApiCoreController
             LEFT JOIN pmieducar.aluno a ON a.ref_idpes = p.idpes AND a.ativo = 1
             LEFT JOIN pmieducar.servidor s ON s.cod_servidor = p.idpes AND s.ativo = 1
             LEFT JOIN cadastro.pessoa pm ON pm.idpes = f.idpes_mae
-            WHERE p.idpes IN (' . $pessoasIds . ');
+            LEFT JOIN pmieducar.usuario u on u.cod_usuario = p.idpes
+            LEFT JOIN LATERAL (
+                SELECT idpes FROM cadastro.fisica f1 WHERE exists (
+                    SELECT 1 FROM cadastro.fisica f2 WHERE f1.idpes IN (f2.idpes_pai, f2.idpes_mae, f2.idpes_responsavel)
+                ) AND f1.idpes = f.idpes
+            ) responsavel ON TRUE
+
+            WHERE p.idpes IN (' . $pessoasIds . ') ORDER BY vinculo DESC;
         ';
 
         $pessoas = $this->fetchPreparedQuery($sql, [], false);
@@ -678,8 +705,16 @@ class PessoaController extends ApiCoreController
             'pessoa_mae',
         ];
 
+        $filters = Portabilis_Array_Utils::filterSet($pessoas, $attrs);
+
+        foreach ($filters as &$item) {
+            if (isset($item['vinculo']) && empty($item['vinculo'])) {
+                $item['vinculo'] = 'Sem vínculo';
+            }
+        }
+
         return [
-            'pessoas' => Portabilis_Array_Utils::filterSet($pessoas, $attrs)
+            'pessoas' => $filters
         ];
     }
 
@@ -693,6 +728,8 @@ class PessoaController extends ApiCoreController
             $this->appendResponse($this->post());
         } elseif ($this->isRequestFor('get', 'info-servidor')) {
             $this->appendResponse($this->getInfoServidor());
+        } elseif ($this->isRequestFor('get', 'exist-servidor')) {
+            $this->appendResponse($this->isExistServant());
         } elseif ($this->isRequestFor('post', 'pessoa-endereco')) {
             $this->appendResponse($this->createOrUpdateEndereco());
         } elseif ($this->isRequestFor('get', 'pessoa-parent')) {

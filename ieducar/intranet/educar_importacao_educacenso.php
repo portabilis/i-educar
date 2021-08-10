@@ -33,7 +33,9 @@ return new class extends clsCadastro {
             null => 'Selecione',
             '2019' => '2019',
             '2020' => '2020',
+            '2021' => '2021',
         ];
+
         $options = [
             'label' => 'Ano',
             'resources' => $resources,

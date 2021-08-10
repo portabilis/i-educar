@@ -1,12 +1,20 @@
 adicionaMaisUmaLinhaNaTabela();
 ajustaTabelaDePessoasUnificadas();
+ajustarUiBotao();
 
-$j('#btn_add_tab_add_1').click(function(){
+function ajustarUiBotao () {
+  $j('#btn_add_tab_add_1').addClass('button_center');
+  document.getElementById("btn_add_tab_add_1").lastChild.textContent = 'ADICIONAR MAIS PESSOAS';
+}
+
+$j('#btn_add_tab_add_1').click(function() {
   ajustaTabelaDePessoasUnificadas();
+  $j('a[id^="link_remove["').css('font-weight', 'bold');
+  $j('a[id^="link_remove["').css('text-decoration', 'underline');
 });
 
-var $quantidadeDeVinculosComAlunos = 0;
-var $quantidadeDeVinculosComServidores = 0;
+let $quantidadeDeVinculosComAlunos = 0;
+let $quantidadeDeVinculosComServidores = 0;
 
 function adicionaMaisUmaLinhaNaTabela() {
   tab_add_1.addRow();
@@ -21,7 +29,10 @@ function carregaDadosPessoas() {
   let pessoas_duplicadas = [];
 
   $j('input[id^="pessoa_duplicada["').each(function(id, input) {
-    pessoas_duplicadas.push(input.value.split(' ')[0]);
+    let value = input.value.split(' ')[0];
+    if (value.length !== 0) {
+      pessoas_duplicadas.push(value);
+    }
   });
 
   var url = getResourceUrlBuilder.buildUrl(
@@ -54,22 +65,33 @@ function carregaDadosPessoas() {
   getResources(options);
 }
 
-function recarregaListaDePessoas() {
+function pegaPessoasDaTabela() {
   let pessoas_duplicadas = [];
-
   $j('input[id^="pessoa_duplicada["').each(function(id, input) {
     pessoas_duplicadas.push(input.value.split(' ')[0]);
   });
 
-  var url = getResourceUrlBuilder.buildUrl(
+  return pessoas_duplicadas
+}
+
+function pegarPessoasParaUnificar() {
+  let pessoas_para_unificar = [];
+  $j('#tabela_pessoas_unificadas .linha_listagem').each(function(id, input) {
+    pessoas_para_unificar.push(input.id);
+  });
+  return pessoas_para_unificar;
+}
+
+function recarregaListaDePessoas(pessoas) {
+  let url = getResourceUrlBuilder.buildUrl(
     '/module/Api/Pessoa',
     'dadosUnificacaoPessoa',
     {
-      pessoas_ids : pessoas_duplicadas
+      pessoas_ids : pessoas
     }
   );
 
-  var options = {
+  let options = {
     url      : url,
     dataType : 'json',
     success  : function(response) {
@@ -116,14 +138,16 @@ function modalInformeMaisPessoas() {
 
 function exitemPessoasDuplicadas() {
   let pessoas = [];
-
   $j('input[id^="pessoa_duplicada["').each(function(id, input) {
-    pessoas.push(input.value.split(' ')[0]);
+    let value = input.value.split(' ')[0];
+    if (value.length !== 0) {
+      pessoas.push(value);
+    }
   });
 
   let pessoasSemDuplicidade = [...new Set(pessoas)];
 
-  return pessoas.length != pessoasSemDuplicidade.length;
+  return pessoas.length !== pessoasSemDuplicidade.length;
 }
 
 function modalAjustePessoasUnificadas() {
@@ -147,6 +171,7 @@ function modalAjustePessoasUnificadas() {
 function listaDadosPessoasUnificadas(response) {
   modalAvisoComplementaDadosPessoa();
   removeExclusaoDePessoas();
+  removeItensVazios();
   disabilitaSearchInputs();
   montaTabela(response);
   adicionaSeparador();
@@ -160,6 +185,15 @@ function listaDadosPessoasUnificadas(response) {
 function removeExclusaoDePessoas() {
   $j('.tr_tabela_pessoas td a').each(function(id, input) {
     input.remove();
+  });
+}
+
+function removeItensVazios() {
+  $j('input[id^="pessoa_duplicada["').each(function(id, input) {
+    let value = input.value.split(' ')[0];
+    if (value.length === 0) {
+      tab_add_1.removeRow(this);
+    }
   });
 }
 
@@ -177,9 +211,10 @@ function confirmaAnalise() {
 
     return;
   }
-  
+
   if (checked) {
     desabilitaBotaoUnificar();
+    removeCheckConfirmaDados()
     modalExigePessoaPrincipal();
     return;
   }
@@ -211,6 +246,10 @@ function existePessoaPrincipal() {
   return existePessoaPrincipal;
 }
 
+function removeCheckConfirmaDados() {
+  $j('#check_confirma_dados_unificacao').prop('checked', false);
+}
+
 function modalExigePessoaPrincipal() {
   makeDialog({
     content: 'Você precisa definir uma pessoa como principal.',
@@ -218,13 +257,11 @@ function modalExigePessoaPrincipal() {
     maxWidth: 860,
     width: 860,
     close: function () {
-      $j('#check_confirma_dados_unificacao').prop('checked', false);
       $j('#dialog-container').dialog('destroy');
     },
     buttons: [{
       text: 'Ok',
       click: function () {
-        $j('#check_confirma_dados_unificacao').prop('checked', false);
         $j('#dialog-container').dialog('destroy');
       }
     },]
@@ -310,16 +347,28 @@ function montaTabela(response) {
     html += '<td><a target="_new" href="/intranet/atendidos_det.php?cod_pessoa=' + value.idpes + '">'+ value.nome +'</a></td>';
     html += '<td>'+ value.data_nascimento +'</td>';
     html += '<td>'+ value.sexo +'</td>';
-    html += '<td>'+ value.cpf +'</td>';
+    html += '<td>'+ addMascara(value.cpf) +'</td>';
     html += '<td>'+ value.rg +'</td>';
     html += '<td>'+ value.pessoa_mae +'</td>';
-    html += '<td><a class="link_remove" onclick="removePessoa(' + value.idpes + ')">EXCLUIR</a></td>';
+    html += '<td><a class="link_remove" onclick="removePessoa(' + value.idpes + ')"><b><u>EXCLUIR</u></b></a></td>';
     html += '</tr>';
   });
 
   html += '</table></td>';
 
   $j('#lista_dados_pessoas_unificadas').html(html);
+}
+
+function addMascara(value) {
+  if (value === 'Não consta') {
+    return value
+  }
+
+  if (value.length === 10) { // Quando o CPF tem 0 na frente o i-educar remove.
+    value = '0' + value;
+  }
+
+  return value.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
 }
 
 function uniqueCheck() {
@@ -336,13 +385,13 @@ function validaCheckPessoaPrincipal(element) {
     return;
   }
 
-  if ($j('#vinculo_' + idpes).text() != 'Sem vínculo') {
+  if ($j('#vinculo_' + idpes).text() !== 'Sem vínculo') {
     return;
   }
 
   if ($quantidadeDeVinculosComAlunos > 0 || $quantidadeDeVinculosComServidores > 0) {
+    desabilitaBotaoUnificar();
     modalInformePessoaPrincipalComVinculo(element.id);
-    return;
   }
 }
 
@@ -353,15 +402,17 @@ function modalInformePessoaPrincipalComVinculo(checkId) {
     maxWidth: 400,
     width: 400,
     close: function () {
-      $j('#'+checkId).prop('checked', false);
       desabilitaBotaoUnificar();
+      removeCheckConfirmaDados()
+      $j('#'+checkId).prop('checked', false);
       $j('#dialog-container').dialog('destroy');
     },
     buttons: [{
       text: 'Ok',
       click: function () {
-        $j('#'+checkId).prop('checked', false);
         desabilitaBotaoUnificar();
+        removeCheckConfirmaDados()
+        $j('#'+checkId).prop('checked', false);
         $j('#dialog-container').dialog('destroy');
       }
     },]
@@ -390,6 +441,7 @@ function removeTr(idpes) {
   let trClose = $j('#' + idpes);
   trClose.fadeOut(400, function() {
     trClose.remove();
+    recarregaListaDePessoas(pegarPessoasParaUnificar())
   });
 }
 
@@ -424,11 +476,11 @@ function contabilizaVinculos(pessoas) {
   pessoas.each(function(value, id) {
     let vinculos = value.vinculo.split(', ');
 
-    if ($j.inArray('Aluno',vinculos) != -1) {
+    if ($j.inArray('Aluno(a)',vinculos) != -1) {
       alunos++;
     }
 
-    if ($j.inArray('Servidor',vinculos) != -1) {
+    if ($j.inArray('Servidor(a)',vinculos) != -1) {
       servidores++;
     }
   });
@@ -453,10 +505,10 @@ function htmlApresentaObservacoes() {
   html = `
     <td colspan="2">
       <div>
-        Consta mais de um vínculo de aluno na lista de pessoas a serem unificadas, 
-        <a href="/intranet/educar_unifica_aluno.php" target="_new"><b>clique aqui</b></a> para fazer a Unificação de alunos antes de unificar as pessoas físicas. 
+        Consta mais de um vínculo de aluno na lista de pessoas a serem unificadas,
+        <a href="/intranet/educar_unifica_aluno.php" target="_new"><b>clique aqui</b></a> para fazer a Unificação de alunos antes de unificar as pessoas físicas.
         Após a unificação clique no botão abaixo para recarregar a listagem de pessoas. <br>
-        <a id="recarregar_lista" onclick="recarregaListaDePessoas()"><b>Recarregar lista</br></a>
+        <a id="recarregar_lista" onclick="recarregaListaDePessoas(pegaPessoasDaTabela())"><b>Recarregar lista</br></a>
       </div>
     </td>
   `;
@@ -563,16 +615,20 @@ var handleSelect = function(event, ui){
   }
 
   function makeDialog(params) {
-  var container = $j('#dialog-container');
+    params.closeOnEscape = false;
+    params.draggable = false;
+    params.modal = true;
+
+  let container = $j('#dialog-container');
 
   if (container.length < 1) {
-  $j('body').append('<div id="dialog-container" style="width: 500px;"></div>');
-  container = $j('#dialog-container');
-}
+    $j('body').append('<div id="dialog-container" style="width: 500px;"></div>');
+    container = $j('#dialog-container');
+  }
 
   if (container.hasClass('ui-dialog-content')) {
-  container.dialog('destroy');
-}
+    container.dialog('destroy');
+  }
 
   container.empty();
   container.html(params.content);
