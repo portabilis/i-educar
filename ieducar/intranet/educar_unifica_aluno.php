@@ -26,7 +26,7 @@ return new class extends clsCadastro {
     {
         $this->acao_enviar = 'carregaDadosAlunos()';
         $this->campoTabelaInicio('tabela_alunos', '', ['Aluno duplicado', 'Campo aluno duplicado'], $this->tabela_alunos);
-            $this->campoRotulo('aluno_label', '', 'Aluno a ser unificado  <span class="campo_obrigatorio">*</span>');
+            $this->campoRotulo('aluno_label', '', 'Aluno(a) a ser unificado(a)  <span class="campo_obrigatorio">*</span>');
             $this->campoTexto('aluno_duplicado', 'Aluno duplicado', $this->aluno_duplicado, 50, 255, false, true, false, '', '', '', 'onfocus');
         $this->campoTabelaFim();
 
