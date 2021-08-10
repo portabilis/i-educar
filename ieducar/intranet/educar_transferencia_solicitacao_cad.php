@@ -28,6 +28,7 @@ return new class extends clsCadastro {
     public $municipio_escola_destino_externa;
     public $ref_cod_escola;
     public $ref_cod_escola_destino;
+    public $escola_em_outro_municipio;
 
     public function __construct()
     {

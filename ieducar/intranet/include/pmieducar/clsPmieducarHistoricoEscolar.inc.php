@@ -782,7 +782,7 @@ class clsPmieducarHistoricoEscolar extends Model
             );
 
             if ($historicoEscolar->cadastra()) {
-                $sequencial = (new clsPmieducarHistoricoEscolar)->getMaxSequencial($detMatricula['ref_cod_aluno']);
+                $sequencial = (new clsPmieducarHistoricoEscolar())->getMaxSequencial($detMatricula['ref_cod_aluno']);
                 $disciplinas = self::dadosDisciplinas($ref_cod_matricula);
                 foreach ($disciplinas as $index => $disciplina) {
                     $historicoDisciplina = new clsPmieducarHistoricoDisciplinas(($index + 1), $detMatricula['ref_cod_aluno'], $sequencial, $disciplina, '');
