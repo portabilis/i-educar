@@ -364,8 +364,8 @@ function addMascara(value) {
     return value
   }
 
-  if (value.length === 10) { // Quando o CPF tem 0 na frente o i-educar remove.
-    value = '0' + value;
+  if (value.length <= 10) { // Quando o CPF tem 0 na frente o i-educar remove.
+    value = String(value).padStart(11, '0'); // '0010'
   }
 
   return value.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
