@@ -37,7 +37,7 @@ class Portabilis_View_Helper_Input_DateDiaMes extends Portabilis_View_Helper_Inp
             $inputOptions['value'] = Portabilis_Date_Utils::pgSQLToBr($inputOptions['value']);
         }
 
-        call_user_func_array([$this->viewInstance, 'campoDataDiaMes'], $inputOptions);
+        $this->viewInstance->campoDataDiaMes(...array_values($inputOptions));
 
         $this->fixupPlaceholder($inputOptions);
         $this->fixupOptions($inputOptions);

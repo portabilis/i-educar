@@ -34,7 +34,7 @@ class Portabilis_View_Helper_Input_Date extends Portabilis_View_Helper_Input_Cor
             $inputOptions['value'] = Portabilis_Date_Utils::pgSQLToBr($inputOptions['value']);
         }
 
-        call_user_func_array([$this->viewInstance, 'campoData'], $inputOptions);
+        $this->viewInstance->campoData(...array_values($inputOptions));
 
         $this->fixupPlaceholder($inputOptions);
         $this->fixupOptions($inputOptions);

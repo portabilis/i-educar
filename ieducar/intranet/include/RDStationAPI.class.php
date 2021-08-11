@@ -64,7 +64,7 @@ class RDStationAPI
     $url:     (String) RD Station endpoint returned by $this->getURL()
     $data:    (Array)
     **/
-    protected function request($method='POST', $url, $data=[])
+    protected function request($method, $url, $data=[])
     {
         $data['token_rdstation'] = $this->token;
         $JSONData = json_encode($data);
