@@ -76,3 +76,8 @@ table.tabela-modal-dados-aluno {
     font-size: 12px;
     padding: 20px 0px;
 }
+
+tr a {
+  color: #47728f;
+  cursor: pointer;
+}
