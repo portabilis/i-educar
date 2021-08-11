@@ -75,7 +75,7 @@ function listaDadosAlunosUnificados(response) {
 }
 
 function removeBotaoMaisPessoas() {
-  $j('#btn_add_tab_add_1').remove();
+  $j('#tabela_alunos tr:last').remove();
 }
 
 function removeItensVazios() {
@@ -249,7 +249,7 @@ function visualizarDadosAlunos(codAluno, nomeAluno) {
 function removeAluno(codAluno) {
   if ($j('#tabela_alunos_unificados tr').length === 3) {
     makeDialog({
-      content: 'É necessário ao menos 2 alunos para a unificação, ao confirmar o processo vai ser reiniciado, Deseja prosseguir?',
+      content: 'É necessário ao menos 2 alunos para a unificação, ao confirmar o processo vai ser reiniciado. Deseja prosseguir?',
       title: 'Atenção!',
       maxWidth: 860,
       width: 860,
