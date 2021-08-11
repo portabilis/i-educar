@@ -34,6 +34,7 @@ class App_Unificacao_Aluno
                     ref_sequencial = ref_sequencial + {$maxSequencialAlunoPrincipal}
                 WHERE ref_ref_cod_aluno = {$codAluno};
             ");
+            $maxSequencialAlunoPrincipal++;
         }
 
         DB::statement("UPDATE pmieducar.matricula SET ref_cod_aluno = {$codAlunoPrincipal} where ref_cod_aluno in ({$codAlunosString})");
