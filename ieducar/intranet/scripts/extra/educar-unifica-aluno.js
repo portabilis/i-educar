@@ -66,11 +66,16 @@ function listaDadosAlunosUnificados(response) {
   removeExclusaoDeAlunos();
   disabilitaSearchInputs();
   removeItensVazios();
+  removeBotaoMaisPessoas();
   montaTabelaDadosAluno(response);
   adicionaBotoes();
   adicionaCheckboxConfirmacao();
   uniqueCheck();
   desabilitaBotaoUnificar();
+}
+
+function removeBotaoMaisPessoas() {
+  $j('#btn_add_tab_add_1').remove();
 }
 
 function removeItensVazios() {
@@ -102,7 +107,7 @@ function montaTabelaDadosAluno(response) {
     <table id="tabela_alunos_unificados">
       <tr class="tr_title">
         <td>Principal</td>
-        <td>Código do(a) aluno(a)</td>
+        <td>Código</td>
         <td>Inep</td>
         <td>Nome</td>
         <td>Nascimento</td>
@@ -243,9 +248,30 @@ function visualizarDadosAlunos(codAluno, nomeAluno) {
 
 function removeAluno(codAluno) {
   if ($j('#tabela_alunos_unificados tr').length === 3) {
-    defaultModal('É necessário ao menos 2 alunos para a unificação.');
+    makeDialog({
+      content: 'É necessário ao menos 2 alunos para a unificação, ao confirmar o processo vai ser reiniciado, Deseja prosseguir?',
+      title: 'Atenção!',
+      maxWidth: 860,
+      width: 860,
+      close: function () {
+        $j('#dialog-container').dialog('destroy');
+      },
+      buttons: [{
+        text: 'Confirmar',
+        click: function () {
+          voltar();
+          $j('#dialog-container').dialog('destroy');
+        }
+      }, {
+        text: 'Cancelar',
+        click: function () {
+          $j('#dialog-container').dialog('destroy');
+        }
+      }]
+    });
     return;
   }
+
   desabilitaConfirmarDadosUnificar();
   desabilitaBotaoUnificar();
   removeTr(codAluno);
@@ -451,7 +477,7 @@ function showConfirmationMessage() {
 function modalAvisoComplementaDadosAluno() {
   makeDialog({
     content: `Para complementar os dados do(a) aluno(a) que selecionou como principal,
-    é necessário fazê-lo manualmente editando os dados do mesmo antes da Unificação de Alunos.
+    é necessário fazê-lo manualmente editando os dados do(a) mesmo(a) antes da Unificação de Alunos.
     <b>Caso não faça essa complementação, os dados dos alunos não selecionadas como principal serão perdidos,
     exceto matrículas e dados de histórico.<b>`,
     title: 'Atenção!',
