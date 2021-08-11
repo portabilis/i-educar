@@ -521,7 +521,7 @@ return new class extends clsCadastro {
                 $dentroPeriodoCorte = $serie->verificaPeriodoCorteEtarioDataNascimento($detPes['data_nasc'], $this->ano);
 
                 if ($bloquearMatriculaFaixaEtaria && !$dentroPeriodoCorte) {
-                    $this->mensagem = 'Não foi possível realizar a matrícula, pois a idade do aluno está fora da faixa etária da série');
+                    $this->mensagem = 'Não foi possível realizar a matrícula, pois a idade do aluno está fora da faixa etária da série';
 
                     return false;
                 } elseif ($alertaFaixaEtaria && !$dentroPeriodoCorte) {
