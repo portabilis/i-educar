@@ -343,13 +343,13 @@ function montaTabela(response) {
   response.pessoas.each(function(value, id) {
     html += '<tr id="' + value.idpes + '" class="linha_listagem">';
     html += '<td><input onclick="validaCheckPessoaPrincipal(this)" type="checkbox" class="check_principal" id="check_principal_' + value.idpes + '"</td>';
-    html += '<td id="vinculo_'+ value.idpes +'">'+ value.vinculo +'</td>';
+    html += '<td id="vinculo_'+ value.idpes +'"><a target="_new" href="/intranet/atendidos_det.php?cod_pessoa=' + value.idpes + '">'+ value.vinculo +'</a></td>';
     html += '<td><a target="_new" href="/intranet/atendidos_det.php?cod_pessoa=' + value.idpes + '">'+ value.nome +'</a></td>';
-    html += '<td>'+ value.data_nascimento +'</td>';
-    html += '<td>'+ value.sexo +'</td>';
-    html += '<td>'+ addMascara(value.cpf) +'</td>';
-    html += '<td>'+ value.rg +'</td>';
-    html += '<td>'+ value.pessoa_mae +'</td>';
+    html += '<td><a target="_new" href="/intranet/atendidos_det.php?cod_pessoa=' + value.idpes + '">'+ value.data_nascimento +'</a></td>';
+    html += '<td><a target="_new" href="/intranet/atendidos_det.php?cod_pessoa=' + value.idpes + '">'+ value.sexo +'</a></td>';
+    html += '<td><a target="_new" href="/intranet/atendidos_det.php?cod_pessoa=' + value.idpes + '">'+ addMascara(value.cpf) +'</a></td>';
+    html += '<td><a target="_new" href="/intranet/atendidos_det.php?cod_pessoa=' + value.idpes + '">'+ value.rg +'</a></td>';
+    html += '<td><a target="_new" href="/intranet/atendidos_det.php?cod_pessoa=' + value.idpes + '">'+ value.pessoa_mae +'</a></td>';
     html += '<td><a class="link_remove" onclick="removePessoa(' + value.idpes + ')"><b><u>EXCLUIR</u></b></a></td>';
     html += '</tr>';
   });
@@ -442,6 +442,8 @@ function removeTr(idpes) {
   trClose.fadeOut(400, function() {
     trClose.remove();
     recarregaListaDePessoas(pegarPessoasParaUnificar())
+    desabilitaConfirmarDadosUnificar();
+    desabilitaBotaoUnificar();
   });
 }
 
