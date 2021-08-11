@@ -469,15 +469,13 @@ return new class extends clsCadastro {
         $styles = ['/modules/Cadastro/Assets/Stylesheets/Escola.css'];
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
 
-        $obj_permissoes = new clsPermissoes();
-
         $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
 
         $this->campoOculto('obrigar_campos_censo', (int) $obrigarCamposCenso);
         $this->campoOculto('pessoaj_id_oculto', $this->pessoaj_id);
         $this->campoOculto('pessoaj_id', $this->pessoaj_id);
 
-        if ($this->pesquisaPessoaJuridica) {
+        if (empty($this->cod_escola)) {
             $this->inputsHelper()->simpleSearchPessoaj('idpes', ['label'=> 'Pessoa Jurídica']);
             $this->acao_enviar = false;
             $this->url_cancelar = false;
@@ -485,6 +483,8 @@ return new class extends clsCadastro {
             $this->array_botao_url_script = ['obj = document.getElementById(\'pessoaj_idpes\');if(obj.value != \'\' ) {
                 document.getElementById(\'tipoacao\').value = \'\'; acao(); } else { acao(); }', 'go(\'educar_escola_lst.php\');'];
         } else {
+            $obj_permissoes = new clsPermissoes();
+            $this->fexcluir = $obj_permissoes->permissao_excluir(561, $this->pessoa_logada, 3);
             $this->inputsHelper()->integer('escola_inep_id', ['label' => 'Código INEP', 'placeholder' => 'INEP', 'required' => $obrigarCamposCenso, 'max_length' => 8, 'label_hint' => 'Somente números']);
 
             $this->carregaDadosDoPost();
@@ -1445,6 +1445,10 @@ return new class extends clsCadastro {
                 ]
             ];
             $this->inputsHelper()->simpleSearchIes(null, $options, $helperOptions);
+
+            $this->breadcrumb('Escola', ['educar_index.php' => 'Escola']);
+            $this->url_cancelar = (!empty($this->cod_escola)) ? "educar_escola_det.php?cod_escola={$this->cod_escola}" : 'educar_escola_lst.php';
+            $this->nome_url_cancelar = 'Cancelar';
         }
     }
 

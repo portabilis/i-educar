@@ -184,7 +184,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         $arr_componente = [
             'cnpj',
             $this->__adicionando_tabela ? $nome : $campo,
-            $obrigatorio ? "/[0-9]{2}\.[0-9]{3}\.[0-9]{3}\/[0-9]{4}\-[0-9]{2}/" : "*(/[0-9]{2}\.[0-9]{3}\.[0-9]{3}\/[0-9]{4}\-[0-9]{2}/)",
+            $obrigatorio ? "/[0-9]{2}\.[0-9]{3}\.[0-9]{3}\/[0-9]{4}\-[0-9]{2}/" : '',
             $valor,
             20,
             18,

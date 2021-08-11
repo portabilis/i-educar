@@ -556,7 +556,7 @@ class clsPmieducarSerie extends Model
             $filtros[] = "idade_final= '{$int_idade_final}'";
         }
 
-        if (is_numeric($int_ref_cod_escola)) {
+        if (isset($int_ref_cod_escola)) {
             $condicao = " EXISTS (SELECT
                     1
                 FROM
@@ -566,13 +566,13 @@ class clsPmieducarSerie extends Model
                     AND es.ativo = 1
                     AND es.ref_cod_escola = '{$int_ref_cod_escola}' ";
 
-            if (is_numeric($ano)) {
+            if (isset($ano)) {
                 $condicao .= " AND {$ano} = ANY(es.anos_letivos) ";
             }
             $condicao .= ' ) ';
 
             $filtros[] = $condicao;
-        } elseif (is_numeric($ano)) {
+        } elseif (isset($ano)) {
             $filtros[] = "{$whereAnd} EXISTS (SELECT 1
                                          FROM pmieducar.escola_serie es
                                         WHERE s.cod_serie = es.ref_cod_serie

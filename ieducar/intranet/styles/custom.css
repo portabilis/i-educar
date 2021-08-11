@@ -1461,3 +1461,8 @@ a.btn-detalhes {
 #componentes_turma_cad td{
   padding: 5px;
 }
+
+.btn-disabled#btn_enviar {
+  background: rgb(233, 240, 248) !important;
+  cursor: not-allowed;
+}
