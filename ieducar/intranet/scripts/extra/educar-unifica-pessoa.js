@@ -348,13 +348,13 @@ function montaTabela(response) {
   response.pessoas.each(function(value, id) {
     html += '<tr id="' + value.idpes + '" class="linha_listagem">';
     html += '<td><input onclick="validaCheckPessoaPrincipal(this)" type="checkbox" class="check_principal" id="check_principal_' + value.idpes + '"</td>';
-    html += '<td id="vinculo_'+ value.idpes +'"><a target="_new" href="/intranet/atendidos_cad.php?cod_pessoa_fj=' + value.idpes + '">'+ value.vinculo +'</a></td>';
-    html += '<td><a target="_new" href="/intranet/atendidos_cad.php?cod_pessoa_fj=' + value.idpes + '">'+ value.nome +'</a></td>';
-    html += '<td><a target="_new" href="/intranet/atendidos_cad.php?cod_pessoa_fj=' + value.idpes + '">'+ value.data_nascimento +'</a></td>';
-    html += '<td><a target="_new" href="/intranet/atendidos_cad.php?cod_pessoa_fj=' + value.idpes + '">'+ value.sexo +'</a></td>';
-    html += '<td><a target="_new" href="/intranet/atendidos_cad.php?cod_pessoa_fj=' + value.idpes + '">'+ addMascara(value.cpf) +'</a></td>';
-    html += '<td><a target="_new" href="/intranet/atendidos_cad.php?cod_pessoa_fj=' + value.idpes + '">'+ value.rg +'</a></td>';
-    html += '<td><a target="_new" href="/intranet/atendidos_cad.php?cod_pessoa_fj=' + value.idpes + '">'+ value.pessoa_mae +'</a></td>';
+    html += '<td id="vinculo_'+ value.idpes +'"><a target="_new" href="/intranet/atendidos_det.php?cod_pessoa=' + value.idpes + '">'+ value.vinculo +'</a></td>';
+    html += '<td><a target="_new" href="/intranet/atendidos_det.php?cod_pessoa=' + value.idpes + '">'+ value.nome +'</a></td>';
+    html += '<td><a target="_new" href="/intranet/atendidos_det.php?cod_pessoa=' + value.idpes + '">'+ value.data_nascimento +'</a></td>';
+    html += '<td><a target="_new" href="/intranet/atendidos_det.php?cod_pessoa=' + value.idpes + '">'+ value.sexo +'</a></td>';
+    html += '<td><a target="_new" href="/intranet/atendidos_det.php?cod_pessoa=' + value.idpes + '">'+ addMascara(value.cpf) +'</a></td>';
+    html += '<td><a target="_new" href="/intranet/atendidos_det.php?cod_pessoa=' + value.idpes + '">'+ value.rg +'</a></td>';
+    html += '<td><a target="_new" href="/intranet/atendidos_det.php?cod_pessoa=' + value.idpes + '">'+ value.pessoa_mae +'</a></td>';
     html += '<td><a class="link_remove" onclick="removePessoa(' + value.idpes + ')"><b><u>EXCLUIR</u></b></a></td>';
     html += '</tr>';
   });
@@ -454,7 +454,7 @@ function removeTr(idpes) {
 
 function confirmaRemocaoPessoaUnificacao() {
   makeDialog({
-    content: 'É necessário ao menos 2 pessoas para a unificação, ao confirmar o processo vai ser reiniciado, Deseja prosseguir?',
+    content: 'É necessário ao menos 2 pessoas para a unificação, ao confirmar o processo vai ser reiniciado. Deseja prosseguir?',
     title: 'Atenção!',
     maxWidth: 860,
     width: 860,
@@ -512,7 +512,7 @@ function htmlApresentaObservacoes() {
   html = `
     <td colspan="2">
       <div>
-        Consta mais de um vínculo de aluno na lista de pessoas a serem unificadas,
+        Consta mais de um vínculo de aluno(a) na lista de pessoas a serem unificadas,
         <a href="/intranet/educar_unifica_aluno.php" target="_new"><b>clique aqui</b></a> para fazer a Unificação de alunos antes de unificar as pessoas físicas.
         Após a unificação clique no botão abaixo para recarregar a listagem de pessoas. <br>
         <a id="recarregar_lista" onclick="recarregaListaDePessoas(pegaPessoasDaTabela())"><b>Recarregar lista</br></a>

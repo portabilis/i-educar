@@ -118,17 +118,17 @@ function montaTabelaDadosAluno(response) {
         <td>Ação</td>
       </tr>
   `;
-
+// intranet/educar_aluno_det.php?cod_aluno=26
   response.alunos.each(function(aluno, id) {
     html += '<tr id="' + aluno.codigo + '" class="linha_listagem">';
     html += '<td><input type="checkbox" class="check_principal" id="check_principal_' + aluno.codigo + '"</td>';
-    html += '<td><a target="_new" href="/module/Cadastro/aluno?id=' + aluno.codigo + '">'+ aluno.codigo +'</a></td>';
-    html += '<td><a target="_new" href="/module/Cadastro/aluno?id=' + aluno.codigo + '">'+ aluno.inep +'</a></td>';
-    html += '<td><a target="_new" href="/module/Cadastro/aluno?id=' + aluno.codigo + '">'+ aluno.nome +'</a></td>';
-    html += '<td><a target="_new" href="/module/Cadastro/aluno?id=' + aluno.codigo + '">'+ aluno.data_nascimento +'</a></td>';
-    html += '<td><a target="_new" href="/module/Cadastro/aluno?id=' + aluno.codigo + '">'+ addMascara(aluno.cpf) +'</a></td>';
-    html += '<td><a target="_new" href="/module/Cadastro/aluno?id=' + aluno.codigo + '">'+ aluno.rg +'</a></td>';
-    html += '<td><a target="_new" href="/module/Cadastro/aluno?id=' + aluno.codigo + '">'+ aluno.mae_aluno +'</a></td>';
+    html += '<td><a target="_new" href="/intranet/educar_aluno_det.php?cod_aluno=' + aluno.codigo + '">'+ aluno.codigo +'</a></td>';
+    html += '<td><a target="_new" href="/intranet/educar_aluno_det.php?cod_aluno=' + aluno.codigo + '">'+ aluno.inep +'</a></td>';
+    html += '<td><a target="_new" href="/intranet/educar_aluno_det.php?cod_aluno=' + aluno.codigo + '">'+ aluno.nome +'</a></td>';
+    html += '<td><a target="_new" href="/intranet/educar_aluno_det.php?cod_aluno=' + aluno.codigo + '">'+ aluno.data_nascimento +'</a></td>';
+    html += '<td><a target="_new" href="/intranet/educar_aluno_det.php?cod_aluno=' + aluno.codigo + '">'+ addMascara(aluno.cpf) +'</a></td>';
+    html += '<td><a target="_new" href="/intranet/educar_aluno_det.php?cod_aluno=' + aluno.codigo + '">'+ aluno.rg +'</a></td>';
+    html += '<td><a target="_new" href="/intranet/educar_aluno_det.php?cod_aluno=' + aluno.codigo + '">'+ aluno.mae_aluno +'</a></td>';
     html += '<td><a onclick="visualizarDadosAlunos(' + aluno.codigo + ', \'' + aluno.nome + '\')">Visualizar</a></td>';
     html += '<td><a class="link_remove" onclick="removeAluno(' + aluno.codigo + ')"><b><u>EXCLUIR</u></b></a></td>';
     html += '</tr>';
