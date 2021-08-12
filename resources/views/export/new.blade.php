@@ -157,7 +157,6 @@
           jQuery('input[type=checkbox]').each(function () {
               if (this.name !== 'agree' && this.checked) {
                   checked = true;
-                  console.log(this.name)
               }
           });
 
