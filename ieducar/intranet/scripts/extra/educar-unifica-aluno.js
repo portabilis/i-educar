@@ -1,6 +1,7 @@
 adicionaMaisUmaLinhaNaTabela();
 ajustaTabelaDeAlunosUnificados();
 ajustarUiBotao();
+adicionaBotoesInicias();
 
 function ajustarUiBotao () {
   $j('#btn_add_tab_add_1').addClass('button_center');
@@ -259,7 +260,7 @@ function removeAluno(codAluno) {
       buttons: [{
         text: 'Confirmar',
         click: function () {
-          voltar();
+          recarregar();
           $j('#dialog-container').dialog('destroy');
         }
       }, {
@@ -284,13 +285,24 @@ function removeTr(codAluno) {
   });
 }
 
-function adicionaBotoes() {
-  let htmlBotao = '<input type="button" class="botaolistagem" onclick="voltar();" value="Voltar" autocomplete="off">';
-  htmlBotao += '<input id="unifica_pessoa" type="button" class="botaolistagem" onclick="showConfirmationMessage();" value="Unificar alunos da lista" autocomplete="off">';
+function adicionaBotoesInicias() {
+  let htmlBotao = '<input type="button" class="botaolistagem" onclick="voltarParaLista();" value="Voltar" autocomplete="off">';
+      htmlBotao += '<input type="button" id="btn_enviar" name="botaolistagem" onClick="carregaDadosAlunos();" value="Carregar dados" autoComplete="off">';
   $j('.linhaBotoes td').html(htmlBotao);
 }
 
-function voltar() {
+function adicionaBotoes() {
+  let htmlBotao = '<input type="button" class="botaolistagem" onclick="voltarParaLista();" value="Voltar" autocomplete="off">';
+      htmlBotao += '<input type="button" class="botaolistagem" onclick="recarregar();" value="Cancelar" autocomplete="off">';
+      htmlBotao += '<input id="unifica_pessoa" type="button" class="botaolistagem" onclick="showConfirmationMessage();" value="Unificar alunos da lista" autocomplete="off">';
+  $j('.linhaBotoes td').html(htmlBotao);
+}
+
+function voltarParaLista() {
+  document.location.href = '/unificacao-aluno'
+}
+
+function recarregar() {
   document.location.reload(true);
 }
 
@@ -517,8 +529,6 @@ function modalAvisoComplementaDadosAluno() {
   $addPontosButton.click(function(){
   setAutoComplete();
 });
-
-  $j('#btn_enviar').val('Carregar dados');
 
 function makeDialog(params) {
   params.closeOnEscape = false;
