@@ -615,7 +615,7 @@ table.calendar .dayLastMonth, .day{
 }
 
 table.calendar .day{
-  background-color: #e9f0f8 !;
+  background-color: #e9f0f8;
   cursor: pointer;
 }
 
@@ -1468,4 +1468,9 @@ a.btn-detalhes {
 #turma_serie.tabela-adicao td.mult_boletim_diferenciado_id,
 #turma_serie td.tr_turma_serie {
   width: 23%;
+}
+
+.btn-disabled#btn_enviar {
+  background: rgb(233, 240, 248) !important;
+  cursor: not-allowed;
 }

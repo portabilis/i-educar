@@ -40,7 +40,7 @@ class LegacyEmployee extends Model
         'email',
     ];
 
-    protected $dates = ['data_reativa_conta'];
+    protected $dates = ['data_reativa_conta', 'data_troca_senha'];
 
     /**
      * @return string
@@ -113,5 +113,10 @@ class LegacyEmployee extends Model
     public function getEnabledUserDate(): ?Carbon
     {
         return $this->data_reativa_conta;
+    }
+
+    public function getPasswordUpdatedDate(): ?Carbon
+    {
+        return $this->data_troca_senha;
     }
 }

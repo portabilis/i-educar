@@ -30,6 +30,6 @@ class Portabilis_View_Helper_Input_Checkbox extends Portabilis_View_Helper_Input
         ';
 
         Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = false);
-        call_user_func_array([$this->viewInstance, 'campoCheck'], $inputOptions);
+        $this->viewInstance->campoCheck(...array_values($inputOptions));
     }
 }

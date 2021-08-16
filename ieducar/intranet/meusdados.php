@@ -1,8 +1,10 @@
 <?php
 
+use App\Models\LegacyEmployee;
+use App\Services\ChangeUserPasswordService;
 use App\Services\UrlPresigner;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\ValidationException;
 
 return new class extends clsCadastro {
     public $nome;
@@ -176,29 +178,6 @@ return new class extends clsCadastro {
 
     public function Editar()
     {
-        if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
-            $this->mensagem = 'Formato do e-mail inválido.';
-
-            return false;
-        }
-        if ($this->senha != $this->senha_confirma) {
-            $this->mensagem = 'As senhas que você digitou não conferem.';
-
-            return false;
-        }
-
-        if (strlen($this->senha) < 8) {
-            $this->mensagem = 'Por favor informe uma senha mais segura, com pelo menos 8 caracteres.';
-
-            return false;
-        }
-
-        if (strrpos($this->senha, $this->matricula)) {
-            $this->mensagem = 'A senha informada &eacute; similar a sua matricula, informe outra senha.';
-
-            return false;
-        }
-
         if (!$this->validatePhoto()) {
             return false;
         }
@@ -239,7 +218,18 @@ return new class extends clsCadastro {
         $senha_old = urldecode($this->senha_old);
 
         if ($senha_old != $this->senha) {
-            $funcionario->senha = Hash::make($this->senha);
+            if ($this->senha !== $this->senha_confirma) {
+                $this->mensagem = 'O campo de confirmação de senha deve ser igual ao campo de confirmação da senha.';
+                return false;
+            }
+            $legacyEmployee = LegacyEmployee::find($this->pessoa_logada);
+            $changeUserPasswordService = app(ChangeUserPasswordService::class);
+            try {
+                $changeUserPasswordService->execute($legacyEmployee, $this->senha);
+            } catch (ValidationException $ex){
+                $this->mensagem = $ex->validator->errors()->first();
+                return false;
+            }
         }
 
         $funcionario->edita();
