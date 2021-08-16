@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Services\CacheManager;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -258,10 +259,8 @@ class Menu extends Model
      */
     public static function user(User $user)
     {
-        $key = $user->getMenuCacheKey();
-        $client = config('legacy.app.database.dbname');
-
-        $cacheMenus = Cache::tags(['menus', $client, $key])->get($key);
+        $userMenuCache = new CacheManager();
+        $cacheMenus = $userMenuCache->getMenuByUser($user);
 
         if ($cacheMenus !== null) {
             return $cacheMenus;
@@ -269,14 +268,14 @@ class Menu extends Model
 
         if ($user->isAdmin()) {
             $adminMenus = static::roots();
-            Cache::tags(['menus', $client, $key])->put($key, $adminMenus, env('CACHE_TTL',60));
+            $userMenuCache->putMenuCache($adminMenus, $user);
             return $adminMenus;
         }
 
         $ids = $user->menu()->pluck('id')->sortBy('id')->toArray();
 
         $menus = self::getMenusByIds($ids);
-        Cache::tags(['menus', $client, $key])->put($key, $menus, env('CACHE_TTL', 60));
+        $userMenuCache->putMenuCache($menus, $user);
 
         return $menus;
     }
