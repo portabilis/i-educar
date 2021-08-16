@@ -72,6 +72,11 @@ class ExportController extends Controller
             return redirect()->route('export.form');
         }
 
+        if (empty($request->all()['fields'])) {
+            return redirect('/exportacoes/novo')
+                ->withErrors(['Error' => ['Selecione ao menos uma informação que deseja exportar para continuar.']]);
+        }
+
         $export = Export::create(
             $this->filter($request)
         );
