@@ -109,6 +109,7 @@ class PopulateSettingsTable extends Migration
             'legacy.report.remote_factory.username' => null,
             'legacy.report.remote_factory.password' => null,
             'legacy.report.remote_factory.logo_name' => null,
+            'legacy.educacenso.enable_export' => 1,
         ];
 
         collect($settings)->each(function ($value, $key) {
