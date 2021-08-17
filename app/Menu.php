@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Services\MenuCache;
+use App\Services\MenuCacheService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -258,7 +258,7 @@ class Menu extends Model
      */
     public static function user(User $user)
     {
-        $userMenuCache = new MenuCache();
+        $userMenuCache = new MenuCacheService();
         $cacheMenus = $userMenuCache->getMenuByUser($user);
 
         if ($cacheMenus !== null) {
