@@ -2,13 +2,11 @@
 
 namespace App\Services;
 
-use App\User;
 use Illuminate\Cache\CacheManager as LaravelCacheManager;
 use Illuminate\Contracts\Cache\Repository;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Cache;
 
-class CacheManager //extends LaravelCacheManager
+class CacheManager extends LaravelCacheManager
 {
     /**
      * Invalida todas as entradas de cache de acordo com as tags passadas
@@ -60,6 +58,7 @@ class CacheManager //extends LaravelCacheManager
         $doNotSupportTags = [
             'Illuminate\Cache\DatabaseStore',
             'Illuminate\Cache\FileStore',
+            'Illuminate\Cache\DynamodbStore',
         ];
 
         if (in_array(get_class($store), $doNotSupportTags)) {
@@ -87,29 +86,5 @@ class CacheManager //extends LaravelCacheManager
         }
 
         return false;
-    }
-
-    /**
-     * @param User $user
-     * @return array|mixed|null
-     */
-    public function getMenuByUser(User $user)
-    {
-        $key = $user->getMenuCacheKey();
-        $client = config('legacy.app.database.dbname');
-
-        return Cache::tags(['menus', $client, $key])->get($key);
-    }
-
-    /**
-     * @param Collection $adminMenus
-     * @param User $user
-     */
-    public function putMenuCache(Collection $adminMenus, User $user)
-    {
-        $key = $user->getMenuCacheKey();
-        $client = config('legacy.app.database.dbname');
-
-        Cache::tags(['menus', $client, $key])->put($key, $adminMenus, env('CACHE_TTL',60));
     }
 }
