@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Menu;
 use App\Models\LegacyUserType;
+use App\Services\CacheManager;
+use App\Services\MenuCache;
 use App\User;
 use Exception;
 use Illuminate\Database\Connection;
@@ -57,7 +59,7 @@ class AccessLevelController extends Controller
 
         $userType->menus()->syncWithoutDetaching($processes);
 
-        Cache::tags('menu-' . config('legacy.app.database.dbname') . '-' . $userType->cod_tipo_usuario)->flush();
+        (new MenuCache())->flushMenuTag($userType->cod_tipo_usuario);
     }
     /**
      * @param Request $request

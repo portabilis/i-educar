@@ -2,13 +2,12 @@
 
 namespace App;
 
-use App\Services\CacheManager;
+use App\Services\MenuCache;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Collection as LaravelCollection;
 
 /**
@@ -259,7 +258,7 @@ class Menu extends Model
      */
     public static function user(User $user)
     {
-        $userMenuCache = new CacheManager();
+        $userMenuCache = new MenuCache();
         $cacheMenus = $userMenuCache->getMenuByUser($user);
 
         if ($cacheMenus !== null) {
