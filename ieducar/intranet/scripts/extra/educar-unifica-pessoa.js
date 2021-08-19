@@ -173,6 +173,7 @@ function listaDadosPessoasUnificadas(response) {
   removeExclusaoDePessoas();
   removeItensVazios();
   disabilitaSearchInputs();
+  removeBotaoMaisPessoas();
   montaTabela(response);
   adicionaSeparador();
   apresentaObservacoes(response.pessoas);
@@ -180,6 +181,10 @@ function listaDadosPessoasUnificadas(response) {
   adicionaBotoes();
   uniqueCheck();
   desabilitaBotaoUnificar();
+}
+
+function removeBotaoMaisPessoas() {
+  $j('#tabela_pessoas tr:last').remove();
 }
 
 function removeExclusaoDePessoas() {
@@ -343,13 +348,13 @@ function montaTabela(response) {
   response.pessoas.each(function(value, id) {
     html += '<tr id="' + value.idpes + '" class="linha_listagem">';
     html += '<td><input onclick="validaCheckPessoaPrincipal(this)" type="checkbox" class="check_principal" id="check_principal_' + value.idpes + '"</td>';
-    html += '<td id="vinculo_'+ value.idpes +'">'+ value.vinculo +'</td>';
+    html += '<td id="vinculo_'+ value.idpes +'"><a target="_new" href="/intranet/atendidos_det.php?cod_pessoa=' + value.idpes + '">'+ value.vinculo +'</a></td>';
     html += '<td><a target="_new" href="/intranet/atendidos_det.php?cod_pessoa=' + value.idpes + '">'+ value.nome +'</a></td>';
-    html += '<td>'+ value.data_nascimento +'</td>';
-    html += '<td>'+ value.sexo +'</td>';
-    html += '<td>'+ addMascara(value.cpf) +'</td>';
-    html += '<td>'+ value.rg +'</td>';
-    html += '<td>'+ value.pessoa_mae +'</td>';
+    html += '<td><a target="_new" href="/intranet/atendidos_det.php?cod_pessoa=' + value.idpes + '">'+ value.data_nascimento +'</a></td>';
+    html += '<td><a target="_new" href="/intranet/atendidos_det.php?cod_pessoa=' + value.idpes + '">'+ value.sexo +'</a></td>';
+    html += '<td><a target="_new" href="/intranet/atendidos_det.php?cod_pessoa=' + value.idpes + '">'+ addMascara(value.cpf) +'</a></td>';
+    html += '<td><a target="_new" href="/intranet/atendidos_det.php?cod_pessoa=' + value.idpes + '">'+ value.rg +'</a></td>';
+    html += '<td><a target="_new" href="/intranet/atendidos_det.php?cod_pessoa=' + value.idpes + '">'+ value.pessoa_mae +'</a></td>';
     html += '<td><a class="link_remove" onclick="removePessoa(' + value.idpes + ')"><b><u>EXCLUIR</u></b></a></td>';
     html += '</tr>';
   });
@@ -364,8 +369,8 @@ function addMascara(value) {
     return value
   }
 
-  if (value.length === 10) { // Quando o CPF tem 0 na frente o i-educar remove.
-    value = '0' + value;
+  if (value.length <= 10) { // Quando o CPF tem 0 na frente o i-educar remove.
+    value = String(value).padStart(11, '0'); // '0010'
   }
 
   return value.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
@@ -442,12 +447,14 @@ function removeTr(idpes) {
   trClose.fadeOut(400, function() {
     trClose.remove();
     recarregaListaDePessoas(pegarPessoasParaUnificar())
+    desabilitaConfirmarDadosUnificar();
+    desabilitaBotaoUnificar();
   });
 }
 
 function confirmaRemocaoPessoaUnificacao() {
   makeDialog({
-    content: 'É necessário ao menos 2 pessoas para a unificação, ao confirmar o processo vai ser reiniciado, Deseja prosseguir?',
+    content: 'É necessário ao menos 2 pessoas para a unificação, ao confirmar o processo vai ser reiniciado. Deseja prosseguir?',
     title: 'Atenção!',
     maxWidth: 860,
     width: 860,
@@ -505,7 +512,7 @@ function htmlApresentaObservacoes() {
   html = `
     <td colspan="2">
       <div>
-        Consta mais de um vínculo de aluno na lista de pessoas a serem unificadas,
+        Consta mais de um vínculo de aluno(a) na lista de pessoas a serem unificadas,
         <a href="/intranet/educar_unifica_aluno.php" target="_new"><b>clique aqui</b></a> para fazer a Unificação de alunos antes de unificar as pessoas físicas.
         Após a unificação clique no botão abaixo para recarregar a listagem de pessoas. <br>
         <a id="recarregar_lista" onclick="recarregaListaDePessoas(pegaPessoasDaTabela())"><b>Recarregar lista</br></a>
