@@ -75,7 +75,7 @@ function addEmailEdit() {
   let url = '"' + '/intranet/empresas_det.php?cod_empresa=' + pessoaId + '"';
   let editEmail =
   '<span>' +
-    '<a href=' + url + 'target="_blank" class="span-busca-cep" style="color: blue; margin-left: 10px;">Clique aqui para editar o email</a>' +
+    '<a href=' + url + 'target="_blank" class="span-busca-cep" style="color: blue; margin-left: 10px;">Clique aqui para editar o e-mail</a>' +
   '</span>';
 
   $j('#tr_p_email td:last-child').append(editEmail)
