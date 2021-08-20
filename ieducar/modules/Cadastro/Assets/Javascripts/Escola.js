@@ -72,7 +72,7 @@ var submitForm = function(){
 
 function addEmailEdit() {
   let pessoaId = $j('#pessoaj_id').val();
-  let url = '"' + '/intranet/empresas_det.php?cod_empresa=' + pessoaId + '"';
+  let url = '"' + '/intranet/empresas_cad.php?idpes=' + pessoaId + '#email ' + '"';
   let editEmail =
   '<span>' +
     '<a href=' + url + 'target="_blank" class="span-busca-cep" style="color: blue; margin-left: 10px;">Clique aqui para editar o e-mail</a>' +
