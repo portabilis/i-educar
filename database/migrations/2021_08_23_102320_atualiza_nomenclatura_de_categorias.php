@@ -19,7 +19,7 @@ class AtualizaNomenclaturaDeCategorias extends Migration
             SET name = (
                 CASE name
                     WHEN \'Integração entre iEducar e iDiário\' THEN \'Integração entre i-Educar e i-Diário\'
-                    ELSE \'\'
+                    ELSE settings_categories.name
                 END
             );
         ');

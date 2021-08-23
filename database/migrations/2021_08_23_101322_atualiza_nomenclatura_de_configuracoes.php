@@ -146,7 +146,7 @@ class AtualizaNomenclaturaDeConfiguracoes extends Migration
                     WHEN \'preregistration.title\' THEN \'Título da página inicial\'
                     WHEN \'preregistration.token\' THEN \'Token de segurança\'
                     WHEN \'preregistration.year\' THEN \'Ano vigente\'
-                    ELSE \'\'
+                    ELSE settings.description
                 END
             );
         ');
