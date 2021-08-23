@@ -45,7 +45,6 @@ return new class extends clsCadastro {
 
                 $this->_senha = $this->senha;
                 $this->fexcluir = true;
-                $retorno = 'Editar';
             }
 
             if ($this->data_expiracao) {
@@ -64,6 +63,9 @@ return new class extends clsCadastro {
                 }
 
                 $this->fexcluir = $obj_permissoes->permissao_excluir(555, $this->pessoa_logada, 7);
+            }
+
+            if ($det_funcionario !== false && $registro !== false) {
                 $retorno = 'Editar';
             }
         }
