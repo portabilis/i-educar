@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Employee;
 use App\Models\LegacyEmployee;
 use App\Services\ChangeUserPasswordService;
 use App\Services\ValidateUserPasswordService;
@@ -23,7 +22,6 @@ return new class extends clsCadastro {
     public $data_expiracao;
     public $escola;
     public $force_reset_password;
-    public $tempo_expira_senha;
 
     public function Inicializar()
     {
@@ -282,25 +280,6 @@ return new class extends clsCadastro {
             return false;
         }
 
-        // Em caso de unificação de pessoas o usuário perde os dados da tabela de funcionário.
-        // Neste caso verificamos se existe e caso não exista, é realizado um novo cadastro de funcionário para o usuário
-        /** @var Employee|null $legacyEmployee */
-        $legacyEmployee = LegacyEmployee::query()->find($this->ref_pessoa);
-
-        if ($legacyEmployee === null && empty($this->_senha)) {
-            $this->mensagem = 'Erro ao cadastrar funcionário, favor informe uma senha.<br>';
-            return false;
-        }
-
-        if ($legacyEmployee === null) {
-            $legacyEmployee = $this->cadastraNovoFuncionario();
-
-            if ($legacyEmployee === null) {
-                $this->mensagem = 'Erro ao cadastrar funcionário, favor entrar em contato com o suporte.<br>';
-                return false;
-            }
-        }
-
         // Ao editar não é necessário trocar a senha, então apenas quando algo
         // for informado é que a mesma será alterada.
         if ($this->_senha) {
@@ -371,47 +350,6 @@ return new class extends clsCadastro {
         $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
-    }
-
-    /**
-     * @param string $dataReativaConta
-     * @return Employee|null
-     */
-    private function cadastraNovoFuncionario()
-    {
-        $objFuncionario = new clsPortalFuncionario(
-            $this->ref_pessoa,
-            $this->matricula,
-            $this->_senha,
-            $this->ativo,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            $this->ref_cod_funcionario_vinculo,
-            $this->tempo_expira_senha,
-            Portabilis_Date_Utils::brToPgSQL($this->data_expiracao),
-            null,
-            'NOW()',
-            $this->pessoa_logada,
-            0,
-            0,
-            null,
-            0,
-            null,
-            $this->email,
-            $this->matricula_interna
-        );
-
-        $objFuncionario->cadastra();
-
-        return Employee::query()->find($this->ref_pessoa);
     }
 
     public function Excluir()
