@@ -3,6 +3,8 @@
 use App\Models\Educacenso\Registro30;
 use App\Models\Individual;
 use App\Models\LegacyDeficiency;
+use App\Models\LegacyRegistration;
+use App\Models\LegacySchoolHistory;
 use App\Models\LogUnification;
 use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
 use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
@@ -2018,6 +2020,89 @@ class AlunoController extends ApiCoreController
         return  ['unificacoes' => $unificationsQuery->get(['main_id', 'duplicates_id', 'created_at', 'active'])->all()];
     }
 
+    protected function dadosUnificacaoAlunos()
+    {
+        $alunosIds = $this->getRequest()->alunos_ids ?? 0;
+
+        $sql = "
+            SELECT
+                a.cod_aluno AS codigo,
+                p.nome AS nome,
+                coalesce(eca.cod_aluno_inep::varchar, 'Não consta') AS inep,
+                coalesce(to_char(f.data_nasc, 'dd/mm/yyyy'), 'Não consta') AS data_nascimento,
+                coalesce(f.cpf::varchar, 'Não consta') AS cpf,
+                coalesce(d.rg, 'Não consta') AS rg,
+                coalesce(relatorio.get_mae_aluno(a.cod_aluno), 'Não consta') AS mae_aluno
+            FROM pmieducar.aluno a
+            JOIN cadastro.pessoa p ON p.idpes = a.ref_idpes
+            JOIN cadastro.fisica f ON f.idpes = a.ref_idpes
+            LEFT JOIN cadastro.documento d ON d.idpes = a.ref_idpes
+            LEFT JOIN modules.educacenso_cod_aluno eca ON eca.cod_aluno = a.cod_aluno
+            WHERE a.cod_aluno IN ($alunosIds);
+        ";
+
+        $alunos = $this->fetchPreparedQuery($sql, [], false);
+
+        $attrs = [
+            'codigo',
+            'nome',
+            'inep',
+            'data_nascimento',
+            'cpf',
+            'rg',
+            'mae_aluno',
+        ];
+
+        return [
+            'alunos' => Portabilis_Array_Utils::filterSet($alunos, $attrs)
+        ];
+    }
+
+    protected function dadosMatriculasHistoricosAlunos()
+    {
+        $alunoId = $this->getRequest()->aluno_id;
+
+        if (empty($alunoId)) {
+            return;
+        }
+
+        $registrations = LegacyRegistration::query()
+            ->where('ref_cod_aluno', $alunoId)
+            ->with('school')
+            ->orderBy('ano')
+            ->get()
+            ->map(function ($registration) {
+                return [
+                    'ano' => $registration->ano,
+                    'escola' => $registration->school->name,
+                    'curso' => $registration->course->name,
+                    'serie' => $registration->grade->name,
+                    'turma' => $registration->lastEnrollment->schoolClass->name,
+                ];
+            })
+            ->toArray();
+
+        $schoolHistories = LegacySchoolHistory::query()
+            ->where('ref_cod_aluno', $alunoId)
+            ->get()
+            ->map(function ($schoolHistory) {
+                $situacao = App_Model_MatriculaSituacao::getInstance()->getValue($schoolHistory->aprovado);
+                return [
+                    'ano' => $schoolHistory->ano,
+                    'escola' => $schoolHistory->escola,
+                    'curso' => $schoolHistory->nm_curso,
+                    'serie' => $schoolHistory->nm_serie,
+                    'situacao' => $situacao,
+                ];
+            })
+            ->toArray();
+
+        return [
+            'matriculas' => $registrations,
+            'historicos' => $schoolHistories,
+        ];
+    }
+
     protected function canGetUnificacoes()
     {
         return $this->validatesPresenceOf('escola');
@@ -2053,6 +2138,10 @@ class AlunoController extends ApiCoreController
             $this->appendResponse($this->getNomeBairro());
         } elseif ($this->isRequestFor('get', 'unificacao-alunos')) {
             $this->appendResponse($this->getUnificacoes());
+        } elseif ($this->isRequestFor('get', 'dadosUnificacaoAlunos')) {
+            $this->appendResponse($this->dadosUnificacaoAlunos());
+        } elseif ($this->isRequestFor('get', 'dadosMatriculasHistoricosAlunos')) {
+            $this->appendResponse($this->dadosMatriculasHistoricosAlunos());
         } elseif ($this->isRequestFor('get', 'deve-habilitar-campo-recursos-prova-inep')) {
             $this->appendResponse($this->deveHabilitarCampoRecursosProvaInep());
         } elseif ($this->isRequestFor('get', 'deve-obrigar-laudo-medico')) {

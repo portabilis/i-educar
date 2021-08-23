@@ -1,0 +1,83 @@
+#tr_tabela_alunos_cab {
+    display: none;
+}
+
+.tabela-adicao .tr_tabela_alunos:nth-of-type(-n+4) td a {
+  display: none;
+}
+
+#tabela_alunos.tabela-adicao td {
+    padding: 5px 8px !important;
+}
+
+table#tabela_alunos_unificados {
+    border-spacing: 0;
+    width: 100%;
+}
+
+#tabela_alunos_unificados .tr_title {
+    background-color: #ccdce6;
+    font-family: "Open Sans";
+    font-size: 14px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.14;
+    color: #47728f;
+}
+
+#tabela_alunos_unificados .tr_title td {
+    padding: 10px;
+}
+
+tr.linha_listagem td {
+    padding: 5px 10px;
+}
+
+tr.linha_listagem:nth-child(even) {
+    background-color: #f5f9fd;
+}
+
+#tabela_alunos_unificados a {
+    color: #47728f;
+    cursor: pointer;
+}
+
+table.tabela-modal-dados-aluno {
+    width: 100%;
+}
+
+.tabela-modal-dados-aluno tr.tabela-modal-dados-aluno-titulo {
+    background-color: #ccdce6;
+    font-family: "Open Sans";
+    font-size: 14px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.14;
+    color: #47728f;
+}
+
+.tabela-modal-dados-aluno td {
+    padding: 5px 10px;
+}
+
+.linhaBotoes td input {
+    margin: 10px 4px;
+}
+
+.botaolistagem.btn-disabled {
+    background: rgb(233, 240, 248) !important;
+    cursor: not-allowed;
+}
+
+#tr_confirma_dados_unificacao td {
+    text-align: center;
+    font-size: 12px;
+    padding: 20px 0px;
+}
+
+tr a {
+  color: #47728f;
+  cursor: pointer;
+}

@@ -469,8 +469,6 @@ return new class extends clsCadastro {
         $styles = ['/modules/Cadastro/Assets/Stylesheets/Escola.css'];
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
 
-        $obj_permissoes = new clsPermissoes();
-
         $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
 
         $this->campoOculto('obrigar_campos_censo', (int) $obrigarCamposCenso);
@@ -485,6 +483,8 @@ return new class extends clsCadastro {
             $this->array_botao_url_script = ['obj = document.getElementById(\'pessoaj_idpes\');if(obj.value != \'\' ) {
                 document.getElementById(\'tipoacao\').value = \'\'; acao(); } else { acao(); }', 'go(\'educar_escola_lst.php\');'];
         } else {
+            $obj_permissoes = new clsPermissoes();
+            $this->fexcluir = $obj_permissoes->permissao_excluir(561, $this->pessoa_logada, 3);
             $this->inputsHelper()->integer('escola_inep_id', ['label' => 'Código INEP', 'placeholder' => 'INEP', 'required' => $obrigarCamposCenso, 'max_length' => 8, 'label_hint' => 'Somente números']);
 
             $this->carregaDadosDoPost();
@@ -667,7 +667,7 @@ return new class extends clsCadastro {
             $this->inputTelefone('2', 'Telefone 2');
             $this->inputTelefone('mov', 'Celular');
             $this->inputTelefone('fax', 'Fax');
-            $this->campoTexto('p_email', 'E-mail', $this->p_email, '50', '100', false);
+            $this->campoRotulo('p_email', 'E-mail', $this->p_email);
             $this->campoTexto('p_http', 'Site/Blog/Rede social', $this->p_http, '50', '255', false);
             $this->passou = true;
             $this->campoOculto('passou', $this->passou);
@@ -1445,6 +1445,10 @@ return new class extends clsCadastro {
                 ]
             ];
             $this->inputsHelper()->simpleSearchIes(null, $options, $helperOptions);
+
+            $this->breadcrumb('Escola', ['educar_index.php' => 'Escola']);
+            $this->url_cancelar = (!empty($this->cod_escola)) ? "educar_escola_det.php?cod_escola={$this->cod_escola}" : 'educar_escola_lst.php';
+            $this->nome_url_cancelar = 'Cancelar';
         }
     }
 
@@ -1452,6 +1456,7 @@ return new class extends clsCadastro {
     {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 3, 'educar_escola_lst.php');
+        $this->pesquisaPessoaJuridica = false;
 
         $this->preparaDados();
 
@@ -1723,6 +1728,7 @@ return new class extends clsCadastro {
     {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7, 'educar_escola_lst.php');
+        $this->pesquisaPessoaJuridica = false;
 
         $this->preparaDados();
 
