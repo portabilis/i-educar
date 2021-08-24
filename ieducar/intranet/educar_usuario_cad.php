@@ -70,7 +70,6 @@ return new class extends clsCadastro {
             }
         }
 
-
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
         $this->breadcrumb($nomeMenu . ' usuário', [
