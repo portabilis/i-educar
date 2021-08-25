@@ -86,7 +86,7 @@ class EnrollmentController extends Controller
 
         // Se for um remanejamento e a matrícula anterior tiver data de saída antes da data base (ou não houver data base)
         // marca a matrícula como "remanejada" e reordena o sequencial da turma de origem
-        if ($request->input('is_relocation') && $previousEnrollment) {
+        if ($request->input('is_relocation') && $previousEnrollment && $previousEnrollment->school_class_id !== $schoolClass->id) {
             $enrollmentService->markAsRelocated($previousEnrollment);
             $enrollmentService->reorderSchoolClassAccordingToRelocationDate($previousEnrollment);
         }
