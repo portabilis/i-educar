@@ -31,7 +31,7 @@ class PessoatransporteController extends ApiCoreController
         $pt->ref_idpes_destino = $this->getRequest()->pessoaj_id;
         $pt->ref_cod_ponto_transporte_escolar = $this->getRequest()->ponto;
         $pt->ref_cod_rota_transporte_escolar = $this->getRequest()->rota;
-        $pt->observacao = Portabilis_String_Utils::toLatin1($this->getRequest()->observacao);
+        $pt->observacao = $this->getRequest()->observacao;
         $pt->turno = $this->getRequest()->turno;
 
         return (is_null($id) ? $pt->cadastra() : $pt->edita());
