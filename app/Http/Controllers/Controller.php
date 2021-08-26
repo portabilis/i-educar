@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Menu;
+use App\Services\MenuCacheService;
 use iEducar\Support\Navigation\Breadcrumb;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -47,7 +48,7 @@ class Controller extends BaseController
     public function menu($process)
     {
         $user = Auth::user();
-        $menu = Menu::user($user);
+        $menu = app(MenuCacheService::class)->getMenuByUser($user);
 
         $topmenu = Menu::query()
             ->where('process', $process)
