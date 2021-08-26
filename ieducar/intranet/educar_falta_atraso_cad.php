@@ -76,8 +76,8 @@ return new class extends clsCadastro {
         $this->campoOculto('cod_falta_atraso', $this->cod_falta_atraso);
         $this->campoOculto('ref_cod_servidor', $this->ref_cod_servidor);
 
-        $this->inputsHelper()->dynamic('instituicao', ['value' => $this->ref_cod_instituicao, 'disabled' => $desabilitado]);
-        $this->inputsHelper()->dynamic('escola', ['value' => $this->ref_cod_escola, 'disabled' => $desabilitado]);
+        $this->inputsHelper()->dynamic('instituicao', ['value' => $this->ref_cod_instituicao]);
+        $this->inputsHelper()->dynamic('escola', ['value' => $this->ref_cod_escola]);
 
         // Text
         // @todo CoreExt_Enum
