@@ -475,7 +475,7 @@ return new class extends clsCadastro {
         $this->campoOculto('pessoaj_id_oculto', $this->pessoaj_id);
         $this->campoOculto('pessoaj_id', $this->pessoaj_id);
 
-        if (empty($this->cod_escola)) {
+        if ($this->pesquisaPessoaJuridica) {
             $this->inputsHelper()->simpleSearchPessoaj('idpes', ['label'=> 'Pessoa Jurídica']);
             $this->acao_enviar = false;
             $this->url_cancelar = false;
@@ -667,7 +667,7 @@ return new class extends clsCadastro {
             $this->inputTelefone('2', 'Telefone 2');
             $this->inputTelefone('mov', 'Celular');
             $this->inputTelefone('fax', 'Fax');
-            $this->campoTexto('p_email', 'E-mail', $this->p_email, '50', '100', false);
+            $this->campoRotulo('p_email', 'E-mail', $this->p_email);
             $this->campoTexto('p_http', 'Site/Blog/Rede social', $this->p_http, '50', '255', false);
             $this->passou = true;
             $this->campoOculto('passou', $this->passou);
@@ -1456,6 +1456,7 @@ return new class extends clsCadastro {
     {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 3, 'educar_escola_lst.php');
+        $this->pesquisaPessoaJuridica = false;
 
         $this->preparaDados();
 
@@ -1727,6 +1728,7 @@ return new class extends clsCadastro {
     {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7, 'educar_escola_lst.php');
+        $this->pesquisaPessoaJuridica = false;
 
         $this->preparaDados();
 

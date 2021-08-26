@@ -1,3 +1,4 @@
+addEmailEdit();
 var $submitButton      = $j('#btn_enviar');
 var $escolaInepIdField = $j('#escola_inep_id');
 var $escolaIdField     = $j('#cod_escola');
@@ -67,6 +68,17 @@ var submitForm = function(){
   if (canSubmit) {
     acao();
   }
+}
+
+function addEmailEdit() {
+  let pessoaId = $j('#pessoaj_id').val();
+  let url = '"' + '/intranet/empresas_cad.php?idpes=' + pessoaId + '#email ' + '"';
+  let editEmail =
+  '<span>' +
+    '<a href=' + url + 'target="_blank" class="span-busca-cep" style="color: blue; margin-left: 10px;">Clique aqui para editar o e-mail</a>' +
+  '</span>';
+
+  $j('#tr_p_email td:last-child').append(editEmail)
 }
 
 var handleGetEscola = function(dataResponse) {

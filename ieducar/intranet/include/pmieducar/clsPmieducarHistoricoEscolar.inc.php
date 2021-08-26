@@ -740,7 +740,7 @@ class clsPmieducarHistoricoEscolar extends Model
         return false;
     }
 
-    public static function gerarHistoricoTransferencia($ref_cod_matricula, $pessoa_logada)
+    public static function gerarHistoricoTransferencia($ref_cod_matricula, $pessoa_logada, $ref_cod_escola)
     {
         $detMatricula = self::dadosMatricula($ref_cod_matricula);
 
@@ -751,9 +751,9 @@ class clsPmieducarHistoricoEscolar extends Model
 
             $historicoEscolar = new clsPmieducarHistoricoEscolar(
                 $detMatricula['ref_cod_aluno'],
-                $sequencial = null,
-                $ref_usuario_exc = null,
-                $ref_usuario_cad = $pessoa_logada,
+                null,
+                null,
+                $pessoa_logada,
                 $detMatricula['nome_serie'],
                 $detMatricula['ano'],
                 $detMatricula['carga_horaria'],
@@ -763,12 +763,12 @@ class clsPmieducarHistoricoEscolar extends Model
                 $dadosEscola['uf'],
                 '',
                 4,
-                $data_cadastro = date('Y-m-d'),
-                $data_exclusao = null,
-                $ativo = 1,
+                date('Y-m-d'),
+                null,
+                1,
                 null,
                 $detMatricula['ref_cod_instituicao'],
-                $origem = '',
+                '',
                 null,
                 $ref_cod_matricula,
                 '',
@@ -776,11 +776,13 @@ class clsPmieducarHistoricoEscolar extends Model
                 '',
                 '',
                 $detMatricula['nome_curso'],
-                $grade_curso_id
+                $grade_curso_id,
+                null,
+                $ref_cod_escola
             );
 
             if ($historicoEscolar->cadastra()) {
-                $sequencial = self::getMaxSequencial($detMatricula['ref_cod_aluno']);
+                $sequencial = (new clsPmieducarHistoricoEscolar())->getMaxSequencial($detMatricula['ref_cod_aluno']);
                 $disciplinas = self::dadosDisciplinas($ref_cod_matricula);
                 foreach ($disciplinas as $index => $disciplina) {
                     $historicoDisciplina = new clsPmieducarHistoricoDisciplinas(($index + 1), $detMatricula['ref_cod_aluno'], $sequencial, $disciplina, '');

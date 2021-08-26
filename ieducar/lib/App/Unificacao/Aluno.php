@@ -10,15 +10,15 @@ class App_Unificacao_Aluno
     {
         self::validaParametros($codAlunoPrincipal, $codAlunos, $codPessoa);
 
-        $maxSequencialAlunoPrincipal = LegacySchoolHistory::query()
-            ->where('ref_cod_aluno', $codAlunoPrincipal)
-            ->max('sequencial') ?? 0;
-
         $codAlunosString = implode(',', $codAlunos);
 
         self::logData($codAlunos, $unificationId);
 
         foreach ($codAlunos as $codAluno) {
+            $maxSequencialAlunoPrincipal = LegacySchoolHistory::query()
+                    ->where('ref_cod_aluno', $codAlunoPrincipal)
+                    ->max('sequencial') ?? 0;
+
             DB::statement("
                 UPDATE pmieducar.historico_escolar
                 SET
@@ -34,6 +34,7 @@ class App_Unificacao_Aluno
                     ref_sequencial = ref_sequencial + {$maxSequencialAlunoPrincipal}
                 WHERE ref_ref_cod_aluno = {$codAluno};
             ");
+            $maxSequencialAlunoPrincipal++;
         }
 
         DB::statement("UPDATE pmieducar.matricula SET ref_cod_aluno = {$codAlunoPrincipal} where ref_cod_aluno in ({$codAlunosString})");

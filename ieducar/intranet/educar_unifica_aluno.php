@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LogUnification;
+use App\Services\ValidationDataService;
 use iEducar\Modules\Unification\StudentLogUnification;
 use Illuminate\Support\Facades\DB;
 
@@ -8,76 +9,94 @@ return new class extends clsCadastro {
     public $pessoa_logada;
     public $tabela_alunos = [];
     public $aluno_duplicado;
+    public $alunos;
 
     public function Inicializar()
     {
-        $retorno = 'Novo';
-
-        $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(
-            999847,
-            $this->pessoa_logada,
-            7,
-            'index.php'
-        );
+        $this->validaPermissaoDaPagina();
 
         $this->breadcrumb('Cadastrar unificação', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
 
-        $this->url_cancelar = route('student-log-unification.index');
-        $this->nome_url_cancelar = 'Cancelar';
-
-        return $retorno;
+        return 'Novo';
     }
 
     public function Gerar()
     {
-        $this->inputsHelper()->dynamic('ano', ['required' => false, 'max_length' => 4]);
-        $this->inputsHelper()->dynamic('instituicao', ['required' =>  false, 'show-select' => true]);
-        $this->inputsHelper()->dynamic('escola', ['required' =>  false, 'show-select' => true, 'value' => 0]);
-        $this->inputsHelper()->simpleSearchAluno(null, ['label' => 'Aluno principal' ]);
-        $this->campoTabelaInicio('tabela_alunos', '', ['Aluno duplicado'], $this->tabela_alunos);
-        $this->campoTexto('aluno_duplicado', 'Aluno duplicado', $this->aluno_duplicado, 50, 255, false, true, false, '', '', '', 'onfocus');
+        $this->acao_enviar = 'carregaDadosAlunos()';
+        $this->campoTabelaInicio('tabela_alunos', '', ['Aluno duplicado', 'Campo aluno duplicado'], $this->tabela_alunos);
+            $this->campoRotulo('aluno_label', '', 'Aluno(a) a ser unificado(a)  <span class="campo_obrigatorio">*</span>');
+            $this->campoTexto('aluno_duplicado', 'Aluno duplicado', $this->aluno_duplicado, 50, 255, false, true, false, '', '', '', 'onfocus');
         $this->campoTabelaFim();
+
+        $styles = ['/modules/Cadastro/Assets/Stylesheets/UnificaAluno.css'];
+        Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
+        $scripts = ['/modules/Portabilis/Assets/Javascripts/ClientApi.js'];
+        Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
     }
 
-    public function Novo()
+    private function validaPermissaoDaPagina()
     {
-        $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(
+        (new clsPermissoes())
+            ->permissao_cadastra(
             999847,
             $this->pessoa_logada,
             7,
             'index.php'
         );
+    }
 
-        $cod_aluno_principal = (int) $this->aluno_id;
-
-        if (!$cod_aluno_principal) {
-            return;
-        }
-
-        $cod_alunos = [];
-
-        //Monta um array com o código dos alunos selecionados na tabela
-        foreach ($this->aluno_duplicado as $key => $value) {
-            $explode = explode(' ', $value);
-
-            if ($explode[0] == $cod_aluno_principal) {
-                $this->mensagem = 'Impossivel de unificar alunos iguais.<br />';
-
+    private function validaDadosDaUnificacaoAluno($alunos): bool
+    {
+        foreach ($alunos as $item) {
+            if (! isset($item['codAluno'])) {
                 return false;
             }
 
-            $cod_alunos[] = (int) $explode[0];
+            if (! isset($item['aluno_principal'])) {
+                return false;
+            }
         }
 
-        if (!count($cod_alunos)) {
-            $this->mensagem = 'Informe no mínimo um aluno para unificação.<br />';
+        return true;
+    }
 
+    public function Novo()
+    {
+        $this->validaPermissaoDaPagina();
+
+        try {
+            $alunos = json_decode($this->alunos, true, 512, JSON_THROW_ON_ERROR);
+        } catch (Exception $exception) {
+            $this->mensagem = 'Informações inválidas para unificação';
             return false;
         }
+
+        if (! $this->validaDadosDaUnificacaoAluno($alunos)) {
+            $this->mensagem = 'Dados enviados inválidos, recarregue a tela e tente novamente!';
+            return false;
+        }
+
+        $validationData = new ValidationDataService();
+
+        if (! $validationData->verifyQuantityByKey($alunos,'aluno_principal', 0)) {
+            $this->mensagem = 'Aluno principal não informado';
+            return false;
+        }
+
+        if ($validationData->verifyQuantityByKey($alunos,'aluno_principal', 1)) {
+            $this->mensagem = 'Não pode haver mais de uma aluno principal';
+            return false;
+        }
+
+        if (! $validationData->verifyDataContainsDuplicatesByKey($alunos,'codAluno')) {
+            $this->mensagem = 'Erro ao tentar unificar Alunos, foi inserido cadastro duplicados';
+            return false;
+        }
+
+        $cod_aluno_principal = $this->buscaPessoaPrincipal($alunos);
+        $cod_alunos = $this->buscaIdesDasPessoasParaUnificar($alunos);
 
         DB::beginTransaction();
         $unificationId = $this->createLog($cod_aluno_principal, $cod_alunos, $this->pessoa_logada);
@@ -94,6 +113,22 @@ return new class extends clsCadastro {
 
         $this->mensagem = '<span>Alunos unificados com sucesso.</span>';
         $this->simpleRedirect(route('student-log-unification.index'));
+    }
+
+    private function buscaIdesDasPessoasParaUnificar($pessoas)
+    {
+        return array_values(array_map(static fn ($item) => (int) $item['codAluno'],
+            array_filter($pessoas, static fn ($pessoas) => $pessoas['aluno_principal'] === false)
+        ));
+    }
+
+    private function buscaPessoaPrincipal($pessoas)
+    {
+        $pessoas = array_values(array_filter($pessoas,
+                static fn ($pessoas) => $pessoas['aluno_principal'] === true)
+        );
+
+        return (int) current($pessoas)['codAluno'];
     }
 
     private function createLog($mainId, $duplicatesId, $createdBy)

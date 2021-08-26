@@ -1,9 +1,11 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
-class AtualizaNomenclaturaDosCamposDaTelaDeConfiguracoes extends Migration
+class AtualizaNomenclaturaDeConfiguracoes extends Migration
 {
     /**
      * Run the migrations.
@@ -144,7 +146,7 @@ class AtualizaNomenclaturaDosCamposDaTelaDeConfiguracoes extends Migration
                     WHEN \'preregistration.title\' THEN \'Título da página inicial\'
                     WHEN \'preregistration.token\' THEN \'Token de segurança\'
                     WHEN \'preregistration.year\' THEN \'Ano vigente\'
-                    ELSE \'\'
+                    ELSE settings.description
                 END
             );
         ');

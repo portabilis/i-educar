@@ -26,7 +26,7 @@ class MotoristaController extends ApiCoreController
     {
         $sqls[] = 'select distinct cod_motorista as id, nome as name from
                  modules.motorista, cadastro.pessoa where idpes = ref_idpes
-                 and cod_motorista like $1||\'%\'';
+                 and cod_motorista::varchar like $1||\'%\'';
 
         return $sqls;
     }

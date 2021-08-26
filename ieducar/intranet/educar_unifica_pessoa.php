@@ -2,12 +2,13 @@
 
 use App\Models\Individual;
 use App\Models\LogUnification;
+use App\Services\ValidationDataService;
 use iEducar\Modules\Unification\PersonLogUnification;
 use Illuminate\Support\Facades\DB;
 
 return new class extends clsCadastro {
+    public $pessoas;
     public $pessoa_logada;
-
     public $tabela_pessoas = [];
     public $pessoa_duplicada;
 
@@ -38,13 +39,18 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
-        $this->acao_enviar = 'showConfirmationMessage()';
-        $this->inputsHelper()->dynamic('ano', ['required' => false, 'max_length' => 4]);
-        $this->inputsHelper()->simpleSearchPessoa(null, ['label' => 'Pessoa principal' ]);
-        $this->campoTabelaInicio('tabela_pessoas', '', ['Pessoa duplicada'], $this->tabela_pessoas);
-        $this->campoTexto('pessoa_duplicada', 'Pessoa duplicada', $this->pessoa_duplicada, 50, 255, false, true, false, '', '', '', 'onfocus');
+        $this->acao_enviar = 'carregaDadosPessoas()';
+        $this->campoTabelaInicio('tabela_pessoas', '', ['Pessoa duplicada', 'Campo Pessoa duplicada'], $this->tabela_pessoas);
+            $this->campoRotulo('pessoa_label', '', 'Pessoa física a ser unificada <span class="campo_obrigatorio">*</span>');
+            $this->campoTexto('pessoa_duplicada', 'Pessoa duplicada', $this->pessoa_duplicada, 50, 255, false, true, false, '', '', '', 'onfocus');
         $this->campoTabelaFim();
+
+        $styles = ['/modules/Cadastro/Assets/Stylesheets/UnificaPessoa.css'];
+        $scripts = ['/modules/Portabilis/Assets/Javascripts/ClientApi.js'];
+        Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
+        Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
     }
+
 
     public function Novo()
     {
@@ -56,32 +62,46 @@ return new class extends clsCadastro {
             'index.php'
         );
 
-        $codPessoaPrincipal = (int) $this->pessoa_id;
-
-        if (!$codPessoaPrincipal) {
-            return;
+        if (empty($this->pessoas)) {
+            $this->simpleRedirect('index.php');
         }
 
-        $codPessoas = [];
-
-        //Monta um array com o código dos pessoas selecionados na tabela
-        foreach ($this->pessoa_duplicada as $key => $value) {
-            $explode = explode(' ', $value);
-
-            if ($explode[0] == $codPessoaPrincipal) {
-                $this->mensagem = 'Impossivel de unificar pessoas iguais.<br />';
-
-                return false;
-            }
-
-            $codPessoas[] = (int) $explode[0];
-        }
-
-        if (!count($codPessoas)) {
-            $this->mensagem = 'Informe no mínimo um pessoa para unificação.<br />';
-
+        try {
+            $pessoas = json_decode($this->pessoas, true, 512, JSON_THROW_ON_ERROR);
+        } catch (Exception $exception) {
+            $this->mensagem = 'Informações inválidas para unificação';
             return false;
         }
+
+        if (count($pessoas) < 2) {
+            $this->mensagem = 'Informe no mínimo duas pessoas para unificação.<br />';
+            return false;
+        }
+
+        if (! $this->validaDadosDaUnificacao($pessoas)) {
+            $this->mensagem = 'Dados enviados inválidos, recarregue a tela e tente novamente!';
+            return false;
+        }
+
+        $validationData = new ValidationDataService();
+
+        if (! $validationData->verifyQuantityByKey($pessoas,'pessoa_principal', 0)) {
+            $this->mensagem = 'Pessoa principal não informada';
+            return false;
+        }
+
+        if ($validationData->verifyQuantityByKey($pessoas, 'pessoa_principal', 1)) {
+            $this->mensagem = 'Não pode haver mais de uma pessoa principal';
+            return false;
+        }
+
+        if (! $validationData->verifyDataContainsDuplicatesByKey($pessoas, 'idpes')) {
+            $this->mensagem = 'Erro ao tentar unificar Pessoas, foi inserido cadastro duplicados';
+            return false;
+        }
+
+        $codPessoaPrincipal = $this->buscaPessoaPrincipal($pessoas);
+        $codPessoas = $this->buscaIdesDasPessoasParaUnificar($pessoas);
 
         DB::beginTransaction();
 
@@ -99,6 +119,37 @@ return new class extends clsCadastro {
 
         $this->mensagem = '<span>Pessoas unificadas com sucesso.</span>';
         return true;
+    }
+
+    private function validaDadosDaUnificacao($pessoa)
+    {
+        foreach ($pessoa as $item) {
+            if (! array_key_exists('idpes',$item)) {
+                return false;
+            }
+
+            if (! array_key_exists('pessoa_principal',$item)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private function buscaIdesDasPessoasParaUnificar($pessoas)
+    {
+       return array_map(static fn ($item) => (int) $item['idpes'],
+            array_filter($pessoas, static fn ($pessoas) => $pessoas['pessoa_principal'] === false)
+        );
+    }
+
+    private function buscaPessoaPrincipal($pessoas)
+    {
+        $pessoas = array_values(array_filter($pessoas,
+                static fn ($pessoas) => $pessoas['pessoa_principal'] === true)
+        );
+
+        return current($pessoas)['idpes'];
     }
 
     private function createLog($mainId, $duplicatesId, $createdBy)
