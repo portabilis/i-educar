@@ -2,12 +2,24 @@
 
 namespace App\Services;
 
+use App\Menu;
 use App\User;
+use Illuminate\Contracts\Cache\Repository as CacheContract;
+use Illuminate\Contracts\Config\Repository as ConfigContract;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\Cache;
+
 
 class MenuCacheService
 {
+    private ConfigContract $config;
+    private CacheContract $cache;
+
+    public function __construct(ConfigContract $config, CacheContract $cache)
+    {
+        $this->config = $config;
+        $this->cache = $cache;
+    }
+
     /**
      * @param User $user
      * @return array|mixed|null
@@ -15,9 +27,18 @@ class MenuCacheService
     public function getMenuByUser(User $user)
     {
         $key = $user->getMenuCacheKey();
-        $client = config('legacy.app.database.dbname');
+        $client = $this->config->get('legacy.app.database.dbname');
 
-        return Cache::tags(['menus', $client, $key])->get($key);
+        $cacheMenus = $this->cache->tags(['menus', $client, $key])->get($key);
+
+        if ($cacheMenus !== null) {
+            return  $cacheMenus;
+        }
+
+        $menus = Menu::user($user);
+        $this->putMenuCache($menus, $user);
+
+        return $menus;
     }
 
     /**
@@ -27,9 +48,9 @@ class MenuCacheService
     public function putMenuCache(Collection $adminMenus, User $user)
     {
         $key = $user->getMenuCacheKey();
-        $client = config('legacy.app.database.dbname');
+        $client = $this->config->get('legacy.app.database.dbname');
 
-        Cache::tags(['menus', $client, $key])->put($key, $adminMenus, env('CACHE_TTL',60));
+        $this->cache->tags(['menus', $client, $key])->put($key, $adminMenus, env('CACHE_TTL',60));
     }
 
     /**
@@ -37,6 +58,6 @@ class MenuCacheService
      */
     public function flushMenuTag($tagMenu)
     {
-        Cache::tags('menu-' . config('legacy.app.database.dbname') . '-' . $tagMenu)->flush();
+        $this->cache->tags('menu-' . $this->config->get('legacy.app.database.dbname') . '-' . $tagMenu)->flush();
     }
 }
