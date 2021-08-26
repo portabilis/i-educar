@@ -258,25 +258,13 @@ class Menu extends Model
      */
     public static function user(User $user)
     {
-        $userMenuCache = new MenuCacheService();
-        $cacheMenus = $userMenuCache->getMenuByUser($user);
-
-        if ($cacheMenus !== null) {
-            return $cacheMenus;
-        }
-
         if ($user->isAdmin()) {
-            $adminMenus = static::roots();
-            $userMenuCache->putMenuCache($adminMenus, $user);
-            return $adminMenus;
+            return static::roots();
         }
 
         $ids = $user->menu()->pluck('id')->sortBy('id')->toArray();
 
-        $menus = self::getMenusByIds($ids);
-        $userMenuCache->putMenuCache($menus, $user);
-
-        return $menus;
+        return self::getMenusByIds($ids);
     }
 
     /**
