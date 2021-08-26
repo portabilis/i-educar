@@ -64,8 +64,8 @@ return new class extends clsCadastro {
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
         $this->breadcrumb($nomeMenu . ' falta/atraso do servidor', [
-        url('intranet/educar_servidores_index.php') => 'Servidores',
-    ]);
+            url('intranet/educar_servidores_index.php') => 'Servidores',
+        ]);
 
         return $retorno;
     }
@@ -82,10 +82,10 @@ return new class extends clsCadastro {
         // Text
         // @todo CoreExt_Enum
         $opcoes = [
-      '' => 'Selecione',
-      1  => 'Atraso',
-      2  => 'Falta'
-    ];
+            '' => 'Selecione',
+            1  => 'Atraso',
+            2  => 'Falta'
+        ];
 
         $this->campoLista('tipo', 'Tipo', $opcoes, $this->tipo);
 
@@ -93,10 +93,10 @@ return new class extends clsCadastro {
         $this->campoNumero('qtd_min', 'Quantidade de Minutos', $this->qtd_min, 30, 255, false);
 
         $opcoes = [
-      '' => 'Selecione',
-      0  => 'Sim',
-      1  => 'Não'
-    ];
+            '' => 'Selecione',
+            0  => 'Sim',
+            1  => 'Não'
+        ];
 
         $this->campoLista('justificada', 'Justificada', $opcoes, $this->justificada);
 
