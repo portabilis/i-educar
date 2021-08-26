@@ -59,7 +59,7 @@ class AccessLevelController extends Controller
 
         $userType->menus()->syncWithoutDetaching($processes);
 
-        (new MenuCacheService())->flushMenuTag($userType->cod_tipo_usuario);
+        app(MenuCacheService::class)->flushMenuTag($userType->cod_tipo_usuario);
     }
     /**
      * @param Request $request
