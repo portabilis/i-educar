@@ -64,6 +64,15 @@ return [
             'endpoint' => env('AWS_ENDPOINT'),
         ],
 
+        'pgsql' => [
+            'driver' => 'sftp',
+            'host' => env('FILESYSTEM_DRIVER_PGSQL_HOST'),
+            'username' => env('FILESYSTEM_DRIVER_PGSQL_SSH_USERNAME'),
+            'root' => '/',
+            'privateKey' => env('FILESYSTEM_DRIVER_PGSQL_SSH_PRIVATE_KEY'),
+            'database' => env('FILESYSTEM_DRIVER_PGSQL_DATABASE'),
+        ],
+
     ],
 
     /*
