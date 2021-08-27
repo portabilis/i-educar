@@ -27,11 +27,11 @@ class VeiculoController extends ApiCoreController
         $veiculo->cod_veiculo = $id;
 
         // após cadastro não muda mais id pessoa
-        $veiculo->descricao = Portabilis_String_Utils::toLatin1($this->getRequest()->descricao);
-        $veiculo->placa = Portabilis_String_Utils::toLatin1($this->getRequest()->placa);
+        $veiculo->descricao = $this->getRequest()->descricao;
+        $veiculo->placa = $this->getRequest()->placa;
         $veiculo->renavam = $this->getRequest()->renavam;
         $veiculo->chassi = $this->getRequest()->chassi;
-        $veiculo->marca = Portabilis_String_Utils::toLatin1($this->getRequest()->marca);
+        $veiculo->marca = $this->getRequest()->marca;
         $veiculo->passageiros = $this->getRequest()->passageiros;
         $veiculo->ano_fabricacao = $this->getRequest()->ano_fabricacao;
         $veiculo->ano_modelo = $this->getRequest()->ano_modelo;
@@ -40,10 +40,10 @@ class VeiculoController extends ApiCoreController
         $veiculo->exclusivo_transporte_escolar = ($this->getRequest()->exclusivo_transporte_escolar == 'on' ? 'S' : 'N');
         $veiculo->adaptado_necessidades_especiais = ($this->getRequest()->adaptado_necessidades_especiais == 'on' ? 'S' : 'N');
         $veiculo->ativo = ($this->getRequest()->ativo == 'on' ? 'S' : 'N');
-        $veiculo->descricao_inativo = Portabilis_String_Utils::toLatin1($this->getRequest()->descricao_inativo);
+        $veiculo->descricao_inativo = $this->getRequest()->descricao_inativo;
         $veiculo->ref_cod_empresa_transporte_escolar = $this->getRequest()->empresa_id;
         $veiculo->ref_cod_motorista = $this->getRequest()->motorista_id;
-        $veiculo->observacao = Portabilis_String_Utils::toLatin1($this->getRequest()->observacao);
+        $veiculo->observacao = $this->getRequest()->observacao;
 
         return (is_null($id) ? $veiculo->cadastra() : $veiculo->edita());
     }

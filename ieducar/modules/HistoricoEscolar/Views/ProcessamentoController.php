@@ -74,8 +74,8 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
         if ($this->validaControlePosicaoHistorico()) {
             $campoPosicao = '
             <tr class=\'tr_posicao\'>
-                <td><label for=\'posicao\'>' . Portabilis_String_Utils::toLatin1('Posição') . ' *</label><br>
-                <sub style=\'vertical-align:top;\'>' . Portabilis_String_Utils::toLatin1('Informe a coluna equivalente a série/ano/etapa a qual o histórico pertence. Ex.: 1º ano informe 1, 2º ano informe 2') . '</sub></td>
+                <td><label for=\'posicao\'>' . 'Posição' . ' *</label><br>
+                <sub style=\'vertical-align:top;\'>' . 'Informe a coluna equivalente a série/ano/etapa a qual o histórico pertence. Ex.: 1º ano informe 1, 2º ano informe 2' . '</sub></td>
                 <td colspan=\'2\'><input type=\'text\' id=\'posicao\' name=\'posicao\' class=\'obrigatorio disable-on-search clear-on-change-curso validates-value-is-numeric\'></input></td>
             </tr>';
         }
