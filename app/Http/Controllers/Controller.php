@@ -17,6 +17,16 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     protected $beta = false;
+    private Breadcrumb $breadcrumb;
+    private MenuCacheService $menuCacheService;
+
+    public function __construct(
+        Breadcrumb $breadcrumb,
+        MenuCacheService $menuCacheService
+    ) {
+        $this->breadcrumb = $breadcrumb;
+        $this->menuCacheService = $menuCacheService;
+    }
 
     /**
      * Set the breadcrumbs of the action
@@ -28,7 +38,7 @@ class Controller extends BaseController
      */
     public function breadcrumb($currentPage, $pages = [])
     {
-        $breadcrumb = app(Breadcrumb::class)
+        $breadcrumb = $this->breadcrumb
             ->current($currentPage, $pages);
 
         if ($this->beta) {
@@ -48,7 +58,7 @@ class Controller extends BaseController
     public function menu($process)
     {
         $user = Auth::user();
-        $menu = app(MenuCacheService::class)->getMenuByUser($user);
+        $menu = $this->menuCacheService->getMenuByUser($user);
 
         $topmenu = Menu::query()
             ->where('process', $process)
