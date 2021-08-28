@@ -66,3 +66,6 @@ RUN apk add --update npm
 RUN composer self-update
 
 RUN apk del .phpize_deps
+
+COPY fpm-php.ini /usr/local/etc/php/conf.d/fpm-php.ini
+COPY fpm-pool-www.conf /usr/local/etc/php-fpm.d/fpm-pool-www.conf
