@@ -631,9 +631,9 @@ return new class extends clsCadastro {
         $options = ['label' => 'Local de funcionamento diferenciado da turma', 'resources' => $resources, 'value' => $this->local_funcionamento_diferenciado, 'required' => false, 'size' => 70,];
         $this->inputsHelper()->select('local_funcionamento_diferenciado', $options);
 
-        $options = ['label' => Portabilis_String_Utils::toLatin1('Não informar esta turma no Censo escolar'),
+        $options = ['label' => 'Não informar esta turma no Censo escolar',
             'value' => $this->nao_informar_educacenso,
-            'label_hint' => Portabilis_String_Utils::toLatin1('Caso este campo seja selecionado, esta turma e todas as matrículas vinculadas a mesma, não serão informadas no arquivo de exportação do Censo escolar')];
+            'label_hint' => 'Caso este campo seja selecionado, esta turma e todas as matrículas vinculadas a mesma, não serão informadas no arquivo de exportação do Censo escolar'];
         $this->inputsHelper()->checkbox('nao_informar_educacenso', $options);
 
         $scripts = [
@@ -711,7 +711,7 @@ return new class extends clsCadastro {
                 false,
                 false,
                 $disableDefinirComponente,
-                Portabilis_String_Utils::toLatin1('Está opção poderá ser utilizada, somente se no cadastro da instituição o parâmetro de permissão estiver habilitado')
+                'Está opção poderá ser utilizada, somente se no cadastro da instituição o parâmetro de permissão estiver habilitado'
             );
 
             $this->escola_serie_disciplina = [];
