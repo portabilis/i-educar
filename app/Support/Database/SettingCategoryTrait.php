@@ -8,7 +8,7 @@ use App\SettingCategory;
 
 trait SettingCategoryTrait
 {
-    public $settingsCattegories = [];
+    public $settingsCattegories;
 
     public function __construct()
     {
@@ -17,12 +17,12 @@ trait SettingCategoryTrait
 
     private function getAllSettingsCategories()
     {
-        $this->settingsCattegories = SettingCategory::get();
+        $this->settingsCattegories = SettingCategory::query()->get();
     }
 
-    private function getSettingCategoryIdByName($name)
+    private function getSettingCategoryIdByName($name): int
     {
-        $id = null;
+        $id = $this->settingsCattegories->first()->id;
 
         foreach ($this->settingsCattegories as $settingCategory) {
             if ($settingCategory->name === $name) {
@@ -30,6 +30,6 @@ trait SettingCategoryTrait
             }
         }
 
-        return $id ?? 'NULL';
+        return $id;
     }
 }
