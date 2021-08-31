@@ -36,8 +36,8 @@
         "league/flysystem-cached-adapter": "~1.1",
         "league/flysystem-sftp": "^1.0",
         "maatwebsite/excel": "^3.1",
-        "mll-lab/graphql-php-scalars": "^3.1",
-        "nuwave/lighthouse": "^4.18",
+        "mll-lab/graphql-php-scalars": "^4",
+        "nuwave/lighthouse": "^5",
         "phpoffice/phpspreadsheet": "^1.8",
         "predis/predis": "^1.1",
         "swiftmailer/swiftmailer": "^6.2"
