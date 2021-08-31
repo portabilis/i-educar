@@ -421,10 +421,6 @@ class ApiCoreController extends Core_Controller_Page_EditController
         return Portabilis_String_Utils::toUtf8($str, $options);
     }
 
-    protected function toLatin1($str, $options = [])
-    {
-        return Portabilis_String_Utils::toLatin1($str, $options);
-    }
 
     protected function safeString($str, $transform = true)
     {
@@ -433,7 +429,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
 
     protected function safeStringForDb($str)
     {
-        return $this->toLatin1($str);
+        return filter_var($str, FILTER_SANITIZE_ADD_SLASHES);;
     }
 
     protected function defaultSearchOptions()
@@ -506,8 +502,6 @@ class ApiCoreController extends Core_Controller_Page_EditController
             $sqls = $this->sqlsForNumericSearch();
             $params = $this->sqlParams($numericQuery);
         } else {
-            $query = Portabilis_String_Utils::toLatin1($query, ['escape' => false]);
-
             $sqls = $this->sqlsForStringSearch();
             $params = $this->sqlParams($query);
         }

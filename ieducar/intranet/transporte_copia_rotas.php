@@ -188,16 +188,16 @@ return new class extends clsCadastro {
                     }
                     $num++;
                 }
-                $this->mensagem = Portabilis_String_Utils::toLatin1('Cópia efetuada com sucesso');
+                $this->mensagem = 'Cópia efetuada com sucesso';
 
                 return true;
             } else {
-                $this->mensagem = Portabilis_String_Utils::toLatin1("A empresa já possuí­ rotas em {$this->ano_dest}");
+                $this->mensagem = "A empresa já possuí­ rotas em {$this->ano_dest}";
 
                 return false;
             }
         } else {
-            $this->mensagem = Portabilis_String_Utils::toLatin1("Não existe rotas em $this->ano_orig para essa empresa");
+            $this->mensagem ="Não existe rotas em $this->ano_orig para essa empresa";
 
             return false;
         }

@@ -34,7 +34,7 @@ class EmpresaController extends ApiCoreController
 
         $empresa->ref_resp_idpes = $this->getRequest()->pessoa_id;
         $empresa->ref_idpes = $this->getRequest()->pessoaj_id;
-        $empresa->observacao = Portabilis_String_Utils::toLatin1($this->getRequest()->observacao);
+        $empresa->observacao = $this->getRequest()->observacao;
 
         return (is_null($id) ? $empresa->cadastra() : $empresa->edita());
     }

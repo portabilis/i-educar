@@ -128,7 +128,7 @@ class CopyAbsenceService implements CopyRegistrationData
         LegacyStudentAbsence $studentAbsence,
         LegacyRegistration $oldRegistration
     ) {
-        $absences = $oldRegistration->studentAbsence->absences;
+        $absences = $oldRegistration->studentAbsence->absencesByDiscipline;
 
         foreach ($absences as $absence) {
             LegacyDisciplineAbsence::create(
@@ -152,7 +152,7 @@ class CopyAbsenceService implements CopyRegistrationData
         LegacyStudentAbsence $studentAbsence,
         LegacyRegistration $oldRegistration
     ) {
-        $absences = $oldRegistration->studentAbsence->absences;
+        $absences = $oldRegistration->studentAbsence->generalAbsences;
 
         foreach ($absences as $absence) {
             LegacyGeneralAbsence::create(
