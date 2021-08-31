@@ -20,7 +20,7 @@ trait SettingCategoryTrait
         $this->settingsCattegories = SettingCategory::get();
     }
 
-    private function getSettingCategoryIdByName($name): int
+    private function getSettingCategoryIdByName($name)
     {
         $id = null;
 
@@ -30,6 +30,6 @@ trait SettingCategoryTrait
             }
         }
 
-        return $id ?? $this->getSettingCategoryIdByName('Sem categoria');
+        return $id ?? 'NULL';
     }
 }
