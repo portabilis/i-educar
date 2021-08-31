@@ -135,9 +135,9 @@ return new class extends clsCadastro {
 
         $this->campoCheck(
             'visivel_pais',
-            Portabilis_String_Utils::toLatin1('Visí­vel aos pais'),
+            'Visível aos pais',
             $this->visivel_pais,
-            Portabilis_String_Utils::toLatin1('Marque este campo, caso deseje que os pais do aluno possam visualizar tal ocorrência disciplinar.')
+            'Marque este campo, caso deseje que os pais do aluno possam visualizar tal ocorrência disciplinar.'
         );
     }
 
@@ -166,7 +166,7 @@ return new class extends clsCadastro {
                 $resposta = json_decode($this->enviaOcorrenciaNovoEducacao($cod_ocorrencia_disciplinar));
 
                 if (is_array($resposta->errors)) {
-                    echo Portabilis_String_Utils::toLatin1('Erro ao enviar ocorrencia disciplinar ao sistema externo: ' . $resposta->errors[0]);
+                    echo 'Erro ao enviar ocorrencia disciplinar ao sistema externo: ' . $resposta->errors[0];
                     die;
                 }
             }
