@@ -59,7 +59,7 @@ return [
     |
     */
 
-    'guard' => 'api',
+    'guard' => 'web',
 
     /*
     |--------------------------------------------------------------------------
@@ -178,7 +178,7 @@ return [
          * Allow clients to query paginated lists without specifying the amount of items.
          * Setting this to `null` means clients have to explicitly ask for the count.
          */
-        'default_count' => null,
+        'default_count' => 10,
 
         /*
          * Limit the maximum amount of items that clients can request from paginated lists.
