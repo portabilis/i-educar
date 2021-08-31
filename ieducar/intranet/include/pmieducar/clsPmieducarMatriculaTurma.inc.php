@@ -454,6 +454,24 @@ class clsPmieducarMatriculaTurma extends Model
                     )
                 ";
                 $whereAnd = ' AND ';
+            } elseif ($int_ativo == 3) {
+                $filtros .= "{$whereAnd}
+                    (
+                        mt.ativo = 1
+                        OR
+                        (
+                            (
+                                mt.transferido
+                                OR mt.remanejado
+                                OR mt.reclassificado
+                                OR mt.abandono
+                                OR mt.falecido
+                            )
+
+                        )
+                    )
+                ";
+                $whereAnd = ' AND ';
             } else {
                 $filtros .= "{$whereAnd} mt.ativo = '0'";
                 $whereAnd = ' AND ';
