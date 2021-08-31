@@ -18,6 +18,7 @@ class clsPmieducarFaltaAtraso extends Model
     public $data_cadastro;
     public $data_exclusao;
     public $ativo;
+    public $ref_cod_servidor_funcao;
 
     public function __construct(
         $cod_falta_atraso = null,
@@ -33,13 +34,14 @@ class clsPmieducarFaltaAtraso extends Model
         $justificada = null,
         $data_cadastro = null,
         $data_exclusao = null,
-        $ativo = null
+        $ativo = null,
+        $ref_cod_servidor_funcao = null
     ) {
         $db = new clsBanco();
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'falta_atraso';
 
-        $this->_campos_lista = $this->_todos_campos = 'cod_falta_atraso, ref_cod_escola, ref_ref_cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_cod_servidor, tipo, data_falta_atraso, qtd_horas, qtd_min, justificada, data_cadastro, data_exclusao, ativo';
+        $this->_campos_lista = $this->_todos_campos = 'cod_falta_atraso, ref_cod_escola, ref_ref_cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_cod_servidor, tipo, data_falta_atraso, qtd_horas, qtd_min, justificada, data_cadastro, data_exclusao, ativo, ref_cod_servidor_funcao';
 
         if (is_numeric($ref_cod_escola)) {
             $this->ref_cod_escola = $ref_cod_escola;
@@ -92,6 +94,10 @@ class clsPmieducarFaltaAtraso extends Model
 
         if (is_numeric($ativo)) {
             $this->ativo = $ativo;
+        }
+
+        if (is_numeric($ref_cod_servidor_funcao)) {
+            $this->ref_cod_servidor_funcao = $ref_cod_servidor_funcao;
         }
     }
 
@@ -164,6 +170,12 @@ class clsPmieducarFaltaAtraso extends Model
             if (is_numeric($this->justificada)) {
                 $campos .= "{$gruda}justificada";
                 $valores .= "{$gruda}'{$this->justificada}'";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->ref_cod_servidor_funcao)) {
+                $campos .= "{$gruda}ref_cod_servidor_funcao";
+                $valores .= "{$gruda}'{$this->ref_cod_servidor_funcao}'";
                 $gruda = ', ';
             }
 
@@ -246,6 +258,11 @@ class clsPmieducarFaltaAtraso extends Model
 
             if (is_string($this->data_cadastro)) {
                 $set .= "{$gruda}data_cadastro = '{$this->data_cadastro}'";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->ref_cod_servidor_funcao)) {
+                $set .= "{$gruda}ref_cod_servidor_funcao = '{$this->ref_cod_servidor_funcao}'";
                 $gruda = ', ';
             }
 

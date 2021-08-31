@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
+
 return new class extends clsCadastro {
     public $pessoa_logada;
 
@@ -17,6 +19,7 @@ return new class extends clsCadastro {
     public $data_cadastro;
     public $data_exclusao;
     public $ativo;
+    public $ref_cod_servidor_funcao;
 
     public function Inicializar()
     {
@@ -89,6 +92,10 @@ return new class extends clsCadastro {
 
         $this->campoLista('tipo', 'Tipo', $opcoes, $this->tipo);
 
+        $funcoesDoServidor = $this->getFuncoesServidor($this->ref_cod_servidor);
+        $funcoesDoServidor = array_replace([null => 'Selecione'], $funcoesDoServidor);
+        $this->campoLista('ref_cod_servidor_funcao', 'Função', $funcoesDoServidor, $this->ref_cod_servidor_funcao, null, null, null, null, null, false);
+
         $this->campoNumero('qtd_horas', 'Quantidade de Horas', $this->qtd_horas, 30, 255, false);
         $this->campoNumero('qtd_min', 'Quantidade de Minutos', $this->qtd_min, 30, 255, false);
 
@@ -102,6 +109,18 @@ return new class extends clsCadastro {
 
         // Data
         $this->campoData('data_falta_atraso', 'Dia', $this->data_falta_atraso, true);
+    }
+
+    private function getFuncoesServidor($codServidor)
+    {
+        return DB::table('pmieducar.servidor_funcao')
+            ->select(DB::raw('cod_servidor_funcao, nm_funcao || coalesce( \' - \' || matricula, \'\') as funcao_matricula'))
+            ->join('pmieducar.funcao', 'funcao.cod_funcao', 'servidor_funcao.ref_cod_funcao')
+            ->where([['servidor_funcao.ref_cod_servidor', $codServidor]])
+            ->orderBy('matricula', 'asc')
+            ->get()
+            ->pluck('funcao_matricula', 'cod_servidor_funcao')
+            ->toArray();
     }
 
     public function Novo()
@@ -135,7 +154,8 @@ return new class extends clsCadastro {
                 $this->justificada,
                 null,
                 null,
-                1
+                1,
+                $this->ref_cod_servidor_funcao
             );
         } elseif ($this->tipo == 2) {
             $db = new clsBanco();
@@ -159,7 +179,8 @@ return new class extends clsCadastro {
                     $this->justificada,
                     null,
                     null,
-                    1
+                    1,
+                    $this->ref_cod_servidor_funcao
                 );
             }
         }
@@ -209,7 +230,8 @@ return new class extends clsCadastro {
                 $this->justificada,
                 null,
                 null,
-                1
+                1,
+                $this->ref_cod_servidor_funcao
             );
         } elseif ($this->tipo == 2) {
             $obj_ser = new clsPmieducarServidor(
@@ -240,7 +262,8 @@ return new class extends clsCadastro {
                 $this->justificada,
                 null,
                 null,
-                1
+                1,
+                $this->ref_cod_servidor_funcao
             );
         }
         $editou = $obj->edita();
