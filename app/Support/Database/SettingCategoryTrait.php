@@ -22,13 +22,14 @@ trait SettingCategoryTrait
 
     private function getSettingCategoryIdByName($name): int
     {
-        $id = 0;
+        $id = null;
+
         foreach ($this->settingsCattegories as $settingCategory) {
             if ($settingCategory->name === $name) {
                 $id = $settingCategory->id;
             }
         }
 
-        return $id;
+        return $id ?? $this->getSettingCategoryIdByName('Sem categoria');
     }
 }
