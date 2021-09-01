@@ -276,6 +276,13 @@ class EnrollmentService
         $enrollment->saveOrFail();
     }
 
+    public function markAsRelocatedSameClassGroup(LegacyEnrollment $enrollment)
+    {
+        $enrollment->remanejado_mesma_turma = true;
+        $enrollment->saveOrFail();
+    }
+
+
     /**
      * Atualiza o campo reclassificado na enturmação para TRUE
      *
