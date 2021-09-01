@@ -38,7 +38,7 @@ class App_Unificacao_Aluno
         }
 
         DB::statement("UPDATE pmieducar.matricula SET ref_cod_aluno = {$codAlunoPrincipal} where ref_cod_aluno in ({$codAlunosString})");
-        DB::statement("UPDATE pmieducar.aluno SET ativo = 0, data_exclusao = now(), ref_usuario_exc = {$codPessoa} where cod_aluno in ({$codAlunosString})");
+        DB::statement("UPDATE pmieducar.aluno SET ativo = 0, ref_usuario_exc = {$codPessoa} where cod_aluno in ({$codAlunosString})");
 
         return true;
     }
