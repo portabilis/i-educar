@@ -84,7 +84,9 @@ class EnrollmentController extends Controller
 
         $previousEnrollment = $enrollmentService->getPreviousEnrollmentAccordingToRelocationDate($registration);
 
+        $isRelocatedSameClassGroup = false;
         if ($previousEnrollment->school_class_id === $schoolClass->id) {
+            $isRelocatedSameClassGroup = true;
             $enrollmentService->markAsRelocatedSameClassGroup($previousEnrollment);
         }
 
@@ -96,7 +98,7 @@ class EnrollmentController extends Controller
         }
 
         try {
-            $enrollmentService->enroll($registration, $schoolClass, $date);
+            $enrollmentService->enroll($registration, $schoolClass, $date, $isRelocatedSameClassGroup);
         } catch (Throwable $throwable) {
             DB::rollback();
 

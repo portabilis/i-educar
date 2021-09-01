@@ -192,7 +192,8 @@ class EnrollmentService
     public function enroll(
         LegacyRegistration $registration,
         LegacySchoolClass $schoolClass,
-        DateTime $date
+        DateTime $date,
+        $isRelocatedSameClassGroup = false
     ) {
         if ($schoolClass->denyEnrollmentsWhenNoVacancy() && empty($schoolClass->vacancies)) {
             throw new NoVacancyException($schoolClass);
@@ -245,6 +246,7 @@ class EnrollmentService
             'ref_usuario_cad' => $this->user->getKey(),
             'data_cadastro' => Carbon::now(),
             'data_enturmacao' => $date,
+            'remanejado_mesma_turma' => $isRelocatedSameClassGroup
         ]);
 
         return $enrollment;
