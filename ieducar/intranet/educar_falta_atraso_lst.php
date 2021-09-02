@@ -35,6 +35,7 @@ return new class extends clsListagem {
         $this->addCabecalhos([
             'Escola',
             'Instituição',
+            'Matrícula',
             'Tipo',
             'Dia',
             'Horas',
@@ -132,6 +133,7 @@ return new class extends clsListagem {
                 $this->addLinhas([
                     $urlHelper->l($registro['nm_escola'], $url, $options),
                     $urlHelper->l($det_ins['nm_instituicao'], $url, $options),
+                    $urlHelper->l($registro['matricula'], $url, $options),
                     $urlHelper->l($tipo, $url, $options),
                     $urlHelper->l($data, $url, $options),
                     $urlHelper->l($horas_aux, $url, $options),

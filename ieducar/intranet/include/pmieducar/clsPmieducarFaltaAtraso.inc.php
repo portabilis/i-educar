@@ -41,7 +41,7 @@ class clsPmieducarFaltaAtraso extends Model
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'falta_atraso';
 
-        $this->_campos_lista = $this->_todos_campos = 'cod_falta_atraso, ref_cod_escola, ref_ref_cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_cod_servidor, tipo, data_falta_atraso, qtd_horas, qtd_min, justificada, data_cadastro, data_exclusao, ativo, ref_cod_servidor_funcao';
+        $this->_campos_lista = $this->_todos_campos = 'cod_falta_atraso, ref_cod_escola, falta_atraso.ref_ref_cod_instituicao, ref_usuario_exc, ref_usuario_cad, falta_atraso.ref_cod_servidor, tipo, data_falta_atraso, qtd_horas, qtd_min, justificada, data_cadastro, data_exclusao, ativo, ref_cod_servidor_funcao';
 
         if (is_numeric($ref_cod_escola)) {
             $this->ref_cod_escola = $ref_cod_escola;
@@ -308,7 +308,11 @@ class clsPmieducarFaltaAtraso extends Model
         $date_data_exclusao_fim = null,
         $int_ativo = null
     ) {
-        $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
+        $sql = "
+            SELECT {$this->_campos_lista}, matricula
+            FROM {$this->_tabela}
+            LEFT JOIN pmieducar.servidor_funcao ON servidor_funcao.cod_servidor_funcao = falta_atraso.ref_cod_servidor_funcao
+        ";
         $filtros = '';
 
         $whereAnd = ' WHERE ';
@@ -324,7 +328,7 @@ class clsPmieducarFaltaAtraso extends Model
         }
 
         if (is_numeric($int_ref_ref_cod_instituicao)) {
-            $filtros .= "{$whereAnd} ref_ref_cod_instituicao = '{$int_ref_ref_cod_instituicao}'";
+            $filtros .= "{$whereAnd} falta_atraso.ref_ref_cod_instituicao = '{$int_ref_ref_cod_instituicao}'";
             $whereAnd = ' AND ';
         }
 
@@ -339,7 +343,7 @@ class clsPmieducarFaltaAtraso extends Model
         }
 
         if (is_numeric($int_ref_cod_servidor)) {
-            $filtros .= "{$whereAnd} ref_cod_servidor = '{$int_ref_cod_servidor}'";
+            $filtros .= "{$whereAnd} falta_atraso.ref_cod_servidor = '{$int_ref_cod_servidor}'";
             $whereAnd = ' AND ';
         }
 
