@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "636cd51aa006f2a955ee5d3f106fbd96",
+    "content-hash": "088d4f391657ca35a23e0264b974bb46",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -64,16 +64,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.191.8",
+            "version": "3.191.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "949feb83cc0db46f07b12aa3128d47be3b9cca63"
+                "reference": "b0e09d3ca2a42edd0b14b9da065376cd3bdd6838"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/949feb83cc0db46f07b12aa3128d47be3b9cca63",
-                "reference": "949feb83cc0db46f07b12aa3128d47be3b9cca63",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/b0e09d3ca2a42edd0b14b9da065376cd3bdd6838",
+                "reference": "b0e09d3ca2a42edd0b14b9da065376cd3bdd6838",
                 "shasum": ""
             },
             "require": {
@@ -148,9 +148,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.191.8"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.191.10"
             },
-            "time": "2021-08-31T18:18:02+00:00"
+            "time": "2021-09-02T18:30:14+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -3937,16 +3937,16 @@
         },
         {
             "name": "nuwave/lighthouse",
-            "version": "v5.22.5",
+            "version": "v5.23.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nuwave/lighthouse.git",
-                "reference": "fdb7765b91acda85216200895376de45d17d8428"
+                "reference": "04108243c4a93b475b4f7f348e586ef36589c0aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nuwave/lighthouse/zipball/fdb7765b91acda85216200895376de45d17d8428",
-                "reference": "fdb7765b91acda85216200895376de45d17d8428",
+                "url": "https://api.github.com/repos/nuwave/lighthouse/zipball/04108243c4a93b475b4f7f348e586ef36589c0aa",
+                "reference": "04108243c4a93b475b4f7f348e586ef36589c0aa",
                 "shasum": ""
             },
             "require": {
@@ -4064,7 +4064,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-08-31T12:27:02+00:00"
+            "time": "2021-09-01T10:06:12+00:00"
         },
         {
             "name": "opis/closure",

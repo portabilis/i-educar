@@ -65,7 +65,7 @@ return new class extends clsCadastro {
                 $this->fexcluir = $obj_permissoes->permissao_excluir(555, $this->pessoa_logada, 7);
             }
 
-            if ($det_funcionario !== false && $registro !== false) {
+            if ($det_funcionario !== false) {
                 $retorno = 'Editar';
             }
         }
