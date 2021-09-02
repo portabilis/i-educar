@@ -45,6 +45,7 @@ class LegacyEnrollment extends Model
         'data_cadastro',
         'data_enturmacao',
         'sequencial_fechamento',
+        'remanejado_mesma_turma',
         'ativo',
     ];
 
