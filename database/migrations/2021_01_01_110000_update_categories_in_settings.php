@@ -140,7 +140,7 @@ class UpdateCategoriesInSettings extends Migration
                     WHEN \'legacy.app.mailer.smtp.port\' THEN ' . $this->getSettingCategoryIdByName('SMTP - Configuração para envio de E-mail') . '
                     WHEN \'legacy.app.mailer.smtp.encryption\' THEN ' . $this->getSettingCategoryIdByName('SMTP - Configuração para envio de E-mail') . '
                     WHEN \'legacy.app.mailer.debug\' THEN ' . $this->getSettingCategoryIdByName('SMTP - Configuração para envio de E-mail') . '
-                    ELSE ' . $this->getSettingCategoryIdByName('Sem categoria') . '
+                    ELSE setting_category_id
                 END
             );
         ');

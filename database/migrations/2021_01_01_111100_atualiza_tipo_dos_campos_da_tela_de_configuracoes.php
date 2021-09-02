@@ -67,7 +67,7 @@ class AtualizaTipoDosCamposDaTelaDeConfiguracoes extends Migration
                     WHEN \'preregistration.lng\' THEN \'float\'
                     WHEN \'preregistration.radius\' THEN \'integer\'
                     WHEN \'preregistration.year\' THEN \'integer\'
-                    ELSE \'string\'
+                    ELSE type
                 END
             );
         ');

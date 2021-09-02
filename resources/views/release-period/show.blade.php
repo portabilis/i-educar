@@ -37,7 +37,7 @@
 
     <div style="text-align: center">
         @if($canModify)
-            <a href="{{url()->route('release-period.form')}}">
+            <a href="{{url(null, [], env('ASSETS_SECURE', null))->route('release-period.form')}}">
                 <button class="btn-green" type="button">Novo</button>
             </a>
             <a href="{{ route('release-period.form', ['releasePeriod' => $releasePeriod->getKey()]) }}">
