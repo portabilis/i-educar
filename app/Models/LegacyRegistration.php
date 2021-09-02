@@ -56,7 +56,9 @@ class LegacyRegistration extends Model
      * @var array
      */
     protected $dates = [
-        'data_matricula'
+        'data_matricula',
+        'data_matricula',
+        'data_cancel',
     ];
 
     /**
