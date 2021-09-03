@@ -472,7 +472,7 @@ trait Avaliacao_Service_Boletim_Acessores
             };
 
             // Se não usar parecer descritivo, retorna NULL
-            if (!isset($class)) {
+            if ($class === null) {
                 return null;
             }
 
