@@ -375,8 +375,10 @@ class clsPmieducarAluno extends Model
                 $gruda = ', ';
             }
 
-            $set .= "{$gruda}data_exclusao = NOW()";
-            $gruda = ', ';
+            if (is_string($this->data_exclusao) && !empty($this->data_exclusao)) {
+                $set .= "{$gruda}data_exclusao = NOW()";
+                $gruda = ', ';
+            }
 
             if (is_numeric($this->ativo)) {
                 $set .= "{$gruda}ativo = '{$this->ativo}'";
@@ -1273,6 +1275,7 @@ class clsPmieducarAluno extends Model
     {
         if (is_numeric($this->cod_aluno) && is_numeric($this->ref_usuario_exc)) {
             $this->ativo = 0;
+            $this->data_exclusao = 'destroy';
 
             return $this->edita();
         }
