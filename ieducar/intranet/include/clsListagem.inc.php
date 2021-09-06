@@ -126,6 +126,12 @@ class clsListagem extends clsCampos
                 $intPaginaAtual = 1;
             }
 
+            if(!isset($_GET['pagina_formulario'])) {
+                $pagina_formulario = 1;
+            }else{
+                $pagina_formulario = $_GET['pagina_formulario'];
+            }
+
             $pagStart = $intPaginaAtual - $intPaginasExibidas;
             $totalPaginas = ceil($intTotalRegistros / $intResultadosPorPagina);
 
@@ -178,7 +184,8 @@ HTML;
 
             for ($i = 0; $i <= $intPaginasExibidas * 2 && $i + $pagStart <= $totalPaginas; $i++) {
                 $compl_url  = ($add_iniciolimit) ? '&iniciolimit=' . ($pagStart + $i + $pag_modifier) : '';
-                $strReturn .= "<td align=\"center\" style=\"padding-left:5px;padding-right:5px;\"><a href=\"{$linkFixo}$getVar=" . ($pagStart + $i + $pag_modifier) . "{$compl_url}&ordenacao={$ordenacao}\" class=\"nvp_paginador\" title=\"Ir para a p&aacute;gina " . ($pagStart + $i) . '">' . addLeadingZero($pagStart + $i) .'</a></td>';
+                $button_class = ($pagina_formulario == ($pagStart + $i)) ? 'nvp_paginador_ativo' : '';
+                $strReturn .= "<td align=\"center\" class=\"{$button_class}\" style=\"padding-left:5px;padding-right:5px;\"><a href=\"{$linkFixo}$getVar=" . ($pagStart + $i + $pag_modifier) . "{$compl_url}&ordenacao={$ordenacao}\" class=\"nvp_paginador\" title=\"Ir para a p&aacute;gina " . ($pagStart + $i) . '">' . addLeadingZero($pagStart + $i) .'</a></td>';
             }
 
             // Setas de fim e próxima
