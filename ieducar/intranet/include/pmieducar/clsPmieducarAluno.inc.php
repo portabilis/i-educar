@@ -46,7 +46,7 @@ class clsPmieducarAluno extends Model
         $ref_usuario_cad = null,
         $ref_idpes = null,
         $data_cadastro = null,
-        $data_exclusao = null,
+        $data_exclusao = false,
         $ativo = null,
         $caminho_foto = null,
         $analfabeto = null,
@@ -100,7 +100,7 @@ class clsPmieducarAluno extends Model
             $this->data_cadastro = $data_cadastro;
         }
 
-        if (is_string($data_exclusao)) {
+        if (is_bool($data_exclusao)) {
             $this->data_exclusao = $data_exclusao;
         }
 
@@ -375,7 +375,7 @@ class clsPmieducarAluno extends Model
                 $gruda = ', ';
             }
 
-            if (is_string($this->data_exclusao) && !empty($this->data_exclusao)) {
+            if ($this->data_exclusao) {
                 $set .= "{$gruda}data_exclusao = NOW()";
                 $gruda = ', ';
             }
@@ -1275,7 +1275,7 @@ class clsPmieducarAluno extends Model
     {
         if (is_numeric($this->cod_aluno) && is_numeric($this->ref_usuario_exc)) {
             $this->ativo = 0;
-            $this->data_exclusao = 'destroy';
+            $this->data_exclusao = true;
 
             return $this->edita();
         }
