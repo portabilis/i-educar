@@ -128,12 +128,12 @@
             }
 
             if (val === 'is_enturmacao') {
-                return 'Na opção Enturmar você está criando uma nova ' +
+                return 'Na opção <b>Enturmar</b> você está criando uma nova ' +
                        'enturmação e esta não será considerada como remanejamento ou ' +
                        'troca de turma. Deseja continuar?';
             }
 
-            return 'Esta ação será considerada como troca de turma/remanejamento e ' +
+            return 'Esta ação será considerada como troca de remanejamento/turma e ' +
                    'será contabilizada nas movimentações do(a) aluno(a). Deseja continuar?';
         }
 
