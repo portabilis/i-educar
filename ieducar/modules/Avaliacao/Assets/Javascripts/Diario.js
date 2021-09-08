@@ -287,6 +287,10 @@ var changeParecer = function(element) {
 
     $fieldsParecerMatricula.val(element.val());
     $fieldsParecerMatricula.data('old_value', element.val());
+
+    $fieldsParecerMatricula.each(function(id, value) {
+      $j(value).closest('td').find('.note-editable').html(element.val());
+    });
   }
 };
 
