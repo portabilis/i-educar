@@ -133,8 +133,8 @@
                        'troca de turma. Deseja continuar?';
             }
 
-            return 'Esta ação será considerada como troca de remanejamento/turma e ' +
-                   'será contabilizada nas movimentações do(a) aluno(a). Deseja continuar?';
+            return 'Esta ação será considerada como remanejamento/troca de turma e ' +
+                    'será contabilizada nas movimentações do(a) aluno(a). Deseja continuar?';
         }
 
         function makeDialog (params) {
