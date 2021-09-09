@@ -39,7 +39,7 @@ class MovimentoMensalMatTrocaeQueryFactory extends QueryFactory
                 on t.ref_ref_cod_serie = s.cod_serie
         inner join
             pmieducar.matricula_turma mt
-                on mt.ref_cod_turma = t.cod_turma 
+                on mt.ref_cod_turma = t.cod_turma
         inner join
             pmieducar.matricula m
                 on m.cod_matricula = mt.ref_cod_matricula
@@ -71,6 +71,7 @@ class MovimentoMensalMatTrocaeQueryFactory extends QueryFactory
             and m.ref_cod_curso = s.ref_cod_curso
             and m.ref_ref_cod_serie = s.cod_serie
             and mt.ref_cod_turma = t.cod_turma
+            and mt.remanejado_mesma_turma = false
             and f.sexo = :sexo
             and m.ativo = 1
             and coalesce(mt.data_enturmacao, m.data_cadastro) between :data_inicial::date and :data_final::date
