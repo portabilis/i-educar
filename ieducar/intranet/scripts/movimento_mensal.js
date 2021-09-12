@@ -14,7 +14,14 @@
   });
 
   function showCalendar() {
+    // Tela de consulta
     if ($j('#modalidade').val() === '5') {
+      $('#tr-calendar').show()
+      return;
+    }
+
+    // Tela de emissão
+    if ($j.inArray('3', $j('#modalidade').val()) >= 0) {
       $('#tr-calendar').show()
       return;
     }

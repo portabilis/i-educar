@@ -48,6 +48,7 @@ return new class extends clsDetalhe {
                      <td bgcolor="#ccdce6"><b>Qtd. Minutos</b></td>
                      <td bgcolor="#ccdce6"><b>Escola</b></td>
                      <td bgcolor="#ccdce6"><b>Instituição</b></td>
+                     <td bgcolor="#ccdce6"><b>Matrícula</b></td>
                  </tr>';
 
             $cont  = 0;
@@ -74,6 +75,7 @@ return new class extends clsDetalhe {
             <td %s align="right">%s</td>
             <td %s align="left">%s</td>
             <td %s align="left">%s</td>
+            <td %s align="left">%s</td>
           </tr>',
                     $color,
                     dataFromPgToBr($falta['data_falta_atraso']),
@@ -86,7 +88,9 @@ return new class extends clsDetalhe {
                     $color,
                     $school->person->name ?? null,
                     $color,
-                    $det_ins['nm_instituicao']
+                    $det_ins['nm_instituicao'],
+                    $color,
+                    $falta['matricula']
                 );
 
                 $cont++;
