@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
+
 return new class extends clsCadastro {
     public $pessoa_logada;
 
@@ -17,6 +19,7 @@ return new class extends clsCadastro {
     public $data_cadastro;
     public $data_exclusao;
     public $ativo;
+    public $ref_cod_servidor_funcao;
 
     public function Inicializar()
     {
@@ -64,8 +67,8 @@ return new class extends clsCadastro {
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
         $this->breadcrumb($nomeMenu . ' falta/atraso do servidor', [
-        url('intranet/educar_servidores_index.php') => 'Servidores',
-    ]);
+            url('intranet/educar_servidores_index.php') => 'Servidores',
+        ]);
 
         return $retorno;
     }
@@ -76,32 +79,48 @@ return new class extends clsCadastro {
         $this->campoOculto('cod_falta_atraso', $this->cod_falta_atraso);
         $this->campoOculto('ref_cod_servidor', $this->ref_cod_servidor);
 
-        $this->inputsHelper()->dynamic('instituicao', ['value' => $this->ref_cod_instituicao, 'disabled' => $desabilitado]);
-        $this->inputsHelper()->dynamic('escola', ['value' => $this->ref_cod_escola, 'disabled' => $desabilitado]);
+        $this->inputsHelper()->dynamic('instituicao', ['value' => $this->ref_cod_instituicao]);
+        $this->inputsHelper()->dynamic('escola', ['value' => $this->ref_cod_escola]);
 
         // Text
         // @todo CoreExt_Enum
         $opcoes = [
-      '' => 'Selecione',
-      1  => 'Atraso',
-      2  => 'Falta'
-    ];
+            '' => 'Selecione',
+            1  => 'Atraso',
+            2  => 'Falta'
+        ];
 
         $this->campoLista('tipo', 'Tipo', $opcoes, $this->tipo);
+
+        $funcoesDoServidor = $this->getFuncoesServidor($this->ref_cod_servidor);
+        $funcoesDoServidor = array_replace([null => 'Selecione'], $funcoesDoServidor);
+        $this->campoLista('ref_cod_servidor_funcao', 'Função', $funcoesDoServidor, $this->ref_cod_servidor_funcao, null, null, null, null, null, false);
 
         $this->campoNumero('qtd_horas', 'Quantidade de Horas', $this->qtd_horas, 30, 255, false);
         $this->campoNumero('qtd_min', 'Quantidade de Minutos', $this->qtd_min, 30, 255, false);
 
         $opcoes = [
-      '' => 'Selecione',
-      0  => 'Sim',
-      1  => 'Não'
-    ];
+            '' => 'Selecione',
+            0  => 'Sim',
+            1  => 'Não'
+        ];
 
         $this->campoLista('justificada', 'Justificada', $opcoes, $this->justificada);
 
         // Data
         $this->campoData('data_falta_atraso', 'Dia', $this->data_falta_atraso, true);
+    }
+
+    private function getFuncoesServidor($codServidor)
+    {
+        return DB::table('pmieducar.servidor_funcao')
+            ->select(DB::raw('cod_servidor_funcao, nm_funcao || coalesce( \' - \' || matricula, \'\') as funcao_matricula'))
+            ->join('pmieducar.funcao', 'funcao.cod_funcao', 'servidor_funcao.ref_cod_funcao')
+            ->where([['servidor_funcao.ref_cod_servidor', $codServidor]])
+            ->orderBy('matricula', 'asc')
+            ->get()
+            ->pluck('funcao_matricula', 'cod_servidor_funcao')
+            ->toArray();
     }
 
     public function Novo()
@@ -135,7 +154,8 @@ return new class extends clsCadastro {
                 $this->justificada,
                 null,
                 null,
-                1
+                1,
+                $this->ref_cod_servidor_funcao
             );
         } elseif ($this->tipo == 2) {
             $db = new clsBanco();
@@ -159,7 +179,8 @@ return new class extends clsCadastro {
                     $this->justificada,
                     null,
                     null,
-                    1
+                    1,
+                    $this->ref_cod_servidor_funcao
                 );
             }
         }
@@ -209,7 +230,8 @@ return new class extends clsCadastro {
                 $this->justificada,
                 null,
                 null,
-                1
+                1,
+                $this->ref_cod_servidor_funcao
             );
         } elseif ($this->tipo == 2) {
             $obj_ser = new clsPmieducarServidor(
@@ -240,7 +262,8 @@ return new class extends clsCadastro {
                 $this->justificada,
                 null,
                 null,
-                1
+                1,
+                $this->ref_cod_servidor_funcao
             );
         }
         $editou = $obj->edita();
