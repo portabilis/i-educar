@@ -34,8 +34,6 @@ class clsPmieducarMatriculaTurma extends Model
         $ref_cod_turma_transf = null,
         $sequencial = null,
         $data_enturmacao = null,
-        $removerSequencial = false,
-        $reabrirMatricula = false,
         $remanejado = false
     ) {
         $this->_schema = 'pmieducar.';

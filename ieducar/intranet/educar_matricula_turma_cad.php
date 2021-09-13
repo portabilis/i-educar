@@ -289,8 +289,6 @@ return new class extends clsCadastro {
                 null,
                 $sequencial,
                 null,
-                null,
-                null,
                 $remanejado
             );
 
