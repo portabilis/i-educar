@@ -16,7 +16,7 @@ class clsPmieducarAluno extends Model
     public $emancipado;
     public $nm_pai;
     public $nm_mae;
-    public $tipo_responsavel;
+    public $tipo_responsavel = '';
     public $recursos_prova_inep;
     public $recebe_escolarizacao_em_outro_espaco;
     public $justificativa_falta_documentacao = false;
@@ -396,7 +396,7 @@ class clsPmieducarAluno extends Model
                 $gruda = ', ';
             }
 
-            if (is_string($this->tipo_responsavel) && sizeof($this->tipo_responsavel) <= 1) {
+            if (is_string($this->tipo_responsavel) && mb_strlen($this->tipo_responsavel) <= 1) {
                 $set .= "{$gruda}tipo_responsavel = '{$this->tipo_responsavel}'";
                 $gruda = ', ';
             } elseif ($this->tipo_responsavel == '') {
