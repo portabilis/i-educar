@@ -15,7 +15,6 @@ class clsPmieducarMatriculaTurma extends Model
     public $sequencial;
     public $data_enturmacao;
     public $sequencial_fechamento;
-    public $reabrirMatricula;
     public $etapa_educacenso;
     public $turma_unificada;
     public $remanejado;
@@ -248,13 +247,6 @@ class clsPmieducarMatriculaTurma extends Model
             if (is_string($this->data_enturmacao)) {
                 $set .= "{$gruda}data_enturmacao = '{$this->data_enturmacao}'";
                 $gruda = ', ';
-            }
-
-            if ($this->reabrirMatricula) {
-                $det = $this->detalhe();
-                $this->ref_usuario_cad = $det['ref_usuario_cad'];
-
-                return $this->cadastra();
             }
 
             if (is_string($this->turno_id) && $this->turno_id == 0) {
