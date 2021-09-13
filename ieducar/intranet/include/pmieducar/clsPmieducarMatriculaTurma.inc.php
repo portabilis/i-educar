@@ -260,21 +260,6 @@ class clsPmieducarMatriculaTurma extends Model
                 return $this->cadastra();
             }
 
-            if ($this->removerSequencial) {
-                $sequencialEnturmacao = new SequencialEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma, $this->data_enturmacao);
-                $this->sequencial_fechamento = $sequencialEnturmacao->ordenaSequencialExcluiMatricula();
-            }
-
-            // FIXME
-            // Este trecho de código não é utilizado na atualização do registro, ou
-            // seja, não serve para nada. Verificar o impacto ao corrigi-lo.
-
-            if (is_numeric($this->sequencial_fechamento)) {
-                $campos .= "{$gruda}sequencial_fechamento";
-                $valores .= "{$gruda}'{$this->sequencial_fechamento}'";
-                $gruda = ', ';
-            }
-
             if (is_string($this->turno_id) && $this->turno_id == 0) {
                 $set .= "{$gruda}turno_id = NULL";
                 $gruda = ', ';
