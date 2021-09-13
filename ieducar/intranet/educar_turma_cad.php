@@ -1237,8 +1237,11 @@ return new class extends clsCadastro {
 
     public function montaObjetoTurma($codTurma = null, $usuarioCad = null, $usuarioExc = null)
     {
+
         $this->dias_semana = '{' . implode(',', $this->dias_semana) . '}';
-        $this->atividades_complementares = '{' . implode(',', $this->atividades_complementares) . '}';
+        if (is_array($this->atividades_complementares)) {
+            $this->atividades_complementares = '{' . implode(',', $this->atividades_complementares) . '}';
+        }
         $this->cod_curso_profissional = $this->cod_curso_profissional[0];
 
         if ($this->tipo_atendimento != 4) {
