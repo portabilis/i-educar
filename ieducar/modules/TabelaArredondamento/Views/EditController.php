@@ -8,6 +8,8 @@ class EditController extends Core_Controller_Page_EditController
     protected $_nivelAcessoOption = App_Model_NivelAcesso::INSTITUCIONAL;
     protected $_saveOption = true;
     protected $_deleteOption = false;
+    protected $valor_minimo = [];
+    protected $valor_maximo = [];
 
     protected $_formMap = [
         'instituicao' => [
