@@ -293,7 +293,7 @@ HTML;
                 </form>';
         }
 
-        $ncols = count($this->cabecalho);
+        $ncols = is_iterable($this->cabecalho) ? count($this->cabecalho) : 0;
         $width = empty($this->largura) ? '' : "width='$this->largura'";
 
         if (empty($this->__titulo)) {
@@ -314,13 +314,9 @@ HTML;
                         <td class='titulo-tabela-listagem' colspan='$ncols'>{$this->__titulo}</td>
                     </tr>";
 
-        $ncols = count($this->cabecalho);
-
         // Cabeçalho
         if (!empty($this->cabecalho)) {
             reset($this->cabecalho);
-
-            $ncols = count($this->cabecalho);
 
             if (!empty($this->colunas)) {
                 reset($this->colunas);
@@ -334,7 +330,7 @@ HTML;
 
             foreach ($this->cabecalho as $i => $texto) {
                 if (!empty($this->colunas)) {
-                    list($i, $fmt) = current($this->colunas);
+                    [$i, $fmt] = current($this->colunas);
                 } else {
                     $fmt = alTopLeft;
                 }
