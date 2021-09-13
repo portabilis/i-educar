@@ -15,7 +15,6 @@ class clsPmieducarMatriculaTurma extends Model
     public $sequencial;
     public $data_enturmacao;
     public $sequencial_fechamento;
-    public $removerSequencial;
     public $reabrirMatricula;
     public $etapa_educacenso;
     public $turma_unificada;

@@ -1118,7 +1118,6 @@ return new class extends clsCadastro {
                     $enturmacao['sequencial']
                 );
 
-                $enturmacao->removerSequencial = true;
                 $detEnturmacao = $enturmacao->detalhe();
                 $detEnturmacao = $detEnturmacao['data_enturmacao'];
                 $enturmacao->data_enturmacao = $detEnturmacao;

@@ -225,15 +225,6 @@ return new class extends clsCadastro {
         $detEnturmacao = $detEnturmacao['data_enturmacao'];
         $enturmacao->data_enturmacao = $detEnturmacao;
 
-        $instituicao = $enturmacao->getInstituicao($matriculaId);
-        $instituicao = new clsPmieducarInstituicao($instituicao);
-        $det_instituicao = $instituicao->detalhe();
-        $data_base_remanejamento = $det_instituicao['data_base_remanejamento'];
-
-        if (($data_base_remanejamento > $this->data_enturmacao) || (!$data_base_remanejamento)) {
-            $enturmacao->removerSequencial = true;
-        }
-
         if ($enturmacao->edita()) {
             if ($remanejado) {
                 $enturmacao->marcaAlunoRemanejado($this->data_enturmacao);
