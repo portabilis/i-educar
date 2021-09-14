@@ -64,7 +64,7 @@ class clsListagem extends clsCampos
         if (empty($_GET)) {
             if (!empty($previousFilters[$uri])) {
                 list($path, $ts) = explode('|', $previousFilters[$uri]);
-                $diff = now() - (int) $ts;
+                $diff = ((int) now()) - ((int) $ts);
 
                 if ($diff > 7200) { //duas horas
                     return;
