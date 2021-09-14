@@ -1697,31 +1697,36 @@ return new class extends clsCadastro {
      */
     public function preparaDados()
     {
-        $this->orgao_vinculado_escola = implode(',', $this->orgao_vinculado_escola);
-        $this->mantenedora_escola_privada = implode(',', $this->mantenedora_escola_privada);
-        $this->local_funcionamento = implode(',', $this->local_funcionamento);
-        $this->abastecimento_agua = implode(',', $this->abastecimento_agua);
-        $this->abastecimento_energia = implode(',', $this->abastecimento_energia);
-        $this->esgoto_sanitario = implode(',', $this->esgoto_sanitario);
-        $this->destinacao_lixo = implode(',', $this->destinacao_lixo);
-        $this->tratamento_lixo = implode(',', $this->tratamento_lixo);
-        $this->salas_funcionais = implode(',', $this->salas_funcionais);
-        $this->salas_gerais = implode(',', $this->salas_gerais);
-        $this->banheiros = implode(',', $this->banheiros);
-        $this->laboratorios = implode(',', $this->laboratorios);
-        $this->salas_atividades = implode(',', $this->salas_atividades);
-        $this->dormitorios = implode(',', $this->dormitorios);
-        $this->areas_externas = implode(',', $this->areas_externas);
-        $this->recursos_acessibilidade = implode(',', $this->recursos_acessibilidade);
-        $this->equipamentos = implode(',', $this->equipamentos);
-        $this->uso_internet = implode(',', $this->uso_internet);
-        $this->rede_local = implode(',', $this->rede_local);
-        $this->equipamentos_acesso_internet = implode(',', $this->equipamentos_acesso_internet);
-        $this->organizacao_ensino = implode(',', $this->organizacao_ensino);
-        $this->instrumentos_pedagogicos = implode(',', $this->instrumentos_pedagogicos);
-        $this->orgaos_colegiados = implode(',', $this->orgaos_colegiados);
-        $this->reserva_vagas_cotas = implode(',', $this->reserva_vagas_cotas);
-        $this->codigo_lingua_indigena = implode(',', $this->codigo_lingua_indigena);
+        $this->orgao_vinculado_escola = $this->transformArryInString($this->orgao_vinculado_escola);
+        $this->mantenedora_escola_privada = $this->transformArryInString($this->mantenedora_escola_privada);
+        $this->local_funcionamento = $this->transformArryInString($this->local_funcionamento);
+        $this->abastecimento_agua = $this->transformArryInString($this->abastecimento_agua);
+        $this->abastecimento_energia = $this->transformArryInString($this->abastecimento_energia);
+        $this->esgoto_sanitario = $this->transformArryInString($this->esgoto_sanitario);
+        $this->destinacao_lixo = $this->transformArryInString($this->destinacao_lixo);
+        $this->tratamento_lixo = $this->transformArryInString($this->tratamento_lixo);
+        $this->salas_funcionais = $this->transformArryInString($this->salas_funcionais);
+        $this->salas_gerais = $this->transformArryInString($this->salas_gerais);
+        $this->banheiros = $this->transformArryInString($this->banheiros);
+        $this->laboratorios = $this->transformArryInString($this->laboratorios);
+        $this->salas_atividades = $this->transformArryInString($this->salas_atividades);
+        $this->dormitorios = $this->transformArryInString($this->dormitorios);
+        $this->areas_externas = $this->transformArryInString($this->areas_externas);
+        $this->recursos_acessibilidade = $this->transformArryInString($this->recursos_acessibilidade);
+        $this->equipamentos = $this->transformArryInString($this->equipamentos);
+        $this->uso_internet = $this->transformArryInString($this->uso_internet);
+        $this->rede_local = $this->transformArryInString($this->rede_local);
+        $this->equipamentos_acesso_internet = $this->transformArryInString($this->equipamentos_acesso_internet);
+        $this->organizacao_ensino = $this->transformArryInString( $this->organizacao_ensino);
+        $this->instrumentos_pedagogicos = $this->transformArryInString($this->instrumentos_pedagogicos);
+        $this->orgaos_colegiados = $this->transformArryInString($this->orgaos_colegiados);
+        $this->reserva_vagas_cotas = $this->transformArryInString($this->reserva_vagas_cotas);
+        $this->codigo_lingua_indigena = $this->transformArryInString($this->codigo_lingua_indigena);
+    }
+
+    private function transformArryInString($value): ?string
+    {
+        return is_array($value) ? implode(',', $value) : null;
     }
 
     public function Editar()
