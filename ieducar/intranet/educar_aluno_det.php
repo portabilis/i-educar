@@ -847,7 +847,9 @@ return new class extends clsDetalhe {
             $this->addDetalhe(['Possui telefone', $reg['telefone']]);
 
             $recursosTecnlogicos = json_decode($reg['recursos_tecnologicos']);
-            $recursosTecnlogicos = implode(', ', $recursosTecnlogicos);
+            if (is_array($recursosTecnlogicos)) {
+                $recursosTecnlogicos = implode(', ', $recursosTecnlogicos);
+            }
             $this->addDetalhe(['Possui acesso à recursos técnologicos?', $recursosTecnlogicos]);
 
             $this->addDetalhe(['Quantidade de pessoas', $reg['quant_pessoas']]);
