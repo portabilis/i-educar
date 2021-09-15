@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\LegacyEnrollment;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClass;
+use App\Models\LegacySchoolClassGrade;
 use App\Models\LegacyTransferRequest;
 use App\User;
 use App_Model_MatriculaSituacao;
@@ -46,10 +47,22 @@ class RegistrationService
      */
     public function getRegistrationsNotEnrolled($schoolClass)
     {
+        $grades = [
+            $schoolClass->grade_id,
+        ];
+
+        if ($schoolClass->multiseriada == 1) {
+            $grades = LegacySchoolClassGrade::query()
+                ->where('turma_id', $schoolClass->getKey())
+                ->get()
+                ->pluck('serie_id')
+                ->toArray();
+        }
+
         return LegacyRegistration::query()
             ->with('student.person', 'lastEnrollment')
             ->where('ref_cod_curso', $schoolClass->course_id)
-            ->where('ref_ref_cod_serie', $schoolClass->grade_id)
+            ->whereIn('ref_ref_cod_serie', $grades)
             ->where('ref_ref_cod_escola', $schoolClass->school_id)
             ->where('ativo', 1)
             ->where('ultima_matricula', 1)
