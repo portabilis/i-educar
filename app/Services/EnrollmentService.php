@@ -259,7 +259,7 @@ class EnrollmentService
      */
     public function markAsTransferred(LegacyEnrollment $enrollment)
     {
-        $enrollment->remanejado = true;
+        $enrollment->transferido = true;
         $enrollment->saveOrFail();
     }
 

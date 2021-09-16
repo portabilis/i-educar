@@ -109,12 +109,12 @@ function montaTabelaDadosAluno(response) {
       <tr class="tr_title">
         <td>Principal</td>
         <td>Código</td>
-        <td>Inep</td>
+        <td>INEP</td>
         <td>Nome</td>
-        <td>Nascimento</td>
+        <td>Data de Nascimento</td>
         <td>CPF</td>
         <td>RG</td>
-        <td>Pessoa Mãe</td>
+        <td>Nome da Mãe</td>
         <td>Dados escolares</td>
         <td>Ação</td>
       </tr>
@@ -320,7 +320,7 @@ function modalMatriculasEHistoricos(response, nomeAluno) {
   let content = contentMatriculasEHistoricos(response);
   makeDialog({
     content: content,
-    title: 'Dados escolares do aluno ' + nomeAluno,
+    title: 'Dados escolares do(a) aluno(a) ' + nomeAluno,
     width: '90%',
     close: function () {
       $j('#dialog-container').dialog('destroy');
