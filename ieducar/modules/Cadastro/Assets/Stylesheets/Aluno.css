@@ -148,18 +148,11 @@
 #dialog-form-pessoa-aluno > fieldset { padding:0; border:0; margin-top:25px; }
 #dialog-form-pessoa-aluno > h1 { font-size: 1.2em; margin: .6em 0; }*/
 
-.ui-dialog .ui-state-error { padding: .3em; }
+
 .validateTips-pessoa-aluno { border: 1px solid transparent; padding: 0.3em; }
 
 .ui-widget-overlay{
      background:black;
-}
-
-.ui-dialog-titlebar {display:none}
-
-.ui-state-error {
-  background: white !important;
-  color: black !important;
 }
 
 .ui-button span{
@@ -209,9 +202,6 @@ div p a{;
   margin-left: 1.2em;
 }
 
-.ui-dialog-content, .ui-widget-content{
-  padding: 0px !important;
-}
 .select {
   border: 1px solid #ffffff; background: #ffffff; color: #000000;
 }
