@@ -194,6 +194,14 @@ let verificaCampoZonaResidencia = () => {
   }
 };
 
+var changeVisibilityOfLinksToPessoaPai = function () {
+  changeVisibilityOfLinksToPessoaParent('pai');
+};
+
+var changeVisibilityOfLinksToPessoaMae = function () {
+  changeVisibilityOfLinksToPessoaParent('mae');
+};
+
 // when page is ready
 
 $j(document).ready(function() {
@@ -243,26 +251,6 @@ $j(document).ready(function() {
   $j('#rg').on('change', verificaObrigatoriedadeRg);
 
 }); // ready
-
-
-// pessoa links callbacks
-
-var changeVisibilityOfLinksToPessoaParent = function(parentType) {
-  var $nomeField  = $j(buildId(parentType + '_nome'));
-  var $idField    = $j(buildId(parentType + '_id'));
-  var $linkToEdit = $j('.pessoa-' + parentType + '-links .editar-pessoa-' + parentType);
-
-  if($nomeField.val() && $idField.val()) {
-    $linkToEdit.attr('href', hrefToEditParent(parentType));
-    $linkToEdit.show().css('display', 'inline');
-  }
-  else {
-    $nomeField.val('')
-    $idField.val('');
-
-    $linkToEdit.hide();
-  }
-}
 
 // children callbacks
 
