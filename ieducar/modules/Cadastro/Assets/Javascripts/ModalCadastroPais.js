@@ -42,14 +42,6 @@ var $linkToEditPessoaMae = $linkToEditPessoaPai.clone()
     .attr('id', 'editar-pessoa-mae-link')
     .appendTo($pessoaMaeActionBar);
 
-
-
-
-
-
-
-
-
 $j("#cadastrar-pessoa-pai-link").click(function () {
     openModalParent('pai');
 });
@@ -58,8 +50,15 @@ $j("#cadastrar-pessoa-mae-link").click(function () {
     openModalParent('mae');
 });
 
+$j("#editar-pessoa-pai-link").click(function () {
+    openEditModalParent('pai');
+});
+
+$j("#editar-pessoa-mae-link").click(function () {
+    openEditModalParent('mae');
+});
+
 function openModalParent(parentType) {
-    console.log('teste');
     $j('#link_cadastro_detalhado_parent').attr('href', '/intranet/atendidos_cad.php?parent_type=' + parentType);
     $j("#dialog-form-pessoa-parent").dialog("open");
     $j(".ui-widget-overlay").click(function () {
@@ -91,6 +90,28 @@ function openModalParent(parentType) {
 
     pessoaPaiOuMae = parentType;
     editar_pessoa = false;
+}
+
+function openEditModalParent(parentType) {
+    $j('#link_cadastro_detalhado_parent').attr('href', '/intranet/atendidos_cad.php?cod_pessoa_fj=' + $j('#' + parentType + '_id').val() + '&parent_type=' + parentType);
+    $j("#dialog-form-pessoa-parent").dialog("open");
+    $j(".ui-widget-overlay").click(function () {
+        $j(".ui-dialog-titlebar-close").trigger('click');
+    });
+    $j('#nome-pessoa-parent').focus();
+
+    personDetails = window[parentType + '_details'];
+
+    nameParent.val(personDetails.nome);
+    estadocivilParent.val(personDetails.estadocivil);
+    sexoParent.val(personDetails.sexo);
+    datanascParent.val(personDetails.data_nascimento);
+    falecidoParent.prop('checked', (personDetails.falecido));
+
+    $j('#dialog-form-pessoa-parent form h2:first-child').html('Editar pessoa ' + (parentType == 'mae' ? 'mãe' : parentType)).css('margin-left', '0.75em');
+
+    pessoaPaiOuMae = parentType;
+    editar_pessoa = true;
 }
 
 $j('body').append('<div id="dialog-form-pessoa-parent"><form><h2></h2><table><tr><td valign="top"><fieldset><label for="nome-pessoa-parent">Nome</label>    <input type="text " name="nome-pessoa-parent" id="nome-pessoa-parent" size="49" maxlength="255" class="text">    <label for="sexo-pessoa-parent">Sexo</label>  <select class="select ui-widget-content ui-corner-all" name="sexo-pessoa-parent" id="sexo-pessoa-parent" ><option value="" selected>Sexo</option><option value="M">Masculino</option><option value="F">Feminino</option></select>    <label for="estado-civil-pessoa-parent">Estado civil</label>   <select class="select ui-widget-content ui-corner-all" name="estado-civil-pessoa-parent" id="estado-civil-pessoa-parent"  ><option id="estado-civil-pessoa-parent_" value="" selected>Estado civil</option><option id="estado-civil-pessoa-parent_2" value="2">Casado(a)</option><option id="estado-civil-pessoa-parent_6" value="6">Companheiro(a)</option><option id="estado-civil-pessoa-parent_3" value="3">Divorciado(a)</option><option id="estado-civil-pessoa-parent_4" value="4">Separado(a)</option><option id="estado-civil-pessoa-parent_1" value="1">Solteiro(a)</option><option id="estado-civil-pessoa-parent_5" value="5">Vi&uacute;vo(a)</option><option id="estado-civil-pessoa-parent_7" value="7">Não informado</option></select><label for="data-nasc-pessoa-parent"> Data de nascimento </label> <input onKeyPress="formataData(this, event);" class="" placeholder="dd/mm/yyyy" type="text" name="data-nasc-pessoa-parent" id="data-nasc-pessoa-parent" value="" size="11" maxlength="10"> <div id="falecido-modal"> <label>Falecido?</label><input type="checkbox" name="falecido-parent" id="falecido-parent" style="display:inline;"> </div></fieldset><p><a id="link_cadastro_detalhado_parent">Cadastro detalhado</a></p></form></div>');
@@ -257,7 +278,6 @@ function checkSelect(comp, name) {
 }
 
 function afterChangePessoaParent(pessoaId, parentType) {
-    console.log(pessoaId, parentType);
     $tempField = $paiNomeField;
     var $parente = '';
 
@@ -327,13 +347,58 @@ var handleGetPersonParentDetails = function (dataResponse, parentType) {
     }
 };
 
-var changeVisibilityOfLinksToPessoaPai = function () {
-    changeVisibilityOfLinksToPessoaParent('pai');
-};
+// pessoa links callbacks
+var changeVisibilityOfLinksToPessoaParent = function (parentType) {
+    var $nomeField = $j(buildId(parentType + '_nome'));
+    var $idField = $j(buildId(parentType + '_id'));
+    var $linkToEdit = $j('.pessoa-' + parentType + '-links .editar-pessoa-' + parentType);
 
-var changeVisibilityOfLinksToPessoaMae = function () {
-    changeVisibilityOfLinksToPessoaParent('mae');
+    if ($nomeField.val() && $idField.val()) {
+        $linkToEdit.show().css('display', 'inline');
+    } else {
+        $nomeField.val('')
+        $idField.val('');
+
+        $linkToEdit.hide();
+    }
 };
 
 $paiNomeField.focusout(changeVisibilityOfLinksToPessoaPai);
 $maeNomeField.focusout(changeVisibilityOfLinksToPessoaMae);
+
+var getPersonDetails = function (personId) {
+    var additionalVars = {
+        id: personId,
+    };
+
+    var options = {
+        url: getResourceUrlBuilder.buildUrl('/module/Api/pessoa', 'pessoa', additionalVars),
+        dataType: 'json',
+        data: {},
+        success: handleGetPersonDetails
+    };
+    getResource(options);
+};
+
+var handleGetPersonDetails = function (dataResponse) {
+    if (dataResponse.id == $j('#pai_id').val()){
+        pai_details = dataResponse;
+    } else {
+        mae_details = dataResponse;
+    }
+}
+
+var pai_details = getPersonDetails($j('#pai_id').val());
+var mae_details = getPersonDetails($j('#mae_id').val());
+
+$j('#pai_nome').change(function(value) {
+    paiId = value.target.value;
+    paiId = paiId.split(' ')[0];
+    pai_details = getPersonDetails(paiId);
+});
+
+$j('#mae_nome').change(function(value) {
+    maeId = value.target.value;
+    maeId = maeId.split(' ')[0];
+    mae_details = getPersonDetails(maeId);
+});
