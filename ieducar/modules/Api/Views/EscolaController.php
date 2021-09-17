@@ -749,7 +749,7 @@ class EscolaController extends ApiCoreController
                 ref_ref_cod_escola,
                 ref_ref_cod_serie
             ) esd
-            WHERE CASE WHEN $escolaId = 0 THEN true ELSE escola_id = $escolaId END
+            WHERE escola_id in ($escolaId)
             GROUP BY escola_id;
         ";
 
