@@ -356,7 +356,6 @@ class EscolaController extends ApiCoreController
     {
         // Caso a capacidade de alunos naquele turno seja menor ou igual ao ao número de alunos matrículados + alunos na reserva de vaga externa deve bloquear
         if ($this->_getMaxAlunoTurno($escolaId) <= ($this->_getQtdAlunosFila($escolaId) + $this->_getQtdMatriculaTurno($escolaId))) {
-            // $this->mensagem .= Portabilis_String_Utils::toLatin1("Não existem vagas disponíveis para essa série/turno!") . '<br/>';
             return false;
         }
 

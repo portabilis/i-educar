@@ -36,7 +36,7 @@ class DiarioController extends ApiCoreController
         $valid = in_array($componenteCurricularId, $componentes);
 
         if (!$valid) {
-            throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("Componente curricular de código $componenteCurricularId não existe para essa turma/matrícula."));
+            throw new CoreExt_Exception("Componente curricular de código {$componenteCurricularId} não existe para essa turma/matrícula.");
         }
 
         return $valid;
@@ -138,7 +138,7 @@ class DiarioController extends ApiCoreController
 
             // validates service
             if (is_null($this->_boletimServiceInstances[$matriculaId])) {
-                throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("Não foi possivel instanciar o serviço boletim para a matrícula $matriculaId."));
+                throw new CoreExt_Exception("Não foi possivel instanciar o serviço boletim para a matrícula {$matriculaId}.");
             }
 
             return $this->_boletimServiceInstances[$matriculaId];
@@ -480,16 +480,15 @@ class DiarioController extends ApiCoreController
 
                     if (!empty($matriculaId)) {
                         if ($this->getRegra($matriculaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE) {
-                            throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres por etapa e componente."));
+                            throw new CoreExt_Exception("A regra da turma {$turmaId} não permite lançamento de pareceres por etapa e componente.");
                         }
 
                         foreach ($parecerTurmaAluno as $componenteCurricularId => $parecerTurmaAlunoComponente) {
                             if ($this->validateComponenteTurma($turmaId, $componenteCurricularId)) {
-                                $parecer = $parecerTurmaAlunoComponente['valor'];
 
                                 $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoComponente([
                                     'componenteCurricular' => $componenteCurricularId,
-                                    'parecer' => Portabilis_String_Utils::toLatin1($parecer),
+                                    'parecer' => $parecerTurmaAlunoComponente['valor'],
                                     'etapa' => $etapa,
                                 ]);
 
@@ -516,16 +515,15 @@ class DiarioController extends ApiCoreController
 
                     if (!empty($matriculaId)) {
                         if ($this->getRegra($matriculaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE) {
-                            throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres anual por componente."));
+                            throw new CoreExt_Exception("A regra da turma {$turmaId} não permite lançamento de pareceres anual por componente.");
                         }
 
                         foreach ($parecerTurmaAluno as $componenteCurricularId => $parecerTurmaAlunoComponente) {
                             if ($this->validateComponenteCurricular($matriculaId, $componenteCurricularId)) {
-                                $parecer = $parecerTurmaAlunoComponente['valor'];
 
                                 $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoComponente([
                                     'componenteCurricular' => $componenteCurricularId,
-                                    'parecer' => Portabilis_String_Utils::toLatin1($parecer),
+                                    'parecer' => $parecerTurmaAlunoComponente['valor'],
                                 ]);
 
                                 $this->serviceBoletim($turmaId, $alunoId)->addParecer($parecerDescritivo);
@@ -552,13 +550,11 @@ class DiarioController extends ApiCoreController
 
                     if (!empty($matriculaId)) {
                         if ($this->getRegra($matriculaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL) {
-                            throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres por etapa geral."));
+                            throw new CoreExt_Exception("A regra da turma {$turmaId} não permite lançamento de pareceres por etapa geral.");
                         }
 
-                        $parecer = $parecerTurmaAluno['valor'];
-
                         $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoGeral([
-                            'parecer' => Portabilis_String_Utils::toLatin1($parecer),
+                            'parecer' => $parecerTurmaAluno['valor'],
                             'etapa' => $etapa,
                         ]);
 
@@ -584,11 +580,11 @@ class DiarioController extends ApiCoreController
 
                     if (!empty($matriculaId)) {
                         if ($this->getRegra($matriculaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL) {
-                            throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres anual geral."));
+                            throw new CoreExt_Exception("A regra da turma {$turmaId} não permite lançamento de pareceres anual geral.");
                         }
 
                         $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoGeral([
-                            'parecer' => Portabilis_String_Utils::toLatin1($parecer),
+                            'parecer' => $parecer,
                         ]);
 
                         $this->serviceBoletim($turmaId, $alunoId)->addParecer($parecerDescritivo);

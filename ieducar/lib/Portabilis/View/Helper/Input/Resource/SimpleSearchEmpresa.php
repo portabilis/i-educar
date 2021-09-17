@@ -7,9 +7,8 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchEmpresa extends Portabil
         if ($id) {
             $sql = 'select nome from modules.empresa_transporte_escolar, cadastro.pessoa where ref_idpes = idpes and cod_empresa_transporte_escolar = $1';
             $options = ['params' => $id, 'return_only' => 'first-field'];
-            $nome = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
 
-            return Portabilis_String_Utils::toLatin1($nome, ['transform' => true, 'escape' => false]);
+            return Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
         }
     }
 
