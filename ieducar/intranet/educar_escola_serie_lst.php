@@ -109,6 +109,7 @@ return new class extends clsListagem {
             $this->limite
         );
 
+        $obj_permissao = new clsPermissoes();
         if ($obj_permissao->permissao_cadastra(585, $this->pessoa_logada, 7)) {
             $this->acao = 'go("educar_escola_serie_cad.php")';
             $this->nome_acao = 'Novo';
