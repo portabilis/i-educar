@@ -20,12 +20,9 @@ class Controller extends BaseController
     private Breadcrumb $breadcrumb;
     private MenuCacheService $menuCacheService;
 
-    public function __construct(
-        Breadcrumb $breadcrumb,
-        MenuCacheService $menuCacheService
-    ) {
-        $this->breadcrumb = $breadcrumb;
-        $this->menuCacheService = $menuCacheService;
+    public function __construct() {
+        $this->breadcrumb = app(Breadcrumb::class);
+        $this->menuCacheService = app(MenuCacheService::class);
     }
 
     /**
