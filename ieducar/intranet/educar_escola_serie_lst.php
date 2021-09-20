@@ -24,20 +24,13 @@ return new class extends clsListagem {
             $this->$var = ($val === '') ? null : $val;
         }
 
-        $lista_busca = [
-            'Série',
-            'Curso'
-        ];
-
-        $obj_permissao = new clsPermissoes();
-        $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
-
+        $lista_busca = ['Série', 'Curso'];
         $lista_busca[] = 'Escola';
         $lista_busca[] = 'Instituição';
         $lista_busca[] = 'Escola';
         $this->addCabecalhos($lista_busca);
 
-        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie']);
+        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie'], [],['options' => ['required' => false]]);
 
         // Paginador
         $this->limite = 20;
