@@ -739,7 +739,8 @@ return new class extends clsCadastro {
         $styles = [
             '/modules/Portabilis/Assets/Stylesheets/Frontend.css',
             '/modules/Portabilis/Assets/Stylesheets/Frontend/Resource.css',
-            '/modules/Cadastro/Assets/Stylesheets/PessoaFisica.css'
+            '/modules/Cadastro/Assets/Stylesheets/PessoaFisica.css',
+            '/modules/Cadastro/Assets/Stylesheets/ModalCadastroPais.css',
         ];
 
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
@@ -747,7 +748,8 @@ return new class extends clsCadastro {
         $script = [
             '/modules/Cadastro/Assets/Javascripts/PessoaFisica.js',
             '/modules/Cadastro/Assets/Javascripts/Addresses.js',
-            '/modules/Cadastro/Assets/Javascripts/Endereco.js'
+            '/modules/Cadastro/Assets/Javascripts/Endereco.js',
+            '/modules/Cadastro/Assets/Javascripts/ModalCadastroPais.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $script);
