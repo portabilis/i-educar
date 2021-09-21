@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Menu;
 use App\Models\LegacyUserType;
+use App\Services\CacheManager;
+use App\Services\MenuCacheService;
 use App\User;
 use Exception;
 use Illuminate\Database\Connection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 use Throwable;
 
@@ -55,8 +58,9 @@ class AccessLevelController extends Controller
         $userType->saveOrFail();
 
         $userType->menus()->syncWithoutDetaching($processes);
-    }
 
+        app(MenuCacheService::class)->flushMenuTag($userType->cod_tipo_usuario);
+    }
     /**
      * @param Request $request
      *
