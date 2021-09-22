@@ -252,11 +252,6 @@ return new class extends clsCadastro {
 
         $desabilitado = $bloqueia;
 
-//        $this->inputsHelper()->dynamic('anoLetivo', ['value' => $this->ano, 'disabled' => $desabilitado]);
-//        $this->inputsHelper()->dynamic('escola', ['value' => $this->ref_cod_escola, 'disabled' => $desabilitado]);
-//        $this->inputsHelper()->dynamic('curso', ['value' => $this->ref_cod_curso, 'disabled' => $desabilitado]);
-//        $this->inputsHelper()->dynamic('serie', ['value' => $this->ref_cod_serie, 'disabled' => $desabilitado]);
-
         $this->inputsHelper()->dynamic('ano', ['value' => (is_null($this->ano) ? date('Y') : $this->ano)]);
         $this->inputsHelper()->dynamic('instituicao', ['value' => $this->ref_cod_instituicao, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie']);
