@@ -210,6 +210,10 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             'tabela' => 'pmieducar.aluno_excluidos',
             'coluna' => 'ref_idpes'
         ],
+        [
+            'tabela' => 'public.school_managers',
+            'coluna' => 'employee_id'
+        ],
     ];
 
     protected $chavesDeletarDuplicados = [
@@ -274,7 +278,7 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             $reg = $this->db->Tupla();
             $codigoClientes[] = $reg['cod_cliente'];
         }
-        if (COUNT($codigoClientes) < 2) {
+        if (count($codigoClientes) < 2) {
             return true;
         }
         $unificadorCliente = new App_Unificacao_Cliente(array_shift($codigoClientes), $codigoClientes, $this->codPessoaLogada, $this->db, $this->unificationId);
