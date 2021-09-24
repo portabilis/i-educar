@@ -9,7 +9,7 @@ $j(function () {
             },
             'turma': {
                 'stepsRows': 'tr[id^="tr_turma_modulo["]',
-                'year': '#ano_letivo'
+                'year': '#ano'
             }
         },
         init: function () {
