@@ -1294,7 +1294,7 @@ return new class extends clsCadastro {
     protected function validaModulos()
     {
         $turmaId = $this->cod_turma;
-        $anoTurma = $this->ano_;
+        $anoTurma = $this->ano_letivo;
         $etapasCount = count($this->data_inicio);
         $etapasCountAntigo = (int) Portabilis_Utils_Database::selectField(
             'SELECT COUNT(*) AS count FROM pmieducar.turma_modulo WHERE ref_cod_turma = $1',
