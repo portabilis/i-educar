@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Illuminate\Cache\CacheManager as LaravelCacheManager;
+use Illuminate\Contracts\Cache\Repository;
 use Illuminate\Support\Facades\Cache;
 
 class CacheManager extends LaravelCacheManager
@@ -12,7 +13,7 @@ class CacheManager extends LaravelCacheManager
      *
      * @param $tags
      *
-     * @return \Illuminate\Contracts\Cache\Repository
+     * @return Repository
      */
     public static function invalidateByTags($tags)
     {
@@ -57,6 +58,7 @@ class CacheManager extends LaravelCacheManager
         $doNotSupportTags = [
             'Illuminate\Cache\DatabaseStore',
             'Illuminate\Cache\FileStore',
+            'Illuminate\Cache\DynamodbStore',
         ];
 
         if (in_array(get_class($store), $doNotSupportTags)) {
