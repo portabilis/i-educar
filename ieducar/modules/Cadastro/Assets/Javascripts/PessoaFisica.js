@@ -20,50 +20,6 @@ var $cpfNotice    = $j('<span>').html('')
                                 .appendTo($cpfField.parent());
 let obrigarCamposCenso = $j('#obrigar_campos_censo');
 
-// links pessoa pai, mãe
-
-var $paiNomeField = $j('#pai_nome');
-var $paiIdField   = $j('#pai_id');
-
-var $maeNomeField = $j('#mae_nome');
-var $maeIdField   = $j('#mae_id');
-
-
-var $pessoaPaiActionBar  = $j('<span>').html('')
-                                       .addClass('pessoa-links pessoa-pai-links')
-                                       .width($paiNomeField.outerWidth() - 12)
-                                       .appendTo($paiNomeField.parent());
-
-var $pessoaMaeActionBar = $pessoaPaiActionBar.clone()
-                                         .removeClass('pessoa-pai-links')
-                                         .addClass('pessoa-mae-links')
-                                         .appendTo($maeNomeField.parent());
-
-var $linkToCreatePessoaPai = $j('<a>').addClass('cadastrar-pessoa-pai decorated')
-                                      .attr('href', hrefToCreateParent('pai'))
-                                      .attr('target', '_blank')
-                                      .html('Cadastrar pessoa')
-                                      .appendTo($pessoaPaiActionBar);
-
-var $linkToEditPessoaPai = $j('<a>').hide()
-                                    .addClass('editar-pessoa-pai decorated')
-                                    .attr('href', hrefToEditParent('pai'))
-                                    .attr('target', '_blank')
-                                    .html('Editar pessoa')
-                                    .appendTo($pessoaPaiActionBar);
-
-var $linkToCreatePessoaMae = $linkToCreatePessoaPai.clone()
-                                                   .removeClass('cadastrar-pessoa-pai')
-                                                   .addClass('cadastrar-pessoa-mae')
-                                                   .attr('href', hrefToCreateParent('mae'))
-                                                   .appendTo($pessoaMaeActionBar);
-
-var $linkToEditPessoaMae = $linkToEditPessoaPai.clone()
-                                               .removeClass('editar-pessoa-pai')
-                                               .addClass('editar-pessoa-mae')
-                                               .attr('href', hrefToEditParent('mae'))
-                                               .appendTo($pessoaMaeActionBar);
-
 var handleGetPersonByCpf = function(dataResponse) {
   handleMessages(dataResponse.msgs);
   $cpfNotice.hide();
@@ -238,6 +194,14 @@ let verificaCampoZonaResidencia = () => {
   }
 };
 
+var changeVisibilityOfLinksToPessoaPai = function () {
+  changeVisibilityOfLinksToPessoaParent('pai');
+};
+
+var changeVisibilityOfLinksToPessoaMae = function () {
+  changeVisibilityOfLinksToPessoaParent('mae');
+};
+
 // when page is ready
 
 $j(document).ready(function() {
@@ -287,35 +251,6 @@ $j(document).ready(function() {
   $j('#rg').on('change', verificaObrigatoriedadeRg);
 
 }); // ready
-
-
-// pessoa links callbacks
-
-var changeVisibilityOfLinksToPessoaParent = function(parentType) {
-  var $nomeField  = $j(buildId(parentType + '_nome'));
-  var $idField    = $j(buildId(parentType + '_id'));
-  var $linkToEdit = $j('.pessoa-' + parentType + '-links .editar-pessoa-' + parentType);
-
-  if($nomeField.val() && $idField.val()) {
-    $linkToEdit.attr('href', hrefToEditParent(parentType));
-    $linkToEdit.show().css('display', 'inline');
-  }
-  else {
-    $nomeField.val('')
-    $idField.val('');
-
-    $linkToEdit.hide();
-  }
-}
-
-var changeVisibilityOfLinksToPessoaPai = function() {
-  changeVisibilityOfLinksToPessoaParent('pai');
-}
-
-var changeVisibilityOfLinksToPessoaMae = function() {
-  changeVisibilityOfLinksToPessoaParent('mae');
-}
-
 
 // children callbacks
 
@@ -368,5 +303,3 @@ var simpleSearchMaeOptions = {
   autocompleteOptions : { close : changeVisibilityOfLinksToPessoaMae }
 };
 
-$paiNomeField.focusout(changeVisibilityOfLinksToPessoaPai);
-$maeNomeField.focusout(changeVisibilityOfLinksToPessoaMae);

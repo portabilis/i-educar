@@ -1,0 +1,80 @@
+.ui-dialog .ui-state-error { padding: .3em; }
+.validateTips-pessoa-aluno { border: 1px solid transparent; padding: 0.3em; }
+
+.ui-widget-overlay{
+     background:black;
+}
+
+.ui-dialog-titlebar {display:none}
+
+.ui-state-error {
+  background: white !important;
+  color: black !important;
+}
+
+.ui-button span{
+
+  color: #ffffff ;
+  border: 1px solid #495C67;
+
+}
+
+.ui-state-hover, .ui-state-focus{
+  border: 0px !important;
+}
+
+fieldset {
+  border: 0px;
+}
+
+fieldset legend{
+  font-weight: bold;
+
+}
+
+tr td:first-child legend{
+  margin-left: -3px;
+}
+
+#feedback-messages{
+  z-index: 1050;
+}
+
+.ui-button-text {
+   font-size: 13px !important;
+}
+
+div p a{
+  color: blue !important;
+  cursor: pointer;
+}
+
+#link_cadastro_detalhado{
+  font-family: arial, verdana, sans-serif, "Times New Roman";
+  font-size: 12px;
+
+}
+
+#link_cadastro_detalhado, #link_cadastro_detalhado_parent{
+  margin-left: 1.2em;
+}
+
+.ui-dialog-content, .ui-widget-content{
+  padding: 0px !important;
+}
+
+.pessoa-links {
+  display: block;
+  padding: 5px;
+  margin: 2px;
+}
+
+.pessoa-links a {
+  /*
+    obs: no firefox, ao mostrar o elemento (.show, jquery), é setado display como block,
+         para reparar isto, após chamar .show(), chamar .css('display', 'inline');
+  */
+
+  margin-right: 5px;
+  cursor: pointer;
+}
