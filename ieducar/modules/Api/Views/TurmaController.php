@@ -143,7 +143,7 @@ class TurmaController extends ApiCoreController
     {
         $codTurma = $this->getRequest()->id;
         $objMatriculaTurma = new clsPmieducarMatriculaTurma();
-        $lstMatriculaTurma = $objMatriculaTurma->lista(null, $codTurma);
+        $lstMatriculaTurma = $objMatriculaTurma->lista(null, $codTurma, null, null, null, null, null, null, 3);
 
         foreach ($lstMatriculaTurma as $matricula) {
             $lstNomes[] = [
