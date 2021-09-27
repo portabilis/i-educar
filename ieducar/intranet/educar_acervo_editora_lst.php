@@ -69,6 +69,7 @@ return new class extends clsListagem {
         $get_cabecalho = 'lista_busca';
         include('include/pmieducar/educar_campo_lista.php');
 
+        $this->inputsHelper()->dynamic('instituicao', ['required' => false, 'instituicao' => $this->ref_cod_instituicao]);
         $this->campoTexto('nm_editora', 'Editora', $this->nm_editora, 30, 255, false);
 
         // Filtros de Foreign Keys

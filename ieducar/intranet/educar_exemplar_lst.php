@@ -72,6 +72,9 @@ return new class extends clsListagem {
         $get_cabecalho = 'lista_busca';
         include('include/pmieducar/educar_campo_lista.php');
 
+        // outros Filtros
+        $this->inputsHelper()->dynamic('instituicao', ['required' => false, 'instituicao' => $this->ref_cod_instituicao]);
+
         $this->addCabecalhos($lista_busca);
 
         $opcoes = [ '' => 'Selecione' ];

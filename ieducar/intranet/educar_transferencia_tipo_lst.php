@@ -63,6 +63,7 @@ return new class extends clsListagem {
         include('include/pmieducar/educar_campo_lista.php');
 
         // outros Filtros
+        $this->inputsHelper()->dynamic('instituicao', ['required' => false, 'instituicao' => $this->ref_cod_instituicao]);
         $this->campoTexto('nm_tipo', 'Transfer&ecirc;ncia', $this->nm_tipo, 30, 255, false);
 
         // Paginador

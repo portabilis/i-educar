@@ -87,6 +87,7 @@ return new class extends clsListagem {
         }
 
         // outros Filtros
+        $this->inputsHelper()->dynamic('instituicao', ['required' => false, 'instituicao' => $this->ref_cod_instituicao]);
         $this->campoTexto('nm_autor', 'Autor', $this->nm_autor, 30, 255, false);
 
         // Paginador

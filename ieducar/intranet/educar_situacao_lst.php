@@ -67,6 +67,7 @@ return new class extends clsListagem {
         $this->addCabecalhos($lista_busca);
 
         // outros Filtros
+        $this->inputsHelper()->dynamic('instituicao', ['required' => false, 'instituicao' => $this->ref_cod_instituicao]);
         $this->campoTexto('nm_situacao', 'Situa&ccedil;&atilde;o', $this->nm_situacao, 30, 255, false);
         $opcoes = ['' => 'Selecione', 1 => 'n&atilde;o', 2 => 'sim' ];
         $this->campoLista('permite_emprestimo', 'Permite Empr&eacute;stimo', $opcoes, $this->permite_emprestimo, null, null, null, null, null, false);

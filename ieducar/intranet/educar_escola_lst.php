@@ -51,7 +51,7 @@ return new class extends clsListagem {
                     $opcoes[$linha['cod_instituicao']] = $linha['nm_instituicao'];
                 }
             }
-            $this->campoLista('ref_cod_instituicao', 'Instituição', $opcoes, $this->ref_cod_instituicao, false, false, false, false, false, false);
+            $this->inputsHelper()->dynamic('instituicao', ['required' => false, 'instituicao' => $this->ref_cod_instituicao]);
         } else {
             $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
             if ($this->ref_cod_instituicao) {

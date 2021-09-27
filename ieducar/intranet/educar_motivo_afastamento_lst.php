@@ -65,6 +65,8 @@ return new class extends clsListagem {
         // outros Filtros
         $get_escola = false;
         include('include/pmieducar/educar_campo_lista.php');
+
+        $this->inputsHelper()->dynamic('instituicao', ['required' => false, 'instituicao' => $this->ref_cod_instituicao]);
         $this->campoTexto('nm_motivo', 'Motivo de Afastamento', $this->nm_motivo, 30, 255, false);
 
         // Paginador

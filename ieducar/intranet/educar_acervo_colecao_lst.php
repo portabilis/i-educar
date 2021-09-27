@@ -56,9 +56,10 @@ return new class extends clsListagem {
         $get_escola = true;
         $get_biblioteca = true;
         $get_cabecalho = 'lista_busca';
-
         include('include/pmieducar/educar_campo_lista.php');
+
         // outros Filtros
+        $this->inputsHelper()->dynamic('instituicao', ['required' => false, 'instituicao' => $this->ref_cod_instituicao]);
         $this->campoTexto('nm_colecao', 'Cole&ccedil;&atilde;o', $this->nm_colecao, 30, 255, false);
 
         // Paginador

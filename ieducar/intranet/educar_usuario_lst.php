@@ -53,7 +53,7 @@ return new class extends clsListagem {
         }
         $this->campoLista('ref_cod_nivel_usuario', 'N&iacute;vel de Acesso', $opcoes, $this->ref_cod_nivel_usuario, null, null, null, null, null, false);
 
-        $this->inputsHelper()->dynamic('instituicao', ['required' => false, 'show-select' => true, 'value' => $this->ref_cod_instituicao]);
+        $this->inputsHelper()->dynamic('instituicao', ['required' => false, 'show-select' => true, 'instituicao' => $this->ref_cod_instituicao]);
         $this->inputsHelper()->dynamic('escola', ['required' => false, 'show-select' => true, 'value' => $this->ref_cod_escola]);
         $selectOptions = [
             0 => 'Selecione',

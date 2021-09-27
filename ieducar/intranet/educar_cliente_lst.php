@@ -73,6 +73,8 @@ return new class extends clsListagem {
 
         include('include/pmieducar/educar_campo_lista.php');
 
+        $this->inputsHelper()->dynamic('instituicao', ['required' => true, 'instituicao' => $this->ref_cod_instituicao]);
+
         // Paginador
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
