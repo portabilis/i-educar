@@ -16,7 +16,7 @@ class Portabilis_View_Helper_Inputs
      * $this->inputsHelper()->dynamic('instituicao', array('options' => array(required' => false)));
      *
      * Pode-se usar:
-     * $this->inputsHelper()->dynamic('instituicao', array(required' => false));
+     * $this->inputsHelper()->dynamic('instituicao', array('required' => false));
      *
      * Ou
      * $this->inputsHelper()->dynamic('instituicao', array(), array('options' => array(required' => false)));
