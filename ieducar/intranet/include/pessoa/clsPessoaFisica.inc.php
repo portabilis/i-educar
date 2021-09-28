@@ -69,7 +69,7 @@ class clsPessoaFisica extends clsPessoaFj
 
         if (is_string($str_nome) && $str_nome != '') {
             $str_nome = $db->escapeString($str_nome);
-            $where .= "{$whereAnd} slug ILIKE unaccent('%{$str_nome}%')";
+            $where .= "{$whereAnd} coalesce(slug, unaccent(nome)) ILIKE unaccent('%{$str_nome}%')";
             $whereAnd = ' AND ';
         }
 

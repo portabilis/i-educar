@@ -51,15 +51,15 @@ return new class extends clsListagem {
         $lista_busca = [
             'Tipo de ambiente',
             'Escola',
-            'Institui&ccedil;&atilde;o'
+            'Instituição'
         ];
 
         $this->addCabecalhos($lista_busca);
 
-        $this->inputsHelper()->dynamic(['instituicao', 'escola']);
+        $this->inputsHelper()->dynamic(['instituicao','escola'],[],['options' => ['required' => false]]);
 
         // outros Filtros
-        $this->campoTexto('nm_funcao', 'Tipo', $this->nm_funcao, 30, 255, false);
+        $this->campoTexto('nm_funcao', 'Tipo', $this->nm_funcao, 30, 255);
 
         // Paginador
         $this->limite = 20;

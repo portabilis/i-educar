@@ -26,8 +26,8 @@ return new class extends clsCadastro {
     {
         $this->acao_enviar = 'carregaDadosAlunos()';
         $this->campoTabelaInicio('tabela_alunos', '', ['Aluno duplicado', 'Campo aluno duplicado'], $this->tabela_alunos);
-            $this->campoRotulo('aluno_label', '', 'Aluno(a) a ser unificado(a)  <span class="campo_obrigatorio">*</span>');
-            $this->campoTexto('aluno_duplicado', 'Aluno duplicado', $this->aluno_duplicado, 50, 255, false, true, false, '', '', '', 'onfocus');
+        $this->campoRotulo('aluno_label', '', 'Aluno(a) a ser unificado(a)  <span class="campo_obrigatorio">*</span>');
+        $this->campoTexto('aluno_duplicado', 'Aluno duplicado', $this->aluno_duplicado, 50, 255, false, true, false, '', '', '', 'onfocus');
         $this->campoTabelaFim();
 
         $styles = ['/modules/Cadastro/Assets/Stylesheets/UnificaAluno.css'];
@@ -40,11 +40,11 @@ return new class extends clsCadastro {
     {
         (new clsPermissoes())
             ->permissao_cadastra(
-            999847,
-            $this->pessoa_logada,
-            7,
-            'index.php'
-        );
+                999847,
+                $this->pessoa_logada,
+                7,
+                'index.php'
+            );
     }
 
     private function validaDadosDaUnificacaoAluno($alunos): bool

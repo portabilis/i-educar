@@ -334,13 +334,13 @@ function montaTabela(response) {
     <table id="tabela_pessoas_unificadas">
       <tr class="tr_title">
         <td>Principal</td>
-        <td>Vinculo</td>
+        <td>Vínculo</td>
         <td>Nome</td>
-        <td>Nascimento</td>
+        <td>Data de Nascimento</td>
         <td>Sexo</td>
         <td>CPF</td>
         <td>RG</td>
-        <td>Pessoa Mãe</td>
+        <td>Nome da Mãe</td>
         <td>Ação</td>
       </tr>
   `;

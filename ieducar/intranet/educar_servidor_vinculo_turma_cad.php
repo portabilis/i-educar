@@ -114,8 +114,7 @@ return new class extends clsCadastro {
         $this->campoOculto('id', $this->id);
         $this->campoOculto('servidor_id', $this->servidor_id);
         $this->inputsHelper()->dynamic('ano', ['value' => (is_null($ano) ? date('Y') : $ano)]);
-        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie']);
-        $this->inputsHelper()->dynamic(['turma'], ['required' => !is_null($this->ref_cod_turma)]);
+        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie', 'turma']);
 
         $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
         $this->campoOculto('obrigar_campos_censo', (int) $obrigarCamposCenso);
