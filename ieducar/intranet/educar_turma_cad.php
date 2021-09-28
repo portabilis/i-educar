@@ -71,6 +71,7 @@ return new class extends clsCadastro {
     public $ano_letivo;
     public $nome_url_cancelar = 'Cancelar';
     public $url_cancelar = 'educar_turma_lst.php';
+    public $ano;
 
     public function Inicializar()
     {
@@ -199,6 +200,7 @@ return new class extends clsCadastro {
 
         $this->campoOculto('obrigar_campos_censo', (int)$obrigarCamposCenso);
         $this->campoOculto('cod_turma', $this->cod_turma);
+        $this->campoOculto('ano_letivo', $this->ano);
         $this->campoOculto('ref_cod_escola_', $this->ref_cod_escola);
         $this->campoOculto('ano_letivo_', $this->ano);
         $this->campoOculto('ref_cod_curso_', $this->ref_cod_curso);
@@ -247,6 +249,7 @@ return new class extends clsCadastro {
 
         $desabilitado = $bloqueia;
 
+        $this->inputsHelper()->dynamic('ano', ['value' => (is_null($this->ano) ? date('Y') : $this->ano)]);
         $this->inputsHelper()->dynamic('instituicao', ['value' => $this->ref_cod_instituicao, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('escola', ['value' => $this->ref_cod_escola, 'disabled' => $desabilitado]);
 
@@ -281,6 +284,8 @@ return new class extends clsCadastro {
         $this->inputsHelper()->dynamic('curso', ['value' => $this->ref_cod_curso, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('serie', ['value' => $this->ref_cod_serie, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('anoLetivo', ['value' => $this->ano, 'disabled' => $desabilitado]);
+        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie']);
+
         // Infra prédio cômodo
         $opcoes = ['' => 'Selecione'];
 
