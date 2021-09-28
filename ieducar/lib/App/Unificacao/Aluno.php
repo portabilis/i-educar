@@ -35,7 +35,6 @@ class App_Unificacao_Aluno
                     ref_sequencial = ref_sequencial + {$maxSequencialAlunoPrincipal}
                 WHERE ref_ref_cod_aluno = {$codAluno};
             ");
-            $maxSequencialAlunoPrincipal++;
         }
 
         IeducarStudent::where('cod_aluno', $codAlunoPrincipal)->update(['data_exclusao' => null]);
@@ -84,7 +83,7 @@ class App_Unificacao_Aluno
             $logData->unification_id = $unificationId;
             $logData->table = 'pmieducar.historico_escolar';
             $logData->keys = json_encode([['id' => $historico->id]]);
-            $logData->old_data = json_encode($historico->toArray());
+            $logData->old_data = json_encode((array)$historico);
             $logData->save();
         }
     }
@@ -102,7 +101,7 @@ class App_Unificacao_Aluno
             $logData->unification_id = $unificationId;
             $logData->table = 'pmieducar.matricula';
             $logData->keys = json_encode([['cod_matricula' => $matricula->cod_matricula]]);
-            $logData->old_data = json_encode($matricula->toArray());
+            $logData->old_data = json_encode((array)$matricula);
             $logData->save();
         }
     }
@@ -120,7 +119,7 @@ class App_Unificacao_Aluno
             $logData->unification_id = $unificationId;
             $logData->table = 'pmieducar.aluno';
             $logData->keys = json_encode([['cod_aluno' => $aluno->cod_aluno]]);
-            $logData->old_data = json_encode($aluno->toArray());
+            $logData->old_data = json_encode((array)$aluno);
             $logData->save();
         }
     }
