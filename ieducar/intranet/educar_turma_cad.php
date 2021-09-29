@@ -205,7 +205,7 @@ return new class extends clsCadastro {
 
         $this->campoOculto('obrigar_campos_censo', (int)$obrigarCamposCenso);
         $this->campoOculto('cod_turma', $this->cod_turma);
-        $this->campoOculto('ano_letivo', $this->ano);
+        $this->campoOculto('ano_letivo', (is_null($this->ano) ? date('Y') : $this->ano));
         $this->campoOculto('dependencia_administrativa', $this->dependencia_administrativa);
         $this->campoOculto('modalidade_curso', $this->modalidade_curso);
         $this->campoOculto('retorno', $this->retorno);
