@@ -229,7 +229,7 @@ function preencheEtapasNaTurma(etapas) {
 function atualizaOpcoesDeDisciplinas() {
   let escola_id = $j('#ref_cod_escola').val();
   let serie_id = $j('#ref_cod_serie').val();
-  let ano = $j('#ano_letivo').val();
+  let ano = $j('#ano').val();
   if (escola_id && serie_id && ano) {
     let parametros = {
       escola_id: escola_id,
@@ -372,7 +372,7 @@ $j(document).ready(function() {
     $j('#ano_letivo').val($j('#ano').val());
   });
 
-  $j('#ref_cod_serie, #ano_letivo').on('change', function(){
+  $j('#ref_cod_serie').on('change', function(){
     atualizaOpcoesDeDisciplinas();
   });
 

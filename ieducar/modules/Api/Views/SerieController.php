@@ -12,6 +12,7 @@ class SerieController extends ApiCoreController
         if ($this->canGetSeries()) {
             $instituicaoId = $this->getRequest()->instituicao_id;
             $escolaId = $this->getRequest()->escola_id ?: null;
+            $ano = $this->getRequest()->ano ?: null;
             $cursoId = $this->getRequest()->curso_id;
             $ativo = $this->getRequest()->ativo;
 
@@ -59,6 +60,10 @@ class SerieController extends ApiCoreController
 
             if ($cursoId) {
                 $sql .= " AND c.cod_curso IN ({$cursoId}) ";
+            }
+
+            if ($ano) {
+                $sql .= " AND {$ano} = any(es.anos_letivos) ";
             }
 
             if ($ativo) {

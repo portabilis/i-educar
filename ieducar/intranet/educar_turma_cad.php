@@ -194,10 +194,6 @@ return new class extends clsCadastro {
 
         $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
 
-        if (is_numeric($this->ano_letivo)) {
-            $this->ano = $this->ano_letivo;
-        }
-
         $this->campoOculto('obrigar_campos_censo', (int)$obrigarCamposCenso);
         $this->campoOculto('cod_turma', $this->cod_turma);
         $this->campoOculto('ref_cod_escola_', $this->ref_cod_escola);
@@ -280,10 +276,7 @@ return new class extends clsCadastro {
         $this->campoOculto('mult_padrao_ano_escolar', $this->mult_padrao_ano_escolar);
         $this->campoTabelaFim();
 
-        $this->inputsHelper()->dynamic('curso', ['value' => $this->ref_cod_curso, 'disabled' => $desabilitado]);
-        $this->inputsHelper()->dynamic('serie', ['value' => $this->ref_cod_serie, 'disabled' => $desabilitado]);
-        $this->inputsHelper()->dynamic('anoLetivo', ['value' => $this->ano, 'disabled' => $desabilitado]);
-        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie']);
+        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie'], ['disabled' => $desabilitado]);
 
         // Infra prédio cômodo
         $opcoes = ['' => 'Selecione'];
