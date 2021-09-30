@@ -1,8 +1,8 @@
-function ajax( funcaoRetorno )
+function ajax( funcaoRetorno, hostInformation = window.location)
 {
+  let host = hostInformation.protocol + '//' + hostInformation.host + '/intranet/';
 
-	if(arguments.length-1 > 0)
-	{
+	if(arguments.length-1 > 0)  {
 		var args = new Array();
 		for(var ct=1;ct<ajax.arguments.length;ct++)
 			args[ct-1] = ajax.arguments[ct];
@@ -34,11 +34,10 @@ function ajax( funcaoRetorno )
 				}
       };
 
-      const location = location.protocol + '//' + location.host + '/intranet/';
 			xml.envia = function() {
         xml.open(
           "GET",
-          location + addRandToURL(arguments[0]),
+          host + addRandToURL(arguments[0]),
           true
         )
         xml.send(null)
@@ -62,7 +61,7 @@ function ajax( funcaoRetorno )
 			This.personalCallback = function() { funcaoRetorno(  This.xml.responseXML,This.args ); };
 			This.callback=function(){ if( This.xml.readyState > 3 ) { if ( This.xml.status == 200 ) { This.personalCallback() } else { alert('erro'); } } };
 			This.xml.onreadystatechange = function(){ This.callback() };
-			This.envia = function(){This.xml.open("GET",addRandToURL(arguments[0]),true);This.xml.send()};
+			This.envia = function(){This.xml.open("GET", host + addRandToURL(arguments[0]),true);This.xml.send()};
 		} catch(e)
 		{
 			alert("Erro ajax: " + e.description);
@@ -72,7 +71,6 @@ function ajax( funcaoRetorno )
 
 function addRandToURL( url )
 {
-  console.log(url);
 	var randVal = Math.round(Math.random() * 10000 );
 	if(url.split('?').length > 1)
 	{
