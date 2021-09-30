@@ -1,5 +1,6 @@
 <?php
 
+use App\Facades\Asset;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyInstitution;
 use App\Services\FileService;
@@ -1042,7 +1043,7 @@ return new class extends clsCadastro {
     //envia foto e salva caminha no banco
     protected function savePhoto($id)
     {
-        $caminhoFoto = url('intranet/imagens/user-perfil.png');
+        $caminhoFoto = Asset::get('intranet/imagens/user-perfil.png');
         if ($this->objPhoto != null) {
             $caminhoFoto = $this->objPhoto->sendPicture();
             if ($caminhoFoto != '') {
