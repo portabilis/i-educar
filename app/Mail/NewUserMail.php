@@ -53,7 +53,7 @@ class NewUserMail extends Mailable
     public function __construct($email, $username, $password, $name, $url = null)
     {
         $this->to($email);
-        $this->subject('Bem-vindo ao i-Educar!');
+        $this->subject('Bem-vindo ao EducaCenso!');
 
         $this->username = $username;
         $this->password = $password;

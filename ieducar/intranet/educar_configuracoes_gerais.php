@@ -172,7 +172,7 @@ return new class extends clsCadastro {
         ]);
 
         $this->inputsHelper()->booleanSelect('active_on_ieducar', [
-            'label' => 'Ativo no i-educar?',
+            'label' => 'Ativo no EducaSis?',
             'value' => $this->active_on_ieducar,
             'required' => true,
         ]);

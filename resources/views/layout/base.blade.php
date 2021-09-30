@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>i-Educar @if(isset($title)) - {!! $title !!} @endif</title>
+    <title>EducaSis @if(isset($title)) - {!! $title !!} @endif</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
     <link rel="stylesheet" href="{{ Asset::get('css/vue-multiselect.min.css') }}">
     <link rel="stylesheet" href="{{ Asset::get('intranet/styles/font-awesome.css') }}">
@@ -16,7 +16,7 @@
 <div class="ieducar-container">
     <header class="ieducar-header">
         <div class="ieducar-header-logo">
-            <h1><a href="{{ url('/') }}">i-Educar</a></h1>
+            <h1><a href="{{ url('/') }}">EducaSis</a></h1>
         </div>
         <div class="ieducar-header-links">
             <div class="dropdown">

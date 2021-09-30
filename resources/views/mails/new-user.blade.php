@@ -56,7 +56,7 @@
                                     <h1 style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; box-sizing: border-box; color: #3d4852; font-size: 19px; font-weight: bold; margin-top: 0; text-align: left;">
                                         Ol&aacute;, {{$name}}!</h1>
                                     <p style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; box-sizing: border-box; color: #3d4852; font-size: 16px; line-height: 1.5em; margin-top: 0; text-align: left;">
-                                        Agora você tem acesso ao i-Educar, a plataforma que automatiza os processos da
+                                        Agora você tem acesso ao EducaSis, a plataforma que automatiza os processos da
                                         educação, centraliza e gera dados em tempo real</p>
                                     <p style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; box-sizing: border-box; color: #3d4852; font-size: 16px; line-height: 1.5em; margin-top: 0; text-align: left;">
                                         Para fazer login no sistema utilize as informações abaixo:</p>
@@ -118,7 +118,7 @@
                                                                                            class="button button-primary"
                                                                                            target="_blank"
                                                                                            style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; box-sizing: border-box; border-radius: 3px; box-shadow: 0 2px 3px rgba(0, 0, 0, 0.16); color: #fff; display: inline-block; text-decoration: none; -webkit-text-size-adjust: none; background-color: #3490dc; border-top: 10px solid #3490dc; border-right: 18px solid #3490dc; border-bottom: 10px solid #3490dc; border-left: 18px solid #3490dc;">
-                                                                                            Ir ao i-Educar
+                                                                                            Ir ao EducaSis
                                                                                         </a>
                                                                                     </td>
                                                                                 </tr>
@@ -146,7 +146,7 @@
                                             <tr>
                                                 <td style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; box-sizing: border-box;">
                                                     <p style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; box-sizing: border-box; color: #3d4852; line-height: 1.5em; margin-top: 0; text-align: left; font-size: 12px;">
-                                                        Se você tiver problemas ao clicar no botão "Ir ao i-Educar",
+                                                        Se você tiver problemas ao clicar no botão "Ir ao EducaSis",
                                                         copie
                                                         e cole a URL abaixo em seu navegador: <a
                                                             href="{{$url}}"

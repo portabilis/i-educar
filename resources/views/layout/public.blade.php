@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="utf-8"/>
-    <title>i-Educar</title>
+    <title>EducaSis</title>
 
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans">
     <link rel="stylesheet" type="text/css" href="{{ url('intranet/styles/login.css') }}">

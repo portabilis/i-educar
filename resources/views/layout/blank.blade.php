@@ -5,7 +5,7 @@
     <meta http-equiv="Pragma" content="no-cache"/>
     <meta http-equiv="Expires" content="-1"/>
 
-    <title>i-Educar @if(isset($title)) - {{$title}} @endif</title>
+    <title>EducaSis @if(isset($title)) - {{$title}} @endif</title>
 
     <script>
         dataLayer = [{
