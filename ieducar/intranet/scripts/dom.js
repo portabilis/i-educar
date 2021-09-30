@@ -28,11 +28,22 @@ function ajax( funcaoRetorno )
 						xml.personalCallback( xml.responseXML, xml.args )
 					} else if (xml.status == 500){
 						alert('N\u00e3o existem Componentes curriculares vinculados para a S\u00e9rie/Ano desta escola. Verifique em Cadastros > S\u00e9rie > Escola-s\u00e9rie se os Componentes curriculares foram selecionados/marcados para esta S\u00e9rie/Ano.');
-					}else {
+					} else {
 						alert('Erro: '+xml.status);
 					}
-				} };
-			xml.envia = function(){xml.open("GET",addRandToURL(arguments[0]),true);xml.send(null)};
+				}
+      };
+
+      const location = location.protocol + '//' + location.host + '/intranet/';
+			xml.envia = function() {
+        xml.open(
+          "GET",
+          location + addRandToURL(arguments[0]),
+          true
+        )
+        xml.send(null)
+      };
+
 			return xml;
 		} catch(e)
 		{
@@ -61,6 +72,7 @@ function ajax( funcaoRetorno )
 
 function addRandToURL( url )
 {
+  console.log(url);
 	var randVal = Math.round(Math.random() * 10000 );
 	if(url.split('?').length > 1)
 	{
