@@ -468,7 +468,7 @@ class EditController extends Core_Controller_Page_EditController
         }
 
         // A contagem usa um dos índices do formulário, senão ia contar sempre 4.
-        $loop = count($this->valor_id);
+        $loop = is_array($this->valor_id) ? count($this->valor_id) : 0;
 
         // Verifica se existe valor acima de 100
         for ($i = 0; $i < $loop; $i++) {

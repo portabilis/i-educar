@@ -635,6 +635,7 @@ class clsPmieducarQuadroHorarioHorarios extends Model
         ORDER BY
           hora_inicial");
 
+            $resultado = [];
             while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
 
@@ -642,7 +643,7 @@ class clsPmieducarQuadroHorarioHorarios extends Model
                 $resultado[] = $tupla;
             }
 
-            if (count($resultado)) {
+            if (count($resultado) > 0) {
                 return $resultado;
             }
         }

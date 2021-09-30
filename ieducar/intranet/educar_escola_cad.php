@@ -441,7 +441,7 @@ return new class extends clsCadastro {
     {
         $escola = (new clsPmieducarEscola())->lista(null, null, null, null, null, null, $pessoaj_id);
 
-        if (count($escola) > 0) {
+        if (is_array($escola) && count($escola) > 0) {
             $current = current($escola);
 
             if (is_array($current) &&
@@ -2582,7 +2582,7 @@ return new class extends clsCadastro {
 
     protected function validaLinguasIndigenas()
     {
-        if (count($this->codigo_lingua_indigena) > 3) {
+        if (is_array($this->codigo_lingua_indigena) && count($this->codigo_lingua_indigena) > 3) {
             $this->mensagem = 'O campo: <b>Línguas indígenas</b>, não pode ter mais que 3 opções';
 
             return false;
