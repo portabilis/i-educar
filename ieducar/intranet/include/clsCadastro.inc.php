@@ -47,8 +47,8 @@ class clsCadastro extends clsCampos
     public $form_enctype;
     public $acao_executa_submit_ajax = false;
 
-    const NOVO = 'N';
-    const EDITAR = 'E';
+    public const NOVO = 'N';
+    public const EDITAR = 'E';
 
     public function __construct()
     {

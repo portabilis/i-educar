@@ -105,8 +105,7 @@ return new class extends clsCadastro {
             $this->ano = $detalhe_matricula['ano'];
 
             $obj_aluno = new clsPmieducarAluno();
-
-            $det_aluno =  $obj_aluno->lista($detalhe_matricula['ref_cod_aluno'], null, null, null, null, null, null, null, null, null, 1);
+            $det_aluno = $obj_aluno->lista(int_cod_aluno: $detalhe_matricula['ref_cod_aluno'], int_ativo: 1);
             $det_aluno = array_shift($det_aluno);
         }
 

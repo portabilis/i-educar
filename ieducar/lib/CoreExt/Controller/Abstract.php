@@ -26,6 +26,8 @@ abstract class CoreExt_Controller_Abstract implements CoreExt_Controller_Interfa
      */
     protected $_dispatcher = null;
 
+    protected $_options = [];
+
     /**
      * @see CoreExt_Configurable#setOptions($options)
      */

@@ -180,7 +180,7 @@ return new class extends clsDetalhe {
 
         $obj = new clsPmieducarAcervoAssunto();
         $obj = $obj->listaAssuntosPorObra($this->cod_acervo);
-        if (count($obj)) {
+        if (is_array($obj) && count($obj)) {
             foreach ($obj as $reg) {
                 $assuntos.= '<span style="background-color: #ccdce6; padding: 4px 20px;"><b>'.$reg['nome'].'</b></span>&nbsp; ';
             }
@@ -191,7 +191,7 @@ return new class extends clsDetalhe {
 
         $obj_categoria = new clsPmieducarCategoriaAcervo();
         $obj_categoria = $obj_categoria->listaCategoriasPorObra($this->cod_acervo);
-        if (count($obj_categoria)) {
+        if (is_array($obj_categoria) && count($obj_categoria)) {
             foreach ($obj_categoria as $obj_cat) {
                 $categorias.= '<span style="background-color: #ccdce6; padding: 4px 20px;"><b>'.$obj_cat['descricao'].'</b></span>&nbsp; ';
             }

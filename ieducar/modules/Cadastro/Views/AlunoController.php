@@ -339,7 +339,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             $this->observacao = (empty($personObject->detalhe()['observacao']) == false) ? $personObject->detalhe()['observacao'] : '';
             $objFoto = new clsCadastroFisicaFoto($this->cod_pessoa_fj);
             $detalheFoto = $objFoto->detalhe();
-            if (count($detalheFoto)) {
+            if (is_array($detalheFoto) && count($detalheFoto)) {
                 $foto = $detalheFoto['caminho'];
             }
         } else {

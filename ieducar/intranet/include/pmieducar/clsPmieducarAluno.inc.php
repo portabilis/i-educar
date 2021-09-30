@@ -211,7 +211,7 @@ class clsPmieducarAluno extends Model
             $valores .= "{$gruda}'1'";
             $gruda = ', ';
 
-            if (is_string($this->tipo_responsavel) && sizeof($this->tipo_responsavel) <= 1) {
+            if (is_string($this->tipo_responsavel) && mb_strlen($this->tipo_responsavel) <= 1) {
                 $campos .= "{$gruda}tipo_responsavel";
                 $valores .= "{$gruda}'{$this->tipo_responsavel}'";
                 $gruda = ', ';
