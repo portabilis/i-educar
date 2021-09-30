@@ -157,7 +157,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Tipo do AEE do aluno';
+        $this->title = 'Tipo do AEE do aluno';
         $this->processoAp = '578';
     }
 };

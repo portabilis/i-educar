@@ -117,7 +117,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Idioma';
+        $this->title = 'Idioma';
         $this->processoAp = '590';
     }
 };

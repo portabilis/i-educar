@@ -107,7 +107,7 @@
 
     public function Formular()
   {
-    $this->titulo = "i-Educar - Sequ&ecirc;ncia Enturma&ccedil;&atilde;o";
+    $this->titulo = "Sequ&ecirc;ncia Enturma&ccedil;&atilde;o";
     $this->processoAp = '587';
   }
   };

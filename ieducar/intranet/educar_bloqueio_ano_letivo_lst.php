@@ -103,7 +103,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Bloqueio do ano letivo';
+        $this->title = 'Bloqueio do ano letivo';
         $this->processoAp = '21251';
     }
 };

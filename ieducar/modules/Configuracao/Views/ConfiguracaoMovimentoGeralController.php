@@ -4,7 +4,7 @@ class clsIndexBase extends clsBase
 {
     public function Formular()
     {
-        $this->titulo = 'i-Educar - Configuração movimento geral';
+        $this->titulo = 'Configuração movimento geral';
         $this->processoAp = 9998867;
     }
 }

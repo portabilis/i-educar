@@ -108,7 +108,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Tipo Regime';
+        $this->title = 'Tipo Regime';
         $this->processoAp = '568';
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;

@@ -7,7 +7,7 @@ class PontoController extends Portabilis_Controller_Page_EditController
     use LegacyAddressingFields;
 
     protected $_dataMapper = 'Usuario_Model_FuncionarioDataMapper';
-    protected $_titulo = 'i-Educar - Pontos';
+    protected $_titulo = 'Pontos';
 
     protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
     protected $_processoAp = 21239;

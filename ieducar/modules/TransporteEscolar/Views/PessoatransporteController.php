@@ -5,7 +5,7 @@ use iEducar\Support\View\SelectOptions;
 class PessoatransporteController extends Portabilis_Controller_Page_EditController
 {
     protected $_dataMapper = 'Usuario_Model_FuncionarioDataMapper';
-    protected $_titulo = 'i-Educar - Usu&aacute;rios de transporte';
+    protected $_titulo = 'Usu&aacute;rios de transporte';
 
     protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
     protected $_processoAp = 21240;

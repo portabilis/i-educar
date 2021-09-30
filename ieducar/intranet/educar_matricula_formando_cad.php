@@ -70,7 +70,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Matricula Turma';
+        $this->title = 'Matricula Turma';
         $this->processoAp = '578';
     }
 };
