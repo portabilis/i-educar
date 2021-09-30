@@ -532,7 +532,7 @@ class PessoaController extends ApiCoreController
     {
         $pessoa = new clsPessoa_();
         $pessoa->idpes = $pessoaId;
-        $pessoa->nome = Portabilis_String_Utils::toLatin1($this->getRequest()->nome);
+        $pessoa->nome = $this->getRequest()->nome;
 
         $sql = 'select 1 from cadastro.pessoa WHERE idpes = $1 limit 1';
 
@@ -654,6 +654,70 @@ class PessoaController extends ApiCoreController
         return $fisica;
     }
 
+    protected function dadosUnificacaoPessoa()
+    {
+        $pessoasIds = $this->getRequest()->pessoas_ids ?? 0;
+
+        $sql = 'SELECT
+                p.idpes,
+                concat_ws(\', \',
+                    CASE WHEN cod_aluno IS NOT NULL THEN \'Aluno(a)\' ELSE NULL end,
+                    CASE WHEN responsavel.idpes IS NOT NULL THEN \'Responsável\' ELSE NULL end,
+                    CASE WHEN cod_servidor IS NOT NULL THEN \'Servidor(a)\' ELSE NULL end,
+                    CASE WHEN cod_usuario IS NOT NULL THEN \'Usuário(a)\' ELSE NULL end
+                ) vinculo,
+                p.nome,
+                COALESCE(to_char(f.data_nasc, \'dd/mm/yyyy\'), \'Não consta\') AS data_nascimento,
+                CASE f.sexo
+                    WHEN \'M\' THEN \'Masculino\'
+                    WHEN \'F\' THEN \'Feminino\'
+                    ELSE \'Não consta\'
+                END AS sexo,
+                COALESCE(f.cpf::varchar, \'Não consta\') AS cpf,
+                COALESCE(d.rg, \'Não consta\') AS rg,
+                COALESCE(pm.nome, \'Não consta\') AS pessoa_mae
+            FROM cadastro.pessoa p
+            JOIN cadastro.fisica f ON f.idpes = p.idpes
+            LEFT JOIN cadastro.documento d ON d.idpes = f.idpes
+            LEFT JOIN pmieducar.aluno a ON a.ref_idpes = p.idpes AND a.ativo = 1
+            LEFT JOIN pmieducar.servidor s ON s.cod_servidor = p.idpes AND s.ativo = 1
+            LEFT JOIN cadastro.pessoa pm ON pm.idpes = f.idpes_mae
+            LEFT JOIN pmieducar.usuario u on u.cod_usuario = p.idpes
+            LEFT JOIN LATERAL (
+                SELECT idpes FROM cadastro.fisica f1 WHERE exists (
+                    SELECT 1 FROM cadastro.fisica f2 WHERE f1.idpes IN (f2.idpes_pai, f2.idpes_mae, f2.idpes_responsavel)
+                ) AND f1.idpes = f.idpes
+            ) responsavel ON TRUE
+
+            WHERE p.idpes IN (' . $pessoasIds . ') ORDER BY vinculo DESC;
+        ';
+
+        $pessoas = $this->fetchPreparedQuery($sql, [], false);
+
+        $attrs = [
+            'idpes',
+            'vinculo',
+            'nome',
+            'data_nascimento',
+            'sexo',
+            'cpf',
+            'rg',
+            'pessoa_mae',
+        ];
+
+        $filters = Portabilis_Array_Utils::filterSet($pessoas, $attrs);
+
+        foreach ($filters as &$item) {
+            if (isset($item['vinculo']) && empty($item['vinculo'])) {
+                $item['vinculo'] = 'Sem vínculo';
+            }
+        }
+
+        return [
+            'pessoas' => $filters
+        ];
+    }
+
     public function Gerar()
     {
         if ($this->isRequestFor('get', 'pessoa-search')) {
@@ -672,6 +736,8 @@ class PessoaController extends ApiCoreController
             $this->appendResponse($this->loadPessoaParent());
         } elseif ($this->isRequestFor('get', 'reativarPessoa')) {
             $this->appendResponse($this->reativarPessoa());
+        } elseif ($this->isRequestFor('get', 'dadosUnificacaoPessoa')) {
+            $this->appendResponse($this->dadosUnificacaoPessoa());
         } else {
             $this->notImplementedOperationError();
         }

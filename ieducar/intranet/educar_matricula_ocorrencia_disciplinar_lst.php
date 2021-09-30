@@ -47,7 +47,7 @@ return new class extends clsListagem {
 
     public function Gerar()
     {
-        $this->titulo = 'Matricula Ocorr&ecirc;ncia Disciplinar - Listagem';
+        $this->titulo = 'Matricula Ocorrência Disciplinar - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null: $val;
@@ -60,18 +60,18 @@ return new class extends clsListagem {
         $this->campoOculto('ref_cod_matricula', $this->ref_cod_matricula);
 
         $this->addCabecalhos([
-            'Tipo Ocorr&ecirc;ncia Disciplinar',
+            'Tipo de Ocorrência Disciplinar',
             'Série ',
             'Turma'
         ]);
 
-        $obj_ref_cod_matricula = new clsPmieducarMatricula();
-        $detalhe_aluno = array_shift($obj_ref_cod_matricula->lista($this->ref_cod_matricula));
-        $obj_escola = new clsPmieducarEscola($detalhe_aluno['ref_ref_cod_escola']);
-        $det_escola = $obj_escola->detalhe();
+        $matricula = (new clsPmieducarMatricula())->lista($this->ref_cod_matricula);
+        $detalhe_aluno = array_shift($matricula);
 
-        $obj_aluno = new clsPmieducarAluno();
-        $det_aluno = array_shift($det_aluno = $obj_aluno->lista($detalhe_aluno['ref_cod_aluno'], null, null, null, null, null, null, null, null, null, 1));
+        $det_escola = (new clsPmieducarEscola($detalhe_aluno['ref_ref_cod_escola']))->detalhe();
+        $det_aluno = (new clsPmieducarAluno())->lista($detalhe_aluno['ref_cod_aluno'], null, null, null, null, null, null, null, null, null, 1);
+
+        $det_aluno = array_shift($det_aluno);
 
         $this->campoRotulo('nm_pessoa', 'Nome do Aluno', $det_aluno['nome_aluno']);
 
@@ -85,7 +85,18 @@ return new class extends clsListagem {
             }
         }
 
-        $this->campoLista('ref_cod_tipo_ocorrencia_disciplinar', 'Tipo Ocorr&ecirc;ncia Disciplinar', $opcoes, $this->ref_cod_tipo_ocorrencia_disciplinar);
+        $this->campoLista(
+            'ref_cod_tipo_ocorrencia_disciplinar',
+            'Tipo Ocorrência Disciplinar',
+            $opcoes,
+            $this->ref_cod_tipo_ocorrencia_disciplinar,
+            '',
+            false,
+            '',
+            '',
+            false,
+            false
+        );
 
         if ($this->ref_cod_escola) {
             $this->ref_ref_cod_escola = $this->ref_cod_escola;

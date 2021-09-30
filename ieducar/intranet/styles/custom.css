@@ -900,7 +900,7 @@ table.calendario td a{
   font-stretch: normal;
   color: #596066;
   padding: 8px !important;
-  margin-right: 4px 10px 4px 0px;
+  margin-right: 4px;
 }
 
 .ui-dialog label{
@@ -1468,6 +1468,12 @@ a.btn-detalhes {
 #turma_serie.tabela-adicao td.mult_boletim_diferenciado_id,
 #turma_serie td.tr_turma_serie {
   width: 23%;
+}
+
+.button_center {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 .btn-disabled#btn_enviar {

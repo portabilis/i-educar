@@ -68,7 +68,7 @@ return new class extends clsCadastro {
                                 4 => 'Amarela',
                                 5 => 'Indígena'];
 
-        $options = ['label' => Portabilis_String_Utils::toLatin1('Raça educacenso'), 'resources' => $resources, 'value' => $this->raca_educacenso];
+        $options = ['label' => 'Raça educacenso', 'resources' => $resources, 'value' => $this->raca_educacenso];
         $this->inputsHelper()->select('raca_educacenso', $options);
     }
 

@@ -227,11 +227,8 @@ class clsModulesAuditoriaNota
 
         $objPessoa = new clsPessoa_($pessoaId);
         $detPessoa = $objPessoa->detalhe();
-        $nomePessoa = $detPessoa['nome'];
 
-        $nomePessoa = Portabilis_String_Utils::toLatin1($nomePessoa);
-
-        return $nomePessoa;
+        return $detPessoa['nome'];
     }
 
     private function getNomeTurma($turmaId)

@@ -18,8 +18,8 @@ class AtualizaNomenclaturaDosCamposDaTelaDeConfiguracoes extends Migration
                 CASE key
                     WHEN \'legacy.code\' THEN \'Habilitar código legado?\'
                     WHEN \'legacy.display_errors\' THEN \'Exibir erros código legado?\'
-                    WHEN \'legacy.apis.access_key\' THEN \'Chave de acesso ao iEducar\'
-                    WHEN \'legacy.apis.secret_key\' THEN \'Chave secreta do iEducar\'
+                    WHEN \'legacy.apis.access_key\' THEN \'Chave de acesso ao i-Educar\'
+                    WHEN \'legacy.apis.secret_key\' THEN \'Chave secreta do i-Educar\'
                     WHEN \'legacy.apis.educacao_token_header\' THEN \'Cabeçalho do Token da Api do i-Diário\'
                     WHEN \'legacy.apis.educacao_token_key\' THEN \'Chave do Token da Api do i-Diário\'
                     WHEN \'legacy.app.administrative_pending.exist\' THEN \'Possui pendência administrativa?\'
@@ -48,7 +48,7 @@ class AtualizaNomenclaturaDosCamposDaTelaDeConfiguracoes extends Migration
                     WHEN \'legacy.app.filaunica.trabalho_obrigatorio\' THEN \'Obriga informar trabalho dos responsáveis do candidato do fila única\'
                     WHEN \'legacy.app.fisica.exigir_cartao_sus\' THEN \'Obrigar campo "Número da carteira do SUS" no cadastro do aluno\'
                     WHEN \'legacy.app.gtm.id\' THEN \'Código do tag manager\'
-                    WHEN \'legacy.app.locale.country\' THEN \'País do cliente (código do iEducar)\'
+                    WHEN \'legacy.app.locale.country\' THEN \'País do cliente (código do i-Educar)\'
                     WHEN \'legacy.app.locale.province\' THEN \'Sigla UF do cliente\'
                     WHEN \'legacy.app.locale.timezone\' THEN \'Configuração de timezone\'
                     WHEN \'legacy.app.matricula.dependencia\' THEN \'Permitir matrículas de dependência?\'
@@ -69,7 +69,7 @@ class AtualizaNomenclaturaDosCamposDaTelaDeConfiguracoes extends Migration
                     WHEN \'legacy.app.recaptcha.public_key\' THEN \'Chave pública\'
                     WHEN \'legacy.app.remove_obrigatorios_cadastro_pessoa\' THEN \'Remove obrigatoriedade dos campos de pessoa física\'
                     WHEN \'legacy.app.reserva_vaga.permite_indeferir_candidatura\' THEN \'Permitir indeferir candidatura da reserva de vaga\'
-                    WHEN \'legacy.app.rg_pessoa_fisica_pais_opcional\' THEN \'Tornar ocional informar RG para os pais dos alunos\'
+                    WHEN \'legacy.app.rg_pessoa_fisica_pais_opcional\' THEN \'Tornar opcional informar RG para os pais dos alunos\'
                     WHEN \'legacy.app.template.pdf.logo\' THEN \'Caminho logo apresentada na impressão da agenda\'
                     WHEN \'legacy.app.template.vars.instituicao\' THEN \'Nome da instituição no template\'
                     WHEN \'legacy.app.template.pdf.titulo\' THEN \'Título Relatório PDF\'
@@ -144,7 +144,7 @@ class AtualizaNomenclaturaDosCamposDaTelaDeConfiguracoes extends Migration
                     WHEN \'preregistration.title\' THEN \'Título da página inicial\'
                     WHEN \'preregistration.token\' THEN \'Token de segurança\'
                     WHEN \'preregistration.year\' THEN \'Ano vigente\'
-                    ELSE \'\'
+                    ELSE description
                 END
             );
         ');

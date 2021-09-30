@@ -8,9 +8,8 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchIes extends Portabilis_V
             $sql = 'select ies_id || \' - \' || nome AS nome from modules.educacenso_ies where id = $1';
             $options = ['params' => $id, 'return_only' => 'first-row'];
             $ies = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
-            $nome = $ies['nome'];
 
-            return Portabilis_String_Utils::toLatin1($nome, ['transform' => true, 'escape' => false]);
+            return $ies['nome'];
         }
     }
 

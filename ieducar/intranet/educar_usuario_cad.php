@@ -45,7 +45,6 @@ return new class extends clsCadastro {
 
                 $this->_senha = $this->senha;
                 $this->fexcluir = true;
-                $retorno = 'Editar';
             }
 
             if ($this->data_expiracao) {
@@ -64,21 +63,20 @@ return new class extends clsCadastro {
                 }
 
                 $this->fexcluir = $obj_permissoes->permissao_excluir(555, $this->pessoa_logada, 7);
+            }
+
+            if ($det_funcionario !== false) {
                 $retorno = 'Editar';
             }
         }
-
-        $this->url_cancelar = $retorno == 'Editar'
-            ? "educar_usuario_det.php?ref_pessoa={$this->ref_pessoa}"
-            : 'educar_usuario_lst.php';
-
-        $this->nome_url_cancelar = 'Cancelar';
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
         $this->breadcrumb($nomeMenu . ' usuário', [
             url('intranet/educar_configuracoes_index.php') => 'Configurações',
         ]);
+
+        $this->montaBotoesDeAcao();
 
         return $retorno;
     }
@@ -209,6 +207,8 @@ return new class extends clsCadastro {
         }
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+
+        $this->montaBotoesDeAcao();
     }
 
     public function Novo()
@@ -453,5 +453,24 @@ return new class extends clsCadastro {
     {
         $validateUserPasswordService = app(ValidateUserPasswordService::class);
         $validateUserPasswordService->execute($password);
+    }
+
+    private function montaBotoesDeAcao(): void
+    {
+        $funcionario = (new clsPortalFuncionario($this->ref_pessoa))->detalhe();
+        $usuario = (new clsPmieducarUsuario($this->ref_pessoa))->detalhe();
+
+        $edita = false;
+        if ($funcionario !== false && $usuario !== false) {
+            $edita = true;
+        }
+
+        $this->url_cancelar = $edita
+            ? "educar_usuario_det.php?ref_pessoa={$this->ref_pessoa}"
+            : 'educar_usuario_lst.php';
+
+        $this->fexcluir = $edita;
+
+        $this->nome_url_cancelar = 'Cancelar';
     }
 };
