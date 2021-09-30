@@ -8,7 +8,7 @@ services:
     links:
       - php
     ports:
-      - 80
+      - 3000:80
     working_dir: /var/www/ieducar
     volumes:
       - ./:/var/www/ieducar
@@ -33,7 +33,7 @@ services:
       POSTGRES_USER: ieducar
       POSTGRES_PASSWORD: ieducar
     ports:
-      - 5432
+      - 5000:5432
     volumes:
       - ./database/data:/var/lib/postgresql/data
 
