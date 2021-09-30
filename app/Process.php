@@ -39,4 +39,6 @@ class Process
     public const EDUCACENSO_IMPORTACOES = 9998848;
     public const CONSULTAS = 9998890;
     public const ACTIVE_LOOKING = 9998921;
+
+    public const MENU_TEACHERS = 58;
 }
