@@ -41,7 +41,7 @@ return new class extends clsCadastro {
 
                 $obj_niveis = new clsPmieducarNivel();
                 $obj_niveis->setOrderby('cod_nivel');
-                $lst_niveis = $obj_niveis->lista(nul, $this->ref_cod_categoria_nivel, null, null, null, null, null, null, null, null, null, 1);
+                $lst_niveis = $obj_niveis->lista(null, $this->ref_cod_categoria_nivel, null, null, null, null, null, null, null, null, null, 1);
 
                 if ($lst_niveis) {
                     foreach ($lst_niveis as $id => $nivel) {

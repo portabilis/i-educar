@@ -204,7 +204,7 @@ class App_Unificacao_Base
                 $this->unificationId,
                 $table,
                 [$columnKey => $key],
-                $data
+                $data->toArray()
             );
         }
     }
