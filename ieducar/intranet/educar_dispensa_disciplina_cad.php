@@ -227,7 +227,7 @@ return new class extends clsCadastro {
         $registration = LegacyRegistration::findOrFail($this->ref_cod_matricula);
         $exemptionService->createExemptionByDisciplineArray($registration, $this->componentecurricular, $this->ref_cod_tipo_dispensa, $this->observacao, $this->etapa);
 
-        if (count($exemptionService->disciplinasNaoExistentesNaSerieDaEscola) > 0) {
+        if (is_array($exemptionService->disciplinasNaoExistentesNaSerieDaEscola) && count($exemptionService->disciplinasNaoExistentesNaSerieDaEscola) > 0) {
             $disciplinas = implode(', ', $disciplinasNaoExistentesNaSerieDaEscola);
             $this->mensagem = "O(s) componente(s):<b>{$disciplinas}</b>. não está(ão) habilitado(s) na série da escola.";
 

@@ -6,6 +6,6 @@ class MovimentoMensalMatTrocaeQueryFactory extends MovimentoMensalDetalheQueryFa
 {
     public function where()
     {
-        return 'matricula_ativa and entrou_durante and sequencial';
+        return 'matricula_ativa and entrou_durante and sequencial > 1';
     }
 }
