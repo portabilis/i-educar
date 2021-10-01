@@ -53,7 +53,7 @@ class clsCampos extends Core_Controller_Page_Abstract
 
     public function campoTabelaFim()
     {
-        if (count($this->__campos_tabela) && is_array($this->__campos_tabela)) {
+        if (is_array($this->__campos_tabela) && count($this->__campos_tabela)) {
             $this->campos['tab_add_' . $this->__id_tabela][] = $this->__campos_tabela;
             $this->campos['tab_add_' . $this->__id_tabela]['cabecalho'] = $this->__cabecalho_tabela;
             $this->campos['tab_add_' . $this->__id_tabela]['nome'] = $this->__nm_tabela;
@@ -1177,6 +1177,8 @@ class clsCampos extends Core_Controller_Page_Abstract
 
                                 $lista = is_array($lista) && sizeof($lista) ? $lista : $campo_[3];
 
+
+
                                 $retorno .= $this->getCampoLista("{$nome}[{$key2}]", "{$nome}[$key2]", $campo_[5], $lista, $valor[$key], $campo_[7], $campo_[8], $class, $campo_[9]);
                                 break;
 
@@ -1811,8 +1813,8 @@ class clsCampos extends Core_Controller_Page_Abstract
         $adicionador_indice = null;
 
         reset($valor);
-        foreach ($valor[3] as $chave => $texto) {
-            if (substr($texto, 0, 9) == 'optgroup:') {
+        foreach ($valor as $chave => $texto) {
+            if (str_starts_with($texto, 'optgroup:')) {
                 // optgroup
                 if ($opt_open) {
                     $retorno .= '</optgroup>';
