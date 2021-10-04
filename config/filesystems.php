@@ -64,6 +64,19 @@ return [
             'endpoint' => env('AWS_ENDPOINT'),
         ],
 
+        'escola' => [
+            'municipio1' => [
+                'driver' => 'sftp',
+                'host' => 'IP_SERVIDOR_BANCO_DE_DADOS',
+                'username' => 'USER_SERVIDOR_BANCO_DE_DADOS',
+                'root' => '/',
+                // Essa chave tem que estar no servidor de aplicação e a .pub no servidor de banco de dados
+                // Definir permissão 444
+                'privateKey' => '/var/www/ieducar/.id_rsa',
+                'database' => 'NOME_BANCO_DE_DADOS',
+            ],
+        ],
+
     ],
 
     /*

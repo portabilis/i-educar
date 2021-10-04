@@ -89,6 +89,38 @@ return [
             'prefix_indexes' => true,
         ],
 
+        'escolas' => [
+            'municipio1' => [
+                'driver' => 'pgsql',
+                'url' => env('ESCOLA_MUNICIPIO1_DATABASE_URL'),
+                'host' => env('ESCOLA_MUNICIPIO1_DB_HOST', '127.0.0.1'),
+                'port' => env('ESCOLA_MUNICIPIO1_DB_PORT', '5432'),
+                'database' => env('ESCOLA_MUNICIPIO1_DB_DATABASE', 'forge'),
+                'username' => env('ESCOLA_MUNICIPIO1_DB_USERNAME', 'forge'),
+                'password' => env('ESCOLA_MUNICIPIO1_DB_PASSWORD', ''),
+                'charset' => 'utf8',
+                'prefix' => '',
+                'prefix_indexes' => true,
+                'schema' => 'public',
+                'sslmode' => 'prefer',
+            ],
+
+            'municipio2' => [
+                'driver' => 'pgsql',
+                'url' => env('ESCOLA_MUNICIPIO2_DATABASE_URL'),
+                'host' => env('ESCOLA_MUNICIPIO2_DB_HOST', '127.0.0.1'),
+                'port' => env('ESCOLA_MUNICIPIO2_DB_PORT', '5432'),
+                'database' => env('ESCOLA_MUNICIPIO2_DB_DATABASE', 'forge'),
+                'username' => env('ESCOLA_MUNICIPIO2_DB_USERNAME', 'forge'),
+                'password' => env('ESCOLA_MUNICIPIO2_DB_PASSWORD', ''),
+                'charset' => 'utf8',
+                'prefix' => '',
+                'prefix_indexes' => true,
+                'schema' => 'public',
+                'sslmode' => 'prefer',
+            ],
+        ],
+
     ],
 
     /*

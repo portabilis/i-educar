@@ -70,6 +70,9 @@
 <div id="footer">
     <p>
         {!! config('legacy.config.ieducar_login_footer') !!}
+
+        @inject('versionController', 'App\Http\Controllers\Api\VersionController')
+        Versão: {{ $versionController->version()['version'] }}
     </p>
 
     <div class="footer-social">
