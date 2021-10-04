@@ -126,7 +126,6 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
     {
         $result = null;
 
-        dd($code);
         eval('?><?php $result = ' . $code . '; ?>');
 
         return $result;
