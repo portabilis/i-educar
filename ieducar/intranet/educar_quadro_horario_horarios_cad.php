@@ -282,14 +282,16 @@ return new class extends clsCadastro {
             $this->quadro_horario = unserialize(urldecode($_POST['quadro_horario']));
         }
 
-        $qtd_horario = count($this->quadro_horario) == 0 ? 1 : count($this->quadro_horario) + 1;
+        $qtd_horario = is_array($this->quadro_horario) ? (count($this->quadro_horario) == 0 ? 1 : count($this->quadro_horario) + 1) : 0;
 
         // primary keys
         if ($this->incluir_horario) {
             if (is_numeric($_POST['ref_cod_servidor']) &&
-        is_string($_POST['hora_inicial']) && is_string($_POST['hora_final']) &&
-        is_numeric($_POST['dia_semana']) && is_numeric($_POST['ref_cod_disciplina'])
-      ) {
+                is_string($_POST['hora_inicial']) &&
+                is_string($_POST['hora_final']) &&
+                is_numeric($_POST['dia_semana'])
+                && is_numeric($_POST['ref_cod_disciplina'])
+            ) {
                 $this->quadro_horario[$qtd_horario]['ref_cod_quadro_horario_']       = $this->ref_cod_quadro_horario;
                 $this->quadro_horario[$qtd_horario]['ref_ref_cod_serie_']            = $this->ref_ref_cod_serie;
                 $this->quadro_horario[$qtd_horario]['ref_ref_cod_escola_']           = $this->ref_cod_escola;
@@ -302,8 +304,6 @@ return new class extends clsCadastro {
                 $this->quadro_horario[$qtd_horario]['ativo_']                        = 1;
                 $this->quadro_horario[$qtd_horario]['dia_semana_']                   = $_POST['dia_semana'];
                 $this->quadro_horario[$qtd_horario]['qtd_horario_']                  = $qtd_horario;
-
-                $qtd_horario++;
 
                 /**
                  * salva os dados em uma tabela temporaria
@@ -342,9 +342,10 @@ return new class extends clsCadastro {
             }
         }
 
-        echo '<script>
-            quadro_horario = ' . count($this->quadro_horario) . ';
-        </script>';
+        $count = is_array($this->quadro_horario) ? count($this->quadro_horario) : 0;
+        echo "<script>
+            quadro_horario = {$count};
+        </script>";
 
         $this->campoOculto('excluir_horario', '');
         $qtd_horario = 1;
@@ -353,7 +354,7 @@ return new class extends clsCadastro {
 
         $this->min_mat = $this->min_ves = $this->min_not = 0;
 
-        if ($this->quadro_horario) {
+        if (is_array($this->quadro_horario)) {
             foreach ($this->quadro_horario as $campo) {
                 if ($this->excluir_horario == $campo['qtd_horario_']) {
                     $obj_horario = new clsPmieducarQuadroHorarioHorarios();

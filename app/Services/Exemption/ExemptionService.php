@@ -220,14 +220,18 @@ class ExemptionService
             'ref_ano' => $registration->ano,
         ];
 
-        $totalEtapas['total'] = LegacySchoolStage::query()->where($where)->count();
+        $totalEtapas = LegacySchoolStage::query()->where($where)->count();
         $arrayEtapas = [];
 
-        for ($i = 1; $i <= $totalEtapas['total']; $i++) {
+        for ($i = 1; $i <= $totalEtapas; $i++) {
             $arrayEtapas[$i] = strval($i);
         }
 
         $arrayEtapas = array_diff($arrayEtapas, $stages);
+
+        if (count($arrayEtapas) === 0) {
+            return null;
+        }
 
         return max($arrayEtapas);
     }
