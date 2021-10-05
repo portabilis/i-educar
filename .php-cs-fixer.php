@@ -1,7 +1,14 @@
 <?php
 
 $finder = PhpCsFixer\Finder::create()
-    ->in('app');
+    ->in([
+        'app',
+        'config',
+        'database',
+        'routes',
+        'src',
+        'tests',
+    ]);
 
 $config = new PhpCsFixer\Config();
 
