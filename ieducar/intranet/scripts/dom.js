@@ -1,4 +1,4 @@
-function ajax( funcaoRetorno, hostInformation = window.location)
+function ajax( funcaoRetorno, id_campo = null, hostInformation = window.location)
 {
   let host = hostInformation.protocol + '//' + hostInformation.host + '/intranet/';
 
