@@ -5,7 +5,7 @@
 @endpush
 
 @section('content')
-    <form id="formcadastro" action="{{ Asset::get('/enturmacao-em-lote/' . $schoolClass->id) }}" method="post">
+    <form id="formcadastro" action="{{ Asset::get('/enturmacao-em-lote/' . $schoolClass->id, env('ASSETS_SECURE', false)) }}" method="post">
         <table class="tablecadastro" width="100%" border="0" cellpadding="2" cellspacing="0">
             <tbody>
                 <tr>
@@ -51,7 +51,7 @@
         </table>
     </form>
 
-    <form action="{{ Asset::get('/enturmacao-em-lote/'.  $schoolClass->id) }}" method="post" class="open-sans">
+    <form action="{{ Asset::get('/enturmacao-em-lote/' . $schoolClass->id, env('ASSETS_SECURE', false)) }}" method="post" class="open-sans">
 
         <h3>Alunos matriculados e não enturmados</h3>
 
