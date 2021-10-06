@@ -55,7 +55,7 @@
         </table>
     </form>
 
-    <form action="{{ route('enrollments.batch.enroll', ['schoolClass' => $schoolClass->id]) }}" method="post" class="open-sans">
+    <form action="{{ Asset::get('/enturmacao-em-lote/'.  $schoolClass->id) }}" method="post" class="open-sans">
 
         <h3>Alunos matriculados e não enturmados</h3>
 
