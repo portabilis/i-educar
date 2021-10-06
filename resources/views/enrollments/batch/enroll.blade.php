@@ -63,8 +63,10 @@
             <div>
             @if($schoolClass->school->institution->allowRegistrationOutAcademicYear)
                 <span class="text-muted">A data de enturmação deve ser maior que a data da matrícula e maior que a data de saída da última enturmação do aluno.</span>
-            @else
+            @elseif($schoolClass->begin_academic_year && $schoolClass->end_academic_year)
                 <span class="text-muted">A data da enturmação deve ser entre:</span> <strong>{{ $schoolClass->begin_academic_year->format('d/m/Y') }}</strong> e <strong>{{ $schoolClass->end_academic_year->format('d/m/Y') }}</strong><span class="text-muted">, maior que a data da matrícula e maior que a data de saída da última enturmação do aluno.</span>
+            @else
+                <span class="text-muted"><strong>O calendário letivo não está definido para a turma.</strong></span>
             @endif
             </div>
         </p>
