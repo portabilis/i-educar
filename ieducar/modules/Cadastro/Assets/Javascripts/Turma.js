@@ -368,6 +368,10 @@ $j(document).ready(function() {
     }
   }
 
+  $j('#ano').on('change', function(){
+    $j('#ano_letivo').val($j('#ano').val());
+  });
+
   $j('#ref_cod_serie, #ano_letivo').on('change', function(){
     atualizaOpcoesDeDisciplinas();
   });
