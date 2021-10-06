@@ -45,7 +45,11 @@
                 </tr>
                 <tr id="tr_ano">
                     <td class="formmdtd" valign="top"><span class="form">Calendário letivo:</span></td>
+                    @if($schoolClass->begin_academic_year && $schoolClass->end_academic_year)
                     <td class="formmdtd" valign="top"><span class="form">{{ $schoolClass->begin_academic_year->format('d/m/Y') }} à {{ $schoolClass->end_academic_year->format('d/m/Y') }}</span></td>
+                    @else
+                    <td class="formmdtd" valign="top"><span class="form">O calendário letivo não está definido para a turma.</span></td>
+                    @endif
                 </tr>
             </tbody>
         </table>
