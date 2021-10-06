@@ -5,7 +5,7 @@
 @endpush
 
 @section('content')
-    <form id="formcadastro" action="" method="post">
+    <form id="formcadastro" action="{{ Asset::get('/cancelar-enturmacao-em-lote/' . $schoolClass->id, env('ASSETS_SECURE', false)) }}" method="post">
         <table class="tablecadastro" width="100%" border="0" cellpadding="2" cellspacing="0">
             <tbody>
                 <tr>
@@ -51,7 +51,7 @@
         </table>
     </form>
 
-    <form action="{{ route('enrollments.batch.cancel', ['schoolClass' => $schoolClass->id]) }}" method="post" class="open-sans">
+    <form action="{{ Asset::get('/cancelar-enturmacao-em-lote/' . $schoolClass->id) }}" method="post" class="open-sans">
 
         <h3>Alunos matriculados e enturmados</h3>
 
@@ -129,7 +129,8 @@
         <div style="text-align: center">
             <button class="btn-green" type="submit">Desenturmar</button>
             <a href="javascript:void(0)" class="btn enrollment-btn-check">Selecionar todos</a>
-            <a href="{{ route('enrollments.batch.enroll.index', ['schoolClass' => $schoolClass->id]) }}" class="btn">Enturmar em lote</a>
+
+            <a href="{{ Asset::get('/enturmacao-em-lote/' . $schoolClass->id) }}" class="btn">Enturmar em lote</a>
             <a href="{{ Asset::get('intranet/educar_matriculas_turma_lst.php') }}" class="btn">Cancelar</a>
         </div>
 
