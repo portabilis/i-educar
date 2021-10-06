@@ -1,24 +1,6 @@
 <?php
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'lib/Portabilis/View/Helper/Application.php';
-require_once 'lib/Portabilis/Date/Utils.php';
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
-
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Distribui&ccedil;&atilde;o de uniforme");
-        $this->processoAp = 578;
-    }
-}
-
-class indice extends clsCadastro
-{
+return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -89,7 +71,6 @@ class indice extends clsCadastro
         $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, "educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
 
         if (is_numeric($this->ref_cod_aluno) && is_numeric($this->cod_distribuicao_uniforme)) {
-
             $obj = new clsPmieducarDistribuicaoUniforme($this->cod_distribuicao_uniforme);
 
             $registro  = $obj->detalhe();
@@ -154,18 +135,7 @@ class indice extends clsCadastro
             'size' => 10
         ]);
 
-        $this->campoLista(
-            'ref_cod_escola',
-            'Escola',
-            $escolaOpcoes,
-            $this->ref_cod_escola,
-            '',
-            false,
-            '(Responsável pela distribuição do uniforme)',
-            '',
-            false,
-            true
-        );
+        $this->inputsHelper()->dynamic(['instituicao', 'escola']);
 
         $this->inputsHelper()->checkbox('kit_completo', [
             'label' => 'Kit completo', 'value' => $this->kit_completo
@@ -188,7 +158,6 @@ class indice extends clsCadastro
             'max_length'  => 10,
             'size' => 10
         ]);
-
 
         $this->inputsHelper()->integer('camiseta_curta_qtd', [
             'required' => false,
@@ -401,12 +370,6 @@ class indice extends clsCadastro
         $this->cod_distribuicao_uniforme = $cadastrou = $obj->cadastra();
 
         if ($cadastrou) {
-            $distribuicao = new clsPmieducarDistribuicaoUniforme($this->cod_distribuicao_uniforme);
-            $distribuicao = $distribuicao->detalhe();
-
-            $auditoria = new clsModulesAuditoriaGeral('distribuicao_uniforme', $this->pessoa_logada, $this->cod_distribuicao_uniforme);
-            $auditoria->inclusao($distribuicao);
-
             $this->redirectIf(true, "educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
         }
 
@@ -464,13 +427,9 @@ class indice extends clsCadastro
             $this->saia_tm
         );
 
-        $detalheAntigo = $obj->detalhe();
         $editou = $obj->edita();
 
         if ($editou) {
-            $auditoria = new clsModulesAuditoriaGeral('distribuicao_uniforme', $this->pessoa_logada, $this->cod_distribuicao_uniforme);
-            $auditoria->alteracao($detalheAntigo, $obj->detalhe());
-
             $this->redirectIf(true, "educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
         }
 
@@ -485,13 +444,9 @@ class indice extends clsCadastro
         $obj_permissoes->permissao_excluir(578, $this->pessoa_logada, 7, "educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
 
         $obj = new clsPmieducarDistribuicaoUniforme($this->cod_distribuicao_uniforme);
-        $detalhe = $obj->detalhe();
         $excluiu = $obj->excluir();
 
         if ($excluiu) {
-            $auditoria = new clsModulesAuditoriaGeral('distribuicao_uniforme', $this->pessoa_logada, $this->cod_distribuicao_uniforme);
-            $auditoria->exclusao($detalhe);
-
             $this->redirectIf(true, "educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
         }
 
@@ -499,51 +454,15 @@ class indice extends clsCadastro
 
         return false;
     }
-}
 
-$pagina = new clsIndexBase();
-$pagina->addForm(new indice());
-$pagina->MakeAll();
-
-?>
-
-<script type="text/javascript">
-    function bloqueiaCamposQuantidade(){
-        $j('#agasalho_qtd').val('').attr('disabled', 'disabled');
-        $j('#camiseta_curta_qtd').val('').attr('disabled', 'disabled');
-        $j('#camiseta_longa_qtd').val('').attr('disabled', 'disabled');
-        $j('#camiseta_infantil_qtd').val('').attr('disabled', 'disabled');
-        $j('#calca_jeans_qtd').val('').attr('disabled', 'disabled');
-        $j('#meias_qtd').val('').attr('disabled', 'disabled');
-        $j('#saia_qtd').val('').attr('disabled', 'disabled');
-        $j('#bermudas_tectels_qtd').val('').attr('disabled', 'disabled');
-        $j('#bermudas_coton_qtd').val('').attr('disabled', 'disabled');
-        $j('#tenis_qtd').val('').attr('disabled', 'disabled');
-        return true;
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-distribuicao-uniforme-cad.js');
     }
 
-    function liberaCamposQuantidade(){
-        $j('#agasalho_qtd').removeAttr('disabled');
-        $j('#camiseta_curta_qtd').removeAttr('disabled');
-        $j('#camiseta_longa_qtd').removeAttr('disabled');
-        $j('#camiseta_infantil_qtd').removeAttr('disabled');
-        $j('#calca_jeans_qtd').removeAttr('disabled');
-        $j('#meias_qtd').removeAttr('disabled');
-        $j('#saia_qtd').removeAttr('disabled');
-        $j('#bermudas_tectels_qtd').removeAttr('disabled');
-        $j('#bermudas_coton_qtd').removeAttr('disabled');
-        $j('#tenis_qtd').removeAttr('disabled');
+    public function Formular()
+    {
+        $this->title = 'i-Educar - Distribui&ccedil;&atilde;o de uniforme';
+        $this->processoAp = 578;
     }
-
-    $j(document).ready(function(){
-        if($j('#kit_completo').is(':checked'))
-            bloqueiaCamposQuantidade();
-
-        $j('#kit_completo').on('change', function(){
-            if($j('#kit_completo').is(':checked'))
-                bloqueiaCamposQuantidade();
-            else
-                liberaCamposQuantidade();
-        });
-    })
-</script>
+};

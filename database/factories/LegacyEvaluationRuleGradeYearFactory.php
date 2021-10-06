@@ -3,6 +3,9 @@
 use App\Models\LegacyEvaluationRule;
 use App\Models\LegacyLevel;
 use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factory;
+
+/** @var Factory $factory */
 
 $factory->define(App\Models\LegacyEvaluationRuleGradeYear::class, function (Faker $faker) {
     return [

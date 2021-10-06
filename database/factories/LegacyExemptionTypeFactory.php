@@ -15,6 +15,6 @@ $factory->define(LegacyExemptionType::class, function (Faker $faker) {
         'ativo' => 1,
         'ref_usuario_cad' => factory(LegacyUser::class)->state('unique')->make(),
         'data_cadastro' => now(),
-        'ref_cod_instituicao' =>  factory(LegacyInstitution::class)->state('unique')->make(),
+        'ref_cod_instituicao' => factory(LegacyInstitution::class)->state('unique')->make(),
     ];
 });

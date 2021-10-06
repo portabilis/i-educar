@@ -1,9 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/View/Helper/Input/MultipleSearch.php';
-require_once 'lib/Portabilis/Utils/Database.php';
-require_once 'lib/Portabilis/String/Utils.php';
-
 class Portabilis_View_Helper_Input_Resource_MultipleSearchCursoAluno extends Portabilis_View_Helper_Input_MultipleSearch
 {
     protected function getOptions($resources)
@@ -32,7 +28,7 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchCursoAluno extends Por
         $optionsVarName = 'multipleSearch' . Portabilis_String_Utils::camelize($options['objectName']) . 'Options';
 
         $js = "
-            if (typeof $optionsVarName == 'undefined') { $optionsVarName = {} }; 
+            if (typeof $optionsVarName == 'undefined') { $optionsVarName = {} };
             $optionsVarName.placeholder = safeUtf8Decode('Selecione os cursos do aluno');
         ";
 

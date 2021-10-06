@@ -1,32 +1,16 @@
 <?php
-$desvio_diretorio = '';
-require_once('include/clsBase.inc.php');
-require_once('include/clsListagem.inc.php');
-require_once('include/clsBanco.inc.php');
 
-class clsIndex extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo('Pessoas Físicas');
-        $this->processoAp = '43';
-    }
-}
-
-class indice extends clsListagem
-{
+return new class extends clsListagem {
     public function Gerar()
     {
         $this->titulo = 'Pessoas Físicas';
 
-        $this->addCabecalhos([ 'Nome', 'CPF']);
-        $this->campoTexto('nm_pessoa', 'Nome', $this->getQueryString('nm_pessoa'), '50', '255', true);
-        $this->campoCpf('id_federal', 'CPF', $this->getQueryString('id_federal'), '50', '', true);
+        $this->addCabecalhos(['Nome', 'CPF']);
+        $this->campoTexto('nm_pessoa', 'Nome', $this->getQueryString('nm_pessoa'), '50', '255');
+        $this->campoCpf('id_federal', 'CPF', $this->getQueryString('id_federal'));
 
-        $where='';
         $par_nome = $this->getQueryString('nm_pessoa') ?: false;
         $par_id_federal = idFederal2Int($this->getQueryString('id_federal')) ?: false;
-        $dba = $db = new clsBanco();
 
         $objPessoa = new clsPessoaFisica();
 
@@ -62,11 +46,10 @@ class indice extends clsListagem
 
         $this->breadcrumb('Pessoa física', ['educar_pessoas_index.php' => 'Pessoas']);
     }
-}
 
-$pagina = new clsIndex();
-
-$miolo = new indice();
-$pagina->addForm($miolo);
-
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->title = 'Pessoas Físicas';
+        $this->processoAp = '43';
+    }
+};

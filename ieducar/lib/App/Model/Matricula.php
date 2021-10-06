@@ -1,8 +1,5 @@
 <?php
 
-require_once 'CoreExt/Entity.php';
-require_once 'App/Model/MatriculaSituacao.php';
-
 class App_Model_Matricula
 {
     /**

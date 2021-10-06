@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsPmieducarExemplarEmprestimo extends Model
 {
     public $cod_emprestimo;
@@ -26,16 +24,16 @@ class clsPmieducarExemplarEmprestimo extends Model
         $this->_campos_lista = $this->_todos_campos = 'ee.cod_emprestimo, ee.ref_usuario_devolucao, ee.ref_usuario_cad, ee.ref_cod_cliente, ee.ref_cod_exemplar, ee.data_retirada, ee.data_devolucao, ee.valor_multa';
 
         if (is_numeric($ref_usuario_devolucao)) {
-                    $this->ref_usuario_devolucao = $ref_usuario_devolucao;
+            $this->ref_usuario_devolucao = $ref_usuario_devolucao;
         }
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
         if (is_numeric($ref_cod_cliente)) {
-                    $this->ref_cod_cliente = $ref_cod_cliente;
+            $this->ref_cod_cliente = $ref_cod_cliente;
         }
         if (is_numeric($ref_cod_exemplar)) {
-                    $this->ref_cod_exemplar = $ref_cod_exemplar;
+            $this->ref_cod_exemplar = $ref_cod_exemplar;
         }
 
         if (is_numeric($cod_emprestimo)) {
@@ -51,7 +49,7 @@ class clsPmieducarExemplarEmprestimo extends Model
             $this->valor_multa = $valor_multa;
         }
         if (is_numeric($ref_cod_biblioteca)) {
-                    $this->ref_cod_biblioteca = $ref_cod_biblioteca;
+            $this->ref_cod_biblioteca = $ref_cod_biblioteca;
         }
     }
 
@@ -471,7 +469,7 @@ class clsPmieducarExemplarEmprestimo extends Model
      *
      * @return string
      */
-    public function listaDividaPagamentoCliente($int_cod_cliente = null, $int_idpes = null, $int_cod_cliente_tipo = null, $int_cod_usuario, $int_cod_biblioteca = null, $int_cod_escola = null, $int_cod_instituicao = null, $pago = false)
+    public function listaDividaPagamentoCliente($int_cod_cliente, $int_idpes, $int_cod_cliente_tipo, $int_cod_usuario, $int_cod_biblioteca = null, $int_cod_escola = null, $int_cod_instituicao = null, $pago = false)
     {
         $obj_nivel = new clsPermissoes();
         $nivel = $obj_nivel->nivel_acesso($int_cod_usuario);

@@ -12,12 +12,14 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 /**
  * LegacyRegistration
  *
- * @property int $id
- * @property boolean isTransferred
- * @property boolean isAbandoned
- * @property LegacyStudentAbsence studentAbsence
- * @property LegacyStudentScore studentScore
+ * @property int                      $id
+ * @property boolean                  isTransferred
+ * @property boolean                  isAbandoned
+ * @property boolean                  isCanceled
+ * @property LegacyStudentAbsence     studentAbsence
+ * @property LegacyStudentScore       studentScore
  * @property LegacyStudentDescriptive studentDescriptive
+ * @property LegacyCourse             course
  *
  */
 class LegacyRegistration extends Model
@@ -109,6 +111,9 @@ class LegacyRegistration extends Model
     /**
      * Relação com a série.
      *
+     * @deprecated
+     * @see grade()
+     *
      * @return BelongsTo
      */
     public function level()
@@ -116,6 +121,25 @@ class LegacyRegistration extends Model
         return $this->belongsTo(LegacyLevel::class, 'ref_ref_cod_serie');
     }
 
+    /**
+     * Relação com a série.
+     *
+     * @return BelongsTo
+     */
+    public function grade()
+    {
+        return $this->belongsTo(LegacyGrade::class, 'ref_ref_cod_serie');
+    }
+
+    /**
+     * Relação com o curso.
+     *
+     * @return BelongsTo
+     */
+    public function course()
+    {
+        return $this->belongsTo(LegacyCourse::class, 'ref_cod_curso');
+    }
 
     /**
      * @return HasMany
@@ -171,6 +195,11 @@ class LegacyRegistration extends Model
     public function getIsAbandonedAttribute()
     {
         return $this->aprovado == App_Model_MatriculaSituacao::ABANDONO;
+    }
+
+    public function getIsCanceledAttribute()
+    {
+        return $this->ativo === 0;
     }
 
     /**

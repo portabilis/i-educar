@@ -4,17 +4,19 @@ namespace App\Jobs;
 
 use App\Models\EducacensoImport as EducacensoImportModel;
 use App\Services\Educacenso\ImportServiceFactory;
+use DateTime;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
 class EducacensoImportJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
     /**
      * @var EducacensoImportModel
      */
@@ -30,27 +32,35 @@ class EducacensoImportJob implements ShouldQueue
      */
     private $databaseConnection;
 
+    /**
+     * @var DateTime
+     */
+    private $registrationDate;
+
     public $timeout = 600;
 
     /**
      * Create a new job instance.
      *
      * @param EducacensoImportModel $educacensoImport
-     * @param $importArray
-     * @param string $databaseConnection
+     * @param                       $importArray
+     * @param string                $databaseConnection
+     * @param DateTime              $registrationDate
      */
-    public function __construct(EducacensoImportModel $educacensoImport, $importArray, $databaseConnection)
+    public function __construct(EducacensoImportModel $educacensoImport, $importArray, $databaseConnection, $registrationDate)
     {
         $this->educacensoImport = $educacensoImport;
         $this->importArray = $importArray;
         $this->databaseConnection = $databaseConnection;
+        $this->registrationDate = $registrationDate;
     }
 
     /**
      * Execute the job.
      *
-     * @return void
      * @throws Throwable
+     *
+     * @return void
      */
     public function handle()
     {
@@ -58,8 +68,9 @@ class EducacensoImportJob implements ShouldQueue
         DB::beginTransaction();
 
         try {
-            $importService = ImportServiceFactory::createImportService($this->educacensoImport->year);
+            $importService = ImportServiceFactory::createImportService($this->educacensoImport->year, $this->registrationDate);
             $importService->import($this->importArray, $this->educacensoImport->user);
+            $importService->adaptData();
         } catch (Throwable $e) {
             DB::rollBack();
             throw $e;
@@ -70,5 +81,13 @@ class EducacensoImportJob implements ShouldQueue
         $educacensoImport->save();
 
         DB::commit();
+    }
+
+    public function tags()
+    {
+        return [
+            $this->databaseConnection,
+            'educacenso-import'
+        ];
     }
 }

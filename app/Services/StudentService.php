@@ -9,8 +9,9 @@ class StudentService
     /**
      * Verifica se o aluno tem alguma matricula em andamento
      *
-     * @param int $studentId
+     * @param int      $studentId
      * @param int|null $levelId
+     *
      * @return boolean
      */
     public function hasInProgressRegistration($studentId, $levelId = null)
@@ -21,7 +22,10 @@ class StudentService
             return false;
         }
 
-        $query = $student->registrations()->where('status', 3);
+        $query = $student->registrations()
+            ->where('status', 3)
+            ->where('is_last_registration', 1)
+        ;
 
         if ($levelId) {
             $query->where('level_id', $levelId);

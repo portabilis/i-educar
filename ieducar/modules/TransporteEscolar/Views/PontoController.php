@@ -2,10 +2,6 @@
 
 use iEducar\Modules\Addressing\LegacyAddressingFields;
 
-require_once 'App/Model/ZonaLocalizacao.php';
-require_once 'lib/Portabilis/Controller/Page/EditController.php';
-require_once 'Usuario/Model/FuncionarioDataMapper.php';
-
 class PontoController extends Portabilis_Controller_Page_EditController
 {
     use LegacyAddressingFields;
@@ -36,13 +32,9 @@ class PontoController extends Portabilis_Controller_Page_EditController
             'delete_success' => '/intranet/transporte_ponto_lst.php'
         ], $this->_options);
         $nomeMenu = $this->getRequest()->id == null ? 'Cadastrar' : 'Editar';
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'] . '/intranet' => 'In&iacute;cio',
-            'educar_transporte_escolar_index.php' => 'Transporte escolar',
-            '' => "$nomeMenu ponto"
+        $this->breadcrumb("$nomeMenu ponto", [
+            url('intranet/educar_transporte_escolar_index.php') => 'Transporte escolar',
         ]);
-        $this->enviaLocalizacao($localizacao->montar());
     }
 
     protected function _initNovo()
@@ -70,7 +62,7 @@ class PontoController extends Portabilis_Controller_Page_EditController
 
         // descricao
         $options = [
-            'label' => Portabilis_String_Utils::toLatin1($this->_getLabel('desc')),
+            'label' => $this->_getLabel('desc'),
             'required' => true,
             'size' => 50,
             'max_length' => 70

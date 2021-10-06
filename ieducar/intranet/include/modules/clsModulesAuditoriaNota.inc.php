@@ -2,8 +2,6 @@
 
 use Illuminate\Support\Facades\Auth;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsModulesAuditoriaNota
 {
     public $notaAntiga;
@@ -229,11 +227,8 @@ class clsModulesAuditoriaNota
 
         $objPessoa = new clsPessoa_($pessoaId);
         $detPessoa = $objPessoa->detalhe();
-        $nomePessoa = $detPessoa['nome'];
 
-        $nomePessoa = Portabilis_String_Utils::toLatin1($nomePessoa);
-
-        return $nomePessoa;
+        return $detPessoa['nome'];
     }
 
     private function getNomeTurma($turmaId)

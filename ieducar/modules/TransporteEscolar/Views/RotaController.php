@@ -1,8 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/Controller/Page/EditController.php';
-require_once 'Usuario/Model/FuncionarioDataMapper.php';
-
 class RotaController extends Portabilis_Controller_Page_EditController
 {
     protected $_dataMapper = 'Usuario_Model_FuncionarioDataMapper';
@@ -59,13 +56,9 @@ class RotaController extends Portabilis_Controller_Page_EditController
             'delete_success' => '/intranet/transporte_rota_lst.php'
         ], $this->_options);
         $nomeMenu = $this->getRequest()->id == null ? 'Cadastrar' : 'Editar';
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'] . '/intranet' => 'In&iacute;cio',
-            'educar_transporte_escolar_index.php' => 'Transporte escolar',
-            '' => "$nomeMenu rota"
+        $this->breadcrumb("$nomeMenu rota", [
+            url('intranet/educar_transporte_escolar_index.php') => 'In&Transporte escolar',
         ]);
-        $this->enviaLocalizacao($localizacao->montar());
     }
 
     protected function _initNovo()
@@ -84,7 +77,7 @@ class RotaController extends Portabilis_Controller_Page_EditController
 
         // ano
         $options = [
-            'label' => Portabilis_String_Utils::toLatin1($this->_getLabel('ano')),
+            'label' => $this->_getLabel('ano'),
             'required' => true,
             'size' => 5,
             'max_length' => 4
@@ -102,7 +95,7 @@ class RotaController extends Portabilis_Controller_Page_EditController
 
         // descricao
         $options = [
-            'label' => Portabilis_String_Utils::toLatin1($this->_getLabel('desc')),
+            'label' => $this->_getLabel('desc'),
             'required' => true,
             'size' => 50,
             'max_length' => 50

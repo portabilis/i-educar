@@ -71,7 +71,7 @@
     <div class="separator"></div>
 
     <div style="text-align: center">
-        {{ $unifications->links() }}
+        {{ $unifications->appends(request()->except('page'))->links() }}
     </div>
 
     <div style="text-align: center">
@@ -84,6 +84,8 @@
 @endsection
 
 @prepend('scripts')
+    <link type='text/css' rel='stylesheet' href='{{ Asset::get("/modules/Portabilis/Assets/Plugins/Chosen/chosen.css") }}'>
+    <script type='text/javascript' src='{{ Asset::get('/modules/Portabilis/Assets/Plugins/Chosen/chosen.jquery.min.js') }}'></script>
     <script type="text/javascript"
             src="{{ Asset::get("/modules/Portabilis/Assets/Javascripts/ClientApi.js") }}"></script>
     <script type="text/javascript"

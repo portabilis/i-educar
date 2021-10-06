@@ -3,11 +3,15 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Rules\ReCaptchaV3;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
+    protected int $maxAttempts = 2;
+    protected int $decayMinutes = 1;
+
     /*
     |--------------------------------------------------------------------------
     | Login Controller
@@ -50,5 +54,23 @@ class LoginController extends Controller
     public function username()
     {
         return 'login';
+    }
+
+    /**
+     * Validate the user login request.
+     *
+     * @param Request $request
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     *
+     * @return void
+     */
+    public function validateLogin(Request $request)
+    {
+        $request->validate([
+            $this->username() => 'required|string',
+            'password' => 'required|string',
+            'grecaptcha' => [new ReCaptchaV3],
+        ]);
     }
 }

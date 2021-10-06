@@ -1,11 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Session;
-
-require_once 'Core/View/Tabulable.php';
-require_once 'include/clsListagem.inc.php';
-require_once 'CoreExt/View/Helper/UrlHelper.php';
-
 class Core_Controller_Page_ListController extends clsListagem implements Core_View_Tabulable
 {
     /**
@@ -80,7 +74,7 @@ class Core_Controller_Page_ListController extends clsListagem implements Core_Vi
 
     protected function getPessoaLogada()
     {
-        return Session::get('id_pessoa');
+        return \Illuminate\Support\Facades\Auth::id();
     }
 
     /**

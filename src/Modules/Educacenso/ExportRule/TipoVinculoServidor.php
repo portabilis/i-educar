@@ -11,6 +11,7 @@ class TipoVinculoServidor implements EducacensoExportRule
 {
     /**
      * @param Registro50 $registro50
+     *
      * @return RegistroEducacenso
      */
     public static function handle(RegistroEducacenso $registro50): RegistroEducacenso

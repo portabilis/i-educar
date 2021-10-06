@@ -2,15 +2,8 @@
 
 use Illuminate\Support\Facades\Gate;
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'lib/Portabilis/Array/Utils.php';
-require_once 'lib/Portabilis/String/Utils.php';
-require_once 'intranet/include/clsBanco.inc.php';
-require_once 'intranet/include/funcoes.inc.php';
-
 class EnderecoController extends ApiCoreController
 {
-
     protected function getPrimeiroEnderecoCep()
     {
         $cep = idFederal2int($this->getRequest()->cep);

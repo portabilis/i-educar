@@ -1,11 +1,9 @@
 $j(document).ready(function(){
-
+  $j('#ano').val('2019')
 });
 
 function acao() {
-  if ($j('#ano').val() != '2018') {
-    $j('#formcadastro').attr('action', '/educacenso/importacao');
-  }
+  $j('#formcadastro').attr('action', '/educacenso/importacao');
 
   $j('#formcadastro').removeAttr('onsubmit');
   $j('#formcadastro').submit();

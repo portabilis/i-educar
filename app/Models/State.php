@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasIbgeCode;
+use App\Support\Database\DateSerializer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -10,7 +11,7 @@ use Illuminate\Support\Collection;
 
 class State extends Model
 {
-    use HasIbgeCode;
+    use DateSerializer, HasIbgeCode;
 
     /**
      * @var array

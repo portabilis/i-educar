@@ -72,6 +72,8 @@ function handleAtualizaComponentesSerie(response) {
 
             if (arrayComponentes.length > 0) {
                 ModalSelectEscolas.init(serieId, nmSerie, arrayComponentes, 'novos-componentes', actions);
+            } else {
+                redirecionaListagem();
             }
 
             messageUtils.success('Componentes da série alterados com sucesso!');

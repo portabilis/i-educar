@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyInstitution;
 use App\Models\LegacySchoolClassType;
 use App\Models\LegacyUser;
 use Faker\Generator as Faker;
@@ -8,7 +9,6 @@ use Illuminate\Database\Eloquent\Factory;
 /** @var Factory $factory */
 
 $factory->define(LegacySchoolClassType::class, function (Faker $faker) {
-
     $name = $faker->colorName;
     $abbreviation = mb_substr($faker->colorName, 0, 5);
 
@@ -17,11 +17,11 @@ $factory->define(LegacySchoolClassType::class, function (Faker $faker) {
         'nm_tipo' => 'Tipo ' . $name,
         'sgl_tipo' => $abbreviation,
         'data_cadastro' => now(),
+        'ref_cod_instituicao' => factory(LegacyInstitution::class)->state('unique')->make(),
     ];
 });
 
 $factory->state(LegacySchoolClassType::class, 'unique', function () {
-
     $schoolClassType = LegacySchoolClassType::query()->first();
 
     if (empty($schoolClassType)) {

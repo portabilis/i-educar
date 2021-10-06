@@ -1,14 +1,5 @@
 <?php
 
-require_once 'include/modules/clsModulesEmpresaTransporteEscolar.inc.php';
-require_once 'include/modules/clsModulesRotaTransporteEscolar.inc.php';
-require_once 'include/modules/clsModulesMotorista.inc.php';
-require_once 'Portabilis/Controller/ApiCoreController.php';
-require_once 'Portabilis/Array/Utils.php';
-require_once 'Portabilis/String/Utils.php';
-require_once 'Portabilis/Array/Utils.php';
-require_once 'Portabilis/Date/Utils.php';
-
 class EmpresaController extends ApiCoreController
 {
     protected $_processoAp = 578; //verificar
@@ -43,7 +34,7 @@ class EmpresaController extends ApiCoreController
 
         $empresa->ref_resp_idpes = $this->getRequest()->pessoa_id;
         $empresa->ref_idpes = $this->getRequest()->pessoaj_id;
-        $empresa->observacao = Portabilis_String_Utils::toLatin1($this->getRequest()->observacao);
+        $empresa->observacao = $this->getRequest()->observacao;
 
         return (is_null($id) ? $empresa->cadastra() : $empresa->edita());
     }

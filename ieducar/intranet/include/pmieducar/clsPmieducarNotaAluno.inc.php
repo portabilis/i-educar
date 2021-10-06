@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsPmieducarNotaAluno extends Model
 {
     public $cod_nota_aluno;
@@ -32,25 +30,25 @@ class clsPmieducarNotaAluno extends Model
         $this->_campos_lista = $this->_todos_campos = 'cod_nota_aluno, ref_sequencial, ref_ref_cod_tipo_avaliacao, ref_cod_serie, ref_cod_escola, ref_cod_disciplina, ref_cod_matricula, ref_usuario_exc, ref_usuario_cad, data_cadastro, data_exclusao, ativo, modulo, ref_cod_curso_disciplina, nota';
 
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
         if (is_numeric($ref_ref_cod_tipo_avaliacao) && is_numeric($ref_sequencial)) {
-                    $this->ref_ref_cod_tipo_avaliacao = $ref_ref_cod_tipo_avaliacao;
-                    $this->ref_sequencial = $ref_sequencial;
+            $this->ref_ref_cod_tipo_avaliacao = $ref_ref_cod_tipo_avaliacao;
+            $this->ref_sequencial = $ref_sequencial;
         }
         if (is_numeric($ref_cod_matricula)) {
-                    $this->ref_cod_matricula = $ref_cod_matricula;
+            $this->ref_cod_matricula = $ref_cod_matricula;
         }
         if (is_numeric($ref_cod_curso_disciplina)) {
-                    $this->ref_cod_curso_disciplina = $ref_cod_curso_disciplina;
+            $this->ref_cod_curso_disciplina = $ref_cod_curso_disciplina;
         }
         if (is_numeric($ref_cod_disciplina) && is_numeric($ref_cod_escola) && is_numeric($ref_cod_serie)) {
-                    $this->ref_cod_disciplina = $ref_cod_disciplina;
-                    $this->ref_cod_escola = $ref_cod_escola;
-                    $this->ref_cod_serie = $ref_cod_serie;
+            $this->ref_cod_disciplina = $ref_cod_disciplina;
+            $this->ref_cod_escola = $ref_cod_escola;
+            $this->ref_cod_serie = $ref_cod_serie;
         }
 
         if (is_numeric($cod_nota_aluno)) {
@@ -481,6 +479,7 @@ class clsPmieducarNotaAluno extends Model
                  * ao fazer a media e essa nota estiver abaixo nao
                  * pode ser feito o arredondamento, somente se estiver
                  *  acima da media deixando o aluno em exame
+                 *
                  * @author Haissam
                  *
                  */
@@ -900,62 +899,6 @@ class clsPmieducarNotaAluno extends Model
     }
 
     /**
-     * Funcao com nome comprido e escrotissimo pra poder dizer o que ela faz...
-     * retorna quantas notas a matricula $cod_matricula ainda vai receber em disciplinas que apuram falta, no modulo $modulo
-     *
-     * @param int $cod_matricula
-     * @param int $cod_serie
-     * @param int $cod_turma
-     * @param int $modulo
-     *
-     * @return int
-     *
-     */
-    public function getQtdRestanteNotasAlunoNaoApuraFaltas($cod_matricula, $cod_serie, $cod_turma, $modulo, $ref_cod_escola)
-    {
-        if (is_numeric($cod_matricula)) {
-            $db = new clsBanco();
-
-            $total = $db->CampoUnico("
-            SELECT COUNT(0)
-            FROM pmieducar.escola_serie_disciplina ds,
-            pmieducar.disciplina d
-            WHERE ref_ref_cod_serie = '{$cod_serie}'
-              AND ref_ref_cod_escola = '{$ref_cod_escola}'
-              AND d.ativo  = 1
-              AND ds.ativo = 1
-              AND d.cod_disciplina = ds.ref_cod_disciplina
-
-            ");
-
-            /**
-             * para faltas globalizada considerar todas as disciplinas
-             */
-
-            // uma lista de disciplinas que apuram falta
-            // exclui dessa lista todas as que o aluno ja recebeu nota nesse modulo
-            $ja_recebidas = $db->CampoUnico("
-                SELECT COUNT(0)
-                FROM pmieducar.nota_aluno na
-                , pmieducar.disciplina d
-                , pmieducar.v_matricula_matricula_turma mmt
-                WHERE na.ref_cod_matricula = '{$cod_matricula}'
-                AND na.ref_cod_matricula = mmt.cod_matricula
-                AND mmt.ref_cod_turma = '{$cod_turma}'
-                AND na.ativo = 1
-                AND mmt.ativo = 1
-                AND na.ref_cod_disciplina = d.cod_disciplina
-                AND na.ref_cod_serie = '{$cod_serie}'
-                AND na.modulo = '{$modulo}'
-            ");
-
-            return $total - $ja_recebidas;
-        }
-
-        return false;
-    }
-
-    /**
      * Retorna uma variável com o resultado
      *
      * @return int
@@ -1028,115 +971,6 @@ class clsPmieducarNotaAluno extends Model
             }
 
             return $db->CampoUnico($sql);
-        }
-
-        return false;
-    }
-
-    /**
-     * Retorna uma lista com as médias filtradas conforme os parâmetros
-     *
-     * @return array
-     */
-    public function listaMedias($int_disc_ref_ref_cod_serie = null, $int_disc_ref_ref_cod_escola = null, $int_disc_ref_cod_turma = null, $int_ref_ref_cod_turma = null, $int_qtd_modulos = null, $int_ref_cod_curso = null, $aprovado = false, $reprovado = false, $exame = false, $andamento = false)
-    {
-        if (is_numeric($int_disc_ref_ref_cod_serie) && is_numeric($int_disc_ref_ref_cod_escola) && is_numeric($int_disc_ref_cod_turma) && is_numeric($int_ref_ref_cod_turma) && is_numeric($int_qtd_modulos) && is_numeric($int_ref_cod_curso)) {
-            $sql = "SELECT ( SELECT DISTINCT tav2.valor
-                               FROM pmieducar.tipo_avaliacao_valores tav2
-                              WHERE tav2.ref_cod_tipo_avaliacao = ( SELECT DISTINCT na2.ref_ref_cod_tipo_avaliacao
-                                                                      FROM pmieducar.nota_aluno na2
-                                                                     WHERE na2.ref_cod_serie  = {$int_disc_ref_ref_cod_serie}
-                                                                       AND na2.ref_cod_escola = {$int_disc_ref_ref_cod_escola} )
-                                AND tav2.valor_min <= ( SUM( tav.valor ) / ( {$int_qtd_modulos} ) )
-                                AND tav2.valor_max >= ( SUM( tav.valor ) / ( {$int_qtd_modulos} ) ) ) as media,
-                           CASE WHEN ( SELECT falta_ch_globalizada
-                                         FROM pmieducar.curso
-                                        WHERE cod_curso = {$int_ref_cod_curso} ) = 0 THEN ( SELECT ( ( SUM( fa.faltas ) * c.hora_falta ) / d.carga_horaria ) * 100
-                                                                                              FROM pmieducar.falta_aluno fa,
-                                                                                                   pmieducar.disciplina   d,
-                                                                                                   pmieducar.curso        c
-                                                                                             WHERE fa.ref_cod_matricula  = na.ref_cod_matricula
-                                                                                               AND fa.ref_cod_disciplina = na.disc_ref_ref_cod_disciplina
-                                                                                               AND fa.ref_cod_disciplina = d.cod_disciplina
-                                                                                               AND c.cod_curso           = {$int_ref_cod_curso}
-                                                                                               AND fa.ref_cod_serie      = {$int_disc_ref_ref_cod_serie}
-                                                                                               AND fa.ref_cod_escola     = {$int_disc_ref_ref_cod_escola}
-                                                                                          GROUP BY c.hora_falta,
-                                                                                                   d.carga_horaria)
-                                ELSE ( SELECT ( ( SUM( f.falta ) * c.hora_falta ) / c.carga_horaria ) * 100
-                                         FROM pmieducar.faltas    f,
-                                              pmieducar.curso     c
-                                        WHERE f.ref_cod_matricula = na.ref_cod_matricula
-                                          AND c.cod_curso         = {$int_ref_cod_curso}
-                                GROUP BY c.hora_falta,
-                                         c.carga_horaria )
-                                 END as faltas,
-                           na.ref_cod_matricula,
-                           na.ref_cod_disciplina
-                      FROM pmieducar.nota_aluno na,
-                           pmieducar.tipo_avaliacao_valores tav
-                     WHERE na.ref_ref_cod_tipo_avaliacao = tav.ref_cod_tipo_avaliacao
-                       AND na.ref_sequencial             = tav.sequencial
-                       AND na.ref_cod_serie              = {$int_disc_ref_ref_cod_serie}
-                       AND na.ref_cod_escola             = {$int_disc_ref_ref_cod_escola}
-                       AND na.ref_cod_matricula NOT IN ( SELECT m.cod_matricula
-                                                               FROM pmieducar.matricula m
-                                                              WHERE m.ref_ref_cod_escola = na.disc_ref_ref_cod_escola
-                                                                AND m.ref_ref_cod_serie  = na.disc_ref_ref_cod_serie
-                                                                AND m.ultima_matricula   = 1
-                                                                AND m.ativo              = 1";
-            if ($aprovado || $reprovado || $exame || $andamento) {
-                $sql .= ' AND (';
-                $conexao = '';
-
-                if ($aprovado) {
-                    $sql .= " {$conexao} m.aprovado = 1";
-                    $conexao = 'OR';
-                }
-                if ($reprovado) {
-                    $sql .= " {$conexao} m.aprovado = 2";
-                    $conexao = 'OR';
-                }
-                if ($exame) {
-                    $sql .= " {$conexao} m.aprovado = 7";
-                    $conexao = 'OR';
-                }
-                if ($andamento) {
-                    $sql .= " {$conexao} m.aprovado = 3";
-                    $conexao = 'OR';
-                }
-                $sql .= ' )';
-            }
-            $sql .= ' )
-                     GROUP BY na.ref_cod_matricula,
-                              na.ref_cod_disciplina';
-
-            $db = new clsBanco();
-            $countCampos = count(explode(',', $this->_campos_lista));
-            $resultado = [];
-
-            $sql .= $filtros . $this->getOrderby() . $this->getLimite();
-
-            $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} {$filtros}");
-
-            $db->Consulta($sql);
-
-            if ($countCampos > 1) {
-                while ($db->ProximoRegistro()) {
-                    $tupla = $db->Tupla();
-
-                    $tupla['_total'] = $this->_total;
-                    $resultado[] = $tupla;
-                }
-            } else {
-                while ($db->ProximoRegistro()) {
-                    $tupla = $db->Tupla();
-                    $resultado[] = $tupla[$this->_campos_lista];
-                }
-            }
-            if (count($resultado)) {
-                return $resultado;
-            }
         }
 
         return false;
@@ -1328,7 +1162,6 @@ class clsPmieducarNotaAluno extends Model
      * @param int $ultimo_modulo
      *
      * @return int
-     *
      */
     public function getUltimaNotaModulo($cod_matricula, $cod_disciplina, $cod_serie, $ultimo_modulo)
     {

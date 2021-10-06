@@ -1,7 +1,5 @@
 <?php
 
-require_once 'CoreExt/Enum.php';
-
 /**
  * App_Model_NivelAcesso class.
  *

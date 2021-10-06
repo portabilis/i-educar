@@ -1,11 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'include/pmieducar/clsPmieducarExemplar.inc.php';
-require_once 'include/pmieducar/clsPmieducarBibliotecaDia.inc.php';
-require_once 'include/pmieducar/clsPmieducarBibliotecaFeriados.inc.php';
-require_once 'lib/Portabilis/Array/Utils.php';
-
 class OrdenacaoAlunosApiController extends ApiCoreController
 {
     protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_BIBLIOTECA;
@@ -166,9 +160,9 @@ class OrdenacaoAlunosApiController extends ApiCoreController
         }
 
         while (in_array(substr($data_entrega, 0, 3), $biblioteca_dias_folga) || in_array(
-                $data_entrega,
-                $biblioteca_dias_feriado
-            )) {
+            $data_entrega,
+            $biblioteca_dias_feriado
+        )) {
             $data_entrega = date('D Y-m-d ', strtotime("$data_entrega +1 day"));
             $data_entrega = dataFromPgToBr($data_entrega, 'D Y-m-d');
         }
@@ -593,7 +587,7 @@ class OrdenacaoAlunosApiController extends ApiCoreController
         $exemplar->cod_exemplar = $this->getRequest()->exemplar_id;
         $exemplar->ref_cod_acervo = $this->getRequest()->acervo_id;
         $exemplar->ref_cod_situacao = $newSituacao['id'];
-        $exemplar->ref_usuario_exc = $this->getSession()->id_pessoa;
+        $exemplar->ref_usuario_exc = \Illuminate\Support\Facades\Auth::id();
 
         return $exemplar->edita();
     }
@@ -618,7 +612,7 @@ class OrdenacaoAlunosApiController extends ApiCoreController
 
             if (!$this->messenger->hasMsgWithType('error')) {
                 $emprestimo = new clsPmieducarExemplarEmprestimo();
-                $emprestimo->ref_usuario_cad = $this->getSession()->id_pessoa;
+                $emprestimo->ref_usuario_cad = \Illuminate\Support\Facades\Auth::id();
                 $emprestimo->ref_cod_cliente = $this->getRequest()->cliente_id;
                 $emprestimo->ref_cod_exemplar = $this->getRequest()->exemplar_id;
 
@@ -661,7 +655,7 @@ class OrdenacaoAlunosApiController extends ApiCoreController
                 $_emprestimo = $this->loadEmprestimoForExemplar();
                 $emprestimo = new clsPmieducarExemplarEmprestimo();
                 $emprestimo->cod_emprestimo = $_emprestimo['id'];
-                $emprestimo->ref_usuario_devolucao = $this->getSession()->id_pessoa;
+                $emprestimo->ref_usuario_devolucao = \Illuminate\Support\Facades\Auth::id();
                 $emprestimo->data_devolucao = date('Y-m-d');
 
                 // TODO calcular / setar valor multa (se) devolução atrasada?

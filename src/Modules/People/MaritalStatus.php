@@ -10,4 +10,5 @@ class MaritalStatus
     const SEPARATED = 4;
     const SINGLE = 1;
     const WIDOWER = 5;
+    const UNINFORMED = 7;
 }

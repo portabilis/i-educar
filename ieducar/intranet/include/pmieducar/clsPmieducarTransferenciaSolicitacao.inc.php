@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsPmieducarTransferenciaSolicitacao extends Model
 {
     public $cod_transferencia_solicitacao;
@@ -31,19 +29,19 @@ class clsPmieducarTransferenciaSolicitacao extends Model
         $this->_campos_lista = $this->_todos_campos = 'ts.cod_transferencia_solicitacao, ts.ref_cod_transferencia_tipo, ts.ref_usuario_exc, ts.ref_usuario_cad, ts.ref_cod_matricula_entrada, ts.ref_cod_matricula_saida, ts.observacao, ts.data_cadastro, ts.data_exclusao, ts.ativo, ts.data_transferencia, ts.escola_destino_externa, ts.ref_cod_escola_destino, ts.estado_escola_destino_externa, ts.municipio_escola_destino_externa';
 
         if (is_numeric($ref_cod_transferencia_tipo)) {
-                    $this->ref_cod_transferencia_tipo = $ref_cod_transferencia_tipo;
+            $this->ref_cod_transferencia_tipo = $ref_cod_transferencia_tipo;
         }
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
         if (is_numeric($ref_cod_matricula_entrada)) {
-                    $this->ref_cod_matricula_entrada = $ref_cod_matricula_entrada;
+            $this->ref_cod_matricula_entrada = $ref_cod_matricula_entrada;
         }
         if (is_numeric($ref_cod_matricula_saida)) {
-                    $this->ref_cod_matricula_saida = $ref_cod_matricula_saida;
+            $this->ref_cod_matricula_saida = $ref_cod_matricula_saida;
         }
 
         if (is_numeric($cod_transferencia_solicitacao)) {
@@ -113,8 +111,9 @@ class clsPmieducarTransferenciaSolicitacao extends Model
                 $gruda = ', ';
             }
             if (is_string($this->observacao)) {
+                $observacao = $db->escapeString($this->observacao);
                 $campos .= "{$gruda}observacao";
-                $valores .= "{$gruda}'{$this->observacao}'";
+                $valores .= "{$gruda}'{$observacao}'";
                 $gruda = ', ';
             }
             $campos .= "{$gruda}data_cadastro";
@@ -132,8 +131,9 @@ class clsPmieducarTransferenciaSolicitacao extends Model
                 $gruda = ', ';
             }
             if (is_string($this->escola_destino_externa)) {
+                $escolaDestinoExterna = $db->escapeString($this->escola_destino_externa);
                 $campos .= "{$gruda}escola_destino_externa";
-                $valores .= "{$gruda}'{$this->escola_destino_externa}'";
+                $valores .= "{$gruda}'{$escolaDestinoExterna}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->ref_cod_escola_destino)) {
@@ -142,13 +142,15 @@ class clsPmieducarTransferenciaSolicitacao extends Model
                 $gruda = ', ';
             }
             if (is_string($this->estado_escola_destino_externa)) {
+                $escolaDestinoExterna = $db->escapeString($this->estado_escola_destino_externa);
                 $campos .= "{$gruda}estado_escola_destino_externa";
-                $valores .= "{$gruda}'{$this->estado_escola_destino_externa}'";
+                $valores .= "{$gruda}'{$escolaDestinoExterna}'";
                 $gruda = ', ';
             }
             if (is_string($this->municipio_escola_destino_externa)) {
+                $municipioEscolaDestinoExterna = $db->escapeString($this->municipio_escola_destino_externa);
                 $campos .= "{$gruda}municipio_escola_destino_externa";
-                $valores .= "{$gruda}'{$this->municipio_escola_destino_externa}'";
+                $valores .= "{$gruda}'{$municipioEscolaDestinoExterna}'";
                 $gruda = ', ';
             }
 
@@ -192,7 +194,8 @@ class clsPmieducarTransferenciaSolicitacao extends Model
                 $gruda = ', ';
             }
             if (is_string($this->observacao)) {
-                $set .= "{$gruda}observacao = '{$this->observacao}'";
+                $observacao = $db->escapeString($this->observacao);
+                $set .= "{$gruda}observacao = '{$observacao}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {

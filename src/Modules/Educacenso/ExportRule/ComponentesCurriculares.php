@@ -11,6 +11,7 @@ class ComponentesCurriculares implements EducacensoExportRule
 {
     /**
      * @param Registro50 $registro50
+     *
      * @return RegistroEducacenso
      */
     public static function handle(RegistroEducacenso $registro50): RegistroEducacenso
@@ -32,7 +33,6 @@ class ComponentesCurriculares implements EducacensoExportRule
         $etapas = [
             1, 2, 3
         ];
-
 
         return !in_array($registro50->funcaoDocente, $funcoes)
             || in_array($registro50->etapaEducacensoTurma, $etapas)

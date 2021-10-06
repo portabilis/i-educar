@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\LegacyLevel;
-use App\Models\LegacySchool;
 use App\Models\LegacySchoolCourse;
 use App\Models\LegacySchoolGrade;
 use App\Models\LegacyUser;
@@ -11,7 +10,6 @@ use Illuminate\Database\Eloquent\Factory;
 /** @var Factory $factory */
 
 $factory->define(LegacySchoolGrade::class, function (Faker $faker) {
-
     $schoolCourse = factory(LegacySchoolCourse::class)->create();
 
     return [

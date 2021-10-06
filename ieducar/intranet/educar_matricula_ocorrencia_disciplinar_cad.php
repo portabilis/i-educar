@@ -1,23 +1,6 @@
 <?php
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'Portabilis/Date/Utils.php';
-require_once 'modules/Api/Model/ApiExternaController.php';
-require_once('include/modules/clsModulesAuditoriaGeral.inc.php');
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Ocorr&ecirc;ncia Disciplinar");
-        $this->processoAp = '578';
-    }
-}
-
-class indice extends clsCadastro
-{
+return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -89,7 +72,8 @@ class indice extends clsCadastro
 
         if (is_numeric($this->ref_cod_matricula)) {
             $obj_ref_cod_matricula = new clsPmieducarMatricula();
-            $detalhe_aluno = array_shift($obj_ref_cod_matricula->lista($this->ref_cod_matricula));
+            $detalhe_aluno = $obj_ref_cod_matricula->lista($this->ref_cod_matricula);
+            array_shift($detalhe_aluno);
             $this->ref_cod_escola = $detalhe_aluno['ref_ref_cod_escola'];
             $obj_escola = new clsPmieducarEscola($this->ref_cod_escola);
             $det_escola = $obj_escola->detalhe();
@@ -116,7 +100,8 @@ class indice extends clsCadastro
                 $detalhe_aluno = array_shift($detalhe_aluno);
             }
             $obj_aluno = new clsPmieducarAluno();
-            $det_aluno = array_shift($det_aluno = $obj_aluno->lista($detalhe_aluno['ref_cod_aluno'], null, null, null, null, null, null, null, null, null, 1));
+            $det_aluno = $obj_aluno->lista($detalhe_aluno['ref_cod_aluno'], null, null, null, null, null, null, null, null, null, 1);
+            array_shift($det_aluno);
 
             $this->campoRotulo('nm_pessoa', 'Nome do Aluno', $det_aluno['nome_aluno']);
         } else {
@@ -152,9 +137,9 @@ class indice extends clsCadastro
 
         $this->campoCheck(
             'visivel_pais',
-            Portabilis_String_Utils::toLatin1('Visí­vel aos pais'),
+            'Visível aos pais',
             $this->visivel_pais,
-            Portabilis_String_Utils::toLatin1('Marque este campo, caso deseje que os pais do aluno possam visualizar tal ocorrência disciplinar.')
+            'Marque este campo, caso deseje que os pais do aluno possam visualizar tal ocorrência disciplinar.'
         );
     }
 
@@ -179,16 +164,11 @@ class indice extends clsCadastro
             $ocorrenciaDisciplinar = new clsPmieducarMatriculaOcorrenciaDisciplinar();
             $ocorrenciaDisciplinar->cod_ocorrencia_disciplinar = $cod_ocorrencia_disciplinar;
 
-            $ocorrenciaDisciplinar = $ocorrenciaDisciplinar->detalhe();
-
-            $auditoria = new clsModulesAuditoriaGeral('matricula_ocorrencia_disciplinar', $this->pessoa_logada, $cod_ocorrencia_disciplinar);
-            $auditoria->inclusao($ocorrenciaDisciplinar);
-
             if (($this->visivel_pais) && ($this->possuiConfiguracaoNovoEducacao())) {
                 $resposta = json_decode($this->enviaOcorrenciaNovoEducacao($cod_ocorrencia_disciplinar));
 
                 if (is_array($resposta->errors)) {
-                    echo Portabilis_String_Utils::toLatin1('Erro ao enviar ocorrencia disciplinar ao sistema externo: ' . $resposta->errors[0]);
+                    echo 'Erro ao enviar ocorrencia disciplinar ao sistema externo: ' . $resposta->errors[0];
                     die;
                 }
             }
@@ -215,7 +195,6 @@ class indice extends clsCadastro
 
         $ocorrenciaDisciplinar = new clsPmieducarMatriculaOcorrenciaDisciplinar();
         $ocorrenciaDisciplinar->cod_ocorrencia_disciplinar = $this->cod_ocorrencia_disciplinar;
-        $ocorrenciaDisciplinarDetalheAntes = $ocorrenciaDisciplinar->detalhe();
 
         $this->visivel_pais = is_null($this->visivel_pais) ? 0 : 1;
 
@@ -227,10 +206,6 @@ class indice extends clsCadastro
 
         $editou = $obj->edita();
         if ($editou) {
-            $ocorrenciaDisciplinarDetalheDepois = $ocorrenciaDisciplinar->detalhe();
-            $auditoria = new clsModulesAuditoriaGeral('matricula_ocorrencia_disciplinar', $this->pessoa_logada, $this->cod_ocorrencia_disciplinar);
-            $auditoria->alteracao($ocorrenciaDisciplinarDetalheAntes, $ocorrenciaDisciplinarDetalheDepois);
-
             $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
             if ($voltaListagem) {
                 $this->simpleRedirect("educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}");
@@ -251,15 +226,11 @@ class indice extends clsCadastro
 
         $ocorrenciaDisciplinar = new clsPmieducarMatriculaOcorrenciaDisciplinar();
         $ocorrenciaDisciplinar->cod_ocorrencia_disciplinar = $this->cod_ocorrencia_disciplinar;
-        $ocorrenciaDisciplinar = $ocorrenciaDisciplinar->detalhe();
 
         $this->data_cadastro = Portabilis_Date_Utils::brToPgSQL($this->data_cadastro);
         $obj = new clsPmieducarMatriculaOcorrenciaDisciplinar($this->ref_cod_matricula, $this->ref_cod_tipo_ocorrencia_disciplinar, $this->sequencial, $this->pessoa_logada, $this->pessoa_logada, $this->observacao, $this->data_cadastro, $this->data_exclusao, 0);
         $excluiu = $obj->excluir();
         if ($excluiu) {
-            $auditoria = new clsModulesAuditoriaGeral('matricula_ocorrencia_disciplinar', $this->pessoa_logada, $this->cod_ocorrencia_disciplinar);
-            $auditoria->exclusao($ocorrenciaDisciplinar);
-
             $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
             $this->simpleRedirect("educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}");
         }
@@ -321,13 +292,10 @@ class indice extends clsCadastro
 
         return strlen($instituicao['url_novo_educacao']) > 0;
     }
-}
 
-// cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
-$miolo = new indice();
-// adiciona o conteudo na clsBase
-$pagina->addForm($miolo);
-// gera o html
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->title = 'i-Educar - Ocorr&ecirc;ncia Disciplinar';
+        $this->processoAp = '578';
+    }
+};

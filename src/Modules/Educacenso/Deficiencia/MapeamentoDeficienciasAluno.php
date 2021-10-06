@@ -2,7 +2,6 @@
 
 namespace iEducar\Modules\Educacenso\Deficiencia;
 
-
 class MapeamentoDeficienciasAluno
 {
     /**

@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * LegacySchool
  *
+ * @property string            $name
  * @property LegacyInstitution $institution
  */
 class LegacySchool extends Model
@@ -54,6 +54,8 @@ class LegacySchool extends Model
         'unidade_vinculada_outra_instituicao',
         'inep_escola_sede',
         'codigo_ies',
+        'qtd_vice_diretor',
+        'qtd_orientador_comunitario',
     ];
 
     /**
@@ -67,6 +69,14 @@ class LegacySchool extends Model
     public function getIdAttribute()
     {
         return $this->cod_escola;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNameAttribute()
+    {
+        return $this->person->nome;
     }
 
     /**
@@ -108,11 +118,6 @@ class LegacySchool extends Model
         return $this->belongsTo(LegacyOrganization::class, 'ref_idpes');
     }
 
-    public function getNameAttribute()
-    {
-        return DB::selectOne('SELECT relatorio.get_nome_escola(:escola) AS nome', ['escola' => $this->id])->nome;
-    }
-
     /**
      * @return HasOne
      */
@@ -131,7 +136,7 @@ class LegacySchool extends Model
             'pmieducar.escola_serie',
             'ref_cod_escola',
             'ref_cod_serie'
-        )->withPivot('ativo', 'anos_letivos');
+        )->withPivot('ativo', 'anos_letivos', 'bloquear_enturmacao_sem_vagas');
     }
 
     /**
@@ -148,5 +153,10 @@ class LegacySchool extends Model
     public function schoolManagers()
     {
         return $this->hasMany('App\\Models\\SchoolManager', 'school_id');
+    }
+
+    public function stages()
+    {
+        return $this->hasMany(LegacySchoolStage::class, 'ref_ref_cod_escola');
     }
 }

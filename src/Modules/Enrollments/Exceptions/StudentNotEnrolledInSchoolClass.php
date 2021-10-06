@@ -18,7 +18,8 @@ class StudentNotEnrolledInSchoolClass extends Exception
     public function __construct($enrollmentId)
     {
         parent::__construct(
-            "Aluno não enturmado.", Error::STUDENT_NOT_ENROLLED_IN_SCHOOL_CLASS
+            'Aluno não enturmado.',
+            Error::STUDENT_NOT_ENROLLED_IN_SCHOOL_CLASS
         );
 
         $this->enrollmentId = $enrollmentId;

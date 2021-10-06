@@ -1,10 +1,8 @@
-<?php
+﻿<?php
 
+use App\Models\LegacyRegistration;
+use App\Services\GlobalAverageService;
 use iEducar\Legacy\Model;
-use Illuminate\Support\Facades\Session;
-
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsPmieducarHistoricoEscolar extends Model
 {
@@ -33,32 +31,28 @@ class clsPmieducarHistoricoEscolar extends Model
     public $origem;
     public $extra_curricular;
     public $ref_cod_matricula;
-    public $pessoa_logada;
 
     public function __construct($ref_cod_aluno = null, $sequencial = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_serie = null, $ano = null, $carga_horaria = null, $dias_letivos = null, $escola = null, $escola_cidade = null, $escola_uf = null, $observacao = null, $aprovado = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $faltas_globalizadas = null, $ref_cod_instituicao = null, $origem = null, $extra_curricular = null, $ref_cod_matricula = null, $frequencia = null, $registro = null, $livro = null, $folha = null, $nm_curso = null, $historico_grade_curso_id = null, $aceleracao = null, $ref_cod_escola = null, $dependencia = false, $posicao = null)
     {
-        $db = new clsBanco();
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}historico_escolar";
-
-        $this->pessoa_logada = Session::get('id_pessoa');
 
         $this->_campos_lista = $this->_todos_campos = 'ref_cod_aluno, sequencial, ref_usuario_exc, ref_usuario_cad, ano, carga_horaria, dias_letivos, escola, escola_cidade, escola_uf, observacao, aprovado, data_cadastro, data_exclusao, ativo, faltas_globalizadas, ref_cod_instituicao, nm_serie, origem, extra_curricular, ref_cod_matricula, frequencia, registro, livro, folha, nm_curso, historico_grade_curso_id, aceleracao, ref_cod_escola, dependencia, posicao';
 
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
         if (is_numeric($ref_cod_aluno)) {
-                    $this->ref_cod_aluno = $ref_cod_aluno;
+            $this->ref_cod_aluno = $ref_cod_aluno;
         }
         if (is_numeric($ref_cod_instituicao)) {
-                    $this->ref_cod_instituicao = $ref_cod_instituicao;
+            $this->ref_cod_instituicao = $ref_cod_instituicao;
         }
         if (is_numeric($ref_cod_matricula)) {
-                    $this->ref_cod_matricula = $ref_cod_matricula;
+            $this->ref_cod_matricula = $ref_cod_matricula;
         }
 
         if (is_numeric($sequencial)) {
@@ -175,8 +169,9 @@ class clsPmieducarHistoricoEscolar extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_serie)) {
+                $serie = $db->escapeString($this->nm_serie);
                 $campos .= "{$gruda}nm_serie";
-                $valores .= "{$gruda}'{$this->nm_serie}'";
+                $valores .= "{$gruda}'{$serie}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->ref_cod_instituicao)) {
@@ -223,27 +218,28 @@ class clsPmieducarHistoricoEscolar extends Model
                 $valores .= "{$gruda}null";
                 $gruda = ', ';
             }
-            $this->escola = addslashes($this->escola);
             if (is_string($this->escola)) {
+                $escola = $db->escapeString($this->escola);
                 $campos .= "{$gruda}escola";
-                $valores .= "{$gruda}E'{$this->escola}'";
+                $valores .= "{$gruda}E'{$escola}'";
                 $gruda = ', ';
             }
-            $this->escola_cidade = addslashes($this->escola_cidade);
             if (is_string($this->escola_cidade)) {
+                $escola_cidade = $db->escapeString($this->escola_cidade);
                 $campos .= "{$gruda}escola_cidade";
-                $valores .= "{$gruda}E'{$this->escola_cidade}'";
+                $valores .= "{$gruda}E'{$escola_cidade}'";
                 $gruda = ', ';
             }
             if (is_string($this->escola_uf)) {
+                $escola_uf = $db->escapeString($this->escola_uf);
                 $campos .= "{$gruda}escola_uf";
-                $valores .= "{$gruda}'{$this->escola_uf}'";
+                $valores .= "{$gruda}'{$escola_uf}'";
                 $gruda = ', ';
             }
-            $this->observacao = addslashes($this->observacao);
             if (is_string($this->observacao)) {
+                $observacao = $db->escapeString($this->observacao);
                 $campos .= "{$gruda}observacao";
-                $valores .= "{$gruda}E'{$this->observacao}'";
+                $valores .= "{$gruda}E'{$observacao}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->aprovado)) {
@@ -265,28 +261,28 @@ class clsPmieducarHistoricoEscolar extends Model
                 $valores .= "{$gruda}null";
                 $gruda = ', ';
             }
-            $this->registro = addslashes($this->registro);
             if (is_string($this->registro)) {
+                $registro = $db->escapeString($this->registro);
                 $campos .= "{$gruda}registro";
-                $valores .= "{$gruda}E'{$this->registro}'";
+                $valores .= "{$gruda}E'{$registro}'";
                 $gruda = ', ';
             }
-            $this->livro = addslashes($this->livro);
             if (is_string($this->livro)) {
+                $livro = $db->escapeString($this->livro);
                 $campos .= "{$gruda}livro";
-                $valores .= "{$gruda}E'{$this->livro}'";
+                $valores .= "{$gruda}E'{$livro}'";
                 $gruda = ', ';
             }
-            $this->folha = addslashes($this->folha);
             if (is_string($this->folha)) {
+                $folha = $db->escapeString($this->folha);
                 $campos .= "{$gruda}folha";
-                $valores .= "{$gruda}E'{$this->folha}'";
+                $valores .= "{$gruda}E'{$folha}'";
                 $gruda = ', ';
             }
-            $this->nm_curso = addslashes($this->nm_curso);
             if (is_string($this->nm_curso)) {
+                $nm_curso = $db->escapeString($this->nm_curso);
                 $campos .= "{$gruda}nm_curso";
-                $valores .= "{$gruda}E'{$this->nm_curso}'";
+                $valores .= "{$gruda}E'{$nm_curso}'";
                 $gruda = ', ';
             }
 
@@ -341,8 +337,6 @@ class clsPmieducarHistoricoEscolar extends Model
 
             if ($this->ref_cod_aluno) {
                 $detalhe = $this->detalhe();
-                $auditoria = new clsModulesAuditoriaGeral('historico_escolar', $this->pessoa_logada, $this->ref_cod_aluno);
-                $auditoria->inclusao($detalhe);
             }
 
             return $this->sequencial;
@@ -371,7 +365,8 @@ class clsPmieducarHistoricoEscolar extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_serie)) {
-                $set .= "{$gruda}nm_serie = '{$this->nm_serie}'";
+                $nm_serie = $db->escapeString($this->nm_serie);
+                $set .= "{$gruda}nm_serie = '{$nm_serie}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->ref_cod_instituicao)) {
@@ -408,23 +403,24 @@ class clsPmieducarHistoricoEscolar extends Model
                 $set .= "{$gruda}dias_letivos = NULL";
                 $gruda = ', ';
             }
-            $this->escola = addslashes($this->escola);
             if (is_string($this->escola)) {
-                $set .= "{$gruda}escola = E'{$this->escola}'";
+                $escola = $db->escapeString($this->escola);
+                $set .= "{$gruda}escola = E'{$escola}'";
                 $gruda = ', ';
             }
-            $this->escola_cidade = addslashes($this->escola_cidade);
             if (is_string($this->escola_cidade)) {
-                $set .= "{$gruda}escola_cidade = E'{$this->escola_cidade}'";
+                $escola_cidade = $db->escapeString($this->escola_cidade);
+                $set .= "{$gruda}escola_cidade = E'{$escola_cidade}'";
                 $gruda = ', ';
             }
             if (is_string($this->escola_uf)) {
-                $set .= "{$gruda}escola_uf = '{$this->escola_uf}'";
+                $escola_uf = $db->escapeString($this->escola_uf);
+                $set .= "{$gruda}escola_uf = '{$escola_uf}'";
                 $gruda = ', ';
             }
-            $this->observacao = addslashes($this->observacao);
             if (is_string($this->observacao)) {
-                $set .= "{$gruda}observacao = E'{$this->observacao}'";
+                $observacao = $db->escapeString($this->observacao);
+                $set .= "{$gruda}observacao = E'{$observacao}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->aprovado)) {
@@ -455,24 +451,24 @@ class clsPmieducarHistoricoEscolar extends Model
                 $set .= "{$gruda}faltas_globalizadas = NULL";
                 $gruda = ', ';
             }
-            $this->registro = addslashes($this->registro);
             if (is_string($this->registro)) {
-                $set .= "{$gruda}registro = E'{$this->registro}'";
+                $registro = $db->escapeString($this->registro);
+                $set .= "{$gruda}registro = E'{$registro}'";
                 $gruda = ', ';
             }
-            $this->livro = addslashes($this->livro);
             if (is_string($this->livro)) {
-                $set .= "{$gruda}livro = E'{$this->livro}'";
+                $livro = $db->escapeString($this->livro);
+                $set .= "{$gruda}livro = E'{$livro}'";
                 $gruda = ', ';
             }
-            $this->folha = addslashes($this->folha);
             if (is_string($this->folha)) {
-                $set .= "{$gruda}folha = E'{$this->folha}'";
+                $folha = $db->escapeString($this->folha);
+                $set .= "{$gruda}folha = E'{$folha}'";
                 $gruda = ', ';
             }
-            $this->nm_curso = addslashes($this->nm_curso);
             if (is_string($this->nm_curso)) {
-                $set .= "{$gruda}nm_curso = E'{$this->nm_curso}'";
+                $nm_curso = $db->escapeString($this->nm_curso);
+                $set .= "{$gruda}nm_curso = E'{$nm_curso}'";
                 $gruda = ', ';
             }
 
@@ -513,8 +509,6 @@ class clsPmieducarHistoricoEscolar extends Model
             if ($set) {
                 $detalheAntigo = $this->detalhe();
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_aluno = '{$this->ref_cod_aluno}' AND sequencial = '{$this->sequencial}'");
-                $auditoria = new clsModulesAuditoriaGeral('historico_escolar', $this->pessoa_logada, $this->ref_cod_aluno);
-                $auditoria->alteracao($detalheAntigo, $this->detalhe());
 
                 return true;
             }
@@ -746,35 +740,35 @@ class clsPmieducarHistoricoEscolar extends Model
         return false;
     }
 
-    public static function gerarHistoricoTransferencia($ref_cod_matricula, $pessoa_logada)
+    public static function gerarHistoricoTransferencia($ref_cod_matricula, $pessoa_logada, $ref_cod_escola)
     {
         $detMatricula = self::dadosMatricula($ref_cod_matricula);
 
         if (self::deveGerarHistorico($detMatricula['ref_cod_instituicao'])) {
             $dadosEscola = self::dadosEscola($detMatricula['ref_ref_cod_escola'], $detMatricula['ref_cod_instituicao']);
 
-            $grade_curso_id = strpos($detMatricula['nome_curso'], '8') !== false ? 1 : 2;
+            $grade_curso_id = str_contains($detMatricula['nome_curso'], '8') ? 1 : 2;
 
             $historicoEscolar = new clsPmieducarHistoricoEscolar(
                 $detMatricula['ref_cod_aluno'],
-                $sequencial = null,
-                $ref_usuario_exc = null,
-                $ref_usuario_cad = $pessoa_logada,
+                null,
+                null,
+                $pessoa_logada,
                 $detMatricula['nome_serie'],
                 $detMatricula['ano'],
-                1000,
+                $detMatricula['carga_horaria'],
                 null,
-                strtoupper($dadosEscola['nome']),
-                strtoupper($dadosEscola['cidade']),
+                mb_strtoupper($dadosEscola['nome']),
+                mb_strtoupper($dadosEscola['cidade']),
                 $dadosEscola['uf'],
                 '',
                 4,
-                $data_cadastro = date('Y-m-d'),
-                $data_exclusao = null,
-                $ativo = 1,
+                date('Y-m-d'),
+                null,
+                1,
                 null,
                 $detMatricula['ref_cod_instituicao'],
-                $origem = '',
+                '',
                 null,
                 $ref_cod_matricula,
                 '',
@@ -782,11 +776,13 @@ class clsPmieducarHistoricoEscolar extends Model
                 '',
                 '',
                 $detMatricula['nome_curso'],
-                $grade_curso_id
+                $grade_curso_id,
+                null,
+                $ref_cod_escola
             );
 
             if ($historicoEscolar->cadastra()) {
-                $sequencial = self::getMaxSequencial($detMatricula['ref_cod_aluno']);
+                $sequencial = (new clsPmieducarHistoricoEscolar())->getMaxSequencial($detMatricula['ref_cod_aluno']);
                 $disciplinas = self::dadosDisciplinas($ref_cod_matricula);
                 foreach ($disciplinas as $index => $disciplina) {
                     $historicoDisciplina = new clsPmieducarHistoricoDisciplinas(($index + 1), $detMatricula['ref_cod_aluno'], $sequencial, $disciplina, '');
@@ -823,7 +819,7 @@ class clsPmieducarHistoricoEscolar extends Model
 
     protected static function dadosMatricula($ref_cod_matricula)
     {
-        $sql = "SELECT m.ref_cod_aluno, nm_serie as nome_serie, s.cod_serie, m.ano, m.ref_ref_cod_escola, c.ref_cod_instituicao, c.nm_curso as nome_curso
+        $sql = "SELECT m.ref_cod_aluno, nm_serie as nome_serie, s.cod_serie, m.ano, m.ref_ref_cod_escola, c.ref_cod_instituicao, c.nm_curso as nome_curso, s.carga_horaria
             FROM pmieducar.matricula m
             INNER JOIN pmieducar.serie s ON m.ref_ref_cod_serie = s.cod_serie
             INNER JOIN pmieducar.curso c ON m.ref_cod_curso = c.cod_curso
@@ -874,23 +870,29 @@ class clsPmieducarHistoricoEscolar extends Model
         if ($this->sequencial && $this->ref_cod_aluno) {
             $detalhes = $this->detalhe();
 
-            $sql = "SELECT media
-                    FROM modules.media_geral
-                    INNER JOIN modules.nota_aluno ON (nota_aluno.id = media_geral.nota_aluno_id)
-                    WHERE nota_aluno.matricula_id = {$detalhes['ref_cod_matricula']};";
+            $registration = LegacyRegistration::findOrFail($detalhes['ref_cod_matricula']);
+            $service = new GlobalAverageService();
+            $average = $service->getGlobalAverage($registration);
+            $mediaGeral = $this->arredondaNota($registration->cod_matricula, $average, 2);
+            $mediaGeral = number_format($mediaGeral, 1, '.', ',');
+
+            $sql = "INSERT INTO pmieducar.historico_disciplinas (sequencial, ref_ref_cod_aluno, ref_sequencial, nm_disciplina, nota) values ({$sequencial}, {$this->ref_cod_aluno}, {$this->sequencial}, 'Média Geral' , {$mediaGeral});";
+
             $db = new clsBanco();
-            $db->Consulta($sql);
-            $db->ProximoRegistro();
-
-            $mediaGeral = $db->Tupla();
-            $mediaGeral = number_format($mediaGeral[0], 1, '.', ',');
-
-            $sql = "INSERT INTO pmieducar.historico_disciplinas values ({$sequencial}, {$this->ref_cod_aluno}, {$this->sequencial}, 'Média Geral', {$mediaGeral});";
             $db->Consulta($sql);
 
             return true;
         } else {
             return null;
         }
+    }
+
+    private function arredondaNota($codMatricula, $nota, $tipoNota)
+    {
+        $regraAvaliacao = App_Model_IedFinder::getRegraAvaliacaoPorMatricula(
+            $codMatricula
+        );
+
+        return $regraAvaliacao->tabelaArredondamento->round($nota, $tipoNota);
     }
 }

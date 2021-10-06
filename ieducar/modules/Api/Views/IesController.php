@@ -1,7 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-
 class IesController extends ApiCoreController
 {
 

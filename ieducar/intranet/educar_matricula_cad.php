@@ -1,5 +1,7 @@
 <?php
 
+use App\Events\RegistrationEvent;
+use App\Exceptions\Registration\RegistrationException;
 use App\Exceptions\Transfer\TransferException;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
@@ -7,31 +9,10 @@ use App\Services\PromotionService;
 use App\Services\SchoolClass\AvailableTimeService;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
-use App\Events\RegistrationEvent;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'lib/Portabilis/Date/Utils.php';
-require_once 'lib/Portabilis/String/Utils.php';
-require_once 'lib/Portabilis/Utils/Database.php';
-require_once 'lib/CoreExt/Controller/Request.php';
-require_once 'modules/Avaliacao/Views/PromocaoApiController.php';
-
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Matrícula');
-        $this->processoAp = 578;
-    }
-}
-
-class indice extends clsCadastro
-{
-    public $pessoa_logada;
+return new class extends clsCadastro {
 
     public $cod_matricula;
 
@@ -58,6 +39,8 @@ class indice extends clsCadastro
     public $ano;
 
     public $data_matricula;
+
+    public $observacoes;
 
     public $ref_cod_instituicao;
 
@@ -96,6 +79,7 @@ class indice extends clsCadastro
         $this->ref_cod_aluno = $this->getQueryString('ref_cod_aluno');
         $this->ref_cod_candidato_reserva_vaga = $this->getQueryString('ref_cod_candidato_reserva_vaga');
         $this->ref_cod_candidato_fila_unica = $this->getQueryString('cod_candidato_fila_unica');
+        $this->ano = $this->getQueryString('ano');
 
         $retorno = $this->ref_cod_turma_copiar_enturmacoes ? 'Enturmar' : 'Novo';
         $obj_aluno = new clsPmieducarAluno($this->ref_cod_aluno);
@@ -107,7 +91,7 @@ class indice extends clsCadastro
         }
 
         if ($this->ref_cod_turma_copiar_enturmacoes) {
-            $this->nome_url_sucesso = Portabilis_String_Utils::toLatin1('Gravar enturmações');
+            $this->nome_url_sucesso = 'Gravar enturmações';
             $url = route('enrollments.batch.enroll.index', ['schoolClass' => $this->ref_cod_turma_copiar_enturmacoes]);
         } else {
             $url = 'educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno;
@@ -165,40 +149,22 @@ class indice extends clsCadastro
                 $this->nm_aluno = $det_aluno['nome_aluno'];
                 $this->campoRotulo('nm_aluno', 'Aluno', $this->nm_aluno);
             }
-
-            /*
-             * Verifica se existem matrículas para o aluno para apresentar o campo
-             * transferência, necessário para o relatório de movimentação mensal.
-             */
-            $obj_matricula = new clsPmieducarMatricula();
-
-            $lst_matricula = $obj_matricula->lista(
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                $this->ref_cod_aluno
-            );
         }
 
         if ($this->ref_cod_turma_copiar_enturmacoes) {
-            $this->nome_url_sucesso = Portabilis_String_Utils::toLatin1('Gravar enturmações');
+            $this->nome_url_sucesso ='Gravar enturmações';
         }
-        // inputs
-
-        $anoLetivoHelperOptions = ['situacoes' => ['em_andamento', 'nao_iniciado']];
 
         $this->inputsHelper()->dynamic(['ano', 'instituicao', 'escola', 'curso', 'serie', 'turma']);
-        $this->inputsHelper()->date('data_matricula', ['label' => Portabilis_String_Utils::toLatin1('Data da matrícula'), 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')]);
+        $this->inputsHelper()->date('data_matricula', ['label' => 'Data da matrícula', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')]);
+        $this->inputsHelper()->textArea('observacoes', ['required' => false, 'label' => 'Observações']);
         $this->inputsHelper()->hidden('ano_em_andamento', ['value' => '1']);
 
         if (config('legacy.app.matricula.dependencia') == 1) {
             $this->inputsHelper()->checkbox(
                 'dependencia',
                 [
-                    'label' => Portabilis_String_Utils::toLatin1('Matrícula de dependência?'),
+                    'label' => 'Matrícula de dependência?',
                     'value' => $this->dependencia
                 ]
             );
@@ -229,7 +195,7 @@ class indice extends clsCadastro
 
     private function getEnturmacoesNaTurma($turma)
     {
-        return (array)Portabilis_Utils_Database::fetchPreparedQuery("
+        return (array) Portabilis_Utils_Database::fetchPreparedQuery("
             select *
             from pmieducar.matricula_turma
             where ref_cod_turma = {$turma}
@@ -239,7 +205,7 @@ class indice extends clsCadastro
 
     private function getMaximoAlunosNaTurma($turma)
     {
-        return (int)(new clsBanco())->CampoUnico("
+        return (int) (new clsBanco())->CampoUnico("
             select max_aluno
             from pmieducar.turma
             where cod_turma = $turma
@@ -377,11 +343,11 @@ class indice extends clsCadastro
         }
 
         if ($this->verificaAlunoFalecido()) {
-            $this->mensagem = Portabilis_String_Utils::toLatin1('Não é possível matricular alunos falecidos.');
+            $this->mensagem = 'Não é possível matricular alunos falecidos.';
         }
 
         if (!$this->permiteMatriculaSerieDestino() && $this->bloqueiaMatriculaSerieNaoSeguinte()) {
-            $this->mensagem = Portabilis_String_Utils::toLatin1('Não é possível matricular alunos em séries fora da sequência de enturmação.');
+            $this->mensagem = 'Não é possível matricular alunos em séries fora da sequência de enturmação.';
 
             return false;
         }
@@ -397,7 +363,7 @@ class indice extends clsCadastro
             $bairro_aluno = $db->CampoUnico("select Upper(nome) from public.bairro where idbai = (select idbai from cadastro.endereco_pessoa where idpes = (select ref_idpes from pmieducar.aluno where cod_aluno = {$this->ref_cod_aluno}))");
 
             if (strcasecmp($bairro_aluno, $bairro_escola) != 0) {
-                $this->mensagem = Portabilis_String_Utils::toLatin1('O aluno deve morar no mesmo bairro da escola');
+                $this->mensagem = 'O aluno deve morar no mesmo bairro da escola';
 
                 return false;
             }
@@ -440,7 +406,6 @@ class indice extends clsCadastro
         }
 
         if (is_array($anoLetivoEmAndamentoEscola)) {
-            require_once 'include/pmieducar/clsPmieducarSerie.inc.php';
             $db = new clsBanco();
 
             $db->Consulta("SELECT ref_ref_cod_serie, ref_cod_curso
@@ -459,7 +424,10 @@ class indice extends clsCadastro
             if (is_array($m) && count($m) && !$dependencia) {
                 $curso = $this->getCurso($this->ref_cod_curso);
 
-                if ($m['ref_ref_cod_serie'] == $this->ref_cod_serie) {
+                $cursoADeferir = new clsPmieducarCurso($this->ref_cod_curso);
+                $cursoDeAtividadeComplementar = $cursoADeferir->cursoDeAtividadeComplementar();
+
+                if ($m['ref_ref_cod_serie'] == $this->ref_cod_serie && !$cursoDeAtividadeComplementar) {
                     $this->mensagem = 'Este aluno j&aacute; est&aacute; matriculado nesta s&eacute;rie e curso, n&atilde;o &eacute; possivel matricular um aluno mais de uma vez na mesma s&eacute;rie.<br />';
 
                     return false;
@@ -488,10 +456,7 @@ class indice extends clsCadastro
                     $cursoADeferir = new clsPmieducarCurso($this->ref_cod_curso);
                     $cursoDeAtividadeComplementar = $cursoADeferir->cursoDeAtividadeComplementar();
 
-                    if (($mesmoCursoAno || config('legacy.app.matricula.multiplas_matriculas') === 0) && !$cursoDeAtividadeComplementar) {
-                        require_once 'include/pmieducar/clsPmieducarEscola.inc.php';
-                        require_once 'include/pessoa/clsJuridica.inc.php';
-
+                    if (($mesmoCursoAno || config('legacy.app.matricula.multiplas_matriculas') == 0) && !$cursoDeAtividadeComplementar) {
                         $serie = new clsPmieducarSerie($m['ref_ref_cod_serie'], null, null, $m['ref_cod_curso']);
                         $serie = $serie->detalhe();
 
@@ -543,7 +508,7 @@ class indice extends clsCadastro
             $reload = Session::get('reload_faixa_etaria');
 
             if ($verificarDataCorte && !$reload) {
-                $instituicao = new clsPmiEducarInstituicao($this->ref_cod_instituicao);
+                $instituicao = new clsPmieducarInstituicao($this->ref_cod_instituicao);
                 $instituicao = $instituicao->detalhe();
 
                 $dataCorte = $instituicao['data_base_matricula'];
@@ -559,12 +524,12 @@ class indice extends clsCadastro
                 $dentroPeriodoCorte = $serie->verificaPeriodoCorteEtarioDataNascimento($detPes['data_nasc'], $this->ano);
 
                 if ($bloquearMatriculaFaixaEtaria && !$dentroPeriodoCorte) {
-                    $this->mensagem = Portabilis_String_Utils::toLatin1('Não foi possível realizar a matrícula, pois a idade do aluno está fora da faixa etária da série');
+                    $this->mensagem = 'Não foi possível realizar a matrícula, pois a idade do aluno está fora da faixa etária da série';
 
                     return false;
                 } elseif ($alertaFaixaEtaria && !$dentroPeriodoCorte) {
                     echo '<script type="text/javascript">
-                        var msg = \'' . Portabilis_String_Utils::toLatin1('A idade do aluno encontra-se fora da faixa etária pré-definida na série, deseja continuar com a matrícula?') . '\';
+                        var msg = \'' . 'A idade do aluno encontra-se fora da faixa etária pré-definida na série, deseja continuar com a matrícula?' . '\';
                         if (!confirm(msg)) {
                           window.location = \'educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno . '\';
                         } else {
@@ -760,7 +725,7 @@ class indice extends clsCadastro
                 );
             }
 
-            $objInstituicao = new clsPmiEducarInstituicao($this->ref_cod_instituicao);
+            $objInstituicao = new clsPmieducarInstituicao($this->ref_cod_instituicao);
             $detInstituicao = $objInstituicao->detalhe();
             $controlaEspacoUtilizacaoAluno = $detInstituicao['controlar_espaco_utilizacao_aluno'];
 
@@ -849,7 +814,7 @@ class indice extends clsCadastro
                 true
             );
 
-            $count = count($lst_CandidatoReservaVaga);
+            $count = is_array($lst_CandidatoReservaVaga) ? count($lst_CandidatoReservaVaga) : 0;
             $countEscolasDiferentes = 0;
             $countEscolasIguais = 0;
 
@@ -864,7 +829,7 @@ class indice extends clsCadastro
 
                 if (($countEscolasDiferentes > 0) && (!$reloadReserva)) {
                     echo '<script type="text/javascript">
-                      var msg = \'' . Portabilis_String_Utils::toLatin1('O aluno possui uma reserva de vaga em outra escola, deseja matricula-lo assim mesmo?') . '\';
+                      var msg = \'' . 'O aluno possui uma reserva de vaga em outra escola, deseja matricula-lo assim mesmo?' . '\';
                       if (!confirm(msg)) {
                         window.location = \'educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno . '\';
                       } else {
@@ -912,7 +877,10 @@ class indice extends clsCadastro
                 $this->ref_cod_curso,
                 null,
                 $this->semestre,
-                $this->data_matricula
+                $this->data_matricula,
+                null,
+                null,
+                $this->observacoes
             );
 
             $dataMatriculaObj = new \DateTime($this->data_matricula);
@@ -960,6 +928,7 @@ class indice extends clsCadastro
 
             if (!empty($this->ref_cod_turma) && $validarCamposEducacenso && !$this->availableTimeService()->isAvailable($this->ref_cod_aluno, $this->ref_cod_turma)) {
                 $this->mensagem = 'O aluno já está matriculado em uma turma com esse horário.';
+
                 return false;
             }
 
@@ -983,17 +952,21 @@ class indice extends clsCadastro
                 if ($this->situacaoUltimaMatricula == $this->transferido &&
                     $this->serieUltimaMatricula == $this->ref_cod_serie &&
                     $this->anoUltimaMatricula == $this->ano
-                )  {
+                ) {
                     /** @var LegacyRegistration $registration */
 
                     $registration = LegacyRegistration::find($this->cod_matricula);
 
+                    $mensagem = '';
+
                     try {
                         event(new RegistrationEvent($registration));
                     } catch (TransferException $exception) {
-                        $this->mensagem = 'Não foi possível copiar os dados da matrícula antiga. ' . $exception->getMessage();
+                        $mensagem = 'Não foi possível copiar os dados da matrícula antiga. ' . $exception->getMessage();
+                    } catch (RegistrationException $exception) {
+                        $this->mensagem = 'Não é possível concluir a matrícula. ' . $exception->getMessage();
 
-                        DB::commit();
+                        DB::rollBack();
                         $this->simpleRedirect('educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
                     }
 
@@ -1001,7 +974,7 @@ class indice extends clsCadastro
                     $promocao->fakeRequest();
                 }
 
-                $this->mensagem = 'Cadastro efetuado com sucesso.<br />';
+                $this->mensagem = 'Cadastro efetuado com sucesso.<br />' . $mensagem;
 
                 DB::commit();
                 $this->simpleRedirect('educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
@@ -1011,7 +984,7 @@ class indice extends clsCadastro
 
             return false;
         } else {
-            $this->mensagem = Portabilis_String_Utils::toLatin1('O ano (letivo) selecionado não está em andamento na escola selecionada.<br />');
+            $this->mensagem = 'O ano (letivo) selecionado não está em andamento na escola selecionada.<br />';
 
             return false;
         }
@@ -1019,7 +992,7 @@ class indice extends clsCadastro
 
     public function permiteDependenciaAnoConcluinte()
     {
-        $instituicao = new clsPmiEducarInstituicao($this->ref_cod_instituicao);
+        $instituicao = new clsPmieducarInstituicao($this->ref_cod_instituicao);
         $instituicao = $instituicao->detalhe();
         $serie = new clsPmieducarSerie($this->ref_cod_serie);
         $serie = $serie->detalhe();
@@ -1050,7 +1023,7 @@ class indice extends clsCadastro
                                                             WHERE serie.cod_serie = {$this->ref_cod_serie}");
 
         if ($matriculasDependencia >= $matriculasDependenciaPermitida) {
-            $this->mensagem = Portabilis_String_Utils::toLatin1("A regra desta série limita a quantidade de matrículas de dependência para {$matriculasDependenciaPermitida}.");
+            $this->mensagem = "A regra desta série limita a quantidade de matrículas de dependência para {$matriculasDependenciaPermitida}.";
 
             return false;
         }
@@ -1279,7 +1252,7 @@ class indice extends clsCadastro
             );
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br />';
+        $this->mensagem = 'Exclusão não realizada.<br />';
 
         return false;
     }
@@ -1380,14 +1353,14 @@ class indice extends clsCadastro
         if (!$dependencia) {
             // Caso quantidade de matrículas naquela turma seja maior ou igual que a capacidade da turma deve bloquear
             if ($this->_getQtdMatriculaTurma() >= $this->_getMaxAlunoTurma()) {
-                $this->mensagem = Portabilis_String_Utils::toLatin1('Não existem vagas disponíveis para essa turma!') . '<br/>';
+                $this->mensagem = 'Não existem vagas disponíveis para essa turma! <br/>';
 
                 return false;
             }
 
             // Caso a capacidade de alunos naquele turno seja menor ou igual ao ao número de alunos matrículados + alunos na reserva de vaga externa deve bloquear
             if ($this->_getMaxAlunoTurno() <= ($this->_getQtdAlunosFila() + $this->_getQtdMatriculaTurno())) {
-                $this->mensagem = Portabilis_String_Utils::toLatin1('Não existem vagas disponíveis para essa série/turno!') . '<br/>';
+                $this->mensagem = 'Não existem vagas disponíveis para essa série/turno! <br/>';
 
                 return false;
             }
@@ -1449,7 +1422,7 @@ class indice extends clsCadastro
             $int_ref_ref_cod_escola_mult = null,
             $int_ref_ref_cod_serie_mult = null,
             $int_qtd_min_alunos_matriculados = null,
-            $bool_verifica_serie_multiseriada = false,
+            $bool_verifica_serie_multiseriada = true,
             $bool_tem_alunos_aguardando_nota = null,
             $visivel = null,
             $turma_turno_id = $det_t['turma_turno_id'],
@@ -1481,7 +1454,7 @@ class indice extends clsCadastro
                    AND turno_pre_matricula = $5
                    AND aprovado = 11 ';
 
-        return (int)Portabilis_Utils_Database::selectField($sql, [$this->ano, $this->ref_cod_escola, $this->ref_cod_curso, $this->ref_cod_serie, $det_t['turma_turno_id']]);
+        return (int) Portabilis_Utils_Database::selectField($sql, [$this->ano, $this->ref_cod_escola, $this->ref_cod_curso, $this->ref_cod_serie, $det_t['turma_turno_id']]);
     }
 
     public function _getQtdMatriculaTurno()
@@ -1531,17 +1504,20 @@ class indice extends clsCadastro
         return count($lst_mt);
     }
 
-    private function availableTimeService() {
+    private function availableTimeService()
+    {
         if (empty($this->availableTimeService)) {
             $this->availableTimeService = new AvailableTimeService();
         }
 
+        $this->availableTimeService->onlySchoolClassesInformedOnCensus();
+
         return $this->availableTimeService;
     }
-}
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
-
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->title = 'i-Educar - Matrícula';
+        $this->processoAp = 578;
+    }
+};

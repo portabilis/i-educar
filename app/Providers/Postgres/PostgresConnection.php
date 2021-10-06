@@ -27,6 +27,7 @@ class PostgresConnection extends ParentPostgresConnection
                 ->prepare($query));
             $this->bindValues($statement, $this->prepareBindings($bindings));
             $statement->execute();
+
             return $statement;
         });
     }

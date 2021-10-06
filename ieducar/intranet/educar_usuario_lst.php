@@ -3,22 +3,7 @@
 use App\User;
 use Illuminate\Support\Facades\Auth;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsListagem.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-
-class clsIndex extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} Usu&aacute;rios!");
-        $this->processoAp = '555';
-    }
-}
-
-class indice extends clsListagem
-{
+return new class extends clsListagem {
     public function Gerar()
     {
         $this->titulo = 'Usuários';
@@ -104,9 +89,9 @@ class indice extends clsListagem
         $obj_func->setOrderby('(nome) ASC');
         $obj_func->setLimite($limite, $iniciolimit);
         $lst_func = $obj_func->listaFuncionarioUsuario(
-            $_GET['matricula'],
-            $_GET['nm_pessoa'],
-            $_GET['matricula_interna'],
+            pg_escape_string($_GET['matricula']),
+            pg_escape_string($_GET['nm_pessoa']),
+            pg_escape_string($_GET['matricula_interna']),
             $this->ref_cod_escola,
             $this->ref_cod_instituicao,
             $this->ref_cod_tipo_usuario,
@@ -118,7 +103,6 @@ class indice extends clsListagem
             foreach ($lst_func as $pessoa) {
                 $ativo = ($pessoa['ativo'] == '1') ? 'Ativo' : 'Inativo';
                 $total = $pessoa['_total'];
-                $pessoa['nome'] = minimiza_capitaliza($pessoa['nome']);
 
                 if ($pessoa['nivel'] == 1) {
                     $nivel = 'Poli-Institucional';
@@ -157,9 +141,10 @@ class indice extends clsListagem
             url('intranet/educar_configuracoes_index.php') => 'Configurações',
         ]);
     }
-}
 
-$pagina = new clsIndex();
-$miolo = new indice();
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->title = 'Usu&aacute;rios!';
+        $this->processoAp = '555';
+    }
+};

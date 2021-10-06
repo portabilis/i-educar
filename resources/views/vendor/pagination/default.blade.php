@@ -1,3 +1,11 @@
+<div style="height: 30px;"></div>
+
+<table style="width: 100%">
+  <tr>
+    <td style="text-align: center">Total de registros: {{ $paginator->total() }}</td>
+  </tr>
+</table>
+
 <table class="paginacao" border="0" cellpadding="0" cellspacing="0" align="center">
     <tbody>
     <tr>

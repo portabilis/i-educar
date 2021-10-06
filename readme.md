@@ -1,5 +1,5 @@
 [![Latest Release](https://img.shields.io/github/release/portabilis/i-educar.svg?label=latest%20release)](https://github.com/portabilis/i-educar/releases)
-[![Build Status](https://travis-ci.com/portabilis/i-educar.svg?branch=2.2)](https://travis-ci.com/portabilis/i-educar)
+[![Build Status](https://github.com/portabilis/i-educar/workflows/tests/badge.svg)](https://github.com/portabilis/i-educar/actions)
 
 # i-Educar
 
@@ -67,7 +67,7 @@ ajudar a alcançar nossos objetivos.
 - [Instalação do pacote de relatórios](#instalação-do-pacote-de-relatórios)
 - [Upgrade](#upgrade)
 
-### Depêndencias
+### Dependência
 
 Para executar o projeto é necessário a utilização de alguns softwares para
 facilitar o desenvolvimento.
@@ -80,9 +80,11 @@ facilitar o desenvolvimento.
 
 #### Servidor
 
-- [PHP](http://php.net/) versão 7.2 ou maior
-- [Postgres](https://www.postgresql.org/) versão 9.5 ou superior
+- [PHP](http://php.net/) versão 7.4
+- [Composer](https://getcomposer.org/)
+- [Postgres](https://www.postgresql.org/)
 - [Nginx](https://www.nginx.com/)
+- [Redis](https://redis.io/)
 
 As seguintes extensões do PHP são necessárias:
 
@@ -240,8 +242,12 @@ Para instalar o pacote de relatórios visite o repositório do projeto
 [https://github.com/portabilis/i-educar-reports-package](https://github.com/portabilis/i-educar-reports-package)
 e siga as instruções de instalação.
 
-#### Upgrade
+### Upgrade
 
+- [Upgrade para 2.6 da 2.5](https://github.com/portabilis/i-educar/wiki/Upgrade-para-2.6-da-2.5).
+- [Upgrade para 2.5 da 2.4](https://github.com/portabilis/i-educar/wiki/Upgrade-para-2.5-da-2.4).
+- [Upgrade para 2.4 da 2.3](https://github.com/portabilis/i-educar/wiki/Upgrade-para-2.4-da-2.3).
+- [Upgrade para 2.3 da 2.2](https://github.com/portabilis/i-educar/wiki/Upgrade-para-2.3-da-2.2).
 - [Upgrade para 2.2 da 2.1](https://github.com/portabilis/i-educar/wiki/Upgrade-para-2.2-da-2.1).
 - [Upgrade para 2.1 da 2.0](https://github.com/portabilis/i-educar/wiki/Upgrade-para-2.1-da-2.0).
 

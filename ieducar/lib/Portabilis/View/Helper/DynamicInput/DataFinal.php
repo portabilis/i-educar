@@ -1,7 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
-
 class Portabilis_View_Helper_DynamicInput_DataFinal extends Portabilis_View_Helper_DynamicInput_Core
 {
     protected function inputValue($value = null)
@@ -36,6 +34,6 @@ class Portabilis_View_Helper_DynamicInput_DataFinal extends Portabilis_View_Help
 
         $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
 
-        call_user_func_array([$this->viewInstance, 'campoData'], $inputOptions);
+       $this->viewInstance->campoData(...array_values( $inputOptions));
     }
 }

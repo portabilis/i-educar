@@ -4,7 +4,7 @@ namespace App\Exceptions\Educacenso;
 
 use RuntimeException;
 
-class NotImplementedYear extends RuntimeException
+class NotImplementedYear extends RuntimeException implements ImportException
 {
     public function __construct($year)
     {

@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsPmieducarAcervoAssunto extends Model
 {
     public $cod_acervo_assunto;
@@ -25,10 +23,10 @@ class clsPmieducarAcervoAssunto extends Model
         $this->_campos_lista = $this->_todos_campos = 'cod_acervo_assunto, ref_usuario_exc, ref_usuario_cad, nm_assunto, descricao, data_cadastro, data_exclusao, ativo, ref_cod_biblioteca';
 
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
 
         if (is_numeric($cod_acervo_assunto)) {
@@ -74,13 +72,15 @@ class clsPmieducarAcervoAssunto extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_assunto)) {
+                $nome_assunto = $db->escapeString($this->nm_assunto);
                 $campos .= "{$gruda}nm_assunto";
-                $valores .= "{$gruda}'{$this->nm_assunto}'";
+                $valores .= "{$gruda}'{$nome_assunto}'";
                 $gruda = ', ';
             }
             if (is_string($this->descricao)) {
+                $descricao = $db->escapeString($this->descricao);
                 $campos .= "{$gruda}descricao";
-                $valores .= "{$gruda}'{$this->descricao}'";
+                $valores .= "{$gruda}'{$descricao}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->ref_cod_biblioteca)) {
@@ -123,11 +123,13 @@ class clsPmieducarAcervoAssunto extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_assunto)) {
-                $set .= "{$gruda}nm_assunto = '{$this->nm_assunto}'";
+                $nome_assunto = $db->escapeString($this->nm_assunto);
+                $set .= "{$gruda}nm_assunto = '{$nome_assunto}'";
                 $gruda = ', ';
             }
             if (is_string($this->descricao)) {
-                $set .= "{$gruda}descricao = '{$this->descricao}'";
+                $descricao = $db->escapeString($this->descricao);
+                $set .= "{$gruda}descricao = '{$descricao}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {
@@ -162,6 +164,8 @@ class clsPmieducarAcervoAssunto extends Model
      */
     public function lista($int_cod_acervo_assunto = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_assunto = null, $str_descricao = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_biblioteca = null)
     {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = '';
 
@@ -180,11 +184,13 @@ class clsPmieducarAcervoAssunto extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_assunto)) {
-            $filtros .= "{$whereAnd} nm_assunto LIKE '%{$str_nm_assunto}%'";
+            $str_nome_assunto = $db->escapeString($str_nm_assunto);
+            $filtros .= "{$whereAnd} nm_assunto LIKE '%{$str_nome_assunto}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($str_descricao)) {
-            $filtros .= "{$whereAnd} descricao LIKE '%{$str_descricao}%'";
+            $str_desc = $db->escapeString($str_descricao);
+            $filtros .= "{$whereAnd} descricao LIKE '%{$str_desc}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($date_data_cadastro_ini)) {
@@ -219,7 +225,6 @@ class clsPmieducarAcervoAssunto extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -296,13 +301,14 @@ class clsPmieducarAcervoAssunto extends Model
     /**
      * Cadastra um determinado assunto para uma determinada obra.
      *
-     * @return array
+     * @return bool|array
      */
     public function listaAssuntosPorObra($acervoId)
     {
         $db = new clsBanco();
         $db->Consulta("SELECT aas.*, (SELECT nm_assunto FROM pmieducar.acervo_assunto WHERE cod_acervo_assunto = aas.ref_cod_acervo_assunto) as nome FROM pmieducar.acervo_acervo_assunto aas WHERE ref_cod_acervo = {$acervoId} ");
 
+        $resultado = [];
         while ($db->ProximoRegistro()) {
             $resultado[] = $db->Tupla();
         }

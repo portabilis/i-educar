@@ -3,8 +3,6 @@
 use App\Models\PersonHasPlace;
 use iEducar\Legacy\Model;
 
-require_once 'include/clsBanco.inc.php';
-
 class clsPessoaFj extends Model
 {
     public $idpes;
@@ -67,7 +65,7 @@ class clsPessoaFj extends Model
         $objPessoa = new clsPessoa_();
 
         $listaPessoa = $objPessoa->lista(
-            $str_nome,
+            $str_nome = pg_escape_string($str_nome),
             $inicio_limite,
             $qtd_registros,
             $str_orderBy,
@@ -104,7 +102,7 @@ class clsPessoaFj extends Model
         if (is_string($nome) && $nome != '') {
             $nome = pg_escape_string($nome);
 
-            $filtros .= "{$whereAnd} translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nome}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $filtros .= "{$whereAnd} slug ILIKE '%{$nome}%'";
             $whereAnd = ' AND ';
             $outros_filtros = true;
         }

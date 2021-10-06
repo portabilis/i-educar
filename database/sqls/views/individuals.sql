@@ -1,4 +1,4 @@
-CREATE OR REPLACE VIEW individuals AS
+CREATE OR REPLACE VIEW public.individuals AS
 SELECT
     idpes AS id,
     idpes AS person_id,

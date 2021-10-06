@@ -14,15 +14,14 @@ class Registro40 extends AbstractRegistro
      */
     protected $model;
 
-
     /**
      * @var Registro40Model[]
      */
     protected $modelArray;
 
-
     /**
      * @param integer $escolaId
+     *
      * @return Registro40Model[]
      */
     public function getData($escolaId)
@@ -40,16 +39,11 @@ class Registro40 extends AbstractRegistro
 
     /**
      * @param $escolaId
+     *
      * @return Registro40Model[]
      */
     public function getExportFormatData($escolaId)
     {
-        $modelArray = $this->getData($escolaId);
-
-        foreach ($modelArray as $registro40) {
-            $registro40->especificacaoCriterioAcesso = $this->convertStringToCenso($registro40->especificacaoCriterioAcesso);
-        }
-
-        return $modelArray;
+        return $this->getData($escolaId);
     }
 }

@@ -1,9 +1,5 @@
 <?php
 
-require_once 'Core/Controller/Page/Abstract.php';
-require_once 'App/Model/NivelTipoUsuario.php';
-require_once 'include/pmieducar/clsPermissoes.inc.php';
-
 class clsCampos extends Core_Controller_Page_Abstract
 {
     public $campos = [];
@@ -188,7 +184,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         $arr_componente = [
             'cnpj',
             $this->__adicionando_tabela ? $nome : $campo,
-            $obrigatorio ? "/[0-9]{2}\.[0-9]{3}\.[0-9]{3}\/[0-9]{4}\-[0-9]{2}/" : "*(/[0-9]{2}\.[0-9]{3}\.[0-9]{3}\/[0-9]{4}\-[0-9]{2}/)",
+            $obrigatorio ? "/[0-9]{2}\.[0-9]{3}\.[0-9]{3}\/[0-9]{4}\-[0-9]{2}/" : '',
             $valor,
             20,
             18,
@@ -292,6 +288,11 @@ class clsCampos extends Core_Controller_Page_Abstract
         }
     }
 
+    public function addHtml($html)
+    {
+        $this->campos['html'] = $html;
+    }
+
     public function campoData(
         $nome,
         $campo,
@@ -308,6 +309,38 @@ class clsCampos extends Core_Controller_Page_Abstract
             $duplo ? 'dataDupla' : 'data',
             $this->__adicionando_tabela ? $nome : $campo,
             $obrigatorio ? "/^(((0?[1-9]|[12]\d|3[01])[\.\-\/](0?[13578]|1[02])[\.\-\/]((1[6-9]|[2-9]\d)?\d{2}))|((0?[1-9]|[12]\d|30)[\.\-\/](0?[13456789]|1[012])[\.\-\/]((1[6-9]|[2-9]\d)?\d{2}))|((0?[1-9]|1\d|2[0-8])[\.\-\/]0?2[\.\-\/]((1[6-9]|[2-9]\d)?\d{2}))|(29[\.\-\/]0?2[\.\-\/]((1[6-9]|[2-9]\d)?(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00)|00)))$/" : "*/^(((0?[1-9]|[12]\d|3[01])[\.\-\/](0?[13578]|1[02])[\.\-\/]((1[6-9]|[2-9]\d)?\d{2}))|((0?[1-9]|[12]\d|30)[\.\-\/](0?[13456789]|1[012])[\.\-\/]((1[6-9]|[2-9]\d)?\d{2}))|((0?[1-9]|1\d|2[0-8])[\.\-\/]0?2[\.\-\/]((1[6-9]|[2-9]\d)?\d{2}))|(29[\.\-\/]0?2[\.\-\/]((1[6-9]|[2-9]\d)?(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00)|00)))$/",
+            $valor,
+            9,
+            10,
+            $dica,
+            $descricao,
+            $acao,
+            $disabled,
+        ];
+
+        if (!$this->__adicionando_tabela) {
+            $this->campos[$nome] = $arr_componente;
+        } else {
+            $this->__campos_tabela[] = $arr_componente;
+        }
+    }
+
+    public function campoDataDiaMes(
+        $nome,
+        $campo,
+        $valor,
+        $obrigatorio = false,
+        $descricao = '',
+        $duplo = false,
+        $acao = '',
+        $disabled = false,
+        $teste = null,
+        $dica = 'dd/mm'
+    ) {
+        $arr_componente = [
+            $duplo ? 'dataDupla' : 'data',
+            $this->__adicionando_tabela ? $nome : $campo,
+            false,
             $valor,
             9,
             10,
@@ -1120,6 +1153,9 @@ class clsCampos extends Core_Controller_Page_Abstract
                         $retorno .= "<td class='$classe2 {$nome}' $center id='td_{$nome}[{$key2}]' valign='top'>\n";
 
                         switch (strtolower($campo_[0])) {
+                            case 'html':
+                                $retorno .= $componente;
+                                // no break
                             case 'texto':
                                 $retorno .= $this->getCampoTexto("{$nome}[{$key2}]", "{$nome}[{$key2}]", $valor[$key], $campo_[4], $campo_[5], $evento, $campo_[10], '', $class, $campo_[7]);
                                 break;
@@ -1232,9 +1268,10 @@ class clsCampos extends Core_Controller_Page_Abstract
                 $class = 'geral';
                 $obrigatorio = '';
             }
-
-            // Separador: insere uma linha preta
-            if ($componente[0] == 'linha_preta') {
+            if ($nome == 'html') {
+                $retorno .= $componente;
+            } elseif // Separador: insere uma linha preta
+            ($componente[0] == 'linha_preta') {
                 $retorno .= "<tr><td  style='padding:0px;background-color:{$componente['cor']};' colspan='2' height='{$componente['altura']}'></td></tr>";
                 continue;
             } elseif ($componente[0] == 'espaco') {
@@ -1310,6 +1347,10 @@ class clsCampos extends Core_Controller_Page_Abstract
                 }
 
                 switch ($tipo) {
+                    case 'html':
+                        $retorno .= $componente;
+                        break;
+
                     case 'rotuloDuplo':
                         $foiDuplo = true;
                         // no break
@@ -1661,19 +1702,19 @@ class clsCampos extends Core_Controller_Page_Abstract
 
     public function MakeFormat()
     {
-        $ret = "
+        $ret = '
     function AdicionaItem(chave, item, nome_pai, submete)
     {
       var x = document.getElementById(nome_pai);
 
-      opt = document.createElement('OPTION');
+      opt = document.createElement(\'OPTION\');
       opt.value = chave;
       opt.selected = true;
       opt.appendChild(document.createTextNode(item));
 
       x.appendChild(opt);
       if (submete) {
-    ";
+    ';
 
         if (isset($this->executa_submete)) {
             $ret .= '
@@ -1747,12 +1788,12 @@ class clsCampos extends Core_Controller_Page_Abstract
 
     public function getCampoLista(
         $nome,
-        $id = '',
-        $acao = '',
+        $id,
+        $acao,
         $valor,
         $default,
-        $complemento = '',
-        $desabilitado = false,
+        $complemento,
+        $desabilitado,
         $class,
         $multiple = false
     ) {
@@ -1803,13 +1844,13 @@ class clsCampos extends Core_Controller_Page_Abstract
 
     public function getCampoMonetario(
         $nome,
-        $id = '',
-        $valor = '',
+        $id,
+        $valor,
         $tamanhovisivel,
         $tamanhomaximo,
-        $disabled = false,
-        $descricao = '',
-        $descricao2 = '',
+        $disabled,
+        $descricao,
+        $descricao2,
         $class,
         $evento = 'onChange',
         $script = ''
@@ -1831,11 +1872,11 @@ class clsCampos extends Core_Controller_Page_Abstract
 
     public function getCampoHora(
         $nome,
-        $id = '',
-        $valor = '',
+        $id,
+        $valor,
         $class,
         $tamanhovisivel,
-                          $tamanhomaximo,
+        $tamanhomaximo,
         $acao = '',
         $descricao = ''
     ) {
@@ -1851,9 +1892,9 @@ class clsCampos extends Core_Controller_Page_Abstract
         return "<span class=\"form\"> $valor</span>";
     }
 
-    public function getCampoCheck($nome, $id = '', $valor, $desc = '', $script = false, $disabled = false)
+    public function getCampoCheck($nome, $id, $valor, $desc = '', $script = false, $disabled = false)
     {
-        $id = $id ? $id : $nome;
+        $id = $id ?: $nome;
 
         $onClick = '';
 
@@ -1878,16 +1919,16 @@ class clsCampos extends Core_Controller_Page_Abstract
         return $retorno;
     }
 
-    public function getCampoCNPJ($nome, $id = '', $valor, $class, $tamanhovisivel, $tamanhomaximo)
+    public function getCampoCNPJ($nome, $id, $valor, $class, $tamanhovisivel, $tamanhomaximo)
     {
-        $id = $id ? $id : $nome;
+        $id = $id ?: $nome;
 
         return "<input onKeyPress=\"formataCNPJ(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$id}\" value=\"{$valor}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\">";
     }
 
-    public function getCampoCPF($nome, $id = '', $valor, $class, $tamanhovisivel, $tamanhomaximo, $disabled = false, $onChange = '')
+    public function getCampoCPF($nome, $id, $valor, $class, $tamanhovisivel, $tamanhomaximo, $disabled = false, $onChange = '')
     {
-        $id = $id ? $id : $nome;
+        $id = $id ?: $nome;
 
         if ($disabled) {
             $disabled = 'disabled=\'disabled\'';
@@ -1900,14 +1941,14 @@ class clsCampos extends Core_Controller_Page_Abstract
 
     public function getCampoIdFederal(
         $nome,
-        $id = '',
+        $id,
         $valor,
         $class,
         $tamanhovisivel,
         $tamanhomaximo,
         $disabled = false
     ) {
-        $id = $id ? $id : $nome;
+        $id = $id ?: $nome;
 
         if ($disabled) {
             $disabled = 'disabled=\'disabled\'';
@@ -1929,17 +1970,16 @@ class clsCampos extends Core_Controller_Page_Abstract
         return "<input name='$nome' id='$id' type='hidden' value='{$valor}'>\n";
     }
 
-    public function getCampoData($nome, $id = '', $valor, $class, $tamanhovisivel, $tamanhomaximo, $disabled = false)
+    public function getCampoData($nome, $id, $valor, $class, $tamanhovisivel, $tamanhomaximo, $disabled = false)
     {
-        if ($disabled) {
-            $disabled = 'disabled=\'disabled\'';
-        } else {
-            $disabled = '';
+        $campoDisabled = '';
+        if ($disabled !== false) {
+            $campoDisabled = 'disabled=\'disabled\'';
         }
 
-        $id = $id ? $id : $nome;
+        $id = $id ?: $nome;
 
-        return "<input onKeyPress=\"formataData(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$id}\" value=\"{$valor}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\" {$disabled}> \n";
+        return "<input onKeyPress=\"formataData(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$id}\" value=\"{$valor}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\" {$campoDisabled}> \n";
     }
 
     public function getCampoCep(
@@ -1972,12 +2012,12 @@ class clsCampos extends Core_Controller_Page_Abstract
      */
     public function getCampoTextoPesquisa(
         $nome,
-        $id = '',
+        $id,
         $valor,
         $class,
         $tamanhovisivel,
         $tamanhomaximo,
-        $disabled = false,
+        $disabled,
         $caminho,
         $campos_serializados = null,
         $descricao = null,
@@ -1990,7 +2030,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $disabled = '';
         }
 
-        $id = $id ? $id : $nome;
+        $id = $id ?: $nome;
 
         $retorno = "<input class='{$class}' type='text' name=\"{$nome}\" id=\"{$id}\" value=\"{$valor}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\" {$evento}='{$script}' {$disabled}> ";
 

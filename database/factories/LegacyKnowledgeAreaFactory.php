@@ -15,7 +15,6 @@ $factory->define(LegacyKnowledgeArea::class, function (Faker $faker) {
 });
 
 $factory->state(LegacyKnowledgeArea::class, 'unique', function () {
-
     $knowledgeArea = LegacyKnowledgeArea::query()->first();
 
     if (empty($knowledgeArea)) {

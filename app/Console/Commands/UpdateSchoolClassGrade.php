@@ -55,7 +55,7 @@ class UpdateSchoolClassGrade extends Command
 
         $this->schoolClass->update([
             'ref_ref_cod_serie' => $this->grade->getKey(),
-            'ref_cod_curso' =>  $this->grade->course->id,
+            'ref_cod_curso' => $this->grade->course->id,
         ]);
 
         $this->schoolClass->enrollments->map(function ($enrollment) {
@@ -104,5 +104,4 @@ class UpdateSchoolClassGrade extends Command
 
         throw new MissingSchoolCourseException($this->schoolClass->school, $this->grade->course);
     }
-
 }

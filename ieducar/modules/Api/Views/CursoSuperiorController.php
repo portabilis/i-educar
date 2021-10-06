@@ -1,7 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-
 class CursoSuperiorController extends ApiCoreController
 {
 
@@ -13,7 +11,9 @@ class CursoSuperiorController extends ApiCoreController
                       nome || \' / \' || coalesce((CASE grau_academico
                                                       WHEN 1 THEN \'Tecnológico\'
                                                       WHEN 2 THEN \'Licenciatura\'
-                                                      WHEN 3 THEN \'Bacharelado\' END), \'\') AS name
+                                                      WHEN 3 THEN \'Bacharelado\'
+                                                      WHEN 4 THEN \'Sequencial\'
+                          END), \'\') AS name
                  FROM modules.educacenso_curso_superior
                 WHERE unaccent(nome) ILIKE \'%\'|| unaccent($1) ||\'%\'
                    OR curso_id ILIKE \'%\'|| $1 ||\'%\'

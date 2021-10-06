@@ -1,7 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/View/Helper/Input/Numeric.php';
-
 class Portabilis_View_Helper_Input_Integer extends Portabilis_View_Helper_Input_Numeric
 {
     protected function fixupValidation($inputOptions)
@@ -11,10 +9,10 @@ class Portabilis_View_Helper_Input_Integer extends Portabilis_View_Helper_Input_
         $js = '
             $j(\'#' . $inputOptions['id'] . "').keyup(function(){
                 var oldValue = this.value;
-                
+
                 this.value = this.value.replace(/[^0-9\.]/g, '');
                 this.value = this.value.replace('.', '');
-                
+
                 if (oldValue != this.value)
                     messageUtils.error('Informe apenas números.', this);
             });

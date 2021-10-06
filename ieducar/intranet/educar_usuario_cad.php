@@ -1,28 +1,15 @@
 <?php
 
+use App\Models\LegacyEmployee;
+use App\Services\ChangeUserPasswordService;
+use App\Services\ValidateUserPasswordService;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
+use Illuminate\Validation\ValidationException;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/clsPmieducarUsuario.inc.php';
-require_once 'include/pmieducar/clsPmieducarEscolaUsuario.inc.php';
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
-require_once 'include/pmieducar/clsPmieducarFuncionarioVinculo.inc.php';
-
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo('Cadastro de usuários');
-        $this->processoAp = 555;
-    }
-}
-
-class indice extends clsCadastro
-{
+return new class extends clsCadastro {
     public $ref_pessoa;
 
     //dados do funcionario
@@ -34,11 +21,13 @@ class indice extends clsCadastro
     public $matricula_interna;
     public $data_expiracao;
     public $escola;
+    public $force_reset_password;
 
     public function Inicializar()
     {
         $retorno = 'Novo';
-
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7, 'educar_usuario_lst.php');
         $this->ref_pessoa = $_POST['ref_pessoa'];
 
         if ($_GET['ref_pessoa']) {
@@ -56,7 +45,6 @@ class indice extends clsCadastro
 
                 $this->_senha = $this->senha;
                 $this->fexcluir = true;
-                $retorno = 'Editar';
             }
 
             if ($this->data_expiracao) {
@@ -74,23 +62,21 @@ class indice extends clsCadastro
                     $this->$campo = $val;
                 }
 
-                $obj_permissoes = new clsPermissoes();
-                $this->fexcluir = $obj_permissoes->permissao_excluir(555, $this->pessoa_logada, 7, 'educar_usuario_lst.php', true);
+                $this->fexcluir = $obj_permissoes->permissao_excluir(555, $this->pessoa_logada, 7);
+            }
+
+            if ($det_funcionario !== false) {
                 $retorno = 'Editar';
             }
         }
-
-        $this->url_cancelar = $retorno == 'Editar'
-            ? "educar_usuario_det.php?ref_pessoa={$this->ref_pessoa}"
-            : 'educar_usuario_lst.php';
-
-        $this->nome_url_cancelar = 'Cancelar';
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
         $this->breadcrumb($nomeMenu . ' usuário', [
             url('intranet/educar_configuracoes_index.php') => 'Configurações',
         ]);
+
+        $this->montaBotoesDeAcao();
 
         return $retorno;
     }
@@ -138,6 +124,11 @@ class indice extends clsCadastro
 
         $this->campoTexto('matricula', 'Matrícula', $this->matricula, 12, 12, true);
         $this->campoSenha('_senha', 'Senha', null, $cadastrando, empty($cadastrando) ? 'Preencha apenas se desejar alterar a senha' : '');
+
+        if (empty($this->_senha)) {
+            $this->inputsHelper()->checkbox('force_reset_password', ['label' => 'Forçar alteração de senha no primeiro acesso', $this->force_reset_password]);
+        }
+
         $this->campoEmail('email', 'E-mail usuário', $this->email, 50, 50, false, false, false, 'Utilizado para redefinir a senha, caso o usúario esqueça<br />Este campo pode ser gravado em branco, neste caso será solicitado um e-mail ao usuário, após entrar no sistema.');
         $this->campoTexto('matricula_interna', 'Matrícula interna', $this->matricula_interna, 30, 30, false, false, false, 'Utilizado somente para registro, caso a instituição deseje que a matrícula interna deste funcionário seja registrada no sistema.');
         $this->campoData('data_expiracao', 'Data de expiração', $this->data_expiracao);
@@ -170,7 +161,6 @@ class indice extends clsCadastro
 
         /** @var User $user */
         $user = Auth::user();
-
         // verifica se pessoa logada é super-usuario
         if ($user->isAdmin()) {
             $lista = $objTemp->lista(null, null, null, null, null, null, null, null, 1);
@@ -209,9 +199,16 @@ class indice extends clsCadastro
 
         $scripts = ['/modules/Cadastro/Assets/Javascripts/Usuario.js'];
 
+        $this->acao_enviar = 'valida()';
+        if (!$this->canChange($user, $this->ref_pessoa)) {
+            $this->acao_enviar = null;
+            $this->fexcluir = null;
+            $scripts[] = '/modules/Cadastro/Assets/Javascripts/disableAllFields.js';
+        }
+
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
 
-        $this->acao_enviar = 'valida()';
+        $this->montaBotoesDeAcao();
     }
 
     public function Novo()
@@ -226,19 +223,18 @@ class indice extends clsCadastro
             return false;
         }
 
-        if (!$this->validatesPassword($this->matricula, $this->_senha)) {
+        try {
+            $this->validatesPassword($this->_senha);
+        } catch (ValidationException $ex) {
+            $this->mensagem = $ex->validator->errors()->first();
             return false;
         }
 
         $senha = Hash::make($this->_senha);
 
-        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, $senha, $this->ativo, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, Portabilis_Date_Utils::brToPgSQL($this->data_expiracao), 'NOW()', 'NOW()', $this->pessoa_logada, 0, 0, null, 0, 1, $this->email, $this->matricula_interna);
+        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, $senha, $this->ativo, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, Portabilis_Date_Utils::brToPgSQL($this->data_expiracao), 'NOW()', 'NOW()', $this->pessoa_logada, 0, 0, null, 0, 1, $this->email, $this->matricula_interna, !is_null($this->force_reset_password));
 
         if ($obj_funcionario->cadastra()) {
-            $funcionario = $obj_funcionario->detalhe();
-            $auditoria = new clsModulesAuditoriaGeral('funcionario', $this->pessoa_logada, $this->ref_pessoa);
-            $auditoria->inclusao($funcionario);
-
             if ($this->ref_cod_instituicao) {
                 $obj = new clsPmieducarUsuario($this->ref_pessoa, null, $this->ref_cod_instituicao, $this->pessoa_logada, $this->pessoa_logada, $this->ref_cod_tipo_usuario, null, null, 1);
             } else {
@@ -246,17 +242,9 @@ class indice extends clsCadastro
             }
 
             if ($obj->existe()) {
-                $detalheAntigo = $obj->detalhe();
                 $cadastrou = $obj->edita();
-                $detalheNovo = $obj->detalhe();
-                $auditoria = new clsModulesAuditoriaGeral('usuario', $this->pessoa_logada, $cadastrou);
-                $auditoria->alteracao($detalheAntigo, $detalheNovo);
             } else {
                 $cadastrou = $obj->cadastra();
-                $usuario = new clsPmieducarUsuario($cadastrou);
-                $usuario = $usuario->detalhe();
-                $auditoria = new clsModulesAuditoriaGeral('usuario', $this->pessoa_logada, $cadastrou);
-                $auditoria->inclusao($usuario);
             }
 
             $this->insereUsuarioEscolas($this->ref_pessoa, $this->escola);
@@ -274,6 +262,12 @@ class indice extends clsCadastro
 
     public function Editar()
     {
+        /** @var User $user */
+        $user = Auth::user();
+        if (!$this->canChange($user, $this->ref_pessoa)) {
+            return false;
+        }
+
         if ($this->email && !filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
             $this->mensagem = 'Formato do e-mail inválido.';
 
@@ -286,25 +280,22 @@ class indice extends clsCadastro
 
         // Ao editar não é necessário trocar a senha, então apenas quando algo
         // for informado é que a mesma será alterada.
-
-        $senha = null;
-
         if ($this->_senha) {
-            if (!$this->validatesPassword($this->matricula, $this->_senha)) {
+            $legacyEmployee = LegacyEmployee::find($this->ref_pessoa);
+            $changeUserPasswordService = app(ChangeUserPasswordService::class);
+            try {
+                $changeUserPasswordService->execute($legacyEmployee, $this->_senha);
+            } catch (ValidationException $ex){
+                $this->mensagem = $ex->validator->errors()->first();
                 return false;
             }
-
-            $senha = Hash::make($this->_senha);
         }
 
-        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, $senha, $this->ativo, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, Portabilis_Date_Utils::brToPgSQL($this->data_expiracao), 'NOW()', 'NOW()', $this->pessoa_logada, 0, 0, null, 0, null, $this->email, $this->matricula_interna);
-        $detalheAntigo = $obj_funcionario->detalhe();
+        $data_reativa_conta = $this->hasChangeStatusUser() && $this->ativo == '1' ? 'NOW()' : null;
+
+        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, null, $this->ativo, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, Portabilis_Date_Utils::brToPgSQL($this->data_expiracao), null, $data_reativa_conta, $this->pessoa_logada, 0, 0, null, 0, null, $this->email, $this->matricula_interna);
 
         if ($obj_funcionario->edita()) {
-            $detalheNovo = $obj_funcionario->detalhe();
-            $auditoria = new clsModulesAuditoriaGeral('funcionario', $this->pessoa_logada, $this->ref_pessoa);
-            $auditoria->alteracao($detalheAntigo, $detalheNovo);
-
             if ($this->ref_cod_instituicao) {
                 $obj = new clsPmieducarUsuario($this->ref_pessoa, null, $this->ref_cod_instituicao, $this->pessoa_logada, $this->pessoa_logada, $this->ref_cod_tipo_usuario, null, null, 1);
             } else {
@@ -312,17 +303,9 @@ class indice extends clsCadastro
             }
 
             if ($obj->existe()) {
-                $detalheAntigo = $obj->detalhe();
                 $editou = $obj->edita();
-                $detalheNovo = $obj->detalhe();
-                $auditoria = new clsModulesAuditoriaGeral('usuario', $this->pessoa_logada, $editou);
-                $auditoria->alteracao($detalheAntigo, $detalheNovo);
             } else {
                 $editou = $obj->cadastra();
-                $usuario = new clsPmieducarUsuario($editou);
-                $usuario = $usuario->detalhe();
-                $auditoria = new clsModulesAuditoriaGeral('usuario', $this->pessoa_logada, $editou);
-                $auditoria->inclusao($usuario);
             }
 
             $this->insereUsuarioEscolas($this->ref_pessoa, $this->escola);
@@ -369,12 +352,15 @@ class indice extends clsCadastro
 
     public function Excluir()
     {
+        /** @var User $user */
+        $user = Auth::user();
+        if (!$this->canChange($user, $this->ref_pessoa)) {
+            return false;
+        }
+
         $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa);
-        $detalhe = $obj_funcionario->detalhe();
 
         if ($obj_funcionario->excluir()) {
-            $auditoria = new clsModulesAuditoriaGeral('funcionario', $this->pessoa_logada, $this->ref_pessoa);
-            $auditoria->exclusao($detalhe);
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_usuario_lst.php');
         }
@@ -391,25 +377,6 @@ class indice extends clsCadastro
 
         if ($db->CampoUnico($sql) == '1') {
             $this->mensagem = "A matrícula '$matricula' já foi usada, por favor, informe outra.";
-
-            return false;
-        }
-
-        return true;
-    }
-
-    public function validatesPassword($matricula, $password)
-    {
-        $msg = '';
-
-        if ($password == $matricula) {
-            $msg = 'Informe uma senha diferente da matricula.';
-        } elseif (strlen($password) < 8) {
-            $msg = 'Por favor informe uma senha segura, com pelo menos 8 caracteres.';
-        }
-
-        if ($msg) {
-            $this->mensagem = $msg;
 
             return false;
         }
@@ -434,10 +401,76 @@ class indice extends clsCadastro
             $usuarioEscola->cadastra();
         }
     }
-}
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
+    /**
+     * Verifica se o usuário logado pode alterar o usuário em questão
+     *
+     * Caso algum usuário com nível diferente de admin tentar alterar dados do usuário admin,
+     * esse método retornará false
+     *
+     * @param User    $currentUser
+     * @param integer $changedUserId
+     *
+     * @return bool
+     */
+    private function canChange(User $currentUser, $changedUserId)
+    {
+        if (!$changedUserId) {
+            return true;
+        }
 
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+        if ($currentUser->isAdmin()) {
+            return true;
+        }
+
+        /** @var User $changedUser */
+        $changedUser = User::find($changedUserId);
+
+        if (empty($changedUser)) {
+            return true;
+        }
+
+        if (!$changedUser->isAdmin()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function Formular()
+    {
+        $this->title = 'Cadastro de usuários';
+        $this->processoAp = 555;
+    }
+
+    public function hasChangeStatusUser(): bool
+    {
+        $legacyEmployer = LegacyEmployee::find($this->ref_pessoa);
+        return $legacyEmployer->ativo != $this->ativo;
+    }
+
+    public function validatesPassword($password)
+    {
+        $validateUserPasswordService = app(ValidateUserPasswordService::class);
+        $validateUserPasswordService->execute($password);
+    }
+
+    private function montaBotoesDeAcao(): void
+    {
+        $funcionario = (new clsPortalFuncionario($this->ref_pessoa))->detalhe();
+        $usuario = (new clsPmieducarUsuario($this->ref_pessoa))->detalhe();
+
+        $edita = false;
+        if ($funcionario !== false && $usuario !== false) {
+            $edita = true;
+        }
+
+        $this->url_cancelar = $edita
+            ? "educar_usuario_det.php?ref_pessoa={$this->ref_pessoa}"
+            : 'educar_usuario_lst.php';
+
+        $this->fexcluir = $edita;
+
+        $this->nome_url_cancelar = 'Cancelar';
+    }
+};

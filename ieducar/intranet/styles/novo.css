@@ -175,6 +175,22 @@ body{
 	font-weight: bold;
 }
 
+.nvp_paginador_ativo{
+	font-size: 12px;
+	background-color: #188ad1;
+	font-family: arial, verdana, sans-serif, sans, helvetica, "Times New Roman";
+	text-decoration: none;
+	font-weight: bold;
+}
+.nvp_paginador_ativo a{
+	font-size: 12px;
+	color: #FFFFFF !important;
+	font-family: arial, verdana, sans-serif, sans, helvetica, "Times New Roman";
+	text-decoration: none;
+	font-weight: bold;
+}
+
+
 .nvp_linkmenu{
 	color:#495c67;
 	font-family: arial, verdana, sans-serif, "Times New Roman";
@@ -544,20 +560,6 @@ A.categoria:link, A.categoria:visited, A.categoria:active, A.categoria:hover {
 {
 	/*text-decoration: none;*/
 	margin-left: 10px;
-}
-
-.prog_alert
-{
-	background-color: #F0F8FF;
-	border-color: #FFBB88;
-	border-width: 1px;
-	border-style: dashed;
-	margin-top: 5px;
-	margin-bottom: 5px;
-	margin-left: 10px;
-	margin-right: 10px;
-	padding: 5px;
-	position: relative;
 }
 
 .controle_fechar

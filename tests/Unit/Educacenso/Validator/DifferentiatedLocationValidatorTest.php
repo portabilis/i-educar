@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Educacenso\Validator;
 
-use iEducar\Modules\Educacenso\Validator\DifferentiatedLocationValidator;
-use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaPessoa;
 use App_Model_ZonaLocalizacao;
+use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaPessoa;
+use iEducar\Modules\Educacenso\Validator\DifferentiatedLocationValidator;
 use Tests\TestCase;
 
 class DifferentiatedLocationValidatorTest extends TestCase
@@ -16,7 +16,7 @@ class DifferentiatedLocationValidatorTest extends TestCase
         $validator = new DifferentiatedLocationValidator($differentiatedLocation, $locationZone);
 
         $this->assertFalse($validator->isValid());
-        $this->assertContains('O campo: Localização diferenciada não pode ser preenchido com <b>Área de assentamento</b> quando o campo: Zona de residência for <b>Urbana</b>.', $validator->getMessage());
+        $this->assertStringContainsString('O campo: Localização diferenciada de residência não pode ser preenchido com <b>Área de assentamento</b> quando o campo: Zona de residência for <b>Urbana</b>.', $validator->getMessage());
     }
 
     public function testDifferentiatedLocationIsAreaAssentamentoAndLocationZoneIsNull()

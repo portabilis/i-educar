@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Prettus\Repository\Contracts\Transformable;
-use Prettus\Repository\Traits\TransformableTrait;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property string $login
@@ -14,10 +14,8 @@ use Prettus\Repository\Traits\TransformableTrait;
  * @property string $remember_token
  * @property bool   $active
  */
-class LegacyEmployee extends EloquentBaseModel implements Transformable
+class LegacyEmployee extends Model
 {
-    use TransformableTrait;
-
     /**
      * @var string
      */
@@ -32,6 +30,17 @@ class LegacyEmployee extends EloquentBaseModel implements Transformable
      * @var bool
      */
     public $timestamps = false;
+
+    protected $fillable = [
+        'ref_cod_pessoa_fj',
+        'matricula',
+        'senha',
+        'ativo',
+        'force_reset_password',
+        'email',
+    ];
+
+    protected $dates = ['data_reativa_conta', 'data_troca_senha'];
 
     /**
      * @return string
@@ -99,5 +108,15 @@ class LegacyEmployee extends EloquentBaseModel implements Transformable
     public function getActiveAttribute()
     {
         return boolval($this->ativo);
+    }
+
+    public function getEnabledUserDate(): ?Carbon
+    {
+        return $this->data_reativa_conta;
+    }
+
+    public function getPasswordUpdatedDate(): ?Carbon
+    {
+        return $this->data_troca_senha;
     }
 }

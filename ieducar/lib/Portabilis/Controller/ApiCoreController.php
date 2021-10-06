@@ -2,18 +2,6 @@
 
 use iEducar\Support\Exceptions\Exception as iEducarException;
 
-require_once 'include/clsBanco.inc.php';
-require_once 'Core/Controller/Page/EditController.php';
-require_once 'CoreExt/Exception.php';
-require_once 'lib/Portabilis/Messenger.php';
-require_once 'lib/Portabilis/Validator.php';
-require_once 'lib/Portabilis/DataMapper/Utils.php';
-require_once 'lib/Portabilis/Array/Utils.php';
-require_once 'lib/Portabilis/Utils/Database.php';
-require_once 'lib/Portabilis/String/Utils.php';
-require_once 'lib/Portabilis/Utils/User.php';
-require_once 'lib/Utils/SafeJson.php';
-
 class ApiCoreController extends Core_Controller_Page_EditController
 {
     // variaveis usadas apenas em formulários, desnecesário subescrever nos filhos.
@@ -74,7 +62,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
 
     protected function validatesUserIsLoggedIn()
     {
-        $canAccess = is_numeric($this->getSession()->id_pessoa);
+        $canAccess = is_numeric(\Illuminate\Support\Facades\Auth::id());
 
         if (!$canAccess) {
             $canAccess = ($this->validatesAccessKey() && $this->validatesSignature());
@@ -106,7 +94,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
     {
         $can = $this->getClsPermissoes()->permissao_excluir(
             $this->getBaseProcessoAp(),
-            $this->getSession()->id_pessoa,
+            \Illuminate\Support\Facades\Auth::id(),
             $this->_nivelAcessoOption
         );
 
@@ -121,7 +109,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
     {
         $can = $this->getClsPermissoes()->permissao_cadastra(
             $this->getBaseProcessoAp(),
-            $this->getSession()->id_pessoa,
+            \Illuminate\Support\Facades\Auth::id(),
             $this->_nivelAcessoOption
         );
 
@@ -256,7 +244,6 @@ class ApiCoreController extends Core_Controller_Page_EditController
                 'message' => $exception->getMessage(),
                 'extra' => $exception->getExtraInfo(),
             ]);
-
         } catch (Exception $e) {
             $this->messenger->append('Exception: ' . $e->getMessage(), 'error', $encodeToUtf8 = true);
         }
@@ -434,10 +421,6 @@ class ApiCoreController extends Core_Controller_Page_EditController
         return Portabilis_String_Utils::toUtf8($str, $options);
     }
 
-    protected function toLatin1($str, $options = [])
-    {
-        return Portabilis_String_Utils::toLatin1($str, $options);
-    }
 
     protected function safeString($str, $transform = true)
     {
@@ -446,7 +429,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
 
     protected function safeStringForDb($str)
     {
-        return $this->toLatin1($str);
+        return filter_var($str, FILTER_SANITIZE_ADD_SLASHES);;
     }
 
     protected function defaultSearchOptions()
@@ -519,8 +502,6 @@ class ApiCoreController extends Core_Controller_Page_EditController
             $sqls = $this->sqlsForNumericSearch();
             $params = $this->sqlParams($numericQuery);
         } else {
-            $query = Portabilis_String_Utils::toLatin1($query, ['escape' => false]);
-
             $sqls = $this->sqlsForStringSearch();
             $params = $this->sqlParams($query);
         }

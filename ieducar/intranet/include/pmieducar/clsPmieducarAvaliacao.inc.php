@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsPmieducarAvaliacao extends Model
 {
     public $cod_avaliacao;
@@ -29,16 +27,16 @@ class clsPmieducarAvaliacao extends Model
         $this->_campos_lista = $this->_todos_campos = 'cod_avaliacao, disc_ref_ref_cod_serie, disc_ref_ref_cod_escola, disc_ref_ref_cod_disciplina, disc_ref_ref_cod_turma, ref_usuario_exc, ref_usuario_cad, titulo, descricao, aplicada, data_cadastro, data_exclusao, ativo';
 
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
         if (is_numeric($disc_ref_ref_cod_turma) && is_numeric($disc_ref_ref_cod_disciplina) && is_numeric($disc_ref_ref_cod_escola) && is_numeric($disc_ref_ref_cod_serie)) {
-                    $this->disc_ref_ref_cod_turma = $disc_ref_ref_cod_turma;
-                    $this->disc_ref_ref_cod_disciplina = $disc_ref_ref_cod_disciplina;
-                    $this->disc_ref_ref_cod_escola = $disc_ref_ref_cod_escola;
-                    $this->disc_ref_ref_cod_serie = $disc_ref_ref_cod_serie;
+            $this->disc_ref_ref_cod_turma = $disc_ref_ref_cod_turma;
+            $this->disc_ref_ref_cod_disciplina = $disc_ref_ref_cod_disciplina;
+            $this->disc_ref_ref_cod_escola = $disc_ref_ref_cod_escola;
+            $this->disc_ref_ref_cod_serie = $disc_ref_ref_cod_serie;
         }
 
         if (is_numeric($cod_avaliacao)) {

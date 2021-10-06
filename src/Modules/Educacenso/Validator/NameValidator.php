@@ -10,7 +10,7 @@ class NameValidator implements EducacensoValidator
 
     public function __construct(string $name)
     {
-        $this->name = strtoupper($name);
+        $this->name = mb_strtoupper($name);
     }
 
     /**
@@ -19,7 +19,8 @@ class NameValidator implements EducacensoValidator
     public function isValid(): bool
     {
         if ($this->hasFourRepeatedCharaters()) {
-            $this->message = "Nome não pode ter a repetição de 4 caracteres seguidos.";
+            $this->message = 'Nome não pode ter a repetição de 4 caracteres seguidos.';
+
             return false;
         }
 

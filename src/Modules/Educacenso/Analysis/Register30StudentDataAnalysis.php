@@ -8,7 +8,6 @@ use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
 use iEducar\Modules\Educacenso\Validator\InepExamValidator;
-use Illuminate\Support\Facades\DB;
 use Portabilis_Utils_Database;
 
 class Register30StudentDataAnalysis implements AnalysisInterface
@@ -17,6 +16,8 @@ class Register30StudentDataAnalysis implements AnalysisInterface
      * @var Registro30
      */
     private $data;
+
+    private $year;
 
     /**
      * @var array
@@ -28,11 +29,18 @@ class Register30StudentDataAnalysis implements AnalysisInterface
         $this->data = $data;
     }
 
+    public function setYear($year)
+    {
+        $this->year = $year;
+    }
+
     public function run()
     {
         $data = $this->data;
 
-        $arrayDeficiencias = array_filter(Portabilis_Utils_Database::pgArrayToArray($data->arrayDeficiencias));
+        $arrayDeficiencias = array_filter(
+            Portabilis_Utils_Database::pgArrayToArray($data->arrayDeficiencias)
+        );
         $arrayRecursos = array_filter(Portabilis_Utils_Database::pgArrayToArray($data->recursosProvaInep));
 
         if (!$arrayDeficiencias && ($data->dadosAluno->tipoAtendimentoTurma == TipoAtendimentoTurma::AEE || $data->dadosAluno->modalidadeCurso == ModalidadeCurso::EDUCACAO_ESPECIAL)) {
@@ -44,6 +52,7 @@ class Register30StudentDataAnalysis implements AnalysisInterface
             ];
         }
 
+        $arrayDeficiencias = $this->data::removeAltasHabilidadesArrayDeficiencias($arrayDeficiencias);
         if (empty($arrayRecursos) && $arrayDeficiencias) {
             $this->messages[] = [
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verificamos que o(a) aluno(a)  {$data->nomePessoa} possui deficiência, portanto é necessário informar qual o recurso para a realização de provas o(a) mesmo(a) necessita ou já recebe.",
@@ -87,15 +96,6 @@ class Register30StudentDataAnalysis implements AnalysisInterface
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} possui valor inválido. Verificamos que o ano de registro da certidão de nascimento (nova) do(a) aluno(a) {$data->nomePessoa}, é anterior ao ano do nascimento ou posterior ao ano corrente (Posições de 11 a 14 do número da certidão).",
                 'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: Tipo certidão civil (novo formato))',
                 'linkPath' => "/intranet/atendidos_cad.php?cod_pessoa_fj={$data->codigoPessoa}",
-                'fail' => true
-            ];
-        }
-
-        if ($data->semDocumentacao() && !$data->justificativaFaltaDocumentacao) {
-            $this->messages[] = [
-                'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verificamos que o(a) aluno(a) {$data->nomePessoa} não possui nenhuma documentação informada (CPF, NIS ou Certidão de Nascimento (nova)), portanto é necessário justificar a falta das documentações.",
-                'path' => '(Escola > Cadastros > Alunos > Editar > Aba: Dados pessoais > Campo: Justificativa para a falta de documentação)',
-                'linkPath' => "/module/Cadastro/aluno?id={$data->codigoAluno}",
                 'fail' => true
             ];
         }

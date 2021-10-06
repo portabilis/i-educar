@@ -1,11 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Session;
-
-require_once('include/clsBanco.inc.php');
-require_once('include/Geral.inc.php');
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
-
 class clsJuridica
 {
     public $idpes;
@@ -26,19 +20,21 @@ class clsJuridica
      */
     public function __construct($idpes = false, $cnpj = false, $fantasia = false, $insc_estadual = false, $capital_social = false, $idpes_cad = false, $idpes_rev = false)
     {
-        $this->pessoa_logada = Session::get('id_pessoa');
-
         $objPessoa = new clsPessoa_($idpes);
         if ($objPessoa->detalhe()) {
             $this->idpes = $idpes;
         }
 
-        $this->cnpj = $cnpj;
+        if (config('legacy.app.uppercase_names')) {
+            $fantasia = Str::upper($fantasia);
+        }
+
         $this->fantasia = $fantasia;
+        $this->cnpj = $cnpj;
         $this->insc_estadual = $insc_estadual;
         $this->capital_social = $capital_social;
-        $this->idpes_cad = $idpes_cad ? $idpes_cad : Session::get('id_pessoa');
-        $this->idpes_rev = $idpes_rev ? $idpes_rev : Session::get('id_pessoa');
+        $this->idpes_cad = $idpes_cad ? $idpes_cad : \Illuminate\Support\Facades\Auth::id();
+        $this->idpes_rev = $idpes_rev ? $idpes_rev : \Illuminate\Support\Facades\Auth::id();
 
         $this->tabela = 'juridica';
         $this->schema = 'cadastro';
@@ -53,28 +49,37 @@ class clsJuridica
     {
         $db = new clsBanco();
 
-        if (is_numeric($this->idpes) && is_numeric($this->cnpj) && is_numeric($this->idpes_cad)) {
+        if (is_numeric($this->idpes) && is_numeric($this->idpes_cad)) {
             $campos = '';
             $valores = '';
             if ($this->fantasia) {
+                $fantasia = $db->escapeString($this->fantasia);
                 $campos .= ', fantasia';
-                $valores .= ", '$this->fantasia'";
+                $valores .= ", '{$fantasia}'";
             }
             if (is_numeric($this->insc_estadual)) {
                 $campos .= ', insc_estadual';
-                $valores .= ", '$this->insc_estadual' ";
+                $valores .= ", '{$this->insc_estadual}' ";
             }
             if (is_string($this->capital_social)) {
                 $campos .= ', capital_social';
                 $valores .= ", '{$this->capital_social}' ";
             }
 
-            $db->Consulta("INSERT INTO {$this->schema}.{$this->tabela} (idpes, cnpj, origem_gravacao, data_cad, operacao, idpes_cad $campos) VALUES ($this->idpes, '$this->cnpj', 'M', NOW(), 'I', '$this->idpes_cad' $valores)");
+            /**
+             * Quando o CNPJ é null é preciso montar um insert específico por conta da concatenação com NULL
+             */
+            if ($this->cnpj === null) {
+                $sql = "INSERT INTO {$this->schema}.{$this->tabela} (idpes, cnpj, origem_gravacao, data_cad, operacao, idpes_cad $campos) VALUES ($this->idpes, null, 'M', NOW(), 'I', '$this->idpes_cad' $valores)";
+
+            } else {
+                $sql = "INSERT INTO {$this->schema}.{$this->tabela} (idpes, cnpj, origem_gravacao, data_cad, operacao, idpes_cad $campos) VALUES ($this->idpes, '$this->cnpj', 'M', NOW(), 'I', '$this->idpes_cad' $valores)";
+            }
+
+            $db->Consulta($sql);
 
             if ($this->idpes) {
-                $detalhe = $this->detalhe();
-                $auditoria = new clsModulesAuditoriaGeral('juridica', $this->pessoa_logada, $this->idpes);
-                $auditoria->inclusao($detalhe);
+                $this->detalhe();
             }
 
             return true;
@@ -90,15 +95,18 @@ class clsJuridica
      */
     public function edita()
     {
+        $db = new clsBanco();
+
         if (is_numeric($this->idpes) && is_numeric($this->idpes_rev)) {
             $set = [];
             if (is_string($this->fantasia)) {
-                $set[] = " fantasia = '$this->fantasia' ";
+                $fantasia = $db->escapeString($this->fantasia);
+                $set[] = " fantasia = '{$fantasia}' ";
             }
 
             if (is_numeric($this->insc_estadual)) {
                 if ($this->insc_estadual) {
-                    $set[] = " insc_estadual = '$this->insc_estadual' ";
+                    $set[] = " insc_estadual = '{$this->insc_estadual}' ";
                 } else {
                     $set[] = ' insc_estadual = NULL ';
                 }
@@ -107,25 +115,21 @@ class clsJuridica
             }
 
             if (is_string($this->capital_social)) {
-                $set[] = " capital_social = '$this->capital_social' ";
+                $set[] = " capital_social = '{$this->capital_social}' ";
             }
 
             if ($this->idpes_rev) {
-                $set[] = " idpes_rev = '$this->idpes_rev' ";
+                $set[] = " idpes_rev = '{$this->idpes_rev}' ";
             }
 
             if (is_numeric($this->cnpj)) {
-                $set[] = " cnpj = '$this->cnpj' ";
+                $set[] = " cnpj = '{$this->cnpj}' ";
             }
 
             if ($set) {
                 $campos = implode(', ', $set);
-                $db = new clsBanco();
                 $detalheAntigo = $this->detalhe();
                 $db->Consulta("UPDATE {$this->schema}.{$this->tabela} SET $campos WHERE idpes = '$this->idpes' ");
-
-                $auditoria = new clsModulesAuditoriaGeral('juridica', $this->pessoa_logada, $this->idpes);
-                $auditoria->alteracao($detalheAntigo, $this->detalhe());
 
                 return true;
             }
@@ -145,8 +149,6 @@ class clsJuridica
             $db = new clsBanco();
             $detalheAntigo = $this->detalhe();
             $db->Consulta("DELETE FROM {$this->schema}.{$this->tabela} WHERE idpes = {$this->idpes}");
-            $auditoria = new clsModulesAuditoriaGeral('juridica', $this->pessoa_logada, $this->idpes);
-            $auditoria->exclusao($detalheAntigo, $this->detalhe());
 
             return true;
         }
@@ -161,9 +163,11 @@ class clsJuridica
      */
     public function lista($str_fantasia = false, $str_insc_estadual = false, $int_cnpj = false, $str_ordenacao = false, $int_limite_ini = false, $int_limite_qtd = false, $arrayint_idisin = false, $arrayint_idnotin = false, $int_idpes = false)
     {
+        $db = new clsBanco;
         $whereAnd = 'WHERE ';
         $join = '';
         if (is_string($str_fantasia)) {
+            $str_fantasia = $db->escapeString($str_fantasia);
             $where .= "{$whereAnd} (fcn_upper_nrm(fantasia) LIKE fcn_upper_nrm('%$str_fantasia%') OR fcn_upper_nrm(nome) LIKE fcn_upper_nrm('%$str_fantasia%'))";
             $whereAnd = ' AND ';
         }

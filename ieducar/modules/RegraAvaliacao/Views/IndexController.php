@@ -1,11 +1,7 @@
 <?php
 
-require_once 'Core/Controller/Page/ListController.php';
-require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
-
 class IndexController extends Core_Controller_Page_ListController
 {
-
     protected $_dataMapper = 'RegraAvaliacao_Model_RegraDataMapper';
     protected $_titulo = 'Listagem de regras de avaliação';
     protected $_processoAp = 947;
@@ -25,14 +21,8 @@ class IndexController extends Core_Controller_Page_ListController
     {
         parent::_preRender();
 
-        $localizacao = new LocalizacaoSistema();
-
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
-            'educar_index.php' => 'Escola',
-            '' => 'Listagem de regras de avalia&ccedil;&otilde;es'
+        $this->breadcrumb('Listagem de regras de avaliações', [
+            url('intranet/educar_index.php') => 'Escola',
         ]);
-
-        $this->enviaLocalizacao($localizacao->montar());
     }
 }

@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsPmieducarProjeto extends Model
 {
     public $cod_projeto;
@@ -44,13 +42,15 @@ class clsPmieducarProjeto extends Model
             $gruda = '';
 
             if (is_string($this->nome)) {
+                $nome = $db->escapeString($this->nome);
                 $campos .= "{$gruda}nome";
-                $valores .= "{$gruda}'{$this->nome}'";
+                $valores .= "{$gruda}'{$nome}'";
                 $gruda = ', ';
             }
             if (is_string($this->observacao)) {
+                $observacao = $db->escapeString($this->observacao);
                 $campos .= "{$gruda}observacao";
-                $valores .= "{$gruda}'{$this->observacao}'";
+                $valores .= "{$gruda}'{$observacao}'";
                 $gruda = ', ';
             }
 
@@ -74,11 +74,13 @@ class clsPmieducarProjeto extends Model
             $set = '';
 
             if (is_string($this->nome)) {
-                $set .= "{$gruda}nome = '{$this->nome}'";
+                $nome = $db->escapeString($this->nome);
+                $set .= "{$gruda}nome = '{$nome}'";
                 $gruda = ', ';
             }
             if (is_string($this->observacao)) {
-                $set .= "{$gruda}observacao = '{$this->observacao}'";
+                $observacao = $db->escapeString($this->observacao);
+                $set .= "{$gruda}observacao = '{$observacao}'";
                 $gruda = ', ';
             }
 
@@ -99,6 +101,7 @@ class clsPmieducarProjeto extends Model
      */
     public function lista($cod_projeto = null, $nome = null)
     {
+        $db = new clsBanco();
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
 
         $filtros = '';
@@ -110,11 +113,11 @@ class clsPmieducarProjeto extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($nome)) {
-            $filtros .= "{$whereAnd} nome ILIKE '%{$nome}%'";
+            $nome_str = $db->escapeString($nome);
+            $filtros .= "{$whereAnd} nome ILIKE '%{$nome_str}%'";
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

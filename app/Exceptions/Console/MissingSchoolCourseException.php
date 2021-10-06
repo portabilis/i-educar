@@ -13,7 +13,9 @@ class MissingSchoolCourseException extends DomainException
         $message = 'Não existe registro em escola curso para escola %s e curso %s';
 
         $message = sprintf(
-            $message, $school->getKey(), $course->getKey()
+            $message,
+            $school->getKey(),
+            $course->getKey()
         );
 
         parent::__construct($message);

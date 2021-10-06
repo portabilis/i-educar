@@ -172,4 +172,10 @@ WHERE TRUE
             ELSE
                 matricula.aprovado = situacao_matricula.cod_situacao
         END
+    )
+    AND matricula_turma.sequencial = (
+        SELECT max(sequencial)
+        FROM pmieducar.matricula_turma mt
+        WHERE mt.ref_cod_turma = matricula_turma.ref_cod_turma
+        AND mt.ref_cod_matricula = matricula.cod_matricula
     );

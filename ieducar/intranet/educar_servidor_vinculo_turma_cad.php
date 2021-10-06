@@ -2,34 +2,13 @@
 
 use App\Models\Employee;
 use App\Models\LegacyInstitution;
-use App\Models\LegacySchoolClass;
 use App\Services\iDiarioService;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\Educacenso\Model\TipoMediacaoDidaticoPedagogico;
 use iEducar\Modules\Servidores\Model\FuncaoExercida;
 use iEducar\Support\View\SelectOptions;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'include/modules/clsModulesProfessorTurma.inc.php';
-require_once 'Portabilis/String/Utils.php';
-require_once 'Portabilis/Utils/Database.php';
-require_once 'lib/Portabilis/Array/Utils.php';
-require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
-
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' Servidores - Servidor vínculo turma');
-        $this->processoAp = 635;
-    }
-}
-
-class indice extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $id;
@@ -135,8 +114,7 @@ class indice extends clsCadastro
         $this->campoOculto('id', $this->id);
         $this->campoOculto('servidor_id', $this->servidor_id);
         $this->inputsHelper()->dynamic('ano', ['value' => (is_null($ano) ? date('Y') : $ano)]);
-        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie']);
-        $this->inputsHelper()->dynamic(['turma'], ['required' => !is_null($this->ref_cod_turma)]);
+        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie', 'turma']);
 
         $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
         $this->campoOculto('obrigar_campos_censo', (int) $obrigarCamposCenso);
@@ -289,6 +267,10 @@ class indice extends clsCadastro
 
     public function Excluir()
     {
+        if (empty($this->id)) {
+            $this->simpleRedirect(url('/intranet/educar_servidor_vinculo_turma_lst.php'));
+        }
+
         $backUrl = sprintf(
             'educar_servidor_vinculo_turma_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
             $this->servidor_id,
@@ -336,6 +318,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = 'Não é possível cadastrar o vínculo pois o servidor não está alocado na escola selecionada.';
+
         return false;
     }
 
@@ -355,16 +338,19 @@ class indice extends clsCadastro
 
         if ($turma['tipo_mediacao_didatico_pedagogico'] == TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA && !in_array($this->funcao_exercida, $funcoesEad)) {
             $this->mensagem = 'O campo: <b>Função exercida</b> deve ser <b>Docente titular</b> ou <b>Docente tutor</b>, quando o campo: <b>Tipo de mediação didático-pedagógica</b> da turma for: <b>Educação a Distância</b>.';
+
             return false;
         }
 
         if ($turma['tipo_atendimento'] != TipoAtendimentoTurma::ESCOLARIZACAO && $this->funcao_exercida == FuncaoExercida::AUXILIAR_EDUCACIONAL) {
             $this->mensagem = 'O campo: <b>Função exercida</b> não pode ser: <b>Auxiliar/Assistente Educacional</b> quando o tipo de atendimento da turma for: <b>' . TipoAtendimentoTurma::getDescriptiveValues()[$turma['tipo_atendimento']] . '</b>';
+
             return false;
         }
 
         if ($turma['tipo_atendimento'] != TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR && $this->funcao_exercida == FuncaoExercida::MONITOR_ATIVIDADE_COMPLEMENTAR) {
             $this->mensagem = 'O campo: <b>Função exercida</b> não pode ser: <b> Profissional/Monitor de Atividade Complementar </b> quando o tipo de atendimento da turma for: <b>' . TipoAtendimentoTurma::getDescriptiveValues()[$turma['tipo_atendimento']] . '</b>';
+
             return false;
         }
 
@@ -376,6 +362,7 @@ class indice extends clsCadastro
      *
      * @param integer $professorId
      * @param integer $turmaId
+     *
      * @return bool
      */
     private function existeLancamentoIDiario($professorId, $turmaId)
@@ -393,16 +380,10 @@ class indice extends clsCadastro
 
         return false;
     }
-}
 
-// Instancia objeto de página
-$pagina = new clsIndexBase();
-
-// Instancia objeto de conteúdo
-$miolo = new indice();
-
-// Atribui o conteúdo à  página
-$pagina->addForm($miolo);
-
-// Gera o código HTML
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->title = 'Servidores - Servidor vínculo turma';
+        $this->processoAp = 635;
+    }
+};

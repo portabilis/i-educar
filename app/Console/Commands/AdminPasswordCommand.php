@@ -31,7 +31,7 @@ class AdminPasswordCommand extends Command
     {
         $password = Hash::make($this->argument('password'));
 
-        DB::connection('pgsql')->update('UPDATE portal.funcionario SET senha = ? WHERE matricula = ?', [$password, 'admin']);
+        DB::update('UPDATE portal.funcionario SET senha = ? WHERE matricula = ?', [$password, 'admin']);
 
         $this->info('Password updated.');
     }

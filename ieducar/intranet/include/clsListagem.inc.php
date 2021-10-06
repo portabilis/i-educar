@@ -5,11 +5,6 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
-require_once 'include/clsCampos.inc.php';
-require_once 'Portabilis/View/Helper/Application.php';
-require_once 'Portabilis/View/Helper/Inputs.php';
-require_once 'include/localizacaoSistema.php';
-
 define('alTopLeft', 'valign=top align=left');
 define('alTopCenter', 'valign=top align=center');
 define('alTopRight', 'valign=top align=right');
@@ -36,8 +31,9 @@ class clsListagem extends clsCampos
     public $tituloFormResultado;
     public $funcAcao = '';
     public $funcAcaoNome = '';
-    public $rotulo_anterior;
     public $appendInTop = false;
+    // Para adicionar uma classe CSS extra no botão configure o valor do
+    // $this->array_botao como um array ex: $this->array_botao[] = ['name' => 'Novo', 'css-extra' => 'btn-green'];
     public $array_botao;
     public $array_botao_url;
     public $array_botao_script;
@@ -47,7 +43,6 @@ class clsListagem extends clsCampos
     public $paginador = [];
     public $numeropaginador = 0;
     public $paginador2;
-    public $busca_janela = 0;
     public $rodape = '';
     public $ordenacao;
     public $campos_ordenacao;
@@ -97,35 +92,9 @@ class clsListagem extends clsCampos
         return false;
     }
 
-    /**
-     * @deprecated
-     */
-    public function addBanner(
-        $strBannerUrl = '',
-        $strBannerLateralUrl = '',
-        $strBannerTitulo = '',
-        $boolFechaBanner = true
-    ) {
-        // Apenas para fins de compatibilidade
-    }
-
-    public function enviaLocalizacao($localizao, $appendInTop = false)
-    {
-        if ($localizao) {
-            $this->locale = $localizao;
-        }
-
-        $this->appendInTop = $appendInTop;
-    }
-
     public function addCabecalhos($coluna)
     {
         $this->cabecalho = $coluna;
-    }
-
-    public function addCabecalho($coluna)
-    {
-        $this->cabecalho[] = $coluna;
     }
 
     public function addLinhas($linha)
@@ -157,6 +126,12 @@ class clsListagem extends clsCampos
                 $intPaginaAtual = 1;
             }
 
+            if(!isset($_GET['pagina_formulario']) & !isset($_GET['pagina_'])) {
+                $pagina_formulario = 1;
+            }else{
+                $pagina_formulario = (isset($_GET['pagina_formulario'])) ? $_GET['pagina_formulario'] : $_GET['pagina_'];
+            }
+
             $pagStart = $intPaginaAtual - $intPaginasExibidas;
             $totalPaginas = ceil($intTotalRegistros / $intResultadosPorPagina);
 
@@ -186,13 +161,17 @@ class clsListagem extends clsCampos
                 }
             }
 
-            /**
-             * HTML do paginador.
-             */
-            $strReturn = '<table class=\'paginacao\' border="0" cellpadding="0" cellspacing="0" align="center"><tr>';
+            $strReturn = <<<HTML
+<table>
+  <tr>
+    <td>Total de registros: {$intTotalRegistros}</td>
+  </tr>
+</table>
+HTML;
+
+            $strReturn .= '<table class=\'paginacao\' border="0" cellpadding="0" cellspacing="0" align="center"><tr>';
 
             // Setas de início e anterior
-            $imagem = ($intPaginaAtual > 1) ? 'seta' :'seta_transp';
             $compl_url = ($add_iniciolimit) ? '&iniciolimit=' . (1 + $pag_modifier): '';
             $strReturn .= "<td width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . (1 + $pag_modifier) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a primeira pagina\"> &laquo; </a></td> ";
             $compl_url = ($add_iniciolimit) ? '&iniciolimit=' . max(1 + $pag_modifier, $intPaginaAtual - 1) : '';
@@ -200,18 +179,16 @@ class clsListagem extends clsCampos
 
             // Meio
             $strReturn .= '';
-            $meios = [];
 
             $ordenacao = $_POST['ordenacao'] ?? $_GET['ordenacao'] ?? $_POST['ordenacao'] ?? null;
 
             for ($i = 0; $i <= $intPaginasExibidas * 2 && $i + $pagStart <= $totalPaginas; $i++) {
-                $imagem     = ($pagStart + $i + $pag_modifier == $intPaginaAtual) ? '2' : '1';
                 $compl_url  = ($add_iniciolimit) ? '&iniciolimit=' . ($pagStart + $i + $pag_modifier) : '';
-                $strReturn .= "<td align=\"center\" style=\"padding-left:5px;padding-right:5px;\"><a href=\"{$linkFixo}$getVar=" . ($pagStart + $i + $pag_modifier) . "{$compl_url}&ordenacao={$ordenacao}\" class=\"nvp_paginador\" title=\"Ir para a p&aacute;gina " . ($pagStart + $i) . '">' . addLeadingZero($pagStart + $i) .'</a></td>';
+                $classe_botao = ($pagina_formulario == ($pagStart + $i)) ? 'nvp_paginador_ativo' : '';
+                $strReturn .= "<td align=\"center\" class=\"{$classe_botao}\" style=\"padding-left:5px;padding-right:5px;\"><a href=\"{$linkFixo}$getVar=" . ($pagStart + $i + $pag_modifier) . "{$compl_url}&ordenacao={$ordenacao}\" class=\"nvp_paginador\" title=\"Ir para a p&aacute;gina " . ($pagStart + $i) . '">' . addLeadingZero($pagStart + $i) .'</a></td>';
             }
 
             // Setas de fim e próxima
-            $imagem     = ($intPaginaAtual < $totalPaginas) ? 'seta' : 'seta_transp';
             $compl_url  = ($add_iniciolimit) ? '&iniciolimit=' . min($totalPaginas + $pag_modifier, $intPaginaAtual + 1) : '';
             $strReturn .= "<td width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . min($totalPaginas + $pag_modifier, $intPaginaAtual + 1) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a proxima pagina\"> &rsaquo; </a></td> ";
             $compl_url  = ($add_iniciolimit) ? '&iniciolimit=' . ($totalPaginas + $pag_modifier): '';
@@ -221,48 +198,6 @@ class clsListagem extends clsCampos
 
             $this->paginador2 = $strReturn;
         }
-    }
-
-    public function addPaginador($argumento, $inicio, $buffer = false)
-    {
-        $visual = 1 + $this->numeropaginador;
-
-        if (!$buffer || (($this->numeropaginador > $inicio - 6) && ($this->numeropaginador < $inicio + 6))) {
-            if ($inicio == $this->numeropaginador) {
-                $this->paginador[] = [$visual, $argumento."&iniciolimit={$this->numeropaginador}", false];
-            } else {
-                $this->paginador[] = [$visual, $argumento."&iniciolimit={$this->numeropaginador}", true];
-            }
-        }
-
-        $this->numeropaginador++;
-    }
-
-    /**
-     * Cria o código HTML.
-     *
-     * @param string $caminho
-     * @param int    $qdt_registros
-     * @param int    $limite
-     * @param string $link_atual
-     *
-     * @return NULL
-     */
-    public function paginador($caminho, $qdt_registros, $limite, $link_atual)
-    {
-        $this->addPaginador2(
-            '',
-            $qdt_registros,
-            $_GET,
-            'formulario',
-            $limite,
-            3,
-            'pos_atual',
-            -1,
-            true
-        );
-
-        return null;
     }
 
     public function RenderHTML()
@@ -629,8 +564,27 @@ class clsListagem extends clsCampos
                 //$retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='". $this->array_botao_script[$i]."' value='".$this->array_botao[$i]."'>&nbsp;\n";
             }
         } elseif (is_array($this->array_botao)) {
-            for ($i = 0; $i < count($this->array_botao); $i++) {
-                $retorno .= '&nbsp;<input type=\'button\' class=\'botaolistagem\' onclick=\'javascript:go( "'.$this->array_botao_url[$i].'" );\' value=\''.$this->array_botao[$i]."'>&nbsp;\n";
+
+            $count = count($this->array_botao);
+            for ($i = 0; $i < $count; $i++) {
+
+                $url = $this->array_botao_url[$i];
+
+                // Valores podem mudar de acordo com a construção do $this->array_botao
+                $extraCssClass = 'botaolistagem';
+                $value = $this->array_botao[$i];
+
+                if (is_array($this->array_botao[$i])) {
+                    if (array_key_exists('css-extra', $this->array_botao[$i])) {
+                        $extraCssClass .= ' ' . $this->array_botao[$i]['css-extra'];
+                    }
+
+                    if (array_key_exists('name', $this->array_botao[$i])) {
+                        $value = ' ' . $this->array_botao[$i]['name'];
+                    }
+                }
+
+                $retorno .= '&nbsp;<input type=\'button\' class=\''. $extraCssClass . '\' onclick=\'javascript:go( "'.$url.'" );\' value=\''.$value."'>&nbsp;\n";
             }
         }
 
@@ -653,17 +607,6 @@ class clsListagem extends clsCampos
         Portabilis_View_Helper_Application::embedJavascriptToFixupFieldsWidth($this);
 
         return $retorno;
-    }
-
-    /**
-     * Exibe mensagem de DIE formatada;
-     *
-     * @param String $msg
-     * @param String $url Redirecionar após 1 segundo
-     */
-    public function erro($msg, $redir = 'index.php')
-    {
-        die("<div style='width: 300px; height: 100px; font: 700 11px Arial,Helv,Sans; background-color: #f6f6f6; color: #e11; position: absolute; left: 50%; top: 50%; margin-top: -20px; margin-left: -100px; text-align: center; border: solid 1px #a1a1f1;'>{$msg}</div><script>setTimeout('window.location=\'$redir\'',5000);</script>");
     }
 
     public function inputsHelper()

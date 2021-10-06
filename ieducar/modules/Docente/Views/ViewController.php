@@ -1,8 +1,5 @@
 <?php
 
-require_once 'Core/Controller/Page/ViewController.php';
-require_once 'Docente/Model/LicenciaturaDataMapper.php';
-
 class ViewController extends Core_Controller_Page_ViewController
 {
     protected $_dataMapper = 'Docente_Model_LicenciaturaDataMapper';

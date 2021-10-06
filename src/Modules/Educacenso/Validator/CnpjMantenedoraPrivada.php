@@ -35,9 +35,9 @@ class CnpjMantenedoraPrivada implements EducacensoValidator
         }
 
         $this->message = "Dados para formular o registro 00 da escola {$this->escola->nome} não encontrados. Verificamos que a mantenedora da escola é uma Instituição sem fins lucrativos e a escola é regulamentada pelo conselho/órgão, portanto é necessário informar o CNPJ da mantenedora principal desta unidade escolar;";
+
         return false;
     }
-
 
     /**
      * @return mixed

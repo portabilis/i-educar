@@ -1,9 +1,9 @@
 <?php
 
+use App\Models\Enrollment;
 use App\Models\LegacySchoolClass;
 use App\Models\Registration;
 use Faker\Generator as Faker;
-use App\Models\Enrollment;
 use Illuminate\Database\Eloquent\Factory;
 
 /** @var Factory $factory */

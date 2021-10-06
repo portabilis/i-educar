@@ -1,9 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
-require_once 'lib/Portabilis/Utils/Database.php';
-require_once 'lib/App/Model/IedFinder.php';
-
 class Portabilis_View_Helper_DynamicInput_AnoLetivo extends Portabilis_View_Helper_DynamicInput_CoreSelect
 {
     protected function inputName()
@@ -35,8 +31,8 @@ class Portabilis_View_Helper_DynamicInput_AnoLetivo extends Portabilis_View_Help
             $resources = App_Model_IedFinder::getAnosLetivosEscolaSerie($escolaId, $serieId);
         } elseif ($escolaId && empty($resources)) {
             $sql = "
-                select ano 
-                from pmieducar.escola_ano_letivo as al 
+                select ano
+                from pmieducar.escola_ano_letivo as al
                 where ref_cod_escola = $1
                 and ativo = 1 {$this->filtroSituacao()}
                 order by ano desc

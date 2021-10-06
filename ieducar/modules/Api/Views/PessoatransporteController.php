@@ -1,15 +1,7 @@
 <?php
 
-require_once 'include/modules/clsModulesPessoaTransporte.inc.php';
-require_once 'include/modules/clsModulesItinerarioTransporteEscolar.inc.php';
-require_once 'Portabilis/Controller/ApiCoreController.php';
-require_once 'Portabilis/Array/Utils.php';
-require_once 'Portabilis/String/Utils.php';
-require_once 'Portabilis/Date/Utils.php';
-
 class PessoatransporteController extends ApiCoreController
 {
-
     protected $_processoAp = 21240; //verificar
     protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA; // verificar
 
@@ -39,7 +31,7 @@ class PessoatransporteController extends ApiCoreController
         $pt->ref_idpes_destino = $this->getRequest()->pessoaj_id;
         $pt->ref_cod_ponto_transporte_escolar = $this->getRequest()->ponto;
         $pt->ref_cod_rota_transporte_escolar = $this->getRequest()->rota;
-        $pt->observacao = Portabilis_String_Utils::toLatin1($this->getRequest()->observacao);
+        $pt->observacao = $this->getRequest()->observacao;
         $pt->turno = $this->getRequest()->turno;
 
         return (is_null($id) ? $pt->cadastra() : $pt->edita());

@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsPmieducarQuadroHorarioHorarios extends Model
 {
     public $ref_cod_quadro_horario;
@@ -46,22 +44,21 @@ class clsPmieducarQuadroHorarioHorarios extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_cod_quadro_horario, ref_cod_serie, ref_cod_escola, ref_cod_disciplina, sequencial, ref_cod_instituicao_substituto, ref_cod_instituicao_servidor, ref_servidor_substituto, ref_servidor, hora_inicial, hora_final, data_cadastro, data_exclusao, ativo, dia_semana';
 
         if (is_numeric($ref_servidor_substituto) && is_numeric($ref_cod_instituicao_substituto)) {
-                $this->ref_servidor_substituto = $ref_servidor_substituto;
-                $this->ref_cod_instituicao_substituto = $ref_cod_instituicao_substituto;
+            $this->ref_servidor_substituto = $ref_servidor_substituto;
+            $this->ref_cod_instituicao_substituto = $ref_cod_instituicao_substituto;
         }
 
         if (is_numeric($ref_servidor) && is_numeric($ref_cod_instituicao_servidor)) {
-                $this->ref_servidor = $ref_servidor;
-                $this->ref_cod_instituicao_servidor = $ref_cod_instituicao_servidor;
+            $this->ref_servidor = $ref_servidor;
+            $this->ref_cod_instituicao_servidor = $ref_cod_instituicao_servidor;
         }
 
         if (is_numeric($ref_servidor_substituto) && is_numeric($ref_cod_instituicao_substituto)) {
-                $this->ref_servidor_substituto = $ref_servidor_substituto;
-                $this->ref_cod_instituicao_substituto = $ref_cod_instituicao_substituto;
+            $this->ref_servidor_substituto = $ref_servidor_substituto;
+            $this->ref_cod_instituicao_substituto = $ref_cod_instituicao_substituto;
         }
 
         if (is_numeric($ref_ref_cod_disciplina) && is_numeric($ref_ref_cod_serie)) {
-            require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
             $anoEscolarMapper = new ComponenteCurricular_Model_AnoEscolarDataMapper();
             $componenteAnos = $anoEscolarMapper->findAll([], [
                 'componenteCurricular' => $ref_ref_cod_disciplina,
@@ -76,7 +73,7 @@ class clsPmieducarQuadroHorarioHorarios extends Model
         }
 
         if (is_numeric($ref_cod_quadro_horario)) {
-                $this->ref_cod_quadro_horario = $ref_cod_quadro_horario;
+            $this->ref_cod_quadro_horario = $ref_cod_quadro_horario;
         }
 
         if (is_numeric($sequencial)) {

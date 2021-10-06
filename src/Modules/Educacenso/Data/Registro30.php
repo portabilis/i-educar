@@ -29,6 +29,7 @@ class Registro30 extends AbstractRegistro
 
     /**
      * @param $schoolId
+     *
      * @return Registro30Model[]
      */
     public function getData($schoolId)
@@ -44,7 +45,7 @@ class Registro30 extends AbstractRegistro
         $arrayEmployeeId = $this->getArrayEmployeeId();
         $employeeData = $this->repository->getEmployeeDataForRecord30($arrayEmployeeId);
         foreach ($employeeData as $data) {
-            $data->email = strtoupper($data->email);
+            $data->email = mb_strtoupper($data->email);
             $this->model = $this->modelArray[$data->codigoPessoa];
             $this->hydrateModel($data);
             $this->modelArray[$data->codigoPessoa] = $this->model;
@@ -58,11 +59,14 @@ class Registro30 extends AbstractRegistro
             $this->modelArray[$data->codigoPessoa] = $this->model;
         }
 
+        $unconsideredKnowledgeArea = [27, 17, 32, 99];
+
         foreach ($this->modelArray as &$record) {
             $record->formacaoAnoConclusao = Portabilis_Utils_Database::pgArrayToArray($record->formacaoAnoConclusao);
             $record->formacaoCurso = Portabilis_Utils_Database::pgArrayToArray($record->formacaoCurso);
             $record->formacaoInstituicao = Portabilis_Utils_Database::pgArrayToArray($record->formacaoInstituicao);
             $record->formacaoComponenteCurricular = Portabilis_Utils_Database::pgArrayToArray($record->formacaoComponenteCurricular);
+            $record->formacaoComponenteCurricular = array_diff($record->formacaoComponenteCurricular, $unconsideredKnowledgeArea);
         }
 
         return $this->modelArray;
@@ -70,7 +74,7 @@ class Registro30 extends AbstractRegistro
 
     /**
      * @param ItemOfRegistro30[] $array
-     * @param string $type
+     * @param string             $type
      */
     public function setArrayDataByType($array, $type)
     {
@@ -100,8 +104,10 @@ class Registro30 extends AbstractRegistro
 
     /**
      * @param $escolaId
-     * @return Registro30Model[]
+     *
      * @throws \Exception
+     *
+     * @return Registro30Model[]
      */
     public function getExportFormatData($escolaId)
     {

@@ -2,8 +2,8 @@
 
 namespace App\Http\Middleware;
 
-use Closure;
 use App\Setting;
+use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
@@ -33,11 +33,10 @@ class LoadSettings
      */
     private function getDatabaseConfig()
     {
-        $connections = config('database.connections');
-        $config = $connections[DB::getDefaultConnection()];
+        $config = DB::connection()->getConfig();
 
         return [
-            'legacy.app.database.hostname' => $config['read']['host'][0] ?? $config['host'],
+            'legacy.app.database.hostname' => $config['host'],
             'legacy.app.database.port' => $config['port'],
             'legacy.app.database.dbname' => $config['database'],
             'legacy.app.database.username' => $config['username'],

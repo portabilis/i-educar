@@ -1,22 +1,6 @@
 <?php
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsListagem.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Séries da escola');
-
-        $this->processoAp = 585;
-    }
-}
-
-class indice extends clsListagem
-{
+return new class extends clsListagem {
     public $limite;
     public $offset;
     public $ref_cod_serie;
@@ -40,20 +24,13 @@ class indice extends clsListagem
             $this->$var = ($val === '') ? null : $val;
         }
 
-        $lista_busca = [
-            'Série',
-            'Curso'
-        ];
-
-        $obj_permissao = new clsPermissoes();
-        $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
-
+        $lista_busca = ['Série', 'Curso'];
         $lista_busca[] = 'Escola';
         $lista_busca[] = 'Instituição';
         $lista_busca[] = 'Escola';
         $this->addCabecalhos($lista_busca);
 
-        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie']);
+        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie'], [],['options' => ['required' => false]]);
 
         // Paginador
         $this->limite = 20;
@@ -98,12 +75,11 @@ class indice extends clsListagem
             foreach ($lista as $registro) {
                 $obj_ref_cod_serie = new clsPmieducarSerie($registro['ref_cod_serie']);
                 $det_ref_cod_serie = $obj_ref_cod_serie->detalhe();
-                $nm_serie = $det_ref_cod_serie['nm_serie'];
+                $nm_serie = empty($det_ref_cod_serie['descricao']) ? $det_ref_cod_serie['nm_serie'] : "{$det_ref_cod_serie['nm_serie']} ({$det_ref_cod_serie['descricao']})";
 
                 $obj_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
                 $det_curso = $obj_curso->detalhe();
-                $registro['ref_cod_curso'] = $det_curso['nm_curso'];
-
+                $registro['ref_cod_curso'] = empty($det_curso['descricao']) ? $det_curso['nm_curso'] : "{$det_curso['nm_curso']} ({$det_curso['descricao']})";
                 $obj_ref_cod_escola = new clsPmieducarEscola($registro['ref_cod_escola']);
                 $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
                 $nm_escola = $det_ref_cod_escola['nome'];
@@ -133,6 +109,7 @@ class indice extends clsListagem
             $this->limite
         );
 
+        $obj_permissao = new clsPermissoes();
         if ($obj_permissao->permissao_cadastra(585, $this->pessoa_logada, 7)) {
             $this->acao = 'go("educar_escola_serie_cad.php")';
             $this->nome_acao = 'Novo';
@@ -144,10 +121,11 @@ class indice extends clsListagem
             url('intranet/educar_index.php') => 'Escola',
         ]);
     }
-}
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
+    public function Formular()
+    {
+        $this->title = 'i-Educar - Séries da escola';
 
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+        $this->processoAp = 585;
+    }
+};

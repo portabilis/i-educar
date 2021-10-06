@@ -1,32 +1,15 @@
 <?php
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsDetalhe.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pessoa/clsCadastroRaca.inc.php';
-require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
-require_once 'include/pessoa/clsCadastroFisicaRaca.inc.php';
-
-require_once 'App/Model/ZonaLocalizacao.php';
-
+use App\Models\LegacyIndividual;
+use App\Services\FileService;
 use App\Services\UrlPresigner;
 
-class clsIndex extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' Pessoa');
-        $this->processoAp = 43;
-    }
-}
-
-class indice extends clsDetalhe
-{
+return new class extends clsDetalhe {
     public function Gerar()
     {
         $this->titulo = 'Detalhe da Pessoa';
 
-        $cod_pessoa = $this->getQueryString('cod_pessoa');
+        $cod_pessoa = (int) $this->getQueryString('cod_pessoa');
 
         $objPessoa = new clsPessoaFisica($cod_pessoa);
         $db = new clsBanco();
@@ -159,6 +142,13 @@ class indice extends clsDetalhe
             $this->addDetalhe(['Sexo', $detalhe['sexo'] == 'M' ? 'Masculino' : 'Feminino']);
         }
 
+        $fileService = new FileService(new UrlPresigner);
+        $files = $fileService->getFiles(LegacyIndividual::find($cod_pessoa));
+
+        if (count($files) > 0) {
+            $this->addHtml(view('uploads.upload-details', ['files' => $files])->render());
+        }
+
         $obj_permissao = new clsPermissoes();
 
         if ($obj_permissao->permissao_cadastra(43, $this->pessoa_logada, 7, null, true)) {
@@ -172,16 +162,10 @@ class indice extends clsDetalhe
 
         $this->breadcrumb('Pessoa física', ['educar_pessoas_index.php' => 'Pessoas']);
     }
-}
 
-// Instancia objeto de página
-$pagina = new clsIndex();
-
-// Instancia objeto de conteúdo
-$miolo = new indice();
-
-// Atribui o conteúdo à página
-$pagina->addForm($miolo);
-
-// Gera o código HTML
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->title = 'Pessoa';
+        $this->processoAp = 43;
+    }
+};

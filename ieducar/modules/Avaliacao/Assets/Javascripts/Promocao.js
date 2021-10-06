@@ -110,17 +110,5 @@ function handleSearch($resultTable, dataResponse) {
             .bind('click', deleteOldComponentesCurriculares)
             .appendTo($text);
 
-  $j('<span />').html(' ').appendTo($text);
-
-  $j('<a />').attr('id', 'clear-messages')
-            .attr('href', '#')
-            .html('Limpar mensagens')
-            .attr('style', 'text-decoration:underline')
-            .bind('click', function(){
-              $j('#feedback-messages').children().remove();
-              $j('#feedback-messages-success').children().remove();
-            })
-            .appendTo($text);
-
   $j('<td />').html($text).appendTo($j('<tr />').appendTo($resultTable));
 }

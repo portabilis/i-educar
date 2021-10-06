@@ -1,19 +1,9 @@
 <?php
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
+use App\Models\LegacySchoolClass;
+use App\Services\SchoolClassService;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Consulta de movimento mensal');
-        $this->processoAp = 9998910;
-    }
-}
-
-class indice extends clsCadastro
-{
+return new class extends clsCadastro {
     const PROCESSO_AP = 9998910;
 
     public $ano;
@@ -63,9 +53,38 @@ class indice extends clsCadastro
 
     public function Gerar()
     {
-        $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola'));
-        $this->inputsHelper()->dynamic(array('curso', 'serie', 'turma'), array('required' => false));
-        $this->inputsHelper()->dynamic(array('dataInicial', 'dataFinal'));
+        $this->inputsHelper()->dynamic(['ano', 'instituicao', 'escola']);
+        $this->inputsHelper()->dynamic(['curso', 'serie', 'turma'], ['required' => false]);
+
+        $options = [
+            'label' => 'Modalidade',
+            'resources' => [
+                1 => 'Todas',
+                2 => 'Regular',
+                3 => 'Atendimento Educacional Especializado - AEE',
+                4 => 'Atividade complementar',
+                5 => 'Educação de Jovens e Adultos - EJA',
+            ],
+            'required' => true,
+        ];
+        $this->inputsHelper()->select('modalidade', $options);
+
+        $calendars = $this->getCalendars();
+        $this->addHtml(
+            view('form.calendar')
+                ->with('calendars', $calendars)
+        );
+
+        $this->inputsHelper()->dynamic(['dataInicial', 'dataFinal']);
+
+        Portabilis_View_Helper_Application::loadJavascript($this, [
+            '/modules/Portabilis/Assets/Plugins/Chosen/chosen.jquery.min.js',
+            '/intranet/scripts/movimento_mensal.js',
+        ]);
+
+        Portabilis_View_Helper_Application::loadStylesheet($this, [
+            '/modules/Portabilis/Assets/Plugins/Chosen/chosen.css'
+        ]);
     }
 
     public function Novo()
@@ -88,6 +107,8 @@ class indice extends clsCadastro
             'ref_cod_turma',
             'data_inicial',
             'data_final',
+            'modalidade',
+            'calendars',
         ];
 
         $queryString = [];
@@ -101,10 +122,42 @@ class indice extends clsCadastro
 
         $this->simpleRedirect($url);
     }
-}
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
+    private function getCalendars()
+    {
+        $schoolClass = $this->getSchoolClass();
 
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+        $schoolClassService = new SchoolClassService();
+
+        return $schoolClassService->getCalendars($schoolClass);
+    }
+
+    private function getSchoolClass()
+    {
+        if ($this->getQueryString('ref_cod_turma')) {
+            return [$this->getQueryString('ref_cod_turma')];
+        }
+
+        return LegacySchoolClass::query()
+            ->where('ano', ($this->getQueryString('ano') ?: date('Y')))
+            ->whereHas('course', function ($courseQuery) {
+                $courseQuery->isEja();
+            })
+            ->when($this->getQueryString('ref_cod_escola'), function ($query) {
+                $query->where('ref_ref_cod_escola', $this->getQueryString('ref_cod_escola'));
+            })
+            ->when($this->getQueryString('ref_cod_serie'), function ($query) {
+                $query->where('ref_ref_cod_serie', $this->getQueryString('ref_cod_serie'));
+            })
+            ->when($this->getQueryString('ref_cod_curso'), function ($query) {
+                $query->where('ref_cod_curso', $this->getQueryString('ref_cod_curso'));
+            })
+            ->get(['cod_turma'])->pluck('cod_turma')->all();
+    }
+
+    public function Formular()
+    {
+        $this->title = 'i-Educar - Consulta de movimento mensal';
+        $this->processoAp = 9998910;
+    }
+};

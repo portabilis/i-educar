@@ -1,4 +1,4 @@
-CREATE OR REPLACE VIEW students AS
+CREATE OR REPLACE VIEW public.students AS
 SELECT
     a.cod_aluno AS id,
     a.ref_cod_religiao AS religion_id,

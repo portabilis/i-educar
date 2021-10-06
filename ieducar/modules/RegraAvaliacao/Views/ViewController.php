@@ -1,8 +1,5 @@
 <?php
 
-require_once 'Core/Controller/Page/ViewController.php';
-require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
-
 class ViewController extends Core_Controller_Page_ViewController
 {
     /**
@@ -39,6 +36,8 @@ class ViewController extends Core_Controller_Page_ViewController
         'Recuperação paralela' => 'tipoRecuperacaoParalela',
         'Nota máxima' => 'notaMaximaGeral',
         'Nota mínima' => 'notaMinimaGeral',
+        'Falta máxima' => 'faltaMaximaGeral',
+        'Falta mínima' => 'faltaMinimaGeral',
         'Nota máxima para exame final' => 'notaMaximaExameFinal',
         'Número máximo de casas decimais' => 'qtdCasasDecimais',
     ];
@@ -51,5 +50,7 @@ class ViewController extends Core_Controller_Page_ViewController
         $this->breadcrumb('Detalhes da regra de avaliação', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
+
+        $this->addBotao('Copiar regra', "/module/RegraAvaliacao/edit?id={$this->getRequest()->id}&copy=true");
     }
 }

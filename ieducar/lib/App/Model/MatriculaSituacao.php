@@ -1,7 +1,5 @@
 <?php
 
-require_once 'CoreExt/Enum.php';
-
 class App_Model_MatriculaSituacao extends CoreExt_Enum
 {
     const APROVADO = 1;

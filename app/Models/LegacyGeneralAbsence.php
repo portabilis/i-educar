@@ -26,7 +26,6 @@ class LegacyGeneralAbsence extends Model
      */
     public $timestamps = false;
 
-
     /**
      * @return BelongsTo
      */

@@ -1,27 +1,15 @@
 <?php
 
+use App\Models\LegacyActiveLooking;
 use App\Models\LegacyRegistration;
 use Illuminate\Support\Str;
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'lib/Portabilis/Array/Utils.php';
-require_once 'lib/Portabilis/String/Utils.php';
-require_once 'App/Model/MatriculaSituacao.php';
-require_once 'intranet/include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'Portabilis/Date/Utils.php';
-require_once 'modules/Avaliacao/Model/NotaAlunoDataMapper.php';
-require_once 'modules/Avaliacao/Model/NotaComponenteMediaDataMapper.php';
-require_once 'modules/Avaliacao/Views/PromocaoApiController.php';
-require_once 'lib/CoreExt/Controller/Request.php';
-
 class MatriculaController extends ApiCoreController
 {
-
     protected function canGetMatriculas()
     {
         return $this->validatesId('escola') &&
-           $this->validatesId('aluno');
+            $this->validatesId('aluno');
     }
 
     protected function canDeleteAbandono()
@@ -114,10 +102,11 @@ class MatriculaController extends ApiCoreController
     /**
      * Método para possibilitar a busca apenas de alunos transferidos, será
      * substituído em futuras versões.
-     * 
-     * @deprecated
      *
      * @return array
+     *
+     * @deprecated
+     *
      */
     public function getTransferredRegistrations()
     {
@@ -127,22 +116,39 @@ class MatriculaController extends ApiCoreController
 
         $query = str_replace('-', ' ', Str::slug($query));
 
-        $registrations = LegacyRegistration::query()
+        $queryBuilder = LegacyRegistration::query()
             ->with('student.person')
-            ->whereHas('student.person', function ($builder) use ($query) {
-                $builder->where('nome', 'ilike', '%' . $query . '%');
-            })
-            ->where('aprovado', 4)
+            ->whereHas(
+                'student.person',
+                function ($builder) use ($query) {
+                    $builder
+                        ->where('slug', 'ilike', '%' . $query . '%')
+                        ->orWhere('ref_cod_aluno', 'like', '%' . $query . '%')
+                        ->orWhere('cod_matricula', 'like', '%' . $query . '%')
+                        ->withCasts(
+                            [
+                                'ref_cod_aluno' => 'string',
+                                'cod_matricula' => 'string',
+                            ]
+                        )
+                    ;
+                }
+            )
+            ->where('aprovado', App_Model_MatriculaSituacao::TRANSFERIDO)
             ->where('ano', $year)
-            ->where('ref_ref_cod_escola', $school)
-            ->limit(15)
-            ->get();
+            ->limit(15);
+
+        if ($school) {
+            $queryBuilder->where('ref_ref_cod_escola', $school);
+        }
+
+        $registrations = $queryBuilder->get();
 
         $transfers = [];
 
         foreach ($registrations as $registration) {
             $codAluno = $registration->student->cod_aluno;
-            $nome = $registration->student->person->nome;
+            $nome = mb_strtoupper($registration->student->person->nome);
             $transfers[$registration->cod_matricula] = "({$codAluno}) {$nome}";
         }
 
@@ -191,8 +197,16 @@ class MatriculaController extends ApiCoreController
 
         $dadosMatricula = $this->fetchPreparedQuery($sql, $matriculaId, false, 'first-row');
 
-        $attrs = ['id', 'aluno_id', 'ano', 'instituicao_id', 'escola_id',
-            'curso_id', 'serie_id', 'turma_id'];
+        $attrs = [
+            'id',
+            'aluno_id',
+            'ano',
+            'instituicao_id',
+            'escola_id',
+            'curso_id',
+            'serie_id',
+            'turma_id'
+        ];
 
         return Portabilis_Array_Utils::filter($dadosMatricula, $attrs);
     }
@@ -300,7 +314,7 @@ class MatriculaController extends ApiCoreController
         }
 
         $sql = "
-            SELECT 
+            SELECT
                 m.ref_cod_aluno AS aluno_id,
                 m.cod_matricula AS matricula_id,
                 m.ref_ref_cod_escola AS escola_id,
@@ -358,7 +372,7 @@ class MatriculaController extends ApiCoreController
                 $params[] = $updatedAt;
             }
 
-            $sql = '(SELECT 
+            $sql = '(SELECT
                        matricula_turma.id,
                        matricula.cod_matricula as matricula_id,
                        matricula_turma.ref_cod_turma AS turma_id,
@@ -371,10 +385,10 @@ class MatriculaController extends ApiCoreController
                            WHEN COALESCE(instituicao.data_base_transferencia, instituicao.data_base_remanejamento) IS NULL THEN FALSE
                            WHEN matricula.aprovado = 4 AND
                                 matricula_turma.transferido AND
-                                matricula_turma.data_exclusao > ($1 || to_char(instituicao.data_base_transferencia, \'-mm-dd\'))::DATE THEN TRUE
+                                matricula_turma.data_exclusao > pmieducar.get_date_in_year($1, instituicao.data_base_transferencia) THEN TRUE
                            WHEN matricula.aprovado = 3 AND
                                 matricula_turma.remanejado AND
-                                matricula_turma.data_exclusao > ($1 || to_char(instituicao.data_base_remanejamento, \'-mm-dd\'))::DATE THEN TRUE
+                                matricula_turma.data_exclusao > pmieducar.get_date_in_year($1, instituicao.data_base_remanejamento) THEN TRUE
                            ELSE FALSE
                        END AS apresentar_fora_da_data,
                        matricula_turma.turno_id,
@@ -388,9 +402,9 @@ class MatriculaController extends ApiCoreController
                     ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
                  WHERE matricula.ref_ref_cod_escola in (' . $escola . ')
                    AND matricula.ano = $1::integer
-                 ' . $whereMatriculaTurma . ') 
+                 ' . $whereMatriculaTurma . ')
                  UNION ALL
-                 (SELECT 
+                 (SELECT
                        matricula_turma_excluidos.id,
                        matricula.cod_matricula as matricula_id,
                        matricula_turma_excluidos.ref_cod_turma AS turma_id,
@@ -403,10 +417,10 @@ class MatriculaController extends ApiCoreController
                            WHEN COALESCE(instituicao.data_base_transferencia, instituicao.data_base_remanejamento) IS NULL THEN FALSE
                            WHEN matricula.aprovado = 4 AND
                                 matricula_turma_excluidos.transferido AND
-                                matricula_turma_excluidos.data_exclusao > ($1 || to_char(instituicao.data_base_transferencia, \'-mm-dd\'))::DATE THEN TRUE
+                                matricula_turma_excluidos.data_exclusao > pmieducar.get_date_in_year($1, instituicao.data_base_transferencia) THEN TRUE
                            WHEN matricula.aprovado = 3 AND
                                 matricula_turma_excluidos.remanejado AND
-                                matricula_turma_excluidos.data_exclusao > ($1 || to_char(instituicao.data_base_remanejamento, \'-mm-dd\'))::DATE THEN TRUE
+                                matricula_turma_excluidos.data_exclusao > pmieducar.get_date_in_year($1, instituicao.data_base_remanejamento) THEN TRUE
                            ELSE FALSE
                        END AS apresentar_fora_da_data,
                        matricula_turma_excluidos.turno_id,
@@ -418,9 +432,9 @@ class MatriculaController extends ApiCoreController
                     ON instituicao.cod_instituicao = escola.ref_cod_instituicao
             INNER JOIN pmieducar.matricula_turma_excluidos
                     ON matricula_turma_excluidos.ref_cod_matricula = matricula.cod_matricula
-                 WHERE matricula.ref_ref_cod_escola in (' . $escola . ') 
+                 WHERE matricula.ref_ref_cod_escola in (' . $escola . ')
                    AND matricula.ano = $1::integer ' . $whereMatriculaExcluidos . ')
-                   
+
                    ORDER BY updated_at';
 
             $enturmacoes = $this->fetchPreparedQuery($sql, $params, false);
@@ -503,14 +517,20 @@ class MatriculaController extends ApiCoreController
             $params = [$sequencial, $matriculaId];
             $this->fetchPreparedQuery($sql, $params);
 
-            $instituicaoId = (new clsBanco)->unicoCampo("select cod_instituicao from pmieducar.instituicao where ativo = 1 order by cod_instituicao asc limit 1;");
+            $instituicaoId = (new clsBanco)->unicoCampo(
+                'select cod_instituicao from pmieducar.instituicao where ativo = 1 order by cod_instituicao asc limit 1;'
+            );
 
-            $fakeRequest = new CoreExt_Controller_Request(['data' => [
-                'oper' => 'post',
-                'resource' => 'promocao',
-                'instituicao_id' => $instituicaoId,
-                'matricula_id' => $matriculaId
-            ]]);
+            $fakeRequest = new CoreExt_Controller_Request(
+                [
+                    'data' => [
+                        'oper' => 'post',
+                        'resource' => 'promocao',
+                        'instituicao_id' => $instituicaoId,
+                        'matricula_id' => $matriculaId
+                    ]
+                ]
+            );
 
             $promocaoApi = new PromocaoApiController();
 
@@ -588,7 +608,10 @@ class MatriculaController extends ApiCoreController
     protected function validaDataEntrada()
     {
         if (!Portabilis_Date_Utils::validaData($this->getRequest()->data_entrada)) {
-            $this->messenger->append('Valor inválido para data de entrada ' . $this->getRequest()->data_entrada, 'error');
+            $this->messenger->append(
+                'Valor inválido para data de entrada ' . $this->getRequest()->data_entrada,
+                'error'
+            );
 
             return false;
         } else {
@@ -630,10 +653,16 @@ class MatriculaController extends ApiCoreController
             $matricula->data_cancel = $data_saida;
 
             if ($matricula->edita()) {
+                $enrollment = LegacyRegistration::find($matricula_id);
+                $lastenrollment = $enrollment->lastEnrollment;
+                $lastenrollment->data_exclusao = $data_saida;
+                $lastenrollment->save();
+
                 return $this->messenger->append('Data de saida atualizada com sucesso.', 'success');
             }
         }
     }
+
     protected function postSituacao()
     {
         if ($this->validatesPresenceOf('matricula_id') && $this->validatesPresenceOf('nova_situacao')) {
@@ -655,7 +684,17 @@ class MatriculaController extends ApiCoreController
             ) {
                 if ($enturmacoes) {
                     foreach ($enturmacoes as $enturmacao) {
-                        $enturmacao = new clsPmieducarMatriculaTurma($matriculaId, $enturmacao['ref_cod_turma'], 1, null, null, date('Y-m-d H:i:s'), 0, null, $enturmacao['sequencial']);
+                        $enturmacao = new clsPmieducarMatriculaTurma(
+                            $matriculaId,
+                            $enturmacao['ref_cod_turma'],
+                            1,
+                            null,
+                            null,
+                            date('Y-m-d H:i:s'),
+                            0,
+                            null,
+                            $enturmacao['sequencial']
+                        );
 
                         if (!$enturmacao->edita()) {
                             return false;
@@ -665,7 +704,7 @@ class MatriculaController extends ApiCoreController
                             $enturmacao->marcaAlunoTransferido();
                         } elseif ($situacaoNova == App_Model_MatriculaSituacao::ABANDONO) {
                             $enturmacao->marcaAlunoAbandono();
-                        }elseif ($situacaoNova == App_Model_MatriculaSituacao::FALECIDO) {
+                        } elseif ($situacaoNova == App_Model_MatriculaSituacao::FALECIDO) {
                             $enturmacao->marcaAlunoFalecido();
                         }
                     }
@@ -678,17 +717,28 @@ class MatriculaController extends ApiCoreController
                     (new Avaliacao_Model_NotaComponenteMediaDataMapper())
                         ->updateSituation($notaAluno->get('id'), $situacaoNova);
                 }
-            } elseif ($situacaoNova == App_Model_MatriculaSituacao::APROVADO || $situacaoNova == App_Model_MatriculaSituacao::EM_ANDAMENTO || $situacaoNova == App_Model_MatriculaSituacao::REPROVADO) {
-                if ($enturmacoes) {
+            } elseif (
+                $situacaoNova == App_Model_MatriculaSituacao::APROVADO ||
+                $situacaoNova == App_Model_MatriculaSituacao::EM_ANDAMENTO ||
+                $situacaoNova == App_Model_MatriculaSituacao::REPROVADO ||
+                $situacaoNova == App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA ||
+                $situacaoNova == App_Model_MatriculaSituacao::APROVADO_PELO_CONSELHO ||
+                $situacaoNova == App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS
+            ) {
+                $matriculaTurma = new clsPmieducarMatriculaTurma();
+                $enturmacoesParaAtivar = $matriculaTurma->lista($matriculaId);
+                if (!empty($enturmacoesParaAtivar)) {
                     $params = [$matriculaId];
                     $sql = 'SELECT sequencial as codigo FROM pmieducar.matricula_turma where ref_cod_matricula = $1 order by ativo desc, sequencial desc limit 1';
                     $sequencial = $this->fetchPreparedQuery($sql, $params, false, 'first-field');
 
-                    $sql = 'UPDATE pmieducar.matricula_turma set ativo = 1, transferido = false, remanejado = false, abandono = false, reclassificado = false where sequencial = $1 and ref_cod_matricula = $2';
+                    $sql = 'UPDATE pmieducar.matricula_turma set ativo = 1, transferido = false, remanejado = false, abandono = false, reclassificado = false, data_exclusao = null where sequencial = $1 and ref_cod_matricula = $2';
 
                     $params = [$sequencial, $matriculaId];
                     $this->fetchPreparedQuery($sql, $params);
                 }
+
+                $matricula->data_cancel = null;
             }
 
             $matricula->aprovado = $this->getRequest()->nova_situacao;
@@ -769,7 +819,7 @@ class MatriculaController extends ApiCoreController
 
         $sql = "
             (
-                SELECT 
+                SELECT
                     m.cod_matricula AS matricula_id,
                     dd.ref_cod_disciplina AS disciplina_id,
                     dd.updated_at,
@@ -784,7 +834,7 @@ class MatriculaController extends ApiCoreController
             )
             UNION ALL
             (
-                SELECT 
+                SELECT
                     m.cod_matricula AS matricula_id,
                     dd.ref_cod_disciplina AS disciplina_id,
                     dd.updated_at,
@@ -820,7 +870,7 @@ class MatriculaController extends ApiCoreController
         $params = [];
 
         if ($modified) {
-            $where = " AND dd.updated_at >= $1";
+            $where = ' AND dd.updated_at >= $1';
             $params[] = $modified;
         }
 
@@ -881,7 +931,7 @@ class MatriculaController extends ApiCoreController
                 $escola = 0;
             }
 
-            $sql = 'SELECT id, deleted_at 
+            $sql = 'SELECT id, deleted_at
                     FROM pmieducar.matricula_turma_excluidos
                     JOIN pmieducar.matricula ON matricula.cod_matricula = matricula_turma_excluidos.ref_cod_matricula
                     WHERE matricula.ano = $1
@@ -909,6 +959,36 @@ class MatriculaController extends ApiCoreController
     protected function canGetEnturmacoesExcluidas()
     {
         return $this->validatesPresenceOf('ano');
+    }
+
+    protected function getBuscaAtiva()
+    {
+        $ano = $this->getRequest()->ano;
+        $escola = $this->getRequest()->escola;
+        $modified = $this->getRequest()->modified;
+
+
+        $legacyActiveLooking = LegacyActiveLooking::withTrashed()
+            ->select('busca_ativa.*')
+            ->selectRaw("CASE resultado_busca_ativa
+                                  WHEN 1 THEN 'Abandono'::varchar
+                                  WHEN 3 THEN 'Retorno com ausência justificada'::varchar
+                                  WHEN 4 THEN 'Retorno sem ausência justificada'::varchar
+                                  ELSE 'Em andamento'::varchar END AS resulta_busca_ativa_text")
+            ->join('pmieducar.matricula', 'ref_cod_matricula', '=', 'cod_matricula')
+            ->where('ano', $ano);
+
+        if($modified){
+            $legacyActiveLooking->where('busca_ativa.updated_at', '>=', $modified);
+        }
+
+        if ($escola) {
+            $legacyActiveLooking->whereIn('ref_ref_cod_escola', explode(',', $escola));
+        }
+
+        $buscaAtiva = $legacyActiveLooking->get()->toArray();
+
+        return ['busca_ativa' => $buscaAtiva];
     }
 
     public function Gerar()
@@ -947,6 +1027,8 @@ class MatriculaController extends ApiCoreController
             $this->appendResponse($this->getDispensaDisciplina());
         } elseif ($this->isRequestFor('get', 'enturmacoes-excluidas')) {
             $this->appendResponse($this->getEnturmacoesExcluidas());
+        } elseif ($this->isRequestFor('get', 'busca-ativa')) {
+            $this->appendResponse($this->getBuscaAtiva());
         } else {
             $this->notImplementedOperationError();
         }

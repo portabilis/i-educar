@@ -1,7 +1,5 @@
 <?php
 
-require_once 'CoreExt/Enum.php';
-
 class App_Model_LocalFuncionamentoDiferenciado extends CoreExt_Enum
 {
     const NAO_ESTA = 0;

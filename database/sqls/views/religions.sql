@@ -1,4 +1,4 @@
-CREATE OR REPLACE VIEW religions AS
+CREATE OR REPLACE VIEW public.religions AS
 SELECT
     cod_religiao AS id,
     ref_usuario_exc AS deleted_by,

@@ -9,6 +9,7 @@ class VeiculoTransporte implements EducacensoExportRule
 {
     /**
      * @param Registro60 $registro60
+     *
      * @return RegistroEducacenso
      */
     public static function handle(RegistroEducacenso $registro60): RegistroEducacenso

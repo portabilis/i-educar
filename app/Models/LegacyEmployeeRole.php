@@ -33,12 +33,12 @@ class LegacyEmployeeRole extends Model
      */
     public $timestamps = false;
 
-    public function getIdAttribute() : int
+    public function getIdAttribute(): int
     {
         return $this->cod_servidor_funcao;
     }
 
-    public function role() : BelongsTo
+    public function role(): BelongsTo
     {
         return $this->belongsTo('App\\Models\\LegacyRole', 'ref_cod_funcao');
     }

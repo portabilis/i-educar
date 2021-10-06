@@ -2,47 +2,19 @@
 
 use App\Models\LegacyIndividual;
 use App\Models\LegacyInstitution;
+use App\Services\FileService;
 use App\Services\UrlPresigner;
 use iEducar\Modules\Addressing\LegacyAddressingFields;
-use iEducar\Modules\Educacenso\Validator\NameValidator;
-use iEducar\Modules\Educacenso\Validator\BirthDateValidator;
-use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
-use iEducar\Modules\Educacenso\Validator\NisValidator;
-use iEducar\Modules\Educacenso\Validator\DifferentiatedLocationValidator;
 use iEducar\Modules\Educacenso\Model\PaisResidencia;
+use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
+use iEducar\Modules\Educacenso\Validator\BirthDateValidator;
+use iEducar\Modules\Educacenso\Validator\DifferentiatedLocationValidator;
+use iEducar\Modules\Educacenso\Validator\NameValidator;
+use iEducar\Modules\Educacenso\Validator\NisValidator;
 use iEducar\Support\View\SelectOptions;
+use Illuminate\Support\Facades\Session;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/pessoa/clsCadastroRaca.inc.php';
-
-require_once 'include/pessoa/clsCadastroFisicaRaca.inc.php';
-require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
-require_once 'include/pmieducar/clsPmieducarAluno.inc.php';
-require_once 'include/modules/clsModulesPessoaTransporte.inc.php';
-require_once 'include/modules/clsModulesMotorista.inc.php';
-require_once 'image_check.php';
-
-require_once 'App/Model/ZonaLocalizacao.php';
-
-require_once 'Portabilis/String/Utils.php';
-require_once 'Portabilis/Utils/Database.php';
-require_once 'Portabilis/View/Helper/Application.php';
-require_once 'Portabilis/Utils/Validation.php';
-require_once 'Portabilis/Date/Utils.php';
-
-class clsIndex extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' Pessoas Físicas - Cadastro');
-        $this->processoAp = 43;
-    }
-}
-
-class indice extends clsCadastro
-{
+return new class extends clsCadastro {
     use LegacyAddressingFields;
 
     public $cod_pessoa_fj;
@@ -156,19 +128,14 @@ class indice extends clsCadastro
             $this->data_admissao = $this->data_admissao ? dataFromPgToBr($this->data_admissao) : '';
 
             $this->estado_civil_id = $this->estado_civil->ideciv;
-            $this->pais_origem_id = $this->pais_origem->idpais;
+            $this->pais_origem_id = $this->pais_origem;
             $this->naturalidade_id = $this->naturalidade;
-
-            $raca = new clsCadastroFisicaRaca($this->cod_pessoa_fj);
-            $raca = $raca->detalhe();
-            $this->cod_raca = is_array($raca) ? $raca['ref_cod_raca'] : null;
         }
 
         $this->fexcluir = $obj_permissoes->permissao_excluir(
             43,
             $this->pessoa_logada,
-            7,
-            'atendidos_lst.php'
+            7
         );
 
         $this->nome_url_cancelar = 'Cancelar';
@@ -179,6 +146,7 @@ class indice extends clsCadastro
 
     public function Gerar()
     {
+        $this->form_enctype = ' enctype=\'multipart/form-data\'';
         $camposObrigatorios = !config('legacy.app.remove_obrigatorios_cadastro_pessoa') == 1;
         $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
         $this->campoOculto('obrigar_campos_censo', (int) $obrigarCamposCenso);
@@ -225,7 +193,7 @@ class indice extends clsCadastro
 
         $foto = false;
         if (is_numeric($this->cod_pessoa_fj)) {
-            $objFoto = new ClsCadastroFisicaFoto($this->cod_pessoa_fj);
+            $objFoto = new clsCadastroFisicaFoto($this->cod_pessoa_fj);
             $detalheFoto = $objFoto->detalhe();
             if (count($detalheFoto)) {
                 $foto = $detalheFoto['caminho'];
@@ -237,9 +205,9 @@ class indice extends clsCadastro
         if ($foto) {
             $this->campoRotulo('fotoAtual_', 'Foto atual', '<img height="117" src="' . (new UrlPresigner())->getPresignedUrl($foto) . '"/>');
             $this->inputsHelper()->checkbox('file_delete', ['label' => 'Excluir a foto']);
-            $this->campoArquivo('file', 'Trocar foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho máximo: 150KB</span>');
+            $this->campoArquivo('photo', 'Trocar foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho máximo: 2MB</span>');
         } else {
-            $this->campoArquivo('file', 'Foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho máximo: 150KB</span>');
+            $this->campoArquivo('photo', 'Foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho máximo: 2MB</span>');
         }
 
         // ao cadastrar pessoa do pai ou mãe apartir do cadastro de outra pessoa,
@@ -386,7 +354,7 @@ class indice extends clsCadastro
         // Carteira do SUS
 
         $options = [
-            'required' => false,
+            'required' => config('legacy.app.fisica.exigir_cartao_sus'),
             'label' => 'Número da carteira do SUS',
             'placeholder' => '',
             'value' => $this->sus,
@@ -651,6 +619,10 @@ class indice extends clsCadastro
         $selectOptionsRaca = Portabilis_Array_Utils::sortByValue($selectOptionsRaca);
         $selectOptionsRaca = array_replace([null => 'Selecione'], $selectOptionsRaca);
 
+        $raca = new clsCadastroFisicaRaca($this->cod_pessoa_fj);
+        $raca = $raca->detalhe();
+        $this->cod_raca = is_array($raca) ? $raca['ref_cod_raca'] : null;
+
         $this->campoLista('cor_raca', 'Raça', $selectOptionsRaca, $this->cod_raca, '', false, '', '', '', $obrigarCamposCenso);
 
         // nacionalidade
@@ -731,7 +703,7 @@ class indice extends clsCadastro
         ]);
 
         $this->inputsHelper()->select('localizacao_diferenciada', [
-            'label' => 'Localização diferenciada',
+            'label' => 'Localização diferenciada de residência',
             'value' => $this->localizacao_diferenciada,
             'resources' => SelectOptions::localizacoesDiferenciadasPessoa(),
             'required' => false,
@@ -754,6 +726,10 @@ class indice extends clsCadastro
         $this->inputTelefone('empresa', 'Telefone da empresa');
         $this->campoTexto('pessoa_contato', 'Pessoa de contato na empresa', $this->pessoa_contato, '50', '255', false);
 
+        $fileService = new FileService(new UrlPresigner);
+        $files = $this->cod_pessoa_fj ? $fileService->getFiles(LegacyIndividual::find($this->cod_pessoa_fj)) : [];
+        $this->addHtml(view('uploads.upload', ['files' => $files])->render());
+
         // after change pessoa pai / mae
 
         if ($parentType) {
@@ -763,7 +739,8 @@ class indice extends clsCadastro
         $styles = [
             '/modules/Portabilis/Assets/Stylesheets/Frontend.css',
             '/modules/Portabilis/Assets/Stylesheets/Frontend/Resource.css',
-            '/modules/Cadastro/Assets/Stylesheets/PessoaFisica.css'
+            '/modules/Cadastro/Assets/Stylesheets/PessoaFisica.css',
+            '/modules/Cadastro/Assets/Stylesheets/ModalCadastroPais.css',
         ];
 
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
@@ -771,7 +748,8 @@ class indice extends clsCadastro
         $script = [
             '/modules/Cadastro/Assets/Javascripts/PessoaFisica.js',
             '/modules/Cadastro/Assets/Javascripts/Addresses.js',
-            '/modules/Cadastro/Assets/Javascripts/Endereco.js'
+            '/modules/Cadastro/Assets/Javascripts/Endereco.js',
+            '/modules/Cadastro/Assets/Javascripts/ModalCadastroPais.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $script);
@@ -920,10 +898,7 @@ class indice extends clsCadastro
         //pela antiga interface do cadastro de alunos.
 
         if (! $parentId && $this->_aluno['nm_' . $parentType]) {
-            $nome = Portabilis_String_Utils::toLatin1(
-                $this->_aluno['nm_' . $parentType],
-                ['transform' => true, 'escape' => false]
-            );
+            $nome = $this->_aluno['nm_' . $parentType];
 
             $inputHint = '<br /><b>Dica:</b> Foi informado o nome "' . $nome .
             '" no cadastro de aluno,<br />tente pesquisar esta pessoa ' .
@@ -1022,6 +997,7 @@ class indice extends clsCadastro
         $this->createOrUpdateTelefones($pessoaId);
         $this->saveAddress($pessoaId);
         $this->afterChangePessoa($pessoaId);
+        $this->saveFiles($pessoaId);
 
         return true;
     }
@@ -1031,6 +1007,7 @@ class indice extends clsCadastro
         $validator = new NameValidator($this->nm_pessoa);
         if (!$validator->isValid()) {
             $this->mensagem = $validator->getMessage();
+
             return false;
         }
 
@@ -1042,6 +1019,7 @@ class indice extends clsCadastro
         $validator = new DifferentiatedLocationValidator($this->localizacao_diferenciada, $this->zona_localizacao_censo);
         if (!$validator->isValid()) {
             $this->mensagem = $validator->getMessage();
+
             return false;
         }
 
@@ -1053,6 +1031,7 @@ class indice extends clsCadastro
         $validator = new BirthDateValidator(Portabilis_Date_Utils::brToPgSQL($this->data_nasc));
         if (!$validator->isValid()) {
             $this->mensagem = $validator->getMessage();
+
             return false;
         }
 
@@ -1062,34 +1041,42 @@ class indice extends clsCadastro
     //envia foto e salva caminha no banco
     protected function savePhoto($id)
     {
-        if ($this->objPhoto!=null) {
+        $caminhoFoto = url('intranet/imagens/user-perfil.png');
+        if ($this->objPhoto != null) {
             $caminhoFoto = $this->objPhoto->sendPicture();
-            if ($caminhoFoto!='') {
-                //new clsCadastroFisicaFoto($id)->exclui();
+            if ($caminhoFoto != '') {
                 $obj = new clsCadastroFisicaFoto($id, $caminhoFoto);
                 $detalheFoto = $obj->detalhe();
-                if (is_array($detalheFoto) && count($detalheFoto)>0) {
+                if (is_array($detalheFoto) && count($detalheFoto) > 0) {
                     $obj->edita();
                 } else {
                     $obj->cadastra();
                 }
-
-                return true;
             } else {
                 echo '<script>alert(\'Foto não salva.\')</script>';
 
                 return false;
             }
+            $caminhoFoto = (new UrlPresigner())->getPresignedUrl($caminhoFoto);
         } elseif ($this->file_delete == 'on') {
             $obj = new clsCadastroFisicaFoto($id);
             $obj->excluir();
         }
+
+        $loggedUser = session('logged_user');
+
+        if ($loggedUser->personId == $id) {
+            Session::put('logged_user_picture', $caminhoFoto);
+            Session::save();
+        }
+
+        return true;
     }
 
     // Retorna true caso a foto seja válida
     protected function validatePhoto()
     {
-        $this->arquivoFoto = $_FILES['file'];
+        $this->arquivoFoto = $_FILES['photo'];
         if (!empty($this->arquivoFoto['name'])) {
             $this->arquivoFoto['name'] = mb_strtolower($this->arquivoFoto['name'], 'UTF-8');
             $this->objPhoto = new PictureController($this->arquivoFoto);
@@ -1154,6 +1141,7 @@ class indice extends clsCadastro
             $validator = new BirthCertificateValidator($this->certidao_nascimento, Portabilis_Date_Utils::brToPgSQL($this->data_nasc));
             if (!$validator->isValid()) {
                 $this->mensagem = $validator->getMessage();
+
                 return false;
             }
         }
@@ -1172,6 +1160,7 @@ class indice extends clsCadastro
         $validator = new NisValidator($this->nis_pis_pasep ?? '');
         if (!$validator->isValid()) {
             $this->mensagem = $validator->getMessage();
+
             return false;
         }
 
@@ -1215,6 +1204,7 @@ class indice extends clsCadastro
 
     protected function createOrUpdatePessoaFisica($pessoaId)
     {
+        $db = new clsBanco();
         $fisica = new clsFisica();
         $fisica->idpes = $pessoaId;
         $fisica->data_nasc = Portabilis_Date_Utils::brToPgSQL($this->data_nasc);
@@ -1229,11 +1219,11 @@ class indice extends clsCadastro
         $fisica->idmun_nascimento = $_REQUEST['naturalidade_id'] ?: 'NULL';
         $fisica->sus = $this->sus;
         $fisica->nis_pis_pasep = $this->nis_pis_pasep ? $this->nis_pis_pasep : 'NULL';
-        $fisica->ocupacao = $this->ocupacao;
-        $fisica->empresa = $this->empresa;
+        $fisica->ocupacao = $db->escapeString($this->ocupacao);
+        $fisica->empresa = $db->escapeString($this->empresa);
         $fisica->ddd_telefone_empresa = $this->ddd_telefone_empresa;
         $fisica->telefone_empresa = $this->telefone_empresa;
-        $fisica->pessoa_contato = $this->pessoa_contato;
+        $fisica->pessoa_contato = $db->escapeString($this->pessoa_contato);
         $this->renda_mensal = str_replace('.', '', $this->renda_mensal);
         $this->renda_mensal = str_replace(',', '.', $this->renda_mensal);
         $fisica->renda_mensal = $this->renda_mensal;
@@ -1321,8 +1311,8 @@ class indice extends clsCadastro
         );
 
         $documentos->sigla_uf_cert_civil = $_REQUEST['uf_emissao_certidao_civil'];
-        $documentos->cartorio_cert_civil = addslashes($_REQUEST['cartorio_emissao_certidao_civil']);
-        $documentos->passaporte = addslashes($_REQUEST['passaporte']);
+        $documentos->cartorio_cert_civil = pg_escape_string($_REQUEST['cartorio_emissao_certidao_civil']);
+        $documentos->passaporte = pg_escape_string($_REQUEST['passaporte']);
 
         // carteira de trabalho
 
@@ -1405,16 +1395,34 @@ class indice extends clsCadastro
 
         $this->inputsHelper()->integer("telefone_{$type}", $options);
     }
-}
 
-// Instancia objeto de página
-$pagina = new clsIndex();
+    private function saveFiles($idpes)
+    {
+        $fileService = new FileService(new UrlPresigner);
 
-// Instancia objeto de conteúdo
-$miolo = new indice();
+        if ($this->file_url) {
+            $newFiles = json_decode($this->file_url);
+            foreach ($newFiles as $file) {
+                $fileService->saveFile(
+                    $file->url,
+                    $file->size,
+                    $file->originalName,
+                    $file->extension,
+                    LegacyIndividual::class,
+                    $idpes
+                );
+            }
+        }
 
-// Atribui o conteúdo à página
-$pagina->addForm($miolo);
+        if ($this->file_url_deleted) {
+            $deletedFiles = explode(',', $this->file_url_deleted);
+            $fileService->deleteFiles($deletedFiles);
+        }
+    }
 
-// Gera o código HTML
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->title = 'Pessoas Físicas - Cadastro';
+        $this->processoAp = 43;
+    }
+};

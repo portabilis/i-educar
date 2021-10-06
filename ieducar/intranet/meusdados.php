@@ -1,22 +1,12 @@
 <?php
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/RDStationAPI.class.php';
-require_once 'image_check.php';
+use App\Models\LegacyEmployee;
+use App\Services\ChangeUserPasswordService;
+use App\Services\UrlPresigner;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\ValidationException;
 
-class clsIndex extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . 'Configurações - Meus dados');
-        $this->processoAp = '0';
-    }
-}
-
-class indice extends clsCadastro
-{
+return new class extends clsCadastro {
     public $nome;
 
     public $ddd_telefone;
@@ -49,10 +39,6 @@ class indice extends clsCadastro
 
     public $file_delete;
 
-    public $caminho_det;
-
-    public $caminho_lst;
-
     public function Inicializar()
     {
         $retorno = 'Novo';
@@ -62,14 +48,11 @@ class indice extends clsCadastro
 
         if ($pessoaFisica) {
             $this->nome = $pessoaFisica['nome'];
-
-            if ($pessoaFisica) {
-                $this->ddd_telefone = $pessoaFisica['ddd_1'];
-                $this->telefone = $pessoaFisica['fone_1'];
-                $this->ddd_celular = $pessoaFisica['ddd_mov'];
-                $this->celular = $pessoaFisica['fone_mov'];
-                $this->sexo = $pessoaFisica['sexo'];
-            }
+            $this->ddd_telefone = $pessoaFisica['ddd_1'];
+            $this->telefone = $pessoaFisica['fone_1'];
+            $this->ddd_celular = $pessoaFisica['ddd_mov'];
+            $this->celular = $pessoaFisica['fone_mov'];
+            $this->sexo = $pessoaFisica['sexo'];
 
             $funcionario = new clsPortalFuncionario($this->pessoa_logada);
             $funcionario = $funcionario->detalhe();
@@ -102,18 +85,16 @@ class indice extends clsCadastro
         $foto = false;
 
         if (is_numeric($this->pessoa_logada)) {
-            $objFoto = new ClsCadastroFisicaFoto($this->pessoa_logada);
+            $objFoto = new clsCadastroFisicaFoto($this->pessoa_logada);
             $detalheFoto = $objFoto->detalhe();
 
             if (count($detalheFoto)) {
                 $foto = $detalheFoto['caminho'];
             }
-        } else {
-            $foto = false;
         }
 
         if ($foto) {
-            $this->campoRotulo('fotoAtual_', 'Foto atual', '<img height="117" src="' .$foto. '"/>');
+            $this->campoRotulo('fotoAtual_', 'Foto atual', '<img height="117" src="' . (new UrlPresigner())->getPresignedUrl($foto) . '"/>');
             $this->inputsHelper()->checkbox('file_delete', ['label' => 'Excluir a foto']);
             $this->campoArquivo('file', 'Trocar foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho m&aacute;ximo: 150KB</span>');
         } else {
@@ -197,29 +178,6 @@ class indice extends clsCadastro
 
     public function Editar()
     {
-        if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
-            $this->mensagem = 'Formato do e-mail inválido.';
-
-            return false;
-        }
-        if ($this->senha != $this->senha_confirma) {
-            $this->mensagem = 'As senhas que você digitou não conferem.';
-
-            return false;
-        }
-
-        if (strlen($this->senha) < 8) {
-            $this->mensagem = 'Por favor informe uma senha mais segura, com pelo menos 8 caracteres.';
-
-            return false;
-        }
-
-        if (strrpos($this->senha, $this->matricula)) {
-            $this->mensagem = 'A senha informada &eacute; similar a sua matricula, informe outra senha.';
-
-            return false;
-        }
-
         if (!$this->validatePhoto()) {
             return false;
         }
@@ -257,8 +215,21 @@ class indice extends clsCadastro
         $funcionario->atualizou_cadastro = 1;
         $funcionario->email = $this->email;
 
-        if ($this->senha_old != $this->senha) {
-            $funcionario->senha = md5($this->senha);
+        $senha_old = urldecode($this->senha_old);
+
+        if ($senha_old != $this->senha) {
+            if ($this->senha !== $this->senha_confirma) {
+                $this->mensagem = 'O campo de confirmação de senha deve ser igual ao campo de confirmação da senha.';
+                return false;
+            }
+            $legacyEmployee = LegacyEmployee::find($this->pessoa_logada);
+            $changeUserPasswordService = app(ChangeUserPasswordService::class);
+            try {
+                $changeUserPasswordService->execute($legacyEmployee, $this->senha);
+            } catch (ValidationException $ex){
+                $this->mensagem = $ex->validator->errors()->first();
+                return false;
+            }
         }
 
         $funcionario->edita();
@@ -329,8 +300,6 @@ class indice extends clsCadastro
 
                 return false;
             }
-
-            return false;
         } else {
             $this->objPhoto = null;
 
@@ -341,6 +310,7 @@ class indice extends clsCadastro
     //envia foto e salva caminha no banco
     public function savePhoto($id)
     {
+        $caminhoFoto = url('intranet/imagens/user-perfil.png');
         if ($this->objPhoto != null) {
             $caminhoFoto = $this->objPhoto->sendPicture();
             if ($caminhoFoto != '') {
@@ -351,21 +321,26 @@ class indice extends clsCadastro
                 } else {
                     $obj->cadastra();
                 }
-
-                return true;
             } else {
                 echo '<script>alert(\'Foto não salva.\')</script>';
 
                 return false;
             }
+            $caminhoFoto = (new UrlPresigner())->getPresignedUrl($caminhoFoto);
         } elseif ($this->file_delete == 'on') {
             $obj = new clsCadastroFisicaFoto($id);
             $obj->excluir();
         }
-    }
-}
 
-$pagina = new clsIndex();
-$miolo = new indice();
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+        Session::put('logged_user_picture', $caminhoFoto);
+        Session::save();
+
+        return true;
+    }
+
+    public function Formular()
+    {
+        $this->title = 'Configurações - Meus dados';
+        $this->processoAp = '0';
+    }
+};

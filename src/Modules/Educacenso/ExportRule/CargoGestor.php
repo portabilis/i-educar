@@ -11,6 +11,7 @@ class CargoGestor implements EducacensoExportRule
 {
     /**
      * @param Registro40 $registro40
+     *
      * @return RegistroEducacenso
      */
     public static function handle(RegistroEducacenso $registro40): RegistroEducacenso

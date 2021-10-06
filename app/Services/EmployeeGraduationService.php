@@ -9,6 +9,7 @@ class EmployeeGraduationService
 {
     /**
      * @param $employee
+     *
      * @return EmployeeGraduation[]
      */
     public function getEmployeeGraduations($employee)

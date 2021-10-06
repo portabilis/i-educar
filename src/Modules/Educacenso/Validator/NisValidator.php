@@ -18,7 +18,8 @@ class NisValidator implements EducacensoValidator
     public function isValid(): bool
     {
         if ($this->isOnlyZeroDigits()) {
-            $this->message = "Os números do campo: NIS (PIS/PASEP) não podem ser todos zeros.";
+            $this->message = 'Os números do campo: NIS (PIS/PASEP) não podem ser todos zeros.';
+
             return false;
         }
 

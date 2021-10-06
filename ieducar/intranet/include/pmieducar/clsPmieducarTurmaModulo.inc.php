@@ -1,9 +1,6 @@
 <?php
 
 use iEducar\Legacy\Model;
-use Illuminate\Support\Facades\Session;
-
-require_once 'include/pmieducar/geral.inc.php';
 
 class clsPmieducarTurmaModulo extends Model
 {
@@ -13,23 +10,19 @@ class clsPmieducarTurmaModulo extends Model
     public $data_inicio;
     public $data_fim;
     public $dias_letivos;
-    public $pessoa_logada;
 
     public function __construct($ref_cod_turma = null, $ref_cod_modulo = null, $sequencial = null, $data_inicio = null, $data_fim = null, $dias_letivos = null)
     {
-        $db = new clsBanco();
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}turma_modulo";
-
-        $this->pessoa_logada = Session::get('id_pessoa');
 
         $this->_campos_lista = $this->_todos_campos = 'ref_cod_turma, ref_cod_modulo, sequencial, data_inicio, data_fim, dias_letivos';
 
         if (is_numeric($ref_cod_modulo)) {
-                    $this->ref_cod_modulo = $ref_cod_modulo;
+            $this->ref_cod_modulo = $ref_cod_modulo;
         }
         if (is_numeric($ref_cod_turma)) {
-                    $this->ref_cod_turma = $ref_cod_turma;
+            $this->ref_cod_turma = $ref_cod_turma;
         }
 
         if (is_numeric($sequencial)) {
@@ -293,7 +286,6 @@ class clsPmieducarTurmaModulo extends Model
             while ($db->ProximoRegistro()) {
                 $tupla[] = $db->Tupla();
             }
-            $this->auditStepsOfClasses($tupla, clsModulesAuditoriaGeral::OPERACAO_EXCLUSAO);
         } catch (Throwable $throwable) {
             return false;
         }
@@ -323,27 +315,11 @@ class clsPmieducarTurmaModulo extends Model
             while ($db->ProximoRegistro()) {
                 $tupla[] = $db->Tupla();
             }
-            $this->auditStepsOfClasses($tupla, clsModulesAuditoriaGeral::OPERACAO_INCLUSAO);
         } catch (Throwable $throwable) {
             return false;
         }
 
         return true;
-    }
-
-    private function auditStepsOfClasses($infos, $operation)
-    {
-        foreach ($infos as $key => $info) {
-            $auditoria = new clsModulesAuditoriaGeral('turma_modulo', $this->pessoa_logada, $info['ref_cod_turma']);
-            if ($operation == clsModulesAuditoriaGeral::OPERACAO_INCLUSAO) {
-                $auditoria->inclusao($info);
-                continue;
-            }
-            if ($operation == clsModulesAuditoriaGeral::OPERACAO_EXCLUSAO) {
-                $auditoria->exclusao($info);
-                continue;
-            }
-        }
     }
 
     /**

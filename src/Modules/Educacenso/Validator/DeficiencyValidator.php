@@ -60,6 +60,7 @@ class DeficiencyValidator implements EducacensoValidator
         foreach ($validations as $validation) {
             if ($this->hasForbiddenValues($validation[0], $validation[1])) {
                 $this->message = $this->getForbiddenDeficiencyMessage($validation[0], $validation[1]);
+
                 return false;
             }
         }
@@ -70,7 +71,6 @@ class DeficiencyValidator implements EducacensoValidator
     private function hasForbiddenValues($deficiency, $forbiddenValues): bool
     {
         return in_array($deficiency, $this->values) && !empty(array_intersect($this->values, $forbiddenValues));
-
     }
 
     /**
@@ -80,7 +80,7 @@ class DeficiencyValidator implements EducacensoValidator
     {
         $descriptions = Deficiencias::getDescriptiveValues();
 
-        $forbiddenDescriptions = array_filter($descriptions, function($key) use ($forbiddenDeficiencies){
+        $forbiddenDescriptions = array_filter($descriptions, function ($key) use ($forbiddenDeficiencies) {
             return in_array($key, $forbiddenDeficiencies);
         }, ARRAY_FILTER_USE_KEY);
 

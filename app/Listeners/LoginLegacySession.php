@@ -2,9 +2,11 @@
 
 namespace App\Listeners;
 
+use App\Models\LegacyIndividual;
 use App\Models\LegacyInstitution;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacyStudent;
+use App\Services\UrlPresigner;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -49,6 +51,11 @@ class LoginLegacySession
     private function getLoggedUserInfo($user)
     {
         $institution = app(LegacyInstitution::class);
+        $individual = new LegacyIndividual(['idpes' => $user->cod_usuario]);
+
+        $picture = $individual->picture()->first()
+            ? (new UrlPresigner())->getPresignedUrl($individual->picture()->first()->caminho)
+            : url('intranet/imagens/user-perfil.png');
 
         try {
             $createdAt = Carbon::create($user->created_at)->getTimestamp();
@@ -68,6 +75,7 @@ class LoginLegacySession
             'students_count' => $this->getStudentsCount(),
             'teachers_count' => $this->getTeachersCount(),
             'classes_count' => $this->getClassesCount(),
+            'picture' => $picture
         ];
     }
 
@@ -80,13 +88,15 @@ class LoginLegacySession
      */
     public function handle($event)
     {
+        $loggedUser = $this->getLoggedUserInfo($event->user);
         Session::put([
             'itj_controle' => 'logado',
             'id_pessoa' => $event->user->id,
             'pessoa_setor' => $event->user->employee->department_id,
             'tipo_menu' => $event->user->employee->menu_type,
             'nivel' => $event->user->type->level,
-            'logged_user' => $this->getLoggedUserInfo($event->user),
+            'logged_user' => $loggedUser,
+            'logged_user_picture' => $loggedUser->picture
         ]);
     }
 }

@@ -4,13 +4,6 @@ use App\Models\City;
 use iEducar\Modules\Addressing\LegacyAddressingFields;
 use Illuminate\Support\Str;
 
-require_once 'Portabilis/Controller/ApiCoreController.php';
-require_once 'Portabilis/Array/Utils.php';
-require_once 'Portabilis/String/Utils.php';
-require_once 'Portabilis/Array/Utils.php';
-require_once 'Portabilis/Date/Utils.php';
-require_once 'include/pmieducar/geral.inc.php';
-
 class PreMatriculaController extends ApiCoreController
 {
     use LegacyAddressingFields;
@@ -49,29 +42,29 @@ class PreMatriculaController extends ApiCoreController
             $matriculaId = $this->getRequest()->matricula_id;
 
             // Dados do aluno
-            $nomeAluno = Portabilis_String_utils::toLatin1($this->getRequest()->nome_aluno);
+            $nomeAluno = $this->getRequest()->nome_aluno;
             $dataNascAluno = $this->getRequest()->data_nasc_aluno;
             $deficiencias = $this->getRequest()->deficiencias;
             $sexoAluno = $this->getRequest()->sexo_aluno;
             $alunoIdParametro = $this->getRequest()->aluno_id;
 
             // Dados responsaveis
-            $nomeMae = Portabilis_String_utils::toLatin1($this->getRequest()->nome_mae);
+            $nomeMae = $this->getRequest()->nome_mae;
             $cpfMae = $this->getRequest()->cpf_mae;
 
-            $nomeResponsavel = Portabilis_String_utils::toLatin1($this->getRequest()->nome_responsavel);
+            $nomeResponsavel = $this->getRequest()->nome_responsavel;
             $cpfResponsavel = $this->getRequest()->cpf_responsavel;
             $telefoneResponsavel = $this->getRequest()->telefone_responsavel;
 
             // Dados do endereço
             $cep = $this->getRequest()->cep;
-            $rua = Portabilis_String_utils::toLatin1($this->getRequest()->rua);
+            $rua = $this->getRequest()->rua;
             $numero = $this->getRequest()->numero;
-            $complemento = Portabilis_String_utils::toLatin1($this->getRequest()->complemento);
-            $bairro = Portabilis_String_utils::toLatin1($this->getRequest()->bairro);
-            $cidade = Portabilis_String_utils::toLatin1($this->getRequest()->cidade);
-            $estado = Portabilis_String_utils::toLatin1($this->getRequest()->estado);
-            $pais = Portabilis_String_utils::toLatin1($this->getRequest()->pais);
+            $complemento = $this->getRequest()->complemento;
+            $bairro = $this->getRequest()->bairro;
+            $cidade = $this->getRequest()->cidade;
+            $estado = $this->getRequest()->estado;
+            $pais = $this->getRequest()->pais;
 
             $this->atualizaPreMatricula($matriculaId, $escolaId);
 
@@ -214,17 +207,17 @@ class PreMatriculaController extends ApiCoreController
             }
 
             // Dados do aluno
-            $nomeAluno = Portabilis_String_utils::toLatin1($this->getRequest()->nome_aluno);
+            $nomeAluno = $this->getRequest()->nome_aluno;
             $dataNascAluno = $this->getRequest()->data_nasc_aluno;
             $deficiencias = $this->getRequest()->deficiencias;
             $sexoAluno = $this->getRequest()->sexo_aluno;
 
             // Dados responsaveis
-            $nomeMae = Portabilis_String_utils::toLatin1($this->getRequest()->nome_mae);
+            $nomeMae = $this->getRequest()->nome_mae;
             $cpfMae = $this->getRequest()->cpf_mae;
             $telefoneMae = $this->getRequest()->telefone_mae;
 
-            $nomeResponsavel = Portabilis_String_utils::toLatin1($this->getRequest()->nome_responsavel);
+            $nomeResponsavel = $this->getRequest()->nome_responsavel;
             $cpfResponsavel = $this->getRequest()->cpf_responsavel;
             $telefoneResponsavel = $this->getRequest()->telefone_responsavel;
 
@@ -482,7 +475,7 @@ class PreMatriculaController extends ApiCoreController
             $pessoa->edita();
         }
 
-        $telefone = str_replace(["-", "(", ")", " "], "", $telefone);
+        $telefone = str_replace(['-', '(', ')', ' '], '', $telefone);
 
         $ddd_telefone = substr($telefone, 0, 2);
         $telefone = substr($telefone, 2);
@@ -491,8 +484,7 @@ class PreMatriculaController extends ApiCoreController
 
         if ($telefoneObj->detalhe()) {
             $results = $telefoneObj->edita();
-        }
-        else {
+        } else {
             $results = $telefoneObj->cadastra();
         }
 
@@ -514,7 +506,7 @@ class PreMatriculaController extends ApiCoreController
             $pessoaId = $pessoa->cadastra();
         }
 
-        $telefone = str_replace(["-", "(", ")", " "], "", $telefone);
+        $telefone = str_replace(['-', '(', ')', ' '], '', $telefone);
 
         $ddd_telefone = substr($telefone, 0, 2);
         $telefone = substr($telefone, 2);
@@ -523,8 +515,7 @@ class PreMatriculaController extends ApiCoreController
 
         if ($telefoneObj->detalhe()) {
             $results = $telefoneObj->edita();
-        }
-        else {
+        } else {
             $results = $telefoneObj->cadastra();
         }
 
@@ -538,7 +529,7 @@ class PreMatriculaController extends ApiCoreController
         $fisica->data_nasc = $dataNascimento;
         $fisica->idpes_cad = 1;
         $fisica->idpes_rev = 1;
-        $fisica->sexo = strtoupper($sexo);
+        $fisica->sexo = mb_strtoupper($sexo);
 
         $sql = 'select 1 from cadastro.fisica WHERE idpes = $1 limit 1';
 

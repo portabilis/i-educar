@@ -2,19 +2,8 @@
 
 use Tests\TestCase;
 
-require_once 'include/pmieducar/clsPmieducarClienteSuspensao.inc.php';
-
 class ClsBancoTest extends TestCase
 {
-    public function testDoCountFromObj()
-    {
-        $db = new clsBanco();
-
-        $obj = new clsPmieducarClienteSuspensao();
-
-        $this->assertNotEquals(true, is_null($db->doCountFromObj($obj)));
-    }
-    
     public function testFormatacaoDeValoresBooleanos()
     {
         $data = [

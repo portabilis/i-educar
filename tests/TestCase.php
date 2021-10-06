@@ -38,6 +38,34 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
+     * Retorna o header de autorização da API.
+     *
+     * @return string[]
+     */
+    protected function getAuthorizationHeader()
+    {
+        return [
+            'Authorization' => 'Bearer ' . env('API_ACCESS_KEY')
+        ];
+    }
+
+    /**
+     * Inicializa as traits helpers.
+     *
+     * @return array
+     */
+    protected function setUpTraits()
+    {
+        $uses = parent::setUpTraits();
+
+        if (isset($uses[LoginFirstUser::class])) {
+            $this->loginWithFirstUser();
+        }
+
+        return $uses;
+    }
+
+    /**
      * Método necessário para executar testes legados.
      *
      * @deprecated

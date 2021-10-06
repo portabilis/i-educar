@@ -1,11 +1,5 @@
 <?php
 
-require_once 'lib/CoreExt/Exception.php';
-require_once 'App/Unificacao/Base.php';
-require_once 'App/Unificacao/Servidor.php';
-require_once 'App/Unificacao/Aluno.php';
-require_once 'App/Unificacao/Cliente.php';
-
 class App_Unificacao_Pessoa extends App_Unificacao_Base
 {
     protected $chavesManterPrimeiroVinculo = [
@@ -26,8 +20,8 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             'coluna' => 'idpes'
         ],
         [
-            'tabela' => 'cadastro.endereco_pessoa',
-            'coluna' => 'idpes'
+            'tabela' => 'public.person_has_place',
+            'coluna' => 'person_id'
         ],
         [
             'tabela' => 'cadastro.fone_pessoa',
@@ -97,14 +91,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             'coluna' => 'idpes_cad'
         ],
         [
-            'tabela' => 'cadastro.endereco_pessoa',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'cadastro.endereco_pessoa',
-            'coluna' => 'idpes_cad'
-        ],
-        [
             'tabela' => 'cadastro.raca',
             'coluna' => 'idpes_exc'
         ],
@@ -157,30 +143,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             'coluna' => 'ref_idpes'
         ],
         [
-            'tabela' => 'public.distrito',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'public.distrito',
-            'coluna' => 'idpes_cad'
-        ],
-        [
-            'tabela' => 'urbano.cep_logradouro',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'urbano.cep_logradouro',
-            'coluna' => 'idpes_cad'
-        ],
-        [
-            'tabela' => 'urbano.cep_logradouro_bairro',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'urbano.cep_logradouro_bairro',
-            'coluna' => 'idpes_cad'
-        ],
-        [
             'tabela' => 'cadastro.documento',
             'coluna' => 'idpes_rev'
         ],
@@ -211,30 +173,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
         [
             'tabela' => 'cadastro.pessoa',
             'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'public.bairro',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'public.bairro',
-            'coluna' => 'idpes_cad'
-        ],
-        [
-            'tabela' => 'public.logradouro',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'public.logradouro',
-            'coluna' => 'idpes_cad'
-        ],
-        [
-            'tabela' => 'public.municipio',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'public.municipio',
-            'coluna' => 'idpes_cad'
         ],
         [
             'tabela' => 'pmieducar.candidato_reserva_vaga',
@@ -272,6 +210,10 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             'tabela' => 'pmieducar.aluno_excluidos',
             'coluna' => 'ref_idpes'
         ],
+        [
+            'tabela' => 'public.school_managers',
+            'coluna' => 'employee_id'
+        ],
     ];
 
     protected $chavesDeletarDuplicados = [
@@ -288,9 +230,9 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
         ]
     ];
 
-    public function __construct($codigoUnificador, $codigosDuplicados, $codPessoaLogada, clsBanco $db, bool $transacao = true)
+    public function __construct($codigoUnificador, $codigosDuplicados, $codPessoaLogada, clsBanco $db, $unificationId)
     {
-        parent::__construct($codigoUnificador, $codigosDuplicados, $codPessoaLogada, $db, $transacao);
+        parent::__construct($codigoUnificador, $codigosDuplicados, $codPessoaLogada, $db, $unificationId);
 
         if (is_dir(base_path('ieducar/intranet/filaunica'))) {
             $this->chavesManterTodosVinculos[] = [
@@ -311,7 +253,7 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
     public function unifica()
     {
         $this->unificaClientes();
-        $unificadorServidor = new App_Unificacao_Servidor($this->codigoUnificador, $this->codigosDuplicados, $this->codPessoaLogada, $this->db, $this->transacao);
+        $unificadorServidor = new App_Unificacao_Servidor($this->codigoUnificador, $this->codigosDuplicados, $this->codPessoaLogada, $this->db, $this->unificationId);
         $unificadorServidor->unifica();
         parent::unifica();
     }
@@ -336,10 +278,10 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             $reg = $this->db->Tupla();
             $codigoClientes[] = $reg['cod_cliente'];
         }
-        if (COUNT($codigoClientes) < 2) {
+        if (count($codigoClientes) < 2) {
             return true;
         }
-        $unificadorCliente = new App_Unificacao_Cliente(array_shift($codigoClientes), $codigoClientes, $this->codPessoaLogada, $this->db, $this->transacao);
+        $unificadorCliente = new App_Unificacao_Cliente(array_shift($codigoClientes), $codigoClientes, $this->codPessoaLogada, $this->db, $this->unificationId);
         $unificadorCliente->unifica();
     }
 

@@ -4,7 +4,6 @@ namespace iEducar\Modules\Educacenso\Model;
 
 class LocalizacaoDiferenciadaEscola
 {
-
     const AREA_ASSENTAMENTO = 1;
     const TERRA_INDIGENA = 2;
     const COMUNIDADES_REMANESCENTES_QUILOMBOS = 3;

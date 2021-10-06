@@ -22,7 +22,6 @@ $factory->define(LegacyInstitution::class, function (Faker $faker) {
 });
 
 $factory->state(LegacyInstitution::class, 'unique', function () {
-
     $institution = LegacyInstitution::query()->first();
 
     if (empty($institution)) {

@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsPmieducarAcervoAcervoAutor extends Model
 {
     public $ref_cod_acervo_autor;
@@ -19,10 +17,10 @@ class clsPmieducarAcervoAcervoAutor extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_cod_acervo_autor, ref_cod_acervo, principal';
 
         if (is_numeric($ref_cod_acervo)) {
-                    $this->ref_cod_acervo = $ref_cod_acervo;
+            $this->ref_cod_acervo = $ref_cod_acervo;
         }
         if (is_numeric($ref_cod_acervo_autor)) {
-                    $this->ref_cod_acervo_autor = $ref_cod_acervo_autor;
+            $this->ref_cod_acervo_autor = $ref_cod_acervo_autor;
         }
 
         if (is_numeric($principal)) {

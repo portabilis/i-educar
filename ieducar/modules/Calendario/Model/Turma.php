@@ -1,7 +1,5 @@
 <?php
 
-require_once 'CoreExt/Entity.php';
-
 class Calendario_Model_Turma extends CoreExt_Entity
 {
     protected $_data = [

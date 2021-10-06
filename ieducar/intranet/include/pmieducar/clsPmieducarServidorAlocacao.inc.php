@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsPmieducarServidorAlocacao extends Model
 {
     public $cod_servidor_alocacao;
@@ -459,7 +457,8 @@ class clsPmieducarServidorAlocacao extends Model
         $int_periodo = null,
         $bool_busca_nome = false,
         $boo_professor = null,
-        $ano = null
+        $ano = null,
+        $desconsiderarAlocacoesComDataDeSaida = false
     ) {
         $filtros = '';
         $whereAnd = ' WHERE ';
@@ -555,6 +554,11 @@ class clsPmieducarServidorAlocacao extends Model
         if (is_bool($boo_professor)) {
             $not = $boo_professor ? '=' : '!=';
             $filtros .= "{$whereAnd} EXISTS(SELECT 1 FROM pmieducar.servidor_funcao,pmieducar.funcao WHERE ref_cod_servidor_funcao = cod_funcao AND ref_cod_servidor = sa.ref_cod_servidor AND sa.ref_ref_cod_instituicao = ref_ref_cod_instituicao AND professor $not 1)";
+        }
+
+        if (is_bool($desconsiderarAlocacoesComDataDeSaida) && $desconsiderarAlocacoesComDataDeSaida) {
+            $filtros .= "{$whereAnd} (sa.data_saida > now() or sa.data_saida is null)";
+            $whereAnd = ' AND ';
         }
 
         $db = new clsBanco();
@@ -800,6 +804,31 @@ class clsPmieducarServidorAlocacao extends Model
      *
      * @throws Exception
      */
+    public function getCargaHorariaAnoSemAlocacaoAtual()
+    {
+        if (is_numeric($this->ref_cod_servidor) && is_numeric($this->ano)) {
+            $db = new clsBanco();
+
+            $sql = "SELECT SUM(carga_horaria::interval)
+                FROM pmieducar.servidor_alocacao
+               WHERE ref_cod_servidor = {$this->ref_cod_servidor}
+                 AND ano = {$this->ano}
+                 AND (data_saida > now() or data_saida is null)";
+
+            if ($this->cod_servidor_alocacao) {
+                $sql .= " AND cod_servidor_alocacao <> {$this->cod_servidor_alocacao}";
+            }
+
+            $db->Consulta($sql);
+            $db->ProximoRegistro();
+            $registro = $db->Tupla();
+
+            return $registro[0];
+        }
+
+        return '';
+    }
+
     public function getCargaHorariaAno()
     {
         if (is_numeric($this->ref_cod_servidor) && is_numeric($this->ano)) {
@@ -808,11 +837,8 @@ class clsPmieducarServidorAlocacao extends Model
             $sql = "SELECT SUM(carga_horaria::interval)
                 FROM pmieducar.servidor_alocacao
                WHERE ref_cod_servidor = {$this->ref_cod_servidor}
-                 AND ano = {$this->ano}";
-
-            if ($this->cod_servidor_alocacao) {
-                $sql .= "AND cod_servidor_alocacao != {$this->cod_servidor_alocacao}";
-            }
+                 AND ano = {$this->ano}
+                 AND (data_saida > now() or data_saida is null)";
 
             $db->Consulta($sql);
             $db->ProximoRegistro();
@@ -839,7 +865,8 @@ class clsPmieducarServidorAlocacao extends Model
                  AND ref_cod_servidor = {$this->ref_cod_servidor}
                  AND ano = {$this->ano}
                  AND periodo = {$this->periodo}
-                 AND ativo = 1";
+                 AND ativo = 1
+                 AND (data_saida > now() or data_saida is null)";
 
             if (is_numeric($this->cod_servidor_alocacao)) {
                 $sql .= " AND cod_servidor_alocacao <> {$this->cod_servidor_alocacao}";

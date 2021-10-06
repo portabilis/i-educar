@@ -42,7 +42,7 @@ class Register30CommonDataAnalysis implements AnalysisInterface
             ];
         }
 
-        $nameValidator = new NameValidator((string)$data->nomePessoa);
+        $nameValidator = new NameValidator((string) $data->nomePessoa);
         if ($data->nomePessoa && !$nameValidator->isValid()) {
             $this->messages[] = [
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} possui valor inválido. Não é permitido a repetição de 4 caracteres seguidos no nome da pessoa {$data->nomePessoa}.",
@@ -81,7 +81,7 @@ class Register30CommonDataAnalysis implements AnalysisInterface
             ];
         }
 
-        $nameValidator = new NameValidator((string)$data->filiacao1);
+        $nameValidator = new NameValidator((string) $data->filiacao1);
         if ($data->filiacao1 && !$nameValidator->isValid()) {
             $this->messages[] = [
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} possui valor inválido. Não é permitido a repetição de 4 caracteres seguidos no nome da mãe de {$data->nomePessoa}.",
@@ -100,7 +100,7 @@ class Register30CommonDataAnalysis implements AnalysisInterface
             ];
         }
 
-        $nameValidator = new NameValidator((string)$data->filiacao2);
+        $nameValidator = new NameValidator((string) $data->filiacao2);
         if ($data->filiacao2 && !$nameValidator->isValid()) {
             $this->messages[] = [
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} possui valor inválido. Não é permitido a repetição de 4 caracteres seguidos no nome do pai de {$data->nomePessoa}.",
@@ -165,7 +165,7 @@ class Register30CommonDataAnalysis implements AnalysisInterface
         }
 
         $deficiencyValidator = new DeficiencyValidator(Portabilis_Utils_Database::pgArrayToArray($data->arrayDeficiencias));
-        if (!$deficiencyValidator->isValid()){
+        if (!$deficiencyValidator->isValid()) {
             $path = '(Servidores > Cadastros > Servidores > Editar > Aba: Dados gerais > Campo: Deficiências)';
             $linkPath = "/intranet/educar_servidor_cad.php?cod_servidor={$data->codigoServidor}&ref_cod_instituicao=" . LegacyInstitution::active()->first()->cod_instituicao;
             if ($data->isStudent()) {

@@ -24,10 +24,10 @@ class clsCadastroFisicaRaca extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_idpes, ref_cod_raca';
 
         if (is_numeric($ref_idpes)) {
-                    $this->ref_idpes = $ref_idpes;
+            $this->ref_idpes = $ref_idpes;
         }
         if (is_numeric($ref_cod_raca)) {
-                    $this->ref_cod_raca = $ref_cod_raca;
+            $this->ref_cod_raca = $ref_cod_raca;
         }
     }
 

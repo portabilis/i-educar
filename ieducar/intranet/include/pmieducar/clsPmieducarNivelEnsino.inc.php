@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsPmieducarNivelEnsino extends Model
 {
     public $cod_nivel_ensino;
@@ -25,13 +23,13 @@ class clsPmieducarNivelEnsino extends Model
         $this->_campos_lista = $this->_todos_campos = 'cod_nivel_ensino, ref_usuario_exc, ref_usuario_cad, nm_nivel, descricao, data_cadastro, data_exclusao, ativo, ref_cod_instituicao';
 
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
         if (is_numeric($ref_cod_instituicao)) {
-                    $this->ref_cod_instituicao = $ref_cod_instituicao;
+            $this->ref_cod_instituicao = $ref_cod_instituicao;
         }
 
         if (is_numeric($cod_nivel_ensino)) {
@@ -74,13 +72,15 @@ class clsPmieducarNivelEnsino extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_nivel)) {
+                $nm_nivel = $db->escapeString($this->nm_nivel);
                 $campos .= "{$gruda}nm_nivel";
-                $valores .= "{$gruda}'{$this->nm_nivel}'";
+                $valores .= "{$gruda}'{$nm_nivel}'";
                 $gruda = ', ';
             }
             if (is_string($this->descricao)) {
+                $descricao = $db->escapeString($this->descricao);
                 $campos .= "{$gruda}descricao";
-                $valores .= "{$gruda}'{$this->descricao}'";
+                $valores .= "{$gruda}'{$descricao}'";
                 $gruda = ', ';
             }
             $campos .= "{$gruda}data_cadastro";
@@ -123,11 +123,13 @@ class clsPmieducarNivelEnsino extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_nivel)) {
-                $set .= "{$gruda}nm_nivel = '{$this->nm_nivel}'";
+                $nm_nivel = $db->escapeString($this->nm_nivel);
+                $set .= "{$gruda}nm_nivel = '{$nm_nivel}'";
                 $gruda = ', ';
             }
             if (is_string($this->descricao)) {
-                $set .= "{$gruda}descricao = '{$this->descricao}'";
+                $descricao = $db->escapeString($this->descricao);
+                $set .= "{$gruda}descricao = '{$descricao}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {
@@ -162,6 +164,8 @@ class clsPmieducarNivelEnsino extends Model
      */
     public function lista($int_cod_nivel_ensino = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_nivel = null, $str_descricao = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_instituicao = null)
     {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = '';
 
@@ -180,7 +184,8 @@ class clsPmieducarNivelEnsino extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_nivel)) {
-            $filtros .= "{$whereAnd} nm_nivel LIKE '%{$str_nm_nivel}%'";
+            $nm_nivel = $db->escapeString($str_nm_nivel);
+            $filtros .= "{$whereAnd} nm_nivel LIKE '%{$nm_nivel}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($str_descricao)) {
@@ -215,7 +220,6 @@ class clsPmieducarNivelEnsino extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

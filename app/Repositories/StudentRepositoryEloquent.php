@@ -2,8 +2,8 @@
 
 namespace App\Repositories;
 
-use App\Models\Student;
 use App\Models\RegistrationStatus;
+use App\Models\Student;
 use iEducar\Support\Repositories\StudentRepository;
 use Illuminate\Database\Eloquent\Collection;
 

@@ -1,25 +1,8 @@
 <?php
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/Geral.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'lib/Portabilis/String/Utils.php';
-
 use iEducar\Support\View\SelectOptions;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' Servidores - Escolaridade');
-        $this->processoAp = '632';
-    }
-}
-
-class indice extends clsCadastro
-{
+return new class extends clsCadastro {
     /**
      * Referência a usuário da sessão
      *
@@ -111,12 +94,6 @@ class indice extends clsCadastro
         $cadastrou = $obj->cadastra();
 
         if ($cadastrou) {
-            $escolaridade = new clsCadastroEscolaridade($cadastrou);
-            $escolaridade = $escolaridade->detalhe();
-
-            $auditoria = new clsModulesAuditoriaGeral('escolaridade', $this->pessoa_logada, $cadastrou);
-            $auditoria->inclusao($escolaridade);
-
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
             $this->simpleRedirect('educar_escolaridade_lst.php');
         }
@@ -128,17 +105,9 @@ class indice extends clsCadastro
 
     public function Editar()
     {
-        $escolaridade = new clsCadastroEscolaridade($this->idesco);
-        $escolaridadeAntes = $escolaridade->detalhe();
-
         $obj = new clsCadastroEscolaridade($this->idesco, $this->descricao, $this->escolaridade);
         $editou = $obj->edita();
         if ($editou) {
-            $escolaridadeDepois = $escolaridade->detalhe();
-
-            $auditoria = new clsModulesAuditoriaGeral('escolaridade', $this->pessoa_logada, $this->idesco);
-            $auditoria->alteracao($escolaridadeAntes, $escolaridadeDepois);
-
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_escolaridade_lst.php');
         }
@@ -151,18 +120,15 @@ class indice extends clsCadastro
     public function Excluir()
     {
         $obj = new clsCadastroEscolaridade($this->idesco, $this->descricao);
-        $escolaridade = $obj->detalhe();
 
         if ($obj->findUsages()) {
             $this->mensagem = 'Exclusão não realizada - Ainda existe vínculos.<br>';
+
             return false;
         }
 
         $excluiu = $obj->excluir();
         if ($excluiu) {
-            $auditoria = new clsModulesAuditoriaGeral('escolaridade', $this->pessoa_logada, $this->idesco);
-            $auditoria->exclusao($escolaridade);
-
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_escolaridade_lst.php');
         }
@@ -171,16 +137,10 @@ class indice extends clsCadastro
 
         return false;
     }
-}
 
-// Instancia objeto de página
-$pagina = new clsIndexBase();
-
-// Instancia objeto de conteúdo
-$miolo = new indice();
-
-// Atribui o conteúdo à página
-$pagina->addForm($miolo);
-
-// Gera o código HTML
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->title = 'Servidores - Escolaridade';
+        $this->processoAp = '632';
+    }
+};

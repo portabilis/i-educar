@@ -2,9 +2,11 @@
 
 use App\Setting;
 use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factory;
+
+/** @var Factory $factory */
 
 $factory->define(Setting::class, function (Faker $faker) {
-
     $type = $faker->randomElement([
         Setting::TYPE_STRING,
         Setting::TYPE_INTEGER,

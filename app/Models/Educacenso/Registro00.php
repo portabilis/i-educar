@@ -266,6 +266,7 @@ class Registro00 implements RegistroEducacenso
 
     /**
      * @param int $column
+     *
      * @return string
      */
     public function getProperty($column)

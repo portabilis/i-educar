@@ -2,20 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Prettus\Repository\Contracts\Transformable;
-use Prettus\Repository\Traits\TransformableTrait;
 
-/**
- * Class Fisica.
- *
- * @package namespace App\Entities;
- */
-class LegacyIndividual extends EloquentBaseModel implements Transformable
+class LegacyIndividual extends Model
 {
-    use TransformableTrait;
+    use HasFiles;
 
     /**
      * @var string
@@ -86,6 +79,7 @@ class LegacyIndividual extends EloquentBaseModel implements Transformable
         'nome_social',
         'pais_residencia',
         'localizacao_diferenciada',
+        'ideciv'
     ];
 
     /**
@@ -130,9 +124,25 @@ class LegacyIndividual extends EloquentBaseModel implements Transformable
     /**
      * @return HasOne
      */
+    public function student()
+    {
+        return $this->hasOne(LegacyStudent::class, 'ref_idpes', 'idpes');
+    }
+
+    /**
+     * @return HasOne
+     */
     public function document()
     {
         return $this->hasOne(LegacyDocument::class, 'idpes');
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function picture()
+    {
+        return $this->hasOne(LegacyIndividualPicture::class, 'idpes');
     }
 
     /**

@@ -25,7 +25,6 @@ class LegacyStudentScore extends Model
      */
     public $timestamps = false;
 
-
     /**
      * @return BelongsTo
      */
@@ -48,5 +47,21 @@ class LegacyStudentScore extends Model
     public function scoreByDiscipline()
     {
         return $this->hasMany(LegacyDisciplineScore::class, 'nota_aluno_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function averageByDiscipline()
+    {
+        return $this->hasMany(LegacyDisciplineScoreAverage::class, 'nota_aluno_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function averageGeneral()
+    {
+        return $this->hasMany(LegacyGeneralAverage::class, 'nota_aluno_id');
     }
 }

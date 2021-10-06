@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,8 +10,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class LegacyDisciplineExemption
+ *
  * @property LegacyRegistration $registration
- * @property integer cod_dispensa
+ * @property integer            cod_dispensa
  */
 class LegacyDisciplineExemption extends Model
 {
@@ -85,8 +87,14 @@ class LegacyDisciplineExemption extends Model
         return $this->hasMany(LegacyExemptionStage::class, 'ref_cod_dispensa', 'cod_dispensa');
     }
 
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'ref_usuario_cad');
+    }
+
     /**
      * @param Builder $query
+     *
      * @return Builder
      */
     public function scopeActive($query)

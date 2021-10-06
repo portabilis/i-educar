@@ -1,10 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Session;
-
-require_once 'include/clsBanco.inc.php';
-require_once 'include/Geral.inc.php';
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
+use App\Models\LegacyPerson;
+use iEducar\Modules\Educacenso\Model\Nacionalidade;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class clsFisica
 {
@@ -32,7 +31,7 @@ class clsFisica
      */
     public $nacionalidade;
 
-    public $idpais_estrangeiro;
+    public $idpais_estrangeiro = false;
     public $data_chagada_brasil;
     public $idmun_nascimento;
     public $ultima_empresa;
@@ -110,7 +109,6 @@ class clsFisica
         $horario_final_trabalho = false,
         $nome_social = false
     ) {
-        $this->pessoa_logada = Session::get('id_pessoa');
         $objPessoa = new clsPessoa_($idpes);
         if ($objPessoa->detalhe()) {
             $this->idpes  = $idpes;
@@ -195,8 +193,8 @@ class clsFisica
         }
 
         $this->justificativa_provisorio = $justificativa_provisorio;
-        $this->idpes_cad = $idpes_cad ? $idpes_cad : Session::get('id_pessoa');
-        $this->idpes_rev = $idpes_rev ? $idpes_rev : Session::get('id_pessoa');
+        $this->idpes_cad = $idpes_cad ? $idpes_cad : Auth::id();
+        $this->idpes_rev = $idpes_rev ? $idpes_rev : Auth::id();
 
         $this->tabela = 'fisica';
         $this->schema = 'cadastro';
@@ -339,13 +337,15 @@ class clsFisica
             }
 
             if (is_string($this->ocupacao)) {
+                $ocupacao = $db->escapeString($this->ocupacao);
                 $campos .=  ', ocupacao';
-                $valores .= ", '$this->ocupacao'";
+                $valores .= ", '{$ocupacao}'";
             }
 
             if (is_string($this->empresa)) {
+                $empresa = $db->escapeString($this->empresa);
                 $campos  .= ', empresa';
-                $valores .= ", '$this->empresa'";
+                $valores .= ", '{$empresa}'";
             }
 
             if (is_numeric($this->ddd_telefone_empresa)) {
@@ -359,8 +359,9 @@ class clsFisica
             }
 
             if (is_string($this->pessoa_contato)) {
+                $pessoa_contato = $db->escapeString($this->pessoa_contato);
                 $campos .=  ', pessoa_contato';
-                $valores .= ", '$this->pessoa_contato'";
+                $valores .= ", '{$pessoa_contato}'";
             }
 
             if (is_numeric($this->renda_mensal)) {
@@ -423,9 +424,19 @@ class clsFisica
             }
 
             if (is_string($this->nome_social) && !empty($this->nome_social)) {
+                $slug = Str::lower(Str::slug($this->nome_social, ' '));
+
+                $person = LegacyPerson::query()->find($this->idpes);
+                $person->slug = "{$slug} {$person->slug}";
+                $person->save();
+                $person = $db->escapeString($this->nome_social);
                 $campos  .= ', nome_social';
-                $valores .= ", '$this->nome_social'";
+                $valores .= ", '{$person}'";
             } else {
+                $person = LegacyPerson::query()->find($this->idpes);
+                $person->slug = Str::lower(Str::slug($person->nome, ' '));
+                $person->save();
+
                 $campos  .= ', nome_social';
                 $valores .= ', NULL';
             }
@@ -436,8 +447,6 @@ class clsFisica
                 $detalhe = $this->detalheSimples();
                 // salvar cpf como string;
                 $detalhe['cpf'] = str_pad((string)$detalhe['cpf'], 11, '0', STR_PAD_LEFT);
-                $auditoria = new clsModulesAuditoriaGeral('fisica', $this->pessoa_logada, $this->idpes);
-                $auditoria->inclusao($detalhe);
             }
 
             return true;
@@ -513,8 +522,11 @@ class clsFisica
                 $set .= "$gruda nacionalidade = {$this->nacionalidade}";
                 $gruda = ', ';
             }
-            if ($this->idpais_estrangeiro) {
+            if ($this->idpais_estrangeiro && $this->nacionalidade != Nacionalidade::BRASILEIRA) {
                 $set .= "$gruda idpais_estrangeiro = {$this->idpais_estrangeiro}";
+                $gruda = ', ';
+            } elseif ($this->idpais_estrangeiro !== false) {
+                $set .= "$gruda idpais_estrangeiro = null";
                 $gruda = ', ';
             }
             if ($this->data_chegada_brasil) {
@@ -685,8 +697,13 @@ class clsFisica
             }
 
             if (is_string($this->nome_social)) {
+                $slug = Str::lower(Str::slug($this->nome_social, ' '));
+
+                $person = LegacyPerson::query()->find($this->idpes);
+                $person->slug = "{$slug} {$person->slug}";
+                $person->save();
+
                 $set .= "$gruda nome_social = '{$this->nome_social}'";
-                $gruda = ', ';
             }
 
             if ($set) {
@@ -699,9 +716,6 @@ class clsFisica
 
                 $detalheAtual = $this->detalheSimples();
                 $detalheAtual['cpf'] = str_pad((string)$detalheAtual['cpf'], 11, '0', STR_PAD_LEFT);
-
-                $auditoria = new clsModulesAuditoriaGeral('fisica', $this->pessoa_logada, $this->idpes);
-                $auditoria->alteracao($detalheAntigo, $detalheAtual);
 
                 return true;
             }
@@ -722,9 +736,6 @@ class clsFisica
 
             $db = new clsBanco();
             $db->Consulta("DELETE FROM {$this->schema}.{$this->tabela} WHERE idpes = {$this->idpes}");
-
-            $auditoria = new clsModulesAuditoriaGeral('fisica', $this->pessoa_logada, $this->idpes);
-            $auditoria->exclusao($detalheAntigo, $this->detalheSimples());
 
             return true;
         }

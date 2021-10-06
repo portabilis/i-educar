@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsModulesUniformeAluno extends Model
 {
     public $ref_cod_aluno;
@@ -45,7 +43,7 @@ class clsModulesUniformeAluno extends Model
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}uniforme_aluno";
 
-        $this->_campos_lista = $this->_todos_campos = ' ref_cod_aluno, recebeu_uniforme, quantidade_camiseta, 
+        $this->_campos_lista = $this->_todos_campos = ' ref_cod_aluno, recebeu_uniforme, quantidade_camiseta,
           tamanho_camiseta, quantidade_blusa_jaqueta, tamanho_blusa_jaqueta, quantidade_bermuda, tamanho_bermuda,
           quantidade_calca, tamanho_calca, quantidade_saia, tamanho_saia, quantidade_calcado, tamanho_calcado,
           quantidade_meia, tamanho_meia';

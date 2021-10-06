@@ -1,7 +1,5 @@
 <?php
 
-require_once 'CoreExt/Validate/Choice.php';
-
 class CoreExt_Validate_ChoiceMultiple extends CoreExt_Validate_Choice
 {
     /**

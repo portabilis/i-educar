@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsPmieducarCategoriaNivel extends Model
 {
     public $cod_categoria_nivel;
@@ -23,10 +21,10 @@ class clsPmieducarCategoriaNivel extends Model
         $this->_campos_lista = $this->_todos_campos = 'cod_categoria_nivel, ref_usuario_exc, ref_usuario_cad, nm_categoria_nivel, data_cadastro, data_exclusao, ativo';
 
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
 
         if (is_numeric($cod_categoria_nivel)) {
@@ -66,8 +64,9 @@ class clsPmieducarCategoriaNivel extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_categoria_nivel)) {
+                $nm_categoria_nivel = $db->escapeString($this->nm_categoria_nivel);
                 $campos .= "{$gruda}nm_categoria_nivel";
-                $valores .= "{$gruda}'{$this->nm_categoria_nivel}'";
+                $valores .= "{$gruda}'{$nm_categoria_nivel}'";
                 $gruda = ', ';
             }
             $campos .= "{$gruda}data_cadastro";
@@ -105,7 +104,8 @@ class clsPmieducarCategoriaNivel extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_categoria_nivel)) {
-                $set .= "{$gruda}nm_categoria_nivel = '{$this->nm_categoria_nivel}'";
+                $nm_categoria_nivel = $db->escapeString($this->nm_categoria_nivel);
+                $set .= "{$gruda}nm_categoria_nivel = '{$nm_categoria_nivel}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {
@@ -146,6 +146,8 @@ class clsPmieducarCategoriaNivel extends Model
      */
     public function lista($int_cod_categoria_nivel = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_categoria_nivel = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $bool_ativo = null)
     {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = '';
 
@@ -164,7 +166,8 @@ class clsPmieducarCategoriaNivel extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_categoria_nivel)) {
-            $filtros .= "{$whereAnd} nm_categoria_nivel LIKE '%{$str_nm_categoria_nivel}%'";
+            $str_nome_categoria_nivel = $db->escapeString($str_nm_categoria_nivel);
+            $filtros .= "{$whereAnd} nm_categoria_nivel LIKE '%{$str_nome_categoria_nivel}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($date_data_cadastro_ini)) {
@@ -192,7 +195,6 @@ class clsPmieducarCategoriaNivel extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

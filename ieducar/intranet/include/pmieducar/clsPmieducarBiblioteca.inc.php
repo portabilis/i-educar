@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsPmieducarBiblioteca extends Model
 {
     public $cod_biblioteca;
@@ -63,10 +61,10 @@ class clsPmieducarBiblioteca extends Model
                                                                                                      bloqueia_emprestimo_em_atraso';
 
         if (is_numeric($ref_cod_instituicao)) {
-                    $this->ref_cod_instituicao = $ref_cod_instituicao;
+            $this->ref_cod_instituicao = $ref_cod_instituicao;
         }
         if (is_numeric($ref_cod_escola)) {
-                    $this->ref_cod_escola = $ref_cod_escola;
+            $this->ref_cod_escola = $ref_cod_escola;
         }
 
         if (is_numeric($cod_biblioteca)) {
@@ -132,8 +130,9 @@ class clsPmieducarBiblioteca extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_biblioteca)) {
+                $nm_biblioteca = $db->escapeString($this->nm_biblioteca);
                 $campos .= "{$gruda}nm_biblioteca";
-                $valores .= "{$gruda}'{$this->nm_biblioteca}'";
+                $valores .= "{$gruda}'{$nm_biblioteca}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->valor_multa)) {
@@ -208,7 +207,8 @@ class clsPmieducarBiblioteca extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_biblioteca)) {
-                $set .= "{$gruda}nm_biblioteca = '{$this->nm_biblioteca}'";
+                $nm_biblioteca = $db->escapeString($this->nm_biblioteca);
+                $set .= "{$gruda}nm_biblioteca = '{$nm_biblioteca}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->valor_multa)) {
@@ -283,6 +283,8 @@ class clsPmieducarBiblioteca extends Model
      */
     public function lista($int_cod_biblioteca = null, $int_ref_cod_instituicao = null, $int_ref_cod_escola = null, $str_nm_biblioteca = null, $int_valor_multa = null, $int_max_emprestimo = null, $int_valor_maximo_multa = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_requisita_senha = null, $int_ativo = null, $int_dias_espera = null, $in_biblioteca = null)
     {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = '';
 
@@ -307,7 +309,8 @@ class clsPmieducarBiblioteca extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_biblioteca)) {
-            $filtros .= "{$whereAnd} nm_biblioteca LIKE '%{$str_nm_biblioteca}%'";
+            $str_nome_biblioteca = $db->escapeString($str_nm_biblioteca);
+            $filtros .= "{$whereAnd} nm_biblioteca LIKE '%{$str_nome_biblioteca}%'";
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_valor_multa)) {
@@ -359,7 +362,6 @@ class clsPmieducarBiblioteca extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

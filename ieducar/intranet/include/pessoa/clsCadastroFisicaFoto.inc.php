@@ -57,6 +57,7 @@ class clsCadastroFisicaFoto extends Model
             }
 
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
+
             return true;
         }
 

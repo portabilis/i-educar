@@ -1,9 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Session;
-
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
-
 abstract class CoreExt_DataMapper
 {
     /**
@@ -542,7 +538,6 @@ abstract class CoreExt_DataMapper
         $sql = $this->_getFindAllStatment($columns, $where, $orderBy);
 
         if ($this->_getDbAdapter()->execPreparedQuery($sql, $params) != false) {
-
             while ($this->_getDbAdapter()->ProximoRegistro()) {
                 $list[] = $this->_createEntityObject($this->_getDbAdapter()->Tupla());
             }
@@ -622,34 +617,11 @@ abstract class CoreExt_DataMapper
             }
         }
 
-        $pessoa_logada = Session::get('id_pessoa');
-
         if ($instance->isNew()) {
             $returning = ' RETURNING ' . implode(',', array_values($this->_primaryKey));
             $return = $this->_getDbAdapter()->Consulta($this->_getSaveStatment($instance) . $returning);
-            $result = $return->fetch(PDO::FETCH_BOTH);
-            $id = $result[0];
-
-            if ($id) {
-                $tmpEntry = $this->find($id);
-                $info = $tmpEntry->toDataArray();
-                $auditoria = new clsModulesAuditoriaGeral($this->_tableName, $pessoa_logada, $id);
-                $auditoria->inclusao($info);
-            }
         } elseif (!$instance->isNew()) {
-            $pkSave = $this->buildKeyToFind($instance);
-
-            $tmpEntry = $this->find($pkSave);
-            $oldInfo = $tmpEntry->toDataArray();
-
             $return = $this->_getDbAdapter()->Consulta($this->_getUpdateStatment($instance));
-
-            $tmpEntry = $this->find($pkSave);
-            $newInfo = $tmpEntry->toDataArray();
-
-            $keys = array_keys($this->_primaryKey);
-            $auditoria = new clsModulesAuditoriaGeral($this->_tableName, $pessoa_logada, $instance->get(array_shift($keys)));
-            $auditoria->alteracao($oldInfo, $newInfo);
         }
 
         return $return;
@@ -695,10 +667,7 @@ abstract class CoreExt_DataMapper
         $return = $this->_getDbAdapter()->Consulta($this->_getDeleteStatment($pkToDelete));
 
         if (count($info)) {
-            $pessoa_logada = Session::get('id_pessoa');
-
-            $auditoria = new clsModulesAuditoriaGeral($this->_tableName, $pessoa_logada, array_shift(array_values($instance)));
-            $auditoria->exclusao($info);
+            $pessoa_logada = \Illuminate\Support\Facades\Auth::id();
         }
 
         return $return;
@@ -799,7 +768,7 @@ abstract class CoreExt_DataMapper
     {
         foreach ($data as $key => $value) {
             $index = array_search($key, $this->_attributeMap);
-            
+
             try {
                 if ($index !== false) {
                     $instance->$index = $value;

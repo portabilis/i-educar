@@ -1,15 +1,7 @@
 <?php
 
-require_once 'CoreExt/Entity.php';
-require_once 'RegraAvaliacao/Model/Nota/TipoValor.php';
-require_once 'RegraAvaliacao/Model/TipoProgressao.php';
-require_once 'RegraAvaliacao/Model/TipoParecerDescritivo.php';
-require_once 'RegraAvaliacao/Model/TipoPresenca.php';
-require_once 'RegraAvaliacao/Model/TipoRecuperacaoParalela.php';
-
 class RegraAvaliacao_Model_Regra extends CoreExt_Entity
 {
-
     protected $_data = [
         'instituicao' => null,
         'nome' => null,
@@ -28,6 +20,8 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
         'mediaRecuperacaoParalela' => null,
         'notaMaximaGeral' => null,
         'notaMinimaGeral' => null,
+        'faltaMaximaGeral' => null,
+        'faltaMinimaGeral' => null,
         'notaMaximaExameFinal' => null,
         'qtdCasasDecimais' => null,
         'notaGeralPorEtapa' => null,
@@ -40,6 +34,7 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
         'regraDiferenciada' => null,
         'calculaMediaRecParalela' => null,
         'tipoCalculoRecuperacaoParalela' => null,
+        'desconsiderarLancamentoFrequencia' => null,
     ];
 
     protected $_dataTypes = [
@@ -49,6 +44,8 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
         'tipoRecuperacaoParalela' => 'numeric',
         'notaMaximaGeral' => 'numeric',
         'notaMinimaGeral' => 'numeric',
+        'faltaMaximaGeral' => 'numeric',
+        'faltaMinimaGeral' => 'numeric',
         'notaMaximaExameFinal' => 'numeric',
         'qtdCasasDecimais' => 'numeric',
         'qtdDisciplinasDependencia' => 'numeric',
@@ -126,7 +123,6 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
     public function getDataMapper()
     {
         if (is_null($this->_dataMapper)) {
-            require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
             $this->setDataMapper(new RegraAvaliacao_Model_RegraDataMapper());
         }
 
@@ -277,6 +273,7 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
      * Pega a nota máxima permitida para a recuperação
      *
      * @param $etapa
+     *
      * @return float
      */
     public function getNotaMaximaRecuperacao($etapa)

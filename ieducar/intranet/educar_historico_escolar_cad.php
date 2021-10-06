@@ -3,25 +3,7 @@
 use App\Models\Country;
 use App\Models\State;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'lib/Portabilis/View/Helper/Application.php';
-require_once 'lib/Portabilis/Utils/CustomLabel.php';
-require_once 'App/Model/NivelTipoUsuario.php';
-
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Hist&oacute;rico Escolar");
-        $this->processoAp = '578';
-    }
-}
-
-class indice extends clsCadastro
-{
+return new class extends clsCadastro {
     public $ref_cod_aluno;
 
     public $sequencial;
@@ -186,42 +168,9 @@ class indice extends clsCadastro
             $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
             $habilitaCargaHoraria = $this->habilitaCargaHoraria($this->ref_cod_instituicao);
         }
-
-        $obj_nivel = new clsPmieducarUsuario($this->pessoa_logada);
-        $nivel_usuario = $obj_nivel->detalhe();
-
-        if ($nivel_usuario['ref_cod_tipo_usuario'] == 1) {
-            $obj_instituicao = new clsPmieducarInstituicao();
-            $lista = $obj_instituicao->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, 1);
-            $opcoes['1'] = 'Selecione';
-
-            if (is_array($lista) && count($lista)) {
-                foreach ($lista as $registro) {
-                    $opcoes["{$registro['cod_instituicao']}"] = "{$registro['nm_instituicao']}";
-                }
-            }
-
-            $this->campoLista('ref_cod_instituicao', 'Institui&ccedil;&atilde;o', $opcoes, '');
-        } else {
-            $obj_instituicao = new clsPmieducarInstituicao($nivel_usuario['ref_cod_instituicao']);
-            $inst = $obj_instituicao->detalhe();
-
-            $this->campoOculto('ref_cod_instituicao', $inst['cod_instituicao']);
-            $this->campoTexto('instituicao', 'Instiui&ccedil;&atilde;o', $inst['nm_instituicao'], 30, 255, false, false, false, '', '', '', '', true);
-        }
-
-        $opcoes = ['' => 'Selecione'];
-        $listar_escolas = new clsPmieducarEscola();
-
-        $escolas = $listar_escolas->lista_escola();
-
-        foreach ($escolas as $escola) {
-            $opcoes["{$escola['cod_escola']}"] = "{$escola['nome']}";
-        }
-
-        $opcoes['outra'] = 'OUTRA';
-
-        $this->campoLista('ref_cod_escola', 'Escola', $opcoes, null, '', false, '', '', false, true);
+        $this->inputsHelper()->dynamic(['instituicao', 'escolaSemFiltroPorUsuario'], ['required' => false]);
+        $labelHintEscolaForaDoMunicipio = 'Transferência para uma escola externa (outro município, particular, etc)';
+        $this->inputsHelper()->checkbox('escola_em_outro_municipio', ['label' => 'Escola em outro município ou fora da rede?', '<br>label_hint' => $labelHintEscolaForaDoMunicipio]);
 
         $escola_options = [
             'required' => false,
@@ -232,9 +181,6 @@ class indice extends clsCadastro
         ];
         $this->inputsHelper()->text('escola', $escola_options);
 
-        // text
-        $this->campoTexto('escola_cidade', 'Cidade da Escola', $this->escola_cidade, 30, 255, true);
-
         $countryId = null;
 
         if ($this->escola_uf) {
@@ -243,23 +189,27 @@ class indice extends clsCadastro
             $countryId = $state->country_id;
         }
 
-        $lista_pais_origem = ['45' => 'País da escola'] + Country::query()->orderBy('name')->pluck('name', 'id')->toArray();
+        $lista_pais_origem = ['' => 'Selecione um país'] + Country::query()->orderBy('name')->pluck('name', 'id')->toArray();
 
-        $this->campoLista('idpais', 'Pa&iacute;s da Escola', $lista_pais_origem, $countryId);
+        $this->campoLista('idpais', 'País da Escola', $lista_pais_origem, $countryId ?? 45);
 
-        $lista_estado = ['SC' => 'Selecione um estado'] + State::getListKeyAbbreviation()->toArray();
+        $lista_estado = ['' => 'Selecione um estado'] + State::getListKeyAbbreviation()->toArray();
 
         $this->campoLista('escola_uf', 'Estado da Escola', $lista_estado, $this->escola_uf);
+
+        // text
+        $this->campoTexto('escola_cidade', 'Cidade da Escola', mb_strtoupper($this->escola_cidade), 30, 255, true);
+
         $this->campoTexto('nm_curso', 'Curso', $this->nm_curso, 30, 255, false, false, false, _cl('historico.cadastro.curso_detalhe'));
 
-        $opcoesGradeCurso = getOpcoesGradeCurso();
+        $opcoesGradeCurso = $this->getOpcoesGradeCurso();
         $this->campoLista('historico_grade_curso_id', 'Grade curso', $opcoesGradeCurso, $this->historico_grade_curso_id);
 
         $this->campoTexto('nm_serie', _cl('historico.cadastro.serie'), $this->nm_serie, 30, 255, true);
         $this->campoCheck('dependencia', 'Histórico de dependência', $this->dependencia);
         $this->campoNumero('ano', 'Ano', $this->ano, 4, 4, true);
 
-        if (validaControlePosicaoHistorico()) {
+        if ($this->validaControlePosicaoHistorico()) {
             $this->campoNumero('posicao', 'Posição', $this->posicao, 1, 1, true, 'Informe a coluna equivalente a série/ano/etapa a qual o histórico pertence. Ex.: 1º ano informe 1, 2º ano informe 2');
         }
 
@@ -284,6 +234,7 @@ class indice extends clsCadastro
             2 => 'Reprovado',
             3 => 'Cursando',
             4 => 'Transferido',
+            5 => 'Reclassificado',
             6 => 'Abandono',
             12 => 'Aprovado com dependência',
             13 => 'Aprovado pelo conselho',
@@ -363,7 +314,39 @@ class indice extends clsCadastro
         $this->frequencia = $this->fixupFrequencia($this->frequencia);
         $this->extra_curricular = is_null($this->extra_curricular) ? 0 : 1;
 
-        $obj = new clsPmieducarHistoricoEscolar($this->ref_cod_aluno, null, null, $this->pessoa_logada, $this->nm_serie, $this->ano, $this->carga_horaria, $this->dias_letivos, $this->escola, $this->escola_cidade, $this->escola_uf, $this->observacao, $this->aprovado, null, null, 1, $this->faltas_globalizadas, $this->ref_cod_instituicao, 1, $this->extra_curricular, null, $this->frequencia, $this->registro, $this->livro, $this->folha, $this->nm_curso, $this->historico_grade_curso_id, $this->aceleracao, $this->ref_cod_escola, !is_null($this->dependencia), $this->posicao);
+        $obj = new clsPmieducarHistoricoEscolar(
+            $this->ref_cod_aluno,
+            null,
+            null,
+            $this->pessoa_logada,
+            $this->nm_serie,
+            $this->ano,
+            $this->carga_horaria,
+            $this->dias_letivos,
+            mb_strtoupper($this->escola),
+            mb_strtoupper($this->escola_cidade),
+            $this->escola_uf,
+            $this->observacao,
+            $this->aprovado,
+            null,
+            null,
+            1,
+            $this->faltas_globalizadas,
+            $this->ref_cod_instituicao,
+            1,
+            $this->extra_curricular,
+            null,
+            $this->frequencia,
+            $this->registro,
+            $this->livro,
+            $this->folha,
+            $this->nm_curso,
+            $this->historico_grade_curso_id,
+            $this->aceleracao,
+            $this->ref_cod_escola,
+            !is_null($this->dependencia),
+            $this->posicao
+        );
         $cadastrou = $obj->cadastra();
 
         if ($cadastrou) {
@@ -403,27 +386,58 @@ class indice extends clsCadastro
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, "educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
 
-        $historicoEscolar = new clsPmieducarHistoricoEscolar($this->ref_cod_aluno, $this->sequencial);
-        $historicoEscolarDetalheAntes = $historicoEscolar->detalhe();
-
-        $this->carga_horaria = is_numeric($this->carga_horaria) ? intval($this->carga_horaria) : $this->carga_horaria;
+        $this->carga_horaria = is_numeric($this->carga_horaria) ? (int) $this->carga_horaria : $this->carga_horaria;
         $this->frequencia = $this->fixupFrequencia($this->frequencia);
 
-        if ($this->cb_faltas_globalizadas != 'on') {
-            $this->faltas_globalizadas = 'NULL';
+        $faltasGlobalizadas = $this->faltas_globalizadas;
+
+        if ($this->cb_faltas_globalizadas !== 'on') {
+            $faltasGlobalizadas = 'NULL';
         }
 
         $this->aceleracao = is_null($this->aceleracao) ? 0 : 1;
         $this->extra_curricular = is_null($this->extra_curricular) ? 0 : 1;
 
-        $obj = new clsPmieducarHistoricoEscolar($this->ref_cod_aluno, $this->sequencial, $this->pessoa_logada, null, $this->nm_serie, $this->ano, $this->carga_horaria, $this->dias_letivos, $this->escola, $this->escola_cidade, $this->escola_uf, $this->observacao, $this->aprovado, null, null, 1, $this->faltas_globalizadas, $this->ref_cod_instituicao, 1, $this->extra_curricular, null, $this->frequencia, $this->registro, $this->livro, $this->folha, $this->nm_curso, $this->historico_grade_curso_id, $this->aceleracao, $this->ref_cod_escola, !is_null($this->dependencia), $this->posicao);
+        $obj = new clsPmieducarHistoricoEscolar(
+            $this->ref_cod_aluno,
+            $this->sequencial,
+            $this->pessoa_logada,
+            null,
+            $this->nm_serie,
+            $this->ano,
+            $this->carga_horaria,
+            $this->dias_letivos,
+            mb_strtoupper($this->escola),
+            mb_strtoupper($this->escola_cidade),
+            $this->escola_uf,
+            $this->observacao,
+            $this->aprovado,
+            null,
+            null,
+            1,
+            $faltasGlobalizadas,
+            $this->ref_cod_instituicao,
+            1,
+            $this->extra_curricular,
+            null,
+            $this->frequencia,
+            $this->registro,
+            $this->livro,
+            $this->folha,
+            $this->nm_curso,
+            $this->historico_grade_curso_id,
+            $this->aceleracao,
+            $this->ref_cod_escola,
+            !is_null($this->dependencia),
+            $this->posicao
+        );
+
         $editou = $obj->edita();
 
         if ($editou) {
 
             //--------------EDITA DISCIPLINAS--------------//
             if ($this->nm_disciplina) {
-
                 $obj = new clsPmieducarHistoricoDisciplinas();
                 $excluiu = $obj->excluirTodos($this->ref_cod_aluno, $this->sequencial);
                 if ($excluiu) {
@@ -491,34 +505,34 @@ class indice extends clsCadastro
 
         return $valorPermitirCargaHoraria;
     }
-}
 
-function getOpcoesGradeCurso()
-{
-    $db = new clsBanco();
-    $sql = 'select * from pmieducar.historico_grade_curso where ativo = 1';
-    $db->Consulta($sql);
+    public function getOpcoesGradeCurso()
+    {
+        $db = new clsBanco();
+        $sql = 'select * from pmieducar.historico_grade_curso where ativo = 1';
+        $db->Consulta($sql);
 
-    $opcoes = ['' => 'Selecione'];
-    while ($db->ProximoRegistro()) {
-        $record = $db->Tupla();
-        $opcoes[$record['id']] = $record['descricao_etapa'];
+        $opcoes = ['' => 'Selecione'];
+        while ($db->ProximoRegistro()) {
+            $record = $db->Tupla();
+            $opcoes[$record['id']] = $record['descricao_etapa'];
+        }
+
+        return $opcoes;
     }
 
-    return $opcoes;
-}
+    public function validaControlePosicaoHistorico()
+    {
+        $obj = new clsPmieducarInstituicao;
+        //Busca instituicao ativa
+        $lst = $obj->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, 1);
 
-function validaControlePosicaoHistorico()
-{
-    $obj = new clsPmieducarInstituicao;
-    //Busca instituicao ativa
-    $lst = $obj->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, 1);
+        return dbBool($lst[0]['controlar_posicao_historicos']);
+    }
 
-    return dbBool($lst[0]['controlar_posicao_historicos']);
-}
-
-$pagina = new clsIndexBase();
-$miolo = new indice();
-
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->title = 'i-Educar - Histórico Escolar';
+        $this->processoAp = '578';
+    }
+};

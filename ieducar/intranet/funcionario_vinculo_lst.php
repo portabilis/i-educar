@@ -1,29 +1,14 @@
 <?php
 
-require_once('include/clsBase.inc.php');
-require_once('include/clsListagem.inc.php');
-require_once('include/clsBanco.inc.php');
-
-class clsIndex extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} Vínculo Funcionários!");
-        $this->processoAp = '190';
-    }
-}
-
-class indice extends clsListagem
-{
+return new class extends clsListagem {
     public function Gerar()
     {
         $this->titulo = 'Vínculos';
 
-        $nome_ = @$_GET['nome_'];
+        $nome_ = $_GET['nome_'] ?? null;
 
         $this->addCabecalhos(['Nome']);
-
-        $this->campoTexto('nome_', 'Nome', $nome_, '50', '255', true);
+        $this->campoTexto('nome_', 'Nome', $nome_, '50', '255');
 
         $db = new clsBanco();
         $sql  = 'SELECT cod_funcionario_vinculo, nm_vinculo FROM portal.funcionario_vinculo';
@@ -31,8 +16,8 @@ class indice extends clsListagem
         $where_and = '';
 
         if (!empty($nome_)) {
-            $where .= $where_and." nm_vinculo LIKE '%$nome_%' ";
-            $where_and = ' AND';
+            $name = $db->escapeString($nome_);
+            $where .= $where_and." nm_vinculo LIKE '%{$name}%' ";
         }
 
         if ($where) {
@@ -64,19 +49,12 @@ class indice extends clsListagem
         $this->acao = 'go("funcionario_vinculo_cad.php")';
         $this->nome_acao = 'Novo';
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
-            '' => 'Listagem de v&iacute;nculos'
-        ]);
-
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Listagem de v&iacute;nculos');
     }
-}
 
-$pagina = new clsIndex();
-
-$miolo = new indice();
-$pagina->addForm($miolo);
-
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->title = 'Vínculo Funcionários!';
+        $this->processoAp = '190';
+    }
+};

@@ -21,7 +21,7 @@ class LegacyDiscipline extends Model
      * @var array
      */
     protected $fillable = [
-        'instituicao_id', 'area_conhecimento_id', 'nome', 'abreviatura', 'tipo_base', 'ordenamento', 'codigo_educacenso',
+        'instituicao_id', 'area_conhecimento_id', 'nome', 'abreviatura', 'tipo_base', 'ordenamento', 'codigo_educacenso', 'desconsidera_para_progressao'
     ];
 
     /**

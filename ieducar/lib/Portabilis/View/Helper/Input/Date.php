@@ -1,8 +1,5 @@
 <?php
 
-require_once 'Portabilis/View/Helper/Input/Core.php';
-require_once 'Portabilis/Date/Utils.php';
-
 class Portabilis_View_Helper_Input_Date extends Portabilis_View_Helper_Input_Core
 {
     public function date($attrName, $options = [])
@@ -37,7 +34,7 @@ class Portabilis_View_Helper_Input_Date extends Portabilis_View_Helper_Input_Cor
             $inputOptions['value'] = Portabilis_Date_Utils::pgSQLToBr($inputOptions['value']);
         }
 
-        call_user_func_array([$this->viewInstance, 'campoData'], $inputOptions);
+        $this->viewInstance->campoData(...array_values($inputOptions));
 
         $this->fixupPlaceholder($inputOptions);
         $this->fixupOptions($inputOptions);
@@ -54,7 +51,7 @@ class Portabilis_View_Helper_Input_Date extends Portabilis_View_Helper_Input_Cor
             var $input = $j(\'#' . $id . "');
             $sizeFixup
             $disableFixup
-            
+
             \$input.change(function(){
                 if (this.value == '') {
                     return true;
@@ -63,7 +60,7 @@ class Portabilis_View_Helper_Input_Date extends Portabilis_View_Helper_Input_Cor
                 var validateData = /^(((0[1-9]|[12][0-9]|3[01])([-.\/])(0[13578]|10|12)([-.\/])(\d{4}))|(([0][1-9]|[12][0-9]|30)([-.\/])(0[469]|11)([-.\/])(\d{4}))|((0[1-9]|1[0-9]|2[0-8])([-.\/])(02)([-.\/])(\d{4}))|((29)(\.|-|\/)(02)([-.\/])([02468][048]00))|((29)([-.\/])(02)([-.\/])([13579][26]00))|((29)([-.\/])(02)([-.\/])([0-9][0-9][0][48]))|((29)([-.\/])(02)([-.\/])([0-9][0-9][2468][048]))|((29)([-.\/])(02)([-.\/])([0-9][0-9][13579][26])))$/;
 
                 if (!validateData.test(this.value)){
-                    messageUtils.error('Informe data válida.', this);
+                    messageUtils.error('Informe uma data válida.', this);
                     this.value = '';
                 }
             });

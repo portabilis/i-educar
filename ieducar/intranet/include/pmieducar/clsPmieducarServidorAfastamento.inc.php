@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsPmieducarServidorAfastamento extends Model
 {
     public $ref_cod_servidor;
@@ -15,7 +13,7 @@ class clsPmieducarServidorAfastamento extends Model
     public $data_exclusao;
     public $data_retorno;
     public $data_saida;
-    public $ativo;
+    public $ativo = 1;
     public $ref_cod_instituicao;
 
     public function __construct($ref_cod_servidor = null, $sequencial = null, $ref_cod_motivo_afastamento = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $data_cadastro = null, $data_exclusao = null, $data_retorno = null, $data_saida = null, $ativo = null, $ref_cod_instituicao = null)
@@ -24,19 +22,19 @@ class clsPmieducarServidorAfastamento extends Model
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}servidor_afastamento";
 
-        $this->_campos_lista = $this->_todos_campos = 'ref_cod_servidor, sequencial, ref_cod_motivo_afastamento, ref_usuario_exc, ref_usuario_cad, data_cadastro, data_exclusao, data_retorno, data_saida, ativo';
+        $this->_campos_lista = $this->_todos_campos = 'ref_cod_servidor, sequencial, ref_cod_motivo_afastamento, ref_usuario_exc, ref_usuario_cad, data_cadastro, data_exclusao, data_retorno, data_saida, ativo, id';
 
         if (is_numeric($ref_cod_motivo_afastamento)) {
-                    $this->ref_cod_motivo_afastamento = $ref_cod_motivo_afastamento;
+            $this->ref_cod_motivo_afastamento = $ref_cod_motivo_afastamento;
         }
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
         if (is_numeric($ref_cod_servidor)) {
-                    $this->ref_cod_servidor = $ref_cod_servidor;
+            $this->ref_cod_servidor = $ref_cod_servidor;
         }
 
         if (is_numeric($sequencial)) {
@@ -58,7 +56,7 @@ class clsPmieducarServidorAfastamento extends Model
             $this->ativo = $ativo;
         }
         if (is_numeric($ref_cod_instituicao)) {
-                    $this->ref_cod_instituicao = $ref_cod_instituicao;
+            $this->ref_cod_instituicao = $ref_cod_instituicao;
         }
     }
 
@@ -124,7 +122,7 @@ class clsPmieducarServidorAfastamento extends Model
 
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
-            return true;
+            return $db->InsertId('pmieducar.servidor_afastamento_id_seq');
         }
 
         return false;
@@ -157,10 +155,8 @@ class clsPmieducarServidorAfastamento extends Model
                 $set .= "{$gruda}data_cadastro = '{$this->data_cadastro}'";
                 $gruda = ', ';
             }
-            $set .= "{$gruda}data_exclusao = NOW()";
-            $gruda = ', ';
-            if (is_string($this->data_retorno) && $this->data_retorno != '') {
-                $set .= "{$gruda}data_retorno = '{$this->data_retorno}'";
+            if (is_string($this->data_retorno)) {
+                $set .= empty($this->data_retorno) ? "{$gruda}data_retorno = null" : "{$gruda}data_retorno = '{$this->data_retorno}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_saida)) {

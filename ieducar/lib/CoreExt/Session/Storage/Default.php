@@ -2,8 +2,6 @@
 
 use Illuminate\Support\Facades\Session;
 
-require_once 'CoreExt/Session/Storage/Abstract.php';
-
 class CoreExt_Session_Storage_Default extends CoreExt_Session_Storage_Abstract
 {
     /**

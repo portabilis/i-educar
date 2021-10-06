@@ -1,8 +1,5 @@
 <?php
 
-require_once 'CoreExt/Entity.php';
-require_once 'App/Model/IedFinder.php';
-
 class TabelaArredondamento_Model_TabelaValor extends CoreExt_Entity
 {
     protected $_data = [
@@ -41,7 +38,6 @@ class TabelaArredondamento_Model_TabelaValor extends CoreExt_Entity
     public function getDataMapper()
     {
         if (is_null($this->_dataMapper)) {
-            require_once 'TabelaArredondamento/Model/TabelaValorDataMapper.php';
             $this->setDataMapper(
                 new TabelaArredondamento_Model_TabelaValorDataMapper()
             );

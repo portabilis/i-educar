@@ -46,6 +46,6 @@ class TelefoneTest extends TestCase
         $telefoneValidator = new Telefone($nomeCampo, '11111111');
         $telefoneValidator->isValid();
 
-        $this->assertContains($nomeCampo, implode(' ', $telefoneValidator->getMessage()));
+        $this->assertStringContainsString($nomeCampo, implode(' ', $telefoneValidator->getMessage()));
     }
 }

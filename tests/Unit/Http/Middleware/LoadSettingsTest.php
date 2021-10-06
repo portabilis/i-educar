@@ -28,7 +28,8 @@ class LoadSettingsTest extends TestCase
 
         $middleware = new LoadSettings();
 
-        $middleware->handle($request, function () {});
+        $middleware->handle($request, function () {
+        });
 
         $this->assertEquals('Middleware for Test', Config::get('load.settings.test'));
     }

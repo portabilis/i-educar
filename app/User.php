@@ -2,14 +2,18 @@
 
 namespace App;
 
+use App\Models\LegacyAccess;
 use App\Models\LegacyEmployee;
 use App\Models\LegacyPerson;
 use App\Models\LegacyUserType;
 use App\Models\School;
+use App\Services\DisableUsersWithDaysGoneSinceLastAccessService;
+use Illuminate\Contracts\Config\Repository;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int            $id
@@ -231,6 +235,14 @@ class User extends Authenticatable
     }
 
     /**
+     * @return BelongsTo
+     */
+    public function access()
+    {
+        return $this->belongsTo(LegacyAccess::class, 'cod_usuario', 'cod_pessoa');
+    }
+
+    /**
      * @return BelongsToMany
      */
     public function processes()
@@ -268,5 +280,85 @@ class User extends Authenticatable
             'cod_usuario',
             'cod_escola'
         );
+    }
+
+    public function getCreatedAtCustom(): ?Carbon
+    {
+        return Carbon::createFromTimestamp((new \DateTime($this->getCreatedAtAttribute()))->getTimestamp());
+    }
+
+    public function getEnabledUserDate(): ?Carbon
+    {
+        if ($this->employee) {
+            return $this->employee->getEnabledUserDate();
+        }
+        return null;
+    }
+    public function getPasswordUpdatedDate(): ?Carbon
+    {
+        if ($this->employee) {
+            return $this->employee->getPasswordUpdatedDate();
+        }
+        return null;
+    }
+
+    public function getLastAccessDate(): Carbon
+    {
+        $legacyAccess = $this->access()
+            ->orderBy('data_hora', 'DESC')
+            ->first();
+
+        if (!$legacyAccess) {
+            return $this->getCreatedAtCustom() ?? Carbon::now();
+        }
+
+        return $legacyAccess->data_hora;
+    }
+
+    public function getDaysSinceLastAccessOrEnabledUserDate(): int
+    {
+        $daysGone = 0;
+        $lastAccessDate = $this->getLastAccessDate();
+
+        if ($this->getEnabledUserDate() &&
+            $this->getEnabledUserDate()->gt($lastAccessDate)) {
+            $lastAccessDate = $this->getEnabledUserDate();
+        }
+
+        $currentDate = Carbon::now();
+        if ($currentDate->gt($lastAccessDate)){
+            $daysGone = $currentDate->diffInDays($lastAccessDate);
+        }
+        return $daysGone;
+    }
+
+    public function getDaysSinceLastPasswordUpdated(): int
+    {
+        $daysGone = 0;
+        $lastPasswordUpdatedDate = $this->getPasswordUpdatedDate();
+
+        $currentDate = Carbon::now();
+        if ($currentDate->gt($lastPasswordUpdatedDate)){
+            $daysGone = $currentDate->diffInDays($lastPasswordUpdatedDate);
+        }
+        return $daysGone;
+    }
+
+    public function getActiveUsersNotAdmin()
+    {
+        return $this->query()
+            ->join('portal.funcionario', 'usuario.cod_usuario', '=', 'funcionario.ref_cod_pessoa_fj')
+            ->where('funcionario.ativo', 1)
+            ->where('ref_cod_tipo_usuario', '<>', LegacyUserType::LEVEL_ADMIN)
+            ->get();
+    }
+
+    public function disable()
+    {
+        $this->employee->data_expiracao = now();
+        $this->employee->ativo = 0;
+        $this->employee->save();
+        $this->ativo = 0;
+        $this->save();
     }
 }

@@ -1,10 +1,5 @@
 <?php
 
-require_once 'CoreExt/Entity.php';
-require_once 'App/Model/IedFinder.php';
-require_once 'ComponenteCurricular/Model/TipoBase.php';
-require_once 'ComponenteCurricular/Model/CodigoEducacenso.php';
-
 class ComponenteCurricular_Model_Componente extends CoreExt_Entity
 {
     protected $_data = [
@@ -15,7 +10,8 @@ class ComponenteCurricular_Model_Componente extends CoreExt_Entity
         'area_conhecimento' => null,
         'cargaHoraria' => null,
         'codigo_educacenso' => null,
-        'ordenamento' => 99999
+        'ordenamento' => 99999,
+        'desconsidera_para_progressao' => false
     ];
 
     protected $_references = [
@@ -39,7 +35,6 @@ class ComponenteCurricular_Model_Componente extends CoreExt_Entity
     public function getDataMapper()
     {
         if (is_null($this->_dataMapper)) {
-            require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
             $this->setDataMapper(new ComponenteCurricular_Model_ComponenteDataMapper());
         }
 

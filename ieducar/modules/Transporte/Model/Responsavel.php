@@ -1,7 +1,5 @@
 <?php
 
-require_once 'CoreExt/Enum.php';
-
 class Transporte_Model_Responsavel extends CoreExt_Enum
 {
     const NENHUM = 0;

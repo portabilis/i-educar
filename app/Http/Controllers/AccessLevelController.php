@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Menu;
 use App\Models\LegacyUserType;
+use App\Services\CacheManager;
+use App\Services\MenuCacheService;
 use App\User;
 use Exception;
 use Illuminate\Database\Connection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 use Throwable;
 
@@ -55,8 +58,9 @@ class AccessLevelController extends Controller
         $userType->saveOrFail();
 
         $userType->menus()->syncWithoutDetaching($processes);
-    }
 
+        app(MenuCacheService::class)->flushMenuTag($userType->cod_tipo_usuario);
+    }
     /**
      * @param Request $request
      *
@@ -81,7 +85,7 @@ class AccessLevelController extends Controller
     {
         $this->menu(554)->breadcrumb('Editar tipo de usuário');
 
-        $processes = $userType->load('menus')->getProcesses();
+        $processes = $userType->load('menus')->getProcesses()->toArray();
 
         /** @var User $user */
         $user = $request->user();
@@ -94,6 +98,14 @@ class AccessLevelController extends Controller
                 'processes' => $menu->processes($menu->title, $userProcesses),
             ]);
         });
+
+        foreach ($userProcesses as $process => $status) {
+            if (isset($processes[$process])) {
+                continue;
+            }
+
+            $processes[$process] = 0;
+        }
 
         return view('accesslevel.index', [
             'menus' => $menus,
@@ -146,11 +158,11 @@ class AccessLevelController extends Controller
 
     /**
      * @param LegacyUserType $userType
-     * @param Connection $connection
-     *
-     * @return RedirectResponse
+     * @param Connection     $connection
      *
      * @throws Exception
+     *
+     * @return RedirectResponse
      */
     public function delete(LegacyUserType $userType, Connection $connection)
     {

@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsPmieducarDistribuicaoUniforme extends Model
 {
     public $cod_distribuicao_uniforme;
@@ -89,13 +87,13 @@ class clsPmieducarDistribuicaoUniforme extends Model
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}distribuicao_uniforme";
 
-        $this->_campos_lista = $this->_todos_campos = ' 
-            cod_distribuicao_uniforme, ref_cod_aluno, ano, kit_completo, 
+        $this->_campos_lista = $this->_todos_campos = '
+            cod_distribuicao_uniforme, ref_cod_aluno, ano, kit_completo,
             agasalho_qtd, camiseta_curta_qtd, camiseta_longa_qtd, meias_qtd,
-            bermudas_tectels_qtd, bermudas_coton_qtd, tenis_qtd, data, 
-            agasalho_tm, camiseta_curta_tm, camiseta_longa_tm, meias_tm, 
+            bermudas_tectels_qtd, bermudas_coton_qtd, tenis_qtd, data,
+            agasalho_tm, camiseta_curta_tm, camiseta_longa_tm, meias_tm,
             bermudas_tectels_tm, bermudas_coton_tm, tenis_tm, ref_cod_escola,
-            camiseta_infantil_qtd, camiseta_infantil_tm, calca_jeans_qtd, 
+            camiseta_infantil_qtd, camiseta_infantil_tm, calca_jeans_qtd,
             calca_jeans_tm, saia_qtd, saia_tm
         ';
 

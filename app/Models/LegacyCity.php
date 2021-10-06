@@ -3,12 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @deprecated Usar novo módulo de endereço
  */
-use Illuminate\Database\Eloquent\Relations\HasMany;
-
 class LegacyCity extends Model
 {
     /**

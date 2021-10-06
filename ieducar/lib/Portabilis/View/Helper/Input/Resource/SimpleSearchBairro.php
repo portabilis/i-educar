@@ -1,9 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/View/Helper/Input/SimpleSearch.php';
-require_once 'lib/Portabilis/Utils/Database.php';
-require_once 'lib/Portabilis/String/Utils.php';
-
 class Portabilis_View_Helper_Input_Resource_SimpleSearchBairro extends Portabilis_View_Helper_Input_SimpleSearch
 {
     public function simpleSearchBairro($attrName, $options = [])
@@ -29,7 +25,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchBairro extends Portabili
             $nome = $municipio['nome'];
             $zona = ($municipio['zona_localizacao'] == 1 ? 'Urbana' : 'Rural');
 
-            return Portabilis_String_Utils::toLatin1($nome, ['transform' => true, 'escape' => false]) . " / Zona $zona";
+            return $nome . " / Zona $zona";
         }
     }
 

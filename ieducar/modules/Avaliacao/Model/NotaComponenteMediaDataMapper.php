@@ -1,8 +1,5 @@
 <?php
 
-require_once 'CoreExt/DataMapper.php';
-require_once 'Avaliacao/Model/NotaComponenteMedia.php';
-
 class Avaliacao_Model_NotaComponenteMediaDataMapper extends CoreExt_DataMapper
 {
     protected $_entityClass = 'Avaliacao_Model_NotaComponenteMedia';

@@ -1,0 +1,14 @@
+/* Styles for Max Length plugin v2.0.1 */
+.maxlength-feedback {
+    margin-left: 0.5em;
+    font-size: 75%;
+}
+.maxlength-full {
+    background-color: #fee;
+}
+.maxlength-overflow {
+    background-color: #fcc;
+}
+.maxlength-disabled {
+    opacity: 0.5;
+}

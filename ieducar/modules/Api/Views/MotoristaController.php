@@ -1,13 +1,5 @@
 <?php
 
-require_once 'include/modules/clsModulesMotorista.inc.php';
-require_once 'include/modules/clsModulesVeiculo.inc.php';
-require_once 'Portabilis/Controller/ApiCoreController.php';
-require_once 'Portabilis/Array/Utils.php';
-require_once 'Portabilis/String/Utils.php';
-require_once 'Portabilis/Array/Utils.php';
-require_once 'Portabilis/Date/Utils.php';
-
 class MotoristaController extends ApiCoreController
 {
     protected $_processoAp = 578; //verificar
@@ -34,7 +26,7 @@ class MotoristaController extends ApiCoreController
     {
         $sqls[] = 'select distinct cod_motorista as id, nome as name from
                  modules.motorista, cadastro.pessoa where idpes = ref_idpes
-                 and cod_motorista like $1||\'%\'';
+                 and cod_motorista::varchar like $1||\'%\'';
 
         return $sqls;
     }
@@ -56,11 +48,11 @@ class MotoristaController extends ApiCoreController
         // após cadastro não muda mais id pessoa
         $motorista->ref_idpes = $this->getRequest()->pessoa_id;
         $motorista->cnh = $this->getRequest()->cnh;
-        $motorista->tipo_cnh = Portabilis_String_Utils::toLatin1($this->getRequest()->tipo_cnh);
+        $motorista->tipo_cnh = $this->getRequest()->tipo_cnh;
         $motorista->dt_habilitacao = Portabilis_Date_Utils::brToPgSQL($this->getRequest()->dt_habilitacao);
         $motorista->vencimento_cnh = Portabilis_Date_Utils::brToPgSQL($this->getRequest()->vencimento_cnh);
         $motorista->ref_cod_empresa_transporte_escolar = $this->getRequest()->empresa_id;
-        $motorista->observacao = Portabilis_String_Utils::toLatin1($this->getRequest()->observacao);
+        $motorista->observacao = $this->getRequest()->observacao;
 
         return (is_null($id) ? $motorista->cadastra() : $motorista->edita());
     }

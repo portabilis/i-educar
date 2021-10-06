@@ -26,7 +26,6 @@ $factory->define(LegacyUser::class, function (Faker $faker) {
 });
 
 $factory->state(LegacyUser::class, 'unique', function () {
-
     $user = LegacyUser::query()->first();
 
     if (empty($user)) {

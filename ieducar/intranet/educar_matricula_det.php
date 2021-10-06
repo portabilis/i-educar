@@ -1,31 +1,13 @@
 <?php
 
+use App\Models\LegacyExemptionType;
 use App\Process;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
+use iEducar\Modules\School\Model\ExemptionType;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsDetalhe.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'include/pmieducar/clsPermissoes.inc.php';
-require_once 'lib/Portabilis/Date/Utils.php';
-require_once 'lib/Portabilis/Utils/CustomLabel.php';
-require_once 'Portabilis/String/Utils.php';
-require_once 'lib/App/Model/Educacenso.php';
-require_once 'App/Model/MatriculaSituacao.php';
-require_once 'Portabilis/View/Helper/Application.php';
-
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Matrícula');
-        $this->processoAp = 578;
-    }
-}
-
-class indice extends clsDetalhe
-{
+return new class extends clsDetalhe {
     public $titulo;
 
     public $ref_cod_matricula;
@@ -52,6 +34,17 @@ class indice extends clsDetalhe
 
     public $ativo;
 
+    public function getDescription($description)
+    {
+        if (empty($description)) {
+            return $description;
+        }
+
+        $lessDescription = substr($description, 0, strpos($description, ' ', 200)) . '...';
+
+        return "<div align='justify'> <span class='desc-red'>{$lessDescription}</span> <span class='descricao' style='display: none'>{$description}</span><a href='javascript:void(0)' class='ver-mais'>Mostrar mais</a><a href='javascript:void(0)' style='display: none' class='ver-menos'>Mostrar menos</a></div>";
+    }
+
     public function Gerar()
     {
         // carrega estilo para feedback messages, exibindo msgs da api.
@@ -59,8 +52,6 @@ class indice extends clsDetalhe
         Portabilis_View_Helper_Application::loadStylesheet($this, $style);
 
         $this->titulo = 'Matrícula - Detalhe';
-        $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg', 'Intranet');
-
         $this->ref_cod_matricula = $_GET['cod_matricula'];
 
         $obj_matricula = new clsPmieducarMatricula();
@@ -157,7 +148,7 @@ class indice extends clsDetalhe
             null,
             null,
             null,
-            1
+            null
         );
 
         $existeTurma = false;
@@ -171,12 +162,17 @@ class indice extends clsDetalhe
             $turma = new clsPmieducarTurma($enturmacao['ref_cod_turma']);
             $turma = $turma->detalhe();
             $turma_id = $enturmacao['ref_cod_turma'];
-            $nomesTurmas[] = $turma['nm_turma'];
-            $datasEnturmacoes[] = Portabilis_Date_Utils::pgSQLToBr($enturmacao['data_enturmacao']);
 
             if (in_array($turma['etapa_educacenso'], App_Model_Educacenso::etapas_multisseriadas())) {
                 $existeTurmaMulti = true;
             }
+
+            if ($enturmacao['ativo'] == 0) {
+                continue;
+            }
+
+            $nomesTurmas[] = $turma['nm_turma'];
+            $datasEnturmacoes[] = Portabilis_Date_Utils::pgSQLToBr($enturmacao['data_enturmacao']);
 
             if ($turma['turma_turno_id'] == clsPmieducarTurma::TURNO_INTEGRAL) {
                 $existeTurmaTurnoIntegral = true;
@@ -202,12 +198,10 @@ class indice extends clsDetalhe
             $this->addDetalhe(['Número Reserva Vaga', $registro['ref_cod_reserva_vaga']]);
         }
 
-        $campoObs = false;
-
         $situacao = App_Model_MatriculaSituacao::getSituacao($registro['aprovado']);
         $this->addDetalhe(['Situação', $situacao]);
 
-        if ($registro[aprovado] == 4) {
+        if ($registro['aprovado'] == App_Model_MatriculaSituacao::TRANSFERIDO) {
             $obj_transferencia = new clsPmieducarTransferenciaSolicitacao();
 
             $lst_transferencia = $obj_transferencia->lista(null, null, null, null, null, $registro['cod_matricula'], null, null, null, null, null, 1, null, null, $registro['ref_cod_aluno'], false);
@@ -224,26 +218,31 @@ class indice extends clsDetalhe
                 $this->addDetalhe(['Estado escola destino', $det_transferencia['estado_escola_destino_externa']]);
                 $this->addDetalhe(['Município escola destino', $det_transferencia['municipio_escola_destino_externa']]);
             }
+            $this->addDetalhe(['Observação', $det_transferencia['observacao']]);
         }
 
         if ($registro['aprovado'] == App_Model_MatriculaSituacao::FALECIDO) {
-            $this->addDetalhe(['Observação', Portabilis_String_Utils::toLatin1($registro['observacao'])]);
+            $this->addDetalhe(['Observação', $registro['observacao']]);
         }
 
         if ($existeSaidaEscola) {
             $this->addDetalhe(['Saída da escola', 'Sim']);
             $this->addDetalhe(['Data de saída da escola', Portabilis_Date_Utils::pgSQLToBr($registro['data_saida_escola'])]);
-            $this->addDetalhe(['Observação', Portabilis_String_Utils::toLatin1($registro['observacao'])]);
+            $this->addDetalhe(['Observação', $registro['observacao']]);
         }
 
-        if ($campoObs) {
+        if ($registro['aprovado'] == App_Model_MatriculaSituacao::ABANDONO) {
             $tipoAbandono = new clsPmieducarAbandonoTipo($registro['ref_cod_abandono_tipo']);
             $tipoAbandono = $tipoAbandono->detalhe();
 
-            $observacaoAbandono = Portabilis_String_Utils::toLatin1($registro['observacao']);
+            $observacaoAbandono = $registro['observacao'];
 
             $this->addDetalhe(['Motivo do Abandono', $tipoAbandono['nome']]);
             $this->addDetalhe(['Observação', $observacaoAbandono]);
+        }
+
+        if ($registro['aprovado'] == App_Model_MatriculaSituacao::RECLASSIFICADO) {
+            $this->addDetalhe(['Descrição', $this->getDescription($registro['descricao_reclassificacao'])]);
         }
 
         $this->addDetalhe(['Formando', $registro['formando'] == 0 ? 'N&atilde;o' : 'Sim']);
@@ -301,15 +300,23 @@ class indice extends clsDetalhe
                     $this->array_botao_url_script[] = "go(\"educar_dispensa_disciplina_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
                 }
 
+                if ($registro['aprovado'] == App_Model_MatriculaSituacao::EM_ANDAMENTO && $this->permissao_busca_ativa()) {
+                    $this->array_botao[] = 'Busca ativa';
+                    $this->array_botao_url_script[] = "go(\"educar_busca_ativa_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
+                }
+
                 $dependencia = $registro['dependencia'];
 
                 if ($registro['ref_ref_cod_serie'] && $existeTurma && $dependencia) {
-                    $this->array_botao[] = 'Disciplinas de depend&ecirc;ncia';
+                    $this->array_botao[] = 'Disciplinas de dependência';
                     $this->array_botao_url_script[] = "go(\"educar_disciplina_dependencia_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
                 }
 
                 $this->array_botao[] = _cl('matricula.detalhe.enturmar');
                 $this->array_botao_url_script[] = "go(\"educar_matricula_turma_lst.php?ref_cod_matricula={$registro['cod_matricula']}&ano_letivo={$registro['ano']}\")";
+
+                $this->array_botao[] = 'Modalidade de ensino';
+                $this->array_botao_url_script[] = "go(\"educar_matricula_modalidade_ensino.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
 
                 $this->array_botao[] = 'Abandono';
                 $this->array_botao_url_script[] = "go(\"educar_abandono_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\");";
@@ -431,6 +438,18 @@ class indice extends clsDetalhe
         return $acesso->permissao_excluir(627, $this->pessoa_logada, 7, null, true);
     }
 
+    public function permissao_busca_ativa()
+    {
+        $user = Auth::user();
+        $allow = Gate::allows('view', Process::ACTIVE_LOOKING);
+
+        if ($user->isLibrary()) {
+            return false;
+        }
+
+        return $allow;
+    }
+
     public function permissaoReclassificar()
     {
         $acesso = new clsPermissoes();
@@ -449,10 +468,10 @@ class indice extends clsDetalhe
 
         return $db->CampoUnico($sql);
     }
-}
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
-
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->title = 'i-Educar - Matrícula';
+        $this->processoAp = 578;
+    }
+};

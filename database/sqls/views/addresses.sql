@@ -1,4 +1,4 @@
-create or replace view addresses as
+create or replace view public.addresses as
 select
 	p.id,
 	p.city_id,

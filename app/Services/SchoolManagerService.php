@@ -9,6 +9,7 @@ class SchoolManagerService
 {
     /**
      * @param $schoolId
+     *
      * @return SchoolManager[]
      */
     public function getSchoolManagers($schoolId)
@@ -39,7 +40,7 @@ class SchoolManagerService
         $schoolManager->access_criteria_id = $valueObject->accessCriteriaId;
         $schoolManager->access_criteria_description = $valueObject->accessCriteriaDescription;
         $schoolManager->link_type_id = $valueObject->linkTypeId;
-        $schoolManager->chief = (bool)$valueObject->isChief;
+        $schoolManager->chief = (bool) $valueObject->isChief;
         $schoolManager->save();
     }
 }

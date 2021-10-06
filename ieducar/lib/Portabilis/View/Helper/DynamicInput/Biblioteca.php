@@ -1,7 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
-
 class Portabilis_View_Helper_DynamicInput_Biblioteca extends Portabilis_View_Helper_DynamicInput_CoreSelect
 {
     protected function inputValue($value = null)
@@ -63,7 +61,7 @@ class Portabilis_View_Helper_DynamicInput_Biblioteca extends Portabilis_View_Hel
 
         $inputOptions['id'] = 'biblioteca_nome';
 
-        call_user_func_array([$this->viewInstance, 'campoRotulo'], $inputOptions);
+        $this->viewInstance->campoRotulo(...array_values($inputOptions));
     }
 
     public function biblioteca($options = [])

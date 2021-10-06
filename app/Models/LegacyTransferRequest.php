@@ -71,7 +71,7 @@ class LegacyTransferRequest extends Model
         return $query->where('ativo', 1);
     }
 
-        /**
+    /**
      * @param Builder $query
      *
      * @return Builder

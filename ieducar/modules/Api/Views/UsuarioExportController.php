@@ -1,9 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'intranet/include/clsBanco.inc.php';
-require_once 'intranet/include/clsBase.inc.php';
-
 class UsuarioExportController extends ApiCoreController
 {
     protected function exportUsers()
@@ -23,12 +19,13 @@ class UsuarioExportController extends ApiCoreController
         );
 
         //Linhas do cabeçalho
-        $csv .= 'Nome,';
+        $csv  = 'Nome,';
         $csv .= 'Matricula,';
         $csv .= 'E-mail,';
+        $csv .= 'CPF,';
         $csv .= 'Status,';
-        $csv .= Portabilis_String_Utils::toLatin1('Tipo_usuário,');
-        $csv .= Portabilis_String_Utils::toLatin1('Instituição,');
+        $csv .= 'Tipo_usuário,';
+        $csv .= 'Instituição,';
         $csv .= 'Escola,';
         $csv .= PHP_EOL;
 
@@ -36,6 +33,7 @@ class UsuarioExportController extends ApiCoreController
             $csv .= '"' . $row['nome'] . '",';
             $csv .= '"' . $row['matricula'] . '",';
             $csv .= '"' . $row['email'] . '",';
+            $csv .= '"' . $row['cpf'] . '",';
             $csv .= '"' . $row['status'] . '",';
             $csv .= '"' . $row['nm_tipo'] . '",';
             $csv .= '"' . $row['nm_instituicao'] . '",';

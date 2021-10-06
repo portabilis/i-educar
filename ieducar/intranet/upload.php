@@ -1,7 +1,5 @@
 <?php
 
-require_once 'file_check.php';
-
 if ($_FILES) {
     foreach ($_FILES as $file) {
         if (!empty($file['name'])) {

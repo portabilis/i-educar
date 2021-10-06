@@ -2,20 +2,25 @@
 
 namespace App\Providers;
 
+use App\Events\RegistrationEvent;
+use App\Events\TransferEvent;
+use App\Listeners\AcceptTransferRequestListener;
 use App\Listeners\AuthenticatedUser;
+use App\Listeners\ConfigureAuthenticatedUserForAudit;
+use App\Listeners\CopyTransferDataListener;
+use App\Listeners\LoginLegacySession;
+use App\Listeners\MessageSendingListener;
+use App\Listeners\NotificationWhenResetPassword;
+use App\Listeners\TransferNotificationListener;
 use App\Models\SchoolManager;
 use App\Observers\SchoolManagerObserver;
-use App\Listeners\LoginLegacySession;
-use App\Listeners\NotificationWhenResetPassword;
 use Illuminate\Auth\Events\Authenticated;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use App\Events\RegistrationEvent;
-use App\Listeners\CopyTransferDataListener;
-use App\Listeners\AcceptTransferRequestListener;
+use Illuminate\Mail\Events\MessageSending;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -35,11 +40,18 @@ class EventServiceProvider extends ServiceProvider
             NotificationWhenResetPassword::class,
         ],
         Authenticated::class => [
-            AuthenticatedUser::class
+            AuthenticatedUser::class,
+            ConfigureAuthenticatedUserForAudit::class,
         ],
         RegistrationEvent::class => [
             CopyTransferDataListener::class,
             AcceptTransferRequestListener::class
+        ],
+        TransferEvent::class => [
+            TransferNotificationListener::class,
+        ],
+        MessageSending::class => [
+            MessageSendingListener::class,
         ]
     ];
 

@@ -1,10 +1,7 @@
 <?php
 
-/**
- * @author Adriano Erik Weiguert Nagasava
- */
         $obj_permissoes = new clsPermissoes();
-        $nivel_usuario  = $obj_permissoes->nivel_acesso( $this->pessoa_logada );
+        $nivel_usuario  = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         $retorno .= '<tr>
                      <td height="24" colspan="2" class="formdktd">
                      <span class="form">
@@ -14,49 +11,40 @@
                      </tr>';
 
         $retorno .= '<form action="" method="post" id="formcadastro" name="formcadastro">';
-        if ( $obrigatorio )
-        {
+        if ($obrigatorio) {
             $instituicao_obrigatorio = $escola_obrigatorio = $curso_obrigatorio = $serie_obrigatorio = $turma_obrigatorio = true;
-        }
-        else
-        {
-            $instituicao_obrigatorio = isset( $instituicao_obrigatorio ) ? $instituicao_obrigatorio : $obrigatorio;
-            $escola_obrigatorio      = isset( $escola_obrigatorio ) ? $escola_obrigatorio : $obrigatorio;
-            $curso_obrigatorio       = isset( $curso_obrigatorio ) ? $curso_obrigatorio : $obrigatorio;
-            $serie_obrigatorio       = isset( $serie_obrigatorio ) ? $serie_obrigatorio : $obrigatorio;
-            $turma_obrigatorio       = isset( $turma_obrigatorio ) ? $turma_obrigatorio : $obrigatorio;
+        } else {
+            $instituicao_obrigatorio = isset($instituicao_obrigatorio) ? $instituicao_obrigatorio : $obrigatorio;
+            $escola_obrigatorio      = isset($escola_obrigatorio) ? $escola_obrigatorio : $obrigatorio;
+            $curso_obrigatorio       = isset($curso_obrigatorio) ? $curso_obrigatorio : $obrigatorio;
+            $serie_obrigatorio       = isset($serie_obrigatorio) ? $serie_obrigatorio : $obrigatorio;
+            $turma_obrigatorio       = isset($turma_obrigatorio) ? $turma_obrigatorio : $obrigatorio;
         }
 
-        if ( $desabilitado )
-        {
+        if ($desabilitado) {
             $instituicao_desabilitado = $escola_desabilitado = $curso_desabilitado = $serie_desabilitado = $turma_desabilitado = true;
-        }
-        else
-        {
-            $instituicao_desabilitado = isset( $instituicao_desabilitado ) ? $instituicao_desabilitado : $desabilitado;
-            $escola_desabilitado      = isset( $escola_desabilitado ) ? $escola_desabilitado : $desabilitado;
-            $curso_desabilitado       = isset( $curso_desabilitado ) ? $curso_desabilitado : $desabilitado;
-            $serie_desabilitado       = isset( $serie_desabilitado ) ? $serie_desabilitado : $desabilitado;
-            $turma_desabilitado       = isset( $turma_desabilitado ) ? $turma_desabilitado : $desabilitado;
+        } else {
+            $instituicao_desabilitado = isset($instituicao_desabilitado) ? $instituicao_desabilitado : $desabilitado;
+            $escola_desabilitado      = isset($escola_desabilitado) ? $escola_desabilitado : $desabilitado;
+            $curso_desabilitado       = isset($curso_desabilitado) ? $curso_desabilitado : $desabilitado;
+            $serie_desabilitado       = isset($serie_desabilitado) ? $serie_desabilitado : $desabilitado;
+            $turma_desabilitado       = isset($turma_desabilitado) ? $turma_desabilitado : $desabilitado;
         }
 
         $obj_permissoes = new clsPermissoes();
-        $nivel_usuario = $obj_permissoes->nivel_acesso( $this->pessoa_logada );
+        $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
-            $opcoes = array( "" => "Selecione" );
+            $opcoes = [ '' => 'Selecione' ];
             $obj_instituicao = new clsPmieducarInstituicao();
-            $obj_instituicao->setCamposLista( "cod_instituicao, nm_instituicao" );
-            $obj_instituicao->setOrderby( "nm_instituicao ASC" );
-            $lista = $obj_instituicao->lista( null, null, null, null, null, null, null, null, null, null, null, null, null, 1 );
-            if ( is_array( $lista ) && count( $lista ) )
-            {
-                foreach ( $lista as $registro )
-                {
+            $obj_instituicao->setCamposLista('cod_instituicao, nm_instituicao');
+            $obj_instituicao->setOrderby('nm_instituicao ASC');
+            $lista = $obj_instituicao->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, 1);
+            if (is_array($lista) && count($lista)) {
+                foreach ($lista as $registro) {
                     $opcoes["{$registro['cod_instituicao']}"] = "{$registro['nm_instituicao']}";
                 }
             }
-        if ( $get_escola && $get_curso )
-        {
+        if ($get_escola && $get_curso) {
             $retorno .= '<tr id="tr_status" class="input_quadro_horario">
                          <td valign="top" class="formlttd">
                          <span class="form">Institui&ccedil;&atilde;o</span>
@@ -65,25 +53,21 @@
                          <sub style="vertical-align: top;"/>
                          </td>';
             $retorno .= '<td valign="top" class="formlttd"><span class="form">';
-            $retorno .= "<select onchange=\"getEscola();\" class='geral' name='ref_cod_instituicao' id='ref_cod_instituicao'>";
-            reset( $opcoes );
-            while ( list( $chave, $texto ) = each( $opcoes ) )
-            {
-                $retorno .=  "<option id=\"ref_cod_instituicao_".urlencode( $chave )."\" value=\"".urlencode( $chave )."\"";
+            $retorno .= '<select onchange="getEscola();" class=\'geral\' name=\'ref_cod_instituicao\' id=\'ref_cod_instituicao\'>';
+            reset($opcoes);
+            while (list($chave, $texto) = each($opcoes)) {
+                $retorno .=  '<option id="ref_cod_instituicao_'.urlencode($chave).'" value="'.urlencode($chave).'"';
 
-                if ( $chave == $this->ref_cod_instituicao )
-                {
-                    $retorno .= " selected";
+                if ($chave == $this->ref_cod_instituicao) {
+                    $retorno .= ' selected';
                 }
                 $retorno .=  ">$texto</option>";
             }
-            $retorno .= "</select>";
+            $retorno .= '</select>';
             $retorno .= '</span>
                             </td>
                             </tr>';
-        }
-        else
-        {
+        } else {
             $retorno .= '<tr id="tr_status" class="input_quadro_horario">
                          <td valign="top" class="formlttd">
                          <span class="form">Institui&ccedil;&atilde;o</span>
@@ -92,58 +76,52 @@
                          <sub style="vertical-align: top;"/>
                          </td>';
             $retorno .= '<td valign="top" class="formlttd"><span class="form">';
-            $retorno .= "<select class='geral' name='ref_cod_instituicao' id='ref_cod_instituicao'>";
-            reset( $opcoes );
-            while ( list( $chave, $texto ) = each( $opcoes ) )
-            {
-                $retorno .=  "<option id=\"ref_cod_instituicao_".urlencode( $chave )."\" value=\"".urlencode( $chave )."\"";
+            $retorno .= '<select class=\'geral\' name=\'ref_cod_instituicao\' id=\'ref_cod_instituicao\'>';
+            reset($opcoes);
+            while (list($chave, $texto) = each($opcoes)) {
+                $retorno .=  '<option id="ref_cod_instituicao_'.urlencode($chave).'" value="'.urlencode($chave).'"';
 
-                if ( $chave==$this->ref_cod_instituicao )
-                {
-                    $retorno .= " selected";
+                if ($chave==$this->ref_cod_instituicao) {
+                    $retorno .= ' selected';
                 }
                 $retorno .=  ">$texto</option>";
             }
-            $retorno .= "</select>";
+            $retorno .= '</select>';
             $retorno .= '</span>
                             </td>
                             </tr>';
         }
 
-        if ( $get_escola )
-        {
-                $opcoes_escola = array( "" => "Selecione" );
-                $obj_escola = new clsPmieducarEscola();
-                $lista = $obj_escola->lista( null, null, null, null, null, null, null, null, null, null, 1 );
+        if ($get_escola) {
+            $opcoes_escola = [ '' => 'Selecione' ];
+            $obj_escola = new clsPmieducarEscola();
+            $lista = $obj_escola->lista(null, null, null, null, null, null, null, null, null, null, 1);
             if ($nivel_usuario == 4 || $nivel_usuario == 8) {
-              $opcoes_escola = array('' => 'Selecione');
-              $obj_escola = new clsPmieducarEscolaUsuario();
-              $lista = $obj_escola->lista($this->pessoa_logada);
+                $opcoes_escola = ['' => 'Selecione'];
+                $obj_escola = new clsPmieducarEscolaUsuario();
+                $lista = $obj_escola->lista($this->pessoa_logada);
 
-              if (is_array($lista) && count($lista)) {
-                foreach ($lista as $registro) {
-                  $codEscola = $registro['ref_cod_escola'];
+                if (is_array($lista) && count($lista)) {
+                    foreach ($lista as $registro) {
+                        $codEscola = $registro['ref_cod_escola'];
 
-                  $escola = new clsPmieducarEscola($codEscola);
-                  $escola = $escola->detalhe();
+                        $escola = new clsPmieducarEscola($codEscola);
+                        $escola = $escola->detalhe();
 
-                  $opcoes_escola[$codEscola] = $escola['nome'];
-                }
-              }
-            } else if ($this->ref_cod_instituicao) {
-                    $opcoes_escola = array( "" => "Selecione" );
-                    $obj_escola = new clsPmieducarEscola();
-                    $lista = $obj_escola->lista( null, null, null, $this->ref_cod_instituicao, null, null, null, null, null, null, 1 );
-                    if ( is_array( $lista ) && count( $lista ) )
-                    {
-                        foreach ( $lista as $registro )
-                        {
-                            $opcoes_escola["{$registro["cod_escola"]}"] = "{$registro['nome']}";
-                        }
+                        $opcoes_escola[$codEscola] = $escola['nome'];
                     }
+                }
+            } elseif ($this->ref_cod_instituicao) {
+                $opcoes_escola = [ '' => 'Selecione' ];
+                $obj_escola = new clsPmieducarEscola();
+                $lista = $obj_escola->lista(null, null, null, $this->ref_cod_instituicao, null, null, null, null, null, null, 1);
+                if (is_array($lista) && count($lista)) {
+                    foreach ($lista as $registro) {
+                        $opcoes_escola["{$registro['cod_escola']}"] = "{$registro['nome']}";
+                    }
+                }
             }
-            if ( $get_escola )
-            {
+            if ($get_escola) {
                 $retorno .= '<tr id="tr_escola" class="input_quadro_horario">
                              <td valign="top" class="formmdtd">
                              <span class="form">Escola</span>
@@ -153,43 +131,37 @@
                              </td>';
                 $retorno .= '<td valign="top" class="formmdtd"><span class="form">';
 
-                $disabled = !$this->ref_cod_escola && $nivel_usuario == 1 /*&& !$this->ref_cod_curso */?  "disabled='true' " : "" ;
+                $disabled = !$this->ref_cod_escola && $nivel_usuario == 1 /*&& !$this->ref_cod_curso */?  'disabled=\'true\' ' : '' ;
                 $retorno .=  " <select onchange=\"getCurso();getAnoLetivo();\" class='geral' name='ref_cod_escola' {$disabled} id='ref_cod_escola'>";
 
-                reset( $opcoes_escola );
-                while ( list( $chave, $texto ) = each( $opcoes_escola ) )
-                {
-                    $retorno .=  "<option id=\"ref_cod_escola_".urlencode( $chave )."\" value=\"".urlencode( $chave )."\"";
+                reset($opcoes_escola);
+                while (list($chave, $texto) = each($opcoes_escola)) {
+                    $retorno .=  '<option id="ref_cod_escola_'.urlencode($chave).'" value="'.urlencode($chave).'"';
 
-                    if ( $chave == $this->ref_cod_escola )
-                    {
-                        $retorno .= " selected";
+                    if ($chave == $this->ref_cod_escola) {
+                        $retorno .= ' selected';
                     }
                     $retorno .=  ">$texto</option>";
                 }
-                $retorno .=  "</select>";
+                $retorno .=  '</select>';
                 $retorno .= '</span>
                                 </td>
                                 </tr>';
             }
         }
-        if ( $get_ano )
-        {
-                $opcoes_ano = array( "" => "Selecione" );
+        if ($get_ano) {
+            $opcoes_ano = [ '' => 'Selecione' ];
 
-                // EDITAR
-                if ( $this->ref_cod_escola )
-                {
-                    $obj_esc_ano = new clsPmieducarEscolaAnoLetivo();
-                    $lst_esc_ano = $obj_esc_ano->lista($this->ref_cod_escola);
-                    if ( is_array( $lst_esc_ano ) && count( $lst_esc_ano ) )
-                    {
-                        foreach ( $lst_esc_ano as $detalhe )
-                        {
-                            $opcoes_ano["{$detalhe['ano']}"] = "{$detalhe['ano']}";
-                        }
+            // EDITAR
+            if ($this->ref_cod_escola) {
+                $obj_esc_ano = new clsPmieducarEscolaAnoLetivo();
+                $lst_esc_ano = $obj_esc_ano->lista($this->ref_cod_escola);
+                if (is_array($lst_esc_ano) && count($lst_esc_ano)) {
+                    foreach ($lst_esc_ano as $detalhe) {
+                        $opcoes_ano["{$detalhe['ano']}"] = "{$detalhe['ano']}";
                     }
                 }
+            }
             $retorno .= '<tr id="tr_ano" class="input_quadro_horario">
                          <td valign="top" class="formlttd">
                          <span class="form">Ano</span>
@@ -199,43 +171,38 @@
                          </td>';
             $retorno .= '<td valign="top" class="formlttd"><span class="form">';
 
-            $disabled = !$this->ano && $nivel_usuario == 1 ?  "disabled='true' " : "" ;
+            $disabled = !$this->ano && $nivel_usuario == 1 ?  'disabled=\'true\' ' : '' ;
             $retorno .=  " <select onchange=\"getSerie();\" class='geral' name='ano' {$disabled} id='ano'>";
 
-            if ( is_array( $opcoes_ano ) )
-                reset( $opcoes_ano );
-            while ( list( $chave, $texto ) = each( $opcoes_ano ) )
-            {
-                $retorno .=  "<option id=\"ano".urlencode( $chave )."\" value=\"".urlencode( $chave )."\"";
+            if (is_array($opcoes_ano)) {
+                reset($opcoes_ano);
+            }
+            while (list($chave, $texto) = each($opcoes_ano)) {
+                $retorno .=  '<option id="ano'.urlencode($chave).'" value="'.urlencode($chave).'"';
 
-                if ( $chave == $this->ano )
-                {
-                    $retorno .= " selected";
+                if ($chave == $this->ano) {
+                    $retorno .= ' selected';
                 }
                 $retorno .=  ">$texto</option>";
             }
-            $retorno .=  "</select>";
+            $retorno .=  '</select>';
             $retorno .= '</span>
                             </td>
                             </tr>';
         }
-        if ( $get_curso )
-        {
-                $opcoes_curso = array( "" => "Selecione" );
+        if ($get_curso) {
+            $opcoes_curso = [ '' => 'Selecione' ];
 
-                // EDITAR
-                if ( $this->ref_cod_escola )
-                {
-                    $obj_esc_cur = new clsPmieducarEscolaCurso();
-                    $lst_esc_cur = $obj_esc_cur->lista( $this->ref_cod_escola, null, null, null, null, null, null, null, 1 );
-                    if ( is_array( $lst_esc_cur ) && count( $lst_esc_cur ) )
-                    {
-                        foreach ( $lst_esc_cur as $detalhe )
-                        {
-                            $opcoes_curso["{$detalhe['ref_cod_curso']}"] = "{$detalhe['nm_curso']}";
-                        }
+            // EDITAR
+            if ($this->ref_cod_escola) {
+                $obj_esc_cur = new clsPmieducarEscolaCurso();
+                $lst_esc_cur = $obj_esc_cur->lista($this->ref_cod_escola, null, null, null, null, null, null, null, 1);
+                if (is_array($lst_esc_cur) && count($lst_esc_cur)) {
+                    foreach ($lst_esc_cur as $detalhe) {
+                        $opcoes_curso["{$detalhe['ref_cod_curso']}"] = "{$detalhe['nm_curso']}";
                     }
                 }
+            }
             $retorno .= '<tr id="tr_curso" class="input_quadro_horario">
                          <td valign="top" class="formlttd">
                          <span class="form">Curso</span>
@@ -245,43 +212,38 @@
                          </td>';
             $retorno .= '<td valign="top" class="formlttd"><span class="form">';
 
-            $disabled = !$this->ref_cod_curso && $nivel_usuario == 1 /*&& !$this->ref_cod_curso*/ ?  "disabled='true' " : "" ;
+            $disabled = !$this->ref_cod_curso && $nivel_usuario == 1 /*&& !$this->ref_cod_curso*/ ?  'disabled=\'true\' ' : '' ;
             $retorno .=  " <select onchange=\"getSerie();\" class='geral' name='ref_cod_curso' {$disabled} id='ref_cod_curso'>";
 
-            if ( is_array( $opcoes_curso ) )
-                reset( $opcoes_curso );
-            while ( list( $chave, $texto ) = each( $opcoes_curso ) )
-            {
-                $retorno .=  "<option id=\"ref_cod_curso_".urlencode( $chave )."\" value=\"".urlencode( $chave )."\"";
+            if (is_array($opcoes_curso)) {
+                reset($opcoes_curso);
+            }
+            while (list($chave, $texto) = each($opcoes_curso)) {
+                $retorno .=  '<option id="ref_cod_curso_'.urlencode($chave).'" value="'.urlencode($chave).'"';
 
-                if ( $chave == $this->ref_cod_curso )
-                {
-                    $retorno .= " selected";
+                if ($chave == $this->ref_cod_curso) {
+                    $retorno .= ' selected';
                 }
                 $retorno .=  ">$texto</option>";
             }
-            $retorno .=  "</select>";
+            $retorno .=  '</select>';
             $retorno .= '</span>
                             </td>
                             </tr>';
         }
-        if ( $get_serie )
-        {
-            $opcoes_serie = array( "" => "Selecione" );
-                // EDITAR
-                if ( $this->ref_cod_curso && $this->ref_cod_escola)
-                {
-                    $obj_serie = new clsPmieducarSerie();
-                    $obj_serie->setOrderby( "nm_serie ASC" );
-                    $lst_serie = $obj_serie->lista( null,null,null,$this->ref_cod_curso,null,null,null,null,null,null,null,null,1);
-                    if ( is_array( $lst_serie ) && count( $lst_serie ) )
-                    {
-                        foreach ( $lst_serie as $serie )
-                        {
-                            $opcoes_serie["{$serie["cod_serie"]}"] = $serie['nm_serie'];
-                        }
+        if ($get_serie) {
+            $opcoes_serie = [ '' => 'Selecione' ];
+            // EDITAR
+            if ($this->ref_cod_curso && $this->ref_cod_escola) {
+                $obj_serie = new clsPmieducarSerie();
+                $obj_serie->setOrderby('nm_serie ASC');
+                $lst_serie = $obj_serie->lista(null, null, null, $this->ref_cod_curso, null, null, null, null, null, null, null, null, 1);
+                if (is_array($lst_serie) && count($lst_serie)) {
+                    foreach ($lst_serie as $serie) {
+                        $opcoes_serie["{$serie['cod_serie']}"] = $serie['nm_serie'];
                     }
                 }
+            }
             $retorno .= '<tr id="tr_curso" class="input_quadro_horario">
                          <td valign="top" class="formmdtd">
                          <span class="form">S&eacute;rie</span>
@@ -291,43 +253,38 @@
                          </td>';
             $retorno .= '<td valign="top" class="formmdtd"><span class="form">';
 
-            $disabled = !$this->ref_cod_serie && $nivel_usuario == 1 /*&& !$this->ref_cod_curso*/ ?  "disabled='true' " : "" ;
+            $disabled = !$this->ref_cod_serie && $nivel_usuario == 1 /*&& !$this->ref_cod_curso*/ ?  'disabled=\'true\' ' : '' ;
             $retorno .=  " <select onchange=\"getTurma();\" class='geral' name='ref_cod_serie' {$disabled} id='ref_cod_serie'>";
 
-            if ( is_array( $opcoes_serie ) )
-                reset( $opcoes_serie );
-            while ( list( $chave, $texto ) = each( $opcoes_serie ) )
-            {
-                $retorno .=  "<option id=\"ref_cod_serie_".urlencode( $chave )."\" value=\"".urlencode( $chave )."\"";
+            if (is_array($opcoes_serie)) {
+                reset($opcoes_serie);
+            }
+            while (list($chave, $texto) = each($opcoes_serie)) {
+                $retorno .=  '<option id="ref_cod_serie_'.urlencode($chave).'" value="'.urlencode($chave).'"';
 
-                if ( $chave == $this->ref_cod_serie )
-                {
-                    $retorno .= " selected";
+                if ($chave == $this->ref_cod_serie) {
+                    $retorno .= ' selected';
                 }
                 $retorno .=  ">$texto</option>";
             }
-            $retorno .=  "</select>";
+            $retorno .=  '</select>';
             $retorno .= '</span>
                             </td>
                             </tr>';
         }
-        if ( $get_turma )
-        {
-            $opcoes_turma = array( "" => "Selecione" );
-                // EDITAR
-                if ( $this->ref_cod_serie /*|| $this->ref_cod_curso*/)
-                {
-                    $obj_turma = new clsPmieducarTurma();
-                    $obj_turma->setOrderby("nm_turma ASC");
-                    $lst_turma = $obj_turma->lista( null, null, null, $this->ref_cod_serie, $this->ref_cod_escola, null, null, null, null, null, null, null, null, 1, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_curso, $this->ref_cod_instituicao, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $this->ano );
-                    if ( is_array( $lst_turma ) && count( $lst_turma ) )
-                    {
-                        foreach ( $lst_turma as $turma )
-                        {
-                            $opcoes_turma["{$turma["cod_turma"]}"] = $turma['nm_turma'];
-                        }
+        if ($get_turma) {
+            $opcoes_turma = [ '' => 'Selecione' ];
+            // EDITAR
+            if ($this->ref_cod_serie /*|| $this->ref_cod_curso*/) {
+                $obj_turma = new clsPmieducarTurma();
+                $obj_turma->setOrderby('nm_turma ASC');
+                $lst_turma = $obj_turma->lista(null, null, null, $this->ref_cod_serie, $this->ref_cod_escola, null, null, null, null, null, null, null, null, 1, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_curso, $this->ref_cod_instituicao, null, null, null, null, null, null, null, null, null, null, $this->ano);
+                if (is_array($lst_turma) && count($lst_turma)) {
+                    foreach ($lst_turma as $turma) {
+                        $opcoes_turma["{$turma['cod_turma']}"] = $turma['nm_turma'];
                     }
                 }
+            }
             $retorno .= '<tr id="tr_turma" class="input_quadro_horario">
                          <td valign="top" class="formlttd">
                          <span class="form">Turma</span>
@@ -337,39 +294,37 @@
                          </td>';
             $retorno .= '<td valign="top" class="formlttd"><span class="form">';
 
-            $disabled = ( !$this->ref_cod_turma && $nivel_usuario == 1 ) ?  "disabled='true' " : "" ;
+            $disabled = (!$this->ref_cod_turma && $nivel_usuario == 1) ?  'disabled=\'true\' ' : '' ;
             $retorno .=  " <select onchange=\"\" class='geral' name='ref_cod_turma' {$disabled} id='ref_cod_turma'>";
 
-            if ( is_array( $opcoes_turma ) )
-            {
-                reset( $opcoes_turma );
+            if (is_array($opcoes_turma)) {
+                reset($opcoes_turma);
             }
-            while ( list( $chave, $texto ) = each( $opcoes_turma ) )
-            {
-                $retorno .=  "<option id=\"ref_cod_turma_".urlencode( $chave )."\" value=\"".urlencode( $chave )."\"";
+            while (list($chave, $texto) = each($opcoes_turma)) {
+                $retorno .=  '<option id="ref_cod_turma_'.urlencode($chave).'" value="'.urlencode($chave).'"';
 
-                if ( $chave == $this->ref_cod_turma )
-                {
-                    $retorno .= " selected";
+                if ($chave == $this->ref_cod_turma) {
+                    $retorno .= ' selected';
                 }
                 $retorno .=  ">$texto</option>";
             }
-            $retorno .=  "</select>";
+            $retorno .=  '</select>';
             $retorno .= '</span>
                             </td>
                             </tr>';
         }
-        if ( isset( $get_cabecalho ) )
-        {
-            if ( $nivel_usuario == 1 || $nivel_usuario == 2 || $nivel_usuario == 4 ) {
-                ${$get_cabecalho}[] = "Curso";
-                ${$get_cabecalho}[] = "S&eacute;rie";
-                ${$get_cabecalho}[] = "Turma";
+        if (isset($get_cabecalho)) {
+            if ($nivel_usuario == 1 || $nivel_usuario == 2 || $nivel_usuario == 4) {
+                ${$get_cabecalho}[] = 'Curso';
+                ${$get_cabecalho}[] = 'S&eacute;rie';
+                ${$get_cabecalho}[] = 'Turma';
             }
-            if ( $nivel_usuario == 1 || $nivel_usuario == 2 )
-                ${$get_cabecalho}[] = "Escola";
-            if ( $nivel_usuario == 1 )
-                ${$get_cabecalho}[] = "Institui&ccedil;&atilde;o";
+            if ($nivel_usuario == 1 || $nivel_usuario == 2) {
+                ${$get_cabecalho}[] = 'Escola';
+            }
+            if ($nivel_usuario == 1) {
+                ${$get_cabecalho}[] = 'Institui&ccedil;&atilde;o';
+            }
         }
 
         $validacao = 'if ( !document.getElementById( "ref_cod_instituicao" ).value ) {
@@ -461,9 +416,8 @@ function desabilitaCampos()
 */
 
 <?php
-if ( $nivel_usuario == 1 || $nivel_usuario == 2 )
-{
-?>
+if ($nivel_usuario == 1 || $nivel_usuario == 2) {
+    ?>
     function getEscola( xml_escola )
     {
         var DOM_array = xml_escola.getElementsByTagName( "escola" );

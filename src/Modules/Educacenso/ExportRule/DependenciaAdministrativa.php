@@ -10,6 +10,7 @@ class DependenciaAdministrativa implements EducacensoExportRule
 {
     /**
      * @param Registro00 $registro00
+     *
      * @return RegistroEducacenso
      */
     public static function handle(RegistroEducacenso $registro00): RegistroEducacenso

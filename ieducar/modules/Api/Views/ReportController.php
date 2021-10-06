@@ -1,8 +1,6 @@
 <?php
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'Reports/Reports/BoletimReport.php';
-require_once 'Reports/Reports/BoletimProfessorReport.php';
+use iEducar\Reports\Contracts\TeacherReportCard;
 
 class ReportController extends ApiCoreController
 {
@@ -106,7 +104,7 @@ class ReportController extends ApiCoreController
     protected function getBoletimProfessor()
     {
         if ($this->canGetBoletimProfessor()) {
-            $boletimProfessorReport = new BoletimProfessorReport();
+            $boletimProfessorReport = app(TeacherReportCard::class);
 
             $boletimProfessorReport->addArg('ano', (int)$this->getRequest()->ano);
             $boletimProfessorReport->addArg('instituicao', (int)$this->getRequest()->instituicao_id);
@@ -114,7 +112,7 @@ class ReportController extends ApiCoreController
             $boletimProfessorReport->addArg('curso', (int)$this->getRequest()->curso_id);
             $boletimProfessorReport->addArg('serie', (int)$this->getRequest()->serie_id);
             $boletimProfessorReport->addArg('turma', (int)$this->getRequest()->turma_id);
-            $boletimProfessorReport->addArg('professor', Portabilis_String_Utils::toLatin1($this->getRequest()->professor));
+            $boletimProfessorReport->addArg('professor', $this->getRequest()->professor);
             $boletimProfessorReport->addArg('disciplina', (int)$this->getRequest()->componente_curricular_id);
             $boletimProfessorReport->addArg('orientacao', 2);
             $boletimProfessorReport->addArg('situacao', (int) $this->getRequest()->situacao ?? 0);

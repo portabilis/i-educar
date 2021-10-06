@@ -21,6 +21,7 @@ use App\Models\LegacySchoolingDegree;
 use App\Models\LegacyStudent;
 use App\Models\StudentInep;
 use App\Services\Educacenso\RegistroImportInterface;
+use App\Services\Educacenso\Version2019\Models\Registro30Model;
 use App\User;
 use iEducar\Modules\Educacenso\Model\Deficiencias;
 use iEducar\Modules\Educacenso\Model\Escolaridade;
@@ -34,29 +35,30 @@ class Registro30Import implements RegistroImportInterface
     /**
      * @var Registro30
      */
-    private $model;
+    protected $model;
 
     /**
      * @var User
      */
-    private $user;
+    protected $user;
 
     /**
      * @var int
      */
-    private $year;
+    protected $year;
 
     /**
      * @var LegacyInstitution
      */
-    private $institution;
+    protected $institution;
 
     /**
      * Faz a importação dos dados a partir da linha do arquivo
      *
      * @param RegistroEducacenso $model
-     * @param int $year
-     * @param $user
+     * @param int                $year
+     * @param                    $user
+     *
      * @return void
      */
     public function import(RegistroEducacenso $model, $year, $user)
@@ -83,19 +85,21 @@ class Registro30Import implements RegistroImportInterface
 
     /**
      * @param $arrayColumns
+     *
      * @return Registro30|RegistroEducacenso
      */
     public static function getModel($arrayColumns)
     {
-        $registro = new Registro30();
+        $registro = new Registro30Model();
         $registro->hydrateModel($arrayColumns);
+
         return $registro;
     }
 
     /**
      * @return LegacyPerson
      */
-    private function getOrCreatePerson()
+    protected function getOrCreatePerson()
     {
         $person = $this->getPerson();
 
@@ -109,7 +113,7 @@ class Registro30Import implements RegistroImportInterface
     /**
      * @return LegacyPerson|null
      */
-    private function getPerson()
+    protected function getPerson()
     {
         $inepNumber = $this->model->inepPessoa;
 
@@ -170,8 +174,8 @@ class Registro30Import implements RegistroImportInterface
             'idmun_nascimento' => $this->model->nacionalidade == Nacionalidade::BRASILEIRA ? $this->getCity($this->model->municipioNascimento) : null,
             'cpf' => $this->model->cpf ?: null,
             'nis_pis_pasep' => $this->model->nis ?: null,
-            'pais_residencia' => (int)$this->model->paisResidencia,
-            'zona_localizacao_censo' => (int)$this->model->localizacaoResidencia,
+            'pais_residencia' => (int) $this->model->paisResidencia,
+            'zona_localizacao_censo' => (int) $this->model->localizacaoResidencia,
         ]);
 
         return $person;
@@ -179,6 +183,7 @@ class Registro30Import implements RegistroImportInterface
 
     /**
      * @param $name
+     *
      * @return LegacyPerson|null
      */
     private function createFiliacao($name)
@@ -208,9 +213,10 @@ class Registro30Import implements RegistroImportInterface
 
     /**
      * @param LegacyPerson $person
+     *
      * @return LegacyStudent mixed
      */
-    private function getOrCreateStudent($person)
+    protected function getOrCreateStudent($person)
     {
         return LegacyStudent::firstOrCreate([
             'ref_idpes' => $person->getKey(),
@@ -222,7 +228,7 @@ class Registro30Import implements RegistroImportInterface
     /**
      * @param LegacyStudent $person
      */
-    private function createStudentInep($student)
+    protected function createStudentInep($student)
     {
         if (empty($this->model->inepPessoa)) {
             return;
@@ -241,9 +247,10 @@ class Registro30Import implements RegistroImportInterface
 
     /**
      * @param LegacyPerson $person
+     *
      * @return Employee
      */
-    private function getOrCreateEmployee($person)
+    protected function getOrCreateEmployee($person)
     {
         return Employee::firstOrCreate([
             'cod_servidor' => $person->getKey(),
@@ -277,7 +284,7 @@ class Registro30Import implements RegistroImportInterface
     /**
      * @param LegacyPerson $person
      */
-    private function createRace($person)
+    protected function createRace($person)
     {
         if ($person->individual->race()->count()) {
             return;
@@ -289,6 +296,7 @@ class Registro30Import implements RegistroImportInterface
 
     /**
      * @param $person
+     *
      * @return LegacyRace
      */
     private function getOrCreateRace($person)
@@ -310,7 +318,7 @@ class Registro30Import implements RegistroImportInterface
     /**
      * @param LegacyPerson $person
      */
-    private function createDeficiencies($person)
+    protected function createDeficiencies($person)
     {
         if ($this->model->deficienciaCegueira) {
             $this->createDeficiency($person, Deficiencias::CEGUEIRA);
@@ -351,7 +359,7 @@ class Registro30Import implements RegistroImportInterface
 
     /**
      * @param LegacyPerson $person
-     * @param int $educacendoDeficiency
+     * @param int          $educacendoDeficiency
      */
     private function createDeficiency($person, $educacendoDeficiency)
     {
@@ -376,6 +384,7 @@ class Registro30Import implements RegistroImportInterface
 
     /**
      * @param $raca
+     *
      * @return string
      */
     private function getRaceName($raca)
@@ -394,6 +403,7 @@ class Registro30Import implements RegistroImportInterface
 
     /**
      * @param $cpf
+     *
      * @return LegacyPerson|null
      */
     private function getPersonByCpf($cpf)
@@ -414,6 +424,7 @@ class Registro30Import implements RegistroImportInterface
 
     /**
      * @param $cityIbge
+     *
      * @return LegacyCity|null
      */
     private function getCity($cityIbge)
@@ -429,6 +440,7 @@ class Registro30Import implements RegistroImportInterface
 
     /**
      * @param $countryIbge
+     *
      * @return LegacyCountry|null
      */
     private function getCountry($countryIbge)
@@ -442,7 +454,7 @@ class Registro30Import implements RegistroImportInterface
         return $legacyCountry ? $legacyCountry->getKey() : null;
     }
 
-    private function createRecursosProvaInep(LegacyStudent $student)
+    protected function createRecursosProvaInep(LegacyStudent $student)
     {
         $arrayRecursos = [];
 
@@ -500,6 +512,7 @@ class Registro30Import implements RegistroImportInterface
 
     /**
      * @param $array
+     *
      * @return string
      */
     private function getPostgresIntegerArray($array)
@@ -510,7 +523,7 @@ class Registro30Import implements RegistroImportInterface
     /**
      * @param LegacyStudent $student
      */
-    private function createCertidaoNascimento(LegacyStudent $student)
+    protected function createCertidaoNascimento(LegacyStudent $student)
     {
         if (empty($this->model->certidaoNascimento)) {
             return;
@@ -536,14 +549,14 @@ class Registro30Import implements RegistroImportInterface
         $this->createRecursosProvaInep($student);
         $this->createCertidaoNascimento($student);
 
-        $student->justificativa_falta_documentacao = (int)$this->model->justificativaFaltaDocumentacao;
+        $student->justificativa_falta_documentacao = (int) $this->model->justificativaFaltaDocumentacao;
         $student->save();
     }
 
     /**
      * @param Employee $employee
      */
-    private function storeEmployeeData(Employee $employee)
+    protected function storeEmployeeData(Employee $employee)
     {
         $this->createEmployeeInep($employee);
         $this->createEscolaridade($employee);
@@ -551,7 +564,7 @@ class Registro30Import implements RegistroImportInterface
         $this->storeEmployeePostgraduate($employee);
         $this->storeEmployeeCourses($employee);
 
-        $employee->tipo_ensino_medio_cursado = (int)$this->model->tipoEnsinoMedioCursado;
+        $employee->tipo_ensino_medio_cursado = (int) $this->model->tipoEnsinoMedioCursado;
         $employee->save();
     }
 
@@ -610,7 +623,6 @@ class Registro30Import implements RegistroImportInterface
                 'discipline_id' => $arrayComponentes[$key] ?? null,
             ]);
         }
-
     }
 
     /**

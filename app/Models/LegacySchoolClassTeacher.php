@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class LegacySchoolClassTeacher extends Model
 {
-
     protected $fillable = [
         'ano',
         'instituicao_id',

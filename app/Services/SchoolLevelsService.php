@@ -10,6 +10,7 @@ class SchoolLevelsService
      * Retorna as regras de avaliação da série
      *
      * @param $levelId
+     *
      * @return EvaluationRule[]
      */
     public function getEvaluationRules($levelId)
@@ -28,6 +29,7 @@ class SchoolLevelsService
      *
      * @param $levelId
      * @param $academicYear
+     *
      * @return bool
      */
     public function levelAllowDefineDisciplinePerStage($levelId, $academicYear)
@@ -53,6 +55,4 @@ class SchoolLevelsService
 
         return $evaluationRule->definir_componente_etapa == 1;
     }
-
-
 }

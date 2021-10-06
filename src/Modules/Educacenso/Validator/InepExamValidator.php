@@ -48,6 +48,7 @@ class InepExamValidator implements EducacensoValidator
 
         if (count($this->resources) > 1) {
             $this->message = 'Não é possível informar mais de uma opção no campo: Recursos necessários para realização de provas, quando a opção: <b>Nenhum</b> estiver selecionada.';
+
             return false;
         }
 
@@ -63,6 +64,7 @@ class InepExamValidator implements EducacensoValidator
         }
 
         $this->setDefaultErrorMessage();
+
         return false;
     }
 
@@ -79,6 +81,7 @@ class InepExamValidator implements EducacensoValidator
 
         if (count(array_intersect($values, $this->resources)) > 1) {
             $this->setDefaultErrorMessage();
+
             return false;
         }
 
@@ -99,7 +102,8 @@ class InepExamValidator implements EducacensoValidator
                 Deficiencias::DEFICIENCIA_FISICA,
                 Deficiencias::DEFICIENCIA_INTELECTUAL,
                 Deficiencias::TRANSTORNO_ESPECTRO_AUTISTA,
-            ],[
+            ],
+            [
                 Deficiencias::SURDEZ,
             ]
         )) {
@@ -107,6 +111,7 @@ class InepExamValidator implements EducacensoValidator
         }
 
         $this->setDefaultErrorMessage();
+
         return false;
     }
 
@@ -125,7 +130,8 @@ class InepExamValidator implements EducacensoValidator
                 Deficiencias::DEFICIENCIA_FISICA,
                 Deficiencias::DEFICIENCIA_INTELECTUAL,
                 Deficiencias::TRANSTORNO_ESPECTRO_AUTISTA,
-            ],[
+            ],
+            [
             ]
         );
 
@@ -138,6 +144,7 @@ class InepExamValidator implements EducacensoValidator
         }
 
         $this->setDefaultErrorMessage();
+
         return false;
     }
 
@@ -148,7 +155,8 @@ class InepExamValidator implements EducacensoValidator
     {
         if ($this->validateResource(
             RecursosRealizacaoProvas::GUIA_INTERPRETE,
-            [],[
+            [],
+            [
                 Deficiencias::SURDOCEGUEIRA,
             ]
         )) {
@@ -156,6 +164,7 @@ class InepExamValidator implements EducacensoValidator
         }
 
         $this->setDefaultErrorMessage();
+
         return false;
     }
 
@@ -170,7 +179,8 @@ class InepExamValidator implements EducacensoValidator
                 Deficiencias::SURDEZ,
                 Deficiencias::DEFICIENCIA_AUDITIVA,
                 Deficiencias::SURDOCEGUEIRA,
-            ],[
+            ],
+            [
                 Deficiencias::CEGUEIRA,
             ]
         )) {
@@ -178,6 +188,7 @@ class InepExamValidator implements EducacensoValidator
         }
 
         $this->setDefaultErrorMessage();
+
         return false;
     }
 
@@ -192,7 +203,8 @@ class InepExamValidator implements EducacensoValidator
                 Deficiencias::SURDEZ,
                 Deficiencias::DEFICIENCIA_AUDITIVA,
                 Deficiencias::SURDOCEGUEIRA,
-            ],[
+            ],
+            [
                 Deficiencias::CEGUEIRA,
             ]
         )) {
@@ -200,6 +212,7 @@ class InepExamValidator implements EducacensoValidator
         }
 
         $this->setDefaultErrorMessage();
+
         return false;
     }
 
@@ -213,7 +226,8 @@ class InepExamValidator implements EducacensoValidator
             [
                 Deficiencias::BAIXA_VISAO,
                 Deficiencias::SURDOCEGUEIRA,
-            ],[
+            ],
+            [
                 Deficiencias::CEGUEIRA,
             ]
         )) {
@@ -221,6 +235,7 @@ class InepExamValidator implements EducacensoValidator
         }
 
         $this->setDefaultErrorMessage();
+
         return false;
     }
 
@@ -234,7 +249,8 @@ class InepExamValidator implements EducacensoValidator
             [
                 Deficiencias::BAIXA_VISAO,
                 Deficiencias::SURDOCEGUEIRA,
-            ],[
+            ],
+            [
                 Deficiencias::CEGUEIRA,
             ]
         )) {
@@ -242,6 +258,7 @@ class InepExamValidator implements EducacensoValidator
         }
 
         $this->setDefaultErrorMessage();
+
         return false;
     }
 
@@ -259,7 +276,8 @@ class InepExamValidator implements EducacensoValidator
                 Deficiencias::DEFICIENCIA_FISICA,
                 Deficiencias::DEFICIENCIA_INTELECTUAL,
                 Deficiencias::TRANSTORNO_ESPECTRO_AUTISTA,
-            ],[
+            ],
+            [
                 Deficiencias::SURDEZ,
             ]
         )) {
@@ -267,6 +285,7 @@ class InepExamValidator implements EducacensoValidator
         }
 
         $this->setDefaultErrorMessage();
+
         return false;
     }
 
@@ -281,7 +300,8 @@ class InepExamValidator implements EducacensoValidator
                 Deficiencias::SURDEZ,
                 Deficiencias::DEFICIENCIA_AUDITIVA,
                 Deficiencias::SURDOCEGUEIRA,
-            ],[
+            ],
+            [
                 Deficiencias::CEGUEIRA,
             ]
         )) {
@@ -289,6 +309,7 @@ class InepExamValidator implements EducacensoValidator
         }
 
         $this->setDefaultErrorMessage();
+
         return false;
     }
 
@@ -303,7 +324,8 @@ class InepExamValidator implements EducacensoValidator
                 Deficiencias::SURDEZ,
                 Deficiencias::DEFICIENCIA_AUDITIVA,
                 Deficiencias::SURDOCEGUEIRA,
-            ],[
+            ],
+            [
                 Deficiencias::CEGUEIRA,
             ]
         )) {
@@ -311,8 +333,10 @@ class InepExamValidator implements EducacensoValidator
         }
 
         $this->setDefaultErrorMessage();
+
         return false;
     }
+
     /**
      * @return bool
      */
@@ -330,6 +354,7 @@ class InepExamValidator implements EducacensoValidator
         }
 
         $this->setDefaultErrorMessage();
+
         return false;
     }
 
@@ -340,7 +365,6 @@ class InepExamValidator implements EducacensoValidator
     {
         return $this->message;
     }
-
 
     private function validateResource($resource, $permittedDeficiencies, $forbiddenDeficiencies)
     {
@@ -359,7 +383,6 @@ class InepExamValidator implements EducacensoValidator
         return in_array($resource, $this->resources);
     }
 
-
     /**
      * @return bool
      */
@@ -371,7 +394,6 @@ class InepExamValidator implements EducacensoValidator
 
         return !empty(array_intersect($permittedDeficiencies, $this->deficiencies));
     }
-
 
     /**
      * @return bool

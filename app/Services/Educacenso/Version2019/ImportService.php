@@ -4,7 +4,8 @@ namespace App\Services\Educacenso\Version2019;
 
 use App\Services\Educacenso\ImportService as GeneralImportService;
 use App\Services\Educacenso\RegistroImportInterface;
-use Illuminate\Http\UploadedFile;
+use iEducar\Modules\Educacenso\Migrations\UpdateEducacensoInstitutionToLayout2020;
+use iEducar\Modules\Educacenso\Migrations\UpdateSchoolClassToLayout2020;
 
 class ImportService extends GeneralImportService
 {
@@ -22,6 +23,7 @@ class ImportService extends GeneralImportService
      * Retorna o nome da escola a partir da string do arquivo de importação
      *
      * @param $school
+     *
      * @return string
      */
     public function getSchoolNameByFile($school)
@@ -32,20 +34,10 @@ class ImportService extends GeneralImportService
     }
 
     /**
-     * Verifica se o arquivo está de acordo com as regras do ano
-     *
-     * todo: Implementar validação do arquivo
-     * @param UploadedFile $file
-     */
-    public function validateFile(UploadedFile $file)
-    {
-
-    }
-
-    /**
      * Retorna a classe responsável por importar o registro da linha
      *
      * @param $lineId
+     *
      * @return RegistroImportInterface
      */
     public function getRegistroById($lineId)
@@ -65,5 +57,11 @@ class ImportService extends GeneralImportService
         }
 
         return new $arrayRegistros[$lineId];
+    }
+
+    public function adaptData()
+    {
+        UpdateEducacensoInstitutionToLayout2020::execute();
+        UpdateSchoolClassToLayout2020::execute();
     }
 }

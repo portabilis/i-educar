@@ -2,23 +2,7 @@
 
 use App\Services\SchoolGradeDisciplineService;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsDetalhe.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'App/Model/IedFinder.php';
-
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Escola S&eacute;rie');
-        $this->processoAp = '585';
-    }
-}
-
-class indice extends clsDetalhe
-{
+return new class extends clsDetalhe {
     public $ref_cod_escola;
     public $ref_cod_serie;
     public $ref_usuario_exc;
@@ -165,10 +149,10 @@ class indice extends clsDetalhe
             url('intranet/educar_index.php') => 'Escola',
         ]);
     }
-}
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
-
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->title = 'i-Educar - Escola S&eacute;rie';
+        $this->processoAp = '585';
+    }
+};

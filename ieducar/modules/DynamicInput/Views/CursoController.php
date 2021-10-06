@@ -12,7 +12,7 @@ class CursoController extends ApiCoreController
     protected function getCursos()
     {
         if ($this->canGetCursos()) {
-            $userId = $this->getSession()->id_pessoa;
+            $userId = \Illuminate\Support\Facades\Auth::id();
             $instituicaoId = $this->getRequest()->instituicao_id;
             $escolaId = $this->getRequest()->escola_id;
             $ano = $this->getRequest()->ano;
@@ -27,13 +27,14 @@ class CursoController extends ApiCoreController
                 $sql = '
                     SELECT
                         c.cod_curso as id,
-                        c.nm_curso as nome
+                        c.nm_curso as nome,
+                        c.descricao
                     FROM
                         pmieducar.curso c,
                         pmieducar.escola_curso ec
                     WHERE ec.ref_cod_escola = $1
                     AND ec.ref_cod_curso = c.cod_curso
-                    AND ec.ativo = 1 AND c.ativo = 1 
+                    AND ec.ativo = 1 AND c.ativo = 1
                 ';
 
                 if (!empty($ano)) {
@@ -48,7 +49,8 @@ class CursoController extends ApiCoreController
 
             $options = [];
             foreach ($cursos as $curso) {
-                $options['__' . $curso['id']] = $this->toUtf8($curso['nome']);
+                $nomeCurso = empty($curso['descricao']) ? $curso['nome'] : "{$curso['nome']} ({$curso['descricao']})";
+                $options['__' . $curso['id']] = $nomeCurso;
             }
 
             return ['options' => $options];

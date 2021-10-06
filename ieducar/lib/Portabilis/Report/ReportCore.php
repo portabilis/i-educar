@@ -2,8 +2,6 @@
 
 use iEducar\Reports\BaseModifier;
 
-require_once 'lib/Portabilis/Array/Utils.php';
-
 abstract class Portabilis_Report_ReportCore
 {
     /**

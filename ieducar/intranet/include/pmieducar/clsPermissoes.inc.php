@@ -1,9 +1,5 @@
 <?php
 
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'include/pmieducar/clsPmieducarEscolaUsuario.inc.php';
-require_once 'lib/Portabilis/Array/Utils.php';
-
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
@@ -60,6 +56,7 @@ class clsPermissoes
      * @param bool   $int_verifica_usuario_biblioteca TRUE para verificar se o usuário possui cadastro em alguma biblioteca
      *
      * @return bool|void
+     *
      * @deprecated
      *
      */

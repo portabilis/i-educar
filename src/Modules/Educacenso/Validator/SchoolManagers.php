@@ -5,6 +5,7 @@ namespace iEducar\Modules\Educacenso\Validator;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\SchoolManagerAccessCriteria;
 use iEducar\Modules\Educacenso\Model\SchoolManagerRole;
+use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento;
 use iEducar\Modules\ValueObjects\SchoolManagerValueObject;
 
 class SchoolManagers implements EducacensoValidator
@@ -12,6 +13,7 @@ class SchoolManagers implements EducacensoValidator
     private $message;
     private $administrativeDependency;
     private $valid = true;
+    private $operatingSituation;
 
     /**
      * @var SchoolManagerValueObject[]
@@ -20,12 +22,14 @@ class SchoolManagers implements EducacensoValidator
 
     /**
      * @param SchoolManagerValueObject[] $valueObject
-     * @param integer $administrativeDependency
+     * @param integer                    $administrativeDependency
+     * @param integer                    $operatingSituation
      */
-    public function __construct($valueObject, $administrativeDependency)
+    public function __construct($valueObject, $administrativeDependency, $operatingSituation)
     {
         $this->valueObject = $valueObject;
         $this->administrativeDependency = $administrativeDependency;
+        $this->operatingSituation = $operatingSituation;
     }
 
     /**
@@ -47,7 +51,6 @@ class SchoolManagers implements EducacensoValidator
 
         foreach ($this->valueObject as $key => $valueObject) {
             $this->validateAccessCriteria($valueObject);
-            $this->validateAccessCriteriaDescription($valueObject);
             $this->validateAccessLinkType($valueObject);
         }
 
@@ -64,6 +67,7 @@ class SchoolManagers implements EducacensoValidator
 
     /**
      * @param array $array
+     *
      * @return bool
      */
     private function containsEmptyOrIsNull($array)
@@ -80,9 +84,9 @@ class SchoolManagers implements EducacensoValidator
             return;
         }
 
-        if ($valueObject->roleId == SchoolManagerRole::DIRETOR && empty($valueObject->accessCriteriaId)) {
+        if ($valueObject->roleId == SchoolManagerRole::DIRETOR && empty($valueObject->accessCriteriaId) && $this->operatingSituation == SituacaoFuncionamento::EM_ATIVIDADE) {
             $this->valid = false;
-            $this->message[] = 'O campo: <b>Critério de acesso ao cargo</b> deve ser preenchido quando o campo: <b>Cargo</b> for: <b>Diretor</b>';
+            $this->message[] = 'O campo: <b>Critério de acesso ao cargo</b> deve ser preenchido quando o campo: <b>Cargo</b> for: <b>Diretor</b> e o campo: <b>Situação de funcionamento</b> for: <b>Em atividade</b>';
         }
 
         $publicDependency = [
@@ -113,21 +117,6 @@ class SchoolManagers implements EducacensoValidator
     /**
      * @param SchoolManagerValueObject $valueObject
      */
-    private function validateAccessCriteriaDescription($valueObject)
-    {
-        if (empty($valueObject->accessCriteriaId)) {
-            return;
-        }
-
-        if ($valueObject->accessCriteriaId == SchoolManagerAccessCriteria::OUTRO && empty($valueObject->accessCriteriaDescription)) {
-            $this->valid = false;
-            $this->message[] = 'O campo: <b>Especificação do critério de acesso</b> deve ser preenchido quando o campo: <b>Critério de acesso ao cargo</b> for: <b>Outros</b>';
-        }
-    }
-
-    /**
-     * @param SchoolManagerValueObject $valueObject
-     */
     private function validateAccessLinkType($valueObject)
     {
         if (empty($valueObject->roleId)) {
@@ -150,6 +139,7 @@ class SchoolManagers implements EducacensoValidator
         foreach ($this->valueObject as $manager) {
             $individualArray[] = $manager->employeeId;
         }
+
         return $individualArray;
     }
 
@@ -159,6 +149,7 @@ class SchoolManagers implements EducacensoValidator
         foreach ($this->valueObject as $manager) {
             $roleArray[] = $manager->roleId;
         }
+
         return $roleArray;
     }
 }

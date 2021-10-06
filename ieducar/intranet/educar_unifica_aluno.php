@@ -1,208 +1,157 @@
 <?php
 
-/**
- * i-Educar - Sistema de gestão escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *                     <ctima@itajai.sc.gov.br>
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
- *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
- * do GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- *
- * @author    Alan Felipe Farias <alan@portabilis.com.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd_Pmieducar
- * @since     Arquivo disponível desde a versão 1.0.0
- * @version   $Id$
- */
-
-
 use App\Models\LogUnification;
+use App\Services\ValidationDataService;
 use iEducar\Modules\Unification\StudentLogUnification;
 use Illuminate\Support\Facades\DB;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/public/geral.inc.php';
+return new class extends clsCadastro {
+    public $pessoa_logada;
+    public $tabela_alunos = [];
+    public $aluno_duplicado;
+    public $alunos;
 
-require_once 'App/Date/Utils.php';
-require_once 'App/Unificacao/Aluno.php';
+    public function Inicializar()
+    {
+        $this->validaPermissaoDaPagina();
 
-require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
+        $this->breadcrumb('Cadastrar unificação', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
 
-
-class clsIndexBase extends clsBase
-{
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Unifica&ccedil;&atilde;o de alunos');
-    $this->processoAp = "999847";
-  }
-}
-
-
-class indice extends clsCadastro
-{
-  var $pessoa_logada;
-
-  var $tabela_alunos = array();
-  var $aluno_duplicado;
-
-  function Inicializar()
-  {
-    $retorno = 'Novo';
-
-    $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(999847, $this->pessoa_logada, 7,
-      'index.php');
-
-    $this->breadcrumb('Cadastrar unificação', [
-        url('intranet/educar_index.php') => 'Escola',
-    ]);
-
-    $this->url_cancelar = route('student-log-unification.index');
-    $this->nome_url_cancelar = "Cancelar";
-
-    return $retorno;
-  }
-
-  function Gerar()
-  {
-
-      $this->inputsHelper()->dynamic('ano', array('required' => false, 'max_length' => 4));
-      $this->inputsHelper()->dynamic('instituicao',  array('required' =>  false, 'show-select' => true));
-      $this->inputsHelper()->dynamic('escola',  array('required' =>  false, 'show-select' => true, 'value' => 0));
-      $this->inputsHelper()->simpleSearchAluno(null,array('label' => 'Aluno principal' ));
-      $this->campoTabelaInicio("tabela_alunos","",array("Aluno duplicado"),$this->tabela_alunos);
-      $this->campoTexto( "aluno_duplicado", "Aluno duplicado", $this->aluno_duplicado, 50, 255, false, true, false, '', '', '', 'onfocus' );
-      $this->campoTabelaFim();
-
-  }
-
-  function Novo()
-  {
-    $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(999847, $this->pessoa_logada, 7,
-      'index.php');
-
-    $cod_aluno_principal = (int) $this->aluno_id;
-
-    if (!$cod_aluno_principal) return;
-
-
-    $cod_alunos = array();
-
-    //Monta um array com o código dos alunos selecionados na tabela
-    foreach ($this->aluno_duplicado as $key => $value) {
-      $explode = explode(" ", $value);
-
-      if($explode[0] == $cod_aluno_principal){
-        $this->mensagem = 'Impossivel de unificar alunos iguais.<br />';
-        return false;
-      }
-
-      $cod_alunos[] = (int) $explode[0];
+        return 'Novo';
     }
 
-    if (!count($cod_alunos)) {
-       $this->mensagem = 'Informe no mínimo um aluno para unificação.<br />';
-        return false;
+    public function Gerar()
+    {
+        $this->acao_enviar = 'carregaDadosAlunos()';
+        $this->campoTabelaInicio('tabela_alunos', '', ['Aluno duplicado', 'Campo aluno duplicado'], $this->tabela_alunos);
+        $this->campoRotulo('aluno_label', '', 'Aluno(a) a ser unificado(a)  <span class="campo_obrigatorio">*</span>');
+        $this->campoTexto('aluno_duplicado', 'Aluno duplicado', $this->aluno_duplicado, 50, 255, false, true, false, '', '', '', 'onfocus');
+        $this->campoTabelaFim();
+
+        $styles = ['/modules/Cadastro/Assets/Stylesheets/UnificaAluno.css'];
+        Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
+        $scripts = ['/modules/Portabilis/Assets/Javascripts/ClientApi.js'];
+        Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
     }
 
-    DB::beginTransaction();
-    $unificationId = $this->createLog($cod_aluno_principal, $cod_alunos, $this->pessoa_logada);
-    App_Unificacao_Aluno::unifica($cod_aluno_principal, $cod_alunos, $this->pessoa_logada, new clsBanco(), $unificationId);
-
-    try {
-        DB::commit();
-    } catch (Throwable $throable) {
-        DB::rollBack();
-        $this->mensagem = 'Não foi possível realizar a unificação';
-        return false;
+    private function validaPermissaoDaPagina()
+    {
+        (new clsPermissoes())
+            ->permissao_cadastra(
+                999847,
+                $this->pessoa_logada,
+                7,
+                'index.php'
+            );
     }
 
-    $this->mensagem = "<span>Alunos unificados com sucesso.</span>";
-    $this->simpleRedirect(route('student-log-unification.index'));
-  }
+    private function validaDadosDaUnificacaoAluno($alunos): bool
+    {
+        foreach ($alunos as $item) {
+            if (! isset($item['codAluno'])) {
+                return false;
+            }
 
-  private function createLog($mainId, $duplicatesId, $createdBy)
-  {
-    $log = new LogUnification();
-    $log->type = StudentLogUnification::getType();
-    $log->main_id = $mainId;
-    $log->duplicates_id = json_encode($duplicatesId);
-    $log->created_by = $createdBy;
-    $log->updated_by = $createdBy;
-    $log->save();
-    return $log->id;
-  }
-}
+            if (! isset($item['aluno_principal'])) {
+                return false;
+            }
+        }
 
-// Instancia objeto de página
-$pagina = new clsIndexBase();
+        return true;
+    }
 
-// Instancia objeto de conteúdo
-$miolo = new indice();
+    public function Novo()
+    {
+        $this->validaPermissaoDaPagina();
 
-// Atribui o conteúdo à  página
-$pagina->addForm($miolo);
+        try {
+            $alunos = json_decode($this->alunos, true, 512, JSON_THROW_ON_ERROR);
+        } catch (Exception $exception) {
+            $this->mensagem = 'Informações inválidas para unificação';
+            return false;
+        }
 
-// Gera o código HTML
-$pagina->MakeAll();
-?>
-<script type="text/javascript">
+        if (! $this->validaDadosDaUnificacaoAluno($alunos)) {
+            $this->mensagem = 'Dados enviados inválidos, recarregue a tela e tente novamente!';
+            return false;
+        }
 
-  var handleSelect = function(event, ui){
-    $j(event.target).val(ui.item.label);
-    return false;
-  };
+        $validationData = new ValidationDataService();
 
-  var search = function(request, response) {
-    var searchPath = '/module/Api/Aluno?oper=get&resource=aluno-search';
-    var params     = { query : request.term };
+        if (! $validationData->verifyQuantityByKey($alunos,'aluno_principal', 0)) {
+            $this->mensagem = 'Aluno principal não informado';
+            return false;
+        }
 
-    $j.get(searchPath, params, function(dataResponse) {
-      simpleSearch.handleSearch(dataResponse, response);
-    });
-  };
+        if ($validationData->verifyQuantityByKey($alunos,'aluno_principal', 1)) {
+            $this->mensagem = 'Não pode haver mais de uma aluno principal';
+            return false;
+        }
 
-  function setAutoComplete() {
-    $j.each($j('input[id^="aluno_duplicado"]'), function(index, field) {
+        if (! $validationData->verifyDataContainsDuplicatesByKey($alunos,'codAluno')) {
+            $this->mensagem = 'Erro ao tentar unificar Alunos, foi inserido cadastro duplicados';
+            return false;
+        }
 
-      $j(field).autocomplete({
-        source    : search,
-        select    : handleSelect,
-        minLength : 1,
-        autoFocus : true
-      });
+        $cod_aluno_principal = $this->buscaPessoaPrincipal($alunos);
+        $cod_alunos = $this->buscaIdesDasPessoasParaUnificar($alunos);
 
-    });
-  }
+        DB::beginTransaction();
+        $unificationId = $this->createLog($cod_aluno_principal, $cod_alunos, $this->pessoa_logada);
+        App_Unificacao_Aluno::unifica($cod_aluno_principal, $cod_alunos, $this->pessoa_logada, new clsBanco(), $unificationId);
 
-  setAutoComplete();
+        try {
+            DB::commit();
+        } catch (Throwable $throable) {
+            DB::rollBack();
+            $this->mensagem = 'Não foi possível realizar a unificação';
 
-  // bind events
+            return false;
+        }
 
-  var $addPontosButton = $j('#btn_add_tab_add_1');
+        $this->mensagem = '<span>Alunos unificados com sucesso.</span>';
+        $this->simpleRedirect(route('student-log-unification.index'));
+    }
 
-  $addPontosButton.click(function(){
-    setAutoComplete();
-  });
+    private function buscaIdesDasPessoasParaUnificar($pessoas)
+    {
+        return array_values(array_map(static fn ($item) => (int) $item['codAluno'],
+            array_filter($pessoas, static fn ($pessoas) => $pessoas['aluno_principal'] === false)
+        ));
+    }
 
-$j('#btn_enviar').val('Unificar');
+    private function buscaPessoaPrincipal($pessoas)
+    {
+        $pessoas = array_values(array_filter($pessoas,
+                static fn ($pessoas) => $pessoas['aluno_principal'] === true)
+        );
 
+        return (int) current($pessoas)['codAluno'];
+    }
 
-</script>
+    private function createLog($mainId, $duplicatesId, $createdBy)
+    {
+        $log = new LogUnification();
+        $log->type = StudentLogUnification::getType();
+        $log->main_id = $mainId;
+        $log->duplicates_id = json_encode(array_values($duplicatesId));
+        $log->created_by = $createdBy;
+        $log->updated_by = $createdBy;
+        $log->save();
+
+        return $log->id;
+    }
+
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-unifica-aluno.js');
+    }
+
+    public function Formular()
+    {
+        $this->title = 'i-Educar - Unificação de alunos';
+        $this->processoAp = '999847';
+    }
+};

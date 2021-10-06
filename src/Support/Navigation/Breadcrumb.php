@@ -20,6 +20,11 @@ class Breadcrumb
     private $legacy;
 
     /**
+     * @var bool
+     */
+    private $beta = false;
+
+    /**
      * Define a página atual e as páginas até ela.
      *
      * @param string $currentPage
@@ -29,7 +34,7 @@ class Breadcrumb
      */
     public function current($currentPage, $pages = [])
     {
-        $this->currentPage = $currentPage;
+        $this->currentPage = html_entity_decode($currentPage);
 
         foreach ($pages as $link => $label) {
             $this->push($label, $link);
@@ -102,5 +107,18 @@ class Breadcrumb
     public function setLegacy(string $legacy)
     {
         $this->legacy = $legacy;
+    }
+
+    public function addBetaFlag()
+    {
+        $this->beta = true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isBeta(): bool
+    {
+        return $this->beta;
     }
 }

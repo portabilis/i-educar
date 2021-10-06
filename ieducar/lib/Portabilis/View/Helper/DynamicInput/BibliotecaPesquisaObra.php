@@ -1,7 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
-
 class Portabilis_View_Helper_DynamicInput_BibliotecaPesquisaObra extends Portabilis_View_Helper_DynamicInput_Core
 {
     protected function getAcervoId($id = null)
@@ -54,7 +52,7 @@ class Portabilis_View_Helper_DynamicInput_BibliotecaPesquisaObra extends Portabi
 
         $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
 
-        call_user_func_array([$this->viewInstance, 'campoTexto'], $inputOptions);
+        $this->viewInstance->campoTexto(...array_values($inputOptions));
 
         $defaultHiddenInputOptions = [
             'id' => 'ref_cod_acervo',
@@ -63,7 +61,7 @@ class Portabilis_View_Helper_DynamicInput_BibliotecaPesquisaObra extends Portabi
 
         $hiddenInputOptions = $this->mergeOptions($options['hiddenInputOptions'], $defaultHiddenInputOptions);
 
-        call_user_func_array([$this->viewInstance, 'campoOculto'], $hiddenInputOptions);
+        $this->viewInstance->campoOculto(...array_values($hiddenInputOptions));
 
         // Ao selecionar obra, na pesquisa de obra é setado o value deste elemento
         $this->viewInstance->campoOculto('cod_biblioteca', '');
@@ -73,19 +71,19 @@ class Portabilis_View_Helper_DynamicInput_BibliotecaPesquisaObra extends Portabi
                 $("#ref_cod_acervo").val("");
                 $("#titulo_obra").val("");
             }
-            
+
             $("#ref_cod_biblioteca").change(resetObra);
         ', true);
 
         Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, '
             function pesquisaObra() {
-            
+
                 var additionalFields = getElementFor("biblioteca");
                 var exceptFields     = getElementFor("titulo_obra");
-            
+
                 if (validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields)) {
                     var bibliotecaId = getElementFor("biblioteca").val();
-                    
+
                     pesquisa_valores_popless("educar_pesquisa_obra_lst.php?campo1=ref_cod_acervo&campo2=titulo_obra&campo3="+bibliotecaId)
                 }
             }

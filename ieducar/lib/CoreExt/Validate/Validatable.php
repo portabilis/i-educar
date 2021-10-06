@@ -1,10 +1,5 @@
 <?php
 
-require_once 'CoreExt/Validate/Choice.php';
-require_once 'CoreExt/Validate/ChoiceMultiple.php';
-require_once 'CoreExt/Validate/String.php';
-require_once 'CoreExt/Validate/Numeric.php';
-
 interface CoreExt_Validate_Validatable
 {
     /**

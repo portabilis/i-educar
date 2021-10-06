@@ -24,13 +24,13 @@ class MissingStagesException extends Exception
     /**
      * StagesNotInformedByTeacherException constructor.
      *
-     * @param array $missingStages
+     * @param array  $missingStages
      * @param string $stageName
      */
     public function __construct($missingStages, $stageName)
     {
         $this->missingStages = $missingStages;
-        $this->stageName= $stageName;
+        $this->stageName = $stageName;
 
         parent::__construct(
             $this->getExceptionMessage($missingStages),

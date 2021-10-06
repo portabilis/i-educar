@@ -27,10 +27,10 @@ class SchoolGradeDisciplineImport implements ToModel, WithProgressBar, WithHeadi
     }
 
     /**
-    * @param array $row
-    *
-    * @return Model
-    */
+     * @param array $row
+     *
+     * @return Model
+     */
     public function model(array $row)
     {
         return LegacySchoolGradeDiscipline::query()->updateOrCreate([

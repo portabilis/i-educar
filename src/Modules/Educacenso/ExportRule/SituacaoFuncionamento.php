@@ -6,11 +6,11 @@ use App\Models\Educacenso\Registro00;
 use App\Models\Educacenso\RegistroEducacenso;
 use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento as SituacaoFuncionamentoModel;
 
-
 class SituacaoFuncionamento implements EducacensoExportRule
 {
     /**
      * @param Registro00 $registro00
+     *
      * @return RegistroEducacenso
      */
     public static function handle(RegistroEducacenso $registro00): RegistroEducacenso
@@ -30,7 +30,6 @@ class SituacaoFuncionamento implements EducacensoExportRule
             $registro00->mantenedoraInstituicoes = null;
             $registro00->mantenedoraSistemaS = null;
             $registro00->mantenedoraOscip = null;
-            $registro00->categoriaEscolaPrivada = null;
             $registro00->conveniadaPoderPublico = null;
             $registro00->cnpjMantenedoraPrincipal = null;
             $registro00->cnpjEscolaPrivada = null;

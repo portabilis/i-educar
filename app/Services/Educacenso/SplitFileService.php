@@ -4,6 +4,7 @@ namespace App\Services\Educacenso;
 
 use Generator;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Str;
 
 class SplitFileService
 {
@@ -61,10 +62,11 @@ class SplitFileService
 
     /**
      * @param string $line
+     *
      * @return bool
      */
     private function isNewSchoolLine($line)
     {
-        return starts_with($line, '00|');
+        return Str::startsWith($line, '00|');
     }
 }

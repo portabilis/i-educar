@@ -1,8 +1,5 @@
 <?php
 
-require_once 'CoreExt/DataMapper.php';
-require_once 'Usuario/Model/Usuario.php';
-
 class Usuario_Model_UsuarioDataMapper extends CoreExt_DataMapper
 {
     protected $_entityClass = 'Usuario_Model_Usuario';

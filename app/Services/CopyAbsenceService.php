@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Contracts\CopyRegistrationData;
+use App\Exceptions\Registration\MissingEvaluationRuleForCurrentYear;
 use App\Exceptions\Transfer\MissingAbsenceType;
 use App\Models\LegacyDisciplineAbsence;
 use App\Models\LegacyEvaluationRule;
@@ -34,11 +35,16 @@ class CopyAbsenceService implements CopyRegistrationData
      * @param LegacyRegistration $newRegistration
      * @param LegacyRegistration $oldRegistration
      *
-     * @throws MissingAbsenceType
+     * @throws MissingAbsenceType|MissingEvaluationRuleForCurrentYear
      */
     public function copy(LegacyRegistration $newRegistration, LegacyRegistration $oldRegistration)
     {
         $newEvaluationRule = $this->service->getEvaluationRule($newRegistration);
+
+        if (!$newEvaluationRule) {
+            throw new MissingEvaluationRuleForCurrentYear();
+        }
+
         $oldEvaluationRule = $this->service->getEvaluationRule($oldRegistration);
 
         if (!$this->compatibleAbsenceType($newEvaluationRule, $oldEvaluationRule)) {
@@ -122,7 +128,7 @@ class CopyAbsenceService implements CopyRegistrationData
         LegacyStudentAbsence $studentAbsence,
         LegacyRegistration $oldRegistration
     ) {
-        $absences = $oldRegistration->studentAbsence->absences;
+        $absences = $oldRegistration->studentAbsence->absencesByDiscipline;
 
         foreach ($absences as $absence) {
             LegacyDisciplineAbsence::create(
@@ -146,7 +152,7 @@ class CopyAbsenceService implements CopyRegistrationData
         LegacyStudentAbsence $studentAbsence,
         LegacyRegistration $oldRegistration
     ) {
-        $absences = $oldRegistration->studentAbsence->absences;
+        $absences = $oldRegistration->studentAbsence->generalAbsences;
 
         foreach ($absences as $absence) {
             LegacyGeneralAbsence::create(

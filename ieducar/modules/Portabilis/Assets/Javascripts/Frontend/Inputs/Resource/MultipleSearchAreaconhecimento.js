@@ -7,6 +7,7 @@
     var areaConhecimentoField = getElementFor('areaconhecimento');
 
     var handleGetAreaConhecimento = function(response) {
+      clearValues(areaConhecimentoField);
       var selectOptions = response['options'];
       updateChozen(areaConhecimentoField, selectOptions);
     }

@@ -68,4 +68,14 @@ class LegacyGrade extends Model
     {
         return $this->belongsTo(LegacyCourse::class, 'ref_cod_curso');
     }
+
+    /**
+     * Relacionamento com a turma.
+     *
+     * @return HasMany
+     */
+    public function schoolClass()
+    {
+        return $this->hasMany(LegacySchoolClass::class, 'ref_ref_cod_serie');
+    }
 }

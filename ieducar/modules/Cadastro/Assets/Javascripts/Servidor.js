@@ -32,7 +32,7 @@ function verificaDeficiencias() {
 }
 
 function submitForm() {
-  if (!validaServidor() || !validaPosGraduacao() || !validaCursoFormacaoContinuada() || !validationUtils.validatesFields(false) || !validateGraduations()) {
+  if (!validaServidor() || !validaPosGraduacao() || !validaCursoFormacaoContinuada() || !validationUtils.validatesFields(false) || !validateGraduations() || !validaCargaHoraria()) {
     return false;
   }
 
@@ -133,13 +133,17 @@ function validaCursoFormacaoContinuada() {
 verificaCamposObrigatorio();
 
 let habilitaTipoEnsinoMedio = () => {
-  if (obrigarCamposCenso) {
-    $j('#tipo_ensino_medio_cursado').makeRequired();
-  } else {
-    $j('#tipo_ensino_medio_cursado').makeUnrequired();
-  }
+  let escolaridade = $j('#ref_idesco').val();
 
-  $j('#tipo_ensino_medio_cursado').removeAttr('disabled');
+  $j.getJSON(`/escolaridade/${escolaridade}`)
+    .done((escolaridade) => {
+      if (obrigarCamposCenso && escolaridade['escolaridade'] === 7) {
+        $j('#tipo_ensino_medio_cursado').makeRequired();
+      } else {
+        $j('#tipo_ensino_medio_cursado').makeUnrequired();
+      }
+      $j('#tipo_ensino_medio_cursado').removeAttr('disabled');
+    })
 };
 
 let bloqueiaTipoEnsinoMedio = () => {
@@ -155,7 +159,7 @@ let verificaEscolaridade = () => {
 
   $j.getJSON(`/escolaridade/${escolaridade}`)
   .done((escolaridade) => {
-    if (escolaridade['escolaridade'] == 7) {
+    if (escolaridade['escolaridade'] === 7 || escolaridade['escolaridade'] === 6) {
       habilitaTipoEnsinoMedio();
     } else {
       bloqueiaTipoEnsinoMedio();
@@ -241,7 +245,6 @@ $j(document).ready(function() {
   // DADOS GERAIS
   $j('#tab1').click(
     function(){
-
       $j('.servidorTab-active').toggleClass('servidorTab-active servidorTab');
       $j('#tab1').toggleClass('servidorTab servidorTab-active')
       $j('.tablecadastro >tbody  > tr').each(function(index, row) {
@@ -423,6 +426,13 @@ function validateGraduations() {
     return result;
   }
 
+  var courseName = $j('input[id="employee_course[0]"]');
+
+  if (obrigarCamposCenso && courseName.val() === undefined) {
+    messageUtils.error('É necessário informar pelo menos um curso superior concluído');
+    return false;
+  }
+
   $j.each($j('input[id^="employee_course_id"]'), function (index, field) {
     var id = $j(field).attr('id');
     var idNum = id.match(/\[(\d+)\]/);
@@ -461,7 +471,24 @@ function validateGraduations() {
       messageUtils.error('O campo: Instituição de Educação Superior é obrigatório.', collegeName);
       result = false;
     }
+
+    if (collegeName.val() != '' && collegeId.val() == '') {
+      messageUtils.error('O campo: Instituição de Educação Superior precisa ser uma instituição válida.', collegeName);
+      result = false;
+    }
   });
 
   return result;
 }
+
+function validaCargaHoraria() {
+  if ($j('#carga_horaria').val() < $j('#total_horas_alocadas_').val()) {
+    messageUtils.error('A Carga horária total deve ser maior ou igual a quantidade de horas alocadas para o servidor.<br>');
+    return false;
+  }
+  return true;
+}
+
+$j('#carga_horaria').change(function () {
+  validaCargaHoraria()
+});

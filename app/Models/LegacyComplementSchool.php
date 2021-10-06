@@ -2,14 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Prettus\Repository\Contracts\Transformable;
-use Prettus\Repository\Traits\TransformableTrait;
 
 /**
  * @property string $name
  */
-class LegacyComplementSchool extends EloquentBaseModel
+class LegacyComplementSchool extends Model
 {
     /**
      * @var string

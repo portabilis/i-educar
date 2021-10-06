@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class EducacensoDegree extends Model
 {
@@ -16,6 +15,11 @@ class EducacensoDegree extends Model
      * @var string
      */
     protected $primaryKey = 'id';
+
+    const GRAU_TECNOLOGICO = 1;
+    const GRAU_LICENCIATURA = 2;
+    const GRAU_BACHARELADO = 3;
+    const GRAU_SEQUENCIAL = 4;
 
     protected $fillable = [
         'curso_id',

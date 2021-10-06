@@ -2,12 +2,6 @@
 
 use iEducar\Modules\ErrorTracking\TrackerFactory;
 
-require_once 'Core/Controller/Page/EditController.php';
-require_once 'lib/Portabilis/View/Helper/Inputs.php';
-require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
-require_once 'lib/Portabilis/String/Utils.php';
-require_once 'include/pmieducar/clsPermissoes.inc.php';
-
 class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_EditController
 {
     /**
@@ -144,10 +138,12 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
         } catch (Exception $e) {
             if (config('legacy.modules.error.track')) {
                 $tracker = TrackerFactory::getTracker(config('legacy.modules.error.tracker_name'));
-                $tracker->notify($e);
+                $data['controller'] = app('request')->path();
+                $data['action'] = $this->report->templateName();
+                $tracker->notify($e, $data);
             }
 
-            $nivelUsuario = (new clsPermissoes)->nivel_acesso($this->getSession()->id_pessoa);
+            $nivelUsuario = (new clsPermissoes)->nivel_acesso(\Illuminate\Support\Facades\Auth::id());
 
             if ((bool) config('legacy.report.show_error_details') === true || (int) $nivelUsuario === 1) {
                 $details = 'Detalhes: ' . $e->getMessage();
@@ -212,7 +208,7 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
      */
     protected function validatesIfUserIsLoggedIn()
     {
-        if (!$this->getSession()->id_pessoa) {
+        if (!\Illuminate\Support\Facades\Auth::id()) {
             $this->simpleRedirect('logof.php');
         }
     }
@@ -252,16 +248,15 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
      */
     public function onValidationError()
     {
-        $msg = Portabilis_String_Utils::toLatin1('O relatório não pode ser emitido, dica(s):') . '\n\n';
+        $msg = 'O relatório não pode ser emitido, dica(s): \n\n';
 
         foreach ($this->validationErrors as $e) {
             $error = $e['message'];
             $msg .= '- ' . $error . '\n';
         }
 
-        $msg .= '\n' . Portabilis_String_Utils::toLatin1('Por favor, verifique esta(s) situação(s) e tente novamente.');
+        $msg .= '\n Por favor, verifique esta(s) situação(s) e tente novamente.';
 
-        $msg = Portabilis_String_Utils::toLatin1($msg, ['escape' => false]);
         echo "<script type='text/javascript'>alert('$msg'); close();</script> ";
     }
 
@@ -275,9 +270,8 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
     public function renderError($details = '')
     {
         $details = Portabilis_String_Utils::escape($details);
-        $msg = Portabilis_String_Utils::toLatin1('Ocorreu um erro ao emitir o relatório.') . '\n\n' . $details;
-
-        $msg = Portabilis_String_Utils::toLatin1($msg, ['escape' => false]);
+        $msg = 'Ocorreu um erro ao emitir o relatório. \n\n' . $details;
+        
         $msg = "<script type='text/javascript'>alert('$msg'); close();</script>";
 
         echo $msg;

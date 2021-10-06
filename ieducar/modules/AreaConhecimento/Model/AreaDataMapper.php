@@ -1,8 +1,5 @@
 <?php
 
-require_once 'CoreExt/DataMapper.php';
-require_once 'AreaConhecimento/Model/Area.php';
-
 class AreaConhecimento_Model_AreaDataMapper extends CoreExt_DataMapper
 {
     protected $_entityClass = 'AreaConhecimento_Model_Area';
@@ -17,6 +14,7 @@ class AreaConhecimento_Model_AreaDataMapper extends CoreExt_DataMapper
         'nome' => 'nome',
         'secao' => 'secao',
         'ordenamento_ac' => 'ordenamento_ac',
+        'agrupar_descritores' => 'agrupar_descritores',
     ];
 
     protected $_primaryKey = [

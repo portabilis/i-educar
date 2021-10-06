@@ -11,11 +11,11 @@ use App\Models\LegacySchoolClass;
 use App\Models\LegacyStudent;
 use App\Models\LegacyStudentTransport;
 use App\Models\SchoolClassInep;
-use App\Models\Student;
 use App\Models\StudentInep;
 use App\Services\Educacenso\RegistroImportInterface;
 use App\User;
 use App_Model_MatriculaSituacao;
+use DateTime;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoAluno;
 use iEducar\Modules\Educacenso\Model\VeiculoTransporteEscolar;
 
@@ -31,7 +31,6 @@ class Registro60Import implements RegistroImportInterface
      */
     private $user;
 
-
     /**
      * @var int
      */
@@ -43,11 +42,17 @@ class Registro60Import implements RegistroImportInterface
     private $institution;
 
     /**
+     * @var DateTime
+     */
+    public $registrationDate;
+
+    /**
      * Faz a importação dos dados a partir da linha do arquivo
      *
      * @param RegistroEducacenso $model
-     * @param int $year
-     * @param $user
+     * @param int                $year
+     * @param                    $user
+     *
      * @return void
      */
     public function import(RegistroEducacenso $model, $year, $user)
@@ -78,6 +83,10 @@ class Registro60Import implements RegistroImportInterface
      */
     private function getSchoolClass(): ?LegacySchoolClass
     {
+        if (empty($this->model->inepTurma)) {
+            return null;
+        }
+
         return SchoolClassInep::where('cod_turma_inep', $this->model->inepTurma)->first()->schoolClass ?? null;
     }
 
@@ -89,21 +98,23 @@ class Registro60Import implements RegistroImportInterface
         return StudentInep::where('cod_aluno_inep', $this->model->inepAluno)->first()->student ?? null;
     }
 
-
     /**
      * @param $arrayColumns
+     *
      * @return Registro50|RegistroEducacenso
      */
     public static function getModel($arrayColumns)
     {
         $registro = new Registro60();
         $registro->hydrateModel($arrayColumns);
+
         return $registro;
     }
 
     /**
      * @param LegacySchoolClass $schoolClass
-     * @param LegacyStudent $student
+     * @param LegacyStudent     $student
+     *
      * @return LegacyRegistration
      */
     private function getOrCreateRegistration(LegacySchoolClass $schoolClass, LegacyStudent $student)
@@ -120,7 +131,7 @@ class Registro60Import implements RegistroImportInterface
                 'aprovado' => App_Model_MatriculaSituacao::APROVADO,
                 'ref_cod_curso' => $schoolClass->course->getKey(),
                 'ref_ref_cod_escola' => $schoolClass->school->getKey(),
-                'data_matricula' => now(),
+                'data_matricula' => $this->registrationDate,
                 'data_cadastro' => now(),
                 'ultima_matricula' => 1,
             ]
@@ -128,13 +139,14 @@ class Registro60Import implements RegistroImportInterface
     }
 
     /**
-     * @param LegacySchoolClass $schoolClass
+     * @param LegacySchoolClass  $schoolClass
      * @param LegacyRegistration $registration
+     *
      * @return LegacyEnrollment
      */
     private function getOrCreateEnrollment(LegacySchoolClass $schoolClass, LegacyRegistration $registration)
     {
-        $maxSequencial = LegacyEnrollment::where('ref_cod_matricula', $registration->getKey())->max('sequencial') ?: 1;
+        $maxSequencial = LegacyEnrollment::where('ref_cod_matricula', $registration->getKey())->max('sequencial') ?: 0;
 
         return LegacyEnrollment::firstOrCreate(
             [
@@ -143,11 +155,11 @@ class Registro60Import implements RegistroImportInterface
             ],
             [
                 'data_cadastro' => now(),
-                'data_enturmacao' => now(),
+                'data_enturmacao' => $this->registrationDate,
                 'ativo' => 1,
                 'etapa_educacenso' => $this->model->etapaAluno,
                 'tipo_atendimento' => $this->getArrayTipoAtendimento(),
-                'sequencial' => $maxSequencial,
+                'sequencial' => $maxSequencial + 1,
                 'ref_usuario_cad' => $this->user->getKey(),
             ]
         );
@@ -213,6 +225,7 @@ class Registro60Import implements RegistroImportInterface
 
     /**
      * @param $array
+     *
      * @return string
      */
     private function getPostgresIntegerArray($array)
@@ -228,7 +241,7 @@ class Registro60Import implements RegistroImportInterface
         LegacyStudentTransport::updateOrCreate(
             ['aluno_id' => $student->getKey()],
             [
-                'responsavel' => (int)$this->model->poderPublicoResponsavelTransporte,
+                'responsavel' => (int) $this->model->poderPublicoResponsavelTransporte,
                 'user_id' => $this->user->getKey(),
             ]
         );
@@ -237,8 +250,6 @@ class Registro60Import implements RegistroImportInterface
         $student->veiculo_transporte_escolar = $this->getArrayVeiculoTransporte();
 
         $student->save();
-
-
     }
 
     private function getArrayVeiculoTransporte()

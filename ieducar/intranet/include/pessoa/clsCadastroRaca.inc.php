@@ -35,10 +35,10 @@ class clsCadastroRaca extends Model
         $this->_campos_lista = $this->_todos_campos = 'cod_raca, idpes_exc, idpes_cad, nm_raca, data_cadastro, data_exclusao, ativo, raca_educacenso';
 
         if (is_numeric($idpes_exc)) {
-                    $this->idpes_exc = $idpes_exc;
+            $this->idpes_exc = $idpes_exc;
         }
         if (is_numeric($idpes_cad)) {
-                    $this->idpes_cad = $idpes_cad;
+            $this->idpes_cad = $idpes_cad;
         }
 
         if (is_numeric($cod_raca)) {

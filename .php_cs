@@ -1,6 +1,5 @@
 <?php
 
-
 $finder = PhpCsFixer\Finder::create()
     ->files()
     ->name('*.php')

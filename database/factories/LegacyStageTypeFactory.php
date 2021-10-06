@@ -19,7 +19,6 @@ $factory->define(LegacyStageType::class, function (Faker $faker) {
 });
 
 $factory->state(LegacyStageType::class, 'unique', function () {
-
     $stageType = LegacyStageType::query()->first();
 
     if (empty($stageType)) {

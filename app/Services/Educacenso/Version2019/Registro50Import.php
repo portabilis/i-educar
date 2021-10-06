@@ -6,13 +6,13 @@ use App\Models\Educacenso\Registro50;
 use App\Models\Educacenso\RegistroEducacenso;
 use App\Models\Employee;
 use App\Models\EmployeeInep;
-use App\Models\LegacySchoolClassTeacher;
-use App\Models\LegacySchoolClassTeacherDiscipline;
-use App\Models\LegacyInstitution;
-use App\Models\LegacySchoolClass;
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyEmployeeRole;
+use App\Models\LegacyInstitution;
 use App\Models\LegacyRole;
+use App\Models\LegacySchoolClass;
+use App\Models\LegacySchoolClassTeacher;
+use App\Models\LegacySchoolClassTeacherDiscipline;
 use App\Models\SchoolClassInep;
 use App\Services\Educacenso\RegistroImportInterface;
 use App\User;
@@ -48,8 +48,9 @@ class Registro50Import implements RegistroImportInterface
      * Faz a importação dos dados a partir da linha do arquivo
      *
      * @param RegistroEducacenso $model
-     * @param int $year
-     * @param $user
+     * @param int                $year
+     * @param                    $user
+     *
      * @return void
      */
     public function import(RegistroEducacenso $model, $year, $user)
@@ -75,19 +76,21 @@ class Registro50Import implements RegistroImportInterface
 
     /**
      * @param $arrayColumns
+     *
      * @return Registro50|RegistroEducacenso
      */
     public static function getModel($arrayColumns)
     {
         $registro = new Registro50();
         $registro->hydrateModel($arrayColumns);
+
         return $registro;
     }
 
     /**
      * @return LegacySchoolClass
      */
-    private function getSchoolClass() : ?LegacySchoolClass
+    private function getSchoolClass(): ?LegacySchoolClass
     {
         if (empty($this->model->inepTurma)) {
             return null;
@@ -99,7 +102,7 @@ class Registro50Import implements RegistroImportInterface
     /**
      * @return Employee|null
      */
-    private function getEmployee() : ?Employee
+    private function getEmployee(): ?Employee
     {
         $inepNumber = $this->model->inepDocente;
         if (!$inepNumber) {
@@ -119,7 +122,7 @@ class Registro50Import implements RegistroImportInterface
      *
      * @return void
      */
-    private function setEmployeeAsTeacher(Employee $employee) : void
+    private function setEmployeeAsTeacher(Employee $employee): void
     {
         if ($this->employeeHasTeacherRole($employee)) {
             return;
@@ -133,13 +136,12 @@ class Registro50Import implements RegistroImportInterface
         ]);
     }
 
-
     /**
      * @param $employee Employee
      *
      * @return bool
      */
-    private function employeeHasTeacherRole(Employee $employee) : bool
+    private function employeeHasTeacherRole(Employee $employee): bool
     {
         return LegacyEmployeeRole::where('ref_cod_servidor', $employee->id)
             ->whereHas('role', function ($query) {
@@ -148,11 +150,10 @@ class Registro50Import implements RegistroImportInterface
             })->exists();
     }
 
-
     /**
      * @return LegacyRole
      */
-    private function getDefaultTeacherRole() : LegacyRole
+    private function getDefaultTeacherRole(): LegacyRole
     {
         if (!empty($this->_legacyRole)) {
             return $this->_legacyRole;
@@ -176,10 +177,11 @@ class Registro50Import implements RegistroImportInterface
 
     /**
      * @param $schoolClass LegacySchoolClass
-     * @param $employee Employee
+     * @param $employee    Employee
+     *
      * @return void
      */
-    private function createSchoolClassTeacher(LegacySchoolClass $schoolClass, Employee $employee) : void
+    private function createSchoolClassTeacher(LegacySchoolClass $schoolClass, Employee $employee): void
     {
         $schoolClassTeacher = LegacySchoolClassTeacher::firstOrNew([
             'ano' => $this->year,
@@ -196,10 +198,11 @@ class Registro50Import implements RegistroImportInterface
 
     /**
      * @param $schoolClassTeacher LegacySchoolClassTeacher
-     * @param $employee Employee
+     * @param $employee           Employee
+     *
      * @return void
      */
-    private function linkDisciplines(LegacySchoolClassTeacher $schoolClassTeacher) : void
+    private function linkDisciplines(LegacySchoolClassTeacher $schoolClassTeacher): void
     {
         foreach ($this->model->componentes as $codigoEducacenso) {
             if (empty(trim($codigoEducacenso))) {

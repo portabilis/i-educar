@@ -13,7 +13,9 @@ class EnrollDateBeforeAcademicYearException extends RangeException
         $message = 'A data de enturmação %s é anterior ao início do ano acadêmico %s.';
 
         $message = sprintf(
-            $message, $date->format('d/m/Y'), $schoolClass->begin_academic_year->format('d/m/Y')
+            $message,
+            $date->format('d/m/Y'),
+            $schoolClass->begin_academic_year->format('d/m/Y')
         );
 
         parent::__construct($message);

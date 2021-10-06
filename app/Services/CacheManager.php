@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Illuminate\Cache\CacheManager as LaravelCacheManager;
+use Illuminate\Contracts\Cache\Repository;
 use Illuminate\Support\Facades\Cache;
 
 class CacheManager extends LaravelCacheManager
@@ -11,7 +12,8 @@ class CacheManager extends LaravelCacheManager
      * Invalida todas as entradas de cache de acordo com as tags passadas
      *
      * @param $tags
-     * @return \Illuminate\Contracts\Cache\Repository
+     *
+     * @return Repository
      */
     public static function invalidateByTags($tags)
     {
@@ -26,8 +28,9 @@ class CacheManager extends LaravelCacheManager
      * Sobreescreve o método que chama todas as ações de cache para setar o prefixo, que será definido de
      * acordo com o tenant
      *
-     * @param  string $method
-     * @param  array $parameters
+     * @param string $method
+     * @param array  $parameters
+     *
      * @return mixed
      */
     public function __call($method, $parameters)
@@ -47,6 +50,7 @@ class CacheManager extends LaravelCacheManager
      * Checks if cache driver supports tags use
      *
      * @param $store
+     *
      * @return bool
      */
     private static function supportsTags($store)
@@ -54,6 +58,7 @@ class CacheManager extends LaravelCacheManager
         $doNotSupportTags = [
             'Illuminate\Cache\DatabaseStore',
             'Illuminate\Cache\FileStore',
+            'Illuminate\Cache\DynamodbStore',
         ];
 
         if (in_array(get_class($store), $doNotSupportTags)) {
@@ -67,6 +72,7 @@ class CacheManager extends LaravelCacheManager
      * Checks if cache driver supports prefix use
      *
      * @param $store
+     *
      * @return bool
      */
     private static function supportsPrefix($store)

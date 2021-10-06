@@ -1,10 +1,5 @@
 <?php
 
-require_once 'CoreExt/DataMapper.php';
-require_once 'TabelaArredondamento/Model/Tabela.php';
-require_once 'RegraAvaliacao/Model/Nota/TipoValor.php';
-require_once 'App/Model/IedFinder.php';
-
 class TabelaArredondamento_Model_TabelaDataMapper extends CoreExt_DataMapper
 {
     protected $_entityClass = 'TabelaArredondamento_Model_Tabela';
@@ -51,7 +46,6 @@ class TabelaArredondamento_Model_TabelaDataMapper extends CoreExt_DataMapper
     public function getTabelaValorDataMapper()
     {
         if (is_null($this->_tabelaValorDataMapper)) {
-            require_once 'TabelaArredondamento/Model/TabelaValorDataMapper.php';
             $this->setTabelaValorDataMapper(
                 new TabelaArredondamento_Model_TabelaValorDataMapper()
             );

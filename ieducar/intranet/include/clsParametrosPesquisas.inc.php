@@ -1,8 +1,5 @@
 <?php
 
-
-require_once( "include/Geral.inc.php" );
-
 /**
  * Classe de parametrização dos dados a serem informados para as listagens genéricas.
  *
@@ -15,95 +12,96 @@ class clsParametrosPesquisas
      *
      * @var int
      */
-    var $submit;
+    public $submit;
 
     /**
      * Deve ser usado para informar os nomes dos campos a serem utilizados.
      *
      * @var array
      */
-    var $campo_nome;
+    public $campo_nome;
 
     /**
      * Deve ser utilizado para informar o tipo do campo ("text" ou "select");
      *
      * @var array
      */
-    var $campo_tipo;
+    public $campo_tipo;
 
     /**
      * Deve ser usado para informar os nomes dos campos a serem utilizados como indice.
      *
      * @var array
      */
-    var $campo_indice;
+    public $campo_indice;
 
     /**
      * Deve ser usado para informar os nomes dos campos a serem utilizados como valores.
      *
      * @var array
      */
-    var $campo_valor;
+    public $campo_valor;
 
     /**
      * Deve ser utilizado para informar se será uma pesquisa de pessoa física (F), pessoa jurídica (J) ou pessoa física e jurídica (FJ).
      *
      * @var char
      */
-    var $pessoa;
+    public $pessoa;
 
     /**
      * Deve ser usado para indicar se deseja que apareça o botão de novo (S) ou não (N) na pesquisa de pessoa.
      *
      * @var char
      */
-    var $pessoa_novo;
+    public $pessoa_novo;
 
     /**
      * Deve ser usado para indicar se deseja que a tela seja aberta num iframe ("frame") ou para abrir na própria janela ("window").
      *
      * @var string
      */
-    var $pessoa_tela;
+    public $pessoa_tela;
 
     /**
      * Deve ser usado para informar o nome do campo para onde será retornado o valor "0", indicando que deve ser feito um novo cadastro de pessoa.
      *
      * @var string
      */
-    var $pessoa_campo;
+    public $pessoa_campo;
 
     /**
      * Deve ser usado para indicar se deseja que após o usuário selecionar uma pessoa, ela seja redirecionada pra uma tela de cadastro com as informações da pessoa selecionada (S) ou não (N).
      *
      * @var char
      */
-    var $pessoa_editar;
+    public $pessoa_editar;
 
     /**
      * Deve ser usado para indicar em qual sistema a pessoa física está/será cadastrada.
      *
      * @var int
      */
-    var $ref_cod_sistema;
+    public $ref_cod_sistema;
 
     /**
      * Deve ser usado para indicar se na inclusão o CPF da pessoa é obrigatório ("S") ou não ("N").
      *
      * @var int
      */
-    var $pessoa_cpf;
+    public $pessoa_cpf;
 
     /**
      * Construtor da classe
      *
      * @return clsParametrosPesquisas
      */
-    function __construct() {
-        $this->campo_nome   = array();
-        $this->campo_tipo   = array();
-        $this->campo_valor  = array();
-        $this->campo_indice = array();
+    public function __construct()
+    {
+        $this->campo_nome   = [];
+        $this->campo_tipo   = [];
+        $this->campo_valor  = [];
+        $this->campo_indice = [];
     }
 
     /**
@@ -111,21 +109,23 @@ class clsParametrosPesquisas
      *
      * @return array
      */
-    function serializaCampos() {
-        $parametros_serializados["submit"]          = $this->submit;
-        $parametros_serializados["campo_nome"]      = $this->campo_nome;
-        $parametros_serializados["campo_tipo"]      = $this->campo_tipo;
-        $parametros_serializados["campo_indice"]    = $this->campo_indice;
-        $parametros_serializados["campo_valor"]     = $this->campo_valor;
-        $parametros_serializados["pessoa"]          = $this->pessoa;
-        $parametros_serializados["pessoa_novo"]     = $this->pessoa_novo;
-        $parametros_serializados["pessoa_tela"]     = $this->pessoa_tela;
-        $parametros_serializados["pessoa_campo"]    = $this->pessoa_campo;
-        $parametros_serializados["pessoa_editar"]   = $this->pessoa_editar;
-        $parametros_serializados["ref_cod_sistema"] = $this->ref_cod_sistema;
-        $parametros_serializados["pessoa_cpf"]      = $this->pessoa_cpf;
-        $parametros_serializados                    = serialize( $parametros_serializados );
-        $parametros_serializados                    = urlencode( $parametros_serializados );
+    public function serializaCampos()
+    {
+        $parametros_serializados['submit']          = $this->submit;
+        $parametros_serializados['campo_nome']      = $this->campo_nome;
+        $parametros_serializados['campo_tipo']      = $this->campo_tipo;
+        $parametros_serializados['campo_indice']    = $this->campo_indice;
+        $parametros_serializados['campo_valor']     = $this->campo_valor;
+        $parametros_serializados['pessoa']          = $this->pessoa;
+        $parametros_serializados['pessoa_novo']     = $this->pessoa_novo;
+        $parametros_serializados['pessoa_tela']     = $this->pessoa_tela;
+        $parametros_serializados['pessoa_campo']    = $this->pessoa_campo;
+        $parametros_serializados['pessoa_editar']   = $this->pessoa_editar;
+        $parametros_serializados['ref_cod_sistema'] = $this->ref_cod_sistema;
+        $parametros_serializados['pessoa_cpf']      = $this->pessoa_cpf;
+        $parametros_serializados                    = serialize($parametros_serializados);
+        $parametros_serializados                    = urlencode($parametros_serializados);
+
         return $parametros_serializados;
     }
 
@@ -134,21 +134,22 @@ class clsParametrosPesquisas
      *
      * @param array $parametros_serializados
      */
-    function deserializaCampos( $parametros_serializados ) {
-        $parametros_serializados = str_replace( "\\", null, $parametros_serializados );
-        $parametros_serializados = unserialize( $parametros_serializados );
-        $this->submit            = $parametros_serializados["submit"];
-        $this->campo_nome        = $parametros_serializados["campo_nome"];
-        $this->campo_tipo        = $parametros_serializados["campo_tipo"];
-        $this->campo_indice      = $parametros_serializados["campo_indice"];
-        $this->campo_valor       = $parametros_serializados["campo_valor"];
-        $this->pessoa            = $parametros_serializados["pessoa"];
-        $this->pessoa_novo       = $parametros_serializados["pessoa_novo"];
-        $this->pessoa_tela       = $parametros_serializados["pessoa_tela"];
-        $this->pessoa_campo      = $parametros_serializados["pessoa_campo"];
-        $this->pessoa_editar     = $parametros_serializados["pessoa_editar"];
-        $this->ref_cod_sistema   = $parametros_serializados["ref_cod_sistema"];
-        $this->pessoa_cpf        = $parametros_serializados["pessoa_cpf"];
+    public function deserializaCampos($parametros_serializados)
+    {
+        $parametros_serializados = str_replace('\\', null, $parametros_serializados);
+        $parametros_serializados = unserialize($parametros_serializados);
+        $this->submit            = $parametros_serializados['submit'];
+        $this->campo_nome        = $parametros_serializados['campo_nome'];
+        $this->campo_tipo        = $parametros_serializados['campo_tipo'];
+        $this->campo_indice      = $parametros_serializados['campo_indice'];
+        $this->campo_valor       = $parametros_serializados['campo_valor'];
+        $this->pessoa            = $parametros_serializados['pessoa'];
+        $this->pessoa_novo       = $parametros_serializados['pessoa_novo'];
+        $this->pessoa_tela       = $parametros_serializados['pessoa_tela'];
+        $this->pessoa_campo      = $parametros_serializados['pessoa_campo'];
+        $this->pessoa_editar     = $parametros_serializados['pessoa_editar'];
+        $this->ref_cod_sistema   = $parametros_serializados['ref_cod_sistema'];
+        $this->pessoa_cpf        = $parametros_serializados['pessoa_cpf'];
     }
 
     /**
@@ -156,19 +157,21 @@ class clsParametrosPesquisas
      *
      * @return array
      */
-    function geraArrayComAtributos() {
-        $parametros_serializados["submit"]          = $this->submit;
-        $parametros_serializados["campo_nome"]      = $this->campo_nome;
-        $parametros_serializados["campo_tipo"]      = $this->campo_tipo;
-        $parametros_serializados["campo_indice"]    = $this->campo_indice;
-        $parametros_serializados["campo_valor"]     = $this->campo_valor;
-        $parametros_serializados["pessoa"]          = $this->pessoa;
-        $parametros_serializados["pessoa_novo"]     = $this->pessoa_novo;
-        $parametros_serializados["pessoa_tela"]     = $this->pessoa_tela;
-        $parametros_serializados["pessoa_campo"]    = $this->pessoa_campo;
-        $parametros_serializados["pessoa_editar"]   = $this->pessoa_editar;
-        $parametros_serializados["ref_cod_sistema"] = $this->ref_cod_sistema;
-        $parametros_serializados["pessoa_cpf"]      = $this->pessoa_cpf;
+    public function geraArrayComAtributos()
+    {
+        $parametros_serializados['submit']          = $this->submit;
+        $parametros_serializados['campo_nome']      = $this->campo_nome;
+        $parametros_serializados['campo_tipo']      = $this->campo_tipo;
+        $parametros_serializados['campo_indice']    = $this->campo_indice;
+        $parametros_serializados['campo_valor']     = $this->campo_valor;
+        $parametros_serializados['pessoa']          = $this->pessoa;
+        $parametros_serializados['pessoa_novo']     = $this->pessoa_novo;
+        $parametros_serializados['pessoa_tela']     = $this->pessoa_tela;
+        $parametros_serializados['pessoa_campo']    = $this->pessoa_campo;
+        $parametros_serializados['pessoa_editar']   = $this->pessoa_editar;
+        $parametros_serializados['ref_cod_sistema'] = $this->ref_cod_sistema;
+        $parametros_serializados['pessoa_cpf']      = $this->pessoa_cpf;
+
         return $parametros_serializados;
     }
 
@@ -177,19 +180,20 @@ class clsParametrosPesquisas
      *
      * @param array $parametros_serializados
      */
-    function preencheAtributosComArray( $parametros_serializados ) {
-        $this->submit          = $parametros_serializados["submit"];
-        $this->campo_nome      = $parametros_serializados["campo_nome"];
-        $this->campo_tipo      = $parametros_serializados["campo_tipo"];
-        $this->campo_indice    = $parametros_serializados["campo_indice"];
-        $this->campo_valor     = $parametros_serializados["campo_valor"];
-        $this->pessoa          = $parametros_serializados["pessoa"];
-        $this->pessoa_novo     = $parametros_serializados["pessoa_novo"];
-        $this->pessoa_tela     = $parametros_serializados["pessoa_tela"];
-        $this->pessoa_campo    = $parametros_serializados["pessoa_campo"];
-        $this->pessoa_editar   = $parametros_serializados["pessoa_editar"];
-        $this->ref_cod_sistema = $parametros_serializados["ref_cod_sistema"];
-        $this->pessoa_cpf      = $parametros_serializados["pessoa_cpf"];
+    public function preencheAtributosComArray($parametros_serializados)
+    {
+        $this->submit          = $parametros_serializados['submit'];
+        $this->campo_nome      = $parametros_serializados['campo_nome'];
+        $this->campo_tipo      = $parametros_serializados['campo_tipo'];
+        $this->campo_indice    = $parametros_serializados['campo_indice'];
+        $this->campo_valor     = $parametros_serializados['campo_valor'];
+        $this->pessoa          = $parametros_serializados['pessoa'];
+        $this->pessoa_novo     = $parametros_serializados['pessoa_novo'];
+        $this->pessoa_tela     = $parametros_serializados['pessoa_tela'];
+        $this->pessoa_campo    = $parametros_serializados['pessoa_campo'];
+        $this->pessoa_editar   = $parametros_serializados['pessoa_editar'];
+        $this->ref_cod_sistema = $parametros_serializados['ref_cod_sistema'];
+        $this->pessoa_cpf      = $parametros_serializados['pessoa_cpf'];
     }
 
     /**
@@ -198,9 +202,10 @@ class clsParametrosPesquisas
      * @param string $campo_nome
      * @param string $campo_valor
      */
-    function adicionaCampoTexto( $campo_nome, $campo_valor ) {
+    public function adicionaCampoTexto($campo_nome, $campo_valor)
+    {
         $this->campo_nome[]   = $campo_nome;
-        $this->campo_tipo[]   = "text";
+        $this->campo_tipo[]   = 'text';
         $this->campo_indice[] = 0;
         $this->campo_valor[]  = $campo_valor;
     }
@@ -212,9 +217,10 @@ class clsParametrosPesquisas
      * @param string $campo_indice
      * @param string $campo_valor
      */
-    function adicionaCampoSelect($campo_nome, $campo_indice, $campo_valor) {
+    public function adicionaCampoSelect($campo_nome, $campo_indice, $campo_valor)
+    {
         $this->campo_nome[]   = $campo_nome;
-        $this->campo_tipo[]   = "select";
+        $this->campo_tipo[]   = 'select';
         $this->campo_indice[] = $campo_indice;
         $this->campo_valor[]  = $campo_valor;
     }
@@ -222,10 +228,11 @@ class clsParametrosPesquisas
     /**
      * Seta o nome do campo especificado na posição indicada.
      *
-     * @param int $posicao
+     * @param int    $posicao
      * @param string $valor
      */
-    function setCampoNome( $posicao, $valor ) {
+    public function setCampoNome($posicao, $valor)
+    {
         $this->campo_nome[$posicao] = $valor;
     }
 
@@ -233,12 +240,14 @@ class clsParametrosPesquisas
      * Caso seja passada a posição do campo por parâmetro, retorna o nome do campo especificado, senão, retorna um array com os nomes de todos os campos.
      *
      * @param int $posicao
+     *
      * @return string or array
      */
-    function getCampoNome( $posicao = null ) {
-        if ( is_numeric( $posicao ) )
+    public function getCampoNome($posicao = null)
+    {
+        if (is_numeric($posicao)) {
             return $this->campo_nome[$posicao];
-        else {
+        } else {
             return $this->campo_nome;
         }
     }
@@ -248,8 +257,9 @@ class clsParametrosPesquisas
      *
      * @param int $posicao
      */
-    function setCampoTipoTexto( $posicao ) {
-        $this->campo_tipo[$posicao] = "text";
+    public function setCampoTipoTexto($posicao)
+    {
+        $this->campo_tipo[$posicao] = 'text';
     }
 
     /**
@@ -257,31 +267,35 @@ class clsParametrosPesquisas
      *
      * @param int $posicao
      */
-    function setCampoTipoSelect( $posicao ) {
-        $this->campo_tipo[$posicao] = "select";
+    public function setCampoTipoSelect($posicao)
+    {
+        $this->campo_tipo[$posicao] = 'select';
     }
 
     /**
      * Caso seja passada a posição do campo por parâmetro, retorna o tipo do campo especificado, senão, retorna um array com os tipos de todos os campos.
      *
      * @param int $posicao
+     *
      * @return string or array
      */
-    function getCampoTipo( $posicao = null ) {
-        if ( is_numeric( $posicao ) ) {
+    public function getCampoTipo($posicao = null)
+    {
+        if (is_numeric($posicao)) {
             return $this->campo_tipo[$posicao];
-        }
-        else
+        } else {
             return $this->campo_tipo;
+        }
     }
 
     /**
      * Seta o indice do campo especificado na posição indicada.
      *
-     * @param int $posicao
+     * @param int    $posicao
      * @param string $valor
      */
-    function setCampoIndice( $posicao, $valor ) {
+    public function setCampoIndice($posicao, $valor)
+    {
         $this->campo_indice[$posicao] = $valor;
     }
 
@@ -289,22 +303,26 @@ class clsParametrosPesquisas
      * Caso seja passada a posição do campo por parâmetro, retorna o indice do campo especificado, senão, retorna um array com os indices de todos os campos.
      *
      * @param int $posicao
+     *
      * @return int or array
      */
-    function getCampoIndice( $posicao = null ) {
-        if ( is_numeric( $posicao ) )
+    public function getCampoIndice($posicao = null)
+    {
+        if (is_numeric($posicao)) {
             return $this->campo_indice[$posicao];
-        else
+        } else {
             return $this->campo_indice;
+        }
     }
 
     /**
      * Seta o nome do campo que será buscado na tabela na posição indicada.
      *
-     * @param int $posicao
+     * @param int    $posicao
      * @param string $valor
      */
-    function setCampoValor( $posicao, $valor ) {
+    public function setCampoValor($posicao, $valor)
+    {
         $this->campo_valor[$posicao] = $valor;
     }
 
@@ -312,13 +330,16 @@ class clsParametrosPesquisas
      * Caso seja passada a posição do campo por parâmetro, retorna o nome do campo que será buscado na tabela, senão, retorna um array com todos os nomes dos campos que irão ser buscados na tabela.
      *
      * @param int $posicao
+     *
      * @return string or array
      */
-    function getCampoValor( $posicao = null ) {
-        if ( is_numeric( $posicao ) )
+    public function getCampoValor($posicao = null)
+    {
+        if (is_numeric($posicao)) {
             return $this->campo_valor[$posicao];
-        else
+        } else {
             return $this->campo_valor;
+        }
     }
 
     /**
@@ -326,7 +347,8 @@ class clsParametrosPesquisas
      *
      * @param int $submit
      */
-    function setSubmit( $submit ) {
+    public function setSubmit($submit)
+    {
         $this->submit = $submit;
     }
 
@@ -335,7 +357,8 @@ class clsParametrosPesquisas
      *
      * @return int
      */
-    function  getSubmit() {
+    public function getSubmit()
+    {
         return $this->submit;
     }
 
@@ -345,7 +368,8 @@ class clsParametrosPesquisas
      *
      * @param string $pessoa
      */
-    function setPessoa( $pessoa ) {
+    public function setPessoa($pessoa)
+    {
         $this->pessoa = $pessoa;
     }
 
@@ -354,7 +378,8 @@ class clsParametrosPesquisas
      *
      * @return string
      */
-    function getPessoa() {
+    public function getPessoa()
+    {
         return  $this->pessoa;
     }
 
@@ -363,7 +388,8 @@ class clsParametrosPesquisas
      *
      * @param char $pessoa_novo
      */
-    function setPessoaNovo( $pessoa_novo ) {
+    public function setPessoaNovo($pessoa_novo)
+    {
         $this->pessoa_novo = $pessoa_novo;
     }
 
@@ -372,7 +398,8 @@ class clsParametrosPesquisas
      *
      * @return char
      */
-    function getPessoaNovo() {
+    public function getPessoaNovo()
+    {
         return $this->pessoa_novo;
     }
 
@@ -381,7 +408,8 @@ class clsParametrosPesquisas
      *
      * @param string $pessoa_tela
      */
-    function setPessoaTela( $pessoa_tela ) {
+    public function setPessoaTela($pessoa_tela)
+    {
         $this->pessoa_tela = $pessoa_tela;
     }
 
@@ -390,7 +418,8 @@ class clsParametrosPesquisas
      *
      * @return string
      */
-    function getPessoaTela() {
+    public function getPessoaTela()
+    {
         return $this->pessoa_tela;
     }
 
@@ -399,7 +428,8 @@ class clsParametrosPesquisas
      *
      * @param string $pessoa_campo
      */
-    function setPessoaCampo( $pessoa_campo ) {
+    public function setPessoaCampo($pessoa_campo)
+    {
         $this->pessoa_campo = $pessoa_campo;
     }
 
@@ -408,7 +438,8 @@ class clsParametrosPesquisas
      *
      * @return string
      */
-    function getPessoaCampo() {
+    public function getPessoaCampo()
+    {
         return $this->pessoa_campo;
     }
 
@@ -417,7 +448,8 @@ class clsParametrosPesquisas
      *
      * @param char $pessoa_editar
      */
-    function setPessoaEditar( $pessoa_editar ) {
+    public function setPessoaEditar($pessoa_editar)
+    {
         $this->pessoa_editar = $pessoa_editar;
     }
 
@@ -426,7 +458,8 @@ class clsParametrosPesquisas
      *
      * @return char
      */
-    function  getPessoaEditar() {
+    public function getPessoaEditar()
+    {
         return $this->pessoa_editar;
     }
 
@@ -435,7 +468,8 @@ class clsParametrosPesquisas
      *
      * @param int $ref_cod_sistema
      */
-    function setCodSistema( $ref_cod_sistema ) {
+    public function setCodSistema($ref_cod_sistema)
+    {
         $this->ref_cod_sistema = $ref_cod_sistema;
     }
 
@@ -444,7 +478,8 @@ class clsParametrosPesquisas
      *
      * @return int
      */
-    function  getCodSistema() {
+    public function getCodSistema()
+    {
         return $this->ref_cod_sistema;
     }
 
@@ -454,7 +489,8 @@ class clsParametrosPesquisas
      *
      * @param int $pessoa_cpf
      */
-    function setPessoaCPF( $pessoa_cpf ) {
+    public function setPessoaCPF($pessoa_cpf)
+    {
         $this->pessoa_cpf = $pessoa_cpf;
     }
 
@@ -463,9 +499,8 @@ class clsParametrosPesquisas
      *
      * @return char
      */
-    function  getPessoaCPF() {
+    public function getPessoaCPF()
+    {
         return $this->pessoa_cpf;
     }
 }
-
-?>

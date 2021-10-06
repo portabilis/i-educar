@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsPmieducarArredondamento extends Model
 {
     public $ref_cod_curso;
@@ -21,7 +19,7 @@ class clsPmieducarArredondamento extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_cod_curso, sequencial, valor, valor_min, valor_max';
 
         if (is_numeric($ref_cod_curso)) {
-                    $this->ref_cod_curso = $ref_cod_curso;
+            $this->ref_cod_curso = $ref_cod_curso;
         }
 
         if (is_numeric($sequencial)) {

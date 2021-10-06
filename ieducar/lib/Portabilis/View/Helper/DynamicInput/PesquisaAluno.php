@@ -1,7 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
-
 class Portabilis_View_Helper_DynamicInput_PesquisaAluno extends Portabilis_View_Helper_DynamicInput_Core
 {
     protected function inputValue($id = null)
@@ -54,7 +52,7 @@ class Portabilis_View_Helper_DynamicInput_PesquisaAluno extends Portabilis_View_
 
         $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
 
-        call_user_func_array([$this->viewInstance, 'campoTexto'], $inputOptions);
+        $this->viewInstance->campoTexto(...array_values($inputOptions));
 
         $this->viewInstance->campoOculto('ref_cod_aluno', $this->inputValue($options['id']));
 
@@ -63,7 +61,7 @@ class Portabilis_View_Helper_DynamicInput_PesquisaAluno extends Portabilis_View_
                 $("#ref_cod_aluno").val("");
                 $("#nm_aluno").val("");
             }
-            
+
             $("#ref_cod_escola").change(resetAluno);
         ', true);
 
@@ -72,7 +70,7 @@ class Portabilis_View_Helper_DynamicInput_PesquisaAluno extends Portabilis_View_
                 function pesquisaAluno() {
                     var additionalFields = [document.getElementById("ref_cod_escola")];
                     var exceptFields     = [document.getElementById("nm_aluno")];
-                    
+
                     if (validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields)) {
                         var escolaId = document.getElementById("ref_cod_escola").value;
                         pesquisa_valores_popless("/intranet/educar_pesquisa_aluno.php?ref_cod_escola="+escolaId);
@@ -83,7 +81,7 @@ class Portabilis_View_Helper_DynamicInput_PesquisaAluno extends Portabilis_View_
             $js = '
                 function pesquisaAluno() {
                     var exceptFields     = [document.getElementById("nm_aluno")];
-                    
+
                     if (validatesPresenseOfValueInRequiredFields([], exceptFields)) {
                         pesquisa_valores_popless("/intranet/educar_pesquisa_aluno.php");
                     }

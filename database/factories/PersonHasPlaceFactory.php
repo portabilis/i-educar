@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\LegacyPerson;
-use App\PersonHasPlace;
+use App\Models\PersonHasPlace;
 use App\Models\Place;
 use Faker\Generator as Faker;
 use Illuminate\Database\Eloquent\Factory;

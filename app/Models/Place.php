@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Support\Database\DateSerializer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Place extends Model
 {
+    use DateSerializer;
+
     /**
      * @var array
      */

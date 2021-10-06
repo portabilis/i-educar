@@ -2,19 +2,23 @@
 
 namespace App\Services\Educacenso;
 
-use App\Models\Educacenso\RegistroEducacenso;
-use App\User;
-use Illuminate\Http\UploadedFile;
+use DateTime;
 
 abstract class ImportService
 {
     const DELIMITER = '|';
 
     /**
+     * @var DateTime
+     */
+    public $registrationDate;
+
+    /**
      * Faz a importação dos dados a partir da string do arquivo do censo
      *
      * @param array $importString
-     * @param $user
+     * @param       $user
+     *
      * @return void
      */
     public function import($importString, $user)
@@ -28,14 +32,14 @@ abstract class ImportService
      * Importa uma linha
      *
      * @param string $line
-     * @param $user
+     * @param        $user
      */
     private function importLine($line, $user)
     {
         $lineId = $this->getLineId($line);
 
         $class = $this->getRegistroById($lineId);
-        $line = preg_replace( "/\r|\n/", '', utf8_decode($line));
+        $line = preg_replace("/\r|\n/", '', $line);
         $arrayColumns = explode(self::DELIMITER, $line);
 
         if (!$class) {
@@ -44,13 +48,18 @@ abstract class ImportService
 
         $model = $class::getModel($arrayColumns);
 
-        $class->import($model, $this->getYear(), $user);
+        if ($lineId == 60) {
+            $class->registrationDate = $this->registrationDate;
+        }
+
+        $class->import($model, $this->getYear(), $user, $this->registrationDate);
     }
 
     /**
      * Retorna o ID da linha (registro)
      *
      * @param $line
+     *
      * @return string
      */
     private function getLineId($line)
@@ -64,6 +73,7 @@ abstract class ImportService
      * Retorna a classe responsável por importar o registro da linha
      *
      * @param $lineId
+     *
      * @return RegistroImportInterface
      */
     abstract public function getRegistroById($lineId);
@@ -79,14 +89,16 @@ abstract class ImportService
      * Retorna o nome da escola a partir da string do arquivo de importação
      *
      * @param $school
+     *
      * @return string
      */
     abstract public function getSchoolNameByFile($school);
 
     /**
-     * Verifica se o arquivo está de acordo com as regras do ano
      *
-     * @param UploadedFile $file
+     * Trata os dados após a importação, caso seja necessário ajustar para eventuais mudanças de um
+     * ano para o outro
+     *
      */
-    abstract public function validateFile(UploadedFile $file);
+    abstract public function adaptData();
 }

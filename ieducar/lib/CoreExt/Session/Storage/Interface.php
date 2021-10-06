@@ -1,7 +1,5 @@
 <?php
 
-require_once 'CoreExt/Configurable.php';
-
 interface CoreExt_Session_Storage_Interface extends CoreExt_Configurable
 {
     /**

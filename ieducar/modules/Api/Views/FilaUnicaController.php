@@ -1,12 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Session;
-
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'lib/Portabilis/Array/Utils.php';
-require_once 'lib/Portabilis/String/Utils.php';
-require_once 'lib/Portabilis/Date/Utils.php';
-require_once 'include/funcoes.inc.php';
+use App\Models\LegacySingleQueueCandidate;
+use Illuminate\Support\Facades\Auth;
 
 class FilaUnicaController extends ApiCoreController
 {
@@ -21,11 +16,11 @@ class FilaUnicaController extends ApiCoreController
         $byCertidao = $this->getRequest()->by_certidao ? $this->getRequest()->by_certidao == '1' : false;
         $byId = $this->getRequest()->by_id ? $this->getRequest()->by_id == '1' : false;
 
-        $sql = "SELECT cod_aluno,
+        $sql = 'SELECT cod_aluno,
                        pessoa.nome,
                        pessoa.idpes,
-                       to_char(fisica.data_nasc, 'dd/mm/yyyy') AS data_nasc,
-                       replace(to_char(fisica.cpf, '000:000:000-00'), ':', '.') AS cpf,
+                       to_char(fisica.data_nasc, \'dd/mm/yyyy\') AS data_nasc,
+                       replace(to_char(fisica.cpf, \'000:000:000-00\'), \':\', \'.\') AS cpf,
                        documento.num_termo,
                        documento.num_folha,
                        documento.num_livro,
@@ -33,7 +28,7 @@ class FilaUnicaController extends ApiCoreController
                        ad.postal_code AS cep,
                        ad.neighborhood AS nm_bairro,
                        ad.city_id,
-                       ad.city_id || ' - ' || ad.city AS nm_municipio,
+                       ad.city_id || \' - \' || ad.city AS nm_municipio,
                        ad.address AS nm_logradouro,
                        ad.number as numero,
                        ad.complement as complemento,
@@ -42,11 +37,11 @@ class FilaUnicaController extends ApiCoreController
                   FROM pmieducar.aluno
                  INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
                  INNER JOIN cadastro.fisica ON (fisica.idpes = aluno.ref_idpes)
-                 INNER JOIN cadastro.documento ON (documento.idpes = aluno.ref_idpes)
+                  LEFT JOIN cadastro.documento ON (documento.idpes = aluno.ref_idpes)
                   LEFT JOIN person_has_place php ON php.person_id = aluno.ref_idpes
                   LEFT JOIN addresses ad ON ad.id = php.place_id
                   WHERE
-                 ";
+                 ';
         if ($byCertidao) {
             $sql .= "  CASE WHEN {$tipoCertidao} != 1
                                  THEN num_termo = '{$numTermo}'
@@ -54,7 +49,6 @@ class FilaUnicaController extends ApiCoreController
                                   AND num_folha = '{$numFolha}'
                             ELSE certidao_nascimento = '{$numNovaCeridao}'
                         END  ";
-
         }
 
         if ($byId) {
@@ -94,16 +88,7 @@ class FilaUnicaController extends ApiCoreController
         $aluno = $this->getRequest()->aluno_id;
 
         if ($aluno && $anoLetivo) {
-            $sql = 'SELECT cod_matricula,
-                           ref_cod_aluno AS cod_aluno
-                      FROM pmieducar.matricula
-                     WHERE ativo = 1
-                       AND aprovado = 3
-                       AND ano = $1
-                       AND ref_cod_aluno = $2';
-            $matricula = $this->fetchPreparedQuery($sql, [$anoLetivo, $aluno], false, 'first-line');
-
-            return $matricula;
+            return (new clsPmieducarMatricula)->matriculaAlunoAndamento($aluno, $anoLetivo, false);
         }
 
         return false;
@@ -115,16 +100,19 @@ class FilaUnicaController extends ApiCoreController
         $aluno = $this->getRequest()->aluno_id;
 
         if ($aluno && $anoLetivo) {
-            $sql = 'SELECT ref_cod_aluno AS cod_aluno,
-                           cod_candidato_fila_unica AS cod_candidato
-                      FROM pmieducar.candidato_fila_unica
-                     WHERE ativo = 1
-                       AND ano_letivo = $1
-                       AND ref_cod_aluno = $2';
+            $legacySingleQueueCandidate= LegacySingleQueueCandidate::query()
+                ->where([
+                    'ativo'=> 1,
+                    'ano_letivo' => $anoLetivo,
+                    'ref_cod_aluno' => $aluno])
+                ->select('ref_cod_aluno AS cod_aluno', 'cod_candidato_fila_unica AS cod_candidato')
+                ->get()
+                ->first()
+            ;
 
-            $matricula = $this->fetchPreparedQuery($sql, [$anoLetivo, $aluno], false, 'first-line');
-
-            return $matricula;
+            if ($legacySingleQueueCandidate instanceof LegacySingleQueueCandidate) {
+                return $legacySingleQueueCandidate->toArray();
+            }
         }
 
         return false;
@@ -248,7 +236,7 @@ class FilaUnicaController extends ApiCoreController
     protected function getMontaSelectEscolasCandidato()
     {
         $cod_candidato_fila_unica = $this->getRequest()->cod_candidato_fila_unica;
-        $userId = Session::get('id_pessoa');
+        $userId = Auth::id();
         $nivelAcesso = $this->getNivelAcesso();
         $acessoEscolar = $nivelAcesso == 4;
 

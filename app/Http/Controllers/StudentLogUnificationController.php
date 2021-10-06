@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\LogUnification;
+use App\Models\Student;
 use App\Services\StudentUnificationService;
 use Illuminate\Http\Request;
 use Throwable;
@@ -18,11 +19,12 @@ class StudentLogUnificationController extends Controller
         $this->menu(999847);
 
         $unificationsQuery = LogUnification::query()->with('main.registrations');
+        $unificationsQuery->where('type', Student::class);
 
         if ($request->get('ref_cod_escola')) {
             $schoolId = $request->get('ref_cod_escola');
             $unificationsQuery->whereHas('studentMain', function ($studentQuery) use ($schoolId) {
-                $studentQuery->whereHas('registrations', function ($registrationsQuery) use ($schoolId){
+                $studentQuery->whereHas('registrations', function ($registrationsQuery) use ($schoolId) {
                     $registrationsQuery->where('school_id', $schoolId);
                 });
             });
@@ -49,8 +51,10 @@ class StudentLogUnificationController extends Controller
             $unificationService->undo($unification);
         } catch (Throwable $exception) {
             return redirect(
-                route('student-log-unification.show', ['unification' => $unification->id]))
-                ->withErrors([$exception->getMessage()]
+                route('student-log-unification.show', ['unification' => $unification->id])
+            )
+                ->withErrors(
+                    [$exception->getMessage()]
                 );
         }
 

@@ -21,5 +21,4 @@ class EnrollmentStatusFilter
             15 => 'Falecido'
         ];
     }
-
 }

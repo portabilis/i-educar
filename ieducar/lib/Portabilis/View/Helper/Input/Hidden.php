@@ -1,7 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/View/Helper/Input/Core.php';
-
 class Portabilis_View_Helper_Input_Hidden extends Portabilis_View_Helper_Input_Core
 {
     public function hidden($attrName, $options = [])
@@ -17,6 +15,6 @@ class Portabilis_View_Helper_Input_Hidden extends Portabilis_View_Helper_Input_C
 
         $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
 
-        call_user_func_array([$this->viewInstance, 'campoOculto'], $inputOptions);
+        $this->viewInstance->campoOculto(...array_values($inputOptions));
     }
 }

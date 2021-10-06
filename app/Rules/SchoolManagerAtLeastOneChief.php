@@ -9,8 +9,9 @@ class SchoolManagerAtLeastOneChief implements Rule
     /**
      * Verifica se pelo menos um gestor foi marcado como principal
      *
-     * @param  string  $attribute
-     * @param  mixed  $value
+     * @param string $attribute
+     * @param mixed  $value
+     *
      * @return bool
      */
     public function passes($attribute, $value)

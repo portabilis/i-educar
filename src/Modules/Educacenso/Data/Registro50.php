@@ -23,6 +23,7 @@ class Registro50 extends AbstractRegistro
     /**
      * @param $escola
      * @param $ano
+     *
      * @return Registro50Model[]
      */
     public function getData($escola, $ano)

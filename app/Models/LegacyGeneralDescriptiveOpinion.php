@@ -26,7 +26,6 @@ class LegacyGeneralDescriptiveOpinion extends Model
      */
     public $timestamps = false;
 
-
     /**
      * @return BelongsTo
      */

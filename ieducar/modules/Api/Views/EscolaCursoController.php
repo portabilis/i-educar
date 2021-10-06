@@ -1,8 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'include/pmieducar/clsPmieducarEscolaCurso.inc.php';
-
 class EscolaCursoController extends ApiCoreController
 {
     public function getAnosLetivos()
@@ -12,6 +9,7 @@ class EscolaCursoController extends ApiCoreController
         if ($escolaCurso = $objeto->detalhe()) {
             $anosLetivos = json_decode($escolaCurso['anos_letivos']);
         }
+
         return ['anos_letivos' => $anosLetivos];
     }
 

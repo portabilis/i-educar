@@ -1,8 +1,5 @@
 <?php
 
-require_once 'include/clsBanco.inc.php';
-require_once 'include/Geral.inc.php';
-
 class clsFuncionario extends clsPessoaFisica
 {
     public $idpes;
@@ -38,7 +35,7 @@ class clsFuncionario extends clsPessoaFisica
         $this->data_expiracao = $data_expiracao;
         $this->ref_cod_funcionario_vinculo = $ref_cod_funcionario_vinculo;
         $this->email = $email;
-        $this->_campos_lista = ' 
+        $this->_campos_lista = '
             f.ref_cod_pessoa_fj,
             f.matricula,
             f.matricula_interna,
@@ -200,7 +197,7 @@ class clsFuncionario extends clsPessoaFisica
         $filtros = '';
         $filtro_pessoa = false;
 
-        $whereAnd = ' WHERE u.ativo = 1 AND ';
+        $whereAnd = ' WHERE true AND ';
 
         if (is_string($str_matricula) && $str_matricula != '') {
             $filtros .= "{$whereAnd} (f.matricula) LIKE ('%{$str_matricula}%')";
@@ -240,6 +237,7 @@ class clsFuncionario extends clsPessoaFisica
 
         if (is_numeric($int_ativo)) {
             $filtros .= "{$whereAnd} f.ativo = '$int_ativo'";
+            $filtros .= "{$whereAnd} u.ativo = '$int_ativo'";
             $whereAnd = ' AND ';
         }
 

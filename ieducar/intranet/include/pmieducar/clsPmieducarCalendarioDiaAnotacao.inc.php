@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsPmieducarCalendarioDiaAnotacao extends Model
 {
     public $ref_dia;
@@ -20,12 +18,12 @@ class clsPmieducarCalendarioDiaAnotacao extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_dia, ref_mes, ref_ref_cod_calendario_ano_letivo, ref_cod_calendario_anotacao';
 
         if (is_numeric($ref_cod_calendario_anotacao)) {
-                    $this->ref_cod_calendario_anotacao = $ref_cod_calendario_anotacao;
+            $this->ref_cod_calendario_anotacao = $ref_cod_calendario_anotacao;
         }
         if (is_numeric($ref_ref_cod_calendario_ano_letivo) && is_numeric($ref_mes) && is_numeric($ref_dia)) {
-                    $this->ref_ref_cod_calendario_ano_letivo = $ref_ref_cod_calendario_ano_letivo;
-                    $this->ref_mes = $ref_mes;
-                    $this->ref_dia = $ref_dia;
+            $this->ref_ref_cod_calendario_ano_letivo = $ref_ref_cod_calendario_ano_letivo;
+            $this->ref_mes = $ref_mes;
+            $this->ref_dia = $ref_dia;
         }
     }
 

@@ -1,9 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/Controller/Page/EditController.php';
-require_once 'Usuario/Model/FuncionarioDataMapper.php';
-require_once 'include/modules/clsModulesTipoVeiculo.inc.php';
-
 class VeiculoController extends Portabilis_Controller_Page_EditController
 {
     protected $_dataMapper = 'Usuario_Model_FuncionarioDataMapper';
@@ -123,13 +119,9 @@ class VeiculoController extends Portabilis_Controller_Page_EditController
             'delete_success' => '/intranet/transporte_veiculo_lst.php'
         ], $this->_options);
         $nomeMenu = $this->getRequest()->id == null ? 'Cadastrar' : 'Editar';
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'] . '/intranet' => 'In&iacute;cio',
-            'educar_transporte_escolar_index.php' => 'Transporte escolar',
-            '' => "$nomeMenu ve&iacute;culo"
+        $this->breadcrumb("$nomeMenu ve&iacute;culo", [
+            url('intranet/educar_transporte_escolar_index.php') => 'Transporte escolar',
         ]);
-        $this->enviaLocalizacao($localizacao->montar());
     }
 
     protected function _initNovo()
@@ -157,7 +149,7 @@ class VeiculoController extends Portabilis_Controller_Page_EditController
 
         // descrição
         $options = [
-            'label' => Portabilis_String_Utils::toLatin1($this->_getLabel('descricao')),
+            'label' => $this->_getLabel('descricao'),
             'required' => true,
             'size' => 50,
             'max_length' => 255
@@ -166,7 +158,7 @@ class VeiculoController extends Portabilis_Controller_Page_EditController
 
         //placa
         $options = [
-            'label' => Portabilis_String_Utils::toLatin1($this->_getLabel('placa')),
+            'label' => $this->_getLabel('placa'),
             'required' => false,
             'size' => 10,
             'max_length' => 10
@@ -175,7 +167,7 @@ class VeiculoController extends Portabilis_Controller_Page_EditController
 
         //renavam
         $options = [
-            'label' => Portabilis_String_Utils::toLatin1($this->_getLabel('renavam')),
+            'label' => $this->_getLabel('renavam'),
             'required' => false,
             'size' => 15,
             'max_length' => 15
@@ -184,7 +176,7 @@ class VeiculoController extends Portabilis_Controller_Page_EditController
 
         //chassi
         $options = [
-            'label' => Portabilis_String_Utils::toLatin1($this->_getLabel('chassi')),
+            'label' => $this->_getLabel('chassi'),
             'required' => false,
             'size' => 30,
             'max_length' => 30
@@ -193,7 +185,7 @@ class VeiculoController extends Portabilis_Controller_Page_EditController
 
         //marca
         $options = [
-            'label' => Portabilis_String_Utils::toLatin1($this->_getLabel('marca')),
+            'label' => $this->_getLabel('marca'),
             'required' => false,
             'size' => 50,
             'max_length' => 50
@@ -233,11 +225,10 @@ class VeiculoController extends Portabilis_Controller_Page_EditController
         // Malha
         $malhas = [
             null => 'Selecione uma Malha',
-            'A' => Portabilis_String_Utils::toLatin1('Aquaviária/Embarcação'),
-            'F' => Portabilis_String_Utils::toLatin1('Ferroviária'),
-            'R' => Portabilis_String_Utils::toLatin1('Rodoviária')
+            'A' => 'Aquaviária/Embarcação',
+            'F' => 'Ferroviária',
+            'R' => 'Rodoviária'
         ];
-
         $options = [
             'label' => $this->_getLabel('malha'),
             'resources' => $malhas,
@@ -266,20 +257,20 @@ class VeiculoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->select('tipo', $options);
 
         // Exclusivo transporte escolar
-        $options = ['label' => Portabilis_String_Utils::toLatin1($this->_getLabel('exclusivo_transporte_escolar'))];
+        $options = ['label' => $this->_getLabel('exclusivo_transporte_escolar')];
         $this->inputsHelper()->checkbox('exclusivo_transporte_escolar', $options);
 
         // Adaptado a necessidades especiais
-        $options = ['label' => Portabilis_String_Utils::toLatin1($this->_getLabel('adaptado_necessidades_especiais'))];
+        $options = ['label' => $this->_getLabel('adaptado_necessidades_especiais')];
         $this->inputsHelper()->checkbox('adaptado_necessidades_especiais', $options);
 
         // Ativo
-        $options = ['label' => Portabilis_String_Utils::toLatin1($this->_getLabel('ativo')), 'value' => 'on'];
+        $options = ['label' => $this->_getLabel('ativo'), 'value' => 'on'];
         $this->inputsHelper()->checkbox('ativo', $options);
 
         // descricao_inativo
         $options = [
-            'label' => Portabilis_String_Utils::toLatin1($this->_getLabel('descricao_inativo')),
+            'label' => $this->_getLabel('descricao_inativo'),
             'required' => false,
             'size' => 50,
             'max_length' => 155
@@ -287,16 +278,16 @@ class VeiculoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->textArea('descricao_inativo', $options);
 
         // Codigo da empresa
-        $options = ['label' => Portabilis_String_Utils::toLatin1($this->_getLabel('empresa')), 'required' => true];
+        $options = ['label' => $this->_getLabel('empresa'), 'required' => true];
         $this->inputsHelper()->simpleSearchEmpresa('empresa', $options);
 
         // Codigo do motorista
-        $options = ['label' => Portabilis_String_Utils::toLatin1($this->_getLabel('motorista')), 'required' => false];
+        $options = ['label' => $this->_getLabel('motorista'), 'required' => false];
         $this->inputsHelper()->simpleSearchMotorista('motorista', $options);
 
         // observações
         $options = [
-            'label' => Portabilis_String_Utils::toLatin1($this->_getLabel('observacao')),
+            'label' => $this->_getLabel('observacao'),
             'required' => false,
             'size' => 50,
             'max_length' => 255

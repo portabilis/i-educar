@@ -14,7 +14,6 @@ class LegacyNeighborhood extends Model
      */
     protected $table = 'public.bairro';
 
-
     /**
      * @var string
      */

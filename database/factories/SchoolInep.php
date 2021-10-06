@@ -6,6 +6,7 @@ use Faker\Generator as Faker;
 use Illuminate\Database\Eloquent\Factory;
 
 /** @var Factory $factory */
+
 $factory->define(SchoolInep::class, function (Faker $faker) {
     return [
         'cod_escola' => factory(LegacySchool::class)->create(),

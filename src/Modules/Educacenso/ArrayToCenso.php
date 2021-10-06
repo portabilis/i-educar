@@ -6,7 +6,6 @@ class ArrayToCenso
 {
     public static function format($array, $glue = '|')
     {
-        return implode($glue, $array);
+        return trim(implode($glue, $array));
     }
-
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Services\ChangeUserPasswordService;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\Request;
 
@@ -33,8 +34,9 @@ class ResetPasswordController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(ChangeUserPasswordService $changeUserPasswordService)
     {
+        $this->changeUserPasswordService = $changeUserPasswordService;
         $this->middleware('guest');
     }
 
@@ -46,7 +48,7 @@ class ResetPasswordController extends Controller
         return [
             'token' => 'required',
             'login' => 'required',
-            'password' => 'required|confirmed|min:6',
+            'password' => 'required|confirmed',
         ];
     }
 
@@ -58,7 +60,6 @@ class ResetPasswordController extends Controller
         return [
             'password.required' => 'O campo senha é obrigatório.',
             'password.confirmed' => 'As senhas não são iguais.',
-            'password.min' => 'A senha deve conter ao menos 8 caracteres.',
         ];
     }
 
@@ -68,7 +69,16 @@ class ResetPasswordController extends Controller
     protected function credentials(Request $request)
     {
         return $request->only(
-            'login', 'password', 'password_confirmation', 'token'
+            'login',
+            'password',
+            'password_confirmation',
+            'token'
         );
+    }
+
+    protected function setUserPassword($user, $password)
+    {
+        $employee = $user->employee;
+        $this->changeUserPasswordService->execute($employee, $password);
     }
 }

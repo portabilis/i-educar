@@ -2,19 +2,17 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Prettus\Repository\Contracts\Transformable;
-use Prettus\Repository\Traits\TransformableTrait;
+use Illuminate\Support\Str;
 
 /**
  * @property string $name
  */
-class LegacyPerson extends EloquentBaseModel implements Transformable
+class LegacyPerson extends Model
 {
-    use TransformableTrait;
-
     /**
      * @var string
      */
@@ -49,6 +47,11 @@ class LegacyPerson extends EloquentBaseModel implements Transformable
             $model->situacao = 'I';
             $model->origem_gravacao = 'M';
             $model->operacao = 'I';
+            $model->slug = Str::lower(Str::slug($model->nome, ' '));
+
+            if (config('legacy.app.uppercase_names')) {
+                $model->nome = Str::upper($model->nome);
+            }
         });
     }
 
@@ -97,6 +100,14 @@ class LegacyPerson extends EloquentBaseModel implements Transformable
             'idpes',
             'cod_deficiencia'
         );
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function employee()
+    {
+        return $this->hasOne(Employee::class, 'cod_servidor', 'idpes');
     }
 
     /**

@@ -46,11 +46,11 @@ input.form-input {
 }
 
 .table-default tbody tr:nth-child(odd) {
-  background-color: #ffffff;
+  background-color: #f5f9fd;
 }
 
 .table-default tbody tr:nth-child(even) {
-  background-color: #f5f9fd;
+  background-color: #ffffff;
 }
 
 .table-default th {
@@ -61,6 +61,10 @@ input.form-input {
   padding: 8px;
   font-size: 14px;
   font-weight: normal;
+}
+
+.table-default.table-form td {
+  padding: 4px 8px;
 }
 
 .text-muted {

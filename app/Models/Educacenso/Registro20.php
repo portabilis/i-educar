@@ -3,12 +3,12 @@
 namespace App\Models\Educacenso;
 
 use App\Services\Educacenso\Version2019\Registro20Import;
+use App_Model_IedFinder;
+use App_Model_LocalFuncionamentoDiferenciado;
+use App_Model_TipoMediacaoDidaticoPedagogico;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
-use App_Model_TipoMediacaoDidaticoPedagogico;
-use App_Model_LocalFuncionamentoDiferenciado;
-use App_Model_IedFinder;
 
 class Registro20 implements RegistroEducacenso
 {
@@ -254,7 +254,7 @@ class Registro20 implements RegistroEducacenso
      */
     private function validaMinutos($minutos)
     {
-        return strlen($minutos) == 2 && $minutos <= '55' && ((int)$minutos % 5) == 0;
+        return strlen($minutos) == 2 && $minutos <= '55' && ((int) $minutos % 5) == 0;
     }
 
     public function getLocalFuncionamentoDescriptiveValue()

@@ -19,6 +19,6 @@ class LegacyDisciplineAcademicYear extends Pivot
     ];
 
     public $timestamps = false;
-    
+
     public $incrementing = false;
 }

@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsPmieducarBibliotecaFeriados extends Model
 {
     public $cod_feriado;
@@ -24,7 +22,7 @@ class clsPmieducarBibliotecaFeriados extends Model
         $this->_campos_lista = $this->_todos_campos = 'cod_feriado, ref_cod_biblioteca, nm_feriado, descricao, data_feriado, data_cadastro, data_exclusao, ativo';
 
         if (is_numeric($ref_cod_biblioteca)) {
-                    $this->ref_cod_biblioteca = $ref_cod_biblioteca;
+            $this->ref_cod_biblioteca = $ref_cod_biblioteca;
         }
 
         if (is_numeric($cod_feriado)) {

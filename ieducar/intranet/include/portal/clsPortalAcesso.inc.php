@@ -376,7 +376,6 @@ SELECT COUNT(0) FROM (
     public function excluir()
     {
         if (is_numeric($this->cod_acesso)) {
-
         }
 
         return false;

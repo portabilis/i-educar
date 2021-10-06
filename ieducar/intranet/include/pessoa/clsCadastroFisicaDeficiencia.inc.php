@@ -21,10 +21,10 @@ class clsCadastroFisicaDeficiencia extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_idpes, ref_cod_deficiencia';
 
         if (is_numeric($ref_idpes)) {
-                    $this->ref_idpes = $ref_idpes;
+            $this->ref_idpes = $ref_idpes;
         }
         if (is_numeric($ref_cod_deficiencia)) {
-                    $this->ref_cod_deficiencia = $ref_cod_deficiencia;
+            $this->ref_cod_deficiencia = $ref_cod_deficiencia;
         }
     }
 

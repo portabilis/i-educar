@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-
 class clsPmieducarAcervo extends Model
 {
     public $cod_acervo;
@@ -133,31 +131,31 @@ class clsPmieducarAcervo extends Model
                                   a.tipo_autor';
 
         if (is_numeric($ref_cod_biblioteca)) {
-                    $this->ref_cod_biblioteca = $ref_cod_biblioteca;
+            $this->ref_cod_biblioteca = $ref_cod_biblioteca;
         }
         if (is_numeric($ref_cod_exemplar_tipo)) {
-                    $this->ref_cod_exemplar_tipo = $ref_cod_exemplar_tipo;
+            $this->ref_cod_exemplar_tipo = $ref_cod_exemplar_tipo;
         }
         if (is_numeric($ref_cod_acervo)) {
-                    $this->ref_cod_acervo = $ref_cod_acervo;
+            $this->ref_cod_acervo = $ref_cod_acervo;
         } elseif ($ref_cod_acervo == 'NULL') {
             $this->ref_cod_acervo = 'NULL';
         }
 
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
         if (is_numeric($ref_cod_acervo_colecao)) {
-                    $this->ref_cod_acervo_colecao = $ref_cod_acervo_colecao;
+            $this->ref_cod_acervo_colecao = $ref_cod_acervo_colecao;
         }
         if (is_numeric($ref_cod_acervo_idioma)) {
-                    $this->ref_cod_acervo_idioma = $ref_cod_acervo_idioma;
+            $this->ref_cod_acervo_idioma = $ref_cod_acervo_idioma;
         }
         if (is_numeric($ref_cod_acervo_editora)) {
-                    $this->ref_cod_acervo_editora = $ref_cod_acervo_editora;
+            $this->ref_cod_acervo_editora = $ref_cod_acervo_editora;
         }
 
         if (is_numeric($cod_acervo)) {

@@ -1,7 +1,5 @@
 <?php
 
-require_once 'CoreExt/Enum.php';
-
 class FormulaMedia_Model_TipoFormula extends CoreExt_Enum
 {
     const MEDIA_FINAL = 1;

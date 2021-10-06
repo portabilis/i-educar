@@ -11,8 +11,16 @@ class HoneyBadgerTracker implements Tracker
     {
         $honeybadger = Honeybadger::new(config('honeybadger'));
 
-        if ($data) {
-            $honeybadger->context('data', $data);
+        if (isset($data['context'])) {
+            $honeybadger->context('data', $data['context']);
+        }
+
+        if (isset($data['controller'])) {
+            $honeybadger->setComponent($data['controller']);
+        }
+
+        if (isset($data['action'])) {
+            $honeybadger->setAction($data['action']);
         }
 
         $honeybadger->notify($exception);

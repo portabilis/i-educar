@@ -1,7 +1,6 @@
 <?php
 
 require_once 'XML/RPC2/Client.php';
-require_once 'lib/Portabilis/Report/ReportFactory.php';
 
 class Portabilis_Report_ReportFactoryRemote extends Portabilis_Report_ReportFactory
 {

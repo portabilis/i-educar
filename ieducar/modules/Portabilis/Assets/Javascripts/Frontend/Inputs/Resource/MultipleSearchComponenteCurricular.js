@@ -121,10 +121,8 @@
  
     function htmlFormModal(){
       return `<div id="dialog_area_conhecimento">
-                <form>
-                  <label for="area_conhecimento">Área de conhecimento</label>
-                  <select multiple="multiple" name="area_conhecimento" id="area_conhecimento">
-                </form>
+                <label for="area_conhecimento">Área de conhecimento</label>
+                <select multiple="multiple" name="area_conhecimento" id="area_conhecimento">
               </div>`;
     }
  

@@ -27,7 +27,6 @@ class LegacyStudentDescriptiveOpinion extends Model
      */
     public $timestamps = false;
 
-
     /**
      * @return BelongsTo
      */
@@ -64,5 +63,10 @@ class LegacyStudentDescriptiveOpinion extends Model
     {
         return $this->parecer_descritivo == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL
             || $this->parecer_descritivo == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL;
+    }
+
+    public function descriptiveOpinionByDiscipline()
+    {
+        return $this->hasMany(LegacyDisciplineDescriptiveOpinion::class, 'parecer_aluno_id');
     }
 }

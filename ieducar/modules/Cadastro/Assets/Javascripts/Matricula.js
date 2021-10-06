@@ -22,12 +22,14 @@ $j(document).ready(function(){
       success  : function (response){
         var comboEscola = $j('#ref_cod_escola');
         comboEscola.empty();
+        comboEscola.trigger("chosen:updated");
         comboEscola.append('<option value="">Selecione uma escola</option>');
         if(response.escolas){
           $j.each(response['escolas'], function (key, escola) {
             comboEscola.append('<option value="' + escola.ref_cod_escola + '">' + escola.nome + '</option>');
           });
         }
+        comboEscola.trigger("chosen:updated");
       }
     };
     getResources(options);

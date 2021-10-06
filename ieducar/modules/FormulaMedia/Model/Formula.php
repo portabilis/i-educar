@@ -1,10 +1,5 @@
 <?php
 
-require_once 'CoreExt/Entity.php';
-require_once 'App/Model/IedFinder.php';
-require_once 'FormulaMedia/Model/TipoFormula.php';
-require_once 'FormulaMedia/Validate/Formula.php';
-
 class FormulaMedia_Model_Formula extends CoreExt_Entity
 {
     /**
@@ -201,7 +196,8 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
         // Substitui os tokens
         $replaced = preg_replace($patterns, $values, $formula);
 
-        return $replaced;
+        // Zera os parâmetros faltantes para não dar erro na formular
+        return $this->fixedUndefinedParams($replaced);
     }
 
     /**
@@ -253,5 +249,21 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
             'formulaMedia' => new FormulaMedia_Validate_Formula($formulaValidatorOptions),
             'tipoFormula' => new CoreExt_Validate_Choice(['choices' => $tipoFormula->getKeys()])
         ];
+    }
+
+    private function fixedUndefinedParams($replaced) :?string
+    {
+        if (null === $replaced) {
+            return null;
+        }
+
+        $patterns = [];
+        $zeroValue = [];
+        foreach ($this->_tokenNumerics as $key => $value) {
+            $zeroValue[] = 0;
+            $patterns[$key] = '@' . $value . '@';
+        }
+
+        return preg_replace($patterns, $zeroValue, $replaced);
     }
 }

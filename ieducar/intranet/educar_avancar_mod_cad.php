@@ -1,19 +1,9 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar');
-        $this->processoAp = '845';
-    }
-}
-
 use App\Models\LegacyInstitution;
 use Illuminate\Support\Facades\Session;
 
-class indice extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $data_matricula;
@@ -194,7 +184,7 @@ class indice extends clsCadastro
         foreach ($lstMatricula as $matricula) {
             $alunoInep = $objAluno->verificaInep($matricula['ref_cod_aluno']);
             if (!$alunoInep && $exigeInep) {
-                $alunosSemInep[] = strtoupper($matricula['nome']);
+                $alunosSemInep[] = mb_strtoupper($matricula['nome']);
             }
         }
 
@@ -209,7 +199,7 @@ class indice extends clsCadastro
         $alunos = [];
 
         foreach ($alunosComSaidaDaEscola as $a) {
-            $alunos[] = strtoupper($a['nome']);
+            $alunos[] = mb_strtoupper($a['nome']);
         }
 
         return $alunos;
@@ -353,24 +343,6 @@ class indice extends clsCadastro
             throw new Exception("Erro durante matrícula do aluno: $alunoId");
         }
 
-        $this->auditarMatriculas($escolaId, $cursoId, $serieId, $ano, $alunoId);
-
-        return true;
-    }
-
-    protected function auditarMatriculas($escolaId, $cursoId, $serieId, $ano, $alunoId)
-    {
-        $objMatricula = new clsPmieducarMatricula();
-        $matricula = $objMatricula->lista(null, null, $escolaId, $serieId, null, null, $alunoId, null, null, null, null, null, 1, $ano, null, null, null, null, null, null, null, null, null, null, $cursoId);
-
-        $matriculaId = $matricula[0]['cod_matricula'];
-        $objMatricula->cod_matricula = $matriculaId;
-
-        $detalhe = $objMatricula->detalhe();
-
-        $auditoria = new clsModulesAuditoriaGeral('matricula', $this->pessoa_logada, $matriculaId);
-        $auditoria->inclusao($detalhe);
-
         return true;
     }
 
@@ -388,10 +360,10 @@ class indice extends clsCadastro
 
         return false;
     }
-}
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
-
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+    public function Formular()
+    {
+        $this->titulo = 'i-Educar';
+        $this->processoAp = '845';
+    }
+};

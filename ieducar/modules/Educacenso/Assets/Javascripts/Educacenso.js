@@ -10,7 +10,9 @@ $j(document).ready(function(){
   ];
 
   const recordsFirstStepNotActive = [
-    '00'
+    '00',
+    '30',
+    '40'
   ];
 
   const recordsSecondStep = [
@@ -43,13 +45,11 @@ $j(document).ready(function(){
             ' <a id="download_file" href="#" style="margin-top: 10px;font-family: verdana, arial;font-size: 14px;">Clique aqui para realizar o download</a>' +
             '</div>'+
              '<div id="modal_mensagem_desabilitado" style="width:400px;display:none; text-align:left">'+
-             ' <p style="margin-left: 20px; margin-top: 30px;font-family: verdana, arial; font-size: 18px; font-weight: bold;">Parabéns! Até o momento todos os dados da sua escola, foram validados com sucesso!</p>' +
-             ' <p style="margin-left: 20px; margin-top: 30px;font-family: verdana, arial; font-size: 14px;">Isso não significa que o trabalho acabou, ainda podem surgir novos ajustes… Fique atento e repita o processo de exportação periodicamente até o dia <b>04/06</b>. Isso evitará surpresas e transtornos! 😉</p>' +
-             ' <p style="margin-left: 20px; margin-top: 30px;font-family: verdana, arial; font-size: 18px; font-weight: bold;">Próximos passos</p>' +
-             ' <ul>' +
-             ' <li><p style="margin-top: 30px;font-family: verdana, arial; font-size: 14px;">A partir do dia 04/06, clique no botão: [Exportar] novamente para gerar o arquivo com os dados para o Educacenso;</p></li>' +
-             ' <li><p style="font-family: verdana, arial; font-size: 14px;">Após salvar o arquivo em seu computador, acesse o link: <a href="http://treinamento.censobasico.inep.gov.br/censobasico" target="_new"> http://treinamento.censobasico.inep.gov.br/censobasico</a> e utilize suas credenciais para acessar a página de importação. Para saber mais sobre esses passos, <a href="https://www.youtube.com/watch?v=AzU8ltLF8Ig&feature=youtu.be&t=5080" target="_new">clique aqui.</a></p></li>' +
-             ' </ul>' +
+             ' <p style="margin-left: 0px; margin-top: 30px;font-family: verdana, arial; font-size: 18px; font-weight: bold;">Parabéns! Até o momento todos os dados da sua escola, foram validados com sucesso!</p>' +
+             ' <p style="margin-left: 0px; margin-top: 30px;font-family: verdana, arial; font-size: 14px; font-weight: bold;">Mas porque o i-Educar não baixou o arquivo de exportação da minha escola?</p>' +
+             ' <p style="margin-left: 0px; margin-top: 30px;font-family: verdana, arial; font-size: 14px;">O Censo Escolar atualizou a Tabela de Curso de Formação Superior de 2020. Novos cursos foram adicionados e outros foram modificados. Nós estamos trabalhando para atualizar esses cursos no i-Educar.</p>' +
+             '<img style="max-width:100%;" src="/intranet/imagens/cursos_superiores_servidor.png"/>' +
+             ' <p style="margin-left: 0px; margin-top: 30px;font-family: verdana, arial; font-size: 14px;">Mas não se preocupe, pois vamos concluir essas alterações até o dia <strong>05/06</strong> e o arquivo será liberado novamente. Se concluirmos antes, iremos te avisar!</p>' +
              '</div>'+
             '</div>';
 

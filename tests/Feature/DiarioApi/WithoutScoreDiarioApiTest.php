@@ -7,7 +7,6 @@ use App_Model_MatriculaSituacao;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
-
 class WithoutScoreDiarioApiTest extends TestCase
 {
     use DatabaseTransactions, DiarioApiRequestTestTrait, DiarioApiFakeDataTestTrait;
@@ -23,7 +22,7 @@ class WithoutScoreDiarioApiTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->evaluationRule = factory(LegacyEvaluationRule::class, 'without-score')->create();
+        $this->evaluationRule = factory(LegacyEvaluationRule::class)->state('without-score')->create();
     }
 
     /**

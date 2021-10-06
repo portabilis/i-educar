@@ -1,8 +1,5 @@
 <?php
 
-require_once 'CoreExt/DataMapper.php';
-require_once 'FormulaMedia/Model/Formula.php';
-
 class FormulaMedia_Model_FormulaDataMapper extends CoreExt_DataMapper
 {
     protected $_entityClass = 'FormulaMedia_Model_Formula';
