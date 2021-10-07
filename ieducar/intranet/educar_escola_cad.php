@@ -925,9 +925,11 @@ return new class extends clsCadastro {
             ];
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
+            $localFuncionamento = is_array($this->local_funcionamento) ? $this->local_funcionamento : [];
+
             // Os campos: Forma de ocupação do prédio e Código da escola que compartilha o prédio
             // serão desabilitados quando local de funcionamento for diferente de 3 (Prédio escolar)
-            $disabled = !in_array(LocalFuncionamento::PREDIO_ESCOLAR, $this->local_funcionamento);
+            $disabled = !in_array(LocalFuncionamento::PREDIO_ESCOLAR, $localFuncionamento);
             $resources = [null => 'Selecione',
                 1 => 'Próprio',
                 2 => 'Alugado',
