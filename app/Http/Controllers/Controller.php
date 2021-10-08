@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Menu;
+use App\Services\MenuCacheService;
 use iEducar\Support\Navigation\Breadcrumb;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -18,6 +19,22 @@ class Controller extends BaseController
     protected $beta = false;
 
     /**
+     * @return Breadcrumb
+     */
+    private function getBreadcrumbInstance(): Breadcrumb
+    {
+        return app(Breadcrumb::class);
+    }
+
+    /**
+     * @return MenuCacheService
+     */
+    private function getMenuCacheServiceInstance(): MenuCacheService
+    {
+        return app(MenuCacheService::class);
+    }
+
+    /**
      * Set the breadcrumbs of the action
      *
      * @param       $currentPage
@@ -27,7 +44,7 @@ class Controller extends BaseController
      */
     public function breadcrumb($currentPage, $pages = [])
     {
-        $breadcrumb = app(Breadcrumb::class)
+        $breadcrumb = $this->getBreadcrumbInstance()
             ->current($currentPage, $pages);
 
         if ($this->beta) {
@@ -47,7 +64,7 @@ class Controller extends BaseController
     public function menu($process)
     {
         $user = Auth::user();
-        $menu = Menu::user($user);
+        $menu = $this->getMenuCacheServiceInstance()->getMenuByUser($user);
 
         $topmenu = Menu::query()
             ->where('process', $process)
