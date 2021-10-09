@@ -1,9 +1,7 @@
 <?php
 
-use App\Models\LegacyExemptionType;
 use App\Process;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
-use iEducar\Modules\School\Model\ExemptionType;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 

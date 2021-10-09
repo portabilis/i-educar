@@ -1,6 +1,7 @@
 <?php
 
 use App\Menu;
+use App\Services\MenuCacheService;
 use App\User;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
@@ -113,7 +114,8 @@ class clsBase
 
         /** @var User $user */
         $user = Auth::user();
-        $menu = Menu::user($user);
+
+        $menu = app(MenuCacheService::class)->getMenuByUser($user);
 
         $topmenu = Menu::query()
             ->where('process', $this->processoAp)

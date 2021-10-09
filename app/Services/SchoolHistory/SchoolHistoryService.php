@@ -89,9 +89,9 @@ class SchoolHistoryService
     private function getUsedSpaceByTemplate($templateName)
     {
         $usedSpaceByTemplate = [
-            'portabilis_historico_escolar_9anos' => 363,
+            'portabilis_historico_escolar_9anos' => 359,
             'portabilis_historico_escolar' => 395,
-            'portabilis_historico_escolar_series_anos' => 330,
+            'portabilis_historico_escolar_series_anos' => 323,
         ];
 
         if ((int) config('legacy.report.header.alternativo')) {

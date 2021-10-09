@@ -20,9 +20,14 @@ class QueryFactory
         $this->pdo = $connection;
     }
 
+    public function query()
+    {
+        return $this->query;
+    }
+
     public function getData()
     {
-        $query = $this->query;
+        $query = $this->query();
         $values = [];
 
         foreach ($this->keys as $key) {

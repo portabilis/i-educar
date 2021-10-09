@@ -5,11 +5,10 @@ return new class extends clsListagem {
     {
         $this->titulo = 'Vínculos';
 
-        $nome_ = @$_GET['nome_'];
+        $nome_ = $_GET['nome_'] ?? null;
 
         $this->addCabecalhos(['Nome']);
-
-        $this->campoTexto('nome_', 'Nome', $nome_, '50', '255', true);
+        $this->campoTexto('nome_', 'Nome', $nome_, '50', '255');
 
         $db = new clsBanco();
         $sql  = 'SELECT cod_funcionario_vinculo, nm_vinculo FROM portal.funcionario_vinculo';
@@ -19,7 +18,6 @@ return new class extends clsListagem {
         if (!empty($nome_)) {
             $name = $db->escapeString($nome_);
             $where .= $where_and." nm_vinculo LIKE '%{$name}%' ";
-            $where_and = ' AND';
         }
 
         if ($where) {

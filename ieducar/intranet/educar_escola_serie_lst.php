@@ -24,20 +24,13 @@ return new class extends clsListagem {
             $this->$var = ($val === '') ? null : $val;
         }
 
-        $lista_busca = [
-            'Série',
-            'Curso'
-        ];
-
-        $obj_permissao = new clsPermissoes();
-        $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
-
+        $lista_busca = ['Série', 'Curso'];
         $lista_busca[] = 'Escola';
         $lista_busca[] = 'Instituição';
         $lista_busca[] = 'Escola';
         $this->addCabecalhos($lista_busca);
 
-        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie']);
+        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie'], [],['options' => ['required' => false]]);
 
         // Paginador
         $this->limite = 20;
@@ -116,6 +109,7 @@ return new class extends clsListagem {
             $this->limite
         );
 
+        $obj_permissao = new clsPermissoes();
         if ($obj_permissao->permissao_cadastra(585, $this->pessoa_logada, 7)) {
             $this->acao = 'go("educar_escola_serie_cad.php")';
             $this->nome_acao = 'Novo';

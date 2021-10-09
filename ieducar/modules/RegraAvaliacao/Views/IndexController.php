@@ -21,7 +21,7 @@ class IndexController extends Core_Controller_Page_ListController
     {
         parent::_preRender();
 
-        $this->breadcrumb('Listagem de regras de avalia&ccedil;&otilde;es', [
+        $this->breadcrumb('Listagem de regras de avaliações', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
     }

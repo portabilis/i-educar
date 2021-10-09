@@ -104,7 +104,7 @@ return new class extends clsCadastro {
 
     public function Excluir()
     {
-        $obj = new clsPmieducarAbandonoTipo($this->cod_abandono_tipo, $this->pessoa_logada, null, null, null, null, null, 0);
+        $obj = new clsPmieducarAbandonoTipo($this->cod_abandono_tipo, $this->pessoa_logada);
         $excluiu = $obj->excluir();
         if ($excluiu) {
             $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
