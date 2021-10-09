@@ -81,6 +81,7 @@ return new class extends clsCadastro {
     public $ano_letivo;
     public $nome_url_cancelar = 'Cancelar';
     public $url_cancelar = 'educar_turma_lst.php';
+    public $ano;
 
     public function Inicializar()
     {
@@ -204,7 +205,7 @@ return new class extends clsCadastro {
 
         $this->campoOculto('obrigar_campos_censo', (int)$obrigarCamposCenso);
         $this->campoOculto('cod_turma', $this->cod_turma);
-        $this->campoOculto('ano_letivo_', $this->ano);
+        $this->campoOculto('ano_letivo', (is_null($this->ano) ? date('Y') : $this->ano));
         $this->campoOculto('dependencia_administrativa', $this->dependencia_administrativa);
         $this->campoOculto('modalidade_curso', $this->modalidade_curso);
         $this->campoOculto('retorno', $this->retorno);
@@ -251,11 +252,10 @@ return new class extends clsCadastro {
 
         $desabilitado = $bloqueia;
 
+        $this->inputsHelper()->dynamic('ano', ['value' => (is_null($this->ano) ? date('Y') : $this->ano)]);
         $this->inputsHelper()->dynamic('instituicao', ['value' => $this->ref_cod_instituicao, 'disabled' => $desabilitado]);
-        $this->inputsHelper()->dynamic('escola', ['value' => $this->ref_cod_escola, 'disabled' => $desabilitado]);
-        $this->inputsHelper()->dynamic('curso', ['value' => $this->ref_cod_curso, 'disabled' => $desabilitado]);
-        $this->inputsHelper()->dynamic('serie', ['value' => $this->ref_cod_serie, 'disabled' => $desabilitado]);
-        $this->inputsHelper()->dynamic('anoLetivo', ['value' => $this->ano, 'disabled' => $desabilitado]);
+        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie']);
+
         // Infra prédio cômodo
         $opcoes = ['' => 'Selecione'];
 
@@ -776,7 +776,7 @@ return new class extends clsCadastro {
                 $disciplinas .= sprintf('<tr align="left"><td>%s</td></tr>', $conteudo);
                 $disciplinas .= '</table>';
             } else {
-                $disciplinas = 'A s&eacute;rie/ano escolar n&atilde;o possui componentes curriculares cadastrados.';
+                $disciplinas = 'A série/ano escolar n&atilde;o possui componentes curriculares cadastrados.';
             }
         }
 
@@ -850,13 +850,13 @@ return new class extends clsCadastro {
             return false;
         }
 
-        if (!$this->nomeEstaDisponivel($this->ano_letivo, $this->ref_cod_curso, $this->ref_cod_serie, $this->ref_cod_escola, $this->nm_turma)) {
+        if (!$this->nomeEstaDisponivel($this->ano, $this->ref_cod_curso, $this->ref_cod_serie, $this->ref_cod_escola, $this->nm_turma)) {
             $this->mensagem = 'O nome da turma já está sendo utilizado nesta escola, para o curso, série e anos informados.';
 
             return false;
         }
 
-        if (!$this->temBoletimDiferenciado($this->ref_cod_serie, $this->ano_letivo, $this->tipo_boletim_diferenciado)) {
+        if (!$this->temBoletimDiferenciado($this->ref_cod_serie, $this->ano, $this->tipo_boletim_diferenciado)) {
             $this->mensagem = 'O campo \'<b>Boletim diferenciado</b>\' é obrigatório quando a regra de avaliação da série possui regra diferenciada definida.';
 
             return false;
@@ -1277,7 +1277,7 @@ return new class extends clsCadastro {
         $objTurma->turma_turno_id = $this->turma_turno_id;
         $objTurma->tipo_boletim = $this->tipo_boletim;
         $objTurma->tipo_boletim_diferenciado = $this->tipo_boletim_diferenciado;
-        $objTurma->ano = $this->ano_letivo;
+        $objTurma->ano = $this->ano;
         $objTurma->tipo_atendimento = $this->tipo_atendimento;
         $objTurma->cod_curso_profissional = $this->cod_curso_profissional;
         $objTurma->etapa_educacenso = $this->etapa_educacenso == '' ? null : $this->etapa_educacenso;
@@ -1294,7 +1294,7 @@ return new class extends clsCadastro {
     protected function validaModulos()
     {
         $turmaId = $this->cod_turma;
-        $anoTurma = $this->ano_letivo_;
+        $anoTurma = $this->ano_letivo;
         $etapasCount = count($this->data_inicio);
         $etapasCountAntigo = (int) Portabilis_Utils_Database::selectField(
             'SELECT COUNT(*) AS count FROM pmieducar.turma_modulo WHERE ref_cod_turma = $1',
@@ -1557,13 +1557,13 @@ return new class extends clsCadastro {
 
     protected function getCountMatriculas($turmaId)
     {
-        if (!is_numeric($this->ano_letivo)) {
+        if (!is_numeric($this->ano)) {
             $this->mensagem = 'É necessário informar um ano letivo.';
 
             return false;
         }
 
-        $sql = "select count(cod_matricula) as matriculas from pmieducar.matricula, pmieducar.matricula_turma where ano = {$this->ano_letivo} and matricula.ativo = 1 and matricula_turma.ativo = matricula.ativo and cod_matricula = ref_cod_matricula and ref_cod_turma = {$turmaId}";
+        $sql = "select count(cod_matricula) as matriculas from pmieducar.matricula, pmieducar.matricula_turma where ano = {$this->ano} and matricula.ativo = 1 and matricula_turma.ativo = matricula.ativo and cod_matricula = ref_cod_matricula and ref_cod_turma = {$turmaId}";
 
         return $this->getDb()->CampoUnico($sql);
     }
@@ -1575,7 +1575,7 @@ return new class extends clsCadastro {
         if ($escolaSerie['bloquear_cadastro_turma_para_serie_com_vagas'] == 1) {
             $turmas = new clsPmieducarTurma();
 
-            $turmas = $turmas->lista(null, null, null, $serieId, $escolaId, null, null, null, null, null, null, null, null, null, 1, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, true, $turnoId, null, $this->ano_letivo, true);
+            $turmas = $turmas->lista(null, null, null, $serieId, $escolaId, null, null, null, null, null, null, null, null, null, 1, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, true, $turnoId, null, $this->ano, true);
 
             foreach ($turmas as $turma) {
                 $countMatriculas = $this->getCountMatriculas($turma['cod_turma']);
