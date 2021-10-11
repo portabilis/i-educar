@@ -562,4 +562,10 @@ class clsPmieducarFaltaAtraso extends Model
 
         return false;
     }
+
+    public function excluiTodosPorServidor($codServidor): void
+    {
+        $db = new clsBanco();
+        $db->Consulta("UPDATE {$this->_tabela} SET ativo = 0 WHERE ref_cod_servidor = '{$codServidor}'");
+    }
 }

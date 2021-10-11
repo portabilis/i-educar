@@ -726,6 +726,7 @@ JS;
 
         $this->excluiDisciplinas(null);
         $this->excluiFuncoes();
+        $this->excluiFaltaAtraso();
         DB::commit();
 
         $this->mensagem = 'Exclusão efetuada com sucesso.<br>';
@@ -839,6 +840,11 @@ JS;
     {
         $obj_servidor_funcao = new clsPmieducarServidorFuncao($this->ref_cod_instituicao, $this->cod_servidor);
         $obj_servidor_funcao->excluirTodos();
+    }
+
+    public function excluiFaltaAtraso()
+    {
+        (new clsPmieducarFaltaAtraso())->excluiTodosPorServidor($this->cod_servidor);
     }
 
     public function excluiFuncoesRemovidas($funcoes)
