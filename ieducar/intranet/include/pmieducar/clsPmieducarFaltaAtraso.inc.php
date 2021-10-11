@@ -566,6 +566,6 @@ class clsPmieducarFaltaAtraso extends Model
     public function excluiTodosPorServidor($codServidor): void
     {
         $db = new clsBanco();
-        $db->Consulta("UPDATE {$this->_tabela} SET ativo = 0 WHERE ref_cod_servidor = '{$codServidor}'");
+        $db->Consulta("DELETE {$this->_tabela} WHERE ref_cod_servidor = '{$codServidor}'");
     }
 }
