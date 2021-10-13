@@ -5,7 +5,7 @@
 @endpush
 
 @section('content')
-    <form action="{{ route('enrollments.enroll', ['schoolClass' => $schoolClass, 'registration' => $registration]) }}" method="post">
+    <form action="{{ Asset::get('/matricula/' .  $registration . '/enturmar/' . $schoolClass)}}" method="post">
         <table class="table-default">
             <thead>
                 <tr>
@@ -91,7 +91,7 @@
                     <button class="btn" type="submit" name="is_relocation" value="1">Transferir para turma (remanejar)</button>
                 @endif
             @endif
-            <a href="{{ route('enrollments.index', ['ref_cod_matricula' => $registration->id, 'ano_letivo' => $registration->year]) }}" class="btn">Cancelar</a>
+            <a href="{{ Asset::get('/intranet/educar_matricula_turma_lst.php?ref_cod_matricula=' . $registration->id . '&ano_letivo=' . $registration->year) }}" class="btn">Cancelar</a>
         </div>
 
     </form>
