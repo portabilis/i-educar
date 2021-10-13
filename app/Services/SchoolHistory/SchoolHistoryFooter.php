@@ -95,7 +95,7 @@ class SchoolHistoryFooter
     private function setFooterDataInLastDiscipline($discipline, $lastDiscipline, $studentId)
     {
         foreach ($this->footerDataKeys as $dataFooter) {
-            if (array_key_exists($dataFooter, $discipline)) {
+            if (is_array($discipline) && array_key_exists($dataFooter, $discipline)) {
                 $this->studentDisciplines[$studentId][$lastDiscipline]->$dataFooter = $discipline->$dataFooter;
             }
         }
