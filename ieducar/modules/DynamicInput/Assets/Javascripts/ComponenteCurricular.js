@@ -14,7 +14,7 @@
       resetSelect($componenteCurricularField);
 
       if ($anoField.val() && $turmaField.val() && $turmaField.is(':enabled')) {
-        $componenteCurricularField.children().first().html('Aguarde carregando...');
+        $componenteCurricularField.children().first().html('Aguarde, carregando...');
 
         var data = {
           ano      : $anoField.attr('value'),

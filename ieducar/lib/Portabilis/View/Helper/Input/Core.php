@@ -217,6 +217,19 @@ class Portabilis_View_Helper_Input_Core
         return null;
     }
 
+    protected function getTurmaId($turmaId = null)
+    {
+        if (!is_null($turmaId) && is_numeric($turmaId)) {
+            return $turmaId;
+        }
+
+        if (isset($this->viewInstance->ref_cod_turma) && is_numeric($this->viewInstance->ref_cod_turma)) {
+            return $this->viewInstance->ref_cod_turma;
+        }
+
+        return null;
+    }
+
     protected function getEscolaridadesId($escolaridadeId = null)
     {
         if (!is_null($escolaridadeId) && is_numeric($escolaridadeId)) {
@@ -228,5 +241,15 @@ class Portabilis_View_Helper_Input_Core
         }
 
         return null;
+    }
+
+    protected function getAno($ano = null){
+        if (!is_null($ano) && is_numeric($ano)) {
+            return $ano;
+        }
+
+        if (isset($this->viewInstance->ano) && is_numeric($this->viewInstance->ano)) {
+            return $this->viewInstance->ano;
+        }
     }
 }

@@ -194,7 +194,7 @@ tr td:first-child legend{
    font-size: 13px !important;
 }
 
-div p a{;
+div p a{
   color: blue !important;
   cursor: pointer;
 }

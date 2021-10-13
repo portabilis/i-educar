@@ -838,4 +838,24 @@ class clsPmieducarSerie extends Model
 
         return Portabilis_Utils_Database::fetchPreparedQuery($sql, $params);
     }
+
+    public function tipoPresencaRegraAvaliacao($cod_serie) {
+        $db = new clsBanco();
+        $sql = "
+            SELECT
+                r.tipo_presenca
+            FROM
+                modules.regra_avaliacao_serie_ano s
+            JOIN modules.regra_avaliacao r
+                ON (s.regra_avaliacao_id = r.id)
+            WHERE s.serie_id = {$cod_serie}
+        ";
+
+        $db->Consulta($sql);
+
+        $db->ProximoRegistro();
+        $tipo_presenca = $db->Campo('tipo_presenca');
+
+        return $tipo_presenca;
+    }
 }

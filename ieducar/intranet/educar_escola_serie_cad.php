@@ -250,7 +250,7 @@ return new class extends clsCadastro {
                 $conteudo .= '  <span style="display: block; float: left; width: 250px;">Nome</span>';
                 $conteudo .= '  <span style="display: block; float: left; width: 100px;">Nome abreviado</span>';
                 $conteudo .= '  <span style="display: block; float: left; width: 100px;">Carga horária</span>';
-                $conteudo .= '  <span style="display: block; float: left; width: 180px;" >Usar padrão do componente?</span>';
+                $conteudo .= '  <span style="display: block; float: left; width: 180px;">Usar padrão do componente?</span>';
 
                 if ($this->definirComponentePorEtapa) {
                     $conteudo .= '  <span style="display: block; width: 280px; float: left; margin-left: 30px;">Usado em etapas específicas?(Exemplo: 1,2 / 1,3)</span>';
@@ -275,12 +275,12 @@ return new class extends clsCadastro {
                 }
 
                 if ($lista) {
-                    $conteudo .= '<label style="display: block; float: left; width: 231px">
+                    $conteudo .= '  <label style="display: block; float: left; width: 231px">
                                         <a class="clone-values"
                                             onclick="cloneValues(' . array_key_first($lista) . ',\'anos_letivos\')">
                                         <i class="fa fa-clone" aria-hidden="true"></i>
                                         </a>
-                                     </label>';
+                                    </label>';
                 }
 
                 $conteudo .= '</div>';

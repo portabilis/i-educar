@@ -435,4 +435,82 @@ class clsPmieducarTurmaModulo extends Model
             return false;
         }
     }
+
+    /**
+     * Retorna a data de inicio da sequencia da etapa
+     *
+     * @return array
+     */
+    public function pegaEtapaSequenciaDataInicio($int_cod_turma, $int_sequencial)
+    {
+        $sql = "
+            SELECT
+                m.data_inicio
+            FROM
+                pmieducar.turma_modulo m
+            WHERE
+                m.ref_cod_turma = {$int_cod_turma} AND m.sequencial = {$int_sequencial}
+        ";
+
+        $db = new clsBanco();
+
+        $data = $db->UnicoCampo($sql);
+
+        if (!$data) {
+            return false;
+        }
+
+        return $data;
+    }
+
+    public function pegaEtapaSequenciaDataFim($int_cod_turma, $int_sequencial)
+    {
+        $sql = "
+            SELECT
+                m.data_fim
+            FROM
+                pmieducar.turma_modulo m
+            WHERE
+                m.ref_cod_turma = {$int_cod_turma} AND m.sequencial = {$int_sequencial}
+        ";
+
+        $db = new clsBanco();
+
+        $data = $db->UnicoCampo($sql);
+
+        if (!$data) {
+            return false;
+        }
+
+        return $data;
+    }
+
+    public function pegaPeriodoLancamentoNotasFaltas ($int_cod_turma, $int_sequencial) {
+        $sql = "
+            SELECT
+                STRING_AGG (d.start_date::character varying, ',') as data_inicio,
+                STRING_AGG (d.end_date::character varying, ',') as data_fim
+            FROM
+                public.release_period_dates d
+            JOIN public.release_periods p
+                ON (p.id = d.release_period_id)
+            JOIN pmieducar.turma_modulo t
+                ON (p.stage_type_id = t.ref_cod_modulo AND p.stage = t.sequencial)
+            WHERE
+                t.ref_cod_turma = {$int_cod_turma} AND t.sequencial = {$int_sequencial}
+        ";
+
+        $db = new clsBanco();
+        $db->Consulta($sql);
+        $db->ProximoRegistro();
+
+        $data['inicio'] = $db->Campo('data_inicio');
+        $data['fim'] = $db->Campo('data_fim');
+
+        if (!$data) {
+            return false;
+        }
+
+        return $data;
+    }
 }
