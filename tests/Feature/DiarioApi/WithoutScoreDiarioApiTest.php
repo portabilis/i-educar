@@ -22,7 +22,7 @@ class WithoutScoreDiarioApiTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->evaluationRule = factory(LegacyEvaluationRule::class)->state('without-score')->create();
+        $this->evaluationRule = LegacyEvaluationRule::factory()->withoutScore()->create();
     }
 
     /**

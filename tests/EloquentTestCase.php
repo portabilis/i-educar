@@ -29,7 +29,9 @@ abstract class EloquentTestCase extends TestCase
      */
     protected function getAttributesForCreate()
     {
-        return factory($this->getEloquentModelName())->make()->toArray();
+        $model = $this->getEloquentModelName();
+
+        return $model::factory()->make()->toArray();
     }
 
     /**
@@ -39,7 +41,9 @@ abstract class EloquentTestCase extends TestCase
      */
     protected function getAttributesForUpdate()
     {
-        return factory($this->getEloquentModelName())->make()->toArray();
+        $model = $this->getEloquentModelName();
+
+        return $model::factory()->make()->toArray();
     }
 
     /**
@@ -147,7 +151,9 @@ abstract class EloquentTestCase extends TestCase
      */
     public function testRelationships()
     {
-        $model = factory($this->getEloquentModelName())->create();
+        $model = $this->getEloquentModelName();
+
+        $model = $model::factory()->create();
 
         foreach ($this->relations as $relation => $class) {
             $this->assertInstanceOf($class, $model->{$relation});

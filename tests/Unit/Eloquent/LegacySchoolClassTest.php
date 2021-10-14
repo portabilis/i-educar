@@ -63,23 +63,23 @@ class LegacySchoolClassTest extends EloquentTestCase
     public function testGetTotalEnrolledMethod()
     {
         /** @var LegacySchoolClass $schoolClass */
-        $schoolClass = factory(LegacySchoolClass::class)->create();
+        $schoolClass = LegacySchoolClass::factory()->create();
 
-        $registration = factory(LegacyRegistration::class)->create([
+        $registration = LegacyRegistration::factory()->create([
             'dependencia' => true,
         ]);
 
-        factory(LegacyEnrollment::class)->create([
+        LegacyEnrollment::factory()->create([
             'ref_cod_turma' => $schoolClass,
             'ref_cod_matricula' => $registration,
         ]);
 
-        factory(LegacyEnrollment::class)->create([
+        LegacyEnrollment::factory()->create([
             'ref_cod_turma' => $schoolClass,
             'ativo' => false,
         ]);
 
-        factory(LegacyEnrollment::class)->create([
+        LegacyEnrollment::factory()->create([
             'ref_cod_turma' => $schoolClass,
         ]);
 
