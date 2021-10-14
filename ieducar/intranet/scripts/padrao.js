@@ -512,7 +512,7 @@ function pesquisa_valores_f(caminho, campo, flag, pag_cadastro)
 
 function pesquisa_valores_popless(caminho, campo)
 {
-  let host = hostInformation.protocol + '//' + hostInformation.host + '/intranet/' + caminho;
+  let host =  window.location.protocol + '//' +  window.location.host + '/intranet/' + caminho;
   let new_id = DOM_divs.length;
   let div = 'div_dinamico_' + new_id;
 
