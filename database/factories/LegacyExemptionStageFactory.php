@@ -22,7 +22,7 @@ class LegacyExemptionStageFactory extends Factory
      */
     public function definition(): array
     {
-        $exemption = LegacyDisciplineExemption::factory()->create();
+        $exemption = LegacyDisciplineExemptionFactory::new()->create();
 
         return [
             'ref_cod_dispensa' => $exemption->cod_dispensa,

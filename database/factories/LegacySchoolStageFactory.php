@@ -23,8 +23,8 @@ class LegacySchoolStageFactory extends Factory
      */
     public function definition(): array
     {
-        $schoolAcademicYear = LegacySchoolAcademicYear::factory()->create();
-        $stageType = LegacyStageType::factory()->unique()->make();
+        $schoolAcademicYear = LegacySchoolAcademicYearFactory::new()->create();
+        $stageType = LegacyStageTypeFactory::new()->unique()->make();
 
         return [
             'ref_ano' => now()->year,

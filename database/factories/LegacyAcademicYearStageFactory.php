@@ -23,13 +23,13 @@ class LegacyAcademicYearStageFactory extends Factory
      */
     public function definition(): array
     {
-        $schooAcademicYear = LegacySchoolAcademicYear::factory()->create();
+        $schooAcademicYear = LegacySchoolAcademicYearFactory::new()->create();
 
         return [
             'ref_ano' => $schooAcademicYear->ano,
             'ref_ref_cod_escola' => $schooAcademicYear->ref_cod_escola,
             'sequencial' => 1,
-            'ref_cod_modulo' => LegacyStageType::factory()->unique()->make(),
+            'ref_cod_modulo' => LegacyStageTypeFactory::new()->unique()->make(),
             'data_inicio' => now()->subMonths(3),
             'data_fim' => now()->addMonths(3),
             'dias_letivos' => $this->faker->numberBetween(150, 200),

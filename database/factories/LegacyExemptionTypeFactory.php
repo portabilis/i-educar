@@ -27,9 +27,9 @@ class LegacyExemptionTypeFactory extends Factory
             'nm_tipo' => $this->faker->words(2, true),
             'descricao' => $this->faker->words(5, true),
             'ativo' => 1,
-            'ref_usuario_cad' => LegacyUser::factory()->unique()->make(),
+            'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
             'data_cadastro' => now(),
-            'ref_cod_instituicao' => LegacyInstitution::factory()->unique()->make(),
+            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
         ];
     }
 }

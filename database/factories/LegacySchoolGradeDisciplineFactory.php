@@ -25,9 +25,9 @@ class LegacySchoolGradeDisciplineFactory extends Factory
     public function definition(): array
     {
         return [
-            'ref_ref_cod_escola' => LegacySchool::factory()->create(),
-            'ref_ref_cod_serie' => LegacyLevel::factory()->create(),
-            'ref_cod_disciplina' => LegacyDiscipline::factory()->create(),
+            'ref_ref_cod_escola' => LegacySchoolFactory::new()->create(),
+            'ref_ref_cod_serie' => LegacyLevelFactory::new()->create(),
+            'ref_cod_disciplina' => LegacyDisciplineFactory::new()->create(),
             'ativo' => 1,
             'anos_letivos' => '{' . now()->year . '}',
         ];
