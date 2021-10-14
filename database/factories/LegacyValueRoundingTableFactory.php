@@ -1,15 +1,30 @@
 <?php
 
+namespace Database\Factories;
+
 use App\Models\LegacyRoundingTable;
 use App\Models\LegacyValueRoundingTable;
-use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-/** @var Factory $factory */
+class LegacyValueRoundingTableFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = LegacyValueRoundingTable::class;
 
-$factory->define(LegacyValueRoundingTable::class, function (Faker $faker) {
-    return [
-        'tabela_arredondamento_id' => factory(LegacyRoundingTable::class)->make(),
-        'nome' => $faker->randomNumber(1),
-    ];
-});
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition(): array
+    {
+        return [
+            'tabela_arredondamento_id' => LegacyRoundingTable::factory()->make(),
+            'nome' => $this->faker->randomNumber(1),
+        ];
+    }
+}
