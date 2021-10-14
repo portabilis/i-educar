@@ -32,8 +32,6 @@ class LegacyStageTypeFactory extends Factory
         ];
     }
 
-
-    // unique
     public function unique()
     {
         return $this->state(function () {

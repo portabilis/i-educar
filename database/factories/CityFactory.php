@@ -28,11 +28,4 @@ class CityFactory extends Factory
             'ibge_code' => $this->faker->numerify('########'),
         ];
     }
-
-    public function unique(): self
-    {
-        return $this->state(function () {
-
-        });
-    }
 }

@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class LegacySchoolClassTeacherDiscipline extends Model
 {
-    use HasFactory;
-
     public $incrementing = false;
 
     public $primaryKey = null;

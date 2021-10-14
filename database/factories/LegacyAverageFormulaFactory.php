@@ -32,7 +32,6 @@ class LegacyAverageFormulaFactory extends Factory
         ];
     }
 
-    // calculo-media-ponderada
     public function weightedAverageCalculation(): self
     {
         return $this->state(function (array $attributes) {
@@ -43,7 +42,6 @@ class LegacyAverageFormulaFactory extends Factory
         });
     }
 
-    // media-presenca-sem-recuperacao
     public function averageWithoutRemedial(): self
     {
         return $this->state(function (array $attributes) {

@@ -39,7 +39,6 @@ class LegacyUserFactory extends Factory
         ];
     }
 
-    // unique
     public function unique()
     {
         return $this->state(function () {

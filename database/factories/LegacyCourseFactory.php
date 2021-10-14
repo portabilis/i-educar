@@ -9,7 +9,6 @@ use App\Models\LegacyInstitution;
 use App\Models\LegacyRegimeType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-
 class LegacyCourseFactory extends Factory
 {
     /**

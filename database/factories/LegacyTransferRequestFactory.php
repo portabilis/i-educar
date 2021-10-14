@@ -25,7 +25,6 @@ class LegacyTransferRequestFactory extends Factory
     {
         return [
             'ref_usuario_cad' => 1,
-            // 'ref_cod_matricula_saida' => LegacyEnrollment::factory()->create(),
             'observacao' => $this->faker->words(3, true),
             'ref_cod_escola_destino' => LegacySchool::factory()->create(),
             'data_cadastro' => now(),
