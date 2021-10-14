@@ -8,5 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class IeducarStudent extends Model
 {
     use HasFactory;
+
     protected $table = 'pmieducar.aluno';
 }

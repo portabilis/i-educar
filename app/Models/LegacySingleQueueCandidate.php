@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class LegacySingleQueueCandidate extends Model
 {
+    use HasFactory;
+
     /**
      * @var string
      */
