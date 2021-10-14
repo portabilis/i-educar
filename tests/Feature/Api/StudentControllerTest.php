@@ -14,7 +14,7 @@ class StudentControllerTest extends TestCase
     public function testUpdateStateRegistration()
     {
         /** @var LegacyStudent $student */
-        $student = factory(LegacyStudent::class)->create();
+        $student = LegacyStudent::factory()->create();
 
         $stateRegistration = '000.000.000';
 
@@ -37,7 +37,7 @@ class StudentControllerTest extends TestCase
     public function testUpdateStateRegistrationWithDigit()
     {
         /** @var LegacyStudent $student */
-        $student = factory(LegacyStudent::class)->create();
+        $student = LegacyStudent::factory()->create();
 
         $stateRegistration = '000.000.000-1';
 
@@ -64,9 +64,9 @@ class StudentControllerTest extends TestCase
         $stateRegistration = '000.000.000';
 
         /** @var LegacyStudent $student */
-        $student = factory(LegacyStudent::class)->create();
+        $student = LegacyStudent::factory()->create();
 
-        factory(LegacyStudent::class)->create([
+        LegacyStudent::factory()->create([
             'aluno_estado_id' => $stateRegistration,
         ]);
 
@@ -82,7 +82,7 @@ class StudentControllerTest extends TestCase
         $this->expectException(ValidationException::class);
 
         /** @var LegacyStudent $student */
-        $student = factory(LegacyStudent::class)->create();
+        $student = LegacyStudent::factory()->create();
 
         $stateRegistration = 1234;
 

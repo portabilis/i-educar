@@ -2,18 +2,18 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyRegistration;
-use App\Models\LegacyStudent;
+use App\Models\LegacySchool;
+use App\Models\SchoolInep;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class LegacyRegistrationFactory extends Factory
+class SchoolInepFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = LegacyRegistration::class;
+    protected $model = SchoolInep::class;
 
     /**
      * Define the model's default state.
@@ -23,10 +23,8 @@ class LegacyRegistrationFactory extends Factory
     public function definition(): array
     {
         return [
-            'ref_cod_aluno' => LegacyStudent::factory()->create(),
-            'data_cadastro' => now(),
-            'ano' => now()->year,
-            'ref_usuario_cad' => 1,
+            'cod_escola' => LegacySchool::factory()->create(),
+            'cod_escola_inep' => $this->faker->numerify('########'),
         ];
     }
 }

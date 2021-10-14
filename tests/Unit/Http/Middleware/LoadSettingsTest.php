@@ -18,7 +18,7 @@ class LoadSettingsTest extends TestCase
      */
     public function testMiddleware()
     {
-        factory(Setting::class)->create([
+        Setting::factory()->create([
             'key' => 'load.settings.test',
             'value' => 'Middleware for Test',
             'type' => Setting::TYPE_STRING,

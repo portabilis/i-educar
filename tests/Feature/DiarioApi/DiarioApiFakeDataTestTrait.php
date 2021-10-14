@@ -30,19 +30,19 @@ trait DiarioApiFakeDataTestTrait
      */
     public function getCommonFakeData($evaluationRule)
     {
-        $course = factory(LegacyCourse::class)->state('padrao-ano-escolar')->create();
+        $course = LegacyCourse::factory()->standardAcademicYear()->create();
 
-        $level = factory(LegacyLevel::class)->create([
+        $level = LegacyLevel::factory()->create([
             'ref_cod_curso' => $course,
             'dias_letivos' => '200'
         ]);
 
-        $schoolGrade = factory(LegacySchoolGrade::class)->create([
+        $schoolGrade = LegacySchoolGrade::factory()->create([
             'ref_cod_serie' => $level,
         ]);
 
         /** @var LegacySchoolClass $schoolClass */
-        $schoolClass = factory(LegacySchoolClass::class)->create([
+        $schoolClass = LegacySchoolClass::factory()->create([
             'ref_ref_cod_escola' => $schoolGrade->school_id,
             'ref_ref_cod_serie' => $schoolGrade->grade_id,
             'ref_cod_curso' => $schoolGrade->grade->course_id,
@@ -56,20 +56,20 @@ trait DiarioApiFakeDataTestTrait
         $school->courses()->attach($schoolClass->course_id, [
             'ativo' => 1,
             'anos_letivos' => '{'.now()->year.'}',
-            'ref_usuario_cad' => factory(User::class)->state('admin')->make()->id,
+            'ref_usuario_cad' => User::factory()->admin()->make()->id,
             'data_cadastro' => now(),
         ]);
 
-        $enrollment = factory(LegacyEnrollment::class)->create([
+        $enrollment = LegacyEnrollment::factory()->create([
             'ref_cod_turma' => $schoolClass,
-            'ref_cod_matricula' => factory(LegacyRegistration::class)->create([
+            'ref_cod_matricula' => LegacyRegistration::factory()->create([
                 'ref_ref_cod_escola' => $schoolClass->school_id,
                 'ref_ref_cod_serie' => $schoolClass->grade_id,
                 'ref_cod_curso' => $schoolClass->course_id,
             ]),
         ]);
 
-        factory(LegacySchoolAcademicYear::class)->create([
+        LegacySchoolAcademicYear::factory()->create([
             'ref_cod_escola' => $school->id,
         ]);
 
@@ -89,7 +89,7 @@ trait DiarioApiFakeDataTestTrait
             $year = now()->year;
         }
 
-        factory(LegacyAcademicYearStage::class)->create([
+        LegacyAcademicYearStage::factory()->create([
             'ref_ano' => $year,
             'ref_ref_cod_escola' => $school->id,
             'sequencial' => $number,
@@ -103,12 +103,12 @@ trait DiarioApiFakeDataTestTrait
      */
     public function getPromotionFromAverageAndAttendanceWithoutRetake()
     {
-        $roundingTable = factory(LegacyRoundingTable::class)->state('numeric')->create();
-        factory(LegacyValueRoundingTable::class, 10)->create([
+        $roundingTable = LegacyRoundingTable::factory()->numeric()->create();
+        LegacyValueRoundingTable::factory()->count(10)->create([
             'tabela_arredondamento_id' => $roundingTable->id,
         ]);
 
-        $evaluationRule = factory(LegacyEvaluationRule::class)->state('media-presenca-sem-recuperacao')->create([
+        $evaluationRule = LegacyEvaluationRule::factory()->mediaPresencaSemRecuperacao()->create([
             'tabela_arredondamento_id' => $roundingTable->id,
         ]);
 
@@ -119,12 +119,12 @@ trait DiarioApiFakeDataTestTrait
 
     public function getProgressionWithAverageCalculationWeightedRecovery()
     {
-        $roundingTable = factory(LegacyRoundingTable::class)->state('numeric')->create();
-        factory(LegacyValueRoundingTable::class, 10)->create([
+        $roundingTable = LegacyRoundingTable::factory()->numeric()->create();
+        LegacyValueRoundingTable::factory()->count(10)->create([
             'tabela_arredondamento_id' => $roundingTable->id,
         ]);
 
-        $evaluationRule = factory(LegacyEvaluationRule::class)->state('progressao-calculo-media-recuperacao-ponderada')->create([
+        $evaluationRule = LegacyEvaluationRule::factory()->progressaoCalculoMediaRecuperacaoPonderada()->create([
             'tabela_arredondamento_id' => $roundingTable->id,
         ]);
 
@@ -150,18 +150,18 @@ trait DiarioApiFakeDataTestTrait
             $school = $schoolClass->school;
             $grade = $schoolClass->grade;
 
-            $discipline = factory(LegacyDiscipline::class)->create();
+            $discipline = LegacyDiscipline::factory()->create();
             $schoolClass->disciplines()->attach($discipline->id, [
                 'ano_escolar_id' => $grade->cod_serie,
                 'escola_id' => $school->id
             ]);
 
-            factory(LegacyDisciplineAcademicYear::class)->create([
+            LegacyDisciplineAcademicYear::factory()->create([
                 'componente_curricular_id' => $discipline->id,
                 'ano_escolar_id' => $schoolClass->grade_id,
             ]);
 
-            factory(LegacySchoolGradeDiscipline::class)->create([
+            LegacySchoolGradeDiscipline::factory()->create([
                 'ref_ref_cod_escola' => $school->id,
                 'ref_ref_cod_serie' => $grade->cod_serie,
                 'ref_cod_disciplina' => $discipline->id
