@@ -4,6 +4,7 @@ namespace Tests\Feature\DiarioApi;
 
 use App\Models\LegacyEvaluationRule;
 use App_Model_MatriculaSituacao;
+use Database\Factories\LegacyEvaluationRuleFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
@@ -22,7 +23,7 @@ class WithoutScoreDiarioApiTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->evaluationRule = LegacyEvaluationRule::factory()->withoutScore()->create();
+        $this->evaluationRule = LegacyEvaluationRuleFactory::new()->withoutScore()->create();
     }
 
     /**
