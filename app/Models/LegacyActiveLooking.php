@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * Class LegacyActiveLooking
  *
  * @property LegacyRegistration $registration
- * @property int                id
+ * @property int id
  */
 class LegacyActiveLooking extends Model
 {

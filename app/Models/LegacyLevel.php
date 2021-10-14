@@ -2,15 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-
 /**
  * @deprecated
  * @see LegacyGrade
  */
 class LegacyLevel extends LegacyGrade
 {
-    use HasFactory;
 
     /**
      * @var string
