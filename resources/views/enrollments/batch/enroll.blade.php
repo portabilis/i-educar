@@ -53,10 +53,6 @@
                 </tr>
             </tbody>
         </table>
-    </form>
-
-    <form action="{{ Asset::get('/enturmacao-em-lote/' . $schoolClass->id, env('ASSETS_SECURE', false)) }}" method="post" class="open-sans">
-
         <h3>Alunos matriculados e não enturmados</h3>
 
         <p>
