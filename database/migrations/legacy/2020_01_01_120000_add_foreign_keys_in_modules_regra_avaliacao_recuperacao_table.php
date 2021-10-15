@@ -15,10 +15,10 @@ class AddForeignKeysInModulesRegraAvaliacaoRecuperacaoTable extends Migration
     {
         Schema::table('modules.regra_avaliacao_recuperacao', function (Blueprint $table) {
             $table->foreign('regra_avaliacao_id')
-               ->references('id')
-               ->on('modules.regra_avaliacao')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('id')
+                ->on('modules.regra_avaliacao')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

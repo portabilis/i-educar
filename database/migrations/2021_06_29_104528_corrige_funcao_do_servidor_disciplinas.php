@@ -12,7 +12,7 @@ class CorrigeFuncaoDoServidorDisciplinas extends Migration
      */
     public function up()
     {
-        DB::statement("
+        DB::statement('
             UPDATE pmieducar.servidor_disciplina
             SET ref_cod_funcao = (
                 SELECT cod_servidor_funcao
@@ -27,7 +27,7 @@ class CorrigeFuncaoDoServidorDisciplinas extends Migration
                 WHERE servidor_funcao.cod_servidor_funcao = servidor_disciplina.ref_cod_funcao
                 AND servidor_funcao.ref_cod_servidor = servidor_disciplina.ref_cod_servidor
             );
-        ");
+        ');
     }
 
     /**

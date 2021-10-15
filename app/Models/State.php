@@ -11,7 +11,8 @@ use Illuminate\Support\Collection;
 
 class State extends Model
 {
-    use DateSerializer, HasIbgeCode;
+    use DateSerializer;
+    use HasIbgeCode;
 
     /**
      * @var array

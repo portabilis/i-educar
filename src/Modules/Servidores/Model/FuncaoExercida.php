@@ -8,14 +8,14 @@ class FuncaoExercida
 {
     use DescriptionValue;
 
-    const DOCENTE = 1;
-    const AUXILIAR_EDUCACIONAL = 2;
-    const MONITOR_ATIVIDADE_COMPLEMENTAR = 3;
-    const INTERPRETE_LIBRAS = 4;
-    const DOCENTE_TITULAR_EAD = 5;
-    const DOCENTE_TUTOR_EAD = 6;
-    const GUIA_INTERPRETE_LIBRAS = 7;
-    const APOIO_ALUNOS_DEFICIENCIA = 8;
+    public const DOCENTE = 1;
+    public const AUXILIAR_EDUCACIONAL = 2;
+    public const MONITOR_ATIVIDADE_COMPLEMENTAR = 3;
+    public const INTERPRETE_LIBRAS = 4;
+    public const DOCENTE_TITULAR_EAD = 5;
+    public const DOCENTE_TUTOR_EAD = 6;
+    public const GUIA_INTERPRETE_LIBRAS = 7;
+    public const APOIO_ALUNOS_DEFICIENCIA = 8;
 
     public static function getDescriptiveValues()
     {

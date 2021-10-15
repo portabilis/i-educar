@@ -5,6 +5,7 @@ use Illuminate\Database\Migrations\Migration;
 class AddColumnsEnrollmentInfo extends Migration
 {
     use \App\Support\Database\AsView;
+
     /**
      * Run the migrations.
      *

@@ -20,7 +20,7 @@ class WhenDeletedTest extends TestCase
     {
         parent::setUp();
 
-        $this->instance = new class {
+        $this->instance = new class () {
             use WhenDeleted;
         };
     }

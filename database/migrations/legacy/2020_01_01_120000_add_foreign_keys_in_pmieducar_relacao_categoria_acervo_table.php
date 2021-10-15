@@ -15,12 +15,12 @@ class AddForeignKeysInPmieducarRelacaoCategoriaAcervoTable extends Migration
     {
         Schema::table('pmieducar.relacao_categoria_acervo', function (Blueprint $table) {
             $table->foreign('ref_cod_acervo')
-               ->references('cod_acervo')
-               ->on('pmieducar.acervo');
+                ->references('cod_acervo')
+                ->on('pmieducar.acervo');
 
             $table->foreign('categoria_id')
-               ->references('id')
-               ->on('pmieducar.categoria_obra');
+                ->references('id')
+                ->on('pmieducar.categoria_obra');
         });
     }
 

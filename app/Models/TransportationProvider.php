@@ -6,9 +6,9 @@ use App\Contracts\Enum;
 
 class TransportationProvider implements Enum
 {
-    const NONE = 0;
-    const STATE = 1;
-    const CITY = 2;
+    public const NONE = 0;
+    public const STATE = 1;
+    public const CITY = 2;
 
     public function getDescriptiveValues(): array
     {

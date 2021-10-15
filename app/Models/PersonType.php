@@ -6,8 +6,8 @@ use App\Contracts\Enum;
 
 class PersonType implements Enum
 {
-    const INDIVIDUAL = 1;
-    const ORGANIZATION = 2;
+    public const INDIVIDUAL = 1;
+    public const ORGANIZATION = 2;
 
     public function getDescriptiveValues(): array
     {

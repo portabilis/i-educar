@@ -8,7 +8,6 @@ namespace App\Models;
  */
 class LegacyLevel extends LegacyGrade
 {
-
     /**
      * @var string
      */

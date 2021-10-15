@@ -1,7 +1,5 @@
 <?php
 
-
-
 class NotaAlunoTest extends UnitBaseTest
 {
     protected $_entity = null;

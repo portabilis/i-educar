@@ -4,10 +4,10 @@ namespace iEducar\Modules\Educacenso\Model;
 
 class EsgotamentoSanitario
 {
-    const REDE_PUBLICA = 1;
-    const FOSSA_SEPTICA = 2;
-    const INEXISTENTE = 3;
-    const FOSSA_RUDIMENTAR = 4;
+    public const REDE_PUBLICA = 1;
+    public const FOSSA_SEPTICA = 2;
+    public const INEXISTENTE = 3;
+    public const FOSSA_RUDIMENTAR = 4;
 
     public static function getDescriptiveValues()
     {

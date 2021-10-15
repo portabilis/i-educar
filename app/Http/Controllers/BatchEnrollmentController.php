@@ -200,8 +200,8 @@ class BatchEnrollmentController extends Controller
         ?MessageBag $success,
         string $type = 'enroll'
     ) {
-        $fail = $fail ?? new MessageBag;
-        $success = $success ?? new MessageBag;
+        $fail = $fail ?? new MessageBag();
+        $success = $success ?? new MessageBag();
 
         switch ($type) {
             case 'enroll':

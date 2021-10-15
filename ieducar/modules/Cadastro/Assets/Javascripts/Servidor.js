@@ -106,8 +106,8 @@ function validaServidor() {
 
 function validaPosGraduacao() {
   posGraduacao = $j('#pos_graduacao').val() || [];
-  possuiOpcaoNenhuma = $j.inArray('4', posGraduacao) != -1;
-  possuiMaisDeUmaOpcao = posGraduacao.length > 1;
+  possuiOpcaoNenhuma = $j.inArray('4', posGraduacao) !== -1;
+  possuiMaisDeUmaOpcao = posGraduacao.filter(Boolean).length > 1;
 
   if (possuiOpcaoNenhuma && possuiMaisDeUmaOpcao) {
     messageUtils.error('Não é possível informar mais de uma opção no campo: <b>Pós-Graduações concluídas</b>, quando a opção: <b>Não tem pós-graduação concluída</b> estiver selecionada.');

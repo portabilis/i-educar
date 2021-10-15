@@ -15,10 +15,10 @@ class AddForeignKeysInModulesTabelaArredondamentoValorTable extends Migration
     {
         Schema::table('modules.tabela_arredondamento_valor', function (Blueprint $table) {
             $table->foreign('tabela_arredondamento_id')
-               ->references('id')
-               ->on('modules.tabela_arredondamento')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('id')
+                ->on('modules.tabela_arredondamento')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

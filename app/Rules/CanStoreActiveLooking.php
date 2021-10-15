@@ -17,16 +17,19 @@ class CanStoreActiveLooking implements Rule
 
         if ($legacyActiveLooking->data_inicio->lt($registrationDate)) {
             $this->msg = 'Data de início não pode ser menor que a data matrícula.';
+
             return false;
         }
 
         if ($legacyActiveLooking->data_fim) {
             if ($legacyActiveLooking->data_fim->lt($legacyActiveLooking->data_inicio)) {
                 $this->msg = 'Data de retorno não pode ser menor que a data de início';
+
                 return false;
             }
             if ($legacyActiveLooking->data_fim->lt($registrationDate)) {
                 $this->msg = 'Data de retorno não pode ser menor que a data da matrícula';
+
                 return false;
             }
         }
@@ -40,12 +43,13 @@ class CanStoreActiveLooking implements Rule
             ")
             ->where('ref_cod_matricula', $legacyRegistration->cod_matricula);
 
-        if ($legacyActiveLooking->id){
+        if ($legacyActiveLooking->id) {
             $activeLookingInSameDate->where('id', '<>', $legacyActiveLooking->id);
         }
 
-        if ($activeLookingInSameDate->exists()){
+        if ($activeLookingInSameDate->exists()) {
             $this->msg = 'Já existe uma busca ativa lançada para o período selecionado.';
+
             return false;
         }
 

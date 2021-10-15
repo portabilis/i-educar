@@ -15,12 +15,12 @@ class AddForeignKeysInPmieducarAlunoAlunoBeneficioTable extends Migration
     {
         Schema::table('pmieducar.aluno_aluno_beneficio', function (Blueprint $table) {
             $table->foreign('aluno_id')
-               ->references('cod_aluno')
-               ->on('pmieducar.aluno');
+                ->references('cod_aluno')
+                ->on('pmieducar.aluno');
 
             $table->foreign('aluno_beneficio_id')
-               ->references('cod_aluno_beneficio')
-               ->on('pmieducar.aluno_beneficio');
+                ->references('cod_aluno_beneficio')
+                ->on('pmieducar.aluno_beneficio');
         });
     }
 

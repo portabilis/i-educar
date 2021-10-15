@@ -314,7 +314,7 @@ class LegacySchoolClass extends Model
             return true;
         }
 
-        return (boolean) $schoolGrade->bloquear_enturmacao_sem_vagas;
+        return (bool) $schoolGrade->bloquear_enturmacao_sem_vagas;
     }
 
     /**

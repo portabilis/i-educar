@@ -1,35 +1,47 @@
 <?php
 
+namespace Database\Factories;
+
 use App\Models\LegacyCourse;
-use App\Models\LegacyEducationLevel;
-use App\Models\LegacyEducationType;
-use App\Models\LegacyInstitution;
-use App\Models\LegacyRegimeType;
-use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-/** @var Factory $factory */
+class LegacyCourseFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = LegacyCourse::class;
 
-$factory->define(LegacyCourse::class, function (Faker $faker) {
-    return [
-        'ref_usuario_cad' => 1,
-        'ref_cod_tipo_regime' => factory(LegacyRegimeType::class)->create(),
-        'ref_cod_nivel_ensino' => factory(LegacyEducationLevel::class)->create(),
-        'ref_cod_tipo_ensino' => factory(LegacyEducationType::class)->create(),
-        'nm_curso' => $faker->words(3, true),
-        'sgl_curso' => $faker->word,
-        'qtd_etapas' => $faker->randomElement([2, 3, 4]),
-        'carga_horaria' => 800,
-        'data_cadastro' => now(),
-        'ref_cod_instituicao' => factory(LegacyInstitution::class)->states('unique')->make(),
-        'hora_falta' => 0.75,
-    ];
-});
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition(): array
+    {
+        return [
+            'ref_usuario_cad' => 1,
+            'ref_cod_tipo_regime' => LegacyRegimeTypeFactory::new()->create(),
+            'ref_cod_nivel_ensino' => LegacyEducationLevelFactory::new()->create(),
+            'ref_cod_tipo_ensino' => LegacyEducationTypeFactory::new()->create(),
+            'nm_curso' => $this->faker->words(3, true),
+            'sgl_curso' => $this->faker->word,
+            'qtd_etapas' => $this->faker->randomElement([2, 3, 4]),
+            'carga_horaria' => 800,
+            'data_cadastro' => now(),
+            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
+            'hora_falta' => 0.75,
+        ];
+    }
 
-$factory->state(LegacyCourse::class, 'padrao-ano-escolar', function (Faker $faker) use ($factory) {
-    $course = $factory->raw(LegacyCourse::class);
-
-    return array_merge($course, [
-        'padrao_ano_escolar' => 1,
-    ]);
-});
+    public function standardAcademicYear(): self
+    {
+        return $this->state(function (array $attributes) {
+            return array_merge($attributes, [
+                'padrao_ano_escolar' => 1,
+            ]);
+        });
+    }
+}

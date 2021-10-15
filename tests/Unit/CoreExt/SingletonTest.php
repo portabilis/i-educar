@@ -2,8 +2,6 @@
 
 use PHPUnit\Framework\TestCase;
 
-
-
 class CoreExt_SingletonTest extends TestCase
 {
     public function testInstanciaESingleton()
