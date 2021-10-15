@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\City;
-use App\Models\State;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CityFactory extends Factory
@@ -23,7 +22,7 @@ class CityFactory extends Factory
     public function definition(): array
     {
         return [
-            'state_id' => State::factory()->create(),
+            'state_id' => StateFactory::new()->create(),
             'name' => $this->faker->city(),
             'ibge_code' => $this->faker->numerify('########'),
         ];

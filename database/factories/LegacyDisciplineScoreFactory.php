@@ -2,9 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineScore;
-use App\Models\LegacyRegistrationScore;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyDisciplineScoreFactory extends Factory
@@ -24,8 +22,8 @@ class LegacyDisciplineScoreFactory extends Factory
     public function definition(): array
     {
         return [
-            'nota_aluno_id' => LegacyRegistrationScore::factory()->create(),
-            'componente_curricular_id' => LegacyDiscipline::factory()->create(),
+            'nota_aluno_id' => LegacyRegistrationScoreFactory::new()->create(),
+            'componente_curricular_id' => LegacyDisciplineFactory::new()->create(),
             'etapa' => $this->faker->randomElement([2, 3, 4]),
         ];
     }

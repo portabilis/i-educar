@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\LegacyEducationType;
-use App\Models\LegacyInstitution;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyEducationTypeFactory extends Factory
@@ -26,7 +25,7 @@ class LegacyEducationTypeFactory extends Factory
             'ref_usuario_cad' => 1,
             'nm_tipo' => $this->faker->word,
             'data_cadastro' => now(),
-            'ref_cod_instituicao' => LegacyInstitution::factory()->unique()->make(),
+            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
         ];
     }
 }

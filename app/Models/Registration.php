@@ -16,7 +16,8 @@ use Illuminate\Database\Query\Builder;
  */
 class Registration extends Model
 {
-    use RegistrationScopes, SoftDeletes;
+    use RegistrationScopes;
+    use SoftDeletes;
 
     /**
      * @param Builder $query
@@ -41,6 +42,6 @@ class Registration extends Model
      */
     public function getStatusDescriptionAttribute()
     {
-        return (new RegistrationStatus)->getDescriptiveValues()[(int) $this->status];
+        return (new RegistrationStatus())->getDescriptiveValues()[(int) $this->status];
     }
 }

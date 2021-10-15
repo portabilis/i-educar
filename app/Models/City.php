@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Models\Concerns\HasIbgeCode;
 use App\Support\Database\DateSerializer;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -13,7 +12,8 @@ use Illuminate\Support\Collection;
 
 class City extends Model
 {
-    use DateSerializer, HasFactory, HasIbgeCode;
+    use DateSerializer;
+    use HasIbgeCode;
 
     /**
      * @var array

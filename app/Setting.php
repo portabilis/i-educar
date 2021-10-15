@@ -3,17 +3,16 @@
 namespace App;
 
 use App\Support\Database\DateSerializer;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Setting extends Model
 {
-    use DateSerializer, HasFactory;
+    use DateSerializer;
 
-    const TYPE_STRING = 'string';
-    const TYPE_FLOAT = 'float';
-    const TYPE_INTEGER = 'integer';
-    const TYPE_BOOLEAN = 'boolean';
+    public const TYPE_STRING = 'string';
+    public const TYPE_FLOAT = 'float';
+    public const TYPE_INTEGER = 'integer';
+    public const TYPE_BOOLEAN = 'boolean';
 
     /**
      * @var array
@@ -44,7 +43,7 @@ class Setting extends Model
                     return false;
                 }
 
-                return (boolean) $value;
+                return (bool) $value;
         }
 
         return $value;

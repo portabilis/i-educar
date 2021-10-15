@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\LegacyEmployee;
-use App\Models\LegacyIndividual;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyEmployeeFactory extends Factory
@@ -24,7 +23,7 @@ class LegacyEmployeeFactory extends Factory
     {
         return [
             'ref_cod_pessoa_fj' => function () {
-                return LegacyIndividual::factory()->create()->idpes;
+                return LegacyIndividualFactory::new()->create()->idpes;
             },
             'matricula' => $this->faker->randomDigitNotNull(),
             'senha' => $this->faker->randomDigitNotNull(),

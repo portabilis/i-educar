@@ -56,7 +56,7 @@ class ImportService extends GeneralImportService
             return;
         }
 
-        return new $arrayRegistros[$lineId];
+        return new $arrayRegistros[$lineId]();
     }
 
     public function adaptData()

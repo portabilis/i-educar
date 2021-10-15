@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyIndividual;
 use App\Models\LegacyStudent;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -23,7 +22,7 @@ class LegacyStudentFactory extends Factory
     public function definition(): array
     {
         return [
-            'ref_idpes' => LegacyIndividual::factory()->create(),
+            'ref_idpes' => LegacyIndividualFactory::new()->create(),
             'data_cadastro' => now(),
         ];
     }

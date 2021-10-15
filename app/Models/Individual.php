@@ -35,7 +35,7 @@ class Individual extends Model
      */
     public function getGenderDescriptionAttribute()
     {
-        return (new Gender)->getDescriptiveValues()[$this->gender];
+        return (new Gender())->getDescriptiveValues()[$this->gender];
     }
 
     /**
@@ -43,7 +43,7 @@ class Individual extends Model
      */
     public function getNationalityDescriptionAttribute()
     {
-        return (new Nationality)->getDescriptiveValues()[$this->nationality];
+        return (new Nationality())->getDescriptiveValues()[$this->nationality];
     }
 
     /**
@@ -51,7 +51,7 @@ class Individual extends Model
      */
     public function getRegistryOriginDescriptionAttribute()
     {
-        return (new RegistryOrigin)->getDescriptiveValues()[$this->registry_origin];
+        return (new RegistryOrigin())->getDescriptiveValues()[$this->registry_origin];
     }
 
     /**
@@ -59,7 +59,7 @@ class Individual extends Model
      */
     public function getLocalizationZoneDescriptionAttribute()
     {
-        return (new LocalizationZone)->getDescriptiveValues()[$this->localization_zone];
+        return (new LocalizationZone())->getDescriptiveValues()[$this->localization_zone];
     }
 
     /**

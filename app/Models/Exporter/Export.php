@@ -128,11 +128,13 @@ class Export extends Model
             switch ($operator) {
                 case '=':
                     $query->whereRaw("{$column} {$operator} {$value}");
+
                     break;
 
                 case 'in':
                     $value = implode(', ', $value);
                     $query->whereRaw("{$column} {$operator} ({$value})");
+
                     break;
             }
         }

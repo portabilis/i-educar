@@ -2,9 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyAverageFormula;
 use App\Models\LegacyEvaluationRule;
-use App\Models\LegacyInstitution;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use RegraAvaliacao_Model_Nota_TipoValor;
 use RegraAvaliacao_Model_TipoPresenca;
@@ -27,8 +25,8 @@ class LegacyEvaluationRuleFactory extends Factory
     public function definition(): array
     {
         return [
-            'formula_media_id' => LegacyAverageFormula::factory()->create(),
-            'instituicao_id' => LegacyInstitution::factory()->unique()->make(),
+            'formula_media_id' => LegacyAverageFormulaFactory::new()->create(),
+            'instituicao_id' => LegacyInstitutionFactory::new()->unique()->make(),
             'nome' => $this->faker->words(3, true),
             'tipo_nota' => $this->faker->randomElement([1, 2, 3, 4]),
             'tipo_progressao' => $this->faker->randomElement([1, 2, 3, 4]),
@@ -81,7 +79,7 @@ class LegacyEvaluationRuleFactory extends Factory
         return $this->state(function (array $attributes) {
             return array_merge($attributes, [
                 'tipo_nota' => RegraAvaliacao_Model_Nota_TipoValor::NUMERICA,
-                'formula_recuperacao_id' => LegacyAverageFormula::factory()->weightedAverageCalculation()->create(),
+                'formula_recuperacao_id' => LegacyAverageFormulaFactory::new()->weightedAverageCalculation()->create(),
                 'tipo_progressao' => RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MEDIA_PRESENCA,
                 'tipo_presenca' => RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE,
                 'porcentagem_presenca' => 75,

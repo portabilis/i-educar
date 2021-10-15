@@ -3,8 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\LegacyEducationNetwork;
-use App\Models\LegacyInstitution;
-use App\Models\LegacyUser;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyEducationNetworkFactory extends Factory
@@ -24,10 +22,10 @@ class LegacyEducationNetworkFactory extends Factory
     public function definition(): array
     {
         return [
-            'ref_usuario_cad' => LegacyUser::factory()->unique()->make(),
+            'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
             'nm_rede' => $this->faker->company,
             'data_cadastro' => now(),
-            'ref_cod_instituicao' => LegacyInstitution::factory()->unique()->make(),
+            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
         ];
     }
 }

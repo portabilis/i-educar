@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyInstitution;
 use App\Models\LegacyKnowledgeArea;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -23,7 +22,7 @@ class LegacyKnowledgeAreaFactory extends Factory
     public function definition(): array
     {
         return [
-            'instituicao_id' => LegacyInstitution::factory()->unique()->make(),
+            'instituicao_id' => LegacyInstitutionFactory::new()->unique()->make(),
             'nome' => $this->faker->words(3, true),
         ];
     }
@@ -34,7 +33,7 @@ class LegacyKnowledgeAreaFactory extends Factory
             $knowledgeArea = LegacyKnowledgeArea::query()->first();
 
             if (empty($knowledgeArea)) {
-                $knowledgeArea = LegacyKnowledgeArea::factory()->create();
+                $knowledgeArea = LegacyKnowledgeAreaFactory::new()->create();
             }
 
             return [

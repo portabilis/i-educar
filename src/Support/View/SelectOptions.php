@@ -18,7 +18,6 @@ use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento;
 use iEducar\Modules\Educacenso\Model\TipoEnsinoMedioCursado;
 use iEducar\Modules\Educacenso\Model\UnidadeVinculadaComOutraInstituicao;
 use iEducar\Modules\School\Model\ActiveLooking;
-use iEducar\Modules\School\Model\ExemptionType;
 use iEducar\Modules\Servidores\Model\FuncaoExercida;
 use iEducar\Modules\Servidores\Model\TipoVinculo;
 use iEducar\Modules\Transport\Period;
@@ -204,12 +203,14 @@ class SelectOptions
 
     /**
      * Retorna as opções disponíveis para os tipos de dispensa
+     *
      * @return string[]
      */
     public static function activeSearchResultOptions()
     {
         $options = ActiveLooking::getDescriptiveValues();
         unset($options[ActiveLooking::ACTIVE_LOOKING_IN_PROGRESS_RESULT]);
+
         return $options;
     }
 }

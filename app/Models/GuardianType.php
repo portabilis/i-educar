@@ -6,10 +6,10 @@ use App\Contracts\Enum;
 
 class GuardianType implements Enum
 {
-    const FATHER = 1;
-    const MOTHER = 2;
-    const BOTH = 3;
-    const OTHER = 4;
+    public const FATHER = 1;
+    public const MOTHER = 2;
+    public const BOTH = 3;
+    public const OTHER = 4;
 
     public function getDescriptiveValues(): array
     {

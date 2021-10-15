@@ -3,11 +3,12 @@
 namespace Tests\Unit\Eloquent;
 
 use App\Models\LegacyCourse;
-use App\Models\LegacyEnrollment;
 use App\Models\LegacyLevel;
-use App\Models\LegacyRegistration;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolClass;
+use Database\Factories\LegacyEnrollmentFactory;
+use Database\Factories\LegacyRegistrationFactory;
+use Database\Factories\LegacySchoolClassFactory;
 use Illuminate\Support\Collection;
 use Tests\EloquentTestCase;
 
@@ -63,23 +64,23 @@ class LegacySchoolClassTest extends EloquentTestCase
     public function testGetTotalEnrolledMethod()
     {
         /** @var LegacySchoolClass $schoolClass */
-        $schoolClass = LegacySchoolClass::factory()->create();
+        $schoolClass = LegacySchoolClassFactory::new()->create();
 
-        $registration = LegacyRegistration::factory()->create([
+        $registration = LegacyRegistrationFactory::new()->create([
             'dependencia' => true,
         ]);
 
-        LegacyEnrollment::factory()->create([
+        LegacyEnrollmentFactory::new()->create([
             'ref_cod_turma' => $schoolClass,
             'ref_cod_matricula' => $registration,
         ]);
 
-        LegacyEnrollment::factory()->create([
+        LegacyEnrollmentFactory::new()->create([
             'ref_cod_turma' => $schoolClass,
             'ativo' => false,
         ]);
 
-        LegacyEnrollment::factory()->create([
+        LegacyEnrollmentFactory::new()->create([
             'ref_cod_turma' => $schoolClass,
         ]);
 

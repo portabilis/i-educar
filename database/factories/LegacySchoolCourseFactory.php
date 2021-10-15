@@ -2,10 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyCourse;
-use App\Models\LegacySchool;
 use App\Models\LegacySchoolCourse;
-use App\Models\LegacyUser;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacySchoolCourseFactory extends Factory
@@ -25,9 +22,9 @@ class LegacySchoolCourseFactory extends Factory
     public function definition(): array
     {
         return [
-            'ref_cod_escola' => LegacySchool::factory()->create(),
-            'ref_cod_curso' => LegacyCourse::factory()->create(),
-            'ref_usuario_cad' => LegacyUser::factory()->unique()->make(),
+            'ref_cod_escola' => LegacySchoolFactory::new()->create(),
+            'ref_cod_curso' => LegacyCourseFactory::new()->create(),
+            'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
             'data_cadastro' => now(),
             'ativo' => 1,
             'autorizacao' => $this->faker->sentence,

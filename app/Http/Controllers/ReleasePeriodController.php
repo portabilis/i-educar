@@ -18,7 +18,7 @@ use Throwable;
 
 class ReleasePeriodController extends Controller
 {
-    const INFO_MESSAGE = '<b>Atenção!</b> Este recurso foi atualizado e agora funciona diferente!
+    public const INFO_MESSAGE = '<b>Atenção!</b> Este recurso foi atualizado e agora funciona diferente!
 Cadastre os períodos que deseja liberar o lançamento de notas e faltas por etapa, podendo criar mais de 1 período de lançamento em todas as etapas';
 
     public function __construct()

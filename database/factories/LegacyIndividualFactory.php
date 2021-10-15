@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\LegacyIndividual;
-use App\Models\LegacyPerson;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyIndividualFactory extends Factory
@@ -23,7 +22,7 @@ class LegacyIndividualFactory extends Factory
     public function definition(): array
     {
         return [
-            'idpes' => LegacyPerson::factory()->create(),
+            'idpes' => LegacyPersonFactory::new()->create(),
             'data_cad' => now(),
             'operacao' => $this->faker->randomElement(['I', 'A', 'E']),
             'origem_gravacao' => $this->faker->randomElement(['M', 'U', 'C', 'O']),

@@ -4,10 +4,10 @@ namespace iEducar\Modules\Educacenso\Model;
 
 class OrgaoVinculadoEscola
 {
-    const OUTRO = 1;
-    const EDUCACAO = 2;
-    const SEGURANCA = 3;
-    const SAUDE = 4;
+    public const OUTRO = 1;
+    public const EDUCACAO = 2;
+    public const SEGURANCA = 3;
+    public const SAUDE = 4;
 
     public static function getDescriptiveValues()
     {

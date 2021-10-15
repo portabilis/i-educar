@@ -2,9 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyInstitution;
 use App\Models\LegacyStageType;
-use App\Models\LegacyUser;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyStageTypeFactory extends Factory
@@ -24,10 +22,10 @@ class LegacyStageTypeFactory extends Factory
     public function definition(): array
     {
         return [
-            'ref_usuario_cad' => LegacyUser::factory()->unique()->make(),
+            'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
             'nm_tipo' => $this->faker->word,
             'data_cadastro' => now(),
-            'ref_cod_instituicao' => LegacyInstitution::factory()->unique()->make(),
+            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
             'num_etapas' => $this->faker->numberBetween(1, 4),
         ];
     }
@@ -38,7 +36,7 @@ class LegacyStageTypeFactory extends Factory
             $stageType = LegacyStageType::query()->first();
 
             if (empty($stageType)) {
-                $stageType = LegacyStageType::factory()->create();
+                $stageType = LegacyStageTypeFactory::new()->create();
             }
 
             return $stageType->toArray();

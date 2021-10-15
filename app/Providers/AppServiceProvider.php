@@ -64,7 +64,7 @@ class AppServiceProvider extends ServiceProvider
             $this->loadLegacyMigrations();
         }
 
-        if(env('ASSETS_SECURE')) {
+        if (env('ASSETS_SECURE')) {
             URL::forceScheme('https');
         }
 

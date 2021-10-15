@@ -4,13 +4,13 @@ namespace App\Models;
 
 use App\Models\Concerns\HasIbgeCode;
 use App\Support\Database\DateSerializer;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class District extends Model
 {
-    use DateSerializer, HasFactory, HasIbgeCode;
+    use DateSerializer;
+    use HasIbgeCode;
 
     /**
      * @var array

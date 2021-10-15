@@ -8,7 +8,9 @@ use Tests\TestCase;
 
 class PromotionFromAverageAndAttendanceWithoutRetakeTest extends TestCase
 {
-    use DiarioApiFakeDataTestTrait, DiarioApiRequestTestTrait, DatabaseTransactions;
+    use DiarioApiFakeDataTestTrait;
+    use DiarioApiRequestTestTrait;
+    use DatabaseTransactions;
 
     /**
      * @var LegacyEnrollment

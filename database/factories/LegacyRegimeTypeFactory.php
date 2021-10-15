@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyInstitution;
 use App\Models\LegacyRegimeType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -27,7 +26,7 @@ class LegacyRegimeTypeFactory extends Factory
             'nm_tipo' => $this->faker->words(3, true),
             'data_cadastro' => now(),
             'ativo' => 1,
-            'ref_cod_instituicao' => LegacyInstitution::factory()->unique()->make(),
+            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
         ];
     }
 }

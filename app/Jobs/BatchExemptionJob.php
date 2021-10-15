@@ -15,7 +15,11 @@ use Throwable;
 
 class BatchExemptionJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, ShouldNotificate;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
+    use ShouldNotificate;
 
     /**
      * @var array
@@ -67,6 +71,7 @@ class BatchExemptionJob implements ShouldQueue
             DB::rollBack();
 
             $this->notificateError();
+
             throw $exception;
         }
 
