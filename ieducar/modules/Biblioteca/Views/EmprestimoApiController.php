@@ -599,7 +599,7 @@ class EmprestimoApiController extends ApiCoreController
         }
 
         $exemplar = $this->loadExemplares($reload, $id);
-        $exemplar = $exemplar ?? [];
+        $exemplar = $exemplar === false ? $exemplar: [];
         return array_shift($exemplar);
     }
 
