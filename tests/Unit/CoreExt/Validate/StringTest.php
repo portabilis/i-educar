@@ -1,7 +1,5 @@
 <?php
 
-
-
 class CoreExt_Validate_StringTest extends PHPUnit\Framework\TestCase
 {
     protected $_validator = null;

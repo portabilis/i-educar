@@ -4,17 +4,17 @@ namespace iEducar\Modules\Educacenso\Model;
 
 class PaisResidencia
 {
-    const ARGENTINA = 32;
-    const BOLIVIA = 68;
-    const BRASIL = 76;
-    const COLOMBIA = 170;
-    const GUIANA = 328;
-    const GUIANA_FRANCESA = 254;
-    const PARAGUAI = 600;
-    const PERU = 604;
-    const SURINAME = 740;
-    const URUGUAI = 858;
-    const VENEZUELA = 862;
+    public const ARGENTINA = 32;
+    public const BOLIVIA = 68;
+    public const BRASIL = 76;
+    public const COLOMBIA = 170;
+    public const GUIANA = 328;
+    public const GUIANA_FRANCESA = 254;
+    public const PARAGUAI = 600;
+    public const PERU = 604;
+    public const SURINAME = 740;
+    public const URUGUAI = 858;
+    public const VENEZUELA = 862;
 
     public static function getDescriptiveValues()
     {

@@ -9,7 +9,9 @@ use Illuminate\Queue\SerializesModels;
 
 class TransferEvent
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable;
+    use InteractsWithSockets;
+    use SerializesModels;
 
     /**
      * @var LegacyTransferRequest

@@ -1,7 +1,5 @@
 <?php
 
-
-
 class FormulaTest extends UnitBaseTest
 {
     protected $_entity = null;

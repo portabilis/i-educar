@@ -4,17 +4,17 @@ namespace iEducar\Modules\Educacenso\Model;
 
 class InstrumentosPedagogicos
 {
-    const ACERVO_MULTIMIDIA = 1;
-    const BRINQUEDROS_EDUCACAO_INFANTIL = 2;
-    const MATERIAIS_CIENTIFICOS = 3;
-    const AMPLIFICACAO_DIFUSAO_SOM = 4;
-    const INSTRUMENTOS_MUSICAIS = 5;
-    const JOGOS_EDUCATIVOS = 6;
-    const MATERIAIS_ATIVIDADES_CULTURAIS = 7;
-    const MATERIAIS_PRATICA_DESPORTIVA = 8;
-    const MATERIAIS_EDUCACAO_INDIGENA = 9;
-    const MATERIAIS_RELACOES_ETNICOS_RACIAIS = 10;
-    const MATERIAIS_EDUCACAO_CAMPO = 11;
+    public const ACERVO_MULTIMIDIA = 1;
+    public const BRINQUEDROS_EDUCACAO_INFANTIL = 2;
+    public const MATERIAIS_CIENTIFICOS = 3;
+    public const AMPLIFICACAO_DIFUSAO_SOM = 4;
+    public const INSTRUMENTOS_MUSICAIS = 5;
+    public const JOGOS_EDUCATIVOS = 6;
+    public const MATERIAIS_ATIVIDADES_CULTURAIS = 7;
+    public const MATERIAIS_PRATICA_DESPORTIVA = 8;
+    public const MATERIAIS_EDUCACAO_INDIGENA = 9;
+    public const MATERIAIS_RELACOES_ETNICOS_RACIAIS = 10;
+    public const MATERIAIS_EDUCACAO_CAMPO = 11;
 
     public static function getDescriptiveValues()
     {

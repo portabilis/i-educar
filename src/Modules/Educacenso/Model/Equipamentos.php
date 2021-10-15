@@ -4,12 +4,12 @@ namespace iEducar\Modules\Educacenso\Model;
 
 class Equipamentos
 {
-    const COMPUTADORES = 1;
-    const IMPRESSORAS = 2;
-    const IMPRESSORAS_MULTIFUNCIONAIS = 3;
-    const COPIADORA = 4;
-    const SCANNER = 5;
-    const ANTENA_PARABOLICA = 6;
+    public const COMPUTADORES = 1;
+    public const IMPRESSORAS = 2;
+    public const IMPRESSORAS_MULTIFUNCIONAIS = 3;
+    public const COPIADORA = 4;
+    public const SCANNER = 5;
+    public const ANTENA_PARABOLICA = 6;
 
     public static function getDescriptiveValues()
     {

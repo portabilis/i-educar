@@ -15,7 +15,10 @@ use Throwable;
 
 class EducacensoImportJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * @var EducacensoImportModel
@@ -73,6 +76,7 @@ class EducacensoImportJob implements ShouldQueue
             $importService->adaptData();
         } catch (Throwable $e) {
             DB::rollBack();
+
             throw $e;
         }
 

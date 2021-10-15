@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 /**
  * LegacyRegistration
  *
- * @property int                      $id
+ * @property int $id
  * @property boolean                  isTransferred
  * @property boolean                  isAbandoned
  * @property boolean                  isCanceled
@@ -255,6 +255,6 @@ class LegacyRegistration extends Model
      */
     public function getStatusDescriptionAttribute()
     {
-        return (new RegistrationStatus)->getDescriptiveValues()[(int) $this->aprovado];
+        return (new RegistrationStatus())->getDescriptiveValues()[(int) $this->aprovado];
     }
 }

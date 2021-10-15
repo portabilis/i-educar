@@ -2,9 +2,9 @@
 
 namespace iEducar\Modules\Educacenso\Validator;
 
-use iEducar\Modules\Educacenso\Model\Regulamentacao;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\EsferaAdministrativa;
+use iEducar\Modules\Educacenso\Model\Regulamentacao;
 
 class AdministrativeDomainValidator implements EducacensoValidator
 {
@@ -18,8 +18,8 @@ class AdministrativeDomainValidator implements EducacensoValidator
         $administrativeDomain,
         $regulations,
         $administrativeDependence,
-        $cityIbgeCode)
-    {
+        $cityIbgeCode
+    ) {
         $this->administrativeDomain = $administrativeDomain;
         $this->regulations = $regulations;
         $this->administrativeDependence = $administrativeDependence;

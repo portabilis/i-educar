@@ -1,7 +1,5 @@
 <?php
 
-
-
 class CoreExt_Controller_FrontTest extends PHPUnit\Framework\TestCase
 {
     protected $_frontController = null;

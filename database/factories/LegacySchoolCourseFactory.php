@@ -1,22 +1,34 @@
 <?php
 
-use App\Models\LegacyCourse;
-use App\Models\LegacySchool;
+namespace Database\Factories;
+
 use App\Models\LegacySchoolCourse;
-use App\Models\LegacyUser;
-use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-/** @var Factory $factory */
+class LegacySchoolCourseFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = LegacySchoolCourse::class;
 
-$factory->define(LegacySchoolCourse::class, function (Faker $faker) {
-    return [
-        'ref_cod_escola' => factory(LegacySchool::class)->create(),
-        'ref_cod_curso' => factory(LegacyCourse::class)->create(),
-        'ref_usuario_cad' => factory(LegacyUser::class)->state('unique')->make(),
-        'data_cadastro' => now(),
-        'ativo' => 1,
-        'autorizacao' => $faker->sentence,
-        'anos_letivos' => '{' . now()->format('Y') . '}',
-    ];
-});
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition(): array
+    {
+        return [
+            'ref_cod_escola' => LegacySchoolFactory::new()->create(),
+            'ref_cod_curso' => LegacyCourseFactory::new()->create(),
+            'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
+            'data_cadastro' => now(),
+            'ativo' => 1,
+            'autorizacao' => $this->faker->sentence,
+            'anos_letivos' => '{' . now()->format('Y') . '}',
+        ];
+    }
+}
