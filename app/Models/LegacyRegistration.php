@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 /**
  * LegacyRegistration
  *
- * @property int $id
+ * @property int                      $id
  * @property boolean                  isTransferred
  * @property boolean                  isAbandoned
  * @property boolean                  isCanceled

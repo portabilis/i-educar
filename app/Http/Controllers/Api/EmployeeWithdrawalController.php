@@ -15,7 +15,7 @@ class EmployeeWithdrawalController extends Controller
     {
         try {
             $employeeWithdrawal = EmployeeWithdrawal::query()->findOrFail($id);
-            $employeeWithdrawal->update(['data_exclusao' => now(),'ativo' => 0]);
+            $employeeWithdrawal->update(['data_exclusao' => now(), 'ativo' => 0]);
         } catch (Exception $exception) {
             return response()->json(
                 [
