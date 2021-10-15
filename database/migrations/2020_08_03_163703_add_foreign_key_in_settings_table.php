@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Schema;
 class AddForeignKeyInSettingsTable extends Migration
 {
     use SettingCategoryTrait;
+
     /**
      * Run the migrations.
      *

@@ -15,22 +15,22 @@ class AddForeignKeysInModulesPessoaTransporteTable extends Migration
     {
         Schema::table('modules.pessoa_transporte', function (Blueprint $table) {
             $table->foreign('ref_idpes')
-               ->references('idpes')
-               ->on('cadastro.fisica')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('idpes')
+                ->on('cadastro.fisica')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_idpes_destino')
-               ->references('idpes')
-               ->on('cadastro.juridica');
+                ->references('idpes')
+                ->on('cadastro.juridica');
 
             $table->foreign('ref_cod_rota_transporte_escolar')
-               ->references('cod_rota_transporte_escolar')
-               ->on('modules.rota_transporte_escolar');
+                ->references('cod_rota_transporte_escolar')
+                ->on('modules.rota_transporte_escolar');
 
             $table->foreign('ref_cod_ponto_transporte_escolar')
-               ->references('cod_ponto_transporte_escolar')
-               ->on('modules.ponto_transporte_escolar');
+                ->references('cod_ponto_transporte_escolar')
+                ->on('modules.ponto_transporte_escolar');
         });
     }
 
