@@ -4,6 +4,6 @@ namespace App\Support\View\Employee;
 
 class EmployeeReturn
 {
-    const SIM = 'S';
-    const NAO = 'N';
+    public const SIM = 'S';
+    public const NAO = 'N';
 }

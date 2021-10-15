@@ -4,7 +4,7 @@ namespace iEducar\Modules\Educacenso\Model;
 
 class TipoMediacaoDidaticoPedagogico
 {
-    const PRESENCIAL = 1;
-    const SEMIPRESENCIAL = 2;
-    const EDUCACAO_A_DISTANCIA = 3;
+    public const PRESENCIAL = 1;
+    public const SEMIPRESENCIAL = 2;
+    public const EDUCACAO_A_DISTANCIA = 3;
 }

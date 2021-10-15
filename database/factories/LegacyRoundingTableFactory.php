@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyInstitution;
 use App\Models\LegacyRoundingTable;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use RegraAvaliacao_Model_Nota_TipoValor;
@@ -24,7 +23,7 @@ class LegacyRoundingTableFactory extends Factory
     public function definition(): array
     {
         return [
-            'instituicao_id' => LegacyInstitution::factory()->unique()->make(),
+            'instituicao_id' => LegacyInstitutionFactory::new()->unique()->make(),
             'nome' => $this->faker->words(3, true),
             'tipo_nota' => $this->faker->randomElement([1, 2]),
         ];

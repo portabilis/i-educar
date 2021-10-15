@@ -4,20 +4,17 @@ namespace App\Models;
 
 use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * LegacyCourse
  *
- * @property string        $name Nome do curso
- * @property LegacyGrade[] grades
+ * @property string        $name
+ * @property LegacyGrade[] $grades
  */
 class LegacyCourse extends Model
 {
-    use HasFactory;
-
     /**
      * @var string
      */

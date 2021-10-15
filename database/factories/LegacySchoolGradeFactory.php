@@ -2,10 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyLevel;
-use App\Models\LegacySchoolCourse;
 use App\Models\LegacySchoolGrade;
-use App\Models\LegacyUser;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacySchoolGradeFactory extends Factory
@@ -24,14 +21,14 @@ class LegacySchoolGradeFactory extends Factory
      */
     public function definition(): array
     {
-        $schoolCourse = LegacySchoolCourse::factory()->create();
+        $schoolCourse = LegacySchoolCourseFactory::new()->create();
 
         return [
             'ref_cod_escola' => $schoolCourse->school,
-            'ref_cod_serie' => LegacyLevel::factory()->create([
+            'ref_cod_serie' => LegacyLevelFactory::new()->create([
                 'ref_cod_curso' => $schoolCourse->course,
             ]),
-            'ref_usuario_cad' => LegacyUser::factory()->unique()->make(),
+            'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
             'data_cadastro' => now(),
             'ativo' => 1,
             'anos_letivos' => $schoolCourse->anos_letivos,

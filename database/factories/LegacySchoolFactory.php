@@ -2,11 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyEducationNetwork;
-use App\Models\LegacyInstitution;
-use App\Models\LegacyOrganization;
 use App\Models\LegacySchool;
-use App\Models\LegacyUser;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacySchoolFactory extends Factory
@@ -26,12 +22,12 @@ class LegacySchoolFactory extends Factory
     public function definition(): array
     {
         return [
-            'ref_usuario_cad' => LegacyUser::factory()->unique()->make(),
-            'ref_cod_instituicao' => LegacyInstitution::factory()->unique()->make(),
-            'ref_cod_escola_rede_ensino' => LegacyEducationNetwork::factory()->create(),
+            'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
+            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
+            'ref_cod_escola_rede_ensino' => LegacyEducationNetworkFactory::new()->create(),
             'sigla' => $this->faker->asciify(),
             'data_cadastro' => now(),
-            'ref_idpes' => LegacyOrganization::factory()->create(),
+            'ref_idpes' => LegacyOrganizationFactory::new()->create(),
         ];
     }
 }

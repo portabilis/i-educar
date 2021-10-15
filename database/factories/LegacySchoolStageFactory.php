@@ -2,9 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacySchoolAcademicYear;
 use App\Models\LegacySchoolStage;
-use App\Models\LegacyStageType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacySchoolStageFactory extends Factory
@@ -23,8 +21,8 @@ class LegacySchoolStageFactory extends Factory
      */
     public function definition(): array
     {
-        $schoolAcademicYear = LegacySchoolAcademicYear::factory()->create();
-        $stageType = LegacyStageType::factory()->unique()->make();
+        $schoolAcademicYear = LegacySchoolAcademicYearFactory::new()->create();
+        $stageType = LegacyStageTypeFactory::new()->unique()->make();
 
         return [
             'ref_ano' => now()->year,

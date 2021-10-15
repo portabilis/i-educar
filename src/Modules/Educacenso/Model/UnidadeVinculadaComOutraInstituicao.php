@@ -4,9 +4,9 @@ namespace iEducar\Modules\Educacenso\Model;
 
 class UnidadeVinculadaComOutraInstituicao
 {
-    const SEM_VINCULO = 0;
-    const EDUCACAO_BASICA = 1;
-    const ENSINO_SUPERIOR = 2;
+    public const SEM_VINCULO = 0;
+    public const EDUCACAO_BASICA = 1;
+    public const ENSINO_SUPERIOR = 2;
 
     /**
      * @return array

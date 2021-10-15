@@ -2,9 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineAcademicYear;
-use App\Models\LegacySchool;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyDisciplineAcademicYearFactory extends Factory
@@ -24,8 +22,8 @@ class LegacyDisciplineAcademicYearFactory extends Factory
     public function definition(): array
     {
         return [
-            'componente_curricular_id' => LegacyDiscipline::factory()->create(),
-            'ano_escolar_id' => LegacySchool::factory()->create(),
+            'componente_curricular_id' => LegacyDisciplineFactory::new()->create(),
+            'ano_escolar_id' => LegacySchoolFactory::new()->create(),
             'carga_horaria' => 100,
             'tipo_nota' => $this->faker->randomElement([1, 2]),
             'anos_letivos' => '{' . now()->year . '}',

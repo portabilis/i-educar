@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\City;
 use App\Models\Place;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -23,7 +22,7 @@ class PlaceFactory extends Factory
     public function definition(): array
     {
         return [
-            'city_id' => City::factory()->create(),
+            'city_id' => CityFactory::new()->create(),
             'address' => $this->faker->streetName,
             'number' => $this->faker->numberBetween(1, 9999),
             'complement' => $this->faker->boolean ? 'Apto' : null,

@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\City;
 use App\Models\District;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -23,7 +22,7 @@ class DistrictFactory extends Factory
     public function definition(): array
     {
         return [
-            'city_id' => City::factory()->create(),
+            'city_id' => CityFactory::new()->create(),
             'name' => $this->faker->dayOfWeek() . ' District',
             'ibge_code' => $this->faker->numerify('########'),
         ];

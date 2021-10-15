@@ -2,9 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyInstitution;
 use App\Models\LegacySchoolClassType;
-use App\Models\LegacyUser;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacySchoolClassTypeFactory extends Factory
@@ -27,11 +25,11 @@ class LegacySchoolClassTypeFactory extends Factory
         $abbreviation = mb_substr($this->faker->colorName, 0, 5);
 
         return [
-            'ref_usuario_cad' => LegacyUser::factory()->unique()->make(),
+            'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
             'nm_tipo' => 'Tipo ' . $name,
             'sgl_tipo' => $abbreviation,
             'data_cadastro' => now(),
-            'ref_cod_instituicao' => LegacyInstitution::factory()->unique()->make(),
+            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
         ];
     }
 
@@ -41,7 +39,7 @@ class LegacySchoolClassTypeFactory extends Factory
             $schoolClassType = LegacySchoolClassType::query()->first();
 
             if (empty($schoolClassType)) {
-                $schoolClassType = LegacySchoolClassType::factory()->create();
+                $schoolClassType = LegacySchoolClassTypeFactory::new()->create();
             }
 
             return [

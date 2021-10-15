@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Menu;
 use App\User;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -22,16 +21,14 @@ use Illuminate\Support\Collection as SupportCollection;
  */
 class LegacyUserType extends Model
 {
-    use HasFactory;
+    public const LEVEL_ADMIN = 1;
+    public const LEVEL_INSTITUTIONAL = 2;
+    public const LEVEL_SCHOOLING = 4;
+    public const LEVEL_LIBRARY = 8;
 
-    const LEVEL_ADMIN = 1;
-    const LEVEL_INSTITUTIONAL = 2;
-    const LEVEL_SCHOOLING = 4;
-    const LEVEL_LIBRARY = 8;
-
-    const CAN_VIEW = 1;
-    const CAN_MODIFY = 2;
-    const CAN_REMOVE = 3;
+    public const CAN_VIEW = 1;
+    public const CAN_MODIFY = 2;
+    public const CAN_REMOVE = 3;
 
     /**
      * @var string

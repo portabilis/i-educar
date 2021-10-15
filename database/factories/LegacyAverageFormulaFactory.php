@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\LegacyAverageFormula;
-use App\Models\LegacyInstitution;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use RegraAvaliacao_Model_Nota_TipoValor;
 use RegraAvaliacao_Model_TipoPresenca;
@@ -26,7 +25,7 @@ class LegacyAverageFormulaFactory extends Factory
     public function definition(): array
     {
         return [
-            'instituicao_id' => LegacyInstitution::factory()->unique()->make(),
+            'instituicao_id' => LegacyInstitutionFactory::new()->unique()->make(),
             'nome' => $this->faker->words(3, true),
             'formula_media' => 'Se / Et',
         ];

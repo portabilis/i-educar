@@ -4,23 +4,23 @@ namespace iEducar\Modules\Educacenso\Model;
 
 class FormacaoContinuada
 {
-    const CRECHE = 1;
-    const PRE_ESCOLA = 2;
-    const ANOS_INICIAIS = 3;
-    const ANOS_FINAIS = 4;
-    const ENSINO_MEDIO = 5;
-    const EJA = 6;
-    const EDUCACAO_ESPECIAL = 7;
-    const EDUCACAO_INDIGENA = 8;
-    const EDUCACAO_DO_CAMPO = 9;
-    const EDUCACAO_AMBIENTAL = 10;
-    const EDUCACAO_DIREITOS_HUMANOS = 11;
-    const GENERO_DIVERSIDADE_SEXUAL = 12;
-    const DIREITOS_CRIANCA_ADOLESCENTE = 13;
-    const RELACOES_ETNICO_RACIAIS = 14;
-    const OUTROS = 15;
-    const NENHUM = 16;
-    const GESTAO_ESCOLAR = 17;
+    public const CRECHE = 1;
+    public const PRE_ESCOLA = 2;
+    public const ANOS_INICIAIS = 3;
+    public const ANOS_FINAIS = 4;
+    public const ENSINO_MEDIO = 5;
+    public const EJA = 6;
+    public const EDUCACAO_ESPECIAL = 7;
+    public const EDUCACAO_INDIGENA = 8;
+    public const EDUCACAO_DO_CAMPO = 9;
+    public const EDUCACAO_AMBIENTAL = 10;
+    public const EDUCACAO_DIREITOS_HUMANOS = 11;
+    public const GENERO_DIVERSIDADE_SEXUAL = 12;
+    public const DIREITOS_CRIANCA_ADOLESCENTE = 13;
+    public const RELACOES_ETNICO_RACIAIS = 14;
+    public const OUTROS = 15;
+    public const NENHUM = 16;
+    public const GESTAO_ESCOLAR = 17;
 
     public static function getDescriptiveValues()
     {

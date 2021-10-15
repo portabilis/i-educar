@@ -9,6 +9,9 @@ use App\Models\LegacySchoolStage;
 use App\Models\SchoolInep;
 use App\Services\Educacenso\Version2019\Registro00Import;
 use App\User;
+use Database\Factories\LegacySchoolFactory;
+use Database\Factories\SchoolInepFactory;
+use Database\Factories\UserFactory;
 use Faker\Factory;
 use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -27,7 +30,7 @@ class Registro002019ImportTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = User::factory()->admin()->make();
+        $this->user = UserFactory::new()->admin()->make();
     }
 
     /**
@@ -37,8 +40,8 @@ class Registro002019ImportTest extends TestCase
     {
         $model = $this->getImportModel();
 
-        $school = LegacySchool::factory()->create();
-        $inep = SchoolInep::factory()->create([
+        $school = LegacySchoolFactory::new()->create();
+        $inep = SchoolInepFactory::new()->create([
             'cod_escola' => $school,
             'cod_escola_inep' => $model->codigoInep,
         ]);
@@ -93,7 +96,7 @@ class Registro002019ImportTest extends TestCase
         $phones = $school->person->phone;
 
         $this->assertCount(1, $phones);
-        $this->assertEquals((int)$model->telefone, (int)$phones->first()->fone);
+        $this->assertEquals((int) $model->telefone, (int) $phones->first()->fone);
     }
 
     /**

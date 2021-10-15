@@ -2,9 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyEvaluationRule;
 use App\Models\LegacyEvaluationRuleGradeYear;
-use App\Models\LegacyLevel;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyEvaluationRuleGradeYearFactory extends Factory
@@ -24,8 +22,8 @@ class LegacyEvaluationRuleGradeYearFactory extends Factory
     public function definition(): array
     {
         return [
-            'serie_id' => LegacyLevel::factory()->create(),
-            'regra_avaliacao_id' => LegacyEvaluationRule::factory()->create(),
+            'serie_id' => LegacyLevelFactory::new()->create(),
+            'regra_avaliacao_id' => LegacyEvaluationRuleFactory::new()->create(),
             'regra_avaliacao_diferenciada_id' => null,
             'ano_letivo' => '{' . now()->year . '}',
         ];

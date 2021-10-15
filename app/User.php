@@ -7,9 +7,6 @@ use App\Models\LegacyEmployee;
 use App\Models\LegacyPerson;
 use App\Models\LegacyUserType;
 use App\Models\School;
-use App\Services\DisableUsersWithDaysGoneSinceLastAccessService;
-use Illuminate\Contracts\Config\Repository;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -29,7 +26,7 @@ use Illuminate\Support\Carbon;
  */
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use Notifiable;
 
     /**
      * @var string
@@ -293,13 +290,16 @@ class User extends Authenticatable
         if ($this->employee) {
             return $this->employee->getEnabledUserDate();
         }
+
         return null;
     }
+
     public function getPasswordUpdatedDate(): ?Carbon
     {
         if ($this->employee) {
             return $this->employee->getPasswordUpdatedDate();
         }
+
         return null;
     }
 
@@ -327,9 +327,10 @@ class User extends Authenticatable
         }
 
         $currentDate = Carbon::now();
-        if ($currentDate->gt($lastAccessDate)){
+        if ($currentDate->gt($lastAccessDate)) {
             $daysGone = $currentDate->diffInDays($lastAccessDate);
         }
+
         return $daysGone;
     }
 
@@ -339,9 +340,10 @@ class User extends Authenticatable
         $lastPasswordUpdatedDate = $this->getPasswordUpdatedDate();
 
         $currentDate = Carbon::now();
-        if ($currentDate->gt($lastPasswordUpdatedDate)){
+        if ($currentDate->gt($lastPasswordUpdatedDate)) {
             $daysGone = $currentDate->diffInDays($lastPasswordUpdatedDate);
         }
+
         return $daysGone;
     }
 

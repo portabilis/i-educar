@@ -3,8 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\LegacyDiscipline;
-use App\Models\LegacyInstitution;
-use App\Models\LegacyKnowledgeArea;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyDisciplineFactory extends Factory
@@ -24,8 +22,8 @@ class LegacyDisciplineFactory extends Factory
     public function definition(): array
     {
         return [
-            'instituicao_id' => LegacyInstitution::factory()->unique()->make(),
-            'area_conhecimento_id' => LegacyKnowledgeArea::factory()->unique()->make(),
+            'instituicao_id' => LegacyInstitutionFactory::new()->unique()->make(),
+            'area_conhecimento_id' => LegacyKnowledgeAreaFactory::new()->unique()->make(),
             'nome' => $this->faker->colorName,
             'abreviatura' => $this->faker->hexColor,
             'tipo_base' => 0,

@@ -4,12 +4,12 @@ namespace iEducar\Modules\Educacenso\Model;
 
 class OrganizacaoEnsino
 {
-    const SERIE_ANO = 1;
-    const PERIODOS_SEMESTRAIS = 2;
-    const CLICLOS_ENSINO_FUNDAMENTAL = 3;
-    const GRUPOS_NAO_SERIADOS = 4;
-    const MODULOS = 5;
-    const ALTERNANCIA_REGULAR = 6;
+    public const SERIE_ANO = 1;
+    public const PERIODOS_SEMESTRAIS = 2;
+    public const CLICLOS_ENSINO_FUNDAMENTAL = 3;
+    public const GRUPOS_NAO_SERIADOS = 4;
+    public const MODULOS = 5;
+    public const ALTERNANCIA_REGULAR = 6;
 
     public static function getDescriptiveValues()
     {

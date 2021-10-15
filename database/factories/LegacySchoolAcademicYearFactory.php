@@ -2,9 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacySchool;
 use App\Models\LegacySchoolAcademicYear;
-use App\Models\LegacyUser;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacySchoolAcademicYearFactory extends Factory
@@ -24,9 +22,9 @@ class LegacySchoolAcademicYearFactory extends Factory
     public function definition(): array
     {
         return [
-            'ref_cod_escola' => LegacySchool::factory()->create(),
+            'ref_cod_escola' => LegacySchoolFactory::new()->create(),
             'ano' => now()->year,
-            'ref_usuario_cad' => LegacyUser::factory()->unique()->make(),
+            'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
             'andamento' => 1,
             'data_cadastro' => now(),
         ];

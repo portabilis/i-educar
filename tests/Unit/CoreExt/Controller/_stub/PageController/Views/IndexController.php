@@ -1,7 +1,5 @@
 <?php
 
-
-
 class IndexController extends Core_Controller_Page_Abstract
 {
     public function setOptions(array $options = [])

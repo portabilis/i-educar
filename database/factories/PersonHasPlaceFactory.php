@@ -2,9 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyPerson;
 use App\Models\PersonHasPlace;
-use App\Models\Place;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class PersonHasPlaceFactory extends Factory
@@ -24,8 +22,8 @@ class PersonHasPlaceFactory extends Factory
     public function definition(): array
     {
         return [
-            'person_id' => LegacyPerson::factory()->create(),
-            'place_id' => Place::factory()->create(),
+            'person_id' => LegacyPersonFactory::new()->create(),
+            'place_id' => PlaceFactory::new()->create(),
             'type' => 1,
         ];
     }

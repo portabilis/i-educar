@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyCourse;
 use App\Models\LegacyLevel;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -25,7 +24,7 @@ class LegacyLevelFactory extends Factory
         return [
             'nm_serie' => $this->faker->words(3, true),
             'ref_usuario_cad' => 1,
-            'ref_cod_curso' => LegacyCourse::factory()->create(),
+            'ref_cod_curso' => LegacyCourseFactory::new()->create(),
             'etapa_curso' => $this->faker->randomElement([1, 2, 3, 4]),
             'carga_horaria' => 800,
             'data_cadastro' => $this->faker->dateTime(),

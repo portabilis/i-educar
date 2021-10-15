@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacySchool;
 use App\Models\SchoolInep;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -23,7 +22,7 @@ class SchoolInepFactory extends Factory
     public function definition(): array
     {
         return [
-            'cod_escola' => LegacySchool::factory()->create(),
+            'cod_escola' => LegacySchoolFactory::new()->create(),
             'cod_escola_inep' => $this->faker->numerify('########'),
         ];
     }

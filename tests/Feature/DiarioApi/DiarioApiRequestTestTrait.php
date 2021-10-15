@@ -4,16 +4,16 @@ namespace Tests\Feature\DiarioApi;
 
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyEnrollment;
-use App\User;
+use Database\Factories\UserFactory;
 use Illuminate\Foundation\Testing\TestResponse;
 
 trait DiarioApiRequestTestTrait
 {
     /**
      * @param LegacyEnrollment $enrollment
-     * @param $disciplineId
-     * @param $stage
-     * @param $score
+     * @param                  $disciplineId
+     * @param                  $stage
+     * @param                  $score
      *
      * @return array
      */
@@ -42,7 +42,7 @@ trait DiarioApiRequestTestTrait
 
         $_GET = $data;
 
-        $user = User::factory()->admin()->make();
+        $user = UserFactory::new()->admin()->make();
 
         /** @var TestResponse $response */
         $response = $this->actingAs($user)->get('/module/Avaliacao/diarioApi?' . http_build_query($data));
@@ -80,7 +80,7 @@ trait DiarioApiRequestTestTrait
 
         $_GET = $data;
 
-        $user = User::factory()->admin()->make();
+        $user = UserFactory::new()->admin()->make();
 
         /** @var TestResponse $response */
         $response = $this->actingAs($user)->get('/module/Avaliacao/diarioApi?' . http_build_query($data));
@@ -112,7 +112,7 @@ trait DiarioApiRequestTestTrait
 
         $_GET = $data;
 
-        $user = User::factory()->admin()->make();
+        $user = UserFactory::new()->admin()->make();
 
         /** @var TestResponse $response */
         $response = $this->actingAs($user)->get('/module/Avaliacao/diarioApi?' . http_build_query($data));
@@ -144,7 +144,7 @@ trait DiarioApiRequestTestTrait
 
         $_GET = $data;
 
-        $user = User::factory()->admin()->make();
+        $user = UserFactory::new()->admin()->make();
 
         /** @var TestResponse $response */
         $response = $this->actingAs($user)->get('/module/Avaliacao/diarioApi?' . http_build_query($data));

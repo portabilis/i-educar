@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
 use App\Models\IeducarStudent;
+use Illuminate\Database\Migrations\Migration;
 
 class FixActiveStudentsWithExclusionDate extends Migration
 {

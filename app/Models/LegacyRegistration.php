@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App_Model_MatriculaSituacao;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -13,20 +12,17 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 /**
  * LegacyRegistration
  *
- * @property int                      $id
- * @property boolean                  isTransferred
- * @property boolean                  isAbandoned
- * @property boolean                  isCanceled
- * @property LegacyStudentAbsence     studentAbsence
- * @property LegacyStudentScore       studentScore
- * @property LegacyStudentDescriptive studentDescriptive
- * @property LegacyCourse             course
- *
+ * @property integer                  $id
+ * @property boolean                  $isTransferred
+ * @property boolean                  $isAbandoned
+ * @property boolean                  $isCanceled
+ * @property LegacyStudentAbsence     $studentAbsence
+ * @property LegacyStudentScore       $studentScore
+ * @property LegacyStudentDescriptive $studentDescriptive
+ * @property LegacyCourse             $course
  */
 class LegacyRegistration extends Model
 {
-    use HasFactory;
-
     /**
      * @var string
      */
@@ -258,6 +254,6 @@ class LegacyRegistration extends Model
      */
     public function getStatusDescriptionAttribute()
     {
-        return (new RegistrationStatus)->getDescriptiveValues()[(int) $this->aprovado];
+        return (new RegistrationStatus())->getDescriptiveValues()[(int) $this->aprovado];
     }
 }

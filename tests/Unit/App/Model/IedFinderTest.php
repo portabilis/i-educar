@@ -1,8 +1,6 @@
 <?php
 
-
 use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
-
 
 class App_Model_IedFinderTest extends UnitBaseTest
 {

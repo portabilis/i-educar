@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Services\RelocationDate\RelocationDateProvider;
 use DateTime;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -21,8 +20,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class LegacyInstitution extends Model implements RelocationDateProvider
 {
-    use HasFactory;
-
     /**
      * @var string
      */
