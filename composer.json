@@ -16,7 +16,7 @@
         "ext-pdo": "*",
         "ext-pgsql": "*",
         "aws/aws-sdk-php-laravel": "^3.6",
-        "composer/semver": "^1.7",
+        "composer/semver": "^3.2",
         "cossou/jasperphp": "^2.8",
         "dex/composer-plug-and-play": "^0.5.0",
         "doctrine/dbal": "^2.13",
@@ -46,7 +46,7 @@
         "facade/ignition": "^2.11",
         "fakerphp/faker": "^1.15",
         "filp/whoops": "^2.14",
-        "friendsofphp/php-cs-fixer": "^2.19",
+        "friendsofphp/php-cs-fixer": "^3.2",
         "laravel/sail": "^0.0.5",
         "laravel/telescope": "^4.6",
         "mockery/mockery": "^1.4.3",
@@ -124,7 +124,7 @@
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
-      ]
+        ]
     },
     "config": {
         "preferred-install": "dist",
