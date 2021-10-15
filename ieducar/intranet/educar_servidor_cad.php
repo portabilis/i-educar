@@ -736,8 +736,8 @@ JS;
         }
 
         $this->excluiDisciplinas(null);
-        $this->excluiFuncoes();
         $this->excluiFaltaAtraso();
+        $this->excluiFuncoes();
         DB::commit();
 
         $this->mensagem = 'Exclusão efetuada com sucesso.<br>';
