@@ -74,6 +74,6 @@ abstract class TestCase extends BaseTestCase
      */
     public function getHtmlCodeFromFile($fileName)
     {
-        return  file_get_contents(__DIR__ . '/Unit/assets/' . $fileName);
+        return file_get_contents(__DIR__ . '/Unit/assets/' . $fileName);
     }
 }
