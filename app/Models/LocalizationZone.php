@@ -6,8 +6,8 @@ use App\Contracts\Enum;
 
 class LocalizationZone implements Enum
 {
-    const URBAN = 1;
-    const RURAL = 2;
+    public const URBAN = 1;
+    public const RURAL = 2;
 
     public function getDescriptiveValues(): array
     {

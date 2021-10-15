@@ -15,16 +15,16 @@ class AddForeignKeysInPmieducarCalendarioDiaAnotacaoTable extends Migration
     {
         Schema::table('pmieducar.calendario_dia_anotacao', function (Blueprint $table) {
             $table->foreign(['ref_ref_cod_calendario_ano_letivo', 'ref_mes', 'ref_dia'])
-               ->references(['ref_cod_calendario_ano_letivo', 'mes', 'dia'])
-               ->on('pmieducar.calendario_dia')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references(['ref_cod_calendario_ano_letivo', 'mes', 'dia'])
+                ->on('pmieducar.calendario_dia')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_calendario_anotacao')
-               ->references('cod_calendario_anotacao')
-               ->on('pmieducar.calendario_anotacao')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_calendario_anotacao')
+                ->on('pmieducar.calendario_anotacao')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

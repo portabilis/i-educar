@@ -12,7 +12,8 @@ use Illuminate\Support\Collection;
 
 class City extends Model
 {
-    use DateSerializer, HasIbgeCode;
+    use DateSerializer;
+    use HasIbgeCode;
 
     /**
      * @var array

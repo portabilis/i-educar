@@ -9,7 +9,9 @@ use Tests\TestCase;
 
 class DependencyTest extends TestCase
 {
-    use DiarioApiFakeDataTestTrait, DiarioApiRequestTestTrait, DatabaseTransactions;
+    use DiarioApiFakeDataTestTrait;
+    use DiarioApiRequestTestTrait;
+    use DatabaseTransactions;
 
     /** @var LegacyEnrollment */
     private $enrollment;

@@ -15,22 +15,22 @@ class AddForeignKeysInPmieducarTransferenciaSolicitacaoTable extends Migration
     {
         Schema::table('pmieducar.transferencia_solicitacao', function (Blueprint $table) {
             $table->foreign('ref_cod_transferencia_tipo')
-               ->references('cod_transferencia_tipo')
-               ->on('pmieducar.transferencia_tipo')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_transferencia_tipo')
+                ->on('pmieducar.transferencia_tipo')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_matricula_saida')
-               ->references('cod_matricula')
-               ->on('pmieducar.matricula')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_matricula')
+                ->on('pmieducar.matricula')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_matricula_entrada')
-               ->references('cod_matricula')
-               ->on('pmieducar.matricula')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_matricula')
+                ->on('pmieducar.matricula')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

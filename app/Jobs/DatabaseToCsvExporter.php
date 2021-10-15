@@ -17,7 +17,10 @@ use Illuminate\Support\Facades\Storage;
 
 class DatabaseToCsvExporter implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * @var int

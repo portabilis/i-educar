@@ -74,6 +74,7 @@ class LegacyCreateTestsCommand extends Command
                 $this->warn(
                     "Teste {$router['className']} criado para a rota {$router['route']} já criado ou houve falha"
                 );
+
                 continue;
             }
 

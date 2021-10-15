@@ -289,15 +289,19 @@ class Registro20 implements RegistroEducacenso
         switch ($this->modalidadeCurso) {
             case ModalidadeCurso::ENSINO_REGULAR:
                 return "{$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL]} ou {$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA]}";
+
                 break;
             case ModalidadeCurso::EDUCACAO_ESPECIAL:
                 return "{$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL]} ou {$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL]}";
+
                 break;
             case ModalidadeCurso::EJA:
                 return "{$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL]}, {$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL]} ou {$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA]}";
+
                 break;
             case ModalidadeCurso::EDUCACAO_PROFISSIONAL:
                 return "{$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL]} ou {$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA]}";
+
                 break;
         }
     }
@@ -312,6 +316,7 @@ class Registro20 implements RegistroEducacenso
             case 18:
             case 69:
                 return [1, 2, 4, 17, 25, 29];
+
                 break;
             case 19:
             case 20:
@@ -319,15 +324,18 @@ class Registro20 implements RegistroEducacenso
             case 41:
             case 70:
                 return [17, 25, 28];
+
                 break;
             case 23:
             case 22:
             case 56:
             case 72:
                 return [17, 25];
+
                 break;
             case 73:
                 return [25];
+
                 break;
             case 25:
             case 26:
@@ -336,6 +344,7 @@ class Registro20 implements RegistroEducacenso
             case 29:
             case 71:
                 return [5, 17, 25, 28];
+
                 break;
             case 30:
             case 31:
@@ -345,21 +354,25 @@ class Registro20 implements RegistroEducacenso
             case 74:
             case 67:
                 return [5, 25, 28];
+
                 break;
             case 35:
             case 36:
             case 37:
             case 38:
                 return [17, 28];
+
                 break;
             case 39:
             case 40:
             case 64:
             case 68:
                 return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 23, 25, 26, 27, 28, 29, 30, 31, 99];
+
                 break;
             default:
                 return [];
+
                 break;
         }
     }

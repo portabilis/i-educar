@@ -1,9 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
 class UpdateEducacensoEis extends Migration
 {
@@ -14,7 +12,7 @@ class UpdateEducacensoEis extends Migration
      */
     public function up()
     {
-        DB::statement("
+        DB::statement('
             UPDATE PUBLIC.employee_graduations
             SET college_id = (
                 CASE ies.ies_id
@@ -105,7 +103,7 @@ class UpdateEducacensoEis extends Migration
                              22150,22151,22152,22153,22157,22169,22170,22225,22226,22227,22228,22229,22235)
             AND ies.id = employee_graduations.college_id;
 
-        ");
+        ');
     }
 
     /**
@@ -115,7 +113,7 @@ class UpdateEducacensoEis extends Migration
      */
     public function down()
     {
-        DB::statement("
+        DB::statement('
             UPDATE public.employee_graduations
             SET college_id = (
                 CASE college_id
@@ -204,7 +202,6 @@ class UpdateEducacensoEis extends Migration
                     19786,20587,21687,20588,21238,21693,19785,21552,21553,19780,21886,21834,21833,19298,19783,21280,
                     21900,21554,21903
                 )
-        ");
+        ');
     }
-
 }

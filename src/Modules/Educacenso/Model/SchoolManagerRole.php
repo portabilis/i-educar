@@ -8,8 +8,8 @@ class SchoolManagerRole
 {
     use DescriptionValue;
 
-    const DIRETOR = 1;
-    const OUTRO = 2;
+    public const DIRETOR = 1;
+    public const OUTRO = 2;
 
     /**
      * @return array
