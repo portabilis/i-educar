@@ -338,7 +338,7 @@ class EmprestimoApiController extends ApiCoreController
             $this->getRequest()->escola_id
         );
 
-        if ($emprestimo) {
+        if (is_array($emprestimo)) {
             $emprestimo = array_shift($emprestimo);
             $emprestimo = Portabilis_Array_Utils::filter($emprestimo, ['cod_emprestimo'  => 'id',
                                                                       'data_retirada'   => 'data',
@@ -598,7 +598,9 @@ class EmprestimoApiController extends ApiCoreController
             $id = $this->getRequest()->exemplar_id;
         }
 
-        return array_shift($this->loadExemplares($reload, $id));
+        $exemplar = $this->loadExemplares($reload, $id);
+        $exemplar = $exemplar ?? [];
+        return array_shift($exemplar);
     }
 
     /* metódos resposta operação / recurso
