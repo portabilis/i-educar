@@ -113,9 +113,9 @@ abstract class EloquentTestCase extends TestCase
     /**
      * Delete a Eloquent model.
      *
-     * @return void
-     *
      * @throws Exception
+     *
+     * @return void
      */
     public function testDeleteUsingEloquent()
     {

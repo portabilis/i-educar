@@ -32,7 +32,7 @@ class MenuCacheService
         $cacheMenus = $this->cache->tags(['menus', $client, $key])->get($key);
 
         if ($cacheMenus !== null) {
-            return  $cacheMenus;
+            return $cacheMenus;
         }
 
         $menus = Menu::user($user);

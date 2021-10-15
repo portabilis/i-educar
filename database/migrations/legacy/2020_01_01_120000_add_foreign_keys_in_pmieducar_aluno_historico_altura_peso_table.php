@@ -15,8 +15,8 @@ class AddForeignKeysInPmieducarAlunoHistoricoAlturaPesoTable extends Migration
     {
         Schema::table('pmieducar.aluno_historico_altura_peso', function (Blueprint $table) {
             $table->foreign('ref_cod_aluno')
-               ->references('cod_aluno')
-               ->on('pmieducar.aluno');
+                ->references('cod_aluno')
+                ->on('pmieducar.aluno');
         });
     }
 

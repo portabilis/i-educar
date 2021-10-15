@@ -11,9 +11,9 @@ trait DiarioApiRequestTestTrait
 {
     /**
      * @param LegacyEnrollment $enrollment
-     * @param $disciplineId
-     * @param $stage
-     * @param $score
+     * @param                  $disciplineId
+     * @param                  $stage
+     * @param                  $score
      *
      * @return array
      */

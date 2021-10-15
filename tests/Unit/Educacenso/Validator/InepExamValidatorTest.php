@@ -11,7 +11,7 @@ class InepExamValidatorTest extends TestCase
 {
     public function testJustNenhumSelected()
     {
-        $resources = [ RecursosRealizacaoProvas::NENHUM ];
+        $resources = [RecursosRealizacaoProvas::NENHUM];
         $deficiencies = [];
         $validator = new InepExamValidator($resources, $deficiencies);
 
@@ -20,8 +20,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testNenhumAndAnotherResourceSelected()
     {
-        $resources = [ RecursosRealizacaoProvas::NENHUM, RecursosRealizacaoProvas::AUXILIO_LEDOR ];
-        $deficiencies = [ Deficiencias::CEGUEIRA ];
+        $resources = [RecursosRealizacaoProvas::NENHUM, RecursosRealizacaoProvas::AUXILIO_LEDOR];
+        $deficiencies = [Deficiencias::CEGUEIRA];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
@@ -30,8 +30,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testProvaAmpliadaAndAnotherPermitedOptionChoosed()
     {
-        $resources = [ RecursosRealizacaoProvas::PROVA_AMPLIADA_FONTE_18, RecursosRealizacaoProvas::AUXILIO_LEDOR ];
-        $deficiencies = [ Deficiencias::BAIXA_VISAO ];
+        $resources = [RecursosRealizacaoProvas::PROVA_AMPLIADA_FONTE_18, RecursosRealizacaoProvas::AUXILIO_LEDOR];
+        $deficiencies = [Deficiencias::BAIXA_VISAO];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertTrue($validator->isValid());
@@ -39,8 +39,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testProvaAmpliadaAndAnotherForbiddenOptionChoosed()
     {
-        $resources = [ RecursosRealizacaoProvas::PROVA_AMPLIADA_FONTE_18, RecursosRealizacaoProvas::PROVA_SUPERAMPLIADA_FONTE_24 ];
-        $deficiencies = [ Deficiencias::BAIXA_VISAO ];
+        $resources = [RecursosRealizacaoProvas::PROVA_AMPLIADA_FONTE_18, RecursosRealizacaoProvas::PROVA_SUPERAMPLIADA_FONTE_24];
+        $deficiencies = [Deficiencias::BAIXA_VISAO];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
@@ -49,8 +49,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testAuxilioLedorAndAllowedDeficiencyChoosed()
     {
-        $resources = [ RecursosRealizacaoProvas::AUXILIO_LEDOR ];
-        $deficiencies = [ Deficiencias::CEGUEIRA ];
+        $resources = [RecursosRealizacaoProvas::AUXILIO_LEDOR];
+        $deficiencies = [Deficiencias::CEGUEIRA];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertTrue($validator->isValid());
@@ -58,8 +58,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testAuxilioLedorAndAllowedAndForbiddenDeficiencyChoosed()
     {
-        $resources = [ RecursosRealizacaoProvas::AUXILIO_LEDOR ];
-        $deficiencies = [ Deficiencias::CEGUEIRA, Deficiencias::SURDEZ ];
+        $resources = [RecursosRealizacaoProvas::AUXILIO_LEDOR];
+        $deficiencies = [Deficiencias::CEGUEIRA, Deficiencias::SURDEZ];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
@@ -68,8 +68,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testAuxilioLedorAndNeutralDeficiencyChoosed()
     {
-        $resources = [ RecursosRealizacaoProvas::AUXILIO_LEDOR ];
-        $deficiencies = [ Deficiencias::DEFICIENCIA_AUDITIVA ];
+        $resources = [RecursosRealizacaoProvas::AUXILIO_LEDOR];
+        $deficiencies = [Deficiencias::DEFICIENCIA_AUDITIVA];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
@@ -78,8 +78,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testAuxilioTranscricaoAndAllowedAloneDeficiencyChoosed()
     {
-        $resources = [ RecursosRealizacaoProvas::AUXILIO_TRANSCRICAO ];
-        $deficiencies = [ Deficiencias::BAIXA_VISAO ];
+        $resources = [RecursosRealizacaoProvas::AUXILIO_TRANSCRICAO];
+        $deficiencies = [Deficiencias::BAIXA_VISAO];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertTrue($validator->isValid());
@@ -87,8 +87,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testAuxilioTranscricaoAndNotAllowedAloneDeficiencyChoosed()
     {
-        $resources = [ RecursosRealizacaoProvas::AUXILIO_TRANSCRICAO ];
-        $deficiencies = [ Deficiencias::CEGUEIRA ];
+        $resources = [RecursosRealizacaoProvas::AUXILIO_TRANSCRICAO];
+        $deficiencies = [Deficiencias::CEGUEIRA];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
@@ -97,8 +97,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testAuxilioTranscricaoAndNotAllowedAloneDeficiencyWithAnotherResourceChoosed()
     {
-        $resources = [ RecursosRealizacaoProvas::AUXILIO_TRANSCRICAO, RecursosRealizacaoProvas::AUXILIO_LEDOR ];
-        $deficiencies = [ Deficiencias::CEGUEIRA ];
+        $resources = [RecursosRealizacaoProvas::AUXILIO_TRANSCRICAO, RecursosRealizacaoProvas::AUXILIO_LEDOR];
+        $deficiencies = [Deficiencias::CEGUEIRA];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertTrue($validator->isValid());
@@ -106,8 +106,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testAuxilioTranscricaoAndNeutralDeficiencyChoosed()
     {
-        $resources = [ RecursosRealizacaoProvas::AUXILIO_TRANSCRICAO ];
-        $deficiencies = [ Deficiencias::DEFICIENCIA_AUDITIVA ];
+        $resources = [RecursosRealizacaoProvas::AUXILIO_TRANSCRICAO];
+        $deficiencies = [Deficiencias::DEFICIENCIA_AUDITIVA];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
@@ -116,8 +116,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testGuiaInterpreteAndNeutralDeficiencyChoosed()
     {
-        $resources = [ RecursosRealizacaoProvas::GUIA_INTERPRETE ];
-        $deficiencies = [ Deficiencias::DEFICIENCIA_AUDITIVA ];
+        $resources = [RecursosRealizacaoProvas::GUIA_INTERPRETE];
+        $deficiencies = [Deficiencias::DEFICIENCIA_AUDITIVA];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertTrue($validator->isValid());
@@ -125,8 +125,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testGuiaInterpreteAndForbiddenDeficiencyChoosed()
     {
-        $resources = [ RecursosRealizacaoProvas::GUIA_INTERPRETE ];
-        $deficiencies = [ Deficiencias::SURDOCEGUEIRA ];
+        $resources = [RecursosRealizacaoProvas::GUIA_INTERPRETE];
+        $deficiencies = [Deficiencias::SURDOCEGUEIRA];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
@@ -135,8 +135,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testTradutorInterpreteAndAllowedDeficiencyChoosed()
     {
-        $resources = [ RecursosRealizacaoProvas::TRADUTOR_INTERPRETE_DE_LIBRAS ];
-        $deficiencies = [ Deficiencias::SURDEZ ];
+        $resources = [RecursosRealizacaoProvas::TRADUTOR_INTERPRETE_DE_LIBRAS];
+        $deficiencies = [Deficiencias::SURDEZ];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertTrue($validator->isValid());
@@ -144,8 +144,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testTradutorInterpreteAndAllowedAndForbiddenDeficiencyChoosed()
     {
-        $resources = [ RecursosRealizacaoProvas::TRADUTOR_INTERPRETE_DE_LIBRAS ];
-        $deficiencies = [ Deficiencias::CEGUEIRA, Deficiencias::SURDEZ ];
+        $resources = [RecursosRealizacaoProvas::TRADUTOR_INTERPRETE_DE_LIBRAS];
+        $deficiencies = [Deficiencias::CEGUEIRA, Deficiencias::SURDEZ];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
@@ -154,8 +154,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testTradutorInterpreteAndNeutralDeficiencyChoosed()
     {
-        $resources = [ RecursosRealizacaoProvas::TRADUTOR_INTERPRETE_DE_LIBRAS ];
-        $deficiencies = [ Deficiencias::DEFICIENCIA_FISICA ];
+        $resources = [RecursosRealizacaoProvas::TRADUTOR_INTERPRETE_DE_LIBRAS];
+        $deficiencies = [Deficiencias::DEFICIENCIA_FISICA];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
@@ -164,8 +164,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testLeituraLabialAndAllowedDeficiencyChoosed()
     {
-        $resources = [ RecursosRealizacaoProvas::LEITURA_LABIAL ];
-        $deficiencies = [ Deficiencias::SURDEZ ];
+        $resources = [RecursosRealizacaoProvas::LEITURA_LABIAL];
+        $deficiencies = [Deficiencias::SURDEZ];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertTrue($validator->isValid());
@@ -173,8 +173,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testLeituraLabialAndAllowedAndForbiddenDeficiencyChoosed()
     {
-        $resources = [ RecursosRealizacaoProvas::LEITURA_LABIAL ];
-        $deficiencies = [ Deficiencias::CEGUEIRA, Deficiencias::SURDEZ ];
+        $resources = [RecursosRealizacaoProvas::LEITURA_LABIAL];
+        $deficiencies = [Deficiencias::CEGUEIRA, Deficiencias::SURDEZ];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
@@ -183,8 +183,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testLeituraLabialAndNeutralDeficiencyChoosed()
     {
-        $resources = [ RecursosRealizacaoProvas::LEITURA_LABIAL ];
-        $deficiencies = [ Deficiencias::DEFICIENCIA_FISICA ];
+        $resources = [RecursosRealizacaoProvas::LEITURA_LABIAL];
+        $deficiencies = [Deficiencias::DEFICIENCIA_FISICA];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
@@ -193,8 +193,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testProvaAmpliadaFonte18AndAllowedDeficiencyChoosed()
     {
-        $resources = [ RecursosRealizacaoProvas::PROVA_AMPLIADA_FONTE_18 ];
-        $deficiencies = [ Deficiencias::BAIXA_VISAO ];
+        $resources = [RecursosRealizacaoProvas::PROVA_AMPLIADA_FONTE_18];
+        $deficiencies = [Deficiencias::BAIXA_VISAO];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertTrue($validator->isValid());
@@ -202,8 +202,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testProvaAmpliadaFonte18AndAllowedAndForbiddenDeficiencyChoosed()
     {
-        $resources = [ RecursosRealizacaoProvas::PROVA_AMPLIADA_FONTE_18 ];
-        $deficiencies = [ Deficiencias::CEGUEIRA, Deficiencias::BAIXA_VISAO ];
+        $resources = [RecursosRealizacaoProvas::PROVA_AMPLIADA_FONTE_18];
+        $deficiencies = [Deficiencias::CEGUEIRA, Deficiencias::BAIXA_VISAO];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
@@ -212,8 +212,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testProvaAmpliadaFonte18AndNeutralDeficiencyChoosed()
     {
-        $resources = [ RecursosRealizacaoProvas::PROVA_AMPLIADA_FONTE_18 ];
-        $deficiencies = [ Deficiencias::DEFICIENCIA_FISICA ];
+        $resources = [RecursosRealizacaoProvas::PROVA_AMPLIADA_FONTE_18];
+        $deficiencies = [Deficiencias::DEFICIENCIA_FISICA];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
@@ -222,8 +222,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testProvaSuperAmpliadaFonte24AndAllowedDeficiencyChoosed()
     {
-        $resources = [ RecursosRealizacaoProvas::PROVA_SUPERAMPLIADA_FONTE_24 ];
-        $deficiencies = [ Deficiencias::BAIXA_VISAO ];
+        $resources = [RecursosRealizacaoProvas::PROVA_SUPERAMPLIADA_FONTE_24];
+        $deficiencies = [Deficiencias::BAIXA_VISAO];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertTrue($validator->isValid());
@@ -231,8 +231,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testProvaSuperAmpliadaFonte24AndAllowedAndForbiddenDeficiencyChoosed()
     {
-        $resources = [ RecursosRealizacaoProvas::PROVA_SUPERAMPLIADA_FONTE_24 ];
-        $deficiencies = [ Deficiencias::CEGUEIRA, Deficiencias::BAIXA_VISAO ];
+        $resources = [RecursosRealizacaoProvas::PROVA_SUPERAMPLIADA_FONTE_24];
+        $deficiencies = [Deficiencias::CEGUEIRA, Deficiencias::BAIXA_VISAO];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
@@ -241,8 +241,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testProvaSuperAmpliadaFonte24AndNeutralDeficiencyChoosed()
     {
-        $resources = [ RecursosRealizacaoProvas::PROVA_SUPERAMPLIADA_FONTE_24 ];
-        $deficiencies = [ Deficiencias::DEFICIENCIA_FISICA ];
+        $resources = [RecursosRealizacaoProvas::PROVA_SUPERAMPLIADA_FONTE_24];
+        $deficiencies = [Deficiencias::DEFICIENCIA_FISICA];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
@@ -251,8 +251,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testCdComAudioAndAllowedDeficiencyChoosed()
     {
-        $resources = [ RecursosRealizacaoProvas::CD_COM_AUDIO_PARA_DEFICIENTE_VISUAL ];
-        $deficiencies = [ Deficiencias::CEGUEIRA ];
+        $resources = [RecursosRealizacaoProvas::CD_COM_AUDIO_PARA_DEFICIENTE_VISUAL];
+        $deficiencies = [Deficiencias::CEGUEIRA];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertTrue($validator->isValid());
@@ -260,8 +260,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testCdComAudioAndAllowedAndForbiddenDeficiencyChoosed()
     {
-        $resources = [ RecursosRealizacaoProvas::CD_COM_AUDIO_PARA_DEFICIENTE_VISUAL ];
-        $deficiencies = [ Deficiencias::SURDEZ, Deficiencias::CEGUEIRA ];
+        $resources = [RecursosRealizacaoProvas::CD_COM_AUDIO_PARA_DEFICIENTE_VISUAL];
+        $deficiencies = [Deficiencias::SURDEZ, Deficiencias::CEGUEIRA];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
@@ -270,8 +270,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testCdComAudioAndNeutralDeficiencyChoosed()
     {
-        $resources = [ RecursosRealizacaoProvas::CD_COM_AUDIO_PARA_DEFICIENTE_VISUAL ];
-        $deficiencies = [ Deficiencias::ALTAS_HABILIDADES_SUPERDOTACAO ];
+        $resources = [RecursosRealizacaoProvas::CD_COM_AUDIO_PARA_DEFICIENTE_VISUAL];
+        $deficiencies = [Deficiencias::ALTAS_HABILIDADES_SUPERDOTACAO];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
@@ -280,8 +280,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testProvaLinguaPortuguesaSegundaLinguaAndAllowedDeficiencyChoosed()
     {
-        $resources = [ RecursosRealizacaoProvas::PROVA_LINGUA_PORTUGUESA_SEGUNDA_LINGUA_SURDOS ];
-        $deficiencies = [ Deficiencias::SURDEZ ];
+        $resources = [RecursosRealizacaoProvas::PROVA_LINGUA_PORTUGUESA_SEGUNDA_LINGUA_SURDOS];
+        $deficiencies = [Deficiencias::SURDEZ];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertTrue($validator->isValid());
@@ -289,8 +289,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testProvaLinguaPortuguesaSegundaLinguaAndAllowedAndForbiddenDeficiencyChoosed()
     {
-        $resources = [ RecursosRealizacaoProvas::PROVA_LINGUA_PORTUGUESA_SEGUNDA_LINGUA_SURDOS ];
-        $deficiencies = [ Deficiencias::SURDEZ, Deficiencias::CEGUEIRA ];
+        $resources = [RecursosRealizacaoProvas::PROVA_LINGUA_PORTUGUESA_SEGUNDA_LINGUA_SURDOS];
+        $deficiencies = [Deficiencias::SURDEZ, Deficiencias::CEGUEIRA];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
@@ -299,8 +299,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testProvaLinguaPortuguesaSegundaLinguaAndNeutralDeficiencyChoosed()
     {
-        $resources = [ RecursosRealizacaoProvas::PROVA_LINGUA_PORTUGUESA_SEGUNDA_LINGUA_SURDOS ];
-        $deficiencies = [ Deficiencias::ALTAS_HABILIDADES_SUPERDOTACAO ];
+        $resources = [RecursosRealizacaoProvas::PROVA_LINGUA_PORTUGUESA_SEGUNDA_LINGUA_SURDOS];
+        $deficiencies = [Deficiencias::ALTAS_HABILIDADES_SUPERDOTACAO];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
@@ -309,8 +309,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testProvaVideoLibrasAndAllowedDeficiencyChoosed()
     {
-        $resources = [ RecursosRealizacaoProvas::PROVA_EM_VIDEO_EM_LIBRAS ];
-        $deficiencies = [ Deficiencias::SURDEZ ];
+        $resources = [RecursosRealizacaoProvas::PROVA_EM_VIDEO_EM_LIBRAS];
+        $deficiencies = [Deficiencias::SURDEZ];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertTrue($validator->isValid());
@@ -318,8 +318,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testProvaVideoLibrasAndAllowedAndForbiddenDeficiencyChoosed()
     {
-        $resources = [ RecursosRealizacaoProvas::PROVA_EM_VIDEO_EM_LIBRAS ];
-        $deficiencies = [ Deficiencias::SURDEZ, Deficiencias::CEGUEIRA ];
+        $resources = [RecursosRealizacaoProvas::PROVA_EM_VIDEO_EM_LIBRAS];
+        $deficiencies = [Deficiencias::SURDEZ, Deficiencias::CEGUEIRA];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
@@ -328,8 +328,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testProvaVideoLibrasAndNeutralDeficiencyChoosed()
     {
-        $resources = [ RecursosRealizacaoProvas::PROVA_EM_VIDEO_EM_LIBRAS ];
-        $deficiencies = [ Deficiencias::ALTAS_HABILIDADES_SUPERDOTACAO ];
+        $resources = [RecursosRealizacaoProvas::PROVA_EM_VIDEO_EM_LIBRAS];
+        $deficiencies = [Deficiencias::ALTAS_HABILIDADES_SUPERDOTACAO];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
@@ -338,8 +338,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testMaterialDidaticoProvaBrailleAndAllowedDeficiencyChoosed()
     {
-        $resources = [ RecursosRealizacaoProvas::MATERIAL_DIDATICO_E_PROVA_EM_BRAILLE ];
-        $deficiencies = [ Deficiencias::CEGUEIRA ];
+        $resources = [RecursosRealizacaoProvas::MATERIAL_DIDATICO_E_PROVA_EM_BRAILLE];
+        $deficiencies = [Deficiencias::CEGUEIRA];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertTrue($validator->isValid());
@@ -347,8 +347,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testMaterialDidaticoProvaBrailleAndNeutralDeficiencyChoosed()
     {
-        $resources = [ RecursosRealizacaoProvas::MATERIAL_DIDATICO_E_PROVA_EM_BRAILLE ];
-        $deficiencies = [ Deficiencias::ALTAS_HABILIDADES_SUPERDOTACAO ];
+        $resources = [RecursosRealizacaoProvas::MATERIAL_DIDATICO_E_PROVA_EM_BRAILLE];
+        $deficiencies = [Deficiencias::ALTAS_HABILIDADES_SUPERDOTACAO];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
@@ -357,8 +357,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testNenhumAndForbiddenDeficiencyChoosed()
     {
-        $resources = [ RecursosRealizacaoProvas::NENHUM ];
-        $deficiencies = [ Deficiencias::CEGUEIRA ];
+        $resources = [RecursosRealizacaoProvas::NENHUM];
+        $deficiencies = [Deficiencias::CEGUEIRA];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
@@ -367,8 +367,8 @@ class InepExamValidatorTest extends TestCase
 
     public function testNenhumAndNeutralDeficiencyChoosed()
     {
-        $resources = [ RecursosRealizacaoProvas::NENHUM ];
-        $deficiencies = [ Deficiencias::ALTAS_HABILIDADES_SUPERDOTACAO ];
+        $resources = [RecursosRealizacaoProvas::NENHUM];
+        $deficiencies = [Deficiencias::ALTAS_HABILIDADES_SUPERDOTACAO];
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertTrue($validator->isValid());

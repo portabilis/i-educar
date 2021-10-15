@@ -293,6 +293,7 @@ class User extends Authenticatable
 
         return null;
     }
+
     public function getPasswordUpdatedDate(): ?Carbon
     {
         if ($this->employee) {

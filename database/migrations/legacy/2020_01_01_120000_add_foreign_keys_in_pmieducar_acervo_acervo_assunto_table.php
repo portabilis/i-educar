@@ -15,16 +15,16 @@ class AddForeignKeysInPmieducarAcervoAcervoAssuntoTable extends Migration
     {
         Schema::table('pmieducar.acervo_acervo_assunto', function (Blueprint $table) {
             $table->foreign('ref_cod_acervo')
-               ->references('cod_acervo')
-               ->on('pmieducar.acervo')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_acervo')
+                ->on('pmieducar.acervo')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_acervo_assunto')
-               ->references('cod_acervo_assunto')
-               ->on('pmieducar.acervo_assunto')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_acervo_assunto')
+                ->on('pmieducar.acervo_assunto')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

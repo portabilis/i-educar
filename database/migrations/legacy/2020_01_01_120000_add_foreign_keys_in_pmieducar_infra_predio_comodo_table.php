@@ -15,16 +15,16 @@ class AddForeignKeysInPmieducarInfraPredioComodoTable extends Migration
     {
         Schema::table('pmieducar.infra_predio_comodo', function (Blueprint $table) {
             $table->foreign('ref_cod_infra_predio')
-               ->references('cod_infra_predio')
-               ->on('pmieducar.infra_predio')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_infra_predio')
+                ->on('pmieducar.infra_predio')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_infra_comodo_funcao')
-               ->references('cod_infra_comodo_funcao')
-               ->on('pmieducar.infra_comodo_funcao')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_infra_comodo_funcao')
+                ->on('pmieducar.infra_comodo_funcao')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

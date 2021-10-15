@@ -15,10 +15,10 @@ class AddForeignKeysInModulesComponenteCurricularTable extends Migration
     {
         Schema::table('modules.componente_curricular', function (Blueprint $table) {
             $table->foreign(['area_conhecimento_id', 'instituicao_id'])
-               ->references(['id', 'instituicao_id'])
-               ->on('modules.area_conhecimento')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references(['id', 'instituicao_id'])
+                ->on('modules.area_conhecimento')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 
