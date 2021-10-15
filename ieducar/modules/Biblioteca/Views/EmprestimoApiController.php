@@ -65,7 +65,7 @@ class EmprestimoApiController extends ApiCoreController
             false,
             $this->getRequest()->biblioteca_id
         );
-        $qtdExemplaresEmprestadosDoCliente = count($exemplaresEmprestadosDoCliente);
+        $qtdExemplaresEmprestadosDoCliente = is_array($exemplaresEmprestadosDoCliente) ? count($exemplaresEmprestadosDoCliente) : 0;
 
         $objBiblioteca = new clsPmieducarBiblioteca($this->getRequest()->biblioteca_id);
         $detBiblioteca = $objBiblioteca->detalhe();
