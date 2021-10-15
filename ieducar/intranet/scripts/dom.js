@@ -1,33 +1,24 @@
-function ajax( funcaoRetorno, id_campo = null, hostInformation = window.location)
-{
+function ajax( funcaoRetorno, id_campo = null, hostInformation = window.location) {
   let host = hostInformation.protocol + '//' + hostInformation.host + '/intranet/';
-
+  let args = null;
 	if(arguments.length-1 > 0)  {
-		var args = new Array();
-		for(var ct=1;ct<ajax.arguments.length;ct++)
+		args = [];
+		for(let ct=1;ct<ajax.arguments.length;ct++)
 			args[ct-1] = ajax.arguments[ct];
-		//args.push(ajax.arguments[ct]);
-
 	}
-	else
-		args = null;
-//	alert('teste do sistema');
 	// para navegadores que seguem o padrao (mozzila, firefox, etc)
-	if ( window.XMLHttpRequest )
-	{
-		try
-		{
-
-			var xml;
+	if ( window.XMLHttpRequest ) {
+		try {
+			let xml;
 			xml = new XMLHttpRequest();
 			xml.args = args;
 			xml.personalCallback = funcaoRetorno;
 			xml.onreadystatechange = function(){
 				if( xml.readyState > 3 ) {
-					if ( xml.status == 200 ) {
+					if ( xml.status === 200 ) {
 						xml.personalCallback( xml.responseXML, xml.args )
-					} else if (xml.status == 500){
-						alert('N\u00e3o existem Componentes curriculares vinculados para a S\u00e9rie/Ano desta escola. Verifique em Cadastros > S\u00e9rie > Escola-s\u00e9rie se os Componentes curriculares foram selecionados/marcados para esta S\u00e9rie/Ano.');
+					} else if (xml.status === 500){
+						alert('Não existem Componentes curriculares vinculados para a Série/Ano desta escola. Verifique em Cadastros > Série > Escola-série se os Componentes curriculares foram selecionados/marcados para esta Série/Ano.');
 					} else {
 						alert('Erro: '+xml.status);
 					}
@@ -37,7 +28,7 @@ function ajax( funcaoRetorno, id_campo = null, hostInformation = window.location
 			xml.envia = function() {
         xml.open(
           "GET",
-          host + addRandToURL(arguments[0]),
+          buildUrl(host, arguments[0]),
           true
         )
         xml.send(null)
@@ -61,12 +52,23 @@ function ajax( funcaoRetorno, id_campo = null, hostInformation = window.location
 			This.personalCallback = function() { funcaoRetorno(  This.xml.responseXML,This.args ); };
 			This.callback=function(){ if( This.xml.readyState > 3 ) { if ( This.xml.status == 200 ) { This.personalCallback() } else { alert('erro'); } } };
 			This.xml.onreadystatechange = function(){ This.callback() };
-			This.envia = function(){This.xml.open("GET", host + addRandToURL(arguments[0]),true);This.xml.send()};
+			This.envia = function(){This.xml.open("GET",buildUrl(host,arguments[0]),true);This.xml.send()};
 		} catch(e)
 		{
 			alert("Erro ajax: " + e.description);
 		}
 	}
+}
+
+function buildUrl(host, arguments) {
+  let url = addRandToURL(arguments);
+
+  if (url.include('modules/')) {
+    host = host.replace('intranet/', '')
+    return host + url;
+  }
+
+  return host + url;
 }
 
 function addRandToURL( url )
