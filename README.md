@@ -36,7 +36,7 @@ Acreditamos que o sucesso do projeto depende diretamente da interação clara e
 objetiva entre os membros da Comunidade. Por isso, estamos definindo algumas
 políticas para que estas interações nos ajudem a crescer juntos! Você pode
 consultar algumas destas boas práticas em nosso [código de
-conduta](https://github.com/portabilis/i-educar/blob/master/code-of-conduct.md).
+conduta](https://github.com/portabilis/i-educar/blob/master/CODE-OF-CONDUCT.md).
 
 Além disso, gostamos de meios de comunicação assíncrona, onde não há necessidade de
 respostas em tempo real. Isso facilita a produtividade individual dos
@@ -53,8 +53,8 @@ comunidade i-Educar e não terá suporte da Portabilis - mantenedora do projeto.
 
 ## Como contribuir
 
-Contribuições são **super bem vindas**! Se você tem vontade de construir o
-i-Educar junto conosco, veja o nosso [guia de contribuição](./contributing.md)
+Contribuições são **super bem-vindas**! Se você tem vontade de construir o
+i-Educar junto conosco, veja o nosso [guia de contribuição](./CONTRIBUTING.md)
 onde explicamos detalhadamente como trabalhamos e de que formas você pode nos
 ajudar a alcançar nossos objetivos.
 
