@@ -19,8 +19,7 @@ class AdministrativeDomainValidator implements EducacensoValidator
         $regulations,
         $administrativeDependence,
         $cityIbgeCode
-    )
-    {
+    ) {
         $this->administrativeDomain = $administrativeDomain;
         $this->regulations = $regulations;
         $this->administrativeDependence = $administrativeDependence;
