@@ -2,9 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyInstitution;
 use App\Models\LegacyStageType;
-use App\Models\LegacyUser;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyStageTypeFactory extends Factory

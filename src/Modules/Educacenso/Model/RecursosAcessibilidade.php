@@ -4,15 +4,15 @@ namespace iEducar\Modules\Educacenso\Model;
 
 class RecursosAcessibilidade
 {
-    const NENHUM = 1;
-    const CORRIMAO = 2;
-    const ELEVADOR = 3;
-    const PISOS_TATEIS = 4;
-    const PORTAS_VAO_LIVRE = 5;
-    const RAMPAS = 6;
-    const SINALIZACAO_SONORA = 7;
-    const SINALIZACAO_TATIL = 8;
-    const SINALIZACAO_VISUAL = 9;
+    public const NENHUM = 1;
+    public const CORRIMAO = 2;
+    public const ELEVADOR = 3;
+    public const PISOS_TATEIS = 4;
+    public const PORTAS_VAO_LIVRE = 5;
+    public const RAMPAS = 6;
+    public const SINALIZACAO_SONORA = 7;
+    public const SINALIZACAO_TATIL = 8;
+    public const SINALIZACAO_VISUAL = 9;
 
     public static function getDescriptiveValues()
     {

@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyInstitution;
 use App\Models\LegacyKnowledgeArea;
 use Illuminate\Database\Eloquent\Factories\Factory;
 

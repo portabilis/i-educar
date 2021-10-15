@@ -4,11 +4,11 @@ namespace iEducar\Modules\Educacenso\Model;
 
 class SalasGerais
 {
-    const SALA_DIRETORIA = 1;
-    const SALA_SECRETARIA = 2;
-    const SALA_PROFESSORES = 3;
-    const BIBLIOTECA = 4;
-    const AUDITORIO = 5;
+    public const SALA_DIRETORIA = 1;
+    public const SALA_SECRETARIA = 2;
+    public const SALA_PROFESSORES = 3;
+    public const BIBLIOTECA = 4;
+    public const AUDITORIO = 5;
 
     public static function getDescriptiveValues()
     {

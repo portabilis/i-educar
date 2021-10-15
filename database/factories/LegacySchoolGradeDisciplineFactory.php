@@ -2,9 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyDiscipline;
-use App\Models\LegacyLevel;
-use App\Models\LegacySchool;
 use App\Models\LegacySchoolGradeDiscipline;
 use Illuminate\Database\Eloquent\Factories\Factory;
 

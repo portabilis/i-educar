@@ -62,6 +62,7 @@ class EnrollmentServiceTest extends TestCase
      * Cancelamento de enturmação com sucesso.
      *
      * @throws Throwable
+     *
      * @return void
      *
      */
@@ -86,6 +87,7 @@ class EnrollmentServiceTest extends TestCase
      * início do ano letivo.
      *
      * @throws Throwable
+     *
      * @return void
      *
      */
@@ -113,6 +115,7 @@ class EnrollmentServiceTest extends TestCase
      * fim do ano letivo.
      *
      * @throws Throwable
+     *
      * @return void
      *
      */
@@ -137,6 +140,7 @@ class EnrollmentServiceTest extends TestCase
      * a data de enturmação.
      *
      * @throws Throwable
+     *
      * @return void
      *
      */
@@ -223,6 +227,7 @@ class EnrollmentServiceTest extends TestCase
      * início do ano letivo.
      *
      * @throws Throwable
+     *
      * @return void
      *
      */
@@ -254,6 +259,7 @@ class EnrollmentServiceTest extends TestCase
      * estiver habilitado na instituição
      *
      * @throws Throwable
+     *
      * @return void
      *
      */
@@ -285,6 +291,7 @@ class EnrollmentServiceTest extends TestCase
      * fim do ano letivo.
      *
      * @throws Throwable
+     *
      * @return void
      *
      */
@@ -312,6 +319,7 @@ class EnrollmentServiceTest extends TestCase
      * A data de enturmação é anterior a data de matrícula.
      *
      * @throws Throwable
+     *
      * @return void
      *
      */

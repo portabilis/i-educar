@@ -1,7 +1,5 @@
 <?php
 
-
-
 abstract class Avaliacao_Service_NotaSituacaoCommon extends Avaliacao_Service_TestCommon
 {
     protected function _setUpNotaComponenteMediaDataMapperMock(

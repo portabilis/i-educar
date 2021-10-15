@@ -3,8 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\LegacyOrganization;
-use App\Models\LegacyPerson;
-use App\Models\LegacyUser;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyOrganizationFactory extends Factory

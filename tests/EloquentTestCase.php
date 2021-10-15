@@ -60,7 +60,7 @@ abstract class EloquentTestCase extends TestCase
     {
         $model = $this->getEloquentModelName();
 
-        return new $model;
+        return new $model();
     }
 
     /**

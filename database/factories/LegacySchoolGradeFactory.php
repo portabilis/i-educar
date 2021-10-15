@@ -2,10 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyLevel;
-use App\Models\LegacySchoolCourse;
 use App\Models\LegacySchoolGrade;
-use App\Models\LegacyUser;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacySchoolGradeFactory extends Factory

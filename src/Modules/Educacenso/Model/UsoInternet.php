@@ -4,11 +4,11 @@ namespace iEducar\Modules\Educacenso\Model;
 
 class UsoInternet
 {
-    const NAO_POSSUI = 1;
-    const ADMINISTRATIVO = 2;
-    const PROCESSOS_ENSINO = 3;
-    const ALUNOS = 4;
-    const COMUNIDADE = 5;
+    public const NAO_POSSUI = 1;
+    public const ADMINISTRATIVO = 2;
+    public const PROCESSOS_ENSINO = 3;
+    public const ALUNOS = 4;
+    public const COMUNIDADE = 5;
 
     public static function getDescriptiveValues()
     {

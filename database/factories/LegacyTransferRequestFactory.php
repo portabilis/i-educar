@@ -2,9 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacySchool;
 use App\Models\LegacyTransferRequest;
-use App\Models\LegacyTransferType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyTransferRequestFactory extends Factory

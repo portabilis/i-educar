@@ -4,7 +4,6 @@ namespace Tests\Feature\DiarioApi;
 
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyEnrollment;
-use App\User;
 use Database\Factories\UserFactory;
 use Illuminate\Foundation\Testing\TestResponse;
 

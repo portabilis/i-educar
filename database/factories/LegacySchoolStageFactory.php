@@ -2,9 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacySchoolAcademicYear;
 use App\Models\LegacySchoolStage;
-use App\Models\LegacyStageType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacySchoolStageFactory extends Factory

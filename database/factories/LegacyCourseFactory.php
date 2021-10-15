@@ -3,10 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\LegacyCourse;
-use App\Models\LegacyEducationLevel;
-use App\Models\LegacyEducationType;
-use App\Models\LegacyInstitution;
-use App\Models\LegacyRegimeType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyCourseFactory extends Factory

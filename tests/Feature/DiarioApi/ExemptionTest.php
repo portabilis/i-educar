@@ -5,7 +5,6 @@ namespace Tests\Feature\DiarioApi;
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineExemption;
 use App\Models\LegacyEnrollment;
-use App\Models\LegacyExemptionStage;
 use App_Model_MatriculaSituacao;
 use Database\Factories\LegacyDisciplineExemptionFactory;
 use Database\Factories\LegacyExemptionStageFactory;
@@ -14,7 +13,9 @@ use Tests\TestCase;
 
 class ExemptionTest extends TestCase
 {
-    use DiarioApiFakeDataTestTrait, DiarioApiRequestTestTrait, DatabaseTransactions;
+    use DiarioApiFakeDataTestTrait;
+    use DiarioApiRequestTestTrait;
+    use DatabaseTransactions;
 
     /** @var LegacyEnrollment */
     private $enrollment;

@@ -2,9 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyAverageFormula;
 use App\Models\LegacyEvaluationRule;
-use App\Models\LegacyInstitution;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use RegraAvaliacao_Model_Nota_TipoValor;
 use RegraAvaliacao_Model_TipoPresenca;

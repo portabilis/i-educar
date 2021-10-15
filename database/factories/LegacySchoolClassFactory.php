@@ -65,4 +65,3 @@ class LegacySchoolClassFactory extends Factory
         });
     }
 }
-

@@ -4,13 +4,13 @@ namespace iEducar\Modules\Transport;
 
 class Period
 {
-    const MORNING = 1;
-    const AFTERNOON = 2;
-    const NIGHT = 3;
-    const FULL_TIME = 4;
-    const MORNING_AND_AFTERNOON = 5;
-    const MORNING_AND_NIGHT = 6;
-    const AFTERNOON_NIGHT = 7;
+    public const MORNING = 1;
+    public const AFTERNOON = 2;
+    public const NIGHT = 3;
+    public const FULL_TIME = 4;
+    public const MORNING_AND_AFTERNOON = 5;
+    public const MORNING_AND_NIGHT = 6;
+    public const AFTERNOON_NIGHT = 7;
 
     /**
      * @return array

@@ -64,17 +64,17 @@ class Student extends Model
 
     public function getGuardianTypeDescriptionAttribute()
     {
-        return (new GuardianType)->getDescriptiveValues()[(int) $this->guardian_type];
+        return (new GuardianType())->getDescriptiveValues()[(int) $this->guardian_type];
     }
 
     public function getTransportationProviderDescriptionAttribute()
     {
-        return (new TransportationProvider)->getDescriptiveValues()[(int) $this->transportation_provider];
+        return (new TransportationProvider())->getDescriptiveValues()[(int) $this->transportation_provider];
     }
 
     public function getTransportationVehicleTypeDescriptionAttribute()
     {
-        return (new TransportationVehicleType)->getDescriptiveValues()[(int) $this->transportation_vehicle_type];
+        return (new TransportationVehicleType())->getDescriptiveValues()[(int) $this->transportation_vehicle_type];
     }
 
     /**

@@ -2,9 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyPerson;
 use App\Models\PersonHasPlace;
-use App\Models\Place;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class PersonHasPlaceFactory extends Factory

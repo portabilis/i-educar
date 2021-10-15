@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacySchool;
 use App\Models\SchoolInep;
 use Illuminate\Database\Eloquent\Factories\Factory;
 

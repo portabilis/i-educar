@@ -1,7 +1,5 @@
 <?php
 
-
-
 class Avaliacao_Service_UtilityTest extends Avaliacao_Service_TestCommon
 {
     public function testArredondaNotaLancaExcecaoSeParametroNaoForNumerico()

@@ -2,9 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineScore;
-use App\Models\LegacyRegistrationScore;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyDisciplineScoreFactory extends Factory

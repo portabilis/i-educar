@@ -2,13 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineExemption;
-use App\Models\LegacyExemptionType;
-use App\Models\LegacyLevel;
-use App\Models\LegacyRegistration;
-use App\Models\LegacySchool;
-use App\Models\LegacyUser;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyDisciplineExemptionFactory extends Factory

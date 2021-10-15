@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyDisciplineExemption;
 use App\Models\LegacyExemptionStage;
 use Illuminate\Database\Eloquent\Factories\Factory;
 

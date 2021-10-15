@@ -3,9 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\LegacyEnrollment;
-use App\Models\LegacyRegistration;
-use App\Models\LegacySchoolClass;
-use App\Models\LegacyUser;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyEnrollmentFactory extends Factory

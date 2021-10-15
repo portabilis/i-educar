@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyIndividual;
 use App\Models\LegacyStudent;
 use Illuminate\Database\Eloquent\Factories\Factory;
 

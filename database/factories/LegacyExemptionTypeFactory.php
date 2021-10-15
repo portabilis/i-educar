@@ -3,8 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\LegacyExemptionType;
-use App\Models\LegacyInstitution;
-use App\Models\LegacyUser;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyExemptionTypeFactory extends Factory

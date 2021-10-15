@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyRegistration;
 use App\Models\LegacyRegistrationScore;
 use Illuminate\Database\Eloquent\Factories\Factory;
 

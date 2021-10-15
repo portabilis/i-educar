@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyRoundingTable;
 use App\Models\LegacyValueRoundingTable;
 use Illuminate\Database\Eloquent\Factories\Factory;
 

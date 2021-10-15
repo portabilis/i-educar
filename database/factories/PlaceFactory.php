@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\City;
 use App\Models\Place;
 use Illuminate\Database\Eloquent\Factories\Factory;
 

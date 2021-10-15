@@ -1,7 +1,5 @@
 <?php
 
-
-
 class Educacenso_Model_CursoSuperiorTest extends PHPUnit\Framework\TestCase
 {
     protected $_entity = null;

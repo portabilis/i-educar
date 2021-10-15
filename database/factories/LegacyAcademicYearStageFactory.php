@@ -3,8 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\LegacyAcademicYearStage;
-use App\Models\LegacySchoolAcademicYear;
-use App\Models\LegacyStageType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyAcademicYearStageFactory extends Factory
@@ -36,4 +34,3 @@ class LegacyAcademicYearStageFactory extends Factory
         ];
     }
 }
-

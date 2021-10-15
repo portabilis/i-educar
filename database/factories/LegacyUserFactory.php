@@ -2,9 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyEmployee;
 use App\Models\LegacyUser;
-use App\Models\LegacyUserType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyUserFactory extends Factory

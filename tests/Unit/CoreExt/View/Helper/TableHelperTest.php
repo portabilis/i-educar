@@ -1,7 +1,5 @@
 <?php
 
-
-
 class CoreExt_View_TableHelperTest extends PHPUnit\Framework\TestCase
 {
     protected $_headerExpected = '

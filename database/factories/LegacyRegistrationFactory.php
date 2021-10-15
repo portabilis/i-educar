@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\LegacyRegistration;
-use App\Models\LegacyStudent;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyRegistrationFactory extends Factory

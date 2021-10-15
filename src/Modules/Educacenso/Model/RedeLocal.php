@@ -4,9 +4,9 @@ namespace iEducar\Modules\Educacenso\Model;
 
 class RedeLocal
 {
-    const NENHUMA = 1;
-    const A_CABO = 2;
-    const WIRELESS = 3;
+    public const NENHUMA = 1;
+    public const A_CABO = 2;
+    public const WIRELESS = 3;
 
     public static function getDescriptiveValues()
     {

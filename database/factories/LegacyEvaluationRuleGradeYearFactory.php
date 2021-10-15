@@ -2,9 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyEvaluationRule;
 use App\Models\LegacyEvaluationRuleGradeYear;
-use App\Models\LegacyLevel;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyEvaluationRuleGradeYearFactory extends Factory
