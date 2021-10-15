@@ -26,7 +26,8 @@ class Registro002019ImportTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->user = factory(User::class)->state('admin')->make();
+
+        $this->user = User::factory()->admin()->make();
     }
 
     /**
@@ -36,8 +37,8 @@ class Registro002019ImportTest extends TestCase
     {
         $model = $this->getImportModel();
 
-        $school = factory(LegacySchool::class)->create();
-        $inep = factory(SchoolInep::class)->create([
+        $school = LegacySchool::factory()->create();
+        $inep = SchoolInep::factory()->create([
             'cod_escola' => $school,
             'cod_escola_inep' => $model->codigoInep,
         ]);

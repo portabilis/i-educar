@@ -36,10 +36,10 @@ class AvaliacaoServiceSituacaoTest extends Avaliacao_Service_TestCommon
             ->method('getRegra')
             ->willReturn($regra);
 
-        $registration = factory(LegacyRegistration::class)
+        $registration = LegacyRegistration::factory()
             ->create(
                 [
-                    'ref_ref_cod_serie' => factory(LegacyLevel::class)->create(),
+                    'ref_ref_cod_serie' => LegacyLevel::factory()->create(),
                     'dependencia' => true,
                 ]
             );

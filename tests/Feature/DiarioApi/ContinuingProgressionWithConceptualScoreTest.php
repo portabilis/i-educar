@@ -31,7 +31,7 @@ class ContinuingProgressionWithConceptualScoreTest extends TestCase
      */
     public function getContinuingProgressionWithConceptualScoreTest()
     {
-        $roundingTable = factory(LegacyRoundingTable::class)->state('conceitual')->create();
+        $roundingTable = LegacyRoundingTable::factory()->conceitual()->create();
 
         $valuesRoundingTable = [
             [
@@ -67,7 +67,7 @@ class ContinuingProgressionWithConceptualScoreTest extends TestCase
         ];
 
         foreach ($valuesRoundingTable as $value) {
-            factory(LegacyValueRoundingTable::class)->create([
+            LegacyValueRoundingTable::factory()->create([
                 'tabela_arredondamento_id' => $roundingTable->id,
                 'nome' => $value['nome'],
                 'descricao' => $value['descricao'],
@@ -76,7 +76,7 @@ class ContinuingProgressionWithConceptualScoreTest extends TestCase
             ]);
         }
 
-        $evaluationRule = factory(LegacyEvaluationRule::class)->state('progressao-continuada-nota-conceitual')->create([
+        $evaluationRule = LegacyEvaluationRule::factory()->progressaoContinuadaNotaConceitual()->create([
             'tabela_arredondamento_id' => $roundingTable->id,
         ]);
 

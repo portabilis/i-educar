@@ -6,6 +6,7 @@ use App\Support\Database\DateSerializer;
 use App\User;
 use DateTime;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -22,7 +23,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class LegacyEnrollment extends Model
 {
-    use DateSerializer;
+    use DateSerializer, HasFactory;
 
     /**
      * @var string

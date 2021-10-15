@@ -1,24 +1,39 @@
 <?php
 
+namespace Database\Factories;
+
 use App\Models\LegacySchoolAcademicYear;
 use App\Models\LegacySchoolStage;
 use App\Models\LegacyStageType;
-use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-/** @var Factory $factory */
+class LegacySchoolStageFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = LegacySchoolStage::class;
 
-$factory->define(LegacySchoolStage::class, function (Faker $faker) {
-    $schoolAcademicYear = factory(LegacySchoolAcademicYear::class)->create();
-    $stageType = factory(LegacyStageType::class)->state('unique')->make();
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition(): array
+    {
+        $schoolAcademicYear = LegacySchoolAcademicYear::factory()->create();
+        $stageType = LegacyStageType::factory()->unique()->make();
 
-    return [
-        'ref_ano' => now()->year,
-        'ref_ref_cod_escola' => $schoolAcademicYear->ref_cod_escola,
-        'sequencial' => $faker->unique()->numberBetween(1, 9),
-        'ref_cod_modulo' => $stageType->getKey(),
-        'data_inicio' => now()->setDate(2019, 2, 1),
-        'data_fim' => now()->setDate(2019, 11, 30),
-        'dias_letivos' => $faker->numberBetween(150, 200),
-    ];
-});
+        return [
+            'ref_ano' => now()->year,
+            'ref_ref_cod_escola' => $schoolAcademicYear->ref_cod_escola,
+            'sequencial' => $this->faker->unique()->numberBetween(1, 9),
+            'ref_cod_modulo' => $stageType->getKey(),
+            'data_inicio' => now()->setDate(2019, 2, 1),
+            'data_fim' => now()->setDate(2019, 11, 30),
+            'dias_letivos' => $this->faker->numberBetween(150, 200),
+        ];
+    }
+}

@@ -15,8 +15,8 @@ class SequencialEnturmacaoTest extends TestCase
 
     public function testSequencialEqualsOneWhenRelocationDateIsNull()
     {
-        $schoolClass = factory(LegacySchoolClass::class)->create();
-        $registration = factory(LegacyRegistration::class)->create([
+        $schoolClass = LegacySchoolClass::factory()->create();
+        $registration = LegacyRegistration::factory()->create([
             'ref_ref_cod_serie' => $schoolClass->ref_ref_cod_serie,
             'ref_ref_cod_escola' => $schoolClass->ref_ref_cod_escola,
             'ref_cod_curso' => $schoolClass->ref_cod_curso,
@@ -29,30 +29,30 @@ class SequencialEnturmacaoTest extends TestCase
 
     public function testSequencialEqualsThreeWhenRelocationDateIsNull()
     {
-        $schoolClass = factory(LegacySchoolClass::class)->create();
-        $registration1 = factory(LegacyRegistration::class)->create([
+        $schoolClass = LegacySchoolClass::factory()->create();
+        $registration1 = LegacyRegistration::factory()->create([
             'ref_ref_cod_serie' => $schoolClass->ref_ref_cod_serie,
             'ref_ref_cod_escola' => $schoolClass->ref_ref_cod_escola,
             'ref_cod_curso' => $schoolClass->ref_cod_curso,
         ]);
-        $registration2 = factory(LegacyRegistration::class)->create([
+        $registration2 = LegacyRegistration::factory()->create([
             'ref_ref_cod_serie' => $schoolClass->ref_ref_cod_serie,
             'ref_ref_cod_escola' => $schoolClass->ref_ref_cod_escola,
             'ref_cod_curso' => $schoolClass->ref_cod_curso,
         ]);
-        $registration3 = factory(LegacyRegistration::class)->create([
+        $registration3 = LegacyRegistration::factory()->create([
             'ref_ref_cod_serie' => $schoolClass->ref_ref_cod_serie,
             'ref_ref_cod_escola' => $schoolClass->ref_ref_cod_escola,
             'ref_cod_curso' => $schoolClass->ref_cod_curso,
         ]);
 
-        factory(LegacyEnrollment::class)->create([
+        LegacyEnrollment::factory()->create([
             'ref_cod_turma' => $schoolClass->cod_turma,
             'ref_cod_matricula' => $registration1->cod_matricula,
             'sequencial_fechamento' => 1
         ]);
 
-        factory(LegacyEnrollment::class)->create([
+        LegacyEnrollment::factory()->create([
             'ref_cod_turma' => $schoolClass->cod_turma,
             'ref_cod_matricula' => $registration2->cod_matricula,
             'sequencial_fechamento' => 2
