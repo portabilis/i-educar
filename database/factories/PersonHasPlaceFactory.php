@@ -24,8 +24,8 @@ class PersonHasPlaceFactory extends Factory
     public function definition(): array
     {
         return [
-            'person_id' => LegacyPerson::factory()->create(),
-            'place_id' => Place::factory()->create(),
+            'person_id' => LegacyPersonFactory::new()->create(),
+            'place_id' => PlaceFactory::new()->create(),
             'type' => 1,
         ];
     }

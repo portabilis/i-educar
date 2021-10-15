@@ -7,6 +7,8 @@ use App\Models\LegacyDisciplineExemption;
 use App\Models\LegacyEnrollment;
 use App\Models\LegacyExemptionStage;
 use App_Model_MatriculaSituacao;
+use Database\Factories\LegacyDisciplineExemptionFactory;
+use Database\Factories\LegacyExemptionStageFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
@@ -39,14 +41,14 @@ class ExemptionTest extends TestCase
 
         // Dispensa a primeira etapa da primeira disciplina
         /** @var LegacyDisciplineExemption $dispensa */
-        $dispensa = LegacyDisciplineExemption::factory()->create([
+        $dispensa = LegacyDisciplineExemptionFactory::new()->create([
             'ref_cod_matricula' => $registration->id,
             'ref_cod_disciplina' => $disciplines[0]->id,
             'ref_cod_escola' => $registration->ref_ref_cod_escola,
             'ref_cod_serie' => $registration->ref_ref_cod_serie,
         ]);
 
-        LegacyExemptionStage::factory()->create([
+        LegacyExemptionStageFactory::new()->create([
             'ref_cod_dispensa' => $dispensa->cod_dispensa,
             'etapa' => 1,
         ]);
@@ -109,18 +111,18 @@ class ExemptionTest extends TestCase
 
         // Dispensa as duas etapas da primeira disciplina
         /** @var LegacyDisciplineExemption $dispensa */
-        $dispensa = LegacyDisciplineExemption::factory()->create([
+        $dispensa = LegacyDisciplineExemptionFactory::new()->create([
             'ref_cod_matricula' => $registration->id,
             'ref_cod_disciplina' => $disciplines[0]->id,
             'ref_cod_escola' => $registration->ref_ref_cod_escola,
             'ref_cod_serie' => $registration->ref_ref_cod_serie,
         ]);
 
-        LegacyExemptionStage::factory()->create([
+        LegacyExemptionStageFactory::new()->create([
             'ref_cod_dispensa' => $dispensa->cod_dispensa,
             'etapa' => 1,
         ]);
-        LegacyExemptionStage::factory()->create([
+        LegacyExemptionStageFactory::new()->create([
             'ref_cod_dispensa' => $dispensa->cod_dispensa,
             'etapa' => 2,
         ]);
@@ -176,14 +178,14 @@ class ExemptionTest extends TestCase
 
         // Dispensa a ultima etapa da primeira disciplina
         /** @var LegacyDisciplineExemption $dispensa */
-        $dispensa = LegacyDisciplineExemption::factory()->create([
+        $dispensa = LegacyDisciplineExemptionFactory::new()->create([
             'ref_cod_matricula' => $registration->id,
             'ref_cod_disciplina' => $disciplines[0]->id,
             'ref_cod_escola' => $registration->ref_ref_cod_escola,
             'ref_cod_serie' => $registration->ref_ref_cod_serie,
         ]);
 
-        LegacyExemptionStage::factory()->create([
+        LegacyExemptionStageFactory::new()->create([
             'ref_cod_dispensa' => $dispensa->cod_dispensa,
             'etapa' => 2,
         ]);

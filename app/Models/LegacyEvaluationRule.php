@@ -2,15 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class LegacyEvaluationRule extends Model
 {
-    use HasFactory;
-
     const PARALLEL_REMEDIAL_NONE = 0;
     const PARALLEL_REMEDIAL_PER_STAGE = 1;
     const PARALLEL_REMEDIAL_PER_SPECIFIC_STAGE = 2;

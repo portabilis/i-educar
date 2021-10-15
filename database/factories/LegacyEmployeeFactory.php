@@ -24,7 +24,7 @@ class LegacyEmployeeFactory extends Factory
     {
         return [
             'ref_cod_pessoa_fj' => function () {
-                return LegacyIndividual::factory()->create()->idpes;
+                return LegacyIndividualFactory::new()->create()->idpes;
             },
             'matricula' => $this->faker->randomDigitNotNull(),
             'senha' => $this->faker->randomDigitNotNull(),

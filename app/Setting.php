@@ -3,12 +3,11 @@
 namespace App;
 
 use App\Support\Database\DateSerializer;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Setting extends Model
 {
-    use DateSerializer, HasFactory;
+    use DateSerializer;
 
     const TYPE_STRING = 'string';
     const TYPE_FLOAT = 'float';

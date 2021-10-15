@@ -25,14 +25,14 @@ class LegacyUserFactory extends Factory
     {
         return [
             'cod_usuario' => function () {
-                return LegacyEmployee::factory()->create()->ref_cod_pessoa_fj;
+                return LegacyEmployeeFactory::new()->create()->ref_cod_pessoa_fj;
             },
             'ref_cod_instituicao' => 1,
             'ref_funcionario_cad' => function () {
-                return LegacyEmployee::factory()->create()->ref_cod_pessoa_fj;
+                return LegacyEmployeeFactory::new()->create()->ref_cod_pessoa_fj;
             },
             'ref_cod_tipo_usuario' => function () {
-                return LegacyUserType::factory()->create()->cod_tipo_usuario;
+                return LegacyUserTypeFactory::new()->create()->cod_tipo_usuario;
             },
             'data_cadastro' => $this->faker->dateTime,
             'ativo' => 1,
@@ -45,7 +45,7 @@ class LegacyUserFactory extends Factory
             $user = LegacyUser::query()->first();
 
             if (empty($user)) {
-                $user = LegacyUser::factory()->create();
+                $user = LegacyUserFactory::new()->create();
             }
 
             return [

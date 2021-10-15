@@ -9,7 +9,6 @@ use App\Models\LegacyUserType;
 use App\Models\School;
 use App\Services\DisableUsersWithDaysGoneSinceLastAccessService;
 use Illuminate\Contracts\Config\Repository;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -29,7 +28,7 @@ use Illuminate\Support\Carbon;
  */
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use Notifiable;
 
     /**
      * @var string

@@ -41,7 +41,7 @@ class LegacyInstitutionFactory extends Factory
             $institution = LegacyInstitution::query()->first();
 
             if (empty($institution)) {
-                $institution = LegacyInstitution::factory()->create();
+                $institution = LegacyInstitutionFactory::new()->create();
             }
 
             return [

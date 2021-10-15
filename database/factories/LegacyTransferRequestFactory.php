@@ -26,10 +26,10 @@ class LegacyTransferRequestFactory extends Factory
         return [
             'ref_usuario_cad' => 1,
             'observacao' => $this->faker->words(3, true),
-            'ref_cod_escola_destino' => LegacySchool::factory()->create(),
+            'ref_cod_escola_destino' => LegacySchoolFactory::new()->create(),
             'data_cadastro' => now(),
             'ativo' => 1,
-            'ref_cod_transferencia_tipo' => LegacyTransferType::factory()->create()
+            'ref_cod_transferencia_tipo' => LegacyTransferTypeFactory::new()->create()
         ];
     }
 }

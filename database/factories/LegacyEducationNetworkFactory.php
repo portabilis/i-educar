@@ -24,10 +24,10 @@ class LegacyEducationNetworkFactory extends Factory
     public function definition(): array
     {
         return [
-            'ref_usuario_cad' => LegacyUser::factory()->unique()->make(),
+            'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
             'nm_rede' => $this->faker->company,
             'data_cadastro' => now(),
-            'ref_cod_instituicao' => LegacyInstitution::factory()->unique()->make(),
+            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
         ];
     }
 }

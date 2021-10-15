@@ -26,7 +26,7 @@ class LegacyAverageFormulaFactory extends Factory
     public function definition(): array
     {
         return [
-            'instituicao_id' => LegacyInstitution::factory()->unique()->make(),
+            'instituicao_id' => LegacyInstitutionFactory::new()->unique()->make(),
             'nome' => $this->faker->words(3, true),
             'formula_media' => 'Se / Et',
         ];

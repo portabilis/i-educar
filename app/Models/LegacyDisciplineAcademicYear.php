@@ -2,13 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class LegacyDisciplineAcademicYear extends Pivot
 {
-    use HasFactory;
-
     protected $table = 'modules.componente_curricular_ano_escolar';
 
     protected $primaryKey = 'componente_curricular_id';

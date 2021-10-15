@@ -2,12 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyEvaluationRuleGradeYear;
-use App\Models\LegacyInstitution;
 use App\Models\LegacySchoolClass;
-use App\Models\LegacySchoolClassType;
-use App\Models\LegacySchoolGrade;
-use App\Models\LegacyUser;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacySchoolClassFactory extends Factory
@@ -26,24 +21,24 @@ class LegacySchoolClassFactory extends Factory
      */
     public function definition(): array
     {
-        $schoolGrade = LegacySchoolGrade::factory()->create();
+        $schoolGrade = LegacySchoolGradeFactory::new()->create();
 
-        LegacyEvaluationRuleGradeYear::factory()->create([
+        LegacyEvaluationRuleGradeYearFactory::new()->create([
             'serie_id' => $schoolGrade->grade,
             'ano_letivo' => now()->year,
         ]);
 
         return [
-            'ref_usuario_cad' => LegacyUser::factory()->unique()->make(),
+            'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
             'nm_turma' => $name = $this->faker->colorName,
             'sgl_turma' => mb_substr($name, 0, 3),
             'max_aluno' => $this->faker->numberBetween(10, 25),
             'data_cadastro' => now(),
-            'ref_cod_turma_tipo' => LegacySchoolClassType::factory()->unique()->make(),
+            'ref_cod_turma_tipo' => LegacySchoolClassTypeFactory::new()->unique()->make(),
             'ref_ref_cod_escola' => $schoolGrade->school_id,
             'ref_ref_cod_serie' => $schoolGrade->grade_id,
             'ref_cod_curso' => $schoolGrade->grade->course_id,
-            'ref_cod_instituicao' => LegacyInstitution::factory()->unique()->make(),
+            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
             'dias_semana' => [2, 3, 4, 5, 6],
             'ano' => now()->year,
             'visivel' => true,
