@@ -18,7 +18,7 @@
         "aws/aws-sdk-php-laravel": "^3.6",
         "composer/semver": "^3.2",
         "cossou/jasperphp": "^2.8",
-        "dex/composer-plug-and-play": "~0.3",
+        "dex/composer-plug-and-play": "^0.5.0",
         "doctrine/dbal": "^2.13",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
@@ -28,7 +28,6 @@
         "intervention/image": "^2.6",
         "laravel/framework": "^8.51",
         "laravel/horizon": "^v5.7.9",
-        "laravel/legacy-factories": "^1.1",
         "laravel/tinker": "^2.6",
         "laravel/ui": "^3.3",
         "league/csv": "^9.7",
@@ -57,7 +56,6 @@
     },
     "autoload": {
         "classmap": [
-            "database/factories",
             "ieducar/intranet/include",
             "ieducar/lib",
             "ieducar/modules/*/Model",
@@ -71,6 +69,7 @@
         ],
         "psr-4": {
             "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
             "iEducar\\": "src"
         }

@@ -3,9 +3,9 @@
 namespace Tests\Feature\DiarioApi;
 
 use App\Models\LegacyEnrollment;
-use App\Models\LegacyEvaluationRule;
-use App\Models\LegacyRoundingTable;
-use App\Models\LegacyValueRoundingTable;
+use Database\Factories\LegacyEvaluationRuleFactory;
+use Database\Factories\LegacyRoundingTableFactory;
+use Database\Factories\LegacyValueRoundingTableFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
@@ -31,7 +31,7 @@ class ContinuingProgressionWithConceptualScoreTest extends TestCase
      */
     public function getContinuingProgressionWithConceptualScoreTest()
     {
-        $roundingTable = factory(LegacyRoundingTable::class)->state('conceitual')->create();
+        $roundingTable = LegacyRoundingTableFactory::new()->conceitual()->create();
 
         $valuesRoundingTable = [
             [
@@ -67,7 +67,7 @@ class ContinuingProgressionWithConceptualScoreTest extends TestCase
         ];
 
         foreach ($valuesRoundingTable as $value) {
-            factory(LegacyValueRoundingTable::class)->create([
+            LegacyValueRoundingTableFactory::new()->create([
                 'tabela_arredondamento_id' => $roundingTable->id,
                 'nome' => $value['nome'],
                 'descricao' => $value['descricao'],
@@ -76,7 +76,7 @@ class ContinuingProgressionWithConceptualScoreTest extends TestCase
             ]);
         }
 
-        $evaluationRule = factory(LegacyEvaluationRule::class)->state('progressao-continuada-nota-conceitual')->create([
+        $evaluationRule = LegacyEvaluationRuleFactory::new()->progressaoContinuadaNotaConceitual()->create([
             'tabela_arredondamento_id' => $roundingTable->id,
         ]);
 

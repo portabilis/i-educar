@@ -3,6 +3,7 @@
 namespace Tests\Unit\Eloquent;
 
 use App\Setting;
+use Database\Factories\SettingFactory;
 use Tests\EloquentTestCase;
 
 class SettingTest extends EloquentTestCase
@@ -20,22 +21,22 @@ class SettingTest extends EloquentTestCase
      */
     public function testBoolean()
     {
-        $settingTrueString = factory(Setting::class)->create([
+        $settingTrueString = SettingFactory::new()->create([
             'type' => 'boolean',
             'value' => 'true',
         ]);
 
-        $settingOneString = factory(Setting::class)->create([
+        $settingOneString = SettingFactory::new()->create([
             'type' => 'boolean',
             'value' => '1',
         ]);
 
-        $settingOne = factory(Setting::class)->create([
+        $settingOne = SettingFactory::new()->create([
             'type' => 'boolean',
             'value' => 1,
         ]);
 
-        $settingTrue = factory(Setting::class)->create([
+        $settingTrue = SettingFactory::new()->create([
             'type' => 'boolean',
             'value' => true,
         ]);
@@ -45,37 +46,37 @@ class SettingTest extends EloquentTestCase
         $this->assertTrue($settingOne->value);
         $this->assertTrue($settingTrue->value);
 
-        $settingFalseString = factory(Setting::class)->create([
+        $settingFalseString = SettingFactory::new()->create([
             'type' => 'boolean',
             'value' => 'false',
         ]);
 
-        $settingFalseZeroString = factory(Setting::class)->create([
+        $settingFalseZeroString = SettingFactory::new()->create([
             'type' => 'boolean',
             'value' => '0',
         ]);
 
-        $settingFalseZero = factory(Setting::class)->create([
+        $settingFalseZero = SettingFactory::new()->create([
             'type' => 'boolean',
             'value' => 0,
         ]);
 
-        $settingFalse = factory(Setting::class)->create([
+        $settingFalse = SettingFactory::new()->create([
             'type' => 'boolean',
             'value' => false,
         ]);
 
-        $settingFalseEmptyString = factory(Setting::class)->create([
+        $settingFalseEmptyString = SettingFactory::new()->create([
             'type' => 'boolean',
             'value' => '',
         ]);
 
-        $settingFalseNull = factory(Setting::class)->create([
+        $settingFalseNull = SettingFactory::new()->create([
             'type' => 'boolean',
             'value' => null,
         ]);
 
-        $settingFalseNullString = factory(Setting::class)->create([
+        $settingFalseNullString = SettingFactory::new()->create([
             'type' => 'boolean',
             'value' => 'null',
         ]);

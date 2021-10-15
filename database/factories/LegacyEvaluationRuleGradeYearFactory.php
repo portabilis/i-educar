@@ -1,17 +1,33 @@
 <?php
 
+namespace Database\Factories;
+
 use App\Models\LegacyEvaluationRule;
+use App\Models\LegacyEvaluationRuleGradeYear;
 use App\Models\LegacyLevel;
-use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-/** @var Factory $factory */
+class LegacyEvaluationRuleGradeYearFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = LegacyEvaluationRuleGradeYear::class;
 
-$factory->define(App\Models\LegacyEvaluationRuleGradeYear::class, function (Faker $faker) {
-    return [
-        'serie_id' => factory(LegacyLevel::class)->create(),
-        'regra_avaliacao_id' => factory(LegacyEvaluationRule::class)->create(),
-        'regra_avaliacao_diferenciada_id' => null,
-        'ano_letivo' => '{' . now()->year . '}',
-    ];
-});
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition(): array
+    {
+        return [
+            'serie_id' => LegacyLevelFactory::new()->create(),
+            'regra_avaliacao_id' => LegacyEvaluationRuleFactory::new()->create(),
+            'regra_avaliacao_diferenciada_id' => null,
+            'ano_letivo' => '{' . now()->year . '}',
+        ];
+    }
+}

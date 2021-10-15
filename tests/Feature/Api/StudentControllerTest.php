@@ -3,6 +3,7 @@
 namespace Tests\Feature\Api;
 
 use App\Models\LegacyStudent;
+use Database\Factories\LegacyStudentFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
@@ -14,7 +15,7 @@ class StudentControllerTest extends TestCase
     public function testUpdateStateRegistration()
     {
         /** @var LegacyStudent $student */
-        $student = factory(LegacyStudent::class)->create();
+        $student = LegacyStudentFactory::new()->create();
 
         $stateRegistration = '000.000.000';
 
@@ -37,7 +38,7 @@ class StudentControllerTest extends TestCase
     public function testUpdateStateRegistrationWithDigit()
     {
         /** @var LegacyStudent $student */
-        $student = factory(LegacyStudent::class)->create();
+        $student = LegacyStudentFactory::new()->create();
 
         $stateRegistration = '000.000.000-1';
 
@@ -64,9 +65,9 @@ class StudentControllerTest extends TestCase
         $stateRegistration = '000.000.000';
 
         /** @var LegacyStudent $student */
-        $student = factory(LegacyStudent::class)->create();
+        $student = LegacyStudentFactory::new()->create();
 
-        factory(LegacyStudent::class)->create([
+        LegacyStudentFactory::new()->create([
             'aluno_estado_id' => $stateRegistration,
         ]);
 
@@ -82,7 +83,7 @@ class StudentControllerTest extends TestCase
         $this->expectException(ValidationException::class);
 
         /** @var LegacyStudent $student */
-        $student = factory(LegacyStudent::class)->create();
+        $student = LegacyStudentFactory::new()->create();
 
         $stateRegistration = 1234;
 

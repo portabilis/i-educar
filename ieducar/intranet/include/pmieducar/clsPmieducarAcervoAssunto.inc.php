@@ -301,13 +301,14 @@ class clsPmieducarAcervoAssunto extends Model
     /**
      * Cadastra um determinado assunto para uma determinada obra.
      *
-     * @return array
+     * @return bool|array
      */
     public function listaAssuntosPorObra($acervoId)
     {
         $db = new clsBanco();
         $db->Consulta("SELECT aas.*, (SELECT nm_assunto FROM pmieducar.acervo_assunto WHERE cod_acervo_assunto = aas.ref_cod_acervo_assunto) as nome FROM pmieducar.acervo_acervo_assunto aas WHERE ref_cod_acervo = {$acervoId} ");
 
+        $resultado = [];
         while ($db->ProximoRegistro()) {
             $resultado[] = $db->Tupla();
         }

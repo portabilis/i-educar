@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Factories;
+
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineExemption;
 use App\Models\LegacyExemptionType;
@@ -7,20 +9,33 @@ use App\Models\LegacyLevel;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchool;
 use App\Models\LegacyUser;
-use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-/** @var Factory $factory */
+class LegacyDisciplineExemptionFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = LegacyDisciplineExemption::class;
 
-$factory->define(LegacyDisciplineExemption::class, function (Faker $faker) {
-    return [
-        'ref_cod_matricula' => factory(LegacyRegistration::class)->create(),
-        'ref_cod_disciplina' => factory(LegacyDiscipline::class)->create(),
-        'ref_cod_escola' => factory(LegacySchool::class)->create(),
-        'ref_cod_serie' => factory(LegacyLevel::class)->create(),
-        'ref_cod_tipo_dispensa' => factory(LegacyExemptionType::class)->create(),
-        'ref_usuario_cad' => factory(LegacyUser::class)->state('unique')->make(),
-        'data_cadastro' => now(),
-        'ativo' => 1,
-    ];
-});
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition(): array
+    {
+        return [
+            'ref_cod_matricula' => LegacyRegistrationFactory::new()->create(),
+            'ref_cod_disciplina' => LegacyDisciplineFactory::new()->create(),
+            'ref_cod_escola' => LegacySchoolFactory::new()->create(),
+            'ref_cod_serie' => LegacyLevelFactory::new()->create(),
+            'ref_cod_tipo_dispensa' => LegacyExemptionTypeFactory::new()->create(),
+            'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
+            'data_cadastro' => now(),
+            'ativo' => 1,
+        ];
+    }
+}

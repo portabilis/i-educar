@@ -1,16 +1,31 @@
 <?php
 
+namespace Database\Factories;
+
 use App\Models\City;
 use App\Models\District;
-use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-/** @var Factory $factory */
+class DistrictFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = District::class;
 
-$factory->define(District::class, function (Faker $faker) {
-    return [
-        'city_id' => factory(City::class)->create(),
-        'name' => $faker->dayOfWeek . ' District',
-        'ibge_code' => $faker->numerify('########'),
-    ];
-});
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition(): array
+    {
+        return [
+            'city_id' => CityFactory::new()->create(),
+            'name' => $this->faker->dayOfWeek() . ' District',
+            'ibge_code' => $this->faker->numerify('########'),
+        ];
+    }
+}
