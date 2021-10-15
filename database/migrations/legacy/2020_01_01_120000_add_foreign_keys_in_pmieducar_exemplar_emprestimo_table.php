@@ -15,16 +15,16 @@ class AddForeignKeysInPmieducarExemplarEmprestimoTable extends Migration
     {
         Schema::table('pmieducar.exemplar_emprestimo', function (Blueprint $table) {
             $table->foreign('ref_cod_exemplar')
-               ->references('cod_exemplar')
-               ->on('pmieducar.exemplar')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_exemplar')
+                ->on('pmieducar.exemplar')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_cliente')
-               ->references('cod_cliente')
-               ->on('pmieducar.cliente')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_cliente')
+                ->on('pmieducar.cliente')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

@@ -15,9 +15,9 @@ class AddForeignKeysInModulesCalendarioTurmaTable extends Migration
     {
         Schema::table('modules.calendario_turma', function (Blueprint $table) {
             $table->foreign(['calendario_ano_letivo_id', 'mes', 'dia'])
-               ->references(['ref_cod_calendario_ano_letivo', 'mes', 'dia'])
-               ->on('pmieducar.calendario_dia')
-               ->onDelete('cascade');
+                ->references(['ref_cod_calendario_ano_letivo', 'mes', 'dia'])
+                ->on('pmieducar.calendario_dia')
+                ->onDelete('cascade');
         });
     }
 

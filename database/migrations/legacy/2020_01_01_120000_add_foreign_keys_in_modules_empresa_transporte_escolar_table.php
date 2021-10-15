@@ -15,14 +15,14 @@ class AddForeignKeysInModulesEmpresaTransporteEscolarTable extends Migration
     {
         Schema::table('modules.empresa_transporte_escolar', function (Blueprint $table) {
             $table->foreign('ref_resp_idpes')
-               ->references('idpes')
-               ->on('cadastro.fisica')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('idpes')
+                ->on('cadastro.fisica')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_idpes')
-               ->references('idpes')
-               ->on('cadastro.juridica');
+                ->references('idpes')
+                ->on('cadastro.juridica');
         });
     }
 

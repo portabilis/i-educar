@@ -15,10 +15,10 @@ class AddForeignKeysInPmieducarTipoAvaliacaoTable extends Migration
     {
         Schema::table('pmieducar.tipo_avaliacao', function (Blueprint $table) {
             $table->foreign('ref_cod_instituicao')
-               ->references('cod_instituicao')
-               ->on('pmieducar.instituicao')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_instituicao')
+                ->on('pmieducar.instituicao')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

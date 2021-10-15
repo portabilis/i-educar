@@ -15,16 +15,16 @@ class AddForeignKeysInPmieducarClienteTipoExemplarTipoTable extends Migration
     {
         Schema::table('pmieducar.cliente_tipo_exemplar_tipo', function (Blueprint $table) {
             $table->foreign('ref_cod_exemplar_tipo')
-               ->references('cod_exemplar_tipo')
-               ->on('pmieducar.exemplar_tipo')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_exemplar_tipo')
+                ->on('pmieducar.exemplar_tipo')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_cliente_tipo')
-               ->references('cod_cliente_tipo')
-               ->on('pmieducar.cliente_tipo')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_cliente_tipo')
+                ->on('pmieducar.cliente_tipo')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

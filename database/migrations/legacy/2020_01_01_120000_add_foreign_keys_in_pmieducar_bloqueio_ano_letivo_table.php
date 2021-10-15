@@ -15,8 +15,8 @@ class AddForeignKeysInPmieducarBloqueioAnoLetivoTable extends Migration
     {
         Schema::table('pmieducar.bloqueio_ano_letivo', function (Blueprint $table) {
             $table->foreign('ref_cod_instituicao')
-               ->references('cod_instituicao')
-               ->on('pmieducar.instituicao');
+                ->references('cod_instituicao')
+                ->on('pmieducar.instituicao');
         });
     }
 

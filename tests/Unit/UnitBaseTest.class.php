@@ -132,7 +132,7 @@ abstract class UnitBaseTest extends TestCase
     {
         // Cria um mock de clsBanco, preservando o código do método formatValues
         return $this->setExcludedMethods(['formatValues'])
-                ->getCleanMock('clsBanco');
+            ->getCleanMock('clsBanco');
     }
 
     /**

@@ -15,22 +15,22 @@ class AddForeignKeysInPmieducarSeriePreRequisitoTable extends Migration
     {
         Schema::table('pmieducar.serie_pre_requisito', function (Blueprint $table) {
             $table->foreign('ref_cod_serie')
-               ->references('cod_serie')
-               ->on('pmieducar.serie')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_serie')
+                ->on('pmieducar.serie')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_pre_requisito')
-               ->references('cod_pre_requisito')
-               ->on('pmieducar.pre_requisito')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_pre_requisito')
+                ->on('pmieducar.pre_requisito')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_operador')
-               ->references('cod_operador')
-               ->on('pmieducar.operador')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_operador')
+                ->on('pmieducar.operador')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

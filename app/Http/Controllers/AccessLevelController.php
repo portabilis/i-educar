@@ -59,6 +59,7 @@ class AccessLevelController extends Controller
 
         app(MenuCacheService::class)->flushMenuTag($userType->cod_tipo_usuario);
     }
+
     /**
      * @param Request $request
      *

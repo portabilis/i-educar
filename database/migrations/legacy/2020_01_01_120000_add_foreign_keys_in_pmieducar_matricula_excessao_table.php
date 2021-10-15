@@ -15,10 +15,10 @@ class AddForeignKeysInPmieducarMatriculaExcessaoTable extends Migration
     {
         Schema::table('pmieducar.matricula_excessao', function (Blueprint $table) {
             $table->foreign(['ref_cod_serie', 'ref_cod_escola', 'ref_cod_disciplina'])
-               ->references(['ref_ref_cod_serie', 'ref_ref_cod_escola', 'ref_cod_disciplina'])
-               ->on('pmieducar.escola_serie_disciplina')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references(['ref_ref_cod_serie', 'ref_ref_cod_escola', 'ref_cod_disciplina'])
+                ->on('pmieducar.escola_serie_disciplina')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 
