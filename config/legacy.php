@@ -76,6 +76,7 @@ return [
             'username' => env('DB_USERNAME'),
             'password' => env('DB_PASSWORD'),
         ],
+        'administrative_tools_url' => env('ADMISNISTRATIVE_TOOLS_URL'),
         'administrative_pending' => [
             'exist' => '',
             'msg' => '',
@@ -191,7 +192,7 @@ return [
             'show_details' => true,
             'track' => false,
             'tracker_name' => 'EMAIL',
-            'honeybadger_key' => '',
+            'honeybadger_key' => env('HONEYBADGER_API_KEY',''),
             'email_recipient' => '',
         ],
     ],
