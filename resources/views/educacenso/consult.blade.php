@@ -6,7 +6,7 @@
 @endpush
 
 @section('content')
-    <form id="formcadastro" method="get" action="{{ route('educacenso.consult') }}">
+    <form id="formcadastro" method="get" action="{{ Asset::get('/educacenso/consulta') }}">
         <table class="table-default table-form">
             <thead>
                 <tr>

@@ -69,7 +69,7 @@ return new class extends clsListagem {
             'Nome Predio',
         ]);
 
-        $obj_escola = new clsPmieducarEscola($this->ref_cod_escola, null, null, ref_cod_instituicao, null, null, null, null, null, null, 1);
+        $obj_escola = new clsPmieducarEscola($this->ref_cod_escola, null, null, $this->ref_cod_instituicao, null, null, null, null, null, null, 1);
         $obj_escola->setCamposLista('cod_escola,nm_escola');
 
         if (!$obj_escola->detalhe() && !empty($this->ref_cod_escola) && !empty($this->ref_cod_instituicao)) {

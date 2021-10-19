@@ -55,7 +55,7 @@
             $retorno .= '<td valign="top" class="formlttd"><span class="form">';
             $retorno .= '<select onchange="getEscola();" class=\'geral\' name=\'ref_cod_instituicao\' id=\'ref_cod_instituicao\'>';
             reset($opcoes);
-            while (list($chave, $texto) = each($opcoes)) {
+            foreach ($opcoes as $chave => $texto) {
                 $retorno .=  '<option id="ref_cod_instituicao_'.urlencode($chave).'" value="'.urlencode($chave).'"';
 
                 if ($chave == $this->ref_cod_instituicao) {
@@ -77,8 +77,9 @@
                          </td>';
             $retorno .= '<td valign="top" class="formlttd"><span class="form">';
             $retorno .= '<select class=\'geral\' name=\'ref_cod_instituicao\' id=\'ref_cod_instituicao\'>';
+
             reset($opcoes);
-            while (list($chave, $texto) = each($opcoes)) {
+            foreach ($opcoes as $chave => $texto) {
                 $retorno .=  '<option id="ref_cod_instituicao_'.urlencode($chave).'" value="'.urlencode($chave).'"';
 
                 if ($chave==$this->ref_cod_instituicao) {
@@ -135,7 +136,7 @@
                 $retorno .=  " <select onchange=\"getCurso();getAnoLetivo();\" class='geral' name='ref_cod_escola' {$disabled} id='ref_cod_escola'>";
 
                 reset($opcoes_escola);
-                while (list($chave, $texto) = each($opcoes_escola)) {
+                foreach ($opcoes_escola as $chave => $texto) {
                     $retorno .=  '<option id="ref_cod_escola_'.urlencode($chave).'" value="'.urlencode($chave).'"';
 
                     if ($chave == $this->ref_cod_escola) {
@@ -174,10 +175,8 @@
             $disabled = !$this->ano && $nivel_usuario == 1 ?  'disabled=\'true\' ' : '' ;
             $retorno .=  " <select onchange=\"getSerie();\" class='geral' name='ano' {$disabled} id='ano'>";
 
-            if (is_array($opcoes_ano)) {
-                reset($opcoes_ano);
-            }
-            while (list($chave, $texto) = each($opcoes_ano)) {
+            reset($opcoes_ano);
+            foreach ($opcoes_ano as $chave => $texto) {
                 $retorno .=  '<option id="ano'.urlencode($chave).'" value="'.urlencode($chave).'"';
 
                 if ($chave == $this->ano) {
@@ -215,10 +214,8 @@
             $disabled = !$this->ref_cod_curso && $nivel_usuario == 1 /*&& !$this->ref_cod_curso*/ ?  'disabled=\'true\' ' : '' ;
             $retorno .=  " <select onchange=\"getSerie();\" class='geral' name='ref_cod_curso' {$disabled} id='ref_cod_curso'>";
 
-            if (is_array($opcoes_curso)) {
-                reset($opcoes_curso);
-            }
-            while (list($chave, $texto) = each($opcoes_curso)) {
+            reset($opcoes_curso);
+            foreach ($opcoes_curso as $chave => $texto) {
                 $retorno .=  '<option id="ref_cod_curso_'.urlencode($chave).'" value="'.urlencode($chave).'"';
 
                 if ($chave == $this->ref_cod_curso) {
@@ -226,6 +223,7 @@
                 }
                 $retorno .=  ">$texto</option>";
             }
+
             $retorno .=  '</select>';
             $retorno .= '</span>
                             </td>
@@ -256,10 +254,8 @@
             $disabled = !$this->ref_cod_serie && $nivel_usuario == 1 /*&& !$this->ref_cod_curso*/ ?  'disabled=\'true\' ' : '' ;
             $retorno .=  " <select onchange=\"getTurma();\" class='geral' name='ref_cod_serie' {$disabled} id='ref_cod_serie'>";
 
-            if (is_array($opcoes_serie)) {
-                reset($opcoes_serie);
-            }
-            while (list($chave, $texto) = each($opcoes_serie)) {
+            reset($opcoes_serie);
+            foreach ($opcoes_serie as $chave => $texto) {
                 $retorno .=  '<option id="ref_cod_serie_'.urlencode($chave).'" value="'.urlencode($chave).'"';
 
                 if ($chave == $this->ref_cod_serie) {
@@ -297,10 +293,8 @@
             $disabled = (!$this->ref_cod_turma && $nivel_usuario == 1) ?  'disabled=\'true\' ' : '' ;
             $retorno .=  " <select onchange=\"\" class='geral' name='ref_cod_turma' {$disabled} id='ref_cod_turma'>";
 
-            if (is_array($opcoes_turma)) {
-                reset($opcoes_turma);
-            }
-            while (list($chave, $texto) = each($opcoes_turma)) {
+            reset($opcoes_turma);
+            foreach ($opcoes_turma as $chave => $texto) {
                 $retorno .=  '<option id="ref_cod_turma_'.urlencode($chave).'" value="'.urlencode($chave).'"';
 
                 if ($chave == $this->ref_cod_turma) {
@@ -308,6 +302,7 @@
                 }
                 $retorno .=  ">$texto</option>";
             }
+
             $retorno .=  '</select>';
             $retorno .= '</span>
                             </td>

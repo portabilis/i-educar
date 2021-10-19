@@ -290,12 +290,12 @@ return new class extends clsCadastro {
 
         if ($this->existe_reserva == 2) {
             // Dias que o cliente tem pra pegar o exemplar. Calculo feito levando em consideracao a pior situacao.
-            $data_prevista_disponivel = date('D Y-m-d', strtotime("$data_prevista_disponivel +".$this->dias_espera.' days'));
+            $data_prevista_disponivel = date('Y-m-d', strtotime("$data_prevista_disponivel +".$this->dias_espera.' days'));
         }
 
 //      echo "data_prevista_disponivel 2: ".$data_prevista_disponivel."<br>";
 
-        $data_prevista_disponivel = date('D Y-m-d', strtotime("$data_prevista_disponivel +".$dias_emprestimo.' days'));
+        $data_prevista_disponivel = date('Y-m-d', strtotime("$data_prevista_disponivel +".$dias_emprestimo.' days'));
 
 //      echo "data_prevista_disponivel 3: ".$data_prevista_disponivel."<br>";
 
@@ -319,24 +319,24 @@ return new class extends clsCadastro {
         if (is_array($lst_biblioteca_feriado) && count($lst_biblioteca_feriado)) {
             foreach ($lst_biblioteca_feriado as $dia_feriado) {
                 // dias de feriado da biblioteca
-                $biblioteca_dias_feriado[] = dataFromPgToBr($dia_feriado['data_feriado'], 'D Y-m-d');
+                $biblioteca_dias_feriado[] = dataFromPgToBr($dia_feriado['data_feriado'], 'Y-m-d');
             }
         }
 
 //      echo "<pre>"; print_r($biblioteca_dias_feriado)."<br>";
 
         // Cliente tem o dia inteiro para entregar o exemplar. Exemplar somente disponivel para a proxima reserva no dia seguinte.
-        $data_prevista_disponivel = date('D Y-m-d ', strtotime("$data_prevista_disponivel +1 day"));
+        $data_prevista_disponivel = date('Y-m-d ', strtotime("$data_prevista_disponivel +1 day"));
         // devido a comparacao das datas, é necessario mudar o formato da data
-        $data_prevista_disponivel = dataFromPgToBr($data_prevista_disponivel, 'D Y-m-d');
+        $data_prevista_disponivel = dataFromPgToBr($data_prevista_disponivel, 'Y-m-d');
 
 //      echo "data_prevista_disponivel 4: ".$data_prevista_disponivel."<br>";
 
         // verifica se a data cai em algum dia que a biblioteca n funciona
         while (in_array(substr($data_prevista_disponivel, 0, 3), $biblioteca_dias_folga) || in_array($data_prevista_disponivel, $biblioteca_dias_feriado)) {
 //          echo "data_prevista_disponivel ASDFG = ".$data_prevista_disponivel."<br>";
-            $data_prevista_disponivel = date('D Y-m-d ', strtotime("$data_prevista_disponivel +1 day"));
-            $data_prevista_disponivel = dataFromPgToBr($data_prevista_disponivel, 'D Y-m-d');
+            $data_prevista_disponivel = date('Y-m-d ', strtotime("$data_prevista_disponivel +1 day"));
+            $data_prevista_disponivel = dataFromPgToBr($data_prevista_disponivel, 'Y-m-d');
 //          echo "data_prevista_disponivel ASDFG = ".$data_prevista_disponivel."<br>";
         }
 

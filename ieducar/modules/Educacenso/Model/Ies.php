@@ -1,6 +1,6 @@
 <?php
 
-class Educacenso_Model_Ies extends CoreExt_Entity
+class Educacenso_Model_Ies extends CoreExt_Entity implements \Stringable
 {
     protected $_data = [
     'ies'                       => null,
@@ -25,7 +25,7 @@ class Educacenso_Model_Ies extends CoreExt_Entity
     ];
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->nome;
     }

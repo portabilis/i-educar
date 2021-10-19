@@ -364,7 +364,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             $this->requiresLogin(true);
             $this->validatesPresenceAndValueInSetOfAtt(true);
             $this->validatesPresenceAndValueInSetOfOper(true);
-        } catch (Exception $e) {
+        } catch (Exception) {
             return false;
         }
 
@@ -887,7 +887,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     protected function getFalta($situacaoFaltaComponenteCurricular = null)
     {
         if ($this->getRequest()->faltas == 'buscar-boletim') {
-            $cnsPresenca = RegraAvaliacao_Model_TipoPresenca;
+            $cnsPresenca = RegraAvaliacao_Model_TipoPresenca::class;
             $tpPresenca = $this->getService()->getRegra()->get('tipoPresenca');
 
             //retorna '' caso não exista situacaoFalta para o componente curricular,
@@ -1131,7 +1131,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     {
         try {
             $this->getService()->save();
-        } catch (CoreExt_Service_Exception $e) {
+        } catch (CoreExt_Service_Exception) {
         }
     }
 
@@ -1168,7 +1168,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             if ($validatesPresenceOfMatriculaId) {
                 $this->validatesPresenceOfMatriculaId(true);
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
             return false;
         }
 

@@ -105,8 +105,8 @@ return new class extends clsCadastro {
         );
 
         $lista = $obj->lista($this->ano, $this->ref_cod_escola, $this->ref_cod_curso, $this->ref_cod_serie, $this->turno);
-        if (count($lista[0])) {
-            $this->mensagem = 'J&aacute; existe cadastro para est&aacute; s&eacute;rie/ano!<br />';
+        if (is_array($lista[0]) && count($lista[0])) {
+            $this->mensagem = 'Já; existe cadastro para está; série/ano!<br />';
 
             return false;
         }

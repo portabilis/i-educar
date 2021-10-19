@@ -42,7 +42,7 @@ class calendario
         $this->ultimo_dia = date('d', mktime(0, 0, 0, $this->mes + 1, -1, $this->ano)) - 1;
 
         $this->url_default = $url_default;
-        if (strpos($this->url_default, '?') === false) {
+        if (!str_contains($this->url_default, '?')) {
             $this->url_uniao = '?';
         } else {
             $this->url_uniao = '&';

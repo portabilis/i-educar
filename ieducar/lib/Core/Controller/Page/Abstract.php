@@ -497,17 +497,10 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
             return $default;
         }
 
-        switch ($_GET[$name]) {
-            case '':
-            case null:
-                $value = $default;
-                break;
-
-            default:
-                $value = $_GET[$name];
-        }
-
-        return $value;
+        return match ($_GET[$name]) {
+            '', null => $default,
+            default => $_GET[$name],
+        };
     }
 
     public function breadcrumb($currentPage, $breadcrumbs = [])

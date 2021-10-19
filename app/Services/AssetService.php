@@ -48,6 +48,11 @@ class AssetService implements AssetServiceContract
      */
     protected function appendVersionToPath(string $path): string
     {
+        $dataUrl = explode('.', $path);
+        if ($dataUrl !== false && ! in_array(last($dataUrl), ['css','js'], true)) {
+            return $path;
+        }
+
         if (!$this->automaticVersioning) {
             return ($this->version) ? ($path . '?v=' . $this->version) : ($path);
         }

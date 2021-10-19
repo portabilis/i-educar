@@ -37,6 +37,7 @@ return new class extends clsCadastro {
     public $employee_completion_year;
     public $employee_college_id;
     public $employee_discipline_id;
+    public $pos_graduacao;
 
     public function Inicializar()
     {
@@ -351,7 +352,7 @@ return new class extends clsCadastro {
             $docenteInep = null;
             try {
                 $docenteInep = $docenteMapper->find(['docente' => $this->cod_servidor]);
-            } catch (Exception $e) {
+            } catch (Exception) {
             }
         }
 
@@ -477,7 +478,12 @@ JS;
         $this->carga_horaria = $hour + $min;
         $this->carga_horaria = $hour + $min;
 
-        $this->pos_graduacao = '{' . implode(',', array_filter($this->pos_graduacao)) . '}';
+        $posGraduacao = [];
+        if (is_array($this->pos_graduacao)) {
+            $posGraduacao = array_filter($this->pos_graduacao);
+        }
+
+        $this->pos_graduacao = '{' . implode(',', $posGraduacao) . '}';
 
         $this->curso_formacao_continuada = '{' . implode(',', $this->curso_formacao_continuada) . '}';
 
@@ -545,7 +551,12 @@ JS;
         $this->carga_horaria = $hour + $min;
         $this->carga_horaria = $hour + $min;
 
-        $this->pos_graduacao = '{' . implode(',', array_filter($this->pos_graduacao)) . '}';
+        $posGraduacao = [];
+        if (is_array($this->pos_graduacao)) {
+            $posGraduacao = array_filter($this->pos_graduacao);
+        }
+
+        $this->pos_graduacao = '{' . implode(',', $posGraduacao) . '}';
 
         $this->curso_formacao_continuada = '{' . implode(',', $this->curso_formacao_continuada) . '}';
 
@@ -725,8 +736,8 @@ JS;
         }
 
         $this->excluiDisciplinas(null);
-        $this->excluiFuncoes();
         $this->excluiFaltaAtraso();
+        $this->excluiFuncoes();
         DB::commit();
 
         $this->mensagem = 'Exclusão efetuada com sucesso.<br>';

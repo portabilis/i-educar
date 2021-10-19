@@ -64,7 +64,7 @@ class clsListagem extends clsCampos
         if (empty($_GET)) {
             if (!empty($previousFilters[$uri])) {
                 list($path, $ts) = explode('|', $previousFilters[$uri]);
-                $diff = now() - (int) $ts;
+                $diff = ((int) now()) - ((int) $ts);
 
                 if ($diff > 7200) { //duas horas
                     return;
@@ -300,7 +300,7 @@ HTML;
                 </form>';
         }
 
-        $ncols = count($this->cabecalho);
+        $ncols = is_iterable($this->cabecalho) ? count($this->cabecalho) : 0;
         $width = empty($this->largura) ? '' : "width='$this->largura'";
 
         if (empty($this->__titulo)) {
@@ -321,13 +321,9 @@ HTML;
                         <td class='titulo-tabela-listagem' colspan='$ncols'>{$this->__titulo}</td>
                     </tr>";
 
-        $ncols = count($this->cabecalho);
-
         // Cabeçalho
         if (!empty($this->cabecalho)) {
             reset($this->cabecalho);
-
-            $ncols = count($this->cabecalho);
 
             if (!empty($this->colunas)) {
                 reset($this->colunas);
@@ -341,7 +337,7 @@ HTML;
 
             foreach ($this->cabecalho as $i => $texto) {
                 if (!empty($this->colunas)) {
-                    list($i, $fmt) = each($this->colunas);
+                    [$i, $fmt] = current($this->colunas);
                 } else {
                     $fmt = alTopLeft;
                 }
@@ -474,7 +470,7 @@ HTML;
             $campo_anterior = '';
             $md = true;
 
-            while (list($nome, $componente) = each($this->camposResultado)) {
+            foreach ($this->camposResultado as $nome => $componente) {
                 if ($componente[0] != 'oculto') {
                     $tipo = $componente[0];
                     $campo = $componente[1] . ':';
@@ -508,8 +504,7 @@ HTML;
                             $retorno .=  "<select class='form' name='$nome'>\n";
 
                             reset($componente[2]);
-
-                            while (list($chave, $texto) = each($componente[2])) {
+                            foreach ($componente[2] as $chave => $texto) {
                                 $retorno .=  '<option value=\'' . urlencode($chave) . '\'';
 
                                 if ($chave == $componente[3]) {

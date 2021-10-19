@@ -10,7 +10,7 @@
     ],
     "homepage": "https://github.com/portabilis/i-educar",
     "require": {
-        "php": "^7.4",
+        "php": "^8.0",
         "ext-gd": "*",
         "ext-json": "*",
         "ext-pdo": "*",

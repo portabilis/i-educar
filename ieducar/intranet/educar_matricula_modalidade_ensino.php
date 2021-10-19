@@ -58,7 +58,7 @@ return new class extends clsCadastro {
             $matricula = (new clsPmieducarMatricula($this->cod_matricula));
             $matricula->modalidade_ensino = (int) $this->modalidade_ensino;
             $matricula->edita();
-        } catch (Exception $exception) {
+        } catch (Exception) {
             $this->mensagem = 'Erro ao atualizar a modalidade de ensino.';
 
             return false;
