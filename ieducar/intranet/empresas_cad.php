@@ -93,7 +93,7 @@ return new class extends clsCadastro {
             $this->campoRotulo('cnpj_', 'CNPJ', $this->cnpj);
             $this->campoOculto('cnpj', $this->cnpj);
         } else {
-            $this->campoCnpj('cnpj', 'CNPJ', $this->cnpj);
+            $this->campoCnpj('cnpj', 'CNPJ', $this->cnpj, true);
         }
 
         $this->viewAddress();
@@ -115,7 +115,7 @@ return new class extends clsCadastro {
 
     public function Novo()
     {
-        if (! empty($this->cnpj) && validaCNPJ($this->cnpj) === false) {
+        if (!empty($this->cnpj) && validaCNPJ($this->cnpj) === false) {
             $this->mensagem = 'CNPJ inválido';
             return false;
         }
@@ -204,7 +204,7 @@ return new class extends clsCadastro {
 
     public function Editar()
     {
-        if (! empty($this->cnpj) && validaCNPJ($this->cnpj) === false) {
+        if (!empty($this->cnpj) && validaCNPJ($this->cnpj) === false) {
             $this->mensagem = 'CNPJ inválido';
             return false;
         }
