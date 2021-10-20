@@ -20,7 +20,8 @@ class Portabilis_View_Helper_Input_SimpleSearch extends Portabilis_View_Helper_I
             'searchPath' => '',
             'addHiddenInput' => true,
             'hiddenInputOptions' => [],
-            'showIdOnValue' => true
+            'showIdOnValue' => true,
+            'checkIfExists' => true,
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);
@@ -32,12 +33,14 @@ class Portabilis_View_Helper_Input_SimpleSearch extends Portabilis_View_Helper_I
 
         $resourceId = $options['hiddenInputOptions']['options']['value'];
 
-        if ($resourceId && !$options['options']['value']) {
+        if ($resourceId && !$options['options']['value'] && $options['checkIfExists'] === true) {
             if ($options['showIdOnValue']) {
                 $options['options']['value'] = $resourceId . ' - ' . $this->resourceValue($resourceId);
             } else {
                 $options['options']['value'] = $this->resourceValue($resourceId);
             }
+        } else {
+            $options['options']['value'] = $resourceId;
         }
 
         $this->hiddenInput($objectName, $attrName, $options);
