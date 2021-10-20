@@ -93,7 +93,7 @@ return new class extends clsCadastro {
             $this->campoRotulo('cnpj_', 'CNPJ', $this->cnpj);
             $this->campoOculto('cnpj', $this->cnpj);
         } else {
-            $this->campoCnpj('cnpj', 'CNPJ', $this->cnpj, true);
+            $this->campoCnpj('cnpj', 'CNPJ', $this->cnpj);
         }
 
         $this->viewAddress();
@@ -209,7 +209,7 @@ return new class extends clsCadastro {
             return false;
         }
 
-        $this->cnpj = validaCNPJ($this->cnpj) ? idFederal2int(urldecode($this->cnpj)) : false;
+        $this->cnpj = validaCNPJ($this->cnpj) ? idFederal2int(urldecode($this->cnpj)) : null;
 
         $objJuridica = new clsJuridica(false, $this->cnpj);
 
@@ -229,7 +229,6 @@ return new class extends clsCadastro {
             return false;
         }
 
-        $this->cnpj = idFederal2int($this->cnpj);
         $this->insc_est = idFederal2int($this->insc_est);
 
         $objPessoa = new clsPessoa_(
