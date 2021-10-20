@@ -1726,7 +1726,7 @@ return new class extends clsCadastro {
         $this->codigo_lingua_indigena = $this->transformArryInString($this->codigo_lingua_indigena);
     }
 
-    private function transformArryInString($value): ?string
+    private function transformArrayInString($value): ?string
     {
         return is_array($value) ? implode(',', $value) : null;
     }
