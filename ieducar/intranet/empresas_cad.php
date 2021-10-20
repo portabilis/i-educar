@@ -3,7 +3,8 @@
 use iEducar\Modules\Addressing\LegacyAddressingFields;
 use Illuminate\Support\Facades\Auth;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     use LegacyAddressingFields;
 
     // Dados do Juridico
@@ -36,7 +37,7 @@ return new class extends clsCadastro {
 
     public function Inicializar()
     {
-        $this->cod_pessoa_fj = is_numeric($_GET['idpes']) ? (int) $_GET['idpes'] : null;
+        $this->cod_pessoa_fj = is_numeric($_GET['idpes']) ? (int)$_GET['idpes'] : null;
         $this->idpes_cad = $this->pessoa_logada;
 
         $this->retorno = 'Novo';
@@ -145,28 +146,28 @@ return new class extends clsCadastro {
         $this->cod_pessoa_fj = $objPessoa->cadastra();
 
         (new clsJuridica(
-           $this->cod_pessoa_fj,
-           $this->cnpj,
-           $this->fantasia,
-           $this->insc_est,
-           $this->capital_social
+            $this->cod_pessoa_fj,
+            $this->cnpj,
+            $this->fantasia,
+            $this->insc_est,
+            $this->capital_social
         ))->cadastra();
 
 
         if ($this->telefone_1) {
-            $this->cadastraTelefone($this->cod_pessoa_fj,1, $this->telefone_1, $this->ddd_telefone_1);
+            $this->cadastraTelefone($this->cod_pessoa_fj, 1, $this->telefone_1, $this->ddd_telefone_1);
         }
 
         if ($this->telefone_2) {
-            $this->cadastraTelefone($this->cod_pessoa_fj, 2,$this->telefone_2, $this->ddd_telefone_2);
+            $this->cadastraTelefone($this->cod_pessoa_fj, 2, $this->telefone_2, $this->ddd_telefone_2);
         }
 
         if ($this->telefone_mov) {
-            $this->cadastraTelefone($this->cod_pessoa_fj, 3,$this->telefone_mov, $this->ddd_telefone_mov);
+            $this->cadastraTelefone($this->cod_pessoa_fj, 3, $this->telefone_mov, $this->ddd_telefone_mov);
         }
 
         if ($this->telefone_fax) {
-            $this->cadastraTelefone($this->cod_pessoa_fj, 4,$this->telefone_fax, $this->ddd_telefone_fax);
+            $this->cadastraTelefone($this->cod_pessoa_fj, 4, $this->telefone_fax, $this->ddd_telefone_fax);
         }
 
         $this->saveAddress($this->cod_pessoa_fj);
@@ -312,8 +313,7 @@ return new class extends clsCadastro {
         }
 
         $this->saveAddress($this->cod_pessoa_fj);
-        $this->mensagem = 'Edição efetuada com sucesso.';
-
+        $this->__set('mensagem', 'Edição efetuada com sucesso.');
         $this->simpleRedirect('empresas_lst.php');
     }
 
