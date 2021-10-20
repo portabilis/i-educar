@@ -1306,6 +1306,11 @@ return new class extends clsCadastro {
             return true;
         }
 
+        $course = LegacyCourse::query()->find($this->ref_cod_curso);
+        if ($course != null && $course->padrao_ano_escolar = 1) {
+            return true;
+        }
+
         $etapasTmp = $etapasCount;
         $etapas = [];
 
