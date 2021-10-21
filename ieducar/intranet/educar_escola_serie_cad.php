@@ -482,7 +482,7 @@ return new class extends clsCadastro {
             $this->anos_letivos ?: []
         );
 
-        $sombra = json_decode(urldecode($this->componentes_sombra), true);
+        $sombra = json_decode(urldecode($this->componentes_sombra), true) ?? [];
         $disciplinas = $this->montaDisciplinas();
         $analise = $this->analisaAlteracoes($sombra, $disciplinas);
 
