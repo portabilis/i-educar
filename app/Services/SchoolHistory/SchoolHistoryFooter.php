@@ -77,14 +77,14 @@ class SchoolHistoryFooter
 
     public function insertFooterDataInLastStudentDiscipline()
     {
-        foreach ($this->studentDisciplines as $key => $student) {
-            $this->setFooterDataByStudent($key, $student);
+        foreach ($this->studentDisciplines as $key => $studentDiscipline) {
+            $this->setFooterDataByStudentDiscipline($key, $studentDiscipline);
         }
 
         return $this->studentDisciplines;
     }
 
-    private function setFooterDataByStudent($studentId, $studentDisciplines)
+    private function setFooterDataByStudentDiscipline($studentId, $studentDisciplines)
     {
         $lastDiscipline = array_key_last($studentDisciplines);
         foreach ($studentDisciplines as $discipline) {
