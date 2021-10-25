@@ -132,7 +132,7 @@ return new class extends clsCadastro {
             $this->naturalidade_id = $this->naturalidade;
         }
 
-        $this->fexcluir = $obj_permissoes->permissao_excluir(
+        $this->fexcluir = is_numeric($this->cod_pessoa_fj) && $obj_permissoes->permissao_excluir(
             43,
             $this->pessoa_logada,
             7
