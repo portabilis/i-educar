@@ -253,8 +253,7 @@ return new class extends clsCadastro {
         $desabilitado = $bloqueia;
 
         $this->inputsHelper()->dynamic('ano', ['value' => (is_null($this->ano) ? date('Y') : $this->ano)]);
-        $this->inputsHelper()->dynamic('instituicao', ['value' => $this->ref_cod_instituicao, 'disabled' => $desabilitado]);
-        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie']);
+        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie'], ['disabled' => $desabilitado]);
 
         // Infra prédio cômodo
         $opcoes = ['' => 'Selecione'];
@@ -776,7 +775,7 @@ return new class extends clsCadastro {
                 $disciplinas .= sprintf('<tr align="left"><td>%s</td></tr>', $conteudo);
                 $disciplinas .= '</table>';
             } else {
-                $disciplinas = 'A série/ano escolar n&atilde;o possui componentes curriculares cadastrados.';
+                $disciplinas = 'A série/ano escolar não possui componentes curriculares cadastrados.';
             }
         }
 
