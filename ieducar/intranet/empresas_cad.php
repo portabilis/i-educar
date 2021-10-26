@@ -313,7 +313,7 @@ return new class extends clsCadastro
         }
 
         $this->saveAddress($this->cod_pessoa_fj);
-        $this->__set('mensagem', 'Edição efetuada com sucesso.');
+        $this->mensagem = 'Edição efetuada com sucesso.';
         $this->simpleRedirect('empresas_lst.php');
     }
 
