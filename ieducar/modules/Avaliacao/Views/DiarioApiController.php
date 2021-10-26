@@ -1216,7 +1216,12 @@ class DiarioApiController extends ApiCoreController
             $componentesCurriculares[] = $componente;
         }
 
-        $ordenamentoComponentes = [];
+        $ordenamentoComponentes = [
+            'ordenamento_ac' => [],
+            'ordenamento' => [],
+            'ordem_nome_area_conhecimento' => [],
+            'ordem_componente_curricular' => [],
+        ];
 
         foreach ($componentesCurriculares as $chave => $componente) {
             $ordenamentoComponentes['ordenamento_ac'][$chave] = $componente['ordenamento_ac'];
