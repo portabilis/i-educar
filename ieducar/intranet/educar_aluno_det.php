@@ -766,6 +766,8 @@ return new class extends clsDetalhe {
                 ]);
                 $this->addDetalhe(['Quantidade de camisetas (manga curta)', $reg['camiseta_curta_qtd'] ?: '0']);
                 $this->addDetalhe(['Quantidade de camisetas (manga longa)', $reg['camiseta_longa_qtd'] ?: '0']);
+                $this->addDetalhe(['Quantidade de camisetas infantis (sem manga)', $reg['camiseta_infantil_qtd'] ?: '0']);
+                $this->addDetalhe(['Quantidade de calça jeans', $reg['calca_jeans_qtd'] ?: '0']);
                 $this->addDetalhe(['Quantidade de meias', $reg['meias_qtd'] ?: '0']);
                 $this->addDetalhe(['Bermudas tectels (masculino)', $reg['bermudas_tectels_qtd'] ?: '0']);
                 $this->addDetalhe(['Bermudas coton (feminino)', $reg['bermudas_coton_qtd'] ?: '0']);
