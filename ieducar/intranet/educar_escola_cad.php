@@ -2455,6 +2455,10 @@ return new class extends clsCadastro {
 
     protected function validaEquipamentosAcessoInternet()
     {
+        if (!is_array($this->equipamentos_acesso_internet) && !is_array($this->rede_local)) {
+            return true;
+        }
+
         if (in_array(2, $this->equipamentos_acesso_internet) && !in_array(3, $this->rede_local)) {
             $this->mensagem = 'O campo: <b>Equipamentos que os aluno(a)s usam para acessar a internet da escola</b> não deve ser preenchido com a opção: <b>Dispositivos pessoais (computadores portáteis, celulares, tablets, etc.)</b> quando o campo: <b>Rede local de interligação de computadores</b> não possuir a opção: <b>Wireless</b> selecionada.';
 
@@ -2514,7 +2518,7 @@ return new class extends clsCadastro {
             return false;
         }
 
-        if (in_array(EquipamentosAcessoInternet::COMPUTADOR_MESA, $this->equipamentos_acesso_internet) && $quantidadesNaoPreenchidas) {
+        if (is_array($this->equipamentos_acesso_internet) && in_array(EquipamentosAcessoInternet::COMPUTADOR_MESA, $this->equipamentos_acesso_internet) && $quantidadesNaoPreenchidas) {
             $this->mensagem = 'Preencha pelo menos um dos campos da seção <b>Quantidade de computadores de uso dos alunos</b> quando o campo <b>Equipamentos que os aluno(a)s usam para acessar a internet da escola</b> for preenchido com <b>Computadores de mesa, portáteis e tablets da escola (no laboratório de informática, biblioteca, sala de aula, etc.)</b>.';
 
             return false;
