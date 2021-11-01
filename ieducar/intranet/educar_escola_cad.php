@@ -1873,7 +1873,7 @@ return new class extends clsCadastro {
 
     protected function validaOcupacaoPredio()
     {
-        if (in_array(LocalFuncionamento::PREDIO_ESCOLAR, $this->local_funcionamento) && empty($this->condicao)) {
+        if (is_array($this->local_funcionamento) && in_array(LocalFuncionamento::PREDIO_ESCOLAR, $this->local_funcionamento) && empty($this->condicao)) {
             $this->mensagem = 'O campo: Forma de ocupação do prédio, deve ser informado quando o Local de funcionamento for prédio escolar.';
 
             return false;
