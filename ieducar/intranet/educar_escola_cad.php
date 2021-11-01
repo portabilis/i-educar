@@ -256,7 +256,7 @@ return new class extends clsCadastro {
                 $this->cnpj = int2CNPJ($objJuridica['cnpj']);
             }
 
-            $this->fexcluir = $obj_permissoes->permissao_excluir(561, $this->pessoa_logada, 3);
+            $this->fexcluir = is_numeric($this->cod_escola) && $obj_permissoes->permissao_excluir(561, $this->pessoa_logada, 3);
 
             $this->loadAddress($this->ref_idpes);
             $this->carregaDadosContato($this->ref_idpes);
