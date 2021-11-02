@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Enrollment;
 use App\Models\LegacyEnrollment;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClass;
@@ -195,17 +196,31 @@ class RegistrationService
      * @param boolean            $relocated
      */
     public function updateEnrollmentsDate(LegacyRegistration $registration, DateTime $date, $relocated)
+    public function updateEnrollmentsDate(LegacyRegistration $registration, DateTime $date, bool $relocated)
     {
         $date = $date->format('Y-m-d');
 
         $enrollment = $registration->lastEnrollment;
+        $enrollment = $registration->enrollments;
 
         if (empty($enrollment)) {
+        if ($enrollment->count() === 0) {
             return;
         }
 
         if (!$relocated && $enrollment->remanejado) {
             return;
+        foreach ($registration->enrollments as $enrollment) {
+
+            if ($relocated && $enrollment->remanejado) {
+                continue;
+            }
+
+            $enrollment->data_enturmacao = $date;
+            $enrollment->save();
+
+        }
+    }
         }
 
         $enrollment->data_enturmacao = $date;
