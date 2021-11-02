@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\Enrollment;
 use App\Models\LegacyEnrollment;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClass;
@@ -12,7 +11,6 @@ use App_Model_MatriculaSituacao;
 use DateTime;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Carbon;
 
 class RegistrationService
 {
@@ -194,21 +192,15 @@ class RegistrationService
      *
      * @param LegacyRegistration $registration
      * @param DateTime           $date
-     * @param boolean            $relocated
+     * @param bool            $ignoreRelocation
      */
-    public function updateEnrollmentsDate(LegacyRegistration $registration, DateTime $date, bool $relocated)
+    public function updateEnrollmentsDate(LegacyRegistration $registration, DateTime $date, bool $ignoreRelocation)
     {
         $date = $date->format('Y-m-d');
 
-        $enrollment = $registration->enrollments;
-
-        if ($enrollment->count() === 0) {
-            return;
-        }
-
         foreach ($registration->enrollments as $enrollment) {
 
-            if ($relocated && $enrollment->remanejado) {
+            if ($ignoreRelocation === false && $enrollment->remanejado) {
                 continue;
             }
 
@@ -217,7 +209,6 @@ class RegistrationService
 
             $sequencial = $enrollment->sequencial;
             $this->processEnrollmentsDates($registration, $sequencial, $date);
-
         }
     }
 
@@ -241,11 +232,13 @@ class RegistrationService
     {
         foreach ($nextEnrollments as $enrollment) {
 
-            if ($enrollment->data_enturmacao != $date) {
+            if (strtotime($enrollment->data_enturmacao->format('Y-m-d')) > strtotime($date)) {
                 $enrollment->data_enturmacao = $date;
             }
 
-            if ($enrollment->data_exclusao !== null) {
+            if ($enrollment->data_exclusao !== null &&
+                strtotime($enrollment->data_exclusao->format('Y-m-d')) > strtotime($date)
+            ) {
                 $enrollment->data_exclusao = $date;
             }
 
@@ -257,13 +250,13 @@ class RegistrationService
     {
         foreach ($previousEnrollments as $enrollment) {
 
-            if ($enrollment->data_exclusao === null) {
-                continue;
+            if (strtotime($enrollment->data_enturmacao->format('Y-m-d')) < strtotime($date)) {
+                $enrollment->data_enturmacao = $date;
             }
 
-            if (strtotime($enrollment->data_exclusao->format('Y-m-d')) < strtotime($date)) {
+            if ($enrollment->data_exclusao !== null &&
+                strtotime($enrollment->data_exclusao->format('Y-m-d')) < strtotime($date)) {
                 $enrollment->data_exclusao = $date;
-                $enrollment->data_enturmacao = $date;
             }
 
             $enrollment->save();
