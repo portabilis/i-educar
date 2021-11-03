@@ -480,6 +480,7 @@ return new class extends clsCadastro {
         $this->inputsHelper()->turmaTurno();
 
         $tiposBoletim = Portabilis_Model_Report_TipoBoletim::getInstance()->getEnums();
+        asort($tiposBoletim);
         $tiposBoletim = Portabilis_Array_Utils::insertIn(null, 'Selecione um modelo', $tiposBoletim);
 
         $this->campoLista('tipo_boletim', 'Modelo relatório boletim', $tiposBoletim, $this->tipo_boletim);
