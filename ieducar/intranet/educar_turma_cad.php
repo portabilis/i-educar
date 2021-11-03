@@ -482,8 +482,8 @@ return new class extends clsCadastro {
         $tiposBoletim = Portabilis_Model_Report_TipoBoletim::getInstance()->getEnums();
         $tiposBoletim = Portabilis_Array_Utils::insertIn(null, 'Selecione um modelo', $tiposBoletim);
 
-        $this->campoLista('tipo_boletim', 'Modelo relat&oacute;rio boletim', $tiposBoletim, $this->tipo_boletim);
-        $this->campoLista('tipo_boletim_diferenciado', 'Modelo relat&oacute;rio boletim diferenciado', $tiposBoletim, $this->tipo_boletim_diferenciado, '', false, '', '', false, false);
+        $this->campoLista('tipo_boletim', 'Modelo relatório boletim', $tiposBoletim, $this->tipo_boletim);
+        $this->campoLista('tipo_boletim_diferenciado', 'Modelo relatório boletim diferenciado', $tiposBoletim, $this->tipo_boletim_diferenciado, '', false, '', '', false, false);
 
         $this->montaListaComponentesSerieEscola();
 
