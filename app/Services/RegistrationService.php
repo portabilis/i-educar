@@ -232,12 +232,12 @@ class RegistrationService
     {
         foreach ($nextEnrollments as $enrollment) {
 
-            if (strtotime($enrollment->data_enturmacao->format('Y-m-d')) > strtotime($date)) {
+            if (strtotime($enrollment->data_enturmacao->format('Y-m-d')) < strtotime($date)) {
                 $enrollment->data_enturmacao = $date;
             }
 
             if ($enrollment->data_exclusao !== null &&
-                strtotime($enrollment->data_exclusao->format('Y-m-d')) > strtotime($date)
+                strtotime($enrollment->data_exclusao->format('Y-m-d')) < strtotime($date)
             ) {
                 $enrollment->data_exclusao = $date;
             }
@@ -250,12 +250,12 @@ class RegistrationService
     {
         foreach ($previousEnrollments as $enrollment) {
 
-            if (strtotime($enrollment->data_enturmacao->format('Y-m-d')) < strtotime($date)) {
+            if (strtotime($enrollment->data_enturmacao->format('Y-m-d')) > strtotime($date)) {
                 $enrollment->data_enturmacao = $date;
             }
 
             if ($enrollment->data_exclusao !== null &&
-                strtotime($enrollment->data_exclusao->format('Y-m-d')) < strtotime($date)) {
+                strtotime($enrollment->data_exclusao->format('Y-m-d')) > strtotime($date)) {
                 $enrollment->data_exclusao = $date;
             }
 
