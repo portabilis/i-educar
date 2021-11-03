@@ -284,7 +284,7 @@ return new class extends clsCadastro {
             $this->quadro_horario = unserialize(urldecode($_POST['quadro_horario']));
         }
 
-        $qtd_horario = is_array($this->quadro_horario) ? (count($this->quadro_horario) == 0 ? 1 : count($this->quadro_horario) + 1) : 0;
+        $qtd_horario = is_array($this->quadro_horario) ? (count($this->quadro_horario) == 0 ? 1 : count($this->quadro_horario) + 1) : 1;
 
         // primary keys
         if ($this->incluir_horario) {
