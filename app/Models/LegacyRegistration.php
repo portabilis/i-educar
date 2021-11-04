@@ -12,15 +12,14 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 /**
  * LegacyRegistration
  *
- * @property int $id
- * @property boolean                  isTransferred
- * @property boolean                  isAbandoned
- * @property boolean                  isCanceled
- * @property LegacyStudentAbsence     studentAbsence
- * @property LegacyStudentScore       studentScore
- * @property LegacyStudentDescriptive studentDescriptive
- * @property LegacyCourse             course
- *
+ * @property integer                  $id
+ * @property boolean                  $isTransferred
+ * @property boolean                  $isAbandoned
+ * @property boolean                  $isCanceled
+ * @property LegacyStudentAbsence     $studentAbsence
+ * @property LegacyStudentScore       $studentScore
+ * @property LegacyStudentDescriptive $studentDescriptive
+ * @property LegacyCourse             $course
  */
 class LegacyRegistration extends Model
 {

@@ -294,14 +294,12 @@ class clsPmieducarServidorDisciplina extends Model
             is_numeric($this->ref_cod_servidor)) {
             $where = '';
 
-            if (is_array($funcao) && count($funcao)) {
-                if ($funcao[0] === '') {
-                    // Evita problemas onde a função na tabela pmieducar.servidor_disciplina está `null`
-                } else {
-                    $funcao = implode(',', $funcao);
-                    $where = "AND ref_cod_funcao in ({$funcao})";
-                }
+            if (is_array($funcao) && count($funcao) && $funcao[0] !== '') {
+                $filter = array_filter($funcao, fn($item) => ctype_digit((string) $item));
+                $funcao = implode(',', $filter);
+                $where = "AND ref_cod_funcao in ({$funcao})";
             }
+
             $db = new clsBanco();
             $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_ref_cod_instituicao = '{$this->ref_ref_cod_instituicao}' AND ref_cod_servidor = '{$this->ref_cod_servidor}' {$where}");
 

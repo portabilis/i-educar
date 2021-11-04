@@ -13,6 +13,7 @@ class DisableUsersWithDaysGoneSinceLastAccessService
     {
         $this->config = $config;
     }
+
     public function execute(Authenticatable $user)
     {
         $expirationPeriod = $this->config->get('legacy.app.user_accounts.max_days_without_login_to_disable_user');

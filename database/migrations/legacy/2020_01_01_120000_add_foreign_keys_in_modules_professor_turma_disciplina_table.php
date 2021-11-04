@@ -15,16 +15,16 @@ class AddForeignKeysInModulesProfessorTurmaDisciplinaTable extends Migration
     {
         Schema::table('modules.professor_turma_disciplina', function (Blueprint $table) {
             $table->foreign('professor_turma_id')
-               ->references('id')
-               ->on('modules.professor_turma')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('id')
+                ->on('modules.professor_turma')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('componente_curricular_id')
-               ->references('id')
-               ->on('modules.componente_curricular')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('id')
+                ->on('modules.componente_curricular')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

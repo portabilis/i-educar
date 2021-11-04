@@ -3,7 +3,7 @@
     "description": "Software livre de gestão escolar",
     "type": "project",
     "license": "GPL-2.0-or-later",
-    "version": "2.6.5",
+    "version": "2.6.7",
     "keywords": [
         "Portabilis",
         "i-Educar"
@@ -102,6 +102,7 @@
         "npm": "npm install",
         "new-install": [
             "@composer install",
+            "@composer plug-and-play:install",
             "@set-permissions",
             "@php artisan key:generate --ansi",
             "@php artisan legacy:link --ansi",
@@ -109,7 +110,8 @@
             "@npm"
         ],
         "update-install": [
-            "@composer update --plug-and-play",
+            "@composer update",
+            "@composer plug-and-play:update",
             "@set-permissions",
             "@php artisan legacy:link --ansi",
             "@php artisan migrate --force --ansi",

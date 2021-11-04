@@ -10,7 +10,7 @@
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --config=node_modules/laravel-mix/setup/webpack.config.js"
     },
     "devDependencies": {
-        "axios": "^0.21.1",
+        "axios": "^0.21.2",
         "bootstrap": "^4.4.1",
         "cross-env": "^5.1",
         "jquery": "^3.5.0",
