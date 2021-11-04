@@ -253,8 +253,7 @@ return new class extends clsCadastro {
         $desabilitado = $bloqueia;
 
         $this->inputsHelper()->dynamic('ano', ['value' => (is_null($this->ano) ? date('Y') : $this->ano)]);
-        $this->inputsHelper()->dynamic('instituicao', ['value' => $this->ref_cod_instituicao, 'disabled' => $desabilitado]);
-        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie']);
+        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie'], ['disabled' => $desabilitado]);
 
         // Infra prédio cômodo
         $opcoes = ['' => 'Selecione'];
@@ -776,7 +775,7 @@ return new class extends clsCadastro {
                 $disciplinas .= sprintf('<tr align="left"><td>%s</td></tr>', $conteudo);
                 $disciplinas .= '</table>';
             } else {
-                $disciplinas = 'A série/ano escolar n&atilde;o possui componentes curriculares cadastrados.';
+                $disciplinas = 'A série/ano escolar não possui componentes curriculares cadastrados.';
             }
         }
 
@@ -1237,6 +1236,7 @@ return new class extends clsCadastro {
 
     public function montaObjetoTurma($codTurma = null, $usuarioCad = null, $usuarioExc = null)
     {
+        $this->dias_semana = is_array($this->dias_semana) ? $this->dias_semana : [];
         $this->dias_semana = '{' . implode(',', $this->dias_semana) . '}';
         $this->atividades_complementares = '{' . implode(',', $this->atividades_complementares) . '}';
         $this->cod_curso_profissional = $this->cod_curso_profissional[0];
@@ -1302,6 +1302,11 @@ return new class extends clsCadastro {
         );
 
         if ($etapasCount >= $etapasCountAntigo) {
+            return true;
+        }
+
+        $course = LegacyCourse::query()->find($this->ref_cod_curso);
+        if ($course != null && $course->padrao_ano_escolar = 1) {
             return true;
         }
 

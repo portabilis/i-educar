@@ -740,7 +740,7 @@ class clsPmieducarHistoricoEscolar extends Model
         return false;
     }
 
-    public static function gerarHistoricoTransferencia($ref_cod_matricula, $pessoa_logada, $ref_cod_escola)
+    public static function gerarHistoricoTransferencia($ref_cod_matricula, $pessoa_logada)
     {
         $detMatricula = self::dadosMatricula($ref_cod_matricula);
 
@@ -778,7 +778,7 @@ class clsPmieducarHistoricoEscolar extends Model
                 $detMatricula['nome_curso'],
                 $grade_curso_id,
                 null,
-                $ref_cod_escola
+                $detMatricula['ref_ref_cod_escola'],
             );
 
             if ($historicoEscolar->cadastra()) {

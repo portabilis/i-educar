@@ -700,7 +700,7 @@ class clsFisica
                 $slug = Str::lower(Str::slug($this->nome_social, ' '));
 
                 $person = LegacyPerson::query()->find($this->idpes);
-                $person->slug = "{$slug} {$person->slug}";
+                $person->slug = trim("{$slug} {$person->slug}");
                 $person->save();
 
                 $set .= "$gruda nome_social = '{$this->nome_social}'";

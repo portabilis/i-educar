@@ -31,7 +31,7 @@ class CursoController extends ApiCoreController
                         c.cod_curso,
                         CASE WHEN (c.descricao is not null and c.descricao <> '')
                         THEN c.nm_curso||' ('||c.descricao||')'
-                        ELSE c.nm_curso END as nm_curso
+                        ELSE c.nm_curso END as nm_curso,
                         (
                             CASE c.updated_at >= ec.updated_at WHEN TRUE THEN
                                 c.updated_at
@@ -66,7 +66,7 @@ class CursoController extends ApiCoreController
                         : ' AND $2 = ANY(ec.anos_letivos) ';
                 }
 
-                $sql .= ' ORDER BY updated_at, c.nm_curso ASC ';
+                $sql .= ' ORDER BY updated_at, nm_curso ASC ';
             } else {
                 $sql = '
                     SELECT
