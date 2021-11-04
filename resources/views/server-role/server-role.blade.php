@@ -17,7 +17,7 @@
                             @if($function->professor === 1)
                                 <td>{{$function->nm_curso}}</td>
                                 <td>
-                                    <i class="pointer collapse-btn fa fa-eye" id="{{$key}}"></i>
+                                    <i class="pointer collapse-btn fa fa-eye" id="{{$key}}"> Mostrar Detalhes</i>
                                     <div class="name collapse-{{$key}}">{{$function->nome}}</div>
                                 </td>
                             @else
@@ -77,29 +77,112 @@
         cursor: pointer;
     }
 
+    .modal-server-container.active {
+        position: absolute;
+        z-index: 2;
+        height: 100vh;
+        width: 100vw;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-server-container.inactive {
+        display: none;
+    }
+
+    .modal-server-header h3 {
+        margin: 0;
+        font-size: 1em;
+        color: #47728f;
+    }
+
+    .modal-server-header {
+        height: 60px;
+        background-color: #CCDCE6;
+        border-radius: 10px 10px 0px 0px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 3% 0 3%;
+    }
+
+    .modal-server-wrapper {
+        min-height: 50vh;
+        min-width: 60vw;
+        width: 60vw;
+        background-color: #FFFFFF;
+        border-radius: 10px;
+
+    }
+
+    .modal-server-body {
+        max-height: 50vh;
+        padding: 3%;
+        font-size: 1em;
+        color: #47728f;
+        overflow: auto;
+    }
 </style>
 
 <script>
 
-    const buttons = document.querySelectorAll('.collapse-btn');
+    const modal_element = '<div class="modal-server-container inactive">'+
+        '<div class="modal-server-wrapper">'+
+        '<div class="modal-server-header">'+
+        '<h3>Componentes Curriculares</h3>'+
+        '<i class="fa fa-close modal-server-close"></i>'+
+        '</div>'+
+        '<div class="modal-server-body"></div>'+
+        '</div>'+
+        '</div>';
+
+    const buttons = document.querySelectorAll('.collapse-btn')
+
+    let modal_data = '';
+
+    document.addEventListener("DOMContentLoaded", function (e) {
+        document.body.insertAdjacentHTML('afterbegin', modal_element);
+        modalListener()
+    })
+
+    function modalListener() {
+        let modal = document.getElementsByClassName('modal-server-container')
+        const modal_close = document.querySelector('.modal-server-close')
+        modal_close.addEventListener('click', event => {
+            modal[0].classList.remove("active");
+            modal[0].classList.add("inactive");
+        })
+    }
 
     buttons.forEach(button => {
         button.addEventListener('click', event => {
-
             let collapse_target = event.target.id
-            let btn = document.getElementById(event.target.id)
             let element = document.getElementsByClassName(`collapse-${collapse_target}`);
+            let modal = document.getElementsByClassName('modal-server-container')
+            let modal_body = document.querySelector('.modal-server-body')
 
-            if (element[0].classList.contains("name")) {
-                element[0].classList.remove("name");
-                btn.classList.remove("fa-eye");
-                btn.classList.add("fa-eye-slash");
+            modal_body.innerHTML = '';
+
+            if (modal[0].classList.contains("active")) {
+                modal[0].classList.remove("active");
+                modal[0].classList.add("inactive");
             } else {
-                element[0].classList.add("name");
-                btn.classList.add("fa-eye");
-                btn.classList.remove("fa-eye-slash");
+                modal[0].classList.remove("inactive");
+                modal[0].classList.add("active");
             }
 
+            modal_data = element[0].textContent;
+
+            if(modal_data.includes(';')){
+                let split_data = modal_data.split(';')
+                split_data.each(i => {
+                    modal_body.innerHTML += `<li>${i}</li>`;
+                })
+            }else{
+                modal_body.innerHTML += `<li>${modal_data}</li>`;
+            }
         })
     })
 
