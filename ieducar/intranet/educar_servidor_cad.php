@@ -292,7 +292,7 @@ return new class extends clsCadastro {
             "<img src='imagens/lupa_antiga.png' border='0' style='cursor:pointer;' alt='Buscar Componente Curricular' title='Buscar Componente Curricular' onclick=\"$funcao\">"
         );
 
-        $funcao = 'popCurso()';
+        $funcao = 'popCurso(this)';
 
         $this->campoRotulo(
             'curso',

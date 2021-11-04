@@ -23,6 +23,7 @@ return new class extends clsCadastro {
 
         $this->cod_servidor = $_GET['ref_cod_servidor'];
         $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
+        $this->ref_cod_servidor_funcao = $_GET['ref_cod_servidor_funcao'] ?: 0;
 
         $obj_permissoes = new clsPermissoes();
 
@@ -55,7 +56,8 @@ return new class extends clsCadastro {
             $lst_servidor_curso = $obj_servidor_curso->lista(
                 null,
                 $this->ref_cod_instituicao,
-                $this->cod_servidor
+                $this->cod_servidor,
+                $this->ref_cod_servidor_funcao
             );
 
             if ($lst_servidor_curso) {
