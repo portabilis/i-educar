@@ -876,6 +876,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         $stages = array_diff($stages, $exemptedStages);
 
+        if (empty($stages)) {
+            return null;
+        }
+
         return max($stages);
     }
 
