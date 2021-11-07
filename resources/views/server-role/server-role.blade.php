@@ -17,8 +17,8 @@
                             @if($function->professor === 1)
                                 <td>{{$function->nm_curso}}</td>
                                 <td>
-                                    <i class="pointer collapse-btn fa fa-eye" id="{{$key}}"> Mostrar Detalhes</i>
-                                    <div class="name collapse-{{$key}}">{{$function->nome}}</div>
+                                    <a class="pointer modal-btn" id="{{$key}}"><i class="fa fa-eye"></i> Mostrar Detalhes</a>
+                                    <div class="name modal-{{$key}}">{{$function->nome}}</div>
                                 </td>
                             @else
                                 <td colspan="2"></td>
@@ -92,6 +92,10 @@
         display: none;
     }
 
+    .modal-btn {
+        color: #47728f;
+    }
+
     .modal-server-header h3 {
         margin: 0;
         font-size: 1em;
@@ -128,17 +132,17 @@
 
 <script>
 
-    const modal_element = '<div class="modal-server-container inactive">'+
-        '<div class="modal-server-wrapper">'+
-        '<div class="modal-server-header">'+
-        '<h3>Componentes Curriculares</h3>'+
-        '<i class="fa fa-close modal-server-close"></i>'+
-        '</div>'+
-        '<div class="modal-server-body"></div>'+
-        '</div>'+
+    const modal_element = '<div class="modal-server-container inactive">' +
+        '<div class="modal-server-wrapper">' +
+        '<div class="modal-server-header">' +
+        '<h3>Componentes Curriculares</h3>' +
+        '<i class="fa fa-close modal-server-close"></i>' +
+        '</div>' +
+        '<div class="modal-server-body"></div>' +
+        '</div>' +
         '</div>';
 
-    const buttons = document.querySelectorAll('.collapse-btn')
+    const buttons = document.querySelectorAll('.modal-btn');
 
     let modal_data = '';
 
@@ -148,22 +152,25 @@
     })
 
     function modalListener() {
-        let modal = document.getElementsByClassName('modal-server-container')
-        const modal_close = document.querySelector('.modal-server-close')
-        modal_close.addEventListener('click', event => {
-            modal[0].classList.remove("active");
-            modal[0].classList.add("inactive");
+        let modal = document.getElementsByClassName('modal-server-container');
+        let close_actions = document.querySelectorAll('.modal-server-close, .modal-server-container');
+        close_actions.forEach(function (i) {
+            i.addEventListener('click', event => {
+                modal[0].classList.remove("active");
+                modal[0].classList.add("inactive");
+            })
         })
     }
 
     buttons.forEach(button => {
         button.addEventListener('click', event => {
-            let collapse_target = event.target.id
-            let element = document.getElementsByClassName(`collapse-${collapse_target}`);
-            let modal = document.getElementsByClassName('modal-server-container')
-            let modal_body = document.querySelector('.modal-server-body')
+            let modal_target = event.target.id;
+            let element = document.getElementsByClassName(`modal-${modal_target}`);
+            let modal = document.getElementsByClassName('modal-server-container');
+            let modal_body = document.querySelector('.modal-server-body');
 
             modal_body.innerHTML = '';
+            modal_data = element[0].textContent;
 
             if (modal[0].classList.contains("active")) {
                 modal[0].classList.remove("active");
@@ -173,14 +180,12 @@
                 modal[0].classList.add("active");
             }
 
-            modal_data = element[0].textContent;
-
-            if(modal_data.includes(';')){
-                let split_data = modal_data.split(';')
+            if (modal_data.includes(';')) {
+                let split_data = modal_data.split(';');
                 split_data.each(i => {
                     modal_body.innerHTML += `<li>${i}</li>`;
                 })
-            }else{
+            } else {
                 modal_body.innerHTML += `<li>${modal_data}</li>`;
             }
         })
