@@ -715,14 +715,12 @@ class clsPmieducarServidor extends Model
                 $disciplinas = $servidorDisciplina->lista(null, null, $str_not_in_servidor);
                 $servidorDisciplinas = [];
                 if (is_array($disciplinas)) {
-                    foreach ($disciplinas as $disciplina) {
-                        $servidorDisciplinas[] = sprintf(
-                            '(sd.ref_cod_disciplina = %d AND sd.ref_cod_curso = %d)',
-                            $disciplina['ref_cod_disciplina'],
-                            $disciplina['ref_cod_curso']
-                        );
-                    }
-                    $servidorDisciplinas = sprintf('AND (%s)', implode(' AND ', $servidorDisciplinas));
+                    $codDisciplinas = array_column($disciplinas, 'ref_cod_disciplina');
+                    $codDisciplinas = implode(',', $codDisciplinas);
+                    $servidorDisciplinas = "
+                        group by sd.ref_cod_servidor
+                        having array[$codDisciplinas] <@ array_agg(sd.ref_cod_disciplina)
+                    ";
                 } else {
                     $servidorDisciplinas = '';
                 }
