@@ -37,7 +37,7 @@ class Portabilis_View_Helper_Input_DateDiaMes extends Portabilis_View_Helper_Inp
             $inputOptions['value'] = Portabilis_Date_Utils::pgSQLToBr($inputOptions['value']);
         }
 
-        call_user_func_array([$this->viewInstance, 'campoDataDiaMes'], $inputOptions);
+        $this->viewInstance->campoDataDiaMes(...array_values($inputOptions));
 
         $this->fixupPlaceholder($inputOptions);
         $this->fixupOptions($inputOptions);
@@ -71,7 +71,7 @@ class Portabilis_View_Helper_Input_DateDiaMes extends Portabilis_View_Helper_Inp
                 const isValidDate = (Boolean(+newDate) && newDate.getDate() === day && (newDate.getMonth() + 1) === month);
 
                 if (! isValidDate){
-                    messageUtils.error('Informe data válida.', this);
+                    messageUtils.error('Informe uma data válida.', this);
                     this.value = '';
                 }
             });

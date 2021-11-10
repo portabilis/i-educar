@@ -44,7 +44,7 @@ class Teacher extends Model
             ],
             'Professor' => [
                 'name' => 'Nome',
-                'social_name' => 'Nome social',
+                'social_name' => 'Nome social e/ou afetivo',
                 'cpf' => 'CPF',
                 'rg' => 'RG',
                 'rg_issue_date' => 'RG (Data Emissão)',
@@ -69,6 +69,11 @@ class Teacher extends Model
             'Informações' => [
                 'phones.phones' => 'Telefones',
                 'disabilities.disabilities' => 'Deficiências',
+                'schooling_degree' => 'Escolaridade',
+                'high_school_type' => 'Tipo de ensino médio cursado',
+                'employee_postgraduates_complete' => 'Pós-Graduações concluídas',
+                'continuing_education_course' => 'Outros cursos de formação continuada',
+                'employee_graduation_complete' => 'Curso(s) superior(es) concluído(s)',
             ],
             'Endereço' => [
                 'place.address' => 'Logradouro',

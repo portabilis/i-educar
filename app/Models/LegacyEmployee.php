@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -38,6 +39,8 @@ class LegacyEmployee extends Model
         'force_reset_password',
         'email',
     ];
+
+    protected $dates = ['data_reativa_conta', 'data_troca_senha'];
 
     /**
      * @return string
@@ -105,5 +108,15 @@ class LegacyEmployee extends Model
     public function getActiveAttribute()
     {
         return boolval($this->ativo);
+    }
+
+    public function getEnabledUserDate(): ?Carbon
+    {
+        return $this->data_reativa_conta;
+    }
+
+    public function getPasswordUpdatedDate(): ?Carbon
+    {
+        return $this->data_troca_senha;
     }
 }

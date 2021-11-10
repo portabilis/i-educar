@@ -762,6 +762,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
     /**
      * @throws Exception
+     *
      * @return $this
      */
     protected function _setUpDispensaDisciplinaMock()

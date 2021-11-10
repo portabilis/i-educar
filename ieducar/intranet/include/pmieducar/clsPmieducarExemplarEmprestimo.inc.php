@@ -469,7 +469,7 @@ class clsPmieducarExemplarEmprestimo extends Model
      *
      * @return string
      */
-    public function listaDividaPagamentoCliente($int_cod_cliente = null, $int_idpes = null, $int_cod_cliente_tipo = null, $int_cod_usuario, $int_cod_biblioteca = null, $int_cod_escola = null, $int_cod_instituicao = null, $pago = false)
+    public function listaDividaPagamentoCliente($int_cod_cliente, $int_idpes, $int_cod_cliente_tipo, $int_cod_usuario, $int_cod_biblioteca = null, $int_cod_escola = null, $int_cod_instituicao = null, $pago = false)
     {
         $obj_nivel = new clsPermissoes();
         $nivel = $obj_nivel->nivel_acesso($int_cod_usuario);

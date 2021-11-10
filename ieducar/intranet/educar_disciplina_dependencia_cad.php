@@ -107,11 +107,11 @@ return new class extends clsCadastro {
         /**
          * Busca dados da matricula
          */
-        $obj_ref_cod_matricula = new clsPmieducarMatricula();
-        $detalhe_aluno = array_shift($obj_ref_cod_matricula->lista($this->ref_cod_matricula));
+        $obj_ref_cod_matricula = (new clsPmieducarMatricula())->lista($this->ref_cod_matricula);
+        $detalhe_aluno = array_shift($obj_ref_cod_matricula);
 
         $obj_aluno = new clsPmieducarAluno();
-        $det_aluno = array_shift($det_aluno = $obj_aluno->lista(
+        $det_aluno = $obj_aluno->lista(
             $detalhe_aluno['ref_cod_aluno'],
             null,
             null,
@@ -123,7 +123,9 @@ return new class extends clsCadastro {
             null,
             null,
             1
-        ));
+        );
+
+        $det_aluno = array_shift($det_aluno);
 
         $obj_escola = new clsPmieducarEscola(
             $this->ref_cod_escola,

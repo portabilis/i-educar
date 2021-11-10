@@ -10,13 +10,15 @@ sed -i.bak 's/APP_ENV=local/APP_ENV=production/g' .env.example && rm .env.exampl
 sed -i.bak 's/APP_DEBUG=true/APP_DEBUG=false/g' .env.example && rm .env.example.bak
 sed -i.bak 's/DB_HOST=postgres/DB_HOST=localhost/g' .env.example && rm .env.example.bak
 composer install --no-dev --ignore-platform-reqs --optimize-autoloader
-git clone https://github.com/portabilis/i-educar-reports-package.git ieducar/modules/Reports
-rm -fR ieducar/modules/Reports/.git
-cd ieducar/modules/Reports/ReportSources
+git clone https://github.com/portabilis/i-educar-reports-package.git packages/portabilis/i-educar-reports-package
+composer plug-and-play:install --no-dev --ignore-platform-reqs --optimize-autoloader
+php artisan community:reports:link
+rm -fR packages/portabilis/i-educar-reports-package/.git
+cd packages/portabilis/i-educar-reports-package/ieducar/ReportSources
 echo "Compilando relatórios..."
-for line in $(ls -a | sort | grep .jrxml | sed -e "s/\.jrxml//"); do $(../../../../vendor/cossou/jasperphp/src/JasperStarter/bin/jasperstarter cp $line.jrxml -o $line); done
+for line in $(ls -a | sort | grep .jrxml | sed -e "s/\.jrxml//"); do $(../../../../../vendor/cossou/jasperphp/src/JasperStarter/bin/jasperstarter cp $line.jrxml -o $line); done
 echo "Fim da compilação"
-cd ../../../../../
+cd ../../../../../../
 tar -zcvf ieducar-${VERSION}.tar.gz ${BUILD_FOLDER}
 rm -fR ${BUILD_FOLDER}
 echo

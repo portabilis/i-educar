@@ -1,7 +1,5 @@
 <?php
 
-
-
 class ParecerDescritivoAlunoTest extends UnitBaseTest
 {
     protected $_entity = null;

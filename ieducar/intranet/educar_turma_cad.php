@@ -71,6 +71,7 @@ return new class extends clsCadastro {
     public $ano_letivo;
     public $nome_url_cancelar = 'Cancelar';
     public $url_cancelar = 'educar_turma_lst.php';
+    public $ano;
 
     public function Inicializar()
     {
@@ -193,14 +194,12 @@ return new class extends clsCadastro {
 
         $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
 
-        if (is_numeric($this->ano_letivo)) {
-            $this->ano = $this->ano_letivo;
-        }
-
         $this->campoOculto('obrigar_campos_censo', (int)$obrigarCamposCenso);
         $this->campoOculto('cod_turma', $this->cod_turma);
         $this->campoOculto('ref_cod_escola_', $this->ref_cod_escola);
-        $this->campoOculto('ano_letivo_', $this->ano);
+        $this->campoOculto('ref_cod_curso_', $this->ref_cod_curso);
+        $this->campoOculto('ref_cod_serie_', $this->ref_cod_serie);
+        $this->campoOculto('ano_letivo', (is_null($this->ano) ? date('Y') : $this->ano));
         $this->campoOculto('dependencia_administrativa', $this->dependencia_administrativa);
         $this->campoOculto('modalidade_curso', $this->modalidade_curso);
         $this->campoOculto('retorno', $this->retorno);
@@ -245,6 +244,7 @@ return new class extends clsCadastro {
 
         $desabilitado = $bloqueia;
 
+        $this->inputsHelper()->dynamic('ano', ['value' => (is_null($this->ano) ? date('Y') : $this->ano)]);
         $this->inputsHelper()->dynamic('instituicao', ['value' => $this->ref_cod_instituicao, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('escola', ['value' => $this->ref_cod_escola, 'disabled' => $desabilitado]);
 
@@ -276,9 +276,8 @@ return new class extends clsCadastro {
         $this->campoOculto('mult_padrao_ano_escolar', $this->mult_padrao_ano_escolar);
         $this->campoTabelaFim();
 
-        $this->inputsHelper()->dynamic('curso', ['value' => $this->ref_cod_curso, 'disabled' => $desabilitado]);
-        $this->inputsHelper()->dynamic('serie', ['value' => $this->ref_cod_serie, 'disabled' => $desabilitado]);
-        $this->inputsHelper()->dynamic('anoLetivo', ['value' => $this->ano, 'disabled' => $desabilitado]);
+        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie'], ['disabled' => $desabilitado]);
+
         // Infra prédio cômodo
         $opcoes = ['' => 'Selecione'];
 
@@ -628,15 +627,16 @@ return new class extends clsCadastro {
         $options = ['label' => 'Local de funcionamento diferenciado da turma', 'resources' => $resources, 'value' => $this->local_funcionamento_diferenciado, 'required' => false, 'size' => 70,];
         $this->inputsHelper()->select('local_funcionamento_diferenciado', $options);
 
-        $options = ['label' => Portabilis_String_Utils::toLatin1('Não informar esta turma no Censo escolar'),
+        $options = ['label' => 'Não informar esta turma no Censo escolar',
             'value' => $this->nao_informar_educacenso,
-            'label_hint' => Portabilis_String_Utils::toLatin1('Caso este campo seja selecionado, esta turma e todas as matrículas vinculadas a mesma, não serão informadas no arquivo de exportação do Censo escolar')];
+            'label_hint' => 'Caso este campo seja selecionado, esta turma e todas as matrículas vinculadas a mesma, não serão informadas no arquivo de exportação do Censo escolar'];
         $this->inputsHelper()->checkbox('nao_informar_educacenso', $options);
 
         $scripts = [
             '/modules/Cadastro/Assets/Javascripts/Turma.js',
             '/intranet/scripts/etapas.js',
             '/intranet/scripts/tabelaSerieMult.js',
+            '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
@@ -721,7 +721,7 @@ return new class extends clsCadastro {
                 false,
                 false,
                 $disableDefinirComponente,
-                Portabilis_String_Utils::toLatin1('Está opção poderá ser utilizada, somente se no cadastro da instituição o parâmetro de permissão estiver habilitado')
+                'Está opção poderá ser utilizada, somente se no cadastro da instituição o parâmetro de permissão estiver habilitado'
             );
 
             $this->escola_serie_disciplina = [];

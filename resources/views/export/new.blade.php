@@ -149,6 +149,55 @@
       if (jQuery('#status').val() == 4) {
           jQuery('.fields').prop('checked', true);
       }
+
+      jQuery("#formcadastro").submit(function(event){
+          event.preventDefault();
+
+          let checked = false;
+          jQuery('input[type=checkbox]').each(function () {
+              if (this.name !== 'agree' && this.checked) {
+                  checked = true;
+              }
+          });
+
+          if (checked === false) {
+              makeDialog({
+                  title: 'Atenção!',
+                  content: 'Selecione ao menos uma informação que deseja exportar para continuar.',
+                  maxWidth: 860,
+                  width: 860,
+                  modal: true,
+                  buttons: [{
+                      text: 'OK',
+                      click: function () {
+                          $j(this).dialog('destroy');
+                      }
+                  }]
+              });
+
+              return;
+          }
+
+          this.submit()
+      });
+
+  function makeDialog (params) {
+      let container = $j('#dialog-container');
+      if (container.length < 1) {
+          $j('body').append('<div id="dialog-container" style="width: 400px;"></div>');
+          container = $j('#dialog-container');
+      }
+
+      if (container.hasClass('ui-dialog-content')) {
+          container.dialog('destroy');
+      }
+
+      container.empty();
+      container.html(params.content);
+      delete params['content'];
+
+      container.dialog(params);
+  }
   });
   </script>
 

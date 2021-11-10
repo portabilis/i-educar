@@ -74,6 +74,7 @@ class LegacyCreateTestsCommand extends Command
                 $this->warn(
                     "Teste {$router['className']} criado para a rota {$router['route']} já criado ou houve falha"
                 );
+
                 continue;
             }
 
@@ -222,7 +223,10 @@ class LegacyCreateTestsCommand extends Command
             'educar_coffebreak_tipo_lst.php',
             'transporte_itinerario_del.php',
             'educar_turma_cad.php',
-            'educar_matricula_modalidade_ensino.php'
+            'educar_matricula_modalidade_ensino.php',
+            'educar_busca_ativa_lst.php',
+            'educar_busca_ativa_cad.php',
+            'migra_alunos.php'
         ];
     }
 
@@ -367,7 +371,9 @@ class LegacyCreateTestsCommand extends Command
             'TransportePessoaDet',
             'TransportePontoDet',
             'TransporteRotaDet',
-            'TransporteVeiculoDet'
+            'TransporteVeiculoDet',
+            'EducarBuscaAtivaLstTest',
+            'EducarBuscaAtivaCadTest'
         ];
     }
 }

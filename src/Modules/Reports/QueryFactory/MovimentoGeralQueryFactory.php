@@ -335,7 +335,7 @@ class MovimentoGeralQueryFactory extends QueryFactory
                         select ref_cod_serie
                         from modules.config_movimento_geral
                         inner join pmieducar.serie on serie.cod_serie = config_movimento_geral.ref_cod_serie
-                        where true 
+                        where true
                             and (case
                                 when :seleciona_curso = 0 then
                                     true
@@ -344,7 +344,7 @@ class MovimentoGeralQueryFactory extends QueryFactory
                             end)
                     )
                     and mt.sequencial = 1
-                    and coalesce(mt.data_enturmacao, m.data_cadastro) between :data_inicial::date and :data_final::date
+                    and (coalesce(mt.data_enturmacao, m.data_cadastro) > :data_inicial::date and coalesce(mt.data_enturmacao, m.data_cadastro) < :data_final::date)
             ) as admitidos,
             (
                 select count(cod_matricula)

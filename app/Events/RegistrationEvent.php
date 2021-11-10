@@ -8,7 +8,9 @@ use Illuminate\Queue\SerializesModels;
 
 class RegistrationEvent
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable;
+    use InteractsWithSockets;
+    use SerializesModels;
 
     public $registration;
 

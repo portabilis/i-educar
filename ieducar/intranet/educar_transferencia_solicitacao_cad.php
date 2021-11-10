@@ -8,44 +8,27 @@ use Illuminate\Support\Facades\DB;
 
 return new class extends clsCadastro {
     public $cod_transferencia_solicitacao;
-
     public $ref_cod_transferencia_tipo;
-
     public $ref_usuario_exc;
-
     public $ref_usuario_cad;
-
     public $ref_cod_matricula_entrada;
-
     public $ref_cod_matricula_saida;
-
     public $observacao;
-
     public $data_cadastro;
-
     public $data_exclusao;
-
     public $ativo;
-
     public $data_transferencia;
-
     public $data_cancel;
-
     public $ref_cod_matricula;
-
     public $transferencia_tipo;
-
     public $ref_cod_aluno;
-
     public $nm_aluno;
-
     public $escola_destino_externa;
-
     public $estado_escola_destino_externa;
-
     public $municipio_escola_destino_externa;
-
     public $ref_cod_escola;
+    public $ref_cod_escola_destino;
+    public $escola_em_outro_municipio;
 
     public function __construct()
     {
@@ -183,15 +166,11 @@ return new class extends clsCadastro {
         if (is_null($det_matricula['data_matricula'])) {
             if (substr($det_matricula['data_cadastro'], 0, 10) > $this->data_cancel) {
                 $this->mensagem = 'Data de transferência não pode ser inferior a data da matrícula.<br>';
-
                 return false;
             }
-        } else {
-            if (substr($det_matricula['data_matricula'], 0, 10) > $this->data_cancel) {
+        } elseif (substr($det_matricula['data_matricula'], 0, 10) > $this->data_cancel) {
                 $this->mensagem = 'Data de transferência não pode ser inferior a data da matrícula.<br>';
-
                 return false;
-            }
         }
 
         $obj->data_cancel = $this->data_cancel;
@@ -298,7 +277,7 @@ return new class extends clsCadastro {
             $obj = new clsPmieducarTransferenciaSolicitacao($this->cod_transferencia_solicitacao, null, $this->pessoa_logada, null, null, null, null, null, null, 0);
             $excluiu = $obj->excluir();
             if ($excluiu) {
-                $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
+                $this->mensagem = 'Exclusão efetuada com sucesso.<br>';
                 $this->simpleRedirect("educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
             }
         } else {

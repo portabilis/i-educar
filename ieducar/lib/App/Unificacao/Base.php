@@ -204,7 +204,7 @@ class App_Unificacao_Base
                 $this->unificationId,
                 $table,
                 [$columnKey => $key],
-                $data
+                $data->toArray()
             );
         }
     }
@@ -235,7 +235,7 @@ class App_Unificacao_Base
         if ($tableName === 'pmieducar.servidor_afastamento') {
             $addSql .= ', sequencial = (
                 select
-                max(sequencial)+1
+                COALESCE(max(sequencial)+1,1)
                 from pmieducar.servidor_afastamento
                 where ref_cod_servidor = ' . $this->codigoUnificador . '
                 ) ';

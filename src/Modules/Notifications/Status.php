@@ -4,6 +4,6 @@ namespace iEducar\Modules\Notifications;
 
 class Status
 {
-    const READ = 1;
-    const UNREAD = 2;
+    public const READ = 1;
+    public const UNREAD = 2;
 }

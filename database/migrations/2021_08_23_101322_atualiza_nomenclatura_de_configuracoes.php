@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-class AtualizaNomenclaturaDosCamposDaTelaDeConfiguracoes extends Migration
+class AtualizaNomenclaturaDeConfiguracoes extends Migration
 {
     /**
      * Run the migrations.
@@ -16,8 +16,10 @@ class AtualizaNomenclaturaDosCamposDaTelaDeConfiguracoes extends Migration
             UPDATE settings
             SET description = (
                 CASE key
-                    WHEN \'legacy.apis.access_key\' THEN \'Chave de acesso ao iEducar\'
-                    WHEN \'legacy.apis.secret_key\' THEN \'Chave secreta do iEducar\'
+                    WHEN \'legacy.code\' THEN \'Habilitar código legado?\'
+                    WHEN \'legacy.display_errors\' THEN \'Exibir erros código legado?\'
+                    WHEN \'legacy.apis.access_key\' THEN \'Chave de acesso ao i-Educar\'
+                    WHEN \'legacy.apis.secret_key\' THEN \'Chave secreta do i-Educar\'
                     WHEN \'legacy.apis.educacao_token_header\' THEN \'Cabeçalho do Token da Api do i-Diário\'
                     WHEN \'legacy.apis.educacao_token_key\' THEN \'Chave do Token da Api do i-Diário\'
                     WHEN \'legacy.app.administrative_pending.exist\' THEN \'Possui pendência administrativa?\'
@@ -29,8 +31,10 @@ class AtualizaNomenclaturaDosCamposDaTelaDeConfiguracoes extends Migration
                     WHEN \'legacy.app.alunos.nao_apresentar_campo_alfabetizado\' THEN \'Não apresentar check "Alfabetizado" no cadastro do aluno\'
                     WHEN \'legacy.app.alunos.obrigar_recursos_tecnologicos\' THEN \'Obrigar informar recursos tecnológicos do aluno\'
                     WHEN \'legacy.app.auditoria.notas\' THEN \'Auditar lançamento de notas\'
-                    WHEN \'legacy.app.aws.bucketname\' THEN \'Bucket S3 para armazenar uploads\'
-                    WHEN \'legacy.app.database.dbname\' THEN \'Nome\'
+                    WHEN \'legacy.app.aws.bucketname\' THEN \'AWS Bucket S3 para armazenar uploads\'
+                    WHEN \'legacy.app.aws.awsacesskey\' THEN \'AWS Bucket S3 Acess Key\'
+                    WHEN \'legacy.app.aws.awssecretkey\' THEN \'AWS Bucket S3 Secret Key\'
+                    WHEN \'legacy.app.database.dbname\' THEN \'Nome do banco de dados\'
                     WHEN \'legacy.app.database.hostname\' THEN \'Host\'
                     WHEN \'legacy.app.database.password\' THEN \'Senha\'
                     WHEN \'legacy.app.database.port\' THEN \'Porta\'
@@ -44,7 +48,7 @@ class AtualizaNomenclaturaDosCamposDaTelaDeConfiguracoes extends Migration
                     WHEN \'legacy.app.filaunica.trabalho_obrigatorio\' THEN \'Obriga informar trabalho dos responsáveis do candidato do fila única\'
                     WHEN \'legacy.app.fisica.exigir_cartao_sus\' THEN \'Obrigar campo "Número da carteira do SUS" no cadastro do aluno\'
                     WHEN \'legacy.app.gtm.id\' THEN \'Código do tag manager\'
-                    WHEN \'legacy.app.locale.country\' THEN \'País do cliente (código do iEducar)\'
+                    WHEN \'legacy.app.locale.country\' THEN \'País do cliente (código do i-Educar)\'
                     WHEN \'legacy.app.locale.province\' THEN \'Sigla UF do cliente\'
                     WHEN \'legacy.app.locale.timezone\' THEN \'Configuração de timezone\'
                     WHEN \'legacy.app.matricula.dependencia\' THEN \'Permitir matrículas de dependência?\'
@@ -65,9 +69,11 @@ class AtualizaNomenclaturaDosCamposDaTelaDeConfiguracoes extends Migration
                     WHEN \'legacy.app.recaptcha.public_key\' THEN \'Chave pública\'
                     WHEN \'legacy.app.remove_obrigatorios_cadastro_pessoa\' THEN \'Remove obrigatoriedade dos campos de pessoa física\'
                     WHEN \'legacy.app.reserva_vaga.permite_indeferir_candidatura\' THEN \'Permitir indeferir candidatura da reserva de vaga\'
-                    WHEN \'legacy.app.rg_pessoa_fisica_pais_opcional\' THEN \'Tornar ocional informar RG para os pais dos alunos\'
+                    WHEN \'legacy.app.rg_pessoa_fisica_pais_opcional\' THEN \'Tornar opcional informar RG para os pais dos alunos\'
                     WHEN \'legacy.app.template.pdf.logo\' THEN \'Caminho logo apresentada na impressão da agenda\'
-                    WHEN \'legacy.app.template.vars.instituicao\' THEN \'Nome do produto\'
+                    WHEN \'legacy.app.template.vars.instituicao\' THEN \'Nome da instituição no template\'
+                    WHEN \'legacy.app.template.pdf.titulo\' THEN \'Título Relatório PDF\'
+                    WHEN \'legacy.app.template.layout\' THEN \'Layout do Template\'
                     WHEN \'legacy.app.user_accounts.default_password_expiration_period\' THEN \'Dias para expiração de senha\'
                     WHEN \'legacy.config.active_on_ieducar\' THEN \'Suspender cliente\'
                     WHEN \'legacy.educacenso.enable_export\' THEN \'Habilitar exportação do arquivo do Educacenso\'
@@ -93,15 +99,28 @@ class AtualizaNomenclaturaDosCamposDaTelaDeConfiguracoes extends Migration
                     WHEN \'legacy.report.default_factory\' THEN \'Factory principal\'
                     WHEN \'legacy.report.remote_factory.logo_name\' THEN \'Logo dos relatórios\'
                     WHEN \'legacy.report.remote_factory.password\' THEN \'Senha\'
-                    WHEN \'legacy.report.remote_factory.this_app_name\' THEN \'Nome da aplicação\'
+                    WHEN \'legacy.report.remote_factory.this_app_name\' THEN \'Nome da aplicação nos relatórios\'
                     WHEN \'legacy.report.remote_factory.token\' THEN \'Token de segurança\'
                     WHEN \'legacy.report.remote_factory.url\' THEN \'Url dos relatórios\'
                     WHEN \'legacy.report.remote_factory.username\' THEN \'Usuário\'
                     WHEN \'legacy.report.show_error_details\' THEN \'Exibir detalhes dos erros de relatórios\'
                     WHEN \'legacy.report.source_path\' THEN \'Caminhos dos relatórios\'
+                    WHEN \'legacy.modules.error.link_to_support\' THEN \'Link para obter suporte\'
+                    WHEN \'legacy.modules.error.send_notification_email\' THEN \'Enviar e-mail de notificação de erro?\'
+                    WHEN \'legacy.modules.error.send_notification_email\' THEN \'Exibir detalhes de erro?\'
                     WHEN \'legacy.modules.error.track\' THEN \'Habilitar track de erros\'
                     WHEN \'legacy.modules.error.tracker_name\' THEN \'Classe usada para registrar erros\'
                     WHEN \'legacy.report.reservas_de_vagas_integrais_por_escola.renda_per_capita_order\' THEN \'Ordenar lista de espera da reserva de vaga pela renda\'
+                    WHEN \'legacy.report.diario_classe.dias_temporarios\' THEN \'Dias temporários do Diário de Classe\'
+                    WHEN \'legacy.app.mailer.smtp.from_name\' THEN \'Nome de Exibição\'
+                    WHEN \'legacy.app.mailer.smtp.from_email\' THEN \'Endereço e-mail de saída\'
+                    WHEN \'legacy.app.mailer.smtp.host\' THEN \'SMTP Host\'
+                    WHEN \'legacy.app.mailer.smtp.port\' THEN \'SMTP Porta\'
+                    WHEN \'legacy.app.mailer.smtp.auth\' THEN \'Autenticação (SSL/TLS)\'
+                    WHEN \'legacy.app.mailer.smtp.username\' THEN \'SMTP Usuário\'
+                    WHEN \'legacy.app.mailer.smtp.password\' THEN \'SMTP Senha\'
+                    WHEN \'legacy.app.mailer.smtp.encryption\' THEN \'Criptografia (SSL/TLS)\'
+                    WHEN \'legacy.app.mailer.debug\' THEN \'SMTP Debug\'
                     WHEN \'preregistration.active\' THEN \'Habilitar cadastros no inscrições online\'
                     WHEN \'preregistration.city\' THEN \'Nome do município\'
                     WHEN \'preregistration.enabled\' THEN \'Habilitar inscrições online\'
@@ -125,7 +144,7 @@ class AtualizaNomenclaturaDosCamposDaTelaDeConfiguracoes extends Migration
                     WHEN \'preregistration.title\' THEN \'Título da página inicial\'
                     WHEN \'preregistration.token\' THEN \'Token de segurança\'
                     WHEN \'preregistration.year\' THEN \'Ano vigente\'
-                    ELSE \'\'
+                    ELSE settings.description
                 END
             );
         ');

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 use App\Models\LegacyRegistration;
 use App\Services\GlobalAverageService;
@@ -747,13 +747,13 @@ class clsPmieducarHistoricoEscolar extends Model
         if (self::deveGerarHistorico($detMatricula['ref_cod_instituicao'])) {
             $dadosEscola = self::dadosEscola($detMatricula['ref_ref_cod_escola'], $detMatricula['ref_cod_instituicao']);
 
-            $grade_curso_id = strpos($detMatricula['nome_curso'], '8') !== false ? 1 : 2;
+            $grade_curso_id = str_contains($detMatricula['nome_curso'], '8') ? 1 : 2;
 
             $historicoEscolar = new clsPmieducarHistoricoEscolar(
                 $detMatricula['ref_cod_aluno'],
-                $sequencial = null,
-                $ref_usuario_exc = null,
-                $ref_usuario_cad = $pessoa_logada,
+                null,
+                null,
+                $pessoa_logada,
                 $detMatricula['nome_serie'],
                 $detMatricula['ano'],
                 $detMatricula['carga_horaria'],
@@ -763,12 +763,12 @@ class clsPmieducarHistoricoEscolar extends Model
                 $dadosEscola['uf'],
                 '',
                 4,
-                $data_cadastro = date('Y-m-d'),
-                $data_exclusao = null,
-                $ativo = 1,
+                date('Y-m-d'),
+                null,
+                1,
                 null,
                 $detMatricula['ref_cod_instituicao'],
-                $origem = '',
+                '',
                 null,
                 $ref_cod_matricula,
                 '',
@@ -776,11 +776,13 @@ class clsPmieducarHistoricoEscolar extends Model
                 '',
                 '',
                 $detMatricula['nome_curso'],
-                $grade_curso_id
+                $grade_curso_id,
+                null,
+                $detMatricula['ref_ref_cod_escola'],
             );
 
             if ($historicoEscolar->cadastra()) {
-                $sequencial = self::getMaxSequencial($detMatricula['ref_cod_aluno']);
+                $sequencial = (new clsPmieducarHistoricoEscolar())->getMaxSequencial($detMatricula['ref_cod_aluno']);
                 $disciplinas = self::dadosDisciplinas($ref_cod_matricula);
                 foreach ($disciplinas as $index => $disciplina) {
                     $historicoDisciplina = new clsPmieducarHistoricoDisciplinas(($index + 1), $detMatricula['ref_cod_aluno'], $sequencial, $disciplina, '');
@@ -874,7 +876,8 @@ class clsPmieducarHistoricoEscolar extends Model
             $mediaGeral = $this->arredondaNota($registration->cod_matricula, $average, 2);
             $mediaGeral = number_format($mediaGeral, 1, '.', ',');
 
-            $sql = "INSERT INTO pmieducar.historico_disciplinas values ({$sequencial}, {$this->ref_cod_aluno}, {$this->sequencial}, 'Média Geral', {$mediaGeral});";
+            $sql = "INSERT INTO pmieducar.historico_disciplinas (sequencial, ref_ref_cod_aluno, ref_sequencial, nm_disciplina, nota) values ({$sequencial}, {$this->ref_cod_aluno}, {$this->sequencial}, 'Média Geral' , {$mediaGeral});";
+
             $db = new clsBanco();
             $db->Consulta($sql);
 

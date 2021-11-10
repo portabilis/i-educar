@@ -123,6 +123,7 @@ class iDiarioService
             'classrooms' => implode(',', $classroomId),
             'discipline' => $disciplineId
         ];
+
         try {
             $response = $this->get('/api/v2/discipline_activity', $data);
             $body = trim((string) $response->getBody());

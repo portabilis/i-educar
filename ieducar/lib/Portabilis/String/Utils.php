@@ -64,19 +64,6 @@ class Portabilis_String_Utils
         return $str;
     }
 
-    /**
-     * @deprecated
-     *
-     * @param string $str
-     * @param array  $options
-     *
-     * @return string
-     */
-    public static function toLatin1($str, $options = [])
-    {
-        return $str;
-    }
-
     public static function unaccent($str)
     {
         $fromEncoding = Portabilis_String_Utils::encoding($str);
@@ -86,7 +73,7 @@ class Portabilis_String_Utils
 
     public static function encoding($str)
     {
-        return mb_detect_encoding($str, 'UTF-8, ', $strict = true);
+        return mb_detect_encoding($str, 'UTF-8', $strict = true);
     }
 
     public static function camelize($str)

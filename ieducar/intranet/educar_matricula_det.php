@@ -2,6 +2,8 @@
 
 use App\Process;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 return new class extends clsDetalhe {
     public $titulo;
@@ -296,10 +298,15 @@ return new class extends clsDetalhe {
                     $this->array_botao_url_script[] = "go(\"educar_dispensa_disciplina_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
                 }
 
+                if ($registro['aprovado'] == App_Model_MatriculaSituacao::EM_ANDAMENTO && $this->permissao_busca_ativa()) {
+                    $this->array_botao[] = 'Busca ativa';
+                    $this->array_botao_url_script[] = "go(\"educar_busca_ativa_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
+                }
+
                 $dependencia = $registro['dependencia'];
 
                 if ($registro['ref_ref_cod_serie'] && $existeTurma && $dependencia) {
-                    $this->array_botao[] = 'Disciplinas de depend&ecirc;ncia';
+                    $this->array_botao[] = 'Disciplinas de dependência';
                     $this->array_botao_url_script[] = "go(\"educar_disciplina_dependencia_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
                 }
 
@@ -359,12 +366,14 @@ return new class extends clsDetalhe {
             }
 
             $ultimaMatricula = $obj_matricula->getEndMatricula($registro['ref_cod_aluno']);
-            if ($registro['aprovado'] == App_Model_MatriculaSituacao::TRANSFERIDO && $this->canCancelTransferencia($registro['cod_matricula'])) {
+            $permiteCancelarTransferencia = new clsPermissoes();
+            $permiteCancelarTransferencia = $permiteCancelarTransferencia->permissao_excluir(578, $this->pessoa_logada, 7);
+            if ($permiteCancelarTransferencia && $registro['aprovado'] == App_Model_MatriculaSituacao::TRANSFERIDO && $this->canCancelTransferencia($registro['cod_matricula'])) {
                 $this->array_botao[] = 'Cancelar transferência';
 
                 # TODO ver se código, seta matricula como em andamento, ativa ultima matricula_turma for matricula, e desativa transferencia solicitacao
                 $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&cancela=true&reabrir_matricula=true&ano={$registro['ano']}&escola={$escola_id}&curso={$curso_id}&serie={$serie_id}&turma={$turma_id}\")";
-            } elseif ($registro['aprovado'] == App_Model_MatriculaSituacao::TRANSFERIDO && $ultimaMatricula == 4) {
+            } elseif ($permiteCancelarTransferencia && $registro['aprovado'] == App_Model_MatriculaSituacao::TRANSFERIDO && $ultimaMatricula == 4) {
                 $this->array_botao[] = 'Cancelar transferência';
 
                 # TODO ver se código, seta matricula como em andamento, ativa ultima matricula_turma for matricula, e desativa transferencia solicitacao
@@ -427,6 +436,18 @@ return new class extends clsDetalhe {
         $acesso = new clsPermissoes();
 
         return $acesso->permissao_excluir(627, $this->pessoa_logada, 7, null, true);
+    }
+
+    public function permissao_busca_ativa()
+    {
+        $user = Auth::user();
+        $allow = Gate::allows('view', Process::ACTIVE_LOOKING);
+
+        if ($user->isLibrary()) {
+            return false;
+        }
+
+        return $allow;
     }
 
     public function permissaoReclassificar()

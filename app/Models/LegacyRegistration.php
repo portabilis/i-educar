@@ -12,14 +12,14 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 /**
  * LegacyRegistration
  *
- * @property int                      $id
- * @property boolean                  isTransferred
- * @property boolean                  isAbandoned
- * @property LegacyStudentAbsence     studentAbsence
- * @property LegacyStudentScore       studentScore
- * @property LegacyStudentDescriptive studentDescriptive
- * @property LegacyCourse             course
- *
+ * @property integer                  $id
+ * @property boolean                  $isTransferred
+ * @property boolean                  $isAbandoned
+ * @property boolean                  $isCanceled
+ * @property LegacyStudentAbsence     $studentAbsence
+ * @property LegacyStudentScore       $studentScore
+ * @property LegacyStudentDescriptive $studentDescriptive
+ * @property LegacyCourse             $course
  */
 class LegacyRegistration extends Model
 {
@@ -196,6 +196,11 @@ class LegacyRegistration extends Model
         return $this->aprovado == App_Model_MatriculaSituacao::ABANDONO;
     }
 
+    public function getIsCanceledAttribute()
+    {
+        return $this->ativo === 0;
+    }
+
     /**
      * @return HasOne
      */
@@ -249,6 +254,6 @@ class LegacyRegistration extends Model
      */
     public function getStatusDescriptionAttribute()
     {
-        return (new RegistrationStatus)->getDescriptiveValues()[(int) $this->aprovado];
+        return (new RegistrationStatus())->getDescriptiveValues()[(int) $this->aprovado];
     }
 }

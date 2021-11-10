@@ -33,13 +33,14 @@ return new class extends clsListagem {
         $registro = $tmp_obj->detalhe();
 
         $this->addCabecalhos([
-      'Escola',
-      'Instituição',
-      'Tipo',
-      'Dia',
-      'Horas',
-      'Minutos'
-    ]);
+            'Escola',
+            'Instituição',
+            'Matrícula',
+            'Tipo',
+            'Dia',
+            'Horas',
+            'Minutos'
+        ]);
 
         $fisica = new clsPessoaFisica($this->ref_cod_servidor);
         $fisica = $fisica->detalhe();
@@ -52,8 +53,7 @@ return new class extends clsListagem {
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET['pagina_' . $this->nome]) ?
-      $_GET['pagina_' . $this->nome] * $this->limite-$this->limite : 0;
+        $this->offset = ($_GET['pagina_' . $this->nome]) ? $_GET['pagina_' . $this->nome] * $this->limite-$this->limite : 0;
 
         $obj_falta_atraso = new clsPmieducarFaltaAtraso(
             null,
@@ -76,7 +76,7 @@ return new class extends clsListagem {
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
 
-        // Recupera o nome da escola
+                // Recupera o nome da escola
                 $obj_ref_cod_escola = new clsPmieducarEscola($registro['ref_cod_escola']);
                 $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
                 $registro['nm_escola'] = $det_ref_cod_escola['nome'];
@@ -117,28 +117,28 @@ return new class extends clsListagem {
                     $minutos_aux = '('.($minutos_aux * -1).')';
                 }
 
-                $tipo = $registro['tipo'] == 1 ?
-          'Atraso' : 'Falta';
+                $tipo = $registro['tipo'] == 1 ? 'Atraso' : 'Falta';
 
                 $urlHelper = CoreExt_View_Helper_UrlHelper::getInstance();
                 $url       = 'educar_falta_atraso_det.php';
                 $options   = ['query' => [
-          'cod_falta_atraso'    => $registro['cod_falta_atraso'],
-          'ref_cod_servidor'    => $registro['ref_cod_servidor'],
-          'ref_cod_escola'      => $registro['ref_cod_escola'],
-          'ref_cod_instituicao' => $registro['ref_ref_cod_instituicao'],
-        ]];
+                    'cod_falta_atraso'    => $registro['cod_falta_atraso'],
+                    'ref_cod_servidor'    => $registro['ref_cod_servidor'],
+                    'ref_cod_escola'      => $registro['ref_cod_escola'],
+                    'ref_cod_instituicao' => $registro['ref_ref_cod_instituicao'],
+                ]];
 
                 $dt = new DateTime($registro['data_falta_atraso']);
                 $data = $dt->format('d/m/Y');
                 $this->addLinhas([
-          $urlHelper->l($registro['nm_escola'], $url, $options),
-          $urlHelper->l($det_ins['nm_instituicao'], $url, $options),
-          $urlHelper->l($tipo, $url, $options),
-          $urlHelper->l($data, $url, $options),
-          $urlHelper->l($horas_aux, $url, $options),
-          $urlHelper->l($minutos_aux, $url, $options)
-        ]);
+                    $urlHelper->l($registro['nm_escola'], $url, $options),
+                    $urlHelper->l($det_ins['nm_instituicao'], $url, $options),
+                    $urlHelper->l($registro['matricula'], $url, $options),
+                    $urlHelper->l($tipo, $url, $options),
+                    $urlHelper->l($data, $url, $options),
+                    $urlHelper->l($horas_aux, $url, $options),
+                    $urlHelper->l($minutos_aux, $url, $options)
+                ]);
             }
         }
 
@@ -175,8 +175,8 @@ return new class extends clsListagem {
         $this->largura = '100%';
 
         $this->breadcrumb('Registro das faltas e atrasos do servidor', [
-        url('intranet/educar_servidores_index.php') => 'Servidores',
-    ]);
+            url('intranet/educar_servidores_index.php') => 'Servidores',
+        ]);
     }
 
     public function Formular()

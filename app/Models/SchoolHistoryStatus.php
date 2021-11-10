@@ -6,15 +6,15 @@ use App\Contracts\Enum;
 
 class SchoolHistoryStatus implements Enum
 {
-    const APPROVED = 1;
-    const REPROVED = 2;
-    const ONGOING = 3;
-    const TRANSFERRED = 4;
-    const RECLASSIFIED = 5;
-    const ABANDONED = 6;
-    const APPROVED_WITH_DEPENDENCY = 12;
-    const APPROVED_BY_BOARD = 13;
-    const REPROVED_BY_ABSENCE = 14;
+    public const APPROVED = 1;
+    public const REPROVED = 2;
+    public const ONGOING = 3;
+    public const TRANSFERRED = 4;
+    public const RECLASSIFIED = 5;
+    public const ABANDONED = 6;
+    public const APPROVED_WITH_DEPENDENCY = 12;
+    public const APPROVED_BY_BOARD = 13;
+    public const REPROVED_BY_ABSENCE = 14;
 
     public function getDescriptiveValues(): array
     {

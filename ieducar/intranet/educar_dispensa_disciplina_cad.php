@@ -21,6 +21,7 @@ return new class extends clsCadastro {
     public $ref_cod_instituicao;
     public $ref_cod_escola;
     public $modoEdicao;
+    public $ano;
 
     public function Inicializar()
     {
@@ -72,13 +73,13 @@ return new class extends clsCadastro {
         }
 
         $this->url_cancelar = $retorno == 'Editar' ?
-        sprintf(
-            'educar_dispensa_disciplina_det.php?ref_cod_matricula=%d&ref_cod_serie=%d&ref_cod_escola=%d&ref_cod_disciplina=%d',
-            $registro['ref_cod_matricula'],
-            $registro['ref_cod_serie'],
-            $registro['ref_cod_escola'],
-            $registro['ref_cod_disciplina']
-        ) :
+            sprintf(
+                'educar_dispensa_disciplina_det.php?ref_cod_matricula=%d&ref_cod_serie=%d&ref_cod_escola=%d&ref_cod_disciplina=%d',
+                $registro['ref_cod_matricula'],
+                $registro['ref_cod_serie'],
+                $registro['ref_cod_escola'],
+                $registro['ref_cod_disciplina']
+            ) :
             'educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula;
 
         $this->nome_url_cancelar = 'Cancelar';
@@ -96,11 +97,18 @@ return new class extends clsCadastro {
          * Busca dados da matricula
          */
         $obj_ref_cod_matricula = new clsPmieducarMatricula();
-        $detalhe_aluno = array_shift($obj_ref_cod_matricula->lista($this->ref_cod_matricula));
-        $this->ano = $detalhe_aluno['ano'];
+        $detalhe_matricula = $obj_ref_cod_matricula->lista($this->ref_cod_matricula);
 
-        $obj_aluno = new clsPmieducarAluno();
-        $det_aluno = array_shift($det_aluno = $obj_aluno->lista($detalhe_aluno['ref_cod_aluno'], null, null, null, null, null, null, null, null, null, 1));
+        if (is_array($detalhe_matricula)) {
+            $detalhe_matricula =  array_shift($detalhe_matricula);
+
+            $this->ano = $detalhe_matricula['ano'];
+
+            $obj_aluno = new clsPmieducarAluno();
+
+            $det_aluno =  $obj_aluno->lista($detalhe_matricula['ref_cod_aluno'], null, null, null, null, null, null, null, null, null, 1);
+            $det_aluno = array_shift($det_aluno);
+        }
 
         $obj_escola = new clsPmieducarEscola($this->ref_cod_escola, null, null, null, null, null, null, null, null, null, 1);
 
@@ -127,6 +135,7 @@ return new class extends clsCadastro {
         // primary keys
         $this->campoOculto('ref_cod_matricula', $this->ref_cod_matricula);
         $this->campoOculto('ref_cod_serie', $this->ref_cod_serie);
+        $this->campoOculto('ref_cod_serie_busca', $this->ref_cod_serie);
         $this->campoOculto('ref_cod_escola', $this->ref_cod_escola);
         $this->campoOculto('cod_dispensa', $this->cod_dispensa);
 
@@ -220,7 +229,7 @@ return new class extends clsCadastro {
         $registration = LegacyRegistration::findOrFail($this->ref_cod_matricula);
         $exemptionService->createExemptionByDisciplineArray($registration, $this->componentecurricular, $this->ref_cod_tipo_dispensa, $this->observacao, $this->etapa);
 
-        if (count($exemptionService->disciplinasNaoExistentesNaSerieDaEscola) > 0) {
+        if (is_array($exemptionService->disciplinasNaoExistentesNaSerieDaEscola) && count($exemptionService->disciplinasNaoExistentesNaSerieDaEscola) > 0) {
             $disciplinas = implode(', ', $disciplinasNaoExistentesNaSerieDaEscola);
             $this->mensagem = "O(s) componente(s):<b>{$disciplinas}</b>. não está(ão) habilitado(s) na série da escola.";
 

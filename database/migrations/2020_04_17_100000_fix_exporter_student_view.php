@@ -6,6 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 class FixExporterStudentView extends Migration
 {
     use MigrationUtils;
+
     /**
      * Run the migrations.
      *

@@ -7,6 +7,7 @@ use App\Models\LegacySchoolClass;
 use App\Rules\DuplicateMultiGrades;
 use App\Rules\IncompatibleAbsenceType;
 use App\Rules\IncompatibleDescriptiveOpinion;
+use App\Rules\IncompatibleRetakeType;
 use App\Rules\ExistsEnrollmentsInSchoolClassGrades;
 use App\Rules\RequiredAlternativeReportCard;
 
@@ -28,6 +29,7 @@ class MultiGradesService
                 new DuplicateMultiGrades(),
                 new IncompatibleAbsenceType(),
                 new IncompatibleDescriptiveOpinion(),
+                new IncompatibleRetakeType(),
                 new RequiredAlternativeReportCard(),
             ],
             'grades_delete' => [
@@ -76,10 +78,12 @@ class MultiGradesService
 
     private function saveSchoolClassGrade(LegacySchoolClass $schoolClass, $schoolClassGrades)
     {
+        $escolaId = $schoolClass->getSchoolIdAttribute();
+
         foreach ($schoolClassGrades as $schoolClassGrade) {
             LegacySchoolClassGrade::query()->updateOrCreate([
                 'turma_id' => $schoolClass->getKey(),
-                'escola_id' => $schoolClass->school->getKey(),
+                'escola_id' => $escolaId,
                 'serie_id' => $schoolClassGrade['serie_id'],
             ], [
                 'boletim_id' => $schoolClassGrade['boletim_id'],

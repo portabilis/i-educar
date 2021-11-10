@@ -104,7 +104,12 @@
     }
  
     function modalOpen(){
-      var turma            = $turmaField.val();
+      var turma = $turmaField.val();
+      var serieBusca = 0;
+
+      if ($j('#ref_cod_serie_busca').val()) {
+        serieBusca = $j('#ref_cod_serie_busca').val();
+      }
  
       if (!turma) {
         alert('Informe uma turma');
@@ -112,7 +117,8 @@
       }
  
       urlForGetAreaConhecimento = getResourceUrlBuilder.buildUrl('/module/Api/AreaConhecimento', 'areaconhecimento-turma', {
-        turma_id  : turma
+        turma_id  : turma,
+        serie_id : serieBusca
       });
  
       var options = {

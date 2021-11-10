@@ -721,7 +721,6 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         $this->deleteHistoricoDisplinas($alunoId, $historicoSequencial);
 
         if ($this->getRequest()->disciplinas == 'buscar-boletim') {
-            $cnsNota = RegraAvaliacao_Model_Nota_TipoValor;
             $tpNota = $this->getService()->getRegra()->get('tipoNota');
             $situacaoFaltasCc = $this->getService()->getSituacaoFaltas()->componentesCurriculares;
             $mediasCc = $this->getService()->getMediasComponentes();
@@ -751,14 +750,14 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                 if (clsPmieducarTurma::verificaDisciplinaDispensada($turmaId, $ccId)) {
                     $nota = $this->DISCIPLINA_DISPENSADA;
                 } elseif ($this->getRequest()->notas == 'buscar-boletim') {
-                    if ($tpNota == $cnsNota::CONCEITUAL) {
+                    if ($tpNota == RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL) {
                         if (config('legacy.app.processar_historicos_conceituais') == '1') {
                             $nota = (string)$mediasCc[$ccId][0]->mediaArredondada;
                             $notaConceitualNumerica = (string)$mediasCc[$ccId][0]->media;
                         }
-                    } elseif ($tpNota == $cnsNota::NUMERICA) {
+                    } elseif ($tpNota == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA) {
                         $nota = (string)$mediasCc[$ccId][0]->mediaArredondada;
-                    } elseif ($tpNota == $cnsNota::NUMERICACONCEITUAL) {
+                    } elseif ($tpNota == RegraAvaliacao_Model_Nota_TipoValor::NUMERICACONCEITUAL) {
                         $nota = (string)$mediasCc[$ccId][0]->mediaArredondada;
                         $notaConceitualNumerica = (string)$mediasCc[$ccId][0]->media;
                     }
@@ -968,7 +967,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     {
         $sql = 'select nm_serie from pmieducar.serie where cod_serie = $1';
 
-        return Portabilis_String_Utils::toLatin1(Portabilis_Utils_Database::selectField($sql, $serieId));
+        return Portabilis_Utils_Database::selectField($sql, $serieId);
     }
 
     protected function getSequencial($alunoId, $ano, $matriculaId)

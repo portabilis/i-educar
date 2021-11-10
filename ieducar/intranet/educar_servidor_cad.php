@@ -136,6 +136,8 @@ return new class extends clsCadastro {
                 $obj_servidor_disciplina = new clsPmieducarServidorDisciplina();
                 $lst_servidor_disciplina = $obj_servidor_disciplina->lista(null, $this->ref_cod_instituicao, $this->cod_servidor);
 
+                Session::forget("servant:{$this->cod_servidor}");
+
                 if ($lst_servidor_disciplina) {
                     foreach ($lst_servidor_disciplina as $disciplina) {
                         $funcoes[$disciplina['ref_cod_funcao']][$disciplina['ref_cod_curso']][] = $disciplina['ref_cod_disciplina'];
@@ -430,7 +432,7 @@ return new class extends clsCadastro {
 
         $resources = [
             null => 'Selecione',
-            1 => Portabilis_String_Utils::toLatin1('Concluído'),
+            1 => 'Concluído',
             2 => 'Em andamento'
         ];
 
@@ -469,7 +471,7 @@ JS;
         $this->ref_cod_instituicao = (int) $this->ref_cod_instituicao;
 
         $timesep = explode(':', $this->carga_horaria);
-        $hour = $timesep[0] + ((int) ($timesep[1] / 60));
+        $hour = (int) $timesep[0] + ((int) ($timesep[1] / 60));
         $min = abs(((int) ($timesep[1] / 60)) - ($timesep[1] / 60)) . '<br>';
 
         $this->carga_horaria = $hour + $min;
@@ -699,56 +701,36 @@ JS;
 
         if ($obj_quadro_horario->detalhe()) {
             $this->mensagem = 'Exclusão não realizada. O servidor está vinculado a um quadro de horários.<br>';
-
             return false;
-        } else {
-            $obj_quadro_horario = new clsPmieducarQuadroHorarioHorarios(
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                $this->cod_servidor,
-                null,
-                null,
-                null,
-                null,
-                null,
-                1,
-                null,
-                $this->ref_cod_instituicao
-            );
-
-            if ($obj_quadro_horario->detalhe()) {
-                $this->mensagem = 'Exclusão não realizada. O servidor está vinculado a um quadro de horários.<br>';
-
-                return false;
-            } else {
-                $obj = new clsPmieducarServidor(
-                    $this->cod_servidor,
-                    null,
-                    $this->ref_idesco,
-                    $this->carga_horaria,
-                    null,
-                    null,
-                    0,
-                    $this->ref_cod_instituicao_original
-                );
-
-                $excluiu = $obj->excluir();
-
-                if ($excluiu) {
-                    $this->excluiFuncoes();
-                    $this->mensagem = 'Exclusão efetuada com sucesso.<br>';
-                    $this->simpleRedirect('educar_servidor_lst.php');
-                }
-            }
         }
-        $this->mensagem = 'Exclusão não realizada.<br>';
 
-        return false;
+        DB::beginTransaction();
+        $obj = new clsPmieducarServidor(
+            $this->cod_servidor,
+            null,
+            $this->ref_idesco,
+            $this->carga_horaria,
+            null,
+            null,
+            0,
+            $this->ref_cod_instituicao_original
+        );
+
+        $excluiu = $obj->excluir();
+
+        if ($excluiu === false) {
+            DB::rollBack();
+            $this->mensagem = 'Exclusão não realizada.<br>';
+            return false;
+        }
+
+        $this->excluiDisciplinas(null);
+        $this->excluiFuncoes();
+        $this->excluiFaltaAtraso();
+        DB::commit();
+
+        $this->mensagem = 'Exclusão efetuada com sucesso.<br>';
+        $this->simpleRedirect('educar_servidor_lst.php');
     }
 
     public function addCamposCenso($obj)
@@ -796,8 +778,6 @@ JS;
             }
         }
 
-        $this->excluiFuncoesRemovidas($listFuncoesCadastradas);
-
         if (!$existe_funcao_professor) {
             $this->excluiDisciplinas(array_keys($funcoes));
             $this->excluiCursos();
@@ -841,6 +821,18 @@ JS;
                     }
                 }
             }
+
+            $funcoesRemovidas = $funcoes;
+
+            foreach ($listFuncoesCadastradas as $funcao) {
+                unset($funcoesRemovidas[$funcao]);
+            }
+
+            if (count($funcoesRemovidas) > 0) {
+                $this->excluiDisciplinas(array_keys($funcoesRemovidas));
+            }
+
+            $this->excluiFuncoesRemovidas($listFuncoesCadastradas);
         }
     }
 
@@ -848,6 +840,11 @@ JS;
     {
         $obj_servidor_funcao = new clsPmieducarServidorFuncao($this->ref_cod_instituicao, $this->cod_servidor);
         $obj_servidor_funcao->excluirTodos();
+    }
+
+    public function excluiFaltaAtraso()
+    {
+        (new clsPmieducarFaltaAtraso())->excluiTodosPorServidor($this->cod_servidor);
     }
 
     public function excluiFuncoesRemovidas($funcoes)

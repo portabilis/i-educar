@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyActiveLooking;
 use App\Models\LegacyRegistration;
 use Illuminate\Support\Str;
 
@@ -103,6 +104,7 @@ class MatriculaController extends ApiCoreController
      * substituído em futuras versões.
      *
      * @return array
+     *
      * @deprecated
      *
      */
@@ -119,7 +121,17 @@ class MatriculaController extends ApiCoreController
             ->whereHas(
                 'student.person',
                 function ($builder) use ($query) {
-                    $builder->where('slug', 'ilike', '%' . $query . '%');
+                    $builder
+                        ->where('slug', 'ilike', '%' . $query . '%')
+                        ->orWhere('ref_cod_aluno', 'like', '%' . $query . '%')
+                        ->orWhere('cod_matricula', 'like', '%' . $query . '%')
+                        ->withCasts(
+                            [
+                                'ref_cod_aluno' => 'string',
+                                'cod_matricula' => 'string',
+                            ]
+                        )
+                    ;
                 }
             )
             ->where('aprovado', App_Model_MatriculaSituacao::TRANSFERIDO)
@@ -136,7 +148,7 @@ class MatriculaController extends ApiCoreController
 
         foreach ($registrations as $registration) {
             $codAluno = $registration->student->cod_aluno;
-            $nome = $registration->student->person->nome;
+            $nome = mb_strtoupper($registration->student->person->nome);
             $transfers[$registration->cod_matricula] = "({$codAluno}) {$nome}";
         }
 
@@ -708,17 +720,28 @@ class MatriculaController extends ApiCoreController
                     (new Avaliacao_Model_NotaComponenteMediaDataMapper())
                         ->updateSituation($notaAluno->get('id'), $situacaoNova);
                 }
-            } elseif ($situacaoNova == App_Model_MatriculaSituacao::APROVADO || $situacaoNova == App_Model_MatriculaSituacao::EM_ANDAMENTO || $situacaoNova == App_Model_MatriculaSituacao::REPROVADO) {
-                if ($enturmacoes) {
+            } elseif (
+                $situacaoNova == App_Model_MatriculaSituacao::APROVADO ||
+                $situacaoNova == App_Model_MatriculaSituacao::EM_ANDAMENTO ||
+                $situacaoNova == App_Model_MatriculaSituacao::REPROVADO ||
+                $situacaoNova == App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA ||
+                $situacaoNova == App_Model_MatriculaSituacao::APROVADO_PELO_CONSELHO ||
+                $situacaoNova == App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS
+            ) {
+                $matriculaTurma = new clsPmieducarMatriculaTurma();
+                $enturmacoesParaAtivar = $matriculaTurma->lista($matriculaId);
+                if (!empty($enturmacoesParaAtivar)) {
                     $params = [$matriculaId];
                     $sql = 'SELECT sequencial as codigo FROM pmieducar.matricula_turma where ref_cod_matricula = $1 order by ativo desc, sequencial desc limit 1';
                     $sequencial = $this->fetchPreparedQuery($sql, $params, false, 'first-field');
 
-                    $sql = 'UPDATE pmieducar.matricula_turma set ativo = 1, transferido = false, remanejado = false, abandono = false, reclassificado = false where sequencial = $1 and ref_cod_matricula = $2';
+                    $sql = 'UPDATE pmieducar.matricula_turma set ativo = 1, transferido = false, remanejado = false, abandono = false, reclassificado = false, data_exclusao = null where sequencial = $1 and ref_cod_matricula = $2';
 
                     $params = [$sequencial, $matriculaId];
                     $this->fetchPreparedQuery($sql, $params);
                 }
+
+                $matricula->data_cancel = null;
             }
 
             $matricula->aprovado = $this->getRequest()->nova_situacao;
@@ -941,6 +964,36 @@ class MatriculaController extends ApiCoreController
         return $this->validatesPresenceOf('ano');
     }
 
+    protected function getBuscaAtiva()
+    {
+        $ano = $this->getRequest()->ano;
+        $escola = $this->getRequest()->escola;
+        $modified = $this->getRequest()->modified;
+
+
+        $legacyActiveLooking = LegacyActiveLooking::withTrashed()
+            ->select('busca_ativa.*')
+            ->selectRaw("CASE resultado_busca_ativa
+                                  WHEN 1 THEN 'Abandono'::varchar
+                                  WHEN 3 THEN 'Retorno com ausência justificada'::varchar
+                                  WHEN 4 THEN 'Retorno sem ausência justificada'::varchar
+                                  ELSE 'Em andamento'::varchar END AS resulta_busca_ativa_text")
+            ->join('pmieducar.matricula', 'ref_cod_matricula', '=', 'cod_matricula')
+            ->where('ano', $ano);
+
+        if($modified){
+            $legacyActiveLooking->where('busca_ativa.updated_at', '>=', $modified);
+        }
+
+        if ($escola) {
+            $legacyActiveLooking->whereIn('ref_ref_cod_escola', explode(',', $escola));
+        }
+
+        $buscaAtiva = $legacyActiveLooking->get()->toArray();
+
+        return ['busca_ativa' => $buscaAtiva];
+    }
+
     public function Gerar()
     {
         if ($this->isRequestFor('get', 'matricula')) {
@@ -977,6 +1030,8 @@ class MatriculaController extends ApiCoreController
             $this->appendResponse($this->getDispensaDisciplina());
         } elseif ($this->isRequestFor('get', 'enturmacoes-excluidas')) {
             $this->appendResponse($this->getEnturmacoesExcluidas());
+        } elseif ($this->isRequestFor('get', 'busca-ativa')) {
+            $this->appendResponse($this->getBuscaAtiva());
         } else {
             $this->notImplementedOperationError();
         }

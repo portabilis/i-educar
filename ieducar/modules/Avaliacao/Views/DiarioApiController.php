@@ -7,6 +7,7 @@ use App\Models\LegacyRemedialRule;
 use App\Models\LegacySchoolClass;
 use App\Process;
 use App\Services\ReleasePeriodService;
+use App\Services\RemoveHtmlTagsStringService;
 use iEducar\Modules\Stages\Exceptions\MissingStagesException;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
@@ -19,9 +20,12 @@ class DiarioApiController extends ApiCoreController
     protected $_processoAp = 642;
     protected $_currentMatriculaId;
 
-    protected function validatesValueOfAttValueIsInOpcoesNotas()
+    private RemoveHtmlTagsStringService $removeHtmlTagsService;
+
+    public function __construct()
     {
-        return true;
+        parent::__construct();
+        $this->removeHtmlTagsService = new RemoveHtmlTagsStringService();
     }
 
     protected function validatesCanChangeDiarioForAno()
@@ -324,7 +328,6 @@ class DiarioApiController extends ApiCoreController
     protected function canPostNota()
     {
         return $this->canPost() &&
-        $this->validatesValueOfAttValueIsInOpcoesNotas(false) &&
         $this->validatesPresenceOf('componente_curricular_id') &&
         $this->validatesRegraAvaliacaoHasNota() &&
         $this->validatesRegraAvaliacaoHasFormulaRecuperacao() &&
@@ -619,7 +622,7 @@ class DiarioApiController extends ApiCoreController
     {
         if ($this->canPostParecer()) {
             $tpParecer = $this->serviceBoletim()->getRegra()->get('parecerDescritivo');
-            $cnsParecer = RegraAvaliacao_Model_TipoParecerDescritivo;
+            $cnsParecer = RegraAvaliacao_Model_TipoParecerDescritivo::class;
 
             if ($tpParecer == $cnsParecer::ETAPA_COMPONENTE || $tpParecer == $cnsParecer::ANUAL_COMPONENTE) {
                 $parecer = $this->getParecerComponente();
@@ -627,6 +630,7 @@ class DiarioApiController extends ApiCoreController
                 $parecer = $this->getParecerGeral();
             }
 
+            $parecer->parecer = $this->removeHtmlTagsService->execute($parecer->parecer);
             $this->serviceBoletim()->addParecer($parecer);
             $this->trySaveServiceBoletim();
             $this->messenger->append('Parecer descritivo matricula ' . $this->getRequest()->matricula_id . ' alterado com sucesso.', 'success');
@@ -715,7 +719,7 @@ class DiarioApiController extends ApiCoreController
     protected function deleteFalta()
     {
         $canDelete = $this->canDeleteFalta();
-        $cnsPresenca = RegraAvaliacao_Model_TipoPresenca;
+        $cnsPresenca = RegraAvaliacao_Model_TipoPresenca::class;
         $tpPresenca = $this->serviceBoletim()->getRegra()->get('tipoPresenca');
 
         if ($canDelete && $tpPresenca == $cnsPresenca::POR_COMPONENTE) {
@@ -747,7 +751,7 @@ class DiarioApiController extends ApiCoreController
                 $this->messenger->append('Parecer descritivo matrícula ' . $this->getRequest()->matricula_id . ' inexistente ou já removido.', 'notice');
             } else {
                 $tpParecer = $this->serviceBoletim()->getRegra()->get('parecerDescritivo');
-                $cnsParecer = RegraAvaliacao_Model_TipoParecerDescritivo;
+                $cnsParecer = RegraAvaliacao_Model_TipoParecerDescritivo::class;
 
                 if ($tpParecer == $cnsParecer::ANUAL_COMPONENTE || $tpParecer == $cnsParecer::ETAPA_COMPONENTE) {
                     $this->serviceBoletim()->deleteParecer($this->getRequest()->etapa, $this->getRequest()->componente_curricular_id);
@@ -1642,6 +1646,8 @@ class DiarioApiController extends ApiCoreController
             'nome' => $evaluationRule->nome,
             'nota_maxima_geral' => $evaluationRule->nota_maxima_geral,
             'nota_minima_geral' => $evaluationRule->nota_minima_geral,
+            'falta_maxima_geral' => $evaluationRule->falta_maxima_geral,
+            'falta_minima_geral' => $evaluationRule->falta_minima_geral,
             'nota_maxima_exame_final' => $evaluationRule->nota_maxima_exame_final,
             'qtd_casas_decimais' => $evaluationRule->qtd_casas_decimais,
             'regra_diferenciada_id' => $evaluationRule->regra_diferenciada_id,

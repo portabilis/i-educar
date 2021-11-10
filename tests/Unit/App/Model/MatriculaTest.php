@@ -1,7 +1,5 @@
 <?php
 
-
-
 class App_Model_MatriculaTest extends UnitBaseTest
 {
     public function testAtualizaMatricula()

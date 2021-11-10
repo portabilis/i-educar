@@ -15,7 +15,7 @@ trait IncrementSequence
     public function incrementSequence($table, $column = 'id')
     {
         if (class_exists($table)) {
-            $class = new $table;
+            $class = new $table();
 
             $table = $class->getTable();
             $column = $class->getKeyName();

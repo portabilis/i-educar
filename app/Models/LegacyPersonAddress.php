@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class LegacyPersonAddress extends Model
 {
-
     /**
      * @var string
      */

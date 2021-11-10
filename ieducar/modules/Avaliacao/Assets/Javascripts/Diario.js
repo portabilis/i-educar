@@ -287,6 +287,10 @@ var changeParecer = function(element) {
 
     $fieldsParecerMatricula.val(element.val());
     $fieldsParecerMatricula.data('old_value', element.val());
+
+    $fieldsParecerMatricula.each(function(id, value) {
+      $j(value).closest('td').find('.note-editable').html(element.val());
+    });
   }
 };
 
@@ -518,13 +522,12 @@ function postNotaRecuperacaoEspecifica($notaRecuperacaoEspecificaElement) {
 
 function postFalta($faltaFieldElement) {
   $faltaFieldElement.val($faltaFieldElement.val().replace(',', '.'));
-
+  var regra = $faltaFieldElement.closest('tr').data('regra');
   //falta é persistida como inteiro
   if ($j.isNumeric($faltaFieldElement.val()))
     $faltaFieldElement.val(parseInt($faltaFieldElement.val()).toString());
-
   if (validatesIfValueIsNumeric($faltaFieldElement.val(), $faltaFieldElement.attr('id')) &&
-      validatesIfNumericValueIsInRange($faltaFieldElement.val(), $faltaFieldElement.attr('id'), 0, 100)) {
+      validatesIfNumericValueIsInRange($faltaFieldElement.val(), $faltaFieldElement.attr('id'), regra.falta_minima_geral, regra.falta_maxima_geral)) {
 
     beforeChangeResource($faltaFieldElement);
 
@@ -548,7 +551,7 @@ function postFalta($faltaFieldElement) {
   } else {
     $j('#' + $faltaFieldElement.attr('id')).addClass('error');
 
-    var regra = $element.closest('tr').data('regra');
+    regra = $element.closest('tr').data('regra');
 
     // se presenca geral, muda o valor em todas faltas da mesma matricula
     if (regra.tipo_presenca == 'geral') {

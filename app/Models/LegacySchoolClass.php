@@ -193,19 +193,23 @@ class LegacySchoolClass extends Model
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getBeginAcademicYearAttribute()
     {
-        return $this->stages()->orderBy('sequencial')->first()->data_inicio;
+        $calendar = $this->stages()->orderBy('sequencial')->first();
+
+        return $calendar ? $calendar->data_inicio : null;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getEndAcademicYearAttribute()
     {
-        return $this->stages()->orderByDesc('sequencial')->first()->data_fim;
+        $calendar = $this->stages()->orderByDesc('sequencial')->first();
+
+        return $calendar ? $calendar->data_fim : null;
     }
 
     /**
@@ -254,6 +258,14 @@ class LegacySchoolClass extends Model
                 ->where('ref_ano', $this->year);
         }
 
+        return $this->hasMany(LegacySchoolClassStage::class, 'ref_cod_turma', 'cod_turma');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function schoolClassStages()
+    {
         return $this->hasMany(LegacySchoolClassStage::class, 'ref_cod_turma', 'cod_turma');
     }
 
@@ -340,7 +352,7 @@ class LegacySchoolClass extends Model
             return true;
         }
 
-        return (boolean) $schoolGrade->bloquear_enturmacao_sem_vagas;
+        return (bool) $schoolGrade->bloquear_enturmacao_sem_vagas;
     }
 
     /**

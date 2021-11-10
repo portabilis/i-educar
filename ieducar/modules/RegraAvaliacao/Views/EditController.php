@@ -108,6 +108,14 @@ class EditController extends Core_Controller_Page_EditController
             'label' => 'Nota mínima geral',
             'help' => 'Informe o valor mínimo para notas no geral'
         ],
+        'faltaMaximaGeral' => [
+            'label' => 'Falta máxima geral',
+            'help' => 'Informe o valor máximo para faltas no geral'
+        ],
+        'faltaMinimaGeral' => [
+            'label' => 'Falta mínima geral',
+            'help' => 'Informe o valor mínimo para faltas no geral'
+        ],
         'notaMaximaExameFinal' => [
             'label' => 'Nota máxima exame final',
             'help' => 'Informe o valor máximo para nota do exame final'
@@ -588,6 +596,26 @@ class EditController extends Core_Controller_Page_EditController
         );
 
         $this->campoNumero(
+            'faltaMaximaGeral',
+            $this->_getLabel('faltaMaximaGeral'),
+            $this->getEntity()->faltaMaximaGeral,
+            4,
+            4,
+            true,
+            $this->_getHelp('faltaMaximaGeral')
+        );
+
+        $this->campoNumero(
+            'faltaMinimaGeral',
+            $this->_getLabel('faltaMinimaGeral'),
+            $this->getEntity()->faltaMinimaGeral,
+            4,
+            4,
+            true,
+            $this->_getHelp('faltaMinimaGeral')
+        );
+
+        $this->campoNumero(
             'notaMaximaExameFinal',
             $this->_getLabel('notaMaximaExameFinal'),
             $this->getEntity()->notaMaximaExameFinal,
@@ -772,7 +800,9 @@ class EditController extends Core_Controller_Page_EditController
                 $this->getEntity()
             );
 
-            for ($i = 0, $loop = count($recuperacoes); $i < ($loop == 0 ? 5 : $loop + 3); $i++) {
+            $quantidadeRecuperacoes = is_array($recuperacoes) ? count($recuperacoes) : 0;
+
+            for ($i = 0, $loop = $quantidadeRecuperacoes; $i < ($loop == 0 ? 5 : $loop + 3); $i++) {
                 $recuperacao = $recuperacoes[$i];
 
                 $recuperacaoLabel = sprintf('recuperacao[label][%d]', $i);
@@ -937,7 +967,7 @@ class EditController extends Core_Controller_Page_EditController
         $recuperacoes = $this->getRequest()->recuperacao;
 
         // A contagem usa um dos índices do formulário, senão ia contar sempre 4.
-        $loop = count($recuperacoes['id']);
+        $loop = is_array($recuperacoes['id']) ? count($recuperacoes['id']) : 0;
 
         // Array de objetos a persistir
         $insert = [];

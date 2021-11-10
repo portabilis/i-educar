@@ -15,9 +15,9 @@ class SchoolHistory
     private $formatScoresGreaterThanTen;
     public $disciplines;
 
-    const GRADE_SERIE = 1;
-    const GRADE_ANO = 2;
-    const GRADE_EJA = 3;
+    public const GRADE_SERIE = 1;
+    public const GRADE_ANO = 2;
+    public const GRADE_EJA = 3;
 
     public function __construct(SchoolHistoryService $service, $seriesYearsModel)
     {
@@ -86,7 +86,7 @@ class SchoolHistory
     public function getDiscipline($studentId, $disciplineName)
     {
         if (!$this->disciplines[$studentId][$disciplineName]) {
-            $this->disciplines[$studentId][$disciplineName] = new DisciplineGroup;
+            $this->disciplines[$studentId][$disciplineName] = new DisciplineGroup();
         }
 
         return $this->disciplines[$studentId][$disciplineName];
@@ -186,7 +186,7 @@ class SchoolHistory
 
     public function getStatus($status)
     {
-        $allStatus = (new SchoolHistoryStatus)->getDescriptiveValues();
+        $allStatus = (new SchoolHistoryStatus())->getDescriptiveValues();
 
         return $allStatus[$status];
     }

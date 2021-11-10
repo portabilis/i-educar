@@ -72,7 +72,8 @@ return new class extends clsCadastro {
 
         if (is_numeric($this->ref_cod_matricula)) {
             $obj_ref_cod_matricula = new clsPmieducarMatricula();
-            $detalhe_aluno = array_shift($obj_ref_cod_matricula->lista($this->ref_cod_matricula));
+            $detalhe_aluno = $obj_ref_cod_matricula->lista($this->ref_cod_matricula);
+            array_shift($detalhe_aluno);
             $this->ref_cod_escola = $detalhe_aluno['ref_ref_cod_escola'];
             $obj_escola = new clsPmieducarEscola($this->ref_cod_escola);
             $det_escola = $obj_escola->detalhe();
@@ -99,7 +100,8 @@ return new class extends clsCadastro {
                 $detalhe_aluno = array_shift($detalhe_aluno);
             }
             $obj_aluno = new clsPmieducarAluno();
-            $det_aluno = array_shift($det_aluno = $obj_aluno->lista($detalhe_aluno['ref_cod_aluno'], null, null, null, null, null, null, null, null, null, 1));
+            $det_aluno = $obj_aluno->lista($detalhe_aluno['ref_cod_aluno'], null, null, null, null, null, null, null, null, null, 1);
+            array_shift($det_aluno);
 
             $this->campoRotulo('nm_pessoa', 'Nome do Aluno', $det_aluno['nome_aluno']);
         } else {
@@ -135,9 +137,9 @@ return new class extends clsCadastro {
 
         $this->campoCheck(
             'visivel_pais',
-            Portabilis_String_Utils::toLatin1('Visí­vel aos pais'),
+            'Visível aos pais',
             $this->visivel_pais,
-            Portabilis_String_Utils::toLatin1('Marque este campo, caso deseje que os pais do aluno possam visualizar tal ocorrência disciplinar.')
+            'Marque este campo, caso deseje que os pais do aluno possam visualizar tal ocorrência disciplinar.'
         );
     }
 
@@ -166,7 +168,7 @@ return new class extends clsCadastro {
                 $resposta = json_decode($this->enviaOcorrenciaNovoEducacao($cod_ocorrencia_disciplinar));
 
                 if (is_array($resposta->errors)) {
-                    echo Portabilis_String_Utils::toLatin1('Erro ao enviar ocorrencia disciplinar ao sistema externo: ' . $resposta->errors[0]);
+                    echo 'Erro ao enviar ocorrencia disciplinar ao sistema externo: ' . $resposta->errors[0];
                     die;
                 }
             }

@@ -36,7 +36,7 @@ Acreditamos que o sucesso do projeto depende diretamente da interação clara e
 objetiva entre os membros da Comunidade. Por isso, estamos definindo algumas
 políticas para que estas interações nos ajudem a crescer juntos! Você pode
 consultar algumas destas boas práticas em nosso [código de
-conduta](https://github.com/portabilis/i-educar/blob/master/code-of-conduct.md).
+conduta](https://github.com/portabilis/i-educar/blob/master/CODE-OF-CONDUCT.md).
 
 Além disso, gostamos de meios de comunicação assíncrona, onde não há necessidade de
 respostas em tempo real. Isso facilita a produtividade individual dos
@@ -53,8 +53,8 @@ comunidade i-Educar e não terá suporte da Portabilis - mantenedora do projeto.
 
 ## Como contribuir
 
-Contribuições são **super bem vindas**! Se você tem vontade de construir o
-i-Educar junto conosco, veja o nosso [guia de contribuição](./contributing.md)
+Contribuições são **super bem-vindas**! Se você tem vontade de construir o
+i-Educar junto conosco, veja o nosso [guia de contribuição](./CONTRIBUTING.md)
 onde explicamos detalhadamente como trabalhamos e de que formas você pode nos
 ajudar a alcançar nossos objetivos.
 
@@ -81,7 +81,8 @@ facilitar o desenvolvimento.
 #### Servidor
 
 - [PHP](http://php.net/) versão 7.4
-- [Postgres](https://www.postgresql.org/) versão 9.5
+- [Composer](https://getcomposer.org/)
+- [Postgres](https://www.postgresql.org/)
 - [Nginx](https://www.nginx.com/)
 - [Redis](https://redis.io/)
 
@@ -241,8 +242,9 @@ Para instalar o pacote de relatórios visite o repositório do projeto
 [https://github.com/portabilis/i-educar-reports-package](https://github.com/portabilis/i-educar-reports-package)
 e siga as instruções de instalação.
 
-#### Upgrade
+### Upgrade
 
+- [Upgrade para 2.6 da 2.5](https://github.com/portabilis/i-educar/wiki/Upgrade-para-2.6-da-2.5).
 - [Upgrade para 2.5 da 2.4](https://github.com/portabilis/i-educar/wiki/Upgrade-para-2.5-da-2.4).
 - [Upgrade para 2.4 da 2.3](https://github.com/portabilis/i-educar/wiki/Upgrade-para-2.4-da-2.3).
 - [Upgrade para 2.3 da 2.2](https://github.com/portabilis/i-educar/wiki/Upgrade-para-2.3-da-2.2).

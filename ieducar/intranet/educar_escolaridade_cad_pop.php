@@ -58,7 +58,7 @@ return new class extends clsCadastro {
                            5 => 'Ensino médio',
                            6 => 'Superior'];
 
-        $options = ['label' => Portabilis_String_Utils::toLatin1('Escolaridade'), 'resources' => $resources, 'value' => $this->escolaridade];
+        $options = ['label' => 'Escolaridade', 'resources' => $resources, 'value' => $this->escolaridade];
         $this->inputsHelper()->select('escolaridade', $options);
     }
 

@@ -15,16 +15,16 @@ class AddForeignKeysInPmieducarHabilitacaoCursoTable extends Migration
     {
         Schema::table('pmieducar.habilitacao_curso', function (Blueprint $table) {
             $table->foreign('ref_cod_habilitacao')
-               ->references('cod_habilitacao')
-               ->on('pmieducar.habilitacao')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_habilitacao')
+                ->on('pmieducar.habilitacao')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_curso')
-               ->references('cod_curso')
-               ->on('pmieducar.curso')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_curso')
+                ->on('pmieducar.curso')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

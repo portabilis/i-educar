@@ -12,6 +12,7 @@ class SerieController extends ApiCoreController
         if ($this->canGetSeries()) {
             $instituicaoId = $this->getRequest()->instituicao_id;
             $escolaId = $this->getRequest()->escola_id ?: null;
+            $ano = $this->getRequest()->ano ?: null;
             $cursoId = $this->getRequest()->curso_id;
             $ativo = $this->getRequest()->ativo;
 
@@ -28,6 +29,7 @@ class SerieController extends ApiCoreController
             $sql = 'SELECT distinct
                     s.cod_serie,
                     s.nm_serie,
+                    s.descricao,
                     s.idade_ideal,
                     s.ref_cod_curso,
                     (
@@ -60,6 +62,10 @@ class SerieController extends ApiCoreController
                 $sql .= " AND c.cod_curso IN ({$cursoId}) ";
             }
 
+            if ($ano) {
+                $sql .= " AND {$ano} = any(es.anos_letivos) ";
+            }
+
             if ($ativo) {
                 $sql .= " AND s.ativo = {$ativo} ";
             }
@@ -74,7 +80,8 @@ class SerieController extends ApiCoreController
             $series = $this->fetchPreparedQuery($sql, $params);
 
             foreach ($series as &$serie) {
-                $serie['nm_serie'] = mb_strtoupper($serie['nm_serie'], 'UTF-8');
+                $nomeSerie = empty($serie['descricao']) ? $serie['nm_serie'] : "{$serie['nm_serie']} ({$serie['descricao']})";
+                $serie['nm_serie'] = mb_strtoupper($nomeSerie, 'UTF-8');
             }
 
             $attrs = [
@@ -186,7 +193,7 @@ class SerieController extends ApiCoreController
     {
         $cursoId = $this->getRequest()->curso_id;
 
-        $sql = 'SELECT distinct s.cod_serie, s.nm_serie
+        $sql = 'SELECT distinct s.cod_serie, s.nm_serie, s.descricao
               FROM pmieducar.serie s
               WHERE s.ativo = 1
               AND s.ref_cod_curso = $1
@@ -196,7 +203,8 @@ class SerieController extends ApiCoreController
         $series = $this->fetchPreparedQuery($sql, $params);
 
         foreach ($series as &$serie) {
-            $serie['nm_serie'] = mb_strtoupper($serie['nm_serie'], 'UTF-8');
+            $nomeSerie = empty($serie['descricao']) ? $serie['nm_serie'] : "{$serie['nm_serie']} ({$serie['descricao']})";
+            $serie['nm_serie'] = mb_strtoupper($nomeSerie, 'UTF-8');
         }
 
         $attrs = [

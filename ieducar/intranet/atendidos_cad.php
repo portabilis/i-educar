@@ -132,7 +132,7 @@ return new class extends clsCadastro {
             $this->naturalidade_id = $this->naturalidade;
         }
 
-        $this->fexcluir = $obj_permissoes->permissao_excluir(
+        $this->fexcluir = is_numeric($this->cod_pessoa_fj) && $obj_permissoes->permissao_excluir(
             43,
             $this->pessoa_logada,
             7
@@ -189,7 +189,7 @@ return new class extends clsCadastro {
 
         $this->campoOculto('cod_pessoa_fj', $this->cod_pessoa_fj);
         $this->campoTexto('nm_pessoa', 'Nome', $this->nm_pessoa, '50', '255', true);
-        $this->campoTexto('nome_social', 'Nome social', $this->nome_social, '50', '255', false);
+        $this->campoTexto('nome_social', 'Nome social e/ou afetivo', $this->nome_social, '50', '255', false);
 
         $foto = false;
         if (is_numeric($this->cod_pessoa_fj)) {
@@ -739,7 +739,8 @@ return new class extends clsCadastro {
         $styles = [
             '/modules/Portabilis/Assets/Stylesheets/Frontend.css',
             '/modules/Portabilis/Assets/Stylesheets/Frontend/Resource.css',
-            '/modules/Cadastro/Assets/Stylesheets/PessoaFisica.css'
+            '/modules/Cadastro/Assets/Stylesheets/PessoaFisica.css',
+            '/modules/Cadastro/Assets/Stylesheets/ModalCadastroPais.css',
         ];
 
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
@@ -747,7 +748,8 @@ return new class extends clsCadastro {
         $script = [
             '/modules/Cadastro/Assets/Javascripts/PessoaFisica.js',
             '/modules/Cadastro/Assets/Javascripts/Addresses.js',
-            '/modules/Cadastro/Assets/Javascripts/Endereco.js'
+            '/modules/Cadastro/Assets/Javascripts/Endereco.js',
+            '/modules/Cadastro/Assets/Javascripts/ModalCadastroPais.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $script);
@@ -850,7 +852,7 @@ return new class extends clsCadastro {
 
         if(window.opener &&  window.opener.afterChangePessoa) {
             var parentType = \$j('#parent_type').val();
-
+            alert('Alteração realizada com sucesso!');
             if (parentType)
             window.opener.afterChangePessoa(self, parentType, $id, \$j('#nm_pessoa').val());
             else
@@ -859,7 +861,7 @@ return new class extends clsCadastro {
         else
             document.location = 'atendidos_lst.php';
 
-        ", $afterReady = true);
+        ", $afterReady = false);
     }
 
     protected function loadAlunoByPessoaId($id)
@@ -896,10 +898,7 @@ return new class extends clsCadastro {
         //pela antiga interface do cadastro de alunos.
 
         if (! $parentId && $this->_aluno['nm_' . $parentType]) {
-            $nome = Portabilis_String_Utils::toLatin1(
-                $this->_aluno['nm_' . $parentType],
-                ['transform' => true, 'escape' => false]
-            );
+            $nome = $this->_aluno['nm_' . $parentType];
 
             $inputHint = '<br /><b>Dica:</b> Foi informado o nome "' . $nome .
             '" no cadastro de aluno,<br />tente pesquisar esta pessoa ' .
@@ -1312,8 +1311,8 @@ return new class extends clsCadastro {
         );
 
         $documentos->sigla_uf_cert_civil = $_REQUEST['uf_emissao_certidao_civil'];
-        $documentos->cartorio_cert_civil = addslashes($_REQUEST['cartorio_emissao_certidao_civil']);
-        $documentos->passaporte = addslashes($_REQUEST['passaporte']);
+        $documentos->cartorio_cert_civil = pg_escape_string($_REQUEST['cartorio_emissao_certidao_civil']);
+        $documentos->passaporte = pg_escape_string($_REQUEST['passaporte']);
 
         // carteira de trabalho
 

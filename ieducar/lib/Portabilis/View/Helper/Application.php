@@ -1,6 +1,6 @@
 <?php
 
-use Tooleks\LaravelAssetVersion\Facades\Asset;
+use App\Facades\Asset;
 
 class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract
 {
