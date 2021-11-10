@@ -10,6 +10,10 @@ $j('#ref_cod_escola').change(function(){
     atualizaOpcoesDeCurso();
 });
 
+$j('#ano').change(function(){
+    atualizaOpcoesDeCurso();
+});
+
 $j('#btn_add_tab_add_1').click(function(){
     let quantidadeDeCursos = $j('select[name^="mult_curso_id"]').length;
     let idUltimoSelectCurso = $j('select[name^="mult_curso_id"]')[quantidadeDeCursos - 1].id;
@@ -91,12 +95,14 @@ function configuraCamposExibidos() {
 
 function atualizaOpcoesDeCurso() {
     let escolaId = $j('#ref_cod_escola').val();
+    let ano = $j('#ano').val();
 
     var url = getResourceUrlBuilder.buildUrl(
         '/module/Api/Curso',
         'cursos-da-escola',
         {
-            escola_id : escolaId
+            escola_id : escolaId,
+            ano : ano
         }
     );
 
@@ -127,13 +133,13 @@ function atualizaInformacoesComBaseNoCurso(inputCurso) {
 }
 
 function atualizaInformacoesComBaseNaSerie() {
-    atualizaOpcoesAnoLetivo()
     defineSerieCursoPrincipal();
 }
 
 function atualizaOpcoesDeSerie(input, value) {
     let instituicaoId = $j('#ref_cod_instituicao').val();
     let escolaId = $j('#ref_cod_escola').val();
+    let ano = $j('#ano').val();
     let cursoId = input.value;
     let linha = input.id.replace(/\D/g, '');
 
@@ -151,6 +157,7 @@ function atualizaOpcoesDeSerie(input, value) {
         {
             instituicao_id : instituicaoId,
             escola_id : escolaId,
+            ano : ano,
             curso_id : cursoId,
             ativo : 1
         }
@@ -195,45 +202,6 @@ function atualizaPadraoAnoEscolar(input) {
         success  : function(response) {
             let padrao_ano_escolar = response.dados_curso['padrao_ano_escolar'] ? 1 : 0;
             $j('input[id="mult_padrao_ano_escolar['+ linha +']"]').val(padrao_ano_escolar);
-        }
-    };
-
-    getResources(options);
-}
-
-function atualizaOpcoesAnoLetivo() {
-    if ($j('#ano_letivo').prop('disabled')) {
-        return;
-    }
-
-    let escolaId = $j('#ref_cod_escola').val();
-    let series = [];
-    let combosSeries = $j('select[name^="mult_serie_id"]');
-
-    $j.each(combosSeries, function(key, serie){
-        series.push(serie.value);
-    });
-
-    var url = getResourceUrlBuilder.buildUrl(
-        '/module/DynamicInput/AnoLetivo',
-        'anos_letivos_em_comum_series_da_escola',
-        {
-            escola_id : escolaId,
-            series : series
-        }
-    );
-
-    var options = {
-        url      : url,
-        dataType : 'json',
-        success  : function(response) {
-            let comboAnoLetivo = $j('#ano_letivo');
-            comboAnoLetivo.empty();
-            comboAnoLetivo.append('<option value="">Selecione um ano letivo</option>');
-
-            $j.each(response.anos_letivos, function(key, ano) {
-                comboAnoLetivo.append('<option value="' + ano + '">' + ano + '</option>');
-            });
         }
     };
 

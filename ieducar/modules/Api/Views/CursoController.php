@@ -209,10 +209,12 @@ class CursoController extends ApiCoreController
     {
         if ($this->canGetCursosDaEscola()) {
             $escolaId = $this->getRequest()->escola_id;
+            $ano = $this->getRequest()->ano;
 
             $cursos = LegacySchoolCourse::query()
                 ->with('course')
                 ->where('ref_cod_escola', $escolaId)
+                ->whereRaw('? = ANY(anos_letivos)', [$ano])
                 ->get()
                 ->pluck('course.nm_curso', 'ref_cod_curso')
                 ->toArray();
