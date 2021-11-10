@@ -15,26 +15,26 @@ class AddForeignKeysInModulesRegraAvaliacaoTable extends Migration
     {
         Schema::table('modules.regra_avaliacao', function (Blueprint $table) {
             $table->foreign('regra_diferenciada_id')
-               ->references('id')
-               ->on('modules.regra_avaliacao');
+                ->references('id')
+                ->on('modules.regra_avaliacao');
 
             $table->foreign(['tabela_arredondamento_id', 'instituicao_id'])
-               ->references(['id', 'instituicao_id'])
-               ->on('modules.tabela_arredondamento')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references(['id', 'instituicao_id'])
+                ->on('modules.tabela_arredondamento')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign(['formula_recuperacao_id', 'instituicao_id'])
-               ->references(['id', 'instituicao_id'])
-               ->on('modules.formula_media')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references(['id', 'instituicao_id'])
+                ->on('modules.formula_media')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign(['formula_media_id', 'instituicao_id'])
-               ->references(['id', 'instituicao_id'])
-               ->on('modules.formula_media')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references(['id', 'instituicao_id'])
+                ->on('modules.formula_media')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

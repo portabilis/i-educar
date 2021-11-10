@@ -15,9 +15,9 @@ class AddForeignKeysInModulesTransporteAlunoTable extends Migration
     {
         Schema::table('modules.transporte_aluno', function (Blueprint $table) {
             $table->foreign('aluno_id')
-               ->references('cod_aluno')
-               ->on('pmieducar.aluno')
-               ->onDelete('cascade');
+                ->references('cod_aluno')
+                ->on('pmieducar.aluno')
+                ->onDelete('cascade');
         });
     }
 

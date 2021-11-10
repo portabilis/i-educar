@@ -1,32 +1,49 @@
 <?php
 
-use App\Models\LegacyInstitution;
+namespace Database\Factories;
+
 use App\Models\LegacyRoundingTable;
-use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use RegraAvaliacao_Model_Nota_TipoValor;
 
-/** @var Factory $factory */
+class LegacyRoundingTableFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = LegacyRoundingTable::class;
 
-$factory->define(LegacyRoundingTable::class, function (Faker $faker) {
-    return [
-        'instituicao_id' => factory(LegacyInstitution::class)->state('unique')->make(),
-        'nome' => $faker->words(3, true),
-        'tipo_nota' => $faker->randomElement([1, 2]),
-    ];
-});
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition(): array
+    {
+        return [
+            'instituicao_id' => LegacyInstitutionFactory::new()->unique()->make(),
+            'nome' => $this->faker->words(3, true),
+            'tipo_nota' => $this->faker->randomElement([1, 2]),
+        ];
+    }
 
-$factory->state(LegacyRoundingTable::class, 'numeric', function (Faker $faker) use ($factory) {
-    $roundingTable = $factory->raw(LegacyRoundingTable::class);
+    public function numeric(): self
+    {
+        return $this->state(function (array $attributes) {
+            return array_merge($attributes, [
+                'tipo_nota' => RegraAvaliacao_Model_Nota_TipoValor::NUMERICA,
+            ]);
+        });
+    }
 
-    return array_merge($roundingTable, [
-        'tipo_nota' => RegraAvaliacao_Model_Nota_TipoValor::NUMERICA,
-    ]);
-});
-
-$factory->state(LegacyRoundingTable::class, 'conceitual', function () use ($factory) {
-    $roundingTable = $factory->raw(LegacyRoundingTable::class);
-
-    return array_merge($roundingTable, [
-        'tipo_nota' => RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL,
-    ]);
-});
+    public function conceitual(): self
+    {
+        return $this->state(function (array $attributes) {
+            return array_merge($attributes, [
+                'tipo_nota' => RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL,
+            ]);
+        });
+    }
+}

@@ -1,7 +1,5 @@
 <?php
 
-
-
 class CoreExt_EntityTest extends UnitBaseTest
 {
     public function testNovaInstanciaEMarcadaComoNew()

@@ -1,12 +1,10 @@
 <?php
 
-
-
 class CoreExt_EnumCoffeeStub extends CoreExt_Enum
 {
-    const AMERICANO = 0;
-    const MOCHA = 1;
-    const ESPRESSO = 2;
+    public const AMERICANO = 0;
+    public const MOCHA = 1;
+    public const ESPRESSO = 2;
 
     protected $_data = [
         self::AMERICANO => '',

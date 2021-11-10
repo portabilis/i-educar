@@ -1,18 +1,32 @@
 <?php
 
-use App\Models\LegacySchool;
+namespace Database\Factories;
+
 use App\Models\LegacySchoolAcademicYear;
-use App\Models\LegacyUser;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-/** @var Factory $factory */
+class LegacySchoolAcademicYearFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = LegacySchoolAcademicYear::class;
 
-$factory->define(LegacySchoolAcademicYear::class, function () {
-    return [
-        'ref_cod_escola' => factory(LegacySchool::class)->create(),
-        'ano' => now()->year,
-        'ref_usuario_cad' => factory(LegacyUser::class)->state('unique')->make(),
-        'andamento' => 1,
-        'data_cadastro' => now(),
-    ];
-});
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition(): array
+    {
+        return [
+            'ref_cod_escola' => LegacySchoolFactory::new()->create(),
+            'ano' => now()->year,
+            'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
+            'andamento' => 1,
+            'data_cadastro' => now(),
+        ];
+    }
+}

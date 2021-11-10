@@ -12,7 +12,6 @@ class CreateActiveLookingMenu extends Migration
      */
     public function up()
     {
-
         $parent_id = Menu::query()->where('old', 55)->firstOrFail()->id;
 
         Menu::query()->create([

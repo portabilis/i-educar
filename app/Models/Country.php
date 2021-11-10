@@ -9,9 +9,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Country extends Model
 {
-    use DateSerializer, HasIbgeCode;
+    use DateSerializer;
+    use HasIbgeCode;
 
-    const BRASIL = 45;
+    public const BRASIL = 45;
 
     /**
      * @var array

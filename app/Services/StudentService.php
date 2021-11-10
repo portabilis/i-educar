@@ -24,8 +24,7 @@ class StudentService
 
         $query = $student->registrations()
             ->where('status', 3)
-            ->where('is_last_registration', 1)
-        ;
+            ->where('is_last_registration', 1);
 
         if ($levelId) {
             $query->where('level_id', $levelId);

@@ -124,6 +124,8 @@ class clsJuridica
 
             if (is_numeric($this->cnpj)) {
                 $set[] = " cnpj = '{$this->cnpj}' ";
+            }else{
+                $set[] = " cnpj = NULL ";
             }
 
             if ($set) {

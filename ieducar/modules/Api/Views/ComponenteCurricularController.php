@@ -60,6 +60,7 @@ class ComponenteCurricularController extends ApiCoreController
             $modified = $this->getRequest()->modified;
 
             $where = '';
+            $wheres = [];
             $params = [$instituicaoId];
 
             if ($areaConhecimentoId) {
