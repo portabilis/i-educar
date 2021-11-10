@@ -17,7 +17,7 @@
                             @if($function->professor === 1)
                                 <td>{{$function->nm_curso}}</td>
                                 <td>
-                                    <a class="pointer modal-btn" id="{{$key}}"><i class="fa fa-eye"></i> Mostrar Detalhes</a>
+                                    <div class="pointer modal-btn" id="{{$key}}">Mostrar detalhe</div>
                                     <div class="name modal-{{$key}}">{{$function->nome}}</div>
                                 </td>
                             @else
@@ -93,7 +93,11 @@
     }
 
     .modal-btn {
-        color: #47728f;
+        color: #188ad1;
+    }
+
+    .modal-btn i {
+        color: #188ad1;
     }
 
     .modal-server-header h3 {
