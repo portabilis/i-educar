@@ -159,6 +159,8 @@ class ComponenteCurricularController extends ApiCoreController
             $areaConhecimentoId = $this->getRequest()->area_conhecimento_id;
             $allDisciplinesMulti = dbBool($this->getRequest()->allDisciplinesMulti);
 
+            $componentes = [];
+
             if ($allDisciplinesMulti) {
                 $componentes = $this->getComponentesTurmaMulti($turmaId, $areaConhecimentoId);
             }
@@ -193,7 +195,7 @@ class ComponenteCurricularController extends ApiCoreController
 
             if (count($componentesCurriculares) < 1) {
                 $sql = 'SELECT cc.id,
-                       cc.nome  
+                       cc.nome
                   FROM pmieducar.turma AS t
                 INNER JOIN pmieducar.escola_serie_disciplina esd ON (esd.ref_ref_cod_escola = t.ref_ref_cod_escola
                                                                  AND esd.ref_ref_cod_serie = coalesce($3, t.ref_ref_cod_serie)
