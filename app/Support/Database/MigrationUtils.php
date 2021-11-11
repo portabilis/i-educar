@@ -16,6 +16,11 @@ trait MigrationUtils
         DB::unprepared("DROP MATERIALIZED VIEW IF EXISTS {$view}");
     }
 
+    public function refreshMaterializedView($view)
+    {
+        DB::unprepared("REFRESH MATERIALIZED VIEW {$view}");
+    }
+
     public function executeSqlFile($filename)
     {
         DB::unprepared(
