@@ -192,14 +192,13 @@ class RegistrationService
      *
      * @param LegacyRegistration $registration
      * @param DateTime           $date
-     * @param bool            $ignoreRelocation
+     * @param bool               $ignoreRelocation
      */
     public function updateEnrollmentsDate(LegacyRegistration $registration, DateTime $date, bool $ignoreRelocation)
     {
         $date = $date->format('Y-m-d');
 
         foreach ($registration->enrollments as $enrollment) {
-
             if ($ignoreRelocation === false && $enrollment->remanejado) {
                 continue;
             }
@@ -217,11 +216,11 @@ class RegistrationService
         $allEnrollments = $registration->enrollments()->get();
 
         $nextEnrollments = $allEnrollments->filter(
-            fn($item) => $item->sequencial > $sequencial
+            fn ($item) => $item->sequencial > $sequencial
         );
 
         $previousEnrollments = $allEnrollments->filter(
-            fn($item) => $item->sequencial < $sequencial
+            fn ($item) => $item->sequencial < $sequencial
         );
 
         $this->updateNextEnrollmentsRegistrationDate($nextEnrollments, $date);
@@ -231,7 +230,6 @@ class RegistrationService
     private function updateNextEnrollmentsRegistrationDate(Collection $nextEnrollments, $date)
     {
         foreach ($nextEnrollments as $enrollment) {
-
             if (strtotime($enrollment->data_enturmacao->format('Y-m-d')) < strtotime($date)) {
                 $enrollment->data_enturmacao = $date;
             }
@@ -249,7 +247,6 @@ class RegistrationService
     private function updatePreviousEnrollmentsRegistrationDate(Collection $previousEnrollments, string $date)
     {
         foreach ($previousEnrollments as $enrollment) {
-
             if (strtotime($enrollment->data_enturmacao->format('Y-m-d')) > strtotime($date)) {
                 $enrollment->data_enturmacao = $date;
             }
