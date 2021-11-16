@@ -192,23 +192,74 @@ class RegistrationService
      *
      * @param LegacyRegistration $registration
      * @param DateTime           $date
-     * @param boolean            $relocated
+     * @param bool            $ignoreRelocation
      */
-    public function updateEnrollmentsDate(LegacyRegistration $registration, DateTime $date, $relocated)
+    public function updateEnrollmentsDate(LegacyRegistration $registration, DateTime $date, bool $ignoreRelocation)
     {
         $date = $date->format('Y-m-d');
 
-        $enrollment = $registration->lastEnrollment;
+        foreach ($registration->enrollments as $enrollment) {
 
-        if (empty($enrollment)) {
-            return;
+            if ($ignoreRelocation === false && $enrollment->remanejado) {
+                continue;
+            }
+
+            $enrollment->data_enturmacao = $date;
+            $enrollment->save();
+
+            $sequencial = $enrollment->sequencial;
+            $this->processEnrollmentsDates($registration, $sequencial, $date);
         }
+    }
 
-        if (!$relocated && $enrollment->remanejado) {
-            return;
+    private function processEnrollmentsDates(LegacyRegistration $registration, int $sequencial, string $date): void
+    {
+        $allEnrollments = $registration->enrollments()->get();
+
+        $nextEnrollments = $allEnrollments->filter(
+            fn($item) => $item->sequencial > $sequencial
+        );
+
+        $previousEnrollments = $allEnrollments->filter(
+            fn($item) => $item->sequencial < $sequencial
+        );
+
+        $this->updateNextEnrollmentsRegistrationDate($nextEnrollments, $date);
+        $this->updatePreviousEnrollmentsRegistrationDate($previousEnrollments, $date);
+    }
+
+    private function updateNextEnrollmentsRegistrationDate(Collection $nextEnrollments, $date)
+    {
+        foreach ($nextEnrollments as $enrollment) {
+
+            if (strtotime($enrollment->data_enturmacao->format('Y-m-d')) < strtotime($date)) {
+                $enrollment->data_enturmacao = $date;
+            }
+
+            if ($enrollment->data_exclusao !== null &&
+                strtotime($enrollment->data_exclusao->format('Y-m-d')) < strtotime($date)
+            ) {
+                $enrollment->data_exclusao = $date;
+            }
+
+            $enrollment->save();
         }
+    }
 
-        $enrollment->data_enturmacao = $date;
-        $enrollment->save();
+    private function updatePreviousEnrollmentsRegistrationDate(Collection $previousEnrollments, string $date)
+    {
+        foreach ($previousEnrollments as $enrollment) {
+
+            if (strtotime($enrollment->data_enturmacao->format('Y-m-d')) > strtotime($date)) {
+                $enrollment->data_enturmacao = $date;
+            }
+
+            if ($enrollment->data_exclusao !== null &&
+                strtotime($enrollment->data_exclusao->format('Y-m-d')) > strtotime($date)) {
+                $enrollment->data_exclusao = $date;
+            }
+
+            $enrollment->save();
+        }
     }
 }
