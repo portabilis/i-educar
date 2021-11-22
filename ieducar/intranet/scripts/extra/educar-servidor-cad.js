@@ -158,9 +158,10 @@ function popless(element) {
 }
 
 function popCurso(element) {
+  var novaFuncao = $j(element).closest('td').attr('id').replace(/\D/g, '');
   var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
   var campoServidor = document.getElementById('cod_servidor').value;
-  var codFuncao = $j(element).closest('tr').find('[id^=cod_servidor_funcao]').val();
+  var codFuncao = $j(element).closest('tr').find('[id^=cod_servidor_funcao]').val() || 'new_' + novaFuncao;
   pesquisa_valores_popless('educar_servidor_curso_lst.php?ref_cod_servidor=' + campoServidor + '&ref_cod_instituicao=' + campoInstituicao + '&ref_cod_servidor_funcao=' + codFuncao, '');
 }
 
