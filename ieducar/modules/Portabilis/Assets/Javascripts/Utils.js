@@ -3,6 +3,15 @@
 
 $j = jQuery.noConflict();
 
+(function($){
+  $(document).ready(function() {
+    if (typeof(getElementFor) === 'function') {
+      let instituicaoField = getElementFor('instituicao');
+      instituicaoField.removeAttr('selected').find('option:eq(1)').attr('selected', 'selected').change();
+    }
+  });
+})(jQuery);
+
 function linkUrlPrivada(url) {
   return '/abre-url-privada?url=' + encodeURI(url);
 }
