@@ -2,9 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Models\LegacyEmployee;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Console\Command;
 
 class DisableEmployeeLogin extends Command
 {
@@ -41,6 +40,7 @@ class DisableEmployeeLogin extends Command
 
         if ($notExists) {
             $this->info('Usuário não encontrado.');
+
             return;
         }
 
