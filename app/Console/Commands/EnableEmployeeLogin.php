@@ -29,17 +29,26 @@ class EnableEmployeeLogin extends Command
      */
     public function handle()
     {
-        if ($this->confirm('Deseja realmente ativar o usuário '.$this->argument('registration').' ?', true)) {
-            $registration = $this->argument('registration');
+        $cancel = $this->confirm('Deseja realmente ativar o usuário ' . $this->argument('registration') . ' ?', true) === false;
 
-            if (LegacyEmployee::where('matricula', $registration)->exists()) {
-                LegacyEmployee::where('matricula', $registration)
-                    ->update([
-                        'ativo' => 1,
-                    ]);
-
-                $this->info('Usuário ativado com sucesso!');
-            }
+        if ($cancel) {
+            return;
         }
+
+        $registration = $this->argument('registration');
+
+        $notExists = LegacyEmployee::where('matricula', $registration)->exists() === false;
+
+        if ($notExists) {
+            $this->info('Usuário não encontrado.');
+            return;
+        }
+
+        LegacyEmployee::where('matricula', $registration)
+            ->update([
+                'ativo' => 1,
+            ]);
+
+        $this->info('Usuário ativado com sucesso!');
     }
 }
