@@ -29,21 +29,21 @@ class DisableEmployeeLogin extends Command
      */
     public function handle()
     {
-        $cancel = $this->confirm('Deseja realmente desativar o usuário '.$this->argument('registration').' ?', true) === false;
-        
+        $registration = $this->argument('registration');
+
+        $cancel = $this->confirm('Deseja realmente desativar o usuário ' . $registration . ' ?', true) === false;
+
         if ($cancel) {
             return;
         }
-        
-        $registration = $this->argument('registration');
-        
+
         $notExists = LegacyEmployee::where('matricula', $registration)->exists() === false;
 
         if ($notExists) {
             $this->info('Usuário não encontrado.');
             return;
         }
-        
+
         LegacyEmployee::where('matricula', $registration)
             ->update([
                 'ativo' => 0,
