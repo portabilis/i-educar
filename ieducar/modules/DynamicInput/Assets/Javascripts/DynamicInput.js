@@ -22,6 +22,10 @@ function updateSelect($targetElement, options, emptyOptionHtml) {
     optgroup.appendTo($targetElement);
   }
 
+  if (options.length === 1) {
+    $targetElement.removeAttr('selected').find('option:eq(1)').attr('selected', 'selected').change();
+  }
+
   if (options.length > 0) {
     $targetElement.removeAttr('disabled');
     $targetElement.children('[value=""]').first().html(emptyOptionHtml || "Selecione uma op&ccedil;&atilde;o");
