@@ -159,6 +159,9 @@ return new class extends clsCadastro {
             }
         }
 
+        // remove dados que podem estar na session de outras consultas
+        Session::forget("cursos_por_funcao");
+
         $this->url_cancelar = ($retorno == 'Editar') ?
             "educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}" :
             'educar_servidor_lst.php';
