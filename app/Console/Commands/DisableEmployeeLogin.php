@@ -39,7 +39,7 @@ class DisableEmployeeLogin extends Command
         
         $notExists = LegacyEmployee::where('matricula', $registration)->exists() === false;
 
-        if (notExists) {
+        if ($notExists) {
             $this->info('Usuário não encontrado.');
             return;
         }
