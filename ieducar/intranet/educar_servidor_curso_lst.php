@@ -53,7 +53,7 @@ return new class extends clsCadastro {
         $this->cursos_servidor = array_keys($funcoes);
 
         if (!$this->cursos_servidor) {
-            $this->cursos_servidor = Session::get($this->ref_cod_servidor_funcao)['cursos_servidor'];
+            $this->cursos_servidor = Session::get('cursos_por_funcao')[$this->ref_cod_servidor_funcao]['cursos_servidor'];
         }
 
         return $retorno;
@@ -142,8 +142,10 @@ return new class extends clsCadastro {
         }
 
         Session::put([
-            $this->ref_cod_servidor_funcao => [
-                'cursos_servidor' => $curso_servidor
+            'cursos_por_funcao' => [
+                $this->ref_cod_servidor_funcao => [
+                    'cursos_servidor' => $curso_servidor
+                ],
             ],
             'cod_servidor' => $this->cod_servidor,
         ]);
