@@ -369,7 +369,7 @@ class DiarioController extends ApiCoreController
     {
         $regra = $this->getRegra($matriculaId);
 
-        return match ($regra->get('tipoRecuperacaoParalela')) {
+        return match ((int)$regra->get('tipoRecuperacaoParalela')) {
             RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPA => 'notaRecuperacaoParalela',
             RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPAS_ESPECIFICAS => 'notaRecuperacaoEspecifica',
             default => '',
