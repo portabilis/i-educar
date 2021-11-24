@@ -249,6 +249,7 @@ class PromocaoApiController extends ApiCoreController
                 ->orderBy('sequencial');
         }
 
+        $getStages = [];
         foreach ($stages->get() as $stage) {
             $getStages[] = $stage->sequencial;
         }
