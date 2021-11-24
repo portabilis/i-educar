@@ -31,8 +31,8 @@
           </defs>
         </svg>
       </p>
-      <p class="title">Oops! Ocorreu um erro!</p>
-      <p class="text">Fique tranquilo, estamos cientes e trabalhando na correção.</p>
+      <p class="title">Oops! Ocorreu um erro.</p>
+      <p class="text">Tente recarregar a página, se o problema persistir entre em contato com a Secretaria de Educação do seu município.</p>
       <p><a href="#" onclick="window.history.go(-1);return false;" class="btn">Voltar para a página anterior</a></p>
     </div>
   </div>
