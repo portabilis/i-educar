@@ -4,7 +4,7 @@
 $j = jQuery.noConflict();
 
 (function($){
-  $(document).ready(function() {
+  $(document).load(function() {
     if (typeof(getElementFor) === 'function') {
       let instituicaoField = getElementFor('instituicao');
       instituicaoField.removeAttr('selected').find('option:eq(1)').attr('selected', 'selected').change();
