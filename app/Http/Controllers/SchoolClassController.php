@@ -48,7 +48,8 @@ class SchoolClassController extends Controller
             $codEscola = $schoolClass->ref_ref_cod_escola;
 
             if (! empty($request->get('multiseriada'))) {
-                $multSerieId = $request->get('mult_serie_id');
+                $multSerieIds = $request->get('mult_serie_id');
+                $multSerieId = is_array($multSerieIds) ? $multSerieIds : [];
                 $multBoletimId = $request->get('mult_boletim_id');
                 $multBoletimDiferenciadoId = $request->get('mult_boletim_diferenciado_id');
 
