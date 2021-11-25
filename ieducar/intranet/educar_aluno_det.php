@@ -461,7 +461,7 @@ return new class extends clsDetalhe {
                         align=\'center\'>
                           <td>
                             <a href=\'' . $this->urlPresigner()->getPresignedUrl($documento->url) . '\'
-                               target=\'_blank\' > Visualizar documento ' . (count($documento) > 1 ? ($key + 1) : '') . '
+                               target=\'_blank\' > Visualizar documento ' . ((is_array($documento) && count($documento)) > 1 ? ($key + 1) : '') . '
                             </a>
                           </td>
                     </tr>';
