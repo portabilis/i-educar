@@ -23,6 +23,7 @@ return new class extends clsCadastro {
 
         $this->cod_servidor = $_GET['ref_cod_servidor'];
         $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
+        $this->ref_cod_servidor_funcao = $_GET['ref_cod_servidor_funcao'] ?: 0;
 
         $obj_permissoes = new clsPermissoes();
 
@@ -47,22 +48,12 @@ return new class extends clsCadastro {
             }
         }
 
-        $this->cursos_servidor = Session::get('cursos_servidor');
+        $funcoes = Session::get("servant:{$this->cod_servidor}", []);
+        $funcoes = $funcoes[$this->ref_cod_servidor_funcao] ?? [];
+        $this->cursos_servidor = array_keys($funcoes);
 
         if (!$this->cursos_servidor) {
-            $obj_servidor_curso = new clsPmieducarServidorCursoMinistra();
-
-            $lst_servidor_curso = $obj_servidor_curso->lista(
-                null,
-                $this->ref_cod_instituicao,
-                $this->cod_servidor
-            );
-
-            if ($lst_servidor_curso) {
-                foreach ($lst_servidor_curso as $curso) {
-                    $this->cursos_servidor[$curso['ref_cod_curso']] = $curso['ref_cod_curso'];
-                }
-            }
+            $this->cursos_servidor = Session::get('cursos_por_funcao')[$this->ref_cod_servidor_funcao]['cursos_servidor'];
         }
 
         return $retorno;
@@ -71,6 +62,7 @@ return new class extends clsCadastro {
     public function Gerar()
     {
         $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
+        $this->campoOculto('ref_cod_servidor_funcao', $this->ref_cod_servidor_funcao);
         $opcoes = $opcoes_curso = ['' => 'Selecione'];
 
         $obj_cursos = new clsPmieducarCurso();
@@ -150,7 +142,11 @@ return new class extends clsCadastro {
         }
 
         Session::put([
-            'cursos_servidor' => $curso_servidor,
+            'cursos_por_funcao' => [
+                $this->ref_cod_servidor_funcao => [
+                    'cursos_servidor' => $curso_servidor
+                ],
+            ],
             'cod_servidor' => $this->cod_servidor,
         ]);
         Session::save();
