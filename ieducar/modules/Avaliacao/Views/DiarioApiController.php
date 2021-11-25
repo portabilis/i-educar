@@ -1434,7 +1434,7 @@ class DiarioApiController extends ApiCoreController
             $etapas = $regraRecuperacao->getEtapas();
             $sumNota = 0;
             foreach ($etapas as $key => $_etapa) {
-                $sumNota += $this->getNotaOriginal($_etapa, $componenteCurricularId);
+                $sumNota += (int)$this->getNotaOriginal($_etapa, $componenteCurricularId);
             }
 
             // caso a média das notas da etapa seja menor que média definida na regra e a última nota tenha sido lançada
