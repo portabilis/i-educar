@@ -56,7 +56,7 @@ return new class extends clsCadastro {
         $this->campoRotulo('nm_pessoa', 'Nome do Aluno', $enturmacao['nome']);
         $this->campoRotulo('sequencial', 'Sequencial', $enturmacao['sequencial']);
 
-        $situacao = match ($matricula['aprovado']) {
+        $situacao = match ((int)$matricula['aprovado']) {
             1 => 'Aprovado',
             2 => 'Reprovado',
             3 => 'Cursando',
