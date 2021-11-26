@@ -266,6 +266,7 @@ return new class extends clsCadastro {
         }
 
         $tiposBoletim = Portabilis_Model_Report_TipoBoletim::getInstance()->getEnums();
+        asort($tiposBoletim);
         $tiposBoletim = Portabilis_Array_Utils::insertIn(null, 'Selecione um modelo', $tiposBoletim);
 
         $this->campoTabelaInicio('turma_serie', 'Séries da turma', ['Curso', 'Série', 'Boletim', 'Boletim diferenciado'], $this->turma_serie);

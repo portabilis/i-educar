@@ -52,6 +52,7 @@ class SerieController extends ApiCoreController
                 WHERE TRUE
                 AND c.ref_cod_instituicao = $1
                 AND c.ativo = 1
+                AND es.ativo = 1
             ';
 
             if ($escolaId) {
