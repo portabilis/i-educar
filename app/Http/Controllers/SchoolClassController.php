@@ -77,6 +77,8 @@ class SchoolClassController extends Controller
                     $etapasUtilizadas,
                     $etapasEspecificas
                 );
+                $multiGradesService = new MultiGradesService();
+                $multiGradesService->deleteAllGradesOfSchoolClass($schoolClass);
             }
 
             if ($codigoInepEducacenso) {
@@ -139,10 +141,15 @@ class SchoolClassController extends Controller
     {
         $params = $request->all();
         $legacySchoolClass = new LegacySchoolClass();
+
         if (!empty($params['cod_turma'])) {
             $legacySchoolClass = LegacySchoolClass::find($params['cod_turma']);
         }
         $pessoaLogada = $request->user()->id;
+
+        if (empty($params['multiseriada'])) {
+            $params['multiseriada'] = 0;
+        }
 
         if (isset($params['dias_semana'])) {
             $params['dias_semana'] = '{' . implode(',', $params['dias_semana']) . '}';
