@@ -18,6 +18,10 @@ class IncompatibleAbsenceType implements Rule
      */
     public function passes($attribute, $value)
     {
+        if (empty($value)) {
+            return;
+        }
+
         $schoolClass = $value[0]['turma_id'];
         $schoolClass = LegacySchoolClass::find($schoolClass);
         $grades = array_column($value, 'serie_id');
