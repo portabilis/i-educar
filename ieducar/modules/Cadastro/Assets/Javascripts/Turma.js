@@ -372,8 +372,17 @@ $j(document).ready(function() {
     $j('#ano_letivo').val($j('#ano').val());
   });
 
+  $j('#ref_cod_escola').on('change', function(){
+    $j('#ref_cod_escola_').val($j('#ref_cod_escola').val());
+  });
+
+  $j('#ref_cod_curso').on('change', function(){
+    $j('#ref_cod_curso_').val($j('#ref_cod_curso').val());
+  });
+
   $j('#ref_cod_serie').on('change', function(){
     atualizaOpcoesDeDisciplinas();
+    $j('#ref_cod_serie_').val($j('#ref_cod_serie').val());
   });
 
   $j("#tipo_boletim, #tipo_boletim_diferenciado").chosen({
