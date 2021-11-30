@@ -417,14 +417,6 @@ var $linkToCreatePessoaResponsavel = $linkToCreatePessoaPai
     .appendTo($pessoaResponsavelActionBar)
     .css('display', 'none');
 
-var $linkToEditPessoaResponsavel = $linkToEditPessoaPai
-    .clone()
-    .removeClass('editar-pessoa-pai')
-    .addClass('editar-pessoa-responsavel')
-    .attr('id', 'editar-pessoa-responsavel-link')
-    .appendTo($pessoaResponsavelActionBar);
-
-
 // adiciona id 'stop' na linha separadora
 $j('.tableDetalheLinhaSeparador').closest('tr').attr('id', 'stop');
 // Adiciona abas na página
@@ -2185,12 +2177,6 @@ function canShowParentsFields() {
         $j("#editar-pessoa-mae-link").click(function () {
             if ($j('#pessoa_id').val()) {
                 openEditModalParent('mae');
-            }
-        });
-
-        $j("#editar-pessoa-responsavel-link").click(function () {
-            if ($j('#pessoa_id').val()) {
-                openEditModalParent('responsavel');
             }
         });
 
