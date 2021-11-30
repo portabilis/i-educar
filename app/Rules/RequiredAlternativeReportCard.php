@@ -21,6 +21,10 @@ class RequiredAlternativeReportCard implements Rule
      */
     public function passes($attribute, $value)
     {
+        if (empty($value)) {
+            return false;
+        }
+
         $schoolClass = $value[0]['turma_id'];
         $schoolClass = LegacySchoolClass::find($schoolClass);
         $year = $schoolClass->ano;
