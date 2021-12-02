@@ -21,12 +21,6 @@ class RemoveHtmlTagsStringService
            return $text;
         }
 
-        $text = preg_replace(self::PATTERNS, '', $text);
-
-        if ($text === null) {
-            throw new \Exception('Erro ao remover html tags.');
-        }
-
-        return $text;
+        return preg_replace(self::PATTERNS, '', $text);
     }
 }
