@@ -6,11 +6,13 @@ class RemoveHtmlTagsStringService
 {
     public const PATTERNS = [
         '/style=\"([^"]*)"/mi',
+        '/style=\\\"([^"]*)"/mi',
         '/<style.*?<\/style>/mi',
         '/(<style[\w\W]+style>)/mi',
         '/(?<=;|"|\s)font-family:[^;\']*(;)?/mi',
         '/font-family:[^;\']*(;)?/mi',
-        '/(<font[^>]*>)|(<\/font>)/'
+        '/(<font[^>]*>)|(<\/font>)/',
+        '/<span.*?<\/span>/mi'
     ];
 
     public function execute(string $text): string
