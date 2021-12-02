@@ -15,8 +15,12 @@ class RemoveHtmlTagsStringService
         '/<span.*?<\/span>/mi'
     ];
 
-    public function execute(string $text): string
+    public function execute(string $text = ''): string
     {
+        if (empty($text) === true) {
+           return $text;
+        }
+
         $text = preg_replace(self::PATTERNS, '', $text);
 
         if ($text === null) {
