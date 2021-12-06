@@ -39,9 +39,11 @@ class PromocaoApiController extends ApiCoreController
         $serieId = empty($this->getRequest()->serie) ? 0 : $this->getRequest()->serie;
         $turmaId = empty($this->getRequest()->turma) ? 0 : $this->getRequest()->turma;
         $matricula = empty($this->getRequest()->matricula) ? 10 : $this->getRequest()->matricula;
-        $sql = 'SELECT m.cod_matricula
-              FROM pmieducar.matricula AS m
-        INNER JOIN pmieducar.matricula_turma AS mt ON m.cod_matricula = mt.ref_cod_matricula
+        $regraDeAvaliacao = empty($this->getRequest()->regras_avaliacao_id) ? 0 : $this->getRequest()->turma;
+
+        $sql = 'SELECT m.cod_matricula FROM pmieducar.matricula AS m
+                INNER JOIN pmieducar.matricula_turma AS mt ON m.cod_matricula = mt.ref_cod_matricula
+                INNER JOIN pmieducar.serie as s on m.ref_ref_cod_serie = s.cod_serie
              WHERE m.ano = $1
                AND m.ativo = 1
                AND mt.ref_cod_matricula = m.cod_matricula
@@ -53,10 +55,11 @@ class PromocaoApiController extends ApiCoreController
                AND (CASE WHEN $6 = 0  THEN true else $6 = mt.ref_cod_turma END)
                AND (CASE WHEN $7 = 10 THEN true
                          WHEN $7 = 9  THEN m.aprovado NOT IN (4,6) ELSE $6 = m.aprovado END)
+                AND (CASE WHEN $8 = 0  THEN true ELSE $8 = s.regra_avaliacao_id END)
           ORDER BY ref_cod_matricula
              LIMIT 1';
 
-        $options = ['params' => [$this->getRequest()->ano, $currentMatriculaId, $escolaId, $cursoId, $serieId, $turmaId, $matricula],
+        $options = ['params' => [$this->getRequest()->ano, $currentMatriculaId, $escolaId, $cursoId, $serieId, $turmaId, $matricula,$regraDeAvaliacao],
             'return_only' => 'first-field'];
 
         return Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
@@ -342,21 +345,24 @@ class PromocaoApiController extends ApiCoreController
             $serieId = empty($this->getRequest()->serie) ? 0 : $this->getRequest()->serie;
             $turmaId = empty($this->getRequest()->turma) ? 0 : $this->getRequest()->turma;
             $matricula = empty($this->getRequest()->matricula) ? 10 : $this->getRequest()->matricula;
+            $regraDeAvaliacao = empty($this->getRequest()->regras_avaliacao_id) ? 0 : $this->getRequest()->regras_avaliacao_id;
+
             $sql = 'SELECT count(m.cod_matricula)
                     FROM pmieducar.matricula AS m
-                INNER JOIN pmieducar.matricula_turma AS mt ON mt.ref_cod_matricula = m.cod_matricula
+                    INNER JOIN pmieducar.matricula_turma AS mt ON mt.ref_cod_matricula = m.cod_matricula
+                    INNER JOIN pmieducar.serie as s on m.ref_ref_cod_serie = s.cod_serie
                     WHERE m.ano = $1
-                        AND m.ativo = 1
-                        AND mt.ref_cod_matricula = m.cod_matricula
-                        AND mt.ativo = 1
-                        AND (CASE WHEN $2 = 0  THEN true ELSE $2 = m.ref_ref_cod_escola END)
-                        AND (CASE WHEN $3 = 0  THEN true ELSE $3 = m.ref_cod_curso END)
-                        AND (CASE WHEN $4 = 0  THEN true ELSE $4 = m.ref_ref_cod_serie END)
-                        AND (CASE WHEN $5 = 0  THEN true ELSE $5 = mt.ref_cod_turma END)
-                        AND (CASE WHEN $6 = 10 THEN true
-                                WHEN $6 = 9  THEN m.aprovado NOT IN (4,6) ELSE $6 = m.aprovado END)';
+                      AND m.ativo = 1
+                      AND mt.ref_cod_matricula = m.cod_matricula
+                      AND mt.ativo = 1
+                      AND (CASE WHEN $2 = 0  THEN true ELSE $2 = m.ref_ref_cod_escola END)
+                      AND (CASE WHEN $3 = 0  THEN true ELSE $3 = m.ref_cod_curso END)
+                      AND (CASE WHEN $4 = 0  THEN true ELSE $4 = m.ref_ref_cod_serie END)
+                      AND (CASE WHEN $5 = 0  THEN true ELSE $5 = mt.ref_cod_turma END)
+                      AND (CASE WHEN $6 = 10 THEN true WHEN $6 = 9  THEN m.aprovado NOT IN (4,6) ELSE $6 = m.aprovado END)
+                      AND (CASE WHEN $7 = 0  THEN true ELSE $7 = s.regra_avaliacao_id END)';
 
-            $options = ['params' => [$this->getRequest()->ano, $escolaId, $cursoId, $serieId, $turmaId, $matricula], 'return_only' => 'first-field'];
+            $options = ['params' => [$this->getRequest()->ano, $escolaId, $cursoId, $serieId, $turmaId, $matricula, $regraDeAvaliacao], 'return_only' => 'first-field'];
 
             return Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
         }
