@@ -20,8 +20,9 @@ class clsPmieducarNotaAluno extends Model
     public $modulo;
     public $ref_cod_curso_disciplina;
     public $nota;
+    public $etapa;
 
-    public function __construct($cod_nota_aluno = null, $ref_sequencial = null, $ref_ref_cod_tipo_avaliacao = null, $ref_cod_serie = null, $ref_cod_escola = null, $ref_cod_disciplina = null, $ref_cod_matricula = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $modulo = null, $ref_cod_curso_disciplina = null, $nota = null)
+    public function __construct($cod_nota_aluno = null, $ref_sequencial = null, $ref_ref_cod_tipo_avaliacao = null, $ref_cod_serie = null, $ref_cod_escola = null, $ref_cod_disciplina = null, $ref_cod_matricula = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $modulo = null, $ref_cod_curso_disciplina = null, $nota = null, $etapa = null)
     {
         $db = new clsBanco();
         $this->_schema = 'pmieducar.';
@@ -68,6 +69,9 @@ class clsPmieducarNotaAluno extends Model
         }
         if (is_numeric($nota)) {
             $this->nota = $nota;
+        }
+        if(is_numeric($etapa)){
+            $this->etapa = $etapa;
         }
     }
 
@@ -231,7 +235,7 @@ class clsPmieducarNotaAluno extends Model
      *
      * @return array
      */
-    public function lista($int_cod_nota_aluno = null, $int_ref_sequencial = null, $int_ref_ref_cod_tipo_avaliacao = null, $int_ref_cod_serie = null, $int_ref_cod_escola = null, $int_ref_cod_disciplina = null, $int_ref_cod_matricula = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_modulo = null, $int_ref_cod_curso_disciplina = null, $int_nota = null)
+    public function lista($int_cod_nota_aluno = null, $int_ref_sequencial = null, $int_ref_ref_cod_tipo_avaliacao = null, $int_ref_cod_serie = null, $int_ref_cod_escola = null, $int_ref_cod_disciplina = null, $int_ref_cod_matricula = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_modulo = null, $int_ref_cod_curso_disciplina = null, $int_nota = null, $int_etapa = null)
     {
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = '';
@@ -308,6 +312,10 @@ class clsPmieducarNotaAluno extends Model
         if (is_numeric($int_nota)) {
             $filtros .= "{$whereAnd} nota = '{$int_nota}'";
             $whereAnd = ' AND ';
+        }
+        if(is_numeric($int_etapa)){
+            $filtros .= "{$whereAnd} etapa '{$int_etapa}'";
+            $whereAnd = 'AND ';
         }
 
         $db = new clsBanco();
@@ -1007,6 +1015,85 @@ class clsPmieducarNotaAluno extends Model
 
         return $db->CampoUnico($sql);
     }
+
+public function notas($ref_cod_matricula, $etapa)
+    {
+   $sql = "
+   SELECT 
+   cc.nome, 
+   STRING_AGG (ncc.nota_arredondada::character varying, ',' ORDER BY ncc.etapa ASC ) AS Notas
+
+    FROM pmieducar.matricula AS m
+
+    JOIN modules.nota_aluno AS na
+        ON na.matricula_id = m.cod_matricula
+
+    JOIN modules.nota_componente_curricular AS ncc
+        ON ncc.nota_aluno_id = na.id
+
+    JOIN modules.componente_curricular AS cc
+        ON ncc.componente_curricular_id = cc.id
+";
+
+$whereAnd = 'WHERE';
+$join = '';
+$filtros = '';
+
+if(is_numeric($ref_cod_matricula)){
+    $filtros .= "{$whereAnd} cod_matricula = '{$ref_cod_matricula}' ";
+    $whereAnd = "AND ";
+}
+
+if (is_numeric($etapa)) {
+    $filtros .= "{$whereAnd} etapa = '{$etapa}'";
+    $whereAnd = "AND ";
+}
+
+$db = new clsBanco();
+$countCampos = count(explode(',', " notas,etapa"));
+$resultado = [];
+
+$sql .= $filtros ."GROUP BY cc.nome". $this->getOrderby() . $this->getLimite();
+
+$this->_total = $db->CampoUnico("SELECT COUNT(0) FROM pmieducar.matricula AS m
+
+JOIN modules.nota_aluno AS na
+	ON na.matricula_id = m.cod_matricula
+
+JOIN modules.nota_componente_curricular AS ncc
+	ON ncc.nota_aluno_id = na.id
+
+JOIN modules.componente_curricular AS cc
+	ON ncc.componente_curricular_id = cc.id
+
+{$filtros}
+GROUP BY cc.nome");
+
+
+$db->Consulta($sql);
+if ($countCampos > 1) {
+    while ($db->ProximoRegistro()) {
+        $tupla = $db->Tupla();
+
+        $tupla['_total'] = $this->_total;
+        $resultado[] = $tupla;
+    }
+} else {
+    while ($db->ProximoRegistro()) {
+        $tupla = $db->Tupla();
+        $resultado[] = $tupla;
+    }
+}
+
+if (count($resultado)) {
+    return $resultado;
+   
+}
+
+return false;
+
+
+}
 
     /**
      * Retorna uma variável com o resultado

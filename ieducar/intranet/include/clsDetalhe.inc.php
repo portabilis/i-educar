@@ -16,6 +16,7 @@ class clsDetalhe extends Core_Controller_Page_Abstract
     public $array_botao;
     public $array_botao_url;
     public $array_botao_url_script;
+    public $text_align;
 
     public function addDetalhe($detalhe)
     {
@@ -44,6 +45,7 @@ class clsDetalhe extends Core_Controller_Page_Abstract
         ob_end_clean();
 
         $width = empty($this->largura) ? '' : 'width=' . $this->largura;
+        $text_align = empty($this->text_align) ? '' : 'text_align=' . $this->text_align;
 
         $barra = '<b>' . $this->titulo . '</b>';
 

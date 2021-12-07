@@ -1111,6 +1111,53 @@ class clsPmieducarAluno extends Model
         return false;
     }
 
+    public function pegarMatriculaIdpes($int_ref_idpes){
+     
+        $sql= "
+        
+        SELECT
+        m.cod_matricula, a.cod_aluno
+    FROM
+        cadastro.pessoa p
+    JOIN pmieducar.aluno AS a
+        ON (p.idpes = a.ref_idpes)
+    JOIN pmieducar.matricula as m
+        ON (a.cod_aluno = m.ref_cod_aluno)
+        
+        
+        ";
+
+     $whereAnd = 'WHERE';
+     $join = '';
+     $filtros = '';
+     
+     if(is_numeric($int_ref_idpes)){
+         $filtros .= "{$whereAnd} idpes ='{$int_ref_idpes}'";
+         $whereAnd .= "AND ";
+     }
+
+     $db = new clsBanco();
+     $resultado = [];
+    
+
+     $sql .= $filtros . $this->getOrderby() . $this->getLimite();
+   
+    
+    
+   $db->Consulta($sql);
+
+   $db->ProximoRegistro();
+  
+
+   return $db->Tupla();
+   
+   
+    
+      
+
+    }
+  
+
     /**
      * Retorna um array com os dados de um registro
      *

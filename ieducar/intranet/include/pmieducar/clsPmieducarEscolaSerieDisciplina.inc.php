@@ -282,6 +282,206 @@ class clsPmieducarEscolaSerieDisciplina extends Model
 
         return false;
     }
+    public function faltaComponente($int_ref_cod_matricula){
+
+        $sql = "
+        SELECT  
+  cc.nome, 
+  STRING_AGG (fcc.quantidade::character varying, ',' ORDER BY fcc.etapa ASC) AS Faltas
+
+
+FROM pmieducar.matricula AS m
+JOIN modules.falta_aluno AS fa
+	ON fa.matricula_id = m.cod_matricula
+JOIN modules.falta_componente_curricular AS fcc
+	ON fa.id = fcc.falta_aluno_id
+JOIN modules.componente_curricular AS cc
+	ON fcc.componente_curricular_id = cc.id
+        ";
+        $whereAnd = 'WHERE ';
+        $join = '';
+        $filtros = '';
+
+    
+        if(is_numeric($int_ref_cod_matricula)){
+            $filtros .= "{$whereAnd} cod_matricula = '{$int_ref_cod_matricula}' ";
+            $whereAnd = "AND ";
+        }
+      
+        
+
+        $db = new clsBanco();
+        $countCampos = count(explode(',',"cc.nome, fcc.quantidade"));
+        $resultado = [];
+
+        $sql .= $filtros ."GROUP BY cc.nome". $this->getOrderby() . $this->getLimite();
+
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM pmieducar.matricula AS m
+        JOIN modules.falta_aluno AS fa
+            ON fa.matricula_id = m.cod_matricula
+        JOIN modules.falta_componente_curricular AS fcc
+            ON fa.id = fcc.falta_aluno_id
+        JOIN modules.componente_curricular AS cc
+            ON fcc.componente_curricular_id = cc.id
+        
+         {$filtros}
+         GROUP BY cc.nome");
+         
+        $db->Consulta($sql);
+        if ($countCampos > 1) {
+            while ($db->ProximoRegistro()) {
+                $tupla = $db->Tupla();
+
+                $tupla['_total'] = $this->_total;
+                $resultado[] = $tupla;
+            }
+        } else {
+            while ($db->ProximoRegistro()) {
+                $tupla = $db->Tupla();
+                $resultado[] = $tupla["fcc.quantidade"];
+            }
+        }
+
+        if (count($resultado)) {
+            return $resultado;
+        }
+
+        return false;
+
+
+    }
+
+    
+    public function faltaGeral($int_ref_cod_matricula){
+        
+        $sql = "
+        SELECT
+      STRING_AGG (fg.quantidade::character varying, ',' ORDER BY fg.etapa ASC) AS Faltas
+      
+     FROM pmieducar.matricula AS m
+      JOIN modules.falta_aluno AS fa
+          ON fa.matricula_id = m.cod_matricula
+      JOIN modules.falta_geral AS fg
+          ON fa.id = fg.falta_aluno_id";
+
+
+        $whereAnd = ' WHERE';
+        $join = '';
+        $filtros = '';
+
+
+
+         $filtros .= "{$whereAnd} cod_matricula = '{$int_ref_cod_matricula}'";
+         $whereAnd = 'AND ';
+    
+    
+     
+        $db = new clsBanco();
+        $countCampos = count(explode(',',"fg.quantidade"));
+        $resultado = [];
+
+        $sql .= $filtros . $this->getOrderby() . $this->getLimite();
+
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM pmieducar.matricula AS m
+        JOIN modules.falta_aluno AS fa
+            ON fa.matricula_id = m.cod_matricula
+        JOIN modules.falta_geral AS fg
+            ON fa.id = fg.falta_aluno_id
+        
+         {$filtros}
+        ");
+         
+        $db->Consulta($sql);
+        if ($countCampos > 1) {
+            while ($db->ProximoRegistro()) {
+                $tupla = $db->Tupla();
+
+                $tupla['_total'] = $this->_total;
+                $resultado[] = $tupla;
+            }
+        } else {
+            while ($db->ProximoRegistro()) {
+                $tupla = $db->Tupla();
+                $resultado[] = $tupla;
+            }
+        }
+     
+        if (count($resultado)) {
+            return $resultado;
+        }
+
+        return false;
+
+
+        
+    }
+
+    public function componenteCurricularNomes($int_ref_ref_cod_serie){
+
+        $sql = "
+        
+        SELECT cc.nome
+
+FROM modules.componente_curricular AS cc
+
+JOIN pmieducar.escola_serie_disciplina AS esd
+	ON esd.ref_cod_disciplina = cc.id
+JOIN modules.componente_curricular_turma AS cct
+	ON cct.componente_curricular_id = cc.id
+JOIN pmieducar.matricula_turma AS mt
+	ON cct.turma_id = mt.ref_cod_turma
+JOIN pmieducar.matricula AS m
+	ON mt.ref_cod_matricula = m.cod_matricula
+        ";
+
+    $whereAnd = 'WHERE';
+    $filtros = '';
+
+        $filtros .= "{$whereAnd} esd.ref_ref_cod_serie = '{$int_ref_ref_cod_serie}'";
+        $whereAnd = 'AND ';
+        
+        $db = new clsBanco();
+        $countCampos = count(explode(',',"cc.nome"));
+        $resultado = [];
+        $sql .= $filtros. "GROUP BY cc.nome" . $this->getOrderby() . $this->getLimite();
+
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM modules.componente_curricular AS cc
+
+        JOIN pmieducar.escola_serie_disciplina AS esd
+            ON esd.ref_cod_disciplina = cc.id
+        JOIN modules.componente_curricular_turma AS cct
+            ON cct.componente_curricular_id = cc.id
+        JOIN pmieducar.matricula_turma AS mt
+            ON cct.turma_id = mt.ref_cod_turma
+        JOIN pmieducar.matricula AS m
+            ON mt.ref_cod_matricula = m.cod_matricula
+        
+         {$filtros}
+         GROUP BY cc.nome
+        ");
+         $db->Consulta($sql);
+         if ($countCampos > 1) {
+             while ($db->ProximoRegistro()) {
+                 $tupla = $db->Tupla();
+ 
+                 $tupla['_total'] = $this->_total;
+                 $resultado[] = $tupla;
+             }
+         } else {
+             while ($db->ProximoRegistro()) {
+                 $tupla = $db->Tupla();
+                 $resultado[] = $tupla;
+             }
+         }
+      
+         if (count($resultado)) {
+             return $resultado;
+         }
+ 
+         return false;
+
+    }
+
 
     /**
      * Retorna um array com os dados de um registro.

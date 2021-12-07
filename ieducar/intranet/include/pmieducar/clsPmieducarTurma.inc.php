@@ -956,7 +956,7 @@ class clsPmieducarTurma extends Model
      *
      * @return array
      */
-    public function lista($int_cod_turma = null, z $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_ref_cod_serie = null, $int_ref_ref_cod_escola = null, $int_ref_cod_infra_predio_comodo = null, $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_turma_tipo = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null, $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = null, $int_ref_cod_instituicao = null, $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null, $bool_verifica_serie_multiseriada = false, $bool_tem_alunos_aguardando_nota = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null, $somenteAnoLetivoEmAndamento = false)
+    public function lista($int_cod_turma = null,  $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_ref_cod_serie = null, $int_ref_ref_cod_escola = null, $int_ref_cod_infra_predio_comodo = null, $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_turma_tipo = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null, $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = null, $int_ref_cod_instituicao = null, $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null, $bool_verifica_serie_multiseriada = false, $bool_tem_alunos_aguardando_nota = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null, $somenteAnoLetivoEmAndamento = false)
     {
         $db = new clsBanco();
 
@@ -1379,6 +1379,8 @@ class clsPmieducarTurma extends Model
 
         return false;
     }
+  
+
 
     /**
      * Retorna uma lista filtrados de acordo com os parametros
@@ -1585,6 +1587,67 @@ class clsPmieducarTurma extends Model
 
         return false;
     }
+
+    public function pegarTurma($ref_cod_matricula)
+    {
+        $sql = "
+        
+        SELECT a.cod_serie,c.ref_cod_turma ,b.ref_cod_aluno, c.ref_cod_matricula, d.nm_turma
+
+        FROM pmieducar.serie AS a
+        
+        JOIN pmieducar.matricula AS b
+        
+        ON a.cod_serie = b.ref_ref_cod_serie
+        
+        JOIN  pmieducar.matricula_turma as c
+        
+        ON b.cod_matricula = c.ref_cod_matricula
+        
+        JOIN pmieducar.turma AS d
+        
+        ON c.ref_cod_turma = d.cod_turma
+        
+        
+        ";
+    $filtros = '';
+    $whereAnd = 'WHERE';
+
+    if(is_numeric($ref_cod_matricula)){
+        $filtros .= "{$whereAnd} ref_cod_matricula = '{$ref_cod_matricula}'";
+        $whereAnd = 'AND ';
+    }
+
+
+        $db = new clsBanco;
+        $resultado = [];
+        $sql .= $filtros . $this->getOrderby() . $this->getLimite();
+   
+    
+    
+   $db->Consulta($sql);
+   $countCampos = count(explode(',', "ref_cod_turma"));
+  
+   if ($countCampos > 1) {
+    while ($db->ProximoRegistro()) {
+        $tupla = $db->Tupla();
+
+        $tupla['_total'] = $this->_total;
+        $resultado[] = $tupla;
+    }
+} else {
+    while ($db->ProximoRegistro()) {
+        $tupla = $db->Tupla();
+        $resultado[] = $tupla['ref_cod_turma'];
+    }
+}
+if (count($resultado)) {
+    return $resultado;
+}
+
+return false;
+    }
+    
 
     /**
      * Retorna um array com os dados de um registro
