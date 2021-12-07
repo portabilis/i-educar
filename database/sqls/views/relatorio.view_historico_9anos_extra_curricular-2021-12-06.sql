@@ -27,7 +27,7 @@ SELECT
                 AND historico_escolar_1.sequencial = hd.ref_sequencial
         WHERE true
             AND hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
-            AND fcn_upper(hd.nm_disciplina::text) = fcn_upper(hd.nm_disciplina::text)
+            AND fcn_upper(hd.nm_disciplina::text) = fcn_upper(historico_disciplinas.nm_disciplina::text)
             AND historico_escolar_1.ativo = 1
             AND historico_escolar_1.extra_curricular = 1
             AND historico_escolar_1.ano = (
@@ -79,7 +79,7 @@ SELECT
                 AND historico_escolar_1.sequencial = hd.ref_sequencial
         WHERE true
             AND hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
-            AND fcn_upper(hd.nm_disciplina::text) = fcn_upper(hd.nm_disciplina::text)
+            AND fcn_upper(hd.nm_disciplina::text) = fcn_upper(historico_disciplinas.nm_disciplina::text)
             AND historico_escolar_1.ativo = 1
             AND historico_escolar_1.extra_curricular = 1
             AND historico_escolar_1.ano = (
@@ -131,7 +131,7 @@ SELECT
                 AND historico_escolar_1.sequencial = hd.ref_sequencial
         WHERE true
             AND hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
-            AND fcn_upper(hd.nm_disciplina::text) = fcn_upper(hd.nm_disciplina::text)
+            AND fcn_upper(hd.nm_disciplina::text) = fcn_upper(historico_disciplinas.nm_disciplina::text)
             AND historico_escolar_1.ativo = 1
             AND historico_escolar_1.extra_curricular = 1
             AND historico_escolar_1.ano = (
@@ -183,7 +183,7 @@ SELECT
                 AND historico_escolar_1.sequencial = hd.ref_sequencial
         WHERE true
             AND hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
-            AND fcn_upper(hd.nm_disciplina::text) = fcn_upper(hd.nm_disciplina::text)
+            AND fcn_upper(hd.nm_disciplina::text) = fcn_upper(historico_disciplinas.nm_disciplina::text)
             AND historico_escolar_1.ativo = 1
             AND historico_escolar_1.extra_curricular = 1
             AND historico_escolar_1.ano = (
@@ -235,7 +235,7 @@ SELECT
                 AND historico_escolar_1.sequencial = hd.ref_sequencial
         WHERE true
             AND hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
-            AND fcn_upper(hd.nm_disciplina::text) = fcn_upper(hd.nm_disciplina::text)
+            AND fcn_upper(hd.nm_disciplina::text) = fcn_upper(historico_disciplinas.nm_disciplina::text)
             AND historico_escolar_1.ativo = 1
             AND historico_escolar_1.extra_curricular = 1
             AND historico_escolar_1.ano = (
@@ -287,7 +287,7 @@ SELECT
                 AND historico_escolar_1.sequencial = hd.ref_sequencial
         WHERE true
             AND hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
-            AND fcn_upper(hd.nm_disciplina::text) = fcn_upper(hd.nm_disciplina::text)
+            AND fcn_upper(hd.nm_disciplina::text) = fcn_upper(historico_disciplinas.nm_disciplina::text)
             AND historico_escolar_1.ativo = 1
             AND historico_escolar_1.extra_curricular = 1
             AND historico_escolar_1.ano = (
@@ -339,7 +339,7 @@ SELECT
                 AND historico_escolar_1.sequencial = hd.ref_sequencial
         WHERE true
             AND hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
-            AND fcn_upper(hd.nm_disciplina::text) = fcn_upper(hd.nm_disciplina::text)
+            AND fcn_upper(hd.nm_disciplina::text) = fcn_upper(historico_disciplinas.nm_disciplina::text)
             AND historico_escolar_1.ativo = 1
             AND historico_escolar_1.extra_curricular = 1
             AND historico_escolar_1.ano = (
@@ -391,7 +391,7 @@ SELECT
                 AND historico_escolar_1.sequencial = hd.ref_sequencial
         WHERE true
             AND hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
-            AND fcn_upper(hd.nm_disciplina::text) = fcn_upper(hd.nm_disciplina::text)
+            AND fcn_upper(hd.nm_disciplina::text) = fcn_upper(historico_disciplinas.nm_disciplina::text)
             AND historico_escolar_1.ativo = 1
             AND historico_escolar_1.extra_curricular = 1
             AND historico_escolar_1.ano = (
@@ -443,7 +443,7 @@ SELECT
                 AND historico_escolar_1.sequencial = hd.ref_sequencial
         WHERE true
             AND hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
-            AND fcn_upper(hd.nm_disciplina::text) = fcn_upper(hd.nm_disciplina::text)
+            AND fcn_upper(hd.nm_disciplina::text) = fcn_upper(historico_disciplinas.nm_disciplina::text)
             AND historico_escolar_1.ativo = 1
             AND historico_escolar_1.extra_curricular = 1
             AND historico_escolar_1.ano = (
