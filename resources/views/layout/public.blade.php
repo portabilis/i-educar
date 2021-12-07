@@ -2,7 +2,9 @@
 <html lang="pt-br">
 <head>
     <meta charset="utf-8"/>
-    <title>i-Educar</title>
+    <title>{{ config('legacy.app.name') }}</title>
+
+    <link rel="shortcut icon" href="{{ url('favicon.ico') }}" />
 
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans">
     <link rel="stylesheet" type="text/css" href="{{ url('intranet/styles/login.css') }}">

@@ -128,7 +128,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Motivos de afastamento do servidor';
+        $this->title = 'Motivos de afastamento do servidor';
         $this->processoAp = '633';
     }
 };

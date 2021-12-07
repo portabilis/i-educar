@@ -653,6 +653,10 @@ class clsCadastro extends clsCampos
      */
     private function getPageTitle()
     {
+        if (isset($this->title)) {
+            return $this->title;
+        }
+
         if (isset($this->titulo)) {
             return $this->titulo;
         }
