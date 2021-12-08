@@ -18,7 +18,7 @@ class RemoveHtmlTagsStringService
     public function execute(string $text = ''): string
     {
         if (empty($text) === true) {
-           return $text;
+            return $text;
         }
 
         return preg_replace(self::PATTERNS, '', $text);
