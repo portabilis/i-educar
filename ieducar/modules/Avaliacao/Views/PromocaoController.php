@@ -15,7 +15,7 @@ class PromocaoController extends Portabilis_Controller_Page_ListController
         $regras = (new RegraAvaliacao_Model_RegraDataMapper())->findAll([], []);
         $regras = CoreExt_Entity::entityFilterAttr($regras, 'id', 'nome');
 
-        $regras = ['' => 'Selecione'] + $regras;
+        $regras = ['' => 'Todas'] + $regras;
 
         $this->inputsHelper()->dynamic('ano', ['id' => 'ano']);
         $this->inputsHelper()->dynamic('instituicao', ['id' => 'instituicao_id']);
