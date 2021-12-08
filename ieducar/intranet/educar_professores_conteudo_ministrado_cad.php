@@ -11,9 +11,10 @@ use Illuminate\Support\Arr;
 return new class extends clsCadastro {
     public $bncc;
     public $observacao;
+    public $frequencia;
 
     public function Inicializar () {
-        $this->titulo = 'Contéudo Ministrado - Cadastro';
+        $this->titulo = 'Conteúdo Ministrado - Cadastro';
 
         $retorno = 'Novo';
 
@@ -45,12 +46,12 @@ return new class extends clsCadastro {
 
         $this->nome_url_cancelar = 'Cancelar';
         $this->url_cancelar = ($retorno == 'Editar')
-            ? sprintf('educar_professores_frequencia_det.php?id=%d', $this->id)
-            : 'educar_professores_frequencia_lst.php';
+            ? sprintf('educar_professores_conteudo_ministrado_det.php?id=%d', $this->id)
+            : 'educar_professores_conteudo_ministrado_lst.php';
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
-        $this->breadcrumb($nomeMenu . ' contéudo ministrado', [
+        $this->breadcrumb($nomeMenu . ' Conteúdo ministrado', [
             url('intranet/educar_conteudo_ministrado_index.php') => 'Professores',
         ]);
 
@@ -64,20 +65,25 @@ return new class extends clsCadastro {
             }
         }
 
+        $this->campoOculto('cod_serie', 9);
+        $this->campoOculto('cod_componente_curricular', 5);
+
+        $this->inputsHelper()->dynamic(['frequencia'], ['frequencia' => $this->frequencia]);
+
         $helperOptions = [
-            'objectName' => 'anos_letivos'
+            'objectName' => 'bncc',
         ];
 
-        dump($this->getBNCC());
-        $this->bncc = array_values(array_intersect($this->bncc, $this->getBNCC()));
+        $todos_bncc = $this->getBNCC(9, 5)['bncc'];
+        $this->bncc = array_values(array_intersect($this->bncc, $todos_bncc));
 
         $options = [
-            'label' => 'Base nacional comum curricular',
+            'label' => 'BNCC',
             'required' => true,
             'size' => 50,
             'options' => [
                 'values' => $this->bncc,
-                'all_values' => $this->getBNCC()
+                'all_values' => $todos_bncc
             ]
         ];
         $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
@@ -86,6 +92,24 @@ return new class extends clsCadastro {
     }
 
     public function Novo() {
+        $obj = new clsModulesComponenteMinistrado(
+            null,
+            $this->frequencia,
+            $this->observacao,
+            $this->bncc
+        );
+
+        $cadastrou = $obj->cadastra();
+
+        if (!$cadastrou) {   
+            $this->mensagem = 'Cadastro não realizado.<br>';
+            return false;
+        } else {
+            $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+            $this->simpleRedirect('educar_professores_conteudo_ministrado_lst.php');
+        }
+
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -95,47 +119,40 @@ return new class extends clsCadastro {
         return false;
     }
 
-    private function getBNCC()
+    private function getBNCC($cod_serie, $cod_componente_curricular)
     {
-        $BNCC = [];
+        $bncc = [];
+        $bncc_temp = [];
+        $obj = new clsModulesBNCC();
 
-        dump('Entrou 1');
-        // if (is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_curso)) {
-            $db = new clsBanco();
+        if ($bncc_temp = $obj->lista($cod_serie, $cod_componente_curricular)) {
+            foreach ($bncc_temp as $bncc_item) {
+                $id = $bncc_item['id'];
+                $code = $bncc_item['code'];
+                $description = $bncc_item['description'];
 
-            $db->Consulta("
-                WITH select_ as (
-                    SELECT
-                        id,
-                        code,
-                        description,
-                        field_of_experience,
-                        thematic_unit,
-                        discipline,
-                        unnest(grades) as grade
-                    FROM
-                        public.learning_objectives_and_skills
-                )
-                    SELECT * FROM select_ WHERE grade = '9' AND discipline = '5'
-            ");
-
-            $db->ProximoRegistro();
-
-            while ($db->ProximoRegistro()) {
-                $BNCC[] = $db->Tupla();
+                $bncc[$id] = $code . ' - ' . $description;
             }
-            // dump($BNCC);
-        // }
+        }
 
-        return array_combine($BNCC, $BNCC);
+        return ['bncc' => $bncc];
+    }
+
+    public function loadAssets () {
+        $scripts = [
+            '/modules/Cadastro/Assets/Javascripts/BNCC.js',
+        ];
+
+        Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
     }
 
     public function __construct () {
         parent::__construct();
+        $this->loadAssets();
     }
 
     public function Formular () {
-        $this->title = 'Contéudo ministrado';
+        $this->title = 'Conteúdo ministrado';
         $this->processoAp = '58';
     }
 };

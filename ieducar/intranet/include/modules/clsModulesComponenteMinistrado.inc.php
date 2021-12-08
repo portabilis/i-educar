@@ -4,42 +4,24 @@ use iEducar\Legacy\Model;
 
 class clsModulesComponenteMinistrado extends Model {
     public $id;
-    public $ano;
-    public $ref_cod_ins;
-    public $ref_cod_escola;
-    public $ref_cod_curso;
-    public $ref_cod_serie;
-    public $ref_cod_turma;
-    public $ref_cod_componente_curricular;
-    public $ref_cod_turno;
-    public $data;
-    public $data_inicial;
-    public $data_final;
-    public $etapa_sequencial;
-    public $alunos;
+    public $frequencia_id;
+    public $observacao;
+    public $frequencia_bncc;
 
     public function __construct(
             $id = null,
-            $ano = null,
-            $ref_cod_ins = null,
-            $ref_cod_escola = null,
-            $ref_cod_curso = null,
-            $ref_cod_serie = null,
-            $ref_cod_turma = null,
-            $ref_cod_componente_curricular = null,
-            $ref_cod_turno = null,
-            $data = null,
-            $data_inicial = null,
-            $data_final = null,
-            $etapa_sequencial = null,
-            $alunos = null
-        ) {
+            $frequencia_id = null,
+            $observacao = null,
+            $frequencia_bncc = null
+    ) {
         $db = new clsBanco();
         $this->_schema = 'modules.';
-        $this->_tabela = "{$this->_schema}frequencia";
+        $this->_tabela = "{$this->_schema}conteudo_ministrado";
 
         $this->_from = "
-                modules.frequencia f
+                modules.conteudo_ministrado as cm
+            JOIN modules.frequencia f
+                ON (cm.frequencia_id = f.id)
             JOIN pmieducar.turma t
                 ON (t.cod_turma = f.ref_cod_turma)
             JOIN pmieducar.instituicao i
@@ -80,41 +62,14 @@ class clsModulesComponenteMinistrado extends Model {
         if (($ano)) {
             $this->ano = $ano;
         }
-        if (is_numeric($ref_cod_ins)) {
-            $this->ref_cod_ins = $ref_cod_ins;
+        if (is_numeric($frequencia_id)) {
+            $this->frequencia_id = $frequencia_id;
         }
-        if (is_numeric($ref_cod_escola)) {
-            $this->ref_cod_escola = $ref_cod_escola;
+        if (($observacao)) {
+            $this->observacao = $observacao;
         }
-        if (is_numeric($ref_cod_curso)) {
-            $this->ref_cod_curso = $ref_cod_curso;
-        }
-        if (is_numeric($ref_cod_serie)) {
-            $this->ref_cod_serie = $ref_cod_serie;
-        }
-        if (is_numeric($ref_cod_turma)) {
-            $this->ref_cod_turma = $ref_cod_turma;
-        }
-        if (is_numeric($ref_cod_componente_curricular)) {
-            $this->ref_cod_componente_curricular = $ref_cod_componente_curricular;
-        }
-        if (is_numeric($ref_cod_turno)) {
-            $this->ref_cod_turno = $ref_cod_turno;
-        }
-        if (($data)) {
-            $this->data = $data;
-        }
-        if (($data_inicial)) {
-            $this->data_inicial = $data_inicial;
-        }
-        if (($data_final)) {
-            $this->data_final = $data_final;
-        }
-        if (($etapa_sequencial)) {
-            $this->etapa_sequencial = $etapa_sequencial;
-        }
-        if (($alunos)) {
-            $this->alunos = $alunos;
+        if($frequencia_bncc){
+            $this->frequencia_bncc = $frequencia_bncc;
         }
     }
 
@@ -124,7 +79,33 @@ class clsModulesComponenteMinistrado extends Model {
      * @return bool
      */
     public function cadastra() {
-        
+        if (is_numeric($this->frequencia_id) && $this->observacao != '' && $this->frequencia_bncc) {
+            $db = new clsBanco();
+
+            $campos = "frequencia_id, observacao, data_cadastro";
+            $valores = "'{$this->frequencia_id}', '{$this->observacao}', (NOW() - INTERVAL '3 HOURS')";
+
+            $db->Consulta("
+                INSERT INTO
+                    {$this->_tabela} ( $campos )
+                    VALUES ( $valores )
+            ");
+
+            $id = $db->InsertId("{$this->_tabela}_id_seq");
+
+            $campos = "conteudo_ministrado_id, bncc_id";
+
+            $gruda = '';
+            $valores = '';
+            foreach ($this->frequencia_bncc as $key => $bncc) {
+                $valores .= $gruda . "(" . "'" . $id . "'" . ", " . "'" . $bncc . "'" .")";
+                $gruda = ', ';
+            }
+
+            $db->Consulta("INSERT INTO {$this->_tabela}_bncc ( $campos ) VALUES $valores");
+
+            return $id;
+        }
 
         return false;
     }
@@ -157,8 +138,102 @@ class clsModulesComponenteMinistrado extends Model {
             $time_data_inicial = null,
             $time_data_final = null,
             $int_etapa = null
-        ) {
+    ) {
        
+        $sql = "
+                SELECT
+                    {$this->_campos_lista}
+                FROM
+                    {$this->_from}
+                ";
+
+        $whereAnd = ' AND ';
+        $filtros = " WHERE TRUE ";
+
+    
+        if (is_numeric($int_ref_cod_ins)) {
+            $filtros .= "{$whereAnd} i.cod_instituicao = '{$int_ref_cod_ins}'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_ref_cod_escola)) {
+            $filtros .= "{$whereAnd} e.cod_escola = '{$int_ref_cod_escola}'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_ref_cod_curso)) {
+            $filtros .= "{$whereAnd} c.cod_curso = '{$int_ref_cod_curso}'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_ref_cod_serie)) {
+            $filtros .= "{$whereAnd} s.cod_serie = '{$int_ref_cod_serie}'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_ref_cod_turma)) {
+            $filtros .= "{$whereAnd} t.cod_turma = '{$int_ref_cod_turma}'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_ref_cod_componente_curricular)) {
+            $filtros .= "{$whereAnd} k.id = '{$int_ref_cod_componente_curricular}'";
+            $whereAnd = ' AND ';
+        }
+        
+        if (is_numeric($int_ref_cod_turno)) {
+            $filtros .= "{$whereAnd} t.turma_turno_id = '{$int_ref_cod_turno}'";
+            $whereAnd = ' AND ';
+        }
+
+        if ($time_data_inicial) {
+            $filtros .= "{$whereAnd} f.data >= '{$time_data_inicial}'";
+            $whereAnd = ' AND ';
+        }
+
+        if ($time_data_final) {
+            $filtros .= "{$whereAnd} f.data <= '{$time_data_final}'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_etapa)) {
+            $filtros .= "{$whereAnd} f.etapa_sequencial = '{$int_etapa}'";
+            $whereAnd = ' AND ';
+        }
+
+        $db = new clsBanco();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
+
+        $sql .= $filtros . $this->getOrderby() . $this->getLimite();
+
+        $this->_total = $db->CampoUnico(
+            "SELECT
+                COUNT(0)
+            FROM
+                {$this->_from}
+            {$filtros}"
+        );
+
+        $db->Consulta($sql);
+
+        if ($countCampos > 1) {
+            while ($db->ProximoRegistro()) {
+                $tupla = $db->Tupla();
+
+                $tupla['_total'] = $this->_total;
+                $resultado[] = $tupla;
+            }
+        } else {
+            while ($db->ProximoRegistro()) {
+                $tupla = $db->Tupla();
+                $resultado[] = $tupla[$this->_campos_lista];
+            }
+        }
+        if (count($resultado)) {
+            return $resultado;
+        }
+
         return false;
     }
 
