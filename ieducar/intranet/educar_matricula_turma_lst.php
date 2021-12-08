@@ -46,10 +46,10 @@ return new class extends clsListagem {
 
         // Busca dados da matricula
         $obj_ref_cod_matricula = new clsPmieducarMatricula();
-        $detalhe_aluno = array_shift($obj_ref_cod_matricula->lista($this->ref_cod_matricula));
+        $matricula = $obj_ref_cod_matricula->lista($this->ref_cod_matricula);
+        $detalhe_aluno = array_shift($matricula);
 
-        $obj_aluno = new clsPmieducarAluno();
-        $det_aluno = array_shift($obj_aluno->lista(
+        $obj_aluno = (new clsPmieducarAluno())->lista(
             $detalhe_aluno['ref_cod_aluno'],
             null,
             null,
@@ -61,8 +61,9 @@ return new class extends clsListagem {
             null,
             null,
             1
-        ));
+        );
 
+        $det_aluno = array_shift($obj_aluno);
         $obj_escola = new clsPmieducarEscola(
             $this->ref_cod_escola,
             null,
@@ -76,6 +77,7 @@ return new class extends clsListagem {
             null,
             1
         );
+
         $det_escola = $obj_escola->detalhe();
 
         if ($det_escola['nome']) {
@@ -134,8 +136,6 @@ return new class extends clsListagem {
 
             $this->exibirBotaoSubmit = false;
         }
-
-        #$this->campoLista('ref_cod_turma_', 'Turma', $opcoes, $this->ref_cod_turma);
 
         // outros filtros
         $this->campoOculto('ref_cod_matricula', $this->ref_cod_matricula);
@@ -229,8 +229,7 @@ return new class extends clsListagem {
         }
         $total = $obj_matricula_turma->_total;
 
-        $enturmacoesMatricula = new clsPmieducarMatriculaTurma();
-        $enturmacoesMatricula = $enturmacoesMatricula->lista3(
+        $enturmacoesMatricula = (new clsPmieducarMatriculaTurma())->lista3(
             $this->ref_cod_matricula,
             null,
             null,
@@ -240,32 +239,6 @@ return new class extends clsListagem {
             null,
             null,
             1,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            $this->ano_letivo
         );
 
         $turmasThisSerie = $lista;
@@ -298,8 +271,6 @@ return new class extends clsListagem {
             $this->nome,
             $this->limite
         );
-
-        $obj_permissoes = new clsPermissoes();
 
         $this->array_botao[] = 'Voltar';
         $this->array_botao_url[] = "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}";
