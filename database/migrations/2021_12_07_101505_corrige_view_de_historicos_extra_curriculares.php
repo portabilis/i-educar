@@ -33,7 +33,7 @@ class CorrigeViewDeHistoricosExtraCurriculares extends Migration
         );
 
         DB::unprepared(
-            file_get_contents(__DIR__ . '/../sqls/views/relatorio.view_historico_9anos_extra_curricular.sql')
+            file_get_contents(__DIR__ . '/../sqls/views/relatorio.view_historico_9anos_extra_curricular-2021-12-05.sql')
         );
     }
 }
