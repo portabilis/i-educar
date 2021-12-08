@@ -398,7 +398,7 @@ return new class extends clsCadastro {
     }
 
     public function Formular () {
-        $this->title = 'Turmas para frequência';
+        $this->title = 'Frequência';
         $this->processoAp = '58';
     }
 };
