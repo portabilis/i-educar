@@ -34,7 +34,8 @@ let postPromocaoMatricula = function(){
         escola : $j('#escola').val(),
         curso : $j('#curso').val(),
         serie : $j('#serie').val(),
-        turma : $j('#turma').val()
+        turma : $j('#turma').val(),
+        regras_avaliacao_id : $j('#regras_avaliacao_id').val()
       },
       success : handlePostPromocaoMatricula,
       error : handlePostPromocaoMatricula
