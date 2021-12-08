@@ -518,7 +518,7 @@ return new class extends clsDetalhe {
 
     public function getComponentesTurmaMulti($turmaId) {
         return DB::table('pmieducar.turma as t')
-        ->selectRaw('cc.id, cc.nome, coalesce(esd.carga_horaria, ccae.carga_horaria)')
+        ->selectRaw('cc.id, cc.nome, coalesce(esd.carga_horaria, ccae.carga_horaria)::int AS carga_horaria')
         ->join('pmieducar.turma_serie as ts', 'ts.turma_id', '=', 't.cod_turma')
         ->join('pmieducar.escola_serie as es', function($join) {
             $join->on('es.ref_cod_serie', '=', 'ts.serie_id');
