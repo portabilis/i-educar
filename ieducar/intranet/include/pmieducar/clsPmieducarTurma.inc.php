@@ -1508,7 +1508,16 @@ class clsPmieducarTurma extends Model
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_ref_cod_curso)) {
-            $filtros .= "{$whereAnd} t.ref_cod_curso = '{$int_ref_cod_curso}'";
+            $filtros .= "{$whereAnd}
+                CASE
+                    WHEN multiseriada = 1 THEN EXISTS (
+                        SELECT 1
+                        FROM pmieducar.turma_serie ts
+                        WHERE ts.turma_id = t.cod_turma
+                        AND ts.curso_id = {$int_ref_cod_curso}
+                    )
+                    ELSE t.ref_cod_curso = {$int_ref_cod_curso}
+                END";
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_qtd_min_alunos_matriculados)) {
