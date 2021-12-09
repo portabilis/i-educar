@@ -87,7 +87,7 @@
                 <button class="btn" type="submit" name="is_cancellation" value="1">Desenturmar</button>
             @else
                 <button class="btn" type="submit">Enturmar</button>
-                @if($anotherClassroomEnrollments->count())
+                @if($enrollments->count())
                     <button class="btn" type="submit" name="is_relocation" value="1">Transferir para turma (remanejar)</button>
                 @endif
             @endif
