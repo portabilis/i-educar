@@ -189,6 +189,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarSerie();
         $tipo_presenca = $obj->tipoPresencaRegraAvaliacao($this->ref_cod_serie);
 
+        if ($tipo_presenca == null) {
+            $this->mensagem = 'Cadastro não realizado, pois esta série não possui uma regra de avaliação configurada.<br>';
+            return false;
+        }
+
         if ($tipo_presenca == 1 && $this->ref_cod_componente_curricular) {
             $this->mensagem = 'Cadastro não realizado, pois esta série não admite frequência por componente curricular.<br>';
             return false;
