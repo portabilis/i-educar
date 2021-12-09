@@ -19,7 +19,7 @@ $j('#btn_add_tab_add_1').click(function(){
     let idUltimoSelectCurso = $j('select[name^="mult_curso_id"]')[quantidadeDeCursos - 1].id;
     let ultimoCurso = $j('select[id="'+idUltimoSelectCurso+'"]');
 
-    if (opcoesCurso.length > 0) {
+    if (Object.keys(opcoesCurso).length > 0) {
         ultimoCurso.empty();
         ultimoCurso.append('<option value="">Selecione um curso</option>');
     }
@@ -113,7 +113,7 @@ function atualizaOpcoesDeCurso() {
         url      : url,
         dataType : 'json',
         success  : function(response) {
-            opcoesCurso = Object.values(response.cursos);
+            opcoesCurso = response.cursos;
             let combosCurso = $j('select[name^="mult_curso_id"]');
             let combosSerie = $j('select[name^="mult_serie_id"]');
             combosCurso.empty();
