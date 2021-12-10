@@ -153,7 +153,6 @@ return new class extends clsCadastro {
         $this->url_cancelar = $this->retorno == 'Editar' ?
         'atendidos_det.php?cod_pessoa=' . $this->cod_pessoa_fj : 'atendidos_lst.php';
 
-        $this->cod_pessoa_fj;
         $objPessoa = new clsPessoaFisica($this->cod_pessoa_fj);
         $db = new clsBanco();
 
