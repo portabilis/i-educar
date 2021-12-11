@@ -132,7 +132,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Veículos';
+        $this->title = 'Veículos';
         $this->processoAp = '21237';
     }
 };

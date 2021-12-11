@@ -395,7 +395,7 @@ SQL;
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Dispensa Componente Curricular';
+        $this->title = 'Dispensa Componente Curricular';
         $this->processoAp = 578;
     }
 };
