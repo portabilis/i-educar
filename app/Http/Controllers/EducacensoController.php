@@ -25,13 +25,8 @@ class EducacensoController extends Controller
 
         $this->menu(70);
 
-        $schools = $institution->schools()->with('person')->get()->sortBy(function ($school) {
-            return $school->name;
-        });
-
         return view('educacenso.consult', [
             'institution' => $institution,
-            'schools' => $schools,
             'paginate' => $paginate,
             'record20' => $records['record20'] ?? null,
             'record40' => $records['record40'] ?? null,
