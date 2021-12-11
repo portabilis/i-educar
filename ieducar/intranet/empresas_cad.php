@@ -385,7 +385,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->_titulo = 'Empresas!';
+        $this->_titulo = 'Pessoa Jurídica - Cadastro';
         $this->processoAp = 41;
     }
 };

@@ -130,7 +130,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Tipo de ambiente';
+        $this->title = 'Tipo de ambiente';
         $this->processoAp = '572';
     }
 };

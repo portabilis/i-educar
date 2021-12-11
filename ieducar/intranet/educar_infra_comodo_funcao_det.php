@@ -83,7 +83,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Tipo de ambiente';
+        $this->title = 'Tipo de ambiente';
         $this->processoAp = '572';
     }
 };
