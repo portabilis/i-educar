@@ -159,7 +159,7 @@ return new class extends clsDetalhe {
     function montaListaBNCC ($codes, $descriptions) {
         if (is_string($codes) && !empty($codes) && is_string($descriptions) && !empty($descriptions)) {
             $codes = explode(',', $codes);
-            $descriptions = explode(',', $descriptions);
+            $descriptions = explode('$/', $descriptions);
         } else {
             return false;
         }
