@@ -4,11 +4,16 @@ class BNCCController extends ApiCoreController
 {
     public function getBNCC()
     {
+        $obj = new clsModulesFrequencia();
+        $dados_frequencia = $obj->detalhe($this->getRequest()->frequencia);
+        $cod_serie = $dados_frequencia['detalhes']['ref_cod_serie'];
+        $cod_componente_curricular = $dados_frequencia['detalhes']['ref_cod_componente_curricular'];
+
         $bncc = [];
         $bncc_temp = [];
         $obj = new clsModulesBNCC();
 
-        if ($bncc_temp = $obj->lista($this->getRequest()->cod_serie, $this->getRequest()->cod_componente_curricular)) {
+        if ($bncc_temp = $obj->lista($cod_serie, $cod_componente_curricular)) {
             foreach ($bncc_temp as $bncc_item) {
                 $id = $bncc_item['id'];
                 $code = $bncc_item['code'];

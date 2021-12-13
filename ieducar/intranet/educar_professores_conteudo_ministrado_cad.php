@@ -18,31 +18,32 @@ return new class extends clsCadastro {
 
         $retorno = 'Novo';
 
-        // $this->id = $_GET['id'];
+        $this->id = $_GET['id'];
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(58, $this->pessoa_logada, 7, 'educar_professores_conteudo_ministrado_lst.php');
 
-        // if (is_numeric($this->id)) {
-        //     $tmp_obj = new clsModulesFrequencia();
-        //     $registro = $tmp_obj->detalhe(
-        //         $this->id
-        //     );
+        if (is_numeric($this->id)) {
+            dump($this->id);
+            $tmp_obj = new clsModulesComponenteMinistrado();
+            $registro = $tmp_obj->detalhe(
+                $this->id
+            );
 
-        //     if ($registro) {
-        //         // passa todos os valores obtidos no registro para atributos do objeto
-        //         foreach ($registro['detalhes'] as $campo => $val) {
-        //             $this->$campo = $val;
-        //         }
-        //         $this->matriculas = $registro['matriculas'];
-        //         $this->ref_cod_serie = $registro['detalhes']['ref_cod_serie']; 
+            if ($registro) {
+                // passa todos os valores obtidos no registro para atributos do objeto
+                foreach ($registro['detalhes'] as $campo => $val) {
+                    dump($campo);
+                    $this->$campo = $val;
+                }
 
-        //         $this->fexcluir = $obj_permissoes->permissao_excluir(58, $this->pessoa_logada, 7);
-        //         $retorno = 'Editar';
 
-        //         $this->titulo = 'Frequência - Edição';
-        //     }
-        // }
+                $this->fexcluir = $obj_permissoes->permissao_excluir(58, $this->pessoa_logada, 7);
+                $retorno = 'Editar';
+
+                $this->titulo = 'Conteúdo Ministrado - Edição';
+            }
+        }
 
         $this->nome_url_cancelar = 'Cancelar';
         $this->url_cancelar = ($retorno == 'Editar')
@@ -65,16 +66,13 @@ return new class extends clsCadastro {
             }
         }
 
-        $this->campoOculto('cod_serie', 9);
-        $this->campoOculto('cod_componente_curricular', 5);
-
         $this->inputsHelper()->dynamic(['frequencia'], ['frequencia' => $this->frequencia]);
 
         $helperOptions = [
             'objectName' => 'bncc',
         ];
 
-        $todos_bncc = $this->getBNCC(9, 5)['bncc'];
+        $todos_bncc = $this->getBNCC($this->frequencia)['bncc'];
         $this->bncc = array_values(array_intersect($this->bncc, $todos_bncc));
 
         $options = [
@@ -119,23 +117,29 @@ return new class extends clsCadastro {
         return false;
     }
 
-    private function getBNCC($cod_serie, $cod_componente_curricular)
+    private function getBNCC($frequencia_id)
     {
-        $bncc = [];
-        $bncc_temp = [];
-        $obj = new clsModulesBNCC();
+        // $obj = new clsModulesFrequencia();
+        // $dados_frequencia = $obj->detalhe($frequencia_id);
+        // $cod_serie = $dados_frequencia['detalhes']['ref_cod_serie'];
+        // $cod_componente_curricular = $dados_frequencia['detalhes']['ref_cod_componente_curricular'];
+        // dump($frequencia_id, $cod_serie, $cod_componente_curricular);
 
-        if ($bncc_temp = $obj->lista($cod_serie, $cod_componente_curricular)) {
-            foreach ($bncc_temp as $bncc_item) {
-                $id = $bncc_item['id'];
-                $code = $bncc_item['code'];
-                $description = $bncc_item['description'];
+        // $bncc = [];
+        // $bncc_temp = [];
+        // $obj = new clsModulesBNCC();
 
-                $bncc[$id] = $code . ' - ' . $description;
-            }
-        }
+        // if ($bncc_temp = $obj->lista($cod_serie, $cod_componente_curricular)) {
+        //     foreach ($bncc_temp as $bncc_item) {
+        //         $id = $bncc_item['id'];
+        //         $code = $bncc_item['code'];
+        //         $description = $bncc_item['description'];
 
-        return ['bncc' => $bncc];
+        //         $bncc[$id] = $code . ' - ' . $description;
+        //     }
+        // }
+
+        // return ['bncc' => $bncc];
     }
 
     public function loadAssets () {
