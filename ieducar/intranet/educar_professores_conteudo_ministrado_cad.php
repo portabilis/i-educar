@@ -10,6 +10,7 @@ use Illuminate\Support\Arr;
 
 return new class extends clsCadastro {
     public $bncc;
+    public $procedimento_metodologico;
     public $observacao;
     public $frequencia;
 
@@ -88,13 +89,15 @@ return new class extends clsCadastro {
         ];
         $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-        $this->campoMemo('observacao', 'Observação', $this->observacao, 100, 5, true);
+        $this->campoMemo('procedimento_metodologico', 'Procedimento metodológico', $this->procedimento_metodologico, 100, 5, true);
+        $this->campoMemo('observacao', 'Observação', $this->observacao, 100, 5, false);
     }
 
     public function Novo() {
         $obj = new clsModulesComponenteMinistrado(
             null,
             $this->frequencia,
+            $this->procedimento_metodologico,
             $this->observacao,
             $this->bncc
         );

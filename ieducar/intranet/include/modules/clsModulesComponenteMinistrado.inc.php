@@ -5,12 +5,14 @@ use iEducar\Legacy\Model;
 class clsModulesComponenteMinistrado extends Model {
     public $id;
     public $frequencia_id;
+    public $procedimento_metodologico;
     public $observacao;
     public $frequencia_bncc;
 
     public function __construct(
             $id = null,
             $frequencia_id = null,
+            $procedimento_metodologico = null,
             $observacao = null,
             $frequencia_bncc = null
     ) {
@@ -66,6 +68,9 @@ class clsModulesComponenteMinistrado extends Model {
         if (is_numeric($frequencia_id)) {
             $this->frequencia_id = $frequencia_id;
         }
+        if (($procedimento_metodologico)) {
+            $this->procedimento_metodologico = $procedimento_metodologico;
+        }
         if (($observacao)) {
             $this->observacao = $observacao;
         }
@@ -80,11 +85,16 @@ class clsModulesComponenteMinistrado extends Model {
      * @return bool
      */
     public function cadastra() {
-        if (is_numeric($this->frequencia_id) && $this->observacao != '' && $this->frequencia_bncc) {
+        if (is_numeric($this->frequencia_id) && $this->procedimento_metodologico != '' && $this->frequencia_bncc) {
             $db = new clsBanco();
 
-            $campos = "frequencia_id, observacao, data_cadastro";
-            $valores = "'{$this->frequencia_id}', '{$this->observacao}', (NOW() - INTERVAL '3 HOURS')";
+            $campos = "frequencia_id, procedimento_metodologico, data_cadastro";
+            $valores = "'{$this->frequencia_id}', '{$this->procedimento_metodologico}', (NOW() - INTERVAL '3 HOURS')";
+
+            if($this->observacao != ''){
+                $campos     .=  ", observacao";
+                $valores    .=  ", '{$this->observacao}'";
+            }
 
             $db->Consulta("
                 INSERT INTO
