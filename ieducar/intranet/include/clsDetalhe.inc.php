@@ -32,6 +32,25 @@ class clsDetalhe extends Core_Controller_Page_Abstract
         return false;
     }
 
+    private function getPageTitle()
+    {
+        if (isset($this->title)) {
+            return $this->title;
+        }
+
+        if (isset($this->_title)) {
+            return $this->_title;
+        }
+
+        if (isset($this->titulo)) {
+            return $this->titulo;
+        }
+
+        if (isset($this->_titulo)) {
+            return $this->_titulo;
+        }
+    }
+
     public function RenderHTML()
     {
         ob_start();
@@ -51,7 +70,7 @@ class clsDetalhe extends Core_Controller_Page_Abstract
             app(Breadcrumb::class)->setLegacy($this->locale);
         }
 
-        View::share('title', $this->titulo);
+        View::share('title', $this->getPageTitle());
 
         $retorno .= "
       <!-- detalhe begin -->
