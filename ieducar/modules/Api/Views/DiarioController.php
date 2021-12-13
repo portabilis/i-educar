@@ -1,5 +1,6 @@
 <?php
 
+use App\Services\RemoveHtmlTagsStringService;
 use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotAllowGeneralAbsence;
 use iEducar\Modules\Stages\Exceptions\MissingStagesException;
 use iEducar\Support\Exceptions\Error;
@@ -488,7 +489,7 @@ class DiarioController extends ApiCoreController
 
                                 $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoComponente([
                                     'componenteCurricular' => $componenteCurricularId,
-                                    'parecer' => $parecerTurmaAlunoComponente['valor'],
+                                    'parecer' => $this->removeHtmlTags($parecerTurmaAlunoComponente['valor']),
                                     'etapa' => $etapa,
                                 ]);
 
@@ -523,7 +524,7 @@ class DiarioController extends ApiCoreController
 
                                 $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoComponente([
                                     'componenteCurricular' => $componenteCurricularId,
-                                    'parecer' => $parecerTurmaAlunoComponente['valor'],
+                                    'parecer' => $this->removeHtmlTags($parecerTurmaAlunoComponente['valor']),
                                 ]);
 
                                 $this->serviceBoletim($turmaId, $alunoId)->addParecer($parecerDescritivo);
@@ -554,7 +555,7 @@ class DiarioController extends ApiCoreController
                         }
 
                         $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoGeral([
-                            'parecer' => $parecerTurmaAluno['valor'],
+                            'parecer' => $this->removeHtmlTags($parecerTurmaAluno['valor']),
                             'etapa' => $etapa,
                         ]);
 
@@ -575,7 +576,7 @@ class DiarioController extends ApiCoreController
 
             foreach ($pareceres as $turmaId => $parecerTurma) {
                 foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
-                    $parecer = $parecerTurmaAluno['valor'];
+                    $parecer = $this->removeHtmlTags($parecerTurmaAluno['valor']);
                     $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
 
                     if (!empty($matriculaId)) {
@@ -643,6 +644,11 @@ class DiarioController extends ApiCoreController
         }
 
         return $val;
+    }
+
+    public function removeHtmlTags(string $text = ''): string
+    {
+        return (new RemoveHtmlTagsStringService())->execute($text);
     }
 
     public function Gerar()

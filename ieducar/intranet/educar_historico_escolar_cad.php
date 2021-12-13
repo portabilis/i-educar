@@ -197,8 +197,17 @@ return new class extends clsCadastro {
 
         $this->campoLista('escola_uf', 'Estado da Escola', $lista_estado, $this->escola_uf);
 
-        // text
-        $this->campoTexto('escola_cidade', 'Cidade da Escola', mb_strtoupper($this->escola_cidade), 30, 255, true);
+        $options = ['label' => 'Cidade da Escola', 'required' => true];
+
+        $helperOptions = [
+            'objectName' => 'escola_cidade',
+            'hiddenInputOptions' => ['options' => ['value' => mb_strtoupper($this->escola_cidade)]],
+            'apiResource' => 'municipio-name-search',
+            'placeholder' => 'Informe o nome da cidade',
+            'checkIfExists' => false,
+        ];
+
+        $this->inputsHelper()->simpleSearchMunicipio('', $options, $helperOptions);
 
         $this->campoTexto('nm_curso', 'Curso', $this->nm_curso, 30, 255, false, false, false, _cl('historico.cadastro.curso_detalhe'));
 

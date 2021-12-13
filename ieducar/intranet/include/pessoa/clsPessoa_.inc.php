@@ -83,8 +83,6 @@ class clsPessoa_
             }
             if ($this->nome || $this->nome === '') {
                 $this->nome = $this->cleanUpName($this->nome);
-                $this->nome = str_replace('\'', '\'\'', $this->nome);
-
                 $slug = Str::lower(Str::slug($this->nome, ' '));
 
                 $set .= "$gruda nome = '$this->nome', slug = '{$slug}' ";

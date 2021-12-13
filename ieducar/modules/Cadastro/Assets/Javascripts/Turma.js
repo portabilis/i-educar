@@ -361,4 +361,8 @@ $j(document).ready(function() {
       );
     }
   }
+  $j("#tipo_boletim, #tipo_boletim_diferenciado").chosen({
+    no_results_text: "Nenhum modelo encontrado!",
+    allow_single_deselect: true,
+  });
 });
