@@ -16,7 +16,8 @@ class CreateContentTaughtsTable extends Migration
         Schema::create('modules.conteudo_ministrado', function (Blueprint $table) {
             $table->id();
             $table->integer('frequencia_id');
-            $table->text('observacao');
+            $table->text('procedimento_metodologico');
+            $table->text('observacao')->nullable();
             $table->timestamp('data_cadastro');
             $table->timestamp('data_atualizacao')->nullable();
 
