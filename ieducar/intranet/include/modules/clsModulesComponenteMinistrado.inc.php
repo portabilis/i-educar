@@ -45,7 +45,8 @@ class clsModulesComponenteMinistrado extends Model {
         ";
 
         $this->_campos_lista = $this->_todos_campos = '
-            f.id,
+            cm.id,
+            f.id as frequencia,
             f.data,
             i.nm_instituicao AS instituicao,
             j.fantasia AS escola,
@@ -243,6 +244,44 @@ class clsModulesComponenteMinistrado extends Model {
      * @return array
      */
     public function detalhe ($id = null) {
+        if (is_numeric($id)) {
+            $db = new clsBanco();
+            $db->Consulta("
+                SELECT
+                    {$this->_todos_campos},
+                    cm.observacao,
+                    f.ref_cod_turma as cod_turma
+                FROM
+                    {$this->_from}
+                WHERE
+                    f.id = {$id}
+            ");
+
+            $db->ProximoRegistro();
+
+            $data['detalhes'] = $db->Tupla();
+
+            // --------------------------------------------------------------------- //
+
+            $db->Consulta("
+                SELECT
+                    STRING_AGG (lok.code::character varying, ',') as codes,
+                    STRING_AGG (lok.description::character varying, ',') as descriptions
+                FROM
+                    modules.conteudo_ministrado_bncc as cm
+                JOIN public.learning_objectives_and_skills as lok
+                    ON (lok.id = cm.bncc_id)
+                GROUP BY
+                    cm.conteudo_ministrado_id
+                HAVING
+                    cm.conteudo_ministrado_id = {$id}
+            ");
+            $db->ProximoRegistro();
+
+            $data['bncc'] = $db->Tupla();
+
+            return $data;
+        }
 
         return false;
     }
