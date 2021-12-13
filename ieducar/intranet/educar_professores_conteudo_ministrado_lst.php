@@ -149,14 +149,14 @@ return new class extends clsListagem {
         }
         $this->largura = '100%';
 
-        $this->breadcrumb('Listagem de contéudos ministrados', [
+        $this->breadcrumb('Listagem de conteúdos ministrados', [
             url('intranet/educar_professores_index.php') => 'Professores',
         ]);
     }
 
     public function Formular()
     { 
-        $this->title = 'Contéudo ministrado - Listagem';
+        $this->title = 'Conteúdo ministrado - Listagem';
         $this->processoAp = '58';
     }
 };
