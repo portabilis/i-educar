@@ -91,6 +91,13 @@ return new class extends clsDetalhe {
                 $registro['bncc']['descricoes'],
             );
         }
+
+        if ($registro['detalhes']['procedimento_metodologico']) {
+            $this->addDetalhe(
+                [
+                    'Procedimento metodológico',
+                    $registro['detalhes']['procedimento_metodologico']
+                ]
             );
         }
 

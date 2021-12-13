@@ -259,6 +259,7 @@ class clsModulesComponenteMinistrado extends Model {
             $db->Consulta("
                 SELECT
                     {$this->_todos_campos},
+                    cm.procedimento_metodologico,
                     cm.observacao,
                     f.ref_cod_turma as cod_turma
                 FROM
