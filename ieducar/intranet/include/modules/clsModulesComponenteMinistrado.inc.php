@@ -275,8 +275,8 @@ class clsModulesComponenteMinistrado extends Model {
 
             $db->Consulta("
                 SELECT
-                    STRING_AGG (lok.code::character varying, ',') as codes,
-                    STRING_AGG (lok.description::character varying, '$/') as descriptions
+                    STRING_AGG (lok.code::character varying, ',') as codigos,
+                    STRING_AGG (lok.description::character varying, '$/') as descricoes
                 FROM
                     modules.conteudo_ministrado_bncc as cm
                 JOIN public.learning_objectives_and_skills as lok

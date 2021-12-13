@@ -85,10 +85,12 @@ return new class extends clsDetalhe {
             );
         }
 
-        if ($registro['bncc']['codes'] && $registro['bncc']['descriptions']) {
+        if ($registro['bncc']['codigos'] && $registro['bncc']['descricoes']) {
             $this->montaListaBNCC(
-                $registro['bncc']['codes'],
-                $registro['bncc']['descriptions'],
+                $registro['bncc']['codigos'],
+                $registro['bncc']['descricoes'],
+            );
+        }
             );
         }
 
@@ -156,10 +158,10 @@ return new class extends clsDetalhe {
         ]);
     }
 
-    function montaListaBNCC ($codes, $descriptions) {
-        if (is_string($codes) && !empty($codes) && is_string($descriptions) && !empty($descriptions)) {
-            $codes = explode(',', $codes);
-            $descriptions = explode('$/', $descriptions);
+    function montaListaBNCC ($codigos, $descricoes) {
+        if (is_string($codigos) && !empty($codigos) && is_string($descricoes) && !empty($descricoes)) {
+            $codigos = explode(',', $codigos);
+            $descricoes = explode('$/', $descricoes);
         } else {
             return false;
         }
@@ -170,14 +172,14 @@ return new class extends clsDetalhe {
         $this->tabela .= ' </div>';
         $this->tabela .= ' <br style="clear: left" />';
 
-        for ($i=0; $i < count($codes); $i++) { 
+        for ($i=0; $i < count($codigos); $i++) { 
             $checked = !$aluno['presenca'] ? "checked='true'" : '';
 
             $this->tabela .= '  <div style="margin-bottom: 10px; float: left" class="linha-disciplina" >';
             
-            $this->tabela .= "  <span style='display: block; float: left; width: 100px'>{$codes[$i]}</span>";
+            $this->tabela .= "  <span style='display: block; float: left; width: 100px'>{$codigos[$i]}</span>";
 
-            $this->tabela .= "  <span style='display: block; float: left; width: 700px'>{$descriptions[$i]}</span>";
+            $this->tabela .= "  <span style='display: block; float: left; width: 700px'>{$descricoes[$i]}</span>";
 
             $this->tabela .= '  </div>';
             $this->tabela .= '  <br style="clear: left" />';
