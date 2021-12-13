@@ -104,46 +104,48 @@ return new class extends clsDetalhe {
         if ($obj_permissoes->permissao_cadastra(58, $this->pessoa_logada, 7)) {
             $this->url_novo = 'educar_professores_conteudo_ministrado_cad.php';
 
-            $data_agora = new DateTime('now');
-            $data_agora = new \DateTime($data_agora->format('Y-m-d'));
+            if (is_numeric($registro['detalhes']['cod_turma']) && is_numeric($registro['detalhes']['fase_etapa'])) {
+                $data_agora = new DateTime('now');
+                $data_agora = new \DateTime($data_agora->format('Y-m-d'));
 
-            $turma = $registro['detalhes']['cod_turma'];
-            $sequencia = $registro['detalhes']['fase_etapa'];
-            $obj = new clsPmieducarTurmaModulo();
+                $turma = $registro['detalhes']['cod_turma'];
+                $sequencia = $registro['detalhes']['fase_etapa'];
+                $obj = new clsPmieducarTurmaModulo();
 
-            $data = $obj->pegaPeriodoLancamentoNotasFaltas($turma, $sequencia);
-            if ($data['inicio'] != null && $data['fim'] != null) {
-                $data['inicio'] = explode(',', $data['inicio']);
-                $data['fim'] = explode(',', $data['fim']);
+                $data = $obj->pegaPeriodoLancamentoNotasFaltas($turma, $sequencia);
+                if ($data['inicio'] != null && $data['fim'] != null) {
+                    $data['inicio'] = explode(',', $data['inicio']);
+                    $data['fim'] = explode(',', $data['fim']);
 
-                array_walk($data['inicio'], function(&$data_inicio, $key) {
-                    $data_inicio = new \DateTime($data_inicio);
-                });
+                    array_walk($data['inicio'], function(&$data_inicio, $key) {
+                        $data_inicio = new \DateTime($data_inicio);
+                    });
 
-                array_walk($data['fim'], function(&$data_fim, $key) {
-                    $data_fim = new \DateTime($data_fim);
-                });
-            } else {
-                $data['inicio'] = new \DateTime($obj->pegaEtapaSequenciaDataInicio($turma, $sequencia));
-                $data['fim'] = new \DateTime($obj->pegaEtapaSequenciaDataFim($turma, $sequencia));
+                    array_walk($data['fim'], function(&$data_fim, $key) {
+                        $data_fim = new \DateTime($data_fim);
+                    });
+                } else {
+                    $data['inicio'] = new \DateTime($obj->pegaEtapaSequenciaDataInicio($turma, $sequencia));
+                    $data['fim'] = new \DateTime($obj->pegaEtapaSequenciaDataFim($turma, $sequencia));
+                }
+
+                $podeEditar = false;
+                if (is_array($data['inicio']) && is_array($data['fim'])) {
+                    for ($i=0; $i < count($data['inicio']); $i++) {
+                        $data_inicio = $data['inicio'][$i];
+                        $data_fim = $data['fim'][$i];
+
+                        $podeEditar = $data_agora >= $data_inicio && $data_agora <= $data_fim;
+
+                        if ($podeEditar) break;
+                    }     
+                } else {
+                    $podeEditar = $data_agora >= $data['inicio'] && $data_agora <= $data['fim'];
+                }
+
+                if ($podeEditar)
+                    $this->url_editar = 'educar_professores_conteudo_ministrado_cad.php?id=' . $registro['detalhes']['id'];
             }
-
-            $podeEditar = false;
-            if (is_array($data['inicio']) && is_array($data['fim'])) {
-                for ($i=0; $i < count($data['inicio']); $i++) {
-                    $data_inicio = $data['inicio'][$i];
-                    $data_fim = $data['fim'][$i];
-
-                    $podeEditar = $data_agora >= $data_inicio && $data_agora <= $data_fim;
-
-                    if ($podeEditar) break;
-                }     
-            } else {
-                $podeEditar = $data_agora >= $data['inicio'] && $data_agora <= $data['fim'];
-            }
-
-            if ($podeEditar)
-                $this->url_editar = 'educar_professores_conteudo_ministrado_cad.php?id=' . $registro['detalhes']['id'];
         }
 
         $this->url_cancelar = 'educar_professores_conteudo_ministrado_lst.php';
