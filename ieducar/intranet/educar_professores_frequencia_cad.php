@@ -22,7 +22,7 @@ return new class extends clsCadastro {
 
         $retorno = 'Novo';
 
-        $this->id = $_GET['id'];
+        $this->id = $_GET['id'];+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(58, $this->pessoa_logada, 7, 'educar_professores_frequencia_lst.php');

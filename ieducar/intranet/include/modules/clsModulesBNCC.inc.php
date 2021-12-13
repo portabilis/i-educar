@@ -11,7 +11,7 @@ class clsModulesBNCC extends Model {
         $ref_cod_componente_curricular = null
     ) {
         $db = new clsBanco();
-        $this->_schema = 'public.';
+        $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}learning_objectives_and_skills";
 
         $this->_from = "
@@ -68,6 +68,7 @@ class clsModulesBNCC extends Model {
         $int_ref_cod_serie = null,
         $int_ref_cod_componente_curricular = null
     ) {
+       
         $sql = "
             WITH select_ as (
                 SELECT
