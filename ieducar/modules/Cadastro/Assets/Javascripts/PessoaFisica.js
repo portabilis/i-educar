@@ -185,6 +185,10 @@ var submitForm = function(event) {
     }
   }
 
+  if (!validateFieldSUS()) {
+    return;
+  }
+
   var tipoCertidaoNascimento = ($j('#tipo_certidao_civil').val() == 'certidao_nascimento_novo_formato');
   var tipoCertidaoCasamento = ($j('#tipo_certidao_civil').val() == 'certidao_casamento_novo_formato');
 
