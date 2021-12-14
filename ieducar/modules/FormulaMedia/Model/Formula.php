@@ -272,6 +272,6 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
      */
     public function __toString()
     {
-        return $this->nome;
+        return $this->nome . ': </br>' . $this->formulaMedia;
     }
 }
