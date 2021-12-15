@@ -163,11 +163,36 @@ class App_Model_IedFinderTest extends UnitBaseTest
                 ];
                 $mock
                     ->shouldReceive('setOrderby')
-                    ->once();
+                    ->twice();
                 $mock
                     ->shouldReceive('lista')
                     ->once()
-                    ->andReturn($returnValue)
+                    ->andReturn($returnValue);
+                $mock
+                    ->shouldReceive('lista')
+                    ->with(
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        1,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null)
+                    ->once()
+                    ->andReturn([$returnValue[1]])
                 ;
             })
         );
@@ -182,6 +207,17 @@ class App_Model_IedFinderTest extends UnitBaseTest
             $test,
             $series,
             '::getSeries() retorna todas as séries cadastradas.'
+        );
+
+        $series = App_Model_IedFinder::getSeries(1);
+        $testFilter = [
+            1 => 'PRÉ'
+        ];
+
+        $this->assertEquals(
+            $testFilter,
+            $series,
+            '::getSeries() retorna todas as séries cadastradas por instituição'
         );
     }
 
