@@ -244,7 +244,8 @@ class App_Model_IedFinder extends CoreExt_Entity
     public static function getSeries($instituicaoId = null, $escolaId = null, $cursoId = null, $ano = null)
     {
         $orderBy = ' nm_serie ASC, ref_cod_curso ASC, cod_serie ASC, etapa_curso ASC';
-        $series = (new clsPmieducarSerie())->setOrderby($orderBy);
+        $series = app(clsPmieducarSerie::class);
+        $series->setOrderby($orderBy);
 
         $series = $series->lista(
             null,

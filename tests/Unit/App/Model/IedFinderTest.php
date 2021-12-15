@@ -1,6 +1,7 @@
 <?php
 
 use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
+use Mockery\MockInterface;
 
 class App_Model_IedFinderTest extends UnitBaseTest
 {
@@ -153,39 +154,34 @@ class App_Model_IedFinderTest extends UnitBaseTest
 
     public function testGetSeries()
     {
-        $returnValue = [
-            1 => ['cod_serie' => 1, 'ref_ref_cod_instituicao' => 1, 'nm_serie' => 'PRÉ'],
-            2 => ['cod_serie' => 2, 'ref_ref_cod_instituicao' => 2, 'nm_serie' => 'SER']
-        ];
-
-        $mock = $this->getCleanMock('clsPmieducarSerie');
-        $mock->expects($this->exactly(2))
-            ->method('lista')
-            ->will($this->onConsecutiveCalls($returnValue, [$returnValue[1]]));
-
-        // Registra a instância no repositório de classes de CoreExt_Entity
-        $instance = CoreExt_Entity::addClassToStorage(
-            'clsPmieducarSerie',
-            $mock,
-            null,
-            true
+        $this->instance(
+            clsPmieducarSerie::class,
+            Mockery::mock(clsPmieducarSerie::class, function (MockInterface $mock) {
+                $returnValue = [
+                    1 => ['cod_serie' => 1, 'ref_ref_cod_instituicao' => 1, 'nm_serie' => 'pré'],
+                    2 => ['cod_serie' => 2, 'ref_ref_cod_instituicao' => 2, 'nm_serie' => 'ser']
+                ];
+                $mock
+                    ->shouldReceive('setOrderby')
+                    ->once();
+                $mock
+                    ->shouldReceive('lista')
+                    ->once()
+                    ->andReturn($returnValue)
+                ;
+            })
         );
 
         $series = App_Model_IedFinder::getSeries();
+        $test = [
+            1 => 'PRÉ',
+            2 => 'SER'
+        ];
+
         $this->assertEquals(
-            [
-                1 => 'PRÉ',
-                2 => 'SER'
-            ],
+            $test,
             $series,
             '::getSeries() retorna todas as séries cadastradas.'
-        );
-
-        $series = App_Model_IedFinder::getSeries(1);
-        $this->assertEquals(
-            [1 => 'PRÉ'],
-            $series,
-            '::getSeries() retorna todas as séries de uma instituição.'
         );
     }
 
