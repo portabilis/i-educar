@@ -2,8 +2,6 @@
 
 namespace iEducar\Legacy;
 
-use phpDocumentor\Reflection\Types\This;
-
 class Model
 {
     /**
