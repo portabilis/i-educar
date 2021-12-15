@@ -2,6 +2,8 @@
 
 namespace iEducar\Legacy;
 
+use phpDocumentor\Reflection\Types\This;
+
 class Model
 {
     /**
@@ -114,13 +116,15 @@ class Model
     /**
      * Define campo para ser utilizado como ordenacao no metolo lista
      *
-     * @return null
+     * @return self
      */
     public function setOrderby($strNomeCampo)
     {
         if (is_string($strNomeCampo) && $strNomeCampo) {
             $this->_campo_order_by = $strNomeCampo;
         }
+
+        return $this;
     }
 
     /**
