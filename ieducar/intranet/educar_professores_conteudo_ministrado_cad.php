@@ -9,6 +9,7 @@ use App\Services\SchoolLevelsService;
 use Illuminate\Support\Arr;
 
 return new class extends clsCadastro {
+    public $id;
     public $bncc;
     public $procedimento_metodologico;
     public $observacao;
@@ -19,31 +20,30 @@ return new class extends clsCadastro {
 
         $retorno = 'Novo';
 
-        // $this->id = $_GET['id'];
+        $this->id = $_GET['id'];
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(58, $this->pessoa_logada, 7, 'educar_professores_conteudo_ministrado_lst.php');
 
-        // if (is_numeric($this->id)) {
-        //     $tmp_obj = new clsModulesFrequencia();
-        //     $registro = $tmp_obj->detalhe(
-        //         $this->id
-        //     );
+        if (is_numeric($this->id)) {
+            $tmp_obj = new clsModulesComponenteMinistrado(
+                $this->id
+            );
+            $registro = $tmp_obj->detalhe();
 
-        //     if ($registro) {
-        //         // passa todos os valores obtidos no registro para atributos do objeto
-        //         foreach ($registro['detalhes'] as $campo => $val) {
-        //             $this->$campo = $val;
-        //         }
-        //         $this->matriculas = $registro['matriculas'];
-        //         $this->ref_cod_serie = $registro['detalhes']['ref_cod_serie']; 
+            if ($registro) {
+                // passa todos os valores obtidos no registro para atributos do objeto
+                foreach ($registro['detalhes'] as $campo => $val) {
+                    $this->$campo = $val;
+                }
+                $this->bncc = $registro['bncc']['ids'];
 
-        //         $this->fexcluir = $obj_permissoes->permissao_excluir(58, $this->pessoa_logada, 7);
-        //         $retorno = 'Editar';
+                $this->fexcluir = $obj_permissoes->permissao_excluir(58, $this->pessoa_logada, 7);
+                $retorno = 'Editar';
 
-        //         $this->titulo = 'Frequência - Edição';
-        //     }
-        // }
+                $this->titulo = 'Frequência - Edição';
+            }
+        }
 
         $this->nome_url_cancelar = 'Cancelar';
         $this->url_cancelar = ($retorno == 'Editar')
@@ -69,14 +69,19 @@ return new class extends clsCadastro {
         $this->campoOculto('cod_serie', 9);
         $this->campoOculto('cod_componente_curricular', 5);
 
-        $this->inputsHelper()->dynamic(['frequencia'], ['frequencia' => $this->frequencia]);
+        if (is_numeric($this->frequencia)) {
+            $desabilitado = true;
+        }
+
+        $this->campoOculto('id', $this->id);
+        $this->inputsHelper()->dynamic(['frequencia'], ['frequencia' => $this->frequencia, 'disabled' => $desabilitado]);
 
         $helperOptions = [
             'objectName' => 'bncc',
         ];
 
         $todos_bncc = $this->getBNCC(9, 5)['bncc'];
-        $this->bncc = array_values(array_intersect($this->bncc, $todos_bncc));
+        // $this->bncc = array_values(array_intersect($this->bncc, $todos_bncc));
 
         $options = [
             'label' => 'BNCC',
@@ -117,7 +122,40 @@ return new class extends clsCadastro {
         return false;
     }
 
+    public function Editar() {
+        $obj = new clsModulesComponenteMinistrado(
+            $this->id,
+            null,
+            $this->procedimento_metodologico,
+            $this->observacao,
+            $this->bncc
+        );
+
+        $editou = $obj->edita();
+
+        if ($editou) {
+            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            $this->simpleRedirect('educar_professores_conteudo_ministrado_lst.php');
+        }
+
+        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+
+        return false;
+    }
+
     public function Excluir () {
+        $obj = new clsModulesComponenteMinistrado(
+            $this->id,
+        );
+
+        $excluiu = $obj->excluir($this->id);
+
+        if ($excluiu) {
+            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            $this->simpleRedirect('educar_professores_conteudo_ministrado_lst.php');
+        }
+
+        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
         
         return false;
     }

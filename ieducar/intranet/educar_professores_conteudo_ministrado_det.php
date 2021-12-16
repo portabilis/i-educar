@@ -32,10 +32,10 @@ return new class extends clsDetalhe {
 
         $obj_permissoes = new clsPermissoes();
 
-        $tmp_obj = new clsModulesComponenteMinistrado();
-        $registro = $tmp_obj->detalhe(
+        $tmp_obj = new clsModulesComponenteMinistrado(
             $this->id
         );
+        $registro = $tmp_obj->detalhe();
 
         if (!$registro) {
             $this->simpleRedirect('educar_professores_conteudo_ministrado_lst.php');
@@ -166,13 +166,6 @@ return new class extends clsDetalhe {
     }
 
     function montaListaBNCC ($codigos, $descricoes) {
-        if (is_string($codigos) && !empty($codigos) && is_string($descricoes) && !empty($descricoes)) {
-            $codigos = explode(',', $codigos);
-            $descricoes = explode('$/', $descricoes);
-        } else {
-            return false;
-        }
-
         $this->tabela .= ' <div style="margin-bottom: 10px;">';
         $this->tabela .= ' <span style="display: block; float: left; width: 100px; font-weight: bold">Código</span>';
         $this->tabela .= ' <span style="display: block; float: left; width: 700px; font-weight: bold">Habilidade</span>';

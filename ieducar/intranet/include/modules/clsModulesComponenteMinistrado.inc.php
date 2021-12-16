@@ -62,19 +62,19 @@ class clsModulesComponenteMinistrado extends Model {
         ';
 
 
-        if (($ano)) {
-            $this->ano = $ano;
+        if (is_numeric($id)) {
+            $this->id = $id;
         }
+
         if (is_numeric($frequencia_id)) {
             $this->frequencia_id = $frequencia_id;
         }
-        if (($procedimento_metodologico)) {
-            $this->procedimento_metodologico = $procedimento_metodologico;
-        }
-        if (($observacao)) {
-            $this->observacao = $observacao;
-        }
-        if($frequencia_bncc){
+
+        $this->procedimento_metodologico = $procedimento_metodologico;
+
+        $this->observacao = $observacao;
+
+        if(is_array($frequencia_bncc)){
             $this->frequencia_bncc = $frequencia_bncc;
         }
     }
@@ -104,16 +104,8 @@ class clsModulesComponenteMinistrado extends Model {
 
             $id = $db->InsertId("{$this->_tabela}_id_seq");
 
-            $campos = "conteudo_ministrado_id, bncc_id";
-
-            $gruda = '';
-            $valores = '';
-            foreach ($this->frequencia_bncc as $key => $bncc) {
-                $valores .= $gruda . "(" . "'" . $id . "'" . ", " . "'" . $bncc . "'" .")";
-                $gruda = ', ';
-            }
-
-            $db->Consulta("INSERT INTO {$this->_tabela}_bncc ( $campos ) VALUES $valores");
+            foreach ($this->frequencia_bncc as $key => $bncc)
+                $this->cadastraBNCC($id, $bncc);
 
             return $id;
         }
@@ -126,10 +118,62 @@ class clsModulesComponenteMinistrado extends Model {
      *
      * @return bool
      */
-    public function edita($id = null) {
-        
+    public function edita() {
+        if (is_numeric($this->id) && $this->procedimento_metodologico && $this->frequencia_bncc) {
+            $db = new clsBanco();
+
+            $set = "procedimento_metodologico = '{$this->procedimento_metodologico}',
+                    observacao = NULLIF('{$this->observacao}',''),
+                    data_atualizacao = (NOW() - INTERVAL '3 HOURS')";
+
+            $db->Consulta("
+                UPDATE
+                    {$this->_tabela}
+                SET
+                    $set
+                WHERE
+                    id = '{$this->id}'
+            ");
+
+            $bncc = $this->listaBNCC($this->id)['ids'];
+            $bncc_diferenca = $this->retornaDiferencaEntreConjuntosBNCC($bncc, $this->frequencia_bncc);
+
+            foreach ($bncc_diferenca['adicionar'] as $key => $bncc_adicionar)
+                $this->cadastraBNCC($this->id, $bncc_adicionar);
+
+            foreach ($bncc_diferenca['remover'] as $key => $bncc_remover)
+                $this->excluiBNCC($this->id, $bncc_remover);
+
+            return true;
+        }
 
         return false;
+    }
+
+    /**
+     * Retorna array com duas arrays, uma com os BNCC a serem cadastrados e a outra com os que devem ser removidos
+     *
+     * @return array
+     */
+    public function retornaDiferencaEntreConjuntosBNCC($atualBNCC, $novoBNCC) {
+        $resultado = [];
+        $resultado['adicionar'] = $novoBNCC;
+        $resultado['remover'] = $atualBNCC;
+
+        for ($i=0; $i < count($novoBNCC); $i++) { 
+            $novo = $novoBNCC[$i];
+
+            for ($j=0; $j < count($atualBNCC); $j++) {
+                $atual = $atualBNCC[$j];
+
+                if ($novo == $atual) {
+                    unset($resultado['adicionar'][$i]);
+                    unset($resultado['remover'][$j]);
+                }
+            }
+        }
+
+        return $resultado;
     }
 
     /**
@@ -253,8 +297,8 @@ class clsModulesComponenteMinistrado extends Model {
      *
      * @return array
      */
-    public function detalhe ($id = null) {
-        if (is_numeric($id)) {
+    public function detalhe () {
+        if (is_numeric($this->id)) {
             $db = new clsBanco();
             $db->Consulta("
                 SELECT
@@ -265,31 +309,14 @@ class clsModulesComponenteMinistrado extends Model {
                 FROM
                     {$this->_from}
                 WHERE
-                    cm.id = {$id}
+                    cm.id = {$this->id}
             ");
 
             $db->ProximoRegistro();
 
             $data['detalhes'] = $db->Tupla();
 
-            // --------------------------------------------------------------------- //
-
-            $db->Consulta("
-                SELECT
-                    STRING_AGG (lok.code::character varying, ',') as codigos,
-                    STRING_AGG (lok.description::character varying, '$/') as descricoes
-                FROM
-                    modules.conteudo_ministrado_bncc as cm
-                JOIN public.learning_objectives_and_skills as lok
-                    ON (lok.id = cm.bncc_id)
-                GROUP BY
-                    cm.conteudo_ministrado_id
-                HAVING
-                    cm.conteudo_ministrado_id = {$id}
-            ");
-            $db->ProximoRegistro();
-
-            $data['bncc'] = $db->Tupla();
+            $data['bncc'] = $this->listaBNCC($this->id);
 
             return $data;
         }
@@ -312,8 +339,89 @@ class clsModulesComponenteMinistrado extends Model {
      *
      * @return bool
      */
-    public function excluir ($id = null) {
+    public function excluir () {
+        if (is_numeric($this->id)) {
+            $db = new clsBanco();
+
+            $db->Consulta("
+                DELETE FROM
+                    modules.conteudo_ministrado
+                WHERE
+                    id = '{$this->id}'
+            ");
+
+            return true;
+        }
 
         return false;
+    }
+
+    /**
+     * Lista relacionamentos entre BNCC e o conteúdo ministrado
+     *
+     * @return array
+     */
+    public function listaBNCC($id_conteudo_ministrado) {
+        $db = new clsBanco();
+
+        $db->Consulta("
+            SELECT
+                STRING_AGG (lok.id::character varying, ',') as ids,
+                STRING_AGG (lok.code::character varying, ',') as codigos,
+                STRING_AGG (lok.description::character varying, '$/') as descricoes
+            FROM
+                modules.conteudo_ministrado_bncc as cm
+            JOIN public.learning_objectives_and_skills as lok
+                ON (lok.id = cm.bncc_id)
+            GROUP BY
+                cm.conteudo_ministrado_id
+            HAVING
+                cm.conteudo_ministrado_id = {$id_conteudo_ministrado}
+        ");
+
+        $db->ProximoRegistro();
+
+        $bncc = $db->Tupla();
+
+        $bncc['ids'] = explode(',', $bncc['ids']);
+        $bncc['codigos'] = explode(',', $bncc['codigos']);
+        $bncc['descricoes'] = explode('$/', $bncc['descricoes']);
+
+        return $bncc;
+    }
+
+    /**
+     * Cadastra relacionamento entre BNCC e o conteúdo ministrado
+     *
+     * @return bool
+     */
+    public function cadastraBNCC($id_conteudo_ministrado, $bncc) {
+        $db = new clsBanco();
+
+        $db->Consulta("
+            INSERT INTO {$this->_tabela}_bncc
+                (conteudo_ministrado_id, bncc_id)
+            VALUES ({$id_conteudo_ministrado}, {$bncc})
+        ");
+
+        return true;
+    }
+
+    /**
+     * Exclui relacionamento entre BNCC e o conteúdo ministrado
+     *
+     * @return bool
+     */
+    public function excluiBNCC($id_conteudo_ministrado, $bncc) {
+        $db = new clsBanco();
+
+        $db->Consulta("
+            DELETE FROM
+                {$this->_tabela}_bncc
+            WHERE
+                conteudo_ministrado_id = '{$id_conteudo_ministrado}' AND bncc_id = '{$bncc}'
+        ");
+
+        return true;
     }
 }
