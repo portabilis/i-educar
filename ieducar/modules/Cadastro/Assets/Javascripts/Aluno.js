@@ -253,6 +253,8 @@ function formularioValido() {
     }
   }
 
+  observacoes_aluno = $j('#observacoes_aluno').val();
+
   if (!validaObrigatoriedadeRecursosTecnologicos()) {
     return false;
   }
@@ -427,7 +429,7 @@ $j('#tab1').addClass('alunoTab-active').removeClass('alunoTab');
 
 // hide nos campos das outras abas (deixando só os campos da primeira aba)
 $j('.tablecadastro >tbody  > tr').each(function (index, row) {
-    if (index > $j('#tr_laudo_medico').index() - 1) {
+    if (index > $j('#tr_observacao_aluno').index() - 1) {
         if (row.id != 'stop') {
             row.hide();
         } else {
@@ -1597,7 +1599,7 @@ function canShowParentsFields() {
                 $j('.alunoTab-active').toggleClass('alunoTab-active alunoTab');
                 $j('#tab1').toggleClass('alunoTab alunoTab-active')
                 $j('.tablecadastro >tbody  > tr').each(function (index, row) {
-                    if (index > $j('#tr_laudo_medico').index() - 1) {
+                    if (index > $j('#tr_observacao_aluno').index() - 1) {
                         if (row.id != 'stop')
                             row.hide();
                         else
@@ -1623,7 +1625,7 @@ function canShowParentsFields() {
 
                     $j('#tr_historico_altura_peso_tit td').removeClass();
                     if (row.id != 'stop') {
-                        if (index > $j('#tr_laudo_medico').index() - 1 && index < $j('#tr_responsavel_parentesco_celular').index() - 1) {
+                        if (index > $j('#tr_observacao_aluno').index() - 1 && index < $j('#tr_responsavel_parentesco_celular').index() - 1) {
                             if (first_click_medica)
                                 $j('#' + row.id).find('td').toggleClass('formlttd formmdtd');
                             row.show();
@@ -2408,6 +2410,9 @@ function canShowParentsFields() {
             nome_social: nome_social,
             pais_residencia: pais_residencia
         };
+
+        console.log(data);
+        return false;
 
         var options = {
             url: postResourceUrlBuilder.buildUrl('/module/Api/pessoa', 'pessoa', {}),
