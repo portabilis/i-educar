@@ -2411,8 +2411,6 @@ function canShowParentsFields() {
             pais_residencia: pais_residencia
         };
 
-        console.log(data);
-        return false;
 
         var options = {
             url: postResourceUrlBuilder.buildUrl('/module/Api/pessoa', 'pessoa', {}),
