@@ -10,11 +10,11 @@ class clsModulesComponenteMinistrado extends Model {
     public $frequencia_bncc;
 
     public function __construct(
-            $id = null,
-            $frequencia_id = null,
-            $procedimento_metodologico = null,
-            $observacao = null,
-            $frequencia_bncc = null
+        $id = null,
+        $frequencia_id = null,
+        $procedimento_metodologico = null,
+        $observacao = null,
+        $frequencia_bncc = null
     ) {
         $db = new clsBanco();
         $this->_schema = 'modules.';
@@ -182,17 +182,17 @@ class clsModulesComponenteMinistrado extends Model {
      * @return array
      */
     public function lista (
-            $int_ano = null,
-            $int_ref_cod_ins = null,
-            $int_ref_cod_escola = null,
-            $int_ref_cod_curso = null,
-            $int_ref_cod_serie = null,
-            $int_ref_cod_turma = null,
-            $int_ref_cod_componente_curricular = null,
-            $int_ref_cod_turno = null,
-            $time_data_inicial = null,
-            $time_data_final = null,
-            $int_etapa = null
+        $int_ano = null,
+        $int_ref_cod_ins = null,
+        $int_ref_cod_escola = null,
+        $int_ref_cod_curso = null,
+        $int_ref_cod_serie = null,
+        $int_ref_cod_turma = null,
+        $int_ref_cod_componente_curricular = null,
+        $int_ref_cod_turno = null,
+        $time_data_inicial = null,
+        $time_data_final = null,
+        $int_etapa = null
     ) {
        
         $sql = "

@@ -19,21 +19,21 @@ class clsModulesFrequencia extends Model {
     public $alunos;
 
     public function __construct(
-            $id = null,
-            $ano = null,
-            $ref_cod_ins = null,
-            $ref_cod_escola = null,
-            $ref_cod_curso = null,
-            $ref_cod_serie = null,
-            $ref_cod_turma = null,
-            $ref_cod_componente_curricular = null,
-            $ref_cod_turno = null,
-            $data = null,
-            $data_inicial = null,
-            $data_final = null,
-            $etapa_sequencial = null,
-            $alunos = null
-        ) {
+        $id = null,
+        $ano = null,
+        $ref_cod_ins = null,
+        $ref_cod_escola = null,
+        $ref_cod_curso = null,
+        $ref_cod_serie = null,
+        $ref_cod_turma = null,
+        $ref_cod_componente_curricular = null,
+        $ref_cod_turno = null,
+        $data = null,
+        $data_inicial = null,
+        $data_final = null,
+        $etapa_sequencial = null,
+        $alunos = null
+    ) {
         $db = new clsBanco();
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}frequencia";
