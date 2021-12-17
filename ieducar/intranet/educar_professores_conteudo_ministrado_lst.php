@@ -99,7 +99,7 @@ return new class extends clsListagem {
         }
 
         $lista = $obj_turma->lista(
-            /*$this->ano,
+            $this->ano,
             $this->ref_cod_instituicao,
             $this->ref_cod_escola,
             $this->ref_cod_curso,
@@ -109,7 +109,7 @@ return new class extends clsListagem {
             $this->turma_turno_id,
             $this->data_inicial,
             $this->data_final,
-            $this->fase_etapa*/
+            $this->fase_etapa
         );
 
         $total = $obj_turma->_total;
