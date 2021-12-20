@@ -336,7 +336,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         if (is_numeric($this->cod_pessoa_fj)) {
             $personObject = new clsFisica($this->cod_pessoa_fj);
-            $this->observacao = (empty($personObject->detalhe()['observacao']) == false) ? $personObject->detalhe()['observacao'] : '';
+            $this->observacao = (empty($personObject->detalhe()['observacao']) == false && isset($personObject->detalhe()['observacao']) == true) ? $personObject->detalhe()['observacao'] : '';
             $objFoto = new clsCadastroFisicaFoto($this->cod_pessoa_fj);
             $detalheFoto = $objFoto->detalhe();
             if (count($detalheFoto)) {
