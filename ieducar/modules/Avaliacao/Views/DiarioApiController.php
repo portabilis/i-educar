@@ -922,6 +922,7 @@ class DiarioApiController extends ApiCoreController
                     $matricula['componentes_curriculares'] = $this->loadComponentesCurricularesForMatricula($matriculaId, $turmaId, $serieId);
                 }
 
+                $matricula['bloquear_troca_de_situacao'] = $registration->isBlockChangeStatus();
                 $matricula['matricula_id'] = $registration->getKey();
                 $matricula['aluno_id'] = $student->getKey();
                 $matricula['nome'] = $person->name;
