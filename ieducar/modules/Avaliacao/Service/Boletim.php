@@ -2731,6 +2731,13 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $situacaoMatricula = $this->getOption('aprovado');
         $situacaoBoletim = $this->getSituacaoAluno();
         $exceptionMsg = '';
+        $matriculaId = $this->getOption('matricula');
+
+        /** @var LegacyRegistration $legacyRegistration */
+        $legacyRegistration = LegacyRegistration::query()->find($matriculaId);
+        if ($legacyRegistration->isBlockChangeStatus() === true) {
+            return true;
+        }
 
         if ($situacaoMatricula == App_Model_MatriculaSituacao::TRANSFERIDO) {
             $novaSituacaoMatricula = App_Model_MatriculaSituacao::TRANSFERIDO;
@@ -2804,7 +2811,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             throw new CoreExt_Service_Exception($exceptionMsg);
         }
 
-        return $this->_updateMatricula($this->getOption('matricula'), $this->getOption('usuario'), $novaSituacaoMatricula);
+        return $this->_updateMatricula($matriculaId, $this->getOption('usuario'), $novaSituacaoMatricula);
     }
 
     /**
