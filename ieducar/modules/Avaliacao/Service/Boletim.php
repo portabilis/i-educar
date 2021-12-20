@@ -2733,9 +2733,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $exceptionMsg = '';
         $matriculaId = $this->getOption('matricula');
 
-        /** @var LegacyRegistration $legacyRegistration */
         $legacyRegistration = LegacyRegistration::query()->find($matriculaId);
-        if ($legacyRegistration->isBlockChangeStatus() === true) {
+        if ($legacyRegistration instanceof LegacyRegistration && $legacyRegistration->isBlockChangeStatus() === true) {
             return true;
         }
 
