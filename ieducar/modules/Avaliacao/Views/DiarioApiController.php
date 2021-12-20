@@ -1790,6 +1790,31 @@ class DiarioApiController extends ApiCoreController
         }
     }
 
+    public function changeLegacyRegistrationBlockStatus()
+    {
+        if (! $this->canPostSituacaoAndNota()) {
+            $this->messenger->append('Usuário não possui permissão para alterar a situação do bloqueio de status da matrícula.', 'error');
+            return;
+        }
+
+        $isBlock = (bool) $this->getRequest()->att_value;
+        $matriculaId = $this->getRequest()->matricula_id;
+
+        /** @var LegacyRegistration $legacyRegistration */
+        $legacyRegistration = LegacyRegistration::query()->find($matriculaId);
+        if ($legacyRegistration === null) {
+            return;
+        }
+
+        $legacyRegistration->bloquear_troca_de_situacao = $isBlock;
+        $legacyRegistration->save();
+
+        $this->appendResponse('matricula_id', $matriculaId);
+
+        $status = $isBlock ? 'ativado' : 'desativado';
+        $this->messenger->append('Bloqueio de troca de situação ' . $status, 'success');
+    }
+
     public function canPostSituacaoAndNota()
     {
         $acesso = new clsPermissoes();
@@ -1824,6 +1849,8 @@ class DiarioApiController extends ApiCoreController
             $this->deleteMedia();
         } elseif ($this->isRequestFor('post', 'situacao')) {
             $this->postSituacao();
+        } elseif ($this->isRequestFor('post', 'bloqueia_troca_de_situacao')) {
+            $this->changeLegacyRegistrationBlockStatus();
         } elseif ($this->isRequestFor('delete', 'nota') || $this->isRequestFor('delete', 'nota_exame')) {
             $this->deleteNota();
         } elseif ($this->isRequestFor('delete', 'nota_recuperacao_paralela')) {
