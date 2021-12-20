@@ -339,6 +339,15 @@ var changeSituacao = function(event) {
   }
 };
 
+var changeBloqueioDeTrocaDeSituacao = function(event) {
+  var $element = $j(this);
+
+  if($element.val() != 0){
+    changeResource($element, postBloqueioDeMudanca);
+    $element.data('old_value', $element.val());
+  }
+};
+
 function afterChangeResource($resourceElement) {
   $resourceElement.removeAttr('disabled').siblings('img').remove();
 
@@ -682,6 +691,26 @@ function postSituacao($situacaoElementField) {
 
   var options = {
     url : postResourceUrlBuilder.buildUrl(API_URL_BASE, 'situacao', additionalVars),
+    dataType : 'json',
+    data : {att_value : $situacaoElementField.val()},
+    success : function(dataResponse) {
+      afterChangeResource($situacaoElementField);
+      handleChange(dataResponse);
+    }
+  };
+
+  $situacaoElementField.data('old_value', $situacaoElementField.val());
+  postResource(options, handleErrorOnPostResource);
+}
+
+function postBloqueioDeMudanca($situacaoElementField) {
+
+  var additionalVars = {
+    matricula_id : $situacaoElementField.data('matricula_id')
+  };
+
+  var options = {
+    url : postResourceUrlBuilder.buildUrl(API_URL_BASE, 'bloqueia_troca_de_situacao', additionalVars),
     dataType : 'json',
     data : {att_value : $situacaoElementField.val()},
     success : function(dataResponse) {
@@ -1138,6 +1167,7 @@ function handleSearch($resultTable, dataResponse) {
     if (! componenteCurricularSelected && value.componentes_curriculares)
       updateComponenteCurriculares($resultTable, value.matricula_id, value.componentes_curriculares, value.regra);
 
+    //ADD checkbox do bloqueio de situação
     if((value.regra.quantidade_etapas == $j('#etapa').val() ) && (value.regra.progressao_manual || value.regra.progressao_manual_ciclo) && !componenteCurricularSelected){
       situacaoFinalField(dataResponse.matricula_id, dataResponse.situacao).appendTo($resultTable);
     }
@@ -1165,6 +1195,7 @@ function handleSearch($resultTable, dataResponse) {
   var $notaGeralEtapaFields = $resultTable.find('.nota-geral-etapa');
   var $mediaFields = $resultTable.find('.media-cc');
   var $situacaoField = $resultTable.find('.situacao-cc');
+  let bloqueioFiel = $resultTable.find('.bloqueio-cc');
 
   $notaFields.on('change', changeNota);
   $notaExameFields.on('change', changeNotaExame);
@@ -1174,6 +1205,7 @@ function handleSearch($resultTable, dataResponse) {
   $notaGeralEtapaFields.on('change', changeNotaGeralEtapa);
   $mediaFields.on('change', changeMedia);
   $situacaoField.on('change', changeSituacao);
+  bloqueioFiel.on('change', changeBloqueioDeTrocaDeSituacao);
 
   $resultTable.addClass('styled').find('.tabable:first').focus();
   navegacaoTab(dataResponse.navegacao_tab);
