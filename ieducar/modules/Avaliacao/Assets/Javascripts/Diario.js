@@ -713,7 +713,7 @@ function postBloqueioDeMudanca(bloqueioSituacaoField) {
     dataType : 'json',
     data : {att_value : bloqueioSituacaoField.is(":checked")},
     success : function(dataResponse) {
-     // Add mensagem de ativação de desativação
+      messageUtils.success(dataResponse.msgs[0].msg)
     }
   };
 
@@ -1165,7 +1165,6 @@ function handleSearch($resultTable, dataResponse) {
     if (! componenteCurricularSelected && value.componentes_curriculares)
       updateComponenteCurriculares($resultTable, value.matricula_id, value.componentes_curriculares, value.regra);
 
-    //ADD checkbox do bloqueio de situação
     if((value.regra.quantidade_etapas == $j('#etapa').val() ) && (value.regra.progressao_manual || value.regra.progressao_manual_ciclo) && !componenteCurricularSelected){
       situacaoFinalField(dataResponse.matricula_id, dataResponse.situacao).appendTo($resultTable);
     }
@@ -1784,26 +1783,39 @@ function changeMediaValue(elementId, nota, notaArredondada, regra){
 
 function situacaoFinalField($matriculaId, $situacao){
 
-  var $selectSituacao  = $j('<select />').attr('id', 'situacao' + '-matricula-' + $matriculaId + '-cc-').addClass('situacao-cc').data('matricula_id', $matriculaId);
-  var $optionDefault                = $j('<option />').html('').val(0).attr('selected', 'selected');
-  var $optionAprovado               = $j('<option />').html('Aprovado').val(1);
-  var $optionRetido                 = $j('<option />').html('Retido').val(2);
-  var $optionAprovadoPeloConselho   = $j('<option />').html('Aprovado pelo conselho').val(13);
-  var $optionAprovadoComDependencia = $j('<option />').html('Aprovado com dependência').val(12);
-  let input = '<td><input type="checkbox" class="bloqueio-matricula" id="'+$matriculaId+'"</td>';
+  let $selectSituacao  = $j('<select />').attr('id', 'situacao' + '-matricula-' + $matriculaId + '-cc-').addClass('situacao-cc').data('matricula_id', $matriculaId);
+  let $optionDefault                = $j('<option />').html('').val(0).attr('selected', 'selected');
+  let $optionAprovado               = $j('<option />').html('Aprovado').val(1);
+  let $optionRetido                 = $j('<option />').html('Retido').val(2);
+  let $optionAprovadoPeloConselho   = $j('<option />').html('Aprovado pelo conselho').val(13);
+  let $optionAprovadoComDependencia = $j('<option />').html('Aprovado com dependência').val(12);
+
+  let $checkbox = $j('<input />')
+    .attr('type', 'checkbox')
+    .attr('name', 'bloqueio-matricula')
+    .attr('id', $matriculaId)
+    .attr('class', 'bloqueio-matricula');
+
+  let label =  $j('<label />')
+    .attr('for', $matriculaId)
+    .html('Bloquear troca de situação de matrícula');
 
   $optionDefault.appendTo($selectSituacao);
   $optionAprovado.appendTo($selectSituacao);
   $optionRetido.appendTo($selectSituacao);
   $optionAprovadoPeloConselho.appendTo($selectSituacao);
+
   if (regra_dependencia) {
     $optionAprovadoComDependencia.appendTo($selectSituacao);
   }
 
-  var $element = $j('<tr />').addClass('center resultado-final');
+  let $element = $j('<tr />').addClass('center resultado-final');
   $j('<td />').addClass('center resultado-final').html(safeUtf8Decode('Situação final')).appendTo($element);
-  $j('<td />').addClass('resultado-final-esquerda').attr('colspan', '6').html($selectSituacao).appendTo($element);
-  $j('<td />').attr('colspan', '2').html(input).appendTo($element);
+  let resultado = $j('<td />').addClass('resultado-final-esquerda').attr('colspan', '6').html($selectSituacao);
+
+  resultado.append($checkbox);
+  resultado.append(label);
+  resultado.appendTo($element);
 
   return $element;
 }
