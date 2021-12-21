@@ -707,7 +707,7 @@ function postBloqueioDeMudanca(bloqueioSituacaoField) {
   let additionalVars = {
     matricula_id : bloqueioSituacaoField[0].id
   };
-  changeBloqueioDeTrocaDeSituacao
+
   let options = {
     url : postResourceUrlBuilder.buildUrl(API_URL_BASE, 'bloqueia_troca_de_situacao', additionalVars),
     dataType : 'json',

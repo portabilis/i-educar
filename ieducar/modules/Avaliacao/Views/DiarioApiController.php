@@ -1777,17 +1777,22 @@ class DiarioApiController extends ApiCoreController
 
     public function postSituacao()
     {
-        if ($this->canPostSituacaoAndNota()) {
-            $novaSituacao = $this->getRequest()->att_value;
-            $matriculaId = $this->getRequest()->matricula_id;
-
-            $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
-
-            $this->serviceBoletim()->alterarSituacao($novaSituacao, $matriculaId);
-            $this->messenger->append('Situação da matrícula ' . $this->getRequest()->matricula_id . ' alterada com sucesso.', 'success');
-        } else {
+        if (! $this->canPostSituacaoAndNota()) {
             $this->messenger->append('Usuário não possui permissão para alterar a situação da matrícula.', 'error');
         }
+
+        $novaSituacao = $this->getRequest()->att_value;
+        $matriculaId = $this->getRequest()->matricula_id;
+
+        $legacyRegistration = LegacyRegistration::query()->find($matriculaId);
+        if ($legacyRegistration instanceof LegacyRegistration && $legacyRegistration->isBlockChangeStatus() === true) {
+            $this->messenger->append('Situação da matrícula ' . $matriculaId . ' não pode ser alterada pois esta bloqueada para mudança de situação');
+            return;
+        }
+
+        $this->serviceBoletim()->alterarSituacao($novaSituacao, $matriculaId);
+        $this->appendResponse('matricula_id', $matriculaId);
+        $this->messenger->append('Situação da matrícula ' . $matriculaId . ' alterada com sucesso.', 'success');
     }
 
     public function changeLegacyRegistrationBlockStatus()
