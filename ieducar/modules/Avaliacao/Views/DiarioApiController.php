@@ -1797,7 +1797,7 @@ class DiarioApiController extends ApiCoreController
             return;
         }
 
-        $isBlock = (bool) $this->getRequest()->att_value;
+        $isBlock = $this->getRequest()->att_value === 'true';
         $matriculaId = $this->getRequest()->matricula_id;
 
         /** @var LegacyRegistration $legacyRegistration */
