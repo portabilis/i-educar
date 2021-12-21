@@ -444,7 +444,7 @@ class clsFisica
                 $valores .= ', NULL';
             }
 
-            if (is_string($this->observacao)) {
+            if (is_string($this->observacao) && $this->observacao != 'NULL') {
                 $campos  .= ', observacao';
                 $valores .= ", '$this->observacao'";
             }
@@ -714,7 +714,7 @@ class clsFisica
                 $set .= "$gruda nome_social = '{$this->nome_social}'";
             }
 
-            if (is_string($this->observacao)) {
+            if (is_string($this->observacao) && $this->observacao != 'NULL') {
                 $set .= "$gruda observacao = '{$this->observacao}'";
                 $gruda = ', ';
             }
