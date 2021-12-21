@@ -65,8 +65,7 @@ class clsModulesBNCC extends Model {
      * @return array
      */
     public function lista (
-        $int_ref_cod_serie = null,
-        $int_ref_cod_componente_curricular = null
+        $int_frequencia = null
     ) {
        
         $sql = "
@@ -76,19 +75,27 @@ class clsModulesBNCC extends Model {
                 FROM
                     {$this->_from}
             )
-                SELECT * FROM select_
+                SELECT
+                    select_.id,
+                    code,
+                    description,
+                    field_of_experience,
+                    thematic_unit,
+                    discipline,
+                    select_.grade
+                FROM select_
+                JOIN modules.frequencia as f
+                    ON (f.ref_componente_curricular IS NULL OR discipline::integer = f.ref_componente_curricular)
+                JOIN pmieducar.turma as t
+                    ON (t.cod_turma = f.ref_cod_turma)
+                WHERE select_.grade::integer = t.ref_ref_cod_serie
         ";
 
         $whereAnd = ' AND ';
-        $filtros = " WHERE TRUE ";
+        $filtros = "";
 
-        if (is_numeric($int_ref_cod_serie)) {
-            $filtros .= "{$whereAnd} grade = '{$int_ref_cod_serie}'";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_numeric($int_ref_cod_componente_curricular)) {
-            $filtros .= "{$whereAnd} discipline = '{$int_ref_cod_componente_curricular}'";
+        if (is_numeric($int_frequencia)) {
+            $filtros .= "{$whereAnd} f.id = '{$int_frequencia}'";
             $whereAnd = ' AND ';
         }
 
@@ -105,7 +112,15 @@ class clsModulesBNCC extends Model {
                 FROM
                     {$this->_from}
             )
-                SELECT COUNT(0) FROM select_ {$filtros}" 
+                SELECT
+                    COUNT(0)
+                FROM select_
+                JOIN modules.frequencia as f
+                    ON (discipline::integer = f.ref_componente_curricular)
+                JOIN pmieducar.turma as t
+                    ON (t.cod_turma = f.ref_cod_turma)
+                WHERE select_.grade::integer = t.ref_ref_cod_serie
+                {$filtros}" 
         );
 
         $db->Consulta($sql);

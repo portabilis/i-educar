@@ -4,21 +4,26 @@ class BNCCController extends ApiCoreController
 {
     public function getBNCC()
     {
-        $bncc = [];
-        $bncc_temp = [];
-        $obj = new clsModulesBNCC();
+        $frequencia = $this->getRequest()->frequencia;
+        if (is_numeric($frequencia)) {
+            $bncc = [];
+            $bncc_temp = [];
+            $obj = new clsModulesBNCC();
 
-        if ($bncc_temp = $obj->lista($this->getRequest()->cod_serie, $this->getRequest()->cod_componente_curricular)) {
-            foreach ($bncc_temp as $bncc_item) {
-                $id = $bncc_item['id'];
-                $code = $bncc_item['code'];
-                $description = $bncc_item['description'];
+            if ($bncc_temp = $obj->lista($frequencia)) {
+                foreach ($bncc_temp as $bncc_item) {
+                    $id = $bncc_item['id'];
+                    $code = $bncc_item['code'];
+                    $description = $bncc_item['description'];
 
-                $bncc[$id] = $code . ' - ' . $description;
+                    $bncc[$id] = $code . ' - ' . $description;
+                }
             }
+
+            return ['bncc' => $bncc];
         }
 
-        return ['bncc' => $bncc];
+        return [];
     }
 
     public function Gerar()

@@ -1,29 +1,38 @@
 (function($){
     $(document).ready(function(){
-        const codSerie = document.getElementById('cod_serie').value
-        const codComponenteCurricular = document.getElementById('cod_componente_curricular').value
+        document.getElementById('frequencia').onchange = function () {
+            console.log('Frequência');
+            const codfrequencia = document.getElementById('frequencia').value
 
-        if (!codSerie || !codComponenteCurricular) {
-            $('#bncc').val([]).empty().trigger('chosen:updated');
-            getResource(false);
-        }
-
-        let url = getResourceUrlBuilder.buildUrl(
-        '/module/Api/BNCC',
-        'bncc',
-        { cod_serie : codSerie, cod_componente_curricular: codComponenteCurricular }
-        );
-
-        var options = {
-            url      : url,
-            dataType : 'json',
-            success  : function (dataResponse) {
-                $('#bncc').html(
-                (dataResponse.bncc||[]).map(code => `<option value='${code}'>${code}</option>`).join()
-                ).trigger('chosen:updated');
+            if (!codfrequencia) {
+                $('#bncc').val([]).empty().trigger('chosen:updated');
+                getResource(false);
             }
-        };
 
-        getResource(options);
+            let url = getResourceUrlBuilder.buildUrl(
+            '/module/Api/BNCC',
+            'bncc',
+            { frequencia : codfrequencia }
+            );
+
+            var options = {
+                url      : url,
+                dataType : 'json',
+                success  : function (dataResponse) {
+                    console.log($('#bncc'));
+                    $('#bncc').html(
+                        (Object.keys(dataResponse.bncc || []).map(key => `<option value='${key}'>${dataResponse.bncc[key]}</option>`)).join()
+                    ).trigger('chosen:updated');
+                }
+            };
+
+            getResource(options);
+        };
+    });
+})(jQuery);
+
+(function a($){
+    $(document).ready(function(){
+        
     });
 })(jQuery);

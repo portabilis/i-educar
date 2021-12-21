@@ -80,8 +80,7 @@ return new class extends clsCadastro {
             'objectName' => 'bncc',
         ];
 
-        $todos_bncc = $this->getBNCC(9, 5)['bncc'];
-        // $this->bncc = array_values(array_intersect($this->bncc, $todos_bncc));
+        $todos_bncc = $this->getBNCC($this->frequencia)['bncc'];
 
         $options = [
             'label' => 'BNCC',
@@ -160,23 +159,27 @@ return new class extends clsCadastro {
         return false;
     }
 
-    private function getBNCC($cod_serie, $cod_componente_curricular)
+    private function getBNCC($frequencia = null)
     {
-        $bncc = [];
-        $bncc_temp = [];
-        $obj = new clsModulesBNCC();
+        if (is_numeric($frequencia)) {
+            $bncc = [];
+            $bncc_temp = [];
+            $obj = new clsModulesBNCC();
 
-        if ($bncc_temp = $obj->lista($cod_serie, $cod_componente_curricular)) {
-            foreach ($bncc_temp as $bncc_item) {
-                $id = $bncc_item['id'];
-                $code = $bncc_item['code'];
-                $description = $bncc_item['description'];
+            if ($bncc_temp = $obj->lista($frequencia)) {
+                foreach ($bncc_temp as $bncc_item) {
+                    $id = $bncc_item['id'];
+                    $code = $bncc_item['code'];
+                    $description = $bncc_item['description'];
 
-                $bncc[$id] = $code . ' - ' . $description;
+                    $bncc[$id] = $code . ' - ' . $description;
+                }
             }
+
+            return ['bncc' => $bncc];
         }
 
-        return ['bncc' => $bncc];
+        return [];
     }
 
     public function loadAssets () {
