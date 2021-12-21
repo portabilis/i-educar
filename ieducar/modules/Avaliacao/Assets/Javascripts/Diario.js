@@ -1790,7 +1790,7 @@ function situacaoFinalField($matriculaId, $situacao){
   var $optionRetido                 = $j('<option />').html('Retido').val(2);
   var $optionAprovadoPeloConselho   = $j('<option />').html('Aprovado pelo conselho').val(13);
   var $optionAprovadoComDependencia = $j('<option />').html('Aprovado com dependência').val(12);
-  let html1 = '<td><input type="checkbox" class="bloqueio-matricula" id="'+$matriculaId+'"</td>';
+  let input = '<td><input type="checkbox" class="bloqueio-matricula" id="'+$matriculaId+'"</td>';
 
   $optionDefault.appendTo($selectSituacao);
   $optionAprovado.appendTo($selectSituacao);
@@ -1803,7 +1803,7 @@ function situacaoFinalField($matriculaId, $situacao){
   var $element = $j('<tr />').addClass('center resultado-final');
   $j('<td />').addClass('center resultado-final').html(safeUtf8Decode('Situação final')).appendTo($element);
   $j('<td />').addClass('resultado-final-esquerda').attr('colspan', '6').html($selectSituacao).appendTo($element);
-  $j('<td />').attr('colspan', '2').html(html1).appendTo($element);
+  $j('<td />').attr('colspan', '2').html(input).appendTo($element);
 
   return $element;
 }
