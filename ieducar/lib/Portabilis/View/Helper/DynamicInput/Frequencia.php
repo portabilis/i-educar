@@ -20,7 +20,7 @@ class Portabilis_View_Helper_DynamicInput_Frequencia extends Portabilis_View_Hel
                     f.id, data, cc.nome, t.nm_turma
                 FROM
                     modules.frequencia f
-                JOIN modules.componente_curricular as cc
+                LEFT JOIN modules.componente_curricular as cc
                     ON	(f.ref_componente_curricular = cc.id)
                 JOIN pmieducar.turma as t
                     ON (f.ref_cod_turma = t.cod_turma)
@@ -30,7 +30,10 @@ class Portabilis_View_Helper_DynamicInput_Frequencia extends Portabilis_View_Hel
             $db->Consulta($sql);
 
             while ($db->ProximoRegistro()) {
-                $resources[$db->Campo('id')] = dataToBrasil($db->Campo('data')) . ' - ' . $db->Campo('nm_turma') . ' (' . $db->Campo('nome') . ')';
+                if ($db->Campo('nome') != null)
+                    $resources[$db->Campo('id')] = dataToBrasil($db->Campo('data')) . ' - ' . $db->Campo('nm_turma') . ' (' . $db->Campo('nome') . ')';
+                else
+                    $resources[$db->Campo('id')] = dataToBrasil($db->Campo('data')) . ' - ' . $db->Campo('nm_turma');
             }
         }
 

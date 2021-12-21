@@ -16,7 +16,7 @@ class FaseEtapaController extends ApiCoreController
                     f.id, data, cc.nome, t.nm_turma
                 FROM
                     modules.frequencia f
-                JOIN modules.componente_curricular as cc
+                LEFT JOIN modules.componente_curricular as cc
                     ON	(f.ref_componente_curricular = cc.id)
                 JOIN pmieducar.turma as t
                     ON (f.ref_cod_turma = t.cod_turma)
@@ -26,8 +26,11 @@ class FaseEtapaController extends ApiCoreController
 
             $options = [];
 
-            for ($i=1; $i < $data['data'] + 1; $i++) { 
-                $options[$data['id']] = $data['data'] . ' - ' . $data['nm_turma'] . ' (' . $data['nome'] . ')';
+            for ($i=1; $i < $data['data'] + 1; $i++) {
+                if ($data['nome'] != null)
+                    $options[$data['id']] = $data['data'] . ' - ' . $data['nm_turma'] . ' (' . $data['nome'] . ')';
+                else
+                    $options[$data['id']] = $data['data'] . ' - ' . $data['nm_turma'];
             }
 
             return ['options' => $options];
