@@ -447,6 +447,9 @@ class clsFisica
             if (is_string($this->observacao) && $this->observacao != 'NULL') {
                 $campos  .= ', observacao';
                 $valores .= ", '$this->observacao'";
+            }else{
+                $campos  .= ', observacao';
+                $valores .= ", NULL";
             }
 
             $db->Consulta("INSERT INTO {$this->schema}.{$this->tabela} (idpes, origem_gravacao, data_cad, operacao, idpes_cad $campos) VALUES ( '{$this->idpes}', 'M', NOW(), 'I', '$this->idpes_cad' $valores )");
@@ -716,6 +719,9 @@ class clsFisica
 
             if (is_string($this->observacao) && $this->observacao != 'NULL') {
                 $set .= "$gruda observacao = '{$this->observacao}'";
+                $gruda = ', ';
+            }else{
+                $set .= "$gruda observacao = NULL";
                 $gruda = ', ';
             }
 
