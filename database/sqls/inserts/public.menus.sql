@@ -5,7 +5,7 @@ INSERT INTO public.menus VALUES (4, NULL, 'Servidores', NULL, '/intranet/educar_
 INSERT INTO public.menus VALUES (5, NULL, 'Educacenso', NULL, '/intranet/educar_educacenso_index.php', 'fa-bar-chart', 6, 1, 70, 70, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (6, NULL, 'Transporte escolar', NULL, '/intranet/educar_transporte_escolar_index.php', 'fa-bus', 7, 1, 69, 69, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (7, NULL, 'Biblioteca', NULL, '/intranet/educar_biblioteca_index.php', 'fa-book', 8, 1, 57, 57, NULL, true, NULL, NULL);
-INSERT INTO public.menus VALUES (8, NULL, 'Configurações', NULL, '/intranet/educar_configuracoes_index.php', 'fa-gear', 9, 1, 25, 25, NULL, true, NULL, NULL);
+INSERT INTO public.menus VALUES (8, NULL, 'Configurações', NULL, '/intranet/educar_configuracoes_index.php', 'fa-gear', 10, 1, 25, 25, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (9, 2, 'Cadastros', NULL, NULL, NULL, 1, 2, NULL, 999929, 7, true, NULL, NULL);
 INSERT INTO public.menus VALUES (74, 13, 'Atualização de matrículas', 'Atualização de matrículas', '/module/Avaliacao/Promocao', NULL, 2, 3, 644, 644, 999910, true, NULL, NULL);
 INSERT INTO public.menus VALUES (10, 2, 'Ferramentas', NULL, NULL, NULL, 2, 2, NULL, 9998876, 7, true, NULL, NULL);
@@ -163,3 +163,9 @@ INSERT INTO public.menus VALUES (170, 3, 'Desfazer unificação de alunos', NULL
 INSERT INTO public.menus VALUES (230, 31, 'Histórico de importações', NULL, '/educacenso/importacao/historico', NULL, 99, 1, 2004, NULL, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (233, 20, 'Exportações', 'Exportações', NULL, NULL, 99, 1, 1020, NULL, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (234, 233, 'Exportação para o SEB', 'Exportação para o SEB', '/exportacao-para-o-seb', NULL, 99, 1, 1021, NULL, NULL, true, NULL, NULL);
+
+INSERT INTO public.menus VALUES (305, NULL, 'Professores', NULL, '/intranet/educar_professores_index.php', 'fa-users', 9, 1, 58, NULL, NULL, true, NULL, NULL);
+INSERT INTO public.menus VALUES (306, 305, 'Diário de classe', NULL, '/intranet/educar_professores_index.php', NULL, 1, 2, NULL, NULL, NULL, true, NULL, NULL);
+INSERT INTO public.menus VALUES (307, 306, 'Frequência', NULL, '/intranet/educar_professores_frequencia_lst.php', NULL, 1, 3, 58, NULL, NULL, true, NULL, NULL);
+INSERT INTO public.menus VALUES (308, 306, 'Conteúdos ministrados', NULL, '/intranet/educar_professores_conteudo_ministrado_lst.php', NULL, 2, 3, 58, NULL, NULL, true, NULL, NULL);
+INSERT INTO public.menus VALUES (309, 306, 'Notas', NULL, '/module/Avaliacao/diario', NULL, 3, 3, 58, NULL, NULL, true, NULL, NULL);
