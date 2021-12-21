@@ -340,11 +340,10 @@ var changeSituacao = function(event) {
 };
 
 var changeBloqueioDeTrocaDeSituacao = function(event) {
-  var $element = $j(this);
+  let element = $j(this);
 
-  if($element.val() != 0){
-    changeResource($element, postBloqueioDeMudanca);
-    $element.data('old_value', $element.val());
+  if(element[0].id != 0) {
+    changeResource(element, postBloqueioDeMudanca);
   }
 };
 
@@ -703,23 +702,22 @@ function postSituacao($situacaoElementField) {
   postResource(options, handleErrorOnPostResource);
 }
 
-function postBloqueioDeMudanca($situacaoElementField) {
+function postBloqueioDeMudanca(bloqueioSituacaoField) {
 
-  var additionalVars = {
-    matricula_id : $situacaoElementField.data('matricula_id')
+  let additionalVars = {
+    matricula_id : bloqueioSituacaoField[0].id
   };
-
-  var options = {
+  changeBloqueioDeTrocaDeSituacao
+  let options = {
     url : postResourceUrlBuilder.buildUrl(API_URL_BASE, 'bloqueia_troca_de_situacao', additionalVars),
     dataType : 'json',
-    data : {att_value : $situacaoElementField.val()},
+    data : {att_value : bloqueioSituacaoField.is(":checked")},
     success : function(dataResponse) {
-      afterChangeResource($situacaoElementField);
-      handleChange(dataResponse);
+     // Add mensagem de ativação de desativação
     }
   };
 
-  $situacaoElementField.data('old_value', $situacaoElementField.val());
+ // bloqueioSituacaoField.data('old_value', bloqueioSituacaoField.val());
   postResource(options, handleErrorOnPostResource);
 }
 
@@ -1195,7 +1193,7 @@ function handleSearch($resultTable, dataResponse) {
   var $notaGeralEtapaFields = $resultTable.find('.nota-geral-etapa');
   var $mediaFields = $resultTable.find('.media-cc');
   var $situacaoField = $resultTable.find('.situacao-cc');
-  let bloqueioFiel = $resultTable.find('.bloqueio-cc');
+  let bloqueioField = $resultTable.find('.bloqueio-matricula');
 
   $notaFields.on('change', changeNota);
   $notaExameFields.on('change', changeNotaExame);
@@ -1205,7 +1203,7 @@ function handleSearch($resultTable, dataResponse) {
   $notaGeralEtapaFields.on('change', changeNotaGeralEtapa);
   $mediaFields.on('change', changeMedia);
   $situacaoField.on('change', changeSituacao);
-  bloqueioFiel.on('change', changeBloqueioDeTrocaDeSituacao);
+  bloqueioField.on('change', changeBloqueioDeTrocaDeSituacao);
 
   $resultTable.addClass('styled').find('.tabable:first').focus();
   navegacaoTab(dataResponse.navegacao_tab);
@@ -1792,6 +1790,7 @@ function situacaoFinalField($matriculaId, $situacao){
   var $optionRetido                 = $j('<option />').html('Retido').val(2);
   var $optionAprovadoPeloConselho   = $j('<option />').html('Aprovado pelo conselho').val(13);
   var $optionAprovadoComDependencia = $j('<option />').html('Aprovado com dependência').val(12);
+  let html1 = '<td><input type="checkbox" class="bloqueio-matricula" id="'+$matriculaId+'"</td>';
 
   $optionDefault.appendTo($selectSituacao);
   $optionAprovado.appendTo($selectSituacao);
@@ -1804,6 +1803,7 @@ function situacaoFinalField($matriculaId, $situacao){
   var $element = $j('<tr />').addClass('center resultado-final');
   $j('<td />').addClass('center resultado-final').html(safeUtf8Decode('Situação final')).appendTo($element);
   $j('<td />').addClass('resultado-final-esquerda').attr('colspan', '6').html($selectSituacao).appendTo($element);
+  $j('<td />').attr('colspan', '2').html(html1).appendTo($element);
 
   return $element;
 }
