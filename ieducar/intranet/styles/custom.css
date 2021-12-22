@@ -1355,6 +1355,24 @@ p.title-table-matricula {
   color: #FFF !important;
 }
 
+btn-danger, input.btn-danger {
+  color:#fff !important;
+  background-color:#aa2e28 !important;
+  border-color:#aa2e28
+}
+
+input.continuar-processo {
+  margin: 10px 5px 10px 0;
+}
+
+span.qnt-matriculas {
+  font-size: 15px !important;
+}
+
+input.proximo-matricula {
+  margin: 10px 10px;
+}
+
 input.btn_small {
     margin: 4px 0;
     padding: 7px 7px !important;

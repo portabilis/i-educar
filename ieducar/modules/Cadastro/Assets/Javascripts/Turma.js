@@ -372,8 +372,34 @@ $j(document).ready(function() {
     $j('#ano_letivo').val($j('#ano').val());
   });
 
-  $j('#ref_cod_serie').on('change', function(){
-    atualizaOpcoesDeDisciplinas();
+  $j('#ref_cod_escola').on('change', function(){
+    $j('#ref_cod_escola_').val($j('#ref_cod_escola').val());
   });
 
+  $j('#ref_cod_curso').on('change', function(){
+    $j('#ref_cod_curso_').val($j('#ref_cod_curso').val());
+  });
+
+  $j('#ref_cod_serie').on('change', function(){
+    atualizaOpcoesDeDisciplinas();
+    $j('#ref_cod_serie_').val($j('#ref_cod_serie').val());
+  });
+
+  $j("#tipo_boletim, #tipo_boletim_diferenciado").chosen({
+    no_results_text: "Nenhum modelo encontrado!",
+    allow_single_deselect: true,
+  });
+
+});
+
+// Força reload na página quando utiliza "voltar" do navegador
+window.addEventListener( "pageshow", function ( event ) {
+  var historyTraversal = (
+    event.persisted ||
+    ( typeof window.performance != "undefined" && window.performance.navigation.type === 2 )
+  );
+  if ( historyTraversal ) {
+    // Handle page restore.
+    window.location.reload();
+  }
 });

@@ -48,7 +48,8 @@ class SchoolClassController extends Controller
             $codEscola = $schoolClass->ref_ref_cod_escola;
 
             if (! empty($request->get('multiseriada'))) {
-                $multSerieId = $request->get('mult_serie_id');
+                $multSerieIds = $request->get('mult_serie_id');
+                $multSerieId = is_array($multSerieIds) ? $multSerieIds : [];
                 $multBoletimId = $request->get('mult_boletim_id');
                 $multBoletimDiferenciadoId = $request->get('mult_boletim_diferenciado_id');
 
@@ -76,6 +77,8 @@ class SchoolClassController extends Controller
                     $etapasUtilizadas,
                     $etapasEspecificas
                 );
+                $multiGradesService = new MultiGradesService();
+                $multiGradesService->deleteAllGradesOfSchoolClass($schoolClass);
             }
 
             if ($codigoInepEducacenso) {
@@ -138,10 +141,15 @@ class SchoolClassController extends Controller
     {
         $params = $request->all();
         $legacySchoolClass = new LegacySchoolClass();
+
         if (!empty($params['cod_turma'])) {
             $legacySchoolClass = LegacySchoolClass::find($params['cod_turma']);
         }
         $pessoaLogada = $request->user()->id;
+
+        if (empty($params['multiseriada'])) {
+            $params['multiseriada'] = 0;
+        }
 
         if (isset($params['dias_semana'])) {
             $params['dias_semana'] = '{' . implode(',', $params['dias_semana']) . '}';

@@ -72,7 +72,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Customiza&ccedil;&atilde;o de labels';
+        $this->title = 'Customiza&ccedil;&atilde;o de labels';
         $this->processoAp = 9998869;
     }
 };

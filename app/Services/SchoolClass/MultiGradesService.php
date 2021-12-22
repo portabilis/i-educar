@@ -61,13 +61,12 @@ class MultiGradesService
         $this->saveSchoolClassGrade($schoolClass, $schoolClassGrades);
     }
 
-    public function deleteAllGradesOfSchoolClass(LegacySchoolClass $schoolClass, $excludeGrades)
+    public function deleteAllGradesOfSchoolClass(LegacySchoolClass $schoolClass)
     {
         $query = LegacySchoolClassGrade::query()
             ->where('turma_id', $schoolClass->getKey());
 
-        $gradesToDelete = $query->whereNotIn('serie_id', $excludeGrades)
-            ->get()
+        $gradesToDelete = $query->get()
             ->pluck('serie_id')
             ->toArray();
 

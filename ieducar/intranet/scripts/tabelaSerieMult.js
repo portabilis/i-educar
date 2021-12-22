@@ -18,7 +18,8 @@ $j('#btn_add_tab_add_1').click(function(){
     let quantidadeDeCursos = $j('select[name^="mult_curso_id"]').length;
     let idUltimoSelectCurso = $j('select[name^="mult_curso_id"]')[quantidadeDeCursos - 1].id;
     let ultimoCurso = $j('select[id="'+idUltimoSelectCurso+'"]');
-    if (opcoesCurso > 0) {
+
+    if (Object.keys(opcoesCurso).length > 0) {
         ultimoCurso.empty();
         ultimoCurso.append('<option value="">Selecione um curso</option>');
     }
@@ -27,6 +28,7 @@ $j('#btn_add_tab_add_1').click(function(){
     });
     let linha = idUltimoSelectCurso.replace(/\D/g, '');
     adicionaEventoClickAoRemoverLinha('link_remove['+ linha +']');
+    converteCamposDeBoletinsEmChosen();
 });
 
 if ($j('#cod_turma').val() > 0 && $j('#multiseriada').is(':checked')) {
@@ -60,6 +62,7 @@ function preencheTabelaSeriesDaTurma() {
                 $j('select[id="mult_boletim_diferenciado_id['+ linha +']"]').val(serie_turma.boletim_diferenciado_id);
                 $j('input[id="mult_padrao_ano_escolar['+ linha +']"]').val(serie_turma.padrao_ano_escolar);
                 adicionaEventoClickAoRemoverLinha('link_remove['+ linha +']');
+                converteCamposDeBoletinsEmChosen();
             });
         }
     };
@@ -251,3 +254,10 @@ function adicionaEventoClickAoRemoverLinha(idLinkRemove) {
         defineSerieCursoPrincipal();
     })
 }
+
+function converteCamposDeBoletinsEmChosen() {
+    $j("select[name^='mult_boletim_id'], select[name^='mult_boletim_diferenciado_id']").chosen({
+      no_results_text: "Nenhum modelo encontrado!",
+      allow_single_deselect: true,
+    });
+  }

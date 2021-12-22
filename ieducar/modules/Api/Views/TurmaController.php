@@ -177,8 +177,23 @@ class TurmaController extends ApiCoreController
     protected function getTipoBoletim()
     {
         $turma = App_Model_IedFinder::getTurma($codTurma = $this->getRequest()->id);
+        $serie = $this->getRequest()->serie_id;
+
         $tipo = $turma['tipo_boletim'];
         $tipoDiferenciado = $turma['tipo_boletim_diferenciado'];
+
+        $boletimPorSerie = [];
+
+        if ($turma['multiseriada'] === 1) {
+            $boletimPorSerie = LegacySchoolClassGrade::query()
+            ->where('turma_id', $turma)
+            ->where('serie_id', $serie)
+            ->first()
+            ->toArray();
+
+            $tipo = $boletimPorSerie['boletim_id'];
+            $tipoDiferenciado = $boletimPorSerie['boletim_diferenciado_id'];
+        }
 
         $tipos = Portabilis_Model_Report_TipoBoletim::getInstance()->getReports();
         $tipos = Portabilis_Array_Utils::insertIn(null, 'indefinido', $tipos);

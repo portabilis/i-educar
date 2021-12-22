@@ -84,7 +84,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Categoria de obras';
+        $this->title = 'Categoria de obras';
         $this->processoAp = 599;
     }
 };

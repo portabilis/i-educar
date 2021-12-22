@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacySchoolClassGrade;
+use Illuminate\Support\Facades\DB;
 
 return new class extends clsDetalhe {
     public $titulo;
@@ -365,7 +366,11 @@ return new class extends clsDetalhe {
             }
         }
 
-        $this->montaListaComponentes();
+        if ($this->multiseriada == 1) {
+            $this->montaListaComponentesMulti();
+        } else {
+            $this->montaListaComponentes();
+        }
 
         if ($obj_permissoes->permissao_cadastra(586, $this->pessoa_logada, 7)) {
             $this->url_novo = 'educar_turma_cad.php';
@@ -477,9 +482,68 @@ return new class extends clsDetalhe {
         );
     }
 
+    public function montaListaComponentesMulti()
+    {
+        $this->tabela3 = '';
+        $componentes = $this->getComponentesTurmaMulti($this->cod_turma);
+
+        if (is_array($componentes) && count($componentes)) {
+            $this->tabela3 .= '<div style="margin-bottom: 10px;">';
+            $this->tabela3 .= '  <span style="display: block; float: left; width: 250px; font-weight: bold">Nome</span>';
+            $this->tabela3 .= '  <span style="display: block; float: left; width: 100px; font-weight: bold">Carga horária</span>';
+            $this->tabela3 .= '</div>';
+            $this->tabela3 .= '<br style="clear: left" />';
+
+            foreach ($componentes as $componente) {
+                $this->tabela3 .= '<div style="margin-bottom: 10px; float: left" class="linha-disciplina" >';
+                $this->tabela3 .= "  <span style='display: block; float: left; width: 250px'>" . $componente->nome . "</span>";
+                $this->tabela3 .= "  <span style='display: block; float: left; width: 100px'>" . $componente->carga_horaria . "</span>";
+                $this->tabela3 .= '</div>';
+                $this->tabela3 .= '<br style="clear: left" />';
+            }
+
+            $disciplinas  = '<table cellspacing="0" cellpadding="0" border="0">';
+            $disciplinas .= sprintf('<tr align="left"><td>%s</td></tr>', $this->tabela3);
+            $disciplinas .= '</table>';
+        } else {
+            $disciplinas = 'A série/ano escolar não possui componentes curriculares cadastrados.';
+        }
+        $this->addDetalhe(
+            [
+                'Componentes curriculares',
+                $disciplinas
+            ]
+        );
+    }
+
+    public function getComponentesTurmaMulti($turmaId) {
+        return DB::table('pmieducar.turma as t')
+        ->selectRaw('cc.id, cc.nome, coalesce(esd.carga_horaria, ccae.carga_horaria)::int AS carga_horaria')
+        ->join('pmieducar.turma_serie as ts', 'ts.turma_id', '=', 't.cod_turma')
+        ->join('pmieducar.escola_serie as es', function($join) {
+            $join->on('es.ref_cod_serie', '=', 'ts.serie_id');
+            $join->on('es.ref_cod_escola', '=', 't.ref_ref_cod_escola');
+        })
+        ->join('pmieducar.escola_serie_disciplina as esd', function($join) {
+            $join->on('esd.ref_ref_cod_serie', '=', 'es.ref_cod_serie');
+            $join->on('esd.ref_ref_cod_escola', '=', 'es.ref_cod_escola');
+        })
+        ->join('modules.componente_curricular as cc', 'cc.id', '=', 'esd.ref_cod_disciplina')
+        ->join('modules.componente_curricular_ano_escolar as ccae', function($join) {
+            $join->on('ccae.componente_curricular_id', '=', 'cc.id');
+            $join->on('ccae.ano_escolar_id', '=', 'es.ref_cod_serie');
+        })
+        ->where('t.cod_turma', $turmaId)
+        ->whereRaw('t.ano = ANY(esd.anos_letivos)')
+        ->where('t.multiseriada', 1)
+        ->distinct()
+        ->get()
+        ->toArray();
+    }
+
     public function Formular()
     {
-        $this->title = 'i-Educar - Turma';
+        $this->title = 'Turma';
         $this->processoAp = 586;
     }
 };
