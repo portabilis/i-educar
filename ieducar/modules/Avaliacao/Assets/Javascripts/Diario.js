@@ -720,7 +720,6 @@ function postBloqueioDeMudanca(bloqueioSituacaoField) {
     }
   };
 
- // bloqueioSituacaoField.data('old_value', bloqueioSituacaoField.val());
   postResource(options, handleErrorOnPostResource);
 }
 
@@ -1225,6 +1224,11 @@ function handleSearch($resultTable, dataResponse) {
     criaBotaoReplicarNotas();
 
   $j('.flashMessages').addClass('msg-diario');
+
+  if(dataResponse.matriculas.length === 1) {
+    $situacaoField.prop('disabled', dataResponse.matriculas[0].bloquear_troca_de_situacao);
+  }
+
 }
 
 function _notaField(matriculaId, componenteCurricularId, klass, id, value, areaConhecimentoId, maxLength, tipoNota, regra) {
