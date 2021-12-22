@@ -923,6 +923,7 @@ class DiarioApiController extends ApiCoreController
                 }
 
                 $matricula['bloquear_troca_de_situacao'] = $registration->isBlockChangeStatus();
+                $matricula['situacao'] = $registration->aprovado;
                 $matricula['matricula_id'] = $registration->getKey();
                 $matricula['aluno_id'] = $student->getKey();
                 $matricula['nome'] = $person->name;
@@ -1815,6 +1816,7 @@ class DiarioApiController extends ApiCoreController
         $legacyRegistration->save();
 
         $this->appendResponse('matricula_id', $matriculaId);
+        $this->appendResponse('bloquear_troca_de_situacao', $isBlock);
 
         $status = $isBlock ? 'ativado' : 'desativado';
         $this->messenger->append('Bloqueio de troca de situação ' . $status, 'success');

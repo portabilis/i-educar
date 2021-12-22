@@ -713,6 +713,9 @@ function postBloqueioDeMudanca(bloqueioSituacaoField) {
     dataType : 'json',
     data : {att_value : bloqueioSituacaoField.is(":checked")},
     success : function(dataResponse) {
+      let matriculaId     = dataResponse.matricula_id;
+      let $situacaoField  = $j('#situacao-matricula-' + matriculaId + '-cc-');
+      $situacaoField.prop('disabled', dataResponse.bloquear_troca_de_situacao);
       messageUtils.success(dataResponse.msgs[0].msg)
     }
   };
@@ -1166,7 +1169,7 @@ function handleSearch($resultTable, dataResponse) {
       updateComponenteCurriculares($resultTable, value.matricula_id, value.componentes_curriculares, value.regra);
 
     if((value.regra.quantidade_etapas == $j('#etapa').val() ) && (value.regra.progressao_manual || value.regra.progressao_manual_ciclo) && !componenteCurricularSelected){
-      situacaoFinalField(dataResponse.matricula_id, dataResponse.situacao).appendTo($resultTable);
+      situacaoFinalField(dataResponse.matricula_id, dataResponse.situacao,value).appendTo($resultTable);
     }
 
     if ((!componenteCurricularSelected) && (showBotaoReplicarNotas))
@@ -1781,19 +1784,22 @@ function changeMediaValue(elementId, nota, notaArredondada, regra){
   }
 }
 
-function situacaoFinalField($matriculaId, $situacao){
+function situacaoFinalField($matriculaId, $situacao, value){
 
-  let $selectSituacao  = $j('<select />').attr('id', 'situacao' + '-matricula-' + $matriculaId + '-cc-').addClass('situacao-cc').data('matricula_id', $matriculaId);
-  let $optionDefault                = $j('<option />').html('').val(0).attr('selected', 'selected');
-  let $optionAprovado               = $j('<option />').html('Aprovado').val(1);
-  let $optionRetido                 = $j('<option />').html('Retido').val(2);
-  let $optionAprovadoPeloConselho   = $j('<option />').html('Aprovado pelo conselho').val(13);
-  let $optionAprovadoComDependencia = $j('<option />').html('Aprovado com dependência').val(12);
+  let situacaoValueAvailable = [1,2,12,13];
+  let selectId = 'situacao' + '-matricula-' + $matriculaId + '-cc-';
+  let $selectSituacao               = $j('<select />').attr('id', selectId).addClass('situacao-cc').data('matricula_id', $matriculaId);
+  let $optionDefault                = $j('<option />').html('').val(0).attr('selected', !situacaoValueAvailable.includes(value.situacao));
+  let $optionAprovado               = $j('<option />').html('Aprovado').val(1).attr('selected', value.situacao === 1);
+  let $optionRetido                 = $j('<option />').html('Retido').val(2).attr('selected', value.situacao === 2);
+  let $optionAprovadoPeloConselho   = $j('<option />').html('Aprovado pelo conselho').val(13).attr('selected', value.situacao === 13);
+  let $optionAprovadoComDependencia = $j('<option />').html('Aprovado com dependência').val(12).attr('selected', value.situacao === 12);
 
   let $checkbox = $j('<input />')
     .attr('type', 'checkbox')
     .attr('name', 'bloqueio-matricula')
     .attr('id', $matriculaId)
+    .prop('checked', value.bloquear_troca_de_situacao)
     .attr('class', 'bloqueio-matricula');
 
   let label =  $j('<label />')
