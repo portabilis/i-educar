@@ -77,7 +77,7 @@ class LegacyRegistration extends Model
         return $this->cod_matricula;
     }
 
-    public function isBlockChangeStatus(): bool
+    public function isLockedToChangeStatus(): bool
     {
         return $this->bloquear_troca_de_situacao;
     }

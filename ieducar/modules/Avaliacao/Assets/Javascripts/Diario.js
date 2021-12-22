@@ -337,7 +337,7 @@ var changeSituacao = function(event) {
   }
 };
 
-var changeBloqueioDeTrocaDeSituacao = function(event) {
+let changeRegistrationLockStatus = function(event) {
   let element = $j(this);
 
   if(element[0].id != 0) {
@@ -689,7 +689,7 @@ function postSituacao($situacaoElementField) {
   var options = {
     url : postResourceUrlBuilder.buildUrl(API_URL_BASE, 'situacao', additionalVars),
     dataType : 'json',
-    data : {att_value : $situacaoElementField.val()},
+    data : {new_status : $situacaoElementField.val()},
     success : function(dataResponse) {
       afterChangeResource($situacaoElementField);
       handleChange(dataResponse);
@@ -709,7 +709,7 @@ function postBloqueioDeMudanca(bloqueioSituacaoField) {
   let options = {
     url : postResourceUrlBuilder.buildUrl(API_URL_BASE, 'bloqueia_troca_de_situacao', additionalVars),
     dataType : 'json',
-    data : {att_value : bloqueioSituacaoField.is(":checked")},
+    data : {bloquear_troca_de_situacao : bloqueioSituacaoField.is(":checked")},
     success : function(dataResponse) {
       let matriculaId     = dataResponse.matricula_id;
       let $situacaoField  = $j('#situacao-matricula-' + matriculaId + '-cc-');
@@ -1202,7 +1202,7 @@ function handleSearch($resultTable, dataResponse) {
   $notaGeralEtapaFields.on('change', changeNotaGeralEtapa);
   $mediaFields.on('change', changeMedia);
   $situacaoField.on('change', changeSituacao);
-  bloqueioField.on('change', changeBloqueioDeTrocaDeSituacao);
+  bloqueioField.on('change', changeRegistrationLockStatus);
 
   $resultTable.addClass('styled').find('.tabable:first').focus();
   navegacaoTab(dataResponse.navegacao_tab);
