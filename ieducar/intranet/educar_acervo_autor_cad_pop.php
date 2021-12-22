@@ -91,7 +91,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Autor';
+        $this->title = 'Autor';
         $this->processoAp = '594';
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;
