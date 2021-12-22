@@ -23,8 +23,7 @@ class AlunoController extends ApiCoreController
     {
         $existenceOptions = ['schema_name' => 'cadastro', 'field_name' => 'idpes'];
 
-        return (
-            $this->validatesPresenceOf('pessoa_id') &&
+        return ($this->validatesPresenceOf('pessoa_id') &&
             $this->validatesExistenceOf('fisica', $this->getRequest()->pessoa_id, $existenceOptions)
         );
     }
@@ -35,8 +34,7 @@ class AlunoController extends ApiCoreController
 
         // beneficio is optional
         if (is_numeric($this->getRequest()->religiao_id)) {
-            $isValid = (
-                $this->validatesPresenceOf('religiao_id') &&
+            $isValid = ($this->validatesPresenceOf('religiao_id') &&
                 $this->validatesExistenceOf('religiao', $this->getRequest()->religiao_id)
             );
         }
@@ -51,8 +49,7 @@ class AlunoController extends ApiCoreController
 
         // beneficio is optional
         if (is_numeric($this->getRequest()->beneficio_id)) {
-            $isValid = (
-                $this->validatesPresenceOf('beneficio_id') &&
+            $isValid = ($this->validatesPresenceOf('beneficio_id') &&
                 $this->validatesExistenceOf('aluno_beneficio', $this->getRequest()->beneficio_id)
             );
         }
@@ -67,8 +64,7 @@ class AlunoController extends ApiCoreController
         if ($this->getRequest()->tipo_responsavel == 'outra_pessoa') {
             $existenceOptions = ['schema_name' => 'cadastro', 'field_name' => 'idpes'];
 
-            $isValid = (
-                $this->validatesPresenceOf('responsavel_id') &&
+            $isValid = ($this->validatesPresenceOf('responsavel_id') &&
                 $this->validatesExistenceOf('fisica', $this->getRequest()->responsavel_id, $existenceOptions)
             );
         }
@@ -80,8 +76,7 @@ class AlunoController extends ApiCoreController
     {
         $expectedValues = ['mae', 'pai', 'outra_pessoa', 'pai_mae'];
 
-        return (
-            $this->validatesPresenceOf('tipo_responsavel') &&
+        return ($this->validatesPresenceOf('tipo_responsavel') &&
             $this->validator->validatesValueInSetOf(
                 $this->getRequest()->tipo_responsavel,
                 $expectedValues,
@@ -92,8 +87,7 @@ class AlunoController extends ApiCoreController
 
     protected function validatesResponsavel()
     {
-        return (
-            $this->validatesResponsavelTipo() &&
+        return ($this->validatesResponsavelTipo() &&
             $this->validatesResponsavelId()
         );
     }
@@ -102,8 +96,7 @@ class AlunoController extends ApiCoreController
     {
         $expectedValues = ['nenhum', 'municipal', 'estadual'];
 
-        return (
-            $this->validatesPresenceOf('tipo_transporte') &&
+        return ($this->validatesPresenceOf('tipo_transporte') &&
             $this->validator->validatesValueInSetOf(
                 $this->getRequest()->tipo_transporte,
                 $expectedValues,
@@ -204,7 +197,7 @@ class AlunoController extends ApiCoreController
         if ($this->getRequest()->aluno_inep_id) {
             $inepCode = str_split($this->getRequest()->aluno_inep_id);
 
-            if(count($inepCode) !== 12 || $inepCode[0] === "0"){
+            if (count($inepCode) !== 12 || $inepCode[0] === "0") {
                 return false;
             }
         }
@@ -214,8 +207,7 @@ class AlunoController extends ApiCoreController
 
     protected function canChange()
     {
-        return (
-            $this->validatesPessoaId() &&
+        return ($this->validatesPessoaId() &&
             $this->validatesResponsavel() &&
             $this->validatesTransporte() &&
             $this->validatesReligiaoId() &&
@@ -1226,10 +1218,11 @@ class AlunoController extends ApiCoreController
                 $aluno = Portabilis_Array_Utils::merge($objPessoaTransporte, $aluno);
             }
 
-            $sql = 'select sus, ref_cod_religiao from cadastro.fisica where idpes = $1';
+            $sql = 'select sus, ref_cod_religiao, observacao from cadastro.fisica where idpes = $1';
             $camposFisica = $this->fetchPreparedQuery($sql, $aluno['pessoa_id'], false, 'first-row');
 
             $aluno['sus'] = $camposFisica['sus'];
+            $aluno['observacao_aluno'] = $camposFisica['observacao'];
             $aluno['religiao_id'] = $camposFisica['ref_cod_religiao'];
             $aluno['beneficios'] = $this->loadBeneficios($id);
             $aluno['projetos'] = $this->loadProjetos($id);
@@ -1875,6 +1868,7 @@ class AlunoController extends ApiCoreController
         $fisica->cpf = $this->getRequest()->id_federal ? idFederal2int($this->getRequest()->id_federal) : 'NULL';
         $fisica->ref_cod_religiao = $this->getRequest()->religiao_id;
         $fisica->nis_pis_pasep = $this->getRequest()->nis_pis_pasep ?: 'NULL';
+        $fisica->observacao = $this->getRequest()->observacao_aluno ?: 'NULL';
         $fisica = $fisica->edita();
     }
 

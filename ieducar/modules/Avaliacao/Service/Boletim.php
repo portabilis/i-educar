@@ -3462,6 +3462,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         }
 
         $disciplineAverages = $this->_loadMedias()->getMediasComponentes();
+        $qtdDisciplinasDependencia = $this->getRegraAvaliacaoQtdDisciplinasDependencia();
+
+        if ($qtdDisciplinasDependencia === 0) {
+            return false;
+        }
 
         $amountReproved = 0;
         foreach ($disciplineAverages as $disciplineId => $disciplineAverage) {
@@ -3476,7 +3481,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             }
         }
 
-        return $amountReproved <= $this->getRegraAvaliacaoQtdDisciplinasDependencia();
+        return $amountReproved <= $qtdDisciplinasDependencia;
     }
 
     private function getCargaHoraria($registration, $ignorarSeriesCiclo)
