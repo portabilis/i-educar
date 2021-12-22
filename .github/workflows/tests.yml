@@ -47,7 +47,7 @@ jobs:
           php-version: '7.4'
       - uses: actions/checkout@v2
       - name: Utiliza versão 2.1.5 do Composer
-        run: composer self-update 2.1.5
+        run: composer self-update 2.1.*
       - name: Install Dependencies
         run: composer new-install
       - name: Unit tests
