@@ -70,7 +70,7 @@ return new class extends clsCadastro {
                 $this->$campo = ($this->$campo) ? $this->$campo : $val;
             }
         }
-
+        
         $this->data = dataToBrasil($this->data);
         $this->ano = explode('/', $this->data)[2];
 
@@ -100,11 +100,12 @@ return new class extends clsCadastro {
 
         $this->campoOculto('id', $this->id);
         $this->inputsHelper()->dynamic('data', ['label' => 'Data', 'required' => $obrigatorio]);
-        $this->inputsHelper()->dynamic('instituicao', ['required' => !$obrigatorio, 'instituicao' => $this->ref_cod_instituicao, 'disabled' => $desabilitado]);
-        $this->inputsHelper()->dynamic('escola', ['required' => !$obrigatorio, 'escola' => $this->ref_cod_escola, 'disabled' => $desabilitado]);
-        $this->inputsHelper()->dynamic('curso', ['required' => !$obrigatorio, 'curso' => $this->ref_cod_curso, 'disabled' => $desabilitado]);
-        $this->inputsHelper()->dynamic('serie', ['required' => !$obrigatorio, 'serie' => $this->ref_cod_serie, 'disabled' => $desabilitado]);
-        $this->inputsHelper()->dynamic('turma', ['required' => $obrigatorio, 'turma' => $this->ref_cod_turma, 'disabled' => $desabilitado]);
+        // $this->inputsHelper()->dynamic('instituicao', ['required' => !$obrigatorio, 'instituicao' => $this->ref_cod_instituicao, 'disabled' => $desabilitado]);
+        // $this->inputsHelper()->dynamic('escola', ['required' => !$obrigatorio, 'escola' => $this->ref_cod_escola, 'disabled' => $desabilitado]);
+        // $this->inputsHelper()->dynamic('curso', ['required' => !$obrigatorio, 'curso' => $this->ref_cod_curso, 'disabled' => $desabilitado]);
+        // $this->inputsHelper()->dynamic('serie', ['required' => !$obrigatorio, 'serie' => $this->ref_cod_serie, 'disabled' => $desabilitado]);
+        // $this->inputsHelper()->dynamic('turma', ['required' => $obrigatorio, 'turma' => $this->ref_cod_turma, 'disabled' => $desabilitado]);
+        $this->inputsHelper()->dynamic('todas_Turmas', ['required' => $obrigatorio, 'turma' => $this->ref_cod_turma, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic(
             'componenteCurricular',
             ['required' => !$obrigatorio, 'componenteCurricular' => $this->ref_cod_componente_curricular, 'disabled' => $desabilitado]
@@ -397,6 +398,7 @@ return new class extends clsCadastro {
     public function loadAssets () {
         $scripts = [
             '/modules/Cadastro/Assets/Javascripts/Frequencia.js',
+            '/modules/DynamicInput/Assets/Javascripts/TodasTurmas.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
