@@ -44,7 +44,7 @@ class Teacher extends Model
             ],
             'Professor' => [
                 'name' => 'Nome',
-                'social_name' => 'Nome social',
+                'social_name' => 'Nome social e/ou afetivo',
                 'cpf' => 'CPF',
                 'rg' => 'RG',
                 'rg_issue_date' => 'RG (Data Emissão)',

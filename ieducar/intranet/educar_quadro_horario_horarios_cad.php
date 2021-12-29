@@ -55,7 +55,7 @@ return new class extends clsCadastro {
             641,
             $this->pessoa_logada,
             7,
-            "educar_quadro_horario_lst.php?ref_cod_instituicao={$this->ref_cod_instituicao}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_serie={$this->ref_ref_cod_serie}&ref_cod_turma={$this->ref_cod_turma}$ano={$this->ano_alocacao}"
+            "educar_quadro_horario_lst.php?ref_cod_instituicao={$this->ref_cod_instituicao}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_serie={$this->ref_ref_cod_serie}&ref_cod_turma={$this->ref_cod_turma}&ano={$this->ano_alocacao}"
         );
 
         if (!$_POST) {
@@ -154,9 +154,11 @@ return new class extends clsCadastro {
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
-        $this->breadcrumb($nomeMenu . ' horário', [
-        url('intranet/educar_servidores_index.php') => 'Servidores',
-    ]);
+        $this->breadcrumb($nomeMenu . ' horário',
+            [
+                url('intranet/educar_servidores_index.php') => 'Servidores',
+            ]
+        );
 
         return $retorno;
     }
@@ -222,15 +224,15 @@ return new class extends clsCadastro {
         $this->campoOculto('identificador', $this->identificador);
 
         $opcoesDias = [
-      '' => 'Selecione um dia da semana',
-      1  => 'Domingo',
-      2  => 'Segunda-Feira',
-      3  => 'Terça-Feira',
-      4  => 'Quarta-Feira',
-      5  => 'Quinta-Feira',
-      6  => 'Sexta-Feira',
-      7  => 'Sábado'
-    ];
+            '' => 'Selecione um dia da semana',
+            1  => 'Domingo',
+            2  => 'Segunda-Feira',
+            3  => 'Terça-Feira',
+            4  => 'Quarta-Feira',
+            5  => 'Quinta-Feira',
+            6  => 'Sexta-Feira',
+            7  => 'Sábado'
+        ];
 
         $this->campoOculto('dia_semana', $this->dia_semana);
         $this->campoLista(
@@ -282,7 +284,7 @@ return new class extends clsCadastro {
             $this->quadro_horario = unserialize(urldecode($_POST['quadro_horario']));
         }
 
-        $qtd_horario = is_array($this->quadro_horario) ? (count($this->quadro_horario) == 0 ? 1 : count($this->quadro_horario) + 1) : 0;
+        $qtd_horario = is_array($this->quadro_horario) ? (count($this->quadro_horario) == 0 ? 1 : count($this->quadro_horario) + 1) : 1;
 
         // primary keys
         if ($this->incluir_horario) {
@@ -413,34 +415,34 @@ return new class extends clsCadastro {
                     );
                 } else {
                     switch ($campo['dia_semana_']) {
-            case 1:
-              $campo['nm_dia_semana_'] = 'Domingo';
-              break;
+                        case 1:
+                            $campo['nm_dia_semana_'] = 'Domingo';
+                            break;
 
-            case 2:
-              $campo['nm_dia_semana_'] = 'Segunda-Feira';
-              break;
+                        case 2:
+                            $campo['nm_dia_semana_'] = 'Segunda-Feira';
+                            break;
 
-            case 3:
-              $campo['nm_dia_semana_'] = 'Terça-Feira';
-              break;
+                        case 3:
+                            $campo['nm_dia_semana_'] = 'Terça-Feira';
+                            break;
 
-            case 4:
-              $campo['nm_dia_semana_'] = 'Quarta-Feira';
-              break;
+                        case 4:
+                            $campo['nm_dia_semana_'] = 'Quarta-Feira';
+                            break;
 
-            case 5:
-              $campo['nm_dia_semana_'] = 'Quinta-Feira';
-              break;
+                        case 5:
+                            $campo['nm_dia_semana_'] = 'Quinta-Feira';
+                            break;
 
-            case 6:
-              $campo['nm_dia_semana_'] = 'Sexta-Feira';
-              break;
+                        case 6:
+                            $campo['nm_dia_semana_'] = 'Sexta-Feira';
+                            break;
 
-            case 7:
-              $campo['nm_dia_semana_'] = 'S&aacute;bado';
-              break;
-          }
+                        case 7:
+                            $campo['nm_dia_semana_'] = 'S&aacute;bado';
+                            break;
+                    }
                 }
 
                 if ($campo['ativo_'] == 1) {

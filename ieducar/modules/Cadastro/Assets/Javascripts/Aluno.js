@@ -417,14 +417,6 @@ var $linkToCreatePessoaResponsavel = $linkToCreatePessoaPai
     .appendTo($pessoaResponsavelActionBar)
     .css('display', 'none');
 
-var $linkToEditPessoaResponsavel = $linkToEditPessoaPai
-    .clone()
-    .removeClass('editar-pessoa-pai')
-    .addClass('editar-pessoa-responsavel')
-    .attr('id', 'editar-pessoa-responsavel-link')
-    .appendTo($pessoaResponsavelActionBar);
-
-
 // adiciona id 'stop' na linha separadora
 $j('.tableDetalheLinhaSeparador').closest('tr').attr('id', 'stop');
 // Adiciona abas na página
@@ -1738,7 +1730,7 @@ function canShowParentsFields() {
                       <legend>Dados b&aacute;sicos</legend>
                       <label for="nome-pessoa-aluno">Nome<span class="campo_obrigatorio">*</span> </label>
                       <input type="text" name="nome-pessoa-aluno" id="nome-pessoa-aluno" size="49" maxlength="255" class="text">
-                      <label for="nome-social-pessoa-aluno">Nome social</label>
+                      <label for="nome-social-pessoa-aluno">Nome social e/ou afetivo</label>
                       <input type="text" name="nome-social-pessoa-aluno" id="nome-social-pessoa-aluno" size="49" maxlength="255" class="text">
                       <label for="sexo-pessoa-aluno">Sexo<span class="campo_obrigatorio">*</span> </label>
                       <select class="select ui-widget-content ui-corner-all" name="sexo-pessoa-aluno" id="sexo-pessoa-aluno">
@@ -2185,12 +2177,6 @@ function canShowParentsFields() {
         $j("#editar-pessoa-mae-link").click(function () {
             if ($j('#pessoa_id').val()) {
                 openEditModalParent('mae');
-            }
-        });
-
-        $j("#editar-pessoa-responsavel-link").click(function () {
-            if ($j('#pessoa_id').val()) {
-                openEditModalParent('responsavel');
             }
         });
 
