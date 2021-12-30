@@ -122,7 +122,6 @@ class ReportController extends ApiCoreController
 
             $modelo = $configuracoes['modelo_boletim_professor'];
 
-            $boletimProfessorReport->addArg('modelo', $modelo);
             $boletimProfessorReport->addArg('linha', 0);
             $boletimProfessorReport->addArg('SUBREPORT_DIR', config('legacy.report.source_path'));
 
