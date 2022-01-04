@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4082a248f7b3e416ccc9b4c83a133a04",
+    "content-hash": "658df0e2dc5b7e5dc679270bca25e9b3",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -465,16 +465,16 @@
         },
         {
             "name": "dex/composer-plug-and-play",
-            "version": "0.5.0",
+            "version": "0.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/edersoares/composer-plug-and-play.git",
-                "reference": "bc9d85a1280b0ba4b4d89576ce130da82d6ed349"
+                "reference": "15c73b02b1bd3d0b99310eacff8270754b3a5ae0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/edersoares/composer-plug-and-play/zipball/bc9d85a1280b0ba4b4d89576ce130da82d6ed349",
-                "reference": "bc9d85a1280b0ba4b4d89576ce130da82d6ed349",
+                "url": "https://api.github.com/repos/edersoares/composer-plug-and-play/zipball/15c73b02b1bd3d0b99310eacff8270754b3a5ae0",
+                "reference": "15c73b02b1bd3d0b99310eacff8270754b3a5ae0",
                 "shasum": ""
             },
             "require": {
@@ -509,9 +509,9 @@
             "description": "Plug and play packages for Composer",
             "support": {
                 "issues": "https://github.com/edersoares/composer-plug-and-play/issues",
-                "source": "https://github.com/edersoares/composer-plug-and-play/tree/0.5.0"
+                "source": "https://github.com/edersoares/composer-plug-and-play/tree/0.6.0"
             },
-            "time": "2021-10-06T02:50:51+00:00"
+            "time": "2021-12-29T14:30:42+00:00"
         },
         {
             "name": "dflydev/dot-access-data",
@@ -11409,5 +11409,5 @@
         "ext-pgsql": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.2.0"
 }
