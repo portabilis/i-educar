@@ -4,8 +4,8 @@
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
     <meta http-equiv="Pragma" content="no-cache"/>
     <meta http-equiv="Expires" content="-1"/>
-
-    <title>i-Educar @if(isset($title)) - {{$title}} @endif</title>
+    <link rel="shortcut icon" href="{{ url('favicon.ico') }}" />
+    <title>@if(isset($title)) {!! $title !!} - @endif {{ config('legacy.app.entity.name') }} - i-Educar</title>
 
     <script>
         dataLayer = [{

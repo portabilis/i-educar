@@ -70,7 +70,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Bloqueio de lanÃ§amento de notas e faltas por etapa';
+        $this->title = 'Bloqueio de lanÃ§amento de notas e faltas por etapa';
         $this->processoAp = 999848;
     }
 };

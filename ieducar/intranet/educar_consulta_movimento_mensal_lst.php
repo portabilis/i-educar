@@ -263,7 +263,7 @@ JS;
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Consulta de movimento mensal';
+        $this->title = 'Consulta de movimento mensal';
         $this->processoAp = 9998910;
     }
 };

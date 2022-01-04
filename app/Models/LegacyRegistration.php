@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App_Model_MatriculaSituacao;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -20,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property LegacyStudentScore       $studentScore
  * @property LegacyStudentDescriptive $studentDescriptive
  * @property LegacyCourse             $course
+ * @property Collection               $enrollments
  */
 class LegacyRegistration extends Model
 {

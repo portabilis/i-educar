@@ -279,7 +279,7 @@ return new class extends clsDetalhe {
         }
 
         if ($det_fisica['nome_social']) {
-            $this->addDetalhe(['Nome Social', mb_strtoupper($det_fisica['nome_social'])]);
+            $this->addDetalhe(['Nome social e/ou afetivo', mb_strtoupper($det_fisica['nome_social'])]);
         }
 
         if (idFederal2int($registro['cpf'])) {
@@ -949,7 +949,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Aluno';
+        $this->title = 'Aluno';
         $this->processoAp = 578;
     }
 };

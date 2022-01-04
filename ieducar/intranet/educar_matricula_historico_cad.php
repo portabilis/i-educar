@@ -223,7 +223,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Bloqueio do ano letivo';
+        $this->title = 'Bloqueio do ano letivo';
 
         $this->processoAp = Process::ENROLLMENT_HISTORY;
     }

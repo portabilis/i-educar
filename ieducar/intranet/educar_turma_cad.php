@@ -480,10 +480,11 @@ return new class extends clsCadastro {
         $this->inputsHelper()->turmaTurno();
 
         $tiposBoletim = Portabilis_Model_Report_TipoBoletim::getInstance()->getEnums();
+        asort($tiposBoletim);
         $tiposBoletim = Portabilis_Array_Utils::insertIn(null, 'Selecione um modelo', $tiposBoletim);
 
-        $this->campoLista('tipo_boletim', 'Modelo relat&oacute;rio boletim', $tiposBoletim, $this->tipo_boletim);
-        $this->campoLista('tipo_boletim_diferenciado', 'Modelo relat&oacute;rio boletim diferenciado', $tiposBoletim, $this->tipo_boletim_diferenciado, '', false, '', '', false, false);
+        $this->campoLista('tipo_boletim', 'Modelo de boletim', $tiposBoletim, $this->tipo_boletim);
+        $this->campoLista('tipo_boletim_diferenciado', 'Modelo do boletim inclusivo', $tiposBoletim, $this->tipo_boletim_diferenciado, '', false, '', '', false, false);
 
         $this->montaListaComponentesSerieEscola();
 
@@ -1639,7 +1640,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Turma';
+        $this->title = 'Turma';
         $this->processoAp = 586;
     }
 };

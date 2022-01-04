@@ -19,18 +19,38 @@ class MunicipioController extends ApiCoreController
         return $resource['id'] . " - $nome ($siglaUf)";
     }
 
+    protected function formatResourceValueOnlyName($resource)
+    {
+        return $this->toUtf8($resource['name'], ['transform' => true]);
+    }
+
     public function Gerar()
     {
         if ($this->isRequestFor('get', 'municipio-search')) {
             $this->appendResponse($this->search());
+        } elseif ($this->isRequestFor('get', 'municipio-name-search')) {
+            $this->appendResponse($this->search(true));
         } else {
             $this->notImplementedOperationError();
         }
     }
 
-    protected function search()
+    protected function search($onlyName = false)
     {
         if ($this->canSearch()) {
+
+            $fields = " DISTINCT sigla_uf,
+                    idmun AS id,
+                    nome AS name,
+                    LENGTH(nome) AS size ";
+
+            if($onlyName === true) {
+                $fields = "
+                    nome AS id,
+                    nome AS name,
+                    LENGTH(nome) AS size ";
+            }
+
             if (is_numeric($this->getRequest()->query)){
                 $where = 'AND idmun = :idmun';
                 $field = 'idmun';
@@ -40,10 +60,7 @@ class MunicipioController extends ApiCoreController
             }
             $sql = "
                 SELECT
-                    DISTINCT sigla_uf,
-                    idmun AS id,
-                    nome AS name,
-                    LENGTH(nome) AS size
+                    {$fields}
                 FROM
                     public.municipio
                 WHERE TRUE
@@ -58,7 +75,9 @@ class MunicipioController extends ApiCoreController
 
             foreach ($tmpResults as $result) {
                 if (!isset($results[$result['id']])) {
-                    $results[$result['id']] = $this->formatResourceValue($result);
+                    $results[$result['id']] = $onlyName === true ?
+                        $this->formatResourceValueOnlyName($result) :
+                        $this->formatResourceValue($result);
                 }
             }
 

@@ -256,7 +256,7 @@ return new class extends clsCadastro {
                 $this->cnpj = int2CNPJ($objJuridica['cnpj']);
             }
 
-            $this->fexcluir = $obj_permissoes->permissao_excluir(561, $this->pessoa_logada, 3);
+            $this->fexcluir = is_numeric($this->cod_escola) && $obj_permissoes->permissao_excluir(561, $this->pessoa_logada, 3);
 
             $this->loadAddress($this->ref_idpes);
             $this->carregaDadosContato($this->ref_idpes);
@@ -484,7 +484,7 @@ return new class extends clsCadastro {
                 document.getElementById(\'tipoacao\').value = \'\'; acao(); } else { acao(); }', 'go(\'educar_escola_lst.php\');'];
         } else {
             $obj_permissoes = new clsPermissoes();
-            $this->fexcluir = $obj_permissoes->permissao_excluir(561, $this->pessoa_logada, 3);
+            $this->fexcluir = is_numeric($this->cod_escola) && $obj_permissoes->permissao_excluir(561, $this->pessoa_logada, 3);
             $this->inputsHelper()->integer('escola_inep_id', ['label' => 'Código INEP', 'placeholder' => 'INEP', 'required' => $obrigarCamposCenso, 'max_length' => 8, 'label_hint' => 'Somente números']);
 
             $this->carregaDadosDoPost();
@@ -1873,7 +1873,7 @@ return new class extends clsCadastro {
 
     protected function validaOcupacaoPredio()
     {
-        if (in_array(LocalFuncionamento::PREDIO_ESCOLAR, $this->local_funcionamento) && empty($this->condicao)) {
+        if (is_array($this->local_funcionamento) && in_array(LocalFuncionamento::PREDIO_ESCOLAR, $this->local_funcionamento) && empty($this->condicao)) {
             $this->mensagem = 'O campo: Forma de ocupação do prédio, deve ser informado quando o Local de funcionamento for prédio escolar.';
 
             return false;
@@ -2455,6 +2455,10 @@ return new class extends clsCadastro {
 
     protected function validaEquipamentosAcessoInternet()
     {
+        if (!is_array($this->equipamentos_acesso_internet) && !is_array($this->rede_local)) {
+            return true;
+        }
+
         if (in_array(2, $this->equipamentos_acesso_internet) && !in_array(3, $this->rede_local)) {
             $this->mensagem = 'O campo: <b>Equipamentos que os aluno(a)s usam para acessar a internet da escola</b> não deve ser preenchido com a opção: <b>Dispositivos pessoais (computadores portáteis, celulares, tablets, etc.)</b> quando o campo: <b>Rede local de interligação de computadores</b> não possuir a opção: <b>Wireless</b> selecionada.';
 
@@ -2514,7 +2518,7 @@ return new class extends clsCadastro {
             return false;
         }
 
-        if (in_array(EquipamentosAcessoInternet::COMPUTADOR_MESA, $this->equipamentos_acesso_internet) && $quantidadesNaoPreenchidas) {
+        if (is_array($this->equipamentos_acesso_internet) && in_array(EquipamentosAcessoInternet::COMPUTADOR_MESA, $this->equipamentos_acesso_internet) && $quantidadesNaoPreenchidas) {
             $this->mensagem = 'Preencha pelo menos um dos campos da seção <b>Quantidade de computadores de uso dos alunos</b> quando o campo <b>Equipamentos que os aluno(a)s usam para acessar a internet da escola</b> for preenchido com <b>Computadores de mesa, portáteis e tablets da escola (no laboratório de informática, biblioteca, sala de aula, etc.)</b>.';
 
             return false;
@@ -2588,7 +2592,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Escola';
+        $this->title = 'Escola';
         $this->processoAp = '561';
     }
 };
