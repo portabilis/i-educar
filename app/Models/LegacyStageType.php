@@ -77,6 +77,6 @@ class LegacyStageType extends Model
 
     public function getDescricaoAttribute()
     {
-        return str_replace(["\r\n", "\r", "\n"], "<br />", $this->attributes['descricao']);
+        return str_replace(["\r\n", "\r", "\n"], '<br />', $this->attributes['descricao']);
     }
 }
