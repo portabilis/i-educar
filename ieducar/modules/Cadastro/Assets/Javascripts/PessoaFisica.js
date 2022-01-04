@@ -38,6 +38,7 @@ function validateFieldSUS() {
   if (sus && ! $j.isNumeric(sus)) {
     campoCadeiraSUSNotice.html(stringUtils.toUtf8('O Número da carteira do SUS informado é inválido')).slideDown('fast');
     $j(document).removeData('submit_form_after_ajax_validation');
+    $j('#sus').focus();
     return false;
   }
   campoCadeiraSUSNotice.hide();
