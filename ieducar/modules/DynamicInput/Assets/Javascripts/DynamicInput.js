@@ -4,7 +4,7 @@ function updateSelect($targetElement, options, emptyOptionHtml) {
   var groups = new Array();
   var optgroup = null;
 
-  $j.each(options, function(index, value){
+  $j.each(options, function(index, value) {
     if ($j(value).data('group')) {
       if (groups.indexOf($j(value).data('group')) == -1) {
         if (optgroup != null) {
@@ -18,16 +18,21 @@ function updateSelect($targetElement, options, emptyOptionHtml) {
       $j(value).appendTo($targetElement);
     }
   });
+
   if (optgroup != null) {
     optgroup.appendTo($targetElement);
   }
 
+  if (options.length === 1) {
+    $targetElement.removeAttr('selected').find('option:eq(1)').attr('selected', 'selected').change();
+  }
+
   if (options.length > 0) {
     $targetElement.removeAttr('disabled');
-    $targetElement.children('[value=""]').first().html(emptyOptionHtml || "Selecione uma op&ccedil;&atilde;o");
+    $targetElement.children('[value=""]').first().html(emptyOptionHtml || "Selecione uma opção");
+  } else {
+    $targetElement.children(':first').html('Sem opções');
   }
-  else
-    $targetElement.children(':first').html('Sem op&ccedil;&otilde;es');
 }
 
 

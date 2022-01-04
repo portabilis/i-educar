@@ -138,8 +138,10 @@ return new class extends clsCadastro {
             7
         );
 
+        $nomeMenu = $this->retorno === 'Editar' ? $this->retorno : 'Cadastrar';
+        
         $this->nome_url_cancelar = 'Cancelar';
-        $this->breadcrumb('Pessoa física', ['educar_pessoas_index.php' => 'Pessoas']);
+        $this->breadcrumb("{$nomeMenu} pessoa física", ['educar_pessoas_index.php' => 'Pessoas']);
 
         return $this->retorno;
     }
@@ -153,7 +155,6 @@ return new class extends clsCadastro {
         $this->url_cancelar = $this->retorno == 'Editar' ?
         'atendidos_det.php?cod_pessoa=' . $this->cod_pessoa_fj : 'atendidos_lst.php';
 
-        $this->cod_pessoa_fj;
         $objPessoa = new clsPessoaFisica($this->cod_pessoa_fj);
         $db = new clsBanco();
 
@@ -1422,7 +1423,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'Pessoas Físicas - Cadastro';
+        $this->title = 'Pessoa Física - Cadastro';
         $this->processoAp = 43;
     }
 };

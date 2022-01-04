@@ -156,7 +156,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Calendario Anotacao';
+        $this->title = 'Calendario Anotacao';
         $this->processoAp = '620';
     }
 };

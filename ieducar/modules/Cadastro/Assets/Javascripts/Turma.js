@@ -391,3 +391,15 @@ $j(document).ready(function() {
   });
 
 });
+
+// Força reload na página quando utiliza "voltar" do navegador
+window.addEventListener( "pageshow", function ( event ) {
+  var historyTraversal = (
+    event.persisted ||
+    ( typeof window.performance != "undefined" && window.performance.navigation.type === 2 )
+  );
+  if ( historyTraversal ) {
+    // Handle page restore.
+    window.location.reload();
+  }
+});

@@ -27,7 +27,7 @@
                 </tr>
                 <tr>
                     <td>Série:</td>
-                    <td>{{ $schoolClass->grade->name ?? null }}</td>
+                    <td>{{ $registration->grade->name ?? null }}</td>
                 </tr>
                 <tr>
                     <td>Turma selecionada:</td>
