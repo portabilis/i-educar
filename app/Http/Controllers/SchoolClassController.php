@@ -36,6 +36,9 @@ class SchoolClassController extends Controller
         $etapasUtilizadas = $request->get('etapas_utilizadas');
         $etapasEspecificas = $request->get('etapas_especificas');
         $codigoInepEducacenso = $request->get('codigo_inep_educacenso');
+        $codTurmaRequest = $request->get('cod_turma');
+        $originalMultiGradesInfo = $this->findOriginalMultiGradesInfo($codTurmaRequest);
+        $originalGrade = $this->findOriginalGrade($codTurmaRequest);
 
         try {
             DB::beginTransaction();
@@ -46,6 +49,8 @@ class SchoolClassController extends Controller
             $codTurma = $schoolClass->cod_turma;
             $codSerie = $schoolClass->ref_ref_cod_serie;
             $codEscola = $schoolClass->ref_ref_cod_escola;
+            $schoolClass->originalMultiGradesInfo = $originalMultiGradesInfo;
+            $schoolClass->originalSerie = $originalGrade;
 
             if (! empty($request->get('multiseriada'))) {
                 $multSerieIds = $request->get('mult_serie_id');
@@ -258,6 +263,34 @@ class SchoolClassController extends Controller
     {
         if (iDiarioService::hasIdiarioConfigurations()) {
             return app(iDiarioService::class);
+        }
+
+        return null;
+    }
+
+    private function findOriginalMultiGradesInfo($codTurma)
+    {
+        if (!empty($codTurma)) {
+            /** @var LegacySchoolClass|null $legacySchoolClass */
+            $legacySchoolClass = LegacySchoolClass::query()->find($codTurma);
+
+            if ($legacySchoolClass instanceof LegacySchoolClass) {
+                return $legacySchoolClass->multiseriada;
+            }
+        }
+
+        return null;
+    }
+
+    private function findOriginalGrade($codTurma)
+    {
+        if (!empty($codTurma)) {
+            /** @var LegacySchoolClass|null $legacySchoolClass */
+            $legacySchoolClass = LegacySchoolClass::query()->find($codTurma);
+
+            if ($legacySchoolClass instanceof LegacySchoolClass) {
+                return $legacySchoolClass->ref_ref_cod_serie;
+            }
         }
 
         return null;
