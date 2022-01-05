@@ -50,7 +50,7 @@ class SchoolClassController extends Controller
             $codSerie = $schoolClass->ref_ref_cod_serie;
             $codEscola = $schoolClass->ref_ref_cod_escola;
             $schoolClass->originalMultiGradesInfo = $originalMultiGradesInfo;
-            $schoolClass->originalSerie = $originalGrade;
+            $schoolClass->originalGrade = $originalGrade;
 
             if (! empty($request->get('multiseriada'))) {
                 $multSerieIds = $request->get('mult_serie_id');

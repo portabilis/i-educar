@@ -43,7 +43,7 @@ class IncompatibleChangeToMultiGradesTest extends TestCase
 
                 // Serie original diferente da listagem de series propostas
                 $mock->shouldReceive('getAttribute')
-                    ->with('originalSerie')
+                    ->with('originalGrade')
                     ->andReturn(1);
 
                 // Contém alunos com matrículas ativas
@@ -90,7 +90,7 @@ class IncompatibleChangeToMultiGradesTest extends TestCase
 
                 // Serie original diferente da listagem de series propostas
                 $mock->shouldReceive('getAttribute')
-                    ->with('originalSerie')
+                    ->with('originalGrade')
                     ->andReturn(1);
 
                 // Contém alunos com matrículas ativas
@@ -134,7 +134,7 @@ class IncompatibleChangeToMultiGradesTest extends TestCase
 
                 // Serie original
                 $mock->shouldReceive('getAttribute')
-                    ->with('originalSerie')
+                    ->with('originalGrade')
                     ->andReturn(1);
 
                 // Não contém alunos com matrículas ativas
@@ -178,7 +178,7 @@ class IncompatibleChangeToMultiGradesTest extends TestCase
 
                 // Serie original
                 $mock->shouldReceive('getAttribute')
-                    ->with('originalSerie')
+                    ->with('originalGrade')
                     ->andReturn(1);
 
                 // Contém alunos com matrículas ativas
@@ -219,7 +219,7 @@ class IncompatibleChangeToMultiGradesTest extends TestCase
 
                 // Serie original
                 $mock->shouldReceive('getAttribute')
-                    ->with('originalSerie')
+                    ->with('originalGrade')
                     ->andReturn(1);
 
                 // Contém alunos com matrículas ativas
