@@ -10,16 +10,16 @@ class IncompatibleChangeToMultiGrades implements Rule
 
     public function passes($attribute, $value): bool
     {
-        $series = [];
+        $grades = [];
         foreach ($value[1] as $item) {
-            $series[] = $item['serie_id'];
+            $grades[] = $item['serie_id'];
         }
 
         /** @var LegacySchoolClass $legacySchoolClass */
         $legacySchoolClass = $value[0];
 
         $changeToMulti = $legacySchoolClass->multiseriada === true && $legacySchoolClass->originalMultiGradesInfo === 0;
-        $notFindOriginalGrade = ! in_array($legacySchoolClass->originalGrade, $series);
+        $notFindOriginalGrade = ! in_array($legacySchoolClass->originalGrade, $grades);
         $containsActiveEnrollments = $legacySchoolClass->getTotalEnrolled() > 0;
 
         if ($changeToMulti && $notFindOriginalGrade && $containsActiveEnrollments) {
