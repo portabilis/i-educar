@@ -7,6 +7,7 @@ use App\Rules\IncompatibleChangeToMultiGrades;
 use Mockery;
 use Mockery\MockInterface;
 use Tests\TestCase;
+use Illuminate\Validation\Rule;
 
 class IncompatibleChangeToMultiGradesTest extends TestCase
 {
