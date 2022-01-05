@@ -345,9 +345,8 @@ $etapas = $etapas[0]['num_etapas'];
 
     public function Formular()
     {
-        $this->title = 'Notas e Faltas';
-        $this->processoAp = 6666;
-        
+        $this->title = 'Notas e faltas';
+        $this->processoAp = 144;   
     }
 }
 
