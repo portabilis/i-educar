@@ -29,8 +29,7 @@ return new class extends clsDetalhe {
         $this->titulo = 'Notas e Faltas';
        
   
-    
-    
+   #Verificação para saber se é um aluno logado
 
        $this->idpes = $this->pessoa_logada;
        $tmp_obj = new clsPmieducarAluno();
@@ -60,8 +59,7 @@ return new class extends clsDetalhe {
             
        }else{
        
-
-
+        #Tranzendo a matrícula do aluno logado
         $tmp_obj = new clsPmieducarMatricula();
         $lst_obj = $tmp_obj->lista(
            $this->cod_matricula,
@@ -76,11 +74,9 @@ return new class extends clsDetalhe {
         $registro['Matricula'] = array_shift($lst_obj);
 
         $this->cod_serie = $registro['Matricula']['ref_ref_cod_serie'];
-        //
         $this->disciplinas = $registro['Matricula']['ref_cod_disciplina'];
- /* ========================================================================= */
-       
-      
+ 
+       #Trazendo informações adicionais do aluno logado
         $tmp_obj = new clsPmieducarAluno();
         $lst_obj = $tmp_obj->lista(
             null,
@@ -93,25 +89,7 @@ return new class extends clsDetalhe {
         );
         $registro['Aluno'] = array_shift($lst_obj);
 
-    
-
-/* ======================================================================================================================= */         
-     
-
-$tmp_obj = new clsPmieducarNotaAluno();
-$lst_obj = $tmp_obj->notas(
- $this->cod_matricula, 
- $this->etapa,
-
-
-);
-
-for ($i=0; $i < count($registro['Historico']); $i++) { 
-        $registro['Historico'][$i]['notas'] = $lst_obj[$i]['notas'];
-
-    }
-      
-/* ======================================================================================================================= */         
+        #Trazendo informações da turma em que o aluno está
        $tmp_obj = new clsPmieducarMatriculaTurma();
        $lst_obj = $tmp_obj->lista(
            $this->cod_matricula,
@@ -124,18 +102,13 @@ for ($i=0; $i < count($registro['Historico']); $i++) {
        $this->cod_turma = $registro['MatriculaTurma']['ref_cod_turma'];
        $this->cod_aluno = $registro['MatriculaTurma']['ref_cod_aluno'];
        $this->cod_matricula = $registro['MatriculaTurma']['ref_cod_matricula'];
-/* ======================================================================================================================= */
 
-
+       #Trazendo o codigo da regra de avaliação da turma do aluno
       $tmp_obj = new clsPmieducarSerie();
       $this->tipoetapa = $tmp_obj->tipoPresencaRegraAvaliacao(
         $this->cod_serie,
 
       );
-  
-       
-/* ====================================================================================================================== */
-
 
         foreach ($registro['Matricula'] as $key => $value) {
             $this->$key = $value;
@@ -144,6 +117,7 @@ for ($i=0; $i < count($registro['Historico']); $i++) {
             $this->$key = $value;
         }
         
+        #Caso não encontre dados, o aluno será retornado a pagina inicial do portal do aluno
        if(!$registro) {
             $this->simpleRedirect('educar_portal_aluno_index.php');
         }
@@ -184,9 +158,6 @@ for ($i=0; $i < count($registro['Historico']); $i++) {
     
         }
      
-     
-        
-        //$this->inputsHelper()->dynamic(['faseEtapa'], ['required' => false, 'label' => 'Etapa']);
         if($registro['Notas']['ref_cod_disciplina']){
             $this->addDetalhe(
 
@@ -194,8 +165,13 @@ for ($i=0; $i < count($registro['Historico']); $i++) {
                 $registro['Notas']['ref_cod_disciplina']
             );
         }
-      /* ======================== COMPONENTES===================================== */
+
+
 $cod_matricula = $this->cod_matricula;
+
+        #Condição para saber o tipo da regra de avaliação a turma do aluno logado
+        #Tipo etapa 1: Falta Geral
+        #Tipo etapa 2: Falta por Componente
 
 if ($this->tipoetapa == 1) {
     
@@ -206,8 +182,6 @@ if ($this->tipoetapa == 1) {
 
         $registro['Historico'] = $lst_obj;
 
-
-        
         $tmp_obj = new clsPmieducarEscolaSerieDisciplina(); 
         $lst_obj = $tmp_obj->faltaGeral(
          $this->cod_matricula,
@@ -222,8 +196,6 @@ if ($this->tipoetapa == 1) {
      $this->cod_matricula, 
      $this->etapa,
      
-    
-    
     );
     for ($i=0; $i < count($registro['Historico']); $i++) { 
         $registro['Historico'][$i]['notas'] = $lst_obj[$i]['notas'];
@@ -244,30 +216,28 @@ if ($this->tipoetapa == 1) {
     $lst_obj = $tmp_obj->notas(
      $this->cod_matricula, 
      $this->etapa,
-    
-    
+
     );
     for ($i=0; $i < count($registro['Historico']); $i++) { 
            
         $registro['Historico'][$i]['notas'] = $lst_obj[$i]['notas'];
        
-           }    
+        }    
 }
-$obj = new clsPmieducarTurmaModulo;
-$modulo = $obj->lista(
+    $obj = new clsPmieducarTurmaModulo;
+    $modulo = $obj->lista(
     $this->cod_turma,
-);
+    );
 
-$modulo = $modulo[0]['ref_cod_modulo'];
+    $modulo = $modulo[0]['ref_cod_modulo'];
 
-$obj = new clsPmieducarModulo;
-$etapas = $obj->lista(
+    $obj = new clsPmieducarModulo;
+    $etapas = $obj->lista(
     $modulo,
-);
-$etapas = $etapas[0]['num_etapas'];
+    );
+    $etapas = $etapas[0]['num_etapas'];
 
-
-
+    #Organizando as etapas de acordo com a quantidade de modulos vindo do banco de dados
     for ($i=0; $i <$etapas ; $i++) { 
        
    
@@ -294,7 +264,7 @@ $etapas = $etapas[0]['num_etapas'];
    
 }
 
-
+    #Após coletar todas as informações, monta a lista de componentes
     public function montaListaComponentes($historico,$etapa){
     
         
@@ -308,22 +278,17 @@ $etapas = $etapas[0]['num_etapas'];
        
         foreach($historico as $registro){
      
-       
+            
             $faltas = explode(',',$registro['faltas']);   
             $notas = explode(',', $registro['notas']);
-           
-               
-         
+            
             $this->tabela .= '<div style = "margin-bottom: 10px; float: left;" class = "linha-disciplina"> ';
             $this->tabela .= "<span style = ' display: block; float: left; width: 400px'>{$registro['nome']}</span>";       
             $this->tabela .= "<span style = ' display: block; float: left; width: 200px'>{$notas[$etapa]}</span>"; 
             $this->tabela .= "<span style = ' display: block; float: left; width: 300px' >{$faltas[$etapa]}</span>";
     
-       
     }
  
-      
-    
         $this->tabela .= '</div>';  
         $this->tabela .= '  <br style="clear: left" />';
    
@@ -338,7 +303,6 @@ $etapas = $etapas[0]['num_etapas'];
             ]
             );
  
-        
     }
 
 
