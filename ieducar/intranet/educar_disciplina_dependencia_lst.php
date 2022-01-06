@@ -173,7 +173,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Disciplina de dependência';
+        $this->title = 'Disciplina de dependência';
         $this->processoAp = 578;
     }
 };

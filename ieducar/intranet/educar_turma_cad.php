@@ -252,7 +252,7 @@ return new class extends clsCadastro {
 
         $desabilitado = $bloqueia;
 
-        $this->inputsHelper()->dynamic('ano', ['value' => (is_null($this->ano) ? date('Y') : $this->ano)]);
+        $this->inputsHelper()->dynamic('ano', ['value' => (is_null($this->ano) ? date('Y') : $this->ano), 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie'], ['disabled' => $desabilitado]);
 
         // Infra prédio cômodo
@@ -1640,7 +1640,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Turma';
+        $this->title = 'Turma';
         $this->processoAp = 586;
     }
 };

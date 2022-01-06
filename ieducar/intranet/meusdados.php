@@ -340,7 +340,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'Configurações - Meus dados';
+        $this->title = 'Meus dados';
         $this->processoAp = '0';
     }
 };

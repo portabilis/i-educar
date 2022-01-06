@@ -363,7 +363,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->titulo = 'i-Educar';
+        $this->titulo = 'Rematrícula automática';
         $this->processoAp = '845';
     }
 };
