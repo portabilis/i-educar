@@ -263,6 +263,12 @@ return new class extends clsCadastro {
             $this->justificativa,
         );
 
+        $existe = $obj->existe();
+        if ($existe){
+            $this->mensagem = 'Cadastro não realizado, pois esta frequência já existe.<br>';
+            $this->simpleRedirect('educar_professores_frequencia_cad.php');
+        }
+
         $cadastrou = $obj->cadastra();
 
         if (!$cadastrou) {   

@@ -659,9 +659,8 @@ class clsModulesFrequencia extends Model {
      * @return array
      */
     public function existe () {
-        if (is_numeric($id)) {
-            $db = new clsBanco();
-            $db->Consulta("
+        if ($this->data && is_numeric($this->ref_cod_turma) && is_numeric($this->etapa_sequencial)) {
+            $sql = "
                 SELECT
                     {$this->_todos_campos},
                     t.cod_turma as cod_turma,
@@ -669,8 +668,16 @@ class clsModulesFrequencia extends Model {
                 FROM
                     {$this->_from}
                 WHERE
-                    f.id = {$id}
-            ");
+                    f.data = '{$this->data}'
+                    AND f.ref_cod_turma = '{$this->ref_cod_turma}'
+                    AND f.etapa_sequencial = '{$this->etapa_sequencial}'
+            ";
+
+            if (is_numeric($this->ref_cod_componente_curricular))
+                $sql .= "AND f.ref_componente_curricular = '{$this->ref_cod_componente_curricular}'";
+
+            $db = new clsBanco();
+            $db->Consulta($sql);
             $db->ProximoRegistro();
 
             return $db->Tupla();
