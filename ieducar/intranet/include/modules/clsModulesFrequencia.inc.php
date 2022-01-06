@@ -77,7 +77,10 @@ class clsModulesFrequencia extends Model {
         ';
 
 
-        if (($ano)) {
+        if ($id) {
+            $this->id = $id;
+        }
+        if ($ano) {
             $this->ano = $ano;
         }
         if (is_numeric($ref_cod_ins)) {
@@ -110,7 +113,7 @@ class clsModulesFrequencia extends Model {
         if (($data_final)) {
             $this->data_final = $data_final;
         }
-        if (($etapa_sequencial)) {
+        if ($etapa_sequencial) {
             $this->etapa_sequencial = $etapa_sequencial;
         }
         if (($alunos)) {
@@ -264,8 +267,8 @@ class clsModulesFrequencia extends Model {
      *
      * @return bool
      */
-    public function edita($id = null) {
-        if (is_numeric($id) && is_numeric($this->etapa_sequencial)) {
+    public function edita() {
+        if (is_numeric($this->id) && is_numeric($this->etapa_sequencial)) {
             $obj = new clsPmieducarSerie();
             $tipo_presenca = $obj->tipoPresencaRegraAvaliacao($this->ref_cod_serie);
 
@@ -294,11 +297,11 @@ class clsModulesFrequencia extends Model {
                     SET
                         $set
                     WHERE
-                        id = '{$id}'
+                        id = '{$this->id}'
                 ");
 
-                $matriculas_antigas = $this->detalhe($id)['matriculas']['refs_cod_matricula'];
-                if ($matriculas_antigas != '') $matriculas_antigas = explode(',', $this->detalhe($id)['matriculas']['refs_cod_matricula']);
+                $matriculas_antigas = $this->detalhe($this->id)['matriculas']['refs_cod_matricula'];
+                if ($matriculas_antigas != '') $matriculas_antigas = explode(',', $this->detalhe($this->id)['matriculas']['refs_cod_matricula']);
 
                 $matriculas_novas = $this->alunos;
 
@@ -317,7 +320,7 @@ class clsModulesFrequencia extends Model {
                             SET
                                 justificativa = '{$justificativa}'
                             WHERE
-                                ref_frequencia = '{$id}' AND ref_cod_matricula = '{$matricula}'
+                                ref_frequencia = '{$this->id}' AND ref_cod_matricula = '{$matricula}'
                         ");
 
                         unset($matriculas_novas[$matricula_antiga]);
@@ -328,7 +331,7 @@ class clsModulesFrequencia extends Model {
                             DELETE FROM
                                 modules.frequencia_aluno
                             WHERE
-                                ref_frequencia = '{$id}' AND ref_cod_matricula = '{$matricula_antiga}'
+                                ref_frequencia = '{$this->id}' AND ref_cod_matricula = '{$matricula_antiga}'
                         ");
 
                         // #########################################################################################
@@ -369,7 +372,7 @@ class clsModulesFrequencia extends Model {
 
                             (ref_frequencia, ref_cod_matricula, justificativa)
                         VALUES
-                            ('{$id}', '{$matricula_id}', '{$justificativa}')
+                            ('{$this->id}', '{$matricula_id}', '{$justificativa}')
                     ");
 
                     // #########################################################################################
@@ -568,8 +571,8 @@ class clsModulesFrequencia extends Model {
      *
      * @return array
      */
-    public function detalhe ($id = null) {
-        if (is_numeric($id)) {
+    public function detalhe () {
+        if (is_numeric($this->id)) {
             $db = new clsBanco();
             $db->Consulta("
                 SELECT
@@ -585,7 +588,7 @@ class clsModulesFrequencia extends Model {
                 FROM
                     {$this->_from}
                 WHERE
-                    f.id = {$id}
+                    f.id = {$this->id}
             ");
             $db->ProximoRegistro();
 
@@ -602,7 +605,7 @@ class clsModulesFrequencia extends Model {
                 GROUP BY
                     f.ref_frequencia
                 HAVING
-                    f.ref_frequencia = {$id}
+                    f.ref_frequencia = {$this->id}
             ");
             $db->ProximoRegistro();
 
@@ -681,12 +684,12 @@ class clsModulesFrequencia extends Model {
      *
      * @return bool
      */
-    public function excluir ($id = null) {
-        if (is_numeric($id)) {
+    public function excluir () {
+        if (is_numeric($this->id)) {
             $obj = new clsPmieducarSerie();
             $tipo_presenca = $obj->tipoPresencaRegraAvaliacao($this->ref_cod_serie);
 
-            $matriculas = $this->pegaMatriculasApartirFrequenciaId($id);
+            $matriculas = $this->pegaMatriculasApartirFrequenciaId($this->id);
 
             $db = new clsBanco();
 
@@ -694,7 +697,7 @@ class clsModulesFrequencia extends Model {
                 DELETE FROM
                     modules.frequencia
                 WHERE
-                    id = '{$id}'
+                    id = '{$this->id}'
             ");
 
             ###########################################################################################################

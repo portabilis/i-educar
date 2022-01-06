@@ -32,10 +32,8 @@ return new class extends clsDetalhe {
 
         $obj_permissoes = new clsPermissoes();
 
-        $tmp_obj = new clsModulesFrequencia();
-        $registro = $tmp_obj->detalhe(
-            $this->id_freq
-        );
+        $tmp_obj = new clsModulesFrequencia($this->id_freq);
+        $registro = $tmp_obj->detalhe();
 
         if (!$registro) {
             $this->simpleRedirect('educar_professores_frequencia_lst.php');

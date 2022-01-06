@@ -28,10 +28,8 @@ return new class extends clsCadastro {
         $obj_permissoes->permissao_cadastra(58, $this->pessoa_logada, 7, 'educar_professores_frequencia_lst.php');
 
         if (is_numeric($this->id)) {
-            $tmp_obj = new clsModulesFrequencia();
-            $registro = $tmp_obj->detalhe(
-                $this->id
-            );
+            $tmp_obj = new clsModulesFrequencia($this->id);
+            $registro = $tmp_obj->detalhe();
 
             if ($registro) {
                 // passa todos os valores obtidos no registro para atributos do objeto
@@ -285,7 +283,7 @@ return new class extends clsCadastro {
         $this->ref_cod_componente_curricular = $this->ref_cod_componente_curricular_;
 
         $obj = new clsModulesFrequencia(
-            null,
+            $this->id,
             null,
             null,
             null,
@@ -301,7 +299,7 @@ return new class extends clsCadastro {
             $this->justificativa,
         );
 
-        $editou = $obj->edita($this->id);
+        $editou = $obj->edita();
 
         if ($editou) {
             $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
@@ -318,7 +316,7 @@ return new class extends clsCadastro {
         $this->ref_cod_componente_curricular = $this->ref_cod_componente_curricular_;
 
         $obj = new clsModulesFrequencia(
-            null,
+            $this->id,
             null,
             null,
             null,
@@ -334,7 +332,7 @@ return new class extends clsCadastro {
             null
         );
 
-        $excluiu = $obj->excluir($this->id);
+        $excluiu = $obj->excluir();
 
         if ($excluiu) {
             $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
