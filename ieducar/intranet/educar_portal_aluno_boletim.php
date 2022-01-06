@@ -59,7 +59,7 @@ return new class extends clsDetalhe {
             
        }else{
        
-        #Tranzendo a matrícula do aluno logado
+        #Trazendo a matrícula do aluno logado
         $tmp_obj = new clsPmieducarMatricula();
         $lst_obj = $tmp_obj->lista(
            $this->cod_matricula,
@@ -89,7 +89,7 @@ return new class extends clsDetalhe {
         );
         $registro['Aluno'] = array_shift($lst_obj);
 
-        #Trazendo informações da turma em que o aluno está
+        #Trazendo informações da turma em que o aluno está alocado
        $tmp_obj = new clsPmieducarMatriculaTurma();
        $lst_obj = $tmp_obj->lista(
            $this->cod_matricula,
@@ -103,7 +103,7 @@ return new class extends clsDetalhe {
        $this->cod_aluno = $registro['MatriculaTurma']['ref_cod_aluno'];
        $this->cod_matricula = $registro['MatriculaTurma']['ref_cod_matricula'];
 
-       #Trazendo o codigo da regra de avaliação da turma do aluno
+       #Trazendo o código da regra de avaliação da turma do aluno
       $tmp_obj = new clsPmieducarSerie();
       $this->tipoetapa = $tmp_obj->tipoPresencaRegraAvaliacao(
         $this->cod_serie,
@@ -117,7 +117,7 @@ return new class extends clsDetalhe {
             $this->$key = $value;
         }
         
-        #Caso não encontre dados, o aluno será retornado a pagina inicial do portal do aluno
+        #Caso não encontre dados, o aluno será retornado a página inicial do portal do aluno
        if(!$registro) {
             $this->simpleRedirect('educar_portal_aluno_index.php');
         }
@@ -167,13 +167,13 @@ return new class extends clsDetalhe {
         }
 
 
-$cod_matricula = $this->cod_matricula;
+    $cod_matricula = $this->cod_matricula;
 
         #Condição para saber o tipo da regra de avaliação a turma do aluno logado
         #Tipo etapa 1: Falta Geral
         #Tipo etapa 2: Falta por Componente
 
-if ($this->tipoetapa == 1) {
+    if ($this->tipoetapa == 1) {
     
         $tmp_obj = new clsPmieducarEscolaSerieDisciplina();
         $lst_obj = $tmp_obj->componenteCurricularNomes(
@@ -191,19 +191,19 @@ if ($this->tipoetapa == 1) {
         $registro['Historico'] = $lst_obj;
  
      
-    $tmp_obj = new clsPmieducarNotaAluno();
-    $lst_obj = $tmp_obj->notas(
-     $this->cod_matricula, 
-     $this->etapa,
+        $tmp_obj = new clsPmieducarNotaAluno();
+        $lst_obj = $tmp_obj->notas(
+         $this->cod_matricula, 
+        $this->etapa,
      
-    );
-    for ($i=0; $i < count($registro['Historico']); $i++) { 
+        );
+        for ($i=0; $i < count($registro['Historico']); $i++) { 
         $registro['Historico'][$i]['notas'] = $lst_obj[$i]['notas'];
 
-    }
+         }
     
   
-}elseif ($this->tipoetapa == 2) {
+    }elseif ($this->tipoetapa == 2) {
     
     $tmp_obj = new clsPmieducarEscolaSerieDisciplina(); 
     $lst_obj = $tmp_obj->faltaComponente(
@@ -237,7 +237,7 @@ if ($this->tipoetapa == 1) {
     );
     $etapas = $etapas[0]['num_etapas'];
 
-    #Organizando as etapas de acordo com a quantidade de modulos vindo do banco de dados
+    #Organizando as etapas de acordo com a quantidade de módulos vindo do banco de dados
     for ($i=0; $i <$etapas ; $i++) { 
        
    
