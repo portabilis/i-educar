@@ -110,7 +110,7 @@ return new class extends clsCadastro {
 
         if (!$cadastrou) {   
             $this->mensagem = 'Cadastro não realizado.<br>';
-            return false;
+            $this->simpleRedirect('educar_professores_conteudo_ministrado_cad.php');
         } else {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
             $this->simpleRedirect('educar_professores_conteudo_ministrado_lst.php');
