@@ -190,17 +190,17 @@ return new class extends clsCadastro {
 
         if ($tipo_presenca == null) {
             $this->mensagem = 'Cadastro não realizado, pois esta série não possui uma regra de avaliação configurada.<br>';
-            return false;
+            $this->simpleRedirect('educar_professores_frequencia_cad.php');
         }
 
         if ($tipo_presenca == 1 && $this->ref_cod_componente_curricular) {
             $this->mensagem = 'Cadastro não realizado, pois esta série não admite frequência por componente curricular.<br>';
-            return false;
+            $this->simpleRedirect('educar_professores_frequencia_cad.php');
         }
 
         if ($tipo_presenca == 2 && !$this->ref_cod_componente_curricular) {
             $this->mensagem = 'Cadastro não realizado, pois o componente curricular é obrigatório para esta série.<br>';
-            return false;
+            $this->simpleRedirect('educar_professores_frequencia_cad.php');
         }
 
         $data_agora = new DateTime('now');
@@ -243,7 +243,7 @@ return new class extends clsCadastro {
 
         if (!$podeRegistrar) {
             $this->mensagem = 'Cadastro não realizado, pois não é mais possível submeter frequência para esta etapa.<br>';
-            return false;
+            $this->simpleRedirect('educar_professores_frequencia_cad.php');
         }
 
         $obj = new clsModulesFrequencia(
@@ -267,7 +267,7 @@ return new class extends clsCadastro {
 
         if (!$cadastrou) {   
             $this->mensagem = 'Cadastro não realizado.<br>';
-            return false;
+            $this->simpleRedirect('educar_professores_frequencia_cad.php');
         } else {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
             $this->simpleRedirect('educar_professores_frequencia_lst.php');
