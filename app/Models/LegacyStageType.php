@@ -27,6 +27,7 @@ class LegacyStageType extends Model
         'data_cadastro',
         'ref_cod_instituicao',
         'num_etapas',
+        'descricao'
     ];
 
     /**
@@ -72,5 +73,10 @@ class LegacyStageType extends Model
                 $query->where('cod_modulo', '<>', $id);
             })
             ->exists();
+    }
+
+    public function getDescricaoAttribute()
+    {
+        return str_replace(["\r\n", "\r", "\n"], '<br />', $this->attributes['descricao']);
     }
 }

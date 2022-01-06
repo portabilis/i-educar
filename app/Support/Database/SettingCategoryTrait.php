@@ -18,6 +18,7 @@ trait SettingCategoryTrait
                 $id = $settingCategory->id;
             }
         }
+
         return $id;
     }
 }

@@ -190,7 +190,8 @@ class App_Model_IedFinderTest extends UnitBaseTest
                         null,
                         null,
                         null,
-                        null)
+                        null
+                    )
                     ->once()
                     ->andReturn([$returnValue[1]])
                 ;

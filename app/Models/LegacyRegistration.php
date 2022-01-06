@@ -13,18 +13,18 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 /**
  * LegacyRegistration
  *
- * @property integer                  $id
- * @property boolean                  $isTransferred
- * @property boolean                  $isAbandoned
- * @property boolean                  $isCanceled
- * @property boolean                  $bloquear_troca_de_situacao
- * @property boolean                  $dependencia
- * @property integer                  $cod_matricula
- * @property integer                  $ano
- * @property LegacyStudentAbsence     $studentAbsence
- * @property LegacyStudentScore       $studentScore
- * @property LegacyCourse             $course
- * @property Collection               $enrollments
+ * @property integer              $id
+ * @property boolean              $isTransferred
+ * @property boolean              $isAbandoned
+ * @property boolean              $isCanceled
+ * @property boolean              $bloquear_troca_de_situacao
+ * @property boolean              $dependencia
+ * @property integer              $cod_matricula
+ * @property integer              $ano
+ * @property LegacyStudentAbsence $studentAbsence
+ * @property LegacyStudentScore   $studentScore
+ * @property LegacyCourse         $course
+ * @property Collection           $enrollments
  */
 class LegacyRegistration extends Model
 {
