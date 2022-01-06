@@ -1,10 +1,10 @@
 <?php
 
-class Portabilis_View_Helper_DynamicInput_Todas_Turmas extends Portabilis_View_Helper_DynamicInput_CoreSelect
+class Portabilis_View_Helper_DynamicInput_TodasTurmas extends Portabilis_View_Helper_DynamicInput_CoreSelect
 {
     protected function inputName()
     {
-        return 'todas_turmas';
+        return 'ref_cod_turma';
     }
 
     protected function inputOptions($options)
@@ -12,8 +12,8 @@ class Portabilis_View_Helper_DynamicInput_Todas_Turmas extends Portabilis_View_H
         $resources = $options['resources'];
 
         $userId = $this->getCurrentUserId();
-        $anoLetivo = $this->getAno($options['ano'] ?? null);
-
+        $anoLetivo = $this->getAno($options['options']['ano'] ?? date('Y'));
+ 
         if (empty($resources) && $userId and $anoLetivo) {
             $obj_servidor = new clsPmieducarServidor(
                 $userId,
@@ -29,22 +29,66 @@ class Portabilis_View_Helper_DynamicInput_Todas_Turmas extends Portabilis_View_H
     
             if($eh_professor){
                 $obj_professor = new clsModulesProfessorTurma();
-                $professor_turmas = $obj_professor->lista($userId);
+                $professor_turmas = $obj_professor->lista(
+                    $userId,
+                    1,          // Fixado na instituição de ID 1
+                    $anoLetivo
+                );
 
                 foreach ($professor_turmas as $key => $professor_turma) {
                     $resources[$professor_turma['ref_cod_turma']] = $professor_turma['nm_turma'] . " (" . $professor_turma['nm_escola'] . ")";
                 }
             } else {
-                $obj_usuario = new clsPmieducarUsuario($userId);
+                $obj_usuario = new clsPmieducarUsuario($userId,);
                 $tipo_usuario = $obj_usuario->detalhe()['ref_cod_tipo_usuario'];
 
                 $obj_tipo_usuario = new clsPmieducarTipoUsuario($tipo_usuario);
                 $nivel = $obj_tipo_usuario->detalhe()['nivel'];
                 
                 $obj_turma = new clsPmieducarTurma();
+                $obj_turma->setOrderby('nm_turma ASC');
 
                 if ($nivel == 1 || $nivel == 2) {
-                    $turmas[] = $obj_turma->lista();
+                    $turmas[] = $obj_turma->lista(
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        false,
+                        null,
+                        null,
+                        null,
+                        null,
+                        $anoLetivo,
+                        false
+                    );
                 } else if ($nivel == 4) {
                     $obj_escola_usuario = new clsPmieducarEscolaUsuario();
                     $escolas_usuario = $obj_escola_usuario->lista($userId);
@@ -55,9 +99,42 @@ class Portabilis_View_Helper_DynamicInput_Todas_Turmas extends Portabilis_View_H
                             null,
                             null,
                             null,
-                            $escola_usuario
+                            $escola_usuario['ref_cod_escola'],
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            false,
+                            null,
+                            null,
+                            null,
+                            null,
+                            $anoLetivo,
+                            false
                         );
-                    }   
+                    }
                 }
 
                 $obj_escola = new clsPmieducarEscola();
@@ -86,7 +163,7 @@ class Portabilis_View_Helper_DynamicInput_Todas_Turmas extends Portabilis_View_H
         ];
     }
 
-    public function todas_Turmas($options = [])
+    public function todasTurmas($options = [])
     {
         parent::select($options);
     }

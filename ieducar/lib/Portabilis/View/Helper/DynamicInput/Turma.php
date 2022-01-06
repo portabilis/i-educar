@@ -10,6 +10,7 @@ class Portabilis_View_Helper_DynamicInput_Turma extends Portabilis_View_Helper_D
     protected function inputOptions($options)
     {
         $resources = $options['resources'];
+
         $instituicaoId = $this->getInstituicaoId($options['instituicaoId'] ?? null);
         $escolaId = $this->getEscolaId($options['escolaId'] ?? null);
         $serieId = $this->getSerieId($options['serieId'] ?? null);

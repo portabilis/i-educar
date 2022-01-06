@@ -68,50 +68,31 @@ return new class extends clsCadastro {
                 $this->$campo = ($this->$campo) ? $this->$campo : $val;
             }
         }
-        
         $this->data = dataToBrasil($this->data);
         $this->ano = explode('/', $this->data)[2];
 
         if ($tipoacao == 'Edita' || !$_POST
-            && is_numeric($this->ref_cod_instituicao)
-            && is_numeric($this->ref_cod_escola)
-            && is_numeric($this->ref_cod_curso)
-            && is_numeric($this->ref_cod_serie)
+            && $this->data
             && is_numeric($this->ref_cod_turma)
+            && is_numeric($this->ref_cod_componente_curricular)
+            && is_numeric($this->fase_etapa)
         ) {
             $desabilitado = true;
         }
 
-        if (is_numeric($this->ref_cod_instituicao)
-            && is_numeric($this->ref_cod_escola)
-            && is_numeric($this->ref_cod_curso)
-            && is_numeric($this->ref_cod_serie)
-        ) {
-            $this->campoOculto('ref_cod_instituicao_', $this->ref_cod_instituicao);
-            $this->campoOculto('ref_cod_escola_', $this->ref_cod_escola);
-            $this->campoOculto('ref_cod_curso_', $this->ref_cod_curso);
-            $this->campoOculto('ref_cod_serie_', $this->ref_cod_serie);
+        if (is_numeric($this->ref_cod_turma) && is_numeric($this->ref_cod_componente_curricular)) {
+            $this->campoOculto('ref_cod_turma_', $this->ref_cod_turma);
             $this->campoOculto('ref_cod_componente_curricular_', $this->ref_cod_componente_curricular);
+            $this->campoOculto('fase_etapa_', $this->fase_etapa);
         }
 
         $obrigatorio = true;
 
         $this->campoOculto('id', $this->id);
-        $this->inputsHelper()->dynamic('data', ['label' => 'Data', 'required' => $obrigatorio]);
-        // $this->inputsHelper()->dynamic('instituicao', ['required' => !$obrigatorio, 'instituicao' => $this->ref_cod_instituicao, 'disabled' => $desabilitado]);
-        // $this->inputsHelper()->dynamic('escola', ['required' => !$obrigatorio, 'escola' => $this->ref_cod_escola, 'disabled' => $desabilitado]);
-        // $this->inputsHelper()->dynamic('curso', ['required' => !$obrigatorio, 'curso' => $this->ref_cod_curso, 'disabled' => $desabilitado]);
-        // $this->inputsHelper()->dynamic('serie', ['required' => !$obrigatorio, 'serie' => $this->ref_cod_serie, 'disabled' => $desabilitado]);
-        // $this->inputsHelper()->dynamic('turma', ['required' => $obrigatorio, 'turma' => $this->ref_cod_turma, 'disabled' => $desabilitado]);
-        $this->inputsHelper()->dynamic('todas_Turmas', ['required' => $obrigatorio, 'turma' => $this->ref_cod_turma, 'disabled' => $desabilitado]);
-        $this->inputsHelper()->dynamic(
-            'componenteCurricular',
-            ['required' => !$obrigatorio, 'componenteCurricular' => $this->ref_cod_componente_curricular, 'disabled' => $desabilitado]
-        );
-        $this->inputsHelper()->dynamic(
-            'faseEtapa',
-            ['required' => $obrigatorio, 'fase_etapa' => $this->fase_etapa, 'label' => 'Etapa']
-        );
+        $this->inputsHelper()->dynamic('data', ['required' => $obrigatorio, 'disabled' => $desabilitado]);
+        $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado]);
+        $this->inputsHelper()->dynamic('componenteCurricular', ['required' => !$obrigatorio, 'disabled' => $desabilitado]);
+        $this->inputsHelper()->dynamic('faseEtapa', ['required' => $obrigatorio, 'label' => 'Etapa', 'disabled' => $desabilitado]);
 
         // Editar
         $maxCaracteresObservacao = 256;
@@ -185,8 +166,11 @@ return new class extends clsCadastro {
     }
 
     public function Novo() {
+        $obj = new clsPmieducarTurma();
+        $serie = $obj->lista($this->ref_cod_turma)[0]['ref_ref_cod_serie'];
+
         $obj = new clsPmieducarSerie();
-        $tipo_presenca = $obj->tipoPresencaRegraAvaliacao($this->ref_cod_serie);
+        $tipo_presenca = $obj->tipoPresencaRegraAvaliacao($serie);
 
         if ($tipo_presenca == null) {
             $this->mensagem = 'Cadastro não realizado, pois esta série não possui uma regra de avaliação configurada.<br>';
@@ -252,7 +236,7 @@ return new class extends clsCadastro {
             null,
             null,
             null,
-            $this->ref_cod_serie,
+            $serie,
             $this->ref_cod_turma,
             $this->ref_cod_componente_curricular,
             null,
@@ -285,8 +269,12 @@ return new class extends clsCadastro {
     }
 
     public function Editar() {
-        $this->ref_cod_serie = $this->ref_cod_serie_;
+        $this->ref_cod_turma = $this->ref_cod_turma_;
         $this->ref_cod_componente_curricular = $this->ref_cod_componente_curricular_;
+        $this->fase_etapa = $this->fase_etapa_;
+
+        $obj = new clsPmieducarTurma();
+        $serie = $obj->lista($this->ref_cod_turma)[0]['ref_ref_cod_serie'];
 
         $obj = new clsModulesFrequencia(
             $this->id,
@@ -294,7 +282,7 @@ return new class extends clsCadastro {
             null,
             null,
             null,
-            $this->ref_cod_serie,
+            $serie,
             null,
             $this->ref_cod_componente_curricular,
             null,
@@ -318,8 +306,11 @@ return new class extends clsCadastro {
     }
 
     public function Excluir () {
-        $this->ref_cod_serie = $this->ref_cod_serie_;
+        $this->ref_cod_turma = $this->ref_cod_turma_;
         $this->ref_cod_componente_curricular = $this->ref_cod_componente_curricular_;
+
+        $obj = new clsPmieducarTurma();
+        $serie = $obj->lista($this->ref_cod_turma)[0]['ref_ref_cod_serie'];
 
         $obj = new clsModulesFrequencia(
             $this->id,
@@ -327,7 +318,7 @@ return new class extends clsCadastro {
             null,
             null,
             null,
-            $this->ref_cod_serie,
+            $serie,
             null,
             $this->ref_cod_componente_curricular,
             null,

@@ -21,7 +21,7 @@
       resetSelect($turmaField);
 
       if ($instituicaoField.val() && $escolaField.val() && $serieField.val() && $serieField.is(':enabled')) {
-        $turmaField.children().first().html('Aguarde carregando...');
+        $turmaField.children().first().html('Aguarde, carregando...');
 
         var urlForGetTurmas = getResourceUrlBuilder.buildUrl('/module/DynamicInput/turma', 'turmas', {
           instituicao_id   : $instituicaoField.val(),

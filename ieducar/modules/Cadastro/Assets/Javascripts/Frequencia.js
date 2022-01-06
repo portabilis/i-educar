@@ -157,7 +157,6 @@ document.getElementById('ref_cod_componente_curricular').onchange = function () 
 //   })(jQuery);
 
 function presencaMudou (presenca) {
-  console.log(presenca);
   document.getElementsByName("justificativa[" + pegarIdPresenca(presenca) + "][]")[0].disabled = presenca.checked;
 }
 

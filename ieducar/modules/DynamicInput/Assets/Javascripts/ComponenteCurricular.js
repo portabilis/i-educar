@@ -4,7 +4,7 @@
     var $anoField                  = getElementFor('ano');
     var $turmaField                = getElementFor('turma');
     var $componenteCurricularField = getElementFor('componente_curricular');
-
+   
     var handleGetComponentesCurriculares = function(response) {
       var selectOptions = jsonResourcesToSelectOptions(response['options']);
       updateSelect($componenteCurricularField, selectOptions, "Selecione um componente curricular");
