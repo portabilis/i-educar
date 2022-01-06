@@ -1016,7 +1016,7 @@ class clsPmieducarNotaAluno extends Model
         return $db->CampoUnico($sql);
     }
 
-public function notas($ref_cod_matricula, $etapa)
+public function notas($ref_cod_matricula)
     {
    $sql = "
    SELECT 
@@ -1044,13 +1044,10 @@ if(is_numeric($ref_cod_matricula)){
     $whereAnd = "AND ";
 }
 
-if (is_numeric($etapa)) {
-    $filtros .= "{$whereAnd} etapa = '{$etapa}'";
-    $whereAnd = "AND ";
-}
+
 
 $db = new clsBanco();
-$countCampos = count(explode(',', " notas,etapa"));
+$countCampos = count(explode(',', " notas"));
 $resultado = [];
 
 $sql .= $filtros ."GROUP BY cc.nome". $this->getOrderby() . $this->getLimite();

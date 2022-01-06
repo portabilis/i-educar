@@ -102,6 +102,7 @@ return new class extends clsDetalhe {
        $this->cod_turma = $registro['MatriculaTurma']['ref_cod_turma'];
        $this->cod_aluno = $registro['MatriculaTurma']['ref_cod_aluno'];
        $this->cod_matricula = $registro['MatriculaTurma']['ref_cod_matricula'];
+       $this->cod_serie = $registro['MatriculaTurma']['ref_ref_cod_serie'];
 
        #Trazendo o código da regra de avaliação da turma do aluno
       $tmp_obj = new clsPmieducarSerie();
@@ -169,39 +170,49 @@ return new class extends clsDetalhe {
 
     $cod_matricula = $this->cod_matricula;
 
+    #Pegando a quantidade de etapas que possui a turma
+    $obj = new clsPmieducarTurmaModulo;
+    $modulo = $obj->lista(
+    $this->cod_turma,
+    );
+
+    $modulo = $modulo[0]['ref_cod_modulo'];
+
+    $obj = new clsPmieducarModulo;
+    $etapas = $obj->lista(
+    $modulo,
+    );
+    $etapas = $etapas[0]['num_etapas'];
+
+
         #Condição para saber o tipo da regra de avaliação a turma do aluno logado
         #Tipo etapa 1: Falta Geral
         #Tipo etapa 2: Falta por Componente
 
     if ($this->tipoetapa == 1) {
     
-        $tmp_obj = new clsPmieducarEscolaSerieDisciplina();
-        $lst_obj = $tmp_obj->componenteCurricularNomes(
-            $this->cod_serie,
+        $tmp_obj = new clsPmieducarNotaAluno();
+        $lst_obj = $tmp_obj->notas(
+         $this->cod_matricula,
+     
         );
-
         $registro['Historico'] = $lst_obj;
+        
 
         $tmp_obj = new clsPmieducarEscolaSerieDisciplina(); 
         $lst_obj = $tmp_obj->faltaGeral(
          $this->cod_matricula,
 
 
-         );      
-        $registro['Historico'] = $lst_obj;
- 
-     
-        $tmp_obj = new clsPmieducarNotaAluno();
-        $lst_obj = $tmp_obj->notas(
-         $this->cod_matricula, 
-        $this->etapa,
-     
-        );
-        for ($i=0; $i < count($registro['Historico']); $i++) { 
-        $registro['Historico'][$i]['notas'] = $lst_obj[$i]['notas'];
-
-         }
+         );    
     
+        for ($i=0; $i < count($registro['Historico']); $i++) { 
+            $registro['Historico'][$i]['faltas'] = $lst_obj[0]['faltas'];
+      
+         } 
+        
+       
+       
   
     }elseif ($this->tipoetapa == 2) {
     
@@ -224,19 +235,6 @@ return new class extends clsDetalhe {
        
         }    
 }
-    $obj = new clsPmieducarTurmaModulo;
-    $modulo = $obj->lista(
-    $this->cod_turma,
-    );
-
-    $modulo = $modulo[0]['ref_cod_modulo'];
-
-    $obj = new clsPmieducarModulo;
-    $etapas = $obj->lista(
-    $modulo,
-    );
-    $etapas = $etapas[0]['num_etapas'];
-
     #Organizando as etapas de acordo com a quantidade de módulos vindo do banco de dados
     for ($i=0; $i <$etapas ; $i++) { 
        
