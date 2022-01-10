@@ -6,6 +6,7 @@ use App\Models\LegacySchoolClassGrade;
 use App\Models\LegacySchoolClass;
 use App\Rules\DuplicateMultiGrades;
 use App\Rules\IncompatibleAbsenceType;
+use App\Rules\IncompatibleChangeToMultiGrades;
 use App\Rules\IncompatibleDescriptiveOpinion;
 use App\Rules\IncompatibleRetakeType;
 use App\Rules\ExistsEnrollmentsInSchoolClassGrades;
@@ -20,9 +21,15 @@ class MultiGradesService
             'grades_delete' => $this->getGradesToDelete($schoolClass, $schoolClassGrades),
         ];
 
+        $changeToMultiGrades = [
+            $schoolClass,
+            $schoolClassGrades
+        ];
+
         validator([
             'grades' => $schoolClassGrades,
             'grades_delete' => $gradesToDelete,
+            'change_to_multi_grades' => $changeToMultiGrades,
         ], [
             'grades' => [
                 'min:2',
@@ -34,6 +41,9 @@ class MultiGradesService
             ],
             'grades_delete' => [
                 new ExistsEnrollmentsInSchoolClassGrades(),
+            ],
+            'change_to_multi_grades' => [
+                new IncompatibleChangeToMultiGrades()
             ],
         ], [
             'grades.min' => 'Você deve selecionar pelo menos 2 séries em turmas multisseriadas.',
