@@ -341,7 +341,7 @@ function getEscolaCursoSerie() {
   campoSerie.length = 1;
 
   if (campoEscola && campoCurso) {
-    campoSerie.disabled = true;
+    campoSerie.readolny = true;
     campoSerie.options[0].text = 'Carregando series';
 
     var xml = new ajax(atualizaLstEscolaCursoSerie);
