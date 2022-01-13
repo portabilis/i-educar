@@ -1,19 +1,33 @@
 <?php
 
-use App\Models\LegacyCourse;
+namespace Database\Factories;
+
 use App\Models\LegacyLevel;
-use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-/** @var Factory $factory */
+class LegacyLevelFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = LegacyLevel::class;
 
-$factory->define(LegacyLevel::class, function (Faker $faker) {
-    return [
-        'nm_serie' => $faker->words(3, true),
-        'ref_usuario_cad' => 1,
-        'ref_cod_curso' => factory(LegacyCourse::class)->create(),
-        'etapa_curso' => $faker->randomElement([1, 2, 3, 4]),
-        'carga_horaria' => 800,
-        'data_cadastro' => $faker->dateTime(),
-    ];
-});
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition(): array
+    {
+        return [
+            'nm_serie' => $this->faker->words(3, true),
+            'ref_usuario_cad' => 1,
+            'ref_cod_curso' => LegacyCourseFactory::new()->create(),
+            'etapa_curso' => $this->faker->randomElement([1, 2, 3, 4]),
+            'carga_horaria' => 800,
+            'data_cadastro' => $this->faker->dateTime(),
+        ];
+    }
+}

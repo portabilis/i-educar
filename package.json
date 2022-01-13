@@ -1,4 +1,5 @@
 {
+    "name": "i-educar",
     "private": true,
     "scripts": {
         "dev": "npm run development",
@@ -10,11 +11,12 @@
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --config=node_modules/laravel-mix/setup/webpack.config.js"
     },
     "devDependencies": {
-        "axios": "^0.21.1",
+        "axios": "^0.21.2",
         "bootstrap": "^4.4.1",
         "cross-env": "^5.1",
         "jquery": "^3.5.0",
         "laravel-mix": "^6.0.6",
+        "lerna": "^4.0.0",
         "lodash": "^4.17.5",
         "popper.js": "^1.16.1",
         "resolve-url-loader": "^3.1.2",

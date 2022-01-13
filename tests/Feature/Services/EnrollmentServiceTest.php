@@ -12,11 +12,13 @@ use App\Exceptions\Enrollment\PreviousCancellationDateException;
 use App\Exceptions\Enrollment\PreviousEnrollDateException;
 use App\Models\LegacyEnrollment;
 use App\Models\LegacySchoolClass;
-use App\Models\LegacySchoolClassStage;
-use App\Models\LegacyUser;
 use App\Services\EnrollmentService;
 use App\User;
 use Carbon\Carbon;
+use Database\Factories\LegacyEnrollmentFactory;
+use Database\Factories\LegacySchoolClassFactory;
+use Database\Factories\LegacySchoolClassStageFactory;
+use Database\Factories\LegacyUserFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 use Throwable;
@@ -42,13 +44,13 @@ class EnrollmentServiceTest extends TestCase
     {
         parent::setUp();
 
-        $user = factory(LegacyUser::class)->state('unique')->make();
+        $user = LegacyUserFactory::new()->unique()->make();
 
         $user = User::find($user->id);
 
-        $schoolClass = factory(LegacySchoolClass::class)->create();
+        $schoolClass = LegacySchoolClassFactory::new()->create();
 
-        factory(LegacySchoolClassStage::class)->create([
+        LegacySchoolClassStageFactory::new()->create([
             'ref_cod_turma' => $schoolClass,
         ]);
 
@@ -59,13 +61,14 @@ class EnrollmentServiceTest extends TestCase
     /**
      * Cancelamento de enturmação com sucesso.
      *
+     * @throws Throwable
+     *
      * @return void
      *
-     * @throws Throwable
      */
     public function testCancelEnrollment()
     {
-        $enrollment = factory(LegacyEnrollment::class)->create([
+        $enrollment = LegacyEnrollmentFactory::new()->create([
             'ref_cod_turma' => $this->schoolClass,
         ]);
 
@@ -83,9 +86,10 @@ class EnrollmentServiceTest extends TestCase
      * Erro ao cancelar uma enturmação devido a data de saída ser anterior ao
      * início do ano letivo.
      *
+     * @throws Throwable
+     *
      * @return void
      *
-     * @throws Throwable
      */
     public function testCancellationDateBeforeAcademicYearException()
     {
@@ -96,7 +100,7 @@ class EnrollmentServiceTest extends TestCase
         $stage->data_inicio = now()->addDay();
         $stage->save();
 
-        $enrollment = factory(LegacyEnrollment::class)->create([
+        $enrollment = LegacyEnrollmentFactory::new()->create([
             'ref_cod_turma' => $this->schoolClass,
         ]);
 
@@ -110,9 +114,10 @@ class EnrollmentServiceTest extends TestCase
      * Erro ao cancelar uma enturmação devido a data de saída ser posterior ao
      * fim do ano letivo.
      *
+     * @throws Throwable
+     *
      * @return void
      *
-     * @throws Throwable
      */
     public function testCancellationDateAfterAcademicYearException()
     {
@@ -123,7 +128,7 @@ class EnrollmentServiceTest extends TestCase
         $stage->data_fim = now()->subDay();
         $stage->save();
 
-        $enrollment = factory(LegacyEnrollment::class)->create([
+        $enrollment = LegacyEnrollmentFactory::new()->create([
             'ref_cod_turma' => $this->schoolClass,
         ]);
 
@@ -134,15 +139,16 @@ class EnrollmentServiceTest extends TestCase
      * Erro ao cancelar uma enturmação devido a data de saída ser anterior que
      * a data de enturmação.
      *
+     * @throws Throwable
+     *
      * @return void
      *
-     * @throws Throwable
      */
     public function testPreviousCancellationDateException()
     {
         $this->expectException(PreviousCancellationDateException::class);
 
-        $enrollment = factory(LegacyEnrollment::class)->create([
+        $enrollment = LegacyEnrollmentFactory::new()->create([
             'ref_cod_turma' => $this->schoolClass,
         ]);
 
@@ -156,7 +162,7 @@ class EnrollmentServiceTest extends TestCase
      */
     public function testEnroll()
     {
-        $enrollment = factory(LegacyEnrollment::class)->make([
+        $enrollment = LegacyEnrollmentFactory::new()->make([
             'ref_cod_turma' => $this->schoolClass,
         ]);
 
@@ -183,7 +189,7 @@ class EnrollmentServiceTest extends TestCase
     {
         $this->expectException(NoVacancyException::class);
 
-        $enrollment = factory(LegacyEnrollment::class)->make([
+        $enrollment = LegacyEnrollmentFactory::new()->make([
             'ref_cod_turma' => $this->schoolClass,
         ]);
 
@@ -205,7 +211,7 @@ class EnrollmentServiceTest extends TestCase
     {
         $this->expectException(ExistsActiveEnrollmentException::class);
 
-        $enrollment = factory(LegacyEnrollment::class)->create([
+        $enrollment = LegacyEnrollmentFactory::new()->create([
             'ref_cod_turma' => $this->schoolClass,
         ]);
 
@@ -220,15 +226,16 @@ class EnrollmentServiceTest extends TestCase
      * Erro ao enturmar uma matrícula devido a data de entrada ser anterior ao
      * início do ano letivo.
      *
+     * @throws Throwable
+     *
      * @return void
      *
-     * @throws Throwable
      */
     public function testEnrollDateBeforeAcademicYearException()
     {
         $this->expectException(EnrollDateBeforeAcademicYearException::class);
 
-        $enrollment = factory(LegacyEnrollment::class)->make([
+        $enrollment = LegacyEnrollmentFactory::new()->make([
             'ref_cod_turma' => $this->schoolClass,
         ]);
 
@@ -251,13 +258,14 @@ class EnrollmentServiceTest extends TestCase
      * Permite matrícular antes do início do ano letivo se o parâmetro permitir_matricula_fora_periodo_letivo
      * estiver habilitado na instituição
      *
+     * @throws Throwable
+     *
      * @return void
      *
-     * @throws Throwable
      */
     public function testEnrollDateBeforeAcademicYearAllowed()
     {
-        $enrollment = factory(LegacyEnrollment::class)->make([
+        $enrollment = LegacyEnrollmentFactory::new()->make([
             'ref_cod_turma' => $this->schoolClass,
         ]);
 
@@ -282,15 +290,16 @@ class EnrollmentServiceTest extends TestCase
      * Erro ao enturmar uma matrícula devido a data de entrada ser posterior ao
      * fim do ano letivo.
      *
+     * @throws Throwable
+     *
      * @return void
      *
-     * @throws Throwable
      */
     public function testEnrollDateAfterAcademicYearException()
     {
         $this->expectException(EnrollDateAfterAcademicYearException::class);
 
-        $enrollment = factory(LegacyEnrollment::class)->make([
+        $enrollment = LegacyEnrollmentFactory::new()->make([
             'ref_cod_turma' => $this->schoolClass,
         ]);
 
@@ -309,15 +318,16 @@ class EnrollmentServiceTest extends TestCase
     /**
      * A data de enturmação é anterior a data de matrícula.
      *
+     * @throws Throwable
+     *
      * @return void
      *
-     * @throws Throwable
      */
     public function testPreviousEnrollDateException()
     {
         $this->expectException(PreviousEnrollDateException::class);
 
-        $enrollment = factory(LegacyEnrollment::class)->create([
+        $enrollment = LegacyEnrollmentFactory::new()->create([
             'ref_cod_turma' => $this->schoolClass,
         ]);
 
@@ -336,7 +346,7 @@ class EnrollmentServiceTest extends TestCase
     public function testGetPreviousEnrollmentWithouRelocationDate()
     {
         /** @var LegacyEnrollment $enrollment */
-        $enrollment = factory(LegacyEnrollment::class)->create([
+        $enrollment = LegacyEnrollmentFactory::new()->create([
             'ref_cod_turma' => $this->schoolClass,
         ]);
 
@@ -354,7 +364,7 @@ class EnrollmentServiceTest extends TestCase
     public function testGetPreviousEnrollmentWithRelocationDateBeforeDepartedDate()
     {
         /** @var LegacyEnrollment $enrollment */
-        $enrollment = factory(LegacyEnrollment::class)->create([
+        $enrollment = LegacyEnrollmentFactory::new()->create([
             'ref_cod_turma' => $this->schoolClass,
             'data_exclusao' => now(),
         ]);
@@ -373,7 +383,7 @@ class EnrollmentServiceTest extends TestCase
     public function testGetPreviousEnrollmentWithRelocationDateAfterDepartedDate()
     {
         /** @var LegacyEnrollment $enrollment */
-        $enrollment = factory(LegacyEnrollment::class)->create([
+        $enrollment = LegacyEnrollmentFactory::new()->create([
             'ref_cod_turma' => $this->schoolClass,
             'data_exclusao' => Carbon::yesterday(),
         ]);
@@ -390,19 +400,19 @@ class EnrollmentServiceTest extends TestCase
     {
         $schoolClass = $this->schoolClass->getKey();
 
-        $enrollment = factory(LegacyEnrollment::class)->create([
+        $enrollment = LegacyEnrollmentFactory::new()->create([
             'ref_cod_turma' => $schoolClass,
         ]);
 
         $registration = $enrollment->registration->getKey();
 
-        factory(LegacyEnrollment::class)->create([
+        LegacyEnrollmentFactory::new()->create([
             'ref_cod_turma' => $schoolClass,
             'ref_cod_matricula' => $registration,
             'sequencial' => 3
         ]);
 
-        factory(LegacyEnrollment::class)->create([
+        LegacyEnrollmentFactory::new()->create([
             'ref_cod_turma' => $schoolClass,
             'ref_cod_matricula' => $registration,
             'sequencial' => 5

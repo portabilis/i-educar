@@ -35,7 +35,6 @@ class App_Unificacao_Aluno
                     ref_sequencial = ref_sequencial + {$maxSequencialAlunoPrincipal}
                 WHERE ref_ref_cod_aluno = {$codAluno};
             ");
-            $maxSequencialAlunoPrincipal++;
         }
 
         IeducarStudent::where('cod_aluno', $codAlunoPrincipal)->update(['data_exclusao' => null]);
@@ -78,12 +77,13 @@ class App_Unificacao_Aluno
     private static function logHistoricos($duplicatesId, $unificationId)
     {
         $historicos = DB::table('pmieducar.historico_escolar')->whereIn('ref_cod_aluno', $duplicatesId)->get();
+
         foreach ($historicos as $historico) {
             $logData = new LogUnificationOldData();
             $logData->unification_id = $unificationId;
             $logData->table = 'pmieducar.historico_escolar';
             $logData->keys = json_encode([['id' => $historico->id]]);
-            $logData->old_data = json_encode($historico);
+            $logData->old_data = json_encode((array)$historico);
             $logData->save();
         }
     }
@@ -95,12 +95,13 @@ class App_Unificacao_Aluno
     private static function logMatriculas($duplicatesId, $unificationId)
     {
         $matriculas = DB::table('pmieducar.matricula')->whereIn('ref_cod_aluno', $duplicatesId)->get();
+
         foreach ($matriculas as $matricula) {
             $logData = new LogUnificationOldData();
             $logData->unification_id = $unificationId;
             $logData->table = 'pmieducar.matricula';
             $logData->keys = json_encode([['cod_matricula' => $matricula->cod_matricula]]);
-            $logData->old_data = json_encode($matricula);
+            $logData->old_data = json_encode((array)$matricula);
             $logData->save();
         }
     }
@@ -112,12 +113,13 @@ class App_Unificacao_Aluno
     private static function logAlunos($duplicatesId, $unificationId)
     {
         $alunos = DB::table('pmieducar.aluno')->whereIn('cod_aluno', $duplicatesId)->get();
+
         foreach ($alunos as $aluno) {
             $logData = new LogUnificationOldData();
             $logData->unification_id = $unificationId;
             $logData->table = 'pmieducar.aluno';
             $logData->keys = json_encode([['cod_aluno' => $aluno->cod_aluno]]);
-            $logData->old_data = json_encode($aluno);
+            $logData->old_data = json_encode((array)$aluno);
             $logData->save();
         }
     }

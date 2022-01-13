@@ -3,7 +3,7 @@
     "description": "Software livre de gestão escolar",
     "type": "project",
     "license": "GPL-2.0-or-later",
-    "version": "2.6.5",
+    "version": "2.6.7",
     "keywords": [
         "Portabilis",
         "i-Educar"
@@ -16,9 +16,9 @@
         "ext-pdo": "*",
         "ext-pgsql": "*",
         "aws/aws-sdk-php-laravel": "^3.6",
-        "composer/semver": "^1.7",
+        "composer/semver": "^3.2",
         "cossou/jasperphp": "^2.8",
-        "dex/composer-plug-and-play": "~0.3",
+        "dex/composer-plug-and-play": "^0.6.0",
         "doctrine/dbal": "^2.13",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
@@ -28,7 +28,6 @@
         "intervention/image": "^2.6",
         "laravel/framework": "^8.51",
         "laravel/horizon": "^v5.7.9",
-        "laravel/legacy-factories": "^1.1",
         "laravel/tinker": "^2.6",
         "laravel/ui": "^3.3",
         "league/csv": "^9.7",
@@ -36,8 +35,8 @@
         "league/flysystem-cached-adapter": "~1.1",
         "league/flysystem-sftp": "^1.0",
         "maatwebsite/excel": "^3.1",
-        "mll-lab/graphql-php-scalars": "^3.1",
-        "nuwave/lighthouse": "^4.18",
+        "mll-lab/graphql-php-scalars": "^4",
+        "nuwave/lighthouse": "^5",
         "phpoffice/phpspreadsheet": "^1.8",
         "predis/predis": "^1.1",
         "swiftmailer/swiftmailer": "^6.2"
@@ -47,7 +46,7 @@
         "facade/ignition": "^2.11",
         "fakerphp/faker": "^1.15",
         "filp/whoops": "^2.14",
-        "friendsofphp/php-cs-fixer": "^2.19",
+        "friendsofphp/php-cs-fixer": "^3.2",
         "laravel/sail": "^0.0.5",
         "laravel/telescope": "^4.6",
         "mockery/mockery": "^1.4.3",
@@ -57,7 +56,6 @@
     },
     "autoload": {
         "classmap": [
-            "database/factories",
             "ieducar/intranet/include",
             "ieducar/lib",
             "ieducar/modules/*/Model",
@@ -71,6 +69,7 @@
         ],
         "psr-4": {
             "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
             "iEducar\\": "src"
         }
@@ -103,6 +102,7 @@
         "npm": "npm install",
         "new-install": [
             "@composer install",
+            "@composer plug-and-play:install",
             "@set-permissions",
             "@php artisan key:generate --ansi",
             "@php artisan legacy:link --ansi",
@@ -110,7 +110,8 @@
             "@npm"
         ],
         "update-install": [
-            "@composer update --plug-and-play",
+            "@composer update",
+            "@composer plug-and-play:update",
             "@set-permissions",
             "@php artisan legacy:link --ansi",
             "@php artisan migrate --force --ansi",
@@ -125,12 +126,15 @@
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
-      ]
+        ]
     },
     "config": {
         "preferred-install": "dist",
         "sort-packages": true,
-        "optimize-autoloader": true
+        "optimize-autoloader": true,
+        "allow-plugins": {
+            "dex/composer-plug-and-play": true
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true

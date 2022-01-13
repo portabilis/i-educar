@@ -40,11 +40,13 @@ class StudentsExport implements FromCollection, ShouldAutoSize, WithColumnFormat
             case GuardianType::FATHER:
                 $guardianName = $fatherName;
                 $guardianDocument = $fatherDocument;
+
                 break;
 
             case GuardianType::MOTHER:
                 $guardianName = $motherName;
                 $guardianDocument = $motherDocument;
+
                 break;
 
             case GuardianType::BOTH:
@@ -69,6 +71,7 @@ class StudentsExport implements FromCollection, ShouldAutoSize, WithColumnFormat
 
                 $guardianName = join(', ', $names);
                 $guardianDocument = join(', ', $documents);
+
                 break;
         }
 

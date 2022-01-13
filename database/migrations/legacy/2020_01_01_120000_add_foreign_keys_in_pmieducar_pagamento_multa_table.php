@@ -15,16 +15,16 @@ class AddForeignKeysInPmieducarPagamentoMultaTable extends Migration
     {
         Schema::table('pmieducar.pagamento_multa', function (Blueprint $table) {
             $table->foreign('ref_cod_cliente')
-               ->references('cod_cliente')
-               ->on('pmieducar.cliente')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_cliente')
+                ->on('pmieducar.cliente')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_biblioteca')
-               ->references('cod_biblioteca')
-               ->on('pmieducar.biblioteca')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_biblioteca')
+                ->on('pmieducar.biblioteca')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

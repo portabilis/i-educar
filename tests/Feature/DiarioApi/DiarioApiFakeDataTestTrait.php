@@ -2,22 +2,25 @@
 
 namespace Tests\Feature\DiarioApi;
 
-use App\Models\LegacyAcademicYearStage;
-use App\Models\LegacyCourse;
-use App\Models\LegacyDiscipline;
-use App\Models\LegacyDisciplineAcademicYear;
 use App\Models\LegacyEnrollment;
 use App\Models\LegacyEvaluationRule;
-use App\Models\LegacyLevel;
-use App\Models\LegacyRegistration;
-use App\Models\LegacyRoundingTable;
 use App\Models\LegacySchool;
-use App\Models\LegacySchoolAcademicYear;
 use App\Models\LegacySchoolClass;
-use App\Models\LegacySchoolGrade;
-use App\Models\LegacySchoolGradeDiscipline;
-use App\Models\LegacyValueRoundingTable;
-use App\User;
+use Database\Factories\LegacyAcademicYearStageFactory;
+use Database\Factories\LegacyCourseFactory;
+use Database\Factories\LegacyDisciplineAcademicYearFactory;
+use Database\Factories\LegacyDisciplineFactory;
+use Database\Factories\LegacyEnrollmentFactory;
+use Database\Factories\LegacyEvaluationRuleFactory;
+use Database\Factories\LegacyLevelFactory;
+use Database\Factories\LegacyRegistrationFactory;
+use Database\Factories\LegacyRoundingTableFactory;
+use Database\Factories\LegacySchoolAcademicYearFactory;
+use Database\Factories\LegacySchoolClassFactory;
+use Database\Factories\LegacySchoolGradeDisciplineFactory;
+use Database\Factories\LegacySchoolGradeFactory;
+use Database\Factories\LegacyValueRoundingTableFactory;
+use Database\Factories\UserFactory;
 
 trait DiarioApiFakeDataTestTrait
 {
@@ -30,19 +33,19 @@ trait DiarioApiFakeDataTestTrait
      */
     public function getCommonFakeData($evaluationRule)
     {
-        $course = factory(LegacyCourse::class)->state('padrao-ano-escolar')->create();
+        $course = LegacyCourseFactory::new()->standardAcademicYear()->create();
 
-        $level = factory(LegacyLevel::class)->create([
+        $level = LegacyLevelFactory::new()->create([
             'ref_cod_curso' => $course,
             'dias_letivos' => '200'
         ]);
 
-        $schoolGrade = factory(LegacySchoolGrade::class)->create([
+        $schoolGrade = LegacySchoolGradeFactory::new()->create([
             'ref_cod_serie' => $level,
         ]);
 
         /** @var LegacySchoolClass $schoolClass */
-        $schoolClass = factory(LegacySchoolClass::class)->create([
+        $schoolClass = LegacySchoolClassFactory::new()->create([
             'ref_ref_cod_escola' => $schoolGrade->school_id,
             'ref_ref_cod_serie' => $schoolGrade->grade_id,
             'ref_cod_curso' => $schoolGrade->grade->course_id,
@@ -55,21 +58,21 @@ trait DiarioApiFakeDataTestTrait
 
         $school->courses()->attach($schoolClass->course_id, [
             'ativo' => 1,
-            'anos_letivos' => '{'.now()->year.'}',
-            'ref_usuario_cad' => factory(User::class)->state('admin')->make()->id,
+            'anos_letivos' => '{' . now()->year . '}',
+            'ref_usuario_cad' => UserFactory::new()->admin()->make()->id,
             'data_cadastro' => now(),
         ]);
 
-        $enrollment = factory(LegacyEnrollment::class)->create([
+        $enrollment = LegacyEnrollmentFactory::new()->create([
             'ref_cod_turma' => $schoolClass,
-            'ref_cod_matricula' => factory(LegacyRegistration::class)->create([
+            'ref_cod_matricula' => LegacyRegistrationFactory::new()->create([
                 'ref_ref_cod_escola' => $schoolClass->school_id,
                 'ref_ref_cod_serie' => $schoolClass->grade_id,
                 'ref_cod_curso' => $schoolClass->course_id,
             ]),
         ]);
 
-        factory(LegacySchoolAcademicYear::class)->create([
+        LegacySchoolAcademicYearFactory::new()->create([
             'ref_cod_escola' => $school->id,
         ]);
 
@@ -80,8 +83,8 @@ trait DiarioApiFakeDataTestTrait
      * Adiciona uma etapa ao ano letivo (pmieducar.ano_letivo_modulo)
      *
      * @param LegacySchool $school
-     * @param $number
-     * @param null $year
+     * @param              $number
+     * @param null         $year
      */
     public function addAcademicYearStage($school, $number, $year = null)
     {
@@ -89,7 +92,7 @@ trait DiarioApiFakeDataTestTrait
             $year = now()->year;
         }
 
-        factory(LegacyAcademicYearStage::class)->create([
+        LegacyAcademicYearStageFactory::new()->create([
             'ref_ano' => $year,
             'ref_ref_cod_escola' => $school->id,
             'sequencial' => $number,
@@ -103,12 +106,12 @@ trait DiarioApiFakeDataTestTrait
      */
     public function getPromotionFromAverageAndAttendanceWithoutRetake()
     {
-        $roundingTable = factory(LegacyRoundingTable::class)->state('numeric')->create();
-        factory(LegacyValueRoundingTable::class, 10)->create([
+        $roundingTable = LegacyRoundingTableFactory::new()->numeric()->create();
+        LegacyValueRoundingTableFactory::new()->count(10)->create([
             'tabela_arredondamento_id' => $roundingTable->id,
         ]);
 
-        $evaluationRule = factory(LegacyEvaluationRule::class)->state('media-presenca-sem-recuperacao')->create([
+        $evaluationRule = LegacyEvaluationRuleFactory::new()->mediaPresencaSemRecuperacao()->create([
             'tabela_arredondamento_id' => $roundingTable->id,
         ]);
 
@@ -119,12 +122,12 @@ trait DiarioApiFakeDataTestTrait
 
     public function getProgressionWithAverageCalculationWeightedRecovery()
     {
-        $roundingTable = factory(LegacyRoundingTable::class)->state('numeric')->create();
-        factory(LegacyValueRoundingTable::class, 10)->create([
+        $roundingTable = LegacyRoundingTableFactory::new()->numeric()->create();
+        LegacyValueRoundingTableFactory::new()->count(10)->create([
             'tabela_arredondamento_id' => $roundingTable->id,
         ]);
 
-        $evaluationRule = factory(LegacyEvaluationRule::class)->state('progressao-calculo-media-recuperacao-ponderada')->create([
+        $evaluationRule = LegacyEvaluationRuleFactory::new()->progressaoCalculoMediaRecuperacaoPonderada()->create([
             'tabela_arredondamento_id' => $roundingTable->id,
         ]);
 
@@ -150,18 +153,18 @@ trait DiarioApiFakeDataTestTrait
             $school = $schoolClass->school;
             $grade = $schoolClass->grade;
 
-            $discipline = factory(LegacyDiscipline::class)->create();
+            $discipline = LegacyDisciplineFactory::new()->create();
             $schoolClass->disciplines()->attach($discipline->id, [
                 'ano_escolar_id' => $grade->cod_serie,
                 'escola_id' => $school->id
             ]);
 
-            factory(LegacyDisciplineAcademicYear::class)->create([
+            LegacyDisciplineAcademicYearFactory::new()->create([
                 'componente_curricular_id' => $discipline->id,
                 'ano_escolar_id' => $schoolClass->grade_id,
             ]);
 
-            factory(LegacySchoolGradeDiscipline::class)->create([
+            LegacySchoolGradeDisciplineFactory::new()->create([
                 'ref_ref_cod_escola' => $school->id,
                 'ref_ref_cod_serie' => $grade->cod_serie,
                 'ref_cod_disciplina' => $discipline->id

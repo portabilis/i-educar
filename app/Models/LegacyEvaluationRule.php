@@ -8,13 +8,13 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class LegacyEvaluationRule extends Model
 {
-    const PARALLEL_REMEDIAL_NONE = 0;
-    const PARALLEL_REMEDIAL_PER_STAGE = 1;
-    const PARALLEL_REMEDIAL_PER_SPECIFIC_STAGE = 2;
+    public const PARALLEL_REMEDIAL_NONE = 0;
+    public const PARALLEL_REMEDIAL_PER_STAGE = 1;
+    public const PARALLEL_REMEDIAL_PER_SPECIFIC_STAGE = 2;
 
-    const PARALLEL_REMEDIAL_REPLACE_SCORE = 1;
-    const PARALLEL_REMEDIAL_AVERAGE_SCORE = 2;
-    const PARALLEL_REMEDIAL_SUM_SCORE = 3;
+    public const PARALLEL_REMEDIAL_REPLACE_SCORE = 1;
+    public const PARALLEL_REMEDIAL_AVERAGE_SCORE = 2;
+    public const PARALLEL_REMEDIAL_SUM_SCORE = 3;
 
     /**
      * @var string

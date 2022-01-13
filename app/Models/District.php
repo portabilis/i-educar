@@ -9,7 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class District extends Model
 {
-    use DateSerializer, HasIbgeCode;
+    use DateSerializer;
+    use HasIbgeCode;
 
     /**
      * @var array

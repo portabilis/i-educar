@@ -136,7 +136,7 @@ return new class extends clsCadastro {
         $log = new LogUnification();
         $log->type = StudentLogUnification::getType();
         $log->main_id = $mainId;
-        $log->duplicates_id = json_encode($duplicatesId);
+        $log->duplicates_id = json_encode(array_values($duplicatesId));
         $log->created_by = $createdBy;
         $log->updated_by = $createdBy;
         $log->save();
@@ -151,7 +151,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Unificação de alunos';
+        $this->title = 'Unificação de alunos';
         $this->processoAp = '999847';
     }
 };

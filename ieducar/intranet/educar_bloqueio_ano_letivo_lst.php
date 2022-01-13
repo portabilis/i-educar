@@ -33,6 +33,7 @@ return new class extends clsListagem {
     public $ref_ano;
     public $data_inicio;
     public $data_fim;
+    public $ano;
 
     public function Gerar()
     {
@@ -51,8 +52,8 @@ return new class extends clsListagem {
             'Data final permitida',
         ]);
 
-        $this->inputsHelper()->dynamic('instituicao');
-        $this->inputsHelper()->dynamic('ano', ['value' => $this->ref_ano]);
+        $this->inputsHelper()->dynamic('instituicao', [],['options' => ['required' => false]]);
+        $this->inputsHelper()->dynamic('ano', ['value' => $this->ref_ano, 'required' => false]);
 
         // Paginador
         $this->limite = 20;
@@ -103,7 +104,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Bloqueio do ano letivo';
+        $this->title = 'Bloqueio do ano letivo';
         $this->processoAp = '21251';
     }
 };

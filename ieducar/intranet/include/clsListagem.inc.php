@@ -200,9 +200,28 @@ HTML;
         }
     }
 
+    private function getPageTitle()
+    {
+        if (isset($this->title)) {
+            return $this->title;
+        }
+
+        if (isset($this->_title)) {
+            return $this->_title;
+        }
+
+        if (isset($this->titulo)) {
+            return $this->titulo;
+        }
+
+        if (isset($this->_titulo)) {
+            return $this->_titulo;
+        }
+    }
+
     public function RenderHTML()
     {
-        View::share('title', $this->titulo);
+        View::share('title', $this->getPageTitle());
 
         ob_start();
 

@@ -1,19 +1,33 @@
 <?php
 
+namespace Database\Factories;
+
 use App\Models\LegacyEmployee;
-use App\Models\LegacyIndividual;
-use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-/** @var Factory $factory */
+class LegacyEmployeeFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = LegacyEmployee::class;
 
-$factory->define(LegacyEmployee::class, function (Faker $faker) {
-    return [
-        'ref_cod_pessoa_fj' => function () {
-            return factory(LegacyIndividual::class)->create()->idpes;
-        },
-        'matricula' => $faker->randomDigitNotNull,
-        'senha' => $faker->randomDigitNotNull,
-        'ativo' => 1
-    ];
-});
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition(): array
+    {
+        return [
+            'ref_cod_pessoa_fj' => function () {
+                return LegacyIndividualFactory::new()->create()->idpes;
+            },
+            'matricula' => $this->faker->randomDigitNotNull(),
+            'senha' => $this->faker->randomDigitNotNull(),
+            'ativo' => 1
+        ];
+    }
+}

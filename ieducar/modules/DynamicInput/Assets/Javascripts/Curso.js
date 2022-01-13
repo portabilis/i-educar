@@ -1,27 +1,27 @@
 (function($){
-  $(document).ready(function(){
-    var $instituicaoField = getElementFor('instituicao');
-    var $escolaField = getElementFor('escola');
-    var $cursoField = getElementFor('curso');
-    var $ano = getElementFor('ano');
+  $(document).ready(function() {
+    let $instituicaoField = getElementFor('instituicao');
+    let $escolaField = getElementFor('escola');
+    let $cursoField = getElementFor('curso');
+    let $ano = getElementFor('ano');
 
-    var handleGetCursos = function(response) {
-      var selectOptions = jsonResourcesToSelectOptions(response['options']);
+    let handleGetCursos = function(response) {
+      let selectOptions = jsonResourcesToSelectOptions(response['options']);
       updateSelect($cursoField, selectOptions, "Selecione um curso");
     }
 
-    var updateCursos = function(){
+    let updateCursos = function() {
       resetSelect($cursoField);
 
       if ($instituicaoField.val() && $escolaField.val() && $escolaField.is(':enabled')) {
         $cursoField.children().first().html('Aguarde carregando...');
-        var urlForGetCursos = getResourceUrlBuilder.buildUrl('/module/DynamicInput/Curso', 'cursos', {
+        let urlForGetCursos = getResourceUrlBuilder.buildUrl('/module/DynamicInput/Curso', 'cursos', {
           escola_id: $escolaField.attr('value'),
           instituicao_id: $instituicaoField.attr('value'),
           ano: ($ano.val() && $ano.val() != "NaN" ? $ano.val() : '')
         });
 
-        var options = {
+        let options = {
           url: urlForGetCursos,
           dataType: 'json',
           success: handleGetCursos

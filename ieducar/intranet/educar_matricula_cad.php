@@ -814,7 +814,7 @@ return new class extends clsCadastro {
                 true
             );
 
-            $count = count($lst_CandidatoReservaVaga);
+            $count = is_array($lst_CandidatoReservaVaga) ? count($lst_CandidatoReservaVaga) : 0;
             $countEscolasDiferentes = 0;
             $countEscolasIguais = 0;
 
@@ -1517,7 +1517,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Matrícula';
+        $this->title = 'Matrícula';
         $this->processoAp = 578;
     }
 };

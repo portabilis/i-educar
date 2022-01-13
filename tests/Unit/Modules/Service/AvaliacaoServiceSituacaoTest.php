@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\LegacyLevel;
-use App\Models\LegacyRegistration;
+use Database\Factories\LegacyLevelFactory;
+use Database\Factories\LegacyRegistrationFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 
 require_once __DIR__ . '/TestCommon.php';
@@ -36,10 +36,10 @@ class AvaliacaoServiceSituacaoTest extends Avaliacao_Service_TestCommon
             ->method('getRegra')
             ->willReturn($regra);
 
-        $registration = factory(LegacyRegistration::class)
+        $registration = LegacyRegistrationFactory::new()
             ->create(
                 [
-                    'ref_ref_cod_serie' => factory(LegacyLevel::class)->create(),
+                    'ref_ref_cod_serie' => LegacyLevelFactory::new()->create(),
                     'dependencia' => true,
                 ]
             );

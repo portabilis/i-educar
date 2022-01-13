@@ -7,9 +7,9 @@ interface AssetServiceContract
     /**
      * AssetServiceContract constructor.
      *
-     * @param string $version
+     * @param string    $version
      * @param bool|null $secure
-     * @param bool $automatic_versioning
+     * @param bool      $automatic_versioning
      */
     public function __construct(string $version, ?bool $secure = null, bool $automatic_versioning = false);
 
@@ -18,14 +18,14 @@ interface AssetServiceContract
      *
      * @return ?string
      */
-    public function getVersion() : ?string;
+    public function getVersion(): ?string;
 
     /**
      * Get assets version number.
      *
      * @return bool
      */
-    public function isAutomaticVersioning() : bool;
+    public function isAutomaticVersioning(): bool;
 
     /**
      * Get secure option.
@@ -37,9 +37,10 @@ interface AssetServiceContract
     /**
      * Generate an asset path with version parameter for the application.
      *
-     * @param string $path
+     * @param string    $path
      * @param bool|null $secure
+     *
      * @return string
      */
-    public function get(string $path, bool $secure = null) : string;
+    public function get(string $path, bool $secure = null): string;
 }
