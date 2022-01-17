@@ -2861,7 +2861,11 @@ function canShowParentsFields() {
 
             $cpfNotice.hide();
 
-            if (cpf && !validationUtils.validatesCpf(cpf)) {
+            let ignoreValidation = [
+              '000.000.000-00'
+            ];
+
+            if (cpf && !ignoreValidation.includes(cpf) && !validationUtils.validatesCpf(cpf)) {
                 $cpfNotice.html("O CPF informado é inválido").slideDown("fast");
 
                 $submitButton.attr("disabled", "disabled").hide();
