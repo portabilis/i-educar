@@ -4,13 +4,7 @@ error_reporting(E_ERROR);
 ini_set('display_errors', 1);
 
 return new class extends clsCadastro {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
     public $pessoa_logada;
-
     public $nome_url_sucesso = 'Efetuar c&oacute;pia';
 
     public function Inicializar()

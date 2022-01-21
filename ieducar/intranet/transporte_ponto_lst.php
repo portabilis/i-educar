@@ -46,7 +46,7 @@ return new class extends clsListagem {
 
         $obj_permissoes = new clsPermissoes();
 
-        $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+        $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
         $this->addCabecalhos([
             'C&oacute;digo do ponto',

@@ -1,13 +1,7 @@
 <?php
 
 return new class extends clsDetalhe {
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
     public $titulo;
-
     public $ref_serie_origem;
     public $ref_serie_destino;
     public $ref_usuario_exc;

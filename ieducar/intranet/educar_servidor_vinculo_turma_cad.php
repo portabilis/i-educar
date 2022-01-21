@@ -10,27 +10,16 @@ use iEducar\Support\View\SelectOptions;
 
 return new class extends clsCadastro {
     public $pessoa_logada;
-
     public $id;
-
     public $ano;
-
     public $servidor_id;
-
     public $funcao_exercida;
-
     public $tipo_vinculo;
-
     public $permite_lancar_faltas_componente;
-
     public $ref_cod_instituicao;
-
     public $ref_cod_escola;
-
     public $ref_cod_curso;
-
     public $ref_cod_serie;
-
     public $ref_cod_turma;
 
     public function Inicializar()

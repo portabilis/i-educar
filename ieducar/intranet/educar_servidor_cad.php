@@ -25,14 +25,9 @@ return new class extends clsCadastro {
     public $tipo_ensino_medio_cursado;
     public $matricula = [];
     public $cod_servidor_funcao = [];
-
     public $total_horas_alocadas;
-
     public $cod_docente_inep;
-
-    // Determina se o servidor é um docente para buscar código Educacenso/Inep.
     public $docente = false;
-
     public $employee_course_id;
     public $employee_completion_year;
     public $employee_college_id;

@@ -1,24 +1,15 @@
 <?php
 
 return new class extends clsCadastro {
-    /**
-     * Referência a usuário da sessão
-     *
-     * @var int
-     */
     public $pessoa_logada = null;
-
     public $ref_cod_escola;
     public $ref_cod_serie;
     public $ref_cod_aluno;
     public $nm_aluno;
     public $nm_aluno_;
-
     public $ref_cod_instituicao;
     public $ref_cod_curso;
-
     public $passo;
-
     public $nm_aluno_ext;
     public $cpf_responsavel;
     public $tipo_aluno;

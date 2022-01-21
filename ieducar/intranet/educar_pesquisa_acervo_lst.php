@@ -55,7 +55,7 @@ return new class extends clsListagem {
 
     public function Gerar()
     {
-        $this->ref_cod_biblioteca = $_GET['ref_cod_biblioteca'] ? $_GET['ref_cod_biblioteca'] : Session::get('ref_cod_biblioteca');
+        $this->ref_cod_biblioteca = $_GET['ref_cod_biblioteca'] ?: Session::get('ref_cod_biblioteca');
         Session::put('ref_cod_biblioteca', $this->ref_cod_biblioteca);
         Session::put('campo1', $_GET['campo1'] ?? Session::get('campo1'));
         Session::save();
@@ -66,18 +66,11 @@ return new class extends clsListagem {
         }
         $this->titulo = 'Obras - Listagem';
 
-        //
-
         $this->addCabecalhos([
             'Obra',
             'Biblioteca'
         ]);
 
-        // outros Filtros
-        //$get_escola     = 1;
-        //$get_biblioteca = 1;
-        //$obrigatorio    = false;
-        //include("include/pmieducar/educar_campo_lista.php");
         $this->campoTexto('titulo_livro', 'Titulo', $this->titulo_livro, 30, 255, false);
         $this->campoOculto('ref_cod_biblioteca', $this->ref_cod_biblioteca);
 
@@ -136,7 +129,6 @@ return new class extends clsListagem {
             }
         }
         $this->addPaginador2('educar_pesquisa_acervo_lst.php', $total, $_GET, $this->nome, $this->limite);
-        $obj_permissoes = new clsPermissoes();
 
         $this->largura = '100%';
     }

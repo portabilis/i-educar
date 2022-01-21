@@ -4,7 +4,6 @@ return new class extends clsCadastro {
     public $nm_vinculo;
     public $cod_vinculo;
     public $abreviatura;
-
     protected $db;
 
     public function __construct()

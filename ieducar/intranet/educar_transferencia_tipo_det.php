@@ -4,13 +4,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
 return new class extends clsDetalhe {
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
     public $titulo;
-
     public $cod_transferencia_tipo;
     public $ref_usuario_exc;
     public $ref_usuario_cad;

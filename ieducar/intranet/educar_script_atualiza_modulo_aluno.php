@@ -1,21 +1,6 @@
 <?php
 
-/**
- * busca escolas
- */
-//die('arquivo bloqueado');
-//$cod_escola = 58;
-//$cod_escola = 45;
 $cod_escola = 41;
-//$cod_escola = 56;
-//$cod_escola = 36;
-//$cod_escola = 25;
-//$cod_escola = 69;
-//$cod_escola = 53;
-//$cod_escola = 62;
-//$cod_escola = 57;
-//$cod_escola = 47;
-
 $obj_escola = new clsPmieducarEscola();
 $lst_escola = $obj_escola->lista($cod_escola, null, null, 1, null, null, null, null, null, null, 1);
 

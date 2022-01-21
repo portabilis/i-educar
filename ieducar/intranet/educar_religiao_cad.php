@@ -58,15 +58,8 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
-        // primary keys
         $this->campoOculto('cod_religiao', $this->cod_religiao);
-
-        // foreign keys
-
-        // text
         $this->campoTexto('nm_religiao', 'Religi&atilde;o', $this->nm_religiao, 30, 255, true);
-
-        // data
     }
 
     public function Novo()

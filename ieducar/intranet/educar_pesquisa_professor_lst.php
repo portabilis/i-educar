@@ -103,7 +103,6 @@ return new class extends clsListagem {
             }
         }
         $this->largura = '100%';
-        $obj_permissoes = new clsPermissoes();
 
         Session::save();
         Session::start();

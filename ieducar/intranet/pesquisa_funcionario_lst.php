@@ -21,7 +21,6 @@ return new class extends clsListagem {
             $parametros->preencheAtributosComArray(Session::get('campos'));
         }
 
-        $submit = false;
 
         $this->addCabecalhos(['Matr&iacute;cula', 'CPF', 'Funcion&aacute;rio']);
 

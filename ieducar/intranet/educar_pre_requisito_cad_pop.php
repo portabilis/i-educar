@@ -46,7 +46,7 @@ return new class extends clsCadastro {
                 $retorno = 'Editar';
             }
         }
-//      $this->url_cancelar = ($retorno == "Editar") ? "educar_pre_requisito_det.php?cod_pre_requisito={$registro["cod_pre_requisito"]}" : "educar_pre_requisito_lst.php";
+
         $this->nome_url_cancelar = 'Cancelar';
         $this->script_cancelar = 'window.parent.fechaExpansivel("div_dinamico_"+(parent.DOM_divs.length-1));';
 

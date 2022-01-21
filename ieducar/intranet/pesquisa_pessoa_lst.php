@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Os parâmetros passados para esta página de listagem devem estar dentro da classe clsParametrosPesquisas.inc.php
- *
- * @author Adriano Erik Weiguert Nagasava
- *
- */
-
 use Illuminate\Support\Facades\Session;
 
 return new class extends clsListagem {
@@ -40,8 +33,6 @@ return new class extends clsListagem {
             $parametros = new clsParametrosPesquisas();
             $parametros->preencheAtributosComArray(Session::get('campos'));
         }
-
-        $submit = false;
 
         foreach ($_GET as $key => $value) {
             $this->$key = $value;

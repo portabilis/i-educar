@@ -3,7 +3,6 @@
 return new class extends clsCadastro {
 
     public $pessoa_logada;
-
     public $cod_tipo_dispensa;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -50,14 +49,12 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
-        // primary keys
+
         $this->campoOculto('cod_tipo_dispensa', $this->cod_tipo_dispensa);
 
-        // foreign keys
         $obrigatorio = true;
         include('include/pmieducar/educar_campo_lista.php');
 
-        // text
         $this->campoTexto('nm_tipo', 'Tipo Dispensa', $this->nm_tipo, 30, 255, true);
         $this->campoMemo('descricao', 'Descrição', $this->descricao, 60, 5, false);
     }

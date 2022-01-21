@@ -8,35 +8,20 @@ use Illuminate\Validation\ValidationException;
 
 return new class extends clsCadastro {
     public $nome;
-
     public $ddd_telefone;
-
     public $telefone;
-
     public $ddd_celular;
-
     public $celular;
-
     public $email;
-
     public $senha;
-
     public $senha_confirma;
-
     public $sexo;
-
     public $senha_old;
-
     public $matricula;
-
     public $matricula_old;
-
     public $receber_novidades;
-
     public $objPhoto;
-
     public $arquivoFoto;
-
     public $file_delete;
 
     public function Inicializar()

@@ -54,13 +54,8 @@ return new class extends clsCadastro {
         // primary keys
         $this->campoOculto('cod_projeto', $this->cod_projeto);
 
-        // foreign keys
-
-        // text
         $this->campoTexto('nome', 'Nome do projeto', $this->nome, 50, 50, true);
         $this->campoMemo('observacao', 'Observa&ccedil;&atilde;o', $this->observacao, 52, 5, false);
-
-        // data
     }
 
     public function Novo()

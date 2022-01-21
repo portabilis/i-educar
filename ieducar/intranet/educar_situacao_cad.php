@@ -1,13 +1,7 @@
 <?php
 
 return new class extends clsCadastro {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
     public $pessoa_logada;
-
     public $cod_situacao;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -20,7 +14,6 @@ return new class extends clsCadastro {
     public $data_exclusao;
     public $ativo;
     public $ref_cod_biblioteca;
-
     public $ref_cod_instituicao;
     public $ref_cod_escola;
     public $ref_cod_biblioteca_;

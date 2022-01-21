@@ -1,13 +1,7 @@
 <?php
 
 return new class extends clsCadastro {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
     public $pessoa_logada;
-
     public $cod_tipo_ensino;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -16,7 +10,6 @@ return new class extends clsCadastro {
     public $data_exclusao;
     public $ativo;
     public $atividade_complementar;
-
     public $ref_cod_instituicao;
 
     public function Inicializar()
@@ -72,16 +65,12 @@ return new class extends clsCadastro {
         // primary keys
         $this->campoOculto('cod_tipo_ensino', $this->cod_tipo_ensino);
 
-        // foreign keys
         $get_escola = false;
         $obrigatorio = true;
         include('include/pmieducar/educar_campo_lista.php');
-        // text
+
         $this->campoTexto('nm_tipo', 'Tipo de Ensino', $this->nm_tipo, 30, 255, true);
-
         $this->campoCheck('atividade_complementar', 'Atividade complementar', $this->atividade_complementar);
-
-        // data
     }
 
     public function Novo()
