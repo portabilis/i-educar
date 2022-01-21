@@ -25,8 +25,6 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(593, $this->pessoa_logada, 11, 'educar_acervo_colecao_lst.php');
 
-        //$this->url_cancelar = "";
-        //$this->nome_url_cancelar = "Cancelar";
         return $retorno;
     }
 

@@ -28,31 +28,6 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(572, $this->pessoa_logada, 7, 'educar_infra_comodo_funcao_lst.php');
 
-        /*if( is_numeric( $this->cod_infra_comodo_funcao ) )
-        {
-
-            $obj = new clsPmieducarInfraComodoFuncao();
-            $lst  = $obj->lista( $this->cod_infra_comodo_funcao );
-            if (is_array($lst))
-            {
-                $registro = array_shift($lst);
-                if( $registro )
-                {
-                    foreach( $registro AS $campo => $val )  // passa todos os valores obtidos no registro para atributos do objeto
-                        $this->$campo = $val;
-
-                    //** verificao de permissao para exclusao
-                    $this->fexcluir = $obj_permissoes->permissao_excluir(572,$this->pessoa_logada,7);
-                    //**
-
-                    $retorno = "Editar";
-                }else{
-                    header( "Location: educar_infra_comodo_funcao_lst.php" );
-                    die();
-                }
-            }
-        }*/
-//      $this->url_cancelar = ($retorno == "Editar") ? "educar_infra_comodo_funcao_det.php?cod_infra_comodo_funcao={$registro["cod_infra_comodo_funcao"]}" : "educar_infra_comodo_funcao_lst.php";
         $this->nome_url_cancelar = 'Cancelar';
         $this->script_cancelar = 'window.parent.fechaExpansivel("div_dinamico_"+(parent.DOM_divs.length-1));';
 

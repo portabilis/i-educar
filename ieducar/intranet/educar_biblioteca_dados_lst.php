@@ -61,13 +61,6 @@ return new class extends clsListagem {
             $lista_busca[] = 'Institui&ccedil;&atilde;o';
         }
 
-        /*if($nivel_usuario == 8){
-            $this->ref_cod_biblioteca = $obj_permissoes->getBiblioteca($this->pessoa_logada);
-            $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
-            $this->ref_cod_escola = $obj_permissoes->getEscola($this->pessoa_logada);
-        }
-        else
-            $this->ref_cod_biblioteca = null;*/
         $obj_usuario_bib = new clsPmieducarBibliotecaUsuario();
         $lista_bib = $obj_usuario_bib->lista(null, $this->pessoa_logada);
         $biblioteca_in = '';

@@ -58,9 +58,6 @@ return new class extends clsCadastro {
         // primary keys
         $this->campoOculto('cod_acervo_assunto', $this->cod_acervo_assunto);
 
-        //foreign keys
-        #$this->inputsHelper()->dynamic(array('instituicao', 'escola', 'biblioteca'));
-
         // text
         $this->campoTexto('nm_assunto', 'Assunto', $this->nm_assunto, 30, 255, true);
         $this->campoMemo('descricao', 'Descri&ccedil;&atilde;o', $this->descricao, 60, 5, false);

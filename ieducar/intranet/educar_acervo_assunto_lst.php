@@ -52,12 +52,6 @@ return new class extends clsListagem {
             'Descrição'
         ]);
 
-        // Filtros de Foreign Keys
-        #$get_escola = true;
-        #$get_biblioteca = true;
-        #$get_cabecalho = "lista_busca";
-        #include("include/pmieducar/educar_campo_lista.php");
-
         // outros Filtros
         $this->campoTexto('nm_assunto', 'Assunto', $this->nm_assunto, 30, 255, false);
         $this->campoTexto('descricao', 'Descrição', $this->descricao, 30, 255, false);

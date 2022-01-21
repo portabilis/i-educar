@@ -191,8 +191,6 @@ return new class extends clsCadastro {
         $this->valor_multa = str_replace('.', '', $this->valor_multa);
         $this->valor_multa = str_replace(',', '.', $this->valor_multa);
 
-//      echo $this->cod_emprestimo." / ".$this->pessoa_logada." / ".date('Y-m-d')." / ".$this->valor_multa;die;
-
         $obj_situacao = new clsPmieducarSituacao();
         $lst_situacao = $obj_situacao->lista(null, null, null, null, 2, null, 1, 0, null, null, null, null, 1, $this->ref_cod_biblioteca);
         if (is_array($lst_situacao) && count($lst_situacao)) {

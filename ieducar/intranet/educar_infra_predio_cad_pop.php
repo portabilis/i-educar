@@ -28,32 +28,10 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(567, $this->pessoa_logada, 7, 'educar_infra_predio_lst.php');
 
-//      if( is_numeric( $this->cod_infra_predio ) )
-//      {
-//
-//          $obj = new clsPmieducarInfraPredio( $this->cod_infra_predio );
-//          $registro  = $obj->detalhe();
-//          if( $registro )
-//          {
-//              foreach( $registro AS $campo => $val )  // passa todos os valores obtidos no registro para atributos do objeto
-//                  $this->$campo = $val;
-//
-//
-//              //** verificao de permissao para exclusao
-//              $this->fexcluir = $obj_permissoes->permissao_excluir(567,$this->pessoa_logada,7);
-//              //**
-//              $retorno = "Editar";
-//          }
-//          else
-//          {
-//              header( "Location: educar_infra_predio_lst.php" );
-//              die();
-//          }
-//      }
-//      $this->url_cancelar = ($retorno == "Editar") ? "educar_infra_predio_det.php?cod_infra_predio={$registro["cod_infra_predio"]}" : "educar_infra_predio_lst.php";
+        $this->url_cancelar = ($retorno == "Editar") ? "educar_infra_predio_det.php?cod_infra_predio={$registro["cod_infra_predio"]}" : "educar_infra_predio_lst.php";
         $this->nome_url_cancelar = 'Cancelar';
         $this->script_cancelar = 'window.parent.fechaExpansivel("div_dinamico_"+(parent.DOM_divs.length-1));';
-//      die();
+
         return $retorno;
     }
 
@@ -78,7 +56,6 @@ return new class extends clsCadastro {
     public function Novo()
     {
 
-//      die($this->ref_cod_escola);
         $obj = new clsPmieducarInfraPredio($this->cod_infra_predio, $this->pessoa_logada, $this->pessoa_logada, $this->ref_cod_escola, $this->nm_predio, $this->desc_predio, $this->endereco, null, null, 1);
         $cadastrou = $obj->cadastra();
         if ($cadastrou) {

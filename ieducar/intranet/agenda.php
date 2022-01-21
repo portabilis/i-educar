@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 
 return new class extends clsCadastro {
     public $agenda;
@@ -23,7 +24,7 @@ return new class extends clsCadastro {
         $db = new clsBanco();
         $db2 = new clsBanco();
         // inicializacao de variaveis
-        $this->editor = \Illuminate\Support\Facades\Auth::id();
+        $this->editor = Auth::id();
 
         Portabilis_View_Helper_Application::loadJavascript($this, '/intranet/scripts/agenda.js');
         Portabilis_View_Helper_Application::loadStylesheet($this, '/intranet/styles/agenda.css');

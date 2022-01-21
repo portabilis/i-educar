@@ -56,12 +56,8 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
-        // primary keys
+
         $this->campoOculto('cod_categoria_nivel', $this->cod_categoria_nivel);
-
-        // foreign keys
-
-        // text
         $this->campoTexto('nm_categoria_nivel', 'Nome Categoria', $this->nm_categoria_nivel, 30, 255, true);
     }
 

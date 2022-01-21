@@ -22,11 +22,9 @@ return new class extends clsCadastro {
     {
         $retorno = 'Novo';
 
-        //** Verificacao de permissao para cadastro
-        $obj_permissao = new clsPermissoes();
 
+        $obj_permissao = new clsPermissoes();
         $obj_permissao->permissao_cadastra(564, $this->pessoa_logada, 7, 'educar_coffebreak_tipo_lst.php');
-        //**
 
         $this->cod_coffebreak_tipo=$_GET['cod_coffebreak_tipo'];
 
@@ -38,9 +36,7 @@ return new class extends clsCadastro {
                     $this->$campo = $val;
                 }
 
-                //** verificao de permissao para exclusao
                 $this->fexcluir = $obj_permissao->permissao_excluir(564, $this->pessoa_logada, 7);
-                //**
                 $retorno = 'Editar';
             } else {
                 $this->simpleRedirect('educar_coffebreak_tipo_lst.php');
@@ -54,17 +50,11 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
-        // primary keys
+
         $this->campoOculto('cod_coffebreak_tipo', $this->cod_coffebreak_tipo);
-
-        // foreign keys
-
-        // text
         $this->campoTexto('nm_tipo', 'Nome Coffee Break', $this->nm_tipo, 42, 255, true);
         $this->campoMonetario('custo_unitario', 'Custo Unit&aacute;rio', $this->custo_unitario, 15, 255, true);
         $this->campoMemo('desc_tipo', 'Descri&ccedil;&atilde;o Coffee Break', $this->desc_tipo, 40, 10, false);
-
-        // data
     }
 
     public function Novo()

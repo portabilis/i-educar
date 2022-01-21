@@ -53,18 +53,11 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
-        // primary keys
         $this->campoOculto('cod_operador', $this->cod_operador);
-
-        // foreign keys
-
-        // text
         $this->campoTexto('nome', 'Nome', $this->nome, 30, 255, true);
         $this->campoMemo('valor', 'Valor', $this->valor, 60, 10, true);
         $opcoes = [ 'Não', 'Sim' ];
         $this->campoLista('fim_sentenca', 'Fim Sentenca', $opcoes, $this->fim_sentenca);
-
-        // data
     }
 
     public function Novo()

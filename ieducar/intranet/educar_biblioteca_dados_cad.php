@@ -38,8 +38,6 @@ return new class extends clsCadastro {
 
     public function Inicializar()
     {
-//      $retorno = "Novo";
-
         $this->cod_biblioteca=$_GET['cod_biblioteca'];
 
         $obj_permissoes = new clsPermissoes();
@@ -101,28 +99,15 @@ return new class extends clsCadastro {
             }
         }
 
-        // foreign keys
-
-        // text
         $this->campoTexto('nm_biblioteca', 'Biblioteca', $this->nm_biblioteca, 30, 255, true, false, false, '', '', '', '', true);
         $this->campoMonetario('valor_multa', 'Valor Multa', $this->valor_multa, 8, 8, true);
         $this->campoNumero('max_emprestimo', 'M&aacute;ximo Empr&eacute;stimo', $this->max_emprestimo, 8, 8, true);
         $this->campoMonetario('valor_maximo_multa', 'Valor M&aacute;ximo Multa', $this->valor_maximo_multa, 8, 8, true);
-
-//      $opcoes = array( "" => "Selecione", 1 => "n&atilde;o", 2 => "sim" );
-//      $this->campoLista( "requisita_senha", "Requisita Senha", $opcoes, $this->requisita_senha );
         $this->campoCheck('requisita_senha', 'Requisita Senha', $this->requisita_senha);
 
         $options = ['label' => 'Bloquear novos empréstimos em caso de atrasos de devolução', 'value' => dbBool($this->bloqueia_emprestimo_em_atraso)];
         $this->inputsHelper()->checkbox('bloqueia_emprestimo_em_atraso', $options);
-
-        //$this->campoCheck( "bloqueia_emprestimo_em_atraso", "Bloquear novos empréstimos em caso de atrasos de entrega", dbBool($this->bloqueia_emprestimo_em_atraso) );
         $this->campoNumero('dias_espera', 'Dias Espera', $this->dias_espera, 2, 2, true);
-
-        /*if ($this->tombo_automatico)
-            $this->campoBoolLista("tombo_automatico", "Biblioteca possui tombo automático", $this->tombo_automatico);
-        else
-            $this->campoBoolLista("tombo_automatico", "Biblioteca possui tombo automático", "t");*/
 
         //-----------------------INCLUI DIA SEMANA------------------------//
         $this->campoQuebra();

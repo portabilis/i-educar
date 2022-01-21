@@ -148,15 +148,10 @@ return new class extends clsCadastro {
 
         $obj_cliente_tipo = new clsPmieducarClienteTipoCliente($this->ref_cod_cliente_tipo, $this->cod_cliente, null, null, null, $this->pessoa_logada);
         if ($obj_cliente_tipo->existeCliente()) {
-            //$obj_cliente_tipo = new clsPmieducarClienteTipoCliente( $this->ref_cod_cliente_tipo, $this->cod_cliente, null, null, null, $this->pessoa_logada, 1 );
-            //if( $obj_cliente_tipo->edita() )
-            //{
-            //$obj_cliente_tipo = new clsPmieducarClienteTipoCliente( $this->ref_cod_cliente_tipo_original, $this->cod_cliente, null, null, null, $this->pessoa_logada, 0 );
-            if ($obj_cliente_tipo->trocaTipo()) {
+             if ($obj_cliente_tipo->trocaTipo()) {
                 $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
                 $this->simpleRedirect('educar_definir_cliente_tipo_lst.php');
             }
-            //  }
             $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
 
             return false;

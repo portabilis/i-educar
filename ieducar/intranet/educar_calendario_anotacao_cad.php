@@ -61,7 +61,6 @@ return new class extends clsCadastro {
                 $retorno = 'Editar';
             }
         }
-        //$this->url_cancelar = ($retorno == "Editar") ? "educar_calendario_anotacao_lst.php?cod_calendario_anotacao={$registro["cod_calendario_anotacao"]}" : "educar_calendario_anotacao_lst.php";
         $this->url_cancelar =  "educar_calendario_anotacao_lst.php?dia={$this->dia}&mes={$this->mes}&ano={$this->ano}&ref_cod_calendario_ano_letivo={$this->ref_ref_cod_calendario_ano_letivo}";
         $this->nome_url_cancelar = 'Cancelar';
 
@@ -70,7 +69,6 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
-        // primary keys
         $this->campoRotulo('info', '-', "Anota&ccedil;&otilde;es Calend&aacute;rio do dia <b>{$this->dia}/{$this->mes}/{$this->ano}</b>");
         $this->campoOculto('cod_calendario_anotacao', $this->cod_calendario_anotacao);
 
@@ -79,11 +77,9 @@ return new class extends clsCadastro {
         $this->campoOculto('ano', $this->ano);
         $this->campoOculto('ref_ref_cod_calendario_ano_letivo', $this->ref_ref_cod_calendario_ano_letivo);
 
-        // text
         $this->campoTexto('nm_anotacao', 'Anota&ccedil;&atilde;o', $this->nm_anotacao, 30, 255, true);
         $this->campoMemo('descricao', 'Descri&ccedil;&atilde;o', $this->descricao, 60, 5, false);
 
-        // data
     }
 
     public function Novo()

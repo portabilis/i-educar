@@ -43,9 +43,6 @@ return new class extends clsCadastro {
 
         $this->cod_curso=$_GET['cod_curso'];
 
-        /*$obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 0, $this->pessoa_logada, 0,  "educar_curso_lst.php" );
-        */
         if (is_numeric($this->cod_curso)) {
             $obj = new clsPmieducarCurso($this->cod_curso);
             $registro  = $obj->detalhe();
@@ -56,7 +53,7 @@ return new class extends clsCadastro {
                 $this->data_cadastro = dataFromPgToBr($this->data_cadastro);
                 $this->data_exclusao = dataFromPgToBr($this->data_exclusao);
 
-                //$obj_permissoes = new clsPermissoes();
+                $obj_permissoes = new clsPermissoes();
                 if ($obj_permissoes->permissao_excluir(0, $this->pessoa_logada, 0)) {
                     $this->fexcluir = true;
                 }
@@ -139,20 +136,10 @@ return new class extends clsCadastro {
         $this->campoMemo('publico_alvo', 'Publico Alvo', $this->publico_alvo, 60, 10, false);
         $this->campoNumero('padrao_ano_escolar', 'Padr&atilde;o Ano Escolar', $this->padrao_ano_escolar, 15, 255, true);
         $this->campoMonetario('hora_falta', 'Hora Falta', $this->hora_falta, 15, 255, true);
-
-        // data
-
-        // time
-
-        // bool
     }
 
     public function Novo()
     {
-
-        /*$obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 0, $this->pessoa_logada, 0,  "educar_curso_lst.php" );
-*/
 
         $obj = new clsPmieducarCurso($this->cod_curso, $this->pessoa_logada, $this->ref_cod_tipo_regime, $this->ref_cod_nivel_ensino, $this->ref_cod_tipo_ensino, $this->ref_cod_tipo_avaliacao, $this->nm_curso, $this->sgl_curso, $this->qtd_etapas, $this->frequencia_minima, $this->media, $this->media_exame, $this->falta_ch_globalizada, $this->carga_horaria, $this->ato_poder_publico, $this->edicao_final, $this->objetivo_curso, $this->publico_alvo, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->pessoa_logada, $this->ref_cod_instituicao, $this->padrao_ano_escolar, $this->hora_falta);
         $cadastrou = $obj->cadastra();
@@ -171,10 +158,6 @@ return new class extends clsCadastro {
 
     public function Editar()
     {
-
-        /*$obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 0, $this->pessoa_logada, 0,  "educar_curso_lst.php" );
-*/
 
         $obj = new clsPmieducarCurso($this->cod_curso, $this->pessoa_logada, $this->ref_cod_tipo_regime, $this->ref_cod_nivel_ensino, $this->ref_cod_tipo_ensino, $this->ref_cod_tipo_avaliacao, $this->nm_curso, $this->sgl_curso, $this->qtd_etapas, $this->frequencia_minima, $this->media, $this->media_exame, $this->falta_ch_globalizada, $this->carga_horaria, $this->ato_poder_publico, $this->edicao_final, $this->objetivo_curso, $this->publico_alvo, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->pessoa_logada, $this->ref_cod_instituicao, $this->padrao_ano_escolar, $this->hora_falta);
         $editou = $obj->edita();

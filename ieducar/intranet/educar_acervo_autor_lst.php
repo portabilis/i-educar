@@ -46,8 +46,6 @@ return new class extends clsListagem {
         $this->titulo = 'Autor - Listagem';
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
-        //$this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
-        //  $this->ref_cod_escola = $obj_permissoes->getEscola($this->pessoa_logada);
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null: $val;

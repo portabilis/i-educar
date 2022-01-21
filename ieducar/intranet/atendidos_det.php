@@ -12,7 +12,6 @@ return new class extends clsDetalhe {
         $cod_pessoa = (int) $this->getQueryString('cod_pessoa');
 
         $objPessoa = new clsPessoaFisica($cod_pessoa);
-        $db = new clsBanco();
 
         $detalhe = $objPessoa->queryRapida(
             $cod_pessoa,

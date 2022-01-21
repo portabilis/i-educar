@@ -66,8 +66,6 @@ return new class extends clsCadastro {
 
     public function Editar()
     {
-        $db = new clsBanco();
-
         $objAgenda = new clsAgenda($this->pessoa_logada, $this->pessoa_logada);
         $this->cod_agenda = $objAgenda->getCodAgenda();
 

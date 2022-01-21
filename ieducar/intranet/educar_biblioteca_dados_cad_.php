@@ -35,8 +35,6 @@ return new class extends clsCadastro {
 
     public function Inicializar()
     {
-//      $retorno = "Novo";
-
         $this->cod_biblioteca=$_GET['cod_biblioteca'];
 
         $obj_permissoes = new clsPermissoes();
@@ -92,16 +90,11 @@ return new class extends clsCadastro {
             }
         }
 
-        // foreign keys
-
-        // text
         $this->campoTexto('nm_biblioteca', 'Biblioteca', $this->nm_biblioteca, 30, 255, true, false, false, '', '', '', '', true);
         $this->campoMonetario('valor_multa', 'Valor Multa', $this->valor_multa, 8, 8, true);
         $this->campoNumero('max_emprestimo', 'M&aacute;ximo Empr&eacute;stimo', $this->max_emprestimo, 8, 8, true);
         $this->campoMonetario('valor_maximo_multa', 'Valor M&aacute;ximo Multa', $this->valor_maximo_multa, 8, 8, true);
 
-//      $opcoes = array( "" => "Selecione", 1 => "n&atilde;o", 2 => "sim" );
-//      $this->campoLista( "requisita_senha", "Requisita Senha", $opcoes, $this->requisita_senha );
         $this->campoCheck('requisita_senha', 'Requisita Senha', $this->requisita_senha);
         $this->campoNumero('dias_espera', 'Dias Espera', $this->dias_espera, 2, 2, true);
 
@@ -157,7 +150,6 @@ return new class extends clsCadastro {
         }
 
         $this->campoOculto('incluir_dia_semana', '');
-//      $this->campoRotulo( "bt_incluir_dia_semana", "Dia da Semana", "<a href='#' onclick=\"getElementById('incluir_dia_semana').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_incluir2.gif' title='Incluir' border=0></a>" );
 
         $this->campoQuebra();
         //-----------------------FIM INCLUI DIA SEMANA------------------------//
