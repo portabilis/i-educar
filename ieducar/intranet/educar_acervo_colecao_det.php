@@ -19,7 +19,7 @@ return new class extends clsDetalhe {
 
     public function Gerar()
     {
-        $this->titulo = 'Cole&ccedil&atilde;o - Detalhe';
+        $this->titulo = 'Cole&ccedilão - Detalhe';
 
         $this->cod_acervo_colecao=$_GET['cod_acervo_colecao'];
 
@@ -53,7 +53,7 @@ return new class extends clsDetalhe {
 
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe([ 'Institui&ccedil;&atilde;o', "{$registro['ref_cod_instituicao']}"]);
+                $this->addDetalhe([ 'Institui&ccedil;ão', "{$registro['ref_cod_instituicao']}"]);
             }
         }
 
@@ -68,13 +68,13 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['cod_acervo_colecao']) {
-            $this->addDetalhe([ 'C&oacute;digo Cole&ccedil;&atilde;o', "{$registro['cod_acervo_colecao']}"]);
+            $this->addDetalhe([ 'C&oacute;digo Cole&ccedil;ão', "{$registro['cod_acervo_colecao']}"]);
         }
         if ($registro['nm_colecao']) {
-            $this->addDetalhe([ 'Cole&ccedil;&atilde;o', "{$registro['nm_colecao']}"]);
+            $this->addDetalhe([ 'Cole&ccedil;ão', "{$registro['nm_colecao']}"]);
         }
         if ($registro['descricao']) {
-            $this->addDetalhe([ 'Descri&ccedil;&atilde;o', "{$registro['descricao']}"]);
+            $this->addDetalhe([ 'Descri&ccedil;ão', "{$registro['descricao']}"]);
         }
         $obj_permissoes = new clsPermissoes();
         if ($obj_permissoes->permissao_cadastra(593, $this->pessoa_logada, 11)) {
@@ -92,7 +92,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'Cole&ccedil&atilde;o';
+        $this->title = 'Cole&ccedilão';
         $this->processoAp = '593';
     }
 };

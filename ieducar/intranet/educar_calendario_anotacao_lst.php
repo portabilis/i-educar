@@ -74,14 +74,14 @@ return new class extends clsListagem {
         }
 
         $this->addCabecalhos([
-            'Anotac&atilde;o',
-            'Descri&ccedil;&atilde;o'
+            'Anotacão',
+            'Descri&ccedil;ão'
         ]);
 
         // Filtros de Foreign Keys
 
         //// outros Filtros
-        //  $this->campoTexto( "nm_anotacao", "Nome Anotac&atilde;o", $this->nm_anotacao, 30, 255, false );
+        //  $this->campoTexto( "nm_anotacao", "Nome Anotacão", $this->nm_anotacao, 30, 255, false );
 
         // Paginador
         $this->limite = 20;
@@ -129,8 +129,8 @@ return new class extends clsListagem {
         $obj_permissoes = new clsPermissoes();
         if ($obj_permissoes->permissao_cadastra(620, $this->pessoa_logada, 7)) {
             $this->acao = "go(\"educar_calendario_anotacao_cad.php?dia={$this->dia}&mes={$this->mes}&ano={$this->ano}&ref_cod_calendario_ano_letivo={$this->ref_cod_calendario_ano_letivo}\")";
-            $this->nome_acao = 'Nova Anota&ccedil;&atilde;o';
-            $this->array_botao = ['Dia Extra/N&atilde;o Letivo','Calendário'];
+            $this->nome_acao = 'Nova Anota&ccedil;ão';
+            $this->array_botao = ['Dia Extra/Não Letivo','Calendário'];
             $this->array_botao_url = ["educar_calendario_dia_cad.php?dia={$this->dia}&mes={$this->mes}&ano={$this->ano}&ref_cod_calendario_ano_letivo={$this->ref_cod_calendario_ano_letivo}","educar_calendario_ano_letivo_lst.php?dia={$this->dia}&mes={$this->mes}&ano={$this->ano}&ref_cod_calendario_ano_letivo={$this->ref_cod_calendario_ano_letivo}"];
         }
 

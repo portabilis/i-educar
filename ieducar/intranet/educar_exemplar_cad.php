@@ -88,7 +88,7 @@ return new class extends clsCadastro {
         $this->inputsHelper()->dynamic('bibliotecaSituacao', ['label' => 'Situação']);
         $this->inputsHelper()->dynamic('bibliotecaFonte');
 
-        $opcoes = [ '' => 'Selecione', '2' => 'Sim', '1' => 'N&atilde;o' ];
+        $opcoes = [ '' => 'Selecione', '2' => 'Sim', '1' => 'Não' ];
         $this->campoLista('permite_emprestimo', 'Permite empréstimo', $opcoes, $this->permite_emprestimo);
 
         $this->preco = is_numeric($this->preco) ? number_format($this->preco, 2, ',', '.') : '';
@@ -131,7 +131,7 @@ return new class extends clsCadastro {
             $obj = new clsPmieducarExemplar($this->cod_exemplar, $this->ref_cod_fonte, $this->ref_cod_motivo_baixa, $this->ref_cod_acervo, $this->ref_cod_situacao, $this->pessoa_logada, $this->pessoa_logada, $this->permite_emprestimo, $this->preco, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->data_aquisicao, $this->getTombo(), $this->getSequencial());
             $cadastrou = $obj->cadastra();
             if (!$cadastrou) {
-                $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+                $this->mensagem = 'Cadastro não realizado.<br>';
 
                 return false;
             }
@@ -160,11 +160,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarExemplar($this->cod_exemplar, $this->ref_cod_fonte, $this->ref_cod_motivo_baixa, $this->ref_cod_acervo, $this->ref_cod_situacao, $this->pessoa_logada, $this->pessoa_logada, $this->permite_emprestimo, $this->preco, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->data_aquisicao, $this->getTombo());
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_exemplar_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
 
         return false;
     }
@@ -178,11 +178,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarExemplar($this->cod_exemplar, $this->ref_cod_fonte, $this->ref_cod_motivo_baixa, $this->ref_cod_acervo, $this->ref_cod_situacao, $this->pessoa_logada, $this->pessoa_logada, $this->permite_emprestimo, $this->preco, $this->data_cadastro, $this->data_exclusao, 0, $this->data_aquisicao);
         $excluiu = $obj->excluir();
         if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_exemplar_lst.php');
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }

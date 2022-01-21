@@ -37,7 +37,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Benef&iacute;cio', "{$registro['nm_beneficio']}"]);
         }
         if ($registro['desc_beneficio']) {
-            $this->addDetalhe([ 'Descri&ccedil;&atilde;o', nl2br("{$registro['desc_beneficio']}")]);
+            $this->addDetalhe([ 'Descri&ccedil;ão', nl2br("{$registro['desc_beneficio']}")]);
         }
 
         //** Verificacao de permissao para cadastro

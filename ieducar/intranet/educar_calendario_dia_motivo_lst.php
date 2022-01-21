@@ -115,7 +115,7 @@ return new class extends clsListagem {
                 if ($registro['tipo'] == 'e') {
                     $registro['tipo'] = 'extra';
                 } elseif ($registro['tipo'] == 'n') {
-                    $registro['tipo'] = 'n&atilde;o-letivo';
+                    $registro['tipo'] = 'não-letivo';
                 }
                 $lista_busca = [
                     "<a href=\"educar_calendario_dia_motivo_det.php?cod_calendario_dia_motivo={$registro['cod_calendario_dia_motivo']}\">{$registro['nm_motivo']}</a>",

@@ -243,7 +243,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe(['Descrição', $this->getDescription($registro['descricao_reclassificacao'])]);
         }
 
-        $this->addDetalhe(['Formando', $registro['formando'] == 0 ? 'N&atilde;o' : 'Sim']);
+        $this->addDetalhe(['Formando', $registro['formando'] == 0 ? 'Não' : 'Sim']);
 
         $obj_permissoes = new clsPermissoes();
 

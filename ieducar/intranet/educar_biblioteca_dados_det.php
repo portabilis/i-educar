@@ -70,7 +70,7 @@ return new class extends clsDetalhe {
         }
         if ($registro['requisita_senha']) {
             if ($registro['requisita_senha'] == 0) {
-                $registro['requisita_senha'] = 'n&atilde;o';
+                $registro['requisita_senha'] = 'não';
             } elseif ($registro['requisita_senha'] == 1) {
                 $registro['requisita_senha'] = 'sim';
             }

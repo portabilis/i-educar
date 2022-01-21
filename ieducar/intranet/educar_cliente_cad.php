@@ -220,7 +220,7 @@ return new class extends clsCadastro {
                     }
                 }
 
-                $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+                $this->mensagem = 'Cadastro não realizado.<br>';
 
                 return false;
             }
@@ -327,13 +327,13 @@ return new class extends clsCadastro {
                 );
 
                 if ($obj_cliente_tipo->cadastra()) {
-                    $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+                    $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
                     $this->simpleRedirect('educar_cliente_lst.php');
                 }
             }
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
         die();
     }
 
@@ -345,11 +345,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarCliente($this->cod_cliente, $this->pessoa_logada, null, $this->ref_idpes, null, null, null, null, 0);
         $excluiu = $obj->excluir();
         if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_cliente_lst.php');
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }

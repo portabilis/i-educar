@@ -758,7 +758,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $tiposTransporte = [
             null => 'Selecione',
-            'nenhum' => 'N&atilde;o utiliza',
+            'nenhum' => 'Não utiliza',
             'municipal' => 'Municipal',
             'estadual' => 'Estadual'
         ];
@@ -1193,7 +1193,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $zonas = App_Model_ZonaLocalizacao::getInstance();
         $zonas = $zonas->getEnums();
-        $zonas = Portabilis_Array_Utils::insertIn(null, 'Zona localiza&ccedil;&atilde;o', $zonas);
+        $zonas = Portabilis_Array_Utils::insertIn(null, 'Zona localiza&ccedil;ão', $zonas);
 
         $options = [
             'label' => '',

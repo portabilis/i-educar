@@ -32,7 +32,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Nome do projeto', "{$registro['nome']}"]);
         }
         if ($registro['observacao']) {
-            $this->addDetalhe([ 'Observa&ccedil;&atilde;o', nl2br("{$registro['observacao']}")]);
+            $this->addDetalhe([ 'Observa&ccedil;ão', nl2br("{$registro['observacao']}")]);
         }
 
         //** Verificacao de permissao para cadastro

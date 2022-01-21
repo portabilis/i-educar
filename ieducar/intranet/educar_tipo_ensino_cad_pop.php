@@ -93,7 +93,7 @@ return new class extends clsCadastro {
             die();
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }

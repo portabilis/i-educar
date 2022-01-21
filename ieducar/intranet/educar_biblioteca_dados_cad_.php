@@ -100,7 +100,7 @@ return new class extends clsCadastro {
         $this->campoNumero('max_emprestimo', 'Máximo Empréstimo', $this->max_emprestimo, 8, 8, true);
         $this->campoMonetario('valor_maximo_multa', 'Valor Máximo Multa', $this->valor_maximo_multa, 8, 8, true);
 
-//      $opcoes = array( "" => "Selecione", 1 => "n&atilde;o", 2 => "sim" );
+//      $opcoes = array( "" => "Selecione", 1 => "não", 2 => "sim" );
 //      $this->campoLista( "requisita_senha", "Requisita Senha", $opcoes, $this->requisita_senha );
         $this->campoCheck('requisita_senha', 'Requisita Senha', $this->requisita_senha);
         $this->campoNumero('dias_espera', 'Dias Espera', $this->dias_espera, 2, 2, true);
@@ -248,7 +248,7 @@ return new class extends clsCadastro {
                             $obj = new clsPmieducarBibliotecaDia($this->cod_biblioteca, $campo[$i]);
                             $cadastrou1  = $obj->cadastra();
                             if (!$cadastrou1) {
-                                $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+                                $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
 
                                 return false;
                             }
@@ -268,23 +268,23 @@ return new class extends clsCadastro {
                             $obj = new clsPmieducarBibliotecaFeriados(null, $this->cod_biblioteca, $feriado['nm_feriado_'], null, $feriado['data_feriado_'], null, null, 1);
                             $cadastrou2  = $obj->cadastra();
                             if (!$cadastrou2) {
-                                $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+                                $this->mensagem = 'Cadastro não realizado.<br>';
 
                                 return false;
                             }
                         }
                     }
                 }
-                $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+                $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
                 $this->simpleRedirect('educar_biblioteca_dados_lst.php');
                 //-----------------------FIM EDITA FERIADO------------------------//
             }
-            $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+            $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
 
             return false;
         }
         echo '<script> alert(\'É necessário adicionar pelo menos 1 Dia da Semana\') </script>';
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
 
         return false;
     }
@@ -303,13 +303,13 @@ return new class extends clsCadastro {
                 $obj  = new clsPmieducarBibliotecaFeriados();
                 $excluiu2 = $obj->excluirTodos($this->cod_biblioteca);
                 if ($excluiu2) {
-                    $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+                    $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
                     $this->simpleRedirect('educar_biblioteca_dados_lst.php');
                 }
             }
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }

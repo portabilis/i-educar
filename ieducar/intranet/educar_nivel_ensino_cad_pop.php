@@ -60,7 +60,7 @@ return new class extends clsCadastro {
         }
         // text
         $this->campoTexto('nm_nivel', 'N&iacute;vel Ensino', $this->nm_nivel, 30, 255, true);
-        $this->campoMemo('descricao', 'Descri&ccedil;&atilde;o', $this->descricao, 60, 5, false);
+        $this->campoMemo('descricao', 'Descri&ccedil;ão', $this->descricao, 60, 5, false);
     }
 
     public function Novo()
@@ -81,7 +81,7 @@ return new class extends clsCadastro {
             return true;
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }

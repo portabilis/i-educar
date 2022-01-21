@@ -25,7 +25,7 @@ return new class extends clsDetalhe {
         Session::save();
         Session::start();
 
-        $this->titulo = 'Exemplar Devolu&ccedil;&atilde;o - Detalhe';
+        $this->titulo = 'Exemplar Devolu&ccedil;ão - Detalhe';
 
         $this->cod_emprestimo=$_GET['cod_emprestimo'];
 
@@ -78,7 +78,7 @@ return new class extends clsDetalhe {
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe([ 'Institui&ccedil;&atilde;o', "{$registro['ref_cod_instituicao']}"]);
+                $this->addDetalhe([ 'Institui&ccedil;ão', "{$registro['ref_cod_instituicao']}"]);
             }
         }
         if ($nivel_usuario == 1 || $nivel_usuario == 2) {
@@ -126,7 +126,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'Exemplar Devolu&ccedil;&atilde;o';
+        $this->title = 'Exemplar Devolu&ccedil;ão';
         $this->processoAp = '628';
     }
 };

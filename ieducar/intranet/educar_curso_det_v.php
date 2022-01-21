@@ -82,7 +82,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Tipo Ensino', "{$registro['ref_cod_tipo_ensino']}"]);
         }
         if ($registro['ref_cod_tipo_avaliacao']) {
-            $this->addDetalhe([ 'Tipo Avaliac&atilde;o', "{$registro['ref_cod_tipo_avaliacao']}"]);
+            $this->addDetalhe([ 'Tipo Avaliacão', "{$registro['ref_cod_tipo_avaliacao']}"]);
         }
         if ($registro['nm_curso']) {
             $this->addDetalhe([ 'Nome Curso', "{$registro['nm_curso']}"]);
@@ -100,7 +100,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Media', number_format($registro['media'], 2, ',', '.')]);
         }
         if ($registro['falta_ch_globalizada']) {
-            $this->addDetalhe([ 'Falta Ch Globalizada', ($registro['falta_ch_globalizada'] == 1) ? 'sim': 'n&atilde;o']);
+            $this->addDetalhe([ 'Falta Ch Globalizada', ($registro['falta_ch_globalizada'] == 1) ? 'sim': 'não']);
         }
         if ($registro['carga_horaria']) {
             $this->addDetalhe([ 'Carga Horaria', number_format($registro['carga_horaria'], 2, ',', '.')]);
@@ -109,7 +109,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Ato Poder Publico', "{$registro['ato_poder_publico']}"]);
         }
         if ($registro['edicao_final']) {
-            $this->addDetalhe([ 'Edic&atilde;o Final', ($registro['edicao_final'] == 1) ? 'sim' : 'n&atilde;o']);
+            $this->addDetalhe([ 'Edicão Final', ($registro['edicao_final'] == 1) ? 'sim' : 'não']);
         }
         if ($registro['objetivo_curso']) {
             $this->addDetalhe([ 'Objetivo Curso', "{$registro['objetivo_curso']}"]);

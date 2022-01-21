@@ -61,18 +61,18 @@ return new class extends clsCadastro {
         $editou = $configuracoes->edita();
 
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
             $this->simpleRedirect('index.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
 
         return false;
     }
 
     public function Formular()
     {
-        $this->title = 'Customiza&ccedil;&atilde;o de labels';
+        $this->title = 'Customiza&ccedil;ão de labels';
         $this->processoAp = 9998869;
     }
 };

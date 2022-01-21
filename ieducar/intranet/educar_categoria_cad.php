@@ -52,7 +52,7 @@ return new class extends clsCadastro {
     public function Gerar()
     {
         $this->campoOculto('id', $this->id);
-        $this->campoTexto('descricao', 'Descri&ccedil;&atilde;o', $this->descricao, 30, 255, true);
+        $this->campoTexto('descricao', 'Descri&ccedil;ão', $this->descricao, 30, 255, true);
         $this->campoMemo('observacoes', 'Observa&ccedil;&otilde;es', $this->observacoes, 60, 5, false);
     }
 
@@ -70,7 +70,7 @@ return new class extends clsCadastro {
             $this->simpleRedirect('educar_categoria_lst.php');
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -83,11 +83,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarCategoriaObra($this->id, $this->descricao, $this->observacoes);
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_categoria_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
 
         return false;
     }
@@ -100,11 +100,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarCategoriaObra($this->id);
         $excluiu = $obj->excluir();
         if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_categoria_lst.php');
         }
 
-        $this->mensagem = 'N&atilde;o é poss&iacute;vel excluir esta categoria. Verifique se a mesma possui v&iacute;nculo com obras.<br>';
+        $this->mensagem = 'Não é poss&iacute;vel excluir esta categoria. Verifique se a mesma possui v&iacute;nculo com obras.<br>';
 
         $this->array_botao[] = 'Voltar';
         $this->array_botao_url_script[] = 'go(\'educar_categoria_obra_det.php?id='. $this->id .'\')';

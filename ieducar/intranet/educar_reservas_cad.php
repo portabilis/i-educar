@@ -351,7 +351,7 @@ return new class extends clsCadastro {
             $this->simpleRedirect('educar_reservas_lst.php');
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }

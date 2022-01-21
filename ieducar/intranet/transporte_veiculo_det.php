@@ -52,7 +52,7 @@ return new class extends clsDetalhe {
         }
         $this->addDetalhe(['Empresa', $registro['nome_empresa']]);
         $this->addDetalhe(['Motorista responsável', $registro['nome_motorista']]);
-        $this->addDetalhe(['Observa&ccedil;&atilde;o', $registro['observacao']]);
+        $this->addDetalhe(['Observa&ccedil;ão', $registro['observacao']]);
         $this->url_cancelar = 'transporte_veiculo_lst.php';
 
         $this->largura = '100%';

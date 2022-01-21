@@ -27,7 +27,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe(['C&oacute;digo', "{$registro['id']}"]);
         }
         if ($registro['descricao']) {
-            $this->addDetalhe(['Descri&ccedil;&atilde;o', "{$registro['descricao']}"]);
+            $this->addDetalhe(['Descri&ccedil;ão', "{$registro['descricao']}"]);
         }
         if ($registro['observacoes']) {
             $this->addDetalhe(['Observa&ccedil;&otilde;es', "{$registro['observacoes']}"]);

@@ -351,15 +351,15 @@ return new class extends clsCadastro {
 
                     $nome = $db2->CampoUnico("SELECT nome FROM cadastro.pessoa WHERE idpes = '{$ref_ref_cod_pessoa_cad}'");
                     $ativo = ($ativo)? '<b>Ativo</b>': 'Inativo';
-                    $importante = ($importante)? 'Sim': 'N&atilde;o';
-                    $publico = ($publico)? 'Sim': 'N&atilde;o';
+                    $importante = ($importante)? 'Sim': 'Não';
+                    $publico = ($publico)? 'Sim': 'Não';
                     if ($data_fim) {
                         $data_fim = date('d/m/Y H:i', strtotime($data_fim));
                     } else {
-                        $data_fim = 'Este compromisso era uma Anota&ccedil;&atilde;o';
+                        $data_fim = 'Este compromisso era uma Anota&ccedil;ão';
                     }
 
-                    $conteudo .= "<tr><td>Vers&atilde;o:</td><td>{$versao}</td></tr>\n";
+                    $conteudo .= "<tr><td>Versão:</td><td>{$versao}</td></tr>\n";
                     $conteudo .= "<tr><td>Titulo:</td><td>{$titulo}</td></tr>\n";
                     $conteudo .= '<tr><td>Inicio:</td><td>' . date('d/m/Y H:i', strtotime($data_inicio)) . "</td></tr>\n";
                     $conteudo .= "<tr><td>Fim:</td><td>{$data_fim}</td></tr>\n";
@@ -368,7 +368,7 @@ return new class extends clsCadastro {
                     $conteudo .= "<tr><td>Importante:</td><td>{$importante}</td></tr>\n";
                     $conteudo .= "<tr><td>Publico:</td><td>{$publico}</td></tr>\n";
                     $conteudo .= "<tr><td>Responsável:</td><td>$nome</td></tr>\n";
-                    $conteudo .= "<tr><td>Reativar?</td><td><a href=\"{$this->scriptNome}?cod_agenda={$this->agenda}&time={$this->time_atual}&restaura={$_GET['versoes']}&versao={$versao}\">Clique aqui para reativar esta vers&atilde;o</a></td></tr>\n";
+                    $conteudo .= "<tr><td>Reativar?</td><td><a href=\"{$this->scriptNome}?cod_agenda={$this->agenda}&time={$this->time_atual}&restaura={$_GET['versoes']}&versao={$versao}\">Clique aqui para reativar esta versão</a></td></tr>\n";
                     $conteudo .= "<tr><td colspan=\"2\"><hr></td></tr>\n";
                 }
                 $conteudo .= "<tr><td colspan=\"2\" align=\"center\"><input type=\"button\" name=\"voltar\" value=\"Voltar\" class=\"agenda_rap_botao\" onclick=\"document.location.href='{$this->scriptNome}?cod_agenda={$this->agenda}&time={$this->time_atual}'\"></td></tr>";

@@ -163,13 +163,13 @@ return new class extends clsCadastro {
                 );
 
                 if ($obj_quadro->excluir()) {
-                    $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+                    $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
                     $this->simpleRedirect("educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}");
                 }
             }
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }

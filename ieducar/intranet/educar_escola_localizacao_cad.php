@@ -61,7 +61,7 @@ return new class extends clsCadastro {
         include('include/pmieducar/educar_campo_lista.php');
 
         // text
-        $this->campoTexto('nm_localizacao', 'Localiza&ccedil;&atilde;o', $this->nm_localizacao, 30, 255, true);
+        $this->campoTexto('nm_localizacao', 'Localiza&ccedil;ão', $this->nm_localizacao, 30, 255, true);
     }
 
     public function Novo()
@@ -76,7 +76,7 @@ return new class extends clsCadastro {
             $this->simpleRedirect('educar_escola_localizacao_lst.php');
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -89,11 +89,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarEscolaLocalizacao($this->cod_escola_localizacao, $this->pessoa_logada, null, $this->nm_localizacao, null, null, 1, $this->ref_cod_instituicao);
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_escola_localizacao_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
 
         return false;
     }
@@ -106,18 +106,18 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarEscolaLocalizacao($this->cod_escola_localizacao, $this->pessoa_logada, null, null, null, null, 0);
         $excluiu = $obj->excluir();
         if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_escola_localizacao_lst.php');
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }
 
     public function Formular()
     {
-        $this->title = 'Escola Localiza&ccedil;&atilde;o';
+        $this->title = 'Escola Localiza&ccedil;ão';
         $this->processoAp = '562';
     }
 };

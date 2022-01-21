@@ -143,11 +143,11 @@ return new class extends clsCadastro {
 
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br />';
+            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br />';
             $this->simpleRedirect('educar_bloqueio_lancamento_faltas_notas_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o nÃ£o realizada.<br />';
+        $this->mensagem = 'Edi&ccedil;ão nÃ£o realizada.<br />';
 
         return false;
     }
@@ -162,11 +162,11 @@ return new class extends clsCadastro {
         $excluiu = $obj->excluir();
 
         if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br />';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br />';
             $this->simpleRedirect('educar_bloqueio_lancamento_faltas_notas_lst.php');
         }
 
-        $this->mensagem = 'Exclus&atilde;o nÃ£o realizada.<br />';
+        $this->mensagem = 'Exclusão nÃ£o realizada.<br />';
 
         return false;
     }

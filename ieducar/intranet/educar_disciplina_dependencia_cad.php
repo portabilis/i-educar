@@ -211,7 +211,7 @@ return new class extends clsCadastro {
             );
         }
 
-        $this->campoMemo('observacao', 'Observa&ccedil;&atilde;o', $this->observacao, 60, 10, false);
+        $this->campoMemo('observacao', 'Observa&ccedil;ão', $this->observacao, 60, 10, false);
     }
 
     public function existeComponenteSerie()
@@ -329,7 +329,7 @@ SQL;
             $this->simpleRedirect('educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br />';
+        $this->mensagem = 'Cadastro não realizado.<br />';
 
         return false;
     }
@@ -354,11 +354,11 @@ SQL;
 
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br />';
+            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br />';
             $this->simpleRedirect('educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o nÃ£o realizada.<br />';
+        $this->mensagem = 'Edi&ccedil;ão nÃ£o realizada.<br />';
 
         return false;
     }
@@ -384,11 +384,11 @@ SQL;
         $excluiu = $obj->excluir();
 
         if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br />';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br />';
             $this->simpleRedirect('educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
         }
 
-        $this->mensagem = 'Exclus&atilde;o nÃ£o realizada.<br />';
+        $this->mensagem = 'Exclusão nÃ£o realizada.<br />';
 
         return false;
     }

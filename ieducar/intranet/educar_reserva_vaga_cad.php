@@ -150,7 +150,7 @@ return new class extends clsCadastro {
             $this->simpleRedirect('educar_reservada_vaga_det.php?cod_reserva_vaga=' . $cadastrou);
         }
 
-        $this->mensagem = 'Reserva de Vaga n&atilde;o realizada.<br>';
+        $this->mensagem = 'Reserva de Vaga não realizada.<br>';
 
         return false;
     }

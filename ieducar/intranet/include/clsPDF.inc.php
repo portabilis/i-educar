@@ -212,7 +212,7 @@ class clsPDF
     {
         if (strlen($color) != 7 || $color[0] != '#') {
             if ($this->depurar) {
-                echo '<b>PDF:</b> N&atilde;o foi possivel setar o fundo. <br>';
+                echo '<b>PDF:</b> Não foi possivel setar o fundo. <br>';
             }
 
             return false;
@@ -236,7 +236,7 @@ class clsPDF
     {
         if (strlen($color) != 7 || $color[0] != '#') {
             if ($this->depurar) {
-                echo '<b>PDF:</b> N&atilde;o foi possivel setar a linha. <br>';
+                echo '<b>PDF:</b> Não foi possivel setar a linha. <br>';
             }
 
             return false;

@@ -71,9 +71,9 @@ return new class extends clsCadastro {
 
         $this->campoTexto('nm_agenda', 'Nome da Agenda', $this->nm_agenda, 50, 50);
 
-        $this->campoLista('publica', 'Pública', [ 'N&atilde;o', 'Sim' ], $this->publica);
+        $this->campoLista('publica', 'Pública', [ 'Não', 'Sim' ], $this->publica);
 
-        $this->campoLista('envia_alerta', 'Envia Alerta', [ 'N&atilde;o', 'Sim' ], $this->envia_alerta);
+        $this->campoLista('envia_alerta', 'Envia Alerta', [ 'Não', 'Sim' ], $this->envia_alerta);
 
         $i = 0;
         if ($this->ref_ref_cod_pessoa_own) {

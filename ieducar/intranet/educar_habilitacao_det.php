@@ -36,13 +36,13 @@ return new class extends clsDetalhe {
             $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
             $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
 
-            $this->addDetalhe([ 'Institui&ccedil;&atilde;o', "{$registro['ref_cod_instituicao']}"]);
+            $this->addDetalhe([ 'Institui&ccedil;ão', "{$registro['ref_cod_instituicao']}"]);
         }
         if ($registro['nm_tipo']) {
-            $this->addDetalhe([ 'Habilita&ccedil;&atilde;o', "{$registro['nm_tipo']}"]);
+            $this->addDetalhe([ 'Habilita&ccedil;ão', "{$registro['nm_tipo']}"]);
         }
         if ($registro['descricao']) {
-            $this->addDetalhe([ 'Descri&ccedil;&atilde;o', "{$registro['descricao']}"]);
+            $this->addDetalhe([ 'Descri&ccedil;ão', "{$registro['descricao']}"]);
         }
 
         $obj_permissao = new clsPermissoes();
@@ -60,7 +60,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'Habilita&ccedil;&atilde;o';
+        $this->title = 'Habilita&ccedil;ão';
         $this->processoAp = '573';
     }
 };

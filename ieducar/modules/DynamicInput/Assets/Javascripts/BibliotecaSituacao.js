@@ -5,7 +5,7 @@
 
     var handleGetSituacoes = function(resources) {
       var selectOptions = xmlResourcesToSelectOptions(resources, 'query', 'cod_situacao');
-      updateSelect($situacaoField, selectOptions, "Selecione uma situa&ccedil;&atilde;o");
+      updateSelect($situacaoField, selectOptions, "Selecione uma situa&ccedil;ão");
     }
 
     var updateSituacoes = function(){

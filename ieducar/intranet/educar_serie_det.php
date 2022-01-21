@@ -46,7 +46,7 @@ return new class extends clsDetalhe {
 
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe(['Institui&ccedil;&atilde;o',
+                $this->addDetalhe(['Institui&ccedil;ão',
           $registro['ref_cod_instituicao']]);
             }
         }
@@ -71,7 +71,7 @@ return new class extends clsDetalhe {
 
         if ($registro['concluinte']) {
             if ($registro['concluinte'] == 1) {
-                $registro['concluinte'] = 'n&atilde;o';
+                $registro['concluinte'] = 'não';
             } elseif ($registro['concluinte'] == 2) {
                 $registro['concluinte'] = 'sim';
             }

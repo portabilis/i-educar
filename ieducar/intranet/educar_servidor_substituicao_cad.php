@@ -224,7 +224,7 @@ return new class extends clsCadastro {
                 if (false !== $return) {
                     $substituiu = $obj->substituir_servidor($substituto);
                     if (!$substituiu) {
-                        $this->mensagem = 'Substituicao n&atilde;o realizado.<br>';
+                        $this->mensagem = 'Substituicao não realizado.<br>';
 
                         return false;
                     }

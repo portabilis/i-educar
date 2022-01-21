@@ -1212,7 +1212,7 @@ var handleGetPersonDetails = function (dataResponse) {
     $j("#cadastrar-pessoa-responsavel-link").show();
   } else if ($j("#pai").val() == "") {
     $j("#tipo_responsavel").append(
-      '<option value="mae" selected >M&atilde;e</option>'
+      '<option value="mae" selected >Mãe</option>'
     );
     $j("#tipo_responsavel").append(
       '<option value="outra_pessoa" >Outra pessoa</option>'
@@ -1226,13 +1226,13 @@ var handleGetPersonDetails = function (dataResponse) {
     );
   } else {
     $j("#tipo_responsavel").append(
-      '<option value="mae" selected >M&atilde;e</option>'
+      '<option value="mae" selected >Mãe</option>'
     );
     $j("#tipo_responsavel").append(
       '<option value="pai" selected >Pai</option>'
     );
     $j("#tipo_responsavel").append(
-      '<option value="pai_mae" >Pai e M&atilde;e</option>'
+      '<option value="pai_mae" >Pai e Mãe</option>'
     );
     $j("#tipo_responsavel").append(
       '<option value="outra_pessoa" >Outra pessoa</option>'
@@ -2661,7 +2661,7 @@ function canShowParentsFields() {
 
       switch (parentType) {
         case "mae":
-          tipoPessoa = "m&atilde;e";
+          tipoPessoa = "mãe";
           break;
         case "responsavel":
           tipoPessoa = "responsável";
@@ -2716,7 +2716,7 @@ function canShowParentsFields() {
       $j("#dialog-form-pessoa-parent form h2:first-child")
         .html(
           "Editar pessoa " +
-          (parentType == "mae" ? "m&atilde;e" : parentType)
+          (parentType == "mae" ? "mãe" : parentType)
         )
         .css("margin-left", "0.75em");
 

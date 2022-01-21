@@ -70,7 +70,7 @@ return new class extends clsCadastro {
 
         // text
         $this->campoTexto('nm_funcao', 'Tipo', $this->nm_funcao, 30, 255, true);
-        $this->campoMemo('desc_funcao', 'Descri&ccedil;&atilde;o do tipo', $this->desc_funcao, 60, 5, false);
+        $this->campoMemo('desc_funcao', 'Descri&ccedil;ão do tipo', $this->desc_funcao, 60, 5, false);
 
         // data
     }
@@ -84,7 +84,7 @@ return new class extends clsCadastro {
             $this->simpleRedirect('educar_infra_comodo_funcao_lst.php');
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -94,11 +94,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarInfraComodoFuncao($this->cod_infra_comodo_funcao, $this->pessoa_logada, null, $this->nm_funcao, $this->desc_funcao, null, null, 1, $this->ref_cod_escola);
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_infra_comodo_funcao_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
 
         return false;
     }
@@ -108,11 +108,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarInfraComodoFuncao($this->cod_infra_comodo_funcao, $this->pessoa_logada, null, null, null, null, null, 0);
         $excluiu = $obj->excluir();
         if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_infra_comodo_funcao_lst.php');
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }

@@ -133,7 +133,7 @@ return new class extends clsCadastro {
         $this->campoLista('ref_cod_tipo_ocorrencia_disciplinar', 'Tipo Ocorr&ecirc;ncia Disciplinar', $opcoes, $this->ref_cod_tipo_ocorrencia_disciplinar);
 
         // text
-        $this->campoMemo('observacao', 'Observac&atilde;o', $this->observacao, 60, 10, true);
+        $this->campoMemo('observacao', 'Observacão', $this->observacao, 60, 10, true);
 
         $this->campoCheck(
             'visivel_pais',
@@ -183,7 +183,7 @@ return new class extends clsCadastro {
             return true;
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -206,7 +206,7 @@ return new class extends clsCadastro {
 
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
             if ($voltaListagem) {
                 $this->simpleRedirect("educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}");
             } else {
@@ -214,7 +214,7 @@ return new class extends clsCadastro {
             }
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
 
         return false;
     }
@@ -231,11 +231,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarMatriculaOcorrenciaDisciplinar($this->ref_cod_matricula, $this->ref_cod_tipo_ocorrencia_disciplinar, $this->sequencial, $this->pessoa_logada, $this->pessoa_logada, $this->observacao, $this->data_cadastro, $this->data_exclusao, 0);
         $excluiu = $obj->excluir();
         if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect("educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}");
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }

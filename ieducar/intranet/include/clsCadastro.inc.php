@@ -94,27 +94,27 @@ class clsCadastro extends clsCampos
                 }
 
                 if (!$this->sucesso && empty($this->erros) && empty($this->_mensagem)) {
-                    $this->_mensagem = 'N&atilde;o foi poss&iacute;vel inserir a informa&ccedil;&atilde;o. [CAD01]';
+                    $this->_mensagem = 'Não foi poss&iacute;vel inserir a informa&ccedil;ão. [CAD01]';
                 }
             } elseif ($this->tipoacao == 'Editar') {
                 $this->sucesso = $this->Editar();
                 if (!$this->sucesso && empty($this->erros) && empty($this->_mensagem)) {
-                    $this->_mensagem = 'N&atilde;o foi poss&iacute;vel editar a informa&ccedil;&atilde;o. [CAD02]';
+                    $this->_mensagem = 'Não foi poss&iacute;vel editar a informa&ccedil;ão. [CAD02]';
                 }
             } elseif ($this->tipoacao == 'Excluir') {
                 $this->sucesso = $this->Excluir();
                 if (!$this->sucesso && empty($this->erros) && empty($this->_mensagem)) {
-                    $this->_mensagem = 'N&atilde;o foi poss&iacute;vel excluir a informa&ccedil;&atilde;o. [CAD03]';
+                    $this->_mensagem = 'Não foi poss&iacute;vel excluir a informa&ccedil;ão. [CAD03]';
                 }
             } elseif ($this->tipoacao == 'ExcluirImg') {
                 $this->sucesso = $this->ExcluirImg();
                 if (!$this->sucesso && empty($this->erros) && empty($this->_mensagem)) {
-                    $this->_mensagem = 'N&atilde;o foi poss&iacute;vel excluir a informa&ccedil;&atilde;o. [CAD04]';
+                    $this->_mensagem = 'Não foi poss&iacute;vel excluir a informa&ccedil;ão. [CAD04]';
                 }
             } elseif ($this->tipoacao == 'Enturmar') {
                 $this->sucesso = $this->Enturmar();
                 if (!$this->sucesso && empty($this->erros) && empty($this->_mensagem)) {
-                    $this->_mensagem = 'N&atilde;o foi poss&iacute;vel copiar as entruma&ccedil;&otilde;es. [CAD05]';
+                    $this->_mensagem = 'Não foi poss&iacute;vel copiar as entruma&ccedil;&otilde;es. [CAD05]';
                 }
             }
 
@@ -239,7 +239,7 @@ class clsCadastro extends clsCampos
         $retorno .= "<tr><td class='formdktd' colspan='2' height='24'>{$barra}</td></tr>";
 
         if (empty($this->campos)) {
-            $retorno .= '<tr><td class=\'linhaSim\' colspan=\'2\'><span class=\'form\'>N&atilde;o existe informa&ccedil;&atilde;o dispon&iacute;vel</span></td></tr>';
+            $retorno .= '<tr><td class=\'linhaSim\' colspan=\'2\'><span class=\'form\'>Não existe informa&ccedil;ão dispon&iacute;vel</span></td></tr>';
         } else {
             // Verifica se houve erros no controller
             $retorno .= $this->_getControllerErrors();

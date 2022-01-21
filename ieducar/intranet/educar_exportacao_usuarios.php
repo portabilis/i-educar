@@ -21,7 +21,7 @@ return new class extends clsCadastro {
         url('intranet/educar_configuracoes_index.php') => 'Configurações',
     ]);
 
-        return 'Nova exporta&ccedil;&atilde;o';
+        return 'Nova exporta&ccedil;ão';
     }
 
     public function Gerar()
@@ -65,7 +65,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'Nova exporta&ccedil;&atilde;o';
+        $this->title = 'Nova exporta&ccedil;ão';
         $this->processoAp = 999869;
     }
 };

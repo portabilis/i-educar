@@ -81,7 +81,7 @@ class clsDetalhe extends Core_Controller_Page_Abstract
       ";
 
         if (empty($this->detalhe)) {
-            $retorno .= "<tr><td class='tableDetalheLinhaSim' colspan='2'>N&atilde;o há informa&ccedil;&atilde;o a ser apresentada.</td></tr>\n";
+            $retorno .= "<tr><td class='tableDetalheLinhaSim' colspan='2'>Não há informa&ccedil;ão a ser apresentada.</td></tr>\n";
         } else {
             if (is_array($this->detalhe)) {
                 reset($this->detalhe);

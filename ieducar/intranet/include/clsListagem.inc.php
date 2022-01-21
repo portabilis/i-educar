@@ -280,7 +280,7 @@ HTML;
             if (empty($this->campos)) {
                 $retorno .=  '
                     <tr>
-                        <td class=\'formlttd\' colspan=\'2\'><span class=\'form\'>N&atilde;o existem campos definidos para o formulário</span></td>
+                        <td class=\'formlttd\' colspan=\'2\'><span class=\'form\'>Não existem campos definidos para o formulário</span></td>
                     </tr>';
             } else {
                 $retorno .= $this->MakeCampos();
@@ -383,7 +383,7 @@ HTML;
 
         // Lista
         if (empty($this->linhas)) {
-            $retorno .=  "<tr><td class='formlttd' colspan='$ncols' align='center'>N&atilde;o há informa&ccedil;&atilde;o para ser apresentada</td></tr>";
+            $retorno .=  "<tr><td class='formlttd' colspan='$ncols' align='center'>Não há informa&ccedil;ão para ser apresentada</td></tr>";
         } else {
             reset($this->linhas);
 

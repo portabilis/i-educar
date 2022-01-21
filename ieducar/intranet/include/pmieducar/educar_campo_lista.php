@@ -53,21 +53,21 @@ if ($nivel_usuario == 1 || $cad_usuario) {
     }
 
     if ($get_escola && $get_biblioteca) {
-        $this->campoLista('ref_cod_instituicao', 'Institui&ccedil;&atilde;o', $opcoes, $this->ref_cod_instituicao, 'getDuploEscolaBiblioteca();', null, null, null, $instituicao_desabilitado, $instituicao_obrigatorio);
+        $this->campoLista('ref_cod_instituicao', 'Institui&ccedil;ão', $opcoes, $this->ref_cod_instituicao, 'getDuploEscolaBiblioteca();', null, null, null, $instituicao_desabilitado, $instituicao_obrigatorio);
     } elseif ($get_escola && $get_curso && $get_matricula) {
-        $this->campoLista('ref_cod_instituicao', 'Institui&ccedil;&atilde;o', $opcoes, $this->ref_cod_instituicao, 'getMatricula();', null, null, null, $instituicao_desabilitado, $instituicao_obrigatorio);
+        $this->campoLista('ref_cod_instituicao', 'Institui&ccedil;ão', $opcoes, $this->ref_cod_instituicao, 'getMatricula();', null, null, null, $instituicao_desabilitado, $instituicao_obrigatorio);
     } elseif ($get_escola && $get_curso) {
-        $this->campoLista('ref_cod_instituicao', 'Institui&ccedil;&atilde;o', $opcoes, $this->ref_cod_instituicao, 'getDuploEscolaCurso();', null, null, null, $instituicao_desabilitado, $instituicao_obrigatorio);
+        $this->campoLista('ref_cod_instituicao', 'Institui&ccedil;ão', $opcoes, $this->ref_cod_instituicao, 'getDuploEscolaCurso();', null, null, null, $instituicao_desabilitado, $instituicao_obrigatorio);
     } elseif ($get_escola) {
-        $this->campoLista('ref_cod_instituicao', 'Institui&ccedil;&atilde;o', $opcoes, $this->ref_cod_instituicao, 'getEscola();', null, null, null, $instituicao_desabilitado, $instituicao_obrigatorio);
+        $this->campoLista('ref_cod_instituicao', 'Institui&ccedil;ão', $opcoes, $this->ref_cod_instituicao, 'getEscola();', null, null, null, $instituicao_desabilitado, $instituicao_obrigatorio);
     } elseif ($get_curso) {
-        $this->campoLista('ref_cod_instituicao', 'Institui&ccedil;&atilde;o', $opcoes, $this->ref_cod_instituicao, 'getCurso();', null, null, null, $instituicao_desabilitado, $instituicao_obrigatorio);
+        $this->campoLista('ref_cod_instituicao', 'Institui&ccedil;ão', $opcoes, $this->ref_cod_instituicao, 'getCurso();', null, null, null, $instituicao_desabilitado, $instituicao_obrigatorio);
     } elseif ($get_biblioteca) {
-        $this->campoLista('ref_cod_instituicao', 'Institui&ccedil;&atilde;o', $opcoes, $this->ref_cod_instituicao, 'getBiblioteca(1);', null, null, null, $instituicao_desabilitado, $instituicao_obrigatorio);
+        $this->campoLista('ref_cod_instituicao', 'Institui&ccedil;ão', $opcoes, $this->ref_cod_instituicao, 'getBiblioteca(1);', null, null, null, $instituicao_desabilitado, $instituicao_obrigatorio);
     } elseif ($get_cliente_tipo) {
         $this->campoLista('ref_cod_cliente_tipo', 'Tipo de Cliente', $opcoes, $this->ref_cod_cliente_tipo, 'getCliente();', null, null, null, $cliente_tipo_desabilitado, $cliente_tipo_obrigatorio);
     } else {
-        $this->campoLista('ref_cod_instituicao', 'Institui&ccedil;&atilde;o', $opcoes, $this->ref_cod_instituicao, '', null, null, null, $instituicao_desabilitado, $instituicao_obrigatorio);
+        $this->campoLista('ref_cod_instituicao', 'Institui&ccedil;ão', $opcoes, $this->ref_cod_instituicao, '', null, null, null, $instituicao_desabilitado, $instituicao_obrigatorio);
     }
 } //se nao eh administrador
 elseif ($nivel_usuario != 1) {
@@ -283,7 +283,7 @@ if (isset($get_cabecalho)) {
         ${$get_cabecalho}[] = 'Escola';
     }
     if ($nivel_usuario == 1) {
-        ${$get_cabecalho}[] = 'Institui&ccedil;&atilde;o';
+        ${$get_cabecalho}[] = 'Institui&ccedil;ão';
     }
 }
 ?>

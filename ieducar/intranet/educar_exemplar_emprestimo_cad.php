@@ -347,7 +347,7 @@ return new class extends clsCadastro {
                         $obj = new clsPmieducarExemplar($campo, null, null, null, $cod_situacao, $this->pessoa_logada, null, null, null, null, null, 1);
                         $editou = $obj->edita();
                         if (!$editou) {
-                            $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+                            $this->mensagem = 'Cadastro não realizado.<br>';
 
                             return false;
                         }
@@ -355,7 +355,7 @@ return new class extends clsCadastro {
                         echo '<script> alert(\'ERRO - Não foi possível encontrar a situação EMPRESTADO da biblioteca utilizada!\'); </script>';
                     }
                 } else {
-                    $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+                    $this->mensagem = 'Cadastro não realizado.<br>';
 
                     return false;
                 }
@@ -364,7 +364,7 @@ return new class extends clsCadastro {
             $this->simpleRedirect('educar_exemplar_devolucao_lst.php');
         }
         echo '<script> alert(\'É necessário adicionar pelo menos 1 Tombo!\') </script>';
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }

@@ -58,7 +58,7 @@ return new class extends clsCadastro {
                 $anos_origem["{$registro['ano']}"] = "{$registro['ano']}";
             }
         } else {
-            $anos_origem = [ '' => 'N&atilde;o existe rotas anteriores' ];
+            $anos_origem = [ '' => 'Não existe rotas anteriores' ];
         }
         $this->campoLista('ref_cod_empresa_transporte_escolar', 'Empresa', $empresas, $this->ref_cod_empresa_transporte_escolar, '', false, '', '', false, false);
         $this->campoLista('ano_orig', 'Ano de origem', $anos_origem, $this->ano_orig, '', false, '', '', false, false);

@@ -58,7 +58,7 @@ return new class extends clsDetalhe {
 
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe(['Institui&ccedil;&atilde;o', $registro['ref_cod_instituicao']]);
+                $this->addDetalhe(['Institui&ccedil;ão', $registro['ref_cod_instituicao']]);
             }
         }
 
@@ -131,17 +131,17 @@ return new class extends clsDetalhe {
         }
 
         if ($habilitacao) {
-            $this->addDetalhe(['Habilita&ccedil;&atilde;o', $tabela]);
+            $this->addDetalhe(['Habilita&ccedil;ão', $tabela]);
         }
 
         if ($registro['padrao_ano_escolar']) {
             if ($registro['padrao_ano_escolar'] == 0) {
-                $registro['padrao_ano_escolar'] = 'n&atilde;o';
+                $registro['padrao_ano_escolar'] = 'não';
             } elseif ($registro['padrao_ano_escolar'] == 1) {
                 $registro['padrao_ano_escolar'] = 'sim';
             }
 
-            $this->addDetalhe(['Padr&atilde;o Ano Escolar', $registro['padrao_ano_escolar']]);
+            $this->addDetalhe(['Padrão Ano Escolar', $registro['padrao_ano_escolar']]);
         }
 
         if ($registro['objetivo_curso']) {

@@ -82,7 +82,7 @@ return new class extends clsCadastro {
             $this->simpleRedirect('educar_abandono_tipo_lst.php');
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -92,12 +92,12 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarAbandonoTipo($this->cod_abandono_tipo, $this->pessoa_logada, null, $this->nome, null, null, 1, $this->ref_cod_instituicao);
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
 
             $this->simpleRedirect('educar_abandono_tipo_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
 
         return false;
     }
@@ -107,12 +107,12 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarAbandonoTipo($this->cod_abandono_tipo, $this->pessoa_logada);
         $excluiu = $obj->excluir();
         if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
 
             $this->simpleRedirect('educar_abandono_tipo_lst.php');
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }

@@ -105,7 +105,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
             </tr>
 
             <tr>
-                <td><label for='situacao'>Situa&ccedil;&atilde;o *</label></td>
+                <td><label for='situacao'>Situa&ccedil;ão *</label></td>
                 <td colspan='2'>
                     <select id='situacao' class='obrigatorio disable-on-search'>
                         <option value=''>Selecione</option>
@@ -135,7 +135,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
                             <th>Nome</th>
                             <th>Nota</th>
                             <th>Falta</th>
-                            <th>A&ccedil;&atilde;o</th>
+                            <th>A&ccedil;ão</th>
                         </tr>
                         <tr class='disciplina'>
                             <td><input class='nome obrigatorio disable-on-search change-state-with-parent' style='display:none;'></input></td>
@@ -207,7 +207,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
             </tr>
 
             <tr>
-                <td><label for=\'observacao\'>Observa&ccedil;&atilde;o</label></td>
+                <td><label for=\'observacao\'>Observa&ccedil;ão</label></td>
                 <td colspan=\'2\'><textarea id=\'observacao\' name=\'observacao\' cols=\'60\' rows=\'5\'></textarea></td>
             </tr>
 

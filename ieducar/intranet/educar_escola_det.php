@@ -104,7 +104,7 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['ref_idpes']) {
-            $this->addDetalhe(['Raz&atilde;o Social', "{$registro['ref_idpes']}"]);
+            $this->addDetalhe(['Razão Social', "{$registro['ref_idpes']}"]);
         }
 
         if (isset($place)) {
@@ -264,13 +264,13 @@ return new class extends clsDetalhe {
             $tabela .= '</table></td></tr>';
             $tabela .= '<tr>
                             <td>
-                                <span class=\'formlttd\'><b>*Somente é poss&iacute;vel finalizar um ano letivo ap&oacute;s n&atilde;o existir mais nenhuma matr&iacute;cula em andamento.</b></span>
+                                <span class=\'formlttd\'><b>*Somente é poss&iacute;vel finalizar um ano letivo ap&oacute;s não existir mais nenhuma matr&iacute;cula em andamento.</b></span>
                             </td>
                         </tr>';
             if (!$canEdit) {
                 $tabela .= '<tr>
                             <td>
-                                <span class=\'formlttd\'><b>**Somente usuários com permiss&atilde;o de edição de escola podem alterar anos letivos.</b></span>
+                                <span class=\'formlttd\'><b>**Somente usuários com permissão de edição de escola podem alterar anos letivos.</b></span>
                             </td>
                         </tr>';
             }

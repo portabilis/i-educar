@@ -58,13 +58,13 @@ return new class extends clsDetalhe {
 
         if ($registro['extra_curricular']) {
             if ($registro['escola']) {
-                $this->addDetalhe([ 'Institui&ccedil;&atilde;o', "{$registro['escola']}"]);
+                $this->addDetalhe([ 'Institui&ccedil;ão', "{$registro['escola']}"]);
             }
             if ($registro['escola_cidade']) {
-                $this->addDetalhe([ 'Cidade da Institui&ccedil;&atilde;o', "{$registro['escola_cidade']}"]);
+                $this->addDetalhe([ 'Cidade da Institui&ccedil;ão', "{$registro['escola_cidade']}"]);
             }
             if ($registro['escola_uf']) {
-                $this->addDetalhe([ 'Estado da Institui&ccedil;&atilde;o', "{$registro['escola_uf']}"]);
+                $this->addDetalhe([ 'Estado da Institui&ccedil;ão', "{$registro['escola_uf']}"]);
             }
             if ($registro['nm_serie']) {
                 $this->addDetalhe([ 'Série', "{$registro['nm_serie']}"]);
@@ -108,13 +108,13 @@ return new class extends clsDetalhe {
         if ($registro['extra_curricular']) {
             $this->addDetalhe([ 'Extra-Curricular', 'Sim']);
         } else {
-            $this->addDetalhe([ 'Extra-Curricular', 'N&atilde;o']);
+            $this->addDetalhe([ 'Extra-Curricular', 'Não']);
         }
 
         if ($registro['aceleracao']) {
             $this->addDetalhe([ 'Aceleração', 'Sim']);
         } else {
-            $this->addDetalhe([ 'Aceleração', 'N&atilde;o']);
+            $this->addDetalhe([ 'Aceleração', 'Não']);
         }
         if ($registro['origem']) {
             $this->addDetalhe([ 'Origem', 'Externo']);
@@ -122,7 +122,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Origem', 'Interno']);
         }
         if ($registro['observacao']) {
-            $this->addDetalhe([ 'Observa&ccedil;&atilde;o', "{$registro['observacao']}"]);
+            $this->addDetalhe([ 'Observa&ccedil;ão', "{$registro['observacao']}"]);
         }
         if ($registro['aprovado']) {
             if ($registro['aprovado'] == 1) {
@@ -145,7 +145,7 @@ return new class extends clsDetalhe {
                 $registro['aprovado'] = 'Reprovado por faltas';
             }
 
-            $this->addDetalhe([ 'Situa&ccedil;&atilde;o', "{$registro['aprovado']}"]);
+            $this->addDetalhe([ 'Situa&ccedil;ão', "{$registro['aprovado']}"]);
         }
 
         if ($registro['registro']) {

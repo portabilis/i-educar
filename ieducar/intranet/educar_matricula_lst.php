@@ -82,7 +82,7 @@ return new class extends clsListagem {
 
         if ($nivel_usuario == 1) {
             $lista_busca[] = 'Escola';
-            $lista_busca[] = 'Institui&ccedil;&atilde;o';
+            $lista_busca[] = 'Institui&ccedil;ão';
         } elseif ($nivel_usuario == 2) {
             $lista_busca[] = 'Escola';
         }

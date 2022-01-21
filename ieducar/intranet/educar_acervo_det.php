@@ -84,7 +84,7 @@ return new class extends clsDetalhe {
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe([ 'Institui&ccedil;&atilde;o', "{$registro['ref_cod_instituicao']}"]);
+                $this->addDetalhe([ 'Institui&ccedil;ão', "{$registro['ref_cod_instituicao']}"]);
             }
         }
         if ($nivel_usuario == 1 || $nivel_usuario == 2) {
@@ -108,7 +108,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Obra Refer&ecirc;ncia', "{$registro['ref_cod_acervo']}"]);
         }
         if ($registro['ref_cod_acervo_colecao']) {
-            $this->addDetalhe([ 'Cole&ccedil;&atilde;o', "{$registro['ref_cod_acervo_colecao']}"]);
+            $this->addDetalhe([ 'Cole&ccedil;ão', "{$registro['ref_cod_acervo_colecao']}"]);
         }
         if ($registro['ref_cod_acervo_idioma']) {
             $this->addDetalhe([ 'Idioma', "{$registro['ref_cod_acervo_idioma']}"]);
@@ -166,7 +166,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Volume', "{$registro['volume']}"]);
         }
         if ($registro['num_edicao']) {
-            $this->addDetalhe([ 'N&uacute;mero Edic&atilde;o', "{$registro['num_edicao']}"]);
+            $this->addDetalhe([ 'N&uacute;mero Edicão', "{$registro['num_edicao']}"]);
         }
         if ($registro['ano']) {
             $this->addDetalhe([ 'Ano', "{$registro['ano']}"]);

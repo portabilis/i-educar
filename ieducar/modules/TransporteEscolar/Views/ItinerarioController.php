@@ -73,7 +73,7 @@ class ItinerarioController extends Portabilis_Controller_Page_EditController
         <th>Tipo</th>
         <th>Veiculo</th>
 
-        <th>A&ccedil;&atilde;o</th>
+        <th>A&ccedil;ão</th>
       </tr>
       <tr class=\'ponto\'>
         <td><input class=\'nome obrigatorio disable-on-search change-state-with-parent\'></input></td>

@@ -54,7 +54,7 @@ return new class extends clsListagem {
         $obj_permissao = new clsPermissoes();
         $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
         $lista_busca[] = 'Escola';
-        $lista_busca[] = 'Institui&ccedil;&atilde;o';
+        $lista_busca[] = 'Institui&ccedil;ão';
         $lista_busca = array_merge($lista_busca, ['Curso', 'Série', 'Registro', 'Livro', 'Folha']);
 
         $this->addCabecalhos($lista_busca);
@@ -66,7 +66,7 @@ return new class extends clsListagem {
         // outros Filtros
         $this->campoNumero('ano', 'Ano', $this->ano, 4, 4, false);
 
-        $opcoes = [ '' => 'Selecione', 2 => 'N&atilde;o', 1 => 'Sim' ];
+        $opcoes = [ '' => 'Selecione', 2 => 'Não', 1 => 'Sim' ];
         $this->campoLista('extra_curricular', 'Extra-curricular', $opcoes, $this->extra_curricular, '', false, '', '', false, false);
 
         if ($this->extra_curricular == 2) {
@@ -126,7 +126,7 @@ return new class extends clsListagem {
                 if ($registro['extra_curricular']) {
                     $registro['extra_curricular'] = 'Sim';
                 } else {
-                    $registro['extra_curricular'] = 'N&atilde;o';
+                    $registro['extra_curricular'] = 'Não';
                 }
 
                 $lista_busca = [
@@ -201,7 +201,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'Distribui&ccedil;&atilde;o de uniforme';
+        $this->title = 'Distribui&ccedil;ão de uniforme';
         $this->processoAp = '578';
     }
 };

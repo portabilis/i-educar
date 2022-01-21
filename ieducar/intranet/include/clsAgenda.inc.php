@@ -312,7 +312,7 @@ class clsAgenda
         if ($this->compromissoPertenceAgenda($cod_compromisso)) {
             $db->Consulta("UPDATE portal.agenda_compromisso SET ativo = 0 WHERE cod_agenda_compromisso = '{$cod_compromisso}'");
             $db->Consulta("UPDATE portal.agenda_compromisso SET ativo = 1 WHERE cod_agenda_compromisso = '{$cod_compromisso}' AND versao = '{$versao}'");
-            $this->erro_msg .= "Vers&atilde;o {$versao} restaurada com sucesso.<br>";
+            $this->erro_msg .= "Versão {$versao} restaurada com sucesso.<br>";
         }
     }
 

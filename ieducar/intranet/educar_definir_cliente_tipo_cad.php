@@ -132,11 +132,11 @@ return new class extends clsCadastro {
                     $this->simpleRedirect('educar_definir_cliente_tipo_lst.php');
                 }
             }
-            $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+            $this->mensagem = 'Cadastro não realizado.<br>';
 
             return false;
         }
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -153,16 +153,16 @@ return new class extends clsCadastro {
             //{
             //$obj_cliente_tipo = new clsPmieducarClienteTipoCliente( $this->ref_cod_cliente_tipo_original, $this->cod_cliente, null, null, null, $this->pessoa_logada, 0 );
             if ($obj_cliente_tipo->trocaTipo()) {
-                $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+                $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
                 $this->simpleRedirect('educar_definir_cliente_tipo_lst.php');
             }
             //  }
-            $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+            $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
 
             return false;
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
 
         return false;
     }
@@ -175,12 +175,12 @@ return new class extends clsCadastro {
         $obj_cliente_tipo = new clsPmieducarClienteTipoCliente($this->ref_cod_cliente_tipo, $this->cod_cliente, null, null, null, $this->pessoa_logada, 1);
         if ($obj_cliente_tipo->existe()) {
             if ($obj_cliente_tipo->excluir()) {
-                $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+                $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
                 $this->simpleRedirect('educar_definir_cliente_tipo_lst.php');
             }
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }

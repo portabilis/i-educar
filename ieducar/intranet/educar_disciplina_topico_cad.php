@@ -52,7 +52,7 @@ return new class extends clsCadastro {
 
         // text
         $this->campoTexto('nm_topico', 'Nome T&oacute;pico', $this->nm_topico, 30, 255, true);
-        $this->campoMemo('desc_topico', 'Descri&ccedil;&atilde;o T&oacute;pico', $this->desc_topico, 30, 5, false);
+        $this->campoMemo('desc_topico', 'Descri&ccedil;ão T&oacute;pico', $this->desc_topico, 30, 5, false);
 
         // data
     }
@@ -66,7 +66,7 @@ return new class extends clsCadastro {
             $this->simpleRedirect('educar_disciplina_topico_lst.php');
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -76,11 +76,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarDisciplinaTopico($this->cod_disciplina_topico, $this->pessoa_logada, null, $this->nm_topico, $this->desc_topico, null, null, 1);
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_disciplina_topico_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
 
         return false;
     }
@@ -90,11 +90,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarDisciplinaTopico($this->cod_disciplina_topico, $this->pessoa_logada, null, null, null, null, null, 0);
         $excluiu = $obj->excluir();
         if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_disciplina_topico_lst.php');
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }

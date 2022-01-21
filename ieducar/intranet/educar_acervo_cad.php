@@ -150,7 +150,7 @@ return new class extends clsCadastro {
                 $opcoes["{$registro['cod_acervo_colecao']}"] = "{$registro['nm_colecao']}";
             }
         }
-        $this->campoLista('ref_cod_acervo_colecao', 'Cole&ccedil;&atilde;o', $opcoes, $this->ref_cod_acervo_colecao, '', false, '', '<img id=\'img_colecao\' src=\'imagens/banco_imagens/escreve.gif\' style=\'cursor:hand; cursor:pointer;\' border=\'0\' onclick="showExpansivelImprimir(500, 200,\'educar_acervo_colecao_cad_pop.php\',[], \'Coleção\')" />', false, false);
+        $this->campoLista('ref_cod_acervo_colecao', 'Cole&ccedil;ão', $opcoes, $this->ref_cod_acervo_colecao, '', false, '', '<img id=\'img_colecao\' src=\'imagens/banco_imagens/escreve.gif\' style=\'cursor:hand; cursor:pointer;\' border=\'0\' onclick="showExpansivelImprimir(500, 200,\'educar_acervo_colecao_cad_pop.php\',[], \'Coleção\')" />', false, false);
 
         // Idioma
         $opcoes = [ '' => 'Selecione' ];
@@ -209,7 +209,7 @@ return new class extends clsCadastro {
         $this->campoTexto('cdu', 'CDU', $this->cdu, 20, 15, false);
         $this->campoTexto('cutter', 'Cutter', $this->cutter, 20, 15, false);
         $this->campoNumero('volume', 'Volume', $this->volume, 20, 255, false);
-        $this->campoNumero('num_edicao', 'N&uacute;mero Edic&atilde;o', $this->num_edicao, 20, 255, false);
+        $this->campoNumero('num_edicao', 'N&uacute;mero Edicão', $this->num_edicao, 20, 255, false);
         $this->campotexto('ano', 'Ano', $this->ano, 25, 25, false);
         $this->campoNumero('num_paginas', 'N&uacute;mero Páginas', $this->num_paginas, 5, 255, false);
         $this->campoTexto('isbn', 'ISBN', $this->isbn, 20, 13, false);
@@ -233,7 +233,7 @@ return new class extends clsCadastro {
 
             $this->simpleRedirect('educar_acervo_lst.php');
         }
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -251,11 +251,11 @@ return new class extends clsCadastro {
             $this->gravaAutores($this->cod_acervo);
             $this->gravaCategorias($this->cod_acervo);
 
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
 
             $this->simpleRedirect('educar_acervo_lst.php');
         }
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
 
         return false;
     }
@@ -270,12 +270,12 @@ return new class extends clsCadastro {
         if ($excluiu) {
             $objCategoria = new clsPmieducarCategoriaAcervo();
             $objCategoria->deletaCategoriaDaObra($this->cod_acervo);
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
 
             $this->simpleRedirect('educar_acervo_lst.php');
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }

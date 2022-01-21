@@ -1514,7 +1514,7 @@ return new class extends clsCadastro {
         );
 
         if ($obj->possuiAlunosVinculados()) {
-            $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.';
+            $this->mensagem = 'Exclusão não realizada.';
 
             return false;
         }
@@ -1532,13 +1532,13 @@ return new class extends clsCadastro {
                     new RedirectResponse('educar_turma_lst.php')
                 );
             } else {
-                $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.';
+                $this->mensagem = 'Exclusão não realizada.';
 
                 return false;
             }
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.';
+        $this->mensagem = 'Exclusão não realizada.';
 
         return false;
     }
@@ -1591,7 +1591,7 @@ return new class extends clsCadastro {
                     return false;
                 } elseif ($turma['max_aluno'] - $countMatriculas > 0) {
                     $vagas = $turma['max_aluno'] - $countMatriculas;
-                    $this->mensagem = "N&atilde;o é possivel cadastrar turmas, pois ainda existem $vagas vagas em aberto na turma '{$turma['nm_turma']}' desta serie e turno.\n\nTal limita&ccedil;&atilde;o ocorre devido defini&ccedil;&atilde;o feita para esta escola e série.";
+                    $this->mensagem = "Não é possivel cadastrar turmas, pois ainda existem $vagas vagas em aberto na turma '{$turma['nm_turma']}' desta serie e turno.\n\nTal limita&ccedil;ão ocorre devido defini&ccedil;ão feita para esta escola e série.";
 
                     return false;
                 }

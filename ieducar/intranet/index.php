@@ -266,8 +266,8 @@ return new class {
         return '<script type="text/javascript" src="scripts/jquery/jquery-1.8.3.min.js"></script>
           <link rel="stylesheet" href="scripts/jquery/jquery-ui.min-1.9.2/css/custom/jquery-ui-1.9.2.custom.min.css">
           <script src="scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js"></script>
-          <div id="dialog" title="Pesquisa de satisfa&ccedil;&atilde;o">
-            <p>Caro usuário(a), a Secretaria Mun. de Educa&ccedil;&atilde;o e a Portabilis Tecnologia, convidam voc&ecirc; a responder a uma pesquisa de satisfa&ccedil;&atilde;o referente ao projeto de moderniza&ccedil;&atilde;o da gest&atilde;o escolar com o i-Educar em ' . $municipio . '.</p>
+          <div id="dialog" title="Pesquisa de satisfa&ccedil;ão">
+            <p>Caro usuário(a), a Secretaria Mun. de Educa&ccedil;ão e a Portabilis Tecnologia, convidam voc&ecirc; a responder a uma pesquisa de satisfa&ccedil;ão referente ao projeto de moderniza&ccedil;ão da gestão escolar com o i-Educar em ' . $municipio . '.</p>
             <br/>
             <p><i>Voc&ecirc; precisará de apenas 5 minutos para responder a pesquisa. :)</i></p>
             <br/>

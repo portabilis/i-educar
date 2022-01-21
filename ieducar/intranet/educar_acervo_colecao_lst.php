@@ -41,14 +41,14 @@ return new class extends clsListagem {
 
     public function Gerar()
     {
-        $this->titulo = 'Cole&ccedil&atilde;o - Listagem';
+        $this->titulo = 'Cole&ccedilão - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null: $val;
         }
 
         $this->addCabecalhos([
-            'Cole&ccedil;&atilde;o',
+            'Cole&ccedil;ão',
             'Biblioteca'
         ]);
 
@@ -59,7 +59,7 @@ return new class extends clsListagem {
 
         include('include/pmieducar/educar_campo_lista.php');
         // outros Filtros
-        $this->campoTexto('nm_colecao', 'Cole&ccedil;&atilde;o', $this->nm_colecao, 30, 255, false);
+        $this->campoTexto('nm_colecao', 'Cole&ccedil;ão', $this->nm_colecao, 30, 255, false);
 
         // Paginador
         $this->limite = 20;
@@ -118,7 +118,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'Cole&ccedil&atilde;o';
+        $this->title = 'Cole&ccedilão';
         $this->processoAp = '593';
     }
 };

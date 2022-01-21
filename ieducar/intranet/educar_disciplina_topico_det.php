@@ -34,7 +34,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Nome T&oacute;pico', "{$registro['nm_topico']}"]);
         }
         if ($registro['desc_topico']) {
-            $this->addDetalhe([ 'Descri&ccedil;&atilde;o T&oacute;pico', "{$registro['desc_topico']}"]);
+            $this->addDetalhe([ 'Descri&ccedil;ão T&oacute;pico', "{$registro['desc_topico']}"]);
         }
 
         $objPermissao = new clsPermissoes();

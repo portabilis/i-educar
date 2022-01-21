@@ -49,7 +49,7 @@ return new class extends clsDetalhe {
         $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe([ 'Institui&ccedil;&atilde;o', "{$registro['ref_cod_instituicao']}"]);
+                $this->addDetalhe([ 'Institui&ccedil;ão', "{$registro['ref_cod_instituicao']}"]);
             }
         }
         if ($nivel_usuario == 1 || $nivel_usuario == 2) {
@@ -64,7 +64,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Tipo de ambiente', "{$registro['nm_funcao']}"]);
         }
         if ($registro['desc_funcao']) {
-            $this->addDetalhe([ 'Descri&ccedil;&atilde;o do tipo', "{$registro['desc_funcao']}"]);
+            $this->addDetalhe([ 'Descri&ccedil;ão do tipo', "{$registro['desc_funcao']}"]);
         }
 
         $obj_permissao = new clsPermissoes();

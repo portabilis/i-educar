@@ -21,7 +21,7 @@ return new class extends clsDetalhe {
 
     public function Gerar()
     {
-        $this->titulo = 'Avalia&ccedil;&atilde;o Desempenho - Detalhe';
+        $this->titulo = 'Avalia&ccedil;ão Desempenho - Detalhe';
 
         $this->ref_cod_servidor=$_GET['ref_cod_servidor'];
         $this->ref_ref_cod_instituicao=$_GET['ref_ref_cod_instituicao'];
@@ -46,17 +46,17 @@ return new class extends clsDetalhe {
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
             if ($nm_instituicao) {
-                $this->addDetalhe([ 'Institui&ccedil;&atilde;o', "{$nm_instituicao}"]);
+                $this->addDetalhe([ 'Institui&ccedil;ão', "{$nm_instituicao}"]);
             }
         }
         if ($registro['ref_cod_servidor']) {
             $this->addDetalhe([ 'Servidor', "{$nm_servidor}"]);
         }
         if ($registro['titulo_avaliacao']) {
-            $this->addDetalhe([ 'Avalia&ccedil;&atilde;o', "{$registro['titulo_avaliacao']}"]);
+            $this->addDetalhe([ 'Avalia&ccedil;ão', "{$registro['titulo_avaliacao']}"]);
         }
         if ($registro['descricao']) {
-            $this->addDetalhe([ 'Descri&ccedil;&atilde;o', "{$registro['descricao']}"]);
+            $this->addDetalhe([ 'Descri&ccedil;ão', "{$registro['descricao']}"]);
         }
 
         $obj_permissoes = new clsPermissoes();
@@ -75,7 +75,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'Servidores - Avalia&ccedil;&atilde;o Desempenho';
+        $this->title = 'Servidores - Avalia&ccedil;ão Desempenho';
         $this->processoAp = '635';
     }
 };

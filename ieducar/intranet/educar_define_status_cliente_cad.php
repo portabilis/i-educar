@@ -140,11 +140,11 @@ return new class extends clsCadastro {
         if ($sequencial = $obj->cadastra()) {
             $obj->sequencial = $sequencial;
 
-            $this->mensagem .= 'Suspens&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Suspensão efetuada com sucesso.<br>';
             $this->simpleRedirect("educar_cliente_det.php?cod_cliente={$this->cod_cliente}&ref_cod_biblioteca={$this->ref_cod_biblioteca}");
         }
 
-        $this->mensagem = 'Suspens&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Suspensão não realizada.<br>';
 
         return false;
     }
@@ -156,12 +156,12 @@ return new class extends clsCadastro {
 
         $obj_suspensao = new clsPmieducarClienteSuspensao($this->sequencial, $this->cod_cliente, null, $this->pessoa_logada, null, null, null, null);
         if ($obj_suspensao->edita()) {
-            $this->mensagem .= 'Libera&ccedil;&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Libera&ccedil;ão efetuada com sucesso.<br>';
             $this->simpleRedirect("educar_cliente_lst.php?cod_cliente={$this->cod_cliente}");
         }
         $obj = new clsPmieducarCliente($this->cod_cliente, $this->pessoa_logada, $this->pessoa_logada, $this->ref_idpes, $this->login, $senha, $this->data_cadastro, $this->data_exclusao, $this->ativo);
         $editou = $obj->edita();
-        $this->mensagem = 'Libera&ccedil;&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Libera&ccedil;ão não realizada.<br>';
 
         return false;
     }
@@ -174,11 +174,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarCliente($this->cod_cliente, $this->ref_cod_cliente_tipo, $this->pessoa_logada, $this->pessoa_logada, $this->ref_idpes, $this->login, $this->senha, $this->data_cadastro, $this->data_exclusao, 0);
         $excluiu = $obj->excluir();
         if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect("educar_cliente_det.php?cod_cliente={$this->cod_cliente}");
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }

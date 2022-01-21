@@ -68,10 +68,10 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['ref_cod_situacao']) {
-            $this->addDetalhe([ 'Situac&atilde;o', "{$registro['ref_cod_situacao']}"]);
+            $this->addDetalhe([ 'Situacão', "{$registro['ref_cod_situacao']}"]);
         }
         if ($registro['permite_emprestimo']) {
-            $registro['permite_emprestimo'] = $registro['permite_emprestimo'] == 2 ? 'Sim' :'N&atilde;o';
+            $registro['permite_emprestimo'] = $registro['permite_emprestimo'] == 2 ? 'Sim' :'Não';
 
             $this->addDetalhe([ 'Permite Empréstimo', "{$registro['permite_emprestimo']}"]);
         }
@@ -80,7 +80,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Pre&ccedil;o', "{$registro['preco']}"]);
         }
         if ($registro['data_aquisicao']) {
-            $this->addDetalhe([ 'Data Aquisic&atilde;o', dataFromPgToBr($registro['data_aquisicao'], 'd/m/Y') ]);
+            $this->addDetalhe([ 'Data Aquisicão', dataFromPgToBr($registro['data_aquisicao'], 'd/m/Y') ]);
         }
 
         $obj_permissoes = new clsPermissoes();

@@ -162,7 +162,7 @@ return new class extends clsCadastro {
                         $obj = new clsPmieducarBibliotecaUsuario($cadastrou, $campo[$i]);
                         $cadastrou2  = $obj->cadastra();
                         if (!$cadastrou2) {
-                            $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+                            $this->mensagem = 'Cadastro não realizado.<br>';
 
                             return false;
                         }
@@ -176,7 +176,7 @@ return new class extends clsCadastro {
             $this->simpleRedirect('educar_biblioteca_lst.php');
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -199,7 +199,7 @@ return new class extends clsCadastro {
                             $obj = new clsPmieducarBibliotecaUsuario($this->cod_biblioteca, $campo[$i]);
                             $cadastrou3  = $obj->cadastra();
                             if (!$cadastrou3) {
-                                $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+                                $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
 
                                 return false;
                             }
@@ -209,11 +209,11 @@ return new class extends clsCadastro {
             }
             //-----------------------FIM EDITA USUARIOS------------------------//
 
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_biblioteca_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
 
         return false;
     }
@@ -226,11 +226,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarBiblioteca($this->cod_biblioteca, null, null, null, null, null, null, null, null, null, 0);
         $excluiu = $obj->excluir();
         if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_biblioteca_lst.php');
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }
