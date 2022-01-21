@@ -7,11 +7,11 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchDocumentosAtestadoVaga
         if (empty($resources)) {
             $resources = [
                 'certidao_nasci' => 'Certidão de nascimento e/ou carteira de identidade',
-                'comprovante_resi' => 'Comprovante de resid&ecirc;ncia',
+                'comprovante_resi' => 'Comprovante de residência',
                 'foto_3_4' => 'Foto 3/4',
                 'historico_escola' => 'Hist&oacute;rico escolar original',
-                'atestado_frequencia' => 'Atestado de frequ&ecirc;ncia original',
-                'atestado_transferencia' => 'Atestado de Transfer&ecirc;ncia',
+                'atestado_frequencia' => 'Atestado de frequência original',
+                'atestado_transferencia' => 'Atestado de Transferência',
                 'decla_vacina' => 'Declaração de vacina da unidade de sa&uacute;de original',
                 'carteira_sus' => 'Carteira do SUS',
                 'cartao_bolsa_fami' => 'C&oacute;pia do cartão bolsa fam&iacute;lia',

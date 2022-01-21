@@ -63,9 +63,9 @@ return new class extends clsCadastro {
         include('include/pmieducar/educar_campo_lista.php');
 
         // text
-        $this->campoTexto('nm_tipo', 'Tipo Ocorr&ecirc;ncia Disciplinar', $this->nm_tipo, 30, 255, true);
+        $this->campoTexto('nm_tipo', 'Tipo Ocorrência Disciplinar', $this->nm_tipo, 30, 255, true);
         $this->campoMemo('descricao', 'Descrição', $this->descricao, 60, 5, false);
-        $this->campoNumero('max_ocorrencias', 'Máximo Ocorr&ecirc;ncias', $this->max_ocorrencias, 4, 4, false);
+        $this->campoNumero('max_ocorrencias', 'Máximo Ocorrências', $this->max_ocorrencias, 4, 4, false);
     }
 
     public function Novo()
@@ -112,7 +112,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'Tipo Ocorr&ecirc;ncia Disciplinar';
+        $this->title = 'Tipo Ocorrência Disciplinar';
         $this->processoAp = '580';
     }
 };

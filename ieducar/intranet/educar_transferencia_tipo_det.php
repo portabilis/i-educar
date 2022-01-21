@@ -48,7 +48,7 @@ return new class extends clsDetalhe {
             }
         }
         if ($registro['nm_tipo']) {
-            $this->addDetalhe([ 'Motivo Transfer&ecirc;ncia', "{$registro['nm_tipo']}"]);
+            $this->addDetalhe([ 'Motivo Transferência', "{$registro['nm_tipo']}"]);
         }
         if ($registro['desc_tipo']) {
             $this->addDetalhe([ 'Descrição', "{$registro['desc_tipo']}"]);
@@ -68,7 +68,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'Motivo Transfer&ecirc;ncia';
+        $this->title = 'Motivo Transferência';
         $this->processoAp = '575';
     }
 };

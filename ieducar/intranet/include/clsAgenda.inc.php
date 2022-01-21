@@ -222,13 +222,13 @@ class clsAgenda
                         $objAgenda->cadastra();
                     }
                 } else {
-                    $this->erro_msg .= 'Voc&ecirc; deve preencher o campo Hora de Inicio corretamente. Formato hora: hh:mm<br>';
+                    $this->erro_msg .= 'Você deve preencher o campo Hora de Inicio corretamente. Formato hora: hh:mm<br>';
                 }
             } else {
-                $this->erro_msg .= 'Voc&ecirc; deve preencher o campo Data corretamente. Formato data: dd/mm/aaaa<br>';
+                $this->erro_msg .= 'Você deve preencher o campo Data corretamente. Formato data: dd/mm/aaaa<br>';
             }
         } else {
-            $this->erro_msg .= 'Voc&ecirc; deve preencher o campo Titulo ou o campo Descricao<br>';
+            $this->erro_msg .= 'Você deve preencher o campo Titulo ou o campo Descricao<br>';
         }
     }
 
@@ -255,15 +255,15 @@ class clsAgenda
                             }
                         }
                     } else {
-                        $this->erro_msg .= 'Voc&ecirc; deve preencher o campo Hora de Inicio corretamente. Formato hora: hh:mm<br>';
+                        $this->erro_msg .= 'Você deve preencher o campo Hora de Inicio corretamente. Formato hora: hh:mm<br>';
                         $verifica = false;
                     }
                 } else {
-                    $this->erro_msg .= 'Voc&ecirc; deve preencher o campo Data corretamente. Formato data: dd/mm/aaaa<br>';
+                    $this->erro_msg .= 'Você deve preencher o campo Data corretamente. Formato data: dd/mm/aaaa<br>';
                     $verifica = false;
                 }
             } else {
-                $this->erro_msg .= 'Voc&ecirc; deve preencher o campo Titulo ou o campo Descricao<br>';
+                $this->erro_msg .= 'Você deve preencher o campo Titulo ou o campo Descricao<br>';
                 $verifica = false;
             }
             if (isset($publico)) {
@@ -301,7 +301,7 @@ class clsAgenda
 
                 $this->edita_compromisso($cod_compromisso, $titulo, $descricao, $data_inicio, $hora_inicio, $hora_fim, $publico, $importante);
             } else {
-                $this->erro_msg .= 'Voc&ecirc; deve preencher o campo Hora de Fim corretamente. Formato hora: hh:mm<br>';
+                $this->erro_msg .= 'Você deve preencher o campo Hora de Fim corretamente. Formato hora: hh:mm<br>';
             }
         }
     }

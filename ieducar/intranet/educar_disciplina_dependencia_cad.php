@@ -169,7 +169,7 @@ return new class extends clsCadastro {
         $this->campoRotulo('nm_aluno', 'Nome do Aluno', $det_aluno['nome_aluno']);
 
         if (!isset($this->ref_cod_turma)) {
-            $this->mensagem = 'Para cadastrar uma disciplina de depend&ecirc;ncia de um aluno, é necessário que este esteja enturmado.';
+            $this->mensagem = 'Para cadastrar uma disciplina de dependência de um aluno, é necessário que este esteja enturmado.';
 
             return;
         }
@@ -266,7 +266,7 @@ SQL;
         $valid = $qtdDisciplinas < $qtdDisciplinasLimite;
 
         if (!$valid) {
-            $this->mensagem .= "A regra desta série limita a quantidade de disciplinas de depend&ecirc;ncia para {$qtdDisciplinasLimite}. <br/>";
+            $this->mensagem .= "A regra desta série limita a quantidade de disciplinas de dependência para {$qtdDisciplinasLimite}. <br/>";
         }
 
         return $valid;

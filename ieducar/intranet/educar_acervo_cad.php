@@ -138,7 +138,7 @@ return new class extends clsCadastro {
             }
         }
 
-        $this->campoLista('ref_cod_acervo', 'Obra Refer&ecirc;ncia', $opcoes, $this->ref_cod_acervo, '', false, '', "<img border=\"0\" onclick=\"pesquisa();\" id=\"ref_cod_acervo_lupa\" name=\"ref_cod_acervo_lupa\" src=\"imagens/lupa.png\"\/>", false, false);
+        $this->campoLista('ref_cod_acervo', 'Obra Referência', $opcoes, $this->ref_cod_acervo, '', false, '', "<img border=\"0\" onclick=\"pesquisa();\" id=\"ref_cod_acervo_lupa\" name=\"ref_cod_acervo_lupa\" src=\"imagens/lupa.png\"\/>", false, false);
 
         // Coleção
         $opcoes = [ '' => 'Selecione' ];

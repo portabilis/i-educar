@@ -130,7 +130,7 @@ return new class extends clsCadastro {
             }
         }
 
-        $this->campoLista('ref_cod_tipo_ocorrencia_disciplinar', 'Tipo Ocorr&ecirc;ncia Disciplinar', $opcoes, $this->ref_cod_tipo_ocorrencia_disciplinar);
+        $this->campoLista('ref_cod_tipo_ocorrencia_disciplinar', 'Tipo Ocorrência Disciplinar', $opcoes, $this->ref_cod_tipo_ocorrencia_disciplinar);
 
         // text
         $this->campoMemo('observacao', 'Observacão', $this->observacao, 60, 10, true);
@@ -295,7 +295,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'Ocorr&ecirc;ncia Disciplinar';
+        $this->title = 'Ocorrência Disciplinar';
         $this->processoAp = '578';
     }
 };

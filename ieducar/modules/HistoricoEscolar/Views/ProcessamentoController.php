@@ -93,7 +93,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
             </tr>
 
             <tr>
-                <td><label for='percentual-frequencia'>% Frequ&ecirc;ncia *</label></td>
+                <td><label for='percentual-frequencia'>% Frequência *</label></td>
                 <td>
                     <select id='percentual-frequencia' class='obrigatorio disable-on-search'>
                         <option value=''>Selecione</option>

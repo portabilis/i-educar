@@ -267,11 +267,11 @@ return new class {
           <link rel="stylesheet" href="scripts/jquery/jquery-ui.min-1.9.2/css/custom/jquery-ui-1.9.2.custom.min.css">
           <script src="scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js"></script>
           <div id="dialog" title="Pesquisa de satisfação">
-            <p>Caro usuário(a), a Secretaria Mun. de Educação e a Portabilis Tecnologia, convidam voc&ecirc; a responder a uma pesquisa de satisfação referente ao projeto de modernização da gestão escolar com o i-Educar em ' . $municipio . '.</p>
+            <p>Caro usuário(a), a Secretaria Mun. de Educação e a Portabilis Tecnologia, convidam você a responder a uma pesquisa de satisfação referente ao projeto de modernização da gestão escolar com o i-Educar em ' . $municipio . '.</p>
             <br/>
-            <p><i>Voc&ecirc; precisará de apenas 5 minutos para responder a pesquisa. :)</i></p>
+            <p><i>Você precisará de apenas 5 minutos para responder a pesquisa. :)</i></p>
             <br/>
-            <p><b> Contamos com voc&ecirc;! :)</b></p>
+            <p><b> Contamos com você! :)</b></p>
           </div>
           <script>
           var $j = jQuery.noConflict();

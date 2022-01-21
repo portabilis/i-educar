@@ -18,7 +18,7 @@ return new class extends clsDetalhe {
 
     public function Gerar()
     {
-        $this->titulo = 'Sequ&ecirc;ncia Enturmação - Detalhe';
+        $this->titulo = 'Sequência Enturmação - Detalhe';
 
         $this->ref_serie_origem = $_GET['ref_serie_origem'];
         $this->ref_serie_destino = $_GET['ref_serie_destino'];
@@ -88,7 +88,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'Sequ&ecirc;ncia Enturmação';
+        $this->title = 'Sequência Enturmação';
         $this->processoAp = '587';
     }
 };

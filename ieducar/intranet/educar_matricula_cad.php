@@ -490,7 +490,7 @@ return new class extends clsCadastro {
                             $curso = '';
                         }
 
-                        $this->mensagem = "Este aluno já está matriculado no(a) '$serie' do curso '$curso' na escola '$escola', para matricular este aluno na sua escola solicite transfer&ecirc;ncia ao secretário(a) da escola citada.<br />";
+                        $this->mensagem = "Este aluno já está matriculado no(a) '$serie' do curso '$curso' na escola '$escola', para matricular este aluno na sua escola solicite transferência ao secretário(a) da escola citada.<br />";
 
                         return false;
                     }
@@ -793,7 +793,7 @@ return new class extends clsCadastro {
             $m = $db->Tupla();
 
             if (is_array($m) && count($m) && $dependencia) {
-                $this->mensagem = 'Esse aluno já tem uma matr&iacute;cula de depend&ecirc;ncia nesta escola e série.';
+                $this->mensagem = 'Esse aluno já tem uma matr&iacute;cula de dependência nesta escola e série.';
 
                 return false;
             }
@@ -1221,7 +1221,7 @@ return new class extends clsCadastro {
                 $editou1 = $obj->edita();
 
                 if (!$editou1) {
-                    $this->mensagem = 'Não foi poss&iacute;vel editar a "&Uacute;ltima Matr&iacute;cula da Sequ&ecirc;ncia".<br />';
+                    $this->mensagem = 'Não foi poss&iacute;vel editar a "&Uacute;ltima Matr&iacute;cula da Sequência".<br />';
 
                     return false;
                 }

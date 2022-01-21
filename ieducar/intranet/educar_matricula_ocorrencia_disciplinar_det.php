@@ -77,16 +77,16 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['sequencial']) {
-            $this->addDetalhe([ 'N&uacute;mero da Ocorr&ecirc;ncia', "{$registro['sequencial']}"]);
+            $this->addDetalhe([ 'N&uacute;mero da Ocorrência', "{$registro['sequencial']}"]);
         }
         if ($registro['data_cadastro']) {
             if ($hora = dataFromPgToBr("{$registro['data_cadastro']}", 'H:i')) {
-                $this->addDetalhe([ 'Hora Ocorr&ecirc;ncia', $hora ]);
+                $this->addDetalhe([ 'Hora Ocorrência', $hora ]);
             }
-            $this->addDetalhe([ 'Data Ocorr&ecirc;ncia', dataFromPgToBr("{$registro['data_cadastro']}", 'd/m/Y') ]);
+            $this->addDetalhe([ 'Data Ocorrência', dataFromPgToBr("{$registro['data_cadastro']}", 'd/m/Y') ]);
         }
         if ($registro['ref_cod_tipo_ocorrencia_disciplinar']) {
-            $this->addDetalhe([ 'Tipo Ocorr&ecirc;ncia', "{$registro['nm_tipo']}"]);
+            $this->addDetalhe([ 'Tipo Ocorrência', "{$registro['nm_tipo']}"]);
         }
         if ($registro['observacao']) {
             $this->addDetalhe([ 'Observação', nl2br("{$registro['observacao']}")]);
@@ -108,7 +108,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'Ocorr&ecirc;ncia Disciplinar';
+        $this->title = 'Ocorrência Disciplinar';
         $this->processoAp = '578';
     }
 };

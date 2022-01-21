@@ -62,7 +62,7 @@ return new class extends clsCadastro {
         include('include/pmieducar/educar_campo_lista.php');
 
         // text
-        $this->campoTexto('nm_tipo', 'Motivo Transfer&ecirc;ncia', $this->nm_tipo, 30, 255, true);
+        $this->campoTexto('nm_tipo', 'Motivo Transferência', $this->nm_tipo, 30, 255, true);
         $this->campoMemo('desc_tipo', 'Descrição', $this->desc_tipo, 60, 5, false);
     }
 
@@ -110,7 +110,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'Motivo Transfer&ecirc;ncia';
+        $this->title = 'Motivo Transferência';
         $this->processoAp = '575';
     }
 };

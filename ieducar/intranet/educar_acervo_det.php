@@ -105,7 +105,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Tipo', "{$registro['ref_cod_exemplar_tipo']}"]);
         }
         if ($registro['ref_cod_acervo']) {
-            $this->addDetalhe([ 'Obra Refer&ecirc;ncia', "{$registro['ref_cod_acervo']}"]);
+            $this->addDetalhe([ 'Obra Referência', "{$registro['ref_cod_acervo']}"]);
         }
         if ($registro['ref_cod_acervo_colecao']) {
             $this->addDetalhe([ 'Coleção', "{$registro['ref_cod_acervo_colecao']}"]);
