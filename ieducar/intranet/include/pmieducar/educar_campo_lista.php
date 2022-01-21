@@ -152,7 +152,7 @@ if ($get_escola_curso_serie) {
             }
         }
     }
-    $this->campoLista('ref_ref_cod_serie', 'S&eacute;rie', $opcoes_series_curso_escola, $this->ref_ref_cod_serie, null, null, null, null, $escola_curso_serie_desabilitado, $escola_curso_serie_obrigatorio);
+    $this->campoLista('ref_ref_cod_serie', 'Série', $opcoes_series_curso_escola, $this->ref_ref_cod_serie, null, null, null, null, $escola_curso_serie_desabilitado, $escola_curso_serie_obrigatorio);
 }
 
 if ($get_serie) {

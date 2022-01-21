@@ -96,7 +96,7 @@ return new class extends clsListagem {
         $this->titulo = 'Infra Predio - Listagem';
 
         // outros Filtros
-        $this->campoTexto('nm_predio', 'Nome Pr&eacute;dio', $this->nm_predio, 30, 255, false);
+        $this->campoTexto('nm_predio', 'Nome Prédio', $this->nm_predio, 30, 255, false);
 
         // Paginador
         $this->limite = 20;

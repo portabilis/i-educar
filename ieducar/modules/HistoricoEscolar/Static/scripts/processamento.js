@@ -276,7 +276,7 @@
       $('<th />').html('Ano').appendTo($linha);
       $('<th />').html('Escola').appendTo($linha);
       $('<th />').html('Curso').appendTo($linha);
-      $('<th />').html('S&eacute;rie').appendTo($linha);
+      $('<th />').html('Série').appendTo($linha);
       $('<th />').html('Turma').appendTo($linha);
       $('<th />').html('Matr&iacute;cula').appendTo($linha);
 

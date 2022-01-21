@@ -80,7 +80,7 @@ return new class extends clsDetalhe {
                 $this->addDetalhe([ 'Estado da Escola', "{$registro['escola_uf']}"]);
             }
             if ($registro['nm_serie']) {
-                $this->addDetalhe([ 'S&eacute;rie', "{$registro['nm_serie']}"]);
+                $this->addDetalhe([ 'Série', "{$registro['nm_serie']}"]);
             }
         }
 

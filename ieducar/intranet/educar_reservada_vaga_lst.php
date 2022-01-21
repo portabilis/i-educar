@@ -66,7 +66,7 @@ return new class extends clsListagem {
 
         $lista_busca = [
       'Aluno',
-      'S&eacute;rie',
+      'Série',
       'Curso'
     ];
 

@@ -69,7 +69,7 @@ return new class extends clsDetalhe {
         $this->addDetalhe(['Nome do Aluno',$det_aluno['nome_aluno']]);
 
         if ($registro['ref_ref_cod_serie']) {
-            $this->addDetalhe([ 'S&eacute;rie', "{$registro['ref_ref_cod_serie']}"]);
+            $this->addDetalhe([ 'Série', "{$registro['ref_ref_cod_serie']}"]);
         }
 
         if ($det_mat_turma['det_turma']) {

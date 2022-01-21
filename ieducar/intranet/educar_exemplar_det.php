@@ -55,7 +55,7 @@ return new class extends clsDetalhe {
         $this->addDetalhe(['Tombo',  "{$registro['tombo']}"]);
 
         if ($registro['ref_cod_acervo']) {
-            $this->addDetalhe([ 'Obra Refer&eacute;ncia', "{$registro['ref_cod_acervo']}"]);
+            $this->addDetalhe([ 'Obra Referéncia', "{$registro['ref_cod_acervo']}"]);
         }
         if ($registro['ref_cod_fonte']) {
             $this->addDetalhe([ 'Fonte', "{$registro['ref_cod_fonte']}"]);
@@ -73,7 +73,7 @@ return new class extends clsDetalhe {
         if ($registro['permite_emprestimo']) {
             $registro['permite_emprestimo'] = $registro['permite_emprestimo'] == 2 ? 'Sim' :'N&atilde;o';
 
-            $this->addDetalhe([ 'Permite Empr&eacute;stimo', "{$registro['permite_emprestimo']}"]);
+            $this->addDetalhe([ 'Permite Empréstimo', "{$registro['permite_emprestimo']}"]);
         }
         if ($registro['preco']) {
             $registro['preco'] = number_format($registro['preco'], 2, ',', '.');

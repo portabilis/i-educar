@@ -66,7 +66,7 @@ return new class extends clsListagem {
             'Ano',
             'Turma',
             'Turno',
-            'S&eacute;rie',
+            'Série',
             'Curso',
             'Escola',
             'Situação'

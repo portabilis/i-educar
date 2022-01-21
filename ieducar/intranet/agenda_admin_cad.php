@@ -39,7 +39,7 @@ return new class extends clsCadastro {
                     if (! $db->ProximoRegistro()) {
                         $db->Consulta("INSERT INTO agenda_responsavel ( ref_ref_cod_pessoa_fj, ref_cod_agenda ) VALUES ( '{$_POST['novo_editor']}', '{$this->cod_agenda}' )");
                     } else {
-                        $this->mensagem = 'O dono da agenda já &eacute; considerado um editor da mesma.';
+                        $this->mensagem = 'O dono da agenda já é considerado um editor da mesma.';
                     }
                 } else {
                     $this->mensagem = 'Este editor já está cadastrado';

@@ -61,7 +61,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Escola', "{$nm_escola}"]);
         }
         if ($registro['ref_cod_infra_predio']) {
-            $this->addDetalhe([ 'Pr&eacute;dio', "{$registro['ref_cod_infra_predio']}"]);
+            $this->addDetalhe([ 'Prédio', "{$registro['ref_cod_infra_predio']}"]);
         }
         if ($registro['nm_comodo']) {
             $this->addDetalhe([ 'Ambiente', "{$registro['nm_comodo']}"]);

@@ -63,13 +63,13 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Curso Origem', "{$nm_curso_origem}"]);
         }
         if ($nm_serie_origem) {
-            $this->addDetalhe([ 'S&eacute;rie Origem', "{$nm_serie_origem}"]);
+            $this->addDetalhe([ 'Série Origem', "{$nm_serie_origem}"]);
         }
         if ($nm_curso_destino) {
             $this->addDetalhe([ 'Curso Destino', "{$nm_curso_destino}"]);
         }
         if ($nm_serie_destino) {
-            $this->addDetalhe([ 'S&eacute;rie Destino', "{$nm_serie_destino}"]);
+            $this->addDetalhe([ 'Série Destino', "{$nm_serie_destino}"]);
         }
 
         $obj_permissoes = new clsPermissoes();

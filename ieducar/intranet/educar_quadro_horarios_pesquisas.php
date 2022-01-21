@@ -246,7 +246,7 @@
             }
             $retorno .= '<tr id="tr_curso" class="input_quadro_horario">
                          <td valign="top" class="formmdtd">
-                         <span class="form">S&eacute;rie</span>
+                         <span class="form">Série</span>
                          <span class="campo_obrigatorio">*</span>
                          <br/>
                          <sub style="vertical-align: top;"/>
@@ -316,7 +316,7 @@
         if (isset($get_cabecalho)) {
             if ($nivel_usuario == 1 || $nivel_usuario == 2 || $nivel_usuario == 4) {
                 ${$get_cabecalho}[] = 'Curso';
-                ${$get_cabecalho}[] = 'S&eacute;rie';
+                ${$get_cabecalho}[] = 'Série';
                 ${$get_cabecalho}[] = 'Turma';
             }
             if ($nivel_usuario == 1 || $nivel_usuario == 2) {

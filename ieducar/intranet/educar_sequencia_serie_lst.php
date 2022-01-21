@@ -25,9 +25,9 @@ return new class extends clsListagem {
 
         $lista_busca = [
             'Curso Origem',
-            'S&eacute;rie Origem',
+            'Série Origem',
             'Curso Destino',
-            'S&eacute;rie Destino'
+            'Série Destino'
         ];
 
         $obj_permissoes = new clsPermissoes();
@@ -98,8 +98,8 @@ return new class extends clsListagem {
             }
         }
 
-        $this->campoLista('ref_serie_origem', 'S&eacute;rie Origem', $opcoes, $this->ref_serie_origem, null, true, '', '', false, false);
-        $this->campoLista('ref_serie_destino', ' S&eacute;rie Destino', $opcoes_, $this->ref_serie_destino, '', false, '', '', false, false);
+        $this->campoLista('ref_serie_origem', 'Série Origem', $opcoes, $this->ref_serie_origem, null, true, '', '', false, false);
+        $this->campoLista('ref_serie_destino', ' Série Destino', $opcoes_, $this->ref_serie_destino, '', false, '', '', false, false);
 
         // Paginador
         $this->limite = 20;

@@ -218,14 +218,14 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
 
             <tr>
                                 <td>
-                                        <label for=\'media-area-conhecimento\'>Fechar m&eacute;dia por área de conhecimento</label><br>
+                                        <label for=\'media-area-conhecimento\'>Fechar média por área de conhecimento</label><br>
                                         <sub style=\'vertical-align:top;\'>Caso esse campo seja selecionado, será gerado o histórico das áreas de conhecimento e não dos componentes curriculares</sub>
                                 </td>
                 <td colspan=\'2\'><input type=\'checkbox\' id=\'media-area-conhecimento\' name=\'media-area-conhecimento\'></input></td>
             </tr>
 
             <tr>
-                <td><label for=\'processar-media-geral\'>Processar m&eacute;dia geral dos alunos</label><br></td>
+                <td><label for=\'processar-media-geral\'>Processar média geral dos alunos</label><br></td>
                 <td colspan=\'2\'><input type=\'checkbox\' id=\'processar-media-geral\' name=\'processar-media-geral\'></input></td>
             </tr>
 

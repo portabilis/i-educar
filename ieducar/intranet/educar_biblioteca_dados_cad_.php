@@ -97,7 +97,7 @@ return new class extends clsCadastro {
         // text
         $this->campoTexto('nm_biblioteca', 'Biblioteca', $this->nm_biblioteca, 30, 255, true, false, false, '', '', '', '', true);
         $this->campoMonetario('valor_multa', 'Valor Multa', $this->valor_multa, 8, 8, true);
-        $this->campoNumero('max_emprestimo', 'Máximo Empr&eacute;stimo', $this->max_emprestimo, 8, 8, true);
+        $this->campoNumero('max_emprestimo', 'Máximo Empréstimo', $this->max_emprestimo, 8, 8, true);
         $this->campoMonetario('valor_maximo_multa', 'Valor Máximo Multa', $this->valor_maximo_multa, 8, 8, true);
 
 //      $opcoes = array( "" => "Selecione", 1 => "n&atilde;o", 2 => "sim" );

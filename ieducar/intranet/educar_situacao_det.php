@@ -74,7 +74,7 @@ return new class extends clsDetalhe {
             } elseif ($registro['permite_emprestimo'] == 2) {
                 $registro['permite_emprestimo'] = 'sim';
             }
-            $this->addDetalhe([ 'Permite Empr&eacute;stimo', "{$registro['permite_emprestimo']}"]);
+            $this->addDetalhe([ 'Permite Empréstimo', "{$registro['permite_emprestimo']}"]);
         }
         if ($registro['descricao']) {
             $this->addDetalhe([ 'Descri&ccedil;&atilde;o', "{$registro['descricao']}"]);

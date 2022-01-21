@@ -122,7 +122,7 @@ return new class extends clsDetalhe {
         }
 
         if ($nm_serie) {
-            $this->addDetalhe(['S&eacute;rie', $nm_serie]);
+            $this->addDetalhe(['Série', $nm_serie]);
         }
 
         $obj_turmas = new clsPmieducarTurma();

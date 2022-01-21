@@ -93,7 +93,7 @@ return new class extends clsCadastro {
         } else {
             $script = "<img id='img_colecao' style='display: none;' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
         }
-        $this->campoLista('ref_cod_infra_predio', 'Pr&eacute;dio', $opcoes_predio, $this->ref_cod_infra_predio, '', false, '', $script);
+        $this->campoLista('ref_cod_infra_predio', 'Prédio', $opcoes_predio, $this->ref_cod_infra_predio, '', false, '', $script);
 
         $opcoes_funcao = [ '' => 'Selecione' ];
 

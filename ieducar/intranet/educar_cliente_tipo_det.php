@@ -72,7 +72,7 @@ return new class extends clsDetalhe {
             $tabela = '<TABLE>
                            <TR align=center>
                                <TD bgcolor=#ccdce6><B>Tipo Exemplar</B></TD>
-                               <TD bgcolor=#ccdce6><B>Dias Empr&eacute;stimo</B></TD>
+                               <TD bgcolor=#ccdce6><B>Dias Empréstimo</B></TD>
                            </TR>';
             $cont = 0;
 

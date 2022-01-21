@@ -264,7 +264,7 @@ return new class extends clsDetalhe {
             $tabela .= '</table></td></tr>';
             $tabela .= '<tr>
                             <td>
-                                <span class=\'formlttd\'><b>*Somente &eacute; poss&iacute;vel finalizar um ano letivo ap&oacute;s n&atilde;o existir mais nenhuma matr&iacute;cula em andamento.</b></span>
+                                <span class=\'formlttd\'><b>*Somente é poss&iacute;vel finalizar um ano letivo ap&oacute;s n&atilde;o existir mais nenhuma matr&iacute;cula em andamento.</b></span>
                             </td>
                         </tr>';
             if (!$canEdit) {

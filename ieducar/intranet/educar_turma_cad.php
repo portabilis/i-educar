@@ -413,7 +413,7 @@ return new class extends clsCadastro {
 
         $this->campoLista(
             'ref_cod_serie_mult',
-            'S&eacute;rie',
+            'Série',
             ['' => 'Selecione'],
             '',
             '',
@@ -782,7 +782,7 @@ return new class extends clsCadastro {
 
         $help = [];
 
-        $label = 'Componentes curriculares definidos em s&eacute;ries da escola';
+        $label = 'Componentes curriculares definidos em séries da escola';
 
         $label = sprintf($label, $help);
 
@@ -1591,7 +1591,7 @@ return new class extends clsCadastro {
                     return false;
                 } elseif ($turma['max_aluno'] - $countMatriculas > 0) {
                     $vagas = $turma['max_aluno'] - $countMatriculas;
-                    $this->mensagem = "N&atilde;o &eacute; possivel cadastrar turmas, pois ainda existem $vagas vagas em aberto na turma '{$turma['nm_turma']}' desta serie e turno.\n\nTal limita&ccedil;&atilde;o ocorre devido defini&ccedil;&atilde;o feita para esta escola e s&eacute;rie.";
+                    $this->mensagem = "N&atilde;o é possivel cadastrar turmas, pois ainda existem $vagas vagas em aberto na turma '{$turma['nm_turma']}' desta serie e turno.\n\nTal limita&ccedil;&atilde;o ocorre devido defini&ccedil;&atilde;o feita para esta escola e série.";
 
                     return false;
                 }

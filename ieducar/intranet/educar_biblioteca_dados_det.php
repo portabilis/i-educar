@@ -62,7 +62,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Valor Multa', "{$registro['valor_multa']}"]);
         }
         if ($registro['max_emprestimo']) {
-            $this->addDetalhe([ 'Máximo Empr&eacute;stimo', "{$registro['max_emprestimo']}"]);
+            $this->addDetalhe([ 'Máximo Empréstimo', "{$registro['max_emprestimo']}"]);
         }
         if ($registro['valor_maximo_multa']) {
             $registro['valor_maximo_multa'] = number_format($registro['valor_maximo_multa'], 2, ',', '.');

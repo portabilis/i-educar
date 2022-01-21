@@ -156,7 +156,7 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['ref_ref_cod_serie']) {
-            $this->addDetalhe(['S&eacute;rie', $registro['ref_ref_cod_serie']]);
+            $this->addDetalhe(['Série', $registro['ref_ref_cod_serie']]);
         }
 
         $obj_permissao = new clsPermissoes();

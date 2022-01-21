@@ -104,7 +104,7 @@ return new class extends clsCadastro {
             $this->simpleRedirect('educar_categoria_lst.php');
         }
 
-        $this->mensagem = 'N&atilde;o &eacute; poss&iacute;vel excluir esta categoria. Verifique se a mesma possui v&iacute;nculo com obras.<br>';
+        $this->mensagem = 'N&atilde;o é poss&iacute;vel excluir esta categoria. Verifique se a mesma possui v&iacute;nculo com obras.<br>';
 
         $this->array_botao[] = 'Voltar';
         $this->array_botao_url_script[] = 'go(\'educar_categoria_obra_det.php?id='. $this->id .'\')';

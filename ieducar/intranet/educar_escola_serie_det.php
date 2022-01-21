@@ -62,7 +62,7 @@ return new class extends clsDetalhe {
         }
 
         if ($nm_serie) {
-            $this->addDetalhe(['S&eacute;rie', $nm_serie]);
+            $this->addDetalhe(['Série', $nm_serie]);
         }
 
         if ($registro['hora_inicial']) {
@@ -152,7 +152,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'Escola S&eacute;rie';
+        $this->title = 'Escola Série';
         $this->processoAp = '585';
     }
 };

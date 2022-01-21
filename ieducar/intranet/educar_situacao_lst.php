@@ -55,7 +55,7 @@ return new class extends clsListagem {
 
         $lista_busca = [
             'Situa&ccedil;&atilde;o',
-            'Permite Empr&eacute;stimo'
+            'Permite Empréstimo'
         ];
 
         // Filtros de Foreign Keys
@@ -69,7 +69,7 @@ return new class extends clsListagem {
         // outros Filtros
         $this->campoTexto('nm_situacao', 'Situa&ccedil;&atilde;o', $this->nm_situacao, 30, 255, false);
         $opcoes = ['' => 'Selecione', 1 => 'n&atilde;o', 2 => 'sim' ];
-        $this->campoLista('permite_emprestimo', 'Permite Empr&eacute;stimo', $opcoes, $this->permite_emprestimo, null, null, null, null, null, false);
+        $this->campoLista('permite_emprestimo', 'Permite Empréstimo', $opcoes, $this->permite_emprestimo, null, null, null, null, null, false);
 
         // Paginador
         $this->limite = 20;

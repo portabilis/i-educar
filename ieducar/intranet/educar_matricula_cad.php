@@ -428,7 +428,7 @@ return new class extends clsCadastro {
                 $cursoDeAtividadeComplementar = $cursoADeferir->cursoDeAtividadeComplementar();
 
                 if ($m['ref_ref_cod_serie'] == $this->ref_cod_serie && !$cursoDeAtividadeComplementar) {
-                    $this->mensagem = 'Este aluno já está matriculado nesta s&eacute;rie e curso, n&atilde;o &eacute; possivel matricular um aluno mais de uma vez na mesma s&eacute;rie.<br />';
+                    $this->mensagem = 'Este aluno já está matriculado nesta série e curso, n&atilde;o é possivel matricular um aluno mais de uma vez na mesma série.<br />';
 
                     return false;
                 } elseif ($curso['multi_seriado'] != 1) {
@@ -441,7 +441,7 @@ return new class extends clsCadastro {
                         $nomeSerie = '';
                     }
 
-                    $this->mensagem = "Este aluno já está matriculado no(a) '$nomeSerie' deste curso e escola. Como este curso n&atilde;o &eacute; multisseriado, n&atilde;o &eacute; possivel manter mais de uma matricula em andamento para o mesmo curso.<br />";
+                    $this->mensagem = "Este aluno já está matriculado no(a) '$nomeSerie' deste curso e escola. Como este curso n&atilde;o é multisseriado, n&atilde;o é possivel manter mais de uma matricula em andamento para o mesmo curso.<br />";
 
                     return false;
                 }
@@ -649,7 +649,7 @@ return new class extends clsCadastro {
                         $total_vagas += $turmas['max_aluno'];
                     }
                 } else {
-                    $this->mensagem = 'A s&eacute;rie selecionada n&atilde;o possui turmas cadastradas.<br />';
+                    $this->mensagem = 'A série selecionada n&atilde;o possui turmas cadastradas.<br />';
 
                     return false;
                 }
@@ -793,7 +793,7 @@ return new class extends clsCadastro {
             $m = $db->Tupla();
 
             if (is_array($m) && count($m) && $dependencia) {
-                $this->mensagem = 'Esse aluno já tem uma matr&iacute;cula de depend&ecirc;ncia nesta escola e s&eacute;rie.';
+                $this->mensagem = 'Esse aluno já tem uma matr&iacute;cula de depend&ecirc;ncia nesta escola e série.';
 
                 return false;
             }

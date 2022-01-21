@@ -20,7 +20,7 @@ return new class extends clsDetalhe {
 
     public function Gerar()
     {
-        $this->titulo = 'S&eacute;rie - Detalhe';
+        $this->titulo = 'Série - Detalhe';
 
         $this->cod_serie=$_GET['cod_serie'];
 
@@ -56,7 +56,7 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['nm_serie']) {
-            $this->addDetalhe(['S&eacute;rie', $registro['nm_serie']]);
+            $this->addDetalhe(['Série', $registro['nm_serie']]);
         }
 
         if ($registro['etapa_curso']) {
@@ -156,7 +156,7 @@ SQL;
 
     public function Formular()
     {
-        $this->title = 'S&eacute;rie';
+        $this->title = 'Série';
         $this->processoAp = '583';
     }
 };

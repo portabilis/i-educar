@@ -73,7 +73,7 @@ return new class extends clsListagem {
             'Matrícula',
             'Situação',
             'Turma',
-            'S&eacute;rie',
+            'Série',
             'Curso'
         ];
 

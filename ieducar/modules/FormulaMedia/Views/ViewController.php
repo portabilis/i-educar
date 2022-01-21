@@ -15,7 +15,7 @@ class ViewController extends Core_Controller_Page_ViewController
     {
         parent::_preRender();
 
-        $this->breadcrumb('Detalhe da f&oacute;rmula de m&eacute;dia', [
+        $this->breadcrumb('Detalhe da f&oacute;rmula de média', [
         url('intranet/educar_index.php') => 'Escola',
     ]);
     }
