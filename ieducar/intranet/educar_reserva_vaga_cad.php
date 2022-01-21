@@ -109,7 +109,7 @@ return new class extends clsCadastro {
         $this->campoTexto('nm_aluno_ext', 'Nome aluno', $this->nm_aluno_ext, 50, 255, false);
         $this->campoCpf(
             'cpf_responsavel',
-            'CPF respons&aacute;vel',
+            'CPF responsável',
             $this->cpf_responsavel,
             false,
             '<span style=\'padding-left:20px;\'><input type=\'button\' value=\'Aluno interno\' onclick=\'showAlunoExt(false);\' class=\'botaolistagem\'></span>'

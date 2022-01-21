@@ -195,7 +195,7 @@ function dataFromPgToBr($data_original, $formatacao = 'd/m/Y')
 
 /**
  * Funcao que troca caracteres acentuados por caracteres extendidos de HTML (para compatibilidade de encode).
- * Ex: á = &aacute;
+ * Ex: á = á
  * pode substituir na ordem reversa
  *
  * @param string $text
@@ -209,8 +209,8 @@ function extendChars($text, $reverse = false)
 {
     $chars = ['Ã', 'Â', 'Á', 'À', 'Ä', 'É', 'Ê', 'È', 'Ë', 'Í', 'Ì', 'Ï', 'Î', 'Ô', 'Õ', 'Ó', 'Ò', 'Ö', 'Ú', 'Ù', 'Û', 'Ü', 'Ý', 'Ñ', 'Ç',
                  'ã', 'â', 'á', 'à', 'ä', 'é', 'ê', 'è', 'ë', 'í', 'ì', 'ï', 'î', 'ô', 'õ', 'ó', 'ò', 'ö', 'ú', 'ù', 'û', 'ü', 'ý', 'ñ', 'ç' ];
-    $extends = ['&Atilde;', '&Acirc;', '&Aacute;', '&Agrave;', '&Auml;', '&Eacute;', '&Ecirc;', '&Egrave;', '&Euml;', '&Iacute;', '&Igrave;', '&Iuml;', '&Icirc;',   '&Ocirc;', '&Otilde;', '&Oacute;', '&Ograve;', '&Ouml;', '&Uacute;', '&Ugrave;', '&Ucirc;', '&Uuml;', '&Yacute;', '&Ntilde;', '&Ccedil;',
-                   '&atilde;', '&acirc;', '&aacute;', '&agrave;', '&auml;', '&eacute;', '&ecirc;', '&egrave;', '&euml;', '&iacute;', '&igrave;', '&iuml;', '&icirc;',   '&ocirc;', '&otilde;', '&oacute;', '&ograve;', '&ouml;', '&uacute;', '&ugrave;', '&ucirc;', '&uuml;', '&yacute;', '&ntilde;', '&ccedil;' ];
+    $extends = ['&Atilde;', '&Acirc;', 'á', '&Agrave;', '&Auml;', '&Eacute;', '&Ecirc;', '&Egrave;', '&Euml;', '&Iacute;', '&Igrave;', '&Iuml;', '&Icirc;',   '&Ocirc;', '&Otilde;', '&Oacute;', '&Ograve;', '&Ouml;', '&Uacute;', '&Ugrave;', '&Ucirc;', '&Uuml;', '&Yacute;', '&Ntilde;', '&Ccedil;',
+                   '&atilde;', '&acirc;', 'á', '&agrave;', '&auml;', '&eacute;', '&ecirc;', '&egrave;', '&euml;', '&iacute;', '&igrave;', '&iuml;', '&icirc;',   '&ocirc;', '&otilde;', '&oacute;', '&ograve;', '&ouml;', '&uacute;', '&ugrave;', '&ucirc;', '&uuml;', '&yacute;', '&ntilde;', '&ccedil;' ];
 
     if ($reverse) {
         return str_replace($extends, $chars, $text);

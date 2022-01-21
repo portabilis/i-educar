@@ -270,7 +270,7 @@ return new class extends clsDetalhe {
             if (!$canEdit) {
                 $tabela .= '<tr>
                             <td>
-                                <span class=\'formlttd\'><b>**Somente usu&aacute;rios com permiss&atilde;o de edição de escola podem alterar anos letivos.</b></span>
+                                <span class=\'formlttd\'><b>**Somente usuários com permiss&atilde;o de edição de escola podem alterar anos letivos.</b></span>
                             </td>
                         </tr>';
             }

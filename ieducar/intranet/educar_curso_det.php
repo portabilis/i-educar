@@ -93,7 +93,7 @@ return new class extends clsDetalhe {
 
         if ($registro['carga_horaria']) {
             $registro['carga_horaria'] = number_format($registro['carga_horaria'], 2, ',', '.');
-            $this->addDetalhe(['Carga Hor&aacute;ria', $registro['carga_horaria']]);
+            $this->addDetalhe(['Carga Horária', $registro['carga_horaria']]);
         }
 
         if ($registro['ato_poder_publico']) {

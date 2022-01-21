@@ -85,7 +85,7 @@ return new class extends clsDetalhe {
             $tabela .= '</TABLE>';
         }
         if ($tabela) {
-            $this->addDetalhe([ 'Usu&aacute;rio', "{$tabela}"]);
+            $this->addDetalhe([ 'Usuário', "{$tabela}"]);
         }
 
         if ($obj_permissoes->permissao_cadastra(591, $this->pessoa_logada, 3)) {

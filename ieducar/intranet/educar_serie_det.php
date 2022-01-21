@@ -80,7 +80,7 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['carga_horaria']) {
-            $this->addDetalhe(['Carga Hor&aacute;ria', $registro['carga_horaria']]);
+            $this->addDetalhe(['Carga Horária', $registro['carga_horaria']]);
         }
 
         $this->addDetalhe(['Dias letivos', $registro['dias_letivos']]);

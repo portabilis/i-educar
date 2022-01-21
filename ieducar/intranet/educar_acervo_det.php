@@ -172,7 +172,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Ano', "{$registro['ano']}"]);
         }
         if ($registro['num_paginas']) {
-            $this->addDetalhe([ 'N&uacute;mero P&aacute;ginas', "{$registro['num_paginas']}"]);
+            $this->addDetalhe([ 'N&uacute;mero Páginas', "{$registro['num_paginas']}"]);
         }
         if ($registro['isbn']) {
             $this->addDetalhe([ 'ISBN', "{$registro['isbn']}"]);

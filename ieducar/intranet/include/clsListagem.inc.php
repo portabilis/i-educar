@@ -185,7 +185,7 @@ HTML;
             for ($i = 0; $i <= $intPaginasExibidas * 2 && $i + $pagStart <= $totalPaginas; $i++) {
                 $compl_url  = ($add_iniciolimit) ? '&iniciolimit=' . ($pagStart + $i + $pag_modifier) : '';
                 $classe_botao = ($pagina_formulario == ($pagStart + $i)) ? 'nvp_paginador_ativo' : '';
-                $strReturn .= "<td align=\"center\" class=\"{$classe_botao}\" style=\"padding-left:5px;padding-right:5px;\"><a href=\"{$linkFixo}$getVar=" . ($pagStart + $i + $pag_modifier) . "{$compl_url}&ordenacao={$ordenacao}\" class=\"nvp_paginador\" title=\"Ir para a p&aacute;gina " . ($pagStart + $i) . '">' . addLeadingZero($pagStart + $i) .'</a></td>';
+                $strReturn .= "<td align=\"center\" class=\"{$classe_botao}\" style=\"padding-left:5px;padding-right:5px;\"><a href=\"{$linkFixo}$getVar=" . ($pagStart + $i + $pag_modifier) . "{$compl_url}&ordenacao={$ordenacao}\" class=\"nvp_paginador\" title=\"Ir para a página " . ($pagStart + $i) . '">' . addLeadingZero($pagStart + $i) .'</a></td>';
             }
 
             // Setas de fim e próxima
@@ -280,7 +280,7 @@ HTML;
             if (empty($this->campos)) {
                 $retorno .=  '
                     <tr>
-                        <td class=\'formlttd\' colspan=\'2\'><span class=\'form\'>N&atilde;o existem campos definidos para o formul&aacute;rio</span></td>
+                        <td class=\'formlttd\' colspan=\'2\'><span class=\'form\'>N&atilde;o existem campos definidos para o formulário</span></td>
                     </tr>';
             } else {
                 $retorno .= $this->MakeCampos();
@@ -383,7 +383,7 @@ HTML;
 
         // Lista
         if (empty($this->linhas)) {
-            $retorno .=  "<tr><td class='formlttd' colspan='$ncols' align='center'>N&atilde;o h&aacute; informa&ccedil;&atilde;o para ser apresentada</td></tr>";
+            $retorno .=  "<tr><td class='formlttd' colspan='$ncols' align='center'>N&atilde;o há informa&ccedil;&atilde;o para ser apresentada</td></tr>";
         } else {
             reset($this->linhas);
 

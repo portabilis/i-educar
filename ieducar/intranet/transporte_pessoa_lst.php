@@ -97,7 +97,7 @@ return new class extends clsListagem {
             $this->nome_acao = 'Novo';
         }
 
-        $this->breadcrumb('Listagem de usu&aacute;rios de tranposrte', [
+        $this->breadcrumb('Listagem de usuários de tranposrte', [
         url('intranet/educar_transporte_escolar_index.php') => 'Transporte escolar',
     ]);
     }

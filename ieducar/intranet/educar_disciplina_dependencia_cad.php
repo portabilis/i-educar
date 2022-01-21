@@ -169,7 +169,7 @@ return new class extends clsCadastro {
         $this->campoRotulo('nm_aluno', 'Nome do Aluno', $det_aluno['nome_aluno']);
 
         if (!isset($this->ref_cod_turma)) {
-            $this->mensagem = 'Para cadastrar uma disciplina de depend&ecirc;ncia de um aluno, &eacute; necess&aacute;rio que este esteja enturmado.';
+            $this->mensagem = 'Para cadastrar uma disciplina de depend&ecirc;ncia de um aluno, &eacute; necessário que este esteja enturmado.';
 
             return;
         }

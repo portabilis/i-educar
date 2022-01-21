@@ -12,7 +12,7 @@ return new class extends clsListagem {
             $this->$var = ($val === '') ? null : $val;
         }
 
-        $this->addCabecalhos(['Nome', 'Matrícula', 'Matrícula Interna', 'Status', 'Tipo usu&aacute;rio', 'N&iacute;vel de Acesso']);
+        $this->addCabecalhos(['Nome', 'Matrícula', 'Matrícula Interna', 'Status', 'Tipo usuário', 'N&iacute;vel de Acesso']);
 
         // Filtros de Busca
         $this->campoTexto('nm_pessoa', 'Nome', $this->nm_pessoa, 42, 255);
@@ -30,7 +30,7 @@ return new class extends clsListagem {
             }
         }
 
-        $this->campoLista('ref_cod_tipo_usuario', 'Tipo Usu&aacute;rio', $opcoes, $this->ref_cod_tipo_usuario, null, null, null, null, null, false);
+        $this->campoLista('ref_cod_tipo_usuario', 'Tipo Usuário', $opcoes, $this->ref_cod_tipo_usuario, null, null, null, null, null, false);
 
         $obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
         $detalhe = $obj_usuario->detalhe();
@@ -144,7 +144,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'Usu&aacute;rios';
+        $this->title = 'Usuários';
         $this->processoAp = '555';
     }
 };

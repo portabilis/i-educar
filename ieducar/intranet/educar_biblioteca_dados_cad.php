@@ -22,7 +22,7 @@ return new class extends clsCadastro {
     public $ativo;
     public $dias_espera;
 
-    public $dias_da_semana = [ '' => 'Selecione', 1 => 'Domingo', 2 => 'Segunda', 3 => 'Ter&ccedil;a', 4 => 'Quarta', 5 => 'Quinta', 6 => 'Sexta', 7 => 'S&aacute;bado' ];
+    public $dias_da_semana = [ '' => 'Selecione', 1 => 'Domingo', 2 => 'Segunda', 3 => 'Ter&ccedil;a', 4 => 'Quarta', 5 => 'Quinta', 6 => 'Sexta', 7 => 'Sábado' ];
     public $dia;
     public $biblioteca_dia_semana;
     public $incluir_dia_semana;
@@ -106,8 +106,8 @@ return new class extends clsCadastro {
         // text
         $this->campoTexto('nm_biblioteca', 'Biblioteca', $this->nm_biblioteca, 30, 255, true, false, false, '', '', '', '', true);
         $this->campoMonetario('valor_multa', 'Valor Multa', $this->valor_multa, 8, 8, true);
-        $this->campoNumero('max_emprestimo', 'M&aacute;ximo Empr&eacute;stimo', $this->max_emprestimo, 8, 8, true);
-        $this->campoMonetario('valor_maximo_multa', 'Valor M&aacute;ximo Multa', $this->valor_maximo_multa, 8, 8, true);
+        $this->campoNumero('max_emprestimo', 'Máximo Empr&eacute;stimo', $this->max_emprestimo, 8, 8, true);
+        $this->campoMonetario('valor_maximo_multa', 'Valor Máximo Multa', $this->valor_maximo_multa, 8, 8, true);
 
 //      $opcoes = array( "" => "Selecione", 1 => "n&atilde;o", 2 => "sim" );
 //      $this->campoLista( "requisita_senha", "Requisita Senha", $opcoes, $this->requisita_senha );

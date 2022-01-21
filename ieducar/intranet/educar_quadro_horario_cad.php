@@ -181,7 +181,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'Servidores - Quadro de Hor&aacute;rios';
+        $this->title = 'Servidores - Quadro de Horários';
         $this->processoAp = '641';
     }
 };

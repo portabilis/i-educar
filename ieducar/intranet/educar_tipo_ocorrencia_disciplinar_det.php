@@ -50,7 +50,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Descri&ccedil;&atilde;o', "{$registro['descricao']}"]);
         }
         if ($registro['max_ocorrencias']) {
-            $this->addDetalhe([ 'M&aacute;ximo Ocorr&ecirc;ncias', "{$registro['max_ocorrencias']}"]);
+            $this->addDetalhe([ 'Máximo Ocorr&ecirc;ncias', "{$registro['max_ocorrencias']}"]);
         }
 
         if ($obj_permissao->permissao_cadastra(580, $this->pessoa_logada, 3)) {

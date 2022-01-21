@@ -1868,7 +1868,7 @@ function canShowParentsFields() {
                 <tr>
                   <td valign="top">
                     <fieldset>
-                      <legend>Dados b&aacute;sicos</legend>
+                      <legend>Dados básicos</legend>
                       <label for="nome-pessoa-aluno">Nome<span class="campo_obrigatorio">*</span> </label>
                       <input type="text" name="nome-pessoa-aluno" id="nome-pessoa-aluno" size="49" maxlength="255" class="text">
                       <label for="nome-social-pessoa-aluno">Nome social e/ou afetivo</label>
@@ -2664,7 +2664,7 @@ function canShowParentsFields() {
           tipoPessoa = "m&atilde;e";
           break;
         case "responsavel":
-          tipoPessoa = "respons&aacute;vel";
+          tipoPessoa = "responsável";
           break;
         default:
           tipoPessoa = "pai";

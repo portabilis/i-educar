@@ -17,7 +17,7 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchDocumentosAtestadoVaga
                 'cartao_bolsa_fami' => 'C&oacute;pia do cart&atilde;o bolsa fam&iacute;lia',
                 'rg_aluno_pai' => 'C&oacute;pia do RG (aluno e pai)',
                 'cpf_aluno_pai' => 'C&oacute;pia do CPF (aluno e pai)',
-                'tit_eleitor' => 'T&iacute;tulo de eleitor do respons&aacute;vel',
+                'tit_eleitor' => 'T&iacute;tulo de eleitor do responsável',
                 'doc_nis' => 'N&uacute;mero de Identifica&ccedil;&atilde;o Social - NIS',
                 'responsabilidade_nao_genitor' => 'Documento de responsável não genitor',
                 'intolerancia_alergia' => 'Laudo médico para intolerância ou alergia',

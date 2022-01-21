@@ -70,7 +70,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Tipo de ambiente', "{$registro['ref_cod_infra_comodo_funcao']}"]);
         }
         if ($registro['area']) {
-            $this->addDetalhe([ '&Aacute;rea m²', "{$registro['area']}"]);
+            $this->addDetalhe([ 'área m²', "{$registro['area']}"]);
         }
         if ($registro['desc_comodo']) {
             $this->addDetalhe([ 'Descri&ccedil;&atilde;o do ambiente', "{$registro['desc_comodo']}"]);

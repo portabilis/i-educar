@@ -50,7 +50,7 @@ return new class extends clsDetalhe {
 
         $this->largura = '100%';
 
-        $this->breadcrumb('Detalhe do usu&aacute;rio de transporte', [
+        $this->breadcrumb('Detalhe do usuário de transporte', [
         url('intranet/educar_transporte_escolar_index.php') => 'Transporte escolar',
     ]);
     }

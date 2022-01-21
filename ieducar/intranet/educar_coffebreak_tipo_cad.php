@@ -61,7 +61,7 @@ return new class extends clsCadastro {
 
         // text
         $this->campoTexto('nm_tipo', 'Nome Coffee Break', $this->nm_tipo, 42, 255, true);
-        $this->campoMonetario('custo_unitario', 'Custo Unit&aacute;rio', $this->custo_unitario, 15, 255, true);
+        $this->campoMonetario('custo_unitario', 'Custo Unitário', $this->custo_unitario, 15, 255, true);
         $this->campoMemo('desc_tipo', 'Descri&ccedil;&atilde;o Coffee Break', $this->desc_tipo, 40, 10, false);
 
         // data

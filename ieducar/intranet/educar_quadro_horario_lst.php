@@ -223,7 +223,7 @@ return new class {
                     $quadro_horario .= '</table></td></tr></table>';
                     $retorno .= "<tr><td colspan='2' ><center><b></b>{$quadro_horario}</center></td></tr>";
                 } else {
-                    $retorno .= '<tr><td colspan=\'2\' ><b><center>N&atilde;o existe nenhum quadro de hor&aacute;rio cadastrado para esta turma.</center></b></td></tr>';
+                    $retorno .= '<tr><td colspan=\'2\' ><b><center>N&atilde;o existe nenhum quadro de horário cadastrado para esta turma.</center></b></td></tr>';
                 }
             }
         }

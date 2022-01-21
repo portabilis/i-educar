@@ -75,7 +75,7 @@ return new class extends clsCadastro {
         4 => 'Quarta',
         5 => 'Quinta',
         6 => 'Sexta',
-        7 => 'S&aacute;bado'
+        7 => 'Sábado'
     ];
     public $nao_informar_educacenso;
     public $ano_letivo;
@@ -382,7 +382,7 @@ return new class extends clsCadastro {
 
         $this->campoTexto('sgl_turma', _cl('turma.detalhe.sigla'), $this->sgl_turma, 15, 15, false);
 
-        $this->campoNumero('max_aluno', 'M&aacute;ximo de Alunos', $this->max_aluno, 3, 3, true);
+        $this->campoNumero('max_aluno', 'Máximo de Alunos', $this->max_aluno, 3, 3, true);
 
         unset($opcoes);
         if (!is_null($this->ref_cod_serie)) {

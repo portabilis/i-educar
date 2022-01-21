@@ -94,7 +94,7 @@ return new class extends clsDetalhe {
         if ($registro['carga_horaria']) {
             $registro['carga_horaria'] = str_replace('.', ',', $registro['carga_horaria']);
 
-            $this->addDetalhe([ 'Carga Hor&aacute;ria', "{$registro['carga_horaria']}"]);
+            $this->addDetalhe([ 'Carga Horária', "{$registro['carga_horaria']}"]);
         }
 
         $this->addDetalhe([ 'Faltas globalizadas', is_numeric($registro['faltas_globalizadas']) ? 'Sim' : 'Não']);

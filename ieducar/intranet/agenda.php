@@ -114,7 +114,7 @@ return new class extends clsCadastro {
         <table border="0" cellpadding="0" cellspacing="3" width="100%">';
 
         $mesesArr = [ '', 'Janeiro', 'Fevereiro', 'Mar&ccedil;o', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro' ];
-        $diasArr = [ 'Domingo', 'Segunda Feira', 'Ter&ccedil;a Feira', 'Quarta Feira', 'Quinta Feira', 'Sexta Feira', 'S&aacute;bado' ];
+        $diasArr = [ 'Domingo', 'Segunda Feira', 'Ter&ccedil;a Feira', 'Quarta Feira', 'Quinta Feira', 'Sexta Feira', 'Sábado' ];
 
         $this->arr_data_atual = [ date('d', $this->time_atual), date('n', $this->time_atual), date('Y', $this->time_atual), date('w', $this->time_atual) ];
         $amanhaArr = [ date('d', $this->time_amanha), date('n', $this->time_amanha), date('Y', $this->time_amanha), date('w', $this->time_amanha) ];
@@ -367,7 +367,7 @@ return new class extends clsCadastro {
                     $conteudo .= "<tr><td>Status:</td><td>{$ativo}</td></tr>\n";
                     $conteudo .= "<tr><td>Importante:</td><td>{$importante}</td></tr>\n";
                     $conteudo .= "<tr><td>Publico:</td><td>{$publico}</td></tr>\n";
-                    $conteudo .= "<tr><td>Respons&aacute;vel:</td><td>$nome</td></tr>\n";
+                    $conteudo .= "<tr><td>Responsável:</td><td>$nome</td></tr>\n";
                     $conteudo .= "<tr><td>Reativar?</td><td><a href=\"{$this->scriptNome}?cod_agenda={$this->agenda}&time={$this->time_atual}&restaura={$_GET['versoes']}&versao={$versao}\">Clique aqui para reativar esta vers&atilde;o</a></td></tr>\n";
                     $conteudo .= "<tr><td colspan=\"2\"><hr></td></tr>\n";
                 }

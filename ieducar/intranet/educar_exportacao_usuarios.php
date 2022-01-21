@@ -55,7 +55,7 @@ return new class extends clsCadastro {
         }
         echo '</script>';
 
-        $this->campoLista('ref_cod_tipo_usuario', 'Tipo usu&aacute;rio', $opcoes, $this->ref_cod_tipo_usuario, '', null, null, null, null, false);
+        $this->campoLista('ref_cod_tipo_usuario', 'Tipo usuário', $opcoes, $this->ref_cod_tipo_usuario, '', null, null, null, null, false);
 
         Portabilis_View_Helper_Application::loadJavascript($this, '/modules/ExportarUsuarios/exportarUsuarios.js');
 

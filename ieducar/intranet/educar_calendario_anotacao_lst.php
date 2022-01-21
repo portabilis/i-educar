@@ -61,7 +61,7 @@ return new class extends clsListagem {
                     new RedirectResponse('educar_calendario_ano_letivo_lst.php')
                 );
             }
-            $this->titulo = "Anota&ccedil;&otilde;oes Calend&aacute;rio <b>{$this->dia}/{$this->mes}/{$this->ano}</b> - Listagem";
+            $this->titulo = "Anota&ccedil;&otilde;oes Calendário <b>{$this->dia}/{$this->mes}/{$this->ano}</b> - Listagem";
 
             Session::put([
                 'calendario.anotacao.dia' => $this->dia,
@@ -130,7 +130,7 @@ return new class extends clsListagem {
         if ($obj_permissoes->permissao_cadastra(620, $this->pessoa_logada, 7)) {
             $this->acao = "go(\"educar_calendario_anotacao_cad.php?dia={$this->dia}&mes={$this->mes}&ano={$this->ano}&ref_cod_calendario_ano_letivo={$this->ref_cod_calendario_ano_letivo}\")";
             $this->nome_acao = 'Nova Anota&ccedil;&atilde;o';
-            $this->array_botao = ['Dia Extra/N&atilde;o Letivo','Calend&aacute;rio'];
+            $this->array_botao = ['Dia Extra/N&atilde;o Letivo','Calendário'];
             $this->array_botao_url = ["educar_calendario_dia_cad.php?dia={$this->dia}&mes={$this->mes}&ano={$this->ano}&ref_cod_calendario_ano_letivo={$this->ref_cod_calendario_ano_letivo}","educar_calendario_ano_letivo_lst.php?dia={$this->dia}&mes={$this->mes}&ano={$this->ano}&ref_cod_calendario_ano_letivo={$this->ref_cod_calendario_ano_letivo}"];
         }
 

@@ -12,7 +12,7 @@ return new class extends clsDetalhe {
 
     public function Gerar()
     {
-        $this->titulo = 'Usu&aacute;rio - Detalhe';
+        $this->titulo = 'Usuário - Detalhe';
 
         $cod_pessoa = $this->cod_usuario = $_GET['ref_pessoa'];
 
@@ -67,7 +67,7 @@ return new class extends clsDetalhe {
         $registro['ref_cod_escola'] = $nomesEscola;
 
         if ($registro['ref_cod_tipo_usuario']) {
-            $this->addDetalhe([ 'Tipo Usu&aacute;rio', "{$registro['ref_cod_tipo_usuario']}"]);
+            $this->addDetalhe([ 'Tipo Usuário', "{$registro['ref_cod_tipo_usuario']}"]);
         }
 
         if ($registro['ref_cod_instituicao']) {
@@ -94,7 +94,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'Usu&aacute;rio';
+        $this->title = 'Usuário';
         $this->processoAp = '555';
     }
 };

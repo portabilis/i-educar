@@ -139,7 +139,7 @@ return new class extends clsCadastro {
             }
         }
 
-        $this->campoLista('ref_cod_usuario', 'Usu&aacute;rio', $opcoes, $this->ref_cod_usuario, '', false, '', "<a href='#' onclick=\"getElementById('incluir_usuario').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>", false, false);
+        $this->campoLista('ref_cod_usuario', 'Usuário', $opcoes, $this->ref_cod_usuario, '', false, '', "<a href='#' onclick=\"getElementById('incluir_usuario').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>", false, false);
 
         $this->campoOculto('incluir_usuario', '');
 

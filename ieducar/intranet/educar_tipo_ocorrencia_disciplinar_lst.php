@@ -50,7 +50,7 @@ return new class extends clsListagem {
 
         $lista_busca = [
             'Tipo Ocorr&ecirc;ncia Disciplinar',
-            'M&aacute;ximo Ocorr&ecirc;ncias'
+            'Máximo Ocorr&ecirc;ncias'
         ];
 
         $obj_permissoes = new clsPermissoes();

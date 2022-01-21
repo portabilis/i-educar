@@ -74,7 +74,7 @@ function openModalParent(parentType) {
             tipoPessoa = 'm&atilde;e';
             break;
         case 'responsavel':
-            tipoPessoa = 'respons&aacute;vel';
+            tipoPessoa = 'responsável';
             break;
         default:
             tipoPessoa = 'pai';

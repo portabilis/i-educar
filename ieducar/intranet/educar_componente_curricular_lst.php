@@ -47,7 +47,7 @@ return new class extends clsListagem {
             'Nome',
             'Abreviatura',
             'Base',
-            '&Aacute;rea de conhecimento'
+            'área de conhecimento'
         ];
 
         $obj_permissoes = new clsPermissoes();

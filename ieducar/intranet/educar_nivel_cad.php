@@ -75,7 +75,7 @@ return new class extends clsCadastro {
 
         $this->campoRotulo('nm_categoria', 'Categoria', $this->nm_categoria);
 
-        $this->campoTabelaInicio('tab01', 'N&iacute;veis', ['Nome N&iacute;vel','Sal&aacute;rio','Ordem'], $this->cod_nivel);
+        $this->campoTabelaInicio('tab01', 'N&iacute;veis', ['Nome N&iacute;vel','Salário','Ordem'], $this->cod_nivel);
 
         $this->campoTexto('nm_nivel', 'Nome N&iacute;vel', '', 30, 100, true);
         $this->campoMonetario('salario_base', 'Salario Base', $this->salario_base, 10, 8, true);

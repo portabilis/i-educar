@@ -116,7 +116,7 @@ class calendario
             <td width="14%" class="calendario_dias_t" title="Quarta Feira">Q</td>
             <td width="14%" class="calendario_dias_t" title="Quinta Feira">Q</td>
             <td width="14%" class="calendario_dias_t" title="Sexta Feira">S</td>
-            <td width="15%" class="calendario_dias_t" title="S&aacute;bado">S</td>
+            <td width="15%" class="calendario_dias_t" title="Sábado">S</td>
         </tr>';
         $comeco = true;
 

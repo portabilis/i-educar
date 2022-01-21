@@ -287,7 +287,7 @@ return new class extends clsCadastro {
 
         $this->campoMonetario(
             'carga_horaria',
-            'Carga Hor&aacute;ria',
+            'Carga Horária',
             $this->carga_horaria,
             7,
             7,

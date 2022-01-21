@@ -118,7 +118,7 @@ return new class extends clsCadastro {
 
         // text
         $this->campoTexto('nm_comodo', 'Ambiente', $this->nm_comodo, 43, 255, true);
-        $this->campoMonetario('area', '&Aacute;rea m²', $this->area, 10, 255, true);
+        $this->campoMonetario('area', 'área m²', $this->area, 10, 255, true);
         $this->campoMemo('desc_comodo', 'Descrição do ambiente', $this->desc_comodo, 60, 5, false);
     }
 

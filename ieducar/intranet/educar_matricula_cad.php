@@ -428,7 +428,7 @@ return new class extends clsCadastro {
                 $cursoDeAtividadeComplementar = $cursoADeferir->cursoDeAtividadeComplementar();
 
                 if ($m['ref_ref_cod_serie'] == $this->ref_cod_serie && !$cursoDeAtividadeComplementar) {
-                    $this->mensagem = 'Este aluno j&aacute; est&aacute; matriculado nesta s&eacute;rie e curso, n&atilde;o &eacute; possivel matricular um aluno mais de uma vez na mesma s&eacute;rie.<br />';
+                    $this->mensagem = 'Este aluno já está matriculado nesta s&eacute;rie e curso, n&atilde;o &eacute; possivel matricular um aluno mais de uma vez na mesma s&eacute;rie.<br />';
 
                     return false;
                 } elseif ($curso['multi_seriado'] != 1) {
@@ -441,7 +441,7 @@ return new class extends clsCadastro {
                         $nomeSerie = '';
                     }
 
-                    $this->mensagem = "Este aluno j&aacute; est&aacute; matriculado no(a) '$nomeSerie' deste curso e escola. Como este curso n&atilde;o &eacute; multisseriado, n&atilde;o &eacute; possivel manter mais de uma matricula em andamento para o mesmo curso.<br />";
+                    $this->mensagem = "Este aluno já está matriculado no(a) '$nomeSerie' deste curso e escola. Como este curso n&atilde;o &eacute; multisseriado, n&atilde;o &eacute; possivel manter mais de uma matricula em andamento para o mesmo curso.<br />";
 
                     return false;
                 }
@@ -490,7 +490,7 @@ return new class extends clsCadastro {
                             $curso = '';
                         }
 
-                        $this->mensagem = "Este aluno j&aacute; est&aacute; matriculado no(a) '$serie' do curso '$curso' na escola '$escola', para matricular este aluno na sua escola solicite transfer&ecirc;ncia ao secret&aacute;rio(a) da escola citada.<br />";
+                        $this->mensagem = "Este aluno já está matriculado no(a) '$serie' do curso '$curso' na escola '$escola', para matricular este aluno na sua escola solicite transfer&ecirc;ncia ao secretário(a) da escola citada.<br />";
 
                         return false;
                     }
@@ -555,7 +555,7 @@ return new class extends clsCadastro {
             $exigeInep = $serieDet['exigir_inep'];
 
             if (!$alunoInep && $exigeInep) {
-                $this->mensagem = 'N&atilde;o foi poss&iacute;vel realizar matr&iacute;cula, necess&aacute;rio inserir o INEP no cadastro do aluno.';
+                $this->mensagem = 'N&atilde;o foi poss&iacute;vel realizar matr&iacute;cula, necessário inserir o INEP no cadastro do aluno.';
 
                 return false;
             }
@@ -793,7 +793,7 @@ return new class extends clsCadastro {
             $m = $db->Tupla();
 
             if (is_array($m) && count($m) && $dependencia) {
-                $this->mensagem = 'Esse aluno j&aacute; tem uma matr&iacute;cula de depend&ecirc;ncia nesta escola e s&eacute;rie.';
+                $this->mensagem = 'Esse aluno já tem uma matr&iacute;cula de depend&ecirc;ncia nesta escola e s&eacute;rie.';
 
                 return false;
             }

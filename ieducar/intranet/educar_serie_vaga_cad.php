@@ -106,7 +106,7 @@ return new class extends clsCadastro {
 
         $lista = $obj->lista($this->ano, $this->ref_cod_escola, $this->ref_cod_curso, $this->ref_cod_serie, $this->turno);
         if (count($lista[0])) {
-            $this->mensagem = 'J&aacute; existe cadastro para est&aacute; s&eacute;rie/ano!<br />';
+            $this->mensagem = 'Já existe cadastro para está s&eacute;rie/ano!<br />';
 
             return false;
         }
@@ -117,7 +117,7 @@ return new class extends clsCadastro {
             $this->simpleRedirect('educar_serie_vaga_lst.php');
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado. Verifique se j&aacute; n&atilde;o existe cadastro para est&aacute; s&eacute;rie/ano!<br />';
+        $this->mensagem = 'Cadastro n&atilde;o realizado. Verifique se já n&atilde;o existe cadastro para está s&eacute;rie/ano!<br />';
 
         return false;
     }

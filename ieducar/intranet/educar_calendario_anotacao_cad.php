@@ -71,7 +71,7 @@ return new class extends clsCadastro {
     public function Gerar()
     {
         // primary keys
-        $this->campoRotulo('info', '-', "Anota&ccedil;&otilde;es Calend&aacute;rio do dia <b>{$this->dia}/{$this->mes}/{$this->ano}</b>");
+        $this->campoRotulo('info', '-', "Anota&ccedil;&otilde;es Calendário do dia <b>{$this->dia}/{$this->mes}/{$this->ano}</b>");
         $this->campoOculto('cod_calendario_anotacao', $this->cod_calendario_anotacao);
 
         $this->campoOculto('dia', $this->dia);

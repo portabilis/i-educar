@@ -53,7 +53,7 @@ return new class extends clsListagem {
         $this->addCabecalhos([
             'C&oacute;digo da empresa',
             'Nome fantasia',
-            'Nome do respons&aacute;vel',
+            'Nome do responsável',
             'Telefone'
         ]);
 
