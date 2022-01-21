@@ -18,7 +18,7 @@ return new class extends clsDetalhe {
 
     public function Gerar()
     {
-        $this->titulo = 'Sequ&ecirc;ncia Enturma&ccedil;ão - Detalhe';
+        $this->titulo = 'Sequ&ecirc;ncia Enturmação - Detalhe';
 
         $this->ref_serie_origem = $_GET['ref_serie_origem'];
         $this->ref_serie_destino = $_GET['ref_serie_destino'];
@@ -56,7 +56,7 @@ return new class extends clsDetalhe {
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe([ 'Institui&ccedil;ão', "{$registro['ref_cod_instituicao']}"]);
+                $this->addDetalhe([ 'Instituição', "{$registro['ref_cod_instituicao']}"]);
             }
         }
         if ($nm_curso_origem) {
@@ -88,7 +88,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'Sequ&ecirc;ncia Enturma&ccedil;ão';
+        $this->title = 'Sequ&ecirc;ncia Enturmação';
         $this->processoAp = '587';
     }
 };

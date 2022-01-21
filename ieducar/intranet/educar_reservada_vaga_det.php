@@ -144,7 +144,7 @@ return new class extends clsDetalhe {
         $this->addDetalhe(['-', 'Reserva Pretendida']);
 
         if ($registro['ref_cod_instituicao']) {
-            $this->addDetalhe(['Institui&ccedil;ão', $registro['ref_cod_instituicao']]);
+            $this->addDetalhe(['Instituição', $registro['ref_cod_instituicao']]);
         }
 
         if ($registro['ref_ref_cod_escola']) {

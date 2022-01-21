@@ -116,11 +116,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarFuncao($this->cod_funcao, $this->pessoa_logada, null, $this->nm_funcao, $this->abreviatura, $this->professor, null, null, 1, $this->ref_cod_instituicao);
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_funcao_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }

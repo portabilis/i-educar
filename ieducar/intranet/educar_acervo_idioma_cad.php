@@ -94,11 +94,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarAcervoIdioma($this->cod_acervo_idioma, $this->pessoa_logada, $this->pessoa_logada, $this->nm_idioma, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->ref_cod_biblioteca);
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_acervo_idioma_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }

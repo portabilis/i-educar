@@ -157,7 +157,7 @@ return new class extends clsCadastro {
                     $sequencial++;
                 }
             }
-            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect("transporte_rota_det.php?cod_rota={$this->cod_rota}");
         }
     }

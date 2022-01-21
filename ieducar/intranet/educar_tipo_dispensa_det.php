@@ -37,14 +37,14 @@ return new class extends clsDetalhe {
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe([ 'Institui&ccedil;ão', "{$registro['ref_cod_instituicao']}"]);
+                $this->addDetalhe([ 'Instituição', "{$registro['ref_cod_instituicao']}"]);
             }
         }
         if ($registro['nm_tipo']) {
             $this->addDetalhe([ 'Tipo Dispensa', "{$registro['nm_tipo']}"]);
         }
         if ($registro['descricao']) {
-            $this->addDetalhe([ 'Descri&ccedil;ão', "{$registro['descricao']}"]);
+            $this->addDetalhe([ 'Descrição', "{$registro['descricao']}"]);
         }
 
         if ($obj_permissoes->permissao_cadastra(577, $this->pessoa_logada, 7)) {

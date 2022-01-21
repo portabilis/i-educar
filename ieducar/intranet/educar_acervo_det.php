@@ -84,7 +84,7 @@ return new class extends clsDetalhe {
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe([ 'Institui&ccedil;ão', "{$registro['ref_cod_instituicao']}"]);
+                $this->addDetalhe([ 'Instituição', "{$registro['ref_cod_instituicao']}"]);
             }
         }
         if ($nivel_usuario == 1 || $nivel_usuario == 2) {
@@ -108,7 +108,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Obra Refer&ecirc;ncia', "{$registro['ref_cod_acervo']}"]);
         }
         if ($registro['ref_cod_acervo_colecao']) {
-            $this->addDetalhe([ 'Cole&ccedil;ão', "{$registro['ref_cod_acervo_colecao']}"]);
+            $this->addDetalhe([ 'Coleção', "{$registro['ref_cod_acervo_colecao']}"]);
         }
         if ($registro['ref_cod_acervo_idioma']) {
             $this->addDetalhe([ 'Idioma', "{$registro['ref_cod_acervo_idioma']}"]);

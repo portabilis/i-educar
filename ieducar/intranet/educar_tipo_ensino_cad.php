@@ -119,11 +119,11 @@ return new class extends clsCadastro {
 
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_tipo_ensino_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }

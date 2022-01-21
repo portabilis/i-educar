@@ -63,7 +63,7 @@ return new class extends clsCadastro {
 
         // text
         $this->campoTexto('nm_tipo', 'Motivo Transfer&ecirc;ncia', $this->nm_tipo, 30, 255, true);
-        $this->campoMemo('desc_tipo', 'Descri&ccedil;ão', $this->desc_tipo, 60, 5, false);
+        $this->campoMemo('desc_tipo', 'Descrição', $this->desc_tipo, 60, 5, false);
     }
 
     public function Novo()
@@ -85,11 +85,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarTransferenciaTipo($this->cod_transferencia_tipo, $this->pessoa_logada, null, $this->nm_tipo, $this->desc_tipo, null, null, 1, $this->ref_cod_instituicao);
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_transferencia_tipo_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }

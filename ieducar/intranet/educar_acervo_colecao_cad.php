@@ -96,8 +96,8 @@ return new class extends clsCadastro {
         include('include/pmieducar/educar_campo_lista.php');
 
         // text
-        $this->campoTexto('nm_colecao', 'Cole&ccedil;ão', $this->nm_colecao, 30, 255, true);
-        $this->campoMemo('descricao', 'Descri&ccedil;ão', $this->descricao, 60, 5, false);
+        $this->campoTexto('nm_colecao', 'Coleção', $this->nm_colecao, 30, 255, true);
+        $this->campoMemo('descricao', 'Descrição', $this->descricao, 60, 5, false);
     }
 
     public function Novo()
@@ -127,12 +127,12 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarAcervoColecao($this->cod_acervo_colecao, $this->pessoa_logada, $this->pessoa_logada, $this->nm_colecao, $this->descricao, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->ref_cod_biblioteca);
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
 
             $this->simpleRedirect('educar_acervo_colecao_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }
@@ -157,7 +157,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'Cole&ccedil;ão';
+        $this->title = 'Coleção';
         $this->processoAp = '593';
     }
 };

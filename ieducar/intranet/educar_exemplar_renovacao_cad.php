@@ -219,7 +219,7 @@ return new class extends clsCadastro {
             $this->simpleRedirect('educar_exemplar_devolucao_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }

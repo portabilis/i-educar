@@ -77,7 +77,7 @@ return new class extends clsDetalhe {
         }
         if ($registro['preco']) {
             $registro['preco'] = number_format($registro['preco'], 2, ',', '.');
-            $this->addDetalhe([ 'Pre&ccedil;o', "{$registro['preco']}"]);
+            $this->addDetalhe([ 'Preço', "{$registro['preco']}"]);
         }
         if ($registro['data_aquisicao']) {
             $this->addDetalhe([ 'Data Aquisicão', dataFromPgToBr($registro['data_aquisicao'], 'd/m/Y') ]);

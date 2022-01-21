@@ -47,7 +47,7 @@
         if ($get_escola && $get_curso) {
             $retorno .= '<tr id="tr_status" class="input_quadro_horario">
                          <td valign="top" class="formlttd">
-                         <span class="form">Institui&ccedil;ão</span>
+                         <span class="form">Instituição</span>
                          <span class="campo_obrigatorio">*</span>
                          <br/>
                          <sub style="vertical-align: top;"/>
@@ -70,7 +70,7 @@
         } else {
             $retorno .= '<tr id="tr_status" class="input_quadro_horario">
                          <td valign="top" class="formlttd">
-                         <span class="form">Institui&ccedil;ão</span>
+                         <span class="form">Instituição</span>
                          <span class="campo_obrigatorio">*</span>
                          <br/>
                          <sub style="vertical-align: top;"/>
@@ -323,7 +323,7 @@
                 ${$get_cabecalho}[] = 'Escola';
             }
             if ($nivel_usuario == 1) {
-                ${$get_cabecalho}[] = 'Institui&ccedil;ão';
+                ${$get_cabecalho}[] = 'Instituição';
             }
         }
 

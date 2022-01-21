@@ -2,7 +2,7 @@
 
 class calendario
 {
-    public $meses = [ 1 => 'Janeiro', 2 => 'Fevereiro', 3 => 'Mar&ccedil;o', 4 => 'Abril', 5 => 'Maio', 6 => 'Junho', 7 => 'Julho', 8 => 'Agosto', 9 => 'Setembro', 10 => 'Outubro', 11 => 'Novembro', 12 => 'Dezembro' ];
+    public $meses = [ 1 => 'Janeiro', 2 => 'Fevereiro', 3 => 'Março', 4 => 'Abril', 5 => 'Maio', 6 => 'Junho', 7 => 'Julho', 8 => 'Agosto', 9 => 'Setembro', 10 => 'Outubro', 11 => 'Novembro', 12 => 'Dezembro' ];
     public $meses_dias;
     public $time;
     public $data;
@@ -112,7 +112,7 @@ class calendario
         <tr>
             <td width="15%" class="calendario_dias_t" title="Domingo">D</td>
             <td width="14%" class="calendario_dias_t" title="Segunda Feira">S</td>
-            <td width="14%" class="calendario_dias_t" title="Ter&ccedil;a Feira">T</td>
+            <td width="14%" class="calendario_dias_t" title="Terça Feira">T</td>
             <td width="14%" class="calendario_dias_t" title="Quarta Feira">Q</td>
             <td width="14%" class="calendario_dias_t" title="Quinta Feira">Q</td>
             <td width="14%" class="calendario_dias_t" title="Sexta Feira">S</td>

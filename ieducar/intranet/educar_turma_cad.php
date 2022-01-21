@@ -71,7 +71,7 @@ return new class extends clsCadastro {
         '' => 'Selecione',
         1 => 'Domingo',
         2 => 'Segunda',
-        3 => 'Ter&ccedil;a',
+        3 => 'Terça',
         4 => 'Quarta',
         5 => 'Quinta',
         6 => 'Sexta',
@@ -1591,7 +1591,7 @@ return new class extends clsCadastro {
                     return false;
                 } elseif ($turma['max_aluno'] - $countMatriculas > 0) {
                     $vagas = $turma['max_aluno'] - $countMatriculas;
-                    $this->mensagem = "Não é possivel cadastrar turmas, pois ainda existem $vagas vagas em aberto na turma '{$turma['nm_turma']}' desta serie e turno.\n\nTal limita&ccedil;ão ocorre devido defini&ccedil;ão feita para esta escola e série.";
+                    $this->mensagem = "Não é possivel cadastrar turmas, pois ainda existem $vagas vagas em aberto na turma '{$turma['nm_turma']}' desta serie e turno.\n\nTal limitação ocorre devido definição feita para esta escola e série.";
 
                     return false;
                 }

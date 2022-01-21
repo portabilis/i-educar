@@ -64,7 +64,7 @@ return new class extends clsListagem {
         $this->inputsHelper()->dynamic(['instituicao', 'escola'], ['required' => false]);
 
         $this->addCabecalhos([
-            'Institui&ccedil;ão',
+            'Instituição',
             'Escola',
             'Nome Predio',
         ]);

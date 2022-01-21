@@ -58,13 +58,13 @@ return new class extends clsDetalhe {
 
         if ($registro['extra_curricular']) {
             if ($registro['escola']) {
-                $this->addDetalhe([ 'Institui&ccedil;ão', "{$registro['escola']}"]);
+                $this->addDetalhe([ 'Instituição', "{$registro['escola']}"]);
             }
             if ($registro['escola_cidade']) {
-                $this->addDetalhe([ 'Cidade da Institui&ccedil;ão', "{$registro['escola_cidade']}"]);
+                $this->addDetalhe([ 'Cidade da Instituição', "{$registro['escola_cidade']}"]);
             }
             if ($registro['escola_uf']) {
-                $this->addDetalhe([ 'Estado da Institui&ccedil;ão', "{$registro['escola_uf']}"]);
+                $this->addDetalhe([ 'Estado da Instituição', "{$registro['escola_uf']}"]);
             }
             if ($registro['nm_serie']) {
                 $this->addDetalhe([ 'Série', "{$registro['nm_serie']}"]);
@@ -122,7 +122,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Origem', 'Interno']);
         }
         if ($registro['observacao']) {
-            $this->addDetalhe([ 'Observa&ccedil;ão', "{$registro['observacao']}"]);
+            $this->addDetalhe([ 'Observação', "{$registro['observacao']}"]);
         }
         if ($registro['aprovado']) {
             if ($registro['aprovado'] == 1) {
@@ -145,7 +145,7 @@ return new class extends clsDetalhe {
                 $registro['aprovado'] = 'Reprovado por faltas';
             }
 
-            $this->addDetalhe([ 'Situa&ccedil;ão', "{$registro['aprovado']}"]);
+            $this->addDetalhe([ 'Situação', "{$registro['aprovado']}"]);
         }
 
         if ($registro['registro']) {

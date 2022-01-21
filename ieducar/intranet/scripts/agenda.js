@@ -84,7 +84,7 @@ function text2form( compId )
 		conteudo += 'P&uacute;blico:<input type="checkbox" name="agenda_rap_publico" id="agenda_rap_publico" ' + chck1 + '>';
 	}
 	conteudo += '<br>';
-	conteudo += '<input type="button" name="agenda_salvar" class="agenda_rap_botao" id="agenda_salvar" value="Salvar Altera&ccedil;&otilde;es" onclick="agenda_salva();"> <input type="button" name="agenda_cancelar" class="agenda_rap_botao" id="agenda_cancelar" value="Cancelar Altera&ccedil;&otilde;es" onclick="form2text( ' + compId + ' );">';
+	conteudo += '<input type="button" name="agenda_salvar" class="agenda_rap_botao" id="agenda_salvar" value="Salvar Alteraç&otilde;es" onclick="agenda_salva();"> <input type="button" name="agenda_cancelar" class="agenda_rap_botao" id="agenda_cancelar" value="Cancelar Alteraç&otilde;es" onclick="form2text( ' + compId + ' );">';
 
 	divConteudo.innerHTML = conteudo;
 	oldBotoes = divBotoes.innerHTML;
@@ -192,7 +192,7 @@ function excluir_compromisso( compId )
 	{
 		excluirSim( compId, location );
 	}
-	//showExpansivel( 400, 114, 'Deseja realmente excluir este compromisso?<br><br>Esta é uma opera&ccedil;ão irrevers&iacute;vel.<br><br><input type="button" name="agenda_sim" class="agenda_rap_botao" id="agenda_salvar" value="Sim" onclick="excluirSim( ' + compId + ' );"> <input type="button" name="agenda_nao" class="agenda_rap_botao" id="agenda_salvar" value="Não" onclick="excluirNao( ' + compId + ' )">' );
+	//showExpansivel( 400, 114, 'Deseja realmente excluir este compromisso?<br><br>Esta é uma operação irrevers&iacute;vel.<br><br><input type="button" name="agenda_sim" class="agenda_rap_botao" id="agenda_salvar" value="Sim" onclick="excluirSim( ' + compId + ' );"> <input type="button" name="agenda_nao" class="agenda_rap_botao" id="agenda_salvar" value="Não" onclick="excluirNao( ' + compId + ' )">' );
 }
 
 function excluirSim( compId )
@@ -209,7 +209,7 @@ function excluirJuris( compId )
 	{
 		excluirSim( compId, location );
 	}
-	//showExpansivel( 400, 114, 'Deseja realmente excluir este compromisso?<br><br>Esta é uma opera&ccedil;ão irrevers&iacute;vel.<br><br><input type="button" name="agenda_sim" class="agenda_rap_botao" id="agenda_salvar" value="Sim" onclick="excluirSim( ' + compId + ' );"> <input type="button" name="agenda_nao" class="agenda_rap_botao" id="agenda_salvar" value="Não" onclick="excluirNao( ' + compId + ' )">' );
+	//showExpansivel( 400, 114, 'Deseja realmente excluir este compromisso?<br><br>Esta é uma operação irrevers&iacute;vel.<br><br><input type="button" name="agenda_sim" class="agenda_rap_botao" id="agenda_salvar" value="Sim" onclick="excluirSim( ' + compId + ' );"> <input type="button" name="agenda_nao" class="agenda_rap_botao" id="agenda_salvar" value="Não" onclick="excluirNao( ' + compId + ' )">' );
 }
 
 function excluirSimJuris( compId )
@@ -248,7 +248,7 @@ function novoForm(array_compromissos)
 	conteudo += '<td colspan="3" width="75%"><input type="text" name="novo_titulo" id="novo_titulo" style="width:330px;"></td>';
 	conteudo += '</tr>';
 	conteudo += '<tr>';
-	conteudo += '<td width="25%" valign="top">Descri&ccedil;ão:</td>';
+	conteudo += '<td width="25%" valign="top">Descrição:</td>';
 	conteudo += '<td colspan="3" width="75%"><textarea name="novo_descricao" id="novo_descricao" class="agenda_conteudo" style="width:330px;"></textarea></td>';
 	conteudo += '</tr>';
 	conteudo += '<tr><td colspan="4" style="height:1px;background-color: #9cbdd7;"></td></tr>';

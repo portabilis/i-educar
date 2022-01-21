@@ -132,11 +132,11 @@ return new class extends clsCadastro {
 
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br />';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br />';
             $this->simpleRedirect('educar_serie_vaga_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;ão nÃ£o realizada.<br />';
+        $this->mensagem = 'Edição nÃ£o realizada.<br />';
 
         return false;
     }

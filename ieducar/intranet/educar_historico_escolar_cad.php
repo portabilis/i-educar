@@ -250,7 +250,7 @@ return new class extends clsCadastro {
             14 => 'Reprovado por faltas'
         ];
 
-        $this->campoLista('aprovado', 'Situa&ccedil;ão', $opcoes, $this->aprovado);
+        $this->campoLista('aprovado', 'Situação', $opcoes, $this->aprovado);
         $this->campoTexto('registro', 'Registro (arquivo)', $this->registro, 30, 50, false);
         $this->campoTexto('livro', 'Livro', $this->livro, 30, 50, false);
         $this->campoTexto('folha', 'Folha', $this->folha, 30, 50, false);

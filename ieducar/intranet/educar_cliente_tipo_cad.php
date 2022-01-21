@@ -84,7 +84,7 @@ return new class extends clsCadastro {
 
         // text
         $this->campoTexto('nm_tipo', 'Tipo Cliente', $this->nm_tipo, 30, 255, true);
-        $this->campoMemo('descricao', 'Descri&ccedil;ão', $this->descricao, 60, 5, false);
+        $this->campoMemo('descricao', 'Descrição', $this->descricao, 60, 5, false);
 
         //-----------------------INICIO EXEMPLAR TIPO------------------------//
 
@@ -189,11 +189,11 @@ return new class extends clsCadastro {
 
             //-----------------------FIM EDITA EXEMPLAR TIPO------------------------//
 
-            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_cliente_tipo_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }

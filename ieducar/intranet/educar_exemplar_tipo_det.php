@@ -51,7 +51,7 @@ return new class extends clsDetalhe {
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
         if ($registro['ref_cod_instituicao'] && $nivel_usuario == 1) {
-            $this->addDetalhe([ 'Institui&ccedil;ão', "{$registro['ref_cod_instituicao']}"]);
+            $this->addDetalhe([ 'Instituição', "{$registro['ref_cod_instituicao']}"]);
         }
         if ($registro['ref_cod_escola'] && ($nivel_usuario == 1 || $nivel_usuario == 2)) {
             $this->addDetalhe([ 'Escola', "{$registro['ref_cod_escola']}"]);
@@ -63,7 +63,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Tipo Exemplar', "{$registro['nm_tipo']}"]);
         }
         if ($registro['descricao']) {
-            $this->addDetalhe([ 'Descri&ccedil;ão', "{$registro['descricao']}"]);
+            $this->addDetalhe([ 'Descrição', "{$registro['descricao']}"]);
         }
         $obj_cliente_tp_exemplar_tp = new clsPmieducarClienteTipoExemplarTipo();
         $lst_cliente_tp_exemplar_tp = $obj_cliente_tp_exemplar_tp->lista(null, $this->cod_exemplar_tipo);

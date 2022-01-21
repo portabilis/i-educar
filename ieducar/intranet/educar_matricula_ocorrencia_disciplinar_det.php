@@ -89,7 +89,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Tipo Ocorr&ecirc;ncia', "{$registro['nm_tipo']}"]);
         }
         if ($registro['observacao']) {
-            $this->addDetalhe([ 'Observa&ccedil;ão', nl2br("{$registro['observacao']}")]);
+            $this->addDetalhe([ 'Observação', nl2br("{$registro['observacao']}")]);
         }
 
         $obj_permissoes = new clsPermissoes();

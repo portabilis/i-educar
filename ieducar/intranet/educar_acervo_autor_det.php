@@ -49,7 +49,7 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['ref_cod_instituicao'] && $nivel_usuario == 1) {
-            $this->addDetalhe([ 'Institui&ccedil;ão', "{$registro['ref_cod_instituicao']}"]);
+            $this->addDetalhe([ 'Instituição', "{$registro['ref_cod_instituicao']}"]);
         }
         if ($registro['ref_cod_escola'] && ($nivel_usuario == 1 || $nivel_usuario == 2)) {
             $this->addDetalhe([ 'Escola', "{$registro['ref_cod_escola']}"]);
@@ -61,7 +61,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Autor', "{$registro['nm_autor']}"]);
         }
         if ($registro['descricao']) {
-            $this->addDetalhe([ 'Descri&ccedil;ão', "{$registro['descricao']}"]);
+            $this->addDetalhe([ 'Descrição', "{$registro['descricao']}"]);
         }
 
         $obj_permissoes = new clsPermissoes();

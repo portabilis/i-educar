@@ -65,7 +65,7 @@ return new class extends clsListagem {
                     'Autor',
                     'Biblioteca',
                     'Escola',
-                    'Institui&ccedil;ão',
+                    'Instituição',
                 ]);
             break;
             case 2:

@@ -21,7 +21,7 @@ return new class extends clsCadastro {
     public $ativo;
     public $dias_espera;
 
-    public $dias_da_semana = [ '' => 'Selecione', 1 => 'Domingo', 2 => 'Segunda', 3 => 'Ter&ccedil;a', 4 => 'Quarta', 5 => 'Quinta', 6 => 'Sexta', 7 => 'Sábado' ];
+    public $dias_da_semana = [ '' => 'Selecione', 1 => 'Domingo', 2 => 'Segunda', 3 => 'Terça', 4 => 'Quarta', 5 => 'Quinta', 6 => 'Sexta', 7 => 'Sábado' ];
     public $dia;
     public $biblioteca_dia_semana;
     public $incluir_dia_semana;
@@ -248,7 +248,7 @@ return new class extends clsCadastro {
                             $obj = new clsPmieducarBibliotecaDia($this->cod_biblioteca, $campo[$i]);
                             $cadastrou1  = $obj->cadastra();
                             if (!$cadastrou1) {
-                                $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
+                                $this->mensagem = 'Edição não realizada.<br>';
 
                                 return false;
                             }
@@ -275,16 +275,16 @@ return new class extends clsCadastro {
                         }
                     }
                 }
-                $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
+                $this->mensagem .= 'Edição efetuada com sucesso.<br>';
                 $this->simpleRedirect('educar_biblioteca_dados_lst.php');
                 //-----------------------FIM EDITA FERIADO------------------------//
             }
-            $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
+            $this->mensagem = 'Edição não realizada.<br>';
 
             return false;
         }
         echo '<script> alert(\'É necessário adicionar pelo menos 1 Dia da Semana\') </script>';
-        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }

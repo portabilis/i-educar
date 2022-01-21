@@ -70,7 +70,7 @@ return new class extends clsCadastro {
 
         // text
         $this->campoTexto('nm_funcao', 'Tipo', $this->nm_funcao, 30, 255, true);
-        $this->campoMemo('desc_funcao', 'Descri&ccedil;ão do tipo', $this->desc_funcao, 60, 5, false);
+        $this->campoMemo('desc_funcao', 'Descrição do tipo', $this->desc_funcao, 60, 5, false);
 
         // data
     }
@@ -94,11 +94,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarInfraComodoFuncao($this->cod_infra_comodo_funcao, $this->pessoa_logada, null, $this->nm_funcao, $this->desc_funcao, null, null, 1, $this->ref_cod_escola);
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_infra_comodo_funcao_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }

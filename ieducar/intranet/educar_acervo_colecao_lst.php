@@ -48,7 +48,7 @@ return new class extends clsListagem {
         }
 
         $this->addCabecalhos([
-            'Cole&ccedil;ão',
+            'Coleção',
             'Biblioteca'
         ]);
 
@@ -59,7 +59,7 @@ return new class extends clsListagem {
 
         include('include/pmieducar/educar_campo_lista.php');
         // outros Filtros
-        $this->campoTexto('nm_colecao', 'Cole&ccedil;ão', $this->nm_colecao, 30, 255, false);
+        $this->campoTexto('nm_colecao', 'Coleção', $this->nm_colecao, 30, 255, false);
 
         // Paginador
         $this->limite = 20;

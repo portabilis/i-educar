@@ -63,7 +63,7 @@ return new class extends clsCadastro {
 
         // text
         $this->campoTexto('nm_motivo', 'Motivo Suspensão', $this->nm_motivo, 30, 255, true);
-        $this->campoMemo('descricao', 'Descri&ccedil;ão', $this->descricao, 60, 5, false);
+        $this->campoMemo('descricao', 'Descrição', $this->descricao, 60, 5, false);
     }
 
     public function Novo()
@@ -92,11 +92,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarMotivoSuspensao($this->cod_motivo_suspensao, $this->pessoa_logada, null, $this->nm_motivo, $this->descricao, null, null, 1, $this->ref_cod_biblioteca);
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_motivo_suspensao_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }

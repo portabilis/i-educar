@@ -93,7 +93,7 @@ return new class extends clsCadastro {
                     $opcoes[$linha['cod_instituicao']] = $linha['nm_instituicao'];
                 }
             }
-            $this->campoLista('ref_cod_instituicao', 'Institui&ccedil;ão', $opcoes, $this->ref_cod_instituicao);
+            $this->campoLista('ref_cod_instituicao', 'Instituição', $opcoes, $this->ref_cod_instituicao);
         } else {
             $obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
             $obj_usuario_det = $obj_usuario->detalhe();
@@ -172,7 +172,7 @@ return new class extends clsCadastro {
             $obj = new clsPmieducarSequenciaSerie($this->ref_serie_origem, $this->ref_serie_destino, $this->pessoa_logada, null, null, null, 1);
             $editou = $obj->edita();
             if ($editou) {
-                $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
+                $this->mensagem .= 'Edição efetuada com sucesso.<br>';
 
                 throw new HttpResponseException(
                     new RedirectResponse('educar_sequencia_serie_lst.php')
@@ -196,18 +196,18 @@ return new class extends clsCadastro {
         if (!$existe) {
             $editou = $obj->editar($this->serie_origem_old, $this->serie_destino_old);
             if ($editou) {
-                $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
+                $this->mensagem .= 'Edição efetuada com sucesso.<br>';
 
                 throw new HttpResponseException(
                     new RedirectResponse('educar_sequencia_serie_lst.php')
                 );
             }
-            $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
+            $this->mensagem = 'Edição não realizada.<br>';
 
             return false;
         }
         echo '<script> alert(\'Edição não realizada! \\n Já existe essa sequência.\') </script>';
-        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }
@@ -239,7 +239,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'Sequ&ecirc;ncia Enturma&ccedil;ão';
+        $this->title = 'Sequ&ecirc;ncia Enturmação';
         $this->processoAp = '587';
     }
 };

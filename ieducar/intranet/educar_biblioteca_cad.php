@@ -199,7 +199,7 @@ return new class extends clsCadastro {
                             $obj = new clsPmieducarBibliotecaUsuario($this->cod_biblioteca, $campo[$i]);
                             $cadastrou3  = $obj->cadastra();
                             if (!$cadastrou3) {
-                                $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
+                                $this->mensagem = 'Edição não realizada.<br>';
 
                                 return false;
                             }
@@ -209,11 +209,11 @@ return new class extends clsCadastro {
             }
             //-----------------------FIM EDITA USUARIOS------------------------//
 
-            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_biblioteca_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }

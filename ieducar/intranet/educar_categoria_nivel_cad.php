@@ -90,11 +90,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarCategoriaNivel($this->cod_categoria_nivel, $this->pessoa_logada, $this->pessoa_logada, $this->nm_categoria_nivel, $this->data_cadastro, $this->data_exclusao, $this->ativo);
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_categoria_nivel_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }

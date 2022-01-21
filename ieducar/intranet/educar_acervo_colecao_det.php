@@ -53,7 +53,7 @@ return new class extends clsDetalhe {
 
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe([ 'Institui&ccedil;ão', "{$registro['ref_cod_instituicao']}"]);
+                $this->addDetalhe([ 'Instituição', "{$registro['ref_cod_instituicao']}"]);
             }
         }
 
@@ -68,13 +68,13 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['cod_acervo_colecao']) {
-            $this->addDetalhe([ 'C&oacute;digo Cole&ccedil;ão', "{$registro['cod_acervo_colecao']}"]);
+            $this->addDetalhe([ 'C&oacute;digo Coleção', "{$registro['cod_acervo_colecao']}"]);
         }
         if ($registro['nm_colecao']) {
-            $this->addDetalhe([ 'Cole&ccedil;ão', "{$registro['nm_colecao']}"]);
+            $this->addDetalhe([ 'Coleção', "{$registro['nm_colecao']}"]);
         }
         if ($registro['descricao']) {
-            $this->addDetalhe([ 'Descri&ccedil;ão', "{$registro['descricao']}"]);
+            $this->addDetalhe([ 'Descrição', "{$registro['descricao']}"]);
         }
         $obj_permissoes = new clsPermissoes();
         if ($obj_permissoes->permissao_cadastra(593, $this->pessoa_logada, 11)) {

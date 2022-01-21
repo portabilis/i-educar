@@ -44,14 +44,14 @@ return new class extends clsDetalhe {
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe([ 'Institui&ccedil;ão', "{$registro['ref_cod_instituicao']}"]);
+                $this->addDetalhe([ 'Instituição', "{$registro['ref_cod_instituicao']}"]);
             }
         }
         if ($registro['nm_tipo']) {
             $this->addDetalhe([ 'Motivo Transfer&ecirc;ncia', "{$registro['nm_tipo']}"]);
         }
         if ($registro['desc_tipo']) {
-            $this->addDetalhe([ 'Descri&ccedil;ão', "{$registro['desc_tipo']}"]);
+            $this->addDetalhe([ 'Descrição', "{$registro['desc_tipo']}"]);
         }
 
         if ($obj_permissoes->permissao_cadastra(575, $this->pessoa_logada, 7)) {

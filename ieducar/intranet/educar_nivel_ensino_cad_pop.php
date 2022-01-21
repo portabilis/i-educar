@@ -60,7 +60,7 @@ return new class extends clsCadastro {
         }
         // text
         $this->campoTexto('nm_nivel', 'N&iacute;vel Ensino', $this->nm_nivel, 30, 255, true);
-        $this->campoMemo('descricao', 'Descri&ccedil;ão', $this->descricao, 60, 5, false);
+        $this->campoMemo('descricao', 'Descrição', $this->descricao, 60, 5, false);
     }
 
     public function Novo()

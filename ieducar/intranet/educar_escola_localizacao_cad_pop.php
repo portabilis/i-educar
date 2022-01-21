@@ -43,7 +43,7 @@ return new class extends clsCadastro {
 
         // text
         $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
-        $this->campoTexto('nm_localizacao', 'Localiza&ccedil;ão', $this->nm_localizacao, 30, 255, true);
+        $this->campoTexto('nm_localizacao', 'Localização', $this->nm_localizacao, 30, 255, true);
     }
 
     public function Novo()

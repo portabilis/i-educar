@@ -62,7 +62,7 @@ return new class extends clsCadastro {
         // text
         $this->campoTexto('nm_tipo', 'Nome Coffee Break', $this->nm_tipo, 42, 255, true);
         $this->campoMonetario('custo_unitario', 'Custo Unitário', $this->custo_unitario, 15, 255, true);
-        $this->campoMemo('desc_tipo', 'Descri&ccedil;ão Coffee Break', $this->desc_tipo, 40, 10, false);
+        $this->campoMemo('desc_tipo', 'Descrição Coffee Break', $this->desc_tipo, 40, 10, false);
 
         // data
     }
@@ -92,11 +92,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarCoffebreakTipo($this->cod_coffebreak_tipo, $this->pessoa_logada, null, $this->nm_tipo, $this->desc_tipo, $this->custo_unitario, null, null, 1);
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_coffebreak_tipo_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }

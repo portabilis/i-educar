@@ -35,7 +35,7 @@ return new class extends clsCadastro {
     public $meses_do_ano = [
                              '1' => 'JANEIRO'
                             ,'2' => 'FEVEREIRO'
-                            ,'3' => 'MAR&Ccedil;O'
+                            ,'3' => 'MARçO'
                             ,'4' => 'ABRIL'
                             ,'5' => 'MAIO'
                             ,'6' => 'JUNHO'

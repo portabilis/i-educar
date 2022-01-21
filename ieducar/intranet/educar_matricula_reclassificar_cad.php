@@ -105,8 +105,8 @@ return new class extends clsCadastro {
         $this->campoOculto('serie_matricula', $this->ref_ref_cod_serie);
         $this->campoLista('ref_cod_curso', 'Curso', $cursos, $this->ref_cod_curso, 'getSerie();');
         $this->campoLista('ref_ref_cod_serie', 'Série', ['' => 'Selecione uma série'], '');
-        $this->inputsHelper()->date('data_cancel', ['label' => 'Data da reclassifica&ccedil;ão', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')]);
-        $this->campoMemo('descricao_reclassificacao', 'Descri&ccedil;ão', $this->descricao_reclassificacao, 100, 10, true);
+        $this->inputsHelper()->date('data_cancel', ['label' => 'Data da reclassificação', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')]);
+        $this->campoMemo('descricao_reclassificacao', 'Descrição', $this->descricao_reclassificacao, 100, 10, true);
 
         $this->acao_enviar = 'if(confirm("Deseja reclassificar está matrícula?"))acao();';
     }

@@ -26,7 +26,7 @@ return new class extends clsDetalhe {
         $this->addDetalhe(['Rota', $registro['nome_rota']]);
         $this->addDetalhe(['Destino', (trim($registro['nome_destino'])=='' ? $registro['nome_destino2'] : $registro['nome_destino'])]);
         $this->addDetalhe(['Ponto de embarque', $registro['nome_ponto'] ]);
-        $this->addDetalhe(['Observa&ccedil;ão', $registro['observacao']]);
+        $this->addDetalhe(['Observação', $registro['observacao']]);
 
         $turnos = [
       1 => 'Matutino',

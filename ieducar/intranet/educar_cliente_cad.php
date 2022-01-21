@@ -327,13 +327,13 @@ return new class extends clsCadastro {
                 );
 
                 if ($obj_cliente_tipo->cadastra()) {
-                    $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
+                    $this->mensagem .= 'Edição efetuada com sucesso.<br>';
                     $this->simpleRedirect('educar_cliente_lst.php');
                 }
             }
         }
 
-        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
         die();
     }
 

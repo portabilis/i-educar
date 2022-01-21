@@ -52,8 +52,8 @@ return new class extends clsCadastro {
     public function Gerar()
     {
         $this->campoOculto('id', $this->id);
-        $this->campoTexto('descricao', 'Descri&ccedil;ão', $this->descricao, 30, 255, true);
-        $this->campoMemo('observacoes', 'Observa&ccedil;&otilde;es', $this->observacoes, 60, 5, false);
+        $this->campoTexto('descricao', 'Descrição', $this->descricao, 30, 255, true);
+        $this->campoMemo('observacoes', 'Observaç&otilde;es', $this->observacoes, 60, 5, false);
     }
 
     public function Novo()
@@ -83,11 +83,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarCategoriaObra($this->id, $this->descricao, $this->observacoes);
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_categoria_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }

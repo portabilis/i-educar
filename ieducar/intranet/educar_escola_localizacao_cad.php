@@ -61,7 +61,7 @@ return new class extends clsCadastro {
         include('include/pmieducar/educar_campo_lista.php');
 
         // text
-        $this->campoTexto('nm_localizacao', 'Localiza&ccedil;ão', $this->nm_localizacao, 30, 255, true);
+        $this->campoTexto('nm_localizacao', 'Localização', $this->nm_localizacao, 30, 255, true);
     }
 
     public function Novo()
@@ -89,11 +89,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarEscolaLocalizacao($this->cod_escola_localizacao, $this->pessoa_logada, null, $this->nm_localizacao, null, null, 1, $this->ref_cod_instituicao);
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_escola_localizacao_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }
@@ -117,7 +117,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'Escola Localiza&ccedil;ão';
+        $this->title = 'Escola Localização';
         $this->processoAp = '562';
     }
 };

@@ -131,11 +131,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarPagamentoMulta($this->cod_pagamento_multa, null, $this->ref_cod_cliente, $this->valor_pago, null, $this->ref_cod_biblioteca);
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_pagamento_multa_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }

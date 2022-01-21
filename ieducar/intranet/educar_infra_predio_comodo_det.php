@@ -55,7 +55,7 @@ return new class extends clsDetalhe {
         $obj_permissao = new clsPermissoes();
         $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
         if ($registro['ref_cod_instituicao']) {
-            $this->addDetalhe([ 'Institui&ccedil;ão', "{$registro['ref_cod_instituicao']}"]);
+            $this->addDetalhe([ 'Instituição', "{$registro['ref_cod_instituicao']}"]);
         }
         if ($nm_escola) {
             $this->addDetalhe([ 'Escola', "{$nm_escola}"]);
@@ -73,7 +73,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'área m²', "{$registro['area']}"]);
         }
         if ($registro['desc_comodo']) {
-            $this->addDetalhe([ 'Descri&ccedil;ão do ambiente', "{$registro['desc_comodo']}"]);
+            $this->addDetalhe([ 'Descrição do ambiente', "{$registro['desc_comodo']}"]);
         }
 
         $obj_permissao = new clsPermissoes();

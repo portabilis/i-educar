@@ -136,7 +136,7 @@ return new class extends clsCadastro {
         if (! empty($script)) {
             echo "<script>window.onload=function(){{$script}}</script>";
         }
-        $this->campoCheck('situacao_emprestada', 'Situa&ccedil;ão Emprestada', $this->situacao_emprestada);
+        $this->campoCheck('situacao_emprestada', 'Situação Emprestada', $this->situacao_emprestada);
         $this->acao_enviar = 'valida()';
     }
 
@@ -172,11 +172,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarSituacao($this->cod_situacao, $this->pessoa_logada, null, $this->nm_situacao, $this->permite_emprestimo, $this->descricao, $this->situacao_padrao, $this->situacao_emprestada, null, null, 1, $this->ref_cod_biblioteca);
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_situacao_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }

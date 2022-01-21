@@ -18,7 +18,7 @@ return new class extends clsListagem {
     // Helper para url
         $urlHelper = CoreExt_View_Helper_UrlHelper::getInstance();
 
-        $this->titulo = 'Bloqueio de lan&ccedil;amento de notas e faltas por etapa - Listagem';
+        $this->titulo = 'Bloqueio de lançamento de notas e faltas por etapa - Listagem';
 
         // passa todos os valores obtidos no GET para atributos do objeto
         foreach ($_GET as $var => $val) {
@@ -103,7 +103,7 @@ return new class extends clsListagem {
 
         $this->largura = '100%';
 
-        $this->breadcrumb('Listagem de bloqueio de lan&ccedil;amento de notas e faltas por etapa', [
+        $this->breadcrumb('Listagem de bloqueio de lançamento de notas e faltas por etapa', [
         url('intranet/educar_index.php') => 'Escola',
     ]);
     }

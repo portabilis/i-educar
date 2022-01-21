@@ -58,7 +58,7 @@ return new class extends clsDetalhe {
 
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe(['Institui&ccedil;ão', $registro['ref_cod_instituicao']]);
+                $this->addDetalhe(['Instituição', $registro['ref_cod_instituicao']]);
             }
         }
 
@@ -131,7 +131,7 @@ return new class extends clsDetalhe {
         }
 
         if ($habilitacao) {
-            $this->addDetalhe(['Habilita&ccedil;ão', $tabela]);
+            $this->addDetalhe(['Habilitação', $tabela]);
         }
 
         if ($registro['padrao_ano_escolar']) {

@@ -84,7 +84,7 @@ return new class extends clsCadastro {
 
         // text
         $this->campoTexto('nm_tipo', 'Tipo Exemplar', $this->nm_tipo, 30, 255, true);
-        $this->campoMemo('descricao', 'Descri&ccedil;ão', $this->descricao, 60, 5, false);
+        $this->campoMemo('descricao', 'Descrição', $this->descricao, 60, 5, false);
 
         //-----------------------INICIO CLIENTE TIPO------------------------//
 
@@ -174,7 +174,7 @@ return new class extends clsCadastro {
                     $obj = new clsPmieducarClienteTipoExemplarTipo($cliente_tipo, $this->cod_exemplar_tipo, $dias_emprestimo);
                     $editou2  = $obj->edita();
                     if (!$editou2) {
-                        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
+                        $this->mensagem = 'Edição não realizada.<br>';
 
                         return false;
                     }
@@ -182,11 +182,11 @@ return new class extends clsCadastro {
             }
             //-----------------------FIM EDITA CLIENTE TIPO------------------------//
 
-            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_exemplar_tipo_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }

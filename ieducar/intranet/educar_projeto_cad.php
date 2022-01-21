@@ -58,7 +58,7 @@ return new class extends clsCadastro {
 
         // text
         $this->campoTexto('nome', 'Nome do projeto', $this->nome, 50, 50, true);
-        $this->campoMemo('observacao', 'Observa&ccedil;ão', $this->observacao, 52, 5, false);
+        $this->campoMemo('observacao', 'Observação', $this->observacao, 52, 5, false);
 
         // data
     }
@@ -82,11 +82,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarProjeto($this->cod_projeto, $this->nome, $this->observacao);
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_projeto_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }

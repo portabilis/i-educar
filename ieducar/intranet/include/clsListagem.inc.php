@@ -383,7 +383,7 @@ HTML;
 
         // Lista
         if (empty($this->linhas)) {
-            $retorno .=  "<tr><td class='formlttd' colspan='$ncols' align='center'>Não há informa&ccedil;ão para ser apresentada</td></tr>";
+            $retorno .=  "<tr><td class='formlttd' colspan='$ncols' align='center'>Não há informação para ser apresentada</td></tr>";
         } else {
             reset($this->linhas);
 

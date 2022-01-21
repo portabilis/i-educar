@@ -5,7 +5,7 @@
 class PromocaoController extends Portabilis_Controller_Page_ListController
 {
     protected $_dataMapper = 'Avaliacao_Model_NotaAlunoDataMapper';
-    protected $_titulo     = 'Lan&ccedil;amento por turma';
+    protected $_titulo     = 'Lançamento por turma';
     protected $_processoAp = 644;
     protected $_formMap    = [];
     private $regras_avaliacao_id;

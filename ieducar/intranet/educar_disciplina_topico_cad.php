@@ -52,7 +52,7 @@ return new class extends clsCadastro {
 
         // text
         $this->campoTexto('nm_topico', 'Nome T&oacute;pico', $this->nm_topico, 30, 255, true);
-        $this->campoMemo('desc_topico', 'Descri&ccedil;ão T&oacute;pico', $this->desc_topico, 30, 5, false);
+        $this->campoMemo('desc_topico', 'Descrição T&oacute;pico', $this->desc_topico, 30, 5, false);
 
         // data
     }
@@ -76,11 +76,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarDisciplinaTopico($this->cod_disciplina_topico, $this->pessoa_logada, null, $this->nm_topico, $this->desc_topico, null, null, 1);
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_disciplina_topico_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }

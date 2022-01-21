@@ -7,7 +7,7 @@ return new class extends clsDetalhe {
 
     public function Gerar()
     {
-        $this->titulo = 'Bloqueio de lan&ccedil;amento de notas e faltas por etapa - Detalhe';
+        $this->titulo = 'Bloqueio de lançamento de notas e faltas por etapa - Detalhe';
 
         $this->cod_bloqueio = $_GET['cod_bloqueio'];
 

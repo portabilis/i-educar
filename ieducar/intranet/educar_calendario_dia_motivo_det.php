@@ -43,7 +43,7 @@ return new class extends clsDetalhe {
         $nm_instituicao = $obj_instituicao_det['nm_instituicao'];
 
         if ($nm_instituicao) {
-            $this->addDetalhe([ 'Institui&ccedil;ão', "{$nm_instituicao}" ]);
+            $this->addDetalhe([ 'Instituição', "{$nm_instituicao}" ]);
         }
         if ($registro['ref_cod_escola']) {
             $this->addDetalhe([ 'Escola', "{$registro['ref_cod_escola']}"]);

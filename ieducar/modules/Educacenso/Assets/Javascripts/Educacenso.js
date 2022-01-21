@@ -28,7 +28,7 @@ $j(document).ready(function(){
   					'	<img src="imagens/educacenso/load_modal_educacenso.gif" width="100px" height="100px" alt="">' +
   					'</div>'+
   					'<div style="float:right;width:300px;">'+
-  					'	<p style="margin-left: 20px; margin-top: 30px;font-family: verdana, arial; font-size: 18px;">Analisando as informa&ccedil;&otilde;es</p>' +
+  					'	<p style="margin-left: 20px; margin-top: 30px;font-family: verdana, arial; font-size: 18px;">Analisando as informaç&otilde;es</p>' +
   					'	<p id="registro_load" style="margin-left: 20px; margin-top: 10px;font-family: verdana, arial; font-size: 10px;">Analisando registro 00</p>' +
   					'</div>'+
   					'</div>';
@@ -41,7 +41,7 @@ $j(document).ready(function(){
             ' <p style="margin-left: 20px; margin-top: 30px;font-family: verdana, arial; font-size: 18px;">Aguarde, os dados estão sendo exportados</p>' +
             '</div>'+
             '<div id="modal_mensagem_sucesso" style="width:400px;display:none;">'+
-            ' <p style=" margin-top: 20px;font-family: verdana, arial; font-size: 18px;">Exporta&ccedil;ão realizada com sucesso.</p>' +
+            ' <p style=" margin-top: 20px;font-family: verdana, arial; font-size: 18px;">Exportação realizada com sucesso.</p>' +
             ' <a id="download_file" href="#" style="margin-top: 10px;font-family: verdana, arial;font-size: 14px;">Clique aqui para realizar o download</a>' +
             '</div>'+
              '<div id="modal_mensagem_desabilitado" style="width:400px;display:none; text-align:left">'+

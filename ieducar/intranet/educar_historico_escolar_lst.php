@@ -54,7 +54,7 @@ return new class extends clsListagem {
         $obj_permissao = new clsPermissoes();
         $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
         $lista_busca[] = 'Escola';
-        $lista_busca[] = 'Institui&ccedil;ão';
+        $lista_busca[] = 'Instituição';
         $lista_busca = array_merge($lista_busca, ['Curso', 'Série', 'Registro', 'Livro', 'Folha']);
 
         $this->addCabecalhos($lista_busca);
@@ -201,7 +201,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'Distribui&ccedil;ão de uniforme';
+        $this->title = 'Distribuição de uniforme';
         $this->processoAp = '578';
     }
 };

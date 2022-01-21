@@ -1193,7 +1193,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $zonas = App_Model_ZonaLocalizacao::getInstance();
         $zonas = $zonas->getEnums();
-        $zonas = Portabilis_Array_Utils::insertIn(null, 'Zona localiza&ccedil;ão', $zonas);
+        $zonas = Portabilis_Array_Utils::insertIn(null, 'Zona localização', $zonas);
 
         $options = [
             'label' => '',

@@ -105,7 +105,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
             </tr>
 
             <tr>
-                <td><label for='situacao'>Situa&ccedil;ão *</label></td>
+                <td><label for='situacao'>Situação *</label></td>
                 <td colspan='2'>
                     <select id='situacao' class='obrigatorio disable-on-search'>
                         <option value=''>Selecione</option>
@@ -135,7 +135,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
                             <th>Nome</th>
                             <th>Nota</th>
                             <th>Falta</th>
-                            <th>A&ccedil;ão</th>
+                            <th>Ação</th>
                         </tr>
                         <tr class='disciplina'>
                             <td><input class='nome obrigatorio disable-on-search change-state-with-parent' style='display:none;'></input></td>
@@ -161,7 +161,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
                 <td>
                     <select id='notas' class='obrigatorio disable-on-search disable-and-hide-wen-disciplinas-manual'>
                         <option value=''>Selecione</option>
-                        <option value='buscar-boletim'>Lan&ccedil;adas no boletim</option>
+                        <option value='buscar-boletim'>Lançadas no boletim</option>
                         <option value='AP'>AP</option>
                         <option value='informar-manualmente'>Informar manualmente</option>
                     </select>
@@ -174,7 +174,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
                 <td>
                     <select id='faltas' class='obrigatorio disable-on-search disable-and-hide-wen-disciplinas-manual'>
                         <option value=''>Selecione</option>
-                        <option value='buscar-boletim'>Lan&ccedil;adas no boletim</option>
+                        <option value='buscar-boletim'>Lançadas no boletim</option>
                         <option value='informar-manualmente'>Informar manualmente</option>
                     </select>
                 </td>
@@ -207,7 +207,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
             </tr>
 
             <tr>
-                <td><label for=\'observacao\'>Observa&ccedil;ão</label></td>
+                <td><label for=\'observacao\'>Observação</label></td>
                 <td colspan=\'2\'><textarea id=\'observacao\' name=\'observacao\' cols=\'60\' rows=\'5\'></textarea></td>
             </tr>
 

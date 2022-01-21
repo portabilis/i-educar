@@ -84,11 +84,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarBloqueioAnoLetivo($this->ref_cod_instituicao, $this->ref_ano, dataToBanco($this->data_inicio), dataToBanco($this->data_fim));
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_bloqueio_ano_letivo_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }

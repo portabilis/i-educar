@@ -150,7 +150,7 @@ return new class extends clsCadastro {
                 $opcoes["{$registro['cod_acervo_colecao']}"] = "{$registro['nm_colecao']}";
             }
         }
-        $this->campoLista('ref_cod_acervo_colecao', 'Cole&ccedil;ão', $opcoes, $this->ref_cod_acervo_colecao, '', false, '', '<img id=\'img_colecao\' src=\'imagens/banco_imagens/escreve.gif\' style=\'cursor:hand; cursor:pointer;\' border=\'0\' onclick="showExpansivelImprimir(500, 200,\'educar_acervo_colecao_cad_pop.php\',[], \'Coleção\')" />', false, false);
+        $this->campoLista('ref_cod_acervo_colecao', 'Coleção', $opcoes, $this->ref_cod_acervo_colecao, '', false, '', '<img id=\'img_colecao\' src=\'imagens/banco_imagens/escreve.gif\' style=\'cursor:hand; cursor:pointer;\' border=\'0\' onclick="showExpansivelImprimir(500, 200,\'educar_acervo_colecao_cad_pop.php\',[], \'Coleção\')" />', false, false);
 
         // Idioma
         $opcoes = [ '' => 'Selecione' ];
@@ -251,11 +251,11 @@ return new class extends clsCadastro {
             $this->gravaAutores($this->cod_acervo);
             $this->gravaCategorias($this->cod_acervo);
 
-            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
 
             $this->simpleRedirect('educar_acervo_lst.php');
         }
-        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }

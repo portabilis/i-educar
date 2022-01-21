@@ -1131,7 +1131,7 @@ return new class extends clsCadastro {
 
         if (!$result) {
             $this->mensagem = 'Não foi poss&iacute;vel desativar as ' .
-                'enturma&ccedil;&otilde;es da matr&iacute;cula.';
+                'enturmaç&otilde;es da matr&iacute;cula.';
         }
 
         return $result;

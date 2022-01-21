@@ -211,7 +211,7 @@ return new class extends clsCadastro {
             );
         }
 
-        $this->campoMemo('observacao', 'Observa&ccedil;ão', $this->observacao, 60, 10, false);
+        $this->campoMemo('observacao', 'Observação', $this->observacao, 60, 10, false);
     }
 
     public function existeComponenteSerie()
@@ -354,11 +354,11 @@ SQL;
 
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br />';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br />';
             $this->simpleRedirect('educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
         }
 
-        $this->mensagem = 'Edi&ccedil;ão nÃ£o realizada.<br />';
+        $this->mensagem = 'Edição nÃ£o realizada.<br />';
 
         return false;
     }

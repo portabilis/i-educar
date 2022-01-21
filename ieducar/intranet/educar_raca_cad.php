@@ -59,7 +59,7 @@ return new class extends clsCadastro {
         // primary keys
         $this->campoOculto('cod_raca', $this->cod_raca);
 
-        $this->campoTexto('nm_raca', 'Ra&ccedil;a', $this->nm_raca, 30, 255, true);
+        $this->campoTexto('nm_raca', 'Raça', $this->nm_raca, 30, 255, true);
 
         $resources = [  0 => 'Não declarada',
                                 1 => 'Branca',
@@ -93,11 +93,11 @@ return new class extends clsCadastro {
         $obj->raca_educacenso = $this->raca_educacenso;
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_raca_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }
@@ -119,7 +119,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'Ra&ccedil;a';
+        $this->title = 'Raça';
         $this->processoAp = '678';
     }
 };

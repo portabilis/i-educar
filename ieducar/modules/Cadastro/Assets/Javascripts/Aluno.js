@@ -1903,7 +1903,7 @@ function canShowParentsFields() {
                   </td>
                   <td>
                     <fieldset valign="top">
-                      <legend>Dados do endere&ccedil;o</legend>
+                      <legend>Dados do endereço</legend>
                       <table></table>
                     </fieldset>
                   </td>

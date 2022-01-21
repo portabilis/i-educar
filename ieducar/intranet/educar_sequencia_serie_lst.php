@@ -17,7 +17,7 @@ return new class extends clsListagem {
 
     public function Gerar()
     {
-        $this->titulo = 'Sequ&ecirc;ncia Enturma&ccedil;ão - Listagem';
+        $this->titulo = 'Sequ&ecirc;ncia Enturmação - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null: $val;
@@ -33,7 +33,7 @@ return new class extends clsListagem {
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
-            $lista_busca[] = 'Institui&ccedil;ão';
+            $lista_busca[] = 'Instituição';
         }
         $this->addCabecalhos($lista_busca);
 
@@ -48,7 +48,7 @@ return new class extends clsListagem {
                     $opcoes[$linha['cod_instituicao']] = $linha['nm_instituicao'];
                 }
             }
-            $this->campoLista('ref_cod_instituicao', 'Institui&ccedil;ão', $opcoes, $this->ref_cod_instituicao, '', null, null, null, null, false);
+            $this->campoLista('ref_cod_instituicao', 'Instituição', $opcoes, $this->ref_cod_instituicao, '', null, null, null, null, false);
         } else {
             $obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
             $obj_usuario_det = $obj_usuario->detalhe();

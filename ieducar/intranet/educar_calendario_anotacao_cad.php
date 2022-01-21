@@ -71,7 +71,7 @@ return new class extends clsCadastro {
     public function Gerar()
     {
         // primary keys
-        $this->campoRotulo('info', '-', "Anota&ccedil;&otilde;es Calendário do dia <b>{$this->dia}/{$this->mes}/{$this->ano}</b>");
+        $this->campoRotulo('info', '-', "Anotaç&otilde;es Calendário do dia <b>{$this->dia}/{$this->mes}/{$this->ano}</b>");
         $this->campoOculto('cod_calendario_anotacao', $this->cod_calendario_anotacao);
 
         $this->campoOculto('dia', $this->dia);
@@ -80,8 +80,8 @@ return new class extends clsCadastro {
         $this->campoOculto('ref_ref_cod_calendario_ano_letivo', $this->ref_ref_cod_calendario_ano_letivo);
 
         // text
-        $this->campoTexto('nm_anotacao', 'Anota&ccedil;ão', $this->nm_anotacao, 30, 255, true);
-        $this->campoMemo('descricao', 'Descri&ccedil;ão', $this->descricao, 60, 5, false);
+        $this->campoTexto('nm_anotacao', 'Anotação', $this->nm_anotacao, 30, 255, true);
+        $this->campoMemo('descricao', 'Descrição', $this->descricao, 60, 5, false);
 
         // data
     }
@@ -124,13 +124,13 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarCalendarioAnotacao($this->cod_calendario_anotacao, $this->pessoa_logada, $this->pessoa_logada, $this->nm_anotacao, $this->descricao, $this->data_cadastro, $this->data_exclusao, $this->ativo);
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             throw new HttpResponseException(
                 new RedirectResponse("educar_calendario_anotacao_lst.php?dia={$this->dia}&mes={$this->mes}&ano={$this->ano}&ref_cod_calendario_ano_letivo={$this->ref_cod_calendario_ano_letivo}")
             );
         }
 
-        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }

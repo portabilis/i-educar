@@ -156,12 +156,12 @@ return new class extends clsCadastro {
 
         $obj_suspensao = new clsPmieducarClienteSuspensao($this->sequencial, $this->cod_cliente, null, $this->pessoa_logada, null, null, null, null);
         if ($obj_suspensao->edita()) {
-            $this->mensagem .= 'Libera&ccedil;ão efetuada com sucesso.<br>';
+            $this->mensagem .= 'Liberação efetuada com sucesso.<br>';
             $this->simpleRedirect("educar_cliente_lst.php?cod_cliente={$this->cod_cliente}");
         }
         $obj = new clsPmieducarCliente($this->cod_cliente, $this->pessoa_logada, $this->pessoa_logada, $this->ref_idpes, $this->login, $senha, $this->data_cadastro, $this->data_exclusao, $this->ativo);
         $editou = $obj->edita();
-        $this->mensagem = 'Libera&ccedil;ão não realizada.<br>';
+        $this->mensagem = 'Liberação não realizada.<br>';
 
         return false;
     }

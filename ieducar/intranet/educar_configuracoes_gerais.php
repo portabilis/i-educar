@@ -294,18 +294,18 @@ return new class extends clsCadastro {
             // Reseta o cache de configurações
             Cache::invalidateByTags(['configurations']);
 
-            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('index.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }
 
     public function Formular()
     {
-        $this->title = 'Configura&ccedil;&otilde;es gerais';
+        $this->title = 'Configuraç&otilde;es gerais';
         $this->processoAp = 999873;
     }
 };

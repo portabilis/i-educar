@@ -46,7 +46,7 @@ return new class extends clsDetalhe {
 
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe(['Institui&ccedil;ão',
+                $this->addDetalhe(['Instituição',
           $registro['ref_cod_instituicao']]);
             }
         }

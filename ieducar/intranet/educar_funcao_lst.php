@@ -58,7 +58,7 @@ return new class extends clsListagem {
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
-            $lista_busca[] = 'Institui&ccedil;ão';
+            $lista_busca[] = 'Instituição';
         }
 
         $this->addCabecalhos($lista_busca);
@@ -67,7 +67,7 @@ return new class extends clsListagem {
         include('include/pmieducar/educar_campo_lista.php');
 
         // outros Filtros
-        $this->campoTexto('nm_funcao', 'Nome Fun&ccedil;ão', $this->nm_funcao, 30, 255, false);
+        $this->campoTexto('nm_funcao', 'Nome Função', $this->nm_funcao, 30, 255, false);
         $this->campoTexto('abreviatura', 'Abreviatura', $this->abreviatura, 30, 255, false);
         $opcoes = ['' => 'Selecione',
                         'N' => 'Não',

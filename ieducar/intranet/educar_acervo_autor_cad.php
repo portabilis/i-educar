@@ -80,7 +80,7 @@ return new class extends clsCadastro {
 
         // text
         $this->campoTexto('nm_autor', 'Autor', $this->nm_autor, 30, 255, true);
-        $this->campoMemo('descricao', 'Descri&ccedil;ão', $this->descricao, 60, 5, false);
+        $this->campoMemo('descricao', 'Descrição', $this->descricao, 60, 5, false);
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
     }
@@ -113,12 +113,12 @@ return new class extends clsCadastro {
         $editou = $obj->edita();
         if ($editou) {
             $obj->cod_acervo_autor = $this->cod_acervo_autor;
-            $this->mensagem .= 'Edi&ccedil;ão efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
 
             $this->simpleRedirect('educar_acervo_autor_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;ão não realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }

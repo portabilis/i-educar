@@ -64,8 +64,8 @@ return new class extends clsCadastro {
             $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
         }
         // text
-        $this->campoTexto('nm_tipo', 'Habilita&ccedil;ão', $this->nm_tipo, 30, 255, true);
-        $this->campoMemo('descricao', 'Descri&ccedil;ão', $this->descricao, 60, 5, false);
+        $this->campoTexto('nm_tipo', 'Habilitação', $this->nm_tipo, 30, 255, true);
+        $this->campoMemo('descricao', 'Descrição', $this->descricao, 60, 5, false);
     }
 
     public function Novo()
@@ -110,7 +110,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'Habilita&ccedil;ão';
+        $this->title = 'Habilitação';
         $this->processoAp = '573';
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;

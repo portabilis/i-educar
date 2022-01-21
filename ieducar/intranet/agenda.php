@@ -113,8 +113,8 @@ return new class extends clsCadastro {
         <div id="DOM_expansivel" class="DOM_expansivel"></div>
         <table border="0" cellpadding="0" cellspacing="3" width="100%">';
 
-        $mesesArr = [ '', 'Janeiro', 'Fevereiro', 'Mar&ccedil;o', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro' ];
-        $diasArr = [ 'Domingo', 'Segunda Feira', 'Ter&ccedil;a Feira', 'Quarta Feira', 'Quinta Feira', 'Sexta Feira', 'Sábado' ];
+        $mesesArr = [ '', 'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro' ];
+        $diasArr = [ 'Domingo', 'Segunda Feira', 'Terça Feira', 'Quarta Feira', 'Quinta Feira', 'Sexta Feira', 'Sábado' ];
 
         $this->arr_data_atual = [ date('d', $this->time_atual), date('n', $this->time_atual), date('Y', $this->time_atual), date('w', $this->time_atual) ];
         $amanhaArr = [ date('d', $this->time_amanha), date('n', $this->time_amanha), date('Y', $this->time_amanha), date('w', $this->time_amanha) ];
@@ -356,7 +356,7 @@ return new class extends clsCadastro {
                     if ($data_fim) {
                         $data_fim = date('d/m/Y H:i', strtotime($data_fim));
                     } else {
-                        $data_fim = 'Este compromisso era uma Anota&ccedil;ão';
+                        $data_fim = 'Este compromisso era uma Anotação';
                     }
 
                     $conteudo .= "<tr><td>Versão:</td><td>{$versao}</td></tr>\n";
@@ -416,7 +416,7 @@ return new class extends clsCadastro {
         $conteudo .= '</td>
             </tr>
             <tr>
-                <td align="center" class="escuro"><span class="titulo">Anota&ccedil;&otilde;es</span></td>
+                <td align="center" class="escuro"><span class="titulo">Anotaç&otilde;es</span></td>
             </tr>
             <tr>
                 <td class="escuro" valign="top">

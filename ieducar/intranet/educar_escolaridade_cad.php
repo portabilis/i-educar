@@ -75,7 +75,7 @@ return new class extends clsCadastro {
         $this->campoOculto('idesco', $this->idesco);
 
         // Outros campos
-        $this->campoTexto('descricao', 'Descri&ccedil;ão', $this->descricao, 30, 255, true);
+        $this->campoTexto('descricao', 'Descrição', $this->descricao, 30, 255, true);
 
         $options = ['label' => 'Escolaridade educacenso', 'resources' => SelectOptions::escolaridades(), 'value' => $this->escolaridade];
         $this->inputsHelper()->select('escolaridade', $options);
