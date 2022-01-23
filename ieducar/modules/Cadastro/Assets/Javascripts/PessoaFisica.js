@@ -5,20 +5,46 @@ function hrefToCreateParent(parentType) {
 }
 
 function hrefToEditParent(parentType) {
-  var id = $j(buildId(parentType + '_id')).val();
+  let id = $j(buildId(parentType + '_id')).val();
   return hrefToCreateParent(parentType) + '&cod_pessoa_fj=' + id;
 }
 
-var pessoaId      = $j('#cod_pessoa_fj').val();
-var $form         = $j('#formcadastro');
-var $submitButton = $j('#btn_enviar');
-var $cpfField     = $j('#id_federal');
-var $cpfNotice    = $j('<span>').html('')
-                                .addClass('error resource-notice')
-                                .hide()
-                                .width($j('#nm_pessoa').outerWidth() - 12)
-                                .appendTo($cpfField.parent());
+let pessoaId      = $j('#cod_pessoa_fj').val();
+let $form         = $j('#formcadastro');
+let $submitButton = $j('#btn_enviar');
+let $cpfField     = $j('#id_federal');
+let campoCadeiraSUS = $j('#sus');
 let obrigarCamposCenso = $j('#obrigar_campos_censo');
+let $cpfNotice  = $j('<span>')
+  .html('')
+  .addClass('error resource-notice')
+  .hide()
+  .width($j('#nm_pessoa').outerWidth() - 12)
+  .appendTo($cpfField.parent());
+
+let campoCadeiraSUSNotice = $j('<span>')
+  .html('')
+  .addClass('error resource-notice')
+  .hide()
+  .width($j('#tipo_certidao_civil').outerWidth() - 12)
+  .appendTo(campoCadeiraSUS.parent());
+
+function validateFieldSUS() {
+  let sus = campoCadeiraSUS.val()
+  campoCadeiraSUSNotice.hide();
+
+  $j(document).data('submit_form_after_ajax_validation', true);
+
+  if (sus && ! $j.isNumeric(sus)) {
+    campoCadeiraSUSNotice.html(stringUtils.toUtf8('O Número da carteira do SUS informado é inválido')).slideDown('fast');
+    $j(document).removeData('submit_form_after_ajax_validation');
+    $j('#sus').focus();
+    return false;
+  }
+  campoCadeiraSUSNotice.hide();
+
+  return true;
+}
 
 var handleGetPersonByCpf = function(dataResponse) {
   handleMessages(dataResponse.msgs);
@@ -160,6 +186,10 @@ var submitForm = function(event) {
     }
   }
 
+  if (!validateFieldSUS()) {
+    return;
+  }
+
   var tipoCertidaoNascimento = ($j('#tipo_certidao_civil').val() == 'certidao_nascimento_novo_formato');
   var tipoCertidaoCasamento = ($j('#tipo_certidao_civil').val() == 'certidao_casamento_novo_formato');
 
@@ -167,6 +197,10 @@ var submitForm = function(event) {
       return certidaoNascimentoInvalida();
   } else if (tipoCertidaoCasamento && $j('#certidao_casamento').val().length < 32) {
       return certidaoCasamentoInvalida();
+  }
+
+  if (campoCadeiraSUS.val()) {
+    validateFieldSUS();
   }
 
   if ($cpfField.val()) {
@@ -250,6 +284,9 @@ $j(document).ready(function() {
 
   $j('#rg').on('change', verificaObrigatoriedadeRg);
 
+  campoCadeiraSUS.focusout(function() {
+    validateFieldSUS();
+  });
 }); // ready
 
 // children callbacks
