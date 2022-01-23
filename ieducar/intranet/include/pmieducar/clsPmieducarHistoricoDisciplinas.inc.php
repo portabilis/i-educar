@@ -36,8 +36,6 @@ class clsPmieducarHistoricoDisciplinas extends Model
         $dependencia = false,
         $tipo_base = ComponenteCurricular_Model_TipoBase::DEFAULT
     ) {
-        $db = new clsBanco();
-
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}historico_disciplinas";
         $this->_campos_lista = $this->_todos_campos = implode(', ', [
@@ -79,7 +77,7 @@ class clsPmieducarHistoricoDisciplinas extends Model
         }
 
         if (is_numeric($carga_horaria_disciplina)) {
-            $this->carga_horaria_disciplina = $carga_horaria_disciplina;
+            $this->carga_horaria_disciplina = (int)$carga_horaria_disciplina;
         }
 
         if (is_bool($dependencia)) {

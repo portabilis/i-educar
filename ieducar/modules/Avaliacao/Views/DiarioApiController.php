@@ -922,6 +922,8 @@ class DiarioApiController extends ApiCoreController
                     $matricula['componentes_curriculares'] = $this->loadComponentesCurricularesForMatricula($matriculaId, $turmaId, $serieId);
                 }
 
+                $matricula['bloquear_troca_de_situacao'] = $registration->isLockedToChangeStatus();
+                $matricula['situacao'] = $registration->aprovado;
                 $matricula['matricula_id'] = $registration->getKey();
                 $matricula['aluno_id'] = $student->getKey();
                 $matricula['nome'] = $person->name;
@@ -1776,17 +1778,48 @@ class DiarioApiController extends ApiCoreController
 
     public function postSituacao()
     {
-        if ($this->canPostSituacaoAndNota()) {
-            $novaSituacao = $this->getRequest()->att_value;
-            $matriculaId = $this->getRequest()->matricula_id;
-
-            $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
-
-            $this->serviceBoletim()->alterarSituacao($novaSituacao, $matriculaId);
-            $this->messenger->append('Situação da matrícula ' . $this->getRequest()->matricula_id . ' alterada com sucesso.', 'success');
-        } else {
+        if (! $this->canPostSituacaoAndNota()) {
             $this->messenger->append('Usuário não possui permissão para alterar a situação da matrícula.', 'error');
         }
+
+        $newStatus = $this->getRequest()->new_status;
+        $matriculaId = $this->getRequest()->matricula_id;
+
+        $legacyRegistration = LegacyRegistration::query()->find($matriculaId);
+        if ($legacyRegistration instanceof LegacyRegistration && $legacyRegistration->isLockedToChangeStatus() === true) {
+            $this->messenger->append('Situação da matrícula ' . $matriculaId . ' não pode ser alterada pois esta bloqueada para mudança de situação');
+            return;
+        }
+
+        $this->serviceBoletim()->alterarSituacao($newStatus, $matriculaId);
+        $this->appendResponse('matricula_id', $matriculaId);
+        $this->messenger->append('Situação da matrícula ' . $matriculaId . ' alterada com sucesso.', 'success');
+    }
+
+    public function changeRegistrationLockStatus()
+    {
+        if (! $this->canPostSituacaoAndNota()) {
+            $this->messenger->append('Usuário não possui permissão para alterar a situação do bloqueio de status da matrícula.', 'error');
+            return;
+        }
+
+        $isBlock = $this->getRequest()->bloquear_troca_de_situacao === 'true';
+        $matriculaId = $this->getRequest()->matricula_id;
+
+        /** @var LegacyRegistration $legacyRegistration */
+        $legacyRegistration = LegacyRegistration::query()->find($matriculaId);
+        if ($legacyRegistration === null) {
+            return;
+        }
+
+        $legacyRegistration->bloquear_troca_de_situacao = $isBlock;
+        $legacyRegistration->save();
+
+        $this->appendResponse('matricula_id', $matriculaId);
+        $this->appendResponse('bloquear_troca_de_situacao', $isBlock);
+
+        $status = $isBlock ? 'ativado' : 'desativado';
+        $this->messenger->append('Bloqueio de troca de situação ' . $status, 'success');
     }
 
     public function canPostSituacaoAndNota()
@@ -1823,6 +1856,8 @@ class DiarioApiController extends ApiCoreController
             $this->deleteMedia();
         } elseif ($this->isRequestFor('post', 'situacao')) {
             $this->postSituacao();
+        } elseif ($this->isRequestFor('post', 'bloqueia_troca_de_situacao')) {
+            $this->changeRegistrationLockStatus();
         } elseif ($this->isRequestFor('delete', 'nota') || $this->isRequestFor('delete', 'nota_exame')) {
             $this->deleteNota();
         } elseif ($this->isRequestFor('delete', 'nota_recuperacao_paralela')) {
