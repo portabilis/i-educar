@@ -147,7 +147,7 @@ return new class extends clsCadastro {
             $this->simpleRedirect('educar_bloqueio_lancamento_faltas_notas_lst.php');
         }
 
-        $this->mensagem = 'Edição nÃ£o realizada.<br />';
+        $this->mensagem = 'Edição não realizada.<br />';
 
         return false;
     }
@@ -166,7 +166,7 @@ return new class extends clsCadastro {
             $this->simpleRedirect('educar_bloqueio_lancamento_faltas_notas_lst.php');
         }
 
-        $this->mensagem = 'Exclusão nÃ£o realizada.<br />';
+        $this->mensagem = 'Exclusão não realizada.<br />';
 
         return false;
     }

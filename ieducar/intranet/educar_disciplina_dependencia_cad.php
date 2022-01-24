@@ -298,7 +298,7 @@ SQL;
         $db = new clsBanco();
         $max_cod_disciplina_dependencia = $db->CampoUnico($sql);
 
-        // Caso nÃ£o exista nenhuma dispensa, atribui o cÃ³digo 1, tabela nÃ£o utiliza sequences
+        // Caso não exista nenhuma dispensa, atribui o cÃ³digo 1, tabela não utiliza sequences
         $max_cod_disciplina_dependencia = $max_cod_disciplina_dependencia > 0 ? $max_cod_disciplina_dependencia : 1;
 
         $obj = new clsPmieducarDisciplinaDependencia(
@@ -358,7 +358,7 @@ SQL;
             $this->simpleRedirect('educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
         }
 
-        $this->mensagem = 'Edição nÃ£o realizada.<br />';
+        $this->mensagem = 'Edição não realizada.<br />';
 
         return false;
     }
@@ -388,7 +388,7 @@ SQL;
             $this->simpleRedirect('educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
         }
 
-        $this->mensagem = 'Exclusão nÃ£o realizada.<br />';
+        $this->mensagem = 'Exclusão não realizada.<br />';
 
         return false;
     }
