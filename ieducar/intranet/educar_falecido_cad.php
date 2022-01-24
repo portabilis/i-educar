@@ -90,7 +90,7 @@ return new class extends clsCadastro {
                     $enturmacao = new clsPmieducarMatriculaTurma($this->ref_cod_matricula, $enturmacao['ref_cod_turma'], $this->pessoa_logada, null, null, null, 0, null, $enturmacao['sequencial']);
 
                     if (! $enturmacao->edita()) {
-                        $this->mensagem = 'Não foi poss&iacute;vel desativar as enturmaç&otilde;es da matr&iacute;cula.';
+                        $this->mensagem = 'Não foi poss&iacute;vel desativar as enturmações da matr&iacute;cula.';
 
                         return false;
                     } else {

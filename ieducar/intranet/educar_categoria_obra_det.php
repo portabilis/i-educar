@@ -30,7 +30,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe(['Descrição', "{$registro['descricao']}"]);
         }
         if ($registro['observacoes']) {
-            $this->addDetalhe(['Observaç&otilde;es', "{$registro['observacoes']}"]);
+            $this->addDetalhe(['Observações', "{$registro['observacoes']}"]);
         }
 
         $obj_permissoes = new clsPermissoes();

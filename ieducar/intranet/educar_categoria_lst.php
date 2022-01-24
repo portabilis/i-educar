@@ -45,7 +45,7 @@ return new class extends clsListagem {
         // outros Filtros
         $this->campoTexto('descricao', 'Descrição', $this->descricao, 49, 255, false);
 
-        $this->addCabecalhos(['Descrição', 'Observaç&otilde;es']);
+        $this->addCabecalhos(['Descrição', 'Observações']);
 
         // Paginador
         $this->limite = 20;

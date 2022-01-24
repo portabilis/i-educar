@@ -84,7 +84,7 @@ function text2form( compId )
 		conteudo += 'P&uacute;blico:<input type="checkbox" name="agenda_rap_publico" id="agenda_rap_publico" ' + chck1 + '>';
 	}
 	conteudo += '<br>';
-	conteudo += '<input type="button" name="agenda_salvar" class="agenda_rap_botao" id="agenda_salvar" value="Salvar Alteraç&otilde;es" onclick="agenda_salva();"> <input type="button" name="agenda_cancelar" class="agenda_rap_botao" id="agenda_cancelar" value="Cancelar Alteraç&otilde;es" onclick="form2text( ' + compId + ' );">';
+	conteudo += '<input type="button" name="agenda_salvar" class="agenda_rap_botao" id="agenda_salvar" value="Salvar Alterações" onclick="agenda_salva();"> <input type="button" name="agenda_cancelar" class="agenda_rap_botao" id="agenda_cancelar" value="Cancelar Alterações" onclick="form2text( ' + compId + ' );">';
 
 	divConteudo.innerHTML = conteudo;
 	oldBotoes = divBotoes.innerHTML;

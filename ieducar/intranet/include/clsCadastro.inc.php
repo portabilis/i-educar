@@ -114,7 +114,7 @@ class clsCadastro extends clsCampos
             } elseif ($this->tipoacao == 'Enturmar') {
                 $this->sucesso = $this->Enturmar();
                 if (!$this->sucesso && empty($this->erros) && empty($this->_mensagem)) {
-                    $this->_mensagem = 'Não foi poss&iacute;vel copiar as entrumaç&otilde;es. [CAD05]';
+                    $this->_mensagem = 'Não foi poss&iacute;vel copiar as entrumações. [CAD05]';
                 }
             }
 

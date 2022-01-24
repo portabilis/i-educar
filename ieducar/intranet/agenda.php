@@ -416,7 +416,7 @@ return new class extends clsCadastro {
         $conteudo .= '</td>
             </tr>
             <tr>
-                <td align="center" class="escuro"><span class="titulo">Anotaç&otilde;es</span></td>
+                <td align="center" class="escuro"><span class="titulo">Anotações</span></td>
             </tr>
             <tr>
                 <td class="escuro" valign="top">

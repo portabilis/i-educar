@@ -53,7 +53,7 @@ return new class extends clsCadastro {
     {
         $this->campoOculto('id', $this->id);
         $this->campoTexto('descricao', 'Descrição', $this->descricao, 30, 255, true);
-        $this->campoMemo('observacoes', 'Observaç&otilde;es', $this->observacoes, 60, 5, false);
+        $this->campoMemo('observacoes', 'Observações', $this->observacoes, 60, 5, false);
     }
 
     public function Novo()

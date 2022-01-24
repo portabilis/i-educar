@@ -61,7 +61,7 @@ return new class extends clsListagem {
                     new RedirectResponse('educar_calendario_ano_letivo_lst.php')
                 );
             }
-            $this->titulo = "Anotaç&otilde;oes Calendário <b>{$this->dia}/{$this->mes}/{$this->ano}</b> - Listagem";
+            $this->titulo = "Anotaçõoes Calendário <b>{$this->dia}/{$this->mes}/{$this->ano}</b> - Listagem";
 
             Session::put([
                 'calendario.anotacao.dia' => $this->dia,

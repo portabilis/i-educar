@@ -28,7 +28,7 @@ $j(document).ready(function(){
   					'	<img src="imagens/educacenso/load_modal_educacenso.gif" width="100px" height="100px" alt="">' +
   					'</div>'+
   					'<div style="float:right;width:300px;">'+
-  					'	<p style="margin-left: 20px; margin-top: 30px;font-family: verdana, arial; font-size: 18px;">Analisando as informaç&otilde;es</p>' +
+  					'	<p style="margin-left: 20px; margin-top: 30px;font-family: verdana, arial; font-size: 18px;">Analisando as informações</p>' +
   					'	<p id="registro_load" style="margin-left: 20px; margin-top: 10px;font-family: verdana, arial; font-size: 10px;">Analisando registro 00</p>' +
   					'</div>'+
   					'</div>';
