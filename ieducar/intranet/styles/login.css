@@ -1,8 +1,6 @@
 body {
-  background-image:url(../imagens/login/pcinza.png);
+  /* background-color: #F1F1F1; */
   /* remover attach e size para imagens textures*/
-  background-attachment:fixed;
-  background-size: 100%;
   font-family: "Open Sans", sans-serif;
   color: #646b71;
   font-size: 14px;
@@ -39,20 +37,14 @@ a {
 }
 
 #login-form {
-  width: 25%;
-  border-radius: 15px;
-  box-shadow:0 0.1rem 0.1rem rgb(0 0 0 / 35%);
+  width: 75%;
+  height: 60%;
   background-color: #ffffff;
   margin: 0 auto;
   padding: 50px;
   box-sizing: border-box;
   text-align: left;
-  transition: .2s;
-  /*border: solid 1px #dddddd; */
 }
-
-#login-form:hover {
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); }
 
 #login-form form {
   margin-top: 25px;
@@ -116,8 +108,7 @@ button.submit:disabled {
   float: right;
 }
 
-.error,
-.success {
+.error, .success {
   width: 460px;
   border-radius: 3px;
   margin: 0 auto 20px;

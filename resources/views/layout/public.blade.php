@@ -6,6 +6,7 @@
 
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans">
     <link rel="stylesheet" type="text/css" href="{{ url('intranet/styles/login.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url('intranet/styles/login-custom.css') }}">
 
     <!-- Google Tag Manager -->
     <script>
@@ -44,34 +45,38 @@
     <iframe src="https://www.googletagmanager.com/ns.html?id={{ config('legacy.gtm') }}" height="0" width="0" style="display:none;visibility:hidden"></iframe>
 </noscript>
 <!-- End Google Tag Manager (noscript) -->
-
 <div id="main">
 
-    <div>
-        <img alt="Logo" width="150px" src="{{ config('legacy.config.ieducar_image') ?? url('intranet/imagens/brasao-republica.png') }}"/>
+    <div class="lateralLogin">
+
+        <h1>{{ config('legacy.config.ieducar_entity_name') }}</h1>
+
+        @if (session('status'))
+            <p class="success">{{ session('status') }}</p>
+        @endif
+
+        @if($errors->count())
+            <p class="error">{{ $errors->first() }}</p>
+        @endif
+
+        <div id="login-form">
+            @yield('content')
+        </div>
+        <div id="footer" class="link">
+            <div class="divLogo"></div>
+           <!-- 
+            <p>Mantido por <a href="https://tecsisdoc.com.br/" target="_blank">Tecsis</a>.
+                <?php /* {!! config('legacy.config.ieducar_login_footer') !!} */?>
+            </p> -->
+        </div>
     </div>
-
-    <h1>{{ config('legacy.config.ieducar_entity_name') }}</h1>
-
-    @if (session('status'))
-        <p class="success">{{ session('status') }}</p>
-    @endif
-
-    @if($errors->count())
-        <p class="error">{{ $errors->first() }}</p>
-    @endif
-
-    <div id="login-form" class="box shadow">
-        @yield('content')
+    
+    <div class="imgBorda"></div>
+    <div class="lateral_2">
+        <img alt="Logo" height="100px" src="{{ config('legacy.config.ieducar_image') ?? url('intranet/imagens/tecsis_png.png') }}"/>
     </div>
 
 </div>
-
-<div id="footer">
-    <p>
-        {!! config('legacy.config.ieducar_login_footer') !!}
-    </p>
-
     <div class="footer-social">
 
         {!! config('legacy.config.ieducar_external_footer') !!}

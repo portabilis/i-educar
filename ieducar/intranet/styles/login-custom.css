@@ -1,0 +1,190 @@
+body {
+  background-image: url(../imagens/login/bg_art_3.png); 
+  overflow: hidden;
+  background-size: 100% auto;
+ 
+}
+
+:root {
+    --azul-claro: #2cc3ff;
+    --azul-padrao: #0074ff;
+    --azul-escuro: #15539c;
+    --azul-escuro-pastel: #3a5575;
+    --verde-receita: #2bd142;
+    --laranja-despesa: #f26522;
+    --roxo-meta: #a864a8;
+    --vermelho: #e94a50;
+}
+
+.lateralLogin {
+    width: 400px;
+    position: absolute;
+    left: -50px;
+    bottom: 0;
+    top: 0;
+    min-height: 600px;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation-name: showLogin;
+    animation-fill-mode: forwards;
+    animation-duration: 1s;
+    animation-iteration-count: 1;
+    animation-delay: 0s;
+}
+.fundoLogin {
+  right: 550px;
+  bottom: 0;
+  top: 0;
+  min-height: 600px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation-name: showFundo;
+  animation-fill-mode: forwards;
+  animation-duration: 1s;
+  animation-iteration-count: 1;
+  animation-delay: 0s;
+}
+
+.lateralLogin .bgLogin {
+    overflow: hidden;
+    padding: 45px;
+    background: #fff;
+    width: 100%;
+    margin-top: -30px;
+}
+
+    .lateralLogin .divLogo {
+      /* Só é utilizado no Login, e é retirado quando é WL */
+        height: 200px;
+        background-image: url(../imagens/login/svg/TecSis-animation_02.svg);
+        background-repeat: no-repeat;
+        background-position: bottom right;
+        margin-right: 15%;
+    }
+
+    .lateralLogin .link {
+        color: #666;
+        font-size: 14px;
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+
+    .lateralLogin svg {
+        width: 20px;
+        margin-right: 10px;
+    }
+
+.imgBorda {
+    position: absolute;
+    width: 280px;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    background: linear-gradient(to bottom right, rgba(243, 46, 33, 1) 0%, rgba(243, 135, 42, 1) 100%);
+    background-image: url(../imagens/login/svg/TecSis_borda.svg);
+    background-repeat: repeat-y;
+    background-size: auto;
+    animation-name: showBorda;
+    animation-fill-mode: forwards;
+    animation-duration: 1s;
+    animation-iteration-count: 1;
+    animation-delay: 0s;
+}
+
+@keyframes showLogin {
+  from {
+      left: -50px;
+      opacity: 0;
+  }
+
+  to {
+      left: 0;
+      opacity: 1;
+  }
+}
+
+@keyframes showFundo {
+from {
+    right: 550px;
+    opacity: 0;
+}
+
+to {
+    right: 0;
+    opacity: 1;
+}
+}
+
+@keyframes showBorda {
+from {
+    left: 230px;
+    opacity: 0;
+}
+
+to {
+    left: 280px;
+    opacity: 1;
+}
+}
+
+@media only screen and (max-width: 1023px) {
+    .lateralLogin {
+        min-height: unset;
+        width: 100%;
+        position: relative;
+        animation-name: unset;
+        left: 0;
+    }
+
+        .lateralLogin .bgLogin {
+            margin-top: unset;
+            padding-left: 9vw;
+            padding-right: 9vw;
+        }
+
+            .lateralLogin .bgLogin * {
+                text-align: center;
+            }
+
+            .lateralLogin .bgLogin .logo {
+                margin-left: 12.5%;
+            }
+
+    .bgNaoTenhoCadastro {
+        position: unset;
+        width: 100%;
+        padding-left: 9vw;
+        padding-right: 9vw;
+        animation-name: unset;
+        opacity: 1;
+    }
+
+        .bgNaoTenhoCadastro * {
+            text-align: center;
+        }
+
+    .lateralLogin .bgLogin .btPadrao {
+        font-size: 13px !important;
+        height: 45px;
+    }
+
+    .shadow {
+      border-radius: 15px;
+      box-shadow:0 0.1rem 0.1rem rgb(0 0 0 / 50%);
+      transition: .2s;
+    }
+
+    .shadow:hover {
+      box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 25%); }
+
+    .imgFundo {
+        display: none;
+    }
+}
+
+
+
