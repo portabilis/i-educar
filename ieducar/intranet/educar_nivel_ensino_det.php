@@ -20,7 +20,7 @@ return new class extends clsDetalhe {
 
     public function Gerar()
     {
-        $this->titulo = 'N&iacute;vel Ensino - Detalhe';
+        $this->titulo = 'Nível Ensino - Detalhe';
 
         $this->cod_nivel_ensino=$_GET['cod_nivel_ensino'];
 
@@ -43,7 +43,7 @@ return new class extends clsDetalhe {
             }
         }
         if ($registro['nm_nivel']) {
-            $this->addDetalhe([ 'N&iacute;vel Ensino', "{$registro['nm_nivel']}"]);
+            $this->addDetalhe([ 'Nível Ensino', "{$registro['nm_nivel']}"]);
         }
         if ($registro['descricao']) {
             $this->addDetalhe([ 'Descrição', "{$registro['descricao']}"]);

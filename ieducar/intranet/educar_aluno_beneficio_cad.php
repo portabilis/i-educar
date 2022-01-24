@@ -62,8 +62,8 @@ return new class extends clsCadastro {
         // foreign keys
 
         // text
-        $this->campoTexto('nm_beneficio', 'Benef&iacute;cio', $this->nm_beneficio, 30, 255, true);
-        $this->campoMemo('desc_beneficio', 'Descrição Benef&iacute;cio', $this->desc_beneficio, 60, 5, false);
+        $this->campoTexto('nm_beneficio', 'Benefício', $this->nm_beneficio, 30, 255, true);
+        $this->campoMemo('desc_beneficio', 'Descrição Benefício', $this->desc_beneficio, 60, 5, false);
 
         // data
     }
@@ -113,7 +113,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'Benef&iacute;cio Aluno';
+        $this->title = 'Benefício Aluno';
         $this->processoAp = '581';
     }
 };

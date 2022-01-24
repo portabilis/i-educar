@@ -57,7 +57,7 @@ return new class extends clsDetalhe {
         $registro['nm_tipo'] = $det_ref_cod_tipo_ocorrencia_disciplinar['nm_tipo'];
 
         if ($registro['ref_cod_matricula']) {
-            $this->addDetalhe([ 'Matr&iacute;cula', "{$registro['ref_cod_matricula']}"]);
+            $this->addDetalhe([ 'Matrícula', "{$registro['ref_cod_matricula']}"]);
         }
 
         $obj_ref_cod_matricula = new clsPmieducarMatricula();

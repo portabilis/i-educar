@@ -87,9 +87,9 @@ return new class extends clsCadastro {
         $this->campoRotulo('nm_categoria', 'Categoria', $this->nm_categoria);
         $this->campoRotulo('nm_nivel', 'Nível', $this->nm_nivel);
 
-        $this->campoTabelaInicio('tab01', 'Subn&iacute;veis', ['Nome Subn&iacute;vel','Salário','Ordem'], $this->cod_nivel);
+        $this->campoTabelaInicio('tab01', 'Subníveis', ['Nome Subnível','Salário','Ordem'], $this->cod_nivel);
 
-        $this->campoTexto('nm_nivel', 'Nome Subn&iacute;vel', '', 30, 100, true);
+        $this->campoTexto('nm_nivel', 'Nome Subnível', '', 30, 100, true);
         $this->campoMonetario('salario_base', 'Salario Base', $this->salario_base, 10, 8, true);
         $this->campoNumero('nr_nivel', 'Ordem', '1', 5, 5, false, false, false, false, false, false, true);
         $this->campoOculto('cod_nivel', '');

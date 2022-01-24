@@ -46,8 +46,8 @@ return new class extends clsDetalhe {
 
             $class2 = $class2 == 'formlttd' ? 'formmdtd' : 'formlttd' ;
             $tab_niveis .= ' <tr>
-                                <td bgcolor=\'#ccdce6\' align=\'center\'>N&iacute;veis</td>
-                                <td bgcolor=\'#ccdce6\' align=\'center\'>Subn&iacute;veis</td>
+                                <td bgcolor=\'#ccdce6\' align=\'center\'>Níveis</td>
+                                <td bgcolor=\'#ccdce6\' align=\'center\'>Subníveis</td>
                             </tr>';
             foreach ($lst_nivel as $nivel) {
                 $tab_niveis .= " <tr class='$class2' align='center'>
@@ -59,7 +59,7 @@ return new class extends clsDetalhe {
             }
             $tab_niveis .=  '</table>';
 
-            $this->addDetalhe(['N&iacute;veis', "$tab_niveis"]);
+            $this->addDetalhe(['Níveis', "$tab_niveis"]);
         }
 
         $obj_permissoes = new clsPermissoes();

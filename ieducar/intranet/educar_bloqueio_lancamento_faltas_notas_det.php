@@ -46,7 +46,7 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['data_inicio']) {
-            $this->addDetalhe(['Data in&iacute;cio', dataToBrasil($registro['data_inicio'])]);
+            $this->addDetalhe(['Data início', dataToBrasil($registro['data_inicio'])]);
         }
 
         if ($registro['data_fim']) {

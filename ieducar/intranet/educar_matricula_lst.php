@@ -56,7 +56,7 @@ return new class extends clsListagem {
 
     public function Gerar()
     {
-        $this->titulo = 'Matr&iacute;cula - Listagem';
+        $this->titulo = 'Matrícula - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null : $val;
@@ -231,7 +231,7 @@ return new class extends clsListagem {
 
         if ($obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7)) {
             $this->acao = "go(\"educar_matricula_cad.php?ref_cod_aluno={$this->ref_cod_aluno}\")";
-            $this->nome_acao = 'Nova Matr&iacute;cula';
+            $this->nome_acao = 'Nova Matrícula';
         }
 
         $this->array_botao[] = 'Voltar';
@@ -246,7 +246,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'Matr&iacute;cula';
+        $this->title = 'Matrícula';
         $this->processoAp = '578';
     }
 };

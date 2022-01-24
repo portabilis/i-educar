@@ -36,7 +36,7 @@ return new class extends clsCadastro {
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
-        $this->breadcrumb("{$nomeMenu} v&iacute;nculo");
+        $this->breadcrumb("{$nomeMenu} vínculo");
 
         return $retorno;
     }

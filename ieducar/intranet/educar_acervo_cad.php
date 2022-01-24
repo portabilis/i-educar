@@ -189,8 +189,8 @@ return new class extends clsCadastro {
         //$this->inputsHelper()->multipleSearchAutores('', $options, $helperOptions);
 
         // text
-        $this->campoTexto('titulo', 'T&iacute;tulo', $this->titulo, 40, 255, true);
-        $this->campoTexto('sub_titulo', 'Subt&iacute;tulo', $this->sub_titulo, 40, 255, false);
+        $this->campoTexto('titulo', 'Título', $this->titulo, 40, 255, true);
+        $this->campoTexto('sub_titulo', 'Subtítulo', $this->sub_titulo, 40, 255, false);
         $this->campoTexto('estante', 'Estante', $this->estante, 20, 15, false);
         $this->campoTexto('dimencao', 'Dimensão', $this->dimencao, 20, 255, false);
         $this->campoTexto('material_ilustrativo', 'Material ilustrativo', $this->material_ilustrativo, 20, 255, false);

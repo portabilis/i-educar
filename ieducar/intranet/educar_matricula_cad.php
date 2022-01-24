@@ -555,7 +555,7 @@ return new class extends clsCadastro {
             $exigeInep = $serieDet['exigir_inep'];
 
             if (!$alunoInep && $exigeInep) {
-                $this->mensagem = 'Não foi poss&iacute;vel realizar matr&iacute;cula, necessário inserir o INEP no cadastro do aluno.';
+                $this->mensagem = 'Não foi possível realizar matrícula, necessário inserir o INEP no cadastro do aluno.';
 
                 return false;
             }
@@ -793,7 +793,7 @@ return new class extends clsCadastro {
             $m = $db->Tupla();
 
             if (is_array($m) && count($m) && $dependencia) {
-                $this->mensagem = 'Esse aluno já tem uma matr&iacute;cula de dependência nesta escola e série.';
+                $this->mensagem = 'Esse aluno já tem uma matrícula de dependência nesta escola e série.';
 
                 return false;
             }
@@ -1130,8 +1130,8 @@ return new class extends clsCadastro {
         }
 
         if (!$result) {
-            $this->mensagem = 'Não foi poss&iacute;vel desativar as ' .
-                'enturmações da matr&iacute;cula.';
+            $this->mensagem = 'Não foi possível desativar as ' .
+                'enturmações da matrícula.';
         }
 
         return $result;
@@ -1221,7 +1221,7 @@ return new class extends clsCadastro {
                 $editou1 = $obj->edita();
 
                 if (!$editou1) {
-                    $this->mensagem = 'Não foi poss&iacute;vel editar a "&Uacute;ltima Matr&iacute;cula da Sequência".<br />';
+                    $this->mensagem = 'Não foi possível editar a "&Uacute;ltima Matrícula da Sequência".<br />';
 
                     return false;
                 }

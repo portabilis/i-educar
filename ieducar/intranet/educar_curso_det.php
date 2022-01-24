@@ -67,7 +67,7 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['ref_cod_nivel_ensino']) {
-            $this->addDetalhe(['N&iacute;vel Ensino', $registro['ref_cod_nivel_ensino']]);
+            $this->addDetalhe(['Nível Ensino', $registro['ref_cod_nivel_ensino']]);
         }
 
         if ($registro['ref_cod_tipo_ensino']) {

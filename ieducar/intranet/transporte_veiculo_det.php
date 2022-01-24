@@ -64,7 +64,7 @@ return new class extends clsDetalhe {
             $this->url_editar = "../module/TransporteEscolar/Veiculo?id={$cod_veiculo}";
         }
 
-        $this->breadcrumb('Detalhe do ve&iacute;culo', [
+        $this->breadcrumb('Detalhe do veículo', [
         url('intranet/educar_transporte_escolar_index.php') => 'Transporte escolar',
     ]);
     }

@@ -31,7 +31,7 @@ return new class extends clsDetalhe {
         $this->addDetalhe(['E-mail usuário', $det_funcionario['email']]);
 
         if (!empty($det_funcionario['matricula_interna'])) {
-            $this->addDetalhe(['Matr&iacute;cula interna', $det_funcionario['matricula_interna']]);
+            $this->addDetalhe(['Matrícula interna', $det_funcionario['matricula_interna']]);
         }
 
         $obj_fisica = new clsFisica($cod_pessoa);

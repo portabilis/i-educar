@@ -26,7 +26,7 @@ return new class extends clsListagem {
         }
 
         $this->addCabecalhos([
-      'Escola', 'Ano', 'Etapa', 'Data in&iacute;cio', 'Data fim'
+      'Escola', 'Ano', 'Etapa', 'Data início', 'Data fim'
     ]);
 
         $this->inputsHelper()->dynamic(['ano'], ['required' => false]);

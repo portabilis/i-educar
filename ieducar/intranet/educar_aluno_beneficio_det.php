@@ -31,10 +31,10 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['cod_aluno_beneficio']) {
-            $this->addDetalhe([ 'Código Benef&iacute;cio', "{$registro['cod_aluno_beneficio']}"]);
+            $this->addDetalhe([ 'Código Benefício', "{$registro['cod_aluno_beneficio']}"]);
         }
         if ($registro['nm_beneficio']) {
-            $this->addDetalhe([ 'Benef&iacute;cio', "{$registro['nm_beneficio']}"]);
+            $this->addDetalhe([ 'Benefício', "{$registro['nm_beneficio']}"]);
         }
         if ($registro['desc_beneficio']) {
             $this->addDetalhe([ 'Descrição', nl2br("{$registro['desc_beneficio']}")]);
@@ -58,7 +58,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'Benef&iacute;cio Aluno';
+        $this->title = 'Benefício Aluno';
         $this->processoAp = '581';
     }
 };

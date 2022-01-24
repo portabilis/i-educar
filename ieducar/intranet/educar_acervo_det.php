@@ -96,10 +96,10 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Biblioteca', "{$registro['ref_cod_biblioteca']}"]);
         }
         if ($registro['titulo']) {
-            $this->addDetalhe([ 'T&iacute;tulo', "{$registro['titulo']}"]);
+            $this->addDetalhe([ 'Título', "{$registro['titulo']}"]);
         }
         if ($registro['sub_titulo']) {
-            $this->addDetalhe([ 'Subt&iacute;tulo', "{$registro['sub_titulo']}"]);
+            $this->addDetalhe([ 'Subtítulo', "{$registro['sub_titulo']}"]);
         }
         if ($registro['ref_cod_exemplar_tipo']) {
             $this->addDetalhe([ 'Tipo', "{$registro['ref_cod_exemplar_tipo']}"]);

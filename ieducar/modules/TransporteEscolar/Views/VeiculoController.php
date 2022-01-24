@@ -119,7 +119,7 @@ class VeiculoController extends Portabilis_Controller_Page_EditController
             'delete_success' => '/intranet/transporte_veiculo_lst.php'
         ], $this->_options);
         $nomeMenu = $this->getRequest()->id == null ? 'Cadastrar' : 'Editar';
-        $this->breadcrumb("$nomeMenu ve&iacute;culo", [
+        $this->breadcrumb("$nomeMenu veículo", [
             url('intranet/educar_transporte_escolar_index.php') => 'Transporte escolar',
         ]);
     }

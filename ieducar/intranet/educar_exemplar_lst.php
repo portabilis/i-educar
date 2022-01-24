@@ -147,7 +147,7 @@ return new class extends clsListagem {
         $this->campoLista('ref_cod_acervo_editora', 'Editora', $opcoes_editora, $this->ref_cod_acervo_editora, '', false, '', '', false, false);
         $this->campoLista('ref_cod_fonte', 'Fonte', $opcoes_fonte, $this->ref_cod_fonte, '', false, '', '', false, false);
 
-        $this->campoTexto('titulo_livro', 'T&iacute;tulo da Obra', $this->titulo_livro, 25, 255, false);
+        $this->campoTexto('titulo_livro', 'Título da Obra', $this->titulo_livro, 25, 255, false);
         $this->campoNumero('cod_exemplar', 'Tombo', $this->cod_exemplar, 10, 50, false);
 
         $opcoes = [ 'NULL' => 'Selecione' ];

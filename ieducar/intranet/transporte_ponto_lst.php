@@ -52,7 +52,7 @@ return new class extends clsListagem {
             'Código do ponto',
             'Descrição',
             'CEP',
-            'Munic&iacute;pio - UF',
+            'Município - UF',
             'Bairro',
             'Logradouro'
         ]);

@@ -51,7 +51,7 @@ return new class extends clsListagem {
             'Código Tipo Usuário',
             'Tipo Usuário',
             'Descrição',
-            'N&iacute;vel',
+            'Nível',
         ]);
 
         //niveis
@@ -64,7 +64,7 @@ return new class extends clsListagem {
         // outros Filtros
         $this->campoTexto('nm_tipo', 'Nome Tipo', $this->nm_tipo, 30, 255, false);
         $this->campoTexto('descricao', 'Descrição', $this->descricao, 30, 255, false);
-        $this->campoLista('nivel', 'N&iacute;vel', $array_nivel, $this->nivel, '', false, '', '', false, false);
+        $this->campoLista('nivel', 'Nível', $array_nivel, $this->nivel, '', false, '', '', false, false);
 
         $this->nivel = $this->nivel == -1 ? '' : $this->nivel;
 

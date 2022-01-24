@@ -192,7 +192,7 @@ function excluir_compromisso( compId )
 	{
 		excluirSim( compId, location );
 	}
-	//showExpansivel( 400, 114, 'Deseja realmente excluir este compromisso?<br><br>Esta é uma operação irrevers&iacute;vel.<br><br><input type="button" name="agenda_sim" class="agenda_rap_botao" id="agenda_salvar" value="Sim" onclick="excluirSim( ' + compId + ' );"> <input type="button" name="agenda_nao" class="agenda_rap_botao" id="agenda_salvar" value="Não" onclick="excluirNao( ' + compId + ' )">' );
+	//showExpansivel( 400, 114, 'Deseja realmente excluir este compromisso?<br><br>Esta é uma operação irreversível.<br><br><input type="button" name="agenda_sim" class="agenda_rap_botao" id="agenda_salvar" value="Sim" onclick="excluirSim( ' + compId + ' );"> <input type="button" name="agenda_nao" class="agenda_rap_botao" id="agenda_salvar" value="Não" onclick="excluirNao( ' + compId + ' )">' );
 }
 
 function excluirSim( compId )
@@ -209,7 +209,7 @@ function excluirJuris( compId )
 	{
 		excluirSim( compId, location );
 	}
-	//showExpansivel( 400, 114, 'Deseja realmente excluir este compromisso?<br><br>Esta é uma operação irrevers&iacute;vel.<br><br><input type="button" name="agenda_sim" class="agenda_rap_botao" id="agenda_salvar" value="Sim" onclick="excluirSim( ' + compId + ' );"> <input type="button" name="agenda_nao" class="agenda_rap_botao" id="agenda_salvar" value="Não" onclick="excluirNao( ' + compId + ' )">' );
+	//showExpansivel( 400, 114, 'Deseja realmente excluir este compromisso?<br><br>Esta é uma operação irreversível.<br><br><input type="button" name="agenda_sim" class="agenda_rap_botao" id="agenda_salvar" value="Sim" onclick="excluirSim( ' + compId + ' );"> <input type="button" name="agenda_nao" class="agenda_rap_botao" id="agenda_salvar" value="Não" onclick="excluirNao( ' + compId + ' )">' );
 }
 
 function excluirSimJuris( compId )
@@ -244,7 +244,7 @@ function novoForm(array_compromissos)
 	conteudo += '</tr>';
 	conteudo += '<tr><td colspan="4" style="height:1px;background-color: #9cbdd7;"></td></tr>';
 	conteudo += '<tr>';
-	conteudo += '<td width="25%" valign="top">T&iacute;tulo:</td>';
+	conteudo += '<td width="25%" valign="top">Título:</td>';
 	conteudo += '<td colspan="3" width="75%"><input type="text" name="novo_titulo" id="novo_titulo" style="width:330px;"></td>';
 	conteudo += '</tr>';
 	conteudo += '<tr>';

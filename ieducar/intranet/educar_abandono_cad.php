@@ -128,7 +128,7 @@ return new class extends clsCadastro {
                     $enturmacao->data_enturmacao = $detEnturmacao;
 
                     if (! $enturmacao->edita()) {
-                        $this->mensagem = 'Não foi poss&iacute;vel desativar as enturmações da matr&iacute;cula.';
+                        $this->mensagem = 'Não foi possível desativar as enturmações da matrícula.';
 
                         return false;
                     } else {

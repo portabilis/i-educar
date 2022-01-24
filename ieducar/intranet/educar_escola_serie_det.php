@@ -77,7 +77,7 @@ return new class extends clsDetalhe {
 
         if ($registro['hora_inicio_intervalo']) {
             $registro['hora_inicio_intervalo'] = date('H:i', strtotime($registro['hora_inicio_intervalo']));
-            $this->addDetalhe(['Hora In&iacute;cio Intervalo', $registro['hora_inicio_intervalo']]);
+            $this->addDetalhe(['Hora Início Intervalo', $registro['hora_inicio_intervalo']]);
         }
 
         if ($registro['hora_fim_intervalo']) {

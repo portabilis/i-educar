@@ -571,7 +571,7 @@ return new class extends clsCadastro {
 
         $this->campoTabelaInicio('turma_modulo', 'Etapas', ['Data inicial', 'Data final', 'Dias Letivos'], $this->turma_modulo);
 
-        $this->campoData('data_inicio', 'Data In&iacute;cio', $this->data_inicio, false);
+        $this->campoData('data_inicio', 'Data Início', $this->data_inicio, false);
         $this->campoData('data_fim', 'Data Fim', $this->data_fim, false);
         $this->campoTexto('dias_letivos', 'Dias Letivos', $this->dias_letivos_, 9);
 
