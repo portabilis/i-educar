@@ -51,8 +51,8 @@ return new class extends clsCadastro {
         // foreign keys
 
         // text
-        $this->campoTexto('nm_topico', 'Nome T&oacute;pico', $this->nm_topico, 30, 255, true);
-        $this->campoMemo('desc_topico', 'Descrição T&oacute;pico', $this->desc_topico, 30, 5, false);
+        $this->campoTexto('nm_topico', 'Nome Tópico', $this->nm_topico, 30, 255, true);
+        $this->campoMemo('desc_topico', 'Descrição Tópico', $this->desc_topico, 30, 5, false);
 
         // data
     }
@@ -101,7 +101,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'Disciplina T&oacute;pico';
+        $this->title = 'Disciplina Tópico';
         $this->processoAp = '565';
     }
 };

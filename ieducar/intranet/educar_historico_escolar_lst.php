@@ -34,7 +34,7 @@ return new class extends clsListagem {
 
     public function Gerar()
     {
-        $this->titulo = 'Hist&oacute;rico Escolar - Listagem';
+        $this->titulo = 'Histórico Escolar - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = $val;

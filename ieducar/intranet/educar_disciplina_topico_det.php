@@ -19,7 +19,7 @@ return new class extends clsDetalhe {
 
     public function Gerar()
     {
-        $this->titulo = 'Disciplina T&oacute;pico - Detalhe';
+        $this->titulo = 'Disciplina Tópico - Detalhe';
 
         $this->cod_disciplina_topico=$_GET['cod_disciplina_topico'];
 
@@ -31,10 +31,10 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['nm_topico']) {
-            $this->addDetalhe([ 'Nome T&oacute;pico', "{$registro['nm_topico']}"]);
+            $this->addDetalhe([ 'Nome Tópico', "{$registro['nm_topico']}"]);
         }
         if ($registro['desc_topico']) {
-            $this->addDetalhe([ 'Descrição T&oacute;pico', "{$registro['desc_topico']}"]);
+            $this->addDetalhe([ 'Descrição Tópico', "{$registro['desc_topico']}"]);
         }
 
         $objPermissao = new clsPermissoes();
@@ -48,7 +48,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'Disciplina T&oacute;pico';
+        $this->title = 'Disciplina Tópico';
         $this->processoAp = '565';
     }
 };

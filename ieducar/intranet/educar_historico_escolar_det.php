@@ -33,7 +33,7 @@ return new class extends clsDetalhe {
 
     public function Gerar()
     {
-        $this->titulo = 'Hist&oacute;rico Escolar - Detalhe';
+        $this->titulo = 'Histórico Escolar - Detalhe';
 
         $this->sequencial=$_GET['sequencial'];
         $this->ref_cod_aluno=$_GET['ref_cod_aluno'];
@@ -291,7 +291,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'Hist&oacute;rico Escolar';
+        $this->title = 'Histórico Escolar';
         $this->processoAp = '578';
     }
 };

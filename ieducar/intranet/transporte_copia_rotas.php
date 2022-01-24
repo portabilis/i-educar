@@ -11,7 +11,7 @@ return new class extends clsCadastro {
      */
     public $pessoa_logada;
 
-    public $nome_url_sucesso = 'Efetuar c&oacute;pia';
+    public $nome_url_sucesso = 'Efetuar cópia';
 
     public function Inicializar()
     {
@@ -20,7 +20,7 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(950, $this->pessoa_logada, 7);
 
-        $this->breadcrumb('C&oacute;pia de rotas', [
+        $this->breadcrumb('Cópia de rotas', [
         url('intranet/educar_transporte_escolar_index.php') => 'Transporte escolar',
     ]);
 
@@ -213,7 +213,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'C&oacute;pia de Rotas';
+        $this->title = 'Cópia de Rotas';
         $this->processoAp = '21240';
     }
 };

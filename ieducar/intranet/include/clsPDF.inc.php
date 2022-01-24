@@ -204,7 +204,7 @@ class clsPDF
     public function MakeCapa()
     {
         if ($this->depurar) {
-            echo '<b>PDF:</b> Confeccionando capa para relat&oacute;rio. <br>';
+            echo '<b>PDF:</b> Confeccionando capa para relatório. <br>';
         }
     }
 

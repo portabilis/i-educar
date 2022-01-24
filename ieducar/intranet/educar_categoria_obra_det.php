@@ -24,7 +24,7 @@ return new class extends clsDetalhe {
             $this->simpleRedirect('educar_categoria_nivel_lst.php');
         }
         if ($registro['id']) {
-            $this->addDetalhe(['C&oacute;digo', "{$registro['id']}"]);
+            $this->addDetalhe(['Código', "{$registro['id']}"]);
         }
         if ($registro['descricao']) {
             $this->addDetalhe(['Descrição', "{$registro['descricao']}"]);

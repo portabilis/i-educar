@@ -31,7 +31,7 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['cod_aluno_beneficio']) {
-            $this->addDetalhe([ 'C&oacute;digo Benef&iacute;cio', "{$registro['cod_aluno_beneficio']}"]);
+            $this->addDetalhe([ 'Código Benef&iacute;cio', "{$registro['cod_aluno_beneficio']}"]);
         }
         if ($registro['nm_beneficio']) {
             $this->addDetalhe([ 'Benef&iacute;cio', "{$registro['nm_beneficio']}"]);

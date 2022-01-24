@@ -48,7 +48,7 @@ return new class extends clsListagem {
         }
 
         $this->addCabecalhos([
-            'C&oacute;digo Tipo Usuário',
+            'Código Tipo Usuário',
             'Tipo Usuário',
             'Descrição',
             'N&iacute;vel',

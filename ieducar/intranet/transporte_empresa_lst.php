@@ -42,7 +42,7 @@ return new class extends clsListagem {
             $this->$var = ($val === '') ? null: $val;
         }
 
-        $this->campoNumero('cod_empresa', 'C&oacute;digo da empresa', $this->cod_empresa, 20, 255, false);
+        $this->campoNumero('cod_empresa', 'Código da empresa', $this->cod_empresa, 20, 255, false);
         $this->campoTexto('nome_empresa', 'Nome fantasia', $this->nome_empresa, 50, 255, false);
         $this->campoTexto('nome_responsavel', 'Nome do responsável', $this->nome_responsavel, 50, 255, false);
 
@@ -51,7 +51,7 @@ return new class extends clsListagem {
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
         $this->addCabecalhos([
-            'C&oacute;digo da empresa',
+            'Código da empresa',
             'Nome fantasia',
             'Nome do responsável',
             'Telefone'

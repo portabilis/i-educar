@@ -68,7 +68,7 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['cod_acervo_colecao']) {
-            $this->addDetalhe([ 'C&oacute;digo Coleção', "{$registro['cod_acervo_colecao']}"]);
+            $this->addDetalhe([ 'Código Coleção', "{$registro['cod_acervo_colecao']}"]);
         }
         if ($registro['nm_colecao']) {
             $this->addDetalhe([ 'Coleção', "{$registro['nm_colecao']}"]);
