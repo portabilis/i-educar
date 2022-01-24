@@ -18,6 +18,7 @@ return new class extends clsCadastro {
                 window.location='transporte_rota_det.php?cod_rota={$this->cod_rota}';
                 </script>";
         }
+        die();
     }
 
     public function Gerar()

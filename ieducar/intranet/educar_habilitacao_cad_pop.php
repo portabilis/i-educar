@@ -28,7 +28,6 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(573, $this->pessoa_logada, 3, 'educar_habilitacao_lst.php');
 
-        $this->url_cancelar = ($retorno == "Editar") ? "educar_habilitacao_det.php?cod_habilitacao={$registro["cod_habilitacao"]}" : "educar_habilitacao_lst.php";
         $this->nome_url_cancelar = 'Cancelar';
         $this->script_cancelar = 'window.parent.fechaExpansivel("div_dinamico_"+(parent.DOM_divs.length-1));';
 
