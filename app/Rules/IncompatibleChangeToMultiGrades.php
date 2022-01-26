@@ -7,6 +7,7 @@ use Illuminate\Contracts\Validation\Rule;
 
 class IncompatibleChangeToMultiGrades implements Rule
 {
+
     public function passes($attribute, $value): bool
     {
         $grades = [];
@@ -17,7 +18,7 @@ class IncompatibleChangeToMultiGrades implements Rule
         /** @var LegacySchoolClass $legacySchoolClass */
         $legacySchoolClass = $value[0];
 
-        $changeToMulti = (int) $legacySchoolClass->multiseriada === 1 && $legacySchoolClass->originalMultiGradesInfo === 0;
+        $changeToMulti = $legacySchoolClass->multiseriada === true && $legacySchoolClass->originalMultiGradesInfo === 0;
         $notFindOriginalGrade = ! in_array($legacySchoolClass->originalGrade, $grades);
         $containsActiveEnrollments = $legacySchoolClass->getTotalEnrolled() > 0;
 
@@ -30,6 +31,6 @@ class IncompatibleChangeToMultiGrades implements Rule
 
     public function message(): string
     {
-        return 'Não foi possível alterar a turma para ser multisseriada, pois a série original possui matrículas vinculadas.';
+       return 'Não foi possível alterar a turma para ser multisseriada, pois a série original possui matrículas vinculadas.';
     }
 }

@@ -138,7 +138,7 @@ if (window.addEventListener) {
   window.attachEvent('onload', evtOnLoad);
 }
 
-document.getElementById('ref_cod_curso').onchange = function () {
+document.getElementById('ref_cod_curso_').onchange = function () {
   getEscolaCursoSerie();
 
   PadraoAnoEscolar_xml();
@@ -151,7 +151,7 @@ function PadraoAnoEscolar_xml() {
   xml1.envia(strURL);
 }
 
-document.getElementById('ref_cod_serie').onchange = function () {
+document.getElementById('ref_cod_serie_').onchange = function () {
   if (this.value) {
     codEscola = document.getElementById('ref_cod_escola').value;
     getHoraEscolaSerie();
@@ -165,7 +165,7 @@ function PadraoAnoEscolar(xml) {
     escola_curso_ = xml.getElementsByTagName('curso');
   }
 
-  campoCurso = document.getElementById('ref_cod_curso').value;
+  campoCurso = document.getElementById('ref_cod_curso_').value;
 
   for (var j = 0; j < escola_curso_.length; j++) {
     if (escola_curso_[j].getAttribute('cod_curso') == campoCurso) {
@@ -185,7 +185,7 @@ function PadraoAnoEscolar(xml) {
     return;
   }
 
-  var campoCurso = document.getElementById('ref_cod_curso').value;
+  var campoCurso = document.getElementById('ref_cod_curso_').value;
 
   if (document.getElementById('padrao_ano_escolar').value == 0) {
     setModuleAndPhasesVisibility(true);
@@ -201,7 +201,7 @@ function setModuleAndPhasesVisibility(show) {
 
 function getHoraEscolaSerie() {
   var campoEscola = document.getElementById('ref_cod_escola').value;
-  var campoSerie = document.getElementById('ref_cod_serie').value;
+  var campoSerie = document.getElementById('ref_cod_serie_').value;
 
   var xml1 = new ajax(atualizaTurmaCad_EscolaSerie);
   strURL = 'educar_escola_serie_hora_xml.php?esc=' + campoEscola + '&ser=' + campoSerie;
@@ -235,8 +235,8 @@ function valida() {
       var campoEscola = document.getElementById('ref_cod_escola').value;
       var campoTurma = document.getElementById('cod_turma').value;
       var campoComodo = document.getElementById('ref_cod_infra_predio_comodo').value;
-      var campoCurso = document.getElementById('ref_cod_curso').value;
-      var campoSerie = document.getElementById('ref_cod_serie').value;
+      var campoCurso = document.getElementById('ref_cod_curso_').value;
+      var campoSerie = document.getElementById('ref_cod_serie_').value;
 
       var url = 'educar_turma_sala_xml.php';
       var pars = '?inst=' + campoInstituicao + '&esc=' + campoEscola + '&not_tur=' +
@@ -259,12 +259,12 @@ function valida_xml(xml) {
     DOM_turma_sala = xml.getElementsByTagName('item');
   }
 
-  var campoCurso = document.getElementById('ref_cod_curso').value;
+  var campoCurso = document.getElementById('ref_cod_curso_').value;
 
   if (document.getElementById('ref_cod_escola').value) {
-    if (!document.getElementById('ref_cod_serie').value) {
+    if (!document.getElementById('ref_cod_serie_').value) {
       alert('Preencha o campo \'Serie\' corretamente!');
-      document.getElementById('ref_cod_serie').focus();
+      document.getElementById('ref_cod_serie_').focus();
       return false;
     }
   }
@@ -329,7 +329,7 @@ document.getElementById('ref_cod_regente_lupa').onclick = function () {
 };
 
 function getEscolaCursoSerie() {
-  var campoCurso = document.getElementById('ref_cod_curso').value;
+  var campoCurso = document.getElementById('ref_cod_curso_').value;
 
   if (document.getElementById('ref_cod_escola')) {
     var campoEscola = document.getElementById('ref_cod_escola').value;
@@ -337,7 +337,7 @@ function getEscolaCursoSerie() {
     var campoEscola = document.getElementById('ref_ref_cod_escola').value;
   }
 
-  var campoSerie = document.getElementById('ref_cod_serie');
+  var campoSerie = document.getElementById('ref_cod_serie_');
   campoSerie.length = 1;
 
   if (campoEscola && campoCurso) {
@@ -352,7 +352,7 @@ function getEscolaCursoSerie() {
 }
 
 function atualizaLstEscolaCursoSerie(xml) {
-  var campoSerie = document.getElementById('ref_cod_serie');
+  var campoSerie = document.getElementById('ref_cod_serie_');
   campoSerie.length = 1;
   campoSerie.options[0].text = 'Selecione uma s\u00e9rie';
   campoSerie.disabled = false;
