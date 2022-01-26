@@ -82,9 +82,7 @@
 				
 				<div id="footer" class="link">
 					<div class="footer-social">
-						
 						<!-- {!! config('legacy.config.ieducar_external_footer') !!} -->
-						
 						@if(config('legacy.config.facebook_url') || config('legacy.config.linkedin_url') || config('legacy.config.twitter_url'))
 						
 						<div class="social-icons">
