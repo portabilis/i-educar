@@ -221,7 +221,7 @@ class SchoolClassController extends Controller
         $docente,
         $etapasUtilizadas,
         $etapasEspecificas
-    ){
+    ) {
         if ($componentes) {
             $mapper = new ComponenteCurricular_Model_TurmaDataMapper();
 
