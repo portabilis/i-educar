@@ -37,7 +37,7 @@ a {
 }
 
 #login-form {
-  width: 75%;
+  width: 90%;
   height: 60%;
   background-color: #ffffff;
   margin: 0 auto;
@@ -86,9 +86,7 @@ button.submit:disabled {
 }
 
 #footer {
-  margin-top: 10px;
-  padding: 10px 0;
-  text-align: center;
+  margin-top: auto;
 }
 
 .footer-social {

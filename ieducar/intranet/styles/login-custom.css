@@ -1,9 +1,18 @@
 body {
-  background-image: url(../imagens/login/bg_art_3.png); 
-  overflow: hidden;
-  background-size: 100% auto;
- 
+	background-image: url(../imagens/login/bg_art_3.png); 
+	overflow: hidden;
+	background-size: 100% auto;
+	
 }
+
+.fontLogin {
+	
+	font-family: 'Love Ya Like A Sister', cursive;
+	color: #15539c;
+	
+}
+.font-s {font-size: 24px;}
+.font-b {width: 555px; font-size: 55px; margin: auto;}
 
 :root {
     --azul-claro: #2cc3ff;
@@ -25,6 +34,7 @@ body {
     min-height: 600px;
     background: #fff;
     display: flex;
+	z-index:3;
     flex-direction: column;
     align-items: center;
     animation-name: showLogin;
@@ -33,20 +43,21 @@ body {
     animation-iteration-count: 1;
     animation-delay: 0s;
 }
+
 .fundoLogin {
-  right: 550px;
-  bottom: 0;
-  top: 0;
-  min-height: 600px;
-  background: #fff;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  animation-name: showFundo;
-  animation-fill-mode: forwards;
-  animation-duration: 1s;
-  animation-iteration-count: 1;
-  animation-delay: 0s;
+	right: 550px;
+	bottom: 0;
+	top: 0;
+	min-height: 600px;
+	background: #fff;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	animation-name: showFundo;
+	animation-fill-mode: forwards;
+	animation-duration: 1s;
+	animation-iteration-count: 1;
+	animation-delay: 0s;
 }
 
 .lateralLogin .bgLogin {
@@ -57,37 +68,57 @@ body {
     margin-top: -30px;
 }
 
-    .lateralLogin .divLogo {
-      /* Só é utilizado no Login, e é retirado quando é WL */
-        height: 200px;
-        background-image: url(../imagens/login/svg/TecSis-animation_02.svg);
-        background-repeat: no-repeat;
-        background-position: bottom right;
-        margin-right: 15%;
-    }
+.lateralLogin .divLogo {
+	/* Só é utilizado no Login, e é retirado quando é WL */
+	height: 200px;
+	background-image: url(../imagens/login/svg/TecSis-animation_02.svg);
+	background-repeat: no-repeat;
+	background-position: bottom right;
+	margin-right: 15%;
+}
 
-    .lateralLogin .link {
-        color: #666;
-        font-size: 14px;
-        margin-top: 10px;
-        margin-bottom: 20px;
-    }
+.entLogo{
+	height: 20%;
+}
 
-    .lateralLogin svg {
-        width: 20px;
-        margin-right: 10px;
-    }
+.lateralLogin .link {
+	color: #666;
+	font-size: 14px;
+}
+
+.lateral_2 {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    left: 350px;
+    opacity: 0;
+	margin: auto;	
+    background-position: center;
+    background-size: cover;
+    animation-name: showFundo;
+    animation-fill-mode: forwards;
+    animation-duration: 1s;
+    animation-delay: 0.6s;
+	
+}
+
+.lateralLogin svg {
+	width: 20px;
+	margin-right: 10px;
+}
 
 .imgBorda {
     position: absolute;
     width: 280px;
     right: 0;
     bottom: 0;
-    top: 0;
+    top: -10px;
     background: linear-gradient(to bottom right, rgba(243, 46, 33, 1) 0%, rgba(243, 135, 42, 1) 100%);
     background-image: url(../imagens/login/svg/TecSis_borda.svg);
     background-repeat: repeat-y;
     background-size: auto;
+	z-index:4;
     animation-name: showBorda;
     animation-fill-mode: forwards;
     animation-duration: 1s;
@@ -96,39 +127,39 @@ body {
 }
 
 @keyframes showLogin {
-  from {
-      left: -50px;
-      opacity: 0;
-  }
-
-  to {
-      left: 0;
-      opacity: 1;
-  }
+	from {
+		left: -50px;
+		opacity: 0;
+	}
+	
+	to {
+		left: 0;
+		opacity: 1;
+	}
 }
 
 @keyframes showFundo {
-from {
-    right: 550px;
-    opacity: 0;
-}
-
-to {
-    right: 0;
-    opacity: 1;
-}
+	from {
+		right: 550px;
+		opacity: 0;
+	}
+	
+	to {
+		right: 0;
+		opacity: 1;
+	}
 }
 
 @keyframes showBorda {
-from {
-    left: 230px;
-    opacity: 0;
-}
-
-to {
-    left: 280px;
-    opacity: 1;
-}
+	from {
+		left: 230px;
+		opacity: 0;
+	}
+	
+	to {
+		left: 280px;
+		opacity: 1;
+	}
 }
 
 @media only screen and (max-width: 1023px) {
@@ -138,22 +169,22 @@ to {
         position: relative;
         animation-name: unset;
         left: 0;
-    }
-
-        .lateralLogin .bgLogin {
-            margin-top: unset;
-            padding-left: 9vw;
-            padding-right: 9vw;
-        }
-
-            .lateralLogin .bgLogin * {
-                text-align: center;
-            }
-
-            .lateralLogin .bgLogin .logo {
-                margin-left: 12.5%;
-            }
-
+	}
+	
+	.lateralLogin .bgLogin {
+		margin-top: unset;
+		padding-left: 9vw;
+		padding-right: 9vw;
+	}
+	
+	.lateralLogin .bgLogin * {
+		text-align: center;
+	}
+	
+	.lateralLogin .bgLogin .logo {
+		margin-left: 12.5%;
+	}
+	
     .bgNaoTenhoCadastro {
         position: unset;
         width: 100%;
@@ -161,30 +192,285 @@ to {
         padding-right: 9vw;
         animation-name: unset;
         opacity: 1;
-    }
-
-        .bgNaoTenhoCadastro * {
-            text-align: center;
-        }
-
+	}
+	
+	.bgNaoTenhoCadastro * {
+		text-align: center;
+	}
+	
     .lateralLogin .bgLogin .btPadrao {
         font-size: 13px !important;
         height: 45px;
-    }
-
+	}
+	
     .shadow {
-      border-radius: 15px;
-      box-shadow:0 0.1rem 0.1rem rgb(0 0 0 / 50%);
-      transition: .2s;
-    }
-
+		border-radius: 15px;
+		box-shadow:0 0.1rem 0.1rem rgb(0 0 0 / 50%);
+		transition: .2s;
+	}
+	
     .shadow:hover {
-      box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 25%); }
-
+	box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 25%); }
+	
     .imgFundo {
         display: none;
-    }
+	}
 }
 
+.col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12, .col,
+.col-auto, .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm,
+.col-sm-auto, .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-11, .col-md-12, .col-md,
+.col-md-auto, .col-lg-1, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg,
+.col-lg-auto, .col-xl-1, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6, .col-xl-7, .col-xl-8, .col-xl-9, .col-xl-10, .col-xl-11, .col-xl-12, .col-xl,
+.col-xl-auto {
+	position: relative;
+	width: 100%;
+	min-height: 1px;
+	padding-right: 15px;
+padding-left: 15px; }
 
+.col {
+	flex-basis: 0;
+	flex-grow: 1;
+max-width: 100%; }
 
+.col-auto {
+	flex: 0 0 auto;
+	width: auto;
+max-width: none; }
+
+.col-1 {
+	flex: 0 0 8.33333%;
+max-width: 8.33333%; }
+
+.col-2 {
+	flex: 0 0 16.66667%;
+max-width: 16.66667%; }
+
+.col-3 {
+	flex: 0 0 25%;
+max-width: 25%; }
+
+.col-4 {
+	flex: 0 0 33.33333%;
+max-width: 33.33333%; }
+
+.col-5 {
+	flex: 0 0 41.66667%;
+max-width: 41.66667%; }
+
+.col-6 {
+	flex: 0 0 50%;
+max-width: 50%; }
+
+.col-7 {
+	flex: 0 0 58.33333%;
+max-width: 58.33333%; }
+
+.col-8 {
+	flex: 0 0 66.66667%;
+max-width: 66.66667%; }
+
+.col-9 {
+	flex: 0 0 75%;
+max-width: 75%; }
+
+.col-10 {
+	flex: 0 0 83.33333%;
+max-width: 83.33333%; }
+
+.col-11 {
+	flex: 0 0 91.66667%;
+max-width: 91.66667%; }
+
+.col-12 {
+	flex: 0 0 100%;
+max-width: 100%; }
+
+@media (min-width: 576px) {
+	.col-sm {
+		flex-basis: 0;
+		flex-grow: 1;
+	max-width: 100%; }
+	.col-sm-auto {
+		flex: 0 0 auto;
+		width: auto;
+	max-width: none; }
+	.col-sm-1 {
+		flex: 0 0 8.33333%;
+	max-width: 8.33333%; }
+	.col-sm-2 {
+		flex: 0 0 16.66667%;
+	max-width: 16.66667%; }
+	.col-sm-3 {
+		flex: 0 0 25%;
+	max-width: 25%; }
+	.col-sm-4 {
+		flex: 0 0 33.33333%;
+	max-width: 33.33333%; }
+	.col-sm-5 {
+		flex: 0 0 41.66667%;
+	max-width: 41.66667%; }
+	.col-sm-6 {
+		flex: 0 0 50%;
+	max-width: 50%; }
+	.col-sm-7 {
+		flex: 0 0 58.33333%;
+	max-width: 58.33333%; }
+	.col-sm-8 {
+		flex: 0 0 66.66667%;
+	max-width: 66.66667%; }
+	.col-sm-9 {
+		flex: 0 0 75%;
+	max-width: 75%; }
+	.col-sm-10 {
+		flex: 0 0 83.33333%;
+	max-width: 83.33333%; }
+	.col-sm-11 {
+		flex: 0 0 91.66667%;
+	max-width: 91.66667%; }
+	.col-sm-12 {
+		flex: 0 0 100%;
+	max-width: 100%; }
+	
+	@media (min-width: 768px) {
+		.col-md {
+			flex-basis: 0;
+			flex-grow: 1;
+		max-width: 100%; }
+		.col-md-auto {
+			flex: 0 0 auto;
+			width: auto;
+		max-width: none; }
+		.col-md-1 {
+			flex: 0 0 8.33333%;
+		max-width: 8.33333%; }
+		.col-md-2 {
+			flex: 0 0 16.66667%;
+		max-width: 16.66667%; }
+		.col-md-3 {
+			flex: 0 0 25%;
+		max-width: 25%; }
+		.col-md-4 {
+			flex: 0 0 33.33333%;
+		max-width: 33.33333%; }
+		.col-md-5 {
+			flex: 0 0 41.66667%;
+		max-width: 41.66667%; }
+		.col-md-6 {
+			flex: 0 0 50%;
+		max-width: 50%; }
+		.col-md-7 {
+			flex: 0 0 58.33333%;
+		max-width: 58.33333%; }
+		.col-md-8 {
+			flex: 0 0 66.66667%;
+		max-width: 66.66667%; }
+		.col-md-9 {
+			flex: 0 0 75%;
+		max-width: 75%; }
+		.col-md-10 {
+			flex: 0 0 83.33333%;
+		max-width: 83.33333%; }
+		.col-md-11 {
+			flex: 0 0 91.66667%;
+		max-width: 91.66667%; }
+		.col-md-12 {
+			flex: 0 0 100%;
+		max-width: 100%; }
+		
+		@media (min-width: 992px) {
+			.col-lg {
+				flex-basis: 0;
+				flex-grow: 1;
+			max-width: 100%; }
+			.col-lg-auto {
+				flex: 0 0 auto;
+				width: auto;
+			max-width: none; }
+			.col-lg-1 {
+				flex: 0 0 8.33333%;
+			max-width: 8.33333%; }
+			.col-lg-2 {
+				flex: 0 0 16.66667%;
+			max-width: 16.66667%; }
+			.col-lg-3 {
+				flex: 0 0 25%;
+			max-width: 25%; }
+			.col-lg-4 {
+				flex: 0 0 33.33333%;
+			max-width: 33.33333%; }
+			.col-lg-5 {
+				flex: 0 0 41.66667%;
+			max-width: 41.66667%; }
+			.col-lg-6 {
+				flex: 0 0 50%;
+			max-width: 50%; }
+			.col-lg-7 {
+				flex: 0 0 58.33333%;
+			max-width: 58.33333%; }
+			.col-lg-8 {
+				flex: 0 0 66.66667%;
+			max-width: 66.66667%; }
+			.col-lg-9 {
+				flex: 0 0 75%;
+			max-width: 75%; }
+			.col-lg-10 {
+				flex: 0 0 83.33333%;
+			max-width: 83.33333%; }
+			.col-lg-11 {
+				flex: 0 0 91.66667%;
+			max-width: 91.66667%; }
+			.col-lg-12 {
+				flex: 0 0 100%;
+			max-width: 100%; }
+			
+			@media (min-width: 1200px) {
+				.col-xl {
+					flex-basis: 0;
+					flex-grow: 1;
+				max-width: 100%; }
+				.col-xl-auto {
+					flex: 0 0 auto;
+					width: auto;
+				max-width: none; }
+				.col-xl-1 {
+					flex: 0 0 8.33333%;
+				max-width: 8.33333%; }
+				.col-xl-2 {
+					flex: 0 0 16.66667%;
+				max-width: 16.66667%; }
+				.col-xl-3 {
+					flex: 0 0 25%;
+				max-width: 25%; }
+				.col-xl-4 {
+					flex: 0 0 33.33333%;
+				max-width: 33.33333%; }
+				.col-xl-5 {
+					flex: 0 0 41.66667%;
+				max-width: 41.66667%; }
+				.col-xl-6 {
+					flex: 0 0 50%;
+				max-width: 50%; }
+				.col-xl-7 {
+					flex: 0 0 58.33333%;
+				max-width: 58.33333%; }
+				.col-xl-8 {
+					flex: 0 0 66.66667%;
+				max-width: 66.66667%; }
+				.col-xl-9 {
+					flex: 0 0 75%;
+				max-width: 75%; }
+				.col-xl-10 {
+					flex: 0 0 83.33333%;
+				max-width: 83.33333%; }
+				.col-xl-11 {
+					flex: 0 0 91.66667%;
+				max-width: 91.66667%; }
+				.col-xl-12 {
+					flex: 0 0 100%;
+				max-width: 100%; }
+				
+				
+			
+				
