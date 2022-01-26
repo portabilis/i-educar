@@ -114,16 +114,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.208.10",
+            "version": "3.209.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "a7802ac9289e0c4de2c76cfe0ea0f11f72955754"
+                "reference": "3a418a7a9beae4675685efe7bb426ee0ae338a40"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/a7802ac9289e0c4de2c76cfe0ea0f11f72955754",
-                "reference": "a7802ac9289e0c4de2c76cfe0ea0f11f72955754",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/3a418a7a9beae4675685efe7bb426ee0ae338a40",
+                "reference": "3a418a7a9beae4675685efe7bb426ee0ae338a40",
                 "shasum": ""
             },
             "require": {
@@ -199,9 +199,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.208.10"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.209.1"
             },
-            "time": "2022-01-05T19:19:54+00:00"
+            "time": "2022-01-07T19:12:55+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -4039,16 +4039,16 @@
         },
         {
             "name": "nuwave/lighthouse",
-            "version": "v5.33.0",
+            "version": "v5.33.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nuwave/lighthouse.git",
-                "reference": "91e3f42b046f3415d89611ce2667600d62746642"
+                "reference": "4ff54df1a6e87fd4e753f4633cc9949f4664ae7d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nuwave/lighthouse/zipball/91e3f42b046f3415d89611ce2667600d62746642",
-                "reference": "91e3f42b046f3415d89611ce2667600d62746642",
+                "url": "https://api.github.com/repos/nuwave/lighthouse/zipball/4ff54df1a6e87fd4e753f4633cc9949f4664ae7d",
+                "reference": "4ff54df1a6e87fd4e753f4633cc9949f4664ae7d",
                 "shasum": ""
             },
             "require": {
@@ -4065,7 +4065,7 @@
                 "illuminate/validation": "5.6.* || 5.7.* || 5.8.* || ^6 || ^7 || ^8",
                 "laragraph/utils": "^1",
                 "php": ">= 7.2",
-                "thecodingmachine/safe": "^1",
+                "thecodingmachine/safe": "^1 || ^2",
                 "webonyx/graphql-php": "^14.7"
             },
             "require-dev": {
@@ -4166,7 +4166,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-12-28T16:43:30+00:00"
+            "time": "2022-01-10T10:50:38+00:00"
         },
         {
             "name": "opis/closure",
@@ -8851,16 +8851,16 @@
         },
         {
             "name": "filp/whoops",
-            "version": "2.14.4",
+            "version": "2.14.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filp/whoops.git",
-                "reference": "f056f1fe935d9ed86e698905a957334029899895"
+                "reference": "a63e5e8f26ebbebf8ed3c5c691637325512eb0dc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filp/whoops/zipball/f056f1fe935d9ed86e698905a957334029899895",
-                "reference": "f056f1fe935d9ed86e698905a957334029899895",
+                "url": "https://api.github.com/repos/filp/whoops/zipball/a63e5e8f26ebbebf8ed3c5c691637325512eb0dc",
+                "reference": "a63e5e8f26ebbebf8ed3c5c691637325512eb0dc",
                 "shasum": ""
             },
             "require": {
@@ -8910,7 +8910,7 @@
             ],
             "support": {
                 "issues": "https://github.com/filp/whoops/issues",
-                "source": "https://github.com/filp/whoops/tree/2.14.4"
+                "source": "https://github.com/filp/whoops/tree/2.14.5"
             },
             "funding": [
                 {
@@ -8918,7 +8918,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-10-03T12:00:00+00:00"
+            "time": "2022-01-07T12:00:00+00:00"
         },
         {
             "name": "friendsofphp/php-cs-fixer",

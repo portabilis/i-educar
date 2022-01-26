@@ -143,7 +143,7 @@ class ServidorController extends ApiCoreController
                         tmp.turma_id,
                         tmp.turno_id,
                         tmp.permite_lancar_faltas_componente,
-                        string_agg(concat(tmp.componente_curricular_id, ' ', tmp.tipo_nota)::varchar, ',') as disciplinas,
+                        string_agg(distinct concat(tmp.componente_curricular_id, ' ', tmp.tipo_nota)::varchar, ',') as disciplinas,
                         max(tmp.updated_at) as updated_at,
                         null as deleted_at
                     from (
@@ -162,9 +162,10 @@ class ServidorController extends ApiCoreController
                                                 on ptd.professor_turma_id = pt.id
                                       inner join pmieducar.turma t
                                                  on t.cod_turma = pt.turma_id
+                                      left join pmieducar.turma_serie ts on ts.turma_id = t.cod_turma
                                       inner join modules.componente_curricular_ano_escolar ccae
-                                                 on ccae.ano_escolar_id = t.ref_ref_cod_serie
-                                                     and ccae.componente_curricular_id = ptd.componente_curricular_id
+                                                on ccae.ano_escolar_id = coalesce(ts.serie_id, t.ref_ref_cod_serie)
+                                                and ccae.componente_curricular_id = ptd.componente_curricular_id
                              where true
                              and pt.instituicao_id = $1
                              and pt.ano = $2
