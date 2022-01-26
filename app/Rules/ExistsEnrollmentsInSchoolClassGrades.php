@@ -29,10 +29,10 @@ class ExistsEnrollmentsInSchoolClassGrades implements Rule
             ->whereHas(
                 'registration',
                 function ($query) use ($schoolClass, $gradesToDelete) {
-                /** @var Builder $query */
-                $query->where('ano', $schoolClass->ano);
-                $query->whereIn('ref_ref_cod_serie', $gradesToDelete);
-            }
+                    /** @var Builder $query */
+                    $query->where('ano', $schoolClass->ano);
+                    $query->whereIn('ref_ref_cod_serie', $gradesToDelete);
+                }
             )
             ->get()
             ->pluck('registration.grade.nm_serie', 'registration.grade.cod_serie')
