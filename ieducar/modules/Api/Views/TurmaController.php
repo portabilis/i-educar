@@ -3,6 +3,8 @@
 # TODO remove-require
 require_once 'Reports/Tipos/TipoBoletim.php';
 
+use App\Models\LegacySchoolClassGrade;
+
 class TurmaController extends ApiCoreController
 {
 
@@ -175,8 +177,23 @@ class TurmaController extends ApiCoreController
     protected function getTipoBoletim()
     {
         $turma = App_Model_IedFinder::getTurma($codTurma = $this->getRequest()->id);
+        $serie = $this->getRequest()->serie_id;
+
         $tipo = $turma['tipo_boletim'];
         $tipoDiferenciado = $turma['tipo_boletim_diferenciado'];
+
+        $boletimPorSerie = [];
+
+        if ($turma['multiseriada'] === 1) {
+            $boletimPorSerie = LegacySchoolClassGrade::query()
+            ->where('turma_id', $turma)
+            ->where('serie_id', $serie)
+            ->first()
+            ->toArray();
+
+            $tipo = $boletimPorSerie['boletim_id'];
+            $tipoDiferenciado = $boletimPorSerie['boletim_diferenciado_id'];
+        }
 
         $tipos = Portabilis_Model_Report_TipoBoletim::getInstance()->getReports();
         $tipos = Portabilis_Array_Utils::insertIn(null, 'indefinido', $tipos);
@@ -219,10 +236,12 @@ class TurmaController extends ApiCoreController
                     t.ano,
                     t.ref_ref_cod_escola as escola_id,
                     t.turma_turno_id as turno_id,
-                    t.ref_cod_curso as curso_id,
-                    t.ref_ref_cod_serie as serie_id,
-                   ra.id as regra_avaliacao_id,
-                   ra.regra_diferenciada_id as regra_avaliacao_diferenciada_id,
+                    json_agg(
+                        json_build_object(
+                            'serie_id', s.cod_serie,
+                            'regra_avaliacao_id', ra.id
+                        )
+                    ) AS series_regras,
                     t.updated_at,
                     (
                         CASE t.ativo WHEN 1 THEN
@@ -234,8 +253,10 @@ class TurmaController extends ApiCoreController
                 FROM pmieducar.turma t
                 INNER JOIN pmieducar.escola e
                     ON e.cod_escola = t.ref_ref_cod_escola
+                LEFT JOIN pmieducar.turma_serie ts ON ts.turma_id = t.cod_turma
+                JOIN pmieducar.serie s ON s.cod_serie = coalesce(ts.serie_id, t.ref_ref_cod_serie)
                 LEFT JOIN modules.regra_avaliacao_serie_ano rasa ON true
-                    AND rasa.serie_id = t.ref_ref_cod_serie
+                    AND rasa.serie_id = s.cod_serie
                     AND rasa.ano_letivo = $2
                 LEFT JOIN modules.regra_avaliacao ra
                     ON ra.id = (case when e.utiliza_regra_diferenciada then rasa.regra_avaliacao_diferenciada_id else rasa.regra_avaliacao_id end)
@@ -244,13 +265,23 @@ class TurmaController extends ApiCoreController
                     AND t.ref_ref_cod_escola IN ({$escola})
                     {$turnoId}
                     {$modified}
+                GROUP BY
+                    t.cod_turma,
+                    t.nm_turma,
+                    t.ano,
+                    t.ref_ref_cod_escola,
+                    t.turma_turno_id
                 ORDER BY t.updated_at, t.ref_ref_cod_escola, t.nm_turma
             ";
 
             $turmas = $this->fetchPreparedQuery($sql, $params);
 
-            $attrs = ['id', 'nome', 'ano', 'escola_id', 'turno_id', 'curso_id', 'serie_id', 'regra_avaliacao_id', 'regra_avaliacao_diferenciada_id', 'updated_at', 'deleted_at'];
+            $attrs = ['id', 'nome', 'ano', 'escola_id', 'turno_id', 'curso_id', 'series_regras', 'updated_at', 'deleted_at'];
             $turmas = Portabilis_Array_Utils::filterSet($turmas, $attrs);
+
+            foreach ($turmas as $key => $turma) {
+                $turmas[$key]['series_regras'] = json_decode($turma['series_regras']);
+            }
 
             return ['turmas' => $turmas];
         }
@@ -376,6 +407,20 @@ class TurmaController extends ApiCoreController
         return ['alunos' => $alunos];
     }
 
+    protected function getSeriesDaTurma()
+    {
+        $schoolClass = $this->getRequest()->turma_id;
+        $seriesDaTurma = LegacySchoolClassGrade::query()
+            ->select('turma_serie.*', 'serie.ref_cod_curso', 'curso.padrao_ano_escolar')
+            ->join('pmieducar.serie', 'serie.cod_serie', '=', 'turma_serie.serie_id')
+            ->join('pmieducar.curso', 'curso.cod_curso', '=', 'serie.ref_cod_curso')
+            ->where('turma_id', $schoolClass)
+            ->get()
+            ->toArray();
+
+        return ['series_turma' => $seriesDaTurma];
+    }
+
     public function Gerar()
     {
         if ($this->isRequestFor('get', 'turma')) {
@@ -392,6 +437,8 @@ class TurmaController extends ApiCoreController
             $this->appendResponse($this->getAlunosMatriculadosTurma());
         } elseif ($this->isRequestFor('get', 'alunos-exame-turma')) {
             $this->appendResponse($this->getAlunosExameTurma());
+        } elseif ($this->isRequestFor('get', 'series-da-turma')) {
+            $this->appendResponse($this->getSeriesDaTurma());
         } else {
             $this->notImplementedOperationError();
         }

@@ -2,6 +2,7 @@
   $(document).ready(function(){
 
     var $anoField       = getElementFor('ano');
+    var $serieField     = getElementFor('serie');
     var $turmaField     = getElementFor('turma');
     var $matriculaField = getElementFor('matricula');
 
@@ -18,6 +19,7 @@
 
         var data = {
           ano      : $anoField.attr('value'),
+          serie_id : $serieField.attr('value'),
           turma_id : $turmaField.attr('value')
         };
 

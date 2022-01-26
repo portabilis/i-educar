@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\LegacySchoolClass;
-use App\Services\SchoolClassService;
+use App\Services\SchoolClass\SchoolClassService;
 
 return new class extends clsCadastro {
     const PROCESSO_AP = 9998910;

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacySchoolClassGrade;
 use App\Services\iDiarioService;
 
 return new class extends clsCadastro {
@@ -535,6 +536,32 @@ return new class extends clsCadastro {
 
             $this->copiarComponenteCurricularTurma($turmaOrigem['cod_turma'], $turmaDestinoId);
             $this->copiarModulosTurma($turmaOrigem['cod_turma'], $turmaDestinoId, $anoOrigem, $anoDestino);
+
+            if ($turmaOrigem['multiseriada'] === 1) {
+                $this->criarTurmaMultisseriada($turmaOrigem, $turmaDestinoId);
+            }
+        }
+    }
+
+    private function criarTurmaMultisseriada($turmaOrigem, $turmaDestinoId)
+    {
+        /** @var LegacySchoolClassGrade[] $turmasSeries */
+        $turmasSeries = LegacySchoolClassGrade::query()
+            ->where('escola_id', $turmaOrigem['ref_ref_cod_escola'])
+            ->where('turma_id', $turmaOrigem['cod_turma'])
+            ->get()
+        ;
+
+        foreach ($turmasSeries as $turmaSerie) {
+            $newTurmaSerie = new LegacySchoolClassGrade();
+
+            $newTurmaSerie->escola_id = $turmaOrigem['ref_ref_cod_escola'];
+            $newTurmaSerie->serie_id = $turmaSerie->serie_id;
+            $newTurmaSerie->turma_id = $turmaDestinoId;
+            $newTurmaSerie->boletim_id = $turmaSerie->boletim_id;
+            $newTurmaSerie->boletim_diferenciado_id = $turmaSerie->boletim_diferenciado_id;
+
+            $newTurmaSerie->save();
         }
     }
 
