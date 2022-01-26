@@ -199,15 +199,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-<<<<<<< Updated upstream
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.199.3"
-            },
-            "time": "2021-10-25T18:17:28+00:00"
-=======
                 "source": "https://github.com/aws/aws-sdk-php/tree/3.207.1"
             },
             "time": "2021-12-01T23:44:02+00:00"
->>>>>>> Stashed changes
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -694,18 +688,6 @@
         },
         {
             "name": "doctrine/dbal",
-<<<<<<< Updated upstream
-            "version": "2.13.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/doctrine/dbal.git",
-                "reference": "2411a55a2a628e6d8dd598388ab13474802c7b6e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/2411a55a2a628e6d8dd598388ab13474802c7b6e",
-                "reference": "2411a55a2a628e6d8dd598388ab13474802c7b6e",
-=======
             "version": "2.13.6",
             "source": {
                 "type": "git",
@@ -716,7 +698,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/doctrine/dbal/zipball/67ef6d0327ccbab1202b39e0222977a47ed3ef2f",
                 "reference": "67ef6d0327ccbab1202b39e0222977a47ed3ef2f",
->>>>>>> Stashed changes
                 "shasum": ""
             },
             "require": {
@@ -729,11 +710,7 @@
             "require-dev": {
                 "doctrine/coding-standard": "9.0.0",
                 "jetbrains/phpstorm-stubs": "2021.1",
-<<<<<<< Updated upstream
-                "phpstan/phpstan": "0.12.99",
-=======
                 "phpstan/phpstan": "1.2.0",
->>>>>>> Stashed changes
                 "phpunit/phpunit": "^7.5.20|^8.5|9.5.10",
                 "psalm/plugin-phpunit": "0.16.1",
                 "squizlabs/php_codesniffer": "3.6.1",
@@ -800,11 +777,7 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/dbal/issues",
-<<<<<<< Updated upstream
-                "source": "https://github.com/doctrine/dbal/tree/2.13.4"
-=======
                 "source": "https://github.com/doctrine/dbal/tree/2.13.6"
->>>>>>> Stashed changes
             },
             "funding": [
                 {
@@ -820,11 +793,7 @@
                     "type": "tidelift"
                 }
             ],
-<<<<<<< Updated upstream
-            "time": "2021-10-02T15:59:26+00:00"
-=======
             "time": "2021-11-26T20:11:05+00:00"
->>>>>>> Stashed changes
         },
         {
             "name": "doctrine/deprecations",
@@ -1506,18 +1475,6 @@
         },
         {
             "name": "graham-campbell/result-type",
-<<<<<<< Updated upstream
-            "version": "v1.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/GrahamCampbell/Result-Type.git",
-                "reference": "296c015dc30ec4322168c5ad3ee5cc11dae827ac"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/GrahamCampbell/Result-Type/zipball/296c015dc30ec4322168c5ad3ee5cc11dae827ac",
-                "reference": "296c015dc30ec4322168c5ad3ee5cc11dae827ac",
-=======
             "version": "v1.0.4",
             "source": {
                 "type": "git",
@@ -1528,7 +1485,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/GrahamCampbell/Result-Type/zipball/0690bde05318336c7221785f2a932467f98b64ca",
                 "reference": "0690bde05318336c7221785f2a932467f98b64ca",
->>>>>>> Stashed changes
                 "shasum": ""
             },
             "require": {
@@ -1565,11 +1521,7 @@
             ],
             "support": {
                 "issues": "https://github.com/GrahamCampbell/Result-Type/issues",
-<<<<<<< Updated upstream
-                "source": "https://github.com/GrahamCampbell/Result-Type/tree/v1.0.3"
-=======
                 "source": "https://github.com/GrahamCampbell/Result-Type/tree/v1.0.4"
->>>>>>> Stashed changes
             },
             "funding": [
                 {
@@ -1581,11 +1533,7 @@
                     "type": "tidelift"
                 }
             ],
-<<<<<<< Updated upstream
-            "time": "2021-10-17T19:48:54+00:00"
-=======
             "time": "2021-11-21T21:41:47+00:00"
->>>>>>> Stashed changes
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -2137,18 +2085,6 @@
         },
         {
             "name": "laravel/framework",
-<<<<<<< Updated upstream
-            "version": "v8.67.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laravel/framework.git",
-                "reference": "fc52acafd069aedc079bf8f17d1a4af4ef489b1e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/fc52acafd069aedc079bf8f17d1a4af4ef489b1e",
-                "reference": "fc52acafd069aedc079bf8f17d1a4af4ef489b1e",
-=======
             "version": "v8.74.0",
             "source": {
                 "type": "git",
@@ -2159,7 +2095,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/laravel/framework/zipball/004ea195012d5132eca07a176a6e587c6a74815e",
                 "reference": "004ea195012d5132eca07a176a6e587c6a74815e",
->>>>>>> Stashed changes
                 "shasum": ""
             },
             "require": {
@@ -2181,17 +2116,6 @@
                 "psr/simple-cache": "^1.0",
                 "ramsey/uuid": "^4.2.2",
                 "swiftmailer/swiftmailer": "^6.3",
-<<<<<<< Updated upstream
-                "symfony/console": "^5.1.4",
-                "symfony/error-handler": "^5.1.4",
-                "symfony/finder": "^5.1.4",
-                "symfony/http-foundation": "^5.1.4",
-                "symfony/http-kernel": "^5.1.4",
-                "symfony/mime": "^5.1.4",
-                "symfony/process": "^5.1.4",
-                "symfony/routing": "^5.1.4",
-                "symfony/var-dumper": "^5.1.4",
-=======
                 "symfony/console": "^5.4",
                 "symfony/error-handler": "^5.4",
                 "symfony/finder": "^5.4",
@@ -2201,7 +2125,6 @@
                 "symfony/process": "^5.4",
                 "symfony/routing": "^5.4",
                 "symfony/var-dumper": "^5.4",
->>>>>>> Stashed changes
                 "tijsverkoyen/css-to-inline-styles": "^2.2.2",
                 "vlucas/phpdotenv": "^5.2",
                 "voku/portable-ascii": "^1.4.8"
@@ -2248,38 +2171,22 @@
             },
             "require-dev": {
                 "aws/aws-sdk-php": "^3.198.1",
-<<<<<<< Updated upstream
-                "doctrine/dbal": "^2.13.3|^3.1.2",
-=======
                 "doctrine/dbal": "^2.13.3|^3.1.4",
->>>>>>> Stashed changes
                 "filp/whoops": "^2.14.3",
                 "guzzlehttp/guzzle": "^6.5.5|^7.0.1",
                 "league/flysystem-cached-adapter": "^1.0",
                 "mockery/mockery": "^1.4.4",
-<<<<<<< Updated upstream
-                "orchestra/testbench-core": "^6.23",
-                "pda/pheanstalk": "^4.0",
-                "phpunit/phpunit": "^8.5.19|^9.5.8",
-                "predis/predis": "^1.1.9",
-                "symfony/cache": "^5.1.4"
-=======
                 "orchestra/testbench-core": "^6.27",
                 "pda/pheanstalk": "^4.0",
                 "phpunit/phpunit": "^8.5.19|^9.5.8",
                 "predis/predis": "^1.1.9",
                 "symfony/cache": "^5.4"
->>>>>>> Stashed changes
             },
             "suggest": {
                 "aws/aws-sdk-php": "Required to use the SQS queue driver, DynamoDb failed job storage and SES mail driver (^3.198.1).",
                 "brianium/paratest": "Required to run tests in parallel (^6.0).",
-<<<<<<< Updated upstream
-                "doctrine/dbal": "Required to rename columns and drop SQLite columns (^2.13.3|^3.1.2).",
-=======
                 "doctrine/dbal": "Required to rename columns and drop SQLite columns (^2.13.3|^3.1.4).",
                 "ext-bcmath": "Required to use the multiple_of validation rule.",
->>>>>>> Stashed changes
                 "ext-ftp": "Required to use the Flysystem FTP driver.",
                 "ext-gd": "Required to use Illuminate\\Http\\Testing\\FileFactory::image().",
                 "ext-memcached": "Required to use the memcache cache driver.",
@@ -2346,22 +2253,6 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-<<<<<<< Updated upstream
-            "time": "2021-10-22T13:27:12+00:00"
-        },
-        {
-            "name": "laravel/horizon",
-            "version": "v5.7.14",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laravel/horizon.git",
-                "reference": "640df7c65c464f83cda66781636d816a0992b0b1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laravel/horizon/zipball/640df7c65c464f83cda66781636d816a0992b0b1",
-                "reference": "640df7c65c464f83cda66781636d816a0992b0b1",
-=======
             "time": "2021-11-30T15:26:05+00:00"
         },
         {
@@ -2376,7 +2267,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/laravel/horizon/zipball/393e0a9a66a1028d236fc7067eb2f8ba655e2e15",
                 "reference": "393e0a9a66a1028d236fc7067eb2f8ba655e2e15",
->>>>>>> Stashed changes
                 "shasum": ""
             },
             "require": {
@@ -2438,15 +2328,9 @@
             ],
             "support": {
                 "issues": "https://github.com/laravel/horizon/issues",
-<<<<<<< Updated upstream
-                "source": "https://github.com/laravel/horizon/tree/v5.7.14"
-            },
-            "time": "2021-10-12T15:20:07+00:00"
-=======
                 "source": "https://github.com/laravel/horizon/tree/v5.7.16"
             },
             "time": "2021-11-23T17:27:41+00:00"
->>>>>>> Stashed changes
         },
         {
             "name": "laravel/legacy-factories",
@@ -2506,18 +2390,6 @@
         },
         {
             "name": "laravel/serializable-closure",
-<<<<<<< Updated upstream
-            "version": "v1.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laravel/serializable-closure.git",
-                "reference": "6cfc678735f22ccedad761b8cae2bab14c3d8e5b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laravel/serializable-closure/zipball/6cfc678735f22ccedad761b8cae2bab14c3d8e5b",
-                "reference": "6cfc678735f22ccedad761b8cae2bab14c3d8e5b",
-=======
             "version": "v1.0.5",
             "source": {
                 "type": "git",
@@ -2528,7 +2400,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/laravel/serializable-closure/zipball/25de3be1bca1b17d52ff0dc02b646c667ac7266c",
                 "reference": "25de3be1bca1b17d52ff0dc02b646c667ac7266c",
->>>>>>> Stashed changes
                 "shasum": ""
             },
             "require": {
@@ -2574,11 +2445,7 @@
                 "issues": "https://github.com/laravel/serializable-closure/issues",
                 "source": "https://github.com/laravel/serializable-closure"
             },
-<<<<<<< Updated upstream
-            "time": "2021-10-07T14:00:57+00:00"
-=======
             "time": "2021-11-30T15:53:04+00:00"
->>>>>>> Stashed changes
         },
         {
             "name": "laravel/tinker",
@@ -2904,18 +2771,6 @@
         },
         {
             "name": "league/csv",
-<<<<<<< Updated upstream
-            "version": "9.7.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/thephpleague/csv.git",
-                "reference": "8544655c460fd01eed0ad258e514488d4b388645"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/csv/zipball/8544655c460fd01eed0ad258e514488d4b388645",
-                "reference": "8544655c460fd01eed0ad258e514488d4b388645",
-=======
             "version": "9.7.4",
             "source": {
                 "type": "git",
@@ -2926,7 +2781,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/thephpleague/csv/zipball/002f55f649e7511710dc7154ff44c7be32c8195c",
                 "reference": "002f55f649e7511710dc7154ff44c7be32c8195c",
->>>>>>> Stashed changes
                 "shasum": ""
             },
             "require": {
@@ -2938,15 +2792,9 @@
                 "ext-curl": "*",
                 "ext-dom": "*",
                 "friendsofphp/php-cs-fixer": "^3.0",
-<<<<<<< Updated upstream
-                "phpstan/phpstan": "^0.12.99",
-                "phpstan/phpstan-phpunit": "^0.12.22",
-                "phpstan/phpstan-strict-rules": "^0.12.11",
-=======
                 "phpstan/phpstan": "^1.0",
                 "phpstan/phpstan-phpunit": "^1.0.0",
                 "phpstan/phpstan-strict-rules": "^1.0",
->>>>>>> Stashed changes
                 "phpunit/phpunit": "^9.5"
             },
             "suggest": {
@@ -3003,11 +2851,7 @@
                     "type": "github"
                 }
             ],
-<<<<<<< Updated upstream
-            "time": "2021-10-05T19:41:46+00:00"
-=======
             "time": "2021-11-30T07:09:34+00:00"
->>>>>>> Stashed changes
         },
         {
             "name": "league/flysystem",
@@ -3253,18 +3097,6 @@
         },
         {
             "name": "league/mime-type-detection",
-<<<<<<< Updated upstream
-            "version": "1.8.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/thephpleague/mime-type-detection.git",
-                "reference": "b38b25d7b372e9fddb00335400467b223349fd7e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/mime-type-detection/zipball/b38b25d7b372e9fddb00335400467b223349fd7e",
-                "reference": "b38b25d7b372e9fddb00335400467b223349fd7e",
-=======
             "version": "1.9.0",
             "source": {
                 "type": "git",
@@ -3275,7 +3107,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/thephpleague/mime-type-detection/zipball/aa70e813a6ad3d1558fc927863d47309b4c23e69",
                 "reference": "aa70e813a6ad3d1558fc927863d47309b4c23e69",
->>>>>>> Stashed changes
                 "shasum": ""
             },
             "require": {
@@ -3306,11 +3137,7 @@
             "description": "Mime-type detection for Flysystem",
             "support": {
                 "issues": "https://github.com/thephpleague/mime-type-detection/issues",
-<<<<<<< Updated upstream
-                "source": "https://github.com/thephpleague/mime-type-detection/tree/1.8.0"
-=======
                 "source": "https://github.com/thephpleague/mime-type-detection/tree/1.9.0"
->>>>>>> Stashed changes
             },
             "funding": [
                 {
@@ -3322,11 +3149,7 @@
                     "type": "tidelift"
                 }
             ],
-<<<<<<< Updated upstream
-            "time": "2021-09-25T08:23:19+00:00"
-=======
             "time": "2021-11-21T11:48:40+00:00"
->>>>>>> Stashed changes
         },
         {
             "name": "maatwebsite/excel",
@@ -4017,18 +3840,6 @@
         },
         {
             "name": "nette/utils",
-<<<<<<< Updated upstream
-            "version": "v3.2.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/nette/utils.git",
-                "reference": "9cd80396ca58d7969ab44fc7afcf03624dfa526e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/nette/utils/zipball/9cd80396ca58d7969ab44fc7afcf03624dfa526e",
-                "reference": "9cd80396ca58d7969ab44fc7afcf03624dfa526e",
-=======
             "version": "v3.2.6",
             "source": {
                 "type": "git",
@@ -4039,7 +3850,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/nette/utils/zipball/2f261e55bd6a12057442045bf2c249806abc1d02",
                 "reference": "2f261e55bd6a12057442045bf2c249806abc1d02",
->>>>>>> Stashed changes
                 "shasum": ""
             },
             "require": {
@@ -4109,24 +3919,6 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/utils/issues",
-<<<<<<< Updated upstream
-                "source": "https://github.com/nette/utils/tree/v3.2.5"
-            },
-            "time": "2021-09-20T10:50:11+00:00"
-        },
-        {
-            "name": "nikic/php-parser",
-            "version": "v4.13.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "50953a2691a922aa1769461637869a0a2faa3f53"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/50953a2691a922aa1769461637869a0a2faa3f53",
-                "reference": "50953a2691a922aa1769461637869a0a2faa3f53",
-=======
                 "source": "https://github.com/nette/utils/tree/v3.2.6"
             },
             "time": "2021-11-24T15:47:23+00:00"
@@ -4143,7 +3935,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/210577fe3cf7badcc5814d99455df46564f3c077",
                 "reference": "210577fe3cf7badcc5814d99455df46564f3c077",
->>>>>>> Stashed changes
                 "shasum": ""
             },
             "require": {
@@ -4184,15 +3975,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-<<<<<<< Updated upstream
-                "source": "https://github.com/nikic/PHP-Parser/tree/v4.13.0"
-            },
-            "time": "2021-09-20T12:20:58+00:00"
-=======
                 "source": "https://github.com/nikic/PHP-Parser/tree/v4.13.2"
             },
             "time": "2021-11-30T19:35:32+00:00"
->>>>>>> Stashed changes
         },
         {
             "name": "nuwave/lighthouse",
@@ -5134,18 +4919,6 @@
         },
         {
             "name": "psy/psysh",
-<<<<<<< Updated upstream
-            "version": "v0.10.9",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/bobthecow/psysh.git",
-                "reference": "01281336c4ae557fe4a994544f30d3a1bc204375"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/01281336c4ae557fe4a994544f30d3a1bc204375",
-                "reference": "01281336c4ae557fe4a994544f30d3a1bc204375",
-=======
             "version": "v0.10.12",
             "source": {
                 "type": "git",
@@ -5156,7 +4929,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/bobthecow/psysh/zipball/a0d9981aa07ecfcbea28e4bfa868031cca121e7d",
                 "reference": "a0d9981aa07ecfcbea28e4bfa868031cca121e7d",
->>>>>>> Stashed changes
                 "shasum": ""
             },
             "require": {
@@ -5216,15 +4988,9 @@
             ],
             "support": {
                 "issues": "https://github.com/bobthecow/psysh/issues",
-<<<<<<< Updated upstream
-                "source": "https://github.com/bobthecow/psysh/tree/v0.10.9"
-            },
-            "time": "2021-10-10T13:37:39+00:00"
-=======
                 "source": "https://github.com/bobthecow/psysh/tree/v0.10.12"
             },
             "time": "2021-11-30T14:05:36+00:00"
->>>>>>> Stashed changes
         },
         {
             "name": "ralouphie/getallheaders",
@@ -5635,10 +5401,7 @@
                     "type": "tidelift"
                 }
             ],
-<<<<<<< Updated upstream
-=======
             "abandoned": "symfony/mailer",
->>>>>>> Stashed changes
             "time": "2021-10-18T15:26:12+00:00"
         },
         {
@@ -6246,18 +6009,6 @@
         },
         {
             "name": "symfony/http-kernel",
-<<<<<<< Updated upstream
-            "version": "v5.3.9",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/http-kernel.git",
-                "reference": "ceaf46a992f60e90645e7279825a830f733a17c5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/ceaf46a992f60e90645e7279825a830f733a17c5",
-                "reference": "ceaf46a992f60e90645e7279825a830f733a17c5",
-=======
             "version": "v5.4.0",
             "source": {
                 "type": "git",
@@ -6268,7 +6019,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/http-kernel/zipball/e012f16688bcb151e965473a70d8ebaa8b1d15ea",
                 "reference": "e012f16688bcb151e965473a70d8ebaa8b1d15ea",
->>>>>>> Stashed changes
                 "shasum": ""
             },
             "require": {
@@ -6351,11 +6101,7 @@
             "description": "Provides a structured process for converting a Request into a Response",
             "homepage": "https://symfony.com",
             "support": {
-<<<<<<< Updated upstream
-                "source": "https://github.com/symfony/http-kernel/tree/v5.3.9"
-=======
                 "source": "https://github.com/symfony/http-kernel/tree/v5.4.0"
->>>>>>> Stashed changes
             },
             "funding": [
                 {
@@ -6371,22 +6117,6 @@
                     "type": "tidelift"
                 }
             ],
-<<<<<<< Updated upstream
-            "time": "2021-09-28T10:25:11+00:00"
-        },
-        {
-            "name": "symfony/mime",
-            "version": "v5.3.8",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/mime.git",
-                "reference": "a756033d0a7e53db389618653ae991eba5a19a11"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/mime/zipball/a756033d0a7e53db389618653ae991eba5a19a11",
-                "reference": "a756033d0a7e53db389618653ae991eba5a19a11",
-=======
             "time": "2021-11-29T16:56:53+00:00"
         },
         {
@@ -6401,7 +6131,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/mime/zipball/d4365000217b67c01acff407573906ff91bcfb34",
                 "reference": "d4365000217b67c01acff407573906ff91bcfb34",
->>>>>>> Stashed changes
                 "shasum": ""
             },
             "require": {
@@ -6455,11 +6184,7 @@
                 "mime-type"
             ],
             "support": {
-<<<<<<< Updated upstream
-                "source": "https://github.com/symfony/mime/tree/v5.3.8"
-=======
                 "source": "https://github.com/symfony/mime/tree/v5.4.0"
->>>>>>> Stashed changes
             },
             "funding": [
                 {
@@ -6475,11 +6200,7 @@
                     "type": "tidelift"
                 }
             ],
-<<<<<<< Updated upstream
-            "time": "2021-09-10T12:30:38+00:00"
-=======
             "time": "2021-11-23T10:19:22+00:00"
->>>>>>> Stashed changes
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -7612,18 +7333,6 @@
         },
         {
             "name": "symfony/translation",
-<<<<<<< Updated upstream
-            "version": "v5.3.9",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/translation.git",
-                "reference": "6e69f3551c1a3356cf6ea8d019bf039a0f8b6886"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/6e69f3551c1a3356cf6ea8d019bf039a0f8b6886",
-                "reference": "6e69f3551c1a3356cf6ea8d019bf039a0f8b6886",
-=======
             "version": "v5.4.0",
             "source": {
                 "type": "git",
@@ -7634,7 +7343,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/translation/zipball/6fe32b10e912a518805bc9eafc2a87145773cf13",
                 "reference": "6fe32b10e912a518805bc9eafc2a87145773cf13",
->>>>>>> Stashed changes
                 "shasum": ""
             },
             "require": {
@@ -7702,11 +7410,7 @@
             "description": "Provides tools to internationalize your application",
             "homepage": "https://symfony.com",
             "support": {
-<<<<<<< Updated upstream
-                "source": "https://github.com/symfony/translation/tree/v5.3.9"
-=======
                 "source": "https://github.com/symfony/translation/tree/v5.4.0"
->>>>>>> Stashed changes
             },
             "funding": [
                 {
@@ -7804,18 +7508,6 @@
         },
         {
             "name": "symfony/var-dumper",
-<<<<<<< Updated upstream
-            "version": "v5.3.8",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/var-dumper.git",
-                "reference": "eaaea4098be1c90c8285543e1356a09c8aa5c8da"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/eaaea4098be1c90c8285543e1356a09c8aa5c8da",
-                "reference": "eaaea4098be1c90c8285543e1356a09c8aa5c8da",
-=======
             "version": "v5.4.0",
             "source": {
                 "type": "git",
@@ -7826,7 +7518,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/var-dumper/zipball/89ab66eaef230c9cd1992de2e9a1b26652b127b9",
                 "reference": "89ab66eaef230c9cd1992de2e9a1b26652b127b9",
->>>>>>> Stashed changes
                 "shasum": ""
             },
             "require": {
@@ -7886,11 +7577,7 @@
                 "dump"
             ],
             "support": {
-<<<<<<< Updated upstream
-                "source": "https://github.com/symfony/var-dumper/tree/v5.3.8"
-=======
                 "source": "https://github.com/symfony/var-dumper/tree/v5.4.0"
->>>>>>> Stashed changes
             },
             "funding": [
                 {
@@ -7906,11 +7593,7 @@
                     "type": "tidelift"
                 }
             ],
-<<<<<<< Updated upstream
-            "time": "2021-09-24T15:59:58+00:00"
-=======
             "time": "2021-11-29T15:30:56+00:00"
->>>>>>> Stashed changes
         },
         {
             "name": "thecodingmachine/safe",
@@ -8106,18 +7789,6 @@
         },
         {
             "name": "vlucas/phpdotenv",
-<<<<<<< Updated upstream
-            "version": "v5.3.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/vlucas/phpdotenv.git",
-                "reference": "accaddf133651d4b5cf81a119f25296736ffc850"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/accaddf133651d4b5cf81a119f25296736ffc850",
-                "reference": "accaddf133651d4b5cf81a119f25296736ffc850",
-=======
             "version": "v5.4.0",
             "source": {
                 "type": "git",
@@ -8128,7 +7799,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/d4394d044ed69a8f244f3445bcedf8a0d7fe2403",
                 "reference": "d4394d044ed69a8f244f3445bcedf8a0d7fe2403",
->>>>>>> Stashed changes
                 "shasum": ""
             },
             "require": {
@@ -8181,11 +7851,7 @@
             ],
             "support": {
                 "issues": "https://github.com/vlucas/phpdotenv/issues",
-<<<<<<< Updated upstream
-                "source": "https://github.com/vlucas/phpdotenv/tree/v5.3.1"
-=======
                 "source": "https://github.com/vlucas/phpdotenv/tree/v5.4.0"
->>>>>>> Stashed changes
             },
             "funding": [
                 {
@@ -8197,11 +7863,7 @@
                     "type": "tidelift"
                 }
             ],
-<<<<<<< Updated upstream
-            "time": "2021-10-02T19:24:42+00:00"
-=======
             "time": "2021-11-10T01:08:39+00:00"
->>>>>>> Stashed changes
         },
         {
             "name": "voku/portable-ascii",
@@ -8831,18 +8493,6 @@
         },
         {
             "name": "facade/ignition",
-<<<<<<< Updated upstream
-            "version": "2.15.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/facade/ignition.git",
-                "reference": "3ee6e94815462bcf09bca0efc1c9069685df8da3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/facade/ignition/zipball/3ee6e94815462bcf09bca0efc1c9069685df8da3",
-                "reference": "3ee6e94815462bcf09bca0efc1c9069685df8da3",
-=======
             "version": "2.17.2",
             "source": {
                 "type": "git",
@@ -8853,7 +8503,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/facade/ignition/zipball/af3cd70d58ca3ef5189ff0e59efbe5a5c043e2d2",
                 "reference": "af3cd70d58ca3ef5189ff0e59efbe5a5c043e2d2",
->>>>>>> Stashed changes
                 "shasum": ""
             },
             "require": {
@@ -8918,11 +8567,7 @@
                 "issues": "https://github.com/facade/ignition/issues",
                 "source": "https://github.com/facade/ignition"
             },
-<<<<<<< Updated upstream
-            "time": "2021-10-11T15:24:06+00:00"
-=======
             "time": "2021-11-29T14:04:22+00:00"
->>>>>>> Stashed changes
         },
         {
             "name": "facade/ignition-contracts",
@@ -9334,18 +8979,6 @@
         },
         {
             "name": "laravel/telescope",
-<<<<<<< Updated upstream
-            "version": "v4.6.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laravel/telescope.git",
-                "reference": "06ce2890dd9f1f6aab218a922746161e6870a29a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laravel/telescope/zipball/06ce2890dd9f1f6aab218a922746161e6870a29a",
-                "reference": "06ce2890dd9f1f6aab218a922746161e6870a29a",
-=======
             "version": "v4.6.8",
             "source": {
                 "type": "git",
@@ -9356,7 +8989,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/laravel/telescope/zipball/85cf170f90f32656cdde6f4ce1a96514e7edbdbe",
                 "reference": "85cf170f90f32656cdde6f4ce1a96514e7edbdbe",
->>>>>>> Stashed changes
                 "shasum": ""
             },
             "require": {
@@ -9408,15 +9040,9 @@
             ],
             "support": {
                 "issues": "https://github.com/laravel/telescope/issues",
-<<<<<<< Updated upstream
-                "source": "https://github.com/laravel/telescope/tree/v4.6.5"
-            },
-            "time": "2021-10-05T19:06:40+00:00"
-=======
                 "source": "https://github.com/laravel/telescope/tree/v4.6.8"
             },
             "time": "2021-11-30T16:09:16+00:00"
->>>>>>> Stashed changes
         },
         {
             "name": "mockery/mockery",
@@ -10030,18 +9656,6 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-<<<<<<< Updated upstream
-            "version": "9.2.7",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "d4c798ed8d51506800b441f7a13ecb0f76f12218"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/d4c798ed8d51506800b441f7a13ecb0f76f12218",
-                "reference": "d4c798ed8d51506800b441f7a13ecb0f76f12218",
-=======
             "version": "9.2.9",
             "source": {
                 "type": "git",
@@ -10052,18 +9666,13 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/f301eb1453c9e7a1bc912ee8b0ea9db22c60223b",
                 "reference": "f301eb1453c9e7a1bc912ee8b0ea9db22c60223b",
->>>>>>> Stashed changes
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
                 "ext-libxml": "*",
                 "ext-xmlwriter": "*",
-<<<<<<< Updated upstream
-                "nikic/php-parser": "^4.12.0",
-=======
                 "nikic/php-parser": "^4.13.0",
->>>>>>> Stashed changes
                 "php": ">=7.3",
                 "phpunit/php-file-iterator": "^3.0.3",
                 "phpunit/php-text-template": "^2.0.2",
@@ -10112,11 +9721,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues",
-<<<<<<< Updated upstream
-                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/9.2.7"
-=======
                 "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/9.2.9"
->>>>>>> Stashed changes
             },
             "funding": [
                 {
@@ -10124,11 +9729,7 @@
                     "type": "github"
                 }
             ],
-<<<<<<< Updated upstream
-            "time": "2021-09-17T05:39:03+00:00"
-=======
             "time": "2021-11-19T15:21:02+00:00"
->>>>>>> Stashed changes
         },
         {
             "name": "phpunit/php-file-iterator",
