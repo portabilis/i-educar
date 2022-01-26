@@ -7,7 +7,6 @@ use Illuminate\Contracts\Validation\Rule;
 
 class CheckSchoolClassExistsByName implements Rule
 {
-
     /**
      * Determine if the validation rule passes.
      *

@@ -26,16 +26,18 @@ class ExistsEnrollmentsInSchoolClassGrades implements Rule
             ->where('ref_cod_turma', $schoolClass->getKey())
             ->where('ativo', 1)
             ->with('registration')
-            ->whereHas('registration', function ($query) use ($schoolClass, $gradesToDelete) {
-                    /** @var Builder $query */
-                    $query->where('ano', $schoolClass->ano);
-                    $query->whereIn('ref_ref_cod_serie', $gradesToDelete);
-                }
+            ->whereHas(
+                'registration',
+                function ($query) use ($schoolClass, $gradesToDelete) {
+                /** @var Builder $query */
+                $query->where('ano', $schoolClass->ano);
+                $query->whereIn('ref_ref_cod_serie', $gradesToDelete);
+            }
             )
             ->get()
             ->pluck('registration.grade.nm_serie', 'registration.grade.cod_serie')
             ->toArray();
-        
+
         $this->gradesWithEnrollments = implode(', ', $gradesWithEnrollments);
 
         return count($gradesWithEnrollments) === 0;

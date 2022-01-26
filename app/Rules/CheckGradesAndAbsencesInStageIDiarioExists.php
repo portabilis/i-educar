@@ -36,8 +36,6 @@ class CheckGradesAndAbsencesInStageIDiarioExists implements Rule
                 && config('legacy.config.token_novo_educacao');
 
             if ($checkReleases) {
-
-
                 $iDiarioService = app(iDiarioService::class);
 
                 foreach ($etapas as $etapa) {

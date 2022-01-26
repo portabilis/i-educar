@@ -6,7 +6,6 @@ use App\Services\iDiarioService;
 use Dotenv\Exception\ValidationException;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Facades\DB;
-use RuntimeException;
 
 class CheckGradesAndAbsencesInStageExists implements Rule
 {

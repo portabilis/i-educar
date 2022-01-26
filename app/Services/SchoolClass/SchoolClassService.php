@@ -15,7 +15,6 @@ use Illuminate\Validation\ValidationException;
 
 class SchoolClassService
 {
-
     /**
      * Retorna se o nome está disponível para cadastro. Ignora a turma com ID
      * caso seja informado.

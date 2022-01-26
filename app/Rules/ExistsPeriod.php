@@ -6,7 +6,6 @@ use Illuminate\Contracts\Validation\Rule;
 
 class ExistsPeriod implements Rule
 {
-
     /**
      * Determine if the validation rule passes.
      *

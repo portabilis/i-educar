@@ -52,6 +52,7 @@ class RequiredAlternativeReportCard implements Rule
         if (count($gradesToValidate) > 0) {
             $gradesToValidate = implode(', ', $gradesToValidate);
             $this->message = "O campo '<b>Boletim diferenciado</b>' é obrigatório para a(s) série(s): $gradesToValidate, pois a regra de avaliação possui regra diferenciada definida.";
+
             return false;
         }
 

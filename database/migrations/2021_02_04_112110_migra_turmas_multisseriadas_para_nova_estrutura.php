@@ -12,7 +12,7 @@ class MigraTurmasMultisseriadasParaNovaEstrutura extends Migration
      */
     public function up()
     {
-        DB::statement("
+        DB::statement('
             INSERT INTO pmieducar.turma_serie (
                 turma_id,
                 serie_id,
@@ -30,7 +30,7 @@ class MigraTurmasMultisseriadasParaNovaEstrutura extends Migration
             JOIN pmieducar.serie s ON s.cod_serie IN (t.ref_ref_cod_serie, t.ref_ref_cod_serie_mult)
             WHERE t.ref_ref_cod_serie_mult IS NOT NULL
             ORDER BY 1,2;
-        ");
+        ');
     }
 
     /**
@@ -40,7 +40,7 @@ class MigraTurmasMultisseriadasParaNovaEstrutura extends Migration
      */
     public function down()
     {
-        DB::statement("
+        DB::statement('
             DELETE
             FROM pmieducar.turma_serie ts
             WHERE EXISTS (
@@ -51,6 +51,6 @@ class MigraTurmasMultisseriadasParaNovaEstrutura extends Migration
                 AND s.cod_serie = ts.serie_id
                 AND t.cod_turma = ts.turma_id
             );
-        ");
+        ');
     }
 }

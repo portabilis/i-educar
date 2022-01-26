@@ -12,7 +12,7 @@ class InsereSeriesMultiInexistentesNasEscolas extends Migration
      */
     public function up()
     {
-        DB::statement("
+        DB::statement('
             INSERT INTO escola_serie (
                 ref_cod_escola,
                 ref_cod_serie,
@@ -40,7 +40,7 @@ class InsereSeriesMultiInexistentesNasEscolas extends Migration
             GROUP BY
                 t.ref_ref_cod_escola,
                 s.cod_serie;
-        ");
+        ');
     }
 
     /**

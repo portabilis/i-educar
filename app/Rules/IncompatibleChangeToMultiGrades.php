@@ -7,7 +7,6 @@ use Illuminate\Contracts\Validation\Rule;
 
 class IncompatibleChangeToMultiGrades implements Rule
 {
-
     public function passes($attribute, $value): bool
     {
         $grades = [];
@@ -31,6 +30,6 @@ class IncompatibleChangeToMultiGrades implements Rule
 
     public function message(): string
     {
-       return 'Não foi possível alterar a turma para ser multisseriada, pois a série original possui matrículas vinculadas.';
+        return 'Não foi possível alterar a turma para ser multisseriada, pois a série original possui matrículas vinculadas.';
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Rules;
 
-use App\Models\LegacySchoolClass;
 use Illuminate\Contracts\Validation\Rule;
 
 class CanDeleteTurma implements Rule
@@ -10,14 +9,15 @@ class CanDeleteTurma implements Rule
     /**
      * Determine if the validation rule passes.
      *
-     * @param  string  $attribute
-     * @param  mixed  $value
+     * @param string $attribute
+     * @param mixed  $value
+     *
      * @return bool
      */
     public function passes($attribute, $value)
     {
         $enrollments = $value->getActiveEnrollments()->count();
-        if($enrollments > 0){
+        if ($enrollments > 0) {
             return false;
         }
 
