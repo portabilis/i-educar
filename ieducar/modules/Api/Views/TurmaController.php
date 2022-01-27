@@ -1,8 +1,5 @@
 <?php
 
-# TODO remove-require
-require_once 'Reports/Tipos/TipoBoletim.php';
-
 use App\Models\LegacySchoolClassGrade;
 
 class TurmaController extends ApiCoreController

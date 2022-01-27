@@ -29,7 +29,7 @@ return new class extends clsCadastro {
     public $ref_cod_instituicao;
     public $ref_cod_curso;
     public $ref_cod_escola_;
-    public $padrao_ano_escolar;
+    public $padrao_ano_escolar = 1;
     public $ref_cod_regente;
     public $ref_cod_instituicao_regente;
     public $turma_modulo = [];
