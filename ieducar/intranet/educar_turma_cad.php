@@ -247,7 +247,6 @@ return new class extends clsCadastro {
         $this->inputsHelper()->dynamic('ano', ['value' => (is_null($this->ano) ? date('Y') : $this->ano), 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('instituicao', ['value' => $this->ref_cod_instituicao, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('escola', ['value' => $this->ref_cod_escola, 'disabled' => $desabilitado]);
-        $this->inputsHelper()->dynamic(['curso', 'serie'], ['disabled' => $desabilitado]);
 
         $multiseriada = $this->multiseriada ?? 0;
         $this->campoCheck('multiseriada', 'Multisseriada', $multiseriada);
@@ -265,6 +264,8 @@ return new class extends clsCadastro {
                 ->toArray();
             $opcoesCursos = array_replace($opcoesCursos, $cursosDaEscola);
         }
+
+        $this->inputsHelper()->dynamic(['curso', 'serie'], ['disabled' => $desabilitado]);
 
         $tiposBoletim = Portabilis_Model_Report_TipoBoletim::getInstance()->getEnums();
         asort($tiposBoletim);
