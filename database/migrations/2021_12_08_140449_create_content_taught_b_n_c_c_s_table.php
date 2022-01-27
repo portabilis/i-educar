@@ -23,10 +23,10 @@ class CreateContentTaughtBNCCSTable extends Migration
                 ->on('modules.conteudo_ministrado')
                 ->onDelete('cascade');
 
-            $table->foreign('bncc_id')
-                ->references('id')
-                ->on('public.learning_objectives_and_skills')
-                ->onDelete('cascade');
+            // $table->foreign('bncc_id')
+            //     ->references('id')
+            //     ->on('public.learning_objectives_and_skills')
+            //     ->onDelete('cascade');
         });
     }
 
