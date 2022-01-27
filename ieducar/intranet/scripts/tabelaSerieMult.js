@@ -4,6 +4,7 @@ configuraCamposExibidos();
 $j('#multiseriada').change(function(){
     configuraCamposExibidos();
     atualizaOpcoesDeDisciplinas();
+    converteCamposDeBoletinsEmChosen();
 });
 
 $j('#ref_cod_escola').change(function(){
@@ -72,7 +73,7 @@ function preencheTabelaSeriesDaTurma() {
 
 function configuraCamposExibidos() {
     let turmaMultisseriada = $j('#multiseriada').is(':checked');
-    
+
     if (turmaMultisseriada) {
         $j('#tr_ref_cod_curso').hide();
         $j('#tr_ref_cod_serie').hide();
