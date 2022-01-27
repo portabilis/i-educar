@@ -215,12 +215,13 @@ body {
         left: 0;
 	}
 	
-	@media (max-width: 768px) {
+	/* @media (max-width: 768px) { */
 		body {margin: 0;}
 		.imgBorda, .divLogo, .lateral_2, .link { opacity: 0; display: none }
 		.lateralLogin {background:none}
-		.entLogoMobile { opacity:1; width: 90%; display: block; }
-		.fontLoginMobile { opacity:1; display: block }
+		.entLogoMobile { opacity:1; width: 90%; max-width: 295px; margin: auto; margin-bottom: 8%; display: block; }
+		.logo-tecsis { max-width: 79px; margin: auto;  }
+		.fontLoginMobile { opacity:1; display: block; margin-bottom: 7%; }
 		.divLogoMobile { opacity:1; display: block; margin-top: -220px; }
 		
 		#login-form {border-radius: 25px; padding: 20px}
@@ -228,7 +229,7 @@ body {
 		.h2 {font-size: 18px}
 		#main { padding-top: 0;}
 		.shadow_M { box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 50%); }
-	}
+	/*}*/
 	
 	.lateralLogin .bgLogin {
 		margin-top: unset;

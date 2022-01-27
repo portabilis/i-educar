@@ -108,6 +108,6 @@
 		</div>
 	</div>
 <div class="divLogoMobile"></div>
-<img alt="Logo" class="entLogoMobile" style="width: 27%; margin: auto" src="{{ url('intranet/imagens/login/svg/TecSis-logo.svg') }}"/>
+<img alt="Logo" class="entLogoMobile logo-tecsis" src="{{ url('intranet/imagens/login/svg/TecSis-logo.svg') }}"/>
 </body>
 </html>
