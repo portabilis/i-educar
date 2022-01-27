@@ -6,9 +6,10 @@
 		
 		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans">
 		<link rel="preconnect" href="https://fonts.googleapis.com">
+		
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Love+Ya+Like+A+Sister&display=swap" rel="stylesheet">
-		
 		<link rel="stylesheet" type="text/css" href="{{ url('intranet/styles/login.css') }}">
 		<link rel="stylesheet" type="text/css" href="{{ url('intranet/styles/login-custom.css') }}">
 		
@@ -53,7 +54,8 @@
 			
 			<div class="lateralLogin">
 				
-				<h1>{{ config('legacy.config.ieducar_entity_name') }}</h1>
+				<?php //<h1>{{ config('legacy.config.ieducar_entity_name') }}</h1>  ?>
+				<h1 class="fontLogin fontLoginMobile">Secretaria Municipal da Educação</h1>
 				
 				@if (session('status'))
 				<p class="success">{{ session('status') }}</p>
@@ -63,7 +65,9 @@
 				<p class="error">{{ $errors->first() }}</p>
 				@endif
 				
-				<div id="login-form">
+				<div id="login-form" class="shadow_M">
+					
+					<img alt="Logo" class="entLogoMobile" src="{{ config('legacy.config.ieducar_image') ?? url('intranet/imagens/login/tecsis_png.png') }}"/>
 					@yield('content')
 				</div>
 				<div id="footer" class="link">
@@ -76,13 +80,13 @@
 			</div>
 			
 			<div class="imgBorda"></div>
-			<div class="lateral_2">
-				<img alt="Logo" class="entLogo" src="{{ config('legacy.config.ieducar_image') ?? url('intranet/imagens/login/tecsis_png.png') }}"/></br>
+			<div class="container lateral_2">
+				<img alt="Logo" class="entLogo" src="{{ config('legacy.config.ieducar_image') ?? url('intranet/imagens/login/tecsis_png.png') }}"/>
 				<h1 class="fontLogin font-b">Secretaria Municipal da Educação</h1>
 				
 				<div id="footer" class="link">
 					<div class="footer-social">
-						<!-- {!! config('legacy.config.ieducar_external_footer') !!} -->
+						<?php /* {!! config('legacy.config.ieducar_external_footer') !!} */ ?>
 						@if(config('legacy.config.facebook_url') || config('legacy.config.linkedin_url') || config('legacy.config.twitter_url'))
 						
 						<div class="social-icons">
@@ -101,10 +105,9 @@
 					</div>
 				</div>
 			</div>
-			
 		</div>
-		
 	</div>
-	
+<div class="divLogoMobile"></div>
+<img alt="Logo" class="entLogoMobile" style="width: 27%; margin: auto" src="{{ url('intranet/imagens/login/svg/TecSis-logo.svg') }}"/>
 </body>
 </html>

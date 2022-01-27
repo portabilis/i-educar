@@ -8,14 +8,13 @@ body {
 }
 
 h1 {
-  font-size: 16px;
+  font-size: 30px;
   color: #646b71;
   font-weight: normal;
 }
 
 h2 {
   text-align: center;
-  font-size: 24px;
   color: #596066;
   font-weight: normal;
   margin: 0;
@@ -103,7 +102,7 @@ button.submit:disabled {
 }
 
 .social-icons {
-  float: right;
+  /* float: right; */
 }
 
 .error, .success {
