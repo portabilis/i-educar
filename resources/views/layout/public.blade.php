@@ -68,22 +68,19 @@
 					<div class="container"></div>
 					<div id="login-form" class="shadow_M">
 						
-						<img alt="Logo" class="entLogoMobile" src="{{ config('legacy.config.ieducar_image') ?? url('intranet/imagens/login/tecsis_png.png') }}"/>
+						<img alt="Logo" class="entLogoMobile" src="{{ config('legacy.config.ieducar_image') ?? url('https://tecsisdoc.com.br/wp-content/uploads/2022/01/tecsis_png.png') }}"/>
 						@yield('content')
 					</div>
 					<div id="footer" class="link">
 						<div class="divLogo"></div>
-						<!-- 
-							<p>Mantido por <a href="https://tecsisdoc.com.br/" target="_blank">Tecsis</a>.
-							<?php /* {!! config('legacy.config.ieducar_login_footer') !!} */?>
-						</p> -->
+						<?php /*	<p>Mantido por <a href="https://tecsisdoc.com.br/" target="_blank">Tecsis</a>.
+						{!! config('legacy.config.ieducar_login_footer') !!} </p> */?>
 					</div>
 				</div>
-				
 				<div class="imgBorda"></div>
 				<div class="container lateral_2">
 					<div class="container">
-						<img alt="Logo" class="entLogo" src="{{ config('legacy.config.ieducar_image') ?? url('intranet/imagens/login/tecsis_png.png') }}"/>
+						<img alt="Logo" class="entLogo" src="{{ config('legacy.config.ieducar_image') ?? url('https://tecsisdoc.com.br/wp-content/uploads/2022/01/tecsis_png.png') }}"/>
 					</div>
 					<div class="container">
 						<h1 class="fontLogin font-b">Secretaria Municipal da Educação</h1>
