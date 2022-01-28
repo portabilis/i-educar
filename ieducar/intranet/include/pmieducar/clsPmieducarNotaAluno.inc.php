@@ -1039,13 +1039,8 @@ $whereAnd = 'WHERE';
 $join = '';
 $filtros = '';
 
-if(is_numeric($ref_cod_matricula)){
     $filtros .= "{$whereAnd} cod_matricula = '{$ref_cod_matricula}' ";
     $whereAnd = "AND ";
-}
-
-
-
 $db = new clsBanco();
 $countCampos = count(explode(',', " notas"));
 $resultado = [];

@@ -292,7 +292,6 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
 
         $style = "/modules/$controllerName/Assets/Stylesheets/$actionName.css";
         $script = "/modules/$controllerName/Assets/Javascripts/$actionName.js";
-
         if (file_exists($rootPath . $style)) {
             Portabilis_View_Helper_Application::loadStylesheet($this, $style);
         }

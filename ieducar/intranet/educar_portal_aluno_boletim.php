@@ -1,13 +1,10 @@
 <?php
-
 use Facade\Ignition\DumpRecorder\Dump;
 use iEducar\Legacy\Model;
 use League\CommonMark\Node\Block\Document;
 use PhpOffice\PhpSpreadsheet\Calculation\TextData\Format;
 use PhpParser\Node\Expr\AssignOp\Div;
-
 use function GuzzleHttp\Promise\settle;
-
 return new class extends clsDetalhe {
   public $cod_turma;
   public $nome_aluno;
@@ -26,25 +23,23 @@ return new class extends clsDetalhe {
      
     public function Gerar()
     {
-        $this->titulo = 'Notas e Faltas';
-       
-  
-   #Verificação para saber se é um aluno logado
 
+        $this->titulo = 'Notas e Faltas';
+      
+   #Verificação para saber se é um aluno logado
+       $this->ano = $_GET['ano'];
        $this->idpes = $this->pessoa_logada;
+      
        $tmp_obj = new clsPmieducarAluno();
        $lst_obj = $tmp_obj->pegarMatriculaIdpes(  
         $this->idpes,
-
+        $this->ano,
        );
+       
+       $registro['Matricula'] = $lst_obj[0];
       
-
-       $registro['Matricula'] = $lst_obj;
-      
-
-
        $this->cod_matricula = $registro['Matricula']['cod_matricula'];
-      
+     
       
        if(!is_numeric($this->cod_matricula)){
         $this->addDetalhe(
@@ -58,23 +53,19 @@ return new class extends clsDetalhe {
             );
             
        }else{
-       
         #Trazendo a matrícula do aluno logado
         $tmp_obj = new clsPmieducarMatricula();
         $lst_obj = $tmp_obj->lista(
-           $this->cod_matricula,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
+            $this->cod_matricula,
+            
         );
 
         $registro['Matricula'] = array_shift($lst_obj);
 
         $this->cod_serie = $registro['Matricula']['ref_ref_cod_serie'];
         $this->disciplinas = $registro['Matricula']['ref_cod_disciplina'];
+        $this->cod_matricula = $registro['Matricula']['cod_matricula'];
+        
  
        #Trazendo informações adicionais do aluno logado
         $tmp_obj = new clsPmieducarAluno();
@@ -93,39 +84,39 @@ return new class extends clsDetalhe {
        $tmp_obj = new clsPmieducarMatriculaTurma();
        $lst_obj = $tmp_obj->lista(
            $this->cod_matricula,
-           null,
-           null,
+       
 
        );
+      
        $registro['MatriculaTurma'] = array_shift($lst_obj);
-       
        $this->cod_turma = $registro['MatriculaTurma']['ref_cod_turma'];
        $this->cod_aluno = $registro['MatriculaTurma']['ref_cod_aluno'];
-       $this->cod_matricula = $registro['MatriculaTurma']['ref_cod_matricula'];
        $this->cod_serie = $registro['MatriculaTurma']['ref_ref_cod_serie'];
-
+       $this->ano = $registro['MatriculaTurma']['ano'];
+      
        #Trazendo o código da regra de avaliação da turma do aluno
       $tmp_obj = new clsPmieducarSerie();
       $this->tipoetapa = $tmp_obj->tipoPresencaRegraAvaliacao(
         $this->cod_serie,
 
       );
-
+     
+      
         foreach ($registro['Matricula'] as $key => $value) {
             $this->$key = $value;
         }
         foreach ($registro['Aluno'] as $key => $value) {
             $this->$key = $value;
         }
-        
+       
         #Caso não encontre dados, o aluno será retornado a página inicial do portal do aluno
        if(!$registro) {
-            $this->simpleRedirect('educar_portal_aluno_index.php');
+            $this->simpleRedirect('educar_portal_aluno_boletim_lst.php');
         }
 
         $obj_permissoes = new clsPermissoes();
         
-       
+     $cod_matricula = $this->cod_matricula;
        if($this->cod_matricula){
            $this->addDetalhe(
                [
@@ -168,7 +159,6 @@ return new class extends clsDetalhe {
         }
 
 
-    $cod_matricula = $this->cod_matricula;
 
     #Pegando a quantidade de etapas que possui a turma
     $obj = new clsPmieducarTurmaModulo;
@@ -188,7 +178,7 @@ return new class extends clsDetalhe {
         #Condição para saber o tipo da regra de avaliação a turma do aluno logado
         #Tipo etapa 1: Falta Geral
         #Tipo etapa 2: Falta por Componente
-
+    
     if ($this->tipoetapa == 1) {
     
         $tmp_obj = new clsPmieducarNotaAluno();
@@ -225,8 +215,8 @@ return new class extends clsDetalhe {
 
     $tmp_obj = new clsPmieducarNotaAluno();
     $lst_obj = $tmp_obj->notas(
-     $this->cod_matricula, 
-     $this->etapa,
+        $this->cod_matricula, 
+  
 
     );
     for ($i=0; $i < count($registro['Historico']); $i++) { 
@@ -242,8 +232,16 @@ return new class extends clsDetalhe {
     $this->montaListaComponentes($registro['Historico'],$i);
   
 }
+    /* echo "<form method='post' name = 'boletim'>";
+    echo "<input type = 'hidden' id = 'ref_cod_matricula' value = '$cod_matricula'>";
+    echo "<input type = 'hidden' id = 'ref_cod_turma' value = '$this->cod_turma'>";
+    echo "</form>";
+    $gerarboletim = '<input type="button" id="btn_enviar" class="botaolistagem" onclick="exibirBoletim()" value="Exibir Boletim" autocomplete="off">';
+    echo $gerarboletim;
+    echo "  <br>"; */
+    
        
-        $this->url_cancelar = 'educar_portal_aluno_index.php';
+        $this->url_cancelar = 'educar_portal_aluno_boletim_lst.php';
         $this->largura = '100%';
 
         $this->breadcrumb('Boletim', [
@@ -252,13 +250,12 @@ return new class extends clsDetalhe {
      
         $scripts = [
             
-            '/modules/Cadastro/Assets/Javascripts/Opcoes.js'
+            '/modules/Reports/Assets/Javascripts/ReportCard.js'
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
       
     }
-   
    
 }
 
@@ -302,9 +299,7 @@ return new class extends clsDetalhe {
             );
  
     }
-
-
-
+    
     public function Formular()
     {
         $this->title = 'Notas e faltas';

@@ -282,33 +282,32 @@ class clsPmieducarEscolaSerieDisciplina extends Model
 
         return false;
     }
-    public function faltaComponente($int_ref_cod_matricula){
+    public function faltaComponente($ref_cod_matricula){
 
         $sql = "
-        SELECT  
-  cc.nome, 
-  STRING_AGG (fcc.quantidade::character varying, ',' ORDER BY fcc.etapa ASC) AS Faltas
+    SELECT  
+    cc.nome, 
+    STRING_AGG (fcc.quantidade::character varying, ',' ORDER BY fcc.etapa ASC) AS Faltas
 
 
-FROM pmieducar.matricula AS m
-JOIN modules.falta_aluno AS fa
-	ON fa.matricula_id = m.cod_matricula
-JOIN modules.falta_componente_curricular AS fcc
-	ON fa.id = fcc.falta_aluno_id
-JOIN modules.componente_curricular AS cc
-	ON fcc.componente_curricular_id = cc.id
+    FROM pmieducar.matricula AS m
+    JOIN modules.falta_aluno AS fa
+	    ON fa.matricula_id = m.cod_matricula
+    JOIN modules.falta_componente_curricular AS fcc
+	    ON fa.id = fcc.falta_aluno_id
+    JOIN modules.componente_curricular AS cc
+	    ON fcc.componente_curricular_id = cc.id
         ";
         $whereAnd = 'WHERE ';
         $join = '';
         $filtros = '';
 
     
-        if(is_numeric($int_ref_cod_matricula)){
-            $filtros .= "{$whereAnd} cod_matricula = '{$int_ref_cod_matricula}' ";
-            $whereAnd = "AND ";
-        }
       
-        
+      
+            $filtros .= "{$whereAnd} cod_matricula = '{$ref_cod_matricula}' ";
+            $whereAnd = "AND ";
+      
 
         $db = new clsBanco();
         $countCampos = count(explode(',',"cc.nome, fcc.quantidade"));
@@ -352,7 +351,7 @@ JOIN modules.componente_curricular AS cc
     }
 
     
-    public function faltaGeral($int_ref_cod_matricula){
+    public function faltaGeral($ref_cod_matricula){
         
         $sql = "
         SELECT
@@ -369,12 +368,9 @@ JOIN modules.componente_curricular AS cc
         $join = '';
         $filtros = '';
 
-
-
-         $filtros .= "{$whereAnd} cod_matricula = '{$int_ref_cod_matricula}'";
-         $whereAnd = 'AND ';
-    
-    
+        $filtros .= "{$whereAnd} cod_matricula = '{$ref_cod_matricula}' ";
+        $whereAnd = 'AND ';
+   
      
         $db = new clsBanco();
         $countCampos = count(explode(',',"fg.quantidade"));
@@ -405,7 +401,6 @@ JOIN modules.componente_curricular AS cc
                 $resultado[] = $tupla;
             }
         }
-     
         if (count($resultado)) {
             return $resultado;
         }

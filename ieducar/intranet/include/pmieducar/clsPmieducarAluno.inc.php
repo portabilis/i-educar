@@ -1111,49 +1111,75 @@ class clsPmieducarAluno extends Model
         return false;
     }
 
-    public function pegarMatriculaIdpes($int_ref_idpes){
-     
+    public function pegarMatriculaIdpes($int_ref_idpes,$ano = null){
         $sql= "
         
         SELECT
-        m.cod_matricula, a.cod_aluno
-    FROM
+        m.cod_matricula, a.cod_aluno, m.ano, t.nm_turma, j.fantasia
+        FROM
         cadastro.pessoa p
-    JOIN pmieducar.aluno AS a
-        ON (p.idpes = a.ref_idpes)
-    JOIN pmieducar.matricula as m
-        ON (a.cod_aluno = m.ref_cod_aluno)
+        JOIN pmieducar.aluno AS a
+            ON (p.idpes = a.ref_idpes)
+        JOIN pmieducar.matricula as m
+			ON (a.cod_aluno = m.ref_cod_aluno)
+		JOIN pmieducar.matricula_turma AS mt
+			ON (m.cod_matricula = mt.ref_cod_matricula)
+		JOIN pmieducar.turma AS t
+			ON (mt.ref_cod_turma = t.cod_turma)
+		FULL JOIN pmieducar.escola AS e
+			ON (t.ref_ref_cod_escola = e.cod_escola)
+		FULL JOIN cadastro.juridica AS j
+			ON (e.ref_idpes = j.idpes)   
         
         
         ";
 
-     $whereAnd = 'WHERE';
-     $join = '';
+     $whereAnd = 'WHERE ';
      $filtros = '';
      
-     if(is_numeric($int_ref_idpes)){
-         $filtros .= "{$whereAnd} idpes ='{$int_ref_idpes}'";
-         $whereAnd .= "AND ";
-     }
+     
+         $filtros .= "{$whereAnd} p.idpes ='{$int_ref_idpes}'";
+         $whereAnd = 'AND ';
+        
+        if(is_numeric($ano)){
+        $filtros .= "{$whereAnd} m.ano = '{$ano}'";
+        $whereAnd = ' AND ';
+    }
 
-     $db = new clsBanco();
-     $resultado = [];
-    
+    $db = new clsBanco();
+    $countCampos = count(explode(',',"m.cod_matricula, a.cod_aluno, m.ano"));
+    $resultado = [];
 
-     $sql .= $filtros . $this->getOrderby() . $this->getLimite();
-   
-    
-    
-   $db->Consulta($sql);
+    $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
-   $db->ProximoRegistro();
-  
-
-   return $db->Tupla();
-   
-   
+    $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM cadastro.pessoa p
+    JOIN pmieducar.aluno AS a
+        ON (p.idpes = a.ref_idpes)
+    JOIN pmieducar.matricula as m
+        ON (a.cod_aluno = m.ref_cod_aluno)
     
-      
+     {$filtros}
+    ");
+     
+    $db->Consulta($sql);
+    if ($countCampos > 1) {
+        while ($db->ProximoRegistro()) {
+            $tupla = $db->Tupla();
+
+            $tupla['_total'] = $this->_total;
+            $resultado[] = $tupla;
+        }
+    } else {
+        while ($db->ProximoRegistro()) {
+            $tupla = $db->Tupla();
+            $resultado[] = $tupla;
+        }
+    }
+    if (count($resultado)) {
+        return $resultado;
+    }
+
+    return false;
 
     }
   

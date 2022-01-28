@@ -1134,6 +1134,66 @@ class clsPmieducarMatriculaTurma extends Model
         return false;
     }
 
+    public function matriculaAno($cod_aluno){
+        $sql = "
+        SELECT m.cod_matricula, t.nm_turma, m.ano
+        FROM pmieducar.matricula AS m
+        
+        JOIN pmieducar.matricula_turma AS mt
+            ON m.cod_matricula = mt.ref_cod_matricula
+        JOIN pmieducar.turma AS t
+            ON mt.ref_cod_turma = t.cod_turma        
+        
+        ";
+        $whereAnd = ' WHERE';
+        $join = '';
+        $filtros = '';
+
+
+        $filtros .= "{$whereAnd} ref_cod_aluno = '{$cod_aluno}' ";
+        $whereAnd = 'AND ';
+        $db = new clsBanco();
+        $countCampos = count(explode(',',"m.cod_matricula, t.nm_turma, m.ano"));
+        $resultado = [];
+
+        $sql .= $filtros . $this->getOrderby() . $this->getLimite();
+        
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM pmieducar.matricula AS m
+
+        JOIN pmieducar.matricula_turma AS mt
+            ON m.cod_matricula = mt.ref_cod_matricula
+        JOIN pmieducar.turma AS t
+            ON mt.ref_cod_turma = t.cod_turma
+        
+         {$filtros}
+        ");
+         $db->Consulta($sql);
+         if ($countCampos > 1) {
+             while ($db->ProximoRegistro()) {
+                 $tupla = $db->Tupla();
+ 
+                 $tupla['_total'] = $this->_total;
+                 $resultado[] = $tupla;
+             }
+         } else {
+             while ($db->ProximoRegistro()) {
+                 $tupla = $db->Tupla();
+                 $resultado[] = $tupla;
+             }
+         }
+        
+         if (count($resultado)) {
+             return $resultado;
+         }
+ 
+         return false;
+ 
+ 
+      
+         
+
+    }
+
     /**
      * Retorna um array com os dados de um registro.
      *
