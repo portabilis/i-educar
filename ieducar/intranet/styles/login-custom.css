@@ -240,6 +240,7 @@ body {
 		.footer-socialMobile { opacity: 1; display: block; width: 310px; margin: auto; }
 		
 		#login-form {border-radius: 25px; padding: 20px; margin-top: initial;}
+		.divBody {height: 100vh;}
 		.lateralLogin .divLogo {height: 74px;}
 		.h2 {font-size: 18px;}
 		#main { padding-top: 0;}
