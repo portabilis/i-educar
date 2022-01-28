@@ -44,70 +44,93 @@
 	</head>
 	
 	<body>
-		
-		<!-- Google Tag Manager (noscript) -->
-		<noscript>
-			<iframe src="https://www.googletagmanager.com/ns.html?id={{ config('legacy.gtm') }}" height="0" width="0" style="display:none;visibility:hidden"></iframe>
-		</noscript>
-		<!-- End Google Tag Manager (noscript) -->
-		<div id="main">
-			
-			<div class="lateralLogin">
+		<div class="divBody">
+			<!-- Google Tag Manager (noscript) -->
+			<noscript>
+				<iframe src="https://www.googletagmanager.com/ns.html?id={{ config('legacy.gtm') }}" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+			</noscript>
+			<!-- End Google Tag Manager (noscript) -->
+			<div id="main">
 				
-				<?php //<h1>{{ config('legacy.config.ieducar_entity_name') }}</h1>  ?>
-				<h1 class="fontLogin fontLoginMobile">Secretaria Municipal da Educação</h1>
-				
-				@if (session('status'))
-				<p class="success">{{ session('status') }}</p>
-				@endif
-				
-				@if($errors->count())
-				<p class="error">{{ $errors->first() }}</p>
-				@endif
-				
-				<div id="login-form" class="shadow_M">
+				<div class="lateralLogin">
 					
-					<img alt="Logo" class="entLogoMobile" src="{{ config('legacy.config.ieducar_image') ?? url('intranet/imagens/login/tecsis_png.png') }}"/>
-					@yield('content')
-				</div>
-				<div id="footer" class="link">
-					<div class="divLogo"></div>
-					<!-- 
-						<p>Mantido por <a href="https://tecsisdoc.com.br/" target="_blank">Tecsis</a>.
-						<?php /* {!! config('legacy.config.ieducar_login_footer') !!} */?>
-					</p> -->
-				</div>
-			</div>
-			
-			<div class="imgBorda"></div>
-			<div class="container lateral_2">
-				<img alt="Logo" class="entLogo" src="{{ config('legacy.config.ieducar_image') ?? url('intranet/imagens/login/tecsis_png.png') }}"/>
-				<h1 class="fontLogin font-b">Secretaria Municipal da Educação</h1>
-				
-				<div id="footer" class="link">
-					<div class="footer-social">
-						<?php /* {!! config('legacy.config.ieducar_external_footer') !!} */ ?>
-						@if(config('legacy.config.facebook_url') || config('legacy.config.linkedin_url') || config('legacy.config.twitter_url'))
+					<?php //<h1>{{ config('legacy.config.ieducar_entity_name') }}</h1>  ?>
+					<h1 class="fontLogin fontLoginMobile">Secretaria Municipal da Educação</h1>
+					
+					@if (session('status'))
+					<p class="success">{{ session('status') }}</p>
+					@endif
+					
+					@if($errors->count())
+					<p class="error">{{ $errors->first() }}</p>
+					@endif
+					
+					<div class="container"></div>
+					<div id="login-form" class="shadow_M">
 						
-						<div class="social-icons">
-							<p class="fontLogin font-s"> Siga-nos nas redes sociais&nbsp;&nbsp;</p>
-							@if(config('legacy.config.facebook_url'))
-							<a target="_blank" href="{{ config('legacy.config.facebook_url')}}"><img src="{{ url('intranet/imagens/icon-social-facebook.png') }}"></a>
-							@endif
-							@if(config('legacy.config.linkedin_url'))
-							<a target="_blank" href="{{ config('legacy.config.linkedin_url')}}"><img src="{{ url('intranet/imagens/icon-social-linkedin.png') }}"></a>
-							@endif
-							@if(config('legacy.config.twitter_url'))
-							<a target="_blank" href="{{ config('legacy.config.twitter_url')}}"><img src="{{ url('intranet/imagens/icon-social-twitter.png') }}"></a>
+						<img alt="Logo" class="entLogoMobile" src="{{ config('legacy.config.ieducar_image') ?? url('intranet/imagens/login/tecsis_png.png') }}"/>
+						@yield('content')
+					</div>
+					<div id="footer" class="link">
+						<div class="divLogo"></div>
+						<!-- 
+							<p>Mantido por <a href="https://tecsisdoc.com.br/" target="_blank">Tecsis</a>.
+							<?php /* {!! config('legacy.config.ieducar_login_footer') !!} */?>
+						</p> -->
+					</div>
+				</div>
+				
+				<div class="imgBorda"></div>
+				<div class="container lateral_2">
+					<div class="container">
+						<img alt="Logo" class="entLogo" src="{{ config('legacy.config.ieducar_image') ?? url('intranet/imagens/login/tecsis_png.png') }}"/>
+					</div>
+					<div class="container">
+						<h1 class="fontLogin font-b">Secretaria Municipal da Educação</h1>
+					</div>
+					
+					<div id="footer" class="link">
+						<div class="footer-social">
+							<?php /* {!! config('legacy.config.ieducar_external_footer') !!} */ ?>
+							@if(config('legacy.config.facebook_url') || config('legacy.config.linkedin_url') || config('legacy.config.twitter_url'))
+							
+							<div class="social-icons">
+								<p class="fontLogin font-s"> Siga-nos nas redes sociais&nbsp;&nbsp;</p>
+								@if(config('legacy.config.facebook_url'))
+								<a target="_blank" href="{{ config('legacy.config.facebook_url')}}"><img src="{{ url('intranet/imagens/icon-social-facebook.png') }}"></a>
+								@endif
+								@if(config('legacy.config.linkedin_url'))
+								<a target="_blank" href="{{ config('legacy.config.linkedin_url')}}"><img src="{{ url('intranet/imagens/icon-social-linkedin.png') }}"></a>
+								@endif
+								@if(config('legacy.config.twitter_url'))
+								<a target="_blank" href="{{ config('legacy.config.twitter_url')}}"><img src="{{ url('intranet/imagens/icon-social-twitter.png') }}"></a>
+								@endif
+							</div>
 							@endif
 						</div>
-						@endif
 					</div>
 				</div>
 			</div>
+			<div class="divLogoMobile"></div>
+			<!-- <img alt="Logo" class="entLogoMobile logo-tecsis" src="{{ url('intranet/imagens/login/svg/TecSis-logo.svg') }}"/> -->
 		</div>
-	</div>
-<div class="divLogoMobile"></div>
-<img alt="Logo" class="entLogoMobile logo-tecsis" src="{{ url('intranet/imagens/login/svg/TecSis-logo.svg') }}"/>
-</body>
+		<?php /* <div class="footer-socialMobile">
+			{!! config('legacy.config.ieducar_external_footer') !!} 
+			@if(config('legacy.config.facebook_url') || config('legacy.config.linkedin_url') || config('legacy.config.twitter_url'))
+			
+			<div class="social-icons">
+			<p class="fontLogin font-s"> Siga-nos nas redes sociais&nbsp;&nbsp;</p>
+			@if(config('legacy.config.facebook_url'))
+			<a target="_blank" href="{{ config('legacy.config.facebook_url')}}"><img src="{{ url('intranet/imagens/icon-social-facebook.png') }}"></a>
+			@endif
+			@if(config('legacy.config.linkedin_url'))
+			<a target="_blank" href="{{ config('legacy.config.linkedin_url')}}"><img src="{{ url('intranet/imagens/icon-social-linkedin.png') }}"></a>
+			@endif
+			@if(config('legacy.config.twitter_url'))
+			<a target="_blank" href="{{ config('legacy.config.twitter_url')}}"><img src="{{ url('intranet/imagens/icon-social-twitter.png') }}"></a>
+			@endif
+			</div>
+			@endif
+		</div> */ ?>
+	</body>
 </html>
