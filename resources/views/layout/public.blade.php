@@ -55,7 +55,7 @@
 				<div class="lateralLogin">
 					
 					<?php //<h1>{{ config('legacy.config.ieducar_entity_name') }}</h1>  ?>
-					<h1 class="fontLogin fontLoginMobile">Secretaria Municipal da Educação</h1>
+					<h1 class="fontLogin fontLoginMobile">Secretaria Municipal de Educação</h1>
 					
 					@if (session('status'))
 					<p class="success">{{ session('status') }}</p>
