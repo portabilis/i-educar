@@ -22,7 +22,7 @@ class DropSomeForeignKeysInCadastroDocumentoTable extends Migration
      */
     public function up()
     {
-        $this->disableForeignKeys('cadastro.documento');
+        // $this->disableForeignKeys('cadastro.documento');
         $this->dropForeignKeysIn('documento');
 
         Schema::table('cadastro.documento', function (Blueprint $table) {
@@ -52,6 +52,6 @@ class DropSomeForeignKeysInCadastroDocumentoTable extends Migration
                 ->onDelete('restrict');
         });
 
-        $this->enableForeignKeys('cadastro.documento');
+        // $this->enableForeignKeys('cadastro.documento');
     }
 }
