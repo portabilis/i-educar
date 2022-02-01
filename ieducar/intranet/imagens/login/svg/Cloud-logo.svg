@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="20mm"
+   height="20mm"
+   viewBox="0 0 20 20"
+   version="1.1"
+   id="svg2687"
+   inkscape:version="1.0.2-2 (e86c870879, 2021-01-15)"
+   sodipodi:docname="Cloud-logo.svg">
+  <defs
+     id="defs2681" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="5.3924443"
+     inkscape:cx="69.388471"
+     inkscape:cy="42.757709"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer5"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     inkscape:window-width="1366"
+     inkscape:window-height="705"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:snap-bbox="true"
+     inkscape:bbox-nodes="true"
+     inkscape:snap-page="true"
+     height="25mm" />
+  <metadata
+     id="metadata2684">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     style="display:inline">
+    <animateMotion
+       path="M 0 0 L 100 0"
+       begin="0"
+       dur="1s"
+       fill="freeze"
+       repeatCount="indefinite" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Layer 2"
+     style="display:inline">
+    <animateMotion
+       path="M 0 0 L 100 0"
+       begin="0"
+       dur="1.3s"
+       fill="freeze"
+       repeatCount="indefinite" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="Layer 3"
+     style="display:inline">
+    <animateMotion
+       path="M 0 0 L 100 0"
+       begin="0"
+       dur="1.8s"
+       fill="freeze"
+       repeatCount="indefinite" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer4"
+     inkscape:label="Layer 4"
+     style="display:inline">
+    <animateMotion
+       path="M 0 0 L 100 0"
+       begin="0"
+       dur="2s"
+       fill="freeze"
+       repeatCount="indefinite" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer5"
+     inkscape:label="logo"
+     style="display:inline">
+    <g
+       id="g853">
+      <path
+         d="m 13.779335,3.3817711 c -1.46414,0 -4.0184351,0.6708413 -4.514171,2.2793446 -0.060248,0.1566966 -0.09334,0.326854 -0.09334,0.5047725 0,0.777105 0.6299552,1.4070602 1.40706,1.4070602 0.632507,0 1.167524,-0.4173608 1.344718,-0.9916934 0.440603,-0.5052895 1.088336,-0.8259401 1.807321,-0.8259401 h 1.3e-5 c 0.98447,0 1.835203,0.6010328 2.20381,1.4541632 0.02843,0.025619 0.05635,0.051769 0.08385,0.078355 h 0.222397 c 1.249658,0 2.275934,1.0049931 2.31063,2.2466625 -0.0347,1.2416624 -1.060972,2.2466624 -2.31063,2.2466624 h -0.222397 c -0.0275,0.02659 -0.05541,0.05274 -0.08385,0.07835 -0.368607,0.853138 -1.21934,1.45417 -2.20381,1.45417 h -1.3e-5 c -0.718985,0 -1.366718,-0.32065 -1.807321,-0.82594 -0.177194,-0.574332 -0.712211,-0.991693 -1.344718,-0.991693 -0.7771048,0 -1.40706,0.629955 -1.40706,1.40706 0,0.177919 0.033092,0.348076 0.09334,0.504773 0.4957359,1.608503 3.050031,2.279337 4.514171,2.279337 3.413025,0 6.183701,-2.748427 6.22064,-6.1527174 -0.03694,-3.4042905 -2.807615,-6.1527245 -6.22064,-6.1527245 z"
+         style="fill:#545454;fill-rule:evenodd;stroke-width:0.264584"
+         id="path519" />
+      <path
+         d="m 7.3777824,3.3831474 c 1.4641397,0 4.0184346,0.6708346 4.5141706,2.2793379 0.06025,0.1566966 0.09335,0.326854 0.09335,0.5047725 0,0.7771049 -0.629962,1.4070602 -1.40706,1.4070602 -0.6325133,0 -1.1675241,-0.4173608 -1.3447242,-0.9916934 C 8.7929191,6.0773351 8.1451862,5.7566845 7.4262013,5.7566845 h -2.02e-5 c -0.9844628,0 -1.8351963,0.6010328 -2.2038093,1.4541699 -0.028432,0.025613 -0.056348,0.051762 -0.083847,0.078348 H 4.9161287 c -1.2496587,0 -2.2759341,1.0049998 -2.3106235,2.2466625 0.034689,1.2416631 1.0609648,2.2466631 2.3106235,2.2466631 H 5.138525 c 0.027499,0.02659 0.055415,0.05274 0.083847,0.07836 0.368613,0.85313 1.2193465,1.454163 2.2038093,1.454163 h 2.02e-5 c 0.7189849,0 1.3667178,-0.320651 1.8073145,-0.82594 0.1772001,-0.574333 0.7122109,-0.991694 1.344724,-0.991694 0.777098,0 1.40706,0.629956 1.40706,1.407061 0,0.177918 -0.0331,0.348076 -0.09335,0.504772 -0.495736,1.608503 -3.0500307,2.279338 -4.5141704,2.279338 -3.4130249,0 -6.1837013,-2.748427 -6.2206398,-6.1527181 0.036938,-3.4042905 2.8076149,-6.1527178 6.2206398,-6.1527178 z"
+         style="fill:#2497c6;fill-rule:evenodd;stroke-width:0.264584"
+         id="path521" />
+      <text
+         x="2.5518963"
+         y="19.474726"
+         id="text525"
+         style="font-size:0.805638px;stroke-width:0.264584"><tspan
+           font-family="Impact"
+           font-size="2.45048px"
+           fill="#2497c6"
+           id="tspan523"
+           style="stroke-width:1.01204">Cloud</tspan></text>
+      <text
+         x="8.7781696"
+         y="19.556089"
+         id="text529"
+         style="font-size:0.805638px;stroke-width:0.264584"><tspan
+           font-family="Impact"
+           font-size="2.45048px"
+           fill="#545454"
+           id="tspan527"
+           style="stroke-width:1.01204">Soluções</tspan></text>
+    </g>
+  </g>
+</svg>

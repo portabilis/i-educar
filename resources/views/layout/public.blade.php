@@ -6,7 +6,7 @@
 		
 		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans">
 		<link rel="preconnect" href="https://fonts.googleapis.com">
-		
+		<link rel="icon" type="image/x-icon" href="{{ url('intranet/imagens/login/logo-ico.png') }}">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Love+Ya+Like+A+Sister&display=swap" rel="stylesheet">
@@ -68,7 +68,7 @@
 					<div class="container"></div>
 					<div id="login-form" class="shadow_M">
 						
-						<img alt="Logo" class="entLogoMobile" src="{{ config('legacy.config.ieducar_image') ?? url('https://tecsisdoc.com.br/wp-content/uploads/2022/01/tecsis_png.png') }}"/>
+						<img alt="Logo" class="entLogoMobile" src="{{ config('legacy.config.ieducar_image') ?? url('https://tecsisdoc.com.br/wp-content/uploads/2022/02/cloud-logo.png') }}"/>
 						@yield('content')
 					</div>
 					<div id="footer" class="link">
