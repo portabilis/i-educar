@@ -5,7 +5,7 @@ INSERT INTO public.menus VALUES (4, NULL, 'Servidores', NULL, '/intranet/educar_
 INSERT INTO public.menus VALUES (5, NULL, 'Educacenso', NULL, '/intranet/educar_educacenso_index.php', 'fa-bar-chart', 6, 1, 70, 70, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (6, NULL, 'Transporte escolar', NULL, '/intranet/educar_transporte_escolar_index.php', 'fa-bus', 7, 1, 69, 69, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (7, NULL, 'Biblioteca', NULL, '/intranet/educar_biblioteca_index.php', 'fa-book', 8, 1, 57, 57, NULL, true, NULL, NULL);
-INSERT INTO public.menus VALUES (8, NULL, 'Configurações', NULL, '/intranet/educar_configuracoes_index.php', 'fa-gear', 10, 1, 25, 25, NULL, true, NULL, NULL);
+INSERT INTO public.menus VALUES (8, NULL, 'Configurações', NULL, '/intranet/educar_configuracoes_index.php', 'fa-gear', 11, 1, 25, 25, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (9, 2, 'Cadastros', NULL, NULL, NULL, 1, 2, NULL, 999929, 7, true, NULL, NULL);
 INSERT INTO public.menus VALUES (74, 13, 'Atualização de matrículas', 'Atualização de matrículas', '/module/Avaliacao/Promocao', NULL, 2, 3, 644, 644, 999910, true, NULL, NULL);
 INSERT INTO public.menus VALUES (10, 2, 'Ferramentas', NULL, NULL, NULL, 2, 2, NULL, 9998876, 7, true, NULL, NULL);
