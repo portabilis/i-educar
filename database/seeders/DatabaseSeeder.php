@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
         $this->call(StatesTableSeeder::class);
         $this->call(CitiesTableSeeder::class);
         $this->call(DistrictsTableSeeder::class);
+        $this->call(BNCCTableSeeder::class);
 
         $this->incrementSequence('countries');
         $this->incrementSequence('states');
