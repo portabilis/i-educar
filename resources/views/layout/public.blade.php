@@ -6,7 +6,7 @@
 		
 		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans">
 		<link rel="preconnect" href="https://fonts.googleapis.com">
-		
+		<link rel="icon" type="image/x-icon" href="{{ url('intranet/imagens/login/logo-ico.png') }}">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Love+Ya+Like+A+Sister&display=swap" rel="stylesheet">
