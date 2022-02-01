@@ -135,6 +135,7 @@ return new class extends clsCadastro {
         // primary keys
         $this->campoOculto('ref_cod_matricula', $this->ref_cod_matricula);
         $this->campoOculto('ref_cod_serie', $this->ref_cod_serie);
+        $this->campoOculto('ref_cod_serie_busca', $this->ref_cod_serie);
         $this->campoOculto('ref_cod_escola', $this->ref_cod_escola);
         $this->campoOculto('cod_dispensa', $this->cod_dispensa);
 

@@ -139,7 +139,7 @@ return new class extends clsCadastro {
         $this->campoOculto('professor', $this->professor);
 
         $url = sprintf(
-            'educar_pesquisa_servidor_lst.php?campo1=ref_cod_servidor_todos_&campo2=ref_cod_servidor_todos&ref_cod_instituicao=%d&ref_cod_servidor=%d&tipo=livre&professor=%d',
+            'educar_pesquisa_servidor_lst.php?campo1=ref_cod_servidor_todos_&campo2=ref_cod_servidor_todos&ref_cod_instituicao=%d&ref_cod_servidor=%d&professor=%d',
             $this->ref_ref_cod_instituicao,
             $this->ref_cod_servidor,
             $this->professor
