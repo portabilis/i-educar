@@ -24,7 +24,9 @@ function updateSelect($targetElement, options, emptyOptionHtml) {
   }
 
   if (options.length === 1) {
-    $targetElement.removeAttr('selected').find('option:eq(1)').attr('selected', 'selected').change();
+      setTimeout(function () {
+        $targetElement.removeAttr('selected').find('option:eq(1)').attr('selected', 'selected').change();
+      },200)
   }
 
   if (options.length > 0) {
