@@ -12,20 +12,20 @@ class clsModulesBNCC extends Model {
     ) {
         $db = new clsBanco();
         $this->_schema = 'modules.';
-        $this->_tabela = "{$this->_schema}learning_objectives_and_skills";
+        $this->_tabela = "{$this->_schema}bncc";
 
         $this->_from = "
-            learning_objectives_and_skills as bncc
+            modules.bncc as bncc
         ";
 
         $this->_campos_lista = $this->_todos_campos = '
             bncc.id,
-            bncc.code,
-            bncc.description,
-            bncc.field_of_experience,
-            bncc.thematic_unit,
-            bncc.discipline,
-            unnest(bncc.grades) as grade
+            bncc.codigo,
+            bncc.habilidade,
+            bncc.campo_experiencia,
+            bncc.unidade_tematica,
+            bncc.componente_curricular_id,
+            unnest(bncc.serie_ids) as serie_id
         ';
 
         if (is_numeric($ref_cod_serie)) {
@@ -38,28 +38,6 @@ class clsModulesBNCC extends Model {
     }
 
     /**
-     * Cria um novo registro
-     *
-     * @return bool
-     */
-    public function cadastra() {
-        
-
-        return false;
-    }
-
-    /**
-     * Edita os dados de um registro
-     *
-     * @return bool
-     */
-    public function edita($id = null) {
-        
-
-        return false;
-    }
-
-    /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
      * @return array
@@ -67,7 +45,6 @@ class clsModulesBNCC extends Model {
     public function lista (
         $int_frequencia = null
     ) {
-       
         $sql = "
             WITH select_ as (
                 SELECT
@@ -77,18 +54,19 @@ class clsModulesBNCC extends Model {
             )
                 SELECT
                     select_.id,
-                    code,
-                    description,
-                    field_of_experience,
-                    thematic_unit,
-                    discipline,
-                    select_.grade
+                    codigo,
+                    habilidade,
+                    campo_experiencia,
+                    unidade_tematica,
+                    componente_curricular_id,
+                    select_.serie_id
                 FROM select_
-                JOIN modules.frequencia as f
-                    ON (f.ref_componente_curricular IS NULL OR discipline::integer = f.ref_componente_curricular)
+                CROSS JOIN modules.frequencia as f
                 JOIN pmieducar.turma as t
                     ON (t.cod_turma = f.ref_cod_turma)
-                WHERE select_.grade::integer = t.ref_ref_cod_serie
+				JOIN modules.componente_curricular as cc
+					ON (cc.codigo_educacenso = select_.componente_curricular_id)
+                WHERE select_.serie_id::integer = t.etapa_educacenso AND (f.ref_componente_curricular IS NULL OR cc.id = f.ref_componente_curricular)
         ";
 
         $whereAnd = ' AND ';
@@ -115,11 +93,12 @@ class clsModulesBNCC extends Model {
                 SELECT
                     COUNT(0)
                 FROM select_
-                JOIN modules.frequencia as f
-                    ON (discipline::integer = f.ref_componente_curricular)
+                CROSS JOIN modules.frequencia as f
                 JOIN pmieducar.turma as t
                     ON (t.cod_turma = f.ref_cod_turma)
-                WHERE select_.grade::integer = t.ref_ref_cod_serie
+				JOIN modules.componente_curricular as cc
+					ON (cc.codigo_educacenso = select_.componente_curricular_id)
+                WHERE select_.serie_id::integer = t.etapa_educacenso AND (f.ref_componente_curricular IS NULL OR cc.id = f.ref_componente_curricular)
                 {$filtros}" 
         );
 
@@ -141,36 +120,6 @@ class clsModulesBNCC extends Model {
         if (count($resultado)) {
             return $resultado;
         }
-
-        return false;
-    }
-
-    /**
-     * Retorna um array com os dados de um registro
-     *
-     * @return array
-     */
-    public function detalhe ($id = null) {
-
-        return false;
-    }
-
-    /**
-     * Retorna um array com os dados de um registro
-     *
-     * @return array
-     */
-    public function existe () {
-
-        return false;
-    }
-
-    /**
-     * Exclui um registro
-     *
-     * @return bool
-     */
-    public function excluir ($id = null) {
 
         return false;
     }

@@ -13,10 +13,10 @@ class BNCCController extends ApiCoreController
             if ($bncc_temp = $obj->lista($frequencia)) {
                 foreach ($bncc_temp as $bncc_item) {
                     $id = $bncc_item['id'];
-                    $code = $bncc_item['code'];
-                    $description = $bncc_item['description'];
+                    $codigo = $bncc_item['codigo'];
+                    $habilidade = $bncc_item['habilidade'];
 
-                    $bncc[$id] = $code . ' - ' . $description;
+                    $bncc[$id] = $codigo . ' - ' . $habilidade;
                 }
             }
 
