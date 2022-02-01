@@ -21,7 +21,7 @@ $j(document).ready(function() {
 
   var handleGetComponenteCurricular = function(dataResponse) {
 
-    setTimeout(function () {
+    eout(function () {
       $j.each(dataResponse['componentecurricular'], function(id, value) {
 
         // Insere o componente no multipleSearch caso não exista
