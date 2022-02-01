@@ -15,11 +15,14 @@ class CreateBNCCTable extends Migration
     {
         Schema::create('modules.bncc', function (Blueprint $table) {
             $table->id();
-            $table->char('code');
-            $table->string('habilidade', 500);
+            $table->char('codigo', 8);
+            $table->string('habilidade', 2048);
             $table->char('campo_experiencia')->nullable();
             $table->char('unidade_tematica')->nullable();
+            $table->integer('componente_curricular_id')->nullable();
         });
+
+        DB::statement('ALTER TABLE modules.bncc ADD COLUMN serie_ids integer[]');
     }
 
     /**
