@@ -87,9 +87,9 @@ return new class extends clsCadastro {
         $this->campoRotulo('nm_categoria', 'Categoria', $this->nm_categoria);
         $this->campoRotulo('nm_nivel', 'Nível', $this->nm_nivel);
 
-        $this->campoTabelaInicio('tab01', 'Subn&iacute;veis', ['Nome Subn&iacute;vel','Sal&aacute;rio','Ordem'], $this->cod_nivel);
+        $this->campoTabelaInicio('tab01', 'Subníveis', ['Nome Subnível','Salário','Ordem'], $this->cod_nivel);
 
-        $this->campoTexto('nm_nivel', 'Nome Subn&iacute;vel', '', 30, 100, true);
+        $this->campoTexto('nm_nivel', 'Nome Subnível', '', 30, 100, true);
         $this->campoMonetario('salario_base', 'Salario Base', $this->salario_base, 10, 8, true);
         $this->campoNumero('nr_nivel', 'Ordem', '1', 5, 5, false, false, false, false, false, false, true);
         $this->campoOculto('cod_nivel', '');
@@ -128,7 +128,7 @@ return new class extends clsCadastro {
             die();
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -153,14 +153,14 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarSubnivel($this->cod_nivel, $this->pessoa_logada, $this->pessoa_logada);
         $excluiu = $obj->excluirTodos();
         if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
 
             throw new HttpResponseException(
                 new RedirectResponse("educar_categoria_nivel_det.php?cod_categoria_nivel={$this->ref_cod_categoria_nivel}")
             );
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }

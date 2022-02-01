@@ -45,7 +45,7 @@ return new class extends clsDetalhe {
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe([ 'Institui&ccedil;&atilde;o', "{$registro['ref_cod_instituicao']}"]);
+                $this->addDetalhe([ 'Instituição', "{$registro['ref_cod_instituicao']}"]);
             }
         }
         if ($registro['ref_cod_escola']) {
@@ -85,7 +85,7 @@ return new class extends clsDetalhe {
             $tabela .= '</TABLE>';
         }
         if ($tabela) {
-            $this->addDetalhe([ 'Usu&aacute;rio', "{$tabela}"]);
+            $this->addDetalhe([ 'Usuário', "{$tabela}"]);
         }
 
         if ($obj_permissoes->permissao_cadastra(591, $this->pessoa_logada, 3)) {

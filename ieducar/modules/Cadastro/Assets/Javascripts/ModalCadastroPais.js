@@ -71,10 +71,10 @@ function openModalParent(parentType) {
 
     switch (parentType) {
         case 'mae':
-            tipoPessoa = 'm&atilde;e';
+            tipoPessoa = 'mãe';
             break;
         case 'responsavel':
-            tipoPessoa = 'respons&aacute;vel';
+            tipoPessoa = 'responsável';
             break;
         default:
             tipoPessoa = 'pai';

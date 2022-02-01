@@ -157,13 +157,13 @@ return new class extends clsCadastro {
 
                 $obj_calend_ano_letivo = new clsPmieducarCalendarioAnoLetivo($det_calend_ano_letivo['cod_calendario_ano_letivo'], $this->ref_cod_escola, $this->pessoa_logada, null, $this->ano, null, null, 1/*, $data_inicio,$data_fim*/);
                 if ($obj_calend_ano_letivo->edita()) {
-                    $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+                    $this->mensagem .= 'Edição efetuada com sucesso.<br>';
                     throw new HttpResponseException(
                         new RedirectResponse('educar_calendario_ano_letivo_lst.php')
                     );
                 }
 
-                $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+                $this->mensagem = 'Edição não realizada.<br>';
 
                 return false;
             } else {
@@ -175,7 +175,7 @@ return new class extends clsCadastro {
                     );
                 }
 
-                $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+                $this->mensagem = 'Cadastro não realizado.<br>';
 
                 return false;
             }
@@ -198,13 +198,13 @@ return new class extends clsCadastro {
         if ($data_inicio && $data_fim) {
             $obj_calend_ano_letivo = new clsPmieducarCalendarioAnoLetivo($this->cod_calendario_ano_letivo, $this->ref_cod_escola, $this->pessoa_logada, null, $this->ano, null, null, 1/*, $data_inicio,$data_fim*/);
             if ($obj_calend_ano_letivo->edita()) {
-                $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+                $this->mensagem .= 'Edição efetuada com sucesso.<br>';
                 throw new HttpResponseException(
                     new RedirectResponse('educar_calendario_ano_letivo_lst.php')
                 );
             }
 
-            $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+            $this->mensagem = 'Edição não realizada.<br>';
 
             return false;
         }
@@ -222,13 +222,13 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarCalendarioAnoLetivo($this->cod_calendario_ano_letivo, $this->ref_cod_escola, $this->pessoa_logada, $this->pessoa_logada, $this->ano, $this->data_cadastra, $this->data_exclusao, 0);
         $excluiu = $obj->excluir();
         if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             throw new HttpResponseException(
                 new RedirectResponse('educar_calendario_ano_letivo_lst.php')
             );
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }

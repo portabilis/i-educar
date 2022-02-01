@@ -271,7 +271,7 @@ return new class extends clsCadastro {
 
         $this->campoRotulo(
             'bt_incluir_horario',
-            'Hor&aacute;rio',
+            'Horário',
             '<a href=\'#\' id=\'btn_incluir_horario\' ><img src=\'imagens/nvp_bot_adiciona.gif\' title=\'Incluir\' border=0></a>'
         );
 
@@ -440,7 +440,7 @@ return new class extends clsCadastro {
                             break;
 
                         case 7:
-                            $campo['nm_dia_semana_'] = 'S&aacute;bado';
+                            $campo['nm_dia_semana_'] = 'Sábado';
                             break;
                     }
                 }

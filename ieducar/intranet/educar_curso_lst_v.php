@@ -69,7 +69,7 @@ return new class extends clsListagem {
             'Curso',
             'Nivel Ensino',
             'Tipo Ensino',
-            'Instituic&atilde;o'
+            'Instituicão'
         ]);
 
         $this->campoTexto('nm_curso', 'Curso', $this->nm_curso, 30, 255, false);

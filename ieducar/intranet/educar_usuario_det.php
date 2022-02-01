@@ -12,7 +12,7 @@ return new class extends clsDetalhe {
 
     public function Gerar()
     {
-        $this->titulo = 'Usu&aacute;rio - Detalhe';
+        $this->titulo = 'Usuário - Detalhe';
 
         $cod_pessoa = $this->cod_usuario = $_GET['ref_pessoa'];
 
@@ -31,7 +31,7 @@ return new class extends clsDetalhe {
         $this->addDetalhe(['E-mail usuário', $det_funcionario['email']]);
 
         if (!empty($det_funcionario['matricula_interna'])) {
-            $this->addDetalhe(['Matr&iacute;cula interna', $det_funcionario['matricula_interna']]);
+            $this->addDetalhe(['Matrícula interna', $det_funcionario['matricula_interna']]);
         }
 
         $obj_fisica = new clsFisica($cod_pessoa);
@@ -67,11 +67,11 @@ return new class extends clsDetalhe {
         $registro['ref_cod_escola'] = $nomesEscola;
 
         if ($registro['ref_cod_tipo_usuario']) {
-            $this->addDetalhe([ 'Tipo Usu&aacute;rio', "{$registro['ref_cod_tipo_usuario']}"]);
+            $this->addDetalhe([ 'Tipo Usuário', "{$registro['ref_cod_tipo_usuario']}"]);
         }
 
         if ($registro['ref_cod_instituicao']) {
-            $this->addDetalhe([ 'Institui&ccedil;&atilde;o', "{$registro['ref_cod_instituicao']}"]);
+            $this->addDetalhe([ 'Instituição', "{$registro['ref_cod_instituicao']}"]);
         }
 
         if ($registro['ref_cod_escola']) {
@@ -94,7 +94,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'Usu&aacute;rio';
+        $this->title = 'Usuário';
         $this->processoAp = '555';
     }
 };

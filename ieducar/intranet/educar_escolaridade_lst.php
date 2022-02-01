@@ -42,7 +42,7 @@ return new class extends clsListagem {
         }
 
         $this->addCabecalhos([
-      'Descri&ccedil;&atilde;o'
+      'Descrição'
     ]);
 
         // Outros Filtros

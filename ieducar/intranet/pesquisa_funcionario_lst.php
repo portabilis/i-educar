@@ -23,7 +23,7 @@ return new class extends clsListagem {
 
         $submit = false;
 
-        $this->addCabecalhos(['Matr&iacute;cula', 'CPF', 'Funcion&aacute;rio']);
+        $this->addCabecalhos(['Matrícula', 'CPF', 'Funcionário']);
 
         // Filtros de Busca
         $this->campoTexto('campo_busca', 'Funcionário', '', 50, 255, false, false, false, 'Matrícula/CPF/Nome do Funcionário');
@@ -132,7 +132,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'Pesquisa por Funcion&aacute;rio!';
+        $this->title = 'Pesquisa por Funcionário!';
         $this->processoAp         = '0';
         $this->renderMenu         = false;
         $this->renderMenuSuspenso = false;

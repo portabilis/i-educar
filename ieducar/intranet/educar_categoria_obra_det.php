@@ -24,13 +24,13 @@ return new class extends clsDetalhe {
             $this->simpleRedirect('educar_categoria_nivel_lst.php');
         }
         if ($registro['id']) {
-            $this->addDetalhe(['C&oacute;digo', "{$registro['id']}"]);
+            $this->addDetalhe(['Código', "{$registro['id']}"]);
         }
         if ($registro['descricao']) {
-            $this->addDetalhe(['Descri&ccedil;&atilde;o', "{$registro['descricao']}"]);
+            $this->addDetalhe(['Descrição', "{$registro['descricao']}"]);
         }
         if ($registro['observacoes']) {
-            $this->addDetalhe(['Observa&ccedil;&otilde;es', "{$registro['observacoes']}"]);
+            $this->addDetalhe(['Observações', "{$registro['observacoes']}"]);
         }
 
         $obj_permissoes = new clsPermissoes();

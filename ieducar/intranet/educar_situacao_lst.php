@@ -47,15 +47,15 @@ return new class extends clsListagem {
 
     public function Gerar()
     {
-        $this->titulo = 'Situa&ccedil;&atilde;o - Listagem';
+        $this->titulo = 'Situação - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null: $val;
         }
 
         $lista_busca = [
-            'Situa&ccedil;&atilde;o',
-            'Permite Empr&eacute;stimo'
+            'Situação',
+            'Permite Empréstimo'
         ];
 
         // Filtros de Foreign Keys
@@ -67,9 +67,9 @@ return new class extends clsListagem {
         $this->addCabecalhos($lista_busca);
 
         // outros Filtros
-        $this->campoTexto('nm_situacao', 'Situa&ccedil;&atilde;o', $this->nm_situacao, 30, 255, false);
-        $opcoes = ['' => 'Selecione', 1 => 'n&atilde;o', 2 => 'sim' ];
-        $this->campoLista('permite_emprestimo', 'Permite Empr&eacute;stimo', $opcoes, $this->permite_emprestimo, null, null, null, null, null, false);
+        $this->campoTexto('nm_situacao', 'Situação', $this->nm_situacao, 30, 255, false);
+        $opcoes = ['' => 'Selecione', 1 => 'não', 2 => 'sim' ];
+        $this->campoLista('permite_emprestimo', 'Permite Empréstimo', $opcoes, $this->permite_emprestimo, null, null, null, null, null, false);
 
         // Paginador
         $this->limite = 20;
@@ -120,7 +120,7 @@ return new class extends clsListagem {
                 }
 
                 if ($registro['permite_emprestimo'] == 1) {
-                    $registro['permite_emprestimo'] = 'n&atilde;o';
+                    $registro['permite_emprestimo'] = 'não';
                 } elseif ($registro['permite_emprestimo'] == 2) {
                     $registro['permite_emprestimo'] = 'sim';
                 }
@@ -161,7 +161,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'Situa&ccedil;&atilde;o';
+        $this->title = 'Situação';
         $this->processoAp = '602';
     }
 };

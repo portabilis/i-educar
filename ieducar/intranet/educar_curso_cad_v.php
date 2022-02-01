@@ -86,7 +86,7 @@ return new class extends clsCadastro {
             }
         }
 
-        $this->campoLista('ref_cod_instituicao', 'Instituic&atilde;o', $opcoes, $this->ref_cod_instituicao);
+        $this->campoLista('ref_cod_instituicao', 'Instituicão', $opcoes, $this->ref_cod_instituicao);
 
         $opcoes = [ '' => 'Selecione' ];
 
@@ -110,7 +110,7 @@ return new class extends clsCadastro {
             }
         }
 
-        $this->campoLista('ref_cod_tipo_avaliacao', 'Tipo Avaliac&atilde;o', $opcoes, $this->ref_cod_tipo_avaliacao);
+        $this->campoLista('ref_cod_tipo_avaliacao', 'Tipo Avaliacão', $opcoes, $this->ref_cod_tipo_avaliacao);
 
         $opcoes = [ '' => 'Selecione' ];
 
@@ -134,10 +134,10 @@ return new class extends clsCadastro {
         $this->campoNumero('falta_ch_globalizada', 'Falta Ch Globalizada', $this->falta_ch_globalizada, 15, 255, true);
         $this->campoMonetario('carga_horaria', 'Carga Horaria', $this->carga_horaria, 15, 255, true);
         $this->campoTexto('ato_poder_publico', 'Ato Poder Publico', $this->ato_poder_publico, 30, 255, false);
-        $this->campoNumero('edicao_final', 'Edic&atilde;o Final', $this->edicao_final, 15, 255, true);
+        $this->campoNumero('edicao_final', 'Edicão Final', $this->edicao_final, 15, 255, true);
         $this->campoMemo('objetivo_curso', 'Objetivo Curso', $this->objetivo_curso, 60, 10, false);
         $this->campoMemo('publico_alvo', 'Publico Alvo', $this->publico_alvo, 60, 10, false);
-        $this->campoNumero('padrao_ano_escolar', 'Padr&atilde;o Ano Escolar', $this->padrao_ano_escolar, 15, 255, true);
+        $this->campoNumero('padrao_ano_escolar', 'Padrão Ano Escolar', $this->padrao_ano_escolar, 15, 255, true);
         $this->campoMonetario('hora_falta', 'Hora Falta', $this->hora_falta, 15, 255, true);
 
         // data
@@ -164,7 +164,7 @@ return new class extends clsCadastro {
             );
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -179,14 +179,14 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarCurso($this->cod_curso, $this->pessoa_logada, $this->ref_cod_tipo_regime, $this->ref_cod_nivel_ensino, $this->ref_cod_tipo_ensino, $this->ref_cod_tipo_avaliacao, $this->nm_curso, $this->sgl_curso, $this->qtd_etapas, $this->frequencia_minima, $this->media, $this->media_exame, $this->falta_ch_globalizada, $this->carga_horaria, $this->ato_poder_publico, $this->edicao_final, $this->objetivo_curso, $this->publico_alvo, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->pessoa_logada, $this->ref_cod_instituicao, $this->padrao_ano_escolar, $this->hora_falta);
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
 
             throw new HttpResponseException(
                 new RedirectResponse('educar_curso_lst.php')
             );
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }
@@ -196,14 +196,14 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarCurso($this->cod_curso, $this->pessoa_logada, $this->ref_cod_tipo_regime, $this->ref_cod_nivel_ensino, $this->ref_cod_tipo_ensino, $this->ref_cod_tipo_avaliacao, $this->nm_curso, $this->sgl_curso, $this->qtd_etapas, $this->frequencia_minima, $this->media, $this->media_exame, $this->falta_ch_globalizada, $this->carga_horaria, $this->ato_poder_publico, $this->edicao_final, $this->objetivo_curso, $this->publico_alvo, $this->data_cadastro, $this->data_exclusao, 0, $this->pessoa_logada, $this->ref_cod_instituicao, $this->padrao_ano_escolar, $this->hora_falta);
         $excluiu = $obj->excluir();
         if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
 
             throw new HttpResponseException(
                 new RedirectResponse('educar_curso_lst.php')
             );
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }

@@ -209,7 +209,7 @@ return new class extends clsCadastro {
             $obj = new clsPmieducarExemplar($this->ref_cod_exemplar, null, null, null, $cod_situacao, $this->pessoa_logada, null, null, null, null, null, 1);
             $editou = $obj->edita();
             if (!$editou) {
-                $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+                $this->mensagem = 'Cadastro não realizado.<br>';
 
                 return false;
             }
@@ -218,14 +218,14 @@ return new class extends clsCadastro {
             $this->simpleRedirect('educar_exemplar_devolucao_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }
 
     public function Formular()
     {
-        $this->title = 'Exemplar Devolu&ccedil;&atilde;o';
+        $this->title = 'Exemplar Devolução';
         $this->processoAp = '628';
     }
 };

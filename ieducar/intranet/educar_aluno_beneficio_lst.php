@@ -40,7 +40,7 @@ return new class extends clsListagem {
 
     public function Gerar()
     {
-        $this->titulo = 'Benef&iacute;cio Aluno - Listagem';
+        $this->titulo = 'Benefício Aluno - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null: $val;
@@ -56,7 +56,7 @@ return new class extends clsListagem {
         //include("include/pmieducar/educar_pesquisa_instituicao_escola.php");
 
         // outros Filtros
-        $this->campoTexto('nm_beneficio', 'Benef&iacute;cio', $this->nm_beneficio, 30, 255, false);
+        $this->campoTexto('nm_beneficio', 'Benefício', $this->nm_beneficio, 30, 255, false);
 
         // Paginador
         $this->limite = 20;

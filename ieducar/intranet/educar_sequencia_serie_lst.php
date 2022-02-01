@@ -17,7 +17,7 @@ return new class extends clsListagem {
 
     public function Gerar()
     {
-        $this->titulo = 'Sequ&ecirc;ncia Enturma&ccedil;&atilde;o - Listagem';
+        $this->titulo = 'Sequência Enturmação - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null: $val;
@@ -25,15 +25,15 @@ return new class extends clsListagem {
 
         $lista_busca = [
             'Curso Origem',
-            'S&eacute;rie Origem',
+            'Série Origem',
             'Curso Destino',
-            'S&eacute;rie Destino'
+            'Série Destino'
         ];
 
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
-            $lista_busca[] = 'Institui&ccedil;&atilde;o';
+            $lista_busca[] = 'Instituição';
         }
         $this->addCabecalhos($lista_busca);
 
@@ -48,7 +48,7 @@ return new class extends clsListagem {
                     $opcoes[$linha['cod_instituicao']] = $linha['nm_instituicao'];
                 }
             }
-            $this->campoLista('ref_cod_instituicao', 'Institui&ccedil;&atilde;o', $opcoes, $this->ref_cod_instituicao, '', null, null, null, null, false);
+            $this->campoLista('ref_cod_instituicao', 'Instituição', $opcoes, $this->ref_cod_instituicao, '', null, null, null, null, false);
         } else {
             $obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
             $obj_usuario_det = $obj_usuario->detalhe();
@@ -98,8 +98,8 @@ return new class extends clsListagem {
             }
         }
 
-        $this->campoLista('ref_serie_origem', 'S&eacute;rie Origem', $opcoes, $this->ref_serie_origem, null, true, '', '', false, false);
-        $this->campoLista('ref_serie_destino', ' S&eacute;rie Destino', $opcoes_, $this->ref_serie_destino, '', false, '', '', false, false);
+        $this->campoLista('ref_serie_origem', 'Série Origem', $opcoes, $this->ref_serie_origem, null, true, '', '', false, false);
+        $this->campoLista('ref_serie_destino', ' Série Destino', $opcoes_, $this->ref_serie_destino, '', false, '', '', false, false);
 
         // Paginador
         $this->limite = 20;

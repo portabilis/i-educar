@@ -127,8 +127,8 @@ return new class extends clsListagem {
         }
         $this->addCabecalhos([
       'Nome do Servidor',
-      'Matr&iacute;cula',
-      'Institui&ccedil;&atilde;o'
+      'Matrícula',
+      'Instituição'
     ]);
         $this->campoTexto('nome_servidor', 'Nome Servidor', $this->nome_servidor, 30, 255, false);
         $this->campoOculto('tipo', $_GET['tipo']);
@@ -145,13 +145,13 @@ return new class extends clsListagem {
           Session::get('hora_final')
       ];
         }
-        // Marca a disciplina como NULL se nÃ£o for informada, restringindo a busca
-        // aos professores e nÃ£o selecionar aqueles em que o curso nÃ£o seja
+        // Marca a disciplina como NULL se não for informada, restringindo a busca
+        // aos professores e não selecionar aqueles em que o curso não seja
         // globalizado e sem disciplinas cadastradas
         $this->ref_cod_disciplina = $this->ref_cod_disciplina ?
       $this->ref_cod_disciplina : null;
-        // Passa NULL para $alocacao_escola_instituicao senÃ£o o seu filtro anula
-        // um anterior (referente a selecionar somente servidores nÃ£o alocados),
+        // Passa NULL para $alocacao_escola_instituicao senão o seu filtro anula
+        // um anterior (referente a selecionar somente servidores não alocados),
         // selecionando apenas servidores alocados na instituiÃ§Ã£o
         $lista = $obj_servidor->lista(
             null,

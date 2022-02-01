@@ -51,20 +51,20 @@ return new class extends clsListagem {
         $this->ref_ref_cod_instituicao=($_GET['ref_cod_instituicao'] == '') ? $_GET['ref_ref_cod_instituicao'] : $_GET['ref_cod_instituicao'];
 
         $lista_busca = [
-            'Avalia&ccedil;&atilde;o',
+            'Avaliação',
             'Servidor'
         ];
 
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
-            $lista_busca[] = 'Institui&ccedil;&atilde;o';
+            $lista_busca[] = 'Instituição';
         }
 
         $this->addCabecalhos($lista_busca);
 
         // outros Filtros
-        $this->campoTexto('titulo_avaliacao', 'Avalia&ccedil;&atilde;o', $this->titulo_avaliacao, 30, 255, false);
+        $this->campoTexto('titulo_avaliacao', 'Avaliação', $this->titulo_avaliacao, 30, 255, false);
 
         // Paginador
         $this->limite = 20;

@@ -58,7 +58,7 @@ return new class extends clsDetalhe {
 
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe(['Institui&ccedil;&atilde;o', $registro['ref_cod_instituicao']]);
+                $this->addDetalhe(['Instituição', $registro['ref_cod_instituicao']]);
             }
         }
 
@@ -67,7 +67,7 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['ref_cod_nivel_ensino']) {
-            $this->addDetalhe(['N&iacute;vel Ensino', $registro['ref_cod_nivel_ensino']]);
+            $this->addDetalhe(['Nível Ensino', $registro['ref_cod_nivel_ensino']]);
         }
 
         if ($registro['ref_cod_tipo_ensino']) {
@@ -93,7 +93,7 @@ return new class extends clsDetalhe {
 
         if ($registro['carga_horaria']) {
             $registro['carga_horaria'] = number_format($registro['carga_horaria'], 2, ',', '.');
-            $this->addDetalhe(['Carga Hor&aacute;ria', $registro['carga_horaria']]);
+            $this->addDetalhe(['Carga Horária', $registro['carga_horaria']]);
         }
 
         if ($registro['ato_poder_publico']) {
@@ -131,17 +131,17 @@ return new class extends clsDetalhe {
         }
 
         if ($habilitacao) {
-            $this->addDetalhe(['Habilita&ccedil;&atilde;o', $tabela]);
+            $this->addDetalhe(['Habilitação', $tabela]);
         }
 
         if ($registro['padrao_ano_escolar']) {
             if ($registro['padrao_ano_escolar'] == 0) {
-                $registro['padrao_ano_escolar'] = 'n&atilde;o';
+                $registro['padrao_ano_escolar'] = 'não';
             } elseif ($registro['padrao_ano_escolar'] == 1) {
                 $registro['padrao_ano_escolar'] = 'sim';
             }
 
-            $this->addDetalhe(['Padr&atilde;o Ano Escolar', $registro['padrao_ano_escolar']]);
+            $this->addDetalhe(['Padrão Ano Escolar', $registro['padrao_ano_escolar']]);
         }
 
         if ($registro['objetivo_curso']) {

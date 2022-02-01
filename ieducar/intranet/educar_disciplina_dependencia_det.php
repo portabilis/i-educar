@@ -12,7 +12,7 @@ return new class extends clsDetalhe {
 
     public function Gerar()
     {
-        $this->titulo = 'Disciplina de depend&ecirc;ncia - Detalhe';
+        $this->titulo = 'Disciplina de dependência - Detalhe';
 
         $this->ref_cod_disciplina = $_GET['ref_cod_disciplina'];
         $this->ref_cod_matricula  = $_GET['ref_cod_matricula'];
@@ -128,7 +128,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'Disciplina depend&ecirc;ncia';
+        $this->title = 'Disciplina dependência';
         $this->processoAp = 578;
     }
 };

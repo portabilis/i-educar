@@ -54,7 +54,7 @@ return new class extends clsListagem {
             case 1:
                 $this->addCabecalhos([
                     'Nome Tipo',
-                    'Institui&ccedil;&atilde;o'
+                    'Instituição'
                 ]);
                 break;
 

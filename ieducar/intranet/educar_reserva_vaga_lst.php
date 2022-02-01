@@ -49,7 +49,7 @@ return new class extends clsListagem {
         }
 
         $lista_busca = [
-      'S&eacute;rie',
+      'Série',
       'Curso'
     ];
 
@@ -57,7 +57,7 @@ return new class extends clsListagem {
         $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
             $lista_busca[] = 'Escola';
-            $lista_busca[] = 'Institui&ccedil;&atilde;o';
+            $lista_busca[] = 'Instituição';
         } elseif ($nivel_usuario == 2) {
             $lista_busca[] = 'Escola';
         }

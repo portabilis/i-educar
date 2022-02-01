@@ -15,7 +15,7 @@ class IndexController extends Core_Controller_Page_ListController
     {
         parent::_preRender();
 
-        $this->breadcrumb('Listagem de f&oacute;rmulas de m&eacute;dia', [
+        $this->breadcrumb('Listagem de fórmulas de média', [
         url('intranet/educar_index.php') => 'Escola',
     ]);
     }

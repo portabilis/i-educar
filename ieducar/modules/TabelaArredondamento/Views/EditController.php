@@ -355,7 +355,7 @@ class EditController extends Core_Controller_Page_EditController
                     $acao = 2;
                     break;
 
-                case 'Arredondar para a casa decimal espec&iacute;fica':
+                case 'Arredondar para a casa decimal específica':
                     $acao = 3;
                     break;
 

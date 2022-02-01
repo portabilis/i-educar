@@ -350,9 +350,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         if ($foto) {
             $this->campoRotulo('fotoAtual_', 'Foto atual', '<img height="117" src="' . (new UrlPresigner())->getPresignedUrl($foto)  . '"/>');
             $this->inputsHelper()->checkbox('file_delete', ['label' => 'Excluir a foto']);
-            $this->campoArquivo('file', 'Trocar foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho m&aacute;ximo: 2MB</span>');
+            $this->campoArquivo('file', 'Trocar foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho máximo: 2MB</span>');
         } else {
-            $this->campoArquivo('file', 'Foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho m&aacute;ximo: 2MB</span>');
+            $this->campoArquivo('file', 'Foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho máximo: 2MB</span>');
         }
 
 
@@ -758,7 +758,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $tiposTransporte = [
             null => 'Selecione',
-            'nenhum' => 'N&atilde;o utiliza',
+            'nenhum' => 'Não utiliza',
             'municipal' => 'Municipal',
             'estadual' => 'Estadual'
         ];
@@ -1193,7 +1193,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $zonas = App_Model_ZonaLocalizacao::getInstance();
         $zonas = $zonas->getEnums();
-        $zonas = Portabilis_Array_Utils::insertIn(null, 'Zona localiza&ccedil;&atilde;o', $zonas);
+        $zonas = Portabilis_Array_Utils::insertIn(null, 'Zona localização', $zonas);
 
         $options = [
             'label' => '',

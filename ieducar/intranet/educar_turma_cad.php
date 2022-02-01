@@ -61,7 +61,7 @@ return new class extends clsCadastro {
         '' => 'Selecione',
         1 => 'Domingo',
         2 => 'Segunda',
-        3 => 'Ter&ccedil;a',
+        3 => 'Terça',
         4 => 'Quarta',
         5 => 'Quinta',
         6 => 'Sexta',
