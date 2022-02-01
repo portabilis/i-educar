@@ -78,7 +78,7 @@ body {
 .lateralLogin .divLogo {
 	/* Só é utilizado no Login, e é retirado quando é WL */
 	height: 200px;
-	background-image: url(../imagens/login/svg/TecSis-animation_02.svg);
+	background-image: url(../imagens/login/svg/Cloud-animation_02.svg);
 	background-repeat: no-repeat;
 	background-position: bottom right;
 	margin-right: 15%;
@@ -87,7 +87,7 @@ body {
 #login-form {margin-top: 76px;}
 
 .divLogoMobile {
-	background-image: url(../imagens/login/svg/TecSis_bordaMobile.svg);
+	background-image: url(../imagens/login/svg/Cloud-bordaMobile.svg);
 	background-repeat: no-repeat;
 	background-position: bottom left;
 	background-size: 100%;
@@ -160,7 +160,7 @@ body {
     bottom: 0;
     top: -10px;
     background: linear-gradient(to bottom right, rgba(243, 46, 33, 1) 0%, rgba(243, 135, 42, 1) 100%);
-    background-image: url(../imagens/login/svg/TecSis_borda.svg);
+    background-image: url(../imagens/login/svg/Cloud_borda.svg);
     background-repeat: repeat-y;
     background-size: auto;
 	z-index:4;

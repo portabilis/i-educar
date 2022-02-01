@@ -68,7 +68,7 @@
 					<div class="container"></div>
 					<div id="login-form" class="shadow_M">
 						
-						<img alt="Logo" class="entLogoMobile" src="{{ config('legacy.config.ieducar_image') ?? url('https://tecsisdoc.com.br/wp-content/uploads/2022/01/tecsis_png.png') }}"/>
+						<img alt="Logo" class="entLogoMobile" src="{{ config('legacy.config.ieducar_image') ?? url('https://tecsisdoc.com.br/wp-content/uploads/2022/02/cloud-logo.png') }}"/>
 						@yield('content')
 					</div>
 					<div id="footer" class="link">
