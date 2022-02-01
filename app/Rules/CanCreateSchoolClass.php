@@ -22,13 +22,14 @@ class CanCreateSchoolClass implements Rule
         $serieId = $value->ref_ref_cod_serie;
         $turnoId = $value->turma_turno_id;
         $anoLetivo = $value->ano;
+        $isCreate = empty($value->cod_turma);
 
         $schoolGrade = LegacySchoolGrade::query()
             ->where('ref_cod_escola', $escolaId)
             ->where('ref_cod_serie', $serieId)
             ->first();
 
-        if ($schoolGrade && $schoolGrade->bloquear_cadastro_turma_para_serie_com_vagas == 1) {
+        if ($isCreate && $schoolGrade && $schoolGrade->bloquear_cadastro_turma_para_serie_com_vagas == 1) {
             $schoolClasses = LegacySchoolClass::query()
                 ->where('ref_ref_cod_serie', $serieId)
                 ->where('ref_ref_cod_escola', $escolaId)
