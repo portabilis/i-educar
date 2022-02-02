@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <link rel="shortcut icon" href="{{ url('favicon.ico') }}" />
-    <title>@if(isset($title)) {!! $title !!} - @endif {{ config('legacy.app.entity.name') }} - i-Educar</title>
+    <title>@if(isset($title)) {!! html_entity_decode($title) !!} - @endif {{ html_entity_decode(config('legacy.app.entity.name')) }} - i-Educar</title>
 
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans">
     <link rel="stylesheet" type="text/css" href="{{ url('intranet/styles/login.css') }}">

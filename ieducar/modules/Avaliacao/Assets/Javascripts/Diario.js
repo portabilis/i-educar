@@ -1,5 +1,3 @@
-//$j('#form_resultado').submit(function(event) {event.preventDefault()});
-
 // variaveis usadas pelo modulo Frontend/Process.js
 var PAGE_URL_BASE = 'diario';
 var API_URL_BASE  = 'diarioApi';
@@ -336,6 +334,14 @@ var changeSituacao = function(event) {
   if($element.val() != 0){
     changeResource($element, postSituacao);
     $element.data('old_value', $element.val());
+  }
+};
+
+let changeRegistrationLockStatus = function(event) {
+  let element = $j(this);
+
+  if(element[0].id != 0) {
+    changeResource(element, postBloqueioDeMudanca);
   }
 };
 
@@ -683,7 +689,7 @@ function postSituacao($situacaoElementField) {
   var options = {
     url : postResourceUrlBuilder.buildUrl(API_URL_BASE, 'situacao', additionalVars),
     dataType : 'json',
-    data : {att_value : $situacaoElementField.val()},
+    data : {new_status : $situacaoElementField.val()},
     success : function(dataResponse) {
       afterChangeResource($situacaoElementField);
       handleChange(dataResponse);
@@ -691,6 +697,27 @@ function postSituacao($situacaoElementField) {
   };
 
   $situacaoElementField.data('old_value', $situacaoElementField.val());
+  postResource(options, handleErrorOnPostResource);
+}
+
+function postBloqueioDeMudanca(bloqueioSituacaoField) {
+
+  let additionalVars = {
+    matricula_id : bloqueioSituacaoField[0].id
+  };
+
+  let options = {
+    url : postResourceUrlBuilder.buildUrl(API_URL_BASE, 'bloqueia_troca_de_situacao', additionalVars),
+    dataType : 'json',
+    data : {bloquear_troca_de_situacao : bloqueioSituacaoField.is(":checked")},
+    success : function(dataResponse) {
+      let matriculaId     = dataResponse.matricula_id;
+      let $situacaoField  = $j('#situacao-matricula-' + matriculaId + '-cc-');
+      $situacaoField.prop('disabled', dataResponse.bloquear_troca_de_situacao);
+      messageUtils.success(dataResponse.msgs[0].msg)
+    }
+  };
+
   postResource(options, handleErrorOnPostResource);
 }
 
@@ -1139,7 +1166,7 @@ function handleSearch($resultTable, dataResponse) {
       updateComponenteCurriculares($resultTable, value.matricula_id, value.componentes_curriculares, value.regra);
 
     if((value.regra.quantidade_etapas == $j('#etapa').val() ) && (value.regra.progressao_manual || value.regra.progressao_manual_ciclo) && !componenteCurricularSelected){
-      situacaoFinalField(dataResponse.matricula_id, dataResponse.situacao).appendTo($resultTable);
+      situacaoFinalField(dataResponse.matricula_id, dataResponse.situacao,value).appendTo($resultTable);
     }
 
     if ((!componenteCurricularSelected) && (showBotaoReplicarNotas))
@@ -1165,6 +1192,7 @@ function handleSearch($resultTable, dataResponse) {
   var $notaGeralEtapaFields = $resultTable.find('.nota-geral-etapa');
   var $mediaFields = $resultTable.find('.media-cc');
   var $situacaoField = $resultTable.find('.situacao-cc');
+  let bloqueioField = $resultTable.find('.bloqueio-matricula');
 
   $notaFields.on('change', changeNota);
   $notaExameFields.on('change', changeNotaExame);
@@ -1174,6 +1202,7 @@ function handleSearch($resultTable, dataResponse) {
   $notaGeralEtapaFields.on('change', changeNotaGeralEtapa);
   $mediaFields.on('change', changeMedia);
   $situacaoField.on('change', changeSituacao);
+  bloqueioField.on('change', changeRegistrationLockStatus);
 
   $resultTable.addClass('styled').find('.tabable:first').focus();
   navegacaoTab(dataResponse.navegacao_tab);
@@ -1193,6 +1222,11 @@ function handleSearch($resultTable, dataResponse) {
     criaBotaoReplicarNotas();
 
   $j('.flashMessages').addClass('msg-diario');
+
+  if(dataResponse.matriculas.length === 1) {
+    $situacaoField.prop('disabled', dataResponse.matriculas[0].bloquear_troca_de_situacao);
+  }
+
 }
 
 function _notaField(matriculaId, componenteCurricularId, klass, id, value, areaConhecimentoId, maxLength, tipoNota, regra) {
@@ -1752,26 +1786,44 @@ function changeMediaValue(elementId, nota, notaArredondada, regra){
   }
 }
 
-function situacaoFinalField($matriculaId, $situacao){
+function situacaoFinalField($matriculaId, $situacao, value){
 
-  var $selectSituacao  = $j('<select />').attr('id', 'situacao' + '-matricula-' + $matriculaId + '-cc-').addClass('situacao-cc').data('matricula_id', $matriculaId);
-  var $optionDefault                = $j('<option />').html('').val(0).attr('selected', 'selected');
-  var $optionAprovado               = $j('<option />').html('Aprovado').val(1);
-  var $optionRetido                 = $j('<option />').html('Retido').val(2);
-  var $optionAprovadoPeloConselho   = $j('<option />').html('Aprovado pelo conselho').val(13);
-  var $optionAprovadoComDependencia = $j('<option />').html('Aprovado com dependência').val(12);
+  let situacaoValueAvailable = [1,2,12,13];
+  let selectId = 'situacao' + '-matricula-' + $matriculaId + '-cc-';
+  let $selectSituacao               = $j('<select />').attr('id', selectId).addClass('situacao-cc').data('matricula_id', $matriculaId);
+  let $optionDefault                = $j('<option />').html('').val(0).attr('selected', !situacaoValueAvailable.includes(value.situacao));
+  let $optionAprovado               = $j('<option />').html('Aprovado').val(1).attr('selected', value.situacao === 1);
+  let $optionRetido                 = $j('<option />').html('Retido').val(2).attr('selected', value.situacao === 2);
+  let $optionAprovadoPeloConselho   = $j('<option />').html('Aprovado pelo conselho').val(13).attr('selected', value.situacao === 13);
+  let $optionAprovadoComDependencia = $j('<option />').html('Aprovado com dependência').val(12).attr('selected', value.situacao === 12);
+
+  let $checkbox = $j('<input />')
+    .attr('type', 'checkbox')
+    .attr('name', 'bloqueio-matricula')
+    .attr('id', $matriculaId)
+    .prop('checked', value.bloquear_troca_de_situacao)
+    .attr('class', 'bloqueio-matricula');
+
+  let label =  $j('<label />')
+    .attr('for', $matriculaId)
+    .html('Bloquear troca de situação de matrícula');
 
   $optionDefault.appendTo($selectSituacao);
   $optionAprovado.appendTo($selectSituacao);
   $optionRetido.appendTo($selectSituacao);
   $optionAprovadoPeloConselho.appendTo($selectSituacao);
+
   if (regra_dependencia) {
     $optionAprovadoComDependencia.appendTo($selectSituacao);
   }
 
-  var $element = $j('<tr />').addClass('center resultado-final');
+  let $element = $j('<tr />').addClass('center resultado-final');
   $j('<td />').addClass('center resultado-final').html(safeUtf8Decode('Situação final')).appendTo($element);
-  $j('<td />').addClass('resultado-final-esquerda').attr('colspan', '6').html($selectSituacao).appendTo($element);
+  let resultado = $j('<td />').addClass('resultado-final-esquerda').attr('colspan', '6').html($selectSituacao);
+
+  resultado.append($checkbox);
+  resultado.append(label);
+  resultado.appendTo($element);
 
   return $element;
 }
