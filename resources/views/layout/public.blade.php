@@ -83,7 +83,7 @@
 						<img alt="Logo" class="entLogo" src="{{ config('legacy.config.ieducar_image') ?? url('https://tecsisdoc.com.br/wp-content/uploads/2022/01/tecsis_png.png') }}"/>
 					</div>
 					<div class="container">
-						<h1 class="fontLogin font-b">Secretaria Municipal da Educação</h1>
+						<h1 class="fontLogin font-b">Secretaria Municipal de Educação</h1>
 					</div>
 					
 					<div id="footer" class="link">
