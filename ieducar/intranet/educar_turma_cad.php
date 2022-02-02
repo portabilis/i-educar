@@ -612,7 +612,7 @@ return new class extends clsCadastro {
         $etapas_educacenso = loadJson('educacenso_json/etapas_ensino.json');
         $etapas_educacenso = array_replace([null => 'Selecione'], $etapas_educacenso);
 
-        $options = ['label' => 'Etapa de ensino', 'resources' => $etapas_educacenso, 'value' => $this->etapa_educacenso, 'required' => false, 'size' => 70,];
+        $options = ['label' => 'Etapa de ensino', 'resources' => $etapas_educacenso, 'value' => $this->etapa_educacenso, 'required' => true, 'size' => 70];
         $this->inputsHelper()->select('etapa_educacenso', $options);
 
         $cursos = loadJson('educacenso_json/cursos_da_educacao_profissional.json');
