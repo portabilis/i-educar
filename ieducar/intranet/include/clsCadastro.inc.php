@@ -324,7 +324,7 @@ class clsCadastro extends clsCampos
                                 $validador = substr($validador, 1);
                                 $campo = 'campos';
                                 $retorno .= " var campos = document.getElementById('{$nomeCampo}['+id_campo+']');\n
-                              if(campos.value!='' &&
+                                if(campos != null && campos.value != '' &&
                           ";
                             } else {
                                 $retorno .= " \n if (";
