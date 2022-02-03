@@ -64,7 +64,7 @@ abstract class Core_Controller_Page_EditController extends clsCadastro implement
         if (0 < $this->getRequest()->id) {
             $this->setOptions([
                 'url_cancelar' => [
-                    'path' => 'view',
+                    'path' => 'view', 
                     'options' => ['query' => ['id' => $this->getRequest()->id]]
                 ]
             ]);

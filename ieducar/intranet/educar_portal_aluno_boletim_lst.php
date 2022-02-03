@@ -1,6 +1,4 @@
 <?php
-
-
 return new class extends clsListagem{
 
 public $pessoa_logada;
@@ -20,7 +18,6 @@ public function Gerar(){
     $lista_busca = [
         'Ano',
         'Escola',
-        'Curso',
         'Turma',
         'Matricula'
         
@@ -58,7 +55,6 @@ public function Gerar(){
             $lista_busca = [
                 "<a href=\"educar_portal_aluno_boletim.php?ano={$registro['ano']}\">{$registro['ano']}</a>",
                 "<a href=\"educar_portal_aluno_boletim.php?ano={$registro['ano']}\">{$registro['fantasia']}</a>",
-                "<a href=\"educar_portal_aluno_boletim.php?ano={$registro['ano']}\">{$registro['nm_curso']}</a>",
                 "<a href=\"educar_portal_aluno_boletim.php?ano={$registro['ano']}\">{$registro['nm_turma']}</a>",
                 "<a href=\"educar_portal_aluno_boletim.php?ano={$registro['ano']}\">{$registro['cod_matricula']}</a>"
                     

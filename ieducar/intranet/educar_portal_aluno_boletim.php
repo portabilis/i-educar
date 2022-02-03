@@ -5,6 +5,7 @@ use League\CommonMark\Node\Block\Document;
 use PhpOffice\PhpSpreadsheet\Calculation\TextData\Format;
 use PhpParser\Node\Expr\AssignOp\Div;
 use function GuzzleHttp\Promise\settle;
+
 return new class extends clsDetalhe {
   public $cod_turma;
   public $nome_aluno;
@@ -18,8 +19,7 @@ return new class extends clsDetalhe {
   public $etapa;
   public $tipoetapa;
 
-  
-  
+ 
      
     public function Gerar()
     {
@@ -232,15 +232,17 @@ return new class extends clsDetalhe {
     $this->montaListaComponentes($registro['Historico'],$i);
   
 }
-    /* echo "<form method='post' name = 'boletim'>";
+    
+    function Gerar(){}
+    echo "<form method='post' name = 'cadastro'>";
     echo "<input type = 'hidden' id = 'ref_cod_matricula' value = '$cod_matricula'>";
     echo "<input type = 'hidden' id = 'ref_cod_turma' value = '$this->cod_turma'>";
     echo "</form>";
-    $gerarboletim = '<input type="button" id="btn_enviar" class="botaolistagem" onclick="exibirBoletim()" value="Exibir Boletim" autocomplete="off">';
+    $gerarboletim = "<input type='button' id='btn_enviar' class='botaolistagem' onclick='customPrintReport();' value='Exibir Boletim' autocomplete='off'>";
     echo $gerarboletim;
-    echo "  <br>"; */
-    
-       
+    echo "  <br>";
+        
+
         $this->url_cancelar = 'educar_portal_aluno_boletim_lst.php';
         $this->largura = '100%';
 
@@ -257,7 +259,9 @@ return new class extends clsDetalhe {
       
     }
    
-}
+} 
+
+  
 
     #Após coletar todas as informações, monta a lista de componentes
     public function montaListaComponentes($historico,$etapa){
@@ -299,6 +303,7 @@ return new class extends clsDetalhe {
             );
  
     }
+    
     
     public function Formular()
     {
