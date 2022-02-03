@@ -1,12 +1,12 @@
 <?php
 
 use App\Support\Database\AsView;
-
 use Illuminate\Database\Migrations\Migration;
 
 class CriaViewSituacaoRelatorios extends Migration
 {
     use AsView;
+
     /**
      * Run the migrations.
      *

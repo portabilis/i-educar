@@ -159,6 +159,9 @@ return new class extends clsCadastro {
             }
         }
 
+        // remove dados que podem estar na session de outras consultas
+        Session::forget("cursos_por_funcao");
+
         $this->url_cancelar = ($retorno == 'Editar') ?
             "educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}" :
             'educar_servidor_lst.php';
@@ -292,7 +295,7 @@ return new class extends clsCadastro {
             "<img src='imagens/lupa_antiga.png' border='0' style='cursor:pointer;' alt='Buscar Componente Curricular' title='Buscar Componente Curricular' onclick=\"$funcao\">"
         );
 
-        $funcao = 'popCurso()';
+        $funcao = 'popCurso(this)';
 
         $this->campoRotulo(
             'curso',
@@ -726,6 +729,7 @@ JS;
 
         $this->excluiDisciplinas(null);
         $this->excluiFuncoes();
+        $this->excluiFaltaAtraso();
         DB::commit();
 
         $this->mensagem = 'Exclusão efetuada com sucesso.<br>';
@@ -839,6 +843,11 @@ JS;
     {
         $obj_servidor_funcao = new clsPmieducarServidorFuncao($this->ref_cod_instituicao, $this->cod_servidor);
         $obj_servidor_funcao->excluirTodos();
+    }
+
+    public function excluiFaltaAtraso()
+    {
+        (new clsPmieducarFaltaAtraso())->excluiTodosPorServidor($this->cod_servidor);
     }
 
     public function excluiFuncoesRemovidas($funcoes)

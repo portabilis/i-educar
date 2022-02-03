@@ -5,64 +5,46 @@ function hrefToCreateParent(parentType) {
 }
 
 function hrefToEditParent(parentType) {
-  var id = $j(buildId(parentType + '_id')).val();
+  let id = $j(buildId(parentType + '_id')).val();
   return hrefToCreateParent(parentType) + '&cod_pessoa_fj=' + id;
 }
 
-var pessoaId      = $j('#cod_pessoa_fj').val();
-var $form         = $j('#formcadastro');
-var $submitButton = $j('#btn_enviar');
-var $cpfField     = $j('#id_federal');
-var $cpfNotice    = $j('<span>').html('')
-                                .addClass('error resource-notice')
-                                .hide()
-                                .width($j('#nm_pessoa').outerWidth() - 12)
-                                .appendTo($cpfField.parent());
+let pessoaId      = $j('#cod_pessoa_fj').val();
+let $form         = $j('#formcadastro');
+let $submitButton = $j('#btn_enviar');
+let $cpfField     = $j('#id_federal');
+let campoCadeiraSUS = $j('#sus');
 let obrigarCamposCenso = $j('#obrigar_campos_censo');
+let $cpfNotice  = $j('<span>')
+  .html('')
+  .addClass('error resource-notice')
+  .hide()
+  .width($j('#nm_pessoa').outerWidth() - 12)
+  .appendTo($cpfField.parent());
 
-// links pessoa pai, mãe
+let campoCadeiraSUSNotice = $j('<span>')
+  .html('')
+  .addClass('error resource-notice')
+  .hide()
+  .width($j('#tipo_certidao_civil').outerWidth() - 12)
+  .appendTo(campoCadeiraSUS.parent());
 
-var $paiNomeField = $j('#pai_nome');
-var $paiIdField   = $j('#pai_id');
+function validateFieldSUS() {
+  let sus = campoCadeiraSUS.val()
+  campoCadeiraSUSNotice.hide();
 
-var $maeNomeField = $j('#mae_nome');
-var $maeIdField   = $j('#mae_id');
+  $j(document).data('submit_form_after_ajax_validation', true);
 
+  if (sus && ! $j.isNumeric(sus)) {
+    campoCadeiraSUSNotice.html(stringUtils.toUtf8('O Número da carteira do SUS informado é inválido')).slideDown('fast');
+    $j(document).removeData('submit_form_after_ajax_validation');
+    $j('#sus').focus();
+    return false;
+  }
+  campoCadeiraSUSNotice.hide();
 
-var $pessoaPaiActionBar  = $j('<span>').html('')
-                                       .addClass('pessoa-links pessoa-pai-links')
-                                       .width($paiNomeField.outerWidth() - 12)
-                                       .appendTo($paiNomeField.parent());
-
-var $pessoaMaeActionBar = $pessoaPaiActionBar.clone()
-                                         .removeClass('pessoa-pai-links')
-                                         .addClass('pessoa-mae-links')
-                                         .appendTo($maeNomeField.parent());
-
-var $linkToCreatePessoaPai = $j('<a>').addClass('cadastrar-pessoa-pai decorated')
-                                      .attr('href', hrefToCreateParent('pai'))
-                                      .attr('target', '_blank')
-                                      .html('Cadastrar pessoa')
-                                      .appendTo($pessoaPaiActionBar);
-
-var $linkToEditPessoaPai = $j('<a>').hide()
-                                    .addClass('editar-pessoa-pai decorated')
-                                    .attr('href', hrefToEditParent('pai'))
-                                    .attr('target', '_blank')
-                                    .html('Editar pessoa')
-                                    .appendTo($pessoaPaiActionBar);
-
-var $linkToCreatePessoaMae = $linkToCreatePessoaPai.clone()
-                                                   .removeClass('cadastrar-pessoa-pai')
-                                                   .addClass('cadastrar-pessoa-mae')
-                                                   .attr('href', hrefToCreateParent('mae'))
-                                                   .appendTo($pessoaMaeActionBar);
-
-var $linkToEditPessoaMae = $linkToEditPessoaPai.clone()
-                                               .removeClass('editar-pessoa-pai')
-                                               .addClass('editar-pessoa-mae')
-                                               .attr('href', hrefToEditParent('mae'))
-                                               .appendTo($pessoaMaeActionBar);
+  return true;
+}
 
 var handleGetPersonByCpf = function(dataResponse) {
   handleMessages(dataResponse.msgs);
@@ -204,6 +186,10 @@ var submitForm = function(event) {
     }
   }
 
+  if (!validateFieldSUS()) {
+    return;
+  }
+
   var tipoCertidaoNascimento = ($j('#tipo_certidao_civil').val() == 'certidao_nascimento_novo_formato');
   var tipoCertidaoCasamento = ($j('#tipo_certidao_civil').val() == 'certidao_casamento_novo_formato');
 
@@ -211,6 +197,10 @@ var submitForm = function(event) {
       return certidaoNascimentoInvalida();
   } else if (tipoCertidaoCasamento && $j('#certidao_casamento').val().length < 32) {
       return certidaoCasamentoInvalida();
+  }
+
+  if (campoCadeiraSUS.val()) {
+    validateFieldSUS();
   }
 
   if ($cpfField.val()) {
@@ -236,6 +226,14 @@ let verificaCampoZonaResidencia = () => {
     $field.makeUnrequired();
     $field.attr('disabled', 'disabled');
   }
+};
+
+var changeVisibilityOfLinksToPessoaPai = function () {
+  changeVisibilityOfLinksToPessoaParent('pai');
+};
+
+var changeVisibilityOfLinksToPessoaMae = function () {
+  changeVisibilityOfLinksToPessoaParent('mae');
 };
 
 // when page is ready
@@ -286,36 +284,10 @@ $j(document).ready(function() {
 
   $j('#rg').on('change', verificaObrigatoriedadeRg);
 
+  campoCadeiraSUS.focusout(function() {
+    validateFieldSUS();
+  });
 }); // ready
-
-
-// pessoa links callbacks
-
-var changeVisibilityOfLinksToPessoaParent = function(parentType) {
-  var $nomeField  = $j(buildId(parentType + '_nome'));
-  var $idField    = $j(buildId(parentType + '_id'));
-  var $linkToEdit = $j('.pessoa-' + parentType + '-links .editar-pessoa-' + parentType);
-
-  if($nomeField.val() && $idField.val()) {
-    $linkToEdit.attr('href', hrefToEditParent(parentType));
-    $linkToEdit.show().css('display', 'inline');
-  }
-  else {
-    $nomeField.val('')
-    $idField.val('');
-
-    $linkToEdit.hide();
-  }
-}
-
-var changeVisibilityOfLinksToPessoaPai = function() {
-  changeVisibilityOfLinksToPessoaParent('pai');
-}
-
-var changeVisibilityOfLinksToPessoaMae = function() {
-  changeVisibilityOfLinksToPessoaParent('mae');
-}
-
 
 // children callbacks
 
@@ -368,5 +340,3 @@ var simpleSearchMaeOptions = {
   autocompleteOptions : { close : changeVisibilityOfLinksToPessoaMae }
 };
 
-$paiNomeField.focusout(changeVisibilityOfLinksToPessoaPai);
-$maeNomeField.focusout(changeVisibilityOfLinksToPessoaMae);

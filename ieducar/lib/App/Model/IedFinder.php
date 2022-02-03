@@ -101,7 +101,9 @@ class App_Model_IedFinder extends CoreExt_Entity
      */
     public static function getEscolasByUser($instituicaoId)
     {
-        $query = LegacySchool::query()->whereHas('person')->where('ref_cod_instituicao', $instituicaoId);
+        $query = LegacySchool::query()
+            ->where('ativo', 1)
+            ->whereHas('person')->where('ref_cod_instituicao', $instituicaoId);
 
         if (Auth::user()->isSchooling()) {
             $schools = Auth::user()->schools->pluck('cod_escola')->all();
@@ -241,13 +243,9 @@ class App_Model_IedFinder extends CoreExt_Entity
      */
     public static function getSeries($instituicaoId = null, $escolaId = null, $cursoId = null, $ano = null)
     {
-        $series = self::addClassToStorage(
-            'clsPmieducarSerie',
-            null,
-            'include/pmieducar/clsPmieducarSerie.inc.php'
-        );
-
-        $series->setOrderby(' nm_serie ASC, ref_cod_curso ASC, cod_serie ASC, etapa_curso ASC');
+        $orderBy = ' nm_serie ASC, ref_cod_curso ASC, cod_serie ASC, etapa_curso ASC';
+        $series = app(clsPmieducarSerie::class);
+        $series->setOrderby($orderBy);
 
         $series = $series->lista(
             null,
@@ -272,14 +270,13 @@ class App_Model_IedFinder extends CoreExt_Entity
             $ano
         );
 
-        $_series = [];
-
+        $result = [];
         foreach ($series as $serie) {
             $nomeSerie = empty($serie['descricao']) ? $serie['nm_serie'] : "{$serie['nm_serie']} ({$serie['descricao']})";
-            $_series[$serie['cod_serie']] = mb_strtoupper($nomeSerie, 'UTF-8');
+            $result[$serie['cod_serie']] = mb_strtoupper($nomeSerie, 'UTF-8');
         }
 
-        return $_series;
+        return $result;
     }
 
     /**

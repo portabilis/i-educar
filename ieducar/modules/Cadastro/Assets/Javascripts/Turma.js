@@ -292,6 +292,10 @@ $j(document).ready(function() {
     }
   }
 
+  $j('#ano').on('change', function(){
+    $j('#ano_letivo').val($j('#ano').val());
+  });
+
   $j('#ref_cod_serie, #ano_letivo').on('change', function(){
     let escola_id = $j('#ref_cod_escola').val();
     let serie_id = $j('#ref_cod_serie').val();
@@ -357,4 +361,8 @@ $j(document).ready(function() {
       );
     }
   }
+  $j("#tipo_boletim, #tipo_boletim_diferenciado").chosen({
+    no_results_text: "Nenhum modelo encontrado!",
+    allow_single_deselect: true,
+  });
 });

@@ -1,55 +1,67 @@
 <?php
 
-use App\Models\LegacyEvaluationRuleGradeYear;
-use App\Models\LegacyInstitution;
+namespace Database\Factories;
+
 use App\Models\LegacySchoolClass;
-use App\Models\LegacySchoolClassType;
-use App\Models\LegacySchoolGrade;
-use App\Models\LegacyUser;
-use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-/** @var Factory $factory */
+class LegacySchoolClassFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = LegacySchoolClass::class;
 
-$factory->define(LegacySchoolClass::class, function (Faker $faker) {
-    $schoolGrade = factory(LegacySchoolGrade::class)->create();
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition(): array
+    {
+        $schoolGrade = LegacySchoolGradeFactory::new()->create();
 
-    factory(LegacyEvaluationRuleGradeYear::class)->create([
-        'serie_id' => $schoolGrade->grade,
-        'ano_letivo' => now()->year,
-    ]);
+        LegacyEvaluationRuleGradeYearFactory::new()->create([
+            'serie_id' => $schoolGrade->grade,
+            'ano_letivo' => now()->year,
+        ]);
 
-    return [
-        'ref_usuario_cad' => factory(LegacyUser::class)->state('unique')->make(),
-        'nm_turma' => $name = $faker->colorName,
-        'sgl_turma' => mb_substr($name, 0, 3),
-        'max_aluno' => $faker->numberBetween(10, 25),
-        'data_cadastro' => now(),
-        'ref_cod_turma_tipo' => factory(LegacySchoolClassType::class)->state('unique')->make(),
-        'ref_ref_cod_escola' => $schoolGrade->school_id,
-        'ref_ref_cod_serie' => $schoolGrade->grade_id,
-        'ref_cod_curso' => $schoolGrade->grade->course_id,
-        'ref_cod_instituicao' => factory(LegacyInstitution::class)->state('unique')->make(),
-        'dias_semana' => [2, 3, 4, 5, 6],
-        'ano' => now()->year,
-        'visivel' => true,
-    ];
-});
+        return [
+            'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
+            'nm_turma' => $name = $this->faker->colorName,
+            'sgl_turma' => mb_substr($name, 0, 3),
+            'max_aluno' => $this->faker->numberBetween(10, 25),
+            'data_cadastro' => now(),
+            'ref_cod_turma_tipo' => LegacySchoolClassTypeFactory::new()->unique()->make(),
+            'ref_ref_cod_escola' => $schoolGrade->school_id,
+            'ref_ref_cod_serie' => $schoolGrade->grade_id,
+            'ref_cod_curso' => $schoolGrade->grade->course_id,
+            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
+            'dias_semana' => [2, 3, 4, 5, 6],
+            'ano' => now()->year,
+            'visivel' => true,
+        ];
+    }
 
-$factory->state(LegacySchoolClass::class, 'morning', function (Faker $faker) use ($factory) {
-    $schollClass = $factory->raw(LegacySchoolClass::class);
+    public function morning(): self
+    {
+        return $this->state(function (array $attributes) {
+            return array_merge($attributes, [
+                'hora_inicial' => '07:45',
+                'hora_final' => '11:45',
+            ]);
+        });
+    }
 
-    return array_merge($schollClass, [
-        'hora_inicial' => '07:45',
-        'hora_final' => '11:45',
-    ]);
-});
-
-$factory->state(LegacySchoolClass::class, 'afternoon', function (Faker $faker) use ($factory) {
-    $schollClass = $factory->raw(LegacySchoolClass::class);
-
-    return array_merge($schollClass, [
-        'hora_inicial' => '13:15',
-        'hora_final' => '17:15',
-    ]);
-});
+    public function afternoon(): self
+    {
+        return $this->state(function (array $attributes) {
+            return array_merge($attributes, [
+                'hora_inicial' => '13:15',
+                'hora_final' => '17:15',
+            ]);
+        });
+    }
+}

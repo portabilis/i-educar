@@ -157,7 +157,7 @@ return new class extends clsCadastro {
         $log = new LogUnification();
         $log->type = PersonLogUnification::getType();
         $log->main_id = $mainId;
-        $log->duplicates_id = json_encode($duplicatesId);
+        $log->duplicates_id = json_encode(array_values($duplicatesId));
         $log->created_by = $createdBy;
         $log->updated_by = $createdBy;
         $log->duplicates_name = json_encode($this->getNamesOfUnifiedPeople($duplicatesId));

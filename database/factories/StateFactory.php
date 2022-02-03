@@ -1,18 +1,32 @@
 <?php
 
-use App\Models\Country;
+namespace Database\Factories;
+
 use App\Models\State;
-use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
-/** @var Factory $factory */
+class StateFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = State::class;
 
-$factory->define(State::class, function (Faker $faker) {
-    return [
-        'country_id' => factory(Country::class)->create(),
-        'name' => Str::ucfirst($month = $faker->monthName) . ' ' . Str::ucfirst($color = $faker->colorName),
-        'abbreviation' => Str::substr($month, 0, 1) . ' ' . Str::substr($color, 0, 1),
-        'ibge_code' => $faker->numerify('########'),
-    ];
-});
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition(): array
+    {
+        return [
+            'country_id' => CountryFactory::new()->create(),
+            'name' => Str::ucfirst($month = $this->faker->monthName()) . ' ' . Str::ucfirst($color = $this->faker->colorName()),
+            'abbreviation' => Str::substr($month, 0, 1) . ' ' . Str::substr($color, 0, 1),
+            'ibge_code' => $this->faker->numerify('########'),
+        ];
+    }
+}

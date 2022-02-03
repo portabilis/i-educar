@@ -34,7 +34,7 @@ return new class extends clsListagem {
             'Instituição'
         ]);
 
-        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'anoLetivo']);
+        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'anoLetivo'], [],['options' => ['required' => false]]);
 
         if ($this->cod_servidor) {
             $objTemp = new clsFuncionario($this->cod_servidor);

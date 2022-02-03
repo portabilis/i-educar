@@ -1,7 +1,5 @@
 <?php
 
-
-
 class Avaliacao_AllTests extends TestCollector
 {
     protected $_name = 'Suíte de testes do módulo Avaliacao';
@@ -9,7 +7,7 @@ class Avaliacao_AllTests extends TestCollector
 
     public static function suite()
     {
-        $instance = new self;
+        $instance = new self();
 
         return $instance->addDirectoryTests();
     }

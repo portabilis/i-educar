@@ -54,7 +54,7 @@ return new class extends clsDetalhe {
         }
 
         if ($detalhe['nome_social']) {
-            $this->addDetalhe(['Nome social', $detalhe['nome_social']]);
+            $this->addDetalhe(['Nome social e/ou afetivo', $detalhe['nome_social']]);
         }
 
         $this->addDetalhe(['CPF', int2cpf($detalhe['cpf'])]);

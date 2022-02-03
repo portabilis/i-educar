@@ -3,6 +3,7 @@
 namespace Tests;
 
 use Exception;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
@@ -29,7 +30,11 @@ abstract class EloquentTestCase extends TestCase
      */
     protected function getAttributesForCreate()
     {
-        return factory($this->getEloquentModelName())->make()->toArray();
+        $factory = Factory::factoryForModel(
+            $this->getEloquentModelName()
+        );
+
+        return $factory->make()->toArray();
     }
 
     /**
@@ -39,7 +44,11 @@ abstract class EloquentTestCase extends TestCase
      */
     protected function getAttributesForUpdate()
     {
-        return factory($this->getEloquentModelName())->make()->toArray();
+        $factory = Factory::factoryForModel(
+            $this->getEloquentModelName()
+        );
+
+        return $factory->make()->toArray();
     }
 
     /**
@@ -51,7 +60,7 @@ abstract class EloquentTestCase extends TestCase
     {
         $model = $this->getEloquentModelName();
 
-        return new $model;
+        return new $model();
     }
 
     /**
@@ -104,9 +113,9 @@ abstract class EloquentTestCase extends TestCase
     /**
      * Delete a Eloquent model.
      *
-     * @return void
-     *
      * @throws Exception
+     *
+     * @return void
      */
     public function testDeleteUsingEloquent()
     {
@@ -147,7 +156,11 @@ abstract class EloquentTestCase extends TestCase
      */
     public function testRelationships()
     {
-        $model = factory($this->getEloquentModelName())->create();
+        $factory = Factory::factoryForModel(
+            $this->getEloquentModelName()
+        );
+
+        $model = $factory->create();
 
         foreach ($this->relations as $relation => $class) {
             $this->assertInstanceOf($class, $model->{$relation});

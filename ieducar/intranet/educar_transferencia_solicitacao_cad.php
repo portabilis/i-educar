@@ -213,7 +213,7 @@ return new class extends clsCadastro {
                 }
             }
         }
-        clsPmieducarHistoricoEscolar::gerarHistoricoTransferencia($this->ref_cod_matricula, $this->pessoa_logada, $this->ref_cod_escola);
+        clsPmieducarHistoricoEscolar::gerarHistoricoTransferencia($this->ref_cod_matricula, $this->pessoa_logada);
 
         if ($this->escola_em_outro_municipio === 'on') {
             $this->ref_cod_escola = null;
@@ -277,7 +277,7 @@ return new class extends clsCadastro {
             $obj = new clsPmieducarTransferenciaSolicitacao($this->cod_transferencia_solicitacao, null, $this->pessoa_logada, null, null, null, null, null, null, 0);
             $excluiu = $obj->excluir();
             if ($excluiu) {
-                $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
+                $this->mensagem = 'Exclusão efetuada com sucesso.<br>';
                 $this->simpleRedirect("educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
             }
         } else {

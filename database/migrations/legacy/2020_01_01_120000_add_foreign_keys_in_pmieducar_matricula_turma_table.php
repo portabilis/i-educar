@@ -15,16 +15,16 @@ class AddForeignKeysInPmieducarMatriculaTurmaTable extends Migration
     {
         Schema::table('pmieducar.matricula_turma', function (Blueprint $table) {
             $table->foreign('ref_cod_turma')
-               ->references('cod_turma')
-               ->on('pmieducar.turma')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_turma')
+                ->on('pmieducar.turma')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_matricula')
-               ->references('cod_matricula')
-               ->on('pmieducar.matricula')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_matricula')
+                ->on('pmieducar.matricula')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

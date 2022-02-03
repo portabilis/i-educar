@@ -74,71 +74,47 @@ return new class extends clsCadastro {
         // primary keys
         $this->campoOculto('cod_situacao', $this->cod_situacao);
 
-        // foreign keys
-        $get_escola     = 1;
-        $escola_obrigatorio = false;
-        $get_biblioteca = 1;
-        $instituicao_obrigatorio = true;
-        $biblioteca_obrigatorio = true;
-        include('include/pmieducar/educar_campo_lista.php');
-
-        //-------------- JS para os Check --------------//
-        //if (!$this->cod_situacao)
-        //  {
-        /*$todas_situacoes = "situacao = new Array();\n";
-        $obj_biblioteca = new clsPmieducarSituacao();
-        $lista = $obj_biblioteca->lista(null,null,null,null,null,null,null,null,null,null,null,null,1);
-        if ( is_array( $lista ) && count( $lista ) )
-        {
-            foreach ( $lista as $registro )
-            {
-                $todas_situacoes .= "situacao[situacao.length] = new Array( {$registro["cod_situacao"]}, {$registro['situacao_padrao']}, {$registro['situacao_emprestada']}, {$registro['ref_cod_biblioteca']});\n";
-            }
+        try {
+            $get_escola     = 1;
+            $escola_obrigatorio = false;
+            $get_biblioteca = 1;
+            $instituicao_obrigatorio = true;
+            $biblioteca_obrigatorio = true;
+            include('include/pmieducar/educar_campo_lista.php');
+        } catch (Exception $exception) {
+            $this->mensagem = $exception->getMessage();
+            $this->simpleRedirect('educar_situacao_lst.php');
+            return false;
         }
-        echo "<script>{$todas_situacoes}</script>";*/
-        //  }
 
-        // text
-        $this->campoTexto('nm_situacao', 'Situa&ccedil;&atilde;o', $this->nm_situacao, 30, 255, true);
+        $this->campoTexto('nm_situacao', 'Situação', $this->nm_situacao, 30, 255, true);
 
-        $opcoes = ['' => 'Selecione', 1 => 'n&atilde;o', 2 => 'sim' ];
-        $this->campoLista('permite_emprestimo', 'Permite Empr&eacute;stimo', $opcoes, $this->permite_emprestimo);
-        $this->campoMemo('descricao', 'Descri&ccedil;&atilde;o', $this->descricao, 60, 5, false);
+        $opcoes = ['' => 'Selecione', 1 => 'não', 2 => 'sim' ];
+        $this->campoLista('permite_emprestimo', 'Permite Empréstimo', $opcoes, $this->permite_emprestimo);
+        $this->campoMemo('descricao', 'Descrição', $this->descricao, 60, 5);
 
         $obj_situacao = new clsPmieducarSituacao();
+        $lst_situacao = false;
         if ($this->ref_cod_biblioteca_) {
             $lst_situacao = $obj_situacao->lista(null, null, null, null, null, null, 1, null, null, null, null, null, 1, $this->ref_cod_biblioteca_, null, null);
         }
 
-        if ($lst_situacao) {   //echo "<pre>";
+        $script = '';
+        if ($lst_situacao) {
 
             $achou = false;
-            //print_r($lst_situacao);die;
+            $script = '';
             foreach ($lst_situacao as $situacao) {
                 if ($situacao['cod_situacao'] == $this->cod_situacao) {
                     $achou = true;
                 }
             }
-            if (!$achou) {
-                $script .="setVisibility('tr_situacao_padrao',false);\n";
-            }
-            //$lista = array_shift($lst_situacao);
-            //$situacao = $lista["cod_situacao"];
-            //$biblioteca = $lista["ref_cod_biblioteca"];
-        }
-        $this->campoCheck('situacao_padrao', 'Situa&ccedil;&atilde;o Padr&atilde;o', $this->situacao_padrao);
-        //if (!isset($lst_situacao) || $this->cod_situacao == $situacao || $this->ref_cod_biblioteca != $biblioteca)
-        //if (!$this->cod_situacao)
-        //$this->campoCheck( "situacao_padrao", "Situa&ccedil;&atilde;o Padr&atilde;o", $this->situacao_padrao );
 
-        //$lst_situacao = $obj_situacao->lista(null,null,null,null,null,null,null,1,null,null,null,null,1,$this->ref_cod_biblioteca,$this->ref_cod_instituicao,$this->ref_cod_escola);
-        /*  if ($lst_situacao)
-            {
-                $lista = array_shift($lst_situacao);
-                $situacao = $lista["cod_situacao"];
-                $biblioteca = $lista["ref_cod_biblioteca"];
-            }*/
-        //if (!isset($lst_situacao) || $this->cod_situacao == $situacao || $this->ref_cod_biblioteca != $biblioteca)
+            if (!$achou) {
+                $script .= "setVisibility('tr_situacao_padrao',false);\n";
+            }
+        }
+        $this->campoCheck('situacao_padrao', 'Situação Padrão', $this->situacao_padrao);
 
         $obj_situacao = new clsPmieducarSituacao();
         if ($this->ref_cod_biblioteca_) {
@@ -152,21 +128,15 @@ return new class extends clsCadastro {
                     $achou = true;
                 }
             }
-            //$lista = array_shift($lst_situacao);
-            //$situacao = $lista["cod_situacao"];
-            //$biblioteca = $lista["ref_cod_biblioteca"];
             if (!$achou) {
                 $script .="setVisibility('tr_situacao_emprestada',false);\n";
             }
         }
 
-        if ($script) {
+        if (! empty($script)) {
             echo "<script>window.onload=function(){{$script}}</script>";
         }
         $this->campoCheck('situacao_emprestada', 'Situa&ccedil;&atilde;o Emprestada', $this->situacao_emprestada);
-        //if ($this->situacao_emprestada)
-        //$this->campoCheck( "situacao_emprestada", "Situa&ccedil;&atilde;o Emprestada", $this->situacao_emprestada );
-
         $this->acao_enviar = 'valida()';
     }
 
@@ -235,7 +205,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'Situa&ccedil;&atilde;o';
+        $this->title = 'Situação';
         $this->processoAp = '602';
     }
 };

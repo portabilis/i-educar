@@ -15,14 +15,14 @@ class AddForeignKeysInPmieducarDistribuicaoUniformeTable extends Migration
     {
         Schema::table('pmieducar.distribuicao_uniforme', function (Blueprint $table) {
             $table->foreign('ref_cod_escola')
-               ->references('cod_escola')
-               ->on('pmieducar.escola');
+                ->references('cod_escola')
+                ->on('pmieducar.escola');
 
             $table->foreign('ref_cod_aluno')
-               ->references('cod_aluno')
-               ->on('pmieducar.aluno')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_aluno')
+                ->on('pmieducar.aluno')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

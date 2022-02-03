@@ -132,14 +132,16 @@ return new class extends clsCadastro {
             $this->naturalidade_id = $this->naturalidade;
         }
 
-        $this->fexcluir = $obj_permissoes->permissao_excluir(
+        $this->fexcluir = is_numeric($this->cod_pessoa_fj) && $obj_permissoes->permissao_excluir(
             43,
             $this->pessoa_logada,
             7
         );
 
+        $nomeMenu = $this->retorno === 'Editar' ? $this->retorno : 'Cadastrar';
+        
         $this->nome_url_cancelar = 'Cancelar';
-        $this->breadcrumb('Pessoa física', ['educar_pessoas_index.php' => 'Pessoas']);
+        $this->breadcrumb("{$nomeMenu} pessoa física", ['educar_pessoas_index.php' => 'Pessoas']);
 
         return $this->retorno;
     }
@@ -153,7 +155,6 @@ return new class extends clsCadastro {
         $this->url_cancelar = $this->retorno == 'Editar' ?
         'atendidos_det.php?cod_pessoa=' . $this->cod_pessoa_fj : 'atendidos_lst.php';
 
-        $this->cod_pessoa_fj;
         $objPessoa = new clsPessoaFisica($this->cod_pessoa_fj);
         $db = new clsBanco();
 
@@ -189,7 +190,7 @@ return new class extends clsCadastro {
 
         $this->campoOculto('cod_pessoa_fj', $this->cod_pessoa_fj);
         $this->campoTexto('nm_pessoa', 'Nome', $this->nm_pessoa, '50', '255', true);
-        $this->campoTexto('nome_social', 'Nome social', $this->nome_social, '50', '255', false);
+        $this->campoTexto('nome_social', 'Nome social e/ou afetivo', $this->nome_social, '50', '255', false);
 
         $foto = false;
         if (is_numeric($this->cod_pessoa_fj)) {
@@ -739,7 +740,8 @@ return new class extends clsCadastro {
         $styles = [
             '/modules/Portabilis/Assets/Stylesheets/Frontend.css',
             '/modules/Portabilis/Assets/Stylesheets/Frontend/Resource.css',
-            '/modules/Cadastro/Assets/Stylesheets/PessoaFisica.css'
+            '/modules/Cadastro/Assets/Stylesheets/PessoaFisica.css',
+            '/modules/Cadastro/Assets/Stylesheets/ModalCadastroPais.css',
         ];
 
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
@@ -747,7 +749,8 @@ return new class extends clsCadastro {
         $script = [
             '/modules/Cadastro/Assets/Javascripts/PessoaFisica.js',
             '/modules/Cadastro/Assets/Javascripts/Addresses.js',
-            '/modules/Cadastro/Assets/Javascripts/Endereco.js'
+            '/modules/Cadastro/Assets/Javascripts/Endereco.js',
+            '/modules/Cadastro/Assets/Javascripts/ModalCadastroPais.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $script);
@@ -850,7 +853,7 @@ return new class extends clsCadastro {
 
         if(window.opener &&  window.opener.afterChangePessoa) {
             var parentType = \$j('#parent_type').val();
-
+            alert('Alteração realizada com sucesso!');
             if (parentType)
             window.opener.afterChangePessoa(self, parentType, $id, \$j('#nm_pessoa').val());
             else
@@ -859,7 +862,7 @@ return new class extends clsCadastro {
         else
             document.location = 'atendidos_lst.php';
 
-        ", $afterReady = true);
+        ", $afterReady = false);
     }
 
     protected function loadAlunoByPessoaId($id)
@@ -1215,7 +1218,7 @@ return new class extends clsCadastro {
         $fisica->nacionalidade = $_REQUEST['tipo_nacionalidade'];
         $fisica->idpais_estrangeiro = $_REQUEST['pais_origem_id'];
         $fisica->idmun_nascimento = $_REQUEST['naturalidade_id'] ?: 'NULL';
-        $fisica->sus = $this->sus;
+        $fisica->sus = trim($this->sus);
         $fisica->nis_pis_pasep = $this->nis_pis_pasep ? $this->nis_pis_pasep : 'NULL';
         $fisica->ocupacao = $db->escapeString($this->ocupacao);
         $fisica->empresa = $db->escapeString($this->empresa);
@@ -1420,7 +1423,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'Pessoas Físicas - Cadastro';
+        $this->title = 'Pessoa Física - Cadastro';
         $this->processoAp = 43;
     }
 };

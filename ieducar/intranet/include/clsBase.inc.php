@@ -1,6 +1,7 @@
 <?php
 
 use App\Menu;
+use App\Services\MenuCacheService;
 use App\User;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
@@ -11,7 +12,7 @@ use Illuminate\Support\Facades\View;
 
 class clsBase
 {
-    public $titulo = 'Prefeitura Municipal';
+
     public $clsForm = [];
     public $processoAp;
     public $renderMenu = true;
@@ -113,7 +114,8 @@ class clsBase
 
         /** @var User $user */
         $user = Auth::user();
-        $menu = Menu::user($user);
+
+        $menu = app(MenuCacheService::class)->getMenuByUser($user);
 
         $topmenu = Menu::query()
             ->where('process', $this->processoAp)
@@ -124,7 +126,7 @@ class clsBase
         }
 
         View::share('menu', $menu);
-        View::share('title', $this->titulo);
+        View::share('title', $this->getPageTitle());
 
         if ($this->renderMenu) {
             $saida_geral .= $this->MakeBody();
@@ -142,5 +144,27 @@ class clsBase
         }
 
         echo view($view, ['body' => $saida_geral])->render();
+    }
+
+    /**
+     * @return string
+     */
+    private function getPageTitle()
+    {
+        if (isset($this->title)) {
+            return $this->title;
+        }
+
+        if (isset($this->_title)) {
+            return $this->_title;
+        }
+
+        if (isset($this->titulo)) {
+            return $this->titulo;
+        }
+
+        if (isset($this->_titulo)) {
+            return $this->_titulo;
+        }
     }
 }

@@ -42,6 +42,54 @@ class Menu extends Model
         'active',
     ];
 
+    private static function getMenusByIds($ids): Collection
+    {
+        return static::query()
+            ->with([
+                'children' => function ($query) use ($ids) {
+                    /** @var Builder $query */
+                    $query->whereNull('process');
+                    $query->orWhereIn('id', $ids);
+                    $query->orderBy('order');
+                    $query->with([
+                        'children' => function ($query) use ($ids) {
+                            /** @var Builder $query */
+                            $query->whereNull('process');
+                            $query->orWhereIn('id', $ids);
+                            $query->orderBy('order');
+                            $query->with([
+                                'children' => function ($query) use ($ids) {
+                                    /** @var Builder $query */
+                                    $query->whereNull('process');
+                                    $query->orWhereIn('id', $ids);
+                                    $query->orderBy('order');
+                                    $query->with([
+                                        'children' => function ($query) use ($ids) {
+                                            /** @var Builder $query */
+                                            $query->whereNull('process');
+                                            $query->orWhereIn('id', $ids);
+                                            $query->orderBy('order');
+                                            $query->with([
+                                                'children' => function ($query) use ($ids) {
+                                                    /** @var Builder $query */
+                                                    $query->whereNull('process');
+                                                    $query->orWhereIn('id', $ids);
+                                                    $query->orderBy('order');
+                                                }
+                                            ]);
+                                        }
+                                    ]);
+                                }
+                            ]);
+                        }
+                    ]);
+                }
+            ])
+            ->whereNull('parent_id')
+            ->orderBy('order')
+            ->get();
+    }
+
     /**
      * Indica se o menu é um link ou tem ao menos um link em seus submenus.
      *
@@ -215,50 +263,7 @@ class Menu extends Model
 
         $ids = $user->menu()->pluck('id')->sortBy('id')->toArray();
 
-        return static::query()
-            ->with([
-                'children' => function ($query) use ($ids) {
-                    /** @var Builder $query */
-                    $query->whereNull('process');
-                    $query->orWhereIn('id', $ids);
-                    $query->orderBy('order');
-                    $query->with([
-                        'children' => function ($query) use ($ids) {
-                            /** @var Builder $query */
-                            $query->whereNull('process');
-                            $query->orWhereIn('id', $ids);
-                            $query->orderBy('order');
-                            $query->with([
-                                'children' => function ($query) use ($ids) {
-                                    /** @var Builder $query */
-                                    $query->whereNull('process');
-                                    $query->orWhereIn('id', $ids);
-                                    $query->orderBy('order');
-                                    $query->with([
-                                        'children' => function ($query) use ($ids) {
-                                            /** @var Builder $query */
-                                            $query->whereNull('process');
-                                            $query->orWhereIn('id', $ids);
-                                            $query->orderBy('order');
-                                            $query->with([
-                                                'children' => function ($query) use ($ids) {
-                                                    /** @var Builder $query */
-                                                    $query->whereNull('process');
-                                                    $query->orWhereIn('id', $ids);
-                                                    $query->orderBy('order');
-                                                }
-                                            ]);
-                                        }
-                                    ]);
-                                }
-                            ]);
-                        }
-                    ]);
-                }
-            ])
-            ->whereNull('parent_id')
-            ->orderBy('order')
-            ->get();
+        return self::getMenusByIds($ids);
     }
 
     /**

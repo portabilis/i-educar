@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Schema;
 
 class DropSomeForeignKeysInCadastroDocumentoTable extends Migration
 {
-    use DropForeignKey, EnableDisableForeignKeys;
+    use DropForeignKey;
+    use EnableDisableForeignKeys;
 
     /**
      * @var bool

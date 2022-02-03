@@ -47,11 +47,12 @@ return new class extends clsListagem {
     public $hora_final;
     public $hora_inicio_intervalo;
     public $hora_fim_intervalo;
-
     public $ref_cod_instituicao;
     public $ref_cod_curso;
     public $ref_cod_escola;
     public $visivel;
+    public $ano;
+    public $ref_cod_serie;
 
     public function Gerar()
     {
@@ -81,9 +82,10 @@ return new class extends clsListagem {
             $this->ano = date('Y');
         }
 
-        $this->inputsHelper()->dynamic(['ano', 'instituicao', 'escola', 'curso', 'serie'], ['ano' => $this->ano]);
+        $this->inputsHelper()->dynamic('ano', ['ano' => $this->ano]);
+        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie'], [],['options' => ['required' => false]]);
 
-        $this->campoTexto('nm_turma', 'Turma', $this->nm_turma, 30, 255, false);
+        $this->campoTexto('nm_turma', 'Turma', $this->nm_turma, 30, 255);
         $this->campoLista('visivel', 'Situação', ['' => 'Selecione', '1' => 'Ativo', '2' => 'Inativo'], $this->visivel, null, null, null, null, null, false);
         $this->inputsHelper()->turmaTurno(['required' => false, 'label' => 'Turno']);
 

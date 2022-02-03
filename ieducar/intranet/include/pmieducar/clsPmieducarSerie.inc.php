@@ -604,11 +604,8 @@ class clsPmieducarSerie extends Model
                 $resultado[] = $tupla[$this->_campos_lista];
             }
         }
-        if (count($resultado)) {
-            return $resultado;
-        }
 
-        return false;
+        return $resultado;
     }
 
     public function listaSeriesComComponentesVinculados(

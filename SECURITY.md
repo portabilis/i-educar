@@ -2,4 +2,4 @@
 
 ## Reporting a Vulnerability
 
-Please report security issues to `eder@portabilis.com.br`
+Please report security issues to `security@portabilis.com.br`

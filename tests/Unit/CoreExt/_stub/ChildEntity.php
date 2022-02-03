@@ -1,7 +1,5 @@
 <?php
 
-
-
 class CoreExt_ChildEntityStub extends CoreExt_Entity
 {
     protected $_data = [

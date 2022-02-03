@@ -1,18 +1,31 @@
 <?php
 
+namespace Database\Factories;
+
 use App\Models\LegacyEducationNetwork;
-use App\Models\LegacyInstitution;
-use App\Models\LegacyUser;
-use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-/** @var Factory $factory */
+class LegacyEducationNetworkFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = LegacyEducationNetwork::class;
 
-$factory->define(LegacyEducationNetwork::class, function (Faker $faker) {
-    return [
-        'ref_usuario_cad' => factory(LegacyUser::class)->state('unique')->make(),
-        'nm_rede' => $faker->company,
-        'data_cadastro' => now(),
-        'ref_cod_instituicao' => factory(LegacyInstitution::class)->state('unique')->make(),
-    ];
-});
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition(): array
+    {
+        return [
+            'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
+            'nm_rede' => $this->faker->company,
+            'data_cadastro' => now(),
+            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
+        ];
+    }
+}

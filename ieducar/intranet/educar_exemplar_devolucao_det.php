@@ -111,9 +111,9 @@ return new class extends clsDetalhe {
             $this->array_botao_url_script = [];
 
             $this->array_botao[] = 'Devolução';
-            $this->array_botao_url_script[] = "go(\"educar_exemplar_devolucao_cad.php?cod_emprestimo={$registro[cod_emprestimo]}\");";
+            $this->array_botao_url_script[] = "go(\"educar_exemplar_devolucao_cad.php?cod_emprestimo={$registro['cod_emprestimo']}\");";
             $this->array_botao[] = 'Renovação';
-            $this->array_botao_url_script[] = "go(\"educar_exemplar_renovacao_cad.php?cod_emprestimo={$registro[cod_emprestimo]}\");";
+            $this->array_botao_url_script[] = "go(\"educar_exemplar_renovacao_cad.php?cod_emprestimo={$registro['cod_emprestimo']}\");";
         }
 
         $this->url_cancelar = 'educar_exemplar_devolucao_lst.php';

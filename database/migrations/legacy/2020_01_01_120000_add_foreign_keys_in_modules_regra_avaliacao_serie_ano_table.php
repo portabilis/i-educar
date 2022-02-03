@@ -15,22 +15,22 @@ class AddForeignKeysInModulesRegraAvaliacaoSerieAnoTable extends Migration
     {
         Schema::table('modules.regra_avaliacao_serie_ano', function (Blueprint $table) {
             $table->foreign('serie_id')
-               ->references('cod_serie')
-               ->on('pmieducar.serie')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_serie')
+                ->on('pmieducar.serie')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('regra_avaliacao_id')
-               ->references('id')
-               ->on('modules.regra_avaliacao')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('id')
+                ->on('modules.regra_avaliacao')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('regra_avaliacao_diferenciada_id')
-               ->references('id')
-               ->on('modules.regra_avaliacao')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('id')
+                ->on('modules.regra_avaliacao')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

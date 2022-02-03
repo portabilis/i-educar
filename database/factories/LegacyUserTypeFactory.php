@@ -1,19 +1,33 @@
 <?php
 
-use App\Models\LegacyEmployee;
+namespace Database\Factories;
+
 use App\Models\LegacyUserType;
-use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-/** @var Factory $factory */
+class LegacyUserTypeFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = LegacyUserType::class;
 
-$factory->define(LegacyUserType::class, function (Faker $faker) {
-    return [
-        'nm_tipo' => $faker->firstName,
-        'nivel' => $faker->randomElement([1, 2, 3, 4]),
-        'ref_funcionario_cad' => function () {
-            return factory(LegacyEmployee::class)->create()->ref_cod_pessoa_fj;
-        },
-        'data_cadastro' => $faker->dateTime,
-    ];
-});
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition(): array
+    {
+        return [
+            'nm_tipo' => $this->faker->firstName,
+            'nivel' => $this->faker->randomElement([1, 2, 3, 4]),
+            'ref_funcionario_cad' => function () {
+                return LegacyEmployeeFactory::new()->create()->ref_cod_pessoa_fj;
+            },
+            'data_cadastro' => $this->faker->dateTime,
+        ];
+    }
+}

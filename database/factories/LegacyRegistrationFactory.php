@@ -1,17 +1,31 @@
 <?php
 
+namespace Database\Factories;
+
 use App\Models\LegacyRegistration;
-use App\Models\LegacyStudent;
-use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-/** @var Factory $factory */
+class LegacyRegistrationFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = LegacyRegistration::class;
 
-$factory->define(LegacyRegistration::class, function (Faker $faker) {
-    return [
-        'ref_cod_aluno' => factory(LegacyStudent::class)->create(),
-        'data_cadastro' => now(),
-        'ano' => now()->year,
-        'ref_usuario_cad' => 1,
-    ];
-});
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition(): array
+    {
+        return [
+            'ref_cod_aluno' => LegacyStudentFactory::new()->create(),
+            'data_cadastro' => now(),
+            'ano' => now()->year,
+            'ref_usuario_cad' => 1,
+        ];
+    }
+}

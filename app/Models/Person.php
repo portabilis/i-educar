@@ -26,12 +26,12 @@ class Person extends Model
 
     public function getTypeDescriptionAttribute()
     {
-        return (new PersonType)->getDescriptiveValues()[(int) $this->type];
+        return (new PersonType())->getDescriptiveValues()[(int) $this->type];
     }
 
     public function getRegistryOriginDescriptionAttribute()
     {
-        return (new RegistryOrigin)->getDescriptiveValues()[(int) $this->registry_origin];
+        return (new RegistryOrigin())->getDescriptiveValues()[(int) $this->registry_origin];
     }
 
     /**

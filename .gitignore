@@ -15,7 +15,7 @@ ieducar-*.tar.gz
 .env
 .env.host
 .env.testing
-.php_cs.cache
+.php-cs-fixer.cache
 docker-compose.override.yml
 
 /node_modules
