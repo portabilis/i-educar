@@ -181,7 +181,7 @@ return new class extends clsListagem {
 
     public function makeExtra()
     {
-        return file_get_contents(__DIR__ . '/scripts/extra/educar-sequencia-serie-lst.js');
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-sequencia-serie.js');
     }
 
     public function Formular()

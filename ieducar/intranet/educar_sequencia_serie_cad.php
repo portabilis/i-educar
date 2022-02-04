@@ -234,7 +234,7 @@ return new class extends clsCadastro {
 
     public function makeExtra()
     {
-        return file_get_contents(__DIR__ . '/scripts/extra/educar-sequencia-serie-cad.js');
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-sequencia-serie.js');
     }
 
     public function Formular()
