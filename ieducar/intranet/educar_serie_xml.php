@@ -10,7 +10,7 @@ if (isset($_GET['cur']) && is_numeric($_GET['cur'])) {
     $db = new clsBanco();
     $db->Consulta(sprintf(
         'SELECT
-      cod_serie, nm_serie
+      cod_serie, nm_serie, descricao
     FROM
       pmieducar.serie
     WHERE
@@ -21,8 +21,8 @@ if (isset($_GET['cur']) && is_numeric($_GET['cur'])) {
     ));
 
     while ($db->ProximoRegistro()) {
-        list($cod, $nome) = $db->Tupla();
-        print sprintf('  <serie cod_serie="%d">%s</serie>%s', $cod, $nome, PHP_EOL);
+        [$cod, $nome, $descricao] = $db->Tupla();
+        print sprintf('  <serie cod_serie="%d">%s</serie>%s', $cod, trim($nome . ((int) $_GET['showDescription'] ===  1? ' ' . $descricao : '')), PHP_EOL);
     }
 }
 
