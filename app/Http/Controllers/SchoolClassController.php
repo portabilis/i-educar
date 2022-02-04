@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\LegacyDisciplineSchoolClass;
 use App\Models\LegacySchoolClass;
 use App\Services\iDiarioService;
 use App\Services\SchoolClass\MultiGradesService;
@@ -70,6 +71,7 @@ class SchoolClassController extends Controller
                 }
                 $multiGradesService = new MultiGradesService();
                 $multiGradesService->storeSchoolClassGrade($schoolClass, $schoolClassGrades);
+                $this->deleteDisciplineSchoolClass($codTurma);
             } else {
                 $this->atualizaComponentesCurriculares(
                     $codSerie,
@@ -222,6 +224,8 @@ class SchoolClassController extends Controller
         $etapasUtilizadas,
         $etapasEspecificas
     ) {
+        $this->deleteDisciplineSchoolClass($codTurma);
+
         if ($componentes) {
             $mapper = new ComponenteCurricular_Model_TurmaDataMapper();
 
@@ -252,6 +256,12 @@ class SchoolClassController extends Controller
 
             $mapper->bulkUpdate($codSerie, $codEscola, $codTurma, $componentesTurma, $iDiarioService);
         }
+    }
+
+    private function deleteDisciplineSchoolClass($codTurma) {
+        return LegacyDisciplineSchoolClass::query()
+            ->where('turma_id', $codTurma)
+            ->delete();
     }
 
     /**
