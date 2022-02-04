@@ -258,7 +258,8 @@ class SchoolClassController extends Controller
         }
     }
 
-    private function deleteDisciplineSchoolClass($codTurma) {
+    private function deleteDisciplineSchoolClass($codTurma)
+    {
         return LegacyDisciplineSchoolClass::query()
             ->where('turma_id', $codTurma)
             ->delete();
