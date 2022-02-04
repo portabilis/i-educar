@@ -70,7 +70,7 @@ document.getElementById('ref_cod_instituicao').onchange = function() {
   campoCurso_.options[0].text = 'Carregando curso destino';
 
   const xml_curso = new ajax(getCurso);
-  xml_curso.envia( "educar_curso_xml2.php?ins="+campoInstituicao );
+  xml_curso.envia( "educar_curso_xml2.php?ins="+campoInstituicao + '&showDescription=1');
 };
 
 document.getElementById('ref_curso_origem').onchange = function() {
