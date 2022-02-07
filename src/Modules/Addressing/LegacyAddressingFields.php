@@ -112,7 +112,7 @@ trait LegacyAddressingFields
             'disabled' => $disabled,
             'placeholder' => 'Complemento',
             'value' => $this->complement,
-            'max_length' => 20
+            'max_length' => 191
         ]);
 
         $this->inputsHelper()->text('neighborhood', [
