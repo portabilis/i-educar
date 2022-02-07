@@ -53,10 +53,10 @@ public function Gerar(){
         foreach($lista as $registro){
            
             $lista_busca = [
-                "<a href=\"educar_portal_aluno_boletim.php?ano={$registro['ano']}\">{$registro['ano']}</a>",
-                "<a href=\"educar_portal_aluno_boletim.php?ano={$registro['ano']}\">{$registro['fantasia']}</a>",
-                "<a href=\"educar_portal_aluno_boletim.php?ano={$registro['ano']}\">{$registro['nm_turma']}</a>",
-                "<a href=\"educar_portal_aluno_boletim.php?ano={$registro['ano']}\">{$registro['cod_matricula']}</a>"
+                "<a href=\"educar_portal_aluno_boletim_det.php?ano={$registro['ano']}\">{$registro['ano']}</a>",
+                "<a href=\"educar_portal_aluno_boletim_det.php?ano={$registro['ano']}\">{$registro['fantasia']}</a>",
+                "<a href=\"educar_portal_aluno_boletim_det.php?ano={$registro['ano']}\">{$registro['nm_turma']}</a>",
+                "<a href=\"educar_portal_aluno_boletim_det.php?ano={$registro['ano']}\">{$registro['cod_matricula']}</a>"
                     
 
             ];

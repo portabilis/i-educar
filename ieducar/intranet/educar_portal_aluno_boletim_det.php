@@ -190,20 +190,19 @@ return new class extends clsDetalhe {
             for ($i=0; $i <$etapas ; $i++) {     
                 $this->montaListaComponentes($registro['Historico'],$i);
             }
-        
+        /* 
             echo "<form method='post' name = 'cadastro'>";
             echo "<input type = 'hidden' id = 'ref_cod_matricula' value = '$cod_matricula'>";
-            echo "<input type = 'hidden' id = 'ref_cod_turma' value = '$this->cod_turma'>";
             echo "</form>";
             $gerarboletim = "<input type='button' id='btn_enviar' class='botaolistagem' onclick='customPrintReport();' value='Exibir Boletim' autocomplete='off'>";
             echo $gerarboletim;
-            echo "  <br>";
+            echo "  <br>"; */
                 
             $this->url_cancelar = 'educar_portal_aluno_boletim_lst.php';
             $this->largura = '100%';
 
             $this->breadcrumb('Boletim', [
-                url('intranet/educar_portal_aluno_boletim.php') => 'Portal do Aluno',
+                url('intranet/educar_portal_aluno_boletim_det.php') => 'Portal do Aluno',
             ]);
             
             $scripts = [

@@ -339,23 +339,23 @@
         },
         {
             "name": "composer/semver",
-            "version": "3.2.7",
+            "version": "3.2.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/semver.git",
-                "reference": "deac27056b57e46faf136fae7b449eeaa71661ee"
+                "reference": "3976a9e563da06e8dd8ca856fa2adcd66cdd98f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/semver/zipball/deac27056b57e46faf136fae7b449eeaa71661ee",
-                "reference": "deac27056b57e46faf136fae7b449eeaa71661ee",
+                "url": "https://api.github.com/repos/composer/semver/zipball/3976a9e563da06e8dd8ca856fa2adcd66cdd98f3",
+                "reference": "3976a9e563da06e8dd8ca856fa2adcd66cdd98f3",
                 "shasum": ""
             },
             "require": {
                 "php": "^5.3.2 || ^7.0 || ^8.0"
             },
             "require-dev": {
-                "phpstan/phpstan": "^0.12.54",
+                "phpstan/phpstan": "^1.4",
                 "symfony/phpunit-bridge": "^4.2 || ^5"
             },
             "type": "library",
@@ -400,7 +400,7 @@
             "support": {
                 "irc": "irc://irc.freenode.org/composer",
                 "issues": "https://github.com/composer/semver/issues",
-                "source": "https://github.com/composer/semver/tree/3.2.7"
+                "source": "https://github.com/composer/semver/tree/3.2.8"
             },
             "funding": [
                 {
@@ -416,7 +416,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-01-04T09:57:54+00:00"
+            "time": "2022-02-04T12:12:24+00:00"
         },
         {
             "name": "cossou/jasperphp",
@@ -4036,16 +4036,16 @@
         },
         {
             "name": "nuwave/lighthouse",
-            "version": "v5.38.1",
+            "version": "v5.39.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nuwave/lighthouse.git",
-                "reference": "26743148699d353454077a368662d7f2fa4a8e95"
+                "reference": "9f5a1b9240fcff321d3698697068dba6388b62b1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nuwave/lighthouse/zipball/26743148699d353454077a368662d7f2fa4a8e95",
-                "reference": "26743148699d353454077a368662d7f2fa4a8e95",
+                "url": "https://api.github.com/repos/nuwave/lighthouse/zipball/9f5a1b9240fcff321d3698697068dba6388b62b1",
+                "reference": "9f5a1b9240fcff321d3698697068dba6388b62b1",
                 "shasum": ""
             },
             "require": {
@@ -4162,7 +4162,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-02-03T15:38:33+00:00"
+            "time": "2022-02-04T11:00:48+00:00"
         },
         {
             "name": "opis/closure",
@@ -9119,16 +9119,16 @@
         },
         {
             "name": "laravel/telescope",
-            "version": "v4.7.1",
+            "version": "v4.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/telescope.git",
-                "reference": "6bb7653a788c504855d0efa0bca44f5431614dac"
+                "reference": "2baeb9313ce3cfd213b23b52dbaf61615a44f907"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/telescope/zipball/6bb7653a788c504855d0efa0bca44f5431614dac",
-                "reference": "6bb7653a788c504855d0efa0bca44f5431614dac",
+                "url": "https://api.github.com/repos/laravel/telescope/zipball/2baeb9313ce3cfd213b23b52dbaf61615a44f907",
+                "reference": "2baeb9313ce3cfd213b23b52dbaf61615a44f907",
                 "shasum": ""
             },
             "require": {
@@ -9180,9 +9180,9 @@
             ],
             "support": {
                 "issues": "https://github.com/laravel/telescope/issues",
-                "source": "https://github.com/laravel/telescope/tree/v4.7.1"
+                "source": "https://github.com/laravel/telescope/tree/v4.7.2"
             },
-            "time": "2022-02-01T16:33:16+00:00"
+            "time": "2022-02-04T07:19:09+00:00"
         },
         {
             "name": "mockery/mockery",
