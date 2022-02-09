@@ -400,7 +400,7 @@ return new class extends clsCadastro {
     }
 
     public function Formular () {
-        $this->title = 'Frequência';
+        $this->title = 'Frequência - Cadastro';
         $this->processoAp = '58';
     }
 };
