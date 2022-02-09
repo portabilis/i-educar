@@ -349,7 +349,7 @@ class EditController extends Core_Controller_Page_EditController
             $acao = match ($valorNota->acao) {
                 'Arredondar para o n&uacute;mero inteiro imediatamente inferior' => 1,
                 'Arredondar para o n&uacute;mero inteiro imediatamente superior' => 2,
-                'Arredondar para a casa decimal específica' => 3,
+                'Arredondar para a casa decimal espec&iacute;fica' => 3,
                 default => 0,
             };
 
