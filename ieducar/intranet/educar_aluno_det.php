@@ -731,6 +731,12 @@ return new class extends clsDetalhe {
             if (trim($reg['desc_plano_saude']) != '') {
                 $this->addDetalhe(['Qual', $reg['desc_plano_saude']]);
             }
+            
+            $this->addDetalhe(['Aluno Vacinado Covid-19?', ($reg['vacina_covid'] == 'S' ? 'Sim' : 'Não')]);
+
+            if(trim($reg['desc_vacina_covid']) != '') {
+                $this->addDetalhe(['Quantas', $reg['desc_vacina_covid']]);
+            }
 
             $this->addDetalhe(['<span id="tr_tit_dados_hospital">Em caso de emergência, autorizo levar meu(minha) filho(a) para o Hospital ou Clínica mais próximos:</span>']);
             $this->addDetalhe(['Responsável', $reg['desc_aceita_hospital_proximo']]);

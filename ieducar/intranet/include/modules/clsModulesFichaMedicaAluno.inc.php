@@ -48,6 +48,8 @@ class clsModulesFichaMedicaAluno extends Model
     public $responsavel_parentesco_celular;
     public $aceita_hospital_proximo;
     public $desc_aceita_hospital_proximo;
+    public $vacina_covid;
+    public $desc_vacina_covid;
 
     /**
      * Construtor.
@@ -96,7 +98,9 @@ class clsModulesFichaMedicaAluno extends Model
         $responsavel_parentesco_telefone = null,
         $responsavel_parentesco_celular = null,
         $aceita_hospital_proximo = null,
-        $desc_aceita_hospital_proximo = null
+        $desc_aceita_hospital_proximo = null,
+        $vacina_covid = null,
+        $desc_vacina_covid = null
     ) {
         $db = new clsBanco();
         $this->_schema = 'modules.';
@@ -110,7 +114,8 @@ class clsModulesFichaMedicaAluno extends Model
         desc_tratamento_medico, medicacao_especifica,desc_medicacao_especifica, acomp_medico_psicologico,
         desc_acomp_medico_psicologico,restricao_atividade_fisica, desc_restricao_atividade_fisica,
         fratura_trauma,desc_fratura_trauma, plano_saude, desc_plano_saude, responsavel, responsavel_parentesco,
-        responsavel_parentesco_telefone, responsavel_parentesco_celular, aceita_hospital_proximo, desc_aceita_hospital_proximo';
+        responsavel_parentesco_telefone, responsavel_parentesco_celular, aceita_hospital_proximo, desc_aceita_hospital_proximo, 
+        vacina_covid, desc_vacina_covid';
 
         if (is_numeric($ref_cod_aluno)) {
             $this->ref_cod_aluno = $ref_cod_aluno;
@@ -264,6 +269,14 @@ class clsModulesFichaMedicaAluno extends Model
             $this->desc_plano_saude = $desc_plano_saude;
         }
 
+        if(is_string($vacina_covid))  {
+            $this->vacina_covid = $vacina_covid;
+        }
+
+        if(is_string($desc_vacina_covid)) {
+            $this->desc_vacina_covid = $desc_vacina_covid;
+        }
+
         if (is_string($responsavel)) {
             $this->responsavel = $responsavel;
         }
@@ -287,6 +300,7 @@ class clsModulesFichaMedicaAluno extends Model
         if (is_string($desc_aceita_hospital_proximo)) {
             $this->desc_aceita_hospital_proximo = $desc_aceita_hospital_proximo;
         }
+      
     }
 
     /**
@@ -455,6 +469,15 @@ class clsModulesFichaMedicaAluno extends Model
             $valores .= "{$gruda}'{$this->desc_plano_saude}'";
             $gruda = ', ';
 
+            $campos .= "{$gruda}vacina_covid";
+            $valores .= "{$gruda}'{$this->vacina_covid}'";
+            $gruda = ', ';
+
+            $campos .= "{$gruda}desc_vacina_covid";
+            $valores .= "{$gruda}'{$this->desc_vacina_covid}'";
+            $gruda = ', ';
+
+
             $campos .= "{$gruda}responsavel";
             $valores .= "{$gruda}'{$this->responsavel}'";
             $gruda = ', ';
@@ -477,7 +500,7 @@ class clsModulesFichaMedicaAluno extends Model
 
             $campos .= "{$gruda}desc_aceita_hospital_proximo";
             $valores .= "{$gruda}'{$this->desc_aceita_hospital_proximo}'";
-
+            
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
             return $this->ref_cod_aluno;
@@ -571,6 +594,10 @@ class clsModulesFichaMedicaAluno extends Model
 
             $set .= ",desc_plano_saude = '{$this->desc_plano_saude}'";
 
+            $set .= ",vacina_covid = '{$this->vacina_covid}'";
+
+            $set .= ",desc_vacina_covid = '{$this->desc_vacina_covid}'";
+
             $set .= ",responsavel = '{$this->responsavel}'";
 
             $set .= ",responsavel_parentesco = '{$this->responsavel_parentesco}'";
@@ -582,6 +609,8 @@ class clsModulesFichaMedicaAluno extends Model
             $set .= ",aceita_hospital_proximo = '{$this->aceita_hospital_proximo}'";
 
             $set .= ",desc_aceita_hospital_proximo = '{$this->desc_aceita_hospital_proximo}'";
+
+          
 
             if ($set) {
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_aluno = '{$this->ref_cod_aluno}'");

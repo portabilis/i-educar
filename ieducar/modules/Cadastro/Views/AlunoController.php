@@ -186,6 +186,10 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         'desc_plano_saude' => ['label' => 'Qual?'],
 
+        'vacina_covid' => ['label' => 'Aluno Vacinado Covid-19?'],
+
+        'desc_vacina_covid' => ['label' => 'Quantas?'],
+
         'aceita_hospital_proximo' => ['label' => '<b>Em caso de emergência, autorizo levar meu(minha) filho(a) para o Hospital ou Clínica mais próximos:</b>'],
 
         'desc_aceita_hospital_proximo' => ['label' => 'Responsável'],
@@ -979,6 +983,12 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $options = ['label' => $this->_getLabel('desc_plano_saude'), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->text('desc_plano_saude', $options);
+
+        $options = ['label' => $this->_getLabel('vacina_covid'), 'required' => false, 'placeholder' => ''];
+        $this->inputsHelper()->checkbox('vacina_covid', $options);
+
+        $options = ['label' => $this->_getLabel('desc_vacina_covid'), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => ''];
+        $this->inputsHelper()->text('desc_vacina_covid', $options);
 
         $options = ['label' => $this->_getLabel('aceita_hospital_proximo'), 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->checkbox('aceita_hospital_proximo', $options);

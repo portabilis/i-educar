@@ -465,6 +465,8 @@ class AlunoController extends ApiCoreController
         $obj->desc_fratura_trauma = $this->getRequest()->desc_fratura_trauma;
         $obj->plano_saude = ($this->getRequest()->plano_saude == 'on' ? 'S' : 'N');
         $obj->desc_plano_saude = $this->getRequest()->desc_plano_saude;
+        $obj->vacina_covid = ($this->getRequest()->vacina_covid == 'on' ? 'S' : 'N');
+        $obj->desc_vacina_covid = $this->getRequest()->desc_vacina_covid;
         $obj->responsavel = $this->getRequest()->responsavel;
         $obj->responsavel_parentesco = $this->getRequest()->responsavel_parentesco;
         $obj->responsavel_parentesco_telefone = $this->getRequest()->responsavel_parentesco_telefone;

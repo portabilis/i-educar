@@ -7,7 +7,24 @@ public $limite;
 public $offset;
 
 public function Gerar(){
- 
+    $this->idpes = $this->pessoa_logada;
+      
+    $tmp_obj = new clsPmieducarAluno();
+    $lst_obj = $tmp_obj->pegarMatriculaIdpes(  
+        $this->idpes,
+        $this->ano,
+    );
+   
+   $registro['Matricula'] = $lst_obj[0];
+  
+   $this->cod_matricula = $registro['Matricula']['cod_matricula'];
+  
+    if (!is_numeric($this->cod_matricula)) {
+       echo
+            'Aviso', '<br>',
+            'Você não está cadastrado como um aluno.';
+       
+    } else {
    
     $this->titulo = 'Historico Escolar - Listagem';
 
@@ -72,6 +89,7 @@ public function Gerar(){
     
     ]);
 
+}
 }
  public function Formular()
 {

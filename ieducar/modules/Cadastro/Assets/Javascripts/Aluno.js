@@ -489,7 +489,7 @@ $j(".tablecadastro >tbody  > tr").each(function (index, row) {
 });
 
 $j(
-  "#restricao_atividade_fisica, #acomp_medico_psicologico, #medicacao_especifica, #tratamento_medico, #doenca_congenita, #alergia_alimento, #alergia_medicamento, #fratura_trauma, #plano_saude, #aceita_hospital_proximo"
+  "#restricao_atividade_fisica, #acomp_medico_psicologico, #medicacao_especifica, #tratamento_medico, #doenca_congenita, #alergia_alimento, #alergia_medicamento, #fratura_trauma, #plano_saude, #aceita_hospital_proximo, #vacina_covid"
 ).addClass("temDescricao");
 
 resourceOptions.handlePost = function (dataResponse) {
@@ -780,6 +780,11 @@ resourceOptions.handleGet = function (dataResponse) {
     $j("#aceita_hospital_proximo").val("on");
   }
 
+  if(dataResponse.vacina_covid == "S"){
+    $j("#vacina_covid").attr("checked", true);
+    $j("#vacina_covid").val("on");
+  }
+  $j("#desc_vacina_covid").val(dataResponse.desc_vacina_covid);
   $j("#altura").val(dataResponse.altura);
   $j("#peso").val(dataResponse.peso);
   $j("#grupo_sanguineo").val(dataResponse.grupo_sanguineo);
@@ -803,6 +808,8 @@ resourceOptions.handleGet = function (dataResponse) {
   $j("#desc_aceita_hospital_proximo").val(
     dataResponse.desc_aceita_hospital_proximo
   );
+  
+
   $j("#responsavel").val(dataResponse.responsavel);
   $j("#responsavel_parentesco").val(dataResponse.responsavel_parentesco);
   $j("#responsavel_parentesco_telefone").val(
