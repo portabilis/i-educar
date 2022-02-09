@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddColumnsMedicalRecordStudent extends Migration
+class AddColumnsMedicalRecordStudent2 extends Migration
 {
     /**
      * Run the migrations.
@@ -16,8 +16,6 @@ class AddColumnsMedicalRecordStudent extends Migration
         Schema::table('modules.ficha_medica_aluno', function (Blueprint $table) {
             $table->char('vacina_covid', 1)->nullable();
             $table->integer('desc_vacina_covid')->nullable();
-            
-            
         });
     }
 
