@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{{ Asset::get('css/vue-multiselect.min.css') }}">
     <link rel="stylesheet" href="{{ Asset::get('intranet/styles/font-awesome.css') }}">
     <link rel="stylesheet" href="{{ Asset::get('css/base.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url('intranet/styles/base-custom.css') }}">
     @stack('styles')
     @stack('scripts')
     @stack('head')
