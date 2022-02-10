@@ -289,21 +289,4 @@ class RegistrationService
 
         return $registration;
     }
-
-    /**
-     * Atualiza a data de saida de uma matrícula
-     *
-     * @param LegacyRegistration $registration
-     * @param DateTime $date
-     * @return LegacyRegistration
-     */
-    public function updateCancelDate(LegacyRegistration $registration, DateTime $date)
-    {
-        $date = $date->format('Y-m-d');
-
-        $registration->data_cancel = $date;
-        $registration->save();
-
-        return $registration;
-    }
 }
