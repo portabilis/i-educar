@@ -79,7 +79,7 @@ return new class extends clsListagem {
             $this->tipo_vinculo
         );
 
-        $total = count($noLimitTotal);
+        $total = is_array($noLimitTotal) ? count($noLimitTotal) : 0;
 
         $obj_vinculo->setLimite($this->limite, $this->offset);
 
