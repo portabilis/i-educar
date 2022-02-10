@@ -57,7 +57,7 @@ return new class extends clsListagem {
         // Paginador
         $this->limite = 20;
         $this->offset = ($_GET['pagina_' . $this->nome]) ?
-      $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
+        $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
 
         $obj_vinculo = new clsModulesProfessorTurma();
 
@@ -66,11 +66,22 @@ return new class extends clsListagem {
         }
 
         $obj_vinculo->setOrderby(' nm_escola, nm_curso, nm_serie, nm_turma ASC');
-        $obj_vinculo->setLimite($this->limite, $this->offset);
 
-        if (! isset($this->tipo)) {
-            $this->tipo = null;
-        }
+        $noLimitTotal = $obj_vinculo->lista(
+            $this->servidor_id,
+            $this->ref_cod_instituicao,
+            $this->ano,
+            $this->ref_cod_escola,
+            $this->ref_cod_curso,
+            $this->ref_cod_serie,
+            $this->ref_cod_turma,
+            $this->funcao_exercida,
+            $this->tipo_vinculo
+        );
+
+        $total = count($noLimitTotal);
+
+        $obj_vinculo->setLimite($this->limite, $this->offset);
 
         $lista = $obj_vinculo->lista(
             $this->servidor_id,
@@ -84,8 +95,6 @@ return new class extends clsListagem {
             $this->tipo_vinculo
         );
 
-        $total = count($lista);
-
         // UrlHelper
         $url  = CoreExt_View_Helper_UrlHelper::getInstance();
         $path = 'educar_servidor_vinculo_turma_det.php';
@@ -98,7 +107,7 @@ return new class extends clsListagem {
             'id' => $registro['id']
         ]];
 
-                $this->addLinhas([
+        $this->addLinhas([
           $url->l($registro['ano'], $path, $options),
           $url->l($registro['nm_escola'], $path, $options),
           $url->l($registro['nm_curso'], $path, $options),
