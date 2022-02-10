@@ -464,16 +464,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->campoCpf('id_federal', 'CPF', $valorCpf);
 
-        $options = [
-            'required' => false,
-            'label' => 'NIS (PIS/PASEP)',
-            'placeholder' => '',
-            'value' => $nisPisPasep,
-            'max_length' => 11,
-            'size' => 20
-        ];
-
-        $this->inputsHelper()->integer('nis_pis_pasep', $options);
+       
 
         $escolha_certidao = 'Tipo certidão civil';
         $selectOptions = [
@@ -819,6 +810,16 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         ];
 
         $this->inputsHelper()->multipleSearchBeneficios('', $options, $helperOptions);
+        $options = [
+            'required' => false,
+            'label' => 'NIS (PIS/PASEP)',
+            'placeholder' => '',
+            'value' => $nisPisPasep,
+            'max_length' => 11,
+            'size' => 20
+        ];
+
+        $this->inputsHelper()->integer('nis_pis_pasep', $options);
 
         $helperOptions = ['objectName' => 'deficiencias'];
         $options = [
