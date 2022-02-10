@@ -234,7 +234,7 @@ body {
 		.lateralLogin {background:none}
 		.logo-tecsis { max-width: 79px; margin: auto;  }
 		
-		.entLogoMobile { opacity:1; max-width: 295px; margin: auto; margin-bottom: 8%; display: block; }
+		.entLogoMobile { opacity:1; max-width: 150px; margin: auto; margin-bottom: 8%; display: block; }
 		.fontLoginMobile { opacity:1; display: block; margin-bottom: 7%; }
 		.divLogoMobile { opacity:1; display: block; margin-top: -3%; }
 		.footer-socialMobile { opacity: 1; display: block; width: 310px; margin: auto; }
