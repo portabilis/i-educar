@@ -988,7 +988,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->checkbox('vacina_covid', $options);
 
         $options = ['label' => $this->_getLabel('desc_vacina_covid'), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => ''];
-        $this->inputsHelper()->text('desc_vacina_covid', $options);
+        $this->inputsHelper()->numeric('desc_vacina_covid', $options);
 
         $options = ['label' => $this->_getLabel('aceita_hospital_proximo'), 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->checkbox('aceita_hospital_proximo', $options);
