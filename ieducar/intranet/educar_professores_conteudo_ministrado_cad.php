@@ -86,7 +86,7 @@ return new class extends clsCadastro {
 
         $options = [
             'label' => 'BNCC',
-            'required' => true,
+            'required' => false,
             'size' => 50,
             'options' => [
                 'values' => $this->bncc,

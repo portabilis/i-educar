@@ -94,7 +94,7 @@ return new class extends clsDetalhe {
             );
         }
 
-        if ($registro['bncc']['codigos'] && $registro['bncc']['descricoes']) {
+        if (is_array($registro['bncc']['codigos']) && is_array($registro['bncc']['descricoes'])) {
             $this->montaListaBNCC(
                 $registro['bncc']['codigos'],
                 $registro['bncc']['descricoes'],

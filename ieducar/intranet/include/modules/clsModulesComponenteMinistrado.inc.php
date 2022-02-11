@@ -85,7 +85,7 @@ class clsModulesComponenteMinistrado extends Model {
      * @return bool
      */
     public function cadastra() {
-        if (is_numeric($this->frequencia_id) && $this->atividades != '' && $this->frequencia_bncc) {
+        if (is_numeric($this->frequencia_id) && $this->atividades != '') {
             $db = new clsBanco();
 
             $campos = "frequencia_id, atividades, data_cadastro";
@@ -119,7 +119,7 @@ class clsModulesComponenteMinistrado extends Model {
      * @return bool
      */
     public function edita() {
-        if (is_numeric($this->id) && $this->atividades && $this->frequencia_bncc) {
+        if (is_numeric($this->id) && $this->atividades) {
             $db = new clsBanco();
 
             $set = "atividades = '{$this->atividades}',
@@ -384,8 +384,8 @@ class clsModulesComponenteMinistrado extends Model {
         $bncc = $db->Tupla();
 
         $bncc['ids'] = explode(',', $bncc['ids']);
-        $bncc['codigos'] = explode(',', $bncc['codigos']);
-        $bncc['descricoes'] = explode('$/', $bncc['descricoes']);
+        $bncc['codigos'] = count($bncc['codigos']) > 0 ? explode(',', $bncc['codigos']) : null;
+        $bncc['descricoes'] = count($bncc['descricoes']) > 0 ? explode('$/', $bncc['descricoes']) : null;
 
         return $bncc;
     }
@@ -413,15 +413,19 @@ class clsModulesComponenteMinistrado extends Model {
      * @return bool
      */
     public function excluiBNCC($id_conteudo_ministrado, $bncc) {
-        $db = new clsBanco();
+        if (is_numeric($id_conteudo_ministrado) && is_numeric($bncc)) {
+            $db = new clsBanco();
 
-        $db->Consulta("
-            DELETE FROM
-                {$this->_tabela}_bncc
-            WHERE
-                conteudo_ministrado_id = '{$id_conteudo_ministrado}' AND bncc_id = '{$bncc}'
-        ");
+            $db->Consulta("
+                DELETE FROM
+                    {$this->_tabela}_bncc
+                WHERE
+                    conteudo_ministrado_id = '{$id_conteudo_ministrado}' AND bncc_id = '{$bncc}'
+            ");
 
-        return true;
+            return true;
+        }
+
+        return false;
     }
 }
