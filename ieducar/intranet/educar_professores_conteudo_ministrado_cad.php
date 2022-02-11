@@ -76,6 +76,8 @@ return new class extends clsCadastro {
         $this->campoOculto('id', $this->id);
         $this->inputsHelper()->dynamic(['frequencia'], ['frequencia' => $this->frequencia, 'disabled' => $desabilitado]);
 
+        $this->campoMemo('procedimento_metodologico', 'Procedimento metodológico', $this->procedimento_metodologico, 100, 5, true);
+
         $helperOptions = [
             'objectName' => 'bncc',
         ];
@@ -92,8 +94,7 @@ return new class extends clsCadastro {
             ]
         ];
         $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
-
-        $this->campoMemo('procedimento_metodologico', 'Procedimento metodológico', $this->procedimento_metodologico, 100, 5, true);
+        
         $this->campoMemo('observacao', 'Observação', $this->observacao, 100, 5, false);
     }
 
