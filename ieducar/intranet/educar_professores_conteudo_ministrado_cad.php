@@ -11,7 +11,7 @@ use Illuminate\Support\Arr;
 return new class extends clsCadastro {
     public $id;
     public $bncc;
-    public $procedimento_metodologico;
+    public $atividades;
     public $observacao;
     public $frequencia;
 
@@ -76,7 +76,7 @@ return new class extends clsCadastro {
         $this->campoOculto('id', $this->id);
         $this->inputsHelper()->dynamic(['frequencia'], ['frequencia' => $this->frequencia, 'disabled' => $desabilitado]);
 
-        $this->campoMemo('procedimento_metodologico', 'Procedimento metodológico', $this->procedimento_metodologico, 100, 5, true);
+        $this->campoMemo('atividades', 'Atividades', $this->atividades, 100, 5, true);
 
         $helperOptions = [
             'objectName' => 'bncc',
@@ -102,7 +102,7 @@ return new class extends clsCadastro {
         $obj = new clsModulesComponenteMinistrado(
             null,
             $this->frequencia,
-            $this->procedimento_metodologico,
+            $this->atividades,
             $this->observacao,
             $this->bncc
         );
@@ -126,7 +126,7 @@ return new class extends clsCadastro {
         $obj = new clsModulesComponenteMinistrado(
             $this->id,
             null,
-            $this->procedimento_metodologico,
+            $this->atividades,
             $this->observacao,
             $this->bncc
         );

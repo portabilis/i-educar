@@ -85,11 +85,11 @@ return new class extends clsDetalhe {
             );
         }
 
-        if ($registro['detalhes']['procedimento_metodologico']) {
+        if ($registro['detalhes']['atividades']) {
             $this->addDetalhe(
                 [
-                    'Procedimento metodológico',
-                    $registro['detalhes']['procedimento_metodologico']
+                    'Atividades',
+                    $registro['detalhes']['atividades']
                 ]
             );
         }
