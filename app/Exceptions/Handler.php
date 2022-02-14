@@ -94,10 +94,6 @@ class Handler extends ExceptionHandler
             return null;
         }
 
-        if ($this === null) {
-            return null;
-        }
-
         $action = explode('@', $this->getActionName());
 
         return $action[1] ?? $action[0];
@@ -110,7 +106,7 @@ class Handler extends ExceptionHandler
      */
     private function getActionName()
     {
-        $controller = app('request')?->route()?->getAction();
+        $controller = app('request')->route()->getAction();
         $controller = class_basename($controller['controller']);
 
         return $controller;
