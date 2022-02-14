@@ -5,7 +5,7 @@
 @endpush
 
 @section('content')
-    <form action="{{ Asset::get('/matricula/' .  $registration->id . '/enturmar/' . $schoolClass->id)}}" method="post">
+    <form id="enrollments-enroll" action="{{ Asset::get('/matricula/' .  $registration->id . '/enturmar/' . $schoolClass->id)}}" method="post">
         <table class="table-default">
             <thead>
                 <tr>
