@@ -94,6 +94,10 @@ class Handler extends ExceptionHandler
             return null;
         }
 
+        if ($this === null) {
+            return null;
+        }
+
         $action = explode('@', $this->getActionName());
 
         return $action[1] ?? $action[0];
