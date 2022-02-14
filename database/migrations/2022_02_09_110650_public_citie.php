@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
 use App\Models\City;
+use Illuminate\Database\Migrations\Migration;
 
 class PublicCitie extends Migration
 {
