@@ -38,7 +38,11 @@ return new class extends clsDetalhe {
             return $description;
         }
 
-        $lessDescription = substr($description, 0, strpos($description, ' ', 200)) . '...';
+        $lessDescription = $description;
+        if (strlen($description) >= 200) {
+            $lessDescription = substr($description, 0, strpos($description, ' ', 200)) . '...';
+        }
+
 
         return "<div align='justify'> <span class='desc-red'>{$lessDescription}</span> <span class='descricao' style='display: none'>{$description}</span><a href='javascript:void(0)' class='ver-mais'>Mostrar mais</a><a href='javascript:void(0)' style='display: none' class='ver-menos'>Mostrar menos</a></div>";
     }
