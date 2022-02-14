@@ -1501,7 +1501,7 @@ return new class extends clsCadastro {
             $dependencia = 'f'
         );
 
-        return $lst_mt->_total;
+        return $obj_mt->_total;
     }
 
     private function availableTimeService()
