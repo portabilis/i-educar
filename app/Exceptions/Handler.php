@@ -110,7 +110,7 @@ class Handler extends ExceptionHandler
      */
     private function getActionName()
     {
-        $controller = app('request')->route()->getAction();
+        $controller = app('request')?->route()?->getAction();
         $controller = class_basename($controller['controller']);
 
         return $controller;
