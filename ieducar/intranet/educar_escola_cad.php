@@ -441,7 +441,7 @@ return new class extends clsCadastro {
     {
         $escola = (new clsPmieducarEscola())->lista(null, null, null, null, null, null, $pessoaj_id);
 
-        if (count($escola) > 0) {
+        if (is_array($escola) && count($escola) > 0) {
             $current = current($escola);
 
             if (is_array($current) &&
@@ -925,9 +925,11 @@ return new class extends clsCadastro {
             ];
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
+            $localFuncionamento = is_array($this->local_funcionamento) ? $this->local_funcionamento : [];
+
             // Os campos: Forma de ocupação do prédio e Código da escola que compartilha o prédio
             // serão desabilitados quando local de funcionamento for diferente de 3 (Prédio escolar)
-            $disabled = !in_array(LocalFuncionamento::PREDIO_ESCOLAR, $this->local_funcionamento);
+            $disabled = !in_array(LocalFuncionamento::PREDIO_ESCOLAR, $localFuncionamento);
             $resources = [null => 'Selecione',
                 1 => 'Próprio',
                 2 => 'Alugado',
@@ -1697,31 +1699,36 @@ return new class extends clsCadastro {
      */
     public function preparaDados()
     {
-        $this->orgao_vinculado_escola = implode(',', $this->orgao_vinculado_escola);
-        $this->mantenedora_escola_privada = implode(',', $this->mantenedora_escola_privada);
-        $this->local_funcionamento = implode(',', $this->local_funcionamento);
-        $this->abastecimento_agua = implode(',', $this->abastecimento_agua);
-        $this->abastecimento_energia = implode(',', $this->abastecimento_energia);
-        $this->esgoto_sanitario = implode(',', $this->esgoto_sanitario);
-        $this->destinacao_lixo = implode(',', $this->destinacao_lixo);
-        $this->tratamento_lixo = implode(',', $this->tratamento_lixo);
-        $this->salas_funcionais = implode(',', $this->salas_funcionais);
-        $this->salas_gerais = implode(',', $this->salas_gerais);
-        $this->banheiros = implode(',', $this->banheiros);
-        $this->laboratorios = implode(',', $this->laboratorios);
-        $this->salas_atividades = implode(',', $this->salas_atividades);
-        $this->dormitorios = implode(',', $this->dormitorios);
-        $this->areas_externas = implode(',', $this->areas_externas);
-        $this->recursos_acessibilidade = implode(',', $this->recursos_acessibilidade);
-        $this->equipamentos = implode(',', $this->equipamentos);
-        $this->uso_internet = implode(',', $this->uso_internet);
-        $this->rede_local = implode(',', $this->rede_local);
-        $this->equipamentos_acesso_internet = implode(',', $this->equipamentos_acesso_internet);
-        $this->organizacao_ensino = implode(',', $this->organizacao_ensino);
-        $this->instrumentos_pedagogicos = implode(',', $this->instrumentos_pedagogicos);
-        $this->orgaos_colegiados = implode(',', $this->orgaos_colegiados);
-        $this->reserva_vagas_cotas = implode(',', $this->reserva_vagas_cotas);
-        $this->codigo_lingua_indigena = implode(',', $this->codigo_lingua_indigena);
+        $this->orgao_vinculado_escola = $this->transformArrayInString($this->orgao_vinculado_escola);
+        $this->mantenedora_escola_privada = $this->transformArrayInString($this->mantenedora_escola_privada);
+        $this->local_funcionamento = $this->transformArrayInString($this->local_funcionamento);
+        $this->abastecimento_agua = $this->transformArrayInString($this->abastecimento_agua);
+        $this->abastecimento_energia = $this->transformArrayInString($this->abastecimento_energia);
+        $this->esgoto_sanitario = $this->transformArrayInString($this->esgoto_sanitario);
+        $this->destinacao_lixo = $this->transformArrayInString($this->destinacao_lixo);
+        $this->tratamento_lixo = $this->transformArrayInString($this->tratamento_lixo);
+        $this->salas_funcionais = $this->transformArrayInString($this->salas_funcionais);
+        $this->salas_gerais = $this->transformArrayInString($this->salas_gerais);
+        $this->banheiros = $this->transformArrayInString($this->banheiros);
+        $this->laboratorios = $this->transformArrayInString($this->laboratorios);
+        $this->salas_atividades = $this->transformArrayInString($this->salas_atividades);
+        $this->dormitorios = $this->transformArrayInString($this->dormitorios);
+        $this->areas_externas = $this->transformArrayInString($this->areas_externas);
+        $this->recursos_acessibilidade = $this->transformArrayInString($this->recursos_acessibilidade);
+        $this->equipamentos = $this->transformArrayInString($this->equipamentos);
+        $this->uso_internet = $this->transformArrayInString($this->uso_internet);
+        $this->rede_local = $this->transformArrayInString($this->rede_local);
+        $this->equipamentos_acesso_internet = $this->transformArrayInString($this->equipamentos_acesso_internet);
+        $this->organizacao_ensino = $this->transformArrayInString( $this->organizacao_ensino);
+        $this->instrumentos_pedagogicos = $this->transformArrayInString($this->instrumentos_pedagogicos);
+        $this->orgaos_colegiados = $this->transformArrayInString($this->orgaos_colegiados);
+        $this->reserva_vagas_cotas = $this->transformArrayInString($this->reserva_vagas_cotas);
+        $this->codigo_lingua_indigena = $this->transformArrayInString($this->codigo_lingua_indigena);
+    }
+
+    private function transformArrayInString($value): ?string
+    {
+        return is_array($value) ? implode(',', $value) : null;
     }
 
     public function Editar()
@@ -2361,90 +2368,90 @@ return new class extends clsCadastro {
 
     protected function validaOpcoesUnicasMultipleSearch()
     {
-        if (in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
+        if (is_array($this->abastecimento_agua) && in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Não há abastecimento de água</b> estiver selecionada.';
 
             return false;
         }
 
-        if (in_array(4, $this->abastecimento_energia) && count($this->abastecimento_energia) > 1) {
+        if (is_array($this->abastecimento_energia) && in_array(4, $this->abastecimento_energia) && count($this->abastecimento_energia) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Fonte de energia elétrica</b>, quando a opção: <b>Não há energia elétrica</b> estiver selecionada.';
 
             return false;
         }
 
-        if (in_array(3, $this->esgoto_sanitario) && count($this->esgoto_sanitario) > 1) {
+        if (is_array($this->esgoto_sanitario) && in_array(3, $this->esgoto_sanitario) && count($this->esgoto_sanitario) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgotamento sanitário</b>, quando a opção: <b>Não há esgotamento sanitário</b> estiver selecionada.';
 
             return false;
         }
 
-        if (in_array(TratamentoLixo::NAO_FAZ, $this->tratamento_lixo) && count($this->tratamento_lixo) > 1) {
+        if (is_array($this->tratamento_lixo) && in_array(TratamentoLixo::NAO_FAZ, $this->tratamento_lixo) && count($this->tratamento_lixo) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Tratamento do lixo/resíduos que a escola realiza</b>, quando a opção: <b>Não faz tratamento</b> estiver selecionada';
 
             return false;
         }
 
-        if (in_array(RecursosAcessibilidade::NENHUM, $this->recursos_acessibilidade) && count($this->recursos_acessibilidade) > 1) {
+        if (is_array($this->recursos_acessibilidade) && is_array($this->recursos_acessibilidade) && in_array(RecursosAcessibilidade::NENHUM, $this->recursos_acessibilidade) && count($this->recursos_acessibilidade) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Recursos de acessibilidade</b>, quando a opção: <b>Nenhum dos recursos de acessibilidade</b> estiver selecionada.';
 
             return false;
         }
 
-        if (in_array(UsoInternet::NAO_POSSUI, $this->uso_internet) && count($this->uso_internet) > 1) {
+        if (is_array($this->uso_internet) && in_array(UsoInternet::NAO_POSSUI, $this->uso_internet) && count($this->uso_internet) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Acesso à internet</b>, quando a opção: <b>Não possui acesso à internet</b> estiver selecionada.';
 
             return false;
         }
-        if (in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
+        if (is_array($this->abastecimento_agua) && in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Não há abastecimento de água</b> estiver selecionada.';
 
             return false;
         }
 
-        if (in_array(4, $this->abastecimento_energia) && count($this->abastecimento_energia) > 1) {
+        if (is_array($this->abastecimento_energia) && in_array(4, $this->abastecimento_energia) && count($this->abastecimento_energia) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Fonte de energia elétrica</b>, quando a opção: <b>Não há energia elétrica</b> estiver selecionada.';
 
             return false;
         }
 
-        if (in_array(3, $this->esgoto_sanitario) && count($this->esgoto_sanitario) > 1) {
+        if (is_array($this->esgoto_sanitario) && in_array(3, $this->esgoto_sanitario) && count($this->esgoto_sanitario) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgotamento sanitário</b>, quando a opção: <b>Não há esgotamento sanitário</b> estiver selecionada.';
 
             return false;
         }
 
-        if (in_array(TratamentoLixo::NAO_FAZ, $this->tratamento_lixo) && count($this->tratamento_lixo) > 1) {
+        if (is_array($this->tratamento_lixo) && in_array(TratamentoLixo::NAO_FAZ, $this->tratamento_lixo) && count($this->tratamento_lixo) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Tratamento do lixo/resíduos que a escola realiza</b>, quando a opção: <b>Não faz tratamento</b> estiver selecionada';
 
             return false;
         }
 
-        if (in_array(RecursosAcessibilidade::NENHUM, $this->recursos_acessibilidade) && count($this->recursos_acessibilidade) > 1) {
+        if (is_array($this->recursos_acessibilidade) && in_array(RecursosAcessibilidade::NENHUM, $this->recursos_acessibilidade) && count($this->recursos_acessibilidade) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Recursos de acessibilidade</b>, quando a opção: <b>Nenhum dos recursos de acessibilidade</b> estiver selecionada.';
 
             return false;
         }
 
-        if (in_array(UsoInternet::NAO_POSSUI, $this->uso_internet) && count($this->uso_internet) > 1) {
+        if (is_array($this->uso_internet) && in_array(UsoInternet::NAO_POSSUI, $this->uso_internet) && count($this->uso_internet) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Acesso à internet</b>, quando a opção: <b>Não possui acesso à internet</b> estiver selecionada.';
 
             return false;
         }
 
-        if (in_array(RedeLocal::NENHUMA, $this->rede_local) && count($this->rede_local) > 1) {
+        if (is_array($this->rede_local) && in_array(RedeLocal::NENHUMA, $this->rede_local) && count($this->rede_local) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Rede local de interligação de computadores</b>, quando a opção: <b>Não há rede local interligando computadores</b> estiver selecionada.';
 
             return false;
         }
 
-        if (in_array(OrgaosColegiados::NENHUM, $this->orgaos_colegiados) && count($this->orgaos_colegiados) > 1) {
+        if (is_array($this->orgaos_colegiados) && in_array(OrgaosColegiados::NENHUM, $this->orgaos_colegiados) && count($this->orgaos_colegiados) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Órgãos colegiados em funcionamento na escola</b>, quando a opção: <b>Não há órgãos colegiados em funcionamento</b> estiver selecionada.';
 
             return false;
         }
 
-        if (in_array(ReservaVagasCotas::NAO_POSSUI, $this->reserva_vagas_cotas) && count($this->reserva_vagas_cotas) > 1) {
+        if (is_array($this->reserva_vagas_cotas) && in_array(ReservaVagasCotas::NAO_POSSUI, $this->reserva_vagas_cotas) && count($this->reserva_vagas_cotas) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Reserva de vagas por sistema de cotas para grupos específicos de alunos(as)</b>, quando a opção: <b>Sem reservas de vagas para sistema de cotas (ampla concorrência)</b> estiver selecionada.';
 
             return false;
@@ -2581,7 +2588,7 @@ return new class extends clsCadastro {
 
     protected function validaLinguasIndigenas()
     {
-        if (count($this->codigo_lingua_indigena) > 3) {
+        if (is_array($this->codigo_lingua_indigena) && count($this->codigo_lingua_indigena) > 3) {
             $this->mensagem = 'O campo: <b>Línguas indígenas</b>, não pode ter mais que 3 opções';
 
             return false;

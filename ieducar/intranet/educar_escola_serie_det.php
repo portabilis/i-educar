@@ -89,7 +89,7 @@ return new class extends clsDetalhe {
         $componentes = [];
         try {
             $componentes = App_Model_IedFinder::getEscolaSerieDisciplina($this->ref_cod_serie, $this->ref_cod_escola);
-        } catch (Exception $e) {
+        } catch (Exception) {
         }
 
         /** @var SchoolGradeDisciplineService $service */

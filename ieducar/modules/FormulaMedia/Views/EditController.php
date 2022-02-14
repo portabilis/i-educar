@@ -159,7 +159,7 @@ class EditController extends Core_Controller_Page_EditController
             parent::Excluir();
         } catch (HttpResponseException $exception) {
             throw $exception;
-        } catch (Throwable $throwable) {
+        } catch (Throwable) {
             return false;
         }
 
@@ -206,7 +206,7 @@ class EditController extends Core_Controller_Page_EditController
             $this->getDataMapper()->save($this->getEntity());
 
             return true;
-        } catch (Exception $e) {
+        } catch (Exception) {
             // TODO: ver @todo do docblock
             $this->mensagem = 'Erro no preenchimento do formulário. ';
 

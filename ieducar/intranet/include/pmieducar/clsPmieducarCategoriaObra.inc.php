@@ -141,16 +141,15 @@ class clsPmieducarCategoriaObra extends Model
     {
         if (is_numeric($this->id)) {
             $db = new clsBanco();
-            $getVinculoObra = $db->Consulta("SELECT *
+            $vinculoObra = $db->Consulta("SELECT *
                                                FROM relacao_categoria_acervo
                                               WHERE categoria_id = {$this->id}");
-            if (pg_num_rows($getVinculoObra) > 0) {
+            if (is_array($vinculoObra) && count($vinculoObra) > 0) {
                 return false;
-            } else {
-                $db->Consulta("DELETE FROM {$this->_tabela} WHERE id = '{$this->id}'");
-
-                return true;
             }
+
+            $db->Consulta("DELETE FROM {$this->_tabela} WHERE id = '{$this->id}'");
+            return true;
         }
     }
 }

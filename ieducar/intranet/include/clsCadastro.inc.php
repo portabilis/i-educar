@@ -47,8 +47,8 @@ class clsCadastro extends clsCampos
     public $form_enctype;
     public $acao_executa_submit_ajax = false;
 
-    const NOVO = 'N';
-    const EDITAR = 'E';
+    public const NOVO = 'N';
+    public const EDITAR = 'E';
 
     public function __construct()
     {
@@ -578,7 +578,7 @@ class clsCadastro extends clsCampos
     {
         try {
             $hasErrors = $this->hasErrors();
-        } catch (Core_Controller_Page_Exception $e) {
+        } catch (Core_Controller_Page_Exception) {
             return null;
         }
 

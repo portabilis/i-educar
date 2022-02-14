@@ -58,6 +58,7 @@ return new class extends clsDetalhe {
         $escolasUsuario = new clsPmieducarEscolaUsuario();
         $escolasUsuario = $escolasUsuario->lista($cod_pessoa);
 
+        $nomesEscola = [];
         foreach ($escolasUsuario as $escola) {
             $escolaDetalhe = new clsPmieducarEscola($escola['ref_cod_escola']);
             $escolaDetalhe = $escolaDetalhe->detalhe();

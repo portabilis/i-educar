@@ -1085,6 +1085,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
             $lastStage = $this->getLastStage($matriculaId, $turmaId, $id);
 
+            if (empty($situacao->componentesCurriculares[$id])) {
+                $situacao->componentesCurriculares[$id] = new \stdClass();
+            }
+
             if ($this->getRegraAvaliacaoTipoProgressao() == RegraAvaliacao_Model_TipoProgressao::CONTINUADA) {
                 $getCountNotaCC = App_Model_IedFinder::verificaSeExisteNotasComponenteCurricular($matriculaId, $id);
 
@@ -2850,7 +2854,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             $media->markOld();
 
             return $this->getNotaComponenteMediaDataMapper()->save($media);
-        } catch (Exception $e) {
+        } catch (Exception) {
             return false;
         }
     }
@@ -2898,7 +2902,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         try {
             // Atualiza situação matricula
             $this->promover();
-        } catch (Exception $e) {
+        } catch (Exception) {
             // Evita que uma mensagem de erro apareça caso a situação na matrícula
             // não seja alterada.
         }
@@ -2929,7 +2933,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 $mediaGeral->get('notaAluno')
             ]);
             $mediaGeral->markOld();
-        } catch (Exception $e) {
+        } catch (Exception) {
             // Prossegue, sem problemas.
         }
 
@@ -3077,7 +3081,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                         $notaComponenteCurricularMedia->situacao = null;
 
                         $notaComponenteCurricularMedia->markOld();
-                    } catch (Exception $e) {
+                    } catch (Exception) {
                         $notaComponenteCurricularMedia = new Avaliacao_Model_NotaComponenteMedia([
                             'notaAluno' => $this->_getNotaAluno()->id,
                             'componenteCurricular' => $id,
