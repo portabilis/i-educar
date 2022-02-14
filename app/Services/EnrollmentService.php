@@ -418,7 +418,8 @@ class EnrollmentService
 
     /**
      * @param LegacyEnrollment $enrollment
-     * @param DateTime $exitDate
+     * @param DateTime         $exitDate
+     *
      * @throws \Illuminate\Validation\ValidationException
      */
     public function updateExitDate(LegacyEnrollment $enrollment, DateTime $exitDate)

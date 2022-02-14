@@ -161,9 +161,10 @@ class iDiarioService
     }
 
     /**
-     * @param int $studentId
+     * @param int       $studentId
      * @param \DateTime $exitDate
      * @doc https://github.com/portabilis/novo-educacao/pull/3626#issue-577687036
+     *
      * @return array
      */
     public function getStudentActivity(int $studentId, \DateTime $exitDate): array
@@ -172,12 +173,14 @@ class iDiarioService
             'student_id' => $studentId,
             'exit_date' => $exitDate->format('Y-m-d')
         ];
+
         try {
             $response = $this->get('/api/v2/student_activity', $data);
             $body = (array) json_decode($response->getBody()->getContents());
         } catch (Exception $e) {
             throw new RuntimeException('Ocorreu um erro de integração com o i-Diário: '.$e->getMessage());
         }
+
         return $body;
     }
 }

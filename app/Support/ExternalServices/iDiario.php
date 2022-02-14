@@ -1,9 +1,11 @@
 <?php
+
 namespace App\Support\ExternalServices;
+
 use App\Services\iDiarioService;
 
-trait iDiario {
-
+trait iDiario
+{
     /**
      * Retorna instância do iDiarioService
      *

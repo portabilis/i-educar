@@ -277,7 +277,8 @@ class RegistrationService
      * Atualiza a data de saida de uma matrícula
      *
      * @param LegacyRegistration $registration
-     * @param DateTime $date
+     * @param DateTime           $date
+     *
      * @return LegacyRegistration
      */
     public function updateCancelDate(LegacyRegistration $registration, DateTime $date)

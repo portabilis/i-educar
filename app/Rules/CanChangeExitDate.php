@@ -34,15 +34,17 @@ class CanChangeExitDate implements Rule
             $hasActivity = count($studentActivity['student_activity']) > 0;
             if ($hasActivity) {
                 $this->msg = $this->buildHtmlMessage($studentActivity);
+
                 return false;
             }
         }
+
         return true;
     }
 
     private function buildHtmlMessage(array $studentActivity)
     {
-        $html = "";
+        $html = '';
         foreach ($studentActivity['student_activity'] as $activityType) {
             $html .= '<b>' . self::ACTIVITY_TYPE_DESCRIPTION[$activityType->type] . '</b>';
             if (isset($activityType->disciplines)) {
@@ -61,6 +63,7 @@ class CanChangeExitDate implements Rule
                 $html .= ': Sim <br><br>';
             }
         }
+
         return $html;
     }
 
@@ -76,6 +79,7 @@ class CanChangeExitDate implements Rule
                 unset($studentActivity['student_activity'][$key]);
             }
         }
+
         return $studentActivity;
     }
 
