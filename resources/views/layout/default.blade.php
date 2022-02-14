@@ -42,6 +42,7 @@
         <!-- End Google Tag Manager -->
     @endif
 
+    @stack('styles')
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans">
     <link rel="stylesheet" type="text/css" href="{{ Asset::get('/intranet/styles/main.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ Asset::get('/intranet/styles/styles.css') }}">
@@ -60,7 +61,6 @@
     <link rel="stylesheet" type="text/css" href='{{ Asset::get('/intranet/scripts/jquery-maxlength/jquery.maxlength.css') }}'>
     <link rel="stylesheet" type="text/css" href="{{ Asset::get("/intranet/scripts/summernote/summernote-lite.css") }}">
 
-    @stack('styles')
 
     <script>
         (function (e, t, n) {
@@ -198,16 +198,22 @@
 
     <tr>
         <td colspan="3">
+            <input type="checkbox" id="expandido">  
+        <?php /*  <label class="expandir-btn"><input type="checkbox" class="expandido"><i class="fa fa-bars fa-2x"></i></label> */ ?>
+            <label for="expandido" class="expandir-btn"><i class="fa fa-ellipsis-v fa-2x"></i></label>
+            <div id="menu_lateral" class="r3c1-Mobile">
+                @include('layout.menu')
+            </div>
             <table summary="" class='tabelanum2' border='0' cellspacing='0' cellpadding='0'>
                 <tr>
                     <td id="menu_lateral" class="r3c1" width='170'>
-                        @include('layout.menu')
+                         @include('layout.menu') 
                     </td>
-
+                    
                     <td valign=top>
                         <table summary="" class='tabelanum2' border='0' cellspacing='0' cellpadding='0'>
                             <tr>
-                                <td>
+                                <td>                                  
                                     @include('layout.topmenu')
                                 </td>
                             </tr>
@@ -221,7 +227,6 @@
                                             </td>
                                         </tr>
                                     </table>
-
                                     @yield('content')
                                 </td>
                             </tr>

@@ -196,6 +196,9 @@ span.error_notice {
 
 .topo .dropdown-content a:hover {color: #188ad1}
 
+
+
+
 .ieducar-header-links .dropdown.notifications {
   float: right;
   margin: 0;
@@ -354,7 +357,7 @@ a.icons-top{
 
 .rodape{
   height: 30px;
-  background-color: #47728f;
+  background-color: #2497c6;
   color: #FFF;
   font-size: 10px;
 }
@@ -370,8 +373,24 @@ a.icons-top{
 
 .r3c1{
   width: 210px;
-  background: #e9f0f8;
+  background: rgba(54,54,54,1);
   border: 0;
+  box-shadow: 4px 3px 5px #666;
+  z-index: 1;
+}
+
+.r3c1-Mobile{
+  width: 40%;
+  height: -webkit-fill-available;
+  background: rgba(54,54,54,1);
+  display:none;
+  border: 0;
+  position: absolute;
+  box-shadow: 4px 0px 5px #777;
+  left: -40%;
+  z-index: 1;
+  transition: left .5s;
+
 }
 
 .nvp_tabelaMenu{
@@ -543,6 +562,22 @@ div#fa-icons {
     margin-right: 8px;
 }
 
+.expandir-btn {
+  background-color: rgba(54,54,54);
+  box-shadow: 0px 4px 5px #777;
+  border-radius: 0 10px 10px 0;
+  position: absolute;
+  display: none;
+  margin-left: 1px;
+  /*    opção 1       */
+  /*margin-top: 0px;  */
+  margin-top: 40%;
+  padding: 10px;
+  transition: margin-left, .5s;
+  z-index: 2;
+}
+
+#expandido {display: none;}
 
 
 /**************************************
@@ -1013,7 +1048,7 @@ table.calendario td a{
 **************************************/
 
 table {
-    color: #47728f;
+    color: #2ab1e8;
     font-family: "Open Sans" !important;
     font-size: 12px;
 }
@@ -1451,6 +1486,21 @@ input.btn_small {
   .inputfile-buttom + label strong {
     display: block;
   }
+}
+
+@media only screen and (max-width: 1023px) {
+  .r3c1 {display: none;}
+  .r3c1-Mobile {display: inherit;}
+  .expandir-btn {display:inherit;}
+  .ieducar-quick-search, .ieducar-sidebar-menu {position: relative}
+  .ieducar-sidebar-menu {width: 100% !important}
+  .ieducar-sidebar-menu li a {font-size: 22px !important;}
+  
+  #expandido:checked ~ .r3c1-Mobile {display: table-cell; left: 0;}
+  #expandido:checked ~ .expandir-btn {margin-left: 40%; box-shadow: 0px 0px 0px #777;}
+  #expandido:checked ~ .ieducar-quick-search {display: inherit;}
+  #expandido:checked ~ .ieducar-sidebar-menu {display: inherit;}
+
 }
 
 /****WIDGET SUPORTE****/

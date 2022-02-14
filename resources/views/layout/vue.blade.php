@@ -1,6 +1,6 @@
 <div id="quick-search" class="vue-template">
     <div class="quick-search">
-        <vue-multiselect placeholder="Informe o nome do menu"
+        <vue-multiselect placeholder="Busca rápida"
                          select-label=""
                          selected-label=""
                          deselect-label=""
