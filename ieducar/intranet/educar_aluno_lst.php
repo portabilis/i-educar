@@ -66,7 +66,7 @@ return new class extends clsListagem {
         }
 
         $this->campoRA('aluno_estado_id', 'Código rede estadual do aluno (RA)', $this->aluno_estado_id, false);
-        $this->campoTexto('nome_aluno', 'Nome do aluno', $this->nome_aluno, 50, 255, false);
+        $this->campoTexto('nome_aluno', '<b>Nome do aluno</b>', $this->nome_aluno, 50, 255, false);
         $this->campoData('data_nascimento', 'Data de Nascimento', $this->data_nascimento);
         $this->campoCpf('cpf_aluno', 'CPF', $this->cpf_aluno);
         $this->campoTexto('rg_aluno', 'RG', $this->rg_aluno);
