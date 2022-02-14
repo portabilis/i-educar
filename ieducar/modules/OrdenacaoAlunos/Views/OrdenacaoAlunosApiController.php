@@ -146,11 +146,11 @@ class OrdenacaoAlunosApiController extends ApiCoreController
         $lst_biblioteca_feriado = $obj_biblioteca_feriado->lista(null, $this->getRequest()->biblioteca_id);
         if (is_array($lst_biblioteca_feriado) && count($lst_biblioteca_feriado)) {
             foreach ($lst_biblioteca_feriado as $dia_feriado) {
-                $biblioteca_dias_feriado[] = dataFromPgToBr($dia_feriado['data_feriado'], 'D Y-m-d');
+                $biblioteca_dias_feriado[] = dataFromPgToBr($dia_feriado['data_feriado'], 'Y-m-d');
             }
         }
 
-        $data_entrega = dataFromPgToBr($date, 'D Y-m-d');
+        $data_entrega = dataFromPgToBr($date, 'Y-m-d');
 
         if (!is_array($biblioteca_dias_folga)) {
             $biblioteca_dias_folga = [null];
@@ -163,8 +163,8 @@ class OrdenacaoAlunosApiController extends ApiCoreController
             $data_entrega,
             $biblioteca_dias_feriado
         )) {
-            $data_entrega = date('D Y-m-d ', strtotime("$data_entrega +1 day"));
-            $data_entrega = dataFromPgToBr($data_entrega, 'D Y-m-d');
+            $data_entrega = date('Y-m-d ', strtotime("$data_entrega +1 day"));
+            $data_entrega = dataFromPgToBr($data_entrega, 'Y-m-d');
         }
 
         $data_entrega = dataFromPgToBr($data_entrega, $format);

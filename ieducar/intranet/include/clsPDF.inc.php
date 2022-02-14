@@ -267,37 +267,17 @@ class clsPDF
 
     public function SetFont($fonte, $tamanho)
     {
-        $f_user = '';
-
-        switch ($fonte) {
-      case 'normal':
-        $f_user = 'Courier';
-        break;
-      case 'courier':
-        $f_user = 'Courier-Bold';
-        break;
-      case 'courierItalico':
-        $f_user = 'Courier-BoldOblique';
-        break;
-      case 'normalItalico':
-        $f_user = 'Helvetica-BoldOblique';
-        break;
-      case 'times':
-        $f_user = 'Times-Bold';
-        break;
-      case 'timesItalico':
-        $f_user = 'Times-BoldItalic';
-        break;
-      case 'symbol':
-        $f_user = 'ZapfDingbats';
-        break;
-      case 'monospaced':
-        $f_user = 'monospaced';
-        break;
-      default:
-        $f_user = 'Helvetica-Bold';
-    }
-
+        $f_user = match ($fonte) {
+            'normal' => 'Courier',
+            'courier' => 'Courier-Bold',
+            'courierItalico' => 'Courier-BoldOblique',
+            'normalItalico' => 'Helvetica-BoldOblique',
+            'times' => 'Times-Bold',
+            'timesItalico' => 'Times-BoldItalic',
+            'symbol' => 'ZapfDingbats',
+            'monospaced' => 'monospaced',
+            default => 'Helvetica-Bold',
+        };
         $font = PDF_findfont($this->pdf, $f_user, 'host', 0);
         PDF_setfont($this->pdf, $font, $tamanho);
 

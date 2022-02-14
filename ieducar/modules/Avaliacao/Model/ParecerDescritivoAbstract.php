@@ -1,6 +1,6 @@
 <?php
 
-abstract class Avaliacao_Model_ParecerDescritivoAbstract extends Avaliacao_Model_Etapa
+abstract class Avaliacao_Model_ParecerDescritivoAbstract extends Avaliacao_Model_Etapa implements \Stringable
 {
     protected $_data = [
     'parecerDescritivoAluno' => null,
@@ -39,7 +39,7 @@ abstract class Avaliacao_Model_ParecerDescritivoAbstract extends Avaliacao_Model
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return (string)$this->parecer;
     }

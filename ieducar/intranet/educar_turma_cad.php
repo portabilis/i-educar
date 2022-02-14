@@ -279,6 +279,11 @@ return new class extends clsCadastro {
         $this->campoOculto('mult_padrao_ano_escolar', $this->mult_padrao_ano_escolar);
         $this->campoTabelaFim();
 
+        $this->inputsHelper()->dynamic('curso', ['value' => $this->ref_cod_curso, 'disabled' => $desabilitado]);
+        $this->inputsHelper()->dynamic('serie', ['value' => $this->ref_cod_serie, 'disabled' => $desabilitado]);
+        $this->inputsHelper()->dynamic('anoLetivo', ['value' => $this->ano, 'disabled' => $desabilitado]);
+        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie']);
+
         // Infra prédio cômodo
         $opcoes = ['' => 'Selecione'];
 
@@ -681,7 +686,7 @@ return new class extends clsCadastro {
                     true,
                     $this->ano
                 );
-            } catch (Throwable $e) {
+            } catch (Throwable) {
                 return;
             }
 

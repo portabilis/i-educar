@@ -72,7 +72,7 @@ trait Avaliacao_Service_Boletim_RegraAvaliacao
      */
     public function getRegraAvaliacaoTipoParecerDescritivo()
     {
-        return $this->getRegraAvaliacao()->get('parecerDescritivo');
+        return (int) $this->getRegraAvaliacao()->get('parecerDescritivo');
     }
 
     /**

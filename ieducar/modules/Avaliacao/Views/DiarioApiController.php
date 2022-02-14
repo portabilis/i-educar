@@ -1048,7 +1048,7 @@ class DiarioApiController extends ApiCoreController
     {
         try {
             $this->serviceBoletim()->save();
-        } catch (CoreExt_Service_Exception $e) {
+        } catch (CoreExt_Service_Exception) {
             // excecoes ignoradas :( pois servico lanca excecoes de alertas, que não são exatamente erros.
             // error_log('CoreExt_Service_Exception ignorada: ' . $e->getMessage());
         }
@@ -1059,7 +1059,7 @@ class DiarioApiController extends ApiCoreController
         try {
             $this->serviceBoletim()->saveFaltas(true);
             $this->serviceBoletim()->promover();
-        } catch (CoreExt_Service_Exception $e) {
+        } catch (CoreExt_Service_Exception) {
         }
     }
 
@@ -1218,7 +1218,12 @@ class DiarioApiController extends ApiCoreController
             $componentesCurriculares[] = $componente;
         }
 
-        $ordenamentoComponentes = [];
+        $ordenamentoComponentes = [
+            'ordenamento_ac' => [],
+            'ordenamento' => [],
+            'ordem_nome_area_conhecimento' => [],
+            'ordem_componente_curricular' => [],
+        ];
 
         foreach ($componentesCurriculares as $chave => $componente) {
             $ordenamentoComponentes['ordenamento_ac'][$chave] = $componente['ordenamento_ac'];
@@ -1431,7 +1436,7 @@ class DiarioApiController extends ApiCoreController
             $etapas = $regraRecuperacao->getEtapas();
             $sumNota = 0;
             foreach ($etapas as $key => $_etapa) {
-                $sumNota += $this->getNotaOriginal($_etapa, $componenteCurricularId);
+                $sumNota += (int)$this->getNotaOriginal($_etapa, $componenteCurricularId);
             }
 
             // caso a média das notas da etapa seja menor que média definida na regra e a última nota tenha sido lançada

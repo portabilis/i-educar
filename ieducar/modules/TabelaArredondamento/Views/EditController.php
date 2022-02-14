@@ -8,6 +8,8 @@ class EditController extends Core_Controller_Page_EditController
     protected $_nivelAcessoOption = App_Model_NivelAcesso::INSTITUCIONAL;
     protected $_saveOption = true;
     protected $_deleteOption = false;
+    protected $valor_minimo = [];
+    protected $valor_maximo = [];
 
     protected $_formMap = [
         'instituicao' => [
@@ -344,25 +346,12 @@ class EditController extends Core_Controller_Page_EditController
 
         for ($i = 0; $i <= 9; $i++) {
             $valorNota = $valores[$i];
-            $acao = 0;
-
-            switch ($valorNota->acao) {
-                case 'Arredondar para o n&uacute;mero inteiro imediatamente inferior':
-                    $acao = 1;
-                    break;
-
-                case 'Arredondar para o n&uacute;mero inteiro imediatamente superior':
-                    $acao = 2;
-                    break;
-
-                case 'Arredondar para a casa decimal específica':
-                    $acao = 3;
-                    break;
-
-                default:
-                    $acao = 0;
-                    break;
-            }
+            $acao = match ($valorNota->acao) {
+                'Arredondar para o n&uacute;mero inteiro imediatamente inferior' => 1,
+                'Arredondar para o n&uacute;mero inteiro imediatamente superior' => 2,
+                'Arredondar para a casa decimal espec&iacute;fica' => 3,
+                default => 0,
+            };
 
             $this->tabela_arredondamento_valor[$i][] = $valorNota->id;
             $this->tabela_arredondamento_valor[$i][] = $i;
@@ -479,7 +468,7 @@ class EditController extends Core_Controller_Page_EditController
         }
 
         // A contagem usa um dos índices do formulário, senão ia contar sempre 4.
-        $loop = count($this->valor_id);
+        $loop = is_array($this->valor_id) ? count($this->valor_id) : 0;
 
         // Verifica se existe valor acima de 100
         for ($i = 0; $i < $loop; $i++) {

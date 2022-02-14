@@ -44,7 +44,7 @@ jobs:
     steps:
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
+          php-version: '8.0'
       - uses: actions/checkout@v2
       - name: Utiliza versão 2.1.14 do Composer
         run: composer self-update 2.1.14

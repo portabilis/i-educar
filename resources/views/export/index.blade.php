@@ -46,6 +46,6 @@
   </div>
 
   <div style="text-align: center; margin-top: 30px; margin-bottom: 30px">
-    <a href="{{ route('export.form') }}" class="btn-green">Nova Exportação</a>
+    <a href="{{ Asset::get('/exportacoes/novo') }}" class="btn-green">Nova Exportação</a>
   </div>
 @endsection

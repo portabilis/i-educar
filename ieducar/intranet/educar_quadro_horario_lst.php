@@ -1,6 +1,7 @@
 <?php
 
 use iEducar\Support\Navigation\Breadcrumb;
+use Illuminate\Support\Facades\Auth;
 
 return new class {
     public $pessoa_logada;
@@ -23,7 +24,7 @@ return new class {
 
     public function renderHTML()
     {
-        $this->pessoa_logada = \Illuminate\Support\Facades\Auth::id();
+        $this->pessoa_logada = Auth::id();
 
         $retorno = '';
 
@@ -53,19 +54,19 @@ return new class {
         <tbody>';
 
         if ($_POST) {
-            $this->ref_cod_turma       = $_POST['ref_cod_turma'] ? $_POST['ref_cod_turma'] : null;
-            $this->ref_cod_serie       = $_POST['ref_cod_serie'] ? $_POST['ref_cod_serie'] : null;
-            $this->ref_cod_curso       = $_POST['ref_cod_curso'] ? $_POST['ref_cod_curso'] : null;
-            $this->ref_cod_escola      = $_POST['ref_cod_escola'] ? $_POST['ref_cod_escola'] : null;
-            $this->ref_cod_instituicao = $_POST['ref_cod_instituicao'] ? $_POST['ref_cod_instituicao'] : null;
-            $this->ano                 = $_POST['ano'] ? $_POST['ano'] : null;
-            $this->busca               = $_GET['busca'] ? $_GET['busca'] : null;
-        } else {
-            if ($_GET) {
-                // Passa todos os valores obtidos no GET para atributos do objeto
-                foreach ($_GET as $var => $val) {
-                    $this->$var = $val === '' ? null : $val;
-                }
+            $this->ref_cod_turma       = $_POST['ref_cod_turma'] ?: null;
+            $this->ref_cod_serie       = $_POST['ref_cod_serie'] ?: null;
+            $this->ref_cod_curso       = $_POST['ref_cod_curso'] ?: null;
+            $this->ref_cod_escola      = $_POST['ref_cod_escola'] ?: null;
+            $this->ref_cod_instituicao = $_POST['ref_cod_instituicao'] ?: null;
+            $this->ano                 = $_POST['ano'] ?: null;
+            $this->busca               = $_GET['busca'] ?: null;
+        }
+
+        if ($_GET) {
+            // Passa todos os valores obtidos no GET para atributos do objeto
+            foreach ($_GET as $var => $val) {
+                $this->$var = $val === '' ? null : $val;
             }
         }
 
@@ -138,8 +139,8 @@ return new class {
                             $c
                         );
 
-                        $texto .= "<td valign=top align='center' width='100' style='cursor: pointer; ' onclick='envia( this, {$this->ref_cod_turma}, {$this->ref_cod_serie}, {$this->ref_cod_curso}, {$this->ref_cod_escola}, {$this->ref_cod_instituicao}, {$det_quadro['cod_quadro_horario']}, {$c}, {$this->ano} );'>";
-
+                        $texto .= "<td valign=top align='center' width='100' style='cursor: pointer; ' onclick='envia( this, {$this->ref_cod_turma}, {$this->ref_cod_serie}, {$this->ref_cod_curso}, {$this->ref_cod_escola}, {$this->ref_cod_instituicao}, {$det_quadro['cod_quadro_horario']}, {$c}, {$this->ano} )'>";
+                        $componente = new  stdClass();
                         if (is_array($resultado)) {
                             $resultado = $this->organizarHorariosIguais($resultado);
                             foreach ($resultado as $registro) {
@@ -152,8 +153,9 @@ return new class {
                                 // Servidor
                                 $obj_servidor = new clsPmieducarServidor();
 
+                                $det_servidor = null;
                                 if ($registro['ref_servidor_substituto']) {
-                                    $det_servidor = array_shift($obj_servidor->lista(
+                                    $servidor = $obj_servidor->lista(
                                         $registro['ref_servidor_substituto'],
                                         null,
                                         null,
@@ -165,15 +167,19 @@ return new class {
                                         null,
                                         null,
                                         null,
-                                         NULL,
+                                        NULL,
                                         null,
                                         null,
                                         null,
                                         null,
                                         true
-                                    ));
+                                    );
+
+                                    if (is_array($servidor)) {
+                                        $det_servidor = array_shift($servidor);
+                                    }
                                 } else {
-                                    $det_servidor = array_shift($obj_servidor->lista(
+                                    $servidor = $obj_servidor->lista(
                                         $registro['ref_servidor'],
                                         null,
                                         null,
@@ -185,16 +191,22 @@ return new class {
                                         null,
                                         null,
                                         null,
-                                         NULL,
+                                        null,
                                         null,
                                         null,
                                         null,
                                         null,
                                         true
-                                    ));
+                                    );
+                                    if (is_array($servidor)) {
+                                        $det_servidor = array_shift($servidor);
+                                    }
                                 }
 
-                                $det_servidor['nome'] = array_shift(explode(' ', $det_servidor['nome']));
+                                if (is_array($det_servidor)) {
+                                    $nomes = explode(' ', $det_servidor['nome']);
+                                    $det_servidor['nome'] = array_shift($nomes);
+                                }
 
                                 //$texto .= "<div  style='text-align: center;background-color: #F6F6F6;font-size: 11px; width: 100px; margin: 3px; border: 1px solid #CCCCCC; padding:5px; '>". substr($registro['hora_inicial'], 0, 5) . ' - ' . substr($registro['hora_final'], 0, 5) . " <br> {$componente->abreviatura} <br> {$det_servidor["nome"]}</div>";
                                 $detalhes = sprintf(
