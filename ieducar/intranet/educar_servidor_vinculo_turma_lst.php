@@ -67,20 +67,6 @@ return new class extends clsListagem {
 
         $obj_vinculo->setOrderby(' nm_escola, nm_curso, nm_serie, nm_turma ASC');
 
-        $noLimitTotal = $obj_vinculo->lista(
-            $this->servidor_id,
-            $this->ref_cod_instituicao,
-            $this->ano,
-            $this->ref_cod_escola,
-            $this->ref_cod_curso,
-            $this->ref_cod_serie,
-            $this->ref_cod_turma,
-            $this->funcao_exercida,
-            $this->tipo_vinculo
-        );
-
-        $total = is_array($noLimitTotal) ? count($noLimitTotal) : 0;
-
         $obj_vinculo->setLimite($this->limite, $this->offset);
 
         $lista = $obj_vinculo->lista(
@@ -94,6 +80,8 @@ return new class extends clsListagem {
             $this->funcao_exercida,
             $this->tipo_vinculo
         );
+
+        $total = $obj_vinculo->_total;
 
         // UrlHelper
         $url  = CoreExt_View_Helper_UrlHelper::getInstance();
