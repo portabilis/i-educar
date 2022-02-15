@@ -50,16 +50,16 @@ return new class extends clsListagem {
 
     public function Gerar()
     {
-        $this->titulo = 'Institui&ccedil;&atilde;o - Listagem';
+        $this->titulo = 'Instituição - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null: $val;
         }
 
-        $this->addCabecalhos([ 'Nome da Institui&ccedil;&atilde;o' ]);
+        $this->addCabecalhos([ 'Nome da Instituição' ]);
 
         // outros Filtros
-        $this->campoTexto('nm_instituicao', 'Nome da Institui&ccedil;&atilde;o', $this->nm_instituicao, 30, 255, false);
+        $this->campoTexto('nm_instituicao', 'Nome da Instituição', $this->nm_instituicao, 30, 255, false);
 
         // Paginador
         $this->limite = 20;

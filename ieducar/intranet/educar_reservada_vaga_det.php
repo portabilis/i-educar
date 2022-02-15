@@ -144,7 +144,7 @@ return new class extends clsDetalhe {
         $this->addDetalhe(['-', 'Reserva Pretendida']);
 
         if ($registro['ref_cod_instituicao']) {
-            $this->addDetalhe(['Institui&ccedil;&atilde;o', $registro['ref_cod_instituicao']]);
+            $this->addDetalhe(['Instituição', $registro['ref_cod_instituicao']]);
         }
 
         if ($registro['ref_ref_cod_escola']) {
@@ -156,12 +156,12 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['ref_ref_cod_serie']) {
-            $this->addDetalhe(['S&eacute;rie', $registro['ref_ref_cod_serie']]);
+            $this->addDetalhe(['Série', $registro['ref_ref_cod_serie']]);
         }
 
         $obj_permissao = new clsPermissoes();
         if ($obj_permissao->permissao_cadastra(639, $this->pessoa_logada, 7)) {
-            $this->array_botao = ['Emiss&atilde;o de Documento de Reserva de Vaga', 'Desativar Reserva'];
+            $this->array_botao = ['Emissão de Documento de Reserva de Vaga', 'Desativar Reserva'];
             $this->array_botao_url_script = ["showExpansivelImprimir(400, 200,  \"educar_relatorio_solicitacao_transferencia.php?cod_reserva_vaga={$this->cod_reserva_vaga}\",[], \"Relatório de Solicitação de transferência\")","go(\"educar_reservada_vaga_det.php?cod_reserva_vaga={$this->cod_reserva_vaga}&desativa=true\")"];
         }
 
@@ -195,12 +195,12 @@ return new class extends clsDetalhe {
         $excluiu = $obj->excluir();
 
         if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_reservada_vaga_lst.php?ref_cod_escola=' .
           $this->ref_cod_escola . '&ref_cod_serie=' . $this->ref_cod_serie);
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }

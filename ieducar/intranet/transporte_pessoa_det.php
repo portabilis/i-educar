@@ -26,7 +26,7 @@ return new class extends clsDetalhe {
         $this->addDetalhe(['Rota', $registro['nome_rota']]);
         $this->addDetalhe(['Destino', (trim($registro['nome_destino'])=='' ? $registro['nome_destino2'] : $registro['nome_destino'])]);
         $this->addDetalhe(['Ponto de embarque', $registro['nome_ponto'] ]);
-        $this->addDetalhe(['Observa&ccedil;&atilde;o', $registro['observacao']]);
+        $this->addDetalhe(['Observação', $registro['observacao']]);
 
         $turnos = [
       1 => 'Matutino',
@@ -50,7 +50,7 @@ return new class extends clsDetalhe {
 
         $this->largura = '100%';
 
-        $this->breadcrumb('Detalhe do usu&aacute;rio de transporte', [
+        $this->breadcrumb('Detalhe do usuário de transporte', [
         url('intranet/educar_transporte_escolar_index.php') => 'Transporte escolar',
     ]);
     }

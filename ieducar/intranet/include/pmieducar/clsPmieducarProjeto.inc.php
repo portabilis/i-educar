@@ -223,6 +223,7 @@ class clsPmieducarProjeto extends Model
 
     public function listaProjetosPorAluno($alunoId)
     {
+        $resultado = [];
         $db = new clsBanco();
         $db->Consulta("SELECT nome as projeto,
                                    data_inclusao,

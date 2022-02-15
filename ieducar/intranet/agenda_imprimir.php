@@ -81,8 +81,6 @@ return new class extends clsCadastro {
 
     public function Novo()
     {
-        $db = new clsBanco();
-
         $where = '';
         // define as datas de limite dos compromissos
         if (!empty($this->data_inicio)) {
@@ -126,9 +124,6 @@ return new class extends clsCadastro {
             $compromissos[] = [ 'cod' => $cod_comp, 'versao' => $versao ];
         }
 
-        $aux = 0;
-        $qtd_pagina = 0;
-
         if (count($compromissos)) {
             $data_ant = '';
             foreach ($compromissos as $compromisso) {
@@ -147,24 +142,6 @@ return new class extends clsCadastro {
                         // se nao tiver titulo pega as X primeiras palavras da descricao ( X = $qtd_tit_copia_desc )
                         $disp_titulo = implode(' ', array_slice(explode(' ', $descricao), 0, $qtd_tit_copia_desc));
                     }
-
-                    // remove quebra de linha
-//                  $disp_titulo = str_replace("\r"," ", $disp_titulo );
-//                  $disp_titulo = str_replace("\n"," ", $disp_titulo );
-//                  $disp_titulo = str_replace("<br>"," ", $disp_titulo );
-//
-//                  $titulo = str_replace("\r"," ", $titulo );
-//                  $titulo = str_replace("\n"," ", $titulo );
-//                  $titulo = str_replace("<br>"," ", $titulo );
-//
-//                  $descricao = str_replace("\r"," ", $descricao );
-//                  $descricao = str_replace("\n"," ", $descricao );
-//                  $descricao = str_replace("<br>"," ", $descricao );
-
-                    // quebra o texto em linhas que caibam
-//                  $disp_titulo = $this->quebraLinha( $disp_titulo, 60 );
-//                  $titulo = $this->quebraLinha( $titulo, 60 );
-//                  $descricao = $this->quebraLinha( $descricao, 60 );
 
                     $hora_comp = substr($data_inicio, 11, 5);
                     $hora_fim = substr($data_fim, 11, 5);
@@ -214,7 +191,6 @@ return new class extends clsCadastro {
                                     $linhas += count(explode("\n", $textoLinha));
                                     $relatorio->novalinha(["{$hora_comp} as {$hora_fim}", $textoLinha], 0, 13 + 10 * $linhas);
                                 }
-//                              $relatorio->altura += 30;
                             }
                         }
                     }

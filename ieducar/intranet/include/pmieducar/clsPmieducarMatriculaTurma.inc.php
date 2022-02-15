@@ -1117,7 +1117,7 @@ class clsPmieducarMatriculaTurma extends Model
             sequencial_fechamento,
         nome";
 
-
+        $resultado = [];
         $db->Consulta($sql);
 
         while ($db->ProximoRegistro()) {

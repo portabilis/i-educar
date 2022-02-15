@@ -50,7 +50,7 @@ return new class extends clsListagem {
         }
 
         $lista_busca = [
-            'Nome Func&atilde;o',
+            'Nome Funcão',
             'Abreviatura',
             'Professor'
         ];
@@ -58,7 +58,7 @@ return new class extends clsListagem {
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
-            $lista_busca[] = 'Institui&ccedil;&atilde;o';
+            $lista_busca[] = 'Instituição';
         }
 
         $this->addCabecalhos($lista_busca);
@@ -67,10 +67,10 @@ return new class extends clsListagem {
         include('include/pmieducar/educar_campo_lista.php');
 
         // outros Filtros
-        $this->campoTexto('nm_funcao', 'Nome Fun&ccedil;&atilde;o', $this->nm_funcao, 30, 255, false);
+        $this->campoTexto('nm_funcao', 'Nome Função', $this->nm_funcao, 30, 255, false);
         $this->campoTexto('abreviatura', 'Abreviatura', $this->abreviatura, 30, 255, false);
         $opcoes = ['' => 'Selecione',
-                        'N' => 'N&atilde;o',
+                        'N' => 'Não',
                         'S' => 'Sim'
                         ];
 
@@ -110,7 +110,7 @@ return new class extends clsListagem {
         // monta a lista
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
-                $registro['professor'] = $registro['professor'] == 1 ? 'Sim' : 'N&atilde;o';
+                $registro['professor'] = $registro['professor'] == 1 ? 'Sim' : 'Não';
 
                 $obj_ref_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
                 $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();

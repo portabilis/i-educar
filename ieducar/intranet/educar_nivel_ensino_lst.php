@@ -41,7 +41,7 @@ return new class extends clsListagem {
 
     public function Gerar()
     {
-        $this->titulo = 'N&iacute;vel Ensino - Listagem';
+        $this->titulo = 'Nível Ensino - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null: $val;
@@ -52,14 +52,14 @@ return new class extends clsListagem {
         ]);
 
         $lista_busca = [
-            'N&iacute;vel Ensino'
+            'Nível Ensino'
         ];
 
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
         if ($nivel_usuario == 1) {
-            $lista_busca[] = 'Institui&ccedil;&atilde;o';
+            $lista_busca[] = 'Instituição';
         }
         $this->addCabecalhos($lista_busca);
 
@@ -67,7 +67,7 @@ return new class extends clsListagem {
         include('include/pmieducar/educar_campo_lista.php');
 
         // outros Filtros
-        $this->campoTexto('nm_nivel', 'N&iacute;vel Ensino', $this->nm_nivel, 30, 255, false);
+        $this->campoTexto('nm_nivel', 'Nível Ensino', $this->nm_nivel, 30, 255, false);
 
         // Paginador
         $this->limite = 20;
@@ -125,7 +125,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'N&iacute;vel Ensino';
+        $this->title = 'Nível Ensino';
         $this->processoAp = '571';
     }
 };

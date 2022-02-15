@@ -11,8 +11,6 @@ use Illuminate\Validation\ValidationException;
 
 return new class extends clsCadastro {
     public $ref_pessoa;
-
-    //dados do funcionario
     public $nome;
     public $matricula;
     public $_senha;

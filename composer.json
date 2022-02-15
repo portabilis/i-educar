@@ -3,14 +3,14 @@
     "description": "Software livre de gestão escolar",
     "type": "project",
     "license": "GPL-2.0-or-later",
-    "version": "2.6.7",
+    "version": "2.6.8",
     "keywords": [
         "Portabilis",
         "i-Educar"
     ],
     "homepage": "https://github.com/portabilis/i-educar",
     "require": {
-        "php": "^7.4",
+        "php": "^8.0",
         "ext-gd": "*",
         "ext-json": "*",
         "ext-pdo": "*",
@@ -101,7 +101,7 @@
         "set-permissions": "find bootstrap/cache -type d -exec chmod 777 {} + && find storage -type d -exec chmod 777 {} +",
         "npm": "npm install",
         "new-install": [
-            "@composer install",
+            "@composer install --ignore-platform-req php",
             "@composer plug-and-play:install",
             "@set-permissions",
             "@php artisan key:generate --ansi",

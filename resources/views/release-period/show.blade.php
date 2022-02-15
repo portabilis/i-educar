@@ -37,14 +37,14 @@
 
     <div style="text-align: center">
         @if($canModify)
-            <a href="{{url()->route('release-period.form')}}">
+            <a href="{{ Asset::get('/periodo-lancamento/fomulario/')}}">
                 <button class="btn-green" type="button">Novo</button>
             </a>
-            <a href="{{ route('release-period.form', ['releasePeriod' => $releasePeriod->getKey()]) }}">
+            <a href="{{ Asset::get('/periodo-lancamento/fomulario/' . $releasePeriod->getKey()) }}">
                 <button class="btn" type="button">Editar</button>
             </a>
         @endif
-        <a href="{{ route('release-period.index') }}">
+        <a href="{{ Asset::get('/periodo-lancamento') }}">
             <button class="btn" type="button">Voltar</button>
         </a>
     </div>

@@ -5,7 +5,7 @@
 @endpush
 
 @section('content')
-    <form id="enrollments-enroll" action="{{ route('enrollments.enroll', ['schoolClass' => $schoolClass, 'registration' => $registration]) }}" method="post">
+    <form id="enrollments-enroll" action="{{ Asset::get('/matricula/' .  $registration->id . '/enturmar/' . $schoolClass->id)}}" method="post">
         <table class="table-default">
             <thead>
                 <tr>
@@ -27,7 +27,7 @@
                 </tr>
                 <tr>
                     <td>Série:</td>
-                    <td>{{ $schoolClass->grade->name ?? null }}</td>
+                    <td>{{ $registration->grade->name ?? null }}</td>
                 </tr>
                 <tr>
                     <td>Turma selecionada:</td>
@@ -86,12 +86,12 @@
             @if($enableCancelButton)
                 <button class="btn"  onclick="modalConfirmacao('is_cancellation')" type="button" name="is_cancellation" value="1">Desenturmar</button>
             @else
-                <button class="btn" onclick="modalConfirmacao('is_enturmacao')" type="button" >Enturmar</button>
-                @if($anotherClassroomEnrollments->count())
-                    <button class="btn" onclick="modalConfirmacao('is_relocation')" type="button" name="is_relocation" value="1">Transferir para turma (remanejar)</button>
+                <button class="btn" type="submit">Enturmar</button>
+                @if($enrollments->count())
+                    <button class="btn" type="submit" name="is_relocation" value="1">Transferir para turma (remanejar)</button>
                 @endif
             @endif
-            <a href="{{ route('enrollments.index', ['ref_cod_matricula' => $registration->id, 'ano_letivo' => $registration->year]) }}" class="btn">Cancelar</a>
+            <a href="{{ Asset::get('/intranet/educar_matricula_turma_lst.php?ref_cod_matricula=' . $registration->id . '&ano_letivo=' . $registration->year) }}" class="btn">Cancelar</a>
         </div>
     </form>
 

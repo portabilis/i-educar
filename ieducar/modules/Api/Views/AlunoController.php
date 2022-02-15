@@ -629,12 +629,23 @@ class AlunoController extends ApiCoreController
         $aluno->ref_usuario_exc = \Illuminate\Support\Facades\Auth::id();
 
         // INFORAMÇÕES PROVA INEP
-        $recursosProvaInep = array_filter($this->getRequest()->recursos_prova_inep__);
-        $recursosProvaInep = '{' . implode(',', $recursosProvaInep) . '}';
+        $recursosProvaInepRequest = $this->getRequest()->recursos_prova_inep__;
+        $recursosProvaInep = null;
+        if (is_array($recursosProvaInepRequest)) {
+            $recursosProvaInep = array_filter($recursosProvaInepRequest);
+            $recursosProvaInep = '{' . implode(',', $recursosProvaInep) . '}';
+        }
         $aluno->recursos_prova_inep = $recursosProvaInep;
         $aluno->recebe_escolarizacao_em_outro_espaco = $this->getRequest()->recebe_escolarizacao_em_outro_espaco;
         $aluno->justificativa_falta_documentacao = $this->getRequest()->justificativa_falta_documentacao;
-        $aluno->veiculo_transporte_escolar = implode(',', array_filter($this->getRequest()->veiculo_transporte_escolar));
+
+        $veiculoTransportEscolarFromRequest = $this->getRequest()->veiculo_transporte_escolar;
+        $veiculoTransporteEscolar = null;
+        if (is_array($veiculoTransportEscolarFromRequest)) {
+            $veiculoTransporteEscolar = implode(',', array_filter($this->getRequest()->veiculo_transporte_escolar));
+        }
+
+        $aluno->veiculo_transporte_escolar = $veiculoTransporteEscolar;
 
         $this->file_foto = $_FILES['file'];
         $this->del_foto = $_POST['file_delete'];

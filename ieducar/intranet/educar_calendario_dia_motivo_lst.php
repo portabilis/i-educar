@@ -45,7 +45,7 @@ return new class extends clsListagem {
 
     public function Gerar()
     {
-        $this->titulo = 'Calend&aacute;rio Dia Motivo - Listagem';
+        $this->titulo = 'Calendário Dia Motivo - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null: $val;
@@ -115,7 +115,7 @@ return new class extends clsListagem {
                 if ($registro['tipo'] == 'e') {
                     $registro['tipo'] = 'extra';
                 } elseif ($registro['tipo'] == 'n') {
-                    $registro['tipo'] = 'n&atilde;o-letivo';
+                    $registro['tipo'] = 'não-letivo';
                 }
                 $lista_busca = [
                     "<a href=\"educar_calendario_dia_motivo_det.php?cod_calendario_dia_motivo={$registro['cod_calendario_dia_motivo']}\">{$registro['nm_motivo']}</a>",
@@ -141,7 +141,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'Calend&aacute;rio Dia Motivo';
+        $this->title = 'Calendário Dia Motivo';
         $this->processoAp = '576';
     }
 };

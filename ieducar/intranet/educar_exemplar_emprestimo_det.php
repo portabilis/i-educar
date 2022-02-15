@@ -19,7 +19,7 @@ return new class extends clsDetalhe {
 
     public function Gerar()
     {
-        $this->titulo = 'Exemplar Empr&eacute;stimo - Detalhe';
+        $this->titulo = 'Exemplar Empréstimo - Detalhe';
 
         $this->cod_emprestimo=$_GET['cod_emprestimo'];
 
@@ -72,7 +72,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'Exemplar Empr&eacute;stimo';
+        $this->title = 'Exemplar Empréstimo';
         $this->processoAp = '610';
     }
 };

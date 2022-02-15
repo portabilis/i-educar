@@ -44,7 +44,7 @@ return new class extends clsListagem {
             $this->$var = ($val === '') ? null: $val;
         }
 
-        $this->campoNumero('cod_pessoa_transporte', 'C&oacute;digo', $this->cod_pessoa_transporte, 20, 255, false);
+        $this->campoNumero('cod_pessoa_transporte', 'Código', $this->cod_pessoa_transporte, 20, 255, false);
         $this->campoTexto('nome_pessoa', 'Nome da pessoa', $this->nome_pessoa, 50, 255, false);
         $this->campoTexto('nome_destino', 'Nome do destino', $this->nome_destino, 70, 255, false);
 
@@ -54,10 +54,10 @@ return new class extends clsListagem {
 
         $obj_permissoes = new clsPermissoes();
 
-        $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+        $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
         $this->addCabecalhos([
-            'C&oacute;digo',
+            'Código',
             'Nome da pessoa',
             'Rota',
             'Destino',
@@ -87,7 +87,6 @@ return new class extends clsListagem {
 
         $this->addPaginador2('transporte_pessoa_lst.php', $total, $_GET, $this->nome, $this->limite);
 
-        //**
         $this->largura = '100%';
 
         $obj_permissao = new clsPermissoes();
@@ -97,7 +96,7 @@ return new class extends clsListagem {
             $this->nome_acao = 'Novo';
         }
 
-        $this->breadcrumb('Listagem de usu&aacute;rios de tranposrte', [
+        $this->breadcrumb('Listagem de usuários de tranposrte', [
         url('intranet/educar_transporte_escolar_index.php') => 'Transporte escolar',
     ]);
     }

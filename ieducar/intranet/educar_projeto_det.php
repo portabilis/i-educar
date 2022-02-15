@@ -26,13 +26,13 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['cod_projeto']) {
-            $this->addDetalhe([ 'C&oacute;digo projeto', "{$registro['cod_projeto']}"]);
+            $this->addDetalhe([ 'Código projeto', "{$registro['cod_projeto']}"]);
         }
         if ($registro['nome']) {
             $this->addDetalhe([ 'Nome do projeto', "{$registro['nome']}"]);
         }
         if ($registro['observacao']) {
-            $this->addDetalhe([ 'Observa&ccedil;&atilde;o', nl2br("{$registro['observacao']}")]);
+            $this->addDetalhe([ 'Observação', nl2br("{$registro['observacao']}")]);
         }
 
         //** Verificacao de permissao para cadastro

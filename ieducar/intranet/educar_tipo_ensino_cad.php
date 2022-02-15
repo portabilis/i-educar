@@ -1,13 +1,7 @@
 <?php
 
 return new class extends clsCadastro {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
     public $pessoa_logada;
-
     public $cod_tipo_ensino;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -16,7 +10,6 @@ return new class extends clsCadastro {
     public $data_exclusao;
     public $ativo;
     public $atividade_complementar;
-
     public $ref_cod_instituicao;
 
     public function Inicializar()
@@ -72,16 +65,12 @@ return new class extends clsCadastro {
         // primary keys
         $this->campoOculto('cod_tipo_ensino', $this->cod_tipo_ensino);
 
-        // foreign keys
         $get_escola = false;
         $obrigatorio = true;
         include('include/pmieducar/educar_campo_lista.php');
-        // text
+
         $this->campoTexto('nm_tipo', 'Tipo de Ensino', $this->nm_tipo, 30, 255, true);
-
         $this->campoCheck('atividade_complementar', 'Atividade complementar', $this->atividade_complementar);
-
-        // data
     }
 
     public function Novo()
@@ -100,7 +89,7 @@ return new class extends clsCadastro {
             $this->simpleRedirect('educar_tipo_ensino_lst.php');
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -119,11 +108,11 @@ return new class extends clsCadastro {
 
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_tipo_ensino_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }
@@ -133,11 +122,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarTipoEnsino($this->cod_tipo_ensino, $this->pessoa_logada, null, $this->nm_tipo, null, null, 0);
         $excluiu = $obj->excluir();
         if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_tipo_ensino_lst.php');
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }

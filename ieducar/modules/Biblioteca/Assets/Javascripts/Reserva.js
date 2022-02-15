@@ -141,7 +141,7 @@ function handleSearch($resultTable, dataResponse) {
   $j('<th />').html('Situa&#231;&#227;o').addClass('center').appendTo($linha);
   $j('<th />').html('Cliente').appendTo($linha);
   $j('<th />').html('Data').addClass('center').appendTo($linha);
-  $j('<th />').html('Data prevista dispon&iacute;vel').addClass('center').appendTo($linha);
+  $j('<th />').html('Data prevista disponível').addClass('center').appendTo($linha);
   $j('<th />').html('A&#231;&#227;o').addClass('center').appendTo($linha);
   $linha.appendTo($resultTable);
 

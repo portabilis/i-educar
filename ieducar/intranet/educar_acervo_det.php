@@ -84,7 +84,7 @@ return new class extends clsDetalhe {
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe([ 'Institui&ccedil;&atilde;o', "{$registro['ref_cod_instituicao']}"]);
+                $this->addDetalhe([ 'Instituição', "{$registro['ref_cod_instituicao']}"]);
             }
         }
         if ($nivel_usuario == 1 || $nivel_usuario == 2) {
@@ -96,19 +96,19 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Biblioteca', "{$registro['ref_cod_biblioteca']}"]);
         }
         if ($registro['titulo']) {
-            $this->addDetalhe([ 'T&iacute;tulo', "{$registro['titulo']}"]);
+            $this->addDetalhe([ 'Título', "{$registro['titulo']}"]);
         }
         if ($registro['sub_titulo']) {
-            $this->addDetalhe([ 'Subt&iacute;tulo', "{$registro['sub_titulo']}"]);
+            $this->addDetalhe([ 'Subtítulo', "{$registro['sub_titulo']}"]);
         }
         if ($registro['ref_cod_exemplar_tipo']) {
             $this->addDetalhe([ 'Tipo', "{$registro['ref_cod_exemplar_tipo']}"]);
         }
         if ($registro['ref_cod_acervo']) {
-            $this->addDetalhe([ 'Obra Refer&ecirc;ncia', "{$registro['ref_cod_acervo']}"]);
+            $this->addDetalhe([ 'Obra Referência', "{$registro['ref_cod_acervo']}"]);
         }
         if ($registro['ref_cod_acervo_colecao']) {
-            $this->addDetalhe([ 'Cole&ccedil;&atilde;o', "{$registro['ref_cod_acervo_colecao']}"]);
+            $this->addDetalhe([ 'Coleção', "{$registro['ref_cod_acervo_colecao']}"]);
         }
         if ($registro['ref_cod_acervo_idioma']) {
             $this->addDetalhe([ 'Idioma', "{$registro['ref_cod_acervo_idioma']}"]);
@@ -166,13 +166,13 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Volume', "{$registro['volume']}"]);
         }
         if ($registro['num_edicao']) {
-            $this->addDetalhe([ 'N&uacute;mero Edic&atilde;o', "{$registro['num_edicao']}"]);
+            $this->addDetalhe([ 'N&uacute;mero Edicão', "{$registro['num_edicao']}"]);
         }
         if ($registro['ano']) {
             $this->addDetalhe([ 'Ano', "{$registro['ano']}"]);
         }
         if ($registro['num_paginas']) {
-            $this->addDetalhe([ 'N&uacute;mero P&aacute;ginas', "{$registro['num_paginas']}"]);
+            $this->addDetalhe([ 'N&uacute;mero Páginas', "{$registro['num_paginas']}"]);
         }
         if ($registro['isbn']) {
             $this->addDetalhe([ 'ISBN', "{$registro['isbn']}"]);
@@ -180,7 +180,7 @@ return new class extends clsDetalhe {
 
         $obj = new clsPmieducarAcervoAssunto();
         $obj = $obj->listaAssuntosPorObra($this->cod_acervo);
-        if (count($obj)) {
+        if (is_array($obj) && count($obj)) {
             foreach ($obj as $reg) {
                 $assuntos.= '<span style="background-color: #ccdce6; padding: 4px 20px;"><b>'.$reg['nome'].'</b></span>&nbsp; ';
             }
@@ -191,7 +191,7 @@ return new class extends clsDetalhe {
 
         $obj_categoria = new clsPmieducarCategoriaAcervo();
         $obj_categoria = $obj_categoria->listaCategoriasPorObra($this->cod_acervo);
-        if (count($obj_categoria)) {
+        if (is_array($obj_categoria) && count($obj_categoria)) {
             foreach ($obj_categoria as $obj_cat) {
                 $categorias.= '<span style="background-color: #ccdce6; padding: 4px 20px;"><b>'.$obj_cat['descricao'].'</b></span>&nbsp; ';
             }

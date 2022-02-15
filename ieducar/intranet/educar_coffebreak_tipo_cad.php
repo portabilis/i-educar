@@ -22,11 +22,9 @@ return new class extends clsCadastro {
     {
         $retorno = 'Novo';
 
-        //** Verificacao de permissao para cadastro
-        $obj_permissao = new clsPermissoes();
 
+        $obj_permissao = new clsPermissoes();
         $obj_permissao->permissao_cadastra(564, $this->pessoa_logada, 7, 'educar_coffebreak_tipo_lst.php');
-        //**
 
         $this->cod_coffebreak_tipo=$_GET['cod_coffebreak_tipo'];
 
@@ -38,9 +36,7 @@ return new class extends clsCadastro {
                     $this->$campo = $val;
                 }
 
-                //** verificao de permissao para exclusao
                 $this->fexcluir = $obj_permissao->permissao_excluir(564, $this->pessoa_logada, 7);
-                //**
                 $retorno = 'Editar';
             } else {
                 $this->simpleRedirect('educar_coffebreak_tipo_lst.php');
@@ -54,17 +50,11 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
-        // primary keys
+
         $this->campoOculto('cod_coffebreak_tipo', $this->cod_coffebreak_tipo);
-
-        // foreign keys
-
-        // text
         $this->campoTexto('nm_tipo', 'Nome Coffee Break', $this->nm_tipo, 42, 255, true);
-        $this->campoMonetario('custo_unitario', 'Custo Unit&aacute;rio', $this->custo_unitario, 15, 255, true);
-        $this->campoMemo('desc_tipo', 'Descri&ccedil;&atilde;o Coffee Break', $this->desc_tipo, 40, 10, false);
-
-        // data
+        $this->campoMonetario('custo_unitario', 'Custo Unitário', $this->custo_unitario, 15, 255, true);
+        $this->campoMemo('desc_tipo', 'Descrição Coffee Break', $this->desc_tipo, 40, 10, false);
     }
 
     public function Novo()
@@ -79,7 +69,7 @@ return new class extends clsCadastro {
             $this->simpleRedirect('educar_coffebreak_tipo_lst.php');
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -92,11 +82,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarCoffebreakTipo($this->cod_coffebreak_tipo, $this->pessoa_logada, null, $this->nm_tipo, $this->desc_tipo, $this->custo_unitario, null, null, 1);
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_coffebreak_tipo_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }
@@ -106,11 +96,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarCoffebreakTipo($this->cod_coffebreak_tipo, $this->pessoa_logada, null, $this->nm_tipo, $this->desc_tipo, $this->custo_unitario, null, null, 0);
         $excluiu = $obj->excluir();
         if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_coffebreak_tipo_lst.php');
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }

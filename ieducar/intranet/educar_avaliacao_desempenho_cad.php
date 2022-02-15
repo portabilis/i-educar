@@ -26,8 +26,6 @@ return new class extends clsCadastro {
         $this->ref_cod_servidor=$_GET['ref_cod_servidor'];
         $this->ref_ref_cod_instituicao=$_GET['ref_ref_cod_instituicao'];
         $this->sequencial=$_GET['sequencial'];
-        //echo $this->ref_cod_servidor. "e ".$this->ref_ref_cod_instituicao."<br>";
-        //die();
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, "educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_ref_cod_instituicao={$this->ref_ref_cod_instituicao}");
 
@@ -45,7 +43,7 @@ return new class extends clsCadastro {
                 $retorno = 'Editar';
             }
         }
-        /*echo*/ $this->url_cancelar = ($retorno == 'Editar') ? "educar_avaliacao_desempenho_det.php?sequencial={$this->sequencial}&ref_cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_ref_cod_instituicao}" : "educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_ref_cod_instituicao}";
+        $this->url_cancelar = ($retorno == 'Editar') ? "educar_avaliacao_desempenho_det.php?sequencial={$this->sequencial}&ref_cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_ref_cod_instituicao}" : "educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_ref_cod_instituicao}";
         $this->nome_url_cancelar = 'Cancelar';
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
@@ -70,7 +68,7 @@ return new class extends clsCadastro {
             $obj_instituicao = new clsPmieducarInstituicao($this->ref_ref_cod_instituicao);
             $det_instituicao = $obj_instituicao->detalhe();
             $nm_instituicao = $det_instituicao['nm_instituicao'];
-            $this->campoTexto('nm_instituicao', 'Institui&ccedil;&atilde;o', $nm_instituicao, 30, 255, false, false, false, '', '', '', '', true);
+            $this->campoTexto('nm_instituicao', 'Instituição', $nm_instituicao, 30, 255, false, false, false, '', '', '', '', true);
         }
 
         $obj_cod_servidor = new clsPessoa_($this->ref_cod_servidor);
@@ -78,10 +76,8 @@ return new class extends clsCadastro {
         $nm_servidor = $det_cod_servidor['nome'];
 
         $this->campoTexto('nm_servidor', 'Servidor', $nm_servidor, 30, 255, false, false, false, '', '', '', '', true);
-
-        // text
-        $this->campoTexto('titulo_avaliacao', 'Avalia&ccedil;&atilde;o', $this->titulo_avaliacao, 30, 255, true);
-        $this->campoMemo('descricao', 'Descri&ccedil;&atilde;o', $this->descricao, 60, 5, true);
+        $this->campoTexto('titulo_avaliacao', 'Avaliação', $this->titulo_avaliacao, 30, 255, true);
+        $this->campoMemo('descricao', 'Descrição', $this->descricao, 60, 5, true);
     }
 
     public function Novo()
@@ -96,7 +92,7 @@ return new class extends clsCadastro {
             $this->simpleRedirect("educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_ref_cod_instituicao={$this->ref_ref_cod_instituicao}");
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -109,11 +105,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarAvaliacaoDesempenho($this->sequencial, $this->ref_cod_servidor, $this->ref_ref_cod_instituicao, $this->pessoa_logada, null, $this->descricao, null, null, 1, $this->titulo_avaliacao);
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect("educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_ref_cod_instituicao={$this->ref_ref_cod_instituicao}");
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }
@@ -126,18 +122,18 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarAvaliacaoDesempenho($this->sequencial, $this->ref_cod_servidor, $this->ref_ref_cod_instituicao, $this->pessoa_logada, null, null, null, null, 0);
         $excluiu = $obj->excluir();
         if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect("educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_ref_cod_instituicao={$this->ref_ref_cod_instituicao}");
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }
 
     public function Formular()
     {
-        $this->title = 'Servidores - Avalia&ccedil;&atilde;o Desempenho';
+        $this->title = 'Servidores - Avaliação Desempenho';
         $this->processoAp = '635';
     }
 };
