@@ -10,6 +10,10 @@ a:hover {
   text-decoration: none;
 }
 
+.r3c1{
+  background-color: rgba(54,54,54,1);
+  color: rgba(42,177,232,1);
+}
 .ieducar-container {
   display: flex;
   flex-direction: column;
@@ -58,8 +62,9 @@ a:hover {
 
 .ieducar-header {
   display: flex;
-  background: #47728f;
+  background-image: linear-gradient(to bottom right, rgba(34,142,187,1) 0%, rgba(42,177,232,1) 75%);
   height: 50px;
+  box-shadow: 0px 4px 7px rgba(50, 50, 50, 0.5);
 }
 
 .ieducar-header * {
@@ -161,6 +166,7 @@ a:hover {
 
 .ieducar-quick-search {
   padding: 0 23px;
+  transition: width .5s;
 }
 
 .ieducar-quick-search label {
@@ -181,16 +187,17 @@ a:hover {
 }
 
 .ieducar-quick-search-title {
-  color: #47728f;
+  color: #fdfdfd;
   font-size: 12px;
   text-transform: uppercase;
   font-weight: bold;
-}
+  display: none;}
 
 .ieducar-sidebar-menu {
   width: 232px;
   padding: 0;
   margin: 0;
+  transition: .5s;
 }
 
 .ieducar-sidebar-menu li {
@@ -201,7 +208,7 @@ a:hover {
 
 .ieducar-sidebar-menu li a {
   display: block;
-  color: #47728f;
+  color: #fdfdfd;
   font-family: "Open Sans", sans-serif;
   font-size: 16px;
   padding: 17px 15px;
@@ -212,12 +219,12 @@ a:hover {
 }
 
 .ieducar-sidebar-menu li a:hover {
-  background: #cddce6;
-  text-decoration: none;
+  background: #cae6f1;
+  color: rgba(54,54,54,1);
 }
 
 .ieducar-sidebar-menu li a i {
-  color: #98b0c3;
+  color: #2ab1e8;
   font-size: 20px;
   padding-right: 10px;
 }
@@ -247,6 +254,7 @@ a:hover {
 .ieducar-sub-menu {
   list-style: none;
   background: #e9eff7;
+  box-shadow: 2px 3px 6px #aaa;
 }
 
 .ieducar-sub-menu {
@@ -341,7 +349,7 @@ a:hover {
 }
 
 .quick-search {
-  margin-bottom: 10px;
+  margin: 10px 0;
 }
 
 .quick-search .multiselect,

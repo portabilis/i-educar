@@ -199,17 +199,15 @@
     <tr>
         <td colspan="3">
             <input type="checkbox" id="expandido">  
-        <?php /*  <label class="expandir-btn"><input type="checkbox" class="expandido"><i class="fa fa-bars fa-2x"></i></label> */ ?>
             <label for="expandido" class="expandir-btn"><i class="fa fa-ellipsis-v fa-2x"></i></label>
-            <div id="menu_lateral" class="r3c1-Mobile">
-                @include('layout.menu')
-            </div>
             <table summary="" class='tabelanum2' border='0' cellspacing='0' cellpadding='0'>
                 <tr>
-                    <td id="menu_lateral" class="r3c1" width='170'>
-                         @include('layout.menu') 
-                    </td>
-                    
+                    <div class="r3c1-Mobile">
+                        @include('layout.menu') 
+                    </div>
+                        <td id="menu_lateral" class="r3c1" width='170'>
+                            @include('layout.menu') 
+                        </td>
                     <td valign=top>
                         <table summary="" class='tabelanum2' border='0' cellspacing='0' cellpadding='0'>
                             <tr>
@@ -308,6 +306,8 @@
         });
     })(jQuery);
 </script>
+
+
 
 <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/custom-file-input.js") }}"></script>
 <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/select2/select2.full.min.js") }}"></script>

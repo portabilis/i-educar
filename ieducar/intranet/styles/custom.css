@@ -375,8 +375,9 @@ a.icons-top{
   width: 210px;
   background: rgba(54,54,54,1);
   border: 0;
-  box-shadow: 4px 3px 5px #666;
+  box-shadow: 4px 3px 5px rgba(50, 50, 50, 0.5);
   z-index: 1;
+  transition: left .5s ease-in-out;
 }
 
 .r3c1-Mobile{
@@ -386,11 +387,10 @@ a.icons-top{
   display:none;
   border: 0;
   position: absolute;
-  box-shadow: 4px 0px 5px #777;
+  box-shadow: 6px 0px 5px rgba(50, 50, 50, 0.5);
   left: -40%;
   z-index: 1;
-  transition: left .5s;
-
+  transition: left .5s ease-in-out;
 }
 
 .nvp_tabelaMenu{
@@ -564,7 +564,7 @@ div#fa-icons {
 
 .expandir-btn {
   background-color: rgba(54,54,54);
-  box-shadow: 0px 4px 5px #777;
+  box-shadow: 2px 3px 3px rgba(50, 50, 50, 0.5);
   border-radius: 0 10px 10px 0;
   position: absolute;
   display: none;
@@ -573,7 +573,7 @@ div#fa-icons {
   /*margin-top: 0px;  */
   margin-top: 40%;
   padding: 10px;
-  transition: margin-left, .5s;
+  transition: margin-left .5s ease-in-out;
   z-index: 2;
 }
 
@@ -1496,8 +1496,9 @@ input.btn_small {
   .ieducar-sidebar-menu {width: 100% !important}
   .ieducar-sidebar-menu li a {font-size: 22px !important;}
   
+  #expandido:checked ~ .r3c1 {display: table-cell; left: 0;}
   #expandido:checked ~ .r3c1-Mobile {display: table-cell; left: 0;}
-  #expandido:checked ~ .expandir-btn {margin-left: 40%; box-shadow: 0px 0px 0px #777;}
+  #expandido:checked ~ .expandir-btn {margin-left: 40%; }
   #expandido:checked ~ .ieducar-quick-search {display: inherit;}
   #expandido:checked ~ .ieducar-sidebar-menu {display: inherit;}
 
