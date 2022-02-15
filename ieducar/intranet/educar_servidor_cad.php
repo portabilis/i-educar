@@ -488,7 +488,12 @@ JS;
 
         $this->pos_graduacao = '{' . implode(',', $posGraduacao) . '}';
 
-        $this->curso_formacao_continuada = '{' . implode(',', $this->curso_formacao_continuada) . '}';
+        $cursoFormacaoContinuada = [];
+        if (is_array($this->curso_formacao_continuada)) {
+            $cursoFormacaoContinuada = array_filter($this->curso_formacao_continuada);
+        }
+
+        $this->curso_formacao_continuada = '{' . implode(',', $cursoFormacaoContinuada) . '}';
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, 'educar_servidor_lst.php');
