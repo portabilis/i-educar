@@ -222,10 +222,12 @@ return new class extends clsDetalhe {
                                             WHERE ref_cod_aluno = $this->ref_cod_aluno
                                               AND sequencial = $this->sequencial");
             //Verifica se a escola foi digitada manualmente no histórico
+            $escola_usuario = '';
             if ($ref_cod_escola == '') {
                 $escolasUsuario = new clsPmieducarEscolaUsuario();
                 $escolasUsuario = $escolasUsuario->lista($this->pessoa_logada);
 
+                $idEscolasUsuario = [];
                 foreach ($escolasUsuario as $escola) {
                     $idEscolasUsuario[] = $escola['ref_cod_escola'];
                 }
