@@ -778,8 +778,11 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                 }
 
                 if ($mediaAreaConhecimento) {
-                    $nota = str_replace(',', '.', $nota);
+                    $nota = (float) str_replace(',', '.', $nota);
                     $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nome'] = $componenteCurricular->area_conhecimento->nome;
+                    if ($arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota'] === null) {
+                        $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota'] = 0;
+                    }
                     $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota'] += $nota;
                     $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota_conceitual_numerica'] += $notaConceitualNumerica;
                     $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['falta'] += $this->getFalta($situacaoFaltasCc[$ccId]);
