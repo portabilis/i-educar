@@ -26,10 +26,37 @@ class BNCCController extends ApiCoreController
         return [];
     }
 
+    public function getBNCCTurma()
+    {
+        $turma = $this->getRequest()->turma;
+        if (is_numeric($turma)) {
+            $bncc = [];
+            $bncc_temp = [];
+            $obj = new clsModulesBNCC();
+
+            if ($bncc_temp = $obj->listaTurma($turma)) {
+                foreach ($bncc_temp as $bncc_item) {
+                    $id = $bncc_item['id'];
+                    $codigo = $bncc_item['codigo'];
+                    $habilidade = $bncc_item['habilidade'];
+
+                    $bncc[$id] = $codigo . ' - ' . $habilidade;
+                }
+            }
+
+            return ['bncc' => $bncc];
+        }
+
+        return [];
+    }
+
     public function Gerar()
     {
         if ($this->isRequestFor('get', 'bncc')) {
             $this->appendResponse($this->getBNCC());
+        }
+        else if ($this->isRequestFor('get', 'bncc_turma')) {
+            $this->appendResponse($this->getBNCCTurma());
         } else {
             $this->notImplementedOperationError();
         }

@@ -123,4 +123,93 @@ class clsModulesBNCC extends Model {
 
         return false;
     }
+
+    /**
+     * Retorna uma lista filtrados de acordo com os parametros
+     *
+     * @return array
+     */
+    public function listaTurma (
+        $int_turma = null
+    ) {
+        $sql = "
+        WITH select_ as (
+            SELECT
+                bncc.id,
+                bncc.codigo,
+                bncc.habilidade,
+                bncc.campo_experiencia,
+                bncc.unidade_tematica,
+                bncc.componente_curricular_id,
+                unnest(bncc.serie_ids) as serie_id
+            FROM
+                modules.bncc as bncc
+        )
+            SELECT
+                select_.id,
+                codigo,
+                habilidade,
+                campo_experiencia,
+                unidade_tematica,
+                componente_curricular_id,
+                select_.serie_id
+            FROM select_
+            CROSS JOIN pmieducar.turma as t
+            WHERE select_.serie_id::integer = t.etapa_educacenso
+        ";
+
+        $whereAnd = ' AND ';
+        $filtros = "";
+
+        if (is_numeric($int_turma)) {
+            $filtros .= "{$whereAnd} t.cod_turma = '{$int_turma}'";
+            $whereAnd = ' AND ';
+        }
+
+        $db = new clsBanco();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
+
+        $sql .= $filtros . $this->getOrderby() . $this->getLimite();
+
+        $this->_total = $db->CampoUnico("
+            WITH select_ as (
+                SELECT
+                    {$this->_campos_lista}
+                FROM
+                    {$this->_from}
+            )
+                SELECT
+                    COUNT(0)
+                FROM select_
+                CROSS JOIN modules.frequencia as f
+                JOIN pmieducar.turma as t
+                    ON (t.cod_turma = f.ref_cod_turma)
+				JOIN modules.componente_curricular as cc
+					ON (cc.codigo_educacenso = select_.componente_curricular_id)
+                WHERE select_.serie_id::integer = t.etapa_educacenso AND (f.ref_componente_curricular IS NULL OR cc.id = f.ref_componente_curricular)
+                {$filtros}" 
+        );
+
+        $db->Consulta($sql);
+
+        if ($countCampos > 1) {
+            while ($db->ProximoRegistro()) {
+                $tupla = $db->Tupla();
+
+                $tupla['_total'] = $this->_total;
+                $resultado[] = $tupla;
+            }
+        } else {
+            while ($db->ProximoRegistro()) {
+                $tupla = $db->Tupla();
+                $resultado[] = $tupla[$this->_campos_lista];
+            }
+        }
+        if (count($resultado)) {
+            return $resultado;
+        }
+
+        return false;
+    }
 }
