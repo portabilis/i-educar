@@ -69,8 +69,8 @@ return new class extends clsCadastro {
                 $this->$campo = ($this->$campo) ? $this->$campo : $val;
             }
         }
-        $this->data = dataToBrasil($this->data);
-        $this->ano = explode('/', $this->data)[2];
+        $this->data_inicial = dataToBrasil($this->data);
+        $this->ano = explode('/', $this->data_inicial)[2];
 
         if ($tipoacao == 'Edita' || !$_POST
             && $this->data_inicial
@@ -106,8 +106,7 @@ return new class extends clsCadastro {
         $this->campoMemo('atividades','Atividades',$this->atividades, 100, 5, true); 
         $this->campoMemo('conteudos','Conteúdos',$this->conteudos, 100, 5, true);   
 
-        // Editar
-       
+        $this->campoOculto('ano', explode('/', dataToBrasil(NOW()))[2]);
     }
 
     public function Novo() {
@@ -358,9 +357,9 @@ return new class extends clsCadastro {
 
     public function loadAssets () {
         $scripts = [
-            '/modules/Cadastro/Assets/Javascripts/Frequencia.js',
             '/modules/DynamicInput/Assets/Javascripts/TodasTurmas.js',
             '/modules/Cadastro/Assets/Javascripts/BNCC.js',
+            '/modules/Cadastro/Assets/Javascripts/PlanejamentoMetodologico.js'
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
