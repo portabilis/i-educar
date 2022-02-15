@@ -119,7 +119,7 @@ class SchoolHistoryService
         $usedSpace = $this->getUsedSpaceByTemplate($templateName);
         $numberOfBlankLines = (int) (((int)$usedSpace - ((int)$numberOfDisciplines * (int)$lineHeight)) / (int)$lineHeight);
 
-        return str_repeat('<br>', $numberOfBlankLines);
+        return str_repeat('<br>', max($numberOfBlankLines, 0));
     }
 
     public function getAllObservationsByStudent($studentId)
