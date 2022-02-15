@@ -163,7 +163,8 @@ return new class extends clsDetalhe {
         $obj = new clsPmieducarHistoricoDisciplinas();
         $obj->setOrderby('nm_disciplina ASC');
         $lst = $obj->lista(null, $this->ref_cod_aluno, $this->sequencial);
-        $qtd_disciplinas = count($lst);
+
+        $qtd_disciplinas = $obj->_total;
         if ($lst) {
             $tabela = '<table>
                            <tr align=\'center\'>
@@ -195,8 +196,6 @@ return new class extends clsDetalhe {
 
                 $tabela .= "<td {$color} align='center'>{$valor['carga_horaria_disciplina']}</td>";
                 $tabela .= '</tr>';
-
-                $registro['faltas_globalizadas'];
 
                 $cont++;
                 $prim_disciplina = true;
