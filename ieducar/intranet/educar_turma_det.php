@@ -44,46 +44,17 @@ return new class extends clsDetalhe {
             7 => 'Sábado'
         ];
 
-        $tmp_obj = new clsPmieducarTurma();
-        $lst_obj = $tmp_obj->lista(
-            $this->cod_turma,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            [
+        $lst_obj = (new clsPmieducarTurma())->lista(
+            int_cod_turma: $this->cod_turma,
+            visivel: [
                 'true',
                 'false'
             ]
         );
+
+        if (empty($lst_obj)) {
+            $this->simpleRedirect('educar_turma_lst.php');
+        }
 
         $registro = array_shift($lst_obj);
 
@@ -91,9 +62,6 @@ return new class extends clsDetalhe {
             $this->$key = $value;
         }
 
-        if (!$registro) {
-            $this->simpleRedirect('educar_turma_lst.php');
-        }
 
         $obj_ref_cod_turma_tipo = new clsPmieducarTurmaTipo(
             $registro['ref_cod_turma_tipo']
