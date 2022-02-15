@@ -42,6 +42,18 @@ class clsModulesPlanejamentoPedagogicoBNCC extends Model {
      * @return bool
      */
     public function cadastra() {
+        if (is_numeric($this->planejamento_pedagogico_id) && is_numeric($this->bncc_id)) {
+            $db = new clsBanco();
+
+            $db->Consulta("
+                INSERT INTO {$this->_tabela}
+                    (planejamento_pedagogico_id, bncc_id)
+                VALUES ({$this->planejamento_pedagogico_id}, {$this->bncc_id})
+            ");
+
+            return true;
+        }
+
         return false;
     }
 

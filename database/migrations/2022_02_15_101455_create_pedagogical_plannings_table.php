@@ -20,6 +20,8 @@ class CreatePedagogicalPlanningsTable extends Migration
             $table->integer('ref_cod_turma');
             $table->text('ddp');
             $table->text('atividades');
+            $table->timestamp('data_cadastro');
+            $table->timestamp('data_atualizacao')->nullable();
 
             $table->foreign('ref_cod_turma')
                 ->references('cod_turma')

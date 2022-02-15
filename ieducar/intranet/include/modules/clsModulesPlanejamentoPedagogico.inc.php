@@ -64,6 +64,40 @@ class clsModulesPlanejamentoPedagogico extends Model {
      * @return bool
      */
     public function cadastra() {
+        if (is_numeric($this->turma_id)
+            && $this->data_inicial != ''
+            && $this->data_final != ''
+            && $this->$ddp != ''
+            && $this->atividades != ''
+            && is_array($this->bnccs)
+            && is_array($this->conteudos)
+        ) {
+            $db = new clsBanco();
+
+            $campos = "data_inicial, data_final, ref_cod_turma, ddp, atividades";
+            $valores = "'{$this->data_inicial}',
+                        '{$this->data_final}',
+                        '{$this->turma_id}',
+                        '{$this->ddp}',
+                        '{$this->atividades}',
+                        (NOW() - INTERVAL '3 HOURS')";
+
+            $db->Consulta("
+                INSERT INTO
+                    {$this->_tabela} ( $campos )
+                    VALUES ( $valores )
+            ");
+
+            $id = $db->InsertId("{$this->_tabela}_id_seq");
+
+            foreach ($this->bnccs as $key => $bncc_id) {
+                $obj = new clsModulesPlanejamentoPedagogicoBNCC($bncc_id);
+                $obj->cadastra();
+            }
+
+            return $id;
+        }
+
         return false;
     }
 
