@@ -37,16 +37,20 @@ return new class extends clsListagem {
 
     public function Gerar()
     {
-        $this->titulo = 'Planejamento de Aula - Listagem';
+        $this->titulo = 'Frequência - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null: $val;
         }
 
         $lista_busca = [
+            'Data inicial',
+            'Data final',
             'Turma',
-            'Data Inicial',
-            'Data Final'
+            'Turno',
+            'S&eacute;rie',
+            'Curso',
+            'Escola',
         ];
 
         $this->addCabecalhos($lista_busca);
@@ -54,18 +58,28 @@ return new class extends clsListagem {
         if (!isset($_GET['busca'])) {
             $this->ano = date('Y');
         }
-        $this->inputsHelper()->dynamic(['turma'], ['required' => false]);
+
+        $this->inputsHelper()->dynamic(['ano'], ['required' => false]);
+        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie', 'turma'], ['required' => false]);
+        $this->inputsHelper()->turmaTurno(['required' => false, 'label' => 'Turno']);
+  
+        $this->campoQuebra();
+        $this->campoRotulo('filtros_periodo', '<b>Filtros por período</b>');
+
         $this->inputsHelper()->dynamic(['dataInicial'], ['required' => false, 'value' => $this->data_inicial]);
         $this->inputsHelper()->dynamic(['dataFinal'], ['required' => false, 'value' => $this->data_final]);
-      
+     
         $this->campoQuebra();
+        $this->campoRotulo('filtros_etapa', '<b>Filtros por etapa</b>');
+
+        $this->inputsHelper()->dynamic(['faseEtapa'], ['required' => false, 'label' => 'Etapa']);
 
         // Paginador
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-        $obj_turma = new clsModulesFrequencia();
-        $obj_turma->setOrderby('data DESC');
+        $obj_turma = new clsModulesPlanejamentoPedagogico();
+        $obj_turma->setOrderby('data_inicial DESC');
         $obj_turma->setLimite($this->limite, $this->offset);
 
         if ($this->data_inicial && Portabilis_Date_Utils::validaData($this->data_inicial) || !$this->data_inicial) {
@@ -92,8 +106,7 @@ return new class extends clsListagem {
             $this->ref_cod_componente_curricular,
             $this->turma_turno_id,
             $this->data_inicial,
-            $this->data_final,
-            $this->fase_etapa
+            $this->data_final
         );
 
         $total = $obj_turma->_total;
@@ -103,23 +116,18 @@ return new class extends clsListagem {
             $ref_cod_escola = '';
             $nm_escola = '';
             foreach ($lista as $registro) {
-                $data_formatada = dataToBrasil($registro['data']);
+                $data_inicial_formatada = dataToBrasil($registro['data_inicial']);
+                $data_final_formatada = dataToBrasil($registro['data_final']);
 
                 $lista_busca = [
-                    "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">{$data_formatada}</a>",
-                    "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">{$registro['turma']}</a>",
-                    "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">{$registro['turno']}</a>",
-                    "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">{$registro['serie']}</a>",
-                    "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">{$registro['curso']}</a>",
-                    "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">{$registro['escola']}</a>",
-                    "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">{$registro['fase_etapa']}º {$registro['etapa']}</a>"
+                    "<a href=\"educar_plano_de_aula_det.php.php?id={$registro['id']}\">{$data_inicial_formatada}</a>",
+                    "<a href=\"educar_plano_de_aula_det.php.php?id={$registro['id']}\">{$data_final_formatada}</a>",
+                    "<a href=\"educar_plano_de_aula_det.php.php?id={$registro['id']}\">{$registro['turma']}</a>",
+                    "<a href=\"educar_plano_de_aula_det.php.php?id={$registro['id']}\">{$registro['turno']}</a>",
+                    "<a href=\"educar_plano_de_aula_det.php.php?id={$registro['id']}\">{$registro['serie']}</a>",
+                    "<a href=\"educar_plano_de_aula_det.php.php?id={$registro['id']}\">{$registro['curso']}</a>",
+                    "<a href=\"educar_plano_de_aula_det.php.php?id={$registro['id']}\">{$registro['escola']}</a>",
                 ];
-
-                if ($registro['componente_curricular']) {
-                    $lista_busca[] = "<a href=\"educar_plano_de_aula_det.php?id={$registro['id']}\">{$registro['componente_curricular']}</a>";
-                } else {
-                    $lista_busca[] = "<a href=\"educar_plano_de_aula_det.php?id={$registro['id']}\">—</a>";
-                }
 
                 $this->addLinhas($lista_busca);
             }
@@ -133,14 +141,14 @@ return new class extends clsListagem {
         }
         $this->largura = '100%';
 
-        $this->breadcrumb('Listagem de frequências', [
+        $this->breadcrumb('Listagem de planejamentos metodológicos', [
             url('intranet/educar_professores_index.php') => 'Professores',
         ]);
     }
 
     public function Formular()
     {
-        $this->title = 'Frequência - Listagem';
+        $this->title = 'Planejamento metodológico - Listagem';
         $this->processoAp = '58';
     }
 };
