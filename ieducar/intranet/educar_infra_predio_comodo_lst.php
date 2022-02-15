@@ -55,7 +55,7 @@ return new class extends clsListagem {
         $lista_busca = [
                     'Ambiente',
                     'Tipo de ambiente',
-                    'Pr&eacute;dio',
+                    'Prédio',
                     'Escola',
                     'Instituição'
         ];

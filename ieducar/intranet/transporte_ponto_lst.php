@@ -41,7 +41,7 @@ return new class extends clsListagem {
             $this->$var = ($val === '') ? null: $val;
         }
 
-        $this->campoNumero('cod_ponto', 'C&oacute;digo do ponto', $this->cod_ponto, 20, 255, false);
+        $this->campoNumero('cod_ponto', 'Código do ponto', $this->cod_ponto, 20, 255, false);
         $this->campoTexto('descricao', 'Descrição', $this->descricao, 50, 255, false);
 
         $obj_permissoes = new clsPermissoes();
@@ -49,10 +49,10 @@ return new class extends clsListagem {
         $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
         $this->addCabecalhos([
-            'C&oacute;digo do ponto',
+            'Código do ponto',
             'Descrição',
             'CEP',
-            'Munic&iacute;pio - UF',
+            'Município - UF',
             'Bairro',
             'Logradouro'
         ]);

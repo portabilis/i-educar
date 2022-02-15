@@ -69,6 +69,7 @@ return new class extends clsCadastro {
         $tiposAbandono  = new clsPmieducarAbandonoTipo();
         $tiposAbandono  = $tiposAbandono->lista(null, null, null, null, null, null, null, null, 1, $ref_cod_instituicao);
 
+        $selectOptions = [];
         foreach ($tiposAbandono as $tipoAbandono) {
             $selectOptions[$tipoAbandono['cod_abandono_tipo']] = $tipoAbandono['nome'];
         }
@@ -81,7 +82,7 @@ return new class extends clsCadastro {
 
         $this->inputsHelper()->date('data_cancel', ['label' => 'Data do abandono', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')]);
         // text
-        $this->campoMemo('observacao', 'Observa&ccedil;&atilde;o', $this->observacao, 60, 5, false);
+        $this->campoMemo('observacao', 'Observação', $this->observacao, 60, 5, false);
     }
 
     public function Novo()
@@ -127,7 +128,7 @@ return new class extends clsCadastro {
                     $enturmacao->data_enturmacao = $detEnturmacao;
 
                     if (! $enturmacao->edita()) {
-                        $this->mensagem = 'N&atilde;o foi poss&iacute;vel desativar as enturma&ccedil;&otilde;es da matr&iacute;cula.';
+                        $this->mensagem = 'Não foi possível desativar as enturmações da matrícula.';
 
                         return false;
                     } else {
@@ -164,7 +165,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'Transfer&ecirc;ncia Solicita&ccedil;&atilde;o';
+        $this->title = 'Transferência Solicitação';
         $this->processoAp = '578';
     }
 };

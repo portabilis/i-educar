@@ -33,8 +33,8 @@ return new class extends clsCadastro {
         echo '<script>window.onload=function(){parent.EscondeDiv(\'LoadImprimir\')}</script>';
         $this->campoOculto('ref_cod_biblioteca', $this->ref_cod_biblioteca);
 
-        $this->campoTexto('nm_colecao', 'Cole&ccedil;&atilde;o', $this->nm_colecao, 30, 255, true);
-        $this->campoMemo('descricao', 'Descri&ccedil;&atilde;o', $this->descricao, 60, 5, false);
+        $this->campoTexto('nm_colecao', 'Coleção', $this->nm_colecao, 30, 255, true);
+        $this->campoMemo('descricao', 'Descrição', $this->descricao, 60, 5, false);
     }
 
     public function Novo()
@@ -58,7 +58,7 @@ return new class extends clsCadastro {
             return true;
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }

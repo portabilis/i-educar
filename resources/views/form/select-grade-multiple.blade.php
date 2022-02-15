@@ -35,7 +35,7 @@
 
                 var handleGetSeries = function(resources) {
                     var selectOptions = jsonResourcesToSelectOptions(resources['options']);
-                    updateSelect($serieField, selectOptions, "Selecione uma s&eacute;rie");
+                    updateSelect($serieField, selectOptions, "Selecione uma série");
                     $j('#ref_cod_serie').trigger('chosen:updated');
                 }
 

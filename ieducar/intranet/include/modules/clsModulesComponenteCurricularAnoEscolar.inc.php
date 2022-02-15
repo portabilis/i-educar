@@ -137,9 +137,9 @@ class clsModulesComponenteCurricularAnoEscolar extends Model
             WHERE ano_escolar_id = {$this->ano_escolar_id}
         ";
 
+        $componentesSerie = [];
         $db = new clsBanco();
         $db->Consulta($sql);
-
         while ($db->ProximoRegistro()) {
             $tupla = $db->Tupla();
             $componentesSerie[] = $tupla['componente_curricular_id'];
@@ -149,7 +149,7 @@ class clsModulesComponenteCurricularAnoEscolar extends Model
             return $componentesSerie;
         }
 
-        return false;
+        return $componentesSerie;
     }
 
     private function getAnosLetivosDiff($componenteCurricularId, $arrayAnosLetivos)

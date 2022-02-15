@@ -55,8 +55,8 @@ return new class extends clsListagem {
         }
         $this->addCabecalhos([
       'Nome do Servidor',
-      'Matr&iacute;cula',
-      'Institui&ccedil;&atilde;o'
+      'Matrícula',
+      'Instituição'
     ]);
         $this->campoTexto('nome_servidor', 'Nome Servidor', $this->nome_servidor, 30, 255, false);
         $this->campoOculto('tipo', $_GET['tipo']);

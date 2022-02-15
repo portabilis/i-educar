@@ -114,8 +114,8 @@ return new class extends clsCadastro {
         <div id="DOM_expansivel" class="DOM_expansivel"></div>
         <table border="0" cellpadding="0" cellspacing="3" width="100%">';
 
-        $mesesArr = [ '', 'Janeiro', 'Fevereiro', 'Mar&ccedil;o', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro' ];
-        $diasArr = [ 'Domingo', 'Segunda Feira', 'Ter&ccedil;a Feira', 'Quarta Feira', 'Quinta Feira', 'Sexta Feira', 'S&aacute;bado' ];
+        $mesesArr = [ '', 'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro' ];
+        $diasArr = [ 'Domingo', 'Segunda Feira', 'Terça Feira', 'Quarta Feira', 'Quinta Feira', 'Sexta Feira', 'Sábado' ];
 
         $this->arr_data_atual = [ date('d', $this->time_atual), date('n', $this->time_atual), date('Y', $this->time_atual), date('w', $this->time_atual) ];
         $amanhaArr = [ date('d', $this->time_amanha), date('n', $this->time_amanha), date('Y', $this->time_amanha), date('w', $this->time_amanha) ];
@@ -352,15 +352,15 @@ return new class extends clsCadastro {
 
                     $nome = $db2->CampoUnico("SELECT nome FROM cadastro.pessoa WHERE idpes = '{$ref_ref_cod_pessoa_cad}'");
                     $ativo = ($ativo)? '<b>Ativo</b>': 'Inativo';
-                    $importante = ($importante)? 'Sim': 'N&atilde;o';
-                    $publico = ($publico)? 'Sim': 'N&atilde;o';
+                    $importante = ($importante)? 'Sim': 'Não';
+                    $publico = ($publico)? 'Sim': 'Não';
                     if ($data_fim) {
                         $data_fim = date('d/m/Y H:i', strtotime($data_fim));
                     } else {
-                        $data_fim = 'Este compromisso era uma Anota&ccedil;&atilde;o';
+                        $data_fim = 'Este compromisso era uma Anotação';
                     }
 
-                    $conteudo .= "<tr><td>Vers&atilde;o:</td><td>{$versao}</td></tr>\n";
+                    $conteudo .= "<tr><td>Versão:</td><td>{$versao}</td></tr>\n";
                     $conteudo .= "<tr><td>Titulo:</td><td>{$titulo}</td></tr>\n";
                     $conteudo .= '<tr><td>Inicio:</td><td>' . date('d/m/Y H:i', strtotime($data_inicio)) . "</td></tr>\n";
                     $conteudo .= "<tr><td>Fim:</td><td>{$data_fim}</td></tr>\n";
@@ -368,8 +368,8 @@ return new class extends clsCadastro {
                     $conteudo .= "<tr><td>Status:</td><td>{$ativo}</td></tr>\n";
                     $conteudo .= "<tr><td>Importante:</td><td>{$importante}</td></tr>\n";
                     $conteudo .= "<tr><td>Publico:</td><td>{$publico}</td></tr>\n";
-                    $conteudo .= "<tr><td>Respons&aacute;vel:</td><td>$nome</td></tr>\n";
-                    $conteudo .= "<tr><td>Reativar?</td><td><a href=\"{$this->scriptNome}?cod_agenda={$this->agenda}&time={$this->time_atual}&restaura={$_GET['versoes']}&versao={$versao}\">Clique aqui para reativar esta vers&atilde;o</a></td></tr>\n";
+                    $conteudo .= "<tr><td>Responsável:</td><td>$nome</td></tr>\n";
+                    $conteudo .= "<tr><td>Reativar?</td><td><a href=\"{$this->scriptNome}?cod_agenda={$this->agenda}&time={$this->time_atual}&restaura={$_GET['versoes']}&versao={$versao}\">Clique aqui para reativar esta versão</a></td></tr>\n";
                     $conteudo .= "<tr><td colspan=\"2\"><hr></td></tr>\n";
                 }
                 $conteudo .= "<tr><td colspan=\"2\" align=\"center\"><input type=\"button\" name=\"voltar\" value=\"Voltar\" class=\"agenda_rap_botao\" onclick=\"document.location.href='{$this->scriptNome}?cod_agenda={$this->agenda}&time={$this->time_atual}'\"></td></tr>";
@@ -417,7 +417,7 @@ return new class extends clsCadastro {
         $conteudo .= '</td>
             </tr>
             <tr>
-                <td align="center" class="escuro"><span class="titulo">Anota&ccedil;&otilde;es</span></td>
+                <td align="center" class="escuro"><span class="titulo">Anotações</span></td>
             </tr>
             <tr>
                 <td class="escuro" valign="top">

@@ -144,7 +144,7 @@ return new class extends clsDetalhe {
         $fileService = new FileService(new UrlPresigner);
         $files = $fileService->getFiles(LegacyIndividual::find($cod_pessoa));
 
-        if (count($files) > 0) {
+        if (is_array($files) && count($files) > 0) {
             $this->addHtml(view('uploads.upload-details', ['files' => $files])->render());
         }
 

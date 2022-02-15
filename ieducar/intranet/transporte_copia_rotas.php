@@ -5,7 +5,7 @@ ini_set('display_errors', 1);
 
 return new class extends clsCadastro {
     public $pessoa_logada;
-    public $nome_url_sucesso = 'Efetuar c&oacute;pia';
+    public $nome_url_sucesso = 'Efetuar cópia';
 
     public function Inicializar()
     {
@@ -14,7 +14,7 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(950, $this->pessoa_logada, 7);
 
-        $this->breadcrumb('C&oacute;pia de rotas', [
+        $this->breadcrumb('Cópia de rotas', [
         url('intranet/educar_transporte_escolar_index.php') => 'Transporte escolar',
     ]);
 
@@ -52,7 +52,7 @@ return new class extends clsCadastro {
                 $anos_origem["{$registro['ano']}"] = "{$registro['ano']}";
             }
         } else {
-            $anos_origem = [ '' => 'N&atilde;o existe rotas anteriores' ];
+            $anos_origem = [ '' => 'Não existe rotas anteriores' ];
         }
         $this->campoLista('ref_cod_empresa_transporte_escolar', 'Empresa', $empresas, $this->ref_cod_empresa_transporte_escolar, '', false, '', '', false, false);
         $this->campoLista('ano_orig', 'Ano de origem', $anos_origem, $this->ano_orig, '', false, '', '', false, false);
@@ -207,7 +207,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'C&oacute;pia de Rotas';
+        $this->title = 'Cópia de Rotas';
         $this->processoAp = '21240';
     }
 };

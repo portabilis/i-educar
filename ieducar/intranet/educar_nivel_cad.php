@@ -75,9 +75,9 @@ return new class extends clsCadastro {
 
         $this->campoRotulo('nm_categoria', 'Categoria', $this->nm_categoria);
 
-        $this->campoTabelaInicio('tab01', 'N&iacute;veis', ['Nome N&iacute;vel','Sal&aacute;rio','Ordem'], $this->cod_nivel);
+        $this->campoTabelaInicio('tab01', 'Níveis', ['Nome Nível','Salário','Ordem'], $this->cod_nivel);
 
-        $this->campoTexto('nm_nivel', 'Nome N&iacute;vel', '', 30, 100, true);
+        $this->campoTexto('nm_nivel', 'Nome Nível', '', 30, 100, true);
         $this->campoMonetario('salario_base', 'Salario Base', $this->salario_base, 10, 8, true);
         $this->campoNumero('nr_nivel', 'Ordem', '1', 5, 5, false, false, false, false, false, false, true);
         $this->campoOculto('cod_nivel', '');
@@ -123,7 +123,7 @@ return new class extends clsCadastro {
             $this->simpleRedirect("educar_categoria_nivel_det.php?cod_categoria_nivel={$this->ref_cod_categoria_nivel}");
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -143,11 +143,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarNivel($this->cod_nivel, $this->ref_cod_categoria_nivel, $this->pessoa_logada, $this->pessoa_logada, $this->ref_cod_nivel_anterior, $this->nm_nivel, $this->salario_base, $this->data_cadastro, $this->data_exclusao, 0);
         $excluiu = $obj->desativaTodos();
         if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect("educar_categoria_nivel_det.php?cod_categoria_nivel={$this->ref_cod_categoria_nivel}");
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }

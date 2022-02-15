@@ -19,7 +19,7 @@ return new class extends clsDetalhe {
 
     public function Gerar()
     {
-        $this->titulo = 'Motivo Suspens&atilde;o - Detalhe';
+        $this->titulo = 'Motivo Suspensão - Detalhe';
 
         $this->cod_motivo_suspensao=$_GET['cod_motivo_suspensao'];
 
@@ -31,10 +31,10 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['nm_motivo']) {
-            $this->addDetalhe([ 'Motivo Suspens&atilde;o', "{$registro['nm_motivo']}"]);
+            $this->addDetalhe([ 'Motivo Suspensão', "{$registro['nm_motivo']}"]);
         }
         if ($registro['descricao']) {
-            $this->addDetalhe([ 'Descri&ccedil;&atilde;o', "{$registro['descricao']}"]);
+            $this->addDetalhe([ 'Descrição', "{$registro['descricao']}"]);
         }
 
         $obj_permissoes = new clsPermissoes();
@@ -53,7 +53,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'Motivo Suspens&atilde;o';
+        $this->title = 'Motivo Suspensão';
         $this->processoAp = '607';
     }
 };

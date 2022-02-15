@@ -27,7 +27,7 @@ return new class {
             $temp = '';
 
             if (isset($_GET['negado'])) {
-                $temp .= '<center><h3>Acesso negado para este usu&aacute;rio.</h3><br>Caso persista nas tentativas sua conta na intranet poder&aacute; ser bloqueada por tempo indeterminado.</center>';
+                $temp .= '<center><h3>Acesso negado para este usuário.</h3><br>Caso persista nas tentativas sua conta na intranet poderá ser bloqueada por tempo indeterminado.</center>';
             }
 
             $pendencia_administrativa = dbBool(config('legacy.app.administrative_pending.exist'));
@@ -266,12 +266,12 @@ return new class {
         return '<script type="text/javascript" src="scripts/jquery/jquery-1.8.3.min.js"></script>
           <link rel="stylesheet" href="scripts/jquery/jquery-ui.min-1.9.2/css/custom/jquery-ui-1.9.2.custom.min.css">
           <script src="scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js"></script>
-          <div id="dialog" title="Pesquisa de satisfa&ccedil;&atilde;o">
-            <p>Caro usu&aacute;rio(a), a Secretaria Mun. de Educa&ccedil;&atilde;o e a Portabilis Tecnologia, convidam voc&ecirc; a responder a uma pesquisa de satisfa&ccedil;&atilde;o referente ao projeto de moderniza&ccedil;&atilde;o da gest&atilde;o escolar com o i-Educar em ' . $municipio . '.</p>
+          <div id="dialog" title="Pesquisa de satisfação">
+            <p>Caro usuário(a), a Secretaria Mun. de Educação e a Portabilis Tecnologia, convidam você a responder a uma pesquisa de satisfação referente ao projeto de modernização da gestão escolar com o i-Educar em ' . $municipio . '.</p>
             <br/>
-            <p><i>Voc&ecirc; precisar&aacute; de apenas 5 minutos para responder a pesquisa. :)</i></p>
+            <p><i>Você precisará de apenas 5 minutos para responder a pesquisa. :)</i></p>
             <br/>
-            <p><b> Contamos com voc&ecirc;! :)</b></p>
+            <p><b> Contamos com você! :)</b></p>
           </div>
           <script>
           var $j = jQuery.noConflict();

@@ -60,7 +60,7 @@ return new class extends clsCadastro {
             die();
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -75,7 +75,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'Defici&ecirc;ncia';
+        $this->title = 'Deficiência';
         $this->processoAp = '631';
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;

@@ -43,7 +43,7 @@ return new class extends clsCadastro {
             }
         }
 
-        $this->simpleRedirect('educar_matricula_lst.php');
+        $this->simpleRedirect("educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
     }
 
     public function Gerar()

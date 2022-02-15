@@ -53,7 +53,7 @@ class clsCampos extends Core_Controller_Page_Abstract
 
     public function campoTabelaFim()
     {
-        if (count($this->__campos_tabela) && is_array($this->__campos_tabela)) {
+        if (is_array($this->__campos_tabela) && count($this->__campos_tabela)) {
             $this->campos['tab_add_' . $this->__id_tabela][] = $this->__campos_tabela;
             $this->campos['tab_add_' . $this->__id_tabela]['cabecalho'] = $this->__cabecalho_tabela;
             $this->campos['tab_add_' . $this->__id_tabela]['nome'] = $this->__nm_tabela;
@@ -1105,7 +1105,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                     $retorno .= "<td class='formmdtd' id='td_$cabId' align='center'><span class='form'>$cab</span>{$obrigatorio}</td>";
                 }
 
-                $retorno .= '<td class=\'formmdtd\' id=\'td_acao\' align=\'center\'><span class=\'form\'>A&ccedil;&atilde;o</span></td>';
+                $retorno .= '<td class=\'formmdtd\' id=\'td_acao\' align=\'center\'><span class=\'form\'>Ação</span></td>';
                 $retorno .= '</tr>';
 
                 $click = "$nome_add.removeRow(this);";
@@ -1113,7 +1113,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                 $img = '<img src="/intranet/imagens/banco_imagens/excluirrr.png" border="0" alt="excluir" />';
                 $md2 = false;
 
-                if (!count($valores)) {
+                if (empty($valores)) {
                     $valores[0] = '';
                 }
 
@@ -1175,8 +1175,9 @@ class clsCampos extends Core_Controller_Page_Abstract
                                     $lista = array_shift($array_valores_lista);
                                 }
 
-                                $lista = (sizeof($lista)) ?
-                                    $lista : $campo_[3];
+                                $lista = is_array($lista) && sizeof($lista) ? $lista : $campo_[3];
+
+
 
                                 $retorno .= $this->getCampoLista("{$nome}[{$key2}]", "{$nome}[$key2]", $campo_[5], $lista, $valor[$key], $campo_[7], $campo_[8], $class, $campo_[9]);
                                 break;
@@ -1579,7 +1580,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                         $retorno .= "<select onchange=\"{$componente[5]}\" class='{$class}' name='{$nome}' id='{$nome}' {$componente[11]}>";
                         reset($componente[3]);
 
-                        while (list($chave, $texto) = each($componente[3])) {
+                        foreach ($componente[3] as $chave => $texto) {
                             $retorno .= "<option id=\"{$nome}_" . urlencode($chave) . '" value="' . urlencode($chave) . '"';
 
                             if ($chave == $componente[4]) {
@@ -1607,9 +1608,9 @@ class clsCampos extends Core_Controller_Page_Abstract
 
                     case 'listaDupla':
                         $retorno .= "<select onchange=\"{$componente[5]}\"  class='{$class}' name='{$nome}' id='{$nome}' {$componente[8]}>";
-                        reset($componente[3]);
 
-                        while (list($chave, $texto) = each($componente[3])) {
+                        reset($componente[3]);
+                        foreach ($componente[3] as $chave => $texto) {
                             $retorno .= '<option value="' . urlencode($chave) . '"';
 
                             if ($chave == $componente[4]) {
@@ -1618,6 +1619,7 @@ class clsCampos extends Core_Controller_Page_Abstract
 
                             $retorno .= ">$texto</option>";
                         }
+
 
                         $retorno .= '</select>';
                         $foiDuplo = true;
@@ -1645,11 +1647,11 @@ class clsCampos extends Core_Controller_Page_Abstract
                     case 'radio':
                         $primeiro = true;
 
-                        reset($componente[3]);
 
                         $retorno .= "<span onclick=\"{$componente[5]}\" >";
 
-                        while (list($chave, $texto) = each($componente[3])) {
+                        reset($componente[3]);
+                        foreach ($componente[3] as $chave => $texto) {
                             if ($primeiro) {
                                 $primeiro = false;
                                 $id = "id=\"{$nome}\"";
@@ -1808,12 +1810,11 @@ class clsCampos extends Core_Controller_Page_Abstract
         $retorno = "<select onchange=\"{$acao}\" class='{$class}' name='{$nome}' id='{$id}' {$desabilitado} $multiple>";
         $opt_open = false;
 
-        reset($valor);
-
         $adicionador_indice = null;
 
-        while (list($chave, $texto) = each($valor)) {
-            if (substr($texto, 0, 9) == 'optgroup:') {
+        reset($valor);
+        foreach ($valor as $chave => $texto) {
+            if (str_starts_with($texto, 'optgroup:')) {
                 // optgroup
                 if ($opt_open) {
                     $retorno .= '</optgroup>';

@@ -31,14 +31,14 @@ return new class extends clsListagem {
         }
 
         $this->addCabecalhos([
-      'Ano',
-      'Escola',
-      'Curso',
-      'Série',
-      'Turma',
-      'Função exercida',
-      'Tipo de vínculo'
-    ]);
+          'Ano',
+          'Escola',
+          'Curso',
+          'Série',
+          'Turma',
+          'Função exercida',
+          'Tipo de vínculo'
+        ]);
 
         $this->campoOculto('ref_cod_servidor', $this->servidor_id);
 
@@ -55,7 +55,7 @@ return new class extends clsListagem {
         // Paginador
         $this->limite = 20;
         $this->offset = ($_GET['pagina_' . $this->nome]) ?
-      $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
+        $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
 
         $obj_vinculo = new clsModulesProfessorTurma();
 
@@ -64,11 +64,8 @@ return new class extends clsListagem {
         }
 
         $obj_vinculo->setOrderby(' nm_escola, nm_curso, nm_serie, nm_turma ASC');
-        $obj_vinculo->setLimite($this->limite, $this->offset);
 
-        if (! isset($this->tipo)) {
-            $this->tipo = null;
-        }
+        $obj_vinculo->setLimite($this->limite, $this->offset);
 
         $lista = $obj_vinculo->lista(
             $this->servidor_id,
@@ -92,19 +89,19 @@ return new class extends clsListagem {
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
                 $options = [
-          'query' => [
-            'id' => $registro['id']
-        ]];
+                  'query' => [
+                    'id' => $registro['id']
+                ]];
 
                 $this->addLinhas([
-          $url->l($registro['ano'], $path, $options),
-          $url->l($registro['nm_escola'], $path, $options),
-          $url->l($registro['nm_curso'], $path, $options),
-          $url->l($registro['nm_serie'], $path, $options),
-          $url->l($registro['nm_turma'], $path, $options),
-          $url->l($resources_funcao[$registro['funcao_exercida']], $path, $options),
-          $url->l($resources_tipo[$registro['tipo_vinculo']], $path, $options)
-        ]);
+                  $url->l($registro['ano'], $path, $options),
+                  $url->l($registro['nm_escola'], $path, $options),
+                  $url->l($registro['nm_curso'], $path, $options),
+                  $url->l($registro['nm_serie'], $path, $options),
+                  $url->l($registro['nm_turma'], $path, $options),
+                  $url->l($resources_funcao[$registro['funcao_exercida']], $path, $options),
+                  $url->l($resources_tipo[$registro['tipo_vinculo']], $path, $options)
+                ]);
             }
         }
 
@@ -134,7 +131,7 @@ return new class extends clsListagem {
 
         $this->breadcrumb('Registro de vínculos do professor', [
         url('intranet/educar_servidores_index.php') => 'Servidores',
-    ]);
+        ]);
     }
 
     public function Formular()

@@ -55,7 +55,7 @@ return new class extends clsCadastro {
         $this->campoOculto('cod_projeto', $this->cod_projeto);
 
         $this->campoTexto('nome', 'Nome do projeto', $this->nome, 50, 50, true);
-        $this->campoMemo('observacao', 'Observa&ccedil;&atilde;o', $this->observacao, 52, 5, false);
+        $this->campoMemo('observacao', 'Observação', $this->observacao, 52, 5, false);
     }
 
     public function Novo()
@@ -67,7 +67,7 @@ return new class extends clsCadastro {
             $this->simpleRedirect('educar_projeto_lst.php');
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -77,11 +77,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarProjeto($this->cod_projeto, $this->nome, $this->observacao);
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_projeto_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }
@@ -91,11 +91,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarProjeto($this->cod_projeto);
         $excluiu = $obj->excluir();
         if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_projeto_lst.php');
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }

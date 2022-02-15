@@ -179,7 +179,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'Ocorr&ecirc;ncia Disciplinar';
+        $this->title = 'Ocorrência Disciplinar';
         $this->processoAp = '578';
     }
 };

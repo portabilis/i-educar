@@ -1,5 +1,6 @@
 <?php
 
+use App\Facades\Asset;
 use App\Models\LegacyEmployee;
 use App\Services\ChangeUserPasswordService;
 use App\Services\UrlPresigner;
@@ -73,7 +74,7 @@ return new class extends clsCadastro {
             $objFoto = new clsCadastroFisicaFoto($this->pessoa_logada);
             $detalheFoto = $objFoto->detalhe();
 
-            if (count($detalheFoto)) {
+            if ($detalheFoto !== false) {
                 $foto = $detalheFoto['caminho'];
             }
         }
@@ -81,9 +82,9 @@ return new class extends clsCadastro {
         if ($foto) {
             $this->campoRotulo('fotoAtual_', 'Foto atual', '<img height="117" src="' . (new UrlPresigner())->getPresignedUrl($foto) . '"/>');
             $this->inputsHelper()->checkbox('file_delete', ['label' => 'Excluir a foto']);
-            $this->campoArquivo('file', 'Trocar foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho m&aacute;ximo: 150KB</span>');
+            $this->campoArquivo('file', 'Trocar foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho máximo: 150KB</span>');
         } else {
-            $this->campoArquivo('file', 'Foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho m&aacute;ximo: 150KB</span>');
+            $this->campoArquivo('file', 'Foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho máximo: 150KB</span>');
         }
 
         $this->campoTexto('nome', 'Nome', $this->nome, 50, 150, true);
@@ -295,7 +296,7 @@ return new class extends clsCadastro {
     //envia foto e salva caminha no banco
     public function savePhoto($id)
     {
-        $caminhoFoto = url('intranet/imagens/user-perfil.png');
+        $caminhoFoto = Asset::get('intranet/imagens/user-perfil.png');
         if ($this->objPhoto != null) {
             $caminhoFoto = $this->objPhoto->sendPicture();
             if ($caminhoFoto != '') {

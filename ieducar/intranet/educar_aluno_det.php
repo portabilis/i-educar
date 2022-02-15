@@ -461,7 +461,7 @@ return new class extends clsDetalhe {
                         align=\'center\'>
                           <td>
                             <a href=\'' . $this->urlPresigner()->getPresignedUrl($documento->url) . '\'
-                               target=\'_blank\' > Visualizar documento ' . (count($documento) > 1 ? ($key + 1) : '') . '
+                               target=\'_blank\' > Visualizar documento ' . (count((array)$documento) > 1 ? ($key + 1) : '') . '
                             </a>
                           </td>
                     </tr>';
@@ -561,7 +561,7 @@ return new class extends clsDetalhe {
         $transporteAluno = null;
         try {
             $transporteAluno = $transporteMapper->find(['aluno' => $this->cod_aluno]);
-        } catch (Exception $e) {
+        } catch (Exception) {
         }
 
         $this->addDetalhe([
@@ -839,7 +839,9 @@ return new class extends clsDetalhe {
             $this->addDetalhe(['Possui telefone', $reg['telefone']]);
 
             $recursosTecnlogicos = json_decode($reg['recursos_tecnologicos']);
-            $recursosTecnlogicos = implode(', ', $recursosTecnlogicos);
+            if (is_array($recursosTecnlogicos)) {
+                $recursosTecnlogicos = implode(', ', $recursosTecnlogicos);
+            }
             $this->addDetalhe(['Possui acesso à recursos técnologicos?', $recursosTecnlogicos]);
 
             $this->addDetalhe(['Quantidade de pessoas', $reg['quant_pessoas']]);

@@ -129,7 +129,7 @@ return new class extends clsCadastro {
         if (! empty($script)) {
             echo "<script>window.onload=function(){{$script}}</script>";
         }
-        $this->campoCheck('situacao_emprestada', 'Situa&ccedil;&atilde;o Emprestada', $this->situacao_emprestada);
+        $this->campoCheck('situacao_emprestada', 'Situação Emprestada', $this->situacao_emprestada);
         $this->acao_enviar = 'valida()';
     }
 
@@ -149,7 +149,7 @@ return new class extends clsCadastro {
             $this->simpleRedirect('educar_situacao_lst.php');
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -165,11 +165,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarSituacao($this->cod_situacao, $this->pessoa_logada, null, $this->nm_situacao, $this->permite_emprestimo, $this->descricao, $this->situacao_padrao, $this->situacao_emprestada, null, null, 1, $this->ref_cod_biblioteca);
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_situacao_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }
@@ -182,11 +182,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarSituacao($this->cod_situacao, $this->pessoa_logada, null, null, null, null, null, null, null, null, 0);
         $excluiu = $obj->excluir();
         if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_situacao_lst.php');
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }

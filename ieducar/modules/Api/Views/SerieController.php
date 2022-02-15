@@ -12,8 +12,9 @@ class SerieController extends ApiCoreController
         if ($this->canGetSeries()) {
             $instituicaoId = $this->getRequest()->instituicao_id;
             $escolaId = $this->getRequest()->escola_id ?: null;
+            $ano = $this->getRequest()->ano ?: null;
             $cursoId = $this->getRequest()->curso_id;
-            $modified = $this->getRequest()->modified ?: null;
+            $ativo = $this->getRequest()->ativo;
 
             if (is_array($escolaId)) {
                 $escolaId = implode(',', $escolaId);
@@ -51,6 +52,7 @@ class SerieController extends ApiCoreController
                 WHERE TRUE
                 AND c.ref_cod_instituicao = $1
                 AND c.ativo = 1
+                AND es.ativo = 1
             ';
 
             if ($escolaId) {
@@ -59,6 +61,14 @@ class SerieController extends ApiCoreController
 
             if ($cursoId) {
                 $sql .= " AND c.cod_curso IN ({$cursoId}) ";
+            }
+
+            if ($ano) {
+                $sql .= " AND {$ano} = any(es.anos_letivos) ";
+            }
+
+            if ($ativo) {
+                $sql .= " AND s.ativo = {$ativo} ";
             }
 
             if ($modified) {

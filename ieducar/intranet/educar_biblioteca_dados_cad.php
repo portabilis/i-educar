@@ -22,7 +22,7 @@ return new class extends clsCadastro {
     public $ativo;
     public $dias_espera;
 
-    public $dias_da_semana = [ '' => 'Selecione', 1 => 'Domingo', 2 => 'Segunda', 3 => 'Ter&ccedil;a', 4 => 'Quarta', 5 => 'Quinta', 6 => 'Sexta', 7 => 'S&aacute;bado' ];
+    public $dias_da_semana = [ '' => 'Selecione', 1 => 'Domingo', 2 => 'Segunda', 3 => 'Terça', 4 => 'Quarta', 5 => 'Quinta', 6 => 'Sexta', 7 => 'Sábado' ];
     public $dia;
     public $biblioteca_dia_semana;
     public $incluir_dia_semana;
@@ -101,8 +101,9 @@ return new class extends clsCadastro {
 
         $this->campoTexto('nm_biblioteca', 'Biblioteca', $this->nm_biblioteca, 30, 255, true, false, false, '', '', '', '', true);
         $this->campoMonetario('valor_multa', 'Valor Multa', $this->valor_multa, 8, 8, true);
-        $this->campoNumero('max_emprestimo', 'M&aacute;ximo Empr&eacute;stimo', $this->max_emprestimo, 8, 8, true);
-        $this->campoMonetario('valor_maximo_multa', 'Valor M&aacute;ximo Multa', $this->valor_maximo_multa, 8, 8, true);
+        $this->campoNumero('max_emprestimo', 'Máximo Empréstimo', $this->max_emprestimo, 8, 8, true);
+        $this->campoMonetario('valor_maximo_multa', 'Valor Máximo Multa', $this->valor_maximo_multa, 8, 8, true);
+
         $this->campoCheck('requisita_senha', 'Requisita Senha', $this->requisita_senha);
 
         $options = ['label' => 'Bloquear novos empréstimos em caso de atrasos de devolução', 'value' => dbBool($this->bloqueia_emprestimo_em_atraso)];
@@ -240,7 +241,7 @@ return new class extends clsCadastro {
                         $cadastrou1 = $obj->cadastra();
 
                         if (!$cadastrou1) {
-                            $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+                            $this->mensagem = 'Edição não realizada.<br>';
 
                             return false;
                         }
@@ -263,7 +264,7 @@ return new class extends clsCadastro {
                         $obj = new clsPmieducarBibliotecaFeriados(null, $this->cod_biblioteca, $feriado['nm_feriado_'], null, $feriado['data_feriado_'], null, null, 1);
                         $cadastrou2  = $obj->cadastra();
                         if (!$cadastrou2) {
-                            $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+                            $this->mensagem = 'Cadastro não realizado.<br>';
 
                             return false;
                         }
@@ -271,11 +272,11 @@ return new class extends clsCadastro {
                 }
             }
             //-----------------------FIM EDITA FERIADO------------------------//
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_biblioteca_dados_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }
@@ -294,13 +295,13 @@ return new class extends clsCadastro {
                 $obj  = new clsPmieducarBibliotecaFeriados();
                 $excluiu2 = $obj->excluirTodos($this->cod_biblioteca);
                 if ($excluiu2) {
-                    $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+                    $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
                     $this->simpleRedirect('educar_biblioteca_dados_lst.php');
                 }
             }
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }
