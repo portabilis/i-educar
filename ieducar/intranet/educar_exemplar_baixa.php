@@ -31,8 +31,6 @@ return new class extends clsCadastro {
 
     public function Inicializar()
     {
-        //$retorno = "Novo";
-
         $this->cod_exemplar=$_GET['cod_exemplar'];
 
         $obj_permissoes = new clsPermissoes();
@@ -54,19 +52,7 @@ return new class extends clsCadastro {
 
                 $this->ref_cod_biblioteca = $det_obra['ref_cod_biblioteca'];
                 $this->ref_cod_acervo = $det_obra['titulo'];
-
-                //$this->ref_cod_instituicao = $obj_det["nm_biblioteca"];
-                //$this->ref_cod_escola = $obj_det["ref_cod_escola"];
                 $this->nm_biblioteca = $obj_det['nm_biblioteca'];
-
-                //$this->data_aquisicao = dataFromPgToBr( $this->data_aquisicao );
-
-                /*$obj_permissoes = new clsPermissoes();
-                if( $obj_permissoes->permissao_excluir( 606, $this->pessoa_logada, 11 ) )
-                {
-                    $this->fexcluir = true;
-                }*/
-
                 $retorno = 'Editar';
             }
         }
@@ -108,25 +94,7 @@ return new class extends clsCadastro {
 
     public function Novo()
     {
-        /*
-
-                $obj_permissoes = new clsPermissoes();
-                $obj_permissoes->permissao_cadastra( 606, $this->pessoa_logada, 11,  "educar_exemplar_lst.php" );
-
-                $this->preco = str_replace(".","",$this->preco);
-                $this->preco = str_replace(",",".",$this->preco);
-
-                $obj = new clsPmieducarExemplar( $this->cod_exemplar, null, $this->ref_cod_motivo_baixa, $this->ref_cod_acervo, $this->ref_cod_situacao, $this->pessoa_logada, $this->pessoa_logada, $this->permite_emprestimo, $this->preco, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->data_aquisicao );
-                $cadastrou = $obj->cadastra();
-                if( $cadastrou )
-                {
-                    $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-                    header( "Location: educar_exemplar_lst.php" );
-                    die();
-                    return true;
-                }
-        */
-        $this->mensagem = 'Cadastro não realizado.<br>';
+        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
 
         return false;
     }

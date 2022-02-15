@@ -29,8 +29,6 @@ return new class extends clsCadastro {
         Session::save();
         Session::start();
 
-//      $this->url_cancelar = "educar_exemplar_emprestimo_lst.php";
-//      $this->nome_url_cancelar = "Cancelar";
         return $retorno;
     }
 
@@ -39,28 +37,6 @@ return new class extends clsCadastro {
         unset($this->login_);
         unset($this->senha_);
         unset($this->ref_cod_biblioteca);
-
-        /*$obj_biblioteca_usuario = new clsPmieducarBibliotecaUsuario();
-        $lst_biblioteca_usuario = $obj_biblioteca_usuario->lista(null, $this->pessoa_logada);
-
-        $opcoes = array( "" => "Selecione" );
-//      $bibliotecas_usuario = "biblioteca_usuario = new Array();\n";
-        if( is_array( $lst_biblioteca_usuario ) && count( $lst_biblioteca_usuario ) )
-        {
-            foreach ( $lst_biblioteca_usuario AS $biblioteca )
-            {
-                $obj_biblioteca = new clsPmieducarBiblioteca( $biblioteca['ref_cod_biblioteca'] );
-                $det_biblioteca = $obj_biblioteca->detalhe();
-//              $nm_biblioteca = $det_biblioteca['nm_biblioteca'];
-//              $requisita_senha = $det_biblioteca['requisita_senha'];
-                $opcoes["{$biblioteca['ref_cod_biblioteca']}"] = "{$det_biblioteca['nm_biblioteca']}";
-
-//              $bibliotecas_usuario .= "biblioteca_usuario[biblioteca_usuario.length] = new Array({$biblioteca["ref_cod_biblioteca"]},{$requisita_senha});\n";
-            }
-        }
-//      echo "<script>{$bibliotecas_usuario}</script>";
-        $this->campoLista( "ref_cod_biblioteca", "Biblioteca", $opcoes, $this->ref_cod_biblioteca);
-*/
 
         $get_escola     = 1;
         $escola_obrigatorio = false;

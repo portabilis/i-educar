@@ -1,13 +1,7 @@
 <?php
 
 return new class extends clsCadastro {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
     public $pessoa_logada;
-
     public $cod_turma_tipo;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -35,10 +29,6 @@ return new class extends clsCadastro {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
                 }
-
-                //$obj_ref_cod_escola = new clsPmieducarEscola( $this->ref_cod_escola );
-                //$det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
-                //$this->ref_cod_instituicao = $det_ref_cod_escola["ref_cod_instituicao"];
 
                 $this->fexcluir = $obj_permissoes->permissao_excluir(570, $this->pessoa_logada, 7);
                 $retorno = 'Editar';

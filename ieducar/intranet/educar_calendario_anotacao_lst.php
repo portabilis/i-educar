@@ -78,29 +78,9 @@ return new class extends clsListagem {
             'Descrição'
         ]);
 
-        // Filtros de Foreign Keys
-
-        //// outros Filtros
-        //  $this->campoTexto( "nm_anotacao", "Nome Anotacão", $this->nm_anotacao, 30, 255, false );
-
         // Paginador
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
-
-        /*$obj_calendario_anotacao = new clsPmieducarCalendarioAnotacao();
-        $obj_calendario_anotacao->setOrderby( "nm_anotacao ASC" );
-        $obj_calendario_anotacao->setLimite( $this->limite, $this->offset );
-
-        $lista = $obj_calendario_anotacao->lista(
-            $this->cod_calendario_anotacao,
-            null,
-            null,
-            $this->nm_anotacao,
-            $this->descricao,
-            null,
-            null,
-            1
-        );*/
 
         $obj_calendario_anotacao_dia = new clsPmieducarCalendarioDiaAnotacao();
         $obj_calendario_anotacao_dia->setLimite($this->limite, $this->offset);

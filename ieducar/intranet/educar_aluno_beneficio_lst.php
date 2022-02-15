@@ -50,11 +50,6 @@ return new class extends clsListagem {
             'Beneficio'
         ]);
 
-        // Filtros de Foreign Keys
-
-        //$obrigatorio = true;
-        //include("include/pmieducar/educar_pesquisa_instituicao_escola.php");
-
         // outros Filtros
         $this->campoTexto('nm_beneficio', 'Benefício', $this->nm_beneficio, 30, 255, false);
 
@@ -89,14 +84,12 @@ return new class extends clsListagem {
         }
         $this->addPaginador2('educar_aluno_beneficio_lst.php', $total, $_GET, $this->nome, $this->limite);
 
-        //** Verificacao de permissao para cadastro
         $obj_permissao = new clsPermissoes();
 
         if ($obj_permissao->permissao_cadastra(581, $this->pessoa_logada, 3)) {
             $this->acao = 'go("educar_aluno_beneficio_cad.php")';
             $this->nome_acao = 'Novo';
         }
-        //**
 
         $this->largura = '100%';
 

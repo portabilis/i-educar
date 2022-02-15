@@ -52,16 +52,6 @@ return new class extends clsDetalhe {
             $this->sequencial = $det_mat_turma['sequencial'];
         }
 
-        // #TODO adicionar ano da matricula atual
-        #$tmp_obj = new clsPmieducarMatriculaTurma( );
-        #$lista = $tmp_obj->lista(NULL, $this->ref_cod_turma, NULL, NULL, NULL, NULL,
-        #  NULL, NULL, 1);
-
-        #$total_alunos = 0;
-        #if ($lista) {
-        #  $total_alunos = count($lista);
-        #}
-
         $tmp_obj = new clsPmieducarTurma();
         $lst_obj = $tmp_obj->lista($this->ref_cod_turma);
         $registro = array_shift($lst_obj);

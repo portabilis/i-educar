@@ -72,11 +72,6 @@ return new class extends clsCadastro {
 
         // text
         $this->campoTexto('nm_biblioteca', 'Biblioteca', $this->nm_biblioteca, 30, 255, true);
-        /*if ($this->tombo_automatico)
-            $this->campoBoolLista("tombo_automatico", "Biblioteca possui tombo automático", $this->tombo_automatico);
-        else
-            $this->campoBoolLista("tombo_automatico", "Biblioteca possui tombo automático", "t");*/
-//      $this->campoCheck("tombo_automatico", "Biblioteca possui tombo automático", dbBool($this->tombo_automatico));
 
         //-----------------------INCLUI USUARIOS------------------------//
         $this->campoQuebra();

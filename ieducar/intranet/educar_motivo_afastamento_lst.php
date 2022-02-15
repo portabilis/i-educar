@@ -54,15 +54,11 @@ return new class extends clsListagem {
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
-            //$lista_busca[] = "Escola";
             $lista_busca[] = 'Instituição';
         }
 
         $this->addCabecalhos($lista_busca);
 
-        // Filtros de Foreign Keys
-
-        // outros Filtros
         $get_escola = false;
         include('include/pmieducar/educar_campo_lista.php');
         $this->campoTexto('nm_motivo', 'Motivo de Afastamento', $this->nm_motivo, 30, 255, false);
@@ -94,10 +90,6 @@ return new class extends clsListagem {
         // monta a lista
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
-                //$obj_ins = new clsPmieducarEscola( $registro["ref_cod_escola"] );
-                //$det_ins = $obj_ins->detalhe();
-
-                //  $ref_cod_instituicao = $det_ins["ref_cod_instituicao"];
                 $obj_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
                 $det_instituicao = $obj_instituicao->detalhe();
 

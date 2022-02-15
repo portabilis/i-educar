@@ -89,9 +89,7 @@ return new class extends clsListagem {
 
         $total = $obj_aluno->_total;
 
-        // monta a lista
         if (is_array($lista) && count($lista)) {
-//          echo "<pre>";print_r($lista);die;
             foreach ($lista as $registro) {
                 $registro['nome_aluno'] = str_replace('\'', '', $registro['nome_aluno']);
                 $script = " onclick=\"addVal1('ref_cod_aluno','{$registro['cod_aluno']}'); addVal1('nm_aluno','{$registro['nome_aluno']}'); addVal1('nm_aluno_','{$registro['nome_aluno']}');fecha();\"";

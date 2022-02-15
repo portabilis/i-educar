@@ -1,13 +1,7 @@
 <?php
 
 return new class extends clsCadastro {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
     public $pessoa_logada;
-
     public $cod_tipo_regime;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -15,7 +9,6 @@ return new class extends clsCadastro {
     public $data_cadastro;
     public $data_exclusao;
     public $ativo;
-
     public $ref_cod_instituicao;
 
     public function Inicializar()
@@ -59,15 +52,11 @@ return new class extends clsCadastro {
         // primary keys
         $this->campoOculto('cod_tipo_regime', $this->cod_tipo_regime);
 
-        // foreign keys
-        // foreign keys
         $get_escola = false;
         $obrigatorio = true;
         include('include/pmieducar/educar_campo_lista.php');
         // text
         $this->campoTexto('nm_tipo', 'Nome Tipo', $this->nm_tipo, 30, 255, true);
-
-        // data
     }
 
     public function Novo()

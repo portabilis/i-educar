@@ -70,7 +70,7 @@ return new class extends clsListagem {
       'Curso'
     ];
 
-        // Recupera ní­vel de acesso do usuário logado
+
         $obj_permissao = new clsPermissoes();
         $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
 

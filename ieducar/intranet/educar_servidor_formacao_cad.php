@@ -2,7 +2,6 @@
 
 return new class extends clsCadastro {
     public $pessoa_logada;
-
     public $cod_formacao;
     public $ref_usuario_exc;
     public $ref_usuario_cad;

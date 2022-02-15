@@ -67,7 +67,6 @@ return new class extends clsCadastro {
 
         $obj_cliente_suspenso = new clsPmieducarCliente();
         $lst_cliente_suspenso = $obj_cliente_suspenso->lista($this->ref_cod_cliente, null, null, null, null, null, null, null, null, null, 1, null, 'suspenso');
-//      echo "<pre>";print_r($lst_cliente_suspenso);
         if (is_array($lst_cliente_suspenso)) {
             echo '<script> alert(\'Cliente atualmente suspenso!\\nNão é possivel realizar o empréstimo.\'); window.location = \'educar_exemplar_emprestimo_lst.php\';</script>';
             die();
@@ -91,7 +90,6 @@ return new class extends clsCadastro {
             $valor_total_divida = $valor_total_multa - $valor_total_pago;
         }
 
-        //$lst_cliente_divida = $obj_exemplar_emprestimo->clienteDividaTotal( null,$this->ref_cod_cliente,null,$this->ref_cod_biblioteca );
         $lst_cliente_divida = $obj_exemplar_emprestimo->listaDividaPagamentoCliente($this->ref_cod_cliente, null, null, null, $this->ref_cod_biblioteca);
         if (is_array($lst_cliente_divida) && count($lst_cliente_divida)) {// calcula o valor das multas do cliente na biblioteca em que esta realizando o emprestimo
             foreach ($lst_cliente_divida as $divida) {
@@ -160,7 +158,6 @@ return new class extends clsCadastro {
                             unset($this->excluir_tombo);
                         } else {
                             $obj_exemplar = new clsPmieducarExemplar();
-//                          $lst_exemplar = $obj_exemplar->lista($exemplar,null,null,null,null,null,null,2,null,null,null,null,null,1,null,null,null,null,$this->ref_cod_biblioteca);
                             $lst_exemplar = $obj_exemplar->lista(null, null, null, null, null, null, null, 2, null, null, null, null, null, 1, null, null, null, null, $this->ref_cod_biblioteca, null, null, null, $exemplar);
 
                             //verifica se o exemplar é disponibilizado para empréstimo
@@ -172,7 +169,6 @@ return new class extends clsCadastro {
                                 $det_situacao = $obj_situacao->detalhe();
                                 $situacao_padrao = $det_situacao['situacao_padrao'];
                                 $permite_emprestimo = $det_situacao['permite_emprestimo'];
-//                          echo "<pre>"; print_r($det_situacao); die();
                                 // verifica se a situacao do exemplar é padrao (disponivel)
                                 if ($situacao_padrao == 1 && $permite_emprestimo == 2) {
                                     $obj_reservas = new clsPmieducarReservas();
@@ -319,7 +315,6 @@ return new class extends clsCadastro {
         }
 
         $this->campoOculto('incluir_tombo', '');
-//      $this->campoRotulo( "bt_incluir_tombo", "Tombo", "<a href='#' onclick=\"getElementById('incluir_tombo').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_incluir2.gif' title='Incluir' border=0></a>" );
 
         $this->campoQuebra();
         //-----------------------FIM INCLUI TOMBO------------------------//

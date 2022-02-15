@@ -25,8 +25,6 @@ return new class extends clsDetalhe {
 
         $this->cod_infra_comodo_funcao=$_GET['cod_infra_comodo_funcao'];
 
-//      $tmp_obj = new clsPmieducarInfraComodoFuncao( $this->cod_infra_comodo_funcao );
-//      $registro = $tmp_obj->detalhe();
         $obj = new clsPmieducarInfraComodoFuncao();
         $lst  = $obj->lista($this->cod_infra_comodo_funcao);
         if (is_array($lst)) {

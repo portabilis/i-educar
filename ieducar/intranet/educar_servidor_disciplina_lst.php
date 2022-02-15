@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Session;
 
 return new class extends clsCadastro {
     public $pessoa_logada;
-
     public $cod_servidor;
     public $ref_cod_instituicao;
     public $ref_idesco;

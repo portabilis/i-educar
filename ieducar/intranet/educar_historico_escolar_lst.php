@@ -73,14 +73,6 @@ return new class extends clsListagem {
             $this->extra_curricular = 0;
         }
 
-//      if ($this->ref_cod_escola)
-//      {
-//          $obj_ref_cod_escola = new clsPmieducarEscola( $this->ref_cod_escola );
-//          $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
-//          $this->escola = $det_ref_cod_escola["nome"];
-//      }
-
-        // Paginador
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 

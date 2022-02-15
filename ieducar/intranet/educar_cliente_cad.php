@@ -128,8 +128,6 @@ return new class extends clsCadastro {
             $this->ref_cod_biblioteca_atual = $this->ref_cod_biblioteca;
             $this->campoOculto('ref_cod_biblioteca_atual', $this->ref_cod_biblioteca_atual);
 
-            //$this->ref_cod_biblioteca   = $db->CampoUnico("SELECT cod_biblioteca  FROM pmieducar.biblioteca, pmieducar.cliente_tipo_cliente ctc, pmieducar.cliente_tipo ct WHERE ref_cod_cliente = '$this->cod_cliente' AND ref_cod_cliente_tipo = cod_cliente_tipo AND ct.ref_cod_biblioteca = cod_biblioteca AND ctc.ref_cod_biblioteca = {$this->ref_cod_biblioteca}");
-
             // obtem o codigo do tipo de cliente, apartir da tabela cliente_tipo_cliente
             $this->ref_cod_cliente_tipo = $db->CampoUnico("SELECT ref_cod_cliente_tipo FROM pmieducar.cliente_tipo_cliente WHERE ref_cod_cliente = '$this->cod_cliente'");
         }

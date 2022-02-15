@@ -34,7 +34,6 @@ return new class extends clsDetalhe {
 
         $obj_ref_cod_matricula = new clsPmieducarMatricula($registro['ref_cod_matricula']);
         $det_ref_cod_matricula = $obj_ref_cod_matricula->detalhe();
-
         $obj_serie = new clsPmieducarSerie($det_ref_cod_matricula['ref_ref_cod_serie']);
         $det_serie = $obj_serie->detalhe();
         $registro['ref_ref_cod_serie'] = $det_serie['nm_serie'];

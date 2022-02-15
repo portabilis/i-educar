@@ -4,13 +4,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
 return new class extends clsCadastro {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
     public $pessoa_logada;
-
     public $cod_nivel;
     public $ref_cod_categoria;
     public $ref_cod_nivel;
@@ -83,12 +77,10 @@ return new class extends clsCadastro {
     {
         $this->campoOculto('ref_cod_categoria', $this->ref_cod_categoria);
         $this->campoOculto('ref_cod_nivel', $this->ref_cod_nivel);
-
         $this->campoRotulo('nm_categoria', 'Categoria', $this->nm_categoria);
         $this->campoRotulo('nm_nivel', 'Nível', $this->nm_nivel);
 
         $this->campoTabelaInicio('tab01', 'Subníveis', ['Nome Subnível','Salário','Ordem'], $this->cod_nivel);
-
         $this->campoTexto('nm_nivel', 'Nome Subnível', '', 30, 100, true);
         $this->campoMonetario('salario_base', 'Salario Base', $this->salario_base, 10, 8, true);
         $this->campoNumero('nr_nivel', 'Ordem', '1', 5, 5, false, false, false, false, false, false, true);

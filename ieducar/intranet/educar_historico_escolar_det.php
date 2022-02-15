@@ -207,10 +207,8 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Disciplina', "{$tabela}"]);
         }
 
-        $obj_permissoes = new clsPermissoes();
         $this->obj_permissao = new clsPermissoes();
         $this->nivel_usuario = $this->obj_permissao->nivel_acesso($this->pessoa_logada);
-        //$year = date('Y');
         $db = new clsBanco();
 
         $restringir_historico_escolar = $db->CampoUnico("SELECT restringir_historico_escolar
