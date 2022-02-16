@@ -19,7 +19,7 @@ return new class extends clsCadastro {
     public $conteudos;
 
     public function Inicializar () {
-        $this->titulo = 'Planejamento de Aula - Cadastro';
+        $this->titulo = 'Planejamento de aula - Cadastro';
 
         $retorno = 'Novo';
 
@@ -29,7 +29,7 @@ return new class extends clsCadastro {
         $obj_permissoes->permissao_cadastra(58, $this->pessoa_logada, 7, 'educar_plano_de_aula_lst.php');
 
         if (is_numeric($this->id)) {
-            $tmp_obj = new clsModulesPlanejamentoPedagogico($this->id);
+            $tmp_obj = new clsModulesPlanejamentoAulaBNCC($this->id);
             $registro = $tmp_obj->detalhe();
 
             if ($registro) {
@@ -44,7 +44,7 @@ return new class extends clsCadastro {
                 $this->fexcluir = $obj_permissoes->permissao_excluir(58, $this->pessoa_logada, 7);
                 $retorno = 'Editar';
 
-                $this->titulo = 'Planejamento de Aula - Edição';
+                $this->titulo = 'Planejamento de aula - Edição';
             }
         }
 
@@ -113,10 +113,7 @@ return new class extends clsCadastro {
         $data_agora = new DateTime('now');
         $data_agora = new \DateTime($data_agora->format('Y-m-d'));
 
-     
-       
-
-        $obj = new clsModulesPlanejamentoPedagogico(
+        $obj = new clsModulesPlanejamentoAulaBNCC(
            null,
            $this->turma_id,
            $this->data_inicial,
@@ -158,9 +155,8 @@ return new class extends clsCadastro {
         $this->bnccs = $this->bnccs;
         $this->conteudos = $this->conteudos;
 
-        $obj = new clsModulesPlanejamentoPedagogico(
-            $this->id,
-            
+        $obj = new clsModulesPlanejamentoAulaBNCC(
+            $this->id     
         );
 
         $editou = $obj->edita();
@@ -233,14 +229,14 @@ return new class extends clsCadastro {
         $scripts = [
             '/modules/DynamicInput/Assets/Javascripts/TodasTurmas.js',
             '/modules/Cadastro/Assets/Javascripts/BNCC.js',
-            '/modules/Cadastro/Assets/Javascripts/PlanejamentoMetodologico.js'
+            '/modules/Cadastro/Assets/Javascripts/PlanejamentoAula.js'
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
     }
 
     public function Formular () {
-        $this->title = 'Planejamento de Aula - Cadastro';
+        $this->title = 'Planejamento de aula - Cadastro';
         $this->processoAp = '58';
     }
 };

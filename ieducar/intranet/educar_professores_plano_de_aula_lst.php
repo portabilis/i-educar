@@ -81,7 +81,7 @@ return new class extends clsListagem {
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-        $obj_turma = new clsModulesPlanejamentoPedagogico();
+        $obj_turma = new clsModulesPlanejamentoAula();
         $obj_turma->setOrderby('data_inicial DESC');
         $obj_turma->setLimite($this->limite, $this->offset);
 
@@ -152,7 +152,7 @@ return new class extends clsListagem {
         }
         $this->largura = '100%';
 
-        $this->breadcrumb('Listagem de planejamentos metodológicos', [
+        $this->breadcrumb('Listagem de planejamentos das aulas', [
             url('intranet/educar_professores_index.php') => 'Professores',
         ]);
     }

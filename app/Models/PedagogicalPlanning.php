@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PedagogicalPlanning extends Model
+class LessonPlanning extends Model
 {
      /**
      * @var string
      */
-    protected $table = 'modules.planejamento_pedagogico';
+    protected $table = 'modules.planejamento_aula';
 
     /**
      * @var string

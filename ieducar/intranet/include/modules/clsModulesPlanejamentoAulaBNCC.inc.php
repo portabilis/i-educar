@@ -4,19 +4,19 @@ use iEducar\Legacy\Model;
 
 class clsModulesPlanejamentoPedagogicoBNCC extends Model {
     public $id;
-    public $planejamento_pedagogico_id;
+    public $planejamento_aula_id;
     public $bncc_id;
 
     public function __construct(
         $id = null,
-        $planejamento_pedagogico_id = null,
+        $planejamento_aula_id = null,
         $bncc_id = null
     ) {
         $this->_schema = 'modules.';
-        $this->_tabela = "{$this->_schema}planejamento_pedagogico_bncc";
+        $this->_tabela = "{$this->_schema}planejamento_aula_bncc";
 
         $this->_from = "
-            modules.planejamento_pedagogico_bncc as ppb
+            modules.planejamento_aula_bncc as pab
         ";
 
         $this->_campos_lista = $this->_todos_campos = '
@@ -27,8 +27,8 @@ class clsModulesPlanejamentoPedagogicoBNCC extends Model {
             $this->id = $id;
         }
 
-        if (is_numeric($planejamento_pedagogico_id)) {
-            $this->planejamento_pedagogico_id = $planejamento_pedagogico_id;
+        if (is_numeric($planejamento_aula_id)) {
+            $this->planejamento_aula_id = $planejamento_aula_id;
         }
 
         if (is_numeric($bncc_id)) {
@@ -42,13 +42,13 @@ class clsModulesPlanejamentoPedagogicoBNCC extends Model {
      * @return bool
      */
     public function cadastra() {
-        if (is_numeric($this->planejamento_pedagogico_id) && is_numeric($this->bncc_id)) {
+        if (is_numeric($this->planejamento_aula_id) && is_numeric($this->bncc_id)) {
             $db = new clsBanco();
 
             $db->Consulta("
                 INSERT INTO {$this->_tabela}
-                    (planejamento_pedagogico_id, bncc_id)
-                VALUES ({$this->planejamento_pedagogico_id}, {$this->bncc_id})
+                    (planejamento_aula_id, bncc_id)
+                VALUES ({$this->planejamento_aula_id}, {$this->bncc_id})
             ");
 
             return true;
@@ -93,7 +93,7 @@ class clsModulesPlanejamentoPedagogicoBNCC extends Model {
                 FROM
                     {$this->_from}
                 WHERE
-                    ppb.planejamento_pedagogico_id = {$this->id}
+                    pab.planejamento_aula_id = {$this->id}
             ");
 
             while ($db->ProximoRegistro()) {
