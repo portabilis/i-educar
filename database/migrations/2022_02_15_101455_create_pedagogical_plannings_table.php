@@ -18,6 +18,8 @@ class CreatePedagogicalPlanningsTable extends Migration
             $table->date('data_inicial');
             $table->date('data_final');
             $table->integer('ref_cod_turma');
+            $table->integer('ref_componente_curricular')->nullable();
+            $table->integer('etapa_sequencial');
             $table->text('ddp');
             $table->text('atividades');
             $table->timestamp('data_cadastro');
@@ -26,6 +28,11 @@ class CreatePedagogicalPlanningsTable extends Migration
             $table->foreign('ref_cod_turma')
                 ->references('cod_turma')
                 ->on('pmieducar.turma')
+                ->onDelete('cascade');
+
+            $table->foreign('ref_componente_curricular')
+                ->references('id')
+                ->on('modules.componente_curricular')
                 ->onDelete('cascade');
         });
     }
