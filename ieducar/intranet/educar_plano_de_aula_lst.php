@@ -120,13 +120,13 @@ return new class extends clsListagem {
                 $data_final_formatada = dataToBrasil($registro['data_final']);
 
                 $lista_busca = [
-                    "<a href=\"educar_plano_de_aula_det.php.php?id={$registro['id']}\">{$data_inicial_formatada}</a>",
-                    "<a href=\"educar_plano_de_aula_det.php.php?id={$registro['id']}\">{$data_final_formatada}</a>",
-                    "<a href=\"educar_plano_de_aula_det.php.php?id={$registro['id']}\">{$registro['turma']}</a>",
-                    "<a href=\"educar_plano_de_aula_det.php.php?id={$registro['id']}\">{$registro['turno']}</a>",
-                    "<a href=\"educar_plano_de_aula_det.php.php?id={$registro['id']}\">{$registro['serie']}</a>",
-                    "<a href=\"educar_plano_de_aula_det.php.php?id={$registro['id']}\">{$registro['curso']}</a>",
-                    "<a href=\"educar_plano_de_aula_det.php.php?id={$registro['id']}\">{$registro['escola']}</a>",
+                    "<a href=\"educar_plano_de_aula_det.php?id={$registro['id']}\">{$data_inicial_formatada}</a>",
+                    "<a href=\"educar_plano_de_aula_det.php?id={$registro['id']}\">{$data_final_formatada}</a>",
+                    "<a href=\"educar_plano_de_aula_det.php?id={$registro['id']}\">{$registro['turma']}</a>",
+                    "<a href=\"educar_plano_de_aula_det.php?id={$registro['id']}\">{$registro['turno']}</a>",
+                    "<a href=\"educar_plano_de_aula_det.php?id={$registro['id']}\">{$registro['serie']}</a>",
+                    "<a href=\"educar_plano_de_aula_det.php?id={$registro['id']}\">{$registro['curso']}</a>",
+                    "<a href=\"educar_plano_de_aula_det.php?id={$registro['id']}\">{$registro['escola']}</a>",
                 ];
 
                 $this->addLinhas($lista_busca);
