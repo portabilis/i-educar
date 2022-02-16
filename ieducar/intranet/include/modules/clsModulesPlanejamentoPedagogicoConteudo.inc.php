@@ -81,6 +81,26 @@ class clsModulesPlanejamentoPedagogicoConteudo extends Model {
      * @return array
      */
     public function detalhe () {
+        $data = [];
+
+        if (is_numeric($this->id)) {
+            $db = new clsBanco();
+            $db->Consulta("
+                SELECT
+                    {$this->_todos_campos}
+                FROM
+                    {$this->_from}
+                WHERE
+                    ppc.planejamento_pedagogico_id = {$this->id}
+            ");
+
+            while ($db->ProximoRegistro()) {
+                $data[] = $db->Tupla();
+            }
+
+            return $data;
+        }
+
         return false;
     }
 

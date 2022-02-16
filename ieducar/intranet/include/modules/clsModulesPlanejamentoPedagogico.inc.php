@@ -246,6 +246,32 @@ class clsModulesPlanejamentoPedagogico extends Model {
      * @return array
      */
     public function detalhe () {
+        $data = [];
+
+        if (is_numeric($this->id)) {
+            $db = new clsBanco();
+            $db->Consulta("
+                SELECT
+                    {$this->_todos_campos}
+                FROM
+                    {$this->_from}
+                WHERE
+                    pp.id = {$this->id}
+            ");
+
+            $db->ProximoRegistro();
+
+            $data['detalhes'] = $db->Tupla();
+
+            $obj = new clsModulesPlanejamentoPedagogicoBNCC($this->id);
+            $data['bnccs'] = $obj->detalhe();
+
+            $obj = new clsModulesPlanejamentoPedagogicoConteudo($this->id);
+            $data['conteudos'] = $obj->detalhe();
+
+            return $data;
+        }
+
         return false;
     }
 

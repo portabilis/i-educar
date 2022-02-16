@@ -83,6 +83,31 @@ class clsModulesPlanejamentoPedagogicoBNCC extends Model {
      * @return array
      */
     public function detalhe () {
+        $data = [];
+
+        if (is_numeric($this->id)) {
+            $db = new clsBanco();
+            $db->Consulta("
+                SELECT
+                    {$this->_todos_campos}
+                FROM
+                    {$this->_from}
+                WHERE
+                    ppb.planejamento_pedagogico_id = {$this->id}
+            ");
+
+            while ($db->ProximoRegistro()) {
+                $ppd = $db->Tupla();
+
+                $obj = new clsModulesBNCC($ppd['id']);
+                $ppd['bncc'] = $obj->detalhe();
+
+                $data[] = $ppd;
+            }
+
+            return $data;
+        }
+
         return false;
     }
 
