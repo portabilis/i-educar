@@ -39,6 +39,8 @@ class clsModulesPlanejamentoPedagogico extends Model {
                 ON (c.cod_curso = t.ref_cod_curso)
             JOIN pmieducar.serie s
                 ON (s.cod_serie = t.ref_ref_cod_serie)
+            LEFT JOIN modules.componente_curricular k
+                ON (k.id = pp.ref_componente_curricular)
             JOIN pmieducar.turma_turno u
                 ON (u.id = t.turma_turno_id)
             LEFT JOIN pmieducar.turma_modulo q
@@ -51,12 +53,18 @@ class clsModulesPlanejamentoPedagogico extends Model {
             pp.id,
             pp.data_inicial,
             pp.data_final,
+            pp.ref_cod_turma as cod_turma,
+            pp.ddp,
+            pp.atividades,
             i.nm_instituicao AS instituicao,
             j.fantasia AS escola,
             c.nm_curso AS curso,
             s.nm_serie AS serie,
             t.nm_turma AS turma,
-            u.nome AS turno
+            k.nome AS componente_curricular,
+            u.nome AS turno,
+            l.nm_tipo AS etapa,
+            pp.etapa_sequencial AS fase_etapa
         ';
 
         if (is_numeric($id)) {
@@ -151,7 +159,8 @@ class clsModulesPlanejamentoPedagogico extends Model {
         $int_ref_cod_componente_curricular = null,
         $int_ref_cod_turno = null,
         $time_data_inicial = null,
-        $time_data_final = null
+        $time_data_final = null,
+        $int_etapa = null
     ) {
         $sql = "
                 SELECT
@@ -189,6 +198,11 @@ class clsModulesPlanejamentoPedagogico extends Model {
             $whereAnd = ' AND ';
         }
         
+        if (is_numeric($int_ref_cod_componente_curricular)) {
+            $filtros .= "{$whereAnd} k.id = '{$int_ref_cod_componente_curricular}'";
+            $whereAnd = ' AND ';
+        }
+
         if (is_numeric($int_ref_cod_turno)) {
             $filtros .= "{$whereAnd} t.turma_turno_id = '{$int_ref_cod_turno}'";
             $whereAnd = ' AND ';
@@ -201,6 +215,11 @@ class clsModulesPlanejamentoPedagogico extends Model {
 
         if ($time_data_final) {
             $filtros .= "{$whereAnd} pp.data_final <= '{$time_data_final}'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_etapa)) {
+            $filtros .= "{$whereAnd} pp.etapa_sequencial = '{$int_etapa}'";
             $whereAnd = ' AND ';
         }
 
