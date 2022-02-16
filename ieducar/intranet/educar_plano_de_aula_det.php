@@ -1,34 +1,19 @@
 <?php
 
 return new class extends clsDetalhe {
-    public $titulo;
-    public $id_freq;
-    public $ref_usuario_exc;
-    public $ref_usuario_cad;
-    public $ref_ref_cod_serie;
-    public $ref_ref_cod_escola;
-    public $ref_cod_infra_predio_comodo;
-    public $nm_turma;
-    public $sgl_turma;
-    public $max_aluno;
-    public $multiseriada;
-    public $data_cadastro;
-    public $data_exclusao;
-    public $ativo;
-    public $ref_cod_turma_tipo;
-    public $hora_inicial;
-    public $hora_final;
-    public $hora_inicio_intervalo;
-    public $hora_fim_intervalo;
-    public $ref_cod_instituicao;
-    public $ref_cod_curso;
-    public $ref_cod_instituicao_regente;
-    public $ref_cod_regente;
+    public $id;
+    public $turma_id;
+    public $data_inicial;
+    public $data_final;
+    public $ddp;
+    public $atividades;
+    public $bncc;
+    public $conteudos;
 
     public function Gerar()
     {
         $this->titulo = 'Planejamento de Aula - Detalhe';
-        $this->id_freq = $_GET['id'];
+        $this->id = $_GET['id'];
 
         $obj_permissoes = new clsPermissoes();
 
@@ -58,38 +43,50 @@ return new class extends clsDetalhe {
             );
         }
 
-        if ($registro['detalhes']['turma']) {
+        if ($registro['detalhes']['data_final']) {
+            $this->addDetalhe(
+                [
+                    'Data Final',
+                    dataToBrasil($registro['detalhes']['data_final'])
+                ]
+            );
+        }
+
+        if ($registro['detalhes']['turma_id']) {
             $this->addDetalhe(
                 [
                     'Turma',
-                    $registro['detalhes']['turma']
+                    $registro['detalhes']['turma_id']
                 ]
             );
         }
 
-        if ($registro['detalhes']['componente_curricular']) {
+        if ($registro['detalhes']['ddp']) {
             $this->addDetalhe(
                 [
-                    'Componente curricular',
-                    $registro['detalhes']['componente_curricular']
+                    'DDP',
+                    $registro['detalhes']['ddp']
                 ]
             );
-        } else {
+        } 
+
+        if ($registro['detalhes']['atividades']) {
             $this->addDetalhe(
                 [
-                    'Componente curricular',
-                    '—'
+                    'Atividades',
+                    $registro['detalhes']['atividades']
                 ]
             );
         }
 
-        if ($registro['detalhes']['etapa'] && $registro['detalhes']['fase_etapa']) {
+        if ($registro['detalhes']['conteudos']) {
             $this->addDetalhe(
                 [
-                    'Etapa',
-                    $registro['detalhes']['fase_etapa'] . "º " . $registro['detalhes']['etapa']
+                    'Conteudos',
+                    $registro['detalhes']['conteudos']
                 ]
             );
+        
         }
         
         if (is_array($registro['bnccs']) && $registro['bnccs'] != null) {
@@ -124,45 +121,6 @@ return new class extends clsDetalhe {
             $data_agora = new DateTime('now');
             $data_agora = new \DateTime($data_agora->format('Y-m-d'));
 
-            $turma = $registro['detalhes']['cod_turma'];
-            $sequencia = $registro['detalhes']['fase_etapa'];
-            $obj = new clsPmieducarTurmaModulo();
-
-            $data = $obj->pegaPeriodoLancamentoNotasFaltas($turma, $sequencia);
-            if ($data['inicio'] != null && $data['fim'] != null) {
-                $data['inicio'] = explode(',', $data['inicio']);
-                $data['fim'] = explode(',', $data['fim']);
-
-                array_walk($data['inicio'], function(&$data_inicio, $key) {
-                    $data_inicio = new \DateTime($data_inicio);
-                });
-
-                array_walk($data['fim'], function(&$data_fim, $key) {
-                    $data_fim = new \DateTime($data_fim);
-                });
-            } else {
-                $data['inicio'] = new \DateTime($obj->pegaEtapaSequenciaDataInicio($turma, $sequencia));
-                $data['fim'] = new \DateTime($obj->pegaEtapaSequenciaDataFim($turma, $sequencia));
-            }
-
-            $podeEditar = false;
-            if (is_array($data['inicio']) && is_array($data['fim'])) {
-                for ($i=0; $i < count($data['inicio']); $i++) {
-                    $data_inicio = $data['inicio'][$i];
-                    $data_fim = $data['fim'][$i];
-
-                    $podeEditar = $data_agora >= $data_inicio && $data_agora <= $data_fim;
-
-                    if ($podeEditar) break;
-                }     
-            } else {
-                $podeEditar = $data_agora >= $data['inicio'] && $data_agora <= $data['fim'];
-            }
-
-            if ($podeEditar)
-                $this->url_editar = 'educar_plano_de_aula_cad.php?id=' . $registro['detalhes']['id'];
-        }
-
         $this->url_cancelar = 'educar_plano_de_aula_lst.php';
         $this->largura = '100%';
 
@@ -170,6 +128,8 @@ return new class extends clsDetalhe {
             url('intranet/educar_professores_index.php') => 'Professores',
         ]);
     }
+    $bncc = $registro['detalhes']['bncc'];
+}
 
     function montaListaBNCC ($bnccs) {
         $this->tabela .= ' <div style="margin-bottom: 10px;">';
@@ -185,9 +145,9 @@ return new class extends clsDetalhe {
 
             $this->tabela .= "  <span style='display: block; float: left; width: 700px'>{$bnccs[$i][bncc][habilidade]}</span>";
 
-            $this->tabela .= '  </div>';
-            $this->tabela .= '  <br style="clear: left" />';
-        }
+        $this->tabela .= '  </div>';
+        $this->tabela .= '  <br style="clear: left" />';
+    }
 
         $bncc  = '<table cellspacing="0" cellpadding="0" border="0">';
         $bncc .= sprintf('<tr align="left"><td>%s</td></tr>', $this->tabela);
@@ -228,4 +188,4 @@ return new class extends clsDetalhe {
         $this->title = 'Frequência - Detalhe';
         $this->processoAp = 58;
     }
-};
+ };

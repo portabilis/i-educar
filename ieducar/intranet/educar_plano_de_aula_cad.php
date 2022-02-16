@@ -110,85 +110,22 @@ return new class extends clsCadastro {
     }
 
     public function Novo() {
-        $obj = new clsPmieducarTurma();
-        $serie = $obj->lista($this->ref_cod_turma)[0]['ref_ref_cod_serie'];
-
-        $obj = new clsPmieducarSerie();
-        $tipo_presenca = $obj->tipoPresencaRegraAvaliacao($serie);
-
-        if ($tipo_presenca == null) {
-            $this->mensagem = 'Cadastro não realizado, pois esta série não possui uma regra de avaliação configurada.<br>';
-            $this->simpleRedirect('educar_professores_frequencia_cad.php');
-        }
-
-        if ($tipo_presenca == 1 && $this->ref_cod_componente_curricular) {
-            $this->mensagem = 'Cadastro não realizado, pois esta série não admite frequência por componente curricular.<br>';
-            $this->simpleRedirect('educar_professores_frequencia_cad.php');
-        }
-
-        if ($tipo_presenca == 2 && !$this->ref_cod_componente_curricular) {
-            $this->mensagem = 'Cadastro não realizado, pois o componente curricular é obrigatório para esta série.<br>';
-            $this->simpleRedirect('educar_professores_frequencia_cad.php');
-        }
-
         $data_agora = new DateTime('now');
         $data_agora = new \DateTime($data_agora->format('Y-m-d'));
 
-        $turma = $this->ref_cod_turma;
-        $sequencia = $this->fase_etapa;
-        $obj = new clsPmieducarTurmaModulo();
+     
+       
 
-        $data = $obj->pegaPeriodoLancamentoNotasFaltas($turma, $sequencia);
-        if ($data['inicio'] != null && $data['fim'] != null) {
-            $data['inicio'] = explode(',', $data['inicio']);
-            $data['fim'] = explode(',', $data['fim']);
+        $obj = new clsModulesPlanejamentoPedagogico(
+           null,
+           $this->turma_id,
+           $this->data_inicial,
+           $this->data_final,
+           $this->ddp, 
+           $this->atividades,
+           $this->bnccs,
+           $this->conteudos,
 
-            array_walk($data['inicio'], function(&$data_inicio, $key) {
-                $data_inicio = new \DateTime($data_inicio);
-            });
-
-            array_walk($data['fim'], function(&$data_fim, $key) {
-                $data_fim = new \DateTime($data_fim);
-            });
-        } else {
-            $data['inicio'] = new \DateTime($obj->pegaEtapaSequenciaDataInicio($turma, $sequencia));
-            $data['fim'] = new \DateTime($obj->pegaEtapaSequenciaDataFim($turma, $sequencia));
-        }
-
-        $podeRegistrar = false;
-        if (is_array($data['inicio']) && is_array($data['fim'])) {
-            for ($i=0; $i < count($data['inicio']); $i++) {
-                $data_inicio = $data['inicio'][$i];
-                $data_fim = $data['fim'][$i];
-
-                $podeRegistrar = $data_agora >= $data_inicio && $data_agora <= $data_fim;
-
-                if ($podeRegistrar) break;
-            }     
-        } else {
-            $podeRegistrar = $data_agora >= $data['inicio'] && $data_agora <= $data['fim'];
-        }
-
-        if (!$podeRegistrar) {
-            $this->mensagem = 'Cadastro não realizado, pois não é mais possível submeter frequência para esta etapa.<br>';
-            $this->simpleRedirect('educar_professores_frequencia_cad.php');
-        }
-
-        $obj = new clsModulesFrequencia(
-            null,
-            null,
-            null,
-            null,
-            null,
-            $serie,
-            $this->ref_cod_turma,
-            $this->ref_cod_componente_curricular,
-            null,
-            dataToBanco($this->data),
-            null,
-            null,
-            $this->fase_etapa,
-            $this->justificativa,
         );
 
         $existe = $obj->existe();
@@ -213,28 +150,17 @@ return new class extends clsCadastro {
     }
 
     public function Editar() {
-        $this->ref_cod_turma = $this->ref_cod_turma_;
-        $this->ref_cod_componente_curricular = $this->ref_cod_componente_curricular_;
-        $this->fase_etapa = $this->fase_etapa_;
 
-        $obj = new clsPmieducarTurma();
-        $serie = $obj->lista($this->ref_cod_turma)[0]['ref_ref_cod_serie'];
+        $this->data_inicial = $this->data_inicial;
+        $this->data_final = $this->data_final;
+        $this->ddp = $this->ddp;
+        $this->atividades = $this->atividades;
+        $this->bnccs = $this->bnccs;
+        $this->conteudos = $this->conteudos;
 
-        $obj = new clsModulesFrequencia(
+        $obj = new clsModulesPlanejamentoPedagogico(
             $this->id,
-            null,
-            null,
-            null,
-            null,
-            $serie,
-            null,
-            $this->ref_cod_componente_curricular,
-            null,
-            dataToBanco($this->data),
-            null,
-            null,
-            $this->fase_etapa,
-            $this->justificativa,
+            
         );
 
         $editou = $obj->edita();
@@ -250,27 +176,18 @@ return new class extends clsCadastro {
     }
 
     public function Excluir () {
-        $this->ref_cod_turma = $this->ref_cod_turma_;
-        $this->ref_cod_componente_curricular = $this->ref_cod_componente_curricular_;
-
-        $obj = new clsPmieducarTurma();
-        $serie = $obj->lista($this->ref_cod_turma)[0]['ref_ref_cod_serie'];
+        
+        $this->data_inicial = $this->data_inicial;
+        $this->data_final = $this->data_final;
+        $this->ddp = $this->ddp;
+        $this->atividades = $this->atividades;
+        $this->bnccs = $this->bnccs;
+        $this->conteudos = $this->conteudos;
+       
 
         $obj = new clsModulesFrequencia(
             $this->id,
-            null,
-            null,
-            null,
-            null,
-            $serie,
-            null,
-            $this->ref_cod_componente_curricular,
-            null,
-            null,
-            null,
-            null,
-            $this->fase_etapa,
-            null
+          
         );
 
         $excluiu = $obj->excluir();
@@ -285,49 +202,6 @@ return new class extends clsCadastro {
         return false;
     }
  
-    function montaListaFrequenciaAlunos ($matriculas, $justificativas, $alunos) {
-        if (is_string($matriculas) && !empty($matriculas)) {
-            $matriculas = explode(',', $matriculas);
-            $justificativas = explode(',', $justificativas);
-
-            for ($i = 0; $i < count($matriculas); $i++) {
-                $alunos[$matriculas[$i]]['presenca'] = true;
-                $alunos[$matriculas[$i]]['justificativa'] = $justificativas[$i];
-            }
-        }
-
-        $this->tabela .= ' <div style="margin-bottom: 10px;">';
-        $this->tabela.= '  <span style="display: block; float: left; width: 300px; font-weight: bold">Nome</span>';
-        $this->tabela .= ' <span style="display: block; float: left; width: 100px; font-weight: bold">Presença</span>';
-        $this->tabela .= ' <span style="display: block; float: left; width: 300px; font-weight: bold">Justificativa</span>';
-        $this->tabela .= ' </div>';
-        $this->tabela .= ' <br style="clear: left" />';
-
-        foreach ($alunos as $aluno) {
-            $this->tabela .= '  <div style="margin-bottom: 10px; float: left" class="linha-disciplina" >';
-            $this->tabela .= "  <span style='display: block; float: left; width: 300px'>{$aluno['nome']}</span>";
-
-            if(!$aluno['presenca']) {
-                $this->tabela .= '  <label style="display: block; float: left; width: 100px;">
-                                        <input type="checkbox" disabled Checked={false}>
-                                    </label>';
-            } else {
-                $this->tabela .= '  <label style="display: block; float: left; width: 100px;">
-                                        <input type="checkbox" disabled !Checked>
-                                    </label>';
-                $this->tabela .= "  <span style='display: block; float: left; width: 300px'>{$aluno['justificativa']}</span>";
-            }
-
-            $this->tabela .= '  </div>';
-            $this->tabela .= '  <br style="clear: left" />';
-        }
-
-        $disciplinas  = '<table cellspacing="0" cellpadding="0" border="0">';
-        $disciplinas .= sprintf('<tr align="left"><td>%s</td></tr>', $this->tabela);
-        $disciplinas .= '</table>';
-
-        return $disciplinas;
-    }
     private function getBNCC($frequencia = null)
     {
         if (is_numeric($frequencia)) {
@@ -366,7 +240,7 @@ return new class extends clsCadastro {
     }
 
     public function Formular () {
-        $this->title = 'Frequência - Cadastro';
+        $this->title = 'Planejamento de Aula - Cadastro';
         $this->processoAp = '58';
     }
 };
