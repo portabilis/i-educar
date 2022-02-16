@@ -125,7 +125,7 @@ class clsModulesPlanejamentoAula extends Model {
             $id = $db->InsertId("{$this->_tabela}_id_seq");
 
             foreach ($this->bnccs as $key => $bncc_id) {
-                $obj = new clsModulesPlanejamentoPedagogicoBNCC($bncc_id);
+                $obj = new clsModulesPlanejamentoAulaBNCC($bncc_id);
                 $obj->cadastra();
             }
 
@@ -282,7 +282,7 @@ class clsModulesPlanejamentoAula extends Model {
 
             $data['detalhes'] = $db->Tupla();
 
-            $obj = new clsModulesPlanejamentoPedagogicoBNCC($this->id);
+            $obj = new clsModulesPlanejamentoAulaBNCC($this->id);
             $data['bnccs'] = $obj->detalhe();
 
             $obj = new clsModulesPlanejamentoAulaConteudo($this->id);

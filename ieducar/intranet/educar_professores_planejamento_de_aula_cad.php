@@ -26,7 +26,7 @@ return new class extends clsCadastro {
         $this->id = $_GET['id'];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(58, $this->pessoa_logada, 7, 'educar_plano_de_aula_lst.php');
+        $obj_permissoes->permissao_cadastra(58, $this->pessoa_logada, 7, 'educar_professores_planejamento_de_aula_lst.php');
 
         if (is_numeric($this->id)) {
             $tmp_obj = new clsModulesPlanejamentoAulaBNCC($this->id);
@@ -49,8 +49,8 @@ return new class extends clsCadastro {
         }
 
         $this->url_cancelar = ($retorno == 'Editar')
-            ? sprintf('educar_plano_de_aula_det.php?id=%d', $this->id)
-            : 'educar_plano_de_aula_lst.php';
+            ? sprintf('educar_professores_planejamento_de_aula_det.php?id=%d', $this->id)
+            : 'educar_professores_planejamento_de_aula_lst.php';
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
@@ -135,10 +135,10 @@ return new class extends clsCadastro {
 
         if (!$cadastrou) {   
             $this->mensagem = 'Cadastro não realizado.<br>';
-            $this->simpleRedirect('educar_plano_de_aula_cad.php');
+            $this->simpleRedirect('educar_professores_planejamento_de_aula_cad.php');
         } else {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-            $this->simpleRedirect('educar_plano_de_aula_lst.php');
+            $this->simpleRedirect('educar_professores_planejamento_de_aula_lst.php');
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
@@ -163,7 +163,7 @@ return new class extends clsCadastro {
 
         if ($editou) {
             $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
-            $this->simpleRedirect('educar_plano_de_aula_lst.php');
+            $this->simpleRedirect('educar_professores_planejamento_de_aula_lst.php');
         }
 
         $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
@@ -190,7 +190,7 @@ return new class extends clsCadastro {
 
         if ($excluiu) {
             $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
-            $this->simpleRedirect('educar_plano_de_aula_lst.php');
+            $this->simpleRedirect('educar_professores_planejamento_de_aula_lst.php');
         }
 
         $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';

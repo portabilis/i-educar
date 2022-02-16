@@ -172,5 +172,5 @@ INSERT INTO public.menus VALUES (309, 306, 'Notas', NULL, '/module/Avaliacao/dia
 INSERT INTO public.menus VALUES (310, NULL, 'Portal do Aluno', NULL, '/intranet/educar_portal_aluno_index.php','fa-users', 10, 1, 144, NULL, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (311, 310, 'Portal do Aluno', NULL, NULL, NULL, 1, 2, NULL, NULL, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (312, 311, 'Historico Escolar', NULL, '/intranet/educar_portal_aluno_boletim_lst.php', NULL, 1, 3, NULL, NULL, NULL, true, NULL, NULL);
-INSERT INTO public.menus VALUES (313, 305, 'Planejamento', NULL, NULL, NULL, 1, 2, 58, NULL, NULL, true, NULL, NULL);
-INSERT INTO public.menus VALUES (314, 313, 'Plano de Aula', NULL, '/intranet/educar_plano_de_aula_lst.php', NULL, 2, 2, 58, NULL, NULL, true, NULL, NULL);
+INSERT INTO public.menus VALUES (313, 305, 'Planejamentos', NULL, NULL, NULL, 1, 2, 58, NULL, NULL, true, NULL, NULL);
+INSERT INTO public.menus VALUES (314, 313, 'Plano de aula', NULL, '/intranet/educar_professores_planejamento_de_aula_lst.php', NULL, 2, 2, 58, NULL, NULL, true, NULL, NULL);

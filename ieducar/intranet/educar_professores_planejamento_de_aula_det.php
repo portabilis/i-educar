@@ -36,7 +36,7 @@ return new class extends clsDetalhe {
         $registro = $tmp_obj->detalhe();
 
         if (!$registro) {
-            $this->simpleRedirect('educar_plano_de_aula_lst.php');
+            $this->simpleRedirect('educar_professores_planejamento_de_aula_lst.php');
         }
 
 
@@ -128,7 +128,7 @@ return new class extends clsDetalhe {
         }
 
         if ($obj_permissoes->permissao_cadastra(58, $this->pessoa_logada, 7)) {
-            $this->url_novo = 'educar_plano_de_aula_cad.php';
+            $this->url_novo = 'educar_professores_planejamento_de_aula_cad.php';
 
             $data_agora = new DateTime('now');
             $data_agora = new \DateTime($data_agora->format('Y-m-d'));
@@ -169,10 +169,10 @@ return new class extends clsDetalhe {
             }
 
             if ($podeEditar)
-                $this->url_editar = 'educar_plano_de_aula_cad.php?id=' . $registro['detalhes']['id'];
+                $this->url_editar = 'educar_professores_planejamento_de_aula_cad.php?id=' . $registro['detalhes']['id'];
         }
 
-        $this->url_cancelar = 'educar_plano_de_aula_lst.php';
+        $this->url_cancelar = 'educar_professores_planejamento_de_aula_lst.php';
         $this->largura = '100%';
 
         $this->breadcrumb('Detalhe da frequência', [
@@ -188,14 +188,8 @@ return new class extends clsDetalhe {
         $this->tabela .= ' <br style="clear: left" />';
 
         for ($i=0; $i < count($bnccs); $i++) {
-            $this->tabela .= '  <div style="margin-bottom: 10px; float: left" class="linha-disciplina" >';
-            
             $this->tabela .= "  <span style='display: block; float: left; width: 100px'>{$bnccs[$i][bncc][codigo]}</span>";
-
             $this->tabela .= "  <span style='display: block; float: left; width: 700px'>{$bnccs[$i][bncc][habilidade]}</span>";
-
-            $this->tabela .= '  <div style="margin-bottom: 10px; float: left" class="linha-disciplina" >';
-            $this->tabela .= "  <span style='display: block; float: left; width: 300px'>{$aluno['nome']}</span>";
         }
         
         $bncc  = '<table cellspacing="0" cellpadding="0" border="0">';

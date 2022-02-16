@@ -2,7 +2,7 @@
 
 use iEducar\Legacy\Model;
 
-class clsModulesPlanejamentoPedagogicoBNCC extends Model {
+class clsModulesPlanejamentoAulaBNCC extends Model {
     public $id;
     public $planejamento_aula_id;
     public $bncc_id;

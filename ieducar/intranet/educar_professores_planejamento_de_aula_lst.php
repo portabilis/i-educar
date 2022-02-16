@@ -124,13 +124,13 @@ return new class extends clsListagem {
                 $data_final_formatada = dataToBrasil($registro['data_final']);
 
                 $lista_busca = [
-                    "<a href=\"educar_plano_de_aula_det.php?id={$registro['id']}\">{$data_inicial_formatada}</a>",
-                    "<a href=\"educar_plano_de_aula_det.php?id={$registro['id']}\">{$data_final_formatada}</a>",
-                    "<a href=\"educar_plano_de_aula_det.php?id={$registro['id']}\">{$registro['turma']}</a>",
-                    "<a href=\"educar_plano_de_aula_det.php?id={$registro['id']}\">{$registro['turno']}</a>",
-                    "<a href=\"educar_plano_de_aula_det.php?id={$registro['id']}\">{$registro['serie']}</a>",
-                    "<a href=\"educar_plano_de_aula_det.php?id={$registro['id']}\">{$registro['curso']}</a>",
-                    "<a href=\"educar_plano_de_aula_det.php?id={$registro['id']}\">{$registro['escola']}</a>",
+                    "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$data_inicial_formatada}</a>",
+                    "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$data_final_formatada}</a>",
+                    "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['turma']}</a>",
+                    "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['turno']}</a>",
+                    "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['serie']}</a>",
+                    "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['curso']}</a>",
+                    "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['escola']}</a>",
                     "<a href=\"educar_professores_conteudo_ministrado_det.php?id={$registro['id']}\">{$registro['fase_etapa']}º {$registro['etapa']}</a>"
                 ];
 
@@ -144,10 +144,10 @@ return new class extends clsListagem {
             }
         }
 
-        $this->addPaginador2('educar_plano_de_aula_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $this->addPaginador2('educar_professores_planejamento_de_aula_lst.php', $total, $_GET, $this->nome, $this->limite);
         $obj_permissoes = new clsPermissoes();
         if ($obj_permissoes->permissao_cadastra(58, $this->pessoa_logada, 7)) {
-            $this->acao = 'go("educar_plano_de_aula_cad.php")';
+            $this->acao = 'go("educar_professores_planejamento_de_aula_cad.php")';
             $this->nome_acao = 'Novo';
         }
         $this->largura = '100%';
