@@ -172,19 +172,7 @@ return new class extends clsCadastro {
     }
 
     public function Excluir () {
-        
-        $this->data_inicial = $this->data_inicial;
-        $this->data_final = $this->data_final;
-        $this->ddp = $this->ddp;
-        $this->atividades = $this->atividades;
-        $this->bnccs = $this->bnccs;
-        $this->conteudos = $this->conteudos;
-       
-
-        $obj = new clsModulesFrequencia(
-            $this->id,
-          
-        );
+        $obj = new clsModulesPlanejamentoAula($this->id);
 
         $excluiu = $obj->excluir();
 

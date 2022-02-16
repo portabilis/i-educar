@@ -309,6 +309,19 @@ class clsModulesPlanejamentoAula extends Model {
      * @return bool
      */
     public function excluir () {
+        if (is_numeric($this->id)) {
+            $db = new clsBanco();
+
+            $db->Consulta("
+                DELETE FROM
+                    {$this->_tabela}
+                WHERE
+                    id = '{$this->id}'
+            ");
+
+            return true;
+        }
+
         return false;
     }
 }
