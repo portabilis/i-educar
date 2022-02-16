@@ -32,7 +32,7 @@ return new class extends clsDetalhe {
 
         $obj_permissoes = new clsPermissoes();
 
-        $tmp_obj = new clsModulesFrequencia($this->id_freq);
+        $tmp_obj = new clsModulesPlanejamentoPedagogico($this->id_freq);
         $registro = $tmp_obj->detalhe();
 
         if (!$registro) {
@@ -40,11 +40,20 @@ return new class extends clsDetalhe {
         }
 
 
-        if ($registro['detalhes']['data']) {
+        if ($registro['detalhes']['data_inicial']) {
             $this->addDetalhe(
                 [
-                    'Data',
-                    dataToBrasil($registro['detalhes']['data'])
+                    'Data inicial',
+                    dataToBrasil($registro['detalhes']['data_inicial'])
+                ]
+            );
+        }
+
+        if ($registro['detalhes']['data_final']) {
+            $this->addDetalhe(
+                [
+                    'Data final',
+                    dataToBrasil($registro['detalhes']['data_final'])
                 ]
             );
         }
@@ -82,12 +91,32 @@ return new class extends clsDetalhe {
                 ]
             );
         }
+        
+        if (is_array($registro['bnccs']) && $registro['bnccs'] != null) {
+            $this->montaListaBNCC($registro['bnccs']);
+        }
 
-        $this->montaListaFrequenciaAlunos(
-            $registro['matriculas']['refs_cod_matricula'],
-            $registro['matriculas']['justificativas'],
-            $registro['alunos']
-        );
+        if (is_array($registro['conteudos']) && $registro['conteudos'] != null) {
+            $this->montaListaConteudos($registro['conteudos']);
+        }
+
+        if ($registro['detalhes']['ddp']) {
+            $this->addDetalhe(
+                [
+                    'Desdobramento didático pedagógico',
+                    $registro['detalhes']['ddp']
+                ]
+            );
+        }
+
+        if ($registro['detalhes']['atividades']) {
+            $this->addDetalhe(
+                [
+                    'Atividades',
+                    $registro['detalhes']['atividades']
+                ]
+            );
+        }
 
         if ($obj_permissoes->permissao_cadastra(58, $this->pessoa_logada, 7)) {
             $this->url_novo = 'educar_plano_de_aula_cad.php';
@@ -142,47 +171,54 @@ return new class extends clsDetalhe {
         ]);
     }
 
-    function montaListaFrequenciaAlunos ($matriculas, $justificativas, $alunos) {
-        if (is_string($matriculas) && !empty($matriculas)) {
-            $matriculas = explode(',', $matriculas);
-            $justificativas = explode(',', $justificativas);
-
-            for ($i = 0; $i < count($matriculas); $i++) {
-                $alunos[$matriculas[$i]]['presenca'] = true;
-                $alunos[$matriculas[$i]]['justificativa'] = $justificativas[$i];
-            }
-        }
-
+    function montaListaBNCC ($bnccs) {
         $this->tabela .= ' <div style="margin-bottom: 10px;">';
-        $this->tabela .= ' <span style="display: block; float: left; width: 300px; font-weight: bold">Nome</span>';
-        $this->tabela .= ' <span style="display: block; float: left; width: 100px; font-weight: bold">Presença</span>';
-        $this->tabela .= ' <span style="display: block; float: left; width: 300px; font-weight: bold">Justificativa</span>';
+        $this->tabela .= ' <span style="display: block; float: left; width: 100px; font-weight: bold">Código</span>';
+        $this->tabela .= ' <span style="display: block; float: left; width: 700px; font-weight: bold">Habilidade</span>';
         $this->tabela .= ' </div>';
         $this->tabela .= ' <br style="clear: left" />';
 
-        foreach ($alunos as $aluno) {
-            $checked = !$aluno['presenca'] ? "checked='true'" : '';
-
+        for ($i=0; $i < count($bnccs); $i++) {
             $this->tabela .= '  <div style="margin-bottom: 10px; float: left" class="linha-disciplina" >';
-            $this->tabela .= "  <span style='display: block; float: left; width: 300px'>{$aluno['nome']}</span>";
+            
+            $this->tabela .= "  <span style='display: block; float: left; width: 100px'>{$bnccs[$i][bncc][codigo]}</span>";
 
-            $this->tabela .= "  <label style='display: block; float: left; width: 100px;'>
-                                    <input type='checkbox' disabled {$checked}>
-                                </label>";
-            $this->tabela .= "  <span style='display: block; float: left; width: 300px'>{$aluno['justificativa']}</span>";
+            $this->tabela .= "  <span style='display: block; float: left; width: 700px'>{$bnccs[$i][bncc][habilidade]}</span>";
 
             $this->tabela .= '  </div>';
             $this->tabela .= '  <br style="clear: left" />';
         }
 
-        $disciplinas  = '<table cellspacing="0" cellpadding="0" border="0">';
-        $disciplinas .= sprintf('<tr align="left"><td>%s</td></tr>', $this->tabela);
-        $disciplinas .= '</table>';
+        $bncc  = '<table cellspacing="0" cellpadding="0" border="0">';
+        $bncc .= sprintf('<tr align="left"><td>%s</td></tr>', $this->tabela);
+        $bncc .= '</table>';
 
         $this->addDetalhe(
             [
-                'Alunos',
-                $disciplinas
+                'Objetivos de aprendizagem/habilidades',
+                $bncc
+            ]
+        );
+    }
+
+    function montaListaConteudos ($conteudos) {
+        for ($i=0; $i < count($conteudos); $i++) {
+            $this->tabela2 .= '  <div style="margin-bottom: 10px; float: left" class="linha-disciplina" >';
+            
+            $this->tabela2 .= "  <span style='display: block; float: left; width: 750px'>{$conteudos[$i][conteudo]}</span>";
+
+            $this->tabela2 .= '  </div>';
+            $this->tabela2 .= '  <br style="clear: left" />';
+        }
+
+        $bncc  = '<table cellspacing="0" cellpadding="0" border="0">';
+        $bncc .= sprintf('<tr align="left"><td>%s</td></tr>', $this->tabela2);
+        $bncc .= '</table>';
+
+        $this->addDetalhe(
+            [
+                'Conteúdos',
+                $bncc
             ]
         );
     }
