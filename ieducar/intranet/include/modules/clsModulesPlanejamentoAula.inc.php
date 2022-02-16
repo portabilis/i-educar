@@ -2,7 +2,7 @@
 
 use iEducar\Legacy\Model;
 
-class clsModulesPlanejamentoPedagogico extends Model {
+class clsModulesPlanejamentoAula extends Model {
     public $id;
     public $turma_id;
     public $data_inicial;
@@ -23,12 +23,12 @@ class clsModulesPlanejamentoPedagogico extends Model {
         $conteudos = null
     ) {
         $this->_schema = 'modules.';
-        $this->_tabela = "{$this->_schema}planejamento_pedagogico";
+        $this->_tabela = "{$this->_schema}planejamento_aula";
 
         $this->_from = "
-                modules.planejamento_pedagogico as pp
+                modules.planejamento_aula as pa
             JOIN pmieducar.turma t
-                ON (t.cod_turma = pp.ref_cod_turma)
+                ON (t.cod_turma = pa.ref_cod_turma)
             JOIN pmieducar.instituicao i
                 ON (i.cod_instituicao = t.ref_cod_instituicao)
             JOIN pmieducar.escola e
@@ -40,7 +40,7 @@ class clsModulesPlanejamentoPedagogico extends Model {
             JOIN pmieducar.serie s
                 ON (s.cod_serie = t.ref_ref_cod_serie)
             LEFT JOIN modules.componente_curricular k
-                ON (k.id = pp.ref_componente_curricular)
+                ON (k.id = pa.ref_componente_curricular)
             JOIN pmieducar.turma_turno u
                 ON (u.id = t.turma_turno_id)
             LEFT JOIN pmieducar.turma_modulo q
@@ -50,12 +50,12 @@ class clsModulesPlanejamentoPedagogico extends Model {
         ";
 
         $this->_campos_lista = $this->_todos_campos = '
-            pp.id,
-            pp.data_inicial,
-            pp.data_final,
-            pp.ref_cod_turma as cod_turma,
-            pp.ddp,
-            pp.atividades,
+            pa.id,
+            pa.data_inicial,
+            pa.data_final,
+            pa.ref_cod_turma as cod_turma,
+            pa.ddp,
+            pa.atividades,
             i.nm_instituicao AS instituicao,
             j.fantasia AS escola,
             c.nm_curso AS curso,
@@ -64,7 +64,7 @@ class clsModulesPlanejamentoPedagogico extends Model {
             k.nome AS componente_curricular,
             u.nome AS turno,
             l.nm_tipo AS etapa,
-            pp.etapa_sequencial AS fase_etapa
+            pa.etapa_sequencial AS fase_etapa
         ';
 
         if (is_numeric($id)) {
@@ -209,17 +209,17 @@ class clsModulesPlanejamentoPedagogico extends Model {
         }
 
         if ($time_data_inicial) {
-            $filtros .= "{$whereAnd} pp.data_inicial >= '{$time_data_inicial}'";
+            $filtros .= "{$whereAnd} pa.data_inicial >= '{$time_data_inicial}'";
             $whereAnd = ' AND ';
         }
 
         if ($time_data_final) {
-            $filtros .= "{$whereAnd} pp.data_final <= '{$time_data_final}'";
+            $filtros .= "{$whereAnd} pa.data_final <= '{$time_data_final}'";
             $whereAnd = ' AND ';
         }
 
         if (is_numeric($int_etapa)) {
-            $filtros .= "{$whereAnd} pp.etapa_sequencial = '{$int_etapa}'";
+            $filtros .= "{$whereAnd} pa.etapa_sequencial = '{$int_etapa}'";
             $whereAnd = ' AND ';
         }
 
@@ -275,7 +275,7 @@ class clsModulesPlanejamentoPedagogico extends Model {
                 FROM
                     {$this->_from}
                 WHERE
-                    pp.id = {$this->id}
+                    pa.id = {$this->id}
             ");
 
             $db->ProximoRegistro();
@@ -285,7 +285,7 @@ class clsModulesPlanejamentoPedagogico extends Model {
             $obj = new clsModulesPlanejamentoPedagogicoBNCC($this->id);
             $data['bnccs'] = $obj->detalhe();
 
-            $obj = new clsModulesPlanejamentoPedagogicoConteudo($this->id);
+            $obj = new clsModulesPlanejamentoAulaConteudo($this->id);
             $data['conteudos'] = $obj->detalhe();
 
             return $data;

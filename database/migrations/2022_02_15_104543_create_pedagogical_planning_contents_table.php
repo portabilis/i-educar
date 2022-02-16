@@ -13,14 +13,14 @@ class CreatePedagogicalPlanningContentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('modules.planejamento_pedagogico_conteudo', function (Blueprint $table) {
+        Schema::create('modules.planejamento_aula_conteudo', function (Blueprint $table) {
             $table->id();
-            $table->integer('planejamento_pedagogico_id');
+            $table->integer('planejamento_aula_id');
             $table->text('conteudo');
             
-            $table->foreign('planejamento_pedagogico_id')
+            $table->foreign('planejamento_aula_id')
                 ->references('id')
-                ->on('modules.planejamento_pedagogico')
+                ->on('modules.planejamento_aula')
                 ->onDelete('cascade');
         });
     }
@@ -32,6 +32,6 @@ class CreatePedagogicalPlanningContentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('modules.planejamento_pedagogico_conteudo');
+        Schema::dropIfExists('modules.planejamento_aula_conteudo');
     }
 }

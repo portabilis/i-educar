@@ -13,7 +13,7 @@ class CreatePedagogicalPlanningsTable extends Migration
      */
     public function up()
     {
-        Schema::create('modules.planejamento_pedagogico', function (Blueprint $table) {
+        Schema::create('modules.planejamento_aula', function (Blueprint $table) {
             $table->id();
             $table->date('data_inicial');
             $table->date('data_final');
@@ -44,6 +44,6 @@ class CreatePedagogicalPlanningsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('modules.planejamento_pedagogico');
+        Schema::dropIfExists('modules.planejamento_aula');
     }
 }

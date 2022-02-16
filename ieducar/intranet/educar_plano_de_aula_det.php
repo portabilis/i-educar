@@ -27,12 +27,12 @@ return new class extends clsDetalhe {
 
     public function Gerar()
     {
-        $this->titulo = 'Planejamento de Aula - Detalhe';
+        $this->titulo = 'Planejamento de aula - Detalhe';
         $this->id_freq = $_GET['id'];
 
         $obj_permissoes = new clsPermissoes();
 
-        $tmp_obj = new clsModulesPlanejamentoPedagogico($this->id_freq);
+        $tmp_obj = new clsModulesPlanejamentoAula($this->id_freq);
         $registro = $tmp_obj->detalhe();
 
         if (!$registro) {

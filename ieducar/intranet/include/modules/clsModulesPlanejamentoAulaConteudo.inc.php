@@ -2,21 +2,21 @@
 
 use iEducar\Legacy\Model;
 
-class clsModulesPlanejamentoPedagogicoConteudo extends Model {
+class clsModulesPlanejamentoAulaConteudo extends Model {
     public $id;
-    public $planejamento_pedagogico_id;
+    public $planejamento_aula_id;
     public $conteudo;
 
     public function __construct(
         $id = null,
-        $planejamento_pedagogico_id = null,
+        $planejamento_aula_id = null,
         $conteudo = null
     ) {
         $this->_schema = 'modules.';
-        $this->_tabela = "{$this->_schema}planejamento_pedagogico_conteudo";
+        $this->_tabela = "{$this->_schema}planejamento_aula_conteudo";
 
         $this->_from = "
-            modules.planejamento_pedagogico_conteudo as ppc
+            modules.planejamento_aula_conteudo as pac
         ";
 
         $this->_campos_lista = $this->_todos_campos = '
@@ -27,8 +27,8 @@ class clsModulesPlanejamentoPedagogicoConteudo extends Model {
             $this->id = $id;
         }
 
-        if (is_numeric($planejamento_pedagogico_id)) {
-            $this->planejamento_pedagogico_id = $planejamento_pedagogico_id;
+        if (is_numeric($planejamento_aula_id)) {
+            $this->planejamento_aula_id = $planejamento_aula_id;
         }
 
         $this->conteudo = $conteudo;
@@ -40,13 +40,13 @@ class clsModulesPlanejamentoPedagogicoConteudo extends Model {
      * @return bool
      */
     public function cadastra() {
-        if (is_numeric($this->planejamento_pedagogico_id) && $this->conteudo != '') {
+        if (is_numeric($this->planejamento_aula_id) && $this->conteudo != '') {
             $db = new clsBanco();
 
             $db->Consulta("
                 INSERT INTO {$this->_tabela}
-                    (planejamento_pedagogico_id, bncc_id)
-                VALUES ({$this->planejamento_pedagogico_id}, {$this->conteudo})
+                    (planejamento_aula_id, bncc_id)
+                VALUES ({$this->planejamento_aula_id}, {$this->conteudo})
             ");
 
             return true;
@@ -91,7 +91,7 @@ class clsModulesPlanejamentoPedagogicoConteudo extends Model {
                 FROM
                     {$this->_from}
                 WHERE
-                    ppc.planejamento_pedagogico_id = {$this->id}
+                    pac.planejamento_aula_id = {$this->id}
             ");
 
             while ($db->ProximoRegistro()) {
