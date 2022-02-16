@@ -3,10 +3,12 @@
 use iEducar\Legacy\Model;
 
 class clsModulesBNCC extends Model {
+    public $id;
     public $ref_cod_serie;
     public $ref_cod_componente_curricular;
 
     public function __construct(
+        $id = null,
         $ref_cod_serie = null,
         $ref_cod_componente_curricular = null
     ) {
@@ -27,6 +29,10 @@ class clsModulesBNCC extends Model {
             bncc.componente_curricular_id,
             unnest(bncc.serie_ids) as serie_id
         ';
+
+        if (is_numeric($id)) {
+            $this->id = $id;
+        }
 
         if (is_numeric($ref_cod_serie)) {
             $this->ref_cod_serie = $ref_cod_serie;
@@ -124,6 +130,34 @@ class clsModulesBNCC extends Model {
         return false;
     }
 
+    /**
+     * Retorna um array com os dados de um registro
+     *
+     * @return array
+     */
+    public function detalhe () {
+        $data = [];
+
+        if (is_numeric($this->id)) {
+            $db = new clsBanco();
+            $db->Consulta("
+                SELECT
+                    {$this->_todos_campos}
+                FROM
+                    {$this->_from}
+                WHERE
+                    bncc.id = {$this->id}
+            ");
+
+            $db->ProximoRegistro();
+            $data = $db->Tupla();
+
+            return $data;
+        }
+
+        return false;
+    }
+    
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
