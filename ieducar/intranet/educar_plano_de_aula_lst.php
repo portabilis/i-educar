@@ -51,6 +51,8 @@ return new class extends clsListagem {
             'S&eacute;rie',
             'Curso',
             'Escola',
+            'Etapa',
+            'Componente curricular'
         ];
 
         $this->addCabecalhos($lista_busca);
@@ -62,6 +64,7 @@ return new class extends clsListagem {
         $this->inputsHelper()->dynamic(['ano'], ['required' => false]);
         $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie', 'turma'], ['required' => false]);
         $this->inputsHelper()->turmaTurno(['required' => false, 'label' => 'Turno']);
+        $this->inputsHelper()->dynamic('componenteCurricular', ['required' => false]);
   
         $this->campoQuebra();
         $this->campoRotulo('filtros_periodo', '<b>Filtros por período</b>');
@@ -106,7 +109,8 @@ return new class extends clsListagem {
             $this->ref_cod_componente_curricular,
             $this->turma_turno_id,
             $this->data_inicial,
-            $this->data_final
+            $this->data_final,
+            $this->fase_etapa
         );
 
         $total = $obj_turma->_total;
@@ -127,7 +131,14 @@ return new class extends clsListagem {
                     "<a href=\"educar_plano_de_aula_det.php?id={$registro['id']}\">{$registro['serie']}</a>",
                     "<a href=\"educar_plano_de_aula_det.php?id={$registro['id']}\">{$registro['curso']}</a>",
                     "<a href=\"educar_plano_de_aula_det.php?id={$registro['id']}\">{$registro['escola']}</a>",
+                    "<a href=\"educar_professores_conteudo_ministrado_det.php?id={$registro['id']}\">{$registro['fase_etapa']}º {$registro['etapa']}</a>"
                 ];
+
+                if ($registro['componente_curricular']) {
+                    $lista_busca[] = "<a href=\"educar_professores_conteudo_ministrado_det.php?id={$registro['id']}\">{$registro['componente_curricular']}</a>";
+                } else {
+                    $lista_busca[] = "<a href=\"educar_professores_conteudo_ministrado_det.php?id={$registro['id']}\">—</a>";
+                }
 
                 $this->addLinhas($lista_busca);
             }
