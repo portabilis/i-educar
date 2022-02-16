@@ -1,7 +1,5 @@
 <?php
 
-use Carbon\Carbon;
-
 class Portabilis_Date_Utils
 {
     /**
@@ -18,7 +16,7 @@ class Portabilis_Date_Utils
             return $date;
         }
 
-        [$dia, $mes, $ano] = explode('/', $date);
+        list($dia, $mes, $ano) = explode('/', $date);
 
         return "$ano-$mes-$dia";
     }
@@ -37,7 +35,7 @@ class Portabilis_Date_Utils
             return $date;
         }
 
-        [$dia, $mes] = explode('/', $date);
+        list($dia, $mes) = explode('/', $date);
 
         $ano = '1900';
 
@@ -112,7 +110,6 @@ class Portabilis_Date_Utils
         } else {
             return false;
         }
-
     }
 
     /**
