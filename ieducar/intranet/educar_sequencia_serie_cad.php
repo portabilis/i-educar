@@ -130,7 +130,7 @@ return new class extends clsCadastro {
             $lista = $objTemp->lista(null, null, null, $this->ref_curso_origem, null, null, null, null, null, null, null, null, 1);
             if (is_array($lista) && count($lista)) {
                 foreach ($lista as $registro) {
-                    $opcoes[$registro['cod_serie']] = $registro['nm_serie'];
+                    $opcoes[$registro['cod_serie']] = $this->concatNameAndDescription($registro);
                 }
             }
         }
@@ -140,7 +140,7 @@ return new class extends clsCadastro {
             $lista = $objTemp->lista(null, null, null, $this->ref_curso_destino, null, null, null, null, null, null, null, null, 1);
             if (is_array($lista) && count($lista)) {
                 foreach ($lista as $registro) {
-                    $opcoes_[$registro['cod_serie']] = $registro['nm_serie'];
+                    $opcoes_[$registro['cod_serie']] = $this->concatNameAndDescription($registro);
                 }
             }
         }
@@ -149,6 +149,12 @@ return new class extends clsCadastro {
         $this->campoLista('ref_serie_destino', ' Série Destino', $opcoes_, $this->ref_serie_destino);
 
         $this->campoOculto('nivel_usuario', $nivel_usuario);
+    }
+
+    private function concatNameAndDescription(array $data): string
+    {
+        return $data['nm_serie'] .
+        !empty($data['descrição']) ? ' - ' . $data['descrição'] : '';
     }
 
     public function Novo()
