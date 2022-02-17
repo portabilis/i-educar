@@ -172,7 +172,11 @@ class clsModulesPlanejamentoAula extends Model {
         $whereAnd = ' AND ';
         $filtros = " WHERE TRUE ";
 
-    
+        if(is_numeric($int_ano)){
+            $filtros .= "{$whereAnd} t.ano = '{$int_ano}'";
+            $whereAnd = ' AND ';
+        }
+
         if (is_numeric($int_ref_cod_ins)) {
             $filtros .= "{$whereAnd} i.cod_instituicao = '{$int_ref_cod_ins}'";
             $whereAnd = ' AND ';
