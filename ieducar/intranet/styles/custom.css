@@ -375,7 +375,7 @@ a.icons-top{
   width: 210px;
   background: rgba(54,54,54,1);
   border: 0;
-  box-shadow: 4px 3px 5px rgba(50, 50, 50, 0.5);
+  box-shadow: 4px 3px 3px rgba(65,69,88,0.4);
   z-index: 1;
   transition: left .5s ease-in-out;
 }
@@ -568,7 +568,7 @@ div#fa-icons {
   border-radius: 0 10px 10px 0;
   position: absolute;
   display: none;
-  margin-left: 1px;
+  margin-left: -3px;
   /*    opção 1       */
   /*margin-top: 0px;  */
   margin-top: 40%;
@@ -1099,7 +1099,7 @@ td.area-conhecimento-destaque {
 .titulo-tabela-listagem {
   background-color: #ccdce6 !important;
   font-family: "Open Sans" !important;
-  font-size: 16px;
+  font-size: 1.5rem;
   font-weight: bold;
   font-style: normal;
   font-stretch: normal;
@@ -1112,7 +1112,7 @@ td.area-conhecimento-destaque {
   background-color: #ffffff;
   border: solid 1px #cddce6;
   padding: 8px;
-  font-size: 14px;
+  font-size: 1.4rem;
   color: #47728f;
   box-sizing: border-box;
 }
@@ -1136,9 +1136,13 @@ td.area-conhecimento-destaque {
   background-color: #ffffff;
   border: solid 1px #cddce6;
   padding: 8px;
-  font-size: 14px;
+  font-size: 1.4rem;
   color: #47728f;
   max-width: 100%;
+}
+
+@media only screen and (max-width: 1023px) {
+  select {width: 100%;}
 }
 
 #formcadastro .formmdtd,
@@ -1159,8 +1163,17 @@ td.area-conhecimento-destaque {
   background-color: #f5f9fd;
 }
 
+@media only screen and (max-width: 1023px) {
+  .formmdtd{ width: calc(100% - 15px); margin: 5px; float: left; }
+  .form{ font-size: 1.4rem; font-weight: bold;}
+}
+
 .formlttd{
   background-color: #FFF;
+}
+
+@media only screen and (max-width: 1023px) {
+  .formlttd{ width: calc(100% - 15px); margin: 5px; float: left; }
 }
 
 .tablelistagem, .tablecadastro, .tableDetalhe{
@@ -1502,7 +1515,27 @@ input.btn_small {
   #expandido:checked ~ .ieducar-quick-search {display: inherit;}
   #expandido:checked ~ .ieducar-sidebar-menu {display: inherit;}
 
-}
+    .form-inline .form-group {
+      display: inline-block;
+      margin-bottom: 0;
+      vertical-align: middle;
+    }
+    .form-inline .form-control {
+      display: inline-block;
+    }
+    .form-inline .radio,
+    .form-inline .checkbox {
+      display: inline-block;
+      padding-left: 0;
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+    .form-inline .radio input[type="radio"],
+    .form-inline .checkbox input[type="checkbox"] {
+      float: none;
+      margin-left: 0;
+    }
+  }
 
 /****WIDGET SUPORTE****/
 .freshwidget-button{

@@ -200,14 +200,14 @@
         <td colspan="3">
             <input type="checkbox" id="expandido">  
             <label for="expandido" class="expandir-btn"><i class="fa fa-ellipsis-v fa-2x"></i></label>
+            <div class="r3c1-Mobile">
+                @include('layout.menu') 
+            </div>
             <table summary="" class='tabelanum2' border='0' cellspacing='0' cellpadding='0'>
                 <tr>
-                    <div class="r3c1-Mobile">
+                    <td id="menu_lateral" class="r3c1" width='170'>
                         @include('layout.menu') 
-                    </div>
-                        <td id="menu_lateral" class="r3c1" width='170'>
-                            @include('layout.menu') 
-                        </td>
+                    </td>
                     <td valign=top>
                         <table summary="" class='tabelanum2' border='0' cellspacing='0' cellpadding='0'>
                             <tr>

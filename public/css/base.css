@@ -253,8 +253,8 @@ a:hover {
 .ieducar-menu,
 .ieducar-sub-menu {
   list-style: none;
-  background: #e9eff7;
-  box-shadow: 2px 3px 6px #aaa;
+  background: rgba(54,54,54);
+  box-shadow: 2px 3px 6px rgb(65 69 88 / 60%);
 }
 
 .ieducar-sub-menu {
@@ -266,13 +266,14 @@ a:hover {
   text-decoration: none;
   display: block;
   padding: 10px;
-  color: #47728f;
+  color: #eee;
   font-family: "Open Sans", sans-serif;
   font-size: 16px;
 }
 
 .ieducar-menu a:hover {
   text-decoration: none;
+  color: rgba(54,54,54);
 }
 
 .ieducar-menu li {
@@ -284,7 +285,7 @@ a:hover {
 }
 
 .ieducar-menu > li:hover {
-  background: #cddce6;
+  background: #cae6f1;
 }
 
 .ieducar-menu li:hover > .ieducar-sub-menu {
@@ -312,7 +313,7 @@ a:hover {
 }
 
 .ieducar-sub-menu li:hover {
-  background: #cddce6;
+  background: #cae6f1;
 }
 
 .ieducar-sub-menu .ieducar-sub-menu {
