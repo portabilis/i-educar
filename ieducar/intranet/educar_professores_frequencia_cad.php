@@ -74,7 +74,6 @@ return new class extends clsCadastro {
         if ($tipoacao == 'Edita' || !$_POST
             && $this->data
             && is_numeric($this->ref_cod_turma)
-            && is_numeric($this->ref_cod_componente_curricular)
             && is_numeric($this->fase_etapa)
         ) {
             $desabilitado = true;
