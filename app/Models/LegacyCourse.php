@@ -108,4 +108,9 @@ class LegacyCourse extends Model
             ->where('matricula.ano', date('Y'))
             ->where('matricula.ativo', 1);
     }
+
+    public function scopeHasModality(Builder $query): Builder
+    {
+        return $query->where('modalidade_curso', '>', 0);
+    }
 }
