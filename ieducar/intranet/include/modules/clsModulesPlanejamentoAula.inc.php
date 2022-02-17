@@ -4,7 +4,9 @@ use iEducar\Legacy\Model;
 
 class clsModulesPlanejamentoAula extends Model {
     public $id;
-    public $turma_id;
+    public $ref_cod_turma;
+    public $ref_componente_curricular_id;
+    public $etapa_sequencial;
     public $data_inicial;
     public $data_final;
     public $ddp;
@@ -14,7 +16,9 @@ class clsModulesPlanejamentoAula extends Model {
 
     public function __construct(
         $id = null,
-        $turma_id = null,
+        $ref_cod_turma = null,
+        $ref_componente_curricular_id = null,
+        $etapa_sequencial = null,
         $data_inicial = null,
         $data_final = null,
         $ddp = null,
@@ -53,7 +57,7 @@ class clsModulesPlanejamentoAula extends Model {
             pa.id,
             pa.data_inicial,
             pa.data_final,
-            pa.ref_cod_turma as cod_turma,
+            pa.ref_cod_turma,
             pa.ddp,
             pa.atividades,
             i.nm_instituicao AS instituicao,
@@ -71,8 +75,16 @@ class clsModulesPlanejamentoAula extends Model {
             $this->id = $id;
         }
 
-        if (is_numeric($turma_id)) {
-            $this->turma_id = $turma_id;
+        if (is_numeric($ref_cod_turma)) {
+            $this->ref_cod_turma = $ref_cod_turma;
+        }
+
+        if (is_numeric($ref_componente_curricular_id)) {
+            $this->ref_componente_curricular_id = $ref_componente_curricular_id;
+        }
+
+        if (is_numeric($etapa_sequencial)) {
+            $this->etapa_sequencial = $etapa_sequencial;
         }
 
         $this->data_inicial = $data_inicial;
@@ -98,23 +110,55 @@ class clsModulesPlanejamentoAula extends Model {
      * @return bool
      */
     public function cadastra() {
-        if (is_numeric($this->turma_id)
+        if (is_numeric($this->ref_cod_turma)
+            && is_numeric($this->etapa_sequencial)
             && $this->data_inicial != ''
             && $this->data_final != ''
-            && $this->$ddp != ''
+            && $this->ddp != ''
             && $this->atividades != ''
             && is_array($this->bnccs)
             && is_array($this->conteudos)
         ) {
+            //dd("adaw");
             $db = new clsBanco();
 
-            $campos = "data_inicial, data_final, ref_cod_turma, ddp, atividades, data_cadastro";
-            $valores = "'{$this->data_inicial}',
-                        '{$this->data_final}',
-                        '{$this->turma_id}',
-                        '{$this->ddp}',
-                        '{$this->atividades}',
-                        (NOW() - INTERVAL '3 HOURS')";
+            $campos = '';
+            $valores = '';
+            $gruda = '';
+
+            $campos .= "{$gruda}data_inicial";
+            $valores .= "{$gruda}'{$this->data_inicial}'";
+            $gruda = ', ';
+
+            $campos .= "{$gruda}data_final";
+            $valores .= "{$gruda}'{$this->data_final}'";
+            $gruda = ', ';
+
+            $campos .= "{$gruda}ref_cod_turma";
+            $valores .= "{$gruda}'{$this->ref_cod_turma}'";
+            $gruda = ', ';
+
+            if(is_numeric($this->ref_componente_curricular_id)) {
+                $campos .= "{$gruda}ref_componente_curricular";
+                $valores .= "{$gruda}'{$this->ref_componente_curricular_id}'";
+                $gruda = ', ';
+            }
+
+            $campos .= "{$gruda}etapa_sequencial";
+            $valores .= "{$gruda}'{$this->etapa_sequencial}'";
+            $gruda = ', ';
+
+            $campos .= "{$gruda}ddp";
+            $valores .= "{$gruda}'{$this->ddp}'";
+            $gruda = ', ';
+
+            $campos .= "{$gruda}atividades";
+            $valores .= "{$gruda}'{$this->atividades}'";
+            $gruda = ', ';
+
+            $campos .= "{$gruda}data_cadastro";
+            $valores .= "{$gruda}(NOW() - INTERVAL '3 HOURS')";
+            $gruda = ', ';
 
             $db->Consulta("
                 INSERT INTO
@@ -125,7 +169,12 @@ class clsModulesPlanejamentoAula extends Model {
             $id = $db->InsertId("{$this->_tabela}_id_seq");
 
             foreach ($this->bnccs as $key => $bncc_id) {
-                $obj = new clsModulesPlanejamentoAulaBNCC($bncc_id);
+                $obj = new clsModulesPlanejamentoAulaBNCC(null, $id, $bncc_id);
+                $obj->cadastra();
+            }
+
+            foreach ($this->conteudos as $key => $conteudo) {
+                $obj = new clsModulesPlanejamentoAulaConteudo(null, $id, $conteudo);
                 $obj->cadastra();
             }
 
