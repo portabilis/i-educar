@@ -131,54 +131,21 @@ class clsModulesBNCC extends Model {
     }
 
     /**
-     * Retorna um array com os dados de um registro
-     *
-     * @return array
-     */
-    public function detalhe () {
-        $data = [];
-
-        if (is_numeric($this->id)) {
-            $db = new clsBanco();
-            $db->Consulta("
-                SELECT
-                    {$this->_todos_campos}
-                FROM
-                    {$this->_from}
-                WHERE
-                    bncc.id = {$this->id}
-            ");
-
-            $db->ProximoRegistro();
-            $data = $db->Tupla();
-
-            return $data;
-        }
-
-        return false;
-    }
-    
-    /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
      * @return array
      */
     public function listaTurma (
-        $int_turma = null
+        $int_turma = null,
+        $int_cod_componente_curricular = null
     ) {
         $sql = "
-        WITH select_ as (
-            SELECT
-                bncc.id,
-                bncc.codigo,
-                bncc.habilidade,
-                bncc.campo_experiencia,
-                bncc.unidade_tematica,
-                bncc.componente_curricular_id,
-                unnest(bncc.serie_ids) as serie_id
-            FROM
-                modules.bncc as bncc
-        )
+            WITH select_ as (
+                SELECT
+                    {$this->_campos_lista}
+                FROM
+                    {$this->_from}
+            )
             SELECT
                 select_.id,
                 codigo,
@@ -189,14 +156,17 @@ class clsModulesBNCC extends Model {
                 select_.serie_id
             FROM select_
             CROSS JOIN pmieducar.turma as t
+            JOIN modules.componente_curricular as cc
+                ON (cc.codigo_educacenso = select_.componente_curricular_id)
             WHERE select_.serie_id::integer = t.etapa_educacenso
+            AND t.cod_turma = '{$int_turma}'
         ";
-
+        //echo("<script>console.log('PHP: " . $sql . "');</script>");
         $whereAnd = ' AND ';
         $filtros = "";
 
-        if (is_numeric($int_turma)) {
-            $filtros .= "{$whereAnd} t.cod_turma = '{$int_turma}'";
+        if (is_numeric($int_cod_componente_curricular)) {
+            $filtros .= "{$whereAnd} select_.componente_curricular_id = '{$int_cod_componente_curricular}'";
             $whereAnd = ' AND ';
         }
 
@@ -242,6 +212,34 @@ class clsModulesBNCC extends Model {
         }
         if (count($resultado)) {
             return $resultado;
+        }
+
+        return false;
+    }
+
+    /**
+     * Retorna um array com os dados de um registro
+     *
+     * @return array
+     */
+    public function detalhe () {
+        $data = [];
+
+        if (is_numeric($this->id)) {
+            $db = new clsBanco();
+            $db->Consulta("
+                SELECT
+                    {$this->_todos_campos}
+                FROM
+                    {$this->_from}
+                WHERE
+                    bncc.id = {$this->id}
+            ");
+
+            $db->ProximoRegistro();
+            $data = $db->Tupla();
+
+            return $data;
         }
 
         return false;
