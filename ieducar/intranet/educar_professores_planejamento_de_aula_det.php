@@ -2,7 +2,7 @@
 
 return new class extends clsDetalhe {
     public $titulo;
-    public $id_freq;
+    public $id;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
     public $ref_ref_cod_serie;
@@ -28,11 +28,11 @@ return new class extends clsDetalhe {
     public function Gerar()
     {
         $this->titulo = 'Planejamento de aula - Detalhe';
-        $this->id_freq = $_GET['id'];
+        $this->id = $_GET['id'];
 
         $obj_permissoes = new clsPermissoes();
 
-        $tmp_obj = new clsModulesPlanejamentoAula($this->id_freq);
+        $tmp_obj = new clsModulesPlanejamentoAula($this->id);
         $registro = $tmp_obj->detalhe();
 
         if (!$registro) {
@@ -40,7 +40,7 @@ return new class extends clsDetalhe {
         }
 
 
-        if ($registro['detalhes']['data']) {
+        if ($registro['detalhes']['data_inicial']) {
             $this->addDetalhe(
                 [
                     'Data inicial',
@@ -53,15 +53,6 @@ return new class extends clsDetalhe {
             $this->addDetalhe(
                 [
                     'Data final',
-                    dataToBrasil($registro['detalhes']['data_final'])
-                ]
-            );
-        }
-
-        if ($registro['detalhes']['data_final']) {
-            $this->addDetalhe(
-                [
-                    'Data Final',
                     dataToBrasil($registro['detalhes']['data_final'])
                 ]
             );
@@ -133,7 +124,7 @@ return new class extends clsDetalhe {
             $data_agora = new DateTime('now');
             $data_agora = new \DateTime($data_agora->format('Y-m-d'));
 
-            $turma = $registro['detalhes']['cod_turma'];
+            $turma = $registro['detalhes']['ref_cod_turma'];
             $sequencia = $registro['detalhes']['fase_etapa'];
             $obj = new clsPmieducarTurmaModulo();
 
