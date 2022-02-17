@@ -45,7 +45,7 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
 
             $db->Consulta("
                 INSERT INTO {$this->_tabela}
-                    (planejamento_aula_id, bncc_id)
+                    (planejamento_aula_id, conteudo)
                 VALUES ({$this->planejamento_aula_id}, {$this->conteudo})
             ");
 
