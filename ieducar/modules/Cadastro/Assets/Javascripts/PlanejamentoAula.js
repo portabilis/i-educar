@@ -1,3 +1,7 @@
+const desativado = document.getElementById('ref_cod_turma').value != '' && document.getElementById('fase_etapa').value != '';
+document.getElementById('data_inicial').disabled = desativado;
+document.getElementById('data_final').disabled = desativado;
+
 document.getElementById('data_inicial').onchange = function () {
     const ano = document.getElementById('data_inicial').value.split('/')[2];
     const anoElement = document.getElementById('ano');

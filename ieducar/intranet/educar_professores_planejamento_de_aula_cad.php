@@ -83,8 +83,8 @@ return new class extends clsCadastro {
         $obrigatorio = true;
 
         $this->campoOculto('id', $this->id);
-        $this->inputsHelper()->dynamic('dataInicial', ['required' => true, 'disabled' => $desabilitado]);
-        $this->inputsHelper()->dynamic('dataFinal', ['required' => true, 'disabled' => $desabilitado]);
+        $this->inputsHelper()->dynamic('dataInicial', ['required' => $obrigatorio]);    // Disabled não funciona; ação colocada no javascript.
+        $this->inputsHelper()->dynamic('dataFinal', ['required' => $obrigatorio]);      // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado]);
         $helperOptions = [
             'objectName' => 'bncc',
