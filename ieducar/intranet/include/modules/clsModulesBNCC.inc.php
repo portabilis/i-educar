@@ -244,4 +244,30 @@ class clsModulesBNCC extends Model {
 
         return false;
     }
+
+    /**
+     * Retorna array com duas arrays, uma com os BNCC a serem cadastrados e a outra com os que devem ser removidos
+     *
+     * @return array
+     */
+    public function retornaDiferencaEntreConjuntosBNCC($atualBNCC, $novoBNCC) {
+        $resultado = [];
+        $resultado['adicionar'] = $novoBNCC;
+        $resultado['remover'] = $atualBNCC;
+
+        for ($i=0; $i < count($novoBNCC); $i++) { 
+            $novo = $novoBNCC[$i];
+
+            for ($j=0; $j < count($atualBNCC); $j++) {
+                $atual = $atualBNCC[$j];
+
+                if ($novo == $atual) {
+                    unset($resultado['adicionar'][$i]);
+                    unset($resultado['remover'][$j]);
+                }
+            }
+        }
+
+        return $resultado;
+    }
 }

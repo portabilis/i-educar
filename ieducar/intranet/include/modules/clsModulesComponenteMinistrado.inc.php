@@ -136,7 +136,8 @@ class clsModulesComponenteMinistrado extends Model {
             ");
 
             $bncc = $this->listaBNCC($this->id)['ids'];
-            $bncc_diferenca = $this->retornaDiferencaEntreConjuntosBNCC($bncc, $this->frequencia_bncc);
+            $obj = new clsModulesBNCC();
+            $bncc_diferenca = $obj->retornaDiferencaEntreConjuntosBNCC($bncc, $this->frequencia_bncc);
 
             foreach ($bncc_diferenca['adicionar'] as $key => $bncc_adicionar)
                 $this->cadastraBNCC($this->id, $bncc_adicionar);
@@ -148,32 +149,6 @@ class clsModulesComponenteMinistrado extends Model {
         }
 
         return false;
-    }
-
-    /**
-     * Retorna array com duas arrays, uma com os BNCC a serem cadastrados e a outra com os que devem ser removidos
-     *
-     * @return array
-     */
-    public function retornaDiferencaEntreConjuntosBNCC($atualBNCC, $novoBNCC) {
-        $resultado = [];
-        $resultado['adicionar'] = $novoBNCC;
-        $resultado['remover'] = $atualBNCC;
-
-        for ($i=0; $i < count($novoBNCC); $i++) { 
-            $novo = $novoBNCC[$i];
-
-            for ($j=0; $j < count($atualBNCC); $j++) {
-                $atual = $atualBNCC[$j];
-
-                if ($novo == $atual) {
-                    unset($resultado['adicionar'][$i]);
-                    unset($resultado['remover'][$j]);
-                }
-            }
-        }
-
-        return $resultado;
     }
 
     /**
