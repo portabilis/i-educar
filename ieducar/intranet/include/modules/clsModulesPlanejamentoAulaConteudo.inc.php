@@ -66,13 +66,27 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
 
     /**
      * Retorna uma lista filtrados de acordo com os parametros
+     * Lista relacionamentos entre os conteudos e o planejamento de aula
      *
      * @return array
      */
-    public function lista (
-        
-    ) {
-        return false;
+    public function lista($planejamento_aula_id) {
+        $db = new clsBanco();
+
+        $db->Consulta("
+            SELECT
+                pac.conteudo
+            FROM
+                modules.planejamento_aula_conteudo as pac
+            WHERE
+                pac.planejamento_aula_id = '{$planejamento_aula_id}'
+        ");
+
+        $db->ProximoRegistro();
+
+        $conteudos = $db->Tupla();
+
+        return $conteudos;
     }
 
     /**

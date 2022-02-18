@@ -68,13 +68,37 @@ class clsModulesPlanejamentoAulaBNCC extends Model {
 
     /**
      * Retorna uma lista filtrados de acordo com os parametros
+     * Lista relacionamentos entre BNCC e o planejamento de aula
      *
      * @return array
      */
-    public function lista (
-        
-    ) {
-        return false;
+    public function lista($planejamento_aula_id) {
+        $db = new clsBanco();
+
+        $db->Consulta("
+            SELECT
+                STRING_AGG (lok.id::character varying, ',') as ids,
+                STRING_AGG (lok.code::character varying, ',') as codigos,
+                STRING_AGG (lok.description::character varying, '$/') as descricoes
+            FROM
+                modules.planejamento_aula_bncc as pab
+            JOIN public.learning_objectives_and_skills as lok
+                ON (lok.id = pab.bncc_id)
+            GROUP BY
+                pab.planejamento_aula_id
+            HAVING
+                pab.planejamento_aula_id = '{$planejamento_aula_id}'
+        ");
+
+        $db->ProximoRegistro();
+
+        $bncc = $db->Tupla();
+
+        $bncc['ids'] = explode(',', $bncc['ids']);
+        $bncc['codigos'] = count($bncc['codigos']) > 0 ? explode(',', $bncc['codigos']) : null;
+        $bncc['descricoes'] = count($bncc['descricoes']) > 0 ? explode('$/', $bncc['descricoes']) : null;
+
+        return $bncc;
     }
 
     /**
