@@ -13,6 +13,9 @@ jobs:
     name: Unit, Integration and Pages
 
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-versions: ['8.0','8.1']
 
     env:
       APP_URL: http://localhost:8000
@@ -42,9 +45,10 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 3
 
     steps:
-      - uses: shivammathur/setup-php@v2
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.1'
+          php-version: ${{ matrix.php-versions }}
 
       - uses: actions/checkout@v2
 
