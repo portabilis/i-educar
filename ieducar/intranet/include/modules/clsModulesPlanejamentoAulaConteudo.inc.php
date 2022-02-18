@@ -56,16 +56,6 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
     }
 
     /**
-     * Edita os dados de um registro
-     *
-     * @return bool
-     */
-    public function edita() {
-        return false;
-    }
-
-    /**
-     * Retorna uma lista filtrados de acordo com os parametros
      * Lista relacionamentos entre os conteudos e o planejamento de aula
      *
      * @return array
