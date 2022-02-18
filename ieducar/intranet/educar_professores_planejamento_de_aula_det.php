@@ -179,8 +179,8 @@ return new class extends clsDetalhe {
         $this->tabela .= ' <br style="clear: left" />';
 
         for ($i=0; $i < count($bnccs); $i++) {
-            $this->tabela .= "  <span style='display: block; float: left; width: 100px'>{$bnccs[$i][bncc][codigo]}</span>";
-            $this->tabela .= "  <span style='display: block; float: left; width: 700px'>{$bnccs[$i][bncc][habilidade]}</span>";
+            $this->tabela .= "  <span style='display: block; float: left; width: 100px; margin-bottom: 10px'>{$bnccs[$i][bncc][codigo]}</span>";
+            $this->tabela .= "  <span style='display: block; float: left; width: 700px; margin-bottom: 10px'>{$bnccs[$i][bncc][habilidade]}</span>";
         }
         
         $bncc  = '<table cellspacing="0" cellpadding="0" border="0">';
