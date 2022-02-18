@@ -87,7 +87,7 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
     public function detalhe () {
         $data = [];
 
-        if (is_numeric($this->id)) {
+        if (is_numeric($this->planejamento_aula_id)) {
             $db = new clsBanco();
             $db->Consulta("
                 SELECT
@@ -95,7 +95,7 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
                 FROM
                     {$this->_from}
                 WHERE
-                    pac.planejamento_aula_id = {$this->id}
+                    pac.planejamento_aula_id = {$this->planejamento_aula_id}
             ");
 
             while ($db->ProximoRegistro()) {
