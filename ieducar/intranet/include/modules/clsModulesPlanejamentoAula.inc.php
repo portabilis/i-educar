@@ -58,6 +58,7 @@ class clsModulesPlanejamentoAula extends Model {
             pa.data_inicial,
             pa.data_final,
             pa.ref_cod_turma,
+            pa.ref_componente_curricular,
             pa.ddp,
             pa.atividades,
             i.nm_instituicao AS instituicao,
@@ -190,6 +191,53 @@ class clsModulesPlanejamentoAula extends Model {
      * @return bool
      */
     public function edita() {
+        if (is_numeric($this->id)
+            && $this->ddp != ''
+            && $this->atividades != ''
+            && is_array($this->bnccs)
+            && is_array($this->conteudos)
+        ) {
+            $db = new clsBanco();
+
+            $set = "
+                ddp = '{$this->ddp}',
+                atividades = '{$this->atividades}',
+                data_atualizacao = (NOW() - INTERVAL '3 HOURS')
+            ";
+
+            $db->Consulta("
+                UPDATE
+                    {$this->_tabela}
+                SET
+                    $set
+                WHERE
+                    id = '{$this->id}'
+            ");
+
+            $obj = new clsModulesPlanejamentoAulaBNCC();
+            $bnccs_atuais = $obj->lista($this->id)['ids'];
+
+            $obj = new clsModulesBNCC(null, $this->id);
+            $bncc_diferenca = $obj->retornaDiferencaEntreConjuntosBNCC($bnccs_atuais, $this->bnccs);
+
+            // $obj = new clsModulesPlanejamentoConteudo();
+            // $conteudos_atuais = $obj->lista($this->id)['ids'];
+            // $conteudo_diferenca = $obj->retornaDiferencaEntreConjuntosConteudo($conteudos_atuais, $this->conteudos);
+
+            foreach ($bncc_diferenca['adicionar'] as $key => $bncc_adicionar){
+                $obj = new clsModulesPlanejamentoAulaBNCC(null, $this->id, $bncc_adicionar);
+                $obj->cadastra();
+            }
+
+            foreach ($bncc_diferenca['remover'] as $key => $bncc_remover){
+                dump($bncc_remover);
+                $obj = new clsModulesPlanejamentoAulaBNCC(null, $this->id, $bncc_remover);
+                $obj->excluir();
+            }
+
+            return true;
+        }
+
         return false;
     }
 
@@ -335,10 +383,10 @@ class clsModulesPlanejamentoAula extends Model {
 
             $data['detalhes'] = $db->Tupla();
 
-            $obj = new clsModulesPlanejamentoAulaBNCC($this->id);
+            $obj = new clsModulesPlanejamentoAulaBNCC(null, $this->id);
             $data['bnccs'] = $obj->detalhe();
 
-            $obj = new clsModulesPlanejamentoAulaConteudo($this->id);
+            $obj = new clsModulesPlanejamentoAulaConteudo(null, $this->id);
             $data['conteudos'] = $obj->detalhe();
 
             return $data;
