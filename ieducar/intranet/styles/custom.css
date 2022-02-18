@@ -565,14 +565,14 @@ div#fa-icons {
 .expandir-btn {
   background-color: rgba(54,54,54);
   box-shadow: 2px 3px 3px rgba(50, 50, 50, 0.5);
-  border-radius: 0 10px 10px 0;
+  border-radius: 0 30px 30px 0;
   position: absolute;
   display: none;
   margin-left: -3px;
   /*    opção 1       */
   /*margin-top: 0px;  */
-  margin-top: 40%;
-  padding: 10px;
+  margin-top: 60vw;
+  padding: 80px 10px;
   transition: margin-left .5s ease-in-out;
   z-index: 2;
 }
@@ -1099,7 +1099,7 @@ td.area-conhecimento-destaque {
 .titulo-tabela-listagem {
   background-color: #ccdce6 !important;
   font-family: "Open Sans" !important;
-  font-size: 1.5rem;
+  font-size: 1rem;
   font-weight: bold;
   font-style: normal;
   font-stretch: normal;
@@ -1112,7 +1112,7 @@ td.area-conhecimento-destaque {
   background-color: #ffffff;
   border: solid 1px #cddce6;
   padding: 8px;
-  font-size: 1.4rem;
+  font-size: 1rem;
   color: #47728f;
   box-sizing: border-box;
 }
@@ -1136,13 +1136,9 @@ td.area-conhecimento-destaque {
   background-color: #ffffff;
   border: solid 1px #cddce6;
   padding: 8px;
-  font-size: 1.4rem;
+  font-size: 1rem;
   color: #47728f;
   max-width: 100%;
-}
-
-@media only screen and (max-width: 1023px) {
-  select {width: 100%;}
 }
 
 #formcadastro .formmdtd,
@@ -1163,17 +1159,8 @@ td.area-conhecimento-destaque {
   background-color: #f5f9fd;
 }
 
-@media only screen and (max-width: 1023px) {
-  .formmdtd{ width: calc(100% - 15px); margin: 5px; float: left; }
-  .form{ font-size: 1.4rem; font-weight: bold;}
-}
-
 .formlttd{
   background-color: #FFF;
-}
-
-@media only screen and (max-width: 1023px) {
-  .formlttd{ width: calc(100% - 15px); margin: 5px; float: left; }
 }
 
 .tablelistagem, .tablecadastro, .tableDetalhe{
@@ -1502,16 +1489,21 @@ input.btn_small {
 }
 
 @media only screen and (max-width: 1023px) {
+  
+  select {width: 100%;}
   .r3c1 {display: none;}
   .r3c1-Mobile {display: inherit;}
   .expandir-btn {display:inherit;}
   .ieducar-quick-search, .ieducar-sidebar-menu {position: relative}
-  .ieducar-sidebar-menu {width: 100% !important}
-  .ieducar-sidebar-menu li a {font-size: 22px !important;}
+  
+  #tablelistagem .formmdtd{ width: calc(100% - 15px); margin: 5px; float: left; }
+  #tablelistagem .formlttd{ width: calc(100% - 15px); margin: 5px; float: left; }
+  .form, .formlttd, .formmdtd, .tablelistagem .formdktd,
+  #tablelistagem .formlttd, #tablelistagem .formmdtd  { font-size: 1.3rem; font-weight: bold;}  
   
   #expandido:checked ~ .r3c1 {display: table-cell; left: 0;}
   #expandido:checked ~ .r3c1-Mobile {display: table-cell; left: 0;}
-  #expandido:checked ~ .expandir-btn {margin-left: 40%; }
+  #expandido:checked ~ .expandir-btn {margin-left: 39%; }
   #expandido:checked ~ .ieducar-quick-search {display: inherit;}
   #expandido:checked ~ .ieducar-sidebar-menu {display: inherit;}
 

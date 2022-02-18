@@ -95,7 +95,7 @@ a:hover {
 .ieducar-header-links .dropbtn {
   color: white;
   padding: 6px 20px 6px 6px;
-  font-size: 16px;
+  font-size: 1.2rem;
   border: none;
   cursor: pointer;
   background-image: url('../intranet/imagens/arrow-down.png');
@@ -132,7 +132,7 @@ a:hover {
   text-decoration: none;
   display: block;
   text-align: left;
-  font-size: 14px;
+  font-size: 1.1rem;
 }
 
 .ieducar-header-links .dropdown-content a:hover {
@@ -268,7 +268,7 @@ a:hover {
   padding: 10px;
   color: #eee;
   font-family: "Open Sans", sans-serif;
-  font-size: 16px;
+  font-size: 1.2rem;
 }
 
 .ieducar-menu a:hover {
@@ -293,7 +293,7 @@ a:hover {
 }
 
 .ieducar-sub-menu a {
-  font-size: 14px;
+  font-size: 1.1rem;
 }
 
 .ieducar-sub-menu {
@@ -403,3 +403,4 @@ a:hover {
   object-fit: cover;
   vertical-align: middle;
 }
+
