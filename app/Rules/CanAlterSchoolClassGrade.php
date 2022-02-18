@@ -31,7 +31,7 @@ class CanAlterSchoolClassGrade implements Rule
         $oldSchoolClassGrade = $oldSchoolClass->ref_ref_cod_serie;
         $newSchoolClassGrade = $value->ref_ref_cod_serie;
         
-        if ((int)$oldSchoolClassGrade == (int)$newSchoolClassGrade) {
+        if ((int)$oldSchoolClassGrade === (int)$newSchoolClassGrade) {
             return true;
         }
 
