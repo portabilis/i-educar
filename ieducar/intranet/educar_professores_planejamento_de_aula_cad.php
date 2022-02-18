@@ -11,7 +11,7 @@ use Illuminate\Support\Arr;
 return new class extends clsCadastro {
     public $id;
     public $ref_cod_turma;
-    public $ref_cod_componente_curricular;
+    public $ref_componente_curricular;
     public $fase_etapa;
     public $data_inicial;
     public $data_final;
@@ -39,9 +39,7 @@ return new class extends clsCadastro {
                 foreach ($registro['detalhes'] as $campo => $val) {
                     $this->$campo = $val;
                 }
-                $this->bncc = array_column($registro['bnccs'], 'id');
-                $this->bncc = ['33', '34'];
-                dump($this->bncc);
+                $this->bncc = array_column($registro['bnccs'], 'bncc_id');
 
                 $this->fexcluir = $obj_permissoes->permissao_excluir(58, $this->pessoa_logada, 7);
                 $retorno = 'Editar';
@@ -98,8 +96,7 @@ return new class extends clsCadastro {
             'objectName' => 'bncc',
         ];
 
-        $todos_bncc = $this->getBNCCTurma($this->turma)['bncc'];
-        dump($todos_bncc);
+        $todos_bncc = $this->getBNCCTurma($this->ref_cod_turma, $this->ref_componente_curricular)['bncc'];
 
         $options = [
             'label' => 'BNCC',
@@ -134,12 +131,12 @@ return new class extends clsCadastro {
             $this->simpleRedirect('educar_professores_planejamento_de_aula_cad.php');
         }
 
-        if ($tipo_presenca == 1 && $this->ref_cod_componente_curricular) {
+        if ($tipo_presenca == 1 && $this->ref_componente_curricular) {
             $this->mensagem = 'Cadastro não realizado, pois esta série não admite frequência por componente curricular.<br>';
             $this->simpleRedirect('educar_professores_planejamento_de_aula_cad.php');
         }
 
-        if ($tipo_presenca == 2 && !$this->ref_cod_componente_curricular) {
+        if ($tipo_presenca == 2 && !$this->ref_componente_curricular) {
             $this->mensagem = 'Cadastro não realizado, pois o componente curricular é obrigatório para esta série.<br>';
             $this->simpleRedirect('educar_professores_planejamento_de_aula_cad.php');
         }
@@ -190,7 +187,7 @@ return new class extends clsCadastro {
         $obj = new clsModulesPlanejamentoAula(
            null,
            $this->ref_cod_turma,
-           $this->ref_cod_componente_curricular,
+           $this->ref_componente_curricular,
            $this->fase_etapa,
            dataToBanco($this->data_inicial),
            dataToBanco($this->data_final),
@@ -202,7 +199,7 @@ return new class extends clsCadastro {
 
         $existe = $obj->existe();
         if ($existe){
-            $this->mensagem = 'Cadastro não realizado, pois esta frequência já existe.<br>';
+            $this->mensagem = 'Cadastro não realizado, pois este planejamento de aula já existe.<br>';
             $this->simpleRedirect('educar_professores_planejamento_de_aula_cad.php');
         }
 
@@ -222,6 +219,9 @@ return new class extends clsCadastro {
     }
 
     public function Editar() {
+        $this->conteudos = ["'AAA.'", "'BBB.'"];
+       // dd($this->id, $this->ddp, $this->atividades, $this->bncc, $this->conteudos);
+
         $this->data_inicial = $this->data_inicial;
         $this->data_final = $this->data_final;
         $this->ddp = $this->ddp;
@@ -229,8 +229,17 @@ return new class extends clsCadastro {
         $this->bnccs = $this->bnccs;
         $this->conteudos = $this->conteudos;
 
-        $obj = new clsModulesPlanejamentoAulaBNCC(
-            $this->id     
+        $obj = new clsModulesPlanejamentoAula(
+            $this->id,
+            null,
+            null,
+            null,
+            null,
+            null,
+            $this->ddp,
+            $this->atividades,
+            $this->bncc,
+            $this->conteudos
         );
 
         $editou = $obj->edita();
@@ -260,14 +269,14 @@ return new class extends clsCadastro {
         return false;
     }
  
-    private function getBNCCTurma($turma = null)
+    private function getBNCCTurma($turma = null, $ref_componente_curricular = null)
     {
         if (is_numeric($turma)) {
             $bncc = [];
             $bncc_temp = [];
             $obj = new clsModulesBNCC();
 
-            if ($bncc_temp = $obj->listaTurma($turma)) {
+            if ($bncc_temp = $obj->listaTurma($turma, $ref_componente_curricular)) {
                 foreach ($bncc_temp as $bncc_item) {
                     $id = $bncc_item['id'];
                     $codigo = $bncc_item['codigo'];
