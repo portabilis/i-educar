@@ -39,6 +39,13 @@ class CanAlterSchoolClassGrade implements Rule
             ->where('ref_cod_turma', $oldSchoolClass->getKey())
             ->where('ativo', 1)
             ->with('registration')
+            ->whereHas(
+                'registration',
+                function ($query) use ($oldSchoolClass) {
+                    /** @var Builder $query */
+                    $query->where('ref_ref_cod_serie', $oldSchoolClass->ref_ref_cod_serie);
+                }
+            )
             ->exists();
         
         if ($existsEnrollment) {
