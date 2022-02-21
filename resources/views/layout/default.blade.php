@@ -199,7 +199,7 @@
     <tr>
         <td colspan="3">
             <input type="checkbox" id="expandido">  
-            <label for="expandido" class="expandir-btn"><i class="fa fa-ellipsis-v fa-2x"></i></label>
+            <label for="expandido" class="expandir-btn"><i class="fa fa-ellipsis-v"></i></label>
             <div class="r3c1-Mobile">
                 @include('layout.menu') 
             </div>

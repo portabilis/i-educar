@@ -18,7 +18,7 @@ caption{
 hr {
     border: 0;
     height: 1px;
-    background: #47728f;
+    background: #ccdce6;
 }
 
 input, select, textarea, span.select2.select2-container.select2-container--default{
@@ -1495,22 +1495,32 @@ input.btn_small {
   .r3c1-Mobile {display: inherit;}
   .expandir-btn {display:inherit;}
   .ieducar-quick-search, .ieducar-sidebar-menu {position: relative}
+  #formcadastro select {font-size: 1.7rem !important;}
+  .breadcrumb a, .breadcrumb span {font-size: 1.7rem !important}
+  .formmdtd sub, .formlttd sub {font-size:1.3rem}
+  #formcadastro input, #formcadastro textarea {font-size: 2rem  !important}
+  table {font-size: 2.5rem !important;}
+  table.paginacao td a.nvp_paginador { font-size: 2.2rem !important;}
+  table.paginacao{width:95vw !important; margin-top: 3vh !important; margin-bottom: 7vh !important;}
 
   .avatar-35{width: 70px !important; height: 70px !important;}
   .notifications img {top: 3px !important; width:40px !important;}
+  .botaolistagem {}
   .ieducar-header{height: 100px !important;}
   .ieducar-header-logo h1 a {font-size: 48px !important;line-height: 100px !important;}
-  .ieducar-menu a {font-size: 1.5rem !important;}
+  .ieducar-menu a {font-size: 1.9rem !important;}
   .ieducar-header-links .dropbtn {padding: 18px 36px 18px 18px !important; font-size: 2rem !important; background-size: 24px !important;}
-  .ieducar-header-links .dropdown-content a {font-size: 1.3rem !important; padding: 25px 25px; margin: 15px 0;}
+  .ieducar-header-links .dropdown-content a {font-size: 1.5rem !important; padding: 25px 25px; margin: 15px 0;}
   .ieducar-sidebar-menu {width: 100% !important}
-  .ieducar-sidebar-menu li a {font-size: 1.5rem !important; padding: 25px 25px !important;}
-  .ieducar-sub-menu li a{font-size: 1.3rem !important; padding: 25px 25px !important; margin: 15px 0 !important;}
+  .ieducar-sidebar-menu li a {font-size: 1.7rem !important; padding: 25px 25px !important;}
+  .ieducar-sub-menu li a{font-size: 1.7rem !important; padding: 25px 25px !important; margin: 15px 0 !important;}
+  .tablelistagem .formlttd a, .tablelistagem .formmdtd a, .titulo-tabela-listagem{font-size:1.5rem !important;}
+  input[type="button"] {font-size: 5rem !important}
   
-  #tablelistagem .formmdtd{ width: calc(100% - 15px); margin: 5px; float: left; }
+  #tablelistagem .formmdtd{ font-size: 1.7rem; width: calc(100% - 15px); margin: 5px; float: left; }
   #tablelistagem .formlttd{ width: calc(100% - 15px); margin: 5px; float: left; }
   .form, .formlttd, .formmdtd, .tablelistagem .formdktd,
-  #tablelistagem .formlttd, #tablelistagem .formmdtd  { font-size: 1.3rem; font-weight: bold;}  
+  #tablelistagem .formlttd, #tablelistagem .formmdtd  { font-size: 1.7rem !important; font-weight: bold;}  
   
   #expandido:checked ~ .r3c1 {display: table-cell; left: 0;}
   #expandido:checked ~ .r3c1-Mobile {display: table-cell; left: 0;}
@@ -1560,6 +1570,9 @@ a.btn-detalhes {
 
 #ref_cod_escola_chosen a.chosen-single,
 #escola_chosen a.chosen-single{
+  text-decoration: none !important;
+  cursor: initial !important;
+  font-size: 1rem !important;
   width: 100% !important;
 }
 

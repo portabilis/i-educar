@@ -23,7 +23,7 @@ a:hover {
 
 .ieducar-content {
   display: flex;
-  flex: 1 1 auto !important;
+  flex: 1 1 auto;
 }
 
 .ieducar-sidebar {
@@ -33,7 +33,7 @@ a:hover {
 }
 
 .ieducar-main {
-  flex: 1 1 auto !important;
+  flex: 1 1 auto;
 }
 
 .ieducar-main-content {
@@ -332,16 +332,16 @@ a:hover {
 
 .breadcrumb a,
 .breadcrumb span {
-  font-weight: bold !important;
+  font-weight: bold;
   color: #47728f;
-  font-size: 14px !important;
+  font-size: 14px;
 }
 
 .breadcrumb .breadcrumb-current,
 .breadcrumb .breadcrumb-current:hover,
 .breadcrumb .breadcrumb-separator,
 .breadcrumb .breadcrumb-separator:hover {
-  color: #999 !important;
+  color: #999;
 }
 
 .beta-badge {
@@ -360,8 +360,8 @@ a:hover {
 }
 
 .quick-search input[type="text"].multiselect__input {
-  padding: 0 5px !important;
-  border: none !important;
+  padding: 0 5px;
+  border: none;
 }
 
 .quick-search .multiselect__tags {
