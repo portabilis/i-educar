@@ -110,8 +110,8 @@ return new class extends clsCadastro {
             $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1, null, $this->ref_cod_instituicao);
             if (is_array($lista) && count($lista)) {
                 foreach ($lista as $registro) {
-                    $opcoes[$registro['cod_curso']] = $registro['nm_curso'];
-                    $opcoes_[$registro['cod_curso']] = $registro['nm_curso'];
+                    $opcoes[$registro['cod_curso']] = $this->concatNameAndDescription('nm_curso', $registro);
+                    $opcoes_[$registro['cod_curso']] = $this->concatNameAndDescription('nm_curso', $registro);
                 }
             }
         }
@@ -130,7 +130,7 @@ return new class extends clsCadastro {
             $lista = $objTemp->lista(null, null, null, $this->ref_curso_origem, null, null, null, null, null, null, null, null, 1);
             if (is_array($lista) && count($lista)) {
                 foreach ($lista as $registro) {
-                    $opcoes[$registro['cod_serie']] = $this->concatNameAndDescription($registro);
+                    $opcoes[$registro['cod_serie']] = $this->concatNameAndDescription('nm_serie', $registro);
                 }
             }
         }
@@ -140,7 +140,7 @@ return new class extends clsCadastro {
             $lista = $objTemp->lista(null, null, null, $this->ref_curso_destino, null, null, null, null, null, null, null, null, 1);
             if (is_array($lista) && count($lista)) {
                 foreach ($lista as $registro) {
-                    $opcoes_[$registro['cod_serie']] = $this->concatNameAndDescription($registro);
+                    $opcoes_[$registro['cod_serie']] = $this->concatNameAndDescription('nm_serie', $registro);
                 }
             }
         }
@@ -151,10 +151,9 @@ return new class extends clsCadastro {
         $this->campoOculto('nivel_usuario', $nivel_usuario);
     }
 
-    private function concatNameAndDescription(array $data): string
+    private function concatNameAndDescription($dataName, array $data): string
     {
-        return $data['nm_serie'] .
-        !empty($data['descrição']) ? ' - ' . $data['descrição'] : '';
+        return $data[$dataName] . (!empty($data['descricao']) ? ' - ' . $data['descricao'] : '');
     }
 
     public function Novo()
