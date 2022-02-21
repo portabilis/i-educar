@@ -58,7 +58,7 @@ class clsModulesPlanejamentoAula extends Model {
             pa.data_inicial,
             pa.data_final,
             pa.ref_cod_turma,
-            pa.ref_componente_curricular,
+            pa.ref_componente_curricular as ref_cod_componente_curricular,
             pa.ddp,
             pa.atividades,
             i.nm_instituicao AS instituicao,
@@ -120,7 +120,6 @@ class clsModulesPlanejamentoAula extends Model {
             && is_array($this->bnccs)
             && is_array($this->conteudos)
         ) {
-            //dd("adaw");
             $db = new clsBanco();
 
             $campos = '';
@@ -220,18 +219,28 @@ class clsModulesPlanejamentoAula extends Model {
             $obj = new clsModulesBNCC(null, $this->id);
             $bncc_diferenca = $obj->retornaDiferencaEntreConjuntosBNCC($bnccs_atuais, $this->bnccs);
 
-            // $obj = new clsModulesPlanejamentoConteudo();
-            // $conteudos_atuais = $obj->lista($this->id)['ids'];
-            // $conteudo_diferenca = $obj->retornaDiferencaEntreConjuntosConteudo($conteudos_atuais, $this->conteudos);
-
             foreach ($bncc_diferenca['adicionar'] as $key => $bncc_adicionar){
                 $obj = new clsModulesPlanejamentoAulaBNCC(null, $this->id, $bncc_adicionar);
                 $obj->cadastra();
             }
 
             foreach ($bncc_diferenca['remover'] as $key => $bncc_remover){
-                dump($bncc_remover);
                 $obj = new clsModulesPlanejamentoAulaBNCC(null, $this->id, $bncc_remover);
+                $obj->excluir();
+            }
+
+
+            $obj = new clsModulesPlanejamentoAulaConteudo();
+            $conteudos_atuais = $obj->lista($this->id);
+            $conteudo_diferenca = $obj->retornaDiferencaEntreConjuntosConteudos($conteudos_atuais, $this->conteudos);
+            //dd($conteudo_diferenca);
+            foreach ($conteudo_diferenca['adicionar'] as $key => $conteudo_adicionar){
+                $obj = new clsModulesPlanejamentoAulaConteudo(null, $this->id, $conteudo_adicionar);
+                $obj->cadastra();
+            }
+
+            foreach ($conteudo_diferenca['remover'] as $key => $conteudo_remover){
+                $obj = new clsModulesPlanejamentoAulaConteudo(null, $this->id, $conteudo_remover);
                 $obj->excluir();
             }
 

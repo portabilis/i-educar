@@ -11,14 +11,14 @@ use Illuminate\Support\Arr;
 return new class extends clsCadastro {
     public $id;
     public $ref_cod_turma;
-    public $ref_componente_curricular;
+    public $ref_cod_componente_curricular;
     public $fase_etapa;
     public $data_inicial;
     public $data_final;
     public $ddp;
     public $atividades;
     public $bnccs;
-    public $conteudos;
+    public $conteudo_id;
 
     public function Inicializar () {
         $this->titulo = 'Planejamento de aula - Cadastro';
@@ -91,35 +91,17 @@ return new class extends clsCadastro {
         $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('componenteCurricular', ['required' => !$obrigatorio, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('faseEtapa', ['required' => $obrigatorio, 'label' => 'Etapa', 'disabled' => $desabilitado]);
-
-        $helperOptions = [
-            'objectName' => 'bncc',
-        ];
-
-        $todos_bncc = $this->getBNCCTurma($this->ref_cod_turma, $this->ref_componente_curricular)['bncc'];
-
-        $options = [
-            'label' => 'BNCC',
-            'required' => $obrigatorio,
-            'size' => 50,
-            'options' => [
-                'values' => $this->bncc,
-                'all_values' => $todos_bncc
-            ]
-        ];
-        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
-
-        $this->campoMemo('conteudos','Conteúdos', $this->conteudos, 100, 5, true);   
-
+        
         $this->campoMemo('ddp','Desdobramento didático pedagógico', $this->ddp, 100, 5, $obrigatorio);
-        $this->campoMemo('atividades','Atividades', $this->atividades, 100, 5, $obrigatorio); 
+        $this->campoMemo('atividades','Atividades', $this->atividades, 100, 5, $obrigatorio);
+
+        $this->adicionarBNCCMultiplaEscolha();
+        $this->adicionarConteudosTabela();
 
         $this->campoOculto('ano', explode('/', dataToBrasil(NOW()))[2]);
     }
 
     public function Novo() {
-        $this->conteudos = ["'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'", "'Donec et ex rutrum, viverra risus id, tincidunt tellus.'"];
-
         $obj = new clsPmieducarTurma();
         $serie = $obj->lista($this->ref_cod_turma)[0]['ref_ref_cod_serie'];
 
@@ -131,14 +113,14 @@ return new class extends clsCadastro {
             $this->simpleRedirect('educar_professores_planejamento_de_aula_cad.php');
         }
 
-        if ($tipo_presenca == 1 && $this->ref_componente_curricular) {
+        if ($tipo_presenca == 1 && $this->ref_cod_componente_curricular) {
             $this->mensagem = 'Cadastro não realizado, pois esta série não admite frequência por componente curricular.<br>';
             $this->simpleRedirect('educar_professores_planejamento_de_aula_cad.php');
         }
 
-        if ($tipo_presenca == 2 && !$this->ref_componente_curricular) {
+        if ($tipo_presenca == 2 && !$this->ref_cod_componente_curricular) {
             $this->mensagem = 'Cadastro não realizado, pois o componente curricular é obrigatório para esta série.<br>';
-            $this->simpleRedirect('educar_professores_planejamento_de_aula_cad.php');
+            //$this->simpleRedirect('educar_professores_planejamento_de_aula_cad.php');
         }
 
         $data_agora = new DateTime('now');
@@ -187,7 +169,7 @@ return new class extends clsCadastro {
         $obj = new clsModulesPlanejamentoAula(
            null,
            $this->ref_cod_turma,
-           $this->ref_componente_curricular,
+           $this->ref_cod_componente_curricular,
            $this->fase_etapa,
            dataToBanco($this->data_inicial),
            dataToBanco($this->data_final),
@@ -219,9 +201,6 @@ return new class extends clsCadastro {
     }
 
     public function Editar() {
-        $this->conteudos = ["'AAA.'", "'BBB.'"];
-       // dd($this->id, $this->ddp, $this->atividades, $this->bncc, $this->conteudos);
-
         $this->data_inicial = $this->data_inicial;
         $this->data_final = $this->data_final;
         $this->ddp = $this->ddp;
@@ -269,14 +248,14 @@ return new class extends clsCadastro {
         return false;
     }
  
-    private function getBNCCTurma($turma = null, $ref_componente_curricular = null)
+    private function getBNCCTurma($turma = null, $ref_cod_componente_curricular = null)
     {
         if (is_numeric($turma)) {
             $bncc = [];
             $bncc_temp = [];
             $obj = new clsModulesBNCC();
 
-            if ($bncc_temp = $obj->listaTurma($turma, $ref_componente_curricular)) {
+            if ($bncc_temp = $obj->listaTurma($turma, $ref_cod_componente_curricular)) {
                 foreach ($bncc_temp as $bncc_item) {
                     $id = $bncc_item['id'];
                     $codigo = $bncc_item['codigo'];
@@ -300,10 +279,54 @@ return new class extends clsCadastro {
         $scripts = [
             '/modules/DynamicInput/Assets/Javascripts/TodasTurmas.js',
             '/modules/Cadastro/Assets/Javascripts/BNCC.js',
-            '/modules/Cadastro/Assets/Javascripts/PlanejamentoAula.js'
+            '/modules/Cadastro/Assets/Javascripts/PlanejamentoAula.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+    }
+
+    private function adicionarBNCCMultiplaEscolha($obrigatorio = true) {
+        $helperOptions = [
+            'objectName' => 'bncc',
+        ];
+
+        $todos_bncc = $this->getBNCCTurma($this->ref_cod_turma, $this->ref_cod_componente_curricular)['bncc'];
+
+        $options = [
+            'label' => 'Objetivos de aprendizagem/habilidades',
+            'required' => $obrigatorio,
+            'size' => 50,
+            'options' => [
+                'values' => $this->bncc,
+                'all_values' => $todos_bncc
+            ]
+        ];
+
+        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+    }
+
+    protected function adicionarConteudosTabela()
+    {
+        // dd($this->id);
+        $obj = new clsModulesPlanejamentoAulaConteudo(null, $this->id);
+        $conteudos = $obj->detalhe();
+
+        for ($i=0; $i < count($conteudos); $i++) { 
+            $rows[$i][] = $conteudos[$i]['conteudo'];
+        }
+
+        $this->campoTabelaInicio(
+            'conteudos',
+            'Conteúdo(s)',
+            [
+                'Conteúdo',
+            ],
+            $rows
+        );
+
+        $this->campoTexto('conteudos','Conteúdos', $this->conteudo_id, 100, 2048, true);   
+
+        $this->campoTabelaFim();
     }
 
     public function Formular () {

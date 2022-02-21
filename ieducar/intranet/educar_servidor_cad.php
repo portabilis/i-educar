@@ -913,6 +913,7 @@ JS;
         $graduations = $this->fillEmployeeGraduations($this->cod_servidor);
 
         $rows = $this->getGraduateTableRows($graduations);
+        dd($rows);
 
         $this->campoTabelaInicio(
             'graduations',
