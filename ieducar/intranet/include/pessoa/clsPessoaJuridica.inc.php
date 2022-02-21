@@ -25,6 +25,7 @@ class clsPessoaJuridica extends clsPessoaFj
         $objJuridica = new clsJuridica();
         $objJuridica->codUsuario = $this->codUsuario;
         $lista = $objJuridica->lista($str_fantasia, false, $numeric_cnpj, $str_ordenacao, $inicio_limit, $fim_limite, $arrayint_idisin, $arrayint_idnotin, $int_idpes);
+        $resultado = [];
         if ($lista) {
             foreach ($lista as $linha) {
                 $this->fantasia = $linha['fantasia'];

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -92,5 +93,28 @@ class Employee extends Model
             'ref_cod_servidor',
             'ref_cod_disciplina'
         )->withPivot('ref_ref_cod_instituicao', 'ref_cod_curso');
+    }
+
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('servidor.ativo', 1);
+    }
+
+    public function scopeProfessor(Builder $query): Builder
+    {
+        return $query->join('pmieducar.servidor_funcao', 'servidor_funcao.ref_cod_servidor', '=', 'servidor.cod_servidor')
+            ->join('pmieducar.funcao', 'funcao.cod_funcao', '=', 'servidor_funcao.ref_cod_funcao')
+            ->where('funcao.professor', 1);
+    }
+
+    public function scopeLastYear(Builder $query): Builder
+    {
+        return $query->join('pmieducar.servidor_alocacao', 'servidor.cod_servidor', '=', 'servidor_alocacao.ref_cod_servidor')
+            ->where('servidor_alocacao.ano', date('Y') - 1);
+    }
+    public function scopeCurrentYear(Builder $query): Builder
+    {
+        return $query->join('pmieducar.servidor_alocacao', 'servidor.cod_servidor', '=', 'servidor_alocacao.ref_cod_servidor')
+            ->where('servidor_alocacao.ano', date('Y'));
     }
 }

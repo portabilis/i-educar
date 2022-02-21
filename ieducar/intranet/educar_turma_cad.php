@@ -6,7 +6,6 @@ use iEducar\Support\View\SelectOptions;
 
 return new class extends clsCadastro {
     public $pessoa_logada;
-
     public $cod_turma;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -681,7 +680,7 @@ return new class extends clsCadastro {
                     true,
                     $this->ano
                 );
-            } catch (Throwable $e) {
+            } catch (Throwable) {
                 return;
             }
 

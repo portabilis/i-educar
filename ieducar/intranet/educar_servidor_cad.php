@@ -25,18 +25,14 @@ return new class extends clsCadastro {
     public $tipo_ensino_medio_cursado;
     public $matricula = [];
     public $cod_servidor_funcao = [];
-
     public $total_horas_alocadas;
-
     public $cod_docente_inep;
-
-    // Determina se o servidor é um docente para buscar código Educacenso/Inep.
     public $docente = false;
-
     public $employee_course_id;
     public $employee_completion_year;
     public $employee_college_id;
     public $employee_discipline_id;
+    public $pos_graduacao;
 
     public function Inicializar()
     {
@@ -354,7 +350,7 @@ return new class extends clsCadastro {
             $docenteInep = null;
             try {
                 $docenteInep = $docenteMapper->find(['docente' => $this->cod_servidor]);
-            } catch (Exception $e) {
+            } catch (Exception) {
             }
         }
 
@@ -480,9 +476,19 @@ JS;
         $this->carga_horaria = $hour + $min;
         $this->carga_horaria = $hour + $min;
 
-        $this->pos_graduacao = '{' . implode(',', array_filter($this->pos_graduacao)) . '}';
+        $posGraduacao = [];
+        if (is_array($this->pos_graduacao)) {
+            $posGraduacao = array_filter($this->pos_graduacao);
+        }
 
-        $this->curso_formacao_continuada = '{' . implode(',', $this->curso_formacao_continuada) . '}';
+        $this->pos_graduacao = '{' . implode(',', $posGraduacao) . '}';
+
+        $cursoFormacaoContinuada = [];
+        if (is_array($this->curso_formacao_continuada)) {
+            $cursoFormacaoContinuada = array_filter($this->curso_formacao_continuada);
+        }
+
+        $this->curso_formacao_continuada = '{' . implode(',', $cursoFormacaoContinuada) . '}';
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, 'educar_servidor_lst.php');
@@ -548,9 +554,19 @@ JS;
         $this->carga_horaria = $hour + $min;
         $this->carga_horaria = $hour + $min;
 
-        $this->pos_graduacao = '{' . implode(',', array_filter($this->pos_graduacao)) . '}';
+        $posGraduacao = [];
+        if (is_array($this->pos_graduacao)) {
+            $posGraduacao = array_filter($this->pos_graduacao);
+        }
 
-        $this->curso_formacao_continuada = '{' . implode(',', $this->curso_formacao_continuada) . '}';
+        $this->pos_graduacao = '{' . implode(',', $posGraduacao) . '}';
+
+        $cursoFormacaoContinuada = [];
+        if (is_array($this->curso_formacao_continuada)) {
+            $cursoFormacaoContinuada = array_filter($this->curso_formacao_continuada);
+        }
+
+        $this->curso_formacao_continuada = '{' . implode(',', $cursoFormacaoContinuada) . '}';
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, 'educar_servidor_lst.php');
@@ -728,8 +744,8 @@ JS;
         }
 
         $this->excluiDisciplinas(null);
-        $this->excluiFuncoes();
         $this->excluiFaltaAtraso();
+        $this->excluiFuncoes();
         DB::commit();
 
         $this->mensagem = 'Exclusão efetuada com sucesso.<br>';

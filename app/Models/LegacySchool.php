@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -158,5 +159,10 @@ class LegacySchool extends Model
     public function stages()
     {
         return $this->hasMany(LegacySchoolStage::class, 'ref_ref_cod_escola');
+    }
+
+    public function scopeActive(Builder $builder)
+    {
+        return $builder->where('escola.ativo', 1);
     }
 }

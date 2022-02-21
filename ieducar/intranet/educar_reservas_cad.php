@@ -207,7 +207,6 @@ return new class extends clsCadastro {
             $this->campoOculto('existe_reserva', $this->existe_reserva);
         }// caso já exista(m) reserva(s) para o exemplar
         elseif ($this->existe_reserva == 2) {
-//          die("emprestado, com reserva");
             $lst_reserva = $obj_reservas->getUltimasReservas($this->ref_cod_acervo, 1);
             if (is_array($lst_reserva) && count($lst_reserva)) {
                 $det_reserva = array_shift($lst_reserva);
@@ -243,8 +242,7 @@ return new class extends clsCadastro {
         $cod_exemplar_tipo = $det_acervo['ref_cod_exemplar_tipo'];
 
         if ($this->existe_reserva == 1) {
-//          die("1");
-//          echo "EMPRESTIMO <br>";
+
             // ------------------- DADOS DO CLIENTE (EMPRESTIMO) ------------------ //
             $obj_exemplar_emprestimo = new clsPmieducarExemplarEmprestimo();
             $lst_exemplar_emprestimo = $obj_exemplar_emprestimo->lista(null, null, null, null, $this->ref_cod_exemplar, null, null, null, null, null, false, $this->ref_cod_biblioteca);
@@ -258,8 +256,7 @@ return new class extends clsCadastro {
                 echo '<script> alert(\'ERRO - Não foi possível encontrar o registro do empréstimo!\'); </script>';
             }
         } elseif ($this->existe_reserva == 2) {
-//          die("2");
-//          echo "RESERVA <br>";
+
             // ------------------- DADOS DO CLIENTE (RESERVA) ------------------ //
             $obj_reservas = new clsPmieducarReservas();
             $lst_reservas = $obj_reservas->lista(null, null, null, null, null, null, $this->data_disponivel, $this->data_disponivel, null, null, $this->ref_cod_exemplar, 1, $this->ref_cod_biblioteca);
@@ -273,7 +270,6 @@ return new class extends clsCadastro {
                 echo '<script> alert(\'ERRO - Não foi possível encontrar a reserva!\'); </script>';
             }
         }
-//      echo "data_prevista_disponivel 1: ".$data_prevista_disponivel."<br>";
 
         $obj_cliente_tipo_cliente = new clsPmieducarClienteTipoCliente();
         $lst_cliente_tipo_cliente = $obj_cliente_tipo_cliente->lista(null, $cod_cliente, null, null, null, null, null, null, $this->ref_cod_biblioteca);
@@ -286,18 +282,12 @@ return new class extends clsCadastro {
         // qtde de dias disponiveis para emprestimo
         $dias_emprestimo = $det_cliente_tipo_exemplar_tipo['dias_emprestimo'];
 
-//      echo "dias_espera: ".$this->dias_espera."<br>";
-
         if ($this->existe_reserva == 2) {
             // Dias que o cliente tem pra pegar o exemplar. Calculo feito levando em consideracao a pior situacao.
-            $data_prevista_disponivel = date('D Y-m-d', strtotime("$data_prevista_disponivel +".$this->dias_espera.' days'));
+            $data_prevista_disponivel = date('Y-m-d', strtotime("$data_prevista_disponivel +".$this->dias_espera.' days'));
         }
 
-//      echo "data_prevista_disponivel 2: ".$data_prevista_disponivel."<br>";
-
-        $data_prevista_disponivel = date('D Y-m-d', strtotime("$data_prevista_disponivel +".$dias_emprestimo.' days'));
-
-//      echo "data_prevista_disponivel 3: ".$data_prevista_disponivel."<br>";
+        $data_prevista_disponivel = date('Y-m-d', strtotime("$data_prevista_disponivel +".$dias_emprestimo.' days'));
 
         //---------------------DIAS FUNCIONAMENTO----------------------//
         $obj_biblioteca_dia = new clsPmieducarBibliotecaDia();
@@ -319,28 +309,22 @@ return new class extends clsCadastro {
         if (is_array($lst_biblioteca_feriado) && count($lst_biblioteca_feriado)) {
             foreach ($lst_biblioteca_feriado as $dia_feriado) {
                 // dias de feriado da biblioteca
-                $biblioteca_dias_feriado[] = dataFromPgToBr($dia_feriado['data_feriado'], 'D Y-m-d');
+                $biblioteca_dias_feriado[] = dataFromPgToBr($dia_feriado['data_feriado'], 'Y-m-d');
             }
         }
 
-//      echo "<pre>"; print_r($biblioteca_dias_feriado)."<br>";
-
         // Cliente tem o dia inteiro para entregar o exemplar. Exemplar somente disponivel para a proxima reserva no dia seguinte.
-        $data_prevista_disponivel = date('D Y-m-d ', strtotime("$data_prevista_disponivel +1 day"));
+        $data_prevista_disponivel = date('Y-m-d ', strtotime("$data_prevista_disponivel +1 day"));
         // devido a comparacao das datas, é necessario mudar o formato da data
-        $data_prevista_disponivel = dataFromPgToBr($data_prevista_disponivel, 'D Y-m-d');
-
-//      echo "data_prevista_disponivel 4: ".$data_prevista_disponivel."<br>";
+        $data_prevista_disponivel = dataFromPgToBr($data_prevista_disponivel, 'Y-m-d');
 
         // verifica se a data cai em algum dia que a biblioteca n funciona
         while (in_array(substr($data_prevista_disponivel, 0, 3), $biblioteca_dias_folga) || in_array($data_prevista_disponivel, $biblioteca_dias_feriado)) {
 //          echo "data_prevista_disponivel ASDFG = ".$data_prevista_disponivel."<br>";
-            $data_prevista_disponivel = date('D Y-m-d ', strtotime("$data_prevista_disponivel +1 day"));
-            $data_prevista_disponivel = dataFromPgToBr($data_prevista_disponivel, 'D Y-m-d');
+            $data_prevista_disponivel = date('Y-m-d ', strtotime("$data_prevista_disponivel +1 day"));
+            $data_prevista_disponivel = dataFromPgToBr($data_prevista_disponivel, 'Y-m-d');
 //          echo "data_prevista_disponivel ASDFG = ".$data_prevista_disponivel."<br>";
         }
-
-//      echo "data_prevista_disponivel 5: ".$data_prevista_disponivel."<br>";die;
 
         $data_prevista_disponivel = dataFromPgToBr($data_prevista_disponivel, 'Y-m-d');
 

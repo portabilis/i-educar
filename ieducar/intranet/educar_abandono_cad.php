@@ -69,6 +69,7 @@ return new class extends clsCadastro {
         $tiposAbandono  = new clsPmieducarAbandonoTipo();
         $tiposAbandono  = $tiposAbandono->lista(null, null, null, null, null, null, null, null, 1, $ref_cod_instituicao);
 
+        $selectOptions = [];
         foreach ($tiposAbandono as $tipoAbandono) {
             $selectOptions[$tipoAbandono['cod_abandono_tipo']] = $tipoAbandono['nome'];
         }
@@ -86,7 +87,6 @@ return new class extends clsCadastro {
 
     public function Novo()
     {
-        $db = new clsBanco();
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
 

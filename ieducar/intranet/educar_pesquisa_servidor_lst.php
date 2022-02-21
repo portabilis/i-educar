@@ -106,10 +106,8 @@ return new class extends clsListagem {
         $hr_not  = $string2.':'.$string1;
         $hora_inicial_ = explode(':', Session::get('hora_inicial'));
         $hora_final_   = explode(':', Session::get('hora_final'));
-        $horas_ini     = sprintf('%02d', (int) abs($hora_final_[0]) - abs($hora_inicial_[0]));
-        $minutos_ini   = sprintf('%02d', (int) abs($hora_final_[1]) - abs($hora_inicial_[1]));
-        $h_m_ini = ($hora_inicial_[0] * 60) + $hora_inicial_[1];
-        $h_m_fim = ($hora_final_[0]   * 60) + $hora_final_[1];
+        $h_m_ini = ((int)$hora_inicial_[0] * 60) + $hora_inicial_[1];
+        $h_m_fim = ((int)$hora_final_[0]   * 60) + $hora_final_[1];
         if ($h_m_ini >= 480 && $h_m_ini <= 720) {
             $this->matutino = true;
             if ($h_m_fim >= 721 && $h_m_fim <= 1080) {

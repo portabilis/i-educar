@@ -175,7 +175,7 @@ if ($get_biblioteca) {
     if ($ref_cod_biblioteca_ == 0 && $nivel_usuario != 1 && $nivel_usuario != 2) {
         $this->campoOculto('ref_cod_biblioteca', $this->ref_cod_biblioteca);
     } else {
-        $qtd_bibliotecas = count($ref_cod_biblioteca_);
+        $qtd_bibliotecas = is_array($ref_cod_biblioteca_) ? count($ref_cod_biblioteca_) : null;
         if ($qtd_bibliotecas == 1 && ($nivel_usuario == 4 || $nivel_usuario == 8)) {
             $det_unica_biblioteca = array_shift($ref_cod_biblioteca_);
             $this->ref_cod_biblioteca = $det_unica_biblioteca['ref_cod_biblioteca'];

@@ -65,7 +65,7 @@ class EmprestimoApiController extends ApiCoreController
             false,
             $this->getRequest()->biblioteca_id
         );
-        $qtdExemplaresEmprestadosDoCliente = count($exemplaresEmprestadosDoCliente);
+        $qtdExemplaresEmprestadosDoCliente = is_array($exemplaresEmprestadosDoCliente) ? count($exemplaresEmprestadosDoCliente) : 0;
 
         $objBiblioteca = new clsPmieducarBiblioteca($this->getRequest()->biblioteca_id);
         $detBiblioteca = $objBiblioteca->detalhe();
@@ -233,11 +233,11 @@ class EmprestimoApiController extends ApiCoreController
         if (is_array($lst_biblioteca_feriado) && count($lst_biblioteca_feriado)) {
             foreach ($lst_biblioteca_feriado as $dia_feriado) {
                 // dias de feriado da biblioteca
-                $biblioteca_dias_feriado[] = dataFromPgToBr($dia_feriado['data_feriado'], 'D Y-m-d');
+                $biblioteca_dias_feriado[] = dataFromPgToBr($dia_feriado['data_feriado'], 'Y-m-d');
             }
         }
 
-        $data_entrega = dataFromPgToBr($date, 'D Y-m-d');
+        $data_entrega = dataFromPgToBr($date, 'Y-m-d');
 
         if (!is_array($biblioteca_dias_folga)) {
             $biblioteca_dias_folga = [null];
@@ -248,8 +248,8 @@ class EmprestimoApiController extends ApiCoreController
 
         // verifica se a data cai em algum dia que a biblioteca n funciona
         while (in_array(substr($data_entrega, 0, 3), $biblioteca_dias_folga) || in_array($data_entrega, $biblioteca_dias_feriado)) {
-            $data_entrega = date('D Y-m-d ', strtotime("$data_entrega +1 day"));
-            $data_entrega = dataFromPgToBr($data_entrega, 'D Y-m-d');
+            $data_entrega = date('Y-m-d ', strtotime("$data_entrega +1 day"));
+            $data_entrega = dataFromPgToBr($data_entrega, 'Y-m-d');
         }
 
         $data_entrega = dataFromPgToBr($data_entrega, $format);
@@ -338,7 +338,7 @@ class EmprestimoApiController extends ApiCoreController
             $this->getRequest()->escola_id
         );
 
-        if ($emprestimo) {
+        if (is_array($emprestimo)) {
             $emprestimo = array_shift($emprestimo);
             $emprestimo = Portabilis_Array_Utils::filter($emprestimo, ['cod_emprestimo'  => 'id',
                                                                       'data_retirada'   => 'data',
@@ -598,7 +598,9 @@ class EmprestimoApiController extends ApiCoreController
             $id = $this->getRequest()->exemplar_id;
         }
 
-        return array_shift($this->loadExemplares($reload, $id));
+        $exemplar = $this->loadExemplares($reload, $id);
+        $exemplar = $exemplar !== false ? $exemplar : [];
+        return array_shift($exemplar);
     }
 
     /* metódos resposta operação / recurso

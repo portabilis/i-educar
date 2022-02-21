@@ -2,7 +2,6 @@
 
 return new class extends clsCadastro {
     public $pessoa_logada;
-
     public $cod_servidor_alocacao;
     public $ref_ref_cod_instituicao;
     public $ref_usuario_exc;
@@ -15,9 +14,7 @@ return new class extends clsCadastro {
     public $data_cadastro;
     public $data_exclusao;
     public $ativo;
-
     public $todos;
-
     public $alocacao_array = [];
     public $professor;
 

@@ -40,14 +40,13 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Descrição', nl2br("{$registro['desc_beneficio']}")]);
         }
 
-        //** Verificacao de permissao para cadastro
         $obj_permissao = new clsPermissoes();
 
         if ($obj_permissao->permissao_cadastra(581, $this->pessoa_logada, 3)) {
             $this->url_novo = 'educar_aluno_beneficio_cad.php';
             $this->url_editar = "educar_aluno_beneficio_cad.php?cod_aluno_beneficio={$registro['cod_aluno_beneficio']}";
         }
-        //**
+
         $this->url_cancelar = 'educar_aluno_beneficio_lst.php';
         $this->largura = '100%';
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class LegacySchoolAcademicYear extends Model
@@ -35,4 +36,19 @@ class LegacySchoolAcademicYear extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    public function scopeActive(Builder $builder)
+    {
+        return $builder->where('escola_ano_letivo.ativo', 1);
+    }
+
+    public function scopeLastYear(Builder $query): Builder
+    {
+        return $query->where('escola_ano_letivo.ano', date('Y') - 1);
+    }
+
+    public function scopeCurrentYear(Builder $query): Builder
+    {
+        return $query->where('escola_ano_letivo.ano', date('Y'));
+    }
 }

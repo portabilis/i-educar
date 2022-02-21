@@ -101,7 +101,7 @@ return new class extends clsCadastro {
             }
         }
         // salva somente os dias que n se repetem ( dias de n funcionamento)
-        $biblioteca_dias_folga = array_diff($this->dias_da_semana, $biblioteca_dias_semana);
+        $biblioteca_dias_folga = array_diff($this->dias_da_semana, $biblioteca_dias_semana ?? []);
         // inverte as relacoes entre chaves e valores ( de $variavel["Sun"] => 1, para $variavel[1] => "Sun")
         $biblioteca_dias_folga = array_flip($biblioteca_dias_folga);
 
@@ -111,12 +111,12 @@ return new class extends clsCadastro {
         if (is_array($lst_biblioteca_feriado) && count($lst_biblioteca_feriado)) {
             foreach ($lst_biblioteca_feriado as $dia_feriado) {
                 // dias de feriado da biblioteca
-                $biblioteca_dias_feriado[] = dataFromPgToBr($dia_feriado['data_feriado'], 'D Y-m-d');
+                $biblioteca_dias_feriado[] = dataFromPgToBr($dia_feriado['data_feriado'], 'Y-m-d');
             }
         }
 
         // devido a comparacao das datas, é necessario mudar o formato da data
-        $data_entrega = dataFromPgToBr($data_entrega, 'D Y-m-d');
+        $data_entrega = dataFromPgToBr($data_entrega, 'Y-m-d');
 
         if (!is_array($biblioteca_dias_folga)) {
             $biblioteca_dias_folga = [null];
@@ -127,8 +127,8 @@ return new class extends clsCadastro {
 
         // verifica se a data cai em algum dia que a biblioteca n funciona
         while (in_array(substr($data_entrega, 0, 3), $biblioteca_dias_folga) || in_array($data_entrega, $biblioteca_dias_feriado)) {
-            $data_entrega = date('D Y-m-d ', strtotime("$data_entrega +1 day"));
-            $data_entrega = dataFromPgToBr($data_entrega, 'D Y-m-d');
+            $data_entrega = date('Y-m-d ', strtotime("$data_entrega +1 day"));
+            $data_entrega = dataFromPgToBr($data_entrega, 'Y-m-d');
         }
 
         $data_entrega = dataFromPgToBr($data_entrega, 'Y-m-d');
@@ -190,8 +190,6 @@ return new class extends clsCadastro {
         $this->valor_multa = urldecode($this->valor_multa);
         $this->valor_multa = str_replace('.', '', $this->valor_multa);
         $this->valor_multa = str_replace(',', '.', $this->valor_multa);
-
-//      echo $this->cod_emprestimo." / ".$this->pessoa_logada." / ".date('Y-m-d')." / ".$this->valor_multa;die;
 
         $obj_situacao = new clsPmieducarSituacao();
         $lst_situacao = $obj_situacao->lista(null, null, null, null, 2, null, 1, 0, null, null, null, null, 1, $this->ref_cod_biblioteca);

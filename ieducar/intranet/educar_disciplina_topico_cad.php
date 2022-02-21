@@ -45,16 +45,9 @@ return new class extends clsCadastro {
     {
         $obj_permissao = new clsPermissoes();
         $obj_permissao->permissao_cadastra(565, $this->pessoa_logada, 7, 'educar_disciplina_topico_lst.php');
-        // primary keys
         $this->campoOculto('cod_disciplina_topico', $this->cod_disciplina_topico);
-
-        // foreign keys
-
-        // text
         $this->campoTexto('nm_topico', 'Nome Tópico', $this->nm_topico, 30, 255, true);
         $this->campoMemo('desc_topico', 'Descrição Tópico', $this->desc_topico, 30, 5, false);
-
-        // data
     }
 
     public function Novo()

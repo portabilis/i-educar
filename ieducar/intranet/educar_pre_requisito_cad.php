@@ -70,14 +70,8 @@ return new class extends clsCadastro {
 
         $opcoes = [ 'Selecione a Tabela' ];
         $this->campoLista('tabela', 'Tabela', $opcoes, $this->tabela, '', false, '', '', true);
-
-        // text
-//      $this->campoTexto( "schema_", "Schema ", $this->schema_, 30, 255, true );
-//      $this->campoTexto( "tabela", "Tabela", $this->tabela, 30, 255, true );
         $this->campoTexto('nome', 'Nome', $this->nome, 30, 255, true);
         $this->campoMemo('sql', 'Sql', $this->sql, 60, 10, false);
-
-        // data
     }
 
     public function Novo()

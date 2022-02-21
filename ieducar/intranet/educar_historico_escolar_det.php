@@ -163,7 +163,8 @@ return new class extends clsDetalhe {
         $obj = new clsPmieducarHistoricoDisciplinas();
         $obj->setOrderby('nm_disciplina ASC');
         $lst = $obj->lista(null, $this->ref_cod_aluno, $this->sequencial);
-        $qtd_disciplinas = count($lst);
+
+        $qtd_disciplinas = $obj->_total;
         if ($lst) {
             $tabela = '<table>
                            <tr align=\'center\'>
@@ -196,8 +197,6 @@ return new class extends clsDetalhe {
                 $tabela .= "<td {$color} align='center'>{$valor['carga_horaria_disciplina']}</td>";
                 $tabela .= '</tr>';
 
-                $registro['faltas_globalizadas'];
-
                 $cont++;
                 $prim_disciplina = true;
             }
@@ -207,10 +206,8 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Disciplina', "{$tabela}"]);
         }
 
-        $obj_permissoes = new clsPermissoes();
         $this->obj_permissao = new clsPermissoes();
         $this->nivel_usuario = $this->obj_permissao->nivel_acesso($this->pessoa_logada);
-        //$year = date('Y');
         $db = new clsBanco();
 
         $restringir_historico_escolar = $db->CampoUnico("SELECT restringir_historico_escolar
@@ -224,10 +221,12 @@ return new class extends clsDetalhe {
                                             WHERE ref_cod_aluno = $this->ref_cod_aluno
                                               AND sequencial = $this->sequencial");
             //Verifica se a escola foi digitada manualmente no histórico
+            $escola_usuario = '';
             if ($ref_cod_escola == '') {
                 $escolasUsuario = new clsPmieducarEscolaUsuario();
                 $escolasUsuario = $escolasUsuario->lista($this->pessoa_logada);
 
+                $idEscolasUsuario = [];
                 foreach ($escolasUsuario as $escola) {
                     $idEscolasUsuario[] = $escola['ref_cod_escola'];
                 }

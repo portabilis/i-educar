@@ -26,8 +26,6 @@ return new class extends clsCadastro {
         $this->ref_cod_servidor=$_GET['ref_cod_servidor'];
         $this->ref_ref_cod_instituicao=$_GET['ref_ref_cod_instituicao'];
         $this->sequencial=$_GET['sequencial'];
-        //echo $this->ref_cod_servidor. "e ".$this->ref_ref_cod_instituicao."<br>";
-        //die();
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, "educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_ref_cod_instituicao={$this->ref_ref_cod_instituicao}");
 
@@ -45,7 +43,7 @@ return new class extends clsCadastro {
                 $retorno = 'Editar';
             }
         }
-        /*echo*/ $this->url_cancelar = ($retorno == 'Editar') ? "educar_avaliacao_desempenho_det.php?sequencial={$this->sequencial}&ref_cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_ref_cod_instituicao}" : "educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_ref_cod_instituicao}";
+        $this->url_cancelar = ($retorno == 'Editar') ? "educar_avaliacao_desempenho_det.php?sequencial={$this->sequencial}&ref_cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_ref_cod_instituicao}" : "educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_ref_cod_instituicao}";
         $this->nome_url_cancelar = 'Cancelar';
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
@@ -78,8 +76,6 @@ return new class extends clsCadastro {
         $nm_servidor = $det_cod_servidor['nome'];
 
         $this->campoTexto('nm_servidor', 'Servidor', $nm_servidor, 30, 255, false, false, false, '', '', '', '', true);
-
-        // text
         $this->campoTexto('titulo_avaliacao', 'Avaliação', $this->titulo_avaliacao, 30, 255, true);
         $this->campoMemo('descricao', 'Descrição', $this->descricao, 60, 5, true);
     }

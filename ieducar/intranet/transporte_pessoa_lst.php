@@ -54,7 +54,7 @@ return new class extends clsListagem {
 
         $obj_permissoes = new clsPermissoes();
 
-        $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+        $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
         $this->addCabecalhos([
             'Código',
@@ -87,7 +87,6 @@ return new class extends clsListagem {
 
         $this->addPaginador2('transporte_pessoa_lst.php', $total, $_GET, $this->nome, $this->limite);
 
-        //**
         $this->largura = '100%';
 
         $obj_permissao = new clsPermissoes();

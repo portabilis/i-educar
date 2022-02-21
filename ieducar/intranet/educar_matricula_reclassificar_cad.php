@@ -54,7 +54,6 @@ return new class extends clsCadastro {
             $this->$key = $value;
         }
 
-        //$this->url_cancelar = "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}";
         $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->cod_matricula}";
 
         $this->breadcrumb('Registro da reclassificação da matrícula', [

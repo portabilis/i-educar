@@ -1,34 +1,10 @@
 <?php
 
 return new class extends clsListagem {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
     public $pessoa_logada;
-
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
     public $titulo;
-
-    /**
-     * Quantidade de registros a ser apresentada em cada pagina
-     *
-     * @var int
-     */
     public $limite;
-
-    /**
-     * Inicio dos registros a serem exibidos (limit)
-     *
-     * @var int
-     */
     public $offset;
-
     public $cod_pessoa;
     public $min_quantidade_falhas;
     public $ultimo_sucesso_ini;
@@ -99,17 +75,13 @@ return new class extends clsListagem {
 
         $total = $obj_acesso->_total;
 
-        // monta a lista
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
-                // muda os campos data
                 $registro['ultimo_sucesso_time'] = strtotime(substr($registro['ultimo_sucesso'], 0, 16));
                 $registro['ultimo_sucesso_br'] = date('d/m/Y H:i', $registro['ultimo_sucesso_time']);
 
                 $registro['quinto_erro_time'] = strtotime(substr($registro['quinto_erro'], 0, 16));
                 $registro['quinto_erro_br'] = date('d/m/Y H:i', $registro['quinto_erro_time']);
-
-                // pega detalhes de foreign_keys
 
                 $pessoa = new clsPessoa_($registro['cod_pessoa']);
                 $det_pessoa = $pessoa->detalhe();

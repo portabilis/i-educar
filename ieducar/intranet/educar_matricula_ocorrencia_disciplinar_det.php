@@ -34,8 +34,6 @@ return new class extends clsDetalhe {
 
         $obj_ref_cod_matricula = new clsPmieducarMatricula($registro['ref_cod_matricula']);
         $det_ref_cod_matricula = $obj_ref_cod_matricula->detalhe();
-        //$registro["ref_cod_matricula"] = $det_ref_cod_matricula["ref_cod_matricula"];
-
         $obj_serie = new clsPmieducarSerie($det_ref_cod_matricula['ref_ref_cod_serie']);
         $det_serie = $obj_serie->detalhe();
         $registro['ref_ref_cod_serie'] = $det_serie['nm_serie'];
@@ -60,13 +58,21 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Matrícula', "{$registro['ref_cod_matricula']}"]);
         }
 
-        $obj_ref_cod_matricula = new clsPmieducarMatricula();
-        $detalhe_aluno = array_shift($obj_ref_cod_matricula->lista($this->ref_cod_matricula));
 
-        $obj_aluno = new clsPmieducarAluno();
-        $det_aluno = array_shift($det_aluno = $obj_aluno->lista($detalhe_aluno['ref_cod_aluno'], null, null, null, null, null, null, null, null, null, 1));
+        $obj_ref_cod_matricula = (new clsPmieducarMatricula())->lista($this->ref_cod_matricula);
+        if (is_array($obj_ref_cod_matricula)) {
+            $obj_ref_cod_matricula = array_shift($obj_ref_cod_matricula);
+        }
 
-        $this->addDetalhe(['Nome do Aluno',$det_aluno['nome_aluno']]);
+        $detalhe_aluno = $obj_ref_cod_matricula;
+
+        $obj_aluno = (new clsPmieducarAluno())->lista($detalhe_aluno['ref_cod_aluno'], null, null, null, null, null, null, null, null, null, 1);
+        if (is_array($obj_aluno)) {
+            $obj_aluno = array_shift($obj_aluno);
+        }
+
+        $det_aluno = $obj_aluno;
+        $this->addDetalhe(['Nome do Aluno', $det_aluno['nome_aluno']]);
 
         if ($registro['ref_ref_cod_serie']) {
             $this->addDetalhe([ 'Série', "{$registro['ref_ref_cod_serie']}"]);

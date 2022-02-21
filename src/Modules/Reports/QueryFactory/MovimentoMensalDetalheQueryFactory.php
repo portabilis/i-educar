@@ -80,6 +80,7 @@ abstract class MovimentoMensalDetalheQueryFactory extends QueryFactory
                 and matricula.ref_ref_cod_escola = :escola
                 and matricula.ano = :ano
                 and turma.ativo = 1
+                and enturmacao.remanejado_mesma_turma = false
                 and
                 (
                     case when :curso = 0 then

@@ -1,13 +1,7 @@
 <?php
 
 return new class extends clsCadastro {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
     public $pessoa_logada;
-
     public $cod_turma_tipo;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -32,19 +26,14 @@ return new class extends clsCadastro {
             $obj = new clsPmieducarTurmaTipo($this->cod_turma_tipo);
             $registro  = $obj->detalhe();
             if ($registro) {
-                foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
+                foreach ($registro as $campo => $val) {
                     $this->$campo = $val;
                 }
-
-                //$obj_ref_cod_escola = new clsPmieducarEscola( $this->ref_cod_escola );
-                //$det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
-                //$this->ref_cod_instituicao = $det_ref_cod_escola["ref_cod_instituicao"];
 
                 $this->fexcluir = $obj_permissoes->permissao_excluir(570, $this->pessoa_logada, 7);
                 $retorno = 'Editar';
             }
         }
-//      $this->url_cancelar = ($retorno == "Editar") ? "educar_turma_tipo_det.php?cod_turma_tipo={$registro["cod_turma_tipo"]}" : "educar_turma_tipo_lst.php";
         $this->nome_url_cancelar = 'Cancelar';
         $this->script_cancelar = 'window.parent.fechaExpansivel("div_dinamico_"+(parent.DOM_divs.length-1));';
 

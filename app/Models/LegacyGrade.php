@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -77,5 +78,10 @@ class LegacyGrade extends Model
     public function schoolClass()
     {
         return $this->hasMany(LegacySchoolClass::class, 'ref_ref_cod_serie');
+    }
+
+    public function scopeActive(Builder $builder)
+    {
+        return $builder->where('serie.ativo', 1);
     }
 }
