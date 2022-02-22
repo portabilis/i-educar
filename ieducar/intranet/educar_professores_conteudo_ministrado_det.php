@@ -173,8 +173,6 @@ return new class extends clsDetalhe {
         $this->tabela .= ' <br style="clear: left" />';
 
         for ($i=0; $i < count($codigos); $i++) { 
-            $checked = !$aluno['presenca'] ? "checked='true'" : '';
-
             $this->tabela .= '  <div style="margin-bottom: 10px; float: left" class="linha-disciplina" >';
             
             $this->tabela .= "  <span style='display: block; float: left; width: 100px'>{$codigos[$i]}</span>";

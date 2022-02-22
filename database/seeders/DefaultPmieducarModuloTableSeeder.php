@@ -19,7 +19,7 @@ class DefaultPmieducarModuloTableSeeder extends Seeder
         DB::table('pmieducar.modulo')->insert([
             'cod_modulo' => 1,
             'ref_usuario_cad' => 1,
-            'nm_tipo' => 'Bimestral',
+            'nm_tipo' => 'Bimestre',
             'data_cadastro' => now(),
             'ativo' => 1,
             'ref_cod_instituicao' => 1,
