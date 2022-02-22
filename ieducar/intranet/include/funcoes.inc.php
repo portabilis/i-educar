@@ -102,7 +102,7 @@ function limpa_acentos($str_nome)
  */
 function dataToBrasil($data_original, $h_m = false, $h_m_s = false)
 {
-    if ($data_original) {
+    if (is_string($data_original)) {
         $arr_data = explode(' ', $data_original);
 
         $data = date('d/m/Y', strtotime($arr_data[0]));
