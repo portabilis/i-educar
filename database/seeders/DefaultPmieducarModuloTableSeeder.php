@@ -23,7 +23,7 @@ class DefaultPmieducarModuloTableSeeder extends Seeder
             'data_cadastro' => now(),
             'ativo' => 1,
             'ref_cod_instituicao' => 1,
-            'num_etapas' => 6
+            'num_etapas' => 4
         ]);
     }
 }
