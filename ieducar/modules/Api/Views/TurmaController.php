@@ -179,17 +179,17 @@ class TurmaController extends ApiCoreController
         $tipo = $turma['tipo_boletim'];
         $tipoDiferenciado = $turma['tipo_boletim_diferenciado'];
 
-        $boletimPorSerie = [];
-
-        if ($turma['multiseriada'] === 1) {
+        if ((int) $turma['multiseriada'] === 1) {
             $boletimPorSerie = LegacySchoolClassGrade::query()
             ->where('turma_id', $turma)
             ->where('serie_id', $serie)
-            ->first()
-            ->toArray();
+            ->first();
 
-            $tipo = $boletimPorSerie['boletim_id'];
-            $tipoDiferenciado = $boletimPorSerie['boletim_diferenciado_id'];
+            if ($boletimPorSerie instanceof LegacySchoolClassGrade) {
+                $boletimPorSerie->toArray();
+                $tipo = $boletimPorSerie['boletim_id'];
+                $tipoDiferenciado = $boletimPorSerie['boletim_diferenciado_id'];
+            }
         }
 
         $tipos = Portabilis_Model_Report_TipoBoletim::getInstance()->getReports();
