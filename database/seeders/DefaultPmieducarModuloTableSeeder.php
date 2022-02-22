@@ -16,7 +16,7 @@ class DefaultPmieducarModuloTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('pmieducar.modulo')->insert([
+        DB::table('pmieducar.modulo')->updateOrInsert([
             'cod_modulo' => 1,
             'ref_usuario_cad' => 1,
             'nm_tipo' => 'Bimestre',
