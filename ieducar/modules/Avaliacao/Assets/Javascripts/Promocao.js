@@ -35,6 +35,7 @@ let postPromocaoMatricula = function(){
         curso : $j('#curso').val(),
         serie : $j('#serie').val(),
         turma : $j('#turma').val(),
+        matricula: $j('#matricula').val(),
         regras_avaliacao_id : $j('#regras_avaliacao_id').val()
       },
       success : handlePostPromocaoMatricula,
@@ -118,22 +119,29 @@ function handleSearch($resultTable, dataResponse) {
     .appendTo($text);
 
   $j('<input />').attr('id', 'promover-matricula')
-            .attr('href', '#')
-            .attr('type','button')
-            .attr('class','btn-green')
-            .attr('value','Iniciar processo')
-            .bind('click', postPromocaoMatricula)
-            .appendTo($text);
+    .attr('href', '#')
+    .attr('type','button')
+    .attr('class','btn-green')
+    .attr('value','Iniciar processo')
+    .bind('click', postPromocaoMatricula)
+    .appendTo($text);
 
   $j('<span />').html(' ').appendTo($text);
 
   $j('<input />').attr('id', 'delete-old-componentes-curriculares')
-            .attr('href', '#')
-            .attr('type','button')
-            .attr('class','btn-danger')
-            .attr('value','Limpar antigos componentes curriculares')
-            .bind('click', deleteOldComponentesCurriculares)
-            .appendTo($text);
+    .attr('href', '#')
+    .attr('type','button')
+    .attr('class','btn-danger')
+    .attr('value','Limpar antigos componentes curriculares')
+    .bind('click', deleteOldComponentesCurriculares)
+    .appendTo($text);
 
   $j('<td />').html($text).appendTo($j('<tr />').appendTo($resultTable));
 }
+
+$j(document).ready(() => {
+  $j('#matricula').on('change', () => {
+    let value = $j('#matricula').val()
+    $j('#matricula option').removeAttr('selected').filter("[value="+value+"]").attr('selected', '')
+  })
+})
