@@ -91,7 +91,7 @@ return new class extends clsCadastro {
         $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('componenteCurricular', ['required' => $obrigatorio, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('faseEtapa', ['required' => $obrigatorio, 'label' => 'Etapa', 'disabled' => $desabilitado]);
-        
+    
         $this->campoMemo('ddp','Desdobramento didático pedagógico', $this->ddp, 100, 5, $obrigatorio);
         $this->campoMemo('atividades','Atividades', $this->atividades, 100, 5, $obrigatorio);
 
@@ -102,27 +102,6 @@ return new class extends clsCadastro {
     }
 
     public function Novo() {
-        $obj = new clsPmieducarTurma();
-        $serie = $obj->lista($this->ref_cod_turma)[0]['ref_ref_cod_serie'];
-
-        $obj = new clsPmieducarSerie();
-        $tipo_presenca = $obj->tipoPresencaRegraAvaliacao($serie);
-
-        if ($tipo_presenca == null) {
-            $this->mensagem = 'Cadastro não realizado, pois esta série não possui uma regra de avaliação configurada.<br>';
-            $this->simpleRedirect('educar_professores_planejamento_de_aula_cad.php');
-        }
-
-        if ($tipo_presenca == 1 && $this->ref_cod_componente_curricular) {
-            $this->mensagem = 'Cadastro não realizado, pois esta série não admite frequência por componente curricular.<br>';
-            $this->simpleRedirect('educar_professores_planejamento_de_aula_cad.php');
-        }
-
-        if ($tipo_presenca == 2 && !$this->ref_cod_componente_curricular) {
-            $this->mensagem = 'Cadastro não realizado, pois o componente curricular é obrigatório para esta série.<br>';
-            //$this->simpleRedirect('educar_professores_planejamento_de_aula_cad.php');
-        }
-
         $data_agora = new DateTime('now');
         $data_agora = new \DateTime($data_agora->format('Y-m-d'));
 
