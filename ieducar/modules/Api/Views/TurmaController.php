@@ -144,6 +144,7 @@ class TurmaController extends ApiCoreController
         $objMatriculaTurma = new clsPmieducarMatriculaTurma();
         $lstMatriculaTurma = $objMatriculaTurma->lista(null, $codTurma, null, null, null, null, null, null, 3);
 
+        $lstNomes = [];
         foreach ($lstMatriculaTurma as $matricula) {
             $lstNomes[] = [
                 'nome' => limpa_acentos(mb_strtoupper($matricula['nome'])),
