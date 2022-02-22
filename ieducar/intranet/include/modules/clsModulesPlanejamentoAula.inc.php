@@ -112,6 +112,7 @@ class clsModulesPlanejamentoAula extends Model {
      */
     public function cadastra() {
         if (is_numeric($this->ref_cod_turma)
+            && is_numeric($this->ref_componente_curricular_id)
             && is_numeric($this->etapa_sequencial)
             && $this->data_inicial != ''
             && $this->data_final != ''
@@ -138,11 +139,9 @@ class clsModulesPlanejamentoAula extends Model {
             $valores .= "{$gruda}'{$this->ref_cod_turma}'";
             $gruda = ', ';
 
-            if(is_numeric($this->ref_componente_curricular_id)) {
-                $campos .= "{$gruda}ref_componente_curricular";
-                $valores .= "{$gruda}'{$this->ref_componente_curricular_id}'";
-                $gruda = ', ';
-            }
+            $campos .= "{$gruda}ref_componente_curricular";
+            $valores .= "{$gruda}'{$this->ref_componente_curricular_id}'";
+            $gruda = ', ';
 
             $campos .= "{$gruda}etapa_sequencial";
             $valores .= "{$gruda}'{$this->etapa_sequencial}'";
@@ -233,7 +232,7 @@ class clsModulesPlanejamentoAula extends Model {
             $obj = new clsModulesPlanejamentoAulaConteudo();
             $conteudos_atuais = $obj->lista($this->id);
             $conteudo_diferenca = $obj->retornaDiferencaEntreConjuntosConteudos($conteudos_atuais, $this->conteudos);
-            //dd($conteudo_diferenca);
+
             foreach ($conteudo_diferenca['adicionar'] as $key => $conteudo_adicionar){
                 $obj = new clsModulesPlanejamentoAulaConteudo(null, $this->id, $conteudo_adicionar);
                 $obj->cadastra();

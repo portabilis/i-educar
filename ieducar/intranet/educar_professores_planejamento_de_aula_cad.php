@@ -89,7 +89,7 @@ return new class extends clsCadastro {
         $this->inputsHelper()->dynamic('dataInicial', ['required' => $obrigatorio]);    // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('dataFinal', ['required' => $obrigatorio]);      // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado]);
-        $this->inputsHelper()->dynamic('componenteCurricular', ['required' => !$obrigatorio, 'disabled' => $desabilitado]);
+        $this->inputsHelper()->dynamic('componenteCurricular', ['required' => $obrigatorio, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('faseEtapa', ['required' => $obrigatorio, 'label' => 'Etapa', 'disabled' => $desabilitado]);
         
         $this->campoMemo('ddp','Desdobramento didático pedagógico', $this->ddp, 100, 5, $obrigatorio);
@@ -293,7 +293,7 @@ return new class extends clsCadastro {
         $todos_bncc = $this->getBNCCTurma($this->ref_cod_turma, $this->ref_cod_componente_curricular)['bncc'];
 
         $options = [
-            'label' => 'Objetivos de aprendizagem/habilidades',
+            'label' => 'Objetivos de aprendizagem/habilidades (BNCC)',
             'required' => $obrigatorio,
             'size' => 50,
             'options' => [

@@ -18,7 +18,7 @@ class CreatePedagogicalPlanningsTable extends Migration
             $table->date('data_inicial');
             $table->date('data_final');
             $table->integer('ref_cod_turma');
-            $table->integer('ref_componente_curricular')->nullable();
+            $table->integer('ref_componente_curricular');
             $table->integer('etapa_sequencial');
             $table->text('ddp');
             $table->text('atividades');

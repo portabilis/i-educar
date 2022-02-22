@@ -74,13 +74,6 @@ return new class extends clsDetalhe {
                     $registro['detalhes']['componente_curricular']
                 ]
             );
-        } else {
-            $this->addDetalhe(
-                [
-                    'Componente curricular',
-                    '—'
-                ]
-            );
         }
 
         if ($registro['detalhes']['etapa'] && $registro['detalhes']['fase_etapa']) {
@@ -189,7 +182,7 @@ return new class extends clsDetalhe {
 
         $this->addDetalhe(
             [
-                'Objetivos de aprendizagem/habilidades',
+                'Objetivos de aprendizagem/habilidades (BNCC)',
                 $bncc
             ]
         );
