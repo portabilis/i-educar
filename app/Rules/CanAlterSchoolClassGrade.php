@@ -18,6 +18,12 @@ class CanAlterSchoolClassGrade implements Rule
      */
     public function passes($attribute, $value)
     {
+        $isCreate = empty($value->cod_turma);
+
+        if ($isCreate) {
+            return true;
+        }
+
         /**
          * Para turmas multisseriadas essa validação
          * é realizada em outro lugar
