@@ -51,37 +51,34 @@ class clsModulesBNCC extends Model {
     public function lista (
         $int_frequencia = null
     ) {
+        if (!is_numeric($int_frequencia))
+            return false;
+
         $sql = "
-            WITH select_ as (
-                SELECT
-                    {$this->_campos_lista}
-                FROM
-                    {$this->_from}
-            )
-                SELECT
-                    select_.id,
-                    codigo,
-                    habilidade,
-                    campo_experiencia,
-                    unidade_tematica,
-                    componente_curricular_id,
-                    select_.serie_id
-                FROM select_
-                CROSS JOIN modules.frequencia as f
-                JOIN pmieducar.turma as t
-                    ON (t.cod_turma = f.ref_cod_turma)
-				JOIN modules.componente_curricular as cc
-					ON (cc.codigo_educacenso = select_.componente_curricular_id)
-                WHERE select_.serie_id::integer = t.etapa_educacenso AND (f.ref_componente_curricular IS NULL OR cc.id = f.ref_componente_curricular)
+        WITH select_ as (
+            SELECT
+                {$this->_campos_lista}
+            FROM
+                {$this->_from}
+        )
+            SELECT
+                bncc.id,
+                codigo,
+                habilidade,
+                campo_experiencia,
+                unidade_tematica,
+                componente_curricular_id,
+                bncc.serie_id
+            FROM
+                modules.frequencia as f
+            JOIN pmieducar.turma as t
+                ON (t.cod_turma = f.ref_cod_turma)
+            JOIN modules.componente_curricular as cc
+                ON (cc.id = f.ref_componente_curricular OR f.ref_componente_curricular IS NULL)
+            JOIN select_ as bncc
+                ON (bncc.serie_id = t.etapa_educacenso AND bncc.componente_curricular_id = cc.codigo_educacenso)
+            WHERE f.id = '{$int_frequencia}'
         ";
-
-        $whereAnd = ' AND ';
-        $filtros = "";
-
-        if (is_numeric($int_frequencia)) {
-            $filtros .= "{$whereAnd} f.id = '{$int_frequencia}'";
-            $whereAnd = ' AND ';
-        }
 
         $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
@@ -98,15 +95,16 @@ class clsModulesBNCC extends Model {
             )
                 SELECT
                     COUNT(0)
-                FROM select_
-                CROSS JOIN modules.frequencia as f
+                FROM
+                    modules.frequencia as f
                 JOIN pmieducar.turma as t
                     ON (t.cod_turma = f.ref_cod_turma)
-				JOIN modules.componente_curricular as cc
-					ON (cc.codigo_educacenso = select_.componente_curricular_id)
-                WHERE select_.serie_id::integer = t.etapa_educacenso AND (f.ref_componente_curricular IS NULL OR cc.id = f.ref_componente_curricular)
-                {$filtros}" 
-        );
+                JOIN modules.componente_curricular as cc
+                    ON (cc.id = f.ref_componente_curricular OR f.ref_componente_curricular IS NULL)
+                JOIN select_ as bncc
+                    ON (bncc.serie_id = t.etapa_educacenso AND bncc.componente_curricular_id = cc.codigo_educacenso)
+                WHERE f.id = '{$int_frequencia}'
+        ");
 
         $db->Consulta($sql);
 
@@ -161,7 +159,7 @@ class clsModulesBNCC extends Model {
             WHERE select_.serie_id::integer = t.etapa_educacenso
             AND t.cod_turma = '{$int_turma}'
         ";
-        //echo("<script>console.log('PHP: " . $sql . "');</script>");
+
         $whereAnd = ' AND ';
         $filtros = "";
 
