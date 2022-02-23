@@ -65,8 +65,8 @@ return new class extends clsListagem {
             $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1, null, $this->ref_cod_instituicao);
             if (is_array($lista) && count($lista)) {
                 foreach ($lista as $registro) {
-                    $opcoes[$registro['cod_curso']] = $registro['nm_curso'];
-                    $opcoes_[$registro['cod_curso']] = $registro['nm_curso'];
+                    $opcoes[$registro['cod_curso']] = $registro['nm_curso'] . (!empty($data['descricao']) ? ' - ' . $data['descricao'] : '');
+                    $opcoes_[$registro['cod_curso']] = $registro['nm_curso'] . (!empty($data['descricao']) ? ' - ' . $data['descricao'] : '');
                 }
             }
         }
@@ -84,7 +84,7 @@ return new class extends clsListagem {
             $lista = $objTemp->lista(null, null, null, $this->ref_curso_origem, null, null, null, null, null, null, null, null, 1);
             if (is_array($lista) && count($lista)) {
                 foreach ($lista as $registro) {
-                    $opcoes[$registro['cod_serie']] = $registro['nm_serie'];
+                    $opcoes[$registro['cod_serie']] = $registro['nm_serie']  . (!empty($data['descricao']) ? ' - ' . $data['descricao'] : '');;
                 }
             }
         }
@@ -93,7 +93,7 @@ return new class extends clsListagem {
             $lista = $objTemp->lista(null, null, null, $this->ref_curso_destino, null, null, null, null, null, null, null, null, 1);
             if (is_array($lista) && count($lista)) {
                 foreach ($lista as $registro) {
-                    $opcoes_[$registro['cod_serie']] = $registro['nm_serie'];
+                    $opcoes_[$registro['cod_serie']] = $registro['nm_serie']  . (!empty($data['descricao']) ? ' - ' . $data['descricao'] : '');;
                 }
             }
         }
