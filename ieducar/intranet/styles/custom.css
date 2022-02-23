@@ -1,3 +1,12 @@
+html{
+  font-size: 62.5%;
+}
+body{
+  font-size: 14px;
+}
+
+h1 {font-size: 24px}
+
 body, html{
   font-family: "Open Sans" !important;
   height: 100% !important;
@@ -209,6 +218,7 @@ span.error_notice {
   color: #ffffff;
   padding: 0 5px;
   margin-right: 15px;
+  margin-top: 6px;
   font-size: 16px;
   border: none;
   cursor: pointer;
@@ -705,9 +715,9 @@ table.calendar .cor{
 .fundoCalendarioProximo .dia_agenda {
   font-family: "Open Sans";
   position: absolute !important;
-  font-size: 30px;
+  font-size: 24px;
   font-weight: bold;
-  color: #FFF;
+  color: rgba(147,147,147,1);
 }
 
 .fundoCalendario span,
@@ -729,8 +739,8 @@ table.calendar .cor{
 
 .fundoCalendarioMesDiferente span{
   font-family: "Open Sans";
-  font-size: 30px;
-  color: #FFF;
+  font-size: 24px;
+  color: rgba(154,154,154,1);
 }
 
 .fundoCalendarioUrgente,
@@ -1112,7 +1122,7 @@ td.area-conhecimento-destaque {
   background-color: #ffffff;
   border: solid 1px #cddce6;
   padding: 8px;
-  font-size: 1rem;
+  font-size: 1.4rem;
   color: #47728f;
   box-sizing: border-box;
 }
@@ -1136,7 +1146,7 @@ td.area-conhecimento-destaque {
   background-color: #ffffff;
   border: solid 1px #cddce6;
   padding: 8px;
-  font-size: 1rem;
+  font-size: 1.4rem;
   color: #47728f;
   max-width: 100%;
 }
@@ -1147,7 +1157,8 @@ td.area-conhecimento-destaque {
   font-family: "Open Sans";
   font-size: 14px;
   padding: 4px 8px;
-  vertical-align: middle;
+  vertical-align: top;
+  width: 50%;
 }
 
 .formmdtd sub, .formlttd sub{
@@ -1201,7 +1212,7 @@ td.area-conhecimento-destaque {
   font-family: "Open Sans";
   font-size: 14px;
   padding: 8px;
-  vertical-align: middle;
+  vertical-align: top;
 }
 
 .tableDetalhe th{
@@ -1495,14 +1506,14 @@ input.btn_small {
   .r3c1-Mobile {display: inherit;}
   .expandir-btn {display:inherit;}
   .ieducar-quick-search, .ieducar-sidebar-menu {position: relative}
-  #formcadastro select {font-size: 1.7rem !important;}
+  #formcadastro select {font-size: 3.4rem !important;}
   .breadcrumb a, .breadcrumb span {font-size: 1.7rem !important}
-  .formmdtd sub, .formlttd sub {font-size:1.3rem}
-  #formcadastro input, #formcadastro textarea {font-size: 2rem  !important}
-  table {font-size: 2.5rem !important;}
+  .formmdtd sub, .formlttd sub {font-size:2.4rem}
+  #formcadastro input, #formcadastro textarea {font-size: 3.4rem  !important}
+  table {font-size: 2rem !important;}
   table.paginacao td a.nvp_paginador { font-size: 2.2rem !important;}
   table.paginacao{width:95vw !important; margin-top: 3vh !important; margin-bottom: 7vh !important;}
-
+  .tableDetalhe th{font-size: 3.4rem;}
   .avatar-35{width: 70px !important; height: 70px !important;}
   .notifications img {top: 3px !important; width:40px !important;}
   .botaolistagem {}
@@ -1514,13 +1525,14 @@ input.btn_small {
   .ieducar-sidebar-menu {width: 100% !important}
   .ieducar-sidebar-menu li a {font-size: 1.7rem !important; padding: 25px 25px !important;}
   .ieducar-sub-menu li a{font-size: 1.7rem !important; padding: 25px 25px !important; margin: 15px 0 !important;}
-  .tablelistagem .formlttd a, .tablelistagem .formmdtd a, .titulo-tabela-listagem{font-size:1.5rem !important;}
-  input[type="button"] {font-size: 5rem !important}
+  .tablelistagem .formlttd a, .tablelistagem .formmdtd a, .titulo-tabela-listagem{font-size: 3.4rem !important;}
+  input[type="button"] {font-size: 2rem !important; padding: 30px 100px !important;}
+  #form_resultado {width: 1023px; overflow-x: scroll;}
   
   #tablelistagem .formmdtd{ font-size: 1.7rem; width: calc(100% - 15px); margin: 5px; float: left; }
-  #tablelistagem .formlttd{ width: calc(100% - 15px); margin: 5px; float: left; }
+  #tablelistagem .formlttd{ width: calc(100% - 15px); margin: 5px; float: left; padding:10px 8px}
   .form, .formlttd, .formmdtd, .tablelistagem .formdktd,
-  #tablelistagem .formlttd, #tablelistagem .formmdtd  { font-size: 1.7rem !important; font-weight: bold;}  
+  #tablelistagem .formlttd, #tablelistagem .formmdtd  { font-size: 3.4rem !important; font-weight: bold;}  
   
   #expandido:checked ~ .r3c1 {display: table-cell; left: 0;}
   #expandido:checked ~ .r3c1-Mobile {display: table-cell; left: 0;}
@@ -1572,7 +1584,7 @@ a.btn-detalhes {
 #escola_chosen a.chosen-single{
   text-decoration: none !important;
   cursor: initial !important;
-  font-size: 1rem !important;
+  font-size: 1.4rem !important;
   width: 100% !important;
 }
 

@@ -153,28 +153,20 @@ return new class extends clsDetalhe {
             }
         }
 
-        $this->tabela .= ' <div style="margin-bottom: 10px;">';
-        $this->tabela .= ' <span style="display: block; float: left; width: 300px; font-weight: bold">Nome</span>';
-        $this->tabela .= ' <span style="display: block; float: left; width: 100px; font-weight: bold">Presença</span>';
-        $this->tabela .= ' <span style="display: block; float: left; width: 300px; font-weight: bold">Justificativa</span>';
-        $this->tabela .= ' </div>';
-        $this->tabela .= ' <br style="clear: left" />';
+
+        $this->tabela .= ' <tr><th><span style="display: block; float: left; width: auto; font-weight: bold">Nome</span></th>';
+        $this->tabela .= ' <th><span style="display: block; float: left; width: 100px; font-weight: bold">Presença</span></th>';
+        $this->tabela .= ' <th><span style="display: block; float: left; width: auto; font-weight: bold">Justificativa</span></th></tr>';
 
         foreach ($alunos as $aluno) {
             $checked = !$aluno['presenca'] ? "checked='true'" : '';
-
-            $this->tabela .= '  <div style="margin-bottom: 10px; float: left" class="linha-disciplina" >';
-            $this->tabela .= "  <span style='display: block; float: left; width: 300px'>{$aluno['nome']}</span>";
-
-            $this->tabela .= "  <label style='display: block; float: left; width: 100px;'>
-                                    <input type='checkbox' disabled {$checked}>
-                                </label>";
-            $this->tabela .= "  <span style='display: block; float: left; width: 300px'>{$aluno['justificativa']}</span>";
-
-            $this->tabela .= '  </div>';
-            $this->tabela .= '  <br style="clear: left" />';
+            
+            $this->tabela .= "  <tr><td class='formlttd'>{$aluno['nome']}</td>";
+            $this->tabela .= "  <td style='margin: auto'><input type='checkbox' disabled {$checked}></td>";
+            $this->tabela .= "  <td class='formlttd'>{$aluno['justificativa']}</td></tr>";
         }
-
+        $this->tabela .= '</table>';
+        
         $disciplinas  = '<table cellspacing="0" cellpadding="0" border="0">';
         $disciplinas .= sprintf('<tr align="left"><td>%s</td></tr>', $this->tabela);
         $disciplinas .= '</table>';
