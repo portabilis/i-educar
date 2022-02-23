@@ -438,7 +438,7 @@ class MatriculaController extends ApiCoreController
                        END AS apresentar_fora_da_data,
                        matricula_turma_excluidos.turno_id,
                        matricula.ref_ref_cod_serie AS serie_id,
-                       matricula_turma_excluidos.deleted_at
+                       matricula_turma_excluidos.deleted_at::date::varchar
                   FROM pmieducar.matricula
             INNER JOIN pmieducar.escola
                     ON escola.cod_escola = matricula.ref_ref_cod_escola
