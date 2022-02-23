@@ -399,7 +399,10 @@ class MatriculaController extends ApiCoreController
                        END AS apresentar_fora_da_data,
                        matricula_turma.turno_id,
                        matricula.ref_ref_cod_serie AS serie_id,
-                       null AS deleted_at
+                       CASE
+                           WHEN turma.ativo = 0 THEN turma.data_exclusao::date::varchar
+                           ELSE NULL
+                       END AS deleted_at
                   FROM pmieducar.matricula
             INNER JOIN pmieducar.escola
                     ON escola.cod_escola = matricula.ref_ref_cod_escola
@@ -407,6 +410,8 @@ class MatriculaController extends ApiCoreController
                     ON instituicao.cod_instituicao = escola.ref_cod_instituicao
             INNER JOIN pmieducar.matricula_turma
                     ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
+                  JOIN pmieducar.turma
+                    ON turma.cod_turma = matricula_turma.ref_cod_turma
                  WHERE matricula.ref_ref_cod_escola in (' . $escola . ')
                    AND matricula.ano = $1::integer
                  ' . $whereMatriculaTurma . ')
