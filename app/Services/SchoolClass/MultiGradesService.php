@@ -76,7 +76,13 @@ class MultiGradesService
         $query = LegacySchoolClassGrade::query()
             ->where('turma_id', $schoolClass->getKey());
 
-        $gradesToDelete = $query->get()
+        /**
+         * Valida exclusão das séries na tabela de turma_serie
+         * desconsiderando a série mantida como principal na turma
+         */
+        $gradesToDelete = $query
+            ->whereNotIn('serie_id', [$schoolClass->ref_ref_cod_serie])
+            ->get()
             ->pluck('serie_id')
             ->toArray();
 
