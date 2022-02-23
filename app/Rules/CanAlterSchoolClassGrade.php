@@ -36,7 +36,7 @@ class CanAlterSchoolClassGrade implements Rule
         $oldSchoolClass = LegacySchoolClass::find($value->cod_turma);
         $oldSchoolClassGrade = $oldSchoolClass->ref_ref_cod_serie;
         $newSchoolClassGrade = $value->ref_ref_cod_serie;
-        
+
         if ((int)$oldSchoolClassGrade === (int)$newSchoolClassGrade) {
             return true;
         }
@@ -53,7 +53,7 @@ class CanAlterSchoolClassGrade implements Rule
                 }
             )
             ->exists();
-        
+
         if ($existsEnrollment) {
             return false;
         }
