@@ -60,7 +60,6 @@ let deleteOldComponentesCurriculares = function() {
 
 function handlePostPromocaoMatricula(dataResponse){
   const response = dataResponse.msgs;
-
   response.map((res) => {
     if (res.type === 'error') {
       messageUtils.error(safeUtf8Decode(res.msg));
@@ -70,23 +69,25 @@ function handlePostPromocaoMatricula(dataResponse){
   });
 
   let $proximoMatriculaIdField = $j('#proximo-matricula-id');
+  let nextEnrollmentValue = parseInt($proximoMatriculaIdField.val());
+  let nextResponseEnrollmentValue = dataResponse.result.proximo_matricula_id;
 
-  let $proximaMatricula = ((dataResponse.any_error_msg) ?  (parseInt($proximoMatriculaIdField.val()) + parseInt(1)) : dataResponse.result.proximo_matricula_id);
-
-  $proximoMatriculaIdField.val($proximaMatricula);
+  if (nextResponseEnrollmentValue !== 0) {
+    let $proximaMatricula = ((dataResponse.any_error_msg) ?  (nextEnrollmentValue + parseInt(1)) : nextResponseEnrollmentValue);
+    $proximoMatriculaIdField.val($proximaMatricula);
+  }
 
   if($j('#continuar-processo').is(':checked') &&
-     $j.isNumeric($proximoMatriculaIdField.val()) &&
-     $proximoMatriculaIdField.data('initial_matricula_id') != $proximoMatriculaIdField.val()){
+    $j.isNumeric(nextEnrollmentValue) &&
+    $proximoMatriculaIdField.data('initial_matricula_id') != nextEnrollmentValue){
     $j('#promover-matricula').click();
   }
   else if(($j('#continuar-processo').is(':checked') &&
-         $proximoMatriculaIdField.data('initial_matricula_id') == $proximoMatriculaIdField.val()) ||
-         ! $j.isNumeric($proximoMatriculaIdField.val())){
-    alert('Processo finalizado');
+        $proximoMatriculaIdField.data('initial_matricula_id') == nextEnrollmentValue) ||
+        !$j.isNumeric(nextEnrollmentValue)){
+        messageUtils.success('Processo finalizado.');
   }
 }
-
 
 function handleDelete(dataResponse){
   const response = dataResponse.msgs;
@@ -100,7 +101,6 @@ function handleDelete(dataResponse){
 }
 
 function handleSearch($resultTable, dataResponse) {
-
   let $text = $j('<div />');
 
   $j('<span />')
@@ -117,7 +117,8 @@ function handleSearch($resultTable, dataResponse) {
     .attr('name', 'proximo-matricula-id')
     .attr('id', 'proximo-matricula-id')
     .attr('class','proximo-matricula')
-    .val('0').appendTo($text);
+    .val(0)
+    .appendTo($text);
 
   $j('<br />').appendTo($text);
 
@@ -152,6 +153,11 @@ function handleSearch($resultTable, dataResponse) {
     .appendTo($text);
 
   $j('<td />').html($text).appendTo($j('<tr />').appendTo($resultTable));
+
+  if (dataResponse.quantidade_matriculas <= 1) {
+    $j('#proximo-matricula-id').prop('disabled', true);
+    $j('#continuar-processo').prop('disabled', true);
+  }
 }
 
 $j(document).ready(() => {
