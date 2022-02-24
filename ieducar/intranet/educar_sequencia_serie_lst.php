@@ -144,7 +144,7 @@ return new class extends clsListagem {
 
                 $obj_ref_curso_destino = new clsPmieducarCurso($registro['ref_curso_destino']);
                 $det_ref_curso_destino = $obj_ref_curso_destino->detalhe();
-                $registro['ref_curso_destino'] = $det_ref_curso_destino['nm_curso'] . (!empty($det_ref_curso_origem['descricao']) ? ' - ' . $det_ref_curso_origem['descricao'] : '');
+                $registro['ref_curso_destino'] = $det_ref_curso_destino['nm_curso'] . (!empty($det_ref_curso_destino['descricao']) ? ' - ' . $det_ref_curso_destino['descricao'] : '');
 
                 $lista_busca = [
                     "<a href=\"educar_sequencia_serie_det.php?ref_serie_origem={$registro['ref_serie_origem']}&ref_serie_destino={$registro['ref_serie_destino']}\">{$registro['ref_curso_origem']}</a>",
