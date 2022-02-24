@@ -16,7 +16,6 @@
                 const codComponenteCurricular = document.getElementById('ref_cod_componente_curricular').value
 
                 if (!codTurma || !codComponenteCurricular) {
-                    console.log("False");
                     $('#bncc').val([]).empty().trigger('chosen:updated');
                     getResource(false);
 
