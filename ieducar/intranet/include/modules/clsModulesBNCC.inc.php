@@ -49,36 +49,47 @@ class clsModulesBNCC extends Model {
      * @return array
      */
     public function lista (
-        $int_frequencia = null
+        $int_frequencia = null,
+        $int_campo_experiencia = null
     ) {
         if (!is_numeric($int_frequencia))
             return false;
 
         $sql = "
-        WITH select_ as (
-            SELECT
-                {$this->_campos_lista}
-            FROM
-                {$this->_from}
-        )
-            SELECT
-                bncc.id,
-                codigo,
-                habilidade,
-                campo_experiencia,
-                unidade_tematica,
-                componente_curricular_id,
-                bncc.serie_id
-            FROM
-                modules.frequencia as f
-            JOIN pmieducar.turma as t
-                ON (t.cod_turma = f.ref_cod_turma)
-            JOIN modules.componente_curricular as cc
-                ON (cc.id = f.ref_componente_curricular OR f.ref_componente_curricular IS NULL)
-            JOIN select_ as bncc
-                ON (bncc.serie_id = t.etapa_educacenso AND bncc.componente_curricular_id = cc.codigo_educacenso)
-            WHERE f.id = '{$int_frequencia}'
+            WITH select_ as (
+                SELECT
+                    {$this->_campos_lista}
+                FROM
+                    {$this->_from}
+            )
+                SELECT
+                    bncc.id,
+                    codigo,
+                    habilidade,
+                    campo_experiencia,
+                    unidade_tematica,
+                    componente_curricular_id,
+                    bncc.serie_id
+                FROM
+                    modules.frequencia as f
+                JOIN pmieducar.turma as t
+                    ON (t.cod_turma = f.ref_cod_turma)
+                JOIN modules.componente_curricular as cc
+                    ON (cc.id = f.ref_componente_curricular OR f.ref_componente_curricular IS NULL)
+                JOIN select_ as bncc
+                    ON (bncc.serie_id = t.etapa_educacenso
+                AND (bncc.componente_curricular_id = cc.codigo_educacenso
+                OR bncc.componente_curricular_id IS NULL))
+                WHERE f.id = '{$int_frequencia}'
         ";
+
+        $whereAnd = ' AND ';
+        $filtros = "";
+
+        if (is_numeric($int_campo_experiencia)) {
+            $filtros .= "{$whereAnd} bncc.campo_experiencia = '{$int_campo_experiencia}'";
+            $whereAnd = ' AND ';
+        }
 
         $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
@@ -102,8 +113,11 @@ class clsModulesBNCC extends Model {
                 JOIN modules.componente_curricular as cc
                     ON (cc.id = f.ref_componente_curricular OR f.ref_componente_curricular IS NULL)
                 JOIN select_ as bncc
-                    ON (bncc.serie_id = t.etapa_educacenso AND bncc.componente_curricular_id = cc.codigo_educacenso)
+                    ON (bncc.serie_id = t.etapa_educacenso
+                AND (bncc.componente_curricular_id = cc.codigo_educacenso
+                OR bncc.componente_curricular_id IS NULL))
                 WHERE f.id = '{$int_frequencia}'
+                {$filtros}
         ");
 
         $db->Consulta($sql);

@@ -5,13 +5,39 @@ class BNCCController extends ApiCoreController
     public function getBNCC()
     {
         $frequencia = $this->getRequest()->frequencia;
+        $campoExperiencia = $this->getRequest()->campoExperiencia;
 
         if (is_numeric($frequencia)) {
+            $db = new clsBanco();
+        
+            $sql = "
+                SELECT
+                    CASE
+                        WHEN t.etapa_educacenso = 1 THEN 1
+                        WHEN t.etapa_educacenso = 2 THEN 1
+                        WHEN t.etapa_educacenso = 3 THEN 1
+                        ELSE 0
+                    END
+                FROM
+                    pmieducar.turma as t
+                JOIN modules.frequencia as f
+                ON (f.ref_cod_turma = t.cod_turma)
+                WHERE f.id = {$frequencia}
+            ";
+
+            $db->Consulta($sql);
+            $db->ProximoRegistro();
+
+            $resultado = $db->Tupla()[0];
+
+            if ($resultado == 1 && $campoExperiencia == '')
+                return [];
+
             $bncc = [];
             $bncc_temp = [];
             $obj = new clsModulesBNCC();
 
-            if ($bncc_temp = $obj->lista($frequencia)) {
+            if ($bncc_temp = $obj->lista($frequencia, $campoExperiencia)) {
                 foreach ($bncc_temp as $bncc_item) {
                     $id = $bncc_item['id'];
                     $codigo = $bncc_item['codigo'];
