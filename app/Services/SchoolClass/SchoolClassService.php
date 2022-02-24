@@ -124,6 +124,8 @@ class SchoolClassService
         )->validate();
 
         $schoolClass->ativo = 0;
+        $schoolClass->visivel = 0;
+        $schoolClass->data_cadastro = 0;
         $schoolClass->save();
     }
 
