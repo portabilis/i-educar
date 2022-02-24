@@ -16,6 +16,16 @@
       if ($anoField.val() && $turmaField.val() && $turmaField.is(':enabled')) {
         $componenteCurricularField.children().first().html('Aguarde, carregando...');
 
+        function getCampoExperiencia(xml) {
+          $result = xml.getElementsByTagName("ce")[0].getAttribute("resp");
+
+          $componenteCurricularField[0].parentElement.parentElement.parentElement.children[0].children[0].innerText =
+            $result == '0' ? 'Componente curricular' : 'Campo de experiência';
+        }
+
+        var xml = new ajax(getCampoExperiencia);
+        xml.envia("educar_campo_experiencia_xml.php?tur=" + $turmaField.val());
+
         var data = {
           ano      : $anoField.attr('value'),
           turma_id : $turmaField.attr('value')

@@ -6,8 +6,8 @@
 
     echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
 
-    $freq = $_GET['freq'];
-    if (is_numeric($freq)) {
+    $tur = $_GET['tur'];
+    if (is_numeric($tur)) {
         $db = new clsBanco();
         
         $sql = "
@@ -20,9 +20,7 @@
                 END
             FROM
                 pmieducar.turma as t
-            JOIN modules.frequencia as f
-            ON (f.ref_cod_turma = t.cod_turma)
-            WHERE f.id = {$freq}
+            WHERE t.cod_turma = {$tur}
         ";
 
         $db->Consulta($sql);
