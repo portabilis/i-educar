@@ -59,7 +59,15 @@ let deleteOldComponentesCurriculares = function() {
 //callback handlers
 
 function handlePostPromocaoMatricula(dataResponse){
-  handleMessages(dataResponse.msgs);
+  const response = dataResponse.msgs;
+
+  response.map((res) => {
+    if (res.type === 'error') {
+      messageUtils.error(safeUtf8Decode(res.msg));
+    } else{
+      messageUtils.success(safeUtf8Decode(res.msg));
+    }
+  });
 
   let $proximoMatriculaIdField = $j('#proximo-matricula-id');
 
@@ -81,7 +89,14 @@ function handlePostPromocaoMatricula(dataResponse){
 
 
 function handleDelete(dataResponse){
-  handleMessages(dataResponse.msgs);
+  const response = dataResponse.msgs;
+  response.map((res) => {
+    if (res.type === 'error') {
+      messageUtils.error(safeUtf8Decode(res.msg));
+    } else{
+      messageUtils.success(safeUtf8Decode(res.msg));
+    }
+  });
 }
 
 function handleSearch($resultTable, dataResponse) {
