@@ -286,7 +286,6 @@ return new class extends clsCadastro {
 
     protected function adicionarConteudosTabela()
     {
-        // dd($this->id);
         $obj = new clsModulesPlanejamentoAulaConteudo(null, $this->id);
         $conteudos = $obj->detalhe();
 
