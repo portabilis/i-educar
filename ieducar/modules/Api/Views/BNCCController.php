@@ -59,11 +59,14 @@ class BNCCController extends ApiCoreController
         $componente_curricular = $this->getRequest()->componente_curricular;
 
         if (is_numeric($turma)) {
+            $obj = new clsPmieducarTurma($turma);
+            $resultado = $obj->getGrau();
+
             $bncc = [];
             $bncc_temp = [];
             $obj = new clsModulesBNCC();
 
-            if ($bncc_temp = $obj->listaTurma($turma, $componente_curricular)) {
+            if ($bncc_temp = $obj->listaTurma($resultado, $turma, $componente_curricular)) {
                 foreach ($bncc_temp as $bncc_item) {
                     $id = $bncc_item['id'];
                     $codigo = $bncc_item['codigo'];
