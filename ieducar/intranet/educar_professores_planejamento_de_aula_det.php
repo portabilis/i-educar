@@ -39,7 +39,7 @@ return new class extends clsDetalhe {
             $this->simpleRedirect('educar_professores_planejamento_de_aula_lst.php');
         }
 
-        $obj = new clsPmieducarTurma($turma);
+        $obj = new clsPmieducarTurma($registro['detalhes']['ref_cod_turma']);
         $resultado = $obj->getGrau();
         
         if ($registro['detalhes']['data_inicial']) {
