@@ -230,11 +230,14 @@ return new class extends clsCadastro {
     private function getBNCCTurma($turma = null, $ref_cod_componente_curricular = null)
     {
         if (is_numeric($turma)) {
+            $obj = new clsPmieducarTurma($turma);
+            $resultado = $obj->getGrau();
+
             $bncc = [];
             $bncc_temp = [];
             $obj = new clsModulesBNCC();
 
-            if ($bncc_temp = $obj->listaTurma($turma, $ref_cod_componente_curricular)) {
+            if ($bncc_temp = $obj->listaTurma($resultado, $turma, $ref_cod_componente_curricular)) {
                 foreach ($bncc_temp as $bncc_item) {
                     $id = $bncc_item['id'];
                     $codigo = $bncc_item['codigo'];
