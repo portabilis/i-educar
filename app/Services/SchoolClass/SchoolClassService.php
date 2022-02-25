@@ -125,7 +125,7 @@ class SchoolClassService
 
         $schoolClass->ativo = 0;
         $schoolClass->visivel = 0;
-        $schoolClass->data_cadastro = now();
+        $schoolClass->data_exclusao = now();
         $schoolClass->save();
     }
 
