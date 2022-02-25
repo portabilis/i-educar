@@ -56,9 +56,7 @@ let deleteOldComponentesCurriculares = function() {
   deleteResource(options);
 };
 
-//callback handlers
-
-function handlePostPromocaoMatricula(dataResponse){
+function handlePostPromocaoMatricula(dataResponse) {
   const response = dataResponse.msgs;
   response.map((res) => {
     if (res.type === 'error') {
@@ -69,27 +67,25 @@ function handlePostPromocaoMatricula(dataResponse){
   });
 
   let $proximoMatriculaIdField = $j('#proximo-matricula-id');
+  let initialMatriculaId = parseInt($proximoMatriculaIdField.data('initial_matricula_id'));
   let nextEnrollmentValue = parseInt($proximoMatriculaIdField.val());
   let nextResponseEnrollmentValue = dataResponse.result.proximo_matricula_id;
+  let arrayCheck = Array.isArray(nextResponseEnrollmentValue);
 
-  if (nextResponseEnrollmentValue !== 0) {
-    let $proximaMatricula = ((dataResponse.any_error_msg) ?  (nextEnrollmentValue + parseInt(1)) : nextResponseEnrollmentValue);
+  if (nextResponseEnrollmentValue !== 0 && !arrayCheck) {
+    let $proximaMatricula = ((dataResponse.any_error_msg) ? (nextEnrollmentValue + parseInt(1)) : nextResponseEnrollmentValue);
     $proximoMatriculaIdField.val($proximaMatricula);
+    initialMatriculaId = parseInt($proximoMatriculaIdField.val());
   }
 
-  if($j('#continuar-processo').is(':checked') &&
-    $j.isNumeric(nextEnrollmentValue) &&
-    $proximoMatriculaIdField.data('initial_matricula_id') != nextEnrollmentValue){
-    $j('#promover-matricula').click();
-  }
-  else if(($j('#continuar-processo').is(':checked') &&
-        $proximoMatriculaIdField.data('initial_matricula_id') == nextEnrollmentValue) ||
-        !$j.isNumeric(nextEnrollmentValue)){
-        messageUtils.success('Processo finalizado.');
+  if ($j('#continuar-processo').is(':checked') && initialMatriculaId !== nextEnrollmentValue) {
+      $j('#promover-matricula').click();
+  } else if (($j('#continuar-processo').is(':checked') && initialMatriculaId === nextEnrollmentValue)) {
+      messageUtils.success('Processo finalizado.');
   }
 }
 
-function handleDelete(dataResponse){
+function handleDelete(dataResponse) {
   const response = dataResponse.msgs;
   response.map((res) => {
     if (res.type === 'error') {
