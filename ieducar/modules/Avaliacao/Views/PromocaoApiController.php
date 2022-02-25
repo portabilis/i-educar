@@ -42,6 +42,7 @@ class PromocaoApiController extends ApiCoreController
         $regraDeAvaliacao = empty($this->getRequest()->regras_avaliacao_id) ? 0 : $this->getRequest()->regras_avaliacao_id;
 
         $sql = 'SELECT m.cod_matricula FROM pmieducar.matricula AS m
+                INNER JOIN pmieducar.aluno ON aluno.cod_aluno = m.ref_cod_aluno
                 INNER JOIN pmieducar.matricula_turma AS mt ON m.cod_matricula = mt.ref_cod_matricula
                 INNER JOIN pmieducar.serie as s on m.ref_ref_cod_serie = s.cod_serie
                 INNER JOIN modules.regra_avaliacao_serie_ano as ra on ra.serie_id = s.cod_serie and ra.ano_letivo = m.ano
@@ -350,6 +351,7 @@ class PromocaoApiController extends ApiCoreController
 
             $sql = 'SELECT count(m.cod_matricula)
                     FROM pmieducar.matricula AS m
+                    INNER JOIN pmieducar.aluno ON aluno.cod_aluno = m.ref_cod_aluno
                     INNER JOIN pmieducar.matricula_turma AS mt ON mt.ref_cod_matricula = m.cod_matricula
                     INNER JOIN pmieducar.serie as s on m.ref_ref_cod_serie = s.cod_serie
                     INNER JOIN modules.regra_avaliacao_serie_ano as ra on ra.serie_id = s.cod_serie and ra.ano_letivo = m.ano
@@ -394,7 +396,7 @@ class PromocaoApiController extends ApiCoreController
                 $situacaoAnterior = $this->loadSituacaoArmazenadaMatricula($this->matriculaId());
 
                 $this->lancarFaltasNaoLancadas($this->matriculaId());
-                //$this->convertParecerToLatin1($matriculaId);
+
                 $this->atualizaNotaExame();
 
                 $this->trySaveBoletimService();
@@ -411,9 +413,11 @@ class PromocaoApiController extends ApiCoreController
                 }
             }
 
-            return ['proximo_matricula_id' => $proximoMatriculaId,
+            return [
+                'proximo_matricula_id' => $proximoMatriculaId,
                 'situacao_anterior' => $situacaoAnterior,
-                'nova_situacao' => $novaSituacao];
+                'nova_situacao' => $novaSituacao
+            ];
         }
     }
 
