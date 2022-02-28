@@ -137,7 +137,7 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
 
     Route::post('/turma', 'SchoolClassController@store')
         ->name('schoolclass.store');
-    Route::delete('/turma', [SchoolClassController::class, ''])
+    Route::delete('/turma', 'SchoolClassController@delete')
         ->name('schoolclass.delete');
 
     Route::get('/enrollments-promotion', [EnrollmentsPromotionController::class, 'processEnrollmentsPromotionJobs'])
