@@ -496,4 +496,31 @@ class PromocaoApiController extends ApiCoreController
 
         return LegacySchoolStage::query()->where($where)->count();
     }
+
+    public function processEnrollmentsPromotion(int $userId, int $enrollmentsId): void
+    {
+        $registration = LegacyRegistration::query()->find($enrollmentsId);
+
+        if (!$registration instanceof LegacyRegistration) {
+            return;
+        }
+
+        $this->setMatriculaId($enrollmentsId);
+        $maiorEtapaUtilizada = $this->maiorEtapaUtilizada($registration);
+
+        $params = [
+            'matricula' => $enrollmentsId,
+            'user_id' => $userId,
+            'etapa' => $maiorEtapaUtilizada
+        ];
+
+        $this->boletimService(
+            build: true,
+            params: $params
+        );
+
+        $this->lancarFaltasNaoLancadas($enrollmentsId);
+        $this->atualizaNotaExame($enrollmentsId);
+        $this->trySaveBoletimService();
+    }
 }
