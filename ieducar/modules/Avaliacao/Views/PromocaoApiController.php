@@ -396,7 +396,7 @@ class PromocaoApiController extends ApiCoreController
 
                 $this->lancarFaltasNaoLancadas($this->matriculaId());
                 //$this->convertParecerToLatin1($matriculaId);
-                $this->atualizaNotaExame();
+                $this->atualizaNotaExame($this->matriculaId());
 
                 $this->trySaveBoletimService();
                 $novaSituacao = $this->loadSituacaoArmazenadaMatricula($this->matriculaId());
@@ -430,21 +430,18 @@ class PromocaoApiController extends ApiCoreController
         }
     }
 
-    protected function atualizaNotaExame()
+    protected function atualizaNotaExame($matriculaId) :void
     {
-        $matriculaId = $this->matriculaId();
-
         foreach (App_Model_IedFinder::getComponentesPorMatricula($matriculaId) as $_componente) {
             $componenteId = $_componente->get('id');
-
-            // FIXME #parameters
             $nota_exame = str_replace(',', '.', $this->boletimService()->preverNotaRecuperacao($componenteId));
 
             if (!empty($nota_exame)) {
                 $this->createOrUpdateNotaExame($matriculaId, $componenteId, $nota_exame);
-            } else {
-                $this->deleteNotaExame($matriculaId, $componenteId);
+                return;
             }
+
+            $this->deleteNotaExame($matriculaId, $componenteId);
         }
     }
 
