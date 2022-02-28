@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\EnrollmentsPromotionController;
+use App\Http\Controllers\SchoolClassController;
 use App\Process;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -135,8 +137,11 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
 
     Route::post('/turma', 'SchoolClassController@store')
         ->name('schoolclass.store');
-    Route::delete('/turma', 'SchoolClassController@delete')
+    Route::delete('/turma', [SchoolClassController::class, ''])
         ->name('schoolclass.delete');
+
+    Route::get('/enrollments-promotion', [EnrollmentsPromotionController::class, 'processEnrollmentsPromotionJobs'])
+        ->name('enrollments.promotion');
 });
 
 Route::group(['namespace' => 'Exports', 'prefix' => 'exports'], function () {
