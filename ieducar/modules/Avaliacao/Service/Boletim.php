@@ -246,7 +246,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             }
         }
 
-        $etapaAtual = ($_GET['etapa'] ?? null) == 'Rc' ? $maiorEtapaUtilizada : ($_GET['etapa'] ?? null);
+        $etapa = $this->getOption('etapa') ?: $_GET['etapa'];
+
+        $etapaAtual = ($etapa ?? null) == 'Rc' ? $maiorEtapaUtilizada : ($etapa ?? null);
 
         $this->_setRegra(App_Model_IedFinder::getRegraAvaliacaoPorMatricula(
             $codMatricula,
