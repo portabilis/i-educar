@@ -3,6 +3,7 @@
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClassStage;
 use App\Models\LegacySchoolStage;
+use Illuminate\Support\Facades\Auth;
 
 class PromocaoApiController extends ApiCoreController
 {
@@ -154,7 +155,7 @@ class PromocaoApiController extends ApiCoreController
         }
     }
 
-    protected function boletimService($reload = false)
+    protected function boletimService($reload = false, $build = false, $params = [])
     {
         $matriculaId = $this->matriculaId();
 
@@ -162,10 +163,20 @@ class PromocaoApiController extends ApiCoreController
             $this->_boletimServices = [];
         }
 
+        if ($build === true) {
+            $data = [
+                'matricula' => $params['matricula'],
+                'usuario' => $params['user_id'],
+                'etapa' => $params['etapa']
+            ];
+            $this->_boletimServices[$matriculaId] = new Avaliacao_Service_Boletim($data);
+            return $this->_boletimServices[$matriculaId];
+        }
+
         if (!isset($this->_boletimServices[$matriculaId]) || $reload) {
             // set service
             try {
-                $params = ['matricula' => $matriculaId, 'usuario' => \Illuminate\Support\Facades\Auth::id()];
+                $params = ['matricula' => $matriculaId, 'usuario' => Auth::id()];
                 $this->_boletimServices[$matriculaId] = new Avaliacao_Service_Boletim($params);
             } catch (Exception $e) {
                 $this->messenger->append("Erro ao instanciar serviço boletim para matricula {$matriculaId}: " . $e->getMessage(), 'error', true);
