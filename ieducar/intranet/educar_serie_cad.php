@@ -244,6 +244,11 @@ return new class extends clsCadastro {
         $this->carga_horaria = str_replace('.', '', $this->carga_horaria);
         $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
 
+        if ($this->regra_avaliacao_id === null) {
+            $this->mensagem = 'Regra de avaliação não cadastrada';
+            return false;
+        }
+
         $obj = new clsPmieducarSerie(
             null,
             null,
