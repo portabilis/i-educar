@@ -92,6 +92,8 @@ return new class extends clsCadastro {
             $obj_ser = new clsPmieducarSerie($registro['ref_ref_cod_serie']);
             $det_ser = $obj_ser->detalhe();
 
+            $this->visivel = (int) $registro['visivel'];
+
             $regra_avaliacao_id = $det_ser['regra_avaliacao_id'];
             if ($regra_avaliacao_id) {
                 $regra_avaliacao_mapper = new RegraAvaliacao_Model_RegraDataMapper();
@@ -422,7 +424,7 @@ return new class extends clsCadastro {
             }
         }
 
-        $ativo = isset($this->cod_turma) ? dbBool($this->visivel) : true;
+        $ativo = is_numeric($this->cod_turma) ? (bool) ($this->visivel) : true;
         $this->campoCheck('visivel', 'Ativo', $ativo);
 
         $resources = SelectOptions::tiposMediacaoDidaticoPedagogico();
