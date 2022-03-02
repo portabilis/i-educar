@@ -207,6 +207,7 @@ class SchoolClassController extends Controller
         && $params['nao_informar_educacenso'] === 'on' ? 1 : 0;
         $params['nao_informar_educacenso'] = $value;
         $params['ativo'] = 1;
+        $params['visivel'] = array_key_exists('visivel', $params);
 
         $legacySchoolClass->fill($params);
 
