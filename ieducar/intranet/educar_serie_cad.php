@@ -20,6 +20,11 @@ return new class extends clsCadastro {
     public $regras_avaliacao_diferenciada_id;
     public $anos_letivos;
 
+    public $regra_avaliacao_id;
+    public $observacao_historico;
+    public $dias_letivos;
+    public $regra_avaliacao_diferenciada_id;
+
     public $ref_cod_instituicao;
 
     public $disciplina_serie;
@@ -130,7 +135,7 @@ return new class extends clsCadastro {
     {
         if ($_POST) {
             foreach ($_POST as $campo => $val) {
-                $this->$campo = ($this->$campo) ? $this->$campo : $val;
+                $this->$campo = ($this->$campo) ?: $val;
             }
         }
 
@@ -149,29 +154,8 @@ return new class extends clsCadastro {
         if ($this->ref_cod_curso) {
             $objTemp = new clsPmieducarCurso();
             $lista = $objTemp->lista(
-                $this->ref_cod_curso,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                1
+                int_cod_curso: $this->ref_cod_curso,
+                int_ativo: 1
             );
 
             if (is_array($lista) && count($lista)) {
@@ -244,6 +228,11 @@ return new class extends clsCadastro {
         $this->carga_horaria = str_replace('.', '', $this->carga_horaria);
         $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
 
+        if ($this->regras_avaliacao_id === null) {
+            $this->mensagem = 'Regra de avaliação não cadastrada';
+            return false;
+        }
+
         $obj = new clsPmieducarSerie(
             null,
             null,
@@ -288,6 +277,11 @@ return new class extends clsCadastro {
         $this->carga_horaria = str_replace('.', '', $this->carga_horaria);
         $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
 
+        if ($this->regras_avaliacao_id === null) {
+            $this->mensagem = 'Regra de avaliação não cadastrada';
+            return false;
+        }
+
         $obj = new clsPmieducarSerie(
             $this->cod_serie,
             $this->pessoa_logada,
@@ -331,17 +325,9 @@ return new class extends clsCadastro {
     public function Excluir()
     {
         $obj = new clsPmieducarSerie(
-            $this->cod_serie,
-            $this->pessoa_logada,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            0
+            cod_serie: $this->cod_serie,
+            ref_usuario_exc: $this->pessoa_logada,
+            ativo: 0
         );
 
         if ($obj->possuiTurmasVinculadas()) {
