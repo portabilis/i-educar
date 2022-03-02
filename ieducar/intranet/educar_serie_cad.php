@@ -20,6 +20,11 @@ return new class extends clsCadastro {
     public $regras_avaliacao_diferenciada_id;
     public $anos_letivos;
 
+    public $regra_avaliacao_id;
+    public $observacao_historico;
+    public $dias_letivos;
+    public $regra_avaliacao_diferenciada_id;
+
     public $ref_cod_instituicao;
 
     public $disciplina_serie;
@@ -130,7 +135,7 @@ return new class extends clsCadastro {
     {
         if ($_POST) {
             foreach ($_POST as $campo => $val) {
-                $this->$campo = ($this->$campo) ? $this->$campo : $val;
+                $this->$campo = ($this->$campo) ?: $val;
             }
         }
 
