@@ -154,29 +154,8 @@ return new class extends clsCadastro {
         if ($this->ref_cod_curso) {
             $objTemp = new clsPmieducarCurso();
             $lista = $objTemp->lista(
-                $this->ref_cod_curso,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                1
+                int_cod_curso: $this->ref_cod_curso,
+                int_ativo: 1
             );
 
             if (is_array($lista) && count($lista)) {
@@ -341,17 +320,9 @@ return new class extends clsCadastro {
     public function Excluir()
     {
         $obj = new clsPmieducarSerie(
-            $this->cod_serie,
-            $this->pessoa_logada,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            0
+            cod_serie: $this->cod_serie,
+            ref_usuario_exc: $this->pessoa_logada,
+            ativo: 0
         );
 
         if ($obj->possuiTurmasVinculadas()) {
