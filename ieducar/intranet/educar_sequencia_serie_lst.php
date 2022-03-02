@@ -65,8 +65,8 @@ return new class extends clsListagem {
             $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1, null, $this->ref_cod_instituicao);
             if (is_array($lista) && count($lista)) {
                 foreach ($lista as $registro) {
-                    $opcoes[$registro['cod_curso']] = $registro['nm_curso'];
-                    $opcoes_[$registro['cod_curso']] = $registro['nm_curso'];
+                    $opcoes[$registro['cod_curso']] = $registro['nm_curso'] . (!empty($registro['descricao']) ? ' - ' . $registro['descricao'] : '');
+                    $opcoes_[$registro['cod_curso']] = $registro['nm_curso'] . (!empty($registro['descricao']) ? ' - ' . $registro['descricao'] : '');
                 }
             }
         }
@@ -84,7 +84,7 @@ return new class extends clsListagem {
             $lista = $objTemp->lista(null, null, null, $this->ref_curso_origem, null, null, null, null, null, null, null, null, 1);
             if (is_array($lista) && count($lista)) {
                 foreach ($lista as $registro) {
-                    $opcoes[$registro['cod_serie']] = $registro['nm_serie'];
+                    $opcoes[$registro['cod_serie']] = $registro['nm_serie']  . (!empty($registro['descricao']) ? ' - ' . $registro['descricao'] : '');;
                 }
             }
         }
@@ -93,7 +93,7 @@ return new class extends clsListagem {
             $lista = $objTemp->lista(null, null, null, $this->ref_curso_destino, null, null, null, null, null, null, null, null, 1);
             if (is_array($lista) && count($lista)) {
                 foreach ($lista as $registro) {
-                    $opcoes_[$registro['cod_serie']] = $registro['nm_serie'];
+                    $opcoes_[$registro['cod_serie']] = $registro['nm_serie']  . (!empty($registro['descricao']) ? ' - ' . $registro['descricao'] : '');
                 }
             }
         }
@@ -110,18 +110,12 @@ return new class extends clsListagem {
         $obj_sequencia_serie->setLimite($this->limite, $this->offset);
 
         $lista = $obj_sequencia_serie->lista(
-            $this->ref_serie_origem,
-            $this->ref_serie_destino,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            $this->ref_curso_origem,
-            $this->ref_curso_destino,
-            $this->ref_cod_instituicao
+            int_ref_serie_origem: $this->ref_serie_origem,
+            int_ref_serie_destino: $this->ref_serie_destino,
+            int_ativo: 1,
+            int_ref_curso_origem: $this->ref_curso_origem,
+            int_ref_curso_destino: $this->ref_curso_destino,
+            int_ref_cod_instituicao: $this->ref_cod_instituicao
         );
 
         $total = $obj_sequencia_serie->_total;
@@ -136,7 +130,7 @@ return new class extends clsListagem {
 
                 $obj_ref_curso_origem = new clsPmieducarCurso($registro['ref_curso_origem']);
                 $det_ref_curso_origem = $obj_ref_curso_origem->detalhe();
-                $registro['ref_curso_origem'] = $det_ref_curso_origem['nm_curso'];
+                $registro['ref_curso_origem'] = $det_ref_curso_origem['nm_curso'] . (!empty($det_ref_curso_origem['descricao']) ? ' - ' . $det_ref_curso_origem['descricao'] : '');
                 $registro['ref_cod_instituicao'] = $det_ref_curso_origem['ref_cod_instituicao'];
 
                 $obj_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
@@ -150,7 +144,7 @@ return new class extends clsListagem {
 
                 $obj_ref_curso_destino = new clsPmieducarCurso($registro['ref_curso_destino']);
                 $det_ref_curso_destino = $obj_ref_curso_destino->detalhe();
-                $registro['ref_curso_destino'] = $det_ref_curso_destino['nm_curso'];
+                $registro['ref_curso_destino'] = $det_ref_curso_destino['nm_curso'] . (!empty($det_ref_curso_destino['descricao']) ? ' - ' . $det_ref_curso_destino['descricao'] : '');
 
                 $lista_busca = [
                     "<a href=\"educar_sequencia_serie_det.php?ref_serie_origem={$registro['ref_serie_origem']}&ref_serie_destino={$registro['ref_serie_destino']}\">{$registro['ref_curso_origem']}</a>",
@@ -181,7 +175,7 @@ return new class extends clsListagem {
 
     public function makeExtra()
     {
-        return file_get_contents(__DIR__ . '/scripts/extra/educar-sequencia-serie-lst.js');
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-sequencia-serie.js');
     }
 
     public function Formular()
