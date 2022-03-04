@@ -78,6 +78,7 @@ return new class extends clsCadastro {
             && $this->data_inicial != ''
             && $this->data_final != ''
             && is_numeric($this->ref_cod_turma)
+            && is_numeric($this->ref_cod_componente_curricular)
             && is_numeric($this->fase_etapa)
         ) {
             $desabilitado = true;
