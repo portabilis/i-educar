@@ -27,7 +27,7 @@ return new class extends clsDetalhe {
 
     public function Gerar()
     {
-        $this->titulo = 'Planejamento de aula - Detalhe';
+        $this->titulo = 'Plano de aula - Detalhe';
         $this->id = $_GET['id'];
 
         $obj_permissoes = new clsPermissoes();
@@ -161,7 +161,7 @@ return new class extends clsDetalhe {
         $this->url_cancelar = 'educar_professores_planejamento_de_aula_lst.php';
         $this->largura = '100%';
 
-        $this->breadcrumb('Detalhe do planejamento de aula', [
+        $this->breadcrumb('Detalhe do plano de aula', [
             url('intranet/educar_professores_index.php') => 'Professores',
         ]);
     }

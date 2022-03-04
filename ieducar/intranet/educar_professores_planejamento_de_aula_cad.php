@@ -21,7 +21,7 @@ return new class extends clsCadastro {
     public $conteudo_id;
 
     public function Inicializar () {
-        $this->titulo = 'Planejamento de aula - Cadastro';
+        $this->titulo = 'Plano de aula - Cadastro';
 
         $retorno = 'Novo';
 
@@ -44,7 +44,7 @@ return new class extends clsCadastro {
                 $this->fexcluir = $obj_permissoes->permissao_excluir(58, $this->pessoa_logada, 7);
                 $retorno = 'Editar';
 
-                $this->titulo = 'Planejamento de aula - Edição';
+                $this->titulo = 'Plano de aula - Edição';
             }
         }
 
@@ -54,7 +54,7 @@ return new class extends clsCadastro {
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
-        $this->breadcrumb($nomeMenu . ' planejamento de aula', [
+        $this->breadcrumb($nomeMenu . ' plano de aula', [
             url('intranet/educar_professores_index.php') => 'Professores',
         ]);
 
@@ -161,7 +161,7 @@ return new class extends clsCadastro {
 
         $existe = $obj->existe();
         if ($existe){
-            $this->mensagem = 'Cadastro não realizado, pois este planejamento de aula já existe.<br>';
+            $this->mensagem = 'Cadastro não realizado, pois este plano de aula já existe.<br>';
             $this->simpleRedirect('educar_professores_planejamento_de_aula_cad.php');
         }
 
@@ -312,7 +312,7 @@ return new class extends clsCadastro {
     }
 
     public function Formular () {
-        $this->title = 'Planejamento de aula - Cadastro';
+        $this->title = 'Plano de aula - Cadastro';
         $this->processoAp = '58';
     }
 };

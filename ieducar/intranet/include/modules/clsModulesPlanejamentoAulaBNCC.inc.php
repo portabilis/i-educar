@@ -58,7 +58,7 @@ class clsModulesPlanejamentoAulaBNCC extends Model {
     }
 
     /**
-     * Lista relacionamentos entre BNCC e o planejamento de aula
+     * Lista relacionamentos entre BNCC e o plano de aula
      *
      * @return array
      */
