@@ -79,7 +79,8 @@ return new class extends clsCadastro {
             $desabilitado = true;
         }
 
-        if (is_numeric($this->ref_cod_turma) && is_numeric($this->ref_cod_componente_curricular)) {
+        if (is_numeric($this->ref_cod_turma)) {
+            $this->campoOculto('data_', dataToBanco($this->data));
             $this->campoOculto('ref_cod_turma_', $this->ref_cod_turma);
             $this->campoOculto('ref_cod_componente_curricular_', $this->ref_cod_componente_curricular);
             $this->campoOculto('fase_etapa_', $this->fase_etapa);
@@ -268,6 +269,7 @@ return new class extends clsCadastro {
     }
 
     public function Editar() {
+        $this->data = $this->data_;
         $this->ref_cod_turma = $this->ref_cod_turma_;
         $this->ref_cod_componente_curricular = $this->ref_cod_componente_curricular_;
         $this->fase_etapa = $this->fase_etapa_;
@@ -275,6 +277,7 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarTurma();
         $serie = $obj->lista($this->ref_cod_turma)[0]['ref_ref_cod_serie'];
 
+        //dd($this->id, $serie, $this->ref_cod_componente_curricular, $this->data, $this->fase_etapa, $this->justificativa);
         $obj = new clsModulesFrequencia(
             $this->id,
             null,
@@ -285,7 +288,7 @@ return new class extends clsCadastro {
             null,
             $this->ref_cod_componente_curricular,
             null,
-            dataToBanco($this->data),
+            $this->data,
             null,
             null,
             $this->fase_etapa,

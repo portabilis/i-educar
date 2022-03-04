@@ -39,6 +39,8 @@ return new class extends clsDetalhe {
             $this->simpleRedirect('educar_professores_frequencia_lst.php');
         }
 
+        $obj = new clsPmieducarTurma($registro['detalhes']['ref_cod_turma']);
+        $resultado = $obj->getGrau();
 
         if ($registro['detalhes']['data']) {
             $this->addDetalhe(
@@ -61,14 +63,14 @@ return new class extends clsDetalhe {
         if ($registro['detalhes']['componente_curricular']) {
             $this->addDetalhe(
                 [
-                    'Componente curricular',
+                    $resultado == 0 ? 'Componente curricular' : 'Campo de experiência',
                     $registro['detalhes']['componente_curricular']
                 ]
             );
         } else {
             $this->addDetalhe(
                 [
-                    'Componente curricular',
+                    $resultado == 0 ? 'Componente curricular' : 'Campo de experiência',
                     '—'
                 ]
             );

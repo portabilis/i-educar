@@ -14,6 +14,7 @@ return new class extends clsCadastro {
     public $atividades;
     public $observacao;
     public $frequencia;
+    public $campoExperiencia;
 
     public function Inicializar () {
         $this->titulo = 'Conteúdo Ministrado - Cadastro';
@@ -75,6 +76,12 @@ return new class extends clsCadastro {
 
         $this->campoOculto('id', $this->id);
         $this->inputsHelper()->dynamic(['frequencia'], ['frequencia' => $this->frequencia, 'disabled' => $desabilitado]);
+
+        $campos_experiencia = loadJson('educacenso_json/campos_experiencia.json');
+        $campos_experiencia = array_replace([null => 'Selecione o campo de experiência'], $campos_experiencia);
+
+        $options = ['label' => 'Campo de experiência', 'resources' => $campos_experiencia, 'value' => $this->campoExperiencia, 'required' => false];
+        $this->inputsHelper()->select('campoExperiencia', $options);
 
         $this->campoMemo('atividades', 'Atividades', $this->atividades, 100, 5, true);
 
@@ -186,6 +193,7 @@ return new class extends clsCadastro {
     public function loadAssets () {
         $scripts = [
             '/modules/Cadastro/Assets/Javascripts/BNCC.js',
+            '/modules/DynamicInput/Assets/Javascripts/CampoExperiencia.js'
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);

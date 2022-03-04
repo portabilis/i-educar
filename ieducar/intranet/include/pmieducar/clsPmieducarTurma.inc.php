@@ -1802,4 +1802,31 @@ return false;
             return Portabilis_Utils_Database::fetchPreparedQuery($sql, $params);
         }
     }
+
+    // Pega o grau da turma (infantil -> 1 vs fundamental -> 0)
+    public function getGrau() {
+        if ($this->cod_turma) {
+            $db = new clsBanco();
+
+            $sql = "
+                SELECT
+                    CASE
+                        WHEN t.etapa_educacenso = 1 THEN 1
+                        WHEN t.etapa_educacenso = 2 THEN 1
+                        WHEN t.etapa_educacenso = 3 THEN 1
+                        ELSE 0
+                    END
+                FROM
+                    pmieducar.turma as t
+                WHERE t.cod_turma = {$this->cod_turma}
+            ";
+
+            $db->Consulta($sql);
+            $db->ProximoRegistro();
+
+            return $db->Tupla()[0];
+        }
+
+        return false;
+    }
 }
