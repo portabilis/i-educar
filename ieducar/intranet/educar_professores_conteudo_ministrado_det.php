@@ -160,7 +160,7 @@ return new class extends clsDetalhe {
         $this->url_cancelar = 'educar_professores_conteudo_ministrado_lst.php';
         $this->largura = '100%';
 
-        $this->breadcrumb('Detalhe do conteúdo ministrado', [
+        $this->breadcrumb('Detalhe do registro de aula', [
             url('intranet/educar_professores_index.php') => 'Professores',
         ]);
     }

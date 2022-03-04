@@ -53,7 +53,7 @@ return new class extends clsCadastro {
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
-        $this->breadcrumb($nomeMenu . ' Conteúdo ministrado', [
+        $this->breadcrumb($nomeMenu . ' Registro de aula', [
             url('intranet/educar_conteudo_ministrado_index.php') => 'Professores',
         ]);
 
@@ -205,7 +205,7 @@ return new class extends clsCadastro {
     }
 
     public function Formular () {
-        $this->title = 'Conteúdo ministrado - Cadastro';
+        $this->title = 'Registro de aula - Cadastro';
         $this->processoAp = '58';
     }
 };
