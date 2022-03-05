@@ -26,6 +26,7 @@
         "intervention/image": "^2.6",
         "laravel/framework": "^9.00",
         "laravel/horizon": "^v6.7.9",
+        "laravel/sanctum": "^2.14.1",
         "laravel/tinker": "^2.6",
         "laravel/ui": "^3.4",
         "league/csv": "^9.7",
