@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacySchoolClass;
+
 return new class extends clsCadastro {
     public $pessoa_logada;
 
@@ -181,13 +183,15 @@ return new class extends clsCadastro {
 
         $opcoes = ['' => 'Selecione'];
 
+        $ano = LegacySchoolClass::find($this->ref_cod_turma)->ano;
         // Seleciona os componentes curriculares da turma
 
         try {
             $componentes = App_Model_IedFinder::getComponentesTurma(
-                $this->ref_cod_serie,
-                $this->ref_cod_escola,
-                $this->ref_cod_turma
+                serieId: $this->ref_cod_serie,
+                escola: $this->ref_cod_escola,
+                turma: $this->ref_cod_turma,
+                ano: $ano
             );
         } catch (App_Model_Exception $e) {
             $this->mensagem = $e->getMessage();

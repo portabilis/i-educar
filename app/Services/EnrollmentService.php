@@ -285,7 +285,6 @@ class EnrollmentService
         $enrollment->saveOrFail();
     }
 
-
     /**
      * Atualiza o campo reclassificado na enturmação para TRUE
      *
