@@ -96,8 +96,8 @@ return new class extends clsCadastro {
         $this->adicionarBNCCMultiplaEscolha();
         $this->adicionarConteudosTabela();
 
-        $this->campoMemo('ddp','Desdobramento didático pedagógico', $this->ddp, 100, 5, !$obrigatorio);
-        $this->campoMemo('atividades','Atividades', $this->atividades, 100, 5, !$obrigatorio);
+        $this->campoMemo('ddp','Metodologia', $this->ddp, 100, 5, !$obrigatorio);
+        $this->campoMemo('atividades','Atividades/Avaliações', $this->atividades, 100, 5, !$obrigatorio);
 
         $this->campoOculto('ano', explode('/', dataToBrasil(NOW()))[2]);
     }
@@ -299,9 +299,9 @@ return new class extends clsCadastro {
 
         $this->campoTabelaInicio(
             'conteudos',
-            'Conteúdo(s)',
+            'Objetivo(s) do conhecimento/conteúdo',
             [
-                'Conteúdo',
+                'Objetivo(s)',
             ],
             $rows
         );
