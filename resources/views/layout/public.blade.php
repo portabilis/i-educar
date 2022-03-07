@@ -1,3 +1,10 @@
+<?php $basetecsis = $_SERVER['SERVER_NAME'];
+	$base = "cloud";
+
+	if($basetecsis == "tecsis.tec.br"){
+		$base = "tecsis";
+	}
+?>
 <!DOCTYPE html>
 <?php $dominio = "tecsis";  ?>
 <html lang="pt-br">
@@ -7,7 +14,7 @@
 		
 		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans">
 		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="icon" type="image/x-icon" href="{{ url('intranet/imagens/login/logo-ico.png') }}">
+		<link rel="icon" type="image/x-icon" href="intranet/imagens/login/<?php echo $base?>-ico.png">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Love+Ya+Like+A+Sister&display=swap" rel="stylesheet">
@@ -144,10 +151,5 @@
                 document.getElementById('imgBordaId').style.backgroundImage="url(../intranet/imagens/login/svg/Tecsis_borda.svg)";
             }
         })()
-        console.log(document.getElementById('divLogoId'));
-        console.log(document.getElementById('divLogoMobileId'));
-        console.log(document.getElementById('imgBordaId'));
-        console.log(window.location.hostname);
-        console.log(tecsis);
         </script>
 </html>
