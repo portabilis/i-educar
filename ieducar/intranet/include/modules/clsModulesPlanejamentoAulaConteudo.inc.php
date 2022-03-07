@@ -45,8 +45,8 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
 
             $db->Consulta("
                 INSERT INTO {$this->_tabela}
-                    (planejamento_aula_id, bncc_id)
-                VALUES ({$this->planejamento_aula_id}, {$this->conteudo})
+                    (planejamento_aula_id, conteudo)
+                VALUES ('{$this->planejamento_aula_id}', '{$this->conteudo}')
             ");
 
             return true;
@@ -56,23 +56,27 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
     }
 
     /**
-     * Edita os dados de um registro
-     *
-     * @return bool
-     */
-    public function edita() {
-        return false;
-    }
-
-    /**
-     * Retorna uma lista filtrados de acordo com os parametros
+     * Lista relacionamentos entre os conteudos e o planejamento de aula
      *
      * @return array
      */
-    public function lista (
-        
-    ) {
-        return false;
+    public function lista($planejamento_aula_id) {
+        $db = new clsBanco();
+
+        $db->Consulta("
+            SELECT
+                *
+            FROM
+                modules.planejamento_aula_conteudo as pac
+            WHERE
+                pac.planejamento_aula_id = '{$planejamento_aula_id}'
+        ");
+
+        while($db->ProximoRegistro()) {
+            $conteudos[] = $db->Tupla();
+        }
+
+        return $conteudos;
     }
 
     /**
@@ -83,7 +87,7 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
     public function detalhe () {
         $data = [];
 
-        if (is_numeric($this->id)) {
+        if (is_numeric($this->planejamento_aula_id)) {
             $db = new clsBanco();
             $db->Consulta("
                 SELECT
@@ -91,7 +95,7 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
                 FROM
                     {$this->_from}
                 WHERE
-                    pac.planejamento_aula_id = {$this->id}
+                    pac.planejamento_aula_id = {$this->planejamento_aula_id}
             ");
 
             while ($db->ProximoRegistro()) {
@@ -119,6 +123,49 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
      * @return bool
      */
     public function excluir () {
+        if (is_numeric($this->planejamento_aula_id) && $this->conteudo) {
+            $db = new clsBanco();
+
+            $db->Consulta("
+                DELETE FROM
+                    {$this->_tabela}
+                WHERE
+                    planejamento_aula_id = '{$this->planejamento_aula_id}' AND conteudo = '{$this->conteudo}'
+            ");
+
+            return true;
+        }
+
         return false;
+    }
+
+    /**
+     * Retorna array com duas arrays, uma com os conteúdos a serem cadastrados e a outra com os que devem ser removidos
+     *
+     * @return array
+     */
+    public function retornaDiferencaEntreConjuntosConteudos($atuaisConteudos, $novosConteudos) {
+        $resultado = [];
+        $resultado['adicionar'] = $novosConteudos;
+
+        for ($i=0; $i < count($atuaisConteudos); $i++) {
+            $resultado['remover'][] = $atuaisConteudos[$i]['conteudo']; 
+        }
+        $atuaisConteudos = $resultado['remover'];
+
+        for ($i=0; $i < count($novosConteudos); $i++) { 
+            $novo = $novosConteudos[$i];
+
+            for ($j=0; $j < count($atuaisConteudos); $j++) {
+                $atual = $atuaisConteudos[$j];
+
+                if ($novo == $atual) {
+                    unset($resultado['adicionar'][$i]);
+                    unset($resultado['remover'][$j]);
+                }
+            }
+        }
+
+        return $resultado;
     }
 }

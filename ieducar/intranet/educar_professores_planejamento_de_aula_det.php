@@ -2,7 +2,7 @@
 
 return new class extends clsDetalhe {
     public $titulo;
-    public $id_freq;
+    public $id;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
     public $ref_ref_cod_serie;
@@ -28,19 +28,21 @@ return new class extends clsDetalhe {
     public function Gerar()
     {
         $this->titulo = 'Planejamento de aula - Detalhe';
-        $this->id_freq = $_GET['id'];
+        $this->id = $_GET['id'];
 
         $obj_permissoes = new clsPermissoes();
 
-        $tmp_obj = new clsModulesPlanejamentoAula($this->id_freq);
+        $tmp_obj = new clsModulesPlanejamentoAula($this->id);
         $registro = $tmp_obj->detalhe();
 
         if (!$registro) {
             $this->simpleRedirect('educar_professores_planejamento_de_aula_lst.php');
         }
 
-
-        if ($registro['detalhes']['data']) {
+        $obj = new clsPmieducarTurma($registro['detalhes']['ref_cod_turma']);
+        $resultado = $obj->getGrau();
+        
+        if ($registro['detalhes']['data_inicial']) {
             $this->addDetalhe(
                 [
                     'Data inicial',
@@ -58,16 +60,7 @@ return new class extends clsDetalhe {
             );
         }
 
-        if ($registro['detalhes']['data_final']) {
-            $this->addDetalhe(
-                [
-                    'Data Final',
-                    dataToBrasil($registro['detalhes']['data_final'])
-                ]
-            );
-        }
-
-        if ($registro['detalhes']['turma_id']) {
+        if ($registro['detalhes']['ref_cod_turma']) {
             $this->addDetalhe(
                 [
                     'Turma',
@@ -79,15 +72,8 @@ return new class extends clsDetalhe {
         if ($registro['detalhes']['componente_curricular']) {
             $this->addDetalhe(
                 [
-                    'Componente curricular',
+                    $resultado == 0 ? 'Componente curricular' : 'Campo de experiência',
                     $registro['detalhes']['componente_curricular']
-                ]
-            );
-        } else {
-            $this->addDetalhe(
-                [
-                    'Componente curricular',
-                    '—'
                 ]
             );
         }
@@ -133,7 +119,7 @@ return new class extends clsDetalhe {
             $data_agora = new DateTime('now');
             $data_agora = new \DateTime($data_agora->format('Y-m-d'));
 
-            $turma = $registro['detalhes']['cod_turma'];
+            $turma = $registro['detalhes']['ref_cod_turma'];
             $sequencia = $registro['detalhes']['fase_etapa'];
             $obj = new clsPmieducarTurmaModulo();
 
@@ -188,8 +174,8 @@ return new class extends clsDetalhe {
         $this->tabela .= ' <br style="clear: left" />';
 
         for ($i=0; $i < count($bnccs); $i++) {
-            $this->tabela .= "  <span style='display: block; float: left; width: 100px'>{$bnccs[$i][bncc][codigo]}</span>";
-            $this->tabela .= "  <span style='display: block; float: left; width: 700px'>{$bnccs[$i][bncc][habilidade]}</span>";
+            $this->tabela .= "  <span style='display: block; float: left; width: 100px; margin-bottom: 10px'>{$bnccs[$i][bncc][codigo]}</span>";
+            $this->tabela .= "  <span style='display: block; float: left; width: 700px; margin-bottom: 10px'>{$bnccs[$i][bncc][habilidade]}</span>";
         }
         
         $bncc  = '<table cellspacing="0" cellpadding="0" border="0">';
@@ -198,7 +184,7 @@ return new class extends clsDetalhe {
 
         $this->addDetalhe(
             [
-                'Objetivos de aprendizagem/habilidades',
+                'Objetivos de aprendizagem/habilidades (BNCC)',
                 $bncc
             ]
         );

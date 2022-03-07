@@ -58,23 +58,37 @@ class clsModulesPlanejamentoAulaBNCC extends Model {
     }
 
     /**
-     * Edita os dados de um registro
-     *
-     * @return bool
-     */
-    public function edita() {
-        return false;
-    }
-
-    /**
-     * Retorna uma lista filtrados de acordo com os parametros
+     * Lista relacionamentos entre BNCC e o planejamento de aula
      *
      * @return array
      */
-    public function lista (
-        
-    ) {
-        return false;
+    public function lista($planejamento_aula_id) {
+        $db = new clsBanco();
+
+        $db->Consulta("
+            SELECT
+                STRING_AGG (lok.id::character varying, ',') as ids,
+                STRING_AGG (lok.code::character varying, ',') as codigos,
+                STRING_AGG (lok.description::character varying, '$/') as descricoes
+            FROM
+                modules.planejamento_aula_bncc as pab
+            JOIN public.learning_objectives_and_skills as lok
+                ON (lok.id = pab.bncc_id)
+            GROUP BY
+                pab.planejamento_aula_id
+            HAVING
+                pab.planejamento_aula_id = '{$planejamento_aula_id}'
+        ");
+
+        $db->ProximoRegistro();
+
+        $bncc = $db->Tupla();
+
+        $bncc['ids'] = explode(',', $bncc['ids']);
+        $bncc['codigos'] = count($bncc['codigos']) > 0 ? explode(',', $bncc['codigos']) : null;
+        $bncc['descricoes'] = count($bncc['descricoes']) > 0 ? explode('$/', $bncc['descricoes']) : null;
+
+        return $bncc;
     }
 
     /**
@@ -85,7 +99,7 @@ class clsModulesPlanejamentoAulaBNCC extends Model {
     public function detalhe () {
         $data = [];
 
-        if (is_numeric($this->id)) {
+        if (is_numeric($this->planejamento_aula_id)) {
             $db = new clsBanco();
             $db->Consulta("
                 SELECT
@@ -93,13 +107,13 @@ class clsModulesPlanejamentoAulaBNCC extends Model {
                 FROM
                     {$this->_from}
                 WHERE
-                    pab.planejamento_aula_id = {$this->id}
+                    pab.planejamento_aula_id = {$this->planejamento_aula_id}
             ");
 
             while ($db->ProximoRegistro()) {
                 $ppd = $db->Tupla();
 
-                $obj = new clsModulesBNCC($ppd['id']);
+                $obj = new clsModulesBNCC($ppd['bncc_id']);
                 $ppd['bncc'] = $obj->detalhe();
 
                 $data[] = $ppd;
@@ -126,6 +140,19 @@ class clsModulesPlanejamentoAulaBNCC extends Model {
      * @return bool
      */
     public function excluir () {
+        if (is_numeric($this->planejamento_aula_id) && is_numeric($this->bncc_id)) {
+            $db = new clsBanco();
+
+            $db->Consulta("
+                DELETE FROM
+                    {$this->_tabela}
+                WHERE
+                    planejamento_aula_id = '{$this->planejamento_aula_id}' AND bncc_id = '{$this->bncc_id}'
+            ");
+
+            return true;
+        }
+
         return false;
     }
 }

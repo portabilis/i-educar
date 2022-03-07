@@ -1,3 +1,5 @@
+document.getElementById('data').disabled = document.getElementById('ref_cod_turma').value != '';
+
 const maxCaracteresObservacao = 256;
 
 var rebuildAllChosenAnosLetivos = undefined;

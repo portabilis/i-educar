@@ -10,13 +10,15 @@ use Illuminate\Support\Arr;
 
 return new class extends clsCadastro {
     public $id;
-    public $turma_id;
+    public $ref_cod_turma;
+    public $ref_cod_componente_curricular;
+    public $fase_etapa;
     public $data_inicial;
     public $data_final;
     public $ddp;
     public $atividades;
     public $bnccs;
-    public $conteudos;
+    public $conteudo_id;
 
     public function Inicializar () {
         $this->titulo = 'Planejamento de aula - Cadastro';
@@ -29,7 +31,7 @@ return new class extends clsCadastro {
         $obj_permissoes->permissao_cadastra(58, $this->pessoa_logada, 7, 'educar_professores_planejamento_de_aula_lst.php');
 
         if (is_numeric($this->id)) {
-            $tmp_obj = new clsModulesPlanejamentoAulaBNCC($this->id);
+            $tmp_obj = new clsModulesPlanejamentoAula($this->id);
             $registro = $tmp_obj->detalhe();
 
             if ($registro) {
@@ -37,9 +39,7 @@ return new class extends clsCadastro {
                 foreach ($registro['detalhes'] as $campo => $val) {
                     $this->$campo = $val;
                 }
-                $this->data_inicial = $registro['data_inicial'];
-                $this->data_final = $registro['data_final']; 
-                $this->turma_id = $registro['turma_id'];
+                $this->bncc = array_column($registro['bnccs'], 'bncc_id');
 
                 $this->fexcluir = $obj_permissoes->permissao_excluir(58, $this->pessoa_logada, 7);
                 $retorno = 'Editar';
@@ -69,13 +69,17 @@ return new class extends clsCadastro {
                 $this->$campo = ($this->$campo) ? $this->$campo : $val;
             }
         }
-        $this->data_inicial = dataToBrasil($this->data);
+        $this->data_inicial = dataToBrasil($this->data_inicial);
+        $this->data_final = dataToBrasil($this->data_final);
+
         $this->ano = explode('/', $this->data_inicial)[2];
 
         if ($tipoacao == 'Edita' || !$_POST
-            && $this->data_inicial
-            && $this->data_final
-            && is_numeric($this->turma_id)
+            && $this->data_inicial != ''
+            && $this->data_final != ''
+            && is_numeric($this->ref_cod_turma)
+            && is_numeric($this->ref_cod_componente_curricular)
+            && is_numeric($this->fase_etapa)
         ) {
             $desabilitado = true;
         }
@@ -83,28 +87,17 @@ return new class extends clsCadastro {
         $obrigatorio = true;
 
         $this->campoOculto('id', $this->id);
-        $this->inputsHelper()->dynamic('dataInicial', ['required' => true, 'disabled' => $desabilitado]);
-        $this->inputsHelper()->dynamic('dataFinal', ['required' => true, 'disabled' => $desabilitado]);
+        $this->inputsHelper()->dynamic('dataInicial', ['required' => $obrigatorio]);    // Disabled não funciona; ação colocada no javascript.
+        $this->inputsHelper()->dynamic('dataFinal', ['required' => $obrigatorio]);      // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado]);
-        $helperOptions = [
-            'objectName' => 'bncc',
-        ];
+        $this->inputsHelper()->dynamic('componenteCurricular', ['required' => $obrigatorio, 'disabled' => $desabilitado]);
+        $this->inputsHelper()->dynamic('faseEtapa', ['required' => $obrigatorio, 'label' => 'Etapa', 'disabled' => $desabilitado]);
+    
+        $this->campoMemo('ddp','Desdobramento didático pedagógico', $this->ddp, 100, 5, $obrigatorio);
+        $this->campoMemo('atividades','Atividades', $this->atividades, 100, 5, $obrigatorio);
 
-        $todos_bncc = $this->getBNCC($this->frequencia)['bncc'];
-
-        $options = [
-            'label' => 'BNCC',
-            'required' => false,
-            'size' => 50,
-            'options' => [
-                'values' => $this->bncc,
-                'all_values' => $todos_bncc
-            ]
-        ];
-        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
-        $this->campoMemo('ddp','DDP',$this->ddp, 100, 5, true);
-        $this->campoMemo('atividades','Atividades',$this->atividades, 100, 5, true); 
-        $this->campoMemo('conteudos','Conteúdos',$this->conteudos, 100, 5, true);   
+        $this->adicionarBNCCMultiplaEscolha();
+        $this->adicionarConteudosTabela();
 
         $this->campoOculto('ano', explode('/', dataToBrasil(NOW()))[2]);
     }
@@ -113,22 +106,63 @@ return new class extends clsCadastro {
         $data_agora = new DateTime('now');
         $data_agora = new \DateTime($data_agora->format('Y-m-d'));
 
-        $obj = new clsModulesPlanejamentoAulaBNCC(
+        $turma = $this->ref_cod_turma;
+        $sequencia = $this->fase_etapa;
+        $obj = new clsPmieducarTurmaModulo();
+
+        $data = $obj->pegaPeriodoLancamentoNotasFaltas($turma, $sequencia);
+        if ($data['inicio'] != null && $data['fim'] != null) {
+            $data['inicio'] = explode(',', $data['inicio']);
+            $data['fim'] = explode(',', $data['fim']);
+
+            array_walk($data['inicio'], function(&$data_inicio, $key) {
+                $data_inicio = new \DateTime($data_inicio);
+            });
+
+            array_walk($data['fim'], function(&$data_fim, $key) {
+                $data_fim = new \DateTime($data_fim);
+            });
+        } else {
+            $data['inicio'] = new \DateTime($obj->pegaEtapaSequenciaDataInicio($turma, $sequencia));
+            $data['fim'] = new \DateTime($obj->pegaEtapaSequenciaDataFim($turma, $sequencia));
+        }
+
+        $podeRegistrar = false;
+        if (is_array($data['inicio']) && is_array($data['fim'])) {
+            for ($i=0; $i < count($data['inicio']); $i++) {
+                $data_inicio = $data['inicio'][$i];
+                $data_fim = $data['fim'][$i];
+
+                $podeRegistrar = $data_agora >= $data_inicio && $data_agora <= $data_fim;
+
+                if ($podeRegistrar) break;
+            }     
+        } else {
+            $podeRegistrar = $data_agora >= $data['inicio'] && $data_agora <= $data['fim'];
+        }
+
+        if (!$podeRegistrar) {
+            $this->mensagem = 'Cadastro não realizado, pois não é mais possível submeter frequência para esta etapa.<br>';
+            $this->simpleRedirect('educar_professores_planejamento_de_aula_cad.php');
+        }
+
+        $obj = new clsModulesPlanejamentoAula(
            null,
-           $this->turma_id,
-           $this->data_inicial,
-           $this->data_final,
+           $this->ref_cod_turma,
+           $this->ref_cod_componente_curricular,
+           $this->fase_etapa,
+           dataToBanco($this->data_inicial),
+           dataToBanco($this->data_final),
            $this->ddp, 
            $this->atividades,
-           $this->bnccs,
-           $this->conteudos,
-
+           $this->bncc,
+           $this->conteudos
         );
 
         $existe = $obj->existe();
         if ($existe){
-            $this->mensagem = 'Cadastro não realizado, pois esta frequência já existe.<br>';
-            $this->simpleRedirect('educar_professores_frequencia_cad.php');
+            $this->mensagem = 'Cadastro não realizado, pois este planejamento de aula já existe.<br>';
+            $this->simpleRedirect('educar_professores_planejamento_de_aula_cad.php');
         }
 
         $cadastrou = $obj->cadastra();
@@ -147,7 +181,6 @@ return new class extends clsCadastro {
     }
 
     public function Editar() {
-
         $this->data_inicial = $this->data_inicial;
         $this->data_final = $this->data_final;
         $this->ddp = $this->ddp;
@@ -155,8 +188,17 @@ return new class extends clsCadastro {
         $this->bnccs = $this->bnccs;
         $this->conteudos = $this->conteudos;
 
-        $obj = new clsModulesPlanejamentoAulaBNCC(
-            $this->id     
+        $obj = new clsModulesPlanejamentoAula(
+            $this->id,
+            null,
+            null,
+            null,
+            null,
+            null,
+            $this->ddp,
+            $this->atividades,
+            $this->bncc,
+            $this->conteudos
         );
 
         $editou = $obj->edita();
@@ -186,14 +228,17 @@ return new class extends clsCadastro {
         return false;
     }
  
-    private function getBNCC($frequencia = null)
+    private function getBNCCTurma($turma = null, $ref_cod_componente_curricular = null)
     {
-        if (is_numeric($frequencia)) {
+        if (is_numeric($turma)) {
+            $obj = new clsPmieducarTurma($turma);
+            $resultado = $obj->getGrau();
+
             $bncc = [];
             $bncc_temp = [];
             $obj = new clsModulesBNCC();
 
-            if ($bncc_temp = $obj->lista($frequencia)) {
+            if ($bncc_temp = $obj->listaTurma($resultado, $turma, $ref_cod_componente_curricular)) {
                 foreach ($bncc_temp as $bncc_item) {
                     $id = $bncc_item['id'];
                     $codigo = $bncc_item['codigo'];
@@ -217,10 +262,53 @@ return new class extends clsCadastro {
         $scripts = [
             '/modules/DynamicInput/Assets/Javascripts/TodasTurmas.js',
             '/modules/Cadastro/Assets/Javascripts/BNCC.js',
-            '/modules/Cadastro/Assets/Javascripts/PlanejamentoAula.js'
+            '/modules/Cadastro/Assets/Javascripts/PlanejamentoAula.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+    }
+
+    private function adicionarBNCCMultiplaEscolha($obrigatorio = true) {
+        $helperOptions = [
+            'objectName' => 'bncc',
+        ];
+
+        $todos_bncc = $this->getBNCCTurma($this->ref_cod_turma, $this->ref_cod_componente_curricular)['bncc'];
+
+        $options = [
+            'label' => 'Objetivos de aprendizagem/habilidades (BNCC)',
+            'required' => $obrigatorio,
+            'size' => 50,
+            'options' => [
+                'values' => $this->bncc,
+                'all_values' => $todos_bncc
+            ]
+        ];
+
+        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+    }
+
+    protected function adicionarConteudosTabela()
+    {
+        $obj = new clsModulesPlanejamentoAulaConteudo(null, $this->id);
+        $conteudos = $obj->detalhe();
+
+        for ($i=0; $i < count($conteudos); $i++) { 
+            $rows[$i][] = $conteudos[$i]['conteudo'];
+        }
+
+        $this->campoTabelaInicio(
+            'conteudos',
+            'Conteúdo(s)',
+            [
+                'Conteúdo',
+            ],
+            $rows
+        );
+
+        $this->campoTexto('conteudos','Conteúdos', $this->conteudo_id, 100, 2048, true);   
+
+        $this->campoTabelaFim();
     }
 
     public function Formular () {
