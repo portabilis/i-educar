@@ -332,7 +332,7 @@ class clsModulesComponenteMinistrado extends Model {
     }
 
     /**
-     * Lista relacionamentos entre BNCC e o conteúdo ministrado
+     * Lista relacionamentos entre BNCC e o registro de aula
      *
      * @return array
      */
@@ -366,7 +366,7 @@ class clsModulesComponenteMinistrado extends Model {
     }
 
     /**
-     * Cadastra relacionamento entre BNCC e o conteúdo ministrado
+     * Cadastra relacionamento entre BNCC e o registro de aula
      *
      * @return bool
      */
@@ -383,7 +383,7 @@ class clsModulesComponenteMinistrado extends Model {
     }
 
     /**
-     * Exclui relacionamento entre BNCC e o conteúdo ministrado
+     * Exclui relacionamento entre BNCC e o registro de aula
      *
      * @return bool
      */
