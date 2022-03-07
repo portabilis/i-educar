@@ -17,6 +17,7 @@ return new class extends clsCadastro {
     public $data_final;
     public $ddp;
     public $atividades;
+    public $referencias;
     public $bnccs;
     public $conteudo_id;
 
@@ -98,6 +99,7 @@ return new class extends clsCadastro {
 
         $this->campoMemo('ddp','Metodologia', $this->ddp, 100, 5, !$obrigatorio);
         $this->campoMemo('atividades','Atividades/Avaliações', $this->atividades, 100, 5, !$obrigatorio);
+        $this->campoMemo('referencias','Referências', $this->referencias, 100, 5, !$obrigatorio);
 
         $this->campoOculto('ano', explode('/', dataToBrasil(NOW()))[2]);
     }
@@ -156,7 +158,8 @@ return new class extends clsCadastro {
            $this->ddp, 
            $this->atividades,
            $this->bncc,
-           $this->conteudos
+           $this->conteudos,
+           $this->referencias
         );
 
         $existe = $obj->existe();
@@ -198,7 +201,8 @@ return new class extends clsCadastro {
             $this->ddp,
             $this->atividades,
             $this->bncc,
-            $this->conteudos
+            $this->conteudos,
+            $this->referencias
         );
 
         $editou = $obj->edita();

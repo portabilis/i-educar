@@ -113,6 +113,15 @@ return new class extends clsDetalhe {
             );
         }
 
+        if ($registro['detalhes']['referencias']) {
+            $this->addDetalhe(
+                [
+                    'Referências',
+                    $registro['detalhes']['referencias']
+                ]
+            );
+        }
+
         if ($obj_permissoes->permissao_cadastra(58, $this->pessoa_logada, 7)) {
             $this->url_novo = 'educar_professores_planejamento_de_aula_cad.php';
 
