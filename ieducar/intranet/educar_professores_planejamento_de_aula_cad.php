@@ -93,11 +93,11 @@ return new class extends clsCadastro {
         $this->inputsHelper()->dynamic('componenteCurricular', ['required' => $obrigatorio, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('faseEtapa', ['required' => $obrigatorio, 'label' => 'Etapa', 'disabled' => $desabilitado]);
     
-        $this->campoMemo('ddp','Desdobramento didático pedagógico', $this->ddp, 100, 5, $obrigatorio);
-        $this->campoMemo('atividades','Atividades', $this->atividades, 100, 5, $obrigatorio);
-
         $this->adicionarBNCCMultiplaEscolha();
         $this->adicionarConteudosTabela();
+
+        $this->campoMemo('ddp','Desdobramento didático pedagógico', $this->ddp, 100, 5, !$obrigatorio);
+        $this->campoMemo('atividades','Atividades', $this->atividades, 100, 5, !$obrigatorio);
 
         $this->campoOculto('ano', explode('/', dataToBrasil(NOW()))[2]);
     }
