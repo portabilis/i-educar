@@ -1,8 +1,18 @@
-<?php $baseTecsis = $_SERVER['SERVER_NAME'];
-	$icoTecsis = "favicon2.ico";
+<?php $baseTecsis   = $_SERVER['HTTP_HOST'];
+    $icoTecsis      = "favicon2.ico";
+    $headerID       = "style='background-image: linear-gradient(to bottom right, rgba(243, 46, 33, 1) 0%, rgba(243, 135, 42, 1) 75%)'";
+    $menu_lateral   = "style='background-color: rgb(2,115,129)'";
+    $rodapeID       = "style='background-color: rgb(243, 135, 42)'";
+    $r3c1Mobile     = "style='background: rgb(2,115,129)'";
+    $expandido      = "style='background-color: rgb(2,115,129)'";
+    $corTecsis      = "style='color:rgb(243, 135, 42)'";
+
 
 	if($baseTecsis != "tecsis.tec.br"){
-		$icoTecsis = "favicon.ico";
+		$icoTecsis = "favicon.ico"; $headerID = "";
+        $menu_lateral = ""; $rodapeID = "";
+        $r3c1Mobile = ""; $expandido = "";
+        $corTecsis = "";
 	}
 ?>
 <!DOCTYPE html>
@@ -12,7 +22,6 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="-1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
     <link rel="icon" type="image/x-icon" href="{!! url($icoTecsis) !!}" />
     <title>@if(isset($title)) {!! html_entity_decode($title) !!} - @endif EducaSis</title>
 
@@ -168,7 +177,7 @@
 <table summary="" class='tabelanum1' id="tablenum1" border='0' cellspacing='0' cellpadding='0'>
     <tr id="topo" class="topo">
         <td colspan="2">
-            <header class="ieducar-header" id="headerID">
+            <header class="ieducar-header" id="headerID" <?= $headerID?>>
                 <div class="ieducar-header-logo">
                     <h1><a href="{{ url('/') }}">EducaSis</a></h1>
                 </div>
@@ -206,19 +215,19 @@
     <tr>
         <td colspan="3">
             <input type="checkbox" id="expandido">  
-            <label for="expandido" class="expandir-btn"><i class="fa fa-ellipsis-v"></i></label>
-            <div class="r3c1-Mobile">
+            <label for="expandido" class="expandir-btn" <?= $expandido?>><i class="fa fa-ellipsis-v" <?=$corTecsis?> ></i></label>
+            <div class="r3c1-Mobile" <?=$r3c1Mobile?> >
                 @include('layout.menu') 
             </div>
             <table summary="" class='tabelanum2' border='0' cellspacing='0' cellpadding='0'>
                 <tr>
-                    <td id="menu_lateral" class="r3c1" width='170'>
+                    <td id="menu_lateral" class="r3c1" width='170' <?= $menu_lateral?>
                         @include('layout.menu') 
                     </td>
                     <td valign=top>
                         <table summary="" class='tabelanum2' border='0' cellspacing='0' cellpadding='0'>
                             <tr>
-                                <td id="testID">                                  
+                                <td>                                  
                                     @include('layout.topmenu')
                                 </td>
                             </tr>
@@ -242,7 +251,7 @@
         </td>
     </tr>
 
-    <tr class="rodape" id="rodapeID">
+    <tr class="rodape" id="rodapeID" <?=$rodapeID?>>
         <td colspan="3">
             <center>
                 @include('layout.footer')
@@ -312,19 +321,6 @@
             fixAutoComplete()
         });
     })(jQuery);
-</script>
-
-<script>
-    tecsis = window.location.hostname;
-(function basetecsis(){
-    if(tecsis == "tecsis.tec.br"){
-        document.getElementById('headerID').style.backgroundImage="linear-gradient(to bottom right, rgba(243, 46, 33, 1) 0%, rgba(243, 135, 42, 1) 75%)";
-        document.getElementById('menu_lateral').style.backgroundColor="rgba(2,115,129,1)";
-        document.getElementById('rodapeID').style.backgroundColor="rgba(243, 135, 42, 1)";
-        document.getElementById('testID').style.backgroundColor="rgb(2, 115, 129)";
-    }
-})()
-
 </script>
 
 <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/custom-file-input.js") }}"></script>

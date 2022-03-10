@@ -1,4 +1,4 @@
-<?php $baseTecsis = $_SERVER['SERVER_NAME'];
+<?php $baseTecsis = $_SERVER['HTTP_HOST'];
 	$icoTecsis = "favicon2.ico";
 
 	if($baseTecsis != "tecsis.tec.br"){
