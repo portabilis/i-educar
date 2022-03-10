@@ -1,9 +1,17 @@
+<?php $baseTecsis = $_SERVER['SERVER_NAME'];
+	$icoTecsis = "favicon2.ico";
+
+	if($baseTecsis != "tecsis.tec.br"){
+		$icoTecsis = "favicon.ico";
+	}
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" href="{{ url('favicon.ico') }}" />
+    <link rel="icon" type="image/x-icon" href="{!! url($icoTecsis) !!}" />
     <title>@if(isset($title)) {!! html_entity_decode($title) !!} - @endif {{ html_entity_decode(config('legacy.app.entity.name')) }} - i-Educar</title>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">

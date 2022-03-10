@@ -1,12 +1,12 @@
-<?php $basetecsis = $_SERVER['SERVER_NAME'];
-	$base = "cloud";
+<?php $baseTecsis = $_SERVER['SERVER_NAME'];
+	$icoTecsis = "favicon2.ico";
 
-	if($basetecsis == "tecsis.tec.br"){
-		$base = "tecsis";
+	if($baseTecsis != "tecsis.tec.br"){
+		$icoTecsis = "favicon.ico";
 	}
 ?>
+
 <!DOCTYPE html>
-<?php $dominio = "tecsis";  ?>
 <html lang="pt-br">
 	<head>
 		<meta charset="utf-8"/>
@@ -14,7 +14,7 @@
 		
 		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans">
 		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="icon" type="image/x-icon" href="intranet/imagens/login/<?php echo $base?>-ico.png">
+		<link rel="icon" type="image/x-icon" href="{!! url($icoTecsis) !!}" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Love+Ya+Like+A+Sister&display=swap" rel="stylesheet">

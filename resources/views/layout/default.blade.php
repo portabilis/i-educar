@@ -1,3 +1,10 @@
+<?php $baseTecsis = $_SERVER['SERVER_NAME'];
+	$icoTecsis = "favicon2.ico";
+
+	if($baseTecsis != "tecsis.tec.br"){
+		$icoTecsis = "favicon.ico";
+	}
+?>
 <!DOCTYPE html>
 <html lang="pt" class="no-js">
 <head>
@@ -5,7 +12,8 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="-1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="shortcut icon" href="{{ url('favicon.ico') }}" />
+
+    <link rel="icon" type="image/x-icon" href="{!! url($icoTecsis) !!}" />
     <title>@if(isset($title)) {!! html_entity_decode($title) !!} - @endif EducaSis</title>
 
     <script>
@@ -43,6 +51,7 @@
     @endif
 
     @stack('styles')
+
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans">
     <link rel="stylesheet" type="text/css" href="{{ Asset::get('/intranet/styles/main.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ Asset::get('/intranet/styles/styles.css') }}">
@@ -60,7 +69,6 @@
     <link rel="stylesheet" type="text/css" href='{{ Asset::get('/intranet/scripts/jquery/jquery-ui.min-1.9.2/css/custom/jquery-ui-1.9.2.custom.min.css') }}'>
     <link rel="stylesheet" type="text/css" href='{{ Asset::get('/intranet/scripts/jquery-maxlength/jquery.maxlength.css') }}'>
     <link rel="stylesheet" type="text/css" href="{{ Asset::get("/intranet/scripts/summernote/summernote-lite.css") }}">
-
 
     <script>
         (function (e, t, n) {
@@ -149,7 +157,6 @@
     <!-- #&SCRIPT&# -->
 </head>
 <body>
-
 @if(!empty($config['app']['gtm']['id']))
     <!-- Google Tag Manager (noscript) -->
     <noscript>
@@ -161,7 +168,7 @@
 <table summary="" class='tabelanum1' id="tablenum1" border='0' cellspacing='0' cellpadding='0'>
     <tr id="topo" class="topo">
         <td colspan="2">
-            <header class="ieducar-header">
+            <header class="ieducar-header" id="headerID">
                 <div class="ieducar-header-logo">
                     <h1><a href="{{ url('/') }}">EducaSis</a></h1>
                 </div>
@@ -211,7 +218,7 @@
                     <td valign=top>
                         <table summary="" class='tabelanum2' border='0' cellspacing='0' cellpadding='0'>
                             <tr>
-                                <td>                                  
+                                <td id="testID">                                  
                                     @include('layout.topmenu')
                                 </td>
                             </tr>
@@ -235,7 +242,7 @@
         </td>
     </tr>
 
-    <tr class="rodape">
+    <tr class="rodape" id="rodapeID">
         <td colspan="3">
             <center>
                 @include('layout.footer')
@@ -307,7 +314,18 @@
     })(jQuery);
 </script>
 
+<script>
+    tecsis = window.location.hostname;
+(function basetecsis(){
+    if(tecsis == "tecsis.tec.br"){
+        document.getElementById('headerID').style.backgroundImage="linear-gradient(to bottom right, rgba(243, 46, 33, 1) 0%, rgba(243, 135, 42, 1) 75%)";
+        document.getElementById('menu_lateral').style.backgroundColor="rgba(2,115,129,1)";
+        document.getElementById('rodapeID').style.backgroundColor="rgba(243, 135, 42, 1)";
+        document.getElementById('testID').style.backgroundColor="rgb(2, 115, 129)";
+    }
+})()
 
+</script>
 
 <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/custom-file-input.js") }}"></script>
 <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/select2/select2.full.min.js") }}"></script>
