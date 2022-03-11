@@ -13,6 +13,7 @@ class clsModulesPlanejamentoAula extends Model {
     public $atividades;
     public $bnccs;
     public $conteudos;
+    public $referencias;
 
     public function __construct(
         $id = null,
@@ -24,7 +25,8 @@ class clsModulesPlanejamentoAula extends Model {
         $ddp = null,
         $atividades = null,
         $bnccs = null,
-        $conteudos = null
+        $conteudos = null,
+        $referencias = null
     ) {
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}planejamento_aula";
@@ -61,6 +63,7 @@ class clsModulesPlanejamentoAula extends Model {
             pa.ref_componente_curricular as ref_cod_componente_curricular,
             pa.ddp,
             pa.atividades,
+            pa.referencias,
             i.nm_instituicao AS instituicao,
             j.fantasia AS escola,
             c.nm_curso AS curso,
@@ -92,9 +95,17 @@ class clsModulesPlanejamentoAula extends Model {
 
         $this->data_final = $data_final;
 
-        $this->ddp = $ddp;
+        if (is_string($ddp)) {
+            $this->ddp = $ddp;
+        }
 
-        $this->atividades = $atividades;
+        if (is_string($atividades)) {
+            $this->atividades = $atividades;
+        }
+
+        if (is_string($referencias)) {
+            $this->referencias = $referencias;
+        }
 
         if(is_array($bnccs)){
             $this->bnccs = $bnccs;
@@ -116,10 +127,11 @@ class clsModulesPlanejamentoAula extends Model {
             && is_numeric($this->etapa_sequencial)
             && $this->data_inicial != ''
             && $this->data_final != ''
-            && $this->ddp != ''
-            && $this->atividades != ''
+            && is_string($this->ddp)
+            && is_string($this->atividades)
             && is_array($this->bnccs)
             && is_array($this->conteudos)
+            && is_string($this->referencias)
         ) {
             $db = new clsBanco();
 
@@ -148,11 +160,15 @@ class clsModulesPlanejamentoAula extends Model {
             $gruda = ', ';
 
             $campos .= "{$gruda}ddp";
-            $valores .= "{$gruda}'{$this->ddp}'";
+            $valores .= "{$gruda}'{$db->escapeString($this->ddp)}'";
             $gruda = ', ';
 
             $campos .= "{$gruda}atividades";
-            $valores .= "{$gruda}'{$this->atividades}'";
+            $valores .= "{$gruda}'{$db->escapeString($this->atividades)}'";
+            $gruda = ', ';
+
+            $campos .= "{$gruda}referencias";
+            $valores .= "{$gruda}'{$db->escapeString($this->referencias)}'";
             $gruda = ', ';
 
             $campos .= "{$gruda}data_cadastro";
@@ -190,16 +206,18 @@ class clsModulesPlanejamentoAula extends Model {
      */
     public function edita() {
         if (is_numeric($this->id)
-            && $this->ddp != ''
-            && $this->atividades != ''
+            && is_string($this->ddp)
+            && is_string($this->atividades)
             && is_array($this->bnccs)
             && is_array($this->conteudos)
+            && is_string($this->referencias)
         ) {
             $db = new clsBanco();
 
             $set = "
-                ddp = '{$this->ddp}',
-                atividades = '{$this->atividades}',
+                ddp = '{$db->escapeString($this->ddp)}',
+                atividades = '{$db->escapeString($this->atividades)}',
+                referencias = '{$db->escapeString($this->referencias)}',
                 data_atualizacao = (NOW() - INTERVAL '3 HOURS')
             ";
 
@@ -213,7 +231,9 @@ class clsModulesPlanejamentoAula extends Model {
             ");
 
             $obj = new clsModulesPlanejamentoAulaBNCC();
-            $bnccs_atuais = $obj->lista($this->id)['ids'];
+            foreach ($obj->lista($this->id) as $key => $bncc) {
+                $bnccs_atuais[] = $bncc;
+            }
 
             $obj = new clsModulesBNCC(null, $this->id);
             $bncc_diferenca = $obj->retornaDiferencaEntreConjuntosBNCC($bnccs_atuais, $this->bnccs);
@@ -391,11 +411,11 @@ class clsModulesPlanejamentoAula extends Model {
 
             $data['detalhes'] = $db->Tupla();
 
-            $obj = new clsModulesPlanejamentoAulaBNCC(null, $this->id);
-            $data['bnccs'] = $obj->detalhe();
+            $obj = new clsModulesPlanejamentoAulaBNCC();
+            $data['bnccs'] = $obj->lista($this->id);
 
-            $obj = new clsModulesPlanejamentoAulaConteudo(null, $this->id);
-            $data['conteudos'] = $obj->detalhe();
+            $obj = new clsModulesPlanejamentoAulaConteudo();
+            $data['conteudos'] = $obj->lista($this->id);
 
             return $data;
         }
@@ -409,6 +429,27 @@ class clsModulesPlanejamentoAula extends Model {
      * @return array
      */
     public function existe () {
+        if ($this->data_inicial && $this->data_final && is_numeric($this->ref_cod_turma) && is_numeric($this->ref_componente_curricular_id) && is_numeric($this->etapa_sequencial)) {
+            $sql = "
+                SELECT
+                    *
+                FROM
+                    modules.planejamento_aula as pa
+                WHERE
+                    pa.data_inicial >= '{$this->data_inicial}'
+                    AND pa.data_final <= '{$this->data_final}'
+                    AND pa.ref_cod_turma = '{$this->ref_cod_turma}'
+                    AND pa.ref_componente_curricular = '{$this->ref_componente_curricular_id}'
+                    AND pa.etapa_sequencial = '{$this->etapa_sequencial}'
+            ";
+
+            $db = new clsBanco();
+            $db->Consulta($sql);
+            $db->ProximoRegistro();
+
+            return $db->Tupla();
+        }
+
         return false;
     }
 
