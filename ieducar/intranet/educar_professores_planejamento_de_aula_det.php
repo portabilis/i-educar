@@ -87,7 +87,7 @@ return new class extends clsDetalhe {
             );
         }
         
-        if (is_array($registro['bnccs']) && $registro['bnccs'] != null) {
+        if (is_array($registro['bnccs'])) {
             $this->montaListaBNCC($registro['bnccs']);
         }
 
@@ -183,8 +183,8 @@ return new class extends clsDetalhe {
         $this->tabela .= ' <br style="clear: left" />';
 
         for ($i=0; $i < count($bnccs); $i++) {
-            $this->tabela .= "  <span style='display: block; float: left; width: 100px; margin-bottom: 10px'>{$bnccs[$i][bncc][codigo]}</span>";
-            $this->tabela .= "  <span style='display: block; float: left; width: 700px; margin-bottom: 10px'>{$bnccs[$i][bncc][habilidade]}</span>";
+            $this->tabela .= "  <span style='display: block; float: left; width: 100px; margin-bottom: 10px'>{$bnccs[$i][codigo]}</span>";
+            $this->tabela .= "  <span style='display: block; float: left; width: 700px; margin-bottom: 10px'>{$bnccs[$i][descricao]}</span>";
         }
         
         $bncc  = '<table cellspacing="0" cellpadding="0" border="0">';
@@ -209,14 +209,14 @@ return new class extends clsDetalhe {
             $this->tabela2 .= '  <br style="clear: left" />';
         }
 
-        $bncc  = '<table cellspacing="0" cellpadding="0" border="0">';
-        $bncc .= sprintf('<tr align="left"><td>%s</td></tr>', $this->tabela2);
-        $bncc .= '</table>';
+        $conteudo  = '<table cellspacing="0" cellpadding="0" border="0">';
+        $conteudo .= sprintf('<tr align="left"><td>%s</td></tr>', $this->tabela2);
+        $conteudo .= '</table>';
 
         $this->addDetalhe(
             [
                 'Conteúdos',
-                $bncc
+                $conteudo
             ]
         );
     }

@@ -2,21 +2,21 @@
 
 use iEducar\Legacy\Model;
 
-class clsModulesPlanejamentoAulaConteudo extends Model {
+class clsModulesComponenteMinistradoConteudo extends Model {
     public $id;
-    public $planejamento_aula_id;
-    public $conteudo;
+    public $conteudo_ministrado_id;
+    public $planejamento_aula_conteudo_id;
 
     public function __construct(
         $id = null,
-        $planejamento_aula_id = null,
-        $conteudo = null
+        $conteudo_ministrado_id = null,
+        $planejamento_aula_conteudo_id = null
     ) {
         $this->_schema = 'modules.';
-        $this->_tabela = "{$this->_schema}planejamento_aula_conteudo";
+        $this->_tabela = "{$this->_schema}conteudo_ministrado_conteudo";
 
         $this->_from = "
-            modules.planejamento_aula_conteudo as pac
+            modules.conteudo_ministrado_conteudo as cmc
         ";
 
         $this->_campos_lista = $this->_todos_campos = '
@@ -27,12 +27,12 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
             $this->id = $id;
         }
 
-        if (is_numeric($planejamento_aula_id)) {
-            $this->planejamento_aula_id = $planejamento_aula_id;
+        if (is_numeric($conteudo_ministrado_id)) {
+            $this->conteudo_ministrado_id = $conteudo_ministrado_id;
         }
 
-        if (is_string($conteudo)) {
-            $this->conteudo = $conteudo;
+        if (is_numeric($planejamento_aula_conteudo_id)) {
+            $this->planejamento_aula_conteudo_id = $planejamento_aula_conteudo_id;
         }
     }
 
@@ -42,13 +42,13 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
      * @return bool
      */
     public function cadastra() {
-        if (is_numeric($this->planejamento_aula_id) && is_string($this->conteudo)) {
+        if (is_numeric($this->conteudo_ministrado_id) && is_numeric($this->planejamento_aula_conteudo_id)) {
             $db = new clsBanco();
 
             $db->Consulta("
                 INSERT INTO {$this->_tabela}
-                    (planejamento_aula_id, conteudo)
-                VALUES ('{$this->planejamento_aula_id}', '{$db->escapeString($this->conteudo)}')
+                    (conteudo_ministrado_id, planejamento_aula_conteudo_id)
+                VALUES ('{$this->conteudo_ministrado_id}', '{$this->planejamento_aula_conteudo_id}')
             ");
 
             return true;
@@ -62,21 +62,25 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
      *
      * @return array
      */
-    public function lista($planejamento_aula_id) {
-        if (is_numeric($planejamento_aula_id)) {
+    public function lista($conteudo_ministrado_id) {
+        if (is_numeric($conteudo_ministrado_id)) {
             $db = new clsBanco();
-
             $db->Consulta("
                 SELECT
                     *
                 FROM
-                    modules.planejamento_aula_conteudo as pac
+                    modules.conteudo_ministrado_conteudo as cmc
                 WHERE
-                    pac.planejamento_aula_id = '{$planejamento_aula_id}'
+                    cmc.conteudo_ministrado_id = '{$conteudo_ministrado_id}'
             ");
 
             while($db->ProximoRegistro()) {
-                $conteudos[] = $db->Tupla();
+                $cmc = $db->Tupla();
+
+                $obj = new clsModulesPlanejamentoAulaConteudo($cmc['planejamento_aula_conteudo_id']);
+                $cmc['planejamento_aula_conteudo'] = $obj->detalhe();
+
+                $conteudos[] = $cmc;
             }
 
             return $conteudos;
@@ -101,7 +105,7 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
                 FROM
                     {$this->_from}
                 WHERE
-                    pac.id = {$this->id}
+                    cmc.id = {$this->id}
             ");
 
             $db->ProximoRegistro();
@@ -128,14 +132,14 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
      * @return bool
      */
     public function excluir () {
-        if (is_numeric($this->planejamento_aula_id) && is_string($this->conteudo)) {
+        if (is_numeric($this->conteudo_ministrado_id) && is_numeric($this->planejamento_aula_conteudo_id)) {
             $db = new clsBanco();
 
             $db->Consulta("
                 DELETE FROM
                     {$this->_tabela}
                 WHERE
-                    planejamento_aula_id = '{$this->planejamento_aula_id}' AND conteudo = '{$db->escapeString($this->conteudo)}'
+                    conteudo_ministrado_id = '{$this->conteudo_ministrado_id}' AND planejamento_aula_conteudo_id = '{$this->planejamento_aula_conteudo_id}'
             ");
 
             return true;
@@ -154,11 +158,11 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
         $resultado['adicionar'] = $novosConteudos;
 
         for ($i=0; $i < count($atuaisConteudos); $i++) {
-            $resultado['remover'][] = $atuaisConteudos[$i]['conteudo']; 
+            $resultado['remover'][] = $atuaisConteudos[$i]['planejamento_aula_conteudo_id']; 
         }
         $atuaisConteudos = $resultado['remover'];
 
-        for ($i=0; $i < count($novosConteudos); $i++) { 
+        for ($i=0; $i < count($novosConteudos); $i++) {
             $novo = $novosConteudos[$i];
 
             for ($j=0; $j < count($atuaisConteudos); $j++) {
