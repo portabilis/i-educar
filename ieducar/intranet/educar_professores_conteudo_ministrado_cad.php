@@ -7,17 +7,19 @@ use App\Services\CheckPostedDataService;
 use App\Services\iDiarioService;
 use App\Services\SchoolLevelsService;
 use Illuminate\Support\Arr;
+use iEducar\Modules\ValueObjects\EmployeeGraduationValueObject;
+use iEducar\Support\View\SelectOptions;
 
 return new class extends clsCadastro {
     public $id;
-    public $bncc;
     public $atividades;
     public $observacao;
     public $frequencia;
-    public $campoExperiencia;
+    public $planejamento_aula_id;
+    public $conteudos;
 
     public function Inicializar () {
-        $this->titulo = 'Conteúdo Ministrado - Cadastro';
+        $this->titulo = 'Registro de aula - Cadastro';
 
         $retorno = 'Novo';
 
@@ -37,7 +39,7 @@ return new class extends clsCadastro {
                 foreach ($registro['detalhes'] as $campo => $val) {
                     $this->$campo = $val;
                 }
-                $this->bncc = $registro['bncc']['ids'];
+                $this->conteudos = array_column($registro['conteudos'], 'planejamento_aula_conteudo_id');
 
                 $this->fexcluir = $obj_permissoes->permissao_excluir(58, $this->pessoa_logada, 7);
                 $retorno = 'Editar';
@@ -72,35 +74,34 @@ return new class extends clsCadastro {
 
         if (is_numeric($this->frequencia)) {
             $desabilitado = true;
+
+            $obj = new clsModulesFrequencia($this->frequencia);
+            $freq = $obj->detalhe()['detalhes'];
+
+            $obj = new clsModulesPlanejamentoAula();
+            $id = $obj->lista(
+                null,
+                null,
+                null,
+                null,
+                null,
+                $freq['ref_cod_turma'],
+                $freq['ref_cod_componente_curricular'],
+                null,
+                null,
+                null,
+                $freq['fase_etapa'],
+            )[0]['id'];
+            
+            $this->planejamento_aula_id = $id;
         }
 
         $this->campoOculto('id', $this->id);
         $this->inputsHelper()->dynamic(['frequencia'], ['frequencia' => $this->frequencia, 'disabled' => $desabilitado]);
 
-        $campos_experiencia = loadJson('educacenso_json/campos_experiencia.json');
-        $campos_experiencia = array_replace([null => 'Selecione o campo de experiência'], $campos_experiencia);
+        $this->campoMemo('atividades', 'Registro diário de aula', $this->atividades, 100, 5, true);
 
-        $options = ['label' => 'Campo de experiência', 'resources' => $campos_experiencia, 'value' => $this->campoExperiencia, 'required' => false];
-        $this->inputsHelper()->select('campoExperiencia', $options);
-
-        $this->campoMemo('atividades', 'Atividades', $this->atividades, 100, 5, true);
-
-        $helperOptions = [
-            'objectName' => 'bncc',
-        ];
-
-        $todos_bncc = $this->getBNCC($this->frequencia)['bncc'];
-
-        $options = [
-            'label' => 'BNCC',
-            'required' => false,
-            'size' => 50,
-            'options' => [
-                'values' => $this->bncc,
-                'all_values' => $todos_bncc
-            ]
-        ];
-        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+        $this->adicionarConteudosMultiplaEscolha();
         
         $this->campoMemo('observacao', 'Observação', $this->observacao, 100, 5, false);
     }
@@ -111,12 +112,12 @@ return new class extends clsCadastro {
             $this->frequencia,
             $this->atividades,
             $this->observacao,
-            $this->bncc
+            $this->conteudos
         );
 
         $cadastrou = $obj->cadastra();
 
-        if (!$cadastrou) {   
+        if (!$cadastrou) {
             $this->mensagem = 'Cadastro não realizado.<br>';
             $this->simpleRedirect('educar_professores_conteudo_ministrado_cad.php');
         } else {
@@ -135,7 +136,7 @@ return new class extends clsCadastro {
             null,
             $this->atividades,
             $this->observacao,
-            $this->bncc
+            $this->conteudos
         );
 
         $editou = $obj->edita();
@@ -167,24 +168,19 @@ return new class extends clsCadastro {
         return false;
     }
 
-    private function getBNCC($frequencia = null)
+    private function getConteudos($planejamento_aula_id = null)
     {
-        if (is_numeric($frequencia)) {
-            $bncc = [];
-            $bncc_temp = [];
-            $obj = new clsModulesBNCC();
+        if (is_numeric($planejamento_aula_id)) {
+            $rows = [];
 
-            if ($bncc_temp = $obj->lista($frequencia)) {
-                foreach ($bncc_temp as $bncc_item) {
-                    $id = $bncc_item['id'];
-                    $codigo = $bncc_item['codigo'];
-                    $habilidade = $bncc_item['habilidade'];
-
-                    $bncc[$id] = $codigo . ' - ' . $habilidade;
-                }
+            $obj = new clsModulesPlanejamentoAulaConteudo();
+            $conteudos = $obj->lista($planejamento_aula_id);
+    
+            foreach ($conteudos as $key => $conteudo) {
+                $rows[$conteudo['id']] = $conteudo['conteudo'];
             }
 
-            return ['bncc' => $bncc];
+            return $rows;
         }
 
         return [];
@@ -192,8 +188,7 @@ return new class extends clsCadastro {
 
     public function loadAssets () {
         $scripts = [
-            '/modules/Cadastro/Assets/Javascripts/BNCC.js',
-            '/modules/DynamicInput/Assets/Javascripts/CampoExperiencia.js'
+            '/modules/Cadastro/Assets/Javascripts/PlanoAulaConteudo.js'
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
@@ -202,6 +197,25 @@ return new class extends clsCadastro {
     public function __construct () {
         parent::__construct();
         $this->loadAssets();
+    }
+
+    protected function adicionarConteudosMultiplaEscolha() {
+        $helperOptions = [
+            'objectName' => 'conteudos',
+        ];
+
+        $todos_conteudos = $this->getConteudos($this->planejamento_aula_id);
+
+        $options = [
+            'label' => 'Objetivo(s) do conhecimento/conteúdo',
+            'required' => false,
+            'size' => 50,
+            'options' => [
+                'values' => $this->conteudos,
+                'all_values' => $todos_conteudos
+            ]
+        ];
+        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
     }
 
     public function Formular () {
