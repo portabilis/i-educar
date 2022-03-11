@@ -82,13 +82,21 @@ class clsModulesPlanejamentoAulaBNCC extends Model {
 
         $db->ProximoRegistro();
 
-        $bncc = $db->Tupla();
+        $info_temp = $db->Tupla();
 
-        $bncc['ids'] = explode(',', $bncc['ids']);
-        $bncc['codigos'] = count($bncc['codigos']) > 0 ? explode(',', $bncc['codigos']) : null;
-        $bncc['descricoes'] = count($bncc['descricoes']) > 0 ? explode('$/', $bncc['descricoes']) : null;
+        $infos['ids'] = explode(',', $info_temp['ids']);
+        $infos['codigos'] = count($info_temp['codigos']) > 0 ? explode(',', $info_temp['codigos']) : null;
+        $infos['descricoes'] = count($info_temp['descricoes']) > 0 ? explode('$/', $info_temp['descricoes']) : null;
 
-        return $bncc;
+        $bnccs = [];
+
+        for ($i=0; $i < count($infos['ids']); $i++) { 
+            $bnccs[$i]['id'] = $infos['ids'][$i];
+            $bnccs[$i]['codigo'] = $infos['codigos'][$i];
+            $bnccs[$i]['descricao'] = $infos['descricoes'][$i];
+        }
+
+        return $bnccs;
     }
 
     /**
