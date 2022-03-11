@@ -40,7 +40,7 @@ return new class extends clsCadastro {
                 foreach ($registro['detalhes'] as $campo => $val) {
                     $this->$campo = $val;
                 }
-                $this->bncc = array_column($registro['bnccs'], 'bncc_id');
+                $this->bncc = array_column($registro['bnccs'], 'id');
 
                 $this->fexcluir = $obj_permissoes->permissao_excluir(58, $this->pessoa_logada, 7);
                 $retorno = 'Editar';
@@ -287,8 +287,8 @@ return new class extends clsCadastro {
 
     protected function adicionarConteudosTabela()
     {
-        $obj = new clsModulesPlanejamentoAulaConteudo(null, $this->id);
-        $conteudos = $obj->detalhe();
+        $obj = new clsModulesPlanejamentoAulaConteudo();
+        $conteudos = $obj->lista($this->id);
 
         for ($i=0; $i < count($conteudos); $i++) { 
             $rows[$i][] = $conteudos[$i]['conteudo'];
