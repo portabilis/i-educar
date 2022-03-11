@@ -144,7 +144,7 @@ return new class extends clsCadastro {
         }
 
         if (!$podeRegistrar) {
-            $this->mensagem = 'Cadastro não realizado, pois não é mais possível submeter frequência para esta etapa.<br>';
+            $this->mensagem = 'Cadastro não realizado, pois não é mais possível submeter plano para esta etapa.<br>';
             $this->simpleRedirect('educar_professores_planejamento_de_aula_cad.php');
         }
 
