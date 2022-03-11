@@ -277,7 +277,6 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarTurma();
         $serie = $obj->lista($this->ref_cod_turma)[0]['ref_ref_cod_serie'];
 
-        //dd($this->id, $serie, $this->ref_cod_componente_curricular, $this->data, $this->fase_etapa, $this->justificativa);
         $obj = new clsModulesFrequencia(
             $this->id,
             null,
