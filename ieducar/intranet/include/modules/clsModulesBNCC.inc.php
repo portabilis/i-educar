@@ -273,18 +273,22 @@ class clsModulesBNCC extends Model {
      *
      * @return array
      */
-    public function retornaDiferencaEntreConjuntosBNCC($atualBNCC, $novoBNCC) {
+    public function retornaDiferencaEntreConjuntosBNCC($atuaisBNCC, $novosBNCC) {
         $resultado = [];
-        $resultado['adicionar'] = $novoBNCC;
-        $resultado['remover'] = $atualBNCC;
+        $resultado['adicionar'] = $novosBNCC;
 
-        for ($i=0; $i < count($novoBNCC); $i++) { 
-            $novo = $novoBNCC[$i];
+        for ($i=0; $i < count($atuaisBNCC); $i++) {
+            $resultado['remover'][] = $atuaisBNCC[$i]['id']; 
+        }
+        $atuaisBNCC = $resultado['remover'];
 
-            for ($j=0; $j < count($atualBNCC); $j++) {
-                $atual = $atualBNCC[$j];
+        for ($i=0; $i < count($novosBNCC); $i++) { 
+            $novo = $novosBNCC[$i];
 
-                if ($novo == $atual) {
+            for ($j=0; $j < count($atuaisBNCC); $j++) {
+                $atual = $atuaisBNCC[$j];
+
+                if ($novo === $atual) {
                     unset($resultado['adicionar'][$i]);
                     unset($resultado['remover'][$j]);
                 }
