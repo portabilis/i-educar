@@ -31,7 +31,9 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
             $this->planejamento_aula_id = $planejamento_aula_id;
         }
 
-        $this->conteudo = $conteudo;
+        if (is_string($conteudo)) {
+            $this->conteudo = $conteudo;
+        }
     }
 
     /**
@@ -40,13 +42,13 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
      * @return bool
      */
     public function cadastra() {
-        if (is_numeric($this->planejamento_aula_id) && $this->conteudo != '') {
+        if (is_numeric($this->planejamento_aula_id) && is_string($this->conteudo)) {
             $db = new clsBanco();
 
             $db->Consulta("
                 INSERT INTO {$this->_tabela}
                     (planejamento_aula_id, conteudo)
-                VALUES ('{$this->planejamento_aula_id}', '{$this->conteudo}')
+                VALUES ('{$this->planejamento_aula_id}', '{$db->escapeString($this->conteudo)}')
             ");
 
             return true;
@@ -56,27 +58,31 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
     }
 
     /**
-     * Lista relacionamentos entre os conteudos e o planejamento de aula
+     * Lista relacionamentos entre os conteudos e o plano de aula
      *
      * @return array
      */
     public function lista($planejamento_aula_id) {
-        $db = new clsBanco();
+        if (is_numeric($planejamento_aula_id)) {
+            $db = new clsBanco();
 
-        $db->Consulta("
-            SELECT
-                *
-            FROM
-                modules.planejamento_aula_conteudo as pac
-            WHERE
-                pac.planejamento_aula_id = '{$planejamento_aula_id}'
-        ");
+            $db->Consulta("
+                SELECT
+                    *
+                FROM
+                    modules.planejamento_aula_conteudo as pac
+                WHERE
+                    pac.planejamento_aula_id = '{$planejamento_aula_id}'
+            ");
 
-        while($db->ProximoRegistro()) {
-            $conteudos[] = $db->Tupla();
+            while($db->ProximoRegistro()) {
+                $conteudos[] = $db->Tupla();
+            }
+
+            return $conteudos;
         }
 
-        return $conteudos;
+        return false;
     }
 
     /**
@@ -87,7 +93,7 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
     public function detalhe () {
         $data = [];
 
-        if (is_numeric($this->planejamento_aula_id)) {
+        if (is_numeric($this->id)) {
             $db = new clsBanco();
             $db->Consulta("
                 SELECT
@@ -95,12 +101,11 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
                 FROM
                     {$this->_from}
                 WHERE
-                    pac.planejamento_aula_id = {$this->planejamento_aula_id}
+                    pac.id = {$this->id}
             ");
 
-            while ($db->ProximoRegistro()) {
-                $data[] = $db->Tupla();
-            }
+            $db->ProximoRegistro();
+            $data = $db->Tupla();
 
             return $data;
         }
@@ -123,14 +128,14 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
      * @return bool
      */
     public function excluir () {
-        if (is_numeric($this->planejamento_aula_id) && $this->conteudo) {
+        if (is_numeric($this->planejamento_aula_id) && is_string($this->conteudo)) {
             $db = new clsBanco();
 
             $db->Consulta("
                 DELETE FROM
                     {$this->_tabela}
                 WHERE
-                    planejamento_aula_id = '{$this->planejamento_aula_id}' AND conteudo = '{$this->conteudo}'
+                    planejamento_aula_id = '{$this->planejamento_aula_id}' AND conteudo = '{$db->escapeString($this->conteudo)}'
             ");
 
             return true;
