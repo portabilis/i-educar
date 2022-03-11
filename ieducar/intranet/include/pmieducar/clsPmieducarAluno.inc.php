@@ -827,9 +827,10 @@ class clsPmieducarAluno extends Model
         $autorizado_cinco = null,
         $parentesco_cinco = null,
         $int_cpf_aluno = null,
-        $int_rg_aluno = null
+        $int_rg_aluno = null,
+        $ref_cod_turma = null
     ) {
-        $filtra_baseado_matricula = is_numeric($ano) || is_numeric($ref_cod_instituicao) || is_numeric($ref_cod_escola) || is_numeric($ref_cod_curso) || is_numeric($ref_cod_serie);// || is_numeric($periodo);
+        $filtra_baseado_matricula = is_numeric($ano) || is_numeric($ref_cod_instituicao) || is_numeric($ref_cod_escola) || is_numeric($ref_cod_curso) || is_numeric($ref_cod_serie) || is_numeric($ref_cod_turma);// || is_numeric($periodo);
 
         $filtros = '';
         $this->resetCamposLista();
@@ -837,7 +838,7 @@ class clsPmieducarAluno extends Model
         $this->_campos_lista .= ', pessoa.nome AS nome_aluno, fisica.nome_social, COALESCE(nome_social, pessoa.nome) AS ordem_aluno, pessoa_mae.nome AS nome_mae, educacenso_cod_aluno.cod_aluno_inep AS codigo_inep';
 
         if ($filtra_baseado_matricula) {
-            $sql = "SELECT distinct {$this->_campos_lista} FROM {$this->_tabela} INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno) ";
+            $sql = "SELECT distinct {$this->_campos_lista} FROM {$this->_tabela} INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno)";
         } else {
             $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         }
@@ -847,7 +848,8 @@ class clsPmieducarAluno extends Model
              LEFT JOIN cadastro.pessoa ON pessoa.idpes = a.ref_idpes
              LEFT JOIN cadastro.fisica ON fisica.idpes = a.ref_idpes
              LEFT JOIN cadastro.pessoa AS pessoa_mae ON pessoa_mae.idpes = fisica.idpes_mae
-             LEFT JOIN modules.educacenso_cod_aluno ON educacenso_cod_aluno.cod_aluno = a.cod_aluno';
+             LEFT JOIN modules.educacenso_cod_aluno ON educacenso_cod_aluno.cod_aluno = a.cod_aluno
+             LEFT JOIN pmieducar.matricula_turma AS mt ON m.cod_matricula = mt.ref_cod_matricula';
 
         $sql .= $joins;
 
@@ -1034,6 +1036,11 @@ class clsPmieducarAluno extends Model
             $filtros .= "{$whereAnd} m.ref_cod_curso = {$ref_cod_curso}";
             $whereAnd = ' AND ';
         }
+        if(is_numeric($ref_cod_turma)){
+            $filtros .= "{$whereAnd} mt.ref_cod_turma = {$ref_cod_turma}";
+            $whereAnd = ' AND ';
+
+        }
 
         if (!empty($str_nm_pai2) || !empty($str_nm_mae2) || !empty($str_nm_responsavel2)) {
             $complemento_letf_outer = '';
@@ -1071,6 +1078,7 @@ class clsPmieducarAluno extends Model
 
             $whereAnd = ' AND ';
         }
+      
 
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];

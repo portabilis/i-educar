@@ -86,7 +86,7 @@ return new class extends clsListagem {
         $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie'], [],['options' => ['required' => false]]);
 
         $this->campoTexto('nm_turma', 'Turma', $this->nm_turma, 30, 255);
-        $this->campoLista('visivel', 'Situação', ['' => 'Selecione', '1' => 'Ativo', '2' => 'Inativo'], $this->visivel, null, null, null, null, null, false);
+        $this->campoLista('visivel', 'Situação', ['1' => 'Ativo', '2' => 'Inativo'], $this->visivel, null, null, null, null, null, false);
         $this->inputsHelper()->turmaTurno(['required' => false, 'label' => 'Turno']);
 
         // Paginador
