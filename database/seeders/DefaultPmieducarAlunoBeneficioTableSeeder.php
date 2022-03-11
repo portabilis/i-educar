@@ -16,12 +16,15 @@ class DefaultPmieducarAlunoBeneficioTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('pmieducar.aluno_beneficio')->updateOrInsert([
-            'cod_aluno_beneficio' => 1,
-            'ref_usuario_cad' => 1,
-            'nm_beneficio' => 'Bolsa Família',
-            'data_cadastro' => now(),
-            'ativo' => 1,
-        ]);
+        DB::table('pmieducar.aluno_beneficio')->updateOrInsert(
+            [
+                'nm_beneficio' => 'Bolsa Família',
+            ],
+            [
+                'ref_usuario_cad' => 1,
+                'data_cadastro' => now(),
+                'ativo' => 1,
+            ]
+        );
     }
 }

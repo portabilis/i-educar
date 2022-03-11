@@ -16,28 +16,37 @@ class DefaultPmieducarReligiaoTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('pmieducar.religiao')->updateOrInsert([
-            'cod_religiao' => 1,
-            'ref_usuario_cad' => 1,
-            'nm_religiao' => 'Católico',
-            'data_cadastro' => now(),
-            'ativo' => 1,
-        ]);
+        DB::table('pmieducar.religiao')->updateOrInsert(
+            [
+                'nm_religiao' => 'Católico'
+            ],
+            [
+                'ref_usuario_cad' => 1,
+                'data_cadastro' => now(),
+                'ativo' => 1,
+            ]
+        );
 
-        DB::table('pmieducar.religiao')->updateOrInsert([
-            'cod_religiao' => 2,
-            'ref_usuario_cad' => 1,
-            'nm_religiao' => 'Evangélico',
-            'data_cadastro' => now(),
-            'ativo' => 1,
-        ]);
+        DB::table('pmieducar.religiao')->updateOrInsert(
+            [
+                'nm_religiao' => 'Evangélico'
+            ],
+            [
+                'ref_usuario_cad' => 1,
+                'data_cadastro' => now(),
+                'ativo' => 1,
+            ]
+        );
 
-        DB::table('pmieducar.religiao')->updateOrInsert([
-            'cod_religiao' => 3,
-            'ref_usuario_cad' => 1,
-            'nm_religiao' => 'Outros',
-            'data_cadastro' => now(),
-            'ativo' => 1,
-        ]);
+        DB::table('pmieducar.religiao')->updateOrInsert(
+            [
+                'nm_religiao' => 'Outros',
+            ],
+            [
+                'ref_usuario_cad' => 1,
+                'data_cadastro' => now(),
+                'ativo' => 1,
+            ]
+        );
     }
 }

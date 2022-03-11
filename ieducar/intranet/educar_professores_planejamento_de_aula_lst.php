@@ -37,7 +37,7 @@ return new class extends clsListagem {
 
     public function Gerar()
     {
-        $this->titulo = 'Frequência - Listagem';
+        $this->titulo = 'Plano de aula - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null: $val;
@@ -152,14 +152,14 @@ return new class extends clsListagem {
         }
         $this->largura = '100%';
 
-        $this->breadcrumb('Listagem de planejamentos das aulas', [
+        $this->breadcrumb('Listagem de planos de aula', [
             url('intranet/educar_professores_index.php') => 'Professores',
         ]);
     }
 
     public function Formular()
     {
-        $this->title = 'Planejamento metodológico - Listagem';
+        $this->title = 'Plano de aula - Listagem';
         $this->processoAp = '58';
     }
 };
