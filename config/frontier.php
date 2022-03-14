@@ -22,7 +22,12 @@ return [
         ],
 
         // https://laravel.com/docs/middleware
-        'middleware' => [],
+        'middleware' => [
+            'web',
+            'ieducar.suspended',
+            'auth',
+            'ieducar.checkresetpassword',
+        ],
 
         'replaces' => [
             env('FRONTIER_FIND') => env('FRONTIER_REPLACE_WITH'),
