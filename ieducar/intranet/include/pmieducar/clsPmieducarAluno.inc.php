@@ -853,7 +853,6 @@ class clsPmieducarAluno extends Model
              LEFT JOIN modules.educacenso_cod_aluno ON educacenso_cod_aluno.cod_aluno = a.cod_aluno';
 
         $sql .= $joins;
-
         $whereAnd = ' WHERE ';
 
         if (is_numeric($int_cod_aluno)) {
@@ -1063,10 +1062,7 @@ class clsPmieducarAluno extends Model
                 $complemento_where .= "{$and_where} (pessoa_responsavel.slug ILIKE unaccent('%{$str_nome_responsavel2}%'))";
                 $and_where = ' AND ';
             }
-        if (is_numeric($ref_cod_turma)) {
-            $filtros .= "{$whereAnd} mt.ref_cod_turma = {$ref_cod_turma}";
-            $whereAnd = ' AND ';
-         }
+    
 
             $filtros .= "
         {$whereAnd} EXISTS
@@ -1076,6 +1072,10 @@ class clsPmieducarAluno extends Model
               f.idpes = ref_idpes
               AND ({$complemento_where}))";
 
+            $whereAnd = ' AND ';
+        }
+         if (is_numeric($ref_cod_turma)) {
+            $filtros .= "{$whereAnd} mt.ref_cod_turma = {$ref_cod_turma}";
             $whereAnd = ' AND ';
         }
 
@@ -1093,7 +1093,7 @@ class clsPmieducarAluno extends Model
             INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno)
             INNER JOIN pmieducar.matricula_turma AS mt ON (m.cod_matricula = mt.ref_cod_matricula) ";
         } else {
-            $sqlCount = "SELECT COUNT(0) FROM {$this->_tabela} INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno) ";
+            $sqlCount = "SELECT COUNT(0) FROM {$this->_tabela}";
         }
 
         $sqlCount .= $joins;
