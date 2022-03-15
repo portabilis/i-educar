@@ -47,6 +47,7 @@ return new class extends clsListagem {
     public $ref_cod_serie;
     public $cpf_aluno;
     public $rg_aluno;
+    public $ref_cod_turma;
 
     public function Gerar()
     {
@@ -78,7 +79,7 @@ return new class extends clsListagem {
         $this->inputsHelper()->integer('ano', ['required' => false, 'value' => $this->ano, 'max_length' => 4]);
         $this->inputsHelper()->dynamic('instituicao', ['required' => false, 'instituicao' => $this->ref_cod_instituicao]);
         $this->inputsHelper()->dynamic('escolaSemFiltroPorUsuario', ['required' => false, 'value' => $this->ref_cod_escola]);
-        $this->inputsHelper()->dynamic(['curso', 'serie', 'turma'], ['required' => false]);
+        $this->inputsHelper()->dynamic(['curso', 'serie', 'turma'],['required' => false]);
 
         $obj_permissoes = new clsPermissoes();
         $cod_escola = $obj_permissoes->getEscola($this->pessoa_logada);

@@ -838,24 +838,23 @@ class clsPmieducarAluno extends Model
         $this->_campos_lista .= ', pessoa.nome AS nome_aluno, fisica.nome_social, COALESCE(nome_social, pessoa.nome) AS ordem_aluno, pessoa_mae.nome AS nome_mae, educacenso_cod_aluno.cod_aluno_inep AS codigo_inep';
 
         if ($filtra_baseado_matricula) {
-            $sql = "SELECT distinct {$this->_campos_lista} FROM {$this->_tabela} ";
+            $sql = "SELECT distinct {$this->_campos_lista} FROM {$this->_tabela} 
+            INNER JOIN pmieducar.matricula AS m ON (m.ref_cod_aluno = a.cod_aluno)
+            INNER JOIN pmieducar.matricula_turma AS mt ON (m.cod_matricula = mt.ref_cod_matricula)";
         } else {
             $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         }
         $db = new clsBanco();
 
         $joins = '
-             JOIN pmieducar.matricula AS m ON (m.ref_cod_aluno = a.cod_aluno) 
              LEFT JOIN cadastro.pessoa ON pessoa.idpes = a.ref_idpes
              LEFT JOIN cadastro.fisica ON fisica.idpes = a.ref_idpes
              LEFT JOIN cadastro.pessoa AS pessoa_mae ON pessoa_mae.idpes = fisica.idpes_mae
-             LEFT JOIN modules.educacenso_cod_aluno ON educacenso_cod_aluno.cod_aluno = a.cod_aluno
-             LEFT JOIN pmieducar.matricula_turma AS mt ON m.cod_matricula = mt.ref_cod_matricula';
+             LEFT JOIN modules.educacenso_cod_aluno ON educacenso_cod_aluno.cod_aluno = a.cod_aluno';
 
         $sql .= $joins;
 
         $whereAnd = ' WHERE ';
-
 
         if (is_numeric($int_cod_aluno)) {
             $filtros .= "{$whereAnd} a.cod_aluno = {$int_cod_aluno}";
@@ -1064,6 +1063,10 @@ class clsPmieducarAluno extends Model
                 $complemento_where .= "{$and_where} (pessoa_responsavel.slug ILIKE unaccent('%{$str_nome_responsavel2}%'))";
                 $and_where = ' AND ';
             }
+        if (is_numeric($ref_cod_turma)) {
+            $filtros .= "{$whereAnd} mt.ref_cod_turma = {$ref_cod_turma}";
+            $whereAnd = ' AND ';
+         }
 
             $filtros .= "
         {$whereAnd} EXISTS
@@ -1086,9 +1089,11 @@ class clsPmieducarAluno extends Model
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
         if ($filtra_baseado_matricula) {
-            $sqlCount = "SELECT COUNT(DISTINCT a.cod_aluno) FROM {$this->_tabela} INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno) ";
+            $sqlCount = "SELECT COUNT(DISTINCT a.cod_aluno) FROM {$this->_tabela}
+            INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno)
+            INNER JOIN pmieducar.matricula_turma AS mt ON (m.cod_matricula = mt.ref_cod_matricula) ";
         } else {
-            $sqlCount = "SELECT COUNT(0) FROM {$this->_tabela} ";
+            $sqlCount = "SELECT COUNT(0) FROM {$this->_tabela} INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno) ";
         }
 
         $sqlCount .= $joins;
