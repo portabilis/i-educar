@@ -225,7 +225,7 @@ a:hover {
 
 .ieducar-sidebar-menu li a i {
   color: #2ab1e8;
-  font-size: 20px;
+  font-size: 100%;
   padding-right: 10px;
 }
 
@@ -350,13 +350,13 @@ a:hover {
 }
 
 .quick-search {
-  margin: 10px 0;
+  margin: 4.3rem 0;
 }
 
 .quick-search .multiselect,
 .quick-search .multiselect__input,
 .quick-search .multiselect__single {
-  font-size: 12px;
+  font-size: 3.5rem; font: inherit;
 }
 
 .quick-search input[type="text"].multiselect__input {

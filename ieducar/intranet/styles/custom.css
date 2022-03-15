@@ -9,7 +9,7 @@ h1 {font-size: 24px}
 
 body, html{
   font-family: "Open Sans" !important;
-  height: 100% !important;
+  height: 100vh !important;
 }
 
 a{
@@ -211,7 +211,7 @@ span.error_notice {
 .ieducar-header-links .dropdown.notifications {
   float: right;
   margin: 0;
-  z-index: 99999999;
+  z-index: 1;
 }
 
 .ieducar-header-links .dropbtn.notifications {
@@ -391,14 +391,14 @@ a.icons-top{
 }
 
 .r3c1-Mobile{
-  width: 40%;
+  width: 75%;
   height: -webkit-fill-available;
   background: rgba(54,54,54,1);
   display:none;
   border: 0;
   position: absolute;
   box-shadow: 6px 0px 5px rgba(50, 50, 50, 0.5);
-  left: -40%;
+  left: -75%;
   z-index: 1;
   transition: left .5s ease-in-out;
 }
@@ -716,7 +716,6 @@ table.calendar .cor{
   font-family: "Open Sans";
   position: absolute !important;
   font-size: 24px;
-  font-weight: bold;
   color: rgba(147,147,147,1);
 }
 
@@ -739,8 +738,9 @@ table.calendar .cor{
 
 .fundoCalendarioMesDiferente span{
   font-family: "Open Sans";
+  font-weight: bold;
   font-size: 24px;
-  color: rgba(154,154,154,1);
+  color: rgba(154,154,154,.5);
 }
 
 .fundoCalendarioUrgente,
@@ -1063,6 +1063,8 @@ table {
     font-size: 12px;
 }
 
+
+
 td#corpo{
   padding: 0 20px;
 }
@@ -1109,7 +1111,7 @@ td.area-conhecimento-destaque {
 .titulo-tabela-listagem {
   background-color: #ccdce6 !important;
   font-family: "Open Sans" !important;
-  font-size: 1rem;
+  font-size: 2.4rem;
   font-weight: bold;
   font-style: normal;
   font-stretch: normal;
@@ -1211,7 +1213,7 @@ td.area-conhecimento-destaque {
   color: #47728f;
   font-family: "Open Sans";
   font-size: 14px;
-  padding: 8px;
+  padding: 12px;
   vertical-align: top;
 }
 
@@ -1505,38 +1507,47 @@ input.btn_small {
   .r3c1 {display: none;}
   .r3c1-Mobile {display: inherit;}
   .expandir-btn {display:inherit;}
-  .ieducar-quick-search, .ieducar-sidebar-menu {position: relative}
   #formcadastro select {font-size: 3.4rem !important;}
-  .breadcrumb a, .breadcrumb span {font-size: 1.7rem !important}
-  .formmdtd sub, .formlttd sub {font-size:2.4rem}
   #formcadastro input, #formcadastro textarea {font-size: 3.4rem  !important}
-  table {font-size: 2rem !important;}
-  table.paginacao td a.nvp_paginador { font-size: 2.2rem !important;}
+  .ieducar-quick-search, .ieducar-sidebar-menu {position: relative}
+  .breadcrumb a, .breadcrumb span {font-size: 2.7rem !important}
+  .formmdtd sub, .formlttd sub {font-size:2.4rem}
+  .multiselect {width: 90% !important; margin: auto;margin-top: 20px !important;}
+  .quick-search .multiselect__tags { font-size: 3.5rem !important}
+  td input[type="checkbox"]:read-only { width: 6rem !important; height: 6rem !important; display:flex}
+  
+  table {font-size: 4rem !important;}
+  table.paginacao td a.nvp_paginador { font-size: 4.5rem !important;}
   table.paginacao{width:95vw !important; margin-top: 3vh !important; margin-bottom: 7vh !important;}
-  .tableDetalhe th{font-size: 3.4rem;}
+  .tableDetalhe th{font-size: 4.5rem; padding-right: 15rem !important;}
   .avatar-35{width: 70px !important; height: 70px !important;}
   .notifications img {top: 3px !important; width:40px !important;}
-  .botaolistagem {}
+
   .ieducar-header{height: 100px !important;}
   .ieducar-header-logo h1 a {font-size: 48px !important;line-height: 100px !important;}
-  .ieducar-menu a {font-size: 1.9rem !important;}
-  .ieducar-header-links .dropbtn {padding: 18px 36px 18px 18px !important; font-size: 2rem !important; background-size: 24px !important;}
+  .ieducar-header-links .dropbtn {padding: 18px 36px 18px 18px !important; font-size: 4rem !important; background-size: 24px !important;}
   .ieducar-header-links .dropdown-content a {font-size: 1.5rem !important; padding: 25px 25px; margin: 15px 0;}
+  .ieducar-menu a {font-size: 3.5rem !important;}
   .ieducar-sidebar-menu {width: 100% !important}
-  .ieducar-sidebar-menu li a {font-size: 1.7rem !important; padding: 25px 25px !important;}
-  .ieducar-sub-menu li a{font-size: 1.7rem !important; padding: 25px 25px !important; margin: 15px 0 !important;}
-  .tablelistagem .formlttd a, .tablelistagem .formmdtd a, .titulo-tabela-listagem{font-size: 3.4rem !important;}
-  input[type="button"] {font-size: 2rem !important; padding: 30px 100px !important;}
-  #form_resultado {width: 1023px; overflow-x: scroll;}
+  .ieducar-sidebar-menu li a {font-size: 4.7rem !important; padding: 4rem 25px !important;}
+  .ieducar-sub-menu li a{font-size: 3.7rem !important; padding: 25px 25px !important; margin: 15px 0 !important;}
+  .tablelistagem .formlttd a, .tablelistagem .formmdtd a, .titulo-tabela-listagem{font-size: 3.4rem !important; width: 39.4rem;}
+  input[type="button"] {font-size: 4rem !important; padding: 30px 100px !important;}
+  #form_resultado {width: 1023px; overflow-x: auto;}
+  .tableDetalheMobile { display: block; max-width: fit-content; overflow-x: auto; white-space: nowrap;}
+  .scroll{ width: 1023px !important;}
   
   #tablelistagem .formmdtd{ font-size: 1.7rem; width: calc(100% - 15px); margin: 5px; float: left; }
+  #ref_cod_escola_chosen a.chosen-single,
+  #escola_chosen a.chosen-single{ font-size: 3.4rem !important;}
   #tablelistagem .formlttd{ width: calc(100% - 15px); margin: 5px; float: left; padding:10px 8px}
   .form, .formlttd, .formmdtd, .tablelistagem .formdktd,
-  #tablelistagem .formlttd, #tablelistagem .formmdtd  { font-size: 3.4rem !important; font-weight: bold;}  
+  #tablelistagem .formlttd, #tablelistagem .formmdtd  { font-size: 4.5rem !important;}
+  td.formlttd table.tableDetalhe {width: 1023px;}
   
   #expandido:checked ~ .r3c1 {display: table-cell; left: 0;}
   #expandido:checked ~ .r3c1-Mobile {display: table-cell; left: 0;}
-  #expandido:checked ~ .expandir-btn {margin-left: 39%; }
+  #expandido:checked ~ .expandir-btn {margin-left: 74.8%; }
   #expandido:checked ~ .ieducar-quick-search {display: inherit;}
   #expandido:checked ~ .ieducar-sidebar-menu {display: inherit;}
 

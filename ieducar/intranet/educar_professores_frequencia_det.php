@@ -154,22 +154,23 @@ return new class extends clsDetalhe {
         }
 
 
-        $this->tabela .= ' <tr><th><span style="display: block; float: left; width: auto; font-weight: bold">Nome</span></th>';
+        $this->tabela .= ' </tr><td class="tableDetalheLinhaSeparador" colspan="3"></td><tr><td><div class="scroll"><table class="tableDetalhe tableDetalheMobile" width="100%"><tr>';
+        $this->tabela .= ' <th><span style="display: block; float: left; width: auto; font-weight: bold">Nome</span></th>';
         $this->tabela .= ' <th><span style="display: block; float: left; width: 100px; font-weight: bold">Presença</span></th>';
         $this->tabela .= ' <th><span style="display: block; float: left; width: auto; font-weight: bold">Justificativa</span></th></tr>';
-
-        foreach ($alunos as $aluno) {
-            $checked = !$aluno['presenca'] ? "checked='true'" : '';
-            
-            $this->tabela .= "  <tr><td class='formlttd'>{$aluno['nome']}</td>";
-            $this->tabela .= "  <td style='margin: auto'><input type='checkbox' disabled {$checked}></td>";
-            $this->tabela .= "  <td class='formlttd'>{$aluno['justificativa']}</td></tr>";
-        }
-        $this->tabela .= '</table>';
         
-        $disciplinas  = '<table cellspacing="0" cellpadding="0" border="0">';
+             foreach ($alunos as $aluno) {
+             $checked = !$aluno['presenca'] ? "checked='true'" : '';
+            
+             $this->tabela .= "  <tr><td class='formlttd'>{$aluno['nome']}</td>";
+             $this->tabela .= "  <td style='margin: auto'><input type='checkbox' disabled {$checked}></td>";
+             $this->tabela .= "  <td class='formlttd'>{$aluno['justificativa']}</td></tr>";
+         }
+        $this->tabela .= '</table></div></td></tr>';
+        $disciplinas  = '</table><table cellspacing="0" cellpadding="0" border="0" width="100%">';
         $disciplinas .= sprintf('<tr align="left"><td>%s</td></tr>', $this->tabela);
         $disciplinas .= '</table>';
+
 
         $this->addDetalhe(
             [

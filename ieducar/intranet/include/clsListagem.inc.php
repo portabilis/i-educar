@@ -335,6 +335,7 @@ HTML;
         $retorno .=  "
             <form name=\"form_resultado\" id=\"form_resultado\" method=\"POST\" action=\"\">
                 <!-- listagem begin -->
+                
                 <table class='tablelistagem' $width border='0' cellpadding='4' cellspacing='1'>
                     <tr>
                         <td class='titulo-tabela-listagem' colspan='$ncols'>{$this->__titulo}</td>
@@ -431,7 +432,8 @@ HTML;
         $retorno .=  "
             <tr>
                 <td class='formdktd' colspan=\"{$ncols}\">&nbsp;</td>
-            </tr>";
+            </tr></table>";
+            
 
         if (!empty($this->paginador2)) {
             $retorno .= "

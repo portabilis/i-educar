@@ -221,7 +221,7 @@
             </div>
             <table summary="" class='tabelanum2' border='0' cellspacing='0' cellpadding='0'>
                 <tr>
-                    <td id="menu_lateral" class="r3c1" width='170' <?= $menu_lateral?>
+                    <td id="menu_lateral" class="r3c1" <?= $menu_lateral?>>
                         @include('layout.menu') 
                     </td>
                     <td valign=top>
