@@ -107,6 +107,7 @@
             "@php artisan key:generate --ansi",
             "@php artisan legacy:link --ansi",
             "@php artisan migrate --seed --force --ansi",
+            "@php artisan storage:link",
             "@npm"
         ],
         "update-install": [
@@ -115,6 +116,7 @@
             "@set-permissions",
             "@php artisan legacy:link --ansi",
             "@php artisan migrate --force --ansi",
+            "@php artisan storage:link",
             "@npm"
         ],
         "post-install-cmd": [

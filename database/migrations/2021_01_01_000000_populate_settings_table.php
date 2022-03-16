@@ -101,7 +101,7 @@ class PopulateSettingsTable extends Migration
             'legacy.report.logo_file_name' => 'brasil.png',
             'legacy.report.show_error_details' => true,
             'legacy.report.default_factory' => 'Portabilis_Report_ReportFactoryPHPJasper',
-            'legacy.report.source_path' => '/var/www/ieducar/ieducar/modules/Reports/ReportSources/',
+            'legacy.report.source_path' => '/ieducar/modules/Reports/ReportSources/',
             'legacy.report.diario_classe.dias_temporarios' => '30',
             'legacy.report.remote_factory.url' => null,
             'legacy.report.remote_factory.token' => null,

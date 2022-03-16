@@ -15,7 +15,7 @@ class AddColumnsMedicalRecordStudent2 extends Migration
     {
         Schema::table('modules.ficha_medica_aluno', function (Blueprint $table) {
             $table->char('vacina_covid', 1)->nullable();
-            $table->integer('desc_vacina_covid')->nullable();
+            $table->char('desc_vacina_covid',2)->nullable();
         });
     }
 

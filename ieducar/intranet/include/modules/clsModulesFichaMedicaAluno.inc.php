@@ -273,10 +273,10 @@ class clsModulesFichaMedicaAluno extends Model
             $this->vacina_covid = $vacina_covid;
         }
 
-        if(is_string($desc_vacina_covid)) {
+        if(is_numeric($desc_vacina_covid)) {
             $this->desc_vacina_covid = $desc_vacina_covid;
         }
-
+        
         if (is_string($responsavel)) {
             $this->responsavel = $responsavel;
         }
@@ -300,7 +300,6 @@ class clsModulesFichaMedicaAluno extends Model
         if (is_string($desc_aceita_hospital_proximo)) {
             $this->desc_aceita_hospital_proximo = $desc_aceita_hospital_proximo;
         }
-      
     }
 
     /**

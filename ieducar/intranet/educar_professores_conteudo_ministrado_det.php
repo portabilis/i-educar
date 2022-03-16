@@ -85,19 +85,19 @@ return new class extends clsDetalhe {
             );
         }
 
-        if ($registro['bncc']['codigos'] && $registro['bncc']['descricoes']) {
-            $this->montaListaBNCC(
-                $registro['bncc']['codigos'],
-                $registro['bncc']['descricoes'],
+        if ($registro['detalhes']['atividades']) {
+            $this->addDetalhe(
+                [
+                    'Atividades',
+                    $registro['detalhes']['atividades']
+                ]
             );
         }
 
-        if ($registro['detalhes']['procedimento_metodologico']) {
-            $this->addDetalhe(
-                [
-                    'Procedimento metodológico',
-                    $registro['detalhes']['procedimento_metodologico']
-                ]
+        if (is_array($registro['bncc']['codigos']) && is_array($registro['bncc']['descricoes'])) {
+            $this->montaListaBNCC(
+                $registro['bncc']['codigos'],
+                $registro['bncc']['descricoes'],
             );
         }
 

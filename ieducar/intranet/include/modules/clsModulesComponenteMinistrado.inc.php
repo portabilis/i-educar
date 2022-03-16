@@ -5,14 +5,14 @@ use iEducar\Legacy\Model;
 class clsModulesComponenteMinistrado extends Model {
     public $id;
     public $frequencia_id;
-    public $procedimento_metodologico;
+    public $atividades;
     public $observacao;
     public $frequencia_bncc;
 
     public function __construct(
         $id = null,
         $frequencia_id = null,
-        $procedimento_metodologico = null,
+        $atividades = null,
         $observacao = null,
         $frequencia_bncc = null
     ) {
@@ -70,7 +70,7 @@ class clsModulesComponenteMinistrado extends Model {
             $this->frequencia_id = $frequencia_id;
         }
 
-        $this->procedimento_metodologico = $procedimento_metodologico;
+        $this->atividades = $atividades;
 
         $this->observacao = $observacao;
 
@@ -85,11 +85,11 @@ class clsModulesComponenteMinistrado extends Model {
      * @return bool
      */
     public function cadastra() {
-        if (is_numeric($this->frequencia_id) && $this->procedimento_metodologico != '' && $this->frequencia_bncc) {
+        if (is_numeric($this->frequencia_id) && $this->atividades != '') {
             $db = new clsBanco();
 
-            $campos = "frequencia_id, procedimento_metodologico, data_cadastro";
-            $valores = "'{$this->frequencia_id}', '{$this->procedimento_metodologico}', (NOW() - INTERVAL '3 HOURS')";
+            $campos = "frequencia_id, atividades, data_cadastro";
+            $valores = "'{$this->frequencia_id}', '{$this->atividades}', (NOW() - INTERVAL '3 HOURS')";
 
             if($this->observacao != ''){
                 $campos     .=  ", observacao";
@@ -119,10 +119,10 @@ class clsModulesComponenteMinistrado extends Model {
      * @return bool
      */
     public function edita() {
-        if (is_numeric($this->id) && $this->procedimento_metodologico && $this->frequencia_bncc) {
+        if (is_numeric($this->id) && $this->atividades) {
             $db = new clsBanco();
 
-            $set = "procedimento_metodologico = '{$this->procedimento_metodologico}',
+            $set = "atividades = '{$this->atividades}',
                     observacao = NULLIF('{$this->observacao}',''),
                     data_atualizacao = (NOW() - INTERVAL '3 HOURS')";
 
@@ -303,7 +303,7 @@ class clsModulesComponenteMinistrado extends Model {
             $db->Consulta("
                 SELECT
                     {$this->_todos_campos},
-                    cm.procedimento_metodologico,
+                    cm.atividades,
                     cm.observacao,
                     f.ref_cod_turma as cod_turma
                 FROM
@@ -384,8 +384,8 @@ class clsModulesComponenteMinistrado extends Model {
         $bncc = $db->Tupla();
 
         $bncc['ids'] = explode(',', $bncc['ids']);
-        $bncc['codigos'] = explode(',', $bncc['codigos']);
-        $bncc['descricoes'] = explode('$/', $bncc['descricoes']);
+        $bncc['codigos'] = count($bncc['codigos']) > 0 ? explode(',', $bncc['codigos']) : null;
+        $bncc['descricoes'] = count($bncc['descricoes']) > 0 ? explode('$/', $bncc['descricoes']) : null;
 
         return $bncc;
     }
@@ -413,15 +413,19 @@ class clsModulesComponenteMinistrado extends Model {
      * @return bool
      */
     public function excluiBNCC($id_conteudo_ministrado, $bncc) {
-        $db = new clsBanco();
+        if (is_numeric($id_conteudo_ministrado) && is_numeric($bncc)) {
+            $db = new clsBanco();
 
-        $db->Consulta("
-            DELETE FROM
-                {$this->_tabela}_bncc
-            WHERE
-                conteudo_ministrado_id = '{$id_conteudo_ministrado}' AND bncc_id = '{$bncc}'
-        ");
+            $db->Consulta("
+                DELETE FROM
+                    {$this->_tabela}_bncc
+                WHERE
+                    conteudo_ministrado_id = '{$id_conteudo_ministrado}' AND bncc_id = '{$bncc}'
+            ");
 
-        return true;
+            return true;
+        }
+
+        return false;
     }
 }
