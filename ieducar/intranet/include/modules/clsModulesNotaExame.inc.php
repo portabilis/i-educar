@@ -75,6 +75,7 @@ class clsModulesNotaExame extends Model
         if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_componente_curricular) && is_numeric($this->nota_exame)) {
             $db = new clsBanco();
             $set = '';
+            $gruda = '';
 
             if (is_numeric($this->nota_exame)) {
                 $set .= "{$gruda}nota_exame = '{$this->nota_exame}'";
