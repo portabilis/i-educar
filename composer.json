@@ -15,6 +15,7 @@
         "ext-json": "*",
         "ext-pdo": "*",
         "ext-pgsql": "*",
+        "aws/aws-sdk-php-laravel": "^3.7",
         "composer/semver": "^3.2",
         "cossou/jasperphp": "^2.8",
         "dex/composer-plug-and-play": "^0.6.0",
