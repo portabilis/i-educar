@@ -183,11 +183,14 @@ return new class extends clsCadastro {
         elseif ($this->status == clsCadastro::EDITAR) {
             $this->campoRotulo('data_saida', 'Data de Afastamento', $this->data_saida);
         }
-
+        if($this->status == clsCadastro::NOVO || $this->retornar_servidor != EmployeeReturn::SIM){
+            $this->campoData('data_retorno', 'Data de Retorno', $this->data_retorno, true);
+        }
         // Se edição, mostra campo para entrar com data de retorno
         if ($this->retornar_servidor == EmployeeReturn::SIM || $this->data_retorno) {
-            $this->campoData('data_retorno', 'Data de Retorno', $this->data_retorno, false);
+            $this->campoData('data_retorno', 'Data de Retorno', $this->data_retorno, true);
         }
+        
 
         $obj_servidor = new clsPmieducarServidor(
             $this->ref_cod_servidor,

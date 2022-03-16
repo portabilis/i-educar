@@ -104,19 +104,19 @@ class clsModulesFrequencia extends Model {
         if (is_numeric($ref_cod_turno)) {
             $this->ref_cod_turno = $ref_cod_turno;
         }
-        if (($data)) {
+        if ($data) {
             $this->data = $data;
         }
-        if (($data_inicial)) {
+        if ($data_inicial) {
             $this->data_inicial = $data_inicial;
         }
-        if (($data_final)) {
+        if ($data_final) {
             $this->data_final = $data_final;
         }
-        if ($etapa_sequencial) {
+        if (is_numeric($etapa_sequencial)) {
             $this->etapa_sequencial = $etapa_sequencial;
         }
-        if (($alunos)) {
+        if (is_array($alunos)) {
             $this->alunos = $alunos;
         }
     }
@@ -174,7 +174,7 @@ class clsModulesFrequencia extends Model {
 
                 $gruda = '';
                 foreach ($this->alunos as $key => $aluno) {
-                    $valores .= $gruda . "(" . "'" . $id . "'" . ", " . "'" . $key . "'" . ", " . "'" . $aluno[0] . "'" . ")";
+                    $valores .= $gruda . "(" . "'" . $id . "'" . ", " . "'" . $key . "'" . ", " . "'" . $db->escapeString($aluno[0]) . "'" . ")";
                     $gruda = ', ';
                 }
 
@@ -318,7 +318,7 @@ class clsModulesFrequencia extends Model {
                             UPDATE
                                 modules.frequencia_aluno
                             SET
-                                justificativa = '{$justificativa}'
+                                justificativa = '{$db->escapeString($justificativa)}'
                             WHERE
                                 ref_frequencia = '{$this->id}' AND ref_cod_matricula = '{$matricula}'
                         ");
@@ -372,7 +372,7 @@ class clsModulesFrequencia extends Model {
 
                             (ref_frequencia, ref_cod_matricula, justificativa)
                         VALUES
-                            ('{$this->id}', '{$matricula_id}', '{$justificativa}')
+                            ('{$this->id}', '{$matricula_id}', '{$db->escapeString($justificativa)}')
                     ");
 
                     // #########################################################################################

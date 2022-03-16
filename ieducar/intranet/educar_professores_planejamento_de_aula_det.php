@@ -2,7 +2,7 @@
 
 return new class extends clsDetalhe {
     public $titulo;
-    public $id_freq;
+    public $id;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
     public $ref_ref_cod_serie;
@@ -27,31 +27,40 @@ return new class extends clsDetalhe {
 
     public function Gerar()
     {
-        $this->titulo = 'Frequência - Detalhe';
-        $this->id_freq = $_GET['id'];
+        $this->titulo = 'Plano de aula - Detalhe';
+        $this->id = $_GET['id'];
 
         $obj_permissoes = new clsPermissoes();
 
-        $tmp_obj = new clsModulesFrequencia($this->id_freq);
+        $tmp_obj = new clsModulesPlanejamentoAula($this->id);
         $registro = $tmp_obj->detalhe();
 
         if (!$registro) {
-            $this->simpleRedirect('educar_professores_frequencia_lst.php');
+            $this->simpleRedirect('educar_professores_planejamento_de_aula_lst.php');
         }
 
         $obj = new clsPmieducarTurma($registro['detalhes']['ref_cod_turma']);
         $resultado = $obj->getGrau();
-
-        if ($registro['detalhes']['data']) {
+        
+        if ($registro['detalhes']['data_inicial']) {
             $this->addDetalhe(
                 [
-                    'Data',
-                    dataToBrasil($registro['detalhes']['data'])
+                    'Data inicial',
+                    dataToBrasil($registro['detalhes']['data_inicial'])
                 ]
             );
         }
 
-        if ($registro['detalhes']['turma']) {
+        if ($registro['detalhes']['data_final']) {
+            $this->addDetalhe(
+                [
+                    'Data final',
+                    dataToBrasil($registro['detalhes']['data_final'])
+                ]
+            );
+        }
+
+        if ($registro['detalhes']['ref_cod_turma']) {
             $this->addDetalhe(
                 [
                     'Turma',
@@ -67,13 +76,6 @@ return new class extends clsDetalhe {
                     $registro['detalhes']['componente_curricular']
                 ]
             );
-        } else {
-            $this->addDetalhe(
-                [
-                    $resultado == 0 ? 'Componente curricular' : 'Campo de experiência',
-                    '—'
-                ]
-            );
         }
 
         if ($registro['detalhes']['etapa'] && $registro['detalhes']['fase_etapa']) {
@@ -84,20 +86,49 @@ return new class extends clsDetalhe {
                 ]
             );
         }
+        
+        if (is_array($registro['bnccs'])) {
+            $this->montaListaBNCC($registro['bnccs']);
+        }
 
-        $this->montaListaFrequenciaAlunos(
-            $registro['matriculas']['refs_cod_matricula'],
-            $registro['matriculas']['justificativas'],
-            $registro['alunos']
-        );
+        if (is_array($registro['conteudos']) && $registro['conteudos'] != null) {
+            $this->montaListaConteudos($registro['conteudos']);
+        }
+
+        if ($registro['detalhes']['ddp']) {
+            $this->addDetalhe(
+                [
+                    'Desdobramento didático pedagógico',
+                    $registro['detalhes']['ddp']
+                ]
+            );
+        }
+
+        if ($registro['detalhes']['atividades']) {
+            $this->addDetalhe(
+                [
+                    'Atividades',
+                    $registro['detalhes']['atividades']
+                ]
+            );
+        }
+
+        if ($registro['detalhes']['referencias']) {
+            $this->addDetalhe(
+                [
+                    'Referências',
+                    $registro['detalhes']['referencias']
+                ]
+            );
+        }
 
         if ($obj_permissoes->permissao_cadastra(58, $this->pessoa_logada, 7)) {
-            $this->url_novo = 'educar_professores_frequencia_cad.php';
+            $this->url_novo = 'educar_professores_planejamento_de_aula_cad.php';
 
             $data_agora = new DateTime('now');
             $data_agora = new \DateTime($data_agora->format('Y-m-d'));
 
-            $turma = $registro['detalhes']['cod_turma'];
+            $turma = $registro['detalhes']['ref_cod_turma'];
             $sequencia = $registro['detalhes']['fase_etapa'];
             $obj = new clsPmieducarTurmaModulo();
 
@@ -133,58 +164,59 @@ return new class extends clsDetalhe {
             }
 
             if ($podeEditar)
-                $this->url_editar = 'educar_professores_frequencia_cad.php?id=' . $registro['detalhes']['id'];
+                $this->url_editar = 'educar_professores_planejamento_de_aula_cad.php?id=' . $registro['detalhes']['id'];
         }
 
-        $this->url_cancelar = 'educar_professores_frequencia_lst.php';
+        $this->url_cancelar = 'educar_professores_planejamento_de_aula_lst.php';
         $this->largura = '100%';
 
-        $this->breadcrumb('Detalhe da frequência', [
+        $this->breadcrumb('Detalhe do plano de aula', [
             url('intranet/educar_professores_index.php') => 'Professores',
         ]);
     }
 
-    function montaListaFrequenciaAlunos ($matriculas, $justificativas, $alunos) {
-        if (is_string($matriculas) && !empty($matriculas)) {
-            $matriculas = explode(',', $matriculas);
-            $justificativas = explode(',', $justificativas);
-
-            for ($i = 0; $i < count($matriculas); $i++) {
-                $alunos[$matriculas[$i]]['presenca'] = true;
-                $alunos[$matriculas[$i]]['justificativa'] = $justificativas[$i];
-            }
-        }
-
+    function montaListaBNCC ($bnccs) {
         $this->tabela .= ' <div style="margin-bottom: 10px;">';
-        $this->tabela .= ' <span style="display: block; float: left; width: 300px; font-weight: bold">Nome</span>';
-        $this->tabela .= ' <span style="display: block; float: left; width: 100px; font-weight: bold">Presença</span>';
-        $this->tabela .= ' <span style="display: block; float: left; width: 300px; font-weight: bold">Justificativa</span>';
+        $this->tabela .= ' <span style="display: block; float: left; width: 100px; font-weight: bold">Código</span>';
+        $this->tabela .= ' <span style="display: block; float: left; width: 700px; font-weight: bold">Habilidade</span>';
         $this->tabela .= ' </div>';
         $this->tabela .= ' <br style="clear: left" />';
 
-        foreach ($alunos as $aluno) {
-            $checked = !$aluno['presenca'] ? "checked='true'" : '';
-
-            $this->tabela .= '  <div style="margin-bottom: 10px; float: left" class="linha-disciplina" >';
-            $this->tabela .= "  <span style='display: block; float: left; width: 300px'>{$aluno['nome']}</span>";
-
-            $this->tabela .= "  <label style='display: block; float: left; width: 100px;'>
-                                    <input type='checkbox' disabled {$checked}>
-                                </label>";
-            $this->tabela .= "  <span style='display: block; float: left; width: 300px'>{$aluno['justificativa']}</span>";
-
-            $this->tabela .= '  </div>';
-            $this->tabela .= '  <br style="clear: left" />';
+        for ($i=0; $i < count($bnccs); $i++) {
+            $this->tabela .= "  <span style='display: block; float: left; width: 100px; margin-bottom: 10px'>{$bnccs[$i][codigo]}</span>";
+            $this->tabela .= "  <span style='display: block; float: left; width: 700px; margin-bottom: 10px'>{$bnccs[$i][descricao]}</span>";
         }
-
-        $disciplinas  = '<table cellspacing="0" cellpadding="0" border="0">';
-        $disciplinas .= sprintf('<tr align="left"><td>%s</td></tr>', $this->tabela);
-        $disciplinas .= '</table>';
+        
+        $bncc  = '<table cellspacing="0" cellpadding="0" border="0">';
+        $bncc .= sprintf('<tr align="left"><td>%s</td></tr>', $this->tabela);
+        $bncc .= '</table>';
 
         $this->addDetalhe(
             [
-                'Alunos',
-                $disciplinas
+                'Objetivos de aprendizagem/habilidades (BNCC)',
+                $bncc
+            ]
+        );
+    }
+
+    function montaListaConteudos ($conteudos) {
+        for ($i=0; $i < count($conteudos); $i++) {
+            $this->tabela2 .= '  <div style="margin-bottom: 10px; float: left" class="linha-disciplina" >';
+            
+            $this->tabela2 .= "  <span style='display: block; float: left; width: 750px'>{$conteudos[$i][conteudo]}</span>";
+
+            $this->tabela2 .= '  </div>';
+            $this->tabela2 .= '  <br style="clear: left" />';
+        }
+
+        $conteudo  = '<table cellspacing="0" cellpadding="0" border="0">';
+        $conteudo .= sprintf('<tr align="left"><td>%s</td></tr>', $this->tabela2);
+        $conteudo .= '</table>';
+
+        $this->addDetalhe(
+            [
+                'Conteúdos',
+                $conteudo
             ]
         );
     }

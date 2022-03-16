@@ -74,13 +74,13 @@ return new class extends clsCadastro {
         if ($tipoacao == 'Edita' || !$_POST
             && $this->data
             && is_numeric($this->ref_cod_turma)
-            && is_numeric($this->ref_cod_componente_curricular)
             && is_numeric($this->fase_etapa)
         ) {
             $desabilitado = true;
         }
 
-        if (is_numeric($this->ref_cod_turma) && is_numeric($this->ref_cod_componente_curricular)) {
+        if (is_numeric($this->ref_cod_turma)) {
+            $this->campoOculto('data_', dataToBanco($this->data));
             $this->campoOculto('ref_cod_turma_', $this->ref_cod_turma);
             $this->campoOculto('ref_cod_componente_curricular_', $this->ref_cod_componente_curricular);
             $this->campoOculto('fase_etapa_', $this->fase_etapa);
@@ -89,7 +89,7 @@ return new class extends clsCadastro {
         $obrigatorio = true;
 
         $this->campoOculto('id', $this->id);
-        $this->inputsHelper()->dynamic('data', ['required' => $obrigatorio, 'disabled' => $desabilitado]);
+        $this->inputsHelper()->dynamic('data', ['required' => $obrigatorio, 'disabled' => $desabilitado]);  // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('componenteCurricular', ['required' => !$obrigatorio, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('faseEtapa', ['required' => $obrigatorio, 'label' => 'Etapa', 'disabled' => $desabilitado]);
@@ -269,6 +269,7 @@ return new class extends clsCadastro {
     }
 
     public function Editar() {
+        $this->data = $this->data_;
         $this->ref_cod_turma = $this->ref_cod_turma_;
         $this->ref_cod_componente_curricular = $this->ref_cod_componente_curricular_;
         $this->fase_etapa = $this->fase_etapa_;
@@ -286,7 +287,7 @@ return new class extends clsCadastro {
             null,
             $this->ref_cod_componente_curricular,
             null,
-            dataToBanco($this->data),
+            $this->data,
             null,
             null,
             $this->fase_etapa,

@@ -53,8 +53,10 @@ class Portabilis_View_Helper_DynamicInput_ComponenteCurricular extends Portabili
 
                 $db = new clsBanco();
                 $db->Consulta($sql);
-                $db->ProximoRegistro();
-                $componentesCurriculares = $db->Tupla();
+
+                while ($db->ProximoRegistro()) {
+                    $componentesCurriculares[] = $db->Tupla();
+                }
 
                 if (!$componentesCurriculares) {
                     $sql = "

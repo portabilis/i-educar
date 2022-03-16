@@ -37,14 +37,15 @@ return new class extends clsListagem {
 
     public function Gerar()
     {
-        $this->titulo = 'Registros de aula - Listagem';
+        $this->titulo = 'Plano de aula - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null: $val;
         }
 
         $lista_busca = [
-            'Data',
+            'Data inicial',
+            'Data final',
             'Turma',
             'Turno',
             'S&eacute;rie',
@@ -80,8 +81,8 @@ return new class extends clsListagem {
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-        $obj_turma = new clsModulesComponenteMinistrado();
-        $obj_turma->setOrderby('data DESC');
+        $obj_turma = new clsModulesPlanejamentoAula();
+        $obj_turma->setOrderby('data_inicial DESC');
         $obj_turma->setLimite($this->limite, $this->offset);
 
         if ($this->data_inicial && Portabilis_Date_Utils::validaData($this->data_inicial) || !$this->data_inicial) {
@@ -119,15 +120,17 @@ return new class extends clsListagem {
             $ref_cod_escola = '';
             $nm_escola = '';
             foreach ($lista as $registro) {
-                $data_formatada = dataToBrasil($registro['data']);
+                $data_inicial_formatada = dataToBrasil($registro['data_inicial']);
+                $data_final_formatada = dataToBrasil($registro['data_final']);
 
                 $lista_busca = [
-                    "<a href=\"educar_professores_conteudo_ministrado_det.php?id={$registro['id']}\">{$data_formatada}</a>",
-                    "<a href=\"educar_professores_conteudo_ministrado_det.php?id={$registro['id']}\">{$registro['turma']}</a>",
-                    "<a href=\"educar_professores_conteudo_ministrado_det.php?id={$registro['id']}\">{$registro['turno']}</a>",
-                    "<a href=\"educar_professores_conteudo_ministrado_det.php?id={$registro['id']}\">{$registro['serie']}</a>",
-                    "<a href=\"educar_professores_conteudo_ministrado_det.php?id={$registro['id']}\">{$registro['curso']}</a>",
-                    "<a href=\"educar_professores_conteudo_ministrado_det.php?id={$registro['id']}\">{$registro['escola']}</a>",
+                    "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$data_inicial_formatada}</a>",
+                    "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$data_final_formatada}</a>",
+                    "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['turma']}</a>",
+                    "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['turno']}</a>",
+                    "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['serie']}</a>",
+                    "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['curso']}</a>",
+                    "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['escola']}</a>",
                     "<a href=\"educar_professores_conteudo_ministrado_det.php?id={$registro['id']}\">{$registro['fase_etapa']}º {$registro['etapa']}</a>"
                 ];
 
@@ -141,22 +144,22 @@ return new class extends clsListagem {
             }
         }
 
-        $this->addPaginador2('educar_professores_frequencia_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $this->addPaginador2('educar_professores_planejamento_de_aula_lst.php', $total, $_GET, $this->nome, $this->limite);
         $obj_permissoes = new clsPermissoes();
         if ($obj_permissoes->permissao_cadastra(58, $this->pessoa_logada, 7)) {
-            $this->acao = 'go("educar_professores_conteudo_ministrado_cad.php")';
+            $this->acao = 'go("educar_professores_planejamento_de_aula_cad.php")';
             $this->nome_acao = 'Novo';
         }
         $this->largura = '100%';
 
-        $this->breadcrumb('Listagem de registros de aula', [
+        $this->breadcrumb('Listagem de planos de aula', [
             url('intranet/educar_professores_index.php') => 'Professores',
         ]);
     }
 
     public function Formular()
-    { 
-        $this->title = 'Registro de aula - Listagem';
+    {
+        $this->title = 'Plano de aula - Listagem';
         $this->processoAp = '58';
     }
 };
