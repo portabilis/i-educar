@@ -176,15 +176,17 @@ return new class extends clsDetalhe {
     }
 
     function montaListaBNCC ($bnccs) {
-        $this->tabela .= ' <div style="margin-bottom: 10px;">';
-        $this->tabela .= ' <span style="display: block; float: left; width: 100px; font-weight: bold">Código</span>';
-        $this->tabela .= ' <span style="display: block; float: left; width: 700px; font-weight: bold">Habilidade</span>';
-        $this->tabela .= ' </div>';
-        $this->tabela .= ' <br style="clear: left" />';
+        
+        $this->tabela .= ' <tr>';
+        $this->tabela .= ' <td class="formmdtd"><span style="display: block; float: left; width: 100px; font-weight: bold;">Código</span></td>';
+        $this->tabela .= ' <td class="formmdtd"><span style="display: block; float: left; width: 700px; font-weight: bold;">Habilidade</span></td>';
+        $this->tabela .= ' </tr>';
 
         for ($i=0; $i < count($bnccs); $i++) {
-            $this->tabela .= "  <span style='display: block; float: left; width: 100px; margin-bottom: 10px'>{$bnccs[$i][codigo]}</span>";
-            $this->tabela .= "  <span style='display: block; float: left; width: 700px; margin-bottom: 10px'>{$bnccs[$i][descricao]}</span>";
+            $this->tabela .= ' <tr>';
+            $this->tabela .= "  <td class='formmdtd'><span style='display: block; float: left; width: 100px; margin-bottom: 10px'>{$bnccs[$i][codigo]}</span></td>";
+            $this->tabela .= "  <td class='formmdtd'><span style='display: block; float: left; width: 700px; margin-bottom: 10px'>{$bnccs[$i][descricao]}</span></td>";
+            $this->tabela .= ' </tr>';
         }
         
         $bncc  = '<table cellspacing="0" cellpadding="0" border="0">';
@@ -202,15 +204,13 @@ return new class extends clsDetalhe {
     function montaListaConteudos ($conteudos) {
         for ($i=0; $i < count($conteudos); $i++) {
             $this->tabela2 .= '  <div style="margin-bottom: 10px; float: left" class="linha-disciplina" >';
-            
             $this->tabela2 .= "  <span style='display: block; float: left; width: 750px'>{$conteudos[$i][conteudo]}</span>";
-
             $this->tabela2 .= '  </div>';
             $this->tabela2 .= '  <br style="clear: left" />';
         }
 
         $conteudo  = '<table cellspacing="0" cellpadding="0" border="0">';
-        $conteudo .= sprintf('<tr align="left"><td>%s</td></tr>', $this->tabela2);
+        $conteudo .= sprintf('<tr align="left"><td class="formlttd">%s</td></tr>', $this->tabela2);
         $conteudo .= '</table>';
 
         $this->addDetalhe(
