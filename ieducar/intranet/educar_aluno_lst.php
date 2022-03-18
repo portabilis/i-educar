@@ -144,7 +144,7 @@ return new class extends clsListagem {
             $this->cod_inep,
             $this->aluno_estado_id,
             $this->ano,
-            $this->ref_cod_instituicao,
+            null,
             $this->ref_cod_escola,
             $this->ref_cod_curso,
             $this->ref_cod_serie,
