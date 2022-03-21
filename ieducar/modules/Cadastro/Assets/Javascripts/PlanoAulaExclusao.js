@@ -2,7 +2,10 @@
     $(document).ready(function(){
         var id = $j('#id').val();
         var copy = $j('#copy').val();
-            
+
+        if (isNaN(id) || id === '')
+            return;
+
         if (!isNaN(id) && copy)
             return;
 
@@ -34,7 +37,6 @@
         }
 
         function handleTentaExcluirPlanoAula (response) {
-            console.log(response);
             registrosAula = response.conteudos_ids;
 
             if (registrosAula.length == 0) {
@@ -110,7 +112,7 @@
             for (let index = 0; index < registrosAula.length; index++) {
                 const registroAula = registrosAula[index];
 
-                const url = "http://" + window.location.host + "/intranet/educar_professores_conteudo_ministrado_cad.php?id=" + registroAula;
+                const url = "http://" + window.location.host + "/intranet/educar_professores_conteudo_ministrado_cad.php?id=" + registroAula[0];
                 openInNewTab(url, '_blank');
             }
         }

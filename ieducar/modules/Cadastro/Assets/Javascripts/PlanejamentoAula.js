@@ -3,6 +3,9 @@
         var id = $j('#id').val();
         var copy = $j('#copy').val();
 
+        if (isNaN(id) || id === '')
+            return;
+
         if (!isNaN(id) && copy)
             return;
 

@@ -1,16 +1,14 @@
-const { isEmpty } = require("lodash");
-
 (function($){
     $(document).ready(function(){
         var id = $j('#id').val();
         var copy = $j('#copy').val();
 
-        if (isNaN(id) || isEmpty(id))
+        if (isNaN(id) || id === '')
             return;
 
         if (!isNaN(id) && copy)
             return;
-        
+
         var registrosAula = [];
 
         var planejamento_aula_id = $j('#id').val();
