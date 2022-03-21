@@ -223,22 +223,24 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
         $resultado['adicionar'] = $novosConteudos;
 
         for ($i=0; $i < count($atuaisConteudos); $i++) {
-            $resultado['remover'][] = $atuaisConteudos[$i]['conteudo']; 
+            $resultado['remover'][$i]['id'] = $atuaisConteudos[$i]['id'];
+            $resultado['remover'][$i]['conteudo'] = $atuaisConteudos[$i]['conteudo']; 
         }
         $atuaisConteudos = $resultado['remover'];
 
-        for ($i=0; $i < count($novosConteudos); $i++) { 
+        for ($i=0; $i < count($novosConteudos); $i++) {
             $novo = $novosConteudos[$i];
 
             for ($j=0; $j < count($atuaisConteudos); $j++) {
                 $atual = $atuaisConteudos[$j];
 
-                if ($novo == $atual) {
+                if ($novo == $atual['conteudo']) {
                     unset($resultado['adicionar'][$i]);
                     unset($resultado['remover'][$j]);
                 }
             }
         }
+        $resultado = array_column($resultado['remover'], 'id');
 
         return $resultado;
     }
