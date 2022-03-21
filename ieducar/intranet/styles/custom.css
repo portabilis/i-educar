@@ -71,6 +71,10 @@ span.select2-selection.select2-selection--multiple{
   border-color: #cddce6 !important;
 }
 
+.chosen-container{
+  width:100% !important;  
+}
+
 .chosen-container-single .chosen-single {
   border-radius: 3px !important;
   background: #ffffff !important;
