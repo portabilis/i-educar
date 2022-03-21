@@ -58,6 +58,31 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
     }
 
     /**
+     * Edita os dados de um registro
+     *
+     * @return bool
+     */
+    public function edita() {
+        if (is_numeric($this->id) && is_string($this->conteudo) && $this->conteudo !== "") {
+            $db = new clsBanco();
+            $sql = "   
+                UPDATE
+                    {$this->_from}
+                SET
+                    conteudo = '{$db->escapeString($this->conteudo)}'
+                WHERE
+                    id = {$this->id}
+            ";
+
+            $db->Consulta($sql);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Lista relacionamentos entre os conteudos e o plano de aula
      *
      * @return array
