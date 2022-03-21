@@ -294,8 +294,9 @@ return new class extends clsCadastro {
         $obj = new clsModulesPlanejamentoAulaConteudo();
         $conteudos = $obj->lista($this->id);
 
-        for ($i=0; $i < count($conteudos); $i++) { 
-            $rows[$i][] = $conteudos[$i]['conteudo'];
+        for ($i=0; $i < count($conteudos); $i++) {
+            $conteudo = $conteudos[$i];
+            $rows[$conteudo['id']][] = $conteudo['conteudo'];
         }
 
         $this->campoTabelaInicio(
@@ -307,7 +308,7 @@ return new class extends clsCadastro {
             $rows
         );
 
-        $this->campoTexto('conteudos','Conteúdos', $this->conteudo_id, 100, 2048, true);   
+        $this->campoTexto('conteudos', 'Conteúdos', $this->conteudo_id, 100, 2048, true);
 
         $this->campoTabelaFim();
     }
