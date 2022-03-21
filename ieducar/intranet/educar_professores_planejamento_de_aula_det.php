@@ -98,7 +98,7 @@ return new class extends clsDetalhe {
         if ($registro['detalhes']['ddp']) {
             $this->addDetalhe(
                 [
-                    'Desdobramento didático pedagógico',
+                    'Metodologia',
                     $registro['detalhes']['ddp']
                 ]
             );
