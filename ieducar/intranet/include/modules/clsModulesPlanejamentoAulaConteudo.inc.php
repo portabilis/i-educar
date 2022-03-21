@@ -170,11 +170,55 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
     }
 
     /**
-     * Retorna array com duas arrays, uma com os conteúdos a serem cadastrados e a outra com os que devem ser removidos
+     * Retorna array com três arrays,
+     * uma com os conteúdos a serem cadastrados, 
+     * outra com os que devem ser removidos,
+     * e outra com os que devem ser editados
      *
      * @return array
      */
-    public function retornaDiferencaEntreConjuntosConteudos($atuaisConteudos, $novosConteudos) {
+    public function retornaDiferencaEntreConjuntosConteudos ($conteudosAtuais, $conteudosNovos) {
+        $resultado = ['adicionar' => [], 'remover' => [], 'editar' => []];
+
+        $conteudosAtuaisClone = array_merge($conteudosAtuais);
+        $conteudosNovosClone = array_merge($conteudosNovos);
+
+        for ($i = count($conteudosNovos) - 1; $i >= 0; $i--) {
+            $novo = $conteudosNovos[$i];
+
+            $chaveId = array_search($novo[0], array_column($conteudosAtuais, 'id'));
+            $valueId = array_search($novo[1], array_column($conteudosAtuais, 'conteudo'));
+
+            if (is_numeric($chaveId)) {
+                if (!is_numeric($valueId)) {
+                    $resultado['editar'][] = $conteudosNovosClone[$chaveId];
+
+                    unset($conteudosAtuaisClone[$chaveId]);
+                    array_pop($conteudosNovos);
+                } else {
+                    if ($chaveId === $valueId)
+                        unset($conteudosAtuaisClone[$chaveId]);
+                    else
+                        dd("Algum conteúdo foi trocado de lugar; isso não é suportado pelo sistema. É possível apenas removê-lo ou editá-lo.");
+                }
+            } else {
+                $resultado['adicionar'][] = $conteudosNovosClone[$i];
+
+                array_pop($conteudosNovos);
+            }
+        }
+
+        $resultado['remover'] = $conteudosAtuaisClone;
+
+        return $resultado;
+    }
+    
+    /**
+     * Retorna array com conteudos os que devem ser removidos
+     *
+     * @return array
+     */
+    public function retornaConteudosRemovidos($atuaisConteudos, $novosConteudos) {
         $resultado = [];
         $resultado['adicionar'] = $novosConteudos;
 
