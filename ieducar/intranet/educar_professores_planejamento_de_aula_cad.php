@@ -27,6 +27,7 @@ return new class extends clsCadastro {
         $retorno = 'Novo';
 
         $this->id = $_GET['id'];
+        $this->copy = $_GET['copy'];
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(58, $this->pessoa_logada, 7, 'educar_professores_planejamento_de_aula_lst.php');
@@ -42,10 +43,12 @@ return new class extends clsCadastro {
                 }
                 $this->bncc = array_column($registro['bnccs'], 'id');
 
-                $this->fexcluir = $obj_permissoes->permissao_excluir(58, $this->pessoa_logada, 7);
-                $retorno = 'Editar';
+                if (!$this->copy) {
+                    $this->fexcluir = $obj_permissoes->permissao_excluir(58, $this->pessoa_logada, 7);
+                    $retorno = 'Editar';
 
-                $this->titulo = 'Plano de aula - Edição';
+                    $this->titulo = 'Plano de aula - Edição';
+                }
             } else {
                 $this->simpleRedirect('educar_professores_planejamento_de_aula_lst.php');
             }
@@ -92,9 +95,9 @@ return new class extends clsCadastro {
         $this->campoOculto('id', $this->id);
         $this->inputsHelper()->dynamic('dataInicial', ['required' => $obrigatorio]);    // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('dataFinal', ['required' => $obrigatorio]);      // Disabled não funciona; ação colocada no javascript.
-        $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado]);
-        $this->inputsHelper()->dynamic('componenteCurricular', ['required' => $obrigatorio, 'disabled' => $desabilitado]);
-        $this->inputsHelper()->dynamic('faseEtapa', ['required' => $obrigatorio, 'label' => 'Etapa', 'disabled' => $desabilitado]);
+        $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado && !$this->copy]);
+        $this->inputsHelper()->dynamic('componenteCurricular', ['required' => $obrigatorio, 'disabled' => $desabilitado && !$this->copy]);
+        $this->inputsHelper()->dynamic('faseEtapa', ['required' => $obrigatorio, 'label' => 'Etapa', 'disabled' => $desabilitado && !$this->copy]);
     
         $this->adicionarBNCCMultiplaEscolha();
         $this->adicionarConteudosTabela();
@@ -102,6 +105,9 @@ return new class extends clsCadastro {
         $this->campoMemo('ddp','Metodologia', $this->ddp, 100, 5, !$obrigatorio);
         $this->campoMemo('atividades','Atividades/Avaliações', $this->atividades, 100, 5, !$obrigatorio);
         $this->campoMemo('referencias','Referências', $this->referencias, 100, 5, !$obrigatorio);
+
+        $this->campoOculto('id', $this->id);
+        $this->campoOculto('copy', $this->copy);
 
         $this->campoOculto('ano', explode('/', dataToBrasil(NOW()))[2]);
     }
@@ -264,6 +270,7 @@ return new class extends clsCadastro {
             '/modules/Cadastro/Assets/Javascripts/PlanejamentoAula.js',
             '/modules/Cadastro/Assets/Javascripts/PlanoAulaExclusao.js',
             '/modules/Cadastro/Assets/Javascripts/PlanoAulaEdicao.js',
+            '/modules/Cadastro/Assets/Javascripts/PlanoAulaDuplicacao.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
