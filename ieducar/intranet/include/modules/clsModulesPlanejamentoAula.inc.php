@@ -488,7 +488,7 @@ class clsModulesPlanejamentoAula extends Model {
             ");
 
             while($db->ProximoRegistro()) {
-                $data[] = $db->Campo('id');
+                $data[] = [$db->Campo('id'), $db->Campo('count')];
             }
 
             return $data;

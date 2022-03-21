@@ -34,6 +34,7 @@
         }
 
         function handleTentaExcluirPlanoAula (response) {
+            console.log(response);
             registrosAula = response.conteudos_ids;
 
             if (registrosAula.length == 0) {
@@ -74,7 +75,7 @@
             var quantidadeRegistrosAulaConteudos = 0;
 
             registrosAula.forEach(registroAula => {
-                quantidadeRegistrosAulaConteudos += registroAula['count'];
+                quantidadeRegistrosAulaConteudos += registroAula[1];
             });
 
             $j("#dialog-warning-excluir-plano-aula").find('#msg').html(getMessageExcluirPlanoAula(quantidadeRegistrosAula, quantidadeRegistrosAulaConteudos));
