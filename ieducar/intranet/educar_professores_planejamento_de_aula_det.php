@@ -35,7 +35,7 @@ return new class extends clsDetalhe {
         $tmp_obj = new clsModulesPlanejamentoAula($this->id);
         $registro = $tmp_obj->detalhe();
 
-        if (!$registro) {
+        if (!$registro['detalhes']) {
             $this->simpleRedirect('educar_professores_planejamento_de_aula_lst.php');
         }
 

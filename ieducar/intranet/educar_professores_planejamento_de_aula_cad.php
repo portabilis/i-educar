@@ -35,7 +35,7 @@ return new class extends clsCadastro {
             $tmp_obj = new clsModulesPlanejamentoAula($this->id);
             $registro = $tmp_obj->detalhe();
 
-            if ($registro) {
+            if ($registro['detalhes'] != null) {
                 // passa todos os valores obtidos no registro para atributos do objeto
                 foreach ($registro['detalhes'] as $campo => $val) {
                     $this->$campo = $val;
@@ -46,6 +46,8 @@ return new class extends clsCadastro {
                 $retorno = 'Editar';
 
                 $this->titulo = 'Plano de aula - Edição';
+            } else {
+                $this->simpleRedirect('educar_professores_planejamento_de_aula_lst.php');
             }
         }
 
