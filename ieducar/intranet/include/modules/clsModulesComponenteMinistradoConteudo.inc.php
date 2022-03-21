@@ -177,4 +177,41 @@ class clsModulesComponenteMinistradoConteudo extends Model {
 
         return $resultado;
     }
+
+    /**
+     * Retorna array com registro(s) de aula com ligação com o conteúdo informado, no caso de ausência, vazio
+     *
+     * @return array
+     */
+    public function existeLigacaoRegistroAula ($planejamento_aula_conteudos_ids) {
+        if (is_array($planejamento_aula_conteudos_ids) && count($planejamento_aula_conteudos_ids) > 0) {
+            $data = [];
+
+            $db = new clsBanco();
+
+            $sql = "
+                SELECT DISTINCT
+                    conteudo_ministrado_id as id
+                FROM
+                    modules.conteudo_ministrado_conteudo as cmc
+            ";
+
+            $whereAnd = ' WHERE';
+
+            foreach ($planejamento_aula_conteudos_ids as $key => $planejamento_aula_conteudo_id) {
+                $sql .= "{$whereAnd} cmc.planejamento_aula_conteudo_id = {$planejamento_aula_conteudo_id}";
+                $whereAnd = ' OR';
+            }
+
+            $db->Consulta($sql);
+
+            while($db->ProximoRegistro()) {
+                $data[] = $db->Campo('id');
+            }
+
+            return $data;
+        }
+
+        return [];
+    }
 }

@@ -454,6 +454,45 @@ class clsModulesPlanejamentoAula extends Model {
     }
 
     /**
+     * Retorna array com registro(s) de aula com ligação com o plano de aula informado ou no caso de erro, false
+     *
+     * @return false|array
+     */
+    public function existeLigacaoRegistroAula () {
+        if (is_numeric($this->id)) {
+            $data = [];
+
+            $db = new clsBanco();
+            $db->Consulta("
+                SELECT
+                    conteudo_ministrado_id as id, COUNT(conteudo_ministrado_id)
+                FROM
+                    modules.planejamento_aula_conteudo as pac
+                CROSS JOIN LATERAL (
+                    SELECT
+                        cmc.conteudo_ministrado_id
+                    FROM
+                        modules.conteudo_ministrado_conteudo as cmc
+                    WHERE
+                        cmc.planejamento_aula_conteudo_id = pac.id
+                ) sub
+                WHERE
+                    pac.planejamento_aula_id = '{$this->id}'
+                GROUP BY
+                    conteudo_ministrado_id
+            ");
+
+            while($db->ProximoRegistro()) {
+                $data[] = $db->Campo('id');
+            }
+
+            return $data;
+        }
+
+        return false;
+    }
+
+    /**
      * Exclui um registro
      *
      * @return bool
