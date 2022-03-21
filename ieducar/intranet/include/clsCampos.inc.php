@@ -863,7 +863,7 @@ class clsCampos extends Core_Controller_Page_Abstract
       this.isIE      = (navigator.appName.indexOf(\'Microsoft\') != -1) ? 1 : 0;
       this.nome      = name;
       this.campos    = new Array();
-      this.reordenar = true;
+      this.reordenar = false;
 
       this.getId = function() { return this.id; }
 
