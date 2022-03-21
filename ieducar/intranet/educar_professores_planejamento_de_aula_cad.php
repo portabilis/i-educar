@@ -262,6 +262,8 @@ return new class extends clsCadastro {
             '/modules/DynamicInput/Assets/Javascripts/TodasTurmas.js',
             '/modules/Cadastro/Assets/Javascripts/BNCC.js',
             '/modules/Cadastro/Assets/Javascripts/PlanejamentoAula.js',
+            '/modules/Cadastro/Assets/Javascripts/PlanoAulaExclusao.js',
+            '/modules/Cadastro/Assets/Javascripts/PlanoAulaEdicao.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
