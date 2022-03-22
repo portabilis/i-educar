@@ -421,7 +421,7 @@ class MatriculaController extends ApiCoreController
                        matricula.cod_matricula as matricula_id,
                        matricula_turma_excluidos.ref_cod_turma AS turma_id,
                        matricula_turma_excluidos.sequencial AS sequencial,
-                       matricula_turma.remanejado_mesma_turma AS remanejado_mesma_turma,
+                       false AS remanejado_mesma_turma,
                        matricula_turma_excluidos.sequencial_fechamento AS sequencial_fechamento,
                        COALESCE(matricula_turma_excluidos.data_enturmacao::date::varchar, \'\') AS data_entrada,
                        COALESCE(matricula_turma_excluidos.data_exclusao::date::varchar, matricula.data_cancel::date::varchar, \'\') AS data_saida,
@@ -438,7 +438,7 @@ class MatriculaController extends ApiCoreController
                        END AS apresentar_fora_da_data,
                        matricula_turma_excluidos.turno_id,
                        matricula.ref_ref_cod_serie AS serie_id,
-                       matricula_turma_excluidos.deleted_at::date::varchar
+                       matricula_turma_excluidos.deleted_at::varchar
                   FROM pmieducar.matricula
             INNER JOIN pmieducar.escola
                     ON escola.cod_escola = matricula.ref_ref_cod_escola
@@ -446,8 +446,6 @@ class MatriculaController extends ApiCoreController
                     ON instituicao.cod_instituicao = escola.ref_cod_instituicao
             INNER JOIN pmieducar.matricula_turma_excluidos
                     ON matricula_turma_excluidos.ref_cod_matricula = matricula.cod_matricula
-            INNER JOIN pmieducar.matricula_turma
-                    ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
                  WHERE matricula.ref_ref_cod_escola in (' . $escola . ')
                    AND matricula.ano = $1::integer ' . $whereMatriculaExcluidos . ')
 
