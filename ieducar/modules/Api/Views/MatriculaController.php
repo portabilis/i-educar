@@ -400,7 +400,8 @@ class MatriculaController extends ApiCoreController
                        matricula_turma.turno_id,
                        matricula.ref_ref_cod_serie AS serie_id,
                        CASE
-                           WHEN turma.ativo = 0 THEN turma.data_exclusao::date::varchar
+                           WHEN turma.ativo = 0 THEN turma.data_exclusao::timestamp(0)
+                           WHEN matricula.ativo = 0 THEN matricula.updated_at::timestamp(0)
                            ELSE NULL
                        END AS deleted_at
                   FROM pmieducar.matricula
@@ -438,7 +439,7 @@ class MatriculaController extends ApiCoreController
                        END AS apresentar_fora_da_data,
                        matricula_turma_excluidos.turno_id,
                        matricula.ref_ref_cod_serie AS serie_id,
-                       matricula_turma_excluidos.deleted_at::varchar
+                       matricula_turma_excluidos.deleted_at::timestamp(0)
                   FROM pmieducar.matricula
             INNER JOIN pmieducar.escola
                     ON escola.cod_escola = matricula.ref_ref_cod_escola
