@@ -71,11 +71,12 @@ span.select2-selection.select2-selection--multiple{
   border-color: #cddce6 !important;
 }
 
-.chosen-container{
-  width:100% !important;  
+.chosen-container, input[type="text"] select .geral {
+  width: 100% !important;
 }
 
-.chosen-container-single .chosen-single {
+.chosen-container-single .chosen-single
+{
   border-radius: 3px !important;
   background: #ffffff !important;
   border: solid 1px #cddce6 !important;
@@ -379,6 +380,10 @@ a.icons-top{
 .rodape a{
   color: #FFF;
   text-decoration: underline;
+}
+
+.flashMessages {
+  width: 66%;
 }
 
 /**************************************
@@ -1050,6 +1055,21 @@ table.calendario td a{
   padding: 20px;
 }
 
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
 .modal-domjs-conteudo{
   box-shadow: 0 12px 24px 0 rgba(0, 0, 0, 0.3);
 }
@@ -1155,6 +1175,7 @@ td.area-conhecimento-destaque {
   font-size: 1.4rem;
   color: #47728f;
   max-width: 100%;
+  width:100% !important;
 }
 
 #formcadastro .formmdtd,
