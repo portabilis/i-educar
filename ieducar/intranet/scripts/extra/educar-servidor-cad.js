@@ -162,16 +162,16 @@ function popCurso(element) {
   var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
   var campoServidor = document.getElementById('cod_servidor').value;
   var codFuncao = $j(element).closest('tr').find('[id^=cod_servidor_funcao]').val() || 'new_' + novaFuncao;
-  pesquisa_valores_popless('educar_servidor_curso_lst.php?ref_cod_servidor=' + campoServidor + '&ref_cod_instituicao=' + campoInstituicao + '&ref_cod_servidor_funcao=' + codFuncao, '');
+  pesquisa_valores_popless1('educar_servidor_curso_lst.php?ref_cod_servidor=' + campoServidor + '&ref_cod_instituicao=' + campoInstituicao + '&ref_cod_servidor_funcao=' + codFuncao, '');
 }
 
 function pesquisa_valores_popless1(caminho, campo) {
   new_id = DOM_divs.length;
   div = 'div_dinamico_' + new_id;
   if (caminho.indexOf('?') == -1) {
-    showExpansivel(850, 500, '<iframe src="' + caminho + '?campo=' + campo + '&div=' + div + '&popless=1" frameborder="0" height="100%" width="100%" marginheight="0" marginwidth="0" name="temp_win_popless"></iframe>', 'Pesquisa de valores');
+    showExpansivel(1024, 480, '<iframe src="' + caminho + '?campo=' + campo + '&div=' + div + '&popless=1" frameborder="0" height="100%" width="100%" marginheight="0" marginwidth="0" name="temp_win_popless"></iframe>', 'Pesquisa de valores');
   } else {
-    showExpansivel(850, 500, '<iframe src="' + caminho + '&campo=' + campo + '&div=' + div + '&popless=1" frameborder="0" height="100%" width="100%" marginheight="0" marginwidth="0" name="temp_win_popless"></iframe>', 'Pesquisa de valores');
+    showExpansivel(1024, 480, '<iframe src="' + caminho + '&campo=' + campo + '&div=' + div + '&popless=1" frameborder="0" height="100%" width="100%" marginheight="0" marginwidth="0" name="temp_win_popless"></iframe>', 'Pesquisa de valores');
   }
 }
 
