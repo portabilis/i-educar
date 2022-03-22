@@ -226,7 +226,7 @@ function showExpansivel( largura, altura, conteudo )
 		cliqueFecha = '';
 	}
 
-	conteudoMoldurado = '<table border="0" id="tabela_conteudo" cellpadding="0" cellspacing="0" width="100%"><tr><td width="9" height="44" valign="top"></td><td id="modal-title" height="44" valign="top">'+ titulo + '</td><td id="modal-close" '+cliqueFecha+'</td><td width="9" height="44" valign="top"></td></tr><tr><td  width="9">&nbsp;</td><td bgcolor="#FFFFFF" colspan="2"><div id="expansivel_conteudo" class="modal-domjs-conteudo" style="overflow:hidden;">';
+	conteudoMoldurado = '<table border="0" id="tabela_conteudo" cellpadding="0" cellspacing="0" width="100%"><tr height="44"><td width="9" valign="top"></td><td id="modal-title"  valign="top">'+ titulo + '</td><td width="9" id="modal-close" valign="top" '+cliqueFecha+'</td></tr><tr><td  width="9">&nbsp;</td><td bgcolor="#FFFFFF" colspan="2"><div id="expansivel_conteudo" class="modal-domjs-conteudo" style="overflow:hidden;">';
 	conteudoMoldurado += conteudo;
 	conteudoMoldurado += '</div></td><td width="9">&nbsp;</td></tr><tr><td width="9" height="20" valign="top"></td><td colspan="2"  height="20">&nbsp;</td><td width="9" height="20" valign="top"></td></tr></table>';
 	expansivel.innerHTML = conteudoMoldurado;
@@ -310,7 +310,7 @@ function showExpansivelImprimir( largura, altura, arquivo, array,  titulo )
 	}
 
 
-	conteudoMoldurado = '<table border="0" id="tabela_conteudo" cellpadding="0" cellspacing="0" ><tr><td width="9" height="44" valign="top"></td><td height="44" valign="top">' + titulo + '</td><td height="44" align="right"><a href="#" id="linkFechar" onclick="fechaExpansivel( \'div_dinamico_'+exp_id+'\');" ><img src="/intranet/imagens/moldura/close.png" border="0" width="17" height="17"></a></td><td width="9" height="44" valign="top"></td></tr><tr><td width="9">&nbsp;</td><td bgcolor="#FFFFFF" colspan="2"><div id="expansivel_conteudo" class="modal-domjs-conteudo" style="overflow:auto;"><div id="LoadImprimir"><img style="margin-bottom: -8px;" src=\'imagens/carregando1.gif\'>Carregando...</div>';
+	conteudoMoldurado = '<table border="0" id="tabela_conteudo" cellpadding="0" cellspacing="0" ><tr height="44"><td width="9" valign="top"></td><td valign="top">' + titulo + '</td><td align="right"><a href="#" id="linkFechar" onclick="fechaExpansivel( \'div_dinamico_'+exp_id+'\');" ><img src="/intranet/imagens/moldura/close.png" border="0" width="17" height="17"></a></td><td width="9" valign="top"></td></tr><tr><td width="9">&nbsp;</td><td bgcolor="#FFFFFF" colspan="2"><div id="expansivel_conteudo" class="modal-domjs-conteudo" style="overflow:auto;"><div id="LoadImprimir"><img style="margin-bottom: -8px;" src=\'imagens/carregando1.gif\'>Carregando...</div>';
 	conteudoMoldurado += '<iframe name=\'miolo_' + exp_id + '\' id=\'miolo_' + exp_id + '\' frameborder=\'0\' height=\'100%\' width=\'100%\' marginheight=\'0\' marginwidth=\'0\' src=\''+arquivo+url+'\'></iframe>';
 	conteudoMoldurado += '</div></td><td width="9">&nbsp;</td></tr><tr><td width="9" height="20" valign="top"></td><td colspan="2" height="20">&nbsp;</td><td width="9" height="20" valign="top"></td></tr></table>';
 	expansivel.innerHTML = conteudoMoldurado;
