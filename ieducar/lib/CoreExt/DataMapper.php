@@ -550,7 +550,7 @@ abstract class CoreExt_DataMapper
      * Retorna um registro que tenha como identificador (chave única ou composta)
      * o valor dado por $pkey.
      *
-     * @param array|long $pkey
+     * @param $pkey
      *
      * @return CoreExt_Entity
      *
