@@ -4,63 +4,18 @@ use iEducar\Legacy\Model;
 
 class clsPmieducarServidorDisciplina extends Model
 {
-    public $ref_cod_disciplina;
-    public $ref_ref_cod_instituicao;
-    public $ref_cod_servidor;
-    public $ref_cod_curso;
-    public $ref_cod_funcao;
 
     public function __construct(
-        $ref_cod_disciplina = null,
-        $ref_ref_cod_instituicao = null,
-        $ref_cod_servidor = null,
-        $ref_cod_curso = null,
-        $ref_cod_funcao = null
+        public $ref_cod_disciplina = null,
+        public  $ref_ref_cod_instituicao = null,
+        public $ref_cod_servidor = null,
+        public  $ref_cod_curso = null,
+        public $ref_cod_funcao = null
     ) {
-        $db = new clsBanco();
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'servidor_disciplina';
 
         $this->_campos_lista = $this->_todos_campos = 'ref_cod_disciplina, ref_ref_cod_instituicao, ref_cod_servidor, ref_cod_curso, ref_cod_funcao';
-
-        if (is_numeric($ref_cod_servidor) && is_numeric($ref_ref_cod_instituicao)) {
-            $servidor = new clsPmieducarServidor(
-                $ref_cod_servidor,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                $ref_ref_cod_instituicao
-            );
-
-            if ($servidor->existe()) {
-                $this->ref_cod_servidor = $ref_cod_servidor;
-                $this->ref_ref_cod_instituicao = $ref_ref_cod_instituicao;
-            }
-        }
-
-        if (is_numeric($ref_cod_disciplina)) {
-            $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
-            try {
-                $componenteMapper->find($ref_cod_disciplina);
-                $this->ref_cod_disciplina = $ref_cod_disciplina;
-            } catch (Exception) {
-            }
-        }
-
-        if (is_numeric($ref_cod_curso)) {
-            $curso = new clsPmieducarCurso($ref_cod_curso);
-
-            if ($curso->existe()) {
-                $this->ref_cod_curso = $ref_cod_curso;
-            }
-        }
-
-        if (is_numeric($ref_cod_funcao)) {
-            $this->ref_cod_funcao = $ref_cod_funcao;
-        }
     }
 
     /**
@@ -230,9 +185,7 @@ class clsPmieducarServidorDisciplina extends Model
     }
 
     /**
-     * Retorna um array com os dados de um registro.
-     *
-     * @return array
+     * @return bool
      * @throws Exception
      */
     public function existe(): bool
