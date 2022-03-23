@@ -247,15 +247,19 @@ class clsPmieducarServidorDisciplina extends Model
      * @return array
      * @throws Exception
      */
-    public function existe()
+    public function existe(): bool
     {
         if (is_numeric($this->ref_cod_disciplina) &&
             is_numeric($this->ref_ref_cod_instituicao) &&
             is_numeric($this->ref_cod_servidor) &&
-            is_numeric($this->ref_cod_curso)
+            is_numeric($this->ref_cod_curso) &&
+            is_numeric($this->ref_cod_funcao)
         ) {
             $db = new clsBanco();
-            $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE ref_cod_disciplina = '{$this->ref_cod_disciplina}' AND ref_ref_cod_instituicao = '{$this->ref_ref_cod_instituicao}' AND ref_cod_servidor = '{$this->ref_cod_servidor}' AND ref_cod_curso = '{$this->ref_cod_curso}'");
+
+            $sql = "SELECT 1 FROM {$this->_tabela} WHERE ref_cod_disciplina = '{$this->ref_cod_disciplina}' AND ref_ref_cod_instituicao = '{$this->ref_ref_cod_instituicao}' AND ref_cod_servidor = '{$this->ref_cod_servidor}' AND ref_cod_curso = '{$this->ref_cod_curso}' AND ref_cod_funcao = '{$this->ref_cod_funcao}'";
+
+            $db->Consulta($sql);
             if ($db->ProximoRegistro()) {
                 return true;
             }
