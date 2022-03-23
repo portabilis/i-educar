@@ -131,13 +131,13 @@ return new class extends clsListagem {
                     "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['serie']}</a>",
                     "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['curso']}</a>",
                     "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['escola']}</a>",
-                    "<a href=\"educar_professores_conteudo_ministrado_det.php?id={$registro['id']}\">{$registro['fase_etapa']}º {$registro['etapa']}</a>"
+                    "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['fase_etapa']}º {$registro['etapa']}</a>"
                 ];
 
                 if ($registro['componente_curricular']) {
-                    $lista_busca[] = "<a href=\"educar_professores_conteudo_ministrado_det.php?id={$registro['id']}\">{$registro['componente_curricular']}</a>";
+                    $lista_busca[] = "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['componente_curricular']}</a>";
                 } else {
-                    $lista_busca[] = "<a href=\"educar_professores_conteudo_ministrado_det.php?id={$registro['id']}\">—</a>";
+                    $lista_busca[] = "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">—</a>";
                 }
 
                 $this->addLinhas($lista_busca);
