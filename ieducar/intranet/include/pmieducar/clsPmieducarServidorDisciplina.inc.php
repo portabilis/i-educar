@@ -74,7 +74,8 @@ class clsPmieducarServidorDisciplina extends Model
         if (is_numeric($this->ref_cod_disciplina) &&
             is_numeric($this->ref_ref_cod_instituicao) &&
             is_numeric($this->ref_cod_servidor) &&
-            is_numeric($this->ref_cod_curso)
+            is_numeric($this->ref_cod_curso) &&
+            is_numeric($this->ref_cod_funcao)
         ) {
             $db = new clsBanco();
 
@@ -82,34 +83,21 @@ class clsPmieducarServidorDisciplina extends Model
             $valores = '';
             $gruda = '';
 
-            if (is_numeric($this->ref_cod_disciplina)) {
-                $campos .= "{$gruda}ref_cod_disciplina";
-                $valores .= "{$gruda}'{$this->ref_cod_disciplina}'";
-                $gruda = ', ';
-            }
+            $campos .= "{$gruda}ref_cod_disciplina";
+            $valores .= "{$gruda}'{$this->ref_cod_disciplina}'";
+            $gruda = ', ';
 
-            if (is_numeric($this->ref_ref_cod_instituicao)) {
-                $campos .= "{$gruda}ref_ref_cod_instituicao";
-                $valores .= "{$gruda}'{$this->ref_ref_cod_instituicao}'";
-                $gruda = ', ';
-            }
+            $campos .= "{$gruda}ref_ref_cod_instituicao";
+            $valores .= "{$gruda}'{$this->ref_ref_cod_instituicao}'";
 
-            if (is_numeric($this->ref_cod_servidor)) {
-                $campos .= "{$gruda}ref_cod_servidor";
-                $valores .= "{$gruda}'{$this->ref_cod_servidor}'";
-                $gruda = ', ';
-            }
+            $campos .= "{$gruda}ref_cod_servidor";
+            $valores .= "{$gruda}'{$this->ref_cod_servidor}'";
 
-            if (is_numeric($this->ref_cod_curso)) {
-                $campos .= "{$gruda}ref_cod_curso";
-                $valores .= "{$gruda}'{$this->ref_cod_curso}'";
-                $gruda = ', ';
-            }
+            $campos .= "{$gruda}ref_cod_curso";
+            $valores .= "{$gruda}'{$this->ref_cod_curso}'";
 
-            if (is_numeric($this->ref_cod_funcao)) {
-                $campos .= "{$gruda}ref_cod_funcao";
-                $valores .= "{$gruda}'{$this->ref_cod_funcao}'";
-            }
+            $campos .= "{$gruda}ref_cod_funcao";
+            $valores .= "{$gruda}'{$this->ref_cod_funcao}'";
 
             $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
 
