@@ -654,12 +654,25 @@ return new class extends clsCadastro {
 
     public function gravaEtapacurso($cod_curso)
     {
-        Portabilis_Utils_Database::fetchPreparedQuery('DELETE FROM etapas_curso_educacenso WHERE curso_id = $1', ['params' => [$cod_curso]]);
+        $etapas = [];
+
         foreach ($this->getRequest()->etapacurso as $etapaId) {
-            if (! empty($etapaId)) {
-                Portabilis_Utils_Database::fetchPreparedQuery('INSERT INTO etapas_curso_educacenso VALUES ($1 , $2)', ['params' => [$etapaId, $cod_curso] ]);
+            if (empty($etapaId)) {
+                continue;
             }
+
+            $etapas[] = $etapaId;
+
+            LegacyCourseEducacensoStage::query()->updateOrCreate([
+                'etapa_id' => $etapaId,
+                'curso_id' => $cod_curso,
+            ]);
         }
+
+        LegacyCourseEducacensoStage::query()
+            ->where('curso_id', $cod_curso)
+            ->whereNotIn('etapa_id', $etapas)
+            ->delete();
     }
 
     public function updateClassStepsForCourse($courseCode, $standerdSchoolYear, $currentYear)
