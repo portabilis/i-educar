@@ -34,5 +34,16 @@ class UpdateConstaintServidorDisciplina extends Migration
      *
      * @return void
      */
-    public function down() {}
+    public function down()
+    {
+        $columns = [
+            'ref_cod_disciplina',
+            'ref_ref_cod_instituicao',
+            'ref_cod_servidor',
+            'ref_cod_curso'
+        ];
+
+        $this->dropPrimaryKeyIn('pmieducar', 'servidor_disciplina','servidor_disciplina_pkey');
+        $this->createConstraint('pmieducar.servidor_disciplina', $columns, 'servidor_disciplina_pkey');
+    }
 }
