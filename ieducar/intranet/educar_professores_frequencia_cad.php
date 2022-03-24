@@ -115,10 +115,10 @@ return new class extends clsCadastro {
                 }
             }
 
-            $conteudo .= '<div style="margin-bottom: 10px; float: left">';
-            $conteudo .= '  <span style="display: block; float: left; width: 400px;">Nome</span>';
-            $conteudo .= '  <span style="display: block; float: left; width: 180px;">Presença</span>';
-            $conteudo .= '  <span style="display: block; float: left; width: 300px;">' . "Justificativa (" . $maxCaracteresObservacao . " caracteres são permitidos)" . '</span>';
+            $conteudo .= '</tr><td><div style="margin-bottom: 10px; float: left">';
+            $conteudo .= '  <span style="display: block; float: left;">Nome</span>';
+            $conteudo .= '  <span style="display: block; float: left;">Presença</span>';
+            $conteudo .= '  <span style="display: block; float: left;">' . "Justificativa (" . $maxCaracteresObservacao . " caracteres são permitidos)" . '</span>';
             $conteudo .= '</div>';
 
             foreach ($this->alunos as $key => $aluno) {
