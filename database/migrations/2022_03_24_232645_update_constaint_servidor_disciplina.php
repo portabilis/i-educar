@@ -17,7 +17,7 @@ class UpdateConstaintServidorDisciplina extends Migration
      */
     public function up()
     {
-        $colluns = [
+        $columns = [
             'ref_cod_disciplina',
             'ref_ref_cod_instituicao',
             'ref_cod_servidor',
