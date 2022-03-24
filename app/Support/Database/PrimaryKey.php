@@ -119,10 +119,10 @@ SQL;
      * @param $foreignKey
      * @return void
      */
-    public function createConstraint($schema, $table, $columnsForeignKey, $foreignKey): void
+    public function createConstraint($table, $columnsForeignKey, $foreignKey): void
     {
         $collumns = implode(', ', $columnsForeignKey);
-        $sql = "ALTER TABLE {$schema}.{$table} ADD CONSTRAINT {$foreignKey} PRIMARY KEY({$collumns});";
+        $sql = "ALTER TABLE {$table} ADD CONSTRAINT {$foreignKey} PRIMARY KEY({$collumns});";
 
         DB::unprepared($sql);
     }
