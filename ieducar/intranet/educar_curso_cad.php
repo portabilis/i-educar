@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\LegacyCourseEducacensoStage;
+use App\Models\LegacyEducacensoStages;
+
 return new class extends clsCadastro {
     public $pessoa_logada;
 
@@ -425,10 +428,20 @@ return new class extends clsCadastro {
         $options = ['label' => 'Modalidade do curso', 'resources' => $resources, 'value' => $this->modalidade_curso];
         $this->inputsHelper()->select('modalidade_curso', $options);
 
-        $helperOptions = ['objectName' => 'etapacurso'];
-        $options = ['label' => 'Etapas que o curso contêm', 'size' => 50, 'required' => false, 'options' => ['value' => null]];
+        $etapasEducacenso = LegacyEducacensoStages::getDescriptiveValues();
+        $etapas = $this->cod_curso ? LegacyCourseEducacensoStage::getIdsByCourse($this->cod_curso) : [];
 
-        $this->inputsHelper()->multipleSearchEtapacurso('', $options, $helperOptions);
+        $this->inputsHelper()->multipleSearchCustom('', [
+            'label' => 'Etapas que o curso contém',
+            'size' => 50,
+            'required' => false,
+            'options' => [
+                'values' => $etapas,
+                'all_values' => $etapasEducacenso
+            ]
+        ], [
+            'objectName'  => 'etapacurso',
+        ]);
 
         $this->campoCheck('importar_curso_pre_matricula', 'Importar os dados do curso para o recurso de pré-matrícula digital?', $this->importar_curso_pre_matricula);
     }
