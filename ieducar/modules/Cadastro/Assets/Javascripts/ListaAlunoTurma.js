@@ -72,7 +72,7 @@ $j("#lista-aluno").dialog({
 
 function mensagem(registrosLista){
     if(!registrosLista){
-       var reg = 'Sem registros';
+       var reg = 'Não há alunos enturmados';
         return reg;
     }
     var lista = [];

@@ -169,7 +169,7 @@ return new class extends clsDetalhe {
             $horas = (int) $cargaHoraria;
             $minutos = round(($cargaHoraria - $horas) * 60);
             $cargaHoraria = sprintf('%02d:%02d', $horas, $minutos);
-            $this->addDetalhe(['Carga Horária', $cargaHoraria]);
+            $this->addDetalhe(['Carga Horária Semanal', $cargaHoraria]);
         }
 
         $dias_da_semana = [
