@@ -13,6 +13,16 @@ function popless() {
   pesquisa_valores_popless('educar_servidor_nivel_cad.php?ref_cod_servidor=' + campoServidor + '&ref_cod_instituicao=' + campoInstituicao, '');
 }
 
+function pesquisa_valores_popless(caminho, campo) {
+  new_id = DOM_divs.length;
+  div = 'div_dinamico_' + new_id;
+  if (caminho.indexOf('?') == -1) {
+    showExpansivel(1024, 480, '<iframe src="' + caminho + '?campo=' + campo + '&div=' + div + '&popless=1" frameborder="0" height="100%" width="100%" marginheight="0" marginwidth="0" name="temp_win_popless"></iframe>', 'Pesquisa de valores');
+  } else {
+    showExpansivel(1024, 480, '<iframe src="' + caminho + '&campo=' + campo + '&div=' + div + '&popless=1" frameborder="0" height="100%" width="100%" marginheight="0" marginwidth="0" name="temp_win_popless"></iframe>', 'Pesquisa de valores');
+  }
+}
+
 
 function makeDialog (params) {
   let container = $j('#dialog-container');
