@@ -1188,6 +1188,11 @@ td.area-conhecimento-destaque {
   width: 50%;
 }
 
+#form_resultado .formmdtd,
+#form_resultado .formlttd {
+  width: auto;
+}
+
 .formmdtd sub, .formlttd sub{
   color: #999;
   font-size: 12px;
