@@ -83,7 +83,7 @@ return new class extends clsDetalhe {
         );
 
         $registro = array_shift($lst_obj);
-
+       
         foreach ($registro as $key => $value) {
             $this->$key = $value;
         }
@@ -105,6 +105,10 @@ return new class extends clsDetalhe {
 
         $det_ref_cod_infra_predio_comodo = $obj_ref_cod_infra_predio_comodo->detalhe();
         $registro['ref_cod_infra_predio_comodo'] = $det_ref_cod_infra_predio_comodo['nm_comodo'];
+
+        $obj_quantidade = new clsPmieducarMatriculaTurma();
+        $registro['quantidade'] = $obj_quantidade->quantidadeAlunos($this->cod_turma);
+    
 
         $obj_cod_instituicao = new clsPmieducarInstituicao(
             $registro['ref_cod_instituicao']
@@ -393,8 +397,11 @@ return new class extends clsDetalhe {
 
             $this->array_botao[] = 'Lançar pareceres da turma';
             $this->array_botao_url_script[] = sprintf('go("educar_parecer_turma_cad.php?cod_turma=%d");', $registro['cod_turma']);
-        }
 
+            $this->array_botao[] = 'Listar alunos da turma (' . $registro['quantidade'].')';
+            $this->array_botao_url_script[] = sprintf('listar();');
+        }
+        
         $this->url_cancelar = 'educar_turma_lst.php';
         $this->largura = '100%';
 
@@ -405,7 +412,8 @@ return new class extends clsDetalhe {
         $scripts = [
             '/modules/Portabilis/Assets/Javascripts/Utils.js',
             '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
-            '/modules/Cadastro/Assets/Javascripts/TurmaDet.js'
+            '/modules/Cadastro/Assets/Javascripts/TurmaDet.js',
+            'modules/Cadastro/Assets/Javascripts/ListaAlunoTurma.js'
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);

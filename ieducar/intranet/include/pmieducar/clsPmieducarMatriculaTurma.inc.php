@@ -1187,11 +1187,36 @@ class clsPmieducarMatriculaTurma extends Model
          }
  
          return false;
- 
- 
-      
-         
 
+    }
+
+    public function quantidadeAlunos($cod_turma){
+        $sql = "
+        SELECT COUNT(p.nome) AS quantidade
+
+        FROM cadastro.pessoa AS p
+
+        JOIN pmieducar.aluno AS a
+	        ON (p.idpes = a.ref_idpes)
+        JOIN pmieducar.matricula AS m
+	        ON (a.cod_aluno = m.ref_cod_aluno)
+        JOIN pmieducar.matricula_turma AS mt
+	        ON (m.cod_matricula = mt.ref_cod_matricula)
+        JOIN pmieducar.turma AS t
+	        ON (mt.ref_cod_turma = t.cod_turma) 
+        WHERE t.cod_turma = $cod_turma
+        
+        ";
+
+        //Usado pra pegar somente um campo
+        $db = new clsBanco();
+        $db->Consulta($sql);
+        $db->ProximoRegistro();
+        $r = $db->campo('quantidade');
+
+        return $r; 
+        
+    
     }
 
     /**
