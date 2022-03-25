@@ -115,11 +115,11 @@ return new class extends clsCadastro {
                 }
             }
 
-            $conteudo .= '</tr><td><div style="margin-bottom: 10px; float: left">';
-            $conteudo .= '  <span style="display: block; float: left;">Nome</span>';
-            $conteudo .= '  <span style="display: block; float: left;">Presença</span>';
-            $conteudo .= '  <span style="display: block; float: left;">' . "Justificativa (" . $maxCaracteresObservacao . " caracteres são permitidos)" . '</span>';
-            $conteudo .= '</div>';
+ 
+            $conteudo .= '  </tr><td class="tableDetalheLinhaSeparador" colspan="3"></td><tr><td><div class="scroll"><table class="tableDetalhe tableDetalheMobile" width="100%"><tr>';
+            $conteudo .= '  <th><span style="display: block; float: left; width: auto; font-weight: bold">Nome</span></th>';
+            $conteudo .= '  <th><span style="display: block; float: left; width: 100px; font-weight: bold">Presença</span></th>';
+            $conteudo .= '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' . "Justificativa (" . $maxCaracteresObservacao . " caracteres são permitidos)" . '</span></th></tr>';
 
             foreach ($this->alunos as $key => $aluno) {
                 $id = $aluno['matricula'];
@@ -127,9 +127,9 @@ return new class extends clsCadastro {
                 $checked = !$aluno['presenca'] ? "checked='true'" : '';
                 $disabled = !$aluno['presenca'] ? "disabled='true'" : '';
 
-                $conteudo .= '  <div style="margin-bottom: 10px; float: left">';
-                $conteudo .= '  <label style="display: block; float: left; width: 400px;">' . $aluno['nome'] . '</label>';
-                $conteudo .= "  <label style='display: block; float: left; width: 180px;'>
+                $conteudo .= '  <tr><td class="formlttd">';
+                $conteudo .= '  <label>' . $aluno['nome'] . '</label></td>';
+                $conteudo .= "  <td><label>
                                     <input
                                         type='checkbox'
                                         onchange='presencaMudou(this)'
@@ -138,24 +138,24 @@ return new class extends clsCadastro {
                                         {$checked}
                                         autocomplete='off'
                                     >
-                                </label>";
-                $conteudo .= "  <input
+                                </label></td>";
+                $conteudo .= "  <td><input
                                     type='text'
                                     name='justificativa[${id}][]'
-                                    style='width: 300px;'
+                                    style='width: 100%;'
                                     maxlength=${maxCaracteresObservacao}
                                     value='{$aluno['justificativa']}'
                                     {$disabled}
                                     autocomplete='off'
                                 />";
-                $conteudo .= '  </div>';
-                $conteudo .= '  <br style="clear: left" />';
+                $conteudo .= '  </td>';
+               // $conteudo .= '  <br style="clear: left" />';
             }
 
             if ($conteudo) {
-                $alunos = '<table cellspacing="0" cellpadding="0" border="0">';
+                $alunos = '</table><table cellspacing="0" cellpadding="0" border="0" width="100%">';
                 $alunos .= '<tr align="left"><td>' . $conteudo . '</td></tr>';
-                $alunos .= '</table>';
+                $alunos .= '</div></table>';
             }
         }
 
