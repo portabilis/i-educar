@@ -1292,6 +1292,9 @@ var handleGetPersonDetails = function (dataResponse) {
   $j("#cartorio_emissao_certidao_civil").val(
     dataResponse.cartorio_cert_civil
   );
+
+  $j("#sus").val(dataResponse.sus);
+
   checkJustificativa();
 
   canShowParentsFields();

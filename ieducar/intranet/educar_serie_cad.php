@@ -255,7 +255,8 @@ return new class extends clsCadastro {
             !is_null($this->bloquear_matricula_faixa_etaria),
             $this->idade_ideal,
             !is_null($this->exigir_inep),
-            !is_null($this->importar_serie_pre_matricula)
+            !is_null($this->importar_serie_pre_matricula),
+            $this->descricao
         );
 
         $this->cod_serie = $cadastrou = $obj->cadastra();
