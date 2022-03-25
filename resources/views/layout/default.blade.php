@@ -217,11 +217,13 @@
             <input type="checkbox" id="expandido">  
             <label for="expandido" class="expandir-btn" <?= $expandido?>><i class="fa fa-ellipsis-v" <?=$corTecsis?> ></i></label>
             <div class="r3c1-Mobile" <?=$r3c1Mobile?> >
-                @include('layout.menu') 
+               @include('partials.searchMobile')
+                @include('layout.menu')
             </div>
             <table summary="" class='tabelanum2' border='0' cellspacing='0' cellpadding='0'>
                 <tr>
-                    <td id="menu_lateral" class="r3c1" <?= $menu_lateral?>>
+                    <td id="menu_lateral" class="r3c1" <?= $menu_lateral?>> 
+                        @include('partials.search')
                         @include('layout.menu') 
                     </td>
                     <td valign=top>
@@ -231,7 +233,6 @@
                                     @include('layout.topmenu')
                                 </td>
                             </tr>
-
                             <tr>
                                 <td height="100%" valign="top" id="corpo">
                                     <table class='tablelistagem' width='100%' border='0' cellpadding='0' cellspacing='0'>
