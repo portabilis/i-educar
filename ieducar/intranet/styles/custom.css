@@ -1569,9 +1569,10 @@ input.btn_small {
   .form, .formlttd, .formmdtd, .tablelistagem .formdktd,
   #tablelistagem .formlttd, #tablelistagem .formmdtd  { font-size: 4.5rem !important;}
   td.formlttd table.tableDetalhe {width: 1023px;}
+  .ieducar-quick-searchM{width: 90%; padding-top: 5rem;}
   
   #expandido:checked ~ .r3c1 {display: table-cell; left: 0;}
-  #expandido:checked ~ .r3c1-Mobile {display: table-cell; left: 0;}
+  #expandido:checked ~ .r3c1-Mobile {display: table-cell; left: 0}
   #expandido:checked ~ .expandir-btn {margin-left: 74.8%; }
   #expandido:checked ~ .ieducar-quick-search {display: inherit;}
   #expandido:checked ~ .ieducar-sidebar-menu {display: inherit;}
