@@ -270,11 +270,6 @@ class Portabilis_View_Helper_Inputs
         $this->multipleSearchResourceInput('multipleSearchAutores', $attrName, $inputOptions, $helperOptions);
     }
 
-    public function multipleSearchEtapacurso($attrName, $inputOptions = [], $helperOptions = [])
-    {
-        $this->multipleSearchResourceInput('multipleSearchEtapacurso', $attrName, $inputOptions, $helperOptions);
-    }
-
     public function multipleSearchComponenteCurricular($attrName, $inputOptions = [], $helperOptions = [])
     {
         $this->multipleSearchResourceInput('multipleSearchComponenteCurricular', $attrName, $inputOptions, $helperOptions);
