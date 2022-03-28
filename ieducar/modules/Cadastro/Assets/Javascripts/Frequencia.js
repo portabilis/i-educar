@@ -31,7 +31,7 @@ function getAluno(xml_aluno) {
         conteudo += '<div style="margin-bottom: 10px; float: left">';
         conteudo += '  <span style="display: block; float: left; width: 400px;">Nome</span>';
         conteudo += '  <span style="display: block; float: left; width: 180px;">Presença?</span>';
-        conteudo += '  <span style="display: block; float: left; width: 300px;">' + "Justificativa (" + maxCaracteresObservacao + " caracteres são permitidos)" + '</span>';
+        conteudo += '  <span style="display: block; float: left; width: 300px;">' + "Justificativa" + '</span>';
         conteudo += '</div>';
 
         for (var i = 0; i < DOM_array.length; i++) {
