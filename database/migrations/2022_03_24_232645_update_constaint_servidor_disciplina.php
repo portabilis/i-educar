@@ -4,11 +4,10 @@ use App\Support\Database\DropPrimaryKey;
 use App\Support\Database\PrimaryKey;
 use Illuminate\Database\Migrations\Migration;
 
-
 class UpdateConstaintServidorDisciplina extends Migration
 {
-     use DropPrimaryKey;
-     use PrimaryKey;
+    use DropPrimaryKey;
+    use PrimaryKey;
 
     /**
      * Run the migrations.
@@ -25,7 +24,7 @@ class UpdateConstaintServidorDisciplina extends Migration
             'ref_cod_funcao'
         ];
 
-        $this->dropPrimaryKeyIn('pmieducar', 'servidor_disciplina','servidor_disciplina_pkey');
+        $this->dropPrimaryKeyIn('pmieducar', 'servidor_disciplina', 'servidor_disciplina_pkey');
         $this->createConstraint('pmieducar.servidor_disciplina', $columns, 'servidor_disciplina_pkey');
     }
 
@@ -43,7 +42,7 @@ class UpdateConstaintServidorDisciplina extends Migration
             'ref_cod_curso'
         ];
 
-        $this->dropPrimaryKeyIn('pmieducar', 'servidor_disciplina','servidor_disciplina_pkey');
+        $this->dropPrimaryKeyIn('pmieducar', 'servidor_disciplina', 'servidor_disciplina_pkey');
         $this->createConstraint('pmieducar.servidor_disciplina', $columns, 'servidor_disciplina_pkey');
     }
 }

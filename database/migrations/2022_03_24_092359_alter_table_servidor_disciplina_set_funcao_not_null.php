@@ -1,9 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
 class AlterTableServidorDisciplinaSetFuncaoNotNull extends Migration
 {
@@ -14,7 +12,7 @@ class AlterTableServidorDisciplinaSetFuncaoNotNull extends Migration
      */
     public function up()
     {
-       DB::unprepared('ALTER TABLE pmieducar.servidor_disciplina ALTER COLUMN ref_cod_funcao SET NOT NULL;');
+        DB::unprepared('ALTER TABLE pmieducar.servidor_disciplina ALTER COLUMN ref_cod_funcao SET NOT NULL;');
     }
 
     /**
@@ -22,5 +20,7 @@ class AlterTableServidorDisciplinaSetFuncaoNotNull extends Migration
      *
      * @return void
      */
-    public function down() {}
+    public function down()
+    {
+    }
 }
