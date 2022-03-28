@@ -310,7 +310,7 @@ return new class extends clsCadastro {
             'conteudos',
             'Objetivo(s) do conhecimento/conteúdo',
             [
-                'Objetivo(s)',
+                'Conteúdo(s)',
             ],
             $rows
         );
