@@ -100,7 +100,7 @@ function handleSearch($resultTable, dataResponse) {
   let $text = $j('<div />');
 
   $j('<span />')
-    .html('Quantidade de matrículas ativas na rede : ' + '<b>' + dataResponse.quantidade_matriculas + '<b><br />')
+    .html('Quantidade de matrículas filtradas: ' + '<b>' + dataResponse.quantidade_matriculas + '<b><br />')
     .attr('class','qnt-matriculas')
     .appendTo($text);
 
