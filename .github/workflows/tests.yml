@@ -50,9 +50,6 @@ jobs:
         with:
           php-version: ${{ matrix.php-versions }}
 
-      - name: Check Composer version
-      - run: composer --version
-
       - name: Install Dependencies
         run: composer new-install
 
