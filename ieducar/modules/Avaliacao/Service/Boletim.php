@@ -1352,6 +1352,12 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                     // Se etapa = quantidade de etapas dessa disciplina, vamos assumir que é a última etapa
                     // já que essa variável só tem o intuito de dizer que todas etapas da disciplina estão lançadas
                     $etapasComponentes[$this->getOption('etapas')] = $this->getOption('etapas');
+                } elseif (in_array($id, $disciplinasNaoReprovativas)) {
+                    /**
+                     * Seta última etapa para componentes não reprovativos
+                     * para que o aluno possa progredir mesmo sem todos os lançamentos
+                     */
+                    $etapasComponentes[$this->getOption('etapas')] = $this->getOption('etapas');
                 } else {
                     $etapasComponentes[$etapa] = $etapa;
                 }
