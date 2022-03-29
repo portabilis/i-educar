@@ -119,7 +119,7 @@ return new class extends clsCadastro {
             $conteudo .= '  </tr><td class="tableDetalheLinhaSeparador" colspan="3"></td><tr><td><div class="scroll"><table class="tableDetalhe tableDetalheMobile" width="100%"><tr>';
             $conteudo .= '  <th><span style="display: block; float: left; width: auto; font-weight: bold">Nome</span></th>';
             $conteudo .= '  <th><span style="display: block; float: left; width: 100px; font-weight: bold">Presença</span></th>';
-            $conteudo .= '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' . "Justificativa (" . $maxCaracteresObservacao . " caracteres são permitidos)" . '</span></th></tr>';
+            $conteudo .= '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' . "Justificativa" . '</span></th></tr>';
 
             foreach ($this->alunos as $key => $aluno) {
                 $id = $aluno['matricula'];

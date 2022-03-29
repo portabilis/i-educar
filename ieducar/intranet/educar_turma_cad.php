@@ -612,7 +612,7 @@ return new class extends clsCadastro {
         $etapas_educacenso = loadJson('educacenso_json/etapas_ensino.json');
         $etapas_educacenso = array_replace([null => 'Selecione'], $etapas_educacenso);
 
-        $options = ['label' => 'Etapa de ensino', 'resources' => $etapas_educacenso, 'value' => $this->etapa_educacenso, 'required' => true, 'size' => 70];
+        $options = ['label' => 'Etapa de ensino', 'resources' => $etapas_educacenso, 'value' => $this->etapa_educacenso, 'required' => false, 'size' => 70];
         $this->inputsHelper()->select('etapa_educacenso', $options);
 
         $cursos = loadJson('educacenso_json/cursos_da_educacao_profissional.json');
@@ -638,7 +638,7 @@ return new class extends clsCadastro {
 
         $scripts = [
             '/modules/Cadastro/Assets/Javascripts/Turma.js',
-            '/intranet/scripts/etapas.js'
+            '/intranet/scripts/etapas.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
@@ -646,6 +646,11 @@ return new class extends clsCadastro {
         $styles = ['/modules/Cadastro/Assets/Stylesheets/Turma.css'];
 
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
+
+        if ($this->retorno === 'Editar') {
+            $this->array_botao[] = 'Atualizar etapas';
+            $this->array_botao_url_script[] = sprintf('atualizarEtapas()');
+        }
     }
 
     protected function obrigaCamposHorario()

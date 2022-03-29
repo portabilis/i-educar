@@ -396,3 +396,66 @@ $j(function () {
 
     etapasHandler.init();
 });
+
+function atualizarEtapas () {
+    var ano = $j("#ano").val();
+    var ref_cod_escola = $j("#ref_cod_escola").val();
+    
+    console.log(ano, ref_cod_escola);
+    var urlForPegarEtapas = postResourceUrlBuilder.buildUrl('/module/Api/AnoLetivoModulo', 'pegar-etapas', {});
+
+    var options = {
+        type     : 'POST',
+        url      : urlForPegarEtapas,
+        dataType : 'json',
+        data     : {
+            ano                 : ano,
+            ref_cod_escola      : ref_cod_escola,
+        },
+        success     : handleAtualizarEtapas,
+    };
+
+    postResource(options);
+}
+
+function handleAtualizarEtapas (response) {
+    var etapas = response.etapas;
+
+    if (etapas === null) {
+        alert("Ocorreu algum erro na obtenção das informações necessárias.")
+    } else {
+        var etapas_trs = document.getElementsByName("tr_turma_modulo[]");
+
+        if (etapas.length === etapas_trs.length) {
+            for (let index = 0; index < etapas_trs.length; index++) {
+                const etapa_tr = etapas_trs[index];
+                const etapa = etapas[index];
+
+                etapa_tr.children[0].children[0].value = dataToBrasil(etapa[4]);
+                etapa_tr.children[1].children[0].value = dataToBrasil(etapa[5]);
+                etapa_tr.children[2].children[0].value = etapa[6];
+            }
+
+            alert("Etapas atualizadas com sucesso. Não esqueça de salvar.");
+        } else {
+            alert("Número de etapas da turma não coincide com o da escola. Operação interrompida.");
+        }
+    }
+}
+
+function dataToBrasil (dataFromBanco) {
+    var data = "";
+    var data_fragmentos = dataFromBanco.split('-');
+
+    for (let index = data_fragmentos.length - 1; index >= 0; index--) {
+        const data_fragmento = data_fragmentos[index];
+
+        if (index !== 0) {
+            data += data_fragmento + '/';
+        } else {
+            data += data_fragmento;
+        }
+    }
+  
+    return data
+}
