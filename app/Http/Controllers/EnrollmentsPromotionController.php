@@ -39,7 +39,10 @@ class EnrollmentsPromotionController extends Controller
         }
 
         if (empty($jobs)) {
-            return response()->json(['message' => 'Não foi possivel encontrar matriculas com os parâmetros enviados']);
+            return response()->json([
+                'message' => 'Não foi possivel encontrar matriculas com os parâmetros enviados',
+                'status' => 'notice'
+            ]);
         }
 
         $message = 'Processo de atualização de matricualas finalizado. Total de itens processados: ';
@@ -50,7 +53,10 @@ class EnrollmentsPromotionController extends Controller
             })
             ->dispatch();
 
-        return response()->json(['message' => 'Itens enviados para processamento']);
+        return response()->json([
+            'message' => 'Itens enviados para processamento',
+            'status' => 'success'
+        ]);
     }
 
     private function loadEnrollmentsByFilter(array $data): array

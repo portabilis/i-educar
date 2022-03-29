@@ -407,8 +407,8 @@ class PromocaoApiController extends ApiCoreController
                 $situacaoAnterior = $this->loadSituacaoArmazenadaMatricula($this->matriculaId());
 
                 $this->lancarFaltasNaoLancadas($this->matriculaId());
-
-                $this->atualizaNotaExame();
+                //$this->convertParecerToLatin1($matriculaId);
+                $this->atualizaNotaExame($this->matriculaId());
 
                 $this->trySaveBoletimService();
                 $novaSituacao = $this->loadSituacaoArmazenadaMatricula($this->matriculaId());
