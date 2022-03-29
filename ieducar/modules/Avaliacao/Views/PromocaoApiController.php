@@ -432,18 +432,6 @@ class PromocaoApiController extends ApiCoreController
         }
     }
 
-    /* remove notas, medias notas e faltas lnçadas para componentes curriculares não mais vinculados
-      as das turmas / séries para que os alunos destas possam ser promovidos */
-    protected function deleteOldComponentesCurriculares()
-    {
-        if ($this->canDeleteOldComponentesCurriculares()) {
-            CleanComponentesCurriculares::destroyOldResources($this->getRequest()->ano);
-
-            $this->messenger->append('Removido notas, medias notas e faltas de antigos componentes curriculares, ' .
-                'vinculados a turmas / séries.', 'notice');
-        }
-    }
-
     protected function atualizaNotaExame($matriculaId) :void
     {
         foreach (App_Model_IedFinder::getComponentesPorMatricula($matriculaId) as $_componente) {
@@ -479,8 +467,6 @@ class PromocaoApiController extends ApiCoreController
             $this->appendResponse('quantidade_matriculas', $this->getQuantidadeMatriculas());
         } elseif ($this->isRequestFor('post', 'promocao')) {
             $this->appendResponse('result', $this->postPromocaoMatricula());
-        } elseif ($this->isRequestFor('delete', 'old_componentes_curriculares')) {
-            $this->appendResponse('result', $this->deleteOldComponentesCurriculares());
         } else {
             $this->notImplementedOperationError();
         }
