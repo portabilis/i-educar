@@ -13,9 +13,6 @@ jobs:
     name: Unit, Integration and Pages
 
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        php-versions: ['8.0','8.1']
 
     env:
       APP_URL: http://localhost:8000
@@ -48,7 +45,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php-versions }}
+          php-version: '8.0'
 
       - name: Install Dependencies
         run: composer new-install
