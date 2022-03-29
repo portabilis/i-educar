@@ -21,28 +21,25 @@ let onClickDeleteEvent    = false;
 let setTableSearchDetails = function(){};
 
 let postPromocaoMatricula = function(){
-  let $proximoMatriculaIdField = $j('#proximo-matricula-id');
-  $proximoMatriculaIdField.data('initial_matricula_id', $proximoMatriculaIdField.val());
+  let options = {
+    url : '/enrollments-promotion',
+    dataType : 'json',
+    type: 'post',
+    data : {
+      instituicao_id : $j('#instituicao_id').val(),
+      ano : $j('#ano').val(),
+      escola : $j('#escola').val(),
+      curso : $j('#curso').val(),
+      serie : $j('#serie').val(),
+      turma : $j('#turma').val(),
+      matricula: $j('#matricula').val(),
+      regras_avaliacao_id : $j('#regras_avaliacao_id').val()
+    },
+    success : handlePostPromocaoMatricula,
+    error : handlePostPromocaoMatricula
+  };
 
-  if (validatesIfValueIsNumeric($proximoMatriculaIdField.val())) {
-    let options = {
-      url : postResourceUrlBuilder.buildUrl(API_URL_BASE, 'promocao', {matricula_id : $proximoMatriculaIdField.val()}),
-      dataType : 'json',
-      data : {
-        instituicao_id : $j('#instituicao_id').val(),
-        ano : $j('#ano').val(),
-        escola : $j('#escola').val(),
-        curso : $j('#curso').val(),
-        serie : $j('#serie').val(),
-        turma : $j('#turma').val(),
-        matricula: $j('#matricula').val(),
-        regras_avaliacao_id : $j('#regras_avaliacao_id').val()
-      },
-      success : handlePostPromocaoMatricula,
-      error : handlePostPromocaoMatricula
-    };
-    postResource(options);
-  }
+  postResource(options);
 };
 
 let deleteOldComponentesCurriculares = function() {
@@ -57,32 +54,12 @@ let deleteOldComponentesCurriculares = function() {
 };
 
 function handlePostPromocaoMatricula(dataResponse) {
-  const response = dataResponse.msgs;
-  response.map((res) => {
-    if (res.type === 'error') {
-      messageUtils.error(safeUtf8Decode(res.msg));
-    } else{
-      messageUtils.success(safeUtf8Decode(res.msg));
-    }
-  });
-
-  let $proximoMatriculaIdField = $j('#proximo-matricula-id');
-  let initialMatriculaId = parseInt($proximoMatriculaIdField.data('initial_matricula_id'));
-  let nextEnrollmentValue = parseInt($proximoMatriculaIdField.val());
-  let nextResponseEnrollmentValue = dataResponse.result.proximo_matricula_id;
-  let arrayCheck = Array.isArray(nextResponseEnrollmentValue);
-
-  if (nextResponseEnrollmentValue !== 0 && !arrayCheck) {
-    let $proximaMatricula = ((dataResponse.any_error_msg) ? (nextEnrollmentValue + parseInt(1)) : nextResponseEnrollmentValue);
-    $proximoMatriculaIdField.val($proximaMatricula);
-    initialMatriculaId = parseInt($proximoMatriculaIdField.val());
+  if (dataResponse.status == 'notice') {
+    messageUtils.notice(dataResponse.message);
+    return;
   }
 
-  if ($j('#continuar-processo').is(':checked') && initialMatriculaId !== nextEnrollmentValue) {
-      $j('#promover-matricula').click();
-  } else if (($j('#continuar-processo').is(':checked') && initialMatriculaId === nextEnrollmentValue)) {
-      messageUtils.success('Processo finalizado.');
-  }
+  messageUtils.success(dataResponse.message);
 }
 
 function handleDelete(dataResponse) {
@@ -101,32 +78,6 @@ function handleSearch($resultTable, dataResponse) {
 
   $j('<span />')
     .html('Quantidade de matrículas filtradas: ' + '<b>' + dataResponse.quantidade_matriculas + '<b><br />')
-    .attr('class','qnt-matriculas')
-    .appendTo($text);
-
-  $j('<span />')
-    .html('Próxima matrícula:')
-    .attr('class','qnt-matriculas')
-    .appendTo($text);
-
-  $j('<input />').attr('type', 'text')
-    .attr('name', 'proximo-matricula-id')
-    .attr('id', 'proximo-matricula-id')
-    .attr('class','proximo-matricula')
-    .val(0)
-    .appendTo($text);
-
-  $j('<br />').appendTo($text);
-
-  $j('<input />')
-    .attr('type', 'checkbox')
-    .attr('id', 'continuar-processo')
-    .attr('name', 'continuar-processo')
-    .attr('class','continuar-processo')
-    .appendTo($text);
-
-  $j('<span />')
-    .html('Continuar processo <br />')
     .attr('class','qnt-matriculas')
     .appendTo($text);
 

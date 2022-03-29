@@ -140,7 +140,7 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::delete('/turma', [SchoolClassController::class, 'delete'])
         ->name('schoolclass.delete');
 
-    Route::get('/enrollments-promotion', [EnrollmentsPromotionController::class, 'processEnrollmentsPromotionJobs'])
+    Route::post('/enrollments-promotion', [EnrollmentsPromotionController::class, 'processEnrollmentsPromotionJobs'])
         ->name('enrollments.promotion');
 });
 
