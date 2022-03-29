@@ -16,8 +16,6 @@ let onClickSelectAllEvent = false;
 let onClickActionEvent    = false;
 let onClickDeleteEvent    = false;
 
-//url builders
-
 let setTableSearchDetails = function(){};
 
 let postPromocaoMatricula = function(){
@@ -42,35 +40,13 @@ let postPromocaoMatricula = function(){
   postResource(options);
 };
 
-let deleteOldComponentesCurriculares = function() {
-  let options = {
-    url : deleteResourceUrlBuilder.buildUrl(API_URL_BASE, 'old_componentes_curriculares', {ano : $j('#ano').val()}),
-    dataType : 'json',
-    data : {},
-    success : handleDelete
-  };
-
-  deleteResource(options);
-};
-
 function handlePostPromocaoMatricula(dataResponse) {
-  if (dataResponse.status == 'notice') {
+  if (dataResponse.status === 'notice') {
     messageUtils.notice(dataResponse.message);
     return;
   }
 
   messageUtils.success(dataResponse.message);
-}
-
-function handleDelete(dataResponse) {
-  const response = dataResponse.msgs;
-  response.map((res) => {
-    if (res.type === 'error') {
-      messageUtils.error(safeUtf8Decode(res.msg));
-    } else{
-      messageUtils.success(safeUtf8Decode(res.msg));
-    }
-  });
 }
 
 function handleSearch($resultTable, dataResponse) {
@@ -91,25 +67,5 @@ function handleSearch($resultTable, dataResponse) {
 
   $j('<span />').html(' ').appendTo($text);
 
-  $j('<input />').attr('id', 'delete-old-componentes-curriculares')
-    .attr('href', '#')
-    .attr('type','button')
-    .attr('class','btn-danger')
-    .attr('value','Limpar antigos componentes curriculares')
-    .bind('click', deleteOldComponentesCurriculares)
-    .appendTo($text);
-
   $j('<td />').html($text).appendTo($j('<tr />').appendTo($resultTable));
-
-  if (dataResponse.quantidade_matriculas <= 1) {
-    $j('#proximo-matricula-id').prop('disabled', true);
-    $j('#continuar-processo').prop('disabled', true);
-  }
 }
-
-$j(document).ready(() => {
-  $j('#matricula').on('change', () => {
-    let value = $j('#matricula').val()
-    $j('#matricula option').removeAttr('selected').filter("[value="+value+"]").attr('selected', '')
-  })
-})
