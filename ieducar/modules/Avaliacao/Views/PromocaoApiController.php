@@ -163,7 +163,7 @@ class PromocaoApiController extends ApiCoreController
             $this->_boletimServices = [];
         }
 
-        if ($build === true) {
+        if ($build) {
             $data = [
                 'matricula' => $params['matricula'],
                 'usuario' => $params['user_id'],
