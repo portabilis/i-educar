@@ -48,7 +48,7 @@ class EnrollmentsPromotionController extends Controller
         $message = 'Processo de atualização de matrículas finalizado. Total de itens processados: ';
         Bus::batch($jobs)
             ->finally(function (Batch $batch) use ($userId, $message) {
-                $message .= $batch->totalJobs . ' matricula(s)';
+                $message .= $batch->totalJobs . ' matrícula(s)';
                 (new NotificationService())->createByUser($userId, $message ,'',NotificationType::OTHER);
             })
             ->dispatch();
