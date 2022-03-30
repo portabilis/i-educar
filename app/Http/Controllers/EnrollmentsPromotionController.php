@@ -30,7 +30,7 @@ class EnrollmentsPromotionController extends Controller
 
         $enrollmentsIds = $this->loadEnrollmentsByFilter($data);
 
-        $userId = Auth::id();
+        $userId = $request->user()->id;
         $databaseConnection = DB::getDefaultConnection();
 
         $jobs = [];
