@@ -153,6 +153,10 @@ return new class extends clsCadastro {
             $this->atividades_complementares = explode(',', str_replace(['{', '}'], '', $this->atividades_complementares));
         }
 
+        if (is_string($this->estrutura_curricular)) {
+            $this->estrutura_curricular = explode(',', str_replace(['{', '}'], '', $this->estrutura_curricular));
+        }
+
         if (is_string($this->cod_curso_profissional)) {
             $this->cod_curso_profissional = explode(',', str_replace(['{', '}'], '', $this->cod_curso_profissional));
         }
@@ -598,7 +602,6 @@ return new class extends clsCadastro {
         $helperOptions = ['objectName' => 'estrutura_curricular'];
         $options = [
             'label' => 'Estrutura curricular',
-            'value' => $this->estrutura_curricular,
             'required' => $obrigarCamposCenso && $this->tipo_atendimento === 0,
             'size' => 70,
             'options' => [
