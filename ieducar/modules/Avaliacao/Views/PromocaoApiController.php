@@ -163,7 +163,7 @@ class PromocaoApiController extends ApiCoreController
             $this->_boletimServices = [];
         }
 
-        if ($build === true) {
+        if ($build) {
             $data = [
                 'matricula' => $params['matricula'],
                 'usuario' => $params['user_id'],
@@ -407,7 +407,6 @@ class PromocaoApiController extends ApiCoreController
                 $situacaoAnterior = $this->loadSituacaoArmazenadaMatricula($this->matriculaId());
 
                 $this->lancarFaltasNaoLancadas($this->matriculaId());
-                //$this->convertParecerToLatin1($matriculaId);
                 $this->atualizaNotaExame($this->matriculaId());
 
                 $this->trySaveBoletimService();
