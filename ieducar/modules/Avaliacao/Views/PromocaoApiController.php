@@ -498,7 +498,7 @@ class PromocaoApiController extends ApiCoreController
     {
         $registration = LegacyRegistration::query()->find($enrollmentsId);
 
-        if (!$registration instanceof LegacyRegistration) {
+        if (empty($registration)) {
             return;
         }
 
