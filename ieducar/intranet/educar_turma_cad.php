@@ -602,7 +602,7 @@ return new class extends clsCadastro {
         $helperOptions = ['objectName' => 'estrutura_curricular'];
         $options = [
             'label' => 'Estrutura curricular',
-            'required' => $obrigarCamposCenso && $this->tipo_atendimento === 0,
+            'required' => false,
             'size' => 70,
             'options' => [
                 'values' => $this->estrutura_curricular,
