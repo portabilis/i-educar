@@ -41,6 +41,7 @@ return new class extends clsCadastro {
     public $etapa_educacenso;
     public $ref_cod_disciplina_dispensada;
     public $codigo_inep_educacenso;
+    public $estrutura_curricular;
     public $tipo_mediacao_didatico_pedagogico;
     public $dias_semana;
     public $tipo_boletim;
@@ -593,6 +594,24 @@ return new class extends clsCadastro {
 
         $options = ['label' => 'Tipo de atendimento', 'resources' => $resources, 'value' => $this->tipo_atendimento, 'required' => $obrigarCamposCenso, 'size' => 70,];
         $this->inputsHelper()->select('tipo_atendimento', $options);
+
+        $helperOptions = ['objectName' => 'estrutura_curricular'];
+        $options = [
+            'label' => 'Estrutura curricular',
+            'value' => $this->estrutura_curricular,
+            'required' => $obrigarCamposCenso && $this->tipo_atendimento === 0,
+            'size' => 70,
+            'options' => [
+                'values' => $this->estrutura_curricular,
+                'all_values'=> [
+                    1 => 'Formação geral básica',
+                    2 => 'Itinerário formativo',
+                    3 => 'Não se aplica'
+                ]
+            ]
+        ];
+
+        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
         $atividadesComplementares = loadJson('educacenso_json/atividades_complementares.json');
         $helperOptions = ['objectName' => 'atividades_complementares'];
