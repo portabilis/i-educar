@@ -18,15 +18,7 @@ class EnrollmentsPromotionController extends Controller
 
     public function processEnrollmentsPromotionJobs(Request $request)
     {
-        $data = [
-            'ano' => (int) $request->get('ano'),
-            'escolaId' => $request->get('escola') === '' ? 0 : (int) $request->get('escola'),
-            'cursoId' => empty($request->get('curso')) ? 0 : (int) $request->get('curso'),
-            'serieId' => empty($request->get('serie')) ? 0 : (int) $request->get('serie'),
-            'turmaId' => empty($request->get('turma')) ? 0 : (int) $request->get('turma'),
-            'matriculaSituacao' => empty($request->get('matricula')) ? 10 : (int) $request->get('matricula'),
-            'regraDeAvaliacao' => empty($request->get('regras_avaliacao_id')) ? 0 : $request->get('regras_avaliacao_id'),
-        ];
+        $data = $this->getResquetData($request);
 
         $enrollmentsIds = $this->loadEnrollmentsByFilter($data);
 
@@ -89,5 +81,18 @@ class EnrollmentsPromotionController extends Controller
                     AND (CASE WHEN :regraDeAvaliacao = 0  THEN true ELSE :regraDeAvaliacao = ra.regra_avaliacao_id END)
                 ORDER BY ref_cod_matricula
                 ';
+    }
+
+    private function getResquetData(Request $request) : array
+    {
+        return [
+            'ano' => (int) $request->input('ano'),
+            'escolaId' => (int) $request->input('escola', 0),
+            'cursoId' => (int) $request->input('curso', 0),
+            'serieId' => (int) $request->input('serie', 0),
+            'escolturmaIdaId' => (int) $request->input('turma', 0),
+            'matriculaSituacao' => (int) $request->input('matricula', 10),
+            'regraDeAvaliacao' => (int) $request->input('regras_avaliacao_id', 0),
+        ];
     }
 }
