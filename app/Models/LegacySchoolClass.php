@@ -107,6 +107,7 @@ class LegacySchoolClass extends Model
         'local_funcionamento_diferenciado',
         'estrutura_curricular',
         'formas_organizacao_turma',
+        'unidade_curricular',
     ];
 
     /**
