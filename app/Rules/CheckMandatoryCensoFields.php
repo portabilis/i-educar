@@ -104,6 +104,9 @@ class CheckMandatoryCensoFields implements Rule
             if (!$this->validaCampoAtividadesComplementares($params)) {
                 return false;
             }
+            if (!$this->validaCampoEstruturaCurricular($params)) {
+                return false;
+            }
             if (!$this->validaCampoEtapaEnsino($params['tipo_atendimento'])) {
                 return false;
             }
@@ -300,6 +303,27 @@ class CheckMandatoryCensoFields implements Rule
         ) && $params->local_funcionamento_diferenciado == App_Model_LocalFuncionamentoDiferenciado::UNIDADE_PRISIONAL) {
             $this->message = 'Não é possível selecionar a opção: Unidade prisional quando o local de funcionamento da escola não for: Unidade prisional.';
 
+            return false;
+        }
+
+        return true;
+    }
+
+    private function validaCampoEstruturaCurricular(mixed $params)
+    {
+        $estruturaCurricular = array_map('intval',
+            explode(',', str_replace(['{', '}'], '', $params->estrutura_curricular))
+         ?: []);
+
+        if ($params->tipo_atendimento == TipoAtendimentoTurma::ESCOLARIZACAO
+            && empty($estruturaCurricular)
+        ) {
+            $this->message = 'Campo atividades Estrutura Curricular é obrigatório.';
+            return false;
+        }
+
+        if (count($estruturaCurricular) > 1 && in_array(3, $estruturaCurricular, true)) {
+            $this->message = "Não é possível informar mais de uma opção no campo: <b>Estrutura curricular</b>, quando a opção: <b>Não se aplica</b> estiver selecionada";
             return false;
         }
 
