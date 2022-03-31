@@ -342,7 +342,11 @@ class CheckMandatoryCensoFields implements Rule
             return true;
         }
 
-        if (!empty($params->formas_organizacao_turma) && in_array(1, $estruturaCurricular, true)) {
+        if (empty($params->formas_organizacao_turma) && !in_array(1, $estruturaCurricular, true)) {
+            return true;
+        }
+
+        if (empty($params->formas_organizacao_turma) && in_array(1, $estruturaCurricular, true)) {
             $this->message = 'Campo: <b>Formas de organização da turma</b> é obrigatório quando o campo: <b>Estrutura Curricular contém: Formação geral básica</b>';
             return false;
         }
