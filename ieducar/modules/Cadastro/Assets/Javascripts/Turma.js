@@ -40,6 +40,15 @@ let verificaEtapaEducacenso = ()=>{
   }
 }
 
+let verificaFormaOrganizacaoTurma = ()=> {
+  $j('#formas_organizacao_turma').makeUnrequired();
+  if (obrigarCamposCenso &&
+      $j('#estrutura_curricular').val() &&
+      $j('#estrutura_curricular').val().includes("1")) {
+    $j('#formas_organizacao_turma').makeRequired();
+  }
+}
+
 let verificaLocalFuncionamentoDiferenciado = () => {
   $j('#local_funcionamento_diferenciado').makeUnrequired();
   let habilitaCampo = [1, 2].includes(+($j('#tipo_mediacao_didatico_pedagogico').val()));
@@ -60,7 +69,12 @@ $j('#tipo_atendimento').change(function() {
   verificaEtapaEducacenso();
   habilitaEtapaEducacenso();
 });
+$j('#estrutura_curricular').change(function() {
+  verificaFormaOrganizacaoTurma();
+});
+
 verificaEtapaEducacenso();
+verificaFormaOrganizacaoTurma();
 verificaLocalFuncionamentoDiferenciado();
 
 $j('#etapa_educacenso').change(function() {
