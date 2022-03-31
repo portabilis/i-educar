@@ -46,6 +46,7 @@ let verificaFormaOrganizacaoTurma = ()=> {
       $j('#estrutura_curricular').val() &&
       $j('#estrutura_curricular').val().includes("1")) {
     $j('#formas_organizacao_turma').makeRequired();
+    return;
   }
 }
 
@@ -71,10 +72,10 @@ $j('#tipo_atendimento').change(function() {
 });
 $j('#estrutura_curricular').change(function() {
   verificaFormaOrganizacaoTurma();
+  habilitaFormasOrganizarTurma();
 });
 
 verificaEtapaEducacenso();
-verificaFormaOrganizacaoTurma();
 verificaLocalFuncionamentoDiferenciado();
 
 $j('#etapa_educacenso').change(function() {
@@ -202,6 +203,15 @@ function habilitaEtapaEducacenso() {
 
   if (atividadeComplementar || atendimentoEducacionalEspecializado) {
     $j("#etapa_educacenso").prop('disabled', true).val("");
+  }
+}
+
+function habilitaFormasOrganizarTurma() {
+  $j("#formas_organizacao_turma").prop('disabled', false);
+  if (obrigarCamposCenso &&
+     !$j('#estrutura_curricular').val() ||
+     !$j('#estrutura_curricular').val().includes("1")) {
+    $j("#formas_organizacao_turma").prop('disabled', true).val("");
   }
 }
 
@@ -383,6 +393,8 @@ $j(document).ready(function() {
       verificaEstruturacurricular();
       mostraCursoTecnico();
       habilitaEtapaEducacenso();
+      verificaFormaOrganizacaoTurma();
+      habilitaFormasOrganizarTurma();
     });
 
   // fix checkboxs
