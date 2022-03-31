@@ -176,6 +176,14 @@ class SchoolClassController extends Controller
             $params['estrutura_curricular'] = null;
         }
 
+        if (empty($params['formas_organizacao_turma'])) {
+            $params['formas_organizacao_turma'] = null;
+        }
+
+        if (empty($params['unidade_curricular'])) {
+            $params['unidade_curricular'] = null;
+        }
+
         if (isset($params['cod_curso_profissional'])) {
             $params['cod_curso_profissional'] = $params['cod_curso_profissional'][0];
         } else {
