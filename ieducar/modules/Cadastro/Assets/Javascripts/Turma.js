@@ -50,6 +50,16 @@ let verificaFormaOrganizacaoTurma = ()=> {
   }
 }
 
+let verificaUnidadeCurricular = ()=> {
+  $j('#unidade_curricular').makeUnrequired();
+  if (obrigarCamposCenso &&
+    $j('#estrutura_curricular').val() &&
+    $j('#estrutura_curricular').val().includes("2")) {
+    $j('#unidade_curricular').makeRequired();
+    return;
+  }
+}
+
 let verificaLocalFuncionamentoDiferenciado = () => {
   $j('#local_funcionamento_diferenciado').makeUnrequired();
   let habilitaCampo = [1, 2].includes(+($j('#tipo_mediacao_didatico_pedagogico').val()));
@@ -73,6 +83,8 @@ $j('#tipo_atendimento').change(function() {
 $j('#estrutura_curricular').change(function() {
   verificaFormaOrganizacaoTurma();
   habilitaFormasOrganizarTurma();
+  verificaUnidadeCurricular();
+  habilitaUnidadeCurricular();
 });
 
 verificaEtapaEducacenso();
@@ -212,6 +224,15 @@ function habilitaFormasOrganizarTurma() {
      !$j('#estrutura_curricular').val() ||
      !$j('#estrutura_curricular').val().includes("1")) {
     $j("#formas_organizacao_turma").prop('disabled', true).val("");
+  }
+}
+
+function habilitaUnidadeCurricular() {
+  $j("#unidade_curricular").prop('disabled', false);
+  if (obrigarCamposCenso &&
+    !$j('#estrutura_curricular').val() ||
+    !$j('#estrutura_curricular').val().includes("2")) {
+    $j("#unidade_curricular").prop('disabled', true).val("");
   }
 }
 
@@ -395,6 +416,8 @@ $j(document).ready(function() {
       habilitaEtapaEducacenso();
       verificaFormaOrganizacaoTurma();
       habilitaFormasOrganizarTurma();
+      verificaUnidadeCurricular();
+      habilitaUnidadeCurricular();
     });
 
   // fix checkboxs
