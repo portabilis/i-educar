@@ -46,7 +46,6 @@ let verificaFormaOrganizacaoTurma = ()=> {
       $j('#estrutura_curricular').val() &&
       $j('#estrutura_curricular').val().includes("1")) {
     $j('#formas_organizacao_turma').makeRequired();
-    return;
   }
 }
 
