@@ -317,9 +317,7 @@ class CheckMandatoryCensoFields implements Rule
 
     private function validaCampoEstruturaCurricular(mixed $params)
     {
-        $estruturaCurricular = array_map('intval',
-            explode(',', str_replace(['{', '}'], '', $params->estrutura_curricular))
-         ?: []);
+        $estruturaCurricular = $this->getEstruturaCurricularValues($params);
 
         if ($params->tipo_atendimento == TipoAtendimentoTurma::ESCOLARIZACAO
             && empty($estruturaCurricular)
@@ -338,10 +336,7 @@ class CheckMandatoryCensoFields implements Rule
 
     private function validaCampoFormasOrganizacaoTurma(mixed $params)
     {
-
-        $estruturaCurricular = array_map('intval',
-            explode(',', str_replace(['{', '}'], '', $params->estrutura_curricular))
-                ?: []);
+        $estruturaCurricular = $this->getEstruturaCurricularValues($params);
 
         if (empty($estruturaCurricular)) {
             return true;
