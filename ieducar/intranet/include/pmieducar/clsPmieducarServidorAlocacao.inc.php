@@ -643,6 +643,29 @@ class clsPmieducarServidorAlocacao extends Model
      *
      * @throws Exception
      */
+    public function detalhePorServidor()
+    {
+        if (is_numeric($this->ref_cod_servidor) && is_numeric($this->ano)) {
+            $db = new clsBanco();
+            $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_servidor = '{$this->ref_cod_servidor}' AND ano = '{$this->ano}'");
+            
+            while($db->ProximoRegistro()) {
+                $resultado[] = $db->Tupla();
+            }
+
+            return $resultado;
+        }
+
+        return false;
+    }
+
+    /**
+     * Retorna um array com os dados de um registro.
+     *
+     * @return array
+     *
+     * @throws Exception
+     */
     public function existe()
     {
         if (is_numeric($this->cod_servidor_alocacao)) {
