@@ -177,6 +177,7 @@ function centralizaExpansivel() {
     expansivel.style.position = 'fixed';
     expansivel.style.top = 'calc(50% - ' + (altura / 2) + 'px)';
     expansivel.style.left = 'calc(50% - ' + (largura / 2) + 'px)';
+	expansivel.style.width = 1023;
   }
 }
 
@@ -226,7 +227,7 @@ function showExpansivel( largura, altura, conteudo )
 		cliqueFecha = '';
 	}
 
-	conteudoMoldurado = '<table border="0" id="tabela_conteudo" cellpadding="0" cellspacing="0" width="100%"><tr height="44"><td valign="top"></td><td id="modal-title"  valign="top">'+ titulo + '</td><td id="modal-close" width="9" '+cliqueFecha+'</td><td valign="top"></td></tr><tr><td >&nbsp;</td><td bgcolor="#FFFFFF" colspan="2"><div id="expansivel_conteudo" class="modal-domjs-conteudo" style="overflow:hidden;">';
+	conteudoMoldurado = '<table border="0" id="tabela_conteudo" cellpadding="0" cellspacing="0" ><tr height="44"><td valign="top"></td><td id="modal-title"  valign="top">'+ titulo + '</td><td id="modal-close" width="9" '+cliqueFecha+'</td><td valign="top"></td></tr><tr><td >&nbsp;</td><td bgcolor="#FFFFFF" colspan="2"><div id="expansivel_conteudo" class="modal-domjs-conteudo" style="overflow:hidden;">';
 	conteudoMoldurado += conteudo;
 	conteudoMoldurado += '</div></td><td >&nbsp;</td></tr><tr><td  height="20" valign="top"></td><td colspan="2"  height="20">&nbsp;</td><td  height="20" valign="top"></td></tr></table>';
 	expansivel.innerHTML = conteudoMoldurado;
@@ -277,7 +278,7 @@ function showExpansivelImprimir( largura, altura, arquivo, array,  titulo )
 	DOM_divs[exp_id] = expansivel;
 	expansivel.style.position = "absolute";
 	expansivel.style.zIndex = 9;
-
+	
 
 	url = '';
 	junta = '?';

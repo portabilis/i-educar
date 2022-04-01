@@ -48,10 +48,10 @@
                     @method('put')
                 @endif
 
-                <table width="100%" cellpadding="0" cellspacing="0">
+                <table width="100%">
                     <tbody>
                     <tr>
-                        <td class="formdktd" colspan="2" height="24"><b>Novo </b></td>
+                        <td class="formdktd" colspan="2" height="24"><b>Novo</b></td>
                     </tr>
                     <tr id="tr_nm_tipo">
                         <td class="formmdtd">

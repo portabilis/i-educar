@@ -47,7 +47,7 @@ return new class extends clsCadastro {
         $this->campoNumero('login_', 'Login', $this->login_, 9, 9);
         $this->campoSenha('senha_', 'Senha', $this->senha_);
 
-        $this->campoTexto('nm_cliente1', 'Cliente', $this->nm_cliente, 30, 255, false, false, false, '', "<img border=\"0\" onclick=\"pesquisa_cliente();\" id=\"ref_cod_cliente_lupa\" name=\"ref_cod_cliente_lupa\" src=\"imagens/lupa.png\"\/>", '', '', true);
+        $this->campoTexto('nm_cliente1', 'Cliente', $this->nm_cliente, 30, 255, false, false, false, '', "<img border=\"0\" class=\"btn\" onclick=\"pesquisa_cliente();\" id=\"ref_cod_cliente_lupa\" name=\"ref_cod_cliente_lupa\" src=\"imagens/lupa.png\"\/>", '', '', true);
         $this->campoOculto('ref_cod_cliente', $this->ref_cod_cliente);
         $this->botao_enviar = false;
         $this->array_botao = ['Continuar', 'Cancelar'];

@@ -145,7 +145,7 @@ class clsDetalhe extends Core_Controller_Page_Abstract
             $retorno .= '</td></tr>';
 
             if ($this->array_botao_url || $this->array_botao_url_script) {
-                $retorno .= '<tr><td colspan=2><table width=\'100%\' summary=\'\'><tr><td></td><td height=\'1\' width=\'95%\'  style=\'font-size: 0px;\'>&nbsp;</td><td></td></tr></table></td></tr><tr><td colspan=\'2\' align=\'center\'>';
+                $retorno .= '<tr><td colspan=2><table summary=\'\'><tr><td></td><td style=\'font-size: 0px;\'>&nbsp;</td><td></td></tr></table></td></tr><tr><td colspan=\'2\' align=\'center\'>';
             }
 
             if ($this->array_botao_url) {

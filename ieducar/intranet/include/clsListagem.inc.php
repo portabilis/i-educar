@@ -162,7 +162,7 @@ class clsListagem extends clsCampos
             }
 
             $strReturn = <<<HTML
-<table>
+<table class="paginacao">
   <tr>
     <td>Total de registros: {$intTotalRegistros}</td>
   </tr>

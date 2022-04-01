@@ -310,20 +310,20 @@ return new class extends clsDetalhe {
             if ($lst) {
                 $tabela = '
           <table>
-            <tr align="center">
-              <td bgcolor="#f5f9fd "><b>Nome</b></td>
-              <td bgcolor="#f5f9fd "><b>Data Início</b></td>
-              <td bgcolor="#f5f9fd "><b>Data Fim</b></td>
-              <td bgcolor="#f5f9fd "><b>Dias Letivos</b></td>
+            <tr>
+              <td class="colorFont" bgcolor="#f5f9fd "><span><strong> Nome </strong></span></td>
+              <td class="colorFont" bgcolor="#f5f9fd "><span><strong> Data Início </strong></span></td>
+              <td class="colorFont" bgcolor="#f5f9fd "><span><strong> Data Fim </strong></span></td>
+              <td class="colorFont" bgcolor="#f5f9fd "><span><strong> Dias Letivos </strong></span></td>
             </tr>';
 
                 $cont = 0;
 
                 foreach ($lst as $valor) {
                     if (($cont % 2) == 0) {
-                        $color = ' bgcolor="#f5f9fd " ';
+                        $color = ' bgcolor= "#FFFFFF" ';
                     } else {
-                        $color = ' bgcolor="#FFFFFF" ';
+                        $color = ' bgcolor= "#f5f9fd" ';
                     }
 
                     $obj_modulo = new clsPmieducarModulo($valor['ref_cod_modulo']);
@@ -336,10 +336,10 @@ return new class extends clsDetalhe {
                     $tabela .= sprintf(
                         '
             <tr>
-              <td %s align=left>%s</td>
-              <td %s align=left>%s</td>
-              <td %s align=left>%s</td>
-              <td %s align=center>%s</td>
+              <td class="colorFont" %s align=left><span class="colorFont">%s</span></td>
+              <td class="colorFont" %s align=left><span class="colorFont">%s</span></td>
+              <td class="colorFont" %s align=left><span class="colorFont">%s</span></td>
+              <td class="colorFont" %s align=center><span class="colorFont">%s</span></td>
             </tr>',
                         $color,
                         $nm_modulo,
@@ -462,10 +462,10 @@ return new class extends clsDetalhe {
         }
 
         if (is_array($lista) && count($lista)) {
-            $this->tabela3 .= '<div style="margin-bottom: 10px;">';
-            $this->tabela3 .= '  <span style="display: block; float: left; width: 250px; font-weight: bold">Nome</span>';
-            $this->tabela3 .= '  <span style="display: block; float: left; width: 100px; font-weight: bold">Carga horária</span>';
-            $this->tabela3 .= '</div>';
+            $this->tabela3 .= '<tr>';
+            $this->tabela3 .= '  <td bgcolor="#f5f9fd" ><span class="colorFont"><strong>Nome</strong></span></td>';
+            $this->tabela3 .= '  <td bgcolor="#f5f9fd" ><span class="colorFont"><strong>Carga horária</strong></span></td>';
+            $this->tabela3 .= '</tr>';
             $this->tabela3 .= '<br style="clear: left" />';
 
             foreach ($lista as $registro) {
@@ -473,17 +473,15 @@ return new class extends clsDetalhe {
                     $registro->cargaHoraria = $componentes[$registro->id]->cargaHoraria;
                 }
 
-                $this->tabela3 .= '<div style="margin-bottom: 10px; float: left" class="linha-disciplina" >';
-                $this->tabela3 .= "  <span style='display: block; float: left; width: 250px'>{$registro}</span>";
-                $this->tabela3 .= "  <span style='display: block; float: left; width: 100px'>{$registro->cargaHoraria}</span>";
-                $this->tabela3 .= '</div>';
-                $this->tabela3 .= '<br style="clear: left" />';
-
+                $this->tabela3 .= '<tr style="margin-bottom: 10px;">';
+                $this->tabela3 .= "<td><span class='colorFont'>{$registro}</span></td>";
+                $this->tabela3 .= "<td><span class='colorFont'>{$registro->cargaHoraria}</span></td>";
+                $this->tabela3 .= '</tr>';
                 $registro->cargaHoraria = '';
             }
 
-            $disciplinas  = '<table cellspacing="0" cellpadding="0" border="0">';
-            $disciplinas .= sprintf('<tr align="left"><td>%s</td></tr>', $this->tabela3);
+            $disciplinas  = '<table>';
+            $disciplinas .= sprintf('<tr ><td>%s</td></tr>', $this->tabela3);
             $disciplinas .= '</table>';
         } else {
             $disciplinas = 'A série/ano escolar não possui componentes curriculares cadastrados.';

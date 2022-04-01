@@ -1,15 +1,26 @@
 html{
   font-size: 62.5%;
+  width: 100%;
 }
 body{
-  font-size: 14px;
+  font-size: 16px;
+  
 }
-
-h1 {font-size: 24px}
 
 body, html{
   font-family: "Open Sans" !important;
-  height: 100vh !important;
+  height: 100% !important;
+  min-height: 100% !important;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-weight: 200;
+  line-height: 1.5;
+  color: #333;
+  text-align: left;
+}
+
+table:not(.paginacao) {
+  width: 100%;
 }
 
 a{
@@ -61,6 +72,10 @@ input:read-only {
     color: #47728f;
 }
 
+.colorFont {
+  color: #47728f;
+}
+
 input.select2-search__field,
 #formcadastro input.select2-search__field,
 span.select2-selection.select2-selection--multiple{
@@ -72,7 +87,7 @@ span.select2-selection.select2-selection--multiple{
 }
 
 .chosen-container, input[type="text"] select .geral {
-  width: 100% !important;
+  width: 50% !important;
 }
 
 .chosen-container-single .chosen-single
@@ -257,6 +272,7 @@ span.error_notice {
 	border-color: #d39e00; }
 .btn-warning:focus, .btn-warning.focus {
 	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 0 0.2rem rgba(255, 193, 7, 0.5); }
+.btn-warning.disabled, .btn-warning:disabled {
     color: #212529;
     background-color: #ffc107;
 	border-color: #ffc107; }
@@ -350,6 +366,10 @@ span.error_notice {
 *************** FONTES ****************
 **************************************/
 
+.b {
+  font-weight: bold;
+} 
+
 h1, h2, h3, h4, h5, h6 {
   margin-top: 0;
   margin-bottom: 0.75rem; }
@@ -370,8 +390,10 @@ label {
     line-height: 1.2;
     color: inherit; }
 
+
+
 span  {
-  font-size: 1.6rem; }
+  font-size: 1.75rem; }
 
 h1, .h1 {
   font-size: 2.5rem; }
@@ -391,6 +413,321 @@ h5, .h5 {
 h6, .h6 {
   font-size: 1rem; }
 
+  @media only screen and (max-width: 1023px) {
+    span  {
+      font-size: 3.4rem; }
+    
+    h1, .h1 {
+      font-size: 5.5rem; }
+    
+    h2, .h2 {
+      font-size: 5rem; }
+    
+    h3, .h3 {
+      font-size: 4.75rem; }
+    
+    h4, .h4 {
+      font-size: 4.5rem; }
+    
+    h5, .h5 {
+      font-size: 4.25rem; }
+    
+    h6, .h6 {
+      font-size: 4rem; }
+
+    #localizacao span {
+      font-size: 3.5rem; }
+    
+    .fundoCalendarioTopo {
+      font-size: 3rem; }
+    
+  }
+
+/**************************************
+***** LINHA / COLUNA / CONTAINER ******
+**************************************/
+.main {
+  display: flex;
+  align-items: unset;
+}
+
+.sidebar{
+  flex:1;
+}
+
+.content {
+  flex: 3;
+}
+
+.container {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto; }
+
+.container-fluid {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto; }
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -15px;
+  margin-left: -15px; }
+
+.col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12, .col,
+.col-auto, .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm,
+.col-sm-auto, .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-11, .col-md-12, .col-md,
+.col-md-auto, .col-lg-1, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg,
+.col-lg-auto, .col-xl-1, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6, .col-xl-7, .col-xl-8, .col-xl-9, .col-xl-10, .col-xl-11, .col-xl-12, .col-xl,
+.col-xl-auto {
+  position: relative;
+  width: 100%;
+  min-height: 1px;
+  padding-right: 15px;
+  padding-left: 15px; }
+
+.col {
+  flex-basis: 0;
+  flex-grow: 1;
+  max-width: 100%; }
+
+.col-auto {
+  flex: 0 0 auto;
+  width: auto;
+  max-width: none; }
+
+.col-1 {
+  flex: 0 0 8.33333%;
+  max-width: 8.33333%; }
+
+.col-2 {
+  flex: 0 0 16.66667%;
+  max-width: 16.66667%; }
+
+.col-3 {
+  flex: 0 0 25%;
+  max-width: 25%; }
+
+.col-4 {
+  flex: 0 0 33.33333%;
+  max-width: 33.33333%; }
+
+.col-5 {
+  flex: 0 0 41.66667%;
+  max-width: 41.66667%; }
+
+.col-6 {
+  flex: 0 0 50%;
+  max-width: 50%; }
+
+.col-7 {
+  flex: 0 0 58.33333%;
+  max-width: 58.33333%; }
+
+.col-8 {
+  flex: 0 0 66.66667%;
+  max-width: 66.66667%; }
+
+.col-9 {
+  flex: 0 0 75%;
+  max-width: 75%; }
+
+.col-10 {
+  flex: 0 0 83.33333%;
+  max-width: 83.33333%; }
+
+.col-11 {
+  flex: 0 0 91.66667%;
+  max-width: 91.66667%; }
+
+.col-12 {
+  flex: 0 0 100%;
+  max-width: 100%; }
+
+.order-first {
+  order: -1; }
+
+.order-last {
+  order: 13; }
+
+.order-0 {
+  order: 0; }
+
+.order-1 {
+  order: 1; }
+
+.order-2 {
+  order: 2; }
+
+.order-3 {
+  order: 3; }
+
+.order-4 {
+  order: 4; }
+
+.order-5 {
+  order: 5; }
+
+.order-6 {
+  order: 6; }
+
+.order-7 {
+  order: 7; }
+
+.order-8 {
+  order: 8; }
+
+.order-9 {
+  order: 9; }
+
+.order-10 {
+  order: 10; }
+
+.order-11 {
+  order: 11; }
+
+.order-12 {
+  order: 12; }
+
+.offset-1 {
+  margin-left: 8.33333%; }
+
+.offset-2 {
+  margin-left: 16.66667%; }
+
+.offset-3 {
+  margin-left: 25%; }
+
+.offset-4 {
+  margin-left: 33.33333%; }
+
+.offset-5 {
+  margin-left: 41.66667%; }
+
+.offset-6 {
+  margin-left: 50%; }
+
+.offset-7 {
+  margin-left: 58.33333%; }
+
+.offset-8 {
+  margin-left: 66.66667%; }
+
+.offset-9 {
+  margin-left: 75%; }
+
+.offset-10 {
+  margin-left: 83.33333%; }
+
+.offset-11 {
+  margin-left: 91.66667%; }
+
+@media (min-width: 1023px) {
+  .col-xl {
+    flex-basis: 0;
+    flex-grow: 1;
+    max-width: 100%; }
+  .col-xl-auto {
+    flex: 0 0 auto;
+    width: auto;
+    max-width: none; }
+  .col-xl-1 {
+    flex: 0 0 8.33333%;
+    max-width: 8.33333%; }
+  .col-xl-2 {
+    flex: 0 0 16.66667%;
+    max-width: 16.66667%; }
+  .col-xl-3 {
+    flex: 0 0 25%;
+    max-width: 25%; }
+  .col-xl-4 {
+    flex: 0 0 33.33333%;
+    max-width: 33.33333%; }
+  .col-xl-5 {
+    flex: 0 0 41.66667%;
+    max-width: 41.66667%; }
+  .col-xl-6 {
+    flex: 0 0 50%;
+    max-width: 50%; }
+  .col-xl-7 {
+    flex: 0 0 58.33333%;
+    max-width: 58.33333%; }
+  .col-xl-8 {
+    flex: 0 0 66.66667%;
+    max-width: 66.66667%; }
+  .col-xl-9 {
+    flex: 0 0 75%;
+    max-width: 75%; }
+  .col-xl-10 {
+    flex: 0 0 83.33333%;
+    max-width: 83.33333%; }
+  .col-xl-11 {
+    flex: 0 0 91.66667%;
+    max-width: 91.66667%; }
+  .col-xl-12 {
+    flex: 0 0 100%;
+    max-width: 100%; }
+  .order-xl-first {
+    order: -1; }
+  .order-xl-last {
+    order: 13; }
+  .order-xl-0 {
+    order: 0; }
+  .order-xl-1 {
+    order: 1; }
+  .order-xl-2 {
+    order: 2; }
+  .order-xl-3 {
+    order: 3; }
+  .order-xl-4 {
+    order: 4; }
+  .order-xl-5 {
+    order: 5; }
+  .order-xl-6 {
+    order: 6; }
+  .order-xl-7 {
+    order: 7; }
+  .order-xl-8 {
+    order: 8; }
+  .order-xl-9 {
+    order: 9; }
+  .order-xl-10 {
+    order: 10; }
+  .order-xl-11 {
+    order: 11; }
+  .order-xl-12 {
+    order: 12; }
+  .offset-xl-0 {
+    margin-left: 0; }
+  .offset-xl-1 {
+    margin-left: 8.33333%; }
+  .offset-xl-2 {
+    margin-left: 16.66667%; }
+  .offset-xl-3 {
+    margin-left: 25%; }
+  .offset-xl-4 {
+    margin-left: 33.33333%; }
+  .offset-xl-5 {
+    margin-left: 41.66667%; }
+  .offset-xl-6 {
+    margin-left: 50%; }
+  .offset-xl-7 {
+    margin-left: 58.33333%; }
+  .offset-xl-8 {
+    margin-left: 66.66667%; }
+  .offset-xl-9 {
+    margin-left: 75%; }
+  .offset-xl-10 {
+    margin-left: 83.33333%; }
+  .offset-xl-11 {
+    margin-left: 91.66667%; } }
+
+
 /**************************************
 ************ TOPO / RODAPÉ ************
 **************************************/
@@ -399,6 +736,11 @@ h6, .h6 {
   height: 50px;
   background: #47728f;
   color: #FFF;
+}
+
+header{
+  display: flex;
+  flex: 1;
 }
 
 .topo td.logo {
@@ -639,24 +981,24 @@ a.icons-top{
 **************************************/
 
 .r3c1{
-  width: 210px;
-  background: rgba(54,54,54,1);
+  background: rgba(54,54,54,1) !important;
+  box-shadow: 2px 3px 6px rgba(65,69,88,0.6);
   border: 0;
-  box-shadow: 4px 3px 3px rgba(65,69,88,0.4);
-  z-index: 1;
-  transition: left .5s ease-in-out;
-}
+  z-index: 10;
+ /* border-radius: 10px; */ }
+.r3c1:hover{ background: rgba(54,54,54,1) !important; transition: background .2s ease-in-out;}
 
-.r3c1-Mobile{
+
+.Mobile{
   width: 75%;
   height: -webkit-fill-available;
   background: rgba(54,54,54,1);
-  display:none;
+  /*display:none; */
   border: 0;
   position: absolute;
   box-shadow: 6px 0px 5px rgba(50, 50, 50, 0.5);
   left: -75%;
-  z-index: 1;
+  z-index: 2;
   transition: left .5s ease-in-out;
 }
 
@@ -863,7 +1205,6 @@ td.fundoLocalizacao {
 #localizacao span{
   font-weight: bold !important;
   color: #47728f;
-  font-size: 14px !important;
 }
 
 #localizacao .pagina_atual,
@@ -1391,12 +1732,18 @@ td.area-conhecimento-destaque {
   padding: 8px;
 }
 
-#formcadastro input, #formcadastro textarea {
+input[type=checkbox] {
+  width: auto !important;
+}
+
+#formcadastro input:not(.botaolistagem), #formcadastro textarea {
   border-radius: 3px;
   background-color: #ffffff;
   border: solid 1px #cddce6;
   padding: 8px;
-  font-size: 1.4rem;
+  font-size: 1.75rem;
+  width: 50%;
+  height: auto;
   color: #47728f;
   box-sizing: border-box;
 }
@@ -1420,10 +1767,10 @@ td.area-conhecimento-destaque {
   background-color: #ffffff;
   border: solid 1px #cddce6;
   padding: 8px;
-  font-size: 1.4rem;
+  font-size: 1.75rem;
   color: #47728f;
-  max-width: 100%;
-  width:100% !important;
+  max-width: 50%;
+  width:100%;
 }
 
 #formcadastro .formmdtd,
@@ -1433,11 +1780,8 @@ td.area-conhecimento-destaque {
   font-size: 14px;
   padding: 4px 8px;
   vertical-align: top;
-  width: 50%;
-}
-
-#form_resultado .formmdtd,
-#form_resultado .formlttd {
+  min-width:50%;
+  max-width: 75%;
   width: auto;
 }
 
@@ -1490,7 +1834,7 @@ td.area-conhecimento-destaque {
 .tableDetalhe .formlttd{
   color: #47728f;
   font-family: "Open Sans";
-  font-size: 14px;
+  font-size: 1.75rem;
   padding: 12px;
   vertical-align: top;
 }
@@ -1498,7 +1842,7 @@ td.area-conhecimento-destaque {
 .tableDetalhe th{
   font-family: "Open Sans";
   background-color: #f5f9fd !important;
-  font-size: 14px;
+  font-size: 1.75rem;
   font-weight: bold;
   font-style: normal;
   font-stretch: normal;
@@ -1506,7 +1850,6 @@ td.area-conhecimento-destaque {
   color: #47728f !important;
   padding: 17px 13px;
 }
-
 
 table#matriculas select {
     background-color: #e9f0f8;
@@ -1586,6 +1929,7 @@ table.paginacao{
 table.paginacao td {
   border: 1px solid #ccdce6;
   padding: 10px !important;
+  text-align: center;
 }
 
 table.paginacao td a{
@@ -1781,16 +2125,16 @@ input.btn_small {
 
 @media only screen and (max-width: 1023px) {
   
-  select {width: 100%;}
+  select {width: 100vh;}
   .r3c1 {display: none;}
-  .r3c1-Mobile {display: inherit;}
+  .Mobile {display: inherit;}
   .expandir-btn {display:inherit;}
   #formcadastro select {font-size: 3.4rem !important; max-width: none;}
   #formcadastro input, #formcadastro textarea {font-size: 3.4rem  !important}
   .ieducar-quick-search, .ieducar-sidebar-menu {position: relative}
   .breadcrumb a, .breadcrumb span {font-size: 2.7rem !important}
   .formmdtd sub, .formlttd sub {font-size:2.4rem}
-  .multiselect {width: 90% !important; margin: auto;margin-top: 20px !important;}
+  .multiselect {width: 90% !important; margin: auto; margin-top: 20px !important;}
   .quick-search .multiselect__tags { font-size: 3.5rem !important}
   td input[type="checkbox"]:read-only { width: 6rem !important; height: 6rem !important; display:flex}
   
@@ -1802,7 +2146,7 @@ input.btn_small {
   .notifications img {top: 3px !important; width:40px !important;}
 
   .ieducar-header{height: 100px !important;}
-  .ieducar-header-logo h1 a {font-size: 48px !important;line-height: 100px !important;}
+  .ieducar-header-logo h1 a {font-size: 4.8rem !important;line-height: 100px !important;}
   .ieducar-header-links .dropbtn {padding: 18px 36px 18px 18px !important; font-size: 4rem !important; background-size: 24px !important;}
   .ieducar-header-links .dropdown-content a {font-size: 1.5rem !important; padding: 25px 25px; margin: 15px 0;}
   .ieducar-menu a {font-size: 3.5rem !important;}
@@ -1825,7 +2169,7 @@ input.btn_small {
   .ieducar-quick-searchM{width: 90%; padding-top: 5rem;}
   
   #expandido:checked ~ .r3c1 {display: table-cell; left: 0;}
-  #expandido:checked ~ .r3c1-Mobile {display: table-cell; left: 0}
+  #expandido:checked ~ .Mobile {display: visible; left: 0}
   #expandido:checked ~ .expandir-btn {margin-left: 74.8%; }
   #expandido:checked ~ .ieducar-quick-search {display: inherit;}
   #expandido:checked ~ .ieducar-sidebar-menu {display: inherit;}
@@ -1853,6 +2197,7 @@ input.btn_small {
   }
 
 /****WIDGET SUPORTE****/
+
 .freshwidget-button{
   left: 30px !important;
 }

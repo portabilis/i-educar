@@ -2275,7 +2275,7 @@ function canShowParentsFields() {
     $j("#dialog-form-pessoa-aluno").dialog({
       autoOpen: false,
       height: "auto",
-      width: "auto",
+      width: "50em",
       modal: true,
       resizable: false,
       draggable: false,

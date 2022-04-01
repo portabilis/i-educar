@@ -78,13 +78,13 @@ return new class {
             $temp .= '<table width="100%" height="400" align="center" border="0" cellspacing="4" cellpadding="0">';
             $temp .= '
         <tr>
-          <td class="fundoCalendarioTopo" style="padding:0px;">DOM</td>
-          <td class="fundoCalendarioTopo" style="padding:0px;">SEG</td>
-          <td class="fundoCalendarioTopo" style="padding:0px;">TER</td>
-          <td class="fundoCalendarioTopo" style="padding:0px;">QUA</td>
-          <td class="fundoCalendarioTopo" style="padding:0px;">QUI</td>
-          <td class="fundoCalendarioTopo" style="padding:0px;">SEX</td>
-          <td class="fundoCalendarioTopo" style="padding:0px;">SAB</td>
+          <td class="fundoCalendarioTopo" >DOM</td>
+          <td class="fundoCalendarioTopo" >SEG</td>
+          <td class="fundoCalendarioTopo" >TER</td>
+          <td class="fundoCalendarioTopo" >QUA</td>
+          <td class="fundoCalendarioTopo" >QUI</td>
+          <td class="fundoCalendarioTopo" >SEX</td>
+          <td class="fundoCalendarioTopo" >SAB</td>
         </tr>';
 
             $mes = $_GET['mes'] ?? date('m');

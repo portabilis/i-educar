@@ -196,7 +196,7 @@ return new class extends clsCadastro {
         $this->campoTextoInv('nm_pessoa', 'Cliente', $nm_pessoa, 30, 255);
 
         // outros Filtros
-        $this->campoTexto('titulo_obra', 'Obra', $this->titulo_obra, 30, 255, true, false, false, '', "<img border=\"0\" onclick=\"pesquisa_obra();\" id=\"ref_cod_acervo_lupa\" name=\"ref_cod_acervo_lupa\" src=\"imagens/lupa.png\"\/>", '', '', true);
+        $this->campoTexto('titulo_obra', 'Obra', $this->titulo_obra, 30, 255, true, false, false, '', "<img border=\"0\" class=\"btn\" onclick=\"pesquisa_obra();\" id=\"ref_cod_acervo_lupa\" name=\"ref_cod_acervo_lupa\" src=\"imagens/lupa.png\"\/>", '', '', true);
         $this->campoOculto('ref_cod_acervo', $this->ref_cod_acervo);
 
         // caso exemplar esteja emprestado, mas ainda nao exista reserva

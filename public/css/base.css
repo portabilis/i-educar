@@ -63,6 +63,7 @@ a:hover {
 .ieducar-header {
   display: flex;
   background-image: linear-gradient(to bottom right, rgba(34,142,187,1) 0%, rgba(42,177,232,1) 75%);
+  align-items: center;
   height: 50px;
   box-shadow: 0px 4px 7px rgba(50, 50, 50, 0.5);
 }
@@ -253,9 +254,12 @@ a:hover {
 .ieducar-menu,
 .ieducar-sub-menu {
   list-style: none;
-  background: rgba(54,54,54);
+  background: rgba(54,54,54,1);
+/*  border-radius: 10px; */
   box-shadow: 2px 3px 6px rgb(65 69 88 / 60%);
 }
+
+.ieducar-menu:hover{background:rgba(54,54,54,1); transition: background .2s ease-in-out;}
 
 .ieducar-sub-menu {
   background: #FFF;
@@ -286,6 +290,7 @@ a:hover {
 
 .ieducar-menu > li:hover {
   background: #cae6f1;
+  border-radius: 8px;
 }
 
 .ieducar-menu li:hover > .ieducar-sub-menu {
@@ -314,6 +319,7 @@ a:hover {
 
 .ieducar-sub-menu li:hover {
   background: #cae6f1;
+  border-radius: 9px;
 }
 
 .ieducar-sub-menu .ieducar-sub-menu {

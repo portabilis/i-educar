@@ -79,10 +79,10 @@ return new class extends clsListagem {
         $this->addCabecalhos($lista_busca);
 
         // Filtros de Foreign Keys
-        $this->campoTexto('nm_cliente', 'Cliente', $this->nm_cliente, 30, 255, false, false, false, '', "<img border=\"0\" onclick=\"pesquisa_cliente();\" id=\"ref_cod_cliente_lupa\" name=\"ref_cod_cliente_lupa\" src=\"imagens/lupa.png\"\/>");
+        $this->campoTexto('nm_cliente', 'Cliente', $this->nm_cliente, 30, 255, false, false, false, '', "<img border=\"0\" class=\"btn\" onclick=\"pesquisa_cliente();\" id=\"ref_cod_cliente_lupa\" name=\"ref_cod_cliente_lupa\" src=\"imagens/lupa.png\"\/>");
         $this->campoOculto('ref_cod_cliente', $this->ref_cod_cliente);
 
-        $this->campoTexto('nm_obra', 'Obra', $this->nm_obra, 30, 255, false, false, false, '', "<img border=\"0\" onclick=\"pesquisa_obra();\" id=\"ref_cod_exemplar_lupa\" name=\"ref_cod_exemplar_lupa\" src=\"imagens/lupa.png\"\/>");
+        $this->campoTexto('nm_obra', 'Obra', $this->nm_obra, 30, 255, false, false, false, '', "<img border=\"0\" class=\"btn\" onclick=\"pesquisa_obra();\" id=\"ref_cod_exemplar_lupa\" name=\"ref_cod_exemplar_lupa\" src=\"imagens/lupa.png\"\/>");
         $this->campoOculto('ref_cod_acervo', $this->ref_cod_acervo);
 
         $this->campoNumero('ref_cod_exemplar', 'Tombo', $this->ref_cod_exemplar, 15, 50);

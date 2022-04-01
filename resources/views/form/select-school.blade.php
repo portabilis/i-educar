@@ -1,5 +1,5 @@
 <span class="form">
-    <select class="geral" name="ref_cod_escola" id="ref_cod_escola" style="width: 308px;">
+    <select class="geral" name="ref_cod_escola" id="ref_cod_escola">
         <option value="">Selecione uma escola</option>
         @if(old('ref_cod_instituicao', Request::get('ref_cod_instituicao')))
             @foreach(App_Model_IedFinder::getEscolasByUser(old('ref_cod_instituicao', Request::get('ref_cod_instituicao'))) as $id => $name)
