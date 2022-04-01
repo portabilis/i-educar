@@ -567,6 +567,22 @@ class clsPortalFuncionario extends Model
         return false;
     }
 
+    public function desativar()
+    {
+        if (is_numeric($this->ref_cod_pessoa_fj)) {
+            $db = new clsBanco();
+            $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE ref_cod_pessoa_fj = '{$this->ref_cod_pessoa_fj}'");
+
+            if ($db->ProximoRegistro()) {
+                $this->ativo = 0;
+
+                if ($this->edita())
+                    return $this->ref_cod_pessoa_fj;
+            }
+        }
+
+        return false;
+    }
     /**
      * Retorna a string com o nome do vinculo cujo código foi passado por parâmetro
      *
