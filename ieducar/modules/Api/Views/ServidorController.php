@@ -230,12 +230,16 @@ class ServidorController extends ApiCoreController
     {
         $servidor = $this->getRequest()->servidor_id;
 
-        $sql = 'SELECT pessoa.nome,
-                       pessoa.email,
-                       educacenso_cod_docente.cod_docente_inep AS inep
+        $sql = 'SELECT
+                    pmieducar.servidor.cod_servidor,
+                    pessoa.nome,
+                    pessoa.email,
+                    educacenso_cod_docente.cod_docente_inep AS inep,
+                    cpf
                 FROM pmieducar.servidor
                 JOIN cadastro.pessoa ON pessoa.idpes = servidor.cod_servidor
                 JOIN modules.educacenso_cod_docente ON educacenso_cod_docente.cod_servidor = servidor.cod_servidor
+                JOIN cadastro.fisica ON cadastro.fisica.idpes = servidor.cod_servidor
                 WHERE servidor.cod_servidor = $1';
 
         $result = $this->fetchPreparedQuery($sql, [$servidor]);
