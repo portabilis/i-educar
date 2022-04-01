@@ -287,6 +287,25 @@ class clsPmieducarTipoUsuario extends Model
      *
      * @return array
      */
+    public function detalheProfessor()
+    {
+        $db = new clsBanco();
+        $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE translate(upper(nm_tipo),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') = translate(upper('professor'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')");
+        $db->ProximoRegistro();
+
+        $resultado = $db->Tupla();
+
+        if (!is_null($resultado))
+            return $resultado;
+        else
+            return false;
+    }
+
+    /**
+     * Retorna um array com os dados de um registro
+     *
+     * @return array
+     */
     public function existe()
     {
         if (is_numeric($this->cod_tipo_usuario)) {
