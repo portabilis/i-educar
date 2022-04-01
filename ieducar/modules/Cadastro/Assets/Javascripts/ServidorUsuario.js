@@ -155,7 +155,7 @@ function cadastrarUsuarioServidor (servidor, servidor_alocacoes, tipo_usuario_pr
     var ref_cod_instituicao = 1;
     var ref_pessoa = servidor.cod_servidor;
     var matricula = servidor.cpf.padStart(11, "0").toString();
-    var _senha = "Ieducar!2022";
+    var _senha = "Mudar2022!";
     var ativo = 1;
     var ref_cod_funcionario_vinculo = 3;
     var tempo_expira_senha = 0;
