@@ -38,11 +38,11 @@ a {
 #login-form {
   width: 90%;
   height: 60%;
-  background-color: #ffffff;
   margin: 0 auto;
   padding: 50px;
   box-sizing: border-box;
   text-align: left;
+  z-index: 1;
 }
 
 #login-form form {
