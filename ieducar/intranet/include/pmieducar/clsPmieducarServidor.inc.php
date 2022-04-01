@@ -810,6 +810,131 @@ class clsPmieducarServidor extends Model
     }
 
     /**
+     * Retorna uma lista filtrados de acordo com os parametros criada para educar_usuarios_servidores_lst.php
+     *
+     * @return array
+     */
+    public function lista2(
+        $int_ref_cod_ins = null,
+        $int_ref_cod_esc = null,
+        $int_ano_letivo = null,
+        $str_nome_servidor = null,
+        $str_matricula_servidor = null,
+        $int_funcao = null,
+        $int_ref_idesco = null,
+        $bool_servidor_com_usuario = null,
+        $int_ano = null
+    ) {
+        $_from = "
+            pmieducar.servidor s
+            LEFT JOIN cadastro.pessoa as p ON (s.cod_servidor = p.idpes)
+            LEFT JOIN cadastro.fisica as ps ON (s.cod_servidor = ps.idpes)
+            LEFT JOIN portal.funcionario as func ON (s.cod_servidor = func.ref_cod_pessoa_fj)
+            LEFT JOIN pmieducar.servidor_funcao as sf ON (s.cod_servidor = sf.ref_cod_servidor)
+            LEFT JOIN pmieducar.servidor_alocacao as sa ON (s.cod_servidor = sa.ref_cod_servidor)
+            LEFT JOIN pmieducar.escola as esc ON (p.idpes = esc.ref_idpes)
+        ";
+
+        $_campos_lista = "
+            s.cod_servidor,
+            p.nome,
+            func.matricula,
+            ps.cpf,
+            string_agg(sa.ref_cod_escola::char, ',') as ref_cod_escola,
+            sf.ref_cod_funcao,
+            func.ativo
+        ";
+
+        $db = new clsBanco();
+
+        $sql = "
+            SELECT
+                {$_campos_lista}
+            FROM
+                {$_from}
+        ";
+
+        $whereAnd = " AND ";
+        $filtros = "WHERE s.ativo = '1' ";
+
+        if (is_numeric($int_ref_cod_ins)) {
+            $filtros .= "{$whereAnd}s.ref_cod_instituicao = '{$int_ref_cod_ins}'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_ref_cod_esc)) {
+            $filtros .= "{$whereAnd}sa.ref_cod_escola = '{$int_ref_cod_esc}'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_ano_letivo)) {
+            $filtros .= "{$whereAnd}sa.ano = '{$int_ano_letivo}'";
+            $whereAnd = ' AND ';
+        }
+        
+        if (is_string($str_nome_servidor)) {
+            $filtros .= " AND translate(upper(p.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome_servidor}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_string($str_matricula_servidor)) {
+            $filtros .= " AND translate(upper(func.matricula),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_matricula_servidor}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_funcao)) {
+            $filtros .= "{$whereAnd}sf.ref_cod_funcao = '{$int_funcao}'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_ref_idesco)) {
+            $filtros .= "{$whereAnd}s.ref_idesco = '{$int_ref_idesco}'";
+            $whereAnd = ' AND ';
+        }
+
+        $filtros .= "{$whereAnd}sa.ativo = 1 AND sa.ref_cod_servidor = s.cod_servidor";
+
+        if ($bool_servidor_com_usuario) {
+            $filtros .= "{$whereAnd}func.matricula IS NULL OR func.matricula IS NOT NULL";
+            $whereAnd = ' AND ';
+        } else {
+            $filtros .= "{$whereAnd}func.matricula IS NULL";
+            $whereAnd = ' AND ';
+        }
+
+        $filtros .= "{$whereAnd}sa.ano = '{$int_ano}'";
+        $whereAnd = ' AND ';
+
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
+
+        $sql .= $filtros . " GROUP BY p.nome, func.matricula, ps.cpf, sf.ref_cod_funcao, s.cod_servidor, func.ativo" . $this->getOrderby() . $this->getLimite();
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$_from} {$filtros}");
+
+        //dump($sql);
+        $db->Consulta($sql);
+
+        if ($countCampos > 1) {
+            while ($db->ProximoRegistro()) {
+                $tupla = $db->Tupla();
+
+                $tupla['_total'] = $this->_total;
+                $resultado[] = $tupla;
+            }
+        } else {
+            while ($db->ProximoRegistro()) {
+                $tupla = $db->Tupla();
+                $resultado[] = $tupla[$this->_campos_lista];
+            }
+        }
+        if (count($resultado)) {
+            return $resultado;
+        }
+
+        return false;
+    }
+
+    /**
      * Retorna um array com os dados de um registro.
      *
      * @return array
