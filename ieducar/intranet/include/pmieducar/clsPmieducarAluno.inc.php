@@ -843,58 +843,13 @@ class clsPmieducarAluno extends Model
             $whereAnd = ' AND ';
         }
 
-        if (is_numeric($int_ref_cod_religiao)) {
-            $filtros .= "{$whereAnd} ref_cod_religiao = '{$int_ref_cod_religiao}'";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_numeric($int_ref_usuario_exc)) {
-            $filtros .= "{$whereAnd} ref_usuario_exc = '{$int_ref_usuario_exc}'";
-            $whereAnd = ' AND ';
-        }
-
         if (is_string($aluno_estado_id)) {
             $filtros .= "{$whereAnd} a.aluno_estado_id LIKE '%{$aluno_estado_id}%'";
             $whereAnd = ' AND ';
         }
 
-        if (is_numeric($int_ref_usuario_cad)) {
-            $filtros .= "{$whereAnd} ref_usuario_cad = '{$int_ref_usuario_cad}'";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_numeric($int_ref_idpes)) {
-            $filtros .= "{$whereAnd} ref_idpes = '{$int_ref_idpes}'";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_string($date_data_cadastro_ini)) {
-            $filtros .= "{$whereAnd} data_cadastro >= '{$date_data_cadastro_ini}'";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_string($date_data_cadastro_fim)) {
-            $filtros .= "{$whereAnd} data_cadastro <= '{$date_data_cadastro_fim}'";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_string($date_data_exclusao_ini)) {
-            $filtros .= "{$whereAnd} data_exclusao >= '{$date_data_exclusao_ini}'";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_string($date_data_exclusao_fim)) {
-            $filtros .= "{$whereAnd} data_exclusao <= '{$date_data_exclusao_fim}'";
-            $whereAnd = ' AND ';
-        }
-
         if ($int_ativo) {
             $filtros .= "{$whereAnd} a.ativo = '1'";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_numeric($int_analfabeto)) {
-            $filtros .= "{$whereAnd} analfabeto = '{$int_analfabeto}'";
             $whereAnd = ' AND ';
         }
 
@@ -977,11 +932,6 @@ class clsPmieducarAluno extends Model
 
         if (is_numeric($int_ref_cod_escola)) {
             $filtros .= "{$whereAnd} a.cod_aluno IN ( SELECT ref_cod_aluno FROM pmieducar.matricula WHERE ref_ref_cod_escola = '{$int_ref_cod_escola}' AND ultima_matricula = 1)";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_numeric($str_tipo_responsavel)) {
-            $filtros .= "{$whereAnd} tipo_responsavel = '{$str_tipo_responsavel}'";
             $whereAnd = ' AND ';
         }
 
