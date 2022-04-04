@@ -171,23 +171,14 @@ class CheckMandatoryCensoFields implements Rule
     private function validaEtapaEducacenso($params)
     {
         $course = LegacyCourse::find($params->ref_cod_curso);
-        if ($params->tipo_atendimento == TipoAtendimentoTurma::ESCOLARIZACAO) {
-            if ($course->modalidade_curso == 1 && !in_array(
-                $params->etapa_educacenso,
-                self::ETAPAS_ENSINO_REGULAR
-            )) {
-                $this->message = 'Quando a modalidade do curso é: Ensino regular, o campo: Etapa de ensino deve ser uma das seguintes opções:'
-                    . implode(',', self::ETAPAS_ENSINO_REGULAR) . '.';
+        $estruturaCurricular = $this->getEstruturaCurricularValues($params);
 
-                return false;
-            }
+        if  (empty($params->etapa_educacenso) &&
+            (in_array(1, $estruturaCurricular, true) || in_array(3, $estruturaCurricular, true))) {
 
-            if ($course->modalidade_curso == 2 && !in_array(
-                $params->etapa_educacenso,
-                self::ETAPAS_ESPECIAL_SUBSTITUTIVAS
-            )) {
-                $this->message = 'Quando a modalidade do curso é: Educação especial, o campo: Etapa de ensino deve ser uma das seguintes opções:'
-                    . implode(',', self::ETAPAS_ESPECIAL_SUBSTITUTIVAS) . '.';
+            $this->message = 'O campo deve ser obrigatório quando o campo "Estrutura curricular" for preenchido com "Formação geral básica" ou "Não se aplica"';
+            return false;
+        }
 
                 return false;
             }
