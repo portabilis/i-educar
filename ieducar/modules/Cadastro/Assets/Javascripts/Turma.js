@@ -206,12 +206,11 @@ function validaAtividadesComplementares() {
 $j('#tipo_mediacao_didatico_pedagogico').on('change', verificaLocalFuncionamentoDiferenciado);
 
 function habilitaEtapaEducacenso() {
-  var atividadeComplementar = $j("#tipo_atendimento").val() == 4;
-  var atendimentoEducacionalEspecializado = $j("#tipo_atendimento").val() == 5;
-
   $j("#etapa_educacenso").prop('disabled', false);
+  const notContainData = $j('#estrutura_curricular').val() === null;
 
-  if (atividadeComplementar || atendimentoEducacionalEspecializado) {
+  if (notContainData || (!$j('#estrutura_curricular').val().include('1') &&
+      !$j('#estrutura_curricular').val().include('3'))) {
     $j("#etapa_educacenso").prop('disabled', true).val("");
   }
 }
