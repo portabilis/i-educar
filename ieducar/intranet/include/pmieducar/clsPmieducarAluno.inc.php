@@ -1,6 +1,7 @@
 <?php
 
 use iEducar\Legacy\Model;
+use iEducar\Modules\Enrollments\Model\EnrollmentStatusFilter;
 
 class clsPmieducarAluno extends Model
 {
@@ -803,7 +804,8 @@ class clsPmieducarAluno extends Model
         $ref_cod_curso = null,
         $ref_cod_serie = null,
         $int_cpf_aluno = null,
-        $int_rg_aluno = null
+        $int_rg_aluno = null,
+        $situacao_matricula_id = null,
     ) {
         $filtra_baseado_matricula = is_numeric($ano) || is_numeric($ref_cod_instituicao) || is_numeric($ref_cod_escola) || is_numeric($ref_cod_curso) || is_numeric($ref_cod_serie);// || is_numeric($periodo);
 
@@ -882,7 +884,13 @@ class clsPmieducarAluno extends Model
         }
 
         if ($filtra_baseado_matricula) {
-            $filtros .= "{$whereAnd} m.aprovado = 3 AND m.ativo = 1 ";
+            $filtros .= "{$whereAnd} m.ativo = 1 ";
+            $whereAnd = ' AND ';
+        }
+
+        if ($situacao_matricula_id && $situacao_matricula_id != EnrollmentStatusFilter::ALL) {
+            $situacao_matricula_id = intval($situacao_matricula_id);
+            $filtros .= "{$whereAnd} m.aprovado = $situacao_matricula_id ";
             $whereAnd = ' AND ';
         }
 
