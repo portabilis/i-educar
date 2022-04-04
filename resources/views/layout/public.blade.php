@@ -1,7 +1,9 @@
-<?php $baseTecsis = $_SERVER['HTTP_HOST'];
+<?php
+	define('HOST', isset($_SERVER['HTTP_HOST']) === true ? $_SERVER['HTTP_HOST'] : (isset($_SERVER['SERVER_ADDR']) === true ? $_SERVER['SERVER_ADDR'] : $_SERVER['SERVER_NAME']));
+	$domain_parts = explode('.', HOST); 
 	$icoTecsis = "favicon2.ico";
 
-	if($baseTecsis != "tecsis.tec.br"){
+	if($domain_parts[2] != "tec"){
 		$icoTecsis = "favicon.ico";
 	}
 ?>
@@ -143,13 +145,15 @@
 	</body>
 
 	<script>
-        tecsis = window.location.hostname;
+        let tecsis = window.location.hostname;
+		let tecsisSplit = tecsis.split(".");
         (function basetecsis(){
-            if(tecsis === "tecsis.tec.br"){
+            if(tecsisSplit[2] == "tec"){
                 document.getElementById('divLogoId').style.backgroundImage="url(../intranet/imagens/login/svg/Tecsis-animation_02.svg)"; 
                 document.getElementById('divLogoMobileId').style.backgroundImage="url(../intranet/imagens/login/svg/Tecsis_bordaMobile.svg)"; 
                 document.getElementById('imgBordaId').style.backgroundImage="url(../intranet/imagens/login/svg/Tecsis_borda.svg)";
             }
         })()
+		console.log(tecsisSplit[2]);
         </script>
 </html>

@@ -1,4 +1,7 @@
-<?php $baseTecsis   = $_SERVER['HTTP_HOST'];
+<?php 
+define('HOST', isset($_SERVER['HTTP_HOST']) === true ? $_SERVER['HTTP_HOST'] : (isset($_SERVER['SERVER_ADDR']) === true ? $_SERVER['SERVER_ADDR'] : $_SERVER['SERVER_NAME']));
+$domain_parts = explode('.', HOST); 
+
     $icoTecsis      = "favicon2.ico";
     $headerID       = "style='background-image: linear-gradient(to bottom right, rgba(243, 46, 33, 1) 0%, rgba(243, 135, 42, 1) 75%)'";
     $menu_lateral   = "style='background-color: rgb(2,115,129)'";
@@ -8,7 +11,7 @@
     $corTecsis      = "style='color:rgb(243, 135, 42)'";
 
 
-	if($baseTecsis != "tecsis.tec.br"){
+	if($domain_parts[2] != "tec"){
 		$icoTecsis = "favicon.ico"; $headerID = "";
         $menu_lateral = ""; $rodapeID = "";
         $r3c1Mobile = ""; $expandido = "";
@@ -219,7 +222,7 @@
                 </div>
                 <div class="content">
                     @include('layout.topmenu')
-                    <div class="content">
+                    <div class="content main">
                         <table summary="" class='tabelanum1' id="tablenum1" border='0' cellspacing='0' cellpadding='0'>
                             <tr>
                                 <td colspan="3">

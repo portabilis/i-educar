@@ -1,7 +1,8 @@
-<?php $baseTecsis = $_SERVER['HTTP_HOST'];
-	$icoTecsis = "favicon2.ico";
+<?php 
+    define('HOST', isset($_SERVER['HTTP_HOST']) === true ? $_SERVER['HTTP_HOST'] : (isset($_SERVER['SERVER_ADDR']) === true ? $_SERVER['SERVER_ADDR'] : $_SERVER['SERVER_NAME']));
+	$domain_parts = explode('.', HOST); 
 
-	if($baseTecsis != "tecsis.tec.br"){
+	if($domain_parts[2] != "tec"){
 		$icoTecsis = "favicon.ico";
 	}
 ?>
