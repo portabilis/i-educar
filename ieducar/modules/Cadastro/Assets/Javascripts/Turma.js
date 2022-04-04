@@ -75,17 +75,18 @@ let verificaLocalFuncionamentoDiferenciado = () => {
 $j('#tipo_atendimento').change(function() {
   mostraAtividadesComplementares();
   verificaEstruturacurricular();
-  verificaEtapaEducacenso();
-  habilitaEtapaEducacenso();
 });
 $j('#estrutura_curricular').change(function() {
   verificaFormaOrganizacaoTurma();
   habilitaFormasOrganizarTurma();
   verificaUnidadeCurricular();
   habilitaUnidadeCurricular();
+  verificaEtapaEducacenso();
+  habilitaEtapaEducacenso();
 });
 
 verificaEtapaEducacenso();
+habilitaEtapaEducacenso();
 verificaLocalFuncionamentoDiferenciado();
 
 $j('#etapa_educacenso').change(function() {
@@ -411,6 +412,7 @@ $j(document).ready(function() {
       verificaEstruturacurricular();
       mostraCursoTecnico();
       habilitaEtapaEducacenso();
+      verificaEtapaEducacenso();
       verificaFormaOrganizacaoTurma();
       habilitaFormasOrganizarTurma();
       verificaUnidadeCurricular();
