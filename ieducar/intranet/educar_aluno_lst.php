@@ -36,7 +36,6 @@ return new class extends clsListagem {
     public $matriculado;
     public $inativado;
     public $nome_responsavel;
-    public $cpf_responsavel;
     public $nome_pai;
     public $nome_mae;
     public $data_nascimento;
@@ -119,8 +118,6 @@ return new class extends clsListagem {
             int_cod_aluno: $this->cod_aluno,
             int_ativo: 1,
             str_nome_aluno: $this->nome_aluno,
-            str_nome_responsavel: null,
-            int_cpf_responsavel: idFederal2int($this->cpf_responsavel),
             int_ref_cod_escola: $ref_cod_escola,
             data_nascimento: $this->data_nascimento,
             str_nm_pai2: $this->nome_pai,

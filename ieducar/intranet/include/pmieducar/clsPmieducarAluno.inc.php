@@ -875,61 +875,6 @@ class clsPmieducarAluno extends Model
             $whereAnd = ' AND ';
         }
 
-        if (is_string($str_nome_responsavel) || is_numeric($int_cpf_responsavel)) {
-            $and_resp = '';
-
-            if (is_string($str_nome_responsavel)) {
-                $and_nome_resp = "
-              (pai_mae.slug ILIKE unaccent('%$str_nome_responsavel%')) AND (aluno.tipo_responsavel = 'm') AND pai_mae.idpes = fisica_aluno.idpes_mae
-              OR
-              (pai_mae.slug ILIKE unaccent('%$str_nome_responsavel%')) AND (aluno.tipo_responsavel = 'p') AND pai_mae.idpes = fisica_aluno.idpes_pai";
-
-                $and_resp = 'AND';
-            }
-
-            if (is_numeric($int_cpf_responsavel)) {
-                $and_cpf_pai_mae = "and fisica_resp.cpf LIKE '$int_cpf_responsavel'";
-            }
-
-            $filtros .= "
-            AND (EXISTS(
-              SELECT
-                1
-              FROM
-                cadastro.fisica fisica_resp,
-                cadastro.fisica,
-                cadastro.pessoa,
-                cadastro.pessoa responsavel
-              WHERE
-                fisica.idpes_responsavel = fisica_resp.idpes
-                AND pessoa.idpes = fisica.idpes
-                AND responsavel.idpes = fisica.idpes_responsavel
-                $and_cpf_pai_mae
-                and aluno.ref_idpes = pessoa.idpes)
-              OR EXISTS (
-                SELECT
-                  1
-                FROM
-                  cadastro.fisica AS fisica_aluno,
-                  cadastro.pessoa AS pai_mae,
-                  cadastro.fisica AS fisica_pai_mae
-                WHERE
-                  fisica_aluno.idpes = aluno.ref_idpes
-                AND (
-                  $and_nome_resp
-                  $and_resp
-                  (
-                    fisica_pai_mae.idpes = fisica_aluno.idpes_pai
-                    OR fisica_pai_mae.idpes = fisica_aluno.idpes_mae
-                  )
-                  AND fisica_pai_mae.cpf LIKE '$int_cpf_responsavel'
-                )
-              )
-            )";
-
-            $whereAnd = ' AND ';
-        }
-
         if (is_numeric($int_ref_cod_escola)) {
             $filtros .= "{$whereAnd} a.cod_aluno IN ( SELECT ref_cod_aluno FROM pmieducar.matricula WHERE ref_ref_cod_escola = '{$int_ref_cod_escola}' AND ultima_matricula = 1)";
             $whereAnd = ' AND ';
