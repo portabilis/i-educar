@@ -46,6 +46,7 @@ return new class extends clsListagem {
     public $ref_cod_serie;
     public $cpf_aluno;
     public $rg_aluno;
+    public $situacao_matricula_id;
 
     public function Gerar()
     {
@@ -132,7 +133,8 @@ return new class extends clsListagem {
             ref_cod_curso: $this->ref_cod_curso,
             ref_cod_serie: $this->ref_cod_serie,
             int_cpf_aluno: idFederal2int($this->cpf_aluno),
-            int_rg_aluno: idFederal2int($this->rg_aluno)
+            int_rg_aluno: idFederal2int($this->rg_aluno),
+            situacao_matricula_id: $this->situacao_matricula_id
         );
 
         $total = $aluno->_total;
