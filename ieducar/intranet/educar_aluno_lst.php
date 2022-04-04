@@ -22,6 +22,8 @@ return new class extends clsListagem {
      */
     public $offset;
 
+    public $cod_inep;
+    public $aluno_estado_id;
     public $cod_aluno;
     public $ref_cod_religiao;
     public $ref_usuario_exc;
