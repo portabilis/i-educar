@@ -907,7 +907,7 @@ class clsPmieducarAluno extends Model
         }
 
         if (!empty($str_nm_pai2) || !empty($str_nm_mae2) || !empty($str_nm_responsavel2)) {
-            $complemento_letf_outer = '';
+            $complemento_sql = '';
             $complemento_where = '';
             $and_where = '';
 
@@ -929,7 +929,6 @@ class clsPmieducarAluno extends Model
                 $str_nome_responsavel2 = $db->escapeString($str_nm_responsavel2);
                 $complemento_sql .= ' LEFT OUTER JOIN cadastro.pessoa AS pessoa_responsavel ON (pessoa_responsavel.idpes = f.idpes_responsavel)';
                 $complemento_where .= "{$and_where} (pessoa_responsavel.slug ILIKE unaccent('%{$str_nome_responsavel2}%'))";
-                $and_where = ' AND ';
             }
 
             $filtros .= "
@@ -939,8 +938,6 @@ class clsPmieducarAluno extends Model
            WHERE
               f.idpes = ref_idpes
               AND ({$complemento_where}))";
-
-            $whereAnd = ' AND ';
         }
 
         $countCampos = count(explode(',', $this->_campos_lista));
