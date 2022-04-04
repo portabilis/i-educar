@@ -153,7 +153,7 @@ function setCookie( name, value, expires, path, domain, secure ) {
 	today.setTime( today.getTime() );
 	if ( expires ) {
 		expires = expires * 1000 * 60 * 60 * 24;
-	}//DOM_expansivel
+	}
 	var expires_date = new Date( today.getTime() + (expires) );
 	document.cookie = name+"="+escape( value ) +
 		( ( expires ) ? ";expires="+expires_date.toGMTString() : "" ) + //expires.toGMTString()
@@ -165,6 +165,7 @@ function setCookie( name, value, expires, path, domain, secure ) {
 /*
 	CONTROLE DE JANELAS
 */
+//DOM_expansivel
 function centralizaExpansivel() {
   screenWidth = 0;
   screenHeight = 0;
@@ -177,7 +178,6 @@ function centralizaExpansivel() {
     expansivel.style.position = 'fixed';
     expansivel.style.top = 'calc(50% - ' + (altura / 2) + 'px)';
     expansivel.style.left = 'calc(50% - ' + (largura / 2) + 'px)';
-	expansivel.style.width = 1023;
   }
 }
 
@@ -232,7 +232,6 @@ function showExpansivel( largura, altura, conteudo )
 	conteudoMoldurado += '</div></td><td >&nbsp;</td></tr><tr><td  height="20" valign="top"></td><td colspan="2"  height="20">&nbsp;</td><td  height="20" valign="top"></td></tr></table>';
 	expansivel.innerHTML = conteudoMoldurado;
 
-
 	/*
 		Tamanho da janela
 	*/
@@ -248,6 +247,7 @@ function showExpansivel( largura, altura, conteudo )
 	}
 
 	expansivel.style.display = 'block';
+	console.log(screenWidth);
 
 	if(largura != 0)
 	{
@@ -265,6 +265,11 @@ function showExpansivel( largura, altura, conteudo )
 function showExpansivelIframe( largura, altura, URL, fecha )
 {
 	showExpansivel( largura, altura, '<iframe src="' + URL + '" frameborder="0" height="100%" width="' + ( largura - 1 ) + '" marginheight="0" marginwidth="0" name="temp_win_popless"></iframe>', fecha );
+}
+
+function showModal( largura, URL, fecha )
+{
+	showModalContent( largura, altura, '<div id=lkModal class="modal"><div class="modal-content" > <span class="close">&times;</span><p>Some text in the Modal..</p></div>';
 }
 
 function showExpansivelImprimir( largura, altura, arquivo, array,  titulo )
