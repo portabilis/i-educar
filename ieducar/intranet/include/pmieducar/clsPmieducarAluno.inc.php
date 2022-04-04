@@ -782,7 +782,7 @@ class clsPmieducarAluno extends Model
      * Não utilizar mais este método.
      *
      * Este método é utilizado na tela de listagem de alunos e não deve ser
-     * reaproveitado pois deverá ser refatorado.
+     * reaproveitado, pois deverá ser refatorado.
      *
      * @deprecated
      */
