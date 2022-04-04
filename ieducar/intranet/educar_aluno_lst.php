@@ -23,8 +23,6 @@ return new class extends clsListagem {
     public $offset;
 
     public $cod_aluno;
-    public $ref_idpes_responsavel;
-    public $ref_cod_aluno_beneficio;
     public $ref_cod_religiao;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
