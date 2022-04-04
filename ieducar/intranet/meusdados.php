@@ -96,9 +96,9 @@ return new class extends clsCadastro {
         if ($foto) {
             $this->campoRotulo('fotoAtual_', 'Foto atual', '<img height="117" src="' . (new UrlPresigner())->getPresignedUrl($foto) . '"/>');
             $this->inputsHelper()->checkbox('file_delete', ['label' => 'Excluir a foto']);
-            $this->campoArquivo('file', 'Trocar foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho m&aacute;ximo: 150KB</span>');
+            $this->campoArquivo('file', 'Trocar foto', $this->arquivoFoto, 40, '<br/> <h5 class="i">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho m&aacute;ximo: 150KB</h5>');
         } else {
-            $this->campoArquivo('file', 'Foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho m&aacute;ximo: 150KB</span>');
+            $this->campoArquivo('file', 'Foto', $this->arquivoFoto, 40, '<br/> <h5 class="i">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho m&aacute;ximo: 150KB</h5>');
         }
 
         $this->campoTexto('nome', 'Nome', $this->nome, 50, 150, true);

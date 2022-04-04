@@ -368,7 +368,11 @@ span.error_notice {
 
 .b {
   font-weight: bold;
-} 
+}
+
+.i{
+  font-style: italic;
+}
 
 h1, h2, h3, h4, h5, h6 {
   margin-top: 0;
@@ -385,12 +389,11 @@ label {
   h1, h2, h3, h4, h5, h6,
   .h1, .h2, .h3, .h4, .h5, .h6 {
     margin-bottom: 0.75rem;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; */
+ /* font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; */
     font-weight: 200;
     line-height: 1.2;
-    color: inherit; }
-
-
+    color: inherit;
+  }
 
 span  {
   font-size: 1.75rem; }
