@@ -112,7 +112,7 @@ return new class extends clsListagem {
         $aluno = new clsPmieducarAluno();
         $aluno->setLimite($this->limite, $this->offset);
 
-        $alunos = $aluno->lista2(
+        $alunos = $aluno->telaDeListagemDeAlunos(
             int_cod_aluno: $this->cod_aluno,
             int_ativo: 1,
             str_nome_aluno: $this->nome_aluno,

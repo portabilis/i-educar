@@ -779,11 +779,14 @@ class clsPmieducarAluno extends Model
     }
 
     /**
-     * Retorna uma lista de registros filtrados de acordo com os parâmetros.
+     * Não utilizar mais este método.
      *
-     * @return array
+     * Este método é utilizado na tela de listagem de alunos e não deve ser
+     * reaproveitado pois deverá ser refatorado.
+     *
+     * @deprecated
      */
-    public function lista2(
+    public function telaDeListagemDeAlunos(
         $int_cod_aluno = null,
         $int_ativo = null,
         $str_nome_aluno = null,
