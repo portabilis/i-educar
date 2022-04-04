@@ -31,12 +31,11 @@ let obrigarCamposCenso = $j('#obrigar_campos_censo').val() == '1';
 
 let verificaEtapaEducacenso = ()=>{
   $j('#etapa_educacenso').makeUnrequired();
-  if ($j('#tipo_atendimento').val() &&
-      $j('#tipo_atendimento').val() != "4" &&
-      $j('#tipo_atendimento').val() != "5") {
-    if (obrigarCamposCenso) {
+  if ($j('#estrutura_curricular').val() &&
+    ($j('#estrutura_curricular').val().include('1') ||
+    $j('#estrutura_curricular').val().include('3')) &&
+    obrigarCamposCenso) {
       $j('#etapa_educacenso').makeRequired();
-    }
   }
 }
 
