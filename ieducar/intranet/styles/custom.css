@@ -452,6 +452,7 @@ h6, .h6 {
 .main {
   display: flex;
   align-items: unset;
+  
 }
 
 .sidebar{
@@ -460,6 +461,7 @@ h6, .h6 {
 
 .content {
   flex: 3;
+  min-height: 100vh;
 }
 
 .container {
