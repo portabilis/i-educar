@@ -106,6 +106,7 @@ class LegacySchoolClass extends Model
         'atividades_aee',
         'local_funcionamento_diferenciado',
         'estrutura_curricular',
+        'formas_organizacao_turma',
     ];
 
     /**

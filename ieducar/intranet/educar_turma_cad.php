@@ -39,6 +39,7 @@ return new class extends clsCadastro {
     public $atividades_complementares;
     public $cod_curso_profissional;
     public $etapa_educacenso;
+    public $formas_organizacao_turma;
     public $ref_cod_disciplina_dispensada;
     public $codigo_inep_educacenso;
     public $estrutura_curricular;
@@ -634,6 +635,19 @@ return new class extends clsCadastro {
 
         $options = ['label' => 'Etapa de ensino', 'resources' => $etapas_educacenso, 'value' => $this->etapa_educacenso, 'required' => false, 'size' => 70,];
         $this->inputsHelper()->select('etapa_educacenso', $options);
+
+        $resources = [
+            null => 'Selecione',
+            1 => 'Série/ano (séries anuais)',
+            2 => 'Períodos semestrais',
+            3 => 'Ciclo(s)',
+            4 => 'Grupos não seriados com base na idade ou competência',
+            5 => 'Módulos',
+            6 => 'Alternância regular de períodos de estudos'
+        ];
+
+        $options = ['label' => 'Formas de organização da turma', 'resources' => $resources, 'value' => $this->formas_organizacao_turma, 'required' => false, 'size' => 70,];
+        $this->inputsHelper()->select('formas_organizacao_turma', $options);
 
         $cursos = loadJson('educacenso_json/cursos_da_educacao_profissional.json');
         $helperOptions = ['objectName' => 'cod_curso_profissional',

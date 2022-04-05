@@ -110,6 +110,9 @@ class CheckMandatoryCensoFields implements Rule
             if (!$this->validaCampoEtapaEnsino($params['tipo_atendimento'])) {
                 return false;
             }
+            if (!$this->validaCampoFormasOrganizacaoTurma($params)) {
+                return false;
+            }
             if (!$this->validaCampoTipoAtendimento($params)) {
                 return false;
             }
@@ -324,6 +327,67 @@ class CheckMandatoryCensoFields implements Rule
 
         if (count($estruturaCurricular) > 1 && in_array(3, $estruturaCurricular, true)) {
             $this->message = "Não é possível informar mais de uma opção no campo: <b>Estrutura curricular</b>, quando a opção: <b>Não se aplica</b> estiver selecionada";
+            return false;
+        }
+
+        return true;
+    }
+
+    private function validaCampoFormasOrganizacaoTurma(mixed $params)
+    {
+
+        $estruturaCurricular = array_map('intval',
+            explode(',', str_replace(['{', '}'], '', $params->estrutura_curricular))
+                ?: []);
+
+        if (empty($estruturaCurricular)) {
+            return true;
+        }
+
+        if (!empty($params->formas_organizacao_turma) && in_array(1, $estruturaCurricular, true)) {
+            $this->message = 'Campo: <b>Formas de organização da turma</b> é obrigatório quando o campo: <b>Estrutura Curricular contém: Formação geral básica</b>';
+            return false;
+        }
+
+        if (!empty($params->formas_organizacao_turma) && !in_array(1, $estruturaCurricular, true)) {
+            $this->message = 'Campo: <b>Formas de organização da turma</b> não pode ser preenchido quando o campo: <b>Estrutura Curricular não contém: Formação geral básica</b>';
+            return false;
+        }
+
+        $validOption = [
+            1 => 'Série/ano (séries anuais)',
+            2 => 'Períodos semestrais',
+            3 => 'Ciclo(s)',
+            4 => 'Grupos não seriados com base na idade ou competência',
+            5 => 'Módulos',
+            6 => 'Alternância regular de períodos de estudos'
+        ];
+
+        $validOptionCorrelationForEtapaEnsino = [
+            1 => [
+                14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 41, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 56, 69, 70, 71, 72, 73, 74, 67
+            ],
+            2 => [
+                25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 69, 70, 71, 72, 73, 74, 67, 68
+            ],
+            3 => [
+                14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 41, 56
+            ],
+            4 => [
+                14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 41, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 56, 69, 70, 71, 72, 73, 74, 67, 68
+            ],
+            5 => [
+                14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 41, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 56, 69, 70, 71, 72, 73, 74, 67,68
+            ],
+            6 => [
+                19, 20, 21, 22, 23, 41, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 69, 70, 71, 72, 73, 74, 67, 68
+            ]
+        ];
+
+
+        if (!in_array((int) $params->etapa_educacenso, $validOptionCorrelationForEtapaEnsino[(int)$params->formas_organizacao_turma], true)) {
+            $todasEtapasEducacenso = loadJson(__DIR__ . '/../../ieducar/intranet/educacenso_json/etapas_ensino.json');
+            $this->message = "Não é possível selecionar a opção: <b>{$validOption[(int)$params->formas_organizacao_turma]}</b>, no campo: <b>Formas de organização da turma</b> quando o campo: Etapa de ensino for: {$todasEtapasEducacenso[$params->etapa_educacenso]}.";
             return false;
         }
 
