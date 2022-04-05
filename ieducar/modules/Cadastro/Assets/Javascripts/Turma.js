@@ -56,6 +56,7 @@ let verificaLocalFuncionamentoDiferenciado = () => {
 
 $j('#tipo_atendimento').change(function() {
   mostraAtividadesComplementares();
+  verificaEstruturacurricular();
   verificaEtapaEducacenso();
   habilitaEtapaEducacenso();
 });
@@ -63,7 +64,7 @@ verificaEtapaEducacenso();
 verificaLocalFuncionamentoDiferenciado();
 
 $j('#etapa_educacenso').change(function() {
-  mostraCursoTecnico();;
+  mostraCursoTecnico();
 });
 
 function mostraAtividadesComplementares(){
@@ -78,6 +79,23 @@ function mostraAtividadesComplementares(){
   } else {
     $j('#atividades_complementares').attr('disabled', 'disabled');
     $j('#atividades_complementares').val([]).trigger('chosen:updated');
+  }
+}
+
+function verificaEstruturacurricular() {
+  const mostraCampo = $j('#tipo_atendimento').val() === '0';
+  const estruturaCurricularField = $j('#estrutura_curricular');
+
+  estruturaCurricularField.makeUnrequired();
+  if (mostraCampo) {
+    estruturaCurricularField.removeAttr('disabled');
+    estruturaCurricularField.trigger('chosen:updated');
+    if (obrigarCamposCenso) {
+      estruturaCurricularField.makeRequired();
+    }
+  } else {
+    estruturaCurricularField.attr('disabled', 'disabled');
+    estruturaCurricularField.val([]).trigger('chosen:updated');
   }
 }
 
@@ -350,6 +368,7 @@ $j(document).ready(function() {
           return false;
       });
       mostraAtividadesComplementares();
+      verificaEstruturacurricular();
       mostraCursoTecnico();
       habilitaEtapaEducacenso();
     });
