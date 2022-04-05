@@ -43,6 +43,8 @@ return new class extends clsListagem {
             $this->$var = ($val === '') ? null: $val;
         }
 
+        $this->funcAcaoNome = "ComValidacaoCampos";
+
         $lista_busca = [
             'Data',
             'Turma',
@@ -61,7 +63,7 @@ return new class extends clsListagem {
         }
 
         $this->inputsHelper()->dynamic(['ano'], ['required' => false]);
-        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie', 'turma'], ['required' => false]);
+        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie', 'turma'], ['required' => true]);
         $this->inputsHelper()->turmaTurno(['required' => false, 'label' => 'Turno']);
         $this->inputsHelper()->dynamic('componenteCurricular', ['required' => false]);
   
@@ -98,6 +100,18 @@ return new class extends clsListagem {
             $this->data_final = dataToBanco($temp_data_final->format('d/m/Y'));
         }
 
+        $obj_servidor = new clsPmieducarServidor(
+            $this->pessoa_logada,
+            null,
+            null,
+            null,
+            null,
+            null,
+            1,      //  Ativo
+            1,      //  Fixado na instituição de ID 1
+        );
+        $eh_professor = $obj_servidor->isProfessor();
+
         $lista = $obj_turma->lista(
             $this->ano,
             $this->ref_cod_instituicao,
@@ -109,7 +123,8 @@ return new class extends clsListagem {
             $this->turma_turno_id,
             $this->data_inicial,
             $this->data_final,
-            $this->fase_etapa
+            $this->fase_etapa,
+            $eh_professor ? $this->pessoa_logada : null         // Passe o ID do servidor caso ele seja um professor
         );
 
         $total = $obj_turma->_total;
