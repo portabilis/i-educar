@@ -151,6 +151,7 @@ return new class extends clsCadastro {
         $this->atividades_complementares = transformStringFromDBInArray($this->atividades_complementares);
         $this->estrutura_curricular = transformStringFromDBInArray($this->estrutura_curricular);
         $this->cod_curso_profissional = transformStringFromDBInArray($this->cod_curso_profissional);
+        $this->unidade_curricular = transformStringFromDBInArray($this->unidade_curricular);
 
         $this->url_cancelar = $retorno == 'Editar' ?
             'educar_turma_det.php?cod_turma=' . $registro['cod_turma'] : 'educar_turma_lst.php';

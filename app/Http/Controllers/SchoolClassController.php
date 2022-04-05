@@ -180,7 +180,9 @@ class SchoolClassController extends Controller
             $params['formas_organizacao_turma'] = null;
         }
 
-        if (empty($params['unidade_curricular'])) {
+        if (isset($params['unidade_curricular'])) {
+            $params['unidade_curricular'] = '{' . implode(',', $params['unidade_curricular']) . '}';
+        } else {
             $params['unidade_curricular'] = null;
         }
 

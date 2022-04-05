@@ -55,7 +55,6 @@ let verificaUnidadeCurricular = ()=> {
     $j('#estrutura_curricular').val() &&
     $j('#estrutura_curricular').val().includes("2")) {
     $j('#unidade_curricular').makeRequired();
-    return;
   }
 }
 
@@ -98,7 +97,7 @@ function mostraAtividadesComplementares(){
   $j('#atividades_complementares').makeUnrequired();
   if (mostraCampo) {
     $j('#atividades_complementares').removeAttr('disabled');
-    $j('#atividades_complementares').trigger('chosen:updated');;
+    $j('#atividades_complementares').trigger('chosen:updated');
     if (obrigarCamposCenso) {
       $j('#atividades_complementares').makeRequired();
     }
@@ -227,12 +226,16 @@ function habilitaFormasOrganizarTurma() {
 }
 
 function habilitaUnidadeCurricular() {
-  $j("#unidade_curricular").prop('disabled', false);
-  if (obrigarCamposCenso &&
-    !$j('#estrutura_curricular').val() ||
-    !$j('#estrutura_curricular').val().includes("2")) {
-    $j("#unidade_curricular").prop('disabled', true).val("");
+
+  const estruturaCurricular = $j('#estrutura_curricular').val();
+  const itinerarioFormativo = estruturaCurricular && estruturaCurricular.includes("2");
+
+  if (itinerarioFormativo) {
+    $j("#unidade_curricular").prop('disabled', false).trigger('chosen:updated');
+    return;
   }
+
+  $j("#unidade_curricular").prop('disabled', true).val([]).trigger('chosen:updated');
 }
 
 $j('#tipo_mediacao_didatico_pedagogico').on('change', function(){
