@@ -53,6 +53,10 @@ class clsModulesPlanejamentoAula extends Model {
                 ON (q.ref_cod_turma = t.cod_turma AND q.sequencial = 1)
             LEFT JOIN pmieducar.modulo l
                 ON (l.cod_modulo = q.ref_cod_modulo)
+            JOIN modules.professor_turma as pt
+                ON (pt.turma_id = pa.ref_cod_turma)
+            JOIN modules.professor_turma_disciplina as ptd
+                ON (pt.id = ptd.professor_turma_id AND ptd.componente_curricular_id = pa.ref_componente_curricular)
         ";
 
         $this->_campos_lista = $this->_todos_campos = '
@@ -290,7 +294,8 @@ class clsModulesPlanejamentoAula extends Model {
         $int_ref_cod_turno = null,
         $time_data_inicial = null,
         $time_data_final = null,
-        $int_etapa = null
+        $int_etapa = null,
+        $int_servidor_id = null
     ) {
         $sql = "
                 SELECT
@@ -302,8 +307,8 @@ class clsModulesPlanejamentoAula extends Model {
         $whereAnd = ' AND ';
         $filtros = " WHERE TRUE ";
 
-        if(is_numeric($int_ano)){
-            $filtros .= "{$whereAnd} t.ano = '{$int_ano}'";
+        if (is_numeric($int_ano)) {
+            $filtros .= "{$whereAnd} (EXTRACT(YEAR FROM pa.data_inicial) = '{$int_ano}' OR EXTRACT(YEAR FROM pa.data_final) = '{$int_ano}')";
             $whereAnd = ' AND ';
         }
 
@@ -357,6 +362,11 @@ class clsModulesPlanejamentoAula extends Model {
             $whereAnd = ' AND ';
         }
 
+        if (is_numeric($int_servidor_id)) {
+            $filtros .= "{$whereAnd} pt.servidor_id = '{$int_servidor_id}'";
+            $whereAnd = ' AND ';
+        }
+
         $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
@@ -370,7 +380,7 @@ class clsModulesPlanejamentoAula extends Model {
                 {$this->_from}
             {$filtros}"
         );
-        
+
         $db->Consulta($sql);
 
         if ($countCampos > 1) {
