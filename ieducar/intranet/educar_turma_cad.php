@@ -147,21 +147,10 @@ return new class extends clsCadastro {
             }
         }
 
-        if (is_string($this->dias_semana)) {
-            $this->dias_semana = explode(',', str_replace(['{', '}'], '', $this->dias_semana));
-        }
-
-        if (is_string($this->atividades_complementares)) {
-            $this->atividades_complementares = explode(',', str_replace(['{', '}'], '', $this->atividades_complementares));
-        }
-
-        if (is_string($this->estrutura_curricular)) {
-            $this->estrutura_curricular = explode(',', str_replace(['{', '}'], '', $this->estrutura_curricular));
-        }
-
-        if (is_string($this->cod_curso_profissional)) {
-            $this->cod_curso_profissional = explode(',', str_replace(['{', '}'], '', $this->cod_curso_profissional));
-        }
+        $this->dias_semana = transformStringFromDBInArray($this->dias_semana);
+        $this->atividades_complementares = transformStringFromDBInArray($this->atividades_complementares);
+        $this->estrutura_curricular = transformStringFromDBInArray($this->estrutura_curricular);
+        $this->cod_curso_profissional = transformStringFromDBInArray($this->cod_curso_profissional);
 
         $this->url_cancelar = $retorno == 'Editar' ?
             'educar_turma_det.php?cod_turma=' . $registro['cod_turma'] : 'educar_turma_lst.php';
