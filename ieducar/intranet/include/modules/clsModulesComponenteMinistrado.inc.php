@@ -44,6 +44,11 @@ class clsModulesComponenteMinistrado extends Model {
                 ON (q.ref_cod_turma = t.cod_turma AND q.sequencial = 1)
             LEFT JOIN pmieducar.modulo l
                 ON (l.cod_modulo = q.ref_cod_modulo)
+            JOIN modules.professor_turma as pt
+                ON (pt.turma_id = f.ref_cod_turma)
+            JOIN modules.professor_turma_disciplina as ptd
+                ON (pt.id = ptd.professor_turma_id AND
+                    (ptd.componente_curricular_id = f.ref_componente_curricular OR f.ref_componente_curricular IS NULL))
         ";
 
         $this->_campos_lista = $this->_todos_campos = '
@@ -89,7 +94,7 @@ class clsModulesComponenteMinistrado extends Model {
      * @return bool
      */
     public function cadastra() {
-        if (is_numeric($this->frequencia_id) && is_string($this->atividades) != '' && is_array($this->conteudos)) {
+        if (is_numeric($this->frequencia_id) && is_string($this->atividades) != '') {
             $db = new clsBanco();
 
             $campos = "frequencia_id, atividades, data_cadastro";
@@ -181,7 +186,8 @@ class clsModulesComponenteMinistrado extends Model {
         $int_ref_cod_turno = null,
         $time_data_inicial = null,
         $time_data_final = null,
-        $int_etapa = null
+        $int_etapa = null,
+        $int_servidor_id = null
     ) {
        
         $sql = "
@@ -194,6 +200,10 @@ class clsModulesComponenteMinistrado extends Model {
         $whereAnd = ' AND ';
         $filtros = " WHERE TRUE ";
 
+        if (is_numeric($int_ano)) {
+            $filtros .= "{$whereAnd} EXTRACT(YEAR FROM f.data) = '{$int_ano}'";
+            $whereAnd = ' AND ';
+        }
     
         if (is_numeric($int_ref_cod_ins)) {
             $filtros .= "{$whereAnd} i.cod_instituicao = '{$int_ref_cod_ins}'";
@@ -242,6 +252,11 @@ class clsModulesComponenteMinistrado extends Model {
 
         if (is_numeric($int_etapa)) {
             $filtros .= "{$whereAnd} f.etapa_sequencial = '{$int_etapa}'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_servidor_id)) {
+            $filtros .= "{$whereAnd} pt.servidor_id = '{$int_servidor_id}'";
             $whereAnd = ' AND ';
         }
 
