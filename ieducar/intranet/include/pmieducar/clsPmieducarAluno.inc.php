@@ -1,6 +1,7 @@
 <?php
 
 use iEducar\Legacy\Model;
+use iEducar\Modules\Enrollments\Model\EnrollmentStatusFilter;
 
 class clsPmieducarAluno extends Model
 {
@@ -779,31 +780,18 @@ class clsPmieducarAluno extends Model
     }
 
     /**
-     * Retorna uma lista de registros filtrados de acordo com os parâmetros.
+     * Não utilizar mais este método.
      *
-     * @return array
+     * Este método é utilizado na tela de listagem de alunos e não deve ser
+     * reaproveitado, pois deverá ser refatorado.
+     *
+     * @deprecated
      */
-    public function lista2(
+    public function telaDeListagemDeAlunos(
         $int_cod_aluno = null,
-        $int_ref_cod_aluno_beneficio = null,
-        $int_ref_cod_religiao = null,
-        $int_ref_usuario_exc = null,
-        $int_ref_usuario_cad = null,
-        $int_ref_idpes = null,
-        $date_data_cadastro_ini = null,
-        $date_data_cadastro_fim = null,
-        $date_data_exclusao_ini = null,
-        $date_data_exclusao_fim = null,
         $int_ativo = null,
-        $str_caminho_foto = null,
         $str_nome_aluno = null,
-        $str_nome_responsavel = null,
-        $int_cpf_responsavel = null,
-        $int_analfabeto = null,
-        $str_nm_pai = null,
-        $str_nm_mae = null,
         $int_ref_cod_escola = null,
-        $str_tipo_responsavel = null,
         $data_nascimento = null,
         $str_nm_pai2 = null,
         $str_nm_mae2 = null,
@@ -815,21 +803,11 @@ class clsPmieducarAluno extends Model
         $ref_cod_escola = null,
         $ref_cod_curso = null,
         $ref_cod_serie = null,
-        $idsetorbai = null,
-        $autorizado_um = null,
-        $parentesco_um = null,
-        $autorizado_dois = null,
-        $parentesco_dois = null,
-        $autorizado_tres = null,
-        $parentesco_tres = null,
-        $autorizado_quatro = null,
-        $parentesco_quatro = null,
-        $autorizado_cinco = null,
-        $parentesco_cinco = null,
         $int_cpf_aluno = null,
-        $int_rg_aluno = null
+        $int_rg_aluno = null,
+        $situacao_matricula_id = null,
     ) {
-        $filtra_baseado_matricula = is_numeric($ano) || is_numeric($ref_cod_instituicao) || is_numeric($ref_cod_escola) || is_numeric($ref_cod_curso) || is_numeric($ref_cod_serie);// || is_numeric($periodo);
+        $filtra_baseado_matricula = is_numeric($ano) || is_numeric($ref_cod_instituicao) || is_numeric($ref_cod_escola) || is_numeric($ref_cod_curso) || is_numeric($ref_cod_serie) || $situacao_matricula_id != EnrollmentStatusFilter::ALL;
 
         $filtros = '';
         $this->resetCamposLista();
@@ -858,58 +836,13 @@ class clsPmieducarAluno extends Model
             $whereAnd = ' AND ';
         }
 
-        if (is_numeric($int_ref_cod_religiao)) {
-            $filtros .= "{$whereAnd} ref_cod_religiao = '{$int_ref_cod_religiao}'";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_numeric($int_ref_usuario_exc)) {
-            $filtros .= "{$whereAnd} ref_usuario_exc = '{$int_ref_usuario_exc}'";
-            $whereAnd = ' AND ';
-        }
-
         if (is_string($aluno_estado_id)) {
             $filtros .= "{$whereAnd} a.aluno_estado_id LIKE '%{$aluno_estado_id}%'";
             $whereAnd = ' AND ';
         }
 
-        if (is_numeric($int_ref_usuario_cad)) {
-            $filtros .= "{$whereAnd} ref_usuario_cad = '{$int_ref_usuario_cad}'";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_numeric($int_ref_idpes)) {
-            $filtros .= "{$whereAnd} ref_idpes = '{$int_ref_idpes}'";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_string($date_data_cadastro_ini)) {
-            $filtros .= "{$whereAnd} data_cadastro >= '{$date_data_cadastro_ini}'";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_string($date_data_cadastro_fim)) {
-            $filtros .= "{$whereAnd} data_cadastro <= '{$date_data_cadastro_fim}'";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_string($date_data_exclusao_ini)) {
-            $filtros .= "{$whereAnd} data_exclusao >= '{$date_data_exclusao_ini}'";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_string($date_data_exclusao_fim)) {
-            $filtros .= "{$whereAnd} data_exclusao <= '{$date_data_exclusao_fim}'";
-            $whereAnd = ' AND ';
-        }
-
         if ($int_ativo) {
             $filtros .= "{$whereAnd} a.ativo = '1'";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_numeric($int_analfabeto)) {
-            $filtros .= "{$whereAnd} analfabeto = '{$int_analfabeto}'";
             $whereAnd = ' AND ';
         }
 
@@ -935,68 +868,8 @@ class clsPmieducarAluno extends Model
             $whereAnd = ' AND ';
         }
 
-        if (is_string($str_nome_responsavel) || is_numeric($int_cpf_responsavel)) {
-            $and_resp = '';
-
-            if (is_string($str_nome_responsavel)) {
-                $and_nome_resp = "
-              (pai_mae.slug ILIKE unaccent('%$str_nome_responsavel%')) AND (aluno.tipo_responsavel = 'm') AND pai_mae.idpes = fisica_aluno.idpes_mae
-              OR
-              (pai_mae.slug ILIKE unaccent('%$str_nome_responsavel%')) AND (aluno.tipo_responsavel = 'p') AND pai_mae.idpes = fisica_aluno.idpes_pai";
-
-                $and_resp = 'AND';
-            }
-
-            if (is_numeric($int_cpf_responsavel)) {
-                $and_cpf_pai_mae = "and fisica_resp.cpf LIKE '$int_cpf_responsavel'";
-            }
-
-            $filtros .= "
-            AND (EXISTS(
-              SELECT
-                1
-              FROM
-                cadastro.fisica fisica_resp,
-                cadastro.fisica,
-                cadastro.pessoa,
-                cadastro.pessoa responsavel
-              WHERE
-                fisica.idpes_responsavel = fisica_resp.idpes
-                AND pessoa.idpes = fisica.idpes
-                AND responsavel.idpes = fisica.idpes_responsavel
-                $and_cpf_pai_mae
-                and aluno.ref_idpes = pessoa.idpes)
-              OR EXISTS (
-                SELECT
-                  1
-                FROM
-                  cadastro.fisica AS fisica_aluno,
-                  cadastro.pessoa AS pai_mae,
-                  cadastro.fisica AS fisica_pai_mae
-                WHERE
-                  fisica_aluno.idpes = aluno.ref_idpes
-                AND (
-                  $and_nome_resp
-                  $and_resp
-                  (
-                    fisica_pai_mae.idpes = fisica_aluno.idpes_pai
-                    OR fisica_pai_mae.idpes = fisica_aluno.idpes_mae
-                  )
-                  AND fisica_pai_mae.cpf LIKE '$int_cpf_responsavel'
-                )
-              )
-            )";
-
-            $whereAnd = ' AND ';
-        }
-
         if (is_numeric($int_ref_cod_escola)) {
             $filtros .= "{$whereAnd} a.cod_aluno IN ( SELECT ref_cod_aluno FROM pmieducar.matricula WHERE ref_ref_cod_escola = '{$int_ref_cod_escola}' AND ultima_matricula = 1)";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_numeric($str_tipo_responsavel)) {
-            $filtros .= "{$whereAnd} tipo_responsavel = '{$str_tipo_responsavel}'";
             $whereAnd = ' AND ';
         }
 
@@ -1011,7 +884,13 @@ class clsPmieducarAluno extends Model
         }
 
         if ($filtra_baseado_matricula) {
-            $filtros .= "{$whereAnd} m.aprovado = 3 AND m.ativo = 1 ";
+            $filtros .= "{$whereAnd} m.ativo = 1 ";
+            $whereAnd = ' AND ';
+        }
+
+        if ($situacao_matricula_id && $situacao_matricula_id != EnrollmentStatusFilter::ALL) {
+            $situacao_matricula_id = intval($situacao_matricula_id);
+            $filtros .= "{$whereAnd} m.aprovado = $situacao_matricula_id ";
             $whereAnd = ' AND ';
         }
 
@@ -1036,7 +915,7 @@ class clsPmieducarAluno extends Model
         }
 
         if (!empty($str_nm_pai2) || !empty($str_nm_mae2) || !empty($str_nm_responsavel2)) {
-            $complemento_letf_outer = '';
+            $complemento_sql = '';
             $complemento_where = '';
             $and_where = '';
 
@@ -1058,7 +937,6 @@ class clsPmieducarAluno extends Model
                 $str_nome_responsavel2 = $db->escapeString($str_nm_responsavel2);
                 $complemento_sql .= ' LEFT OUTER JOIN cadastro.pessoa AS pessoa_responsavel ON (pessoa_responsavel.idpes = f.idpes_responsavel)';
                 $complemento_where .= "{$and_where} (pessoa_responsavel.slug ILIKE unaccent('%{$str_nome_responsavel2}%'))";
-                $and_where = ' AND ';
             }
 
             $filtros .= "
@@ -1068,8 +946,6 @@ class clsPmieducarAluno extends Model
            WHERE
               f.idpes = ref_idpes
               AND ({$complemento_where}))";
-
-            $whereAnd = ' AND ';
         }
 
         $countCampos = count(explode(',', $this->_campos_lista));
