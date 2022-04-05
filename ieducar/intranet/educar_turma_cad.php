@@ -650,8 +650,8 @@ return new class extends clsCadastro {
         $options = ['label' => 'Formas de organização da turma', 'resources' => $resources, 'value' => $this->formas_organizacao_turma, 'required' => false, 'size' => 70,];
         $this->inputsHelper()->select('formas_organizacao_turma', $options);
 
+        $helperOptions = ['objectName' => 'unidade_curricular'];
         $resources = [
-            null => 'Selecione',
             1 => 'Eletivas',
             2 => 'Libras',
             3 => 'Língua indígena',
@@ -661,9 +661,17 @@ return new class extends clsCadastro {
             7 => 'Projeto de vida',
             8 => 'Trilhas de aprofundamento/aprendizagens'
         ];
+        $options = [
+            'label' => 'Unidade curricular',
+            'required' => false,
+            'size' => 70,
+            'options' => [
+                'values' => $this->unidade_curricular,
+                'all_values'=> $resources
+            ]
+        ];
 
-        $options = ['label' => 'Unidade curricular', 'resources' => $resources, 'value' => $this->unidade_curricular, 'required' => false, 'size' => 70];
-        $this->inputsHelper()->select('unidade_curricular', $options);
+        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
         $cursos = loadJson('educacenso_json/cursos_da_educacao_profissional.json');
         $helperOptions = ['objectName' => 'cod_curso_profissional',
