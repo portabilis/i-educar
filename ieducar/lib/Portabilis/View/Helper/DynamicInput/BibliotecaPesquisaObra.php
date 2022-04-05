@@ -28,7 +28,7 @@ class Portabilis_View_Helper_DynamicInput_BibliotecaPesquisaObra extends Portabi
         $defaultOptions = ['id' => null, 'options' => [], 'hiddenInputOptions' => []];
         $options = $this->mergeOptions($options, $defaultOptions);
 
-        $inputHint = '<img border=\'0\' onclick=\'pesquisaObra();\' id=\'lupa_pesquisa_obra\' name=\'lupa_pesquisa_obra\' src=\'imagens/lupa.png\' />';
+        $inputHint = '<img border=\'0\' onclick=\'pesquisaObra();\' id=\'lupa_pesquisa_obra\' name=\'lupa_pesquisa_obra\' src=\'imagens/lupaT.png\' />';
 
         // se não recuperar obra, deixa titulo em branco
         $obra = $this->getObra($options['id']);

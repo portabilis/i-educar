@@ -96,7 +96,7 @@ return new class extends clsCadastro {
             $parametros->setSubmit(1);
             $parametros->adicionaCampoSelect('novo_editor', 'ref_cod_pessoa_fj', 'nome');
             $this->campoListaPesq('novo_editor', 'Novo Editor', $lista, 0, 'pesquisa_funcionario_lst.php', '', false, '', '', null, null, '', false, $parametros->serializaCampos());
-            //$this->campoLista( "edit_add", "Editores", $lista, "", "", false, "", "<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel( 500,500, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'pesquisa_funcionario_lst.php?campos=$serializedcampos\'></iframe>' );\">", false, true );
+            //$this->campoLista( "edit_add", "Editores", $lista, "", "", false, "", "<img id='lupa' src=\"imagens/lupaT.png\" border=\"0\" onclick=\"showExpansivel( 500,500, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'pesquisa_funcionario_lst.php?campos=$serializedcampos\'></iframe>' );\">", false, true );
             unset($campos);
         } else {
             //$this->campoListaPesq( "dono", "Dono da agenda", $lista, 0, "pesquisa_funcionario.php" );
@@ -104,7 +104,7 @@ return new class extends clsCadastro {
             $parametros->setSubmit(0);
             $parametros->adicionaCampoSelect('dono', 'ref_cod_pessoa_fj', 'nome');
             $this->campoListaPesq('dono', 'Dono da agenda', $lista, 0, 'pesquisa_funcionario_lst.php', '', false, '', '', null, null, '', false, $parametros->serializaCampos());
-            //$this->campoLista( "dono", "Dono da agenda", $lista, "", "", false, "", "<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel( 500,500, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'pesquisa_funcionario_lst.php?campos=$serializedcampos\'></iframe>' );\">", false, true );
+            //$this->campoLista( "dono", "Dono da agenda", $lista, "", "", false, "", "<img id='lupa' src=\"imagens/lupaT.png\" border=\"0\" onclick=\"showExpansivel( 500,500, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'pesquisa_funcionario_lst.php?campos=$serializedcampos\'></iframe>' );\">", false, true );
         }
     }
 

@@ -353,7 +353,7 @@ return new class extends clsCadastro {
             }
         }
 
-        $script = 'javascript:showExpansivelIframe(520, 170, \'educar_turma_tipo_cad_pop.php\');';
+        $script = 'javascript:showExpansivelIframe(1024, 480, \'educar_turma_tipo_cad_pop.php\');';
 
         if ($this->ref_cod_instituicao && $this->ref_cod_escola && $this->ref_cod_curso) {
             $script = sprintf(

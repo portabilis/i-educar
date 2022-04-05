@@ -292,7 +292,7 @@ return new class extends clsCadastro {
         $this->campoRotulo(
             'disciplina',
             'Componentes Curriculares',
-            "<img src='imagens/lupa_antiga.png' border='0' style='cursor:pointer;' alt='Buscar Componente Curricular' title='Buscar Componente Curricular' onclick=\"$funcao\">"
+            "<img src='imagens/lupaT.png' border='0' style='cursor:pointer;' alt='Buscar Componente Curricular' title='Buscar Componente Curricular' onclick=\"$funcao\">"
         );
 
         $funcao = 'popCurso(this)';
@@ -300,7 +300,7 @@ return new class extends clsCadastro {
         $this->campoRotulo(
             'curso',
             'Curso',
-            "<img src='imagens/lupa_antiga.png' border='0' style='cursor:pointer;' alt='Buscar Cursos' title='Buscar Cursos' onclick=\"$funcao\">"
+            "<img src='imagens/lupaT.png' border='0' style='cursor:pointer;' alt='Buscar Cursos' title='Buscar Cursos' onclick=\"$funcao\">"
         );
 
         $this->campoTexto('matricula', 'Matricula', $this->matricula);
@@ -340,7 +340,7 @@ return new class extends clsCadastro {
             'Carga Horária Semanal',
             $hora_formatada,
             true,
-            ' Número de horas deve ser maior que horas alocadas',
+            ' * Número de horas deve ser maior que horas alocadas',
             '',
             false
         );
@@ -371,7 +371,7 @@ return new class extends clsCadastro {
 
         $obj_permissoes = new clsPermissoes();
         if ($obj_permissoes->permissao_cadastra(632, $this->pessoa_logada, 4)) {
-            $script = 'javascript:showExpansivelIframe(350, 135, \'educar_escolaridade_cad_pop.php\');';
+            $script = 'javascript:showExpansivelIframe(1024, 480, \'educar_escolaridade_cad_pop.php\');';
             $script = "<img id='img_deficiencia' style='display: \'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
         } else {
             $script = null;

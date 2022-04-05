@@ -146,7 +146,7 @@ return new class extends clsCadastro {
         );
 
         $img = sprintf(
-            '<img border="0" onclick="pesquisa_valores_popless(\'%s\', \'nome\')" src="imagens/lupa.png">',
+            '<img border="0" onclick="pesquisa_valores_popless(\'%s\', \'nome\')" src="imagens/lupaT.png">',
             $url
         );
 

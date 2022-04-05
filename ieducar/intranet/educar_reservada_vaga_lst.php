@@ -113,7 +113,7 @@ return new class extends clsListagem {
             false,
             false,
             '',
-            '<img border="0" onclick="pesquisa_aluno();" id="ref_cod_aluno_lupa" name="ref_cod_aluno_lupa" src="imagens/lupa.png" />'
+            '<img border="0" onclick="pesquisa_aluno();" id="ref_cod_aluno_lupa" name="ref_cod_aluno_lupa" src="imagens/lupaT.png" />'
         );
 
         // Código do aluno (retornado de pop-up de busca da pesquisa de alunos - lupa)

@@ -28,7 +28,7 @@ class Portabilis_View_Helper_DynamicInput_PesquisaAluno extends Portabilis_View_
         $defaultOptions = ['id' => null, 'options' => [], 'filterByEscola' => false];
         $options = $this->mergeOptions($options, $defaultOptions);
 
-        $inputHint = '<img border=\'0\' onclick=\'pesquisaAluno();\' id=\'lupa_pesquisa_aluno\' name=\'lupa_pesquisa_aluno\' src=\'imagens/lupa.png\' />';
+        $inputHint = '<img border=\'0\' onclick=\'pesquisaAluno();\' id=\'lupa_pesquisa_aluno\' name=\'lupa_pesquisa_aluno\' src=\'imagens/lupaT.png\' />';
 
         // se não recuperar recurso, deixa resourceLabel em branco
         $resource = $this->getResource($options['id']);

@@ -87,7 +87,7 @@ return new class extends clsCadastro {
             }
         }
 
-        $script = 'javascript:showExpansivelIframe(520, 400, \'educar_infra_predio_cad_pop.php\');';
+        $script = 'javascript:showExpansivelIframe(1024, 480, \'educar_infra_predio_cad_pop.php\');';
         if ($this->ref_cod_escola && $this->ref_cod_instituicao) {
             $script = "<img id='img_colecao' style='display: \'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
         } else {

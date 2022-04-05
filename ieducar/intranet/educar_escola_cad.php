@@ -524,7 +524,7 @@ return new class extends clsCadastro {
             $opcoes = ['' => 'Selecione'];
 
             // EDITAR
-            $script = 'javascript:showExpansivelIframe(520, 120, \'educar_escola_rede_ensino_cad_pop.php\');';
+            $script = 'javascript:showExpansivelIframe(1024, 480, \'educar_escola_rede_ensino_cad_pop.php\');';
             $display = "'display: none;'";
             if ($this->ref_cod_instituicao) {
                 $objTemp = new clsPmieducarEscolaRedeEnsino();
@@ -615,7 +615,7 @@ return new class extends clsCadastro {
             $opcoes = ['' => 'Selecione'];
 
             // EDITAR
-            $script = 'javascript:showExpansivelIframe(520, 120, \'educar_escola_rede_ensino_cad_pop.php\');';
+            $script = 'javascript:showExpansivelIframe(1024, 420, \'educar_escola_rede_ensino_cad_pop.php\');';
             if ($this->ref_cod_instituicao) {
                 $objTemp = new clsPmieducarEscolaRedeEnsino();
                 $lista = $objTemp->lista(null, null, null, null, null, null, null, null, 1, $this->ref_cod_instituicao);

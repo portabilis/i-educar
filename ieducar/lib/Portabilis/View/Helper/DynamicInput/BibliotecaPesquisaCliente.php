@@ -16,7 +16,7 @@ class Portabilis_View_Helper_DynamicInput_BibliotecaPesquisaCliente extends Port
         $defaultOptions = ['id' => null, 'options' => [], 'hiddenInputOptions' => []];
         $options = $this->mergeOptions($options, $defaultOptions);
 
-        $inputHint = '<img border=\'0\' onclick=\'pesquisaCliente();\' id=\'lupa_pesquisa_cliente\' name=\'lupa_pesquisa_cliente\' src=\'imagens/lupa.png\' />';
+        $inputHint = '<img border=\'0\' onclick=\'pesquisaCliente();\' id=\'lupa_pesquisa_cliente\' name=\'lupa_pesquisa_cliente\' src=\'imagens/lupaT.png\' />';
 
         $defaultInputOptions = [
             'id' => 'nome_cliente',
