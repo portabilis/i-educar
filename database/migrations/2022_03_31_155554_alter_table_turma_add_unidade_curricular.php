@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -14,7 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        DB::unprepared('ALTER TABLE pmieducar.turma ADD COLUMN unidade_curricular int2;');
+        Schema::table('pmieducar.turma',
+            fn(Blueprint $table) => $table->integer('unidade_curricular')->nullable()
+        );
     }
 
     /**
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down()
     {
-        DB::unprepared('ALTER TABLE pmieducar.turma DROP COLUMN unidade_curricular;');
+        Schema::table('pmieducar.turma', fn(Blueprint $table) => $table->dropColumn('unidade_curricular'));
     }
 };
