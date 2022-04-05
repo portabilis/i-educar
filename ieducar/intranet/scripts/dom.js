@@ -267,11 +267,6 @@ function showExpansivelIframe( largura, altura, URL, fecha )
 	showExpansivel( largura, altura, '<iframe src="' + URL + '" frameborder="0" height="100%" width="' + ( largura - 1 ) + '" marginheight="0" marginwidth="0" name="temp_win_popless"></iframe>', fecha );
 }
 
-function showModal( largura, URL, fecha )
-{
-	showModalContent( largura, altura, '<div id=lkModal class="modal"><div class="modal-content" > <span class="close">&times;</span><p>Some text in the Modal..</p></div>';
-}
-
 function showExpansivelImprimir( largura, altura, arquivo, array,  titulo )
 {
 
