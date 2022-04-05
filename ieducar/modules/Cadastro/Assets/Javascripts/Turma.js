@@ -46,7 +46,15 @@ let verificaFormaOrganizacaoTurma = ()=> {
       $j('#estrutura_curricular').val() &&
       $j('#estrutura_curricular').val().includes("1")) {
     $j('#formas_organizacao_turma').makeRequired();
-    return;
+  }
+}
+
+let verificaUnidadeCurricular = ()=> {
+  $j('#unidade_curricular').makeUnrequired();
+  if (obrigarCamposCenso &&
+    $j('#estrutura_curricular').val() &&
+    $j('#estrutura_curricular').val().includes("2")) {
+    $j('#unidade_curricular').makeRequired();
   }
 }
 
@@ -73,6 +81,8 @@ $j('#tipo_atendimento').change(function() {
 $j('#estrutura_curricular').change(function() {
   verificaFormaOrganizacaoTurma();
   habilitaFormasOrganizarTurma();
+  verificaUnidadeCurricular();
+  habilitaUnidadeCurricular();
 });
 
 verificaEtapaEducacenso();
@@ -87,7 +97,7 @@ function mostraAtividadesComplementares(){
   $j('#atividades_complementares').makeUnrequired();
   if (mostraCampo) {
     $j('#atividades_complementares').removeAttr('disabled');
-    $j('#atividades_complementares').trigger('chosen:updated');;
+    $j('#atividades_complementares').trigger('chosen:updated');
     if (obrigarCamposCenso) {
       $j('#atividades_complementares').makeRequired();
     }
@@ -215,6 +225,19 @@ function habilitaFormasOrganizarTurma() {
      !$j('#estrutura_curricular').val().includes("1")) {
     $j("#formas_organizacao_turma").prop('disabled', true).val("");
   }
+}
+
+function habilitaUnidadeCurricular() {
+
+  const estruturaCurricular = $j('#estrutura_curricular').val();
+  const itinerarioFormativo = estruturaCurricular && estruturaCurricular.includes("2");
+
+  if (itinerarioFormativo) {
+    $j("#unidade_curricular").prop('disabled', false).trigger('chosen:updated');
+    return;
+  }
+
+  $j("#unidade_curricular").prop('disabled', true).val([]).trigger('chosen:updated');
 }
 
 $j('#tipo_mediacao_didatico_pedagogico').on('change', function(){
@@ -397,6 +420,8 @@ $j(document).ready(function() {
       habilitaEtapaEducacenso();
       verificaFormaOrganizacaoTurma();
       habilitaFormasOrganizarTurma();
+      verificaUnidadeCurricular();
+      habilitaUnidadeCurricular();
     });
 
   // fix checkboxs

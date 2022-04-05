@@ -113,6 +113,9 @@ class CheckMandatoryCensoFields implements Rule
             if (!$this->validaCampoFormasOrganizacaoTurma($params)) {
                 return false;
             }
+            if (!$this->validaCampoUnidadeCurricular($params)) {
+                return false;
+            }
             if (!$this->validaCampoTipoAtendimento($params)) {
                 return false;
             }
@@ -314,9 +317,7 @@ class CheckMandatoryCensoFields implements Rule
 
     private function validaCampoEstruturaCurricular(mixed $params)
     {
-        $estruturaCurricular = array_map('intval',
-            explode(',', str_replace(['{', '}'], '', $params->estrutura_curricular))
-         ?: []);
+        $estruturaCurricular = $this->getEstruturaCurricularValues($params);
 
         if ($params->tipo_atendimento == TipoAtendimentoTurma::ESCOLARIZACAO
             && empty($estruturaCurricular)
@@ -335,16 +336,17 @@ class CheckMandatoryCensoFields implements Rule
 
     private function validaCampoFormasOrganizacaoTurma(mixed $params)
     {
-
-        $estruturaCurricular = array_map('intval',
-            explode(',', str_replace(['{', '}'], '', $params->estrutura_curricular))
-                ?: []);
+        $estruturaCurricular = $this->getEstruturaCurricularValues($params);
 
         if (empty($estruturaCurricular)) {
             return true;
         }
 
-        if (!empty($params->formas_organizacao_turma) && in_array(1, $estruturaCurricular, true)) {
+        if (empty($params->formas_organizacao_turma) && !in_array(1, $estruturaCurricular, true)) {
+            return true;
+        }
+
+        if (empty($params->formas_organizacao_turma) && in_array(1, $estruturaCurricular, true)) {
             $this->message = 'Campo: <b>Formas de organização da turma</b> é obrigatório quando o campo: <b>Estrutura Curricular contém: Formação geral básica</b>';
             return false;
         }
@@ -394,6 +396,31 @@ class CheckMandatoryCensoFields implements Rule
         return true;
     }
 
+    private function validaCampoUnidadeCurricular(mixed $params): bool
+    {
+        $estruturaCurricular = $this->getEstruturaCurricularValues($params);
+
+        if (empty($estruturaCurricular)) {
+            return true;
+        }
+
+        if (empty($params->unidade_curricular) && !in_array(2, $estruturaCurricular, true)) {
+            return true;
+        }
+
+        if (empty($params->unidade_curricular) && in_array(2, $estruturaCurricular, true)) {
+            $this->message = 'Campo: <b>Unidade curricular</b> é obrigatório quando o campo: <b>Estrutura Curricular contém: Itinerário formativo</b>';
+            return false;
+        }
+
+        if (!empty($params->unidade_curricular) && !in_array(2, $estruturaCurricular, true)) {
+            $this->message = 'Campo: <b>Unidade curricular</b> não pode ser preenchido quando o campo: <b>Estrutura Curricular não contém: Itinerário formativo</b>';
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * Get the validation error message.
      *
@@ -402,5 +429,12 @@ class CheckMandatoryCensoFields implements Rule
     public function message()
     {
         return $this->message;
+    }
+
+    private function getEstruturaCurricularValues(mixed $params): array
+    {
+        return array_map('intval',
+            explode(',', str_replace(['{', '}'], '', $params->estrutura_curricular))
+                ?: []);
     }
 }

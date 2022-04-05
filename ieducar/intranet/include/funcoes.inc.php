@@ -394,3 +394,12 @@ function isArrayEmpty($value): bool
 {
     return is_array($value) && empty($value[0]);
 }
+
+ function transformStringFromDBInArray($string): ?array
+{
+    if (is_string($string) && str_contains($string, '{') && str_contains($string, '}')) {
+        return explode(',', str_replace(['{', '}'], '', $string));
+    }
+
+    return null;
+}
