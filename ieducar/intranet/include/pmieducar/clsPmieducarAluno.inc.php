@@ -807,7 +807,7 @@ class clsPmieducarAluno extends Model
         $int_rg_aluno = null,
         $situacao_matricula_id = null,
     ) {
-        $filtra_baseado_matricula = is_numeric($ano) || is_numeric($ref_cod_instituicao) || is_numeric($ref_cod_escola) || is_numeric($ref_cod_curso) || is_numeric($ref_cod_serie);// || is_numeric($periodo);
+        $filtra_baseado_matricula = is_numeric($ano) || is_numeric($ref_cod_instituicao) || is_numeric($ref_cod_escola) || is_numeric($ref_cod_curso) || is_numeric($ref_cod_serie) || $situacao_matricula_id != EnrollmentStatusFilter::ALL;
 
         $filtros = '';
         $this->resetCamposLista();
