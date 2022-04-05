@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Custon;
+namespace Database\Custom;
 
 use Illuminate\Database\Schema\Grammars\PostgresGrammar;
 use Illuminate\Support\Fluent;
