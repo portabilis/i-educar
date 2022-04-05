@@ -337,7 +337,7 @@ return new class extends clsCadastro {
 
         $this->campoHora(
             'carga_horaria',
-            'Carga Horária',
+            'Carga Horária Semanal',
             $hora_formatada,
             true,
             ' Número de horas deve ser maior que horas alocadas',
