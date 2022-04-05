@@ -102,10 +102,12 @@ function verificaEstruturacurricular() {
   const estruturaCurricularField = $j('#estrutura_curricular');
 
   estruturaCurricularField.makeUnrequired();
-  if (mostraCampo && obrigarCamposCenso) {
+  if (mostraCampo) {
     estruturaCurricularField.removeAttr('disabled');
     estruturaCurricularField.trigger('chosen:updated');
-    estruturaCurricularField.makeRequired()
+    if (obrigarCamposCenso) {
+      estruturaCurricularField.makeRequired();
+    }
   } else {
     estruturaCurricularField.attr('disabled', 'disabled');
     estruturaCurricularField.val([]).trigger('chosen:updated');
