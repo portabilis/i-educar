@@ -138,7 +138,7 @@ class ComponenteCurricularController extends ApiCoreController
     {
         if ($this->canGetComponentesCurriculares()) {
             $userId = \Illuminate\Support\Facades\Auth::id();
-            $instituicaoId = $this->getRequest()->instituicao_id;
+            $instituicaoId = $this->getRequest()->instituicao_id || 1;
             $turmaId = $this->getRequest()->turma_id;
             $ano = $this->getRequest()->ano;
 
