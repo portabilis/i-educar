@@ -22,9 +22,9 @@ class LegacyRegistrationFactory extends Factory
     public function definition(): array
     {
         return [
-            'ref_cod_aluno' => LegacyStudentFactory::new()->create(),
-            'ref_ref_cod_serie' => LegacyLevelFactory::new()->create(),
-            'ref_cod_curso' => LegacyCourseFactory::new()->create(),
+            'ref_cod_aluno' => fn () => LegacyStudentFactory::new()->create(),
+            'ref_ref_cod_serie' => fn () => LegacyLevelFactory::new()->create(),
+            'ref_cod_curso' => fn () => LegacyCourseFactory::new()->create(),
             'data_cadastro' => now(),
             'ano' => now()->year,
             'ref_usuario_cad' => 1,
