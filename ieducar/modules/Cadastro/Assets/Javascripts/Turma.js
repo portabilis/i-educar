@@ -31,12 +31,11 @@ let obrigarCamposCenso = $j('#obrigar_campos_censo').val() == '1';
 
 let verificaEtapaEducacenso = ()=>{
   $j('#etapa_educacenso').makeUnrequired();
-  if ($j('#tipo_atendimento').val() &&
-      $j('#tipo_atendimento').val() != "4" &&
-      $j('#tipo_atendimento').val() != "5") {
-    if (obrigarCamposCenso) {
+  if ($j('#estrutura_curricular').val() &&
+    ($j('#estrutura_curricular').val().include('1') ||
+    $j('#estrutura_curricular').val().include('3')) &&
+    obrigarCamposCenso) {
       $j('#etapa_educacenso').makeRequired();
-    }
   }
 }
 
@@ -75,17 +74,18 @@ let verificaLocalFuncionamentoDiferenciado = () => {
 $j('#tipo_atendimento').change(function() {
   mostraAtividadesComplementares();
   verificaEstruturacurricular();
-  verificaEtapaEducacenso();
-  habilitaEtapaEducacenso();
 });
 $j('#estrutura_curricular').change(function() {
   verificaFormaOrganizacaoTurma();
   habilitaFormasOrganizarTurma();
   verificaUnidadeCurricular();
   habilitaUnidadeCurricular();
+  verificaEtapaEducacenso();
+  habilitaEtapaEducacenso();
 });
 
 verificaEtapaEducacenso();
+habilitaEtapaEducacenso();
 verificaLocalFuncionamentoDiferenciado();
 
 $j('#etapa_educacenso').change(function() {
@@ -208,12 +208,11 @@ function validaAtividadesComplementares() {
 $j('#tipo_mediacao_didatico_pedagogico').on('change', verificaLocalFuncionamentoDiferenciado);
 
 function habilitaEtapaEducacenso() {
-  var atividadeComplementar = $j("#tipo_atendimento").val() == 4;
-  var atendimentoEducacionalEspecializado = $j("#tipo_atendimento").val() == 5;
-
   $j("#etapa_educacenso").prop('disabled', false);
+  const notContainData = $j('#estrutura_curricular').val() === null;
 
-  if (atividadeComplementar || atendimentoEducacionalEspecializado) {
+  if (notContainData || (!$j('#estrutura_curricular').val().include('1') &&
+      !$j('#estrutura_curricular').val().include('3'))) {
     $j("#etapa_educacenso").prop('disabled', true).val("");
   }
 }
@@ -418,6 +417,7 @@ $j(document).ready(function() {
       verificaEstruturacurricular();
       mostraCursoTecnico();
       habilitaEtapaEducacenso();
+      verificaEtapaEducacenso();
       verificaFormaOrganizacaoTurma();
       habilitaFormasOrganizarTurma();
       verificaUnidadeCurricular();
