@@ -305,14 +305,12 @@ class CheckMandatoryCensoFields implements Rule
         return true;
     }
 
-    private function validaCampoEstruturaCurricular(mixed $params)
+    public function validaCampoEstruturaCurricular(mixed $params)
     {
         $estruturaCurricular = $this->getEstruturaCurricularValues($params);
 
-        if ($params->tipo_atendimento == TipoAtendimentoTurma::ESCOLARIZACAO
-            && empty($estruturaCurricular)
-        ) {
-            $this->message = 'Campo atividades Estrutura Curricular é obrigatório.';
+        if ($params->tipo_atendimento == TipoAtendimentoTurma::ESCOLARIZACAO && empty($estruturaCurricular)) {
+            $this->message = 'Campo "Estrutura Curricular" é obrigatório quando o campo tipo de atentimento é "Escolarização".';
             return false;
         }
 
@@ -421,8 +419,12 @@ class CheckMandatoryCensoFields implements Rule
         return $this->message;
     }
 
-    private function getEstruturaCurricularValues(mixed $params): array
+    private function getEstruturaCurricularValues(mixed $params): ?array
     {
+        if ($params->estrutura_curricular === null) {
+            return null;
+        }
+
         return array_map('intval',
             explode(',', str_replace(['{', '}'], '', $params->estrutura_curricular))
                 ?: []);
