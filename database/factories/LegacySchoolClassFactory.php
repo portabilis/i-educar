@@ -29,16 +29,16 @@ class LegacySchoolClassFactory extends Factory
         ]);
 
         return [
-            'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
+            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->unique()->make(),
             'nm_turma' => $name = $this->faker->colorName,
             'sgl_turma' => mb_substr($name, 0, 3),
             'max_aluno' => $this->faker->numberBetween(10, 25),
             'data_cadastro' => now(),
-            'ref_cod_turma_tipo' => LegacySchoolClassTypeFactory::new()->unique()->make(),
+            'ref_cod_turma_tipo' => fn () => LegacySchoolClassTypeFactory::new()->unique()->make(),
             'ref_ref_cod_escola' => $schoolGrade->school_id,
             'ref_ref_cod_serie' => $schoolGrade->grade_id,
             'ref_cod_curso' => $schoolGrade->grade->course_id,
-            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
+            'ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()->unique()->make(),
             'dias_semana' => [2, 3, 4, 5, 6],
             'ano' => now()->year,
             'visivel' => true,
