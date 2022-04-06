@@ -150,7 +150,7 @@
         (function basetecsis(){
             if(tecsisSplit[2] == "tec"){
                 document.getElementById('divLogoId').style.backgroundImage="url(../intranet/imagens/login/svg/Tecsis-animation_02.svg)"; 
-                document.getElementById('divLogoMobileId').style.backgroundImage="url(../intranet/imagens/login/svg/Tecsis_bordaMobile.svg)"; 
+                document.getElementById('divLogoMobileId').style.backgroundImage="url(../intranet/imagens/login/svg/Tecsis-bordaMobile.svg)"; 
                 document.getElementById('imgBordaId').style.backgroundImage="url(../intranet/imagens/login/svg/Tecsis_borda.svg)";
             }
         })()
