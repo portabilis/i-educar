@@ -28,6 +28,7 @@ class LegacyRegistrationFactory extends Factory
             'data_cadastro' => now(),
             'ano' => now()->year,
             'ref_usuario_cad' => 1,
+            'aprovado' => 3,
         ];
     }
 }
