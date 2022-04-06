@@ -147,21 +147,11 @@ return new class extends clsCadastro {
             }
         }
 
-        if (is_string($this->dias_semana)) {
-            $this->dias_semana = explode(',', str_replace(['{', '}'], '', $this->dias_semana));
-        }
-
-        if (is_string($this->atividades_complementares)) {
-            $this->atividades_complementares = explode(',', str_replace(['{', '}'], '', $this->atividades_complementares));
-        }
-
-        if (is_string($this->estrutura_curricular)) {
-            $this->estrutura_curricular = explode(',', str_replace(['{', '}'], '', $this->estrutura_curricular));
-        }
-
-        if (is_string($this->cod_curso_profissional)) {
-            $this->cod_curso_profissional = explode(',', str_replace(['{', '}'], '', $this->cod_curso_profissional));
-        }
+        $this->dias_semana = transformStringFromDBInArray($this->dias_semana);
+        $this->atividades_complementares = transformStringFromDBInArray($this->atividades_complementares);
+        $this->estrutura_curricular = transformStringFromDBInArray($this->estrutura_curricular);
+        $this->cod_curso_profissional = transformStringFromDBInArray($this->cod_curso_profissional);
+        $this->unidade_curricular = transformStringFromDBInArray($this->unidade_curricular);
 
         $this->url_cancelar = $retorno == 'Editar' ?
             'educar_turma_det.php?cod_turma=' . $registro['cod_turma'] : 'educar_turma_lst.php';
@@ -650,8 +640,8 @@ return new class extends clsCadastro {
         $options = ['label' => 'Formas de organização da turma', 'resources' => $resources, 'value' => $this->formas_organizacao_turma, 'required' => false, 'size' => 70,];
         $this->inputsHelper()->select('formas_organizacao_turma', $options);
 
+        $helperOptions = ['objectName' => 'unidade_curricular'];
         $resources = [
-            null => 'Selecione',
             1 => 'Eletivas',
             2 => 'Libras',
             3 => 'Língua indígena',
@@ -661,9 +651,17 @@ return new class extends clsCadastro {
             7 => 'Projeto de vida',
             8 => 'Trilhas de aprofundamento/aprendizagens'
         ];
+        $options = [
+            'label' => 'Unidade curricular',
+            'required' => false,
+            'size' => 70,
+            'options' => [
+                'values' => $this->unidade_curricular,
+                'all_values'=> $resources
+            ]
+        ];
 
-        $options = ['label' => 'Unidade curricular', 'resources' => $resources, 'value' => $this->unidade_curricular, 'required' => false, 'size' => 70];
-        $this->inputsHelper()->select('unidade_curricular', $options);
+        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
         $cursos = loadJson('educacenso_json/cursos_da_educacao_profissional.json');
         $helperOptions = ['objectName' => 'cod_curso_profissional',
