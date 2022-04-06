@@ -82,7 +82,7 @@ class CheckMandatoryCensoFields implements Rule
         68
     ];
 
-    public $message = '';
+    public string $message = '';
 
     /**
      * Determine if the validation rule passes.
