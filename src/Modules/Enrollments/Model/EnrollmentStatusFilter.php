@@ -4,7 +4,7 @@ namespace iEducar\Modules\Enrollments\Model;
 
 class EnrollmentStatusFilter
 {
-    const ALL = 10;
+    public const ALL = 10;
 
     public static function getDescriptiveValues()
     {
