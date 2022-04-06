@@ -48,6 +48,10 @@ input, select, textarea, span.select2.select2-container.select2-container--defau
   font-family: 'Open Sans' !important;
 }
 
+select{
+  width: 50% !important;
+}
+
 input:read-only {
   background-color: #e9f0f8 !important;
 }
@@ -84,6 +88,10 @@ span.select2-selection.select2-selection--multiple{
 
 .select2-dropdown {
   border-color: #cddce6 !important;
+}
+
+.geral {
+  width: 50% !important;
 }
 
 .chosen-container, input[type="text"] select .geral {
@@ -452,6 +460,7 @@ h6, .h6 {
 .main {
   display: flex;
   align-items: unset;
+  contain: content;
   
 }
 
@@ -1743,7 +1752,7 @@ input[type=checkbox] {
   width: auto !important;
 }
 
-#formcadastro input:not(.botaolistagem), #formcadastro textarea {
+#formcadastro input:not(.botaolistagem , .chosen-search input), #formcadastro textarea {
   border-radius: 3px;
   background-color: #ffffff;
   border: solid 1px #cddce6;
@@ -2130,6 +2139,7 @@ input.btn_small {
 
 @media only screen and (max-width: 1023px) {
   
+  .ieducar-header, .col-8 {}
   select {width: 100vh;}
   .r3c1 {display: none;}
   .Mobile {display: inherit;}
@@ -2137,6 +2147,9 @@ input.btn_small {
   #formcadastro select {font-size: 3.4rem !important; max-width: none;}
   #formcadastro input, #formcadastro textarea {font-size: 3.4rem  !important}
   .ieducar-quick-search, .ieducar-sidebar-menu {position: relative}
+  .chosen-container, input[type="text"] select .geral {width: 100% !important;}
+  select, .geral{width: 100% !important;}
+  .chosen-container .chosen-results li.active-result {font-size: 2rem}
   .breadcrumb a, .breadcrumb span {font-size: 2.7rem !important}
   .formmdtd sub, .formlttd sub {font-size:2.4rem}
   .multiselect {width: 90% !important; margin: auto; margin-top: 20px !important;}
@@ -2147,7 +2160,7 @@ input.btn_small {
   table.paginacao td a.nvp_paginador { font-size: 4.5rem !important;}
   table.paginacao{width:95vw !important; margin-top: 3vh !important; margin-bottom: 7vh !important;}
   .tableDetalhe th{font-size: 4.5rem; padding-right: 15rem !important;}
-  .avatar-35{width: 70px !important; height: 70px !important;}
+  .avatar-35{width: 70px !important; padding: 5px 0px !important; height: 70px !important;}
   .notifications img {top: 3px !important; width:40px !important;}
 
   .ieducar-header{height: 100px !important;}
