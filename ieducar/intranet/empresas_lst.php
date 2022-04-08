@@ -73,7 +73,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'Empresas!';
+        $this->title = 'Empresas';
         $this->processoAp = 41;
     }
 };
