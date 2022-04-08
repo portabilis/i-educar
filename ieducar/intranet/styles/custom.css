@@ -182,9 +182,22 @@ span.error_notice {
   font-size: 1rem;
   line-height: 1.5;
   border-radius: 0.25rem;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; }
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
 
-.btn-primary {
+.btn-default {
+  color: #333333;
+  background-color: #ffffff;
+  border-color: #cccccc;
+}
+
+.btn-lg{
+    padding: 12px 30px;
+    font-size: 13px;
+    font-weight: 300;
+}
+
+  .btn-primary {
 	color: #212529;
 	background-color: #cdcdcd;
 	border-color: #cdcdcd;
@@ -488,10 +501,15 @@ h6, .h6 {
   margin-left: auto; }
 
 .row {
-  display: flex;
+  flex: 1fr;
   flex-wrap: wrap;
   margin-right: -15px;
   margin-left: -15px; }
+
+.flex{
+  display: flex;
+  margin: auto;
+}
 
 .col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12, .col,
 .col-auto, .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm,
@@ -1740,7 +1758,7 @@ td.area-conhecimento-destaque {
 .titulo-tabela-listagem {
   background-color: #ccdce6 !important;
   font-family: "Open Sans" !important;
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: bold;
   font-style: normal;
   font-stretch: normal;
@@ -1758,7 +1776,7 @@ input[type=checkbox] {
   border: solid 1px #cddce6;
   padding: 8px;
   font-size: 1.75rem;
-  width: 50%;
+  min-width: 50%;
   height: auto;
   color: #47728f;
   box-sizing: border-box;
@@ -2142,26 +2160,32 @@ input.btn_small {
   .ieducar-header, .col-8 {}
   select {width: 100vh;}
   .r3c1 {display: none;}
+  .campo_obrigatorio {font-size: 30px;}
+  .paginacao .row .btn-lg {padding: 12px 45px;}
   .Mobile {display: inherit;}
   .expandir-btn {display:inherit;}
-  #formcadastro select {font-size: 3.4rem !important; max-width: none;}
-  #formcadastro input, #formcadastro textarea {font-size: 3.4rem  !important}
+  #formcadastro .formdktd,.tableDetalhe .formdktd,.titulo-tabela-listagem {font-size: 4rem}
+  #formcadastro select {font-size: 3rem !important; max-width: none;}
+  #formcadastro input, #formcadastro textarea {font-size: 3rem  !important; min-width: 50%;}
   .ieducar-quick-search, .ieducar-sidebar-menu {position: relative}
   .chosen-container, input[type="text"] select .geral {width: 100% !important;}
   select, .geral{width: 100% !important;}
   .chosen-container .chosen-results li.active-result {font-size: 2rem}
-  .breadcrumb a, .breadcrumb span {font-size: 2.7rem !important}
-  .formmdtd sub, .formlttd sub {font-size:2.4rem}
+  #formcadastro  .formmdtd, #formcadastro .formlttd {display:flex; width: 100%; padding: 4px 0px; max-width: 100%;}
+  .breadcrumb a, .breadcrumb span {font-size: 2.5rem !important}
+  .formmdtd sub, .formlttd sub {font-size:2rem}
   .multiselect {width: 90% !important; margin: auto; margin-top: 20px !important;}
   .quick-search .multiselect__tags { font-size: 3.5rem !important}
   td input[type="checkbox"]:read-only { width: 6rem !important; height: 6rem !important; display:flex}
   
   table {font-size: 4rem !important;}
   table.paginacao td a.nvp_paginador { font-size: 4.5rem !important;}
+  .nvp_paginador, .nvp_paginador_ativo a {font-size: 5rem !important;} 
   table.paginacao{width:95vw !important; margin-top: 3vh !important; margin-bottom: 7vh !important;}
   .tableDetalhe th{font-size: 4.5rem; padding-right: 15rem !important;}
   .avatar-35{width: 70px !important; padding: 5px 0px !important; height: 70px !important;}
   .notifications img {top: 3px !important; width:40px !important;}
+  .btn {font-size: 3rem;}
 
   .ieducar-header{height: 100px !important;}
   .ieducar-header-logo h1 a {font-size: 4.8rem !important;line-height: 100px !important;}
@@ -2182,7 +2206,7 @@ input.btn_small {
   #escola_chosen a.chosen-single{ font-size: 3.4rem !important;}
   #tablelistagem .formlttd{ width: calc(100% - 15px); margin: 5px; float: left; padding:10px 8px}
   .form, .formlttd, .formmdtd, .tablelistagem .formdktd,
-  #tablelistagem .formlttd, #tablelistagem .formmdtd  { font-size: 4.5rem !important;}
+  #tablelistagem .formlttd, #tablelistagem .formmdtd  { font-size: 4rem !important; line-height: 3; font-weight:bold}
   td.formlttd table.tableDetalhe {width: 1023px;}
   .ieducar-quick-searchM{width: 90%; padding-top: 5rem;}
   
