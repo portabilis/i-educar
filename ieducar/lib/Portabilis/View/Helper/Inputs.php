@@ -250,7 +250,7 @@ class Portabilis_View_Helper_Inputs
         $this->simpleSearchResourceInput('simpleSearchAcervo', $attrName, $inputOptions, $helperOptions);
     }
 
-    public function multipleSearchDeficiencias($attrName, $inputOptions = [], $helperOptions = [])
+    public function multipleSearchDeficiencias($attrName, $inputOptions = [], $helperOptions = []) 
     {
         $this->multipleSearchResourceInput('multipleSearchDeficiencias', $attrName, $inputOptions, $helperOptions);
     }

@@ -1,24 +1,22 @@
 <?
-
 class ListaAlunoTurmaController extends ApiCoreController
 {
     public function pegarlista()
     {
-        $cod_turma = $this->getRequest()->cod_turma;
+        $codTurma = $this->getRequest()->cod_turma;
 
-        if(is_numeric($cod_turma)){
+        if(is_numeric($codTurma)){
             $obj = new clsPmieducarMatriculaTurma();
-            $lista = $obj->listaPorSequencial($cod_turma);
+            $lista = $obj->listaPorSequencial($codTurma);
 
             return ['lista' => $lista];
-
         }
 
         return[];
     }
    public function gerar()
    {
-       if($this->isRequestFor('post', 'lista')){
+       if($this->isRequestFor('get','lista')){
            $this->appendResponse($this->pegarlista());
        }
    } 

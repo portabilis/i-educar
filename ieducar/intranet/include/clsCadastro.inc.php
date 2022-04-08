@@ -635,7 +635,7 @@ class clsCadastro extends clsCampos
 
         return $this->_inputsHelper;
     }
-
+ 
     protected function currentUserId()
     {
         return Portabilis_Utils_User::currentUserId();
