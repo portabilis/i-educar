@@ -1119,7 +1119,7 @@ class clsPmieducarMatriculaTurma extends Model
 
 
         $db->Consulta($sql);
-
+        
         while ($db->ProximoRegistro()) {
             $tupla = $db->Tupla();
 

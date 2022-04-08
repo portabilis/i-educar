@@ -1,38 +1,37 @@
 var registrosLista = [];
-var lista;
-function listar(){
+var lista = [];
+ async function listar(){
 
     var cod_turma = location.href.split('cod_turma=').pop();
-    console.log(cod_turma);
 
-    var urlForListar = postResourceUrlBuilder.buildUrl('/module/Api/ListaAlunoTurma', 'lista', {});
-
-    var options = {
-        type     : 'POST',
-        url      : urlForListar,
-        dataType : 'json',
-        data     : {
-            cod_turma    : cod_turma,
-           
-        },
-        success  : handleListar
+   if(!isNaN (cod_turma)){
+    var searchPathTurma = '/module/Api/ListaAlunoTurma?oper=get&resource=lista',
+    paramsDadosTurma = {
+        cod_turma : cod_turma
     };
+    
+    await $j.get(searchPathTurma, paramsDadosTurma, function(response){
+        
+    lista = response.lista;
+});
 
-    postResource(options);
+   handleListar(lista);
+  
+}
+return null;
 }
 
 
 function handleListar (response) {
-    registrosLista = response.lista;
-    console.log(response)
+    registrosLista = response;
     opennig(registrosLista);
+   
 }
 
 
-function opennig(registrosLista){
+function opennig(registrosLista){  
    lista = registrosLista.length;
     $j("#lista-aluno").find('#msg').html(mensagem(registrosLista));
-    console.log('oi casada, sou mendigo')
     $j("#lista-aluno").dialog("open")
 
 }
@@ -48,7 +47,7 @@ $j('body').append(
     '<div id="msg" class="msg"></div>' +
     '</div>'
 );
-$j('#dlista-aluno').find(':input').css('display', 'block');
+$j('#lista-aluno').find(':input').css('display', 'block');
 
 $j("#lista-aluno").dialog({
     autoOpen: false,
@@ -94,7 +93,6 @@ function mensagem(registrosLista){
     registro += `<table cellspacing = "0" cellpading="0" border="0">`;
     registro += `<tr align = "left"><td>%s</td></tr>, tabela`;
     registro += `</table>`;
-    console.log(tabela)
 
     return tabela;
   

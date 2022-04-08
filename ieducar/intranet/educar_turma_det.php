@@ -380,7 +380,7 @@ return new class extends clsDetalhe {
             }
         }
 
-        $this->montaListaComponentes();
+        $this->montaListaComponentes(); 
 
         if ($obj_permissoes->permissao_cadastra(586, $this->pessoa_logada, 7)) {
             $this->url_novo = 'educar_turma_cad.php';
