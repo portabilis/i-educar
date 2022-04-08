@@ -174,6 +174,7 @@ class CheckMandatoryCensoFields implements Rule
         $estruturaCurricular = $this->getEstruturaCurricularValues($params);
 
         if  (empty($params->etapa_educacenso) &&
+            is_array($estruturaCurricular) &&
             (in_array(1, $estruturaCurricular, true) || in_array(3, $estruturaCurricular, true))) {
 
             $this->message = 'O campo deve ser obrigatório quando o campo "Estrutura curricular" for preenchido com "Formação geral básica" ou "Não se aplica"';
