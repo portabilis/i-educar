@@ -173,24 +173,25 @@ class CheckMandatoryCensoFields implements Rule
         $course = LegacyCourse::find($params->ref_cod_curso);
         $estruturaCurricular = $this->getEstruturaCurricularValues($params);
 
-        if  (empty($params->etapa_educacenso) &&
+        if (empty($params->etapa_educacenso) &&
             is_array($estruturaCurricular) &&
             (in_array(1, $estruturaCurricular, true) || in_array(3, $estruturaCurricular, true))) {
-
             $this->message = 'O campo <b>"Etapa de ensino"</b> deve ser obrigatório quando o campo "Estrutura curricular" for preenchido com "Formação geral básica" ou "Não se aplica"';
+
             return false;
         }
 
         if ((int)$course->modalidade_curso === 1 && !in_array((int)$params->etapa_educacenso, self::ETAPAS_ENSINO_REGULAR)) {
-
             $this->message = 'Quando a modalidade do curso é: Ensino regular, o campo: Etapa de ensino deve ser uma das seguintes opções:'
                 . implode(',', self::ETAPAS_ENSINO_REGULAR) . '.';
+
             return false;
         }
 
         if ($course->modalidade_curso == 2 && !in_array((int) $params->etapa_educacenso, self::ETAPAS_ESPECIAL_SUBSTITUTIVAS)) {
             $this->message = 'Quando a modalidade do curso é: Educação especial, o campo: Etapa de ensino deve ser uma das seguintes opções:'
                 . implode(',', self::ETAPAS_ESPECIAL_SUBSTITUTIVAS) . '.';
+
             return false;
         }
 
@@ -216,6 +217,7 @@ class CheckMandatoryCensoFields implements Rule
         if ($params->tipo_mediacao_didatico_pedagogico == App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA &&
             !in_array((int) $params->etapa_educacenso, [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 40, 70, 71, 73, 74, 67, 68], true)) {
             $this->message = 'Quando o campo: Tipo de mediação didático-pedagógica é: Educação a Distância, o campo: Etapa de ensino deve ser uma das seguintes opções: 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 70, 71, 73, 74, 64, 67 ou 68.';
+
             return false;
         }
 
@@ -312,29 +314,34 @@ class CheckMandatoryCensoFields implements Rule
 
         if ($params->tipo_atendimento == TipoAtendimentoTurma::ESCOLARIZACAO && empty($estruturaCurricular)) {
             $this->message = 'Campo "Estrutura Curricular" é obrigatório quando o campo tipo de atentimento é "Escolarização".';
+
             return false;
         }
 
         if (count($estruturaCurricular) > 1 && in_array(3, $estruturaCurricular, true)) {
             $this->message = 'Não é possível informar mais de uma opção no campo: <b>Estrutura curricular</b>, quando a opção: <b>Não se aplica</b> estiver selecionada';
+
             return false;
         }
 
         $etapaEnsinoCanNotContainsWithFormacaoGeralBasica = [1, 2, 3, 39, 40, 64, 68];
         if (in_array(1, $estruturaCurricular, true) && in_array((int) $params->tipo_atendimento, $etapaEnsinoCanNotContainsWithFormacaoGeralBasica)) {
             $this->message = 'Quando o campo: <b>Estrutura curricular</b> for preenchido com: <b>Formação geral básica</b>, o campo: <b>Etapa de ensino</b> deve ser uma das seguintes opções: 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 41, 69, 70, 71, 72, 56, 73, 74 ou 67';
+
             return false;
         }
 
         $etapaEnsinoCanNotContainsWithItinerarioFormativo = [1, 2, 3, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 39, 40, 41, 56, 64, 68, 69, 70, 72, 73];
         if (in_array(2, $estruturaCurricular, true) && in_array((int) $params->tipo_atendimento, $etapaEnsinoCanNotContainsWithItinerarioFormativo)) {
             $this->message = 'Quando o campo: <b>Estrutura curricular</b> for preenchido com: <b>Itinerário formativo</b>, o campo: <b>Etapa de ensino</b> deve ser uma das seguintes opções: 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 71, 74, 67';
+
             return false;
         }
 
         $etapaEnsinoCanNotContainsWithNaoSeAplica = [1, 2, 3, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 39, 40, 41, 56, 64, 68, 69, 70, 72 , 73];
         if (in_array(3, $estruturaCurricular, true) && in_array((int) $params->tipo_atendimento, $etapaEnsinoCanNotContainsWithNaoSeAplica)) {
             $this->message = 'Quando o campo: <b>Estrutura curricular</b> for preenchido com: <b>Não se aplica</b>, o campo: <b>Etapa de ensino</b> deve ser uma das seguintes opções: 1, 2, 3, 24, 39, 40, 64, 68';
+
             return false;
         }
 
@@ -355,11 +362,13 @@ class CheckMandatoryCensoFields implements Rule
 
         if (empty($params->formas_organizacao_turma) && in_array(1, $estruturaCurricular, true)) {
             $this->message = 'Campo: <b>Formas de organização da turma</b> é obrigatório quando o campo: <b>Estrutura Curricular contém: Formação geral básica</b>';
+
             return false;
         }
 
         if (!empty($params->formas_organizacao_turma) && !in_array(1, $estruturaCurricular, true)) {
             $this->message = 'Campo: <b>Formas de organização da turma</b> não pode ser preenchido quando o campo: <b>Estrutura Curricular não contém: Formação geral básica</b>';
+
             return false;
         }
 
@@ -393,10 +402,10 @@ class CheckMandatoryCensoFields implements Rule
             ]
         ];
 
-
         if (!in_array((int) $params->etapa_educacenso, $validOptionCorrelationForEtapaEnsino[(int)$params->formas_organizacao_turma], true)) {
             $todasEtapasEducacenso = loadJson(__DIR__ . '/../../ieducar/intranet/educacenso_json/etapas_ensino.json');
             $this->message = "Não é possível selecionar a opção: <b>{$validOption[(int)$params->formas_organizacao_turma]}</b>, no campo: <b>Formas de organização da turma</b> quando o campo: Etapa de ensino for: {$todasEtapasEducacenso[$params->etapa_educacenso]}.";
+
             return false;
         }
 
@@ -417,11 +426,13 @@ class CheckMandatoryCensoFields implements Rule
 
         if (empty($params->unidade_curricular) && in_array(2, $estruturaCurricular, true)) {
             $this->message = 'Campo: <b>Unidade curricular</b> é obrigatório quando o campo: <b>Estrutura Curricular contém: Itinerário formativo</b>';
+
             return false;
         }
 
         if (!empty($params->unidade_curricular) && !in_array(2, $estruturaCurricular, true)) {
             $this->message = 'Campo: <b>Unidade curricular</b> não pode ser preenchido quando o campo: <b>Estrutura Curricular não contém: Itinerário formativo</b>';
+
             return false;
         }
 
@@ -444,8 +455,10 @@ class CheckMandatoryCensoFields implements Rule
             return null;
         }
 
-        return array_map('intval',
+        return array_map(
+            'intval',
             explode(',', str_replace(['{', '}'], '', $params->estrutura_curricular))
-                ?: []);
+                ?: []
+        );
     }
 }

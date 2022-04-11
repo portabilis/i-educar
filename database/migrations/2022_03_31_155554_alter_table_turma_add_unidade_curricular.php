@@ -6,8 +6,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class () extends Migration {
     /**
      * Run the migrations.
      *
@@ -19,8 +18,9 @@ return new class extends Migration
 
         DB::connection()->setSchemaGrammar($typeClass);
 
-        Schema::table('pmieducar.turma',
-            static fn(Blueprint $table) =>
+        Schema::table(
+            'pmieducar.turma',
+            static fn (Blueprint $table) =>
             $table
                 ->addColumn('int_array', 'unidade_curricular')
                 ->nullable()
@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('pmieducar.turma', fn(Blueprint $table) => $table->dropColumn('unidade_curricular'));
+        Schema::table('pmieducar.turma', fn (Blueprint $table) => $table->dropColumn('unidade_curricular'));
     }
 };
