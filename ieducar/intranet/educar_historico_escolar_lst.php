@@ -193,7 +193,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'Distribuição de uniforme';
+        $this->title = 'Atualização de histórico escolar';
         $this->processoAp = '578';
     }
 };

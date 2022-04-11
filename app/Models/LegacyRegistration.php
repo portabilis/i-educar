@@ -272,6 +272,7 @@ class LegacyRegistration extends Model
     {
         return $query->join('pmieducar.aluno', 'aluno.cod_aluno', '=', 'matricula.ref_cod_aluno')
             ->join('cadastro.fisica', 'aluno.ref_idpes', '=', 'fisica.idpes')
+            ->where('aluno.ativo', 1)
             ->where('sexo', 'M');
     }
 
@@ -279,6 +280,7 @@ class LegacyRegistration extends Model
     {
         return $query->join('pmieducar.aluno', 'aluno.cod_aluno', '=', 'matricula.ref_cod_aluno')
             ->join('cadastro.fisica', 'aluno.ref_idpes', '=', 'fisica.idpes')
+            ->where('aluno.ativo', 1)
             ->where('sexo', 'F');
     }
 
