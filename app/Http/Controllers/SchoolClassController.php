@@ -201,8 +201,6 @@ class SchoolClassController extends Controller
         if (isset($params['etapa_educacenso'])
             && !in_array($params['etapa_educacenso'], $etapasCursoTecnico)) {
             $params['cod_curso_profissional'] = null;
-        } else {
-            $params['etapa_educacenso'] = null;
         }
 
         if (empty($params['cod_turma'])) {
