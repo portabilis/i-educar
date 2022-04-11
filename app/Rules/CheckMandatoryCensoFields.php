@@ -177,7 +177,7 @@ class CheckMandatoryCensoFields implements Rule
             is_array($estruturaCurricular) &&
             (in_array(1, $estruturaCurricular, true) || in_array(3, $estruturaCurricular, true))) {
 
-            $this->message = 'O campo deve ser obrigatório quando o campo "Estrutura curricular" for preenchido com "Formação geral básica" ou "Não se aplica"';
+            $this->message = 'O campo <b>"Etapa de ensino"</b> deve ser obrigatório quando o campo "Estrutura curricular" for preenchido com "Formação geral básica" ou "Não se aplica"';
             return false;
         }
 
