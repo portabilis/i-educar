@@ -1926,11 +1926,6 @@ return new class extends clsCadastro {
 
             return false;
         }
-        if (empty($this->conveniada_com_poder_publico)) {
-            $this->mensagem = 'O campo conveniada com poder público é obrigatório para escolas em atividade de administração privada.';
-
-            return false;
-        }
         if (empty($this->mantenedora_escola_privada) ||
             (is_array($this->mantenedora_escola_privada) &&
             count($this->mantenedora_escola_privada) == 1 &&
