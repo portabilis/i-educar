@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "009f32991ae81dd716a29cdbae65761f",
+    "content-hash": "5819342077bf76be04688b10c6b18c3b",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -513,6 +513,59 @@
                 "source": "https://github.com/edersoares/composer-plug-and-play/tree/0.6.0"
             },
             "time": "2021-12-29T14:30:42+00:00"
+        },
+        {
+            "name": "dex/frontier",
+            "version": "0.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/edersoares/frontier.git",
+                "reference": "cd65180c1bd55c2fc66f9a02cf770c1878c57b00"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/edersoares/frontier/zipball/cd65180c1bd55c2fc66f9a02cf770c1878c57b00",
+                "reference": "cd65180c1bd55c2fc66f9a02cf770c1878c57b00",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^8|^9"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^6.23",
+                "phpunit/phpunit": "^9.5"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Dex\\Laravel\\Frontier\\FrontierServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Dex\\Laravel\\Frontier\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Eder Soares",
+                    "email": "edersoares@me.com",
+                    "homepage": "https://edersoares.me",
+                    "role": "Developer"
+                }
+            ],
+            "description": "The frontier between your Laravel app and your decoupled frontend",
+            "support": {
+                "issues": "https://github.com/edersoares/frontier/issues",
+                "source": "https://github.com/edersoares/frontier/tree/0.2.0"
+            },
+            "time": "2022-02-12T16:36:59+00:00"
         },
         {
             "name": "dflydev/dot-access-data",
@@ -11775,5 +11828,5 @@
         "ext-pgsql": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.2.0"
 }
