@@ -889,8 +889,16 @@ class clsPmieducarAluno extends Model
         }
 
         if ($situacao_matricula_id && $situacao_matricula_id != EnrollmentStatusFilter::ALL) {
-            $situacao_matricula_id = intval($situacao_matricula_id);
-            $filtros .= "{$whereAnd} m.aprovado = $situacao_matricula_id ";
+            $situacao_matricula_id = (int)$situacao_matricula_id;
+            if ($situacao_matricula_id === 9) {
+                //Exceto Transferidos/Abandono
+                $abandono =  App_Model_MatriculaSituacao::ABANDONO;
+                $transferido = App_Model_MatriculaSituacao::TRANSFERIDO;
+                $filtros .= "{$whereAnd} m.aprovado not in({$abandono},{$transferido})";
+            } else {
+                $filtros .= "{$whereAnd} m.aprovado = $situacao_matricula_id ";
+            }
+
             $whereAnd = ' AND ';
         }
 
