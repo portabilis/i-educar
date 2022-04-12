@@ -187,6 +187,7 @@ return new class extends clsCadastro {
     public  $pessoaj_idpes;
     public  $pessoaj_id;
     public bool $pesquisaPessoaJuridica = true;
+    public $poder_publico_parceria_convenio;
 
     public $inputsRecursos = [
         'qtd_secretario_escolar' => 'Secretário(a) escolar',
@@ -435,6 +436,8 @@ return new class extends clsCadastro {
         if (is_string($this->codigo_lingua_indigena)) {
             $this->codigo_lingua_indigena = explode(',', str_replace(['{', '}'], '', $this->codigo_lingua_indigena));
         }
+
+        $this->poder_publico_parceria_convenio = transformStringFromDBInArray($this->poder_publico_parceria_convenio);
     }
 
     private function pessoaJuridicaContemEscola($pessoaj_id)
@@ -759,6 +762,25 @@ return new class extends clsCadastro {
             ];
 
             $this->inputsHelper()->select('categoria_escola_privada', $options);
+
+            $helperOptions = ['objectName' => 'poder_publico_parceria_convenio'];
+            $resources = [
+                1 => 'Secretaria estadual',
+                2 => 'Secretaria municipal',
+                3 => 'Não possui parceria ou convênio'
+            ];
+
+            $options = [
+                'label' => 'Poder público responsável pela parceria ou convênio entre a Administração Pública e outras instituições',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->poder_publico_parceria_convenio,
+                    'all_values' => $resources
+                ]
+            ];
+
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
             $resources = [
                 '' => 'Selecione',
