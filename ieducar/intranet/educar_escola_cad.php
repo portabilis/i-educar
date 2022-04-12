@@ -1677,6 +1677,7 @@ return new class extends clsCadastro {
         $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
         $obj->esfera_administrativa = $this->esfera_administrativa;
         $obj->iddis = (int)$this->district_id;
+        $obj->poder_publico_parceria_convenio = $this->poder_publico_parceria_convenio;
 
         foreach ($this->inputsRecursos as $key => $value) {
             $obj->{$key} = $this->{$key};
@@ -1746,6 +1747,7 @@ return new class extends clsCadastro {
         $this->orgaos_colegiados = $this->transformArrayInString($this->orgaos_colegiados);
         $this->reserva_vagas_cotas = $this->transformArrayInString($this->reserva_vagas_cotas);
         $this->codigo_lingua_indigena = $this->transformArrayInString($this->codigo_lingua_indigena);
+        $this->poder_publico_parceria_convenio = $this->transformArrayInString($this->poder_publico_parceria_convenio);
     }
 
     private function transformArrayInString($value): ?string
