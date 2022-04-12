@@ -125,6 +125,7 @@ class clsPmieducarEscola extends Model
     public $qtd_vice_diretor;
     public $qtd_orientador_comunitario;
     public $iddis;
+    public $poder_publico_parceria_convenio;
 
     public function __construct(
         $cod_escola = null,
@@ -173,7 +174,8 @@ class clsPmieducarEscola extends Model
           e.qtd_fonoaudiologo,
           e.qtd_vice_diretor,
           e.qtd_orientador_comunitario,
-          e.iddis
+          e.iddis,
+          e.poder_publico_parceria_convenio
           ';
 
         if (is_numeric($ref_usuario_cad)) {
@@ -954,6 +956,11 @@ class clsPmieducarEscola extends Model
 
             $campos .= "{$gruda}ativo";
             $valores .= "{$gruda}'1'";
+
+            if (is_string($this->poder_publico_parceria_convenio)) {
+                $campos .= "{$gruda}poder_publico_parceria_convenio";
+                $valores .= "{$gruda}'{{$this->poder_publico_parceria_convenio}}'";
+            }
 
             $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
             $recordId = $db->InsertId("{$this->_tabela}_cod_escola_seq");
@@ -1835,6 +1842,14 @@ class clsPmieducarEscola extends Model
             } elseif (is_null($this->iddis) || $this->iddis == '') {
                 $gruda = ', ';
                 $set .= "{$gruda}iddis = NULL ";
+            }
+
+            if (is_string($this->poder_publico_parceria_convenio)) {
+                $gruda .= "poder_publico_parceria_convenio";
+                $set .= "{$gruda}='{{$this->poder_publico_parceria_convenio}}'";
+            } else {
+                $gruda .= "poder_publico_parceria_convenio";
+                $set .= "{$gruda}=NULL";
             }
 
             if ($set) {
