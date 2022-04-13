@@ -354,7 +354,7 @@ class CheckMandatoryCensoFields implements Rule
             return false;
         }
 
-        $etapaEnsinoCanNotContainsWithNaoSeAplica = [1, 2, 3, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 39, 40, 41, 56, 64, 68, 69, 70, 72 , 73];
+        $etapaEnsinoCanNotContainsWithNaoSeAplica = [14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 41, 56, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 69, 70, 72, 71, 73, 67, 74];
         if (is_array($estruturaCurricular) &&
             in_array(3, $estruturaCurricular, true) &&
             isset($params->etapa_educacenso) &&
