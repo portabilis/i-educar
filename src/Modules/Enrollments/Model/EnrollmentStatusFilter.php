@@ -4,7 +4,7 @@ namespace iEducar\Modules\Enrollments\Model;
 
 class EnrollmentStatusFilter
 {
-    public const EXCETO_TRANSFERIDO_ABANDONO = 9;
+    public const EXCEPT_TRANSFERRED_OR_ABANDONMENT = 9;
     public const ALL = 10;
 
     public static function getDescriptiveValues()
