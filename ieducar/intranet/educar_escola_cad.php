@@ -1899,7 +1899,9 @@ return new class extends clsCadastro {
                 $this->validaRecursos() &&
                 $this->validaQuantidadeComputadoresAlunos() &&
                 $this->validaQuantidadeEquipamentosEnsino() &&
-                $this->validaLinguasIndigenas();
+                $this->validaLinguasIndigenas() &&
+                $this->validaPoderPublicoParceriaConvenio()
+            ;
     }
 
     protected function validaOcupacaoPredio()
@@ -2614,6 +2616,23 @@ return new class extends clsCadastro {
     {
         if (is_array($this->codigo_lingua_indigena) && count($this->codigo_lingua_indigena) > 3) {
             $this->mensagem = 'O campo: <b>Línguas indígenas</b>, não pode ter mais que 3 opções';
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private function validaPoderPublicoParceriaConvenio()
+    {
+        $values = transformStringFromDBInArray($this->poder_publico_parceria_convenio);
+
+        if ($values === null) {
+            return true;
+        }
+
+        if (count($values) > 1 && in_array(3, $values)) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Poder público responsável pela parceria ou convênio entre a Administração Pública e outras instituições</b>, quando a opção: <b>Não possui parceria ou convênio</b> estiver selecionada.';
 
             return false;
         }
