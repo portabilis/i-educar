@@ -211,7 +211,6 @@ function habilitaEtapaEducacenso() {
   $j("#etapa_educacenso").prop('disabled', false);
   const notContainData = $j('#estrutura_curricular').val() === null;
 
-  console.log($j('#estrutura_curricular').val(),!$j('#estrutura_curricular').val().include('1'), !$j('#estrutura_curricular').val().include('3'));
   if (notContainData || (!$j('#estrutura_curricular').val().include('1') &&
       !$j('#estrutura_curricular').val().include('3'))) {
     $j("#etapa_educacenso").prop('disabled', true)
