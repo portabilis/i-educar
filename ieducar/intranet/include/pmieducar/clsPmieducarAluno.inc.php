@@ -890,7 +890,7 @@ class clsPmieducarAluno extends Model
 
         if ($situacao_matricula_id && $situacao_matricula_id != EnrollmentStatusFilter::ALL) {
             $situacao_matricula_id = (int)$situacao_matricula_id;
-            if ($situacao_matricula_id === 9) {
+            if ($situacao_matricula_id === EnrollmentStatusFilter::EXCETO_TRANSFERIDO_ABANDONO) {
                 //Exceto Transferidos/Abandono
                 $abandono =  App_Model_MatriculaSituacao::ABANDONO;
                 $transferido = App_Model_MatriculaSituacao::TRANSFERIDO;
