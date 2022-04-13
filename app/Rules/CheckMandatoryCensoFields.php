@@ -182,7 +182,7 @@ class CheckMandatoryCensoFields implements Rule
         }
 
         if ((int)$course->modalidade_curso === 1 &&
-            isset($params->etapa_educacensos) &&
+            isset($params->etapa_educacenso) &&
             !in_array((int)$params->etapa_educacenso, self::ETAPAS_ENSINO_REGULAR)) {
             $this->message = 'Quando a modalidade do curso é: Ensino regular, o campo: Etapa de ensino deve ser uma das seguintes opções:'
                 . implode(',', self::ETAPAS_ENSINO_REGULAR) . '.';
@@ -191,7 +191,7 @@ class CheckMandatoryCensoFields implements Rule
         }
 
         if ($course->modalidade_curso == 2 &&
-            isset($params->etapa_educacensos) &&
+            isset($params->etapa_educacenso) &&
             !in_array((int) $params->etapa_educacenso, self::ETAPAS_ESPECIAL_SUBSTITUTIVAS)) {
             $this->message = 'Quando a modalidade do curso é: Educação especial, o campo: Etapa de ensino deve ser uma das seguintes opções:'
                 . implode(',', self::ETAPAS_ESPECIAL_SUBSTITUTIVAS) . '.';
@@ -200,7 +200,7 @@ class CheckMandatoryCensoFields implements Rule
         }
 
         if ($course->modalidade_curso == 3 &&
-            isset($params->etapa_educacensos) &&
+            isset($params->etapa_educacenso) &&
             !in_array($params->etapa_educacenso, [69, 70, 71, 72])) {
             $this->message = 'Quando a modalidade do curso é: Educação de Jovens e Adultos (EJA), o campo: Etapa de ensino deve ser uma das seguintes opções: 69, 70, 71 ou 72.';
 
@@ -214,7 +214,7 @@ class CheckMandatoryCensoFields implements Rule
         }
 
         if ($params->tipo_mediacao_didatico_pedagogico == App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL &&
-            isset($params->etapa_educacensos) &&
+            isset($params->etapa_educacenso) &&
             !in_array($params->etapa_educacenso, [69, 70, 71, 72])) {
             $this->message = 'Quando o campo: Tipo de mediação didático-pedagógica é: Semipresencial, o campo: Etapa de ensino deve ser uma das seguintes opções: 69, 70, 71 ou 72.';
 
@@ -222,9 +222,9 @@ class CheckMandatoryCensoFields implements Rule
         }
 
         if ($params->tipo_mediacao_didatico_pedagogico == App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA &&
-            isset($params->etapa_educacensos) &&
+            isset($params->etapa_educacenso) &&
             !in_array((int) $params->etapa_educacenso, [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 40, 70, 71, 73, 74, 67, 68], true)) {
-            $this->message = 'Quando o campo: Tipo de mediação didático-pedagógica é: Educação a Distância, o campo: Etapa de ensino deve ser uma das seguintes opções: 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 70, 71, 73, 74, 64, 67 ou 68.';
+            $this->message = 'Quando o campo: Tipo de mediação didático-pedagógica é: Educação a Distância, o campo: Etapa de ensino deve ser uma das seguintes opções: 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 70, 71, 73, 74, 67 ou 68.';
 
             return false;
         }
@@ -235,7 +235,7 @@ class CheckMandatoryCensoFields implements Rule
         ];
 
         if (in_array($params->local_funcionamento_diferenciado, $localDeFuncionamentoData) &&
-            isset($params->etapa_educacensos) &&
+            isset($params->etapa_educacenso) &&
             in_array($params->etapa_educacenso, [1, 2, 3, 56])) {
             $nomeOpcao = (App_Model_LocalFuncionamentoDiferenciado::getInstance()->getEnums())[$params->local_funcionamento_diferenciado];
             $this->message = "Quando o campo: Local de funcionamento diferenciado é: {$nomeOpcao}, o campo: Etapa de ensino não pode ser nenhuma das seguintes opções: 1, 2, 3 ou 56.";
