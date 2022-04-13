@@ -108,6 +108,7 @@ class SchoolClassService
     public function storeSchoolClass(LegacySchoolClass $schoolClass)
     {
         $this->validate($schoolClass);
+        
         $schoolClass->save();
 
         return $schoolClass;
