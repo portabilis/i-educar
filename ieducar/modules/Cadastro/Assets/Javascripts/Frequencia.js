@@ -28,23 +28,22 @@ function getAluno(xml_aluno) {
     var conteudo = '';
 
     if (DOM_array.length) {
-        conteudo += '<div style="margin-bottom: 10px; float: left">';
-        conteudo += '  <span style="display: block; float: left; width: 400px;">Nome</span>';
-        conteudo += '  <span style="display: block; float: left; width: 180px;">Presença?</span>';
-        conteudo += '  <span style="display: block; float: left; width: 300px;">' + "Justificativa" + '</span>';
-        conteudo += '</div>';
-
+        conteudo += '<td class="tableDetalheLinhaSeparador" colspan="3"></td><tr><td><div class="scroll"><table class="tableDetalhe tableDetalheMobile" width="100%"><tr class="tableHeader">';
+        conteudo += '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' + "Nome" + '</span></th>';
+        conteudo += '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' + "Presença" + '</span></th>';
+        conteudo += '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' + "Justificativa" + '</span></th>';
+        conteudo += '</tr>';
+        conteudo += '<tr><td class="tableDetalheLinhaSeparador" colspan="3"></td></tr>';
+        
         for (var i = 0; i < DOM_array.length; i++) {
             id = DOM_array[i].getAttribute("cod_aluno");
 
-            conteudo += '<div style="margin-bottom: 10px; float: left">';
-            conteudo += '  <label style="display: block; float: left; width: 400px;">' + DOM_array[i].firstChild.data + '</label>';
-            conteudo += ` <label style="display: block; float: left; width: 180px;"> \
+            conteudo += ' <td class="sizeFont colorFont"><p>' + DOM_array[i].firstChild.data + '</p></td>';
+            conteudo += ` <td class="sizeFont colorFont" > \
                             <input type="checkbox" onchange="presencaMudou(this)" id="alunos[]" name='alunos[${id}]' Checked> \
-                          </label>`;
-            conteudo += `<input type='text' name='justificativa[${id}][]' style='width: 300px;' maxlength=${maxCaracteresObservacao} disabled></input>`;
-            conteudo += '</div>';
-            conteudo += '<br style="clear: left" />';
+                          </td>`;
+            conteudo += ` <td><input type='text' name='justificativa[${id}][]' style="display: flex;" maxlength=${maxCaracteresObservacao} disabled></input></td>`;
+            conteudo += ' </tr>';
         }
     } else {
         campoAlunos.innerHTML = 'Faltam informações obrigatórias.';
@@ -52,7 +51,7 @@ function getAluno(xml_aluno) {
 
     if (conteudo) {
         campoAlunos.innerHTML = '<table cellspacing="0" cellpadding="0" border="0">';
-        campoAlunos.innerHTML += '<tr align="left"><td>' + conteudo + '</td></tr>';
+        campoAlunos.innerHTML += '<tr align="left"><td><p>' + conteudo + '</p></td></tr>';
         campoAlunos.innerHTML += '</table>';
     }
 }
