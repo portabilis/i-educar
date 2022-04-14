@@ -141,6 +141,13 @@ return new class extends clsCadastro {
         $this->campoQuebra();
     }
 
+    public function Formular()
+    {
+        $this->title = 'Biblioteca';
+        $this->processoAp = '591';
+    }
+
+
     public function Novo()
     {
         $obj_permissoes = new clsPermissoes();
