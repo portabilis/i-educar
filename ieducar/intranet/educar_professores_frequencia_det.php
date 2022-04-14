@@ -156,7 +156,7 @@ return new class extends clsDetalhe {
         }
 
 
-        $this->tabela .= ' </tr><td class="tableDetalheLinhaSeparador" colspan="3"></td><tr><td><div class="scroll"><table class="tableDetalhe tableDetalheMobile" width="100%"><tr>';
+        $this->tabela .= ' </tr><td class="tableDetalheLinhaSeparador" colspan="3"></td><tr><td><div class="scroll"><table class="tableDetalhe tableDetalheMobile" width="100%">';
         $this->tabela .= ' <th><span style="display: block; float: left; width: auto; font-weight: bold">Nome</span></th>';
         $this->tabela .= ' <th><span style="display: block; float: left; width: 100px; font-weight: bold">Presença</span></th>';
         $this->tabela .= ' <th><span style="display: block; float: left; width: auto; font-weight: bold">Justificativa</span></th></tr>';
@@ -164,9 +164,9 @@ return new class extends clsDetalhe {
              foreach ($alunos as $aluno) {
              $checked = !$aluno['presenca'] ? "checked='true'" : '';
             
-             $this->tabela .= "  <tr><td class='formlttd'>{$aluno['nome']}</td>";
+             $this->tabela .= "  <tr><td class='formlttd'><p>{$aluno['nome']}</p></td>";
              $this->tabela .= "  <td style='margin: auto'><input type='checkbox' disabled {$checked}></td>";
-             $this->tabela .= "  <td class='formlttd'>{$aluno['justificativa']}</td></tr>";
+             $this->tabela .= "  <td class='formlttd'><p>{$aluno['justificativa']}</p></td></tr>";
          }
         $this->tabela .= '</table></div></td></tr>';
         $disciplinas  = '</table><table cellspacing="0" cellpadding="0" border="0" width="100%">';

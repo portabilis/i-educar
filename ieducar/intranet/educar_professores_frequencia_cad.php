@@ -117,9 +117,10 @@ return new class extends clsCadastro {
 
  
             $conteudo .= '  </tr><td class="tableDetalheLinhaSeparador" colspan="3"></td><tr><td><div class="scroll"><table class="tableDetalhe tableDetalheMobile" width="100%"><tr>';
-            $conteudo .= '  <th><span style="display: block; float: left; width: auto; font-weight: bold">Nome</span></th>';
-            $conteudo .= '  <th><span style="display: block; float: left; width: 100px; font-weight: bold">Presença</span></th>';
-            $conteudo .= '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' . "Justificativa" . '</span></th></tr>';
+            $conteudo .= '  <th><p>'."Nome".'</p></th>';
+            $conteudo .= '  <th><p>'."Presença".'</p></th>';
+            $conteudo .= '  <th><p>'."Justificativa".'</p></th></tr>';
+            $conteudo .= '  </td></tr></table>';
 
             foreach ($this->alunos as $key => $aluno) {
                 $id = $aluno['matricula'];
@@ -149,13 +150,14 @@ return new class extends clsCadastro {
                                     autocomplete='off'
                                 />";
                 $conteudo .= '  </td>';
-               // $conteudo .= '  <br style="clear: left" />';
+                $conteudo .= '  <br style="clear: left" />';
             }
 
             if ($conteudo) {
-                $alunos = '</table><table cellspacing="0" cellpadding="0" border="0" width="100%">';
+                $alunos .= '<table cellspacing="0" cellpadding="0" border="0" width="100%">';
+                $alunos .= '<tr align="left"><td></td></tr>';
                 $alunos .= '<tr align="left"><td>' . $conteudo . '</td></tr>';
-                $alunos .= '</div></table>';
+                $alunos .= '</table>';
             }
         }
 
@@ -353,26 +355,26 @@ return new class extends clsCadastro {
             }
         }
 
-        $this->tabela .= ' <div style="margin-bottom: 10px;">';
-        $this->tabela.= '  <span style="display: block; float: left; width: 300px; font-weight: bold">Nome</span>';
-        $this->tabela .= ' <span style="display: block; float: left; width: 100px; font-weight: bold">Presença</span>';
-        $this->tabela .= ' <span style="display: block; float: left; width: 300px; font-weight: bold">Justificativa</span>';
-        $this->tabela .= ' </div>';
-        $this->tabela .= ' <br style="clear: left" />';
+        $this->tabela .= ' <tr><td><div class="scroll"><table class="tableDetalhe tableDetalheMobile" width="100%"><tr class="tableHeader">';
+        $this->tabela .= ' <th><span style="display: block; float: left; width: auto; font-weight: bold">'+'Nome'+'</span></th>';
+        $this->tabela .= ' <th><span style="display: block; float: left; width: 100px; font-weight: bold">'+'Presença'+'</span></th>';
+        $this->tabela .= ' <th><span style="display: block; float: left; width: auto; font-weight: bold">'+'Justificativa'+'</span></th>';
+        $this->tabela .= ' </tr>';
+        $this->tabela .= ' <tr><td class="tableDetalheLinhaSeparador" colspan="3"></td></tr>';
 
         foreach ($alunos as $aluno) {
-            $this->tabela .= '  <div style="margin-bottom: 10px; float: left" class="linha-disciplina" >';
-            $this->tabela .= "  <span style='display: block; float: left; width: 300px'>{$aluno['nome']}</span>";
+            $this->tabela .= '  <td  class="colorFont">';
+            $this->tabela .= "  <p>{$aluno['nome']}</p></td>";
 
             if(!$aluno['presenca']) {
-                $this->tabela .= '  <label style="display: block; float: left; width: 100px;">
+                $this->tabela .= '  <td >
                                         <input type="checkbox" disabled Checked={false}>
-                                    </label>';
+                                    </td>';
             } else {
-                $this->tabela .= '  <label style="display: block; float: left; width: 100px;">
+                $this->tabela .= '  <td >
                                         <input type="checkbox" disabled !Checked>
-                                    </label>';
-                $this->tabela .= "  <span style='display: block; float: left; width: 300px'>{$aluno['justificativa']}</span>";
+                                    </td>';
+                $this->tabela .= "  <td><p>{$aluno['justificativa']}</p></td>";
             }
 
             $this->tabela .= '  </div>';

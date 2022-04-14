@@ -80,6 +80,10 @@ input:read-only {
   color: #47728f;
 }
 
+.sizeFont {
+  font-size: 1.75rem;
+}
+
 input.select2-search__field,
 #formcadastro input.select2-search__field,
 span.select2-selection.select2-selection--multiple{
@@ -405,7 +409,7 @@ p {
 
 label {
   display: inline-block;
-  margin-bottom: 0.5rem; }
+  margin-bottom: 0.5rem;}
 
   h1, h2, h3, h4, h5, h6,
   .h1, .h2, .h3, .h4, .h5, .h6 {
@@ -1028,7 +1032,6 @@ a.icons-top{
   /*display:none; */
   border: 0;
   position: absolute;
-  box-shadow: 6px 0px 5px rgba(50, 50, 50, 0.5);
   left: -75%;
   z-index: 2;
   transition: left .5s ease-in-out;
@@ -1724,6 +1727,10 @@ td.tableDetalheLinhaSeparador {
     background-color: #ccdce6 !important;
 }
 
+tr.tableHeader {
+  background-color: #ccdce6 !important;
+}
+
 .tabelanum2{
   border: 0 !important;
 }
@@ -2176,7 +2183,8 @@ input.btn_small {
   .formmdtd sub, .formlttd sub {font-size:2rem}
   .multiselect {width: 90% !important; margin: auto; margin-top: 20px !important;}
   .quick-search .multiselect__tags { font-size: 3.5rem !important}
-  td input[type="checkbox"]:read-only { width: 6rem !important; height: 6rem !important; display:flex}
+  td input[type="checkbox"]:read-only { width: auto !important; height: auto !important; min-width: 30%; display:flex}
+  input[type="checkbox"]{min-width: 30%; }
   
   table {font-size: 4rem !important;}
   table.paginacao td a.nvp_paginador { font-size: 4.5rem !important;}
