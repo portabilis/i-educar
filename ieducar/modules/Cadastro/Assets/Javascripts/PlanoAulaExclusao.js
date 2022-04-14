@@ -124,12 +124,6 @@
             }).click();
         }
 
-        function arrayColumn(array, columnName) {
-            return array.map(function(value,index) {
-                return value[columnName];
-            })
-        }
-
         function delay(time) {
             return new Promise(resolve => setTimeout(resolve, time));
         }

@@ -54,7 +54,3 @@
 
   }); // ready
 })(jQuery);
-
-function getModoApresentacao ($turma) {
-
-}

@@ -401,7 +401,6 @@ function atualizarEtapas () {
     var ano = $j("#ano").val();
     var ref_cod_escola = $j("#ref_cod_escola").val();
     
-    console.log(ano, ref_cod_escola);
     var urlForPegarEtapas = postResourceUrlBuilder.buildUrl('/module/Api/AnoLetivoModulo', 'pegar-etapas', {});
 
     var options = {

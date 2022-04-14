@@ -151,6 +151,7 @@ if (document.getElementById('total_horas_alocadas')) {
 
 function popless(element) {
   var novaFuncao = $j(element).closest('td').attr('id').replace('td_disciplina[', '').replace(']', '');
+  console.log(novaFuncao);
   var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
   var campoServidor = document.getElementById('cod_servidor').value;
   var codFuncao = $j(element).closest('tr').find('[id^=cod_servidor_funcao]').val() || 'new_' + novaFuncao;
