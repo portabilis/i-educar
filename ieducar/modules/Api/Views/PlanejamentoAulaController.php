@@ -8,7 +8,7 @@ class PlanejamentoAulaController extends ApiCoreController
 
         if (is_numeric($planejamento_aula_id)) {
             $obj = new clsModulesPlanejamentoAula($planejamento_aula_id);
-            $conteudos_ids = $obj->existeLigacaoRegistroAula($id);
+            $conteudos_ids = $obj->existeLigacaoRegistroAula();
 
             return ['conteudos_ids' => $conteudos_ids];
         }
@@ -43,7 +43,7 @@ class PlanejamentoAulaController extends ApiCoreController
 
         if (is_numeric($planejamento_aula_id)) {
             $obj = new clsModulesPlanejamentoAula($planejamento_aula_id);
-            return ['result' => $obj->excluir($id)];
+            return ['result' => $obj->excluir()];
         }
 
         return [];
@@ -82,6 +82,95 @@ class PlanejamentoAulaController extends ApiCoreController
         return ['result' => "Edição não realizada."];
     }
 
+    public function criarPlanoAula ()
+    {
+        $data_inicial = $this->getRequest()->data_inicial;
+        $data_final = $this->getRequest()->data_final;
+        $turma = $this->getRequest()->turma;
+        $faseEtapa = $this->getRequest()->faseEtapa;
+        $ddp = $this->getRequest()->ddp;
+        $atividades = $this->getRequest()->atividades;
+        $referencias = $this->getRequest()->referencias;
+        $conteudos = $this->getRequest()->conteudos;
+        $componentesCurriculares = $this->getRequest()->componentesCurriculares;
+        $bnccs = $this->getRequest()->bnccs;
+        $bnccEspecificacoes = $this->getRequest()->bnccEspecificacoes;
+
+        $data_agora = new DateTime('now');
+        $data_agora = new \DateTime($data_agora->format('Y-m-d'));
+
+        $sequencia = $faseEtapa;
+        $obj = new clsPmieducarTurmaModulo();
+
+        $data = $obj->pegaPeriodoLancamentoNotasFaltas($turma, $sequencia);
+        if ($data['inicio'] != null && $data['fim'] != null) {
+            $data['inicio'] = explode(',', $data['inicio']);
+            $data['fim'] = explode(',', $data['fim']);
+
+            array_walk($data['inicio'], function(&$data_inicio, $key) {
+                $data_inicio = new \DateTime($data_inicio);
+            });
+
+            array_walk($data['fim'], function(&$data_fim, $key) {
+                $data_fim = new \DateTime($data_fim);
+            });
+        } else {
+            $data['inicio'] = new \DateTime($obj->pegaEtapaSequenciaDataInicio($turma, $sequencia));
+            $data['fim'] = new \DateTime($obj->pegaEtapaSequenciaDataFim($turma, $sequencia));
+        }
+
+        $podeRegistrar = false;
+        if (is_array($data['inicio']) && is_array($data['fim'])) {
+            for ($i=0; $i < count($data['inicio']); $i++) {
+                $data_inicio = $data['inicio'][$i];
+                $data_fim = $data['fim'][$i];
+
+                $podeRegistrar = $data_agora >= $data_inicio && $data_agora <= $data_fim;
+
+                if ($podeRegistrar) break;
+            }     
+        } else {
+            $podeRegistrar = $data_agora >= $data['inicio'] && $data_agora <= $data['fim'];
+        }
+
+        if (!$podeRegistrar) {
+            return [ "result" => "Cadastro não realizado, pois não é mais possível submeter plano para esta etapa." ];
+            $this->simpleRedirect('educar_professores_planejamento_de_aula_cad.php');
+        }
+
+        $obj = new clsModulesPlanejamentoAula(
+           null,
+           $turma,
+           $componentesCurriculares,
+           $faseEtapa,
+           $data_inicial,
+           $data_final,
+           $ddp, 
+           $atividades,
+           $bnccs,
+           $conteudos,
+           $referencias,
+           $bnccEspecificacoes,
+        );
+
+        $existe = $obj->existe();
+        if ($existe){
+            return [ "result" => "Cadastro não realizado, pois este plano de aula já existe." ];
+            $this->simpleRedirect('educar_professores_planejamento_de_aula_cad.php');
+        }
+
+        $cadastrou = $obj->cadastra();
+        if (!$cadastrou) {   
+            return [ "result" => "Cadastro não realizado." ];
+            $this->simpleRedirect('educar_professores_planejamento_de_aula_cad.php');
+        } else {
+            return [ "result" => "Cadastro efetuado com sucesso." ];
+            $this->simpleRedirect('educar_professores_planejamento_de_aula_lst.php');
+        }
+
+        return [ "result" => "Cadastro não realizado." ];
+    }
+
     public function Gerar()
     {
         if ($this->isRequestFor('post', 'verificar-plano-aula-sendo-usado')) {
@@ -92,6 +181,8 @@ class PlanejamentoAulaController extends ApiCoreController
             $this->appendResponse($this->excluirPlanoAula());
         } else if ($this->isRequestFor('post', 'editar-plano-aula')) {
             $this->appendResponse($this->editarPlanoAula());
+        } else if ($this->isRequestFor('post', 'novo-plano-aula')) {
+            $this->appendResponse($this->criarPlanoAula());
         }
     }
 }

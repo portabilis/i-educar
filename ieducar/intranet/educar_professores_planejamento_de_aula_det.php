@@ -91,6 +91,10 @@ return new class extends clsDetalhe {
             $this->montaListaBNCC($registro['bnccs']);
         }
 
+        if (is_array($registro['especificacoes']) && $registro['especificacoes'] != null) {
+            $this->montaListaEspecificacoes($registro['especificacoes']);
+        }
+
         if (is_array($registro['conteudos']) && $registro['conteudos'] != null) {
             $this->montaListaConteudos($registro['conteudos']);
         }
@@ -163,8 +167,8 @@ return new class extends clsDetalhe {
                 $podeEditar = $data_agora >= $data['inicio'] && $data_agora <= $data['fim'];
             }
 
-            if ($podeEditar)
-                $this->url_editar = 'educar_professores_planejamento_de_aula_cad.php?id=' . $registro['detalhes']['id'];
+            // if ($podeEditar)
+            //     $this->url_editar = 'educar_professores_planejamento_de_aula_cad.php?id=' . $registro['detalhes']['id'];
         }
 
         $this->url_cancelar = 'educar_professores_planejamento_de_aula_lst.php';
@@ -174,7 +178,7 @@ return new class extends clsDetalhe {
             url('intranet/educar_professores_index.php') => 'Professores',
         ]);
 
-        $this->addBotao('Copiar plano de aula', "/intranet/educar_professores_planejamento_de_aula_cad.php?id={$this->getRequest()->id}&copy=true");
+        //$this->addBotao('Copiar plano de aula', "/intranet/educar_professores_planejamento_de_aula_cad.php?id={$this->getRequest()->id}&copy=true");
     }
 
     function montaListaBNCC ($bnccs) {
@@ -199,6 +203,26 @@ return new class extends clsDetalhe {
             [
                 'Objetivos de aprendizagem/habilidades (BNCC)',
                 $bncc
+            ]
+        );
+    }
+
+    function montaListaEspecificacoes ($especificacoes) {
+        for ($i=0; $i < count($especificacoes); $i++) {
+            $this->tabela3 .= '  <div style="margin-bottom: 10px; float: left" class="linha-disciplina" >';
+            $this->tabela3 .= "  <span style='display: block; float: left; width: 750px'>{$especificacoes[$i][especificacao]}</span>";
+            $this->tabela3 .= '  </div>';
+            $this->tabela3 .= '  <br style="clear: left" />';
+        }
+
+        $especificacao  = '<table cellspacing="0" cellpadding="0" border="0">';
+        $especificacao .= sprintf('<tr align="left"><td class="formlttd">%s</td></tr>', $this->tabela3);
+        $especificacao .= '</table>';
+
+        $this->addDetalhe(
+            [
+                'Especificações',
+                $especificacao
             ]
         );
     }

@@ -35,6 +35,8 @@ class clsModulesPlanejamentoAula extends Model {
 
         $this->_from = "
                 modules.planejamento_aula as pa
+            JOIN modules.planejamento_aula_componente_curricular as pacc
+                ON (pacc.planejamento_aula_id = pa.id)
             JOIN pmieducar.turma t
                 ON (t.cod_turma = pa.ref_cod_turma)
             JOIN pmieducar.instituicao i
@@ -48,7 +50,7 @@ class clsModulesPlanejamentoAula extends Model {
             JOIN pmieducar.serie s
                 ON (s.cod_serie = t.ref_ref_cod_serie)
             LEFT JOIN modules.componente_curricular k
-                ON (k.id = pa.ref_componente_curricular)
+                ON (k.id = pacc.componente_curricular_id)
             JOIN pmieducar.turma_turno u
                 ON (u.id = t.turma_turno_id)
             LEFT JOIN pmieducar.turma_modulo q
@@ -58,7 +60,7 @@ class clsModulesPlanejamentoAula extends Model {
             JOIN modules.professor_turma as pt
                 ON (pt.turma_id = pa.ref_cod_turma)
             JOIN modules.professor_turma_disciplina as ptd
-                ON (pt.id = ptd.professor_turma_id AND ptd.componente_curricular_id = pa.ref_componente_curricular)
+                ON (pt.id = ptd.professor_turma_id AND ptd.componente_curricular_id = pacc.componente_curricular_id)
         ";
 
         $this->_campos_lista = $this->_todos_campos = '
@@ -66,7 +68,6 @@ class clsModulesPlanejamentoAula extends Model {
             pa.data_inicial,
             pa.data_final,
             pa.ref_cod_turma,
-            pa.ref_componente_curricular as ref_cod_componente_curricular,
             pa.ddp,
             pa.atividades,
             pa.referencias,
@@ -75,7 +76,6 @@ class clsModulesPlanejamentoAula extends Model {
             c.nm_curso AS curso,
             s.nm_serie AS serie,
             t.nm_turma AS turma,
-            k.nome AS componente_curricular,
             u.nome AS turno,
             l.nm_tipo AS etapa,
             pa.etapa_sequencial AS fase_etapa
@@ -191,22 +191,35 @@ class clsModulesPlanejamentoAula extends Model {
             $id = $db->InsertId("{$this->_tabela}_id_seq");
 
             foreach ($this->ref_componente_curricular_array as $key => $ref_componente_curricular) {
-                $obj = new clsModulesPlanejamentoAulaComponenteCurricular(null, $id, $ref_componente_curricular);
+                $obj = new clsModulesPlanejamentoAulaComponenteCurricular(null, $id, $ref_componente_curricular[1]);
                 $obj->cadastra();
             }
 
             foreach ($this->bnccs as $key => $bncc_array) {
-                foreach ($bncc_array as $key => $bncc_id) {
+                foreach ($bncc_array[1] as $key => $bncc_id) {
                     $obj = new clsModulesPlanejamentoAulaBNCC(null, $id, $bncc_id);
                     $obj->cadastra();
                 }
             }
 
             foreach ($this->conteudos as $key => $conteudo) {
-                $obj = new clsModulesPlanejamentoAulaConteudo(null, $id, $conteudo);
+                $obj = new clsModulesPlanejamentoAulaConteudo(null, $id, $conteudo[1]);
                 $obj->cadastra();
             }
-            dd("adaw");
+
+            foreach ($this->bncc_especificacoes as $key => $bncc_especificacoes_array) {
+                foreach ($bncc_especificacoes_array[1] as $key => $bncc_especificacao_id) {
+                    $obj = new clsModulesBNCCEspecificacao($bncc_especificacao_id);
+                    $bncc_id = $obj->detalhe()['bncc_id'];
+                    
+                    $obj = new clsModulesPlanejamentoAulaBNCC(null, $id, $bncc_id);
+                    $planejamento_aula_bncc_id = $obj->detalhe2()['id'];
+
+                    $obj = new clsModulesPlanejamentoAulaBNCCEspecificacao(null, $planejamento_aula_bncc_id, $bncc_especificacao_id);
+                    $obj->cadastra();
+                }
+            }
+
             return $id;
         }
 
@@ -305,14 +318,15 @@ class clsModulesPlanejamentoAula extends Model {
         $time_data_inicial = null,
         $time_data_final = null,
         $int_etapa = null,
-        $int_servidor_id = null
+        $int_servidor_id = null,
+        $time_data = null
     ) {
         $sql = "
-                SELECT
-                    {$this->_campos_lista}
-                FROM
-                    {$this->_from}
-                ";
+            SELECT DISTINCT
+                {$this->_campos_lista}
+            FROM
+                {$this->_from}
+        ";
 
         $whereAnd = ' AND ';
         $filtros = " WHERE TRUE ";
@@ -367,6 +381,11 @@ class clsModulesPlanejamentoAula extends Model {
             $whereAnd = ' AND ';
         }
 
+        if ($time_data) {
+            $filtros .= "{$whereAnd} pa.data_inicial <= '{$time_data}' AND pa.data_final >= '{$time_data}'";
+            $whereAnd = ' AND ';
+        }
+        
         if (is_numeric($int_etapa)) {
             $filtros .= "{$whereAnd} pa.etapa_sequencial = '{$int_etapa}'";
             $whereAnd = ' AND ';
@@ -439,6 +458,9 @@ class clsModulesPlanejamentoAula extends Model {
             $obj = new clsModulesPlanejamentoAulaBNCC();
             $data['bnccs'] = $obj->lista($this->id);
 
+            $obj = new clsModulesPlanejamentoAulaBNCCEspecificacao();
+            $data['especificacoes'] = $obj->lista($this->id);
+
             $obj = new clsModulesPlanejamentoAulaConteudo();
             $data['conteudos'] = $obj->lista($this->id);
 
@@ -454,26 +476,26 @@ class clsModulesPlanejamentoAula extends Model {
      * @return array
      */
     public function existe () {
-        if ($this->data_inicial && $this->data_final && is_numeric($this->ref_cod_turma) && is_numeric($this->ref_componente_curricular_array) && is_numeric($this->etapa_sequencial)) {
-            $sql = "
-                SELECT
-                    *
-                FROM
-                    modules.planejamento_aula as pa
-                WHERE
-                    pa.data_inicial >= '{$this->data_inicial}'
-                    AND pa.data_final <= '{$this->data_final}'
-                    AND pa.ref_cod_turma = '{$this->ref_cod_turma}'
-                    AND pa.ref_componente_curricular = '{$this->ref_componente_curricular_array}'
-                    AND pa.etapa_sequencial = '{$this->etapa_sequencial}'
-            ";
+        // if ($this->data_inicial && $this->data_final && is_numeric($this->ref_cod_turma) && is_numeric($this->ref_componente_curricular_array) && is_numeric($this->etapa_sequencial)) {
+        //     $sql = "
+        //         SELECT
+        //             *
+        //         FROM
+        //             modules.planejamento_aula as pa
+        //         WHERE
+        //             pa.data_inicial >= '{$this->data_inicial}'
+        //             AND pa.data_final <= '{$this->data_final}'
+        //             AND pa.ref_cod_turma = '{$this->ref_cod_turma}'
+        //             AND pa.ref_componente_curricular = '{$this->ref_componente_curricular_array}'
+        //             AND pa.etapa_sequencial = '{$this->etapa_sequencial}'
+        //     ";
 
-            $db = new clsBanco();
-            $db->Consulta($sql);
-            $db->ProximoRegistro();
+        //     $db = new clsBanco();
+        //     $db->Consulta($sql);
+        //     $db->ProximoRegistro();
 
-            return $db->Tupla();
-        }
+        //     return $db->Tupla();
+        // }
 
         return false;
     }

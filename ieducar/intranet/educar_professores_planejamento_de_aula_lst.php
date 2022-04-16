@@ -51,8 +51,7 @@ return new class extends clsListagem {
             'S&eacute;rie',
             'Curso',
             'Escola',
-            'Etapa',
-            'Componente curricular'
+            'Etapa'
         ];
 
         $this->addCabecalhos($lista_busca);
@@ -130,8 +129,6 @@ return new class extends clsListagem {
 
         // monta a lista
         if (is_array($lista) && count($lista)) {
-            $ref_cod_escola = '';
-            $nm_escola = '';
             foreach ($lista as $registro) {
                 $data_inicial_formatada = dataToBrasil($registro['data_inicial']);
                 $data_final_formatada = dataToBrasil($registro['data_final']);
@@ -146,12 +143,6 @@ return new class extends clsListagem {
                     "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['escola']}</a>",
                     "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['fase_etapa']}º {$registro['etapa']}</a>"
                 ];
-
-                if ($registro['componente_curricular']) {
-                    $lista_busca[] = "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['componente_curricular']}</a>";
-                } else {
-                    $lista_busca[] = "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">—</a>";
-                }
 
                 $this->addLinhas($lista_busca);
             }

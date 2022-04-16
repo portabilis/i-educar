@@ -3,9 +3,9 @@
 	$domain_parts = explode('.', HOST); 
 	$icoTecsis = "favicon2.ico";
 
-	if($domain_parts[2] != "tec"){
-		$icoTecsis = "favicon.ico";
-	}
+	// if($domain_parts[2] != "tec"){
+	// 	$icoTecsis = "favicon.ico";
+	// }
 ?>
 
 <!DOCTYPE html>

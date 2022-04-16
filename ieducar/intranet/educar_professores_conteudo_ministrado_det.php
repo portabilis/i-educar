@@ -94,10 +94,14 @@ return new class extends clsDetalhe {
             );
         }
 
+        if (is_array($registro['especificacoes'])) {
+            $this->montaListaEspecificacoes($registro['especificacoes']);
+        }
+
         if (is_array($registro['conteudos'])) {
             $this->montaListaConteudos($registro['conteudos']);
         }
-
+        
         if ($registro['detalhes']['observacao']) {
             $this->addDetalhe(
                 [
@@ -149,8 +153,8 @@ return new class extends clsDetalhe {
                     $podeEditar = $data_agora >= $data['inicio'] && $data_agora <= $data['fim'];
                 }
 
-                if ($podeEditar)
-                    $this->url_editar = 'educar_professores_conteudo_ministrado_cad.php?id=' . $registro['detalhes']['id'];
+                // if ($podeEditar)
+                //     $this->url_editar = 'educar_professores_conteudo_ministrado_cad.php?id=' . $registro['detalhes']['id'];
             }
         }
 
@@ -160,6 +164,28 @@ return new class extends clsDetalhe {
         $this->breadcrumb('Detalhe do registro de aula', [
             url('intranet/educar_professores_index.php') => 'Professores',
         ]);
+    }
+
+    function montaListaEspecificacoes ($especificacoes) {
+        for ($i=0; $i < count($especificacoes); $i++) {
+            $this->tabela3 .= '  <div style="margin-bottom: 10px; float: left" class="linha-disciplina" >';
+            
+            $this->tabela3 .= "  <span style='display: block; float: left'>{$especificacoes[$i][planejamento_aula_bncc_especificacao][especificacao]}</span>";
+
+            $this->tabela3 .= '  </div>';
+            $this->tabela3 .= '  <br style="clear: left" />';
+        }
+
+        $especificacao  = '<table cellspacing="0" cellpadding="0" border="0">';
+        $especificacao .= sprintf('<tr align="left"><td>%s</td></tr>', $this->tabela3);
+        $especificacao .= '</table>';
+
+        $this->addDetalhe(
+            [
+                'Especificações',
+                $especificacao
+            ]
+        );
     }
 
     function montaListaConteudos ($conteudos) {

@@ -8,13 +8,15 @@ class clsModulesComponenteMinistrado extends Model {
     public $atividades;
     public $observacao;
     public $conteudos;
+    public $especificacoes;
 
     public function __construct(
         $id = null,
         $frequencia_id = null,
         $atividades = null,
         $observacao = null,
-        $conteudos = null
+        $conteudos = null,
+        $especificacoes = null
     ) {
         $db = new clsBanco();
         $this->_schema = 'modules.';
@@ -86,6 +88,10 @@ class clsModulesComponenteMinistrado extends Model {
         if(is_array($conteudos)){
             $this->conteudos = $conteudos;
         }
+
+        if(is_array($especificacoes)){
+            $this->especificacoes = $especificacoes;
+        }
     }
 
     /**
@@ -115,6 +121,11 @@ class clsModulesComponenteMinistrado extends Model {
 
             foreach ($this->conteudos as $key => $conteudo) {
                 $obj = new clsModulesComponenteMinistradoConteudo(null, $id, $conteudo);
+                $obj->cadastra();
+            }
+
+            foreach ($this->especificacoes as $key => $especificacao) {
+                $obj = new clsModulesComponenteMinistradoBNCCEspecificacao(null, $id, $especificacao);
                 $obj->cadastra();
             }
 
@@ -324,6 +335,9 @@ class clsModulesComponenteMinistrado extends Model {
 
             $obj = new clsModulesComponenteMinistradoConteudo();
             $data['conteudos'] = $obj->lista($this->id);
+
+            $obj = new clsModulesComponenteMinistradoBNCCEspecificacao();
+            $data['especificacoes'] = $obj->lista($this->id);
 
             return $data;
         }

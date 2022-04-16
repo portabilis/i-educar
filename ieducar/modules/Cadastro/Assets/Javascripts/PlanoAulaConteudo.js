@@ -21,8 +21,13 @@
                     url      : url,
                     dataType : 'json',
                     success  : function (dataResponse) {
+                        console.log(dataResponse.pac);
+                        $('#especificacoes').html(
+                            (Object.keys(dataResponse.pac[0] || []).map(key => `<option value='${key}'>${dataResponse.pac[0][key]}</option>`)).join()
+                        ).trigger('chosen:updated');
+
                         $('#conteudos').html(
-                            (Object.keys(dataResponse.pac || []).map(key => `<option value='${key}'>${dataResponse.pac[key]}</option>`)).join()
+                            (Object.keys(dataResponse.pac[1] || []).map(key => `<option value='${key}'>${dataResponse.pac[1][key]}</option>`)).join()
                         ).trigger('chosen:updated');
                     }
                 };

@@ -23,6 +23,8 @@ class PlanejamentoAulaConteudoController extends ApiCoreController
                 null,
                 null,
                 $freq['fase_etapa'],
+                null,
+                $freq['data']
             )[0]['id'];
 
             if (is_numeric($id)) {
@@ -32,8 +34,19 @@ class PlanejamentoAulaConteudoController extends ApiCoreController
                 foreach ($conteudos as $key => $conteudo) {
                     $lista[$conteudo['id']] = $conteudo['conteudo'];
                 }
+                $conteudos = $lista;
 
-                return ['pac' => $lista];
+
+                $lista = [];
+                $obj = new clsModulesPlanejamentoAulaBNCCEspecificacao();
+                $especificacoes = $obj->lista($id);
+
+                foreach ($especificacoes as $key => $especificacao) {
+                    $lista[$especificacao['id']] = $especificacao['especificacao'];
+                }
+                $especificacoes = $lista;
+
+                return ['pac' => [$especificacoes, $conteudos]];
             }
 
             return [];
