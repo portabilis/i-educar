@@ -100,7 +100,7 @@ class clsModulesPlanejamentoAulaBNCCEspecificacao extends Model {
     public function detalhe () {
         $data = [];
 
-        if (is_numeric($this->planejamento_aula_bncc_id)) {
+        if (is_numeric($this->id)) {
             $db = new clsBanco();
             $db->Consulta("
                 SELECT
@@ -108,16 +108,11 @@ class clsModulesPlanejamentoAulaBNCCEspecificacao extends Model {
                 FROM
                     {$this->_from}
                 WHERE
-                    pabe.planejamento_aula_bncc_id = {$this->planejamento_aula_bncc_id}
+                    pabe.id = {$this->id}
             ");
 
             while ($db->ProximoRegistro()) {
-                $ppd = $db->Tupla();
-
-                $obj = new clsModulesBNCCEspecificacao($ppd['bncc_especificacao_id']);
-                $ppd['especificacao'] = $obj->detalhe();
-
-                $data[] = $ppd;
+                $data[] = $db->Tupla();
             }
 
             return $data;

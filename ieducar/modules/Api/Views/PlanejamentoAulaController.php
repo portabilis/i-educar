@@ -96,9 +96,6 @@ class PlanejamentoAulaController extends ApiCoreController
         $bnccs = $this->getRequest()->bnccs;
         $bnccEspecificacoes = $this->getRequest()->bnccEspecificacoes;
 
-        $data_agora = new DateTime('now');
-        $data_agora = new \DateTime($data_agora->format('Y-m-d'));
-
         $sequencia = $faseEtapa;
         $obj = new clsPmieducarTurmaModulo();
 
@@ -125,16 +122,16 @@ class PlanejamentoAulaController extends ApiCoreController
                 $data_inicio = $data['inicio'][$i];
                 $data_fim = $data['fim'][$i];
 
-                $podeRegistrar = $data_agora >= $data_inicio && $data_agora <= $data_fim;
+                $podeRegistrar = $data_inicial >= $data_inicio && $data_final <= $data_fim;
 
                 if ($podeRegistrar) break;
             }     
         } else {
-            $podeRegistrar = $data_agora >= $data['inicio'] && $data_agora <= $data['fim'];
+            $podeRegistrar = new DateTime($data_inicial) >= $data['inicio'] && new DateTime($data_final) <= $data['fim'];
         }
 
         if (!$podeRegistrar) {
-            return [ "result" => "Cadastro não realizado, pois não é mais possível submeter plano para esta etapa." ];
+            return [ "result" => "Cadastro não realizado, pois o intervalo de datas não se adequa as etapas da turma." ];
             $this->simpleRedirect('educar_professores_planejamento_de_aula_cad.php');
         }
 

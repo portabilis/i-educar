@@ -49,32 +49,30 @@
     }
 
     function handleGetComponentesCurriculares (response) {
-      var todasDisciplinasElemento = document.createElement("option");
-      todasDisciplinasElemento.setAttribute("value", TODAS_DISCIPLINAS_VALUE);
-      todasDisciplinasElemento.innerHTML = "TODAS AS DISCIPLINAS";
+      console.log(response);
+      // var todasDisciplinasElemento = document.createElement("option");
+      // todasDisciplinasElemento.setAttribute("value", TODAS_DISCIPLINAS_VALUE);
+      // todasDisciplinasElemento.innerHTML = "TODAS AS DISCIPLINAS";
 
       count = bncc_table.children[0].childElementCount - 4;
       id = 0;
       index = 0;
       while (index !== count) {
-
         componenteCurricularField = document.getElementById(`ref_cod_componente_curricular_array[${id}]`);
 
         if (componenteCurricularField !== null) {
-          if (componenteCurricularField.childElementCount === 1) {
-            componenteCurricularField.length = 1;
-            componenteCurricularField.options[0].text = 'Selecione o componente curricular';
+          componenteCurricularField.length = 1;
+          componenteCurricularField.options[0].text = 'Selecione o componente curricular';
 
-            var selectOptions = jsonResourcesToSelectOptions(response['options']);
-            //componenteCurricularField.append(todasDisciplinasElemento);
-            selectOptions.forEach(option => {
-              componenteCurricularField.append(option[0]);
-            });
+          var selectOptions = jsonResourcesToSelectOptions(response['options']);
+          //componenteCurricularField.append(todasDisciplinasElemento);
+          selectOptions.forEach(option => {
+            componenteCurricularField.append(option[0]);
+          });
 
-            // bind onchange event
-            componenteCurricularField.style.height = "54px";
-            componenteCurricularField.addEventListener("change", trocaComponenteCurricular, false);
-          }
+          // bind onchange event
+          componenteCurricularField.style.height = "54px";
+          componenteCurricularField.addEventListener("change", trocaComponenteCurricular, false);
 
           index++;
         }
@@ -415,7 +413,6 @@
       href: href,
       }).click();
   }
-
 
     // bind onchange event
     turmaField.change(updateComponentesCurriculares);

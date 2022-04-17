@@ -403,7 +403,7 @@ class clsModulesPlanejamentoAula extends Model {
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
         $this->_total = $db->CampoUnico(
-            "SELECT
+            "SELECT 
                 COUNT(0)
             FROM
                 {$this->_from}

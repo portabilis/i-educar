@@ -274,6 +274,7 @@ return new class extends clsCadastro {
 
         return [];
     }
+    
     public function __construct () {
         parent::__construct();
         $this->loadAssets();
@@ -301,9 +302,6 @@ return new class extends clsCadastro {
             'objetivos_aprendizagem',
             'Objetivo(s) de aprendizagem',
             ['Componente curricular', "Habilidade(s)", "Especificação(ões)"],
-            // $arr_valores,
-            // '',
-            // $lst_opcoes
         );
 
         // Componente curricular

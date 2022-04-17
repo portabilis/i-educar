@@ -77,13 +77,15 @@ class clsModulesComponenteMinistradoBNCCEspecificacao extends Model {
             while($db->ProximoRegistro()) {
                 $cmbe = $db->Tupla();
 
-                $obj = new clsModulesBNCCEspecificacao($cmbe['planejamento_aula_bncc_especificacao_id']);
-                $cmbe['planejamento_aula_bncc_especificacao'] = $obj->detalhe();
+                $obj = new clsModulesPlanejamentoAulaBNCCEspecificacao($cmbe['planejamento_aula_bncc_especificacao_id']);
+                $bncc_especificacao_id = $obj->detalhe()[0]['bncc_especificacao_id'];
 
-                $conteudos[] = $cmbe;
+                $obj = new clsModulesBNCCEspecificacao($bncc_especificacao_id);
+                $cmbe['bncc_especificacao'] = $obj->detalhe();
+
+                $especificacoes[] = $cmbe;
             }
-
-            return $conteudos;
+            return $especificacoes;
         }
 
         return false;

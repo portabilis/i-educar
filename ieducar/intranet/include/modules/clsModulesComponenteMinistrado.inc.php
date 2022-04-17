@@ -123,7 +123,6 @@ class clsModulesComponenteMinistrado extends Model {
                 $obj = new clsModulesComponenteMinistradoConteudo(null, $id, $conteudo);
                 $obj->cadastra();
             }
-
             foreach ($this->especificacoes as $key => $especificacao) {
                 $obj = new clsModulesComponenteMinistradoBNCCEspecificacao(null, $id, $especificacao);
                 $obj->cadastra();

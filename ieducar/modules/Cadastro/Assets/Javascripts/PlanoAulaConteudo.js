@@ -21,7 +21,6 @@
                     url      : url,
                     dataType : 'json',
                     success  : function (dataResponse) {
-                        console.log(dataResponse.pac);
                         $('#especificacoes').html(
                             (Object.keys(dataResponse.pac[0] || []).map(key => `<option value='${key}'>${dataResponse.pac[0][key]}</option>`)).join()
                         ).trigger('chosen:updated');

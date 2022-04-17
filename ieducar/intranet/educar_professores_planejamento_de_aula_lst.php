@@ -80,9 +80,9 @@ return new class extends clsListagem {
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-        $obj_turma = new clsModulesPlanejamentoAula();
-        $obj_turma->setOrderby('data_inicial DESC');
-        $obj_turma->setLimite($this->limite, $this->offset);
+        $obj_plano = new clsModulesPlanejamentoAula();
+        $obj_plano->setOrderby('data_inicial DESC');
+        $obj_plano->setLimite($this->limite, $this->offset);
 
         if ($this->data_inicial && Portabilis_Date_Utils::validaData($this->data_inicial) || !$this->data_inicial) {
             $this->data_inicial = dataToBanco($this->data_inicial);
@@ -110,7 +110,7 @@ return new class extends clsListagem {
         );
         $eh_professor = $obj_servidor->isProfessor();
 
-        $lista = $obj_turma->lista(
+        $lista = $obj_plano->lista(
             $this->ano,
             $this->ref_cod_instituicao,
             $this->ref_cod_escola,
@@ -125,7 +125,7 @@ return new class extends clsListagem {
             $eh_professor ? $this->pessoa_logada : null         // Passe o ID do servidor caso ele seja um professor
         );
 
-        $total = $obj_turma->_total;
+        $total = /*$obj_turma->_total*/count($lista);
 
         // monta a lista
         if (is_array($lista) && count($lista)) {
