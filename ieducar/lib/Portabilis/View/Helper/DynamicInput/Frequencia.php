@@ -24,6 +24,7 @@ class Portabilis_View_Helper_DynamicInput_Frequencia extends Portabilis_View_Hel
                     ON	(f.ref_componente_curricular = cc.id)
                 JOIN pmieducar.turma as t
                     ON (f.ref_cod_turma = t.cod_turma)
+                ORDER BY data DESC
             ";
 
             $db = new clsBanco();
