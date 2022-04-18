@@ -95,7 +95,7 @@ span.select2-selection.select2-selection--multiple{
 }
 
 .geral {
-  width: 50% !important;
+  width: 75% !important;
 }
 
 .chosen-container, input[type="text"] select .geral {
@@ -1773,21 +1773,22 @@ td.area-conhecimento-destaque {
   padding: 8px;
 }
 
-input[type=checkbox] {
-  width: auto !important;
-}
-
 #formcadastro input:not(.botaolistagem , .chosen-search input), #formcadastro textarea {
   border-radius: 3px;
   background-color: #ffffff;
   border: solid 1px #cddce6;
   padding: 8px;
   font-size: 1.75rem;
-  min-width: 50%;
+  flex: 2;
   height: auto;
   color: #47728f;
   box-sizing: border-box;
 }
+#formcadastro textarea{ max-width: 75% !important;}
+.tablecadastro{display: grid; }
+
+.tablecadastro tr td:first-child{font-weight: bold; /* background-color: red; */}
+.tablecadastro tr td:last-child{/* background-color: blue; */}
 
 .chosen-choices{
   border-radius: 3px;
@@ -1819,8 +1820,7 @@ input[type=checkbox] {
   font-size: 14px;
   padding: 4px 8px;
   vertical-align: top;
-  min-width:50%;
-  max-width: 75%;
+  max-width:50%;
   width: auto;
 }
 
@@ -1972,17 +1972,17 @@ table.paginacao td {
 }
 
 table.paginacao td a{
-color: #188ad1
+  color: #188ad1
 }
 
 table.paginacao td a.nvp_paginador {
-    font-size: 14px;
+  font-size: 1.5rem;
 }
 
 #tabela_arredondamento_numerica tr:last-child,
 #tabela_arredondamento_numerica tr.tr_tabela_arredondamento_numerica td:last-child,
 #tabela_arredondamento_numerica tr#tr_tabela_arredondamento_numerica_cab td:last-child {
-    display: none !important;
+  display: none !important;
 }
 
 #tabela_arredondamento tr.tr_tabela_arredondamento td:first-child,
@@ -2178,13 +2178,15 @@ input.btn_small {
   .chosen-container, input[type="text"] select .geral {width: 100% !important;}
   select, .geral{width: 100% !important;}
   .chosen-container .chosen-results li.active-result {font-size: 2rem}
-  #formcadastro  .formmdtd, #formcadastro .formlttd {display:flex; width: 100%; padding: 4px 0px; max-width: 100%;}
+  #formcadastro  .formmdtd, #formcadastro .formlttd {display:flex; width: 100%; padding: 4px 10px; max-width: 100%;}
   .breadcrumb a, .breadcrumb span {font-size: 2.5rem !important}
   .formmdtd sub, .formlttd sub {font-size:2rem}
   .multiselect {width: 90% !important; margin: auto; margin-top: 20px !important;}
   .quick-search .multiselect__tags { font-size: 3.5rem !important}
-  td input[type="checkbox"]:read-only { width: auto !important; height: auto !important; min-width: 30%; display:flex}
+  td input[type="checkbox"]:read-only { width: auto !important; height: 4rem !important; min-width: 30%; display:flex}
   input[type="checkbox"]{min-width: 30%; }
+  td p {font-size: 2.75rem !important}
+  input[type=checkbox] {width: auto !important; transform: scale(2); -webkit-transform: scale(2)}
   
   table {font-size: 4rem !important;}
   table.paginacao td a.nvp_paginador { font-size: 4.5rem !important;}
@@ -2194,6 +2196,7 @@ input.btn_small {
   .avatar-35{width: 70px !important; padding: 5px 0px !important; height: 70px !important;}
   .notifications img {top: 3px !important; width:40px !important;}
   .btn {font-size: 3rem;}
+  .tablecadastro{display: flex; }
 
   .ieducar-header{height: 100px !important;}
   .ieducar-header-logo h1 a {font-size: 4.8rem !important;line-height: 100px !important;}
@@ -2207,7 +2210,7 @@ input.btn_small {
   input[type="button"] {font-size: 4rem !important; padding: 30px 100px !important;}
   #form_resultado {width: 1023px; overflow-x: auto;}
   .tableDetalheMobile { display: block; max-width: fit-content; overflow-x: auto; white-space: nowrap;}
-  .scroll{ width: 1023px !important;}
+  .scroll{ margin: 0 4px; width: 900px; overflow: auto;}
   
   #tablelistagem .formmdtd{ font-size: 1.7rem; width: calc(100% - 15px); margin: 5px; float: left; }
   #ref_cod_escola_chosen a.chosen-single,

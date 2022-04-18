@@ -131,7 +131,7 @@
                                        id="btn-add-row"><img
                                             src="/intranet/imagens/nvp_bot_novo.png" border="0" alt="incluir"
                                             style="float:left; margin:5px;">
-                                        <p style="padding:9px; margin:0;">ADICIONAR NOVO</p>
+                                        <label style="padding:9px; margin:0;">ADICIONAR NOVO</label>
                                     </a>
                             </tr>
                             </tbody>
