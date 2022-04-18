@@ -201,7 +201,7 @@ class clsModulesComponenteMinistrado extends Model {
     ) {
        
         $sql = "
-                SELECT
+                SELECT DISTINCT
                     {$this->_campos_lista}
                 FROM
                     {$this->_from}
