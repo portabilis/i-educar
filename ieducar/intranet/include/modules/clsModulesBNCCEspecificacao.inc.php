@@ -8,7 +8,9 @@ class clsModulesBNCCEspecificacao extends Model {
     public $especificacao;
 
     public function __construct(
-
+        $id = null,
+        $bncc_id = null,
+        $especificacao = null
     ) {
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}bncc_especificacao";
@@ -20,6 +22,18 @@ class clsModulesBNCCEspecificacao extends Model {
         $this->_campos_lista = $this->_todos_campos = '
             *
         ';
+
+        if (is_numeric($id)) {
+            $this->id = $id;
+        }
+
+        if (is_numeric($bncc_id)) {
+            $this->bncc_id = $bncc_id;
+        }
+
+        if (is_string($especificacao)) {
+            $this->especificacao = $especificacao;
+        }
     }
 
     /**
@@ -89,5 +103,34 @@ class clsModulesBNCCEspecificacao extends Model {
         }
 
         return $bncc_especificacao;
+    }
+
+    
+    /**
+     * Retorna um array com os dados de um registro
+     *
+     * @return array
+     */
+    public function detalhe () {
+        $data = [];
+
+        if (is_numeric($this->id)) {
+            $db = new clsBanco();
+            $db->Consulta("
+                SELECT
+                    {$this->_todos_campos}
+                FROM
+                    {$this->_from}
+                WHERE
+                    be.id = {$this->id}
+            ");
+
+            $db->ProximoRegistro();
+            $data = $db->Tupla();
+
+            return $data;
+        }
+
+        return false;
     }
 }

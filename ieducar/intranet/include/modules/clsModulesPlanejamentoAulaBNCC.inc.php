@@ -138,6 +138,35 @@ class clsModulesPlanejamentoAulaBNCC extends Model {
      *
      * @return array
      */
+    public function detalhe2 () {
+        $data = [];
+
+        if (is_numeric($this->planejamento_aula_id) && is_numeric($this->bncc_id)) {
+            $db = new clsBanco();
+            
+            $db->Consulta("
+                SELECT
+                    {$this->_todos_campos}
+                FROM
+                    {$this->_from}
+                WHERE
+                    pab.planejamento_aula_id = {$this->planejamento_aula_id} AND pab.bncc_id = {$this->bncc_id}
+            ");
+
+            $db->ProximoRegistro();
+            $data = $db->Tupla();
+
+            return $data;
+        }
+
+        return false;
+    }
+
+    /**
+     * Retorna um array com os dados de um registro
+     *
+     * @return array
+     */
     public function existe () {
         return false;
     }

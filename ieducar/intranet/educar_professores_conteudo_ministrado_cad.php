@@ -17,6 +17,7 @@ return new class extends clsCadastro {
     public $frequencia;
     public $planejamento_aula_id;
     public $conteudos;
+    public $especificacoes;
 
     public function Inicializar () {
         $this->titulo = 'Registro de aula - Cadastro';
@@ -112,7 +113,8 @@ return new class extends clsCadastro {
             $this->frequencia,
             $this->atividades,
             $this->observacao,
-            $this->conteudos
+            $this->conteudos,
+            $this->especificacoes
         );
 
         $cadastrou = $obj->cadastra();
@@ -200,6 +202,24 @@ return new class extends clsCadastro {
     }
 
     protected function adicionarConteudosMultiplaEscolha() {
+        // ESPECIFICAÇÕES
+        $helperOptions = [
+            'objectName' => 'especificacoes',
+        ];
+
+        //$todas_especificacoes = $this->getEspecificacoes($this->planejamento_aula_id);
+
+        $options = [
+            'label' => 'Especificações',
+            'required' => false,
+            'options' => [
+                'values' => $this->especificacoes,
+                'all_values' => /*$todas_especificacoes*/[]
+            ]
+        ];
+        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
+        // CONTEUDOS
         $helperOptions = [
             'objectName' => 'conteudos',
         ];
@@ -209,7 +229,6 @@ return new class extends clsCadastro {
         $options = [
             'label' => 'Objetivo(s) do conhecimento/conteúdo',
             'required' => false,
-            'size' => 50,
             'options' => [
                 'values' => $this->conteudos,
                 'all_values' => $todos_conteudos

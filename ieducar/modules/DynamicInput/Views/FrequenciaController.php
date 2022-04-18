@@ -20,6 +20,7 @@ class FaseEtapaController extends ApiCoreController
                     ON	(f.ref_componente_curricular = cc.id)
                 JOIN pmieducar.turma as t
                     ON (f.ref_cod_turma = t.cod_turma)
+                ORDER BY data DESC
             ";
 
             $data = $this->fetchPreparedQuery($sql)[0];

@@ -49,32 +49,30 @@
     }
 
     function handleGetComponentesCurriculares (response) {
-      var todasDisciplinasElemento = document.createElement("option");
-      todasDisciplinasElemento.setAttribute("value", TODAS_DISCIPLINAS_VALUE);
-      todasDisciplinasElemento.innerHTML = "TODAS AS DISCIPLINAS";
+      console.log(response);
+      // var todasDisciplinasElemento = document.createElement("option");
+      // todasDisciplinasElemento.setAttribute("value", TODAS_DISCIPLINAS_VALUE);
+      // todasDisciplinasElemento.innerHTML = "TODAS AS DISCIPLINAS";
 
       count = bncc_table.children[0].childElementCount - 4;
       id = 0;
       index = 0;
       while (index !== count) {
-
         componenteCurricularField = document.getElementById(`ref_cod_componente_curricular_array[${id}]`);
 
         if (componenteCurricularField !== null) {
-          if (componenteCurricularField.childElementCount === 1) {
-            componenteCurricularField.length = 1;
-            componenteCurricularField.options[0].text = 'Selecione o componente curricular';
+          componenteCurricularField.length = 1;
+          componenteCurricularField.options[0].text = 'Selecione o componente curricular';
 
-            var selectOptions = jsonResourcesToSelectOptions(response['options']);
-            componenteCurricularField.append(todasDisciplinasElemento);
-            selectOptions.forEach(option => {
-              componenteCurricularField.append(option[0]);
-            });
+          var selectOptions = jsonResourcesToSelectOptions(response['options']);
+          //componenteCurricularField.append(todasDisciplinasElemento);
+          selectOptions.forEach(option => {
+            componenteCurricularField.append(option[0]);
+          });
 
-            // bind onchange event
-            componenteCurricularField.style.height = "54px";
-            componenteCurricularField.addEventListener("change", trocaComponenteCurricular, false);
-          }
+          // bind onchange event
+          componenteCurricularField.style.height = "54px";
+          componenteCurricularField.addEventListener("change", trocaComponenteCurricular, false);
 
           index++;
         }
@@ -195,7 +193,7 @@
       for (let index = 0; index < novasOpcoes.length; index++) {
         const novaOpcao = novasOpcoes[index];
 
-        var id = novaOpcao[2] != null ? novaOpcao[2] + "-" + novaOpcao[0] : novaOpcao[0];
+        var id = novaOpcao[2] != null ? novaOpcao[2] : novaOpcao[0];
         var value = novaOpcao[1].substring(0, maxCharacters).trimEnd();
         value = value.length < maxCharacters ? value : value.concat("...");
         $(elemento).append(`<option value="${id}">${value}</option>`);
@@ -299,12 +297,6 @@
       var bnccs                     = pegarBNCCs();
       var bnccEspecificacoes        = pegarBNCCEspecificacoes();
 
-      console.log(data_inicial, data_final, turma, faseEtapa, ddp, atividades, referencias);
-      console.log(conteudos);
-      console.log(componentesCurriculares);
-      console.log(bnccs);
-      console.log(bnccEspecificacoes);
-
       // VALIDAÇÃO
       if (!ehDataValida(new Date(data_inicial))) { alert("Data inicial não é válida."); return; }
       if (!ehDataValida(new Date(data_final))) { alert("Data final não é válida."); return; }
@@ -314,10 +306,24 @@
       if (atividades == null) { alert("O campo atividades não é válido."); return; }
       if (referencias == null) { alert("O campo referências não é válido."); return; }
       if (!ehComponentesCurricularesValidos(componentesCurriculares)) { alert("Os componentes curriculares são obrigatórios."); return; }
-      if (!ehComponentesCurricularesValidos2(componentesCurriculares)) { alert("\"Todas as disciplinas\" foi selecionado, não é aceitável ter mais componentes."); return; }
+      //if (!ehComponentesCurricularesValidos2(componentesCurriculares)) { alert("\"Todas as disciplinas\" foi selecionado, não é aceitável ter mais componentes."); return; }
       if (!ehBNCCsValidos(bnccs)) { alert("As habilidades são obrigatórias."); return; }
       if (!ehBNCCEspecificacoesValidos(bnccEspecificacoes)) { alert("As especificações são obrigatórias."); return; }
       if (!ehConteudosValidos(conteudos)) { alert("Os conteúdos são obrigatórios."); return; }
+
+      novoPlanoAula(
+        data_inicial,
+        data_final,
+        turma,
+        faseEtapa,
+        ddp,
+        atividades,
+        referencias,
+        conteudos,
+        componentesCurriculares,
+        bnccs,
+        bnccEspecificacoes
+      );
     }
 
     function dataParaBanco (dataFromBrasil) {
@@ -349,9 +355,9 @@
       return componentesCurriculares.every(componenteCurricular => !isNaN(parseInt(componenteCurricular[1], 10)));
     }
 
-    function ehComponentesCurricularesValidos2 (componentesCurriculares) {
-      return componentesCurriculares.length === 1 && componentesCurriculares.some(componenteCurricular => componenteCurricular[1] == 666);
-    }
+    // function ehComponentesCurricularesValidos2 (componentesCurriculares) {
+    //   return componentesCurriculares.length === 1 && componentesCurriculares.some(componenteCurricular => componenteCurricular[1] == 666);
+    // }
 
     function ehBNCCsValidos (bnccs) {
       return bnccs.every(bncc => bncc[1].length > 0);
@@ -360,6 +366,53 @@
     function ehBNCCEspecificacoesValidos (bnccEspecificacoes) {
       return bnccEspecificacoes.every(bnccsEspecificacao => bnccsEspecificacao[1].length > 0);
     }
+
+    function novoPlanoAula (data_inicial, data_final, turma, faseEtapa, ddp, atividades, referencias, conteudos, componentesCurriculares, bnccs, bnccEspecificacoes) {
+      var urlForNovoPlanoAula = postResourceUrlBuilder.buildUrl('/module/Api/PlanejamentoAula', 'novo-plano-aula', {});
+
+      var options = {
+          type     : 'POST',
+          url      : urlForNovoPlanoAula,
+          dataType : 'json',
+          data     : {
+            data_inicial            : data_inicial,
+            data_final              : data_final,
+            turma                   : turma,
+            faseEtapa               : faseEtapa,
+            ddp                     : ddp,
+            atividades              : atividades,
+            referencias             : referencias,
+            conteudos               : conteudos,
+            componentesCurriculares : componentesCurriculares,
+            bnccs                   : bnccs,
+            bnccEspecificacoes      : bnccEspecificacoes,
+          },
+          success  : handleNovoPlanoAula
+      };
+
+      postResource(options);
+    }
+
+    function handleNovoPlanoAula (response) {
+      if(response.result == "Cadastro efetuado com sucesso.") {
+          messageUtils.success('Cadastro efetuado com sucesso!');
+
+          delay(1000).then(() => urlHelper("http://" + window.location.host + "/intranet/educar_professores_planejamento_de_aula_lst.php", '_self'));
+      } else {
+          messageUtils.error(response.result);
+      }
+    }
+
+    function delay (time) {
+      return new Promise(resolve => setTimeout(resolve, time));
+    }
+
+    function urlHelper (href, mode) {
+      Object.assign(document.createElement('a'), {
+      target: mode,
+      href: href,
+      }).click();
+  }
 
     // bind onchange event
     turmaField.change(updateComponentesCurriculares);

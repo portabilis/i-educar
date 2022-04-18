@@ -84,7 +84,7 @@
             if(response.result == "Edição efetuada com sucesso.") {
                 messageUtils.success('Plano de aula editado com sucesso!');
 
-                delay(1000).then(() => openInNewTab("http://" + window.location.host + "/intranet/educar_professores_planejamento_de_aula_lst.php", '_self'));
+                delay(1000).then(() => urlHelper("http://" + window.location.host + "/intranet/educar_professores_planejamento_de_aula_lst.php", '_self'));
             } else {
                 messageUtils.success('Erro desconhecido ocorreu.');
             }
@@ -128,21 +128,15 @@
                 const registroAula = registrosAula[index];
 
                 const url = "http://" + window.location.host + "/intranet/educar_professores_conteudo_ministrado_cad.php?id=" + registroAula;
-                openInNewTab(url, '_blank');
+                urlHelper(url, '_blank');
             }
         }
 
-        function openInNewTab (href, mode) {
+        function urlHelper (href, mode) {
             Object.assign(document.createElement('a'), {
             target: mode,
             href: href,
             }).click();
-        }
-
-        function arrayColumn (array, columnName) {
-            return array.map(function(value,index) {
-                return value[columnName];
-            })
         }
 
         function delay (time) {
