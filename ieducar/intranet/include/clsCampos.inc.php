@@ -829,6 +829,7 @@ class clsCampos extends Core_Controller_Page_Abstract
 
         reset($arr_campos);
         $campo_anterior = '';
+        $nome_anterior = '';
         $md = true;
 
         if (!is_null($start_md) && is_bool($start_md)) {
@@ -1287,10 +1288,11 @@ class clsCampos extends Core_Controller_Page_Abstract
                     $campo = $componente[1] . "{$componente['separador']}";
                 }
 
-                if (($campo == $campo_anterior) && ($campo != '-:')) {
+                if (($campo == $campo_anterior) && ($campo != '-:') && $nome == $nome_anterior) {
                     $campo = '';
                 } else {
                     $campo_anterior = $campo;
+                    $nome_anterior = $nome;
 
                     if (!$foiDuplo) {
                         $md = !$md;
