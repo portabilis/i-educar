@@ -15,7 +15,7 @@ class CyclicRegimeService
      *
      * @return LegacyRegistration[]
      */
-    public function getAllRegistrationsOfCycle($registration)
+    public function getAllRegistrationsOfCycle($registration,)
     {
         return Cache::store('array')->remember("getAllRegistrationsOfCycle:{$registration}", now()->addMinute(), function () use ($registration) {
             /** @var LegacyRegistration $registration */
@@ -27,7 +27,6 @@ class CyclicRegimeService
             foreach ($grades as $grade) {
                 $result = LegacyRegistration::where('ref_ref_cod_serie', $grade->getKey())
                     ->where('ref_cod_aluno', $registration->ref_cod_aluno)
-                    ->where('ano', $registration->ano)
                     ->active()
                     ->get()
                     ->first();
