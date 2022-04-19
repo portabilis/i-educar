@@ -182,7 +182,7 @@ class CheckMandatoryCensoFields implements Rule
             return false;
         }
 
-        if ((int)$course->modalidade_curso === 1 &&
+        if ((int)$course->modalidade_curso === ModalidadeCurso::ENSINO_REGULAR &&
             isset($params->etapa_educacenso) &&
             !in_array((int)$params->etapa_educacenso, self::ETAPAS_ENSINO_REGULAR)) {
             $this->message = 'Quando a modalidade do curso é: Ensino regular, o campo: Etapa de ensino deve ser uma das seguintes opções:'
@@ -191,7 +191,7 @@ class CheckMandatoryCensoFields implements Rule
             return false;
         }
 
-        if ($course->modalidade_curso == 2 &&
+        if ((int)$course->modalidade_curso === ModalidadeCurso::EDUCACAO_ESPECIAL &&
             isset($params->etapa_educacenso) &&
             !in_array((int) $params->etapa_educacenso, self::ETAPAS_ESPECIAL_SUBSTITUTIVAS)) {
             $this->message = 'Quando a modalidade do curso é: Educação especial, o campo: Etapa de ensino deve ser uma das seguintes opções:'
@@ -200,7 +200,7 @@ class CheckMandatoryCensoFields implements Rule
             return false;
         }
 
-        if ($course->modalidade_curso == 3 &&
+        if ((int)$course->modalidade_curso === ModalidadeCurso::EJA &&
             isset($params->etapa_educacenso) &&
             !in_array($params->etapa_educacenso, [69, 70, 71, 72])) {
             $this->message = 'Quando a modalidade do curso é: Educação de Jovens e Adultos (EJA), o campo: Etapa de ensino deve ser uma das seguintes opções: 69, 70, 71 ou 72.';
@@ -208,7 +208,7 @@ class CheckMandatoryCensoFields implements Rule
             return false;
         }
 
-        if ($course->modalidade_curso == 4 && !in_array((int) $params->etapa_educacenso, [30, 31, 32, 33, 34, 39, 40, 73, 74, 64, 67, 68])) {
+        if ((int)$course->modalidade_curso === ModalidadeCurso::EDUCACAO_PROFISSIONAL && !in_array((int) $params->etapa_educacenso, [30, 31, 32, 33, 34, 39, 40, 73, 74, 64, 67, 68])) {
             $this->message = 'Quando a modalidade do curso é: Educação Profissional, o campo: Etapa de ensino deve ser uma das seguintes opções: 30, 31, 32, 33, 34, 39, 40, 73, 74, 64, 67 ou 68.';
 
             return false;
