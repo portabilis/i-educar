@@ -478,11 +478,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         foreach ($registrations as $registration) {
             $faltaAluno = $studentAbsenceService->getOrCreateStudentAbsence($registration, $this->getEvaluationRule());
 
-            $faltas[] = $this->getFaltaAbstractDataMapper()->findAll(
+            $faltas = array_merge($faltas, $this->getFaltaAbstractDataMapper()->findAll(
                 [],
                 ['faltaAluno' => $faltaAluno->getKey()],
                 ['etapa' => 'ASC']
-            );
+            ));
         }
 
         return $faltas;
