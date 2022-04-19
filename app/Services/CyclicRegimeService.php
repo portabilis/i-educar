@@ -15,7 +15,7 @@ class CyclicRegimeService
      *
      * @return LegacyRegistration[]
      */
-    public function getAllRegistrationsOfCycle($registration,)
+    public function getAllRegistrationsOfCycle($registration)
     {
         return Cache::store('array')->remember("getAllRegistrationsOfCycle:{$registration}", now()->addMinute(), function () use ($registration) {
             /** @var LegacyRegistration $registration */
