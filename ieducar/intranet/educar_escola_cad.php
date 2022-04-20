@@ -1934,26 +1934,10 @@ return new class extends clsCadastro {
 
     protected function validaFormasDeContratacaoEntreAdministracaoPublicaEOutrasInstituicoes(): bool
     {
-        //Caso o campo "Categoria da escola privada" for igual à "Comunitária", "Confessional" ou "Filantrópica",
-        // não deve aceitar as opções:
-
-        //Termo de cooperação técnica e financeira;
-        //Contrato de consórcio público/Convênio de cooperação;
-
-        //Caso o campo "Categoria da escola privada" for igual à "Particular" aceitar somente a opção "Contrato de prestação de serviço";
-
-        $acceptDependenciaAdministrativa = [DependenciaAdministrativaEscola::FEDERAL, DependenciaAdministrativaEscola::ESTADUAL, DependenciaAdministrativaEscola::MUNICIPAL];
-
-        // 1 => 'Termo de colaboração (Lei nº 13.019/2014)',
-        //                2 => 'Termo de fomento (Lei nº 13.019/2014)',
-        //                3 => 'Acordo de cooperação (Lei nº 13.019/2014)',
-        //                4 => 'Contrato de prestação de serviço',
-        //                5 => 'Termo de cooperação técnica e financeira',
-        //                6 => 'Contrato de consórcio público/Convênio de cooperação'
-
-        $notAcceptFormasDeContratoInDependenciaAdministrativa = [1, 2, 3, 6];
         $formasDeContratacao = transformStringFromDBInArray($this->formas_contratacao_adm_publica_e_outras_instituicoes);
 
+        $acceptDependenciaAdministrativa = [DependenciaAdministrativaEscola::FEDERAL, DependenciaAdministrativaEscola::ESTADUAL, DependenciaAdministrativaEscola::MUNICIPAL];
+        $notAcceptFormasDeContratoInDependenciaAdministrativa = [1, 2, 3, 6];
         if (in_array((int)$this->dependencia_administrativa, $acceptDependenciaAdministrativa, true)) {
 
             $data = array_filter($formasDeContratacao,
@@ -1965,13 +1949,6 @@ return new class extends clsCadastro {
                 return false;
             }
         }
-        // $resources = [
-        //                '' => 'Selecione',
-        //                1 => 'Particular',
-        //                2 => 'Comunitária',
-        //                3 => 'Confessional',
-        //                4 => 'Filantrópica'
-        //            ];
 
         $categoriaEscolaPrivadaLista = [2,3,4];
         $notAcceptFormasDeContratoInDependenciaAdministrativa = [5,6];
@@ -1988,8 +1965,6 @@ return new class extends clsCadastro {
         }
 
         if ((int)$this->categoria_escola_privada === 1) {
-
-            // $formasDeContratacao array or null
             if (count($formasDeContratacao) > 1)    {
                 $this->mensagem = 'Quando o campo "Categoria da escola privada" for igual à "Particular" só é possível cadastrar "Contrato de prestação de serviço"';
                 return false;
