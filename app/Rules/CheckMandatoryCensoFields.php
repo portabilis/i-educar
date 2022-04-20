@@ -207,7 +207,9 @@ class CheckMandatoryCensoFields implements Rule
             return false;
         }
 
-        if ($course->modalidade_curso == 4 && !in_array((int) $params->etapa_educacenso, [30, 31, 32, 33, 34, 39, 40, 73, 74, 64, 67, 68])) {
+        if ($course->modalidade_curso == 4 &&
+            isset($params->etapa_educacenso) &&
+            !in_array((int) $params->etapa_educacenso, [30, 31, 32, 33, 34, 39, 40, 73, 74, 64, 67, 68])) {
             $this->message = 'Quando a modalidade do curso é: Educação Profissional, o campo: Etapa de ensino deve ser uma das seguintes opções: 30, 31, 32, 33, 34, 39, 40, 73, 74, 64, 67 ou 68.';
 
             return false;
