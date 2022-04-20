@@ -118,7 +118,7 @@ return new class extends clsListagem {
       table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">7° Ano</td>');
       table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">8° Ano</td>');
       table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">9° Ano</td>');
-      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="3">Eliminados</td>');
+      table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="3">Movimentações</td>');
       table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">Rem.</td>');
       table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">Recla.</td>');
       table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="2">Óbito</td>');
