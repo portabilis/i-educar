@@ -1965,12 +1965,13 @@ return new class extends clsCadastro {
         }
 
         if ((int)$this->categoria_escola_privada === 1) {
-            if (count($formasDeContratacao) > 1)    {
+
+            if ($formasDeContratacao === null || !in_array(4, $formasDeContratacao)) {
                 $this->mensagem = 'Quando o campo "Categoria da escola privada" for igual à "Particular" só é possível cadastrar "Contrato de prestação de serviço"';
                 return false;
             }
 
-            if (!in_array(4, $formasDeContratacao)) {
+            if (count($formasDeContratacao) > 1)    {
                 $this->mensagem = 'Quando o campo "Categoria da escola privada" for igual à "Particular" só é possível cadastrar "Contrato de prestação de serviço"';
                 return false;
             }
