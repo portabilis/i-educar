@@ -177,7 +177,7 @@ return new class extends clsDetalhe {
         }
 
         $especificacao  = '<table cellspacing="0" cellpadding="0" border="0">';
-        $especificacao .= sprintf('<tr align="left"><td>%s</td></tr>', $this->tabela3);
+        $especificacao .= sprintf('<tr align="left"><td class="formmdtd">%s</td></tr>', $this->tabela3);
         $especificacao .= '</table>';
 
         $this->addDetalhe(
@@ -199,7 +199,7 @@ return new class extends clsDetalhe {
         }
 
         $conteudo  = '<table cellspacing="0" cellpadding="0" border="0">';
-        $conteudo .= sprintf('<tr align="left"><td>%s</td></tr>', $this->tabela2);
+        $conteudo .= sprintf('<tr align="left"><td class="formlttd">%s</td></tr>', $this->tabela2);
         $conteudo .= '</table>';
 
         $this->addDetalhe(
