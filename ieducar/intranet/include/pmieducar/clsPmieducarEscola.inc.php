@@ -1859,6 +1859,16 @@ class clsPmieducarEscola extends Model
                 $set .= "{$gruda}=NULL";
             }
 
+            if (is_string($this->formas_contratacao_adm_publica_e_outras_instituicoes)) {
+                $gruda = ', ';
+                $gruda .= "formas_contratacao_adm_publica_e_outras_instituicoes";
+                $set .= "{$gruda}='{{$this->formas_contratacao_adm_publica_e_outras_instituicoes}}'";
+            } else {
+                $gruda = ', ';
+                $gruda .= "formas_contratacao_adm_publica_e_outras_instituicoes";
+                $set .= "{$gruda}=NULL";
+            }
+
             if ($set) {
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_escola = '{$this->cod_escola}'");
 
