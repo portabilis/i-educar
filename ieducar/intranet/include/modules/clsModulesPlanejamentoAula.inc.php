@@ -28,7 +28,9 @@ class clsModulesPlanejamentoAula extends Model {
         $bnccs = null,
         $conteudos = null,
         $referencias = null,
-        $bncc_especificacoes = null
+        $bncc_especificacoes = null,
+        $recursos_didaticos = null,
+        $registro_adaptacao = null
     ) {
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}planejamento_aula";
@@ -70,6 +72,8 @@ class clsModulesPlanejamentoAula extends Model {
             pa.ref_cod_turma,
             pa.ddp,
             pa.atividades,
+            pa.recursos_didaticos,
+            pa.registro_adaptacao,
             pa.referencias,
             i.nm_instituicao AS instituicao,
             j.fantasia AS escola,
@@ -124,6 +128,14 @@ class clsModulesPlanejamentoAula extends Model {
         if(is_array($conteudos)){
             $this->conteudos = $conteudos;
         }
+
+        if (is_string($recursos_didaticos)) {
+            $this->recursos_didaticos = $recursos_didaticos;
+        }
+
+        if (is_string($registro_adaptacao)) {
+            $this->registro_adaptacao = $registro_adaptacao;
+        }
     }
 
     /**
@@ -143,6 +155,8 @@ class clsModulesPlanejamentoAula extends Model {
             && is_array($this->conteudos)
             && is_string($this->referencias)
             && is_array($this->bncc_especificacoes)
+            && is_string($this->recursos_didaticos)
+            && is_string($this->registro_adaptacao)
         ) {
             $db = new clsBanco();
 
@@ -178,6 +192,14 @@ class clsModulesPlanejamentoAula extends Model {
             $valores .= "{$gruda}'{$db->escapeString($this->referencias)}'";
             $gruda = ', ';
 
+            $campos .= "{$gruda}recursos_didaticos";
+            $valores .= "{$gruda}'{$db->escapeString($this->recursos_didaticos)}'";
+            $gruda = ', ';
+
+            $campos .= "{$gruda}registro_adaptacao";
+            $valores .= "{$gruda}'{$db->escapeString($this->registro_adaptacao)}'";
+            $gruda = ', ';
+            
             $campos .= "{$gruda}data_cadastro";
             $valores .= "{$gruda}(NOW() - INTERVAL '3 HOURS')";
             $gruda = ', ';

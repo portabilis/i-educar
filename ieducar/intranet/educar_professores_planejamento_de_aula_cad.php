@@ -21,6 +21,8 @@ return new class extends clsCadastro {
     public $bncc;
     public $conteudo_id;
     public $bncc_especificacoes;
+    public $recursos_didaticos;
+    public $registro_adaptacao;
 
     public function Inicializar () {
         $this->titulo = 'Plano de aula - Cadastro';
@@ -105,6 +107,8 @@ return new class extends clsCadastro {
 
         $this->campoMemo('ddp','Metodologia', $this->ddp, 100, 5, !$obrigatorio);
         $this->campoMemo('atividades','Atividades/Avaliações', $this->atividades, 100, 5, !$obrigatorio);
+        $this->campoMemo('recursos_didaticos','Recursos didáticos', $this->recursos_didaticos, 100, 5, !$obrigatorio);
+        $this->campoMemo('registro_adaptacao','Registro de adaptação', $this->registro_adaptacao, 100, 5, !$obrigatorio);
         $this->campoMemo('referencias','Referências', $this->referencias, 100, 5, !$obrigatorio);
 
         $this->campoOculto('id', $this->id);
