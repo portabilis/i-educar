@@ -40,7 +40,7 @@ let verificaEtapaEducacenso = ()=>{
 }
 
 let verificaFormaOrganizacaoTurma = ()=> {
-  const canNotContainData = ['1', '2', '3', '24', '62'];
+  const escolarizacao = ['1', '2', '3', '24', '62'];
   const tipoAtendimento = $j('#tipo_atendimento').val() == '0';
   const etapaEducacenso = $j('#etapa_educacenso').val()
 
@@ -48,13 +48,13 @@ let verificaFormaOrganizacaoTurma = ()=> {
   if (obrigarCamposCenso &&
       tipoAtendimento &&
       etapaEducacenso &&
-     !canNotContainData.includes(etapaEducacenso)
+     !escolarizacao.includes(etapaEducacenso)
   ) {
     $j('#formas_organizacao_turma').makeRequired();
   }
 
   $j("#formas_organizacao_turma").prop('disabled', false);
-  if (!tipoAtendimento && canNotContainData.includes(etapaEducacenso)) {
+  if (!tipoAtendimento && escolarizacao.includes(etapaEducacenso)) {
     $j("#formas_organizacao_turma").prop('disabled', true).val("");
   }
 }
