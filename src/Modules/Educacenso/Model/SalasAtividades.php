@@ -11,7 +11,7 @@ class SalasAtividades
     public const MULTIUSO = 5;
     public const RECURSOS_AEE = 6;
     public const REPOUSO_ALUNO = 7;
-    public const EDUCACAO_PROFISSIONAL = 7;
+    public const EDUCACAO_PROFISSIONAL = 8;
 
     public static function getDescriptiveValues()
     {
