@@ -1938,7 +1938,7 @@ return new class extends clsCadastro {
 
         $acceptDependenciaAdministrativa = [DependenciaAdministrativaEscola::FEDERAL, DependenciaAdministrativaEscola::ESTADUAL, DependenciaAdministrativaEscola::MUNICIPAL];
         $notAcceptFormasDeContratoInDependenciaAdministrativa = [1, 2, 3, 6];
-        if (in_array((int)$this->dependencia_administrativa, $acceptDependenciaAdministrativa, true)) {
+        if (is_array($formasDeContratacao) && in_array((int)$this->dependencia_administrativa, $acceptDependenciaAdministrativa, true)) {
 
             $data = array_filter($formasDeContratacao,
                 static fn($forma)  => !in_array((int)$forma, $notAcceptFormasDeContratoInDependenciaAdministrativa, true)
@@ -1952,7 +1952,7 @@ return new class extends clsCadastro {
 
         $categoriaEscolaPrivadaLista = [2,3,4];
         $notAcceptFormasDeContratoInDependenciaAdministrativa = [5,6];
-        if (in_array((int)$this->categoria_escola_privada, $categoriaEscolaPrivadaLista, true)) {
+        if (is_array($formasDeContratacao) && in_array((int)$this->categoria_escola_privada, $categoriaEscolaPrivadaLista, true)) {
 
             $data = array_filter($formasDeContratacao,
                 static fn($forma)  => !in_array((int)$forma, $notAcceptFormasDeContratoInDependenciaAdministrativa, true)
