@@ -2439,11 +2439,6 @@ return new class extends clsCadastro {
             return false;
         }
 
-        if (is_array($this->rede_local) && in_array(RedeLocal::NENHUMA, $this->rede_local) && count($this->rede_local) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Rede local de interligação de computadores</b>, quando a opção: <b>Não há rede local interligando computadores</b> estiver selecionada.';
-
-            return false;
-        }
 
         if (is_array($this->orgaos_colegiados) && in_array(OrgaosColegiados::NENHUM, $this->orgaos_colegiados) && count($this->orgaos_colegiados) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Órgãos colegiados em funcionamento na escola</b>, quando a opção: <b>Não há órgãos colegiados em funcionamento</b> estiver selecionada.';
@@ -2464,12 +2459,6 @@ return new class extends clsCadastro {
     {
         if (!is_array($this->equipamentos_acesso_internet) && !is_array($this->rede_local)) {
             return true;
-        }
-
-        if (in_array(2, $this->equipamentos_acesso_internet) && !in_array(3, $this->rede_local)) {
-            $this->mensagem = 'O campo: <b>Equipamentos que os aluno(a)s usam para acessar a internet da escola</b> não deve ser preenchido com a opção: <b>Dispositivos pessoais (computadores portáteis, celulares, tablets, etc.)</b> quando o campo: <b>Rede local de interligação de computadores</b> não possuir a opção: <b>Wireless</b> selecionada.';
-
-            return false;
         }
 
         return true;
