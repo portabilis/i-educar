@@ -822,6 +822,7 @@ class clsPmieducarAluno extends Model
         $db = new clsBanco();
 
         $joins = '
+             LEFT JOIN relatorio.view_situacao s ON s.cod_matricula = m.cod_matricula
              LEFT JOIN cadastro.pessoa ON pessoa.idpes = a.ref_idpes
              LEFT JOIN cadastro.fisica ON fisica.idpes = a.ref_idpes
              LEFT JOIN cadastro.pessoa AS pessoa_mae ON pessoa_mae.idpes = fisica.idpes_mae
@@ -890,14 +891,7 @@ class clsPmieducarAluno extends Model
 
         if ($situacao_matricula_id && $situacao_matricula_id != EnrollmentStatusFilter::ALL) {
             $situacao_matricula_id = (int)$situacao_matricula_id;
-            if ($situacao_matricula_id === EnrollmentStatusFilter::EXCEPT_TRANSFERRED_OR_ABANDONMENT) {
-                //Exceto Transferidos/Abandono
-                $abandono =  App_Model_MatriculaSituacao::ABANDONO;
-                $transferido = App_Model_MatriculaSituacao::TRANSFERIDO;
-                $filtros .= "{$whereAnd} m.aprovado not in({$abandono},{$transferido})";
-            } else {
-                $filtros .= "{$whereAnd} m.aprovado = $situacao_matricula_id ";
-            }
+            $filtros .= "{$whereAnd} s.cod_situacao = {$situacao_matricula_id} ";
 
             $whereAnd = ' AND ';
         }
