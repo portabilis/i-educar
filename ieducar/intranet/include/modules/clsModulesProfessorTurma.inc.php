@@ -509,6 +509,20 @@ class clsModulesProfessorTurma extends Model
         return $componentesVinculados;
     }
 
+    public function pegarServidorId($servidor_id)
+    {   
+        $servidor_id = [];
+        $sql = "SELECT servidor_id FROM modules.professor_turma WHERE servidor_id = {$servidor_id}";
+        $db = new clsBanco();
+        $db->Consulta($sql);
+        while($db->ProximoRegistro()){
+            $tupla = $db->Tupla();
+            $servidor_id[] = $tupla['servidor_id'];
+        }
+        return $servidor_id;
+        
+    }
+
     private function auditaComponentesVinculados($professor_turma_id, $componentesAntigos, $componentesNovos)
     {
         $componentesExcluidos = array_diff($componentesAntigos, $componentesNovos);
