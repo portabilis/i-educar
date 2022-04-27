@@ -807,7 +807,7 @@ class clsPmieducarAluno extends Model
         $int_rg_aluno = null,
         $situacao_matricula_id = null,
     ) {
-        $filtra_baseado_matricula = is_numeric($ano) || is_numeric($ref_cod_instituicao) || is_numeric($ref_cod_escola) || is_numeric($ref_cod_curso) || is_numeric($ref_cod_serie) || $situacao_matricula_id != EnrollmentStatusFilter::ALL;
+        $filtra_baseado_matricula = is_numeric($ano) || is_numeric($ref_cod_instituicao) || is_numeric($ref_cod_escola) || is_numeric($ref_cod_curso) || is_numeric($ref_cod_serie);
 
         $filtros = '';
         $this->resetCamposLista();
@@ -815,14 +815,20 @@ class clsPmieducarAluno extends Model
         $this->_campos_lista .= ', pessoa.nome AS nome_aluno, fisica.nome_social, COALESCE(nome_social, pessoa.nome) AS ordem_aluno, pessoa_mae.nome AS nome_mae, educacenso_cod_aluno.cod_aluno_inep AS codigo_inep';
 
         if ($filtra_baseado_matricula) {
-            $sql = "SELECT distinct {$this->_campos_lista} FROM {$this->_tabela} INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno) ";
+            $sql = "
+                SELECT distinct {$this->_campos_lista}
+                FROM {$this->_tabela}
+                INNER JOIN pmieducar.matricula m
+                ON m.ref_cod_aluno = a.cod_aluno
+                INNER JOIN relatorio.view_situacao s
+                ON s.cod_matricula = m.cod_matricula
+            ";
         } else {
             $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         }
         $db = new clsBanco();
 
         $joins = '
-             LEFT JOIN relatorio.view_situacao s ON s.cod_matricula = m.cod_matricula
              LEFT JOIN cadastro.pessoa ON pessoa.idpes = a.ref_idpes
              LEFT JOIN cadastro.fisica ON fisica.idpes = a.ref_idpes
              LEFT JOIN cadastro.pessoa AS pessoa_mae ON pessoa_mae.idpes = fisica.idpes_mae
@@ -889,7 +895,7 @@ class clsPmieducarAluno extends Model
             $whereAnd = ' AND ';
         }
 
-        if ($situacao_matricula_id && $situacao_matricula_id != EnrollmentStatusFilter::ALL) {
+        if ($filtra_baseado_matricula && $situacao_matricula_id) {
             $situacao_matricula_id = (int)$situacao_matricula_id;
             $filtros .= "{$whereAnd} s.cod_situacao = {$situacao_matricula_id} ";
 
@@ -960,7 +966,13 @@ class clsPmieducarAluno extends Model
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
         if ($filtra_baseado_matricula) {
-            $sqlCount = "SELECT COUNT(DISTINCT a.cod_aluno) FROM {$this->_tabela} INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno) ";
+            $sqlCount = "
+                SELECT COUNT(DISTINCT a.cod_aluno) FROM {$this->_tabela}
+                INNER JOIN pmieducar.matricula m
+                ON (m.ref_cod_aluno = a.cod_aluno)
+                INNER JOIN relatorio.view_situacao s
+                ON s.cod_matricula = m.cod_matricula
+            ";
         } else {
             $sqlCount = "SELECT COUNT(0) FROM {$this->_tabela} ";
         }
