@@ -836,7 +836,7 @@ class clsPmieducarAluno extends Model
 
         $sql .= $joins;
 
-        $whereAnd = ' WHERE ';
+        $whereAnd = ' WHERE a.ativo = 1 AND ';
 
         if (is_numeric($int_cod_aluno)) {
             $filtros .= "{$whereAnd} a.cod_aluno = {$int_cod_aluno}";
