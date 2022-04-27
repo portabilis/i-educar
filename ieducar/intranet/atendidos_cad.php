@@ -140,7 +140,7 @@ return new class extends clsCadastro {
         );
 
         $nomeMenu = $this->retorno === 'Editar' ? $this->retorno : 'Cadastrar';
-        
+
         $this->nome_url_cancelar = 'Cancelar';
         $this->breadcrumb("{$nomeMenu} pessoa física", ['educar_pessoas_index.php' => 'Pessoas']);
 
@@ -623,7 +623,7 @@ return new class extends clsCadastro {
 
         $raca = new clsCadastroFisicaRaca($this->cod_pessoa_fj);
         $raca = $raca->detalhe();
-        $this->cod_raca = is_array($raca) ? $raca['ref_cod_raca'] : null;
+        $this->cod_raca = is_array($raca) ? $raca['ref_cod_raca'] : $this->cor_raca;
 
         $this->campoLista('cor_raca', 'Raça', $selectOptionsRaca, $this->cod_raca, '', false, '', '', '', $obrigarCamposCenso);
 

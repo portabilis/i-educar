@@ -84,8 +84,6 @@ $j('#estrutura_curricular').change(function() {
   habilitaEtapaEducacenso();
 });
 
-verificaEtapaEducacenso();
-habilitaEtapaEducacenso();
 verificaLocalFuncionamentoDiferenciado();
 
 $j('#etapa_educacenso').change(function() {
@@ -213,7 +211,7 @@ function habilitaEtapaEducacenso() {
 
   if (notContainData || (!$j('#estrutura_curricular').val().include('1') &&
       !$j('#estrutura_curricular').val().include('3'))) {
-    $j("#etapa_educacenso").prop('disabled', true).val("");
+    $j("#etapa_educacenso").prop('disabled', true).val('');
   }
 }
 

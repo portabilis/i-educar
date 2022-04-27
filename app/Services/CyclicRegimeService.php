@@ -27,7 +27,6 @@ class CyclicRegimeService
             foreach ($grades as $grade) {
                 $result = LegacyRegistration::where('ref_ref_cod_serie', $grade->getKey())
                     ->where('ref_cod_aluno', $registration->ref_cod_aluno)
-                    ->where('ano', $registration->ano)
                     ->active()
                     ->get()
                     ->first();

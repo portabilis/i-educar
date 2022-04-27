@@ -181,42 +181,52 @@ class CheckMandatoryCensoFields implements Rule
             return false;
         }
 
-        if ((int)$course->modalidade_curso === 1 && !in_array((int)$params->etapa_educacenso, self::ETAPAS_ENSINO_REGULAR)) {
+        if ((int)$course->modalidade_curso === 1 &&
+            isset($params->etapa_educacenso) &&
+            !in_array((int)$params->etapa_educacenso, self::ETAPAS_ENSINO_REGULAR)) {
             $this->message = 'Quando a modalidade do curso é: Ensino regular, o campo: Etapa de ensino deve ser uma das seguintes opções:'
                 . implode(',', self::ETAPAS_ENSINO_REGULAR) . '.';
 
             return false;
         }
 
-        if ($course->modalidade_curso == 2 && !in_array((int) $params->etapa_educacenso, self::ETAPAS_ESPECIAL_SUBSTITUTIVAS)) {
+        if ($course->modalidade_curso == 2 &&
+            isset($params->etapa_educacenso) &&
+            !in_array((int) $params->etapa_educacenso, self::ETAPAS_ESPECIAL_SUBSTITUTIVAS)) {
             $this->message = 'Quando a modalidade do curso é: Educação especial, o campo: Etapa de ensino deve ser uma das seguintes opções:'
                 . implode(',', self::ETAPAS_ESPECIAL_SUBSTITUTIVAS) . '.';
 
             return false;
         }
 
-        if ($course->modalidade_curso == 3 && !in_array($params->etapa_educacenso, [69, 70, 71, 72])) {
+        if ($course->modalidade_curso == 3 &&
+            isset($params->etapa_educacenso) &&
+            !in_array($params->etapa_educacenso, [69, 70, 71, 72])) {
             $this->message = 'Quando a modalidade do curso é: Educação de Jovens e Adultos (EJA), o campo: Etapa de ensino deve ser uma das seguintes opções: 69, 70, 71 ou 72.';
 
             return false;
         }
 
-        if ($course->modalidade_curso == 4 && !in_array((int) $params->etapa_educacenso, [30, 31, 32, 33, 34, 39, 40, 73, 74, 64, 67, 68])) {
+        if ($course->modalidade_curso == 4 &&
+            isset($params->etapa_educacenso) &&
+            !in_array((int) $params->etapa_educacenso, [30, 31, 32, 33, 34, 39, 40, 73, 74, 64, 67, 68])) {
             $this->message = 'Quando a modalidade do curso é: Educação Profissional, o campo: Etapa de ensino deve ser uma das seguintes opções: 30, 31, 32, 33, 34, 39, 40, 73, 74, 64, 67 ou 68.';
 
             return false;
         }
 
-        if ($params->tipo_mediacao_didatico_pedagogico == App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL
-            && !in_array($params->etapa_educacenso, [69, 70, 71, 72])) {
+        if ($params->tipo_mediacao_didatico_pedagogico == App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL &&
+            isset($params->etapa_educacenso) &&
+            !in_array($params->etapa_educacenso, [69, 70, 71, 72])) {
             $this->message = 'Quando o campo: Tipo de mediação didático-pedagógica é: Semipresencial, o campo: Etapa de ensino deve ser uma das seguintes opções: 69, 70, 71 ou 72.';
 
             return false;
         }
 
         if ($params->tipo_mediacao_didatico_pedagogico == App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA &&
-            !in_array((int) $params->etapa_educacenso, [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 40, 70, 71, 73, 74, 67, 68], true)) {
-            $this->message = 'Quando o campo: Tipo de mediação didático-pedagógica é: Educação a Distância, o campo: Etapa de ensino deve ser uma das seguintes opções: 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 70, 71, 73, 74, 64, 67 ou 68.';
+            isset($params->etapa_educacenso) &&
+            !in_array((int) $params->etapa_educacenso, [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 70, 71, 73, 74, 67, 68], true)) {
+            $this->message = 'Quando o campo: Tipo de mediação didático-pedagógica é: Educação a Distância, o campo: Etapa de ensino deve ser uma das seguintes opções: 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 70, 71, 73, 74, 67 ou 68';
 
             return false;
         }
@@ -226,7 +236,9 @@ class CheckMandatoryCensoFields implements Rule
             App_Model_LocalFuncionamentoDiferenciado::UNIDADE_PRISIONAL
         ];
 
-        if (in_array($params->local_funcionamento_diferenciado, $localDeFuncionamentoData) && in_array($params->etapa_educacenso, [1, 2, 3, 56])) {
+        if (in_array($params->local_funcionamento_diferenciado, $localDeFuncionamentoData) &&
+            isset($params->etapa_educacenso) &&
+            in_array($params->etapa_educacenso, [1, 2, 3, 56])) {
             $nomeOpcao = (App_Model_LocalFuncionamentoDiferenciado::getInstance()->getEnums())[$params->local_funcionamento_diferenciado];
             $this->message = "Quando o campo: Local de funcionamento diferenciado é: {$nomeOpcao}, o campo: Etapa de ensino não pode ser nenhuma das seguintes opções: 1, 2, 3 ou 56.";
 
@@ -318,28 +330,37 @@ class CheckMandatoryCensoFields implements Rule
             return false;
         }
 
-        if (count($estruturaCurricular) > 1 && in_array(3, $estruturaCurricular, true)) {
+        if (is_array($estruturaCurricular) && count($estruturaCurricular) > 1 && in_array(3, $estruturaCurricular, true)) {
             $this->message = 'Não é possível informar mais de uma opção no campo: <b>Estrutura curricular</b>, quando a opção: <b>Não se aplica</b> estiver selecionada';
 
             return false;
         }
 
         $etapaEnsinoCanNotContainsWithFormacaoGeralBasica = [1, 2, 3, 39, 40, 64, 68];
-        if (in_array(1, $estruturaCurricular, true) && in_array((int) $params->tipo_atendimento, $etapaEnsinoCanNotContainsWithFormacaoGeralBasica)) {
+        if (is_array($estruturaCurricular) &&
+            in_array(1, $estruturaCurricular, true) &&
+            isset($params->etapa_educacenso) &&
+            in_array((int) $params->etapa_educacenso, $etapaEnsinoCanNotContainsWithFormacaoGeralBasica)) {
             $this->message = 'Quando o campo: <b>Estrutura curricular</b> for preenchido com: <b>Formação geral básica</b>, o campo: <b>Etapa de ensino</b> deve ser uma das seguintes opções: 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 41, 69, 70, 71, 72, 56, 73, 74 ou 67';
 
             return false;
         }
 
         $etapaEnsinoCanNotContainsWithItinerarioFormativo = [1, 2, 3, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 39, 40, 41, 56, 64, 68, 69, 70, 72, 73];
-        if (in_array(2, $estruturaCurricular, true) && in_array((int) $params->tipo_atendimento, $etapaEnsinoCanNotContainsWithItinerarioFormativo)) {
+        if (is_array($estruturaCurricular) &&
+            in_array(2, $estruturaCurricular, true) &&
+            isset($params->etapa_educacenso) &&
+            in_array((int) $params->etapa_educacenso, $etapaEnsinoCanNotContainsWithItinerarioFormativo)) {
             $this->message = 'Quando o campo: <b>Estrutura curricular</b> for preenchido com: <b>Itinerário formativo</b>, o campo: <b>Etapa de ensino</b> deve ser uma das seguintes opções: 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 71, 74, 67';
 
             return false;
         }
 
-        $etapaEnsinoCanNotContainsWithNaoSeAplica = [1, 2, 3, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 39, 40, 41, 56, 64, 68, 69, 70, 72 , 73];
-        if (in_array(3, $estruturaCurricular, true) && in_array((int) $params->tipo_atendimento, $etapaEnsinoCanNotContainsWithNaoSeAplica)) {
+        $etapaEnsinoCanNotContainsWithNaoSeAplica = [14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 41, 56, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 69, 70, 72, 71, 73, 67, 74];
+        if (is_array($estruturaCurricular) &&
+            in_array(3, $estruturaCurricular, true) &&
+            isset($params->etapa_educacenso) &&
+            in_array((int) $params->etapa_educacenso, $etapaEnsinoCanNotContainsWithNaoSeAplica)) {
             $this->message = 'Quando o campo: <b>Estrutura curricular</b> for preenchido com: <b>Não se aplica</b>, o campo: <b>Etapa de ensino</b> deve ser uma das seguintes opções: 1, 2, 3, 24, 39, 40, 64, 68';
 
             return false;
