@@ -829,8 +829,8 @@ class clsPmieducarAluno extends Model
         $db = new clsBanco();
 
         $joins = '
-             LEFT JOIN cadastro.pessoa ON pessoa.idpes = a.ref_idpes
-             LEFT JOIN cadastro.fisica ON fisica.idpes = a.ref_idpes
+             INNER JOIN cadastro.pessoa ON pessoa.idpes = a.ref_idpes
+             INNER JOIN cadastro.fisica ON fisica.idpes = a.ref_idpes
              LEFT JOIN cadastro.pessoa AS pessoa_mae ON pessoa_mae.idpes = fisica.idpes_mae
              LEFT JOIN modules.educacenso_cod_aluno ON educacenso_cod_aluno.cod_aluno = a.cod_aluno';
 
