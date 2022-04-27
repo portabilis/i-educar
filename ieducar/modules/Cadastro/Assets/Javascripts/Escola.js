@@ -168,6 +168,19 @@ function habilitaCampoEsferaAdministrativa() {
     }
   }
 }
+function changeNumeroDeSalas() {
+  const containsPredioEscolar = $j.inArray(LOCAL_FUNCIONAMENTO.PREDIO_ESCOLAR.toString(), $j('#local_funcionamento').val()) == -1;
+
+  $j('#local_funcionamento').prop('disabled', disabled);
+
+  if (obrigarCamposCenso) {
+    if (containsPredioEscolar) {
+      $j('#numero_salas_utilizadas_dentro_predio').makeRequired();
+    } else {
+      $j('#numero_salas_utilizadas_fora_predio').makeUnrequired();
+    }
+  }
+}
 
 function changeLocalFuncionamento(){
     var disabled = $j.inArray(LOCAL_FUNCIONAMENTO.PREDIO_ESCOLAR.toString(), $j('#local_funcionamento').val()) == -1;
