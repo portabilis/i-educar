@@ -1078,8 +1078,9 @@ class clsCampos extends Core_Controller_Page_Abstract
                 $classe = $md ? 'formlttd' : 'formmdtd';
                 $md = $md ? false : true;
 
-                $retorno .= "<tr id='tr_$nome_tabela' class='$classe'><td valign='top' align='center' colspan='2'>";
+                $retorno .= "<tr id='tr_$nome_tabela' class='$classe'><td style='width: 100%' colspan='2'>";
                 $retorno .= "\n<table cellspacing='0' $largura id='$nome_tabela' class='tabela-adicao' cellpadding='2' style='margin:10px 0px 10px 0px;' >";
+          
 
                 $total_campos = count($cabecalho);
                 $span = $total_campos + 1;
@@ -1245,7 +1246,8 @@ class clsCampos extends Core_Controller_Page_Abstract
                 $img = '<img src="/intranet/imagens/nvp_bot_novo.png" border="0" alt="incluir" style="float:left; margin:5px;" />';
                 $retorno .= '<tr id=\'adicionar_linha\' style="background-color:#f5f9fd;">';
                 $tt = $total_campos + 1;
-                $retorno .= "<td colspan='$tt' align='left' style='padding-top: 17px !important;'><a style=\"color: #47728f; text-decoration:none;\" href='javascript:void(0)' id='btn_add_$nome_add' onclick='$click' style='outline: none;'>$img <p style=\"padding:9px; margin:0;\">ADICIONAR NOVO<p></a></td>";
+                $retorno .= "<td colspan='$tt' align='left' style='padding-top: 17px !important;'><label><a style=\"color: #47728f; text-decoration:none;\" href='javascript:void(0)' id='btn_add_$nome_add' onclick='$click' style='outline: none;'><p>$img ADICIONAR NOVO</p></a></label></td>";
+                $retorno .= '</tr>';
                 $retorno .= '</tr>';
 
                 $retorno .= '</table>';
