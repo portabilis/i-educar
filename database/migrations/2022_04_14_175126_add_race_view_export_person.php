@@ -32,5 +32,4 @@ class AddRaceViewExportPerson extends Migration
         $this->createView('public.exporter_social_assistance', '2020-05-07');
         $this->createView('public.exporter_teacher', '2021-10-13');
     }
-
 }
