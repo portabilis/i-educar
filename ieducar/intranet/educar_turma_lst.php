@@ -91,7 +91,7 @@ return new class extends clsListagem {
         $this->campoTexto('nm_turma', 'Turma', $this->nm_turma, 30, 255);
         $this->campoLista('visivel', 'Situação', ['' => 'Selecione', '1' => 'Ativo', '2' => 'Inativo'], $this->visivel, null, null, null, null, null, false);
         $this->inputsHelper()->turmaTurno(['required' => false, 'label' => 'Turno']);
-        $this->campoLista('turma_sem_professor', 'Turma sem professor', [ '1' => 'Não', '2' => 'Sim' ],  $this->turma_sem_professor);
+        $this->campoLista('turma_sem_professor', 'Turma sem professor', [ '1' => 'Não', '2' => 'Sim' ],  $this->turma_sem_professor,null, null, null, null, null, false);
         
         
         
