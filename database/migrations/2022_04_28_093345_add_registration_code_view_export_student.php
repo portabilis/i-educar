@@ -3,7 +3,7 @@
 use App\Support\Database\AsView;
 use Illuminate\Database\Migrations\Migration;
 
-class AddStateNetworkCodeViewExportStudent extends Migration
+class AddRegistrationCodeViewExportStudent extends Migration
 {
     use AsView;
 
