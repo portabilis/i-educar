@@ -12,9 +12,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Setting::query()->update([
-            'key' => 'legacy.educacenso.enable_export',
-            'value' => 0,
+        Setting::query()->where([
+            'key' => 'legacy.educacenso.enable_export'
+        ])->firstOrFail()->update([
+            'value' => false
         ]);
     }
 
@@ -25,9 +26,10 @@ return new class extends Migration
      */
     public function down()
     {
-        Setting::query()->update([
-            'key' => 'legacy.educacenso.enable_export',
-            'value' => 1,
+        Setting::query()->where([
+        'key' => 'legacy.educacenso.enable_export'
+        ])->firstOrFail()->update([
+            'value' => true
         ]);
     }
 };
