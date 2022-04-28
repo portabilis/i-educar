@@ -12,7 +12,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Setting::query()->updateOrCreate([
+        Setting::query()->update([
             'key' => 'legacy.educacenso.enable_export',
             'value' => 0,
         ]);
@@ -25,7 +25,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Setting::query()->updateOrCreate([
+        Setting::query()->update([
             'key' => 'legacy.educacenso.enable_export',
             'value' => 1,
         ]);
