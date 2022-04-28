@@ -53,6 +53,7 @@ return new class extends clsListagem {
     public $visivel;
     public $ano;
     public $ref_cod_serie;
+    public $professor_sem_turma;
 
     public function Gerar()
     {
@@ -82,13 +83,19 @@ return new class extends clsListagem {
             $this->ano = date('Y');
         }
 
+        $this->turma_sem_professor = $_GET['turma_sem_professor'];
+
         $this->inputsHelper()->dynamic('ano', ['ano' => $this->ano]);
         $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie'], [],['options' => ['required' => false]]);
 
         $this->campoTexto('nm_turma', 'Turma', $this->nm_turma, 30, 255);
         $this->campoLista('visivel', 'Situação', ['' => 'Selecione', '1' => 'Ativo', '2' => 'Inativo'], $this->visivel, null, null, null, null, null, false);
         $this->inputsHelper()->turmaTurno(['required' => false, 'label' => 'Turno']);
-
+        $this->campoLista('turma_sem_professor', 'Turma sem professor', [ '1' => 'Não', '2' => 'Sim' ],  $this->turma_sem_professor);
+        
+        
+        
+ 
         // Paginador
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
@@ -108,7 +115,49 @@ return new class extends clsListagem {
         if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
             $obj_turma->codUsuario = $this->pessoa_logada;
         }
-
+        
+       // dump($this->turma_sem_professor);
+       
+       if($this->turma_sem_professor == 2){
+            $lista = $obj_turma->lista4(
+            null,
+            null,
+            null,
+            $this->ref_cod_serie,
+            $this->ref_cod_escola,
+            null,
+            $this->nm_turma,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            1,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            $this->ref_cod_curso,
+            $this->ref_cod_instituicao,
+            null,
+            null,
+            null,
+            null,
+            null,
+            $visivel,
+            $this->turma_turno_id,
+            null,
+            $this->ano,
+            $this->turma_sem_professor
+            );
+        }else{
         $lista = $obj_turma->lista2(
             null,
             null,
@@ -146,7 +195,7 @@ return new class extends clsListagem {
             null,
             $this->ano
         );
-
+    }
         $total = $obj_turma->_total;
 
         // monta a lista
