@@ -153,8 +153,8 @@ return new class extends clsDetalhe {
                     $podeEditar = $data_agora >= $data['inicio'] && $data_agora <= $data['fim'];
                 }
 
-                // if ($podeEditar)
-                //     $this->url_editar = 'educar_professores_conteudo_ministrado_cad.php?id=' . $registro['detalhes']['id'];
+                if ($podeEditar)
+                    $this->url_editar = 'educar_professores_conteudo_ministrado_cad.php?id=' . $registro['detalhes']['id'];
             }
         }
 
