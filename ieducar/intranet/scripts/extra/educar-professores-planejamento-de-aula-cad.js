@@ -152,7 +152,6 @@
     }
 
     async function trocaBNCC (bnccElementoId, bnccArray) {
-      //bnccs[bnccElementoId] = bnccArray;
       var bnccEspeficacoesDados = [];
 
       var bnccEspecificoesElemento = document.getElementById(`custom_bncc_especificacoes[${bnccElementoId}]`);
@@ -297,7 +296,6 @@
       if (atividades == null) { alert("O campo atividades não é válido."); return; }
       if (referencias == null) { alert("O campo referências não é válido."); return; }
       if (!ehComponentesCurricularesValidos(componentesCurriculares)) { alert("Os componentes curriculares são obrigatórios."); return; }
-      //if (!ehComponentesCurricularesValidos2(componentesCurriculares)) { alert("\"Todas as disciplinas\" foi selecionado, não é aceitável ter mais componentes."); return; }
       if (!ehBNCCsValidos(bnccs)) { alert("As habilidades são obrigatórias."); return; }
       if (!ehBNCCEspecificacoesValidos(bnccEspecificacoes)) { alert("As especificações são obrigatórias."); return; }
       if (!ehConteudosValidos(conteudos)) { alert("Os conteúdos são obrigatórios."); return; }
@@ -349,10 +347,6 @@
     function ehComponentesCurricularesValidos (componentesCurriculares) {
       return componentesCurriculares.every(componenteCurricular => !isNaN(parseInt(componenteCurricular[1], 10)));
     }
-
-    // function ehComponentesCurricularesValidos2 (componentesCurriculares) {
-    //   return componentesCurriculares.length === 1 && componentesCurriculares.some(componenteCurricular => componenteCurricular[1] == 666);
-    // }
 
     function ehBNCCsValidos (bnccs) {
       return bnccs.every(bncc => bncc[1].length > 0);
