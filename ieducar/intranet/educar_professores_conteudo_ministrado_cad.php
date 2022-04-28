@@ -100,7 +100,7 @@ return new class extends clsCadastro {
         $this->campoOculto('id', $this->id);
         $this->inputsHelper()->dynamic(['frequencia'], ['frequencia' => $this->frequencia, 'disabled' => $desabilitado]);
 
-        $this->campoMemo('atividades', 'Registro diário de aula', $this->atividades, 100, 5, true);
+        $this->campoMemo('atividades', 'Registro diário de aula', $this->atividades, 100, 5, false);
 
         $this->adicionarConteudosMultiplaEscolha();
         
@@ -114,7 +114,7 @@ return new class extends clsCadastro {
             $this->atividades,
             $this->observacao,
             $this->conteudos,
-            $this->especificacoes
+            //$this->especificacoes
         );
 
         $cadastrou = $obj->cadastra();
@@ -203,7 +203,7 @@ return new class extends clsCadastro {
 
     protected function adicionarConteudosMultiplaEscolha() {
         // ESPECIFICAÇÕES
-        $helperOptions = [
+        /*$helperOptions = [
             'objectName' => 'especificacoes',
         ];
 
@@ -214,10 +214,10 @@ return new class extends clsCadastro {
             'required' => false,
             'options' => [
                 'values' => $this->especificacoes,
-                'all_values' => /*$todas_especificacoes*/[]
+                'all_values' => /*$todas_especificacoes*//*[]
             ]
         ];
-        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);*/
 
         // CONTEUDOS
         $helperOptions = [
@@ -228,7 +228,7 @@ return new class extends clsCadastro {
 
         $options = [
             'label' => 'Objetivo(s) do conhecimento/conteúdo',
-            'required' => false,
+            'required' => true,
             'options' => [
                 'values' => $this->conteudos,
                 'all_values' => $todos_conteudos

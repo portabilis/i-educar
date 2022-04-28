@@ -42,6 +42,15 @@ return new class extends clsDetalhe {
         $obj = new clsPmieducarTurma($registro['detalhes']['ref_cod_turma']);
         $resultado = $obj->getGrau();
         
+        if ($registro['detalhes']['id']) {
+            $this->addDetalhe(
+                [
+                    'ID',
+                    $registro['detalhes']['id']
+                ]
+            );
+        }
+        
         if ($registro['detalhes']['data_inicial']) {
             $this->addDetalhe(
                 [
@@ -117,6 +126,24 @@ return new class extends clsDetalhe {
             );
         }
 
+        if ($registro['detalhes']['recursos_didaticos']) {
+            $this->addDetalhe(
+                [
+                    'Recursos didáticos',
+                    $registro['detalhes']['recursos_didaticos']
+                ]
+            );
+        }
+
+        if ($registro['detalhes']['registro_adaptacao']) {
+            $this->addDetalhe(
+                [
+                    'Registro de adaptação',
+                    $registro['detalhes']['registro_adaptacao']
+                ]
+            );
+        }
+
         if ($registro['detalhes']['referencias']) {
             $this->addDetalhe(
                 [
@@ -169,6 +196,7 @@ return new class extends clsDetalhe {
 
             // if ($podeEditar)
             //     $this->url_editar = 'educar_professores_planejamento_de_aula_cad.php?id=' . $registro['detalhes']['id'];
+
         }
 
         $this->url_cancelar = 'educar_professores_planejamento_de_aula_lst.php';
@@ -177,6 +205,8 @@ return new class extends clsDetalhe {
         $this->breadcrumb('Detalhe do plano de aula', [
             url('intranet/educar_professores_index.php') => 'Professores',
         ]);
+
+        $this->addBotao('Excluir', "");
 
         //$this->addBotao('Copiar plano de aula', "/intranet/educar_professores_planejamento_de_aula_cad.php?id={$this->getRequest()->id}&copy=true");
     }
@@ -245,6 +275,19 @@ return new class extends clsDetalhe {
                 $conteudo
             ]
         );
+    }
+
+    public function __construct () {
+        parent::__construct();
+        $this->loadAssets();
+    }
+
+    public function loadAssets () {
+        $scripts = [
+            '/modules/Cadastro/Assets/Javascripts/PlanoAulaExclusaoTemp.js',
+        ];
+
+        Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
     }
 
     public function Formular()

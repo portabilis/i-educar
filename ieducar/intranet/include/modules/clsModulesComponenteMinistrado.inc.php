@@ -15,8 +15,8 @@ class clsModulesComponenteMinistrado extends Model {
         $frequencia_id = null,
         $atividades = null,
         $observacao = null,
-        $conteudos = null,
-        $especificacoes = null
+        $conteudos = null
+        //$especificacoes = null
     ) {
         $db = new clsBanco();
         $this->_schema = 'modules.';
@@ -89,9 +89,9 @@ class clsModulesComponenteMinistrado extends Model {
             $this->conteudos = $conteudos;
         }
 
-        if(is_array($especificacoes)){
+        /*if(is_array($especificacoes)){
             $this->especificacoes = $especificacoes;
-        }
+        }*/
     }
 
     /**
@@ -100,11 +100,16 @@ class clsModulesComponenteMinistrado extends Model {
      * @return bool
      */
     public function cadastra() {
-        if (is_numeric($this->frequencia_id) && is_string($this->atividades) != '') {
+        if (is_numeric($this->frequencia_id)) {
             $db = new clsBanco();
 
-            $campos = "frequencia_id, atividades, data_cadastro";
-            $valores = "'{$this->frequencia_id}', '{$db->escapeString($this->atividades)}', (NOW() - INTERVAL '3 HOURS')";
+            $campos = "frequencia_id, data_cadastro";
+            $valores = "'{$this->frequencia_id}', (NOW() - INTERVAL '3 HOURS')";
+
+            if(is_string($this->atividades)){
+                $campos     .=  ", atividades";
+                $valores    .=  ", '{$db->escapeString($this->atividades)}'";
+            }
 
             if(is_string($this->observacao)){
                 $campos     .=  ", observacao";
@@ -123,10 +128,11 @@ class clsModulesComponenteMinistrado extends Model {
                 $obj = new clsModulesComponenteMinistradoConteudo(null, $id, $conteudo);
                 $obj->cadastra();
             }
-            foreach ($this->especificacoes as $key => $especificacao) {
+
+            /*foreach ($this->especificacoes as $key => $especificacao) {
                 $obj = new clsModulesComponenteMinistradoBNCCEspecificacao(null, $id, $especificacao);
                 $obj->cadastra();
-            }
+            }*/
 
             return $id;
         }

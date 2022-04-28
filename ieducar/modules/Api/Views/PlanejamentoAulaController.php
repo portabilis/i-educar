@@ -95,6 +95,8 @@ class PlanejamentoAulaController extends ApiCoreController
         $componentesCurriculares = $this->getRequest()->componentesCurriculares;
         $bnccs = $this->getRequest()->bnccs;
         $bnccEspecificacoes = $this->getRequest()->bnccEspecificacoes;
+        $recursos_didaticos = $this->getRequest()->recursos_didaticos;
+        $registro_adaptacao = $this->getRequest()->registro_adaptacao;
 
         $sequencia = $faseEtapa;
         $obj = new clsPmieducarTurmaModulo();
@@ -148,6 +150,8 @@ class PlanejamentoAulaController extends ApiCoreController
            $conteudos,
            $referencias,
            $bnccEspecificacoes,
+           $recursos_didaticos,
+           $registro_adaptacao
         );
 
         $existe = $obj->existe();

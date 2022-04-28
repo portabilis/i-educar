@@ -21,6 +21,8 @@ return new class extends clsCadastro {
     public $bncc;
     public $conteudo_id;
     public $bncc_especificacoes;
+    public $recursos_didaticos;
+    public $registro_adaptacao;
 
     public function Inicializar () {
         $this->titulo = 'Plano de aula - Cadastro';
@@ -105,6 +107,8 @@ return new class extends clsCadastro {
 
         $this->campoMemo('ddp','Metodologia', $this->ddp, 100, 5, !$obrigatorio);
         $this->campoMemo('atividades','Atividades/Avaliações', $this->atividades, 100, 5, !$obrigatorio);
+        $this->campoMemo('recursos_didaticos','Recursos didáticos', $this->recursos_didaticos, 100, 5, !$obrigatorio);
+        $this->campoMemo('registro_adaptacao','Registro de adaptação', $this->registro_adaptacao, 100, 5, !$obrigatorio);
         $this->campoMemo('referencias','Referências', $this->referencias, 100, 5, !$obrigatorio);
 
         $this->campoOculto('id', $this->id);
@@ -114,97 +118,7 @@ return new class extends clsCadastro {
     }
 
     public function Novo() {
-        $data_agora = new DateTime('now');
-        $data_agora = new \DateTime($data_agora->format('Y-m-d'));
-
-        $turma = $this->ref_cod_turma;
-        $sequencia = $this->fase_etapa;
-        $obj = new clsPmieducarTurmaModulo();
-
-        $data = $obj->pegaPeriodoLancamentoNotasFaltas($turma, $sequencia);
-        if ($data['inicio'] != null && $data['fim'] != null) {
-            $data['inicio'] = explode(',', $data['inicio']);
-            $data['fim'] = explode(',', $data['fim']);
-
-            array_walk($data['inicio'], function(&$data_inicio, $key) {
-                $data_inicio = new \DateTime($data_inicio);
-            });
-
-            array_walk($data['fim'], function(&$data_fim, $key) {
-                $data_fim = new \DateTime($data_fim);
-            });
-        } else {
-            $data['inicio'] = new \DateTime($obj->pegaEtapaSequenciaDataInicio($turma, $sequencia));
-            $data['fim'] = new \DateTime($obj->pegaEtapaSequenciaDataFim($turma, $sequencia));
-        }
-
-        $podeRegistrar = false;
-        if (is_array($data['inicio']) && is_array($data['fim'])) {
-            for ($i=0; $i < count($data['inicio']); $i++) {
-                $data_inicio = $data['inicio'][$i];
-                $data_fim = $data['fim'][$i];
-
-                $podeRegistrar = $data_agora >= $data_inicio && $data_agora <= $data_fim;
-
-                if ($podeRegistrar) break;
-            }     
-        } else {
-            $podeRegistrar = $data_agora >= $data['inicio'] && $data_agora <= $data['fim'];
-        }
-
-        if (!$podeRegistrar) {
-            $this->mensagem = 'Cadastro não realizado, pois não é mais possível submeter plano para esta etapa.<br>';
-            $this->simpleRedirect('educar_professores_planejamento_de_aula_cad.php');
-        }
-
-        $this->ref_cod_componente_curricular_array = array(
-            6, 9
-        );
-
-        $this->bncc = array(
-            array(800, 954, 1019),
-            array(128, 87)
-        );
-
-        $this->bncc_especificacoes = array(
-            array(576, 578, 1306),
-            array(91, 2636)
-        );
-
-        $obj = new clsModulesPlanejamentoAula(
-           null,
-           $this->ref_cod_turma,
-           $this->ref_cod_componente_curricular_array,
-           $this->fase_etapa,
-           dataToBanco($this->data_inicial),
-           dataToBanco($this->data_final),
-           $this->ddp, 
-           $this->atividades,
-           $this->bncc,
-           $this->conteudos,
-           $this->referencias,
-           $this->bncc_especificacoes,
-        );
-
-        $existe = $obj->existe();
-        if ($existe){
-            $this->mensagem = 'Cadastro não realizado, pois este plano de aula já existe.<br>';
-            $this->simpleRedirect('educar_professores_planejamento_de_aula_cad.php');
-        }
-
-        $cadastrou = $obj->cadastra();
-
-        if (!$cadastrou) {   
-            $this->mensagem = 'Cadastro não realizado.<br>';
-            $this->simpleRedirect('educar_professores_planejamento_de_aula_cad.php');
-        } else {
-            $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-            $this->simpleRedirect('educar_professores_planejamento_de_aula_lst.php');
-        }
-
-        $this->mensagem = 'Cadastro não realizado.<br>';
-
-        return false;
+        // educar-professores-planejamento-de-aula-cad.js
     }
 
     public function Editar() {
