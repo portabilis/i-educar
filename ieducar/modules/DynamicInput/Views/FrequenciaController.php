@@ -9,11 +9,7 @@ class FaseEtapaController extends ApiCoreController
 
     protected function getFrequencias()
     {
-        $instituicaoId = /*$this->getInstituicaoId($options['instituicaoId'] ?? null)*/1;
-        $userId = $this->getCurrentUserId();
-        $isOnlyProfessor = Portabilis_Business_Professor::isOnlyProfessor($instituicaoId, $userId);
-
-        if (/*$isOnlyProfessor && */$this->canGetFrequencias()) {
+        if ($this->canGetFrequencias()) {
     
             $sql = "
                 SELECT
@@ -24,18 +20,8 @@ class FaseEtapaController extends ApiCoreController
                     ON	(f.ref_componente_curricular = cc.id)
                 JOIN pmieducar.turma as t
                     ON (f.ref_cod_turma = t.cod_turma)
-                JOIN modules.professor_turma as pt
-                    ON (pt.turma_id = t.cod_turma)
-                JOIN modules.professor_turma_disciplina as ptd
-                    ON (pt.id = ptd.professor_turma_id AND ptd.componente_curricular_id = cc.id)
                 ORDER BY data DESC
             ";
-
-            if ($isOnlyProfessor && $servidor_id) {
-                $sql .= " WHERE pt.servidor_id = '{$servidor_id}'";
-            }
-
-            $sql .= " ORDER BY data DESC";
 
             $data = $this->fetchPreparedQuery($sql)[0];
 

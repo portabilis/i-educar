@@ -10,12 +10,11 @@ class Portabilis_View_Helper_DynamicInput_Frequencia extends Portabilis_View_Hel
     protected function inputOptions($options)
     {
         $resources = $options['resources'];
+        // $turmaId = $this->getTurmaId($options['turmaId'] ?? null);
 
-        $instituicaoId = /*$this->getInstituicaoId($options['instituicaoId'] ?? null)*/1;
         $userId = $this->getCurrentUserId();
-        $isOnlyProfessor = Portabilis_Business_Professor::isOnlyProfessor($instituicaoId, $userId);
 
-        if (empty($resources)) {
+        if (/*$turmaId and */empty($resources)) {
             $sql = "
                 SELECT
                     f.id, data, cc.nome, t.nm_turma
@@ -25,17 +24,8 @@ class Portabilis_View_Helper_DynamicInput_Frequencia extends Portabilis_View_Hel
                     ON	(f.ref_componente_curricular = cc.id)
                 JOIN pmieducar.turma as t
                     ON (f.ref_cod_turma = t.cod_turma)
-                JOIN modules.professor_turma as pt
-                    ON (pt.turma_id = t.cod_turma)
-                JOIN modules.professor_turma_disciplina as ptd
-                    ON (pt.id = ptd.professor_turma_id AND ptd.componente_curricular_id = cc.id)
+                ORDER BY data DESC
             ";
-
-            if ($isOnlyProfessor && $userId) {
-                $sql .= " WHERE pt.servidor_id = '{$userId}'";
-            }
-
-            $sql .= " ORDER BY data DESC";
 
             $db = new clsBanco();
             $db->Consulta($sql);
