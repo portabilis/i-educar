@@ -56,7 +56,7 @@ class Student extends Model
                 'email' => 'E-mail',
                 'sus' => 'Número SUS',
                 'nis' => 'NIS (PIS/PASEP)',
-                'registration_code_id' => 'Código da Rede Estadual',
+                'registration_code_id' => 'Código da Rede Estadual (RA)',
                 'occupation' => 'Ocupação',
                 'organization' => 'Empresa',
                 'monthly_income' => 'Renda Mensal',
