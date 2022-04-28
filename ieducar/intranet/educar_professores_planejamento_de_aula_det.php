@@ -284,7 +284,7 @@ return new class extends clsDetalhe {
 
     public function loadAssets () {
         $scripts = [
-            '/modules/Cadastro/Assets/Javascripts/PlanoAulaExclusao.js',
+            '/modules/Cadastro/Assets/Javascripts/PlanoAulaExclusaoTemp.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);

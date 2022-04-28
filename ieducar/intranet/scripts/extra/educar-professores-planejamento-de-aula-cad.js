@@ -49,36 +49,25 @@
     }
 
     function handleGetComponentesCurriculares (response) {
-      console.log(response);
-      // var todasDisciplinasElemento = document.createElement("option");
-      // todasDisciplinasElemento.setAttribute("value", TODAS_DISCIPLINAS_VALUE);
-      // todasDisciplinasElemento.innerHTML = "TODAS AS DISCIPLINAS";
+      var selectOptions = jsonResourcesToSelectOptions(response['options']);
 
-      count = bncc_table.children[0].childElementCount - 4;
-      id = 0;
-      index = 0;
-      while (index !== count) {
-        componenteCurricularField = document.getElementById(`ref_cod_componente_curricular_array[${id}]`);
+      var linhasElemento = document.getElementsByName("tr_objetivos_aprendizagem[]");
+      var componentesCurricularesElementos = []
 
-        if (componenteCurricularField !== null) {
-          componenteCurricularField.length = 1;
-          componenteCurricularField.options[0].text = 'Selecione o componente curricular';
+      // get disciplines elements
+      linhasElemento.forEach(linhaElemento => {
+        componentesCurricularesElementos.push(linhaElemento.children[0].children[0]);
+      });
 
-          var selectOptions = jsonResourcesToSelectOptions(response['options']);
-          //componenteCurricularField.append(todasDisciplinasElemento);
-          selectOptions.forEach(option => {
-            componenteCurricularField.append(option[0]);
-          });
+      componentesCurricularesElementos.forEach(componenteCurricularElemento => {    
+        // add disciplines
+        selectOptions.forEach(option => {
+          componenteCurricularElemento.append(option[0]);
+        });
 
-          // bind onchange event
-          componenteCurricularField.style.height = "54px";
-          componenteCurricularField.addEventListener("change", trocaComponenteCurricular, false);
-
-          index++;
-        }
-
-        id++;
-      }
+        // bind onchange event
+        componenteCurricularElemento.addEventListener("change", trocaComponenteCurricular, false);
+      });
     }
 
     function consertarBNCCElementos () {
@@ -293,9 +282,11 @@
       var atividades                = document.getElementById("atividades").value;
       var referencias               = document.getElementById("referencias").value;
       var conteudos                 = pegarConteudos();
-      var componentesCurriculares  = pegarComponentesCurriculares();
+      var componentesCurriculares   = pegarComponentesCurriculares();
       var bnccs                     = pegarBNCCs();
       var bnccEspecificacoes        = pegarBNCCEspecificacoes();
+      var recursos_didaticos        = document.getElementById("recursos_didaticos").value;
+      var registro_adaptacao        = document.getElementById("registro_adaptacao").value;
 
       // VALIDAÇÃO
       if (!ehDataValida(new Date(data_inicial))) { alert("Data inicial não é válida."); return; }
@@ -310,6 +301,8 @@
       if (!ehBNCCsValidos(bnccs)) { alert("As habilidades são obrigatórias."); return; }
       if (!ehBNCCEspecificacoesValidos(bnccEspecificacoes)) { alert("As especificações são obrigatórias."); return; }
       if (!ehConteudosValidos(conteudos)) { alert("Os conteúdos são obrigatórios."); return; }
+      if (recursos_didaticos == null) { alert("O campo recursos didáticos não é válido."); return; }
+      if (registro_adaptacao == null) { alert("O campo registro de adaptação não é válido."); return; }
 
       novoPlanoAula(
         data_inicial,
@@ -322,7 +315,9 @@
         conteudos,
         componentesCurriculares,
         bnccs,
-        bnccEspecificacoes
+        bnccEspecificacoes,
+        recursos_didaticos,
+        registro_adaptacao
       );
     }
 
@@ -367,7 +362,7 @@
       return bnccEspecificacoes.every(bnccsEspecificacao => bnccsEspecificacao[1].length > 0);
     }
 
-    function novoPlanoAula (data_inicial, data_final, turma, faseEtapa, ddp, atividades, referencias, conteudos, componentesCurriculares, bnccs, bnccEspecificacoes) {
+    function novoPlanoAula (data_inicial, data_final, turma, faseEtapa, ddp, atividades, referencias, conteudos, componentesCurriculares, bnccs, bnccEspecificacoes, recursos_didaticos, registro_adaptacao) {
       var urlForNovoPlanoAula = postResourceUrlBuilder.buildUrl('/module/Api/PlanejamentoAula', 'novo-plano-aula', {});
 
       var options = {
@@ -386,6 +381,8 @@
             componentesCurriculares : componentesCurriculares,
             bnccs                   : bnccs,
             bnccEspecificacoes      : bnccEspecificacoes,
+            recursos_didaticos      : recursos_didaticos,
+            registro_adaptacao      : registro_adaptacao
           },
           success  : handleNovoPlanoAula
       };
