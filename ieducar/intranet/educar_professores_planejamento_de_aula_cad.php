@@ -105,7 +105,7 @@ return new class extends clsCadastro {
         $this->adicionarBNCCMultiplaEscolha();
         $this->adicionarConteudosTabela();
 
-        $this->campoMemo('ddp','Metodologia', $this->ddp, 100, 5, !$obrigatorio);
+        $this->campoMemo('ddp','Metodologia', $this->ddp, 100, 5, $obrigatorio);
         $this->campoMemo('atividades','Atividades/Avaliações', $this->atividades, 100, 5, !$obrigatorio);
         $this->campoMemo('recursos_didaticos','Recursos didáticos', $this->recursos_didaticos, 100, 5, !$obrigatorio);
         $this->campoMemo('registro_adaptacao','Registro de adaptação', $this->registro_adaptacao, 100, 5, !$obrigatorio);

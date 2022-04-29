@@ -59,10 +59,15 @@
         componentesCurricularesElementos.push(linhaElemento.children[0].children[0]);
       });
 
-      componentesCurricularesElementos.forEach(componenteCurricularElemento => {    
+      componentesCurricularesElementos.forEach(componenteCurricularElemento => {
+        var jComponenteCurricularElemento = $(componenteCurricularElemento);
+
+        // clear disciplines
+        jComponenteCurricularElemento.empty().append('<option value="">Selecione o componente curricular</option>');
+        
         // add disciplines
         selectOptions.forEach(option => {
-          componenteCurricularElemento.append(option[0]);
+          jComponenteCurricularElemento.append(option[0]);
         });
 
         // bind onchange event
@@ -292,7 +297,7 @@
       if (!ehDataValida(new Date(data_final))) { alert("Data final não é válida."); return; }
       if (isNaN(parseInt(turma, 10))) { alert("Turma é obrigatória."); return; }
       if (isNaN(parseInt(faseEtapa, 10))) { alert("Etapa é obrigatória."); return; }
-      if (ddp == null) { alert("O campo ddp não é válido."); return; }
+      if (ddp == null || ddp == '') { alert("Campo atividades é obrigatório."); return; }
       if (atividades == null) { alert("O campo atividades não é válido."); return; }
       if (referencias == null) { alert("O campo referências não é válido."); return; }
       if (!ehComponentesCurricularesValidos(componentesCurriculares)) { alert("Os componentes curriculares são obrigatórios."); return; }
