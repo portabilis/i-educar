@@ -35,6 +35,7 @@ let postPromocaoMatricula = function(){
         curso : $j('#curso').val(),
         serie : $j('#serie').val(),
         turma : $j('#turma').val(),
+        matricula: $j('#matricula').val(),
         regras_avaliacao_id : $j('#regras_avaliacao_id').val()
       },
       success : handlePostPromocaoMatricula,
@@ -55,36 +56,47 @@ let deleteOldComponentesCurriculares = function() {
   deleteResource(options);
 };
 
-//callback handlers
-
-function handlePostPromocaoMatricula(dataResponse){
-  handleMessages(dataResponse.msgs);
+function handlePostPromocaoMatricula(dataResponse) {
+  const response = dataResponse.msgs;
+  response.map((res) => {
+    if (res.type === 'error') {
+      messageUtils.error(safeUtf8Decode(res.msg));
+    } else{
+      messageUtils.success(safeUtf8Decode(res.msg));
+    }
+  });
 
   let $proximoMatriculaIdField = $j('#proximo-matricula-id');
+  let initialMatriculaId = parseInt($proximoMatriculaIdField.data('initial_matricula_id'));
+  let nextEnrollmentValue = parseInt($proximoMatriculaIdField.val());
+  let nextResponseEnrollmentValue = dataResponse.result.proximo_matricula_id;
+  let arrayCheck = Array.isArray(nextResponseEnrollmentValue);
 
-  let $proximaMatricula = ((dataResponse.any_error_msg) ?  (parseInt($proximoMatriculaIdField.val()) + parseInt(1)) : dataResponse.result.proximo_matricula_id);
-
-  $proximoMatriculaIdField.val($proximaMatricula);
-
-  if($j('#continuar-processo').is(':checked') &&
-     $j.isNumeric($proximoMatriculaIdField.val()) &&
-     $proximoMatriculaIdField.data('initial_matricula_id') != $proximoMatriculaIdField.val()){
-    $j('#promover-matricula').click();
+  if (nextResponseEnrollmentValue !== 0 && !arrayCheck) {
+    let $proximaMatricula = ((dataResponse.any_error_msg) ? (nextEnrollmentValue + parseInt(1)) : nextResponseEnrollmentValue);
+    $proximoMatriculaIdField.val($proximaMatricula);
+    initialMatriculaId = parseInt($proximoMatriculaIdField.val());
   }
-  else if(($j('#continuar-processo').is(':checked') &&
-         $proximoMatriculaIdField.data('initial_matricula_id') == $proximoMatriculaIdField.val()) ||
-         ! $j.isNumeric($proximoMatriculaIdField.val())){
-    alert('Processo finalizado');
+
+  if ($j('#continuar-processo').is(':checked') && initialMatriculaId !== nextEnrollmentValue) {
+      $j('#promover-matricula').click();
+  } else if (($j('#continuar-processo').is(':checked') && initialMatriculaId === nextEnrollmentValue)) {
+      messageUtils.success('Processo finalizado.');
   }
 }
 
-
-function handleDelete(dataResponse){
-  handleMessages(dataResponse.msgs);
+function handleDelete(dataResponse) {
+  const response = dataResponse.msgs;
+  response.map((res) => {
+    if (res.type === 'error') {
+      messageUtils.error(safeUtf8Decode(res.msg));
+    } else{
+      messageUtils.success(safeUtf8Decode(res.msg));
+    }
+  });
 }
 
 function handleSearch($resultTable, dataResponse) {
-
   let $text = $j('<div />');
 
   $j('<span />')
@@ -101,7 +113,8 @@ function handleSearch($resultTable, dataResponse) {
     .attr('name', 'proximo-matricula-id')
     .attr('id', 'proximo-matricula-id')
     .attr('class','proximo-matricula')
-    .val('0').appendTo($text);
+    .val(0)
+    .appendTo($text);
 
   $j('<br />').appendTo($text);
 
@@ -118,22 +131,34 @@ function handleSearch($resultTable, dataResponse) {
     .appendTo($text);
 
   $j('<input />').attr('id', 'promover-matricula')
-            .attr('href', '#')
-            .attr('type','button')
-            .attr('class','btn-green')
-            .attr('value','Iniciar processo')
-            .bind('click', postPromocaoMatricula)
-            .appendTo($text);
+    .attr('href', '#')
+    .attr('type','button')
+    .attr('class','btn-green')
+    .attr('value','Iniciar processo')
+    .bind('click', postPromocaoMatricula)
+    .appendTo($text);
 
   $j('<span />').html(' ').appendTo($text);
 
   $j('<input />').attr('id', 'delete-old-componentes-curriculares')
-            .attr('href', '#')
-            .attr('type','button')
-            .attr('class','btn-danger')
-            .attr('value','Limpar antigos componentes curriculares')
-            .bind('click', deleteOldComponentesCurriculares)
-            .appendTo($text);
+    .attr('href', '#')
+    .attr('type','button')
+    .attr('class','btn-danger')
+    .attr('value','Limpar antigos componentes curriculares')
+    .bind('click', deleteOldComponentesCurriculares)
+    .appendTo($text);
 
   $j('<td />').html($text).appendTo($j('<tr />').appendTo($resultTable));
+
+  if (dataResponse.quantidade_matriculas <= 1) {
+    $j('#proximo-matricula-id').prop('disabled', true);
+    $j('#continuar-processo').prop('disabled', true);
+  }
 }
+
+$j(document).ready(() => {
+  $j('#matricula').on('change', () => {
+    let value = $j('#matricula').val()
+    $j('#matricula option').removeAttr('selected').filter("[value="+value+"]").attr('selected', '')
+  })
+})

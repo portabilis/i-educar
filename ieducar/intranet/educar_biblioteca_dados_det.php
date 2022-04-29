@@ -21,7 +21,7 @@ return new class extends clsDetalhe {
     public $ativo;
     public $dias_espera;
 
-    public $dias_da_semana = [ '' => 'Selecione', 1 => 'Domingo', 2 => 'Segunda', 3 => 'Ter&ccedil;a', 4 => 'Quarta', 5 => 'Quinta', 6 => 'Sexta', 7 => 'S&aacute;bado' ];
+    public $dias_da_semana = [ '' => 'Selecione', 1 => 'Domingo', 2 => 'Segunda', 3 => 'Terça', 4 => 'Quarta', 5 => 'Quinta', 6 => 'Sexta', 7 => 'Sábado' ];
 
     public function Gerar()
     {
@@ -62,15 +62,15 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Valor Multa', "{$registro['valor_multa']}"]);
         }
         if ($registro['max_emprestimo']) {
-            $this->addDetalhe([ 'M&aacute;ximo Empr&eacute;stimo', "{$registro['max_emprestimo']}"]);
+            $this->addDetalhe([ 'Máximo Empréstimo', "{$registro['max_emprestimo']}"]);
         }
         if ($registro['valor_maximo_multa']) {
             $registro['valor_maximo_multa'] = number_format($registro['valor_maximo_multa'], 2, ',', '.');
-            $this->addDetalhe([ 'Valor M&aacute;ximo Multa', "{$registro['valor_maximo_multa']}"]);
+            $this->addDetalhe([ 'Valor Máximo Multa', "{$registro['valor_maximo_multa']}"]);
         }
         if ($registro['requisita_senha']) {
             if ($registro['requisita_senha'] == 0) {
-                $registro['requisita_senha'] = 'n&atilde;o';
+                $registro['requisita_senha'] = 'não';
             } elseif ($registro['requisita_senha'] == 1) {
                 $registro['requisita_senha'] = 'sim';
             }

@@ -1,13 +1,7 @@
 <?php
 
 return new class extends clsDetalhe {
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
     public $titulo;
-
     public $cod_acesso;
     public $data_hora;
     public $ip_externo;

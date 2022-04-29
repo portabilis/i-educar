@@ -213,7 +213,7 @@ class EditController extends Core_Controller_Page_EditController
             this.getTabelasArredondamento = function(docObj, tipoNota) {
                 tabela_arredondamento.docObj = docObj;
                 var xml = new ajax(tabela_arredondamento.parseResponse);
-                xml.envia("/modules/TabelaArredondamento/Views/TabelaTipoNotaAjax.php?tipoNota=" + tipoNota);
+                xml.envia("modules/TabelaArredondamento/Views/TabelaTipoNotaAjax.php?tipoNota=" + tipoNota);
             };
 
             this.parseResponse = function() {

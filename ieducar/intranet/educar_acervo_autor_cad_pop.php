@@ -38,18 +38,13 @@ return new class extends clsCadastro {
         // primary keys
         $this->campoOculto('cod_acervo_autor', $this->cod_acervo_autor);
 
-        /*  // foreign keys
-            $get_escola     = 1;
-            $get_biblioteca = 1;
-            $obrigatorio    = true;
-            include("include/pmieducar/educar_campo_lista.php");*/
         $this->campoOculto('ref_cod_biblioteca', $this->ref_cod_biblioteca);
 
         // text
         $this->campoTexto('nm_autor', 'Autor', $this->nm_autor, 30, 255, true);
-        $this->campoMemo('descricao', 'Descri&ccedil;&atilde;o', $this->descricao, 60, 5, false);
+        $this->campoMemo('descricao', 'Descrição', $this->descricao, 60, 5, false);
         $obj_permissoes = new clsPermissoes();
-        $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+        $obj_permissoes->nivel_acesso($this->pessoa_logada);
     }
 
     public function Novo()
@@ -71,7 +66,7 @@ return new class extends clsCadastro {
             return true;
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }

@@ -276,9 +276,9 @@
       $('<th />').html('Ano').appendTo($linha);
       $('<th />').html('Escola').appendTo($linha);
       $('<th />').html('Curso').appendTo($linha);
-      $('<th />').html('S&eacute;rie').appendTo($linha);
+      $('<th />').html('Série').appendTo($linha);
       $('<th />').html('Turma').appendTo($linha);
-      $('<th />').html('Matr&iacute;cula').appendTo($linha);
+      $('<th />').html('Matrícula').appendTo($linha);
 
       $linha.appendTo($tableSearchDetails);
 
@@ -365,7 +365,7 @@
           $('<th />').html('Curso').appendTo($linha);
           $('<th />').html(safeUtf8Decode('Série')).appendTo($linha);
           $('<th />').html('Turma').appendTo($linha);
-          $('<th />').html('Matr&iacute;cula').appendTo($linha);
+          $('<th />').html('Matrícula').appendTo($linha);
           $('<th />').html('Aluno').appendTo($linha);
           $('<th />').html('Situa&#231;&#227;o').appendTo($linha);
           $linha.appendTo($resultTable);

@@ -222,7 +222,7 @@ return new class extends clsCadastro {
             $this->campoNumero('posicao', 'Posição', $this->posicao, 1, 1, true, 'Informe a coluna equivalente a série/ano/etapa a qual o histórico pertence. Ex.: 1º ano informe 1, 2º ano informe 2');
         }
 
-        $this->campoNumero('carga_horaria', 'Carga Hor&aacute;ria', $this->carga_horaria, 8, 8, false);
+        $this->campoNumero('carga_horaria', 'Carga Horária', $this->carga_horaria, 8, 8, false);
         $this->campoCheck('cb_faltas_globalizadas', 'Faltas Globalizadas', is_numeric($this->faltas_globalizadas) ? 'on' : '');
         $this->campoNumero('faltas_globalizadas', 'Faltas Globalizadas', $this->faltas_globalizadas, 4, 4, false);
         $this->campoNumero('dias_letivos', 'Dias Letivos', $this->dias_letivos, 3, 3, false);
@@ -250,7 +250,7 @@ return new class extends clsCadastro {
             14 => 'Reprovado por faltas'
         ];
 
-        $this->campoLista('aprovado', 'Situa&ccedil;&atilde;o', $opcoes, $this->aprovado);
+        $this->campoLista('aprovado', 'Situação', $opcoes, $this->aprovado);
         $this->campoTexto('registro', 'Registro (arquivo)', $this->registro, 30, 50, false);
         $this->campoTexto('livro', 'Livro', $this->livro, 30, 50, false);
         $this->campoTexto('folha', 'Folha', $this->folha, 30, 50, false);

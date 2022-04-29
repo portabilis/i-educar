@@ -1,34 +1,10 @@
 <?php
 
 return new class extends clsListagem {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
     public $pessoa_logada;
-
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
     public $titulo;
-
-    /**
-     * Quantidade de registros a ser apresentada em cada pagina
-     *
-     * @var int
-     */
     public $limite;
-
-    /**
-     * Inicio dos registros a serem exibidos (limit)
-     *
-     * @var int
-     */
     public $offset;
-
     public $cod_turma_tipo;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -55,7 +31,7 @@ return new class extends clsListagem {
         $obj_permissao = new clsPermissoes();
         $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
-            $lista_busca[] = 'Institui&ccedil;&atilde;o';
+            $lista_busca[] = 'Instituição';
         }
 
         $this->addCabecalhos($lista_busca);

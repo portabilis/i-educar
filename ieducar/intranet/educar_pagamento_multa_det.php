@@ -39,8 +39,8 @@ return new class extends clsDetalhe {
                 if ($lst_divida) {
                     $tabela = '<TABLE>
                                        <TR align=center>
-                                           <TD bgcolor=#ccdce6><B>Data de Devolu&ccedil;&atilde;o</B></TD>
-                                           <TD bgcolor=#ccdce6><B>T&iacute;tulo</B></TD>
+                                           <TD bgcolor=#ccdce6><B>Data de Devolução</B></TD>
+                                           <TD bgcolor=#ccdce6><B>Título</B></TD>
                                            <TD bgcolor=#ccdce6><B>Biblioteca</B></TD>
                                            <TD bgcolor=#ccdce6><B>Valor</B></TD>
                                        </TR>';

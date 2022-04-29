@@ -45,9 +45,6 @@ return new class extends clsListagem {
             $this->addLinhas(["<img src='imagens/noticia.jpg' border=0>$data_hora", $local ]);
         }
 
-        /*$this->acao = "go(\"bairros_cad.php\")";
-        $this->nome_acao = "Novo";*/
-
         $opcoes[''] = 'Escolha uma opção...';
         $opcoes['P'] = 'Prefeitura';
         $opcoes['X'] = 'Externo';

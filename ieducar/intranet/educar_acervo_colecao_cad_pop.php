@@ -25,8 +25,6 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(593, $this->pessoa_logada, 11, 'educar_acervo_colecao_lst.php');
 
-        //$this->url_cancelar = "";
-        //$this->nome_url_cancelar = "Cancelar";
         return $retorno;
     }
 
@@ -35,8 +33,8 @@ return new class extends clsCadastro {
         echo '<script>window.onload=function(){parent.EscondeDiv(\'LoadImprimir\')}</script>';
         $this->campoOculto('ref_cod_biblioteca', $this->ref_cod_biblioteca);
 
-        $this->campoTexto('nm_colecao', 'Cole&ccedil;&atilde;o', $this->nm_colecao, 30, 255, true);
-        $this->campoMemo('descricao', 'Descri&ccedil;&atilde;o', $this->descricao, 60, 5, false);
+        $this->campoTexto('nm_colecao', 'Coleção', $this->nm_colecao, 30, 255, true);
+        $this->campoMemo('descricao', 'Descrição', $this->descricao, 60, 5, false);
     }
 
     public function Novo()
@@ -60,7 +58,7 @@ return new class extends clsCadastro {
             return true;
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }

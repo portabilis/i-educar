@@ -39,7 +39,6 @@ return new class extends clsCadastro {
                 $retorno = 'Editar';
             }
         }
-//      $this->url_cancelar = ($retorno == "Editar") ? "educar_nivel_ensino_det.php?cod_nivel_ensino={$registro["cod_nivel_ensino"]}" : "educar_nivel_ensino_lst.php";
         $this->nome_url_cancelar = 'Cancelar';
         $this->script_cancelar = 'window.parent.fechaExpansivel("div_dinamico_"+(parent.DOM_divs.length-1));';
 
@@ -59,8 +58,8 @@ return new class extends clsCadastro {
             $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
         }
         // text
-        $this->campoTexto('nm_nivel', 'N&iacute;vel Ensino', $this->nm_nivel, 30, 255, true);
-        $this->campoMemo('descricao', 'Descri&ccedil;&atilde;o', $this->descricao, 60, 5, false);
+        $this->campoTexto('nm_nivel', 'Nível Ensino', $this->nm_nivel, 30, 255, true);
+        $this->campoMemo('descricao', 'Descrição', $this->descricao, 60, 5, false);
     }
 
     public function Novo()
@@ -81,7 +80,7 @@ return new class extends clsCadastro {
             return true;
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -105,7 +104,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'N&iacute;vel Ensino';
+        $this->title = 'Nível Ensino';
         $this->processoAp = '571';
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;

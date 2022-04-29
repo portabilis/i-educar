@@ -25,25 +25,6 @@ return new class extends clsCadastro {
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(647, $this->pessoa_logada, 3, 'educar_escola_rede_ensino_lst.php');
-
-        /*if( is_numeric( $this->cod_escola_rede_ensino ) )
-        {
-
-            $obj = new clsPmieducarEscolaRedeEnsino( $this->cod_escola_rede_ensino );
-            $registro  = $obj->detalhe();
-            if( $registro )
-            {
-                foreach( $registro AS $campo => $val )  // passa todos os valores obtidos no registro para atributos do objeto
-                    $this->$campo = $val;
-
-                if( $obj_permissoes->permissao_excluir( 647, $this->pessoa_logada, 3 ) )
-                {
-                    $this->fexcluir = true;
-                }
-                $retorno = "Editar";
-            }
-        }*/
-//      $this->url_cancelar = ($retorno == "Editar") ? "educar_escola_rede_ensino_det.php?cod_escola_rede_ensino={$registro["cod_escola_rede_ensino"]}" : "educar_escola_rede_ensino_lst.php";
         $this->nome_url_cancelar = 'Cancelar';
         $this->script_cancelar = 'window.parent.fechaExpansivel("div_dinamico_"+(parent.DOM_divs.length-1));';
 
@@ -52,14 +33,8 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
-        // primary keys
         $this->campoOculto('cod_escola_rede_ensino', $this->cod_escola_rede_ensino);
-
-        // Filtros de Foreign Keys
-//      $obrigatorio = true;
-//      include("include/pmieducar/educar_campo_lista.php");
         $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
-        // text
         $this->campoTexto('nm_rede', 'Rede Ensino', $this->nm_rede, 30, 255, true);
     }
 
@@ -83,7 +58,7 @@ return new class extends clsCadastro {
             return true;
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }

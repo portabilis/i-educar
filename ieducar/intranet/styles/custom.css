@@ -1486,6 +1486,14 @@ a.btn-detalhes {
   justify-content: center !important;
 }
 
+#turma_serie.tabela-adicao td.mult_curso_id,
+#turma_serie.tabela-adicao td.mult_serie_id,
+#turma_serie.tabela-adicao td.mult_boletim_id,
+#turma_serie.tabela-adicao td.mult_boletim_diferenciado_id,
+#turma_serie td.tr_turma_serie {
+  width: 23%;
+}
+
 .btn-disabled#btn_enviar {
   background: rgb(233, 240, 248) !important;
   cursor: not-allowed;

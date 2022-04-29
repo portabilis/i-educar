@@ -248,7 +248,7 @@ class AnoController extends Core_Controller_Page_EditController
 
             try {
                 $this->getDataMapper()->save($entity);
-            } catch (Exception $e) {
+            } catch (Exception) {
                 $this->mensagem = 'Erro no preenchimento do formulário.';
 
                 return false;

@@ -97,7 +97,7 @@ return new class extends clsCadastro {
         }
 
         arsort($anosLetivos);
-        $anoLetivoSelected = max($anosLetivos);
+        $anoLetivoSelected = empty($anoLetivoSelected) ? null : max($anosLetivos);
 
         if (request('ano_letivo')) {
             $anoLetivoSelected = request('ano_letivo');
@@ -173,7 +173,7 @@ return new class extends clsCadastro {
             'objectName' => 'anos_letivos'
         ];
 
-        $this->anos_letivos = array_values(array_intersect($this->anos_letivos, $this->getAnosLetivosDisponiveis()));
+        $this->anos_letivos = array_values(array_intersect($this->anos_letivos ?? [], $this->getAnosLetivosDisponiveis()));
 
         $options = [
             'label' => 'Anos letivos',
@@ -194,7 +194,7 @@ return new class extends clsCadastro {
         // hora
         $this->campoHora('hora_inicial', 'Hora Inicial', $this->hora_inicial, false);
         $this->campoHora('hora_final', 'Hora Final', $this->hora_final, false);
-        $this->campoHora('hora_inicio_intervalo', 'Hora In&iacute;cio Intervalo', $this->hora_inicio_intervalo, false);
+        $this->campoHora('hora_inicio_intervalo', 'Hora Início Intervalo', $this->hora_inicio_intervalo, false);
         $this->campoHora('hora_fim_intervalo', 'Hora Fim Intervalo', $this->hora_fim_intervalo, false);
         $this->campoCheck('bloquear_enturmacao_sem_vagas', 'Bloquear enturmação após atingir limite de vagas', $this->bloquear_enturmacao_sem_vagas);
         $this->campoCheck('bloquear_cadastro_turma_para_serie_com_vagas', 'Bloquear cadastro de novas turmas antes de atingir limite de vagas (no mesmo turno)', $this->bloquear_cadastro_turma_para_serie_com_vagas);
@@ -482,7 +482,7 @@ return new class extends clsCadastro {
             $this->anos_letivos ?: []
         );
 
-        $sombra = json_decode(urldecode($this->componentes_sombra), true);
+        $sombra = json_decode(urldecode($this->componentes_sombra), true) ?? [];
         $disciplinas = $this->montaDisciplinas();
         $analise = $this->analisaAlteracoes($sombra, $disciplinas);
 

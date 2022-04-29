@@ -16,6 +16,7 @@ use App\Exceptions\Enrollment\PreviousEnrollRegistrationDateException;
 use App\Models\LegacyEnrollment;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClass;
+use App\Rules\CanChangeExitDate;
 use App\Services\SchoolClass\AvailableTimeService;
 use App\User;
 use Carbon\Carbon;
@@ -192,7 +193,8 @@ class EnrollmentService
     public function enroll(
         LegacyRegistration $registration,
         LegacySchoolClass $schoolClass,
-        DateTime $date
+        DateTime $date,
+        $isRelocatedSameClassGroup = false
     ) {
         if ($schoolClass->denyEnrollmentsWhenNoVacancy() && empty($schoolClass->vacancies)) {
             throw new NoVacancyException($schoolClass);
@@ -245,6 +247,7 @@ class EnrollmentService
             'ref_usuario_cad' => $this->user->getKey(),
             'data_cadastro' => Carbon::now(),
             'data_enturmacao' => $date,
+            'remanejado_mesma_turma' => $isRelocatedSameClassGroup
         ]);
 
         return $enrollment;
@@ -273,6 +276,12 @@ class EnrollmentService
     public function markAsRelocated(LegacyEnrollment $enrollment)
     {
         $enrollment->remanejado = true;
+        $enrollment->saveOrFail();
+    }
+
+    public function markAsRelocatedSameClassGroup(LegacyEnrollment $enrollment)
+    {
+        $enrollment->remanejado_mesma_turma = true;
         $enrollment->saveOrFail();
     }
 
@@ -413,5 +422,31 @@ class EnrollmentService
         $relocationDate = $enrollment->schoolClass->school->institution->relocation_date;
 
         return !$relocationDate || $date >= $relocationDate;
+    }
+
+    /**
+     * @param LegacyEnrollment $enrollment
+     * @param DateTime         $exitDate
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function updateExitDate(LegacyEnrollment $enrollment, DateTime $exitDate)
+    {
+        $studentId = $enrollment->getStudentId();
+        validator(
+            [
+                'data' =>
+                    [
+                        'student_id' => $studentId,
+                        'exit_date' => $exitDate
+                    ]
+            ],
+            [
+                'data' => [new CanChangeExitDate()]
+            ]
+        )->validate();
+
+        $enrollment->data_exclusao = $exitDate->format('Y-m-d');
+        $enrollment->save();
     }
 }

@@ -1,5 +1,6 @@
 (function($){
   $(document).ready(function(){
+    var $serieField = $('#ref_cod_serie');
     var $turmaField = $('#ref_cod_turma');
     var $anoField  = $('#ano');
     var $componenteCurricularField = $('#componentecurricular');
@@ -15,9 +16,11 @@
       if ($turmaField.val()) {
 
         var urlForGetComponenteCurricular = getResourceUrlBuilder.buildUrl('/module/Api/ComponenteCurricular', 'componentes-curriculares-for-multiple-search', {
+          serie_id : $serieField.val(),
           turma_id : $turmaField.val(),
           ano : $anoField.val(),
-          instituicao_id: $instituicaoField.val()
+          instituicao_id: $instituicaoField.val(),
+          allDisciplinesMulti : allDisciplinesMulti,
         });
 
         var options = {
@@ -43,9 +46,11 @@
         return false;
       }
       urlForGetAreaConhecimento = getResourceUrlBuilder.buildUrl('/module/Api/ComponenteCurricular', 'componentes-curriculares-for-multiple-search', {
+        serie_id  : $serieField.val(),
         turma_id  : $turmaField.val(),
         ano: $anoField.val(),
         instituicao_id: $instituicaoField.val(),
+        allDisciplinesMulti : allDisciplinesMulti,
         area_conhecimento_id: areaConhecimento
       });
  
@@ -99,7 +104,12 @@
     }
  
     function modalOpen(){
-      var turma            = $turmaField.val();
+      var turma = $turmaField.val();
+      var serieBusca = 0;
+
+      if ($j('#ref_cod_serie_busca').val()) {
+        serieBusca = $j('#ref_cod_serie_busca').val();
+      }
  
       if (!turma) {
         alert('Informe uma turma');
@@ -107,7 +117,8 @@
       }
  
       urlForGetAreaConhecimento = getResourceUrlBuilder.buildUrl('/module/Api/AreaConhecimento', 'areaconhecimento-turma', {
-        turma_id  : turma
+        turma_id  : turma,
+        serie_id : serieBusca
       });
  
       var options = {

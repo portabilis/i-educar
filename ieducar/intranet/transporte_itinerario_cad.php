@@ -150,14 +150,14 @@ return new class extends clsCadastro {
                     );
                     $cadastrou1 = $obj->cadastra();
                     if (!$cadastrou1) {
-                        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+                        $this->mensagem = 'Cadastro não realizado.<br>';
 
                         return false;
                     }
                     $sequencial++;
                 }
             }
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect("transporte_rota_det.php?cod_rota={$this->cod_rota}");
         }
     }

@@ -5,8 +5,6 @@ return new class extends clsCadastro {
 
     public function Inicializar()
     {
-        $retorno = 'Novo';
-
         $this->cod_rota=$_GET['cod_rota'];
 
         $obj_permissoes = new clsPermissoes();
@@ -20,10 +18,7 @@ return new class extends clsCadastro {
                 window.location='transporte_rota_det.php?cod_rota={$this->cod_rota}';
                 </script>";
         }
-
         die();
-
-        return;
     }
 
     public function Gerar()

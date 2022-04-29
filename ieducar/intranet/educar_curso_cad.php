@@ -89,8 +89,8 @@ return new class extends clsCadastro {
             $this->habilitacao_curso = unserialize(urldecode($_POST['habilitacao_curso']));
         }
 
-        $qtd_habilitacao = (count($this->habilitacao_curso) == 0) ?
-         1 : (count($this->habilitacao_curso) + 1);
+        $qtd_habilitacao = (is_array($this->habilitacao_curso) && count($this->habilitacao_curso) == 0) ?
+            1 : (is_array($this->habilitacao_curso) && count($this->habilitacao_curso) + 1);
 
         if (is_numeric($this->cod_curso) && $_POST['incluir'] != 'S' && empty($_POST['excluir_'])) {
             $obj = new clsPmieducarHabilitacaoCurso(null, $this->cod_curso);
@@ -287,7 +287,7 @@ return new class extends clsCadastro {
 
         $this->campoMonetario(
             'carga_horaria',
-            'Carga Hor&aacute;ria',
+            'Carga Horária',
             $this->carga_horaria,
             7,
             7,

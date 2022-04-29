@@ -7,7 +7,7 @@
 @section('content')
     @if($canModify)
         <form id="formcadastro"
-              action="@if($releasePeriod->exists) {{ route('release-period.update', ['releasePeriod' => $releasePeriod->id]) }} @else {{ route('release-period.create') }}@endif"
+              action="@if($releasePeriod->exists) {{ Asset::get('/periodo-lancamento/atualizar/' . $releasePeriod->id) }} @else {{Asset::get('/periodo-lancamento/criar') }}@endif"
               method="post">
             <table class="tablecadastro" width="100%" border="0" cellpadding="2" cellspacing="0">
                 <tbody>

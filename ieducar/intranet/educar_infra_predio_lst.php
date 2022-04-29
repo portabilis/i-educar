@@ -64,12 +64,12 @@ return new class extends clsListagem {
         $this->inputsHelper()->dynamic(['instituicao', 'escola'], ['required' => false]);
 
         $this->addCabecalhos([
-            'Institui&ccedil;&atilde;o',
+            'Instituição',
             'Escola',
             'Nome Predio',
         ]);
 
-        $obj_escola = new clsPmieducarEscola($this->ref_cod_escola, null, null, ref_cod_instituicao, null, null, null, null, null, null, 1);
+        $obj_escola = new clsPmieducarEscola($this->ref_cod_escola, null, null, $this->ref_cod_instituicao, null, null, null, null, null, null, 1);
         $obj_escola->setCamposLista('cod_escola,nm_escola');
 
         if (!$obj_escola->detalhe() && !empty($this->ref_cod_escola) && !empty($this->ref_cod_instituicao)) {
@@ -96,7 +96,7 @@ return new class extends clsListagem {
         $this->titulo = 'Infra Predio - Listagem';
 
         // outros Filtros
-        $this->campoTexto('nm_predio', 'Nome Pr&eacute;dio', $this->nm_predio, 30, 255, false);
+        $this->campoTexto('nm_predio', 'Nome Prédio', $this->nm_predio, 30, 255, false);
 
         // Paginador
         $this->limite = 20;

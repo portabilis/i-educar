@@ -34,16 +34,9 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
-        // primary keys
         $this->campoOculto('cod_escola_localizacao', $this->cod_escola_localizacao);
-
-        // Filtros de Foreign Keys
-//      $obrigatorio = true;
-//      include("include/pmieducar/educar_campo_lista.php");
-
-        // text
         $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
-        $this->campoTexto('nm_localizacao', 'Localiza&ccedil;&atilde;o', $this->nm_localizacao, 30, 255, true);
+        $this->campoTexto('nm_localizacao', 'Localização', $this->nm_localizacao, 30, 255, true);
     }
 
     public function Novo()
@@ -65,7 +58,7 @@ return new class extends clsCadastro {
             return true;
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }

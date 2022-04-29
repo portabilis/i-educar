@@ -37,7 +37,7 @@ return new class extends clsCadastro {
         $this->nm_agenda = $objAgenda->getNome();
 
         $this->campoOculto('cod_agenda', $this->cod_agenda);
-        $this->campoLista('envia_alerta', 'Envia Alerta', [ 'N&atilde;o', 'Sim' ], $this->envia_alerta);
+        $this->campoLista('envia_alerta', 'Envia Alerta', [ 'Não', 'Sim' ], $this->envia_alerta);
 
         $db->Consulta("SELECT ref_cod_agenda FROM agenda_responsavel WHERE ref_ref_cod_pessoa_fj = '{$this->pessoa_logada}' AND principal = 1");
         if ($db->ProximoRegistro()) {
@@ -66,8 +66,6 @@ return new class extends clsCadastro {
 
     public function Editar()
     {
-        $db = new clsBanco();
-
         $objAgenda = new clsAgenda($this->pessoa_logada, $this->pessoa_logada);
         $this->cod_agenda = $objAgenda->getCodAgenda();
 

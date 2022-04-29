@@ -1,34 +1,10 @@
 <?php
 
 return new class extends clsListagem {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
     public $pessoa_logada;
-
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
     public $titulo;
-
-    /**
-     * Quantidade de registros a ser apresentada em cada pagina
-     *
-     * @var int
-     */
     public $limite;
-
-    /**
-     * Inicio dos registros a serem exibidos (limit)
-     *
-     * @var int
-     */
     public $offset;
-
     public $cod_tipo_regime;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -54,7 +30,7 @@ return new class extends clsListagem {
             case 1:
                 $this->addCabecalhos([
                     'Nome Tipo',
-                    'Institui&ccedil;&atilde;o'
+                    'Instituição'
                 ]);
                 break;
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SchoolClassController;
 use App\Process;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -132,6 +133,11 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
 
     Route::get('/dispensa-lote', 'BatchExemptionController@index')->middleware('can:modify:' . Process::BATCH_EXEMPTION)->name('batch-exemption.index');
     Route::post('/dispensa-lote', 'BatchExemptionController@exempt')->middleware('can:modify:' . Process::BATCH_EXEMPTION)->name('batch-exemption.exempt');
+
+    Route::post('/turma', [SchoolClassController::class, 'store'])
+        ->name('schoolclass.store');
+    Route::delete('/turma', [SchoolClassController::class, 'delete'])
+        ->name('schoolclass.delete');
 });
 
 Route::group(['namespace' => 'Exports', 'prefix' => 'exports'], function () {

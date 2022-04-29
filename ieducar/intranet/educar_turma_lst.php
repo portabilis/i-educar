@@ -1,34 +1,10 @@
 <?php
 
 return new class extends clsListagem {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
     public $pessoa_logada;
-
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
     public $titulo;
-
-    /**
-     * Quantidade de registros a ser apresentada em cada pagina
-     *
-     * @var int
-     */
     public $limite;
-
-    /**
-     * Inicio dos registros a serem exibidos (limit)
-     *
-     * @var int
-     */
     public $offset;
-
     public $cod_turma;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -66,7 +42,7 @@ return new class extends clsListagem {
             'Ano',
             'Turma',
             'Turno',
-            'S&eacute;rie',
+            'Série',
             'Curso',
             'Escola',
             'Situação'
@@ -161,7 +137,7 @@ return new class extends clsListagem {
                 $nm_escola = $det_ref_cod_escola['nome'];
 
                 $registro['nm_curso'] = empty($registro['descricao_curso']) ? $registro['nm_curso'] : "{$registro['nm_curso']} ({$registro['descricao_curso']})";
-                $registro['nm_serie'] = empty($registro['descricao_serie']) ? $registro['nm_serie'] : "{$registro['nm_serie']} ({$registro['descricao_serie']})";
+                $registro['nm_serie'] = $registro['descricao_serie'];
 
                 $lista_busca = [
                     "<a href=\"educar_turma_det.php?cod_turma={$registro['cod_turma']}\">{$registro['ano']}</a>",

@@ -28,13 +28,13 @@ class MovimentoGeralAlunosRemQueryFactory extends QueryFactory
         inner join
             pmieducar.matricula m
                 on m.cod_matricula = mt.ref_cod_matricula
-        inner join 
+        inner join
             pmieducar.turma
                 on turma.cod_turma = mt.ref_cod_turma
         inner join
             pmieducar.aluno a
                 on a.cod_aluno = m.ref_cod_aluno
-        inner join 
+        inner join
             cadastro.pessoa
                 on pessoa.idpes = a.ref_idpes
         where true
@@ -60,6 +60,7 @@ class MovimentoGeralAlunosRemQueryFactory extends QueryFactory
                 from pmieducar.matricula_turma
                 where matricula_turma.ref_cod_matricula = mt.ref_cod_matricula
             )
+            and mt.remanejado_mesma_turma = false
             and coalesce(mt.data_exclusao, m.data_cancel) between :data_inicial::date and :data_final::date
         order by
             pessoa.nome asc

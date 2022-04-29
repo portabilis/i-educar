@@ -57,7 +57,7 @@ return new class extends clsListagem {
         Session::save();
         Session::start();
 
-        $this->titulo = 'Exemplar Empr&eacute;stimo - Listagem';
+        $this->titulo = 'Exemplar Empréstimo - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null: $val;
@@ -202,7 +202,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'Exemplar Empr&eacute;stimo';
+        $this->title = 'Exemplar Empréstimo';
         $this->processoAp = '610';
     }
 };

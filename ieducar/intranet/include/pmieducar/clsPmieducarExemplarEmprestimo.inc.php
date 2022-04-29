@@ -577,7 +577,7 @@ class clsPmieducarExemplarEmprestimo extends Model
             $tupla['_total'] = $this->_total;
             $resultado[] = $tupla;
         }
-        if (count($resultado)) {
+        if (is_array($resultado) && count($resultado)) {
             return $resultado;
         }
 

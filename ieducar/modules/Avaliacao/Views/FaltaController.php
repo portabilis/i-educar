@@ -170,7 +170,7 @@ class FaltaController extends Core_Controller_Page_EditController
             $this->_service->save();
         } catch (CoreExt_Service_Exception $e) {
             // Ok. Não pode promover por se tratar de progressão manual ou por estar em andamento
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->mensagem = 'Erro no preenchimento do formulário. ';
 
             return false;

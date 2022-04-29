@@ -1,34 +1,10 @@
 <?php
 
 return new class extends clsListagem {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
     public $pessoa_logada;
-
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
     public $titulo;
-
-    /**
-     * Quantidade de registros a ser apresentada em cada pagina
-     *
-     * @var int
-     */
     public $limite;
-
-    /**
-     * Inicio dos registros a serem exibidos (limit)
-     *
-     * @var int
-     */
     public $offset;
-
     public $cod_tipo_ocorrencia_disciplinar;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -42,31 +18,29 @@ return new class extends clsListagem {
 
     public function Gerar()
     {
-        $this->titulo = 'Tipo Ocorr&ecirc;ncia Disciplinar - Listagem';
+        $this->titulo = 'Tipo Ocorrência Disciplinar - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null: $val;
         }
 
         $lista_busca = [
-            'Tipo Ocorr&ecirc;ncia Disciplinar',
-            'M&aacute;ximo Ocorr&ecirc;ncias'
+            'Tipo Ocorrência Disciplinar',
+            'Máximo Ocorrências'
         ];
 
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
-            $lista_busca[] = 'Institui&ccedil;&atilde;o';
+            $lista_busca[] = 'Instituição';
         }
 
         $this->addCabecalhos($lista_busca);
 
-        // Filtros de Foreign Keys
-//      $get_escola = true;
         include('include/pmieducar/educar_campo_lista.php');
 
         // outros Filtros
-        $this->campoTexto('nm_tipo', 'Tipo Ocorr&ecirc;ncia Disciplinar', $this->nm_tipo, 30, 255, false);
+        $this->campoTexto('nm_tipo', 'Tipo Ocorrência Disciplinar', $this->nm_tipo, 30, 255, false);
         //$this->campoNumero( "max_ocorrencias", "Max Ocorrencias", $this->max_ocorrencias, 15, 255, false );
 
         // Paginador
@@ -127,7 +101,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'Tipo Ocorr&ecirc;ncia Disciplinar';
+        $this->title = 'Tipo Ocorrência Disciplinar';
         $this->processoAp = '580';
     }
 };

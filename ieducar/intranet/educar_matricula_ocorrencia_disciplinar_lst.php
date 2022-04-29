@@ -102,9 +102,6 @@ return new class extends clsListagem {
             $this->ref_ref_cod_escola = $this->ref_cod_escola;
         }
 
-        // outros Filtros
-
-        // Paginador
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
@@ -131,7 +128,6 @@ return new class extends clsListagem {
             foreach ($lista as $registro) {
                 $obj_ref_cod_matricula = new clsPmieducarMatricula($registro['ref_cod_matricula']);
                 $det_ref_cod_matricula = $obj_ref_cod_matricula->detalhe();
-                //$registro["ref_cod_matricula"] = $det_ref_cod_matricula["ref_cod_matricula"];
 
                 $obj_serie = new clsPmieducarSerie($det_ref_cod_matricula['ref_ref_cod_serie']);
                 $det_serie = $obj_serie->detalhe();
@@ -183,7 +179,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'Ocorr&ecirc;ncia Disciplinar';
+        $this->title = 'Ocorrência Disciplinar';
         $this->processoAp = '578';
     }
 };

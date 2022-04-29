@@ -91,12 +91,12 @@ class PictureController
                 if ($size < $this->maxSize) {
                     return true;
                 } else {
-                    $this->errorMessage = 'O cadastro n&atilde;o pode ser realizado, a foto possui um tamanho maior do que o permitido.';
+                    $this->errorMessage = 'O cadastro não pode ser realizado, a foto possui um tamanho maior do que o permitido.';
 
                     return false;
                 }
             } else {
-                $this->errorMessage = 'O cadastro n&atilde;o pode ser realizado, a foto possui um formato diferente daqueles permitidos.';
+                $this->errorMessage = 'O cadastro não pode ser realizado, a foto possui um formato diferente daqueles permitidos.';
 
                 return false;
             }
