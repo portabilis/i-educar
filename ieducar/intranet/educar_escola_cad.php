@@ -1261,6 +1261,8 @@ return new class extends clsCadastro {
             $options = ['label' => 'Lousa digital', 'resources' => $resources, 'value' => $this->lousas_digitais, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => ''];
             $this->inputsHelper()->integer('lousas_digitais', $options);
 
+            $this->campoCheck('nao_ha_funcionarios_para_funcoes', 'Não há funcionários para as funções listadas', (bool)($this->nao_ha_funcionarios_para_funcoes));
+
             $this->campoRotulo(
                 'quantidade_profissionais',
                 '<b>Quantidade de profissionais</b>'
