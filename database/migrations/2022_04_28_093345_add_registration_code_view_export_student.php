@@ -23,6 +23,5 @@ class AddRegistrationCodeViewExportStudent extends Migration
 
         $this->createView('public.exporter_student', '2022-04-26');
         $this->createView('public.exporter_social_assistance', '2020-05-07');
-
     }
 }
