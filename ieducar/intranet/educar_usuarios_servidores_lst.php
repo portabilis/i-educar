@@ -81,7 +81,7 @@ return new class extends clsListagem {
             isset($_GET['servidor_com_usuario']),
             date('Y')
         );
-        $total = $obj_servidor->_total;
+        $total = count($lista);
 
         // monta a lista
         if (is_array($lista) && count($lista)) {
