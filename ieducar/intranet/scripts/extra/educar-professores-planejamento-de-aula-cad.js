@@ -297,7 +297,7 @@
       if (!ehDataValida(new Date(data_final))) { alert("Data final não é válida."); return; }
       if (isNaN(parseInt(turma, 10))) { alert("Turma é obrigatória."); return; }
       if (isNaN(parseInt(faseEtapa, 10))) { alert("Etapa é obrigatória."); return; }
-      if (ddp == null || ddp == '') { alert("Campo atividades é obrigatório."); return; }
+      if (ddp == null || ddp == '') { alert("Metodologia é obrigatória."); return; }
       if (atividades == null) { alert("O campo atividades não é válido."); return; }
       if (referencias == null) { alert("O campo referências não é válido."); return; }
       if (!ehComponentesCurricularesValidos(componentesCurriculares)) { alert("Os componentes curriculares são obrigatórios."); return; }
