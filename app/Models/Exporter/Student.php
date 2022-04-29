@@ -38,6 +38,7 @@ class Student extends Model
             'Códigos' => [
                 'id' => 'ID Pessoa',
                 'student_id' => 'ID Aluno',
+
                 'registration_id' => 'ID Matrícula',
                 'school_id' => 'ID Escola',
                 'school_class_id' => 'ID Turma',
@@ -55,6 +56,7 @@ class Student extends Model
                 'email' => 'E-mail',
                 'sus' => 'Número SUS',
                 'nis' => 'NIS (PIS/PASEP)',
+                'registration_code_id' => 'Código da Rede Estadual (RA)',
                 'occupation' => 'Ocupação',
                 'organization' => 'Empresa',
                 'monthly_income' => 'Renda Mensal',
