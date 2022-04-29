@@ -14,31 +14,13 @@ class App_Model_Educacenso
 
     public static function etapasDaTurma($etapaEnsino)
     {
-        $etapas = [];
-
-        switch ($etapaEnsino) {
-            case '3':
-                $etapas = [1, 2];
-                break;
-
-            case '22':
-            case '23':
-                $etapas = [14, 15, 16, 17, 18, 19, 20, 21, 41];
-                break;
-
-            case '56':
-                $etapas = [1, 2, 14, 15, 16, 17, 18, 19, 20, 21, 41];
-                break;
-
-            case '64':
-                $etapas = [30, 40];
-                break;
-
-            case '72':
-                $etapas = [69, 70];
-                break;
-        }
-
-        return $etapas;
+        return match ((string)$etapaEnsino) {
+            '3' => [1, 2],
+            '22', '23' => [14, 15, 16, 17, 18, 19, 20, 21, 41],
+            '56' => [1, 2, 14, 15, 16, 17, 18, 19, 20, 21, 41],
+            '64' => [30, 40],
+            '72' => [69, 70],
+            default => [],
+        };
     }
 }

@@ -46,6 +46,7 @@ class clsPmieducarCategoriaAcervo extends Model
     public function listaCategoriasPorObra($acervoId)
     {
         $db = new clsBanco();
+        $resultado = [];
         $db->Consulta("SELECT pmieducar.relacao_categoria_acervo.*,
                               categoria_obra.descricao as descricao
                          FROM pmieducar.acervo

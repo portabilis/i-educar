@@ -35,7 +35,7 @@ return new class extends clsCadastro {
     public $meses_do_ano = [
                              '1' => 'JANEIRO'
                             ,'2' => 'FEVEREIRO'
-                            ,'3' => 'MAR&Ccedil;O'
+                            ,'3' => 'MARÇO'
                             ,'4' => 'ABRIL'
                             ,'5' => 'MAIO'
                             ,'6' => 'JUNHO'
@@ -75,8 +75,7 @@ return new class extends clsCadastro {
         $this->ano = $ano_atual = date('Y');
         $this->mes = $mes_atual = date('n');
 
-        $this->campoLista('mes', 'M&ecirc;s', $this->meses_do_ano, $this->mes, '', false);
-//      $this->campoLista( "ano", "Ano",$anos, $this->ano,"",false );
+        $this->campoLista('mes', 'Mês', $this->meses_do_ano, $this->mes, '', false);
 
         $this->campoNumero('ano', 'Ano', $this->ano, 4, 4, true);
 
@@ -98,9 +97,6 @@ return new class extends clsCadastro {
                     window.onload = function(){ changeCurso() };
                   </script>';
         }
-
-        //  if($this->get_link)
-        //  $this->campoRotulo("rotulo11", "-", "<a href='$this->get_link' target='_blank'>Baixar Relatório</a>");
 
         $this->url_cancelar = 'educar_index.php';
         $this->nome_url_cancelar = 'Cancelar';

@@ -47,12 +47,12 @@ return new class extends clsListagem {
     public $cod_biblioteca;
     public $situacao;
 
-    const TODOS = 0;
-    const EM_ATRASO = 1;
+    public const TODOS = 0;
+    public const EM_ATRASO = 1;
 
     public function Gerar()
     {
-        $this->titulo = 'Exemplar Devolu&ccedil;&atilde;o - Listagem';
+        $this->titulo = 'Exemplar Devolução - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null: $val;
@@ -81,8 +81,10 @@ return new class extends clsListagem {
         $this->campoTexto('nm_obra', 'Obra', $this->nm_obra, 30, 255, false, false, false, '', "<img border=\"0\" onclick=\"pesquisa_obra();\" id=\"ref_cod_exemplar_lupa\" name=\"ref_cod_exemplar_lupa\" src=\"imagens/lupa.png\"\/>");
         $this->campoOculto('ref_cod_acervo', $this->ref_cod_acervo);
 
-        $situacoes = [TODOS => 'Todos',
-                                             EM_ATRASO => 'Em atraso'];
+        $situacoes = [
+            self::TODOS => 'Todos',
+            self::EM_ATRASO => 'Em atraso'
+        ];
 
         $this->campoLista('situacao', 'Situação', $situacoes, $this->situacao);
 
@@ -108,7 +110,7 @@ return new class extends clsListagem {
         $obj_exemplar_emprestimo->setOrderby('data_retirada ASC');
         $obj_exemplar_emprestimo->setLimite($this->limite, $this->offset);
 
-        if ($this->situacao == EM_ATRASO) {
+        if ($this->situacao == self::EM_ATRASO) {
             $obj_exemplar_emprestimo->em_atraso = true;
         }
 
@@ -208,7 +210,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'Exemplar Devolu&ccedil;&atilde;o';
+        $this->title = 'Exemplar Devolução';
         $this->processoAp = '628';
     }
 };

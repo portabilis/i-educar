@@ -38,7 +38,11 @@ return new class extends clsDetalhe {
             return $description;
         }
 
-        $lessDescription = substr($description, 0, strpos($description, ' ', 200)) . '...';
+        $lessDescription = $description;
+        if (strlen($description) >= 200) {
+            $lessDescription = substr($description, 0, strpos($description, ' ', 200)) . '...';
+        }
+
 
         return "<div align='justify'> <span class='desc-red'>{$lessDescription}</span> <span class='descricao' style='display: none'>{$description}</span><a href='javascript:void(0)' class='ver-mais'>Mostrar mais</a><a href='javascript:void(0)' style='display: none' class='ver-menos'>Mostrar menos</a></div>";
     }
@@ -243,7 +247,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe(['Descrição', $this->getDescription($registro['descricao_reclassificacao'])]);
         }
 
-        $this->addDetalhe(['Formando', $registro['formando'] == 0 ? 'N&atilde;o' : 'Sim']);
+        $this->addDetalhe(['Formando', $registro['formando'] == 0 ? 'Não' : 'Sim']);
 
         $obj_permissoes = new clsPermissoes();
 

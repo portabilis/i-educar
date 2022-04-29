@@ -2,7 +2,7 @@
 
 class calendario
 {
-    public $meses = [ 1 => 'Janeiro', 2 => 'Fevereiro', 3 => 'Mar&ccedil;o', 4 => 'Abril', 5 => 'Maio', 6 => 'Junho', 7 => 'Julho', 8 => 'Agosto', 9 => 'Setembro', 10 => 'Outubro', 11 => 'Novembro', 12 => 'Dezembro' ];
+    public $meses = [ 1 => 'Janeiro', 2 => 'Fevereiro', 3 => 'Março', 4 => 'Abril', 5 => 'Maio', 6 => 'Junho', 7 => 'Julho', 8 => 'Agosto', 9 => 'Setembro', 10 => 'Outubro', 11 => 'Novembro', 12 => 'Dezembro' ];
     public $meses_dias;
     public $time;
     public $data;
@@ -42,7 +42,7 @@ class calendario
         $this->ultimo_dia = date('d', mktime(0, 0, 0, $this->mes + 1, -1, $this->ano)) - 1;
 
         $this->url_default = $url_default;
-        if (strpos($this->url_default, '?') === false) {
+        if (!str_contains($this->url_default, '?')) {
             $this->url_uniao = '?';
         } else {
             $this->url_uniao = '&';
@@ -112,11 +112,11 @@ class calendario
         <tr>
             <td width="15%" class="calendario_dias_t" title="Domingo">D</td>
             <td width="14%" class="calendario_dias_t" title="Segunda Feira">S</td>
-            <td width="14%" class="calendario_dias_t" title="Ter&ccedil;a Feira">T</td>
+            <td width="14%" class="calendario_dias_t" title="Terça Feira">T</td>
             <td width="14%" class="calendario_dias_t" title="Quarta Feira">Q</td>
             <td width="14%" class="calendario_dias_t" title="Quinta Feira">Q</td>
             <td width="14%" class="calendario_dias_t" title="Sexta Feira">S</td>
-            <td width="15%" class="calendario_dias_t" title="S&aacute;bado">S</td>
+            <td width="15%" class="calendario_dias_t" title="Sábado">S</td>
         </tr>';
         $comeco = true;
 

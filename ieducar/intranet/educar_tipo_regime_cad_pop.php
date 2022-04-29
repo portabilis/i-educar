@@ -1,13 +1,8 @@
 <?php
 
 return new class extends clsCadastro {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
-    public $pessoa_logada;
 
+    public $pessoa_logada;
     public $cod_tipo_regime;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -15,7 +10,6 @@ return new class extends clsCadastro {
     public $data_cadastro;
     public $data_exclusao;
     public $ativo;
-
     public $ref_cod_instituicao;
 
     public function Inicializar()
@@ -35,13 +29,10 @@ return new class extends clsCadastro {
                     $this->$campo = $val;
                 }
 
-                //** verificao de permissao para exclusao
                 $this->fexcluir = $obj_permissoes->permissao_excluir(568, $this->pessoa_logada, 3);
-                //**
                 $retorno = 'Editar';
             }
         }
-//      $this->url_cancelar = ($retorno == "Editar") ? "educar_tipo_regime_det.php?cod_tipo_regime={$registro["cod_tipo_regime"]}" : "educar_tipo_regime_lst.php";
         $this->nome_url_cancelar = 'Cancelar';
         $this->script_cancelar = 'window.parent.fechaExpansivel("div_dinamico_"+(parent.DOM_divs.length-1));';
 
@@ -50,22 +41,16 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
-        // primary keys
         $this->campoOculto('cod_tipo_regime', $this->cod_tipo_regime);
 
-        // foreign keys
-        // foreign keys
         if ($_GET['precisa_lista']) {
             $get_escola = false;
             $obrigatorio = true;
             include('include/pmieducar/educar_campo_lista.php');
-        }// text
-        else {
+        } else {
             $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
         }
         $this->campoTexto('nm_tipo', 'Nome Tipo', $this->nm_tipo, 30, 255, true);
-
-        // data
     }
 
     public function Novo()
@@ -84,7 +69,7 @@ return new class extends clsCadastro {
             die();
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }

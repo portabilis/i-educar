@@ -461,7 +461,7 @@ return new class extends clsDetalhe {
                         align=\'center\'>
                           <td>
                             <a href=\'' . $this->urlPresigner()->getPresignedUrl($documento->url) . '\'
-                               target=\'_blank\' > Visualizar documento ' . (count($documento) > 1 ? ($key + 1) : '') . '
+                               target=\'_blank\' > Visualizar documento ' . (count((array)$documento) > 1 ? ($key + 1) : '') . '
                             </a>
                           </td>
                     </tr>';
@@ -503,9 +503,6 @@ return new class extends clsDetalhe {
             $this->addDetalhe(['Estado Expedidor', $registro['sigla_uf_exp_rg']]);
         }
 
-        /**
-         * @todo CoreExt_Enum?
-         */
         if (!$registro['tipo_cert_civil'] && $registro['certidao_nascimento']) {
             $this->addDetalhe(['Tipo Certidão Civil', 'Nascimento (novo formato)']);
             $this->addDetalhe(['Número Certidão Civil', $registro['certidao_nascimento']]);
@@ -564,7 +561,7 @@ return new class extends clsDetalhe {
         $transporteAluno = null;
         try {
             $transporteAluno = $transporteMapper->find(['aluno' => $this->cod_aluno]);
-        } catch (Exception $e) {
+        } catch (Exception) {
         }
 
         $this->addDetalhe([
@@ -578,10 +575,6 @@ return new class extends clsDetalhe {
         if ($registro['nis_pis_pasep']) {
             $this->addDetalhe(['NIS', $registro['nis_pis_pasep']]);
         }
-
-        // Verifica se o usuário tem permissão para cadastrar um aluno.
-        // O sistema irá validar o cadastro de permissões e o parâmetro
-        // "bloquear_cadastro_aluno" da instituição.
 
         if ($this->obj_permissao->permissao_cadastra(578, $this->pessoa_logada, 7)) {
             $bloquearCadastroAluno = dbBool($configuracoes['bloquear_cadastro_aluno']);
@@ -809,7 +802,6 @@ return new class extends clsDetalhe {
             }
 
             $this->addDetalhe(['<span id="fmoradia"></span>Moradia', $moradia]);
-            $situacao;
 
             switch ($reg['moradia_situacao']) {
                 case 1:
@@ -847,7 +839,9 @@ return new class extends clsDetalhe {
             $this->addDetalhe(['Possui telefone', $reg['telefone']]);
 
             $recursosTecnlogicos = json_decode($reg['recursos_tecnologicos']);
-            $recursosTecnlogicos = implode(', ', $recursosTecnlogicos);
+            if (is_array($recursosTecnlogicos)) {
+                $recursosTecnlogicos = implode(', ', $recursosTecnlogicos);
+            }
             $this->addDetalhe(['Possui acesso à recursos técnologicos?', $recursosTecnlogicos]);
 
             $this->addDetalhe(['Quantidade de pessoas', $reg['quant_pessoas']]);

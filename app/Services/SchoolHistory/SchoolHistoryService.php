@@ -109,18 +109,17 @@ class SchoolHistoryService
      * Calcula e retorna quantidade de linhas necessários para que o campo
      * de observações preencha o restante da página em branco
      *
-     * @param $usedSpace           soma das alturas das bands fixas do histórico
-     * @param $numberOfDisciplines número de disciplinas geradas no histórico
-     * @param $lineHeight          altura da linha
+     * @param int $numberOfDisciplines número de disciplinas geradas no histórico
+     * @param int $lineHeight          altura da linha
      *
      * @return string
      */
     public function getBlankSpace($templateName, $numberOfDisciplines, $lineHeight)
     {
         $usedSpace = $this->getUsedSpaceByTemplate($templateName);
-        $numberOfBlankLines = (($usedSpace - ($numberOfDisciplines * $lineHeight)) / $lineHeight);
+        $numberOfBlankLines = (int) (((int)$usedSpace - ((int)$numberOfDisciplines * (int)$lineHeight)) / (int)$lineHeight);
 
-        return str_repeat('<br>', (int) $numberOfBlankLines);
+        return str_repeat('<br>', max($numberOfBlankLines, 0));
     }
 
     public function getAllObservationsByStudent($studentId)

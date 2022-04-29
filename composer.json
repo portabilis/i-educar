@@ -10,7 +10,7 @@
     ],
     "homepage": "https://github.com/portabilis/i-educar",
     "require": {
-        "php": "^7.4",
+        "php": "^8.0",
         "ext-gd": "*",
         "ext-json": "*",
         "ext-pdo": "*",
@@ -99,7 +99,7 @@
         "check-style": "vendor/bin/php-cs-fixer --diff --dry-run --verbose fix",
         "fix-style": "vendor/bin/php-cs-fixer fix",
         "set-permissions": "find bootstrap/cache -type d -exec chmod 777 {} + && find storage -type d -exec chmod 777 {} +",
-        "npm": "npm install",
+        "npm": "yarn install",
         "new-install": [
             "@composer install",
             "@composer plug-and-play:install",

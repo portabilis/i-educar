@@ -352,7 +352,7 @@ return new class extends clsCadastro {
 
         $escolaSerie = $escolaSerie->detalhe();
 
-        if (count($escolaSerie) > 0) {
+        if (is_array($escolaSerie) && count($escolaSerie) > 0) {
             if ($escolaSerie['ativo'] == '1') {
                 return true;
             }

@@ -42,7 +42,7 @@ return new class extends clsListagem {
 
     public function Gerar()
     {
-        $this->titulo = 'Habilita&ccedil;&atilde;o - Listagem';
+        $this->titulo = 'Habilitação - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null: $val;
@@ -57,20 +57,20 @@ return new class extends clsListagem {
         switch ($nivel_usuario) {
             case 1:
                 $this->addCabecalhos([
-                    'Institui&ccedil;&atilde;o',
-                    'Habilitac&atilde;o'
+                    'Instituição',
+                    'Habilitacão'
                 ]);
                 break;
 
             default:
                 $this->addCabecalhos([
-                    'Habilitac&atilde;o'
+                    'Habilitacão'
                 ]);
                 break;
         }
 
         // outros Filtros
-        $this->campoTexto('nm_tipo', 'Habilita&ccedil;&atilde;o', $this->nm_tipo, 30, 255, false);
+        $this->campoTexto('nm_tipo', 'Habilitação', $this->nm_tipo, 30, 255, false);
 
         // Paginador
         $this->limite = 20;
@@ -134,7 +134,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->titulo = 'i-Educar - Habilita&ccedil;&atilde;o';
+        $this->titulo = 'i-Educar - Habilitação';
         $this->processoAp = '573';
     }
 };

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -96,5 +97,22 @@ class LegacyStudent extends Model
     public function inep()
     {
         return $this->hasOne(StudentInep::class, 'cod_aluno', 'cod_aluno');
+    }
+
+    public function scopeActive(Builder $query)
+    {
+        return $query->where('aluno.ativo', 1);
+    }
+
+    public function scopeMale(Builder $query)
+    {
+        return $query->join('cadastro.fisica', 'aluno.ref_idpes', '=', 'fisica.idpes')
+            ->where('sexo', 'M');
+    }
+
+    public function scopeFemale(Builder $query)
+    {
+        return $query->join('cadastro.fisica', 'aluno.ref_idpes', '=', 'fisica.idpes')
+            ->where('sexo', 'F');
     }
 }

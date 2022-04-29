@@ -41,14 +41,14 @@ return new class extends clsListagem {
 
     public function Gerar()
     {
-        $this->titulo = 'Motivo Suspens&atilde;o - Listagem';
+        $this->titulo = 'Motivo Suspensão - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null: $val;
         }
 
         $this->addCabecalhos([
-            'Motivo Suspens&atilde;o',
+            'Motivo Suspensão',
             'Biblioteca'
         ]);
 
@@ -58,7 +58,7 @@ return new class extends clsListagem {
         include('include/pmieducar/educar_campo_lista.php');
 
         // outros Filtros
-        $this->campoTexto('nm_motivo', 'Motivo Suspens&atilde;o', $this->nm_motivo, 30, 255, false);
+        $this->campoTexto('nm_motivo', 'Motivo Suspensão', $this->nm_motivo, 30, 255, false);
 
         // Paginador
         $this->limite = 20;
@@ -117,7 +117,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'Motivo Suspens&atilde;o';
+        $this->title = 'Motivo Suspensão';
         $this->processoAp = '607';
     }
 };

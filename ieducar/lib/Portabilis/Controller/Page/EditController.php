@@ -49,7 +49,7 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
                     throw new Exception("Invalid value returned from '_save' method: '$result', please return null, true or false!");
                 }
             } catch (Exception $e) {
-                $this->messenger()->append('Erro ao gravar altera&ccedil;&otilde;es, por favor, tente novamente.', 'error');
+                $this->messenger()->append('Erro ao gravar alterações, por favor, tente novamente.', 'error');
                 error_log('Erro ao gravar alteracoes: ' . $e->getMessage());
 
                 $result = false;
@@ -58,7 +58,7 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
             $result = $result && !$this->messenger()->hasMsgWithType('error');
 
             if ($result) {
-                $this->messenger()->append('Altera&ccedil;&otilde;es gravadas com sucesso.', 'success', false, 'success');
+                $this->messenger()->append('Alterações gravadas com sucesso.', 'success', false, 'success');
             }
         }
 
@@ -148,6 +148,6 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
 
     protected function getDataMapperFor($packageName, $modelName)
     {
-        return Portabilis_DataMapper_Utils::getDataMapperFor($packageName, $modelName);
+        return (new Portabilis_DataMapper_Utils())->getDataMapperFor($packageName, $modelName);
     }
 }

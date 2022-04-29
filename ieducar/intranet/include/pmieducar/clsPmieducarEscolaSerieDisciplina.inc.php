@@ -35,7 +35,7 @@ class clsPmieducarEscolaSerieDisciplina extends Model
             try {
                 $componenteMapper->find($ref_cod_disciplina);
                 $this->ref_cod_disciplina = $ref_cod_disciplina;
-            } catch (Exception $e) {
+            } catch (Exception) {
             }
         }
 

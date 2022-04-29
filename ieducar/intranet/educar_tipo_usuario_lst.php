@@ -48,10 +48,10 @@ return new class extends clsListagem {
         }
 
         $this->addCabecalhos([
-            'C&oacute;digo Tipo Usu&aacute;rio',
-            'Tipo Usu&aacute;rio',
-            'Descri&ccedil;&atilde;o',
-            'N&iacute;vel',
+            'Código Tipo Usuário',
+            'Tipo Usuário',
+            'Descrição',
+            'Nível',
         ]);
 
         //niveis
@@ -63,8 +63,8 @@ return new class extends clsListagem {
 
         // outros Filtros
         $this->campoTexto('nm_tipo', 'Nome Tipo', $this->nm_tipo, 30, 255, false);
-        $this->campoTexto('descricao', 'Descri&ccedil;&atilde;o', $this->descricao, 30, 255, false);
-        $this->campoLista('nivel', 'N&iacute;vel', $array_nivel, $this->nivel, '', false, '', '', false, false);
+        $this->campoTexto('descricao', 'Descrição', $this->descricao, 30, 255, false);
+        $this->campoLista('nivel', 'Nível', $array_nivel, $this->nivel, '', false, '', '', false, false);
 
         $this->nivel = $this->nivel == -1 ? '' : $this->nivel;
 

@@ -169,6 +169,10 @@ var windowUtils = {
     options.options = optionsUtils.merge(defaultWindowOptions, options.options);
 
     window.open(url, options.name,  objectUtils.join(options.options)).focus();
+  },
+
+  redirect: function (url){
+    window.top.location = url;
   }
 };
 
@@ -317,3 +321,39 @@ var handleMessages = messageUtils.handleMessages;
 
   }); // ready
 })(jQuery);
+var modalLoadingCommon = $j('#modal_loading_common');
+var modalLoadingUtils = {
+  show: function (title = 'Aguarde', text = 'Processando requisição...') {
+
+    if (modalLoadingCommon.length < 1) {
+      $j('body').append('<div id="modal_loading_common" style="width: 500px;"></div>');
+      modalLoadingCommon = $j('#modal_loading_common');
+    }
+    modalLoadingCommon.attr('title', title);
+    modalLoadingCommon.html(text);
+    modalLoadingCommon.dialog({modal: true});
+  },
+
+  hide: function (){
+    modalLoadingCommon.dialog("close");
+    modalLoadingCommon.dialog('destroy');
+  }
+}
+
+const buttonUtils = {
+  loading: function (elementId, textLoading = 'Aguarde...') {
+    if (document.getElementById(elementId)) {
+      document.getElementById(elementId).disabled = true;
+      document.getElementById(elementId).value = textLoading;
+      document.getElementById(elementId).className = 'botaolistagemdisabled';
+    }
+  },
+
+  reset: function (elementId, text){
+    if (document.getElementById(elementId)) {
+      document.getElementById(elementId).disabled = false;
+      document.getElementById(elementId).value = text;
+      document.getElementById(elementId).className = 'botaolistagem';
+    }
+  }
+}

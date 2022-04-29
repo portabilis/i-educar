@@ -160,7 +160,7 @@ class SchoolHistory
         $column = $this->service->getLevelByName($levelName);
 
         if ($this->service->isEightYears($gradeType) && $this->seriesYearsModel) {
-            return $column + 1;
+            return ((int) $column) + 1;
         }
 
         return $column;
@@ -172,7 +172,7 @@ class SchoolHistory
             $score = str_replace('.', ',', $score);
         }
 
-        if ($this->formatScoresGreaterThanTen && $score > 10) {
+        if ($this->formatScoresGreaterThanTen && (int) $score > 10) {
             $score = '*' . $score;
         }
 

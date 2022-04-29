@@ -22,7 +22,7 @@ return new class extends clsListagem {
         }
 
         $lista_busca = [
-      'S&eacute;rie',
+      'Série',
       'Curso'
     ];
 

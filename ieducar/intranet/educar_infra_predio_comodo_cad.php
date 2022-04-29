@@ -93,7 +93,7 @@ return new class extends clsCadastro {
         } else {
             $script = "<img id='img_colecao' style='display: none;' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
         }
-        $this->campoLista('ref_cod_infra_predio', 'Pr&eacute;dio', $opcoes_predio, $this->ref_cod_infra_predio, '', false, '', $script);
+        $this->campoLista('ref_cod_infra_predio', 'Prédio', $opcoes_predio, $this->ref_cod_infra_predio, '', false, '', $script);
 
         $opcoes_funcao = [ '' => 'Selecione' ];
 
@@ -118,7 +118,7 @@ return new class extends clsCadastro {
 
         // text
         $this->campoTexto('nm_comodo', 'Ambiente', $this->nm_comodo, 43, 255, true);
-        $this->campoMonetario('area', '&Aacute;rea m²', $this->area, 10, 255, true);
+        $this->campoMonetario('area', 'área m²', $this->area, 10, 255, true);
         $this->campoMemo('desc_comodo', 'Descrição do ambiente', $this->desc_comodo, 60, 5, false);
     }
 
@@ -133,7 +133,7 @@ return new class extends clsCadastro {
             $this->simpleRedirect('educar_infra_predio_comodo_lst.php');
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -146,11 +146,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarInfraPredioComodo($this->cod_infra_predio_comodo, $this->pessoa_logada, null, $this->ref_cod_infra_comodo_funcao, $this->ref_cod_infra_predio, $this->nm_comodo, $this->desc_comodo, $this->area, null, null, 1);
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_infra_predio_comodo_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }
@@ -160,11 +160,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarInfraPredioComodo($this->cod_infra_predio_comodo, $this->pessoa_logada, null, null, null, null, null, null, null, null, 0);
         $excluiu = $obj->excluir();
         if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_infra_predio_comodo_lst.php');
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }

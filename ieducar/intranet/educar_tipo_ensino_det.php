@@ -1,13 +1,7 @@
 <?php
 
 return new class extends clsDetalhe {
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
     public $titulo;
-
     public $cod_tipo_ensino;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -15,7 +9,6 @@ return new class extends clsDetalhe {
     public $data_cadastro;
     public $data_exclusao;
     public $ativo;
-
     public $ref_cod_instituicao;
 
     public function Gerar()
@@ -42,7 +35,7 @@ return new class extends clsDetalhe {
             $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
             $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
 
-            $this->addDetalhe([ 'Institui&ccedil;&atilde;o', "{$registro['ref_cod_instituicao']}"]);
+            $this->addDetalhe([ 'Instituição', "{$registro['ref_cod_instituicao']}"]);
         }
         if ($registro['nm_tipo']) {
             $this->addDetalhe([ 'Nome Tipo', "{$registro['nm_tipo']}"]);

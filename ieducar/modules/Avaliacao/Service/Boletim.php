@@ -584,11 +584,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         return false;
     }
 
-    public function getQtdComponentes($ignorarDispensasParciais = false)
+    public function getQtdComponentes($ignorarDispensasParciais = false, $disciplinasNaoReprovativas = [])
     {
         $enrollment = $this->getOption('matriculaData');
 
-        $total = count(App_Model_IedFinder::getComponentesPorMatricula(
+        $disciplinas = App_Model_IedFinder::getComponentesPorMatricula(
             $enrollment['cod_matricula'],
             $this->getComponenteDataMapper(),
             $this->getComponenteTurmaDataMapper(),
@@ -598,7 +598,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             $enrollment,
             true,
             $ignorarDispensasParciais
-        ));
+        );
+
+        foreach ($disciplinasNaoReprovativas as $d) {
+            unset($disciplinas[$d]);
+        }
 
         $disciplinesWithoutStage = Portabilis_Utils_Database::fetchPreparedQuery('
             SELECT COUNT(*) AS count
@@ -618,7 +622,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             ]
         ]);
 
-        return $total - (int) $disciplinesWithoutStage[0]['count'];
+        return count($disciplinas) - (int) $disciplinesWithoutStage[0]['count'];
     }
 
     /**
@@ -876,6 +880,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         $stages = array_diff($stages, $exemptedStages);
 
+        if (empty($stages)) {
+            return null;
+        }
+
         return max($stages);
     }
 
@@ -965,8 +973,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $componentesMatricula = App_Model_IedFinder::getComponentesPorMatricula($matriculaId, null, null, null, $this->getOption('etapaAtual'), $this->getOption('ref_cod_turma'), null, true, true);
         $mediasComponentes = array_intersect_key($mediasComponentes, $componentesMatricula);
 
-        $mediasComponenentesTotal = $mediasComponentes;
-
         if (!$calcularSituacaoAluno) {
             $componentes = $this->getComponentes();
             $calculaComponenteAgrupado = !empty(array_intersect_key(array_flip($this->codigoDisciplinasAglutinadas()), $componentes));
@@ -1035,7 +1041,13 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             unset($mediasComponentes[$disciplinaDispensadaTurma]);
         }
 
-        $totalComponentes = $this->getQtdComponentes($calcularSituacaoAluno);
+        $mediasComponenentesTotal = $mediasComponentes;
+
+        foreach ($disciplinasNaoReprovativas as $d) {
+            unset($mediasComponenentesTotal[$d]);
+        }
+
+        $totalComponentes = $this->getQtdComponentes($calcularSituacaoAluno, $disciplinasNaoReprovativas);
 
         if (empty($mediasComponenentesTotal) && count($componentesMatricula)) {
             $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
@@ -1072,6 +1084,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             $somaMedias += $media;
 
             $lastStage = $this->getLastStage($matriculaId, $turmaId, $id);
+
+            if (empty($situacao->componentesCurriculares[$id])) {
+                $situacao->componentesCurriculares[$id] = new \stdClass();
+            }
 
             if ($this->getRegraAvaliacaoTipoProgressao() == RegraAvaliacao_Model_TipoProgressao::CONTINUADA) {
                 $getCountNotaCC = App_Model_IedFinder::verificaSeExisteNotasComponenteCurricular($matriculaId, $id);
@@ -1128,7 +1144,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 && $this->hasRegraAvaliacaoFormulaRecuperacao()
             ) {
                 $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
-            } elseif ($etapa < $lastStage && (string) $etapa != 'Rc') {
+            } elseif ($etapa < $lastStage && (string) $etapa != 'Rc' && !in_array($id, $disciplinasNaoReprovativas)) {
                 $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
             } else {
                 $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO;
@@ -1334,6 +1350,12 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                     // Se etapa = quantidade de etapas dessa disciplina, vamos assumir que é a última etapa
                     // já que essa variável só tem o intuito de dizer que todas etapas da disciplina estão lançadas
                     $etapasComponentes[$this->getOption('etapas')] = $this->getOption('etapas');
+                } elseif (in_array($id, $disciplinasNaoReprovativas)) {
+                    /**
+                     * Seta última etapa para componentes não reprovativos
+                     * para que o aluno possa progredir mesmo sem todos os lançamentos
+                     */
+                    $etapasComponentes[$this->getOption('etapas')] = $this->getOption('etapas');
                 } else {
                     $etapasComponentes[$etapa] = $etapa;
                 }
@@ -1352,8 +1374,16 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 }
             }
 
+            $faltasComponentesTotal = $faltasComponentes;
+            $componentesTotal = $componentes;
+
+            foreach ($disciplinasNaoReprovativas as $d) {
+                unset($faltasComponentesTotal[$d]);
+                unset($componentesTotal[$d]);
+            }
+
             if (0 == count($faltasComponentes) ||
-                count($faltasComponentes) != count($componentes)) {
+                count($faltasComponentesTotal) != count($componentesTotal)) {
                 $etapa = 1;
             } else {
                 $etapa = min($etapasComponentes);
@@ -2830,7 +2860,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             $media->markOld();
 
             return $this->getNotaComponenteMediaDataMapper()->save($media);
-        } catch (Exception $e) {
+        } catch (Exception) {
             return false;
         }
     }
@@ -2878,7 +2908,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         try {
             // Atualiza situação matricula
             $this->promover();
-        } catch (Exception $e) {
+        } catch (Exception) {
             // Evita que uma mensagem de erro apareça caso a situação na matrícula
             // não seja alterada.
         }
@@ -2909,7 +2939,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 $mediaGeral->get('notaAluno')
             ]);
             $mediaGeral->markOld();
-        } catch (Exception $e) {
+        } catch (Exception) {
             // Prossegue, sem problemas.
         }
 
@@ -3057,7 +3087,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                         $notaComponenteCurricularMedia->situacao = null;
 
                         $notaComponenteCurricularMedia->markOld();
-                    } catch (Exception $e) {
+                    } catch (Exception) {
                         $notaComponenteCurricularMedia = new Avaliacao_Model_NotaComponenteMedia([
                             'notaAluno' => $this->_getNotaAluno()->id,
                             'componenteCurricular' => $id,

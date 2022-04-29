@@ -2,13 +2,11 @@
 
 return new class extends clsDetalhe {
     public $titulo;
-
     public $id;
     public $ano;
     public $servidor_id;
     public $funcao_exercida;
     public $tipo_vinculo;
-
     public $ref_cod_instituicao;
     public $ref_cod_escola;
     public $ref_cod_curso;
