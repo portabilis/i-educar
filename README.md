@@ -80,7 +80,7 @@ facilitar o desenvolvimento.
 
 #### Servidor
 
-- [PHP](http://php.net/) versão 7.4
+- [PHP](http://php.net/) versão 8.0
 - [Composer](https://getcomposer.org/)
 - [Postgres](https://www.postgresql.org/)
 - [Nginx](https://www.nginx.com/)
@@ -244,6 +244,7 @@ e siga as instruções de instalação.
 
 ### Upgrade
 
+- [Upgrade para 2.7 da 2.6](https://github.com/portabilis/i-educar/wiki/Upgrade-para-2.7-da-2.6).
 - [Upgrade para 2.6 da 2.5](https://github.com/portabilis/i-educar/wiki/Upgrade-para-2.6-da-2.5).
 - [Upgrade para 2.5 da 2.4](https://github.com/portabilis/i-educar/wiki/Upgrade-para-2.5-da-2.4).
 - [Upgrade para 2.4 da 2.3](https://github.com/portabilis/i-educar/wiki/Upgrade-para-2.4-da-2.3).

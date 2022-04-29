@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a15eadb6ba2b8fc9775d5ed3679d4ab2",
+    "content-hash": "404adccae45d23eeab001944a29d241e",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -466,16 +466,16 @@
         },
         {
             "name": "dex/composer-plug-and-play",
-            "version": "0.6.0",
+            "version": "0.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/edersoares/composer-plug-and-play.git",
-                "reference": "15c73b02b1bd3d0b99310eacff8270754b3a5ae0"
+                "reference": "6c385dfd4ab7885d07a14ce2dd0428e2f1efba01"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/edersoares/composer-plug-and-play/zipball/15c73b02b1bd3d0b99310eacff8270754b3a5ae0",
-                "reference": "15c73b02b1bd3d0b99310eacff8270754b3a5ae0",
+                "url": "https://api.github.com/repos/edersoares/composer-plug-and-play/zipball/6c385dfd4ab7885d07a14ce2dd0428e2f1efba01",
+                "reference": "6c385dfd4ab7885d07a14ce2dd0428e2f1efba01",
                 "shasum": ""
             },
             "require": {
@@ -484,7 +484,7 @@
                 "php": ">=7.3"
             },
             "require-dev": {
-                "composer/composer": "^2.0",
+                "composer/composer": "^2.3.0",
                 "phpunit/phpunit": "^9.4"
             },
             "type": "composer-plugin",
@@ -510,9 +510,9 @@
             "description": "Plug and play packages for Composer",
             "support": {
                 "issues": "https://github.com/edersoares/composer-plug-and-play/issues",
-                "source": "https://github.com/edersoares/composer-plug-and-play/tree/0.6.0"
+                "source": "https://github.com/edersoares/composer-plug-and-play/tree/0.8.0"
             },
-            "time": "2021-12-29T14:30:42+00:00"
+            "time": "2022-04-08T01:32:57+00:00"
         },
         {
             "name": "dflydev/dot-access-data",
