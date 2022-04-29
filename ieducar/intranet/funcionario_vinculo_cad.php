@@ -4,7 +4,6 @@ return new class extends clsCadastro {
     public $nm_vinculo;
     public $cod_vinculo;
     public $abreviatura;
-
     protected $db;
 
     public function __construct()
@@ -36,7 +35,7 @@ return new class extends clsCadastro {
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
-        $this->breadcrumb("{$nomeMenu} v&iacute;nculo");
+        $this->breadcrumb("{$nomeMenu} vínculo");
 
         return $retorno;
     }

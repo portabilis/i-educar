@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\SchoolClassController;
+use App\Http\Controllers\WebController;
 use App\Process;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +24,10 @@ Route::group(['middleware' => ['auth']], function () {
 });
 
 Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.xssbypass', 'ieducar.suspended', 'auth', 'ieducar.checkresetpassword']], function () {
+    Route::get('/config', [WebController::class, 'config']);
+    Route::get('/user', [WebController::class, 'user']);
+    Route::get('/menus', [WebController::class, 'menus']);
+
     Route::get('/intranet/educar_matricula_turma_lst.php', 'LegacyController@intranet')
         ->defaults('uri', 'educar_matricula_turma_lst.php')
         ->name('enrollments.index');
@@ -132,6 +138,11 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
 
     Route::get('/dispensa-lote', 'BatchExemptionController@index')->middleware('can:modify:' . Process::BATCH_EXEMPTION)->name('batch-exemption.index');
     Route::post('/dispensa-lote', 'BatchExemptionController@exempt')->middleware('can:modify:' . Process::BATCH_EXEMPTION)->name('batch-exemption.exempt');
+
+    Route::post('/turma', [SchoolClassController::class, 'store'])
+        ->name('schoolclass.store');
+    Route::delete('/turma', [SchoolClassController::class, 'delete'])
+        ->name('schoolclass.delete');
 });
 
 Route::group(['namespace' => 'Exports', 'prefix' => 'exports'], function () {

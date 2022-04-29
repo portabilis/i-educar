@@ -30,7 +30,7 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['cod_acervo_idioma']) {
-            $this->addDetalhe([ 'C&oacute;digo Idioma', "{$registro['cod_acervo_idioma']}"]);
+            $this->addDetalhe([ 'Código Idioma', "{$registro['cod_acervo_idioma']}"]);
         }
         if ($registro['nm_idioma']) {
             $this->addDetalhe([ 'Idioma', "{$registro['nm_idioma']}"]);

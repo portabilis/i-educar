@@ -27,28 +27,6 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(589, $this->pessoa_logada, 0, 'educar_operador_lst.php', true);
 
-        /*if( is_numeric( $this->cod_operador ) )
-        {
-
-            $obj = new clsPmieducarOperador( $this->cod_operador );
-            $registro  = $obj->detalhe();
-            if( $registro )
-            {
-                foreach( $registro AS $campo => $val )  // passa todos os valores obtidos no registro para atributos do objeto
-                    $this->$campo = $val;
-                $this->data_cadastro = dataFromPgToBr( $this->data_cadastro );
-                $this->data_exclusao = dataFromPgToBr( $this->data_exclusao );
-
-                $obj_permissoes = new clsPermissoes();
-                if( $obj_permissoes->permissao_excluir( 589, $this->pessoa_logada, 0, null, true ) )
-                {
-                    $this->fexcluir = true;
-                }
-
-                $retorno = "Editar";
-            }
-        }
-        $this->url_cancelar = ($retorno == "Editar") ? "educar_operador_det.php?cod_operador={$registro["cod_operador"]}" : "educar_operador_lst.php";*/
         $this->script_cancelar = 'window.parent.fechaExpansivel("div_dinamico_"+(parent.DOM_divs.length-1));';
         $this->nome_url_cancelar = 'Cancelar';
 
@@ -57,18 +35,11 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
-        // primary keys
         $this->campoOculto('cod_operador', $this->cod_operador);
-
-        // foreign keys
-
-        // text
         $this->campoTexto('nome', 'Nome', $this->nome, 30, 255, true);
         $this->campoMemo('valor', 'Valor', $this->valor, 60, 10, true);
         $opcoes = [ 'Não', 'Sim' ];
         $this->campoLista('fim_sentenca', 'Fim Sentenca', $opcoes, $this->fim_sentenca);
-
-        // data
     }
 
     public function Novo()
@@ -89,7 +60,7 @@ return new class extends clsCadastro {
             return true;
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }

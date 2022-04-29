@@ -56,7 +56,7 @@ function int2CNPJ($int)
     }
 
     return substr($str, 0, 2) . '.' . substr($str, 2, 3). '.' . substr($str, 5, 3)
-    . '/' . substr($str, 8, 4) . '-' . substr($str, 12, 2);
+        . '/' . substr($str, 8, 4) . '-' . substr($str, 12, 2);
 }
 
 /**
@@ -102,7 +102,7 @@ function limpa_acentos($str_nome)
  */
 function dataToBrasil($data_original, $h_m = false, $h_m_s = false)
 {
-    if ($data_original) {
+    if (is_string($data_original)) {
         $arr_data = explode(' ', $data_original);
 
         $data = date('d/m/Y', strtotime($arr_data[0]));
@@ -208,9 +208,9 @@ function dataFromPgToBr($data_original, $formatacao = 'd/m/Y')
 function extendChars($text, $reverse = false)
 {
     $chars = ['Ã', 'Â', 'Á', 'À', 'Ä', 'É', 'Ê', 'È', 'Ë', 'Í', 'Ì', 'Ï', 'Î', 'Ô', 'Õ', 'Ó', 'Ò', 'Ö', 'Ú', 'Ù', 'Û', 'Ü', 'Ý', 'Ñ', 'Ç',
-                 'ã', 'â', 'á', 'à', 'ä', 'é', 'ê', 'è', 'ë', 'í', 'ì', 'ï', 'î', 'ô', 'õ', 'ó', 'ò', 'ö', 'ú', 'ù', 'û', 'ü', 'ý', 'ñ', 'ç' ];
+        'ã', 'â', 'á', 'à', 'ä', 'é', 'ê', 'è', 'ë', 'í', 'ì', 'ï', 'î', 'ô', 'õ', 'ó', 'ò', 'ö', 'ú', 'ù', 'û', 'ü', 'ý', 'ñ', 'ç' ];
     $extends = ['&Atilde;', '&Acirc;', '&Aacute;', '&Agrave;', '&Auml;', '&Eacute;', '&Ecirc;', '&Egrave;', '&Euml;', '&Iacute;', '&Igrave;', '&Iuml;', '&Icirc;',   '&Ocirc;', '&Otilde;', '&Oacute;', '&Ograve;', '&Ouml;', '&Uacute;', '&Ugrave;', '&Ucirc;', '&Uuml;', '&Yacute;', '&Ntilde;', '&Ccedil;',
-                   '&atilde;', '&acirc;', '&aacute;', '&agrave;', '&auml;', '&eacute;', '&ecirc;', '&egrave;', '&euml;', '&iacute;', '&igrave;', '&iuml;', '&icirc;',   '&ocirc;', '&otilde;', '&oacute;', '&ograve;', '&ouml;', '&uacute;', '&ugrave;', '&ucirc;', '&uuml;', '&yacute;', '&ntilde;', '&ccedil;' ];
+        '&atilde;', '&acirc;', '&aacute;', '&agrave;', '&auml;', '&eacute;', '&ecirc;', '&egrave;', '&euml;', '&iacute;', '&igrave;', '&iuml;', '&icirc;',   '&ocirc;', '&otilde;', '&oacute;', '&ograve;', '&ouml;', '&uacute;', '&ugrave;', '&ucirc;', '&uuml;', '&yacute;', '&ntilde;', '&ccedil;' ];
 
     if ($reverse) {
         return str_replace($extends, $chars, $text);
@@ -309,7 +309,7 @@ function int2IdFederal($int)
 function dbBool($val)
 {
     return ($val === 'true' || $val === 't' || $val === true || $val == 1 ||
-    $val === 'yes' || $val === 'y' || $val === 'sim' || $val === 's');
+        $val === 'yes' || $val === 'y' || $val === 'sim' || $val === 's');
 }
 
 function int2Nis($nis)
@@ -343,17 +343,17 @@ function validaCNPJ($cnpj = null)
     return validaDigitosCNPJ($cnpj);
 }
 
- function verificaSequencia($cnpj) {
-        return ($cnpj == '00000000000000' ||
-            $cnpj == '11111111111111' ||
-            $cnpj == '22222222222222' ||
-            $cnpj == '33333333333333' ||
-            $cnpj == '44444444444444' ||
-            $cnpj == '55555555555555' ||
-            $cnpj == '66666666666666' ||
-            $cnpj == '77777777777777' ||
-            $cnpj == '88888888888888' ||
-            $cnpj == '99999999999999');
+function verificaSequencia($cnpj) {
+    return ($cnpj == '00000000000000' ||
+        $cnpj == '11111111111111' ||
+        $cnpj == '22222222222222' ||
+        $cnpj == '33333333333333' ||
+        $cnpj == '44444444444444' ||
+        $cnpj == '55555555555555' ||
+        $cnpj == '66666666666666' ||
+        $cnpj == '77777777777777' ||
+        $cnpj == '88888888888888' ||
+        $cnpj == '99999999999999');
 }
 
 function validaDigitosCNPJ($cnpj): bool
@@ -393,4 +393,13 @@ function isEmptyDbArray($value): bool
 function isArrayEmpty($value): bool
 {
     return is_array($value) && empty($value[0]);
+}
+
+ function transformStringFromDBInArray($string): ?array
+{
+    if (is_string($string) && str_contains($string, '{') && str_contains($string, '}')) {
+        return explode(',', str_replace(['{', '}'], '', $string));
+    }
+
+    return null;
 }

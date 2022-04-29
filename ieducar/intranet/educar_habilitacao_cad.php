@@ -68,8 +68,8 @@ return new class extends clsCadastro {
         $obrigatorio = true;
         include('include/pmieducar/educar_campo_lista.php');
         // text
-        $this->campoTexto('nm_tipo', 'Habilita&ccedil;&atilde;o', $this->nm_tipo, 30, 255, true);
-        $this->campoMemo('descricao', 'Descri&ccedil;&atilde;o', $this->descricao, 60, 5, false);
+        $this->campoTexto('nm_tipo', 'Habilitação', $this->nm_tipo, 30, 255, true);
+        $this->campoMemo('descricao', 'Descrição', $this->descricao, 60, 5, false);
     }
 
     public function Novo()
@@ -84,7 +84,7 @@ return new class extends clsCadastro {
             );
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -94,14 +94,14 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarHabilitacao($this->cod_habilitacao, $this->pessoa_logada, null, $this->nm_tipo, $this->descricao, null, null, 1, $this->ref_cod_instituicao);
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
 
             throw new HttpResponseException(
                 new RedirectResponse('educar_habilitacao_lst.php')
             );
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }
@@ -111,21 +111,21 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarHabilitacao($this->cod_habilitacao, $this->pessoa_logada, null, null, null, null, null, 0, $this->ref_cod_instituicao);
         $excluiu = $obj->excluir();
         if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
 
             throw new HttpResponseException(
                 new RedirectResponse('educar_habilitacao_lst.php')
             );
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }
 
     public function Formular()
     {
-        $this->titulo = 'i-Educar - Habilita&ccedil;&atilde;o';
+        $this->titulo = 'i-Educar - Habilitação';
         $this->processoAp = '573';
     }
 };

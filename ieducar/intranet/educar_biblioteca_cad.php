@@ -72,11 +72,6 @@ return new class extends clsCadastro {
 
         // text
         $this->campoTexto('nm_biblioteca', 'Biblioteca', $this->nm_biblioteca, 30, 255, true);
-        /*if ($this->tombo_automatico)
-            $this->campoBoolLista("tombo_automatico", "Biblioteca possui tombo automático", $this->tombo_automatico);
-        else
-            $this->campoBoolLista("tombo_automatico", "Biblioteca possui tombo automático", "t");*/
-//      $this->campoCheck("tombo_automatico", "Biblioteca possui tombo automático", dbBool($this->tombo_automatico));
 
         //-----------------------INCLUI USUARIOS------------------------//
         $this->campoQuebra();
@@ -139,12 +134,19 @@ return new class extends clsCadastro {
             }
         }
 
-        $this->campoLista('ref_cod_usuario', 'Usu&aacute;rio', $opcoes, $this->ref_cod_usuario, '', false, '', "<a href='#' onclick=\"getElementById('incluir_usuario').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>", false, false);
+        $this->campoLista('ref_cod_usuario', 'Usuário', $opcoes, $this->ref_cod_usuario, '', false, '', "<a href='#' onclick=\"getElementById('incluir_usuario').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>", false, false);
 
         $this->campoOculto('incluir_usuario', '');
 
         $this->campoQuebra();
     }
+
+    public function Formular()
+    {
+        $this->title = 'Biblioteca';
+        $this->processoAp = '591';
+    }
+
 
     public function Novo()
     {
@@ -162,7 +164,7 @@ return new class extends clsCadastro {
                         $obj = new clsPmieducarBibliotecaUsuario($cadastrou, $campo[$i]);
                         $cadastrou2  = $obj->cadastra();
                         if (!$cadastrou2) {
-                            $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+                            $this->mensagem = 'Cadastro não realizado.<br>';
 
                             return false;
                         }
@@ -176,7 +178,7 @@ return new class extends clsCadastro {
             $this->simpleRedirect('educar_biblioteca_lst.php');
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -199,7 +201,7 @@ return new class extends clsCadastro {
                             $obj = new clsPmieducarBibliotecaUsuario($this->cod_biblioteca, $campo[$i]);
                             $cadastrou3  = $obj->cadastra();
                             if (!$cadastrou3) {
-                                $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+                                $this->mensagem = 'Edição não realizada.<br>';
 
                                 return false;
                             }
@@ -209,11 +211,11 @@ return new class extends clsCadastro {
             }
             //-----------------------FIM EDITA USUARIOS------------------------//
 
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_biblioteca_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }
@@ -226,11 +228,11 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarBiblioteca($this->cod_biblioteca, null, null, null, null, null, null, null, null, null, 0);
         $excluiu = $obj->excluir();
         if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_biblioteca_lst.php');
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }

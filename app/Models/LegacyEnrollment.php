@@ -45,6 +45,7 @@ class LegacyEnrollment extends Model
         'data_cadastro',
         'data_enturmacao',
         'sequencial_fechamento',
+        'remanejado_mesma_turma',
         'ativo',
     ];
 
@@ -160,5 +161,10 @@ class LegacyEnrollment extends Model
     public function updatedBy()
     {
         return $this->belongsTo(User::class, 'ref_usuario_exc');
+    }
+
+    public function getStudentId()
+    {
+        return $this->registration->student->cod_aluno;
     }
 }

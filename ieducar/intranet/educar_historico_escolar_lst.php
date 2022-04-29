@@ -34,7 +34,7 @@ return new class extends clsListagem {
 
     public function Gerar()
     {
-        $this->titulo = 'Hist&oacute;rico Escolar - Listagem';
+        $this->titulo = 'Histórico Escolar - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = $val;
@@ -54,7 +54,7 @@ return new class extends clsListagem {
         $obj_permissao = new clsPermissoes();
         $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
         $lista_busca[] = 'Escola';
-        $lista_busca[] = 'Institui&ccedil;&atilde;o';
+        $lista_busca[] = 'Instituição';
         $lista_busca = array_merge($lista_busca, ['Curso', 'Série', 'Registro', 'Livro', 'Folha']);
 
         $this->addCabecalhos($lista_busca);
@@ -66,21 +66,13 @@ return new class extends clsListagem {
         // outros Filtros
         $this->campoNumero('ano', 'Ano', $this->ano, 4, 4, false);
 
-        $opcoes = [ '' => 'Selecione', 2 => 'N&atilde;o', 1 => 'Sim' ];
+        $opcoes = [ '' => 'Selecione', 2 => 'Não', 1 => 'Sim' ];
         $this->campoLista('extra_curricular', 'Extra-curricular', $opcoes, $this->extra_curricular, '', false, '', '', false, false);
 
         if ($this->extra_curricular == 2) {
             $this->extra_curricular = 0;
         }
 
-//      if ($this->ref_cod_escola)
-//      {
-//          $obj_ref_cod_escola = new clsPmieducarEscola( $this->ref_cod_escola );
-//          $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
-//          $this->escola = $det_ref_cod_escola["nome"];
-//      }
-
-        // Paginador
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
@@ -126,7 +118,7 @@ return new class extends clsListagem {
                 if ($registro['extra_curricular']) {
                     $registro['extra_curricular'] = 'Sim';
                 } else {
-                    $registro['extra_curricular'] = 'N&atilde;o';
+                    $registro['extra_curricular'] = 'Não';
                 }
 
                 $lista_busca = [
@@ -201,7 +193,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'Distribui&ccedil;&atilde;o de uniforme';
+        $this->title = 'Atualização de histórico escolar';
         $this->processoAp = '578';
     }
 };

@@ -54,11 +54,6 @@ class LegacyUserType extends Model
     ];
 
     /**
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
      * @return int
      */
     public function getLevelAttribute()

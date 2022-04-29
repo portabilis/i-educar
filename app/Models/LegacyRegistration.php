@@ -194,7 +194,7 @@ class LegacyRegistration extends Model
      */
     public function scopeActive($query)
     {
-        return $query->where('ativo', 1);
+        return $query->where('matricula.ativo', 1);
     }
 
     public function getIsTransferredAttribute()
@@ -266,5 +266,31 @@ class LegacyRegistration extends Model
     public function getStatusDescriptionAttribute()
     {
         return (new RegistrationStatus())->getDescriptiveValues()[(int) $this->aprovado];
+    }
+
+    public function scopeMale(Builder $query): Builder
+    {
+        return $query->join('pmieducar.aluno', 'aluno.cod_aluno', '=', 'matricula.ref_cod_aluno')
+            ->join('cadastro.fisica', 'aluno.ref_idpes', '=', 'fisica.idpes')
+            ->where('aluno.ativo', 1)
+            ->where('sexo', 'M');
+    }
+
+    public function scopeFemale(Builder $query): Builder
+    {
+        return $query->join('pmieducar.aluno', 'aluno.cod_aluno', '=', 'matricula.ref_cod_aluno')
+            ->join('cadastro.fisica', 'aluno.ref_idpes', '=', 'fisica.idpes')
+            ->where('aluno.ativo', 1)
+            ->where('sexo', 'F');
+    }
+
+    public function scopeLastYear(Builder $query): Builder
+    {
+        return $query->where('matricula.ano', date('Y') - 1);
+    }
+
+    public function scopeCurrentYear(Builder $query): Builder
+    {
+        return $query->where('matricula.ano', date('Y'));
     }
 }

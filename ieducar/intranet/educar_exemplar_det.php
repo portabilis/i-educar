@@ -55,7 +55,7 @@ return new class extends clsDetalhe {
         $this->addDetalhe(['Tombo',  "{$registro['tombo']}"]);
 
         if ($registro['ref_cod_acervo']) {
-            $this->addDetalhe([ 'Obra Refer&eacute;ncia', "{$registro['ref_cod_acervo']}"]);
+            $this->addDetalhe([ 'Obra Referéncia', "{$registro['ref_cod_acervo']}"]);
         }
         if ($registro['ref_cod_fonte']) {
             $this->addDetalhe([ 'Fonte', "{$registro['ref_cod_fonte']}"]);
@@ -68,19 +68,19 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['ref_cod_situacao']) {
-            $this->addDetalhe([ 'Situac&atilde;o', "{$registro['ref_cod_situacao']}"]);
+            $this->addDetalhe([ 'Situacão', "{$registro['ref_cod_situacao']}"]);
         }
         if ($registro['permite_emprestimo']) {
-            $registro['permite_emprestimo'] = $registro['permite_emprestimo'] == 2 ? 'Sim' :'N&atilde;o';
+            $registro['permite_emprestimo'] = $registro['permite_emprestimo'] == 2 ? 'Sim' :'Não';
 
-            $this->addDetalhe([ 'Permite Empr&eacute;stimo', "{$registro['permite_emprestimo']}"]);
+            $this->addDetalhe([ 'Permite Empréstimo', "{$registro['permite_emprestimo']}"]);
         }
         if ($registro['preco']) {
             $registro['preco'] = number_format($registro['preco'], 2, ',', '.');
-            $this->addDetalhe([ 'Pre&ccedil;o', "{$registro['preco']}"]);
+            $this->addDetalhe([ 'Preço', "{$registro['preco']}"]);
         }
         if ($registro['data_aquisicao']) {
-            $this->addDetalhe([ 'Data Aquisic&atilde;o', dataFromPgToBr($registro['data_aquisicao'], 'd/m/Y') ]);
+            $this->addDetalhe([ 'Data Aquisicão', dataFromPgToBr($registro['data_aquisicao'], 'd/m/Y') ]);
         }
 
         $obj_permissoes = new clsPermissoes();

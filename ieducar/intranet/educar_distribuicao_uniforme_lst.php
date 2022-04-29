@@ -36,7 +36,7 @@ return new class extends clsListagem {
 
     public function Gerar()
     {
-        $this->titulo = 'Distribui&ccedil;&atilde;o de uniforme - Listagem';
+        $this->titulo = 'Distribuição de uniforme - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = $val;
@@ -48,7 +48,7 @@ return new class extends clsListagem {
             $this->simpleRedirect('educar_aluno_lst.php');
         }
 
-        $this->addCabecalhos([ 'Ano', 'Kit completo', 'Data da distribu&ccedil;&atilde;o']);
+        $this->addCabecalhos([ 'Ano', 'Kit completo', 'Data da distribução']);
 
         $obj_permissao = new clsPermissoes();
         $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
@@ -113,7 +113,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'Distribui&ccedil;&atilde;o de uniforme';
+        $this->title = 'Distribuição de uniforme';
         $this->processoAp = '578';
     }
 };

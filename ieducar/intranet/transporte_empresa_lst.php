@@ -42,18 +42,18 @@ return new class extends clsListagem {
             $this->$var = ($val === '') ? null: $val;
         }
 
-        $this->campoNumero('cod_empresa', 'C&oacute;digo da empresa', $this->cod_empresa, 20, 255, false);
+        $this->campoNumero('cod_empresa', 'Código da empresa', $this->cod_empresa, 20, 255, false);
         $this->campoTexto('nome_empresa', 'Nome fantasia', $this->nome_empresa, 50, 255, false);
         $this->campoTexto('nome_responsavel', 'Nome do responsável', $this->nome_responsavel, 50, 255, false);
 
         $obj_permissoes = new clsPermissoes();
 
-        $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+        $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
         $this->addCabecalhos([
-            'C&oacute;digo da empresa',
+            'Código da empresa',
             'Nome fantasia',
-            'Nome do respons&aacute;vel',
+            'Nome do responsável',
             'Telefone'
         ]);
 
@@ -78,7 +78,6 @@ return new class extends clsListagem {
 
         $this->addPaginador2('transporte_empresa_lst.php', $total, $_GET, $this->nome, $this->limite);
 
-        //**
         $this->largura = '100%';
 
         $obj_permissao = new clsPermissoes();

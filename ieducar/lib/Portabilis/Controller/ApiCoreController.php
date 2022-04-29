@@ -353,7 +353,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
 
     protected function getDataMapperFor($packageName, $modelName)
     {
-        return Portabilis_DataMapper_Utils::getDataMapperFor($packageName, $modelName);
+        return (new Portabilis_DataMapper_Utils())->getDataMapperFor($packageName, $modelName);
     }
 
     protected function getEntityOf($dataMapper, $id)
@@ -365,7 +365,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
     {
         try {
             $entity = $this->getEntityOf($dataMapper, $id);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $entity = null;
         }
 

@@ -58,7 +58,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Data Reserva', dataFromPgToBr($registro['data_reserva'], 'd/m/Y') ]);
         }
         if ($registro['data_prevista_disponivel']) {
-            $this->addDetalhe([ 'Data Prevista Dispon&iacute;vel', dataFromPgToBr($registro['data_prevista_disponivel'], 'd/m/Y') ]);
+            $this->addDetalhe([ 'Data Prevista Disponível', dataFromPgToBr($registro['data_prevista_disponivel'], 'd/m/Y') ]);
         }
 
         $obj_permissoes = new clsPermissoes();

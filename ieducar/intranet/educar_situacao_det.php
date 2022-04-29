@@ -1,13 +1,7 @@
 <?php
 
 return new class extends clsDetalhe {
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
     public $titulo;
-
     public $cod_situacao;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -20,13 +14,12 @@ return new class extends clsDetalhe {
     public $data_exclusao;
     public $ativo;
     public $ref_cod_biblioteca;
-
     public $ref_cod_instituicao;
     public $ref_cod_escola;
 
     public function Gerar()
     {
-        $this->titulo = 'Situa&ccedil;&atilde;o - Detalhe';
+        $this->titulo = 'Situação - Detalhe';
 
         $this->cod_situacao=$_GET['cod_situacao'];
 
@@ -57,7 +50,7 @@ return new class extends clsDetalhe {
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
         if ($registro['ref_cod_instituicao'] && $nivel_usuario == 1) {
-            $this->addDetalhe([ 'Institui&ccedil;&atilde;o', "{$registro['ref_cod_instituicao']}"]);
+            $this->addDetalhe([ 'Instituição', "{$registro['ref_cod_instituicao']}"]);
         }
         if ($registro['ref_cod_escola'] && ($nivel_usuario == 1 || $nivel_usuario == 2)) {
             $this->addDetalhe([ 'Escola', "{$registro['ref_cod_escola']}"]);
@@ -66,34 +59,34 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Biblioteca', "{$registro['ref_cod_biblioteca']}"]);
         }
         if ($registro['nm_situacao']) {
-            $this->addDetalhe([ 'Situa&ccedil;&atilde;o', "{$registro['nm_situacao']}"]);
+            $this->addDetalhe([ 'Situação', "{$registro['nm_situacao']}"]);
         }
         if ($registro['permite_emprestimo']) {
             if ($registro['permite_emprestimo'] == 1) {
-                $registro['permite_emprestimo'] = 'n&atilde;o';
+                $registro['permite_emprestimo'] = 'não';
             } elseif ($registro['permite_emprestimo'] == 2) {
                 $registro['permite_emprestimo'] = 'sim';
             }
-            $this->addDetalhe([ 'Permite Empr&eacute;stimo', "{$registro['permite_emprestimo']}"]);
+            $this->addDetalhe([ 'Permite Empréstimo', "{$registro['permite_emprestimo']}"]);
         }
         if ($registro['descricao']) {
-            $this->addDetalhe([ 'Descri&ccedil;&atilde;o', "{$registro['descricao']}"]);
+            $this->addDetalhe([ 'Descrição', "{$registro['descricao']}"]);
         }
         if ($registro['situacao_padrao']) {
             if ($registro['situacao_padrao'] == 0) {
-                $registro['situacao_padrao'] = 'n&atilde;o';
+                $registro['situacao_padrao'] = 'não';
             } elseif ($registro['situacao_padrao'] == 1) {
                 $registro['situacao_padrao'] = 'sim';
             }
-            $this->addDetalhe([ 'Situa&ccedil;&atilde;o Padr&atilde;o', "{$registro['situacao_padrao']}"]);
+            $this->addDetalhe([ 'Situação Padrão', "{$registro['situacao_padrao']}"]);
         }
         if ($registro['situacao_emprestada']) {
             if ($registro['situacao_emprestada'] == 0) {
-                $registro['situacao_emprestada'] = 'n&atilde;o';
+                $registro['situacao_emprestada'] = 'não';
             } elseif ($registro['situacao_emprestada'] == 1) {
                 $registro['situacao_emprestada'] = 'sim';
             }
-            $this->addDetalhe([ 'Situa&ccedil;&atilde;o Emprestada', "{$registro['situacao_emprestada']}"]);
+            $this->addDetalhe([ 'Situação Emprestada', "{$registro['situacao_emprestada']}"]);
         }
 
         $obj_permissoes = new clsPermissoes();
@@ -112,7 +105,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'Situa&ccedil;&atilde;o';
+        $this->title = 'Situação';
         $this->processoAp = '602';
     }
 };

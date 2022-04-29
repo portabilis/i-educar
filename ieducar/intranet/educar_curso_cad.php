@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\LegacyCourseEducacensoStage;
+use App\Models\LegacyEducacensoStages;
+
 return new class extends clsCadastro {
     public $pessoa_logada;
 
@@ -89,8 +92,8 @@ return new class extends clsCadastro {
             $this->habilitacao_curso = unserialize(urldecode($_POST['habilitacao_curso']));
         }
 
-        $qtd_habilitacao = (count($this->habilitacao_curso) == 0) ?
-         1 : (count($this->habilitacao_curso) + 1);
+        $qtd_habilitacao = (is_array($this->habilitacao_curso) && count($this->habilitacao_curso) == 0) ?
+            1 : (is_array($this->habilitacao_curso) && count($this->habilitacao_curso) + 1);
 
         if (is_numeric($this->cod_curso) && $_POST['incluir'] != 'S' && empty($_POST['excluir_'])) {
             $obj = new clsPmieducarHabilitacaoCurso(null, $this->cod_curso);
@@ -287,7 +290,7 @@ return new class extends clsCadastro {
 
         $this->campoMonetario(
             'carga_horaria',
-            'Carga Hor&aacute;ria',
+            'Carga Horária',
             $this->carga_horaria,
             7,
             7,
@@ -425,10 +428,20 @@ return new class extends clsCadastro {
         $options = ['label' => 'Modalidade do curso', 'resources' => $resources, 'value' => $this->modalidade_curso];
         $this->inputsHelper()->select('modalidade_curso', $options);
 
-        $helperOptions = ['objectName' => 'etapacurso'];
-        $options = ['label' => 'Etapas que o curso contêm', 'size' => 50, 'required' => false, 'options' => ['value' => null]];
+        $etapasEducacenso = LegacyEducacensoStages::getDescriptiveValues();
+        $etapas = $this->cod_curso ? LegacyCourseEducacensoStage::getIdsByCourse($this->cod_curso) : [];
 
-        $this->inputsHelper()->multipleSearchEtapacurso('', $options, $helperOptions);
+        $this->inputsHelper()->multipleSearchCustom('', [
+            'label' => 'Etapas que o curso contém',
+            'size' => 50,
+            'required' => false,
+            'options' => [
+                'values' => $etapas,
+                'all_values' => $etapasEducacenso
+            ]
+        ], [
+            'objectName'  => 'etapacurso',
+        ]);
 
         $this->campoCheck('importar_curso_pre_matricula', 'Importar os dados do curso para o recurso de pré-matrícula digital?', $this->importar_curso_pre_matricula);
     }
@@ -641,12 +654,25 @@ return new class extends clsCadastro {
 
     public function gravaEtapacurso($cod_curso)
     {
-        Portabilis_Utils_Database::fetchPreparedQuery('DELETE FROM etapas_curso_educacenso WHERE curso_id = $1', ['params' => [$cod_curso]]);
+        $etapas = [];
+
         foreach ($this->getRequest()->etapacurso as $etapaId) {
-            if (! empty($etapaId)) {
-                Portabilis_Utils_Database::fetchPreparedQuery('INSERT INTO etapas_curso_educacenso VALUES ($1 , $2)', ['params' => [$etapaId, $cod_curso] ]);
+            if (empty($etapaId)) {
+                continue;
             }
+
+            $etapas[] = $etapaId;
+
+            LegacyCourseEducacensoStage::query()->updateOrCreate([
+                'etapa_id' => $etapaId,
+                'curso_id' => $cod_curso,
+            ]);
         }
+
+        LegacyCourseEducacensoStage::query()
+            ->where('curso_id', $cod_curso)
+            ->whereNotIn('etapa_id', $etapas)
+            ->delete();
     }
 
     public function updateClassStepsForCourse($courseCode, $standerdSchoolYear, $currentYear)

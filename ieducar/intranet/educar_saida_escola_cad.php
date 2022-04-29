@@ -29,7 +29,7 @@ return new class extends clsCadastro {
 
         $obj_matricula = new clsPmieducarMatricula($this->cod_matricula, null, null, null, $this->pessoa_logada, null, null);
 
-        $det_matricula = $obj_matricula->detalhe();
+        $obj_matricula->detalhe();
 
         $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}";
 
@@ -61,7 +61,7 @@ return new class extends clsCadastro {
         $this->inputsHelper()->date('data_saida_escola', ['label' => 'Data de saída da escola', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')]);
 
         // text
-        $this->campoMemo('observacao', 'Observa&ccedil;&atilde;o', $this->observacao, 60, 5, false);
+        $this->campoMemo('observacao', 'Observação', $this->observacao, 60, 5, false);
     }
 
     public function Novo()
@@ -78,7 +78,7 @@ return new class extends clsCadastro {
 
         $obj_matricula = new clsPmieducarMatricula($this->ref_cod_matricula, null, null, null, $this->pessoa_logada);
 
-        $det_matricula = $obj_matricula->detalhe();
+        $obj_matricula->detalhe();
 
         if ($obj_matricula->edita()) {
             if ($obj_matricula->setSaidaEscola($this->observacao, Portabilis_Date_Utils::brToPgSQL($this->data_saida_escola))) {

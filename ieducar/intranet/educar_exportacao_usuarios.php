@@ -21,7 +21,7 @@ return new class extends clsCadastro {
         url('intranet/educar_configuracoes_index.php') => 'Configurações',
     ]);
 
-        return 'Nova exporta&ccedil;&atilde;o';
+        return 'Nova exportação';
     }
 
     public function Gerar()
@@ -55,7 +55,7 @@ return new class extends clsCadastro {
         }
         echo '</script>';
 
-        $this->campoLista('ref_cod_tipo_usuario', 'Tipo usu&aacute;rio', $opcoes, $this->ref_cod_tipo_usuario, '', null, null, null, null, false);
+        $this->campoLista('ref_cod_tipo_usuario', 'Tipo usuário', $opcoes, $this->ref_cod_tipo_usuario, '', null, null, null, null, false);
 
         Portabilis_View_Helper_Application::loadJavascript($this, '/modules/ExportarUsuarios/exportarUsuarios.js');
 
@@ -65,7 +65,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'Nova exporta&ccedil;&atilde;o';
+        $this->title = 'Nova exportação';
         $this->processoAp = 999869;
     }
 };

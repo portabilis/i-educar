@@ -998,7 +998,7 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
   var $linha = $j('<tr />');
 
   if (componenteCurricularSelected) {
-    $j('<th />').html('&Aacute;rea de Conhecimento').appendTo($linha);
+    $j('<th />').html('área de Conhecimento').appendTo($linha);
     $j('<th />').html('Componente curricular').appendTo($linha);
   }
 

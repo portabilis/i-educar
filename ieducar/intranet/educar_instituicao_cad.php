@@ -143,8 +143,6 @@ return new class extends clsCadastro {
 
         $this->inputsHelper()->simpleSearchPessoa('coordenador_transporte', $options);
 
-        $opcoes = [];
-
         if (!empty($this->ref_sigla_uf)) {
             $opcoes = [null => 'Selecione'];
             $orgaoRegional = new Educacenso_Model_OrgaoRegionalDataMapper();

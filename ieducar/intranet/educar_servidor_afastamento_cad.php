@@ -8,16 +8,7 @@ use Illuminate\Support\Carbon;
 
 return new class extends clsCadastro {
 
-    /**
-     * Referência a usuário da sessão
-     *
-     * @var int
-     */
     public $pessoa_logada = null;
-
-    /**
-     * Atributos de mapeamento dos campos de banco de dados
-     */
     public $id = null;
     public $ref_cod_servidor = null;
     public $sequencial = null;
@@ -33,12 +24,6 @@ return new class extends clsCadastro {
     public $status = null;
     public $alocacao_array = null;
     public $parametros = null;
-
-    /**
-     * Dias da semana
-     *
-     * @var array
-     */
     public $dias_da_semana = [
         '' => 'Selecione',
         1  => 'Domingo',

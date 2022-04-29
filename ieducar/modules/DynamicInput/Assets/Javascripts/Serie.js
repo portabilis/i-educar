@@ -12,7 +12,7 @@
 
     var handleGetSeries = function(resources) {
       var selectOptions = jsonResourcesToSelectOptions(resources['options']);
-      updateSelect($serieField, selectOptions, "Selecione uma s&eacute;rie");
+      updateSelect($serieField, selectOptions, "Selecione uma série");
     }
 
     var updateSeries = function(){

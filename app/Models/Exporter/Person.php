@@ -51,6 +51,7 @@ class Person extends Model
                 'organization' => 'Empresa',
                 'monthly_income' => 'Renda Mensal',
                 'gender' => 'Gênero',
+                'race' => 'Raça',
                 'phones.phones' => 'Telefones',
                 'disabilities.disabilities' => 'Deficiências',
             ],

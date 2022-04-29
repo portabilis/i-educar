@@ -1212,7 +1212,7 @@ var handleGetPersonDetails = function (dataResponse) {
     $j("#cadastrar-pessoa-responsavel-link").show();
   } else if ($j("#pai").val() == "") {
     $j("#tipo_responsavel").append(
-      '<option value="mae" selected >M&atilde;e</option>'
+      '<option value="mae" selected >Mãe</option>'
     );
     $j("#tipo_responsavel").append(
       '<option value="outra_pessoa" >Outra pessoa</option>'
@@ -1226,13 +1226,13 @@ var handleGetPersonDetails = function (dataResponse) {
     );
   } else {
     $j("#tipo_responsavel").append(
-      '<option value="mae" selected >M&atilde;e</option>'
+      '<option value="mae" selected >Mãe</option>'
     );
     $j("#tipo_responsavel").append(
       '<option value="pai" selected >Pai</option>'
     );
     $j("#tipo_responsavel").append(
-      '<option value="pai_mae" >Pai e M&atilde;e</option>'
+      '<option value="pai_mae" >Pai e Mãe</option>'
     );
     $j("#tipo_responsavel").append(
       '<option value="outra_pessoa" >Outra pessoa</option>'
@@ -1292,6 +1292,9 @@ var handleGetPersonDetails = function (dataResponse) {
   $j("#cartorio_emissao_certidao_civil").val(
     dataResponse.cartorio_cert_civil
   );
+
+  $j("#sus").val(dataResponse.sus);
+
   checkJustificativa();
 
   canShowParentsFields();
@@ -1868,7 +1871,7 @@ function canShowParentsFields() {
                 <tr>
                   <td valign="top">
                     <fieldset>
-                      <legend>Dados b&aacute;sicos</legend>
+                      <legend>Dados básicos</legend>
                       <label for="nome-pessoa-aluno">Nome<span class="campo_obrigatorio">*</span> </label>
                       <input type="text" name="nome-pessoa-aluno" id="nome-pessoa-aluno" size="49" maxlength="255" class="text">
                       <label for="nome-social-pessoa-aluno">Nome social e/ou afetivo</label>
@@ -1903,7 +1906,7 @@ function canShowParentsFields() {
                   </td>
                   <td>
                     <fieldset valign="top">
-                      <legend>Dados do endere&ccedil;o</legend>
+                      <legend>Dados do endereço</legend>
                       <table></table>
                     </fieldset>
                   </td>
@@ -2661,10 +2664,10 @@ function canShowParentsFields() {
 
       switch (parentType) {
         case "mae":
-          tipoPessoa = "m&atilde;e";
+          tipoPessoa = "mãe";
           break;
         case "responsavel":
-          tipoPessoa = "respons&aacute;vel";
+          tipoPessoa = "responsável";
           break;
         default:
           tipoPessoa = "pai";
@@ -2716,7 +2719,7 @@ function canShowParentsFields() {
       $j("#dialog-form-pessoa-parent form h2:first-child")
         .html(
           "Editar pessoa " +
-          (parentType == "mae" ? "m&atilde;e" : parentType)
+          (parentType == "mae" ? "mãe" : parentType)
         )
         .css("margin-left", "0.75em");
 

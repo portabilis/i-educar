@@ -71,7 +71,6 @@ class Portabilis_View_Helper_Input_Core
         Portabilis_View_Helper_Application::loadStylesheet($this->viewInstance, $style);
 
         $dependencies = [
-            '/modules/Portabilis/Assets/Javascripts/Utils.js',
             '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
             '/modules/Portabilis/Assets/Javascripts/Validator.js'
         ];
@@ -113,7 +112,7 @@ class Portabilis_View_Helper_Input_Core
 
     protected function getDataMapperFor($packageName, $modelName)
     {
-        return Portabilis_DataMapper_Utils::getDataMapperFor($packageName, $modelName);
+        return (new Portabilis_DataMapper_Utils())->getDataMapperFor($packageName, $modelName);
     }
 
     protected static function mergeOptions($options, $defaultOptions)

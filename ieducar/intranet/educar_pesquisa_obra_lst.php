@@ -102,10 +102,8 @@ return new class extends clsListagem {
 
         $total = $obj_acervo->_total;
 
-        // monta a lista
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
-//              echo $registro["cod_acervo_auto"];die;
                 $obj_acervo_autor = new clsPmieducarAcervoAutor($registro['cod_acervo_autor']);
                 $det_acervo_autor = $obj_acervo_autor->detalhe();
                 $registro['cod_acervo_autor'] = $det_acervo_autor['nm_autor'];

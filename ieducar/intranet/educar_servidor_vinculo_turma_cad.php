@@ -10,27 +10,16 @@ use iEducar\Support\View\SelectOptions;
 
 return new class extends clsCadastro {
     public $pessoa_logada;
-
     public $id;
-
     public $ano;
-
     public $servidor_id;
-
     public $funcao_exercida;
-
     public $tipo_vinculo;
-
     public $permite_lancar_faltas_componente;
-
     public $ref_cod_instituicao;
-
     public $ref_cod_escola;
-
     public $ref_cod_curso;
-
     public $ref_cod_serie;
-
     public $ref_cod_turma;
 
     public function Inicializar()
@@ -162,7 +151,7 @@ return new class extends clsCadastro {
 
         $this->inputsHelper()->checkbox('permite_lancar_faltas_componente', $options);
         $this->inputsHelper()->checkbox('selecionar_todos', ['label' => 'Selecionar/remover todos']);
-        $this->inputsHelper()->multipleSearchComponenteCurricular(null, ['label' => 'Componentes lecionados', 'required' => true], ['searchForArea' => true]);
+        $this->inputsHelper()->multipleSearchComponenteCurricular(null, ['label' => 'Componentes lecionados', 'required' => true], ['searchForArea' => true, 'allDisciplinesMulti' => true]);
 
         $scripts = [
             '/modules/Cadastro/Assets/Javascripts/ServidorVinculoTurma.js'
@@ -370,7 +359,7 @@ return new class extends clsCadastro {
         try {
             /** @var iDiarioService $iDiarioService */
             $iDiarioService = app(iDiarioService::class);
-        } catch (RuntimeException $e) {
+        } catch (RuntimeException) {
             return false;
         }
 

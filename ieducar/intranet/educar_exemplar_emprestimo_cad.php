@@ -67,7 +67,6 @@ return new class extends clsCadastro {
 
         $obj_cliente_suspenso = new clsPmieducarCliente();
         $lst_cliente_suspenso = $obj_cliente_suspenso->lista($this->ref_cod_cliente, null, null, null, null, null, null, null, null, null, 1, null, 'suspenso');
-//      echo "<pre>";print_r($lst_cliente_suspenso);
         if (is_array($lst_cliente_suspenso)) {
             echo '<script> alert(\'Cliente atualmente suspenso!\\nNão é possivel realizar o empréstimo.\'); window.location = \'educar_exemplar_emprestimo_lst.php\';</script>';
             die();
@@ -91,7 +90,6 @@ return new class extends clsCadastro {
             $valor_total_divida = $valor_total_multa - $valor_total_pago;
         }
 
-        //$lst_cliente_divida = $obj_exemplar_emprestimo->clienteDividaTotal( null,$this->ref_cod_cliente,null,$this->ref_cod_biblioteca );
         $lst_cliente_divida = $obj_exemplar_emprestimo->listaDividaPagamentoCliente($this->ref_cod_cliente, null, null, null, $this->ref_cod_biblioteca);
         if (is_array($lst_cliente_divida) && count($lst_cliente_divida)) {// calcula o valor das multas do cliente na biblioteca em que esta realizando o emprestimo
             foreach ($lst_cliente_divida as $divida) {
@@ -160,7 +158,6 @@ return new class extends clsCadastro {
                             unset($this->excluir_tombo);
                         } else {
                             $obj_exemplar = new clsPmieducarExemplar();
-//                          $lst_exemplar = $obj_exemplar->lista($exemplar,null,null,null,null,null,null,2,null,null,null,null,null,1,null,null,null,null,$this->ref_cod_biblioteca);
                             $lst_exemplar = $obj_exemplar->lista(null, null, null, null, null, null, null, 2, null, null, null, null, null, 1, null, null, null, null, $this->ref_cod_biblioteca, null, null, null, $exemplar);
 
                             //verifica se o exemplar é disponibilizado para empréstimo
@@ -172,7 +169,6 @@ return new class extends clsCadastro {
                                 $det_situacao = $obj_situacao->detalhe();
                                 $situacao_padrao = $det_situacao['situacao_padrao'];
                                 $permite_emprestimo = $det_situacao['permite_emprestimo'];
-//                          echo "<pre>"; print_r($det_situacao); die();
                                 // verifica se a situacao do exemplar é padrao (disponivel)
                                 if ($situacao_padrao == 1 && $permite_emprestimo == 2) {
                                     $obj_reservas = new clsPmieducarReservas();
@@ -212,9 +208,9 @@ return new class extends clsCadastro {
                                                 $det_reserva = array_shift($reservas);
                                                 $data_disponivel = $reservas['data_prevista_disponivel'];
                                                 if ($dias_espera == 1) {
-                                                    $data_disponivel = date('D Y-m-d', strtotime("$data_disponivel +".$dias_espera.' day'));
+                                                    $data_disponivel = date('Y-m-d', strtotime("$data_disponivel +".$dias_espera.' day'));
                                                 } elseif ($dias_espera > 1) {
-                                                    $data_disponivel = date('D Y-m-d', strtotime("$data_disponivel +".$dias_espera.' days'));
+                                                    $data_disponivel = date('Y-m-d', strtotime("$data_disponivel +".$dias_espera.' days'));
                                                 }
 
                                                 //---------------------DIAS FUNCIONAMENTO----------------------//
@@ -237,17 +233,17 @@ return new class extends clsCadastro {
                                                 if (is_array($lst_biblioteca_feriado) && count($lst_biblioteca_feriado)) {
                                                     foreach ($lst_biblioteca_feriado as $dia_feriado) {
                                                         // dias de feriado da biblioteca
-                                                        $biblioteca_dias_feriado[] = dataFromPgToBr($dia_feriado['data_feriado'], 'D Y-m-d');
+                                                        $biblioteca_dias_feriado[] = dataFromPgToBr($dia_feriado['data_feriado'], 'Y-m-d');
                                                     }
                                                 }
 
                                                 // devido a comparacao das datas, é necessario mudar o formato da data
-                                                $data_disponivel = dataFromPgToBr($data_disponivel, 'D Y-m-d');
+                                                $data_disponivel = dataFromPgToBr($data_disponivel, 'Y-m-d');
 
                                                 // verifica se a data cai em algum dia que a biblioteca n funciona
                                                 while (in_array(substr($data_disponivel, 0, 3), $biblioteca_dias_folga) || in_array($data_disponivel, $biblioteca_dias_feriado)) {
-                                                    $data_disponivel = date('D Y-m-d ', strtotime("$data_disponivel +1 day"));
-                                                    $data_disponivel = dataFromPgToBr($data_disponivel, 'D Y-m-d');
+                                                    $data_disponivel = date('Y-m-d ', strtotime("$data_disponivel +1 day"));
+                                                    $data_disponivel = dataFromPgToBr($data_disponivel, 'Y-m-d');
                                                 }
 
                                                 $data_disponivel = dataFromPgToBr($data_disponivel, 'Y-m-d');
@@ -319,7 +315,6 @@ return new class extends clsCadastro {
         }
 
         $this->campoOculto('incluir_tombo', '');
-//      $this->campoRotulo( "bt_incluir_tombo", "Tombo", "<a href='#' onclick=\"getElementById('incluir_tombo').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_incluir2.gif' title='Incluir' border=0></a>" );
 
         $this->campoQuebra();
         //-----------------------FIM INCLUI TOMBO------------------------//
@@ -347,7 +342,7 @@ return new class extends clsCadastro {
                         $obj = new clsPmieducarExemplar($campo, null, null, null, $cod_situacao, $this->pessoa_logada, null, null, null, null, null, 1);
                         $editou = $obj->edita();
                         if (!$editou) {
-                            $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+                            $this->mensagem = 'Cadastro não realizado.<br>';
 
                             return false;
                         }
@@ -355,7 +350,7 @@ return new class extends clsCadastro {
                         echo '<script> alert(\'ERRO - Não foi possível encontrar a situação EMPRESTADO da biblioteca utilizada!\'); </script>';
                     }
                 } else {
-                    $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+                    $this->mensagem = 'Cadastro não realizado.<br>';
 
                     return false;
                 }
@@ -364,14 +359,14 @@ return new class extends clsCadastro {
             $this->simpleRedirect('educar_exemplar_devolucao_lst.php');
         }
         echo '<script> alert(\'É necessário adicionar pelo menos 1 Tombo!\') </script>';
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
 
     public function Formular()
     {
-        $this->title = 'Exemplar Empr&eacute;stimo';
+        $this->title = 'Exemplar Empréstimo';
         $this->processoAp = '610';
     }
 };

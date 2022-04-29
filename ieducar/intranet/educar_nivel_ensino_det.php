@@ -20,7 +20,7 @@ return new class extends clsDetalhe {
 
     public function Gerar()
     {
-        $this->titulo = 'N&iacute;vel Ensino - Detalhe';
+        $this->titulo = 'Nível Ensino - Detalhe';
 
         $this->cod_nivel_ensino=$_GET['cod_nivel_ensino'];
 
@@ -39,14 +39,14 @@ return new class extends clsDetalhe {
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe([ 'Institui&ccedil;&atilde;o', "{$registro['ref_cod_instituicao']}"]);
+                $this->addDetalhe([ 'Instituição', "{$registro['ref_cod_instituicao']}"]);
             }
         }
         if ($registro['nm_nivel']) {
-            $this->addDetalhe([ 'N&iacute;vel Ensino', "{$registro['nm_nivel']}"]);
+            $this->addDetalhe([ 'Nível Ensino', "{$registro['nm_nivel']}"]);
         }
         if ($registro['descricao']) {
-            $this->addDetalhe([ 'Descri&ccedil;&atilde;o', "{$registro['descricao']}"]);
+            $this->addDetalhe([ 'Descrição', "{$registro['descricao']}"]);
         }
 
         if ($obj_permissoes->permissao_cadastra(571, $this->pessoa_logada, 3)) {

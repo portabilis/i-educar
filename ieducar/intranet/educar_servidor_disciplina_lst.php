@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Session;
 
 return new class extends clsCadastro {
     public $pessoa_logada;
-
     public $cod_servidor;
     public $ref_cod_instituicao;
     public $ref_idesco;
@@ -198,7 +197,7 @@ return new class extends clsCadastro {
 
         if ($this->ref_cod_curso) {
             for ($i = 0, $loop = count($this->ref_cod_curso); $i < $loop; $i++) {
-                if ($this->ref_cod_disciplina[$i] == 'todas_disciplinas') {
+                if ($this->ref_cod_disciplina[$i] === 'todas_disciplinas') {
                     $componenteAnoDataMapper = new ComponenteCurricular_Model_AnoEscolarDataMapper();
                     $componentes = $componenteAnoDataMapper->findComponentePorCurso($this->ref_cod_curso[$i]);
 

@@ -63,7 +63,7 @@ class clsPmieducarTurma extends Model
 
         $this->_campos_lista = $this->_todos_campos = 't.cod_turma, t.ref_usuario_exc, t.ref_usuario_cad, t.ref_ref_cod_serie, t.ref_ref_cod_escola, t.ref_cod_infra_predio_comodo, t.nm_turma, t.sgl_turma, t.max_aluno, t.multiseriada, t.data_cadastro, t.data_exclusao, t.ativo, t.ref_cod_turma_tipo, t.hora_inicial, t.hora_final, t.hora_inicio_intervalo, t.hora_fim_intervalo, t.ref_cod_regente, t.ref_cod_instituicao_regente,t.ref_cod_instituicao, t.ref_cod_curso, t.ref_ref_cod_serie_mult, t.ref_ref_cod_escola_mult, t.visivel, t.turma_turno_id, t.tipo_boletim, t.tipo_boletim_diferenciado, t.ano,
         t.tipo_atendimento, t.cod_curso_profissional, t.etapa_educacenso, t.ref_cod_disciplina_dispensada, t.parecer_1_etapa, t.parecer_2_etapa,
-        t.parecer_3_etapa, t.parecer_4_etapa, t.nao_informar_educacenso, t.tipo_mediacao_didatico_pedagogico, t.dias_semana, t.atividades_complementares, t.atividades_aee, t.local_funcionamento_diferenciado ';
+        t.parecer_3_etapa, t.parecer_4_etapa, t.nao_informar_educacenso, t.tipo_mediacao_didatico_pedagogico, t.dias_semana, t.atividades_complementares, t.atividades_aee, t.local_funcionamento_diferenciado, t.estrutura_curricular, t.formas_organizacao_turma, t.unidade_curricular';
 
         if (is_numeric($ref_cod_turma_tipo)) {
             $this->ref_cod_turma_tipo = $ref_cod_turma_tipo;
@@ -956,7 +956,7 @@ class clsPmieducarTurma extends Model
      *
      * @return array
      */
-    public function lista($int_cod_turma = null, z $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_ref_cod_serie = null, $int_ref_ref_cod_escola = null, $int_ref_cod_infra_predio_comodo = null, $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_turma_tipo = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null, $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = null, $int_ref_cod_instituicao = null, $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null, $bool_verifica_serie_multiseriada = false, $bool_tem_alunos_aguardando_nota = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null, $somenteAnoLetivoEmAndamento = false)
+    public function lista($int_cod_turma = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_ref_cod_serie = null, $int_ref_ref_cod_escola = null, $int_ref_cod_infra_predio_comodo = null, $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_turma_tipo = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null, $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = null, $int_ref_cod_instituicao = null, $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null, $bool_verifica_serie_multiseriada = false, $bool_tem_alunos_aguardando_nota = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null, $somenteAnoLetivoEmAndamento = false)
     {
         $db = new clsBanco();
 
@@ -978,12 +978,16 @@ class clsPmieducarTurma extends Model
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_ref_ref_cod_serie)) {
-            $mult = '';
-            if ($bool_verifica_serie_multiseriada == true) {
-                $mult = " OR  t.ref_ref_cod_serie_mult = '{$int_ref_ref_cod_serie}' ";
-            }
-
-            $filtros .= "{$whereAnd} ( t.ref_ref_cod_serie = '{$int_ref_ref_cod_serie}' $mult )";
+            $filtros .= "{$whereAnd}
+                CASE
+                    WHEN multiseriada = 1 THEN EXISTS (
+                        SELECT 1
+                        FROM pmieducar.turma_serie ts
+                        WHERE ts.turma_id = t.cod_turma
+                        AND ts.serie_id = {$int_ref_ref_cod_serie}
+                    )
+                    ELSE t.ref_ref_cod_serie = {$int_ref_ref_cod_serie}
+                END";
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_ref_ref_cod_escola)) {
@@ -1086,14 +1090,6 @@ class clsPmieducarTurma extends Model
             $filtros .= "{$whereAnd} t.ref_cod_curso = '{$int_ref_cod_curso}'";
             $whereAnd = ' AND ';
         }
-        if (is_numeric($int_ref_ref_cod_escola_mult)) {
-            $filtros .= "{$whereAnd} t.ref_ref_cod_escola_mult = '{$int_ref_ref_cod_escola_mult}'";
-            $whereAnd = ' AND ';
-        }
-        if (is_numeric($int_ref_ref_cod_serie_mult)) {
-            $filtros .= "{$whereAnd} t.ref_ref_cod_serie_mult = '{$int_ref_ref_cod_serie_mult}'";
-            $whereAnd = ' AND ';
-        }
         if (is_numeric($int_qtd_min_alunos_matriculados)) {
             $filtros .= "{$whereAnd} (SELECT COUNT(0) FROM pmieducar.matricula_turma WHERE ref_cod_turma = t.cod_turma) >= '{$int_qtd_min_alunos_matriculados}' ";
             $whereAnd = ' AND ';
@@ -1182,7 +1178,7 @@ class clsPmieducarTurma extends Model
     {
         $db = new clsBanco();
 
-        $sql = "SELECT {$this->_campos_lista},c.nm_curso,c.descricao as descricao_curso,s.nm_serie,s.descricao as descricao_serie,i.nm_instituicao FROM {$this->_tabela} t left outer join {$this->_schema}serie s on (t.ref_ref_cod_serie = s.cod_serie), {$this->_schema}curso c, {$this->_schema}instituicao i ";
+        $sql = "SELECT {$this->_campos_lista},c.nm_curso,textcat_all(s.nm_serie ORDER BY s.nm_serie) AS nm_serie, textcat_all(s.nm_serie || ' ' || coalesce('(' || s.descricao || ')', '') ORDER BY s.nm_serie) AS descricao_serie, i.nm_instituicao FROM {$this->_tabela} t LEFT JOIN pmieducar.turma_serie ts ON (ts.turma_id  = t.cod_turma) LEFT JOIN {$this->_schema}serie s ON (s.cod_serie = COALESCE(ts.serie_id, t.ref_ref_cod_serie)), {$this->_schema}curso c, {$this->_schema}instituicao i ";
         $filtros = '';
 
         $whereAnd = ' WHERE t.ref_cod_curso = c.cod_curso AND c.ref_cod_instituicao = i.cod_instituicao AND ';
@@ -1200,7 +1196,7 @@ class clsPmieducarTurma extends Model
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_ref_ref_cod_serie)) {
-            $filtros .= "{$whereAnd} t.ref_ref_cod_serie = '{$int_ref_ref_cod_serie}'";
+            $filtros .= "{$whereAnd} COALESCE(ts.serie_id, t.ref_ref_cod_serie) = '{$int_ref_ref_cod_serie}'";
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_ref_ref_cod_escola)) {
@@ -1309,14 +1305,6 @@ class clsPmieducarTurma extends Model
             $filtros .= "{$whereAnd} t.ref_cod_curso = '{$int_ref_cod_curso}'";
             $whereAnd = ' AND ';
         }
-        if (is_numeric($int_ref_ref_cod_escola_mult)) {
-            $filtros .= "{$whereAnd} t.ref_ref_cod_escola_mult = '{$int_ref_ref_cod_escola_mult}'";
-            $whereAnd = ' AND ';
-        }
-        if (is_numeric($int_ref_ref_cod_serie_mult)) {
-            $filtros .= "{$whereAnd} t.int_ref_ref_cod_serie_mult = '{$int_ref_ref_cod_serie_mult}'";
-            $whereAnd = ' AND ';
-        }
         if (is_numeric($int_qtd_min_alunos_matriculados)) {
             $filtros .= "{$whereAnd} (SELECT COUNT(0) FROM pmieducar.matricula_turma WHERE ref_cod_turma = t.cod_turma) >= '{$int_qtd_min_alunos_matriculados}' ";
             $whereAnd = ' AND ';
@@ -1354,9 +1342,9 @@ class clsPmieducarTurma extends Model
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
-        $sql .= $filtros . $this->getOrderby() . $this->getLimite();
+        $sql .= $filtros . $this->getGroupByLista2() . $this->getOrderby() . $this->getLimite();
 
-        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} t left outer join {$this->_schema}serie s on (t.ref_ref_cod_serie = s.cod_serie), {$this->_schema}curso c , {$this->_schema}instituicao i {$filtros}");
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} t LEFT JOIN pmieducar.turma_serie ts ON (ts.turma_id  = t.cod_turma) LEFT JOIN {$this->_schema}serie s ON (s.cod_serie = COALESCE(ts.serie_id, t.ref_ref_cod_serie)), {$this->_schema}curso c , {$this->_schema}instituicao i {$filtros}");
 
         $db->Consulta($sql);
 
@@ -1406,7 +1394,16 @@ class clsPmieducarTurma extends Model
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_ref_ref_cod_serie)) {
-            $filtros .= "{$whereAnd} t.ref_ref_cod_serie = '{$int_ref_ref_cod_serie}'";
+            $filtros .= "{$whereAnd}
+                CASE
+                    WHEN multiseriada = 1 THEN EXISTS (
+                        SELECT 1
+                        FROM pmieducar.turma_serie ts
+                        WHERE ts.turma_id = t.cod_turma
+                        AND ts.serie_id = {$int_ref_ref_cod_serie}
+                    )
+                    ELSE t.ref_ref_cod_serie = {$int_ref_ref_cod_serie}
+                END";
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_ref_ref_cod_escola)) {
@@ -1511,15 +1508,17 @@ class clsPmieducarTurma extends Model
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_ref_cod_curso)) {
-            $filtros .= "{$whereAnd} t.ref_cod_curso = '{$int_ref_cod_curso}'";
-            $whereAnd = ' AND ';
-        }
-        if (is_numeric($int_ref_ref_cod_escola_mult)) {
-            $filtros .= "{$whereAnd} t.ref_ref_cod_escola_mult = '{$int_ref_ref_cod_escola_mult}'";
-            $whereAnd = ' AND ';
-        }
-        if (is_numeric($int_ref_ref_cod_serie_mult)) {
-            $filtros .= "{$whereAnd} t.int_ref_ref_cod_serie_mult = '{$int_ref_ref_cod_serie_mult}'";
+            $filtros .= "{$whereAnd}
+                CASE
+                    WHEN multiseriada = 1 THEN EXISTS (
+                        SELECT 1
+                        FROM pmieducar.turma_serie ts
+                        JOIN pmieducar.serie s on s.cod_serie = ts.serie_id
+                        WHERE ts.turma_id = t.cod_turma
+                        AND s.ref_cod_curso = {$int_ref_cod_curso}
+                    )
+                    ELSE t.ref_cod_curso = {$int_ref_cod_curso}
+                END";
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_qtd_min_alunos_matriculados)) {
@@ -1738,5 +1737,55 @@ class clsPmieducarTurma extends Model
 
             return Portabilis_Utils_Database::fetchPreparedQuery($sql, $params);
         }
+    }
+
+    private function getGroupByLista2() {
+        return "
+            GROUP BY
+                t.cod_turma,
+                t.ref_usuario_exc,
+                t.ref_usuario_cad,
+                t.ref_ref_cod_serie,
+                t.ref_ref_cod_escola,
+                t.ref_cod_infra_predio_comodo,
+                t.nm_turma,
+                t.sgl_turma,
+                t.max_aluno,
+                t.multiseriada,
+                t.data_cadastro,
+                t.data_exclusao,
+                t.ativo,
+                t.ref_cod_turma_tipo,
+                t.hora_inicial,
+                t.hora_final,
+                t.hora_inicio_intervalo,
+                t.hora_fim_intervalo,
+                t.ref_cod_regente,
+                t.ref_cod_instituicao_regente,t.ref_cod_instituicao,
+                t.ref_cod_curso,
+                t.ref_ref_cod_serie_mult,
+                t.ref_ref_cod_escola_mult,
+                t.visivel,
+                t.turma_turno_id,
+                t.tipo_boletim,
+                t.tipo_boletim_diferenciado,
+                t.ano,
+                t.tipo_atendimento,
+                t.cod_curso_profissional,
+                t.etapa_educacenso,
+                t.ref_cod_disciplina_dispensada,
+                t.parecer_1_etapa,
+                t.parecer_2_etapa,
+                t.parecer_3_etapa,
+                t.parecer_4_etapa,
+                t.nao_informar_educacenso,
+                t.tipo_mediacao_didatico_pedagogico,
+                t.dias_semana,
+                t.atividades_complementares,
+                t.atividades_aee,
+                t.local_funcionamento_diferenciado,
+                c.nm_curso,
+                i.nm_instituicao
+        ";
     }
 }

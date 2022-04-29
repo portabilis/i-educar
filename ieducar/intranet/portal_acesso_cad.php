@@ -1,13 +1,7 @@
 <?php
 
 return new class extends clsCadastro {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
     public $pessoa_logada;
-
     public $cod_acesso;
     public $data_hora;
     public $ip_externo;
@@ -44,25 +38,13 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
-        // primary keys
         $this->campoOculto('cod_acesso', $this->cod_acesso);
-
-        // foreign keys
-
-        // text
         $this->campoTexto('ip_externo', 'Ip Externo', $this->ip_externo, 30, 255, true);
         $this->campoTexto('ip_interno', 'Ip Interno', $this->ip_interno, 30, 255, true);
         $this->campoNumero('cod_pessoa', 'Pessoa', $this->cod_pessoa, 15, 255, true);
         $this->campoMemo('obs', 'Obs', $this->obs, 60, 10, false);
-
-        // data
         $this->campoData('data_hora', 'Data Hora', $this->data_hora, true);
-
-        // time
-
-        // bool
         $this->campoBoolLista('sucesso', 'Sucesso', $this->sucesso);
-        //$this->campoCheck( "sucesso", "Sucesso", ( $this->sucesso == 't' ) );
     }
 
     public function Novo()
@@ -74,7 +56,7 @@ return new class extends clsCadastro {
             $this->simpleRedirect('portal_acesso_lst.php');
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -84,11 +66,11 @@ return new class extends clsCadastro {
         $obj = new clsPortalAcesso($this->cod_acesso, $this->data_hora, $this->ip_externo, $this->ip_interno, $this->cod_pessoa, $this->obs, $this->sucesso);
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('portal_acesso_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }
@@ -98,11 +80,11 @@ return new class extends clsCadastro {
         $obj = new clsPortalAcesso($this->cod_acesso, $this->data_hora, $this->ip_externo, $this->ip_interno, $this->cod_pessoa, $this->obs, $this->sucesso);
         $excluiu = $obj->excluir();
         if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('portal_acesso_lst.php');
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }

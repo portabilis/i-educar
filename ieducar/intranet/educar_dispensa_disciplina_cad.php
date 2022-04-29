@@ -105,8 +105,7 @@ return new class extends clsCadastro {
             $this->ano = $detalhe_matricula['ano'];
 
             $obj_aluno = new clsPmieducarAluno();
-
-            $det_aluno =  $obj_aluno->lista($detalhe_matricula['ref_cod_aluno'], null, null, null, null, null, null, null, null, null, 1);
+            $det_aluno = $obj_aluno->lista(int_cod_aluno: $detalhe_matricula['ref_cod_aluno'], int_ativo: 1);
             $det_aluno = array_shift($det_aluno);
         }
 
@@ -135,6 +134,7 @@ return new class extends clsCadastro {
         // primary keys
         $this->campoOculto('ref_cod_matricula', $this->ref_cod_matricula);
         $this->campoOculto('ref_cod_serie', $this->ref_cod_serie);
+        $this->campoOculto('ref_cod_serie_busca', $this->ref_cod_serie);
         $this->campoOculto('ref_cod_escola', $this->ref_cod_escola);
         $this->campoOculto('cod_dispensa', $this->cod_dispensa);
 
@@ -204,7 +204,7 @@ return new class extends clsCadastro {
                 null,
                 $disciplinaId
             );
-        } catch (Exception $e) {
+        } catch (Exception) {
             return false;
         }
 

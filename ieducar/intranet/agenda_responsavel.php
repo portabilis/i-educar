@@ -14,8 +14,6 @@ return new class extends clsListagem {
 
         $this->campoTexto('pesquisa', 'Agenda', '', 50, 255);
 
-        $db = new clsBanco();
-
         $and = '';
 
         if (!empty($_GET['pesquisa'])) {
@@ -29,8 +27,6 @@ return new class extends clsListagem {
 
         // Paginador
         $limite = 15;
-        $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$limite-$limite: 0;
-
         $sql = "SELECT cod_agenda, 1 AS minha FROM agenda WHERE ref_ref_cod_pessoa_own = {$this->pessoa} {$and} UNION SELECT ref_cod_agenda, 0 AS minha FROM agenda_responsavel WHERE ref_ref_cod_pessoa_fj = {$this->pessoa} ORDER BY minha DESC";
 
         $db1 = new clsBanco();

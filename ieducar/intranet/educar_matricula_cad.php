@@ -281,7 +281,7 @@ return new class extends clsCadastro {
         try {
             $enturmacoesNaTurmaDestino = $this->getEnturmacoesNaTurma($this->ref_cod_turma);
             $enturmacoesParaCopiar = $this->getEnturmacoesNaTurma($this->ref_cod_turma_copiar_enturmacoes);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->mensagem = 'Houve um erro ao buscar informações das turmas.';
 
             return false;
@@ -428,7 +428,7 @@ return new class extends clsCadastro {
                 $cursoDeAtividadeComplementar = $cursoADeferir->cursoDeAtividadeComplementar();
 
                 if ($m['ref_ref_cod_serie'] == $this->ref_cod_serie && !$cursoDeAtividadeComplementar) {
-                    $this->mensagem = 'Este aluno j&aacute; est&aacute; matriculado nesta s&eacute;rie e curso, n&atilde;o &eacute; possivel matricular um aluno mais de uma vez na mesma s&eacute;rie.<br />';
+                    $this->mensagem = 'Este aluno já está matriculado nesta série e curso, não é possivel matricular um aluno mais de uma vez na mesma série.<br />';
 
                     return false;
                 } elseif ($curso['multi_seriado'] != 1) {
@@ -441,7 +441,7 @@ return new class extends clsCadastro {
                         $nomeSerie = '';
                     }
 
-                    $this->mensagem = "Este aluno j&aacute; est&aacute; matriculado no(a) '$nomeSerie' deste curso e escola. Como este curso n&atilde;o &eacute; multisseriado, n&atilde;o &eacute; possivel manter mais de uma matricula em andamento para o mesmo curso.<br />";
+                    $this->mensagem = "Este aluno já está matriculado no(a) '$nomeSerie' deste curso e escola. Como este curso não é multisseriado, não é possivel manter mais de uma matricula em andamento para o mesmo curso.<br />";
 
                     return false;
                 }
@@ -490,7 +490,7 @@ return new class extends clsCadastro {
                             $curso = '';
                         }
 
-                        $this->mensagem = "Este aluno j&aacute; est&aacute; matriculado no(a) '$serie' do curso '$curso' na escola '$escola', para matricular este aluno na sua escola solicite transfer&ecirc;ncia ao secret&aacute;rio(a) da escola citada.<br />";
+                        $this->mensagem = "Este aluno já está matriculado no(a) '$serie' do curso '$curso' na escola '$escola', para matricular este aluno na sua escola solicite transferência ao secretário(a) da escola citada.<br />";
 
                         return false;
                     }
@@ -555,7 +555,7 @@ return new class extends clsCadastro {
             $exigeInep = $serieDet['exigir_inep'];
 
             if (!$alunoInep && $exigeInep) {
-                $this->mensagem = 'N&atilde;o foi poss&iacute;vel realizar matr&iacute;cula, necess&aacute;rio inserir o INEP no cadastro do aluno.';
+                $this->mensagem = 'Não foi possível realizar matrícula, necessário inserir o INEP no cadastro do aluno.';
 
                 return false;
             }
@@ -649,7 +649,7 @@ return new class extends clsCadastro {
                         $total_vagas += $turmas['max_aluno'];
                     }
                 } else {
-                    $this->mensagem = 'A s&eacute;rie selecionada n&atilde;o possui turmas cadastradas.<br />';
+                    $this->mensagem = 'A série selecionada não possui turmas cadastradas.<br />';
 
                     return false;
                 }
@@ -793,7 +793,7 @@ return new class extends clsCadastro {
             $m = $db->Tupla();
 
             if (is_array($m) && count($m) && $dependencia) {
-                $this->mensagem = 'Esse aluno j&aacute; tem uma matr&iacute;cula de depend&ecirc;ncia nesta escola e s&eacute;rie.';
+                $this->mensagem = 'Esse aluno já tem uma matrícula de dependência nesta escola e série.';
 
                 return false;
             }
@@ -980,7 +980,7 @@ return new class extends clsCadastro {
                 $this->simpleRedirect('educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
             }
 
-            $this->mensagem = 'Cadastro n&atilde;o realizado.<br />';
+            $this->mensagem = 'Cadastro não realizado.<br />';
 
             return false;
         } else {
@@ -1130,8 +1130,8 @@ return new class extends clsCadastro {
         }
 
         if (!$result) {
-            $this->mensagem = 'N&atilde;o foi poss&iacute;vel desativar as ' .
-                'enturma&ccedil;&otilde;es da matr&iacute;cula.';
+            $this->mensagem = 'Não foi possível desativar as ' .
+                'enturmações da matrícula.';
         }
 
         return $result;
@@ -1221,7 +1221,7 @@ return new class extends clsCadastro {
                 $editou1 = $obj->edita();
 
                 if (!$editou1) {
-                    $this->mensagem = 'N&atilde;o foi poss&iacute;vel editar a "&Uacute;ltima Matr&iacute;cula da Sequ&ecirc;ncia".<br />';
+                    $this->mensagem = 'Não foi possível editar a "&Uacute;ltima Matrícula da Sequência".<br />';
 
                     return false;
                 }
@@ -1245,7 +1245,7 @@ return new class extends clsCadastro {
         $excluiu = $obj->excluir();
 
         if ($excluiu) {
-            $this->mensagem = 'Exclus&atilde;o efetuada com sucesso.<br />';
+            $this->mensagem = 'Exclusão efetuada com sucesso.<br />';
 
             throw new HttpResponseException(
                 new RedirectResponse("educar_aluno_det.php?cod_aluno={$this->ref_cod_aluno}")
@@ -1501,7 +1501,7 @@ return new class extends clsCadastro {
             $dependencia = 'f'
         );
 
-        return count($lst_mt);
+        return $obj_mt->_total;
     }
 
     private function availableTimeService()

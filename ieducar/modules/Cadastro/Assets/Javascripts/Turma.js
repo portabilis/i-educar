@@ -31,12 +31,29 @@ let obrigarCamposCenso = $j('#obrigar_campos_censo').val() == '1';
 
 let verificaEtapaEducacenso = ()=>{
   $j('#etapa_educacenso').makeUnrequired();
-  if ($j('#tipo_atendimento').val() &&
-      $j('#tipo_atendimento').val() != "4" &&
-      $j('#tipo_atendimento').val() != "5") {
-    if (obrigarCamposCenso) {
+  if ($j('#estrutura_curricular').val() &&
+    ($j('#estrutura_curricular').val().include('1') ||
+    $j('#estrutura_curricular').val().include('3')) &&
+    obrigarCamposCenso) {
       $j('#etapa_educacenso').makeRequired();
-    }
+  }
+}
+
+let verificaFormaOrganizacaoTurma = ()=> {
+  $j('#formas_organizacao_turma').makeUnrequired();
+  if (obrigarCamposCenso &&
+      $j('#estrutura_curricular').val() &&
+      $j('#estrutura_curricular').val().includes("1")) {
+    $j('#formas_organizacao_turma').makeRequired();
+  }
+}
+
+let verificaUnidadeCurricular = ()=> {
+  $j('#unidade_curricular').makeUnrequired();
+  if (obrigarCamposCenso &&
+    $j('#estrutura_curricular').val() &&
+    $j('#estrutura_curricular').val().includes("2")) {
+    $j('#unidade_curricular').makeRequired();
   }
 }
 
@@ -56,14 +73,21 @@ let verificaLocalFuncionamentoDiferenciado = () => {
 
 $j('#tipo_atendimento').change(function() {
   mostraAtividadesComplementares();
+  verificaEstruturacurricular();
+});
+$j('#estrutura_curricular').change(function() {
+  verificaFormaOrganizacaoTurma();
+  habilitaFormasOrganizarTurma();
+  verificaUnidadeCurricular();
+  habilitaUnidadeCurricular();
   verificaEtapaEducacenso();
   habilitaEtapaEducacenso();
 });
-verificaEtapaEducacenso();
+
 verificaLocalFuncionamentoDiferenciado();
 
 $j('#etapa_educacenso').change(function() {
-  mostraCursoTecnico();;
+  mostraCursoTecnico();
 });
 
 function mostraAtividadesComplementares(){
@@ -71,13 +95,30 @@ function mostraAtividadesComplementares(){
   $j('#atividades_complementares').makeUnrequired();
   if (mostraCampo) {
     $j('#atividades_complementares').removeAttr('disabled');
-    $j('#atividades_complementares').trigger('chosen:updated');;
+    $j('#atividades_complementares').trigger('chosen:updated');
     if (obrigarCamposCenso) {
       $j('#atividades_complementares').makeRequired();
     }
   } else {
     $j('#atividades_complementares').attr('disabled', 'disabled');
     $j('#atividades_complementares').val([]).trigger('chosen:updated');
+  }
+}
+
+function verificaEstruturacurricular() {
+  const mostraCampo = $j('#tipo_atendimento').val() === '0';
+  const estruturaCurricularField = $j('#estrutura_curricular');
+
+  estruturaCurricularField.makeUnrequired();
+  if (mostraCampo) {
+    estruturaCurricularField.removeAttr('disabled');
+    estruturaCurricularField.trigger('chosen:updated');
+    if (obrigarCamposCenso) {
+      estruturaCurricularField.makeRequired();
+    }
+  } else {
+    estruturaCurricularField.attr('disabled', 'disabled');
+    estruturaCurricularField.val([]).trigger('chosen:updated');
   }
 }
 
@@ -165,14 +206,35 @@ function validaAtividadesComplementares() {
 $j('#tipo_mediacao_didatico_pedagogico').on('change', verificaLocalFuncionamentoDiferenciado);
 
 function habilitaEtapaEducacenso() {
-  var atividadeComplementar = $j("#tipo_atendimento").val() == 4;
-  var atendimentoEducacionalEspecializado = $j("#tipo_atendimento").val() == 5;
-
   $j("#etapa_educacenso").prop('disabled', false);
+  const notContainData = $j('#estrutura_curricular').val() === null;
 
-  if (atividadeComplementar || atendimentoEducacionalEspecializado) {
-    $j("#etapa_educacenso").prop('disabled', true).val("");
+  if (notContainData || (!$j('#estrutura_curricular').val().include('1') &&
+      !$j('#estrutura_curricular').val().include('3'))) {
+    $j("#etapa_educacenso").prop('disabled', true).val('');
   }
+}
+
+function habilitaFormasOrganizarTurma() {
+  $j("#formas_organizacao_turma").prop('disabled', false);
+  if (obrigarCamposCenso &&
+     !$j('#estrutura_curricular').val() ||
+     !$j('#estrutura_curricular').val().includes("1")) {
+    $j("#formas_organizacao_turma").prop('disabled', true).val("");
+  }
+}
+
+function habilitaUnidadeCurricular() {
+
+  const estruturaCurricular = $j('#estrutura_curricular').val();
+  const itinerarioFormativo = estruturaCurricular && estruturaCurricular.includes("2");
+
+  if (itinerarioFormativo) {
+    $j("#unidade_curricular").prop('disabled', false).trigger('chosen:updated');
+    return;
+  }
+
+  $j("#unidade_curricular").prop('disabled', true).val([]).trigger('chosen:updated');
 }
 
 $j('#tipo_mediacao_didatico_pedagogico').on('change', function(){
@@ -226,6 +288,80 @@ function preencheEtapasNaTurma(etapas) {
   });
 }
 
+function atualizaOpcoesDeDisciplinas() {
+  let escola_id = $j('#ref_cod_escola').val();
+  let serie_id = $j('#ref_cod_serie').val();
+  let ano = $j('#ano').val();
+  if (escola_id && serie_id && ano) {
+    let parametros = {
+      escola_id: escola_id,
+      serie_id: serie_id,
+      ano: ano
+    };
+    let url = getResourceUrlBuilder.buildUrl(
+      '/module/Api/ComponenteCurricular',
+      'componentes-curriculares-escola-serie-ano',
+      parametros
+    );
+    let options = {
+      dataType: 'json',
+      url: url,
+      success: preencheComponentesCurriculares
+    };
+    getResource(options);
+  } else {
+    $j('#disciplinas').html('');
+  }
+}
+
+var preencheComponentesCurriculares = function(data) {
+  let componentesCurriculares = data.componentes_curriculares;
+  var conteudo = '';
+  let multisseriada = $j('#multiseriada').is(':checked');
+
+  if (componentesCurriculares && !multisseriada) {
+    conteudo += `<tr>
+                   <td> <span>Nome</span></td>
+                   <td> <span>Abreviatura</span></td>
+                   <td> <span>Carga horária </span></td>
+                   <td> <span>Usar padrão do componente?</span></td>
+                   <td> <span>Possui docente vinculado?</span></td>
+                 </tr>`;
+
+    componentesCurriculares.forEach((componente) => {
+      conteudo += getLinhaComponente(componente);
+    });
+
+    $j('#tr_disciplinas_ td:first').html('Componentes curriculares definidos em séries da escola');
+    $j('#disciplinas').show();
+  }  else if (multisseriada) {
+    $j('#tr_disciplinas_ td:first').html('Os componentes curriculares de turmas multisseriadas devem ser definidos em suas respectivas series (Escola > Cadastros > Séries da escola)');
+    $j('#disciplinas').hide();
+  } else {
+    $j('#disciplinas').html('A série/ano escolar não possui componentes curriculares cadastrados.');
+  }
+
+  if (conteudo) {
+    $j('#disciplinas').html(
+      `<table id="componentes_turma_cad" cellspacing="0" cellpadding="0" border="0">
+          <tr align="left"><td>${conteudo}</td></tr>
+      </table>`
+    );
+  }
+}
+
+
+var getLinhaComponente = function(componente) {
+  return  `
+  <tr class="linha-disciplina">
+    <td width="250"><input type="checkbox" name="disciplinas[${componente.id}]" class="check-disciplina" id="disciplinas[]" value="${componente.id}">${componente.nome}</td>
+    <td><span>${componente.abreviatura}</span></td>
+    <td><input type="text" name="carga_horaria[${componente.id}]" value="" size="5" maxlength="7"></td>
+    <td><input type="checkbox" name="usar_componente[${componente.id}]" value="1">(${componente.carga_horaria} h)</td>
+    <td><input type="checkbox" name="docente_vinculado[${componente.id}]" value="1"></td>
+  </tr>`;
+}
+
 $j(document).ready(function() {
 
   // on click das abas
@@ -246,6 +382,8 @@ $j(document).ready(function() {
           row.show();
         }
       });
+      //multisseriada
+      configuraCamposExibidos();
     }
   );
 
@@ -274,8 +412,14 @@ $j(document).ready(function() {
           return false;
       });
       mostraAtividadesComplementares();
+      verificaEstruturacurricular();
       mostraCursoTecnico();
       habilitaEtapaEducacenso();
+      verificaEtapaEducacenso();
+      verificaFormaOrganizacaoTurma();
+      habilitaFormasOrganizarTurma();
+      verificaUnidadeCurricular();
+      habilitaUnidadeCurricular();
     });
 
   // fix checkboxs
@@ -296,73 +440,34 @@ $j(document).ready(function() {
     $j('#ano_letivo').val($j('#ano').val());
   });
 
-  $j('#ref_cod_serie, #ano_letivo').on('change', function(){
-    let escola_id = $j('#ref_cod_escola').val();
-    let serie_id = $j('#ref_cod_serie').val();
-    let ano = $j('#ano_letivo').val();
-    if (escola_id && serie_id && ano) {
-      let parametros = {
-        escola_id: escola_id,
-        serie_id: serie_id,
-        ano: ano
-      };
-      let url = getResourceUrlBuilder.buildUrl(
-        '/module/Api/ComponenteCurricular',
-        'componentes-curriculares-escola-serie-ano',
-        parametros
-      );
-      let options = {
-        dataType: 'json',
-        url: url,
-        success: preencheComponentesCurriculares
-      };
-      getResource(options);
-    } else {
-      $j('#disciplinas').html('');
-    }
+  $j('#ref_cod_escola').on('change', function(){
+    $j('#ref_cod_escola_').val($j('#ref_cod_escola').val());
   });
 
-  var getLinhaComponente = function(componente) {
-    return  `
-    <tr class="linha-disciplina">
-      <td width="250"><input type="checkbox" name="disciplinas[${componente.id}]" class="check-disciplina" id="disciplinas[]" value="${componente.id}">${componente.nome}</td>
-      <td><span>${componente.abreviatura}</span></td>
-      <td><input type="text" name="carga_horaria[${componente.id}]" value="" size="5" maxlength="7"></td>
-      <td><input type="checkbox" name="usar_componente[${componente.id}]" value="1">(${componente.carga_horaria} h)</td>
-      <td><input type="checkbox" name="docente_vinculado[${componente.id}]" value="1"></td>
-    </tr>`;
-  }
+  $j('#ref_cod_curso').on('change', function(){
+    $j('#ref_cod_curso_').val($j('#ref_cod_curso').val());
+  });
 
-  var preencheComponentesCurriculares = function(data) {
-    let componentesCurriculares = data.componentes_curriculares;
-    var conteudo = '';
+  $j('#ref_cod_serie').on('change', function(){
+    atualizaOpcoesDeDisciplinas();
+    $j('#ref_cod_serie_').val($j('#ref_cod_serie').val());
+  });
 
-    if (componentesCurriculares.length) {
-      conteudo += `<tr>
-                     <td> <span>Nome</span></td>
-                     <td> <span>Abreviatura</span></td>
-                     <td> <span>Carga horária </span></td>
-                     <td> <span>Usar padrão do componente?</span></td>
-                     <td> <span>Possui docente vinculado?</span></td>
-                   </tr>`;
-
-      componentesCurriculares.forEach((componente) => {
-        conteudo += getLinhaComponente(componente);
-      });
-    } else {
-      $j('#disciplinas').html('A série/ano escolar não possui componentes curriculares cadastrados.');
-    }
-
-    if (conteudo) {
-      $j('#disciplinas').html(
-        `<table id="componentes_turma_cad" cellspacing="0" cellpadding="0" border="0">
-            <tr align="left"><td>${conteudo}</td></tr>
-        </table>`
-      );
-    }
-  }
   $j("#tipo_boletim, #tipo_boletim_diferenciado").chosen({
     no_results_text: "Nenhum modelo encontrado!",
     allow_single_deselect: true,
   });
+
+});
+
+// Força reload na página quando utiliza "voltar" do navegador
+window.addEventListener( "pageshow", function ( event ) {
+  var historyTraversal = (
+    event.persisted ||
+    ( typeof window.performance != "undefined" && window.performance.navigation.type === 2 )
+  );
+  if ( historyTraversal ) {
+    // Handle page restore.
+    window.location.reload();
+  }
 });
