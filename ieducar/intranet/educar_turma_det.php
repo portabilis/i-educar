@@ -488,7 +488,7 @@ return new class extends clsDetalhe {
 
     public function getComponentesTurmaMulti($turmaId) {
         return DB::table('pmieducar.turma as t')
-        ->selectRaw("cc.id, cc.nome, coalesce(esd.carga_horaria, ccae.carga_horaria)::int AS carga_horaria,CASE WHEN esd.carga_horaria IS NOT NULL THEN s.nm_serie ELSE sp.nm_serie END as serie")
+        ->selectRaw("cc.id, cc.nome, coalesce(esd.carga_horaria, ccae.carga_horaria)::int AS carga_horaria,s.nm_serie as serie")
         ->join('pmieducar.turma_serie as ts', 'ts.turma_id', '=', 't.cod_turma')
         ->leftJoin('pmieducar.serie as s', 's.cod_serie', 'ts.serie_id')
         ->join('pmieducar.escola_serie as es', function($join) {
@@ -504,7 +504,6 @@ return new class extends clsDetalhe {
             $join->on('ccae.componente_curricular_id', '=', 'cc.id');
             $join->on('ccae.ano_escolar_id', '=', 'es.ref_cod_serie');
         })
-        ->join('pmieducar.serie as sp', 'sp.cod_serie', 'ccae.ano_escolar_id')
         ->where('t.cod_turma', $turmaId)
         ->whereRaw('t.ano = ANY(esd.anos_letivos)')
         ->where('t.multiseriada', 1)
