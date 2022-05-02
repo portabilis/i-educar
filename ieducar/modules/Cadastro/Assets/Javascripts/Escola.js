@@ -246,7 +246,7 @@ if (!$j('#pessoaj_idpes').is(':visible')) {
 $j(document).ready(function() {
 
   // on click das abas
-
+  habilitaCampoPoderPublicoOuConvenio();
   // DADOS GERAIS
   $j('#tab1').click(
     function(){
@@ -498,8 +498,22 @@ $j(document).ready(function() {
       verificaCamposDepAdm();
       obrigaCampoRegulamentacao();
       habilitarCampoUnidadeVinculada();
+      habilitaCampoPoderPublicoOuConvenio();
     }
   );
+
+  function habilitaCampoPoderPublicoOuConvenio() {
+    if ($j('#situacao_funcionamento').val() == SITUACAO_FUNCIONAMENTO.EM_ATIVIDADE) {
+      $j('#poder_publico_parceria_convenio').makeRequired();
+      $j("#poder_publico_parceria_convenio").prop('disabled', false);
+      $j("#poder_publico_parceria_convenio").trigger("chosen:updated");
+      return;
+    }
+
+    $j('#poder_publico_parceria_convenio').makeUnrequired();
+    $j("#poder_publico_parceria_convenio").prop('disabled', true);
+    $j("#poder_publico_parceria_convenio").trigger("chosen:updated");
+  }
 
   $j('#regulamentacao').change(
     function(){

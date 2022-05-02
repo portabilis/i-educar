@@ -187,6 +187,7 @@ return new class extends clsCadastro {
     public  $pessoaj_idpes;
     public  $pessoaj_id;
     public bool $pesquisaPessoaJuridica = true;
+    public $poder_publico_parceria_convenio;
 
     public $inputsRecursos = [
         'qtd_secretario_escolar' => 'Secretário(a) escolar',
@@ -435,6 +436,8 @@ return new class extends clsCadastro {
         if (is_string($this->codigo_lingua_indigena)) {
             $this->codigo_lingua_indigena = explode(',', str_replace(['{', '}'], '', $this->codigo_lingua_indigena));
         }
+
+        $this->poder_publico_parceria_convenio = transformStringFromDBInArray($this->poder_publico_parceria_convenio);
     }
 
     private function pessoaJuridicaContemEscola($pessoaj_id)
@@ -759,6 +762,25 @@ return new class extends clsCadastro {
             ];
 
             $this->inputsHelper()->select('categoria_escola_privada', $options);
+
+            $helperOptions = ['objectName' => 'poder_publico_parceria_convenio'];
+            $resources = [
+                1 => 'Secretaria estadual',
+                2 => 'Secretaria municipal',
+                3 => 'Não possui parceria ou convênio'
+            ];
+
+            $options = [
+                'label' => 'Poder público responsável pela parceria ou convênio entre a Administração Pública e outras instituições',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->poder_publico_parceria_convenio,
+                    'all_values' => $resources
+                ]
+            ];
+
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
             $resources = [
                 '' => 'Selecione',
@@ -1646,6 +1668,7 @@ return new class extends clsCadastro {
         $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
         $obj->esfera_administrativa = $this->esfera_administrativa;
         $obj->iddis = (int)$this->district_id;
+        $obj->poder_publico_parceria_convenio = $this->poder_publico_parceria_convenio;
 
         foreach ($this->inputsRecursos as $key => $value) {
             $obj->{$key} = $this->{$key};
@@ -1715,6 +1738,7 @@ return new class extends clsCadastro {
         $this->orgaos_colegiados = $this->transformArrayInString($this->orgaos_colegiados);
         $this->reserva_vagas_cotas = $this->transformArrayInString($this->reserva_vagas_cotas);
         $this->codigo_lingua_indigena = $this->transformArrayInString($this->codigo_lingua_indigena);
+        $this->poder_publico_parceria_convenio = $this->transformArrayInString($this->poder_publico_parceria_convenio);
     }
 
     private function transformArrayInString($value): ?string
@@ -1866,7 +1890,9 @@ return new class extends clsCadastro {
                 $this->validaRecursos() &&
                 $this->validaQuantidadeComputadoresAlunos() &&
                 $this->validaQuantidadeEquipamentosEnsino() &&
-                $this->validaLinguasIndigenas();
+                $this->validaLinguasIndigenas() &&
+                $this->validaPoderPublicoParceriaConvenio()
+            ;
     }
 
     protected function validaOcupacaoPredio()
@@ -2576,6 +2602,23 @@ return new class extends clsCadastro {
     {
         if (is_array($this->codigo_lingua_indigena) && count($this->codigo_lingua_indigena) > 3) {
             $this->mensagem = 'O campo: <b>Línguas indígenas</b>, não pode ter mais que 3 opções';
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private function validaPoderPublicoParceriaConvenio()
+    {
+        $values = transformStringFromDBInArray($this->poder_publico_parceria_convenio);
+
+        if ($values === null) {
+            return true;
+        }
+
+        if (count($values) > 1 && in_array(3, $values)) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Poder público responsável pela parceria ou convênio entre a Administração Pública e outras instituições</b>, quando a opção: <b>Não possui parceria ou convênio</b> estiver selecionada.';
 
             return false;
         }
