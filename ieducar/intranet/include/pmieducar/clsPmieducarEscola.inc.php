@@ -126,6 +126,7 @@ class clsPmieducarEscola extends Model
     public $qtd_orientador_comunitario;
     public $iddis;
     public $poder_publico_parceria_convenio;
+    public $formas_contratacao_adm_publica_e_outras_instituicoes;
 
     public function __construct(
         $cod_escola = null,
@@ -175,7 +176,8 @@ class clsPmieducarEscola extends Model
           e.qtd_vice_diretor,
           e.qtd_orientador_comunitario,
           e.iddis,
-          e.poder_publico_parceria_convenio
+          e.poder_publico_parceria_convenio,
+          e.formas_contratacao_adm_publica_e_outras_instituicoes
           ';
 
         if (is_numeric($ref_usuario_cad)) {
@@ -960,6 +962,11 @@ class clsPmieducarEscola extends Model
             if (is_string($this->poder_publico_parceria_convenio)) {
                 $campos .= "{$gruda}poder_publico_parceria_convenio";
                 $valores .= "{$gruda}'{{$this->poder_publico_parceria_convenio}}'";
+            }
+
+            if (is_string($this->formas_contratacao_adm_publica_e_outras_instituicoes)) {
+                $campos .= "{$gruda}formas_contratacao_adm_publica_e_outras_instituicoes";
+                $valores .= "{$gruda}'{{$this->formas_contratacao_adm_publica_e_outras_instituicoes}}'";
             }
 
             $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
@@ -1849,6 +1856,16 @@ class clsPmieducarEscola extends Model
                 $set .= "{$gruda}='{{$this->poder_publico_parceria_convenio}}'";
             } else {
                 $gruda .= "poder_publico_parceria_convenio";
+                $set .= "{$gruda}=NULL";
+            }
+
+            if (is_string($this->formas_contratacao_adm_publica_e_outras_instituicoes)) {
+                $gruda = ', ';
+                $gruda .= "formas_contratacao_adm_publica_e_outras_instituicoes";
+                $set .= "{$gruda}='{{$this->formas_contratacao_adm_publica_e_outras_instituicoes}}'";
+            } else {
+                $gruda = ', ';
+                $gruda .= "formas_contratacao_adm_publica_e_outras_instituicoes";
                 $set .= "{$gruda}=NULL";
             }
 

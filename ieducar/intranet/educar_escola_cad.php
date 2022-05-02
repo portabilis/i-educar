@@ -188,6 +188,7 @@ return new class extends clsCadastro {
     public  $pessoaj_id;
     public bool $pesquisaPessoaJuridica = true;
     public $poder_publico_parceria_convenio;
+    public $formas_contratacao_adm_publica_e_outras_instituicoes;
 
     public $inputsRecursos = [
         'qtd_secretario_escolar' => 'Secretário(a) escolar',
@@ -438,6 +439,7 @@ return new class extends clsCadastro {
         }
 
         $this->poder_publico_parceria_convenio = transformStringFromDBInArray($this->poder_publico_parceria_convenio);
+        $this->formas_contratacao_adm_publica_e_outras_instituicoes = transformStringFromDBInArray($this->formas_contratacao_adm_publica_e_outras_instituicoes);
     }
 
     private function pessoaJuridicaContemEscola($pessoaj_id)
@@ -776,6 +778,29 @@ return new class extends clsCadastro {
                 'required' => false,
                 'options' => [
                     'values' => $this->poder_publico_parceria_convenio,
+                    'all_values' => $resources
+                ]
+            ];
+
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
+
+            $helperOptions = ['objectName' => 'formas_contratacao_adm_publica_e_outras_instituicoes'];
+            $resources = [
+                1 => 'Termo de colaboração (Lei nº 13.019/2014)',
+                2 => 'Termo de fomento (Lei nº 13.019/2014)',
+                3 => 'Acordo de cooperação (Lei nº 13.019/2014)',
+                4 => 'Contrato de prestação de serviço',
+                5 => 'Termo de cooperação técnica e financeira',
+                6 => 'Contrato de consórcio público/Convênio de cooperação'
+            ];
+
+            $options = [
+                'label' => 'Formas de contratação entre a Administração Pública e outras instituições',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->formas_contratacao_adm_publica_e_outras_instituicoes,
                     'all_values' => $resources
                 ]
             ];
@@ -1669,6 +1694,7 @@ return new class extends clsCadastro {
         $obj->esfera_administrativa = $this->esfera_administrativa;
         $obj->iddis = (int)$this->district_id;
         $obj->poder_publico_parceria_convenio = $this->poder_publico_parceria_convenio;
+        $obj->formas_contratacao_adm_publica_e_outras_instituicoes = $this->formas_contratacao_adm_publica_e_outras_instituicoes;
 
         foreach ($this->inputsRecursos as $key => $value) {
             $obj->{$key} = $this->{$key};
@@ -1739,6 +1765,7 @@ return new class extends clsCadastro {
         $this->reserva_vagas_cotas = $this->transformArrayInString($this->reserva_vagas_cotas);
         $this->codigo_lingua_indigena = $this->transformArrayInString($this->codigo_lingua_indigena);
         $this->poder_publico_parceria_convenio = $this->transformArrayInString($this->poder_publico_parceria_convenio);
+        $this->formas_contratacao_adm_publica_e_outras_instituicoes = $this->transformArrayInString($this->formas_contratacao_adm_publica_e_outras_instituicoes);
     }
 
     private function transformArrayInString($value): ?string
@@ -1891,8 +1918,57 @@ return new class extends clsCadastro {
                 $this->validaQuantidadeComputadoresAlunos() &&
                 $this->validaQuantidadeEquipamentosEnsino() &&
                 $this->validaLinguasIndigenas() &&
-                $this->validaPoderPublicoParceriaConvenio()
+                $this->validaPoderPublicoParceriaConvenio() &&
+                $this->validaFormasDeContratacaoEntreAdministracaoPublicaEOutrasInstituicoes()
             ;
+    }
+
+    protected function validaFormasDeContratacaoEntreAdministracaoPublicaEOutrasInstituicoes(): bool
+    {
+        $formasDeContratacao = transformStringFromDBInArray($this->formas_contratacao_adm_publica_e_outras_instituicoes);
+
+        $acceptDependenciaAdministrativa = [DependenciaAdministrativaEscola::FEDERAL, DependenciaAdministrativaEscola::ESTADUAL, DependenciaAdministrativaEscola::MUNICIPAL];
+        $notAcceptFormasDeContratoInDependenciaAdministrativa = [1, 2, 3, 6];
+        if (is_array($formasDeContratacao) && in_array((int)$this->dependencia_administrativa, $acceptDependenciaAdministrativa, true)) {
+
+            $data = array_filter($formasDeContratacao,
+                static fn($forma)  => !in_array((int)$forma, $notAcceptFormasDeContratoInDependenciaAdministrativa, true)
+            );
+
+            if (count($data) === 0) {
+                $this->mensagem = 'O campo <b>Formas de contratação entre a Administração Pública e outras instituições</b> foi preenchido incorretamente.';
+                return false;
+            }
+        }
+
+        $categoriaEscolaPrivadaLista = [2,3,4];
+        $notAcceptFormasDeContratoInDependenciaAdministrativa = [5,6];
+        if (is_array($formasDeContratacao) && in_array((int)$this->categoria_escola_privada, $categoriaEscolaPrivadaLista, true)) {
+
+            $data = array_filter($formasDeContratacao,
+                static fn($forma)  => !in_array((int)$forma, $notAcceptFormasDeContratoInDependenciaAdministrativa, true)
+            );
+
+            if (count($data) === 0) {
+                $this->mensagem = 'O campo <b>Formas de contratação entre a Administração Pública e outras instituições</b> foi preenchido incorretamente.';
+                return false;
+            }
+        }
+
+        if ((int)$this->categoria_escola_privada === 1) {
+
+            if ($formasDeContratacao === null || !in_array(4, $formasDeContratacao)) {
+                $this->mensagem = 'Quando o campo "Categoria da escola privada" for igual à "Particular" só é possível cadastrar "Contrato de prestação de serviço"';
+                return false;
+            }
+
+            if (count($formasDeContratacao) > 1)    {
+                $this->mensagem = 'Quando o campo "Categoria da escola privada" for igual à "Particular" só é possível cadastrar "Contrato de prestação de serviço"';
+                return false;
+            }
+        }
+
+        return true;
     }
 
     protected function validaOcupacaoPredio()
