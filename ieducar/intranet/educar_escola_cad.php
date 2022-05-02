@@ -1300,18 +1300,6 @@ return new class extends clsCadastro {
                 $obrigarOrganizacaoEnsino = $obrigarOrganizacaoEnsino->isValid();
             }
 
-            $helperOptions = ['objectName' => 'organizacao_ensino'];
-            $options = [
-                'label' => 'Forma(s) de organização do ensino',
-                'size' => 50,
-                'required' => $obrigarCamposCenso && $obrigarOrganizacaoEnsino,
-                'options' => [
-                    'values' => $this->organizacao_ensino,
-                    'all_values' => OrganizacaoEnsino::getDescriptiveValues()
-                ]
-            ];
-            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
-
             $helperOptions = ['objectName' => 'instrumentos_pedagogicos'];
             $options = [
                 'label' => 'Instrumentos, materiais socioculturais e/ou pedagógicos em uso na escola para o desenvolvimento de atividades de ensino aprendizagem',
