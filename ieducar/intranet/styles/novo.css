@@ -111,17 +111,17 @@ body{
 	font-size: 10px;
 	vertical-align: middle;
 	border-left: 3px solid;
-	border-color: #495C67;
+	border-color: var(--border-color);
 }
 
 .r2c1A{
 	font-size: 10px;
 	vertical-align: middle;
-	color: #495C67;
+	color: var(--border-color);
 }
 
 .r2c2{
-	background-color: #495C67;
+	background-color: var(--border-color);
 	height: 21px;
 	vertical-align: middle;
 	text-align: center;
@@ -133,7 +133,7 @@ body{
 	background-color: #f5f9fd;
 	vertical-align: top;
 	border-right: 2px solid;
-	border-color: #495C67;
+	border-color: var(--border-color);
 }
 
 .r3c2{
@@ -169,7 +169,7 @@ body{
 
 .nvp_paginador{
 	font-size: 12px;
-	color: #495C67;
+	color: var(--border-color);
 	font-family: arial, verdana, sans-serif, sans, helvetica, "Times New Roman";
 	text-decoration: none;
 	font-weight: bold;
@@ -192,7 +192,7 @@ body{
 
 
 .nvp_linkmenu{
-	color:#495c67;
+	color:var(--border-color);
 	font-family: arial, verdana, sans-serif, "Times New Roman";
 	font-size: 10px;
 	padding-left: 3px;
@@ -222,12 +222,12 @@ body{
 .nvp_entre_linha{
 	height: 1px;
 	font-size: 0px;
-	background-color: #495C67;
+	background-color: var(--border-color);
 }
 
 .nvp_table_corpo{
 	border: 3px solid;
-	border-color: #495C67;
+	border-color: var(--border-color);
 	color: black;
 	font-family: arial, verdana, sans-serif, "Times New Roman";
 	font-size: 12px;
@@ -250,7 +250,7 @@ table{
 
 .nvp_corpo_r2{
 	border-top: 3px solid;
-	border-color: #495C67;
+	border-color: var(--border-color);
 	color: black;
 	font-family: arial, verdana, sans-serif, "Times New Roman";
 	font-size: 12px;
@@ -261,7 +261,7 @@ table{
 
 .nvp_corpo_r2_escura{
 	border-top: 3px solid;
-	border-color: #495C67;
+	border-color: var(--border-color);
 	padding-right: 0px;
 	color: black;
 	font-family: arial, verdana, sans-serif, "Times New Roman";
@@ -291,7 +291,7 @@ a:hover{
 
 .botaolistagem{
 	border: 2px solid;
-	border-color: #495C67;
+	border-color: var(--border-color);
 	background-color: #ccdce6;
 	color: black;
 	font-family: arial, verdana, sans-serif, "Times New Roman";
@@ -326,21 +326,19 @@ A.categoria:link, A.categoria:visited, A.categoria:active, A.categoria:hover {
 
 .tabelanum1{
 	height: 100%;
-	width: 100%;
 	font-family: arial, verdana, sans-serif, "Times New Roman";
 	font-size: 12px;
 	border: 4px solid;
-	border-color: #495C67;
+	border-color: var(--border-color);
 }
 
 .tabelanum2{
 	height: 100%;
-	width: 100%;
 	font-family: arial, verdana, sans-serif, "Times New Roman";
 	font-size: 12px;
 	border-top: 2px solid;
 	border-bottom: 2px solid;
-	border-color: #495C67;
+	border-color: var(--border-color);
 }
 
 /* graficos diarios */
@@ -426,8 +424,8 @@ A.categoria:link, A.categoria:visited, A.categoria:active, A.categoria:hover {
  	border-width: 0.1px;
  	border-style: solid;
  	/*font-weight: bold;*/
- 	color: #495C67;
- 	border-color: #495C67;
+ 	color: var(--border-color);
+ 	border-color: var(--border-color);
   	width: 14%;
  	height: 60px;
  	background-repeat: no-repeat;
@@ -448,11 +446,11 @@ A.categoria:link, A.categoria:visited, A.categoria:active, A.categoria:hover {
 
 .fundoCalendarioTopo
 {
- 	background-color: #495C67;
+ 	background-color: var(--border-color);
  	padding-left:5px;
  	border-width: 0.1px;
  	border-style: solid;
- 	border-color: #495C67;
+ 	border-color: var(--border-color);
  	font-size: 11pt;
  	font-weight: bold;
 	font-family: verdana,heveltica,arial,sans-serif;
@@ -466,8 +464,8 @@ A.categoria:link, A.categoria:visited, A.categoria:active, A.categoria:hover {
  	padding-left:5px;
  	border-width: 0.1px;
  	border-style: solid;
- 	border-color: #495C67;
- 	color: #495C67;
+ 	border-color: var(--border-color);
+ 	color: var(--border-color);
    	width: 14%;
  	height: 70px;
 }
@@ -479,8 +477,8 @@ A.categoria:link, A.categoria:visited, A.categoria:active, A.categoria:hover {
  	padding-left:5px;
  	border-width: 0.1px;
  	border-style: solid;
- 	border-color: #495C67;
- 	color: #495C67;
+ 	border-color: var(--border-color);
+ 	color: var(--border-color);
    	width: 14%;
  	height: 70px;
 }
@@ -491,8 +489,8 @@ A.categoria:link, A.categoria:visited, A.categoria:active, A.categoria:hover {
  	padding-left:5px;
  	border-width: 0.1px;
  	border-style: solid;
- 	border-color: #495C67;
- 	color: #495C67;
+ 	border-color: var(--border-color);
+ 	color: var(--border-color);
   	width: 14%;
  	height: 70px;
 }
@@ -588,8 +586,8 @@ list-style: none;
 	margin-top:-2px;
 	padding:0px;
 	width:159px;
-	/*border-right:1px solid #495C67;
-	border-bottom:1px solid #495C67;*/
+	/*border-right:1px solid var(--border-color);
+	border-bottom:1px solid var(--border-color);*/
 }
 ul.menu li
 {
