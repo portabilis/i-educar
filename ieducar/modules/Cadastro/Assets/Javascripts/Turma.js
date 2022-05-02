@@ -40,11 +40,22 @@ let verificaEtapaEducacenso = ()=>{
 }
 
 let verificaFormaOrganizacaoTurma = ()=> {
+  const escolarizacao = ['1', '2', '3', '24', '62'];
+  const tipoAtendimento = $j('#tipo_atendimento').val() == '0';
+  const etapaEducacenso = $j('#etapa_educacenso').val()
+
   $j('#formas_organizacao_turma').makeUnrequired();
   if (obrigarCamposCenso &&
-      $j('#estrutura_curricular').val() &&
-      $j('#estrutura_curricular').val().includes("1")) {
+      tipoAtendimento &&
+      etapaEducacenso &&
+     !escolarizacao.includes(etapaEducacenso)
+  ) {
     $j('#formas_organizacao_turma').makeRequired();
+  }
+
+  $j("#formas_organizacao_turma").prop('disabled', false);
+  if (!tipoAtendimento && escolarizacao.includes(etapaEducacenso)) {
+    $j("#formas_organizacao_turma").prop('disabled', true).val("");
   }
 }
 
@@ -74,22 +85,20 @@ let verificaLocalFuncionamentoDiferenciado = () => {
 $j('#tipo_atendimento').change(function() {
   mostraAtividadesComplementares();
   verificaEstruturacurricular();
+  verificaFormaOrganizacaoTurma();
 });
 $j('#estrutura_curricular').change(function() {
-  verificaFormaOrganizacaoTurma();
-  habilitaFormasOrganizarTurma();
   verificaUnidadeCurricular();
   habilitaUnidadeCurricular();
   verificaEtapaEducacenso();
   habilitaEtapaEducacenso();
 });
 
-verificaEtapaEducacenso();
-habilitaEtapaEducacenso();
 verificaLocalFuncionamentoDiferenciado();
 
 $j('#etapa_educacenso').change(function() {
   mostraCursoTecnico();
+  verificaFormaOrganizacaoTurma();
 });
 
 function mostraAtividadesComplementares(){
@@ -213,16 +222,7 @@ function habilitaEtapaEducacenso() {
 
   if (notContainData || (!$j('#estrutura_curricular').val().include('1') &&
       !$j('#estrutura_curricular').val().include('3'))) {
-    $j("#etapa_educacenso").prop('disabled', true).val("");
-  }
-}
-
-function habilitaFormasOrganizarTurma() {
-  $j("#formas_organizacao_turma").prop('disabled', false);
-  if (obrigarCamposCenso &&
-     !$j('#estrutura_curricular').val() ||
-     !$j('#estrutura_curricular').val().includes("1")) {
-    $j("#formas_organizacao_turma").prop('disabled', true).val("");
+    $j("#etapa_educacenso").prop('disabled', true).val('');
   }
 }
 
@@ -419,7 +419,6 @@ $j(document).ready(function() {
       habilitaEtapaEducacenso();
       verificaEtapaEducacenso();
       verificaFormaOrganizacaoTurma();
-      habilitaFormasOrganizarTurma();
       verificaUnidadeCurricular();
       habilitaUnidadeCurricular();
     });
