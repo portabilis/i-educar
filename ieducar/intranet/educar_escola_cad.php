@@ -767,15 +767,6 @@ return new class extends clsCadastro {
                 3 => 'Estadual e Municipal'
             ];
 
-            $options = [
-                'label' => 'Conveniada com poder público',
-                'resources' => $resources,
-                'value' => $this->conveniada_com_poder_publico,
-                'required' => false,
-                'size' => 70
-            ];
-
-            $this->inputsHelper()->select('conveniada_com_poder_publico', $options);
             $this->campoCnpj('cnpj_mantenedora_principal', 'CNPJ da mantenedora principal da escola privada', $this->cnpj_mantenedora_principal);
 
             $hiddenInputOptions = ['options' => ['value' => $this->secretario_id]];
@@ -1932,11 +1923,6 @@ return new class extends clsCadastro {
         }
         if (empty($this->categoria_escola_privada)) {
             $this->mensagem = 'O campo categoria da escola privada é obrigatório para escolas em atividade de administração privada.';
-
-            return false;
-        }
-        if (empty($this->conveniada_com_poder_publico)) {
-            $this->mensagem = 'O campo conveniada com poder público é obrigatório para escolas em atividade de administração privada.';
 
             return false;
         }
