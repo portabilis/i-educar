@@ -169,15 +169,17 @@ function habilitaCampoEsferaAdministrativa() {
   }
 }
 function changeNumeroDeSalas() {
-  const containsPredioEscolar = $j.inArray(LOCAL_FUNCIONAMENTO.PREDIO_ESCOLAR.toString(), $j('#local_funcionamento').val()) == -1;
+  const containsPredioEscolar = $j.inArray(LOCAL_FUNCIONAMENTO.PREDIO_ESCOLAR.toString(), $j('#local_funcionamento').val()) > -1;
 
-  $j('#local_funcionamento').prop('disabled', disabled);
-
+  $j('#numero_salas_utilizadas_dentro_predio').prop('disabled', !containsPredioEscolar);
   if (obrigarCamposCenso) {
     if (containsPredioEscolar) {
       $j('#numero_salas_utilizadas_dentro_predio').makeRequired();
-    } else {
       $j('#numero_salas_utilizadas_fora_predio').makeUnrequired();
+    } else {
+      $j('#numero_salas_utilizadas_dentro_predio').makeUnrequired();
+      $j('#numero_salas_utilizadas_fora_predio').makeRequired();
+      $j('#numero_salas_utilizadas_dentro_predio').val('');
     }
   }
 }
@@ -314,6 +316,7 @@ $j(document).ready(function() {
           return false;
       });
       habilitaCamposNumeroSalas();
+      changeNumeroDeSalas();
     });
 
   // EQUIPAMENTOS
