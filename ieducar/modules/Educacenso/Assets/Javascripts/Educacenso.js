@@ -48,7 +48,6 @@ $j(document).ready(function(){
              ' <p style="margin-left: 0px; margin-top: 30px;font-family: verdana, arial; font-size: 18px; font-weight: bold;">Parabéns! Até o momento todos os dados da sua escola, foram validados com sucesso!</p>' +
              ' <p style="margin-left: 0px; margin-top: 30px;font-family: verdana, arial; font-size: 14px; font-weight: bold;">Mas porque o i-Educar não baixou o arquivo de exportação da minha escola?</p>' +
              ' <p style="margin-left: 0px; margin-top: 30px;font-family: verdana, arial; font-size: 14px;">O INEP está trabalhando nas mudanças de regras e campos solicitados pelo Censo em 2022. Estamos adpatando o sistema e exportação do arquivo para que tudo fique de acordo com o Layout.</p>' +
-             '<img style="max-width:100%;" src="/intranet/imagens/cursos_superiores_servidor.png"/>' +
              ' <p style="margin-left: 0px; margin-top: 30px;font-family: verdana, arial; font-size: 14px;">Mas não se preocupe, assim que todas essas alterações forem concluídas, a exportação do arquivo será liberada!</p>' +
              '</div>'+
             '</div>';
