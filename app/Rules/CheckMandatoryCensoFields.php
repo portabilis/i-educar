@@ -7,6 +7,7 @@ use App\Models\LegacyInstitution;
 use App\Models\School;
 use App_Model_LocalFuncionamentoDiferenciado;
 use App_Model_TipoMediacaoDidaticoPedagogico;
+use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use Illuminate\Contracts\Validation\Rule;
 
@@ -181,7 +182,7 @@ class CheckMandatoryCensoFields implements Rule
             return false;
         }
 
-        if ((int)$course->modalidade_curso === 1 &&
+        if ((int)$course->modalidade_curso === ModalidadeCurso::ENSINO_REGULAR &&
             isset($params->etapa_educacenso) &&
             !in_array((int)$params->etapa_educacenso, self::ETAPAS_ENSINO_REGULAR)) {
             $this->message = 'Quando a modalidade do curso é: Ensino regular, o campo: Etapa de ensino deve ser uma das seguintes opções:'
@@ -190,7 +191,7 @@ class CheckMandatoryCensoFields implements Rule
             return false;
         }
 
-        if ($course->modalidade_curso == 2 &&
+        if ((int)$course->modalidade_curso === ModalidadeCurso::EDUCACAO_ESPECIAL &&
             isset($params->etapa_educacenso) &&
             !in_array((int) $params->etapa_educacenso, self::ETAPAS_ESPECIAL_SUBSTITUTIVAS)) {
             $this->message = 'Quando a modalidade do curso é: Educação especial, o campo: Etapa de ensino deve ser uma das seguintes opções:'
@@ -199,7 +200,7 @@ class CheckMandatoryCensoFields implements Rule
             return false;
         }
 
-        if ($course->modalidade_curso == 3 &&
+        if ((int)$course->modalidade_curso === ModalidadeCurso::EJA &&
             isset($params->etapa_educacenso) &&
             !in_array($params->etapa_educacenso, [69, 70, 71, 72])) {
             $this->message = 'Quando a modalidade do curso é: Educação de Jovens e Adultos (EJA), o campo: Etapa de ensino deve ser uma das seguintes opções: 69, 70, 71 ou 72.';
@@ -277,11 +278,18 @@ class CheckMandatoryCensoFields implements Rule
         if ($params->tipo_atendimento != TipoAtendimentoTurma::ESCOLARIZACAO && in_array(
             $params->tipo_mediacao_didatico_pedagogico,
             [
-                    App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL,
-                    App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA
-                ]
+                App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL,
+                App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA
+            ]
         )) {
             $this->message = 'O campo: Tipo de atendimento deve ser: Escolarização quando o campo: Tipo de mediação didático-pedagógica for: Semipresencial ou Educação a Distância.';
+
+            return false;
+        }
+
+        $course = LegacyCourse::find($params->ref_cod_curso);
+        if ((int)$params->tipo_atendimento === TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR && (int) $course->modalidade_curso === ModalidadeCurso::EJA) {
+            $this->message = 'Quando a modalidade do curso é: <b>Educação de Jovens e Adultos (EJA)</b>, o campo <b>Tipo de atendimento</b> não pode ser <b>Atividade complementar</b>';
 
             return false;
         }
