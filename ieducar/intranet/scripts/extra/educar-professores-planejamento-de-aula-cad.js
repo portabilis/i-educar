@@ -1,7 +1,5 @@
 (function($){
   $(document).ready(function(){
-    const TODAS_DISCIPLINAS_VALUE = 666;
-
     var bncc_table = document.getElementById("objetivos_aprendizagem");
     var btn_add    = document.getElementById("btn_add_tab_add_1");
 
@@ -138,8 +136,6 @@
       var bnccElemento = document.getElementById(`custom_bncc[${componenteCurricularId}]`);
 
       if (turma !== null && componenteCurricularValue !== null) {
-        componenteCurricularValue = componenteCurricularValue == TODAS_DISCIPLINAS_VALUE ? null : componenteCurricularValue;
-
         var searchPathBNCCTurma = '/module/Api/BNCC?oper=get&resource=bncc_turma',
         paramsBNCCTurma  = {
           turma                 : document.getElementById("ref_cod_turma").value,
