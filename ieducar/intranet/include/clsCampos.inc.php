@@ -1078,20 +1078,20 @@ class clsCampos extends Core_Controller_Page_Abstract
                 $classe = $md ? 'formlttd' : 'formmdtd';
                 $md = $md ? false : true;
 
-                $retorno .= "<tr id='tr_$nome_tabela' class='$classe'><td>";
-                $retorno .= "\n<table id='$nome_tabela' class='tabela-adicao' >";
+                $retorno .= "<tr id='tr_$nome_tabela' class='$classe'><td style='width: 100%' colspan='2'>";
+                $retorno .= "\n<table cellspacing='0' $largura id='$nome_tabela' class='tabela-adicao' cellpadding='2' style='margin:10px 0px 10px 0px;' >";
           
 
                 $total_campos = count($cabecalho);
                 $span = $total_campos + 1;
 
                 if ($titulo) {
-                    $retorno .= "<tr id='tr_{$nome_tabela}_tit'  class='formdktd'><td style='flex: $span fr'>$titulo</td></tr>";
+                    $retorno .= "<tr align='center' id='tr_{$nome_tabela}_tit' style='font-weight:bold'  class='formdktd'><td colspan='$span'>$titulo</td></tr>";
                 } else {
-                    $retorno .= "<tr id='tr_{$nome_tabela}_tit' style='display:none;visibility:hidden;' ><td style='flex: $span fr'>&nbsp;</td></tr>";
+                    $retorno .= "<tr align='center' id='tr_{$nome_tabela}_tit' style='font-weight:bold;display:none;visibility:hidden;' ><td colspan='$span'>&nbsp;</td></tr>";
                 }
 
-                $retorno .= "<tr style='font-weight:bold' id='tr_{$nome_tabela}_cab'>";
+                $retorno .= "<tr align='center' style='font-weight:bold' id='tr_{$nome_tabela}_cab'>";
 
                 foreach ($cabecalho as $key => $cab) {
                     $expressao_regular = $componente[$key][2];
@@ -1103,10 +1103,10 @@ class clsCampos extends Core_Controller_Page_Abstract
                     }
                     $cabId = str_replace(' ', '_', strtolower($cab));
 
-                    $retorno .= "<td class='formmdtd' id='td_$cabId' ><span class='form'>$cab</span>{$obrigatorio}</td>";
+                    $retorno .= "<td class='formmdtd' id='td_$cabId' align='center'><span class='form'>$cab</span>{$obrigatorio}</td>";
                 }
 
-                $retorno .= '<td class=\'formmdtd\' id=\'td_acao\'><span class=\'form\'>A&ccedil;&atilde;o</span></td>';
+                $retorno .= '<td class=\'formmdtd\' id=\'td_acao\' align=\'center\'><span class=\'form\'>A&ccedil;&atilde;o</span></td>';
                 $retorno .= '</tr>';
 
                 $click = "$nome_add.removeRow(this);";
@@ -1151,7 +1151,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                         $center = (strtolower($campo_[0]) == 'rotulo' || strtolower($campo_[0]) == 'check' || $largura) ?
                             'align="center"' : '';
 
-                        $retorno .= "<td class='$classe2 {$nome}' id='td_{$nome}[{$key2}]' >";
+                        $retorno .= "<td class='$classe2 {$nome}' $center id='td_{$nome}[{$key2}]' valign='top'>\n";
 
                         switch (strtolower($campo_[0])) {
                             case 'html':
@@ -1232,7 +1232,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                         }
                     }
 
-                    $retorno .= "<td ><a href='javascript:void(0)' onclick='$click' id='link_remove[$key2]' style='outline: none;'>$img</a>$retorno_oculto</td>";
+                    $retorno .= "<td align='center'><a href='javascript:void(0)' onclick='$click' id='link_remove[$key2]' style='outline: none;'>$img</a>$retorno_oculto</td>";
                     $img = '<img src="/intranet/imagens/banco_imagens/excluirrr.png" border="0" alt="excluir" />';
                     $id = count($valores);
 
@@ -1246,7 +1246,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                 $img = '<img src="/intranet/imagens/nvp_bot_novo.png" border="0" alt="incluir" style="float:left; margin:5px;" />';
                 $retorno .= '<tr id=\'adicionar_linha\' style="background-color:#f5f9fd;">';
                 $tt = $total_campos + 1;
-                $retorno .= "<td style=' flex: $tt fr'><label><a style=\" text-decoration:none;\" href='javascript:void(0)' id='btn_add_$nome_add' onclick='$click' style='outline: none;'><p>$img ADICIONAR NOVO</p></a></label></td>";
+                $retorno .= "<td colspan='$tt' align='left' style='padding-top: 17px !important;'><label><a style=\"color: #47728f; text-decoration:none;\" href='javascript:void(0)' id='btn_add_$nome_add' onclick='$click' style='outline: none;'><p>$img ADICIONAR NOVO</p></a></label></td>";
                 $retorno .= '</tr>';
                 $retorno .= '</tr>';
 
@@ -1274,10 +1274,10 @@ class clsCampos extends Core_Controller_Page_Abstract
                 $retorno .= $componente;
             } elseif // Separador: insere uma linha preta
             ($componente[0] == 'linha_preta') {
-                $retorno .= "<tr><td  style='padding:0px;background-color:{$componente['cor']};' height='{$componente['altura']}'></td></tr>";
+                $retorno .= "<tr><td  style='padding:0px;background-color:{$componente['cor']};' colspan='2' height='{$componente['altura']}'></td></tr>";
                 continue;
             } elseif ($componente[0] == 'espaco') {
-                $retorno .= '<tr><td><hr></td></tr>';
+                $retorno .= '<tr><td colspan=\'2\'><hr></td></tr>';
                 continue;
             } elseif ($componente[0] != 'oculto') {
                 $tipo = $componente[0];
@@ -1318,7 +1318,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                         $explicacao = ($componente[6]) ?
                             "<br><sub style='vertical-align:top;'>{$componente[6]}</sub>" : '';
 
-                        $retorno .= "<tr><td class='$classe'><span class='form'><b>$componente[3]</b></span>{$explicacao}</td></tr>\n";
+                        $retorno .= "<tr><td colspan='2' class='$classe'><span class='form'><b>$componente[3]</b></span>{$explicacao}</td></tr>\n";
                     } else {
                         if (!empty($componente[10]) && !empty($componente[0])
                             && ($componente[0] == 'textoDuploInv' || $componente[0] == 'textoInv')) {

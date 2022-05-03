@@ -228,18 +228,18 @@ class clsCadastro extends clsCampos
             app(Breadcrumb::class)->setLegacy($this->locale);
         }
 
-        $retorno .= "\n<div class='tablecadastro' >\n";
+        $retorno .= "<center>\n<table class='tablecadastro' $width border='0' style='line-height: 2.31; ' cellpadding='2' cellspacing='0'>\n";
         $applicationTitle = $this->titulo_aplication ?? '';
-        $titulo = isset($this->titulo) ? $this->titulo : "<b>{$this->tipoacao} {$applicationTitle}</b>"; //tíulo
+        $titulo = isset($this->titulo) ? $this->titulo : "<b>{$this->tipoacao} {$applicationTitle}</b>";
 
         View::share('title', $this->getPageTitle());
 
         $barra = $titulo;
 
-        $retorno .= "<div class='formdktd'>{$barra}</div>";
+        $retorno .= "<tr><td class='formdktd' colspan='2' height='24'>{$barra}</td></tr>";
 
         if (empty($this->campos)) {
-            $retorno .= '<div class=\'linhaSim\' ><span class=\'form\'>N&atilde;o existe informa&ccedil;&atilde;o dispon&iacute;vel</span></div>';
+            $retorno .= '<tr><td class=\'linhaSim\' colspan=\'2\'><span class=\'form\'>N&atilde;o existe informa&ccedil;&atilde;o dispon&iacute;vel</span></td></tr>';
         } else {
             // Verifica se houve erros no controller
             $retorno .= $this->_getControllerErrors();
@@ -247,8 +247,8 @@ class clsCadastro extends clsCampos
         }
 
         $retorno .=
-            '<hr></hr>
-    <div class=\'linhaBotoes\'>
+            '<tr><td class=\'tableDetalheLinhaSeparador\' colspan=\'2\'></td></tr>
+    <tr class=\'linhaBotoes\'><td colspan=\'2\' align=\'center\'>
     <script type="text/javascript">
     var goodIE = (document.all) ? 1:0;
     var netscape6 = (document.getElementById && !document.all) ? 1:0;
@@ -527,8 +527,8 @@ class clsCadastro extends clsCampos
             }
         }
 
-        $retorno .= "</div";
-        $retorno .= "</div><!-- cadastro end -->";
+        $retorno .= "</td>\n</tr>\n";
+        $retorno .= "</table>\n</center>\n<!-- cadastro end -->\n";
         $retorno .= "</form>\n";
 
         if (!empty($this->executa_script)) {

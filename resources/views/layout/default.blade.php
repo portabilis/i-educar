@@ -188,7 +188,7 @@ $domain_parts = explode('.', HOST);
                 <div class="container col-8">
                     <div class="ieducar-header-links">
                         <div class="dropdown">
-                            <div class="dropbtn log-name">{{ $loggedUser->name }}</div>
+                            <div class="dropbtn">{{ $loggedUser->name }}</div>
                             <div class="dropdown-content">
                                 <a href="{{ url('intranet/agenda.php') }}">Agenda</a>
                                 <a href="{{ url('intranet/index.php') }}">Calendário</a>
@@ -222,7 +222,7 @@ $domain_parts = explode('.', HOST);
                 </div>
                 <div class="content">
                     @include('layout.topmenu')
-                    <div class="content m1 main grid">
+                    <div class="content m1 grid">
                         <div class='tabelanum1' id="tablenum1">
                             <div>
                                 <div>
@@ -234,8 +234,9 @@ $domain_parts = explode('.', HOST);
                                                 @include('partials.searchMobile')
                                                 @include('layout.menu')
                                             </div>
-                                            <div class="grid-card">
-                                                <div class='tabelanum2'>
+                                            <div >
+                                                <div summary="" class='tabelanum2'>
+                                                    <div>
                                                         <div id="corpo">
                                                             <div class='tablelistagem'>
                                                                 <div>
@@ -246,6 +247,7 @@ $domain_parts = explode('.', HOST);
                                                             </div>
                                                             @yield('content')
                                                         </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
