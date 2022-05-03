@@ -59,9 +59,6 @@
 
       componentesCurricularesElementos.forEach(componenteCurricularElemento => {
         var jComponenteCurricularElemento = $(componenteCurricularElemento);
-
-        // clear disciplines
-        jComponenteCurricularElemento.empty().append('<option value="">Selecione o componente curricular</option>');
         
         // add disciplines
         selectOptions.forEach(option => {
