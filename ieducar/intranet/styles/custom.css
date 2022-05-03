@@ -3,11 +3,14 @@
   --font-color-a: #188ad1;
   --font-color-gray: #999;
   --font-color-menu: #999;
-  --border-color: rgba(0,0,0, 0%); /* #495C67  default color at system*/
   --text_area: ;
   --input_: ;
 
 }
+
+
+
+
 
 html{
   font-size: 62.5%;
@@ -26,6 +29,7 @@ body, html{
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-weight: 200;
   line-height: 1.5;
+  color: #333;
   text-align: left;
 }
 
@@ -137,7 +141,7 @@ input[type="button"] {
   padding: 10px 30px !important;
   border-radius: 3px !important;
   font-weight: normal;
-  margin: 15px 0;
+  margin: 15px 0px;
 }
 
 select{
@@ -483,24 +487,19 @@ h6, .h6 {
 ***** LINHA / COLUNA / CONTAINER ******
 **************************************/
 .main {
+  display: flex;
   align-items: unset;
   contain: content;
   
 }
-
-
 
 .sidebar{
   flex:1;
 }
 
 .content {
+  flex: 3;
   min-height: 100vh;
-  width: 100vw;
-}
-
-.content .m1 {
-  margin: 1em;
 }
 
 .container {
@@ -530,12 +529,6 @@ h6, .h6 {
 .flex{
   display: flex;
   margin: auto;
-}
-
-.grid {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(1, 2fr);
 }
 
 .col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12, .col,
@@ -1728,10 +1721,7 @@ td#corpo{
 }
 
 .tabelanum1{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: baseline;
+  border: 0 !important;
 }
 
 td.tableDetalheLinhaSeparador {
@@ -1743,11 +1733,7 @@ tr.tableHeader {
 }
 
 .tabelanum2{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  /* border: 0 !important; */
+  border: 0 !important;
 }
 
 table.cellcolor th, table tr.cellcolor th, .cellcolor, tr.even{
@@ -2194,7 +2180,6 @@ input.btn_small {
   td p {font-size: 2.75rem !important}
   input[type=checkbox] {width: auto !important; transform: scale(2); -webkit-transform: scale(2)}
   .in-ex{width: 1.8em !important;}
-  .content .m1 { margin: 1em; }
   
   table {font-size: 4rem !important;}
   table.paginacao td a.nvp_paginador { font-size: 4.5rem !important;}

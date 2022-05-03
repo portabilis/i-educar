@@ -215,46 +215,46 @@ $domain_parts = explode('.', HOST);
                     </div>
                 </div>
             </header>
-            <div class="main flex">
+            <div class="main">
                 <div id="menu_lateral sidebar" class="r3c1" <?= $menu_lateral?>> 
                     @include('partials.search')
                     @include('layout.menu')
                 </div>
                 <div class="content">
                     @include('layout.topmenu')
-                    <div class="content m1 grid">
-                        <div class='tabelanum1' id="tablenum1">
-                            <div>
-                                <div>
+                    <div class="content main">
+                        <table summary="" class='tabelanum1' id="tablenum1" border='0' cellspacing='0' cellpadding='0'>
+                            <tr>
+                                <td colspan="3">
                                     <input type="checkbox" id="expandido">  
                                     <label for="expandido" class="expandir-btn" <?= $expandido?>><i class="fa fa-ellipsis-v" <?=$corTecsis?> ></i></label>
-                                    <div summary="" class='tabelanum2'>
-                                        <div>
+                                    <table summary="" class='tabelanum2' border='0' cellspacing='0' cellpadding='0'>
+                                        <tr>
                                             <div class="r3c1 Mobile" <?=$r3c1Mobile?> >
                                                 @include('partials.searchMobile')
                                                 @include('layout.menu')
                                             </div>
-                                            <div >
-                                                <div summary="" class='tabelanum2'>
-                                                    <div>
-                                                        <div id="corpo">
-                                                            <div class='tablelistagem'>
-                                                                <div>
-                                                                    <div class='fundoLocalizacao'>
+                                            <td valign=top>
+                                                <table summary="" class='tabelanum2' border='0' cellspacing='0' cellpadding='0'>
+                                                    <tr>
+                                                        <td valign="top" id="corpo">
+                                                            <table class='tablelistagem' border='0' cellpadding='0' cellspacing='0'>
+                                                                <tr>
+                                                                    <td class='fundoLocalizacao' colspan='2'>
                                                                         @include('layout.breadcrumb')
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
                                                             @yield('content')
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>
