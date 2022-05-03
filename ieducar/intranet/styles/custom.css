@@ -1,16 +1,14 @@
 :root{
   --font-color: #47728f;
   --font-color-a: #188ad1;
-  --font-color-gray: #999;
+  --font-color-grey: #999;
   --font-color-menu: #999;
+  --bg-color-title: #9ADCFF;
+  --border-color: rgba(0,0,0, 0%); /* #495C67  default color at system*/
   --text_area: ;
   --input_: ;
 
 }
-
-
-
-
 
 html{
   font-size: 62.5%;
@@ -29,7 +27,6 @@ body, html{
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-weight: 200;
   line-height: 1.5;
-  color: #333;
   text-align: left;
 }
 
@@ -52,7 +49,7 @@ caption{
 hr {
     border: 0;
     height: 1px;
-    background: #ccdce6;
+    background: var(--bg-color-title);
 }
 
 input, select, textarea, span.select2.select2-container.select2-container--default{
@@ -83,11 +80,11 @@ input:read-only {
     padding: 4px;
 }
 .select2-results__option {
-    color: --var(font-color);
+    color: var(--font-color);
 }
 
 .colorFont {
-  color: --var(font-color);
+  color: var(--font-color);
 }
 
 .sizeFont {
@@ -119,7 +116,7 @@ span.select2-selection.select2-selection--multiple{
   border: solid 1px #cddce6 !important;
   padding: 8px !important;
   font-size: 14px !important;
-  color: --var(font-color) !important;
+  color: var(--font-color) !important;
   max-width: 100% !important;
   height: auto !important;
   width: auto !important;
@@ -137,11 +134,11 @@ span.select2-selection.select2-selection--multiple{
 input[type="button"] {
   background-color: #FFF !important;
   font-size: 14px !important;
-  color: --var(font-color) !important;
+  color: var(--font-color) !important;
   padding: 10px 30px !important;
   border-radius: 3px !important;
   font-weight: normal;
-  margin: 15px 0px;
+  margin: 15px 0;
 }
 
 select{
@@ -149,7 +146,7 @@ select{
   background-color: #ffffff;
   border: solid 1px #cddce6;
   padding: 8px;
-  color: --var(font-color);
+  color: var(--font-color);
 }
 
 .decorated {
@@ -162,7 +159,7 @@ select{
 
 .disabled, *[disabled]{
   background-color: #e9f0f8 !important;
-  color: --var(font-color);
+  color: var(--font-color);
 }
 
 #lupa{
@@ -487,19 +484,23 @@ h6, .h6 {
 ***** LINHA / COLUNA / CONTAINER ******
 **************************************/
 .main {
-  display: flex;
   align-items: unset;
-  contain: content;
   
 }
+
+
 
 .sidebar{
   flex:1;
 }
 
 .content {
-  flex: 3;
   min-height: 100vh;
+  flex: 3;
+}
+
+.content .m1 {
+  margin: 1em;
 }
 
 .container {
@@ -529,6 +530,19 @@ h6, .h6 {
 .flex{
   display: flex;
   margin: auto;
+}
+
+.grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 2fr));
+}
+
+.grid-card{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12, .col,
@@ -786,7 +800,7 @@ h6, .h6 {
 
 .topo{
   height: 50px;
-  background: --var(font-color);
+  background: var(--font-color);
   color: #FFF;
 }
 
@@ -908,7 +922,7 @@ header{
   display: block;
   text-align: left;
   font-size: 14px;
-  border-bottom: 1px solid #ccdce6;
+  border-bottom: 1px solid var(--bg-color-title);
 }
 
 .ieducar-header-links .dropdown-content-notifications a:hover {
@@ -930,7 +944,7 @@ header{
 span.notification-balloon {
   background-color: red;
   padding: 5px;
-  border: 2px solid --var(font-color);
+  border: 2px solid var(--font-color);
   height: 0;
   position: absolute;
   border-radius: 50%;
@@ -947,14 +961,14 @@ span.notification-balloon {
 .dropdown-content-notifications p.date-notification {
   text-align: right;
   font-size: 10px;
-  color: var(--font-color-gray);
+  color: var(--font-color-grey);
 }
 
 .notifications-bar {
   display: flow-root;
   color: #646b71;
   padding: 5px 15px !important;
-  border-bottom: 1px solid #ccdce6;
+  border-bottom: 1px solid var(--bg-color-title);
   background: #eee !important;
   font-weight: bold !important;
 }
@@ -976,7 +990,7 @@ span.notification-balloon {
 .notifications-bar a.btn-mark-all-read {
   padding-right: 7px !important;
   margin-right: 7px;
-  border-right: 1px solid #ccdce6 !important;
+  border-right: 1px solid var(--bg-color-title) !important;
   cursor: pointer;
 }
 
@@ -1098,7 +1112,7 @@ a.icons-top{
 
 
 .nvp_tabelaMenu .title a{
-  color: --var(font-color);
+  color: var(--font-color);
   font-size: 16px;
   font-weight: normal;
   text-decoration: none;
@@ -1109,13 +1123,15 @@ a.icons-top{
   height: 13px;
 }
 
+sub {color: var(--font-color-grey)}
+
 .nvp_tabelaMenu .nvp_sub {
     padding: 3px 40px !important;
     width: 190px;
 }
 
 .nvp_tabelaMenu .nvp_sub a{
-  color: --var(font-color);
+  color: var(--font-color);
   font-size: 12px;
 }
 
@@ -1150,7 +1166,7 @@ a.icons-top{
 }
 
 .clLevel0over{
-  background: #ccdce6;
+  background: var(--bg-color-title);
   border: 0;
   display: flex;
   padding: 0 30px 0 10px;
@@ -1163,7 +1179,7 @@ a.icons-top{
 }
 
 .clLevel1over, .clLevel2over{
-  background: #ccdce6;
+  background: var(--bg-color-title);
 }
 
 .clLevel1 a,
@@ -1176,14 +1192,13 @@ a.icons-top{
 }
 
 .menu_susp_root{
-  color: --var(font-color) !important;
+  color: var(--font-color) !important;
   font-size: 16px;
   padding: 10px 0;
   width: 100%;
 }
 
 a.menu_susp_root:after {
-    content: "";
     float: right;
     display: inline-block;
     vertical-align: middle;
@@ -1252,14 +1267,14 @@ td.fundoLocalizacao {
 #localizacao a,
 #localizacao span{
   font-weight: bold !important;
-  color: --var(font-color);
+  color: var(--font-color);
 }
 
 #localizacao .pagina_atual,
 #localizacao .pagina_atual:hover,
 #localizacao .flechinha,
 #localizacao .flechinha:hover{
-  color: var(--font-color-gray) !important;
+  color: var(--font-color-grey) !important;
 }
 
 /**************************************
@@ -1277,7 +1292,7 @@ table.calendar {
 
 table.calendar .cal_dir, .cal_esq{
   background-image: none;
-  color: --var(font-color);
+  color: var(--font-color);
   text-align: left;
   height: auto;
   font-size: 40px;
@@ -1286,12 +1301,12 @@ table.calendar .cal_dir, .cal_esq{
 
 table.calendar .header {
   background: #fff;
-  color: --var(font-color);
+  color: var(--font-color);
   border: 0;
 }
 
 table.calendar .header td{
-  background: #ccdce6;
+  background: var(--bg-color-title);
   width: 45px;
   padding: 10px;
 }
@@ -1300,7 +1315,7 @@ table.calendar .dayLastMonth, .day{
   border: 0;
   padding: 10px !important;
   width: 45px !important;
-  color: --var(font-color);
+  color: var(--font-color);
 }
 
 table.calendar .day{
@@ -1319,7 +1334,7 @@ table.calendar .anotacao{
 
 table.calendar .legenda{
   border: 0;
-  color: --var(font-color);
+  color: var(--font-color);
   font-size: 12px;
 }
 
@@ -1336,7 +1351,7 @@ table.calendar .cor{
 **************************************/
 
 .fundoCalendarioTopo {
-  background-color: --var(font-color);
+  background-color: var(--font-color);
   padding: 7px !important;
   border: 0;
 }
@@ -1344,13 +1359,13 @@ table.calendar .cor{
 .fundoCalendario{
   background-color: #cddce6;
   border: 0;
-  color: --var(font-color);
+  color: var(--font-color);
 }
 
 .fundoCalendarioUrgente,
 .fundoCalendarioProximo {
   border: 0;
-  color: --var(font-color) !important;
+  color: var(--font-color) !important;
 }
 
 .fundoCalendario .dia_agenda,
@@ -1364,7 +1379,7 @@ table.calendar .cor{
 .fundoCalendario span,
 .fundoCalendarioUrgente span,
 .fundoCalendarioProximo span{
-  color: --var(font-color);
+  color: var(--font-color);
   font-size: 12px;
   font-weight: bold;
   position: relative;
@@ -1373,7 +1388,7 @@ table.calendar .cor{
 .fundoCalendarioMesDiferente{
   background-color: #e9f0f8;
   border: 0;
-  color: --var(font-color);
+  color: var(--font-color);
 }
 
 .fundoCalendarioMesDiferente span{
@@ -1407,7 +1422,7 @@ a.nav_agenda:hover{
 
 table.calendar .cal_esq_qh{
   background: none !important;
-  color: --var(font-color);
+  color: var(--font-color);
   text-align: left;
   height: auto;
   font-size: 40px;
@@ -1415,7 +1430,7 @@ table.calendar .cal_esq_qh{
 }
 
 table.calendar .mes{
-  color: --var(font-color);
+  color: var(--font-color);
   padding: 10px;
   font-size: 16px;
 }
@@ -1439,26 +1454,26 @@ table.calendar .horario {
 }
 
 .titulo, .comp_tit_antigo{
-  color: --var(font-color) !important;
+  color: var(--font-color) !important;
 }
 
 td.arrow-dia a {
-  color: --var(font-color);
+  color: var(--font-color);
 }
 
 td.arrow-dia {
   font-size: 25px;
   padding: 0 5px;
-  background: #ccdce6;
+  background: var(--bg-color-title);
 }
 
 td.data-info{
-  background: #ccdce6;
+  background: var(--bg-color-title);
   padding: 11px 0;
 }
 
 td.data-info span{
-  color: --var(font-color);
+  color: var(--font-color);
 }
 
 .small:hover{
@@ -1468,7 +1483,7 @@ td.data-info span{
 .small div {
   background: #e9f0f8;
   border: 1px solid #cddce6;
-  color: --var(font-color);
+  color: var(--font-color);
   padding: 5px 15px 5px 13px;
   border-radius: 3px;
   margin: 2px 0;
@@ -1503,12 +1518,12 @@ table.calendario td{
 }
 
 table.calendario td a{
-  color: --var(font-color);
+  color: var(--font-color);
 }
 
 .calendario_dias_t{
-  background: #ccdce6;
-  color: --var(font-color);
+  background: var(--bg-color-title);
+  color: var(--font-color);
   border: 0;
 }
 
@@ -1524,7 +1539,7 @@ table.calendario td a{
 }
 
 .calendario_dia_sel{
-  background: #ccdce6;
+  background: var(--bg-color-title);
   border: 0;
 }
 
@@ -1538,7 +1553,7 @@ table.calendario td a{
 
 .ui-dialog h2 {
     color: #FFF;
-    background: --var(font-color);
+    background: var(--font-color);
     margin: 0 0 25px !important;
     padding: 18px;
     font-size: 18px;
@@ -1552,7 +1567,7 @@ table.calendario td a{
   font-style: normal;
   font-stretch: normal;
   line-height: 1.31;
-  color: --var(font-color);
+  color: var(--font-color);
 }
 
 .ui-dialog input{
@@ -1589,7 +1604,7 @@ table.calendario td a{
   font-style: normal;
   font-stretch: normal;
   line-height: 1.5;
-  color: --var(font-color);
+  color: var(--font-color);
   margin-right: 5px;
 }
 
@@ -1605,7 +1620,7 @@ table.calendario td a{
 .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset{
 	float: none !important;
 	text-align: center !important;
-  border-top: 1px solid #ccdce6;
+  border-top: 1px solid var(--bg-color-title);
   padding: 10px 0px;
 }
 
@@ -1623,7 +1638,7 @@ table.calendario td a{
   font-style: normal;
   font-stretch: normal;
   text-align: center;
-  color: --var(font-color) !important;
+  color: var(--font-color) !important;
   background: #FFF;
   padding: 9px 35px !important;
 }
@@ -1645,7 +1660,7 @@ table.calendario td a{
 
 
 .atualizacao-dados  .ui-dialog-titlebar.ui-widget-header.ui-corner-all.ui-helper-clearfix{
-	background: --var(font-color);
+	background: var(--font-color);
 	color: #FFF;
 	text-align: center;
 }
@@ -1663,7 +1678,7 @@ table.calendario td a{
 }
 
 #modal-title {
-  background: --var(font-color);
+  background: var(--font-color);
   color: #FFF;
   vertical-align: middle;
   text-align: center;
@@ -1672,7 +1687,7 @@ table.calendario td a{
 }
 
 #modal-close{
-  background: --var(font-color);
+  background: var(--font-color);
   text-align: right;
   padding: 20px;
 }
@@ -1703,7 +1718,7 @@ table.calendario td a{
 ***************TABELAS*****************
 **************************************/
 
-table {
+table, div  {
     color: var(--font-color);
     font-size: 12px;
     margin-left: auto;
@@ -1721,19 +1736,26 @@ td#corpo{
 }
 
 .tabelanum1{
-  border: 0 !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: baseline;
 }
 
 td.tableDetalheLinhaSeparador {
-    background-color: #ccdce6 !important;
+    background-color: var(--bg-color-title) !important;
 }
 
 tr.tableHeader {
-  background-color: #ccdce6 !important;
+  background-color: var(--bg-color-title) !important;
 }
 
 .tabelanum2{
-  border: 0 !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* border: 0 !important; */
 }
 
 table.cellcolor th, table tr.cellcolor th, .cellcolor, tr.even{
@@ -1746,13 +1768,13 @@ table.styled tr td, table.styled tr th{
 }
 
 table.strong th, tr.strong th, tr.strong td, table.styled th{
-  background-color: #ccdce6;
-  color: --var(font-color) !important;
+  background-color: var(--bg-color-title);
+  color: var(--font-color) !important;
   font-size: 12px;
 }
 
 td.area-conhecimento-destaque {
-    background-color: --var(font-color) !important;
+    background-color: var(--font-color) !important;
     color: #FFF !important;
     font-size: 12px;
 }
@@ -1764,12 +1786,12 @@ td.area-conhecimento-destaque {
 #formcadastro .formdktd,
 .tableDetalhe .formdktd,
 .titulo-tabela-listagem {
-  background-color: #ccdce6 !important;
+  background-color: var(--bg-color-title) !important;
   font-size: 2rem;
   font-weight: bold;
   font-style: normal;
   font-stretch: normal;
-  color: --var(font-color);
+  color: var(--font-color);
   padding: 8px;
 }
 
@@ -1781,7 +1803,7 @@ td.area-conhecimento-destaque {
   font-size: 1.75rem;
   flex: 2;
   height: auto;
-  color: --var(font-color);
+  color: var(--font-color);
   box-sizing: border-box;
 }
 #formcadastro textarea{ max-width: 75% !important;}
@@ -1809,12 +1831,12 @@ td.area-conhecimento-destaque {
   border: solid 1px #cddce6;
   padding: 8px;
   font-size: 1.75rem;
-  color: --var(font-color);
+  color: var(--font-color);
 }
 
 #formcadastro .formmdtd,
 #formcadastro .formlttd{
-  color: --var(font-color);
+  color: var(--font-color);
   font-size: 14px;
   padding: 4px 8px;
   vertical-align: top;
@@ -1823,7 +1845,7 @@ td.area-conhecimento-destaque {
 }
 
 .formmdtd sub, .formlttd sub{
-  color: var(--font-color-gray);
+  color: var(--font-color-grey);
   font-size: 12px;
 }
 
@@ -1846,7 +1868,7 @@ td.area-conhecimento-destaque {
   font-style: normal;
   font-stretch: normal;
   line-height: 1.14;
-  color: --var(font-color);
+  color: var(--font-color);
   padding: 17px 13px;
 }
 
@@ -1854,7 +1876,7 @@ td.area-conhecimento-destaque {
 .tablelistagem .formlttd,
 .tablelistagem .formmdtd a,
 .tablelistagem .formlttd a{
-  color: --var(font-color);
+  color: var(--font-color);
   font-size: 12px;
   padding: 8px;
   vertical-align: top;
@@ -1867,7 +1889,7 @@ td.area-conhecimento-destaque {
 
 .tableDetalhe .formmdtd,
 .tableDetalhe .formlttd{
-  color: --var(font-color);
+  color: var(--font-color);
   font-size: 1.75rem;
   padding: 12px;
   vertical-align: top;
@@ -1880,19 +1902,19 @@ td.area-conhecimento-destaque {
   font-style: normal;
   font-stretch: normal;
   line-height: 1.14;
-  color: --var(font-color) !important;
+  color: var(--font-color) !important;
   padding: 17px 13px;
 }
 
 table#matriculas select {
     background-color: #e9f0f8;
-    color: --var(font-color);
-    border-color: #ccdce6;
+    color: var(--font-color);
+    border-color: var(--bg-color-title);
 }
 
 
 table.tablelistagem.auditoria-tab .formdktd {
-    background-color: #ccdce6 !important;
+    background-color: var(--bg-color-title) !important;
     font-size: 14px;
     padding: 5px;
 }
@@ -1918,7 +1940,7 @@ table.tablelistagem.auditoria-tab tr:nth-child(2n+1) td.formlttd{
 }
 
 a.clone-values {
-  color: --var(font-color);
+  color: var(--font-color);
   font-size: 15px;
   cursor: pointer;
 }
@@ -1960,7 +1982,7 @@ table.paginacao{
 }
 
 table.paginacao td {
-  border: 1px solid #ccdce6;
+  border: 1px solid var(--bg-color-title);
   padding: 10px !important;
   text-align: center;
 }
@@ -1994,12 +2016,12 @@ table.paginacao td a.nvp_paginador {
 **************************************/
 
 p.title-table-matricula {
-  background-color: #ccdce6 !important;
+  background-color: var(--bg-color-title) !important;
   font-size: 16px;
   font-weight: bold;
   font-style: normal;
   font-stretch: normal;
-  color: --var(font-color);
+  color: var(--font-color);
   padding: 8px;
   margin-bottom: 0;
 }
@@ -2030,7 +2052,7 @@ p.title-table-matricula {
   padding: 6px 20px 12px 20px;
   border-radius: 0px !important;
   border: 0 !important;
-  color: --var(font-color);
+  color: var(--font-color);
 }
 
 .alunoTab,
@@ -2112,7 +2134,7 @@ input.btn_small {
 }
 
 .inputfile-buttom + label {
-    color: --var(font-color);
+    color: var(--font-color);
 }
 
 .inputfile-buttom + label {
@@ -2180,6 +2202,7 @@ input.btn_small {
   td p {font-size: 2.75rem !important}
   input[type=checkbox] {width: auto !important; transform: scale(2); -webkit-transform: scale(2)}
   .in-ex{width: 1.8em !important;}
+  .content .m1 { margin: 1em; }
   
   table {font-size: 4rem !important;}
   table.paginacao td a.nvp_paginador { font-size: 4.5rem !important;}
@@ -2249,10 +2272,10 @@ input.btn_small {
 }
 
 a.btn-detalhes {
-  background: #CCDCE6 !important;
+  background: var(--bg-color-title) !important;
   padding: 8px 17px;
   border-radius: 3px;
-  color: --var(font-color);
+  color: var(--font-color);
   cursor: pointer;
   white-space: nowrap;
 }
