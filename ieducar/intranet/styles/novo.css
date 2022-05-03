@@ -40,11 +40,11 @@ body{
 }
 
 .linhaBotoes{
-	background-color: #ccdce6;
+	background-color: var(--bg-color-title);
 }
 
 .formdktd{
-	background-color: #ccdce6 !important;
+	background-color: var(--bg-color-title) !important;
 }
 
 .formmdtd{
@@ -206,7 +206,7 @@ body{
 }
 
 .nvp_cor_sim{
-	background-color: #ccdce6;
+	background-color: var(--bg-color-title);
 	font-size: 10px;
 	padding-left: 5px;
 	border-bottom:1px solid #000000;
@@ -268,7 +268,7 @@ table{
 	font-size: 0px;
 	vertical-align: top;
 	width: 21px;
-	background-color: #ccdce6;
+	background-color: var(--bg-color-title);
 }
 
 .barraLateral{
@@ -292,7 +292,7 @@ a:hover{
 .botaolistagem{
 	border: 2px solid;
 	border-color: var(--border-color);
-	background-color: #ccdce6;
+	background-color: var(--bg-color-title);
 	color: black;
 	font-family: arial, verdana, sans-serif, "Times New Roman";
 	font-size: 11px;
@@ -316,7 +316,7 @@ a:hover{
 }
 
 .rodape{
-	background-color: #ccdce6;
+	background-color: var(--bg-color-title);
 	height: 36px;
 	vertical-align: middle;
 }
