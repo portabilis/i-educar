@@ -84,6 +84,9 @@ class PlanejamentoAulaController extends ApiCoreController
 
     public function criarPlanoAula ()
     {
+        $data_agora = new DateTime('now');
+        $data_agora = new \DateTime($data_agora->format('Y-m-d'));
+
         $data_inicial = $this->getRequest()->data_inicial;
         $data_final = $this->getRequest()->data_final;
         $turma = $this->getRequest()->turma;
@@ -103,33 +106,35 @@ class PlanejamentoAulaController extends ApiCoreController
 
         $data = $obj->pegaPeriodoLancamentoNotasFaltas($turma, $sequencia);
         if ($data['inicio'] != null && $data['fim'] != null) {
-            $data['inicio'] = explode(',', $data['inicio']);
-            $data['fim'] = explode(',', $data['fim']);
+            $data['inicio_periodo_lancamentos'] = explode(',', $data['inicio']);
+            $data['fim_periodo_lancamentos'] = explode(',', $data['fim']);
 
-            array_walk($data['inicio'], function(&$data_inicio, $key) {
+            array_walk($data['inicio_periodo_lancamentos'], function(&$data_inicio, $key) {
                 $data_inicio = new \DateTime($data_inicio);
             });
 
-            array_walk($data['fim'], function(&$data_fim, $key) {
+            array_walk($data['fim_periodo_lancamentos'], function(&$data_fim, $key) {
                 $data_fim = new \DateTime($data_fim);
             });
-        } else {
-            $data['inicio'] = new \DateTime($obj->pegaEtapaSequenciaDataInicio($turma, $sequencia));
-            $data['fim'] = new \DateTime($obj->pegaEtapaSequenciaDataFim($turma, $sequencia));
         }
 
-        $podeRegistrar = false;
-        if (is_array($data['inicio']) && is_array($data['fim'])) {
-            for ($i=0; $i < count($data['inicio']); $i++) {
-                $data_inicio = $data['inicio'][$i];
-                $data_fim = $data['fim'][$i];
+        $data['inicio'] = new \DateTime($obj->pegaEtapaSequenciaDataInicio($turma, $sequencia));
+        $data['fim'] = new \DateTime($obj->pegaEtapaSequenciaDataFim($turma, $sequencia));
 
-                $podeRegistrar = $data_inicial >= $data_inicio && $data_final <= $data_fim;
+        $podeRegistrar = false;
+        if (is_array($data['inicio_periodo_lancamentos']) && is_array($data['fim_periodo_lancamentos'])) {
+            for ($i=0; $i < count($data['inicio_periodo_lancamentos']); $i++) {
+                $data_inicio = $data['inicio_periodo_lancamentos'][$i];
+                $data_fim = $data['fim_periodo_lancamentos'][$i];
+
+                $podeRegistrar = $data_agora >= $data_inicio && $data_agora <= $data_fim;
 
                 if ($podeRegistrar) break;
-            }     
+            }
+            $podeRegistrar = $podeRegistrar && new DateTime($data_inicial) >= $data['inicio'] && new DateTime($data_final) <= $data['fim'];
         } else {
             $podeRegistrar = new DateTime($data_inicial) >= $data['inicio'] && new DateTime($data_final) <= $data['fim'];
+            $podeRegistrar = $podeRegistrar && $data_agora >= $data['inicio'] && $data_agora <= $data['fim'];
         }
 
         if (!$podeRegistrar) {
