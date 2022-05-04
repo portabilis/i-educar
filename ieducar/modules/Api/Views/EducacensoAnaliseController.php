@@ -1259,9 +1259,13 @@ class EducacensoAnaliseController extends ApiCoreController
                 ];
             }
 
-            if (!$gestor->tipoVinculo && $gestor->cargo == SchoolManagerRole::DIRETOR && $gestor->isDependenciaAdministrativaPublica()) {
+            if (!$gestor->tipoVinculo &&
+                (int) $gestor->cargo === SchoolManagerRole::DIRETOR &&
+                $gestor->isDependenciaAdministrativaPublica() &&
+                (int) $escola->situacaoFuncionamento === SituacaoFuncionamento::EM_ATIVIDADE
+            ) {
                 $mensagem[] = [
-                    'text' => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verificamos que o gestor escolar {$nomeGestor} é diretor(a) e a dependência administrativa da escola é {$dependenciaAdministraticaDesc}, portanto é necessário informar o tipo de vínculo.",
+                    'text' => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verificamos que o gestor escolar {$nomeGestor} é diretor(a) e a dependência administrativa da escola é {$dependenciaAdministraticaDesc} e a situação de funcionamento da escola é em atividade, portanto é necessário informar o tipo de vínculo.",
                     'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Tabela Gestores escolares > Link: Dados adicionais do(a) gestor(a) > Campo: Tipo de vínculo)',
                     'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
                     'fail' => true
