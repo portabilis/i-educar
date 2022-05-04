@@ -2292,12 +2292,6 @@ return new class extends clsCadastro {
             return true;
         }
 
-        if ((int)$this->numero_salas_utilizadas_fora_predio <= 0 && (int)$this->numero_salas_utilizadas_dentro_predio <= 0) {
-            $this->mensagem = 'O campo: <b>Número de salas de aula utilizadas na escola dentro do prédio escolar</b> deve ser preenchido quando o campo: <b>Local de funcionamento</b> for: <b>Prédio escolar</b> e o campo: <b>Número de salas de aula utilizadas na escola fora do prédio escolar</b> não for preenchido';
-
-            return false;
-        }
-
         return true;
     }
 
@@ -2305,12 +2299,6 @@ return new class extends clsCadastro {
     {
         if ($this->numero_salas_utilizadas_fora_predio == '0') {
             $this->mensagem = 'O campo: <b>Número de salas de aula utilizadas na escola fora do prédio escolar</b> não pode ser preenchido com 0';
-
-            return false;
-        }
-
-        if ((int)$this->numero_salas_utilizadas_fora_predio <= 0 && (int)$this->numero_salas_utilizadas_dentro_predio <= 0) {
-            $this->mensagem = 'O campo: <b>Número de salas de aula utilizadas na escola fora do prédio escolar</b> deve ser preenchido quando o campo: <b>Número de salas de aula utilizadas na escola dentro do prédio escolar</b> não for preenchido';
 
             return false;
         }
