@@ -10,6 +10,7 @@ class Equipamentos
     public const COPIADORA = 4;
     public const SCANNER = 5;
     public const ANTENA_PARABOLICA = 6;
+    public const NENHUM_EQUIPAMENTO_LISTADO = 7;
 
     public static function getDescriptiveValues()
     {
@@ -20,6 +21,7 @@ class Equipamentos
             self::COPIADORA => 'Copiadora',
             self::SCANNER => 'Scanner',
             self::ANTENA_PARABOLICA => 'Antena parabólica',
+            self::NENHUM_EQUIPAMENTO_LISTADO => 'Nenhum dos equipamentos listados',
         ];
     }
 }

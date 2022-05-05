@@ -1476,6 +1476,10 @@ return new class extends clsCadastro {
             return false;
         }
 
+        if (!$this->validaCampoEquipamentos()) {
+            return false;
+        }
+
         if (! isset($this->pessoaj_id_oculto) ||
             ! is_int((int)$this->pessoaj_id_oculto)
         ) {
@@ -1753,6 +1757,10 @@ return new class extends clsCadastro {
             return false;
         }
 
+        if (!$this->validaCampoEquipamentos()) {
+            return false;
+        }
+
         $this->bloquear_lancamento_diario_anos_letivos_encerrados = is_null($this->bloquear_lancamento_diario_anos_letivos_encerrados) ? 0 : 1;
         $this->utiliza_regra_diferenciada = !is_null($this->utiliza_regra_diferenciada);
 
@@ -1812,6 +1820,18 @@ return new class extends clsCadastro {
             new RedirectResponse('educar_escola_lst.php')
         );
     }
+
+    protected function validaCampoEquipamentos()
+    {
+        $dadosEquipamentos = transformStringFromDBInArray($this->equipamentos);
+
+        if (is_array($dadosEquipamentos) && count($dadosEquipamentos) > 1 && in_array(Equipamentos::NENHUM_EQUIPAMENTO_LISTADO, $dadosEquipamentos)) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Equipamentos da escola</b>, quando a opção: <b>Nenhum dos equipamentos listados</b> estiver selecionada.';
+            return false;
+        }
+        return true;
+    }
+
     protected function inputTelefone($type, $typeLabel = '')
     {
         if (!$typeLabel) {

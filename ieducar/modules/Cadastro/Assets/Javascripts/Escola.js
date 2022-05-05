@@ -337,7 +337,15 @@ $j(document).ready(function() {
       habilitaCampoAcessoInternet();
       habilitaCampoEquipamentosAcessoInternet();
       habilitaCamposQuantidadeComputadoresAlunos();
+      obrigaEquipamentos();
     });
+
+  function obrigaEquipamentos() {
+    $j('#equipamentos').makeUnrequired();
+    if(obrigarCamposCenso) {
+      $j('#equipamentos').makeRequired();
+    }
+  }
 
   // Dados educacionais
   $j('#tab5').click(
