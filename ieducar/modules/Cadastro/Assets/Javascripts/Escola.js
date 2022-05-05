@@ -205,6 +205,21 @@ function habilitaCampoEsferaAdministrativa() {
     }
   }
 }
+function changeNumeroDeSalas() {
+  const containsPredioEscolar = $j.inArray(LOCAL_FUNCIONAMENTO.PREDIO_ESCOLAR.toString(), $j('#local_funcionamento').val()) > -1;
+
+  $j('#numero_salas_utilizadas_dentro_predio').prop('disabled', !containsPredioEscolar);
+  if (obrigarCamposCenso) {
+    if (containsPredioEscolar) {
+      $j('#numero_salas_utilizadas_dentro_predio').makeRequired();
+      $j('#numero_salas_utilizadas_fora_predio').makeUnrequired();
+    } else {
+      $j('#numero_salas_utilizadas_dentro_predio').makeUnrequired();
+      $j('#numero_salas_utilizadas_fora_predio').makeRequired();
+      $j('#numero_salas_utilizadas_dentro_predio').val('');
+    }
+  }
+}
 
 function changeLocalFuncionamento(){
     var disabled = $j.inArray(LOCAL_FUNCIONAMENTO.PREDIO_ESCOLAR.toString(), $j('#local_funcionamento').val()) == -1;
@@ -338,6 +353,7 @@ $j(document).ready(function() {
           return false;
       });
       habilitaCamposNumeroSalas();
+      changeNumeroDeSalas();
     });
 
   // EQUIPAMENTOS
@@ -357,9 +373,16 @@ $j(document).ready(function() {
       });
       habilitaCampoAcessoInternet();
       habilitaCampoEquipamentosAcessoInternet();
-      habilitaCampoRedeLocal();
       habilitaCamposQuantidadeComputadoresAlunos();
+      obrigaEquipamentos();
     });
+
+  function obrigaEquipamentos() {
+    $j('#equipamentos').makeUnrequired();
+    if(obrigarCamposCenso) {
+      $j('#equipamentos').makeRequired();
+    }
+  }
 
   // Dados educacionais
   $j('#tab5').click(
@@ -810,29 +833,12 @@ $j('#uso_internet').on('change', function () {
     habilitaCampoEquipamentosAcessoInternet();
 });
 
-function habilitaCampoRedeLocal() {
-    let disabled = $j.inArray(EQUIPAMENTOS.COMPUTADORES.toString(), $j('#equipamentos').val()) == -1;
-
-    if (disabled) {
-        makeUnrequired('rede_local');
-    } else if(obrigarCamposCenso){
-        makeRequired('rede_local');
-    }
-
-    $j('#rede_local').prop('disabled', disabled);
-
-    $j("#rede_local").trigger("chosen:updated");
-}
 function habilitaCamposQuantidadeComputadoresAlunos() {
     let disabled = $j.inArray(EQUIPAMENTOS_ACESSO_INTERNET.COMPUTADORES, $j('#equipamentos_acesso_internet').val()) == -1;
 
     $j('#quantidade_computadores_alunos_mesa, #quantidade_computadores_alunos_portateis, #quantidade_computadores_alunos_tablets').prop('disabled', disabled);
     $j("#quantidade_computadores_alunos_mesa, #quantidade_computadores_alunos_portateis, #quantidade_computadores_alunos_tablets").trigger("chosen:updated");
 }
-
-$j('#equipamentos').on('change', function () {
-    habilitaCampoRedeLocal();
-});
 
 $j('#equipamentos_acesso_internet').on('change', function () {
   habilitaCamposQuantidadeComputadoresAlunos();

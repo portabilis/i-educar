@@ -1303,18 +1303,6 @@ return new class extends clsCadastro {
                 $obrigarOrganizacaoEnsino = $obrigarOrganizacaoEnsino->isValid();
             }
 
-            $helperOptions = ['objectName' => 'organizacao_ensino'];
-            $options = [
-                'label' => 'Forma(s) de organização do ensino',
-                'size' => 50,
-                'required' => $obrigarCamposCenso && $obrigarOrganizacaoEnsino,
-                'options' => [
-                    'values' => $this->organizacao_ensino,
-                    'all_values' => OrganizacaoEnsino::getDescriptiveValues()
-                ]
-            ];
-            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
-
             $helperOptions = ['objectName' => 'instrumentos_pedagogicos'];
             $options = [
                 'label' => 'Instrumentos, materiais socioculturais e/ou pedagógicos em uso na escola para o desenvolvimento de atividades de ensino aprendizagem',
@@ -1493,6 +1481,10 @@ return new class extends clsCadastro {
         }
 
         if (!$this->validaOpcoesUnicasMultipleSearch()) {
+            return false;
+        }
+
+        if (!$this->validaCampoEquipamentos()) {
             return false;
         }
 
@@ -1779,6 +1771,10 @@ return new class extends clsCadastro {
             return false;
         }
 
+        if (!$this->validaCampoEquipamentos()) {
+            return false;
+        }
+
         $this->bloquear_lancamento_diario_anos_letivos_encerrados = is_null($this->bloquear_lancamento_diario_anos_letivos_encerrados) ? 0 : 1;
         $this->utiliza_regra_diferenciada = !is_null($this->utiliza_regra_diferenciada);
 
@@ -1838,6 +1834,16 @@ return new class extends clsCadastro {
             new RedirectResponse('educar_escola_lst.php')
         );
     }
+
+    protected function validaCampoEquipamentos()
+    {
+        if (is_array($this->equipamentos) && count($this->equipamentos) > 1 && in_array(Equipamentos::NENHUM_EQUIPAMENTO_LISTADO, $this->equipamentos)) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Equipamentos da escola</b>, quando a opção: <b>Nenhum dos equipamentos listados</b> estiver selecionada.';
+            return false;
+        }
+        return true;
+    }
+
     protected function inputTelefone($type, $typeLabel = '')
     {
         if (!$typeLabel) {
@@ -2317,12 +2323,6 @@ return new class extends clsCadastro {
             return true;
         }
 
-        if ((int)$this->numero_salas_utilizadas_fora_predio <= 0 && (int)$this->numero_salas_utilizadas_dentro_predio <= 0) {
-            $this->mensagem = 'O campo: <b>Número de salas de aula utilizadas na escola dentro do prédio escolar</b> deve ser preenchido quando o campo: <b>Local de funcionamento</b> for: <b>Prédio escolar</b> e o campo: <b>Número de salas de aula utilizadas na escola fora do prédio escolar</b> não for preenchido';
-
-            return false;
-        }
-
         return true;
     }
 
@@ -2330,12 +2330,6 @@ return new class extends clsCadastro {
     {
         if ($this->numero_salas_utilizadas_fora_predio == '0') {
             $this->mensagem = 'O campo: <b>Número de salas de aula utilizadas na escola fora do prédio escolar</b> não pode ser preenchido com 0';
-
-            return false;
-        }
-
-        if ((int)$this->numero_salas_utilizadas_fora_predio <= 0 && (int)$this->numero_salas_utilizadas_dentro_predio <= 0) {
-            $this->mensagem = 'O campo: <b>Número de salas de aula utilizadas na escola fora do prédio escolar</b> deve ser preenchido quando o campo: <b>Número de salas de aula utilizadas na escola dentro do prédio escolar</b> não for preenchido';
 
             return false;
         }
@@ -2452,11 +2446,6 @@ return new class extends clsCadastro {
             return false;
         }
 
-        if (is_array($this->rede_local) && in_array(RedeLocal::NENHUMA, $this->rede_local) && count($this->rede_local) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Rede local de interligação de computadores</b>, quando a opção: <b>Não há rede local interligando computadores</b> estiver selecionada.';
-
-            return false;
-        }
 
         if (is_array($this->orgaos_colegiados) && in_array(OrgaosColegiados::NENHUM, $this->orgaos_colegiados) && count($this->orgaos_colegiados) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Órgãos colegiados em funcionamento na escola</b>, quando a opção: <b>Não há órgãos colegiados em funcionamento</b> estiver selecionada.';
@@ -2477,12 +2466,6 @@ return new class extends clsCadastro {
     {
         if (!is_array($this->equipamentos_acesso_internet) && !is_array($this->rede_local)) {
             return true;
-        }
-
-        if (in_array(2, $this->equipamentos_acesso_internet) && !in_array(3, $this->rede_local)) {
-            $this->mensagem = 'O campo: <b>Equipamentos que os aluno(a)s usam para acessar a internet da escola</b> não deve ser preenchido com a opção: <b>Dispositivos pessoais (computadores portáteis, celulares, tablets, etc.)</b> quando o campo: <b>Rede local de interligação de computadores</b> não possuir a opção: <b>Wireless</b> selecionada.';
-
-            return false;
         }
 
         return true;

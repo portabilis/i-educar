@@ -11,6 +11,7 @@ class SalasAtividades
     public const MULTIUSO = 5;
     public const RECURSOS_AEE = 6;
     public const REPOUSO_ALUNO = 7;
+    public const EDUCACAO_PROFISSIONAL = 8;
 
     public static function getDescriptiveValues()
     {
@@ -22,6 +23,7 @@ class SalasAtividades
             self::MULTIUSO => 'Sala multiúso (música, dança e artes)',
             self::RECURSOS_AEE => 'Sala de recursos multifuncionais para Atendimento Educacional Especializado (AEE)',
             self::REPOUSO_ALUNO => 'Sala de repouso para aluno(a)',
+            self::EDUCACAO_PROFISSIONAL => 'Salas de oficinas da educação profissional',
         ];
     }
 }
