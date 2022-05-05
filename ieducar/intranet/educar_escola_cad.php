@@ -1823,7 +1823,9 @@ return new class extends clsCadastro {
 
     protected function validaCampoEquipamentos()
     {
-        if (is_array($this->equipamentos) && count($this->equipamentos) > 1 && in_array(Equipamentos::NENHUM_EQUIPAMENTO_LISTADO, $this->equipamentos)) {
+        $dadosEquipamentos = transformStringFromDBInArray($this->equipamentos);
+
+        if (is_array($dadosEquipamentos) && count($dadosEquipamentos) > 1 && in_array(Equipamentos::NENHUM_EQUIPAMENTO_LISTADO, $dadosEquipamentos)) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Equipamentos da escola</b>, quando a opção: <b>Nenhum dos equipamentos listados</b> estiver selecionada.';
             return false;
         }
