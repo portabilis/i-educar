@@ -143,7 +143,8 @@ function habilitaRecuros() {
     $j('#qtd_bombeiro'),
     $j('#qtd_psicologo'),
     $j('#qtd_fonoaudiologo'),
-    $j('#qtd_vice_diretor')
+    $j('#qtd_vice_diretor'),
+    $j('#qtd_orientador_comunitario')
   ];
 
   const isChecked = $j('#nao_ha_funcionarios_para_funcoes').is(':checked');
