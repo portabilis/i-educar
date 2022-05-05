@@ -26,13 +26,14 @@ class Portabilis_Utils_Database
             'params' => [],
             'show_errors' => true,
             'return_only' => '',
-            'messenger' => null
+            'messenger' => null,
+            'fetchMode' => PDO::FETCH_BOTH,
         ];
 
         $options = self::mergeOptions($options, $defaultOptions);
 
         try {
-            if (self::db()->execPreparedQuery($sql, $options['params']) != false) {
+            if (self::db()->setFetchMode($options['fetchMode'])->execPreparedQuery($sql, $options['params']) !== false) {
                 while (self::db()->ProximoRegistro()) {
                     $result[] = self::db()->Tupla();
                 }

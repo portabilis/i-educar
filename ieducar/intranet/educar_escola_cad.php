@@ -689,7 +689,7 @@ return new class extends clsCadastro {
             $orgaos = OrgaoVinculadoEscola::getDescriptiveValues();
             $helperOptions = ['objectName'  => 'orgao_vinculado_escola'];
             $options = [
-                'label' => 'Órgão que a escola pública está vinculada',
+                'label' => 'Órgão ao qual a escola pública está vinculada',
                 'size' => 50,
                 'required' => false,
                 'options' => [

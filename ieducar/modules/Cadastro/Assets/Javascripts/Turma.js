@@ -31,12 +31,40 @@ let obrigarCamposCenso = $j('#obrigar_campos_censo').val() == '1';
 
 let verificaEtapaEducacenso = ()=>{
   $j('#etapa_educacenso').makeUnrequired();
-  if ($j('#tipo_atendimento').val() &&
-      $j('#tipo_atendimento').val() != "4" &&
-      $j('#tipo_atendimento').val() != "5") {
-    if (obrigarCamposCenso) {
+  if ($j('#estrutura_curricular').val() &&
+    ($j('#estrutura_curricular').val().include('1') ||
+    $j('#estrutura_curricular').val().include('3')) &&
+    obrigarCamposCenso) {
       $j('#etapa_educacenso').makeRequired();
-    }
+  }
+}
+
+let verificaFormaOrganizacaoTurma = ()=> {
+  const escolarizacao = ['1', '2', '3', '24', '62'];
+  const tipoAtendimento = $j('#tipo_atendimento').val() == '0';
+  const etapaEducacenso = $j('#etapa_educacenso').val()
+
+  $j('#formas_organizacao_turma').makeUnrequired();
+  if (obrigarCamposCenso &&
+      tipoAtendimento &&
+      etapaEducacenso &&
+     !escolarizacao.includes(etapaEducacenso)
+  ) {
+    $j('#formas_organizacao_turma').makeRequired();
+  }
+
+  $j("#formas_organizacao_turma").prop('disabled', false);
+  if (!tipoAtendimento && escolarizacao.includes(etapaEducacenso)) {
+    $j("#formas_organizacao_turma").prop('disabled', true).val("");
+  }
+}
+
+let verificaUnidadeCurricular = ()=> {
+  $j('#unidade_curricular').makeUnrequired();
+  if (obrigarCamposCenso &&
+    $j('#estrutura_curricular').val() &&
+    $j('#estrutura_curricular').val().includes("2")) {
+    $j('#unidade_curricular').makeRequired();
   }
 }
 
@@ -56,14 +84,21 @@ let verificaLocalFuncionamentoDiferenciado = () => {
 
 $j('#tipo_atendimento').change(function() {
   mostraAtividadesComplementares();
+  verificaEstruturacurricular();
+  verificaFormaOrganizacaoTurma();
+});
+$j('#estrutura_curricular').change(function() {
+  verificaUnidadeCurricular();
+  habilitaUnidadeCurricular();
   verificaEtapaEducacenso();
   habilitaEtapaEducacenso();
 });
-verificaEtapaEducacenso();
+
 verificaLocalFuncionamentoDiferenciado();
 
 $j('#etapa_educacenso').change(function() {
-  mostraCursoTecnico();;
+  mostraCursoTecnico();
+  verificaFormaOrganizacaoTurma();
 });
 
 function mostraAtividadesComplementares(){
@@ -71,13 +106,30 @@ function mostraAtividadesComplementares(){
   $j('#atividades_complementares').makeUnrequired();
   if (mostraCampo) {
     $j('#atividades_complementares').removeAttr('disabled');
-    $j('#atividades_complementares').trigger('chosen:updated');;
+    $j('#atividades_complementares').trigger('chosen:updated');
     if (obrigarCamposCenso) {
       $j('#atividades_complementares').makeRequired();
     }
   } else {
     $j('#atividades_complementares').attr('disabled', 'disabled');
     $j('#atividades_complementares').val([]).trigger('chosen:updated');
+  }
+}
+
+function verificaEstruturacurricular() {
+  const mostraCampo = $j('#tipo_atendimento').val() === '0';
+  const estruturaCurricularField = $j('#estrutura_curricular');
+
+  estruturaCurricularField.makeUnrequired();
+  if (mostraCampo) {
+    estruturaCurricularField.removeAttr('disabled');
+    estruturaCurricularField.trigger('chosen:updated');
+    if (obrigarCamposCenso) {
+      estruturaCurricularField.makeRequired();
+    }
+  } else {
+    estruturaCurricularField.attr('disabled', 'disabled');
+    estruturaCurricularField.val([]).trigger('chosen:updated');
   }
 }
 
@@ -165,14 +217,26 @@ function validaAtividadesComplementares() {
 $j('#tipo_mediacao_didatico_pedagogico').on('change', verificaLocalFuncionamentoDiferenciado);
 
 function habilitaEtapaEducacenso() {
-  var atividadeComplementar = $j("#tipo_atendimento").val() == 4;
-  var atendimentoEducacionalEspecializado = $j("#tipo_atendimento").val() == 5;
-
   $j("#etapa_educacenso").prop('disabled', false);
+  const notContainData = $j('#estrutura_curricular').val() === null;
 
-  if (atividadeComplementar || atendimentoEducacionalEspecializado) {
-    $j("#etapa_educacenso").prop('disabled', true).val("");
+  if (notContainData || (!$j('#estrutura_curricular').val().include('1') &&
+      !$j('#estrutura_curricular').val().include('3'))) {
+    $j("#etapa_educacenso").prop('disabled', true).val('');
   }
+}
+
+function habilitaUnidadeCurricular() {
+
+  const estruturaCurricular = $j('#estrutura_curricular').val();
+  const itinerarioFormativo = estruturaCurricular && estruturaCurricular.includes("2");
+
+  if (itinerarioFormativo) {
+    $j("#unidade_curricular").prop('disabled', false).trigger('chosen:updated');
+    return;
+  }
+
+  $j("#unidade_curricular").prop('disabled', true).val([]).trigger('chosen:updated');
 }
 
 $j('#tipo_mediacao_didatico_pedagogico').on('change', function(){
@@ -350,8 +414,13 @@ $j(document).ready(function() {
           return false;
       });
       mostraAtividadesComplementares();
+      verificaEstruturacurricular();
       mostraCursoTecnico();
       habilitaEtapaEducacenso();
+      verificaEtapaEducacenso();
+      verificaFormaOrganizacaoTurma();
+      verificaUnidadeCurricular();
+      habilitaUnidadeCurricular();
     });
 
   // fix checkboxs
