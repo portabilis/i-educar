@@ -1883,7 +1883,22 @@ return new class extends clsCadastro {
                 $this->validaRecursos() &&
                 $this->validaQuantidadeComputadoresAlunos() &&
                 $this->validaQuantidadeEquipamentosEnsino() &&
-                $this->validaLinguasIndigenas();
+                $this->validaLinguasIndigenas() &&
+                $this->validaInstrumentosPedagogicos()
+            ;
+    }
+    protected function validaInstrumentosPedagogicos()
+    {
+        $dadosInstrumentosPedagogicos = transformStringFromDBInArray($this->instrumentos_pedagogicos);
+
+        if (is_array($dadosInstrumentosPedagogicos) &&
+            count($dadosInstrumentosPedagogicos) > 1 &&
+            in_array(InstrumentosPedagogicos::NENHUM_DOS_INSTRUMENTOS_LISTADOS, $dadosInstrumentosPedagogicos)) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Instrumentos, materiais socioculturais e/ou pedagógicos em uso na escola para o desenvolvimento de atividades de ensino aprendizagem</b>, quando a opção: <b>Nenhum dos instrumentos listados</b> estiver selecionada.';
+            return false;
+        }
+
+        return true;
     }
 
     protected function validaOcupacaoPredio()

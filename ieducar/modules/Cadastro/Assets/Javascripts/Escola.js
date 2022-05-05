@@ -297,6 +297,7 @@ $j(document).ready(function() {
           return false;
       });
       changeLocalFuncionamento();
+      changeNumeroDeSalas();
       changePredioCompartilhadoEscola();
     });
 
@@ -387,7 +388,16 @@ $j(document).ready(function() {
         habilitaCampoEducacaoIndigena();
         habilitaCampoLinguaMinistrada();
         habilitaReservaVagasCotas();
+        obrigraInstrumentosPedagogicos();
       });
+
+
+  function  obrigraInstrumentosPedagogicos() {
+    $j('#instrumentos_pedagogicos').makeUnrequired();
+    if (obrigarCamposCenso) {
+      $j('#instrumentos_pedagogicos').makeRequired();
+    }
+  }
 
   // fix checkboxs
   $j('input:checked').val('on');
