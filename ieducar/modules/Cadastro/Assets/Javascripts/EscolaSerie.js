@@ -28,6 +28,8 @@ function getDisciplina(xml_disciplina) {
     var conteudo = '';
 
     if (DOM_array.length) {
+        const first_key = DOM_array[0].getAttribute("cod_disciplina");
+
         conteudo += '<div style="margin-bottom: 10px; float: left">';
         conteudo += '  <span style="display: block; float: left; width: 250px;">Nome</span>';
         conteudo += '  <span style="display: block; float: left; width: 100px">Carga horária</span>';
@@ -40,17 +42,17 @@ function getDisciplina(xml_disciplina) {
         conteudo += "  <label style='display: block; float: left; width: 150px;'><input type='checkbox' name='CheckTodos' onClick='marcarCheck(" + '"disciplinas[]"' + ");'/>Marcar todos</label>";
         conteudo += "<label style='display: block; float: left; width: 100px'>&nbsp;</label>" +
         "<label style='display: block; float: left; width: 100px;'>" +
-        "<a class='clone-values' onclick='cloneFirstValues("+'"carga_horaria"'+")'>" +
+        "<a class='clone-values' onclick='cloneValues("+first_key+",\"carga_horaria\")'>" +
         "<i class='fa fa-clone' aria-hidden='true'></i>" +
         "</a>" +
         "</label>";
         conteudo += "  <label style='display: block; float: left; width: 150px'><input type='checkbox' name='CheckTodos2' onClick='marcarCheck(" + '"usar_componente[]"' + ");';/>Marcar todos</label>";
         conteudo += "<label style='display: block; float: left; width: 30px'>&nbsp;</label>" +
         "<label style='display: block; float: left; width: 100px;'>" +
-        "<a class='clone-values' onclick='cloneFirstValues("+'"anos_letivos"'+")'>" +
+        "<a class='clone-values' onclick='cloneValues("+first_key+",\"anos_letivos\")'>" +
         "<i class='fa fa-clone' aria-hidden='true'></i>" +
         "</a>" +
-        "</label>
+        "</label>";
         conteudo += '</div>';
         conteudo += '<br style="clear: left" />';
 
@@ -346,10 +348,6 @@ function cloneValues(componente_id, classe){
       }
     }
   }, this);
-}
-
-function cloneFirstValues(classe){
-  cloneValues($j('#disciplinas input[name^="disciplinas"]').first().val(),classe);
 }
 
 $j('#disciplinas').on('change','input[name^="disciplinas"]',function () {
