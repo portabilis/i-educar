@@ -2490,7 +2490,7 @@ return new class extends clsCadastro {
             return true;
         }
 
-        $this->mensagem = 'Preencha pelo menos um dos campos <b>da seção</b> Quantidade de profissionais da aba Recursos.';
+        $this->mensagem = 'Preencha pelo menos um dos campos <b>da seção Quantidade de profissionais</b> da aba Recursos.';
 
         return false;
     }
