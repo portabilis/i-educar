@@ -1469,7 +1469,7 @@ return new class extends clsCadastro {
             return false;
         }
 
-        if ($this->nao_ha_funcionarios_para_funcoes === false &&
+        if ($this->nao_ha_funcionarios_para_funcoes !== null &&
             $this->validaRecursos() === false) {
             return false;
         }
@@ -1756,7 +1756,7 @@ return new class extends clsCadastro {
             return false;
         }
 
-        if ($this->nao_ha_funcionarios_para_funcoes === false &&
+        if ($this->nao_ha_funcionarios_para_funcoes !== null &&
             $this->validaRecursos() === false) {
             return false;
         }
