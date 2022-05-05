@@ -1881,9 +1881,11 @@ return new class extends clsCadastro {
     }
     protected function validaInstrumentosPedagogicos()
     {
-        if (is_array($this->instrumentos_pedagogicos) &&
-            count($this->instrumentos_pedagogicos) > 1 &&
-            in_array(InstrumentosPedagogicos::NENHUM_DOS_INSTRUMENTOS_LISTADOS, $this->instrumentos_pedagogicos)) {
+        $dadosInstrumentosPedagogicos = transformStringFromDBInArray($this->instrumentos_pedagogicos);
+
+        if (is_array($dadosInstrumentosPedagogicos) &&
+            count($dadosInstrumentosPedagogicos) > 1 &&
+            in_array(InstrumentosPedagogicos::NENHUM_DOS_INSTRUMENTOS_LISTADOS, $dadosInstrumentosPedagogicos)) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Instrumentos, materiais socioculturais e/ou pedagógicos em uso na escola para o desenvolvimento de atividades de ensino aprendizagem</b>, quando a opção: <b>Nenhum dos instrumentos listados</b> estiver selecionada.';
             return false;
         }
