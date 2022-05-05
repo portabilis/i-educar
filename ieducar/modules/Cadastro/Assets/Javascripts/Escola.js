@@ -150,6 +150,7 @@ function habilitaRecuros() {
   const isChecked = $j('#nao_ha_funcionarios_para_funcoes').is(':checked');
   if (isChecked) {
     camposDosRecuros.forEach(function (campo) {
+      campo.val('');
       campo.prop('disabled', true);
     });
     return;
