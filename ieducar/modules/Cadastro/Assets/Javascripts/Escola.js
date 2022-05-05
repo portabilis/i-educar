@@ -119,9 +119,47 @@ $j('#local_funcionamento').on('change', function () {
     changeLocalFuncionamento()
 });
 
+$j('#nao_ha_funcionarios_para_funcoes').on('change', function () {
+    habilitaRecuros()
+});
+
 $j('#predio_compartilhado_outra_escola').on('change', function () {
     changePredioCompartilhadoEscola()
 });
+
+function habilitaRecuros() {
+
+  const camposDosRecuros = [
+    $j('#qtd_secretario_escolar'),
+    $j('#qtd_auxiliar_administrativo'),
+    $j('#qtd_apoio_pedagogico'),
+    $j('#qtd_coordenador_turno'),
+    $j('#qtd_tecnicos'),
+    $j('#qtd_bibliotecarios'),
+    $j('#qtd_segurancas'),
+    $j('#qtd_auxiliar_servicos_gerais'),
+    $j('#qtd_nutricionistas'),
+    $j('#qtd_profissionais_preparacao'),
+    $j('#qtd_bombeiro'),
+    $j('#qtd_psicologo'),
+    $j('#qtd_fonoaudiologo'),
+    $j('#qtd_vice_diretor'),
+    $j('#qtd_orientador_comunitario')
+  ];
+
+  const isChecked = $j('#nao_ha_funcionarios_para_funcoes').is(':checked');
+  if (isChecked) {
+    camposDosRecuros.forEach(function (campo) {
+      campo.val('');
+      campo.prop('disabled', true);
+    });
+    return;
+  }
+
+  camposDosRecuros.forEach(function (campo) {
+    campo.prop('disabled', false);
+  });
+}
 
 function obrigaCampoRegulamentacao() {
   escolaEmAtividade = $j('#situacao_funcionamento').val() == SITUACAO_FUNCIONAMENTO.EM_ATIVIDADE;
@@ -242,7 +280,7 @@ if (!$j('#pessoaj_idpes').is(':visible')) {
   linha_inicial_infra = $j('#tlocal_funcionamento').index()-2;
   linha_inicial_dependencia = $j('#tr_possui_dependencias').index()-2;
   linha_inicial_equipamento = $j('#tr_equipamentos').index()-2;
-  linha_inicial_recursos = $j('#tr_quantidade_profissionais').index()-2;
+  linha_inicial_recursos = $j('#tr_quantidade_profissionais').index()-3;
   linha_inicial_dados = $j('#tatendimento_aee').index()-2;
 
   // Adiciona um ID à linha que termina o formulário para parar de esconder os campos
@@ -360,6 +398,7 @@ $j(document).ready(function() {
           }else if (index>0){
             row.hide();
           }
+          habilitaRecuros();
         }else
           return false;
       });

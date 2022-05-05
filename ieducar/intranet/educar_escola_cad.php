@@ -187,6 +187,7 @@ return new class extends clsCadastro {
     public  $pessoaj_idpes;
     public  $pessoaj_id;
     public bool $pesquisaPessoaJuridica = true;
+    public $nao_ha_funcionarios_para_funcoes;
 
     public $inputsRecursos = [
         'qtd_secretario_escolar' => 'Secretário(a) escolar',
@@ -1261,6 +1262,8 @@ return new class extends clsCadastro {
             $options = ['label' => 'Lousa digital', 'resources' => $resources, 'value' => $this->lousas_digitais, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => ''];
             $this->inputsHelper()->integer('lousas_digitais', $options);
 
+            $this->campoCheck('nao_ha_funcionarios_para_funcoes', 'Não há funcionários para as funções listadas', $this->nao_ha_funcionarios_para_funcoes);
+
             $this->campoRotulo(
                 'quantidade_profissionais',
                 '<b>Quantidade de profissionais</b>'
@@ -1466,6 +1469,11 @@ return new class extends clsCadastro {
             return false;
         }
 
+        if ($this->nao_ha_funcionarios_para_funcoes === null &&
+            $this->validaRecursos() === false) {
+            return false;
+        }
+
         $this->validateManagersRules();
 
         if (!$this->validaDigitosInepEscolaCompartilhada()) {
@@ -1646,6 +1654,7 @@ return new class extends clsCadastro {
         $obj->mantenedora_escola_privada = $this->mantenedora_escola_privada;
         $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
         $obj->esfera_administrativa = $this->esfera_administrativa;
+        $obj->nao_ha_funcionarios_para_funcoes = $this->nao_ha_funcionarios_para_funcoes !== null;
         $obj->iddis = (int)$this->district_id;
 
         foreach ($this->inputsRecursos as $key => $value) {
@@ -1744,6 +1753,11 @@ return new class extends clsCadastro {
         }
 
         if (!$this->validaCamposCenso()) {
+            return false;
+        }
+
+        if ($this->nao_ha_funcionarios_para_funcoes === null &&
+            $this->validaRecursos() === false) {
             return false;
         }
 
@@ -1880,7 +1894,6 @@ return new class extends clsCadastro {
                 $this->validaSalasClimatizadas() &&
                 $this->validaSalasAcessibilidade() &&
                 $this->validaEquipamentosAcessoInternet() &&
-                $this->validaRecursos() &&
                 $this->validaQuantidadeComputadoresAlunos() &&
                 $this->validaQuantidadeEquipamentosEnsino() &&
                 $this->validaLinguasIndigenas() &&
@@ -2494,7 +2507,7 @@ return new class extends clsCadastro {
             return true;
         }
 
-        $this->mensagem = 'Preencha pelo menos um dos campos <b>da seção</b> Quantidade de profissionais da aba Recursos.';
+        $this->mensagem = 'Preencha pelo menos um dos campos <b>da seção Quantidade de profissionais</b> da aba Recursos.';
 
         return false;
     }
