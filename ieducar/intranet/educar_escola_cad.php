@@ -1928,7 +1928,7 @@ return new class extends clsCadastro {
         $formasDeContratacao = transformStringFromDBInArray($this->formas_contratacao_adm_publica_e_outras_instituicoes);
 
         $acceptDependenciaAdministrativa = [DependenciaAdministrativaEscola::FEDERAL, DependenciaAdministrativaEscola::ESTADUAL, DependenciaAdministrativaEscola::MUNICIPAL];
-        $notAcceptFormasDeContratoInDependenciaAdministrativa = [1, 2, 3, 6];
+        $notAcceptFormasDeContratoInDependenciaAdministrativa = [1, 2, 3, 4];
         if (is_array($formasDeContratacao) && in_array((int)$this->dependencia_administrativa, $acceptDependenciaAdministrativa, true)) {
 
             $data = array_filter($formasDeContratacao,
