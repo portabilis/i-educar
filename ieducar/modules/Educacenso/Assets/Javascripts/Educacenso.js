@@ -47,9 +47,8 @@ $j(document).ready(function(){
              '<div id="modal_mensagem_desabilitado" style="width:400px;display:none; text-align:left">'+
              ' <p style="margin-left: 0px; margin-top: 30px;font-family: verdana, arial; font-size: 18px; font-weight: bold;">Parabéns! Até o momento todos os dados da sua escola, foram validados com sucesso!</p>' +
              ' <p style="margin-left: 0px; margin-top: 30px;font-family: verdana, arial; font-size: 14px; font-weight: bold;">Mas porque o i-Educar não baixou o arquivo de exportação da minha escola?</p>' +
-             ' <p style="margin-left: 0px; margin-top: 30px;font-family: verdana, arial; font-size: 14px;">O Censo Escolar atualizou a Tabela de Curso de Formação Superior de 2020. Novos cursos foram adicionados e outros foram modificados. Nós estamos trabalhando para atualizar esses cursos no i-Educar.</p>' +
-             '<img style="max-width:100%;" src="/intranet/imagens/cursos_superiores_servidor.png"/>' +
-             ' <p style="margin-left: 0px; margin-top: 30px;font-family: verdana, arial; font-size: 14px;">Mas não se preocupe, pois vamos concluir essas alterações até o dia <strong>05/06</strong> e o arquivo será liberado novamente. Se concluirmos antes, iremos te avisar!</p>' +
+             ' <p style="margin-left: 0px; margin-top: 30px;font-family: verdana, arial; font-size: 14px;">O INEP está trabalhando nas mudanças de regras e campos solicitados pelo Censo em 2022. Estamos adpatando o sistema e exportação do arquivo para que tudo fique de acordo com o Layout.</p>' +
+             ' <p style="margin-left: 0px; margin-top: 30px;font-family: verdana, arial; font-size: 14px;">Mas não se preocupe, assim que todas essas alterações forem concluídas, a exportação do arquivo será liberada!</p>' +
              '</div>'+
             '</div>';
 
