@@ -124,6 +124,7 @@ class clsPmieducarEscola extends Model
     public $qtd_fonoaudiologo;
     public $qtd_vice_diretor;
     public $qtd_orientador_comunitario;
+    public $nao_ha_funcionarios_para_funcoes;
     public $iddis;
 
     public function __construct(
@@ -173,6 +174,7 @@ class clsPmieducarEscola extends Model
           e.qtd_fonoaudiologo,
           e.qtd_vice_diretor,
           e.qtd_orientador_comunitario,
+          e.nao_ha_funcionarios_para_funcoes,
           e.iddis
           ';
 
@@ -948,6 +950,16 @@ class clsPmieducarEscola extends Model
                 $gruda = ', ';
             }
 
+            if ($this->nao_ha_funcionarios_para_funcoes) {
+                $campos .= "{$gruda}nao_ha_funcionarios_para_funcoes";
+                $valores .= "{$gruda}true";
+                $gruda = ', ';
+            } else {
+                $campos .= "{$gruda}nao_ha_funcionarios_para_funcoes";
+                $valores .= "{$gruda}false";
+                $gruda = ', ';
+            }
+
             $campos .= "{$gruda}data_cadastro";
             $valores .= "{$gruda}NOW()";
             $gruda = ', ';
@@ -1029,6 +1041,14 @@ class clsPmieducarEscola extends Model
 
             if (is_numeric($this->bloquear_lancamento_diario_anos_letivos_encerrados)) {
                 $set .= "{$gruda}bloquear_lancamento_diario_anos_letivos_encerrados = '{$this->bloquear_lancamento_diario_anos_letivos_encerrados}'";
+                $gruda = ', ';
+            }
+
+            if ($this->nao_ha_funcionarios_para_funcoes) {
+                $set .= "{$gruda}nao_ha_funcionarios_para_funcoes = true";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}nao_ha_funcionarios_para_funcoes = false";
                 $gruda = ', ';
             }
 

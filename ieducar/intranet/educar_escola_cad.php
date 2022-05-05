@@ -1262,7 +1262,7 @@ return new class extends clsCadastro {
             $options = ['label' => 'Lousa digital', 'resources' => $resources, 'value' => $this->lousas_digitais, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => ''];
             $this->inputsHelper()->integer('lousas_digitais', $options);
 
-            $this->campoCheck('nao_ha_funcionarios_para_funcoes', 'Não há funcionários para as funções listadas', (bool)($this->nao_ha_funcionarios_para_funcoes));
+            $this->campoCheck('nao_ha_funcionarios_para_funcoes', 'Não há funcionários para as funções listadas', $this->nao_ha_funcionarios_para_funcoes);
 
             $this->campoRotulo(
                 'quantidade_profissionais',
@@ -1662,6 +1662,7 @@ return new class extends clsCadastro {
         $obj->mantenedora_escola_privada = $this->mantenedora_escola_privada;
         $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
         $obj->esfera_administrativa = $this->esfera_administrativa;
+        $obj->nao_ha_funcionarios_para_funcoes = $this->nao_ha_funcionarios_para_funcoes !== null;
         $obj->iddis = (int)$this->district_id;
 
         foreach ($this->inputsRecursos as $key => $value) {
