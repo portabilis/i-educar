@@ -2392,7 +2392,7 @@ return new class extends clsCadastro {
             return false;
         }
 
-        if (is_array($this->recursos_acessibilidade) && is_array($this->recursos_acessibilidade) && in_array(RecursosAcessibilidade::NENHUM, $this->recursos_acessibilidade) && count($this->recursos_acessibilidade) > 1) {
+        if (is_array($this->recursos_acessibilidade) && in_array(RecursosAcessibilidade::NENHUM, $this->recursos_acessibilidade) && count($this->recursos_acessibilidade) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Recursos de acessibilidade</b>, quando a opção: <b>Nenhum dos recursos de acessibilidade</b> estiver selecionada.';
 
             return false;

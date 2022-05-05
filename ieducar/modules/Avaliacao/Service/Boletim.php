@@ -471,8 +471,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     {
         $faltas = [];
 
-        /** @var LegacyRegistration[] $registrations */
-        $registrations = app(CyclicRegimeService::class)->getAllRegistrationsOfCycle($matricula);
+        /** @var CyclicRegimeService $cyclicRegimeService */
+        $cyclicRegimeService = app(CyclicRegimeService::class);
+        $registrations = $cyclicRegimeService->getAllRegistrationsOfCycle($matricula);
 
         /** @var StudentAbsenceService $studentAbsenceService */
         $studentAbsenceService = app(StudentAbsenceService::class);
@@ -500,8 +501,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      */
     private function getComponentesRegimeCiclico($matricula)
     {
-        /** @var LegacyRegistration[] $registrations */
-        $registrations = app(CyclicRegimeService::class)->getAllRegistrationsOfCycle($matricula);
+        /** @var CyclicRegimeService $cyclicRegimeService */
+        $cyclicRegimeService = app(CyclicRegimeService::class);
+        $registrations = $cyclicRegimeService->getAllRegistrationsOfCycle($matricula);
 
         $componentes = [];
         foreach ($registrations as $registration) {
@@ -3522,8 +3524,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             return $this->getOption('serieCargaHoraria');
         }
 
-        /** @var LegacyRegistration[] $registrations */
-        $registrations = app(CyclicRegimeService::class)->getAllRegistrationsOfCycle($registration);
+        /** @var CyclicRegimeService $cyclicRegimeService */
+        $cyclicRegimeService = app(CyclicRegimeService::class);
+        $registrations = $cyclicRegimeService->getAllRegistrationsOfCycle($registration);
 
         $cargaHoraria = 0;
         foreach ($registrations as $registration) {
@@ -3539,8 +3542,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             return $this->getOption('serieDiasLetivos');
         }
 
-        /** @var LegacyRegistration[] $registrations */
-        $registrations = app(CyclicRegimeService::class)->getAllRegistrationsOfCycle($registration);
+        /** @var CyclicRegimeService $cyclicRegimeService */
+        $cyclicRegimeService = app(CyclicRegimeService::class);
+        $registrations = $cyclicRegimeService->getAllRegistrationsOfCycle($registration);
 
         $diasLetivos = 0;
         foreach ($registrations as $registration) {

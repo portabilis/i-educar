@@ -60,8 +60,8 @@ function ajax( funcaoRetorno, id_campo = null, hostInformation = window.location
 	}
 }
 
-function buildUrl(host, arguments) {
-  let url = addRandToURL(arguments);
+function buildUrl(host, args) {
+  let url = addRandToURL(args);
 
   if (url.include('modules/')) {
     host = host.replace('intranet/', '')
