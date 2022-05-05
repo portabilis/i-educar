@@ -90,7 +90,7 @@ class EnrollmentsPromotionController extends Controller
             'escolaId' => (int) $request->input('escola', 0),
             'cursoId' => (int) $request->input('curso', 0),
             'serieId' => (int) $request->input('serie', 0),
-            'escolturmaIdaId' => (int) $request->input('turma', 0),
+            'turmaId' => (int) $request->input('turma', 0),
             'matriculaSituacao' => (int) $request->input('matricula', 10),
             'regraDeAvaliacao' => (int) $request->input('regras_avaliacao_id', 0),
         ];
