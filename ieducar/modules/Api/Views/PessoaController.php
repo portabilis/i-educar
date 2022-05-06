@@ -135,7 +135,8 @@ class PessoaController extends ApiCoreController
               (SELECT fone_pessoa.ddd FROM cadastro.fone_pessoa WHERE fone_pessoa.idpes = $2 AND fone_pessoa.tipo = 1) as ddd_fone_fixo,
               (SELECT fone_pessoa.ddd FROM cadastro.fone_pessoa WHERE fone_pessoa.idpes = $2 AND fone_pessoa.tipo = 2) as ddd_fone_mov,
 
-             fisica.pais_residencia
+             fisica.pais_residencia,
+             fisica.sus
             from cadastro.fisica
             where idpes = $2';
 
@@ -190,6 +191,7 @@ class PessoaController extends ApiCoreController
             'nome_cartorio',
             'nome_social',
             'pais_residencia',
+            'sus',
         ];
 
         $details = Portabilis_Array_Utils::filter($details, $attrs);

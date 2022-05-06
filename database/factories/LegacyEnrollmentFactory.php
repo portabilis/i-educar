@@ -22,10 +22,10 @@ class LegacyEnrollmentFactory extends Factory
     public function definition(): array
     {
         return [
-            'ref_cod_matricula' => LegacyRegistrationFactory::new()->create(),
-            'ref_cod_turma' => LegacySchoolClassFactory::new()->create(),
+            'ref_cod_matricula' => fn () => LegacyRegistrationFactory::new()->create(),
+            'ref_cod_turma' => fn () => LegacySchoolClassFactory::new()->create(),
             'sequencial' => 1,
-            'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
+            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->unique()->make(),
             'data_cadastro' => now(),
             'data_enturmacao' => now(),
         ];

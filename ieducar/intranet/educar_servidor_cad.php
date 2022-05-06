@@ -770,9 +770,9 @@ JS;
 
         if ($this->ref_cod_funcao) {
             foreach ($this->ref_cod_funcao as $k => $funcao) {
-                list($funcao, $professor) = explode('-', $funcao);
+                [$funcao, $professor] = explode('-', $funcao);
 
-                if ((bool) $professor) {
+                if ($professor) {
                     $existe_funcao_professor = true;
                 }
 
@@ -793,11 +793,10 @@ JS;
                     $cod_servidor_funcao = $obj_servidor_funcao->detalhe()['cod_servidor_funcao'];
                 }
 
-                array_push($listFuncoesCadastradas, $cod_servidor_funcao);
+                $listFuncoesCadastradas[] = $cod_servidor_funcao;
             }
         }
-
-        if (!$existe_funcao_professor) {
+        if (! $existe_funcao_professor) {
             $this->excluiDisciplinas(array_keys($funcoes));
             $this->excluiCursos();
         }
@@ -820,7 +819,7 @@ JS;
                             $funcao
                         );
 
-                        if (!$obj_servidor_disciplina->existe()) {
+                        if (! $obj_servidor_disciplina->existe()) {
                             $obj_servidor_disciplina->cadastra();
                         }
                     }
