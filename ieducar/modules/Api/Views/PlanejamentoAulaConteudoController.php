@@ -29,21 +29,21 @@ class PlanejamentoAulaConteudoController extends ApiCoreController
 
             if (is_numeric($id)) {
                 $obj = new clsModulesPlanejamentoAulaConteudo();
-                $conteudos = $obj->lista($id);
+                $conteudos = $obj->lista2($id);
 
                 foreach ($conteudos as $key => $conteudo) {
-                    $lista[$conteudo['id']] = $conteudo['conteudo'];
+                    $lista[$conteudo['id']] = [$conteudo['conteudo'], $conteudo['usando']];
                 }
                 $conteudos = $lista;
 
 
                 $lista = [];
-                $obj = new clsModulesPlanejamentoAulaBNCCEspecificacao();
-                $especificacoes = $obj->lista($id);
+                // $obj = new clsModulesPlanejamentoAulaBNCCEspecificacao();
+                // $especificacoes = $obj->lista($id);
 
-                foreach ($especificacoes as $key => $especificacao) {
-                    $lista[$especificacao['id']] = $especificacao['especificacao'];
-                }
+                // foreach ($especificacoes as $key => $especificacao) {
+                //     $lista[$especificacao['id']] = $especificacao['especificacao'];
+                // }
                 $especificacoes = $lista;
 
                 return ['pac' => [$especificacoes, $conteudos]];

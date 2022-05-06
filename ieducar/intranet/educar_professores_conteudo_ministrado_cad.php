@@ -176,7 +176,7 @@ return new class extends clsCadastro {
             $rows = [];
 
             $obj = new clsModulesPlanejamentoAulaConteudo();
-            $conteudos = $obj->lista($planejamento_aula_id);
+            $conteudos = $obj->lista2($planejamento_aula_id);
     
             foreach ($conteudos as $key => $conteudo) {
                 $rows[$conteudo['id']] = $conteudo['conteudo'];
