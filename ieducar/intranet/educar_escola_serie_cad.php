@@ -98,7 +98,7 @@ return new class extends clsCadastro {
 
         arsort($anosLetivos);
 
-        $anoLetivoSelected = request('ano_letivo') ?? max($anosLetivos);
+        $anoLetivoSelected = request('ano_letivo') ?? (empty($anosLetivos) ? null : max($anosLetivos));
 
         $this->definirComponentePorEtapa = $this->escolaSerieService->levelAllowDefineDisciplinePerStage(
             $this->ref_cod_serie,
@@ -323,7 +323,7 @@ return new class extends clsCadastro {
                                 multiple='multiple' class='anos_letivos' id='anos_letivos_{$registro->id}' data-id='$registro->id'> ";
 
                     foreach ($this->anos_letivos as $anoLetivo) {
-                        $seletected = in_array($anoLetivo, $anosLetivosComponente) ? 'selected=selected' : '';
+                        $seletected = in_array($anoLetivo, $anosLetivosComponente, true) ? 'selected=selected' : '';
                         $conteudo .= "<option value='{$anoLetivo}' {$seletected}>{$anoLetivo}</option>";
                     }
                     $conteudo .= ' </select>';
