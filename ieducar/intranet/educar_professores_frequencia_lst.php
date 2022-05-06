@@ -128,7 +128,7 @@ return new class extends clsListagem {
         );
 
         $total = $obj_turma->_total;
-
+        //dump($lista);
         // monta a lista
         if (is_array($lista) && count($lista)) {
             $ref_cod_escola = '';

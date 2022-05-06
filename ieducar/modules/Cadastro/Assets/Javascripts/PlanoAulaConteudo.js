@@ -35,8 +35,9 @@
                             ).trigger('chosen:updated');
                         }
                     }
+                    
                 };
-
+                console.log(options);
                 getResource(options);
             };
         }

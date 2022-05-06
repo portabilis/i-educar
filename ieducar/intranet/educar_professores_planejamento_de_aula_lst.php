@@ -126,7 +126,7 @@ return new class extends clsListagem {
         );
 
         $total = /*$obj_turma->_total*/count($lista);
-
+        dump($lista);
         // monta a lista
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {

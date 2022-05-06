@@ -12,7 +12,7 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchDeficiencias extends P
 
         return $this->insertOption(null, '', $resources);
     }
-
+ 
     public function multipleSearchDeficiencias($attrName, $options = [])
     {
         $defaultOptions = [

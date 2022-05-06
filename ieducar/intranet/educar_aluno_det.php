@@ -167,7 +167,7 @@ return new class extends clsDetalhe {
 
             $registro['ddd_fax'] = $det_pessoa_fj['ddd_fax'] ?? null;
             $registro['fone_fax'] = $det_pessoa_fj['fone_fax'] ?? null;
-
+ 
             $registro['ddd_mov'] = $det_pessoa_fj['ddd_mov'] ?? null;
             $registro['fone_mov'] = $det_pessoa_fj['fone_mov'] ?? null;
 

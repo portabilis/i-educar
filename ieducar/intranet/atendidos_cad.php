@@ -48,6 +48,7 @@ return new class extends clsCadastro {
     public $zona_localizacao_censo;
     public $localizacao_diferenciada;
     public $pais_residencia;
+    public $cod_profissao;
 
     // Variáveis para controle da foto
     public $objPhoto;
@@ -77,7 +78,7 @@ return new class extends clsCadastro {
                 $this->pai_id, $this->mae_id, $this->tipo_nacionalidade, $this->pais_origem, $this->naturalidade,
                 $this->letra, $this->sus, $this->nis_pis_pasep, $this->ocupacao, $this->empresa, $this->ddd_telefone_empresa,
                 $this->telefone_empresa, $this->pessoa_contato, $this->renda_mensal, $this->data_admissao, $this->falecido,
-                $this->religiao_id, $this->zona_localizacao_censo, $this->localizacao_diferenciada, $this->nome_social, $this->pais_residencia
+                $this->religiao_id, $this->zona_localizacao_censo, $this->localizacao_diferenciada, $this->nome_social, $this->pais_residencia, $this->ref_cod_profissao
             ) =
             $objPessoa->queryRapida(
                 $this->cod_pessoa_fj,
@@ -116,7 +117,8 @@ return new class extends clsCadastro {
                 'zona_localizacao_censo',
                 'localizacao_diferenciada',
                 'nome_social',
-                'pais_residencia'
+                'pais_residencia',
+                'ref_cod_profissao',
             );
 
             $this->loadAddress($this->cod_pessoa_fj);
@@ -267,8 +269,7 @@ return new class extends clsCadastro {
 
         $documentos = new clsDocumento();
         $documentos->idpes = $this->cod_pessoa_fj;
-        $documentos = $documentos->detalhe();
-
+        $documentos = $documentos->detalhe();       
         // rg
 
         // o rg é obrigatorio ao cadastrar pai ou mãe, exceto se configurado como opcional.
@@ -302,7 +303,6 @@ return new class extends clsCadastro {
         ];
 
         $this->inputsHelper()->date('data_emissao_rg', $options);
-
         // orgão emissão rg
 
         $selectOptions = [ null => 'Órgão emissor' ];
@@ -682,7 +682,27 @@ return new class extends clsCadastro {
 
         // Religião
         $this->inputsHelper()->religiao(['required' => false, 'label' => 'Religião']);
+        
+       //Profissão
+       $profissao = new clsProfissao();
+       $profissao->setOrderby('nm_profissao ASC');
+       $profissao->ref_cod_profissao = $this->cod_profissao;
+       $profissao->nm_profissao = $this->nm_profissao;
+       $profissao = $profissao->lista($this->cod_profissao);
+       
+       $selectOptionsProfissao = [];
 
+       foreach ($profissao as $profissao){
+           $selectOptionsProfissao[$profissao['cod_profissao']] = $profissao['nm_profissao'];
+       }
+
+       //$selectOptionsProfissao = Portabilis_Array_Utils::sortByValue($selectOptionsProfissao);
+       $selectOptionsProfissao = array_replace([null => 'Selecione'], $selectOptionsProfissao);
+
+       $this->cod_profissao = is_array($profissao) ? $profissao['ref_cod_profissao'] : null;
+
+        $this->campoLista('ref_cod_profissao','Profissão',$selectOptionsProfissao ,null,null, null, null, null, null, false);
+       
         $this->viewAddress();
 
         $this->inputsHelper()->select('pais_residencia', [
@@ -726,6 +746,8 @@ return new class extends clsCadastro {
         $this->campoTexto('empresa', 'Empresa', $this->empresa, '50', '255', false);
         $this->inputTelefone('empresa', 'Telefone da empresa');
         $this->campoTexto('pessoa_contato', 'Pessoa de contato na empresa', $this->pessoa_contato, '50', '255', false);
+
+        
 
         $fileService = new FileService(new UrlPresigner);
         $files = $this->cod_pessoa_fj ? $fileService->getFiles(LegacyIndividual::find($this->cod_pessoa_fj)) : [];
@@ -1231,10 +1253,12 @@ return new class extends clsCadastro {
         $fisica->data_admissao = $this->data_admissao ? Portabilis_Date_Utils::brToPgSQL($this->data_admissao) : null;
         $fisica->falecido = $this->falecido;
         $fisica->ref_cod_religiao = $this->religiao_id;
+        $fisica->codigo = $this->codigo_profissao;
         $fisica->zona_localizacao_censo = empty($this->zona_localizacao_censo) ? null : $this->zona_localizacao_censo;
         $fisica->localizacao_diferenciada = $this->localizacao_diferenciada ?: 'null';
         $fisica->nome_social = $this->nome_social;
         $fisica->pais_residencia = $this->pais_residencia;
+        $fisica->ref_cod_profissao = $this->ref_cod_profissao;
 
         $sql = 'select 1 from cadastro.fisica WHERE idpes = $1 limit 1';
 

@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
 class clsCadastro extends clsCampos
-{
+{ 
     public $target = '_self';
     public $largura;
     public $tipoacao;

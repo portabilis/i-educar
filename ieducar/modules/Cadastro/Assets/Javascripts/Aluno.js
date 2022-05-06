@@ -2396,7 +2396,7 @@ function canShowParentsFields() {
     });
 
     $j("body").append(
-      '<div id="dialog-form-pessoa-parent"><form><h2></h2><table><tr><td valign="top"><fieldset><label for="nome-pessoa-parent">Nome</label>    <input type="text " name="nome-pessoa-parent" id="nome-pessoa-parent" size="49" maxlength="255" class="text">    <label for="sexo-pessoa-parent">Sexo</label>  <select class="select ui-widget-content ui-corner-all" name="sexo-pessoa-parent" id="sexo-pessoa-parent" ><option value="" selected>Sexo</option><option value="M">Masculino</option><option value="F">Feminino</option></select>    <label for="estado-civil-pessoa-parent">Estado civil</label>   <select class="select ui-widget-content ui-corner-all" name="estado-civil-pessoa-parent" id="estado-civil-pessoa-parent"  ><option id="estado-civil-pessoa-parent_" value="" selected>Estado civil</option><option id="estado-civil-pessoa-parent_2" value="2">Casado(a)</option><option id="estado-civil-pessoa-parent_6" value="6">Companheiro(a)</option><option id="estado-civil-pessoa-parent_3" value="3">Divorciado(a)</option><option id="estado-civil-pessoa-parent_4" value="4">Separado(a)</option><option id="estado-civil-pessoa-parent_1" value="1">Solteiro(a)</option><option id="estado-civil-pessoa-parent_5" value="5">Vi&uacute;vo(a)</option><option id="estado-civil-pessoa-parent_7" value="7">Não informado</option></select><label for="data-nasc-pessoa-parent"> Data de nascimento </label> <input onKeyPress="formataData(this, event);" class="" placeholder="dd/mm/yyyy" type="text" name="data-nasc-pessoa-parent" id="data-nasc-pessoa-parent" value="" size="11" maxlength="10"> <div id="falecido-modal"> <label>Falecido?</label><input type="checkbox" name="falecido-parent" id="falecido-parent" style="display:inline;"> </div></fieldset><p><a id="link_cadastro_detalhado_parent">Cadastro detalhado</a></p></form></div>'
+      '<div id="dialog-form-pessoa-parent"><form><h2></h2><table><tr><td valign="top"><fieldset><label for="nome-pessoa-parent">Nome</label>    <input type="text " name="nome-pessoa-parent" id="nome-pessoa-parent" size="49" maxlength="255" class="text">    <label for="sexo-pessoa-parent">Sexo</label>  <select class="select ui-widget-content ui-corner-all" name="sexo-pessoa-parent" id="sexo-pessoa-parent" ><option value="" selected>Sexo</option><option value="M">Masculino</option><option value="F">Feminino</option></select>  <label for="estado-civil-pessoa-parent">Estado civil</label>   <select class="select ui-widget-content ui-corner-all" name="estado-civil-pessoa-parent" id="estado-civil-pessoa-parent"  ><option id="estado-civil-pessoa-parent_" value="" selected>Estado civil</option><option id="estado-civil-pessoa-parent_2" value="2">Casado(a)</option><option id="estado-civil-pessoa-parent_6" value="6">Companheiro(a)</option><option id="estado-civil-pessoa-parent_3" value="3">Divorciado(a)</option><option id="estado-civil-pessoa-parent_4" value="4">Separado(a)</option><option id="estado-civil-pessoa-parent_1" value="1">Solteiro(a)</option><option id="estado-civil-pessoa-parent_5" value="5">Vi&uacute;vo(a)</option><option id="estado-civil-pessoa-parent_7" value="7">Não informado</option></select><label for="data-nasc-pessoa-parent"> Data de nascimento </label> <input onKeyPress="formataData(this, event);" class="" placeholder="dd/mm/yyyy" type="text" name="data-nasc-pessoa-parent" id="data-nasc-pessoa-parent" value="" size="11" maxlength="10"> <label for="profissao-parent">Profissão</label> <input type="text" name="profissao-parent" id="profissao-parent" value = "" maxlength = "130"><div id="falecido-modal"> <label>Falecido?</label><input type="checkbox" name="falecido-parent" id="falecido-parent" style="display:inline;"> </div></fieldset><p><a id="link_cadastro_detalhado_parent">Cadastro detalhado</a></p></form></div>'
     );
 
     $j("#dialog-form-pessoa-parent").find(":input").css("display", "block");
@@ -2405,13 +2405,16 @@ function canShowParentsFields() {
       sexoParent = $j("#sexo-pessoa-parent"),
       estadocivilParent = $j("#estado-civil-pessoa-parent"),
       datanascParent = $j("#data-nasc-pessoa-parent"),
+      profissaoParent = $j("#profissao-parent"),
       falecidoParent = $j("#falecido-parent"),
       allFields = $j([])
         .add(nameParent)
         .add(sexoParent)
         .add(estadocivilParent)
         .add(datanascParent)
+        .add(profissaoParent)
         .add(falecidoParent);
+       
 
     $j("#dialog-form-pessoa-parent").dialog({
       autoOpen: false,
@@ -2440,6 +2443,7 @@ function canShowParentsFields() {
                 "O campo data de nascimento deve ser preenchido no formato dd/mm/yyyy."
               );
           }
+          bValid = bValid && checkLength(profissaoParent, "profissao", 3, 255);
 
           if (bValid) {
             postPessoa(
@@ -2458,7 +2462,8 @@ function canShowParentsFields() {
               null,
               null,
               null,
-              falecidoParent.is(":checked")
+              falecidoParent.is(":checked"),
+              profissaoParent.val(),
             );
           }
         },
@@ -2709,6 +2714,7 @@ function canShowParentsFields() {
       estadocivilParent.val(window[parentType + "_details"].estadocivil);
       sexoParent.val(window[parentType + "_details"].sexo);
       datanascParent.val(window[parentType + "_details"].data_nascimento);
+      
       falecidoParent.prop(
         "checked",
         window[parentType + "_details"].falecido
@@ -2919,7 +2925,8 @@ function canShowParentsFields() {
     zona_localizacao_censo,
     localizacao_diferenciada,
     nome_social,
-    pais_residencia
+    pais_residencia,
+    ref_cod_profissao
   ) {
     var data = {
       nome: nome,
@@ -2940,6 +2947,7 @@ function canShowParentsFields() {
       localizacao_diferenciada: localizacao_diferenciada,
       nome_social: nome_social,
       pais_residencia: pais_residencia,
+      ref_cod_profissao: ref_cod_profissao,
     };
 
     var options = {

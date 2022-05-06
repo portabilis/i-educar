@@ -34,7 +34,7 @@ return new class extends clsCadastro {
                 $this->id
             );
             $registro = $tmp_obj->detalhe();
-
+            
             if ($registro) {
                 // passa todos os valores obtidos no registro para atributos do objeto
                 foreach ($registro['detalhes'] as $campo => $val) {
@@ -47,8 +47,9 @@ return new class extends clsCadastro {
 
                 $this->titulo = 'Frequência - Edição';
             }
+            
         }
-
+       
         $this->nome_url_cancelar = 'Cancelar';
         $this->url_cancelar = ($retorno == 'Editar')
             ? sprintf('educar_professores_conteudo_ministrado_det.php?id=%d', $this->id)

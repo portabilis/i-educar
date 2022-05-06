@@ -10,7 +10,6 @@ return new class extends clsDetalhe {
         $this->titulo = 'Detalhe da Pessoa';
 
         $cod_pessoa = (int) $this->getQueryString('cod_pessoa');
-
         $objPessoa = new clsPessoaFisica($cod_pessoa);
         $db = new clsBanco();
 
@@ -41,9 +40,11 @@ return new class extends clsDetalhe {
             'tipo',
             'sexo',
             'zona_localizacao',
-            'nome_social'
+            'nome_social',
+            'ref_cod_profissao'
         );
 
+       
         $objFoto = new clsCadastroFisicaFoto($cod_pessoa);
         $caminhoFoto = $objFoto->detalhe();
         if ($caminhoFoto!=false) {
@@ -141,7 +142,10 @@ return new class extends clsDetalhe {
         if ($detalhe['sexo']) {
             $this->addDetalhe(['Sexo', $detalhe['sexo'] == 'M' ? 'Masculino' : 'Feminino']);
         }
-
+      
+        if($detalhe['ref_cod_profissao']){ 
+            $this->addDetalhe(['Profissão', $detalhe['ref_cod_profissao']]);
+        }
         $fileService = new FileService(new UrlPresigner);
         $files = $fileService->getFiles(LegacyIndividual::find($cod_pessoa));
 

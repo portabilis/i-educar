@@ -37,6 +37,7 @@ class clsPessoaFisica extends clsPessoaFj
     public $pais_residencia;
     public $banco = 'pmi';
     public $schema_cadastro = 'cadastro';
+    public $ref_cod_profissao;
 
     /**
      * Construtor.
@@ -219,6 +220,7 @@ class clsPessoaFisica extends clsPessoaFj
                 $this->localizacao_diferenciada = $detalhe_fisica['localizacao_diferenciada'];
                 $this->nome_social = $detalhe_fisica['nome_social'];
                 $this->pais_residencia = $detalhe_fisica['pais_residencia'];
+                $this->ref_cod_profissao = $detalhe_fisica['ref_cod_profissao'];
 
                 $tupla['idpes'] = $this->idpes;
                 $tupla[] = &$tupla['idpes'];
@@ -313,6 +315,9 @@ class clsPessoaFisica extends clsPessoaFj
                 $tupla['pais_residencia'] = $this->pais_residencia;
                 $tupla[] = &$tupla['pais_residencia'];
 
+                $tupla['ref_cod_profissao'] = $this->ref_cod_profissao;
+                $tupla[] = &$tupla['ref_cod_profissao'];
+
                 return $tupla;
             }
         } elseif ($this->cpf) {
@@ -351,7 +356,8 @@ class clsPessoaFisica extends clsPessoaFj
                 false,
                 false,
                 false,
-                $this->cpf
+                $this->cpf,
+                false
             );
 
             $this->idpes = $lista[0]['idpes'];
@@ -395,6 +401,7 @@ class clsPessoaFisica extends clsPessoaFj
                     $this->localizacao_diferenciada = $detalhe_fisica['localizacao_diferenciada'];
                     $this->nome_social = $detalhe_fisica['nome_social'];
                     $this->pais_residencia = $detalhe_fisica['pais_residencia'];
+                    $this->ref_cod_profissao = $detalhe_fisica['ref_cod_profissao'];
 
                     $tupla['idpes'] = $this->idpes;
                     $tupla[] = &$tupla['idpes'];
@@ -482,6 +489,9 @@ class clsPessoaFisica extends clsPessoaFj
 
                     $tupla['pais_residencia'] = $this->pais_residencia;
                     $tupla[] = &$tupla['pais_residencia'];
+
+                    $tupla['ref_cod_profissao'] = $this->ref_cod_profissao;
+                    $tupla[] = &$tupla['ref_cod_profissao'];
 
                     return $tupla;
                 }
