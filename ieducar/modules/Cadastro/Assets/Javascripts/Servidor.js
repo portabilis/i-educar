@@ -190,6 +190,14 @@ function checkGraduationsTable() {
   }
 }
 
+function checkPosgraduateTable() {
+  if (escolaridadeSuperior && $j('#tab2').hasClass('servidorTab-active')) {
+    $j('#tr_posgraduate').show();
+  } else {
+    $j('#tr_posgraduate').hide();
+  }
+}
+
 function verificaCamposObrigatorio() {
   if($j('#ref_idesco').val()) {
     var options = {
@@ -203,12 +211,14 @@ function verificaCamposObrigatorio() {
         escolaridadeSuperior = dataResponse.escolaridade.escolaridade == '6'
         habilitaCampoPosGraduacao();
         checkGraduationsTable();
+        checkPosgraduateTable();
       }
     }
     getResource(options);
   } else {
     escolaridadeSuperior = false;
     checkGraduationsTable();
+    checkPosgraduateTable();
   }
 }
 
@@ -293,6 +303,7 @@ $j(document).ready(function() {
       });
       habilitaCampoPosGraduacao();
       checkGraduationsTable();
+      checkPosgraduateTable();
     });
 
   // fix checkboxs
