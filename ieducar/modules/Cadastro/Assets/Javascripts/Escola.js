@@ -125,6 +125,7 @@ window.addEventListener(
   'load', function () {
     obrigaCampoFormaDeContratacao();
     habilitaCampoFormaDeContratacao();
+    habilitaAbaMatriculasAtendidas();
   },false
 );
 
@@ -151,6 +152,21 @@ function obrigaCampoRegulamentacao() {
     $j('#regulamentacao').makeUnrequired();
     $j("#regulamentacao").prop('disabled', true);
   }
+}
+
+$j('#poder_publico_parceria_convenio').on('change', function () {
+  habilitaAbaMatriculasAtendidas();
+});
+
+function habilitaAbaMatriculasAtendidas() {
+  const secretariaEstadual = $j.inArray(PODER_PUBLICO_PARCERIA_CONVENIO.SECRETARIA_ESTADUAL.toString(), $j('#poder_publico_parceria_convenio').val()) != -1
+  const secretariaMunicipal = $j.inArray(PODER_PUBLICO_PARCERIA_CONVENIO.SECRETARIA_MUNICIPAL.toString(), $j('#poder_publico_parceria_convenio').val()) != -1
+
+  if (secretariaEstadual || secretariaMunicipal) {
+    $j('#tab2').show();
+    return;
+  }
+  $j('#tab2').hide();
 }
 
 function obrigaCampoFormaDeContratacao() {
