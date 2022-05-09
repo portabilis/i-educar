@@ -315,11 +315,11 @@ if (!$j('#pessoaj_idpes').is(':visible')) {
 
   // Adiciona um ID à linha que termina o formulário para parar de esconder os campos
   $j('.tableDetalheLinhaSeparador').closest('tr').attr('id','stop');
-  $j('.tablecadastro >tbody  > tr').each(function(index, row) {
-    if (index>=linha_inicial_infra){
-      if (row.id!='stop')
+  $j('.tablecadastro > tbody > tr').each(function(index, row) {
+    if ( index >= linha_inicial_matriculas_atendidas_convenio){
+      if (row.id !== 'stop') {
         row.hide();
-      else{
+      } else {
         return false;
       }
     }
@@ -333,16 +333,16 @@ $j(document).ready(function() {
   // DADOS GERAIS
   $j('#tab1').click(
     function() {
-
       $j('.escolaTab-active').toggleClass('escolaTab-active escolaTab');
       $j('#tab1').toggleClass('escolaTab escolaTab-active')
-      $j('.tablecadastro >tbody  > tr').each(function(index, row) {
-        if (index>=linha_inicial_infra){
-          if (row.id!='stop')
+      $j('.tablecadastro > tbody > tr').each(function(index, row) {
+        if (index >= linha_inicial_matriculas_atendidas_convenio) {
+          if (row.id !== 'stop') {
             row.hide();
-          else
+          } else {
             return false;
-        }else{
+          }
+        } else {
           row.show();
         }
       });
