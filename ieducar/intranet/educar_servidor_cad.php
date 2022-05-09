@@ -992,8 +992,8 @@ JS;
             $posgraduate
         );
 
-        $this->inputsHelper()->select('posgraduate_type_id', ['resources' => $types, 'required', false]);
-        $this->inputsHelper()->select('posgraduate_area_id', ['resources' => $areas, 'required', false]);
+        $this->inputsHelper()->select('posgraduate_type_id', ['resources' => $types, 'required' => false]);
+        $this->inputsHelper()->select('posgraduate_area_id', ['resources' => $areas, 'required' => false]);
         $this->campoTexto('posgraduate_completion_year', null, null, null, 4);
 
         $this->campoTabelaFim();
