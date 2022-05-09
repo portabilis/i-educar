@@ -32,7 +32,13 @@ function verificaDeficiencias() {
 }
 
 function submitForm() {
-  if (!validaServidor() || !validaPosGraduacao() || !validaCursoFormacaoContinuada() || !validationUtils.validatesFields(false) || !validateGraduations() || !validaCargaHoraria()) {
+  if (!validaServidor() ||
+      !validaPosGraduacao() ||
+      !validaCursoFormacaoContinuada() ||
+      !validationUtils.validatesFields(false) ||
+      !validateGraduations() ||
+      !validaCargaHoraria() ||
+      !validatePosgraduate()) {
     return false;
   }
 
@@ -493,3 +499,51 @@ function validaCargaHoraria() {
 $j('#carga_horaria').change(function () {
   validaCargaHoraria()
 });
+
+function validatePosgraduate() {
+  var result = true;
+
+  if (!escolaridadeSuperior) {
+    return result;
+  }
+
+  $j.each($j('select[id^="posgraduate_type_id["]'), function (index, field) {
+    var id = $j(field).attr('id');
+    var idNum = id.match(/\[(\d+)\]/);
+    var typeId = $j(field),
+        areaId = $j('select[id="posgraduate_area_id[' + idNum[1] + ']"]'),
+        completionYear = $j('input[id="posgraduate_completion_year[' + idNum[1] + ']"]');
+
+    if (obrigarCamposCenso && (areaId.val() != '' || completionYear.val() != '') && typeId.val() == '') {
+      messageUtils.error('O campo: Tipo da pós-graduação é obrigatório.', typeId);
+      result = false;
+    }
+
+    if (obrigarCamposCenso && (typeId.val() != '' || completionYear.val() != '') && areaId.val() == '') {
+      messageUtils.error('O campo: Área da pós-graduação é obrigatório.', areaId);
+      result = false;
+    }
+
+    if (obrigarCamposCenso && (typeId.val() != '' || areaId.val() != '') && completionYear.val() == '') {
+      messageUtils.error('O campo: Ano de conclusão da pós-graduação é obrigatório.', completionYear);
+      result = false;
+    }
+
+    if (completionYear.val().length != 4) {
+      messageUtils.error('O campo: Ano de conclusão da pós-graduação deve conter 4 dígitos.', completionYear);
+      result = false;
+    }
+
+    if (parseInt(completionYear.val()) < 1940) {
+      messageUtils.error('O campo: Ano de conclusão da pós-graduação deve ser maior que 1940.', completionYear);
+      result = false;
+    }
+
+    if (parseInt(completionYear.val()) > (new Date().getFullYear())) {
+      messageUtils.error('O campo: Ano de conclusão da pós-graduação não deve ser maior que o ano atual.', completionYear);
+      result = false;
+    }
+  });
+
+  return result;
+}
