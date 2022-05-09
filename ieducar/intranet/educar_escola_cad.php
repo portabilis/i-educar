@@ -951,6 +951,8 @@ return new class extends clsCadastro {
             $this->campoOculto('incluir_curso', '');
             $this->campoQuebra();
 
+            $this->campoRotulo('matriculas_atendidas_convenio', '</b>Matrículas atendidas por convênio</b>');
+
             $helperOptions = ['objectName' => 'local_funcionamento'];
             $options = [
                 'label' => 'Local de funcionamento',
