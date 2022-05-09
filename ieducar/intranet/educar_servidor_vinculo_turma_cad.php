@@ -324,9 +324,11 @@ return new class extends clsCadastro {
             FuncaoExercida::DOCENTE_TITULAR_EAD,
             FuncaoExercida::DOCENTE_TUTOR_EAD,
         ];
+        
+        $etapas_instrutor_educacao_pŕofissional = [30,31,32,33,34,39,40,73,74,64,67,68];
 
-        if ($this->funcao_exercida == FuncaoExercida::INSTRUTOR_EDUCACAO_PROFISSIONAL && (!in_array('2', transformStringFromDBInArray($turma['estrutura_curricular']), true) || !in_array($turma['etapa_educacenso'],[30,31,32,33,34,39,40,73,74,64,67,68], true))){
-           $opcoes = \Str::replaceLast(', ',' ou ',implode(', ',[30,31,32,33,34,39,40,73,74,64,67,68]));
+        if ($this->funcao_exercida == FuncaoExercida::INSTRUTOR_EDUCACAO_PROFISSIONAL && (!in_array('2', transformStringFromDBInArray($turma['estrutura_curricular']), true) || !in_array($turma['etapa_educacenso'],$etapas_instrutor_educacao_pŕofissional, true))){
+           $opcoes = \Str::replaceLast(', ',' ou ',implode(', ',$etapas_instrutor_educacao_pŕofissional));
            $this->mensagem = "O campo: <b>Função exercida</b> pode ser <b>Instrutor da Educação Profissional</b> apenas quando o campo <b>Estrutura Curricular</b> da turma for: <b>Itinerário formativo</b> e o campo <b>Etapa de ensino</b> for uma das opções: {$opcoes}.";
 
            return false;
