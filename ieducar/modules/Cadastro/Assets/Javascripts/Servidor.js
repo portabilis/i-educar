@@ -240,6 +240,7 @@ $j('.tablecadastro >tbody  > tr').each(function(index, row) {
 
 $j(document).ready(function() {
   $j('#tr_graduations_tit td').addClass('formdktd');
+  $j('#tr_posgraduate_tit td').addClass('formdktd');
   // on click das abas
 
   // DADOS GERAIS

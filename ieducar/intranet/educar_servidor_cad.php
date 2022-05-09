@@ -1,9 +1,12 @@
 <?php
 
 use App\Models\EmployeeGraduation;
+use App\Models\EmployeePosgraduate;
 use App\Models\LegacySchoolingDegree;
 use App\Services\EmployeeGraduationService;
+use iEducar\Modules\Educacenso\Model\AreaPosGraduacao;
 use iEducar\Modules\Educacenso\Model\Escolaridade;
+use iEducar\Modules\Educacenso\Model\PosGraduacao;
 use iEducar\Modules\ValueObjects\EmployeeGraduationValueObject;
 use iEducar\Support\View\SelectOptions;
 use Illuminate\Support\Facades\DB;
@@ -436,6 +439,8 @@ return new class extends clsCadastro {
         ];
 
         $this->addGraduationsTable();
+
+        $this->addPosgraduateTable();
 
         $scripts = ['/modules/Cadastro/Assets/Javascripts/Servidor.js'];
 
@@ -949,6 +954,41 @@ JS;
             'required' => false
         ];
         $this->inputsHelper()->select('employee_discipline_id', $options);
+
+        $this->campoTabelaFim();
+    }
+
+    protected function addPosgraduateTable()
+    {
+        $posgraduate = EmployeePosgraduate::query()
+            ->where('employee_id', $this->cod_servidor)
+            ->get()
+            ->map(function ($posgraduate) {
+                return [
+                    $posgraduate->type_id,
+                    $posgraduate->area_id,
+                    $posgraduate->completion_year,
+                    $posgraduate->id,
+                ];
+            });
+
+        $types = [null => 'Selecione uma opção'] + PosGraduacao::getDescriptiveValues();
+        $areas = [null => 'Selecione uma opção'] + AreaPosGraduacao::getDescriptiveValues();
+
+        $this->campoTabelaInicio(
+            'posgraduate',
+            'Pós-graduações concluídas',
+            [
+                'Tipo de pós graduação',
+                'Área',
+                'Ano de conclusão',
+            ],
+            $posgraduate
+        );
+
+        $this->inputsHelper()->select('posgraduate_type_id', ['resources' => $types, 'required', false]);
+        $this->inputsHelper()->select('posgraduate_area_id', ['resources' => $areas, 'required', false]);
+        $this->campoTexto('posgraduate_completion_year', null, null, null, 4);
 
         $this->campoTabelaFim();
     }
