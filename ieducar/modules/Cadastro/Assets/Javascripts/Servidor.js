@@ -33,7 +33,6 @@ function verificaDeficiencias() {
 
 function submitForm() {
   if (!validaServidor() ||
-      !validaPosGraduacao() ||
       !validaCursoFormacaoContinuada() ||
       !validationUtils.validatesFields(false) ||
       !validateGraduations() ||
@@ -108,19 +107,6 @@ function validaServidor() {
   }
 
   return true
-}
-
-function validaPosGraduacao() {
-  posGraduacao = $j('#pos_graduacao').val() || [];
-  possuiOpcaoNenhuma = $j.inArray('4', posGraduacao) !== -1;
-  possuiMaisDeUmaOpcao = posGraduacao.filter(Boolean).length > 1;
-
-  if (possuiOpcaoNenhuma && possuiMaisDeUmaOpcao) {
-    messageUtils.error('Não é possível informar mais de uma opção no campo: <b>Pós-Graduações concluídas</b>, quando a opção: <b>Não tem pós-graduação concluída</b> estiver selecionada.');
-    return false;
-  }
-
-  return true;
 }
 
 function validaCursoFormacaoContinuada() {
@@ -209,7 +195,6 @@ function verificaCamposObrigatorio() {
       ),
       success : function(dataResponse) {
         escolaridadeSuperior = dataResponse.escolaridade.escolaridade == '6'
-        habilitaCampoPosGraduacao();
         checkGraduationsTable();
         checkPosgraduateTable();
       }
@@ -220,15 +205,6 @@ function verificaCamposObrigatorio() {
     checkGraduationsTable();
     checkPosgraduateTable();
   }
-}
-
-
-function habilitaCampoPosGraduacao() {
-  $j('#pos_graduacao').removeAttr('disabled');
-  if (!escolaridadeSuperior) {
-    $j('#pos_graduacao').attr('disabled', 'disabled').makeUnrequired().val('');
-  }
-  $j("#pos_graduacao").trigger("chosen:updated");
 }
 
 //abas
@@ -301,7 +277,6 @@ $j(document).ready(function() {
         }else
           return false;
       });
-      habilitaCampoPosGraduacao();
       checkGraduationsTable();
       checkPosgraduateTable();
     });

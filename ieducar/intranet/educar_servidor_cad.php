@@ -37,7 +37,6 @@ return new class extends clsCadastro {
     public $employee_completion_year;
     public $employee_college_id;
     public $employee_discipline_id;
-    public $pos_graduacao;
 
     public function Inicializar()
     {
@@ -146,10 +145,6 @@ return new class extends clsCadastro {
 
                     // Armazena na sessão para permitir a alteração via modal
                     Session::put("servant:{$this->cod_servidor}", $funcoes);
-                }
-
-                if (is_string($this->pos_graduacao)) {
-                    $this->pos_graduacao = explode(',', str_replace(['{', '}'], '', $this->pos_graduacao));
                 }
 
                 if (is_string($this->curso_formacao_continuada)) {
@@ -389,22 +384,6 @@ return new class extends clsCadastro {
 
         $this->inputsHelper()->select('tipo_ensino_medio_cursado', $options);
 
-        $helperOptions = ['objectName' => 'pos_graduacao'];
-        $options = [
-            'label' => 'Pós-Graduações concluídas',
-            'required' => false,
-            'options' => [
-                'values' => $this->pos_graduacao,
-                'all_values' => [
-                    1 => 'Especialização',
-                    2 => 'Mestrado',
-                    3 => 'Doutorado',
-                    4 => 'Não tem pós-graduação concluída'
-                ]
-            ]
-        ];
-        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
-
         $helperOptions = ['objectName' => 'curso_formacao_continuada'];
         $options = [
             'label' => 'Outros cursos de formação continuada (Mínimo de 80 horas)',
@@ -483,13 +462,6 @@ JS;
         $this->carga_horaria = $hour + $min;
         $this->carga_horaria = $hour + $min;
 
-        $posGraduacao = [];
-        if (is_array($this->pos_graduacao)) {
-            $posGraduacao = array_filter($this->pos_graduacao);
-        }
-
-        $this->pos_graduacao = '{' . implode(',', $posGraduacao) . '}';
-
         $cursoFormacaoContinuada = [];
         if (is_array($this->curso_formacao_continuada)) {
             $cursoFormacaoContinuada = array_filter($this->curso_formacao_continuada);
@@ -562,13 +534,6 @@ JS;
         $min = abs(((int) ($timesep[1] / 60)) - ($timesep[1] / 60)) . '<br>';
         $this->carga_horaria = $hour + $min;
         $this->carga_horaria = $hour + $min;
-
-        $posGraduacao = [];
-        if (is_array($this->pos_graduacao)) {
-            $posGraduacao = array_filter($this->pos_graduacao);
-        }
-
-        $this->pos_graduacao = '{' . implode(',', $posGraduacao) . '}';
 
         $cursoFormacaoContinuada = [];
         if (is_array($this->curso_formacao_continuada)) {
@@ -766,7 +731,6 @@ JS;
     public function addCamposCenso($obj)
     {
         $obj->tipo_ensino_medio_cursado = $this->tipo_ensino_medio_cursado;
-        $obj->pos_graduacao = $this->pos_graduacao;
         $obj->curso_formacao_continuada = $this->curso_formacao_continuada;
 
         return $obj;
