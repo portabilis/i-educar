@@ -30,4 +30,17 @@ class EmployeePosgraduate extends Model
     {
         return $this->belongsTo(Employee::class, 'employee_id', 'cod_servidor');
     }
+
+    /**
+     * Filtra pelo ID do servidor
+     *
+     * @param Builder $query
+     * @param $employeeId
+     *
+     * @return Builder
+     */
+    public function scopeOfEmployee($query, $employeeId)
+    {
+        return $query->where('employee_id', $employeeId);
+    }
 }

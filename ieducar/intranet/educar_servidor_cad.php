@@ -4,10 +4,12 @@ use App\Models\EmployeeGraduation;
 use App\Models\EmployeePosgraduate;
 use App\Models\LegacySchoolingDegree;
 use App\Services\EmployeeGraduationService;
+use App\Services\EmployeePosgraduateService;
 use iEducar\Modules\Educacenso\Model\AreaPosGraduacao;
 use iEducar\Modules\Educacenso\Model\Escolaridade;
 use iEducar\Modules\Educacenso\Model\PosGraduacao;
 use iEducar\Modules\ValueObjects\EmployeeGraduationValueObject;
+use iEducar\Modules\ValueObjects\EmployeePosgraduateValueObject;
 use iEducar\Support\View\SelectOptions;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -516,6 +518,7 @@ JS;
                 $this->createOrUpdateDeficiencias();
 
                 $this->storeGraduations($this->cod_servidor);
+                $this->storePosgraduate($this->cod_servidor);
 
                 include 'educar_limpa_sessao_curso_disciplina_servidor.php';
 
@@ -539,6 +542,7 @@ JS;
                 $this->createOrUpdateDeficiencias();
 
                 $this->storeGraduations($this->cod_servidor);
+                $this->storePosgraduate($this->cod_servidor);
 
                 include 'educar_limpa_sessao_curso_disciplina_servidor.php';
 
@@ -590,6 +594,7 @@ JS;
                 $this->createOrUpdateDeficiencias();
 
                 $this->storeGraduations($this->cod_servidor);
+                $this->storePosgraduate($this->cod_servidor);
 
                 include 'educar_limpa_sessao_curso_disciplina_servidor.php';
 
@@ -685,6 +690,7 @@ JS;
                             $this->createOrUpdateDeficiencias();
 
                             $this->storeGraduations($this->cod_servidor);
+                            $this->storePosgraduate($this->cod_servidor);
 
                             include 'educar_limpa_sessao_curso_disciplina_servidor.php';
 
@@ -1073,6 +1079,36 @@ JS;
             $valueObject->collegeId = $this->employee_college_id[$key];
             $valueObject->disciplineId = $this->employee_discipline_id[$key] ?: null;
             $employeeGraduationService->storeGraduation($valueObject);
+        }
+    }
+
+    protected function storePosgraduate($employeeId)
+    {
+        /** @var EmployeePosgraduateService $employeePosgraduateService */
+        $employeePosgraduateService = app(EmployeePosgraduateService::class);
+
+        $employeePosgraduateService->deleteAll($employeeId);
+
+        if (empty($this->ref_idesco)) {
+            return true;
+        }
+
+        if (LegacySchoolingDegree::find($this->ref_idesco)->escolaridade != Escolaridade::EDUCACAO_SUPERIOR) {
+            return true;
+        }
+
+        foreach ($this->posgraduate_type_id as $key => $typeId) {
+            if (empty($typeId)) {
+                continue;
+            }
+
+            $valueObject = new EmployeePosgraduateValueObject();
+            $valueObject->employeeId = $employeeId;
+            $valueObject->entityId = $this->ref_cod_instituicao;
+            $valueObject->typeId = $this->posgraduate_type_id[$key];
+            $valueObject->areaId = $this->posgraduate_area_id[$key];
+            $valueObject->completionYear = $this->posgraduate_completion_year[$key];
+            $employeePosgraduateService->storePosgraduate($valueObject);
         }
     }
 
