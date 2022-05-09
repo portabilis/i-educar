@@ -976,7 +976,8 @@ JS;
                     $posgraduate->completion_year,
                     $posgraduate->id,
                 ];
-            });
+            })
+            ->toArray();
 
         $types = [null => 'Selecione uma opção'] + PosGraduacao::getDescriptiveValues();
         $areas = [null => 'Selecione uma opção'] + AreaPosGraduacao::getDescriptiveValues();
