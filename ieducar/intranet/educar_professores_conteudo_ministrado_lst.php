@@ -132,7 +132,7 @@ return new class extends clsListagem {
             $ref_cod_escola = '';
             $nm_escola = '';
             foreach ($lista as $registro) {
-                $data_formatada = dataToBrasil($registro['data']);
+                $data_formatada = dataToBrasil($registro['data']); 
 
                 $lista_busca = [
                     "<a href=\"educar_professores_conteudo_ministrado_det.php?id={$registro['id']}\">{$data_formatada}</a>",

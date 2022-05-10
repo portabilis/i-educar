@@ -32,7 +32,8 @@ class clsModulesFrequencia extends Model {
         $data_inicial = null,
         $data_final = null,
         $etapa_sequencial = null,
-        $alunos = null
+        $alunos = null,
+        $servidor_id = null
     ) {
         $db = new clsBanco();
         $this->_schema = 'modules.';
@@ -65,6 +66,8 @@ class clsModulesFrequencia extends Model {
             JOIN modules.professor_turma_disciplina as ptd
                 ON (pt.id = ptd.professor_turma_id AND
                     (ptd.componente_curricular_id = f.ref_componente_curricular OR f.ref_componente_curricular IS NULL))
+            JOIN pmieducar.servidor se
+                ON (pt.servidor_id = se.cod_servidor)
         ";
 
         $this->_campos_lista = $this->_todos_campos = '
@@ -78,7 +81,8 @@ class clsModulesFrequencia extends Model {
             k.nome AS componente_curricular,
             u.nome AS turno,
             l.nm_tipo AS etapa,
-            f.etapa_sequencial AS fase_etapa
+            f.etapa_sequencial AS fase_etapa, 
+            pt.servidor_id AS cod_professor
         ';
 
 
@@ -123,6 +127,9 @@ class clsModulesFrequencia extends Model {
         }
         if (is_array($alunos)) {
             $this->alunos = $alunos;
+        }
+        if(is_numeric($servidor_id)) {
+            $this->servidor_id = $servidor_id;
         }
     }
 
@@ -551,8 +558,11 @@ class clsModulesFrequencia extends Model {
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
+        //dump($sql);
+
+       
         $this->_total = $db->CampoUnico(
-            "SELECT
+            "SELECT 
                 COUNT(0)
             FROM
                 {$this->_from}

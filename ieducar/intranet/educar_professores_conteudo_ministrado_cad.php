@@ -71,14 +71,18 @@ return new class extends clsCadastro {
             }
         }
 
+        $this->ano = date('Y');
+        $this->servidor_id = $this->pessoa_logada;
         $this->campoOculto('cod_serie', 9);
         $this->campoOculto('cod_componente_curricular', 5);
 
+       
         if (is_numeric($this->frequencia)) {
             $desabilitado = true;
 
             $obj = new clsModulesFrequencia($this->frequencia);
             $freq = $obj->detalhe()['detalhes'];
+            
 
             $obj = new clsModulesPlanejamentoAula();
             $id = $obj->lista(
@@ -93,14 +97,16 @@ return new class extends clsCadastro {
                 null,
                 null,
                 $freq['fase_etapa'],
+                $this->servidor_id
             )[0]['id'];
             
             $this->planejamento_aula_id = $id;
+          
+            
         }
-
+       
         $this->campoOculto('id', $this->id);
-        $this->inputsHelper()->dynamic(['frequencia'], ['frequencia' => $this->frequencia, 'disabled' => $desabilitado]);
-
+        $this->inputsHelper()->dynamic(['frequencia'], ['frequencia' => $this->frequencia, 'disabled' => $desabilitado]);     
         $this->campoMemo('atividades', 'Registro diário de aula', $this->atividades, 100, 5, false);
 
         $this->adicionarConteudosMultiplaEscolha();
@@ -178,13 +184,14 @@ return new class extends clsCadastro {
 
             $obj = new clsModulesPlanejamentoAulaConteudo();
             $conteudos = $obj->lista2($planejamento_aula_id);
-    
+           
             foreach ($conteudos as $key => $conteudo) {
                 $rows[$conteudo['id']] = $conteudo['conteudo'];
             }
 
             return $rows;
         }
+        
 
         return [];
     }

@@ -125,8 +125,7 @@ return new class extends clsListagem {
             $eh_professor ? $this->pessoa_logada : null         // Passe o ID do servidor caso ele seja um professor
         );
 
-        $total = /*$obj_turma->_total*/count($lista);
-        dump($lista);
+        $total = /*$obj_turma->_total*/count($lista); 
         // monta a lista
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
