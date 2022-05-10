@@ -208,7 +208,7 @@ return new class extends clsCadastro {
         'qtd_orientador_comunitario' => 'Orientador(a) comunitário(a) ou assistente social'
     ];
 
-    public $inputsMatrículasAtendidasPorConvenio = [
+    public $inputsMatriculasAtendidasPorConvenio = [
         'qtd_matriculas_atividade_complementar' => 'Atividade complementar',
         'qtd_atendimento_educacional_especializado' => 'Atendimento educacional especializado',
         'qtd_ensino_regular_creche_parcial' => 'Ensino Regular - Creche - Parcial',
@@ -997,9 +997,9 @@ return new class extends clsCadastro {
             $this->campoOculto('incluir_curso', '');
             $this->campoQuebra();
 
-            $this->campoRotulo('matriculas_atendidas_convenio', '<b>Matrículas atendidas por convênio</b>');
+            $this->campoRotulo('matriculas_atendidas_convenio', '<b>Número de matrículas atendidas por meio da parceria ou convênio</b>');
 
-            foreach ($this->inputsMatrículasAtendidasPorConvenio as $key => $label) {
+            foreach ($this->inputsMatriculasAtendidasPorConvenio as $key => $label) {
                 $options = ['label' => $label, 'value' => $this->{$key}, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => ''];
                 $this->inputsHelper()->integer($key, $options);
             }
@@ -1753,6 +1753,10 @@ return new class extends clsCadastro {
             $obj->{$key} = $this->{$key};
         }
 
+        foreach ($this->inputsMatriculasAtendidasPorConvenio as $key => $value) {
+            $obj->{$key} = $this->{$key};
+        }
+
         return $obj;
     }
 
@@ -1972,7 +1976,8 @@ return new class extends clsCadastro {
                 $this->validaQuantidadeEquipamentosEnsino() &&
                 $this->validaLinguasIndigenas() &&
                 $this->validaPoderPublicoParceriaConvenio() &&
-                $this->validaFormasDeContratacaoEntreAdministracaoPublicaEOutrasInstituicoes()
+                $this->validaFormasDeContratacaoEntreAdministracaoPublicaEOutrasInstituicoes() &&
+                $this->validaMatriculasAtendidasPorConvenio()
             ;
     }
 
@@ -2636,6 +2641,30 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Preencha pelo menos um dos campos <b>da seção</b> Quantidade de profissionais da aba Recursos.';
+
+        return false;
+    }
+
+    protected function validaMatriculasAtendidasPorConvenio()
+    {
+        $algumCampoPreenchido = false;
+        foreach ($this->inputsMatriculasAtendidasPorConvenio as $key => $label) {
+            if ($this->{$key} == '0') {
+                $this->mensagem = "O campo: <b>{$label}</b> não pode ser preenchido com 0";
+
+                return false;
+            }
+
+            if ((int) $this->{$key} > 0) {
+                $algumCampoPreenchido = true;
+            }
+        }
+
+        if ($algumCampoPreenchido) {
+            return true;
+        }
+
+        $this->mensagem = 'Preencha pelo menos um dos campos da seção <b>Número de matrículas atendidas por meio da parceria ou convênio</b> da aba <b>Matrículas atendidas por convênio.</b>';
 
         return false;
     }
