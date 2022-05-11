@@ -20,8 +20,8 @@ return new class extends Migration
             $table->integer('qtd_ensino_regular_creche_int')->nullable();
             $table->integer('qtd_ensino_regular_pre_escola_par')->nullable();
             $table->integer('qtd_ensino_regular_pre_escola_int')->nullable();
-            $table->integer('qtd_ensino-regular_ensino_fund_anos_iniciais_par')->nullable();
-            $table->integer('qtd_ensino-regular_ensino_fund_anos_iniciais_int')->nullable();
+            $table->integer('qtd_ensino_regular_ensino_fund_anos_iniciais_par')->nullable();
+            $table->integer('qtd_ensino_regular_ensino_fund_anos_iniciais_int')->nullable();
             $table->integer('qtd_ensino_regular_ensino_fund_anos_finais_par')->nullable();
             $table->integer('qtd_ensino_regular_ensino_fund_anos_finais_int')->nullable();
             $table->integer('qtd_ensino_regular_ensino_med_anos_iniciais_par')->nullable();
@@ -74,8 +74,8 @@ return new class extends Migration
             $table->dropColumn('qtd_ensino_regular_creche_int');
             $table->dropColumn('qtd_ensino_regular_pre_escola_par');
             $table->dropColumn('qtd_ensino_regular_pre_escola_int');
-            $table->dropColumn('qtd_ensino-regular_ensino_fund_anos_iniciais_par');
-            $table->dropColumn('qtd_ensino-regular_ensino_fund_anos_iniciais_int');
+            $table->dropColumn('qtd_ensino_regular_ensino_fund_anos_iniciais_par');
+            $table->dropColumn('qtd_ensino_regular_ensino_fund_anos_iniciais_int');
             $table->dropColumn('qtd_ensino_regular_ensino_fund_anos_finais_par');
             $table->dropColumn('qtd_ensino_regular_ensino_fund_anos_finais_int');
             $table->dropColumn('qtd_ensino_regular_ensino_med_anos_iniciais_par');
