@@ -1932,10 +1932,10 @@ return new class extends clsCadastro {
         if (is_array($formasDeContratacao) && in_array((int)$this->dependencia_administrativa, $acceptDependenciaAdministrativa, true)) {
 
             $data = array_filter($formasDeContratacao,
-                static fn($forma)  => !in_array((int)$forma, $notAcceptFormasDeContratoInDependenciaAdministrativa, true)
+                static fn($forma)  => in_array((int)$forma, $notAcceptFormasDeContratoInDependenciaAdministrativa, true)
             );
 
-            if (count($data) === 0) {
+            if (count($data) !== 0) {
                 $this->mensagem = 'O campo <b>Formas de contratação entre a Administração Pública e outras instituições</b> foi preenchido incorretamente.';
                 return false;
             }
