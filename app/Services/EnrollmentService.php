@@ -210,15 +210,6 @@ class EnrollmentService
             throw new EnrollDateAfterAcademicYearException($schoolClass, $date);
         }
 
-        $existsActiveEnrollment = $registration->enrollments()
-            ->where('ativo', 1)
-            ->where('ref_cod_turma', $schoolClass->id)
-            ->count();
-
-        if ($existsActiveEnrollment) {
-            throw new ExistsActiveEnrollmentException($registration);
-        }
-
         if (
             $registration->lastEnrollment
             && $registration->lastEnrollment->date_departed
@@ -238,6 +229,15 @@ class EnrollmentService
         }
 
         $sequenceInSchoolClass = $this->getSequenceSchoolClass($registration, $schoolClass, $date);
+
+        $existsActiveEnrollment = $registration->enrollments()
+            ->where('ativo', 1)
+            ->where('ref_cod_turma', $schoolClass->id)
+            ->exists();
+
+        if ($existsActiveEnrollment) {
+            throw new ExistsActiveEnrollmentException($registration);
+        }
 
         /** @var LegacyEnrollment $enrollment */
         $enrollment = $registration->enrollments()->create([
