@@ -138,7 +138,7 @@
         <div class="separator"></div>
 
         <div style="text-align: center">
-            <button class="btn-green" type="submit">Enturmar</button>
+            <button class="btn-green" type="submit" data-load="Enturmando ...">Enturmar</button>
             <a href="javascript:void(0)" class="btn registration-btn-check" >Selecionar todos</a>
             <a href="{{ Asset::get('/cancelar-enturmacao-em-lote/' . $schoolClass->id) }}" class="btn">Desenturmar em lote</a>
             <a href="{{ Asset::get('intranet/educar_matricula_cad.php?ref_cod_turma_copiar_enturmacoes=' . $schoolClass->id) }}" class="btn">Copiar enturmações</a>
@@ -150,7 +150,7 @@
     <script>
         $j(document).ready(function () {
             $j('#formcadastro').submit(function (e) {
-                $j('button[type="submit"]').attr("disabled", true);
+                $j('button[type="submit"]').attr("disabled", true).text('Enturmando ...');
                 return true;
             });
             $j('.registration-check-master').change(function () {
