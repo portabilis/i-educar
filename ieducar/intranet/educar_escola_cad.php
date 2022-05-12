@@ -2647,6 +2647,12 @@ return new class extends clsCadastro {
 
     protected function validaMatriculasAtendidasPorConvenio()
     {
+        $poderPulicoParceriaConvenio = transformStringFromDBInArray($this->poder_publico_parceria_convenio);
+
+        if (!in_array(1, $poderPulicoParceriaConvenio) && !in_array(2, $poderPulicoParceriaConvenio)){
+            return true;
+        }
+
         $algumCampoPreenchido = false;
         foreach ($this->inputsMatriculasAtendidasPorConvenio as $key => $label) {
             if ($this->{$key} == '0') {
