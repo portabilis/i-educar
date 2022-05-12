@@ -149,6 +149,10 @@
 
     <script>
         $j(document).ready(function () {
+            $j('#formcadastro').submit(function (e) {
+                $j('button[type="submit"]').attr("disabled", true).text('Enturmando ...');
+                return true;
+            });
             $j('.registration-check-master').change(function () {
                 if ($j(this).prop('checked')) {
                     $j('.registration-check').prop('checked', true);
