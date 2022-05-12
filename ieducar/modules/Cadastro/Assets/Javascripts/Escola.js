@@ -313,6 +313,9 @@ if (!$j('#pessoaj_idpes').is(':visible')) {
   linha_inicial_recursos = $j('#tr_quantidade_profissionais').index()-2;
   linha_inicial_dados = $j('#tatendimento_aee').index()-2;
 
+  // Esconde os campos da primeira ao carregar a tela.
+  $j('#tab2').hide();
+
   // Adiciona um ID à linha que termina o formulário para parar de esconder os campos
   $j('.tableDetalheLinhaSeparador').closest('tr').attr('id','stop');
   $j('.tablecadastro > tbody > tr').each(function(index, row) {
