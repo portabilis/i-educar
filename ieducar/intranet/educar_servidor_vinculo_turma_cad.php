@@ -325,6 +325,15 @@ return new class extends clsCadastro {
             FuncaoExercida::DOCENTE_TUTOR_EAD,
         ];
 
+        $etapas_instrutor_educacao_pŕofissional = [30,31,32,33,34,39,40,73,74,64,67,68];
+
+        if ($this->funcao_exercida == FuncaoExercida::INSTRUTOR_EDUCACAO_PROFISSIONAL && (($turma['estrutura_curricular'] && !in_array('2', transformStringFromDBInArray($turma['estrutura_curricular']), true)) || !in_array($turma['etapa_educacenso'],$etapas_instrutor_educacao_pŕofissional, true))){
+           $opcoes = \Str::replaceLast(', ',' ou ',implode(', ',$etapas_instrutor_educacao_pŕofissional));
+           $this->mensagem = "O campo: <b>Função exercida</b> pode ser <b>Instrutor da Educação Profissional</b> apenas quando o campo <b>Estrutura Curricular</b> da turma for: <b>Itinerário formativo</b> e o campo <b>Etapa de ensino</b> for uma das opções: {$opcoes}.";
+
+           return false;
+        }
+
         if ($turma['tipo_mediacao_didatico_pedagogico'] == TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA && !in_array($this->funcao_exercida, $funcoesEad)) {
             $this->mensagem = 'O campo: <b>Função exercida</b> deve ser <b>Docente titular</b> ou <b>Docente tutor</b>, quando o campo: <b>Tipo de mediação didático-pedagógica</b> da turma for: <b>Educação a Distância</b>.';
 
