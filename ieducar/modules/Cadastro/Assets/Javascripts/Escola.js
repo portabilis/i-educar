@@ -689,10 +689,6 @@ $j(document).ready(function() {
       $j("#poder_publico_parceria_convenio").trigger("chosen:updated");
       return;
     }
-
-    $j('#poder_publico_parceria_convenio').makeUnrequired();
-    $j("#poder_publico_parceria_convenio").prop('disabled', true);
-    $j("#poder_publico_parceria_convenio").trigger("chosen:updated");
   }
 
   $j('#regulamentacao').change(
