@@ -322,15 +322,6 @@ class EducacensoAnaliseController extends ApiCoreController
                 ];
             }
 
-            if (!$escola->conveniadaPoderPublico) {
-                $mensagem[] = [
-                    'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a dependência administrativa da escola é privada, portanto é necessário informar qual o tipo de convênio desta unidade escolar.",
-                    'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: Conveniada com poder público)',
-                    'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
-                    'fail' => true
-                ];
-            }
-
             if (!$escola->mantenedoraEscolaPrivada) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a dependência administrativa da escola é privada, portanto é necessário informar qual o tipo de mantenedora desta unidade escolar.",
