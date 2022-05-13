@@ -2665,6 +2665,10 @@ return new class extends clsCadastro {
     {
         $poderPulicoParceriaConvenio = transformStringFromDBInArray($this->poder_publico_parceria_convenio);
 
+        if ($poderPulicoParceriaConvenio === null) {
+            return true;
+        }
+
         if (!in_array(1, $poderPulicoParceriaConvenio) && !in_array(2, $poderPulicoParceriaConvenio)){
             return true;
         }
