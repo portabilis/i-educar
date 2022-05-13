@@ -1998,7 +1998,9 @@ return new class extends clsCadastro {
                 $this->validaLinguasIndigenas() &&
                 $this->validaPoderPublicoParceriaConvenio() &&
                 $this->validaFormasDeContratacaoEntreAdministracaoPublicaEOutrasInstituicoes() &&
-                $this->validaMatriculasAtendidasPorConvenio()
+                $this->validaMatriculasAtendidasPorConvenio() &&
+                $this->validaLinguasIndigenas() &&
+                $this->validaInstrumentosPedagogicos()
             ;
     }
 
@@ -2048,10 +2050,8 @@ return new class extends clsCadastro {
         }
 
         return true;
-                $this->validaLinguasIndigenas() &&
-                $this->validaInstrumentosPedagogicos()
-            ;
     }
+
     protected function validaInstrumentosPedagogicos()
     {
         $dadosInstrumentosPedagogicos = transformStringFromDBInArray($this->instrumentos_pedagogicos);
@@ -2118,11 +2118,13 @@ return new class extends clsCadastro {
         if ($this->dependencia_administrativa != '4' || $this->situacao_funcionamento != 1) {
             return true;
         }
+
         if (empty($this->categoria_escola_privada)) {
             $this->mensagem = 'O campo categoria da escola privada é obrigatório para escolas em atividade de administração privada.';
 
             return false;
         }
+
         if (empty($this->mantenedora_escola_privada) ||
             (is_array($this->mantenedora_escola_privada) &&
             count($this->mantenedora_escola_privada) == 1 &&
