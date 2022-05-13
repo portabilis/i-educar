@@ -1172,9 +1172,9 @@ class EducacensoAnaliseController extends ApiCoreController
         $registro40 = new Registro40Data($educacensoRepository, $registro40Model);
         $gestores = $registro40->getData($escolaId);
 
-        /** @var todo Refatorar para usar o model School */
-        $escola = DB::select(DB::raw('SELECT relatorio.get_nome_escola(:escolaId) as nome'), [$escolaId])[0];
-        $nomeEscola = $escola->nome;
+        $escola = LegacySchool::query()->find($escolaId);
+
+        $nomeEscola = $escola->name;
         $codEscola = $escolaId;
 
         $mensagem = [];
@@ -1260,9 +1260,9 @@ class EducacensoAnaliseController extends ApiCoreController
             }
 
             if (!$gestor->tipoVinculo &&
-                (int) $gestor->cargo === SchoolManagerRole::DIRETOR &&
+                $gestor->cargo === SchoolManagerRole::DIRETOR &&
                 $gestor->isDependenciaAdministrativaPublica() &&
-                (int) $escola->situacaoFuncionamento === SituacaoFuncionamento::EM_ATIVIDADE
+                $escola->situacao_funcionamento === SituacaoFuncionamento::EM_ATIVIDADE
             ) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verificamos que o gestor escolar {$nomeGestor} é diretor(a) e a dependência administrativa da escola é {$dependenciaAdministraticaDesc} e a situação de funcionamento da escola é em atividade, portanto é necessário informar o tipo de vínculo.",
