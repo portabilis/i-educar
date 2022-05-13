@@ -15,6 +15,8 @@ class InstrumentosPedagogicos
     public const MATERIAIS_EDUCACAO_INDIGENA = 9;
     public const MATERIAIS_RELACOES_ETNICOS_RACIAIS = 10;
     public const MATERIAIS_EDUCACAO_CAMPO = 11;
+    public const NENHUM_DOS_INSTRUMENTOS_LISTADOS = 12;
+    public const MATERIAL_EDUCACAO_PROFISSIONAL = 13;
 
     public static function getDescriptiveValues()
     {
@@ -26,10 +28,12 @@ class InstrumentosPedagogicos
             self::INSTRUMENTOS_MUSICAIS => 'Instrumentos musicais para conjunto, banda/fanfarra e/ou aulas de música',
             self::JOGOS_EDUCATIVOS => 'Jogos educativos',
             self::MATERIAIS_ATIVIDADES_CULTURAIS => 'Materiais para atividades culturais e artísticas',
+            self::MATERIAL_EDUCACAO_PROFISSIONAL => 'Material para educação profissional',
             self::MATERIAIS_PRATICA_DESPORTIVA => 'Materiais para prática desportiva e recreação',
             self::MATERIAIS_EDUCACAO_INDIGENA => 'Materiais pedagógicos para a educação escolar indígena',
             self::MATERIAIS_RELACOES_ETNICOS_RACIAIS => 'Materiais pedagógicos para a educação das Relações Étnicos Raciais',
             self::MATERIAIS_EDUCACAO_CAMPO => 'Materiais pedagógicos para a educação do campo',
+            self::NENHUM_DOS_INSTRUMENTOS_LISTADOS => 'Nenhum dos instrumentos listados',
         ];
     }
 }
