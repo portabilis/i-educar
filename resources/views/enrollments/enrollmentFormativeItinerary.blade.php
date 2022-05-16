@@ -23,7 +23,7 @@
                     <td>Turma:</td>
                     <td>{{ $enrollment->schoolClass->name ?? null }}</td>
                 </tr>
-                <tr>
+                <tr id="tr_itinerary_type">
                     <td>Tipo do itinerário formativo:</td>
                     <td>
                         @php
@@ -36,7 +36,7 @@
                         </select>
                     </td>
                 </tr>
-                <tr>
+                <tr id="tr_itinerary_composition">
                     <td>Composição do itinerário formativo integrado:</td>
                     <td>
                         @php
@@ -49,7 +49,7 @@
                         </select>
                     </td>
                 </tr>
-                <tr>
+                <tr id="tr_itinerary_course">
                     <td>Tipo do curso do itinerário de formação técnica e profissional:</td>
                     <td>
                         <select name="itinerary_course" id="itinerary_course" class="select-default">
@@ -60,7 +60,7 @@
                         </select>
                     </td>
                 </tr>
-                <tr>
+                <tr id="tr_concomitant_itinerary">
                     <td>Itinerário concomitante intercomplementar à matrícula de formação geral básica:</td>
                     <td>
                         <select name="concomitant_itinerary" id="concomitant_itinerary" class="select-default">
@@ -92,6 +92,7 @@
 @push('scripts')
     <script type='text/javascript' src='{{ Asset::get('/modules/Portabilis/Assets/Plugins/Chosen/chosen.jquery.min.js') }}'></script>
     <script type="text/javascript" src="{{ Asset::get("/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/MultipleSearch.js") }}"></script>
+    <script type="text/javascript" src="{{ Asset::get("/js/enrollment-formative-itinerary.js") }}"></script>
     <script type='text/javascript'>
     (function ($) {
         $(document).ready(function () {
