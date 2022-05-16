@@ -81,7 +81,7 @@
             </tr>
             <tr>
                 <td colspan="13" align="center">
-                    <input type="submit" class="btn-green botaolistagem" onclick="javascript: go('/intranet/educar_matricula_det.php?cod_matricula=')" value=" Salvar ">
+                    <input type="submit" class="btn-green botaolistagem" onclick="javascript: go('/intranet/educar_matricula_det.php?cod_matricula={{ $enrollment->registration->id }}')" value=" Salvar ">
                     <input type="button" class="botaolistagem" onclick="javascript: go('/intranet/educar_matricula_det.php?cod_matricula={{ $enrollment->registration->id }}')" value=" Cancelar ">
                 </td>
             </tr>
