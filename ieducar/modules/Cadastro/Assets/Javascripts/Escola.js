@@ -130,7 +130,8 @@ window.addEventListener(
 );
 
 $j('#local_funcionamento').on('change', function () {
-    changeLocalFuncionamento()
+    changeLocalFuncionamento();
+    changeNumeroDeSalas();
 });
 
 $j('#nao_ha_funcionarios_para_funcoes').on('change', function () {
