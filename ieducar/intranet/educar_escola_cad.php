@@ -1267,7 +1267,7 @@ return new class extends clsCadastro {
             $options = [
                 'label' => 'Equipamentos da escola',
                 'size' => 50,
-                'required' => false,
+                'required' => $this->validarCamposObrigatoriosCenso(),
                 'options' => [
                     'values' => $this->equipamentos,
                     'all_values' => Equipamentos::getDescriptiveValues()
