@@ -90,7 +90,7 @@ class EnrollmentFormativeItineraryController extends Controller
         try {
             $service->saveFormativeItinerary($enrollment, $itineraryData);
         } catch (\Throwable $th) {
-            redirect('/intranet/educar_matricula_det.php?cod_matricula=' . $enrollment->registration->id)->with('error', 'Não foi possível salvar o itinerário formativo');
+            return redirect()->back()->with('error', $th->getMessage());
         }
 
         return redirect('/intranet/educar_matricula_det.php?cod_matricula=' . $enrollment->registration->id)->with('success', 'Itinerário formativo salvo com sucesso.');
