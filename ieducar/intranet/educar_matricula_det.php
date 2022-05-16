@@ -347,6 +347,12 @@ return new class extends clsDetalhe {
                 $this->array_botao_url_script[] = "go(\"educar_matricula_turma_turno_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
             }
 
+            if (true) {
+                $this->array_botao[] = 'Itinerário formativo';
+                $link = route('enrollments.enrollment-formative-itinerary-list', ['id' => $registro['cod_matricula']]);
+                $this->array_botao_url_script[] = "go(\"{$link}\")";
+            }
+
             if ($registro['aprovado'] != 4 && $registro['aprovado'] != 6) {
                 if (is_array($lst_transferencia) && isset($data_transferencia)) {
                     $this->array_botao[] = 'Cancelar solicitação transferência';
