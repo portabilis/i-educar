@@ -157,6 +157,7 @@ return new class extends clsDetalhe {
         $existeTurmaMulti = false;
         $existeTurmaTurnoIntegral = false;
         $existeAtendimentoEspecializado = false;
+        $existeTurmaItineraria = false;
         $nomesTurmas = [];
         $datasEnturmacoes = [];
 
@@ -167,6 +168,14 @@ return new class extends clsDetalhe {
 
             if (in_array($turma['etapa_educacenso'], App_Model_Educacenso::etapas_multisseriadas())) {
                 $existeTurmaMulti = true;
+            }
+
+            $estruturaCurricular = transformStringFromDBInArray($turma['estrutura_curricular']);
+            $turmaItineraria = in_array(2, $estruturaCurricular);
+            $etapasItinerario = [25, 26, 27, 28, 30, 31, 32, 33, 35, 36, 37, 38, 71, 74];
+
+            if ($turmaItineraria && in_array($turma['etapa_educacenso'], $etapasItinerario)) {
+                $existeTurmaItineraria = true;
             }
 
             if ($enturmacao['ativo'] == 0) {
@@ -347,7 +356,7 @@ return new class extends clsDetalhe {
                 $this->array_botao_url_script[] = "go(\"educar_matricula_turma_turno_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
             }
 
-            if (true) {
+            if ($existeTurmaItineraria) {
                 $this->array_botao[] = 'Itinerário formativo';
                 $link = route('enrollments.enrollment-formative-itinerary-list', ['id' => $registro['cod_matricula']]);
                 $this->array_botao_url_script[] = "go(\"{$link}\")";
