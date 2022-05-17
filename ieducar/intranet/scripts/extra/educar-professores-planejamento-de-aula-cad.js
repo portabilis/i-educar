@@ -18,7 +18,7 @@
 
     btn_add.onclick = function () {
       tab_add_1.addRow();
-      
+
       updateComponentesCurriculares();
       consertarBNCCElementos();
       consertarBNCCEspecificoesElementos();
@@ -54,12 +54,17 @@
 
       // get disciplines elements
       linhasElemento.forEach(linhaElemento => {
+        console.log(linhaElemento.children[0].children[0])
         componentesCurricularesElementos.push(linhaElemento.children[0].children[0]);
       });
 
       componentesCurricularesElementos.forEach(componenteCurricularElemento => {
+        $(componenteCurricularElemento).empty();
         var jComponenteCurricularElemento = $(componenteCurricularElemento);
-        
+
+        var optionOne = '<option id="ref_cod_componente_curricular_array[0]_" value="">Selecione o componente curricular</option>';
+        jComponenteCurricularElemento.append(optionOne);
+
         // add disciplines
         selectOptions.forEach(option => {
           jComponenteCurricularElemento.append(option[0]);
@@ -80,7 +85,7 @@
 
         if (bnccField !== null) {
           bnccField.setAttribute("multiple", "multiple");
-        
+
           $j(bnccField).chosen({
             no_results_text: "Sem resultados para ",
             width: '100% !important',
@@ -107,7 +112,7 @@
 
         if (bncc_especificaoes !== null) {
           bncc_especificaoes.setAttribute("multiple", "multiple");
-        
+
           $j(bncc_especificaoes).chosen({
             no_results_text: "Sem resultados para ",
             width: '100% !important',
@@ -122,14 +127,14 @@
         id++;
       }
     }
-    
+
     async function trocaComponenteCurricular (event) {
       var bnccDados = [];
-    
+
       var componenteCurricularId = pegarId(event.currentTarget.id);
       var componenteCurricularValue = event.currentTarget.value || null;
       var turma = document.getElementById("ref_cod_turma").value;
-    
+
       var bnccElemento = document.getElementById(`custom_bncc[${componenteCurricularId}]`);
 
       if (turma !== null && componenteCurricularValue !== null) {
@@ -138,10 +143,10 @@
           turma                 : document.getElementById("ref_cod_turma").value,
           componente_curricular : componenteCurricularValue
         };
-      
+
         await $j.get(searchPathBNCCTurma, paramsBNCCTurma, function (dataResponse) {
           bnccDados = dataResponse.bncc === null ? [] : Object.entries(dataResponse.bncc);
-      
+
           addOpcoesBNCC(bnccElemento, bnccDados);
         });
       } else {
@@ -159,7 +164,7 @@
         paramsBNCCEspecificacoesTurma  = {
           bnccArray  : bnccArray
         };
-      
+
         await $j.get(searchPathBNCCEspeficacoesTurma, paramsBNCCEspecificacoesTurma, function (dataResponse) {
           var obj = dataResponse.result;
           bnccEspeficacoesDados = dataResponse.result === null ? [] : Object.keys(obj).map((key) => [obj[key][0], obj[key][1], obj[key][2]]);
@@ -170,7 +175,7 @@
         addOpcoesBNCC(bnccEspecificoesElemento, []);
       }
     }
-    
+
     function addOpcoesBNCC (elemento, novasOpcoes) {
       const maxCharacters = 60;
 
@@ -184,13 +189,13 @@
         value = value.length < maxCharacters ? value : value.concat("...");
         $(elemento).append(`<option value="${id}">${value}</option>`);
       }
-    
+
       $(elemento).trigger("chosen:updated");
     }
-    
+
     function pegarId (id) {
       id = id.substring(id.indexOf('[') + 1, id.indexOf(']'));
-    
+
       return id;
     }
 
@@ -330,10 +335,10 @@
               data += data_fragmento;
           }
       }
-    
+
       return data
     }
-  
+
     function ehDataValida (d) {
       return d instanceof Date && !isNaN(d);
     }
