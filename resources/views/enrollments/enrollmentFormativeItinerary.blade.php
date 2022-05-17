@@ -3,6 +3,11 @@
 @push('styles')
     <link rel="stylesheet" type="text/css" href="{{ Asset::get('css/ieducar.css') }}" />
     <link type='text/css' rel='stylesheet' href='{{ Asset::get("/modules/Portabilis/Assets/Plugins/Chosen/chosen.css") }}'>
+    <style type="text/css">
+        .select-default {
+            padding: 10px;
+        }
+    </style>
 @endpush
 
 @section('content')

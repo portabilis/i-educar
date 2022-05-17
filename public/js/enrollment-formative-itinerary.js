@@ -14,9 +14,11 @@ function habilitaComposicaoItinerario() {
     if (types.includes('6')) {
         $j('#itinerary_composition').removeAttr('disabled');
         $j('#itinerary_composition').trigger('chosen:updated');
+        addSpanRequiredField('tr_itinerary_composition');
     } else {
         $j('#itinerary_composition').attr('disabled', 'disabled');
         $j('#itinerary_composition').val([]).trigger('chosen:updated');
+        removeSpanRequiredField('tr_itinerary_composition');
         habilitaCamposFormacaoTecnica();
     }
 }
@@ -30,9 +32,21 @@ function habilitaCamposFormacaoTecnica() {
 
     $j('#itinerary_course').attr('disabled', 'disabled');
     $j('#concomitant_itinerary').attr('disabled', 'disabled');
+    removeSpanRequiredField('tr_itinerary_course');
+    removeSpanRequiredField('tr_concomitant_itinerary');
 
     if (compositions.includes('5')) {
         $j('#itinerary_course').removeAttr('disabled');
         $j('#concomitant_itinerary').removeAttr('disabled');
+        addSpanRequiredField('tr_itinerary_course');
+        addSpanRequiredField('tr_concomitant_itinerary');
     }
+}
+
+function addSpanRequiredField(trElement) {
+    $j('#' + trElement + ' td:nth-child(1)').append('<span class="campo_obrigatorio">*</span>');
+}
+
+function removeSpanRequiredField(trElement) {
+    $j('#' + trElement + ' td:nth-child(1) span').remove();
 }
