@@ -143,9 +143,9 @@ return new class extends clsDetalhe {
             $this->addDetalhe(['Sexo', $detalhe['sexo'] == 'M' ? 'Masculino' : 'Feminino']);
         }
       
-        if($detalhe['ref_cod_profissao']){ 
+        /* if($detalhe['ref_cod_profissao']){ 
             $this->addDetalhe(['Profissão', $detalhe['ref_cod_profissao']]);
-        }
+        } */
         $fileService = new FileService(new UrlPresigner);
         $files = $fileService->getFiles(LegacyIndividual::find($cod_pessoa));
 
