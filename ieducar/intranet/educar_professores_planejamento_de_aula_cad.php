@@ -162,7 +162,7 @@ return new class extends clsCadastro {
 
         return false;
     }
- 
+
     private function getBNCCTurma($turma = null, $ref_cod_componente_curricular_array = null)
     {
         if (is_numeric($turma)) {
@@ -188,7 +188,7 @@ return new class extends clsCadastro {
 
         return [];
     }
-    
+
     public function __construct () {
         parent::__construct();
         $this->loadAssets();
@@ -228,7 +228,7 @@ return new class extends clsCadastro {
 
         // BNCCs
         $todos_bncc = [];
-        
+
         $options = [
             'label' => 'Objetivos de aprendizagem/habilidades (BNCC)',
             'required' => true,
@@ -241,7 +241,7 @@ return new class extends clsCadastro {
 
         // BNCCs Especificações
         $todos_bncc_especificacoes = [];
-        
+
         $options = [
             'label' => 'Especificações',
             'required' =>true,
@@ -274,7 +274,7 @@ return new class extends clsCadastro {
             $rows
         );
 
-        $this->campoTexto('conteudos', 'Conteúdos', $this->conteudo_id, 100, 2048, true);
+        $this->campoTexto('conteudos', 'Conteúdos', $this->conteudo_id, 100, 2048);
 
         $this->campoTabelaFim();
     }
