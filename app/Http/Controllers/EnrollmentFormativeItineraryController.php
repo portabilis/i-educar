@@ -96,7 +96,7 @@ class EnrollmentFormativeItineraryController extends Controller
             $service->saveFormativeItinerary($enrollment, $itineraryData);
         } catch (\Throwable $th) {
             return response()->json(
-                $th->getMessage(), 400
+                ['message' => $th->getMessage()], 400
             );
         }
 

@@ -130,10 +130,10 @@
                     url:"{{ Asset::get('/enrollment-formative-itinerary/' . $enrollment->id) }}",
                     data: dataToSend,
                     success:function(data) {
-                        messageUtils.success(decodeURIComponent(JSON.parse((data.responseText.message))));
+                        messageUtils.success(decodeURIComponent(JSON.parse(data.responseText.message)));
                     },
                     error:function(data) {
-                        messageUtils.error(decodeURIComponent(JSON.parse( data.responseText)));
+                        messageUtils.error(decodeURIComponent(JSON.parse(data.responseText.message)));
                     }
                 });
 
