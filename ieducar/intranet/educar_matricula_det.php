@@ -172,9 +172,11 @@ return new class extends clsDetalhe {
 
             $estruturaCurricular = transformStringFromDBInArray($turma['estrutura_curricular']) ?? [];
             $turmaItineraria = in_array(2, $estruturaCurricular);
+            $turmaFormacaoBasica = in_array(1, $estruturaCurricular);
             $etapasItinerario = [25, 26, 27, 28, 30, 31, 32, 33, 35, 36, 37, 38, 71, 74];
 
-            if ($turmaItineraria && in_array($turma['etapa_educacenso'], $etapasItinerario)) {
+            if (($turmaItineraria && count($estruturaCurricular) === 1) ||
+                ($turmaItineraria && $turmaFormacaoBasica && in_array($turma['etapa_educacenso'], $etapasItinerario))) {
                 $existeTurmaItineraria = true;
             }
 
