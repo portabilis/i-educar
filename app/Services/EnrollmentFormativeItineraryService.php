@@ -37,6 +37,7 @@ class EnrollmentFormativeItineraryService
         validator(
             [
                 'formative_itinerary' => $itineraryData,
+                'formative_itinerary_type' => $itineraryData->itineraryType,
                 'formative_itinerary_composition' => $itineraryData->itineraryComposition,
             ],
             [
@@ -45,11 +46,15 @@ class EnrollmentFormativeItineraryService
                     new RequiredEnrollmentItineraryCourse(),
                     new RequiredEnrollmentConcomitantItinerary(),
                 ],
+                'formative_itinerary_type' => [
+                    'max:4',
+                ],
                 'formative_itinerary_composition' => [
                     'max:4',
                 ]
             ],
             [
+                'formative_itinerary_type.max' => 'O campo <b>Tipo do itinerário formativo</b> não pode ter mais de 4 opções selecionadas.',
                 'formative_itinerary_composition.max' => 'O campo <b>Composição do itinerário formativo integrado</b> não pode ter mais de 4 opções selecionadas.'
             ],
         )->validate();
