@@ -50,7 +50,7 @@ class EnrollmentFormativeItineraryService
                 ]
             ],
             [
-                'formative_itinerary_composition.max' => 'O campo <b>Composição do itinerário formativo integrado<b> não pode ter mais de 4 opções selecionadas.'
+                'formative_itinerary_composition.max' => 'O campo <b>Composição do itinerário formativo integrado</b> não pode ter mais de 4 opções selecionadas.'
             ],
         )->validate();
     }
