@@ -19,12 +19,12 @@
     btn_add.onclick = function () {
       tab_add_1.addRow();
 
-      updateComponentesCurriculares();
+      updateComponentesCurriculares(false);
       consertarBNCCElementos();
       consertarBNCCEspecificoesElementos();
     }
 
-    var updateComponentesCurriculares = function () {
+    var updateComponentesCurriculares = function (clearComponent = true) {
       if (anoField.val() && turmaField.val() && turmaField.is(':enabled')) {
 
         var data = {
@@ -39,14 +39,16 @@
         var options = {
           url : urlForGetComponentesCurriculares,
           dataType : 'json',
-          success  : handleGetComponentesCurriculares
+          success  : function (response) {
+            handleGetComponentesCurriculares(response, clearComponent)
+          }
         };
 
         getResources(options);
       }
     }
 
-    function handleGetComponentesCurriculares (response) {
+    function handleGetComponentesCurriculares (response, clearComponent = true) {
       var selectOptions = jsonResourcesToSelectOptions(response['options']);
 
       var linhasElemento = document.getElementsByName("tr_objetivos_aprendizagem[]");
@@ -54,16 +56,17 @@
 
       // get disciplines elements
       linhasElemento.forEach(linhaElemento => {
-        console.log(linhaElemento.children[0].children[0])
         componentesCurricularesElementos.push(linhaElemento.children[0].children[0]);
       });
 
       componentesCurricularesElementos.forEach(componenteCurricularElemento => {
-        $(componenteCurricularElemento).empty();
         var jComponenteCurricularElemento = $(componenteCurricularElemento);
 
-        var optionOne = '<option id="ref_cod_componente_curricular_array[0]_" value="">Selecione o componente curricular</option>';
-        jComponenteCurricularElemento.append(optionOne);
+        if (clearComponent) {
+          $(componenteCurricularElemento).empty();
+          var optionOne = '<option id="ref_cod_componente_curricular_array[0]_" value="">Selecione o componente curricular</option>';
+          jComponenteCurricularElemento.append(optionOne);
+        }
 
         // add disciplines
         selectOptions.forEach(option => {
