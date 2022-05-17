@@ -8,7 +8,13 @@ use App\Services\EnrollmentFormativeItineraryService;
 use iEducar\Modules\Educacenso\Model\TipoCursoItinerario;
 use iEducar\Modules\Educacenso\Model\TipoItinerarioFormativo;
 use iEducar\Modules\ValueObjects\EnrollmentFormativeItineraryValueObject;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
 
 class EnrollmentFormativeItineraryController extends Controller
 {
@@ -37,7 +43,7 @@ class EnrollmentFormativeItineraryController extends Controller
      *
      * @param int $id enturmação
      *
-     * @return View
+     * @return Application|Factory|View
      */
     public function viewFormativeItinerary($id) {
         $this->breadcrumb('Itinerário formativo do aluno', [
@@ -56,11 +62,10 @@ class EnrollmentFormativeItineraryController extends Controller
     }
 
     /**
-     * @param Request  $request
-     *
-     * @return RedirectResponse
+     * @param Request $request
+     * @return JsonResponse|Redirector|RedirectResponse|Application
      */
-    public function storeFormativeItinerary(Request $request)
+    public function storeFormativeItinerary(Request $request): JsonResponse|Redirector|RedirectResponse|Application
     {
         $fields = $request->all();
         $enrollment = LegacyEnrollment::find($fields['enrollment_id']);
@@ -90,9 +95,16 @@ class EnrollmentFormativeItineraryController extends Controller
         try {
             $service->saveFormativeItinerary($enrollment, $itineraryData);
         } catch (\Throwable $th) {
-            return redirect()->back()->with('error', $th->getMessage());
+            return response()->json(
+                $th->getMessage(), 400
+            );
         }
 
-        return redirect('/intranet/educar_matricula_det.php?cod_matricula=' . $enrollment->registration->id)->with('success', 'Itinerário formativo salvo com sucesso.');
+        return response()->json(
+            [
+                'registration_id' => $enrollment->registration_id,
+                'message' => 'Itinerário formativo salvo com sucesso.'
+            ]
+        );
     }
 }

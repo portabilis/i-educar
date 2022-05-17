@@ -13,8 +13,7 @@ class EnrollmentFormativeItineraryService
     public function saveFormativeItinerary(
         LegacyEnrollment $enrollment,
         EnrollmentFormativeItineraryValueObject $itineraryData
-    )
-    {
+    ) {
         $this->validate($itineraryData);
         $enrollment->tipo_itinerario = $this->convertArrayToDBField($itineraryData->itineraryType);
         $enrollment->composicao_itinerario = $this->convertArrayToDBField($itineraryData->itineraryComposition);

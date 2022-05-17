@@ -6,7 +6,7 @@
 @endpush
 
 @section('content')
-<form id="enrollments-formative-itinerary" class="form-new-register" action="{{ Asset::get('/enrollment-formative-itinerary/' . $enrollment->id)}}" method="post">
+<form >
     <div>
         <table class="table-default">
             <thead>
@@ -72,7 +72,7 @@
                 </tr>
                 <tr>
                     <td colspan="2">
-                    <input type="hidden" name="enrollment_id" value="{{ $enrollment->id }}">
+                    <input type="hidden" id="enrollment_id" name="enrollment_id" value="{{ $enrollment->id }}">
                     </td>
                 </tr>
             </tbody>
@@ -81,7 +81,7 @@
             </tr>
             <tr>
                 <td colspan="13" align="center">
-                    <input type="submit" class="btn-green botaolistagem" onclick="javascript: go('/intranet/educar_matricula_det.php?cod_matricula={{ $enrollment->registration->id }}')" value=" Salvar ">
+                    <input type="button" class="btn-green btn-submit botaolistagem" value=" Salvar ">
                     <input type="button" class="botaolistagem" onclick="javascript: go('/intranet/educar_matricula_det.php?cod_matricula={{ $enrollment->registration->id }}')" value=" Cancelar ">
                 </td>
             </tr>
@@ -94,12 +94,45 @@
     <script type="text/javascript" src="{{ Asset::get("/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/MultipleSearch.js") }}"></script>
     <script type="text/javascript" src="{{ Asset::get("/js/enrollment-formative-itinerary.js") }}"></script>
     <script type='text/javascript'>
+        // id="enrollments-formative-itinerary" class="form-new-register" action="{{ Asset::get('/enrollment-formative-itinerary/' . $enrollment->id)}}" method="post"
     (function ($) {
         $(document).ready(function () {
             multipleSearchHelper.setup('itinerary_type', '', 'multiple', 'multiple');
             $j('#itinerary_type').trigger('chosen:updated');
             multipleSearchHelper.setup('itinerary_composition', '', 'multiple', 'multiple');
             $j('#itinerary_composition').trigger('chosen:updated');
+
+            $(".btn-submit").click(function(e){
+
+                e.preventDefault();
+
+                const itinerary_type =  $j('#itinerary_type').val();
+                const itinerary_composition =  $j('#itinerary_composition').val();
+                const concomitant_itinerary =  $j('#concomitant_itinerary').val();
+                const itinerary_course =  $j('#itinerary_course').val();
+                const enrollment_id =  $j('#enrollment_id').val();
+
+                const dataToSend = {
+                    itinerary_type:itinerary_type,
+                    itinerary_composition:itinerary_composition,
+                    concomitant_itinerary:concomitant_itinerary,
+                    itinerary_course:itinerary_course,
+                    enrollment_id:enrollment_id
+                };
+
+                $.ajax({
+                    type:'POST',
+                    url:"{{ Asset::get('/enrollment-formative-itinerary/' . $enrollment->id) }}",
+                    data: dataToSend,
+                    success:function(data) {
+                        messageUtils.success(decodeURIComponent(JSON.parse((data.responseText.message))));
+                    },
+                    error:function(data) {
+                        messageUtils.error(decodeURIComponent(JSON.parse( data.responseText)));
+                    }
+                });
+
+            });
         });
     })(jQuery);
     </script>
