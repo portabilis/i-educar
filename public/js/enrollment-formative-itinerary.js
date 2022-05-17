@@ -22,7 +22,6 @@ function habilitaComposicaoItinerario() {
 }
 
 function habilitaCamposFormacaoTecnica() {
-    console.log('teste');
     let compositions = [];
 
     if ($j('#itinerary_composition').val()) {
