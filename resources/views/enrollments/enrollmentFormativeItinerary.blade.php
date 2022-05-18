@@ -99,7 +99,7 @@
     <script type="text/javascript" src="{{ Asset::get("/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/MultipleSearch.js") }}"></script>
     <script type="text/javascript" src="{{ Asset::get("/js/enrollment-formative-itinerary.js") }}"></script>
     <script type='text/javascript'>
-        // id="enrollments-formative-itinerary" class="form-new-register" action="{{ Asset::get('/enrollment-formative-itinerary/' . $enrollment->id)}}" method="post"
+
     (function ($) {
         $(document).ready(function () {
             multipleSearchHelper.setup('itinerary_type', '', 'multiple', 'multiple');
@@ -130,7 +130,8 @@
                     url:"{{ Asset::get('/enrollment-formative-itinerary/' . $enrollment->id) }}",
                     data: dataToSend,
                     success:function(data) {
-                        messageUtils.success(decodeURIComponent(JSON.parse(data.responseText.message)));
+                        messageUtils.success(data.message);
+                        windowUtils.redirect('/intranet/educar_matricula_det.php?cod_matricula=' + data.registration_id)
                     },
                     error:function(data) {
                         messageUtils.error(decodeURIComponent(JSON.parse(data.responseText.message)));
