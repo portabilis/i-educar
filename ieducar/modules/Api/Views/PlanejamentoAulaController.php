@@ -72,9 +72,9 @@ class PlanejamentoAulaController extends ApiCoreController
                 $conteudos,
                 $referencias
             );
-    
+
             $editou = $obj->edita();
-    
+
             if ($editou)
                 return ['result' => 'Edição efetuada com sucesso.'];
         }
@@ -149,7 +149,7 @@ class PlanejamentoAulaController extends ApiCoreController
            $faseEtapa,
            $data_inicial,
            $data_final,
-           $ddp, 
+           $ddp,
            $atividades,
            $bnccs,
            $conteudos,
@@ -159,14 +159,15 @@ class PlanejamentoAulaController extends ApiCoreController
            $registro_adaptacao
         );
 
-        $existe = $obj->existe();
+        $existe = $obj->existeComponentePeriodo();
+
         if ($existe){
-            return [ "result" => "Cadastro não realizado, pois este plano de aula já existe." ];
+            return [ "result" => "Cadastro não realizado, pois já há um planejamento para esse componente nesse período." ];
             $this->simpleRedirect('educar_professores_planejamento_de_aula_cad.php');
         }
 
         $cadastrou = $obj->cadastra();
-        if (!$cadastrou) {   
+        if (!$cadastrou) {
             return [ "result" => "Cadastro não realizado." ];
             $this->simpleRedirect('educar_professores_planejamento_de_aula_cad.php');
         } else {

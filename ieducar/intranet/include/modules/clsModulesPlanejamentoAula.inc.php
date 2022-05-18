@@ -199,7 +199,7 @@ class clsModulesPlanejamentoAula extends Model {
             $campos .= "{$gruda}registro_adaptacao";
             $valores .= "{$gruda}'{$db->escapeString($this->registro_adaptacao)}'";
             $gruda = ', ';
-            
+
             $campos .= "{$gruda}data_cadastro";
             $valores .= "{$gruda}(NOW() - INTERVAL '3 HOURS')";
             $gruda = ', ';
@@ -233,7 +233,7 @@ class clsModulesPlanejamentoAula extends Model {
                 foreach ($bncc_especificacoes_array[1] as $key => $bncc_especificacao_id) {
                     $obj = new clsModulesBNCCEspecificacao($bncc_especificacao_id);
                     $bncc_id = $obj->detalhe()['bncc_id'];
-                    
+
                     $obj = new clsModulesPlanejamentoAulaBNCC(null, $id, $bncc_id);
                     $planejamento_aula_bncc_id = $obj->detalhe2()['id'];
 
@@ -382,7 +382,7 @@ class clsModulesPlanejamentoAula extends Model {
             $filtros .= "{$whereAnd} t.cod_turma = '{$int_ref_cod_turma}'";
             $whereAnd = ' AND ';
         }
-        
+
         if (is_numeric($int_ref_cod_componente_curricular)) {
             $filtros .= "{$whereAnd} k.id = '{$int_ref_cod_componente_curricular}'";
             $whereAnd = ' AND ';
@@ -407,7 +407,7 @@ class clsModulesPlanejamentoAula extends Model {
             $filtros .= "{$whereAnd} pa.data_inicial <= '{$time_data}' AND pa.data_final >= '{$time_data}'";
             $whereAnd = ' AND ';
         }
-        
+
         if (is_numeric($int_etapa)) {
             $filtros .= "{$whereAnd} pa.etapa_sequencial = '{$int_etapa}'";
             $whereAnd = ' AND ';
@@ -427,7 +427,7 @@ class clsModulesPlanejamentoAula extends Model {
         //dump($sql);
 
         $this->_total = $db->CampoUnico(
-            "SELECT 
+            "SELECT
                 COUNT(0)
             FROM
                 {$this->_from}
@@ -520,6 +520,41 @@ class clsModulesPlanejamentoAula extends Model {
 
         //     return $db->Tupla();
         // }
+
+        return false;
+    }
+
+    public function existeComponentePeriodo () {
+         if ($this->data_inicial && $this->data_final && is_array($this->ref_componente_curricular_array)) {
+             $refsComponentes = [];
+
+             foreach ($this->ref_componente_curricular_array as $key => $refComponente) {
+                 unset($refComponente[0]);
+                 foreach ($refComponente as $ref) {
+                     array_push($refsComponentes, $ref);
+                 }
+             }
+
+             $sql = "
+                 SELECT
+                     pa.*,
+	                 pacc.componente_curricular_id
+                 FROM
+                     modules.planejamento_aula as pa
+                 JOIN modules.planejamento_aula_componente_curricular as pacc
+                    ON (pacc.planejamento_aula_id = pa.id)
+                 WHERE
+                     pa.data_inicial >= '{$this->data_inicial}'
+                     AND pa.data_final <= '{$this->data_final}'
+                     AND pacc.componente_curricular_id IN (".implode(',', $refsComponentes).")
+             ";
+
+             $db = new clsBanco();
+             $db->Consulta($sql);
+             $db->ProximoRegistro();
+
+             return $db->Tupla();
+         }
 
         return false;
     }
