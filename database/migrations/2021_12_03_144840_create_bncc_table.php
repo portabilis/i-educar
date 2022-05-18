@@ -15,7 +15,7 @@ class CreateBNCCTable extends Migration
     {
         Schema::create('modules.bncc', function (Blueprint $table) {
             $table->id();
-            $table->char('codigo', 8);
+            $table->char('codigo', 12);
             $table->string('habilidade', 2048);
             $table->char('campo_experiencia')->nullable();
             $table->char('unidade_tematica')->nullable();
