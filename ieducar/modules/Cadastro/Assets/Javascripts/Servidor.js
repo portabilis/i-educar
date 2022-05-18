@@ -492,6 +492,8 @@ function validatePosgraduate() {
     return true;
   }
 
+  var posgraduacoesHash = [];
+
   var result = true;
 
   $j.each($j('select[id^="posgraduate_type_id["]'), function (index, field) {
@@ -500,6 +502,8 @@ function validatePosgraduate() {
     var typeId = $j(field),
         areaId = $j('select[id="posgraduate_area_id[' + idNum[1] + ']"]'),
         completionYear = $j('input[id="posgraduate_completion_year[' + idNum[1] + ']"]');
+
+    posgraduacoesHash[index] = typeId.val().concat(areaId.val(), completionYear.val());
 
     if (obrigarCamposCenso && (areaId.val() != '' || completionYear.val() != '') && typeId.val() == '') {
       messageUtils.error('O campo: Tipo da pós-graduação é obrigatório.', typeId);
@@ -531,6 +535,11 @@ function validatePosgraduate() {
       result = false;
     }
   });
+
+  if (posgraduacoesHash.length != $j.unique(posgraduacoesHash).length) {
+    messageUtils.error('Não é possível cadastrar mais de uma vez a mesma Pós-graduação.');
+    result = false;
+  }
 
   return result;
 }
