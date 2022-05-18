@@ -134,7 +134,7 @@
                         windowUtils.redirect('/intranet/educar_matricula_det.php?cod_matricula=' + data.registration_id)
                     },
                     error:function(data) {
-                        messageUtils.error(decodeURIComponent(JSON.parse(data.responseText.message)));
+                        messageUtils.error(decodeURIComponent(JSON.parse(data.responseText).message));
                     }
                 });
 
