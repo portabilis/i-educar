@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('employee_posgraduate', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->integer('employee_id')->unsigned();
             $table->integer('entity_id')->unsigned();
             $table->integer('type_id')->unsigned()->nullable();
