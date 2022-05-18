@@ -520,7 +520,7 @@ function validatePosgraduate() {
       result = false;
     }
 
-    if (completionYear.val().length != 4) {
+    if (completionYear.val().length != 0  && completionYear.val().length != 4) {
       messageUtils.error('O campo: Ano de conclusão da pós-graduação deve conter 4 dígitos.', completionYear);
       result = false;
     }
