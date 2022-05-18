@@ -487,11 +487,12 @@ $j('#carga_horaria').change(function () {
 });
 
 function validatePosgraduate() {
-  var result = true;
 
   if (!escolaridadeSuperior) {
-    return result;
+    return true;
   }
+
+  var result = true;
 
   $j.each($j('select[id^="posgraduate_type_id["]'), function (index, field) {
     var id = $j(field).attr('id');
