@@ -7,86 +7,86 @@ $j(document).ready(function() {
   }
 
   fiupMultipleSearchSize();
-  $componentecurricular = $j('#componentecurricular');
-  $selecionarTodosElement = $j('#selecionar_todos');
-  $componentecurricular.trigger('chosen:updated');
-  $anoLetivoField = $j('#ano');
-  $serieField = $j('#ref_cod_serie');
-  $turmaField = $j('#ref_cod_turma');
-  $turnoField = $j('#turma_turno_id');
-  $professorAreaEspecificaField = $j('#permite_lancar_faltas_componente');
+  const componentecurricular = $j('#componentecurricular');
+  const selecionarTodosElement = $j('#selecionar_todos');
+  componentecurricular.trigger('chosen:updated');
+  const anoLetivoField = $j('#ano');
+  const serieField = $j('#ref_cod_serie');
+  const turmaField = $j('#ref_cod_turma');
+  const turnoField = $j('#turma_turno_id');
+  const professorAreaEspecificaField = $j('#permite_lancar_faltas_componente');
 
   getRegraAvaliacao();
   getTurnoTurma();
 
-  var handleGetComponenteCurricular = function(dataResponse) {
+  const handleGetComponenteCurricular = function (dataResponse) {
 
     setTimeout(function () {
-      $j.each(dataResponse['componentecurricular'], function(id, value) {
+      $j.each(dataResponse['componentecurricular'], function (id, value) {
 
         // Insere o componente no multipleSearch caso não exista
-        if (0 == $componentecurricular.children("[value=" + value + "]").length) {
+        if (0 == componentecurricular.children("[value=" + value + "]").length) {
           addComponenteCurricular(value);
         } else {
-          $componentecurricular.children("[value=" + value + "]").attr('selected', '');
+          componentecurricular.children("[value=" + value + "]").attr('selected', '');
         }
       });
 
-      $componentecurricular.trigger('chosen:updated');
+      componentecurricular.trigger('chosen:updated');
     }, 1000);
-  }
+  };
 
-  var handleAddComponenteCurricular = function(dataResponse, id) {
-    $componentecurricular.append('<option value="' + id + '"> ' + dataResponse.result[id] + '</option>');
-    $componentecurricular.children("[value=" + id + "]").attr('selected', '');
-    $componentecurricular.trigger('chosen:updated');
-  }
+  const handleAddComponenteCurricular = function (dataResponse, id) {
+    componentecurricular.append('<option value="' + id + '"> ' + dataResponse.result[id] + '</option>');
+    componentecurricular.children("[value=" + id + "]").attr('selected', '');
+    componentecurricular.trigger('chosen:updated');
+  };
 
   var addComponenteCurricular = function(id) {
 
-    var searchPath = '/module/Api/ComponenteCurricular?oper=get&resource=componente_curricular-search';
-    var params     = { query : id };
+    const searchPath = '/module/Api/ComponenteCurricular?oper=get&resource=componente_curricular-search';
+    const params = {query: id};
 
     $j.get(searchPath, params, function(dataResponse) {
       handleAddComponenteCurricular(dataResponse, id);
     });
   }
 
-  var getComponenteCurricular = function() {
-    var $id = $j('#id');
-    if ($id.val()!='') {
-      var additionalVars = {
-        id : $id.val(),
+  const getComponenteCurricular = function () {
+    const $id = $j('#id');
+    if ($id.val() != '') {
+      const additionalVars = {
+        id: $id.val(),
       };
 
-      var options = {
-        url      : getResourceUrlBuilder.buildUrl('/module/Api/componenteCurricular', 'componentecurricular-search', additionalVars),
-        dataType : 'json',
-        data     : {},
-        success  : handleGetComponenteCurricular,
+      const options = {
+        url: getResourceUrlBuilder.buildUrl('/module/Api/componenteCurricular', 'componentecurricular-search', additionalVars),
+        dataType: 'json',
+        data: {},
+        success: handleGetComponenteCurricular,
       };
 
       getResource(options);
     }
-  }
+  };
 
   getComponenteCurricular();
 
-  var dependenciaAdministrativa = undefined;
+  let dependenciaAdministrativa = undefined;
 
   function getDependenciaAdministrativaEscola(){
-    var options = {
-      dataType : 'json',
-      url : getResourceUrlBuilder.buildUrl(
+    const options = {
+      dataType: 'json',
+      url: getResourceUrlBuilder.buildUrl(
         '/module/Api/Escola',
         'escola-dependencia-administrativa',
-        {escola_id : $j('#ref_cod_escola').val()}
+        {escola_id: $j('#ref_cod_escola').val()}
       ),
-      success : function(dataResponse) {
+      success: function (dataResponse) {
         dependenciaAdministrativa = parseInt(dataResponse.dependencia_administrativa);
         verificaObrigatoriedadeTipoVinculo();
       }
-    }
+    };
     getResource(options);
   }
 
@@ -103,29 +103,29 @@ $j(document).ready(function() {
   $j('#ref_cod_escola').on('change', getDependenciaAdministrativaEscola);
   getDependenciaAdministrativaEscola();
 
-  $selecionarTodosElement.on('change',function(){
+  selecionarTodosElement.on('change',function(){
     $j('#componentecurricular option').attr('selected', $j(this).prop('checked'));
-    $componentecurricular.trigger("chosen:updated");
+    componentecurricular.trigger("chosen:updated");
   });
 
   $j('#funcao_exercida').on('change', verificaObrigatoriedadeTipoVinculo);
 
-  var toggleProfessorAreaEspecifica = function(tipoPresenca){
+  const toggleProfessorAreaEspecifica = function (tipoPresenca) {
     //se o tipo de presença for falta global
-    if(tipoPresenca == '1'){
-      $professorAreaEspecificaField.closest('tr').show();
-    }else{
-      $professorAreaEspecificaField.closest('tr').hide();
-      $professorAreaEspecificaField.attr('checked', false);
+    if (tipoPresenca == '1') {
+      professorAreaEspecificaField.closest('tr').show();
+    } else {
+      professorAreaEspecificaField.closest('tr').hide();
+      professorAreaEspecificaField.attr('checked', false);
     }
   };
 
-  $turmaField.on('change', function () {
+  turmaField.on('change', function () {
     getTurnoTurma();
   });
 
   function getTurnoTurma() {
-    $turmaId = $turmaField.val();
+    let $turmaId = turmaField.val();
 
     if ($turmaId == '') {
       toggleTurno(0);
@@ -141,7 +141,7 @@ $j(document).ready(function() {
     };
 
     getResource(options);
-  };
+  }
 
   function handleGetTurnoTurma(dataResponse) {
     toggleTurno(dataResponse['turma_turno_id']);
@@ -151,49 +151,49 @@ $j(document).ready(function() {
     turno_id = parseInt(turno_id, 10);
 
     if (turno_id === 4) { // 4 - Integral
-      $turnoField.closest('tr').show();
+      turnoField.closest('tr').show();
     } else {
-      $turnoField.closest('tr').hide();
-      $turnoField.val('');
+      turnoField.closest('tr').hide();
+      turnoField.val('');
     }
-  };
+  }
 
-  $serieField.on('change', function(){
+  serieField.on('change', function(){
     getRegraAvaliacao();
   });
 
   function getRegraAvaliacao(){
-    $serieId = $serieField.val();
-    $anoLetivo = $anoLetivoField.val();
+    const serieId = serieField.val();
+    const anoLetivo = anoLetivoField.val();
 
-    var params = {
-      serie_id   : $serieId,
-      ano_letivo : $anoLetivo
+    const params = {
+      serie_id: serieId,
+      ano_letivo: anoLetivo
     };
 
-    var options = {
-      url      : getResourceUrlBuilder.buildUrl('/module/Api/Regra', 'regra-serie', params),
-      dataType : 'json',
-      data     : {},
-      success  : handleGetRegraAvaliacao,
+    const options = {
+      url: getResourceUrlBuilder.buildUrl('/module/Api/Regra', 'regra-serie', params),
+      dataType: 'json',
+      data: {},
+      success: handleGetRegraAvaliacao,
     };
     getResource(options);
-  };
+  }
 
   function handleGetRegraAvaliacao(dataResponse){
     toggleProfessorAreaEspecifica(dataResponse["tipo_presenca"]);
   }
 
-  var submitForm = function(){
+  const submitForm = function () {
     let canSubmit = validationUtils.validatesFields();
     if (canSubmit) {
       acao();
     }
-  }
+  };
 
-  var $submitButton      = $j('#btn_enviar');
-  $submitButton.removeAttr('onclick');
+  const submitButton = $j('#btn_enviar');
+  submitButton.removeAttr('onclick');
   $j(document.formcadastro).removeAttr('onsubmit');
-  $submitButton.click(submitForm);
+  submitButton.click(submitForm);
 
 });
