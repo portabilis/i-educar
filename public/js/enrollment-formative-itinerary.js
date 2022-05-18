@@ -44,6 +44,7 @@ function habilitaCamposFormacaoTecnica() {
 }
 
 function addSpanRequiredField(trElement) {
+    removeSpanRequiredField(trElement);
     $j('#' + trElement + ' td:nth-child(1)').append('<span class="campo_obrigatorio">*</span>');
 }
 
