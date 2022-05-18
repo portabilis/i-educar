@@ -536,6 +536,8 @@ function validatePosgraduate() {
     }
   });
 
+  posgraduacoesHash.sort();
+
   if (posgraduacoesHash.length != $j.unique(posgraduacoesHash).length) {
     messageUtils.error('Não é possível cadastrar mais de uma vez a mesma Pós-graduação.');
     result = false;
