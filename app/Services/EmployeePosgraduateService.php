@@ -12,10 +12,7 @@ class EmployeePosgraduateService
      */
     public function deleteAll($employee)
     {
-        $posgraduate = EmployeePosgraduate::ofEmployee($employee)->get();
-        foreach ($posgraduate as $pos) {
-            $pos->delete();
-        }
+        EmployeePosgraduate::ofEmployee($employee)->delete();
     }
 
     /**
@@ -23,12 +20,12 @@ class EmployeePosgraduateService
      */
     public function storePosgraduate(EmployeePosgraduateValueObject $valueObject)
     {
-        $employeePosgraduate = new EmployeePosgraduate();
-        $employeePosgraduate->employee_id = $valueObject->employeeId;
-        $employeePosgraduate->entity_id = $valueObject->entityId;
-        $employeePosgraduate->type_id = $valueObject->typeId;
-        $employeePosgraduate->area_id = $valueObject->areaId;
-        $employeePosgraduate->completion_year = $valueObject->completionYear;
-        $employeePosgraduate->save();
+        EmployeePosgraduate::create([
+            'employee_id' => $valueObject->employeeId,
+            'entity_id' => $valueObject->entityId,
+            'type_id' => $valueObject->typeId,
+            'area_id' => $valueObject->areaId,
+            'completion_year' => $valueObject->completionYear,
+        ]);
     }
 }
