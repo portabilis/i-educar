@@ -4,7 +4,6 @@ namespace iEducar\Modules\Educacenso\Model;
 
 class AreaPosGraduacao
 {
-    public const PROGRAMAS_BASICOS = 0;
     public const EDUCACAO = 1;
     public const ARTES_HUMANIDADE = 2;
     public const CIENCIAS_SOCIAIS = 3;
@@ -15,11 +14,11 @@ class AreaPosGraduacao
     public const AGRICULTURA = 8;
     public const SAUDE = 9;
     public const SERVICOS = 10;
+    public const PROGRAMAS_BASICOS = 99;
 
     public static function getDescriptiveValues()
     {
-        return [            
-            self::PROGRAMAS_BASICOS => 'Programas básicos',
+        return [
             self::EDUCACAO => 'Educação',
             self::ARTES_HUMANIDADE => 'Artes e humanidades',
             self::CIENCIAS_SOCIAIS => 'Ciências sociais, comunicação e informação',
@@ -30,6 +29,7 @@ class AreaPosGraduacao
             self::AGRICULTURA => 'Agricultura, silvicultura, pesca e veterinária',
             self::SAUDE => 'Saúde e bem-estar',
             self::SERVICOS => 'Serviços',
+            self::PROGRAMAS_BASICOS => 'Programas básicos',
         ];
     }
 }
