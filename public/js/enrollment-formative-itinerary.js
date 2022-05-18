@@ -30,16 +30,18 @@ function habilitaCamposFormacaoTecnica() {
         compositions = $j('#itinerary_composition').val();
     }
 
-    $j('#itinerary_course').attr('disabled', 'disabled');
-    $j('#concomitant_itinerary').attr('disabled', 'disabled');
-    removeSpanRequiredField('tr_itinerary_course');
-    removeSpanRequiredField('tr_concomitant_itinerary');
-
     if (compositions.includes('5')) {
         $j('#itinerary_course').removeAttr('disabled');
         $j('#concomitant_itinerary').removeAttr('disabled');
         addSpanRequiredField('tr_itinerary_course');
         addSpanRequiredField('tr_concomitant_itinerary');
+    } else {
+        $j('#itinerary_course').attr('disabled', 'disabled');
+        $j('#concomitant_itinerary').attr('disabled', 'disabled');
+        $j('#itinerary_course').val('');
+        $j('#concomitant_itinerary').val('');
+        removeSpanRequiredField('tr_itinerary_course');
+        removeSpanRequiredField('tr_concomitant_itinerary');
     }
 }
 
