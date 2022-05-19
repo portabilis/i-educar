@@ -42,14 +42,17 @@ class EnrollmentFormativeItineraryService
             ],
             [
                 'formative_itinerary' => [
+                    'bail',
                     new RequiredEnrollmentItineraryComposition(),
                     new RequiredEnrollmentItineraryCourse(),
                     new RequiredEnrollmentConcomitantItinerary(),
                 ],
                 'formative_itinerary_type' => [
+                    'bail',
                     'max:4',
                 ],
                 'formative_itinerary_composition' => [
+                    'bail',
                     'max:4',
                 ]
             ],
