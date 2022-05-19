@@ -400,8 +400,8 @@ return new class extends clsDetalhe {
             $this->addDetalhe(['Página Pessoal', $registro['url']]);
         }
 
-        if ($registro['ref_cod_religiao']) {
-            $obj_religiao = new clsPmieducarReligiao($registro['ref_cod_religiao']);
+        if ($det_fisica['ref_cod_religiao']) {
+            $obj_religiao = new clsPmieducarReligiao($det_fisica['ref_cod_religiao']);
             $obj_religiao_det = $obj_religiao->detalhe();
 
             $this->addDetalhe(['Religião', $obj_religiao_det['nm_religiao']]);
