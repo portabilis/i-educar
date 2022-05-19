@@ -383,28 +383,6 @@ class CheckMandatoryCensoFields implements Rule
 
     private function validaCampoFormasOrganizacaoTurma(mixed $params)
     {
-        $estruturaCurricular = $this->getEstruturaCurricularValues($params);
-
-        if (empty($estruturaCurricular)) {
-            return true;
-        }
-
-        if (empty($params->formas_organizacao_turma) && !in_array(1, $estruturaCurricular, true)) {
-            return true;
-        }
-
-        if (empty($params->formas_organizacao_turma) && in_array(1, $estruturaCurricular, true)) {
-            $this->message = 'Campo: <b>Formas de organização da turma</b> é obrigatório quando o campo: <b>Estrutura Curricular contém: Formação geral básica</b>';
-
-            return false;
-        }
-
-        if (!empty($params->formas_organizacao_turma) && !in_array(1, $estruturaCurricular, true)) {
-            $this->message = 'Campo: <b>Formas de organização da turma</b> não pode ser preenchido quando o campo: <b>Estrutura Curricular não contém: Formação geral básica</b>';
-
-            return false;
-        }
-
         $validOption = [
             1 => 'Série/ano (séries anuais)',
             2 => 'Períodos semestrais',
