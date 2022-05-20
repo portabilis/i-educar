@@ -16,6 +16,8 @@ class CreateOccupationsTable extends Migration
         Schema::create('cadastro.profissao', function (Blueprint $table) {
             $table->integer('cod_profissao');
             $table->string('nm_profissao');
+
+            $table->primary(['cod_profissao']);
         });
     }
 
