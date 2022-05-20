@@ -127,6 +127,7 @@ return new class extends clsCadastro {
         $helperOptions = ['objectName' => 'unidades_curriculares'];
         $options = [
             'label' => 'Adicionar campo Unidade(s) curricular(es) que leciona',
+            'label_hint' => 'Campo referente a unidade(s) curricular(es) da turma',
             'size' => 50,
             'required' => false,
             'options' => [
