@@ -2,6 +2,7 @@
 
 use App\Models\LegacyDisciplineSchoolClass;
 use App\Models\LegacySchoolCourse;
+use iEducar\Modules\Educacenso\Model\UnidadesCurriculares;
 use iEducar\Support\View\SelectOptions;
 
 return new class extends clsCadastro {
@@ -641,23 +642,13 @@ return new class extends clsCadastro {
         $this->inputsHelper()->select('formas_organizacao_turma', $options);
 
         $helperOptions = ['objectName' => 'unidade_curricular'];
-        $resources = [
-            1 => 'Eletivas',
-            2 => 'Libras',
-            3 => 'Língua indígena',
-            4 => 'Língua/Literatura estrangeira - Espanhol',
-            5 => 'Língua/Literatura estrangeira - Francês',
-            6 => 'Língua/Literatura estrangeira - outra',
-            7 => 'Projeto de vida',
-            8 => 'Trilhas de aprofundamento/aprendizagens'
-        ];
         $options = [
             'label' => 'Unidade curricular',
             'required' => false,
             'size' => 70,
             'options' => [
                 'values' => $this->unidade_curricular,
-                'all_values'=> $resources
+                'all_values'=> UnidadesCurriculares::getDescriptiveValues()
             ]
         ];
 
