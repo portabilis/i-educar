@@ -1,6 +1,15 @@
 $j(document).ready(function() {
 
-  let obrigarCamposCenso = $j('#obrigar_campos_censo').val() == '1';
+  const addComponenteCurricular = function(id) {
+
+    const searchPath = '/module/Api/ComponenteCurricular?oper=get&resource=componente_curricular-search';
+    const params = {query: id};
+
+    $j.get(searchPath, params, function(dataResponse) {
+      handleAddComponenteCurricular(dataResponse, id);
+    });
+  };
+  const obrigarCamposCenso = $j('#obrigar_campos_censo').val() == '1';
 
   function fiupMultipleSearchSize(){
     $j('.search-field input').css('height', '25px');
@@ -42,15 +51,46 @@ $j(document).ready(function() {
     componentecurricular.trigger('chosen:updated');
   };
 
-  var addComponenteCurricular = function(id) {
+  $j('#ref_cod_turma').change(function () {
+    getTurnoTurma();
+  });
 
-    const searchPath = '/module/Api/ComponenteCurricular?oper=get&resource=componente_curricular-search';
-    const params = {query: id};
+  $j('#funcao_exercida').change(function () {
+    getTurnoTurma();
+  });
 
-    $j.get(searchPath, params, function(dataResponse) {
-      handleAddComponenteCurricular(dataResponse, id);
-    });
+  const unidadesCurriculares = (data) => {
+
+    const unidadesCurriculares = $j('#tr_unidades_curriculares');
+    const funcaoExercida = $j('#funcao_exercida').val();
+
+    unidadesCurriculares.hide();
+    if (!!data && 'unidades_curriculares' in data &&
+      data.unidades_curriculares.length > 0 &&
+      data.unidades_curriculares.includes("2") &&
+      funcaoExercida &&
+      $j.inArray($j('#funcao_exercida').val(),["1", "5"]) > -1
+    ) {
+      filtraUnidadesCurricularesDaTurma(data);
+      unidadesCurriculares.show();
+    }
+
+    function filtraUnidadesCurricularesDaTurma(data) {
+      $j("#unidades_curriculares option").each(function() {
+        $j(this).prop('disabled', true)}
+      ).trigger('chosen:updated');
+
+      let unidadesCurricularesDaTurma = data.unidades_curriculares.slice(1,-1).split(',');
+
+      $j("#unidades_curriculares option").each(function()  {
+          if(unidadesCurricularesDaTurma.includes($j(this).val())){
+            $j(this).prop('disabled', false)}
+        }
+      ).trigger('chosen:updated');
+    }
   }
+
+  unidadesCurriculares();
 
   const getComponenteCurricular = function () {
     const $id = $j('#id');
@@ -110,7 +150,7 @@ $j(document).ready(function() {
 
   $j('#funcao_exercida').on('change', verificaObrigatoriedadeTipoVinculo);
 
-  const toggleProfessorAreaEspecifica = function (tipoPresenca) {
+  let toggleProfessorAreaEspecifica = function (tipoPresenca) {
     //se o tipo de presença for falta global
     if (tipoPresenca == '1') {
       professorAreaEspecificaField.closest('tr').show();
@@ -120,19 +160,19 @@ $j(document).ready(function() {
     }
   };
 
-  turmaField.on('change', function () {
-    getTurnoTurma();
-  });
+  // turmaField.on('change', function () {
+  //   getTurnoTurma();
+  // });
 
   function getTurnoTurma() {
-    let $turmaId = turmaField.val();
+    let turmaId = turmaField.val();
 
-    if ($turmaId == '') {
+    if (turmaId == '') {
       toggleTurno(0);
       return;
     }
 
-    let params = {id: $turmaId};
+    let params = {id: turmaId};
     let options = {
       url: getResourceUrlBuilder.buildUrl('/module/Api/Turma', 'turma', params),
       dataType: 'json',
@@ -145,6 +185,7 @@ $j(document).ready(function() {
 
   function handleGetTurnoTurma(dataResponse) {
     toggleTurno(dataResponse['turma_turno_id']);
+    unidadesCurriculares(dataResponse);
   }
 
   function toggleTurno (turno_id) {
