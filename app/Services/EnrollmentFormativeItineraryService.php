@@ -3,9 +3,9 @@
 namespace App\Services;
 
 use App\Models\LegacyEnrollment;
+use App\Rules\RequiredEnrollmentConcomitantItinerary;
 use App\Rules\RequiredEnrollmentItineraryComposition;
 use App\Rules\RequiredEnrollmentItineraryCourse;
-use App\Rules\RequiredEnrollmentConcomitantItinerary;
 use iEducar\Modules\ValueObjects\EnrollmentFormativeItineraryValueObject;
 
 class EnrollmentFormativeItineraryService

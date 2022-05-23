@@ -6,8 +6,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class () extends Migration {
     /**
      * Run the migrations.
      *
@@ -20,10 +19,10 @@ return new class extends Migration
         DB::connection()->setSchemaGrammar($typeClass);
 
         Schema::table('pmieducar.matricula_turma', function (Blueprint $table) {
-            $table->addColumn('int_array','tipo_itinerario')->nullable();
-            $table->addColumn('int_array','composicao_itinerario')->nullable();
-            $table->addColumn('integer','curso_itinerario')->nullable();
-            $table->addColumn('boolean','itinerario_concomitante')->nullable();
+            $table->addColumn('int_array', 'tipo_itinerario')->nullable();
+            $table->addColumn('int_array', 'composicao_itinerario')->nullable();
+            $table->addColumn('integer', 'curso_itinerario')->nullable();
+            $table->addColumn('boolean', 'itinerario_concomitante')->nullable();
         });
     }
 

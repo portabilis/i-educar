@@ -45,7 +45,8 @@ class EnrollmentFormativeItineraryController extends Controller
      *
      * @return Application|Factory|View
      */
-    public function viewFormativeItinerary($id) {
+    public function viewFormativeItinerary($id)
+    {
         $this->breadcrumb('Itinerário formativo do aluno', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
@@ -53,6 +54,7 @@ class EnrollmentFormativeItineraryController extends Controller
         $this->menu(578);
 
         $enrollment = LegacyEnrollment::find($id);
+
         return view('enrollments.enrollmentFormativeItinerary', [
             'enrollment' => $enrollment,
             'itineraryType' => TipoItinerarioFormativo::getDescriptiveValues(),
@@ -63,6 +65,7 @@ class EnrollmentFormativeItineraryController extends Controller
 
     /**
      * @param Request $request
+     *
      * @return JsonResponse|Redirector|RedirectResponse|Application
      */
     public function storeFormativeItinerary(Request $request): JsonResponse|Redirector|RedirectResponse|Application
@@ -96,7 +99,8 @@ class EnrollmentFormativeItineraryController extends Controller
             $service->saveFormativeItinerary($enrollment, $itineraryData);
         } catch (\Throwable $th) {
             return response()->json(
-                ['message' => $th->getMessage()], 400
+                ['message' => $th->getMessage()],
+                400
             );
         }
 
