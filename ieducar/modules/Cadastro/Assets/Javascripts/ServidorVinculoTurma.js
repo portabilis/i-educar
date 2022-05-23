@@ -65,9 +65,9 @@ $j(document).ready(function() {
     const funcaoExercida = $j('#funcao_exercida').val();
 
     unidadesCurriculares.hide();
-    if (!!data && 'unidades_curriculares' in data &&
-      data.unidades_curriculares.length > 0 &&
-      data.unidades_curriculares.includes("2") &&
+    if (!!data && 'estrutura_curricular' in data &&
+      data.estrutura_curricular.length > 0 &&
+      data.estrutura_curricular.includes("2") &&
       funcaoExercida &&
       $j.inArray($j('#funcao_exercida').val(),["1", "5"]) > -1
     ) {
@@ -80,13 +80,14 @@ $j(document).ready(function() {
         $j(this).prop('disabled', true)}
       ).trigger('chosen:updated');
 
-      let unidadesCurricularesDaTurma = data.unidades_curriculares.slice(1,-1).split(',');
-
-      $j("#unidades_curriculares option").each(function()  {
-          if(unidadesCurricularesDaTurma.includes($j(this).val())){
-            $j(this).prop('disabled', false)}
-        }
-      ).trigger('chosen:updated');
+      if ('unidade_curricular' in data && !!data.unidade_curricular) {
+        let unidadesCurricularesDaTurma = data.unidade_curricular.slice(1,-1).split(',');
+        $j("#unidades_curriculares option").each(function()  {
+            if(unidadesCurricularesDaTurma.includes($j(this).val())){
+              $j(this).prop('disabled', false)
+            }
+          }).trigger('chosen:updated');
+      }
     }
   }
 
