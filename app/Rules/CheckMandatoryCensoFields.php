@@ -332,6 +332,10 @@ class CheckMandatoryCensoFields implements Rule
     {
         $estruturaCurricular = $this->getEstruturaCurricularValues($params);
 
+        if (is_array($estruturaCurricular) && in_array(2, $estruturaCurricular, true) && count($estruturaCurricular) === 1) {
+            $params->etapa_educacenso = null;
+        }
+
         if ($params->tipo_atendimento == TipoAtendimentoTurma::ESCOLARIZACAO && empty($estruturaCurricular)) {
             $this->message = 'Campo "Estrutura Curricular" é obrigatório quando o campo tipo de atentimento é "Escolarização".';
 
