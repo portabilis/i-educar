@@ -11,6 +11,7 @@ use iEducar\Modules\Educacenso\Model\FormaOrganizacaoTurma;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
+use iEducar\Modules\Educacenso\Model\UnidadesCurriculares;
 
 class Registro20 implements RegistroEducacenso
 {
@@ -90,7 +91,7 @@ class Registro20 implements RegistroEducacenso
     public $unidadesCurriculares;
 
     /**
-     * @var string
+     * @var array
      */
     public $unidadesCurricularesSemDocenteVinculado;
 
@@ -494,6 +495,17 @@ class Registro20 implements RegistroEducacenso
     public function etapaEducacensoDescritiva() {
         $etapasEducacenso = loadJson('educacenso_json/etapas_ensino.json');
         return $etapasEducacenso[$this->etapaEducacenso];
+    }
+
+    public function unidadesCurricularesSemDocenteVinculado() {
+        $unidadesCurriculares = UnidadesCurriculares::getDescriptiveValues();
+        $unidadesSemDocente = [];
+
+        foreach ($this->unidadesCurricularesSemDocenteVinculado as $unidadeCurricular) {
+            $unidadesSemDocente[$unidadeCurricular] = $unidadesCurriculares[$unidadeCurricular];
+        }
+
+        return $unidadesSemDocente;
     }
 
     public function formaOrganizacaoTurmaDescritiva()
