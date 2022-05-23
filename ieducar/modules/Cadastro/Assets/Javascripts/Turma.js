@@ -93,6 +93,7 @@ $j('#estrutura_curricular').change(function() {
   habilitaUnidadeCurricular();
   verificaEtapaEducacenso();
   habilitaEtapaEducacenso();
+  verificaFormaOrganizacaoTurma();
 });
 
 verificaLocalFuncionamentoDiferenciado();
