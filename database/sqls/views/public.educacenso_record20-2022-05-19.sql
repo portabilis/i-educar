@@ -18,7 +18,6 @@ SELECT
     turma.estrutura_curricular AS "estruturaCurricular",
     turma.formas_organizacao_turma AS "formasOrganizacaoTurma",
     turma.unidade_curricular AS "unidadesCurriculares",
-
     (
       SELECT
         array_agg(unidade_curricular) AS unidades_curriculares
