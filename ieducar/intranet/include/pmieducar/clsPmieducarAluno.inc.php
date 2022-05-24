@@ -416,6 +416,9 @@ class clsPmieducarAluno extends Model
             if (is_string($this->recursos_prova_inep)) {
                 $set .= "{$gruda}recursos_prova_inep = '{$this->recursos_prova_inep}'";
                 $gruda = ', ';
+            } else {
+                $set .= "{$gruda}recursos_prova_inep = NULL";
+                $gruda = ', ';
             }
 
             if (is_numeric($this->recebe_escolarizacao_em_outro_espaco)) {
