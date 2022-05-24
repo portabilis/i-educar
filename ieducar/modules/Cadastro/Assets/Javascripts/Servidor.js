@@ -32,7 +32,12 @@ function verificaDeficiencias() {
 }
 
 function submitForm() {
-  if (!validaServidor() || !validaPosGraduacao() || !validaCursoFormacaoContinuada() || !validationUtils.validatesFields(false) || !validateGraduations() || !validaCargaHoraria()) {
+  if (!validaServidor() ||
+      !validaCursoFormacaoContinuada() ||
+      !validationUtils.validatesFields(false) ||
+      !validateGraduations() ||
+      !validaCargaHoraria() ||
+      !validatePosgraduate()) {
     return false;
   }
 
@@ -104,19 +109,6 @@ function validaServidor() {
   return true
 }
 
-function validaPosGraduacao() {
-  posGraduacao = $j('#pos_graduacao').val() || [];
-  possuiOpcaoNenhuma = $j.inArray('4', posGraduacao) !== -1;
-  possuiMaisDeUmaOpcao = posGraduacao.filter(Boolean).length > 1;
-
-  if (possuiOpcaoNenhuma && possuiMaisDeUmaOpcao) {
-    messageUtils.error('Não é possível informar mais de uma opção no campo: <b>Pós-Graduações concluídas</b>, quando a opção: <b>Não tem pós-graduação concluída</b> estiver selecionada.');
-    return false;
-  }
-
-  return true;
-}
-
 function validaCursoFormacaoContinuada() {
   cursoFormacaoContinuada = $j('#curso_formacao_continuada').val() || [];
   possuiOpcaoNenhum = $j.inArray('16', cursoFormacaoContinuada) != -1;
@@ -184,6 +176,14 @@ function checkGraduationsTable() {
   }
 }
 
+function checkPosgraduateTable() {
+  if (escolaridadeSuperior && $j('#tab2').hasClass('servidorTab-active')) {
+    $j('#tr_posgraduate').show();
+  } else {
+    $j('#tr_posgraduate').hide();
+  }
+}
+
 function verificaCamposObrigatorio() {
   if($j('#ref_idesco').val()) {
     var options = {
@@ -195,24 +195,16 @@ function verificaCamposObrigatorio() {
       ),
       success : function(dataResponse) {
         escolaridadeSuperior = dataResponse.escolaridade.escolaridade == '6'
-        habilitaCampoPosGraduacao();
         checkGraduationsTable();
+        checkPosgraduateTable();
       }
     }
     getResource(options);
   } else {
     escolaridadeSuperior = false;
     checkGraduationsTable();
+    checkPosgraduateTable();
   }
-}
-
-
-function habilitaCampoPosGraduacao() {
-  $j('#pos_graduacao').removeAttr('disabled');
-  if (!escolaridadeSuperior) {
-    $j('#pos_graduacao').attr('disabled', 'disabled').makeUnrequired().val('');
-  }
-  $j("#pos_graduacao").trigger("chosen:updated");
 }
 
 //abas
@@ -240,6 +232,7 @@ $j('.tablecadastro >tbody  > tr').each(function(index, row) {
 
 $j(document).ready(function() {
   $j('#tr_graduations_tit td').addClass('formdktd');
+  $j('#tr_posgraduate_tit td').addClass('formdktd');
   // on click das abas
 
   // DADOS GERAIS
@@ -284,8 +277,8 @@ $j(document).ready(function() {
         }else
           return false;
       });
-      habilitaCampoPosGraduacao();
       checkGraduationsTable();
+      checkPosgraduateTable();
     });
 
   // fix checkboxs
@@ -492,3 +485,63 @@ function validaCargaHoraria() {
 $j('#carga_horaria').change(function () {
   validaCargaHoraria()
 });
+
+function validatePosgraduate() {
+
+  if (!escolaridadeSuperior) {
+    return true;
+  }
+
+  var posgraduacoesHash = [];
+
+  var result = true;
+
+  $j.each($j('select[id^="posgraduate_type_id["]'), function (index, field) {
+    var id = $j(field).attr('id');
+    var idNum = id.match(/\[(\d+)\]/);
+    var typeId = $j(field),
+        areaId = $j('select[id="posgraduate_area_id[' + idNum[1] + ']"]'),
+        completionYear = $j('input[id="posgraduate_completion_year[' + idNum[1] + ']"]');
+
+    posgraduacoesHash[index] = typeId.val().concat(areaId.val(), completionYear.val());
+
+    if (obrigarCamposCenso && (areaId.val() != '' || completionYear.val() != '') && typeId.val() == '') {
+      messageUtils.error('O campo: Tipo da pós-graduação é obrigatório.', typeId);
+      result = false;
+    }
+
+    if (obrigarCamposCenso && (typeId.val() != '' || completionYear.val() != '') && areaId.val() == '') {
+      messageUtils.error('O campo: Área da pós-graduação é obrigatório.', areaId);
+      result = false;
+    }
+
+    if (obrigarCamposCenso && (typeId.val() != '' || areaId.val() != '') && completionYear.val() == '') {
+      messageUtils.error('O campo: Ano de conclusão da pós-graduação é obrigatório.', completionYear);
+      result = false;
+    }
+
+    if (completionYear.val().length != 0  && completionYear.val().length != 4) {
+      messageUtils.error('O campo: Ano de conclusão da pós-graduação deve conter 4 dígitos.', completionYear);
+      result = false;
+    }
+
+    if (parseInt(completionYear.val()) < 1940) {
+      messageUtils.error('O campo: Ano de conclusão da pós-graduação deve ser maior que 1940.', completionYear);
+      result = false;
+    }
+
+    if (parseInt(completionYear.val()) > (new Date().getFullYear())) {
+      messageUtils.error('O campo: Ano de conclusão da pós-graduação não deve ser maior que o ano atual.', completionYear);
+      result = false;
+    }
+  });
+
+  posgraduacoesHash.sort();
+
+  if (posgraduacoesHash.length != $j.unique(posgraduacoesHash).length) {
+    messageUtils.error('Não é possível cadastrar mais de uma vez a mesma Pós-graduação.');
+    result = false;
+  }
+
+  return result;
+}

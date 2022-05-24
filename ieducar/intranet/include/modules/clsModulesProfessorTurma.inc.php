@@ -24,6 +24,8 @@ class clsModulesProfessorTurma extends Model
 
     public $codUsuario;
 
+    public $unidades_curriculares;
+
     /**
      * Construtor.
      *
@@ -46,12 +48,13 @@ class clsModulesProfessorTurma extends Model
         $funcao_exercida = null,
         $tipo_vinculo = null,
         $permite_lancar_faltas_componente = null,
-        $turno_id = null
+        $turno_id = null,
+        $unidades_curriculares = null
     ) {
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}professor_turma";
 
-        $this->_campos_lista = $this->_todos_campos = ' pt.id, pt.ano, pt.instituicao_id, pt.servidor_id, pt.turma_id, pt.funcao_exercida, pt.tipo_vinculo, pt.permite_lancar_faltas_componente, pt.turno_id';
+        $this->_campos_lista = $this->_todos_campos = ' pt.id, pt.ano, pt.instituicao_id, pt.servidor_id, pt.turma_id, pt.funcao_exercida, pt.tipo_vinculo, pt.permite_lancar_faltas_componente, pt.turno_id, pt.unidades_curriculares';
 
         if (is_numeric($id)) {
             $this->id = $id;
@@ -83,6 +86,10 @@ class clsModulesProfessorTurma extends Model
 
         if (is_numeric($turno_id)) {
             $this->turno_id = $turno_id;
+        }
+
+        if (is_string($unidades_curriculares)) {
+            $this->unidades_curriculares = $unidades_curriculares;
         }
 
         if (isset($permite_lancar_faltas_componente)) {
@@ -161,9 +168,19 @@ class clsModulesProfessorTurma extends Model
                 $gruda = ', ';
             }
 
+            if (is_string($this->unidades_curriculares)) {
+                $campos .= "{$gruda}unidades_curriculares";
+                $valores .= "{$gruda}='{{$this->unidades_curriculares}}'";
+                $gruda = ', ';
+            } else {
+                $campos .= "{$gruda}unidades_curriculares";
+                $valores .= "{$gruda}NULL";
+                $gruda = ', ';
+            }
+
             $campos .= "{$gruda}updated_at";
             $valores .= "{$gruda} CURRENT_TIMESTAMP";
-            $gruda = ', ';
+
 
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
@@ -240,6 +257,14 @@ class clsModulesProfessorTurma extends Model
                 $gruda = ', ';
             } elseif (is_null($this->turno_id)) {
                 $set .= "{$gruda}turno_id = NULL";
+                $gruda = ', ';
+            }
+
+            if (is_string($this->unidades_curriculares)) {
+                $set .= "{$gruda}unidades_curriculares ='{{$this->unidades_curriculares}}'";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}unidades_curriculares = NULL";
                 $gruda = ', ';
             }
 
