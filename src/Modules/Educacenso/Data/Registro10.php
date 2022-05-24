@@ -87,97 +87,108 @@ class Registro10 extends AbstractRegistro
             $data->dormitoriosProfessor() ?: 0, // 52
             $data->laboratoriosCiencias() ?: 0, // 53
             $data->laboratoriosInformatica() ?: 0, // 54
-            $data->areasExternasParqueInfantil() ?: 0, // 55
-            $data->areasExternasPatioCoberto() ?: 0, // 56
-            $data->areasExternasPatioDescoberto() ?: 0, // 57
-            $data->areasExternasPiscina() ?: 0, // 58
-            $data->areasExternasQuadraCoberta() ?: 0, // 59
-            $data->areasExternasQuadraDescoberta() ?: 0, // 60
-            $data->salasFuncionaisRefeitorio() ?: 0, // 61
-            $data->salasAtividadesRepousoAluno() ?: 0, // 62
-            $data->salasAtividadesAtelie() ?: 0, // 63
-            $data->salasAtividadesMusica() ?: 0, // 64
-            $data->salasAtividadesEstudioDanca() ?: 0, // 65
-            $data->salasAtividadesMultiuso() ?: 0, // 66
-            $data->areasExternasTerreirao() ?: 0, // 67
-            $data->areasExternasViveiro() ?: 0, // 68
-            $data->salasGeraisSalaDiretoria() ?: 0, // 69
-            $data->salasAtividadesLeitura() ?: 0, // 70
-            $data->salasGeraisSalaProfessores() ?: 0, // 71
-            $data->salasAtividadesRecursosAee() ?: 0, // 72
-            $data->salasGeraisSalaSecretaria() ?: 0, // 73
-            $data->naoPossuiDependencias() ?: 0, // 74
-            $data->recursosAcessibilidadeCorrimao() ?: 0, // 75
-            $data->recursosAcessibilidadeElevador() ?: 0, // 76
-            $data->recursosAcessibilidadePisosTateis() ?: 0, // 77
-            $data->recursosAcessibilidadePortasVaoLivre() ?: 0, // 78
-            $data->recursosAcessibilidadeRampas() ?: 0, // 79
-            $data->recursosAcessibilidadeSinalizacaoSonora() ?: 0, // 80
-            $data->recursosAcessibilidadeSinalizacaoTatil() ?: 0, // 81
-            $data->recursosAcessibilidadeSinalizacaoVisual() ?: 0, // 82
-            $data->recursosAcessibilidadeNenhum() ?: 0, // 83
-            $data->numeroSalasUtilizadasDentroPredio, // 84
-            $data->numeroSalasUtilizadasForaPredio, // 85
-            $data->numeroSalasUtilizadasDentroPredio || $data->numeroSalasUtilizadasForaPredio ? $data->numeroSalasClimatizadas : null, // 86
-            $data->numeroSalasUtilizadasDentroPredio || $data->numeroSalasUtilizadasForaPredio ? $data->numeroSalasAcessibilidade : null, // 87
-            $data->possuiAntenaParabolica() ?: 0, // 88
-            $data->possuiComputadores() ?: 0, // 89
-            $data->possuiCopiadora() ?: 0, // 90
-            $data->possuiImpressoras() ?: 0, // 91
-            $data->possuiImpressorasMultifuncionais() ?: 0, // 92
-            $data->possuiScanner() ?: 0, // 93
-            $data->dvds ?: null, // 94
-            $data->aparelhosDeSom ?: null, // 95
-            $data->televisoes ?: null, // 96
-            $data->lousasDigitais ?: null, // 97
-            $data->projetoresDigitais ?: null, // 98
-            $data->possuiComputadores() ? $data->quantidadeComputadoresAlunosMesa : null, // 99
-            $data->possuiComputadores() ? $data->quantidadeComputadoresAlunosPortateis : null, // 100
-            $data->possuiComputadores() ? $data->quantidadeComputadoresAlunosTablets : null, // 101
-            $data->usoInternetAdministrativo() ?: 0, // 102
-            $data->usoInternetProcessosEnsino() ?: 0, // 103
-            $data->usoInternetAlunos() ?: 0, // 104
-            $data->usoInternetComunidade() ?: 0, // 105
-            $data->usoInternetNaoPossui() ?: 0, // 106
-            $data->equipamentosAcessoInternetComputadorMesa() ?: 0, // 107
-            $data->equipamentosAcessoInternetDispositivosPessoais() ?: 0, // 108
-            $data->usoInternetNaoPossui() ? null : ($data->acessoInternet ?: 0), // 109
-            ($data->possuiComputadores() || $data->possuiComputadoresDeMesaTabletsEPortateis()) ? ($data->redeLocalACabo() ?: 0) : null, // 110
-            ($data->possuiComputadores() || $data->possuiComputadoresDeMesaTabletsEPortateis()) ? ($data->redeLocalWireless() ?: 0) : null, // 111
-            ($data->possuiComputadores() || $data->possuiComputadoresDeMesaTabletsEPortateis()) ? ($data->redeLocalNenhuma() ?: 0) : null, // 112
-            $data->qtdAuxiliarAdministrativo ?: null, // 113
-            $data->qtdAuxiliarServicosGerais ?: null, // 114
-            $data->qtdBibliotecarios ?: null, // 115
-            $data->qtdBombeiro ?: null, // 116
-            $data->qtdCoordenadorTurno ?: null, // 117
-            $data->qtdFonoaudiologo ?: null, // 118
-            $data->qtdNutricionistas ?: null, // 119
-            $data->qtdPsicologo ?: null, // 120
-            $data->qtdProfissionaisPreparacao ?: null, // 121
-            $data->qtdApoioPedagogico ?: null, // 122
-            $data->qtdSecretarioEscolar ?: null, // 123
-            $data->qtdSegurancas ?: null, // 124
-            $data->qtdTecnicos ?: null, // 125
-            $data->qtdViceDiretor ?: null, // 126
-            $data->qtdOrientadorComunitario ?: null, // 127
-            $data->alimentacaoEscolarAlunos, // 128
-            $data->organizacaoEnsinoSerieAno() ?: 0, // 129
-            $data->organizacaoEnsinoPeriodosSemestrais() ?: 0, // 130
-            $data->organizacaoEnsinoCliclosEnsinoFundamental() ?: 0, // 131
-            $data->organizacaoEnsinoGruposNaoSeriados() ?: 0, // 132
-            $data->organizacaoEnsinoModulos() ?: 0, // 133
-            $data->organizacaoEnsinoAlternanciaRegular() ?: 0, // 134
-            $data->instrumentosPedagogicosAcervoMultimidia() ?: 0, // 135
-            $data->instrumentosPedagogicosBrinquedrosEducacaoInfantil() ?: 0, // 136
-            $data->instrumentosPedagogicosMateriaisCientificos() ?: 0, // 137
-            $data->instrumentosPedagogicosAmplificacaoDifusaoSom() ?: 0, // 138
-            $data->instrumentosPedagogicosInstrumentosMusicais() ?: 0, // 139
-            $data->instrumentosPedagogicosJogosEducativos() ?: 0, // 140
-            $data->instrumentosPedagogicosMateriaisAtividadesCulturais() ?: 0, // 141
-            $data->instrumentosPedagogicosMateriaisPraticaDesportiva() ?: 0, // 142
-            $data->instrumentosPedagogicosMateriaisEducacaoIndigena() ?: 0, // 143
-            $data->instrumentosPedagogicosMateriaisRelacoesEtnicosRaciais() ?: 0, // 144
-            $data->instrumentosPedagogicosMateriaisEducacaoCampo() ?: 0, // 145
+
+            $data->laboratoriosEducacaoProfissional() ?: 0, // 55
+
+            $data->areasExternasParqueInfantil() ?: 0, // 56
+            $data->areasExternasPatioCoberto() ?: 0, // 57
+            $data->areasExternasPatioDescoberto() ?: 0, // 58
+            $data->areasExternasPiscina() ?: 0, // 59
+            $data->areasExternasQuadraCoberta() ?: 0, // 60
+            $data->areasExternasQuadraDescoberta() ?: 0, // 61
+            $data->salasFuncionaisRefeitorio() ?: 0, // 62
+            $data->salasAtividadesRepousoAluno() ?: 0, // 63
+            $data->salasAtividadesAtelie() ?: 0, // 64
+            $data->salasAtividadesMusica() ?: 0, // 65
+            $data->salasAtividadesEstudioDanca() ?: 0, // 66
+            $data->salasAtividadesMultiuso() ?: 0, // 67
+            $data->areasExternasTerreirao() ?: 0, // 68
+            $data->areasExternasViveiro() ?: 0, // 69
+            $data->salasGeraisSalaDiretoria() ?: 0, // 70
+            $data->salasAtividadesLeitura() ?: 0, // 71
+            $data->salasGeraisSalaProfessores() ?: 0, // 72
+            $data->salasAtividadesRecursosAee() ?: 0, // 73
+            $data->salasGeraisSalaSecretaria() ?: 0, // 74
+
+            $data->salasAtividadesEducacaoProfissional() ?: 0, // 74
+
+            $data->naoPossuiDependencias() ?: 0, // 76
+            $data->recursosAcessibilidadeCorrimao() ?: 0, // 77
+            $data->recursosAcessibilidadeElevador() ?: 0, // 78
+            $data->recursosAcessibilidadePisosTateis() ?: 0, // 79
+            $data->recursosAcessibilidadePortasVaoLivre() ?: 0, // 80
+            $data->recursosAcessibilidadeRampas() ?: 0, // 81
+            $data->recursosAcessibilidadeSinalizacaoSonora() ?: 0, // 82
+            $data->recursosAcessibilidadeSinalizacaoTatil() ?: 0, // 83
+            $data->recursosAcessibilidadeSinalizacaoVisual() ?: 0, // 84
+            $data->recursosAcessibilidadeNenhum() ?: 0, // 85
+            $data->predioEscolar() ? $data->numeroSalasUtilizadasDentroPredio : '', // 86
+            $data->numeroSalasUtilizadasForaPredio, // 87
+            $data->numeroSalasUtilizadasDentroPredio || $data->numeroSalasUtilizadasForaPredio ? $data->numeroSalasClimatizadas : null, // 88
+            $data->numeroSalasUtilizadasDentroPredio || $data->numeroSalasUtilizadasForaPredio ? $data->numeroSalasAcessibilidade : null, // 89
+            $data->possuiAntenaParabolica() ?: 0, // 90
+            $data->possuiComputadores() ?: 0, // 91
+            $data->possuiCopiadora() ?: 0, // 92
+            $data->possuiImpressoras() ?: 0, // 93
+            $data->possuiImpressorasMultifuncionais() ?: 0, // 94
+            $data->possuiScanner() ?: 0, // 95
+
+            $data->nenhumEquipamentoNaEscola() ?: 0, // 96
+
+            $data->dvds ?: null, // 97
+            $data->aparelhosDeSom ?: null, // 98
+            $data->televisoes ?: null, // 99
+            $data->lousasDigitais ?: null, // 100
+            $data->projetoresDigitais ?: null, // 101
+            $data->possuiComputadores() ? $data->quantidadeComputadoresAlunosMesa : null, // 102
+            $data->possuiComputadores() ? $data->quantidadeComputadoresAlunosPortateis : null, // 103
+            $data->possuiComputadores() ? $data->quantidadeComputadoresAlunosTablets : null, // 104
+            $data->usoInternetAdministrativo() ?: 0, // 105
+            $data->usoInternetProcessosEnsino() ?: 0, // 106
+            $data->usoInternetAlunos() ?: 0, // 107
+            $data->usoInternetComunidade() ?: 0, // 108
+            $data->usoInternetNaoPossui() ?: 0, // 109
+            $data->equipamentosAcessoInternetComputadorMesa() ?: 0, // 110
+            $data->equipamentosAcessoInternetDispositivosPessoais() ?: 0, // 111
+            $data->usoInternetNaoPossui() ? null : ($data->acessoInternet ?: 0), // 112
+            ($data->possuiComputadores() || $data->possuiComputadoresDeMesaTabletsEPortateis()) ? ($data->redeLocalACabo() ?: 0) : null, // 113
+            ($data->possuiComputadores() || $data->possuiComputadoresDeMesaTabletsEPortateis()) ? ($data->redeLocalWireless() ?: 0) : null, // 114
+            ($data->possuiComputadores() || $data->possuiComputadoresDeMesaTabletsEPortateis()) ? ($data->redeLocalNenhuma() ?: 0) : null, // 115
+
+            $data->semFuncionariosParaFuncoes ? null : $data->qtdAuxiliarAdministrativo, // 116
+            $data->semFuncionariosParaFuncoes ? null : $data->qtdAuxiliarServicosGerais, // 117
+            $data->semFuncionariosParaFuncoes ? null : $data->qtdBibliotecarios, // 118
+            $data->semFuncionariosParaFuncoes ? null : $data->qtdBombeiro, // 119
+            $data->semFuncionariosParaFuncoes ? null : $data->qtdCoordenadorTurno, // 120
+            $data->semFuncionariosParaFuncoes ? null : $data->qtdFonoaudiologo, // 121
+            $data->semFuncionariosParaFuncoes ? null : $data->qtdNutricionistas, // 122
+            $data->semFuncionariosParaFuncoes ? null : $data->qtdPsicologo, // 123
+            $data->semFuncionariosParaFuncoes ? null : $data->qtdProfissionaisPreparacao, // 124
+            $data->semFuncionariosParaFuncoes ? null : $data->qtdApoioPedagogico, // 125
+            $data->semFuncionariosParaFuncoes ? null : $data->qtdSecretarioEscolar, // 126
+            $data->semFuncionariosParaFuncoes ? null : $data->qtdSegurancas, // 127
+            $data->semFuncionariosParaFuncoes ? null : $data->qtdTecnicos, // 128
+            $data->semFuncionariosParaFuncoes ? null : $data->qtdViceDiretor, // 129
+            $data->semFuncionariosParaFuncoes ? null : $data->qtdOrientadorComunitario, // 130
+
+            (int) $data->semFuncionariosParaFuncoes, //131
+
+            $data->alimentacaoEscolarAlunos, // 132
+
+            $data->instrumentosPedagogicosAcervoMultimidia() ?: 0, // 133
+            $data->instrumentosPedagogicosBrinquedrosEducacaoInfantil() ?: 0, // 134
+            $data->instrumentosPedagogicosMateriaisCientificos() ?: 0, // 135
+            $data->instrumentosPedagogicosAmplificacaoDifusaoSom() ?: 0, // 136
+            $data->instrumentosPedagogicosInstrumentosMusicais() ?: 0, // 137
+            $data->instrumentosPedagogicosJogosEducativos() ?: 0, // 138
+            $data->instrumentosPedagogicosMateriaisAtividadesCulturais() ?: 0, // 139
+            $data->instrumentosPedagogicosMateriaisEducacaoProfissional() ?: 0, // 140
+            $data->instrumentosPedagogicosMateriaisPraticaDesportiva() ?: 0, // 141
+            $data->instrumentosPedagogicosMateriaisEducacaoIndigena() ?: 0, // 142
+            $data->instrumentosPedagogicosMateriaisRelacoesEtnicosRaciais() ?: 0, // 143
+            $data->instrumentosPedagogicosMateriaisEducacaoCampo() ?: 0, // 144            
+            $data->instrumentosPedagogicosNenhum() ?: 0, // 145
+
             $data->educacaoIndigena, // 146
             $data->educacaoIndigena ? ($data->linguaMinistradaIndigena() ?: 0) : null, // 147
             $data->educacaoIndigena ? ($data->linguaMinistradaPortugues() ?: 0) : null, // 148
