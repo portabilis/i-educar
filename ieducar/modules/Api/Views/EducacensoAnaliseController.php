@@ -27,6 +27,7 @@ use iEducar\Modules\Educacenso\Data\Registro40 as Registro40Data;
 use iEducar\Modules\Educacenso\Data\Registro50 as Registro50Data;
 use iEducar\Modules\Educacenso\Data\Registro60 as Registro60Data;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
+use iEducar\Modules\Educacenso\Model\EstruturaCurricular;
 use iEducar\Modules\Educacenso\Model\LinguaMinistrada;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
@@ -1428,6 +1429,21 @@ class EducacensoAnaliseController extends ApiCoreController
             if ($docente->funcaoDocente == FuncaoExercida::MONITOR_ATIVIDADE_COMPLEMENTAR  && $docente->tipoAtendimentoTurma != TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 50 da escola {$docente->nomeEscola} possui valor inválido. Verificamos que o tipo de atendimento da turma {$docente->nomeTurma} é {$tipoAtendimentoDesc}, portanto a função exercida do(a) docente {$docente->nomeDocente} não pode ser profissional/monitor de atividade complementar.",
+                    'path' => '(Servidores > Cadastros > Servidores > Vincular professor a turmas > Editar > Campo: Função exercida)',
+                    'linkPath' => "/intranet/educar_servidor_vinculo_turma_cad.php?id={$docente->idAlocacao}&ref_cod_instituicao={$docente->idInstituicao}&ref_cod_servidor={$docente->idServidor}",
+                    'fail' => true
+                ];
+            }
+
+            $etapasValidasParaInstrutor = [30, 31, 32, 33, 34, 39, 40, 73, 74, 64, 67, 68];            
+
+            if ($docente->funcaoDocente == FuncaoExercida::INSTRUTOR_EDUCACAO_PROFISSIONAL &&
+                (
+                    !in_array(EstruturaCurricular::ITINERARIO_FORMATIVO, $docente->estruturaCurricular)
+                    || !in_array($docente->etapaEducacensoTurma, $etapasValidasParaInstrutor)
+                )) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 50 da escola {$docente->nomeEscola} possui valor inválido. Verificamos que estrutura curricular da turma {$docente->nomeTurma} é {$docente->estruturasCurricularesDescritivas()} e a etapa de ensino é {$docente->estapaEducacensoDescritiva()}, portanto a função exercida do(a) docente {$docente->nomeDocente} não pode ser instrutor da Educação Profissional.",
                     'path' => '(Servidores > Cadastros > Servidores > Vincular professor a turmas > Editar > Campo: Função exercida)',
                     'linkPath' => "/intranet/educar_servidor_vinculo_turma_cad.php?id={$docente->idAlocacao}&ref_cod_instituicao={$docente->idInstituicao}&ref_cod_servidor={$docente->idServidor}",
                     'fail' => true
