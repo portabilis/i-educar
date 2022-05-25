@@ -19,6 +19,10 @@ class FormaOrganizacaoTurma implements EducacensoValidator
      */
     public function isValid(): bool
     {
+        if (empty($this->turma->formasOrganizacaoTurma)) {
+            return true;
+        }
+
         if ($this->turma->tipoAtendimento !== TipoAtendimentoTurma::ESCOLARIZACAO) {
             return true;
         }
