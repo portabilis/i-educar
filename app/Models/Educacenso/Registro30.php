@@ -116,15 +116,7 @@ class Registro30 implements RegistroEducacenso
 
     public $formacaoComponenteCurricular;
 
-    public $countPosGraduacao;
-
-    public $posGraduacaoEspecializacao;
-
-    public $posGraduacaoMestrado;
-
-    public $posGraduacaoDoutorado;
-
-    public $posGraduacaoNaoPossui;
+    public $posGraduacoes;
 
     public $countFormacaoContinuada;
 

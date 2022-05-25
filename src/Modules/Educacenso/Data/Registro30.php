@@ -45,6 +45,7 @@ class Registro30 extends AbstractRegistro
         $arrayEmployeeId = $this->getArrayEmployeeId();
         $employeeData = $this->repository->getEmployeeDataForRecord30($arrayEmployeeId);
         foreach ($employeeData as $data) {
+            $data->posGraduacoes = $this->formatPosGraduateToArray($data->posGraduacoes);
             $data->email = mb_strtoupper($data->email);
             $this->model = $this->modelArray[$data->codigoPessoa];
             $this->hydrateModel($data);
@@ -172,5 +173,16 @@ class Registro30 extends AbstractRegistro
         }
 
         return $arrayId;
+    }
+
+    private function formatPosGraduateToArray($posGraduate)
+    {
+        $posGraduate = explode('}","{',$posGraduate);
+
+        foreach ($posGraduate as $key => $pos) {
+            $posGraduate[$key] = json_decode('{' . str_replace(['\\', '{"{', '}"}'], '', $pos) . '}');
+        }
+
+        return $posGraduate;
     }
 }
