@@ -413,7 +413,9 @@ class CheckMandatoryCensoFields implements Rule
             ]
         ];
 
-        if (isset($params->etapa_educacenso) &&
+        if ($params->tipo_atendimento == TipoAtendimentoTurma::ESCOLARIZACAO &&
+            isset($params->formas_organizacao_turma) &&
+            isset($params->etapa_educacenso) &&
             !in_array((int) $params->etapa_educacenso, $validOptionCorrelationForEtapaEnsino[(int)$params->formas_organizacao_turma], true)
         ) {
             $todasEtapasEducacenso = loadJson(__DIR__ . '/../../ieducar/intranet/educacenso_json/etapas_ensino.json');
