@@ -323,6 +323,7 @@
       if (atividades == null) { alert("O campo atividades não é válido."); return; }
       if (referencias == null) { alert("O campo referências não é válido."); return; }
       if (!ehComponentesCurricularesValidos(componentesCurriculares)) { alert("Os componentes curriculares são obrigatórios."); return; }
+      if (!componentesCurricularesPreenchidos(componentesCurriculares, componentesCurricularesGeral)) { alert("Existem componentes sem planejamento."); }
       if (!ehBNCCsValidos(bnccs)) { alert("As habilidades são obrigatórias."); return; }
       if (!ehBNCCEspecificacoesValidos(bnccEspecificacoes)) { alert("As especificações são obrigatórias."); return; }
       if (!ehConteudosValidos(conteudos)) { alert("Os conteúdos são obrigatórios."); return; }
@@ -377,12 +378,17 @@
 
     function componentesCurricularesPreenchidos (componentesCurriculares, componentesCurricularesGeral) {
       let componentesCurricularesFiltrados = [];
+      let componentesUnique = [];
+
+      $.each(componentesCurricularesGeral, function(i, el){
+        if($.inArray(el, componentesUnique) === -1) componentesUnique.push(el);
+      });
 
       componentesCurriculares.forEach(componenteCurricular => {
           componentesCurricularesFiltrados.push(componenteCurricular[1]);
       });
 
-      return JSON.stringify(componentesCurricularesFiltrados) == JSON.stringify(componentesCurricularesGeral);
+      return JSON.stringify(componentesCurricularesFiltrados) == JSON.stringify(componentesUnique);
     }
 
     function ehBNCCsValidos (bnccs) {
