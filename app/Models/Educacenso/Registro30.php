@@ -118,6 +118,8 @@ class Registro30 implements RegistroEducacenso
 
     public $posGraduacoes;
 
+    public $posGraduacaoNaoPossui;
+
     public $countFormacaoContinuada;
 
     public $formacaoContinuadaCreche;
