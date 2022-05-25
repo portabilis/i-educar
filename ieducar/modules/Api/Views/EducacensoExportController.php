@@ -465,7 +465,7 @@ class EducacensoExportController extends ApiCoreController
                 $pessoa->posGraduacoes[5]->type_id,
                 $pessoa->posGraduacoes[5]->area_id,
                 $pessoa->posGraduacoes[5]->completion_year,
-                $pessoa->posGraduacoes[0]->type_id ? 0 : 1, //Não possui pós graduação
+                $pessoa->posGraduacaoNaoPossui,
                 $pessoa->formacaoContinuadaCreche,
                 $pessoa->formacaoContinuadaPreEscola,
                 $pessoa->formacaoContinuadaAnosIniciaisFundamental,
