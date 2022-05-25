@@ -1006,7 +1006,7 @@ class EducacensoAnaliseController extends ApiCoreController
                     ];
                 }
 
-                if ($turma->itinerarioFormativo && count(array_filter($turma->unidadesCurriculares)) == 0) {
+                if ($turma->itinerarioFormativo() && count(array_filter($turma->unidadesCurriculares)) == 0) {
                     $mensagem[] = [
                         'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verifique se as unidades curriculares da turma {$nomeTurma} foram informadas.",
                         'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Formas de organização da turma)',
