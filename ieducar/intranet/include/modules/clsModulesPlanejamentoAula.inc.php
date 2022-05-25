@@ -528,7 +528,7 @@ class clsModulesPlanejamentoAula extends Model {
          if ($this->data_inicial && $this->data_final && is_array($this->ref_componente_curricular_array)) {
              $refsComponentes = [];
 
-             foreach ($this->ref_componente_curricular_array as $key => $refComponente) {
+             foreach ($this->ref_componente_curricular_array as $refComponente) {
                  unset($refComponente[0]);
                  foreach ($refComponente as $ref) {
                      array_push($refsComponentes, $ref);

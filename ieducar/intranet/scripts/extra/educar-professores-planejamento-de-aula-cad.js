@@ -278,6 +278,26 @@
       return conteudos;
     }
 
+    function pegarComponentesCurricularesGeral() {
+      let componentesCurricularesGeral = [];
+      let linhasElemento = document.getElementsByName("tr_objetivos_aprendizagem[]");
+      let componentesCurricularesElementos = []
+
+      linhasElemento.forEach(linhaElemento => {
+        componentesCurricularesElementos.push(linhaElemento.children[0].children[0]);
+      });
+
+      componentesCurricularesElementos.forEach(componenteCurricularElemento => {
+        $(componenteCurricularElemento).find('option').each(function() {
+          if ($(this).val() != '' && $(this).val() != 0) {
+            componentesCurricularesGeral.push($(this).val());
+          }
+        });
+      });
+
+      return componentesCurricularesGeral;
+    }
+
     function enviarFormulario () {
       var data_inicial              = dataParaBanco(document.getElementById("data_inicial").value);
       var data_final                = dataParaBanco(document.getElementById("data_final").value);
@@ -288,6 +308,7 @@
       var referencias               = document.getElementById("referencias").value;
       var conteudos                 = pegarConteudos();
       var componentesCurriculares   = pegarComponentesCurriculares();
+      var componentesCurricularesGeral   = pegarComponentesCurricularesGeral();
       var bnccs                     = pegarBNCCs();
       var bnccEspecificacoes        = pegarBNCCEspecificacoes();
       var recursos_didaticos        = document.getElementById("recursos_didaticos").value;
@@ -302,6 +323,7 @@
       if (atividades == null) { alert("O campo atividades não é válido."); return; }
       if (referencias == null) { alert("O campo referências não é válido."); return; }
       if (!ehComponentesCurricularesValidos(componentesCurriculares)) { alert("Os componentes curriculares são obrigatórios."); return; }
+      if (!componentesCurricularesPreenchidos(componentesCurriculares, componentesCurricularesGeral)) { alert("Existem componentes sem planejamento."); }
       if (!ehBNCCsValidos(bnccs)) { alert("As habilidades são obrigatórias."); return; }
       if (!ehBNCCEspecificacoesValidos(bnccEspecificacoes)) { alert("As especificações são obrigatórias."); return; }
       if (!ehConteudosValidos(conteudos)) { alert("Os conteúdos são obrigatórios."); return; }
@@ -352,6 +374,21 @@
 
     function ehComponentesCurricularesValidos (componentesCurriculares) {
       return componentesCurriculares.every(componenteCurricular => !isNaN(parseInt(componenteCurricular[1], 10)));
+    }
+
+    function componentesCurricularesPreenchidos (componentesCurriculares, componentesCurricularesGeral) {
+      let componentesCurricularesFiltrados = [];
+      let componentesUnique = [];
+
+      $.each(componentesCurricularesGeral, function(i, el){
+        if($.inArray(el, componentesUnique) === -1) componentesUnique.push(el);
+      });
+
+      componentesCurriculares.forEach(componenteCurricular => {
+          componentesCurricularesFiltrados.push(componenteCurricular[1]);
+      });
+
+      return JSON.stringify(componentesCurricularesFiltrados) == JSON.stringify(componentesUnique);
     }
 
     function ehBNCCsValidos (bnccs) {
