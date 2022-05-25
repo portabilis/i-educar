@@ -482,11 +482,7 @@ SQL;
                 tbl_formacoes.completion_year AS "formacaoAnoConclusao",
                 tbl_formacoes.college_id AS "formacaoInstituicao",
                 tbl_formacoes.discipline_id AS "formacaoComponenteCurricular",
-                coalesce(cardinality(servidor.pos_graduacao),0) as "countPosGraduacao",
-                (ARRAY[1] <@ servidor.pos_graduacao)::INT "posGraduacaoEspecializacao",
-                (ARRAY[2] <@ servidor.pos_graduacao)::INT "posGraduacaoMestrado",
-                (ARRAY[3] <@ servidor.pos_graduacao)::INT "posGraduacaoDoutorado",
-                (ARRAY[4] <@ servidor.pos_graduacao)::INT "posGraduacaoNaoPossui",
+                tbl_posgraduacoes.pos_graduate::text AS "posGraduacoes",
                 coalesce(cardinality(servidor.curso_formacao_continuada),0) as "countFormacaoContinuada",
                 (ARRAY[1] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaCreche",
                 (ARRAY[2] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaPreEscola",
@@ -521,10 +517,16 @@ SQL;
                  JOIN modules.educacenso_curso_superior ON educacenso_curso_superior.id = employee_graduations.course_id
                  JOIN modules.educacenso_ies ON educacenso_ies.id = employee_graduations.college_id
                 WHERE employee_graduations.employee_id = servidor.cod_servidor
-            ) AS tbl_formacoes
+            ) AS tbl_formacoes,
+            LATERAL (
+                SELECT
+                    array_agg(
+                        row_to_json(employee_posgraduate)
+                    ) AS "pos_graduate"
+                FROM employee_posgraduate
+                WHERE employee_posgraduate.employee_id = servidor.cod_servidor
+            ) AS tbl_posgraduacoes
             WHERE servidor.cod_servidor IN ({$stringPersonId})
-
-
 SQL;
 
         return $this->fetchPreparedQuery($sql);
