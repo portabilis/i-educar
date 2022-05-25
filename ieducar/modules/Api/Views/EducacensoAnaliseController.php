@@ -834,7 +834,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 ];
             }
 
-            if ($turma->modalidade == ModalidadeCurso::EJA && $turma->tipoAtendimento == TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR) {
+            if ($turma->modalidadeCurso == ModalidadeCurso::EJA && $turma->tipoAtendimento == TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} possui valor inválido. Verificamos que a modalidade do curso da turma {$nomeTurma} é Educação de Jovens e Adultos (EJA), portanto o tipo de atendimento da turma não pode ser atividade complementar.",
                     'path' => '(Escola > Cadastros > Cursos > Editar > Campo: Modalidade do curso)',
