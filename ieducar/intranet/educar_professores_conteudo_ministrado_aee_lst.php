@@ -80,7 +80,7 @@ return new class extends clsListagem {
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-        $obj_turma = new clsModulesComponenteMinistrado();
+        $obj_turma = new clsModulesComponenteMinistradoAee();
         $obj_turma->setOrderby('data DESC');
         $obj_turma->setLimite($this->limite, $this->offset);
 

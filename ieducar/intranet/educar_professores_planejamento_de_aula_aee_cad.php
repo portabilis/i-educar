@@ -20,12 +20,12 @@ return new class extends clsCadastro {
     public $referencias;
     public $bncc;
     public $conteudo_id;
-    //public $bncc_especificacoes;
+    public $bncc_especificacoes;
     public $recursos_didaticos;
     public $registro_adaptacao;
 
     public function Inicializar () {
-        $this->titulo = 'Plano de aula AEE - Cadastro';
+        $this->titulo = 'Plano de aula - Cadastro';
 
         $retorno = 'Novo';
 
@@ -33,10 +33,10 @@ return new class extends clsCadastro {
         $this->copy = $_GET['copy'];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(58, $this->pessoa_logada, 7, 'educar_professores_planejamento_de_aula_aee_lst.php');
+        $obj_permissoes->permissao_cadastra(58, $this->pessoa_logada, 7, 'educar_professores_planejamento_de_aula_lst.php');
 
         if (is_numeric($this->id)) {
-            $tmp_obj = new clsModulesPlanejamentoAula($this->id);
+            $tmp_obj = new clsModulesPlanejamentoAulaAee($this->id);
             $registro = $tmp_obj->detalhe();
 
             if ($registro['detalhes'] != null) {
@@ -50,7 +50,7 @@ return new class extends clsCadastro {
                     $this->fexcluir = $obj_permissoes->permissao_excluir(58, $this->pessoa_logada, 7);
                     $retorno = 'Editar';
 
-                    $this->titulo = 'Plano de aula AEE - Edição';
+                    $this->titulo = 'Plano de aula - Edição';
                 }
             } else {
                 $this->simpleRedirect('educar_professores_planejamento_de_aula_aee_lst.php');
@@ -63,7 +63,7 @@ return new class extends clsCadastro {
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
-        $this->breadcrumb($nomeMenu . ' plano de aula - AEE', [
+        $this->breadcrumb($nomeMenu . ' plano de aula', [
             url('intranet/educar_professores_index.php') => 'Professores',
         ]);
 
@@ -104,12 +104,12 @@ return new class extends clsCadastro {
 
         $this->adicionarBNCCMultiplaEscolha();
         $this->adicionarConteudosTabela();
-        
-        $this->campoMemo('recursos_didaticos','Necessidade de Aprendizagem', $this->recursos_didaticos, 100, 5, !$obrigatorio);
-        $this->campoMemo('recursos_didaticos','Objetivos do Conhecimento', $this->recursos_didaticos, 100, 5, !$obrigatorio);
+
         $this->campoMemo('ddp','Metodologia', $this->ddp, 100, 5, $obrigatorio);
+        $this->campoMemo('atividades','Atividades/Avaliações', $this->atividades, 100, 5, !$obrigatorio);
         $this->campoMemo('recursos_didaticos','Recursos didáticos', $this->recursos_didaticos, 100, 5, !$obrigatorio);
-        $this->campoMemo('registro_adaptacao','Outros', $this->registro_adaptacao, 100, 5, !$obrigatorio);        
+        $this->campoMemo('registro_adaptacao','Registro de adaptação', $this->registro_adaptacao, 100, 5, !$obrigatorio);
+        $this->campoMemo('referencias','Referências', $this->referencias, 100, 5, !$obrigatorio);
 
         $this->campoOculto('id', $this->id);
         $this->campoOculto('copy', $this->copy);
@@ -122,7 +122,7 @@ return new class extends clsCadastro {
     }
 
     public function Editar() {
-        $obj = new clsModulesPlanejamentoAula(
+        $obj = new clsModulesPlanejamentoAulaAee(
             $this->id,
             null,
             null,
@@ -149,7 +149,7 @@ return new class extends clsCadastro {
     }
 
     public function Excluir () {
-        $obj = new clsModulesPlanejamentoAula($this->id);
+        $obj = new clsModulesPlanejamentoAulaAee($this->id);
 
         $excluiu = $obj->excluir();
 
@@ -257,7 +257,7 @@ return new class extends clsCadastro {
 
     protected function adicionarConteudosTabela()
     {
-        $obj = new clsModulesPlanejamentoAulaConteudo();
+        $obj = new clsModulesPlanejamentoAulaConteudoAee();
         $conteudos = $obj->lista($this->id);
 
         for ($i=0; $i < count($conteudos); $i++) {
@@ -276,7 +276,7 @@ return new class extends clsCadastro {
 
         $this->campoTexto('conteudos', 'Conteúdos', $this->conteudo_id, 100, 2048);
 
-        //$this->campoTabelaFim();
+        $this->campoTabelaFim();
     }
 
     public function Formular () {

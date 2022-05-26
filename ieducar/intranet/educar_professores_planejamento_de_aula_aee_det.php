@@ -32,7 +32,7 @@ return new class extends clsDetalhe {
 
         $obj_permissoes = new clsPermissoes();
 
-        $tmp_obj = new clsModulesPlanejamentoAula($this->id);
+        $tmp_obj = new clsModulesPlanejamentoAulaAee($this->id);
         $registro = $tmp_obj->detalhe();
 
         if (!$registro['detalhes']) {

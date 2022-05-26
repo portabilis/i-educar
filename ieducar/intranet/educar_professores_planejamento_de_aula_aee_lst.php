@@ -80,7 +80,7 @@ return new class extends clsListagem {
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-        $obj_plano = new clsModulesPlanejamentoAula();
+        $obj_plano = new clsModulesPlanejamentoAulaAee();
         $obj_plano->setOrderby('data_inicial DESC');
         $obj_plano->setLimite($this->limite, $this->offset);
 
@@ -133,14 +133,14 @@ return new class extends clsListagem {
                 $data_final_formatada = dataToBrasil($registro['data_final']);
 
                 $lista_busca = [
-                    "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$data_inicial_formatada}</a>",
-                    "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$data_final_formatada}</a>",
-                    "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['turma']}</a>",
-                    "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['turno']}</a>",
-                    "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['serie']}</a>",
-                    "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['curso']}</a>",
-                    "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['escola']}</a>",
-                    "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['fase_etapa']}º {$registro['etapa']}</a>"
+                    "<a href=\"educar_professores_planejamento_de_aula_aee_det.php?id={$registro['id']}\">{$data_inicial_formatada}</a>",
+                    "<a href=\"educar_professores_planejamento_de_aula_aee_det.php?id={$registro['id']}\">{$data_final_formatada}</a>",
+                    "<a href=\"educar_professores_planejamento_de_aula_aee_det.php?id={$registro['id']}\">{$registro['turma']}</a>",
+                    "<a href=\"educar_professores_planejamento_de_aula_aee_det.php?id={$registro['id']}\">{$registro['turno']}</a>",
+                    "<a href=\"educar_professores_planejamento_de_aula_aee_det.php?id={$registro['id']}\">{$registro['serie']}</a>",
+                    "<a href=\"educar_professores_planejamento_de_aula_aee_det.php?id={$registro['id']}\">{$registro['curso']}</a>",
+                    "<a href=\"educar_professores_planejamento_de_aula_aee_det.php?id={$registro['id']}\">{$registro['escola']}</a>",
+                    "<a href=\"educar_professores_planejamento_de_aula_aee_det.php?id={$registro['id']}\">{$registro['fase_etapa']}º {$registro['etapa']}</a>"
                 ];
 
                 $this->addLinhas($lista_busca);
@@ -155,7 +155,7 @@ return new class extends clsListagem {
         }
         $this->largura = '100%';
 
-        $this->breadcrumb('Listagem de planos de aula AEE', [
+        $this->breadcrumb('Listagem de planos de aula - AEE', [
             url('intranet/educar_professores_index.php') => 'Professores',
         ]);
     }
