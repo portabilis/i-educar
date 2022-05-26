@@ -992,7 +992,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 $mensagem[] = [
                     'text' => "<span class='avisos-educacenso'><b>Aviso não impeditivo:</b> Dados para formular o registro 20 da escola {$turma->nomeEscola} sujeito à valor inválido. Verificamos que a turma {$nomeTurma} é de formação geral básica e itinerário formativo, e a etapa de ensino é {$descricaoEtapa}, portanto você pode definir os itinerários dos alunos individualmente.",
                     'path' => '(Escola > Cadastros > Alunos > Visualizar > Itinerário formativo > Campo: Tipo do itinerário formativo)',
-                    'linkPath' => "",
+                    'linkPath' => "/intranet/educar_aluno_lst.php",
                     'fail' => false
                 ];
             }
