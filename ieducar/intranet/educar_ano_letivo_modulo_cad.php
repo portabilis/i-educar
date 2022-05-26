@@ -187,7 +187,7 @@ return new class extends clsCadastro {
             'ref_cod_modulo',
             'Etapa',
             $opcoesCampoModulo,
-            $this->ref_cod_modulo,
+            \Request::get('ref_cod_modulo',$this->ref_cod_modulo),
             null,
             null,
             null,
@@ -206,11 +206,21 @@ return new class extends clsCadastro {
         if (is_numeric($this->ref_ano) && is_numeric($this->ref_ref_cod_escola) && !$_POST) {
             $qtd_registros = 0;
 
-            foreach ($this->etapas as $campo) {
-                $this->ano_letivo_modulo[$qtd_registros][] = dataFromPgToBr($campo['data_inicio']);
-                $this->ano_letivo_modulo[$qtd_registros][] = dataFromPgToBr($campo['data_fim']);
-                $this->ano_letivo_modulo[$qtd_registros][] = $campo['dias_letivos'];
-                $qtd_registros++;
+
+            if (Request::has('data_inicio')) {
+                foreach (Request::get('data_inicio') as $key => $campo) {
+                    $this->ano_letivo_modulo[$qtd_registros][] = \Request::get('data_inicio')[$key] ?? null;
+                    $this->ano_letivo_modulo[$qtd_registros][] = \Request::get('data_fim')[$key] ?? null;
+                    $this->ano_letivo_modulo[$qtd_registros][] = \Request::get('dias_letivos')[$key] ?? null;
+                    $qtd_registros++;
+                }
+            } else {
+                foreach ($this->etapas as $key => $campo) {
+                    $this->ano_letivo_modulo[$qtd_registros][] = dataFromPgToBr($campo['data_inicio']);
+                    $this->ano_letivo_modulo[$qtd_registros][] = dataFromPgToBr($campo['data_fim']);
+                    $this->ano_letivo_modulo[$qtd_registros][] = $campo['dias_letivos'];
+                    $qtd_registros++;
+                }
             }
 
             $this->campoTabelaInicio(
@@ -243,6 +253,15 @@ return new class extends clsCadastro {
             7,
             'educar_escola_lst.php'
         );
+
+        try {
+            $this->validaDates();
+        } catch (Exception $e) {
+            $_POST = [];
+            $this->Inicializar();
+            $this->mensagem = $e->getMessage();
+            return false;
+        }
 
         if ($this->ref_cod_modulo && $this->data_inicio && $this->data_fim) {
             $this->copiarTurmasUltimoAno($this->ref_ref_cod_escola, $this->ref_ano);
@@ -314,6 +333,15 @@ return new class extends clsCadastro {
             7,
             'educar_escola_lst.php'
         );
+
+        try {
+            $this->validaDates();
+        } catch (Exception $e) {
+            $_POST = [];
+            $this->Inicializar();
+            $this->mensagem = $e->getMessage();
+            return false;
+        }
 
         if ($this->ref_cod_modulo && $this->data_inicio && $this->data_fim) {
             try {
@@ -634,6 +662,27 @@ return new class extends clsCadastro {
         }
 
         return json_encode($retorno);
+    }
+
+    protected function validaDates(): void
+    {
+        foreach ($this->data_inicio as $key => $campo) {
+            $data_inicio = $this->data_inicio[$key];
+            $data_fim = $this->data_fim[$key];
+
+            $etapaAntigo = Portabilis_Utils_Database::selectRow(
+                'SELECT data_inicio,data_fim FROM pmieducar.ano_letivo_modulo WHERE ref_ano <> $1 AND ref_ref_cod_escola = $2 AND
+                                                                   ($3::date BETWEEN data_inicio AND data_fim::date OR $4::date BETWEEN data_inicio AND data_fim OR
+                                                                   ($3::date <= data_inicio AND $4::date >= data_fim)) limit 1',
+                [$this->ref_ano,$this->ref_ref_cod_escola,$data_inicio,$data_fim]
+            );
+
+            if (!empty($etapaAntigo) && isset($etapaAntigo['data_inicio'],$etapaAntigo['data_fim'])) {
+                $db_data_inicio = \Carbon\Carbon::parse($etapaAntigo['data_inicio'])->format('d/m/Y');
+                $db_data_fim = \Carbon\Carbon::parse($etapaAntigo['data_fim'])->format('d/m/Y');
+                throw new RuntimeException("A etapa <b>$data_inicio-$data_fim</b> encontra-se dentro do período letivo <b>$db_data_inicio-$db_data_fim</b>");
+            }
+        }
     }
 
     protected function validaModulos()
