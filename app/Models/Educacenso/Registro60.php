@@ -2,6 +2,7 @@
 
 namespace App\Models\Educacenso;
 
+use iEducar\Modules\Educacenso\Model\EstruturaCurricular;
 use iEducar\Modules\Educacenso\Model\PaisResidencia;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\Educacenso\Model\TipoMediacaoDidaticoPedagogico;
@@ -173,6 +174,64 @@ class Registro60 implements RegistroEducacenso, ItemOfRegistro30
             $this->tipoMediacaoTurma == TipoMediacaoDidaticoPedagogico::PRESENCIAL &&
             $this->localFuncionamentoDiferenciadoTurma == \App_Model_LocalFuncionamentoDiferenciado::NAO_ESTA &&
             $this->localFuncionamentoDiferenciadoTurma == \App_Model_LocalFuncionamentoDiferenciado::SALA_ANEXA;
+    }
+
+    /**
+     * @return bool
+     */
+    public function analisaDadosItinerario()
+    {
+        if (
+            in_array(EstruturaCurricular::ITINERARIO_FORMATIVO, $this->estruturaCurricularTurma) &&
+            count($this->estruturaCurricularTurma) === 1
+        ) {
+            return true;
+        }
+
+        $etapasValidas = [25, 26, 27, 28, 30, 31, 32, 33, 35, 36, 37, 38, 71, 74];
+
+        if (
+            in_array(EstruturaCurricular::ITINERARIO_FORMATIVO, $this->estruturaCurricularTurma) &&
+            in_array(EstruturaCurricular::FORMACAO_GERAL_BASICA, $this->estruturaCurricularTurma) &&
+            in_array($this->etapaTurma, $etapasValidas)
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function tipoItinerarioNaoPreenchido()
+    {
+        return
+            !$this->tipoItinerarioLinguagens &&
+            !$this->tipoItinerarioMatematica &&
+            !$this->tipoItinerarioCienciasNatureza &&
+            !$this->tipoItinerarioCienciasHumanas &&
+            !$this->tipoItinerarioFormacaoTecnica &&
+            !$this->tipoItinerarioIntegrado;
+    }
+
+    /**
+     * @return bool
+     */
+    public function composicaoItinerarioNaoPreenchido()
+    {
+        return
+            !$this->composicaoItinerarioLinguagens &&
+            !$this->composicaoItinerarioMatematica &&
+            !$this->composicaoItinerarioCienciasNatureza &&
+            !$this->composicaoItinerarioCienciasHumanas &&
+            !$this->composicaoItinerarioFormacaoTecnica;
+    }
+
+    public function etapaTurmaDescritiva() {
+        $etapasEducacenso = loadJson('educacenso_json/etapas_ensino.json');
+
+        return $etapasEducacenso[$this->etapaTurma];
     }
 
     public function getCodigoPessoa()

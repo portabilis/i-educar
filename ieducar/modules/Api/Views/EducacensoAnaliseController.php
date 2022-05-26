@@ -27,6 +27,7 @@ use iEducar\Modules\Educacenso\Data\Registro40 as Registro40Data;
 use iEducar\Modules\Educacenso\Data\Registro50 as Registro50Data;
 use iEducar\Modules\Educacenso\Data\Registro60 as Registro60Data;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
+use iEducar\Modules\Educacenso\Model\EstruturaCurricular;
 use iEducar\Modules\Educacenso\Model\LinguaMinistrada;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
@@ -37,6 +38,7 @@ use iEducar\Modules\Educacenso\Model\SchoolManagerAccessCriteria;
 use iEducar\Modules\Educacenso\Model\SchoolManagerRole;
 use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
+use iEducar\Modules\Educacenso\Model\TipoItinerarioFormativo;
 use iEducar\Modules\Educacenso\Model\TipoMediacaoDidaticoPedagogico;
 use iEducar\Modules\Educacenso\Validator\AdministrativeDomainValidator;
 use iEducar\Modules\Educacenso\Validator\CnpjMantenedoraPrivada;
@@ -1520,6 +1522,64 @@ class EducacensoAnaliseController extends ApiCoreController
                     'linkPath' => "/intranet/educar_matricula_etapa_turma_cad.php?ref_cod_matricula={$codigoMatricula}&ref_cod_aluno={$codigoAluno}",
                     'fail' => true
                 ];
+            }
+
+            if ($aluno->analisaDadosItinerario()) {
+                if (
+                    in_array(EstruturaCurricular::ITINERARIO_FORMATIVO, $aluno->estruturaCurricularTurma) &&
+                    count($aluno->estruturaCurricularTurma) === 1 &&
+                    $aluno->tipoItinerarioNaoPreenchido()
+                ) {
+                    $mensagem[] = [
+                        'text' => "Dados para formular o registro 60 da escola {$nomeEscola} não encontrados. Verificamos que a estrutura curricular da turma {$nomeTurma} é itinerário formativo, portanto é necessário informar o tipo do itinerário formativo do(a) aluno(a) {$nomeAluno}.",
+                        'path' => '(Escola > Cadastros > Alunos > Visualizar > Itinerário formativo > Campo: Tipo do itinerário formativo)',
+                        'linkPath' => "/enrollment-formative-itinerary/{$aluno->enturmacaoId}",
+                        'fail' => true
+                    ];
+                }
+
+                $etapasObrigatorias = [26, 27, 28, 31, 32, 33, 36, 37, 38, 71, 74];
+
+                if (
+                    in_array(EstruturaCurricular::ITINERARIO_FORMATIVO, $aluno->estruturaCurricularTurma) &&
+                    in_array(EstruturaCurricular::FORMACAO_GERAL_BASICA, $aluno->estruturaCurricularTurma) &&
+                    in_array($aluno->etapaTurma, $etapasObrigatorias) &&
+                    $aluno->tipoItinerarioNaoPreenchido()
+                ) {
+                    $mensagem[] = [
+                        'text' => "Dados para formular o registro 60 da escola {$nomeEscola} não encontrados. Verificamos que a estrutura curricular da turma {$nomeTurma} é formação geral básica/itinerário formativo e a etapa de ensino é {$aluno->etapaTurmaDescritiva()}, portanto é necessário informar o tipo do itinerario formativo do(a) aluno(a) {$nomeAluno}.",
+                        'path' => '(Escola > Cadastros > Alunos > Visualizar > Itinerário formativo > Campo: Tipo do itinerário formativo)',
+                        'linkPath' => "/enrollment-formative-itinerary/{$aluno->enturmacaoId}",
+                        'fail' => true
+                    ];
+                }
+
+                if ($aluno->tipoItinerarioIntegrado && $aluno->composicaoItinerarioNaoPreenchido()) {
+                    $mensagem[] = [
+                        'text' => "Dados para formular o registro 60 da escola {$nomeEscola} não encontrados. Verificamos que o tipo de itinerário formativo do(a) aluno(a) {$nomeAluno} foi preenchido com a opção de itinerário formativo integrado, portanto é necessário informar a composição do itinerário formativo integrado.",
+                        'path' => '(Escola > Cadastros > Alunos > Visualizar > Itinerário formativo > Campo: Composição do itinerário formativo integrado)',
+                        'linkPath' => "/enrollment-formative-itinerary/{$aluno->enturmacaoId}",
+                        'fail' => true
+                    ];
+                }
+
+                if ($aluno->composicaoItinerarioFormacaoTecnica && empty($aluno->cursoItinerario)) {
+                    $mensagem[] = [
+                        'text' => "Dados para formular o registro 60 da escola {$nomeEscola} não encontrados. Verificamos que a composição do itinerário formativo do(a) aluno(a) {$nomeAluno} foi preenchido com a opção de formação técnica e profissional, portanto é necessário informar o tipo do curso do itinerário de formação técnica e profissional.",
+                        'path' => '(Escola > Cadastros > Alunos > Visualizar > Itinerário formativo > Campo: Tipo do curso do itinerário de formação técnica e profissional)',
+                        'linkPath' => "/enrollment-formative-itinerary/{$aluno->enturmacaoId}",
+                        'fail' => true
+                    ];
+                }
+
+                if ($aluno->composicaoItinerarioFormacaoTecnica && $aluno->itinerarioConcomitante === null) {
+                    $mensagem[] = [
+                        'text' => "Dados para formular o registro 60 da escola {$nomeEscola} não encontrados. Verificamos que a composição do itinerário formativo do(a) aluno(a) {$nomeAluno} foi preenchido com a opção de formação técnica e profissional, portanto é necessário informar se é um itinerário concomitante intercomplementar à matrícula de formação geral básica.",
+                        'path' => '(Escola > Cadastros > Alunos > Visualizar > Itinerário formativo > Campo: Itinerário concomitante intercomplementar à matrícula de formação geral básica)',
+                        'linkPath' => "/enrollment-formative-itinerary/{$aluno->enturmacaoId}",
+                        'fail' => true
+                    ];
+                }
             }
 
             if (isArrayEmpty($aluno->tipoAtendimentoMatricula) && $aluno->tipoAtendimentoTurma == TipoAtendimentoTurma::AEE) {
