@@ -976,61 +976,61 @@ class EducacensoAnaliseController extends ApiCoreController
                     ];
                 }
 
-                if ($turma->formacaoGeralBasica() && $turma->itinerarioFormativo() && in_array($turma->etapaEducacenso, [25, 30, 35])) {
-                    $descricaoEtapa = $turma->etapaEducacensoDescritiva();
-                    $mensagem[] = [
-                        'text' => "<span class='avisos-educacenso'><b>Aviso não impeditivo:</b> Dados para formular o registro 20 da escola {$turma->nomeEscola} sujeito à valor inválido. Verificamos que a turma {$nomeTurma} é de formação geral básica e itinerário formativo, e a etapa de ensino é {$descricaoEtapa}, portanto você pode definir os itinerários dos alunos individualmente.",
-                        'path' => '(Escola > Cadastros > Alunos > Visualizar > Itinerário formativo > Campo: Tipo do itinerário formativo)',
-                        'linkPath' => "",
-                        'fail' => false
-                    ];
-                }
-
-                $formasDeOrganizacaoDaTurma = new FormaOrganizacaoTurma($turma);
-
-                if ($turma->tipoAtendimento == TipoAtendimentoTurma::ESCOLARIZACAO && in_array($this->turma->etapaEducacenso, [1, 2, 3, 24]) && empty($turma->formasOrganizacaoTurma)) {
-                    $mensagem[] = [
-                        'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verifique se a forma de organização da turma {$nomeTurma} foi informada.",
-                        'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Formas de organização da turma)',
-                        'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
-                        'fail' => true
-                    ];
-                } elseif (!$formasDeOrganizacaoDaTurma->isValid()) {
-                    $descricaoEtapa = $turma->etapaEducacensoDescritiva();
-                    $descricaoFormaOrganizacao = $turma->formaOrganizacaoTurmaDescritiva();
-                    $mensagem[] = [
-                        'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} possui valor inválido. Verificamos que etapa de ensino da turma {$nomeTurma} é {$descricaoEtapa}, portanto a forma de organização da turma não pode ser {$descricaoFormaOrganizacao}.",
-                        'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Formas de organização da turma)',
-                        'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
-                        'fail' => true
-                    ];
-                }
-
-                if ($turma->itinerarioFormativo() && count(array_filter($turma->unidadesCurriculares)) == 0) {
-                    $mensagem[] = [
-                        'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verifique se as unidades curriculares da turma {$nomeTurma} foram informadas.",
-                        'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Formas de organização da turma)',
-                        'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
-                        'fail' => true
-                    ];
-                }
-
-                if (count($turma->unidadesCurricularesSemDocenteVinculado()) > 0) {
-                    foreach ($turma->unidadesCurricularesSemDocenteVinculado() as $unidadeCurricular) {
-                        $mensagem[] = [
-                            'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verificamos que a unidade curricular {$unidadeCurricular} faz parte da turma {$nomeTurma}, portanto deve haver um docente vinculado à mesma.",
-                            'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Formas de organização da turma)',
-                            'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
-                            'fail' => true
-                        ];
-                    }
-                }
-
                 if (in_array($turma->localFuncionamentoDiferenciado, [App_Model_LocalFuncionamentoDiferenciado::UNIDADE_ATENDIMENTO_SOCIOEDUCATIVO, App_Model_LocalFuncionamentoDiferenciado::UNIDADE_PRISIONAL]) && in_array($turma->etapaEducacenso, [1, 2, 3, 56])) {
                     $descricaoLocalDiferenciado = $turma->getLocalFuncionamentoDiferenciadoDescription();
                     $mensagem[] = [
                         'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola}  possui valor inválido. Verificamos que o local de funcionamento diferenciado da turma {$nomeTurma} é {$descricaoLocalDiferenciado}, portanto a etapa de ensino não pode ser nenhuma das seguintes opções: 1, 2, 3 ou 56.",
                         'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Etapa de ensino)',
+                        'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
+                        'fail' => true
+                    ];
+                }
+            }
+
+            if ($turma->formacaoGeralBasica() && $turma->itinerarioFormativo() && in_array($turma->etapaEducacenso, [25, 30, 35])) {
+                $descricaoEtapa = $turma->etapaEducacensoDescritiva();
+                $mensagem[] = [
+                    'text' => "<span class='avisos-educacenso'><b>Aviso não impeditivo:</b> Dados para formular o registro 20 da escola {$turma->nomeEscola} sujeito à valor inválido. Verificamos que a turma {$nomeTurma} é de formação geral básica e itinerário formativo, e a etapa de ensino é {$descricaoEtapa}, portanto você pode definir os itinerários dos alunos individualmente.",
+                    'path' => '(Escola > Cadastros > Alunos > Visualizar > Itinerário formativo > Campo: Tipo do itinerário formativo)',
+                    'linkPath' => "",
+                    'fail' => false
+                ];
+            }
+
+            $formasDeOrganizacaoDaTurma = new FormaOrganizacaoTurma($turma);
+
+            if ($turma->tipoAtendimento == TipoAtendimentoTurma::ESCOLARIZACAO && !in_array($this->turma->etapaEducacenso, [1, 2, 3, 24]) && empty($turma->formasOrganizacaoTurma)) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verifique se a forma de organização da turma {$nomeTurma} foi informada.",
+                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Formas de organização da turma)',
+                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
+                    'fail' => true
+                ];
+            } elseif (!$formasDeOrganizacaoDaTurma->isValid()) {
+                $descricaoEtapa = $turma->etapaEducacensoDescritiva();
+                $descricaoFormaOrganizacao = $turma->formaOrganizacaoTurmaDescritiva();
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} possui valor inválido. Verificamos que etapa de ensino da turma {$nomeTurma} é {$descricaoEtapa}, portanto a forma de organização da turma não pode ser {$descricaoFormaOrganizacao}.",
+                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Formas de organização da turma)',
+                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
+                    'fail' => true
+                ];
+            }
+
+            if ($turma->itinerarioFormativo() && count(array_filter($turma->unidadesCurriculares)) == 0) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verifique se as unidades curriculares da turma {$nomeTurma} foram informadas.",
+                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Formas de organização da turma)',
+                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
+                    'fail' => true
+                ];
+            }
+
+            if (count($turma->unidadesCurricularesSemDocenteVinculado()) > 0) {
+                foreach ($turma->unidadesCurricularesSemDocenteVinculado() as $unidadeCurricular) {
+                    $mensagem[] = [
+                        'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verificamos que a unidade curricular {$unidadeCurricular} faz parte da turma {$nomeTurma}, portanto deve haver um docente vinculado à mesma.",
+                        'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Formas de organização da turma)',
                         'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
                         'fail' => true
                     ];
