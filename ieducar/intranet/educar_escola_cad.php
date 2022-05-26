@@ -1579,6 +1579,10 @@ return new class extends clsCadastro {
             return false;
         }
 
+        if (!$this->validaInstrumentosPedagogicos()) {
+            return false;
+        }
+
         if (! isset($this->pessoaj_id_oculto) ||
             ! is_int((int)$this->pessoaj_id_oculto)
         ) {
@@ -1874,6 +1878,10 @@ return new class extends clsCadastro {
             return false;
         }
 
+        if (!$this->validaInstrumentosPedagogicos()) {
+            return false;
+        }
+
         $this->bloquear_lancamento_diario_anos_letivos_encerrados = is_null($this->bloquear_lancamento_diario_anos_letivos_encerrados) ? 0 : 1;
         $this->utiliza_regra_diferenciada = !is_null($this->utiliza_regra_diferenciada);
 
@@ -1999,8 +2007,7 @@ return new class extends clsCadastro {
                 $this->validaPoderPublicoParceriaConvenio() &&
                 $this->validaFormasDeContratacaoEntreAdministracaoPublicaEOutrasInstituicoes() &&
                 $this->validaMatriculasAtendidasPorConvenio() &&
-                $this->validaLinguasIndigenas() &&
-                $this->validaInstrumentosPedagogicos()
+                $this->validaLinguasIndigenas()
             ;
     }
 
