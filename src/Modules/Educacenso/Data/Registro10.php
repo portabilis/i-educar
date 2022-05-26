@@ -163,7 +163,7 @@ class Registro10 extends AbstractRegistro
             $data->semFuncionariosParaFuncoes ? null : $data->qtdTecnicos, // 128	Técnicos(as), monitores(as), supervisores(as) ou auxiliares de laboratório(s), de apoio a tecnologias educacionais ou em multimeios/multimídias eletrônico-digitais.
             $data->semFuncionariosParaFuncoes ? null : $data->qtdViceDiretor, // 129	Vice-diretor(a) ou diretor(a) adjunto(a), profissionais responsáveis pela gestão administrativa e/ou financeira
             $data->semFuncionariosParaFuncoes ? null : $data->qtdOrientadorComunitario, // 130	Orientador(a) comunitário(a) ou assistente social
-            (int) $data->semFuncionariosParaFuncoes, //131	Não há funcionários para as funções listadas
+            $data->semFuncionariosParaFuncoes ? 1 : null, //131	Não há funcionários para as funções listadas
             $data->alimentacaoEscolarAlunos, // 132	Alimentação escolar para os aluno(a)s
             $data->instrumentosPedagogicosAcervoMultimidia() ?: 0, // 133	Acervo multimídia
             $data->instrumentosPedagogicosBrinquedrosEducacaoInfantil() ?: 0, // 134	Brinquedos para educação infantil
