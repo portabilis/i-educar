@@ -2167,6 +2167,7 @@ return new class extends clsCadastro {
     {
         $msgRequereTelefone = "O campo: {$nomeCampo}, deve ser preenchido quando o DDD estiver preenchido.";
         $msgRequereDDD = "O campo: DDD, deve ser preenchido quando o {$nomeCampo} estiver preenchido.";
+        $msgDDDInvalido = "O campo: DDD, possui um valor inválido";
 
         if (!empty($valorDDD) && empty($valorTelefone)) {
             $this->mensagem = $msgRequereTelefone;
@@ -2176,6 +2177,12 @@ return new class extends clsCadastro {
 
         if (empty($valorDDD) && !empty($valorTelefone)) {
             $this->mensagem = $msgRequereDDD;
+
+            return false;
+        }
+
+        if (\Str::length($valorDDD) === 2 && \Str::startsWith($valorDDD,'0')) {
+            $this->mensagem = $msgDDDInvalido;
 
             return false;
         }
