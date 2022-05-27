@@ -2181,7 +2181,7 @@ return new class extends clsCadastro {
             return false;
         }
 
-        if (\Str::length($valorDDD) === 2 && \Str::startsWith($valorDDD,'0')) {
+        if (!empty($valorDDD) && ((int)$valorDDD >= 0 && (int)$valorDDD < 11)) {
             $this->mensagem = $msgDDDInvalido;
 
             return false;
