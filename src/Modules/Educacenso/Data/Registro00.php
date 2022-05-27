@@ -3,6 +3,10 @@
 namespace iEducar\Modules\Educacenso\Data;
 
 use App\Models\Educacenso\Registro00 as Registro00Model;
+use iEducar\Modules\Educacenso\ExportRule\DependenciaAdministrativa;
+use iEducar\Modules\Educacenso\ExportRule\EsferaAdministrativa;
+use iEducar\Modules\Educacenso\ExportRule\Regulamentacao;
+use iEducar\Modules\Educacenso\ExportRule\SituacaoFuncionamento;
 use iEducar\Modules\Educacenso\Formatters;
 use Portabilis_Date_Utils;
 
@@ -15,37 +19,139 @@ class Registro00 extends AbstractRegistro
      */
     protected $model;
 
+    public $codigoInep;
+    public $nomeEscola;
+    public $situacaoFuncionamento;
+
     /**
      * @param $escola
      * @param $ano
      *
      * @return Registro00Model
      */
-    public function getData($escola, $ano)
+    public function getData($school, $year)
     {
-        $data = $this->repository->getDataForRecord00($escola, $ano);
+        $data = $this->repository->getDataForRecord00($school, $year);
 
-        $this->hydrateModel($data[0]);
+        $models = [];
+        foreach ($data as $record) {
+            $record = $this->processData($record);
+            $models[] = $this->hydrateModel($record);
+        }
 
-        return $this->model;
+        return $models;
     }
 
-    public function getExportFormatData($escola, $ano)
+    /**
+     * @param $escola
+     * @param $year
+     *
+     * @return array
+     */
+    public function getExportFormatData($escola, $year)
     {
-        $model = $this->getData($escola, $ano);
+        $records = $this->getData($escola, $year);
 
-        $this->model->codigoInep = substr($this->model->codigoInep, 0, 8);
-        $this->model->inicioAnoLetivo = Portabilis_Date_Utils::pgSQLToBr($this->model->inicioAnoLetivo);
-        $this->model->fimAnoLetivo = Portabilis_Date_Utils::pgSQLToBr($this->model->fimAnoLetivo);
-        $this->model->nome = $this->convertStringToCenso($this->model->nome);
-        $this->model->logradouro = $this->convertStringToCenso($this->model->logradouro);
-        $this->model->numero = $this->convertStringToCenso($this->model->numero);
-        $this->model->complemento = $this->convertStringToCenso($this->model->complemento);
-        $this->model->bairro = $this->convertStringToCenso($this->model->bairro);
-        $this->model->email = mb_strtoupper($this->model->email);
-        $this->model->orgaoRegional = ($this->model->orgaoRegional ? str_pad($this->model->orgaoRegional, 5, '0', STR_PAD_LEFT) : null);
-        $this->model->cnpjEscolaPrivada = $this->cnpjToCenso($this->model->cnpjEscolaPrivada);
-        $this->model->cnpjMantenedoraPrincipal = $this->cnpjToCenso($this->model->cnpjMantenedoraPrincipal);
+        $data = [];
+
+        foreach ($records as $record) {
+            $data[] = $this->getRecordExportData($record);
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param $Registro00Model
+     *
+     * @return array
+     */
+    public function getRecordExportData($record)
+    {
+        $this->codigoInep = $record->codigoInep;
+        $this->nomeEscola = $record->nome;
+        $this->situacaoFuncionamento = $record->situacaoFuncionamento;
+
+        $record = SituacaoFuncionamento::handle($record);
+        $record = DependenciaAdministrativa::handle($record);
+        $record = Regulamentacao::handle($record);
+        $record = EsferaAdministrativa::handle($record);
+
+        return [
+            $record->registro,
+            $record->codigoInep,
+            $record->situacaoFuncionamento,
+            $record->inicioAnoLetivo,
+            $record->fimAnoLetivo,
+            $record->nome,
+            $record->cep,
+            $record->codigoIbgeMunicipio,
+            $record->codigoIbgeDistrito,
+            $record->logradouro,
+            $record->numero,
+            $record->complemento,
+            $record->bairro,
+            $record->ddd,
+            $record->telefone,
+            $record->telefoneOutro,
+            $record->email,
+            $record->orgaoRegional,
+            $record->zonaLocalizacao,
+            $record->localizacaoDiferenciada,
+            $record->dependenciaAdministrativa,
+            $record->orgaoEducacao,
+            $record->orgaoSeguranca,
+            $record->orgaoSaude,
+            $record->orgaoOutro,
+            $record->mantenedoraEmpresa,
+            $record->mantenedoraSindicato,
+            $record->mantenedoraOng,
+            $record->mantenedoraInstituicoes,
+            $record->mantenedoraSistemaS,
+            $record->mantenedoraOscip,
+            $record->categoriaEscolaPrivada,
+            $record->conveniadaPoderPublico,
+            $record->cnpjMantenedoraPrincipal,
+            $record->cnpjEscolaPrivada,
+            $record->regulamentacao,
+            $record->esferaFederal,
+            $record->esferaEstadual,
+            $record->esferaMunicipal,
+            $record->unidadeVinculada,
+            $record->inepEscolaSede,
+            $record->codigoIes,
+        ];
+    }
+
+    private function processData($data)
+    {
+        $data->codigoInep = substr($data->codigoInep, 0, 8);
+        $data->inicioAnoLetivo = Portabilis_Date_Utils::pgSQLToBr($data->inicioAnoLetivo);
+        $data->fimAnoLetivo = Portabilis_Date_Utils::pgSQLToBr($data->fimAnoLetivo);
+        $data->nome = $this->convertStringToCenso($data->nome);
+        $data->logradouro = $this->convertStringToCenso($data->logradouro);
+        $data->numero = $this->convertStringToCenso($data->numero);
+        $data->complemento = $this->convertStringToCenso($data->complemento);
+        $data->bairro = $this->convertStringToCenso($data->bairro);
+        $data->email = mb_strtoupper($data->email);
+        $data->orgaoRegional = ($data->orgaoRegional ? str_pad($data->orgaoRegional, 5, '0', STR_PAD_LEFT) : null);
+        $data->cnpjEscolaPrivada = $this->cnpjToCenso($data->cnpjEscolaPrivada);
+        $data->cnpjMantenedoraPrincipal = $this->cnpjToCenso($data->cnpjMantenedoraPrincipal);
+
+        return $data;
+    }
+
+    /**
+     * @param $data
+     */
+    protected function hydrateModel($data)
+    {
+        $model = clone $this->model;
+        foreach ($data as $field => $value) {
+            if (property_exists($model, $field)) {
+                $model->$field = $value;
+            }
+        }
 
         return $model;
     }
