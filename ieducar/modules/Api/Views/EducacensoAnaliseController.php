@@ -875,14 +875,14 @@ class EducacensoAnaliseController extends ApiCoreController
                 ];
             }
 
-            if ($turma->formacaoGeralBasica() && is_null($turma->etapaEducacenso)) {
+            if (($turma->formacaoGeralBasica() || $turma->estruturaCurricularNaoSeAplica()) && is_null($turma->etapaEducacenso)) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verifique se alguma opção de etapa de ensino da turma {$nomeTurma} foi informada.",
                     'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Etapa de ensino)',
                     'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
                     'fail' => true
                 ];
-            } elseif ($turma->formacaoGeralBasica()) {
+            } elseif ($turma->formacaoGeralBasica() || $turma->estruturaCurricularNaoSeAplica()) {
                 $valid = true;
                 $opcoesEtapaEducacenso = '';
 
