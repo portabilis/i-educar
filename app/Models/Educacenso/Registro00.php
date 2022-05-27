@@ -5,214 +5,439 @@ namespace App\Models\Educacenso;
 class Registro00 implements RegistroEducacenso
 {
     /**
-     * @var string Campo 1
+     * @var string
      */
     public $registro;
 
     /**
-     * @var string Campo 2
+     * @var string
      */
     public $codigoInep;
 
     /**
-     * @var string Campo 3
+     * @var string
      */
     public $situacaoFuncionamento;
 
     /**
-     * @var string Campo 4
+     * @var string
      */
     public $inicioAnoLetivo;
 
     /**
-     * @var string Campo 5
+     * @var string
      */
     public $fimAnoLetivo;
 
     /**
-     * @var string Campo 6
+     * @var string
      */
     public $nome;
 
     /**
-     * @var string Campo 7
+     * @var string
      */
     public $cep;
 
     /**
-     * @var string Campo 8
+     * @var string
      */
     public $codigoIbgeMunicipio;
 
     /**
-     * @var string Campo 9
+     * @var string
      */
     public $codigoIbgeDistrito;
 
     /**
-     * @var string Campo 10
+     * @var string
      */
     public $logradouro;
 
     /**
-     * @var string Campo 11
+     * @var string
      */
     public $numero;
 
     /**
-     * @var string Campo 12
+     * @var string
      */
     public $complemento;
 
     /**
-     * @var string Campo 13
+     * @var string
      */
     public $bairro;
 
     /**
-     * @var string Campo 14
+     * @var string
      */
     public $ddd;
 
     /**
-     * @var string Campo 15
+     * @var string
      */
     public $telefone;
 
     /**
-     * @var string Campo 16
+     * @var string
      */
     public $telefoneOutro;
 
     /**
-     * @var string Campo 17
+     * @var string
      */
     public $email;
 
     /**
-     * @var string Campo 18
+     * @var string
      */
     public $orgaoRegional;
 
     /**
-     * @var string Campo 19
+     * @var string
      */
     public $zonaLocalizacao;
 
     /**
-     * @var string Campo 20
+     * @var string
      */
     public $localizacaoDiferenciada;
 
     /**
-     * @var string Campo 21
+     * @var string
      */
     public $dependenciaAdministrativa;
 
     /**
-     * @var string Campo 22
+     * @var string
      */
     public $orgaoEducacao;
 
     /**
-     * @var string Campo 23
+     * @var string
      */
     public $orgaoSeguranca;
 
     /**
-     * @var string Campo 24
+     * @var string
      */
     public $orgaoSaude;
 
     /**
-     * @var string Campo 25
+     * @var string
      */
     public $orgaoOutro;
 
     /**
-     * @var string Campo 26
+     * @var string
      */
     public $mantenedoraEmpresa;
 
     /**
-     * @var string Campo 27
+     * @var string
      */
     public $mantenedoraSindicato;
 
     /**
-     * @var string Campo 28
+     * @var string
      */
     public $mantenedoraOng;
 
     /**
-     * @var string Campo 29
+     * @var string
      */
     public $mantenedoraInstituicoes;
 
     /**
-     * @var string Campo 30
+     * @var string
      */
     public $mantenedoraSistemaS;
 
     /**
-     * @var string Campo 31
+     * @var string
      */
     public $mantenedoraOscip;
 
     /**
-     * @var string Campo 32
+     * @var string
      */
     public $categoriaEscolaPrivada;
 
     /**
-     * @var string Campo 33
+     * @var string
      */
     public $conveniadaPoderPublico;
 
     /**
-     * @var string Campo 34
+     * @var string
      */
     public $cnpjMantenedoraPrincipal;
 
     /**
-     * @var string Campo 35
+     * @var string
      */
     public $cnpjEscolaPrivada;
 
     /**
-     * @var string Campo 36
+     * @var string
      */
     public $regulamentacao;
 
     /**
-     * @var string Campo 37
+     * @var string
      */
     public $esferaFederal;
 
     /**
-     * @var string Campo 38
+     * @var string
      */
     public $esferaEstadual;
 
     /**
-     * @var string Campo 39
+     * @var string
      */
     public $esferaMunicipal;
 
     /**
-     * @var string Campo 40
+     * @var string
      */
     public $unidadeVinculada;
 
     /**
-     * @var string Campo 41
+     * @var string
      */
     public $inepEscolaSede;
 
     /**
-     * @var string Campo 42
+     * @var string
      */
     public $codigoIes;
+
+    /**
+     * @var array
+     */
+    public $poderPublicoConveniado;
+
+    /**
+     * @var array
+     */
+    public $formasContratacaoPoderPublico;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatAtividadesComplentar;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatAee;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatCrecheParcial;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatCrecheIntegral;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatPreEscolaParcial;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatPreEscolaIntegral;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatFundamentalIniciaisParcial;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatFundamentalIniciaisIntegral;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatFundamentalFinaisParcial;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatFundamentalFinaisIntegral;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatEnsinoMedioParcial;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatEnsinoMedioIntegral;
+
+    /**
+     * @var integer
+     */
+    public $qdtMatClasseEspecialParcial;
+
+    /**
+     * @var integer
+     */
+    public $qdtMatClasseEspecialIntegral;
+
+    /**
+     * @var integer
+     */
+    public $qdtMatEjaFundamental;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatEjaEnsinoMedio;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatEducacaoProfissionalIntegradaEjaFundamentalParcial;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatEducacaoProfissionalIntegradaEjaFundamentalIntegral;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatEducacaoProfissionalIntegradaEjaNivelMedioParcial;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatEducacaoProfissionalIntegradaEjaNivelMedioIntegral;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatEducacaoProfissionalConcomitanteEjaNivelMedioParcial;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatEducacaoProfissionalConcomitanteEjaNivelMedioIntegral;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatEducacaoProfissionalIntercomentarEjaNivelMedioParcial;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatEducacaoProfissionalIntercomentarEjaNivelMedioIntegral;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatEducacaoProfissionalIntegradaEnsinoMedioParcial;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatEducacaoProfissionalIntegradaEnsinoMedioIntegral;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatEducacaoProfissionalConcomitenteEnsinoMedioParcial;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatEducacaoProfissionalConcomitenteEnsinoMedioIntegral;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatEducacaoProfissionalIntercomplementarEnsinoMedioParcial;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatEducacaoProfissionalIntercomplementarEnsinoMedioIntegral;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatEducacaoProfissionalTecnicaIntegradaEnsinoMedioParcial;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatEducacaoProfissionalTecnicaIntegradaEnsinoMedioIntegral;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatEducacaoProfissionalTecnicaConcomitanteEnsinoMedioParcial;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatEducacaoProfissionalTecnicaConcomitanteEnsinoMedioIntegral;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatEducacaoProfissionalTecnicaIntercomplementarEnsinoMedioParcial;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatEducacaoProfissionalTecnicaIntercomplementarEnsinoMedioItegral;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatEducacaoProfissionalTecnicaSubsequenteEnsinoMedio;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatEducacaoProfissionalTecnicaIntegradaEjaNivelMedioParcial;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatEducacaoProfissionalTecnicaIntegradaEjaNivelMedioIntegral;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatEducacaoProfissionalTecnicaConcomitanteEjaNivelMedioParcial;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatEducacaoProfissionalTecnicaConcomitanteEjaNivelMedioIntegral;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatEducacaoProfissionalTecnicaIntercomplementarEjaNivelMedioParcial;
+
+    /**
+     * @var integer
+     */
+    public $qtdMatEducacaoProfissionalTecnicaIntercomplementarEjaNivelMedioIntegral;
 
     /**
      * @var string Campo usado na validação
