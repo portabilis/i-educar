@@ -147,7 +147,7 @@ class EducacensoExportController extends ApiCoreController
 
         $export .= $this->exportaDadosRegistro99();
 
-        return $export;
+        return $this->exportaDadosRegistro00($escolaId, $ano, $continuaExportacao);
     }
 
     protected function exportaDadosCensoPorEscolaFase2($escolaId, $ano, $data_ini, $data_fim)
