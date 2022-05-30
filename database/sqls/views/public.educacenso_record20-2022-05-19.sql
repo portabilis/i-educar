@@ -114,7 +114,14 @@ SELECT
                           AND deficiencia.deficiencia_educacenso IN (3, 4, 5)
                  WHERE professor_turma.turma_id = turma.cod_turma
                  LIMIT 1), 0) as "possuiServidorNecessitandoTradutor",
-
+    (
+      SELECT array_agg(DISTINCT codigo_educacenso)
+        FROM pmieducar.turma t
+        JOIN modules.professor_turma pt ON pt.turma_id = t.cod_turma
+        JOIN modules.professor_turma_disciplina ptd ON ptd.professor_turma_id = pt.id
+        JOIN modules.componente_curricular cc ON cc.id = ptd.componente_curricular_id
+      WHERE t.cod_turma = turma.cod_turma
+    ) AS "disciplinasEducacensoComDocentes",
 
     turma.local_funcionamento_diferenciado as "localFuncionamentoDiferenciado",
     escola.local_funcionamento as "localFuncionamento",
