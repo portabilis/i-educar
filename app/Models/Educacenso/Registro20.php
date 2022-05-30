@@ -6,9 +6,12 @@ use App\Services\Educacenso\Version2019\Registro20Import;
 use App_Model_IedFinder;
 use App_Model_LocalFuncionamentoDiferenciado;
 use App_Model_TipoMediacaoDidaticoPedagogico;
+use iEducar\Modules\Educacenso\Model\EstruturaCurricular;
+use iEducar\Modules\Educacenso\Model\FormaOrganizacaoTurma;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
+use iEducar\Modules\Educacenso\Model\UnidadesCurriculares;
 
 class Registro20 implements RegistroEducacenso
 {
@@ -65,12 +68,32 @@ class Registro20 implements RegistroEducacenso
     /**
      * @var array
      */
+    public $estruturaCurricular;
+
+    /**
+     * @var array
+     */
     public $atividadesComplementares;
 
     /**
      * @var string
      */
     public $etapaEducacenso;
+
+    /**
+     * @var array
+     */
+    public $formasOrganizacaoTurma;
+
+    /**
+     * @var array
+     */
+    public $unidadesCurriculares;
+
+    /**
+     * @var array
+     */
+    public $unidadesCurricularesSemDocenteVinculado;
 
     /**
      * @var string
@@ -111,6 +134,11 @@ class Registro20 implements RegistroEducacenso
      * @var string
      */
     public $possuiAlunoNecessitandoTradutor;
+
+    /**
+     * @var array
+     */
+    public $disciplinasEducacensoComDocentes;
 
     /**
      * @var string
@@ -467,5 +495,55 @@ class Registro20 implements RegistroEducacenso
         }
 
         return $componentesExistentes;
+    }
+
+    public function etapaEducacensoDescritiva() {
+        $etapasEducacenso = loadJson('educacenso_json/etapas_ensino.json');
+        return $etapasEducacenso[$this->etapaEducacenso];
+    }
+
+    public function unidadesCurricularesSemDocenteVinculado() {
+        $unidadesCurriculares = UnidadesCurriculares::getDescriptiveValues();
+        $unidadesSemDocente = [];
+
+        foreach ($this->unidadesCurricularesSemDocenteVinculado as $unidadeCurricular) {
+            $unidadesSemDocente[$unidadeCurricular] = $unidadesCurriculares[$unidadeCurricular];
+        }
+
+        return $unidadesSemDocente;
+    }
+
+    public function formaOrganizacaoTurmaDescritiva()
+    {
+        $descriptiveValues = FormaOrganizacaoTurma::getDescriptiveValues();
+        return $descriptiveValues[$this->formasOrganizacaoTurma];
+    }
+
+    public function itinerarioFormativo()
+    {
+        return in_array(EstruturaCurricular::ITINERARIO_FORMATIVO, $this->estruturaCurricular);
+    }
+
+    public function formacaoGeralBasica()
+    {
+        return in_array(EstruturaCurricular::FORMACAO_GERAL_BASICA, $this->estruturaCurricular);
+    }
+
+    public function estruturaCurricularNaoSeAplica()
+    {
+        return in_array(EstruturaCurricular::NAO_SE_APLICA, $this->estruturaCurricular);
+    }
+
+    public function requereFormasOrganizacaoTurma()
+    {
+        return $this->escolarizacao() && !in_array($this->etapaEducacenso, [1, 2, 3, 24]);
+    }
+
+    public function requereEtapaEducacenso()
+    {
+        return in_array($this->estruturaCurricular, [
+            EstruturaCurricular::FORMACAO_GERAL_BASICA,
+            EstruturaCurricular::NAO_SE_APLICA
+        ]);
     }
 }

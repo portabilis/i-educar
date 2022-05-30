@@ -18,7 +18,6 @@ SELECT
     turma.estrutura_curricular AS "estruturaCurricular",
     turma.formas_organizacao_turma AS "formasOrganizacaoTurma",
     turma.unidade_curricular AS "unidadesCurriculares",
-
     (
       SELECT
         array_agg(unidade_curricular) AS unidades_curriculares
@@ -115,7 +114,6 @@ SELECT
                           AND deficiencia.deficiencia_educacenso IN (3, 4, 5)
                  WHERE professor_turma.turma_id = turma.cod_turma
                  LIMIT 1), 0) as "possuiServidorNecessitandoTradutor",
-
     (
       SELECT array_agg(DISTINCT codigo_educacenso)
         FROM pmieducar.turma t
