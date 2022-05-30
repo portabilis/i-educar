@@ -136,6 +136,11 @@ class Registro20 implements RegistroEducacenso
     public $possuiAlunoNecessitandoTradutor;
 
     /**
+     * @var array
+     */
+    public $disciplinasEducacensoComDocentes;
+
+    /**
      * @var string
      */
     public $possuiServidorNecessitandoTradutor;

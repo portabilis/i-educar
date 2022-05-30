@@ -110,34 +110,53 @@ class Registro20 extends AbstractRegistro
             $record->itinerarioFormativo() ? (int) in_array(6, $record->unidadesCurriculares) : '', // 45 Língua/Literatura estrangeira - outra
             $record->itinerarioFormativo() ? (int) in_array(7, $record->unidadesCurriculares) : '', // 46 Projeto de vida
             $record->itinerarioFormativo() ? (int) in_array(8, $record->unidadesCurriculares) : '', // 47 Trilhas de aprofundamento/aprendizagens
-            $canExportComponente ? (int) in_array(1, $componentesEducacenso) : '', // 48 1. Química
-            $canExportComponente ? (int) in_array(2, $componentesEducacenso) : '', // 49 2. Física
-            $canExportComponente ? (int) in_array(3, $componentesEducacenso) : '', // 50 3. Matemática
-            $canExportComponente ? (int) in_array(4, $componentesEducacenso) : '', // 51 4. Biologia
-            $canExportComponente ? (int) in_array(5, $componentesEducacenso) : '', // 52 5. Ciências
-            $canExportComponente ? (int) in_array(6, $componentesEducacenso) : '', // 53 6. Língua/Literatura Portuguesa
-            $canExportComponente ? (int) in_array(7, $componentesEducacenso) : '', // 54 7. Língua/Literatura Estrangeira - Inglês
-            $canExportComponente ? (int) in_array(8, $componentesEducacenso) : '', // 55 8. Língua/Literatura Estrangeira - Espanhol
-            $canExportComponente ? (int) in_array(9, $componentesEducacenso) : '', // 56 9. Língua/Literatura Estrangeira - Outra
-            $canExportComponente ? (int) in_array(10, $componentesEducacenso) : '', // 57 10. Arte (Educação Artística, Teatro, Dança, Música, Artes Plásticas e outras)
-            $canExportComponente ? (int) in_array(11, $componentesEducacenso) : '', // 58 11. Educação Física
-            $canExportComponente ? (int) in_array(12, $componentesEducacenso) : '', // 59 12. História
-            $canExportComponente ? (int) in_array(13, $componentesEducacenso) : '', // 60 13. Geografia
-            $canExportComponente ? (int) in_array(14, $componentesEducacenso) : '', // 61 14. Filosofia
-            $canExportComponente ? (int) in_array(16, $componentesEducacenso) : '', // 62 16. Informática/ Computação
-            $canExportComponente ? (int) in_array(17, $componentesEducacenso) : '', // 63 17. Áreas do conhecimento profissionalizantes
-            $canExportComponente ? (int) in_array(23, $componentesEducacenso) : '', // 64 23. Libras
-            $canExportComponente ? (int) in_array(25, $componentesEducacenso) : '', // 65 25. Áreas do conhecimento pedagógicas
-            $canExportComponente ? (int) in_array(26, $componentesEducacenso) : '', // 66 26. Ensino Religioso
-            $canExportComponente ? (int) in_array(27, $componentesEducacenso) : '', // 67 27. Língua Indígena
-            $canExportComponente ? (int) in_array(28, $componentesEducacenso) : '', // 68 28. Estudos Sociais
-            $canExportComponente ? (int) in_array(29, $componentesEducacenso) : '', // 69 29. Sociologia
-            $canExportComponente ? (int) in_array(30, $componentesEducacenso) : '', // 70 30. Língua/Literatura Estrangeira - Francês
-            $canExportComponente ? (int) in_array(31, $componentesEducacenso) : '', // 71 31. Língua Portuguesa como Segunda Língua
-            $canExportComponente ? (int) in_array(32, $componentesEducacenso) : '', // 72 32. Estágio Curricular Supervisionado
-            $canExportComponente ? (int) in_array(33, $componentesEducacenso) : '', // 73 33. Projeto de vida
-            $canExportComponente ? (int) in_array(99, $componentesEducacenso) : '', // 74 99. Outras áreas do conhecimento
+            $canExportComponente ? $this->getCensoValueForDiscipline(1, $componentesEducacenso, $record->disciplinasEducacensoComDocentes) : '', // 48 1. Química
+            $canExportComponente ? $this->getCensoValueForDiscipline(2, $componentesEducacenso, $record->disciplinasEducacensoComDocentes) : '', // 49 2. Física
+            $canExportComponente ? $this->getCensoValueForDiscipline(3, $componentesEducacenso, $record->disciplinasEducacensoComDocentes) : '', // 50 3. Matemática
+            $canExportComponente ? $this->getCensoValueForDiscipline(4, $componentesEducacenso, $record->disciplinasEducacensoComDocentes) : '', // 51 4. Biologia
+            $canExportComponente ? $this->getCensoValueForDiscipline(5, $componentesEducacenso, $record->disciplinasEducacensoComDocentes) : '', // 52 5. Ciências
+            $canExportComponente ? $this->getCensoValueForDiscipline(6, $componentesEducacenso, $record->disciplinasEducacensoComDocentes) : '', // 53 6. Língua/Literatura Portuguesa
+            $canExportComponente ? $this->getCensoValueForDiscipline(7, $componentesEducacenso, $record->disciplinasEducacensoComDocentes) : '', // 54 7. Língua/Literatura Estrangeira - Inglês
+            $canExportComponente ? $this->getCensoValueForDiscipline(8, $componentesEducacenso, $record->disciplinasEducacensoComDocentes) : '', // 55 8. Língua/Literatura Estrangeira - Espanhol
+            $canExportComponente ? $this->getCensoValueForDiscipline(9, $componentesEducacenso, $record->disciplinasEducacensoComDocentes) : '', // 56 9. Língua/Literatura Estrangeira - Outra
+            $canExportComponente ? $this->getCensoValueForDiscipline(10, $componentesEducacenso, $record->disciplinasEducacensoComDocentes) : '', // 57 10. Arte (Educação Artística, Teatro, Dança, Música, Artes Plásticas e outras)
+            $canExportComponente ? $this->getCensoValueForDiscipline(11, $componentesEducacenso, $record->disciplinasEducacensoComDocentes) : '', // 58 11. Educação Física
+            $canExportComponente ? $this->getCensoValueForDiscipline(12, $componentesEducacenso, $record->disciplinasEducacensoComDocentes) : '', // 59 12. História
+            $canExportComponente ? $this->getCensoValueForDiscipline(13, $componentesEducacenso, $record->disciplinasEducacensoComDocentes) : '', // 60 13. Geografia
+            $canExportComponente ? $this->getCensoValueForDiscipline(14, $componentesEducacenso, $record->disciplinasEducacensoComDocentes) : '', // 61 14. Filosofia
+            $canExportComponente ? $this->getCensoValueForDiscipline(16, $componentesEducacenso, $record->disciplinasEducacensoComDocentes) : '', // 62 16. Informática/ Computação
+            $canExportComponente ? $this->getCensoValueForDiscipline(17, $componentesEducacenso, $record->disciplinasEducacensoComDocentes) : '', // 63 17. Áreas do conhecimento profissionalizantes
+            $canExportComponente ? $this->getCensoValueForDiscipline(23, $componentesEducacenso, $record->disciplinasEducacensoComDocentes) : '', // 64 23. Libras
+            $canExportComponente ? $this->getCensoValueForDiscipline(25, $componentesEducacenso, $record->disciplinasEducacensoComDocentes) : '', // 65 25. Áreas do conhecimento pedagógicas
+            $canExportComponente ? $this->getCensoValueForDiscipline(26, $componentesEducacenso, $record->disciplinasEducacensoComDocentes) : '', // 66 26. Ensino Religioso
+            $canExportComponente ? $this->getCensoValueForDiscipline(27, $componentesEducacenso, $record->disciplinasEducacensoComDocentes) : '', // 67 27. Língua Indígena
+            $canExportComponente ? $this->getCensoValueForDiscipline(28, $componentesEducacenso, $record->disciplinasEducacensoComDocentes) : '', // 68 28. Estudos Sociais
+            $canExportComponente ? $this->getCensoValueForDiscipline(29, $componentesEducacenso, $record->disciplinasEducacensoComDocentes) : '', // 69 29. Sociologia
+            $canExportComponente ? $this->getCensoValueForDiscipline(30, $componentesEducacenso, $record->disciplinasEducacensoComDocentes) : '', // 70 30. Língua/Literatura Estrangeira - Francês
+            $canExportComponente ? $this->getCensoValueForDiscipline(31, $componentesEducacenso, $record->disciplinasEducacensoComDocentes) : '', // 71 31. Língua Portuguesa como Segunda Língua
+            $canExportComponente ? $this->getCensoValueForDiscipline(32, $componentesEducacenso, $record->disciplinasEducacensoComDocentes) : '', // 72 32. Estágio Curricular Supervisionado
+            $canExportComponente ? $this->getCensoValueForDiscipline(33, $componentesEducacenso, $record->disciplinasEducacensoComDocentes) : '', // 73 33. Projeto de vida
+            $canExportComponente ? $this->getCensoValueForDiscipline(99, $componentesEducacenso, $record->disciplinasEducacensoComDocentes) : '', // 74 99. Outras áreas do conhecimento
         ];
+    }
+
+    /**
+     * @param $discipline
+     * @param $disciplinesWithTeacher
+     *
+     * @return integer
+     */
+    private function getCensoValueForDiscipline($discipline, $disciplines, $disciplinesWithTeacher)
+    {
+        if (in_array($discipline, $disciplines) && in_array($discipline, $disciplinesWithTeacher)) {
+            return 1; // oferece a área do conhecimento/componente curricular com docente vinculado
+        }
+
+        if (in_array($discipline, $disciplines) && !in_array($discipline, $disciplinesWithTeacher)) {
+            return 2; // oferece a área do conhecimento/componente curricular sem docente vinculado
+        }
+
+        return 0;
     }
 
     /**
@@ -174,6 +193,8 @@ class Registro20 extends AbstractRegistro
         $data->estruturaCurricular = Portabilis_Utils_Database::pgArrayToArray($data->estruturaCurricular);
         $data->unidadesCurriculares = Portabilis_Utils_Database::pgArrayToArray($data->unidadesCurriculares);
         $data->unidadesCurricularesSemDocenteVinculado = Portabilis_Utils_Database::pgArrayToArray($data->unidadesCurricularesSemDocenteVinculado);
+        $data->disciplinasEducacensoComDocentes = Portabilis_Utils_Database::pgArrayToArray($data->disciplinasEducacensoComDocentes);
+
 
         return $data;
     }
