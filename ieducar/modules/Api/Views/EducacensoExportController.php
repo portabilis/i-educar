@@ -147,7 +147,7 @@ class EducacensoExportController extends ApiCoreController
 
         $export .= $this->exportaDadosRegistro99();
 
-        return $this->exportaDadosRegistro00($escolaId, $ano, $continuaExportacao);
+        return $export;
     }
 
     protected function exportaDadosCensoPorEscolaFase2($escolaId, $ano, $data_ini, $data_fim)
@@ -279,9 +279,7 @@ class EducacensoExportController extends ApiCoreController
 
         $continuaExportacao = !in_array($registro00->situacaoFuncionamento, [ModelSituacaoFuncionamento::EXTINTA, ModelSituacaoFuncionamento::PARALISADA]);
 
-        return implode(PHP_EOL, array_map(function ($record) {
-            return ArrayToCenso::format($record);
-        }, $data)) . PHP_EOL;
+        return ArrayToCenso::format($data) . PHP_EOL;
     }
 
     protected function exportaDadosRegistro10($escolaId, $ano)

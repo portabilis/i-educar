@@ -43,24 +43,18 @@ class Registro00 extends AbstractRegistro
             $models[] = $this->hydrateModel($record);
         }
 
-        return $models;
+        return $models[0];
     }
 
     /**
      * @param $escola
      * @param $year
      *
-     * @return array
      */
     public function getExportFormatData($escola, $year)
     {
-        $records = $this->getData($escola, $year);
-
-        $data = [];
-
-        foreach ($records as $record) {
-            $data[] = $this->getRecordExportData($record);
-        }
+        $data = $this->getData($escola, $year);
+        $data = $this->getRecordExportData($data);
 
         return $data;
     }
