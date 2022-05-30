@@ -611,14 +611,14 @@ class EducacensoAnaliseController extends ApiCoreController
         if (count(array_filter($escola->instrumentosPedagogicos)) == 0) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se os instrumentos, materiais socioculturais e/ou pedagógicos da escola foram informados.",
-                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Equipamentos > Campo: Instrumentos, materiais socioculturais e/ou pedagógicos em uso na escola para o desenvolvimento de atividades de ensino aprendizagem)',
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Instrumentos, materiais socioculturais e/ou pedagógicos em uso na escola para o desenvolvimento de atividades de ensino aprendizagem)',
                 'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
                 'fail' => true
             ];
         } elseif ($escola->instrumentosPedagogicosPreenchidosIncorretamente()) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} possui valor inválido. Verificamos que os instrumentos, materiais socioculturais e/ou pedagógicos da escola foram preenchidos incorretamente.",
-                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Equipamentos > Campo: Instrumentos, materiais socioculturais e/ou pedagógicos em uso na escola para o desenvolvimento de atividades de ensino aprendizagem)',
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Instrumentos, materiais socioculturais e/ou pedagógicos em uso na escola para o desenvolvimento de atividades de ensino aprendizagem)',
                 'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
                 'fail' => true
             ];
