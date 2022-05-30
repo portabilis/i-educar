@@ -135,7 +135,7 @@ class Registro20 extends AbstractRegistro
             $canExportComponente ? (int) in_array(30, $componentesEducacenso) : '', // 70 30. Língua/Literatura Estrangeira - Francês
             $canExportComponente ? (int) in_array(31, $componentesEducacenso) : '', // 71 31. Língua Portuguesa como Segunda Língua
             $canExportComponente ? (int) in_array(32, $componentesEducacenso) : '', // 72 32. Estágio Curricular Supervisionado
-            $canExportComponente ? (int) in_array(32, $componentesEducacenso) : '', // 73 33. Projeto de vida
+            $canExportComponente ? (int) in_array(33, $componentesEducacenso) : '', // 73 33. Projeto de vida
             $canExportComponente ? (int) in_array(99, $componentesEducacenso) : '', // 74 99. Outras áreas do conhecimento
         ];
     }
