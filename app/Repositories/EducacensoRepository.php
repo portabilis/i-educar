@@ -188,7 +188,7 @@ SQL;
      */
     public function getDataForRecord10($school)
     {
-        $sql = '
+        $sql = <<<'SQL'
             SELECT
                 escola.cod_escola AS "codEscola",
                 educacenso_cod_escola.cod_escola_inep AS "codigoInep",
@@ -281,11 +281,11 @@ SQL;
                 escola.qtd_bombeiro as "qtdBombeiro",
                 escola.qtd_psicologo as "qtdPsicologo",
                 escola.qtd_fonoaudiologo as "qtdFonoaudiologo",
+                escola.nao_ha_funcionarios_para_funcoes as "semFuncionariosParaFuncoes",
                 escola.alimentacao_escolar_alunos as "alimentacaoEscolarAlunos",
                 escola.orgaos_colegiados as "orgaosColegiados",
                 escola.exame_selecao_ingresso as "exameSelecaoIngresso",
                 escola.reserva_vagas_cotas as "reservaVagasCotas",
-                escola.organizacao_ensino as "organizacaoEnsino",
                 escola.instrumentos_pedagogicos as "instrumentosPedagogicos",
                 escola.compartilha_espacos_atividades_integracao AS "compartilhaEspacosAtividadesIntegracao",
                 escola.usa_espacos_equipamentos_atividades_regulares AS "usaEspacosEquipamentosAtividadesRegulares",
@@ -299,7 +299,7 @@ SQL;
             LEFT JOIN modules.educacenso_cod_escola ON (escola.cod_escola = educacenso_cod_escola.cod_escola)
             WHERE TRUE
                 AND escola.cod_escola = :school
-        ';
+SQL;
 
         return $this->fetchPreparedQuery($sql, [
             'school' => $school
