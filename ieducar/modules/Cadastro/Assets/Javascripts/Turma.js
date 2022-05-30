@@ -40,21 +40,22 @@ let verificaEtapaEducacenso = ()=>{
 }
 
 let verificaFormaOrganizacaoTurma = ()=> {
-  const escolarizacao = ['1', '2', '3', '24', '62'];
-  const tipoAtendimento = $j('#tipo_atendimento').val() == '0';
+  const etapasInvalidas = ['1', '2', '3', '24', '62'];
+  const escolarizacao = $j('#tipo_atendimento').val() == '0';
   const etapaEducacenso = $j('#etapa_educacenso').val()
 
   $j('#formas_organizacao_turma').makeUnrequired();
   if (obrigarCamposCenso &&
-      tipoAtendimento &&
+      escolarizacao &&
       etapaEducacenso &&
-     !escolarizacao.includes(etapaEducacenso)
+     !etapasInvalidas.includes(etapaEducacenso)
   ) {
     $j('#formas_organizacao_turma').makeRequired();
   }
 
   $j("#formas_organizacao_turma").prop('disabled', false);
-  if (!tipoAtendimento && escolarizacao.includes(etapaEducacenso)) {
+
+  if (!escolarizacao || !etapaEducacenso || etapasInvalidas.includes(etapaEducacenso)) {
     $j("#formas_organizacao_turma").prop('disabled', true).val("");
   }
 }
@@ -92,6 +93,7 @@ $j('#estrutura_curricular').change(function() {
   habilitaUnidadeCurricular();
   verificaEtapaEducacenso();
   habilitaEtapaEducacenso();
+  verificaFormaOrganizacaoTurma();
 });
 
 verificaLocalFuncionamentoDiferenciado();
