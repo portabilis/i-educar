@@ -195,7 +195,6 @@ class Registro20 extends AbstractRegistro
         $data->unidadesCurricularesSemDocenteVinculado = Portabilis_Utils_Database::pgArrayToArray($data->unidadesCurricularesSemDocenteVinculado);
         $data->disciplinasEducacensoComDocentes = Portabilis_Utils_Database::pgArrayToArray($data->disciplinasEducacensoComDocentes);
 
-
         return $data;
     }
 }

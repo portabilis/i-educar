@@ -497,12 +497,15 @@ class Registro20 implements RegistroEducacenso
         return $componentesExistentes;
     }
 
-    public function etapaEducacensoDescritiva() {
+    public function etapaEducacensoDescritiva()
+    {
         $etapasEducacenso = loadJson('educacenso_json/etapas_ensino.json');
+
         return $etapasEducacenso[$this->etapaEducacenso];
     }
 
-    public function unidadesCurricularesSemDocenteVinculado() {
+    public function unidadesCurricularesSemDocenteVinculado()
+    {
         $unidadesCurriculares = UnidadesCurriculares::getDescriptiveValues();
         $unidadesSemDocente = [];
 
@@ -516,6 +519,7 @@ class Registro20 implements RegistroEducacenso
     public function formaOrganizacaoTurmaDescritiva()
     {
         $descriptiveValues = FormaOrganizacaoTurma::getDescriptiveValues();
+
         return $descriptiveValues[$this->formasOrganizacaoTurma];
     }
 

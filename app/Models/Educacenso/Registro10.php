@@ -1011,7 +1011,7 @@ class Registro10 extends Registro10Fields
         return in_array(InstrumentosPedagogicos::MATERIAL_EDUCACAO_PROFISSIONAL, $this->instrumentosPedagogicos);
     }
 
-        /**
+    /**
      * @return bool
      */
     public function instrumentosPedagogicosPreenchidosIncorretamente()
@@ -1054,7 +1054,8 @@ class Registro10 extends Registro10Fields
         return in_array(InstrumentosPedagogicos::MATERIAIS_EDUCACAO_CAMPO, $this->instrumentosPedagogicos);
     }
 
-    public function instrumentosPedagogicosNenhum() {
+    public function instrumentosPedagogicosNenhum()
+    {
         return in_array(InstrumentosPedagogicos::NENHUM_DOS_INSTRUMENTOS_LISTADOS, $this->instrumentosPedagogicos);
     }
 
