@@ -1579,6 +1579,10 @@ return new class extends clsCadastro {
             return false;
         }
 
+        if (!$this->validaInstrumentosPedagogicos()) {
+            return false;
+        }
+
         if (! isset($this->pessoaj_id_oculto) ||
             ! is_int((int)$this->pessoaj_id_oculto)
         ) {
@@ -1874,6 +1878,10 @@ return new class extends clsCadastro {
             return false;
         }
 
+        if (!$this->validaInstrumentosPedagogicos()) {
+            return false;
+        }
+
         $this->bloquear_lancamento_diario_anos_letivos_encerrados = is_null($this->bloquear_lancamento_diario_anos_letivos_encerrados) ? 0 : 1;
         $this->utiliza_regra_diferenciada = !is_null($this->utiliza_regra_diferenciada);
 
@@ -1999,8 +2007,7 @@ return new class extends clsCadastro {
                 $this->validaPoderPublicoParceriaConvenio() &&
                 $this->validaFormasDeContratacaoEntreAdministracaoPublicaEOutrasInstituicoes() &&
                 $this->validaMatriculasAtendidasPorConvenio() &&
-                $this->validaLinguasIndigenas() &&
-                $this->validaInstrumentosPedagogicos()
+                $this->validaLinguasIndigenas()
             ;
     }
 
@@ -2167,6 +2174,8 @@ return new class extends clsCadastro {
     {
         $msgRequereTelefone = "O campo: {$nomeCampo}, deve ser preenchido quando o DDD estiver preenchido.";
         $msgRequereDDD = "O campo: DDD, deve ser preenchido quando o {$nomeCampo} estiver preenchido.";
+        $msgDDDInvalido = "O campo: DDD, possui um valor inválido";
+        $listDDDInvalidos = [0,1,2,3,4,5,6,7,8,9,10,20,23,25,26,29,30,36,39,40,50,52,56,57,58,59,60,70,72,76,78,80,90];
 
         if (!empty($valorDDD) && empty($valorTelefone)) {
             $this->mensagem = $msgRequereTelefone;
@@ -2176,6 +2185,12 @@ return new class extends clsCadastro {
 
         if (empty($valorDDD) && !empty($valorTelefone)) {
             $this->mensagem = $msgRequereDDD;
+
+            return false;
+        }
+
+        if (!empty($valorDDD) && (strlen((int)$valorDDD) !== 2 || in_array((int)$valorDDD,$listDDDInvalidos))) {
+            $this->mensagem = $msgDDDInvalido;
 
             return false;
         }
