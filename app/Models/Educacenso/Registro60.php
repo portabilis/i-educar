@@ -16,6 +16,19 @@ class Registro60 implements RegistroEducacenso, ItemOfRegistro30
     public $inepTurma;
     public $matriculaAluno;
     public $etapaAluno;
+    public $tipoItinerarioLinguagens;
+    public $tipoItinerarioMatematica;
+    public $tipoItinerarioCienciasNatureza;
+    public $tipoItinerarioCienciasHumanas;
+    public $tipoItinerarioFormacaoTecnica;
+    public $tipoItinerarioIntegrado;
+    public $composicaoItinerarioLinguagens;
+    public $composicaoItinerarioMatematica;
+    public $composicaoItinerarioCienciasNatureza;
+    public $composicaoItinerarioCienciasHumanas;
+    public $composicaoItinerarioFormacaoTecnica;
+    public $cursoItinerario;
+    public $itinerarioConcomitante;
     public $tipoAtendimentoDesenvolvimentoFuncoesGognitivas;
     public $tipoAtendimentoDesenvolvimentoVidaAutonoma;
     public $tipoAtendimentoEnriquecimentoCurricular;
@@ -71,6 +84,16 @@ class Registro60 implements RegistroEducacenso, ItemOfRegistro30
      * @var string Campo usado somente na análise
      */
     public $etapaTurma;
+
+    /**
+     * @var array Campo usado somente na análise
+     */
+    public $estruturaCurricularTurma;
+
+    /**
+     * @var integer Campo usado somente na análise
+     */
+    public $enturmacaoId;
 
     /**
      * @var string Campo usado somente na análise
