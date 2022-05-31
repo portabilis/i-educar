@@ -61,6 +61,12 @@ class Registro50 implements RegistroEducacenso, ItemOfRegistro30
     public $componentes;
 
     /**
+     * @var array
+     *            Campos 24 a 31
+     */
+    public $unidadesCurriculares;
+
+    /**
      * @var string
      *             Campo usado somente na análise
      */
@@ -119,6 +125,12 @@ class Registro50 implements RegistroEducacenso, ItemOfRegistro30
      *             Campo usado somente na análise
      */
     public $etapaEducacensoTurma;
+
+    /**
+     * @var array
+     *            Campo usado somente na análise
+     */
+    public $estruturaCurricular;
 
     public function hydrateModel(array $arrayColumns): void
     {

@@ -32,6 +32,7 @@ use iEducar\Modules\Educacenso\ExportRule\TiposAee;
 use iEducar\Modules\Educacenso\ExportRule\TipoVinculoServidor;
 use iEducar\Modules\Educacenso\ExportRule\TransporteEscolarPublico;
 use iEducar\Modules\Educacenso\ExportRule\TurmaMulti;
+use iEducar\Modules\Educacenso\ExportRule\UnidadesCurricularesServidor;
 use iEducar\Modules\Educacenso\ExportRule\VeiculoTransporte;
 use iEducar\Modules\Educacenso\Formatters;
 
@@ -530,6 +531,7 @@ class EducacensoExportController extends ApiCoreController
         $registro50 = new Registro50Data($educacensoRepository, $registro50Model);
 
         $quantidadeComponentes = 15;
+        $quantidadeUnidadesCurriculares = 8;
 
         /** @var Registro50[] $docentes */
         $docentes = $registro50->getExportFormatData($escolaId, $ano);
@@ -539,6 +541,8 @@ class EducacensoExportController extends ApiCoreController
             $docente = TipoVinculoServidor::handle($docente);
             /** @var Registro50 $docente */
             $docente = ComponentesCurriculares::handle($docente);
+            /** @var Registro50 $docente */
+            $docente = UnidadesCurricularesServidor::handle($docente);
 
             $data = [
                 $docente->registro,
@@ -553,6 +557,10 @@ class EducacensoExportController extends ApiCoreController
 
             for ($count = 0; $count <= $quantidadeComponentes - 1; $count++) {
                 $data[] = $docente->componentes[$count];
+            }
+
+            for ($count = 1; $count <= $quantidadeUnidadesCurriculares; $count++) {
+                $data[] = $docente->unidadesCurriculares === null ? '' : (int) in_array($count, $docente->unidadesCurriculares);
             }
 
             $stringCenso .= ArrayToCenso::format($data) . PHP_EOL;
