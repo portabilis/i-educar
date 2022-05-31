@@ -488,4 +488,49 @@ class Registro00 implements RegistroEducacenso
      * @var string Campo usado na validação
      */
     public $anoFimAnoLetivo;
+
+    public function NaoPossuiQuantidadeDeMatriculasAtendidas()
+    {
+        return
+            !$this->qtdMatAtividadesComplentar &&
+            !$this->qtdMatAee &&
+            !$this->qtdMatCrecheParcial &&
+            !$this->qtdMatCrecheIntegral &&
+            !$this->qtdMatPreEscolaParcial &&
+            !$this->qtdMatPreEscolaIntegral &&
+            !$this->qtdMatFundamentalIniciaisParcial &&
+            !$this->qtdMatFundamentalIniciaisIntegral &&
+            !$this->qtdMatFundamentalFinaisParcial &&
+            !$this->qtdMatFundamentalFinaisIntegral &&
+            !$this->qtdMatEnsinoMedioParcial &&
+            !$this->qtdMatEnsinoMedioIntegral &&
+            !$this->qtdMatEjaEnsinoMedio &&
+            !$this->qtdMatEducacaoProfissionalIntegradaEjaFundamentalParcial &&
+            !$this->qtdMatEducacaoProfissionalIntegradaEjaFundamentalIntegral &&
+            !$this->qtdMatEducacaoProfissionalIntegradaEjaNivelMedioParcial &&
+            !$this->qtdMatEducacaoProfissionalIntegradaEjaNivelMedioIntegral &&
+            !$this->qtdMatEducacaoProfissionalConcomitanteEjaNivelMedioParcial &&
+            !$this->qtdMatEducacaoProfissionalConcomitanteEjaNivelMedioIntegral &&
+            !$this->qtdMatEducacaoProfissionalIntercomentarEjaNivelMedioParcial &&
+            !$this->qtdMatEducacaoProfissionalIntercomentarEjaNivelMedioIntegral &&
+            !$this->qtdMatEducacaoProfissionalIntegradaEnsinoMedioParcial &&
+            !$this->qtdMatEducacaoProfissionalIntegradaEnsinoMedioIntegral &&
+            !$this->qtdMatEducacaoProfissionalConcomitenteEnsinoMedioParcial &&
+            !$this->qtdMatEducacaoProfissionalConcomitenteEnsinoMedioIntegral &&
+            !$this->qtdMatEducacaoProfissionalIntercomplementarEnsinoMedioParcial &&
+            !$this->qtdMatEducacaoProfissionalIntercomplementarEnsinoMedioIntegral &&
+            !$this->qtdMatEducacaoProfissionalTecnicaIntegradaEnsinoMedioParcial &&
+            !$this->qtdMatEducacaoProfissionalTecnicaIntegradaEnsinoMedioIntegral &&
+            !$this->qtdMatEducacaoProfissionalTecnicaConcomitanteEnsinoMedioParcial &&
+            !$this->qtdMatEducacaoProfissionalTecnicaConcomitanteEnsinoMedioIntegral &&
+            !$this->qtdMatEducacaoProfissionalTecnicaIntercomplementarEnsinoMedioParcial &&
+            !$this->qtdMatEducacaoProfissionalTecnicaIntercomplementarEnsinoMedioItegral &&
+            !$this->qtdMatEducacaoProfissionalTecnicaSubsequenteEnsinoMedio &&
+            !$this->qtdMatEducacaoProfissionalTecnicaIntegradaEjaNivelMedioParcial &&
+            !$this->qtdMatEducacaoProfissionalTecnicaIntegradaEjaNivelMedioIntegral &&
+            !$this->qtdMatEducacaoProfissionalTecnicaConcomitanteEjaNivelMedioParcial &&
+            !$this->qtdMatEducacaoProfissionalTecnicaConcomitanteEjaNivelMedioIntegral &&
+            !$this->qtdMatEducacaoProfissionalTecnicaIntercomplementarEjaNivelMedioParcial &&
+            !$this->qtdMatEducacaoProfissionalTecnicaIntercomplementarEjaNivelMedioIntegral;
+    }
 }
