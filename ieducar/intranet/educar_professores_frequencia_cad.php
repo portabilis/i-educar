@@ -15,7 +15,14 @@ return new class extends clsCadastro {
     public $ref_cod_componente_curricular;
     public $fase_etapa;
     public $ref_cod_serie;
+    public $alunos;
     public $justificativa;
+    public $ordens_aulas;
+    public $ordens_aulas1;
+    public $ordens_aulas2;
+    public $ordens_aulas3;
+    public $ordens_aulas4;
+    public $ordens_aulas5;
 
     public function Inicializar () {
         $this->titulo = 'Frequência - Cadastro';
@@ -38,7 +45,8 @@ return new class extends clsCadastro {
                 }
                 $this->matriculas = $registro['matriculas'];
                 $this->alunos = $registro['alunos'];
-                $this->ref_cod_serie = $registro['detalhes']['ref_cod_serie']; 
+                $this->ref_cod_serie = $registro['detalhes']['ref_cod_serie'];
+                $this->ordens_aulas = explode(',', $registro['detalhes']['ordens_aulas']);
 
                 $this->fexcluir = $obj_permissoes->permissao_excluir(58, $this->pessoa_logada, 7);
                 $retorno = 'Editar';
@@ -94,33 +102,55 @@ return new class extends clsCadastro {
         $this->inputsHelper()->dynamic('componenteCurricular', ['required' => !$obrigatorio, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('faseEtapa', ['required' => $obrigatorio, 'label' => 'Etapa', 'disabled' => $desabilitado]);
 
+        for ($i = 1; $i <= 5; $i++) {
+            $this->inputsHelper()->checkbox('ordens_aulas'.$i, ['label' => 'Ordens das aulas', 'value' => (in_array($i, $this->ordens_aulas) ? $i : ''), 'disabled' => $desabilitado, 'required' => false, 'label_hint' => $i.'º Aula']);
+        }
+
+
         // Editar
         $maxCaracteresObservacao = 256;
         $alunos = 'Faltam informações obrigatórias.';
 
-        if ($this->data && is_numeric($this->ref_cod_turma) && $this->fase_etapa && $this->alunos) {                  
+        if ($this->data && is_numeric($this->ref_cod_turma) && $this->ref_cod_serie && $this->fase_etapa && $this->alunos) {
             $alunos = '';
             $conteudo = '';
 
             $matriculas = $this->matriculas['refs_cod_matricula'];
             $justificativas = $this->matriculas['justificativas'];
+            $aulasArray = explode(';', $this->matriculas['aulas_faltou']);
+
 
             if (is_string($matriculas) && !empty($matriculas)) {
                 $matriculas = explode(',', $matriculas);
                 $justificativas = explode(',', $justificativas);
-    
+
                 for ($i = 0; $i < count($matriculas); $i++) {
                     $this->alunos[$matriculas[$i]]['presenca'] = true;
                     $this->alunos[$matriculas[$i]]['justificativa'] = $justificativas[$i];
+                    $this->alunos[$matriculas[$i]]['aulas'] = explode(',', $aulasArray[$i]);
                 }
             }
 
- 
-            $conteudo .= '  </tr><td class="tableDetalheLinhaSeparador" colspan="3"></td><tr><td><div class="scroll"><table class="tableDetalhe tableDetalheMobile" width="100%"><tr>';
-            $conteudo .= '  <th><p>'."Nome".'</p></th>';
-            $conteudo .= '  <th><p>'."Presença".'</p></th>';
-            $conteudo .= '  <th><p>'."Justificativa".'</p></th></tr>';
-            $conteudo .= '  </td></tr></table>';
+            $obj = new clsPmieducarSerie();
+            $tipo_presenca = $obj->tipoPresencaRegraAvaliacao($this->ref_cod_serie);
+
+
+            $conteudo .= '  </tr><td class="tableDetalheLinhaSeparador" colspan="3"></td><tr><td><div class="scroll"><table class="tableDetalhe tableDetalheMobile" width="100%"><tr class="tableHeader">';
+            $conteudo .= '  <th><span style="display: block; float: left; width: auto; font-weight: bold">'."Nome".'</span></th>';
+
+            if ($tipo_presenca == 1) {
+                $conteudo .= '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' . "Presença" . '</span></th>';
+            }
+
+            if ($tipo_presenca == 2) {
+                for ($i = 1; $i <= count($this->ordens_aulas); $i++) {
+                    $conteudo .= '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' . "Aula " .$i. '</span></th>';
+                }
+            }
+
+            $conteudo .= '  <th><span style="display: block; float: left; width: auto; font-weight: bold">'."Justificativa".'</span></th>';
+            $conteudo .= '  </tr>';
+            $conteudo .= '  <tr><td class="tableDetalheLinhaSeparador" colspan="3"></td></tr>';
 
             foreach ($this->alunos as $key => $aluno) {
                 $id = $aluno['matricula'];
@@ -128,29 +158,78 @@ return new class extends clsCadastro {
                 $checked = !$aluno['presenca'] ? "checked='true'" : '';
                 $disabled = !$aluno['presenca'] ? "disabled='true'" : '';
 
-                $conteudo .= '  <tr><td class="formlttd">';
-                $conteudo .= '  <label>' . $aluno['nome'] . '</label></td>';
-                $conteudo .= "  <td><label>
+                $conteudo .= '  <tr>';
+                $conteudo .= '  <td class="sizeFont colorFont"><p>' . $aluno['nome'] . '</p></td>';
+                if ($tipo_presenca == 1) {
+                    $conteudo .= "  <td class='sizeFont colorFont'>
                                     <input
                                         type='checkbox'
                                         onchange='presencaMudou(this)'
                                         id='alunos[]'
                                         name={$name}
+                                        value={$id}
                                         {$checked}
                                         autocomplete='off'
                                     >
-                                </label></td>";
+                                    </td>";
+                }
+                if ($tipo_presenca == 2) {
+                 $qtdFaltas = 0;
+                 $aulasFaltou = '';
+
+                    for ($i = 1; $i <= count($this->ordens_aulas); $i++) {
+                        $checkFalta = in_array($i, $aluno['aulas']);
+
+                        $checked = (!$checkFalta ? "checked='true'" : '');
+
+                        if ($checkFalta) {
+                            $aulasFaltou .= $i . ',';
+                            $qtdFaltas++;
+                        }
+
+                        $conteudo .= "  <td class='sizeFont colorFont'>
+                                    <input
+                                        type='checkbox'
+                                        onchange='presencaMudou(this)'
+                                        id='alunos[]'
+                                        name={$name}
+                                        value={$id}
+                                        data-aulaid={$i}
+                                        {$checked}
+                                        autocomplete='off'
+                                    >
+                                </td>";
+                    }
+
+                    $conteudo .= "  <td><input
+                                    type='hidden'
+                                    name='justificativa[${id}][qtd]'
+                                    style='display: flex;'
+                                    value='{$qtdFaltas}'
+                                    readonly
+                                    autocomplete='off'
+                                />";
+                    $conteudo .= "  <td><input
+                                    type='hidden'
+                                    name='justificativa[${id}][aulas]'
+                                    style='display: flex;'
+                                    value='{$aulasFaltou}'
+                                    readonly
+                                    autocomplete='off'
+                                />";
+                }
                 $conteudo .= "  <td><input
                                     type='text'
                                     name='justificativa[${id}][]'
-                                    style='width: 100%;'
+                                    style='display: flex;'
                                     maxlength=${maxCaracteresObservacao}
                                     value='{$aluno['justificativa']}'
                                     {$disabled}
                                     autocomplete='off'
                                 />";
+
                 $conteudo .= '  </td>';
-                $conteudo .= '  <br style="clear: left" />';
+                $conteudo .= '  </tr>';
             }
 
             if ($conteudo) {
@@ -211,7 +290,7 @@ return new class extends clsCadastro {
                 $data_fim = new \DateTime($data_fim);
             });
         }
-        
+
         $data['inicio'] = new \DateTime($obj->pegaEtapaSequenciaDataInicio($turma, $sequencia));
         $data['fim'] = new \DateTime($obj->pegaEtapaSequenciaDataFim($turma, $sequencia));
 
@@ -236,6 +315,15 @@ return new class extends clsCadastro {
             $this->simpleRedirect('educar_professores_frequencia_cad.php');
         }
 
+        $this->ordens_aulas = [];
+
+        if (isset($this->ordens_aulas1) && !empty($this->ordens_aulas1)) array_push($this->ordens_aulas, '1');
+        if (isset($this->ordens_aulas2) && !empty($this->ordens_aulas2)) array_push($this->ordens_aulas, '2');
+        if (isset($this->ordens_aulas3) && !empty($this->ordens_aulas3)) array_push($this->ordens_aulas, '3');
+        if (isset($this->ordens_aulas4) && !empty($this->ordens_aulas4)) array_push($this->ordens_aulas, '4');
+        if (isset($this->ordens_aulas5) && !empty($this->ordens_aulas5)) array_push($this->ordens_aulas, '5');
+
+
         $obj = new clsModulesFrequencia(
             null,
             null,
@@ -251,6 +339,8 @@ return new class extends clsCadastro {
             null,
             $this->fase_etapa,
             $this->justificativa,
+            null,
+            $this->ordens_aulas
         );
 
         $existe = $obj->existe();
@@ -261,7 +351,7 @@ return new class extends clsCadastro {
 
         $cadastrou = $obj->cadastra();
 
-        if (!$cadastrou) {   
+        if (!$cadastrou) {
             $this->mensagem = 'Cadastro não realizado.<br>';
             $this->simpleRedirect('educar_professores_frequencia_cad.php');
         } else {
@@ -347,7 +437,7 @@ return new class extends clsCadastro {
 
         return false;
     }
- 
+
     function montaListaFrequenciaAlunos ($matriculas, $justificativas, $alunos) {
         if (is_string($matriculas) && !empty($matriculas)) {
             $matriculas = explode(',', $matriculas);
