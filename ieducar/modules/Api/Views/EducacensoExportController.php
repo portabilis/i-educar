@@ -22,6 +22,7 @@ use iEducar\Modules\Educacenso\ExportRule\ComponentesCurriculares;
 use iEducar\Modules\Educacenso\ExportRule\CriterioAcessoGestor;
 use iEducar\Modules\Educacenso\ExportRule\DependenciaAdministrativa;
 use iEducar\Modules\Educacenso\ExportRule\EsferaAdministrativa;
+use iEducar\Modules\Educacenso\ExportRule\ItinerarioFormativoAluno;
 use iEducar\Modules\Educacenso\ExportRule\PoderPublicoResponsavelTransporte;
 use iEducar\Modules\Educacenso\ExportRule\RecebeEscolarizacaoOutroEspaco;
 use iEducar\Modules\Educacenso\ExportRule\RegrasEspecificasRegistro30;
@@ -565,6 +566,7 @@ class EducacensoExportController extends ApiCoreController
             $aluno = VeiculoTransporte::handle($aluno);
             /** @var Registro60 $aluno */
             $aluno = PoderPublicoResponsavelTransporte::handle($aluno);
+            $aluno = ItinerarioFormativoAluno::handle($aluno);
 
             $data = [
                 $aluno->registro,
@@ -575,6 +577,19 @@ class EducacensoExportController extends ApiCoreController
                 $aluno->inepTurma,
                 $aluno->matriculaAluno,
                 $aluno->etapaAluno,
+                $aluno->tipoItinerarioLinguagens,
+                $aluno->tipoItinerarioMatematica,
+                $aluno->tipoItinerarioCienciasNatureza,
+                $aluno->tipoItinerarioCienciasHumanas,
+                $aluno->tipoItinerarioFormacaoTecnica,
+                $aluno->tipoItinerarioIntegrado,
+                $aluno->composicaoItinerarioLinguagens,
+                $aluno->composicaoItinerarioMatematica,
+                $aluno->composicaoItinerarioCienciasNatureza,
+                $aluno->composicaoItinerarioCienciasHumanas,
+                $aluno->composicaoItinerarioFormacaoTecnica,
+                $aluno->cursoItinerario,
+                $aluno->itinerarioConcomitante,
                 $aluno->tipoAtendimentoDesenvolvimentoFuncoesGognitivas,
                 $aluno->tipoAtendimentoDesenvolvimentoVidaAutonoma,
                 $aluno->tipoAtendimentoEnriquecimentoCurricular,
