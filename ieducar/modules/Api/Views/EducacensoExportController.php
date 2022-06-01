@@ -30,6 +30,7 @@ use iEducar\Modules\Educacenso\ExportRule\RegrasGeraisRegistro30;
 use iEducar\Modules\Educacenso\ExportRule\Regulamentacao;
 use iEducar\Modules\Educacenso\ExportRule\SituacaoFuncionamento;
 use iEducar\Modules\Educacenso\ExportRule\TiposAee;
+use iEducar\Modules\Educacenso\ExportRule\TipoVinculoGestor;
 use iEducar\Modules\Educacenso\ExportRule\TipoVinculoServidor;
 use iEducar\Modules\Educacenso\ExportRule\TransporteEscolarPublico;
 use iEducar\Modules\Educacenso\ExportRule\TurmaMulti;
@@ -508,6 +509,8 @@ class EducacensoExportController extends ApiCoreController
             $gestor = CargoGestor::handle($gestor);
             /** @var Registro40 $gestor */
             $gestor = CriterioAcessoGestor::handle($gestor);
+            /** @var Registro40 $gestor */
+            $gestor = TipoVinculoGestor::handle($gestor);
 
             $data = [
                 $gestor->registro,
