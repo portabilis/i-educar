@@ -30,7 +30,7 @@ return new class extends clsCadastro {
         $obj_permissoes->permissao_cadastra(58, $this->pessoa_logada, 7, 'educar_professores_conteudo_ministrado_aee_lst.php');
 
         if (is_numeric($this->id)) {
-            $tmp_obj = new clsModulesComponenteMinistrado(
+            $tmp_obj = new clsModulesComponenteMinistradoAee(
                 $this->id
             );
             $registro = $tmp_obj->detalhe();
@@ -80,11 +80,11 @@ return new class extends clsCadastro {
         if (is_numeric($this->frequencia)) {
             $desabilitado = true;
 
-            $obj = new clsModulesFrequencia($this->frequencia);
+            $obj = new clsModulesFrequenciaAee($this->frequencia);
             $freq = $obj->detalhe()['detalhes'];
             
 
-            $obj = new clsModulesPlanejamentoAula();
+            $obj = new clsModulesPlanejamentoAulaAee();
             $id = $obj->lista(
                 null,
                 null,
@@ -116,7 +116,7 @@ return new class extends clsCadastro {
     }
 
     public function Novo() {
-        $obj = new clsModulesComponenteMinistrado(
+        $obj = new clsModulesComponenteMinistradoAee(
             null,
             $this->frequencia,
             $this->atividades,
@@ -141,7 +141,7 @@ return new class extends clsCadastro {
     }
 
     public function Editar() {
-        $obj = new clsModulesComponenteMinistrado(
+        $obj = new clsModulesComponenteMinistradoAee(
             $this->id,
             null,
             $this->atividades,
@@ -162,7 +162,7 @@ return new class extends clsCadastro {
     }
 
     public function Excluir () {
-        $obj = new clsModulesComponenteMinistrado(
+        $obj = new clsModulesComponenteMinistradoAee(
             $this->id,
         );
 
@@ -183,7 +183,7 @@ return new class extends clsCadastro {
         if (is_numeric($planejamento_aula_id)) {
             $rows = [];
 
-            $obj = new clsModulesPlanejamentoAulaConteudo();
+            $obj = new clsModulesPlanejamentoAulaConteudoAee();
             $conteudos = $obj->lista2($planejamento_aula_id);
            
             foreach ($conteudos as $key => $conteudo) {

@@ -32,7 +32,7 @@ return new class extends clsDetalhe {
 
         $obj_permissoes = new clsPermissoes();
 
-        $tmp_obj = new clsModulesComponenteMinistrado(
+        $tmp_obj = new clsModulesComponenteMinistradoAee(
             $this->id
         );
         $registro = $tmp_obj->detalhe();
