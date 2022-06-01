@@ -1505,7 +1505,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 ];
             }
 
-            if ($aluno->tipoAtendimentoTurma ==  $aluno->isAtividadeComplementarOrAee()) {
+            if ($aluno->isAtividadeComplementarOrAee()) {
                 $countAtividadesComplementar[$codigoAluno][] = [
                     'codigoAluno' => $codigoAluno,
                     'nomeAluno' => $nomeAluno,
