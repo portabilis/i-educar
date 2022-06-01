@@ -32,8 +32,8 @@ return new class extends clsListagem {
     public $data_inicial;
     public $data_final;
 
-    public $etapa;
-    public $fase_etapa;
+    //public $etapa;
+   //public $fase_etapa;
 
     public function Gerar()
     {
@@ -45,13 +45,10 @@ return new class extends clsListagem {
 
         $lista_busca = [
             'Data',
+            'Aluno',
             'Turma',
-            'Turno',
-            'S&eacute;rie',
             'Curso',
-            'Escola',
-            'Etapa',
-            'Componente curricular'
+            'Escola'
         ];
 
         $this->addCabecalhos($lista_busca);
@@ -61,9 +58,8 @@ return new class extends clsListagem {
         }
 
         $this->inputsHelper()->dynamic(['ano'], ['required' => false]);
-        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie', 'turma'], ['required' => false]);
-        $this->inputsHelper()->turmaTurno(['required' => false, 'label' => 'Turno']);
-        $this->inputsHelper()->dynamic('componenteCurricular', ['required' => false]);
+        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie', 'turma']);
+        //$this->inputsHelper()->turmaTurno(['required' => false, 'label' => 'Turno']);
   
         $this->campoQuebra();
         $this->campoRotulo('filtros_periodo', '<b>Filtros por período</b>');
@@ -71,10 +67,10 @@ return new class extends clsListagem {
         $this->inputsHelper()->dynamic(['dataInicial'], ['required' => false, 'value' => $this->data_inicial]);
         $this->inputsHelper()->dynamic(['dataFinal'], ['required' => false, 'value' => $this->data_final]);
      
-        $this->campoQuebra();
-        $this->campoRotulo('filtros_etapa', '<b>Filtros por etapa</b>');
+        //$this->campoQuebra();
+        //$this->campoRotulo('filtros_etapa', '<b>Filtros por etapa</b>');
 
-        $this->inputsHelper()->dynamic(['faseEtapa'], ['required' => false, 'label' => 'Etapa']);
+        //$this->inputsHelper()->dynamic(['faseEtapa'], ['required' => false, 'label' => 'Etapa']);
 
         // Paginador
         $this->limite = 20;
@@ -115,13 +111,10 @@ return new class extends clsListagem {
             $this->ref_cod_instituicao,
             $this->ref_cod_escola,
             $this->ref_cod_curso,
-            $this->ref_cod_serie,
             $this->ref_cod_turma,
-            $this->ref_cod_componente_curricular,
-            $this->turma_turno_id,
             $this->data_inicial,
             $this->data_final,
-            $this->fase_etapa,
+            //$this->fase_etapa,
             $eh_professor ? $this->pessoa_logada : null         // Passe o ID do servidor caso ele seja um professor
         );
 
@@ -136,12 +129,10 @@ return new class extends clsListagem {
 
                 $lista_busca = [
                     "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$data_formatada}</a>",
-                    "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$registro['turma']}</a>",
-                    "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$registro['turno']}</a>",
-                    "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$registro['serie']}</a>",
+                    "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$registro['aluno']}</a>",
+                    "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$registro['turma']}</a>",                    
                     "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$registro['curso']}</a>",
-                    "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$registro['escola']}</a>",
-                    "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$registro['fase_etapa']}º {$registro['etapa']}</a>"
+                    "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$registro['escola']}</a>"
                 ];
 
                 if ($registro['componente_curricular']) {

@@ -12,9 +12,10 @@ use iEducar\Support\View\SelectOptions;
 
 return new class extends clsCadastro {
     public $id;
+    public $hora_inicio;
+    public $hora_fim;
     public $atividades;
     public $observacao;
-    public $frequencia;
     public $planejamento_aula_id;
     public $conteudos;
     public $especificacoes;
@@ -92,11 +93,9 @@ return new class extends clsCadastro {
                 null,
                 null,
                 $freq['ref_cod_turma'],
-                $freq['ref_cod_componente_curricular'],
                 null,
                 null,
                 null,
-                $freq['fase_etapa'],
                 $this->servidor_id
             )[0]['id'];
             
@@ -105,12 +104,34 @@ return new class extends clsCadastro {
             
         }
        
+        $obrigatorio = true;
+
         $this->campoOculto('id', $this->id);
-        $this->campoMemo('conteudo', 'Registro diário de aula', $this->conteudo, 100, 5, false);
-        //$this->inputsHelper()->dynamic(['frequencia'], ['frequencia' => $this->frequencia, 'disabled' => $desabilitado]);     
+        $this->inputsHelper()->dynamic('data', ['required' => $obrigatorio]);    // Disabled não funciona; ação colocada no javascript.
+        $this->campoHora('hora_inicio', 'Hora Início', $this->hora_inicio, ['required' => $obrigatorio]);    // Disabled não funciona; ação colocada no javascript.
+        $this->campoHora('hora_fim', 'Hora Fim', $this->hora_fim, ['required' => $obrigatorio]);      // Disabled não funciona; ação colocada no javascript.        
+
+         // Montar o inputsHelper->select \/
+        // Cria lista de Alunos
+        $obj_aluno = new clsPmieducarMatricula();
+        $obj_aluno->setOrderBy(' nome asc ');
+        $lista_alunos = $obj_aluno->lista_matriculas_aee();
+        $aluno_resources = ['' => 'Selecione um Aluno'];
+        foreach ($lista_alunos as $reg) {
+            $aluno_resources["{$reg['cod_matricula']}"] = "{$reg['cod_matricula']} - {$reg['nome']}";
+        }
+
+        // Alunos
+        $options = [
+            'label' => 'Aluno',
+            'required' => true,
+            'resources' => $aluno_resources
+        ];
+        $this->inputsHelper()->select('aluno', $options);
+        
         $this->campoMemo('atividades', 'Registro diário de aula', $this->atividades, 100, 5, false);
 
-        //$this->adicionarConteudosMultiplaEscolha();
+        $this->adicionarConteudosMultiplaEscolha();
         
         $this->campoMemo('observacao', 'Observação', $this->observacao, 100, 5, false);
     }
@@ -118,7 +139,9 @@ return new class extends clsCadastro {
     public function Novo() {
         $obj = new clsModulesComponenteMinistradoAee(
             null,
-            $this->frequencia,
+            $this->hora_inicio,
+            $this->hora_fim,
+            $this->matricula,
             $this->atividades,
             $this->observacao,
             $this->conteudos,
@@ -144,6 +167,8 @@ return new class extends clsCadastro {
         $obj = new clsModulesComponenteMinistradoAee(
             $this->id,
             null,
+            $this->hora_inicio,
+            $this->hora_fim,
             $this->atividades,
             $this->observacao,
             $this->conteudos
@@ -183,7 +208,7 @@ return new class extends clsCadastro {
         if (is_numeric($planejamento_aula_id)) {
             $rows = [];
 
-            $obj = new clsModulesPlanejamentoAulaConteudoAee();
+            $obj = new clsModulesPlanejamentoAulaConteudo();
             $conteudos = $obj->lista2($planejamento_aula_id);
            
             foreach ($conteudos as $key => $conteudo) {
@@ -237,7 +262,7 @@ return new class extends clsCadastro {
 
         $options = [
             'label' => 'Objetivo(s) do conhecimento/conteúdo',
-            'required' => true,
+            'required' => false,
             'options' => [
                 'values' => $this->conteudos,
                 'all_values' => $todos_conteudos

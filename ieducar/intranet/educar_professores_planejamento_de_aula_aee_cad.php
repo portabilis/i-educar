@@ -7,25 +7,27 @@ use App\Services\CheckPostedDataService;
 use App\Services\iDiarioService;
 use App\Services\SchoolLevelsService;
 use Illuminate\Support\Arr;
+use iEducar\Support\View\SelectOptions;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $id;
     public $ref_cod_turma;
     public $ref_cod_componente_curricular_array;
-    public $fase_etapa;
     public $data_inicial;
     public $data_final;
     public $ddp;
-    public $atividades;
-    public $referencias;
+    public $necessidade_aprendizagem;
+    public $caracterizacao_pedagogica;
     public $bncc;
     public $conteudo_id;
     public $bncc_especificacoes;
     public $recursos_didaticos;
-    public $registro_adaptacao;
+    public $outros;
 
-    public function Inicializar () {
-        $this->titulo = 'Plano de aula - Cadastro';
+    public function Inicializar()
+    {
+        $this->titulo = 'Plano de aula AEE - Cadastro';
 
         $retorno = 'Novo';
 
@@ -50,7 +52,7 @@ return new class extends clsCadastro {
                     $this->fexcluir = $obj_permissoes->permissao_excluir(58, $this->pessoa_logada, 7);
                     $retorno = 'Editar';
 
-                    $this->titulo = 'Plano de aula - Edição';
+                    $this->titulo = 'Plano de aula AEE - Edição';
                 }
             } else {
                 $this->simpleRedirect('educar_professores_planejamento_de_aula_aee_lst.php');
@@ -63,7 +65,7 @@ return new class extends clsCadastro {
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
-        $this->breadcrumb($nomeMenu . ' plano de aula', [
+        $this->breadcrumb($nomeMenu . ' plano de aula AEE', [
             url('intranet/educar_professores_index.php') => 'Professores',
         ]);
 
@@ -72,7 +74,8 @@ return new class extends clsCadastro {
         return $retorno;
     }
 
-    public function Gerar () {
+    public function Gerar()
+    {
         if ($_POST) {
             foreach ($_POST as $campo => $val) {
                 $this->$campo = ($this->$campo) ? $this->$campo : $val;
@@ -84,7 +87,8 @@ return new class extends clsCadastro {
 
         $this->ano = explode('/', $this->data_inicial)[2];
 
-        if ($tipoacao == 'Edita' || !$_POST
+        if (
+            $tipoacao == 'Edita' || !$_POST
             && $this->data_inicial != ''
             && $this->data_final != ''
             && is_numeric($this->ref_cod_turma)
@@ -99,17 +103,53 @@ return new class extends clsCadastro {
         $this->campoOculto('id', $this->id);
         $this->inputsHelper()->dynamic('dataInicial', ['required' => $obrigatorio]);    // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('dataFinal', ['required' => $obrigatorio]);      // Disabled não funciona; ação colocada no javascript.
-        $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado && !$this->copy]);
+
+        // Montar o inputsHelper->select \/
+        // Cria lista de Turmas
+        $obj_turma = new clsPmieducarTurma();
+        $obj_turma->setOrderBy(' nm_turma asc ');
+        $lista_turmas = $obj_turma->lista_turmas_aee();
+        $turma_resources = ['' => 'Selecione uma Turma'];
+        foreach ($lista_turmas as $reg) {
+            $turma_resources["{$reg['cod_turma']}"] = "{$reg['nm_turma']}";
+        }
+
+        // Alunos
+        $options = [
+            'label' => 'Turma',
+            'required' => true,
+            'resources' => $turma_resources
+        ];
+        $this->inputsHelper()->select('turma', $options);
+
+        // Montar o inputsHelper->select \/
+        // Cria lista de Alunos
+        $obj_aluno = new clsPmieducarMatricula();
+        $obj_aluno->setOrderBy(' nome asc ');
+        $lista_alunos = $obj_aluno->lista_matriculas_aee();
+        $aluno_resources = ['' => 'Selecione um Aluno'];
+        foreach ($lista_alunos as $reg) {
+            $aluno_resources["{$reg['cod_matricula']}"] = "{$reg['cod_matricula']} - {$reg['nome']}";
+        }
+
+        // Alunos
+        $options = [
+            'label' => 'Aluno',
+            'required' => true,
+            'resources' => $aluno_resources
+        ];
+        $this->inputsHelper()->select('matricula', $options);
+
         $this->inputsHelper()->dynamic('faseEtapa', ['required' => $obrigatorio, 'label' => 'Etapa', 'disabled' => $desabilitado && !$this->copy]);
 
         $this->adicionarBNCCMultiplaEscolha();
         $this->adicionarConteudosTabela();
 
-        $this->campoMemo('ddp','Metodologia', $this->ddp, 100, 5, $obrigatorio);
-        $this->campoMemo('atividades','Atividades/Avaliações', $this->atividades, 100, 5, !$obrigatorio);
-        $this->campoMemo('recursos_didaticos','Recursos didáticos', $this->recursos_didaticos, 100, 5, !$obrigatorio);
-        $this->campoMemo('registro_adaptacao','Registro de adaptação', $this->registro_adaptacao, 100, 5, !$obrigatorio);
-        $this->campoMemo('referencias','Referências', $this->referencias, 100, 5, !$obrigatorio);
+        $this->campoMemo('ddp', 'Metodologia', $this->ddp, 100, 5, $obrigatorio);
+        $this->campoMemo('recursos_didaticos', 'Recursos didáticos', $this->recursos_didaticos, 100, 5, !$obrigatorio);
+        $this->campoMemo('necessidade_aprendizagem', 'Necessidade de Aprendizagem', $this->necessidade_aprendizagem, 100, 5, !$obrigatorio);
+        $this->campoMemo('caracterizacao_pedagogica', 'Caracterização Pedagógica', $this->caracterizacao_pedagogica, 100, 5, !$obrigatorio);
+        $this->campoMemo('outros', 'Outros', $this->outros, 100, 5, !$obrigatorio);
 
         $this->campoOculto('id', $this->id);
         $this->campoOculto('copy', $this->copy);
@@ -117,11 +157,13 @@ return new class extends clsCadastro {
         $this->campoOculto('ano', explode('/', dataToBrasil(NOW()))[2]);
     }
 
-    public function Novo() {
+    public function Novo()
+    {
         // educar-professores-planejamento-de-aula-cad.js
     }
 
-    public function Editar() {
+    public function Editar()
+    {
         $obj = new clsModulesPlanejamentoAulaAee(
             $this->id,
             null,
@@ -130,10 +172,12 @@ return new class extends clsCadastro {
             null,
             null,
             $this->ddp,
-            $this->atividades,
             $this->bncc,
             $this->conteudos,
-            $this->referencias
+            $this->recursos_didaticos,
+            $this->necessidade_aprendizagem,
+            $this->caracterizacao_pedagogica,
+            $this->outros
         );
 
         $editou = $obj->edita();
@@ -148,7 +192,8 @@ return new class extends clsCadastro {
         return false;
     }
 
-    public function Excluir () {
+    public function Excluir()
+    {
         $obj = new clsModulesPlanejamentoAulaAee($this->id);
 
         $excluiu = $obj->excluir();
@@ -189,12 +234,14 @@ return new class extends clsCadastro {
         return [];
     }
 
-    public function __construct () {
+    public function __construct()
+    {
         parent::__construct();
         $this->loadAssets();
     }
 
-    public function loadAssets () {
+    public function loadAssets()
+    {
         $scripts = [
             '/modules/DynamicInput/Assets/Javascripts/TodasTurmas.js',
             '/modules/Cadastro/Assets/Javascripts/PlanejamentoAula.js',
@@ -208,10 +255,11 @@ return new class extends clsCadastro {
 
     public function makeExtra()
     {
-        return file_get_contents(__DIR__ . '/scripts/extra/educar-professores-planejamento-de-aula-cad.js');
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-professores-planejamento-de-aula-aee-cad.js');
     }
 
-    private function adicionarBNCCMultiplaEscolha() {
+    private function adicionarBNCCMultiplaEscolha()
+    {
         $this->campoTabelaInicio(
             'objetivos_aprendizagem',
             'Objetivo(s) de aprendizagem',
@@ -244,7 +292,7 @@ return new class extends clsCadastro {
 
         $options = [
             'label' => 'Especificações',
-            'required' =>true,
+            'required' => true,
             'options' => [
                 'values' => $this->bncc_especificacoes,
                 'all_values' => $todos_bncc_especificacoes
@@ -257,10 +305,10 @@ return new class extends clsCadastro {
 
     protected function adicionarConteudosTabela()
     {
-        $obj = new clsModulesPlanejamentoAulaConteudoAee();
+        $obj = new clsModulesPlanejamentoAulaConteudo();
         $conteudos = $obj->lista($this->id);
 
-        for ($i=0; $i < count($conteudos); $i++) {
+        for ($i = 0; $i < count($conteudos); $i++) {
             $conteudo = $conteudos[$i];
             $rows[$conteudo['id']][] = $conteudo['conteudo'];
         }
@@ -279,7 +327,8 @@ return new class extends clsCadastro {
         $this->campoTabelaFim();
     }
 
-    public function Formular () {
+    public function Formular()
+    {
         $this->title = 'Plano de aula AEE - Cadastro';
         $this->processoAp = '58';
     }

@@ -2039,4 +2039,23 @@ return false;
 
         return false;
     }
+
+    public function lista_turmas_aee()
+    {
+
+        $db = new clsBanco();
+        $sql = 'SELECT t.cod_turma, t.nm_turma 
+        FROM pmieducar.turma AS t
+        JOIN pmieducar.curso AS c ON c.cod_curso = t.ref_cod_curso
+        WHERE t.ref_cod_curso = 7';
+
+        $db->Consulta($sql);
+
+        while ($db->ProximoRegistro()) {
+            $tupla = $db->Tupla();
+            $resultado[] = $tupla;
+        }
+
+        return $resultado;
+    }
 }
