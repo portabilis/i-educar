@@ -17,7 +17,7 @@ class RequiredEnrollmentConcomitantItinerary implements Rule
      */
     public function passes($attribute, $value)
     {
-        if (in_array(TipoItinerarioFormativo::FORMACAO_TECNICA, $value->itineraryComposition) && empty($value->concomitantItinerary)) {
+        if (in_array(TipoItinerarioFormativo::FORMACAO_TECNICA, $value->itineraryComposition) && $value->concomitantItinerary === null) {
             return false;
         }
 
