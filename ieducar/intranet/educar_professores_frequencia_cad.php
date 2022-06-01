@@ -23,6 +23,9 @@ return new class extends clsCadastro {
     public $ordens_aulas3;
     public $ordens_aulas4;
     public $ordens_aulas5;
+    public $atividades;
+    public $conteudos;
+    public $planejamento_aula_id;
 
     public function Inicializar () {
         $this->titulo = 'Frequência - Cadastro';
@@ -105,6 +108,33 @@ return new class extends clsCadastro {
         for ($i = 1; $i <= 5; $i++) {
             $this->inputsHelper()->checkbox('ordens_aulas'.$i, ['label' => 'Ordens das aulas', 'value' => (in_array($i, $this->ordens_aulas) ? $i : ''), 'disabled' => $desabilitado, 'required' => false, 'label_hint' => $i.'º Aula']);
         }
+
+        $this->campoMemo('atividades', 'Registro diário de aula', $this->atividades, 100, 5, false);
+
+
+        if (is_numeric($this->id)) {
+            $servidor_id = $this->pessoa_logada;
+
+            $obj = new clsModulesPlanejamentoAula();
+            $id = $obj->lista(
+                null,
+                null,
+                null,
+                null,
+                null,
+                $this->ref_cod_turma,
+                $this->ref_cod_componente_curricular,
+                null,
+                null,
+                null,
+                $this->fase_etapa,
+                $servidor_id
+            )[0]['id'];
+
+            $this->planejamento_aula_id = $id;
+        }
+
+        $this->adicionarConteudosMultiplaEscolha();
 
 
         // Editar
@@ -351,10 +381,21 @@ return new class extends clsCadastro {
 
         $cadastrou = $obj->cadastra();
 
+
         if (!$cadastrou) {
             $this->mensagem = 'Cadastro não realizado.<br>';
             $this->simpleRedirect('educar_professores_frequencia_cad.php');
         } else {
+            $obj = new clsModulesComponenteMinistrado(
+                null,
+                $cadastrou,
+                $this->atividades,
+                null,
+                $this->conteudos,
+            );
+
+            $obj->cadastra();
+
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
             $this->simpleRedirect('educar_professores_frequencia_lst.php');
         }
@@ -392,6 +433,36 @@ return new class extends clsCadastro {
 
         $editou = $obj->edita();
 
+        $obj = new clsModulesComponenteMinistrado();
+        $componenteMinistrado = $obj->lista(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            $this->id
+        )[0];
+
+        if ($componenteMinistrado) {
+            $obj = new clsModulesComponenteMinistrado(
+                $componenteMinistrado['id'],
+                $this->id,
+                $this->atividades,
+                $componenteMinistrado['observacao'],
+                $this->conteudos
+            );
+
+            $obj->edita();
+        }
+
+
         if ($editou) {
             $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_professores_frequencia_lst.php');
@@ -427,6 +498,28 @@ return new class extends clsCadastro {
         );
 
         $excluiu = $obj->excluir();
+
+        $obj = new clsModulesComponenteMinistrado();
+        $componenteMinistrado = $obj->lista(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            $this->id
+        )[0];
+
+        if ($componenteMinistrado) {
+            $obj = new clsModulesComponenteMinistrado($componenteMinistrado['id']);
+            $obj->excluir();
+        }
 
         if ($excluiu) {
             $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
@@ -494,6 +587,61 @@ return new class extends clsCadastro {
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+    }
+
+    protected function adicionarConteudosMultiplaEscolha() {
+        // ESPECIFICAÇÕES
+        /*$helperOptions = [
+            'objectName' => 'especificacoes',
+        ];
+
+        //$todas_especificacoes = $this->getEspecificacoes($this->planejamento_aula_id);
+
+        $options = [
+            'label' => 'Especificações',
+            'required' => false,
+            'options' => [
+                'values' => $this->especificacoes,
+                'all_values' => /*$todas_especificacoes*//*[]
+            ]
+        ];
+        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);*/
+
+        // CONTEUDOS
+        $helperOptions = [
+            'objectName' => 'conteudos',
+        ];
+
+        $todos_conteudos = $this->getConteudos($this->planejamento_aula_id);
+
+        $options = [
+            'label' => 'Objetivo(s) do conhecimento/conteúdo',
+            'required' => true,
+            'options' => [
+                'values' => $this->conteudos,
+                'all_values' => $todos_conteudos
+            ]
+        ];
+        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+    }
+
+    private function getConteudos($planejamento_aula_id = null)
+    {
+        if (is_numeric($planejamento_aula_id)) {
+            $rows = [];
+
+            $obj = new clsModulesPlanejamentoAulaConteudo();
+            $conteudos = $obj->lista2($planejamento_aula_id);
+
+            foreach ($conteudos as $key => $conteudo) {
+                $rows[$conteudo['id']] = $conteudo['conteudo'];
+            }
+
+            return $rows;
+        }
+
+
+        return [];
     }
 
     public function Formular () {

@@ -84,7 +84,7 @@ class clsModulesComponenteMinistrado extends Model {
         if (is_string($observacao)) {
             $this->observacao = $observacao;
         }
-        
+
         if(is_array($conteudos)){
             $this->conteudos = $conteudos;
         }
@@ -126,7 +126,7 @@ class clsModulesComponenteMinistrado extends Model {
 
             foreach ($this->conteudos as $key => $conteudo) {
                 $obj = new clsModulesComponenteMinistradoConteudo(null, $id, $conteudo);
-                $obj->cadastra();
+                $bla = $obj->cadastra();
             }
 
             /*foreach ($this->especificacoes as $key => $especificacao) {
@@ -203,12 +203,16 @@ class clsModulesComponenteMinistrado extends Model {
         $time_data_inicial = null,
         $time_data_final = null,
         $int_etapa = null,
-        $int_servidor_id = null
+        $int_servidor_id = null,
+        $int_frequencia_id = null
     ) {
-       
+
         $sql = "
                 SELECT DISTINCT
-                    {$this->_campos_lista}
+                    {$this->_campos_lista},
+                    cm.atividades,
+                    cm.observacao,
+                    f.ref_cod_turma as cod_turma
                 FROM
                     {$this->_from}
                 ";
@@ -220,7 +224,7 @@ class clsModulesComponenteMinistrado extends Model {
             $filtros .= "{$whereAnd} EXTRACT(YEAR FROM f.data) = '{$int_ano}'";
             $whereAnd = ' AND ';
         }
-    
+
         if (is_numeric($int_ref_cod_ins)) {
             $filtros .= "{$whereAnd} i.cod_instituicao = '{$int_ref_cod_ins}'";
             $whereAnd = ' AND ';
@@ -250,7 +254,7 @@ class clsModulesComponenteMinistrado extends Model {
             $filtros .= "{$whereAnd} k.id = '{$int_ref_cod_componente_curricular}'";
             $whereAnd = ' AND ';
         }
-        
+
         if (is_numeric($int_ref_cod_turno)) {
             $filtros .= "{$whereAnd} t.turma_turno_id = '{$int_ref_cod_turno}'";
             $whereAnd = ' AND ';
@@ -273,6 +277,11 @@ class clsModulesComponenteMinistrado extends Model {
 
         if (is_numeric($int_servidor_id)) {
             $filtros .= "{$whereAnd} pt.servidor_id = '{$int_servidor_id}'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_frequencia_id)) {
+            $filtros .= "{$whereAnd} cm.frequencia_id = '{$int_frequencia_id}'";
             $whereAnd = ' AND ';
         }
 
@@ -319,7 +328,7 @@ class clsModulesComponenteMinistrado extends Model {
      */
     public function detalhe () {
         $data = [];
-        
+
         if (is_numeric($this->id)) {
             $db = new clsBanco();
             $db->Consulta("

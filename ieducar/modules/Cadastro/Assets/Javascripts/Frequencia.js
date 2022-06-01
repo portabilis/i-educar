@@ -1,8 +1,96 @@
+(function($){
+  $(document).ready(function(){
+
+    hideOrdensAulas();
+
+    function hideOrdensAulas() {
+      for (let i = 1; i <= 5; i++) {
+        $('#tr_ordens_aulas' + i).hide();
+        $('#ordens_aulas' + i).val('').empty().hide();
+      }
+    }
+
+    document.getElementById('fase_etapa').onchange = function () {
+      const campoTurma = document.getElementById('ref_cod_turma').value;
+      const campoComponenteCurricular = document.getElementById('ref_cod_componente_curricular').value;
+      const campoFaseEtapa = document.getElementById('fase_etapa').value;
+
+      if (!campoTurma || !campoComponenteCurricular || !campoFaseEtapa) {
+        $('#conteudos').val([]).empty().trigger('chosen:updated');
+        getResource(false);
+      }
+
+      let url = getResourceUrlBuilder.buildUrl(
+        '/module/Api/PlanejamentoAulaConteudo',
+        'pacByFreq',
+        { campoTurma : campoTurma,
+          campoComponenteCurricular : campoComponenteCurricular,
+          campoFaseEtapa : campoFaseEtapa }
+      );
+
+      var options = {
+        url      : url,
+        dataType : 'json',
+        success  : function (dataResponse) {
+          $('#conteudos').val([]).empty().trigger('chosen:updated');
+
+          if (dataResponse.pac != null) {
+            $('#conteudos').html(
+              (Object.keys(dataResponse.pac[1] || [])
+                .map(key => !dataResponse.pac[1][key][1]
+                  ? `<option value='${key}'>${dataResponse.pac[1][key][0]}</option>`
+                  : `<option value='${key}' style="color:blue">${dataResponse.pac[1][key][0]}</option>`)).join()
+            ).trigger('chosen:updated');
+          }
+        }
+
+      };
+
+      getResource(options);
+
+    };
+
+    document.getElementById('ref_cod_turma').onchange = function () {
+      const campoTurma = document.getElementById('ref_cod_turma').value;
+
+      if (!campoTurma) {
+        hideOrdensAulas();
+        getResource(false);
+      }
+
+      let params = {id: campoTurma};
+      let options = {
+        url: getResourceUrlBuilder.buildUrl('/module/Api/Frequencia', 'getTipoPresenca', params),
+        dataType: 'json',
+        data: {},
+        success: function (response) {
+          if (response.tipo_presenca == 2 || response.tipo_presenca == '2') {
+            for (let i = 1; i <= 5; i++) {
+              $('#tr_ordens_aulas' + i).show();
+              $('#ordens_aulas' + i).show();
+            }
+          } else {
+            carregarAlunos();
+          }
+        },
+      };
+
+      getResource(options);
+
+    }
+
+    $('input[type="checkbox"]').change(function() {
+      carregarAlunos();
+    });
+  });
+})(jQuery);
+
 document.getElementById('data').disabled = document.getElementById('ref_cod_turma').value != '';
 
 const maxCaracteresObservacao = 256;
 
 var rebuildAllChosenAnosLetivos = undefined;
+
 function existeComponente(){
     if ($j('input[name^="disciplinas["]:checked').length <= 0) {
         alert('É necessário adicionar pelo menos um componente curricular.');
@@ -22,68 +110,68 @@ document.getElementById('data').onchange = function () {
 };
 
 function getAluno(xml_aluno) {
-    var campoAlunos = document.getElementById('alunos');
-    var DOM_array = xml_aluno.getElementsByTagName("aluno");
+  var campoAlunos = document.getElementById('alunos');
+  var DOM_array = xml_aluno.getElementsByTagName("aluno");
 
-    let qtdAulas = 0;
+  let qtdAulas = 0;
 
-    for (let i = 1; i <= 5; i++) {
-      if (document.getElementById("ordens_aulas" + i).checked) {
-        qtdAulas += 1;
+  for (let i = 1; i <= 5; i++) {
+    if (document.getElementById("ordens_aulas" + i).checked) {
+      qtdAulas += 1;
+    }
+  }
+
+  var conteudo = '';
+
+  if (DOM_array.length) {
+    conteudo += '<td class="tableDetalheLinhaSeparador" colspan="3"></td><tr><td><div class="scroll"><table class="tableDetalhe tableDetalheMobile" width="100%"><tr class="tableHeader">';
+    conteudo += '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' + "Nome" + '</span></th>';
+
+    if (qtdAulas == 0) {
+      conteudo += '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' + "Presença" + '</span></th>';
+    } else {
+      for (let qtd = 1; qtd <= qtdAulas; qtd++) {
+        conteudo += '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' + "Aula " + qtd + '</span></th>';
       }
     }
 
-    var conteudo = '';
+    conteudo += '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' + "Justificativa" + '</span></th>';
+    conteudo += '</tr>';
+    conteudo += '<tr><td class="tableDetalheLinhaSeparador" colspan="3"></td></tr>';
 
-    if (DOM_array.length) {
-        conteudo += '<td class="tableDetalheLinhaSeparador" colspan="3"></td><tr><td><div class="scroll"><table class="tableDetalhe tableDetalheMobile" width="100%"><tr class="tableHeader">';
-        conteudo += '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' + "Nome" + '</span></th>';
+    for (var i = 0; i < DOM_array.length; i++) {
+      id = DOM_array[i].getAttribute("cod_aluno");
+      conteudo += ' <td class="sizeFont colorFont"><p>' + DOM_array[i].firstChild.data + '</p></td>';
 
-        if (qtdAulas == 0) {
-          conteudo += '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' + "Presença" + '</span></th>';
-        } else {
-          for (let qtd = 1; qtd <= qtdAulas; qtd++) {
-            conteudo += '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' + "Aula " + qtd + '</span></th>';
-          }
-        }
-
-        conteudo += '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' + "Justificativa" + '</span></th>';
-        conteudo += '</tr>';
-        conteudo += '<tr><td class="tableDetalheLinhaSeparador" colspan="3"></td></tr>';
-
-        for (var i = 0; i < DOM_array.length; i++) {
-            id = DOM_array[i].getAttribute("cod_aluno");
-            conteudo += ' <td class="sizeFont colorFont"><p>' + DOM_array[i].firstChild.data + '</p></td>';
-
-            if (qtdAulas == 0) {
-              conteudo += ` <td class="sizeFont colorFont" > \
+      if (qtdAulas == 0) {
+        conteudo += ` <td class="sizeFont colorFont" > \
                             <input type="checkbox" onchange="presencaMudou(this)" id="alunos[]" name="alunos[]" value="${id}" Checked>
                           </td>`;
-            } else {
-              for (let qtd = 1; qtd <= qtdAulas; qtd++) {
-                conteudo += ` <td class="sizeFont colorFont" > \
+      } else {
+        for (let qtd = 1; qtd <= qtdAulas; qtd++) {
+          conteudo += ` <td class="sizeFont colorFont" > \
                             <input type="checkbox" onchange="presencaMudou(this)" id="alunos[]" name='alunos[]' data-aulaid="${qtd}" value="${id}" Checked>
                           </td>`;
-              }
-            }
-
-            conteudo += ` <td><input type='text' name='justificativa[${id}][]' style="display: flex;" maxlength=${maxCaracteresObservacao} disabled></td>`;
-            conteudo += ` <td><input type='hidden' name='justificativa[${id}][qtd]' style="display: flex;" value="0" readonly></td>`;
-            conteudo += ` <td><input type='hidden' name='justificativa[${id}][aulas]' style="display: flex;" readonly></td>`;
-            conteudo += ' </tr>';
         }
-    } else {
-        campoAlunos.innerHTML = 'Faltam informações obrigatórias.';
-    }
+      }
 
-    if (conteudo) {
-        campoAlunos.innerHTML = '<table cellspacing="0" cellpadding="0" border="0">';
-        campoAlunos.innerHTML += '<tr align="left"><td><p>' + conteudo + '</p></td></tr>';
-        campoAlunos.innerHTML += '</table>';
+      conteudo += ` <td><input type='text' name='justificativa[${id}][]' style="display: flex;" maxlength=${maxCaracteresObservacao} disabled></td>`;
+      conteudo += ` <td><input type='hidden' name='justificativa[${id}][qtd]' style="display: flex;" value="0" readonly></td>`;
+      conteudo += ` <td><input type='hidden' name='justificativa[${id}][aulas]' style="display: flex;" readonly></td>`;
+      conteudo += ' </tr>';
     }
+  } else {
+    campoAlunos.innerHTML = 'Faltam informações obrigatórias.';
+  }
+
+  if (conteudo) {
+    campoAlunos.innerHTML = '<table cellspacing="0" cellpadding="0" border="0">';
+    campoAlunos.innerHTML += '<tr align="left"><td><p>' + conteudo + '</p></td></tr>';
+    campoAlunos.innerHTML += '</table>';
+  }
 }
 
-document.getElementById('ref_cod_componente_curricular').onchange = function () {
+function carregarAlunos() {
     var campoTurma = document.getElementById('ref_cod_turma').value;
     var campoComponenteCurricular = document.getElementById('ref_cod_componente_curricular').value;
 
@@ -92,7 +180,7 @@ document.getElementById('ref_cod_componente_curricular').onchange = function () 
 
     var xml_disciplina = new ajax(getAluno);
     xml_disciplina.envia("educar_aluno_xml.php?tur=" + campoTurma + "&ccur=" + campoComponenteCurricular);
-};
+}
 
 function presencaMudou (presenca) {
   console.log(presenca)

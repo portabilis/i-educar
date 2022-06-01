@@ -55,10 +55,90 @@ class PlanejamentoAulaConteudoController extends ApiCoreController
         return [];
     }
 
+    public function getPacByFreq()
+    {
+        $ref_cod_turma = $this->getRequest()->campoTurma;
+        $ref_cod_componente_curricular = $this->getRequest()->campoComponenteCurricular;
+        $fase_etapa = $this->getRequest()->campoFaseEtapa;
+
+        if (is_numeric($ref_cod_turma) && is_numeric($ref_cod_componente_curricular) && is_numeric($fase_etapa)) {
+            $obj = new clsModulesPlanejamentoAula();
+            $id = $obj->lista(
+                null,
+                null,
+                null,
+                null,
+                null,
+                $ref_cod_turma,
+                $ref_cod_componente_curricular,
+                null,
+                null,
+                null,
+                $fase_etapa,
+                null,
+            )[0]['id'];
+
+            if (is_numeric($id)) {
+                $obj = new clsModulesPlanejamentoAulaConteudo();
+                $conteudos = $obj->lista2($id);
+
+                foreach ($conteudos as $key => $conteudo) {
+                    $lista[$conteudo['id']] = [$conteudo['conteudo'], $conteudo['usando']];
+                }
+                $conteudos = $lista;
+
+
+                $lista = [];
+                // $obj = new clsModulesPlanejamentoAulaBNCCEspecificacao();
+                // $especificacoes = $obj->lista($id);
+
+                // foreach ($especificacoes as $key => $especificacao) {
+                //     $lista[$especificacao['id']] = $especificacao['especificacao'];
+                // }
+                $especificacoes = $lista;
+
+                return ['pac' => [$especificacoes, $conteudos]];
+            }
+
+            return [];
+        }
+
+        return [];
+    }
+
+    // api
+    protected function getTurma()
+    {
+        if (!$this->canGet()) {
+            return void;
+        }
+
+        $id = $this->getRequest()->id;
+
+        $turma = new clsPmieducarTurma();
+        $turma->cod_turma = $id;
+        $turma = $turma->detalhe();
+
+        foreach ($turma as $k => $v) {
+            if (is_numeric($k)) {
+                unset($turma[$k]);
+            }
+        }
+
+    }
+
     public function Gerar()
     {
         if ($this->isRequestFor('get', 'pac')) {
             $this->appendResponse($this->getPAC());
+        }
+
+        if ($this->isRequestFor('get', 'pacByFreq')) {
+            $this->appendResponse($this->getPacByFreq());
+        }
+
+        if ($this->isRequestFor('get', 'turma')) {
+            $this->appendResponse($this->getTurma());
         }
     }
 }

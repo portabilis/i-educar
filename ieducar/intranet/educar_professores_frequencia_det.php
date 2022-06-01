@@ -42,6 +42,29 @@ return new class extends clsDetalhe {
         $obj = new clsPmieducarTurma($registro['detalhes']['ref_cod_turma']);
         $resultado = $obj->getGrau();
 
+
+        $obj = new clsModulesComponenteMinistrado();
+        $componenteMinistrado = $obj->lista(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            $this->id_freq
+        )[0];
+
+        if (isset($componenteMinistrado) && !empty($componenteMinistrado)) {
+            $obj = new clsModulesComponenteMinistradoConteudo();
+            $componenteMinistrado['conteudos'] = $obj->lista($componenteMinistrado['id']);
+        }
+
         if ($registro['detalhes']['data']) {
             $this->addDetalhe(
                 [
@@ -83,6 +106,19 @@ return new class extends clsDetalhe {
                     $registro['detalhes']['fase_etapa'] . "º " . $registro['detalhes']['etapa']
                 ]
             );
+        }
+
+        if (isset($componenteMinistrado) && $componenteMinistrado['atividades']) {
+            $this->addDetalhe(
+                [
+                    'Registro diário de aula',
+                    $componenteMinistrado['atividades']
+                ]
+            );
+        }
+
+        if (isset($componenteMinistrado) && is_array($componenteMinistrado['conteudos'])) {
+            $this->montaListaConteudos($componenteMinistrado['conteudos']);
         }
 
         $ordensAulasArray = [];
@@ -225,6 +261,28 @@ return new class extends clsDetalhe {
             [
                 'Alunos',
                 $disciplinas
+            ]
+        );
+    }
+
+    function montaListaConteudos ($conteudos) {
+        for ($i=0; $i < count($conteudos); $i++) {
+            $this->tabela2 .= '  <div style="margin-bottom: 10px; float: left" class="linha-disciplina" >';
+
+            $this->tabela2 .= "  <span style='display: block; float: left'>{$conteudos[$i][planejamento_aula_conteudo][conteudo]}</span>";
+
+            $this->tabela2 .= '  </div>';
+            $this->tabela2 .= '  <br style="clear: left" />';
+        }
+
+        $conteudo  = '<table cellspacing="0" cellpadding="0" border="0">';
+        $conteudo .= sprintf('<tr align="left"><td class="formlttd">%s</td></tr>', $this->tabela2);
+        $conteudo .= '</table>';
+
+        $this->addDetalhe(
+            [
+                'Conteúdos',
+                $conteudo
             ]
         );
     }
