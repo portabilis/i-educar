@@ -1070,9 +1070,9 @@ JS;
             $valueObject = new EmployeePosgraduateValueObject();
             $valueObject->employeeId = $employeeId;
             $valueObject->entityId = $this->ref_cod_instituicao;
-            $valueObject->typeId = $this->posgraduate_type_id[$key];
-            $valueObject->areaId = $this->posgraduate_area_id[$key];
-            $valueObject->completionYear = $this->posgraduate_completion_year[$key];
+            $valueObject->typeId = $this->posgraduate_type_id[$key] ?: null;
+            $valueObject->areaId = $this->posgraduate_area_id[$key] ?: null;
+            $valueObject->completionYear = $this->posgraduate_completion_year[$key] ?: null;
             $employeePosgraduateService->storePosgraduate($valueObject);
         }
     }
