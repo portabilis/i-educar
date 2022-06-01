@@ -228,7 +228,8 @@ class Registro60 implements RegistroEducacenso, ItemOfRegistro30
             !$this->composicaoItinerarioFormacaoTecnica;
     }
 
-    public function etapaTurmaDescritiva() {
+    public function etapaTurmaDescritiva()
+    {
         $etapasEducacenso = loadJson('educacenso_json/etapas_ensino.json');
 
         return $etapasEducacenso[$this->etapaTurma];

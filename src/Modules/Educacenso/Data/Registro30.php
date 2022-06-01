@@ -178,7 +178,7 @@ class Registro30 extends AbstractRegistro
 
     private function formatPosGraduateToArray($posGraduate)
     {
-        $posGraduate = explode('}","{',$posGraduate);
+        $posGraduate = explode('}","{', $posGraduate);
 
         foreach ($posGraduate as $key => $pos) {
             $posGraduate[$key] = json_decode('{' . str_replace(['\\', '{"{', '}"}'], '', $pos) . '}');
