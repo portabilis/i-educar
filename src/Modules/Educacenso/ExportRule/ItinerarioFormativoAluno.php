@@ -5,7 +5,6 @@ namespace iEducar\Modules\Educacenso\ExportRule;
 use App\Models\Educacenso\Registro60;
 use App\Models\Educacenso\RegistroEducacenso;
 use iEducar\Modules\Educacenso\Model\EstruturaCurricular;
-use iEducar\Modules\Educacenso\Model\TipoItinerarioFormativo;
 
 class ItinerarioFormativoAluno implements EducacensoExportRule
 {

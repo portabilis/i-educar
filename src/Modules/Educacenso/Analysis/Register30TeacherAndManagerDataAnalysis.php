@@ -46,7 +46,6 @@ class Register30TeacherAndManagerDataAnalysis implements AnalysisInterface
         }
 
         foreach ($data->posGraduacoes as $posgraduacao) {
-
             if ($data->escolaridade == Escolaridade::EDUCACAO_SUPERIOR &&
                 $posgraduacao->type_id &&
                 empty($posgraduacao->area_id)
