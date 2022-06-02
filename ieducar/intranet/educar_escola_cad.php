@@ -240,19 +240,19 @@ return new class extends clsCadastro {
         'qtd_edu_prof_quali_prof_tec_conc_ensino_med_int' => 'Educação Profissional - Qualificação profissional técnica - Concomitante ao ensino médio - Integral',
         'qtd_edu_prof_quali_prof_tec_conc_inter_ensino_med_par' => 'Educação Profissional - Qualificação profissional técnica - Concomitante intercomplementar ao ensino médio - Parcial',
         'qtd_edu_prof_quali_prof_tec_conc_inter_ensino_med_int' => 'Educação Profissional - Qualificação profissional técnica - Concomitante intercomplementar ao ensino médio - Integral',
+        'qtd_edu_prof_edu_prof_tec_nivel_med_inte_ensino_med_par' => 'Educação Profissional - Educação profissional técnica de nível médio - Integrada ao ensino médio - Parcial',
+        'qtd_edu_prof_edu_prof_tec_nivel_med_inte_ensino_med_int' => 'Educação Profissional - Educação profissional técnica de nível médio - Integrada ao ensino médio - Integral',
+        'qtd_edu_prof_edu_prof_tec_nivel_med_conc_ensino_med_par' => 'Educação Profissional - Educação profissional técnica de nível médio - Concomitante ao ensino médio - Parcial',
+        'qtd_edu_prof_edu_prof_tec_nivel_med_conc_ensino_med_int' => 'Educação Profissional - Educação profissional técnica de nível médio - Concomitante ao ensino médio - Integral',
+        'qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_ensino_med_par' => 'Educação Profissional - Educação profissional técnica de nível médio - Concomitante intercomplementar ao ensino médio - Parcial',
+        'qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_ensino_med_int' => 'Educação Profissional - Educação profissional técnica de nível médio - Concomitante intercomplementar ao ensino médio - Integral',
+        'qtd_edu_prof_edu_prof_tec_nivel_med_subsequente_ensino_med' => 'Educação Profissional - Educação profissional técnica de nível médio - Subsequente ao ensino médio',
         'qtd_edu_prof_edu_prof_tec_nivel_med_inte_edu_eja_nivel_med_par' => 'Educação Profissional - Educação profissional técnica de nível médio - Integrada à educação de jovens e adultos de nível médio - Parcial',
         'qtd_edu_prof_edu_prof_tec_nivel_med_inte_edu_eja_nivel_med_int' => 'Educação Profissional - Educação profissional técnica de nível médio - Integrada à educação de jovens e adultos de nível médio - Integral',
         'qtd_edu_prof_edu_prof_tec_nivel_med_conc_edu_eja_nivel_med_par' => 'Educação Profissional - Educação profissional técnica de nível médio - Concomitante à educação de jovens e adultos de nível médio - Parcial',
         'qtd_edu_prof_edu_prof_tec_nivel_med_conc_edu_eja_nivel_med_int' => 'Educação Profissional - Educação profissional técnica de nível médio - Concomitante à educação de jovens e adultos de nível médio - Integral',
         'qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_edu_eja_med_par' => 'Educação Profissional - Educação profissional técnica de nível médio - Concomitante intercomplementar à educação de jovens e adultos de nível médio - Parcial',
         'qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_edu_eja_med_int' => 'Educação Profissional - Educação profissional técnica de nível médio - Concomitante intercomplementar à educação de jovens e adultos de nível médio - Integral',
-        'qtd_edu_prof_edu_prof_tec_nivel_med_inte_ensino_med_par' => 'Educação Profissional - Educação profissional técnica de nível médio - Integrada ao ensino médio - Parcial',
-        'qtd_edu_prof_edu_prof_tec_nivel_med_inte_ensino_med_int' => 'Educação Profissional - Educação profissional técnica de nível médio - Integrada ao ensino médio - Integral',
-        'qtd_edu_prof_edu_prof_tec_nivel_med_conc_ensino_med_par' => 'Educação Profissional - Educação profissional técnica de nível médio - Concomitante ao ensino médio - Parcial',
-        'qtd_edu_prof_edu_prof_tec_nivel_med_subsequente_ensino_med' => 'Educação Profissional - Educação profissional técnica de nível médio - Subsequente ao ensino médio',
-        'qtd_edu_prof_edu_prof_tec_nivel_med_conc_ensino_med_int' => 'Educação Profissional - Educação profissional técnica de nível médio - Concomitante ao ensino médio - Integral',
-        'qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_ensino_med_par' => 'Educação Profissional - Educação profissional técnica de nível médio - Concomitante intercomplementar ao ensino médio - Parcial',
-        'qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_ensino_med_int' => 'Educaçao Profissional - Educação profissional técnica de nível médio - Concomitante intercomplementar ao ensino médio - Integral'
     ];
 
     public function Inicializar()
