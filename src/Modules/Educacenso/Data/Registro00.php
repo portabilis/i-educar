@@ -134,33 +134,33 @@ class Registro00 extends AbstractRegistro
             $record->qdtMatClasseEspecialIntegral, // 55	Educação Especial - Classe especial - Integral
             $record->qdtMatEjaFundamental, // 56	Educação de Jovens e Adultos (EJA) - Ensino fundamental
             $record->qtdMatEjaEnsinoMedio, // 57	Educação de Jovens e Adultos (EJA) - Ensino médio
-            $record->qtdMatEducacaoProfissionalIntegradaEjaFundamentalParcial, // 58	Educação Profissional - Qualificação profissional - Integrada à educação de jovens e adultos no ensino fundamental - Parcial
-            $record->qtdMatEducacaoProfissionalIntegradaEjaFundamentalIntegral, // 59	Educação Profissional - Qualificação profissional - Integrada à educação de jovens e adultos no ensino fundamental - Integral
-            $record->qtdMatEducacaoProfissionalIntegradaEjaNivelMedioParcial, // 60	Educação Profissional - Qualificação profissional técnica - Integrada à educação de jovens e adultos de nível médio - Parcial
-            $record->qtdMatEducacaoProfissionalIntegradaEjaNivelMedioIntegral, // 61	Educação Profissional - Qualificação profissional técnica - Integrada à educação de jovens e adultos de nível médio - Integral
-            $record->qtdMatEducacaoProfissionalConcomitanteEjaNivelMedioParcial, // 62	Educação Profissional - Qualificação profissional técnica - Concomitante à educação de jovens e adultos de nível médio - Parcial
-            $record->qtdMatEducacaoProfissionalConcomitanteEjaNivelMedioIntegral, // 63	Educação Profissional - Qualificação profissional técnica - Concomitante à educação de jovens e adultos de nível médio - Integral
-            $record->qtdMatEducacaoProfissionalIntercomentarEjaNivelMedioParcial, // 64	Educação Profissional - Qualificação profissional técnica - Concomitante intercomplementar à educação de jovens e adultos de nível médio - Parcial
-            $record->qtdMatEducacaoProfissionalIntercomentarEjaNivelMedioIntegral, // 65	Educação Profissional - Qualificação profissional técnica - Concomitante intercomplementar à educação de jovens e adultos de nível médio - Integral
-            $record->qtdMatEducacaoProfissionalIntegradaEnsinoMedioParcial, // 66	Educação Profissional - Qualificação profissional técnica - Integrada ao ensino médio - Parcial
-            $record->qtdMatEducacaoProfissionalIntegradaEnsinoMedioIntegral, // 67	Educação Profissional - Qualificação profissional técnica - Integrada ao ensino médio - Integral
-            $record->qtdMatEducacaoProfissionalConcomitenteEnsinoMedioParcial, // 68	Educação Profissional - Qualificação profissional técnica - Concomitante ao ensino médio - Parcial
-            $record->qtdMatEducacaoProfissionalConcomitenteEnsinoMedioIntegral, // 69	Educação Profissional - Qualificação profissional técnica - Concomitante ao ensino médio - Integral
-            $record->qtdMatEducacaoProfissionalIntercomplementarEnsinoMedioParcial, // 70	Educação Profissional - Qualificação profissional técnica - Concomitante intercomplementar ao ensino médio - Parcial
-            $record->qtdMatEducacaoProfissionalIntercomplementarEnsinoMedioIntegral, // 71	Educação Profissional - Qualificação profissional técnica - Concomitante intercomplementar ao ensino médio - Integral
-            $record->qtdMatEducacaoProfissionalTecnicaIntegradaEnsinoMedioParcial, // 72	Educação Profissional - Educação profissional técnica de nível médio - Integrada ao ensino médio - Parcial
-            $record->qtdMatEducacaoProfissionalTecnicaIntegradaEnsinoMedioIntegral, // 73	Educação Profissional - Educação profissional técnica de nível médio - Integrada ao ensino médio - Integral
-            $record->qtdMatEducacaoProfissionalTecnicaConcomitanteEnsinoMedioParcial, // 74	Educação Profissional - Educação profissional técnica de nível médio - Concomitante ao ensino médio - Parcial
-            $record->qtdMatEducacaoProfissionalTecnicaConcomitanteEnsinoMedioIntegral, // 75	Educação Profissional - Educação profissional técnica de nível médio - Concomitante ao ensino médio - Integral
-            $record->qtdMatEducacaoProfissionalTecnicaIntercomplementarEnsinoMedioParcial, // 76	Educação Profissional - Educação profissional técnica de nível médio - Concomitante intercomplementar ao ensino médio - Parcial
-            $record->qtdMatEducacaoProfissionalTecnicaIntercomplementarEnsinoMedioItegral, // 77	Educação Profissional - Educação profissional técnica de nível médio - Concomitante intercomplementar ao ensino médio - Integral
-            $record->qtdMatEducacaoProfissionalTecnicaSubsequenteEnsinoMedio, // 78	Educação Profissional - Educação profissional técnica de nível médio - Subsequente ao ensino médio
-            $record->qtdMatEducacaoProfissionalTecnicaIntegradaEjaNivelMedioParcial, // 79	Educação Profissional - Educação profissional técnica de nível médio - Integrada à educação de jovens e adultos de nível médio - Parcial
-            $record->qtdMatEducacaoProfissionalTecnicaIntegradaEjaNivelMedioIntegral, // 80	Educação Profissional - Educação profissional técnica de nível médio - Integrada à educação de jovens e adultos de nível médio - Integral
-            $record->qtdMatEducacaoProfissionalTecnicaConcomitanteEjaNivelMedioParcial, // 81	Educação Profissional - Educação profissional técnica de nível médio - Concomitante à educação de jovens e adultos de nível médio - Parcial
-            $record->qtdMatEducacaoProfissionalTecnicaConcomitanteEjaNivelMedioIntegral, // 82	Educação Profissional - Educação profissional técnica de nível médio - Concomitante à educação de jovens e adultos de nível médio - Integral
-            $record->qtdMatEducacaoProfissionalTecnicaIntercomplementarEjaNivelMedioParcial, // 83	Educação Profissional - Educação profissional técnica de nível médio - Concomitante intercomplementar à educação de jovens e adultos de nível médio - Parcial
-            $record->qtdMatEducacaoProfissionalTecnicaIntercomplementarEjaNivelMedioIntegral, // 84	Educação Profissional - Educação profissional técnica de nível médio - Concomitante intercomplementar à educação de jovens e adultos de nível médio - Integral
+            $record->qtdMatEdProfIntegradaEjaFundamentalParcial, // 58	Educação Profissional - Qualificação profissional - Integrada à educação de jovens e adultos no ensino fundamental - Parcial
+            $record->qtdMatEdProfIntegradaEjaFundamentalIntegral, // 59	Educação Profissional - Qualificação profissional - Integrada à educação de jovens e adultos no ensino fundamental - Integral
+            $record->qtdMatEdProfIntegradaEjaNivelMedioParcial, // 60	Educação Profissional - Qualificação profissional técnica - Integrada à educação de jovens e adultos de nível médio - Parcial
+            $record->qtdMatEdProfIntegradaEjaNivelMedioIntegral, // 61	Educação Profissional - Qualificação profissional técnica - Integrada à educação de jovens e adultos de nível médio - Integral
+            $record->qtdMatEdProfConcomitanteEjaNivelMedioParcial, // 62	Educação Profissional - Qualificação profissional técnica - Concomitante à educação de jovens e adultos de nível médio - Parcial
+            $record->qtdMatEdProfConcomitanteEjaNivelMedioIntegral, // 63	Educação Profissional - Qualificação profissional técnica - Concomitante à educação de jovens e adultos de nível médio - Integral
+            $record->qtdMatEdProfIntercomentarEjaNivelMedioParcial, // 64	Educação Profissional - Qualificação profissional técnica - Concomitante intercomplementar à educação de jovens e adultos de nível médio - Parcial
+            $record->qtdMatEdProfIntercomentarEjaNivelMedioIntegral, // 65	Educação Profissional - Qualificação profissional técnica - Concomitante intercomplementar à educação de jovens e adultos de nível médio - Integral
+            $record->qtdMatEdProfIntegradaEnsinoMedioParcial, // 66	Educação Profissional - Qualificação profissional técnica - Integrada ao ensino médio - Parcial
+            $record->qtdMatEdProfIntegradaEnsinoMedioIntegral, // 67	Educação Profissional - Qualificação profissional técnica - Integrada ao ensino médio - Integral
+            $record->qtdMatEdProfConcomitenteEnsinoMedioParcial, // 68	Educação Profissional - Qualificação profissional técnica - Concomitante ao ensino médio - Parcial
+            $record->qtdMatEdProfConcomitenteEnsinoMedioIntegral, // 69	Educação Profissional - Qualificação profissional técnica - Concomitante ao ensino médio - Integral
+            $record->qtdMatEdProfIntercomplementarEnsinoMedioParcial, // 70	Educação Profissional - Qualificação profissional técnica - Concomitante intercomplementar ao ensino médio - Parcial
+            $record->qtdMatEdProfIntercomplementarEnsinoMedioIntegral, // 71	Educação Profissional - Qualificação profissional técnica - Concomitante intercomplementar ao ensino médio - Integral
+            $record->qtdMatEdProfTecnicaIntegradaEnsinoMedioParcial, // 72	Educação Profissional - Educação profissional técnica de nível médio - Integrada ao ensino médio - Parcial
+            $record->qtdMatEdProfTecnicaIntegradaEnsinoMedioIntegral, // 73	Educação Profissional - Educação profissional técnica de nível médio - Integrada ao ensino médio - Integral
+            $record->qtdMatEdProfTecnicaConcomitanteEnsinoMedioParcial, // 74	Educação Profissional - Educação profissional técnica de nível médio - Concomitante ao ensino médio - Parcial
+            $record->qtdMatEdProfTecnicaConcomitanteEnsinoMedioIntegral, // 75	Educação Profissional - Educação profissional técnica de nível médio - Concomitante ao ensino médio - Integral
+            $record->qtdMatEdProfTecnicaIntercomplementarEnsinoMedioParcial, // 76	Educação Profissional - Educação profissional técnica de nível médio - Concomitante intercomplementar ao ensino médio - Parcial
+            $record->qtdMatEdProfTecnicaIntercomplementarEnsinoMedioItegral, // 77	Educação Profissional - Educação profissional técnica de nível médio - Concomitante intercomplementar ao ensino médio - Integral
+            $record->qtdMatEdProfTecnicaSubsequenteEnsinoMedio, // 78	Educação Profissional - Educação profissional técnica de nível médio - Subsequente ao ensino médio
+            $record->qtdMatEdProfTecnicaIntegradaEjaNivelMedioParcial, // 79	Educação Profissional - Educação profissional técnica de nível médio - Integrada à educação de jovens e adultos de nível médio - Parcial
+            $record->qtdMatEdProfTecnicaIntegradaEjaNivelMedioIntegral, // 80	Educação Profissional - Educação profissional técnica de nível médio - Integrada à educação de jovens e adultos de nível médio - Integral
+            $record->qtdMatEdProfTecnicaConcomitanteEjaNivelMedioParcial, // 81	Educação Profissional - Educação profissional técnica de nível médio - Concomitante à educação de jovens e adultos de nível médio - Parcial
+            $record->qtdMatEdProfTecnicaConcomitanteEjaNivelMedioIntegral, // 82	Educação Profissional - Educação profissional técnica de nível médio - Concomitante à educação de jovens e adultos de nível médio - Integral
+            $record->qtdMatEdProfTecnicaIntercomplementarEjaNivelMedioParcial, // 83	Educação Profissional - Educação profissional técnica de nível médio - Concomitante intercomplementar à educação de jovens e adultos de nível médio - Parcial
+            $record->qtdMatEdProfTecnicaIntercomplementarEjaNivelMedioIntegral, // 84	Educação Profissional - Educação profissional técnica de nível médio - Concomitante intercomplementar à educação de jovens e adultos de nível médio - Integral
             $record->cnpjMantenedoraPrincipal, // 85	CNPJ da mantenedora principal da escola privada
             $record->cnpjEscolaPrivada, // 86	Número do CNPJ da escola privada
             $record->regulamentacao, // 87	Regulamentação/autorização no conselho ou órgão municipal, estadual ou federal de educaçãof
