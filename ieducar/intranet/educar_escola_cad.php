@@ -313,8 +313,6 @@ return new class extends clsCadastro {
             $retorno = 'Editar';
         }
 
-        $this->inicializaDados();
-
         $this->url_cancelar = ($retorno == 'Editar') ? "educar_escola_det.php?cod_escola={$registro['cod_escola']}" : 'educar_escola_lst.php';
 
         $this->breadcrumb('Escola', ['educar_index.php' => 'Escola']);
@@ -509,6 +507,8 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
+        $this->inicializaDados();
+
         // assets
         $scripts = [
             '/modules/Portabilis/Assets/Javascripts/Utils.js',
