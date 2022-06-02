@@ -10,10 +10,10 @@ class clsPmieducarMatricula extends Model
     public const MODELO_PRESENCIAL = 3;
 
     public const MODELOS_DE_ENSINO = [
-          self::MODELO_PRESENCIAL => 'Presencial' ,
-          self::MODELO_SEMIPRESENCIAL => 'Semipresencial' ,
-          self::MODELO_EAD => 'EAD' ,
-          self::MODELO_OFF_LINE => 'Off-line' ,
+        self::MODELO_PRESENCIAL => 'Presencial',
+        self::MODELO_SEMIPRESENCIAL => 'Semipresencial',
+        self::MODELO_EAD => 'EAD',
+        self::MODELO_OFF_LINE => 'Off-line',
     ];
 
     public $cod_matricula;
@@ -1045,7 +1045,29 @@ class clsPmieducarMatricula extends Model
 
         return false;
     }
-    
+
+    public function lista_matriculas_aee()
+    {
+
+        $db = new clsBanco();
+        $sql = 'SELECT m.cod_matricula, p.nome 
+        FROM pmieducar.matricula AS m
+        JOIN pmieducar.aluno AS a ON a.cod_aluno = m.ref_cod_aluno
+        JOIN cadastro.pessoa AS p ON p.idpes = a.ref_idpes
+        JOIN pmieducar.curso AS c ON c.cod_curso = m.ref_cod_curso
+        JOIN pmieducar.turma AS t ON t.ref_cod_curso = c.cod_curso
+        WHERE t.tipo_atendimento = 5';
+
+        $db->Consulta($sql);
+
+        while ($db->ProximoRegistro()) {
+            $tupla = $db->Tupla();
+            $resultado[] = $tupla;
+        }
+
+        return $resultado;
+    }
+
 
     /**
      * Retorna um array com os dados de um registro.
