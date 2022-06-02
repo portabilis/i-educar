@@ -1054,7 +1054,9 @@ class clsPmieducarMatricula extends Model
         FROM pmieducar.matricula AS m
         JOIN pmieducar.aluno AS a ON a.cod_aluno = m.ref_cod_aluno
         JOIN cadastro.pessoa AS p ON p.idpes = a.ref_idpes
-        WHERE m.ref_cod_curso = 7';
+        JOIN pmieducar.curso AS c ON c.cod_curso = m.ref_cod_curso
+        JOIN pmieducar.turma AS t ON t.ref_cod_curso = c.cod_curso
+        WHERE t.tipo_atendimento = 5';
 
         $db->Consulta($sql);
 

@@ -2047,7 +2047,7 @@ return false;
         $sql = 'SELECT t.cod_turma, t.nm_turma 
         FROM pmieducar.turma AS t
         JOIN pmieducar.curso AS c ON c.cod_curso = t.ref_cod_curso
-        WHERE t.ref_cod_curso = 7';
+        WHERE t.tipo_atendimento = 5';
 
         $db->Consulta($sql);
 
