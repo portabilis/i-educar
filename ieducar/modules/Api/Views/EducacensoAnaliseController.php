@@ -40,6 +40,7 @@ use iEducar\Modules\Educacenso\Model\SchoolManagerRole;
 use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\Educacenso\Model\TipoMediacaoDidaticoPedagogico;
+use iEducar\Modules\Educacenso\Model\UnidadeVinculadaComOutraInstituicao;
 use iEducar\Modules\Educacenso\Validator\AdministrativeDomainValidator;
 use iEducar\Modules\Educacenso\Validator\CnpjMantenedoraPrivada;
 use iEducar\Modules\Educacenso\Validator\FormasContratacaoEscolaValidator;
@@ -376,6 +377,33 @@ class EducacensoAnaliseController extends ApiCoreController
             $mensagem[] = [
                 'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a escola não preencheu nenhuma informação referente ao Número de matrículas atendidas por meio da parceria ou convênio, portanto é necessário informar pelo menos um dos campos.",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Matrículas atendidas por convênio > Seção: Número de matrículas atendidas por meio da parceria ou convênio)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
+        }
+
+        if ($escola->unidadeVinculada === UnidadeVinculadaComOutraInstituicao::EDUCACAO_BASICA && empty($escola->inepEscolaSede)) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que essa unidade está vinculada à uma escola da educação básica, portanto é necessário informar o código INEP da escola sede.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Código da Escola Sede)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
+        }
+
+        if ($escola->unidadeVinculada === UnidadeVinculadaComOutraInstituicao::EDUCACAO_BASICA && $escola->inepEscolaSede == $escola->codigoInep) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} possui valor inválido. Verificamos que essa unidade está vinculada à uma escola da educação básica, portanto o código INEP da escola sede deve ser diferente do INEP da escola atual.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Código da Escola Sede)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
+        }
+
+        if ($escola->unidadeVinculada === UnidadeVinculadaComOutraInstituicao::ENSINO_SUPERIOR && empty($escola->codigoIes)) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que essa unidade está vinculada à uma instituição de ensino superior, portanto é necessário informar o código da instituição.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Código da IES)',
                 'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
                 'fail' => true
             ];
