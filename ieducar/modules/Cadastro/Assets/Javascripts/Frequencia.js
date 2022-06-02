@@ -14,8 +14,9 @@
       const campoTurma = document.getElementById('ref_cod_turma').value;
       const campoComponenteCurricular = document.getElementById('ref_cod_componente_curricular').value;
       const campoFaseEtapa = document.getElementById('fase_etapa').value;
+      const campoData = document.getElementById('data').value;
 
-      if (!campoTurma || !campoComponenteCurricular || !campoFaseEtapa) {
+      if (!campoTurma || !campoComponenteCurricular || !campoFaseEtapa || !campoData) {
         $('#conteudos').val([]).empty().trigger('chosen:updated');
         getResource(false);
       }
@@ -25,7 +26,8 @@
         'pacByFreq',
         { campoTurma : campoTurma,
           campoComponenteCurricular : campoComponenteCurricular,
-          campoFaseEtapa : campoFaseEtapa }
+          campoFaseEtapa : campoFaseEtapa,
+          campoData: campoData}
       );
 
       var options = {

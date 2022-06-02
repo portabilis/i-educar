@@ -394,6 +394,7 @@ class clsModulesPlanejamentoAula extends Model {
         }
 
         if ($time_data_inicial) {
+            $time_data_inicial = Portabilis_Date_Utils::brToPgSQL($time_data_inicial);
             $filtros .= "{$whereAnd} pa.data_inicial >= '{$time_data_inicial}'";
             $whereAnd = ' AND ';
         }
