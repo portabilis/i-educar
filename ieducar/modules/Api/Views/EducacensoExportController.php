@@ -37,6 +37,7 @@ use iEducar\Modules\Educacenso\ExportRule\TurmaMulti;
 use iEducar\Modules\Educacenso\ExportRule\UnidadesCurricularesServidor;
 use iEducar\Modules\Educacenso\ExportRule\VeiculoTransporte;
 use iEducar\Modules\Educacenso\Formatters;
+use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento as ModelSituacaoFuncionamento;
 
 /**
  * Class EducacensoExportController
@@ -272,64 +273,14 @@ class EducacensoExportController extends ApiCoreController
         $educacensoRepository = new EducacensoRepository();
         $registro00Model = new Registro00();
         $registro00 = new Registro00Data($educacensoRepository, $registro00Model);
-        $escola = $registro00->getExportFormatData($escolaId, $ano);
+        $data = $registro00->getExportFormatData($escolaId, $ano);
 
-        if (empty($escola->codigoInep)) {
-            $this->msg .= "Dados para formular o registro 00 da escola {$escolaId} não encontrados. Verifique se a escola possuí endereço normalizado, código do INEP e dados do gestor cadastrados.<br/>";
+        if (empty($registro00->codigoInep)) {
+            $this->msg .= "Dados para formular o registro 00 da escola {$registro00->nomeEscola} não encontrados. Verifique se a escola possuí endereço normalizado, código do INEP e dados do gestor cadastrados.<br/>";
             $this->error = true;
         }
 
-        $escola = SituacaoFuncionamento::handle($escola);
-        $escola = DependenciaAdministrativa::handle($escola);
-        $escola = Regulamentacao::handle($escola);
-        $escola = EsferaAdministrativa::handle($escola);
-
-        $continuaExportacao = !in_array($escola->situacaoFuncionamento, [2, 3]);
-
-        $data = [
-            $escola->registro,
-            $escola->codigoInep,
-            $escola->situacaoFuncionamento,
-            $escola->inicioAnoLetivo,
-            $escola->fimAnoLetivo,
-            $escola->nome,
-            $escola->cep,
-            $escola->codigoIbgeMunicipio,
-            $escola->codigoIbgeDistrito,
-            $escola->logradouro,
-            $escola->numero,
-            $escola->complemento,
-            $escola->bairro,
-            $escola->ddd,
-            $escola->telefone,
-            $escola->telefoneOutro,
-            $escola->email,
-            $escola->orgaoRegional,
-            $escola->zonaLocalizacao,
-            $escola->localizacaoDiferenciada,
-            $escola->dependenciaAdministrativa,
-            $escola->orgaoEducacao,
-            $escola->orgaoSeguranca,
-            $escola->orgaoSaude,
-            $escola->orgaoOutro,
-            $escola->mantenedoraEmpresa,
-            $escola->mantenedoraSindicato,
-            $escola->mantenedoraOng,
-            $escola->mantenedoraInstituicoes,
-            $escola->mantenedoraSistemaS,
-            $escola->mantenedoraOscip,
-            $escola->categoriaEscolaPrivada,
-            $escola->conveniadaPoderPublico,
-            $escola->cnpjMantenedoraPrincipal,
-            $escola->cnpjEscolaPrivada,
-            $escola->regulamentacao,
-            $escola->esferaFederal,
-            $escola->esferaEstadual,
-            $escola->esferaMunicipal,
-            $escola->unidadeVinculada,
-            $escola->inepEscolaSede,
-            $escola->codigoIes,
-        ];
+        $continuaExportacao = !in_array($registro00->situacaoFuncionamento, [ModelSituacaoFuncionamento::EXTINTA, ModelSituacaoFuncionamento::PARALISADA]);
 
         return ArrayToCenso::format($data) . PHP_EOL;
     }

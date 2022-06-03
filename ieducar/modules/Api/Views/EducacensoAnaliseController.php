@@ -26,6 +26,7 @@ use iEducar\Modules\Educacenso\Data\Registro30 as Registro30Data;
 use iEducar\Modules\Educacenso\Data\Registro40 as Registro40Data;
 use iEducar\Modules\Educacenso\Data\Registro50 as Registro50Data;
 use iEducar\Modules\Educacenso\Data\Registro60 as Registro60Data;
+use iEducar\Modules\Educacenso\ExportRule\PoderPublicoConveniado as ExportRulePoderPublicoConveniado;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\EstruturaCurricular;
 use iEducar\Modules\Educacenso\Model\LinguaMinistrada;
@@ -33,6 +34,7 @@ use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
 use iEducar\Modules\Educacenso\Model\MantenedoraDaEscolaPrivada;
 use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
+use iEducar\Modules\Educacenso\Model\PoderPublicoConveniado;
 use iEducar\Modules\Educacenso\Model\Regulamentacao;
 use iEducar\Modules\Educacenso\Model\SchoolManagerAccessCriteria;
 use iEducar\Modules\Educacenso\Model\SchoolManagerRole;
@@ -40,8 +42,10 @@ use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\Educacenso\Model\TipoItinerarioFormativo;
 use iEducar\Modules\Educacenso\Model\TipoMediacaoDidaticoPedagogico;
+use iEducar\Modules\Educacenso\Model\UnidadeVinculadaComOutraInstituicao;
 use iEducar\Modules\Educacenso\Validator\AdministrativeDomainValidator;
 use iEducar\Modules\Educacenso\Validator\CnpjMantenedoraPrivada;
+use iEducar\Modules\Educacenso\Validator\FormasContratacaoEscolaValidator;
 use iEducar\Modules\Educacenso\Validator\FormaOrganizacaoTurma;
 use iEducar\Modules\Educacenso\Validator\InepNumberValidator;
 use iEducar\Modules\Educacenso\Validator\Telefone;
@@ -224,20 +228,6 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if ($escola->situacaoFuncionamento == SituacaoFuncionamento::EM_ATIVIDADE &&
-            $escola->dependenciaAdministrativa == DependenciaAdministrativaEscola::PRIVADA &&
-            empty($escola->cnpjEscolaPrivada)
-        ) {
-            $idpesEscola = School::find($codEscola)->ref_idpes;
-
-            $mensagem[] = [
-                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se o CNPJ da escola foi informado. Quando a escola possui o tipo de 'Dependência administrativa' como 'Privada', deve ser informado CNPJ.",
-                'path' => '(Pessoas > Cadastros > Pessoas jurídicas > Editar > Campo: CNPJ)',
-                'linkPath' => "/intranet/empresas_cad.php?idpes={$idpesEscola}",
-                'fail' => true
-            ];
-        }
-
         if (!$escola->esferaAdministrativa && ($escola->regulamentacao == Regulamentacao::SIM || $escola->regulamentacao == Regulamentacao::EM_TRAMITACAO)) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a escola é regulamentada ou está em tramitação pelo conselho/órgão, portanto é necessário informar qual a esfera administrativa;",
@@ -333,6 +323,92 @@ class EducacensoAnaliseController extends ApiCoreController
                     'fail' => true
                 ];
             }
+        }
+
+        if ($escola->situacaoFuncionamento == SituacaoFuncionamento::EM_ATIVIDADE && empty(array_filter($escola->poderPublicoConveniado))) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se o poder público responsável pela parceria ou convênio entre a Administração Pública e outras instituições foi informado.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: Poder público responsável pela parceria ou convênio entre a Administração Pública e outras instituições)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
+        }
+
+        if (in_array(PoderPublicoConveniado::NAO_POSSUI, $escola->poderPublicoConveniado) && count($escola->poderPublicoConveniado) > 1) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 10 da escola {$nomeEscola} possui valor inválido. Verificamos que o Poder público responsável pela parceria ou convênio entre a Administração Pública e outras instituições foi preenchido incorretamente.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: Poder público responsável pela parceria ou convênio entre a Administração Pública e outras instituições)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
+        }
+
+        if (
+            (in_array(PoderPublicoConveniado::MUNICIPAL, $escola->poderPublicoConveniado) ||
+            in_array(PoderPublicoConveniado::NAO_POSSUI, $escola->poderPublicoConveniado))
+            && empty(array_filter($escola->formasContratacaoPoderPublico))
+        ) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se as formas de contratação entre a Administração Pública e outras instituições foram informadas.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: Formas de contratação entre a Administração Pública e outras instituições)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
+        }
+
+        $formasContratacaoValidator = new FormasContratacaoEscolaValidator(
+            $escola->dependenciaAdministrativa,
+            $escola->categoriaEscolaPrivada,
+            $escola->formasContratacaoPoderPublico
+        );
+
+        if (!$formasContratacaoValidator->isValid()) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} possui valor inválido. Verificamos que as formas de contratação entre a Administração Pública e outras instituições foram informadas incorretamente.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: Formas de contratação entre a Administração Pública e outras instituições)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
+        }
+
+        if (
+            (in_array(PoderPublicoConveniado::MUNICIPAL, $escola->poderPublicoConveniado) ||
+            in_array(PoderPublicoConveniado::ESTADUAL, $escola->poderPublicoConveniado)) &&
+            $escola->NaoPossuiQuantidadeDeMatriculasAtendidas()
+        ) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a escola não preencheu nenhuma informação referente ao Número de matrículas atendidas por meio da parceria ou convênio, portanto é necessário informar pelo menos um dos campos.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Matrículas atendidas por convênio > Seção: Número de matrículas atendidas por meio da parceria ou convênio)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
+        }
+
+        if ($escola->unidadeVinculada === UnidadeVinculadaComOutraInstituicao::EDUCACAO_BASICA && empty($escola->inepEscolaSede)) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que essa unidade está vinculada à uma escola da educação básica, portanto é necessário informar o código INEP da escola sede.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Código da Escola Sede)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
+        }
+
+        if ($escola->unidadeVinculada === UnidadeVinculadaComOutraInstituicao::EDUCACAO_BASICA && $escola->inepEscolaSede == $escola->codigoInep) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} possui valor inválido. Verificamos que essa unidade está vinculada à uma escola da educação básica, portanto o código INEP da escola sede deve ser diferente do INEP da escola atual.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Código da Escola Sede)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
+        }
+
+        if ($escola->unidadeVinculada === UnidadeVinculadaComOutraInstituicao::ENSINO_SUPERIOR && empty($escola->codigoIes)) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que essa unidade está vinculada à uma instituição de ensino superior, portanto é necessário informar o código da instituição.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Código da IES)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
         }
 
         return [
