@@ -313,8 +313,6 @@ return new class extends clsCadastro {
             $retorno = 'Editar';
         }
 
-        $this->inicializaDados();
-
         $this->url_cancelar = ($retorno == 'Editar') ? "educar_escola_det.php?cod_escola={$registro['cod_escola']}" : 'educar_escola_lst.php';
 
         $this->breadcrumb('Escola', ['educar_index.php' => 'Escola']);
@@ -509,6 +507,8 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
+        $this->inicializaDados();
+
         // assets
         $scripts = [
             '/modules/Portabilis/Assets/Javascripts/Utils.js',
@@ -2216,6 +2216,11 @@ return new class extends clsCadastro {
 
     protected function validaDigitosInepEscola($inep, $nomeCampo)
     {
+        if (str_starts_with($inep, '0')) {
+            $this->mensagem = "O campo: {$nomeCampo} não pode iniciar com 0.";
+            return false;
+        }
+
         if (!empty($inep) && strlen($inep) != 8) {
             $this->mensagem = "O campo: {$nomeCampo} deve conter 8 dígitos.";
 
