@@ -2216,6 +2216,11 @@ return new class extends clsCadastro {
 
     protected function validaDigitosInepEscola($inep, $nomeCampo)
     {
+        if (str_starts_with($inep, '0')) {
+            $this->mensagem = "O campo: {$nomeCampo} não pode iniciar com 0.";
+            return false;
+        }
+
         if (!empty($inep) && strlen($inep) != 8) {
             $this->mensagem = "O campo: {$nomeCampo} deve conter 8 dígitos.";
 
