@@ -16,8 +16,7 @@ class FormasContratacaoEscolaValidator implements EducacensoValidator
         $dependenciaAdministrativa,
         $categoriaEscolaPrivada,
         $formasContratacao
-    )
-    {
+    ) {
         $this->dependenciaAdministrativa = $dependenciaAdministrativa;
         $this->categoriaEscolaPrivada = $categoriaEscolaPrivada;
         $this->formasContratacao = $formasContratacao;

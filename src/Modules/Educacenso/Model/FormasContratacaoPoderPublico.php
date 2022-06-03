@@ -4,7 +4,6 @@ namespace iEducar\Modules\Educacenso\Model;
 
 class FormasContratacaoPoderPublico
 {
-
     public const TERMO_COLABORACAO = 1;
     public const TERMO_FOMENTO = 2;
     public const ACORDO_COOPERACAO = 3;
