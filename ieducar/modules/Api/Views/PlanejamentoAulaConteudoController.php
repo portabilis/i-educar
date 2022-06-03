@@ -58,11 +58,10 @@ class PlanejamentoAulaConteudoController extends ApiCoreController
     public function getPacByFreq()
     {
         $ref_cod_turma = $this->getRequest()->campoTurma;
-        $ref_cod_componente_curricular = $this->getRequest()->campoComponenteCurricular;
         $fase_etapa = $this->getRequest()->campoFaseEtapa;
         $data = $this->getRequest()->campoData;
 
-        if (is_numeric($ref_cod_turma) && is_numeric($ref_cod_componente_curricular) && is_numeric($fase_etapa) && !empty($data)) {
+        if (is_numeric($ref_cod_turma) && is_numeric($fase_etapa) && !empty($data)) {
             $obj = new clsModulesPlanejamentoAula();
             $id = $obj->lista(
                 null,
@@ -71,7 +70,7 @@ class PlanejamentoAulaConteudoController extends ApiCoreController
                 null,
                 null,
                 $ref_cod_turma,
-                $ref_cod_componente_curricular,
+                null,
                 null,
                 null,
                 null,
