@@ -50,6 +50,8 @@ return new class extends clsCadastro {
                 $this->alunos = $registro['alunos'];
                 $this->ref_cod_serie = $registro['detalhes']['ref_cod_serie'];
                 $this->ordens_aulas = explode(',', $registro['detalhes']['ordens_aulas']);
+                $this->atividades = $registro['planejamento_aula']['atividades'];
+                $this->conteudos = array_column($registro['planejamento_aula']['conteudos'], 'planejamento_aula_conteudo_id');
 
                 $this->fexcluir = $obj_permissoes->permissao_excluir(58, $this->pessoa_logada, 7);
                 $retorno = 'Editar';
@@ -106,10 +108,22 @@ return new class extends clsCadastro {
         $this->inputsHelper()->dynamic('faseEtapa', ['required' => $obrigatorio, 'label' => 'Etapa', 'disabled' => $desabilitado]);
 
         for ($i = 1; $i <= 5; $i++) {
-            $this->inputsHelper()->checkbox('ordens_aulas'.$i, ['label' => 'Ordens das aulas', 'value' => (in_array($i, $this->ordens_aulas) ? $i : ''), 'disabled' => $desabilitado, 'required' => false, 'label_hint' => $i.'º Aula']);
+            $this->inputsHelper()->checkbox('ordens_aulas'.$i, ['label' => 'Ordem das aulas', 'value' => (in_array($i, $this->ordens_aulas) ? $i : ''), 'disabled' => $desabilitado, 'required' => false, 'label_hint' => $i.'º Aula']);
         }
 
-        $this->campoMemo('atividades', 'Registro diário de aula', $this->atividades, 100, 5, false);
+        $this->campoMemo('atividades',
+            'Registro diário de aula',
+            $this->atividades,
+            100,
+            5,
+            false,
+            '',
+            '',
+            false,
+            false,
+            'onclick',
+            $desabilitado
+        );
 
 
         if (is_numeric($this->id)) {
@@ -128,13 +142,14 @@ return new class extends clsCadastro {
                 null,
                 null,
                 $this->fase_etapa,
-                $servidor_id
+                $servidor_id,
+                Portabilis_Date_Utils::brToPgSQL($this->data)
             )[0]['id'];
 
             $this->planejamento_aula_id = $id;
         }
 
-        $this->adicionarConteudosMultiplaEscolha();
+        $this->adicionarConteudosMultiplaEscolha($desabilitado);
 
 
         // Editar
@@ -231,7 +246,7 @@ return new class extends clsCadastro {
                                 </td>";
                     }
 
-                    $conteudo .= "  <td><input
+                    $conteudo .= "  <input
                                     type='hidden'
                                     name='justificativa[${id}][qtd]'
                                     style='display: flex;'
@@ -239,7 +254,15 @@ return new class extends clsCadastro {
                                     readonly
                                     autocomplete='off'
                                 />";
-                    $conteudo .= "  <td><input
+                    $conteudo .= "  <input
+                                    type='hidden'
+                                    name='justificativa[${id}][qtdFaltasFreqAntiga]'
+                                    style='display: flex;'
+                                    value='{$qtdFaltas}'
+                                    readonly
+                                    autocomplete='off'
+                                />";
+                    $conteudo .= "  <input
                                     type='hidden'
                                     name='justificativa[${id}][aulas]'
                                     style='display: flex;'
@@ -374,6 +397,7 @@ return new class extends clsCadastro {
         );
 
         $existe = $obj->existe();
+
         if ($existe){
             $this->mensagem = 'Cadastro não realizado, pois esta frequência já existe.<br>';
             $this->simpleRedirect('educar_professores_frequencia_cad.php');
@@ -476,6 +500,7 @@ return new class extends clsCadastro {
     public function Excluir () {
         $this->ref_cod_turma = $this->ref_cod_turma_;
         $this->ref_cod_componente_curricular = $this->ref_cod_componente_curricular_;
+        $this->fase_etapa = $this->fase_etapa_;
 
         $obj = new clsPmieducarTurma();
         $serie = $obj->lista($this->ref_cod_turma)[0]['ref_ref_cod_serie'];
@@ -589,7 +614,7 @@ return new class extends clsCadastro {
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
     }
 
-    protected function adicionarConteudosMultiplaEscolha() {
+    protected function adicionarConteudosMultiplaEscolha($desabilitado) {
         // ESPECIFICAÇÕES
         /*$helperOptions = [
             'objectName' => 'especificacoes',
@@ -620,7 +645,8 @@ return new class extends clsCadastro {
             'options' => [
                 'values' => $this->conteudos,
                 'all_values' => $todos_conteudos
-            ]
+            ],
+            'disabled' => $desabilitado,
         ];
         $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
     }

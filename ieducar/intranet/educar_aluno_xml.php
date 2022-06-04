@@ -7,7 +7,7 @@
     echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
     if (is_numeric($_GET['tur'])) {
         $db = new clsBanco();
-        
+
         $sql = "
             SELECT t.ref_cod_matricula, p.nome
             FROM pmieducar.aluno a
@@ -28,6 +28,8 @@
         } else {
             $sql .= "WHERE t.ref_cod_turma = {$_GET['tur']}";
         }
+
+        $sql .= " ORDER BY p.nome ASC";
 
         $db->Consulta("{$sql}");
 

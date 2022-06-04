@@ -1,7 +1,10 @@
 (function($){
   $(document).ready(function(){
+    var refCodTurma = $('#ref_cod_turma').val();
 
-    hideOrdensAulas();
+    if (refCodTurma == '') {
+      hideOrdensAulas();
+    }
 
     function hideOrdensAulas() {
       for (let i = 1; i <= 5; i++) {
@@ -80,7 +83,10 @@
     }
 
     $('input[type="checkbox"]').change(function() {
-      carregarAlunos();
+      let name = $(this).attr('name');
+      if (name.indexOf('ordens_aulas') > -1) {
+        carregarAlunos();
+      }
     });
   });
 })(jQuery);
@@ -183,12 +189,8 @@ function carregarAlunos() {
 }
 
 function presencaMudou (presenca) {
-  console.log(presenca)
   let elementJustificativa = document.getElementsByName("justificativa[" + presenca.value + "][]")[0];
-  elementJustificativa.disabled = presenca.checked;
-
   let elementJustificativaQtd = document.getElementsByName("justificativa[" + presenca.value + "][qtd]")[0];
-
   let elementJustificativaAulas = document.getElementsByName("justificativa[" + presenca.value + "][aulas]")[0];
 
   let aula_id = presenca.dataset.aulaid;
@@ -206,6 +208,11 @@ function presencaMudou (presenca) {
     elementJustificativaAulas.value = aulasValue + aula_id + ',';
   }
 
+  if (presenca.checked && parseInt(elementJustificativaQtd.value) > 0){
+    elementJustificativa.disabled = !presenca.checked;
+  } else {
+    elementJustificativa.disabled = presenca.checked;
+  }
 }
 
 function pegarIdPresenca (presenca) {
