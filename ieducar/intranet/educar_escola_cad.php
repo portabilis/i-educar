@@ -2099,6 +2099,12 @@ return new class extends clsCadastro {
     protected function validaEsferaAdministrativa()
     {
         $cidyId = $this->city_id;
+
+        if (empty($cidyId)) {
+            $this->mensagem = 'Cidade não informada';
+            return false;
+        }
+
         $cityIBGE = City::query()
             ->whereKey($cidyId)
             ->get()
