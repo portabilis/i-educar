@@ -667,8 +667,8 @@ return new class extends clsCadastro {
     protected function validaDates(): void
     {
         foreach ($this->data_inicio as $key => $campo) {
-            $data_inicio = $this->data_inicio[$key];
-            $data_fim = $this->data_fim[$key];
+            $data_inicio = \Carbon\Carbon::createFromFormat('d/m/Y',$this->data_inicio[$key]);
+            $data_fim = \Carbon\Carbon::createFromFormat('d/m/Y',$this->data_fim[$key]);
 
             $etapaAntigo = Portabilis_Utils_Database::selectRow(
                 'SELECT data_inicio,data_fim FROM pmieducar.ano_letivo_modulo WHERE ref_ano <> $1 AND ref_ref_cod_escola = $2 AND
