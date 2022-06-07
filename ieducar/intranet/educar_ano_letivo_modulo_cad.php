@@ -678,9 +678,7 @@ return new class extends clsCadastro {
             );
 
             if (!empty($etapaAntigo) && isset($etapaAntigo['data_inicio'],$etapaAntigo['data_fim'])) {
-                $db_data_inicio = \Carbon\Carbon::parse($etapaAntigo['data_inicio'])->format('d/m/Y');
-                $db_data_fim = \Carbon\Carbon::parse($etapaAntigo['data_fim'])->format('d/m/Y');
-                throw new RuntimeException("A etapa <b>$data_inicio-$data_fim</b> encontra-se dentro do período letivo <b>$db_data_inicio-$db_data_fim</b>");
+                throw new RuntimeException("A data informada não pode fazer parte do período configurado para outros anos letivos.");
             }
         }
     }
