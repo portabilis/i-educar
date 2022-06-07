@@ -111,20 +111,6 @@ return new class extends clsCadastro {
             $this->inputsHelper()->checkbox('ordens_aulas'.$i, ['label' => 'Ordem das aulas', 'value' => (in_array($i, $this->ordens_aulas) ? $i : ''), 'disabled' => $desabilitado, 'required' => false, 'label_hint' => $i.'º Aula']);
         }
 
-        $this->campoMemo('atividades',
-            'Registro diário de aula',
-            $this->atividades,
-            100,
-            5,
-            false,
-            '',
-            '',
-            false,
-            false,
-            'onclick',
-            $desabilitado
-        );
-
 
         if (is_numeric($this->id)) {
             $servidor_id = $this->pessoa_logada;
@@ -148,8 +134,6 @@ return new class extends clsCadastro {
 
             $this->planejamento_aula_id = $id;
         }
-
-        $this->adicionarConteudosMultiplaEscolha($desabilitado);
 
 
         // Editar
@@ -295,6 +279,22 @@ return new class extends clsCadastro {
 
         $this->campoRotulo('alunos_lista_', 'Alunos', "<div id='alunos'>$alunos</div>");
         $this->campoQuebra();
+
+        $this->campoMemo('atividades',
+            'Registro diário de aula',
+            $this->atividades,
+            100,
+            5,
+            false,
+            '',
+            '',
+            false,
+            false,
+            'onclick',
+            $desabilitado
+        );
+
+        $this->adicionarConteudosMultiplaEscolha($desabilitado);
 
         $this->campoOculto('ano', explode('/', dataToBrasil(NOW()))[2]);
     }
