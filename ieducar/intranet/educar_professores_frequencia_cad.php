@@ -296,10 +296,10 @@ return new class extends clsCadastro {
             false,
             false,
             'onclick',
-            $desabilitado
+            false
         );
 
-        $this->adicionarConteudosMultiplaEscolha($desabilitado);
+        $this->adicionarConteudosMultiplaEscolha();
 
         $this->campoOculto('ano', explode('/', dataToBrasil(NOW()))[2]);
     }
@@ -619,7 +619,7 @@ return new class extends clsCadastro {
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
     }
 
-    protected function adicionarConteudosMultiplaEscolha($desabilitado) {
+    protected function adicionarConteudosMultiplaEscolha() {
         // ESPECIFICAÇÕES
         /*$helperOptions = [
             'objectName' => 'especificacoes',
@@ -646,12 +646,11 @@ return new class extends clsCadastro {
 
         $options = [
             'label' => 'Objetivo(s) do conhecimento/conteúdo',
-            'required' => !$desabilitado,
+            'required' => true,
             'options' => [
                 'values' => $this->conteudos,
                 'all_values' => $todos_conteudos
-            ],
-            'disabled' => $desabilitado,
+            ]
         ];
         $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
     }
