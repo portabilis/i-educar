@@ -6,10 +6,16 @@
     var $componenteCurricularField = getElementFor('componente_curricular');
 
     var $componenteCurricularTitleField =  $componenteCurricularField[0].parentElement.parentElement.parentElement.children[0].children[0];
-    
+
     var handleGetComponentesCurriculares = function(response) {
       var selectOptions = jsonResourcesToSelectOptions(response['options']);
       updateSelect($componenteCurricularField, selectOptions, "Selecione um componente curricular");
+
+      let tipoPresenca = $turmaField.attr('tipo_presenca');
+
+      if (tipoPresenca == 1 || tipoPresenca == '1') {
+        $componenteCurricularField.prop('disabled', true);
+      }
     }
 
     function getResultado(xml) {
@@ -21,6 +27,7 @@
 
     var updateComponentesCurriculares = function(){
       resetSelect($componenteCurricularField);
+      $componenteCurricularField.prop('disabled', false);
 
       if ($anoField.val() && $turmaField.val() && $turmaField.is(':enabled')) {
         $componenteCurricularField.children().first().html('Aguarde, carregando...');
