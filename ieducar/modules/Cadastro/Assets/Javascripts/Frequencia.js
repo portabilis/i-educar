@@ -15,8 +15,10 @@
 
     document.getElementById('fase_etapa').onchange = function () {
       const campoTurma = document.getElementById('ref_cod_turma').value;
+      const tipoPresenca = $('#ref_cod_turma').attr('tipo_presenca');
       const campoFaseEtapa = document.getElementById('fase_etapa').value;
       const campoData = document.getElementById('data').value;
+      const campoComponenteCurricular = document.getElementById('ref_cod_componente_curricular').value;
 
       if (!campoTurma || !campoFaseEtapa || !campoData) {
         $('#conteudos').val([]).empty().trigger('chosen:updated');
@@ -27,8 +29,10 @@
         '/module/Api/PlanejamentoAulaConteudo',
         'pacByFreq',
         { campoTurma : campoTurma,
+          tipoPresenca : tipoPresenca,
           campoFaseEtapa : campoFaseEtapa,
-          campoData: campoData}
+          campoData: campoData,
+          campoComponenteCurricular: campoComponenteCurricular}
       );
 
       var options = {

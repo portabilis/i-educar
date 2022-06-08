@@ -60,8 +60,11 @@ class PlanejamentoAulaConteudoController extends ApiCoreController
         $ref_cod_turma = $this->getRequest()->campoTurma;
         $fase_etapa = $this->getRequest()->campoFaseEtapa;
         $data = $this->getRequest()->campoData;
+        $tipoPresenca = $this->getRequest()->tipoPresenca;
+        $campoComponenteCurricular = $this->getRequest()->campoComponenteCurricular;
 
-        if (is_numeric($ref_cod_turma) && is_numeric($fase_etapa) && !empty($data)) {
+
+        if (is_numeric($ref_cod_turma) && is_numeric($fase_etapa) && !empty($data) && ($tipoPresenca == 1 || ($tipoPresenca == 2 && !empty($campoComponenteCurricular)))) {
             $obj = new clsModulesPlanejamentoAula();
             $id = $obj->lista(
                 null,
@@ -70,7 +73,7 @@ class PlanejamentoAulaConteudoController extends ApiCoreController
                 null,
                 null,
                 $ref_cod_turma,
-                null,
+                !empty($campoComponenteCurricular) ? $campoComponenteCurricular : null,
                 null,
                 null,
                 null,
