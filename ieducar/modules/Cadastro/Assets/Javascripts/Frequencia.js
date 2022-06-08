@@ -67,6 +67,8 @@
         dataType: 'json',
         data: {},
         success: function (response) {
+          $('#ref_cod_turma').attr('tipo_presenca', response.tipo_presenca);
+
           if (response.tipo_presenca == 2 || response.tipo_presenca == '2') {
             for (let i = 1; i <= 5; i++) {
               $('#tr_ordens_aulas' + i).show();

@@ -179,10 +179,10 @@ class clsModulesFrequencia extends Model {
 
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES ( $valores )");
 
-
             $id = $db->InsertId("{$this->_tabela}_id_seq");
 
             if ($this->alunos) {
+
                 $campos = '';
                 $valores = '';
                 $gruda = '';
@@ -198,15 +198,19 @@ class clsModulesFrequencia extends Model {
 
                 $gruda = '';
 
+                $insertFreqAluno = false;
                 foreach ($this->alunos as $key => $aluno) {
                     if (isset($aluno["qtd"]) && $aluno["qtd"] > 0) {
+                        $insertFreqAluno = true;
                         $valores .= $gruda . "(" . "'" . $id . "'" . ", " . "'" . $key . "'" . ", " . "'" . $db->escapeString($aluno[0]) . "'" . ", " . "'" . $db->escapeString(substr($aluno["aulas"], 0, -1)) . "'" . ")";
                         $gruda = ', ';
                     }
                 }
 
+                if ($insertFreqAluno) {
+                    $db->Consulta("INSERT INTO modules.frequencia_aluno ( $campos ) VALUES $valores");
+                }
 
-                $db->Consulta("INSERT INTO modules.frequencia_aluno ( $campos ) VALUES $valores");
 
                 // ###########################################################################################################
 

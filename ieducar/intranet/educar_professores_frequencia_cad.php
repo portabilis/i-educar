@@ -99,6 +99,13 @@ return new class extends clsCadastro {
             $this->campoOculto('fase_etapa_', $this->fase_etapa);
         }
 
+        $tipo_presenca = '';
+        if ($this->ref_cod_serie) {
+            $obj = new clsPmieducarSerie();
+            $tipo_presenca = $obj->tipoPresencaRegraAvaliacao($this->ref_cod_serie);
+        }
+
+
         $obrigatorio = true;
 
         $this->campoOculto('id', $this->id);
@@ -107,10 +114,11 @@ return new class extends clsCadastro {
         $this->inputsHelper()->dynamic('componenteCurricular', ['required' => !$obrigatorio, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('faseEtapa', ['required' => $obrigatorio, 'label' => 'Etapa', 'disabled' => $desabilitado]);
 
-        for ($i = 1; $i <= 5; $i++) {
-            $this->inputsHelper()->checkbox('ordens_aulas'.$i, ['label' => 'Ordem das aulas', 'value' => (in_array($i, $this->ordens_aulas) ? $i : ''), 'disabled' => $desabilitado, 'required' => false, 'label_hint' => $i.'º Aula']);
+        if (empty($tipo_presenca) || $tipo_presenca == 2) {
+            for ($i = 1; $i <= 5; $i++) {
+                $this->inputsHelper()->checkbox('ordens_aulas'.$i, ['label' => 'Ordem das aulas', 'value' => (in_array($i, $this->ordens_aulas) ? $i : ''), 'disabled' => $desabilitado, 'required' => false, 'label_hint' => $i.'º Aula']);
+            }
         }
-
 
         if (is_numeric($this->id)) {
             $servidor_id = $this->pessoa_logada;
@@ -159,9 +167,6 @@ return new class extends clsCadastro {
                     $this->alunos[$matriculas[$i]]['aulas'] = explode(',', $aulasArray[$i]);
                 }
             }
-
-            $obj = new clsPmieducarSerie();
-            $tipo_presenca = $obj->tipoPresencaRegraAvaliacao($this->ref_cod_serie);
 
 
             $conteudo .= '  </tr><td class="tableDetalheLinhaSeparador" colspan="3"></td><tr><td><div class="scroll"><table class="tableDetalhe tableDetalheMobile" width="100%"><tr class="tableHeader">';
