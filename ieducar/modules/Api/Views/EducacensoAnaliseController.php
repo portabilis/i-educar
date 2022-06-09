@@ -345,7 +345,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
         if (
             (in_array(PoderPublicoConveniado::MUNICIPAL, $escola->poderPublicoConveniado) ||
-            in_array(PoderPublicoConveniado::NAO_POSSUI, $escola->poderPublicoConveniado))
+            in_array(PoderPublicoConveniado::ESTADUAL, $escola->poderPublicoConveniado))
             && empty(array_filter($escola->formasContratacaoPoderPublico))
         ) {
             $mensagem[] = [
