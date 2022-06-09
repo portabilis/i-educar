@@ -1067,8 +1067,6 @@ class clsPmieducarEscola extends Model
                 $valores .= "{$gruda}'{{$this->formas_contratacao_adm_publica_e_outras_instituicoes}}'";
             }
 
-
-            $gruda .= ', ';
             if (is_numeric($this->qtd_matriculas_atividade_complementar)) {
                 $campos .= "{$gruda}qtd_matriculas_atividade_complementar";
                 $valores .= "{$gruda}'{$this->qtd_matriculas_atividade_complementar}'";
