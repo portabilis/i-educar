@@ -109,9 +109,9 @@ class Registro00 extends AbstractRegistro
             $record->mantenedoraSistemaS, // 30	Sistema S (Sesi, Senai, Sesc, outros)
             $record->mantenedoraOscip, // 31	Organização da Sociedade Civil de Interesse Público (Oscip)
             $record->categoriaEscolaPrivada, // 32	Categoria da escola privada
-            $record->poderPublicoConveniado ? (int) in_array(PoderPublicoConveniado::ESTADUAL, $record->poderPublicoConveniado) : null, // 33	Secretaria estadual
-            $record->poderPublicoConveniado ? (int) in_array(PoderPublicoConveniado::MUNICIPAL, $record->poderPublicoConveniado) : null, // 34	Secretaria Municipal
-            $record->poderPublicoConveniado ? (int) in_array(PoderPublicoConveniado::NAO_POSSUI, $record->poderPublicoConveniado) : null, // 35	Não possui parceria ou convênio
+            $record->poderPublicoConveniado ? (int) in_array(PoderPublicoConveniado::ESTADUAL, $record->poderPublicoConveniado) : '', // 33	Secretaria estadual
+            $record->poderPublicoConveniado ? (int) in_array(PoderPublicoConveniado::MUNICIPAL, $record->poderPublicoConveniado) : '', // 34	Secretaria Municipal
+            $record->poderPublicoConveniado ? (int) in_array(PoderPublicoConveniado::NAO_POSSUI, $record->poderPublicoConveniado) : '', // 35	Não possui parceria ou convênio
             $record->formasContratacaoPoderPublico ? (int) in_array(FormasContratacaoPoderPublico::TERMO_COLABORACAO, $record->formasContratacaoPoderPublico) : '', // 36	Termo de colaboração (Lei nº 13.019/2014)
             $record->formasContratacaoPoderPublico ? (int) in_array(FormasContratacaoPoderPublico::TERMO_FOMENTO, $record->formasContratacaoPoderPublico) : '', // 37	Termo de fomento (Lei nº 13.019/2014)
             $record->formasContratacaoPoderPublico ? (int) in_array(FormasContratacaoPoderPublico::ACORDO_COOPERACAO, $record->formasContratacaoPoderPublico) : '', // 38	Acordo de cooperação (Lei nº 13.019/2014)
