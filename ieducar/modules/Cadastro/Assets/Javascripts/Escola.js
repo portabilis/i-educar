@@ -684,11 +684,21 @@ $j(document).ready(function() {
   );
 
   function habilitaCampoPoderPublicoOuConvenio() {
-    if (obrigarCamposCenso && $j('#situacao_funcionamento').val() == SITUACAO_FUNCIONAMENTO.EM_ATIVIDADE) {
+
+    let situacaoFuncionamento = $j('#situacao_funcionamento').val();
+
+    if (obrigarCamposCenso && situacaoFuncionamento == SITUACAO_FUNCIONAMENTO.EM_ATIVIDADE) {
       $j('#poder_publico_parceria_convenio').makeRequired();
-      $j("#poder_publico_parceria_convenio").prop('disabled', false);
+      $j("#poder_publico_parceria_convenio").val('');
       $j("#poder_publico_parceria_convenio").trigger("chosen:updated");
       return;
+    }
+
+    if (obrigarCamposCenso && situacaoFuncionamento != SITUACAO_FUNCIONAMENTO.EM_ATIVIDADE) {
+      $j('#poder_publico_parceria_convenio').makeUnrequired();
+      $j("#poder_publico_parceria_convenio").val('disabled', true);
+      $j("#poder_publico_parceria_convenio").prop('disabled', true);
+      $j("#poder_publico_parceria_convenio").trigger("chosen:updated");
     }
   }
 
