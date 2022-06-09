@@ -338,6 +338,11 @@ return new class extends clsCadastro {
 
         $dependencia = $this->dependencia == 'on';
 
+        if (!$this->validaPeriodoDeMatriculasPelaDataFechamento()) {
+            $this->mensagem = 'Não é possível matricular alunos após a data de fechamento.';
+            return false;
+        }
+
         if ($dependencia && !$this->verificaQtdeDependenciasPermitida()) {
             return false;
         }
@@ -1085,6 +1090,21 @@ return new class extends clsCadastro {
         }
 
         return false;
+    }
+
+    private function validaPeriodoDeMatriculasPelaDataFechamento() : bool
+    {
+        $instituicao = app(LegacyInstitution::class);
+
+        if (empty($instituicao->data_fechamento)) {
+            return true;
+        }
+
+        $dataFechamento = explode('-', $instituicao->data_fechamento);
+        $dataFechamento = $this->ano . '-' . $dataFechamento[1] . '-' . $dataFechamento[2];
+        $dataMatricula = Portabilis_Date_Utils::brToPgSQL($this->data_matricula);
+
+        return $dataMatricula <= $dataFechamento;
     }
 
     public function desativaEnturmacoesMatricula($matriculaId)
