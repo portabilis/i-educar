@@ -1643,8 +1643,10 @@ return new class extends clsCadastro {
 
     public function validaCnpjMantenedora(): bool
     {
-        if(validaCNPJ($this->cnpj_mantenedora_principal)) {
-            $this->mensagem = 'O CNPJ da mantenedora principal é inválido.';
+        if((int)$this->dependencia_administrativa === DependenciaAdministrativaEscola::PRIVADA &&
+            !empty($this->cnpj_mantenedora_principal) &&
+            !validaCNPJ($this->cnpj_mantenedora_principal)) {
+            $this->mensagem = 'O CNPJ da mantenedora principal é inválido. Favor verificar.';
             return false;
         }
 
