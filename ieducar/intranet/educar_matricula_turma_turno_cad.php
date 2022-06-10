@@ -95,6 +95,8 @@ return new class extends clsCadastro {
 
             $this->campoLista("turno[{$enturmacao['ref_cod_turma']}-{$enturmacao['sequencial']}]", "Turno do aluno na turma: {$enturmacao['nm_turma']}", $turnos, $enturmacao['turno_id'], '', false, 'Não é necessário preencher o campo quando o aluno cursar o turno INTEGRAL', '', false, false);
         }
+
+        $this->acao_enviar = 'showConfirmationMessage(this)';
     }
 
     public function Editar()
@@ -113,9 +115,14 @@ return new class extends clsCadastro {
             $obj->edita();
         }
 
-        $this->mensagem .= 'Turno atualizado com sucesso.<br>';
+        session()->flash('success','Turno atualizado com sucesso!');
 
-        return true;
+        return $this->simpleRedirect(url('intranet/educar_matricula_det.php?cod_matricula='.$this->cod_matricula));
+    }
+
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-matricula-turma-turno.js');
     }
 
     private function validaPermissao()
