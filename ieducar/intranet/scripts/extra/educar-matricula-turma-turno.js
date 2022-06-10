@@ -38,7 +38,6 @@ function showConfirmationMessage(e) {
         $j('#formcadastro').removeAttr('onsubmit');
         $j('#formcadastro').submit();
         $j('#dialog-container').dialog('destroy');
-        //windowUtils.redirect('/intranet/educar_matricula_det.php?cod_matricula='+$j('#formcadastro input[name="cod_matricula"]').val());
       }
     }, {
       text: 'Cancelar',
