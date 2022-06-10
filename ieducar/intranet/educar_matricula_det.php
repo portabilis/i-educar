@@ -196,14 +196,12 @@ return new class extends clsDetalhe {
                 $existeAtendimentoEspecializado = true;
             }
 
-            switch ($enturmacao['turno_id']) {
-                case 1:
-                    $nomesTurnos[] =  'Matutino';
-                    break;
-                case 2:
-                    $nomesTurnos[] =  'Vespertino';
-                    break;
-            }
+            $nomesTurnos[] = match ((int)$enturmacao['turno_id']) {
+                clsPmieducarTurma::TURNO_MATUTINO =>  'Matutino',
+                clsPmieducarTurma::TURNO_VESPERTINO => 'Vespertino',
+                clsPmieducarTurma::TURNO_NOTURNO => 'Noturno',
+                clsPmieducarTurma::TURNO_INTEGRAL => 'Integral',
+            };
         }
         $nomesTurmas = implode('<br />', $nomesTurmas);
         $datasEnturmacoes = implode('<br />', $datasEnturmacoes);
