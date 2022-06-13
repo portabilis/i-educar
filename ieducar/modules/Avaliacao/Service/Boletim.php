@@ -1498,8 +1498,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     private function valorMediaSituacao(Avaliacao_Model_NotaComponenteMedia $mediaComponente)
     {
         $regraNotaNumerica = $this->getRegraAvaliacaoTipoNota() == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA;
-
-        return $regraNotaNumerica ? $mediaComponente->mediaArredondada : $mediaComponente->media;
+        $media = $regraNotaNumerica ? $mediaComponente->mediaArredondada : $mediaComponente->media;
+        return empty($media) ? 0 : $media;
     }
 
     /**
