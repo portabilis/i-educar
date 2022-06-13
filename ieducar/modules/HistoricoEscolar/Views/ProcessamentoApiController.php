@@ -720,7 +720,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     {
         $this->deleteHistoricoDisplinas($alunoId, $historicoSequencial);
 
-        if ($this->getRequest()->disciplinas == 'buscar-boletim') {
+        if ($this->getRequest()->disciplinas === 'buscar-boletim') {
             $tpNota = $this->getService()->getRegra()->get('tipoNota');
             $situacaoFaltasCc = $this->getService()->getSituacaoFaltas()->componentesCurriculares;
             $mediasCc = $this->getService()->getMediasComponentes();
