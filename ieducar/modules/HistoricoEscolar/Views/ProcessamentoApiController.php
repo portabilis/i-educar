@@ -842,10 +842,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                 }
             }
             if ($processarMediaGeral) {
-                $componentesCurriculares['media_geral'] = $this->insereComponenteMediaGeral(
-                    $historicoSequencial,
-                    $alunoId
-                );
+                $this->insereComponenteMediaGeral($historicoSequencial, $alunoId);
             }
         } else {
             $i = 0;
