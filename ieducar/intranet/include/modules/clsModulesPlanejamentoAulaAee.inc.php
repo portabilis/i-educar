@@ -15,6 +15,7 @@ class clsModulesPlanejamentoAulaAee extends Model {
     public $conteudos;
     public $caracterizacao_pedagogica;
     public $bncc_especificacoes;
+    public $outros;
 
     public function __construct(
         $id = null,
@@ -130,6 +131,7 @@ class clsModulesPlanejamentoAulaAee extends Model {
      */
     public function cadastra() {
         if (is_numeric($this->ref_cod_turma)
+            && is_numeric($this->ref_cod_matricula)
             && is_array($this->ref_componente_curricular_array)
             && $this->data_inicial != ''
             && $this->data_final != ''
@@ -215,9 +217,9 @@ class clsModulesPlanejamentoAulaAee extends Model {
                     $bncc_id = $obj->detalhe()['bncc_id'];
 
                     $obj = new clsModulesPlanejamentoAulaBNCCAee(null, $id, $bncc_id);
-                    $planejamento_aula_bncc_id = $obj->detalhe2()['id'];
+                    $planejamento_aula_bncc_aee_id = $obj->detalhe2()['id'];
 
-                    $obj = new clsModulesPlanejamentoAulaBNCCEspecificacaoAee(null, $planejamento_aula_bncc_id, $bncc_especificacao_id);
+                    $obj = new clsModulesPlanejamentoAulaBNCCEspecificacaoAee(null, $planejamento_aula_bncc_aee_id, $bncc_especificacao_id);
                     $obj->cadastra();
                 }
             }

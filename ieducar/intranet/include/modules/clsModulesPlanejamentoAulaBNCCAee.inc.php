@@ -4,12 +4,12 @@ use iEducar\Legacy\Model;
 
 class clsModulesPlanejamentoAulaBNCCAee extends Model {
     public $id;
-    public $planejamento_aula_id;
+    public $planejamento_aula_aee_id;
     public $bncc_id;
 
     public function __construct(
         $id = null,
-        $planejamento_aula_id = null,
+        $planejamento_aula_aee_id = null,
         $bncc_id = null
     ) {
         $this->_schema = 'modules.';
@@ -27,8 +27,8 @@ class clsModulesPlanejamentoAulaBNCCAee extends Model {
             $this->id = $id;
         }
 
-        if (is_numeric($planejamento_aula_id)) {
-            $this->planejamento_aula_id = $planejamento_aula_id;
+        if (is_numeric($planejamento_aula_aee_id)) {
+            $this->planejamento_aula_aee_id = $planejamento_aula_aee_id;
         }
 
         if (is_numeric($bncc_id)) {
@@ -42,13 +42,13 @@ class clsModulesPlanejamentoAulaBNCCAee extends Model {
      * @return bool
      */
     public function cadastra() {
-        if (is_numeric($this->planejamento_aula_id) && is_numeric($this->bncc_id)) {
+        if (is_numeric($this->planejamento_aula_aee_id) && is_numeric($this->bncc_id)) {
             $db = new clsBanco();
 
             $db->Consulta("
                 INSERT INTO {$this->_tabela}
-                    (planejamento_aula_id, bncc_id)
-                VALUES ({$this->planejamento_aula_id}, {$this->bncc_id})
+                    (planejamento_aula_aee_id, bncc_id)
+                VALUES ({$this->planejamento_aula_aee_id}, {$this->bncc_id})
             ");
 
             return true;
@@ -62,7 +62,7 @@ class clsModulesPlanejamentoAulaBNCCAee extends Model {
      *
      * @return array
      */
-    public function lista($planejamento_aula_id) {
+    public function lista($planejamento_aula_aee_id) {
         $db = new clsBanco();
 
         $db->Consulta("
@@ -75,9 +75,9 @@ class clsModulesPlanejamentoAulaBNCCAee extends Model {
             JOIN public.learning_objectives_and_skills as lok
                 ON (lok.id = pab.bncc_id)
             GROUP BY
-                pab.planejamento_aula_id
+                pab.planejamento_aula_aee_id
             HAVING
-                pab.planejamento_aula_id = '{$planejamento_aula_id}'
+                pab.planejamento_aula_aee_id = '{$planejamento_aula_aee_id}'
         ");
 
         $db->ProximoRegistro();
@@ -107,7 +107,7 @@ class clsModulesPlanejamentoAulaBNCCAee extends Model {
     public function detalhe () {
         $data = [];
 
-        if (is_numeric($this->planejamento_aula_id)) {
+        if (is_numeric($this->planejamento_aula_aee_id)) {
             $db = new clsBanco();
             $db->Consulta("
                 SELECT
@@ -115,13 +115,13 @@ class clsModulesPlanejamentoAulaBNCCAee extends Model {
                 FROM
                     {$this->_from}
                 WHERE
-                    pab.planejamento_aula_id = {$this->planejamento_aula_id}
+                    pab.planejamento_aula_aee_id = {$this->planejamento_aula_aee_id}
             ");
 
             while ($db->ProximoRegistro()) {
                 $ppd = $db->Tupla();
 
-                $obj = new clsModulesBNCCAee($ppd['bncc_id']);
+                $obj = new clsModulesBNCC($ppd['bncc_id']);
                 $ppd['bncc'] = $obj->detalhe();
 
                 $data[] = $ppd;
@@ -141,7 +141,7 @@ class clsModulesPlanejamentoAulaBNCCAee extends Model {
     public function detalhe2 () {
         $data = [];
 
-        if (is_numeric($this->planejamento_aula_id) && is_numeric($this->bncc_id)) {
+        if (is_numeric($this->planejamento_aula_aee_id) && is_numeric($this->bncc_id)) {
             $db = new clsBanco();
             
             $db->Consulta("
@@ -150,7 +150,7 @@ class clsModulesPlanejamentoAulaBNCCAee extends Model {
                 FROM
                     {$this->_from}
                 WHERE
-                    pab.planejamento_aula_id = {$this->planejamento_aula_id} AND pab.bncc_id = {$this->bncc_id}
+                    pab.planejamento_aula_aee_id = {$this->planejamento_aula_aee_id} AND pab.bncc_id = {$this->bncc_id}
             ");
 
             $db->ProximoRegistro();
@@ -177,14 +177,14 @@ class clsModulesPlanejamentoAulaBNCCAee extends Model {
      * @return bool
      */
     public function excluir () {
-        if (is_numeric($this->planejamento_aula_id) && is_numeric($this->bncc_id)) {
+        if (is_numeric($this->planejamento_aula_aee_id) && is_numeric($this->bncc_id)) {
             $db = new clsBanco();
 
             $db->Consulta("
                 DELETE FROM
                     {$this->_tabela}
                 WHERE
-                    planejamento_aula_id = '{$this->planejamento_aula_id}' AND bncc_id = '{$this->bncc_id}'
+                planejamento_aula_aee_id = '{$this->planejamento_aula_aee_id}' AND bncc_id = '{$this->bncc_id}'
             ");
 
             return true;

@@ -2,7 +2,8 @@
 
 use iEducar\Legacy\Model;
 
-class clsModulesBNCC extends Model {
+class clsModulesBNCC extends Model
+{
     public $id;
     public $ref_cod_serie;
     public $ref_cod_componente_curricular;
@@ -48,7 +49,7 @@ class clsModulesBNCC extends Model {
      *
      * @return array
      */
-    public function lista (
+    public function lista(
         $int_frequencia = null,
         $int_campo_experiencia = null
     ) {
@@ -147,7 +148,7 @@ class clsModulesBNCC extends Model {
      *
      * @return array
      */
-    public function listaTurma (
+    public function listaTurma(
         $int_modo = 0,
         $int_turma = null,
         $int_cod_componente_curricular = null
@@ -198,7 +199,8 @@ class clsModulesBNCC extends Model {
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
-        $this->_total = $db->CampoUnico("
+        $this->_total = $db->CampoUnico(
+            "
             WITH select_ as (
                 SELECT
                     {$this->_campos_lista}
@@ -215,7 +217,102 @@ class clsModulesBNCC extends Model {
                 JOIN select_ as bncc
                     ON (bncc.serie_id = t.etapa_educacenso
                     AND {$modo}
-                {$filtros}" 
+                {$filtros}"
+        );
+
+        $db->Consulta($sql);
+
+        if ($countCampos > 1) {
+            while ($db->ProximoRegistro()) {
+                $tupla = $db->Tupla();
+
+                $tupla['_total'] = $this->_total;
+                $resultado[] = $tupla;
+            }
+        } else {
+            while ($db->ProximoRegistro()) {
+                $tupla = $db->Tupla();
+                $resultado[] = $tupla[$this->_campos_lista];
+            }
+        }
+        if (count($resultado)) {
+            return $resultado;
+        }
+
+        return false;
+    }
+
+    /**
+     * Retorna uma lista filtrados de acordo com os parametros
+     *
+     * @return array
+     */
+    public function listaTurmaAee(
+        //$int_modo = 0,
+        $int_turma = null,
+        $int_cod_componente_curricular = null
+    ) {
+        //$modo = $int_modo == 0 ? '(bncc.componente_curricular_id = cc.codigo_educacenso))' : '(bncc.campo_experiencia = cc.id))';
+
+        $sql = "
+        SELECT bncc.id,
+        bncc.codigo,
+        bncc.habilidade,
+        bncc.campo_experiencia,
+        bncc.unidade_tematica,
+        bncc.componente_curricular_id,
+        t.tipo_atendimento,
+        unnest(bncc.serie_ids) as serie_id
+        FROM pmieducar.turma as t
+            JOIN pmieducar.escola_serie_disciplina as esd
+                ON (esd.ref_ref_cod_serie = t.ref_ref_cod_serie)
+            JOIN modules.componente_curricular as cc
+                ON (cc.id = esd.ref_cod_disciplina)
+            JOIN modules.bncc as bncc
+                ON (bncc.campo_experiencia = cc.id)
+                    
+        ";
+
+        $whereAnd = 'WHERE ';
+        $filtros = "";
+
+        if (is_numeric($int_turma)) {
+            $filtros .= "{$whereAnd} t.cod_turma = '{$int_turma}'";
+            $whereAnd = ' AND';
+        }
+
+        if (is_numeric($int_cod_componente_curricular)) {
+            $filtros .= "{$whereAnd} esd.ref_cod_disciplina = '{$int_cod_componente_curricular}'";
+            $whereAnd = ' AND';
+        }
+
+        $filtros .= "{$whereAnd} t.tipo_atendimento = 5";
+        $whereAnd = ' AND';
+
+        $db = new clsBanco();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
+
+        $sql .= $filtros . $this->getOrderby() . $this->getLimite();
+
+        $this->_total = $db->CampoUnico(
+            "
+            WITH select_ as (
+                SELECT
+                    {$this->_campos_lista}
+                FROM
+                    {$this->_from}
+            )
+                SELECT
+                    COUNT(0)
+                FROM pmieducar.turma as t
+                JOIN pmieducar.escola_serie_disciplina as esd
+                    ON (esd.ref_ref_cod_serie = t.ref_ref_cod_serie)
+                JOIN modules.componente_curricular as cc
+                    ON (cc.id = esd.ref_cod_disciplina)
+                JOIN select_ as bncc
+                    ON (bncc.campo_experiencia = cc.id                   
+                {$filtros}"
         );
 
         $db->Consulta($sql);
@@ -245,7 +342,8 @@ class clsModulesBNCC extends Model {
      *
      * @return array
      */
-    public function detalhe () {
+    public function detalhe()
+    {
         $data = [];
 
         if (is_numeric($this->id)) {
@@ -273,19 +371,20 @@ class clsModulesBNCC extends Model {
      *
      * @return array
      */
-    public function retornaDiferencaEntreConjuntosBNCC($atuaisBNCC, $novosBNCC) {
+    public function retornaDiferencaEntreConjuntosBNCC($atuaisBNCC, $novosBNCC)
+    {
         $resultado = [];
         $resultado['adicionar'] = $novosBNCC;
 
-        for ($i=0; $i < count($atuaisBNCC); $i++) {
-            $resultado['remover'][] = $atuaisBNCC[$i]['id']; 
+        for ($i = 0; $i < count($atuaisBNCC); $i++) {
+            $resultado['remover'][] = $atuaisBNCC[$i]['id'];
         }
         $atuaisBNCC = $resultado['remover'];
 
-        for ($i=0; $i < count($novosBNCC); $i++) { 
+        for ($i = 0; $i < count($novosBNCC); $i++) {
             $novo = $novosBNCC[$i];
 
-            for ($j=0; $j < count($atuaisBNCC); $j++) {
+            for ($j = 0; $j < count($atuaisBNCC); $j++) {
                 $atual = $atuaisBNCC[$j];
 
                 if ($novo === $atual) {

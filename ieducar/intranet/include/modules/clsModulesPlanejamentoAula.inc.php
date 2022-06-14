@@ -2,6 +2,8 @@
 
 use iEducar\Legacy\Model;
 
+die(var_dump($this->ref_cod_turma));
+
 class clsModulesPlanejamentoAula extends Model {
     public $id;
     public $ref_cod_turma;
@@ -137,7 +139,7 @@ class clsModulesPlanejamentoAula extends Model {
             $this->registro_adaptacao = $registro_adaptacao;
         }
     }
-
+   
     /**
      * Cria um novo registro
      *

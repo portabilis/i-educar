@@ -4,12 +4,12 @@ use iEducar\Legacy\Model;
 
 class clsModulesPlanejamentoAulaComponenteCurricularAee extends Model {
     public $id;
-    public $planejamento_aula_id;
+    public $planejamento_aula_aee_id;
     public $componente_curricular_id;
 
     public function __construct(
         $id = null,
-        $planejamento_aula_id = null,
+        $planejamento_aula_aee_id = null,
         $componente_curricular_id = null
     ) {
         $this->_schema = 'modules.';
@@ -27,8 +27,8 @@ class clsModulesPlanejamentoAulaComponenteCurricularAee extends Model {
             $this->id = $id;
         }
 
-        if (is_numeric($planejamento_aula_id)) {
-            $this->planejamento_aula_id = $planejamento_aula_id;
+        if (is_numeric($planejamento_aula_aee_id)) {
+            $this->planejamento_aula_aee_id = $planejamento_aula_aee_id;
         }
 
         if (is_numeric($componente_curricular_id)) {
@@ -42,13 +42,13 @@ class clsModulesPlanejamentoAulaComponenteCurricularAee extends Model {
      * @return bool
      */
     public function cadastra() {
-        if (is_numeric($this->planejamento_aula_id) && is_numeric($this->componente_curricular_id)) {
+        if (is_numeric($this->planejamento_aula_aee_id) && is_numeric($this->componente_curricular_id)) {
             $db = new clsBanco();
 
             $db->Consulta("
                 INSERT INTO {$this->_tabela}
-                    (planejamento_aula_id, componente_curricular_id)
-                VALUES ({$this->planejamento_aula_id}, {$this->componente_curricular_id})
+                    (planejamento_aula_aee_id, componente_curricular_id)
+                VALUES ({$this->planejamento_aula_aee_id}, {$this->componente_curricular_id})
             ");
 
             return true;
@@ -62,7 +62,7 @@ class clsModulesPlanejamentoAulaComponenteCurricularAee extends Model {
      *
      * @return array
      */
-    public function lista($planejamento_aula_id) {
+    public function lista($planejamento_aula_aee_id) {
         $db = new clsBanco();
 
         $db->Consulta("
@@ -75,9 +75,9 @@ class clsModulesPlanejamentoAulaComponenteCurricularAee extends Model {
             JOIN public.learning_objectives_and_skills as lok
                 ON (lok.id = pacc.componente_curricular_id)
             GROUP BY
-                pacc.planejamento_aula_id
+                pacc.planejamento_aula_aee_id
             HAVING
-                pacc.planejamento_aula_id = '{$planejamento_aula_id}'
+                pacc.planejamento_aula_aee_id = '{$planejamento_aula_aee_id}'
         ");
 
         $db->ProximoRegistro();
@@ -107,7 +107,7 @@ class clsModulesPlanejamentoAulaComponenteCurricularAee extends Model {
     public function detalhe () {
         $data = [];
 
-        if (is_numeric($this->planejamento_aula_id)) {
+        if (is_numeric($this->planejamento_aula_aee_id)) {
             $db = new clsBanco();
             $db->Consulta("
                 SELECT
@@ -115,7 +115,7 @@ class clsModulesPlanejamentoAulaComponenteCurricularAee extends Model {
                 FROM
                     {$this->_from}
                 WHERE
-                    pacc.planejamento_aula_id = {$this->planejamento_aula_id}
+                    pacc.planejamento_aula_aee_id = {$this->planejamento_aula_aee_id}
             ");
 
             while ($db->ProximoRegistro()) {
@@ -143,14 +143,14 @@ class clsModulesPlanejamentoAulaComponenteCurricularAee extends Model {
      * @return bool
      */
     public function excluir () {
-        if (is_numeric($this->planejamento_aula_id) && is_numeric($this->componente_curricular_id)) {
+        if (is_numeric($this->planejamento_aula_aee_id) && is_numeric($this->componente_curricular_id)) {
             $db = new clsBanco();
 
             $db->Consulta("
                 DELETE FROM
                     {$this->_tabela}
                 WHERE
-                    planejamento_aula_id = '{$this->planejamento_aula_id}' AND componente_curricular_id = '{$this->componente_curricular_id}'
+                planejamento_aula_aee_id = '{$this->planejamento_aula_aee_id}' AND componente_curricular_id = '{$this->componente_curricular_id}'
             ");
 
             return true;

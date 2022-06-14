@@ -7,13 +7,14 @@ use App\Services\CheckPostedDataService;
 use App\Services\iDiarioService;
 use App\Services\SchoolLevelsService;
 use Illuminate\Support\Arr;
-use iEducar\Support\View\SelectOptions;
 
 return new class extends clsCadastro
 {
     public $id;
     public $ref_cod_turma;
+    public $ref_cod_matricula;
     public $ref_cod_componente_curricular_array;
+    public $fase_etapa;
     public $data_inicial;
     public $data_final;
     public $ddp;
@@ -35,7 +36,7 @@ return new class extends clsCadastro
         $this->copy = $_GET['copy'];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(58, $this->pessoa_logada, 7, 'educar_professores_planejamento_de_aula_lst.php');
+        $obj_permissoes->permissao_cadastra(58, $this->pessoa_logada, 7, 'educar_professores_planejamento_de_aula_aee_lst.php');
 
         if (is_numeric($this->id)) {
             $tmp_obj = new clsModulesPlanejamentoAulaAee($this->id);
@@ -120,7 +121,7 @@ return new class extends clsCadastro
             'required' => true,
             'resources' => $turma_resources
         ];
-        $this->inputsHelper()->select('turma', $options);
+        $this->inputsHelper()->select('ref_cod_turma', $options);
 
         // Montar o inputsHelper->select \/
         // Cria lista de Alunos
@@ -138,7 +139,7 @@ return new class extends clsCadastro
             'required' => true,
             'resources' => $aluno_resources
         ];
-        $this->inputsHelper()->select('matricula', $options);
+        $this->inputsHelper()->select('ref_cod_matricula', $options);
 
         $this->inputsHelper()->dynamic('faseEtapa', ['required' => $obrigatorio, 'label' => 'Etapa', 'disabled' => $desabilitado && !$this->copy]);
 
@@ -159,7 +160,7 @@ return new class extends clsCadastro
 
     public function Novo()
     {
-        // educar-professores-planejamento-de-aula-cad.js
+        // educar-professores-planejamento-de-aula-cad.js        
     }
 
     public function Editar()
@@ -218,7 +219,7 @@ return new class extends clsCadastro
             $bncc_temp = [];
             $obj = new clsModulesBNCC();
 
-            if ($bncc_temp = $obj->listaTurma($resultado, $turma, $ref_cod_componente_curricular_array)) {
+            if ($bncc_temp = $obj->listaTurmaAee($resultado, $turma, $ref_cod_componente_curricular_array)) {
                 foreach ($bncc_temp as $bncc_item) {
                     $id = $bncc_item['id'];
                     $codigo = $bncc_item['codigo'];
