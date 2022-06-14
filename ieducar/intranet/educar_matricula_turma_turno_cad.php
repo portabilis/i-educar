@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Enrollment;
+
 return new class extends clsCadastro {
     public $cod_matricula;
     public $ref_cod_aluno;
@@ -27,8 +29,8 @@ return new class extends clsCadastro {
         $this->campoOculto('cod_matricula', $this->cod_matricula);
         $this->campoOculto('ref_cod_aluno', $this->ref_cod_aluno);
 
-        $this->nome_url_cancelar = 'Voltar';
-        $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->cod_matricula}";
+        $this->array_botao[] = 'Voltar';
+        $this->array_botao_url[] = "educar_matricula_det.php?cod_matricula={$this->cod_matricula}";
 
         $this->breadcrumb('Turno do aluno', [
             $_SERVER['SERVER_NAME'] . '/intranet' => 'Início',
@@ -104,18 +106,28 @@ return new class extends clsCadastro {
         $this->validaPermissao();
         $this->validaParametros();
 
+        $is_change = false;
         foreach ($this->turno as $codTurmaESequencial => $turno) {
             // Necessário pois chave é Turma + Matrícula + Sequencial
             $codTurmaESequencial = explode('-', $codTurmaESequencial);
             $codTurma = $codTurmaESequencial[0];
             $sequencial = $codTurmaESequencial[1];
-            $obj = new clsPmieducarMatriculaTurma($this->cod_matricula, $codTurma, $this->pessoa_logada);
-            $obj->sequencial = $sequencial;
-            $obj->turno_id = $turno;
-            $obj->edita();
+
+            if (Enrollment::where('ref_cod_matricula',$this->cod_matricula)->where('ref_cod_turma',$codTurma)->value('turno_id') !==  (int)$turno) {
+                $is_change = true;
+
+                $obj = new clsPmieducarMatriculaTurma($this->cod_matricula, $codTurma, $this->pessoa_logada);
+                $obj->sequencial = $sequencial;
+                $obj->turno_id = $turno;
+                $obj->edita();
+            }
         }
 
-        session()->flash('success','Turno atualizado com sucesso!');
+        if ($is_change) {
+            session()->flash('success','Turno atualizado com sucesso!');
+        } else {
+            session()->flash('error','Não houve alterações no valor do campo Turno!');
+        }
 
         return $this->simpleRedirect(url('intranet/educar_matricula_det.php?cod_matricula='.$this->cod_matricula));
     }

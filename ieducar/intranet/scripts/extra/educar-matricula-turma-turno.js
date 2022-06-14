@@ -25,7 +25,7 @@ function makeDialog(params) {
 
 function showConfirmationMessage(e) {
   makeDialog({
-    content: 'Você está alterando o turno do(a) aluno(a). Deseja continuar?',
+    content: 'Você está alterando o turno da matrícula desse(a) aluno(a). Deseja continuar?',
     title: 'Atenção!',
     maxWidth: 600,
     width: 600,
@@ -33,7 +33,7 @@ function showConfirmationMessage(e) {
       $j('#dialog-container').dialog('destroy');
     },
     buttons: [{
-      text: 'Confirmar',
+      text: 'Continuar',
       click: function () {
         $j('#formcadastro').removeAttr('onsubmit');
         $j('#formcadastro').submit();
