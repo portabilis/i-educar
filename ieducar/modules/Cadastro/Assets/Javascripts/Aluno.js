@@ -2405,14 +2405,12 @@ function canShowParentsFields() {
       sexoParent = $j("#sexo-pessoa-parent"),
       estadocivilParent = $j("#estado-civil-pessoa-parent"),
       datanascParent = $j("#data-nasc-pessoa-parent"),
-      profissaoParent = $j("#profissao-parent"),
       falecidoParent = $j("#falecido-parent"),
       allFields = $j([])
         .add(nameParent)
         .add(sexoParent)
         .add(estadocivilParent)
         .add(datanascParent)
-        .add(profissaoParent)
         .add(falecidoParent);
        
 
@@ -2443,7 +2441,6 @@ function canShowParentsFields() {
                 "O campo data de nascimento deve ser preenchido no formato dd/mm/yyyy."
               );
           }
-          bValid = bValid && checkLength(profissaoParent, "profissao", 3, 255);
 
           if (bValid) {
             postPessoa(
@@ -2462,8 +2459,7 @@ function canShowParentsFields() {
               null,
               null,
               null,
-              falecidoParent.is(":checked"),
-              profissaoParent.val(),
+              falecidoParent.is(":checked")
             );
           }
         },
@@ -2926,7 +2922,6 @@ function canShowParentsFields() {
     localizacao_diferenciada,
     nome_social,
     pais_residencia,
-    ref_cod_profissao
   ) {
     var data = {
       nome: nome,
@@ -2946,8 +2941,7 @@ function canShowParentsFields() {
       zona_localizacao_censo: zona_localizacao_censo,
       localizacao_diferenciada: localizacao_diferenciada,
       nome_social: nome_social,
-      pais_residencia: pais_residencia,
-      ref_cod_profissao: ref_cod_profissao,
+      pais_residencia: pais_residencia
     };
 
     var options = {
