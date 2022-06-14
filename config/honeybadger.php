@@ -1,5 +1,7 @@
 <?php
 
+use iEducar\Support\Exceptions\DisciplinesWithoutInformedHoursException;
+
 return [
     'api_key' => env('HONEYBADGER_API_KEY'),
     'environment' => [
@@ -22,5 +24,8 @@ return [
         'timeout' => 0,
         'proxy' => [],
     ],
-    'excluded_exceptions' => [],
+    'excluded_exceptions' => [
+        App_Model_Exception::class,
+        DisciplinesWithoutInformedHoursException::class
+    ],
 ];
