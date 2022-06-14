@@ -113,7 +113,8 @@ return new class extends clsCadastro {
             $codTurma = $codTurmaESequencial[0];
             $sequencial = $codTurmaESequencial[1];
 
-            if (Enrollment::where('ref_cod_matricula',$this->cod_matricula)->where('ref_cod_turma',$codTurma)->value('turno_id') !==  (int)$turno) {
+
+            if (Enrollment::where('ref_cod_matricula',$this->cod_matricula)->where('ref_cod_turma',$codTurma)->value('turno_id') !=  (int)$turno) {
                 $is_change = true;
 
                 $obj = new clsPmieducarMatriculaTurma($this->cod_matricula, $codTurma, $this->pessoa_logada);
