@@ -233,12 +233,14 @@ function habilitaCampoFormaDeContratacao() {
 
   if (!poderPublico) {
     $j("#formas_contratacao_adm_publica_e_outras_instituicoes").prop('disabled', true);
+    $j("#formas_contratacao_adm_publica_e_outras_instituicoes").val('');
     $j("#formas_contratacao_adm_publica_e_outras_instituicoes").trigger("chosen:updated");
     return;
   }
 
   if (naoPossueParceriaOuConvenio) {
     $j("#formas_contratacao_adm_publica_e_outras_instituicoes").prop('disabled', true);
+    $j("#formas_contratacao_adm_publica_e_outras_instituicoes").val('');
     $j("#formas_contratacao_adm_publica_e_outras_instituicoes").trigger("chosen:updated");
     return;
   }
@@ -680,6 +682,8 @@ $j(document).ready(function() {
       obrigaCampoRegulamentacao();
       habilitarCampoUnidadeVinculada();
       habilitaCampoPoderPublicoOuConvenio();
+      obrigaCampoFormaDeContratacao();
+      habilitaCampoFormaDeContratacao();
     }
   );
 
@@ -690,6 +694,7 @@ $j(document).ready(function() {
     if (obrigarCamposCenso && situacaoFuncionamento == SITUACAO_FUNCIONAMENTO.EM_ATIVIDADE) {
       $j('#poder_publico_parceria_convenio').makeRequired();
       $j("#poder_publico_parceria_convenio").val('');
+      $j("#poder_publico_parceria_convenio").prop('disabled', false);
       $j("#poder_publico_parceria_convenio").trigger("chosen:updated");
       return;
     }
