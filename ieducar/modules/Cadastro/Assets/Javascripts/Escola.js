@@ -654,12 +654,7 @@ $j(document).ready(function() {
     }
   }
 
-
-  $j('#mantenedora_escola_privada').change(
-    function (){
-      obrigarCnpjMantenedora();
-    }
-  );
+  $j('#mantenedora_escola_privada').on('change', () => obrigarCnpjMantenedora());
 
   function obrigarCnpjMantenedora() {
     dependenciaPrivada = $j('#dependencia_administrativa').val() == DEPENDENCIA_ADMINISTRATIVA.PRIVADA;
