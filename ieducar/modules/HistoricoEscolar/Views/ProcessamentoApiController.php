@@ -784,8 +784,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                         $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota'] = 0;
                     }
 
-                    $notaConceitualNumerica = $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota_conceitual_numerica'] ?? 0;
-                    $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota_conceitual_numerica'] = $notaConceitualNumerica;
+                    $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota_conceitual_numerica'] ??= 0 ;
 
                     $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota'] += $nota;
                     $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota_conceitual_numerica'] += $notaConceitualNumerica;
