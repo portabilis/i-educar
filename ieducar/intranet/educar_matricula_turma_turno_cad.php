@@ -123,11 +123,8 @@ return new class extends clsCadastro {
             }
         }
 
-        if ($is_change) {
-            session()->flash('success','Turno atualizado com sucesso!');
-        } else {
-            session()->flash('error','Não houve alterações no valor do campo Turno!');
-        }
+
+        session()->flash('success', $is_change ? 'Turno alterado com sucesso!' : 'Não houve alteração no valor do campo Turno.');
 
         return $this->simpleRedirect(url('intranet/educar_matricula_det.php?cod_matricula='.$this->cod_matricula));
     }
