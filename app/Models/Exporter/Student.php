@@ -59,7 +59,8 @@ class Student extends Model
                 'organization' => 'Empresa',
                 'monthly_income' => 'Renda Mensal',
                 'gender' => 'Gênero',
-                'race' => 'Raça'
+                'race' => 'Raça',
+                'religion' => 'Religião'
             ],
             'Escola' => [
                 'school' => 'Escola',
