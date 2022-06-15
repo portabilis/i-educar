@@ -28,14 +28,14 @@ class DiarioController extends ApiCoreController
         $ano = $detTurma['ano'];
 
         //obtem a série da matrícula
-        if ($matriculaId && $detTurma['multiseriada'] == 1 && ($matricula_serie_id = $this->getSeriePorMatricula($matriculaId))) {
-            $serieId = $matricula_serie_id;
+        if ($matriculaId && $detTurma['multiseriada'] == 1) {
+            $serieId = $this->getSeriePorMatricula($matriculaId) ?: $serieId;
         }
 
         return App_Model_IedFinder::getComponentesTurma($serieId, $escolaId, $turmaId, null, null, null, null, null, $ano);
     }
 
-    private function getSeriePorMatricula($matriculaId) {
+    private function getSeriePorMatricula($matriculaId,$default = null) {
         return \App\Models\LegacyRegistration::where('cod_matricula',$matriculaId)->value('ref_ref_cod_serie');
     }
 
