@@ -35,7 +35,7 @@ class DiarioController extends ApiCoreController
         return App_Model_IedFinder::getComponentesTurma($serieId, $escolaId, $turmaId, null, null, null, null, null, $ano);
     }
 
-    private function getSeriePorMatricula($matriculaId,$default = null) {
+    private function getSeriePorMatricula($matriculaId) {
         return \App\Models\LegacyRegistration::where('cod_matricula',$matriculaId)->value('ref_ref_cod_serie');
     }
 
