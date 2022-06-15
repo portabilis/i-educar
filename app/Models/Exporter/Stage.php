@@ -56,6 +56,11 @@ class Stage extends Model
         return 'Calendário letivo';
     }
 
+    public function getDescription()
+    {
+        return 'Exportação de todos os calendários letivos do ano filtrado para identificação das datas de início e fim das etapas e existência de lançamentos.';
+    }
+
     /**
      * @param string $column
      *

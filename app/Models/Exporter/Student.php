@@ -155,6 +155,11 @@ class Student extends Model
         return 'Alunos';
     }
 
+    public function getDescription()
+    {
+        return 'Os dados exportados serão contabilizados por quantidade de alunos(as), agrupando as informações de séries, cursos, turmas e turnos quando o(a) aluno(a) possuir mais de uma matrícula no ano filtrado.';
+    }
+
     /**
      * @param string $column
      *
