@@ -66,9 +66,10 @@
         </tr>
         @endif
         <tr>
-          <td class="formlttd" valign="top" colspan="2">
-            <div style="margin-top: 20px">Selecione os campos que deseja exportar</div>
-          </td>
+            <td class="formlttd" colspan="2" style="margin-top: 20px">
+                <div style="padding: 20px; display: block">{{$exportation->getDescription()}}</div>
+                <div style="margin-top: 20px">Selecione os campos que deseja exportar</div>
+            </td>
         </tr>
         <tr>
           <td class="formlttd" valign="top" colspan="2">
