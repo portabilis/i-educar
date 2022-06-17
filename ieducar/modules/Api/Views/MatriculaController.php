@@ -402,6 +402,8 @@ class MatriculaController extends ApiCoreController
                        CASE
                            WHEN turma.ativo = 0 THEN turma.data_exclusao::timestamp(0)
                            WHEN matricula.ativo = 0 THEN matricula.updated_at::timestamp(0)
+                           WHEN matricula_turma.ativo = 0 AND transferido is null AND remanejado is null AND reclassificado is null AND abandono is nullAND falecido is null
+                           THEN coalesce(matricula_turma.data_exclusao,matricula_turma.updated_at)::timestamp(0)
                            ELSE NULL
                        END AS deleted_at
                   FROM pmieducar.matricula
