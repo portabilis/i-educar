@@ -313,7 +313,7 @@ class DiarioController extends ApiCoreController
                     }
 
                     foreach ($notaTurmaAluno as $componenteCurricularId => $notaTurmaAlunoDisciplina) {
-                        if ($this->validateComponenteTurma($turmaId, $componenteCurricularId)) {
+                        if ($this->validateComponenteTurma($turmaId, $componenteCurricularId,$matriculaId)) {
                             $notaOriginal = $notaTurmaAlunoDisciplina['nota'];
 
                             if (is_null($notaOriginal)) {
@@ -412,7 +412,7 @@ class DiarioController extends ApiCoreController
                     foreach ($faltaTurmaAluno as $componenteCurricularId => $faltaTurmaAlunoDisciplina) {
                         if ($matriculaId) {
                             if ($this->validateMatricula($matriculaId)) {
-                                if ($this->validateComponenteTurma($turmaId, $componenteCurricularId)) {
+                                if ($this->validateComponenteTurma($turmaId, $componenteCurricularId,$matriculaId)) {
                                     $valor = $faltaTurmaAlunoDisciplina['valor'];
 
                                     $falta = new Avaliacao_Model_FaltaComponente([
@@ -487,7 +487,7 @@ class DiarioController extends ApiCoreController
                         }
 
                         foreach ($parecerTurmaAluno as $componenteCurricularId => $parecerTurmaAlunoComponente) {
-                            if ($this->validateComponenteTurma($turmaId, $componenteCurricularId)) {
+                            if ($this->validateComponenteTurma($turmaId, $componenteCurricularId,$matriculaId)) {
 
                                 $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoComponente([
                                     'componenteCurricular' => $componenteCurricularId,
