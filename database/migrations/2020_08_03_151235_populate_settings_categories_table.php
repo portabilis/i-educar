@@ -33,7 +33,7 @@ class PopulateSettingsCategoriesTable extends Migration
             ],
             [
                 'name' => 'Banco de dados',
-                'enabled' => false,
+                'enabled' => true,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ],
