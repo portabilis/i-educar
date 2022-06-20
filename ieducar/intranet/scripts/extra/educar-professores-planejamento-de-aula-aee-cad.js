@@ -339,10 +339,10 @@
         matricula,        
         faseEtapa,
         ddp,
-        caracterizacao_pedagogica,
         necessidade_aprendizagem,
+        caracterizacao_pedagogica,
         conteudos,
-        componentesCurriculares,
+        componentesCurriculares, 
         bnccs,
         bnccEspecificacoes,
         recursos_didaticos,
@@ -402,7 +402,9 @@
       return bnccEspecificacoes.every(bnccsEspecificacao => bnccsEspecificacao[1].length > 0);
     }
 
-    function novoPlanoAula(data_inicial, data_final, turma, faseEtapa, matricula, necessidade_aprendizagem, caracterizacao_pedagogica, conteudos, componentesCurriculares, bnccs, bnccEspecificacoes, recursos_didaticos, outros) {
+    function novoPlanoAula(data_inicial, data_final, turma, matricula, faseEtapa, ddp, 
+      necessidade_aprendizagem, caracterizacao_pedagogica, conteudos, 
+      componentesCurriculares, bnccs, bnccEspecificacoes, recursos_didaticos, outros) {
       var urlForNovoPlanoAula = postResourceUrlBuilder.buildUrl('/module/Api/PlanejamentoAulaAee', 'novo-plano-aula-aee', {});
 
       var options = {
@@ -413,8 +415,9 @@
           data_inicial: data_inicial,
           data_final: data_final,
           turma: turma,
-          faseEtapa: faseEtapa,
           matricula: matricula,
+          faseEtapa: faseEtapa,
+          ddp,         
           necessidade_aprendizagem: necessidade_aprendizagem,
           caracterizacao_pedagogica: caracterizacao_pedagogica,
           conteudos: conteudos,

@@ -104,7 +104,7 @@ class PlanejamentoAulaAeeController extends ApiCoreController
         $recursos_didaticos = $this->getRequest()->recursos_didaticos;
         $outros = $this->getRequest()->outros;
 
-        die(var_dump($necessidade_aprendizagem));
+        die(var_dump($conteudos));
 
         // $sequencia = $faseEtapa;
         // $obj = new clsPmieducarTurmaModulo();
