@@ -16,6 +16,9 @@ class CreateConteudoMinistradoAeeTable extends Migration
         Schema::create('modules.conteudo_ministrado_aee', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('ref_cod_matricula');
+            $table->date('data');
+            $table->time('hora_inicio');
+            $table->time('hora_fim');
             $table->text('atividades');
             $table->text('observacao')->nullable();
             $table->timestamp('data_cadastro');
