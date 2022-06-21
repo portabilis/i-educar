@@ -1544,6 +1544,10 @@ return new class extends clsCadastro {
 
         $this->preparaDados();
 
+        if (!$this->validaCnpjMantenedora()) {
+            return false;
+        }
+
         if (!$this->validaDigitosInepEscola($this->escola_inep_id, 'Código INEP')) {
             return false;
         }
@@ -1634,6 +1638,18 @@ return new class extends clsCadastro {
                 return false;
             }
         }
+        return true;
+    }
+
+    public function validaCnpjMantenedora(): bool
+    {
+        if((int)$this->dependencia_administrativa === DependenciaAdministrativaEscola::PRIVADA &&
+            !empty($this->cnpj_mantenedora_principal) &&
+            !validaCNPJ($this->cnpj_mantenedora_principal)) {
+            $this->mensagem = 'O CNPJ da mantenedora principal é inválido. Favor verificar.';
+            return false;
+        }
+
         return true;
     }
 
@@ -1842,6 +1858,10 @@ return new class extends clsCadastro {
         $this->pesquisaPessoaJuridica = false;
 
         $this->preparaDados();
+
+        if (!$this->validaCnpjMantenedora()) {
+            return false;
+        }
 
         if (!$this->validaDigitosInepEscola($this->escola_inep_id, 'Código INEP')) {
             return false;
