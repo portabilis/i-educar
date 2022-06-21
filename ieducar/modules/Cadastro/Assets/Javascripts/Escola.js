@@ -387,6 +387,7 @@ $j(document).ready(function() {
 
   // on click das abas
   habilitaCampoPoderPublicoOuConvenio();
+  obrigarCnpjMantenedora();
   // DADOS GERAIS
   $j('#tab1').click(
     function() {
