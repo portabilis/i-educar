@@ -720,7 +720,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     {
         $this->deleteHistoricoDisplinas($alunoId, $historicoSequencial);
 
-        if ($this->getRequest()->disciplinas == 'buscar-boletim') {
+        if ($this->getRequest()->disciplinas === 'buscar-boletim') {
             $tpNota = $this->getService()->getRegra()->get('tipoNota');
             $situacaoFaltasCc = $this->getService()->getSituacaoFaltas()->componentesCurriculares;
             $mediasCc = $this->getService()->getMediasComponentes();
@@ -783,8 +783,11 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                     if ($arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota'] === null) {
                         $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota'] = 0;
                     }
+
+                    $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota_conceitual_numerica'] ??= 0 ;
+
                     $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota'] += $nota;
-                    $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota_conceitual_numerica'] += $notaConceitualNumerica;
+                    $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota_conceitual_numerica'] += is_numeric($notaConceitualNumerica) ? $notaConceitualNumerica : 0;
                     $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['falta'] += $this->getFalta($situacaoFaltasCc[$ccId]);
                     $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['ordenamento'] = $componenteCurricular->area_conhecimento->ordenamento;
                     $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['carga_horaria_disciplina'] = $componenteCurricular->area_conhecimento->carga_horaria_disciplina;
@@ -838,10 +841,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                 }
             }
             if ($processarMediaGeral) {
-                $componentesCurriculares['media_geral'] = $this->insereComponenteMediaGeral(
-                    $historicoSequencial,
-                    $alunoId
-                );
+                $this->insereComponenteMediaGeral($historicoSequencial, $alunoId);
             }
         } else {
             $i = 0;

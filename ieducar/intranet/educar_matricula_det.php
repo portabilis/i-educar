@@ -160,6 +160,7 @@ return new class extends clsDetalhe {
         $existeTurmaItineraria = false;
         $nomesTurmas = [];
         $datasEnturmacoes = [];
+        $nomesTurnos = [];
 
         foreach ($enturmacoes as $enturmacao) {
             $turma = new clsPmieducarTurma($enturmacao['ref_cod_turma']);
@@ -194,16 +195,25 @@ return new class extends clsDetalhe {
             if ($turma['tipo_atendimento'] == TipoAtendimentoTurma::AEE) {
                 $existeAtendimentoEspecializado = true;
             }
+
+            $nomesTurnos[] = match ((int)$enturmacao['turno_id']) {
+                clsPmieducarTurma::TURNO_MATUTINO =>  'Matutino',
+                clsPmieducarTurma::TURNO_VESPERTINO => 'Vespertino',
+                default => 'Integral',
+            };
         }
         $nomesTurmas = implode('<br />', $nomesTurmas);
         $datasEnturmacoes = implode('<br />', $datasEnturmacoes);
+        $nomesTurnos = implode('<br />', $nomesTurnos);
 
         if ($nomesTurmas) {
             $this->addDetalhe(['Turma', $nomesTurmas]);
+            $this->addDetalhe(['Turno', $nomesTurnos]);
             $this->addDetalhe(['Data Enturmação', $datasEnturmacoes]);
             $existeTurma = true;
         } else {
             $this->addDetalhe(['Turma', '']);
+            $this->addDetalhe(['Turno', '']);
             $this->addDetalhe(['Data Enturmação', '']);
         }
 

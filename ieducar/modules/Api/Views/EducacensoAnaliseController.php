@@ -345,7 +345,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
         if (
             (in_array(PoderPublicoConveniado::MUNICIPAL, $escola->poderPublicoConveniado) ||
-            in_array(PoderPublicoConveniado::NAO_POSSUI, $escola->poderPublicoConveniado))
+            in_array(PoderPublicoConveniado::ESTADUAL, $escola->poderPublicoConveniado))
             && empty(array_filter($escola->formasContratacaoPoderPublico))
         ) {
             $mensagem[] = [
@@ -1346,14 +1346,6 @@ class EducacensoAnaliseController extends ApiCoreController
         $codEscola = $escolaId;
 
         $mensagem = [];
-        if (count($gestores) > 3) {
-            $mensagem[] = [
-                    'text' => "Dados para formular o registro 40 da escola {$nomeEscola} possui valor inválido. A escola não pode ter mais de 3 gestores escolares.",
-                    'path' => '(Escola > Cadastros > Escolas > Editar > Aba: dados gerais > Tabela Gestores escolares)',
-                    'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
-                    'fail' => true
-                ];
-        }
 
         if (empty($gestores)) {
             $mensagem[] = [
@@ -1367,6 +1359,15 @@ class EducacensoAnaliseController extends ApiCoreController
                 'mensagens' => $mensagem,
                 'title' => 'Análise exportação - Registro 40'
             ];
+        }
+
+        if (count($gestores) > 3) {
+            $mensagem[] = [
+                    'text' => "Dados para formular o registro 40 da escola {$nomeEscola} possui valor inválido. A escola não pode ter mais de 3 gestores escolares.",
+                    'path' => '(Escola > Cadastros > Escolas > Editar > Aba: dados gerais > Tabela Gestores escolares)',
+                    'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                    'fail' => true
+                ];
         }
 
         foreach ($gestores as $gestor) {
@@ -1512,7 +1513,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 ];
             }
 
-            $etapasValidasParaInstrutor = [30, 31, 32, 33, 34, 39, 40, 73, 74, 64, 67, 68];            
+            $etapasValidasParaInstrutor = [30, 31, 32, 33, 34, 39, 40, 73, 74, 64, 67, 68];
 
             if ($docente->funcaoDocente == FuncaoExercida::INSTRUTOR_EDUCACAO_PROFISSIONAL &&
                 (
@@ -1598,7 +1599,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 ];
             }
 
-            if ($aluno->tipoAtendimentoTurma ==  $aluno->isAtividadeComplementarOrAee()) {
+            if ($aluno->isAtividadeComplementarOrAee()) {
                 $countAtividadesComplementar[$codigoAluno][] = [
                     'codigoAluno' => $codigoAluno,
                     'nomeAluno' => $nomeAluno,
