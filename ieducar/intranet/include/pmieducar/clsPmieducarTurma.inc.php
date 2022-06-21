@@ -2044,10 +2044,10 @@ return false;
     {
 
         $db = new clsBanco();
-        $sql = 'SELECT t.cod_turma, t.nm_turma 
-        FROM pmieducar.turma AS t
-        JOIN pmieducar.curso AS c ON c.cod_curso = t.ref_cod_curso
-        WHERE t.tipo_atendimento = 5';
+        $ano_turma = date('Y');
+        $sql = "SELECT cod_turma, nm_turma FROM pmieducar.turma
+        WHERE tipo_atendimento = 5
+        AND ano = $ano_turma";
 
         $db->Consulta($sql);
 
