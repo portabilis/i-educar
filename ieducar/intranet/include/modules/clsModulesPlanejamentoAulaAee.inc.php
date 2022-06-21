@@ -38,8 +38,8 @@ class clsModulesPlanejamentoAulaAee extends Model {
 
         $this->_from = "
                 modules.planejamento_aula_aee as pa
-            JOIN modules.planejamento_aula_componente_curricular_aee as pacc
-                ON (pacc.planejamento_aula_aee_id = pa.id)
+            JOIN modules.planejamento_aula_componente_curricular as pacc
+                ON (pacc.planejamento_aula_id = pa.id)
             JOIN pmieducar.turma t
                 ON (t.cod_turma = pa.ref_cod_turma)
             JOIN pmieducar.instituicao i
@@ -195,19 +195,19 @@ class clsModulesPlanejamentoAulaAee extends Model {
             $id = $db->InsertId("{$this->_tabela}_id_seq");
 
             foreach ($this->ref_componente_curricular_array as $key => $ref_componente_curricular) {
-                $obj = new clsModulesPlanejamentoAulaComponenteCurricularAee(null, $id, $ref_componente_curricular[1]);
+                $obj = new clsModulesPlanejamentoAulaComponenteCurricular(null, $id, $ref_componente_curricular[1]);
                 $obj->cadastra();
             }
 
             foreach ($this->bnccs as $key => $bncc_array) {
                 foreach ($bncc_array[1] as $key => $bncc_id) {
-                    $obj = new clsModulesPlanejamentoAulaBNCCAee(null, $id, $bncc_id);
+                    $obj = new clsModulesPlanejamentoAulaBNCC(null, $id, $bncc_id);
                     $obj->cadastra();
                 }
             }
 
             foreach ($this->conteudos as $key => $conteudo) {
-                $obj = new clsModulesPlanejamentoAulaConteudoAee(null, $id, $conteudo[1]);
+                $obj = new clsModulesPlanejamentoAulaConteudo(null, $id, $conteudo[1]);
                 $obj->cadastra();
             }
 
@@ -216,10 +216,10 @@ class clsModulesPlanejamentoAulaAee extends Model {
                     $obj = new clsModulesBNCCEspecificacao($bncc_especificacao_id);
                     $bncc_id = $obj->detalhe()['bncc_id'];
 
-                    $obj = new clsModulesPlanejamentoAulaBNCCAee(null, $id, $bncc_id);
+                    $obj = new clsModulesPlanejamentoAulaBNCC(null, $id, $bncc_id);
                     $planejamento_aula_bncc_aee_id = $obj->detalhe2()['id'];
 
-                    $obj = new clsModulesPlanejamentoAulaBNCCEspecificacaoAee(null, $planejamento_aula_bncc_aee_id, $bncc_especificacao_id);
+                    $obj = new clsModulesPlanejamentoAulaBNCCEspecificacao(null, $planejamento_aula_bncc_aee_id, $bncc_especificacao_id);
                     $obj->cadastra();
                 }
             }
@@ -264,7 +264,7 @@ class clsModulesPlanejamentoAulaAee extends Model {
                     id = '{$this->id}'
             ");
 
-            $obj = new clsModulesPlanejamentoAulaBNCCAee();
+            $obj = new clsModulesPlanejamentoAulaBNCC();
             foreach ($obj->lista($this->id) as $key => $bncc) {
                 $bnccs_atuais[] = $bncc;
             }
@@ -273,32 +273,32 @@ class clsModulesPlanejamentoAulaAee extends Model {
             $bncc_diferenca = $obj->retornaDiferencaEntreConjuntosBNCC($bnccs_atuais, $this->bnccs);
 
             foreach ($bncc_diferenca['adicionar'] as $key => $bncc_adicionar){
-                $obj = new clsModulesPlanejamentoAulaBNCCAee(null, $this->id, $bncc_adicionar);
+                $obj = new clsModulesPlanejamentoAulaBNCC(null, $this->id, $bncc_adicionar);
                 $obj->cadastra();
             }
 
             foreach ($bncc_diferenca['remover'] as $key => $bncc_remover){
-                $obj = new clsModulesPlanejamentoAulaBNCCAee(null, $this->id, $bncc_remover);
+                $obj = new clsModulesPlanejamentoAulaBNCC(null, $this->id, $bncc_remover);
                 $obj->excluir();
             }
 
 
-            $obj = new clsModulesPlanejamentoAulaConteudoAee();
+            $obj = new clsModulesPlanejamentoAulaConteudo();
             $conteudos_atuais = $obj->lista($this->id);
             $conteudo_diferenca = $obj->retornaDiferencaEntreConjuntosConteudos($conteudos_atuais, $this->conteudos);
 
             foreach ($conteudo_diferenca['adicionar'] as $key => $conteudo_adicionar){
-                $obj = new clsModulesPlanejamentoAulaConteudoAee(null, $this->id, $conteudo_adicionar[1]);
+                $obj = new clsModulesPlanejamentoAulaConteudo(null, $this->id, $conteudo_adicionar[1]);
                 $obj->cadastra();
             }
 
             foreach ($conteudo_diferenca['remover'] as $key => $conteudo_remover){
-                $obj = new clsModulesPlanejamentoAulaConteudoAee(null, $this->id, $conteudo_remover[2]);
+                $obj = new clsModulesPlanejamentoAulaConteudo(null, $this->id, $conteudo_remover[2]);
                 $obj->excluir();
             }
 
             foreach ($conteudo_diferenca['editar'] as $key => $conteudo_editar){
-                $obj = new clsModulesPlanejamentoAulaConteudoAee($conteudo_editar[0], null, $conteudo_editar[1]);
+                $obj = new clsModulesPlanejamentoAulaConteudo($conteudo_editar[0], null, $conteudo_editar[1]);
                 $obj->edita();
             }
 
@@ -440,10 +440,10 @@ class clsModulesPlanejamentoAulaAee extends Model {
 
             $data['detalhes'] = $db->Tupla();
 
-            $obj = new clsModulesPlanejamentoAulaBNCCAee();
+            $obj = new clsModulesPlanejamentoAulaBNCC();
             $data['bnccs'] = $obj->lista($this->id);
 
-            $obj = new clsModulesPlanejamentoAulaBNCCEspecificacaoAee();
+            $obj = new clsModulesPlanejamentoAulaBNCCEspecificacao();
             $data['especificacoes'] = $obj->lista($this->id);
 
             $obj = new clsModulesPlanejamentoAulaConteudo();
@@ -502,7 +502,7 @@ class clsModulesPlanejamentoAulaAee extends Model {
 	                 pacc.componente_curricular_id
                  FROM
                      modules.planejamento_aula_aee as pa
-                 JOIN modules.planejamento_aula_componente_curricular_aee as pacc
+                 JOIN modules.planejamento_aula_componente_curricular as pacc
                     ON (pacc.planejamento_aula_id = pa.id)
                  WHERE
                      pa.data_inicial >= '{$this->data_inicial}'
@@ -534,7 +534,7 @@ class clsModulesPlanejamentoAulaAee extends Model {
                 SELECT
                     conteudo_ministrado_id as id, COUNT(conteudo_ministrado_id)
                 FROM
-                    modules.planejamento_aula_conteudo_aee as pac
+                    modules.planejamento_aula_conteudo as pac
                 CROSS JOIN LATERAL (
                     SELECT
                         cmc.conteudo_ministrado_id
