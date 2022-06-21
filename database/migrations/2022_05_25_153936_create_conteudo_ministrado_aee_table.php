@@ -16,14 +16,12 @@ class CreateConteudoMinistradoAeeTable extends Migration
         Schema::create('modules.conteudo_ministrado_aee', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('ref_cod_matricula');
-            $table->integer('frequencia_aee_id');
             $table->text('atividades');
             $table->text('observacao')->nullable();
             $table->timestamp('data_cadastro');
             $table->timestamp('data_atualizacao')->nullable();
             $table->timestamps();
-            //constraint
-            $table->foreign('frequencia_aee_id')->references('id')->on('modules.frequencia_aee')->onDelete(('cascade'));
+            //constraint            
             $table->foreign('ref_cod_matricula')->references('cod_matricula')->on('pmieducar.matricula')->onDelete(('cascade'));
         });
     }
