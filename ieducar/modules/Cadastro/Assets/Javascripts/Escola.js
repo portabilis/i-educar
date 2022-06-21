@@ -137,9 +137,6 @@ function obrigarCnpjMantenedora() {
   emAtividade = $j('#situacao_funcionamento').val() == SITUACAO_FUNCIONAMENTO.EM_ATIVIDADE;
 
   $j('#cnpj_mantenedora_principal').makeUnrequired();
-
-  console.log(0);
-  console.log(mantenedoraSemFinsLucrativos);
   if (obrigarCamposCenso && dependenciaPrivada && mantenedoraSemFinsLucrativos && escolaRegulamentada && emAtividade) {
     $j('#cnpj_mantenedora_principal').makeRequired();
   }
