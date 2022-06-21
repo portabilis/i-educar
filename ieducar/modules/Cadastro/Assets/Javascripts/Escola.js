@@ -126,8 +126,24 @@ window.addEventListener(
     obrigaCampoFormaDeContratacao();
     habilitaCampoFormaDeContratacao();
     habilitaAbaMatriculasAtendidas();
+    obrigarCnpjMantenedora();
   },false
 );
+
+function obrigarCnpjMantenedora() {
+  dependenciaPrivada = $j('#dependencia_administrativa').val() == DEPENDENCIA_ADMINISTRATIVA.PRIVADA;
+  mantenedoraSemFinsLucrativos = $j.inArray(MANTENEDORA_ESCOLA_PRIVADA.INSTITUICOES_SIM_FINS_LUCRATIVOS.toString(), $j('#mantenedora_escola_privada').val()) != -1;
+  escolaRegulamentada = $j('#regulamentacao').val() == 1;
+  emAtividade = $j('#situacao_funcionamento').val() == SITUACAO_FUNCIONAMENTO.EM_ATIVIDADE;
+
+  $j('#cnpj_mantenedora_principal').makeUnrequired();
+
+  console.log(0);
+  console.log(mantenedoraSemFinsLucrativos);
+  if (obrigarCamposCenso && dependenciaPrivada && mantenedoraSemFinsLucrativos && escolaRegulamentada && emAtividade) {
+    $j('#cnpj_mantenedora_principal').makeRequired();
+  }
+}
 
 $j('#local_funcionamento').on('change', function () {
     changeLocalFuncionamento();
@@ -389,7 +405,6 @@ $j(document).ready(function() {
 
   // on click das abas
   habilitaCampoPoderPublicoOuConvenio();
-  obrigarCnpjMantenedora();
   // DADOS GERAIS
   $j('#tab1').click(
     function() {
@@ -659,18 +674,7 @@ $j(document).ready(function() {
 
   $j('#mantenedora_escola_privada').on('change', () => obrigarCnpjMantenedora());
 
-  function obrigarCnpjMantenedora() {
-    dependenciaPrivada = $j('#dependencia_administrativa').val() == DEPENDENCIA_ADMINISTRATIVA.PRIVADA;
-    mantenedoraSemFinsLucrativos = $j.inArray(MANTENEDORA_ESCOLA_PRIVADA.INSTITUICOES_SIM_FINS_LUCRATIVOS.toString(), $j('#mantenedora_escola_privada').val()) != -1;
-    escolaRegulamentada = $j('#regulamentacao').val() == 1;
-    emAtividade = $j('#situacao_funcionamento').val() == SITUACAO_FUNCIONAMENTO.EM_ATIVIDADE;
 
-    $j('#cnpj_mantenedora_principal').makeUnrequired();
-
-    if (obrigarCamposCenso && dependenciaPrivada && mantenedoraSemFinsLucrativos && escolaRegulamentada && emAtividade) {
-      $j('#cnpj_mantenedora_principal').makeRequired();
-    }
-  }
 
   $j('#situacao_funcionamento').change(
     function(){
