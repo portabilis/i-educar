@@ -935,6 +935,19 @@ class EducacensoAnaliseController extends ApiCoreController
                 ];
             }
 
+            if (
+                $turma->tipoMediacaoDidaticoPedagogico == App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL &&
+                count(array_filter($turma->estruturaCurricular)) > 0 &&
+                !in_array(EstruturaCurricular::FORMACAO_GERAL_BASICA, $turma->estruturaCurricular)
+            ) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} possui valor inválido. Verificamos que o tipo de mediação didático pedagógico da turma {$nomeTurma} é semipresencial, portanto a turma deve ter estrutura curricular de formação geral básica.",
+                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Estrutura curricular)',
+                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
+                    'fail' => true
+                ];
+            }
+
             if ($atividadeComplementar && !$existeAtividadeComplementar) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verificamos que a turma {$nomeTurma} é de atividades complementares, portanto é necessário informar quais atividades complementares são trabalhadas.",
