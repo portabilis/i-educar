@@ -425,8 +425,7 @@ class CheckMandatoryCensoFields implements Rule
             ]
         ];
 
-        if ($params->tipo_atendimento == TipoAtendimentoTurma::ESCOLARIZACAO &&
-            isset($params->formas_organizacao_turma) &&
+        if (isset($params->formas_organizacao_turma) &&
             isset($params->etapa_educacenso) &&
             !in_array((int) $params->etapa_educacenso, $validOptionCorrelationForEtapaEnsino[(int)$params->formas_organizacao_turma], true)
         ) {

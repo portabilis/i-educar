@@ -1122,7 +1122,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
             $formasDeOrganizacaoDaTurma = new FormaOrganizacaoTurma($turma);
 
-            if ($turma->tipoAtendimento == TipoAtendimentoTurma::ESCOLARIZACAO && !in_array($turma->etapaEducacenso, [1, 2, 3, 24]) && empty($turma->formasOrganizacaoTurma)) {
+            if (!empty($turma->etapaEducacenso) && !in_array($turma->etapaEducacenso, [1, 2, 3, 24]) && empty($turma->formasOrganizacaoTurma)) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verifique se a forma de organização da turma {$nomeTurma} foi informada.",
                     'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Formas de organização da turma)',

@@ -24,7 +24,7 @@ class FormaOrganizacaoTurma implements EducacensoValidator
             return true;
         }
 
-        if ($this->turma->tipoAtendimento !== TipoAtendimentoTurma::ESCOLARIZACAO) {
+        if (empty($this->turma->etapaEducacenso)) {
             return true;
         }
 
