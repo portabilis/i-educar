@@ -12,7 +12,7 @@ class Student extends Model
     /**
      * @var string
      */
-    protected $table = 'exporter_student';
+    protected $table = 'exporter_student_grouped_registration';
 
     /**
      * @var Collection
