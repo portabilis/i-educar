@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-die(var_dump($this->ref_cod_turma));
-
 class clsModulesPlanejamentoAula extends Model {
     public $id;
     public $ref_cod_turma;
@@ -481,6 +479,9 @@ class clsModulesPlanejamentoAula extends Model {
             $db->ProximoRegistro();
 
             $data['detalhes'] = $db->Tupla();
+
+            $obj = new clsModulesPlanejamentoAulaComponenteCurricular();
+            $data['componentesCurriculares'] = $obj->lista($this->id);
 
             $obj = new clsModulesPlanejamentoAulaBNCC();
             $data['bnccs'] = $obj->lista($this->id);
