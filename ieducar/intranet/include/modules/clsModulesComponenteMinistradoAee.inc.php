@@ -25,9 +25,7 @@ class clsModulesComponenteMinistradoAee extends Model {
         $this->_tabela = "{$this->_schema}conteudo_ministrado_aee";
 
         $this->_from = "
-                modules.conteudo_ministrado_aee as cm
-            JOIN modules.frequencia_aee f
-                ON (cm.frequencia_aee_id = f.id)
+                modules.conteudo_ministrado_aee as cm            
             JOIN pmieducar.turma t
                 ON (t.cod_turma = f.ref_cod_turma)
             JOIN pmieducar.instituicao i
@@ -42,8 +40,7 @@ class clsModulesComponenteMinistradoAee extends Model {
 
         $this->_campos_lista = $this->_todos_campos = '
             cm.id,
-            f.id as frequencia,
-            f.data,
+            cm.data,
             i.nm_instituicao AS instituicao,
             j.fantasia AS escola,
             c.nm_curso AS curso,
@@ -53,10 +50,6 @@ class clsModulesComponenteMinistradoAee extends Model {
 
         if (is_numeric($id)) {
             $this->id = $id;
-        }
-
-        if (is_numeric($frequencia_aee_id)) {
-            $this->frequencia_aee_id = $frequencia_aee_id;
         }
 
         if (is_string($atividades)) {
@@ -84,18 +77,18 @@ class clsModulesComponenteMinistradoAee extends Model {
     public function cadastra() {
 
         
-        if (is_numeric($this->frequencia_aee_id)) {
+        if (is_numeric($this->ref_cod_matricula)) {
             $db = new clsBanco();
 
-            $campos = "frequencia_aee_id, data_cadastro";
-            $valores = "'{$this->frequencia_aee_id}', (NOW() - INTERVAL '3 HOURS')";
+            $campos = "ref_cod_matricula, data_cadastro";
+            $valores = "'{$this->ref_cod_matricula}', (NOW() - INTERVAL '3 HOURS')";
 
             if(is_string($this->hora_inicio)){
                 $campos     .=  ", hora_inicio";
                 $valores    .=  ", '{($this->hora_inicio)}'";
             }
 
-            die(var_dump($this->hora_inicio));
+            //die(var_dump($this->hora_inicio));
 
             if(is_string($this->hora_fim)){
                 $campos     .=  ", hora_fim";
@@ -121,7 +114,7 @@ class clsModulesComponenteMinistradoAee extends Model {
             $id = $db->InsertId("{$this->_tabela}_id_seq");
 
             foreach ($this->conteudos as $key => $conteudo) {
-                $obj = new clsModulesComponenteMinistradoConteudoAee(null, $id, $conteudo);
+                $obj = new clsModulesComponenteMinistradoConteudo(null, $id, $conteudo);
                 $obj->cadastra();
             }
 

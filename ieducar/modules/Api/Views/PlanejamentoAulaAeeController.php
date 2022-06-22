@@ -24,11 +24,11 @@ class PlanejamentoAulaAeeController extends ApiCoreController
         $conteudos_novos = $this->getRequest()->conteudos;
 
         if (is_numeric($planejamento_aula_aee_id) && is_array($conteudos_novos) && count($conteudos_novos) > 0) {
-            $obj = new clsModulesPlanejamentoAulaConteudoAee();
+            $obj = new clsModulesPlanejamentoAulaConteudo();
             $conteudos_atuais = $obj->lista($planejamento_aula_aee_id);
             $conteudos = $obj->retornaDiferencaEntreConjuntosConteudos($conteudos_atuais, $conteudos_novos);
 
-            $obj = new clsModulesComponenteMinistradoConteudoAee();
+            $obj = new clsModulesComponenteMinistradoConteudo();
             $conteudos_ids = $obj->existeLigacaoRegistroAula(array_column($conteudos['remover'], 'id'));
 
             return ['conteudos_ids' => $conteudos_ids];
@@ -104,7 +104,7 @@ class PlanejamentoAulaAeeController extends ApiCoreController
         $recursos_didaticos = $this->getRequest()->recursos_didaticos;
         $outros = $this->getRequest()->outros;
 
-        die(var_dump($conteudos));
+        die(var_dump($componentesCurriculares));
 
         // $sequencia = $faseEtapa;
         // $obj = new clsPmieducarTurmaModulo();
