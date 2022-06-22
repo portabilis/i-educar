@@ -64,13 +64,13 @@ return new class extends clsListagem {
         $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie', 'turma'], ['required' => false]);
         $this->inputsHelper()->turmaTurno(['required' => false, 'label' => 'Turno']);
         $this->inputsHelper()->dynamic('componenteCurricular', ['required' => false]);
-  
+
         $this->campoQuebra();
         $this->campoRotulo('filtros_periodo', '<b>Filtros por período</b>');
 
         $this->inputsHelper()->dynamic(['dataInicial'], ['required' => false, 'value' => $this->data_inicial]);
         $this->inputsHelper()->dynamic(['dataFinal'], ['required' => false, 'value' => $this->data_final]);
-     
+
         $this->campoQuebra();
         $this->campoRotulo('filtros_etapa', '<b>Filtros por etapa</b>');
 
@@ -125,7 +125,7 @@ return new class extends clsListagem {
             $eh_professor ? $this->pessoa_logada : null         // Passe o ID do servidor caso ele seja um professor
         );
 
-        $total = /*$obj_turma->_total*/count($lista); 
+        $total = /*$obj_turma->_total*/count($lista);
         // monta a lista
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {

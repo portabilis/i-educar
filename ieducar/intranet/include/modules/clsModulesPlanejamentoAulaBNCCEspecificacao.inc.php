@@ -93,6 +93,55 @@ class clsModulesPlanejamentoAulaBNCCEspecificacao extends Model {
     }
 
     /**
+     * Lista relacionamentos entre BNCC e o plano de aula
+     * Através de um array de PABE
+     *
+     * @return array
+     */
+    public function listaEspecificacoesByBNCCArray($planejamento_aula_bncc_idsArray) {
+        if (is_array($planejamento_aula_bncc_idsArray)) {
+            $db = new clsBanco();
+
+            $sql = "
+                SELECT
+                    pabe.*,
+                    be.especificacao
+                FROM
+                    modules.planejamento_aula_bncc_especificacao as pabe
+                JOIN modules.planejamento_aula_bncc as pab
+                    ON (pab.id = pabe.planejamento_aula_bncc_id)
+                JOIN modules.planejamento_aula as pa
+                    ON (pa.id = pab.planejamento_aula_id)
+                JOIN modules.bncc_especificacao as be
+	                ON (be.id = pabe.bncc_especificacao_id)
+                WHERE
+                    pabe.planejamento_aula_bncc_id IN (
+            ";
+
+            for ($i=0; $i < count($planejamento_aula_bncc_idsArray); $i++) {
+                $separador = $i < count($planejamento_aula_bncc_idsArray) -1 ? ',' : '';
+                $pa_bncc_id = $planejamento_aula_bncc_idsArray[$i];
+
+                $sql .= $pa_bncc_id . $separador;
+            }
+
+            $sql .= ")";
+
+            $db->Consulta($sql);
+
+            $especificacoes = [];
+
+            while($db->ProximoRegistro()) {
+                $especificacoes[] = $db->Tupla()['bncc_especificacao_id'];
+            }
+
+            return $especificacoes;
+        }
+
+        return false;
+    }
+
+    /**
      * Retorna um array com os dados de um registro
      *
      * @return array

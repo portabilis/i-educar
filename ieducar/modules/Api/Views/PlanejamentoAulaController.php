@@ -54,23 +54,30 @@ class PlanejamentoAulaController extends ApiCoreController
         $planejamento_aula_id = $this->getRequest()->planejamento_aula_id;
         $ddp = $this->getRequest()->ddp;
         $atividades = $this->getRequest()->atividades;
-        $bncc = $this->getRequest()->bncc;
-        $conteudos = $this->getRequest()->conteudos_novos;
         $referencias = $this->getRequest()->referencias;
+        $conteudos = $this->getRequest()->conteudos;
+        $componentesCurriculares = $this->getRequest()->componentesCurriculares;
+        $bnccs = $this->getRequest()->bnccs;
+        $bnccEspecificacoes = $this->getRequest()->bnccEspecificacoes;
+        $recursos_didaticos = $this->getRequest()->recursos_didaticos;
+        $registro_adaptacao = $this->getRequest()->registro_adaptacao;
 
         if (is_numeric($planejamento_aula_id)) {
             $obj = new clsModulesPlanejamentoAula(
                 $planejamento_aula_id,
                 null,
-                null,
+                $componentesCurriculares,
                 null,
                 null,
                 null,
                 $ddp,
                 $atividades,
-                $bncc,
+                $bnccs,
                 $conteudos,
-                $referencias
+                $referencias,
+                $bnccEspecificacoes,
+                $recursos_didaticos,
+                $registro_adaptacao
             );
 
             $editou = $obj->edita();
@@ -178,6 +185,109 @@ class PlanejamentoAulaController extends ApiCoreController
         return [ "result" => "Cadastro não realizado." ];
     }
 
+    public function getObjetivosAprendizagem ()
+    {
+        $planejamento_aula_id = $this->getRequest()->planejamento_aula_id;
+        $turma_id = $this->getRequest()->turma_id;
+        $ano = $this->getRequest()->ano;
+
+        if (is_numeric($planejamento_aula_id)) {
+            $obj = new clsModulesPlanejamentoAula($planejamento_aula_id);
+            $detalhePA = $obj->detalhe();
+
+            $row = [];
+
+            foreach ($detalhePA['componentesCurriculares'] as $key => $componenteCurricular) {
+                $habilidadesPaCC = [];
+                $especificacoesGeralBNCC = [];
+                $especificacoesPABNCC = [];
+                $planejamento_aula_bncc_ids = [];
+
+                $habilidadesGeralCC = $this->getBNCCTurma($turma_id, $componenteCurricular['id']);
+
+                foreach ($detalhePA['bnccs'] as $key => $bnccPA) {
+                    if (array_key_exists($bnccPA["id"], $habilidadesGeralCC['bncc'])) {
+                        $especificacoesGeralBNCC[$bnccPA["id"]] = $this->getEspecificacaoBNCC($bnccPA['id'])['bncc_especificacao'];
+                        $habilidadesPaCC[] = $bnccPA["id"];
+                        $planejamento_aula_bncc_ids[] = $bnccPA["planejamento_aula_bncc_id"];
+                    }
+                }
+
+                if (!empty($planejamento_aula_bncc_ids)) {
+                    $objTemp = new clsModulesPlanejamentoAulaBNCCEspecificacao();
+                    $especificacoesPABNCC[] = $objTemp->listaEspecificacoesByBNCCArray($planejamento_aula_bncc_ids);
+                }
+
+                $row[] = [
+                    'componente_curricular_id' => $componenteCurricular['id'],
+                    'habilidades' => [
+                        'habilidades_planejamento_aula_cc' => $habilidadesPaCC,
+                        'habilidades_geral_cc' => $habilidadesGeralCC['bncc']
+                    ],
+                    'especificacoes' => [
+                        'especificacoes_pa_bncc' => $especificacoesPABNCC,
+                        'especificacoes_geral_bncc' => $especificacoesGeralBNCC
+                    ]
+                ];
+
+            }
+
+            $row['count_objetivos'] = count($row);
+
+            return $row;
+
+        }
+
+        return [];
+    }
+
+    private function getBNCCTurma($turma = null, $ref_cod_componente_curricular = null)
+    {
+        if (is_numeric($turma)) {
+            $obj = new clsPmieducarTurma($turma);
+            $resultado = $obj->getGrau();
+
+            $bncc = [];
+            $bncc_temp = [];
+            $obj = new clsModulesBNCC();
+
+            if ($bncc_temp = $obj->listaTurma($resultado, $turma, $ref_cod_componente_curricular)) {
+                foreach ($bncc_temp as $bncc_item) {
+                    $id = $bncc_item['id'];
+                    $codigo = $bncc_item['codigo'];
+                    $habilidade = $bncc_item['habilidade'];
+
+                    $bncc[$id] = $codigo . ' - ' . $habilidade;
+                }
+            }
+
+            return ['bncc' => $bncc];
+        }
+
+        return [];
+    }
+
+    private function getEspecificacaoBNCC($bncc_id = null)
+    {
+        if (is_numeric($bncc_id)) {
+            $bncc_especificacao = [];
+            $obj = new clsModulesBNCCEspecificacao();
+
+            if ($bncc_especificacao_temp = $obj->lista($bncc_id)) {
+                foreach ($bncc_especificacao_temp as $bncc_especificacao_item) {
+                    $id = $bncc_especificacao_item['id'];
+                    $especificacao = $bncc_especificacao_item['especificacao'];
+
+                    $bncc_especificacao[$id] = $id . ' - ' . $especificacao;
+                }
+            }
+
+            return ['bncc_especificacao' => $bncc_especificacao];
+        }
+
+        return [];
+    }
+
     public function Gerar()
     {
         if ($this->isRequestFor('post', 'verificar-plano-aula-sendo-usado')) {
@@ -190,6 +300,8 @@ class PlanejamentoAulaController extends ApiCoreController
             $this->appendResponse($this->editarPlanoAula());
         } else if ($this->isRequestFor('post', 'novo-plano-aula')) {
             $this->appendResponse($this->criarPlanoAula());
+        } else if ($this->isRequestFor('get', 'get-objetivos-aprendizagem')) {
+            $this->appendResponse($this->getObjetivosAprendizagem());
         }
     }
 }
