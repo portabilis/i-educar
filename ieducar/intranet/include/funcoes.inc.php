@@ -49,6 +49,7 @@ function loadJson($file)
 
 function int2CNPJ($int)
 {
+    $int = preg_replace('/[\D]/', '', $int );
     if (strlen($int) < 14) {
         $str = str_repeat('0', 14 - strlen($int)) . $int;
     } else {

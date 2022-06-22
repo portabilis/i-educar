@@ -126,8 +126,21 @@ window.addEventListener(
     obrigaCampoFormaDeContratacao();
     habilitaCampoFormaDeContratacao();
     habilitaAbaMatriculasAtendidas();
+    obrigarCnpjMantenedora();
   },false
 );
+
+function obrigarCnpjMantenedora() {
+  dependenciaPrivada = $j('#dependencia_administrativa').val() == DEPENDENCIA_ADMINISTRATIVA.PRIVADA;
+  mantenedoraSemFinsLucrativos = $j.inArray(MANTENEDORA_ESCOLA_PRIVADA.INSTITUICOES_SIM_FINS_LUCRATIVOS.toString(), $j('#mantenedora_escola_privada').val()) != -1;
+  escolaRegulamentada = $j('#regulamentacao').val() == 1;
+  emAtividade = $j('#situacao_funcionamento').val() == SITUACAO_FUNCIONAMENTO.EM_ATIVIDADE;
+
+  $j('#cnpj_mantenedora_principal').makeUnrequired();
+  if (obrigarCamposCenso && dependenciaPrivada && mantenedoraSemFinsLucrativos && escolaRegulamentada && emAtividade) {
+    $j('#cnpj_mantenedora_principal').makeRequired();
+  }
+}
 
 $j('#local_funcionamento').on('change', function () {
     changeLocalFuncionamento();
@@ -233,12 +246,14 @@ function habilitaCampoFormaDeContratacao() {
 
   if (!poderPublico) {
     $j("#formas_contratacao_adm_publica_e_outras_instituicoes").prop('disabled', true);
+    $j("#formas_contratacao_adm_publica_e_outras_instituicoes").val('');
     $j("#formas_contratacao_adm_publica_e_outras_instituicoes").trigger("chosen:updated");
     return;
   }
 
   if (naoPossueParceriaOuConvenio) {
     $j("#formas_contratacao_adm_publica_e_outras_instituicoes").prop('disabled', true);
+    $j("#formas_contratacao_adm_publica_e_outras_instituicoes").val('');
     $j("#formas_contratacao_adm_publica_e_outras_instituicoes").trigger("chosen:updated");
     return;
   }
@@ -654,25 +669,9 @@ $j(document).ready(function() {
     }
   }
 
+  $j('#mantenedora_escola_privada').on('change', () => obrigarCnpjMantenedora());
 
-  $j('#mantenedora_escola_privada').change(
-    function (){
-      obrigarCnpjMantenedora();
-    }
-  );
 
-  function obrigarCnpjMantenedora() {
-    dependenciaPrivada = $j('#dependencia_administrativa').val() == DEPENDENCIA_ADMINISTRATIVA.PRIVADA;
-    mantenedoraSemFinsLucrativos = $j.inArray(MANTENEDORA_ESCOLA_PRIVADA.INSTITUICOES_SIM_FINS_LUCRATIVOS.toString(), $j('#mantenedora_escola_privada').val()) != -1;
-    escolaRegulamentada = $j('#regulamentacao').val() == 1;
-    emAtividade = $j('#situacao_funcionamento').val() == SITUACAO_FUNCIONAMENTO.EM_ATIVIDADE;
-
-    $j('#cnpj_mantenedora_principal').makeUnrequired();
-
-    if (obrigarCamposCenso && dependenciaPrivada && mantenedoraSemFinsLucrativos && escolaRegulamentada && emAtividade) {
-      $j('#cnpj_mantenedora_principal').makeRequired();
-    }
-  }
 
   $j('#situacao_funcionamento').change(
     function(){
@@ -680,15 +679,28 @@ $j(document).ready(function() {
       obrigaCampoRegulamentacao();
       habilitarCampoUnidadeVinculada();
       habilitaCampoPoderPublicoOuConvenio();
+      obrigaCampoFormaDeContratacao();
+      habilitaCampoFormaDeContratacao();
     }
   );
 
   function habilitaCampoPoderPublicoOuConvenio() {
-    if (obrigarCamposCenso && $j('#situacao_funcionamento').val() == SITUACAO_FUNCIONAMENTO.EM_ATIVIDADE) {
+
+    let situacaoFuncionamento = $j('#situacao_funcionamento').val();
+
+    if (obrigarCamposCenso && situacaoFuncionamento == SITUACAO_FUNCIONAMENTO.EM_ATIVIDADE) {
       $j('#poder_publico_parceria_convenio').makeRequired();
+      $j("#poder_publico_parceria_convenio").val('');
       $j("#poder_publico_parceria_convenio").prop('disabled', false);
       $j("#poder_publico_parceria_convenio").trigger("chosen:updated");
       return;
+    }
+
+    if (obrigarCamposCenso && situacaoFuncionamento != SITUACAO_FUNCIONAMENTO.EM_ATIVIDADE) {
+      $j('#poder_publico_parceria_convenio').makeUnrequired();
+      $j("#poder_publico_parceria_convenio").val('disabled', true);
+      $j("#poder_publico_parceria_convenio").prop('disabled', true);
+      $j("#poder_publico_parceria_convenio").trigger("chosen:updated");
     }
   }
 
