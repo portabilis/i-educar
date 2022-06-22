@@ -258,24 +258,6 @@ return new class extends clsCadastro {
         $this->campoTabelaFim();
     }
 
-    protected function getGraduateTableRows($graduations)
-    {
-        $rows = [];
-
-        foreach ($graduations as $graduation) {
-            $rows[] = [
-                $graduation->course,
-                $graduation->completion_year,
-                $graduation->college,
-                $graduation->discipline_id,
-                $graduation->course_id,
-                $graduation->college_id,
-            ];
-        }
-
-        return $rows;
-    }
-
     protected function adicionarConteudosTabela()
     {
         $obj = new clsModulesPlanejamentoAulaConteudo();
