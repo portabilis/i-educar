@@ -68,6 +68,7 @@ class clsModulesPlanejamentoAulaBNCC extends Model {
         $db->Consulta("
             SELECT
                 STRING_AGG (lok.id::character varying, ',') as ids,
+                STRING_AGG (pab.id::character varying, ',') as pab_ids,
                 STRING_AGG (lok.code::character varying, ',') as codigos,
                 STRING_AGG (lok.description::character varying, '$/') as descricoes
             FROM
@@ -85,13 +86,15 @@ class clsModulesPlanejamentoAulaBNCC extends Model {
         $info_temp = $db->Tupla();
 
         $infos['ids'] = explode(',', $info_temp['ids']);
+        $infos['pab_ids'] = explode(',', $info_temp['pab_ids']);
         $infos['codigos'] = count($info_temp['codigos']) > 0 ? explode(',', $info_temp['codigos']) : null;
         $infos['descricoes'] = count($info_temp['descricoes']) > 0 ? explode('$/', $info_temp['descricoes']) : null;
 
         $bnccs = [];
 
-        for ($i=0; $i < count($infos['ids']); $i++) { 
+        for ($i=0; $i < count($infos['ids']); $i++) {
             $bnccs[$i]['id'] = $infos['ids'][$i];
+            $bnccs[$i]['planejamento_aula_bncc_id'] = $infos['pab_ids'][$i];
             $bnccs[$i]['codigo'] = $infos['codigos'][$i];
             $bnccs[$i]['descricao'] = $infos['descricoes'][$i];
         }
@@ -143,7 +146,7 @@ class clsModulesPlanejamentoAulaBNCC extends Model {
 
         if (is_numeric($this->planejamento_aula_id) && is_numeric($this->bncc_id)) {
             $db = new clsBanco();
-            
+
             $db->Consulta("
                 SELECT
                     {$this->_todos_campos}

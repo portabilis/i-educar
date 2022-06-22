@@ -41,7 +41,7 @@ return new class extends clsDetalhe {
 
         $obj = new clsPmieducarTurma($registro['detalhes']['ref_cod_turma']);
         $resultado = $obj->getGrau();
-        
+
         if ($registro['detalhes']['id']) {
             $this->addDetalhe(
                 [
@@ -50,7 +50,7 @@ return new class extends clsDetalhe {
                 ]
             );
         }
-        
+
         if ($registro['detalhes']['data_inicial']) {
             $this->addDetalhe(
                 [
@@ -95,7 +95,7 @@ return new class extends clsDetalhe {
                 ]
             );
         }
-        
+
         if (is_array($registro['bnccs'])) {
             $this->montaListaBNCC($registro['bnccs']);
         }
@@ -189,7 +189,7 @@ return new class extends clsDetalhe {
                     $podeEditar = $data_agora >= $data_inicio && $data_agora <= $data_fim;
 
                     if ($podeEditar) break;
-                }     
+                }
             } else {
                 $podeEditar = $data_agora >= $data['inicio'] && $data_agora <= $data['fim'];
             }
@@ -212,7 +212,7 @@ return new class extends clsDetalhe {
     }
 
     function montaListaBNCC ($bnccs) {
-        
+
         $this->tabela .= ' <tr>';
         $this->tabela .= ' <td class="formmdtd"><span style="display: block; float: left; width: 100px; font-weight: bold;">Código</span></td>';
         $this->tabela .= ' <td class="formmdtd"><span style="display: block; float: left; width: 700px; font-weight: bold;">Habilidade</span></td>';
@@ -224,7 +224,7 @@ return new class extends clsDetalhe {
             $this->tabela .= "  <td class='formmdtd'><span style='display: block; float: left; width: 700px; margin-bottom: 10px'>{$bnccs[$i][descricao]}</span></td>";
             $this->tabela .= ' </tr>';
         }
-        
+
         $bncc  = '<table cellspacing="0" cellpadding="0" border="0">';
         $bncc .= sprintf('<tr align="left"><td>%s</td></tr>', $this->tabela);
         $bncc .= '</table>';

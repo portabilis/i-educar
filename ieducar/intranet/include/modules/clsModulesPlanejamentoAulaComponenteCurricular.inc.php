@@ -58,45 +58,36 @@ class clsModulesPlanejamentoAulaComponenteCurricular extends Model {
     }
 
     /**
-     * Lista relacionamentos entre BNCC e o plano de aula
+     * Lista relacionamentos entre CC e o plano de aula
      *
      * @return array
      */
     public function lista($planejamento_aula_id) {
-        $db = new clsBanco();
+        if (is_numeric($planejamento_aula_id)) {
+            $db = new clsBanco();
 
-        $db->Consulta("
-            SELECT
-                STRING_AGG (lok.id::character varying, ',') as ids,
-                STRING_AGG (lok.code::character varying, ',') as codigos,
-                STRING_AGG (lok.description::character varying, '$/') as descricoes
-            FROM
-                modules.planejamento_aula_bncc as pacc
-            JOIN public.learning_objectives_and_skills as lok
-                ON (lok.id = pacc.componente_curricular_id)
-            GROUP BY
-                pacc.planejamento_aula_id
-            HAVING
-                pacc.planejamento_aula_id = '{$planejamento_aula_id}'
-        ");
+            $db->Consulta("
+                SELECT
+                    pac.planejamento_aula_id,
+                    pac.componente_curricular_id,
+                    cc.nome
+                FROM
+                    modules.planejamento_aula_componente_curricular AS pac
+                JOIN modules.componente_curricular cc on (pac.componente_curricular_id = cc.id)
+                WHERE
+                    pac.planejamento_aula_id = '{$planejamento_aula_id}'
+            ");
 
-        $db->ProximoRegistro();
+            $componentes = [];
 
-        $info_temp = $db->Tupla();
+            while($db->ProximoRegistro()) {
+                $componentes[]["id"] = $db->Tupla()['componente_curricular_id'];
+            }
 
-        $infos['ids'] = explode(',', $info_temp['ids']);
-        $infos['codigos'] = count($info_temp['codigos']) > 0 ? explode(',', $info_temp['codigos']) : null;
-        $infos['descricoes'] = count($info_temp['descricoes']) > 0 ? explode('$/', $info_temp['descricoes']) : null;
-
-        $bnccs = [];
-
-        for ($i=0; $i < count($infos['ids']); $i++) { 
-            $bnccs[$i]['id'] = $infos['ids'][$i];
-            $bnccs[$i]['codigo'] = $infos['codigos'][$i];
-            $bnccs[$i]['descricao'] = $infos['descricoes'][$i];
+            return $componentes;
         }
 
-        return $bnccs;
+        return false;
     }
 
     /**

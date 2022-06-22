@@ -45,6 +45,8 @@ return new class extends clsCadastro {
                     $this->$campo = $val;
                 }
                 $this->bncc = array_column($registro['bnccs'], 'id');
+                $this->bncc_especificacoes = array_column($registro['especificacoes'], 'id');
+                $this->ref_cod_componente_curricular_array = $registro['componentesCurriculas'];
 
                 if (!$this->copy) {
                     $this->fexcluir = $obj_permissoes->permissao_excluir(58, $this->pessoa_logada, 7);
@@ -88,7 +90,6 @@ return new class extends clsCadastro {
             && $this->data_inicial != ''
             && $this->data_final != ''
             && is_numeric($this->ref_cod_turma)
-            && is_numeric($this->ref_cod_componente_curricular_array)
             && is_numeric($this->fase_etapa)
         ) {
             $desabilitado = true;
@@ -99,8 +100,8 @@ return new class extends clsCadastro {
         $this->campoOculto('id', $this->id);
         $this->inputsHelper()->dynamic('dataInicial', ['required' => $obrigatorio]);    // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('dataFinal', ['required' => $obrigatorio]);      // Disabled não funciona; ação colocada no javascript.
-        $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado && !$this->copy]);
-        $this->inputsHelper()->dynamic('faseEtapa', ['required' => $obrigatorio, 'label' => 'Etapa', 'disabled' => $desabilitado && !$this->copy]);
+        $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado]);
+        $this->inputsHelper()->dynamic('faseEtapa', ['required' => $obrigatorio, 'label' => 'Etapa', 'disabled' => $desabilitado]);
 
         $this->adicionarBNCCMultiplaEscolha();
         $this->adicionarConteudosTabela();
@@ -133,6 +134,7 @@ return new class extends clsCadastro {
             $this->atividades,
             $this->bncc,
             $this->conteudos,
+            $this->bncc_especificacoes,
             $this->referencias
         );
 
@@ -163,7 +165,7 @@ return new class extends clsCadastro {
         return false;
     }
 
-    private function getBNCCTurma($turma = null, $ref_cod_componente_curricular_array = null)
+    private function getBNCCTurma($turma = null, $ref_cod_componente_curricular = null)
     {
         if (is_numeric($turma)) {
             $obj = new clsPmieducarTurma($turma);
@@ -173,7 +175,7 @@ return new class extends clsCadastro {
             $bncc_temp = [];
             $obj = new clsModulesBNCC();
 
-            if ($bncc_temp = $obj->listaTurma($resultado, $turma, $ref_cod_componente_curricular_array)) {
+            if ($bncc_temp = $obj->listaTurma($resultado, $turma, $ref_cod_componente_curricular)) {
                 foreach ($bncc_temp as $bncc_item) {
                     $id = $bncc_item['id'];
                     $codigo = $bncc_item['codigo'];
@@ -212,13 +214,86 @@ return new class extends clsCadastro {
     }
 
     private function adicionarBNCCMultiplaEscolha() {
+        $rows = [];
+
+        $row = [
+        'cc_id' => 3,
+        'habilidades' => [
+            'a',
+            'b',
+            'especificacoes' => [
+
+            ]
+        ]
+        ];
+
+        foreach ($this->ref_cod_componente_curricular_array as $key => $bla) {
+            $habilidades = $this->getBNCCTurma($this->ref_cod_turma, $key);
+//            $objTemp = new clsModulesPlanejamentoAulaBNCC();
+//            $habilidadesPA = $objTemp->lista($this->id);
+//
+//            if ((isset($habilidades['bncc']) && !empty($habilidades['bncc'])) && (isset($habilidadesPA) && !empty($habilidadesPA))) {
+//                foreach ($habilidadesPA as $bncc_id => $bncc_desc) {
+//
+//                }
+//            }
+
+
+            $rows[] = [
+              $key,
+              $habilidades['bncc'],
+            ];
+
+
+
+//            dd($habilidades, $habilidadesPA);
+
+            //verificar se a habilidade do foreach é igual ao que ta no banco
+            //se for, add ao array de habilidades
+
+            //recuperar os bncc do planjeamento da aula
+            //busca as especificações
+            //preenche
+
+//                $rows[] = [
+//                    $graduation->course,
+//                    $graduation->completion_year,
+//                    $graduation->college,
+//                    $graduation->discipline_id,
+//                    $graduation->course_id,
+//                    $graduation->college_id,
+//                ];
+//            dd($this->getBNCCTurma($this->ref_cod_turma, $key));
+        }
+
         $this->campoTabelaInicio(
             'objetivos_aprendizagem',
             'Objetivo(s) de aprendizagem',
             ['Componente curricular', "Habilidade(s)", "Especificação(ões)"],
+            $rows
         );
 
+//        dd($rows);
+
+
         // Componente curricular
+//        $componenteAnoDataMapper = new ComponenteCurricular_Model_AnoEscolarDataMapper();
+//        $lista = $componenteAnoDataMapper->findComponentePorCurso($this->ref_cod_turma);
+//
+//        if (is_array($lista) && count($lista) > 0) {
+//            foreach ($lista as $componente) {
+//                $opcoesCC[] = $componente->id;
+//            }
+//        } else {
+//            $opcoesCC = ['' => 'Selecione o componente curricular'];
+//        }
+//
+//        $opcoesCC = [
+//            '' => 'Selecione o componente curricular',
+//            3 => 'Matematica',
+//            4 => 'Portugues'
+//        ];
+
         $this->campoLista(
             'ref_cod_componente_curricular_array',
             'Componente curricular',
@@ -255,6 +330,24 @@ return new class extends clsCadastro {
         $this->campoTabelaFim();
     }
 
+    protected function getGraduateTableRows($graduations)
+    {
+        $rows = [];
+
+        foreach ($graduations as $graduation) {
+            $rows[] = [
+                $graduation->course,
+                $graduation->completion_year,
+                $graduation->college,
+                $graduation->discipline_id,
+                $graduation->course_id,
+                $graduation->college_id,
+            ];
+        }
+
+        return $rows;
+    }
+
     protected function adicionarConteudosTabela()
     {
         $obj = new clsModulesPlanejamentoAulaConteudo();
@@ -278,6 +371,7 @@ return new class extends clsCadastro {
 
         $this->campoTabelaFim();
     }
+
 
     public function Formular () {
         $this->title = 'Plano de aula - Cadastro';

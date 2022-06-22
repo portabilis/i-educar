@@ -69,8 +69,12 @@
         }
 
         // add disciplines
+        console.log(selectOptions);
         selectOptions.forEach(option => {
+          console.log(jComponenteCurricularElemento);
+          console.log(option[0]);
           jComponenteCurricularElemento.append(option[0]);
+          console.log('--------------------------------');
         });
 
         // bind onchange event

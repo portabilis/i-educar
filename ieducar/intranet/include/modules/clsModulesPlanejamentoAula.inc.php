@@ -260,8 +260,12 @@ class clsModulesPlanejamentoAula extends Model {
             && is_string($this->ddp)
             && is_string($this->atividades)
             && is_array($this->bnccs)
+            && is_array($this->bncc_especificacoes)
+            && is_array($this->ref_componente_curricular_array)
             && is_array($this->conteudos)
             && is_string($this->referencias)
+            && is_string($this->recursos_didaticos)
+            && is_string($this->registro_adaptacao)
         ) {
             $db = new clsBanco();
 
@@ -269,6 +273,8 @@ class clsModulesPlanejamentoAula extends Model {
                 ddp = '{$db->escapeString($this->ddp)}',
                 atividades = '{$db->escapeString($this->atividades)}',
                 referencias = '{$db->escapeString($this->referencias)}',
+                recursos_didaticos = '{$db->escapeString($this->recursos_didaticos)}',
+                registro_adaptacao = '{$db->escapeString($this->registro_adaptacao)}',
                 data_atualizacao = (NOW() - INTERVAL '3 HOURS')
             ";
 
@@ -481,6 +487,9 @@ class clsModulesPlanejamentoAula extends Model {
             $db->ProximoRegistro();
 
             $data['detalhes'] = $db->Tupla();
+
+            $obj = new clsModulesPlanejamentoAulaComponenteCurricular();
+            $data['componentesCurriculares'] = $obj->lista($this->id);
 
             $obj = new clsModulesPlanejamentoAulaBNCC();
             $data['bnccs'] = $obj->lista($this->id);
