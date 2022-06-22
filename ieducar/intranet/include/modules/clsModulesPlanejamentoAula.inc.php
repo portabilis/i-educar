@@ -139,7 +139,7 @@ class clsModulesPlanejamentoAula extends Model {
             $this->registro_adaptacao = $registro_adaptacao;
         }
     }
-   
+
     /**
      * Cria um novo registro
      *
@@ -488,17 +488,17 @@ class clsModulesPlanejamentoAula extends Model {
 
             $data['detalhes'] = $db->Tupla();
 
-            $obj = new clsModulesPlanejamentoAulaComponenteCurricular();
-            $data['componentesCurriculares'] = $obj->lista($this->id);
+//            $obj = new clsModulesPlanejamentoAulaComponenteCurricular();
+//            $data['componentesCurriculares'] = $obj->lista($this->id);
 
-            $obj = new clsModulesPlanejamentoAulaBNCC();
-            $data['bnccs'] = $obj->lista($this->id);
-
-            $obj = new clsModulesPlanejamentoAulaBNCCEspecificacao();
-            $data['especificacoes'] = $obj->lista($this->id);
-
-            $obj = new clsModulesPlanejamentoAulaConteudo();
-            $data['conteudos'] = $obj->lista($this->id);
+//            $obj = new clsModulesPlanejamentoAulaBNCC();
+//            $data['bnccs'] = $obj->lista($this->id);
+//
+//            $obj = new clsModulesPlanejamentoAulaBNCCEspecificacao();
+//            $data['especificacoes'] = $obj->lista($this->id);
+//
+//            $obj = new clsModulesPlanejamentoAulaConteudo();
+//            $data['conteudos'] = $obj->lista($this->id);
 
             return $data;
         }
