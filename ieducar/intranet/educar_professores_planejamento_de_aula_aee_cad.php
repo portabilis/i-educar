@@ -107,8 +107,7 @@ return new class extends clsCadastro
 
         // Montar o inputsHelper->select \/
         // Cria lista de Turmas
-        $obj_turma = new clsPmieducarTurma();
-        $obj_turma->setOrderBy(' nm_turma asc ');
+        $obj_turma = new clsPmieducarTurma();        
         $lista_turmas = $obj_turma->lista_turmas_aee();
         $turma_resources = ['' => 'Selecione uma Turma'];
         foreach ($lista_turmas as $reg) {
@@ -125,8 +124,7 @@ return new class extends clsCadastro
 
         // Montar o inputsHelper->select \/
         // Cria lista de Alunos
-        $obj_aluno = new clsPmieducarMatricula();
-        $obj_aluno->setOrderBy(' nome asc ');
+        $obj_aluno = new clsPmieducarMatricula();       
         $lista_alunos = $obj_aluno->lista_matriculas_aee();
         $aluno_resources = ['' => 'Selecione um Aluno'];
         foreach ($lista_alunos as $reg) {

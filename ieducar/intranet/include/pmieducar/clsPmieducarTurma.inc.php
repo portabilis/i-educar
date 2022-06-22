@@ -2047,7 +2047,8 @@ return false;
         $ano_turma = date('Y');
         $sql = "SELECT cod_turma, nm_turma FROM pmieducar.turma
         WHERE tipo_atendimento = 5
-        AND ano = $ano_turma";
+        AND ano = $ano_turma
+        ORDER BY nm_turma ASC";
 
         $db->Consulta($sql);
 
