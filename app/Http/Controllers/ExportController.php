@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\DatabaseToCsvExporter;
+use App\Models\Exporter\Enrollment;
 use App\Models\Exporter\Export;
 use App\Models\Exporter\SocialAssistance;
 use App\Models\Exporter\Stage;
@@ -105,7 +106,11 @@ class ExportController extends Controller
         $model = $data['model'];
 
         if ($model === Student::class) {
-            $data = $this->filterStudents($request, $data, 'exporter_student');
+            $data = $this->filterStudents($request, $data, 'exporter_student_grouped_registration');
+        }
+
+        if ($model === Enrollment::class) {
+            $data = $this->filterStudentEnrrolments($request, $data, 'exporter_student');
         }
 
         if ($model === Teacher::class) {
@@ -113,7 +118,7 @@ class ExportController extends Controller
         }
 
         if ($model === SocialAssistance::class) {
-            $data = $this->filterStudents($request, $data, 'exporter_social_assistance');
+            $data = $this->filterStudentEnrrolments($request, $data, 'exporter_social_assistance');
         }
 
         if ($model === Stage::class) {
@@ -130,6 +135,37 @@ class ExportController extends Controller
      * @return array
      */
     protected function filterStudents(Request $request, $data, $table)
+    {
+        $data['filename'] = 'alunos.csv';
+
+        if ($status = $request->input('situacao_matricula')) {
+            $data['filters'][] = [
+                'column' => $table . '.status',
+                'operator' => '=',
+                'value' => $status,
+            ];
+        }
+
+        if ($year = $request->input('ano')) {
+            $data['filters'][] = [
+                'column' => $table . '.year',
+                'operator' => '=',
+                'value' =>  $year . '::text',
+            ];
+        }
+
+        if ($request->input('ref_cod_escola')) {
+            $data['filters'][] = [
+                'column' => $table . '.school_id',
+                'operator' => 'like',
+                'value' => "'%" . $request->input('ref_cod_escola') . "%'"
+            ];
+        }
+
+        return $data;
+    }
+
+    protected function filterStudentEnrrolments(Request $request, $data, $table)
     {
         $data['filename'] = 'alunos.csv';
 
