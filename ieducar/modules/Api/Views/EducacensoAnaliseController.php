@@ -935,6 +935,19 @@ class EducacensoAnaliseController extends ApiCoreController
                 ];
             }
 
+            if (
+                $turma->tipoMediacaoDidaticoPedagogico == App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL &&
+                count(array_filter($turma->estruturaCurricular)) > 0 &&
+                !in_array(EstruturaCurricular::FORMACAO_GERAL_BASICA, $turma->estruturaCurricular)
+            ) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} possui valor inválido. Verificamos que o tipo de mediação didático pedagógico da turma {$nomeTurma} é semipresencial, portanto a turma deve ter estrutura curricular de formação geral básica.",
+                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Estrutura curricular)',
+                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
+                    'fail' => true
+                ];
+            }
+
             if ($atividadeComplementar && !$existeAtividadeComplementar) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verificamos que a turma {$nomeTurma} é de atividades complementares, portanto é necessário informar quais atividades complementares são trabalhadas.",
@@ -1044,8 +1057,8 @@ class EducacensoAnaliseController extends ApiCoreController
                         }
                         break;
                     case App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA:
-                        if (!in_array($turma->etapaEducacenso, [30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 70, 71, 73, 74, 64, 67, 68])) {
-                            $opcoesEtapaEducacenso = '30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 70, 71, 73, 74, 64, 67 ou 68';
+                        if (!in_array($turma->etapaEducacenso, [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 70, 71, 73, 74, 64, 67, 68])) {
+                            $opcoesEtapaEducacenso = '25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 70, 71, 73, 74, 64, 67 ou 68';
                             $valid = false;
                         }
                         break;
@@ -1109,7 +1122,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
             $formasDeOrganizacaoDaTurma = new FormaOrganizacaoTurma($turma);
 
-            if ($turma->tipoAtendimento == TipoAtendimentoTurma::ESCOLARIZACAO && !in_array($turma->etapaEducacenso, [1, 2, 3, 24]) && empty($turma->formasOrganizacaoTurma)) {
+            if (!empty($turma->etapaEducacenso) && !in_array($turma->etapaEducacenso, [1, 2, 3, 24]) && empty($turma->formasOrganizacaoTurma)) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verifique se a forma de organização da turma {$nomeTurma} foi informada.",
                     'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Formas de organização da turma)',
