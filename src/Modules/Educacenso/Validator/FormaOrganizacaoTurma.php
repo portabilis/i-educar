@@ -4,7 +4,6 @@ namespace iEducar\Modules\Educacenso\Validator;
 
 use App\Models\Educacenso\Registro20;
 use iEducar\Modules\Educacenso\Model\FormaOrganizacaoTurma as ModelFormaOrganizacaoTurma;
-use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 
 class FormaOrganizacaoTurma implements EducacensoValidator
 {
