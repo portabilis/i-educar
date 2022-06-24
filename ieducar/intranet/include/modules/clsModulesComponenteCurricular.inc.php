@@ -129,4 +129,36 @@ class clsModulesComponenteCurricular extends Model
 
         return false;
     }
+    /**
+     * Retorna array com duas arrays, uma com os CC a serem cadastrados e a outra com os que devem ser removidos
+     *
+     * @return array
+     */
+    public function retornaDiferencaEntreConjuntosCC($atuaisCC, $novosCC)
+    {
+        $resultado = [];
+        $resultado['adicionar'] = $novosCC;
+
+        for ($i = 0; $i < count($atuaisCC); $i++) {
+            $resultado['remover'][] = $atuaisCC[$i]['id'];
+        }
+
+        $atuaisCC = $resultado['remover'];
+
+        for ($i = 0; $i < count($novosCC); $i++) {
+            $novo = $novosCC[$i][1];
+
+            for ($j = 0; $j < count($atuaisCC); $j++) {
+                $atual = $atuaisCC[$j];
+
+                if ($novo == $atual) {
+                    unset($resultado['adicionar'][$i][1]);
+                    unset($resultado['remover'][$j]);
+                }
+            }
+        }
+
+        return $resultado;
+    }
+
 }

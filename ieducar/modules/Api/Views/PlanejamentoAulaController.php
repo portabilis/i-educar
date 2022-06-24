@@ -82,6 +82,8 @@ class PlanejamentoAulaController extends ApiCoreController
 
             $editou = $obj->edita();
 
+            exit;
+
             if ($editou)
                 return ['result' => 'Edição efetuada com sucesso.'];
         }

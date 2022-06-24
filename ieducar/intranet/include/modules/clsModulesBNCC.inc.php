@@ -270,7 +270,7 @@ class clsModulesBNCC extends Model
                 ON (cc.id = esd.ref_cod_disciplina)
             JOIN modules.bncc as bncc
                 ON (bncc.campo_experiencia = cc.id)
-                    
+
         ";
 
         $whereAnd = 'WHERE ';
@@ -311,7 +311,7 @@ class clsModulesBNCC extends Model
                 JOIN modules.componente_curricular as cc
                     ON (cc.id = esd.ref_cod_disciplina)
                 JOIN select_ as bncc
-                    ON (bncc.campo_experiencia = cc.id                   
+                    ON (bncc.campo_experiencia = cc.id
                 {$filtros}"
         );
 
@@ -379,16 +379,17 @@ class clsModulesBNCC extends Model
         for ($i = 0; $i < count($atuaisBNCC); $i++) {
             $resultado['remover'][] = $atuaisBNCC[$i]['id'];
         }
+
         $atuaisBNCC = $resultado['remover'];
 
         for ($i = 0; $i < count($novosBNCC); $i++) {
-            $novo = $novosBNCC[$i];
+            $novoArray = $novosBNCC[$i][1];
 
             for ($j = 0; $j < count($atuaisBNCC); $j++) {
                 $atual = $atuaisBNCC[$j];
 
-                if ($novo === $atual) {
-                    unset($resultado['adicionar'][$i]);
+                if ($indiceAtual = array_search($atual, $novoArray)) {
+                    unset($resultado['adicionar'][$i][1][$indiceAtual]);
                     unset($resultado['remover'][$j]);
                 }
             }

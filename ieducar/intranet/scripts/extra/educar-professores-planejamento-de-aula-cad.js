@@ -5,12 +5,15 @@
 
     var anoField   = getElementFor('ano');
     var turmaField = getElementFor('turma');
+    var id = $j('#id').val();
 
     var submitButton = $j('#btn_enviar');
     submitButton.removeAttr('onclick');
 
     submitButton.click(function () {
+      if (id == '' || isNaN(id)) {
         enviarFormulario();
+      }
     });
 
     consertarBNCCElementos();

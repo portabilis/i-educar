@@ -105,7 +105,7 @@ class clsModulesBNCCEspecificacao extends Model {
         return $bncc_especificacao;
     }
 
-    
+
     /**
      * Retorna um array com os dados de um registro
      *
@@ -132,5 +132,37 @@ class clsModulesBNCCEspecificacao extends Model {
         }
 
         return false;
+    }
+
+    /**
+     * Retorna array com duas arrays, uma com os BNCC ESPECIFICAÇÕES a serem cadastrados e a outra com os que devem ser removidos
+     *
+     * @return array
+     */
+    public function retornaDiferencaEntreConjuntosBNCC($atuaisBNCCEspecificacao, $novosBNCCEspecificacao)
+    {
+        $resultado = [];
+        $resultado['adicionar'] = $novosBNCCEspecificacao;
+
+        for ($i = 0; $i < count($atuaisBNCCEspecificacao); $i++) {
+            $resultado['remover'][] = $atuaisBNCCEspecificacao[$i]['bncc_especificacao_id'];
+        }
+
+        $atuaisBNCC = $resultado['remover'];
+
+        for ($i = 0; $i < count($novosBNCCEspecificacao); $i++) {
+            $novoArray = $novosBNCCEspecificacao[$i][1];
+
+            for ($j = 0; $j < count($atuaisBNCC); $j++) {
+                $atual = $atuaisBNCC[$j];
+
+                if ($indiceAtual = array_search($atual, $novoArray)) {
+                    unset($resultado['adicionar'][$i][1][$indiceAtual]);
+                    unset($resultado['remover'][$j]);
+                }
+            }
+        }
+
+        return $resultado;
     }
 }
