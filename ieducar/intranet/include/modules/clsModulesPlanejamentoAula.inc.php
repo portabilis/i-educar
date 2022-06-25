@@ -255,6 +255,8 @@ class clsModulesPlanejamentoAula extends Model {
      */
     public function edita() {
         if (is_numeric($this->id)
+            && $this->data_inicial != ''
+            && $this->data_final != ''
             && is_string($this->ddp)
             && is_string($this->atividades)
             && is_array($this->bnccs)
@@ -269,6 +271,8 @@ class clsModulesPlanejamentoAula extends Model {
             $db = new clsBanco();
 
             $set = "
+                data_inicial = '{$this->data_inicial}',
+                data_final = '{$this->data_final}',
                 ddp = '{$db->escapeString($this->ddp)}',
                 atividades = '{$db->escapeString($this->atividades)}',
                 referencias = '{$db->escapeString($this->referencias)}',
@@ -277,14 +281,14 @@ class clsModulesPlanejamentoAula extends Model {
                 data_atualizacao = (NOW() - INTERVAL '3 HOURS')
             ";
 
-//            $db->Consulta("
-//                UPDATE
-//                    {$this->_tabela}
-//                SET
-//                    $set
-//                WHERE
-//                    id = '{$this->id}'
-//            ");
+            $db->Consulta("
+                UPDATE
+                    {$this->_tabela}
+                SET
+                    $set
+                WHERE
+                    id = '{$this->id}'
+            ");
 
 
             $obj = new clsModulesPlanejamentoAulaComponenteCurricular();
@@ -296,11 +300,15 @@ class clsModulesPlanejamentoAula extends Model {
             $cc_diferenca = $obj->retornaDiferencaEntreConjuntosCC($cc_atuais, $this->ref_componente_curricular_array);
 
             foreach ($cc_diferenca['adicionar'] as $ccAdicionarArray){
-                foreach ($ccAdicionarArray[1] as $bncc_id) {
-                    if (empty($bncc_id)) continue;
-//                    $obj = new clsModulesPlanejamentoAulaBNCC(null, $this->id, $bncc_id);
-//                    $obj->cadastra();
+                if (isset($ccAdicionarArray[1]) && !empty($ccAdicionarArray[1])) {
+                    $obj = new clsModulesPlanejamentoAulaComponenteCurricular(null, $this->id, $ccAdicionarArray[1]);
+                    $obj->cadastra();
                 }
+            }
+
+            foreach ($cc_diferenca['remover'] as $cc_remover){
+                $obj = new clsModulesPlanejamentoAulaComponenteCurricular(null, $this->id, $cc_remover);
+                $obj->excluir();
             }
 
             $obj = new clsModulesPlanejamentoAulaBNCC();
@@ -311,18 +319,17 @@ class clsModulesPlanejamentoAula extends Model {
             $obj = new clsModulesBNCC(null, $this->id);
             $bncc_diferenca = $obj->retornaDiferencaEntreConjuntosBNCC($bnccs_atuais, $this->bnccs);
 
-
             foreach ($bncc_diferenca['adicionar'] as $bnccAdicionarArray){
                 foreach ($bnccAdicionarArray[1] as $bncc_id) {
                     if (empty($bncc_id)) continue;
-//                    $obj = new clsModulesPlanejamentoAulaBNCC(null, $this->id, $bncc_id);
-//                    $obj->cadastra();
+                    $obj = new clsModulesPlanejamentoAulaBNCC(null, $this->id, $bncc_id);
+                    $obj->cadastra();
                 }
             }
 
             foreach ($bncc_diferenca['remover'] as $bncc_remover){
-//                $obj = new clsModulesPlanejamentoAulaBNCC(null, $this->id, $bncc_remover);
-//                $obj->excluir();
+                $obj = new clsModulesPlanejamentoAulaBNCC(null, $this->id, $bncc_remover);
+                $obj->excluir();
             }
 
             $obj = new clsModulesPlanejamentoAulaBNCCEspecificacao();
@@ -343,8 +350,8 @@ class clsModulesPlanejamentoAula extends Model {
                     $obj = new clsModulesPlanejamentoAulaBNCC(null, $this->id, $bncc_id);
                     $planejamento_aula_bncc_id = $obj->detalhe2()['id'];
 
-//                    $obj = new clsModulesPlanejamentoAulaBNCCEspecificacao(null, $planejamento_aula_bncc_id, $bncc_especificacao_id);
-//                    $obj->cadastra();
+                    $obj = new clsModulesPlanejamentoAulaBNCCEspecificacao(null, $planejamento_aula_bncc_id, $bncc_especificacao_id);
+                    $obj->cadastra();
                 }
             }
 
@@ -355,8 +362,8 @@ class clsModulesPlanejamentoAula extends Model {
                 $obj = new clsModulesPlanejamentoAulaBNCC(null, $this->id, $bncc_id);
                 $planejamento_aula_bncc_id = $obj->detalhe2()['id'];
 
-//                $obj = new clsModulesPlanejamentoAulaBNCCEspecificacao(null, $planejamento_aula_bncc_id, $bncc_especificacao_remover);
-//                $obj->excluir();
+                $obj = new clsModulesPlanejamentoAulaBNCCEspecificacao(null, $planejamento_aula_bncc_id, $bncc_especificacao_remover);
+                $obj->excluir();
             }
 
 

@@ -158,7 +158,7 @@ class clsModulesComponenteMinistradoConteudo extends Model {
         $resultado['adicionar'] = $novosConteudos;
 
         for ($i=0; $i < count($atuaisConteudos); $i++) {
-            $resultado['remover'][] = $atuaisConteudos[$i]['planejamento_aula_conteudo_id']; 
+            $resultado['remover'][] = $atuaisConteudos[$i]['planejamento_aula_conteudo_id'];
         }
         $atuaisConteudos = $resultado['remover'];
 
@@ -199,6 +199,7 @@ class clsModulesComponenteMinistradoConteudo extends Model {
             $whereAnd = ' WHERE';
 
             foreach ($planejamento_aula_conteudos_ids as $key => $planejamento_aula_conteudo_id) {
+                if (empty($planejamento_aula_conteudo_id)) continue;
                 $sql .= "{$whereAnd} cmc.planejamento_aula_conteudo_id = {$planejamento_aula_conteudo_id}";
                 $whereAnd = ' OR';
             }

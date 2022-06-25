@@ -5,6 +5,7 @@
         var id = $j('#id').val();
         var copy = $j('#copy').val();
         var bncc_table = document.getElementById("objetivos_aprendizagem");
+        var titleTable = document.getElementById("tr_objetivos_aprendizagem_tit");
         var btn_add    = document.getElementById("btn_add_tab_add_1");
 
         if (isNaN(id) || id === '')
@@ -60,6 +61,8 @@
       }
 
       async function getObjetivosAprendizagem() {
+        $(titleTable).children().first().html("Aguarde, carregando Objetivo(s) de aprendizagem...");
+
         await getComponentesCurriculares();
 
         var urlForGetObjetivosAprendizagem = getResourceUrlBuilder.buildUrl('/module/Api/PlanejamentoAula', 'get-objetivos-aprendizagem', {});
@@ -93,6 +96,8 @@
 
        await fillComponenteCurricular(index, response);
        await fillHabilidadesAndEspecificacoes(index, response);
+
+        $(titleTable).children().first().html("Objetivo(s) de aprendizagem");
      }
 
       function fillComponenteCurricular(index, response) {
@@ -108,6 +113,7 @@
 
             $(ccElement).append(`<option value="${id}" ${selected}>${mapValue.value}</option>`);
           }
+          ccElement.addEventListener("change", trocaComponenteCurricular, false);
         });
       }
 
@@ -357,6 +363,10 @@
             }
         }
 
+        function ehDataValida (d) {
+          return d instanceof Date && !isNaN(d);
+        }
+
         function ehComponentesCurricularesValidos (componentesCurriculares) {
           return componentesCurriculares.every(componenteCurricular => !isNaN(parseInt(componenteCurricular[1], 10)));
         }
@@ -466,6 +476,8 @@
       }
 
         function editarPlanoAula () {
+          let data_inicial              = dataParaBanco(document.getElementById("data_inicial").value);
+          let data_final                = dataParaBanco(document.getElementById("data_final").value);
           let ddp = $j('#ddp').val(); //metodologia
           let atividades = $j('#atividades').val();
           let recursos_didaticos = $j('#recursos_didaticos').val();
@@ -475,8 +487,14 @@
           let componentesCurricularesGeral   = pegarComponentesCurricularesGeral();
           let bnccs                     = pegarBNCCs();
           let bnccEspecificacoes        = pegarBNCCEspecificacoes();
+          let turma                     = document.getElementById("ref_cod_turma").value;
+          let faseEtapa                 = document.getElementById("fase_etapa").value;
 
           // VALIDAÇÃO
+          if (!ehDataValida(new Date(data_inicial))) { alert("Data inicial não é válida."); return; }
+          if (!ehDataValida(new Date(data_final))) { alert("Data final não é válida."); return; }
+          if (isNaN(parseInt(turma, 10))) { alert("Turma é obrigatória."); return; }
+          if (isNaN(parseInt(faseEtapa, 10))) { alert("Etapa é obrigatória."); return; }
           if (ddp == null || ddp == '') { alert("Metodologia é obrigatória."); return; }
           if (atividades == null) { alert("O campo atividades não é válido."); return; }
           if (referencias == null) { alert("O campo referências não é válido."); return; }
@@ -496,6 +514,10 @@
                 dataType : 'json',
                 data     : {
                     planejamento_aula_id    : planejamento_aula_id,
+                    data_inicial            : data_inicial,
+                    data_final              : data_final,
+                    turma                   : turma,
+                    faseEtapa               : faseEtapa,
                     ddp                     : ddp,
                     atividades              : atividades,
                     referencias             : referencias,
@@ -538,19 +560,8 @@
         function getMessageEditarPlanoAula(quantidadeRegistrosAula) {
             return ` \
                 <span> \
-                    Ao concluir esta ação: \
-                </span><br> \
-                <ul> \
-                    <li> \
-                        Este plano de aula será <b>editado</b>. \
-                    </li> \
-                    <li> \
-                        Um ou mais conteúdos no plano de aula será(ão) <b>deletado(s)</b>. \
-                    </li> \
-                </ul> \
-                <span> \
-                    No entanto, haverá efeitos colaterais em \
-                    <b>${quantidadeRegistrosAula}</b> registro(s) de aula. O(s) conteúdo(s) também será(ão) deletado(s) lá. O que deseja fazer? \
+                    Não é possível prosseguir com a edição porque <b> um ou mais conteúdos </b> estão sendo utilizados em \
+                    <b>${quantidadeRegistrosAula}</b> registro(s) de aula. O que deseja fazer? \
                 </span><br> \
             `;
         }
@@ -601,6 +612,23 @@
             return id;
         }
 
+      function dataParaBanco (dataFromBrasil) {
+        var data = "";
+        var data_fragmentos = dataFromBrasil.split('/');
+
+        for (let index = data_fragmentos.length - 1; index >= 0; index--) {
+          const data_fragmento = data_fragmentos[index];
+
+          if (index !== 0) {
+            data += data_fragmento + '-';
+          } else {
+            data += data_fragmento;
+          }
+        }
+
+        return data
+      }
+
         $j('body').append(
             '<div id="dialog-warning-editar-plano-aula' + '" style="max-height: 80vh; width: 820px; overflow: auto;">' +
             '<div id="msg" class="msg"></div>' +
@@ -621,9 +649,6 @@
                 $j(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
             },
             buttons: {
-                "Continuar": function () {
-                    editarPlanoAula();
-                },
                 "Cancelar": function () {
                     closeModal();
                 },

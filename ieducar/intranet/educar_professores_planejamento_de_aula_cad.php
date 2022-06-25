@@ -71,6 +71,7 @@ return new class extends clsCadastro {
 
         $this->nome_url_cancelar = 'Cancelar';
 
+
         return $retorno;
     }
 
@@ -98,6 +99,7 @@ return new class extends clsCadastro {
         $obrigatorio = true;
 
         $this->campoOculto('id', $this->id);
+        $this->campoOculto('planejamento_aula_id', $this->id);
         $this->inputsHelper()->dynamic('dataInicial', ['required' => $obrigatorio]);    // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('dataFinal', ['required' => $obrigatorio]);      // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado]);

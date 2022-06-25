@@ -65,7 +65,7 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
     public function edita() {
         if (is_numeric($this->id) && is_string($this->conteudo) && $this->conteudo !== "") {
             $db = new clsBanco();
-            $sql = "   
+            $sql = "
                 UPDATE
                     {$this->_from}
                 SET
@@ -205,7 +205,7 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
 
     /**
      * Retorna array com três arrays,
-     * uma com os conteúdos a serem cadastrados, 
+     * uma com os conteúdos a serem cadastrados,
      * outra com os que devem ser removidos,
      * e outra com os que devem ser editados
      *
@@ -246,7 +246,7 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
 
         return $resultado;
     }
-    
+
     /**
      * Retorna array com conteudos os que devem ser removidos
      *
@@ -258,7 +258,7 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
 
         for ($i=0; $i < count($atuaisConteudos); $i++) {
             $resultado['remover'][$i]['id'] = $atuaisConteudos[$i]['id'];
-            $resultado['remover'][$i]['conteudo'] = $atuaisConteudos[$i]['conteudo']; 
+            $resultado['remover'][$i]['conteudo'] = $atuaisConteudos[$i]['conteudo'];
         }
         $atuaisConteudos = $resultado['remover'];
 

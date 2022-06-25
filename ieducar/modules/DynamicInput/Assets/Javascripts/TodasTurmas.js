@@ -1,10 +1,15 @@
 (function($){
   $(document).ready(function(){
-    
+
     var $anoField                  = getElementFor('ano');
     var $turmaField                = getElementFor('ref_cod_turma');
+    var planejamento_aula_id    = document.getElementById('planejamento_aula_id');
 
     // var $turmaOcultaField          = document.getElementById("ref_cod_turma");
+
+    if (planejamento_aula_id.value != '') {
+      return;
+    }
 
     var handleGetTodasTurmas = function(response) {
       var selectOptions = jsonResourcesToSelectOptions(response['options']);

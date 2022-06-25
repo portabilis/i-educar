@@ -6,12 +6,13 @@
     var anoField   = getElementFor('ano');
     var turmaField = getElementFor('turma');
     var id = $j('#id').val();
+    var planejamento_aula_id    = document.getElementById('planejamento_aula_id');
 
     var submitButton = $j('#btn_enviar');
     submitButton.removeAttr('onclick');
 
     submitButton.click(function () {
-      if (id == '' || isNaN(id)) {
+      if (planejamento_aula_id.value == '' || isNaN(planejamento_aula_id.value)) {
         enviarFormulario();
       }
     });
