@@ -37,6 +37,12 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
         ->name('enrollments.enroll');
     Route::get('/enrollment-history/{id}', 'EnrollmentHistoryController@show')
         ->name('enrollments.enrollment-history');
+    Route::get('/enrollment-formative-itinerary-list/{id}', 'EnrollmentFormativeItineraryController@list')
+        ->name('enrollments.enrollment-formative-itinerary-list');
+    Route::get('/enrollment-formative-itinerary/{id}', 'EnrollmentFormativeItineraryController@viewFormativeItinerary')
+        ->name('enrollments.enrollment-formative-itinerary');
+    Route::post('/enrollment-formative-itinerary/{id}', 'EnrollmentFormativeItineraryController@storeFormativeItinerary')
+        ->name('enrollments.enrollment-formative-itinerary-store');
 
     Route::get('/educacenso/consulta', 'EducacensoController@consult')
         ->name('educacenso.consult');

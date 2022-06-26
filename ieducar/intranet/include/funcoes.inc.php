@@ -49,6 +49,7 @@ function loadJson($file)
 
 function int2CNPJ($int)
 {
+    $int = preg_replace('/[\D]/', '', $int );
     if (strlen($int) < 14) {
         $str = str_repeat('0', 14 - strlen($int)) . $int;
     } else {
@@ -397,7 +398,7 @@ function isArrayEmpty($value): bool
 
  function transformStringFromDBInArray($string): ?array
 {
-    if (is_string($string) && str_contains($string, '{') && str_contains($string, '}')) {
+    if (is_string($string)) {
         return explode(',', str_replace(['{', '}'], '', $string));
     }
 

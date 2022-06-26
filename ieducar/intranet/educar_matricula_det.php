@@ -157,16 +157,28 @@ return new class extends clsDetalhe {
         $existeTurmaMulti = false;
         $existeTurmaTurnoIntegral = false;
         $existeAtendimentoEspecializado = false;
+        $existeTurmaItineraria = false;
         $nomesTurmas = [];
         $datasEnturmacoes = [];
+        $nomesTurnos = [];
 
         foreach ($enturmacoes as $enturmacao) {
             $turma = new clsPmieducarTurma($enturmacao['ref_cod_turma']);
-            $turma = $turma->detalhe();
+            $turma = $turma->detalhe() ?? [];
             $turma_id = $enturmacao['ref_cod_turma'];
 
             if (in_array($turma['etapa_educacenso'], App_Model_Educacenso::etapas_multisseriadas())) {
                 $existeTurmaMulti = true;
+            }
+
+            $estruturaCurricular = transformStringFromDBInArray($turma['estrutura_curricular']) ?? [];
+            $turmaItineraria = in_array(2, $estruturaCurricular);
+            $turmaFormacaoBasica = in_array(1, $estruturaCurricular);
+            $etapasItinerario = [25, 26, 27, 28, 30, 31, 32, 33, 35, 36, 37, 38, 71, 74];
+
+            if (($turmaItineraria && count($estruturaCurricular) === 1) ||
+                ($turmaItineraria && $turmaFormacaoBasica && in_array($turma['etapa_educacenso'], $etapasItinerario))) {
+                $existeTurmaItineraria = true;
             }
 
             if ($enturmacao['ativo'] == 0) {
@@ -183,16 +195,25 @@ return new class extends clsDetalhe {
             if ($turma['tipo_atendimento'] == TipoAtendimentoTurma::AEE) {
                 $existeAtendimentoEspecializado = true;
             }
+
+            $nomesTurnos[] = match ((int)$enturmacao['turno_id']) {
+                clsPmieducarTurma::TURNO_MATUTINO =>  'Matutino',
+                clsPmieducarTurma::TURNO_VESPERTINO => 'Vespertino',
+                default => 'Integral',
+            };
         }
         $nomesTurmas = implode('<br />', $nomesTurmas);
         $datasEnturmacoes = implode('<br />', $datasEnturmacoes);
+        $nomesTurnos = implode('<br />', $nomesTurnos);
 
         if ($nomesTurmas) {
             $this->addDetalhe(['Turma', $nomesTurmas]);
+            $this->addDetalhe(['Turno', $nomesTurnos]);
             $this->addDetalhe(['Data Enturmação', $datasEnturmacoes]);
             $existeTurma = true;
         } else {
             $this->addDetalhe(['Turma', '']);
+            $this->addDetalhe(['Turno', '']);
             $this->addDetalhe(['Data Enturmação', '']);
         }
 
@@ -345,6 +366,12 @@ return new class extends clsDetalhe {
             if ($existeTurmaTurnoIntegral) {
                 $this->array_botao[] = 'Turno';
                 $this->array_botao_url_script[] = "go(\"educar_matricula_turma_turno_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
+            }
+
+            if ($existeTurmaItineraria) {
+                $this->array_botao[] = 'Itinerário formativo';
+                $link = route('enrollments.enrollment-formative-itinerary-list', ['id' => $registro['cod_matricula']]);
+                $this->array_botao_url_script[] = "go(\"{$link}\")";
             }
 
             if ($registro['aprovado'] != 4 && $registro['aprovado'] != 6) {

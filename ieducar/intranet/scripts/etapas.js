@@ -164,7 +164,7 @@ $j(function () {
                     dateParts = that.getDateParts(val),
                     ts = that.makeTimestamp(dateParts),
                     parentLine = $elm.closest('tr'),
-                    previousLine = parentLine.prev(that.getSelector('stepsRows'));
+                    previousLine = parentLine.prevAll(that.getSelector('stepsRows')).first();
 
                 if (previousLine.length < 1) {
                     var validYears = [currentYear, previousYear];
