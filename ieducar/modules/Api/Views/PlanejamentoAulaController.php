@@ -45,6 +45,27 @@ class PlanejamentoAulaController extends ApiCoreController
         return [];
     }
 
+    public function verificarPlanoAulaSendoByConteudo ()
+    {
+        $planejamento_aula_id = $this->getRequest()->planejamento_aula_id;
+        $conteudos = $this->getRequest()->conteudos;
+
+        if (is_numeric($planejamento_aula_id) && is_array($conteudos) && count($conteudos) > 0) {
+            $conteudosVerificar = [];
+
+            foreach ($conteudos as $conteudo) {
+                $conteudosVerificar[] = $conteudo[0];
+            }
+
+            $obj = new clsModulesComponenteMinistradoConteudo();
+            $conteudos_ids = $obj->existeLigacaoRegistroAula($conteudosVerificar);
+
+            return ['conteudos_ids' => $conteudos_ids];
+        }
+
+        return [];
+    }
+
     public function excluirPlanoAula ()
     {
         $planejamento_aula_id = $this->getRequest()->planejamento_aula_id;
@@ -327,6 +348,8 @@ class PlanejamentoAulaController extends ApiCoreController
             $this->appendResponse($this->criarPlanoAula());
         } else if ($this->isRequestFor('get', 'get-objetivos-aprendizagem')) {
             $this->appendResponse($this->getObjetivosAprendizagem());
+        } else if ($this->isRequestFor('post', 'verificar-plano-aula-sendo-usado-conteudo')) {
+            $this->appendResponse($this->verificarPlanoAulaSendoByConteudo());
         }
     }
 }

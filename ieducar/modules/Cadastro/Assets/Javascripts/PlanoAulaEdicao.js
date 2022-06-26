@@ -337,7 +337,7 @@
         function tentaEditarPlanoAula () {
             conteudos = pegarConteudos();
 
-            var urlForVerificarPlanoAulaSendoUsado = postResourceUrlBuilder.buildUrl('/module/Api/PlanejamentoAula', 'verificar-plano-aula-sendo-usado2', {});
+            var urlForVerificarPlanoAulaSendoUsado = postResourceUrlBuilder.buildUrl('/module/Api/PlanejamentoAula', 'verificar-plano-aula-sendo-usado-conteudo', {});
 
             var options = {
                 type     : 'POST',
