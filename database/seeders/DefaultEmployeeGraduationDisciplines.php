@@ -40,6 +40,7 @@ class DefaultEmployeeGraduationDisciplines extends Seeder
             25 => 'Disciplinas Áreas do conhecimento pedagógicas',
             26 => 'Ensino religioso',
             32 => 'Estágio curricular supervisionado',
+            33 => 'Projeto de vida',
             99 => 'Outras Disciplinas Áreas do conhecimento',
         ];
 

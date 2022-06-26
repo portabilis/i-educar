@@ -351,6 +351,14 @@ class Registro10 extends Registro10Fields
     /**
      * @return bool
      */
+    public function laboratoriosEducacaoProfissional()
+    {
+        return in_array(Laboratorios::EDUCACAO_PROFISSIONAL, $this->laboratorios);
+    }
+
+    /**
+     * @return bool
+     */
     public function laboratoriosCiencias()
     {
         return in_array(Laboratorios::CIENCIAS, $this->laboratorios);
@@ -410,6 +418,14 @@ class Registro10 extends Registro10Fields
     public function salasAtividadesRepousoAluno()
     {
         return in_array(SalasAtividades::REPOUSO_ALUNO, $this->salasAtividades);
+    }
+
+    /**
+     * @return bool
+     */
+    public function salasAtividadesEducacaoProfissional()
+    {
+        return in_array(SalasAtividades::EDUCACAO_PROFISSIONAL, $this->salasAtividades);
     }
 
     /**
@@ -655,6 +671,17 @@ class Registro10 extends Registro10Fields
     /**
      * @return bool
      */
+    public function EquipamentosPreenchidosIncorretamente()
+    {
+        return (
+            in_array(Equipamentos::NENHUM_EQUIPAMENTO_LISTADO, $this->equipamentos) &&
+            count($this->equipamentos) > 1
+        );
+    }
+
+    /**
+     * @return bool
+     */
     public function equipamentosAcessoInternetComputadorMesa()
     {
         return in_array(EquipamentosAcessoInternet::COMPUTADOR_MESA, $this->equipamentosAcessoInternet);
@@ -793,6 +820,14 @@ class Registro10 extends Registro10Fields
             $this->qtdFonoaudiologo ||
             $this->qtdViceDiretor ||
             $this->qtdOrientadorComunitario;
+    }
+
+    /**
+     * @return bool
+     */
+    public function nenhumEquipamentoNaEscola()
+    {
+        return in_array(Equipamentos::NENHUM_EQUIPAMENTO_LISTADO, $this->equipamentos);
     }
 
     /**
@@ -971,6 +1006,25 @@ class Registro10 extends Registro10Fields
     /**
      * @return bool
      */
+    public function instrumentosPedagogicosMateriaisEducacaoProfissional()
+    {
+        return in_array(InstrumentosPedagogicos::MATERIAL_EDUCACAO_PROFISSIONAL, $this->instrumentosPedagogicos);
+    }
+
+    /**
+     * @return bool
+     */
+    public function instrumentosPedagogicosPreenchidosIncorretamente()
+    {
+        return (
+            in_array(InstrumentosPedagogicos::NENHUM_DOS_INSTRUMENTOS_LISTADOS, $this->instrumentosPedagogicos) &&
+            count($this->instrumentosPedagogicos) > 1
+        );
+    }
+
+    /**
+     * @return bool
+     */
     public function instrumentosPedagogicosMateriaisPraticaDesportiva()
     {
         return in_array(InstrumentosPedagogicos::MATERIAIS_PRATICA_DESPORTIVA, $this->instrumentosPedagogicos);
@@ -998,6 +1052,11 @@ class Registro10 extends Registro10Fields
     public function instrumentosPedagogicosMateriaisEducacaoCampo()
     {
         return in_array(InstrumentosPedagogicos::MATERIAIS_EDUCACAO_CAMPO, $this->instrumentosPedagogicos);
+    }
+
+    public function instrumentosPedagogicosNenhum()
+    {
+        return in_array(InstrumentosPedagogicos::NENHUM_DOS_INSTRUMENTOS_LISTADOS, $this->instrumentosPedagogicos);
     }
 
     /**

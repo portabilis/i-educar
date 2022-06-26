@@ -28,6 +28,8 @@ function getDisciplina(xml_disciplina) {
     var conteudo = '';
 
     if (DOM_array.length) {
+        const first_key = DOM_array[0].getAttribute("cod_disciplina");
+
         conteudo += '<div style="margin-bottom: 10px; float: left">';
         conteudo += '  <span style="display: block; float: left; width: 250px;">Nome</span>';
         conteudo += '  <span style="display: block; float: left; width: 100px">Carga horária</span>';
@@ -37,8 +39,20 @@ function getDisciplina(xml_disciplina) {
 
         conteudo += '<br style="clear: left" />';
         conteudo += '<div style="margin-bottom: 10px; float: left">';
-        conteudo += "  <label style='display: block; float: left; width: 350px;'><input type='checkbox' name='CheckTodos' onClick='marcarCheck(" + '"disciplinas[]"' + ");'/>Marcar todos</label>";
-        conteudo += "  <label style='display: block; float: left; width: 330px;'><input type='checkbox' name='CheckTodos2' onClick='marcarCheck(" + '"usar_componente[]"' + ");';/>Marcar todos</label>";
+        conteudo += "  <label style='display: block; float: left; width: 150px;'><input type='checkbox' name='CheckTodos' onClick='marcarCheck(" + '"disciplinas[]"' + ");'/>Marcar todos</label>";
+        conteudo += "<label style='display: block; float: left; width: 100px'>&nbsp;</label>" +
+        "<label style='display: block; float: left; width: 100px;'>" +
+        "<a class='clone-values' onclick='cloneValues("+first_key+",\"carga_horaria\")'>" +
+        "<i class='fa fa-clone' aria-hidden='true'></i>" +
+        "</a>" +
+        "</label>";
+        conteudo += "  <label style='display: block; float: left; width: 150px'><input type='checkbox' name='CheckTodos2' onClick='marcarCheck(" + '"usar_componente[]"' + ");';/>Marcar todos</label>";
+        conteudo += "<label style='display: block; float: left; width: 30px'>&nbsp;</label>" +
+        "<label style='display: block; float: left; width: 100px;'>" +
+        "<a class='clone-values' onclick='cloneValues("+first_key+",\"anos_letivos\")'>" +
+        "<i class='fa fa-clone' aria-hidden='true'></i>" +
+        "</a>" +
+        "</label>";
         conteudo += '</div>';
         conteudo += '<br style="clear: left" />';
 
@@ -46,11 +60,11 @@ function getDisciplina(xml_disciplina) {
             id = DOM_array[i].getAttribute("cod_disciplina");
 
             conteudo += '<div style="margin-bottom: 10px; float: left">';
-            conteudo += '  <label style="display: block; float: left; width: 250px;"><input type="checkbox" name="disciplinas[' + id + ']" id="disciplinas[]" value="' + id + '">' + DOM_array[i].firstChild.data + '</label>';
-            conteudo += '  <label style="display: block; float: left; width: 100px;"><input type="text" name="carga_horaria[' + id + ']" value="" size="5" maxlength="7"></label>';
-            conteudo += '  <label style="display: block; float: left; width: 180px;"><input type="checkbox" id="usar_componente[]" name="usar_componente[' + id + ']" value="1">(' + DOM_array[i].getAttribute("carga_horaria") + ' h)</label>';
+            conteudo += '  <label style="display: block; float: left; width: 250px;"><input type="checkbox" name="disciplinas[' + id + ']" class="check_'+id+'" id="disciplinas[]" value="' + id + '">' + DOM_array[i].firstChild.data + '</label>';
+            conteudo += '  <label style="display: block; float: left; width: 100px;"><input type="text" id="carga_horaria_' + id + '" data-id="'+id+'" name="carga_horaria[' + id + ']" class="carga_horaria" value="" size="5" maxlength="7"></label>';
+            conteudo += '  <label style="display: block; float: left; width: 180px;"><input type="checkbox" id="usar_componente[]" name="usar_componente[' + id + ']" class="" value="1">(' + DOM_array[i].getAttribute("carga_horaria") + ' h)</label>';
             conteudo += `
-            <select name='componente_anos_letivos[${id}][]' style='width: 150px;' multiple='multiple'>
+            <select name='componente_anos_letivos[${id}][]' class="anos_letivos" id='anos_letivos_${id}' data-id='${id}' style='width: 150px;' multiple='multiple'>
             </select>
             `;
             conteudo += '</div>';
@@ -335,3 +349,7 @@ function cloneValues(componente_id, classe){
     }
   }, this);
 }
+
+$j('#disciplinas').on('change','input[name^="disciplinas"]',function () {
+  $j(this).closest('div').find('input[name^="usar_componente"]').prop('checked', $j(this).is(':checked'));
+})

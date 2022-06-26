@@ -1498,8 +1498,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     private function valorMediaSituacao(Avaliacao_Model_NotaComponenteMedia $mediaComponente)
     {
         $regraNotaNumerica = $this->getRegraAvaliacaoTipoNota() == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA;
-
-        return $regraNotaNumerica ? $mediaComponente->mediaArredondada : $mediaComponente->media;
+        $media = $regraNotaNumerica ? $mediaComponente->mediaArredondada : $mediaComponente->media;
+        return empty($media) ? 0 : $media;
     }
 
     /**
@@ -2393,8 +2393,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             return $this->getRegraAvaliacaoTabelaArredondamentoConceitual()->round($media, 2);
         }
 
-        //Arredonda média para quantidade de casas decimais permitidas
-        $media = round($media, $this->getRegraAvaliacaoQtdCasasDecimais());
+        //Reduz a média sem arredondar para quantidade de casas decimais permitidas
+        $media = bcdiv($media, 1, $this->getRegraAvaliacaoQtdCasasDecimais());
 
         return $this->getRegraAvaliacaoTabelaArredondamento()->round($media, 2);
     }
