@@ -132,7 +132,51 @@ class EducacensoRepository
             (ARRAY[5] <@ e.mantenedora_escola_privada)::INT AS "mantenedoraSistemaS",
             (ARRAY[6] <@ e.mantenedora_escola_privada)::INT AS "mantenedoraOscip",
             e.categoria_escola_privada AS "categoriaEscolaPrivada",
-            e.conveniada_com_poder_publico AS "conveniadaPoderPublico",
+            e.poder_publico_parceria_convenio AS "poderPublicoConveniado",
+            e.formas_contratacao_adm_publica_e_outras_instituicoes AS "formasContratacaoPoderPublico",
+            e.qtd_matriculas_atividade_complementar AS "qtdMatAtividadesComplentar",
+            e.qtd_atendimento_educacional_especializado AS "qtdMatAee",
+            e.qtd_ensino_regular_creche_par AS "qtdMatCrecheParcial",
+            e.qtd_ensino_regular_creche_int AS "qtdMatCrecheIntegral",
+            e.qtd_ensino_regular_pre_escola_par AS "qtdMatPreEscolaParcial",
+            e.qtd_ensino_regular_pre_escola_int AS "qtdMatPreEscolaIntegral",
+            e.qtd_ensino_regular_ensino_fund_anos_iniciais_par AS "qtdMatFundamentalIniciaisParcial",
+            e.qtd_ensino_regular_ensino_fund_anos_iniciais_int AS "qtdMatFundamentalIniciaisIntegral",
+            e.qtd_ensino_regular_ensino_fund_anos_finais_par AS "qtdMatFundamentalFinaisParcial",
+            e.qtd_ensino_regular_ensino_fund_anos_finais_int AS "qtdMatFundamentalFinaisIntegral",
+            e.qtd_ensino_regular_ensino_med_anos_iniciais_par AS "qtdMatEnsinoMedioParcial",
+            e.qtd_ensino_regular_ensino_med_anos_iniciais_int AS "qtdMatEnsinoMedioIntegral",
+            e.qtd_edu_especial_classe_especial_par AS "qdtMatClasseEspecialParcial",
+            e.qtd_edu_especial_classe_especial_int AS "qdtMatClasseEspecialIntegral",
+            e.qtd_edu_eja_ensino_fund AS "qdtMatEjaFundamental",
+            e.qtd_edu_eja_ensino_med AS "qtdMatEjaEnsinoMedio",
+            e.qtd_edu_prof_quali_prof_inte_edu_eja_no_ensino_fund_par AS "qtdMatEdProfIntegradaEjaFundamentalParcial",
+            e.qtd_edu_prof_quali_prof_inte_edu_eja_no_ensino_fund_int AS  "qtdMatEdProfIntegradaEjaFundamentalIntegral",
+            e.qtd_edu_prof_quali_prof_tec_inte_edu_eja_nivel_med_par AS "qtdMatEdProfIntegradaEjaNivelMedioParcial",
+            e.qtd_edu_prof_quali_prof_tec_inte_edu_eja_nivel_med_int AS "qtdMatEdProfIntegradaEjaNivelMedioIntegral",
+            e.qtd_edu_prof_quali_prof_tec_conc_edu_eja_nivel_med_par AS "qtdMatEdProfConcomitanteEjaNivelMedioParcial",
+            e.qtd_edu_prof_quali_prof_tec_conc_edu_eja_nivel_med_int AS "qtdMatEdProfConcomitanteEjaNivelMedioIntegral",
+            e.qtd_edu_prof_quali_prof_tec_conc_inter_edu_eja_nivel_med_par AS "qtdMatEdProfIntercomentarEjaNivelMedioParcial",
+            e.qtd_edu_prof_quali_prof_tec_conc_inter_edu_eja_nivel_med_int AS "qtdMatEdProfIntercomentarEjaNivelMedioIntegral",
+            e.qtd_edu_prof_quali_prof_tec_inte_ensino_med_par AS "qtdMatEdProfIntegradaEnsinoMedioParcial",
+            e.qtd_edu_prof_quali_prof_tecinte_ensino_med_int AS "qtdMatEdProfIntegradaEnsinoMedioIntegral",
+            e.qtd_edu_prof_quali_prof_tec_conc_ensino_med_par AS "qtdMatEdProfConcomitenteEnsinoMedioParcial",
+            e.qtd_edu_prof_quali_prof_tec_conc_ensino_med_int AS "qtdMatEdProfConcomitenteEnsinoMedioIntegral",
+            e.qtd_edu_prof_quali_prof_tec_conc_inter_ensino_med_par AS "qtdMatEdProfIntercomplementarEnsinoMedioParcial",
+            e.qtd_edu_prof_quali_prof_tec_conc_inter_ensino_med_int AS "qtdMatEdProfIntercomplementarEnsinoMedioIntegral",
+            e.qtd_edu_prof_edu_prof_tec_nivel_med_inte_ensino_med_par AS "qtdMatEdProfTecnicaIntegradaEnsinoMedioParcial",
+            e.qtd_edu_prof_edu_prof_tec_nivel_med_inte_ensino_med_int AS "qtdMatEdProfTecnicaIntegradaEnsinoMedioIntegral",
+            e.qtd_edu_prof_edu_prof_tec_nivel_med_conc_ensino_med_par AS "qtdMatEdProfTecnicaConcomitanteEnsinoMedioParcial",
+            e.qtd_edu_prof_edu_prof_tec_nivel_med_conc_ensino_med_int AS "qtdMatEdProfTecnicaConcomitanteEnsinoMedioIntegral",
+            e.qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_ensino_med_par AS "qtdMatEdProfTecnicaIntercomplementarEnsinoMedioParcial",
+            e.qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_ensino_med_int AS "qtdMatEdProfTecnicaIntercomplementarEnsinoMedioItegral",
+            e.qtd_edu_prof_edu_prof_tec_nivel_med_subsequente_ensino_med AS "qtdMatEdProfTecnicaSubsequenteEnsinoMedio",
+            e.qtd_edu_prof_edu_prof_tec_nivel_med_inte_edu_eja_nivel_med_par AS "qtdMatEdProfTecnicaIntegradaEjaNivelMedioParcial",
+            e.qtd_edu_prof_edu_prof_tec_nivel_med_inte_edu_eja_nivel_med_int AS "qtdMatEdProfTecnicaIntegradaEjaNivelMedioIntegral",
+            e.qtd_edu_prof_edu_prof_tec_nivel_med_conc_edu_eja_nivel_med_par AS "qtdMatEdProfTecnicaConcomitanteEjaNivelMedioParcial",
+            e.qtd_edu_prof_edu_prof_tec_nivel_med_conc_edu_eja_nivel_med_int AS "qtdMatEdProfTecnicaConcomitanteEjaNivelMedioIntegral",
+            e.qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_edu_eja_med_par AS "qtdMatEdProfTecnicaIntercomplementarEjaNivelMedioParcial",
+            e.qtd_edu_prof_edu_prof_tec_nivel_med_conc_inter_edu_eja_med_int AS "qtdMatEdProfTecnicaIntercomplementarEjaNivelMedioIntegral",
             e.cnpj_mantenedora_principal AS "cnpjMantenedoraPrincipal",
             j.cnpj AS "cnpjEscolaPrivada",
             e.regulamentacao AS "regulamentacao",
@@ -188,7 +232,7 @@ SQL;
      */
     public function getDataForRecord10($school)
     {
-        $sql = '
+        $sql = <<<'SQL'
             SELECT
                 escola.cod_escola AS "codEscola",
                 educacenso_cod_escola.cod_escola_inep AS "codigoInep",
@@ -281,11 +325,11 @@ SQL;
                 escola.qtd_bombeiro as "qtdBombeiro",
                 escola.qtd_psicologo as "qtdPsicologo",
                 escola.qtd_fonoaudiologo as "qtdFonoaudiologo",
+                escola.nao_ha_funcionarios_para_funcoes as "semFuncionariosParaFuncoes",
                 escola.alimentacao_escolar_alunos as "alimentacaoEscolarAlunos",
                 escola.orgaos_colegiados as "orgaosColegiados",
                 escola.exame_selecao_ingresso as "exameSelecaoIngresso",
                 escola.reserva_vagas_cotas as "reservaVagasCotas",
-                escola.organizacao_ensino as "organizacaoEnsino",
                 escola.instrumentos_pedagogicos as "instrumentosPedagogicos",
                 escola.compartilha_espacos_atividades_integracao AS "compartilhaEspacosAtividadesIntegracao",
                 escola.usa_espacos_equipamentos_atividades_regulares AS "usaEspacosEquipamentosAtividadesRegulares",
@@ -299,7 +343,7 @@ SQL;
             LEFT JOIN modules.educacenso_cod_escola ON (escola.cod_escola = educacenso_cod_escola.cod_escola)
             WHERE TRUE
                 AND escola.cod_escola = :school
-        ';
+SQL;
 
         return $this->fetchPreparedQuery($sql, [
             'school' => $school
@@ -482,11 +526,7 @@ SQL;
                 tbl_formacoes.completion_year AS "formacaoAnoConclusao",
                 tbl_formacoes.college_id AS "formacaoInstituicao",
                 tbl_formacoes.discipline_id AS "formacaoComponenteCurricular",
-                coalesce(cardinality(servidor.pos_graduacao),0) as "countPosGraduacao",
-                (ARRAY[1] <@ servidor.pos_graduacao)::INT "posGraduacaoEspecializacao",
-                (ARRAY[2] <@ servidor.pos_graduacao)::INT "posGraduacaoMestrado",
-                (ARRAY[3] <@ servidor.pos_graduacao)::INT "posGraduacaoDoutorado",
-                (ARRAY[4] <@ servidor.pos_graduacao)::INT "posGraduacaoNaoPossui",
+                tbl_posgraduacoes.pos_graduate::text AS "posGraduacoes",
                 coalesce(cardinality(servidor.curso_formacao_continuada),0) as "countFormacaoContinuada",
                 (ARRAY[1] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaCreche",
                 (ARRAY[2] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaPreEscola",
@@ -521,10 +561,16 @@ SQL;
                  JOIN modules.educacenso_curso_superior ON educacenso_curso_superior.id = employee_graduations.course_id
                  JOIN modules.educacenso_ies ON educacenso_ies.id = employee_graduations.college_id
                 WHERE employee_graduations.employee_id = servidor.cod_servidor
-            ) AS tbl_formacoes
+            ) AS tbl_formacoes,
+            LATERAL (
+                SELECT
+                    array_agg(
+                        row_to_json(employee_posgraduate)
+                    ) AS "pos_graduate"
+                FROM employee_posgraduate
+                WHERE employee_posgraduate.employee_id = servidor.cod_servidor
+            ) AS tbl_posgraduacoes
             WHERE servidor.cod_servidor IN ({$stringPersonId})
-
-
 SQL;
 
         return $this->fetchPreparedQuery($sql);

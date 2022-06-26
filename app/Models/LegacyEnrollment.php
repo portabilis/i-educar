@@ -47,6 +47,10 @@ class LegacyEnrollment extends Model
         'sequencial_fechamento',
         'remanejado_mesma_turma',
         'ativo',
+        'tipo_itinerario',
+        'composicao_itinerario',
+        'curso_itinerario',
+        'itinerario_concomitante'
     ];
 
     /**

@@ -18,7 +18,7 @@ class clsPmieducarAluno extends Model
     public $nm_pai;
     public $nm_mae;
     public $tipo_responsavel = '';
-    public $recursos_prova_inep;
+    public $recursos_prova_inep = false;
     public $recebe_escolarizacao_em_outro_espaco;
     public $justificativa_falta_documentacao = false;
     public $url_laudo_medico;
@@ -415,6 +415,9 @@ class clsPmieducarAluno extends Model
 
             if (is_string($this->recursos_prova_inep)) {
                 $set .= "{$gruda}recursos_prova_inep = '{$this->recursos_prova_inep}'";
+                $gruda = ', ';
+            } elseif ($this->recursos_prova_inep !== false) {
+                $set .= "{$gruda}recursos_prova_inep = NULL";
                 $gruda = ', ';
             }
 

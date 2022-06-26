@@ -97,11 +97,8 @@ return new class extends clsCadastro {
         }
 
         arsort($anosLetivos);
-        $anoLetivoSelected = empty($anoLetivoSelected) ? null : max($anosLetivos);
 
-        if (request('ano_letivo')) {
-            $anoLetivoSelected = request('ano_letivo');
-        }
+        $anoLetivoSelected = request('ano_letivo') ?? (empty($anosLetivos) ? null : max($anosLetivos));
 
         $this->definirComponentePorEtapa = $this->escolaSerieService->levelAllowDefineDisciplinePerStage(
             $this->ref_cod_serie,
@@ -326,13 +323,13 @@ return new class extends clsCadastro {
                                 multiple='multiple' class='anos_letivos' id='anos_letivos_{$registro->id}' data-id='$registro->id'> ";
 
                     foreach ($this->anos_letivos as $anoLetivo) {
-                        $seletected = in_array($anoLetivo, $anosLetivosComponente) ? 'selected=selected' : '';
+                        $seletected = in_array($anoLetivo, $anosLetivosComponente, true) ? 'selected=selected' : '';
                         $conteudo .= "<option value='{$anoLetivo}' {$seletected}>{$anoLetivo}</option>";
                     }
                     $conteudo .= ' </select>';
 
                     if ($this->definirComponentePorEtapa) {
-                        $conteudo .= "  <input style='margin-left:30px; float:left;' type='checkbox' id='etapas_especificas[]' name='etapas_especificas[$registro->id]' value='1' " . $checkedEtapaEspecifica . '></label>';
+                        $conteudo .= "  <input style='margin-left:30px; float:left;margin-top: 13px' type='checkbox' id='etapas_especificas[]' name='etapas_especificas[$registro->id]' value='1' " . $checkedEtapaEspecifica . '></label>';
                         $conteudo .= "  <label style='display: block; float: left; width: 260px;'>Etapas utilizadas: <input type='text' class='etapas_utilizadas' name='etapas_utilizadas[$registro->id]' value='{$etapas_utilizadas}' size='5' maxlength='7'></label>";
                     }
 

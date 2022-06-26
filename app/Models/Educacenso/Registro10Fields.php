@@ -659,6 +659,11 @@ class Registro10Fields implements RegistroEducacenso
      */
     public $url;
 
+    /**
+     * @var bool
+     */
+    public $semFuncionariosParaFuncoes;
+
     public $registro;
     public $localFuncionamentoPredioEscolar;
     public $localFuncionamentoSalasOutraEscola;

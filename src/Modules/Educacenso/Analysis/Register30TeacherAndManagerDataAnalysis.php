@@ -45,18 +45,26 @@ class Register30TeacherAndManagerDataAnalysis implements AnalysisInterface
             ];
         }
 
-        if ($data->escolaridade == Escolaridade::EDUCACAO_SUPERIOR && empty($data->countPosGraduacao)) {
-            $this->messages[] = [
-                'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verificamos que a escolaridade da pessoa {$data->nomePessoa} é ensino superior, portanto é necessário informar se o(a) mesmo(a) possui alguma pós-graduação concluída.",
-                'path' => '(Servidores > Cadastros > Servidores > Editar > Aba: Dados adicionais > Seção: Curso(s) Superior(es) Concluído(s) > Campo: Pós-Graduações concluídas)',
-                'linkPath' => "educar_servidor_cad.php?cod_servidor={$data->codigoPessoa}&ref_cod_instituicao={$data->codigoInstituicao}",
-                'fail' => true
-            ];
-        } else {
-            if ($data->escolaridade == Escolaridade::EDUCACAO_SUPERIOR && $data->posGraduacaoNaoPossui && $data->countPosGraduacao > 1) {
+        foreach ($data->posGraduacoes as $posgraduacao) {
+            if ($data->escolaridade == Escolaridade::EDUCACAO_SUPERIOR &&
+                $posgraduacao->type_id &&
+                empty($posgraduacao->area_id)
+            ) {
                 $this->messages[] = [
-                    'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} possui valor inválido. Verificamos que a pós-graduação da pessoa {$data->nomePessoa} foi preenchida incorretamente.",
-                    'path' => '(Servidores > Cadastros > Servidores > Editar > Aba: Dados adicionais > Seção: Curso(s) Superior(es) Concluído(s) > Campo: Pós-Graduações concluídas)',
+                    'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verificamos que a pessoa {$data->nomePessoa} possui pós-graduação informada, portanto é necessário informar a área.",
+                    'path' => '(Servidores > Cadastros > Servidores > Editar > Aba: Dados adicionais > Seção: Pós-graduções concluídas > Campo: Área)',
+                    'linkPath' => "educar_servidor_cad.php?cod_servidor={$data->codigoPessoa}&ref_cod_instituicao={$data->codigoInstituicao}",
+                    'fail' => true
+                ];
+            }
+
+            if ($data->escolaridade == Escolaridade::EDUCACAO_SUPERIOR &&
+                $posgraduacao->type_id &&
+                empty($posgraduacao->completion_year)
+            ) {
+                $this->messages[] = [
+                    'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verificamos que a pessoa {$data->nomePessoa} possui pós-graduação informada, portanto é necessário informaro o ano de conclusão.",
+                    'path' => '(Servidores > Cadastros > Servidores > Editar > Aba: Dados adicionais > Seção: Pós-graduções concluídas > Campo: Ano de conclusão)',
                     'linkPath' => "educar_servidor_cad.php?cod_servidor={$data->codigoPessoa}&ref_cod_instituicao={$data->codigoInstituicao}",
                     'fail' => true
                 ];
