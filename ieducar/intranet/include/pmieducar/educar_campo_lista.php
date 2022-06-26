@@ -452,7 +452,7 @@ function getEscolaCursoSerie() {
     var campoCursoValue = document.getElementById('ref_cod_curso').value;
     var campoCurso = document.getElementById('ref_cod_curso');
     var campoSerie = document.getElementById('ref_ref_cod_serie');
-    var cod_aluno = <?=$_GET['ref_cod_aluno']?>;
+    var cod_aluno = <?= intval($_GET['ref_cod_aluno']) ?>;
 
     campoSerie.length = 1;
 
