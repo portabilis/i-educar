@@ -9,7 +9,8 @@ return new class extends Migration {
 
     public function up()
     {
-        //Atualiza cidades do cities seeder original, com nomes diferentes sem o ibge code.
+        //Cidades obtidas do seeder original que estão na tabela de 2022
+        //Não possuem ibge_code e os nomes estão diferentes, impossibilitando a busca.
         $this->createOrUpdate('MA', 'Pindaré-Mirim', '2108504', 'Pindare Mirim');
         $this->createOrUpdate('PI', 'Aroeiras do Itaim', '2200954', 'Aroeira do Itaim');
         $this->createOrUpdate('PE', 'Belém do São Francisco', '2601607', 'Belem de Sao Francisco');
@@ -63,13 +64,12 @@ return new class extends Migration {
                 $this->createOrUpdate($city->state_abbreviation, $city->name, $city->ibge_code);
             }
         }
-
     }
 
 
     public function createOrUpdate($state_abbreviation, $name, $ibge_code, $old_name = null)
     {
-        //codigo ibge unico
+        //verifica se o codigo ibge já esta cadastrado
         if (City::where('ibge_code', $ibge_code)->exists()) {
             return;
         }
@@ -82,7 +82,7 @@ return new class extends Migration {
             return;
         }
 
-        //cria a cidade, se o ibge_code não estiver cadastrada
+        //cria a cidade
         if ($state_id = State::where('abbreviation', $state_abbreviation)->value('id')) {
             City::create(compact('state_id', 'name', 'ibge_code'));
         }
