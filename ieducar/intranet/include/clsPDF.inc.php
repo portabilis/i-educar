@@ -89,6 +89,8 @@ class clsPDF
         PDF_close($this->pdf);
         PDF_delete($this->pdf);
 
+        $len = null; // Fix SonarCloud
+
         if ($this->depurar) {
             echo "<b>PDF:</b> Finalizando o arquivo com tamanho de -> {$len}<br>";
         }

@@ -111,6 +111,7 @@ class clsCadastroReligiao extends Model
         if (is_numeric($this->cod_religiao)) {
             $db = new clsBanco();
             $set = '';
+            $gruda = '';
 
             if (is_numeric($this->idpes_exc)) {
                 $set .= "{$gruda}idpes_exc = '{$this->idpes_exc}'";

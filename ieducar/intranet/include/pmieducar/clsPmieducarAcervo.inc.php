@@ -386,6 +386,7 @@ class clsPmieducarAcervo extends Model
     {
         if (is_numeric($this->cod_acervo) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_cod_exemplar_tipo)) {
@@ -727,6 +728,7 @@ class clsPmieducarAcervo extends Model
             'LEFT JOIN pmieducar.acervo_acervo_autor aaa ON (aaa.ref_cod_acervo = a.cod_acervo) ' .
             'LEFT JOIN pmieducar.acervo_autor aa ON (aa.cod_acervo_autor = aaa.ref_cod_acervo_autor)';
 
+        $filtros = '';
         $whereAnd = ' WHERE ';
         if (is_array($int_ref_cod_biblioteca)) {
             $bibs = implode(', ', $int_ref_cod_biblioteca);

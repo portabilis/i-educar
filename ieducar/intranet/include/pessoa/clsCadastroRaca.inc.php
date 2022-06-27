@@ -117,6 +117,7 @@ class clsCadastroRaca extends Model
         if (is_numeric($this->cod_raca)) {
             $db = new clsBanco();
             $set = '';
+            $gruda = '';
 
             if (is_numeric($this->idpes_exc)) {
                 $set .= "{$gruda}idpes_exc = '{$this->idpes_exc}'";

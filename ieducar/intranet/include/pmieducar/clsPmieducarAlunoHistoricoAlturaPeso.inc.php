@@ -89,6 +89,7 @@ class clsPmieducarAlunoHistoricoAlturaPeso extends Model
     {
         if (is_numeric($this->ref_cod_aluno)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_string($this->data_historico)) {

@@ -600,6 +600,7 @@ class clsDocumento
         $int_idpes = false
     ) {
         $whereAnd = 'WHERE ';
+        $where = '';
 
         if (is_string($int_idpes)) {
             $where .= "{$whereAnd}idpes IN ({$int_idpes})";

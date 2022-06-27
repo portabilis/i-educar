@@ -393,6 +393,7 @@ class clsModulesMoradiaAluno extends Model
         if (is_numeric($this->ref_cod_aluno)) {
             $db = new clsBanco();
             $set = '';
+            $gruda = '';
 
             if (is_numeric($this->ref_cod_aluno)) {
                 $set .= "{$gruda}ref_cod_aluno = '{$this->ref_cod_aluno}'";
