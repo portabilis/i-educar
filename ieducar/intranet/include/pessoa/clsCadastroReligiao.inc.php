@@ -168,10 +168,6 @@ class clsCadastroReligiao extends Model
 
         $whereAnd = ' WHERE ';
 
-        if (is_numeric($int_cod_religiao)) {
-            $filtros .= "{$whereAnd} cod_religiao = '{$int_cod_religiao}'";
-            $whereAnd = ' AND ';
-        }
         if (is_numeric($int_idpes_exc)) {
             $filtros .= "{$whereAnd} idpes_exc = '{$int_idpes_exc}'";
             $whereAnd = ' AND ';

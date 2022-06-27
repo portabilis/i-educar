@@ -698,12 +698,6 @@ class clsDocumento
         while ($db->ProximoRegistro()) {
             $tupla = $db->Tupla();
 
-            $tupla['idpes'] = $tupla['idpes'];
-            $tupla['idorg_exp_rg'] = $tupla['idorg_exp_rg'];
-            $tupla['sigla_uf_cart_trabalho'] = $tupla['sigla_uf_cart_trabalho'];
-            $tupla['sigla_uf_cert_civil'] = $tupla['sigla_uf_cert_civil'];
-            $tupla['sigla_uf_exp_rg'] = $tupla['sigla_uf_exp_rg'];
-
             $tupla['total'] = $total;
             $resultado[] = $tupla;
         }
@@ -748,10 +742,6 @@ class clsDocumento
                 $this->passaporte = $tupla['passaporte'];
 
                 $tupla['idpes'] = $tupla['idpes'] ?? null;
-                $tupla['idorg_exp_rg'] = $tupla['idorg_exp_rg'];
-                $tupla['sigla_uf_cart_trabalho'] = $tupla['sigla_uf_cart_trabalho'];
-                $tupla['sigla_uf_cert_civil'] = $tupla['sigla_uf_cert_civil'];
-                $tupla['sigla_uf_exp_rg'] = $tupla['sigla_uf_exp_rg'];
 
                 return $tupla;
             }

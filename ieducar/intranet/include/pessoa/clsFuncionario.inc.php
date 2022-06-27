@@ -135,11 +135,6 @@ class clsFuncionario extends clsPessoaFisica
             $filtro_pessoa = true;
         }
 
-        if (is_string($str_email)) {
-            $filtros .= "{$whereAnd} f.email ILIKE '%{$str_email}%'f";
-            $whereAnd = ' AND ';
-        }
-
         $limite = '';
         if ($int_inicio_limit !== false && $int_qtd_registros !== false) {
             $limite = "LIMIT $int_qtd_registros OFFSET $int_inicio_limit ";

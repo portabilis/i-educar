@@ -247,7 +247,7 @@ return new class extends clsDetalhe {
             if (is_string($registro['dias_semana']) && !empty($registro['dias_semana'])) {
                 $registro['dias_semana'] = explode(',', str_replace(['{', '}'], '', $registro['dias_semana']));
                 $diasSemana = '';
-                foreach ($registro['dias_semana'] as $key => $dia) {
+                foreach ($registro['dias_semana'] as $dia) {
                     $diasSemana .= $dias_da_semana[$dia] . '<br>';
                 }
                 $this->addDetalhe(
@@ -323,7 +323,7 @@ return new class extends clsDetalhe {
 
             if (is_string($registro['dias_semana']) && !empty($registro['dias_semana'])) {
                 $registro['dias_semana'] = explode(',', str_replace(['{', '}'], '', $registro['dias_semana']));
-                foreach ($registro['dias_semana'] as $key => $dia) {
+                foreach ($registro['dias_semana'] as $dia) {
                     $diasSemana .= $dias_da_semana[$dia] . '<br>';
                 }
                 $this->addDetalhe(

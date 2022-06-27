@@ -212,11 +212,6 @@ return new class extends clsListagem {
                     "<a href=\"educar_acervo_det.php?cod_acervo={$registro['cod_acervo']}\">{$registro['isbn']}</a>"
                 ];
 
-                if ($qtd_bibliotecas > 1 && ($nivel_usuario == 4 || $nivel_usuario == 8)) {
-                    $lista_busca[] = "<a href=\"educar_acervo_det.php?cod_acervo={$registro['cod_acervo']}\">{$registro['ref_cod_biblioteca']}</a>";
-                } elseif ($nivel_usuario == 1 || $nivel_usuario == 2 || $nivel_usuario == 4) {
-                    $lista_busca[] = "<a href=\"educar_acervo_det.php?cod_acervo={$registro['cod_acervo']}\">{$registro['ref_cod_biblioteca']}</a>";
-                }
                 $this->addLinhas($lista_busca);
             }
         }

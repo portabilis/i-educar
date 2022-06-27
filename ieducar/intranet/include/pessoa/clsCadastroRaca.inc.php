@@ -178,10 +178,6 @@ class clsCadastroRaca extends Model
 
         $whereAnd = ' WHERE ';
 
-        if (is_numeric($int_cod_raca)) {
-            $filtros .= "{$whereAnd} cod_raca = '{$int_cod_raca}'";
-            $whereAnd = ' AND ';
-        }
         if (is_numeric($int_idpes_exc)) {
             $filtros .= "{$whereAnd} idpes_exc = '{$int_idpes_exc}'";
             $whereAnd = ' AND ';

@@ -604,22 +604,6 @@ class clsPmieducarAcervo extends Model
             $filtros .= "{$whereAnd} a.cutter LIKE $$%{$str_cutter}%$$";
             $whereAnd = ' AND ';
         }
-        if (is_numeric($int_volume)) {
-            $filtros .= "{$whereAnd} a.volume = '{$int_volume}'";
-            $whereAnd = ' AND ';
-        }
-        if (is_numeric($int_num_edicao)) {
-            $filtros .= "{$whereAnd} a.num_edicao = '{$int_num_edicao}'";
-            $whereAnd = ' AND ';
-        }
-        if (is_string($str_ano)) {
-            $filtros .= "{$whereAnd} a.ano = '{$str_ano}'";
-            $whereAnd = ' AND ';
-        }
-        if (is_numeric($int_num_paginas)) {
-            $filtros .= "{$whereAnd} a.num_paginas = '{$int_num_paginas}'";
-            $whereAnd = ' AND ';
-        }
         if (is_string($str_isbn)) {
             $filtros .= "{$whereAnd} a.isbn = '{$str_isbn}'";
             $whereAnd = ' AND ';
@@ -655,10 +639,6 @@ class clsPmieducarAcervo extends Model
             $filtros .= "{$whereAnd} a.ref_cod_biblioteca = '{$int_ref_cod_biblioteca}'";
             $whereAnd = ' AND ';
         }
-        if (is_numeric($int_ref_cod_instituicao)) {
-            $filtro .= "{$whereAnd} b.ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
-            $whereAnd = ' AND ';
-        }
         if (is_numeric($int_ref_cod_escola)) {
             $filtro .= "{$whereAnd} b.ref_cod_escola = '{$int_ref_cod_escola}'";
             $whereAnd = ' AND ';
@@ -667,12 +647,6 @@ class clsPmieducarAcervo extends Model
             $filtros .= "{$whereAnd} aa.nm_autor LIKE $$%{$str_nm_autor}%$$";
             $whereAnd = ' AND ';
         }
-        /*else
-        {
-            $filtros .= "{$whereAnd} aaa.principal = '1'";
-            $whereAnd = " AND ";
-        }*/
-
         $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];

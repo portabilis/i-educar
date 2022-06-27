@@ -34,8 +34,6 @@ class clsOrgaoEmissorRg
             $db->Consulta("INSERT INTO {$this->schema}.{$this->tabela} ( sigla, descricao, situacao$campos ) VALUES ( '{$this->sigla}', '{$this->descricao}', '{$this->situacao}'$values )");
 
             return $db->InsertId("{$this->tabela}_idorg_rg_seq");
-
-            return true;
         }
 
         return false;

@@ -816,10 +816,6 @@ class clsFisica
             $where .= "{$whereAnd}idpes_con =  '$int_idpes_con'";
             $whereAnd = ' AND ';
         }
-        if (is_string($data_data_uniao)) {
-            $where .= "{$whereAnd}data_uniao =  '$data_data-uniao'";
-            $whereAnd = ' AND ';
-        }
         if (is_string($data_data_obito)) {
             $where .= "{$whereAnd}data_obito =  '$data_data_obito'";
             $whereAnd = ' AND ';
@@ -830,10 +826,6 @@ class clsFisica
         }
         if (is_numeric($int_idpais_estrangeiro)) {
             $where .= "{$whereAnd}idpais_estrangeiro =  '$int_idpais_estrangeiro'";
-            $whereAnd = ' AND ';
-        }
-        if (is_string($data_data_chegada_brasil)) {
-            $where .= "{$whereAnd}data_chegada_brasil =  '$data_data_chegada_brasil'";
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_idmun_nascimento)) {
@@ -965,7 +957,6 @@ class clsFisica
         $resultado = [];
         while ($db->ProximoRegistro()) {
             $tupla = $db->Tupla();
-            $tupla['idesco'] =  $tupla['idesco'];
             $tupla['ideciv'] = new clsEstadoCivil($tupla['ideciv']);
             $tupla['idocup'] = new clsOcupacao($tupla['idocup']);
 
