@@ -112,7 +112,7 @@ class clsModulesEmpresaTransporteEscolar extends Model
                 $gruda = ', ';
             }
             if ($set) {
-                $detalheAntigo = $this->detalhe();
+                $this->detalhe();
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_empresa_transporte_escolar = '{$this->cod_empresa_transporte_escolar}'");
 
                 return true;

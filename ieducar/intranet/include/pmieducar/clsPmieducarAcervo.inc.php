@@ -640,7 +640,7 @@ class clsPmieducarAcervo extends Model
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_ref_cod_escola)) {
-            $filtro .= "{$whereAnd} b.ref_cod_escola = '{$int_ref_cod_escola}'";
+            $filtros .= "{$whereAnd} b.ref_cod_escola = '{$int_ref_cod_escola}'";
             $whereAnd = ' AND ';
         }
         if (!empty($str_nm_autor)) {

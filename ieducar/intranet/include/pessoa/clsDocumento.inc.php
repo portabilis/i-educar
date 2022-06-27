@@ -620,7 +620,7 @@ class clsDocumento
             $whereAnd = ' AND ';
         }
         if (is_string($this->tipo_cert_civil)) {
-            $where .= "{$whereAnd}tipo_cert_civil LIKE '%$str_tipo_cert_civil%'";
+            $where .= "{$whereAnd}tipo_cert_civil LIKE '%$this->tipo_cert_civil%'";
             $whereAnd = ' AND ';
         }
         if (is_numeric($this->num_termo)) {
@@ -632,7 +632,7 @@ class clsDocumento
             $whereAnd = ' AND ';
         }
         if (is_numeric($this->num_folha)) {
-            $where .= "{$whereAnd}num_folha = '$intnum_folha'";
+            $where .= "{$whereAnd}num_folha = '$this->num_folha'";
             $whereAnd = ' AND ';
         }
         if (is_string($this->data_emissao_cert_civil)) {

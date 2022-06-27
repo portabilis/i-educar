@@ -166,7 +166,7 @@ class clsFisica
         $this->nacionalidade            = $nacionalidade;
 
         // todo Remover variável não usada
-        $this->data_chegada_brasil      = $data_chegada_brasil ?? null;
+        $this->data_chegada_brasil      = null;
         $this->ultima_empresa           = $ultima_empresa;
         $this->nome_mae                 = $nome_mae;
         $this->nome_pai                 = $nome_pai;
@@ -178,7 +178,7 @@ class clsFisica
         $this->empresa                  = $empresa;
         $this->ddd_telefone_empresa     = $ddd_telefone_empresa;
         $this->telefone_empresa         = $telefone_empresa;
-        $this->pessoa_contato           = $pessoa_contato ?? null;
+        $this->pessoa_contato           = null;
         $this->renda_mensal             = $renda_mensal;
         $this->data_admissao            = $data_admissao;
         $this->zona_localizacao_censo   = $zona_localizacao_censo;

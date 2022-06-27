@@ -99,7 +99,7 @@ return new class extends clsListagem {
             $obj_colecao->setOrderby('nm_colecao ASC');
             $obj_colecao->setCamposLista('cod_acervo_colecao, nm_colecao');
             $lst_colecao = $obj_colecao->lista(null, null, null, null, null, null, null, null, null, 1, $this->ref_cod_biblioteca);
-            if (is_array($opcoes)) {
+            if (is_array($opcoes_colecao)) {
                 foreach ($lst_colecao as $colecao) {
                     $opcoes_colecao[$colecao['cod_acervo_colecao']] = $colecao['nm_colecao'];
                 }
