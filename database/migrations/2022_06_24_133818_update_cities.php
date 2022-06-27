@@ -40,7 +40,7 @@ return new class extends Migration {
         $cities = DB::table('temp_cities_2022 as tc')->whereNotExists(function ($query) {
             $query->selectRaw('1')
                 ->from('cities as c')
-                ->join('states as s','c.state_id','s.id')
+                ->join('states as s', 'c.state_id', 's.id')
                 ->where(function ($q) {
                     //com ibge_code
                     $q->where(function ($q) {
@@ -52,7 +52,7 @@ return new class extends Migration {
                     $q->orWhere(function ($q) {
                         $q->whereNull('c.ibge_code');
                         $q->whereRaw("unaccent(c.name) ILIKE unaccent(tc.name)");
-                        $q->where('s.abbreviation','tc.state_abbreviation');
+                        $q->where('s.abbreviation', 'tc.state_abbreviation');
                     });
                 });
         })->get();
@@ -69,20 +69,23 @@ return new class extends Migration {
 
     public function createOrUpdate($state_abbreviation, $name, $ibge_code, $old_name = null)
     {
-        $search_name = $old_name ?? $name;
-        $city = City::whereRaw("unaccent(name) ILIKE unaccent(?)", $search_name)->whereHas('state', fn($q) => $q->where('abbreviation', $state_abbreviation))->whereNull('ibge_code')->first();
-
-        //atualiza ibge_code e nome, se a cidade estiver cadastrada sem o ibge_code
-        if ($city) {
-            $city->update(['ibge_code' => $ibge_code, 'name' => $name]);
-        } elseif (City::where('ibge_code', $ibge_code)->doesntExist()) {
-            //cria a cidade, se o ibge_code não estiver cadastrada
-            if ($state_id = State::where('abbreviation', $state_abbreviation)->value('id')) {
-                $city = City::create(compact('state_id', 'name', 'ibge_code'));
-            }
+        //codigo ibge unico
+        if (City::where('ibge_code', $ibge_code)->exists()) {
+            return;
         }
 
-        return $city;
+        //atualiza ibge_code e nome, se a cidade estiver cadastrada sem o ibge_code
+        $city = City::whereRaw("unaccent(name) ILIKE unaccent(?)", $old_name ?? $name)->whereHas('state', fn($q) => $q->where('abbreviation', $state_abbreviation))->whereNull('ibge_code')->first();
+
+        if ($city) {
+            $city->update(['ibge_code' => $ibge_code, 'name' => $name]);
+            return;
+        }
+
+        //cria a cidade, se o ibge_code não estiver cadastrada
+        if ($state_id = State::where('abbreviation', $state_abbreviation)->value('id')) {
+            City::create(compact('state_id', 'name', 'ibge_code'));
+        }
     }
 
     public function down()
