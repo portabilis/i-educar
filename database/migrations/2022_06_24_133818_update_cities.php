@@ -60,7 +60,7 @@ return new class extends Migration {
         //cria ou atualiza as cidades
         if ($cities->isNotEmpty()) {
             foreach ($cities as $city) {
-                //$this->createOrUpdate($city->state_abbreviation, $city->name, $city->ibge_code);
+                $this->createOrUpdate($city->state_abbreviation, $city->name, $city->ibge_code);
             }
         }
 
