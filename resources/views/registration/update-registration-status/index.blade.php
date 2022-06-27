@@ -178,7 +178,7 @@
                 </td>
                 <td class="formlttd" valign="top">
                    <span class="form">
-                       <textarea class="geral" name="transferencia_observacoes" id="transferencia_observacoes" cols="60" rows="5" style="wrap:virtual"></textarea>
+                       <textarea class="geral" name="transferencia_observacoes" id="transferencia_observacoes" cols="60" rows="5"></textarea>
                     </span>
                 </td>
             </tr>
