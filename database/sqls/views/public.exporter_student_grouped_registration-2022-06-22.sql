@@ -22,27 +22,27 @@ SELECT p.id,
        p.mother_id,
        p.father_id,
        p.guardian_id,
-       string_agg(ep.nome, Chr(13)) AS school,
+       ep.nome AS school,
        string_agg(m.data_matricula::date::TEXT, Chr(13)) AS registration_date,
        string_agg(COALESCE(m.data_cancel::date, mt.data_exclusao::date)::TEXT,  Chr(13)) AS registration_out,
-       string_agg(m.ano::TEXT, Chr(13)) AS year,
-    string_agg(vs.cod_situacao::TEXT, Chr(13)) AS status,
-    string_agg(vs.texto_situacao::TEXT, Chr(13)) AS status_text,
-    a.cod_aluno AS student_id,
-    a.aluno_estado_id AS registration_code_id,
-    string_agg(m.cod_matricula::TEXT, Chr(13)) AS registration_id,
-    string_agg(m.ref_cod_curso::TEXT, Chr(13)) AS course_id,
-    string_agg(m.ref_ref_cod_serie::TEXT, Chr(13)) AS grade_id,
-    string_agg(m.ref_ref_cod_escola::TEXT, Chr(13)) AS school_id,
-    string_agg(t.cod_turma::TEXT, Chr(13)) AS school_class_id,
-    string_agg(t.tipo_atendimento::TEXT, Chr(13)) AS attendance_type,
-    string_agg(ece.cod_escola_inep::TEXT, Chr(13)) AS school_inep,
-    string_agg(t.etapa_educacenso::TEXT, Chr(13)) AS school_class_stage,
-    string_agg(COALESCE(tm.nome, tt.nome)::TEXT, Chr(13))  AS period,
-    array_to_string(ARRAY( SELECT json_array_elements_text(ma.recursos_tecnologicos) AS json_array_elements_text), ';'::text) AS technological_resources,
-    p.nationality,
-    p.birthplace,
-   string_agg((CASE m.modalidade_ensino
+       m.ano AS year,
+        string_agg(vs.cod_situacao::TEXT, Chr(13)) AS status,
+        string_agg(vs.texto_situacao::TEXT, Chr(13)) AS status_text,
+        a.cod_aluno AS student_id,
+        a.aluno_estado_id AS registration_code_id,
+        string_agg(m.cod_matricula::TEXT, Chr(13)) AS registration_id,
+        string_agg(m.ref_cod_curso::TEXT, Chr(13)) AS course_id,
+        string_agg(m.ref_ref_cod_serie::TEXT, Chr(13)) AS grade_id,
+        ep.idpes AS school_id,
+        string_agg(t.cod_turma::TEXT, Chr(13)) AS school_class_id,
+        string_agg(t.tipo_atendimento::TEXT, Chr(13)) AS attendance_type,
+        string_agg(ece.cod_escola_inep::TEXT, Chr(13)) AS school_inep,
+        string_agg(t.etapa_educacenso::TEXT, Chr(13)) AS school_class_stage,
+        string_agg(COALESCE(tm.nome, tt.nome)::TEXT, Chr(13))  AS period,
+        array_to_string(ARRAY( SELECT json_array_elements_text(ma.recursos_tecnologicos) AS json_array_elements_text), ';'::text) AS technological_resources,
+        p.nationality,
+        p.birthplace,
+        string_agg((CASE m.modalidade_ensino
         WHEN 0 THEN 'Semipresencial'::varchar
         WHEN 1 THEN 'EAD'::varchar
         WHEN 2 THEN 'Off-line'::varchar
@@ -59,7 +59,7 @@ FROM exporter_person p
  JOIN relatorio.view_situacao vs ON vs.cod_matricula = m.cod_matricula AND
 																		vs.cod_turma = mt.ref_cod_turma AND
 																		vs.sequencial = mt.sequencial  AND
-																		 vs.cod_situacao = 10 -- Todas as situações
+																		vs.cod_situacao = 10 -- Todas as situações
  JOIN pmieducar.turma t ON t.cod_turma = mt.ref_cod_turma
  LEFT JOIN modules.educacenso_cod_escola ece ON e.cod_escola = ece.cod_escola
  LEFT JOIN pmieducar.turma_turno tt ON tt.id = t.turma_turno_id
@@ -91,5 +91,8 @@ GROUP BY p.id,
         a.aluno_estado_id,
         array_to_string(ARRAY( SELECT json_array_elements_text(ma.recursos_tecnologicos) AS json_array_elements_text), ';'::text),
         p.nationality,
-        p.birthplace
+        p.birthplace,
+        ep.nome,
+        m.ano,
+		ep.idpes
 ORDER BY a.ref_idpes;

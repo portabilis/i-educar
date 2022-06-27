@@ -25,7 +25,7 @@ SELECT p.id,
        string_agg(ep.nome, Chr(13)) AS school,
        string_agg(m.data_matricula::date::TEXT, Chr(13)) AS registration_date,
        string_agg(COALESCE(m.data_cancel::date, mt.data_exclusao::date)::TEXT,  Chr(13)) AS registration_out,
-       string_agg(m.ano::TEXT, Chr(13)) AS year,
+       m.ano AS year,
     string_agg(vs.cod_situacao::TEXT, Chr(13)) AS status,
     string_agg(vs.texto_situacao::TEXT, Chr(13)) AS status_text,
     a.cod_aluno AS student_id,
@@ -91,5 +91,6 @@ GROUP BY p.id,
         a.aluno_estado_id,
         array_to_string(ARRAY( SELECT json_array_elements_text(ma.recursos_tecnologicos) AS json_array_elements_text), ';'::text),
         p.nationality,
-        p.birthplace
+        p.birthplace,
+        m.ano
 ORDER BY a.ref_idpes;

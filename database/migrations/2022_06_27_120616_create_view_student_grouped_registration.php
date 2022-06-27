@@ -14,6 +14,7 @@ return new class extends Migration
      */
     public function up()
     {
+        $this->down();
         $this->createView('public.exporter_student_grouped_registration', '2022-06-22');
     }
 

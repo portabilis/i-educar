@@ -106,7 +106,7 @@ class ExportController extends Controller
         $model = $data['model'];
 
         if ($model === Student::class) {
-            $data = $this->filterStudents($request, $data, 'exporter_student_grouped_registration');
+            $data = $this->filterStudentEnrrolments($request, $data, 'exporter_student_grouped_registration');
         }
 
         if ($model === Enrollment::class) {
@@ -123,43 +123,6 @@ class ExportController extends Controller
 
         if ($model === Stage::class) {
             $data = $this->filterStages($request, $data);
-        }
-
-        return $data;
-    }
-
-    /**
-     * @param Request $request
-     * @param array   $data
-     *
-     * @return array
-     */
-    protected function filterStudents(Request $request, $data, $table)
-    {
-        $data['filename'] = 'alunos.csv';
-
-        if ($status = $request->input('situacao_matricula')) {
-            $data['filters'][] = [
-                'column' => $table . '.status',
-                'operator' => '=',
-                'value' => $status,
-            ];
-        }
-
-        if ($year = $request->input('ano')) {
-            $data['filters'][] = [
-                'column' => $table . '.year',
-                'operator' => '=',
-                'value' =>  $year . '::text',
-            ];
-        }
-
-        if ($request->input('ref_cod_escola')) {
-            $data['filters'][] = [
-                'column' => $table . '.school_id',
-                'operator' => 'like',
-                'value' => "'%" . $request->input('ref_cod_escola') . "%'"
-            ];
         }
 
         return $data;
