@@ -33,7 +33,7 @@ SELECT p.id,
         string_agg(m.cod_matricula::TEXT, Chr(13)) AS registration_id,
         string_agg(m.ref_cod_curso::TEXT, Chr(13)) AS course_id,
         string_agg(m.ref_ref_cod_serie::TEXT, Chr(13)) AS grade_id,
-        ep.idpes AS school_id,
+        m.ref_ref_cod_escola AS school_id,
         string_agg(t.cod_turma::TEXT, Chr(13)) AS school_class_id,
         string_agg(t.tipo_atendimento::TEXT, Chr(13)) AS attendance_type,
         string_agg(ece.cod_escola_inep::TEXT, Chr(13)) AS school_inep,
@@ -94,5 +94,5 @@ GROUP BY p.id,
         p.birthplace,
         ep.nome,
         m.ano,
-		ep.idpes
+		m.ref_ref_cod_escola
 ORDER BY a.ref_idpes;
