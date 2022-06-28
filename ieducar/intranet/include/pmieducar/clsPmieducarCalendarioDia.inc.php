@@ -126,6 +126,7 @@ class clsPmieducarCalendarioDia extends Model
     {
         if (is_numeric($this->ref_cod_calendario_ano_letivo) && is_numeric($this->mes) && is_numeric($this->dia) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_usuario_exc)) {
@@ -236,11 +237,6 @@ class clsPmieducarCalendarioDia extends Model
             $whereAnd = ' AND ';
         } else {
             $filtros .= "{$whereAnd} c.ativo = '0'";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_string($tipo_dia)) {
-            $filtros .= "{$whereAnd} exists (SELECT FROM pmieducar.calendario_dia_motivo WHERE )";
             $whereAnd = ' AND ';
         }
 

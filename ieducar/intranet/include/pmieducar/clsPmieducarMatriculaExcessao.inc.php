@@ -137,6 +137,7 @@ class clsPmieducarMatriculaExcessao extends Model
     {
         if (is_numeric($this->cod_aluno_excessao)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_cod_matricula)) {
@@ -211,10 +212,6 @@ class clsPmieducarMatriculaExcessao extends Model
 
         $whereAnd = ' WHERE ';
 
-        if (is_numeric($int_cod_aluno_excessao)) {
-            $filtros .= "{$whereAnd} cod_aluno_excessao = '{$int_cod_aluno_excessao}'";
-            $whereAnd = ' AND ';
-        }
         if (is_numeric($int_ref_cod_matricula)) {
             $filtros .= "{$whereAnd} ref_cod_matricula = '{$int_ref_cod_matricula}'";
             $whereAnd = ' AND ';

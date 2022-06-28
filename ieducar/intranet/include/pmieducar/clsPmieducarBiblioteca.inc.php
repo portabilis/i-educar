@@ -196,6 +196,7 @@ class clsPmieducarBiblioteca extends Model
     {
         if (is_numeric($this->cod_biblioteca)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_cod_instituicao)) {
