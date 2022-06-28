@@ -109,6 +109,7 @@ class clsPortalAcesso extends Model
     {
         if (is_numeric($this->cod_acesso)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_string($this->data_hora)) {
@@ -159,10 +160,6 @@ class clsPortalAcesso extends Model
 
         $whereAnd = ' WHERE ';
 
-        if (is_numeric($int_cod_acesso)) {
-            $filtros .= "{$whereAnd} cod_acesso = '{$int_cod_acesso}'";
-            $whereAnd = ' AND ';
-        }
         if (is_string($date_data_hora_ini)) {
             $filtros .= "{$whereAnd} data_hora >= '{$date_data_hora_ini}'";
             $whereAnd = ' AND ';
