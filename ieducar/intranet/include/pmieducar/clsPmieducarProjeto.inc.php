@@ -71,6 +71,7 @@ class clsPmieducarProjeto extends Model
     {
         if (is_numeric($this->cod_projeto) && is_string($this->nome)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_string($this->nome)) {

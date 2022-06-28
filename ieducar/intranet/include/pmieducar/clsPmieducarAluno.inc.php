@@ -348,6 +348,7 @@ class clsPmieducarAluno extends Model
     {
         if (is_numeric($this->cod_aluno)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
             $gruda = '';
 

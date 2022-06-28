@@ -227,6 +227,7 @@ class clsPmieducarCandidatoReservaVaga extends Model
     {
         if (is_numeric($this->cod_candidato_reserva_vaga)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
             $gruda = '';
             $campos = '';

@@ -376,6 +376,7 @@ class clsPmieducarMatricula extends Model
     {
         if (is_numeric($this->cod_matricula)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
             $gruda = '';
 

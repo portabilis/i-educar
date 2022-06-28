@@ -181,6 +181,7 @@ class clsPmieducarHistoricoDisciplinas extends Model
     {
         if (is_numeric($this->sequencial) && is_numeric($this->ref_ref_cod_aluno) && is_numeric($this->ref_sequencial)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
             $gruda = '';
 

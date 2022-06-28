@@ -273,6 +273,7 @@ class clsPmieducarCandidatoFilaUnica extends Model
             && is_numeric($this->ref_cod_aluno)
         ) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
             $gruda = '';
 

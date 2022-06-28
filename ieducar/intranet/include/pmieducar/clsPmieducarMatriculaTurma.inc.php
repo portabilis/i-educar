@@ -188,6 +188,7 @@ class clsPmieducarMatriculaTurma extends Model
         if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_turma) &&
             is_numeric($this->ref_usuario_exc) && is_numeric($this->sequencial)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             $gruda = '';
