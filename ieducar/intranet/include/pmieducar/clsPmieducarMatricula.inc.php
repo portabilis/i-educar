@@ -1199,45 +1199,6 @@ class clsPmieducarMatricula extends Model
         return $situacaoUltimaMatricula;
     }
 
-    public function isSequencia($origem, $destino)
-    {
-        $obj = new clsPmieducarSequenciaSerie();
-        $sequencia = $obj->lista($origem, null, null, null, null, null, null, null, 1);
-        $achou = false;
-
-        if ($sequencia) {
-            do {
-                if ($lista['ref_serie_origem'] == $destino) {
-                    $achou = true;
-                    break;
-                }
-                if ($lista['ref_serie_destino'] == $destino) {
-                    $achou = true;
-                    break;
-                }
-
-                $sequencia_ = $obj->lista(
-                    $lista['ref_serie_destino'],
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    1
-                );
-
-                if (!$lista) {
-                    $achou = false;
-                    break;
-                }
-            } while ($achou != false);
-        }
-
-        return $achou;
-    }
-
     public function getInicioSequencia()
     {
         $db = new clsBanco();

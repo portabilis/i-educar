@@ -68,6 +68,7 @@ class clsPmieducarDispensaDisciplinaEtapa extends Model
     {
         if (is_numeric($this->ref_cod_dispensa) && is_numeric($this->etapa)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->etapa)) {
