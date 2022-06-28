@@ -87,6 +87,7 @@ class clsPmieducarServidorCurso extends Model
     {
         if (is_numeric($this->cod_servidor_curso)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_cod_formacao)) {

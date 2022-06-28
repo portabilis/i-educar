@@ -101,6 +101,7 @@ class clsPmieducarTurmaModulo extends Model
     {
         if (is_numeric($this->ref_cod_turma) && is_numeric($this->ref_cod_modulo) && is_numeric($this->sequencial)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_string($this->data_inicio)) {

@@ -120,6 +120,7 @@ class clsPmieducarTipoUsuario extends Model
     {
         if (is_numeric($this->cod_tipo_usuario) && is_numeric($this->ref_funcionario_exc)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_funcionario_cad)) {

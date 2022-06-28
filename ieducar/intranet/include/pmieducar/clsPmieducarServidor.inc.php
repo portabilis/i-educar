@@ -156,8 +156,8 @@ class clsPmieducarServidor extends Model
     {
         if (is_numeric($this->cod_servidor) && is_numeric($this->ref_cod_instituicao)) {
             $db = new clsBanco();
-            $set = '';
             $gruda = '';
+            $set = '';
 
             if (is_numeric($this->ref_idesco)) {
                 $set .= "{$gruda}ref_idesco = '{$this->ref_idesco}'";

@@ -138,6 +138,7 @@ class clsPmieducarSerieVaga extends Model
     {
         if (is_numeric($this->cod_serie_vaga) && is_numeric($this->vagas)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_string($this->vagas)) {

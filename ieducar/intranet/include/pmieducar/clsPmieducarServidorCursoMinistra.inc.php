@@ -72,6 +72,7 @@ class clsPmieducarServidorCursoMinistra extends Model
     {
         if (is_numeric($this->ref_cod_curso) && is_numeric($this->ref_ref_cod_instituicao) && is_numeric($this->ref_cod_servidor)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if ($set) {

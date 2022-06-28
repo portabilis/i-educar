@@ -154,8 +154,8 @@ class clsPmieducarQuadroHorarioHorariosAux extends Model
     {
         if (is_numeric($this->ref_cod_quadro_horario) && is_numeric($this->sequencial)) {
             $db = new clsBanco();
-            $set = '';
             $gruda = '';
+            $set = '';
             if (is_numeric($this->ref_cod_disciplina)) {
                 $set .= "{$gruda}ref_cod_disciplina = '{$this->ref_cod_disciplina}'";
                 $gruda = ', ';

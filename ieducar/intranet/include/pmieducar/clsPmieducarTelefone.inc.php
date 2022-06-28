@@ -84,6 +84,7 @@ class clsPmieducarTelefone extends Model
     {
         if (is_numeric($this->ref_cod_pessoa_educ) && is_numeric($this->tipo)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ddd)) {
