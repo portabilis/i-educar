@@ -33,7 +33,7 @@ return new class extends Migration {
         });
 
         //copia valores da tabela de cidades 2022
-        $filename = database_path('csv/cities/cities_2022.csv');
+        $filename = base_path() . '/database/csv/cities/cities_2022.csv';
 
         DB::statement("COPY temp_cities_2022 FROM '{$filename}' DELIMITER ',' CSV HEADER");
 
