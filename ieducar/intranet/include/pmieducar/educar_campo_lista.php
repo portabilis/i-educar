@@ -132,11 +132,6 @@ if ($get_curso) {
         }
     }
     $this->campoLista('ref_cod_curso', 'Curso', $opcoes_curso, $this->ref_cod_curso, null, null, null, null, $curso_desabilitado, $curso_obrigatorio);
-
-    if ($get_semestre) {
-        $this->campoRotulo('semestres', 'Semestre', '<div id=\'div_semestre\'>Selecione um Curso</div>');
-        $this->campoOculto('is_padrao', 1);
-    }
 }
 
 if ($get_escola_curso_serie) {
@@ -803,38 +798,4 @@ function limpaCampos(nivel) {
         }
     }
 }
-
-<?php
-if ($get_semestre) {
-    ?>
-
-function verifica_curso() {
-    var ref_cod_curso = document.getElementById('ref_cod_curso').value;
-    if (ref_cod_curso != '') {
-        var pars = 'ref_cod_curso=' + ref_cod_curso;
-        new Ajax.Request('educar_matricula_cad_curso_segue_padrao.php', {
-                method: 'post',
-                parameters: pars,
-                onComplete: function (resp) {
-                    if (resp.responseText == 0) {
-                        var radios = '<input type=\'radio\' id=\'sem1\' name=\'semestre\' value=\'1\'>1º Semestre<br>' +
-                            '<input type=\'radio\' id=\'sem2\' name=\'semestre\' value=\'2\'>2º Semestre<br>';
-                        $('div_semestre').innerHTML = radios;
-                        $('is_padrao').value = 0;
-                    } else {
-                        $('div_semestre').innerHTML = 'Selecione um Curso';
-                        $('is_padrao').value = 1;
-                    }
-                },
-            },
-        );
-    } else {
-        $('div_semestre').innerHTML = 'Selecione um Curso';
-        $('is_padrao').value = 1;
-    }
-}
-
-<?php
-} ?>
-
 </script>
