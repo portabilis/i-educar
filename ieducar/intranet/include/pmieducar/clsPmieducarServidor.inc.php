@@ -158,7 +158,6 @@ class clsPmieducarServidor extends Model
             $db = new clsBanco();
             $gruda = '';
             $set = '';
-            $gruda = '';
 
             if (is_numeric($this->ref_idesco)) {
                 $set .= "{$gruda}ref_idesco = '{$this->ref_idesco}'";

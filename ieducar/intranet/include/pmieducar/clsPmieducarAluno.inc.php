@@ -350,7 +350,6 @@ class clsPmieducarAluno extends Model
             $db = new clsBanco();
             $gruda = '';
             $set = '';
-            $gruda = '';
 
             if (is_numeric($this->ref_cod_religiao) || $this->ref_cod_religiao == 'NULL') {
                 $set .= "{$gruda}ref_cod_religiao = {$this->ref_cod_religiao}";

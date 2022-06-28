@@ -378,7 +378,6 @@ class clsPmieducarMatricula extends Model
             $db = new clsBanco();
             $gruda = '';
             $set = '';
-            $gruda = '';
 
             if (is_numeric($this->ref_cod_reserva_vaga)) {
                 $set .= "{$gruda}ref_cod_reserva_vaga = '{$this->ref_cod_reserva_vaga}'";

@@ -205,7 +205,6 @@ class clsPmieducarDispensaDisciplina extends Model
             $db = new clsBanco();
             $gruda = '';
             $set = '';
-            $gruda = '';
 
             if (is_numeric($this->ref_usuario_exc)) {
                 $set .= "{$gruda}ref_usuario_exc = '{$this->ref_usuario_exc}'";

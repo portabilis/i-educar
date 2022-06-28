@@ -275,7 +275,6 @@ class clsPmieducarCandidatoFilaUnica extends Model
             $db = new clsBanco();
             $gruda = '';
             $set = '';
-            $gruda = '';
 
             if (is_numeric($this->ref_cod_serie)) {
                 $set .= "{$gruda}ref_cod_serie = {$this->ref_cod_serie}";

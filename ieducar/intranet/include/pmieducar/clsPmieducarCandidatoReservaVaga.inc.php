@@ -229,7 +229,6 @@ class clsPmieducarCandidatoReservaVaga extends Model
             $db = new clsBanco();
             $gruda = '';
             $set = '';
-            $gruda = '';
             $campos = '';
 
             if (is_numeric($this->ano_letivo)) {

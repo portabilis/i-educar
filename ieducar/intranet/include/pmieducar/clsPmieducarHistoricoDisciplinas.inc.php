@@ -183,7 +183,6 @@ class clsPmieducarHistoricoDisciplinas extends Model
             $db = new clsBanco();
             $gruda = '';
             $set = '';
-            $gruda = '';
 
             if (is_string($this->nm_disciplina)) {
                 $disciplina = $db->escapeString($this->nm_disciplina);
