@@ -227,14 +227,6 @@ class clsPmieducarQuadroHorarioHorariosAux extends Model
 
         $whereAnd = ' WHERE ';
 
-        if (is_numeric($int_ref_cod_quadro_horario)) {
-            $filtros .= "{$whereAnd} ref_cod_quadro_horario = '{$int_ref_cod_quadro_horario}'";
-            $whereAnd = ' AND ';
-        }
-        if (is_numeric($int_sequencial)) {
-            $filtros .= "{$whereAnd} sequencial = '{$int_sequencial}'";
-            $whereAnd = ' AND ';
-        }
         if (is_numeric($int_ref_cod_disciplina)) {
             $filtros .= "{$whereAnd} ref_cod_disciplina = '{$int_ref_cod_disciplina}'";
             $whereAnd = ' AND ';
