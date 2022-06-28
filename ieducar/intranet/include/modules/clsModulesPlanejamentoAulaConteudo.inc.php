@@ -98,6 +98,7 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
                     modules.planejamento_aula_conteudo as pac
                 WHERE
                     pac.planejamento_aula_id = '{$planejamento_aula_id}'
+                ORDER BY pac.id ASC
             ");
 
             while($db->ProximoRegistro()) {

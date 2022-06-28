@@ -88,6 +88,7 @@
      }
 
       async function gerarObjetivoAprendizagem(index, response) {
+
       if (index > 0) {
         tab_add_1.addRow();
         consertarBNCCElementos();
@@ -354,7 +355,7 @@
         }
 
         function handleTentaEditarPlanoAula (response) {
-            registrosAula = response.conteudos_ids;
+            registrosAula = response.frequencia_ids;
 
             if (registrosAula.length == 0) {
                 editarPlanoAula();
@@ -570,7 +571,7 @@
             for (let index = 0; index < registrosAula.length; index++) {
                 const registroAula = registrosAula[index];
 
-                const url = "http://" + window.location.host + "/intranet/educar_professores_conteudo_ministrado_cad.php?id=" + registroAula;
+                const url = "http://" + window.location.host + "/intranet/educar_professores_frequencia_cad.php?id=" + registroAula;
                 urlHelper(url, '_blank');
             }
         }

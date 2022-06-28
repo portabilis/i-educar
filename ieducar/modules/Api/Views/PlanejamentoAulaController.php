@@ -7,10 +7,15 @@ class PlanejamentoAulaController extends ApiCoreController
         $planejamento_aula_id = $this->getRequest()->planejamento_aula_id;
 
         if (is_numeric($planejamento_aula_id)) {
+            $frequencia_ids = [];
             $obj = new clsModulesPlanejamentoAula($planejamento_aula_id);
-            $conteudos_ids = $obj->existeLigacaoRegistroAula();
+            $frequenciaUtilizadas = $obj->existeLigacaoRegistroAulaByFrequencia();
 
-            return ['conteudos_ids' => $conteudos_ids];
+            foreach ($frequenciaUtilizadas as $frequencia) {
+                $frequencia_ids[] = $frequencia['frequencia_id'];
+            }
+
+            return ['frequencia_ids' => $frequencia_ids];
         }
 
         return [];
@@ -37,7 +42,11 @@ class PlanejamentoAulaController extends ApiCoreController
             }
 
             $obj = new clsModulesComponenteMinistradoConteudo();
-            $conteudos_ids = $obj->existeLigacaoRegistroAula($conteudosVerificar);
+            $conteudosUtilizados = $obj->existeLigacaoRegistroAula($conteudosVerificar);
+
+            foreach ($conteudosUtilizados as $conteudo) {
+                $conteudos_ids[] = $conteudo['id'];
+            }
 
             return ['conteudos_ids' => $conteudos_ids];
         }
@@ -51,6 +60,7 @@ class PlanejamentoAulaController extends ApiCoreController
         $conteudos = $this->getRequest()->conteudos;
 
         if (is_numeric($planejamento_aula_id) && is_array($conteudos) && count($conteudos) > 0) {
+            $frequencia_ids = [];
             $conteudosVerificar = [];
 
             foreach ($conteudos as $conteudo) {
@@ -58,9 +68,13 @@ class PlanejamentoAulaController extends ApiCoreController
             }
 
             $obj = new clsModulesComponenteMinistradoConteudo();
-            $conteudos_ids = $obj->existeLigacaoRegistroAula($conteudosVerificar);
+            $frequenciaUtilizadas = $obj->existeLigacaoRegistroAula($conteudosVerificar);
 
-            return ['conteudos_ids' => $conteudos_ids];
+            foreach ($frequenciaUtilizadas as $frequencia) {
+                $frequencia_ids[] = $frequencia['frequencia_id'];
+            }
+
+            return ['frequencia_ids' => $frequencia_ids];
         }
 
         return [];

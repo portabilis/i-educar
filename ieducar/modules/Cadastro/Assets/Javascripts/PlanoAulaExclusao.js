@@ -37,7 +37,7 @@
         }
 
         function handleTentaExcluirPlanoAula (response) {
-            registrosAula = response.conteudos_ids;
+            registrosAula = response.frequencia_ids;
 
             if (registrosAula.length == 0) {
                 excluirPlanoAula();
@@ -74,13 +74,8 @@
 
         function openModal() {
             var quantidadeRegistrosAula = registrosAula.length;
-            var quantidadeRegistrosAulaConteudos = 0;
 
-            registrosAula.forEach(registroAula => {
-                quantidadeRegistrosAulaConteudos += registroAula[1];
-            });
-
-            $j("#dialog-warning-excluir-plano-aula").find('#msg').html(getMessageExcluirPlanoAula(quantidadeRegistrosAula, quantidadeRegistrosAulaConteudos));
+            $j("#dialog-warning-excluir-plano-aula").find('#msg').html(getMessageExcluirPlanoAula(quantidadeRegistrosAula));
             $j("#dialog-warning-excluir-plano-aula").dialog("open");
         }
 
@@ -90,20 +85,11 @@
             $j("#dialog-warning-excluir-plano-aula").dialog('close');
         }
 
-        function getMessageExcluirPlanoAula(quantidadeRegistrosAula, quantidadeRegistrosAulaConteudos) {
-            return ` \
+        function getMessageExcluirPlanoAula(quantidadeRegistrosAula) {
+          return ` \
                 <span> \
-                    Ao concluir esta ação: \
-                </span><br> \
-                <ul> \
-                    <li> \
-                        Este plano de aula será <b>deletado</b>. \
-                    </li> \
-                </ul> \
-                <span> \
-                    No entanto, haverá efeitos colaterais em \
-                    <b>${quantidadeRegistrosAulaConteudos}</b> conteúdo(s) alocado(s) em \
-                    <b>${quantidadeRegistrosAula}</b> registro(s) de aula. Eles também serão deletados. O que deseja fazer? \
+                    Não é possível prosseguir com a exclusão porque <b> um ou mais conteúdos </b> estão sendo utilizados em \
+                    <b>${quantidadeRegistrosAula}</b> registro(s) de aula. O que deseja fazer? \
                 </span><br> \
             `;
         }
@@ -112,7 +98,7 @@
             for (let index = 0; index < registrosAula.length; index++) {
                 const registroAula = registrosAula[index];
 
-                const url = "http://" + window.location.host + "/intranet/educar_professores_conteudo_ministrado_cad.php?id=" + registroAula[0];
+                const url = "http://" + window.location.host + "/intranet/educar_professores_frequencia_cad.php?id=" + registroAula;
                 urlHelper(url, '_blank');
             }
         }
@@ -148,9 +134,6 @@
                 $j(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
             },
             buttons: {
-                "Continuar": function () {
-                    excluirPlanoAula();
-                },
                 "Cancelar": function () {
                     closeModal();
                 },

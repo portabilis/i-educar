@@ -191,9 +191,12 @@ class clsModulesComponenteMinistradoConteudo extends Model {
 
             $sql = "
                 SELECT DISTINCT
-                    conteudo_ministrado_id as id
+                    conteudo_ministrado_id as id,
+                    cm.frequencia_id
                 FROM
                     modules.conteudo_ministrado_conteudo as cmc
+                INNER JOIN modules.conteudo_ministrado cm
+                    ON cm.id = cmc.conteudo_ministrado_id
             ";
 
             $whereAnd = ' WHERE';
@@ -207,7 +210,10 @@ class clsModulesComponenteMinistradoConteudo extends Model {
             $db->Consulta($sql);
 
             while($db->ProximoRegistro()) {
-                $data[] = $db->Campo('id');
+                $data[] = [
+                    'id' => $db->Campo('id'),
+                    'frequencia_id' => $db->Campo('frequencia_id')
+                ];
             }
 
             return $data;

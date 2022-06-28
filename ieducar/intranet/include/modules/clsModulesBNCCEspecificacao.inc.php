@@ -87,6 +87,7 @@ class clsModulesBNCCEspecificacao extends Model {
             $sql .= " WHERE be.bncc_id IN (";
 
             for ($i=0; $i < count($bnccArray); $i++) {
+                if(empty($bnccArray[$i])) continue;
                 $separador = $i < count($bnccArray) -1 ? ',' : '';
                 $bncc = $bnccArray[$i];
 
