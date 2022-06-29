@@ -3,14 +3,14 @@
 use App\Models\City;
 use App\Models\State;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 
 return new class extends Migration {
 
     public function up()
     {
-        //Cidades obtidas do seeder original que estão na tabela de 2022
-        //Não possuem ibge_code e os nomes estão diferentes, impossibilitando a busca.
+        //Comparação realizada com o seeder original
+
+        //Atualização. Não possuem ibge_code e os nomes estão diferentes.
         $this->createOrUpdate('MA', 'Pindaré-Mirim', '2108504', 'Pindare Mirim');
         $this->createOrUpdate('PI', 'Aroeiras do Itaim', '2200954', 'Aroeira do Itaim');
         $this->createOrUpdate('PE', 'Belém do São Francisco', '2601607', 'Belem de Sao Francisco');
@@ -24,52 +24,32 @@ return new class extends Migration {
         $this->createOrUpdate('PR', "Bela Vista da Caroba", '4102752', 'Bela Vista do Caroba');
         $this->createOrUpdate('MS', "Batayporã", '5002001', 'Bataipora');
 
-        //cria tabela temporária para cidades 2022
-        Schema::create('temp_cities_2022', function (Blueprint $table) {
-            $table->temporary();
-            $table->string('state_abbreviation');
-            $table->string('name');
-            $table->integer('ibge_code');
-        });
-
-        //copia valores da tabela de cidades 2022
-        $filename = base_path() . '/database/csv/cities/cities_2022.csv';
-
-        DB::statement("COPY temp_cities_2022 FROM '{$filename}' DELIMITER ',' CSV HEADER");
-
-        //obtem somente as cidades a serem atualizadas
-        $cities = DB::table('temp_cities_2022 as tc')->whereNotExists(function ($query) {
-            $query->selectRaw('1')
-                ->from('cities as c')
-                ->join('states as s', 'c.state_id', 's.id')
-                ->where(function ($q) {
-                    //com ibge_code
-                    $q->where(function ($q) {
-                        $q->whereNotNull('c.ibge_code');
-                        $q->whereRaw('c.ibge_code  = tc.ibge_code');
-                    });
-
-                    //sem ibge_code, pesquisa por nome e estado
-                    $q->orWhere(function ($q) {
-                        $q->whereNull('c.ibge_code');
-                        $q->whereRaw("unaccent(c.name) ILIKE unaccent(tc.name)");
-                        $q->where('s.abbreviation', 'tc.state_abbreviation');
-                    });
-                });
-        })->get();
-
-        //cria ou atualiza as cidades
-        if ($cities->isNotEmpty()) {
-            foreach ($cities as $city) {
-                $this->createOrUpdate($city->state_abbreviation, $city->name, $city->ibge_code);
-            }
-        }
+        //Novos
+        $this->createOrUpdate('AM', "Itacoatiara", '1301902');
+        $this->createOrUpdate('BA', "Barro Preto", '2903300');
+        $this->createOrUpdate('CE', "Itapajé", '2306306');
+        $this->createOrUpdate('MS', "Paraíso das Águas", '5006275');
+        $this->createOrUpdate('MT', "Curvelândia", '5103437');
+        $this->createOrUpdate('PA', "Mojuí dos Campos", '1504752');
+        $this->createOrUpdate('PA', "Santa Izabel do Pará", '1506500');
+        $this->createOrUpdate('PB', "Joca Claudino", '2513653');
+        $this->createOrUpdate('PB', "São Domingos", '2513968');
+        $this->createOrUpdate('PB', "Tacima", '2516409');
+        $this->createOrUpdate('PE', "Ilha de Itamaracá", '2607604');
+        $this->createOrUpdate('PR', "Goioerê", '4108601');
+        $this->createOrUpdate('RN', "Serra Caiada", '2410306');
+        $this->createOrUpdate('RS', "Pinto Bandeira", '4314548');
+        $this->createOrUpdate('SC', "Garopaba", '4205704');
+        $this->createOrUpdate('SC', "Pescaria Brava", '4212650');
+        $this->createOrUpdate('SC', "Balneário Rincão", '4220000');
+        $this->createOrUpdate('SP', "Embu das Artes", '3515004');
+        $this->createOrUpdate('TO', "Couto Magalhães", '1706001');
+        $this->createOrUpdate('TO', "São Valério", '1720499');
     }
-
 
     public function createOrUpdate($state_abbreviation, $name, $ibge_code, $old_name = null)
     {
-        //verifica se o codigo ibge já esta cadastrado
+        //verifica se o codigo ibge já existe
         if (City::where('ibge_code', $ibge_code)->exists()) {
             return;
         }
