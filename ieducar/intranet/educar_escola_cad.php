@@ -1542,8 +1542,6 @@ return new class extends clsCadastro {
         $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 3, 'educar_escola_lst.php');
         $this->pesquisaPessoaJuridica = false;
 
-        $this->preparaDados();
-
         if (!$this->validaCnpjMantenedora()) {
             return false;
         }
@@ -1593,6 +1591,8 @@ return new class extends clsCadastro {
             $this->mensagem = 'Erro ao selecionar a pessoa jurídica';
             return false;
         }
+
+        $this->preparaDados();
 
         $pessoaJuridica = (new clsJuridica((int)$this->pessoaj_id_oculto))->detalhe();
 
@@ -1857,8 +1857,6 @@ return new class extends clsCadastro {
         $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7, 'educar_escola_lst.php');
         $this->pesquisaPessoaJuridica = false;
 
-        $this->preparaDados();
-
         if (!$this->validaCnpjMantenedora()) {
             return false;
         }
@@ -1901,6 +1899,8 @@ return new class extends clsCadastro {
         if (!$this->validaInstrumentosPedagogicos()) {
             return false;
         }
+
+        $this->preparaDados();
 
         $this->bloquear_lancamento_diario_anos_letivos_encerrados = is_null($this->bloquear_lancamento_diario_anos_letivos_encerrados) ? 0 : 1;
         $this->utiliza_regra_diferenciada = !is_null($this->utiliza_regra_diferenciada);
@@ -2033,7 +2033,7 @@ return new class extends clsCadastro {
 
     protected function validaFormasDeContratacaoEntreAdministracaoPublicaEOutrasInstituicoes(): bool
     {
-        $formasDeContratacao = transformStringFromDBInArray($this->formas_contratacao_adm_publica_e_outras_instituicoes);
+        $formasDeContratacao = $this->formas_contratacao_adm_publica_e_outras_instituicoes;
 
         $acceptDependenciaAdministrativa = [DependenciaAdministrativaEscola::FEDERAL, DependenciaAdministrativaEscola::ESTADUAL, DependenciaAdministrativaEscola::MUNICIPAL];
         $notAcceptFormasDeContratoInDependenciaAdministrativa = [1, 2, 3, 4];
@@ -2709,13 +2709,11 @@ return new class extends clsCadastro {
 
     protected function validaMatriculasAtendidasPorConvenio()
     {
-        $poderPulicoParceriaConvenio = transformStringFromDBInArray($this->poder_publico_parceria_convenio);
-
-        if ($poderPulicoParceriaConvenio === null) {
+        if ($this->poder_publico_parceria_convenio === null) {
             return true;
         }
 
-        if (!in_array(1, $poderPulicoParceriaConvenio) && !in_array(2, $poderPulicoParceriaConvenio)){
+        if (!in_array(1, $this->poder_publico_parceria_convenio) && !in_array(2, $this->poder_publico_parceria_convenio)){
             return true;
         }
 
