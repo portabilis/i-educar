@@ -17,7 +17,9 @@
         submitButton.removeAttr('onclick');
 
         submitButton.click(function () {
+          if(confirm('Este procedimento irá excluir o plano de aula. Tem certeza que deseja continuar?')) {
             tentaExcluirPlanoAula();
+          }
         });
 
         function tentaExcluirPlanoAula () {

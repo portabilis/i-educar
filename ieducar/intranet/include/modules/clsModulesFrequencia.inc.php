@@ -75,6 +75,7 @@ class clsModulesFrequencia extends Model {
         $this->_campos_lista = $this->_todos_campos = '
             f.id,
             f.data,
+            f.ordens_aulas,
             i.nm_instituicao AS instituicao,
             j.fantasia AS escola,
             c.nm_curso AS curso,
@@ -805,8 +806,26 @@ class clsModulesFrequencia extends Model {
             $db = new clsBanco();
             $db->Consulta($sql);
             $db->ProximoRegistro();
+            $frequencia = $db->Tupla();
 
-            return $db->Tupla();
+            /*
+             * Necessário verificação da forma abaixo ao invés de inserir na consulta pois pode haver
+             * o caso de esta salvo '1,2' e o usuário selecionar '1', como está salvado em forma
+             * de texto, não teria como verificar se esse 1 contém dentro do '1,2'
+             */
+            if ($frequencia && is_array($this->ordens_aulas) && !empty(trim($frequencia['ordens_aulas']))) {
+                $frequenciaOrdensAula = explode(',', $frequencia['ordens_aulas']);
+
+                foreach ($frequenciaOrdensAula as $frequenciaOrdemAula) {
+                    if (in_array(trim($frequenciaOrdemAula), $this->ordens_aulas)) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            return $frequencia;
         }
 
         return false;
