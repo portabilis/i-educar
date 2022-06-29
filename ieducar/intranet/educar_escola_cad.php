@@ -2026,8 +2026,7 @@ return new class extends clsCadastro {
                 $this->validaLinguasIndigenas() &&
                 $this->validaPoderPublicoParceriaConvenio() &&
                 $this->validaFormasDeContratacaoEntreAdministracaoPublicaEOutrasInstituicoes() &&
-                $this->validaMatriculasAtendidasPorConvenio() &&
-                $this->validaLinguasIndigenas()
+                $this->validaMatriculasAtendidasPorConvenio()
             ;
     }
 
