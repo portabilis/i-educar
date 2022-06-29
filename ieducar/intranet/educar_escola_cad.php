@@ -23,6 +23,7 @@ use iEducar\Modules\Educacenso\Model\MantenedoraDaEscolaPrivada;
 use iEducar\Modules\Educacenso\Model\OrganizacaoEnsino;
 use iEducar\Modules\Educacenso\Model\OrgaosColegiados;
 use iEducar\Modules\Educacenso\Model\OrgaoVinculadoEscola;
+use iEducar\Modules\Educacenso\Model\PoderPublicoConveniado;
 use iEducar\Modules\Educacenso\Model\RecursosAcessibilidade;
 use iEducar\Modules\Educacenso\Model\RedeLocal;
 use iEducar\Modules\Educacenso\Model\Regulamentacao;
@@ -1577,14 +1578,6 @@ return new class extends clsCadastro {
             return false;
         }
 
-        if (!$this->validaCampoEquipamentos()) {
-            return false;
-        }
-
-        if (!$this->validaInstrumentosPedagogicos()) {
-            return false;
-        }
-
         if (! isset($this->pessoaj_id_oculto) ||
             ! is_int((int)$this->pessoaj_id_oculto)
         ) {
@@ -1892,14 +1885,6 @@ return new class extends clsCadastro {
             return false;
         }
 
-        if (!$this->validaCampoEquipamentos()) {
-            return false;
-        }
-
-        if (!$this->validaInstrumentosPedagogicos()) {
-            return false;
-        }
-
         $this->preparaDados();
 
         $this->bloquear_lancamento_diario_anos_letivos_encerrados = is_null($this->bloquear_lancamento_diario_anos_letivos_encerrados) ? 0 : 1;
@@ -1962,17 +1947,6 @@ return new class extends clsCadastro {
         );
     }
 
-    protected function validaCampoEquipamentos()
-    {
-        $dadosEquipamentos = transformStringFromDBInArray($this->equipamentos);
-
-        if (is_array($dadosEquipamentos) && count($dadosEquipamentos) > 1 && in_array(Equipamentos::NENHUM_EQUIPAMENTO_LISTADO, $dadosEquipamentos)) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Equipamentos da escola</b>, quando a opção: <b>Nenhum dos equipamentos listados</b> estiver selecionada.';
-            return false;
-        }
-        return true;
-    }
-
     protected function inputTelefone($type, $typeLabel = '')
     {
         if (!$typeLabel) {
@@ -2024,7 +1998,6 @@ return new class extends clsCadastro {
                 $this->validaQuantidadeComputadoresAlunos() &&
                 $this->validaQuantidadeEquipamentosEnsino() &&
                 $this->validaLinguasIndigenas() &&
-                $this->validaPoderPublicoParceriaConvenio() &&
                 $this->validaFormasDeContratacaoEntreAdministracaoPublicaEOutrasInstituicoes() &&
                 $this->validaMatriculasAtendidasPorConvenio()
             ;
@@ -2073,20 +2046,6 @@ return new class extends clsCadastro {
                 $this->mensagem = 'Quando o campo "Categoria da escola privada" for igual à "Particular" só é possível cadastrar "Contrato de prestação de serviço"';
                 return false;
             }
-        }
-
-        return true;
-    }
-
-    protected function validaInstrumentosPedagogicos()
-    {
-        $dadosInstrumentosPedagogicos = transformStringFromDBInArray($this->instrumentos_pedagogicos);
-
-        if (is_array($dadosInstrumentosPedagogicos) &&
-            count($dadosInstrumentosPedagogicos) > 1 &&
-            in_array(InstrumentosPedagogicos::NENHUM_DOS_INSTRUMENTOS_LISTADOS, $dadosInstrumentosPedagogicos)) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Instrumentos, materiais socioculturais e/ou pedagógicos em uso na escola para o desenvolvimento de atividades de ensino aprendizagem</b>, quando a opção: <b>Nenhum dos instrumentos listados</b> estiver selecionada.';
-            return false;
         }
 
         return true;
@@ -2586,6 +2545,12 @@ return new class extends clsCadastro {
 
     protected function validaOpcoesUnicasMultipleSearch()
     {
+        if (is_array($this->poder_publico_parceria_convenio) && in_array(PoderPublicoConveniado::NAO_POSSUI, $this->poder_publico_parceria_convenio) && count($this->poder_publico_parceria_convenio) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Poder público responsável pela parceria ou convênio entre a Administração Pública e outras instituições</b>, quando a opção: <b>Não possui parceria ou convênio</b> estiver selecionada.';
+
+            return false;
+        }
+
         if (is_array($this->abastecimento_agua) && in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Não há abastecimento de água</b> estiver selecionada.';
 
@@ -2612,6 +2577,12 @@ return new class extends clsCadastro {
 
         if (is_array($this->recursos_acessibilidade) && in_array(RecursosAcessibilidade::NENHUM, $this->recursos_acessibilidade) && count($this->recursos_acessibilidade) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Recursos de acessibilidade</b>, quando a opção: <b>Nenhum dos recursos de acessibilidade</b> estiver selecionada.';
+
+            return false;
+        }
+
+        if (is_array($this->equipamentos) && in_array(Equipamentos::NENHUM_EQUIPAMENTO_LISTADO, $this->equipamentos) && count($this->equipamentos) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Equipamentos da escola</b>, quando a opção: <b>Nenhum dos equipamentos listados</b> estiver selecionada.';
 
             return false;
         }
@@ -2666,6 +2637,12 @@ return new class extends clsCadastro {
 
         if (is_array($this->reserva_vagas_cotas) && in_array(ReservaVagasCotas::NAO_POSSUI, $this->reserva_vagas_cotas) && count($this->reserva_vagas_cotas) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Reserva de vagas por sistema de cotas para grupos específicos de alunos(as)</b>, quando a opção: <b>Sem reservas de vagas para sistema de cotas (ampla concorrência)</b> estiver selecionada.';
+
+            return false;
+        }
+
+        if (is_array($this->instrumentos_pedagogicos) && in_array(InstrumentosPedagogicos::NENHUM_DOS_INSTRUMENTOS_LISTADOS, $this->instrumentos_pedagogicos) && count($this->instrumentos_pedagogicos) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Instrumentos, materiais socioculturais e/ou pedagógicos em uso na escola para o desenvolvimento de atividades de ensino aprendizagem</b>, quando a opção: <b>Nenhum dos instrumentos listados</b> estiver selecionada.';
 
             return false;
         }
@@ -2829,23 +2806,6 @@ return new class extends clsCadastro {
     {
         if (is_array($this->codigo_lingua_indigena) && count($this->codigo_lingua_indigena) > 3) {
             $this->mensagem = 'O campo: <b>Línguas indígenas</b>, não pode ter mais que 3 opções';
-
-            return false;
-        }
-
-        return true;
-    }
-
-    private function validaPoderPublicoParceriaConvenio()
-    {
-        $values = transformStringFromDBInArray($this->poder_publico_parceria_convenio);
-
-        if ($values === null) {
-            return true;
-        }
-
-        if (count($values) > 1 && in_array(3, $values)) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Poder público responsável pela parceria ou convênio entre a Administração Pública e outras instituições</b>, quando a opção: <b>Não possui parceria ou convênio</b> estiver selecionada.';
 
             return false;
         }
