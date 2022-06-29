@@ -8,6 +8,7 @@ use App\Rules\SchoolManagerAtLeastOneChief;
 use App\Rules\SchoolManagerUniqueIndividuals;
 use App\Services\SchoolManagerService;
 use iEducar\Modules\Addressing\LegacyAddressingFields;
+use iEducar\Modules\Educacenso\Model\AbastecimentoAgua;
 use iEducar\Modules\Educacenso\Model\AreasExternas;
 use iEducar\Modules\Educacenso\Model\Banheiros;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
@@ -15,6 +16,8 @@ use iEducar\Modules\Educacenso\Model\Dormitorios;
 use iEducar\Modules\Educacenso\Model\Equipamentos;
 use iEducar\Modules\Educacenso\Model\EquipamentosAcessoInternet;
 use iEducar\Modules\Educacenso\Model\EsferaAdministrativa;
+use iEducar\Modules\Educacenso\Model\EsgotamentoSanitario;
+use iEducar\Modules\Educacenso\Model\FonteEnergia;
 use iEducar\Modules\Educacenso\Model\InstrumentosPedagogicos;
 use iEducar\Modules\Educacenso\Model\Laboratorios;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
@@ -2551,19 +2554,19 @@ return new class extends clsCadastro {
             return false;
         }
 
-        if (is_array($this->abastecimento_agua) && in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
+        if (is_array($this->abastecimento_agua) && in_array(AbastecimentoAgua::INEXISTENTE, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Não há abastecimento de água</b> estiver selecionada.';
 
             return false;
         }
 
-        if (is_array($this->abastecimento_energia) && in_array(4, $this->abastecimento_energia) && count($this->abastecimento_energia) > 1) {
+        if (is_array($this->abastecimento_energia) && in_array(FonteEnergia::INEXISTENTE, $this->abastecimento_energia) && count($this->abastecimento_energia) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Fonte de energia elétrica</b>, quando a opção: <b>Não há energia elétrica</b> estiver selecionada.';
 
             return false;
         }
 
-        if (is_array($this->esgoto_sanitario) && in_array(3, $this->esgoto_sanitario) && count($this->esgoto_sanitario) > 1) {
+        if (is_array($this->esgoto_sanitario) && in_array(EsgotamentoSanitario::INEXISTENTE, $this->esgoto_sanitario) && count($this->esgoto_sanitario) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgotamento sanitário</b>, quando a opção: <b>Não há esgotamento sanitário</b> estiver selecionada.';
 
             return false;
