@@ -907,7 +907,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             $falta = $this->getRequest()->faltas;
         }
 
-        return $falta;
+        return empty($falta) ? 0 : $falta;
     }
 
     protected function getDadosMatricula($matriculaId)
