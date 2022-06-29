@@ -21,7 +21,7 @@ select
 		WHEN 3 THEN 'Curso Técnico'
 		WHEN 4 THEN 'Magistério Indígena Modalidade Normal'
 		ELSE ''
-END AS high_school_type,
+    END AS high_school_type,
 	form.continuing_education_course,
     sf.matricula AS matricula
 from modules.professor_turma pt
