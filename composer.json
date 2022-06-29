@@ -54,7 +54,8 @@
         "mockery/mockery": "^1.4.3",
         "nunomaduro/collision": "^6.1",
         "phpunit/phpunit": "^9.5.7",
-        "spatie/laravel-ignition": "^1.0"
+        "spatie/laravel-ignition": "^1.0",
+        "uderline/openapi-php-attributes": "^1.5"
     },
     "autoload": {
         "classmap": [
