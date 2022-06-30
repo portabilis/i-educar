@@ -53,7 +53,7 @@
             </span>
           </td>
         </tr>
-        @if(in_array(request('type', 1), [1,3]))
+        @if(in_array(request('type', 1), [1,2]))
         <tr>
           <td class="formlttd" valign="top">
             <span class="form">Situação da Matrícula</span>
