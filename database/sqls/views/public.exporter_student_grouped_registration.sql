@@ -58,8 +58,7 @@ FROM exporter_person p
          JOIN pmieducar.matricula_turma mt ON mt.ref_cod_matricula = m.cod_matricula
          JOIN relatorio.view_situacao vs ON vs.cod_matricula = m.cod_matricula AND
                                             vs.cod_turma = mt.ref_cod_turma AND
-                                            vs.sequencial = mt.sequencial  AND
-                                            vs.cod_situacao = 10 -- Todas as situações
+                                            vs.sequencial = mt.sequencial
          JOIN pmieducar.turma t ON t.cod_turma = mt.ref_cod_turma
          LEFT JOIN modules.educacenso_cod_escola ece ON e.cod_escola = ece.cod_escola
          LEFT JOIN pmieducar.turma_turno tt ON tt.id = t.turma_turno_id
