@@ -14,6 +14,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::group([
+    'middleware' => 'auth:sanctum',
+], function () {
+    // api routes
+});
+
 Route::get('version', 'Api\\VersionController@version');
 
 Route::get('/postal-code/{postalCode}', 'Api\PostalCodeController@search');
