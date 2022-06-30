@@ -1,0 +1,36 @@
+<?php
+
+namespace {{ namespace }};
+
+use {{ namespacedModel }};
+use {{ rootNamespace }}Http\Controllers\ResourceController;
+use {{ namespacedRequests }}
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class {{ class }} extends ResourceController
+{
+    public function index({{ model }} ${{ modelVariable }}, {{ updateRequest }} $request): JsonResource
+    {
+        return $this->all(${{ modelVariable }}, $request);
+    }
+
+    public function store({{ model }} ${{ modelVariable }}, {{ updateRequest }} $request): JsonResource
+    {
+        return $this->post(${{ modelVariable }}, $request);
+    }
+
+    public function show({{ model }} ${{ modelVariable }}, {{ updateRequest }} $request): JsonResource
+    {
+        return $this->get(${{ modelVariable }}, $request);
+    }
+
+    public function update({{ model }} ${{ modelVariable }}, {{ updateRequest }} $request): JsonResource
+    {
+        return $this->patch(${{ modelVariable }}, $request);
+    }
+
+    public function destroy({{ model }} ${{ modelVariable }}, {{ updateRequest }} $request): JsonResource
+    {
+        return $this->delete(${{ modelVariable }}, $request);
+    }
+}
