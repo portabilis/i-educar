@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3b8c67b525115d7b53aee211951c3a9d",
+    "content-hash": "a3cc619eb8cf1cab37c70d0e1bd8ab37",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -11814,6 +11814,64 @@
                 }
             ],
             "time": "2021-07-28T10:34:58+00:00"
+        },
+        {
+            "name": "uderline/openapi-php-attributes",
+            "version": "1.5.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/uderline/openapi-php-attributes.git",
+                "reference": "e39759c8d3d23b738cc378f4fcc2b1c7eaece98b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/uderline/openapi-php-attributes/zipball/e39759c8d3d23b738cc378f4fcc2b1c7eaece98b",
+                "reference": "e39759c8d3d23b738cc378f4fcc2b1c7eaece98b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.0",
+                "symfony/finder": "^6.0",
+                "symfony/http-foundation": "^6.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "OpenApiGenerator\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Joseph Martell",
+                    "email": "contact@josephmartell.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Automatically render your OpenApi 3 file describing your PHP API using attributes",
+            "homepage": "https://uderline.github.io/openapi-php-attributes/",
+            "keywords": [
+                "api",
+                "api-rest",
+                "attributes",
+                "json",
+                "openapi",
+                "openapi3",
+                "php",
+                "php8",
+                "renderer"
+            ],
+            "support": {
+                "issues": "https://github.com/uderline/openapi-php-attributes/issues",
+                "source": "https://github.com/uderline/openapi-php-attributes/tree/1.5.1"
+            },
+            "time": "2022-06-06T10:53:57+00:00"
         }
     ],
     "aliases": [],
