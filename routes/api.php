@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\CountryController;
 use App\Http\Controllers\Api\EmployeeWithdrawalController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,7 +18,9 @@ use Illuminate\Support\Facades\Route;
 Route::group([
     'middleware' => 'auth:sanctum',
 ], function () {
-    Route::apiResources([]);
+    Route::apiResources([
+        'country' => CountryController::class,
+    ]);
 });
 
 Route::get('version', 'Api\\VersionController@version');
