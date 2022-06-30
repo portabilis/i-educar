@@ -28,7 +28,7 @@
         <directory suffix="Test.php">./tests/Pages/</directory>
     </testsuite>
     <testsuite name="Diario">
-      <directory suffix="Test.php">./tests/Api/DiarioApi</directory>
+      <directory suffix="Test.php">./tests/Api</directory>
     </testsuite>
   </testsuites>
   <php>
