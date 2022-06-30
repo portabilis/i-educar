@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use Database\Factories\LegacyUserFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Testing\TestResponse;
 
@@ -15,6 +16,13 @@ class ResourceTestCase extends TestCase
 
     protected int $indexFactoryCount = 20;
     protected int $indexJsonCount = 15;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->actingAs(LegacyUserFactory::new()->admin()->create());
+    }
 
     protected function getUri(array $params = [], array $query = []): string
     {
