@@ -14,7 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::apiResources([]);
+Route::group([
+    'middleware' => 'auth:sanctum',
+], function () {
+    Route::apiResources([]);
+});
 
 Route::get('version', 'Api\\VersionController@version');
 
