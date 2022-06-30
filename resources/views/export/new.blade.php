@@ -58,9 +58,9 @@
           <td class="formlttd" valign="top">
             <span class="form">Situação da Matrícula</span>
           </td>
-          <td class="formlttd" valign="top">
+          <td class="formlttd"  valign="top">
             <span class="form">
-              @include('form.select-registration-status')
+              @include('form.select-registration-status', ['exportStudent' => request('type', 1)])
             </span>
           </td>
         </tr>
