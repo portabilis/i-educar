@@ -50,11 +50,11 @@ return new class extends clsListagem {
             'Turma',
             'Turno',
             'S&eacute;rie',
-            'Professor',
             'Escola',
             'Etapa',
             'Componente curricular',
-            'Aulas'
+            'Aulas',
+            'Professor'
         ];
 
         $this->addCabecalhos($lista_busca);
@@ -142,7 +142,6 @@ return new class extends clsListagem {
                     "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">{$registro['turma']}</a>",
                     "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">{$registro['turno']}</a>",
                     "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">{$registro['serie']}</a>",
-                    "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">{$registro['professor']}</a>",
                     "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">{$registro['escola']}</a>",
                     "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">{$registro['fase_etapa']}º {$registro['etapa']}</a>"
                 ];
@@ -158,6 +157,8 @@ return new class extends clsListagem {
                 } else {
                     $lista_busca[] = "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">—</a>";
                 }
+
+                $lista_busca[] = "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">{$registro['professor']}</a>";
 
                 $this->addLinhas($lista_busca);
             }

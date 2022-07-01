@@ -48,10 +48,10 @@ return new class extends clsListagem {
             'Data final',
             'Turma',
             'S&eacute;rie',
-            'Professor',
             'Escola',
             'Etapa',
-            'Componente Curricular'
+            'Componente Curricular',
+            'Professor'
         ];
 
         $this->addCabecalhos($lista_busca);
@@ -132,6 +132,9 @@ return new class extends clsListagem {
                 $obj = new clsModulesPlanejamentoAulaComponenteCurricular();
                 $componentesCurriculares = $obj->lista($registro['id']);
 
+                $obj = new clsPmieducarSerie();
+                $tipo_presenca = $obj->tipoPresencaRegraAvaliacao($registro['cod_serie']);
+
                 $data_inicial_formatada = dataToBrasil($registro['data_inicial']);
                 $data_final_formatada = dataToBrasil($registro['data_final']);
 
@@ -140,12 +143,11 @@ return new class extends clsListagem {
                     "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$data_final_formatada}</a>",
                     "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['turma']}</a>",
                     "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['serie']}</a>",
-                    "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['professor']}</a>",
                     "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['escola']}</a>",
                     "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['fase_etapa']}º {$registro['etapa']}</a>"
                 ];
 
-                if (isset($componentesCurriculares) && is_array($componentesCurriculares)) {
+                if (isset($componentesCurriculares) && is_array($componentesCurriculares) && !empty($tipo_presenca) && $tipo_presenca == 2) {
                     $abreviatura = '';
                     foreach ($componentesCurriculares as $componenteCurricular) {
                         $abreviatura .= $componenteCurricular['abreviatura'].'<br>';
@@ -154,6 +156,8 @@ return new class extends clsListagem {
                 } else {
                     $lista_busca[] = "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">—</a>";
                 }
+
+                $lista_busca[] = "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['professor']}</a>";
 
                 $this->addLinhas($lista_busca);
             }

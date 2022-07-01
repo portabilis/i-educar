@@ -85,7 +85,8 @@ class clsModulesPlanejamentoAula extends Model {
             u.nome AS turno,
             l.nm_tipo AS etapa,
             pa.etapa_sequencial AS fase_etapa,
-            pe.nome as professor
+            pe.nome as professor,
+            s.cod_serie
         ';
 
         if (is_numeric($id)) {
