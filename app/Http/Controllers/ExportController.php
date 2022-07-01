@@ -119,7 +119,7 @@ class ExportController extends Controller
         }
 
         if ($model === SocialAssistance::class) {
-            $data = $this->filterStudentEnrrolments($request, $data, 'exporter_social_assistance','assistencia_social');
+            $data = $this->filterStudentEnrrolments($request, $data, 'exporter_social_assistance', 'assistencia_social');
         }
 
         if ($model === Stage::class) {
@@ -238,6 +238,6 @@ class ExportController extends Controller
 
     private function buildFileName($fileName): string
     {
-        return str_replace(' ','_',$fileName . '_'. Carbon::now()->toDateTimeString() .  '.csv') ;
+        return str_replace(' ', '_', $fileName . '_'. Carbon::now()->toDateTimeString() .  '.csv') ;
     }
 }
