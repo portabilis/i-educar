@@ -638,10 +638,9 @@ class clsModulesFrequencia extends Model {
 
         //dump($sql);
 
-
         $this->_total = $db->CampoUnico(
             "SELECT
-                COUNT(0)
+                COUNT(DISTINCT f.ID)
             FROM
                 {$this->_from}
             {$filtros}"

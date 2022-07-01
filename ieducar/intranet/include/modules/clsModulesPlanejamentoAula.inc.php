@@ -498,7 +498,7 @@ class clsModulesPlanejamentoAula extends Model {
 
         $this->_total = $db->CampoUnico(
             "SELECT
-                COUNT(0)
+                COUNT(DISTINCT pa.ID)
             FROM
                 {$this->_from}
             {$filtros}"
