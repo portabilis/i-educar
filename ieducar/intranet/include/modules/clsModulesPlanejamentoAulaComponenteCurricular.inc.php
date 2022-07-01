@@ -70,7 +70,8 @@ class clsModulesPlanejamentoAulaComponenteCurricular extends Model {
                 SELECT
                     pac.planejamento_aula_id,
                     pac.componente_curricular_id,
-                    cc.nome
+                    cc.nome,
+                    cc.abreviatura
                 FROM
                     modules.planejamento_aula_componente_curricular AS pac
                 JOIN modules.componente_curricular cc on (pac.componente_curricular_id = cc.id)
@@ -81,7 +82,11 @@ class clsModulesPlanejamentoAulaComponenteCurricular extends Model {
             $componentes = [];
 
             while($db->ProximoRegistro()) {
-                $componentes[]["id"] = $db->Tupla()['componente_curricular_id'];
+                $componentes[] = [
+                    'id' => $db->Tupla()['componente_curricular_id'],
+                    'abreviatura' => $db->Tupla()['abreviatura'],
+                    'nome' => $db->Tupla()['nome'],
+                ];
             }
 
             return $componentes;

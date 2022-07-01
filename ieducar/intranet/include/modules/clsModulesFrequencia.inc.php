@@ -70,6 +70,8 @@ class clsModulesFrequencia extends Model {
                     (ptd.componente_curricular_id = f.ref_componente_curricular OR f.ref_componente_curricular IS NULL))
             JOIN pmieducar.servidor se
                 ON (pt.servidor_id = se.cod_servidor)
+            JOIN cadastro.pessoa AS pe
+                ON ( pe.idpes = pt.servidor_id )
         ";
 
         $this->_campos_lista = $this->_todos_campos = '
@@ -85,7 +87,8 @@ class clsModulesFrequencia extends Model {
             u.nome AS turno,
             l.nm_tipo AS etapa,
             f.etapa_sequencial AS fase_etapa,
-            pt.servidor_id AS cod_professor
+            pt.servidor_id AS cod_professor,
+            pe.nome AS professor
         ';
 
 
@@ -676,6 +679,7 @@ class clsModulesFrequencia extends Model {
     public function detalhe () {
         if (is_numeric($this->id)) {
             $db = new clsBanco();
+
             $db->Consulta("
                 SELECT
                     {$this->_todos_campos},
@@ -687,7 +691,8 @@ class clsModulesFrequencia extends Model {
 			        t.ref_ref_cod_serie as ref_cod_serie,
                     t.cod_turma as ref_cod_turma,
                     f.ref_componente_curricular as ref_cod_componente_curricular,
-                    f.ordens_aulas as ordens_aulas
+                    f.ordens_aulas as ordens_aulas,
+                    pe.nome as professor
                 FROM
                     {$this->_from}
                 WHERE

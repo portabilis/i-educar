@@ -74,6 +74,24 @@ return new class extends clsDetalhe {
             );
         }
 
+        if ($registro['detalhes']['escola']) {
+            $this->addDetalhe(
+                [
+                    'Escola',
+                    $registro['detalhes']['escola']
+                ]
+            );
+        }
+
+        if ($registro['detalhes']['professor']) {
+            $this->addDetalhe(
+                [
+                    'Professor',
+                    $registro['detalhes']['professor']
+                ]
+            );
+        }
+
         if ($registro['detalhes']['turma']) {
             $this->addDetalhe(
                 [

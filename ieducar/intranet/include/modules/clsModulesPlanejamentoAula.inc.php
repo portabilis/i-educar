@@ -61,6 +61,8 @@ class clsModulesPlanejamentoAula extends Model {
                 ON (l.cod_modulo = q.ref_cod_modulo)
             JOIN modules.professor_turma as pt
                 ON (pt.turma_id = pa.ref_cod_turma)
+            JOIN cadastro.pessoa AS pe
+                ON ( pe.idpes = pt.servidor_id )
             JOIN modules.professor_turma_disciplina as ptd
                 ON (pt.id = ptd.professor_turma_id AND ptd.componente_curricular_id = pacc.componente_curricular_id)
         ";
@@ -82,7 +84,8 @@ class clsModulesPlanejamentoAula extends Model {
             t.nm_turma AS turma,
             u.nome AS turno,
             l.nm_tipo AS etapa,
-            pa.etapa_sequencial AS fase_etapa
+            pa.etapa_sequencial AS fase_etapa,
+            pe.nome as professor
         ';
 
         if (is_numeric($id)) {
@@ -536,6 +539,7 @@ class clsModulesPlanejamentoAula extends Model {
 
         if (is_numeric($this->id)) {
             $db = new clsBanco();
+
             $db->Consulta("
                 SELECT
                     {$this->_todos_campos}
