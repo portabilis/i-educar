@@ -82,6 +82,35 @@ class BNCCController extends ApiCoreController
         return [];
     }
 
+    // public function getBNCCTurmaAee()
+    // {
+    //     $turma = $this->getRequest()->turma;
+    //     $componente_curricular = $this->getRequest()->componente_curricular;
+
+    //     if (is_numeric($turma)) {
+    //         $obj = new clsPmieducarTurma($turma);
+    //         $resultado = $obj->getGrau();
+
+    //         $bncc = [];
+    //         $bncc_temp = [];
+    //         $obj = new clsModulesBNCC();
+
+    //         if ($bncc_temp = $obj->listaTurmaAee($turma, $componente_curricular)) {
+    //             foreach ($bncc_temp as $bncc_item) {
+    //                 $id = $bncc_item['id'];
+    //                 $codigo = $bncc_item['codigo'];
+    //                 $habilidade = $bncc_item['habilidade'];
+
+    //                 $bncc[$id] = $codigo . ' - ' . $habilidade;
+    //             }
+    //         }
+
+    //         return ['bncc' => $bncc];
+    //     }
+
+    //     return [];
+    // }
+
     public function Gerar()
     {
         if ($this->isRequestFor('get', 'bncc')) {

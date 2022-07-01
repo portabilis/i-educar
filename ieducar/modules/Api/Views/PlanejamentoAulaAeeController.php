@@ -2,7 +2,7 @@
 
 class PlanejamentoAulaAeeController extends ApiCoreController
 {
-    public function verificarPlanoAulaSendoUsado ()
+    public function verificarPlanoAulaSendoUsado()
     {
         $planejamento_aula_aee_id = $this->getRequest()->planejamento_aula_aee_id;
 
@@ -16,7 +16,7 @@ class PlanejamentoAulaAeeController extends ApiCoreController
         return [];
     }
 
-    public function verificarPlanoAulaSendoUsado2 ()
+    public function verificarPlanoAulaSendoUsado2()
     {
         $conteudos_ids = [];
 
@@ -37,7 +37,7 @@ class PlanejamentoAulaAeeController extends ApiCoreController
         return [];
     }
 
-    public function excluirPlanoAula ()
+    public function excluirPlanoAula()
     {
         $planejamento_aula_aee_id = $this->getRequest()->planejamento_aula_aee_id;
 
@@ -49,7 +49,7 @@ class PlanejamentoAulaAeeController extends ApiCoreController
         return [];
     }
 
-    public function editarPlanoAula ()
+    public function editarPlanoAula()
     {
         $planejamento_aula_aee_id = $this->getRequest()->planejamento_aula_aee_id;
         $ddp = $this->getRequest()->ddp;
@@ -82,15 +82,15 @@ class PlanejamentoAulaAeeController extends ApiCoreController
         return ['result' => "Edição não realizada."];
     }
 
-    public function criarPlanoAula ()
+    public function criarPlanoAula()
     {
-       
 
-        $data_agora = new DateTime('now');
-        $data_agora = new \DateTime($data_agora->format('Y-m-d'));
+
+        // $data_agora = new DateTime('now');
+        // $data_agora = new \DateTime($data_agora->format('Y-m-d'));
 
         $data_inicial = $this->getRequest()->data_inicial;
-        $data_final = $this->getRequest()->data_final;        
+        $data_final = $this->getRequest()->data_final;
         $turma = $this->getRequest()->turma;
         $matricula = $this->getRequest()->matricula;
         $faseEtapa = $this->getRequest()->faseEtapa;
@@ -104,7 +104,7 @@ class PlanejamentoAulaAeeController extends ApiCoreController
         $recursos_didaticos = $this->getRequest()->recursos_didaticos;
         $outros = $this->getRequest()->outros;
 
-        die(var_dump($componentesCurriculares));
+        //die(var_dump($componentesCurriculares));
 
         // $sequencia = $faseEtapa;
         // $obj = new clsPmieducarTurmaModulo();
@@ -147,40 +147,42 @@ class PlanejamentoAulaAeeController extends ApiCoreController
         //     $this->simpleRedirect('educar_professores_planejamento_de_aula_cad.php');
         // }
 
-        $obj = new clsModulesPlanejamentoAulaAee(           
-           $turma,
-           $matricula,
-           $componentesCurriculares,
-           $faseEtapa,
-           $data_inicial,
-           $data_final,
-           $ddp,
-           $necessidade_aprendizagem,
-           $bnccs,
-           $conteudos,
-           $caracterizacao_pedagogica,
-           $bnccEspecificacoes,
-           $recursos_didaticos,
-           $outros
+        $obj = new clsModulesPlanejamentoAulaAee(
+            null,
+            $data_inicial,
+            $data_final,
+            $turma,
+            $matricula,
+            $faseEtapa,
+            $ddp,
+            $necessidade_aprendizagem,
+            $caracterizacao_pedagogica,
+            $conteudos,
+            $componentesCurriculares,
+            $bnccs,
+            $bnccEspecificacoes,
+            $recursos_didaticos,
+            $outros
         );
 
-        $existe = $obj->existe(); 
+        // $existe = $obj->existe(); 
 
-        if ($existe){
-            return [ "result" => "Cadastro não realizado, pois já há um planejamento para esse componente nesse período." ];
-            $this->simpleRedirect('educar_professores_planejamento_de_aula_aee_cad.php');
-        }
+        // if ($existe){
+        //     return [ "result" => "Cadastro não realizado, pois já há um planejamento para esse componente nesse período." ];
+        //     $this->simpleRedirect('educar_professores_planejamento_de_aula_aee_cad.php');
+        // }
 
+        //die(var_dump($obj));
         $cadastrou = $obj->cadastra();
         if (!$cadastrou) {
-            return [ "result" => "Cadastro não realizado." ];
+            return ["result" => "Cadastro não realizado."];
             $this->simpleRedirect('educar_professores_planejamento_de_aula_aee_cad.php');
         } else {
-            return [ "result" => "Cadastro efetuado com sucesso." ];
+            return ["result" => "Cadastro efetuado com sucesso."];
             $this->simpleRedirect('educar_professores_planejamento_de_aula_aee_lst.php');
         }
 
-        return [ "result" => "Cadastro não realizado." ];
+        return ["result" => "Cadastro não realizado."];
     }
 
     public function Gerar()

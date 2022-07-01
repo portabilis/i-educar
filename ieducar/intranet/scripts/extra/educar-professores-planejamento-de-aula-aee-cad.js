@@ -417,7 +417,7 @@
           turma: turma,
           matricula: matricula,
           faseEtapa: faseEtapa,
-          ddp,         
+          ddp: ddp,         
           necessidade_aprendizagem: necessidade_aprendizagem,
           caracterizacao_pedagogica: caracterizacao_pedagogica,
           conteudos: conteudos,
