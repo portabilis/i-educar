@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Api;
+namespace Tests\Feature\Http\Controllers\Api;
 
 use App\Models\LegacyStudent;
 use Database\Factories\LegacyStudentFactory;
