@@ -69,4 +69,9 @@ class LegacyStudentDescriptiveOpinion extends Model
     {
         return $this->hasMany(LegacyDisciplineDescriptiveOpinion::class, 'parecer_aluno_id');
     }
+
+    public function generalDescriptiveOpinion()
+    {
+        return $this->hasMany(LegacyGeneralDescriptiveOpinion::class, 'parecer_aluno_id');
+    }
 }
