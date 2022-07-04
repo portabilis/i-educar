@@ -78,6 +78,7 @@
     <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/ied/phpjs.js") }} "></script>
     <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/jquery/jquery-1.8.3.min.js") }} "></script>
     <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/jquery/jquery.modal.min.js") }} "></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prototype/1.7.1.0/prototype.min.js" integrity="sha512-BfwTGy/vhB1IOMlnxjnHLDQFX9FAidk1uYzXB6JOj9adeMoKlO3Bi3rZGGOrYfCOhBMZggeXTBmmdkfscYOQ/w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/jquery.mask.min.js") }} "></script>
     <script type='text/javascript' src='{{ Asset::get('/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js') }}'></script>
     <script type='text/javascript' src='{{ Asset::get('/modules/Portabilis/Assets/Javascripts/Utils.js') }}'></script>
