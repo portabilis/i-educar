@@ -111,7 +111,7 @@ return new class extends clsCadastro
         $lista_turmas = $obj_turma->lista_turmas_aee();
         $turma_resources = ['' => 'Selecione uma Turma'];
         foreach ($lista_turmas as $reg) {
-            $turma_resources["{$reg['cod_turma']}"] = "{$reg['nm_turma']}";
+            $turma_resources["{$reg['cod_turma']}"] = "{$reg['nm_turma']} - ({$reg['nome']})";
         }
 
         // Alunos
