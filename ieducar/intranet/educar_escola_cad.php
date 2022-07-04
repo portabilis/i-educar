@@ -1848,7 +1848,7 @@ return new class extends clsCadastro {
 
     private function transformArrayInString($value): ?string
     {
-        return is_array($value) ? implode(',', $value) : null;
+        return is_array($value) ? implode(',', array_filter($value)) : null;
     }
 
     public function Editar()
