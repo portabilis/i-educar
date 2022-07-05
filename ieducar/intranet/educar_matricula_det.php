@@ -206,8 +206,21 @@ return new class extends clsDetalhe {
         $datasEnturmacoes = implode('<br />', $datasEnturmacoes);
         $nomesTurnos = implode('<br />', $nomesTurnos);
 
+
         if ($nomesTurmas) {
             $this->addDetalhe(['Turma', $nomesTurmas]);
+
+            //se integral - exibe o botão para customizar o turno na enturmação, exibindo este turno;
+            //se não integral - oculta o botão para customizar o turno na enturmação. Exibe o turno específico da turma.
+            if (!$existeTurmaTurnoIntegral) {
+                $nomesTurnos = match ((int)$turma['turma_turno_id']) {
+                    clsPmieducarTurma::TURNO_MATUTINO =>  'Matutino',
+                    clsPmieducarTurma::TURNO_VESPERTINO => 'Vespertino',
+                    clsPmieducarTurma::TURNO_NOTURNO => 'Noturno',
+                    clsPmieducarTurma::TURNO_INTEGRAL => 'Integral',
+                };
+            }
+
             $this->addDetalhe(['Turno', $nomesTurnos]);
             $this->addDetalhe(['Data Enturmação', $datasEnturmacoes]);
             $existeTurma = true;
