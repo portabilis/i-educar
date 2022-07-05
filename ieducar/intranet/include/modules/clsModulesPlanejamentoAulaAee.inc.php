@@ -29,7 +29,7 @@ class clsModulesPlanejamentoAulaAee extends Model
         $etapa_sequencial = null,
         $ddp = null,
         $necessidade_aprendizagem = null,
-        $caracterizacao_pedagogica = null,       
+        $caracterizacao_pedagogica = null,
         $conteudos = null,
         $ref_componente_curricular_array = null,
         $bnccs = null,
@@ -53,7 +53,13 @@ class clsModulesPlanejamentoAulaAee extends Model
             JOIN cadastro.juridica j
                 ON (j.idpes = e.ref_idpes)
             JOIN pmieducar.curso c
-                ON (c.cod_curso = t.ref_cod_curso)            
+                ON (c.cod_curso = t.ref_cod_curso) 
+            JOIN pmieducar.matricula m
+                ON (m.cod_matricula = pa.ref_cod_matricula)  
+            JOIN pmieducar.aluno a
+                ON (a.cod_aluno = m.ref_cod_aluno) 
+            JOIN cadastro.pessoa p
+                ON (p.idpes = a.ref_idpes)         
             LEFT JOIN modules.componente_curricular k
                 ON (k.id = pacc.componente_curricular_id)            
         ";
@@ -70,6 +76,7 @@ class clsModulesPlanejamentoAulaAee extends Model
             pa.caracterizacao_pedagogica,
             pa.outros,
             i.nm_instituicao AS instituicao,
+            p.nome as aluno,
             j.fantasia AS escola,
             c.nm_curso AS curso,
             t.nm_turma AS turma
@@ -113,7 +120,7 @@ class clsModulesPlanejamentoAulaAee extends Model
 
         if (is_array($ref_componente_curricular_array)) {
             $this->ref_componente_curricular_array = $ref_componente_curricular_array;
-        }        
+        }
 
         if (is_array($bnccs)) {
             $this->bnccs = $bnccs;
@@ -141,19 +148,19 @@ class clsModulesPlanejamentoAulaAee extends Model
     {
         if (
             is_numeric($this->ref_cod_turma)
-            // && $this->data_inicial != ''
-            // && $this->data_final != ''
-            // && is_numeric($this->etapa_sequencial)
-            // && is_numeric($this->ref_cod_matricula)
-            // && is_array($this->ref_componente_curricular_array)
-            // && is_string($this->ddp)
-            // && is_string($this->necessidade_aprendizagem)
-            // && is_array($this->bnccs)
-            // && is_array($this->conteudos)
-            // && is_string($this->caracterizacao_pedagogica)
-            // && is_array($this->bncc_especificacoes)
-            // && is_string($this->recursos_didaticos)
-            // && is_string($this->outros)
+            && $this->data_inicial != ''
+            && $this->data_final != ''
+            && is_numeric($this->etapa_sequencial)
+            && is_numeric($this->ref_cod_matricula)
+            && is_array($this->ref_componente_curricular_array)
+            && is_string($this->ddp)
+            && is_string($this->necessidade_aprendizagem)
+            && is_array($this->bnccs)
+            && is_array($this->conteudos)
+            && is_string($this->caracterizacao_pedagogica)
+            && is_array($this->bncc_especificacoes)
+            && is_string($this->recursos_didaticos)
+            && is_string($this->outros)
         ) {
             $db = new clsBanco();
 
@@ -340,6 +347,7 @@ class clsModulesPlanejamentoAulaAee extends Model
         $int_ref_cod_escola = null,
         $int_ref_cod_curso = null,
         $int_ref_cod_turma = null,
+        $int_ref_cod_matricula = null,
         $time_data_inicial = null,
         $time_data_final = null,
         $int_servidor_id = null,
@@ -380,6 +388,11 @@ class clsModulesPlanejamentoAulaAee extends Model
             $whereAnd = ' AND ';
         }
 
+        if (is_numeric($int_ref_cod_matricula)) {
+            $filtros .= "{$whereAnd} pa.ref_cod_matricula = '{$int_ref_cod_matricula}'";
+            $whereAnd = ' AND ';
+        }
+
         if ($time_data_inicial) {
             $filtros .= "{$whereAnd} pa.data_inicial >= '{$time_data_inicial}'";
             $whereAnd = ' AND ';
@@ -406,7 +419,7 @@ class clsModulesPlanejamentoAulaAee extends Model
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
-        //dump($sql);
+        dump($sql);
 
         $this->_total = $db->CampoUnico(
             "SELECT
