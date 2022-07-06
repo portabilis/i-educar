@@ -2030,6 +2030,7 @@ class clsPmieducarTurma extends Model
                 FROM
                     pmieducar.turma as t
                 WHERE t.cod_turma = {$this->cod_turma}
+                AND t.tipo_atendimento = 5
             ";
 
             $db->Consulta($sql);
@@ -2040,6 +2041,32 @@ class clsPmieducarTurma extends Model
 
         return false;
     }
+
+     // Pega o tipo da turma (AEE -> 1 vs REGULAR -> 0)
+     public function getTipoTurma()
+     {
+         if ($this->cod_turma) {
+             $db = new clsBanco();
+ 
+             $sql = "
+                 SELECT
+                     CASE
+                         WHEN t.tipo_atendimento = 5 THEN 1                        
+                         ELSE 0
+                     END
+                 FROM
+                     pmieducar.turma as t
+                 WHERE t.cod_turma = {$this->cod_turma}
+             ";
+ 
+             $db->Consulta($sql);
+             $db->ProximoRegistro();
+ 
+             return $db->Tupla()[0];
+         }
+ 
+         return false;
+     }
 
     public function lista_turmas_aee()
     {
