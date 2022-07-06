@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\Api\CityController;
 use App\Http\Controllers\Api\CountryController;
+use App\Http\Controllers\Api\DistrictController;
 use App\Http\Controllers\Api\EmployeeWithdrawalController;
+use App\Http\Controllers\Api\StateController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,11 +20,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::group([
     'middleware' => 'auth:sanctum',
-], function () {
+], static fn () =>
     Route::apiResources([
         'country' => CountryController::class,
-    ]);
-});
+        'state' => StateController::class,
+        'district' => DistrictController::class,
+        'city' => CityController::class,
+    ])
+);
 
 Route::get('version', 'Api\\VersionController@version');
 
