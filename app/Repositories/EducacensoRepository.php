@@ -556,7 +556,7 @@ SQL;
                 SELECT ARRAY_REMOVE(ARRAY_AGG(educacenso_curso_superior.curso_id), NULL) course_id,
                        ARRAY_REMOVE(ARRAY_AGG(completion_year), NULL) completion_year,
                        ARRAY_REMOVE(ARRAY_AGG(educacenso_ies.ies_id), NULL) college_id,
-                       ARRAY_REMOVE(ARRAY_AGG(discipline_id), NULL) discipline_id
+                       ARRAY_REMOVE(ARRAY_AGG(coalesce(discipline_id, 0)), NULL) discipline_id
                  FROM employee_graduations
                  JOIN modules.educacenso_curso_superior ON educacenso_curso_superior.id = employee_graduations.course_id
                  JOIN modules.educacenso_ies ON educacenso_ies.id = employee_graduations.college_id
