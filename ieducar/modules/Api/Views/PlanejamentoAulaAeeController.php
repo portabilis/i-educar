@@ -83,11 +83,7 @@ class PlanejamentoAulaAeeController extends ApiCoreController
     }
 
     public function criarPlanoAula()
-    {
-
-
-        // $data_agora = new DateTime('now');
-        // $data_agora = new \DateTime($data_agora->format('Y-m-d'));
+    { 
 
         $data_inicial = $this->getRequest()->data_inicial;
         $data_final = $this->getRequest()->data_final;
@@ -103,49 +99,13 @@ class PlanejamentoAulaAeeController extends ApiCoreController
         $bnccEspecificacoes = $this->getRequest()->bnccEspecificacoes;
         $recursos_didaticos = $this->getRequest()->recursos_didaticos;
         $outros = $this->getRequest()->outros;
+      
+        $podeRegistrar = $this->verificarDatasTurma($faseEtapa, $turma, $data_inicial, $data_final);
 
-        //die(var_dump($componentesCurriculares));
-
-        // $sequencia = $faseEtapa;
-        // $obj = new clsPmieducarTurmaModulo();
-
-        // $data = $obj->pegaPeriodoLancamentoNotasFaltas($turma, $sequencia);
-        // if ($data['inicio'] != null && $data['fim'] != null) {
-        //     $data['inicio_periodo_lancamentos'] = explode(',', $data['inicio']);
-        //     $data['fim_periodo_lancamentos'] = explode(',', $data['fim']);
-
-        //     array_walk($data['inicio_periodo_lancamentos'], function(&$data_inicio, $key) {
-        //         $data_inicio = new \DateTime($data_inicio);
-        //     });
-
-        //     array_walk($data['fim_periodo_lancamentos'], function(&$data_fim, $key) {
-        //         $data_fim = new \DateTime($data_fim);
-        //     });
-        // }
-
-        // $data['inicio'] = new \DateTime($obj->pegaEtapaSequenciaDataInicio($turma, $sequencia));
-        // $data['fim'] = new \DateTime($obj->pegaEtapaSequenciaDataFim($turma, $sequencia));
-
-        // $podeRegistrar = false;
-        // if (is_array($data['inicio_periodo_lancamentos']) && is_array($data['fim_periodo_lancamentos'])) {
-        //     for ($i=0; $i < count($data['inicio_periodo_lancamentos']); $i++) {
-        //         $data_inicio = $data['inicio_periodo_lancamentos'][$i];
-        //         $data_fim = $data['fim_periodo_lancamentos'][$i];
-
-        //         $podeRegistrar = $data_agora >= $data_inicio && $data_agora <= $data_fim;
-
-        //         if ($podeRegistrar) break;
-        //     }
-        //     $podeRegistrar = $podeRegistrar && new DateTime($data_inicial) >= $data['inicio'] && new DateTime($data_final) <= $data['fim'];
-        // } else {
-        //     $podeRegistrar = new DateTime($data_inicial) >= $data['inicio'] && new DateTime($data_final) <= $data['fim'];
-        //     $podeRegistrar = $podeRegistrar && $data_agora >= $data['inicio'] && $data_agora <= $data['fim'];
-        // }
-
-        // if (!$podeRegistrar) {
-        //     return [ "result" => "Cadastro não realizado, pois o intervalo de datas não se adequa as etapas da turma." ];
-        //     $this->simpleRedirect('educar_professores_planejamento_de_aula_cad.php');
-        // }
+        if (!$podeRegistrar) {
+            return [ "result" => "Cadastro não realizado, pois o intervalo de datas não se adequa as etapas da turma." ];
+            $this->simpleRedirect('educar_professores_planejamento_de_aula_aee_cad.php');
+        }
 
         $obj = new clsModulesPlanejamentoAulaAee(
             null,
@@ -165,14 +125,13 @@ class PlanejamentoAulaAeeController extends ApiCoreController
             $outros
         );
 
-        // $existe = $obj->existe(); 
+        $existe = $obj->existe(); 
 
-        // if ($existe){
-        //     return [ "result" => "Cadastro não realizado, pois já há um planejamento para esse componente nesse período." ];
-        //     $this->simpleRedirect('educar_professores_planejamento_de_aula_aee_cad.php');
-        // }
+        if ($existe){
+            return [ "result" => "Cadastro não realizado, pois já há um planejamento para esse componente nesse período." ];
+            $this->simpleRedirect('educar_professores_planejamento_de_aula_aee_cad.php');
+        }
 
-        //die(var_dump($obj));
         $cadastrou = $obj->cadastra();
         if (!$cadastrou) {
             return ["result" => "Cadastro não realizado."];
@@ -183,6 +142,49 @@ class PlanejamentoAulaAeeController extends ApiCoreController
         }
 
         return ["result" => "Cadastro não realizado."];
+    }
+
+    private function verificarDatasTurma($faseEtapa, $turma, $data_inicial, $data_final) {
+        $podeRegistrar = false;
+        $data_agora = new DateTime('now');
+        $data_agora = new \DateTime($data_agora->format('Y-m-d'));
+
+        $sequencia = $faseEtapa;
+        $obj = new clsPmieducarTurmaModulo();
+
+        $data = $obj->pegaPeriodoLancamentoNotasFaltas($turma, $sequencia);
+        if ($data['inicio'] != null && $data['fim'] != null) {
+            $data['inicio_periodo_lancamentos'] = explode(',', $data['inicio']);
+            $data['fim_periodo_lancamentos'] = explode(',', $data['fim']);
+
+            array_walk($data['inicio_periodo_lancamentos'], function(&$data_inicio, $key) {
+                $data_inicio = new \DateTime($data_inicio);
+            });
+
+            array_walk($data['fim_periodo_lancamentos'], function(&$data_fim, $key) {
+                $data_fim = new \DateTime($data_fim);
+            });
+        }
+
+        $data['inicio'] = new \DateTime($obj->pegaEtapaSequenciaDataInicio($turma, $sequencia));
+        $data['fim'] = new \DateTime($obj->pegaEtapaSequenciaDataFim($turma, $sequencia));
+
+        if (is_array($data['inicio_periodo_lancamentos']) && is_array($data['fim_periodo_lancamentos'])) {
+            for ($i=0; $i < count($data['inicio_periodo_lancamentos']); $i++) {
+                $data_inicio = $data['inicio_periodo_lancamentos'][$i];
+                $data_fim = $data['fim_periodo_lancamentos'][$i];
+
+                $podeRegistrar = $data_agora >= $data_inicio && $data_agora <= $data_fim;
+
+                if ($podeRegistrar) break;
+            }
+            $podeRegistrar = $podeRegistrar && new DateTime($data_inicial) >= $data['inicio'] && new DateTime($data_final) <= $data['fim'];
+        } else {
+            $podeRegistrar = new DateTime($data_inicial) >= $data['inicio'] && new DateTime($data_final) <= $data['fim'];
+            $podeRegistrar = $podeRegistrar && $data_agora >= $data['inicio'] && $data_agora <= $data['fim'];
+        }
+
+        return $podeRegistrar;
     }
 
     public function Gerar()
