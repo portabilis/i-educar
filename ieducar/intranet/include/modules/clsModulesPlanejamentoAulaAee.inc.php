@@ -61,7 +61,8 @@ class clsModulesPlanejamentoAulaAee extends Model
             JOIN cadastro.pessoa p
                 ON (p.idpes = a.ref_idpes)         
             LEFT JOIN modules.componente_curricular k
-                ON (k.id = pacc.componente_curricular_id)            
+                ON (k.id = pacc.componente_curricular_id)  
+                                         
         ";
 
         $this->_campos_lista = $this->_todos_campos = '
@@ -419,7 +420,7 @@ class clsModulesPlanejamentoAulaAee extends Model
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
-        dump($sql);
+        //dump($sql);
 
         $this->_total = $db->CampoUnico(
             "SELECT

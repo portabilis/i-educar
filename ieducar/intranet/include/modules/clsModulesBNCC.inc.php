@@ -31,6 +31,15 @@ class clsModulesBNCC extends Model
             unnest(bncc.serie_ids) as serie_id
         ';
 
+        $this->_campos_lista_aee = $this->_todos_campos_aee = '
+            bncc.id,
+            bncc.codigo,
+            bncc.habilidade,
+            bncc.campo_experiencia,
+            bncc.unidade_tematica,
+            bncc.componente_curricular_id
+        ';
+
         if (is_numeric($id)) {
             $this->id = $id;
         }
@@ -252,29 +261,26 @@ class clsModulesBNCC extends Model
         $int_cod_componente_curricular = null
     ) {
         $sql = "
-        WITH select_ as (SELECT
-                    bncc.id,
-            bncc.codigo,
-            bncc.habilidade,
-            bncc.campo_experiencia,
-            bncc.unidade_tematica,
-            bncc.componente_curricular_id
-                FROM
-                    modules.bncc as bncc)
-SELECT
-                    bncc.id,
-                    codigo,
-                    habilidade,
-                    campo_experiencia,
-                    unidade_tematica,
-                    componente_curricular_id
-                FROM pmieducar.turma as t
-                JOIN pmieducar.escola_serie_disciplina as esd
-                    ON (esd.ref_ref_cod_serie = t.ref_ref_cod_serie)
-                JOIN modules.componente_curricular as cc
-                    ON (cc.id = esd.ref_cod_disciplina)
-                JOIN select_ as bncc
-                    ON (bncc.campo_experiencia = cc.id)       
+        WITH select_ as (
+            SELECT
+                {$this->_campos_lista_aee}
+            FROM
+                {$this->_from}
+        )
+            SELECT
+                bncc.id,
+                codigo,
+                habilidade,
+                campo_experiencia,
+                unidade_tematica,
+                componente_curricular_id
+            FROM pmieducar.turma as t
+            JOIN pmieducar.escola_serie_disciplina as esd
+                ON (esd.ref_ref_cod_serie = t.ref_ref_cod_serie)
+            JOIN modules.componente_curricular as cc
+                ON (cc.id = esd.ref_cod_disciplina)
+            JOIN select_ as bncc
+                ON (bncc.campo_experiencia = cc.id)       
         ";
 
         $whereAnd = 'WHERE ';
@@ -303,12 +309,7 @@ SELECT
             "
             WITH select_ as (
                 SELECT
-                bncc.id,
-                bncc.codigo,
-                bncc.habilidade,
-                bncc.campo_experiencia,
-                bncc.unidade_tematica,
-                bncc.componente_curricular_id
+                    {$this->_campos_lista_aee}
                 FROM
                     {$this->_from}
             )
