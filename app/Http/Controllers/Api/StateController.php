@@ -4,9 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\ResourceController;
 use App\Models\State;
-use App\Rules\Teste;
-use App\Rules\TesteSecond;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -36,12 +33,4 @@ class StateController extends ResourceController
     {
         return $this->delete($state, $request);
     }
-
-//    public function rules()
-//    {
-//        return [
-//            new Teste(),
-//            new TesteSecond()
-//        ];
-//    }
 }

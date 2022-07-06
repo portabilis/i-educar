@@ -6,10 +6,7 @@ use App\Models\City;
 use App\Models\Country;
 use App\Models\District;
 use App_Model_NivelTipoUsuario;
-use clsPermissoes;
 use Illuminate\Contracts\Validation\Rule;
-use Illuminate\Support\Facades\Auth;
-use phpDocumentor\Reflection\Types\This;
 
 class DistrictRestricOperationRule implements Rule
 {
@@ -35,8 +32,11 @@ class DistrictRestricOperationRule implements Rule
 
         $city = City::query()->find($city);
 
-        return !($city->state->country_id === Country::BRASIL &&
-            $this->accessLevel === App_Model_NivelTipoUsuario::POLI_INSTITUCIONAL);
+        if ($this->accessLevel === App_Model_NivelTipoUsuario::POLI_INSTITUCIONAL) {
+            return true;
+        }
+
+        return $city->state->country_id !== Country::BRASIL;
     }
 
     /**

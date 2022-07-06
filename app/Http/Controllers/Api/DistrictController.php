@@ -5,11 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\ResourceController;
 use App\Models\District;
 use App\Rules\DistrictRestricOperationRule;
-use App\Rules\Teste;
-use clsPermissoes;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Auth;
 
 class DistrictController extends ResourceController
 {
@@ -41,9 +38,9 @@ class DistrictController extends ResourceController
         return $this->delete($district, $request);
     }
 
-    public function rules(): array
+    public function rules($district, Request $request): array
     {
-        $accessLevel = (int)(new clsPermissoes())->nivel_acesso(Auth::id());
+        $accessLevel = $request->user()->getLevel();
         return [
             new DistrictRestricOperationRule($accessLevel)
         ];

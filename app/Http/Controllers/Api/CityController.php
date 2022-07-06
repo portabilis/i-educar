@@ -6,6 +6,7 @@ use App\Http\Controllers\ResourceController;
 use App\Models\City;
 use App\Rules\CityRestricOperationRule;
 use clsPermissoes;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
@@ -37,9 +38,9 @@ class CityController extends ResourceController
         return $this->delete($city, $request);
     }
 
-    public function rules(): array
+    public function rules(City|Model $city, Request $request): array
     {
-        $accessLevel = (int)(new clsPermissoes())->nivel_acesso(Auth::id());
+        $accessLevel = $request->user()->getLevel();
         return [
             new CityRestricOperationRule($accessLevel)
         ];

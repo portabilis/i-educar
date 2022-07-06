@@ -3,7 +3,11 @@
 namespace Tests\Feature\Http\Controllers\Api;
 
 use App\Models\City;
+use App\Models\Country;
 use Database\Factories\CityFactory;
+use Database\Factories\CountryFactory;
+use Database\Factories\LegacyUserFactory;
+use Database\Factories\StateFactory;
 use Tests\ResourceTestCase;
 
 class CityControllerTest extends ResourceTestCase
@@ -35,5 +39,52 @@ class CityControllerTest extends ResourceTestCase
     public function testDelete(): void
     {
         $this->destroy();
+    }
+
+    public function testFailDestroyDistrict()
+    {
+        $this->actingAs(LegacyUserFactory::new()->institutional()->create());
+
+        $model = $this->createCityIntoBrasil();
+
+        $response = $this->delete(
+            $this->getUri([$model->getKey()])
+        );
+
+        $response->assertStatus(422);
+
+        $response->assertJson([
+            'message' => 'Não é permitido edição de municípios brasileiros, pois já estão previamente cadastrados.'
+        ]);
+
+        $this->assertCount(1, $response->json('errors'));
+    }
+
+    public function testFailCreateDistrict()
+    {
+        $this->actingAs(LegacyUserFactory::new()->institutional()->create());
+
+        $model = $this->createCityIntoBrasil();
+
+        $response = $this->post(
+            $this->getUri(), $model->toArray()
+        );
+
+        $response->assertStatus(422);
+
+        $response->assertJson([
+            'message' => 'Não é permitido edição de municípios brasileiros, pois já estão previamente cadastrados.'
+        ]);
+
+        $this->assertCount(1, $response->json('errors'));
+    }
+
+
+    private function createCityIntoBrasil(): City
+    {
+        $country = (new CountryFactory())->create(['id' => Country::BRASIL]);
+        $state = (new StateFactory())->create(['country_id' => $country]);
+
+        return (new CityFactory())->create(['state_id' => $state]);
     }
 }

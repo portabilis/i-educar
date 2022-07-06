@@ -30,12 +30,15 @@ class CityRestricOperationRule implements Rule
      */
     public function passes($attribute, $value)
     {
-        $stateId = $value->getOriginal('state_id') ?? $value->city_id;
+        $stateId = $value->getOriginal('state_id') ?? $value->state_id;
 
         $state = State::query()->find($stateId);
 
-        return !($state->country_id === Country::BRASIL &&
-            $this->accessLevel === App_Model_NivelTipoUsuario::POLI_INSTITUCIONAL);
+        if ($this->accessLevel === App_Model_NivelTipoUsuario::POLI_INSTITUCIONAL) {
+            return true;
+        }
+
+        return $state->country_id !== Country::BRASIL;
 
     }
 
@@ -46,6 +49,6 @@ class CityRestricOperationRule implements Rule
      */
     public function message()
     {
-        return 'The validation error message.';
+        return 'Não é permitido edição de municípios brasileiros, pois já estão previamente cadastrados.';
     }
 }

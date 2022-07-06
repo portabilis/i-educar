@@ -115,7 +115,7 @@ abstract class ResourceController extends Controller
 
         $model->fill($request->all());
 
-        $this->validation($model, $this->createRules());
+        $this->validation($model, $this->createRules($model, $request));
 
         $model->saveOrFail();
 
@@ -140,7 +140,7 @@ abstract class ResourceController extends Controller
 
         $model->fill($request->all());
 
-        $this->validation($model, $this->updateRules());
+        $this->validation($model, $this->updateRules($model, $request));
 
         $model->saveOrFail();
 
@@ -151,9 +151,9 @@ abstract class ResourceController extends Controller
     {
         $this->can('remove');
 
-        $model->delete();
+        $this->validation($model, $this->deleteRules($model, $request));
 
-        $this->validation($model, $this->deleteRules());
+        $model->delete();
 
         return $this->newResource($model);
     }
@@ -167,23 +167,23 @@ abstract class ResourceController extends Controller
         $validator->validate();
     }
 
-    protected function rules(): array
+    protected function rules(Model $model, Request $request): array
     {
         return [];
     }
 
-    protected function updateRules()
+    protected function updateRules(Model $model, Request $request)
     {
-        return $this->rules();
+        return $this->rules($model, $request);
     }
 
-    protected function createRules()
+    protected function createRules(Model $model, Request $request)
     {
-        return $this->rules();
+        return $this->rules($model, $request);
     }
 
-    protected function deleteRules()
+    protected function deleteRules(Model $model, Request $request)
     {
-        return $this->rules();
+        return $this->rules($model, $request);
     }
 }

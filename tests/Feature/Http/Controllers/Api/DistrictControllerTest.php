@@ -2,8 +2,13 @@
 
 namespace Tests\Feature\Http\Controllers\Api;
 
+use App\Http\Controllers\Api\DistrictController;
 use App\Models\Country;
 use App\Models\District;
+use Database\Factories\LegacyUserFactory;
+use Database\Factories\UserFactory;
+use Mockery;
+use Mockery\MockInterface;
 use Tests\ResourceTestCase;
 use Database\Factories\CityFactory;
 use Database\Factories\StateFactory;
@@ -43,6 +48,8 @@ class DistrictControllerTest extends ResourceTestCase
 
     public function testeFailUpdateDistrict()
     {
+        $this->actingAs(LegacyUserFactory::new()->institutional()->create());
+
         $model = $this->createDistrictIntoBrasil();
 
         $updatedModel = $this->newFactory()->make();
@@ -51,49 +58,42 @@ class DistrictControllerTest extends ResourceTestCase
             $this->getUri([$model->getKey()]), $updatedModel->toArray()
         );
 
-        $response->assertStatus(422);
+        $response->assertStatus(403);
 
-        $response->assertJson([
-                'message' => 'Não é permitido exclusão de distritos brasileiros, pois já estão previamente cadastrados.'
-        ]);
-
-        $this->assertCount(1, $response->json(['errors']));
+        $response->assertJson(['message' => 'This action is unauthorized.']);
     }
 
     public function testeFailCreateDistrict()
     {
+        $this->actingAs(LegacyUserFactory::new()->institutional()->create());
+
         $model = $this->createDistrictIntoBrasil();
 
         $response = $this->post(
             $this->getUri(), $model->toArray()
         );
 
-        $response->assertStatus(422);
+        $response->assertStatus(403);
 
-        $response->assertJson([
-            'message' => 'Não é permitido exclusão de distritos brasileiros, pois já estão previamente cadastrados.'
-        ]);
-
-        $this->assertCount(1, $response->json(['errors']));
+        $response->assertJson(['message' => 'This action is unauthorized.']);
     }
 
     public function testeFailDestroyDistrict()
     {
+        $this->actingAs(LegacyUserFactory::new()->institutional()->create());
+
         $model = $this->createDistrictIntoBrasil();
 
         $response = $this->delete(
             $this->getUri([$model->getKey()])
         );
 
-        $response->assertStatus(422);
+        $response->assertStatus(403);
 
-        $response->assertJson([
-            'message' => 'Não é permitido exclusão de distritos brasileiros, pois já estão previamente cadastrados.'
-        ]);
-
-        $this->assertCount(1, $response->json(['errors']));
+        $response->assertJson(['message' => 'This action is unauthorized.']);
     }
 
+        //$response->assertJson(['message' => 'This action is unauthorized.']);
     private function createDistrictIntoBrasil(): District
     {
         $country = (new CountryFactory())->create(['id' => Country::BRASIL]);
