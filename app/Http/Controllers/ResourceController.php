@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Validator;
 
 abstract class ResourceController extends Controller
 {
@@ -86,10 +88,7 @@ abstract class ResourceController extends Controller
         $query->select($columns);
     }
 
-    protected function filter(Builder $builder, Request $request): void
-    {
-
-    }
+    protected function filter(Builder $builder, Request $request): void {}
 
     public function all(Model $model, Request $request): JsonResource
     {
@@ -115,6 +114,9 @@ abstract class ResourceController extends Controller
         $this->can('modify');
 
         $model->fill($request->all());
+
+        $this->validation($model, $this->createRules());
+
         $model->saveOrFail();
 
         return $this->newResource($model);
@@ -137,6 +139,9 @@ abstract class ResourceController extends Controller
         $this->can('modify');
 
         $model->fill($request->all());
+
+        $this->validation($model, $this->updateRules());
+
         $model->saveOrFail();
 
         return $this->newResource($model);
@@ -148,6 +153,37 @@ abstract class ResourceController extends Controller
 
         $model->delete();
 
+        $this->validation($model, $this->deleteRules());
+
         return $this->newResource($model);
+    }
+
+    protected function validation(Model $model, array $rules)
+    {
+       $validator =  Validator::make(Arr::wrap($model),
+            [$rules]
+        );
+
+        $validator->validate();
+    }
+
+    protected function rules(): array
+    {
+        return [];
+    }
+
+    protected function updateRules()
+    {
+        return $this->rules();
+    }
+
+    protected function createRules()
+    {
+        return $this->rules();
+    }
+
+    protected function deleteRules()
+    {
+        return $this->rules();
     }
 }
