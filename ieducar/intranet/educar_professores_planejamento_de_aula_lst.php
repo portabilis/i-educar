@@ -77,7 +77,7 @@ return new class extends clsListagem {
         $this->inputsHelper()->dynamic(['faseEtapa'], ['required' => false, 'label' => 'Etapa']);
 
         // Paginador
-        $this->limite = 20;
+        $this->limite = 4;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
         $obj_plano = new clsModulesPlanejamentoAula();
@@ -125,7 +125,7 @@ return new class extends clsListagem {
             $eh_professor ? $this->pessoa_logada : null         // Passe o ID do servidor caso ele seja um professor
         );
 
-        $total = /*$obj_turma->_total*/count($lista);
+        $total = $obj_plano->_total;
         // monta a lista
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
