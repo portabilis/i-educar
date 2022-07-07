@@ -199,7 +199,8 @@ return new class extends clsDetalhe {
             if ($enturmacao['turno_id']) {
                 $nomesTurnos[] = match ((int)$enturmacao['turno_id']) {
                     clsPmieducarTurma::TURNO_MATUTINO =>  'Matutino',
-                    clsPmieducarTurma::TURNO_VESPERTINO => 'Vespertino'
+                    clsPmieducarTurma::TURNO_VESPERTINO => 'Vespertino',
+                    default => null
                 };
             }
         }
@@ -212,6 +213,7 @@ return new class extends clsDetalhe {
                 clsPmieducarTurma::TURNO_VESPERTINO => 'Vespertino',
                 clsPmieducarTurma::TURNO_NOTURNO => 'Noturno',
                 clsPmieducarTurma::TURNO_INTEGRAL => 'Integral',
+                default => null
             };
         } else {
             $nomesTurnos = implode('<br />', $nomesTurnos);
