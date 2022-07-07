@@ -27,7 +27,7 @@ class MenuFactory extends Factory
             'type' => $this->faker->randomDigitNotZero(),
             'parent_old' => null,
             'old' => null,
-            'process' => 759,
+            'process' => $this->faker->randomDigitNotZero(),
             'active' => true,
         ];
     }
