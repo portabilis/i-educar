@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\ResourceController;
 use App\Models\District;
 use App\Rules\DistrictRestricOperationRule;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
