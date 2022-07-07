@@ -77,7 +77,7 @@ return new class extends clsListagem {
         $this->inputsHelper()->dynamic(['faseEtapa'], ['required' => false, 'label' => 'Etapa']);
 
         // Paginador
-        $this->limite = 4;
+        $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
         $obj_plano = new clsModulesPlanejamentoAula();
