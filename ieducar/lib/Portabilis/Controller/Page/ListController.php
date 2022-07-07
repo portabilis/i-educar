@@ -19,8 +19,8 @@ class Portabilis_Controller_Page_ListController extends Core_Controller_Page_Lis
         $controllerName = ucwords($dispatcher->getControllerName());
         $actionName = ucwords($dispatcher->getActionName());
 
-        $style = "/modules/$controllerName/Assets/Stylesheets/$actionName.css";
-        $script = "/modules/$controllerName/Assets/Javascripts/$actionName.js";
+        $style = "/vendor/legacy/$controllerName/Assets/Stylesheets/$actionName.css";
+        $script = "/vendor/legacy/$controllerName/Assets/Javascripts/$actionName.js";
 
         if (file_exists($rootPath . $style)) {
             Portabilis_View_Helper_Application::loadStylesheet($this, $style);
