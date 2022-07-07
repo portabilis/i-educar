@@ -64,7 +64,10 @@
             "ieducar/modules/Avaliacao/Service",
             "ieducar/modules/Avaliacao/Fixups",
             "ieducar/modules/Avaliacao/Views",
-            "ieducar/modules/FormulaMedia/Validate"
+            "ieducar/modules/FormulaMedia/Validate",
+            "packages/portabilis/*/ieducar/intranet/include/",
+            "packages/portabilis/*/ieducar/lib/Portabilis/View/Helper/DynamicInput/",
+            "packages/portabilis/*/ieducar/lib/Portabilis/View/Helper/Input/Resource/"
         ],
         "files": [
             "ieducar/intranet/include/funcoes.inc.php"
