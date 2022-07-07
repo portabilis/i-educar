@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\DiarioApi;
+namespace Tests\Api;
 
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyEnrollment;

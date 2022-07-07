@@ -100,6 +100,11 @@ class Teacher extends Model
         return 'Professores';
     }
 
+    public function getDescription()
+    {
+        return 'Os dados exportados serão contabilizados por quantidade de professores(as) alocados(as) no ano filtrado, agrupando as informações de cursos de formação dos docentes.';
+    }
+
     /**
      * @param string $column
      *
