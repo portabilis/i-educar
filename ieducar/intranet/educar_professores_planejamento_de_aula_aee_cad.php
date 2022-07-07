@@ -104,7 +104,7 @@ return new class extends clsCadastro
         $this->campoOculto('id', $this->id);
         $this->inputsHelper()->dynamic('dataInicial', ['required' => $obrigatorio]);    // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('dataFinal', ['required' => $obrigatorio]);      // Disabled não funciona; ação colocada no javascript.
-
+        $this->inputsHelper()->dynamic(['turma', 'matricula']);
         // Montar o inputsHelper->select \/
         // Cria lista de Turmas
         $obj_turma = new clsPmieducarTurma();        
