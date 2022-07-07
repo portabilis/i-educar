@@ -111,10 +111,10 @@ return new class extends clsCadastro
         $lista_turmas = $obj_turma->lista_turmas_aee();
         $turma_resources = ['' => 'Selecione uma Turma'];
         foreach ($lista_turmas as $reg) {
-            $turma_resources["{$reg['cod_turma']}"] = "{$reg['nm_turma']}";
+            $turma_resources["{$reg['cod_turma']}"] = "{$reg['nm_turma']} - ({$reg['nome']})";
         }
 
-        // Alunos
+        // Turmas
         $options = [
             'label' => 'Turma',
             'required' => true,
@@ -138,8 +138,8 @@ return new class extends clsCadastro
             'resources' => $aluno_resources
         ];
         $this->inputsHelper()->select('ref_cod_matricula', $options);
-
-        $this->inputsHelper()->dynamic('faseEtapa', ['required' => $obrigatorio, 'label' => 'Etapa', 'disabled' => $desabilitado && !$this->copy]);
+       
+        $this->inputsHelper()->dynamic('faseEtapa', ['required' => $obrigatorio, 'label' => 'Etapa', 'disabled' => $desabilitado]);
 
         $this->adicionarBNCCMultiplaEscolha();
         $this->adicionarConteudosTabela();
@@ -210,14 +210,14 @@ return new class extends clsCadastro
     private function getBNCCTurma($turma = null, $ref_cod_componente_curricular_array = null)
     {
         if (is_numeric($turma)) {
-            $obj = new clsPmieducarTurma($turma);
-            $resultado = $obj->getGrau();
+            // $obj = new clsPmieducarTurma($turma);
+            // $resultado = $obj->getGrau();
 
             $bncc = [];
             $bncc_temp = [];
             $obj = new clsModulesBNCC();
 
-            if ($bncc_temp = $obj->listaTurmaAee($resultado, $turma, $ref_cod_componente_curricular_array)) {
+            if ($bncc_temp = $obj->listaTurmaAee($turma, $ref_cod_componente_curricular_array)) {
                 foreach ($bncc_temp as $bncc_item) {
                     $id = $bncc_item['id'];
                     $codigo = $bncc_item['codigo'];

@@ -31,6 +31,15 @@ class clsModulesBNCC extends Model
             unnest(bncc.serie_ids) as serie_id
         ';
 
+        $this->_campos_lista_aee = $this->_todos_campos_aee = '
+            bncc.id,
+            bncc.codigo,
+            bncc.habilidade,
+            bncc.campo_experiencia,
+            bncc.unidade_tematica,
+            bncc.componente_curricular_id
+        ';
+
         if (is_numeric($id)) {
             $this->id = $id;
         }
@@ -248,29 +257,30 @@ class clsModulesBNCC extends Model
      * @return array
      */
     public function listaTurmaAee(
-        //$int_modo = 0,
         $int_turma = null,
         $int_cod_componente_curricular = null
     ) {
-        //$modo = $int_modo == 0 ? '(bncc.componente_curricular_id = cc.codigo_educacenso))' : '(bncc.campo_experiencia = cc.id))';
-
         $sql = "
-        SELECT bncc.id,
-        bncc.codigo,
-        bncc.habilidade,
-        bncc.campo_experiencia,
-        bncc.unidade_tematica,
-        bncc.componente_curricular_id,
-        t.tipo_atendimento,
-        unnest(bncc.serie_ids) as serie_id
-        FROM pmieducar.turma as t
+        WITH select_ as (
+            SELECT
+                {$this->_campos_lista_aee}
+            FROM
+                {$this->_from}
+        )
+            SELECT
+                bncc.id,
+                codigo,
+                habilidade,
+                campo_experiencia,
+                unidade_tematica,
+                componente_curricular_id
+            FROM pmieducar.turma as t
             JOIN pmieducar.escola_serie_disciplina as esd
                 ON (esd.ref_ref_cod_serie = t.ref_ref_cod_serie)
             JOIN modules.componente_curricular as cc
                 ON (cc.id = esd.ref_cod_disciplina)
-            JOIN modules.bncc as bncc
-                ON (bncc.campo_experiencia = cc.id)
-
+            JOIN select_ as bncc
+                ON (bncc.campo_experiencia = cc.id)       
         ";
 
         $whereAnd = 'WHERE ';
@@ -282,7 +292,7 @@ class clsModulesBNCC extends Model
         }
 
         if (is_numeric($int_cod_componente_curricular)) {
-            $filtros .= "{$whereAnd} esd.ref_cod_disciplina = '{$int_cod_componente_curricular}'";
+            $filtros .= "{$whereAnd} cc.id = '{$int_cod_componente_curricular}'";
             $whereAnd = ' AND';
         }
 
@@ -299,7 +309,7 @@ class clsModulesBNCC extends Model
             "
             WITH select_ as (
                 SELECT
-                    {$this->_campos_lista}
+                    {$this->_campos_lista_aee}
                 FROM
                     {$this->_from}
             )
@@ -311,7 +321,7 @@ class clsModulesBNCC extends Model
                 JOIN modules.componente_curricular as cc
                     ON (cc.id = esd.ref_cod_disciplina)
                 JOIN select_ as bncc
-                    ON (bncc.campo_experiencia = cc.id
+                    ON (bncc.campo_experiencia = cc.id)
                 {$filtros}"
         );
 

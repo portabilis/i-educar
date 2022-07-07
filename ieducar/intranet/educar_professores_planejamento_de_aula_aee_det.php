@@ -39,8 +39,8 @@ return new class extends clsDetalhe {
             $this->simpleRedirect('educar_professores_planejamento_de_aula_aee_lst.php');
         }
 
-        $obj = new clsPmieducarTurma($registro['detalhes']['ref_cod_turma']);
-        $resultado = $obj->getGrau();
+        // $obj = new clsPmieducarTurma($registro['detalhes']['ref_cod_turma']);
+        // $resultado = $obj->getGrau();
 
         if ($registro['detalhes']['id']) {
             $this->addDetalhe(
@@ -74,6 +74,15 @@ return new class extends clsDetalhe {
                 [
                     'Turma',
                     $registro['detalhes']['turma']
+                ]
+            );
+        }
+
+        if ($registro['detalhes']['ref_cod_matricula']) {
+            $this->addDetalhe(
+                [
+                    'Aluno',
+                    $registro['detalhes']['aluno']
                 ]
             );
         }
@@ -117,15 +126,6 @@ return new class extends clsDetalhe {
             );
         }
 
-        if ($registro['detalhes']['atividades']) {
-            $this->addDetalhe(
-                [
-                    'Atividades',
-                    $registro['detalhes']['atividades']
-                ]
-            );
-        }
-
         if ($registro['detalhes']['recursos_didaticos']) {
             $this->addDetalhe(
                 [
@@ -135,20 +135,29 @@ return new class extends clsDetalhe {
             );
         }
 
-        if ($registro['detalhes']['registro_adaptacao']) {
+        if ($registro['detalhes']['necessidade_aprendizagem']) {
             $this->addDetalhe(
                 [
-                    'Registro de adaptação',
-                    $registro['detalhes']['registro_adaptacao']
+                    'Necessidade de Aprendizagem',
+                    $registro['detalhes']['necessidade_aprendizagem']
                 ]
             );
         }
 
-        if ($registro['detalhes']['referencias']) {
+        if ($registro['detalhes']['caracterizacao_pedagogica']) {
             $this->addDetalhe(
                 [
-                    'Referências',
-                    $registro['detalhes']['referencias']
+                    'Caracterização Pedagógica',
+                    $registro['detalhes']['caracterizacao_pedagogica']
+                ]
+            );
+        }
+
+        if ($registro['detalhes']['outros']) {
+            $this->addDetalhe(
+                [
+                    'Outros',
+                    $registro['detalhes']['outros']
                 ]
             );
         }
@@ -163,22 +172,22 @@ return new class extends clsDetalhe {
             $sequencia = $registro['detalhes']['fase_etapa'];
             $obj = new clsPmieducarTurmaModulo();
 
-            $data = $obj->pegaPeriodoLancamentoNotasFaltas($turma, $sequencia);
-            if ($data['inicio'] != null && $data['fim'] != null) {
-                $data['inicio'] = explode(',', $data['inicio']);
-                $data['fim'] = explode(',', $data['fim']);
+            // $data = $obj->pegaPeriodoLancamentoNotasFaltas($turma, $sequencia);
+            // if ($data['inicio'] != null && $data['fim'] != null) {
+            //     $data['inicio'] = explode(',', $data['inicio']);
+            //     $data['fim'] = explode(',', $data['fim']);
 
-                array_walk($data['inicio'], function(&$data_inicio, $key) {
-                    $data_inicio = new \DateTime($data_inicio);
-                });
+            //     array_walk($data['inicio'], function(&$data_inicio, $key) {
+            //         $data_inicio = new \DateTime($data_inicio);
+            //     });
 
-                array_walk($data['fim'], function(&$data_fim, $key) {
-                    $data_fim = new \DateTime($data_fim);
-                });
-            } else {
-                $data['inicio'] = new \DateTime($obj->pegaEtapaSequenciaDataInicio($turma, $sequencia));
-                $data['fim'] = new \DateTime($obj->pegaEtapaSequenciaDataFim($turma, $sequencia));
-            }
+            //     array_walk($data['fim'], function(&$data_fim, $key) {
+            //         $data_fim = new \DateTime($data_fim);
+            //     });
+            // } else {
+            //     $data['inicio'] = new \DateTime($obj->pegaEtapaSequenciaDataInicio($turma, $sequencia));
+            //     $data['fim'] = new \DateTime($obj->pegaEtapaSequenciaDataFim($turma, $sequencia));
+            // }
 
             $podeEditar = false;
             if (is_array($data['inicio']) && is_array($data['fim'])) {

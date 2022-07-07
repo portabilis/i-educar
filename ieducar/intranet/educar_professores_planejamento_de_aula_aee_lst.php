@@ -111,6 +111,7 @@ return new class extends clsListagem {
             $this->ref_cod_escola,
             $this->ref_cod_curso,
             $this->ref_cod_turma,
+            $this->ref_cod_matricula,
             $this->data_inicial,
             $this->data_final,
             $eh_professor ? $this->pessoa_logada : null         // Passe o ID do servidor caso ele seja um professor

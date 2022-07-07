@@ -1357,9 +1357,9 @@ class clsPmieducarTurma extends Model
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
         $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} t left outer join {$this->_schema}serie s on (t.ref_ref_cod_serie = s.cod_serie), {$this->_schema}curso c , {$this->_schema}instituicao i {$filtros}");
-       
+
         $db->Consulta($sql);
-       
+
 
         if ($countCampos > 1) {
             while ($db->ProximoRegistro()) {
@@ -1380,7 +1380,7 @@ class clsPmieducarTurma extends Model
 
         return false;
     }
-  
+
 
 
     /**
@@ -1589,7 +1589,7 @@ class clsPmieducarTurma extends Model
         return false;
     }
 
-     /**
+    /**
      * Retorna uma lista de turmas sem Professores
      *
      * @return array
@@ -1766,16 +1766,16 @@ class clsPmieducarTurma extends Model
         if (is_numeric($ano)) {
             $filtros .= "{$whereAnd} t.ano = '{$ano}'";
         }
-        
+
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
         $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} t left join modules.professor_turma pt ON (t.cod_turma = pt.turma_id) left outer join {$this->_schema}serie s on (t.ref_ref_cod_serie = s.cod_serie), {$this->_schema}curso c , {$this->_schema}instituicao i {$filtros}");
-       
+
         $db->Consulta($sql);
-       
+
 
         if ($countCampos > 1) {
             while ($db->ProximoRegistro()) {
@@ -1796,7 +1796,7 @@ class clsPmieducarTurma extends Model
 
         return false;
     }
-  
+
 
     public function pegarTurma($ref_cod_matricula)
     {
@@ -1820,44 +1820,44 @@ class clsPmieducarTurma extends Model
         
         
         ";
-    $filtros = '';
-    $whereAnd = 'WHERE';
+        $filtros = '';
+        $whereAnd = 'WHERE';
 
-    if(is_numeric($ref_cod_matricula)){
-        $filtros .= "{$whereAnd} ref_cod_matricula = '{$ref_cod_matricula}'";
-        $whereAnd = 'AND ';
-    }
+        if (is_numeric($ref_cod_matricula)) {
+            $filtros .= "{$whereAnd} ref_cod_matricula = '{$ref_cod_matricula}'";
+            $whereAnd = 'AND ';
+        }
 
 
         $db = new clsBanco;
         $resultado = [];
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
-   
-    
-    
-   $db->Consulta($sql);
-   $countCampos = count(explode(',', "ref_cod_turma"));
-  
-   if ($countCampos > 1) {
-    while ($db->ProximoRegistro()) {
-        $tupla = $db->Tupla();
 
-        $tupla['_total'] = $this->_total;
-        $resultado[] = $tupla;
-    }
-} else {
-    while ($db->ProximoRegistro()) {
-        $tupla = $db->Tupla();
-        $resultado[] = $tupla['ref_cod_turma'];
-    }
-}
-if (count($resultado)) {
-    return $resultado;
-}
 
-return false;
+
+        $db->Consulta($sql);
+        $countCampos = count(explode(',', "ref_cod_turma"));
+
+        if ($countCampos > 1) {
+            while ($db->ProximoRegistro()) {
+                $tupla = $db->Tupla();
+
+                $tupla['_total'] = $this->_total;
+                $resultado[] = $tupla;
+            }
+        } else {
+            while ($db->ProximoRegistro()) {
+                $tupla = $db->Tupla();
+                $resultado[] = $tupla['ref_cod_turma'];
+            }
+        }
+        if (count($resultado)) {
+            return $resultado;
+        }
+
+        return false;
     }
-    
+
 
     /**
      * Retorna um array com os dados de um registro
@@ -2014,7 +2014,8 @@ return false;
     }
 
     // Pega o grau da turma (infantil -> 1 vs fundamental -> 0)
-    public function getGrau() {
+    public function getGrau()
+    {
         if ($this->cod_turma) {
             $db = new clsBanco();
 
@@ -2029,6 +2030,7 @@ return false;
                 FROM
                     pmieducar.turma as t
                 WHERE t.cod_turma = {$this->cod_turma}
+                AND t.tipo_atendimento = 5
             ";
 
             $db->Consulta($sql);
@@ -2040,15 +2042,45 @@ return false;
         return false;
     }
 
+     // Pega o tipo da turma (AEE -> 1 vs REGULAR -> 0)
+     public function getTipoTurma()
+     {
+         if ($this->cod_turma) {
+             $db = new clsBanco();
+ 
+             $sql = "
+                 SELECT
+                     CASE
+                         WHEN t.tipo_atendimento = 5 THEN 1                        
+                         ELSE 0
+                     END
+                 FROM
+                     pmieducar.turma as t
+                 WHERE t.cod_turma = {$this->cod_turma}
+             ";
+ 
+             $db->Consulta($sql);
+             $db->ProximoRegistro();
+ 
+             return $db->Tupla()[0];
+         }
+ 
+         return false;
+     }
+
     public function lista_turmas_aee()
     {
 
         $db = new clsBanco();
         $ano_turma = date('Y');
-        $sql = "SELECT cod_turma, nm_turma FROM pmieducar.turma
-        WHERE tipo_atendimento = 5
-        AND ano = $ano_turma
-        ORDER BY nm_turma ASC";
+        $sql = "SELECT t.cod_turma, t.nm_turma, p.nome 
+        FROM pmieducar.turma t
+        JOIN pmieducar.escola e ON e.cod_escola = t.ref_ref_cod_escola
+        JOIN cadastro.pessoa p ON p.idpes = e.ref_idpes
+        WHERE t.tipo_atendimento = 5
+                AND t.ano =  $ano_turma
+                AND t.ativo = 1
+                ORDER BY t.nm_turma ASC";
 
         $db->Consulta($sql);
 

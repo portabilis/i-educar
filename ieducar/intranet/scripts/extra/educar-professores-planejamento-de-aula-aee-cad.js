@@ -309,7 +309,6 @@
       var caracterizacao_pedagogica = document.getElementById("caracterizacao_pedagogica").value;
       var conteudos = pegarConteudos();
       var componentesCurriculares = pegarComponentesCurriculares();
-      var componentesCurricularesGeral = pegarComponentesCurricularesGeral();
       var bnccs = pegarBNCCs();
       var bnccEspecificacoes = pegarBNCCEspecificacoes();
       var recursos_didaticos = document.getElementById("recursos_didaticos").value;
@@ -320,14 +319,13 @@
       if (!ehDataValida(new Date(data_final))) { alert("Data final não é válida."); return; }
       if (isNaN(parseInt(turma, 10))) { alert("Turma é obrigatória."); return; }
       if (isNaN(parseInt(matricula, 10))) { alert("Aluno é obrigatório."); return; }
-      //if (isNaN(parseInt(faseEtapa, 10))) { alert("Etapa é obrigatória."); return; }
+      if (isNaN(parseInt(faseEtapa, 10))) { alert("Etapa é obrigatória."); return; }
       if (ddp == null || ddp == '') { alert("Metodologia é obrigatória."); return; }
       if (necessidade_aprendizagem == null) { alert("O campo Necessidade de Aprendizagem não é válido."); return; }
       if (caracterizacao_pedagogica == null) { alert("O campo Caracterização Pedagógica não é válido."); return; }
       if (!ehComponentesCurricularesValidos(componentesCurriculares)) { alert("Os componentes curriculares são obrigatórios."); return; }
-      if (!componentesCurricularesPreenchidos(componentesCurriculares, componentesCurricularesGeral)) { alert("Existem componentes sem planejamento."); }
-      //if (!ehBNCCsValidos(bnccs)) { alert("As habilidades são obrigatórias."); return; }
-      //if (!ehBNCCEspecificacoesValidos(bnccEspecificacoes)) { alert("As especificações são obrigatórias."); return; }
+      if (!ehBNCCsValidos(bnccs)) { alert("As habilidades são obrigatórias."); return; }
+      if (!ehBNCCEspecificacoesValidos(bnccEspecificacoes)) { alert("As especificações são obrigatórias."); return; }
       if (!ehConteudosValidos(conteudos)) { alert("Os conteúdos são obrigatórios."); return; }
       if (recursos_didaticos == null) { alert("O campo recursos didáticos não é válido."); return; }
       if (outros == null) { alert("O campo Outros não é válido."); return; }
@@ -417,7 +415,7 @@
           turma: turma,
           matricula: matricula,
           faseEtapa: faseEtapa,
-          ddp,         
+          ddp: ddp,         
           necessidade_aprendizagem: necessidade_aprendizagem,
           caracterizacao_pedagogica: caracterizacao_pedagogica,
           conteudos: conteudos,
