@@ -2587,6 +2587,12 @@ return new class extends clsCadastro {
             return false;
         }
 
+        if (is_array($this->rede_local) && in_array(RedeLocal::NENHUMA, $this->rede_local) && count($this->rede_local) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Rede local de interligação de computadores</b>, quando a opção: <b>Não há rede local interligando computadores</b> estiver selecionada.';
+
+            return false;
+        }
+
         if (is_array($this->uso_internet) && in_array(UsoInternet::NAO_POSSUI, $this->uso_internet) && count($this->uso_internet) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Acesso à internet</b>, quando a opção: <b>Não possui acesso à internet</b> estiver selecionada.';
 
