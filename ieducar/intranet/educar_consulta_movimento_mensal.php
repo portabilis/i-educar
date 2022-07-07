@@ -78,12 +78,12 @@ return new class extends clsCadastro {
         $this->inputsHelper()->dynamic(['dataInicial', 'dataFinal']);
 
         Portabilis_View_Helper_Application::loadJavascript($this, [
-            '/modules/Portabilis/Assets/Plugins/Chosen/chosen.jquery.min.js',
+            '/vendor/legacy/Portabilis/Assets/Plugins/Chosen/chosen.jquery.min.js',
             '/intranet/scripts/movimento_mensal.js',
         ]);
 
         Portabilis_View_Helper_Application::loadStylesheet($this, [
-            '/modules/Portabilis/Assets/Plugins/Chosen/chosen.css'
+            '/vendor/legacy/Portabilis/Assets/Plugins/Chosen/chosen.css'
         ]);
     }
 

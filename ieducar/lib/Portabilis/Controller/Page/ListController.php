@@ -36,20 +36,20 @@ class Portabilis_Controller_Page_ListController extends Core_Controller_Page_Lis
         Portabilis_View_Helper_Application::loadJQueryFormLib($this);
 
         $styles = [
-            '/modules/Portabilis/Assets/Stylesheets/Frontend.css',
-            '/modules/Portabilis/Assets/Stylesheets/Frontend/Process.css'
+            '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend.css',
+            '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend/Process.css'
         ];
 
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
 
         $scripts = [
-            '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
-            '/modules/Portabilis/Assets/Javascripts/Validator.js',
-            '/modules/Portabilis/Assets/Javascripts/Utils.js'
+            '/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js',
+            '/vendor/legacy/Portabilis/Assets/Javascripts/Validator.js',
+            '/vendor/legacy/Portabilis/Assets/Javascripts/Utils.js'
         ];
 
         if (!$this->backwardCompatibility) {
-            $scripts[] = '/modules/Portabilis/Assets/Javascripts/Frontend/Process.js';
+            $scripts[] = '/vendor/legacy/Portabilis/Assets/Javascripts/Frontend/Process.js';
         }
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);

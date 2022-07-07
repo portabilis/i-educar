@@ -50,7 +50,7 @@ return new class extends clsDetalhe {
     public function Gerar()
     {
         // carrega estilo para feedback messages, exibindo msgs da api.
-        $style = '/modules/Portabilis/Assets/Stylesheets/Frontend.css';
+        $style = '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend.css';
         Portabilis_View_Helper_Application::loadStylesheet($this, $style);
 
         $this->titulo = 'Matrícula - Detalhe';
@@ -453,9 +453,9 @@ return new class extends clsDetalhe {
 
         // js
         $scripts = [
-            '/modules/Portabilis/Assets/Javascripts/Utils.js',
-            '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
-            '/modules/Cadastro/Assets/Javascripts/MatriculaShow.js'
+            '/vendor/legacy/Portabilis/Assets/Javascripts/Utils.js',
+            '/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/MatriculaShow.js'
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);

@@ -16,7 +16,7 @@ function removeImgLoadingFor($targetElement) {
 
 function appendImgLoadingTo($targetElement) {
   if ($targetElement.siblings('img').length < 1);
-    $j('<img alt="loading..." src="/modules/Portabilis/Assets/Images/loading.gif" />').appendTo($targetElement.parent());
+    $j('<img alt="loading..." src="/vendor/legacy/Portabilis/Assets/Images/loading.gif" />').appendTo($targetElement.parent());
 }
 
 

@@ -117,20 +117,20 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
         Portabilis_View_Helper_Application::loadJQueryFormLib($this);
 
         $styles = [
-            '/modules/Portabilis/Assets/Stylesheets/Frontend.css',
-            '/modules/Portabilis/Assets/Stylesheets/Frontend/Resource.css',
+            '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend.css',
+            '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend/Resource.css',
         ];
 
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
 
         $scripts = [
-            '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
-            '/modules/Portabilis/Assets/Javascripts/Validator.js',
-            '/modules/Portabilis/Assets/Javascripts/Utils.js'
+            '/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js',
+            '/vendor/legacy/Portabilis/Assets/Javascripts/Validator.js',
+            '/vendor/legacy/Portabilis/Assets/Javascripts/Utils.js'
         ];
 
         if (!$this->backwardCompatibility) {
-            $scripts[] = '/modules/Portabilis/Assets/Javascripts/Frontend/Resource.js';
+            $scripts[] = '/vendor/legacy/Portabilis/Assets/Javascripts/Frontend/Resource.js';
         }
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);

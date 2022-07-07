@@ -28,7 +28,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
     {
         Portabilis_View_Helper_Application::loadStylesheet($this, [
             '/modules/HistoricoEscolar/Static/styles/processamento.css',
-            '/modules/Portabilis/Assets/Plugins/Chosen/chosen.css'
+            '/vendor/legacy/Portabilis/Assets/Plugins/Chosen/chosen.css'
         ]);
 
         $this->inputsHelper()->dynamic(['ano', 'instituicao', 'escola']);
@@ -236,10 +236,10 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
         Portabilis_View_Helper_Application::loadJavascript(
             $this,
             [
-                '/modules/Portabilis/Assets/Javascripts/Utils.js',
-                '/modules/Portabilis/Assets/Plugins/Chosen/chosen.jquery.min.js',
-                '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/MultipleSearch.js',
-                '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js',
+                '/vendor/legacy/Portabilis/Assets/Javascripts/Utils.js',
+                '/vendor/legacy/Portabilis/Assets/Plugins/Chosen/chosen.jquery.min.js',
+                '/vendor/legacy/Portabilis/Assets/Javascripts/Frontend/Inputs/MultipleSearch.js',
+                '/vendor/legacy/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js',
                 '/modules/HistoricoEscolar/Static/scripts/processamento.js'
             ]
         );

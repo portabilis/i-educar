@@ -136,8 +136,8 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract
 
     public static function loadChosenLib($viewInstance)
     {
-        self::loadStylesheet($viewInstance, '/modules/Portabilis/Assets/Plugins/Chosen/chosen.css', false);
-        self::loadJavascript($viewInstance, '/modules/Portabilis/Assets/Plugins/Chosen/chosen.jquery.min.js', false);
+        self::loadStylesheet($viewInstance, '/vendor/legacy/Portabilis/Assets/Plugins/Chosen/chosen.css', false);
+        self::loadJavascript($viewInstance, '/vendor/legacy/Portabilis/Assets/Plugins/Chosen/chosen.jquery.min.js', false);
     }
 
     public static function loadAjaxChosenLib($viewInstance)
@@ -147,6 +147,6 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract
 
         Portabilis_View_Helper_Application::embedStylesheet($viewInstance, $fixupCss);
 
-        self::loadJavascript($viewInstance, '/modules/Portabilis/Assets/Plugins/AjaxChosen/ajax-chosen.min.js', false);
+        self::loadJavascript($viewInstance, '/vendor/legacy/Portabilis/Assets/Plugins/AjaxChosen/ajax-chosen.min.js', false);
     }
 }

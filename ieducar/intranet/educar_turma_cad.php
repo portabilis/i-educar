@@ -676,15 +676,15 @@ return new class extends clsCadastro {
         $this->inputsHelper()->checkbox('nao_informar_educacenso', $options);
 
         $scripts = [
-            '/modules/Cadastro/Assets/Javascripts/Turma.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/Turma.js',
             '/intranet/scripts/etapas.js',
             '/intranet/scripts/tabelaSerieMult.js',
-            '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
+            '/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
 
-        $styles = ['/modules/Cadastro/Assets/Stylesheets/Turma.css'];
+        $styles = ['/vendor/legacy/Cadastro/Assets/Stylesheets/Turma.css'];
 
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
     }

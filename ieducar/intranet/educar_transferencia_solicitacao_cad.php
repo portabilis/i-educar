@@ -34,10 +34,10 @@ return new class extends clsCadastro {
     {
         parent::__construct();
         Portabilis_View_Helper_Application::loadStylesheet($this, [
-            '/modules/Portabilis/Assets/Stylesheets/Frontend/Resource.css'
+            '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend/Resource.css'
         ]);
         Portabilis_View_Helper_Application::loadJavascript($this, [
-            '/modules/Cadastro/Assets/Javascripts/TransferenciaSolicitacao.js'
+            '/vendor/legacy/Cadastro/Assets/Javascripts/TransferenciaSolicitacao.js'
         ]);
     }
 

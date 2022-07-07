@@ -188,7 +188,7 @@ return new class extends clsDetalhe {
             $this->array_botao_url = ["educar_escola_ano_letivo_cad.php?cod_escola={$registro['cod_escola']}"];
         }
 
-        $styles = ['/modules/Cadastro/Assets/Stylesheets/EscolaAnosLetivos.css'];
+        $styles = ['/vendor/legacy/Cadastro/Assets/Stylesheets/EscolaAnosLetivos.css'];
 
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
 

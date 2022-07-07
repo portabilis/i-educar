@@ -16,7 +16,7 @@ return new class extends clsCadastro {
 
     protected function loadAssets()
     {
-        $jsFile = '/modules/Cadastro/Assets/Javascripts/ModalExclusaoEscolaridade.js';
+        $jsFile = '/vendor/legacy/Cadastro/Assets/Javascripts/ModalExclusaoEscolaridade.js';
         Portabilis_View_Helper_Application::loadJavascript($this, $jsFile);
     }
 

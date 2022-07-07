@@ -81,8 +81,8 @@
     <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/prototype/prototype-1.7.1.0.js") }} "></script>
     <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/scriptaculous/effects.js") }} "></script>
     <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/jquery.mask.min.js") }} "></script>
-    <script type='text/javascript' src='{{ Asset::get('/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js') }}'></script>
-    <script type='text/javascript' src='{{ Asset::get('/modules/Portabilis/Assets/Javascripts/Utils.js') }}'></script>
+    <script type='text/javascript' src='{{ Asset::get('/vendor/legacy/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js') }}'></script>
+    <script type='text/javascript' src='{{ Asset::get('/vendor/legacy/Portabilis/Assets/Javascripts/Utils.js') }}'></script>
     <script type='text/javascript' src='{{ Asset::get('/intranet/scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js') }}'></script>
     <script type='text/javascript' src='{{ Asset::get('/intranet/scripts/summernote/summernote-lite.js') }}'></script>
     <script type='text/javascript' src='{{ Asset::get('/intranet/scripts/summernote/summernote-pt-BR.js') }}'></script>

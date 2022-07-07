@@ -423,13 +423,13 @@ return new class extends clsCadastro {
 
         $this->addPosgraduateTable();
 
-        $scripts = ['/modules/Cadastro/Assets/Javascripts/Servidor.js'];
+        $scripts = ['/vendor/legacy/Cadastro/Assets/Javascripts/Servidor.js'];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
 
         $styles = [
-            '/modules/Cadastro/Assets/Stylesheets/Servidor.css',
-            '/modules/Portabilis/Assets/Stylesheets/Frontend/Resource.css'
+            '/vendor/legacy/Cadastro/Assets/Stylesheets/Servidor.css',
+            '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend/Resource.css'
         ];
 
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
