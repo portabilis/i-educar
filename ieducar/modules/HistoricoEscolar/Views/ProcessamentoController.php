@@ -27,7 +27,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
     public function Gerar()
     {
         Portabilis_View_Helper_Application::loadStylesheet($this, [
-            '/modules/HistoricoEscolar/Static/styles/processamento.css',
+            '/vendor/legacy/HistoricoEscolar/Static/styles/processamento.css',
             '/vendor/legacy/Portabilis/Assets/Plugins/Chosen/chosen.css'
         ]);
 
@@ -240,7 +240,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
                 '/vendor/legacy/Portabilis/Assets/Plugins/Chosen/chosen.jquery.min.js',
                 '/vendor/legacy/Portabilis/Assets/Javascripts/Frontend/Inputs/MultipleSearch.js',
                 '/vendor/legacy/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js',
-                '/modules/HistoricoEscolar/Static/scripts/processamento.js'
+                '/vendor/legacy/HistoricoEscolar/Static/scripts/processamento.js'
             ]
         );
     }
