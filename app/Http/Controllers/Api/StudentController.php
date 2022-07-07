@@ -21,6 +21,7 @@ class StudentController extends Controller
      */
     public function updateStateRegistration(UpdateStateRegistrationRequest $request, LegacyStudent $student)
     {
+        dd($request->getStateRegistration());
         $student->state_registration_id = $request->getStateRegistration();
         $student->saveOrFail();
 

@@ -4,7 +4,9 @@ namespace Tests\Feature\Api;
 
 use App\Models\LegacyStudent;
 use Database\Factories\LegacyStudentFactory;
+use Exception;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
@@ -60,6 +62,7 @@ class StudentControllerTest extends TestCase
 
     public function testUpdateStateRegistrationDuplicated()
     {
+        $this->withoutExceptionHandling();
         $this->expectException(ValidationException::class);
 
         $stateRegistration = '000.000.000';
@@ -80,6 +83,7 @@ class StudentControllerTest extends TestCase
 
     public function testUpdateStateRegistrationInvalid()
     {
+        $this->withoutExceptionHandling();
         $this->expectException(ValidationException::class);
 
         /** @var LegacyStudent $student */
