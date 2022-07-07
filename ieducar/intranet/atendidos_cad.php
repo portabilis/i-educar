@@ -813,15 +813,6 @@ return new class extends clsCadastro {
             return false;
         }
 
-        $cliente = new clsPmieducarCliente();
-        $cliente = $cliente->lista(null, null, null, $idPes, null, null, null, null, null, null, 1);
-
-        if ($cliente) {
-            $this->mensagem = 'Não foi possível excluir. Esta pessoa possuí vínculo com cliente.';
-
-            return false;
-        }
-
         $usuarioTransporte = new clsModulesPessoaTransporte();
         $usuarioTransporte = $usuarioTransporte->lista(null, $idPes);
 
