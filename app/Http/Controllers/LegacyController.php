@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Closure;
 use clsBase;
 use CoreExt_Exception_FileNotFoundException;
 use Exception;
@@ -19,6 +20,11 @@ class LegacyController extends Controller
     private $request;
 
     /**
+     * @var array
+     */
+    private static array $resolvers = [];
+
+    /**
      * LegacyController constructor.
      *
      * @param Request $request
@@ -26,6 +32,16 @@ class LegacyController extends Controller
     public function __construct(Request $request)
     {
         $this->request = $request;
+    }
+
+    /**
+     * @param Closure $resolver
+     *
+     * @return void
+     */
+    public static function resolver(Closure $resolver): void
+    {
+        static::$resolvers[] = $resolver;
     }
 
     /**
@@ -71,7 +87,13 @@ class LegacyController extends Controller
      */
     private function loadLegacyFile($filename)
     {
-        $legacyFile = $this->getLegacyPath() . '/' . $filename;
+        foreach (static::$resolvers as $resolver) {
+            $legacyFile = $resolver($filename);
+        }
+
+        if (empty($legacyFile)) {
+            $legacyFile = $this->getLegacyPath() . '/' . $filename;
+        }
 
         if (false === file_exists($legacyFile)) {
             throw new NotFoundHttpException('Legacy file not found.');
