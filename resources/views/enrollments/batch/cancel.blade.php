@@ -102,9 +102,9 @@
                                        {{ $success->first($enrollment->id) ? 'disabled' : '' }} />
                             </label>
                         </td>
-                        <td>{{ $enrollment->registration->cod_matricula }}</td>
-                        <td>{{ $enrollment->student_name }}</td>
-                        <td>{{ $enrollment->data_enturmacao->format('d/m/Y') }}</td>
+                        <td>{{ $enrollment?->registration?->cod_matricula }}</td>
+                        <td>{{ $enrollment?->student_name }}</td>
+                        <td>{{ $enrollment?->data_enturmacao->format('d/m/Y') }}</td>
                         <td>
                             {{ $success->first($enrollment->id) }}
                             {{ $fails->first($enrollment->id) }}
