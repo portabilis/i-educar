@@ -2030,7 +2030,6 @@ class clsPmieducarTurma extends Model
                 FROM
                     pmieducar.turma as t
                 WHERE t.cod_turma = {$this->cod_turma}
-                AND t.tipo_atendimento = 5
             ";
 
             $db->Consulta($sql);
