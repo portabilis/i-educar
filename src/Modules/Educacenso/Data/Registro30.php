@@ -78,7 +78,6 @@ class Registro30 extends AbstractRegistro
         $componentesDesconsiderados = [32, 99];
 
         foreach ($componentes as $key => $componente) {
-
             if ($anulaProximoComponente === true || (int) $componente === 0 || in_array($componente, $componentesDesconsiderados)) {
                 $anulaProximoComponente = true;
                 $componentes[$key] = null;
