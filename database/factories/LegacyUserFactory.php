@@ -53,4 +53,20 @@ class LegacyUserFactory extends Factory
             ];
         });
     }
+
+    public function withAccess($process, $view = true, $modify = true, $remove = true): static
+    {
+        return $this->afterCreating(function (LegacyUser $user) use ($process, $view, $modify, $remove) {
+            $menu = MenuFactory::new()->create(
+                ['process' => $process]
+            );
+            LegacyMenuUserTypeFactory::new()->create([
+                'menu_id' => $menu,
+                'ref_cod_tipo_usuario' => $user->type,
+                'cadastra' => $modify,
+                'visualiza' => $view,
+                'exclui' => $remove,
+            ]);
+        });
+    }
 }
