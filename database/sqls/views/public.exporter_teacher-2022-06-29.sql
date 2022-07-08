@@ -23,7 +23,7 @@ select
 		ELSE ''
     END AS high_school_type,
 	form.continuing_education_course,
-    sf.matricula AS matricula
+    sf.matricula AS enrollments
 from modules.professor_turma pt
 inner join public.exporter_person p
 on p.id = pt.servidor_id
