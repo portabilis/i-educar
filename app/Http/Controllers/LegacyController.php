@@ -45,6 +45,21 @@ class LegacyController extends Controller
     }
 
     /**
+     * @param string $uri
+     * @param string $path
+     *
+     * @return string
+     */
+    public static function resolve(string $uri, string $path): string
+    {
+        foreach (static::$resolvers as $resolver) {
+            $path = $resolver($uri) ?? $path;
+        }
+
+        return $path;
+    }
+
+    /**
      * Return i-Educar legacy code path.
      *
      * @return string
@@ -87,13 +102,7 @@ class LegacyController extends Controller
      */
     private function loadLegacyFile($filename)
     {
-        foreach (static::$resolvers as $resolver) {
-            $legacyFile = $resolver($filename);
-        }
-
-        if (empty($legacyFile)) {
-            $legacyFile = $this->getLegacyPath() . '/' . $filename;
-        }
+        $legacyFile = static::resolve($filename, $this->getLegacyPath() . '/' . $filename);
 
         if (false === file_exists($legacyFile)) {
             throw new NotFoundHttpException('Legacy file not found.');
