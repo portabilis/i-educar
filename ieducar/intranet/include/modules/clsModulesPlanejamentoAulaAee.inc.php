@@ -347,10 +347,14 @@ class clsModulesPlanejamentoAulaAee extends Model
         $int_ref_cod_ins = null,
         $int_ref_cod_escola = null,
         $int_ref_cod_curso = null,
+        $int_ref_cod_serie = null,
         $int_ref_cod_turma = null,
         $int_ref_cod_matricula = null,
+        $int_ref_cod_componente_curricular = null,
+        $int_ref_cod_turno = null,
         $time_data_inicial = null,
         $time_data_final = null,
+        $int_etapa = null,
         $int_servidor_id = null,
         $time_data = null
     ) {
@@ -395,6 +399,7 @@ class clsModulesPlanejamentoAulaAee extends Model
         }
 
         if ($time_data_inicial) {
+            $time_data_inicial = Portabilis_Date_Utils::brToPgSQL($time_data_inicial);
             $filtros .= "{$whereAnd} pa.data_inicial >= '{$time_data_inicial}'";
             $whereAnd = ' AND ';
         }
@@ -475,6 +480,9 @@ class clsModulesPlanejamentoAulaAee extends Model
             $db->ProximoRegistro();
 
             $data['detalhes'] = $db->Tupla();
+
+            $obj = new clsModulesPlanejamentoAulaComponenteCurricular();
+            $data['componentesCurriculares'] = $obj->lista($this->id);
 
             $obj = new clsModulesPlanejamentoAulaBNCC();
             $data['bnccs'] = $obj->lista($this->id);

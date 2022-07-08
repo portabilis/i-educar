@@ -39,8 +39,8 @@ return new class extends clsDetalhe {
             $this->simpleRedirect('educar_professores_planejamento_de_aula_aee_lst.php');
         }
 
-        // $obj = new clsPmieducarTurma($registro['detalhes']['ref_cod_turma']);
-        // $resultado = $obj->getGrau();
+        $obj = new clsPmieducarTurma($registro['detalhes']['ref_cod_turma']);
+        $resultado = $obj->getGrau();
 
         if ($registro['detalhes']['id']) {
             $this->addDetalhe(
@@ -69,6 +69,24 @@ return new class extends clsDetalhe {
             );
         }
 
+        if ($registro['detalhes']['escola']) {
+            $this->addDetalhe(
+                [
+                    'Escola',
+                    $registro['detalhes']['escola']
+                ]
+            );
+        }
+
+        if ($registro['detalhes']['professor']) {
+            $this->addDetalhe(
+                [
+                    'Professor',
+                    $registro['detalhes']['professor']
+                ]
+            );
+        }
+
         if ($registro['detalhes']['ref_cod_turma']) {
             $this->addDetalhe(
                 [
@@ -87,11 +105,16 @@ return new class extends clsDetalhe {
             );
         }
 
-        if ($registro['detalhes']['componente_curricular']) {
+        if ($registro['componentesCurriculares']) {
+            $nomeComponenteCurricular = '';
+            foreach ($registro['componentesCurriculares'] as $componenteCurricular) {
+                $nomeComponenteCurricular .= $componenteCurricular['nome'].'<br>';
+            }
+
             $this->addDetalhe(
                 [
                     $resultado == 0 ? 'Componente curricular' : 'Campo de experiência',
-                    $registro['detalhes']['componente_curricular']
+                    $nomeComponenteCurricular
                 ]
             );
         }
