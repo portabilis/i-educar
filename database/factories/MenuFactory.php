@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class MenuFactory extends Factory
 {
-
     protected $model = Menu::class;
 
     /**

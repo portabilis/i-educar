@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyMenuUserTypeFactory extends Factory
 {
-
     protected $model = LegacyMenuUserType::class;
 
     /**
@@ -19,7 +18,8 @@ class LegacyMenuUserTypeFactory extends Factory
     public function definition()
     {
         return [
-            'ref_cod_tipo_usuario' => LegacyUserTypeFactory::new()->create([
+            'ref_cod_tipo_usuario' => LegacyUserTypeFactory::new()->create(
+                [
                     'nivel' => $this->faker->randomElement([
                         App_Model_NivelTipoUsuario::POLI_INSTITUCIONAL,
                         App_Model_NivelTipoUsuario::INSTITUCIONAL,
