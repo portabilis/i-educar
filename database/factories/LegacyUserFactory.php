@@ -37,6 +37,17 @@ class LegacyUserFactory extends Factory
         ];
     }
 
+    public function admin(): static
+    {
+        return $this->state([
+            'ref_cod_tipo_usuario' => function () {
+                return LegacyUserTypeFactory::new()->create([
+                    'nivel' => 1,
+                ]);
+            },
+        ]);
+    }
+
     public function unique()
     {
         return $this->state(function () {
