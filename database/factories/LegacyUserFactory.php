@@ -37,6 +37,17 @@ class LegacyUserFactory extends Factory
         ];
     }
 
+    public function admin(): static
+    {
+        return $this->state([
+            'ref_cod_tipo_usuario' => function () {
+                return LegacyUserTypeFactory::new()->create([
+                    'nivel' => 1,
+                ]);
+            },
+        ]);
+    }
+
     public function unique()
     {
         return $this->state(function () {
@@ -51,6 +62,22 @@ class LegacyUserFactory extends Factory
                 'ref_funcionario_cad' => $user->ref_funcionario_cad,
                 'ref_cod_tipo_usuario' => $user->cod_tipo_usuario,
             ];
+        });
+    }
+
+    public function withAccess($process, $view = true, $modify = true, $remove = true): static
+    {
+        return $this->afterCreating(function (LegacyUser $user) use ($process, $view, $modify, $remove) {
+            $menu = MenuFactory::new()->create(
+                ['process' => $process]
+            );
+            LegacyMenuUserTypeFactory::new()->create([
+                'menu_id' => $menu,
+                'ref_cod_tipo_usuario' => $user->type,
+                'cadastra' => $modify,
+                'visualiza' => $view,
+                'exclui' => $remove,
+            ]);
         });
     }
 }
