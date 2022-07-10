@@ -31,8 +31,10 @@ class clsPessoaTelefone
             // Verifica se ja existe um telefone desse tipo cadastrado para essa pessoa
             if (!$db->numLinhas()) {
                 // nao tem, cadastra 1 novo
-                if ($this->ddd && $this->fone) {
-                    $db->Consulta("INSERT INTO {$this->schema_cadastro}.{$this->tabela_telefone} (idpes, tipo, ddd, fone,origem_gravacao, data_cad, operacao, idpes_cad) VALUES ('$this->idpes', '$this->tipo', '$this->ddd', '$this->fone','M', NOW(), 'I', '$this->idpes_cad')");
+                if (!empty($this->ddd) && !empty($this->fone)) {
+                    $ddd = preg_replace('/\D/', '', $this->ddd);
+                    $fone = preg_replace('/\D/', '', $this->fone);
+                    $db->Consulta("INSERT INTO {$this->schema_cadastro}.{$this->tabela_telefone} (idpes, tipo, ddd, fone,origem_gravacao, data_cad, operacao, idpes_cad) VALUES ('$this->idpes', '$this->tipo', '$ddd', '$fone','M', NOW(), 'I', '$this->idpes_cad')");
 
                     return true;
                 }
