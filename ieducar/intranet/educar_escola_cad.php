@@ -8,24 +8,25 @@ use App\Rules\SchoolManagerAtLeastOneChief;
 use App\Rules\SchoolManagerUniqueIndividuals;
 use App\Services\SchoolManagerService;
 use iEducar\Modules\Addressing\LegacyAddressingFields;
+use iEducar\Modules\Educacenso\Model\AbastecimentoAgua;
 use iEducar\Modules\Educacenso\Model\AreasExternas;
 use iEducar\Modules\Educacenso\Model\Banheiros;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\Dormitorios;
 use iEducar\Modules\Educacenso\Model\Equipamentos;
 use iEducar\Modules\Educacenso\Model\EquipamentosAcessoInternet;
-use iEducar\Modules\Educacenso\Model\EsferaAdministrativa;
+use iEducar\Modules\Educacenso\Model\EsgotamentoSanitario;
+use iEducar\Modules\Educacenso\Model\FonteEnergia;
 use iEducar\Modules\Educacenso\Model\InstrumentosPedagogicos;
 use iEducar\Modules\Educacenso\Model\Laboratorios;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
 use iEducar\Modules\Educacenso\Model\MantenedoraDaEscolaPrivada;
-use iEducar\Modules\Educacenso\Model\OrganizacaoEnsino;
 use iEducar\Modules\Educacenso\Model\OrgaosColegiados;
 use iEducar\Modules\Educacenso\Model\OrgaoVinculadoEscola;
+use iEducar\Modules\Educacenso\Model\PoderPublicoConveniado;
 use iEducar\Modules\Educacenso\Model\RecursosAcessibilidade;
 use iEducar\Modules\Educacenso\Model\RedeLocal;
-use iEducar\Modules\Educacenso\Model\Regulamentacao;
 use iEducar\Modules\Educacenso\Model\ReservaVagasCotas;
 use iEducar\Modules\Educacenso\Model\SalasAtividades;
 use iEducar\Modules\Educacenso\Model\SalasFuncionais;
@@ -1542,8 +1543,6 @@ return new class extends clsCadastro {
         $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 3, 'educar_escola_lst.php');
         $this->pesquisaPessoaJuridica = false;
 
-        $this->preparaDados();
-
         if (!$this->validaCnpjMantenedora()) {
             return false;
         }
@@ -1579,20 +1578,14 @@ return new class extends clsCadastro {
             return false;
         }
 
-        if (!$this->validaCampoEquipamentos()) {
-            return false;
-        }
-
-        if (!$this->validaInstrumentosPedagogicos()) {
-            return false;
-        }
-
         if (! isset($this->pessoaj_id_oculto) ||
             ! is_int((int)$this->pessoaj_id_oculto)
         ) {
             $this->mensagem = 'Erro ao selecionar a pessoa jurídica';
             return false;
         }
+
+        $this->preparaDados();
 
         $pessoaJuridica = (new clsJuridica((int)$this->pessoaj_id_oculto))->detalhe();
 
@@ -1848,7 +1841,7 @@ return new class extends clsCadastro {
 
     private function transformArrayInString($value): ?string
     {
-        return is_array($value) ? implode(',', $value) : null;
+        return is_array($value) ? implode(',', array_filter($value)) : null;
     }
 
     public function Editar()
@@ -1856,8 +1849,6 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7, 'educar_escola_lst.php');
         $this->pesquisaPessoaJuridica = false;
-
-        $this->preparaDados();
 
         if (!$this->validaCnpjMantenedora()) {
             return false;
@@ -1894,13 +1885,7 @@ return new class extends clsCadastro {
             return false;
         }
 
-        if (!$this->validaCampoEquipamentos()) {
-            return false;
-        }
-
-        if (!$this->validaInstrumentosPedagogicos()) {
-            return false;
-        }
+        $this->preparaDados();
 
         $this->bloquear_lancamento_diario_anos_letivos_encerrados = is_null($this->bloquear_lancamento_diario_anos_letivos_encerrados) ? 0 : 1;
         $this->utiliza_regra_diferenciada = !is_null($this->utiliza_regra_diferenciada);
@@ -1962,17 +1947,6 @@ return new class extends clsCadastro {
         );
     }
 
-    protected function validaCampoEquipamentos()
-    {
-        $dadosEquipamentos = transformStringFromDBInArray($this->equipamentos);
-
-        if (is_array($dadosEquipamentos) && count($dadosEquipamentos) > 1 && in_array(Equipamentos::NENHUM_EQUIPAMENTO_LISTADO, $dadosEquipamentos)) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Equipamentos da escola</b>, quando a opção: <b>Nenhum dos equipamentos listados</b> estiver selecionada.';
-            return false;
-        }
-        return true;
-    }
-
     protected function inputTelefone($type, $typeLabel = '')
     {
         if (!$typeLabel) {
@@ -2024,16 +1998,14 @@ return new class extends clsCadastro {
                 $this->validaQuantidadeComputadoresAlunos() &&
                 $this->validaQuantidadeEquipamentosEnsino() &&
                 $this->validaLinguasIndigenas() &&
-                $this->validaPoderPublicoParceriaConvenio() &&
                 $this->validaFormasDeContratacaoEntreAdministracaoPublicaEOutrasInstituicoes() &&
-                $this->validaMatriculasAtendidasPorConvenio() &&
-                $this->validaLinguasIndigenas()
+                $this->validaMatriculasAtendidasPorConvenio()
             ;
     }
 
     protected function validaFormasDeContratacaoEntreAdministracaoPublicaEOutrasInstituicoes(): bool
     {
-        $formasDeContratacao = transformStringFromDBInArray($this->formas_contratacao_adm_publica_e_outras_instituicoes);
+        $formasDeContratacao = $this->formas_contratacao_adm_publica_e_outras_instituicoes;
 
         $acceptDependenciaAdministrativa = [DependenciaAdministrativaEscola::FEDERAL, DependenciaAdministrativaEscola::ESTADUAL, DependenciaAdministrativaEscola::MUNICIPAL];
         $notAcceptFormasDeContratoInDependenciaAdministrativa = [1, 2, 3, 4];
@@ -2074,20 +2046,6 @@ return new class extends clsCadastro {
                 $this->mensagem = 'Quando o campo "Categoria da escola privada" for igual à "Particular" só é possível cadastrar "Contrato de prestação de serviço"';
                 return false;
             }
-        }
-
-        return true;
-    }
-
-    protected function validaInstrumentosPedagogicos()
-    {
-        $dadosInstrumentosPedagogicos = transformStringFromDBInArray($this->instrumentos_pedagogicos);
-
-        if (is_array($dadosInstrumentosPedagogicos) &&
-            count($dadosInstrumentosPedagogicos) > 1 &&
-            in_array(InstrumentosPedagogicos::NENHUM_DOS_INSTRUMENTOS_LISTADOS, $dadosInstrumentosPedagogicos)) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Instrumentos, materiais socioculturais e/ou pedagógicos em uso na escola para o desenvolvimento de atividades de ensino aprendizagem</b>, quando a opção: <b>Nenhum dos instrumentos listados</b> estiver selecionada.';
-            return false;
         }
 
         return true;
@@ -2587,19 +2545,25 @@ return new class extends clsCadastro {
 
     protected function validaOpcoesUnicasMultipleSearch()
     {
-        if (is_array($this->abastecimento_agua) && in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
+        if (is_array($this->poder_publico_parceria_convenio) && in_array(PoderPublicoConveniado::NAO_POSSUI, $this->poder_publico_parceria_convenio) && count($this->poder_publico_parceria_convenio) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Poder público responsável pela parceria ou convênio entre a Administração Pública e outras instituições</b>, quando a opção: <b>Não possui parceria ou convênio</b> estiver selecionada.';
+
+            return false;
+        }
+
+        if (is_array($this->abastecimento_agua) && in_array(AbastecimentoAgua::INEXISTENTE, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Não há abastecimento de água</b> estiver selecionada.';
 
             return false;
         }
 
-        if (is_array($this->abastecimento_energia) && in_array(4, $this->abastecimento_energia) && count($this->abastecimento_energia) > 1) {
+        if (is_array($this->abastecimento_energia) && in_array(FonteEnergia::INEXISTENTE, $this->abastecimento_energia) && count($this->abastecimento_energia) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Fonte de energia elétrica</b>, quando a opção: <b>Não há energia elétrica</b> estiver selecionada.';
 
             return false;
         }
 
-        if (is_array($this->esgoto_sanitario) && in_array(3, $this->esgoto_sanitario) && count($this->esgoto_sanitario) > 1) {
+        if (is_array($this->esgoto_sanitario) && in_array(EsgotamentoSanitario::INEXISTENTE, $this->esgoto_sanitario) && count($this->esgoto_sanitario) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgotamento sanitário</b>, quando a opção: <b>Não há esgotamento sanitário</b> estiver selecionada.';
 
             return false;
@@ -2617,37 +2581,14 @@ return new class extends clsCadastro {
             return false;
         }
 
-        if (is_array($this->uso_internet) && in_array(UsoInternet::NAO_POSSUI, $this->uso_internet) && count($this->uso_internet) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Acesso à internet</b>, quando a opção: <b>Não possui acesso à internet</b> estiver selecionada.';
-
-            return false;
-        }
-        if (is_array($this->abastecimento_agua) && in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Não há abastecimento de água</b> estiver selecionada.';
+        if (is_array($this->equipamentos) && in_array(Equipamentos::NENHUM_EQUIPAMENTO_LISTADO, $this->equipamentos) && count($this->equipamentos) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Equipamentos da escola</b>, quando a opção: <b>Nenhum dos equipamentos listados</b> estiver selecionada.';
 
             return false;
         }
 
-        if (is_array($this->abastecimento_energia) && in_array(4, $this->abastecimento_energia) && count($this->abastecimento_energia) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Fonte de energia elétrica</b>, quando a opção: <b>Não há energia elétrica</b> estiver selecionada.';
-
-            return false;
-        }
-
-        if (is_array($this->esgoto_sanitario) && in_array(3, $this->esgoto_sanitario) && count($this->esgoto_sanitario) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgotamento sanitário</b>, quando a opção: <b>Não há esgotamento sanitário</b> estiver selecionada.';
-
-            return false;
-        }
-
-        if (is_array($this->tratamento_lixo) && in_array(TratamentoLixo::NAO_FAZ, $this->tratamento_lixo) && count($this->tratamento_lixo) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Tratamento do lixo/resíduos que a escola realiza</b>, quando a opção: <b>Não faz tratamento</b> estiver selecionada';
-
-            return false;
-        }
-
-        if (is_array($this->recursos_acessibilidade) && in_array(RecursosAcessibilidade::NENHUM, $this->recursos_acessibilidade) && count($this->recursos_acessibilidade) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Recursos de acessibilidade</b>, quando a opção: <b>Nenhum dos recursos de acessibilidade</b> estiver selecionada.';
+        if (is_array($this->rede_local) && in_array(RedeLocal::NENHUMA, $this->rede_local) && count($this->rede_local) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Rede local de interligação de computadores</b>, quando a opção: <b>Não há rede local interligando computadores</b> estiver selecionada.';
 
             return false;
         }
@@ -2671,13 +2612,21 @@ return new class extends clsCadastro {
             return false;
         }
 
+        if (is_array($this->instrumentos_pedagogicos) && in_array(InstrumentosPedagogicos::NENHUM_DOS_INSTRUMENTOS_LISTADOS, $this->instrumentos_pedagogicos) && count($this->instrumentos_pedagogicos) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Instrumentos, materiais socioculturais e/ou pedagógicos em uso na escola para o desenvolvimento de atividades de ensino aprendizagem</b>, quando a opção: <b>Nenhum dos instrumentos listados</b> estiver selecionada.';
+
+            return false;
+        }
+
         return true;
     }
 
     protected function validaEquipamentosAcessoInternet()
     {
-        if (!is_array($this->equipamentos_acesso_internet) && !is_array($this->rede_local)) {
-            return true;
+        if (is_array($this->equipamentos_acesso_internet) && in_array(2, $this->equipamentos_acesso_internet) && 
+            is_array($this->rede_local) && !in_array(3, $this->rede_local)) {
+            $this->mensagem = "O campo: <b>Equipamentos que os aluno(a)s usam para acessar a internet da escola</b> não deve ser preenchido com a opção: <b>Dispositivos pessoais (computadores portáteis, celulares, tablets, etc.)</b> quando o campo: <b>Rede local de interligação de computadores</b> não possuir a opção: <b>Wireless</b> selecionada.";
+            return false;
         }
 
         return true;
@@ -2709,13 +2658,11 @@ return new class extends clsCadastro {
 
     protected function validaMatriculasAtendidasPorConvenio()
     {
-        $poderPulicoParceriaConvenio = transformStringFromDBInArray($this->poder_publico_parceria_convenio);
-
-        if ($poderPulicoParceriaConvenio === null) {
+        if ($this->poder_publico_parceria_convenio === null) {
             return true;
         }
 
-        if (!in_array(1, $poderPulicoParceriaConvenio) && !in_array(2, $poderPulicoParceriaConvenio)){
+        if (!in_array(1, $this->poder_publico_parceria_convenio) && !in_array(2, $this->poder_publico_parceria_convenio)){
             return true;
         }
 
@@ -2832,23 +2779,6 @@ return new class extends clsCadastro {
     {
         if (is_array($this->codigo_lingua_indigena) && count($this->codigo_lingua_indigena) > 3) {
             $this->mensagem = 'O campo: <b>Línguas indígenas</b>, não pode ter mais que 3 opções';
-
-            return false;
-        }
-
-        return true;
-    }
-
-    private function validaPoderPublicoParceriaConvenio()
-    {
-        $values = transformStringFromDBInArray($this->poder_publico_parceria_convenio);
-
-        if ($values === null) {
-            return true;
-        }
-
-        if (count($values) > 1 && in_array(3, $values)) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Poder público responsável pela parceria ou convênio entre a Administração Pública e outras instituições</b>, quando a opção: <b>Não possui parceria ou convênio</b> estiver selecionada.';
 
             return false;
         }

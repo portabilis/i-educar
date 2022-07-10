@@ -6,10 +6,15 @@ use App\Support\Database\JoinableBuilder;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 
-class StudentEloquentBuilder extends Builder
+class EnrollmentEloquentBuilder extends Builder
 {
     use JoinableBuilder;
 
+    /**
+     * @param array $columns
+     *
+     * @return EnrollmentEloquentBuilder
+     */
     public function mother($columns)
     {
         $this->addSelect(
@@ -17,10 +22,15 @@ class StudentEloquentBuilder extends Builder
         );
 
         return $this->leftJoin('exporter_person as mother', function (JoinClause $join) {
-            $join->on('exporter_student_grouped_registration.mother_id', '=', 'mother.id');
+            $join->on('exporter_student.mother_id', '=', 'mother.id');
         });
     }
 
+    /**
+     * @param array $columns
+     *
+     * @return EnrollmentEloquentBuilder
+     */
     public function father($columns)
     {
         $this->addSelect(
@@ -28,10 +38,15 @@ class StudentEloquentBuilder extends Builder
         );
 
         return $this->leftJoin('exporter_person as father', function (JoinClause $join) {
-            $join->on('exporter_student_grouped_registration.father_id', '=', 'father.id');
+            $join->on('exporter_student.father_id', '=', 'father.id');
         });
     }
 
+    /**
+     * @param array $columns
+     *
+     * @return EnrollmentEloquentBuilder
+     */
     public function guardian($columns)
     {
         $this->addSelect(
@@ -39,10 +54,13 @@ class StudentEloquentBuilder extends Builder
         );
 
         return $this->leftJoin('exporter_person as guardian', function (JoinClause $join) {
-            $join->on('exporter_student_grouped_registration.guardian_id', '=', 'guardian.id');
+            $join->on('exporter_student.guardian_id', '=', 'guardian.id');
         });
     }
 
+    /**
+     * @return EnrollmentEloquentBuilder
+     */
     public function benefits()
     {
         $this->addSelect(
@@ -50,10 +68,13 @@ class StudentEloquentBuilder extends Builder
         );
 
         return $this->leftJoin('exporter_benefits as benefits', function (JoinClause $join) {
-            $join->on('exporter_student_grouped_registration.student_id', '=', 'benefits.student_id');
+            $join->on('exporter_student.student_id', '=', 'benefits.student_id');
         });
     }
 
+    /**
+     * @return EnrollmentEloquentBuilder
+     */
     public function disabilities()
     {
         $this->addSelect(
@@ -61,10 +82,13 @@ class StudentEloquentBuilder extends Builder
         );
 
         return $this->leftJoin('exporter_disabilities as disabilities', function (JoinClause $join) {
-            $join->on('exporter_student_grouped_registration.id', '=', 'disabilities.person_id');
+            $join->on('exporter_student.id', '=', 'disabilities.person_id');
         });
     }
 
+    /**
+     * @return EnrollmentEloquentBuilder
+     */
     public function phones()
     {
         $this->addSelect(
@@ -72,10 +96,15 @@ class StudentEloquentBuilder extends Builder
         );
 
         return $this->leftJoin('exporter_phones as phones', function (JoinClause $join) {
-            $join->on('exporter_student_grouped_registration.id', '=', 'phones.person_id');
+            $join->on('exporter_student.id', '=', 'phones.person_id');
         });
     }
 
+    /**
+     * @param array $columns
+     *
+     * @return EnrollmentEloquentBuilder
+     */
     public function place($columns)
     {
         $this->addSelect(
@@ -83,7 +112,7 @@ class StudentEloquentBuilder extends Builder
         );
 
         return $this->leftJoin('person_has_place', function (JoinClause $join) {
-            $join->on('exporter_student_grouped_registration.id', '=', 'person_has_place.person_id');
+            $join->on('exporter_student.id', '=', 'person_has_place.person_id');
         })->leftJoin('addresses as place', function (JoinClause $join) {
             $join->on('person_has_place.place_id', '=', 'place.id');
         });

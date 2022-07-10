@@ -19,7 +19,7 @@ class DiarioController extends ApiCoreController
         return App_Model_IedFinder::getComponentesPorMatricula($matriculaId);
     }
 
-    protected function getComponentesPorTurma($turmaId)
+    protected function getComponentesPorTurma($turmaId,$matriculaId = null)
     {
         $objTurma = new clsPmieducarTurma($turmaId);
         $detTurma = $objTurma->detalhe();
@@ -27,7 +27,16 @@ class DiarioController extends ApiCoreController
         $serieId = $detTurma['ref_ref_cod_serie'];
         $ano = $detTurma['ano'];
 
+        //obtem a série da matrícula
+        if ($matriculaId && $detTurma['multiseriada'] == 1) {
+            $serieId = $this->getSeriePorMatricula($matriculaId) ?: $serieId;
+        }
+
         return App_Model_IedFinder::getComponentesTurma($serieId, $escolaId, $turmaId, null, null, null, null, null, $ano);
+    }
+
+    private function getSeriePorMatricula($matriculaId) {
+        return \App\Models\LegacyRegistration::where('cod_matricula',$matriculaId)->value('ref_ref_cod_serie');
     }
 
     protected function validateComponenteCurricular($matriculaId, $componenteCurricularId)
@@ -43,10 +52,9 @@ class DiarioController extends ApiCoreController
         return $valid;
     }
 
-    protected function validateComponenteTurma($turmaId, $componenteCurricularId)
+    protected function validateComponenteTurma($turmaId, $componenteCurricularId,$matriculaId = null)
     {
-        $componentesTurma = $this->getComponentesPorTurma($turmaId);
-
+        $componentesTurma = $this->getComponentesPorTurma($turmaId,$matriculaId);
         if ($componentesTurma instanceof CoreExt_Entity) {
             $componentesTurma = CoreExt_Entity::entityFilterAttr($componentesTurma, 'id', 'id');
         } else {
@@ -207,7 +215,7 @@ class DiarioController extends ApiCoreController
                 }
 
                 foreach ($notaTurmaAluno as $componenteCurricularId => $notaTurmaAlunoDisciplina) {
-                    if (!$this->validateComponenteTurma($turmaId, $componenteCurricularId)) {
+                    if (!$this->validateComponenteTurma($turmaId, $componenteCurricularId,$matriculaId)) {
                         continue;
                     }
 
@@ -287,6 +295,7 @@ class DiarioController extends ApiCoreController
 
             $this->messenger->append('Notas postadas com sucesso!', 'success');
         }
+
     }
 
     protected function postRecuperacoes()
@@ -304,7 +313,7 @@ class DiarioController extends ApiCoreController
                     }
 
                     foreach ($notaTurmaAluno as $componenteCurricularId => $notaTurmaAlunoDisciplina) {
-                        if ($this->validateComponenteTurma($turmaId, $componenteCurricularId)) {
+                        if ($this->validateComponenteTurma($turmaId, $componenteCurricularId,$matriculaId)) {
                             $notaOriginal = $notaTurmaAlunoDisciplina['nota'];
 
                             if (is_null($notaOriginal)) {
@@ -403,7 +412,7 @@ class DiarioController extends ApiCoreController
                     foreach ($faltaTurmaAluno as $componenteCurricularId => $faltaTurmaAlunoDisciplina) {
                         if ($matriculaId) {
                             if ($this->validateMatricula($matriculaId)) {
-                                if ($this->validateComponenteTurma($turmaId, $componenteCurricularId)) {
+                                if ($this->validateComponenteTurma($turmaId, $componenteCurricularId,$matriculaId)) {
                                     $valor = $faltaTurmaAlunoDisciplina['valor'];
 
                                     $falta = new Avaliacao_Model_FaltaComponente([
@@ -478,7 +487,7 @@ class DiarioController extends ApiCoreController
                         }
 
                         foreach ($parecerTurmaAluno as $componenteCurricularId => $parecerTurmaAlunoComponente) {
-                            if ($this->validateComponenteTurma($turmaId, $componenteCurricularId)) {
+                            if ($this->validateComponenteTurma($turmaId, $componenteCurricularId,$matriculaId)) {
 
                                 $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoComponente([
                                     'componenteCurricular' => $componenteCurricularId,
