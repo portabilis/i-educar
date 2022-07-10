@@ -130,6 +130,7 @@ class clsPmieducarDisciplinaDependencia extends Model
             is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_disciplina)
         ) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_string($this->observacao)) {

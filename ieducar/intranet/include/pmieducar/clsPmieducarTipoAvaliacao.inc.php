@@ -112,6 +112,7 @@ class clsPmieducarTipoAvaliacao extends Model
     {
         if (is_numeric($this->cod_tipo_avaliacao) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_usuario_exc)) {
@@ -181,22 +182,6 @@ class clsPmieducarTipoAvaliacao extends Model
         }
         if (is_string($str_nm_tipo)) {
             $filtros .= "{$whereAnd} nm_tipo LIKE '%{$str_nm_tipo}%'";
-            $whereAnd = ' AND ';
-        }
-        if (is_string($date_data_cadastro_ini)) {
-            $filtros .= "{$whereAnd} data_cadastro >= '{$date_data_cadastro_ini}'";
-            $whereAnd = ' AND ';
-        }
-        if (is_string($date_data_cadastro_fim)) {
-            $filtros .= "{$whereAnd} data_cadastro <= '{$date_data_cadastro_fim}'";
-            $whereAnd = ' AND ';
-        }
-        if (is_string($date_data_exclusao_ini)) {
-            $filtros .= "{$whereAnd} data_exclusao >= '{$date_data_exclusao_ini}'";
-            $whereAnd = ' AND ';
-        }
-        if (is_string($date_data_exclusao_fim)) {
-            $filtros .= "{$whereAnd} data_exclusao <= '{$date_data_exclusao_fim}'";
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_ativo)) {

@@ -203,8 +203,8 @@ class clsPmieducarDispensaDisciplina extends Model
             is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_disciplina) &&
             is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
-            $set = '';
             $gruda = '';
+            $set = '';
 
             if (is_numeric($this->ref_usuario_exc)) {
                 $set .= "{$gruda}ref_usuario_exc = '{$this->ref_usuario_exc}'";

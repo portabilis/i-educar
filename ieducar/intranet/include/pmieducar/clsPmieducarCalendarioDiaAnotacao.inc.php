@@ -79,6 +79,7 @@ class clsPmieducarCalendarioDiaAnotacao extends Model
     {
         if (is_numeric($this->ref_dia) && is_numeric($this->ref_mes) && is_numeric($this->ref_ref_cod_calendario_ano_letivo) && is_numeric($this->ref_cod_calendario_anotacao)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if ($set) {

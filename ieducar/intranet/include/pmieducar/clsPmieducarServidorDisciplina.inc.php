@@ -76,6 +76,7 @@ class clsPmieducarServidorDisciplina extends Model
             is_numeric($this->ref_cod_curso)
         ) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if ($set) {
