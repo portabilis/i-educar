@@ -326,6 +326,7 @@ return new class extends clsCadastro {
         $objModulo           = new clsPmieducarModulo();
         $dadosModulo         = $objModulo->lista($dadosEtapa[0]['ref_cod_modulo']);
         $nomeModulo          = $dadosModulo[0]['nm_tipo'];
+        $conteudoHtml = '';
 
         foreach ($dadosEtapa as $modulo) {
             $checked = '';

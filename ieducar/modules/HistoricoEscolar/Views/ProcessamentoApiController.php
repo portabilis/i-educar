@@ -785,6 +785,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                     }
 
                     $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota_conceitual_numerica'] ??= 0 ;
+                    $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['falta'] ??= 0;
 
                     $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota'] += $nota;
                     $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota_conceitual_numerica'] += is_numeric($notaConceitualNumerica) ? $notaConceitualNumerica : 0;
@@ -906,7 +907,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             $falta = $this->getRequest()->faltas;
         }
 
-        return $falta;
+        return empty($falta) ? 0 : $falta;
     }
 
     protected function getDadosMatricula($matriculaId)

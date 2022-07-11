@@ -103,7 +103,7 @@ class clsPmieducarAlunoBeneficio extends Model
     {
         if (is_numeric($this->cod_aluno_beneficio) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
-
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_usuario_exc)) {

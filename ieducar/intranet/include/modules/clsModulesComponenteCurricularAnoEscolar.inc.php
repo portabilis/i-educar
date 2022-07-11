@@ -312,10 +312,9 @@ SQL;
                 $gruda = ', ';
             }
 
-            if (is_numeric($this->tipo_nota) && (int) $tipo_nota !== 0) {
+            if (is_numeric($this->tipo_nota)) {
                 $campos .= "{$gruda}tipo_nota";
                 $valores .= "{$gruda}'{$this->tipo_nota}'";
-                $gruda = ', ';
             }
 
             $sql = "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )";

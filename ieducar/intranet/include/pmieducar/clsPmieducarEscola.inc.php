@@ -1344,8 +1344,8 @@ class clsPmieducarEscola extends Model
     {
         if (is_numeric($this->cod_escola)) {
             $db = new clsBanco();
-            $set = '';
             $gruda = '';
+            $set = '';
 
             if (is_numeric($this->ref_usuario_cad)) {
                 $set .= "{$gruda}ref_usuario_cad = '{$this->ref_usuario_cad}'";

@@ -117,6 +117,7 @@ class clsCadastroRaca extends Model
         if (is_numeric($this->cod_raca)) {
             $db = new clsBanco();
             $set = '';
+            $gruda = '';
 
             if (is_numeric($this->idpes_exc)) {
                 $set .= "{$gruda}idpes_exc = '{$this->idpes_exc}'";
@@ -177,10 +178,6 @@ class clsCadastroRaca extends Model
 
         $whereAnd = ' WHERE ';
 
-        if (is_numeric($int_cod_raca)) {
-            $filtros .= "{$whereAnd} cod_raca = '{$int_cod_raca}'";
-            $whereAnd = ' AND ';
-        }
         if (is_numeric($int_idpes_exc)) {
             $filtros .= "{$whereAnd} idpes_exc = '{$int_idpes_exc}'";
             $whereAnd = ' AND ';

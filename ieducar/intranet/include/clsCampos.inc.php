@@ -1637,10 +1637,6 @@ class clsCampos extends Core_Controller_Page_Abstract
 
                         break;
 
-                    case 'email':
-                        $retorno .= '<a href=\'www.google.com.br\' class=\'linkBory\'>Enviar Por Email</a>';
-                        break;
-
                     case 'emailDuplo':
                         $retorno .= "<input class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" onKeyUp=\"{$componente[8]}\">";
                         $foiDuplo = true;

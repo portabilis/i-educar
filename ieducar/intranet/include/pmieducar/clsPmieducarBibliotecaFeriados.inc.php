@@ -106,6 +106,7 @@ class clsPmieducarBibliotecaFeriados extends Model
     {
         if (is_numeric($this->cod_feriado)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_cod_biblioteca)) {
