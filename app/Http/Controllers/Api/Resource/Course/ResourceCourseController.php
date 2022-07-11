@@ -13,7 +13,7 @@ class ResourceCourseController extends Controller
     {
         $institution = $request->get('institution');
         $school = $request->get('school');
-        $not_school_pattern = $request->get('not_pattern') === '1';
+        $notSchoolPattern = $request->get('not_pattern') === '1';
         $course = $request->get('course');
 
         $courses = LegacyCourse::select(['cod_curso as id', 'padrao_ano_escolar as is_standard_calendar', 'qtd_etapas as steps'])->selectName()
