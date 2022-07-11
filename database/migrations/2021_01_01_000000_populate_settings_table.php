@@ -16,6 +16,7 @@ class PopulateSettingsTable extends Migration
             'legacy.code' => '1',
             'legacy.display_errors' => '0',
             'legacy.path' => 'ieducar',
+            'legacy.apis.access_key' => 'ieducar-access-key',
             'legacy.apis.secret_key' => 'ieducar-secret-key',
             'legacy.apis.educacao_token_header' => null,
             'legacy.apis.educacao_token_key' => null,
