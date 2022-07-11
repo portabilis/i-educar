@@ -111,7 +111,7 @@
             "@set-permissions",
             "@php artisan key:generate --ansi",
             "@php artisan legacy:link --ansi",
-            "@php artisan migrate --seed --force --ansi",
+            "@php artisan migrate --force --ansi",
             "@npm"
         ],
         "update-install": [
