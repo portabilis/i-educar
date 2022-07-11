@@ -1178,7 +1178,6 @@ class clsPmieducarTurma extends Model
     {
         $db = new clsBanco();
 
-        dd('asd');
         $sql = "SELECT {$this->_campos_lista},(CASE WHEN coalesce(c.descricao,'') <> '' THEN c.nm_curso || ' (' || c.descricao || ')' ELSE c.nm_curso END) as nm_curso,textcat_all(s.nm_serie ORDER BY s.nm_serie) AS nm_serie, textcat_all((CASE WHEN coalesce(s.descricao,'') <> '' THEN s.nm_serie || ' (' || s.descricao || ')' ELSE s.nm_serie END) ORDER BY s.nm_serie) AS descricao_serie, i.nm_instituicao FROM {$this->_tabela} t LEFT JOIN pmieducar.turma_serie ts ON (ts.turma_id  = t.cod_turma) LEFT JOIN {$this->_schema}serie s ON (s.cod_serie = COALESCE(ts.serie_id, t.ref_ref_cod_serie)), {$this->_schema}curso c, {$this->_schema}instituicao i ";
         $filtros = '';
 
