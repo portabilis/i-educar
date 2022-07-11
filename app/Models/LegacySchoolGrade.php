@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacySchoolGrade extends Model
 {
+    use HasFactory;
+
     /**
      * @var string
      */
@@ -60,6 +63,6 @@ class LegacySchoolGrade extends Model
      */
     public function grade()
     {
-        return $this->belongsTo(LegacyLevel::class, 'ref_cod_serie');
+        return $this->belongsTo(LegacyGrade::class, 'ref_cod_serie');
     }
 }

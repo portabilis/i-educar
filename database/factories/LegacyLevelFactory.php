@@ -5,6 +5,10 @@ namespace Database\Factories;
 use App\Models\LegacyLevel;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
+/**
+ * @deprecated
+ * @see LegacyGradeFactory
+ */
 class LegacyLevelFactory extends Factory
 {
     /**

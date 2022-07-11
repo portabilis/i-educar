@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class LegacyEvaluationRule extends Model
 {
+    use HasFactory;
+
     public const PARALLEL_REMEDIAL_NONE = 0;
     public const PARALLEL_REMEDIAL_PER_STAGE = 1;
     public const PARALLEL_REMEDIAL_PER_SPECIFIC_STAGE = 2;
@@ -109,5 +113,39 @@ class LegacyEvaluationRule extends Model
     public function isGlobalScore()
     {
         return $this->nota_geral_por_etapa == 1;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNameAttribute()
+    {
+        return $this->getRawOriginal('name') ?? $this->nome;
+    }
+
+    /**
+     * Filtra por Instituição
+     *
+     * @param Builder $query
+     * @param int|null $institution
+     * @return void
+     */
+    public function scopeWhereInstitution(Builder $query, ?int $institution = null): void
+    {
+        if ($institution !== null) {
+            $query->where('instituicao_id', $institution);
+        }
+    }
+
+    /**
+     * Ordena por nome
+     *
+     * @param Builder $query
+     * @param string $direction
+     * @return void
+     */
+    public function scopeOrderByName(Builder $query, string $direction = 'asc'): void
+    {
+        $query->orderBy('nome',$direction);
     }
 }

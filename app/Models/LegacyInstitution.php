@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Services\RelocationDate\RelocationDateProvider;
 use DateTime;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -20,6 +21,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class LegacyInstitution extends Model implements RelocationDateProvider
 {
+
+    use HasFactory;
     /**
      * @var string
      */
@@ -137,6 +140,25 @@ class LegacyInstitution extends Model implements RelocationDateProvider
     public function schools()
     {
         return $this->hasMany(LegacySchool::class, 'ref_cod_instituicao', 'cod_instituicao');
+    }
+
+    /**
+     * Regras de avaliação
+     *
+     * @return HasMany
+     */
+    public function evaluationRules(): HasMany
+    {
+        return $this->hasMany(LegacyEvaluationRule::class,'instituicao_id');
+    }
+
+    /**
+     * Redes de ensino
+     *
+     * @return HasMany
+     */
+    public function educationNetworks() : HasMany{
+        return $this->hasMany(LegacyEducationNetwork::class,'ref_cod_instituicao');
     }
 
     public function getRelocationDate()

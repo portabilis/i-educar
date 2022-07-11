@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -17,6 +18,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class LegacySchool extends Model
 {
+    use HasFactory;
+
     /**
      * @var string
      */
@@ -69,7 +72,7 @@ class LegacySchool extends Model
      */
     public function getIdAttribute()
     {
-        return $this->cod_escola;
+        return $this->getRawOriginal('id') ?? $this->cod_escola;
     }
 
     /**
@@ -77,7 +80,8 @@ class LegacySchool extends Model
      */
     public function getNameAttribute()
     {
-        return $this->person->nome;
+        //verifica na query original se existe, para casos com joins e orderby name
+        return $this->getRawOriginal('name') ?? $this->organization->name;
     }
 
     /**
@@ -88,6 +92,16 @@ class LegacySchool extends Model
     public function institution()
     {
         return $this->belongsTo(LegacyInstitution::class, 'ref_cod_instituicao');
+    }
+
+    /**
+     * Anos letivos
+     *
+     * @return HasMany
+     */
+    public function academicYears(): HasMany
+    {
+        return $this->hasMany(LegacySchoolAcademicYear::class,'ref_cod_escola');
     }
 
     /**
@@ -153,7 +167,7 @@ class LegacySchool extends Model
      */
     public function schoolManagers()
     {
-        return $this->hasMany('App\\Models\\SchoolManager', 'school_id');
+        return $this->hasMany(SchoolManager::class, 'school_id');
     }
 
     public function stages()
@@ -161,8 +175,50 @@ class LegacySchool extends Model
         return $this->hasMany(LegacySchoolStage::class, 'ref_ref_cod_escola');
     }
 
-    public function scopeActive(Builder $builder)
+    /**
+     * Filtra por Ativo
+     *
+     * @param Builder $builder
+     * @return void
+     */
+    public function scopeActive(Builder $builder): void
     {
-        return $builder->where('escola.ativo', 1);
+        $builder->where('escola.ativo', 1);
+    }
+
+    /**
+     * Realiza a junçao com organização
+     *
+     * @param Builder $builder
+     * @return void
+     */
+    public function scopeJoinOrganization(Builder $builder): void
+    {
+        $builder->join('cadastro.juridica','idpes','ref_idpes');
+    }
+
+    /**
+     * Filtra por Instituição
+     *
+     * @param Builder $query
+     * @param int|null $institution
+     * @return void
+     */
+    public function scopeWhereInstitution(Builder $query, ?int $institution = null): void
+    {
+        if ($institution !== null) {
+            $query->where('ref_cod_instituicao', $institution);
+        }
+    }
+
+    /**
+     * Ordena por nome
+     *
+     * @param Builder $query
+     * @return void
+     */
+    public function scopeOrderByName(Builder $query): void
+    {
+        $query->orderBy('name');
     }
 }

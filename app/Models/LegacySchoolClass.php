@@ -5,6 +5,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -32,6 +33,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class LegacySchoolClass extends Model
 {
+    use HasFactory;
+
     /**
      * @var string
      */
@@ -120,7 +123,7 @@ class LegacySchoolClass extends Model
      */
     public function getIdAttribute()
     {
-        return $this->cod_turma;
+        return $this->getRawOriginal('id') ?? $this->cod_turma;
     }
 
     /**
@@ -128,7 +131,7 @@ class LegacySchoolClass extends Model
      */
     public function getNameAttribute()
     {
-        return $this->nm_turma;
+        return $this->getRawOriginal('name') ?? $this->nm_turma;
     }
 
     /**
@@ -136,7 +139,7 @@ class LegacySchoolClass extends Model
      */
     public function getYearAttribute()
     {
-        return $this->ano;
+        return $this->getRawOriginal('year') ?? $this->ano;
     }
 
     /**
@@ -214,6 +217,25 @@ class LegacySchoolClass extends Model
         $calendar = $this->stages()->orderByDesc('sequencial')->first();
 
         return $calendar ? $calendar->data_fim : null;
+    }
+
+    /**
+     * Séries
+     *
+     * @return BelongsToMany
+     */
+    public function grades(): BelongsToMany {
+        return $this->belongsToMany(LegacyGrade::class,'turma_serie','turma_id','serie_id');
+    }
+
+
+    /**
+     * Anos Letivos
+     *
+     * @return HasMany
+     */
+    public function academic_years(): HasMany {
+        return $this->hasMany(LegacySchoolAcademicYear::class,'ref_cod_escola','ref_ref_cod_escola')->whereColumn('escola_ano_letivo.ano','turma.ano');
     }
 
     /**
@@ -451,6 +473,96 @@ class LegacySchoolClass extends Model
     }
 
     /**
+     * Filtra por Instituição
+     *
+     * @param Builder $query
+     * @param int|null $institution
+     * @return void
+     */
+    public function scopeWhereInstitution(Builder $query, ?int $institution = null): void
+    {
+        if ($institution !== null) {
+            $query->where('ref_cod_instituicao', $institution);
+        }
+    }
+
+    /**
+     * Ordena por nome
+     *
+     * @param Builder $query
+     * @param string $direction
+     * @return void
+     */
+    public function scopeOrderByName(Builder $query, string $direction = 'asc'): void
+    {
+        $query->orderBy('nm_turma',$direction);
+    }
+
+    /**
+     * Filtra por Curso
+     *
+     * @param Builder $query
+     * @param int|null $course
+     * @return void
+     */
+    public function scopeWhereCourse(Builder $query, ?int $course = null): void
+    {
+        if ($course !== null) {
+            $query->where('ref_cod_curso', $course);
+        }
+    }
+
+    /**
+     * Filtra por ano escolar em progresso
+     *
+     * @param Builder $query
+     * @param int|null $year
+     * @return void
+     */
+    public function scopeWhereInProgress(Builder $query, ?int $year = null): void
+    {
+        $query->whereHas('academic_years',function ($q) use($year){
+            $q->inProgress();
+            if ($year !== null) {
+               $q->whereYear($year);
+            }
+        });
+    }
+
+    /**
+     * Filtra por Escola
+     *
+     * @param Builder $query
+     * @param int|null $school
+     * @return void
+     */
+    public function scopeWhereSchool(Builder $query, ?int $school = null): void
+    {
+        if ($school !== null) {
+            $query->where('ref_ref_cod_escola', $school);
+        }
+    }
+
+    /**
+     * Filtra por Serie
+     *
+     * @param Builder $query
+     * @param int|null $grade
+     * @return void
+     */
+    public function scopeWhereGrade(Builder $query, ?int $grade = null): void
+    {
+        if ($grade !== null) {
+            $query->where(function ($q) use($grade){
+                $q->whereHas('grades',function ($q) use($grade){
+                    $q->where('cod_serie',$grade);
+                });
+                $q->orWhere('ref_ref_cod_serie',$grade);
+            });
+        }
+    }
+
+    /**
      * Retorna o turno da turma.
      *
      * Relação com turma_turno.
@@ -470,5 +582,20 @@ class LegacySchoolClass extends Model
     public function scopeActive($query)
     {
         return $query->where('ativo', 1);
+    }
+
+    /**
+     * Adiciona ao select o nome com descrição
+     *
+     * @param Builder $query
+     * @param bool $withYear
+     */
+    public function scopeSelectName(Builder $query, bool $withYear = true): void
+    {
+        if ($withYear) {
+            $query->addSelect(\DB::raw("(CASE WHEN ano is not null THEN (nm_turma || ' (' || ano || ')') ELSE nm_turma END) as name"));
+        } else {
+            $query->addSelect("nm_turma as name");
+        }
     }
 }
