@@ -80,7 +80,7 @@ class Portabilis_View_Helper_Input_Core
 
     protected function loadAssets()
     {
-        $rootPath = dirname(dirname(dirname(dirname(dirname(__DIR__)))));
+        $rootPath = public_path();
         $style = "/vendor/legacy/DynamicInput/Assets/Stylesheets/{$this->helperName()}.css";
         $script = "/vendor/legacy/DynamicInput/Assets/Javascripts/{$this->helperName()}.js";
 
