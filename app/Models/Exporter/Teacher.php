@@ -30,30 +30,6 @@ class Teacher extends Model
     }
 
     /**
-     * @return string
-     */
-    public function getLabel()
-    {
-        return 'Professores';
-    }
-
-    /**
-     * @param string $column
-     *
-     * @return string
-     */
-    public function alias($column)
-    {
-        if (empty($this->alias)) {
-            $this->alias = collect($this->getExportedColumnsByGroup())->flatMap(function ($item) {
-                return $item;
-            });
-        }
-
-        return $this->alias->get($column, $column);
-    }
-
-    /**
      * @return array
      */
     public function getExportedColumnsByGroup()
@@ -115,5 +91,34 @@ class Teacher extends Model
                 'place.country' => 'País',
             ],
         ];
+    }
+
+    /**
+     * @return string
+     */
+    public function getLabel()
+    {
+        return 'Professores';
+    }
+
+    public function getDescription()
+    {
+        return 'Os dados exportados serão contabilizados por quantidade de professores(as) alocados(as) no ano filtrado, agrupando as informações de cursos de formação dos docentes.';
+    }
+
+    /**
+     * @param string $column
+     *
+     * @return string
+     */
+    public function alias($column)
+    {
+        if (empty($this->alias)) {
+            $this->alias = collect($this->getExportedColumnsByGroup())->flatMap(function ($item) {
+                return $item;
+            });
+        }
+
+        return $this->alias->get($column, $column);
     }
 }

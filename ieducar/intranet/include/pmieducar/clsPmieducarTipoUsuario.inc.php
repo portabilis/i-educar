@@ -120,6 +120,7 @@ class clsPmieducarTipoUsuario extends Model
     {
         if (is_numeric($this->cod_tipo_usuario) && is_numeric($this->ref_funcionario_exc)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_funcionario_cad)) {
@@ -211,22 +212,6 @@ class clsPmieducarTipoUsuario extends Model
         }
         if (is_numeric($int_nivel_menor)) {
             $filtros .= "{$whereAnd} nivel >= '{$int_nivel_menor}'";
-            $whereAnd = ' AND ';
-        }
-        if (is_string($date_data_cadastro_ini)) {
-            $filtros .= "{$whereAnd} data_cadastro >= '{$date_data_cadastro_ini}'";
-            $whereAnd = ' AND ';
-        }
-        if (is_string($date_data_cadastro_fim)) {
-            $filtros .= "{$whereAnd} data_cadastro <= '{$date_data_cadastro_fim}'";
-            $whereAnd = ' AND ';
-        }
-        if (is_string($date_data_exclusao_ini)) {
-            $filtros .= "{$whereAnd} data_exclusao >= '{$date_data_exclusao_ini}'";
-            $whereAnd = ' AND ';
-        }
-        if (is_string($date_data_exclusao_fim)) {
-            $filtros .= "{$whereAnd} data_exclusao <= '{$date_data_exclusao_fim}'";
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_ativo)) {

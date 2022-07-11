@@ -111,6 +111,7 @@ class clsCadastroReligiao extends Model
         if (is_numeric($this->cod_religiao)) {
             $db = new clsBanco();
             $set = '';
+            $gruda = '';
 
             if (is_numeric($this->idpes_exc)) {
                 $set .= "{$gruda}idpes_exc = '{$this->idpes_exc}'";
@@ -167,10 +168,6 @@ class clsCadastroReligiao extends Model
 
         $whereAnd = ' WHERE ';
 
-        if (is_numeric($int_cod_religiao)) {
-            $filtros .= "{$whereAnd} cod_religiao = '{$int_cod_religiao}'";
-            $whereAnd = ' AND ';
-        }
         if (is_numeric($int_idpes_exc)) {
             $filtros .= "{$whereAnd} idpes_exc = '{$int_idpes_exc}'";
             $whereAnd = ' AND ';

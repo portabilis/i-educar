@@ -170,6 +170,7 @@ class clsPmieducarPessoaEduc extends Model
     {
         if (is_numeric($this->cod_pessoa_educ) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_idpes_responsavel)) {

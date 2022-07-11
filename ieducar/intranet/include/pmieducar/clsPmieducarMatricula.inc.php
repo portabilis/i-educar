@@ -376,8 +376,8 @@ class clsPmieducarMatricula extends Model
     {
         if (is_numeric($this->cod_matricula)) {
             $db = new clsBanco();
-            $set = '';
             $gruda = '';
+            $set = '';
 
             if (is_numeric($this->ref_cod_reserva_vaga)) {
                 $set .= "{$gruda}ref_cod_reserva_vaga = '{$this->ref_cod_reserva_vaga}'";
@@ -1197,45 +1197,6 @@ class clsPmieducarMatricula extends Model
                                                                                          AND m.ativo = 1)");
 
         return $situacaoUltimaMatricula;
-    }
-
-    public function isSequencia($origem, $destino)
-    {
-        $obj = new clsPmieducarSequenciaSerie();
-        $sequencia = $obj->lista($origem, null, null, null, null, null, null, null, 1);
-        $achou = false;
-
-        if ($sequencia) {
-            do {
-                if ($lista['ref_serie_origem'] == $destino) {
-                    $achou = true;
-                    break;
-                }
-                if ($lista['ref_serie_destino'] == $destino) {
-                    $achou = true;
-                    break;
-                }
-
-                $sequencia_ = $obj->lista(
-                    $lista['ref_serie_destino'],
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    1
-                );
-
-                if (!$lista) {
-                    $achou = false;
-                    break;
-                }
-            } while ($achou != false);
-        }
-
-        return $achou;
     }
 
     public function getInicioSequencia()

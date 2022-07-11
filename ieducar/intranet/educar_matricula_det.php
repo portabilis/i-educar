@@ -196,15 +196,28 @@ return new class extends clsDetalhe {
                 $existeAtendimentoEspecializado = true;
             }
 
-            $nomesTurnos[] = match ((int)$enturmacao['turno_id']) {
-                clsPmieducarTurma::TURNO_MATUTINO =>  'Matutino',
-                clsPmieducarTurma::TURNO_VESPERTINO => 'Vespertino',
-                default => 'Integral',
-            };
+            if ($enturmacao['turno_id']) {
+                $nomesTurnos[] = match ((int)$enturmacao['turno_id']) {
+                    clsPmieducarTurma::TURNO_MATUTINO =>  'Matutino',
+                    clsPmieducarTurma::TURNO_VESPERTINO => 'Vespertino',
+                    default => null
+                };
+            }
         }
         $nomesTurmas = implode('<br />', $nomesTurmas);
         $datasEnturmacoes = implode('<br />', $datasEnturmacoes);
-        $nomesTurnos = implode('<br />', $nomesTurnos);
+
+        if (empty($nomesTurnos)) {
+            $nomesTurnos = match ((int)$turma['turma_turno_id']) {
+                clsPmieducarTurma::TURNO_MATUTINO =>  'Matutino',
+                clsPmieducarTurma::TURNO_VESPERTINO => 'Vespertino',
+                clsPmieducarTurma::TURNO_NOTURNO => 'Noturno',
+                clsPmieducarTurma::TURNO_INTEGRAL => 'Integral',
+                default => null
+            };
+        } else {
+            $nomesTurnos = implode('<br />', $nomesTurnos);
+        }
 
         if ($nomesTurmas) {
             $this->addDetalhe(['Turma', $nomesTurmas]);
@@ -311,7 +324,7 @@ return new class extends clsDetalhe {
                 // Verificar se tem permissao para executar cancelamento de matricula
                 if ($this->permissao_cancelar()) {
                     $this->array_botao[] = 'Cancelar matrícula';
-                    $this->array_botao_url_script[] = "if(confirm(\"Deseja realmente cancelar esta matrícula?\"))go(\"educar_matricula_cad.php?cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
+                   $this->array_botao_url_script[] = "showConfirmationMessage(\"educar_matricula_cad.php?cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
                 }
 
                 $this->array_botao[] = 'Ocorrências disciplinares';
@@ -459,6 +472,11 @@ return new class extends clsDetalhe {
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+    }
+
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-matricula.js');
     }
 
     // Verificar se pode cancelar matricula

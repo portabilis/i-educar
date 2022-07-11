@@ -490,7 +490,7 @@ return new class extends clsCadastro {
 
             $this->mensagem = $msgs;
 
-            return $this->simpleRedirect(\Request::getRequestUri());
+            $this->simpleRedirect(\Request::getRequestUri());
         }
 
         $editou = $obj->edita();

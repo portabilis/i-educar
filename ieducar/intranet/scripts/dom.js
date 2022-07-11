@@ -105,24 +105,6 @@ function addEvent(elm, evType, fn, useCapture) {
 	}
 }
 
-function getElementsByClass(searchClass,node,tag) {
-	var classElements = new Array();
-	if ( node == null )
-		node = document;
-	if ( tag == null )
-		tag = '*';
-	var els = node.getElementsByTagName(tag);
-	var elsLen = els.length;
-	var pattern = new RegExp("(^|\\s)"+searchClass+"(\\s|$)");
-	for (i = 0, j = 0; i < elsLen; i++) {
-		if ( pattern.test(els[i].className) ) {
-			classElements[j] = els[i];
-			j++;
-		}
-	}
-	return classElements;
-}
-
 function toggle(obj) {
 	var el = document.getElementById(obj);
 	if ( el.style.display != 'none' ) {
@@ -403,53 +385,6 @@ function DOM_setVal( value )
 	document.getElementById( DOM_atual.objectId ).value = value;
 }
 
-function DOM_navegaUpDown(e)
-{
-	var tecla = ( window.event ) ? event.keyCode : e.keyCode;
-	if( tecla > 32 && tecla < 41 )
-	{
-		if( tecla == 33 )// page up || 36 Home
-		{
-			DOM_trocaClasse( 0 );
-		} else if( tecla == 34 )// page down || 35 End
-		{
-			DOM_trocaClasse( total - 1 );
-		} else if( tecla == 38 )// UP
-		{
-			if( DOM_opcao  ) {
-				DOM_trocaClasse( DOM_opcao - 1 );
-			}
-			else
-			{
-				DOM_trocaClasse( DOM_opcao );
-			}
-		} else if( tecla == 40 )// DOWN
-		{
-			if( DOM_opcao + 1 < total )
-			{
-				DOM_trocaClasse( DOM_opcao + 1 );
-			}
-			else
-			{
-				DOM_trocaClasse( DOM_opcao );
-			}
-		}
-	}
-	else
-	{
-		if( tecla != 16 && tecla != 17 && tecla != 0 && tecla != 20 )
-		{
-			DOM_showHint();
-		}
-	}
-}
-
-function DOM_focusOut()
-{
-	//setTimeout( "document.getElementById( \"DOM_expansivel\" ).style.display = 'none';", 100 );
-	document.getElementById( "DOM_expansivel" ).style.display = 'none';
-}
-
 function DOM_focusIn()
 {
 	DOM_acao = 1;
@@ -462,21 +397,6 @@ function DOM_focusIn()
 		posY = DOM_ObjectPosition_getPageOffsetTop( obj );
 		objExpansivel.style.left = posX - 1;
 		objExpansivel.style.top = posY + 21;
-	}
-}
-
-function DOM_showHint()
-{
-	obj = document.getElementById( DOM_atual.objectId );
-	minChars = 3;
-	strText = obj.value;
-	if( strText.length >= minChars )
-	{
-		DOM_loadXMLDoc( "xml_pessoas.php?s=" + strText );
-	}
-	else
-	{
-		document.getElementById( "DOM_expansivel" ).style.display = 'none';
 	}
 }
 

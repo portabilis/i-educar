@@ -127,7 +127,7 @@ return new class extends clsCadastro {
 
         session()->flash('success', $is_change ? 'Turno alterado com sucesso!' : 'Não houve alteração no valor do campo Turno.');
 
-        return $this->simpleRedirect(url('intranet/educar_matricula_det.php?cod_matricula='.$this->cod_matricula));
+        $this->simpleRedirect(url('intranet/educar_matricula_det.php?cod_matricula='.$this->cod_matricula));
     }
 
     public function makeExtra()

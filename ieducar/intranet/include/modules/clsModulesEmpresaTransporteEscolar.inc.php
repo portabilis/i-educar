@@ -94,6 +94,7 @@ class clsModulesEmpresaTransporteEscolar extends Model
     {
         if (is_numeric($this->cod_empresa_transporte_escolar)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_idpes)) {
@@ -112,7 +113,7 @@ class clsModulesEmpresaTransporteEscolar extends Model
                 $gruda = ', ';
             }
             if ($set) {
-                $detalheAntigo = $this->detalhe();
+                $this->detalhe();
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_empresa_transporte_escolar = '{$this->cod_empresa_transporte_escolar}'");
 
                 return true;

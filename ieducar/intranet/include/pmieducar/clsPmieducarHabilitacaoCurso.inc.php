@@ -65,6 +65,7 @@ class clsPmieducarHabilitacaoCurso extends Model
     {
         if (is_numeric($this->ref_cod_habilitacao) && is_numeric($this->ref_cod_curso)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if ($set) {

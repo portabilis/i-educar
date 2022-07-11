@@ -83,6 +83,7 @@ class clsPmieducarBloqueioAnoLetivo extends Model
     {
         if (is_numeric($this->ref_cod_instituicao) && is_numeric($this->ref_ano) && is_string($this->data_inicio) && is_string($this->data_fim)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_string($this->data_inicio)) {

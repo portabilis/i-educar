@@ -95,6 +95,7 @@ class clsPmieducarPagamentoMulta extends Model
     {
         if (is_numeric($this->cod_pagamento_multa)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_usuario_cad)) {
