@@ -4,7 +4,6 @@ namespace App\Models\Educacenso;
 
 use App\Models\LegacySchoolClass;
 use App\Services\Educacenso\Version2019\Registro20Import;
-use App_Model_IedFinder;
 use App_Model_LocalFuncionamentoDiferenciado;
 use App_Model_TipoMediacaoDidaticoPedagogico;
 use iEducar\Modules\Educacenso\Model\EstruturaCurricular;
