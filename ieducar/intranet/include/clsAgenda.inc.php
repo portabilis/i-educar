@@ -414,7 +414,7 @@ class clsAgenda
                     if ($encaminha['ref_cod_juris_processo'] && $encaminha['ref_versao_processo']) {
                         $objProcesso = new clsProcesso($encaminha['ref_cod_juris_processo'], $encaminha['ref_versao_processo']);
                         $detalheProcesso = $objProcesso->detalhe();
-                        if ($detalheProcesso['ativo'] == 1 && !$detalheProcesso['ref_pessoa_finalizadora'] && $qtd<3) {
+                        if ($detalheProcesso['ativo'] == 1 && !$detalheProcesso['ref_pessoa_finalizadora']) {
                             $temp_arr_compromisso2['data_inicio'] = $detalheProcesso['data_envio'];
                             $temp_arr_compromisso2['versao'] = '1';
                             $temp_arr_compromisso2['data_fim'] =$detalheProcesso['data_envio'];
@@ -431,7 +431,7 @@ class clsAgenda
                         $detalheTramite = $objTramite->detalhe();
                         $objProcesso = new clsProcesso($detalheTramite['ref_cod_juris_processo'], $detalheTramite['ref_versao_processo']);
                         $detalheProcesso = $objProcesso->detalhe();
-                        if ($detalheTramite['ativo'] == 1 && !$detalheProcesso['ref_pessoa_finalizadora'] && $qtd<3) {
+                        if ($detalheTramite['ativo'] == 1 && !$detalheProcesso['ref_pessoa_finalizadora']) {
                             $temp_arr_compromisso2['data_inicio'] = $detalheProcesso['data_envio'];
                             $temp_arr_compromisso2['versao'] = '1';
                             $temp_arr_compromisso2['data_fim'] =$detalheProcesso['data_envio'];

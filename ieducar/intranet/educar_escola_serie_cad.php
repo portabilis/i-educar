@@ -490,7 +490,7 @@ return new class extends clsCadastro {
 
             $this->mensagem = $msgs;
 
-            return $this->simpleRedirect(\Request::getRequestUri());
+            $this->simpleRedirect(\Request::getRequestUri());
         }
 
         $editou = $obj->edita();
@@ -750,10 +750,12 @@ return new class extends clsCadastro {
                     SELECT COUNT(cct.*), cc.nome
                     FROM modules.componente_curricular_turma cct
                     INNER JOIN modules.componente_curricular cc ON cc.id = cct.componente_curricular_id
+                    INNER JOIN pmieducar.turma t ON t.cod_turma = cct.turma_id
                     WHERE TRUE
                         AND cct.componente_curricular_id = $1
                         AND cct.ano_escolar_id = $2
                         AND cct.escola_id = $3
+                        AND t.ativo = 1
                     GROUP BY cc.nome
                 ', ['params' => [
                     (int) $componenteId,

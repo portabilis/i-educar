@@ -79,25 +79,25 @@
             @php $exemptionUrl = url('intranet/educar_dispensa_disciplina_det.php?ref_cod_matricula=' . $exemption->ref_cod_matricula . '&ref_cod_serie=' . $exemption->ref_cod_serie . '&ref_cod_escola=' . $exemption->ref_cod_escola . '&ref_cod_disciplina=' . $exemption->ref_cod_disciplina) @endphp
             <tr>
                 <td>
-                    <a href="{{ $exemptionUrl }}" target="_blank">{{ $exemption->registration->ano }}</a>
+                    <a href="{{ $exemptionUrl }}" target="_blank" rel="noopener">{{ $exemption->registration->ano }}</a>
                 </td>
                 <td>
-                    <a href="{{ $exemptionUrl }}" target="_blank">{{ $exemption->registration->student->person->nome }}</a>
+                    <a href="{{ $exemptionUrl }}" target="_blank" rel="noopener">{{ $exemption->registration->student->person->nome }}</a>
                 </td>
                 <td>
-                    <a href="{{ $exemptionUrl }}" target="_blank">{{ $exemption->discipline->nome }}</a>
+                    <a href="{{ $exemptionUrl }}" target="_blank" rel="noopener">{{ $exemption->discipline->nome }}</a>
                 </td>
                 <td>
-                    <a href="{{ $exemptionUrl }}" target="_blank">{{ $exemption->type }}</a>
+                    <a href="{{ $exemptionUrl }}" target="_blank" rel="noopener">{{ $exemption->type }}</a>
                 </td>
                 <td>
-                    <a href="{{ $exemptionUrl }}" target="_blank">{{ $exemption->data_cadastro->format('d/m/Y') }}</a>
+                    <a href="{{ $exemptionUrl }}" target="_blank" rel="noopener">{{ $exemption->data_cadastro->format('d/m/Y') }}</a>
                 </td>
                 <td>
-                    <a href="{{ $exemptionUrl }}" target="_blank">{{ $exemption->createdBy->name }}</a>
+                    <a href="{{ $exemptionUrl }}" target="_blank" rel="noopener">{{ $exemption->createdBy->name }}</a>
                 </td>
                 <td>
-                    <a href="{{ $exemptionUrl }}" target="_blank">@if($exemption->batch) Sim @else Não @endif</a>
+                    <a href="{{ $exemptionUrl }}" target="_blank" rel="noopener">@if($exemption->batch) Sim @else Não @endif</a>
                 </td>
             </tr>
         @empty

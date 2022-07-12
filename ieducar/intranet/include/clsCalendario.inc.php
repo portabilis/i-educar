@@ -569,6 +569,8 @@ class clsCalendario
             }
         }
 
+        $mensagens = '';
+
         while ($diaCorrente <= $NumeroDiasMes) {
             // Seventh column (Saturday) reached. Start a new row.
             if ($DiaSemana == 7) {

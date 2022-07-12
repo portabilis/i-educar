@@ -88,6 +88,7 @@ class clsCadastroEscolaridade extends Model
         if (is_numeric($this->idesco)) {
             $db = new clsBanco();
             $set = '';
+            $gruda = '';
 
             if (is_string($this->descricao)) {
                 $descricao = $db->escapeString($this->descricao);

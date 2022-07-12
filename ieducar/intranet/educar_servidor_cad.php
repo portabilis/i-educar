@@ -72,7 +72,7 @@ return new class extends clsCadastro {
             $registro = $obj->detalhe();
 
             if (empty($registro)) {
-                return $this->simpleRedirect(url('intranet/educar_servidor_lst.php'));
+                $this->simpleRedirect(url('intranet/educar_servidor_lst.php'));
             }
 
             if ($registro) {

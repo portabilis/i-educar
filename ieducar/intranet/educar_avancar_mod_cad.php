@@ -311,8 +311,6 @@ return new class extends clsCadastro {
         } else {
             throw new Exception('Não foi possível obter a próxima série da sequência de enturmação');
         }
-
-        return false;
     }
 
     protected function rematricularAlunoReprovado($escolaId, $cursoId, $serieId, $ano, $alunoId)
