@@ -69,7 +69,7 @@
                 <td class="formlttd" colspan="2" style="margin-top: 20px">
                     <div class="flex gap-4 justify-between items-center border-l-8 border-solid py-2 px-4 border-warning bg-warning text-warning">
                         <div>
-                            <i class="fa fa-exclamation-triangle x-alert-icon"></i>
+                            <i class="fa fa-exclamation-triangle x-alert-icon" aria-hidden="true"></i>
                         </div>
                         <div class="flex-grow ">{{$exportation->getDescription()}}</div>
                     </div>
@@ -153,8 +153,8 @@
                 padding-right: 1rem;
             }
             .border-warning {
-                border-left-color: #dfc32e !important;
                 border: 0;
+                border-left-color: #dfc32e;
             }
             .bg-warning {
                 background-color: #fff8d6;

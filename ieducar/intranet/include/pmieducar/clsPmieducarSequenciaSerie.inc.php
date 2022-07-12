@@ -97,6 +97,7 @@ class clsPmieducarSequenciaSerie extends Model
     {
         if (is_numeric($this->ref_serie_origem) && is_numeric($this->ref_serie_destino) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_usuario_exc)) {
@@ -137,6 +138,7 @@ class clsPmieducarSequenciaSerie extends Model
     {
         if (is_numeric($this->ref_serie_origem) && is_numeric($this->ref_serie_destino) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_serie_origem)) {

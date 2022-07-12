@@ -166,6 +166,7 @@ class clsJuridica
     public function lista($str_fantasia = false, $str_insc_estadual = false, $int_cnpj = false, $str_ordenacao = false, $int_limite_ini = false, $int_limite_qtd = false, $arrayint_idisin = false, $arrayint_idnotin = false, $int_idpes = false)
     {
         $db = new clsBanco;
+        $where = '';
         $whereAnd = 'WHERE ';
         $join = '';
         if (is_string($str_fantasia)) {

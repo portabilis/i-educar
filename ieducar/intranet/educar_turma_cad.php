@@ -378,17 +378,10 @@ return new class extends clsCadastro {
 
         $script = 'javascript:showExpansivelIframe(520, 170, \'educar_turma_tipo_cad_pop.php\');';
 
-        if ($this->ref_cod_instituicao && $this->ref_cod_escola && $this->ref_cod_curso) {
-            $script = sprintf(
-                '<div id=\'img_turma\' border=\'0\' onclick=\'%s\'>',
-                $script
-            );
-        } else {
-            $script = sprintf(
-                '<div id=\'img_turma\' border=\'0\' onclick=\'%s\'>',
-                $script
-            );
-        }
+        $script = sprintf(
+            '<div id=\'img_turma\' border=\'0\' onclick=\'%s\'>',
+            $script
+        );
 
         $this->campoLista(
             'ref_cod_turma_tipo',

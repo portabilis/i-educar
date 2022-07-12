@@ -188,6 +188,7 @@ class clsPmieducarMatriculaTurma extends Model
         if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_turma) &&
             is_numeric($this->ref_usuario_exc) && is_numeric($this->sequencial)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             $gruda = '';
@@ -268,6 +269,9 @@ class clsPmieducarMatriculaTurma extends Model
             // FIXME
             // Este trecho de código não é utilizado na atualização do registro, ou
             // seja, não serve para nada. Verificar o impacto ao corrigi-lo.
+
+            $campos = '';
+            $valores = '';
 
             if (is_numeric($this->sequencial_fechamento)) {
                 $campos .= "{$gruda}sequencial_fechamento";
@@ -861,7 +865,7 @@ class clsPmieducarMatriculaTurma extends Model
         $int_matricula_ativo = null,
         $int_semestre = null
     ) {
-        $sql = "SELECT {$this->_campos_lista}, c.nm_curso, s.nm_serie, t.nm_turma, c.ref_cod_instituicao, m.ref_ref_cod_escola, m.ref_cod_curso, m.ref_ref_cod_serie, m.ref_cod_aluno, p.nome,a.tipo_responsavel,f.data_nasc FROM {$this->_tabela} mt, {$this->_schema}matricula m, {$this->_schema}curso c, {$this->_schema}serie s, {$this->_schema}turma t, {$this->_schema}aluno a, cadastro.pessoa p, cadastro.fisica f {$join}";
+        $sql = "SELECT {$this->_campos_lista}, c.nm_curso, s.nm_serie, t.nm_turma, c.ref_cod_instituicao, m.ref_ref_cod_escola, m.ref_cod_curso, m.ref_ref_cod_serie, m.ref_cod_aluno, p.nome,a.tipo_responsavel,f.data_nasc FROM {$this->_tabela} mt, {$this->_schema}matricula m, {$this->_schema}curso c, {$this->_schema}serie s, {$this->_schema}turma t, {$this->_schema}aluno a, cadastro.pessoa p, cadastro.fisica f ";
         $filtros = '';
 
         $whereAnd = ' WHERE mt.ref_cod_matricula = m.cod_matricula AND m.ref_cod_curso = c.cod_curso AND t.cod_turma = mt.ref_cod_turma AND s.cod_serie = m.ref_ref_cod_serie AND a.cod_aluno = m.ref_cod_aluno AND p.idpes = a.ref_idpes AND p.idpes = f.idpes AND';
@@ -929,11 +933,6 @@ class clsPmieducarMatriculaTurma extends Model
             $whereAnd = ' AND ';
         }
 
-        if (is_numeric($int_ref_cod_instituicao)) {
-            $filtros .= "{$whereAnd} c.ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
-            $whereAnd = ' AND ';
-        }
-
         if (is_numeric($int_ref_cod_aluno)) {
             $filtros .= "{$whereAnd} m.ref_cod_aluno = '{$int_ref_cod_aluno}'";
             $whereAnd = ' AND ';
@@ -992,7 +991,7 @@ class clsPmieducarMatriculaTurma extends Model
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
-        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} mt, {$this->_schema}matricula m, {$this->_schema}curso c, {$this->_schema}serie s, {$this->_schema}turma t, {$this->_schema}aluno a, cadastro.pessoa p, cadastro.fisica f {$join} {$filtros}");
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} mt, {$this->_schema}matricula m, {$this->_schema}curso c, {$this->_schema}serie s, {$this->_schema}turma t, {$this->_schema}aluno a, cadastro.pessoa p, cadastro.fisica f {$filtros}");
         $db->Consulta($sql);
 
         if ($countCampos > 1) {

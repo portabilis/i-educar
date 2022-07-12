@@ -190,9 +190,8 @@ function excluir_compromisso( compId )
 {
 	if( confirm( 'Deseja realmente excluir este compromisso?\nEsta e uma operacao irreversivel!' ) )
 	{
-		excluirSim( compId, location );
+		excluirSim(compId);
 	}
-	//showExpansivel( 400, 114, 'Deseja realmente excluir este compromisso?<br><br>Esta é uma operação irreversível.<br><br><input type="button" name="agenda_sim" class="agenda_rap_botao" id="agenda_salvar" value="Sim" onclick="excluirSim( ' + compId + ' );"> <input type="button" name="agenda_nao" class="agenda_rap_botao" id="agenda_salvar" value="Não" onclick="excluirNao( ' + compId + ' )">' );
 }
 
 function excluirSim( compId )
@@ -200,23 +199,6 @@ function excluirSim( compId )
 	expansivel = document.getElementById( "DOM_expansivel" );
 	expansivel.style.display = 'none';
 	document.location.href = 'agenda.php' + document.getElementById( "parametros" ).value + '&deletar=' + compId;
-}
-
-// Excluir compromisso dentro do sistema OpenJuris -- Higor 23/11/2005
-function excluirJuris( compId )
-{
-	if( confirm( 'Deseja realmente excluir este compromisso?\nEsta e uma operacao irreversivel!' ) )
-	{
-		excluirSim( compId, location );
-	}
-	//showExpansivel( 400, 114, 'Deseja realmente excluir este compromisso?<br><br>Esta é uma operação irreversível.<br><br><input type="button" name="agenda_sim" class="agenda_rap_botao" id="agenda_salvar" value="Sim" onclick="excluirSim( ' + compId + ' );"> <input type="button" name="agenda_nao" class="agenda_rap_botao" id="agenda_salvar" value="Não" onclick="excluirNao( ' + compId + ' )">' );
-}
-
-function excluirSimJuris( compId )
-{
-	expansivel = document.getElementById( "DOM_expansivel" );
-	expansivel.style.display = 'none';
-	document.location.href = 'juris_agenda_desenv.php' + document.getElementById( "parametros" ).value + '&deletar=' + compId;
 }
 
 function novoForm(array_compromissos)
