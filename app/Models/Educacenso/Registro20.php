@@ -437,7 +437,7 @@ class Registro20 implements RegistroEducacenso
     {
         $componentes = $this->componentes();
         $componentes = $componentes->map(function ($componente) {
-            return $componente->discipline->codigo_educacenso;
+            return $componente->codigo_educacenso;
         })->toArray();
 
         return array_unique($componentes);
@@ -450,7 +450,7 @@ class Registro20 implements RegistroEducacenso
     {
         $componentes = $this->componentes();
         $componentes = $componentes->map(function ($componente) {
-            return $componente->discipline->id;
+            return $componente->id;
         })->toArray();
 
         return array_unique($componentes);

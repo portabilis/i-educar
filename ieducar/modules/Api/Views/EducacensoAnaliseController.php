@@ -1208,16 +1208,16 @@ class EducacensoAnaliseController extends ApiCoreController
                 $componenteNulo = null;
 
                 foreach ($componentes as $componente) {
-                    if (empty($componente->get('codigo_educacenso'))) {
+                    if (empty($componente->codigo_educacensos)) {
                         $componenteNulo = $componente;
                         break;
                     }
 
-                    if (in_array($componente->get('codigo_educacenso'), $turma->getForbiddenDisciplines())) {
+                    if (in_array($componente->codigo_educacenso, $turma->getForbiddenDisciplines())) {
                         $mensagem[] = [
-                            'text' => "<span class='avisos-educacenso'><b>Aviso não impeditivo:</b> Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. A disciplina {$componente->get('nome')} da turma {$nomeTurma} não está de acordo com a Tabela de Regras de Disciplinas do Censo, portanto não será exportada.</span>",
+                            'text' => "<span class='avisos-educacenso'><b>Aviso não impeditivo:</b> Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. A disciplina {$componente->nome} da turma {$nomeTurma} não está de acordo com a Tabela de Regras de Disciplinas do Censo, portanto não será exportada.</span>",
                             'path' => '(Escola > Cadastros > Componentes curriculares > Editar > Disciplina Educacenso)',
-                            'linkPath' => "/module/ComponenteCurricular/edit?id={$componente->get('id')}",
+                            'linkPath' => "/module/ComponenteCurricular/edit?id={$componente->id}",
                             'fail' => false
                         ];
                     }
@@ -1227,7 +1227,7 @@ class EducacensoAnaliseController extends ApiCoreController
                     $mensagem = [[
                         'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verifique se a disciplina do educacenso foi informada para a disciplina {$componente->get('nome')}.",
                         'path' => '(Escola > Cadastros > Componentes curriculares > Editar > Disciplina Educacenso)',
-                        'linkPath' => "/module/ComponenteCurricular/edit?id={$componenteNulo->get('id')}",
+                        'linkPath' => "/module/ComponenteCurricular/edit?id={$componenteNulo->id}",
                         'fail' => true
                     ]];
 
