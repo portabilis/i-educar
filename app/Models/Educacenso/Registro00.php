@@ -585,6 +585,7 @@ class Registro00 implements RegistroEducacenso
             'inepEscolaSede',
             'codigoIes',
         ];
+
         return $properties[$column];
     }
 
