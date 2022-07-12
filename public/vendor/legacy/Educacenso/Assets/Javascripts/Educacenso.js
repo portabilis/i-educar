@@ -54,7 +54,7 @@ $j(document).ready(function(){
 
 
     var headerPaginaResposta = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+'Análise exportação'+'</title>'+
-            '<link rel="stylesheet" href="../modules/Educacenso/Assets/Stylesheets/educacensoPdf.css?v=5"></head><body>'+
+            '<link rel="stylesheet" href="../vendor/legacy/Educacenso/Assets/Stylesheets/educacensoPdf.css?v=5"></head><body>'+
             '<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">'+
             `<p class="date-info">Data da geração: ${currentDateString()}</p>`+
 						'<div id="content">'+

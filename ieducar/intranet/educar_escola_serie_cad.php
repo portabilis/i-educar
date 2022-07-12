@@ -614,9 +614,9 @@ return new class extends clsCadastro {
     public function loadAssets()
     {
         $scripts = [
-            '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
-            '/modules/Cadastro/Assets/Javascripts/EscolaSerie.js',
-            '/modules/Cadastro/Assets/Javascripts/ModalDispensas.js'
+            '/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/EscolaSerie.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/ModalDispensas.js'
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);

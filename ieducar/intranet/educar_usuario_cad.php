@@ -195,13 +195,13 @@ return new class extends clsCadastro {
             'required' => false
         ]);
 
-        $scripts = ['/modules/Cadastro/Assets/Javascripts/Usuario.js'];
+        $scripts = ['/vendor/legacy/Cadastro/Assets/Javascripts/Usuario.js'];
 
         $this->acao_enviar = 'valida()';
         if (!$this->canChange($user, $this->ref_pessoa)) {
             $this->acao_enviar = null;
             $this->fexcluir = null;
-            $scripts[] = '/modules/Cadastro/Assets/Javascripts/disableAllFields.js';
+            $scripts[] = '/vendor/legacy/Cadastro/Assets/Javascripts/disableAllFields.js';
         }
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);

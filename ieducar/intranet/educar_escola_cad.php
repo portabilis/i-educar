@@ -512,14 +512,14 @@ return new class extends clsCadastro {
 
         // assets
         $scripts = [
-            '/modules/Portabilis/Assets/Javascripts/Utils.js',
-            '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
-            '/modules/Cadastro/Assets/Javascripts/Escola.js',
-            '/modules/Cadastro/Assets/Javascripts/Addresses.js',
-            '/modules/Cadastro/Assets/Javascripts/SchoolManagersModal.js',
+            '/vendor/legacy/Portabilis/Assets/Javascripts/Utils.js',
+            '/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/Escola.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/Addresses.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/SchoolManagersModal.js',
         ];
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
-        $styles = ['/modules/Cadastro/Assets/Stylesheets/Escola.css'];
+        $styles = ['/vendor/legacy/Cadastro/Assets/Stylesheets/Escola.css'];
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
 
         $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
