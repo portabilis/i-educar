@@ -426,7 +426,10 @@ class LegacySchoolClass extends Model
                 ->where('ref_ref_cod_escola', $this->school_id)
                 ->whereIn('ref_ref_cod_serie', $multigrades)
                 ->whereRaw('? = ANY(anos_letivos)', [$this->year])
-                ->get();
+                ->get()
+                ->map(function ($schoolGrade) {
+                    return $schoolGrade->discipline;
+                });
         }
 
         $disciplinesOfSchoolClass = $this->disciplines()->get();
@@ -439,7 +442,10 @@ class LegacySchoolClass extends Model
             ->where('ref_ref_cod_escola', $this->school_id)
             ->where('ref_ref_cod_serie', $this->grade_id)
             ->whereRaw('? = ANY(anos_letivos)', [$this->year])
-            ->get();
+            ->get()
+            ->map(function ($schoolGrade) {
+                return $schoolGrade->discipline;
+            });
     }
 
     /**
