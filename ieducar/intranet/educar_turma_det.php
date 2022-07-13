@@ -367,9 +367,9 @@ return new class extends clsDetalhe {
         ]);
 
         $scripts = [
-            '/modules/Portabilis/Assets/Javascripts/Utils.js',
-            '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
-            '/modules/Cadastro/Assets/Javascripts/TurmaDet.js'
+            '/vendor/legacy/Portabilis/Assets/Javascripts/Utils.js',
+            '/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/TurmaDet.js'
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);

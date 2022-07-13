@@ -45,8 +45,8 @@ return new class extends clsCadastro {
             $this->campoTexto('pessoa_duplicada', 'Pessoa duplicada', $this->pessoa_duplicada, 50, 255, false, true, false, '', '', '', 'onfocus');
         $this->campoTabelaFim();
 
-        $styles = ['/modules/Cadastro/Assets/Stylesheets/UnificaPessoa.css'];
-        $scripts = ['/modules/Portabilis/Assets/Javascripts/ClientApi.js'];
+        $styles = ['/vendor/legacy/Cadastro/Assets/Stylesheets/UnificaPessoa.css'];
+        $scripts = ['/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js'];
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
     }

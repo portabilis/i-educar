@@ -614,9 +614,9 @@ return new class extends clsCadastro {
     public function loadAssets()
     {
         $scripts = [
-            '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
-            '/modules/Cadastro/Assets/Javascripts/EscolaSerie.js',
-            '/modules/Cadastro/Assets/Javascripts/ModalDispensas.js'
+            '/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/EscolaSerie.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/ModalDispensas.js'
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
@@ -750,10 +750,12 @@ return new class extends clsCadastro {
                     SELECT COUNT(cct.*), cc.nome
                     FROM modules.componente_curricular_turma cct
                     INNER JOIN modules.componente_curricular cc ON cc.id = cct.componente_curricular_id
+                    INNER JOIN pmieducar.turma t ON t.cod_turma = cct.turma_id
                     WHERE TRUE
                         AND cct.componente_curricular_id = $1
                         AND cct.ano_escolar_id = $2
                         AND cct.escola_id = $3
+                        AND t.ativo = 1
                     GROUP BY cc.nome
                 ', ['params' => [
                     (int) $componenteId,

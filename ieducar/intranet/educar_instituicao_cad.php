@@ -341,9 +341,9 @@ return new class extends clsCadastro {
             false
         );
 
-        $scripts = ['/modules/Cadastro/Assets/Javascripts/Instituicao.js'];
+        $scripts = ['/vendor/legacy/Cadastro/Assets/Javascripts/Instituicao.js'];
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
-        $styles = ['/modules/Cadastro/Assets/Stylesheets/Instituicao.css'];
+        $styles = ['/vendor/legacy/Cadastro/Assets/Stylesheets/Instituicao.css'];
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
     }
 
