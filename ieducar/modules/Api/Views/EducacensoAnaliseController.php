@@ -1208,7 +1208,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 $componenteNulo = null;
 
                 foreach ($componentes as $componente) {
-                    if (empty($componente->codigo_educacensos)) {
+                    if (empty($componente->codigo_educacenso)) {
                         $componenteNulo = $componente;
                         break;
                     }
@@ -1225,7 +1225,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
                 if ($componenteNulo) {
                     $mensagem = [[
-                        'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verifique se a disciplina do educacenso foi informada para a disciplina {$componente->get('nome')}.",
+                        'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verifique se a disciplina do educacenso foi informada para a disciplina {$componente->nome}.",
                         'path' => '(Escola > Cadastros > Componentes curriculares > Editar > Disciplina Educacenso)',
                         'linkPath' => "/module/ComponenteCurricular/edit?id={$componenteNulo->id}",
                         'fail' => true
