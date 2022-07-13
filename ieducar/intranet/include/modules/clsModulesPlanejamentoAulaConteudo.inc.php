@@ -6,11 +6,13 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
     public $id;
     public $planejamento_aula_id;
     public $conteudo;
+    public $plano_aee;
 
     public function __construct(
         $id = null,
         $planejamento_aula_id = null,
-        $conteudo = null
+        $conteudo = null,
+        $plano_aee = null
     ) {
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}planejamento_aula_conteudo";
@@ -34,6 +36,10 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
         if (is_string($conteudo)) {
             $this->conteudo = $conteudo;
         }
+
+        if (is_string($plano_aee)) {
+            $this->plano_aee = $plano_aee;
+        }
     }
 
     /**
@@ -48,7 +54,28 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
             $db->Consulta("
                 INSERT INTO {$this->_tabela}
                     (planejamento_aula_id, conteudo)
-                VALUES ('{$this->planejamento_aula_id}', '{$db->escapeString($this->conteudo)}')
+                VALUES ('{$this->planejamento_aula_id}', '{$db->escapeString($this->conteudo)}', '{$this->plano_aee}')
+            ");
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Cria um novo registro do Planejamento AEE
+     *
+     * @return bool
+     */
+    public function cadastra_conteudo_aee() {
+        if (is_numeric($this->planejamento_aula_id) && is_string($this->conteudo)) {
+            $db = new clsBanco();
+
+            $db->Consulta("
+                INSERT INTO {$this->_tabela}
+                    (planejamento_aula_id, conteudo, plano_aee)
+                VALUES ('{$this->planejamento_aula_id}', '{$db->escapeString($this->conteudo)}', 'S')
             ");
 
             return true;
@@ -98,6 +125,36 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
                     modules.planejamento_aula_conteudo as pac
                 WHERE
                     pac.planejamento_aula_id = '{$planejamento_aula_id}'
+                ORDER BY pac.id ASC
+            ");
+
+            while($db->ProximoRegistro()) {
+                $conteudos[] = $db->Tupla();
+            }
+
+            return $conteudos;
+        }
+
+        return false;
+    }
+
+    /**
+     * Lista relacionamentos entre os conteudos e o plano de aula AEE
+     *
+     * @return array
+     */
+    public function lista_aee($planejamento_aula_id) {
+        if (is_numeric($planejamento_aula_id)) {
+            $db = new clsBanco();
+
+            $db->Consulta("
+                SELECT
+                    *
+                FROM
+                    modules.planejamento_aula_conteudo as pac
+                WHERE
+                    pac.planejamento_aula_id = '{$planejamento_aula_id}'
+                    AND pac.plano_aee = 'S'
                 ORDER BY pac.id ASC
             ");
 

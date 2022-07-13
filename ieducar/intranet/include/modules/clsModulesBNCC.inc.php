@@ -280,7 +280,8 @@ class clsModulesBNCC extends Model
             JOIN modules.componente_curricular as cc
                 ON (cc.id = esd.ref_cod_disciplina)
             JOIN select_ as bncc
-                ON (bncc.campo_experiencia = cc.id)       
+                ON (bncc.campo_experiencia = cc.id) 
+                OR (bncc.componente_curricular_id = cc.codigo_educacenso)      
         ";
 
         $whereAnd = 'WHERE ';

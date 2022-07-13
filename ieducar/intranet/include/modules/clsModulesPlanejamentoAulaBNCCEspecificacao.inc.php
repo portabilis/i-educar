@@ -80,6 +80,43 @@ class clsModulesPlanejamentoAulaBNCCEspecificacao extends Model {
 	                ON (be.id = pabe.bncc_especificacao_id)
                 WHERE
                     pa.id = '{$planejamento_aula_id}'
+                    AND pab.plano_aee IS NULL
+            ");
+
+            while($db->ProximoRegistro()) {
+                $especificacoes[] = $db->Tupla();
+            }
+
+            return $especificacoes;
+        }
+
+        return false;
+    }
+
+     /**
+     * Lista relacionamentos entre BNCC e o plano de aula AEE
+     *
+     * @return array
+     */
+    public function lista_aee($planejamento_aula_id) {
+        if (is_numeric($planejamento_aula_id)) {
+            $db = new clsBanco();
+
+            $db->Consulta("
+                SELECT
+                    pabe.*,
+                    be.especificacao
+                FROM
+                    modules.planejamento_aula_bncc_especificacao as pabe
+                JOIN modules.planejamento_aula_bncc as pab
+                    ON (pab.id = pabe.planejamento_aula_bncc_id)
+                JOIN modules.planejamento_aula as pa
+                    ON (pa.id = pab.planejamento_aula_id)
+                JOIN modules.bncc_especificacao as be
+	                ON (be.id = pabe.bncc_especificacao_id)
+                WHERE
+                    pa.id = '{$planejamento_aula_id}'
+                   AND pab.plano_aee = 'S'
             ");
 
             while($db->ProximoRegistro()) {

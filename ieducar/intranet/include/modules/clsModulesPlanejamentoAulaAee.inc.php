@@ -221,21 +221,23 @@ class clsModulesPlanejamentoAulaAee extends Model
 
             $id = $db->InsertId("{$this->_tabela}_id_seq");
 
+            $plano_aee = 'S';
+
             foreach ($this->ref_componente_curricular_array as $key => $ref_componente_curricular) {
-                $obj = new clsModulesPlanejamentoAulaComponenteCurricular(null, $id, $ref_componente_curricular[1]);
-                $obj->cadastra();
+                $obj = new clsModulesPlanejamentoAulaComponenteCurricular(null, $id, $ref_componente_curricular[1], $plano_aee);
+                $obj->cadastra_componente_aee();
             }
 
             foreach ($this->bnccs as $key => $bncc_array) {
                 foreach ($bncc_array[1] as $key => $bncc_id) {
-                    $obj = new clsModulesPlanejamentoAulaBNCC(null, $id, $bncc_id);
-                    $obj->cadastra();
+                    $obj = new clsModulesPlanejamentoAulaBNCC(null, $id, $bncc_id, $plano_aee);
+                    $obj->cadastra_bncc_aee();
                 }
             }
 
             foreach ($this->conteudos as $key => $conteudo) {
-                $obj = new clsModulesPlanejamentoAulaConteudo(null, $id, $conteudo[1]);
-                $obj->cadastra();
+                $obj = new clsModulesPlanejamentoAulaConteudo(null, $id, $conteudo[1], $plano_aee);
+                $obj->cadastra_conteudo_aee();
             }
 
             foreach ($this->bncc_especificacoes as $key => $bncc_especificacoes_array) {
@@ -347,10 +349,14 @@ class clsModulesPlanejamentoAulaAee extends Model
         $int_ref_cod_ins = null,
         $int_ref_cod_escola = null,
         $int_ref_cod_curso = null,
+        $int_ref_cod_serie = null,
         $int_ref_cod_turma = null,
         $int_ref_cod_matricula = null,
+        $int_ref_cod_componente_curricular = null,
+        $int_ref_cod_turno = null,
         $time_data_inicial = null,
         $time_data_final = null,
+        $int_etapa = null,
         $int_servidor_id = null,
         $time_data = null
     ) {
@@ -395,6 +401,7 @@ class clsModulesPlanejamentoAulaAee extends Model
         }
 
         if ($time_data_inicial) {
+            $time_data_inicial = Portabilis_Date_Utils::brToPgSQL($time_data_inicial);
             $filtros .= "{$whereAnd} pa.data_inicial >= '{$time_data_inicial}'";
             $whereAnd = ' AND ';
         }
@@ -476,14 +483,17 @@ class clsModulesPlanejamentoAulaAee extends Model
 
             $data['detalhes'] = $db->Tupla();
 
+            $obj = new clsModulesPlanejamentoAulaComponenteCurricular();
+            $data['componentesCurriculares'] = $obj->lista_aee($this->id);
+
             $obj = new clsModulesPlanejamentoAulaBNCC();
-            $data['bnccs'] = $obj->lista($this->id);
+            $data['bnccs'] = $obj->lista_aee($this->id);
 
             $obj = new clsModulesPlanejamentoAulaBNCCEspecificacao();
-            $data['especificacoes'] = $obj->lista($this->id);
+            $data['especificacoes'] = $obj->lista_aee($this->id);
 
             $obj = new clsModulesPlanejamentoAulaConteudo();
-            $data['conteudos'] = $obj->lista($this->id);
+            $data['conteudos'] = $obj->lista_aee($this->id);
 
             return $data;
         }
