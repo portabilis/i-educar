@@ -1208,7 +1208,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 $componenteNulo = null;
 
                 foreach ($componentes as $componente) {
-                    if (empty($componente->codigo_educacensos)) {
+                    if (empty($componente->codigo_educacenso)) {
                         $componenteNulo = $componente;
                         break;
                     }
