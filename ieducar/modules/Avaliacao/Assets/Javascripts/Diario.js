@@ -76,7 +76,7 @@ var postResourceUrlBuilder = {
 
 var getResourceUrlBuilder = {
   buildUrl : function(urlBase, resourceName, additionalVars) {
-
+    
     var vars = {
       resource : resourceName,
       oper : 'get',
@@ -109,6 +109,7 @@ function  changeResource($resourceElement, postFunction, deleteFunction) {
 
 
 function setDefaultFaltaIfEmpty(matricula_id, componente_curricular_id) {
+  console.log('aq')
   var $element = $j('#falta-matricula-' + matricula_id + '-cc-' + componente_curricular_id);
 
   if ($element.closest('tr').data('regra').desconsiderar_lancamento_frequencia) {
@@ -211,7 +212,7 @@ var changeNotaExame = function(event) {
   }
 
   var $element = $j(this);
-  setDefaultFaltaIfEmpty($element.data('matricula_id'), $element.data('componente_curricular_id'));
+  //setDefaultFaltaIfEmpty($element.data('matricula_id'), $element.data('componente_curricular_id'));
   lockedAverage($element, function () {
     changeResource($element, postNotaExame, deleteNotaExame);
   });
@@ -224,7 +225,7 @@ var changeNotaRecuperacaoParalela = function(event){
   }
 
   var $element = $j(this);
-  setDefaultFaltaIfEmpty($element.data('matricula_id'), $element.data('componente_curricular_id'));
+  //setDefaultFaltaIfEmpty($element.data('matricula_id'), $element.data('componente_curricular_id'));
   lockedAverage($element, function () {
     changeResource($element, postNotaRecuperacaoParalela, deleteNotaRecuperacaoParalela);
   });
@@ -237,7 +238,7 @@ var changeNotaRecuperacaoEspecifica = function(event){
   }
 
   var $element = $j(this);
-  setDefaultFaltaIfEmpty($element.data('matricula_id'), $element.data('componente_curricular_id'));
+  //setDefaultFaltaIfEmpty($element.data('matricula_id'), $element.data('componente_curricular_id'));
   lockedAverage($element, function () {
     changeResource($element, postNotaRecuperacaoEspecifica, deleteNotaRecuperacaoEspecifica);
   });
@@ -385,7 +386,7 @@ function postNota($notaFieldElement) {
         afterChangeResource($notaFieldElement);
         handleChange(dataResponse);
         checkIfShowNotaRecuperacaoParalelaField($notaFieldElement.val(), dataResponse);
-        setDefaultFaltaIfEmpty($notaFieldElement.data('matricula_id'), $notaFieldElement.data('componente_curricular_id'));
+       // setDefaultFaltaIfEmpty($notaFieldElement.data('matricula_id'), $notaFieldElement.data('componente_curricular_id'));
       }
     };
 
@@ -1100,7 +1101,6 @@ function setNextTabIndex($element) {
 }
 
 function handleSearch($resultTable, dataResponse) {
-
   var regras = $tableSearchDetails.data('regras');
   var useNota                 = regras.filter(function(regra){return regra.tipo_nota != 'nenhum'; }).length > 0;
   var ultimaEtapa             = regras[0]['quantidade_etapas'] == $j('#etapa').val();
@@ -1225,6 +1225,10 @@ function handleSearch($resultTable, dataResponse) {
 
   if(dataResponse.matriculas.length === 1) {
     $situacaoField.prop('disabled', dataResponse.matriculas[0].bloquear_troca_de_situacao);
+  }
+
+  if(!dataResponse.instituicao.permitir_edicao_frequencia) {
+    $faltaFields.prop('disabled', true);
   }
 
 }

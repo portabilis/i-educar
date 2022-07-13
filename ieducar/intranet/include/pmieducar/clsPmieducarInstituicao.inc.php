@@ -51,6 +51,7 @@ class clsPmieducarInstituicao extends Model
     public $permitir_matricula_fora_periodo_letivo;
     public $ordenar_alunos_sequencial_enturmacao;
     public $obrigar_telefone_pessoa;
+    public $permitir_edicao_frequencia;
 
     public function __construct(
         $cod_instituicao = null,
@@ -83,7 +84,8 @@ class clsPmieducarInstituicao extends Model
         $bloquear_vinculo_professor_sem_alocacao_escola = null,
         $permitir_matricula_fora_periodo_letivo = null,
         $ordenar_alunos_sequencial_enturmacao = null,
-        $obrigar_telefone_pessoa = null
+        $obrigar_telefone_pessoa = null,
+        $permitir_edicao_frequencia = null
     ) {
         $db = new clsBanco();
         $this->_schema = 'pmieducar.';
@@ -140,7 +142,8 @@ class clsPmieducarInstituicao extends Model
             bloquear_vinculo_professor_sem_alocacao_escola,
             permitir_matricula_fora_periodo_letivo,
             ordenar_alunos_sequencial_enturmacao,
-            obrigar_telefone_pessoa
+            obrigar_telefone_pessoa,
+            permitir_edicao_frequencia
         ';
 
         if (is_numeric($ref_usuario_cad)) {
@@ -261,6 +264,11 @@ class clsPmieducarInstituicao extends Model
         if (is_bool($obrigar_telefone_pessoa)) {
             $this->obrigar_telefone_pessoa = $obrigar_telefone_pessoa;
         }
+
+        if (is_bool($permitir_edicao_frequencia)) {
+            $this->permitir_edicao_frequencia = $permitir_edicao_frequencia;
+        }
+        
     }
 
     public function canRegister()
@@ -668,6 +676,16 @@ class clsPmieducarInstituicao extends Model
                 $gruda = ', ';
             }
 
+            if (dbBool($this->permitir_edicao_frequencia)) {
+                $campos .= "{$gruda}permitir_edicao_frequencia";
+                $valores .= "{$gruda} true ";
+                $gruda = ', ';
+            } else {
+                $campos .= "{$gruda}permitir_edicao_frequencia";
+                $valores .= "{$gruda} false ";
+                $gruda = ', ';
+            }
+
             if (is_string($this->orgao_regional) and !empty($this->orgao_regional)) {
                 $campos .= "{$gruda}orgao_regional";
                 $valores .= "{$gruda}'{$this->orgao_regional}'";
@@ -1043,6 +1061,15 @@ class clsPmieducarInstituicao extends Model
                 $set .= "{$gruda}obrigar_telefone_pessoa = false ";
                 $gruda = ', ';
             }
+
+            if (dbBool($this->permitir_edicao_frequencia)) {
+                $set .= "{$gruda}permitir_edicao_frequencia = true ";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}permitir_edicao_frequencia = false ";
+                $gruda = ', ';
+            }
+
 
             if ($set) {
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_instituicao = '{$this->cod_instituicao}'");

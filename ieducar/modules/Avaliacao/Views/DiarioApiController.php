@@ -1004,6 +1004,19 @@ class DiarioApiController extends ApiCoreController
 
         return $matriculaId;
     }
+ 
+    protected function getInstituicao() {
+        $instituicao_id = $this->getRequest()->instituicao_id;
+
+        if (is_numeric($instituicao_id) && !empty($instituicao_id)) {
+            $obj = new clsPmieducarInstituicao($instituicao_id);
+            $instituicao = $obj->detalhe();
+
+            return $instituicao;
+        }
+
+        return [];
+    }
 
     /**
      * @param bool $reload
@@ -1833,6 +1846,7 @@ class DiarioApiController extends ApiCoreController
     {
         if ($this->isRequestFor('get', 'matriculas')) {
             $this->appendResponse('matriculas', $this->getMatriculas());
+            $this->appendResponse('instituicao', $this->getInstituicao());
             $this->appendResponse('navegacao_tab', $this->getNavegacaoTab());
             $this->appendResponse('can_change', $this->canChange());
             $this->appendResponse('locked', !$this->validatesPeriodoLancamentoFaltasNotas(false));
