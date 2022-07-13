@@ -58,7 +58,7 @@ return new class extends clsListagem {
         }
 
         $this->inputsHelper()->dynamic(['ano'], ['required' => false]);
-        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie', 'turma']);
+        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie', 'turma', 'matricula']);
         //$this->inputsHelper()->turmaTurno(['required' => false, 'label' => 'Turno']);
   
         $this->campoQuebra();
@@ -112,9 +112,10 @@ return new class extends clsListagem {
             $this->ref_cod_escola,
             $this->ref_cod_curso,
             $this->ref_cod_turma,
-            $this->data_inicial,
-            $this->data_final,
-            //$this->fase_etapa,
+            $this->ref_cod_matricula,
+            $this->data,
+            $this->data_fim,
+            $this->fase_etapa,
             $eh_professor ? $this->pessoa_logada : null         // Passe o ID do servidor caso ele seja um professor
         );
 
@@ -129,8 +130,8 @@ return new class extends clsListagem {
 
                 $lista_busca = [
                     "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$data_formatada}</a>",
-                    "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$registro['aluno']}</a>",
-                    "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$registro['turma']}</a>",                    
+                    "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$registro['nome']}</a>",
+                    "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$registro['turma']}</a>", 
                     "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$registro['curso']}</a>",
                     "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$registro['escola']}</a>"
                 ];

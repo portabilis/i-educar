@@ -1050,14 +1050,16 @@ class clsPmieducarMatricula extends Model
     {
 
         $db = new clsBanco();
-        $sql = 'SELECT m.cod_matricula, p.nome 
+        $ano_turma = date('Y'); 
+        $sql = "SELECT m.cod_matricula, p.nome 
         FROM pmieducar.matricula AS m
         JOIN pmieducar.aluno AS a ON a.cod_aluno = m.ref_cod_aluno
         JOIN cadastro.pessoa AS p ON p.idpes = a.ref_idpes
         JOIN pmieducar.curso AS c ON c.cod_curso = m.ref_cod_curso
         JOIN pmieducar.turma AS t ON t.ref_cod_curso = c.cod_curso
         WHERE t.tipo_atendimento = 5
-        ORDER BY p.nome ASC';
+        AND m.ano = $ano_turma
+        ORDER BY p.nome ASC";
 
         $db->Consulta($sql);
 

@@ -99,7 +99,7 @@ class clsModulesPlanejamentoAulaAee extends Model
             $this->ref_cod_matricula = $ref_cod_matricula;
         }
 
-        if (is_numeric($etapa_sequencial)) {
+        if (is_numeric($etapa_sequencial)) {lista2
             $this->etapa_sequencial = $etapa_sequencial;
         }
 

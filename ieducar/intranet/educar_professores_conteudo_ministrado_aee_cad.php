@@ -15,10 +15,10 @@ return new class extends clsCadastro {
     public $hora_inicio;
     public $hora_fim;
     public $atividades;
+    public $ref_cod_matricula;
     public $observacao;
     public $planejamento_aula_id;
     public $conteudos;
-    public $especificacoes;
 
     public function Inicializar () {
         $this->titulo = 'Registro de aula AEE - Cadastro';
@@ -78,12 +78,7 @@ return new class extends clsCadastro {
         $this->campoOculto('cod_componente_curricular', 5);
 
        
-        if (is_numeric($this->frequencia)) {
-            $desabilitado = true;
-
-            $obj = new clsModulesFrequenciaAee($this->frequencia);
-            $freq = $obj->detalhe()['detalhes'];
-            
+        if (is_numeric($this->ref_cod_matricula)) {                       
 
             $obj = new clsModulesPlanejamentoAulaAee();
             $id = $obj->lista(
@@ -91,16 +86,20 @@ return new class extends clsCadastro {
                 null,
                 null,
                 null,
+                null,               
                 null,
-                $freq['ref_cod_turma'],
+                $this->ref_cod_matricula,
+                null,               
                 null,
                 null,
+                null, 
                 null,
-                $this->servidor_id
+                null,
             )[0]['id'];
             
-            $this->planejamento_aula_id = $id;
-          
+            $this->planejamento_aula_id = $id;      
+            
+            die(var_dump( $this->planejamento_aula_id));
             
         }
        
@@ -111,10 +110,10 @@ return new class extends clsCadastro {
         $this->campoHora('hora_inicio', 'Hora Início', $this->hora_inicio, ['required' => $obrigatorio]);    // Disabled não funciona; ação colocada no javascript.
         $this->campoHora('hora_fim', 'Hora Fim', $this->hora_fim, ['required' => $obrigatorio]);      // Disabled não funciona; ação colocada no javascript.        
 
-         // Montar o inputsHelper->select \/
+        
+        // Montar o inputsHelper->select \/
         // Cria lista de Alunos
-        $obj_aluno = new clsPmieducarMatricula();
-        $obj_aluno->setOrderBy(' nome asc ');
+        $obj_aluno = new clsPmieducarMatricula();       
         $lista_alunos = $obj_aluno->lista_matriculas_aee();
         $aluno_resources = ['' => 'Selecione um Aluno'];
         foreach ($lista_alunos as $reg) {
@@ -127,7 +126,7 @@ return new class extends clsCadastro {
             'required' => true,
             'resources' => $aluno_resources
         ];
-        $this->inputsHelper()->select('aluno', $options);
+        $this->inputsHelper()->select('matricula', $options);
         
         $this->campoMemo('atividades', 'Registro diário de aula', $this->atividades, 100, 5, false);
 
@@ -139,14 +138,17 @@ return new class extends clsCadastro {
     public function Novo() {
         $obj = new clsModulesComponenteMinistradoAee(
             null,
-            $this->hora_inicio,
-            $this->hora_fim,
             $this->matricula,
+            $this->data,
+            $this->hora_inicio,
+            $this->hora_fim,            
             $this->atividades,
             $this->observacao,
-            $this->conteudos,
-            //$this->especificacoes
+            $this->conteudos
         );
+
+         die(var_dump($obj));
+        // dump($obj);
 
         $cadastrou = $obj->cadastra();
 
@@ -209,7 +211,7 @@ return new class extends clsCadastro {
             $rows = [];
 
             $obj = new clsModulesPlanejamentoAulaConteudo();
-            $conteudos = $obj->lista2($planejamento_aula_id);
+            $conteudos = $obj->lista2_aee($planejamento_aula_id);
            
             foreach ($conteudos as $key => $conteudo) {
                 $rows[$conteudo['id']] = $conteudo['conteudo'];
@@ -224,7 +226,7 @@ return new class extends clsCadastro {
 
     public function loadAssets () {
         $scripts = [
-            '/modules/Cadastro/Assets/Javascripts/PlanoAulaConteudo.js'
+            '/modules/Cadastro/Assets/Javascripts/PlanoAulaConteudoAee.js'
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);

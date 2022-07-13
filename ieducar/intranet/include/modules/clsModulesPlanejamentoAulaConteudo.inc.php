@@ -190,6 +190,42 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
                     ON (cmc.planejamento_aula_conteudo_id = pac.id)
                 WHERE
                     pac.planejamento_aula_id =  '{$planejamento_aula_id}'
+                    AND pac.plano_aee IS NULL
+            ");
+
+            while($db->ProximoRegistro()) {
+                $conteudos[] = $db->Tupla();
+            }
+
+            return $conteudos;
+        }
+
+        return false;
+    }
+
+     /**
+     * Lista relacionamentos entre os conteúdos e o plano de aula retornando se os conteúdos estão sendo usados
+     *
+     * @return array
+     */
+    public function lista2_aee($planejamento_aula_id) {
+        if (is_numeric($planejamento_aula_id)) {
+            $db = new clsBanco();
+
+            $db->Consulta("
+                SELECT
+                    pac.*,
+                    CASE
+                        WHEN cmc.planejamento_aula_conteudo_id IS NULL THEN false
+                        WHEN cmc.planejamento_aula_conteudo_id IS NOT NULL THEN true
+                    END usando
+                FROM
+                    modules.planejamento_aula_conteudo as pac
+                LEFT JOIN modules.conteudo_ministrado_conteudo as cmc
+                    ON (cmc.planejamento_aula_conteudo_id = pac.id)
+                WHERE
+                    pac.planejamento_aula_id =  '{$planejamento_aula_id}'
+                    AND pac.plano_aee = 'S'
             ");
 
             while($db->ProximoRegistro()) {
