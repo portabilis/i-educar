@@ -2,16 +2,14 @@
 
 namespace App\Http\Requests\Api\Resource\SchoolAcademicYear;
 
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
+use App\Http\Requests\Api\Resource\ResourceRequest;
 
-class ResourceSchoolAcademicYearRequest extends FormRequest
+class ResourceSchoolAcademicYearRequest extends ResourceRequest
 {
     public function rules(): array
     {
         return [
-            'school' => ['required', 'integer','min:1'],
+            'school' => ['required', 'integer', 'min:1'],
             'year' => ['nullable', 'integer', 'digits:4'],
             'limit' => ['nullable', 'integer']
         ];
@@ -23,10 +21,5 @@ class ResourceSchoolAcademicYearRequest extends FormRequest
             'school' => 'Escola',
             'year' => 'Ano'
         ];
-    }
-
-    protected function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(response()->json(['data'=>[]]));
     }
 }

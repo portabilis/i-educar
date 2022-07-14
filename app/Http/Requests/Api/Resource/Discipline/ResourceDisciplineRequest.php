@@ -2,18 +2,16 @@
 
 namespace App\Http\Requests\Api\Resource\Discipline;
 
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
+use App\Http\Requests\Api\Resource\ResourceRequest;
 
-class ResourceDisciplineRequest extends FormRequest
+class ResourceDisciplineRequest extends ResourceRequest
 {
     public function rules(): array
     {
         return [
-            'course' => ['nullable','integer','min:1'],
-            'grade' => ['required_without_all:course,school','required_with:school','nullable','integer','min:1'],
-            'school'=> ['nullable','integer','min:1']
+            'course' => ['nullable', 'integer', 'min:1'],
+            'grade' => ['required_without_all:course,school', 'required_with:school', 'nullable', 'integer', 'min:1'],
+            'school' => ['nullable', 'integer', 'min:1']
         ];
     }
 
@@ -24,10 +22,5 @@ class ResourceDisciplineRequest extends FormRequest
             'course' => 'Curso',
             'school' => 'Escola'
         ];
-    }
-
-    protected function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(response()->json(['data'=>[]]));
     }
 }

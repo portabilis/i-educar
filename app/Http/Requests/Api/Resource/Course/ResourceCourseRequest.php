@@ -1,13 +1,9 @@
 <?php
 
 namespace App\Http\Requests\Api\Resource\Course;
+use App\Http\Requests\Api\Resource\ResourceRequest;
 
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Validation\ValidationException;
-
-class ResourceCourseRequest extends FormRequest
+class ResourceCourseRequest extends ResourceRequest
 {
     public function rules(): array
     {
@@ -27,10 +23,5 @@ class ResourceCourseRequest extends FormRequest
             'not_pattern' => 'Sem Padrão Escolar',
             'course' => 'Curso'
         ];
-    }
-
-    protected function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(response()->json(['data'=>[]]));
     }
 }
