@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacyEducationNetworkBuilder;
+use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class LegacyEducationNetwork extends Model
 {
-    use HasFactory;
+    use LegacyAttribute;
 
     /**
      * @var string
@@ -19,6 +20,23 @@ class LegacyEducationNetwork extends Model
      * @var string
      */
     protected $primaryKey = 'cod_escola_rede_ensino';
+
+    /**
+     * Builder dos filtros
+     *
+     * @var string
+     */
+    protected $builder = LegacyEducationNetworkBuilder::class;
+
+    /**
+     * Atributos legados para serem usados nas queries
+     *
+     * @var string[]
+     */
+    public $legacy = [
+        'id' => 'cod_escola_rede_ensino',
+        'name' => 'nm_rede'
+    ];
 
     /**
      * @var array
@@ -41,7 +59,7 @@ class LegacyEducationNetwork extends Model
      */
     public function getIdAttribute()
     {
-        return $this->getRawOriginal('id') ?? $this->cod_escola_rede_ensino;
+        return $this->cod_escola_rede_ensino;
     }
 
     /**
@@ -49,21 +67,19 @@ class LegacyEducationNetwork extends Model
      */
     public function getNameAttribute()
     {
-        return $this->getRawOriginal('name') ?? $this->nm_rede;
+        return $this->nm_rede;
     }
 
     /**
      * Filtra por Instituição
      *
      * @param Builder $query
-     * @param int|null $institution
+     * @param int $institution
      * @return void
      */
-    public function scopeWhereInstitution(Builder $query, ?int $institution = null): void
+    public function scopeWhereInstitution(Builder $query, int $institution): void
     {
-        if ($institution !== null) {
-            $query->where('ref_cod_instituicao', $institution);
-        }
+        $query->where('ref_cod_instituicao', $institution);
     }
 
     /**

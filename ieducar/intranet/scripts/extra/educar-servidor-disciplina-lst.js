@@ -9,7 +9,7 @@ function trocaCurso(id_campo) {
     campoDisciplina.disabled = true;
     campoDisciplina.options[0].text = 'Carregando Disciplinas';
 
-    send("/api/resource/discipline",atualizaLstDisciplina,{course:campoCurso},id);
+    getApiResource("/api/resource/discipline",atualizaLstDisciplina,{course:campoCurso},id);
   } else {
     campoFuncao.options[0].text = 'Selecione';
   }

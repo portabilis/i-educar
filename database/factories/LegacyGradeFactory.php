@@ -18,11 +18,11 @@ class LegacyGradeFactory extends Factory
             'descricao' => $this->faker->word(),
             'etapa_curso' => $this->faker->randomNumber(1),
             'concluinte' => $this->faker->randomNumber(1),
-            'carga_horaria' => $this->faker->randomFloat(),
+            'carga_horaria' => $this->faker->randomNumber(3),
             'data_cadastro' =>  now(),
             'ativo' => 1,
             'importar_serie_pre_matricula' => $this->faker->boolean(),
-            'ref_cod_curso' => LegacyCourse::factory(),
+            'ref_cod_curso' => LegacyCourseFactory::new(),
         ];
     }
 }

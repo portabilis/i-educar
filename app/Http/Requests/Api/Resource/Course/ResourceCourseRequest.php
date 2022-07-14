@@ -12,10 +12,10 @@ class ResourceCourseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'institution' => ['required_without_all:school,course','nullable','integer'],
-            'school' => ['nullable','integer'],
-            'not_pattern' => ['nullable','boolean','boolean'],
-            'course' => ['nullable','integer']
+            'institution' => ['required_without_all:school,course','nullable','integer','min:1'],
+            'school' => ['nullable','integer','min:1'],
+            'not_pattern' => ['nullable','boolean'],
+            'course' => ['nullable','integer','min:1']
         ];
     }
 
@@ -29,13 +29,8 @@ class ResourceCourseRequest extends FormRequest
         ];
     }
 
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     protected function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException(response()->json([]));
+        throw new HttpResponseException(response()->json(['data'=>[]]));
     }
 }

@@ -5,7 +5,10 @@ namespace Tests\Feature\Api\Resource\Course;
 use App\Models\LegacyCourse;
 use App\Models\LegacyInstitution;
 use App\Models\LegacySchool;
-use App\Models\LegacySchoolCourse;
+use Database\Factories\LegacyCourseFactory;
+use Database\Factories\LegacyInstitutionFactory;
+use Database\Factories\LegacySchoolCourseFactory;
+use Database\Factories\LegacySchoolFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
@@ -24,80 +27,87 @@ class ResourceCourseTest extends TestCase
      */
     private LegacySchool $school;
 
+    /**
+     * @var string
+     */
+    private string $route = 'api.resource.course';
+
+    /**
+     * @var LegacyCourse
+     */
+    private LegacyCourse $course;
+
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->institution = LegacyInstitution::factory()->create();
+        $this->institution = LegacyInstitutionFactory::new()->create();
 
-        $schools = LegacySchool::factory(2)->create([
+        $schools = LegacySchoolFactory::new()->count(2)->create([
             'ref_cod_instituicao' => $this->institution->id
         ]);
         $this->school = $schools->first();
 
         $schools->each(function ($school) {
-            $courses = LegacyCourse::factory(2)->create(['ref_cod_instituicao' => $this->institution->id]);
+            $courses = LegacyCourseFactory::new()->count(2)->create(['ref_cod_instituicao' => $this->institution->id]);
 
             $courses->each(function ($course) use ($school) {
-                LegacySchoolCourse::factory()->create([
+                LegacySchoolCourseFactory::new()->create([
                     'ref_cod_curso' => $course->id,
                     'ref_cod_escola' => $school->id
                 ]);
             });
+
         });
+
+        $this->course = LegacyCourse::whereHas('schools',function ($q) {
+            $q->where('cod_escola',$this->school->id);
+        })->first();
     }
 
 
     public function test_exact_json_match()
     {
-        $response = $this->getJson(route('resource::api.course', ['institution' => $this->institution, 'school' => $this->school]));
+        $response = $this->getJson(route($this->route, ['institution' => $this->institution, 'school' => $this->school,'course'=>$this->course]));
 
-        $response->assertStatus(200);
+
+        $response->assertOk();
         $response->assertJsonStructure([
-            '*' => [
-                'id',
-                'name',
-                'is_standard_calendar',
-                'steps'
+            'data' => [
+                '*' => [
+                        'id',
+                        'name',
+                        'is_standard_calendar',
+                        'steps'
+                ]
             ]
         ]);
 
-        $courses = LegacyCourse::select(['cod_curso as id', 'padrao_ano_escolar as is_standard_calendar', 'qtd_etapas as steps'])->selectName()
-            ->whereInstitution($this->institution->id)->whereSchool($this->school->id)
-            ->active()->orderByName()->get();
+        $courses = LegacyCourse::getResource([
+            'institution' => $this->institution->id,
+            'school' => $this->school->id,
+            'course' => $this->course->id
+        ]);
 
         $response->assertJson(function (AssertableJson $json) use ($courses) {
-            $json->has(2);
+            $json->has('data',1);
 
             foreach ($courses as $key => $course) {
-                $json->has($key, function ($json) use ($course) {
-                    $json->where('id', $course->id);
-                    $json->where('name', $course->name);
-                    $json->where('is_standard_calendar', $course->is_standard_calendar);
-                    $json->where('steps', $course->steps);
+                $json->has('data.'.$key, function ($json) use ($course) {
+                    $json->where('id', $course['id']);
+                    $json->where('name', $course['name']);
+                    $json->where('is_standard_calendar', $course['is_standard_calendar']);
+                    $json->where('steps', $course['steps']);
                 });
             }
         });
     }
 
-    public function test_not_found(): void
-    {
-        $response = $this->getJson(route('resource::api.course', ['institution' => 0]));
-
-        $response->assertStatus(200);
-        $response->assertJson(function (AssertableJson $json) {
-            $json->has(0);
-        });
-    }
-
     public function test_invalid_parameters(): void
     {
-        $response = $this->getJson(route('resource::api.course', ['institution' => 'Instituição', 'school' => 'Escola', 'not_pattern' => '2', 'course' => 'Curso']));
+        $response = $this->getJson(route($this->route, ['institution' => 'Instituição', 'school' => 'Escola', 'not_pattern' => '2', 'course' => 'Curso']));
 
-        $response->assertStatus(200);
-
-        $response->assertJson(function (AssertableJson $json) {
-            $json->has(0);
-        });
+        $response->assertOk();
+        $response->assertJsonCount(0,'data');
     }
 }

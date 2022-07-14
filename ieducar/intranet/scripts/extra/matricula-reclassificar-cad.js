@@ -1,7 +1,7 @@
 function getSerie() {
   const campoCurso = document.getElementById('ref_cod_curso').value;
   const campoSerie = document.getElementById('serie_matricula').value;
-  send("/api/resource/grade",getSeries,{course:campoCurso,grade_exclude:campoSerie});
+  getApiResource("/api/resource/grade",getSeries,{course:campoCurso,grade_exclude:campoSerie});
 }
 
 function getSeries(series) {

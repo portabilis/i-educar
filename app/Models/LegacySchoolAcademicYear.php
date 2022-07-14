@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacySchoolAcademicYearBuilder;
+use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class LegacySchoolAcademicYear extends Model
 {
+    use LegacyAttribute;
 
-    use HasFactory;
     /**
      * @var string
      */
@@ -19,6 +20,22 @@ class LegacySchoolAcademicYear extends Model
      * @var string
      */
     protected $primaryKey = 'ref_cod_escola';
+
+    /**
+     * Builder dos filtros
+     *
+     * @var string
+     */
+    protected $builder = LegacySchoolAcademicYearBuilder::class;
+
+    /**
+     * Atributos legados para serem usados nas queries
+     *
+     * @var string[]
+     */
+    public $legacy = [
+        'year' => 'ano'
+    ];
 
     /**
      * @var array
@@ -59,7 +76,7 @@ class LegacySchoolAcademicYear extends Model
      * @return int
      */
     public function getYearAttribute(): int {
-        return $this->getRawOriginal('year') ?? $this->ano;
+        return $this->ano;
     }
 
     /**
@@ -77,14 +94,12 @@ class LegacySchoolAcademicYear extends Model
      * Filtra pelo ano
      *
      * @param Builder $query
-     * @param int|null $year
+     * @param int $year
      * @return void
      */
-    public function scopeWhereYear(Builder $query, ?int $year = null): void
+    public function scopeWhereYear(Builder $query, int $year ): void
     {
-        if ($year !== null) {
-            $query->where('escola_ano_letivo.ano',$year);
-        }
+        $query->where('escola_ano_letivo.ano',$year);
     }
 
     /**
@@ -103,28 +118,24 @@ class LegacySchoolAcademicYear extends Model
      * Filtra por Instituição
      *
      * @param Builder $query
-     * @param int|null $school
+     * @param int $school
      * @return void
      */
-    public function scopeWhereSchool(Builder $query, ?int $school = null): void
+    public function scopeWhereSchool(Builder $query, int $school): void
     {
-        if ($school !== null) {
-            $query->where('ref_cod_escola', $school);
-        }
+        $query->where('ref_cod_escola', $school);
     }
 
     /**
      * Filtra por anos maiores
      *
      * @param Builder $query
-     * @param int|null $year
+     * @param int $year
      * @return void
      */
-    public function scopeWhereGteYear(Builder $query, ?int $year = null): void
+    public function scopeWhereGteYear(Builder $query, int $year): void
     {
-        if ($year !== null) {
-            $query->where('ano', '>=', $year);
-        }
+        $query->where('ano', '>=', $year);
     }
 
 }

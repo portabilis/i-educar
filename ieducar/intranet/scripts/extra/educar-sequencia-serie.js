@@ -49,7 +49,7 @@ document.getElementById('ref_cod_instituicao').onchange = function() {
   setAttributes(campoCurso,'Carregando curso origem',true);
   const campoCurso_ = document.getElementById('ref_curso_destino');
   setAttributes(campoCurso_,'Carregando curso destino',true);
-  send('/api/resource/course',getCurso,{institution:campoInstituicao})
+  getApiResource('/api/resource/course',getCurso,{institution:campoInstituicao})
 };
 
 document.getElementById('ref_curso_origem').onchange = function() {
@@ -57,12 +57,12 @@ document.getElementById('ref_curso_origem').onchange = function() {
   const campoSerie = document.getElementById('ref_serie_origem');
   setAttributes(campoSerie,'Carregando série origem',true);
 
-  send('/api/resource/grade',getSerie,{course:campoCurso})
+  getApiResource('/api/resource/grade',getSerie,{course:campoCurso})
 };
 
 document.getElementById('ref_curso_destino').onchange = function() {
   const campoCurso_ = document.getElementById('ref_curso_destino').value;
   const campoSerie_ = document.getElementById('ref_serie_destino');
   setAttributes(campoSerie_,'Carregando série destino',true);
-  send('/api/resource/grade',getSerie_,{course:campoCurso_})
+  getApiResource('/api/resource/grade',getSerie_,{course:campoCurso_})
 };

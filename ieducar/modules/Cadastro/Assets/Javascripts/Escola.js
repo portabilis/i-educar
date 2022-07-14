@@ -794,8 +794,8 @@ if ( document.getElementById('ref_cod_instituicao') )
         const campoCurso = document.getElementById('ref_cod_curso');
         setAttributes(campoCurso,'Carregando curso',true);
 
-        send("/api/resource/education-network",getRedeEnsino,{institution:campoInstituicao});
-        send("/api/resource/course",getCurso,{institution:campoInstituicao});
+        getApiResource("/api/resource/education-network",getRedeEnsino,{institution:campoInstituicao});
+        getApiResource("/api/resource/course",getCurso,{institution:campoInstituicao});
 
         if (this.value == '')
         {

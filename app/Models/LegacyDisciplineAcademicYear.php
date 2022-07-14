@@ -2,18 +2,36 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacyDisciplineAcademicYearBuilder;
+use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class LegacyDisciplineAcademicYear extends Pivot
 {
-    use HasFactory;
+    use LegacyAttribute;
 
     protected $table = 'modules.componente_curricular_ano_escolar';
 
     protected $primaryKey = 'componente_curricular_id';
+
+    /**
+     * Builder dos filtros
+     *
+     * @var string
+     */
+    protected $builder = LegacyDisciplineAcademicYearBuilder::class;
+
+    /**
+     * Atributos legados para serem usados nas queries
+     *
+     * @var string[]
+     */
+    public $legacy = [
+        'id' => 'componente_curricular_id',
+        'workload' => 'carga_horaria'
+    ];
 
     protected $fillable = [
         'componente_curricular_id',
@@ -51,21 +69,21 @@ class LegacyDisciplineAcademicYear extends Pivot
      * @return int
      */
     public function getIdAttribute() {
-        return $this->getRawOriginal('id') ?? $this->componente_curricular_id;
+        return $this->componente_curricular_id;
     }
 
     /**
      * @return string
      */
     public function getNameAttribute() {
-        return $this->getRawOriginal('name') ?? $this->discipline->name;
+        return $this->discipline->name ?? null;
     }
 
     /**
      * @return int
      */
     public function getWorkloadAttribute() {
-        return $this->getRawOriginal('workload') ?? $this->carga_horaria;
+        return $this->carga_horaria;
     }
 
 
@@ -73,30 +91,26 @@ class LegacyDisciplineAcademicYear extends Pivot
      * Filtra por curso
      *
      * @param Builder $query
-     * @param int|null $course
+     * @param int $course
      * @return void
      */
-    public function scopeWhereCourse(Builder $query, ?int $course = null): void
+    public function scopeWhereCourse(Builder $query, int $course): void
     {
-        if ($course !== null) {
-            $query->whereHas('grade',function ($q) use($course){
-                $q->whereCourse($course);
-            });
-        }
+        $query->whereHas('grade',function ($q) use($course){
+            $q->whereCourse($course);
+        });
     }
 
     /**
      * Filtra por série
      *
      * @param Builder $query
-     * @param int|null $grade
+     * @param int $grade
      * @return void
      */
-    public function scopeWhereGrade(Builder $query, ?int $grade = null): void
+    public function scopeWhereGrade(Builder $query, int $grade ): void
     {
-        if ($grade !== null) {
-            $query->where('ano_escolar_id',$grade);
-        }
+        $query->where('ano_escolar_id',$grade);
     }
 
     /**
@@ -107,18 +121,6 @@ class LegacyDisciplineAcademicYear extends Pivot
      */
     public function scopeDistinctDiscipline(Builder $query): void
     {
-        $query->distinct('id');
-    }
-
-    /**
-     * Faz join com Disciplina
-     *
-     * @param Builder $query
-     * @return void
-     */
-    public function scopeAddSelectName(Builder $query): void
-    {
-        $query->join('componente_curricular','componente_curricular_id','id');
-        $query->addSelect('nome as name');
+        $query->distinct('componente_curricular_id');
     }
 }

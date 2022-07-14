@@ -8,8 +8,13 @@ use App\Models\LegacyInstitution;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolAcademicYear;
 use App\Models\LegacySchoolClass;
-use App\Models\LegacySchoolCourse;
-use App\Models\LegacySchoolGrade;
+use Database\Factories\LegacyCourseFactory;
+use Database\Factories\LegacyGradeFactory;
+use Database\Factories\LegacyInstitutionFactory;
+use Database\Factories\LegacySchoolClassFactory;
+use Database\Factories\LegacySchoolCourseFactory;
+use Database\Factories\LegacySchoolFactory;
+use Database\Factories\LegacySchoolGradeFactory;
 use Illuminate\Database\Eloquent\HigherOrderBuilderProxy;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Testing\Fluent\AssertableJson;
@@ -43,15 +48,20 @@ class ResourceSchoolClassTest extends TestCase
      */
     private int $year;
 
+    /**
+     * @var string
+     */
+    private string $route = 'api.resource.school-class';
+
     protected function setUp(): void
     {
         parent::setUp();
 
         //instituição
-        $this->institution = LegacyInstitution::factory()->create();
+        $this->institution = LegacyInstitutionFactory::new()->create();
 
         //escolas / ano academico
-        $schools = LegacySchool::factory(2)->hasAcademicYears()->create([
+        $schools = LegacySchoolFactory::new()->count(2)->hasAcademicYears()->create([
             'ref_cod_instituicao' => $this->institution->id
         ]);
 
@@ -62,24 +72,26 @@ class ResourceSchoolClassTest extends TestCase
         $this->year = LegacySchoolAcademicYear::where('ref_cod_escola', $this->school->id)->first()->year;
 
         $schools->each(function ($school) {
+
             //cursos
-            LegacyCourse::factory(2)->create(['ref_cod_instituicao' => $this->institution->id])->each(function ($course) use ($school) {
+            LegacyCourseFactory::new()->count(2)->create(['ref_cod_instituicao' => $this->institution->id])->each(function ($course) use ($school) {
                 //escola_curso
-                LegacySchoolCourse::factory()->create([
+                LegacySchoolCourseFactory::new()->create([
                     'ref_cod_curso' => $course->id,
                     'ref_cod_escola' => $school->id
                 ]);
 
+
                 //series
-                LegacyGrade::factory(2)->create(['ref_cod_curso' => $course->id])->each(function ($grade) use ($school, $course) {
+                LegacyGradeFactory::new()->count(2)->create(['ref_cod_curso' => $course->id])->each(function ($grade) use ($school, $course) {
                     //escol_serie
-                    LegacySchoolGrade::factory()->create([
+                    LegacySchoolGradeFactory::new()->create([
                         'ref_cod_serie' => $grade->id,
                         'ref_cod_escola' => $school->id
                     ]);
 
                     //turmas
-                    LegacySchoolClass::factory(2)->create([
+                    LegacySchoolClassFactory::new()->count(2)->create([
                         'ref_ref_cod_serie' => $grade->id,
                         'ref_ref_cod_escola' => $school->id,
                         'ref_cod_curso' => $course->id,
@@ -87,9 +99,9 @@ class ResourceSchoolClassTest extends TestCase
                         'ano' => $this->year
                     ]);
                 });
-
             });
         });
+
 
         //curso
         $this->course = LegacyCourse::where('ref_cod_instituicao', $this->institution->id)->first();
@@ -99,64 +111,55 @@ class ResourceSchoolClassTest extends TestCase
 
     public function test_exact_json_match(): void
     {
-        $response = $this->getJson(route('resource::api.school-class', ['institution' => $this->institution, 'school' => $this->school, 'course' => $this->course, 'grade' => $this->grade, 'year' => $this->year]));
+        $response = $this->getJson(route($this->route, ['institution' => $this->institution, 'school' => $this->school, 'course' => $this->course, 'grade' => $this->grade, 'year' => $this->year]));
 
-        $response->assertStatus(200);
+
+        $response->assertOk();
 
         $response->assertJsonStructure([
-            '*' => [
-                'id',
-                'name'
+            'data' => [
+                '*' => [
+                    'id',
+                    'name'
+                ]
             ]
         ]);
 
-        $school_classes = LegacySchoolClass::select(['cod_turma as id'])->selectName()
-            ->whereInstitution($this->institution->id)->whereSchool($this->school->id)->whereCourse($this->course->id)->whereGrade($this->grade->id)->whereInProgress($this->year)
-            ->active()->orderByName()
-            ->get();
+        $school_classes =  LegacySchoolClass::getResource([
+            'institution' => $this->institution->id,
+            'school' => $this->school->id,
+            'course' => $this->course->id,
+            'grade' => $this->grade->id,
+            'inProgress' => true,
+            'year' => $this->year
+        ]);
 
         $response->assertJson(function (AssertableJson $json) use ($school_classes) {
-            $json->has(2);
+            $json->has('data',2);
 
             foreach ($school_classes as $key => $school_class) {
-                $json->has($key, function ($json) use ($key, $school_class) {
-                    $json->where('id', $school_class->id);
-                    $json->where('name', $school_class->name);
+                $json->has('data.'.$key, function ($json) use ($school_class) {
+                    $json->where('id', $school_class['id']);
+                    $json->where('name', $school_class['name']);
                 });
             }
         });
     }
 
-    public function test_not_found(): void
-    {
-        $response = $this->getJson(route('resource::api.school-class', ['institution' => 0]));
-
-        $response->assertStatus(200);
-
-        $response->assertJson(function (AssertableJson $json) {
-            $json->has(0);
-        });
-    }
-
     public function test_required_parameters(): void
     {
-        $response = $this->getJson(route('resource::api.school-class'));
 
-        $response->assertStatus(200);
+        $response = $this->getJson(route($this->route));
 
-        $response->assertJson(function (AssertableJson $json) {
-            $json->has(0);
-        });
+        $response->assertOk();
+        $response->assertJsonCount(0,'data');
     }
 
     public function test_invalid_parameters(): void
     {
-        $response = $this->getJson(route('resource::api.school-class', ['institution' => 'Instituição', 'school' => 'Escola', 'course' => 'Curso', 'grade' => 'Serie', 'year' => '202']));
+        $response = $this->getJson(route($this->route, ['institution' => 'Instituição', 'school' => 'Escola', 'course' => 'Curso', 'grade' => 'Serie', 'year' => '202']));
 
-        $response->assertStatus(200);
-
-        $response->assertJson(function (AssertableJson $json) {
-            $json->has(0);
-        });
+        $response->assertOk();
+        $response->assertJsonCount(0,'data');
     }
 }

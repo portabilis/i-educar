@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacyCourseBuilder;
+use App\Traits\LegacyAttribute;
 use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -17,7 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class LegacyCourse extends Model
 {
-    use HasFactory;
+    use LegacyAttribute;
 
     /**
      * @var string
@@ -28,6 +29,26 @@ class LegacyCourse extends Model
      * @var string
      */
     protected $primaryKey = 'cod_curso';
+
+    /**
+     * Builder dos filtros
+     *
+     * @var string
+     */
+    protected $builder = LegacyCourseBuilder::class;
+
+    /**
+     * Atributos legados para serem usados nas queries
+     *
+     * @var array
+     */
+    public $legacy = [
+        'id' => 'cod_curso',
+        'name' => 'nm_curso',
+        'is_standard_calendar' => 'padrao_ano_escolar',
+        'steps' => 'qtd_etapas',
+        'description' => 'descricao'
+    ];
 
     /**
      * @var array
@@ -55,7 +76,7 @@ class LegacyCourse extends Model
      */
     public function getIdAttribute()
     {
-        return $this->getRawOriginal('id') ?? $this->cod_curso;
+        return $this->cod_curso;
     }
 
     /**
@@ -71,7 +92,7 @@ class LegacyCourse extends Model
      */
     public function getStepsAttribute()
     {
-        return $this->getRawOriginal('steps') ?? $this->qtd_etapas;
+        return$this->qtd_etapas;
     }
 
     /**
@@ -79,7 +100,11 @@ class LegacyCourse extends Model
      */
     public function getNameAttribute()
     {
-        return $this->getRawOriginal('name') ?? $this->nm_curso;
+        if (empty($this->description)) {
+            return $this->nm_curso;
+        }
+
+        return $this->nm_curso . ' (' . $this->description . ')';
     }
 
     /**
@@ -87,7 +112,7 @@ class LegacyCourse extends Model
      */
     public function getIsStandardCalendarAttribute()
     {
-        return$this->getRawOriginal('is_standard_calendar') ??  $this->padrao_ano_escolar;
+        return $this->padrao_ano_escolar;
     }
 
     /**
@@ -148,83 +173,61 @@ class LegacyCourse extends Model
      * Filtra por Instituição
      *
      * @param Builder $query
-     * @param $institution
+     * @param int $institution
      * @return void
      */
-    public function scopeWhereInstitution(Builder $query, ?int $institution = null): void
+    public function scopeWhereInstitution(Builder $query, int $institution): void
     {
-        if ($institution !== null) {
-            $query->where('ref_cod_instituicao', $institution);
-        }
+        $query->where('ref_cod_instituicao', $institution);
     }
 
     /**
      * Filtra por Escola
      *
      * @param Builder $query
-     * @param int|null $school
+     * @param int $school
      * @return void
      */
-    public function scopeWhereSchool(Builder $query, ?int $school = null): void
+    public function scopeWhereSchool(Builder $query, int $school): void
     {
-        if ($school !== null) {
-            $query->whereHas('schools', function ($q) use ($school) {
-                $q->where('cod_escola', $school);
-            });
-        }
+        $query->whereHas('schools', function ($q) use ($school) {
+            $q->where('cod_escola', $school);
+        });
     }
 
     /**
      * Filtra por Padrão Ano Escolar
      *
      * @param Builder $query
-     * @param bool|null $condition
+     * @param bool $condition
      * @return void
      */
-    public function scopeWhereNotIsStandardCalendar(Builder $query, ?bool $condition = true): void
+    public function scopeWhereNotIsStandardCalendar(Builder $query, bool $condition = true): void
     {
-        if ($condition) {
-            $query->where('padrao_ano_escolar',0);
-        }
+        $query->when($condition,fn($q) => $q->where('padrao_ano_escolar',0));
     }
 
     /**
      * Filtra o Curso
      *
      * @param Builder $query
-     * @param int|null $course
+     * @param int $course
      * @return void
      */
-    public function scopeWhereCourse(Builder $query, ?int $course = null): void
+    public function scopeWhereCourse(Builder $query, int $course ): void
     {
-        if ($course) {
-            $query->where('cod_curso',$course);
-        }
-    }
-
-    /**
-     * Adiciona ao select o nome com descrição
-     *
-     * @param Builder $query
-     * @param bool $withDescription
-     */
-    public function scopeSelectName(Builder $query, bool $withDescription = true): void
-    {
-        if ($withDescription) {
-            $query->addSelect(\DB::raw("(CASE WHEN coalesce(descricao,'') <> '' THEN (nm_curso || ' (' || descricao || ')') ELSE nm_curso END) as name"));
-        } else {
-            $query->addSelect("name");
-        }
+        $query->where('cod_curso',$course);
     }
 
     /**
      * Ordena por nome
      *
      * @param Builder $query
+     * @param string $direction
      * @return void
      */
-    public function scopeOrderByName(Builder $query): void
+    public function scopeOrderByName(Builder $query, string $direction = 'asc'): void
     {
-        $query->orderBy('nm_curso');
+        $query->orderBy('nm_curso',$direction);
     }
 }

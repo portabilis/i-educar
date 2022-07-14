@@ -323,7 +323,7 @@ function getCurso() {
         campoCurso.disabled = true;
         campoCurso.options[0].text = 'Carregando cursos';
 
-        send("/api/resource/course",atualizaLstCurso,{institution:campoInstituicao,not_pattern:1});
+        getApiResource("/api/resource/course",atualizaLstCurso,{institution:campoInstituicao,not_pattern:1});
     } else {
         campoCurso.options[0].text = 'Selecione';
     }
@@ -355,7 +355,7 @@ function getCurso() {
     if (campoInstituicao) {
         campoCurso.disabled = true;
         campoCurso.options[0].text = 'Carregando cursos';
-        send("/api/resource/course",atualizaLstCurso,{institution:campoInstituicao});
+        getApiResource("/api/resource/course",atualizaLstCurso,{institution:campoInstituicao});
     } else {
         campoCurso.options[0].text = 'Selecione';
     }
@@ -411,9 +411,9 @@ function getEscolaCurso() {
         campoCurso.options[0].text = 'Carregando cursos';
 
         <?php if ($get_cursos_nao_padrao) {?>
-        send("/api/resource/course",atualizaLstEscolaCurso,{school:campoEscola,not_pattern:1});
+        getApiResource("/api/resource/course",atualizaLstEscolaCurso,{school:campoEscola,not_pattern:1});
         <?php } else {?>
-        send("/api/resource/course",atualizaLstEscolaCurso,{school:campoEscola});
+        getApiResource("/api/resource/course",atualizaLstEscolaCurso,{school:campoEscola});
         <?php } ?>
     } else {
         campoCurso.options[0].text = 'Selecione';
@@ -494,7 +494,7 @@ function getEscolaCursoSerie() {
     if (campoEscola && campoCurso) {
         campoSerie.disabled = true;
         campoSerie.options[0].text = 'Carregando séries';
-        send("/api/resource/grade",atualizaLstEscolaCursoSerie,{school:campoEscola,course:campoCurso});
+        getApiResource("/api/resource/grade",atualizaLstEscolaCursoSerie,{school:campoEscola,course:campoCurso});
     } else {
         campoSerie.options[0].text = 'Selecione';
     }
@@ -535,7 +535,7 @@ function getSerie() {
         campoSerie.disabled = true;
         campoSerie.options[0].text = 'Carregando séries';
 
-        send("/api/resource/grade",atualizaLstSerie,{school:campoEscola,course:campoCurso});
+        getApiResource("/api/resource/grade",atualizaLstSerie,{school:campoEscola,course:campoCurso});
     } else {
         campoSerie.options[0].text = 'Selecione';
     }
@@ -573,7 +573,7 @@ function getSerie() {
         campoSerie.disabled = true;
         campoSerie.options[0].text = 'Carregando séries';
 
-        send("/api/resource/grade",atualizaLstEscolaCurso,{course:campoCurso});
+        getApiResource("/api/resource/grade",atualizaLstEscolaCurso,{course:campoCurso});
     } else {
         campoSerie.options[0].text = 'Selecione';
     }
@@ -718,7 +718,7 @@ function getTurma() {
         campoTurma.disabled = true;
         campoTurma.options[0].text = 'Carregando turmas';
 
-        send("/api/resource/school-class",atualizaLstTurma,{school:campoEscola,grade:campoSerie});
+        getApiResource("/api/resource/school-class",atualizaLstTurma,{school:campoEscola,grade:campoSerie});
     } else {
         campoTurma.options[0].text = 'Selecione';
     }

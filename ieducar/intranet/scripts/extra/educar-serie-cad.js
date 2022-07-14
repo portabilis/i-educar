@@ -8,7 +8,7 @@ function getRegra()
     const campoRegrasDiferenciadas = document.getElementById('regra_avaliacao_diferenciada_id');
     setAttributes(campoRegrasDiferenciadas,'Carregando regras',true)
 
-    send('/api/resource/evaluation-rule',RegrasInstituicao,{institution:campoInstituicao})
+    getApiResource('/api/resource/evaluation-rule',RegrasInstituicao,{institution:campoInstituicao})
   }
 
   function EtapasCurso(cursos)
@@ -72,7 +72,7 @@ function getRegra()
 
     setAttributes(campoEtapas,'Carregando etapas',true);
 
-    send('/api/resource/course',EtapasCurso,{course:campoCurso})
+    getApiResource('/api/resource/course',EtapasCurso,{course:campoCurso})
   }
 
   /**

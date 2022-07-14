@@ -17,7 +17,7 @@
     setAttributes(campoCurso,'Selecione uma escola antes');
     setAttributes(campoSerie,'Selecione um curso antes');
     setAttributes(campoTurma,'Selecione uma Série antes');
-    send("/api/resource/school",getEscola,{institution:campoInstituicao.value});
+    getApiResource("/api/resource/school",getEscola,{institution:campoInstituicao.value});
   };
 
   campoEscola.onchange = function()
@@ -26,28 +26,28 @@
     setAttributes(campoCurso,'Carregando curso');
     setAttributes(campoSerie,'Selecione um curso antes');
     setAttributes(campoTurma,'Selecione uma série antes');
-    send("/api/resource/course",getCurso,{school:$j(this).val()});
-    send("/api/resource/school-academic-year",getAnoLetivo,{school:campoEscola.value});
+    getApiResource("/api/resource/course",getCurso,{school:$j(this).val()});
+    getApiResource("/api/resource/school-academic-year",getAnoLetivo,{school:campoEscola.value});
   };
 
   campoCurso.onchange = function()
   {
     setAttributes(campoSerie,'Carregando série');
     setAttributes(campoSerie,'Selecione uma Série antes');
-    send("/api/resource/grade",getSerie,{school:campoEscola.value,course:campoCurso.value});
+    getApiResource("/api/resource/grade",getSerie,{school:campoEscola.value,course:campoCurso.value});
   };
 
   campoAno.onchange = function()
   {
     setAttributes(campoSerie,'Carregando série');
     setAttributes(campoTurma,'Selecione uma Série antes');
-    send("/api/resource/grade",getSerie,{school:campoEscola.value,course:campoCurso.value});
+    getApiResource("/api/resource/grade",getSerie,{school:campoEscola.value,course:campoCurso.value});
   };
 
   campoSerie.onchange = function()
   {
     setAttributes(campoTurma,'Carregando turma');
-    send("/api/resource/school-class",getTurma,{school:campoEscola.value,grade:campoSerie.value,year:campoAno.value});
+    getApiResource("/api/resource/school-class",getTurma,{school:campoEscola.value,grade:campoSerie.value,year:campoAno.value});
   };
 
   if (document.getElementById('botao_busca')) {

@@ -2,16 +2,34 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacySchoolGradeDisciplineBuilder;
+use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacySchoolGradeDiscipline extends Model
 {
-    use HasFactory;
+    use LegacyAttribute;
 
     protected $table = 'pmieducar.escola_serie_disciplina';
+
+    /**
+     * Builder dos filtros
+     *
+     * @var string
+     */
+    protected $builder = LegacySchoolGradeDisciplineBuilder::class;
+
+    /**
+     * Atributos legados para serem usados nas queries
+     *
+     * @var string[]
+     */
+    public $legacy = [
+        'id' => 'ref_cod_disciplina',
+        'workload' => 'carga_horaria'
+    ];
 
     protected $fillable = [
         'ref_ref_cod_serie',
@@ -31,21 +49,21 @@ class LegacySchoolGradeDiscipline extends Model
      * @return int
      */
     public function getIdAttribute() {
-        return $this->getRawOriginal('id') ?? $this->ref_cod_disciplina;
+        return $this->ref_cod_disciplina;
     }
 
     /**
      * @return string
      */
     public function getNameAttribute() {
-        return $this->getRawOriginal('name') ?? $this->discipline->name;
+        return $this->discipline->name ?? null;
     }
 
     /**
      * @return int
      */
     public function getWorkloadAttribute() {
-        return $this->getRawOriginal('workload') ?? $this->carga_horaria;
+        return $this->carga_horaria;
     }
 
     /**
@@ -60,28 +78,24 @@ class LegacySchoolGradeDiscipline extends Model
      * Filtra por escola
      *
      * @param Builder $query
-     * @param int|null $school
+     * @param int $school
      * @return void
      */
-    public function scopeWhereSchool(Builder $query, ?int $school): void
+    public function scopeWhereSchool(Builder $query, int $school): void
     {
-        if ($school !== null) {
-            $query->where('ref_ref_cod_escola',$school);
-        }
+        $query->where('ref_ref_cod_escola',$school);
     }
 
     /**
      * Filtra por escola
      *
      * @param Builder $query
-     * @param int|null $grade
+     * @param int $grade
      * @return void
      */
-    public function scopeWhereGrade(Builder $query, ?int $grade): void
+    public function scopeWhereGrade(Builder $query, int $grade): void
     {
-        if ($grade !== null) {
-            $query->where('ref_ref_cod_serie',$grade);
-        }
+        $query->where('ref_ref_cod_serie',$grade);
     }
 
     /**
@@ -92,18 +106,6 @@ class LegacySchoolGradeDiscipline extends Model
      */
     public function scopeDistinctDiscipline(Builder $query): void
     {
-        $query->distinct('id');
-    }
-
-    /**
-     * Faz join com Disciplina
-     *
-     * @param Builder $query
-     * @return void
-     */
-    public function scopeAddSelectName(Builder $query): void
-    {
-        $query->join('componente_curricular as c','ref_cod_disciplina','c.id');
-        $query->addSelect('nome as name');
+        $query->distinct('ref_cod_disciplina');
     }
 }

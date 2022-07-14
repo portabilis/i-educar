@@ -11,17 +11,6 @@ class ResourceSchoolAcademicYearController extends Controller
 {
     public function index(ResourceSchoolAcademicYearRequest $request): JsonResource
     {
-        $school = $request->get('school');
-        $year = $request->get('year');
-        $limit = $request->get('limit');
-
-        $school_academic_years = LegacySchoolAcademicYear::select('ano as year')
-            ->whereSchool($school)->whereGteYear($year)
-            ->active()->orderByYear()
-            ->when($limit, fn($q) => $q->limit($limit))
-            ->get();
-
-        JsonResource::withoutWrapping();
-        return JsonResource::collection($school_academic_years);
+        return LegacySchoolAcademicYear::getResource();
     }
 }

@@ -5,8 +5,10 @@ namespace Tests\Feature\Api\Resource\Grade;
 use App\Models\LegacyCourse;
 use App\Models\LegacyGrade;
 use App\Models\LegacySchool;
-use App\Models\LegacySchoolGrade;
-use Illuminate\Database\Eloquent\Model;
+use Database\Factories\LegacyCourseFactory;
+use Database\Factories\LegacyGradeFactory;
+use Database\Factories\LegacySchoolFactory;
+use Database\Factories\LegacySchoolGradeFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Collection;
 use Illuminate\Testing\Fluent\AssertableJson;
@@ -35,22 +37,27 @@ class ResourceGradeTest extends TestCase
      */
     private LegacySchool $school;
 
+    /**
+     * @var string
+     */
+    private string $route = 'api.resource.grade';
+
 
     protected function setUp(): void
     {
         parent::setUp();
 
         //curso
-        $this->course = LegacyCourse::factory()->create();
+        $this->course = LegacyCourseFactory::new()->create();
 
         //escolas
-        $this->schools = LegacySchool::factory(2)->create();
+        $this->schools = LegacySchoolFactory::new()->count(2)->create();
         //escola
         $this->school = $this->schools->first();
 
         $this->schools->each(function ($school) {
-            LegacyGrade::factory(2)->create(['ref_cod_curso' => $this->course->id])->each(function ($grade) use ($school) {
-                LegacySchoolGrade::factory()->create([
+            LegacyGradeFactory::new()->count(3)->create(['ref_cod_curso' => $this->course->id])->each(function ($grade) use ($school) {
+                LegacySchoolGradeFactory::new()->create([
                     'ref_cod_serie' => $grade->id,
                     'ref_cod_escola' => $school->id
                 ]);
@@ -63,29 +70,32 @@ class ResourceGradeTest extends TestCase
 
     public function test_exact_json_match(): void
     {
-        $response = $this->getJson(route('resource::api.grade', ['course' => $this->course->id, 'school' => $this->school]));
+        $response = $this->getJson(route($this->route, ['course' => $this->course->id, 'school' => $this->school]));
 
         $response->assertStatus(200);
 
+        $response->assertOk();
         $response->assertJsonStructure([
-            '*' => [
-                'id',
-                'name'
+            'data' => [
+                '*' => [
+                    'id',
+                    'name'
+                ]
             ]
         ]);
 
-        //compara quantidade e valores
-        $grades = LegacyGrade::select('cod_serie as id')->selectName()
-            ->whereCourse($this->course->id)->whereSchool($this->school->id)
-            ->active()->orderByNameAndCourse()->get();
+        $grades = LegacyGrade::getResource([
+            'course' => $this->course->id,
+            'school' => $this->school->id
+        ]);
 
         $response->assertJson(function (AssertableJson $json) use ($grades) {
-            $json->has(2);
+            $json->has('data',3);
 
             foreach ($grades as $key => $grade) {
-                $json->has($key, function ($json) use ($grade) {
-                    $json->where('id', $grade->id);
-                    $json->where('name', $grade->name);
+                $json->has('data.'.$key, function ($json) use ($grade) {
+                    $json->where('id', $grade['id']);
+                    $json->where('name', $grade['name']);
                 });
             }
         });
@@ -96,64 +106,49 @@ class ResourceGradeTest extends TestCase
         $grade_exclude_id = $this->grade->id;
         $school_exclude_id = $this->school->id;
 
-        $response = $this->getJson(route('resource::api.grade', ['course' => $this->course->id, 'grade_exclude' => $grade_exclude_id, 'school_exclude' => $school_exclude_id]));
+        $response = $this->getJson(route($this->route, ['course' => $this->course->id, 'grade_exclude' => $grade_exclude_id, 'school_exclude' => $school_exclude_id]));
 
-        $response->assertStatus(200);
-
+        $response->assertOk();
         $response->assertJsonStructure([
-            '*' => [
-                'id',
-                'name'
+            'data' => [
+                '*' => [
+                    'id',
+                    'name'
+                ]
             ]
         ]);
 
-        //compara quantidade e valores
-        $grades = LegacyGrade::select('cod_serie as id')->selectName()
-            ->whereCourse($this->course->id)->whereNotGrade($grade_exclude_id)->whereNotSchool($school_exclude_id)
-            ->active()->orderByNameAndCourse()->get();
+        $grades = LegacyGrade::getResource([
+            'course' => $this->course->id,
+            'gradeExclude' => $grade_exclude_id,
+            'schoolExclude' => $school_exclude_id
+        ]);
 
         $response->assertJson(function (AssertableJson $json) use ($grades) {
-            $json->has(2);
+            $json->has('data',3);
 
             foreach ($grades as $key => $grade) {
-                $json->has($key, function ($json) use ($grade) {
-                    $json->where('id', $grade->id);
-                    $json->where('name', $grade->name);
+                $json->has('data.'.$key, function ($json) use ($grade) {
+                    $json->where('id', $grade['id']);
+                    $json->where('name', $grade['name']);
                 });
             }
         });
     }
 
-    public function test_not_found(): void
-    {
-        $response = $this->getJson(route('resource::api.grade', ['course' => 0]));
-
-        $response->assertStatus(200);
-
-        $response->assertJson(function (AssertableJson $json) {
-            $json->has(0);
-        });
-    }
-
     public function test_required_parameters(): void
     {
-        $response = $this->getJson(route('resource::api.grade'));
+        $response = $this->getJson(route($this->route));
 
-        $response->assertStatus(200);
-
-        $response->assertJson(function (AssertableJson $json) {
-            $json->has(0);
-        });
+        $response->assertOk();
+        $response->assertJsonCount(0,'data');
     }
 
     public function test_invalid_parameters(): void
     {
-        $response = $this->getJson(route('resource::api.grade', ['course' => 'Curso', 'school' => 'Escola', 'grade_exclude' => 'Serie', 'school_exclude' => 'Escola']));
+        $response = $this->getJson(route('api.resource.grade', ['course' => 'Curso', 'school' => 'Escola', 'grade_exclude' => 'Serie', 'school_exclude' => 'Escola']));
 
-        $response->assertStatus(200);
-
-        $response->assertJson(function (AssertableJson $json) {
-            $json->has(0);
-        });
+        $response->assertOk();
+        $response->assertJsonCount(0,'data');
     }
 }

@@ -2,15 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacyEvaluationRuleBuilder;
+use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class LegacyEvaluationRule extends Model
 {
-    use HasFactory;
+    use LegacyAttribute;
 
     public const PARALLEL_REMEDIAL_NONE = 0;
     public const PARALLEL_REMEDIAL_PER_STAGE = 1;
@@ -35,6 +36,22 @@ class LegacyEvaluationRule extends Model
      */
     protected $casts = [
         'media_recuperacao_paralela' => 'float',
+    ];
+
+    /**
+     * Builder dos filtros
+     *
+     * @var string
+     */
+    protected $builder = LegacyEvaluationRuleBuilder::class;
+
+    /**
+     * Atributos legados para serem usados nas queries
+     *
+     * @var string[]
+     */
+    public $legacy = [
+        'name' => 'nome'
     ];
 
     /**
@@ -120,21 +137,19 @@ class LegacyEvaluationRule extends Model
      */
     public function getNameAttribute()
     {
-        return $this->getRawOriginal('name') ?? $this->nome;
+        return $this->nome;
     }
 
     /**
      * Filtra por Instituição
      *
      * @param Builder $query
-     * @param int|null $institution
+     * @param int $institution
      * @return void
      */
-    public function scopeWhereInstitution(Builder $query, ?int $institution = null): void
+    public function scopeWhereInstitution(Builder $query, int $institution): void
     {
-        if ($institution !== null) {
-            $query->where('instituicao_id', $institution);
-        }
+        $query->where('instituicao_id', $institution);
     }
 
     /**

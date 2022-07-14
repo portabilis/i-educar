@@ -11,7 +11,7 @@ class ResourceSchoolAcademicYearRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'school' => ['required', 'integer'],
+            'school' => ['required', 'integer','min:1'],
             'year' => ['nullable', 'integer', 'digits:4'],
             'limit' => ['nullable', 'integer']
         ];
@@ -25,13 +25,8 @@ class ResourceSchoolAcademicYearRequest extends FormRequest
         ];
     }
 
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     protected function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException(response()->json([]));
+        throw new HttpResponseException(response()->json(['data'=>[]]));
     }
 }

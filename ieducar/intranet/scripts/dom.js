@@ -1,11 +1,11 @@
-function send(url,callback,data = null,id = null) {
+function getApiResource(url,callback,data = null,id = null) {
   $j.ajax({
     url: url,
     data: data,
     dataType: "json",
     type: "GET",
     success: function(e) {
-      callback(e,id);
+      callback(e.data,id);
     },
     error: function(e){
       alert('Erro: '+e.status);

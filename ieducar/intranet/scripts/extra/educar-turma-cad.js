@@ -147,7 +147,7 @@ document.getElementById('ref_cod_curso').onchange = function () {
 function PadraoAnoEscolar_xml() {
   const campoInstituicao = document.getElementById('ref_cod_instituicao').value;
 
-  send("/api/resource/course",PadraoAnoEscolar,{institution:campoInstituicao});
+  getApiResource("/api/resource/course",PadraoAnoEscolar,{institution:campoInstituicao});
 }
 
 document.getElementById('ref_cod_serie').onchange = function () {
@@ -342,7 +342,7 @@ function getEscolaCursoSerie() {
     campoSerie.disabled = true;
     campoSerie.options[0].text = 'Carregando series';
 
-    send("/api/resource/grade",atualizaLstEscolaCursoSerie,{school:campoEscola,course:campoCurso});
+    getApiResource("/api/resource/grade",atualizaLstEscolaCursoSerie,{school:campoEscola,course:campoCurso});
   } else {
     campoSerie.options[0].text = 'Selecione';
   }

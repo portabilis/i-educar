@@ -11,7 +11,7 @@ class ResourceEducationNetworkRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'institution' => ['required','integer']
+            'institution' => ['required','integer','min:1']
         ];
     }
 
@@ -22,13 +22,8 @@ class ResourceEducationNetworkRequest extends FormRequest
         ];
     }
 
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     protected function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException(response()->json([]));
+        throw new HttpResponseException(response()->json(['data'=>[]]));
     }
 }

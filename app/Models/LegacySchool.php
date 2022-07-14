@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacySchoolBuilder;
+use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -18,7 +19,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class LegacySchool extends Model
 {
-    use HasFactory;
+    use LegacyAttribute;
 
     /**
      * @var string
@@ -29,6 +30,24 @@ class LegacySchool extends Model
      * @var string
      */
     protected $primaryKey = 'cod_escola';
+
+
+    /**
+     * Builder dos filtros
+     *
+     * @var string
+     */
+    protected $builder = LegacySchoolBuilder::class;
+
+    /**
+     * Atributos legados para serem usados nas queries
+     *
+     * @var string[]
+     */
+    public $legacy = [
+        'id' => 'cod_escola',
+        'name' => 'fantasia'
+    ];
 
     /**
      * @var array
@@ -72,7 +91,7 @@ class LegacySchool extends Model
      */
     public function getIdAttribute()
     {
-        return $this->getRawOriginal('id') ?? $this->cod_escola;
+        return $this->cod_escola;
     }
 
     /**
@@ -80,8 +99,7 @@ class LegacySchool extends Model
      */
     public function getNameAttribute()
     {
-        //verifica na query original se existe, para casos com joins e orderby name
-        return $this->getRawOriginal('name') ?? $this->organization->name;
+        return $this->organization->fantasia ?? null;
     }
 
     /**
@@ -201,24 +219,24 @@ class LegacySchool extends Model
      * Filtra por Instituição
      *
      * @param Builder $query
-     * @param int|null $institution
+     * @param int $institution
      * @return void
      */
-    public function scopeWhereInstitution(Builder $query, ?int $institution = null): void
+    public function scopeWhereInstitution(Builder $query, int $institution): void
     {
-        if ($institution !== null) {
-            $query->where('ref_cod_instituicao', $institution);
-        }
+        $query->where('ref_cod_instituicao', $institution);
     }
 
     /**
      * Ordena por nome
      *
      * @param Builder $query
+     * @param string $direction
      * @return void
      */
-    public function scopeOrderByName(Builder $query): void
+    public function scopeOrderByName(Builder $query, string $direction = 'asc'): void
     {
-        $query->orderBy('name');
+        $query->joinOrganization();
+        $query->orderBy('fantasia',$direction);
     }
 }

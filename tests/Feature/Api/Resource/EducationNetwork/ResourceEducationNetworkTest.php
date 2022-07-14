@@ -4,6 +4,7 @@ namespace Tests\Feature\Api\Resource\EducationNetwork;
 
 use App\Models\LegacyEducationNetwork;
 use App\Models\LegacyInstitution;
+use Database\Factories\LegacyInstitutionFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
@@ -17,74 +18,59 @@ class ResourceEducationNetworkTest extends TestCase
      */
     private LegacyInstitution $institution;
 
+    /**
+     * @var string
+     */
+    private string $route = 'api.resource.education-network';
+
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->institution = LegacyInstitution::factory()->hasEducationNetworks(2)->create();
+        $this->institution = LegacyInstitutionFactory::new()->hasEducationNetworks(2)->create();
     }
 
     public function test_exact_json_match(): void
     {
-        $response = $this->getJson(route('resource::api.education-network', ['institution' => $this->institution]));
+        $response = $this->getJson(route($this->route, ['institution' => $this->institution]));
 
-        $response->assertStatus(200);
-
+        $response->assertOk();
         $response->assertJsonStructure([
-            '*' => [
-                'id',
-                'name'
+            'data' => [
+                '*' => [
+                    'id',
+                    'name'
+                ]
             ]
         ]);
-
-        $education_networks = LegacyEducationNetwork::whereInstitution($this->institution->id)
-            ->active()
-            ->orderByName()
-            ->get(['cod_escola_rede_ensino', 'nm_rede']);
+        $education_networks = LegacyEducationNetwork::getResource(['institution' => $this->institution->id]);
 
         $response->assertJson(function (AssertableJson $json) use ($education_networks) {
-            $json->has(2);
+            $json->has('data',2);
 
             foreach ($education_networks as $key => $education_network) {
-                $json->has($key, function ($json) use ($education_network) {
-                    $json->where('id', $education_network->id);
-                    $json->where('name', $education_network->name);
+                $json->has('data.'.$key, function ($json) use ($education_network) {
+                    $json->where('id', $education_network['id']);
+                    $json->where('name', $education_network['name']);
                 });
             }
         });
     }
 
-    public function test_not_found(): void
-    {
-        $response = $this->getJson(route('resource::api.education-network', ['institution' => 0]));
-
-        $response->assertStatus(200);
-
-        $response->assertJson(function (AssertableJson $json) {
-            $json->has(0);
-        });
-    }
-
     public function test_required_parameters(): void
     {
-        $response = $this->getJson(route('resource::api.education-network'));
+        $response = $this->getJson(route($this->route));
 
-        $response->assertStatus(200);
-
-        $response->assertJson(function (AssertableJson $json) {
-            $json->has(0);
-        });
+        $response->assertOk();
+        $response->assertJsonCount(0,'data');
     }
 
     public function test_invalid_parameters(): void
     {
-        $response = $this->getJson(route('resource::api.evaluation-rule', ['institution' => 'Instituição']));
+        $response = $this->getJson(route($this->route, ['institution' => 'Instituição']));
 
-        $response->assertStatus(200);
-
-        $response->assertJson(function (AssertableJson $json) {
-            $json->has(0);
-        });
+        $response->assertOk();
+        $response->assertJsonCount(0,'data');
     }
 
 }

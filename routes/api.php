@@ -30,13 +30,13 @@ Route::get('/school-class/stages/{schoolClass}', 'Api\SchoolClassController@getS
 
 Route::delete('/employee-withdrawal/{id}', [EmployeeWithdrawalController::class, 'remove']);
 
-Route::group(['prefix' => 'resource', 'as' => 'resource::','namespace' => 'Api\Resource'], static function () {
-    Route::get('course','Course\ResourceCourseController@index')->name('api.course');
-    Route::get('grade','Grade\ResourceGradeController@index')->name('api.grade');
-    Route::get('school-academic-year','SchoolAcademicYear\ResourceSchoolAcademicYearController@index')->name('api.school-academic-year');
-    Route::get('school','School\ResourceSchoolController@index')->name('api.school');
-    Route::get('school-class','SchoolClass\ResourceSchoolClassController@index')->name('api.school-class');
-    Route::get('evaluation-rule','EvaluationRule\ResourceEvaluationRuleController@index')->name('api.evaluation-rule');
-    Route::get('education-network','EducationNetwork\ResourceEducationNetworkController@index')->name('api.education-network');
-    Route::get('discipline','Discipline\ResourceDisciplineController@index')->name('api.discipline');
+Route::group(['prefix' => 'resource', 'as' => 'api.resource.','namespace' => 'Api\Resource'], static function () {
+    Route::get('course','Course\ResourceCourseController@index')->name('course');
+    Route::get('grade','Grade\ResourceGradeController@index')->name('grade');
+    Route::get('school-academic-year','SchoolAcademicYear\ResourceSchoolAcademicYearController@index')->name('school-academic-year');
+    Route::get('school','School\ResourceSchoolController@index')->name('school');
+    Route::get('school-class','SchoolClass\ResourceSchoolClassController@index')->name('school-class');
+    Route::get('evaluation-rule','EvaluationRule\ResourceEvaluationRuleController@index')->name('evaluation-rule');
+    Route::get('education-network','EducationNetwork\ResourceEducationNetworkController@index')->name('education-network');
+    Route::get('discipline','Discipline\ResourceDisciplineController@index')->name('discipline');
 });

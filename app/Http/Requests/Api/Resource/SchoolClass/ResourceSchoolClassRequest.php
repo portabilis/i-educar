@@ -11,10 +11,10 @@ class ResourceSchoolClassRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'institution' => ['required_without_all:school,grade,course','nullable','integer'],
-            'school' => ['nullable', 'integer'],
-            'grade' => ['nullable', 'integer'],
-            'course'=> ['nullable', 'integer'],
+            'institution' => ['required_without_all:school,grade,course','nullable','integer','min:1'],
+            'school' => ['nullable', 'integer','min:1'],
+            'grade' => ['nullable', 'integer','min:1'],
+            'course'=> ['nullable', 'integer','min:1'],
             'year' => ['nullable', 'integer', 'digits:4']
         ];
     }
@@ -30,13 +30,8 @@ class ResourceSchoolClassRequest extends FormRequest
         ];
     }
 
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     protected function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException(response()->json([]));
+        throw new HttpResponseException(response()->json(['data'=>[]]));
     }
 }

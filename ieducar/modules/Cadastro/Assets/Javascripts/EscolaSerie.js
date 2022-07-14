@@ -88,7 +88,7 @@ document.getElementById('ref_cod_serie').onchange = function () {
     const campoDisciplinas = document.getElementById('disciplinas');
     campoDisciplinas.innerHTML = "Carregando disciplina";
 
-    send("/api/resource/discipline",getDisciplina,{grade:campoSerie});
+    getApiResource("/api/resource/discipline",getDisciplina,{grade:campoSerie});
 };
 
 after_getEscola = function () {
@@ -118,7 +118,7 @@ function getSerie() {
         campoSerie.disabled = true;
         campoSerie.options[0].text = 'Carregando séries';
 
-        send("/api/resource/grade",atualizaLstSerie,{course:campoCurso,school_exclude:campoEscola});
+        getApiResource("/api/resource/grade",atualizaLstSerie,{course:campoCurso,school_exclude:campoEscola});
     } else {
         campoSerie.options[0].text = 'Selecione';
     }
