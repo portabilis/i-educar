@@ -166,7 +166,8 @@ if ($get_serie) {
     $this->campoLista('ref_cod_serie', 'Série', $opcoes_serie, $this->ref_cod_serie, null, null, null, null, $serie_desabilitado, $serie_obrigatorio);
 }
 
-if ($get_biblioteca) {
+// TODO remover no futuro #library-package
+if ($get_biblioteca && class_exists(clsPmieducarBiblioteca::class)) {
     if ($ref_cod_biblioteca_ == 0 && $nivel_usuario != 1 && $nivel_usuario != 2) {
         $this->campoOculto('ref_cod_biblioteca', $this->ref_cod_biblioteca);
     } else {
@@ -212,7 +213,8 @@ if ($get_biblioteca) {
     }
 }
 
-if ($get_cliente_tipo) {
+// TODO remover no futuro #library-package
+if ($get_cliente_tipo && class_exists(clsPmieducarClienteTipo::class)) {
     $opcoes_cli_tpo = ['' => 'Selecione'];
     if ($this->ref_cod_biblioteca) {
         $obj_cli_tpo = new clsPmieducarClienteTipo();
