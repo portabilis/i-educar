@@ -61,14 +61,9 @@ class LegacyBuilder extends Builder
         $columns = array_merge($columns, $this->except);
         $this->replaceAttribute($columns);
 
-        //original do laravel get
-        $builder = $this->applyScopes();
+        //original do laravel
+        $resource = $this->get($columns);
 
-        if (count($models = $builder->getModels($columns)) > 0) {
-            $models = $builder->eagerLoadRelations($models);
-        }
-
-        $resource = $builder->getModel()->newCollection($models);
         return $this->mapResource($resource, $columnsNotExcept);
     }
 
