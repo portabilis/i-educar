@@ -85,8 +85,7 @@ class LegacyBuilder extends Builder
             $resource = [];
 
             foreach ($columnsNotExcept as $key) {
-                $id = $inverse_keys[$key] ?? $key;
-                $resource[$id] = $item->{$id};
+                $resource[$key] = $item->{$key};
 
                 foreach ($this->additional as $add) {
                     $resource[$add] = $item->{$add} ?? null;
