@@ -80,11 +80,12 @@ class LegacyBuilder extends Builder
 
             foreach ($columnsNotExcept as $key) {
                 $resource[$key] = $item->{$key};
-
-                foreach ($this->additional as $add) {
-                    $resource[$add] = $item->{$add} ?? null;
-                }
             }
+
+            foreach ($this->additional as $add) {
+                $resource[$add] = $item->{$add} ?? null;
+            }
+
             return $resource;
         });
     }
