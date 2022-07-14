@@ -1218,15 +1218,18 @@ class AlunoController extends ApiCoreController
                 $aluno = Portabilis_Array_Utils::merge($objMoradia, $aluno);
             }
 
-            $objPessoaTransporte = new clsModulesPessoaTransporte(null, null, $aluno['pessoa_id']);
-            $objPessoaTransporte = $objPessoaTransporte->detalhe();
+            // TODO remover no futuro #transport-package
+            if (class_exists(clsModulesPessoaTransporte::class)) {
+                $objPessoaTransporte = new clsModulesPessoaTransporte(null, null, $aluno['pessoa_id']);
+                $objPessoaTransporte = $objPessoaTransporte->detalhe();
 
-            if ($objPessoaTransporte) {
-                foreach ($objPessoaTransporte as $chave => $value) {
-                    $objPessoaTransporte[$chave] = Portabilis_String_Utils::toUtf8($value);
+                if ($objPessoaTransporte) {
+                    foreach ($objPessoaTransporte as $chave => $value) {
+                        $objPessoaTransporte[$chave] = Portabilis_String_Utils::toUtf8($value);
+                    }
+
+                    $aluno = Portabilis_Array_Utils::merge($objPessoaTransporte, $aluno);
                 }
-
-                $aluno = Portabilis_Array_Utils::merge($objPessoaTransporte, $aluno);
             }
 
             $sql = 'select sus, ref_cod_religiao, observacao from cadastro.fisica where idpes = $1';
@@ -1692,6 +1695,11 @@ class AlunoController extends ApiCoreController
 
     protected function createOrUpdatePessoaTransporte($ref_idpes)
     {
+        // TODO remover no futuro o uso deste método createOrUpdatePessoaTransporte #transport-package
+        if (class_exists(clsModulesPessoaTransporte::class) === false) {
+            return;
+        }
+
         $pt = new clsModulesPessoaTransporte(null, null, $ref_idpes);
         $det = $pt->detalhe();
 
