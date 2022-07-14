@@ -39,9 +39,12 @@ return new class extends clsCadastro {
     public $atividades_complementares;
     public $cod_curso_profissional;
     public $etapa_educacenso;
+    public $formas_organizacao_turma;
     public $ref_cod_disciplina_dispensada;
     public $codigo_inep_educacenso;
+    public $estrutura_curricular;
     public $tipo_mediacao_didatico_pedagogico;
+    public $unidade_curricular;
     public $dias_semana;
     public $tipo_boletim;
     public $tipo_boletim_diferenciado;
@@ -144,17 +147,11 @@ return new class extends clsCadastro {
             }
         }
 
-        if (is_string($this->dias_semana)) {
-            $this->dias_semana = explode(',', str_replace(['{', '}'], '', $this->dias_semana));
-        }
-
-        if (is_string($this->atividades_complementares)) {
-            $this->atividades_complementares = explode(',', str_replace(['{', '}'], '', $this->atividades_complementares));
-        }
-
-        if (is_string($this->cod_curso_profissional)) {
-            $this->cod_curso_profissional = explode(',', str_replace(['{', '}'], '', $this->cod_curso_profissional));
-        }
+        $this->dias_semana = transformStringFromDBInArray($this->dias_semana);
+        $this->atividades_complementares = transformStringFromDBInArray($this->atividades_complementares);
+        $this->estrutura_curricular = transformStringFromDBInArray($this->estrutura_curricular);
+        $this->cod_curso_profissional = transformStringFromDBInArray($this->cod_curso_profissional);
+        $this->unidade_curricular = transformStringFromDBInArray($this->unidade_curricular);
 
         $this->url_cancelar = $retorno == 'Editar' ?
             'educar_turma_det.php?cod_turma=' . $registro['cod_turma'] : 'educar_turma_lst.php';
@@ -594,6 +591,23 @@ return new class extends clsCadastro {
         $options = ['label' => 'Tipo de atendimento', 'resources' => $resources, 'value' => $this->tipo_atendimento, 'required' => $obrigarCamposCenso, 'size' => 70,];
         $this->inputsHelper()->select('tipo_atendimento', $options);
 
+        $helperOptions = ['objectName' => 'estrutura_curricular'];
+        $options = [
+            'label' => 'Estrutura curricular',
+            'required' => false,
+            'size' => 70,
+            'options' => [
+                'values' => $this->estrutura_curricular,
+                'all_values'=> [
+                    1 => 'Formação geral básica',
+                    2 => 'Itinerário formativo',
+                    3 => 'Não se aplica'
+                ]
+            ]
+        ];
+
+        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
         $atividadesComplementares = loadJson('educacenso_json/atividades_complementares.json');
         $helperOptions = ['objectName' => 'atividades_complementares'];
         $options = ['label' => 'Tipos de atividades complementares',
@@ -610,8 +624,44 @@ return new class extends clsCadastro {
         $etapas_educacenso = loadJson('educacenso_json/etapas_ensino.json');
         $etapas_educacenso = array_replace([null => 'Selecione'], $etapas_educacenso);
 
-        $options = ['label' => 'Etapa de ensino', 'resources' => $etapas_educacenso, 'value' => $this->etapa_educacenso, 'required' => false, 'size' => 70,];
+        $options = ['label' => 'Etapa de ensino', 'resources' => $etapas_educacenso, 'value' => $this->etapa_educacenso, 'required' => false, 'size' => 70];
         $this->inputsHelper()->select('etapa_educacenso', $options);
+
+        $resources = [
+            null => 'Selecione',
+            1 => 'Série/ano (séries anuais)',
+            2 => 'Períodos semestrais',
+            3 => 'Ciclo(s)',
+            4 => 'Grupos não seriados com base na idade ou competência',
+            5 => 'Módulos',
+            6 => 'Alternância regular de períodos de estudos'
+        ];
+
+        $options = ['label' => 'Formas de organização da turma', 'resources' => $resources, 'value' => $this->formas_organizacao_turma, 'required' => false, 'size' => 70,];
+        $this->inputsHelper()->select('formas_organizacao_turma', $options);
+
+        $helperOptions = ['objectName' => 'unidade_curricular'];
+        $resources = [
+            1 => 'Eletivas',
+            2 => 'Libras',
+            3 => 'Língua indígena',
+            4 => 'Língua/Literatura estrangeira - Espanhol',
+            5 => 'Língua/Literatura estrangeira - Francês',
+            6 => 'Língua/Literatura estrangeira - outra',
+            7 => 'Projeto de vida',
+            8 => 'Trilhas de aprofundamento/aprendizagens'
+        ];
+        $options = [
+            'label' => 'Unidade curricular',
+            'required' => false,
+            'size' => 70,
+            'options' => [
+                'values' => $this->unidade_curricular,
+                'all_values'=> $resources
+            ]
+        ];
+
+        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
         $cursos = loadJson('educacenso_json/cursos_da_educacao_profissional.json');
         $helperOptions = ['objectName' => 'cod_curso_profissional',
