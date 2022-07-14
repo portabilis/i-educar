@@ -4,6 +4,7 @@ namespace App\Models\Builders;
 
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Collection;
 
 class LegacySchoolGradeDisciplineBuilder extends LegacyBuilder
 {
@@ -12,36 +13,34 @@ class LegacySchoolGradeDisciplineBuilder extends LegacyBuilder
      * Retorna o recurso para os selects dos formulários
      *
      * @param array $filters
-     * @return AnonymousResourceCollection
+     * @return Collection
      */
-    public function getResource(array $filters = []): AnonymousResourceCollection
+    public function getResource(array $filters = []): Collection
     {
         $this->distinctDiscipline()->with('discipline:id,nome')->filter($filters);
         //não não aparece na query, mas é adicionado no recurso
-        $resource = $this->resource(['id', 'workload'], ['name']);
-
-        return JsonResource::collection($resource);
+        return $this->resource(['id', 'workload'], ['name']);
     }
 
     /**
      * Filtra por Escola
      *
-     * @param int|null $school
+     * @param int $school
      * @return $this
      */
-    public function filterSchool(int $school = null): self
+    public function filterSchool(int $school): self
     {
-        return $this->when($school, fn($q) => $q->whereSchool($school));
+        return $this->whereSchool($school);
     }
 
     /**
      * Filtra por Série
      *
-     * @param int|null $grade
+     * @param int $grade
      * @return $this
      */
-    public function filterGrade(int $grade = null): self
+    public function filterGrade(int $grade): self
     {
-        return $this->when($grade, fn($q) => $q->whereGrade($grade));
+        return $this->whereGrade($grade);
     }
 }

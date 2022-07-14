@@ -4,6 +4,7 @@ namespace App\Models\Builders;
 
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Collection;
 
 class LegacySchoolBuilder extends LegacyBuilder
 {
@@ -12,26 +13,24 @@ class LegacySchoolBuilder extends LegacyBuilder
      * Retorna o recurso para os selects dos formulários
      *
      * @param array $filters
-     * @return AnonymousResourceCollection
+     * @return Collection
      */
-    public function getResource(array $filters = []): AnonymousResourceCollection
+    public function getResource(array $filters = []): Collection
     {
         $this->active()->orderByName()->filter($filters);
         //ref_idpes é usado na query, mas nao aparece no recurso.
         //name não é usado na query, mas é aparece no recurso com adicional
-        $resource = $this->setExcept(['ref_idpes'])->resource(['id'], ['name']);
-
-        return JsonResource::collection($resource);
+        return $this->setExcept(['ref_idpes'])->resource(['id'], ['name']);
     }
 
     /**
      * Filtra por Instituição
      *
-     * @param int|null $institution
+     * @param int $institution
      * @return $this
      */
-    public function filterInstitution(int $institution = null): self
+    public function filterInstitution(int $institution): self
     {
-        return $this->when($institution, fn($q) => $q->whereInstitution($institution));
+        return $this->whereInstitution($institution);
     }
 }

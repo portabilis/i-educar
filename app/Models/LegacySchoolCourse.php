@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class LegacySchoolCourse extends Model
 {
-
     /**
      * @var string
      */

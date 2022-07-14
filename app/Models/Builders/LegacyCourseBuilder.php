@@ -4,6 +4,7 @@ namespace App\Models\Builders;
 
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Collection;
 
 class LegacyCourseBuilder extends LegacyBuilder
 {
@@ -11,50 +12,48 @@ class LegacyCourseBuilder extends LegacyBuilder
      * Retorna o recurso para os selects dos formulários
      *
      * @param array $filters
-     * @return AnonymousResourceCollection
+     * @return Collection
      */
-    public function getResource(array $filters = []): AnonymousResourceCollection
+    public function getResource(array $filters = []): Collection
     {
         //filtros
         $this->active()->orderByName()->filter($filters);
         //query específica obtem valores passados pelos filtros
         $this->whereNotIsStandardCalendar($this->filterEqualTo('not_pattern', '1'));
         //description será usada em getNameAttribute, mas não aparece no recurso
-        $resource = $this->setExcept(['description'])->resource(['id', 'name', 'is_standard_calendar', 'steps']);
-
-        return JsonResource::collection($resource);
+        return $this->setExcept(['description'])->resource(['id', 'name', 'is_standard_calendar', 'steps']);
     }
 
     /**
      * Filtra por Instituição
      *
-     * @param int|null $institution
+     * @param int $institution
      * @return $this
      */
-    public function filterInstitution(int $institution = null): self
+    public function filterInstitution(int $institution): self
     {
-        return $this->when($institution, fn($q) => $q->whereInstitution($institution));
+        return $this->whereInstitution($institution);
     }
 
     /**
      * Filtra por Escola
      *
-     * @param int|null $school
+     * @param int $school
      * @return $this
      */
-    public function filterSchool(int $school = null): self
+    public function filterSchool(int $school): self
     {
-        return $this->when($school, fn($q) => $q->whereSchool($school));
+        return $this->whereSchool($school);
     }
 
     /**
      * Filtra por Curso
      *
-     * @param int|null $course
+     * @param int $course
      * @return $this
      */
-    public function filterCourse(int $course = null): self
+    public function filterCourse(int $course): self
     {
-        return $this->when($course, fn($q) => $q->whereCourse($course));
+        return $this->whereCourse($course);
     }
 }

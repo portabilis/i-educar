@@ -2,7 +2,6 @@
 
 namespace App\Models\Builders;
 
-use App\Models\Collection\LegactJsonResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
@@ -167,14 +166,11 @@ class LegacyBuilder extends Builder
      */
     private function setFilters(array $filters): void
     {
-        //obtem do request se não estiver passando os filtros
-        if (!$filters && ($request = request())) {
-            $filters = $request->all();
-        }
-
         $data = [];
         foreach ($filters as $key => $value) {
-            $data[$this->getFilterName($key)] = $value;
+            if ($value !== null) {
+                $data[$this->getFilterName($key)] = $value;
+            }
         }
 
         $this->filters = $data;

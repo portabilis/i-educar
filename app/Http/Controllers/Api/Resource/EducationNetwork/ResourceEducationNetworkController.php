@@ -11,6 +11,6 @@ class ResourceEducationNetworkController extends Controller
 {
     public function index(ResourceEducationNetworkRequest $request): JsonResource
     {
-        return LegacyEducationNetwork::getResource();
+        return JsonResource::collection(LegacyEducationNetwork::getResource($request->all()));
     }
 }

@@ -11,6 +11,6 @@ class ResourceCourseController extends Controller
 {
     public function index(ResourceCourseRequest $request): JsonResource
     {
-        return LegacyCourse::getResource();
+        return JsonResource::collection(LegacyCourse::getResource($request->all()));
     }
 }

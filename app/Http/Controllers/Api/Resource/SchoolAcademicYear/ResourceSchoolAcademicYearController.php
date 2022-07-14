@@ -11,6 +11,6 @@ class ResourceSchoolAcademicYearController extends Controller
 {
     public function index(ResourceSchoolAcademicYearRequest $request): JsonResource
     {
-        return LegacySchoolAcademicYear::getResource();
+        return JsonResource::collection(LegacySchoolAcademicYear::getResource($request->all()));
     }
 }

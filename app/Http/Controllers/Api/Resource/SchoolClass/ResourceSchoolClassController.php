@@ -6,11 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Resource\SchoolClass\ResourceSchoolClassRequest;
 use App\Models\LegacySchoolClass;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class ResourceSchoolClassController extends Controller
 {
-    public function index(ResourceSchoolClassRequest $request): AnonymousResourceCollection
+    public function index(ResourceSchoolClassRequest $request): JsonResource
     {
-        return LegacySchoolClass::getResource();
+        return JsonResource::collection(LegacySchoolClass::getResource($request->all()));
     }
 }

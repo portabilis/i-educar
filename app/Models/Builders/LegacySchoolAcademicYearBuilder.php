@@ -4,6 +4,7 @@ namespace App\Models\Builders;
 
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Collection;
 
 class LegacySchoolAcademicYearBuilder extends LegacyBuilder
 {
@@ -12,35 +13,33 @@ class LegacySchoolAcademicYearBuilder extends LegacyBuilder
      * Retorna o recurso para os selects dos formulários
      *
      * @param array $filters
-     * @return AnonymousResourceCollection
+     * @return Collection
      */
-    public function getResource(array $filters = []): AnonymousResourceCollection
+    public function getResource(array $filters = []): Collection
     {
         $this->active()->orderByYear()->filter($filters);
-        $resource = $this->resource(['year']);
-
-        return JsonResource::collection($resource);
+        return $this->resource(['year']);
     }
 
     /**
      * Filtra por Escola
      *
-     * @param int|null $school
+     * @param int $school
      * @return $this
      */
-    public function filterSchool(int $school = null): self
+    public function filterSchool(int $school): self
     {
-        return $this->when($school, fn($q) => $q->whereSchool($school));
+        return $this->whereSchool($school);
     }
 
     /**
      * Filtra por Anos maiores
      *
-     * @param int|null $year
+     * @param int $year
      * @return $this
      */
-    public function filterYear(int $year = null): self
+    public function filterYear(int $year): self
     {
-        return $this->when($year, fn($q) => $q->whereGteYear($year));
+        return $this->whereGteYear($year);
     }
 }

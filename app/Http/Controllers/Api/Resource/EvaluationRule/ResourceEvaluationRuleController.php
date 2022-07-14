@@ -11,6 +11,6 @@ class ResourceEvaluationRuleController extends Controller
 {
     public function index(ResourceEvaluationRuleRequest $request): JsonResource
     {
-        return LegacyEvaluationRule::getResource();
+        return JsonResource::collection(LegacyEvaluationRule::getResource($request->all()));
     }
 }

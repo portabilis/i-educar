@@ -4,6 +4,7 @@ namespace App\Models\Builders;
 
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Collection;
 
 class LegacyEvaluationRuleBuilder extends LegacyBuilder
 {
@@ -12,24 +13,22 @@ class LegacyEvaluationRuleBuilder extends LegacyBuilder
      * Retorna o recurso para os selects dos formulários
      *
      * @param array $filters
-     * @return AnonymousResourceCollection
+     * @return Collection
      */
-    public function getResource(array $filters = []): AnonymousResourceCollection
+    public function getResource(array $filters = []): Collection
     {
         $this->orderByName()->filter($filters);
-        $resource = $this->resource(['id', 'name']);
-
-        return JsonResource::collection($resource);
+        return $this->resource(['id', 'name']);
     }
 
     /**
      * Filtra por Instituição
      *
-     * @param int|null $institution
+     * @param int $institution
      * @return $this
      */
-    public function filterInstitution(int $institution = null): self
+    public function filterInstitution(int $institution): self
     {
-        return $this->when($institution, fn($q) => $q->whereInstitution($institution));
+        return $this->whereInstitution($institution);
     }
 }
