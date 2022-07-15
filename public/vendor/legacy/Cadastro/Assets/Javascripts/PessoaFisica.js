@@ -180,10 +180,9 @@ function certidaoCasamentoInvalida() {
 }
 
 var submitForm = function(event) {
-  if ($j('#postal_code').val()){
-    if (!validateEndereco()){
-      return;
-    }
+
+  if (!validateCidade()){
+    return;
   }
 
   if (!validateFieldSUS()) {

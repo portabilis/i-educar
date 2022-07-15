@@ -23,6 +23,18 @@ var handleGetPermissaoEditar = function(dataResponse) {
   }
 };
 
+function validateCidade(){
+  var err = false;
+
+  if (!$j('#city_id').val()){
+    $j('#city_city').addClass('error');
+    messageUtils.error('Selecione um município corretamente.');
+    err = true;
+  }
+
+  return !err;
+}
+
 function validateEndereco(){
 
   var err = false;

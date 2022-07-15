@@ -684,7 +684,7 @@ return new class extends clsCadastro {
         // Religião
         $this->inputsHelper()->religiao(['required' => false, 'label' => 'Religião']);
 
-        $this->viewAddress();
+        $this->viewAddress(true);
 
         $this->inputsHelper()->select('pais_residencia', [
             'label' => 'País de residência',
@@ -997,7 +997,7 @@ return new class extends clsCadastro {
         $this->createOrUpdatePessoaFisica($pessoaId);
         $this->createOrUpdateDocumentos($pessoaId);
         $this->createOrUpdateTelefones($pessoaId);
-        $this->saveAddress($pessoaId);
+        $this->saveAddress($pessoaId,true);
         $this->afterChangePessoa($pessoaId);
         $this->saveFiles($pessoaId);
 
