@@ -221,23 +221,21 @@ class clsModulesPlanejamentoAulaAee extends Model
 
             $id = $db->InsertId("{$this->_tabela}_id_seq");
 
-            $plano_aee = 'S';
-
             foreach ($this->ref_componente_curricular_array as $key => $ref_componente_curricular) {
-                $obj = new clsModulesPlanejamentoAulaComponenteCurricular(null, $id, $ref_componente_curricular[1], $plano_aee);
-                $obj->cadastra_componente_aee();
+                $obj = new clsModulesPlanejamentoAulaComponenteCurricular(null, $id, $ref_componente_curricular[1]);
+                $obj->cadastra();
             }
 
             foreach ($this->bnccs as $key => $bncc_array) {
                 foreach ($bncc_array[1] as $key => $bncc_id) {
-                    $obj = new clsModulesPlanejamentoAulaBNCC(null, $id, $bncc_id, $plano_aee);
-                    $obj->cadastra_bncc_aee();
+                    $obj = new clsModulesPlanejamentoAulaBNCC(null, $id, $bncc_id);
+                    $obj->cadastra();
                 }
             }
 
             foreach ($this->conteudos as $key => $conteudo) {
-                $obj = new clsModulesPlanejamentoAulaConteudo(null, $id, $conteudo[1], $plano_aee);
-                $obj->cadastra_conteudo_aee();
+                $obj = new clsModulesPlanejamentoAulaConteudo(null, $id, $conteudo[1]);
+                $obj->cadastra();
             }
 
             foreach ($this->bncc_especificacoes as $key => $bncc_especificacoes_array) {
@@ -484,16 +482,16 @@ class clsModulesPlanejamentoAulaAee extends Model
             $data['detalhes'] = $db->Tupla();
 
             $obj = new clsModulesPlanejamentoAulaComponenteCurricular();
-            $data['componentesCurriculares'] = $obj->lista_aee($this->id);
+            $data['componentesCurriculares'] = $obj->lista($this->id);
 
             $obj = new clsModulesPlanejamentoAulaBNCC();
-            $data['bnccs'] = $obj->lista_aee($this->id);
+            $data['bnccs'] = $obj->lista($this->id);
 
             $obj = new clsModulesPlanejamentoAulaBNCCEspecificacao();
-            $data['especificacoes'] = $obj->lista_aee($this->id);
+            $data['especificacoes'] = $obj->lista($this->id);
 
             $obj = new clsModulesPlanejamentoAulaConteudo();
-            $data['conteudos'] = $obj->lista_aee($this->id);
+            $data['conteudos'] = $obj->lista($this->id);
 
             return $data;
         }
