@@ -58,7 +58,7 @@ return new class extends clsListagem {
         }
 
         $this->inputsHelper()->dynamic(['ano'], ['required' => false]);
-        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie', 'turma', 'matricula']);
+        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie', 'turma']);
   
         $this->campoQuebra();
         $this->campoRotulo('filtros_periodo', '<b>Filtros por período</b>');
