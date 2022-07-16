@@ -29,6 +29,11 @@
             $sql .= "WHERE t.ref_cod_turma = {$_GET['tur']}";
         }
 
+        if (isset($_GET['data']) && !empty($_GET['data'])) {
+            $dateSql = implode("-",array_reverse(explode("/",$_GET['data'])));
+            $sql .= " AND T.data_enturmacao <= '{$dateSql}' AND (T.data_exclusao IS NULL OR T.data_exclusao >= '{$dateSql}') ";
+        }
+
         $sql .= " ORDER BY p.nome ASC";
 
         $db->Consulta("{$sql}");

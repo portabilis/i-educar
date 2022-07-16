@@ -186,12 +186,13 @@ function getAluno(xml_aluno) {
 function carregarAlunos() {
     var campoTurma = document.getElementById('ref_cod_turma').value;
     var campoComponenteCurricular = document.getElementById('ref_cod_componente_curricular').value;
+    var campoData = document.getElementById('data').value;
 
     var campoAlunos = document.getElementById('alunos');
     campoAlunos.innerHTML = "Carregando alunos...";
 
     var xml_disciplina = new ajax(getAluno);
-    xml_disciplina.envia("educar_aluno_xml.php?tur=" + campoTurma + "&ccur=" + campoComponenteCurricular);
+    xml_disciplina.envia("educar_aluno_xml.php?tur=" + campoTurma + "&ccur=" + campoComponenteCurricular + "&data=" + campoData);
 }
 
 function presencaMudou (presenca) {
