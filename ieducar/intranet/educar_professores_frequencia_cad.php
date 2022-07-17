@@ -285,12 +285,17 @@ return new class extends clsCadastro {
         $this->campoRotulo('alunos_lista_', 'Alunos', "<div id='alunos'>$alunos</div>");
         $this->campoQuebra();
 
+        $clsInstituicao = new clsPmieducarInstituicao();
+        $instituicao = $clsInstituicao->primeiraAtiva();
+        $obrigatorioRegistroDiarioAtividade = $instituicao['obrigatorio_registro_diario_atividade'];
+        $obrigatorioConteudo = $instituicao['permitir_planeja_conteudos'];
+
         $this->campoMemo('atividades',
             'Registro diário de aula',
             $this->atividades,
             100,
             5,
-            false,
+            $obrigatorioRegistroDiarioAtividade,
             '',
             '',
             false,
@@ -299,7 +304,10 @@ return new class extends clsCadastro {
             false
         );
 
-        $this->adicionarConteudosMultiplaEscolha();
+        if ($obrigatorioConteudo) {
+            $this->adicionarConteudosMultiplaEscolha($obrigatorioConteudo);
+        }
+
 
         $this->campoOculto('ano', explode('/', dataToBrasil(NOW()))[2]);
     }

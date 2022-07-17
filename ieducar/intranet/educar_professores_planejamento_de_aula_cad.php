@@ -98,15 +98,24 @@ return new class extends clsCadastro {
 
         $obrigatorio = true;
 
+        $clsInstituicao = new clsPmieducarInstituicao();
+        $instituicao = $clsInstituicao->primeiraAtiva();
+        $obrigatorioConteudo = $instituicao['permitir_planeja_conteudos'];
+
         $this->campoOculto('id', $this->id);
         $this->campoOculto('planejamento_aula_id', $this->id);
+        $this->campoOculto('obrigatorio_conteudo', $obrigatorioConteudo);
         $this->inputsHelper()->dynamic('dataInicial', ['required' => $obrigatorio]);    // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('dataFinal', ['required' => $obrigatorio]);      // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('faseEtapa', ['required' => $obrigatorio, 'label' => 'Etapa', 'disabled' => $desabilitado]);
 
         $this->adicionarBNCCMultiplaEscolha();
-        $this->adicionarConteudosTabela();
+
+        if ($obrigatorioConteudo) {
+            $this->adicionarConteudosTabela($obrigatorioConteudo);
+        }
+
 
         $this->campoMemo('ddp','Metodologia', $this->ddp, 100, 5, $obrigatorio);
         $this->campoMemo('atividades','Atividades/Avaliações', $this->atividades, 100, 5, !$obrigatorio);
@@ -260,7 +269,7 @@ return new class extends clsCadastro {
         $this->campoTabelaFim();
     }
 
-    protected function adicionarConteudosTabela()
+    protected function adicionarConteudosTabela($obrigatorioConteudo)
     {
         $obj = new clsModulesPlanejamentoAulaConteudo();
         $conteudos = $obj->lista($this->id);
@@ -279,7 +288,7 @@ return new class extends clsCadastro {
             $rows
         );
 
-        $this->campoTexto('conteudos', 'Conteúdos', $this->conteudo_id, 100, 2048);
+        $this->campoTexto('conteudos', 'Conteúdos', $this->conteudo_id, 100, 2048, $obrigatorioConteudo);
 
         $this->campoTabelaFim();
     }

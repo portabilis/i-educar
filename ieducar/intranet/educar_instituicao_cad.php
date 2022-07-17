@@ -56,6 +56,8 @@ return new class extends clsCadastro {
     public $ordenar_alunos_sequencial_enturmacao;
     public $obrigar_telefone_pessoa;
     public $permitir_edicao_frequencia;
+    public $permitir_planeja_conteudos;
+    public $obrigatorio_registro_diario_atividade;
 
     public function Inicializar()
     {
@@ -109,6 +111,8 @@ return new class extends clsCadastro {
         $this->ordenar_alunos_sequencial_enturmacao = dbBool($this->ordenar_alunos_sequencial_enturmacao);
         $this->obrigar_telefone_pessoa = dbBool($this->obrigar_telefone_pessoa);
         $this->permitir_edicao_frequencia = dbBool($this->permitir_edicao_frequencia);
+        $this->permitir_planeja_conteudos = dbBool($this->permitir_planeja_conteudos);
+        $this->obrigatorio_registro_diario_atividade = dbBool($this->obrigatorio_registro_diario_atividade);
 
         return $retorno;
     }
@@ -355,6 +359,26 @@ return new class extends clsCadastro {
             false
         );
 
+        $this->campoCheck(
+            'permitir_planeja_conteudos',
+            'Permitir planejar conteúdos',
+            $this->permitir_planeja_conteudos,
+            null,
+            false,
+            false,
+            false
+        );
+
+        $this->campoCheck(
+            'obrigatorio_registro_diario_atividade',
+            'Obrigatório registro diário de atividade',
+            $this->obrigatorio_registro_diario_atividade,
+            null,
+            false,
+            false,
+            false
+        );
+
         $scripts = ['/modules/Cadastro/Assets/Javascripts/Instituicao.js'];
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
         $styles = ['/modules/Cadastro/Assets/Stylesheets/Instituicao.css'];
@@ -400,7 +424,9 @@ return new class extends clsCadastro {
             $this->permitir_matricula_fora_periodo_letivo,
             $this->ordenar_alunos_sequencial_enturmacao,
             $this->obrigar_telefone_pessoa,
-            $this->permitir_edicao_frequencia
+            $this->permitir_edicao_frequencia,
+            $this->permitir_planeja_conteudos,
+            $this->obrigatorio_registro_diario_atividade,
         );
         $obj->data_base_remanejamento = Portabilis_Date_Utils::brToPgSQL($this->data_base_remanejamento);
         $obj->data_base_transferencia = Portabilis_Date_Utils::brToPgSQL($this->data_base_transferencia);
@@ -436,9 +462,11 @@ return new class extends clsCadastro {
         $obj->ordenar_alunos_sequencial_enturmacao = !is_null($this->ordenar_alunos_sequencial_enturmacao);
         $obj->obrigar_telefone_pessoa = !is_null($this->obrigar_telefone_pessoa);
         $obj->permitir_edicao_frequencia = !is_null($this->permitir_edicao_frequencia);
+        $obj->permitir_planeja_conteudos = !is_null($this->permitir_planeja_conteudos);
+        $obj->obrigatorio_registro_diario_atividade = !is_null($this->obrigatorio_registro_diario_atividade);
 
         $editou = $obj->edita();
-        
+
         if ($editou) {
             if (is_null($this->altera_atestado_para_declaracao)) {
                 Menu::changeMenusToAttestation();

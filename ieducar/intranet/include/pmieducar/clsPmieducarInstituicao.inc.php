@@ -52,6 +52,8 @@ class clsPmieducarInstituicao extends Model
     public $ordenar_alunos_sequencial_enturmacao;
     public $obrigar_telefone_pessoa;
     public $permitir_edicao_frequencia;
+    public $permitir_planeja_conteudos;
+    public $obrigatorio_registro_diario_atividade;
 
     public function __construct(
         $cod_instituicao = null,
@@ -85,7 +87,9 @@ class clsPmieducarInstituicao extends Model
         $permitir_matricula_fora_periodo_letivo = null,
         $ordenar_alunos_sequencial_enturmacao = null,
         $obrigar_telefone_pessoa = null,
-        $permitir_edicao_frequencia = null
+        $permitir_edicao_frequencia = null,
+        $permitir_planeja_conteudos = null,
+        $obrigatorio_registro_diario_atividade = null
     ) {
         $db = new clsBanco();
         $this->_schema = 'pmieducar.';
@@ -143,7 +147,9 @@ class clsPmieducarInstituicao extends Model
             permitir_matricula_fora_periodo_letivo,
             ordenar_alunos_sequencial_enturmacao,
             obrigar_telefone_pessoa,
-            permitir_edicao_frequencia
+            permitir_edicao_frequencia,
+            permitir_planeja_conteudos,
+            obrigatorio_registro_diario_atividade
         ';
 
         if (is_numeric($ref_usuario_cad)) {
@@ -268,7 +274,15 @@ class clsPmieducarInstituicao extends Model
         if (is_bool($permitir_edicao_frequencia)) {
             $this->permitir_edicao_frequencia = $permitir_edicao_frequencia;
         }
-        
+
+        if (is_bool($permitir_planeja_conteudos)) {
+            $this->permitir_planeja_conteudos = $permitir_planeja_conteudos;
+        }
+
+        if (is_bool($obrigatorio_registro_diario_atividade)) {
+            $this->obrigatorio_registro_diario_atividade = $obrigatorio_registro_diario_atividade;
+        }
+
     }
 
     public function canRegister()
@@ -686,6 +700,26 @@ class clsPmieducarInstituicao extends Model
                 $gruda = ', ';
             }
 
+            if (dbBool($this->permitir_planeja_conteudos)) {
+                $campos .= "{$gruda}permitir_planeja_conteudos";
+                $valores .= "{$gruda} true ";
+                $gruda = ', ';
+            } else {
+                $campos .= "{$gruda}permitir_planeja_conteudos";
+                $valores .= "{$gruda} false ";
+                $gruda = ', ';
+            }
+
+            if (dbBool($this->obrigatorio_registro_diario_atividade)) {
+                $campos .= "{$gruda}obrigatorio_registro_diario_atividade";
+                $valores .= "{$gruda} true ";
+                $gruda = ', ';
+            } else {
+                $campos .= "{$gruda}obrigatorio_registro_diario_atividade";
+                $valores .= "{$gruda} false ";
+                $gruda = ', ';
+            }
+
             if (is_string($this->orgao_regional) and !empty($this->orgao_regional)) {
                 $campos .= "{$gruda}orgao_regional";
                 $valores .= "{$gruda}'{$this->orgao_regional}'";
@@ -1067,6 +1101,22 @@ class clsPmieducarInstituicao extends Model
                 $gruda = ', ';
             } else {
                 $set .= "{$gruda}permitir_edicao_frequencia = false ";
+                $gruda = ', ';
+            }
+
+            if (dbBool($this->permitir_planeja_conteudos)) {
+                $set .= "{$gruda}permitir_planeja_conteudos = true ";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}permitir_planeja_conteudos = false ";
+                $gruda = ', ';
+            }
+
+            if (dbBool($this->obrigatorio_registro_diario_atividade)) {
+                $set .= "{$gruda}obrigatorio_registro_diario_atividade = true ";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}obrigatorio_registro_diario_atividade = false ";
                 $gruda = ', ';
             }
 

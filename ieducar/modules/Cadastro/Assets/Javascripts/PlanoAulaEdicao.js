@@ -490,6 +490,14 @@
           let bnccEspecificacoes        = pegarBNCCEspecificacoes();
           let turma                     = document.getElementById("ref_cod_turma").value;
           let faseEtapa                 = document.getElementById("fase_etapa").value;
+          let obrigatorio_conteudo        = document.getElementById("obrigatorio_conteudo").value;
+
+
+          console.log(obrigatorio_conteudo)
+          console.log(obrigatorio_conteudo.length)
+          console.log((obrigatorio_conteudo == '1'))
+          console.log((obrigatorio_conteudo.length == 1 && obrigatorio_conteudo == '1'))
+          console.log(conteudos)
 
           // VALIDAÇÃO
           if (!ehDataValida(new Date(data_inicial))) { alert("Data inicial não é válida."); return; }
@@ -503,7 +511,7 @@
           if (!componentesCurricularesPreenchidos(componentesCurriculares, componentesCurricularesGeral)) { alert("Existem componentes sem planejamento."); }
           if (!ehBNCCsValidos(bnccs)) { alert("As habilidades são obrigatórias."); return; }
           if (!ehBNCCEspecificacoesValidos(bnccEspecificacoes)) { alert("As especificações são obrigatórias."); return; }
-          if (!ehConteudosValidos(conteudos)) { alert("Os conteúdos são obrigatórios."); return; }
+          if (obrigatorio_conteudo.length == 1 && obrigatorio_conteudo == '1' && !ehConteudosValidos(conteudos)) { alert("Os conteúdos são obrigatórios."); return; }
           if (recursos_didaticos == null) { alert("O campo recursos didáticos não é válido."); return; }
           if (registro_adaptacao == null) { alert("O campo registro de adaptação não é válido."); return; }
 
