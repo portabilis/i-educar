@@ -186,6 +186,7 @@ return new class extends clsCadastro {
             $conteudo .= '  </tr>';
             $conteudo .= '  <tr><td class="tableDetalheLinhaSeparador" colspan="3"></td></tr>';
 
+
             foreach ($this->alunos as $key => $aluno) {
                 $id = $aluno['matricula'];
                 $name = "alunos[" . $id . "]";

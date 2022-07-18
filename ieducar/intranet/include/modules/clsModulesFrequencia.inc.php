@@ -768,6 +768,8 @@ class clsModulesFrequencia extends Model {
                 ";
             }
 
+            $sql .= " AND T.data_enturmacao <= '{$data['detalhes']['data']}' AND (T.data_exclusao IS NULL OR T.data_exclusao >= '{$data['detalhes']['data']}') ";
+
             $sql .= " ORDER BY p.nome ASC";
 
             $db->Consulta("
