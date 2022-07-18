@@ -75,9 +75,9 @@ class StudentControllerTest extends TestCase
             'state_registration_id' => $stateRegistration,
         ], $this->getAuthorizationHeader());
 
+        $response->assertUnprocessable();
         $response->assertJson(['message' => 'Já existe uma aluno com este número de inscrição.']);
-        $response->assertJsonCount(1,'errors');
-        $response->assertJson(['errors' => ['state_registration_id' => ['Já existe uma aluno com este número de inscrição.']]]);
+        $response->assertJsonValidationErrors(['state_registration_id' => ['Já existe uma aluno com este número de inscrição.']]);
     }
 
     public function testUpdateStateRegistrationInvalid()
@@ -91,8 +91,8 @@ class StudentControllerTest extends TestCase
             'state_registration_id' => $stateRegistration,
         ], $this->getAuthorizationHeader());
 
+        $response->assertUnprocessable();
         $response->assertJson(['message' => 'O número de inscrição é inválido.']);
-        $response->assertJsonCount(1,'errors');
-        $response->assertJson(['errors' => ['state_registration_id' => ['O número de inscrição é inválido.']]]);
+        $response->assertJsonValidationErrors(['state_registration_id' => ['O número de inscrição é inválido.']]);
     }
 }
