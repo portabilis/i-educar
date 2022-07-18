@@ -127,7 +127,7 @@ class clsModulesComponenteMinistrado extends Model {
             if (is_array($this->conteudos)) {
                 foreach ($this->conteudos as $key => $conteudo) {
                     $obj = new clsModulesComponenteMinistradoConteudo(null, $id, $conteudo);
-                    $bla = $obj->cadastra();
+                    $obj->cadastra();
                 }
             }
 
