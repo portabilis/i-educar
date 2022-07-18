@@ -124,9 +124,11 @@ class clsModulesComponenteMinistrado extends Model {
 
             $id = $db->InsertId("{$this->_tabela}_id_seq");
 
-            foreach ($this->conteudos as $key => $conteudo) {
-                $obj = new clsModulesComponenteMinistradoConteudo(null, $id, $conteudo);
-                $bla = $obj->cadastra();
+            if (is_array($this->conteudos)) {
+                foreach ($this->conteudos as $key => $conteudo) {
+                    $obj = new clsModulesComponenteMinistradoConteudo(null, $id, $conteudo);
+                    $bla = $obj->cadastra();
+                }
             }
 
             /*foreach ($this->especificacoes as $key => $especificacao) {
@@ -162,23 +164,26 @@ class clsModulesComponenteMinistrado extends Model {
                     id = '{$this->id}'
             ");
 
-            $obj = new clsModulesComponenteMinistradoConteudo();
-            foreach ($obj->lista($this->id) as $key => $conteudo) {
-                $conteudos_atuais[] = $conteudo;
+            if (is_array($this->conteudos)) {
+                $obj = new clsModulesComponenteMinistradoConteudo();
+                foreach ($obj->lista($this->id) as $key => $conteudo) {
+                    $conteudos_atuais[] = $conteudo;
+                }
+
+                $obj = new clsModulesComponenteMinistradoConteudo(null, $this->id);
+                $conteudos_diferenca = $obj->retornaDiferencaEntreConjuntosConteudos($conteudos_atuais, $this->conteudos);
+
+                foreach ($conteudos_diferenca['adicionar'] as $key => $conteudo_adicionar){
+                    $obj = new clsModulesComponenteMinistradoConteudo(null, $this->id, $conteudo_adicionar);
+                    $obj->cadastra();
+                }
+
+                foreach ($conteudos_diferenca['remover'] as $key => $conteudo_remover){
+                    $obj = new clsModulesComponenteMinistradoConteudo(null, $this->id, $conteudo_remover);
+                    $obj->excluir();
+                }
             }
 
-            $obj = new clsModulesComponenteMinistradoConteudo(null, $this->id);
-            $conteudos_diferenca = $obj->retornaDiferencaEntreConjuntosConteudos($conteudos_atuais, $this->conteudos);
-
-            foreach ($conteudos_diferenca['adicionar'] as $key => $conteudo_adicionar){
-                $obj = new clsModulesComponenteMinistradoConteudo(null, $this->id, $conteudo_adicionar);
-                $obj->cadastra();
-            }
-
-            foreach ($conteudos_diferenca['remover'] as $key => $conteudo_remover){
-                $obj = new clsModulesComponenteMinistradoConteudo(null, $this->id, $conteudo_remover);
-                $obj->excluir();
-            }
 
             return true;
         }

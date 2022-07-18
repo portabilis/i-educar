@@ -156,7 +156,6 @@ class clsModulesPlanejamentoAula extends Model {
             && is_string($this->ddp)
             && is_string($this->atividades)
             && is_array($this->bnccs)
-            && is_array($this->conteudos)
             && is_string($this->referencias)
             && is_array($this->bncc_especificacoes)
             && is_string($this->recursos_didaticos)
@@ -228,9 +227,11 @@ class clsModulesPlanejamentoAula extends Model {
                 }
             }
 
-            foreach ($this->conteudos as $key => $conteudo) {
-                $obj = new clsModulesPlanejamentoAulaConteudo(null, $id, $conteudo[1]);
-                $obj->cadastra();
+            if (is_array($this->conteudos)) {
+                foreach ($this->conteudos as $key => $conteudo) {
+                    $obj = new clsModulesPlanejamentoAulaConteudo(null, $id, $conteudo[1]);
+                    $obj->cadastra();
+                }
             }
 
             foreach ($this->bncc_especificacoes as $key => $bncc_especificacoes_array) {
@@ -266,7 +267,6 @@ class clsModulesPlanejamentoAula extends Model {
             && is_array($this->bnccs)
             && is_array($this->bncc_especificacoes)
             && is_array($this->ref_componente_curricular_array)
-            && is_array($this->conteudos)
             && is_string($this->referencias)
             && is_string($this->recursos_didaticos)
             && is_string($this->registro_adaptacao)
@@ -370,24 +370,25 @@ class clsModulesPlanejamentoAula extends Model {
                 $obj->excluir();
             }
 
+            if (is_array($this->conteudos)) {
+                $obj = new clsModulesPlanejamentoAulaConteudo();
+                $conteudos_atuais = $obj->lista($this->id);
+                $conteudo_diferenca = $obj->retornaDiferencaEntreConjuntosConteudos($conteudos_atuais, $this->conteudos);
 
-            $obj = new clsModulesPlanejamentoAulaConteudo();
-            $conteudos_atuais = $obj->lista($this->id);
-            $conteudo_diferenca = $obj->retornaDiferencaEntreConjuntosConteudos($conteudos_atuais, $this->conteudos);
+                foreach ($conteudo_diferenca['adicionar'] as $key => $conteudo_adicionar){
+                    $obj = new clsModulesPlanejamentoAulaConteudo(null, $this->id, $conteudo_adicionar[1]);
+                    $obj->cadastra();
+                }
 
-            foreach ($conteudo_diferenca['adicionar'] as $key => $conteudo_adicionar){
-                $obj = new clsModulesPlanejamentoAulaConteudo(null, $this->id, $conteudo_adicionar[1]);
-                $obj->cadastra();
-            }
+                foreach ($conteudo_diferenca['remover'] as $key => $conteudo_remover){
+                    $obj = new clsModulesPlanejamentoAulaConteudo(null, $this->id, $conteudo_remover[2]);
+                    $obj->excluir();
+                }
 
-            foreach ($conteudo_diferenca['remover'] as $key => $conteudo_remover){
-                $obj = new clsModulesPlanejamentoAulaConteudo(null, $this->id, $conteudo_remover[2]);
-                $obj->excluir();
-            }
-
-            foreach ($conteudo_diferenca['editar'] as $key => $conteudo_editar){
-                $obj = new clsModulesPlanejamentoAulaConteudo($conteudo_editar[0], null, $conteudo_editar[1]);
-                $obj->edita();
+                foreach ($conteudo_diferenca['editar'] as $key => $conteudo_editar){
+                    $obj = new clsModulesPlanejamentoAulaConteudo($conteudo_editar[0], null, $conteudo_editar[1]);
+                    $obj->edita();
+                }
             }
 
             return true;
