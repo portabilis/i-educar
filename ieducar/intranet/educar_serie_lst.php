@@ -44,7 +44,8 @@ return new class extends clsListagem {
 
         $this->addCabecalhos($lista_busca);
 
-        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso'],[],['options' => ['required' => false]]);
+        $get_curso = true;
+        include('include/pmieducar/educar_campo_lista.php');
 
         // outros Filtros
         $this->campoTexto('nm_serie', 'Série', $this->nm_serie, 30, 255);
