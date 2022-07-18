@@ -326,6 +326,7 @@ return new class extends clsCadastro {
         $objModulo           = new clsPmieducarModulo();
         $dadosModulo         = $objModulo->lista($dadosEtapa[0]['ref_cod_modulo']);
         $nomeModulo          = $dadosModulo[0]['nm_tipo'];
+        $conteudoHtml = '';
 
         foreach ($dadosEtapa as $modulo) {
             $checked = '';
@@ -395,8 +396,8 @@ return new class extends clsCadastro {
     public function loadAssets()
     {
         $scripts = [
-            '/modules/Cadastro/Assets/Javascripts/ModalDispensasDisciplinaCad.js',
-            '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/ModalDispensasDisciplinaCad.js',
+            '/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);

@@ -131,6 +131,7 @@ class clsPmieducarInfraPredio extends Model
     {
         if (is_numeric($this->cod_infra_predio) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_usuario_exc)) {

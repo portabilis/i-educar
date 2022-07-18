@@ -76,7 +76,7 @@ return new class extends clsCadastro {
 
         foreach ($arrayTipoAtendimento as $data) {
             $obj = new clsPmieducarMatriculaTurma($this->cod_matricula, $data['turma'], $this->pessoa_logada);
-            $tipoAtendimento = implode(',', $data['value']);
+            $tipoAtendimento = $data['value'] ? implode(',', $data['value']) : null;
             $obj->sequencial = $data['sequencial'];
             $obj->tipo_atendimento = $tipoAtendimento;
             $obj->edita();

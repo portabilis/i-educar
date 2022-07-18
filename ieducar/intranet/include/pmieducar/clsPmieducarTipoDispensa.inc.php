@@ -113,6 +113,7 @@ class clsPmieducarTipoDispensa extends Model
     {
         if (is_numeric($this->cod_tipo_dispensa) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_usuario_exc)) {

@@ -175,7 +175,7 @@ return new class extends clsCadastro {
         $this->inputsHelper()->multipleSearchComponenteCurricular(null, ['label' => 'Componentes lecionados', 'required' => true], ['searchForArea' => true, 'allDisciplinesMulti' => true]);
 
         $scripts = [
-            '/modules/Cadastro/Assets/Javascripts/ServidorVinculoTurma.js'
+            '/vendor/legacy/Cadastro/Assets/Javascripts/ServidorVinculoTurma.js'
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);

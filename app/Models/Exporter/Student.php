@@ -12,7 +12,7 @@ class Student extends Model
     /**
      * @var string
      */
-    protected $table = 'exporter_student';
+    protected $table = 'exporter_student_grouped_registration';
 
     /**
      * @var Collection
@@ -38,8 +38,6 @@ class Student extends Model
             'Códigos' => [
                 'id' => 'ID Pessoa',
                 'student_id' => 'ID Aluno',
-
-                'registration_id' => 'ID Matrícula',
                 'school_id' => 'ID Escola',
                 'school_class_id' => 'ID Turma',
                 'grade_id' => 'ID Série',
@@ -61,7 +59,8 @@ class Student extends Model
                 'organization' => 'Empresa',
                 'monthly_income' => 'Renda Mensal',
                 'gender' => 'Gênero',
-                'race' => 'Raça'
+                'race' => 'Raça',
+                'religion' => 'Religião'
             ],
             'Escola' => [
                 'school' => 'Escola',
@@ -69,12 +68,8 @@ class Student extends Model
                 'school_class' => 'Turma',
                 'grade' => 'Série',
                 'course' => 'Curso',
-                'registration_date' => 'Data da Matrícula',
-                'registration_out' => 'Data de saída da matrícula',
                 'year' => 'Ano',
-                'status_text' => 'Situação da Matrícula',
                 'period' => 'Turno',
-                'school_class_stage' => 'Etapa Educacenso',
             ],
             'Informações' => [
                 'nationality' => 'Nacionalidade',
@@ -158,6 +153,11 @@ class Student extends Model
     public function getLabel()
     {
         return 'Alunos';
+    }
+
+    public function getDescription()
+    {
+        return 'Os dados exportados serão contabilizados por quantidade de alunos(as), agrupando as informações de séries, cursos, turmas quando o(a) aluno(a) possuir mais de uma matrícula para a situação e ano filtrados.';
     }
 
     /**

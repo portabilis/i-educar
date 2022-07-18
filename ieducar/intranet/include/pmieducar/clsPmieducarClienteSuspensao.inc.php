@@ -119,6 +119,7 @@ class clsPmieducarClienteSuspensao extends Model
     {
         if (is_numeric($this->sequencial) && is_numeric($this->ref_cod_cliente)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_usuario_libera)) {

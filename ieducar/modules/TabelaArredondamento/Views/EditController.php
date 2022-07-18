@@ -133,7 +133,7 @@ class EditController extends Core_Controller_Page_EditController
 
         Portabilis_View_Helper_Application::loadJavascript(
             $this,
-            '/modules/RegraAvaliacao/Assets/Javascripts/TabelaArredondamento.js'
+            '/vendor/legacy/RegraAvaliacao/Assets/Javascripts/TabelaArredondamento.js'
         );
 
         $nomeMenu = $this->getRequest()->id == null ? 'Cadastrar' : 'Editar';

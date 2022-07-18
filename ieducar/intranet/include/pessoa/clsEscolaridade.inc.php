@@ -76,6 +76,7 @@ class clsEscolaridade
      */
     public function lista($int_idesco = false, $str_descricao = false, $str_ordenacao = 'descricao', $int_limite_ini = 0, $int_limite_qtd = 30)
     {
+        $where = '';
         $whereAnd = 'WHERE ';
 
         if (is_numeric($int_idesco)) {

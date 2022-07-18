@@ -163,11 +163,7 @@ class relatoriosPref
                 $mod += ($linha['alturaLinha'] > $this->lastMod) ? $this->lastMod : 0;
                 // se for titulo ou linha impar desenha uma caixa no fundo
                 if ($this->num_linhas % 2 || $linha['titulo']) {
-                    if ($linha['titulo']) {
-                        $this->pdf->Shape('ret', $this->margem_esquerda, $this->pdf->altura - $linha['altura'] - $mod, $this->largura - $this->margem_direita - $this->margem_esquerda, $linha['alturaLinha'], 1, $linha['fundo'], $linha['fundo']);
-                    } else {
-                        $this->pdf->Shape('ret', $this->margem_esquerda, $this->pdf->altura - $linha['altura'] - $mod, $this->largura - $this->margem_direita - $this->margem_esquerda, $linha['alturaLinha'], 1, $linha['fundo'], $linha['fundo']);
-                    }
+                    $this->pdf->Shape('ret', $this->margem_esquerda, $this->pdf->altura - $linha['altura'] - $mod, $this->largura - $this->margem_direita - $this->margem_esquerda, $linha['alturaLinha'], 1, $linha['fundo'], $linha['fundo']);
                 }
                 $i = 0;
                 $col = 0;

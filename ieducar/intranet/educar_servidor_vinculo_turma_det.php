@@ -108,8 +108,6 @@ return new class extends clsDetalhe {
                 $registro['instituicao_id'],
                 $registro['servidor_id']
             );
-
-            "go(\"educar_servidor_vinculo_turma_copia_cad.php?{$get_padrao}\");";
         }
 
         $this->url_cancelar = sprintf(

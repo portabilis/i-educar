@@ -89,6 +89,8 @@ class clsPDF
         PDF_close($this->pdf);
         PDF_delete($this->pdf);
 
+        $len = null; // Fix SonarCloud
+
         if ($this->depurar) {
             echo "<b>PDF:</b> Finalizando o arquivo com tamanho de -> {$len}<br>";
         }
@@ -552,23 +554,10 @@ class clsPDF
         $px1,
         $py1,
         $px2,
-        $py2,
-        $linha = 2.001,
-        $color1 = '#000000',
-        $color2 = '#000000'
+        $py2
     ) {
-        if ($teck2) {
-            $this->SetLine($linha);
-            $this->SetBoth($color1);
-            $this->SetFill($color2);
-        }
-
         PDF_moveto($this->pdf, $xo, $yo);
         PDF_curveto($this->pdf, $px1, $py1, $px2, $py2, $x, $y);
-
-        if ($teck) {
-            PDF_stroke($this->pdf);
-        }
 
         if ($this->depurar) {
             echo '<b>PDF:</b> Adicionado uma curva.<br>';
