@@ -137,6 +137,7 @@ class clsPmieducarServidorAfastamento extends Model
     {
         if (is_numeric($this->ref_cod_servidor) && is_numeric($this->sequencial) && is_numeric($this->ref_usuario_exc) && is_numeric($this->ref_cod_instituicao)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_cod_motivo_afastamento)) {

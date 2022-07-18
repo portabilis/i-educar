@@ -378,17 +378,10 @@ return new class extends clsCadastro {
 
         $script = 'javascript:showExpansivelIframe(520, 170, \'educar_turma_tipo_cad_pop.php\');';
 
-        if ($this->ref_cod_instituicao && $this->ref_cod_escola && $this->ref_cod_curso) {
-            $script = sprintf(
-                '<div id=\'img_turma\' border=\'0\' onclick=\'%s\'>',
-                $script
-            );
-        } else {
-            $script = sprintf(
-                '<div id=\'img_turma\' border=\'0\' onclick=\'%s\'>',
-                $script
-            );
-        }
+        $script = sprintf(
+            '<div id=\'img_turma\' border=\'0\' onclick=\'%s\'>',
+            $script
+        );
 
         $this->campoLista(
             'ref_cod_turma_tipo',
@@ -676,15 +669,15 @@ return new class extends clsCadastro {
         $this->inputsHelper()->checkbox('nao_informar_educacenso', $options);
 
         $scripts = [
-            '/modules/Cadastro/Assets/Javascripts/Turma.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/Turma.js',
             '/intranet/scripts/etapas.js',
             '/intranet/scripts/tabelaSerieMult.js',
-            '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
+            '/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
 
-        $styles = ['/modules/Cadastro/Assets/Stylesheets/Turma.css'];
+        $styles = ['/vendor/legacy/Cadastro/Assets/Stylesheets/Turma.css'];
 
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
     }

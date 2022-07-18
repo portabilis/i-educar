@@ -109,14 +109,14 @@ return new class extends clsCadastro {
 
         // carrega estilo para feedback messages, para exibir msg validação frequencia.
 
-        $style = '/modules/Portabilis/Assets/Stylesheets/Frontend.css';
+        $style = '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend.css';
         Portabilis_View_Helper_Application::loadStylesheet($this, $style);
 
         Portabilis_View_Helper_Application::loadJavascript(
             $this,
-            ['/modules/Portabilis/Assets/Javascripts/Utils.js',
-                        '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js',
-                        '/modules/Portabilis/Assets/Javascripts/Validator.js']
+            ['/vendor/legacy/Portabilis/Assets/Javascripts/Utils.js',
+                        '/vendor/legacy/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js',
+                        '/vendor/legacy/Portabilis/Assets/Javascripts/Validator.js']
         );
         $this->addBotao('Excluir todos', "transporte_itinerario_del.php?cod_rota={$this->cod_rota}");
     }

@@ -22,7 +22,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchAluno extends Portabilis
 
     protected function loadAssets()
     {
-        $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/Resource/SimpleSearchAluno.js';
+        $jsFile = '/vendor/legacy/Portabilis/Assets/Javascripts/Frontend/Inputs/Resource/SimpleSearchAluno.js';
         Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
     }
 }

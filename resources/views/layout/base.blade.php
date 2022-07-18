@@ -25,7 +25,6 @@
                 <div class="dropbtn">{{ $loggedUser->name }}</div>
                 <div class="dropdown-content">
                     <a href="{{ Asset::get('intranet/agenda.php') }}">Agenda</a>
-                    <a href="{{ Asset::get('intranet/index.php') }}">Calendário</a>
                     <a href="{{ Asset::get('intranet/meusdados.php') }}">Meus dados</a>
                     <a href="{{ Asset::get('intranet/logof.php') }}" id="logout">Sair</a>
                 </div>

@@ -66,6 +66,7 @@ class clsPmieducarBibliotecaDia extends Model
     {
         if (is_numeric($this->ref_cod_biblioteca) && is_numeric($this->dia)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if ($set) {

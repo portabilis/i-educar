@@ -110,7 +110,7 @@ return new class extends clsCadastro
         $this->campoTexto('insc_est', 'Inscrição Estadual', $this->insc_est, '20', '30');
 
         Portabilis_View_Helper_Application::loadJavascript($this, [
-            '/modules/Cadastro/Assets/Javascripts/Addresses.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/Addresses.js',
         ]);
     }
 

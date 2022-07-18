@@ -32,7 +32,6 @@ class clsFuncionario extends clsPessoaFisica
         $this->data_troca_senha = $data_troca_senha;
         $this->data_reativa_conta = $data_reativa_conta;
         $this->tempo_expira_senha = $tempo_expira_senha;
-        $this->data_expiracao = $data_expiracao;
         $this->ref_cod_funcionario_vinculo = $ref_cod_funcionario_vinculo;
         $this->email = $email;
         $this->_campos_lista = '
@@ -133,11 +132,6 @@ class clsFuncionario extends clsPessoaFisica
             $filtros .= "{$whereAnd} f.ref_cod_pessoa_fj = '{$int_idpes}'";
             $whereAnd = ' AND ';
             $filtro_pessoa = true;
-        }
-
-        if (is_string($str_email)) {
-            $filtros .= "{$whereAnd} f.email ILIKE '%{$str_email}%'f";
-            $whereAnd = ' AND ';
         }
 
         $limite = '';

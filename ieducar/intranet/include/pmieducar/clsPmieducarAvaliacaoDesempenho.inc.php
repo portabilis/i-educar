@@ -121,6 +121,7 @@ class clsPmieducarAvaliacaoDesempenho extends Model
     {
         if (is_numeric($this->sequencial) && is_numeric($this->ref_cod_servidor) && is_numeric($this->ref_ref_cod_instituicao) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_usuario_exc)) {

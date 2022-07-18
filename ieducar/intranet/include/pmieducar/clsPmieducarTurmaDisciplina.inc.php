@@ -79,6 +79,7 @@ class clsPmieducarTurmaDisciplina extends Model
     {
         if (is_numeric($this->ref_cod_turma) && is_numeric($this->ref_cod_disciplina) && is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_serie)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if ($set) {

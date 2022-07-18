@@ -50,7 +50,7 @@ return new class extends clsDetalhe {
     public function Gerar()
     {
         // carrega estilo para feedback messages, exibindo msgs da api.
-        $style = '/modules/Portabilis/Assets/Stylesheets/Frontend.css';
+        $style = '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend.css';
         Portabilis_View_Helper_Application::loadStylesheet($this, $style);
 
         $this->titulo = 'Matrícula - Detalhe';
@@ -196,15 +196,28 @@ return new class extends clsDetalhe {
                 $existeAtendimentoEspecializado = true;
             }
 
-            $nomesTurnos[] = match ((int)$enturmacao['turno_id']) {
-                clsPmieducarTurma::TURNO_MATUTINO =>  'Matutino',
-                clsPmieducarTurma::TURNO_VESPERTINO => 'Vespertino',
-                default => 'Integral',
-            };
+            if ($enturmacao['turno_id']) {
+                $nomesTurnos[] = match ((int)$enturmacao['turno_id']) {
+                    clsPmieducarTurma::TURNO_MATUTINO =>  'Matutino',
+                    clsPmieducarTurma::TURNO_VESPERTINO => 'Vespertino',
+                    default => null
+                };
+            }
         }
         $nomesTurmas = implode('<br />', $nomesTurmas);
         $datasEnturmacoes = implode('<br />', $datasEnturmacoes);
-        $nomesTurnos = implode('<br />', $nomesTurnos);
+
+        if (empty($nomesTurnos)) {
+            $nomesTurnos = match ((int)$turma['turma_turno_id']) {
+                clsPmieducarTurma::TURNO_MATUTINO =>  'Matutino',
+                clsPmieducarTurma::TURNO_VESPERTINO => 'Vespertino',
+                clsPmieducarTurma::TURNO_NOTURNO => 'Noturno',
+                clsPmieducarTurma::TURNO_INTEGRAL => 'Integral',
+                default => null
+            };
+        } else {
+            $nomesTurnos = implode('<br />', $nomesTurnos);
+        }
 
         if ($nomesTurmas) {
             $this->addDetalhe(['Turma', $nomesTurmas]);
@@ -453,9 +466,9 @@ return new class extends clsDetalhe {
 
         // js
         $scripts = [
-            '/modules/Portabilis/Assets/Javascripts/Utils.js',
-            '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
-            '/modules/Cadastro/Assets/Javascripts/MatriculaShow.js'
+            '/vendor/legacy/Portabilis/Assets/Javascripts/Utils.js',
+            '/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/MatriculaShow.js'
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);

@@ -75,6 +75,7 @@ class clsPmieducarAcervoAcervoAutor extends Model
     {
         if (is_numeric($this->ref_cod_acervo_autor) && is_numeric($this->ref_cod_acervo)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->principal)) {

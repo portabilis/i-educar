@@ -51,7 +51,7 @@
         </table>
     </form>
 
-    <form action="{{ Asset::get('/cancelar-enturmacao-em-lote/' . $schoolClass->id) }}" method="post" class="open-sans">
+    <form  id="enrollments-unenroll"  action="{{ Asset::get('/cancelar-enturmacao-em-lote/' . $schoolClass->id) }}" method="post" class="open-sans">
 
         <h3>Alunos matriculados e enturmados</h3>
 
@@ -102,9 +102,9 @@
                                        {{ $success->first($enrollment->id) ? 'disabled' : '' }} />
                             </label>
                         </td>
-                        <td>{{ $enrollment->registration->cod_matricula }}</td>
-                        <td>{{ $enrollment->student_name }}</td>
-                        <td>{{ $enrollment->data_enturmacao->format('d/m/Y') }}</td>
+                        <td>{{ $enrollment?->registration?->cod_matricula }}</td>
+                        <td>{{ $enrollment?->student_name }}</td>
+                        <td>{{ $enrollment?->data_enturmacao->format('d/m/Y') }}</td>
                         <td>
                             {{ $success->first($enrollment->id) }}
                             {{ $fails->first($enrollment->id) }}
@@ -137,6 +137,7 @@
     </form>
 
     <script>
+
         $j(document).ready(function () {
             $j('.enrollment-check-master').change(function () {
                 if ($j(this).prop('checked')) {
@@ -155,6 +156,49 @@
                 $j('.enrollment-check').prop('checked', true);
             });
         });
+
+        $j('#enrollments-unenroll').submit(function (e) {
+            e.preventDefault();
+            makeDialog({
+                title: 'Atenção!',
+                content: 'O processo de desenturmação e enturmação manual ' +
+                    'não será considerado como remanejamento ou troca de turma, ' +
+                    'para isso você deve selecionar a turma nova e remanejar. Deseja continuar?',
+                maxWidth: 860,
+                width: 860,
+                modal: true,
+                buttons: [{
+                    text: 'OK',
+                    click: function () {
+                        e.currentTarget.submit();
+                        $j(this).dialog('destroy');
+                    }
+                },{
+                    text: 'Cancelar',
+                    click: function () {
+                        $j(this).dialog('destroy');
+                    }
+                }]
+            });
+        });
+
+        function makeDialog (params) {
+            let container = $j('#dialog-container');
+            if (container.length < 1) {
+                $j('body').append('<div id="dialog-container" style="width: 400px;"></div>');
+                container = $j('#dialog-container');
+            }
+
+            if (container.hasClass('ui-dialog-content')) {
+                container.dialog('destroy');
+            }
+
+            container.empty();
+            container.html(params.content);
+            delete params['content'];
+
+            container.dialog(params);
+        }
     </script>
 
 @endsection
