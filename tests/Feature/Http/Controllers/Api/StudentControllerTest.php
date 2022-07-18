@@ -4,10 +4,7 @@ namespace Tests\Feature\Http\Controllers\Api;
 
 use App\Models\LegacyStudent;
 use Database\Factories\LegacyStudentFactory;
-use Exception;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
 class StudentControllerTest extends TestCase
