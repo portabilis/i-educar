@@ -239,6 +239,7 @@
 
         var linhasElemento = document.getElementsByName("tr_objetivos_aprendizagem[]");
         var componentesCurricularesElementos = []
+        let componentesCurricularesSelecionados = pegarSomenteValoresComponentesCurriculares();
 
         // get disciplines elements
         linhasElemento.forEach(linhaElemento => {
@@ -256,7 +257,9 @@
 
           // add disciplines
           selectOptions.forEach(option => {
-            jComponenteCurricularElemento.append(option[0]);
+            if (!componentesCurricularesSelecionados.includes(option[0].value)) {
+              jComponenteCurricularElemento.append(option[0]);
+            }
           });
 
           // bind onchange event
@@ -413,6 +416,21 @@
           componenteCurricular.push(componenteCurricularId);
           componenteCurricular.push(componenteCurricularValor);
           componentesCurriculares.push(componenteCurricular);
+        });
+
+        return componentesCurriculares;
+      }
+
+      function pegarSomenteValoresComponentesCurriculares () {
+        var componentesCurriculares = []
+
+        tr_objetivos_aprendizagens = document.getElementsByName("tr_objetivos_aprendizagem[]");
+        tr_objetivos_aprendizagens.forEach(tr_objetivos_aprendizagem => {
+          var id = tr_objetivos_aprendizagem.children[0].children[0].id;
+          var componenteCurricularElemento = document.getElementById(id);
+          var componenteCurricularValor = componenteCurricularElemento.value;
+
+          componentesCurriculares.push(componenteCurricularValor);
         });
 
         return componentesCurriculares;
