@@ -183,7 +183,7 @@ class PlanejamentoAulaController extends ApiCoreController
            $registro_adaptacao
         );
 
-        $existe = $obj->existe();
+        $existe = $obj->existeComponentePeriodo();
 
         if ($existe){
             return [ "result" => "Cadastro não realizado, pois já há um planejamento para esse componente nesse período." ];
