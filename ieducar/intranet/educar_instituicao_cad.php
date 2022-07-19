@@ -361,7 +361,7 @@ return new class extends clsCadastro {
 
         $this->campoCheck(
             'permitir_planeja_conteudos',
-            'Permitir planejar conteúdos',
+            'Obrigatório planejamento de conteúdos',
             $this->permitir_planeja_conteudos,
             null,
             false,
