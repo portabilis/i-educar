@@ -73,12 +73,12 @@ return new class extends clsListagem {
         $this->campoTexto('nome_pai', 'Nome do Pai', $this->nome_pai, 50, 255);
         $this->campoTexto('nome_mae', 'Nome da Mãe', $this->nome_mae, 50, 255);
         $this->campoTexto('nome_responsavel', 'Nome do Responsável', $this->nome_responsavel, 50, 255);
-        $this->campoRotulo('filtros_matricula', '<b>Filtros de alunos</b>',null,null,'Descrever quais serão os resultados obtidos nos próximos filtros de campos');
+        $this->campoRotulo('filtros_matricula', '<b>Filtros de alunos</b>');
 
         $this->inputsHelper()->integer('ano', ['required' => false, 'value' => $this->ano, 'max_length' => 4,'label_hint'=>'Retorna alunos com matrículas no ano selecionado']);
         $this->inputsHelper()->dynamic('instituicao', ['required' => false, 'value' => $this->ref_cod_instituicao]);
         $this->inputsHelper()->dynamic('escolaSemFiltroPorUsuario', ['required' => false, 'value' => $this->ref_cod_escola,'label_hint'=>'Retorna alunos com matrículas na escola selecionada']);
-        $this->inputsHelper()->dynamic(['curso', 'serie'], ['required' => false,'label_hint'=>'Retorna alunos com matrículas na série selecionada']);
+        $this->inputsHelper()->dynamic(['curso', 'serie'], ['required' => false,'label_hint'=>'Retorna alunos com matrículas no curso selecionado']);
         $this->inputsHelper()->dynamic(['situacaoMatricula'], ['required' => false,'label_hint'=>'Retorna alunos com matrículas compatíveis com esta situação']);
 
         $obj_permissoes = new clsPermissoes();
