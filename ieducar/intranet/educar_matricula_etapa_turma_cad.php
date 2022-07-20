@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyEnrollment;
+
 return new class extends clsCadastro {
     public $cod_matricula;
     public $ref_cod_aluno;
@@ -67,13 +69,22 @@ return new class extends clsCadastro {
             $codTurmaESequencial = explode('-', $codTurmaESequencial);
             $codTurma = $codTurmaESequencial[0];
             $sequencial = $codTurmaESequencial[1];
-            $obj = new clsPmieducarMatriculaTurma($this->cod_matricula, $codTurma, $this->pessoa_logada);
-            $obj->sequencial = $sequencial;
-            $obj->etapa_educacenso = $etapaEducacenso;
-            $obj->edita();
+
+            $enrollment = (new LegacyEnrollment())
+                ->newQuery()
+                ->where([
+                    'ref_cod_matricula' => $this->cod_matricula,
+                    'ref_cod_turma' => $codTurma,
+                    'sequencial' => $sequencial
+                    ]
+                )->firstOrFail();
+
+            $enrollment->etapa_educacenso = $etapaEducacenso;
+
+            $enrollment->saveOrFail();
         }
 
-        $this->mensagem .= 'Etapas atualizadas com sucesso.<br>';
+        $this->mensagem = 'Etapas atualizadas com sucesso.<br>';
         $this->simpleRedirect("educar_matricula_det.php?cod_matricula={$this->cod_matricula}");
     }
 
