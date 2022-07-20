@@ -5,6 +5,7 @@
 /public/modules
 /docker/jasper/
 /vendor
+/public/vendor
 /ieducar-*
 composer-plug-and-play.json
 composer-plug-and-play.lock
