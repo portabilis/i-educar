@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyDisciplineSchoolClass;
+use App\Models\LegacySchoolClassType;
 use App\Models\LegacySchoolCourse;
 use iEducar\Modules\Educacenso\Model\UnidadesCurriculares;
 use iEducar\Support\View\SelectOptions;
@@ -353,22 +354,12 @@ return new class extends clsCadastro {
         // Turma tipo
         $opcoes = ['' => 'Selecione'];
 
-        // Editar
-        $objTemp = new clsPmieducarTurmaTipo();
-        $objTemp->setOrderby('nm_tipo ASC');
-        $lista = $objTemp->lista(
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            $this->ref_cod_instituicao
-        );
+        $query = LegacySchoolClassType::where('ativo', 1)
+            ->orderBy('nm_tipo', 'ASC');
+        if (is_numeric($this->ref_cod_instituicao)) {
+            $query->where('ref_cod_instituicao', $this->ref_cod_instituicao);
+        }
+        $lista = $query->get()->toArray();
 
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
