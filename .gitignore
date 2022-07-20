@@ -3,9 +3,9 @@
 /database/migrations/extras
 /packages/*
 /public/modules
+/public/vendor/legacy/Reports
 /docker/jasper/
 /vendor
-/public/vendor
 /ieducar-*
 composer-plug-and-play.json
 composer-plug-and-play.lock
