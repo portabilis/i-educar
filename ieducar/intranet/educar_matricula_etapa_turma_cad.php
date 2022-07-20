@@ -38,41 +38,8 @@ return new class extends clsCadastro {
         $enturmacoes = new clsPmieducarMatriculaTurma();
         $enturmacoes = $enturmacoes->lista(
             $this->cod_matricula,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            false,
-            null,
-            null,
-            null,
-            false,
-            false,
-            false,
-            null,
-            null,
-            false,
-            null,
-            false,
-            false,
-            false,
-            null,
-            true
+            int_ativo: 1,
+            apenasTurmasMultiSeriadas: true
         );
 
         $todasEtapasEducacenso = loadJson('educacenso_json/etapas_ensino.json');
