@@ -70,8 +70,7 @@ return new class extends clsCadastro {
             $codTurma = $codTurmaESequencial[0];
             $sequencial = $codTurmaESequencial[1];
 
-            $enrollment = (new LegacyEnrollment())
-                ->newQuery()
+            $enrollment = LegacyEnrollment::query()
                 ->where([
                     'ref_cod_matricula' => $this->cod_matricula,
                     'ref_cod_turma' => $codTurma,
