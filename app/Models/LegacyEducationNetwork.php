@@ -7,6 +7,11 @@ use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * LegacyEducationNetwork
+ *
+ * @method static LegacyEducationNetworkBuilder query()
+ */
 class LegacyEducationNetwork extends Model
 {
     use LegacyAttribute;
@@ -69,40 +74,4 @@ class LegacyEducationNetwork extends Model
     {
         return $this->nm_rede;
     }
-
-    /**
-     * Filtra por Instituição
-     *
-     * @param Builder $query
-     * @param int $institution
-     * @return void
-     */
-    public function scopeWhereInstitution(Builder $query, int $institution): void
-    {
-        $query->where('ref_cod_instituicao', $institution);
-    }
-
-    /**
-     * Filtra por ativo
-     *
-     * @param Builder $query
-     * @return Builder
-     */
-    public function scopeActive(Builder $query): Builder
-    {
-        return $query->where('ativo', 1);
-    }
-
-    /**
-     * Ordena por nome
-     *
-     * @param Builder $query
-     * @param string $direction
-     * @return void
-     */
-    public function scopeOrderByName(Builder $query, string $direction = 'asc'): void
-    {
-        $query->orderBy('nm_rede',$direction);
-    }
-
 }

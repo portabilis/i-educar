@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class LegacyAverageFormula extends Model
 {
-
     /**
      * @var string
      */
