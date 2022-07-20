@@ -7,6 +7,11 @@ use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * LegacySchoolAcademicYear
+ *
+ * @method static LegacySchoolAcademicYearBuilder query()
+ */
 class LegacySchoolAcademicYear extends Model
 {
     use LegacyAttribute;
@@ -125,17 +130,4 @@ class LegacySchoolAcademicYear extends Model
     {
         $query->where('ref_cod_escola', $school);
     }
-
-    /**
-     * Filtra por anos maiores
-     *
-     * @param Builder $query
-     * @param int $year
-     * @return void
-     */
-    public function scopeWhereGteYear(Builder $query, int $year): void
-    {
-        $query->where('ano', '>=', $year);
-    }
-
 }

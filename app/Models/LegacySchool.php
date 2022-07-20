@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  *
  * @property string            $name
  * @property LegacyInstitution $institution
+ * @method static LegacySchoolBuilder query()
  */
 class LegacySchool extends Model
 {
@@ -191,52 +192,5 @@ class LegacySchool extends Model
     public function stages()
     {
         return $this->hasMany(LegacySchoolStage::class, 'ref_ref_cod_escola');
-    }
-
-    /**
-     * Filtra por Ativo
-     *
-     * @param Builder $builder
-     * @return void
-     */
-    public function scopeActive(Builder $builder): void
-    {
-        $builder->where('escola.ativo', 1);
-    }
-
-    /**
-     * Realiza a junçao com organização
-     *
-     * @param Builder $builder
-     * @return void
-     */
-    public function scopeJoinOrganization(Builder $builder): void
-    {
-        $builder->join('cadastro.juridica','idpes','ref_idpes');
-    }
-
-    /**
-     * Filtra por Instituição
-     *
-     * @param Builder $query
-     * @param int $institution
-     * @return void
-     */
-    public function scopeWhereInstitution(Builder $query, int $institution): void
-    {
-        $query->where('ref_cod_instituicao', $institution);
-    }
-
-    /**
-     * Ordena por nome
-     *
-     * @param Builder $query
-     * @param string $direction
-     * @return void
-     */
-    public function scopeOrderByName(Builder $query, string $direction = 'asc'): void
-    {
-        $query->joinOrganization();
-        $query->orderBy('fantasia',$direction);
     }
 }

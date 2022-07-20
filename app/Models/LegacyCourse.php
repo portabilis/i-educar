@@ -4,8 +4,6 @@ namespace App\Models;
 
 use App\Models\Builders\LegacyCourseBuilder;
 use App\Traits\LegacyAttribute;
-use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -15,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  *
  * @property string        $name
  * @property LegacyGrade[] $grades
+ * @method static LegacyCourseBuilder query()
  */
 class LegacyCourse extends Model
 {
@@ -92,7 +91,7 @@ class LegacyCourse extends Model
      */
     public function getStepsAttribute()
     {
-        return$this->qtd_etapas;
+        return $this->qtd_etapas;
     }
 
     /**
@@ -133,101 +132,5 @@ class LegacyCourse extends Model
     public function schools(): BelongsToMany
     {
         return $this->belongsToMany(LegacySchool::class,'escola_curso','ref_cod_curso','ref_cod_escola')->wherePivot('ativo',1);
-    }
-
-    /**
-     * @param Builder $query
-     *
-     * @return Builder
-     */
-    public function scopeIsEja($query)
-    {
-        return $query->where('modalidade_curso', ModalidadeCurso::EJA);
-    }
-
-    public function scopeActive(Builder $query)
-    {
-        return $query->where('curso.ativo', 1);
-    }
-
-    public function scopeRegistrationsActiveLastYear(Builder $query): Builder
-    {
-        return $query->join('pmieducar.matricula', 'curso.cod_curso', '=', 'matricula.ref_cod_curso')
-            ->where('matricula.ano', date('Y') - 1)
-            ->where('matricula.ativo', 1);
-    }
-
-    public function scopeRegistrationsActiveCurrentYear(Builder $query): Builder
-    {
-        return $query->join('pmieducar.matricula', 'curso.cod_curso', '=', 'matricula.ref_cod_curso')
-            ->where('matricula.ano', date('Y'))
-            ->where('matricula.ativo', 1);
-    }
-
-    public function scopeHasModality(Builder $query): Builder
-    {
-        return $query->where('modalidade_curso', '>', 0);
-    }
-
-    /**
-     * Filtra por Instituição
-     *
-     * @param Builder $query
-     * @param int $institution
-     * @return void
-     */
-    public function scopeWhereInstitution(Builder $query, int $institution): void
-    {
-        $query->where('ref_cod_instituicao', $institution);
-    }
-
-    /**
-     * Filtra por Escola
-     *
-     * @param Builder $query
-     * @param int $school
-     * @return void
-     */
-    public function scopeWhereSchool(Builder $query, int $school): void
-    {
-        $query->whereHas('schools', function ($q) use ($school) {
-            $q->where('cod_escola', $school);
-        });
-    }
-
-    /**
-     * Filtra por Padrão Ano Escolar
-     *
-     * @param Builder $query
-     * @param bool $condition
-     * @return void
-     */
-    public function scopeWhereNotIsStandardCalendar(Builder $query, bool $condition = true): void
-    {
-        $query->when($condition,fn($q) => $q->where('padrao_ano_escolar',0));
-    }
-
-    /**
-     * Filtra o Curso
-     *
-     * @param Builder $query
-     * @param int $course
-     * @return void
-     */
-    public function scopeWhereCourse(Builder $query, int $course ): void
-    {
-        $query->where('cod_curso',$course);
-    }
-
-    /**
-     * Ordena por nome
-     *
-     * @param Builder $query
-     * @param string $direction
-     * @return void
-     */
-    public function scopeOrderByName(Builder $query, string $direction = 'asc'): void
-    {
-        $query->orderBy('nm_curso',$direction);
     }
 }

@@ -9,6 +9,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+/**
+ * LegacyGrade
+ *
+ * @method static LegacyGradeBuilder query()
+ */
 class LegacyGrade extends Model
 {
     use LegacyAttribute;
@@ -132,80 +137,5 @@ class LegacyGrade extends Model
     public function schoolClass()
     {
         return $this->hasMany(LegacySchoolClass::class, 'ref_ref_cod_serie');
-    }
-
-    /**
-     * Filtra por ativos
-     *
-     * @param Builder $builder
-     * @return Builder
-     */
-    public function scopeActive(Builder $builder)
-    {
-        return $builder->where('serie.ativo', 1);
-    }
-
-    /**
-     * Filtra por Curso
-     *
-     * @param Builder $query
-     * @param int $course
-     * @return void
-     */
-    public function scopeWhereCourse(Builder $query, int $course): void
-    {
-        $query->where('ref_cod_curso', $course);
-    }
-
-
-    /**
-     * Filtra diferentes series
-     *
-     * @param Builder $query
-     * @param int $serie_exclude
-     * @return void
-     */
-    public function scopeWhereNotGrade(Builder $query, int $serie_exclude): void
-    {
-        $query->where('cod_serie','<>',$serie_exclude);
-    }
-
-    /**
-     * Filtra por séries presentes na escola
-     *
-     * @param Builder $query
-     * @param int $school
-     * @return void
-     */
-    public function scopeWhereSchool(Builder $query, int $school): void
-    {
-        $query->whereHas('schools', function ($q) use ($school) {
-            $q->where('cod_escola', $school);
-        });
-    }
-
-    /**
-     * Filtra por Séries não presentes na escola
-     *
-     * @param Builder $query
-     * @param int $school_exclude
-     * @return void
-     */
-    public function scopeWhereNotSchool(Builder $query, int $school_exclude): void
-    {
-        $query->whereDoesntHave('schools', function ($q) use ($school_exclude) {
-            $q->where('cod_escola', $school_exclude);
-        });
-    }
-
-    /**
-     * Ordena por nome e curso
-     *
-     * @param Builder $query
-     * @return void
-     */
-    public function scopeOrderByNameAndCourse(Builder $query): void
-    {
-        $query->orderBy('nm_serie')->orderBy('ref_cod_curso');
     }
 }

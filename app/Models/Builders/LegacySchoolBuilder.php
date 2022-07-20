@@ -33,4 +33,48 @@ class LegacySchoolBuilder extends LegacyBuilder
     {
         return $this->whereInstitution($institution);
     }
+
+    /**
+     * Ordena por nome
+     *
+     * @param string $direction
+     * @return LegacySchoolBuilder
+     */
+    public function orderByName(string $direction = 'asc'): self
+    {
+        return $this->joinOrganization()->orderBy('fantasia',$direction);
+    }
+
+    /**
+     * Filtra por Instituição
+     *
+     * @param int $institution
+     * @return LegacySchoolBuilder
+     */
+    public function whereInstitution(int $institution): self
+    {
+        return $this->where('ref_cod_instituicao', $institution);
+    }
+
+
+    /**
+     * Realiza a junçao com organização
+     *
+     * @return LegacySchoolBuilder
+     */
+    public function joinOrganization(): self
+    {
+        return $this->join('cadastro.juridica','idpes','ref_idpes');
+    }
+
+    /**
+     * Filtra por Ativo
+     *
+     * @return LegacySchoolBuilder
+     */
+    public function active(): self
+    {
+        return $this->where('escola.ativo', 1);
+    }
+
 }

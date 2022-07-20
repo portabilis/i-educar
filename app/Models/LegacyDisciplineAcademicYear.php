@@ -4,10 +4,14 @@ namespace App\Models;
 
 use App\Models\Builders\LegacyDisciplineAcademicYearBuilder;
 use App\Traits\LegacyAttribute;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
+/**
+ * LegacyDisciplineAcademicYear
+ *
+ * @method static LegacyDisciplineAcademicYearBuilder query()
+ */
 class LegacyDisciplineAcademicYear extends Pivot
 {
     use LegacyAttribute;
@@ -84,43 +88,5 @@ class LegacyDisciplineAcademicYear extends Pivot
      */
     public function getWorkloadAttribute() {
         return $this->carga_horaria;
-    }
-
-
-    /**
-     * Filtra por curso
-     *
-     * @param Builder $query
-     * @param int $course
-     * @return void
-     */
-    public function scopeWhereCourse(Builder $query, int $course): void
-    {
-        $query->whereHas('grade',function ($q) use($course){
-            $q->whereCourse($course);
-        });
-    }
-
-    /**
-     * Filtra por série
-     *
-     * @param Builder $query
-     * @param int $grade
-     * @return void
-     */
-    public function scopeWhereGrade(Builder $query, int $grade ): void
-    {
-        $query->where('ano_escolar_id',$grade);
-    }
-
-    /**
-     * Filtra somente os distintos por id
-     *
-     * @param Builder $query
-     * @return void
-     */
-    public function scopeDistinctDiscipline(Builder $query): void
-    {
-        $query->distinct('componente_curricular_id');
     }
 }

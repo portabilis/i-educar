@@ -2,8 +2,6 @@
 
 namespace App\Models\Builders;
 
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 
 class LegacyEvaluationRuleBuilder extends LegacyBuilder
@@ -30,5 +28,27 @@ class LegacyEvaluationRuleBuilder extends LegacyBuilder
     public function filterInstitution(int $institution): self
     {
         return $this->whereInstitution($institution);
+    }
+
+    /**
+     * Ordena por nome
+     *
+     * @param string $direction
+     * @return LegacyEvaluationRuleBuilder
+     */
+    public function orderByName(string $direction = 'asc'): self
+    {
+        return $this->orderBy('nome',$direction);
+    }
+
+    /**
+     * Filtra por Instituição
+     *
+     * @param int $institution
+     * @return LegacyEvaluationRuleBuilder
+     */
+    public function whereInstitution(int $institution): self
+    {
+        return $this->where('instituicao_id', $institution);
     }
 }

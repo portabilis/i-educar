@@ -2,8 +2,6 @@
 
 namespace App\Models\Builders;
 
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 
 class LegacySchoolAcademicYearBuilder extends LegacyBuilder
@@ -33,7 +31,7 @@ class LegacySchoolAcademicYearBuilder extends LegacyBuilder
     }
 
     /**
-     * Filtra por Anos maiores
+     * Filtra por anos maiores
      *
      * @param int $year
      * @return $this
@@ -41,5 +39,16 @@ class LegacySchoolAcademicYearBuilder extends LegacyBuilder
     public function filterYear(int $year): self
     {
         return $this->whereGteYear($year);
+    }
+
+    /**
+     * Filtra por anos maiores
+     *
+     * @param int $year
+     * @return LegacySchoolAcademicYearBuilder
+     */
+    public function whereGteYear(int $year): self
+    {
+        return $this->where('ano', '>=', $year);
     }
 }

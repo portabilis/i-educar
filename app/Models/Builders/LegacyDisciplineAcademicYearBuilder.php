@@ -2,8 +2,6 @@
 
 namespace App\Models\Builders;
 
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 
 class LegacyDisciplineAcademicYearBuilder extends LegacyBuilder
@@ -43,5 +41,39 @@ class LegacyDisciplineAcademicYearBuilder extends LegacyBuilder
     public function filterGrade(int $grade): self
     {
         return $this->whereGrade($grade);
+    }
+
+    /**
+     * Filtra somente os distintos por id
+     *
+     * @return LegacyDisciplineAcademicYearBuilder
+     */
+    public function distinctDiscipline(): self
+    {
+        return $this->distinct('componente_curricular_id');
+    }
+
+    /**
+     * Filtra por série
+     *
+     * @param int $grade
+     * @return LegacyDisciplineAcademicYearBuilder
+     */
+    public function whereGrade(int $grade ): self
+    {
+        return $this->where('ano_escolar_id',$grade);
+    }
+
+    /**
+     * Filtra por curso
+     *
+     * @param int $course
+     * @return LegacyDisciplineAcademicYearBuilder
+     */
+    public function whereCourse(int $course): self
+    {
+        return $this->whereHas('grade',function ($q) use($course){
+            $q->whereCourse($course);
+        });
     }
 }

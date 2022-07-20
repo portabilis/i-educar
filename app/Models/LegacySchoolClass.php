@@ -32,6 +32,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property LegacySchool       $school
  * @property LegacySchoolGrade  $schoolGrade
  * @property LegacyEnrollment[] $enrollments
+ * @method static LegacySchoolClassBuilder query()
  */
 class LegacySchoolClass extends Model
 {
@@ -525,101 +526,6 @@ class LegacySchoolClass extends Model
     }
 
     /**
-     * Filtra por Instituição
-     *
-     * @param Builder $query
-     * @param int $institution
-     * @return void
-     */
-    public function scopeWhereInstitution(Builder $query, int $institution): void
-    {
-        $query->where('ref_cod_instituicao', $institution);
-    }
-
-    /**
-     * Ordena por nome
-     *
-     * @param Builder $query
-     * @param string $direction
-     * @return void
-     */
-    public function scopeOrderByName(Builder $query, string $direction = 'asc'): void
-    {
-        $query->orderBy('nm_turma',$direction);
-    }
-
-    /**
-     * Filtra por Curso
-     *
-     * @param Builder $query
-     * @param int $course
-     * @return void
-     */
-    public function scopeWhereCourse(Builder $query, int $course): void
-    {
-        $query->where('ref_cod_curso', $course);
-
-    }
-
-    /**
-     * Filtra por ano escolar em progresso
-     *
-     * @param Builder $query
-     * @param int|null $year
-     * @return void
-     */
-    public function scopeWhereInProgress(Builder $query): void
-    {
-        $query->whereHas('academic_years',function ($q){
-            $q->inProgress();
-        });
-    }
-
-    /**
-     * Filtra pelo ano e em progresso
-     *
-     * @param Builder $query
-     * @param int $year
-     * @return void
-     */
-    public function scopeWhereInProgressYear(Builder $query, int $year): void
-    {
-        $query->whereHas('academic_years',function ($q) use($year){
-            $q->inProgress();
-            $q->whereYear($year);
-        });
-    }
-
-    /**
-     * Filtra por Escola
-     *
-     * @param Builder $query
-     * @param int $school
-     * @return void
-     */
-    public function scopeWhereSchool(Builder $query, int $school): void
-    {
-        $query->where('ref_ref_cod_escola', $school);
-    }
-
-    /**
-     * Filtra por Serie
-     *
-     * @param Builder $query
-     * @param int $grade
-     * @return void
-     */
-    public function scopeWhereGrade(Builder $query, int $grade): void
-    {
-        $query->where(function ($q) use($grade){
-            $q->whereHas('grades',function ($q) use($grade){
-                $q->where('cod_serie',$grade);
-            });
-            $q->orWhere('ref_ref_cod_serie',$grade);
-        });
-    }
-
-    /**
      * Retorna o turno da turma.
      *
      * Relação com turma_turno.
@@ -629,15 +535,5 @@ class LegacySchoolClass extends Model
     public function period()
     {
         return $this->belongsTo(LegacyPeriod::class, 'turma_turno_id');
-    }
-
-    /**
-     * @param Builder $query
-     *
-     * @return Builder
-     */
-    public function scopeActive($query)
-    {
-        return $query->where('ativo', 1);
     }
 }

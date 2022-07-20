@@ -9,6 +9,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+/**
+ * LegacyEvaluationRule
+ *
+ * @method static LegacyEvaluationRuleBuilder query()
+ */
 class LegacyEvaluationRule extends Model
 {
     use LegacyAttribute;
@@ -138,29 +143,5 @@ class LegacyEvaluationRule extends Model
     public function getNameAttribute()
     {
         return $this->nome;
-    }
-
-    /**
-     * Filtra por Instituição
-     *
-     * @param Builder $query
-     * @param int $institution
-     * @return void
-     */
-    public function scopeWhereInstitution(Builder $query, int $institution): void
-    {
-        $query->where('instituicao_id', $institution);
-    }
-
-    /**
-     * Ordena por nome
-     *
-     * @param Builder $query
-     * @param string $direction
-     * @return void
-     */
-    public function scopeOrderByName(Builder $query, string $direction = 'asc'): void
-    {
-        $query->orderBy('nome',$direction);
     }
 }

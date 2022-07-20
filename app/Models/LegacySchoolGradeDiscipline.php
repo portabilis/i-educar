@@ -4,10 +4,15 @@ namespace App\Models;
 
 use App\Models\Builders\LegacySchoolGradeDisciplineBuilder;
 use App\Traits\LegacyAttribute;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+
+/**
+ * LegacySchoolGradeDiscipline
+ *
+ * @method static LegacySchoolGradeDisciplineBuilder query()
+ */
 class LegacySchoolGradeDiscipline extends Model
 {
     use LegacyAttribute;
@@ -72,40 +77,5 @@ class LegacySchoolGradeDiscipline extends Model
     public function discipline()
     {
         return $this->belongsTo(LegacyDiscipline::class, 'ref_cod_disciplina');
-    }
-
-    /**
-     * Filtra por escola
-     *
-     * @param Builder $query
-     * @param int $school
-     * @return void
-     */
-    public function scopeWhereSchool(Builder $query, int $school): void
-    {
-        $query->where('ref_ref_cod_escola',$school);
-    }
-
-    /**
-     * Filtra por escola
-     *
-     * @param Builder $query
-     * @param int $grade
-     * @return void
-     */
-    public function scopeWhereGrade(Builder $query, int $grade): void
-    {
-        $query->where('ref_ref_cod_serie',$grade);
-    }
-
-    /**
-     * Filtra somente os distintos por id
-     *
-     * @param Builder $query
-     * @return void
-     */
-    public function scopeDistinctDiscipline(Builder $query): void
-    {
-        $query->distinct('ref_cod_disciplina');
     }
 }
