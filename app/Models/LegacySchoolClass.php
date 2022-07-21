@@ -148,16 +148,6 @@ class LegacySchoolClass extends Model
         return $this->cod_turma;
     }
 
-    public function toArray() {
-        $data = parent::toArray();
-        $data->map(function ($item) {
-            return [
-                'id' => $item->id,
-                'name' => $item->name
-            ];
-        });
-    }
-
     /**
      * @return string
      */

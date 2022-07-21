@@ -148,7 +148,6 @@ class LegacySchoolClassBuilder extends LegacyBuilder
         });
     }
 
-
     /**
      * Filtra por Curso
      *
