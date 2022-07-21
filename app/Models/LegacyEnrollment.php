@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int                $id
  * @property int                $registration_id
  * @property int                $school_class_id
+ * @property int                $etapa_educacenso
  * @property string             $studentName
  * @property DateTime           $date
  * @property LegacyRegistration $registration
@@ -50,7 +51,8 @@ class LegacyEnrollment extends Model
         'tipo_itinerario',
         'composicao_itinerario',
         'curso_itinerario',
-        'itinerario_concomitante'
+        'itinerario_concomitante',
+        'etapa_educacenso'
     ];
 
     /**
