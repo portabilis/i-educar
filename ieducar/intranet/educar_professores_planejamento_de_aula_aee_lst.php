@@ -32,8 +32,8 @@ return new class extends clsListagem {
     public $data_inicial;
     public $data_final;
 
-    //public $etapa;
-    //public $fase_etapa;
+    public $etapa;
+    public $fase_etapa;
 
     public function Gerar()
     {
@@ -46,9 +46,12 @@ return new class extends clsListagem {
         $lista_busca = [
             'Data inicial',
             'Data final',
-            'Aluno',
             'Turma',
-            'Escola'
+            'S&eacute;rie',
+            'Escola',
+            'Etapa',
+            'Componente Curricular',
+            'Professor'
         ];
 
         $this->addCabecalhos($lista_busca);
@@ -58,18 +61,20 @@ return new class extends clsListagem {
         }
 
         $this->inputsHelper()->dynamic(['ano'], ['required' => false]);
-        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie', 'turma']);
-  
+        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie', 'turma'], ['required' => false]);
+        //$this->inputsHelper()->turmaTurno(['required' => false, 'label' => 'Turno']);
+        $this->inputsHelper()->dynamic('componenteCurricular', ['required' => false]);
+
         $this->campoQuebra();
         $this->campoRotulo('filtros_periodo', '<b>Filtros por período</b>');
 
         $this->inputsHelper()->dynamic(['dataInicial'], ['required' => false, 'value' => $this->data_inicial]);
         $this->inputsHelper()->dynamic(['dataFinal'], ['required' => false, 'value' => $this->data_final]);
-     
-        $this->campoQuebra();
-        //$this->campoRotulo('filtros_etapa', '<b>Filtros por etapa</b>');
 
-        //$this->inputsHelper()->dynamic(['faseEtapa'], ['required' => false, 'label' => 'Etapa']);
+        $this->campoQuebra();
+        $this->campoRotulo('filtros_etapa', '<b>Filtros por etapa</b>');
+
+        $this->inputsHelper()->dynamic(['faseEtapa'], ['required' => false, 'label' => 'Etapa']);
 
         // Paginador
         $this->limite = 20;
@@ -110,27 +115,49 @@ return new class extends clsListagem {
             $this->ref_cod_instituicao,
             $this->ref_cod_escola,
             $this->ref_cod_curso,
+            $this->ref_cod_serie,
             $this->ref_cod_turma,
-            $this->ref_cod_matricula,
+            $this->ref_cod_componente_curricular,
+            $this->turma_turno_id,
             $this->data_inicial,
             $this->data_final,
+            $this->fase_etapa,
             $eh_professor ? $this->pessoa_logada : null         // Passe o ID do servidor caso ele seja um professor
         );
 
-        $total = /*$obj_turma->_total*/count($lista); 
+        $total = $obj_plano->_total;
         // monta a lista
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
+                $obj = new clsModulesPlanejamentoAulaComponenteCurricularAee();
+                $componentesCurriculares = $obj->lista($registro['id']);
+
+                // $obj = new clsPmieducarSerie();
+                // $tipo_presenca = $obj->tipoPresencaRegraAvaliacao($registro['cod_serie']);
+
                 $data_inicial_formatada = dataToBrasil($registro['data_inicial']);
                 $data_final_formatada = dataToBrasil($registro['data_final']);
 
                 $lista_busca = [
                     "<a href=\"educar_professores_planejamento_de_aula_aee_det.php?id={$registro['id']}\">{$data_inicial_formatada}</a>",
                     "<a href=\"educar_professores_planejamento_de_aula_aee_det.php?id={$registro['id']}\">{$data_final_formatada}</a>",
-                    "<a href=\"educar_professores_planejamento_de_aula_aee_det.php?id={$registro['id']}\">{$registro['aluno']}</a>",
                     "<a href=\"educar_professores_planejamento_de_aula_aee_det.php?id={$registro['id']}\">{$registro['turma']}</a>",
-                    "<a href=\"educar_professores_planejamento_de_aula_aee_det.php?id={$registro['id']}\">{$registro['escola']}</a>"
+                    "<a href=\"educar_professores_planejamento_de_aula_aee_det.php?id={$registro['id']}\">{$registro['serie']}</a>",
+                    "<a href=\"educar_professores_planejamento_de_aula_aee_det.php?id={$registro['id']}\">{$registro['escola']}</a>",
+                    "<a href=\"educar_professores_planejamento_de_aula_aee_det.php?id={$registro['id']}\">{$registro['fase_etapa']}º {$registro['etapa']}</a>"
                 ];
+
+                if (isset($componentesCurriculares) && is_array($componentesCurriculares)) {
+                    $abreviatura = '';
+                    foreach ($componentesCurriculares as $componenteCurricular) {
+                        $abreviatura .= $componenteCurricular['abreviatura'].'<br>';
+                    }
+                    $lista_busca[] = "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">{$abreviatura}</a>";
+                } else {
+                    $lista_busca[] = "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">—</a>";
+                }
+
+                $lista_busca[] = "<a href=\"educar_professores_planejamento_de_aula_aee_det.php?id={$registro['id']}\">{$registro['professor']}</a>";
 
                 $this->addLinhas($lista_busca);
             }
@@ -144,7 +171,7 @@ return new class extends clsListagem {
         }
         $this->largura = '100%';
 
-        $this->breadcrumb('Listagem de planos de aula - AEE', [
+        $this->breadcrumb('Listagem de planos de aula AEE', [
             url('intranet/educar_professores_index.php') => 'Professores',
         ]);
     }
