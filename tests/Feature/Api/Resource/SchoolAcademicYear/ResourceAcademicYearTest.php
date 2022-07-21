@@ -4,6 +4,7 @@ namespace Tests\Feature\Api\Resource\SchoolAcademicYear;
 
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolAcademicYear;
+use Database\Factories\LegacySchoolAcademicYearFactory;
 use Database\Factories\LegacySchoolFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Testing\Fluent\AssertableJson;
@@ -32,7 +33,13 @@ class ResourceAcademicYearTest extends TestCase
     {
         parent::setUp();
         //escolas
-        $schools = LegacySchoolFactory::new()->count(2)->hasAcademicYears(4)->create();
+        $schools = LegacySchoolFactory::new()->count(2)->create();
+        $schools->each(function ($school) {
+            LegacySchoolAcademicYearFactory::new()->create(['ref_cod_escola'=>$school->cod_escola,'ano' => now()->year]);
+            LegacySchoolAcademicYearFactory::new()->create(['ref_cod_escola'=>$school->cod_escola,'ano' => now()->subYear()->year]);
+            LegacySchoolAcademicYearFactory::new()->create(['ref_cod_escola'=>$school->cod_escola,'ano' => now()->subYears(2)->year]);
+            LegacySchoolAcademicYearFactory::new()->create(['ref_cod_escola'=>$school->cod_escola,'ano' => now()->subYears(3)->year]);
+        });
         //escola
         $this->school = $schools->first();
         //ano

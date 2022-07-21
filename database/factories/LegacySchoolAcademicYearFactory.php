@@ -23,7 +23,7 @@ class LegacySchoolAcademicYearFactory extends Factory
     {
         return [
             'ref_cod_escola' => LegacySchoolFactory::new()->create(),
-            'ano' => $this->faker->unique()->year,
+            'ano' => now()->year,
             'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
             'andamento' => 1,
             'data_cadastro' => now(),

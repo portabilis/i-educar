@@ -25,7 +25,7 @@ class LegacySchoolStageFactory extends Factory
         $stageType = LegacyStageTypeFactory::new()->unique()->make();
 
         return [
-            'ref_ano' => $schoolAcademicYear->ano,
+            'ref_ano' => now()->year,
             'ref_ref_cod_escola' => $schoolAcademicYear->ref_cod_escola,
             'sequencial' => $this->faker->unique()->numberBetween(1, 9),
             'ref_cod_modulo' => $stageType->getKey(),
