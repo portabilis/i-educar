@@ -352,18 +352,13 @@ return new class extends clsCadastro {
         $this->campoListaPesq('ref_cod_regente', 'Professor/Regente', $array_servidor, $this->ref_cod_regente, '', '', false, '', '', null, null, '', true, false, false);
 
         // Turma tipo
-        $opcoes = ['' => 'Selecione'];
-
         $query = LegacySchoolClassType::query()->where('ativo', 1)
             ->orderBy('nm_tipo', 'ASC');
         if (is_numeric($this->ref_cod_instituicao)) {
             $query->where('ref_cod_instituicao', $this->ref_cod_instituicao);
         }
-        $lista = $query->pluck('nm_tipo', 'cod_turma_tipo');
+        $opcoes = collect(['' => 'Selecione'])->merge($query->pluck('nm_tipo', 'cod_turma_tipo'));
 
-        foreach ($lista as $key => $value) {
-            $opcoes[$key] = $value;
-        }
         $script = 'javascript:showExpansivelIframe(520, 170, \'educar_turma_tipo_cad_pop.php\');';
 
         $script = sprintf(
