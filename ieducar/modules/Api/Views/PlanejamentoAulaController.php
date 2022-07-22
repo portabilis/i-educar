@@ -64,14 +64,20 @@ class PlanejamentoAulaController extends ApiCoreController
             $conteudosVerificar = [];
 
             foreach ($conteudos as $conteudo) {
+                if ($conteudo[0] == 0 || empty($conteudo[0])) {
+                    continue;
+                }
                 $conteudosVerificar[] = $conteudo[0];
             }
 
-            $obj = new clsModulesComponenteMinistradoConteudo();
-            $frequenciaUtilizadas = $obj->existeLigacaoRegistroAula($conteudosVerificar);
 
-            foreach ($frequenciaUtilizadas as $frequencia) {
-                $frequencia_ids[] = $frequencia['frequencia_id'];
+            if (count($conteudosVerificar) > 0) {
+                $obj = new clsModulesComponenteMinistradoConteudo();
+                $frequenciaUtilizadas = $obj->existeLigacaoRegistroAula($conteudosVerificar);
+
+                foreach ($frequenciaUtilizadas as $frequencia) {
+                    $frequencia_ids[] = $frequencia['frequencia_id'];
+                }
             }
 
             return ['frequencia_ids' => $frequencia_ids];

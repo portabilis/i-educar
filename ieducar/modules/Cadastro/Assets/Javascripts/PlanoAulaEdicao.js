@@ -359,8 +359,9 @@
 
         function handleTentaEditarPlanoAula (response) {
             registrosAula = response.frequencia_ids;
+            let obrigatorio_conteudo        = document.getElementById("obrigatorio_conteudo").value;
 
-            if (registrosAula.length == 0) {
+            if ((obrigatorio_conteudo.length != 1 && obrigatorio_conteudo != '1') || registrosAula.length == 0) {
                 editarPlanoAula();
             } else {
                 openModal();
@@ -509,13 +510,6 @@
           let turma                     = document.getElementById("ref_cod_turma").value;
           let faseEtapa                 = document.getElementById("fase_etapa").value;
           let obrigatorio_conteudo        = document.getElementById("obrigatorio_conteudo").value;
-
-
-          console.log(obrigatorio_conteudo)
-          console.log(obrigatorio_conteudo.length)
-          console.log((obrigatorio_conteudo == '1'))
-          console.log((obrigatorio_conteudo.length == 1 && obrigatorio_conteudo == '1'))
-          console.log(conteudos)
 
           // VALIDAÇÃO
           if (!ehDataValida(new Date(data_inicial))) { alert("Data inicial não é válida."); return; }
