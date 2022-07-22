@@ -180,11 +180,6 @@ function certidaoCasamentoInvalida() {
 }
 
 var submitForm = function(event) {
-
-  if (!validateCidade()){
-    return;
-  }
-
   if (!validateFieldSUS()) {
     return;
   }

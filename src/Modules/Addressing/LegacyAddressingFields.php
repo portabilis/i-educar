@@ -43,28 +43,25 @@ trait LegacyAddressingFields
             return;
         }
 
-        if ($optionalFields) {
-            $validation_fields = [$this->city_id];
-        } else {
+        if (!$optionalFields) {
             $validation_fields = [$this->city_id, $this->address, $this->neighborhood, $this->postal_code];
-        }
+            $original_count = count($validation_fields);
+            $hasEmpty = array_filter($validation_fields);
 
-        $original_count = count($validation_fields);
-        $hasEmpty = array_filter($validation_fields);
-
-        if (count($hasEmpty) < $original_count) {
-            return;
+            if (count($hasEmpty) < $original_count) {
+                return;
+            }
         }
 
         $place = Place::query()->updateOrCreate([
             'id' => $person->place->id ?? 0,
         ], [
-            'address' => $this->address,
+            'address' => $this->address ?: null,
             'number' => $this->number ?: null,
-            'complement' => $this->complement,
-            'neighborhood' => $this->neighborhood,
-            'city_id' => $this->city_id,
-            'postal_code' => idFederal2int($this->postal_code),
+            'complement' => $this->complement ?: null,
+            'neighborhood' => $this->neighborhood ?: null,
+            'city_id' => $this->city_id ?: null,
+            'postal_code' => empty($this->postal_code) ? null : idFederal2int($this->postal_code),
         ]);
 
         PersonHasPlace::query()->updateOrCreate([
