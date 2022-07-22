@@ -359,14 +359,11 @@ return new class extends clsCadastro {
         if (is_numeric($this->ref_cod_instituicao)) {
             $query->where('ref_cod_instituicao', $this->ref_cod_instituicao);
         }
-        $lista = $query->get()->toArray();
+        $lista = $query->pluck('nm_tipo', 'cod_turma_tipo');
 
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $opcoes[$registro['cod_turma_tipo']] = $registro['nm_tipo'];
-            }
+        foreach ($lista as $key => $value) {
+            $opcoes[$key] = $value;
         }
-
         $script = 'javascript:showExpansivelIframe(520, 170, \'educar_turma_tipo_cad_pop.php\');';
 
         $script = sprintf(
