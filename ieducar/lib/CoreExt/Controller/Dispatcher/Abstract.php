@@ -118,7 +118,7 @@ abstract class CoreExt_Controller_Dispatcher_Abstract implements CoreExt_Control
         $path = explode('/', $path);
 
         $baseurl = parse_url($this->getRequest()->getBaseurl(), PHP_URL_PATH);
-        $baseurl = explode('/', $baseurl);
+        $baseurl = is_null($baseurl) ? [''] : explode('/', $baseurl);
 
         $script = explode('/', $this->getRequest()->get('SCRIPT_FILENAME'));
         $script = array_pop($script);

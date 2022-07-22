@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ExportController;
 use App\Http\Controllers\SchoolClassController;
 use App\Http\Controllers\WebController;
 use App\Process;
@@ -8,7 +9,10 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes(['register' => false]);
 
-Route::redirect('/', 'intranet/index.php');
+Route::redirect('/', '/web');
+
+Route::redirect('intranet/index.php', '/web')
+    ->name('home');
 
 Route::any('module/Api/{uri}', 'LegacyController@api')->where('uri', '.*');
 
@@ -81,10 +85,6 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::get('/unificacao-pessoa', 'PersonLogUnificationController@index')->name('person-log-unification.index');
     Route::get('/unificacao-pessoa/{unification}', 'PersonLogUnificationController@show')->name('person-log-unification.show');
 
-    Route::get('intranet/index.php', 'LegacyController@intranet')
-        ->defaults('uri', 'index.php')
-        ->name('home');
-
     Route::get('intranet/educar_configuracoes_index.php', 'LegacyController@intranet')
         ->defaults('uri', 'educar_configuracoes_index.php')
         ->name('settings');
@@ -122,7 +122,7 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::post('/notificacoes/marca-todas-como-lidas', 'NotificationController@markAllRead')->name('notifications.mark-all-read');
 
     Route::get('/exportacoes', 'ExportController@index')->middleware('can:view:' . Process::DATA_EXPORT)->name('export.index');
-    Route::get('/exportacoes/novo', 'ExportController@form')->middleware('can:modify:' . Process::DATA_EXPORT)->name('export.form');
+    Route::get('/exportacoes/novo', [ExportController::class,'form'])->middleware('can:modify:' . Process::DATA_EXPORT)->name('export.form');
     Route::post('/exportacoes/exportar', 'ExportController@export')->middleware('can:modify:' . Process::DATA_EXPORT)->name('export.export');
 
     Route::get('/atualiza-data-entrada', 'UpdateRegistrationDateController@index')->middleware('can:view:' . Process::UPDATE_REGISTRATION_DATE)->name('update-registration-date.index');

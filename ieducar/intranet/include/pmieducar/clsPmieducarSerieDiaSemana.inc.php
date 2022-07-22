@@ -73,6 +73,7 @@ class clsPmieducarSerieDiaSemana extends Model
     {
         if (is_numeric($this->dia_semana)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_ref_cod_serie)) {

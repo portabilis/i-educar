@@ -292,7 +292,7 @@ class clsPmieducarHistoricoEscolar extends Model
                 $gruda = ', ';
             }
 
-            if (is_numeric($aceleracao)) {
+            if (is_numeric($this->aceleracao)) {
                 $campos .= "{$gruda}aceleracao";
                 $valores .= "{$gruda}'{$this->aceleracao}'";
                 $gruda = ', ';
@@ -354,6 +354,7 @@ class clsPmieducarHistoricoEscolar extends Model
     {
         if (is_numeric($this->ref_cod_aluno) && is_numeric($this->sequencial) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_usuario_exc)) {

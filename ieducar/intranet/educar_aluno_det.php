@@ -920,14 +920,14 @@ return new class extends clsDetalhe {
         $this->breadcrumb('Aluno', ['/intranet/educar_index.php' => 'Escola']);
         // js
         $scripts = [
-            '/modules/Portabilis/Assets/Javascripts/Utils.js',
-            '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
-            '/modules/Cadastro/Assets/Javascripts/AlunoShow.js?version=3'
+            '/vendor/legacy/Portabilis/Assets/Javascripts/Utils.js',
+            '/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/AlunoShow.js?version=3'
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
 
-        $styles = ['/modules/Cadastro/Assets/Stylesheets/Aluno.css'];
+        $styles = ['/vendor/legacy/Cadastro/Assets/Stylesheets/Aluno.css'];
 
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
     }

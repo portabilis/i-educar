@@ -43,7 +43,7 @@ return new class extends clsListagem {
 
             // Filtros de Busca
             $this->campoTexto('campo_busca', 'Pessoa', $this->campo_busca, 35, 255, false, false, false, 'Código/Nome');
-            $this->campoCpf('cpf', 'CPF', ($this->cpf)?int2CPF(idFederal2int($this->cpf)):'');
+            $this->campoCpf('cpf', 'CPF', !empty($this->cpf) ? int2CPF(idFederal2int($this->cpf)) : '');
 
             $chave_busca = @$_GET['campo_busca'];
             $cpf = @$_GET['cpf'];

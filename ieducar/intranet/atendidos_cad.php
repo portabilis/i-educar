@@ -739,19 +739,19 @@ return new class extends clsCadastro {
         }
 
         $styles = [
-            '/modules/Portabilis/Assets/Stylesheets/Frontend.css',
-            '/modules/Portabilis/Assets/Stylesheets/Frontend/Resource.css',
-            '/modules/Cadastro/Assets/Stylesheets/PessoaFisica.css',
-            '/modules/Cadastro/Assets/Stylesheets/ModalCadastroPais.css',
+            '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend.css',
+            '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend/Resource.css',
+            '/vendor/legacy/Cadastro/Assets/Stylesheets/PessoaFisica.css',
+            '/vendor/legacy/Cadastro/Assets/Stylesheets/ModalCadastroPais.css',
         ];
 
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
 
         $script = [
-            '/modules/Cadastro/Assets/Javascripts/PessoaFisica.js',
-            '/modules/Cadastro/Assets/Javascripts/Addresses.js',
-            '/modules/Cadastro/Assets/Javascripts/Endereco.js',
-            '/modules/Cadastro/Assets/Javascripts/ModalCadastroPais.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/PessoaFisica.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/Addresses.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/Endereco.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/ModalCadastroPais.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $script);
@@ -1089,8 +1089,6 @@ return new class extends clsCadastro {
 
                 return false;
             }
-
-            return false;
         } else {
             $this->objPhoto = null;
 

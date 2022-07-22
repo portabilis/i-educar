@@ -205,7 +205,7 @@ return new class extends clsCadastro {
 
     protected function loadAssets()
     {
-        $jsFiles = ['/modules/BuscaAtiva/BuscaAtiva.js', '/modules/BuscaAtiva/educar-busca-ativa-cad.js'];
+        $jsFiles = ['/vendor/legacy/BuscaAtiva/BuscaAtiva.js', '/vendor/legacy/BuscaAtiva/educar-busca-ativa-cad.js'];
         Portabilis_View_Helper_Application::loadJavascript($this, $jsFiles);
     }
 

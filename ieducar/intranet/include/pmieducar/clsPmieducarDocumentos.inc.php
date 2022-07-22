@@ -174,6 +174,7 @@ class clsPmieducarDocumentos extends Model
     {
         if (is_numeric($this->ref_cod_pessoa_educ)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_idorg_rg)) {

@@ -419,16 +419,33 @@ class LegacySchoolClass extends Model
      */
     public function getDisciplines()
     {
-        if ($this->course->is_standard_calendar) {
-            return $this->gradeDisciplines()
+        if ((bool) $this->multiseriada) {
+            $multigrades = $this->multigrades->pluck('serie_id')->toArray();
+
+            return LegacySchoolGradeDiscipline::query()
+                ->where('ref_ref_cod_escola', $this->school_id)
+                ->whereIn('ref_ref_cod_serie', $multigrades)
                 ->whereRaw('? = ANY(anos_letivos)', [$this->year])
-                ->get();
+                ->get()
+                ->map(function ($schoolGrade) {
+                    return $schoolGrade->discipline;
+                });
         }
 
-        return $this->disciplines()
-            ->where('ano_escolar_id', $this->grade_id)
-            ->where('escola_id', $this->school_id)
-            ->get();
+        $disciplinesOfSchoolClass = $this->disciplines()->get();
+
+        if ($disciplinesOfSchoolClass->count() > 0) {
+            return $disciplinesOfSchoolClass;
+        }
+
+        return LegacySchoolGradeDiscipline::query()
+            ->where('ref_ref_cod_escola', $this->school_id)
+            ->where('ref_ref_cod_serie', $this->grade_id)
+            ->whereRaw('? = ANY(anos_letivos)', [$this->year])
+            ->get()
+            ->map(function ($schoolGrade) {
+                return $schoolGrade->discipline;
+            });
     }
 
     /**

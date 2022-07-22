@@ -246,7 +246,8 @@ return new class extends clsDetalhe {
 
             if (is_string($registro['dias_semana']) && !empty($registro['dias_semana'])) {
                 $registro['dias_semana'] = explode(',', str_replace(['{', '}'], '', $registro['dias_semana']));
-                foreach ($registro['dias_semana'] as $key => $dia) {
+                $diasSemana = '';
+                foreach ($registro['dias_semana'] as $dia) {
                     $diasSemana .= $dias_da_semana[$dia] . '<br>';
                 }
                 $this->addDetalhe(
@@ -322,7 +323,8 @@ return new class extends clsDetalhe {
 
             if (is_string($registro['dias_semana']) && !empty($registro['dias_semana'])) {
                 $registro['dias_semana'] = explode(',', str_replace(['{', '}'], '', $registro['dias_semana']));
-                foreach ($registro['dias_semana'] as $key => $dia) {
+                $diasSemana = '';
+                foreach ($registro['dias_semana'] as $dia) {
                     $diasSemana .= $dias_da_semana[$dia] . '<br>';
                 }
                 $this->addDetalhe(
@@ -365,9 +367,9 @@ return new class extends clsDetalhe {
         ]);
 
         $scripts = [
-            '/modules/Portabilis/Assets/Javascripts/Utils.js',
-            '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
-            '/modules/Cadastro/Assets/Javascripts/TurmaDet.js'
+            '/vendor/legacy/Portabilis/Assets/Javascripts/Utils.js',
+            '/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/TurmaDet.js'
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);

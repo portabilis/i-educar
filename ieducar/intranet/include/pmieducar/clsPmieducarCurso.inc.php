@@ -305,6 +305,7 @@ class clsPmieducarCurso extends Model
         $gruda = '';
         if (is_numeric($this->cod_curso) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_usuario_cad)) {

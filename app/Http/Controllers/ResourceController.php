@@ -160,7 +160,8 @@ abstract class ResourceController extends Controller
 
     protected function validation(Model $model, array $rules)
     {
-       $validator =  Validator::make(Arr::wrap($model),
+        $validator =  Validator::make(
+            Arr::wrap($model),
             [$rules]
         );
 

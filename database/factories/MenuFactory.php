@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class MenuFactory extends Factory
 {
-
     protected $model = Menu::class;
 
     /**
@@ -19,15 +18,15 @@ class MenuFactory extends Factory
     {
         return [
             'parent_id' => null,
-            'title' => $this->faker->domainName,
-            'description' => $this->faker->name,
+            'title' => $this->faker->colorName(),
+            'description' => $this->faker->name(),
             'link' => $this->faker->filePath(),
-            'icon' => $this->faker->imageUrl,
+            'icon' => $this->faker->imageUrl(),
             'order'=> $this->faker->randomDigitNotZero(),
             'type' => $this->faker->randomDigitNotZero(),
             'parent_old' => null,
             'old' => null,
-            'process' => 759,
+            'process' => $this->faker->randomDigitNotZero(),
             'active' => true,
         ];
     }

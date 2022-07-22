@@ -61,7 +61,8 @@ class ResourceTestCase extends TestCase
         $model = $this->newFactory()->make();
 
         $response = $this->post(
-            $this->getUri(), $model->toArray()
+            $this->getUri(),
+            $model->toArray()
         );
 
         $response->assertCreated();
@@ -96,7 +97,8 @@ class ResourceTestCase extends TestCase
         $updatedModel = $this->newFactory()->make();
 
         $response = $this->patch(
-            $this->getUri([$model->getKey()]), $updatedModel->toArray()
+            $this->getUri([$model->getKey()]),
+            $updatedModel->toArray()
         );
 
         $response->assertOk();

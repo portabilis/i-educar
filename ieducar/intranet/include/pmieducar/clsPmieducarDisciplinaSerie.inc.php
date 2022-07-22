@@ -73,6 +73,7 @@ class clsPmieducarDisciplinaSerie extends Model
     {
         if (is_numeric($this->ref_cod_disciplina) && is_numeric($this->ref_cod_serie)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ativo)) {

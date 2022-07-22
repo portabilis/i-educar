@@ -76,7 +76,7 @@ class Portabilis_View_Helper_Input_SimpleSearch extends Portabilis_View_Helper_I
 
     protected function js($objectName, $attrName, $options)
     {
-        $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js';
+        $jsFile = '/vendor/legacy/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js';
         Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
 
         $resourceOptions = 'simpleSearch' . Portabilis_String_Utils::camelize($objectName) . 'Options';
