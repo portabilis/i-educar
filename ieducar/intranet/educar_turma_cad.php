@@ -354,7 +354,7 @@ return new class extends clsCadastro {
         // Turma tipo
         $opcoes = ['' => 'Selecione'];
 
-        $query = LegacySchoolClassType::where('ativo', 1)
+        $query = LegacySchoolClassType::query()->where('ativo', 1)
             ->orderBy('nm_tipo', 'ASC');
         if (is_numeric($this->ref_cod_instituicao)) {
             $query->where('ref_cod_instituicao', $this->ref_cod_instituicao);
