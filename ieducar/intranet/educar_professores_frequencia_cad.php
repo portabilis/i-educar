@@ -378,8 +378,6 @@ return new class extends clsCadastro {
             $podeRegistrar = $podeRegistrar && $data_agora >= $data['inicio'] && $data_agora <= $data['fim'];
         }
 
-        $podeRegistrar = true;
-
         if (!$podeRegistrar) {
             $this->mensagem = 'Cadastro não realizado, pois não é mais possível submeter frequência para esta etapa.<br>';
             $this->simpleRedirect('educar_professores_frequencia_cad.php');
