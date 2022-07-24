@@ -639,6 +639,29 @@ class clsModulesPlanejamentoAula extends Model {
         return false;
     }
 
+    public function existeComponenteByData ($data) {
+        $sql = "
+             SELECT
+                 pa.*,
+                 pacc.componente_curricular_id
+             FROM
+                 modules.planejamento_aula as pa
+             JOIN modules.planejamento_aula_componente_curricular as pacc
+                ON (pacc.planejamento_aula_id = pa.id)
+             WHERE
+                 '{$data}' BETWEEN DATE(pa.data_inicial) AND DATE(pa.data_final)";
+
+        if (is_array($this->ref_componente_curricular_array)) {
+            $sql .= " AND pacc.componente_curricular_id IN (".implode(',', $this->ref_componente_curricular_array).")";
+        }
+
+        $db = new clsBanco();
+        $db->Consulta($sql);
+        $db->ProximoRegistro();
+
+        return $db->Tupla();
+    }
+
     /**
      * Retorna array com registro(s) de aula com ligação com o plano de aula informado ou no caso de erro, false
      *

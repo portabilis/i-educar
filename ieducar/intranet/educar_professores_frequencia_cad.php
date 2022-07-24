@@ -290,6 +290,7 @@ return new class extends clsCadastro {
         $instituicao = $clsInstituicao->primeiraAtiva();
         $obrigatorioRegistroDiarioAtividade = $instituicao['obrigatorio_registro_diario_atividade'];
         $obrigatorioConteudo = $instituicao['permitir_planeja_conteudos'];
+        $utilizar_planejamento_aula = $instituicao['utilizar_planejamento_aula'];
 
         $this->campoMemo('atividades',
             'Registro diário de aula',
@@ -305,8 +306,8 @@ return new class extends clsCadastro {
             false
         );
 
-        if ($obrigatorioConteudo) {
-            $this->adicionarConteudosMultiplaEscolha($obrigatorioConteudo);
+        if ($obrigatorioConteudo && $utilizar_planejamento_aula) {
+            $this->adicionarConteudosMultiplaEscolha();
         }
 
 
@@ -377,10 +378,13 @@ return new class extends clsCadastro {
             $podeRegistrar = $podeRegistrar && $data_agora >= $data['inicio'] && $data_agora <= $data['fim'];
         }
 
+        $podeRegistrar = true;
+
         if (!$podeRegistrar) {
             $this->mensagem = 'Cadastro não realizado, pois não é mais possível submeter frequência para esta etapa.<br>';
             $this->simpleRedirect('educar_professores_frequencia_cad.php');
         }
+
 
         $this->ordens_aulas = [];
 
@@ -390,6 +394,28 @@ return new class extends clsCadastro {
         if (isset($this->ordens_aulas4) && !empty($this->ordens_aulas4)) array_push($this->ordens_aulas, '4');
         if (isset($this->ordens_aulas5) && !empty($this->ordens_aulas5)) array_push($this->ordens_aulas, '5');
 
+        $clsInstituicao = new clsPmieducarInstituicao();
+        $instituicao = $clsInstituicao->primeiraAtiva();
+        $utilizarPlanejamentoAula = $instituicao['utilizar_planejamento_aula'];
+
+        if ($utilizarPlanejamentoAula) {
+            $componenteCurricular = (isset($this->ref_cod_componente_curricular) && !empty($this->ref_cod_componente_curricular)
+                                    ? [$this->ref_cod_componente_curricular]
+                                    : null);
+
+            $obj = new clsModulesPlanejamentoAula(
+                null,
+                null,
+                $componenteCurricular
+            );
+
+            $existe = $obj->existeComponenteByData($data_cadastro);
+
+            if (!$existe) {
+                $this->mensagem = 'Cadastro não realizado, pois não há planejamento de aula para essa data.<br>';
+                $this->simpleRedirect('educar_professores_frequencia_cad.php');
+            }
+        }
 
         $obj = new clsModulesFrequencia(
             null,
