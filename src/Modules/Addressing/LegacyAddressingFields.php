@@ -35,7 +35,7 @@ trait LegacyAddressingFields
         }
     }
 
-    protected function saveAddress($person,$optionalFields = false)
+    protected function saveAddress($person, $optionalFields = false)
     {
         $person = Person::query()->find($person);
 
