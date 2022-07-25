@@ -640,7 +640,8 @@ class clsModulesPlanejamentoAula extends Model {
     }
 
     public function existeComponenteByData ($data) {
-        $sql = "
+        if (!empty($this->ref_cod_turma) && !empty($this->etapa_sequencial)) {
+            $sql = "
              SELECT
                  pa.*,
                  pacc.componente_curricular_id
@@ -649,17 +650,21 @@ class clsModulesPlanejamentoAula extends Model {
              JOIN modules.planejamento_aula_componente_curricular as pacc
                 ON (pacc.planejamento_aula_id = pa.id)
              WHERE
-                 '{$data}' BETWEEN DATE(pa.data_inicial) AND DATE(pa.data_final)";
+                 '{$data}' BETWEEN DATE(pa.data_inicial) AND DATE(pa.data_final)
+                 AND pa.ref_cod_turma = '{$this->ref_cod_turma}' AND pa.etapa_sequencial = '{$this->etapa_sequencial}'";
 
-        if (is_array($this->ref_componente_curricular_array)) {
-            $sql .= " AND pacc.componente_curricular_id IN (".implode(',', $this->ref_componente_curricular_array).")";
+            if (is_array($this->ref_componente_curricular_array)) {
+                $sql .= " AND pacc.componente_curricular_id IN (" . implode(',', $this->ref_componente_curricular_array) . ")";
+            }
+
+            $db = new clsBanco();
+            $db->Consulta($sql);
+            $db->ProximoRegistro();
+
+            return $db->Tupla();
         }
 
-        $db = new clsBanco();
-        $db->Consulta($sql);
-        $db->ProximoRegistro();
-
-        return $db->Tupla();
+        return false;
     }
 
     /**

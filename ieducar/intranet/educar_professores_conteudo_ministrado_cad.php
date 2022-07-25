@@ -139,8 +139,9 @@ return new class extends clsCadastro {
 
             $obj = new clsModulesPlanejamentoAula(
                 null,
-                null,
-                $componenteCurricular
+                $frequencia['detalhes']['ref_cod_turma'],
+                $componenteCurricular,
+                $frequencia['detalhes']['fase_etapa']
             );
 
             $existe = $obj->existeComponenteByData($frequencia['detalhes']['data']);
