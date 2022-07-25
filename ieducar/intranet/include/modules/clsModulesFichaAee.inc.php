@@ -2,7 +2,8 @@
 
 use iEducar\Legacy\Model;
 
-class clsModulesFichaAee extends Model {
+class clsModulesFichaAee extends Model
+{
     public $id;
     public $ref_cod_turma;
     public $ref_cod_matricula;
@@ -26,6 +27,16 @@ class clsModulesFichaAee extends Model {
                 modules.ficha_aee as fa            
             JOIN pmieducar.turma t
                 ON (t.cod_turma = fa.ref_cod_turma)
+            JOIN pmieducar.matricula m
+                ON (m.cod_matricula = fa.ref_cod_matricula)  
+            JOIN pmieducar.aluno a
+                ON (a.cod_aluno = m.ref_cod_aluno)             
+            JOIN cadastro.pessoa p
+                ON (p.idpes = a.ref_idpes)
+            JOIN modules.professor_turma as pt
+                ON (pt.turma_id = fa.ref_cod_turma)
+            JOIN cadastro.pessoa AS pe
+                ON ( pe.idpes = pt.servidor_id )
             JOIN pmieducar.instituicao i
                 ON (i.cod_instituicao = t.ref_cod_instituicao)
             JOIN pmieducar.escola e
@@ -39,11 +50,15 @@ class clsModulesFichaAee extends Model {
         $this->_campos_lista = $this->_todos_campos = '
             fa.id,
             fa.data,
-            i.nm_instituicao AS instituicao,
+            fa.ref_cod_turma,
+            fa.ref_cod_matricula,
+            fa.necessidades_aprendizagem,
+            fa.caracterizacao_pedagogica, 
+            p.nome AS aluno,
             j.fantasia AS escola,
             c.nm_curso AS curso,
             t.nm_turma AS turma,
-
+            pe.nome AS professor
         ';
 
 
@@ -51,23 +66,23 @@ class clsModulesFichaAee extends Model {
             $this->id = $id;
         }
 
+        if (is_string($data)) {
+            $this->data = $data;
+        }
+
         if (is_numeric($ref_cod_turma)) {
             $this->ref_cod_turma = $ref_cod_turma;
         }
 
-        if (is_string($ref_cod_matricula)) {
+        if (is_numeric($ref_cod_matricula)) {
             $this->ref_cod_matricula = $ref_cod_matricula;
         }
 
-        if (is_string($data)) {
-            $this->data = $data;
-        }
-        
-        if(is_string($necessidades_aprendizagem)){
+        if (is_string($necessidades_aprendizagem)) {
             $this->necessidades_aprendizagem = $necessidades_aprendizagem;
         }
 
-        if(is_string($caracterizacao_pedagogica)){
+        if (is_string($caracterizacao_pedagogica)) {
             $this->caracterizacao_pedagogica = $caracterizacao_pedagogica;
         }
     }
@@ -77,43 +92,37 @@ class clsModulesFichaAee extends Model {
      *
      * @return bool
      */
-    public function cadastra() {
-
-        
-        if (is_numeric($this->ref_cod_matricula)) {
+    public function cadastra()
+    {
+        if (is_numeric($this->ref_cod_turma)) {
             $db = new clsBanco();
 
             $this->data = date('Y-m-d');
 
-            $campos = "ref_cod_matricula";
-            $valores = "'{$this->ref_cod_matricula}'";
-
-            if(is_numeric($this->ref_cod_turma)){
-                $campos     .=  ", ref_cod_turma";
-                $valores    .=  ", '$this->ref_cod_turma'";
-            }
+            $campos = "ref_cod_turma, ref_cod_matricula, created_at";
+            $valores = "'{$this->ref_cod_turma}', '{$this->ref_cod_matricula}', (NOW() - INTERVAL '3 HOURS')";
 
             if(is_string($this->data)){
                 $campos     .=  ", data";
                 $valores    .=  ", '{($this->data)}'";
             }
-            
-            if(is_string($this->necessidades_aprendizagem)){
+
+            if (is_string($this->necessidades_aprendizagem)) {
                 $campos     .=  ", necessidades_aprendizagem";
                 $valores    .=  ", '{$db->escapeString($this->necessidades_aprendizagem)}'";
             }
 
-            if(is_string($this->caracterizacao_pedagogica)){
+            if (is_string($this->caracterizacao_pedagogica)) {
                 $campos     .=  ", caracterizacao_pedagogica";
                 $valores    .=  ", '{$db->escapeString($this->caracterizacao_pedagogica)}'";
-            }          
+            }
 
             $db->Consulta("
                 INSERT INTO
                     {$this->_tabela} ( $campos )
                     VALUES ( $valores )
             ");
-           
+
             return true;
         }
 
@@ -125,13 +134,14 @@ class clsModulesFichaAee extends Model {
      *
      * @return bool
      */
-    public function edita() {
-        if (is_numeric($this->id) && is_string($this->atividades)) {
+    public function edita()
+    {
+        if (is_numeric($this->id) && is_string($this->necessidades_aprendizagem)) {
             $db = new clsBanco();
 
-            $set = "atividades = '{$db->escapeString($this->atividades)}',
-                    observacao = NULLIF('{$db->escapeString($this->observacao)}',''),
-                    data_atualizacao = (NOW() - INTERVAL '3 HOURS')";
+            $set = "necessidades_aprendizagem = '{$db->escapeString($this->necessidades_aprendizagem)}',
+                    caracterizacao_pedagogica = NULLIF('{$db->escapeString($this->caracterizacao_pedagogica)}',''),
+                    updated_at = (NOW() - INTERVAL '3 HOURS')";
 
             $db->Consulta("
                 UPDATE
@@ -141,25 +151,7 @@ class clsModulesFichaAee extends Model {
                 WHERE
                     id = '{$this->id}'
             ");
-
-            $obj = new clsModulesComponenteMinistradoConteudoAee();
-            foreach ($obj->lista($this->id) as $key => $conteudo) {
-                $conteudos_atuais[] = $conteudo;
-            }
-
-            $obj = new clsModulesComponenteMinistradoConteudoAee(null, $this->id);
-            $conteudos_diferenca = $obj->retornaDiferencaEntreConjuntosConteudos($conteudos_atuais, $this->conteudos);
-
-            foreach ($conteudos_diferenca['adicionar'] as $key => $conteudo_adicionar){
-                $obj = new clsModulesComponenteMinistradoConteudoAee(null, $this->id, $conteudo_adicionar);
-                $obj->cadastra();
-            }
-
-            foreach ($conteudos_diferenca['remover'] as $key => $conteudo_remover){
-                $obj = new clsModulesComponenteMinistradoConteudoAee(null, $this->id, $conteudo_remover);
-                $obj->excluir();
-            }
-
+            
             return true;
         }
 
@@ -171,18 +163,16 @@ class clsModulesFichaAee extends Model {
      *
      * @return array
      */
-    public function lista (
-        $int_ano = null,
+    public function lista(
+        $data = null,
         $int_ref_cod_ins = null,
         $int_ref_cod_escola = null,
         $int_ref_cod_curso = null,
         $int_ref_cod_turma = null,
-        $int_ref_cod_componente_curricular = null,
-        $time_data_inicial = null,
-        $time_data_final = null,
+        $int_ref_cod_matricula = null,
         $int_servidor_id = null
     ) {
-       
+
         $sql = "
                 SELECT DISTINCT
                     {$this->_campos_lista}
@@ -193,11 +183,6 @@ class clsModulesFichaAee extends Model {
         $whereAnd = ' AND ';
         $filtros = " WHERE TRUE ";
 
-        if (is_numeric($int_ano)) {
-            $filtros .= "{$whereAnd} EXTRACT(YEAR FROM f.data) = '{$int_ano}'";
-            $whereAnd = ' AND ';
-        }
-    
         if (is_numeric($int_ref_cod_ins)) {
             $filtros .= "{$whereAnd} i.cod_instituicao = '{$int_ref_cod_ins}'";
             $whereAnd = ' AND ';
@@ -218,21 +203,6 @@ class clsModulesFichaAee extends Model {
             $whereAnd = ' AND ';
         }
 
-        if (is_numeric($int_ref_cod_componente_curricular)) {
-            $filtros .= "{$whereAnd} k.id = '{$int_ref_cod_componente_curricular}'";
-            $whereAnd = ' AND ';
-        }
-
-        if ($time_data_inicial) {
-            $filtros .= "{$whereAnd} f.data >= '{$time_data_inicial}'";
-            $whereAnd = ' AND ';
-        }
-
-        if ($time_data_final) {
-            $filtros .= "{$whereAnd} f.data <= '{$time_data_final}'";
-            $whereAnd = ' AND ';
-        }
-       
         if (is_numeric($int_servidor_id)) {
             $filtros .= "{$whereAnd} pt.servidor_id = '{$int_servidor_id}'";
             $whereAnd = ' AND ';
@@ -242,7 +212,7 @@ class clsModulesFichaAee extends Model {
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
-        $sql .= $filtros . $this->getOrderby() . $this->getLimite();
+        $sql .= $filtros . 'ORDER BY fa.data DESC' . $this->getLimite();
 
         $this->_total = $db->CampoUnico(
             "SELECT
@@ -279,32 +249,24 @@ class clsModulesFichaAee extends Model {
      *
      * @return array
      */
-    public function detalhe () {
+    public function detalhe()
+    {
         $data = [];
-        
+
         if (is_numeric($this->id)) {
             $db = new clsBanco();
             $db->Consulta("
                 SELECT
-                    {$this->_todos_campos},
-                    cm.atividades,
-                    cm.observacao,
-                    f.ref_cod_turma as cod_turma
+                    {$this->_todos_campos}                                    
                 FROM
                     {$this->_from}
                 WHERE
-                    cm.id = {$this->id}
+                    fa.id = {$this->id}
             ");
 
             $db->ProximoRegistro();
 
             $data['detalhes'] = $db->Tupla();
-
-            $obj = new clsModulesComponenteMinistradoConteudoAee();
-            $data['conteudos'] = $obj->lista($this->id);
-
-            $obj = new clsModulesComponenteMinistradoConteudoAee();
-            $data['especificacoes'] = $obj->lista($this->id);
 
             return $data;
         }
@@ -317,7 +279,8 @@ class clsModulesFichaAee extends Model {
      *
      * @return array
      */
-    public function existe () {
+    public function existe()
+    {
 
         return false;
     }
@@ -327,13 +290,14 @@ class clsModulesFichaAee extends Model {
      *
      * @return bool
      */
-    public function excluir () {
+    public function excluir()
+    {
         if (is_numeric($this->id)) {
             $db = new clsBanco();
 
             $db->Consulta("
                 DELETE FROM
-                    modules.conteudo_ministrado
+                modules.ficha_aee
                 WHERE
                     id = '{$this->id}'
             ");
