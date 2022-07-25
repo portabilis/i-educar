@@ -12,6 +12,6 @@ class ResourceSchoolController extends Controller
 {
     public function index(ResourceSchoolRequest $request): JsonResource
     {
-        return JsonResource::collection(LegacySchool::getResource($request->all()));
+        return JsonResource::collection(LegacySchool::query()->getResource($request->all()));
     }
 }

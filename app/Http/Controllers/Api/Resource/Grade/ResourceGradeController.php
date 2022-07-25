@@ -11,6 +11,6 @@ class ResourceGradeController extends Controller
 {
     public function index(ResourceGradeRequest $request): JsonResource
     {
-        return JsonResource::collection(LegacyGrade::getResource($request->all()));
+        return JsonResource::collection(LegacyGrade::query()->getResource($request->all()));
     }
 }

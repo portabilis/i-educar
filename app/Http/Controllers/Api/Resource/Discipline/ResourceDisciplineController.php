@@ -14,9 +14,9 @@ class ResourceDisciplineController extends Controller
     {
         //altera o model se school e grade
         if ($request->has(['school','grade'])) {
-            $resource = LegacySchoolGradeDiscipline::getResource($request->all());
+            $resource = LegacySchoolGradeDiscipline::query()->getResource($request->all());
         } else {
-            $resource = LegacyDisciplineAcademicYear::getResource($request->all());
+            $resource = LegacyDisciplineAcademicYear::query()->getResource($request->all());
         }
 
         return JsonResource::collection($resource);

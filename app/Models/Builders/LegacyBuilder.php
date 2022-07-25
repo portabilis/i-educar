@@ -124,7 +124,7 @@ class LegacyBuilder extends Builder
     private function executeFilters(): void
     {
         foreach ($this->filters as $filter => $parameter) {
-            if (method_exists($this, $method = 'filter' . $filter)) {
+            if (method_exists($this, $method = 'where' . $filter)) {
                 $this->{$method}($parameter);
             }
         }
