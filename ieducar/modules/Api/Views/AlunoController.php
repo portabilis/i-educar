@@ -1088,9 +1088,7 @@ class AlunoController extends ApiCoreController
         if ($this->canGet()) {
             $id = $this->getRequest()->id;
 
-            $aluno = new clsPmieducarAluno();
-            $aluno->cod_aluno = $id;
-            $aluno = $aluno->detalhe();
+            $alunoDetalhe = (new clsPmieducarAluno($id))->detalhe();
 
             $attrs = [
                 'cod_aluno' => 'id',
