@@ -25,7 +25,7 @@ SELECT
     a.justificativa_falta_documentacao AS missing_docs_rationale,
     a.url_laudo_medico AS medical_report_path,
     a.codigo_sistema AS system_code,
-    a.tipo_transport AS transportation_provider,
+    a.tipo_transporte AS transportation_provider,
     a.veiculo_transporte_escolar AS transportation_vehicle_type,
     a.autorizado_um AS pickup_authorized_first,
     a.parentesco_um AS pickup_kinship_first,
