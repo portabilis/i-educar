@@ -368,26 +368,9 @@ class AlunoController extends ApiCoreController
         return $turnoValido;
     }
 
-    protected function loadTransporte($alunoId)
+    protected function loadTransporte($responsavelTransporte): string
     {
-        $tiposTransporte = [
-            Transporte_Model_Responsavel::NENHUM => 'nenhum',
-            Transporte_Model_Responsavel::MUNICIPAL => 'municipal',
-            Transporte_Model_Responsavel::ESTADUAL => 'estadual'
-        ];
-
-        $dataMapper = $this->getDataMapperFor('transporte', 'aluno');
-        $entity = $this->tryGetEntityOf($dataMapper, $alunoId);
-
-        //Alterado para retornar null quando não houver transporte, pois
-        //na validação do censo este campo é obrigatório e não deve vir pré-populado
-        if (is_null($entity)) {
-            $tipo = $tiposTransporte[null];
-        } else {
-            $tipo = $tiposTransporte[$entity->get('responsavel')];
-        }
-
-        return $tipo;
+        return (new TransportationProvider())->getValueDescription($responsavelTransporte);
     }
 
     protected function saveSus($pessoaId)
