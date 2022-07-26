@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyGrade;
+
 return new class extends clsListagem {
     public $limite;
     public $offset;
@@ -50,19 +52,10 @@ return new class extends clsListagem {
 
         // Editar
         if ($this->ref_cod_curso) {
-            $obj_serie = new clsPmieducarSerie();
-            $obj_serie->setOrderby('nm_serie ASC');
-            $lst_serie = $obj_serie->lista(
-                [
-                    'ref_cod_curso' => $this->ref_cod_curso,
-                    'ativo' => 1
-                ]
-            );
+            $series = LegacyGrade::where('ativo',1)->where('ref_cod_curso',$this->ref_cod_curso)->orderBy('nm_serie')->get(['nm_serie','cod_serie']);
 
-            if (is_array($lst_serie) && count($lst_serie)) {
-                foreach ($lst_serie as $serie) {
-                    $opcoes_serie[$serie['cod_serie']] = $serie['nm_serie'];
-                }
+            foreach ($series as $serie) {
+                $opcoes_serie[$serie['cod_serie']] = $serie['nm_serie'];
             }
         }
 
@@ -71,12 +64,7 @@ return new class extends clsListagem {
             'Série',
             $opcoes_serie,
             $this->ref_cod_serie,
-            '',
-            false,
-            '',
-            '',
-            $this->ref_cod_serie ? true : false,
-            false
+            obrigatorio: false
         );
 
         // Paginador
