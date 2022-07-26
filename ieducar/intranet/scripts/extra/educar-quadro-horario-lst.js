@@ -47,7 +47,7 @@
   campoSerie.onchange = function()
   {
     setAttributes(campoTurma,'Carregando turma');
-    getApiResource("/api/resource/school-class",getTurma,{school:campoEscola.value,grade:campoSerie.value,year:campoAno.value});
+    getApiResource("/api/resource/school-class",getTurma,{school:campoEscola.value,grade:campoSerie.value,in_progress_year:campoAno.value});
   };
 
   if (document.getElementById('botao_busca')) {

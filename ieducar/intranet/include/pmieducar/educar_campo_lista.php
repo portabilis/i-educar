@@ -318,7 +318,7 @@ function getCurso() {
         campoCurso.disabled = true;
         campoCurso.options[0].text = 'Carregando cursos';
 
-        getApiResource("/api/resource/course",atualizaLstCurso,{institution:campoInstituicao,not_pattern:1});
+        getApiResource("/api/resource/course",atualizaLstCurso,{institution:campoInstituicao,standard_calendar:0});
     } else {
         campoCurso.options[0].text = 'Selecione';
     }
@@ -406,7 +406,7 @@ function getEscolaCurso() {
         campoCurso.options[0].text = 'Carregando cursos';
 
         <?php if ($get_cursos_nao_padrao) {?>
-        getApiResource("/api/resource/course",atualizaLstEscolaCurso,{school:campoEscola,not_pattern:1});
+        getApiResource("/api/resource/course",atualizaLstEscolaCurso,{school:campoEscola,standard_calendar:0});
         <?php } else {?>
         getApiResource("/api/resource/course",atualizaLstEscolaCurso,{school:campoEscola});
         <?php } ?>

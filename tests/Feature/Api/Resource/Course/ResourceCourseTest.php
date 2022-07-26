@@ -105,7 +105,7 @@ class ResourceCourseTest extends TestCase
 
     public function test_invalid_parameters(): void
     {
-        $response = $this->getJson(route($this->route, ['institution' => 'Instituição', 'school' => 'Escola', 'not_pattern' => '2', 'course' => 'Curso']));
+        $response = $this->getJson(route($this->route, ['institution' => 'Instituição', 'school' => 'Escola', 'standard_calendar' => '2', 'course' => 'Curso']));
 
         $response->assertOk();
         $response->assertJsonCount(0,'data');

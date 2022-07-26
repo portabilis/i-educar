@@ -194,21 +194,9 @@ class LegacyBuilder extends Builder
      * @param int|null $limit
      * @return $this
      */
-    public function filterLimit(int $limit = null): self
+    public function whereLimit(int $limit = null): self
     {
         return $this->when($limit, fn($q) => $q->limit($limit));
-    }
-
-    /**
-     * Compara se um filtro com outro valor
-     *
-     * @param string $name
-     * @param mixed $value
-     * @return bool
-     */
-    public function filterEqualTo(string $name, mixed $value): bool
-    {
-        return $this->getFilter($name) === $value;
     }
 
     /**

@@ -111,7 +111,7 @@ class ResourceSchoolClassTest extends TestCase
 
     public function test_exact_json_match(): void
     {
-        $response = $this->getJson(route($this->route, ['institution' => $this->institution, 'school' => $this->school, 'course' => $this->course, 'grade' => $this->grade, 'year' => $this->year]));
+        $response = $this->getJson(route($this->route, ['institution' => $this->institution, 'school' => $this->school, 'course' => $this->course, 'grade' => $this->grade, 'in_progress_year' => $this->year]));
 
 
         $response->assertOk();
@@ -130,8 +130,7 @@ class ResourceSchoolClassTest extends TestCase
             'school' => $this->school->id,
             'course' => $this->course->id,
             'grade' => $this->grade->id,
-            'inProgress' => true,
-            'year' => $this->year
+            'in_progress_year' => $this->year
         ]);
 
         $response->assertJson(function (AssertableJson $json) use ($school_classes) {
@@ -157,7 +156,7 @@ class ResourceSchoolClassTest extends TestCase
 
     public function test_invalid_parameters(): void
     {
-        $response = $this->getJson(route($this->route, ['institution' => 'Instituição', 'school' => 'Escola', 'course' => 'Curso', 'grade' => 'Serie', 'year' => '202']));
+        $response = $this->getJson(route($this->route, ['institution' => 'Instituição', 'school' => 'Escola', 'course' => 'Curso', 'grade' => 'Serie', 'in_progress_year' => '202']));
 
         $response->assertOk();
         $response->assertJsonCount(0,'data');

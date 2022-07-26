@@ -6,7 +6,6 @@ use Illuminate\Support\Collection;
 
 class LegacyGradeBuilder extends LegacyBuilder
 {
-
     /**
      * Retorna o recurso para os selects dos formulários
      *
@@ -18,50 +17,6 @@ class LegacyGradeBuilder extends LegacyBuilder
         $this->active()->orderByNameAndCourse()->filter($filters);
         //description será usada em getNameAttribute, mas não aparece no recurso
         return $this->setExcept(['description'])->resource(['id', 'name']);
-    }
-
-    /**
-     * Filtra por Escola
-     *
-     * @param int $school
-     * @return $this
-     */
-    public function filterSchool(int $school): self
-    {
-        return $this->whereSchool($school);
-    }
-
-    /**
-     * Filtra por Curso
-     *
-     * @param int $course
-     * @return $this
-     */
-    public function filterCourse(int $course): self
-    {
-        return $this->whereCourse($course);
-    }
-
-    /**
-     * Filtra removendo séries da lista
-     *
-     * @param int $grade_exclude
-     * @return $this
-     */
-    public function filterGradeExclude(int $grade_exclude): self
-    {
-        return $this->whereNotGrade($grade_exclude);
-    }
-
-    /**
-     * Filtra removendo escolas da lisa
-     *
-     * @param int $school_exclude
-     * @return $this
-     */
-    public function filterSchoolExclude(int $school_exclude): self
-    {
-        return $this->whereNotSchool($school_exclude);
     }
 
     /**
@@ -80,7 +35,7 @@ class LegacyGradeBuilder extends LegacyBuilder
      * @param int $school_exclude
      * @return LegacyGradeBuilder
      */
-    public function whereNotSchool(int $school_exclude): self
+    public function whereSchoolExclude(int $school_exclude): self
     {
         return $this->whereDoesntHave('schools', function ($q) use ($school_exclude) {
             $q->where('cod_escola', $school_exclude);
@@ -106,7 +61,7 @@ class LegacyGradeBuilder extends LegacyBuilder
      * @param int $serie_exclude
      * @return LegacyGradeBuilder
      */
-    public function whereNotGrade(int $serie_exclude): self
+    public function whereGradeExclude(int $serie_exclude): self
     {
         return $this->where('cod_serie','<>',$serie_exclude);
     }

@@ -6,7 +6,6 @@ use Illuminate\Support\Collection;
 
 class LegacyEvaluationRuleBuilder extends LegacyBuilder
 {
-
     /**
      * Retorna o recurso para os selects dos formulários
      *
@@ -17,17 +16,6 @@ class LegacyEvaluationRuleBuilder extends LegacyBuilder
     {
         $this->orderByName()->filter($filters);
         return $this->resource(['id', 'name']);
-    }
-
-    /**
-     * Filtra por Instituição
-     *
-     * @param int $institution
-     * @return $this
-     */
-    public function filterInstitution(int $institution): self
-    {
-        return $this->whereInstitution($institution);
     }
 
     /**

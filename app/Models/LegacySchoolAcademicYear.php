@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Models\Builders\LegacySchoolAcademicYearBuilder;
 use App\Traits\LegacyAttribute;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -62,72 +61,10 @@ class LegacySchoolAcademicYear extends Model
      */
     public $timestamps = false;
 
-    public function scopeActive(Builder $builder)
-    {
-        return $builder->where('escola_ano_letivo.ativo', 1);
-    }
-
-    public function scopeLastYear(Builder $query): Builder
-    {
-        return $query->where('escola_ano_letivo.ano', date('Y') - 1);
-    }
-
-    public function scopeCurrentYear(Builder $query): Builder
-    {
-        return $query->where('escola_ano_letivo.ano', date('Y'));
-    }
-
     /**
      * @return int
      */
     public function getYearAttribute(): int {
         return $this->ano;
-    }
-
-    /**
-     * Filtra por ano letivos em andamento
-     *
-     * @param Builder $query
-     * @return void
-     */
-    public function scopeInProgress(Builder $query): void
-    {
-        $query->where('escola_ano_letivo.andamento',1);
-    }
-
-    /**
-     * Filtra pelo ano
-     *
-     * @param Builder $query
-     * @param int $year
-     * @return void
-     */
-    public function scopeWhereYear(Builder $query, int $year ): void
-    {
-        $query->where('escola_ano_letivo.ano',$year);
-    }
-
-    /**
-     * Ordena por Ano
-     *
-     * @param Builder $query
-     * @param string $direction
-     * @return void
-     */
-    public function scopeOrderByYear(Builder $query, string $direction = 'desc'): void
-    {
-        $query->orderBy('ano',$direction);
-    }
-
-    /**
-     * Filtra por Instituição
-     *
-     * @param Builder $query
-     * @param int $school
-     * @return void
-     */
-    public function scopeWhereSchool(Builder $query, int $school): void
-    {
-        $query->where('ref_cod_escola', $school);
     }
 }

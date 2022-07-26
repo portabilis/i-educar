@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Builders\LegacyBuilder;
 use App\Models\Builders\LegacySchoolClassBuilder;
 use App\Traits\LegacyAttribute;
 use Carbon\Carbon;

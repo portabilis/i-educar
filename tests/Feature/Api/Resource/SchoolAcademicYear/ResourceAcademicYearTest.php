@@ -48,9 +48,7 @@ class ResourceAcademicYearTest extends TestCase
 
     public function test_exact_json_match(): void
     {
-        $limit = 1;
-
-        $response = $this->getJson(route($this->route, ['school' => $this->school, 'year' => $this->year, 'limit' => 2]));
+        $response = $this->getJson(route($this->route, ['school' => $this->school, 'year_gte' => $this->year, 'limit' => 2]));
 
         $response->assertOk();
         $response->assertJsonStructure([
@@ -63,7 +61,7 @@ class ResourceAcademicYearTest extends TestCase
 
         $academic_years = LegacySchoolAcademicYear::getResource([
             'school' => $this->school->id,
-            'year' => $this->year
+            'year_gte' => $this->year
         ]);
 
         $response->assertJson(function (AssertableJson $json) use ($academic_years) {
@@ -87,7 +85,7 @@ class ResourceAcademicYearTest extends TestCase
 
     public function test_invalid_parameters(): void
     {
-        $response = $this->getJson(route($this->route, ['school' => 'Escola', 'year' => '202', 'limit' => 'Limite']));
+        $response = $this->getJson(route($this->route, ['school' => 'Escola', 'year_gte' => '202', 'limit' => 'Limite']));
 
         $response->assertOk();
         $response->assertJsonCount(0,'data');

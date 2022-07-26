@@ -10,7 +10,7 @@ class ResourceCourseRequest extends ResourceRequest
         return [
             'institution' => ['required_without_all:school,course','nullable','integer','min:1'],
             'school' => ['nullable','integer','min:1'],
-            'not_pattern' => ['nullable','boolean'],
+            'standard_calendar' => ['nullable','boolean'],
             'course' => ['nullable','integer','min:1']
         ];
     }
@@ -20,7 +20,7 @@ class ResourceCourseRequest extends ResourceRequest
         return [
             'institution' => 'Instituição',
             'school' => 'Escola',
-            'not_pattern' => 'Sem Padrão Escolar',
+            'standard_calendar' => 'Sem Padrão Escolar',
             'course' => 'Curso'
         ];
     }

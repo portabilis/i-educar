@@ -22,28 +22,6 @@ class LegacyDisciplineAcademicYearBuilder extends LegacyBuilder
     }
 
     /**
-     * Filtra por Curso
-     *
-     * @param int $course
-     * @return $this
-     */
-    public function filterCourse(int $course): self
-    {
-        return $this->whereCourse($course);
-    }
-
-    /**
-     * Filtra por Série
-     *
-     * @param int $grade
-     * @return $this
-     */
-    public function filterGrade(int $grade): self
-    {
-        return $this->whereGrade($grade);
-    }
-
-    /**
      * Filtra somente os distintos por id
      *
      * @return LegacyDisciplineAcademicYearBuilder

@@ -17,43 +17,8 @@ class LegacyCourseBuilder extends LegacyBuilder
     {
         //filtros
         $this->active()->orderByName()->filter($filters);
-        //query específica obtem valores passados pelos filtros
-        $this->whereNotIsStandardCalendar($this->filterEqualTo('not_pattern', '1'));
         //description será usada em getNameAttribute, mas não aparece no recurso
         return $this->setExcept(['description'])->resource(['id', 'name', 'is_standard_calendar', 'steps']);
-    }
-
-    /**
-     * Filtra por Instituição
-     *
-     * @param int $institution
-     * @return $this
-     */
-    public function filterInstitution(int $institution): self
-    {
-        return $this->whereInstitution($institution);
-    }
-
-    /**
-     * Filtra por Escola
-     *
-     * @param int $school
-     * @return $this
-     */
-    public function filterSchool(int $school): self
-    {
-        return $this->whereSchool($school);
-    }
-
-    /**
-     * Filtra por Curso
-     *
-     * @param int $course
-     * @return $this
-     */
-    public function filterCourse(int $course): self
-    {
-        return $this->whereCourse($course);
     }
 
     /**
@@ -92,12 +57,12 @@ class LegacyCourseBuilder extends LegacyBuilder
     /**
      * Filtra por  Padrão Ano Escolar
      *
-     * @param bool $condition
+     * @param int $standard_calendar
      * @return LegacyCourseBuilder
      */
-    public function whereNotIsStandardCalendar(bool $condition = true): self
+    public function whereStandardCalendar(int $standard_calendar): self
     {
-        return $this->when($condition,fn($q) => $q->where('padrao_ano_escolar',0));
+        return $this->where('padrao_ano_escolar',$standard_calendar);
     }
 
     /**

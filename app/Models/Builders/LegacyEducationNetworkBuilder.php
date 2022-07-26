@@ -22,17 +22,6 @@ class LegacyEducationNetworkBuilder extends LegacyBuilder
     }
 
     /**
-     * Filtra por Instituição
-     *
-     * @param int $institution
-     * @return $this
-     */
-    public function filterInstitution(int $institution): self
-    {
-        return $this->whereInstitution($institution);
-    }
-
-    /**
      * Ordena por nome
      *
      * @param string $direction
