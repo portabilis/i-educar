@@ -18,4 +18,24 @@ class TransportationProvider implements Enum
             self::CITY => 'Municipal',
         ];
     }
+
+    public function from($value): int
+    {
+        return match ($value) {
+            'nenhum' => self::NONE,
+            'municipal' => self::CITY,
+            'estadual' => self::STATE,
+            default => throw new \Exception('Opção de transporte do aluno inválida')
+        };
+    }
+
+    public function getValueDescription($value)
+    {
+        return match ((int)$value) {
+            self::CITY => 'municipal',
+            self::NONE => 'nenhum',
+            self::STATE => 'estadual',
+            default => throw new \Exception('Opção de transporte do aluno inválida')
+        };
+    }
 }
