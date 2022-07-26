@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::table('pmieducar.aluno',
             static fn(Blueprint $table) => $table
-                ->integer('responsavel_transporte')
+                ->integer('tipo_transporte')
                 ->default(0)
         );
     }
@@ -29,7 +29,7 @@ return new class extends Migration
     {
         Schema::table('pmieducar.aluno',
             static fn(Blueprint $table)  =>
-            $table->dropColumn('responsavel_transporte')
+            $table->dropColumn('tipo_transporte')
         );
     }
 };

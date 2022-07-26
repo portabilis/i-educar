@@ -9,7 +9,7 @@ return new class extends Migration
     {
         DB::statement(
             'UPDATE pmieducar.aluno
-            SET responsavel_transporte  = transporte_aluno.responsavel
+            SET tipo_transporte  = transporte_aluno.responsavel
             FROM modules.transporte_aluno
             WHERE transporte_aluno.aluno_id = cod_aluno
             AND transporte_aluno.responsavel != 0'
