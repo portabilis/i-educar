@@ -30,7 +30,54 @@ return new class extends clsListagem {
         $lista_busca[] = 'Escola';
         $this->addCabecalhos($lista_busca);
 
-        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie'], [],['options' => ['required' => false]]);
+        $obrigatorio = false;
+        $get_escola = true;
+        $get_curso = true;
+        $get_serie = false;
+        $get_escola_serie = true;
+
+        include 'include/pmieducar/educar_campo_lista.php';
+
+        if ($this->ref_cod_escola_) {
+            $this->ref_cod_escola = $this->ref_cod_escola_;
+        }
+
+        if ($this->ref_cod_serie_) {
+            $this->ref_cod_serie = $this->ref_cod_serie_;
+        }
+
+        $opcoes_serie = ['' => 'Selecione'];
+
+        // Editar
+        if ($this->ref_cod_curso) {
+            $obj_serie = new clsPmieducarSerie();
+            $obj_serie->setOrderby('nm_serie ASC');
+            $lst_serie = $obj_serie->lista(
+                [
+                    'ref_cod_curso' => $this->ref_cod_curso,
+                    'ativo' => 1
+                ]
+            );
+
+            if (is_array($lst_serie) && count($lst_serie)) {
+                foreach ($lst_serie as $serie) {
+                    $opcoes_serie[$serie['cod_serie']] = $serie['nm_serie'];
+                }
+            }
+        }
+
+        $this->campoLista(
+            'ref_cod_serie',
+            'Série',
+            $opcoes_serie,
+            $this->ref_cod_serie,
+            '',
+            false,
+            '',
+            '',
+            $this->ref_cod_serie ? true : false,
+            false
+        );
 
         // Paginador
         $this->limite = 20;
@@ -120,6 +167,12 @@ return new class extends clsListagem {
         $this->breadcrumb('Séries da escola', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
+    }
+
+
+    public function makeExtra()
+    {
+        return file_get_contents(public_path('/vendor/legacy/Cadastro/Assets/Javascripts/EscolaSerie.js'));
     }
 
     public function Formular()

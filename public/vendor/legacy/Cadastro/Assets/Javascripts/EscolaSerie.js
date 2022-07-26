@@ -102,6 +102,7 @@ after_getEscola = function () {
 };
 
 function getSerie() {
+
     var campoCurso = document.getElementById('ref_cod_curso').value;
 
     if (document.getElementById('ref_cod_escola')) {
@@ -122,6 +123,12 @@ function getSerie() {
 
         var xml = new ajax(atualizaLstSerie);
         xml.envia("educar_serie_not_escola_xml.php?esc=" + campoEscola + "&cur=" + campoCurso);
+    } else if(campoCurso) {
+        campoSerie.disabled = true;
+        campoSerie.options[0].text = 'Carregando séries';
+
+        var xml = new ajax(atualizaLstSerie);
+        xml.envia("educar_serie_xml.php?cur="+campoCurso);
     } else {
         campoSerie.options[0].text = 'Selecione';
     }
