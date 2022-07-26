@@ -1128,18 +1128,7 @@ class AlunoController extends ApiCoreController
             $aluno['tipo_responsavel'] = $this->tipoResponsavel($aluno);
             $aluno['aluno_inep_id'] = $this->loadAlunoInepId($id);
             $aluno['ativo'] = $aluno['ativo'] == 1;
-            $aluno['aluno_estado_id'] = Portabilis_String_Utils::toUtf8($aluno['aluno_estado_id']);
-            $aluno['codigo_sistema'] = Portabilis_String_Utils::toUtf8($aluno['codigo_sistema']);
-            $aluno['autorizado_um'] = Portabilis_String_Utils::toUtf8($aluno['autorizado_um']);
-            $aluno['parentesco_um'] = Portabilis_String_Utils::toUtf8($aluno['parentesco_um']);
-            $aluno['autorizado_dois'] = Portabilis_String_Utils::toUtf8($aluno['autorizado_dois']);
-            $aluno['parentesco_dois'] = Portabilis_String_Utils::toUtf8($aluno['parentesco_dois']);
-            $aluno['autorizado_tres'] = Portabilis_String_Utils::toUtf8($aluno['autorizado_tres']);
-            $aluno['parentesco_tres'] = Portabilis_String_Utils::toUtf8($aluno['parentesco_tres']);
-            $aluno['autorizado_quatro'] = Portabilis_String_Utils::toUtf8($aluno['autorizado_quatro']);
-            $aluno['parentesco_quatro'] = Portabilis_String_Utils::toUtf8($aluno['parentesco_quatro']);
-            $aluno['autorizado_cinco'] = Portabilis_String_Utils::toUtf8($aluno['autorizado_cinco']);
-            $aluno['parentesco_cinco'] = Portabilis_String_Utils::toUtf8($aluno['parentesco_cinco']);
+
             $aluno['veiculo_transporte_escolar'] = Portabilis_Utils_Database::pgArrayToArray($aluno['veiculo_transporte_escolar']);
             $aluno['alfabetizado'] = $aluno['analfabeto'] == 0;
             unset($aluno['analfabeto']);
@@ -1166,11 +1155,6 @@ class AlunoController extends ApiCoreController
             $objMoradia = new clsModulesMoradiaAluno($id);
             if ($objMoradia->existe()) {
                 $objMoradia = $objMoradia->detalhe();
-
-                foreach ($objMoradia as $chave => $value) {
-                    $objMoradia[$chave] = Portabilis_String_Utils::toUtf8($value);
-                }
-
                 $aluno = Portabilis_Array_Utils::merge($objMoradia, $aluno);
             }
 
@@ -1178,10 +1162,6 @@ class AlunoController extends ApiCoreController
             $objPessoaTransporte = $objPessoaTransporte->detalhe();
 
             if ($objPessoaTransporte) {
-                foreach ($objPessoaTransporte as $chave => $value) {
-                    $objPessoaTransporte[$chave] = Portabilis_String_Utils::toUtf8($value);
-                }
-
                 $aluno = Portabilis_Array_Utils::merge($objPessoaTransporte, $aluno);
             }
 
