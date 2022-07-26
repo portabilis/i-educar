@@ -6,6 +6,7 @@ use App\Models\LegacyDeficiency;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolHistory;
 use App\Models\LogUnification;
+use App\Models\TransportationProvider;
 use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
 use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
 use iEducar\Modules\Educacenso\Validator\InepExamValidator;
@@ -623,6 +624,8 @@ class AlunoController extends ApiCoreController
         //laudo medico
         $aluno->url_laudo_medico = $this->getRequest()->url_laudo_medico;
 
+        $aluno->tipo_transporte = (new TransportationProvider())->from($this->getRequest()->tipo_transporte);
+
         if (is_null($id)) {
             $id = $aluno->cadastra();
             $aluno->cod_aluno = $id;
@@ -1118,13 +1121,14 @@ class AlunoController extends ApiCoreController
                 'parentesco_quatro',
                 'autorizado_cinco',
                 'parentesco_cinco',
-                'emancipado'
+                'emancipado',
+                'tipo_transporte'
             ];
 
-            $aluno = Portabilis_Array_Utils::filter($aluno, $attrs);
+            $aluno = Portabilis_Array_Utils::filter($alunoDetalhe, $attrs);
 
             $aluno['nome'] = $this->loadNomeAluno($id);
-            $aluno['tipo_transporte'] = $this->loadTransporte($id);
+            $aluno['tipo_transporte'] = $this->loadTransporte($aluno['tipo_transporte']);
             $aluno['tipo_responsavel'] = $this->tipoResponsavel($aluno);
             $aluno['aluno_inep_id'] = $this->loadAlunoInepId($id);
             $aluno['ativo'] = $aluno['ativo'] == 1;
@@ -1574,7 +1578,6 @@ class AlunoController extends ApiCoreController
                 $this->updateBeneficios($id);
                 $this->updateResponsavel();
                 $this->saveSus($pessoaId);
-                $this->createOrUpdateTransporte($id);
                 $this->createUpdateOrDestroyEducacensoAluno($id);
                 $this->updateDeficiencias();
                 $this->createOrUpdateFichaMedica($id);
@@ -1607,7 +1610,6 @@ class AlunoController extends ApiCoreController
             $this->updateBeneficios($id);
             $this->updateResponsavel();
             $this->saveSus($pessoaId);
-            $this->createOrUpdateTransporte($id);
             $this->createUpdateOrDestroyEducacensoAluno($id);
             $this->updateDeficiencias();
             $this->createOrUpdateFichaMedica($id);
