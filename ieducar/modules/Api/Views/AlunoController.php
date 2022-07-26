@@ -381,28 +381,6 @@ class AlunoController extends ApiCoreController
         return $this->fetchPreparedQuery($sql, [$sus, $pessoaId]);
     }
 
-    protected function createOrUpdateTransporte($alunoId)
-    {
-        $tiposTransporte = [
-            'nenhum' => Transporte_Model_Responsavel::NENHUM,
-            'municipal' => Transporte_Model_Responsavel::MUNICIPAL,
-            'estadual' => Transporte_Model_Responsavel::ESTADUAL
-        ];
-
-        $data = [
-            'aluno' => $alunoId,
-            'responsavel' => $tiposTransporte[$this->getRequest()->tipo_transporte],
-            'user' => \Illuminate\Support\Facades\Auth::id(),
-            'created_at' => 'NOW()',
-        ];
-
-        $dataMapper = $this->getDataMapperFor('transporte', 'aluno');
-        $entity = $this->getOrCreateEntityOf($dataMapper, $alunoId);
-        $entity->setOptions($data);
-
-        return $this->saveEntity($dataMapper, $entity);
-    }
-
     protected function createOrUpdateFichaMedica($id)
     {
         $obj = new clsModulesFichaMedicaAluno();
