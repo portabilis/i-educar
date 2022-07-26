@@ -550,8 +550,7 @@ class AlunoController extends ApiCoreController
         $aluno->cod_aluno = $id;
 
         $alunoEstadoId = mb_strtoupper($this->getRequest()->aluno_estado_id);
-        $alunoEstadoId = str_replace('.', '', $alunoEstadoId);
-        $alunoEstadoId = str_replace('-', '', $alunoEstadoId);
+        $alunoEstadoId = str_replace(['-','.'], '', $alunoEstadoId);
 
         if (strlen($alunoEstadoId) < 10) {
             $mask['pattern'] = '"(.{3})(.{3})(.{3})"';
@@ -561,9 +560,7 @@ class AlunoController extends ApiCoreController
             $mask['replacement'] = '\\1.\\2.\\3-\\4';
         }
 
-        $alunoEstadoId = preg_replace($mask['pattern'], $mask['replacement'], $alunoEstadoId);
-        $aluno->aluno_estado_id = $alunoEstadoId;
-
+        $aluno->aluno_estado_id = preg_replace($mask['pattern'], $mask['replacement'], $alunoEstadoId);
         $aluno->codigo_sistema = $this->getRequest()->codigo_sistema;
         $aluno->autorizado_um = $this->getRequest()->autorizado_um;
         $aluno->parentesco_um = $this->getRequest()->parentesco_um;
