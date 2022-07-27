@@ -195,22 +195,22 @@ return new class extends clsDetalhe {
             $sequencia = $registro['detalhes']['fase_etapa'];
             $obj = new clsPmieducarTurmaModulo();
 
-            // $data = $obj->pegaPeriodoLancamentoNotasFaltas($turma, $sequencia);
-            // if ($data['inicio'] != null && $data['fim'] != null) {
-            //     $data['inicio'] = explode(',', $data['inicio']);
-            //     $data['fim'] = explode(',', $data['fim']);
+            $data = $obj->pegaPeriodoLancamentoNotasFaltas($turma, $sequencia);
+            if ($data['inicio'] != null && $data['fim'] != null) {
+                $data['inicio'] = explode(',', $data['inicio']);
+                $data['fim'] = explode(',', $data['fim']);
 
-            //     array_walk($data['inicio'], function(&$data_inicio, $key) {
-            //         $data_inicio = new \DateTime($data_inicio);
-            //     });
+                array_walk($data['inicio'], function(&$data_inicio, $key) {
+                    $data_inicio = new \DateTime($data_inicio);
+                });
 
-            //     array_walk($data['fim'], function(&$data_fim, $key) {
-            //         $data_fim = new \DateTime($data_fim);
-            //     });
-            // } else {
-            //     $data['inicio'] = new \DateTime($obj->pegaEtapaSequenciaDataInicio($turma, $sequencia));
-            //     $data['fim'] = new \DateTime($obj->pegaEtapaSequenciaDataFim($turma, $sequencia));
-            // }
+                array_walk($data['fim'], function(&$data_fim, $key) {
+                    $data_fim = new \DateTime($data_fim);
+                });
+            } else {
+                $data['inicio'] = new \DateTime($obj->pegaEtapaSequenciaDataInicio($turma, $sequencia));
+                $data['fim'] = new \DateTime($obj->pegaEtapaSequenciaDataFim($turma, $sequencia));
+            }
 
             $podeEditar = false;
             if (is_array($data['inicio']) && is_array($data['fim'])) {
@@ -226,8 +226,8 @@ return new class extends clsDetalhe {
                 $podeEditar = $data_agora >= $data['inicio'] && $data_agora <= $data['fim'];
             }
 
-            // if ($podeEditar)
-            //     $this->url_editar = 'educar_professores_planejamento_de_aula_cad.php?id=' . $registro['detalhes']['id'];
+            if ($podeEditar)
+                $this->url_editar = 'educar_professores_planejamento_de_aula_aee_cad.php?id=' . $registro['detalhes']['id'];
 
         }
 
@@ -237,8 +237,6 @@ return new class extends clsDetalhe {
         $this->breadcrumb('Detalhe do plano de aula AEE', [
             url('intranet/educar_professores_index.php') => 'Professores',
         ]);
-
-        $this->addBotao('Excluir', "");
 
         //$this->addBotao('Copiar plano de aula', "/intranet/educar_professores_planejamento_de_aula_cad.php?id={$this->getRequest()->id}&copy=true");
     }

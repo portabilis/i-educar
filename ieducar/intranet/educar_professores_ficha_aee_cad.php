@@ -87,7 +87,11 @@ return new class extends clsCadastro
         $obrigatorio = true;
 
         $this->campoOculto('id', $this->id);
-        $this->inputsHelper()->dynamic('data', ['required' => $obrigatorio]);    // Disabled não funciona; ação colocada no javascript.        
+        $this->campoOculto('copy', $this->copy);                
+
+       
+        $this->campoOculto('ano', explode('/', dataToBrasil(NOW()))[2]);    
+        $this->inputsHelper()->dynamic('data', ['required' => $obrigatorio]);         
         $this->inputsHelper()->dynamic(['turma', 'matricula']);
         // Montar o inputsHelper->select \/
         // Cria lista de Turmas
@@ -124,39 +128,13 @@ return new class extends clsCadastro
         $this->inputsHelper()->select('ref_cod_matricula', $options);
 
         $this->campoMemo('necessidades_aprendizagem', 'Necessidades de Aprendizagem', $this->necessidades_aprendizagem, 100, 5, !$obrigatorio);
-        $this->campoMemo('caracterizacao_pedagogica', 'Caracterização Pedagógica', $this->caracterizacao_pedagogica, 100, 5, !$obrigatorio);
-
-        $this->campoOculto('id', $this->id);
-        $this->campoOculto('copy', $this->copy);
-
-        $this->campoOculto('ano', explode('/', dataToBrasil(NOW()))[2]);
+        $this->campoMemo('caracterizacao_pedagogica', 'Caracterização Pedagógica', $this->caracterizacao_pedagogica, 100, 5, !$obrigatorio);  
     }
 
 
     public function Novo()
     {
-        $obj = new clsModulesFichaAee(
-            null,
-            $this->ref_cod_turma,
-            $this->ref_cod_matricula,
-            $this->data,
-            $this->necessidades_aprendizagem,
-            $this->caracterizacao_pedagogica
-        );
-
-        $cadastrou = $obj->cadastra();
-
-        if (!$cadastrou) {
-            $this->mensagem = 'Cadastro não realizado.<br>';
-            $this->simpleRedirect('educar_professores_ficha_aee_cad.php');
-        } else {
-            $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-            $this->simpleRedirect('educar_professores_ficha_aee_lst.php');
-        }
-
-        $this->mensagem = 'Cadastro não realizado.<br>';
-
-        return false;
+       //
     }
 
     public function Editar()
@@ -207,19 +185,18 @@ return new class extends clsCadastro
     public function loadAssets()
     {
         $scripts = [
-            '/modules/Cadastro/Assets/Javascripts/PlanejamentoAula.js',
-            '/modules/Cadastro/Assets/Javascripts/PlanoAulaExclusao.js',
-            '/modules/Cadastro/Assets/Javascripts/PlanoAulaEdicao.js',
-            '/modules/Cadastro/Assets/Javascripts/PlanoAulaDuplicacao.js',
+            '/modules/Cadastro/Assets/Javascripts/FichaAee.js',
+            '/modules/Cadastro/Assets/Javascripts/FichaAeeExclusao.js',
+            '/modules/Cadastro/Assets/Javascripts/FichaAeeEdicao.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
     }
 
-    // public function makeExtra()
-    // {
-    //     return file_get_contents(__DIR__ . '/scripts/extra/educar-professores-planejamento-de-aula-aee-cad.js');
-    // }
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-professores-ficha-aee-cad.js');
+    }
 
     public function Formular()
     {

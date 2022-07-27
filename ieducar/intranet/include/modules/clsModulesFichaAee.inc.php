@@ -5,17 +5,17 @@ use iEducar\Legacy\Model;
 class clsModulesFichaAee extends Model
 {
     public $id;
+    public $data;
     public $ref_cod_turma;
     public $ref_cod_matricula;
-    public $data;
     public $necessidades_aprendizagem;
     public $caracterizacao_pedagogica;
 
     public function __construct(
         $id = null,
+        $data = null,
         $ref_cod_turma = null,
         $ref_cod_matricula = null,
-        $data = null,
         $necessidades_aprendizagem = null,
         $caracterizacao_pedagogica = null
     ) {
@@ -99,12 +99,18 @@ class clsModulesFichaAee extends Model
 
             $this->data = date('Y-m-d');
 
-            $campos = "ref_cod_turma, ref_cod_matricula, created_at";
-            $valores = "'{$this->ref_cod_turma}', '{$this->ref_cod_matricula}', (NOW() - INTERVAL '3 HOURS')";
+            $campos = "data, created_at";
+            $valores = "'{($this->data)}', (NOW() - INTERVAL '3 HOURS')";
 
-            if(is_string($this->data)){
-                $campos     .=  ", data";
-                $valores    .=  ", '{($this->data)}'";
+
+            if (is_numeric($this->ref_cod_turma)) {
+                $campos     .=  ", ref_cod_turma";
+                $valores    .=  ", '$this->ref_cod_turma'";
+            }
+
+            if (is_numeric($this->ref_cod_matricula)) {
+                $campos     .=  ", ref_cod_matricula";
+                $valores    .=  ", '$this->ref_cod_matricula'";
             }
 
             if (is_string($this->necessidades_aprendizagem)) {
@@ -136,11 +142,16 @@ class clsModulesFichaAee extends Model
      */
     public function edita()
     {
-        if (is_numeric($this->id) && is_string($this->necessidades_aprendizagem)) {
+        if (
+            is_numeric($this->id)
+            && is_string($this->necessidades_aprendizagem)
+            && is_string($this->caracterizacao_pedagogica)
+        ) {
             $db = new clsBanco();
 
-            $set = "necessidades_aprendizagem = '{$db->escapeString($this->necessidades_aprendizagem)}',
-                    caracterizacao_pedagogica = NULLIF('{$db->escapeString($this->caracterizacao_pedagogica)}',''),
+            $set = "
+                    necessidades_aprendizagem = '{$db->escapeString($this->necessidades_aprendizagem)}',
+                    caracterizacao_pedagogica = '{$db->escapeString($this->caracterizacao_pedagogica)}',
                     updated_at = (NOW() - INTERVAL '3 HOURS')";
 
             $db->Consulta("
@@ -151,7 +162,7 @@ class clsModulesFichaAee extends Model
                 WHERE
                     id = '{$this->id}'
             ");
-            
+
             return true;
         }
 

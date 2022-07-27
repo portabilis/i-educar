@@ -130,7 +130,7 @@ return new class extends clsDetalhe {
             url('intranet/educar_professores_index.php') => 'Professores',
         ]);
 
-        $this->addBotao('Excluir', "");
+        // $this->addBotao('Excluir', "");
     }
 
     
