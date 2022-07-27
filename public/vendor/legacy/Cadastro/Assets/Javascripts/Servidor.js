@@ -290,7 +290,7 @@ $j(document).ready(function() {
 });
 
 var searchCourse = function (request, response) {
-  if (!request.term.includes(' - ')) {
+  if (!(request.term.includes(' - ') && request.term.length > 5)) {
     var searchPath = '/module/Api/CursoSuperior?oper=get&resource=cursosuperior-search',
       params = {
         query: request.term
