@@ -290,14 +290,16 @@ $j(document).ready(function() {
 });
 
 var searchCourse = function (request, response) {
-  var searchPath = '/module/Api/CursoSuperior?oper=get&resource=cursosuperior-search',
+  if (!request.term.includes(' - ')) {
+    var searchPath = '/module/Api/CursoSuperior?oper=get&resource=cursosuperior-search',
       params = {
         query: request.term
       };
 
-  $j.get(searchPath, params, function (dataResponse) {
-    simpleSearch.handleSearch(dataResponse, response);
-  });
+    $j.get(searchPath, params, function (dataResponse) {
+      simpleSearch.handleSearch(dataResponse, response);
+    });
+  }
 };
 
 var handleSelectCourse = function (event, ui) {
