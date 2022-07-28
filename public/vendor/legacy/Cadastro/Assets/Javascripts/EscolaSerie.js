@@ -122,7 +122,7 @@ function getSerie() {
         campoSerie.options[0].text = 'Carregando séries';
 
         var xml = new ajax(atualizaLstSerie);
-        xml.envia("educar_serie_not_escola_xml.php?esc=" + campoEscola + "&cur=" + campoCurso);
+        xml.envia("educar_serie_xml.php?cur="+campoCurso);
     } else if(campoCurso) {
         campoSerie.disabled = true;
         campoSerie.options[0].text = 'Carregando séries';
@@ -151,7 +151,7 @@ function atualizaLstSerie(xml) {
             );
         }
     } else {
-        campoSerie.options[0].text = 'O curso não possui nenhuma série ou todas as séries já estã associadas a essa escola';
+        campoSerie.options[0].text = 'O curso não possui nenhuma série ou todas as séries já estão associadas a essa escola';
         campoSerie.disabled = true;
     }
 }
