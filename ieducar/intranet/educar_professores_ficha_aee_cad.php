@@ -86,94 +86,62 @@ return new class extends clsCadastro
 
         $obrigatorio = true;
 
-        $this->campoOculto('id', $this->id);
-        $this->campoOculto('copy', $this->copy);                
+        $this->campoOculto('ficha_aee_id', $this->id);
+        $this->campoOculto('copy', $this->copy);
 
-       
-        $this->campoOculto('ano', explode('/', dataToBrasil(NOW()))[2]);    
-        $this->inputsHelper()->dynamic('data', ['required' => $obrigatorio]);         
-        $this->inputsHelper()->dynamic(['turma', 'matricula']);
-        // Montar o inputsHelper->select \/
-        // Cria lista de Turmas
-        $obj_turma = new clsPmieducarTurma();
-        $lista_turmas = $obj_turma->lista_turmas_aee();
-        $turma_resources = ['' => 'Selecione uma Turma'];
-        foreach ($lista_turmas as $reg) {
-            $turma_resources["{$reg['cod_turma']}"] = "{$reg['nm_turma']} - ({$reg['nome']})";
+
+        $this->campoOculto('ano', explode('/', dataToBrasil(NOW()))[2]);
+        $this->inputsHelper()->dynamic('data', ['required' => $obrigatorio]);
+
+        if (empty($this->id)) {
+            $this->campoOculto('ficha_aee_id', $this->id);
+            $this->inputsHelper()->dynamic(['turma', 'matricula']);
+            // Montar o inputsHelper->select \/
+            // Cria lista de Turmas
+            $obj_turma = new clsPmieducarTurma();
+            $lista_turmas = $obj_turma->lista_turmas_aee();
+            $turma_resources = ['' => 'Selecione uma Turma'];
+            foreach ($lista_turmas as $reg) {
+                $turma_resources["{$reg['cod_turma']}"] = "{$reg['nm_turma']} - ({$reg['nome']})";
+            }
+
+            // Turmas
+            $options = [
+                'label' => 'Turma',
+                'required' => true,
+                'resources' => $turma_resources
+            ];
+            $this->inputsHelper()->select('ref_cod_turma', $options);
+
+            // Montar o inputsHelper->select \/
+            // Cria lista de Alunos
+            $obj_aluno = new clsPmieducarMatricula();
+            $lista_alunos = $obj_aluno->lista_matriculas_aee();
+            $aluno_resources = ['' => 'Selecione um Aluno'];
+            foreach ($lista_alunos as $reg) {
+                $aluno_resources["{$reg['cod_matricula']}"] = "{$reg['cod_matricula']} - {$reg['nome']}";
+            }
+
+            // Alunos
+            $options = [
+                'label' => 'Aluno',
+                'required' => true,
+                'resources' => $aluno_resources
+            ];
+            $this->inputsHelper()->select('ref_cod_matricula', $options);
+        } else {
+            $this->campoTextoDisabled('aluno', 'Aluno', $this->aluno);
+            $this->campoTextoDisabled('turma', 'Turma', $this->turma);
+
+            $this->campoOculto('id', $this->id);
+            $this->campoOculto('copy', $this->copy);
+            $this->campoOculto('data', $this->data);
+            $this->campoOculto('ref_cod_turma', $this->ref_cod_turma);
+            $this->campoOculto('ref_cod_matricula', $this->ref_cod_matricula);
         }
-
-        // Turmas
-        $options = [
-            'label' => 'Turma',
-            'required' => true,
-            'resources' => $turma_resources
-        ];
-        $this->inputsHelper()->select('ref_cod_turma', $options);
-
-        // Montar o inputsHelper->select \/
-        // Cria lista de Alunos
-        $obj_aluno = new clsPmieducarMatricula();
-        $lista_alunos = $obj_aluno->lista_matriculas_aee();
-        $aluno_resources = ['' => 'Selecione um Aluno'];
-        foreach ($lista_alunos as $reg) {
-            $aluno_resources["{$reg['cod_matricula']}"] = "{$reg['cod_matricula']} - {$reg['nome']}";
-        }
-
-        // Alunos
-        $options = [
-            'label' => 'Aluno',
-            'required' => true,
-            'resources' => $aluno_resources
-        ];
-        $this->inputsHelper()->select('ref_cod_matricula', $options);
 
         $this->campoMemo('necessidades_aprendizagem', 'Necessidades de Aprendizagem', $this->necessidades_aprendizagem, 100, 5, !$obrigatorio);
-        $this->campoMemo('caracterizacao_pedagogica', 'Caracterização Pedagógica', $this->caracterizacao_pedagogica, 100, 5, !$obrigatorio);  
-    }
-
-
-    public function Novo()
-    {
-       //
-    }
-
-    public function Editar()
-    {
-        $obj = new clsModulesFichaAee(
-            $this->id,
-            null,
-            null,
-            null,
-            $this->necessidades_aprendizagem,
-            $this->caracterizacao_pedagogica
-        );
-
-        $editou = $obj->edita();
-
-        if ($editou) {
-            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
-            $this->simpleRedirect('educar_professores_ficha_aee_lst.php');
-        }
-
-        $this->mensagem = 'Edição não realizada.<br>';
-
-        return false;
-    }
-
-    public function Excluir()
-    {
-        $obj = new clsModulesFichaAee($this->id);
-
-        $excluiu = $obj->excluir();
-
-        if ($excluiu) {
-            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
-            $this->simpleRedirect('educar_professores_ficha_aee_lst.php');
-        }
-
-        $this->mensagem = 'Exclusão não realizada.<br>';
-
-        return false;
+        $this->campoMemo('caracterizacao_pedagogica', 'Caracterização Pedagógica', $this->caracterizacao_pedagogica, 100, 5, !$obrigatorio);
     }
 
     public function __construct()
@@ -185,7 +153,6 @@ return new class extends clsCadastro
     public function loadAssets()
     {
         $scripts = [
-            '/modules/Cadastro/Assets/Javascripts/FichaAee.js',
             '/modules/Cadastro/Assets/Javascripts/FichaAeeExclusao.js',
             '/modules/Cadastro/Assets/Javascripts/FichaAeeEdicao.js',
         ];

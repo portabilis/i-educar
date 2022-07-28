@@ -29,7 +29,7 @@
                 url: urlForExcluirFichaAee,
                 dataType: 'json',
                 data: {
-                    ficha_aee_id: ficha_aee_id,
+                    ficha_aee_id: ficha_aee_id
                 },
                 success: handleExcluirFichaAee
             };

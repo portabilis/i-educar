@@ -19,19 +19,16 @@
       editarFichaAee();
     });
 
-    // function ehDataValida(d) {
-    //   return d instanceof Date && !isNaN(d);
-    // }
-
     function editarFichaAee() {
-      //let data = dataParaBanco(document.getElementById("data").value);
-      let necessidades_aprendizagem = document.getElementById("necessidades_aprendizagem").value;
-      let caracterizacao_pedagogica = document.getElementById("caracterizacao_pedagogica").value;
+      var data = dataParaBanco(document.getElementById("data").value);  
+      var turma = document.getElementById("ref_cod_turma").value;
+      var matricula = document.getElementById("ref_cod_matricula").value;         
+      var necessidades_aprendizagem = document.getElementById("necessidades_aprendizagem").value;
+      var caracterizacao_pedagogica = document.getElementById("caracterizacao_pedagogica").value; 
 
       // VALIDAÇÃO
-      //if (!ehDataValida(new Date(data))) { alert("Data inicial não é válida."); return; }
-      if (necessidades_aprendizagem == null) { alert("O campo Necessidades de Aprendizagem não é válido."); return; }
-      if (caracterizacao_pedagogica == null) { alert("O campo Caracterização Pedagógica não é válido."); return; }
+      if (necessidades_aprendizagem == null || necessidades_aprendizagem == '') { alert("O campo Necessidades de Aprendizagem é obrigatório."); return; }
+      if (caracterizacao_pedagogica == null || caracterizacao_pedagogica == '') { alert("O campo Caracterização Pedagógica é obrigatório."); return; }
 
       var urlForEditarFichaAee = postResourceUrlBuilder.buildUrl('/module/Api/FichaAee', 'editar-ficha-aee', {});
 
@@ -41,7 +38,9 @@
         dataType: 'json',
         data: {
           ficha_aee_id: ficha_aee_id,
-          //data: data,
+          data: data,
+          turma: turma,
+          matricula: matricula,
           necessidades_aprendizagem: necessidades_aprendizagem,
           caracterizacao_pedagogica: caracterizacao_pedagogica
         },

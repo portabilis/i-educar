@@ -17,13 +17,13 @@ class FichaAeeController extends ApiCoreController
 
     public function editarFichaAee()
     {
-        $ficha_aee_id = (int) $this->getRequest()->ficha_aee_id; 
+        $ficha_aee_id = (int) $this->getRequest()->ficha_aee_id;        
         $necessidades_aprendizagem = $this->getRequest()->necessidades_aprendizagem;
         $caracterizacao_pedagogica = $this->getRequest()->caracterizacao_pedagogica;
 
         if (is_numeric($ficha_aee_id)) {
             $obj = new clsModulesFichaAee(
-                $ficha_aee_id,                
+                $ficha_aee_id,
                 null,
                 null,
                 null,
