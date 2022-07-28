@@ -357,9 +357,9 @@ return new class extends clsCadastro {
         if (is_numeric($this->ref_cod_instituicao)) {
             $query->where('ref_cod_instituicao', $this->ref_cod_instituicao);
         }
-        $opcoes = $query->pluck('nm_tipo', 'cod_turma_tipo')
-                    ->put('', 'Selecione')
-                    ->sortKeys();
+        $opcoes = $query->orderBy('nm_tipo', 'ASC')
+            ->pluck('nm_tipo', 'cod_turma_tipo')
+            ->prepend('Selecione', '');
 
         $script = 'javascript:showExpansivelIframe(520, 170, \'educar_turma_tipo_cad_pop.php\');';
 
