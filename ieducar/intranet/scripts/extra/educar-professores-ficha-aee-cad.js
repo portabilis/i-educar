@@ -1,13 +1,14 @@
 (function ($) {
   $(document).ready(function () { 
     var id = $j('#id').val();
+    var copy = $j('#copy').val();
     var ficha_aee_id    = document.getElementById('ficha_aee_id');
 
     var submitButton = $j('#btn_enviar');
     submitButton.removeAttr('onclick');
 
     submitButton.click(function () {
-      if (ficha_aee_id == '' || isNaN(ficha_aee_id)) {
+      if (ficha_aee_id == '' || isNaN(ficha_aee_id) && copy === '') {
         enviarFormulario();
       }
     });
