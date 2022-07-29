@@ -137,8 +137,8 @@ return new class extends clsCadastro
             $this->campoOculto('ref_cod_matricula', $this->ref_cod_matricula);
         }
 
-        $this->campoMemo('necessidades_aprendizagem', 'Necessidades de Aprendizagem', $this->necessidades_aprendizagem, 100, 5, !$obrigatorio);
         $this->campoMemo('caracterizacao_pedagogica', 'Caracterização Pedagógica', $this->caracterizacao_pedagogica, 100, 5, !$obrigatorio);
+        $this->campoMemo('necessidades_aprendizagem', 'Necessidades de Aprendizagem', $this->necessidades_aprendizagem, 100, 5, !$obrigatorio);       
     }
 
     public function __construct()
