@@ -129,6 +129,12 @@ return new class extends clsCadastro
             return false;
         }
 
+        if (!$this->validaCaracteresPermitidosComplemento()) {
+            $this->mensagem = 'O campo Complemento só permite os caracteres: ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ª º – / . ,';
+
+            return false;
+        }
+
         $this->insc_est = idFederal2int($this->insc_est);
         $this->idpes_cad = $this->pessoa_logada;
 
@@ -203,6 +209,15 @@ return new class extends clsCadastro
         return is_numeric($telefone) && (strlen($telefone) < 12);
     }
 
+    protected function validaCaracteresPermitidosComplemento()
+    {
+        if (empty($this->complement)) {
+            return true;
+        }
+        $pattern = '/^[a-zA-Z0-9ªº\/–\ .,-]+$/';
+        return preg_match($pattern, $this->complement);
+    }
+
     public function Editar()
     {
         if (!empty($this->cnpj) && validaCNPJ($this->cnpj) === false) {
@@ -211,6 +226,12 @@ return new class extends clsCadastro
         }
 
         $this->cnpj = validaCNPJ($this->cnpj) ? idFederal2int(urldecode($this->cnpj)) : null;
+
+        if (!$this->validaCaracteresPermitidosComplemento()) {
+            $this->mensagem = 'O campo Complemento só permite os caracteres: ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ª º – / . ,';
+
+            return false;
+        }
 
         $objJuridica = new clsJuridica(false, $this->cnpj);
 

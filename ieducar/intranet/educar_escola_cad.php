@@ -1543,6 +1543,10 @@ return new class extends clsCadastro {
         $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 3, 'educar_escola_lst.php');
         $this->pesquisaPessoaJuridica = false;
 
+        if (!$this->validaCaracteresPermitidosComplemento()) {
+            return false;
+        }
+
         if (!$this->validaCnpjMantenedora()) {
             return false;
         }
@@ -1849,6 +1853,10 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7, 'educar_escola_lst.php');
         $this->pesquisaPessoaJuridica = false;
+
+        if (!$this->validaCaracteresPermitidosComplemento()) {
+            return false;
+        }
 
         if (!$this->validaCnpjMantenedora()) {
             return false;
@@ -2525,6 +2533,20 @@ return new class extends clsCadastro {
         return true;
     }
 
+    protected function validaCaracteresPermitidosComplemento()
+    {
+        if (empty($this->complement)) {
+            return true;
+        }
+        $pattern = '/^[a-zA-Z0-9ªº\/–\ .,-]+$/';
+
+        if (!preg_match($pattern, $this->complement)) {
+            $this->mensagem = 'O campo Complemento só permite os caracteres: ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ª º – / . ,';
+            return false;
+        }
+        return true;
+    }
+
     protected function validaSalasAcessibilidade()
     {
         if ($this->numero_salas_acessibilidade == '0') {
@@ -2623,7 +2645,7 @@ return new class extends clsCadastro {
 
     protected function validaEquipamentosAcessoInternet()
     {
-        if (is_array($this->equipamentos_acesso_internet) && in_array(2, $this->equipamentos_acesso_internet) && 
+        if (is_array($this->equipamentos_acesso_internet) && in_array(2, $this->equipamentos_acesso_internet) &&
             is_array($this->rede_local) && !in_array(3, $this->rede_local)) {
             $this->mensagem = "O campo: <b>Equipamentos que os aluno(a)s usam para acessar a internet da escola</b> não deve ser preenchido com a opção: <b>Dispositivos pessoais (computadores portáteis, celulares, tablets, etc.)</b> quando o campo: <b>Rede local de interligação de computadores</b> não possuir a opção: <b>Wireless</b> selecionada.";
             return false;
