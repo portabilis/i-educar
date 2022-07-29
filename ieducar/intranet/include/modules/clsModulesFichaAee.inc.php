@@ -285,13 +285,28 @@ class clsModulesFichaAee extends Model
         return false;
     }
 
-    /**
+     /**
      * Retorna um array com os dados de um registro
      *
      * @return array
      */
-    public function existe()
-    {
+    public function existe () {
+        if (is_numeric($this->ref_cod_turma) && is_numeric($this->ref_cod_matricula)) {
+            $sql = "
+                SELECT
+                    *
+                FROM
+                    modules.ficha_aee as fa
+                WHERE fa.ref_cod_matricula = '{$this->ref_cod_matricula}'
+                    AND fa.ref_cod_turma = '{$this->ref_cod_turma}'
+            ";
+
+            $db = new clsBanco();
+            $db->Consulta($sql);
+            $db->ProximoRegistro();
+
+            return $db->Tupla();
+        }
 
         return false;
     }

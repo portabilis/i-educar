@@ -86,15 +86,12 @@ return new class extends clsCadastro
 
         $obrigatorio = true;
 
-        $this->campoOculto('ficha_aee_id', $this->id);
-        $this->campoOculto('copy', $this->copy);
-
-
         $this->campoOculto('ano', explode('/', dataToBrasil(NOW()))[2]);
         $this->inputsHelper()->dynamic('data', ['required' => $obrigatorio]);
 
         if (empty($this->id)) {
             $this->campoOculto('ficha_aee_id', $this->id);
+            $this->campoOculto('copy', $this->copy);
             $this->inputsHelper()->dynamic(['turma', 'matricula']);
             // Montar o inputsHelper->select \/
             // Cria lista de Turmas
