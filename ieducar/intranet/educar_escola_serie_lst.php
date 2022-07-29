@@ -37,6 +37,7 @@ return new class extends clsListagem {
         $get_curso = true;
         $get_serie = false;
         $get_escola_serie = true;
+        $get_select_name_full = true;
 
         include 'include/pmieducar/educar_campo_lista.php';
 
@@ -48,11 +49,11 @@ return new class extends clsListagem {
             $this->ref_cod_serie = $this->ref_cod_serie_;
         }
 
-        $opcoes_serie = ['' => 'Selecione'];
+        $opcoes_serie = ['' => 'Selecione uma série'];
 
         // Editar
         if ($this->ref_cod_curso) {
-            $series = LegacyGrade::where('ativo',1)->where('ref_cod_curso',$this->ref_cod_curso)->orderBy('nm_serie')->get(['nm_serie','cod_serie']);
+            $series = LegacyGrade::where('ativo',1)->where('ref_cod_curso',$this->ref_cod_curso)->orderBy('nm_serie')->pluck('nm_serie','cod_serie')->prepend('Selecione uma série','');
 
             foreach ($series as $serie) {
                 $opcoes_serie[$serie['cod_serie']] = $serie['nm_serie'];

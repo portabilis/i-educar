@@ -12,7 +12,27 @@ document.getElementById('ref_cod_instituicao').onchange = function () {
 }
 
 document.getElementById('ref_cod_escola').onchange = function () {
-    getEscolaCurso();
+    let xml;
+    let campoEscola;
+    const campoInstituicao = document.getElementById('ref_cod_instituicao').value;
+    const campoCurso = document.getElementById('ref_cod_curso');
+    if (document.getElementById('ref_cod_escola')) {
+      campoEscola = document.getElementById('ref_cod_escola').value;
+    } else if (document.getElementById('ref_ref_cod_escola')) {
+      campoEscola = document.getElementById('ref_ref_cod_escola').value;
+    }
+    campoCurso.length = 1;
+
+    limpaCampos(3);
+    if (campoEscola) {
+      campoCurso.disabled = true;
+      campoCurso.options[0].text = 'Carregando cursos';
+      xml = new ajax(atualizaLstEscolaCurso);
+      xml.envia('educar_curso_xml.php?esc=' + campoEscola);
+    } else {
+      xml = new ajax(atualizaLstCurso);
+      xml.envia('educar_curso_xml.php?ins=' + campoInstituicao);
+    }
 }
 
 document.getElementById('ref_cod_curso').onchange = function () {

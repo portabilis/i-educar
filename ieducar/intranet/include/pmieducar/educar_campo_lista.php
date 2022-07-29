@@ -41,7 +41,7 @@ $nivel_usuario = $obj_permissoes->nivel_acesso($pessoa_logada);
 
 //Se administrador
 if ($nivel_usuario == 1 || $cad_usuario) {
-    $opcoes = ['' => 'Selecione'];
+    $opcoes = ['' => $get_select_name_full ? 'Selecione uma instituição': 'Selecione'];
     $obj_instituicao = new clsPmieducarInstituicao();
     $obj_instituicao->setCamposLista('cod_instituicao, nm_instituicao');
     $obj_instituicao->setOrderby('nm_instituicao ASC');
@@ -101,7 +101,7 @@ if ($get_escola && ($nivel_usuario == 1 || $nivel_usuario == 2 || $cad_usuario))
     ]);
 }
 if ($get_curso) {
-    $opcoes_curso = ['' => 'Selecione'];
+    $opcoes_curso = ['' => $get_select_name_full ? 'Selecione um curso' : 'Selecione'];
 
     // EDITAR
     if ($this->ref_cod_escola) {
@@ -115,7 +115,7 @@ if ($get_curso) {
             }
         }
     } elseif ($this->ref_cod_instituicao) {
-        $opcoes_curso = ['' => 'Selecione'];
+        $opcoes_curso = ['' => $get_select_name_full ? 'Selecione um curso' : 'Selecione'];
         $obj_curso = new clsPmieducarCurso();
         $obj_curso->setOrderby('nm_curso ASC');
 
