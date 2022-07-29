@@ -693,6 +693,42 @@ class clsCampos extends Core_Controller_Page_Abstract
         }
     }
 
+    public function campoTextoDisabled(
+        $nome,
+        $campo,
+        $valor,
+        $tamanhovisivel = null,
+        $tamanhomaximo = null,
+        $obrigatorio = false,
+        $expressao = false,
+        $duplo = false,
+        $descricao = '',
+        $descricao2 = '',
+        $script = '',
+        $evento = 'onKeyUp',
+        $disabled = true
+    ) {
+        $arr_componente = [
+            $duplo ? 'textoDuplo' : 'texto',
+            $this->__adicionando_tabela ? $nome : $campo,
+            $expressao ? $expressao : ($obrigatorio ? '/[^ ]/' : ''),
+            $valor,
+            $tamanhovisivel,
+            $tamanhomaximo,
+            $descricao,
+            $descricao2,
+            $script,
+            $evento,
+            $disabled
+        ];
+
+        if (!$this->__adicionando_tabela) {
+            $this->campos[$nome] = $arr_componente;
+        } else {
+            $this->__campos_tabela[] = $arr_componente;
+        }
+    }
+
     public function campoEmail(
         $nome,
         $campo,

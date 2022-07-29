@@ -11,8 +11,6 @@ class clsModulesPlanejamentoAulaAee extends Model
     public $ref_cod_matricula;
     public $etapa_sequencial;
     public $ddp;
-    public $necessidade_aprendizagem;
-    public $caracterizacao_pedagogica;
     public $conteudos;
     public $ref_componente_curricular_array;
     public $bnccs;
@@ -28,8 +26,6 @@ class clsModulesPlanejamentoAulaAee extends Model
         $ref_cod_matricula = null,
         $etapa_sequencial = null,
         $ddp = null,
-        $necessidade_aprendizagem = null,
-        $caracterizacao_pedagogica = null,
         $conteudos = null,
         $ref_componente_curricular_array = null,
         $bnccs = null,
@@ -42,8 +38,8 @@ class clsModulesPlanejamentoAulaAee extends Model
 
         $this->_from = "
                 modules.planejamento_aula_aee as pa
-            JOIN modules.planejamento_aula_componente_curricular as pacc
-                ON (pacc.planejamento_aula_id = pa.id)
+            JOIN modules.planejamento_aula_componente_curricular_aee as pacc
+                ON (pacc.planejamento_aula_aee_id = pa.id)
             JOIN pmieducar.turma t
                 ON (t.cod_turma = pa.ref_cod_turma)
             JOIN pmieducar.instituicao i
@@ -54,10 +50,20 @@ class clsModulesPlanejamentoAulaAee extends Model
                 ON (j.idpes = e.ref_idpes)
             JOIN pmieducar.curso c
                 ON (c.cod_curso = t.ref_cod_curso) 
+            JOIN pmieducar.serie s
+                ON (s.cod_serie = t.ref_ref_cod_serie)
+            JOIN pmieducar.turma_turno u
+                ON (u.id = t.turma_turno_id)
+            LEFT JOIN pmieducar.turma_modulo q
+                ON (q.ref_cod_turma = t.cod_turma AND q.sequencial = 1)
+            JOIN modules.professor_turma as pt
+                ON (pt.turma_id = pa.ref_cod_turma)
+            JOIN cadastro.pessoa AS pe
+                ON ( pe.idpes = pt.servidor_id )
             JOIN pmieducar.matricula m
                 ON (m.cod_matricula = pa.ref_cod_matricula)  
             JOIN pmieducar.aluno a
-                ON (a.cod_aluno = m.ref_cod_aluno) 
+                ON (a.cod_aluno = m.ref_cod_aluno)             
             JOIN cadastro.pessoa p
                 ON (p.idpes = a.ref_idpes)         
             LEFT JOIN modules.componente_curricular k
@@ -72,15 +78,16 @@ class clsModulesPlanejamentoAulaAee extends Model
             pa.ref_cod_matricula,
             pa.ref_cod_turma,
             pa.ddp,
-            pa.necessidade_aprendizagem,
             pa.recursos_didaticos,
-            pa.caracterizacao_pedagogica,
             pa.outros,
+            pa.etapa_sequencial AS fase_etapa,
             i.nm_instituicao AS instituicao,
             p.nome as aluno,
             j.fantasia AS escola,
             c.nm_curso AS curso,
-            t.nm_turma AS turma
+            t.nm_turma AS turma,
+            pe.nome as professor,
+            s.nm_serie AS serie
         ';
 
         if (is_numeric($id)) {
@@ -105,14 +112,6 @@ class clsModulesPlanejamentoAulaAee extends Model
 
         if (is_string($ddp)) {
             $this->ddp = $ddp;
-        }
-
-        if (is_string($necessidade_aprendizagem)) {
-            $this->necessidade_aprendizagem = $necessidade_aprendizagem;
-        }
-
-        if (is_string($caracterizacao_pedagogica)) {
-            $this->caracterizacao_pedagogica = $caracterizacao_pedagogica;
         }
 
         if (is_array($conteudos)) {
@@ -155,10 +154,8 @@ class clsModulesPlanejamentoAulaAee extends Model
             && is_numeric($this->ref_cod_matricula)
             && is_array($this->ref_componente_curricular_array)
             && is_string($this->ddp)
-            && is_string($this->necessidade_aprendizagem)
             && is_array($this->bnccs)
             && is_array($this->conteudos)
-            && is_string($this->caracterizacao_pedagogica)
             && is_array($this->bncc_especificacoes)
             && is_string($this->recursos_didaticos)
             && is_string($this->outros)
@@ -193,14 +190,6 @@ class clsModulesPlanejamentoAulaAee extends Model
             $valores .= "{$gruda}'{$db->escapeString($this->ddp)}'";
             $gruda = ', ';
 
-            $campos .= "{$gruda}necessidade_aprendizagem";
-            $valores .= "{$gruda}'{$db->escapeString($this->necessidade_aprendizagem)}'";
-            $gruda = ', ';
-
-            $campos .= "{$gruda}caracterizacao_pedagogica";
-            $valores .= "{$gruda}'{$db->escapeString($this->caracterizacao_pedagogica)}'";
-            $gruda = ', ';
-
             $campos .= "{$gruda}recursos_didaticos";
             $valores .= "{$gruda}'{$db->escapeString($this->recursos_didaticos)}'";
             $gruda = ', ';
@@ -222,19 +211,19 @@ class clsModulesPlanejamentoAulaAee extends Model
             $id = $db->InsertId("{$this->_tabela}_id_seq");
 
             foreach ($this->ref_componente_curricular_array as $key => $ref_componente_curricular) {
-                $obj = new clsModulesPlanejamentoAulaComponenteCurricular(null, $id, $ref_componente_curricular[1]);
+                $obj = new clsModulesPlanejamentoAulaComponenteCurricularAee(null, $id, $ref_componente_curricular[1]);
                 $obj->cadastra();
             }
 
             foreach ($this->bnccs as $key => $bncc_array) {
                 foreach ($bncc_array[1] as $key => $bncc_id) {
-                    $obj = new clsModulesPlanejamentoAulaBNCC(null, $id, $bncc_id);
+                    $obj = new clsModulesPlanejamentoAulaBNCCAee(null, $id, $bncc_id);
                     $obj->cadastra();
                 }
             }
 
             foreach ($this->conteudos as $key => $conteudo) {
-                $obj = new clsModulesPlanejamentoAulaConteudo(null, $id, $conteudo[1]);
+                $obj = new clsModulesPlanejamentoAulaConteudoAee(null, $id, $conteudo[1]);
                 $obj->cadastra();
             }
 
@@ -244,9 +233,9 @@ class clsModulesPlanejamentoAulaAee extends Model
                     $bncc_id = $obj->detalhe()['bncc_id'];
 
                     $obj = new clsModulesPlanejamentoAulaBNCC(null, $id, $bncc_id);
-                    $planejamento_aula_bncc_id = $obj->detalhe2()['id'];
+                    $planejamento_aula_bncc_aee_id = $obj->detalhe2()['id'];
 
-                    $obj = new clsModulesPlanejamentoAulaBNCCEspecificacao(null, $planejamento_aula_bncc_id, $bncc_especificacao_id);
+                    $obj = new clsModulesPlanejamentoAulaBNCCEspecificacaoAee(null, $planejamento_aula_bncc_aee_id, $bncc_especificacao_id);
                     $obj->cadastra();
                 }
             }
@@ -271,8 +260,6 @@ class clsModulesPlanejamentoAulaAee extends Model
             && is_array($this->bnccs)
             && is_array($this->conteudos)
             && is_string($this->recursos_didaticos)
-            && is_string($this->necessidade_aprendizagem)
-            && is_string($this->caracterizacao_pedagogica)
             && is_string($this->outros)
         ) {
             $db = new clsBanco();
@@ -388,6 +375,11 @@ class clsModulesPlanejamentoAulaAee extends Model
             $whereAnd = ' AND ';
         }
 
+        if (is_numeric($int_ref_cod_serie)) {
+            $filtros .= "{$whereAnd} s.cod_serie = '{$int_ref_cod_serie}'";
+            $whereAnd = ' AND ';
+        }
+
         if (is_numeric($int_ref_cod_turma)) {
             $filtros .= "{$whereAnd} t.cod_turma = '{$int_ref_cod_turma}'";
             $whereAnd = ' AND ';
@@ -481,16 +473,16 @@ class clsModulesPlanejamentoAulaAee extends Model
 
             $data['detalhes'] = $db->Tupla();
 
-            $obj = new clsModulesPlanejamentoAulaComponenteCurricular();
+            $obj = new clsModulesPlanejamentoAulaComponenteCurricularAee();
             $data['componentesCurriculares'] = $obj->lista($this->id);
 
-            $obj = new clsModulesPlanejamentoAulaBNCC();
+            $obj = new clsModulesPlanejamentoAulaBNCCAee();
             $data['bnccs'] = $obj->lista($this->id);
 
-            $obj = new clsModulesPlanejamentoAulaBNCCEspecificacao();
+            $obj = new clsModulesPlanejamentoAulaBNCCEspecificacaoAee();
             $data['especificacoes'] = $obj->lista($this->id);
 
-            $obj = new clsModulesPlanejamentoAulaConteudo();
+            $obj = new clsModulesPlanejamentoAulaConteudoAee();
             $data['conteudos'] = $obj->lista($this->id);
 
             return $data;

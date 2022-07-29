@@ -52,11 +52,9 @@ class PlanejamentoAulaAeeController extends ApiCoreController
     public function editarPlanoAula()
     {
         $planejamento_aula_aee_id = $this->getRequest()->planejamento_aula_aee_id;
-        $ddp = $this->getRequest()->ddp;
-        $necessidade_aprendizagem = $this->getRequest()->necessidade_aprendizagem;
+        $ddp = $this->getRequest()->ddp;      
         $bncc = $this->getRequest()->bncc;
-        $conteudos = $this->getRequest()->conteudos_novos;
-        $caracterizacao_pedagogica = $this->getRequest()->caracterizacao_pedagogica;
+        $conteudos = $this->getRequest()->conteudos_novos;      
 
         if (is_numeric($planejamento_aula_aee_id)) {
             $obj = new clsModulesPlanejamentoAulaAee(
@@ -67,10 +65,8 @@ class PlanejamentoAulaAeeController extends ApiCoreController
                 null,
                 null,
                 $ddp,
-                $necessidade_aprendizagem,
                 $bncc,
-                $conteudos,
-                $caracterizacao_pedagogica
+                $conteudos
             );
 
             $editou = $obj->edita();
@@ -90,9 +86,7 @@ class PlanejamentoAulaAeeController extends ApiCoreController
         $turma = $this->getRequest()->turma;
         $matricula = $this->getRequest()->matricula;
         $faseEtapa = $this->getRequest()->faseEtapa;
-        $ddp = $this->getRequest()->ddp;
-        $necessidade_aprendizagem = $this->getRequest()->necessidade_aprendizagem;
-        $caracterizacao_pedagogica = $this->getRequest()->caracterizacao_pedagogica;
+        $ddp = $this->getRequest()->ddp;       
         $conteudos = $this->getRequest()->conteudos;
         $componentesCurriculares = $this->getRequest()->componentesCurriculares;
         $bnccs = $this->getRequest()->bnccs;
@@ -114,9 +108,7 @@ class PlanejamentoAulaAeeController extends ApiCoreController
             $turma,
             $matricula,
             $faseEtapa,
-            $ddp,
-            $necessidade_aprendizagem,
-            $caracterizacao_pedagogica,
+            $ddp,            
             $conteudos,
             $componentesCurriculares,
             $bnccs,

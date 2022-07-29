@@ -17,9 +17,7 @@ return new class extends clsCadastro
     public $fase_etapa;
     public $data_inicial;
     public $data_final;
-    public $ddp;
-    public $necessidade_aprendizagem;
-    public $caracterizacao_pedagogica;
+    public $ddp;    
     public $bncc;
     public $conteudo_id;
     public $bncc_especificacoes;
@@ -145,9 +143,7 @@ return new class extends clsCadastro
         $this->adicionarConteudosTabela();
 
         $this->campoMemo('ddp', 'Metodologia', $this->ddp, 100, 5, $obrigatorio);
-        $this->campoMemo('recursos_didaticos', 'Recursos didáticos', $this->recursos_didaticos, 100, 5, !$obrigatorio);
-        $this->campoMemo('necessidade_aprendizagem', 'Necessidade de Aprendizagem', $this->necessidade_aprendizagem, 100, 5, !$obrigatorio);
-        $this->campoMemo('caracterizacao_pedagogica', 'Caracterização Pedagógica', $this->caracterizacao_pedagogica, 100, 5, !$obrigatorio);
+        $this->campoMemo('recursos_didaticos', 'Recursos didáticos', $this->recursos_didaticos, 100, 5, !$obrigatorio);       
         $this->campoMemo('outros', 'Outros', $this->outros, 100, 5, !$obrigatorio);
 
         $this->campoOculto('id', $this->id);
@@ -173,9 +169,7 @@ return new class extends clsCadastro
             $this->ddp,
             $this->bncc,
             $this->conteudos,
-            $this->recursos_didaticos,
-            $this->necessidade_aprendizagem,
-            $this->caracterizacao_pedagogica,
+            $this->recursos_didaticos,           
             $this->outros
         );
 
@@ -210,8 +204,8 @@ return new class extends clsCadastro
     private function getBNCCTurma($turma = null, $ref_cod_componente_curricular_array = null)
     {
         if (is_numeric($turma)) {
-            // $obj = new clsPmieducarTurma($turma);
-            // $resultado = $obj->getGrau();
+            $obj = new clsPmieducarTurma($turma);
+            $resultado = $obj->getGrau();
 
             $bncc = [];
             $bncc_temp = [];
@@ -242,7 +236,7 @@ return new class extends clsCadastro
     public function loadAssets()
     {
         $scripts = [
-            '/modules/DynamicInput/Assets/Javascripts/TodasTurmas.js',
+           
             '/modules/Cadastro/Assets/Javascripts/PlanejamentoAula.js',
             '/modules/Cadastro/Assets/Javascripts/PlanoAulaExclusao.js',
             '/modules/Cadastro/Assets/Javascripts/PlanoAulaEdicao.js',
