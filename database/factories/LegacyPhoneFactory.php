@@ -15,7 +15,7 @@ class LegacyPhoneFactory extends Factory
             'idpes' => fn () => LegacyPersonFactory::new()->create(),
             'tipo' => $this->faker->randomElement([1, 2, 3, 4]),
             'ddd' => $this->faker->numerify('##'),
-            'fone' => $this->faker->numerify('########'),
+            'fone' => $this->faker->numerify('9#######'),
             'idpes_cad' => fn () => LegacyUserFactory::new()->unique()->make(),
             'idpes_rev' => fn () => LegacyUserFactory::new()->unique()->make(),
             'data_rev' => $this->faker->dateTime(),
