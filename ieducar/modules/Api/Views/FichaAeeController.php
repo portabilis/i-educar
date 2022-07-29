@@ -57,6 +57,13 @@ class FichaAeeController extends ApiCoreController
             $caracterizacao_pedagogica
         );
 
+        $existe = $obj->existe();
+
+        if ($existe){
+            return [ "result" => "Cadastro não realizado, pois já há uma Ficha cadastrada para este Aluno nesta Turma." ];
+            $this->simpleRedirect('educar_professores_ficha_aee_cad.php');
+        }
+
         $cadastrou = $obj->cadastra();
         if (!$cadastrou) {
             return ["result" => "Cadastro não realizado."];
