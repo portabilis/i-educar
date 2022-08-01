@@ -28,6 +28,8 @@ class LegacySchoolFactory extends Factory
             'sigla' => $this->faker->asciify(),
             'data_cadastro' => now(),
             'ref_idpes' => LegacyOrganizationFactory::new()->create(),
+            'latitude' => $this->faker->latitude(),
+            'longitude' => $this->faker->longitude(),
         ];
     }
 }
