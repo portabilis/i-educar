@@ -53,7 +53,7 @@ return new class extends clsListagem {
 
         // Editar
         if ($this->ref_cod_curso) {
-            $series = LegacyGrade::where('ativo',1)->where('ref_cod_curso',$this->ref_cod_curso)->orderBy('nm_serie')->pluck('nm_serie','cod_serie')->prepend('Selecione uma série','');
+            $series = LegacyGrade::where('ativo',1)->where('ref_cod_curso',$this->ref_cod_curso)->orderBy('nm_serie')->get(['nm_serie','cod_serie']);
 
             foreach ($series as $serie) {
                 $opcoes_serie[$serie['cod_serie']] = $serie['nm_serie'];
