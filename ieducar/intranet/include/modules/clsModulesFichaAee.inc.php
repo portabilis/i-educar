@@ -97,8 +97,6 @@ class clsModulesFichaAee extends Model
         if (is_numeric($this->ref_cod_turma)) {
             $db = new clsBanco();
 
-            $this->data = date('Y-m-d');
-
             $campos = "data, created_at";
             $valores = "'{($this->data)}', (NOW() - INTERVAL '3 HOURS')";
 
@@ -122,7 +120,7 @@ class clsModulesFichaAee extends Model
                 $campos     .=  ", caracterizacao_pedagogica";
                 $valores    .=  ", '{$db->escapeString($this->caracterizacao_pedagogica)}'";
             }
-
+            
             $db->Consulta("
                 INSERT INTO
                     {$this->_tabela} ( $campos )
