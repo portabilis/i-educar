@@ -993,7 +993,7 @@ return new class extends clsCadastro {
         }
 
         if (!$this->validaCaracteresPermitidosComplemento()) {
-            $this->mensagem = 'O campo Complemento só permite os caracteres: ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ª º – / . ,';
+            $this->mensagem = 'O campo foi preenchido com valor não permitido. O campo Complemento só permite os caracteres: ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ª º – / . ,';
 
             return false;
         }
