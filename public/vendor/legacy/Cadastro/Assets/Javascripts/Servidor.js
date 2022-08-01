@@ -383,8 +383,6 @@ function setAutoComplete() {
       var id = $j(this).attr('id'),
           idNum = id.match(/\[(\d+)\]/),
           refIdCourse = $j('input[id="employee_college_id[' + idNum[1] + ']"]');
-
-      refIdCourse.val('')
     });
   });
 };
