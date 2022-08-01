@@ -14,16 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::table('notifications', function (Blueprint $table) {
-            $sm = Schema::getConnection()->getDoctrineSchemaManager();
-            $doctrineTable = $sm->listTableDetails('notifications');
-
-            if (! $doctrineTable->hasIndex('notifications_user_id')) {
-                $table->index('user_id', 'notifications_user_id');
-            }
-
-            if (! $doctrineTable->hasIndex('notifications_read_at')) {
-                $table->index('read_at', 'notifications_read_at');
-            }
+            $table->index(['user_id']);
+            $table->index(['read_at']);
         });
     }
 
