@@ -5,7 +5,6 @@ namespace Tests\Feature\Http\Controllers\Api;
 use App\Models\LegacyStudent;
 use Database\Factories\LegacyStudentFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
 class StudentControllerTest extends TestCase
@@ -60,8 +59,6 @@ class StudentControllerTest extends TestCase
 
     public function testUpdateStateRegistrationDuplicated()
     {
-        $this->expectException(ValidationException::class);
-
         $stateRegistration = '000.000.000';
 
         /** @var LegacyStudent $student */
@@ -75,13 +72,13 @@ class StudentControllerTest extends TestCase
             'state_registration_id' => $stateRegistration,
         ], $this->getAuthorizationHeader());
 
-        $response->assertJson([]);
+        $response->assertUnprocessable();
+        $response->assertJson(['message' => 'Já existe uma aluno com este número de inscrição.']);
+        $response->assertJsonValidationErrors(['state_registration_id' => ['Já existe uma aluno com este número de inscrição.']]);
     }
 
     public function testUpdateStateRegistrationInvalid()
     {
-        $this->expectException(ValidationException::class);
-
         /** @var LegacyStudent $student */
         $student = LegacyStudentFactory::new()->create();
 
@@ -91,6 +88,8 @@ class StudentControllerTest extends TestCase
             'state_registration_id' => $stateRegistration,
         ], $this->getAuthorizationHeader());
 
-        $response->assertJson([]);
+        $response->assertUnprocessable();
+        $response->assertJson(['message' => 'O número de inscrição é inválido.']);
+        $response->assertJsonValidationErrors(['state_registration_id' => ['O número de inscrição é inválido.']]);
     }
 }

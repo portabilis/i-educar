@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyDisciplineSchoolClass;
+use App\Models\LegacySchoolClassType;
 use App\Models\LegacySchoolCourse;
 use iEducar\Modules\Educacenso\Model\UnidadesCurriculares;
 use iEducar\Support\View\SelectOptions;
@@ -351,30 +352,14 @@ return new class extends clsCadastro {
         $this->campoListaPesq('ref_cod_regente', 'Professor/Regente', $array_servidor, $this->ref_cod_regente, '', '', false, '', '', null, null, '', true, false, false);
 
         // Turma tipo
-        $opcoes = ['' => 'Selecione'];
-
-        // Editar
-        $objTemp = new clsPmieducarTurmaTipo();
-        $objTemp->setOrderby('nm_tipo ASC');
-        $lista = $objTemp->lista(
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            $this->ref_cod_instituicao
-        );
-
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $opcoes[$registro['cod_turma_tipo']] = $registro['nm_tipo'];
-            }
+        $query = LegacySchoolClassType::query()->where('ativo', 1)
+            ->orderBy('nm_tipo', 'ASC');
+        if (is_numeric($this->ref_cod_instituicao)) {
+            $query->where('ref_cod_instituicao', $this->ref_cod_instituicao);
         }
+        $opcoes = $query->orderBy('nm_tipo', 'ASC')
+            ->pluck('nm_tipo', 'cod_turma_tipo')
+            ->prepend('Selecione', '');
 
         $script = 'javascript:showExpansivelIframe(520, 170, \'educar_turma_tipo_cad_pop.php\');';
 
