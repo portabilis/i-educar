@@ -35,15 +35,8 @@ return new class extends Migration
     public function down()
     {
         Schema::table('notifications', function (Blueprint $table) {
-            $sm = Schema::getConnection()->getDoctrineSchemaManager();
-            $doctrineTable = $sm->listTableDetails('notifications');
-
-            if ($doctrineTable->hasIndex('notifications_user_id')) {
-                $table->dropIndex('notifications_user_id');
-            }
-            if ($doctrineTable->hasIndex('notifications_read_at')) {
-                $table->dropIndex('notifications_read_at');
-            }
+            $table->dropIndex(['user_id']);
+            $table->dropIndex(['read_at']);
         });
     }
 };
