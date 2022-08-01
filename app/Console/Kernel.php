@@ -32,7 +32,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
 
-        $schedule->command('notifications:delete')->dailyAt('04:00');
+        $schedule->command('notifications:delete')->saturdays()->dailyAt('04:00');
     }
 
     /**
