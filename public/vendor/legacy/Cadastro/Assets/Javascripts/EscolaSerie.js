@@ -12,7 +12,27 @@ document.getElementById('ref_cod_instituicao').onchange = function () {
 }
 
 document.getElementById('ref_cod_escola').onchange = function () {
-    getEscolaCurso();
+    let xml;
+    let campoEscola;
+    const campoInstituicao = document.getElementById('ref_cod_instituicao').value;
+    const campoCurso = document.getElementById('ref_cod_curso');
+    if (document.getElementById('ref_cod_escola')) {
+      campoEscola = document.getElementById('ref_cod_escola').value;
+    } else if (document.getElementById('ref_ref_cod_escola')) {
+      campoEscola = document.getElementById('ref_ref_cod_escola').value;
+    }
+    campoCurso.length = 1;
+
+    limpaCampos(3);
+    if (campoEscola) {
+      campoCurso.disabled = true;
+      campoCurso.options[0].text = 'Carregando cursos';
+      xml = new ajax(atualizaLstEscolaCurso);
+      xml.envia('educar_curso_xml.php?esc=' + campoEscola);
+    } else {
+      xml = new ajax(atualizaLstCurso);
+      xml.envia('educar_curso_xml.php?ins=' + campoInstituicao);
+    }
 }
 
 document.getElementById('ref_cod_curso').onchange = function () {
@@ -102,6 +122,7 @@ after_getEscola = function () {
 };
 
 function getSerie() {
+
     var campoCurso = document.getElementById('ref_cod_curso').value;
 
     if (document.getElementById('ref_cod_escola')) {
@@ -121,7 +142,13 @@ function getSerie() {
         campoSerie.options[0].text = 'Carregando séries';
 
         var xml = new ajax(atualizaLstSerie);
-        xml.envia("educar_serie_not_escola_xml.php?esc=" + campoEscola + "&cur=" + campoCurso);
+        xml.envia("educar_serie_xml.php?cur="+campoCurso);
+    } else if(campoCurso) {
+        campoSerie.disabled = true;
+        campoSerie.options[0].text = 'Carregando séries';
+
+        var xml = new ajax(atualizaLstSerie);
+        xml.envia("educar_serie_xml.php?cur="+campoCurso);
     } else {
         campoSerie.options[0].text = 'Selecione';
     }
@@ -144,7 +171,7 @@ function atualizaLstSerie(xml) {
             );
         }
     } else {
-        campoSerie.options[0].text = 'O curso não possui nenhuma série ou todas as séries já estã associadas a essa escola';
+        campoSerie.options[0].text = 'O curso não possui nenhuma série ou todas as séries já estão associadas a essa escola';
         campoSerie.disabled = true;
     }
 }
