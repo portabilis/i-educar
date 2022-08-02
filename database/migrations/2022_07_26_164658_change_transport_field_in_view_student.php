@@ -25,6 +25,6 @@ return new class extends Migration
     public function down()
     {
         $this->dropView('students');
-        $this->createView('students');
+        $this->createView('students','2022-07-25');
     }
 };
