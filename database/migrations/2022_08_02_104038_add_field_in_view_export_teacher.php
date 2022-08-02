@@ -26,7 +26,7 @@ return new class extends Migration
 
     private function upViews()
     {
-        $this->createView('public.exporter_teacher', '2022-06-29');
+        $this->createView('public.exporter_teacher', '2022-08-02');
     }
 
     private function downViews()
