@@ -1,4 +1,6 @@
 $j(document).ready(function () {
+  const optional = $j('#search-postal-code').data('optional') === 1;
+
   var disableAddressing = function (flag) {
     $j('#search-postal-code').css('opacity', flag ? 0.5 : 1);
     $j('#address').attr('disabled', flag);
@@ -24,11 +26,13 @@ $j(document).ready(function () {
         $j('#city_city').val(res.city.id + ' - ' + res.city.name + ' (' + res.state_abbreviation + ')');
       }).always(function() {
         $j('#postal_code_search_loading').css('visibility', 'hidden');
-        disableAddressing(false);
+        if (!optional) {
+          disableAddressing(false);
+        }
       });
-    } else {
-      disableAddressing(true);
-    }
+    } else if (!optional) {
+        disableAddressing(true);
+      }
   };
 
   var changePostalCode = function () {
@@ -36,10 +40,8 @@ $j(document).ready(function () {
     var regexp = /[0-9]{5}\-[0-9]{3}/;
     var valid = regexp.test(postalCode);
 
-    if (valid) {
-      disableAddressing(false);
-    } else {
-      disableAddressing(true);
+    if (!optional) {
+      disableAddressing(!valid);
     }
   };
 

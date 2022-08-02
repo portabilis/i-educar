@@ -609,7 +609,7 @@ class PessoaController extends ApiCoreController
         $this->neighborhood = $this->getRequest()->neighborhood;
         $this->city_id = $this->getRequest()->city_id;
 
-        $this->saveAddress($this->getRequest()->person_id);
+        $this->saveAddress($this->getRequest()->person_id,true);
     }
 
     protected function getInep($servidorId)

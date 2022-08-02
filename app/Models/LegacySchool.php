@@ -57,6 +57,8 @@ class LegacySchool extends Model
         'codigo_ies',
         'qtd_vice_diretor',
         'qtd_orientador_comunitario',
+        'latitude',
+        'longitude',
     ];
 
     /**

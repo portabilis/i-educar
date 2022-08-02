@@ -238,7 +238,7 @@ return new class extends clsCadastro {
         }
 
         Portabilis_View_Helper_Application::loadJavascript($this, [
-            '/modules/Portabilis/Assets/Javascripts/Validator.js',
+            '/vendor/legacy/Portabilis/Assets/Javascripts/Validator.js',
             '/intranet/scripts/etapas.js'
         ]);
     }

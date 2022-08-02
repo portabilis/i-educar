@@ -56,7 +56,7 @@ return new class extends clsCadastro {
 
         $this->nome_url_sucesso = 'Importar';
 
-        Portabilis_View_Helper_Application::loadJavascript($this, '/modules/Educacenso/Assets/Javascripts/Importacao.js');
+        Portabilis_View_Helper_Application::loadJavascript($this, '/vendor/legacy/Educacenso/Assets/Javascripts/Importacao.js');
     }
 
     public function Novo()

@@ -23,7 +23,7 @@ class LegacyLevel extends LegacyGrade
      */
     protected $fillable = [
         'nm_serie', 'ref_usuario_cad', 'ref_cod_curso', 'etapa_curso', 'carga_horaria', 'data_cadastro', 'concluinte',
-        'dias_letivos', 'ativo', 'intervalo'
+        'dias_letivos', 'ativo', 'intervalo', 'idade_final', 'idade_inicial'
     ];
 
     /**

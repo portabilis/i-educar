@@ -95,8 +95,8 @@ return new class extends clsCadastro {
 
         $this->campoRotulo('componentes_', 'Componentes da série', '<table id=\'componentes\'></table>');
 
-        $scripts = ['/modules/Cadastro/Assets/Javascripts/ComponentesSerie.js',
-                     '/modules/Cadastro/Assets/Javascripts/ComponentesSerieAcao.js'];
+        $scripts = ['/vendor/legacy/Cadastro/Assets/Javascripts/ComponentesSerie.js',
+                     '/vendor/legacy/Cadastro/Assets/Javascripts/ComponentesSerieAcao.js'];
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
     }
 

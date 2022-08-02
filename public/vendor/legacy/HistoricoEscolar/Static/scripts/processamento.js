@@ -585,7 +585,7 @@
 
     function beforeChangeResource($resourceElement){
       if ($resourceElement.siblings('img').length < 1);
-        $('<img alt="loading..." src="/modules/HistoricoEscolar/Static/images/loading.gif" />').appendTo($resourceElement.parent());
+        $('<img alt="loading..." src="/vendor/legacy/HistoricoEscolar/Static/images/loading.gif" />').appendTo($resourceElement.parent());
     }
 
     function handlePostProcessamento(dataResponse){

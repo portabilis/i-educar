@@ -35,7 +35,7 @@ trait LegacyAddressingFields
         }
     }
 
-    protected function saveAddress($person)
+    protected function saveAddress($person, $optionalFields = false)
     {
         $person = Person::query()->find($person);
 
@@ -43,21 +43,25 @@ trait LegacyAddressingFields
             return;
         }
 
-        $hasEmpty = array_filter([$this->city_id, $this->address, $this->neighborhood, $this->postal_code]);
+        if (!$optionalFields) {
+            $validation_fields = [$this->city_id, $this->address, $this->neighborhood, $this->postal_code];
+            $original_count = count($validation_fields);
+            $hasEmpty = array_filter($validation_fields);
 
-        if (count($hasEmpty) < 4) {
-            return;
+            if (count($hasEmpty) < $original_count) {
+                return;
+            }
         }
 
         $place = Place::query()->updateOrCreate([
             'id' => $person->place->id ?? 0,
         ], [
-            'address' => $this->address,
+            'address' => $this->address ?: null,
             'number' => $this->number ?: null,
-            'complement' => $this->complement,
-            'neighborhood' => $this->neighborhood,
-            'city_id' => $this->city_id,
-            'postal_code' => idFederal2int($this->postal_code),
+            'complement' => $this->complement ?: null,
+            'neighborhood' => $this->neighborhood ?: null,
+            'city_id' => $this->city_id ?: null,
+            'postal_code' => empty($this->postal_code) ? null : idFederal2int($this->postal_code),
         ]);
 
         PersonHasPlace::query()->updateOrCreate([
@@ -68,17 +72,17 @@ trait LegacyAddressingFields
         ]);
     }
 
-    protected function viewAddress()
+    protected function viewAddress($optionalFields = false)
     {
         $enderecamentoObrigatorio = false;
 
         $this->campoRotulo('enderecamento', '<b>Endereçamento</b>', '', '', 'Digite um CEP para buscar <br>o endereço completo');
 
-        $searchPostalCode = '<a id="search-postal-code" href="javascript:void(0)" class="span-busca-cep" style="color: blue; margin-left: 10px;">Preencher automaticamente usando o CEP</a>';
+        $searchPostalCode = '<a id="search-postal-code" data-optional="'.$optionalFields.'" href="javascript:void(0)" class="span-busca-cep" style="color: blue; margin-left: 10px;">Preencher automaticamente usando o CEP</a>';
         $notKnowMyPostalCode = '<a href="http://www.buscacep.correios.com.br/sistemas/buscacep/" target="_blank" class="span-busca-cep" style="color: blue; margin-left: 10px;">Não sei meu CEP</a>';
         $loading = '<img id="postal_code_search_loading" src="/intranet/imagens/indicator.gif" style="margin-left: 10px; visibility: hidden">';
 
-        $disabled = empty($this->postal_code);
+        $disabled = !$optionalFields && empty($this->postal_code);
 
         $this->campoCep(
             'postal_code',
@@ -112,7 +116,7 @@ trait LegacyAddressingFields
             'disabled' => $disabled,
             'placeholder' => 'Complemento',
             'value' => $this->complement,
-            'max_length' => 191
+            'max_length' => 20
         ]);
 
         $this->inputsHelper()->text('neighborhood', [

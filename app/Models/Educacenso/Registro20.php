@@ -2,8 +2,8 @@
 
 namespace App\Models\Educacenso;
 
+use App\Models\LegacySchoolClass;
 use App\Services\Educacenso\Version2019\Registro20Import;
-use App_Model_IedFinder;
 use App_Model_LocalFuncionamentoDiferenciado;
 use App_Model_TipoMediacaoDidaticoPedagogico;
 use iEducar\Modules\Educacenso\Model\EstruturaCurricular;
@@ -161,7 +161,7 @@ class Registro20 implements RegistroEducacenso
     public $modalidadeCurso;
 
     /**
-     * @var array
+     * @var Collection
      */
     public $componentes;
 
@@ -435,10 +435,11 @@ class Registro20 implements RegistroEducacenso
     public function componentesCodigosEducacenso()
     {
         $componentes = $this->componentes();
+        $componentes = $componentes->map(function ($componente) {
+            return $componente->codigo_educacenso;
+        })->toArray();
 
-        return array_map(function ($componente) {
-            return $componente->get('codigo_educacenso');
-        }, $componentes);
+        return array_unique($componentes);
     }
 
     /**
@@ -447,19 +448,20 @@ class Registro20 implements RegistroEducacenso
     public function componentesIds()
     {
         $componentes = $this->componentes();
+        $componentes = $componentes->map(function ($componente) {
+            return $componente->id;
+        })->toArray();
 
-        return array_map(function ($componente) {
-            return $componente->get('id');
-        }, $componentes);
+        return array_unique($componentes);
     }
 
     /**
-     * @return array
+     * @return Collection
      */
     public function componentes()
     {
         if (!isset($this->componentes)) {
-            $this->componentes = App_Model_IedFinder::getComponentesTurma($this->codSerie, $this->codEscola, $this->codTurma, null, null, null, null, true, $this->anoTurma);
+            $this->componentes = LegacySchoolClass::find($this->codTurma)->getDisciplines();
         }
 
         return $this->componentes;
