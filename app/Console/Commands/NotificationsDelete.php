@@ -33,7 +33,7 @@ class NotificationsDelete extends Command
     {
         foreach ($this->getConnections() as $connection) {
             DB::setDefaultConnection($connection);
-            Notification::whereDate('created_at','<', now()->subMonths(6))->delete();
+            Notification::whereDate('created_at', '<', now()->subMonths(6))->delete();
         }
     }
 }

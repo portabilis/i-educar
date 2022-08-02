@@ -2,7 +2,6 @@
 
 namespace App\Console;
 
-use App\Console\Commands\NotificationsDelete;
 use App\Jobs\CheckInstitutionConfigurationsJob;
 use App\Jobs\TenantsJob;
 use Illuminate\Console\Scheduling\Schedule;
