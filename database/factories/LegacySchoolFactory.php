@@ -7,18 +7,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacySchoolFactory extends Factory
 {
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
     protected $model = LegacySchool::class;
 
-    /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
     public function definition(): array
     {
         return [
@@ -31,5 +21,15 @@ class LegacySchoolFactory extends Factory
             'latitude' => $this->faker->latitude(),
             'longitude' => $this->faker->longitude(),
         ];
+    }
+
+    public function withPhone(): static
+    {
+        return $this->afterCreating(function (LegacySchool $school) {
+            LegacyPhoneFactory::new()->create([
+                'idpes' => $school->person,
+                'tipo' => 1,
+            ]);
+        });
     }
 }
