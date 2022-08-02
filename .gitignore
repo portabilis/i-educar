@@ -3,6 +3,7 @@
 /database/migrations/extras
 /packages/*
 /public/modules
+/public/vendor/legacy/Reports
 /docker/jasper/
 /vendor
 /ieducar-*

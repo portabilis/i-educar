@@ -12,7 +12,26 @@ document.getElementById('ref_cod_instituicao').onchange = function () {
 }
 
 document.getElementById('ref_cod_escola').onchange = function () {
-    getEscolaCurso();
+    let xml;
+    let campoEscola;
+    const campoInstituicao = document.getElementById('ref_cod_instituicao').value;
+    const campoCurso = document.getElementById('ref_cod_curso');
+    if (document.getElementById('ref_cod_escola')) {
+      campoEscola = document.getElementById('ref_cod_escola').value;
+    } else if (document.getElementById('ref_ref_cod_escola')) {
+      campoEscola = document.getElementById('ref_ref_cod_escola').value;
+    }
+    campoCurso.length = 1;
+
+    limpaCampos(3);
+    if (campoEscola) {
+      campoCurso.disabled = true;
+      campoCurso.options[0].text = 'Carregando cursos';
+
+      getApiResource("/api/resource/course",atualizaLstEscolaCurso,{school:campoEscola});
+    } else {
+      getApiResource("/api/resource/course",atualizaLstCurso,{institution:campoInstituicao});
+    }
 }
 
 document.getElementById('ref_cod_curso').onchange = function () {
@@ -100,13 +119,8 @@ after_getEscola = function () {
 };
 
 function getSerie() {
-    var campoCurso = document.getElementById('ref_cod_curso').value;
 
-    if (document.getElementById('ref_cod_escola')) {
-        var campoEscola = document.getElementById('ref_cod_escola').value;
-    } else if (document.getElementById('ref_ref_cod_escola')) {
-        var campoEscola = document.getElementById('ref_ref_cod_escola').value;
-    }
+    var campoCurso = document.getElementById('ref_cod_curso').value;
 
     var campoSerie = document.getElementById('ref_cod_serie');
 
@@ -114,11 +128,11 @@ function getSerie() {
 
     limpaCampos(4);
 
-    if (campoEscola && campoCurso) {
+    if(campoCurso) {
         campoSerie.disabled = true;
         campoSerie.options[0].text = 'Carregando séries';
 
-        getApiResource("/api/resource/grade",atualizaLstSerie,{course:campoCurso,school_exclude:campoEscola});
+        getApiResource("/api/resource/grade",atualizaLstSerie,{course:campoCurso});
     } else {
         campoSerie.options[0].text = 'Selecione';
     }

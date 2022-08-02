@@ -43,6 +43,7 @@ class SchoolHistory
         $discipline->nm_disciplina = $data['nm_disciplina'];
         $discipline->cod_aluno = $data['cod_aluno'];
         $discipline->nome_aluno = $data['nome_aluno'];
+        $discipline->nome_social_aluno = $data['nome_social_aluno'];
         $discipline->nm_escola = $data['nm_escola'];
         $discipline->cod_inep = $data['cod_inep'];
         $discipline->cidade_nascimento_uf = $data['cidade_nascimento_uf'];

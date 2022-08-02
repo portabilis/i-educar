@@ -45,8 +45,14 @@ class MatriculaController extends ApiCoreController
         // opcionalmente por ano.
         return 'select aluno.cod_aluno as aluno_id,
             matricula.cod_matricula as id,
-            pessoa.nome as name
+            (case
+                        when fisica.nome_social not like \'\' then
+                            fisica.nome_social || \' - Nome de registro: \' || pessoa.nome
+                        else
+                            pessoa.nome
+                    end) as name
        from cadastro.pessoa
+      inner join cadastro.fisica on(pessoa.idpes = fisica.idpes)
       inner join pmieducar.aluno on(pessoa.idpes = aluno.ref_idpes)
       inner join pmieducar.matricula on(aluno.cod_aluno = matricula.ref_cod_aluno)
       inner join pmieducar.escola on(escola.cod_escola = matricula.ref_ref_cod_escola)
@@ -402,6 +408,13 @@ class MatriculaController extends ApiCoreController
                        CASE
                            WHEN turma.ativo = 0 THEN turma.data_exclusao::timestamp(0)
                            WHEN matricula.ativo = 0 THEN matricula.updated_at::timestamp(0)
+                           WHEN matricula_turma.ativo = 0
+                           AND coalesce(transferido, false) = false
+                           AND coalesce(remanejado, false) = false
+                           AND coalesce(reclassificado, false) = false
+                           AND coalesce(abandono, false) = false
+                           AND coalesce(falecido, false) = false
+                           THEN coalesce(matricula_turma.data_exclusao,matricula_turma.updated_at)::timestamp(0)
                            ELSE NULL
                        END AS deleted_at
                   FROM pmieducar.matricula

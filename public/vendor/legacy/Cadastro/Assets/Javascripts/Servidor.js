@@ -290,14 +290,16 @@ $j(document).ready(function() {
 });
 
 var searchCourse = function (request, response) {
-  var searchPath = '/module/Api/CursoSuperior?oper=get&resource=cursosuperior-search',
+  if (!(request.term.includes(' - ') && request.term.length > 5)) {
+    var searchPath = '/module/Api/CursoSuperior?oper=get&resource=cursosuperior-search',
       params = {
         query: request.term
       };
 
-  $j.get(searchPath, params, function (dataResponse) {
-    simpleSearch.handleSearch(dataResponse, response);
-  });
+    $j.get(searchPath, params, function (dataResponse) {
+      simpleSearch.handleSearch(dataResponse, response);
+    });
+  }
 };
 
 var handleSelectCourse = function (event, ui) {
@@ -313,14 +315,16 @@ var handleSelectCourse = function (event, ui) {
 };
 
 var searchCollege = function (request, response) {
-  var searchPath = '/module/Api/Ies?oper=get&resource=ies-search',
+  if (!(request.term.includes(' - ') && request.term.length > 5)) {
+    var searchPath = '/module/Api/Ies?oper=get&resource=ies-search',
       params = {
         query: request.term
       };
 
-  $j.get(searchPath, params, function (dataResponse) {
-    simpleSearch.handleSearch(dataResponse, response);
-  });
+    $j.get(searchPath, params, function (dataResponse) {
+      simpleSearch.handleSearch(dataResponse, response);
+    });
+  }
 };
 
 var handleSelectCollege = function (event, ui) {
@@ -356,8 +360,6 @@ function setAutoComplete() {
       var id = $j(this).attr('id'),
           idNum = id.match(/\[(\d+)\]/),
           refIdCourse = $j('input[id="employee_course_id[' + idNum[1] + ']"]');
-
-      refIdCourse.val('')
     });
   });
 
@@ -381,8 +383,6 @@ function setAutoComplete() {
       var id = $j(this).attr('id'),
           idNum = id.match(/\[(\d+)\]/),
           refIdCourse = $j('input[id="employee_college_id[' + idNum[1] + ']"]');
-
-      refIdCourse.val('')
     });
   });
 };

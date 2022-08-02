@@ -684,7 +684,7 @@ return new class extends clsCadastro {
         // Religião
         $this->inputsHelper()->religiao(['required' => false, 'label' => 'Religião']);
 
-        $this->viewAddress();
+        $this->viewAddress(true);
 
         $this->inputsHelper()->select('pais_residencia', [
             'label' => 'País de residência',
@@ -992,12 +992,18 @@ return new class extends clsCadastro {
             return false;
         }
 
+        if (!$this->validaCaracteresPermitidosComplemento()) {
+            $this->mensagem = 'O campo foi preenchido com valor não permitido. O campo Complemento só permite os caracteres: ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ª º – / . ,';
+
+            return false;
+        }
+
         $pessoaId = $this->createOrUpdatePessoa($pessoaIdOrNull);
         $this->savePhoto($pessoaId);
         $this->createOrUpdatePessoaFisica($pessoaId);
         $this->createOrUpdateDocumentos($pessoaId);
         $this->createOrUpdateTelefones($pessoaId);
-        $this->saveAddress($pessoaId);
+        $this->saveAddress($pessoaId,true);
         $this->afterChangePessoa($pessoaId);
         $this->saveFiles($pessoaId);
 
@@ -1178,6 +1184,15 @@ return new class extends clsCadastro {
         }
 
         return true;
+    }
+
+    protected function validaCaracteresPermitidosComplemento()
+    {
+        if (empty($this->complement)) {
+            return true;
+        }
+        $pattern = '/^[a-zA-Z0-9ªº\/–\ .,-]+$/';
+        return preg_match($pattern, $this->complement);
     }
 
     protected function createOrUpdatePessoa($pessoaId = null)
