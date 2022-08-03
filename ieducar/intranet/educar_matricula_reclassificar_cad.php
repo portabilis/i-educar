@@ -88,17 +88,10 @@ return new class extends clsCadastro {
 
         $escolaAluno = $this->ref_ref_cod_escola;
 
-        $objEscolaCurso = new clsPmieducarEscolaCurso();
+        $lst_escola_curso = \App\Models\LegacyCourse::query()->active()->whereSchool($escolaAluno)->orderBy('nm_curso')->get(['cod_curso','nm_curso','descricao']);
 
-        $listaEscolaCurso = $objEscolaCurso->lista($escolaAluno);
-
-        if ($listaEscolaCurso) {
-            foreach ($listaEscolaCurso as $escolaCurso) {
-                $objCurso = new clsPmieducarCurso($escolaCurso['ref_cod_curso']);
-                $detCurso = $objCurso->detalhe();
-                $nomeCurso = $detCurso['nm_curso'];
-                $cursos[$escolaCurso['ref_cod_curso']] = $nomeCurso;
-            }
+        foreach ($lst_escola_curso as $escolaCurso) {
+            $cursos[$escolaCurso->id] = $escolaCurso->name;
         }
 
         $this->campoOculto('serie_matricula', $this->ref_ref_cod_serie);

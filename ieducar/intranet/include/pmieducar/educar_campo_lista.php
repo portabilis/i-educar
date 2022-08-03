@@ -107,28 +107,20 @@ if ($get_curso) {
     if ($this->ref_cod_escola) {
         $obj_escola_curso = new clsPmieducarEscolaCurso();
 
-        $lst_escola_curso = $obj_escola_curso->lista($this->ref_cod_escola, null, null, null, null, null, null, null, 1);
+        $lst_escola_curso = \App\Models\LegacyCourse::query()->active()->whereSchool($this->ref_cod_escola)->orderBy('nm_curso')->get(['cod_curso','nm_curso','descricao']);
 
-        if (is_array($lst_escola_curso) && count($lst_escola_curso)) {
-            foreach ($lst_escola_curso as $escola_curso) {
-                $opcoes_curso["{$escola_curso['ref_cod_curso']}"] = $escola_curso['nm_curso'];
-            }
+        foreach ($lst_escola_curso as $escola_curso) {
+            $opcoes_curso["{$escola_curso->id}"] = $escola_curso->name;
         }
     } elseif ($this->ref_cod_instituicao) {
         $opcoes_curso = ['' => $get_select_name_full ? 'Selecione um curso' : 'Selecione'];
-        $obj_curso = new clsPmieducarCurso();
-        $obj_curso->setOrderby('nm_curso ASC');
 
-        if ($sem_padrao) {
-            $lista = $obj_curso->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1, null, $this->ref_cod_instituicao, 0);
-        } else {
-            $lista = $obj_curso->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1, null, $this->ref_cod_instituicao);
-        }
+        $lst_escola_curso = \App\Models\LegacyCourse::query()->active()->when($sem_padrao,function ($q) {
+            $q->whereStandardCalendar(0);
+        })->whereInstitution($this->ref_cod_instituicao)->orderBy('nm_curso')->get(['cod_curso','nm_curso','descricao']);
 
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $opcoes_curso["{$registro['cod_curso']}"] = "{$registro['nm_curso']}";
-            }
+        foreach ($lst_escola_curso as $escola_curso) {
+            $opcoes_curso["{$escola_curso->id}"] = $escola_curso->name;
         }
     }
     $this->campoLista('ref_cod_curso', 'Curso', $opcoes_curso, $this->ref_cod_curso, null, null, null, null, $curso_desabilitado, $curso_obrigatorio);
