@@ -544,26 +544,6 @@ class clsModulesProfessorTurma extends Model
         return $componentesVinculados;
     }
 
-    private function auditaComponentesVinculados($professor_turma_id, $componentesAntigos, $componentesNovos)
-    {
-        $componentesExcluidos = array_diff($componentesAntigos, $componentesNovos);
-        $componentesAdicionados = array_diff($componentesNovos, $componentesAntigos);
-
-        foreach ($componentesExcluidos as $componente) {
-            $componente = [
-                'componente_curricular_id' => $componente,
-                'nome' => $this->retornaNomeDoComponente($componente)
-            ];
-        }
-
-        foreach ($componentesAdicionados as $componente) {
-            $componente = [
-                'componente_curricular_id' => $componente,
-                'nome' => $this->retornaNomeDoComponente($componente)
-            ];
-        }
-    }
-
     public function retornaNomeDoComponente($idComponente)
     {
         $mapperComponente = new ComponenteCurricular_Model_ComponenteDataMapper;
