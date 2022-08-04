@@ -21,9 +21,9 @@ select
 		WHEN 3 THEN 'Curso Técnico'
 		WHEN 4 THEN 'Magistério Indígena Modalidade Normal'
 		ELSE ''
-END AS high_school_type,
+    END AS high_school_type,
 	form.continuing_education_course,
-    sf.matricula AS matricula
+    sf.matricula AS enrollments
 from modules.professor_turma pt
 inner join public.exporter_person p
 on p.id = pt.servidor_id
@@ -39,7 +39,11 @@ inner join pmieducar.curso c
 on c.cod_curso = t.ref_cod_curso
 left join pmieducar.servidor servidor
 on pt.servidor_id = servidor.cod_servidor
-LEFT JOIN pmieducar.servidor_funcao sf on sf.ref_cod_servidor = servidor.cod_servidor
+LEFT JOIN pmieducar.servidor_alocacao sa on sa.ref_cod_servidor = servidor.cod_servidor AND
+                                            sa.ano = pt.ano AND
+                                            sa.ref_cod_escola = e.cod_escola
+LEFT JOIN pmieducar.servidor_funcao sf on sf.ref_cod_servidor = sa.ref_cod_servidor AND
+                                          sf.cod_servidor_funcao = sa.ref_cod_servidor_funcao
 left join cadastro.escolaridade
 on escolaridade.idesco = servidor.ref_idesco,
 	LATERAL (

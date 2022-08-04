@@ -12,15 +12,6 @@ $j(document).ready(function () {
     $campoEstadoEscolaDestinoExterna.closest("tr").hide();
     $campoMunicipioEscolaDestinoExterna.closest("tr").hide();
 
-    const msg = '<b>Novidade</b>: O processo de transferência foi simplificado!<br/>' +
-        'Agora você não precisa mais informar o tipo de transferência<br/>' +
-        'que será utilizado. Basta preencher os campos obrigatórios, e<br/>' +
-        'o aluno ficará com a situação de transferido automaticamente.';
-
-    $j('<p>').addClass('right-top-notice notice')
-        .html(stringUtils.toUtf8(msg))
-        .appendTo($j('#tr_nm_aluno').closest('td'));
-
     $campoCodInstituicao.makeRequired();
     $campoCodEscola.makeRequired();
     $campoEscolaOutroMunicipio.change(mostraEscolaOutroMunicipio);
