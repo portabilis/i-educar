@@ -27,11 +27,10 @@ document.getElementById('ref_cod_escola').onchange = function () {
     if (campoEscola) {
       campoCurso.disabled = true;
       campoCurso.options[0].text = 'Carregando cursos';
-      xml = new ajax(atualizaLstEscolaCurso);
-      xml.envia('educar_curso_xml.php?esc=' + campoEscola);
+
+      getApiResource("/api/resource/course",atualizaLstEscolaCurso,{school:campoEscola});
     } else {
-      xml = new ajax(atualizaLstCurso);
-      xml.envia('educar_curso_xml.php?ins=' + campoInstituicao);
+      getApiResource("/api/resource/course",atualizaLstCurso,{institution:campoInstituicao});
     }
 }
 
@@ -42,13 +41,12 @@ document.getElementById('ref_cod_curso').onchange = function () {
     campoDisciplinas.innerHTML = "Nenhuma série selecionada";
 }
 
-function getDisciplina(xml_disciplina) {
-    var campoDisciplinas = document.getElementById('disciplinas');
-    var DOM_array = xml_disciplina.getElementsByTagName("disciplina");
-    var conteudo = '';
+function getDisciplina(disciplinas) {
+  const campoDisciplinas = document.getElementById('disciplinas');
+  var conteudo = '';
 
-    if (DOM_array.length) {
-        const first_key = DOM_array[0].getAttribute("cod_disciplina");
+    if (disciplinas.length) {
+        const first_key = disciplinas[0].id;
 
         conteudo += '<div style="margin-bottom: 10px; float: left">';
         conteudo += '  <span style="display: block; float: left; width: 250px;">Nome</span>';
@@ -76,20 +74,20 @@ function getDisciplina(xml_disciplina) {
         conteudo += '</div>';
         conteudo += '<br style="clear: left" />';
 
-        for (var i = 0; i < DOM_array.length; i++) {
-            id = DOM_array[i].getAttribute("cod_disciplina");
+        $j.each(disciplinas, function(i, item) {
+          id = item.id;
 
-            conteudo += '<div style="margin-bottom: 10px; float: left">';
-            conteudo += '  <label style="display: block; float: left; width: 250px;"><input type="checkbox" name="disciplinas[' + id + ']" class="check_'+id+'" id="disciplinas[]" value="' + id + '">' + DOM_array[i].firstChild.data + '</label>';
-            conteudo += '  <label style="display: block; float: left; width: 100px;"><input type="text" id="carga_horaria_' + id + '" data-id="'+id+'" name="carga_horaria[' + id + ']" class="carga_horaria" value="" size="5" maxlength="7"></label>';
-            conteudo += '  <label style="display: block; float: left; width: 180px;"><input type="checkbox" id="usar_componente[]" name="usar_componente[' + id + ']" class="" value="1">(' + DOM_array[i].getAttribute("carga_horaria") + ' h)</label>';
-            conteudo += `
+          conteudo += '<div style="margin-bottom: 10px; float: left">';
+          conteudo += '  <label style="display: block; float: left; width: 250px;"><input type="checkbox" name="disciplinas[' + id + ']" class="check_'+id+'" id="disciplinas[]" value="' + id + '">' + item.name + '</label>';
+          conteudo += '  <label style="display: block; float: left; width: 100px;"><input type="text" id="carga_horaria_' + id + '" data-id="'+id+'" name="carga_horaria[' + id + ']" class="carga_horaria" value="" size="5" maxlength="7"></label>';
+          conteudo += '  <label style="display: block; float: left; width: 180px;"><input type="checkbox" id="usar_componente[]" name="usar_componente[' + id + ']" class="" value="1">(' +  item.workload + ' h)</label>';
+          conteudo += `
             <select name='componente_anos_letivos[${id}][]' class="anos_letivos" id='anos_letivos_${id}' data-id='${id}' style='width: 150px;' multiple='multiple'>
             </select>
             `;
-            conteudo += '</div>';
-            conteudo += '<br style="clear: left" />';
-        }
+          conteudo += '</div>';
+          conteudo += '<br style="clear: left" />';
+        });
     } else {
         campoDisciplinas.innerHTML = 'A série/ano escolar não possui componentes '
             + 'curriculares cadastrados.';
@@ -104,13 +102,12 @@ function getDisciplina(xml_disciplina) {
 }
 
 document.getElementById('ref_cod_serie').onchange = function () {
-    var campoSerie = document.getElementById('ref_cod_serie').value;
+    const campoSerie = document.getElementById('ref_cod_serie').value;
 
-    var campoDisciplinas = document.getElementById('disciplinas');
+    const campoDisciplinas = document.getElementById('disciplinas');
     campoDisciplinas.innerHTML = "Carregando disciplina";
 
-    var xml_disciplina = new ajax(getDisciplina);
-    xml_disciplina.envia("educar_disciplina_xml.php?ser=" + campoSerie);
+    getApiResource("/api/resource/discipline",getDisciplina,{grade:campoSerie});
 };
 
 after_getEscola = function () {
@@ -125,51 +122,30 @@ function getSerie() {
 
     var campoCurso = document.getElementById('ref_cod_curso').value;
 
-    if (document.getElementById('ref_cod_escola')) {
-        var campoEscola = document.getElementById('ref_cod_escola').value;
-    } else if (document.getElementById('ref_ref_cod_escola')) {
-        var campoEscola = document.getElementById('ref_ref_cod_escola').value;
-    }
-
     var campoSerie = document.getElementById('ref_cod_serie');
 
     campoSerie.length = 1;
 
     limpaCampos(4);
 
-    if (campoEscola && campoCurso) {
+    if(campoCurso) {
         campoSerie.disabled = true;
         campoSerie.options[0].text = 'Carregando séries';
 
-        var xml = new ajax(atualizaLstSerie);
-        xml.envia("educar_serie_xml.php?cur="+campoCurso);
-    } else if(campoCurso) {
-        campoSerie.disabled = true;
-        campoSerie.options[0].text = 'Carregando séries';
-
-        var xml = new ajax(atualizaLstSerie);
-        xml.envia("educar_serie_xml.php?cur="+campoCurso);
+        getApiResource("/api/resource/grade",atualizaLstSerie,{course:campoCurso});
     } else {
         campoSerie.options[0].text = 'Selecione';
     }
 }
 
-function atualizaLstSerie(xml) {
-    var campoSerie = document.getElementById('ref_cod_serie');
-    campoSerie.length = 1;
-    campoSerie.options[0].text = 'Selecione uma série';
-    campoSerie.disabled = false;
+function atualizaLstSerie(series) {
+    const campoSerie = document.getElementById('ref_cod_serie');
+    setAttributes(campoSerie,'Selecione uma série',false)
 
-    series = xml.getElementsByTagName('serie');
     if (series.length) {
-        for (var i = 0; i < series.length; i++) {
-            campoSerie.options[campoSerie.options.length] = new Option(
-                series[i].firstChild.data,
-                series[i].getAttribute('cod_serie'),
-                false,
-                false
-            );
-        }
+      $j.each(series, function(i, item) {
+        campoSerie.options[campoSerie.options.length] = new Option(item.name,item.id, false, false);
+      });
     } else {
         campoSerie.options[0].text = 'O curso não possui nenhuma série ou todas as séries já estão associadas a essa escola';
         campoSerie.disabled = true;

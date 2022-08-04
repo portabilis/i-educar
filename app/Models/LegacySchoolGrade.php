@@ -60,6 +60,6 @@ class LegacySchoolGrade extends Model
      */
     public function grade()
     {
-        return $this->belongsTo(LegacyLevel::class, 'ref_cod_serie');
+        return $this->belongsTo(LegacyGrade::class, 'ref_cod_serie');
     }
 }
