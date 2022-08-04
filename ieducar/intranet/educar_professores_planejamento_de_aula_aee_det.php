@@ -158,24 +158,6 @@ return new class extends clsDetalhe {
             );
         }
 
-        if ($registro['detalhes']['necessidade_aprendizagem']) {
-            $this->addDetalhe(
-                [
-                    'Necessidade de Aprendizagem',
-                    $registro['detalhes']['necessidade_aprendizagem']
-                ]
-            );
-        }
-
-        if ($registro['detalhes']['caracterizacao_pedagogica']) {
-            $this->addDetalhe(
-                [
-                    'Caracterização Pedagógica',
-                    $registro['detalhes']['caracterizacao_pedagogica']
-                ]
-            );
-        }
-
         if ($registro['detalhes']['outros']) {
             $this->addDetalhe(
                 [
@@ -184,6 +166,7 @@ return new class extends clsDetalhe {
                 ]
             );
         }
+       
 
         if ($obj_permissoes->permissao_cadastra(58, $this->pessoa_logada, 7)) {
             $this->url_novo = 'educar_professores_planejamento_de_aula_aee_cad.php';
@@ -226,8 +209,8 @@ return new class extends clsDetalhe {
                 $podeEditar = $data_agora >= $data['inicio'] && $data_agora <= $data['fim'];
             }
 
-            if ($podeEditar)
-                $this->url_editar = 'educar_professores_planejamento_de_aula_aee_cad.php?id=' . $registro['detalhes']['id'];
+             if ($podeEditar)
+                 $this->url_editar = 'educar_professores_planejamento_de_aula_aee_cad.php?id=' . $registro['detalhes']['id'];
 
         }
 
@@ -237,6 +220,8 @@ return new class extends clsDetalhe {
         $this->breadcrumb('Detalhe do plano de aula AEE', [
             url('intranet/educar_professores_index.php') => 'Professores',
         ]);
+
+//        $this->addBotao('Excluir', "");
 
         //$this->addBotao('Copiar plano de aula', "/intranet/educar_professores_planejamento_de_aula_cad.php?id={$this->getRequest()->id}&copy=true");
     }
@@ -314,7 +299,7 @@ return new class extends clsDetalhe {
 
     public function loadAssets () {
         $scripts = [
-            '/modules/Cadastro/Assets/Javascripts/PlanoAulaExclusaoTemp.js',
+            '/modules/Cadastro/Assets/Javascripts/PlanoAulaAeeExclusaoTemp.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
