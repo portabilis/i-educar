@@ -1,30 +1,30 @@
-(function ($) {
-  $(document).ready(function () {
+(function($){
+  $(document).ready(function(){
     //TODO: Refatorar Edição do plano de aula
 
-    var id = $j('#id').val();
-    var copy = $j('#copy').val();
-    var bncc_table = document.getElementById("objetivos_aprendizagem");
-    var titleTable = document.getElementById("tr_objetivos_aprendizagem_tit");
-    var btn_add = document.getElementById("btn_add_tab_add_1");
+      var id = $j('#id').val();
+      var copy = $j('#copy').val();
+      var bncc_table = document.getElementById("objetivos_aprendizagem");
+      var titleTable = document.getElementById("tr_objetivos_aprendizagem_tit");
+      var btn_add    = document.getElementById("btn_add_tab_add_1");
 
-    if (isNaN(id) || id === '')
-      return;
+      if (isNaN(id) || id === '')
+          return;
 
-    if (!isNaN(id) && copy)
-      return;
+      if (!isNaN(id) && copy)
+          return;
 
-    var registrosAula = [];
+      var registrosAula = [];
 
-    var planejamento_aula_aee_id = $j('#id').val();
-    var turma_id = $j('#ref_cod_turma').val();
-    var ano = $j('#ano').val();
-    var ddp;
-    var atividades;
-    var bncc;
-    var conteudos;
-    var referencias;
-    var componentesCurriculares;
+      var planejamento_aula_id = $j('#id').val();
+      var turma_id = $j('#ref_cod_turma').val();
+      var ano = $j('#ano').val();
+      var ddp;
+      var atividades;
+      var bncc;
+      var conteudos;
+      var referencias;
+      var componentesCurriculares;
 
     btn_add.onclick = function () {
       tab_add_1.addRow();
@@ -36,12 +36,12 @@
 
     getObjetivosAprendizagem();
 
-    function getComponentesCurriculares() {
+    function getComponentesCurriculares () {
       if (ano && turma_id) {
 
         var data = {
-          ano: ano,
-          turma_id: turma_id
+          ano      : ano,
+          turma_id : turma_id
         };
 
         var urlForGetComponentesCurriculares = getResourceUrlBuilder.buildUrl(
@@ -49,9 +49,9 @@
         );
 
         var options = {
-          url: urlForGetComponentesCurriculares,
-          dataType: 'json',
-          success: function (response) {
+          url : urlForGetComponentesCurriculares,
+          dataType : 'json',
+          success  : function (response) {
             componentesCurriculares = response['options'];
           }
         };
@@ -71,7 +71,7 @@
         url: urlForGetObjetivosAprendizagem,
         dataType: 'json',
         data: {
-          planejamento_aula_aee_id: planejamento_aula_aee_id,
+          planejamento_aula_id: planejamento_aula_id,
           turma_id: turma_id,
           ano: ano,
         },
@@ -85,21 +85,21 @@
       for (let index = 0; index < response.count_objetivos; index++) {
         gerarObjetivoAprendizagem(index, response);
       }
-    }
+   }
 
     async function gerarObjetivoAprendizagem(index, response) {
 
-      if (index > 0) {
-        tab_add_1.addRow();
-        consertarBNCCElementos();
-        consertarBNCCEspecificoesElementos();
-      }
+    if (index > 0) {
+      tab_add_1.addRow();
+      consertarBNCCElementos();
+      consertarBNCCEspecificoesElementos();
+    }
 
-      await fillComponenteCurricular(index, response);
-      await fillHabilidadesAndEspecificacoes(index, response);
+     await fillComponenteCurricular(index, response);
+     await fillHabilidadesAndEspecificacoes(index, response);
 
       $(titleTable).children().first().html("Objetivo(s) de aprendizagem");
-    }
+   }
 
     function fillComponenteCurricular(index, response) {
       let ccElement = document.getElementById(`ref_cod_componente_curricular_array[${index}]`);
@@ -157,7 +157,7 @@
       });
     }
 
-    function consertarBNCCElementos() {
+    function consertarBNCCElementos () {
       count = bncc_table.children[0].childElementCount - 4;
       id = 0;
       index = 0;
@@ -174,7 +174,7 @@
             height: '28px',
             placeholder_text_multiple: "Selecione as opções",
             search_contains: true
-          }).change(async function (e) {
+          }).change(async function(e){
             await trocaBNCC(pegarId(e.currentTarget.id), $(this).val());
           });
 
@@ -185,7 +185,7 @@
       }
     }
 
-    function consertarBNCCEspecificoesElementos() {
+    function consertarBNCCEspecificoesElementos () {
       count = bncc_table.children[0].childElementCount - 4;
       id = 0;
       index = 0;
@@ -210,12 +210,12 @@
       }
     }
 
-    function updateComponentesCurriculares(clearComponent = true) {
+    function updateComponentesCurriculares (clearComponent = true) {
       if (ano && turma_id) {
 
         var data = {
-          ano: ano,
-          turma_id: turma_id
+          ano      : ano,
+          turma_id : turma_id
         };
 
         var urlForGetComponentesCurriculares = getResourceUrlBuilder.buildUrl(
@@ -223,9 +223,9 @@
         );
 
         var options = {
-          url: urlForGetComponentesCurriculares,
-          dataType: 'json',
-          success: function (response) {
+          url : urlForGetComponentesCurriculares,
+          dataType : 'json',
+          success  : function (response) {
             handleGetComponentesCurriculares(response, clearComponent)
           }
         };
@@ -234,7 +234,7 @@
       }
     }
 
-    function handleGetComponentesCurriculares(response, clearComponent = true) {
+    function handleGetComponentesCurriculares (response, clearComponent = true) {
       var selectOptions = jsonResourcesToSelectOptions(response['options']);
 
       var linhasElemento = document.getElementsByName("tr_objetivos_aprendizagem[]");
@@ -264,7 +264,7 @@
       });
     }
 
-    async function trocaComponenteCurricular(event) {
+    async function trocaComponenteCurricular (event) {
       var bnccDados = [];
 
       var componenteCurricularId = pegarId(event.currentTarget.id);
@@ -275,9 +275,9 @@
 
       if (turma !== null && componenteCurricularValue !== null) {
         var searchPathBNCCTurma = '/module/Api/BNCC?oper=get&resource=bncc_turma',
-          paramsBNCCTurma = {
-            turma: document.getElementById("ref_cod_turma").value,
-            componente_curricular: componenteCurricularValue
+          paramsBNCCTurma  = {
+            turma                 : document.getElementById("ref_cod_turma").value,
+            componente_curricular : componenteCurricularValue
           };
 
         await $j.get(searchPathBNCCTurma, paramsBNCCTurma, function (dataResponse) {
@@ -289,15 +289,15 @@
       }
     }
 
-    async function trocaBNCC(bnccElementoId, bnccArray) {
+    async function trocaBNCC (bnccElementoId, bnccArray) {
       var bnccEspeficacoesDados = [];
 
       var bnccEspecificoesElemento = document.getElementById(`custom_bncc_especificacoes[${bnccElementoId}]`);
 
       if (bnccElementoId !== null && bnccArray !== null && bnccArray.length > 0) {
         var searchPathBNCCEspeficacoesTurma = '/module/Api/BNCCEspecificacao?oper=get&resource=list',
-          paramsBNCCEspecificacoesTurma = {
-            bnccArray: bnccArray
+          paramsBNCCEspecificacoesTurma  = {
+            bnccArray  : bnccArray
           };
 
         await $j.get(searchPathBNCCEspeficacoesTurma, paramsBNCCEspecificacoesTurma, function (dataResponse) {
@@ -311,7 +311,7 @@
       }
     }
 
-    function addOpcoesBNCC(elemento, novasOpcoes) {
+    function addOpcoesBNCC (elemento, novasOpcoes) {
       const maxCharacters = 60;
 
       $(elemento).empty();
@@ -328,78 +328,78 @@
       $(elemento).trigger("chosen:updated");
     }
 
-    var submitButton = $j('#btn_enviar');
-    submitButton.removeAttr('onclick');
+      var submitButton = $j('#btn_enviar');
+      submitButton.removeAttr('onclick');
 
-    submitButton.click(function () {
-      editarPlanoAulaAee();
-    });
+      submitButton.click(function () {
+          tentaEditarPlanoAula();
+      });
 
-    function tentaEditarPlanoAulaAee() {
-      conteudos = pegarConteudos();
+      function tentaEditarPlanoAula () {
+          conteudos = pegarConteudos();
+//falta fazer verificação
+          var urlForVerificarPlanoAulaSendoUsado = postResourceUrlBuilder.buildUrl('/module/Api/PlanejamentoAula', 'verificar-plano-aula-sendo-usado-conteudo', {});
 
-      var urlForVerificarPlanoAulaAeeSendoUsado = postResourceUrlBuilder.buildUrl('/module/Api/PlanejamentoAulaAee', 'verificar-plano-aula-aee-sendo-usado-conteudo', {});
+          var options = {
+              type     : 'POST',
+              url      : urlForVerificarPlanoAulaSendoUsado,
+              dataType : 'json',
+              data     : {
+                  planejamento_aula_id    : planejamento_aula_id,
+                  conteudos               : conteudos,
+              },
+              success  : handleTentaEditarPlanoAula
+          };
 
-      var options = {
-        type: 'POST',
-        url: urlForVerificarPlanoAulaAeeSendoUsado,
-        dataType: 'json',
-        data: {
-          planejamento_aula_aee_id: planejamento_aula_aee_id,
-          conteudos: conteudos,
-        },
-        success: handleTentaEditarPlanoAulaAee
-      };
-
-      postResource(options);
-    }
-
-    function handleTentaEditarPlanoAulaAee(response) {
-      registrosAula = response.frequencia_ids;
-
-      if (registrosAula.length == 0) {
-        editarPlanoAulaAee();
-      } else {
-        openModal();
+          postResource(options);
       }
-    }
 
-    function ehDataValida(d) {
-      return d instanceof Date && !isNaN(d);
-    }
+      function handleTentaEditarPlanoAula (response) {
+          registrosAula = response.frequencia_ids;
 
-    function ehComponentesCurricularesValidos(componentesCurriculares) {
-      return componentesCurriculares.every(componenteCurricular => !isNaN(parseInt(componenteCurricular[1], 10)));
-    }
+          if (registrosAula.length == 0) {
+              editarPlanoAula();
+          } else {
+              openModal();
+          }
+      }
 
-    function componentesCurricularesPreenchidos(componentesCurriculares, componentesCurricularesGeral) {
-      let componentesCurricularesFiltrados = [];
-      let componentesUnique = [];
+      function ehDataValida (d) {
+        return d instanceof Date && !isNaN(d);
+      }
 
-      $.each(componentesCurricularesGeral, function (i, el) {
-        if ($.inArray(el, componentesUnique) === -1) componentesUnique.push(el);
-      });
+      function ehComponentesCurricularesValidos (componentesCurriculares) {
+        return componentesCurriculares.every(componenteCurricular => !isNaN(parseInt(componenteCurricular[1], 10)));
+      }
 
-      componentesCurriculares.forEach(componenteCurricular => {
-        componentesCurricularesFiltrados.push(componenteCurricular[1]);
-      });
+      function componentesCurricularesPreenchidos (componentesCurriculares, componentesCurricularesGeral) {
+        let componentesCurricularesFiltrados = [];
+        let componentesUnique = [];
 
-      return JSON.stringify(componentesCurricularesFiltrados) == JSON.stringify(componentesUnique);
-    }
+        $.each(componentesCurricularesGeral, function(i, el){
+          if($.inArray(el, componentesUnique) === -1) componentesUnique.push(el);
+        });
 
-    function ehBNCCsValidos(bnccs) {
-      return bnccs.every(bncc => bncc[1].length > 0);
-    }
+        componentesCurriculares.forEach(componenteCurricular => {
+          componentesCurricularesFiltrados.push(componenteCurricular[1]);
+        });
 
-    function ehBNCCEspecificacoesValidos(bnccEspecificacoes) {
-      return bnccEspecificacoes.every(bnccsEspecificacao => bnccsEspecificacao[1].length > 0);
-    }
+        return JSON.stringify(componentesCurricularesFiltrados) == JSON.stringify(componentesUnique);
+      }
 
-    function ehConteudosValidos(conteudos) {
-      return conteudos.every(conteudo => conteudo[1] !== "" && conteudo[1] != null);
-    }
+      function ehBNCCsValidos (bnccs) {
+        return bnccs.every(bncc => bncc[1].length > 0);
+      }
 
-    function pegarComponentesCurriculares() {
+      function ehBNCCEspecificacoesValidos (bnccEspecificacoes) {
+        return bnccEspecificacoes.every(bnccsEspecificacao => bnccsEspecificacao[1].length > 0);
+      }
+
+      function ehConteudosValidos (conteudos) {
+        return conteudos.every(conteudo => conteudo[1] !== "" && conteudo[1] != null);
+      }
+
+    function pegarComponentesCurriculares () {
       var componentesCurriculares = []
 
       tr_objetivos_aprendizagens = document.getElementsByName("tr_objetivos_aprendizagem[]");
@@ -418,7 +418,7 @@
       return componentesCurriculares;
     }
 
-    function pegarBNCCs() {
+    function pegarBNCCs () {
       var BNCCs = []
 
       tr_objetivos_aprendizagens = document.getElementsByName("tr_objetivos_aprendizagem[]");
@@ -437,7 +437,7 @@
       return BNCCs;
     }
 
-    function pegarBNCCEspecificacoes() {
+    function pegarBNCCEspecificacoes () {
       var BNCCEspecificacoes = []
 
       tr_objetivos_aprendizagens = document.getElementsByName("tr_objetivos_aprendizagem[]");
@@ -466,7 +466,7 @@
       });
 
       componentesCurricularesElementos.forEach(componenteCurricularElemento => {
-        $(componenteCurricularElemento).find('option').each(function () {
+        $(componenteCurricularElemento).find('option').each(function() {
           if ($(this).val() != '' && $(this).val() != 0) {
             componentesCurricularesGeral.push($(this).val());
           }
@@ -476,148 +476,146 @@
       return componentesCurricularesGeral;
     }
 
-    function editarPlanoAulaAee() {
-      let data_inicial = dataParaBanco(document.getElementById("data_inicial").value);
-      let data_final = dataParaBanco(document.getElementById("data_final").value);
-      let turma = document.getElementById("ref_cod_turma").value;
-      let matricula = document.getElementById("ref_cod_matricula").value;
-      let faseEtapa = document.getElementById("faseEtapa").value;
-      let ddp = $j('#ddp').val(); //metodologia    
-      let obrigatorio_conteudo = document.getElementById("obrigatorio_conteudo").value;
-      let componentesCurriculares = pegarComponentesCurriculares();
-      let componentesCurricularesGeral = pegarComponentesCurricularesGeral();
-      let bnccs = pegarBNCCs();
-      let bnccEspecificacoes = pegarBNCCEspecificacoes();
-      let recursos_didaticos = $j('#recursos_didaticos').val();
-      let outros = $j('#outros').val();
+      function editarPlanoAula () {
+        let data_inicial              = dataParaBanco(document.getElementById("data_inicial").value);
+        let data_final                = dataParaBanco(document.getElementById("data_final").value);
+        let ddp = $j('#ddp').val(); //metodologia
+        let recursos_didaticos = $j('#recursos_didaticos').val();
+        let outros = $j('#outros').val();
+        let componentesCurriculares   = pegarComponentesCurriculares();
+        let componentesCurricularesGeral   = pegarComponentesCurricularesGeral();
+        let bnccs                     = pegarBNCCs();
+        let bnccEspecificacoes        = pegarBNCCEspecificacoes();
+        let turma                     = document.getElementById("ref_cod_turma").value;
+        let faseEtapa                 = document.getElementById("fase_etapa").value;
+        let obrigatorio_conteudo        = document.getElementById("obrigatorio_conteudo").value;
 
-      console.log(obrigatorio_conteudo)
-      console.log(obrigatorio_conteudo.length)
-      console.log((obrigatorio_conteudo == '1'))
-      console.log((obrigatorio_conteudo.length == 1 && obrigatorio_conteudo == '1'))
-      console.log(conteudos)
 
-      // VALIDAÇÃO
-      if (!ehDataValida(new Date(data_inicial))) { alert("Data inicial não é válida."); return; }
-      if (!ehDataValida(new Date(data_final))) { alert("Data final não é válida."); return; }
-      if (isNaN(parseInt(turma, 10))) { alert("Turma é obrigatória."); return; }
-      if (isNaN(parseInt(matricula, 10))) { alert("Aluno é obrigatório."); return; }
-      if (isNaN(parseInt(faseEtapa, 10))) { alert("Etapa é obrigatória."); return; }
-      if (ddp == null || ddp == '') { alert("Metodologia é obrigatória."); return; }
-      if (obrigatorio_conteudo.length == 1 && obrigatorio_conteudo == '1' && !ehConteudosValidos(conteudos)) { alert("Os conteúdos são obrigatórios."); return; }
-      if (!ehComponentesCurricularesValidos(componentesCurriculares)) { alert("Os componentes curriculares são obrigatórios."); return; }
-      if (!componentesCurricularesPreenchidos(componentesCurriculares, componentesCurricularesGeral)) { alert("Existem componentes sem planejamento."); }
-      if (!ehBNCCsValidos(bnccs)) { alert("As habilidades são obrigatórias."); return; }
-      if (!ehBNCCEspecificacoesValidos(bnccEspecificacoes)) { alert("As especificações são obrigatórias."); return; }
-      if (recursos_didaticos == null) { alert("O campo recursos didáticos não é válido."); return; }
-      if (outros == null) { alert("O campo Outrosnão é válido."); return; }
+        console.log(obrigatorio_conteudo)
+        console.log(obrigatorio_conteudo.length)
+        console.log((obrigatorio_conteudo == '1'))
+        console.log((obrigatorio_conteudo.length == 1 && obrigatorio_conteudo == '1'))
+        console.log(conteudos)
 
-      var urlForEditarPlanoAulaAee = postResourceUrlBuilder.buildUrl('/module/Api/PlanejamentoAulaAee', 'editar-plano-aula-aee', {});
+        // VALIDAÇÃO
+        if (!ehDataValida(new Date(data_inicial))) { alert("Data inicial não é válida."); return; }
+        if (!ehDataValida(new Date(data_final))) { alert("Data final não é válida."); return; }
+        if (isNaN(parseInt(turma, 10))) { alert("Turma é obrigatória."); return; }
+        if (isNaN(parseInt(faseEtapa, 10))) { alert("Etapa é obrigatória."); return; }
+        if (ddp == null || ddp == '') { alert("Metodologia é obrigatória."); return; }
+        if (!ehComponentesCurricularesValidos(componentesCurriculares)) { alert("Os componentes curriculares são obrigatórios."); return; }
+        if (!componentesCurricularesPreenchidos(componentesCurriculares, componentesCurricularesGeral)) { alert("Existem componentes sem planejamento."); }
+        if (!ehBNCCsValidos(bnccs)) { alert("As habilidades são obrigatórias."); return; }
+        if (!ehBNCCEspecificacoesValidos(bnccEspecificacoes)) { alert("As especificações são obrigatórias."); return; }
+        if (obrigatorio_conteudo.length == 1 && obrigatorio_conteudo == '1' && !ehConteudosValidos(conteudos)) { alert("Os conteúdos são obrigatórios."); return; }
+        if (recursos_didaticos == null) { alert("O campo recursos didáticos não é válido."); return; }
+        if (outros == null) { alert("O campo Outros não é válido."); return; }
 
-      var options = {
-        type: 'POST',
-        url: urlForEditarPlanoAulaAee,
-        dataType: 'json',
-        data: {
-          planejamento_aula_aee_id: planejamento_aula_aee_id,
-          data_inicial: data_inicial,
-          data_final: data_final,
-          turma: turma,
-          matricula: matricula,
-          faseEtapa: faseEtapa,
-          ddp: ddp,
-          conteudos: conteudos,
-          componentesCurriculares: componentesCurriculares,
-          bnccs: bnccs,
-          bnccEspecificacoes: bnccEspecificacoes,
-          recursos_didaticos: recursos_didaticos,
-          outros: outros
-        },
-        success: handleEditarPlanoAulaAee
-      };
+          var urlForEditarPlanoAula = postResourceUrlBuilder.buildUrl('/module/Api/PlanejamentoAulaAee', 'editar-plano-aula-aee', {});
 
-      postResource(options);
-    }
+          var options = {
+              type     : 'POST',
+              url      : urlForEditarPlanoAula,
+              dataType : 'json',
+              data     : {
+                  planejamento_aula_id    : planejamento_aula_id,
+                  data_inicial            : data_inicial,
+                  data_final              : data_final,                    
+                  ddp                     : ddp,
+                  conteudos               : conteudos,
+                  componentesCurriculares : componentesCurriculares,
+                  bnccs                   : bnccs,
+                  bnccEspecificacoes      : bnccEspecificacoes,
+                  recursos_didaticos      : recursos_didaticos,
+                  outros      : outros,
+                  turma                   : turma,
+                  faseEtapa               : faseEtapa
+              },
+              success  : handleEditarPlanoAula
+          };
 
-    function handleEditarPlanoAulaAee(response) {
-      if (response.result == "Edição efetuada com sucesso.") {
-        messageUtils.success('Plano de aula editado com sucesso!');
-
-        delay(1000).then(() => urlHelper("http://" + window.location.host + "/intranet/educar_professores_planejamento_de_aula_aee_lst2.php", '_self'));
-      } else {
-        messageUtils.success('Erro desconhecido ocorreu.');
+          postResource(options);
       }
-    }
 
-    function openModal() {
-      var quantidadeRegistrosAula = registrosAula.length;
+      function handleEditarPlanoAula (response) {
+          if(response.result == "Edição efetuada com sucesso.") {
+              messageUtils.success('Plano de aula editado com sucesso!');
 
-      $j("#dialog-warning-editar-plano-aula").find('#msg').html(getMessageEditarPlanoAula(quantidadeRegistrosAula));
-      $j("#dialog-warning-editar-plano-aula").dialog("open");
-    }
-
-    function closeModal() {
-      registrosAula = [];
-
-      $j("#dialog-warning-editar-plano-aula").dialog('close');
-    }
-
-    function getMessageEditarPlanoAula(quantidadeRegistrosAula) {
-      return ` \
-                <span> \
-                    Não é possível prosseguir com a edição porque <b> um ou mais conteúdos </b> estão sendo utilizados em \
-                    <b>${quantidadeRegistrosAula}</b> registro(s) de aula. O que deseja fazer? \
-                </span><br> \
-            `;
-    }
-
-    function verRegistrosAula() {
-      for (let index = 0; index < registrosAula.length; index++) {
-        const registroAula = registrosAula[index];
-
-        const url = "http://" + window.location.host + "/intranet/educar_professores_frequencia_cad.php?id=" + registroAula;
-        urlHelper(url, '_blank');
+              delay(1000).then(() => urlHelper("http://" + window.location.host + "/intranet/educar_professores_planejamento_de_aula_aee_lst.php", '_self'));
+          } else {
+              messageUtils.success('Erro desconhecido ocorreu.');
+          }
       }
-    }
 
-    function urlHelper(href, mode) {
-      Object.assign(document.createElement('a'), {
-        target: mode,
-        href: href,
-      }).click();
-    }
+      function openModal() {
+          var quantidadeRegistrosAula = registrosAula.length;
 
-    function delay(time) {
-      return new Promise(resolve => setTimeout(resolve, time));
-    }
+          $j("#dialog-warning-editar-plano-aula").find('#msg').html(getMessageEditarPlanoAula(quantidadeRegistrosAula));
+          $j("#dialog-warning-editar-plano-aula").dialog("open");
+      }
 
-    function pegarConteudos() {
-      var conteudos = []
+      function closeModal() {
+          registrosAula = [];
 
-      tr_conteudos = document.getElementsByName("tr_conteudos[]");
-      tr_conteudos.forEach(tr_conteudo => {
-        var id = tr_conteudo.children[0].children[0].id;
-        var conteudoElemento = document.getElementById(id);
-        var conteudoId = pegarId(conteudoElemento.name);
-        var conteudoValor = conteudoElemento.value;
+          $j("#dialog-warning-editar-plano-aula").dialog('close');
+      }
 
-        var conteudo = [];
-        conteudo.push(conteudoId);
-        conteudo.push(conteudoValor);
-        conteudos.push(conteudo);
-      });
+      function getMessageEditarPlanoAula(quantidadeRegistrosAula) {
+          return ` \
+              <span> \
+                  Não é possível prosseguir com a edição porque <b> um ou mais conteúdos </b> estão sendo utilizados em \
+                  <b>${quantidadeRegistrosAula}</b> registro(s) de aula. O que deseja fazer? \
+              </span><br> \
+          `;
+      }
 
-      return conteudos;
-    }
+      function verRegistrosAula () {
+          for (let index = 0; index < registrosAula.length; index++) {
+              const registroAula = registrosAula[index];
 
-    function pegarId(name) {
-      let id = name;
-      id = id.substring(id.indexOf('[') + 1, id.indexOf(']'));
+              const url = "http://" + window.location.host + "/intranet/educar_professores_frequencia_cad.php?id=" + registroAula;
+              urlHelper(url, '_blank');
+          }
+      }
 
-      return id;
-    }
+      function urlHelper (href, mode) {
+          Object.assign(document.createElement('a'), {
+          target: mode,
+          href: href,
+          }).click();
+      }
 
-    function dataParaBanco(dataFromBrasil) {
+      function delay (time) {
+          return new Promise(resolve => setTimeout(resolve, time));
+      }
+
+      function pegarConteudos () {
+          var conteudos = []
+
+          tr_conteudos = document.getElementsByName("tr_conteudos[]");
+          tr_conteudos.forEach(tr_conteudo => {
+              var id = tr_conteudo.children[0].children[0].id;
+              var conteudoElemento = document.getElementById(id);
+              var conteudoId = pegarId(conteudoElemento.name);
+              var conteudoValor = conteudoElemento.value;
+
+              var conteudo = [];
+              conteudo.push(conteudoId);
+              conteudo.push(conteudoValor);
+              conteudos.push(conteudo);
+          });
+
+          return conteudos;
+      }
+
+      function pegarId (name) {
+          let id = name;
+          id = id.substring(id.indexOf('[') + 1, id.indexOf(']'));
+
+          return id;
+      }
+
+    function dataParaBanco (dataFromBrasil) {
       var data = "";
       var data_fragmentos = dataFromBrasil.split('/');
 
@@ -634,33 +632,33 @@
       return data
     }
 
-    $j('body').append(
-      '<div id="dialog-warning-editar-plano-aula' + '" style="max-height: 80vh; width: 820px; overflow: auto;">' +
-      '<div id="msg" class="msg"></div>' +
-      '</div>'
-    );
+      $j('body').append(
+          '<div id="dialog-warning-editar-plano-aula' + '" style="max-height: 80vh; width: 820px; overflow: auto;">' +
+          '<div id="msg" class="msg"></div>' +
+          '</div>'
+      );
 
-    $j('#dialog-warning-editar-plano-aula').find(':input').css('display', 'block');
+      $j('#dialog-warning-editar-plano-aula').find(':input').css('display', 'block');
 
-    $j("#dialog-warning-editar-plano-aula").dialog({
-      autoOpen: false,
-      closeOnEscape: false,
-      draggable: false,
-      width: 820,
-      modal: true,
-      resizable: false,
-      title: 'Dependências detectadas',
-      open: function (event, ui) {
-        $j(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
-      },
-      buttons: {
-        "Cancelar": function () {
-          closeModal();
-        },
-        "Ver registro(s) afetado(s)": function () {
-          verRegistrosAula();
-        }
-      }
-    });
+      $j("#dialog-warning-editar-plano-aula").dialog({
+          autoOpen: false,
+          closeOnEscape: false,
+          draggable: false,
+          width: 820,
+          modal: true,
+          resizable: false,
+          title: 'Dependências detectadas',
+          open: function(event, ui) {
+              $j(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
+          },
+          buttons: {
+              "Cancelar": function () {
+                  closeModal();
+              },
+              "Ver registro(s) afetado(s)": function () {
+                  verRegistrosAula();
+              }
+          }
+      });
   });
 })(jQuery);

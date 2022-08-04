@@ -107,10 +107,10 @@ class clsModulesPlanejamentoAulaBNCCEspecificacaoAee extends Model {
                     pabe.*,
                     be.especificacao
                 FROM
-                    modules.planejamento_aula_bncc_especificacao as pabe
-                JOIN modules.planejamento_aula_bncc as pab
+                    modules.planejamento_aula_bncc_especificacao_aee as pabe
+                JOIN modules.planejamento_aula_bncc_aee as pab
                     ON (pab.id = pabe.planejamento_aula_bncc_aee_id)
-                JOIN modules.planejamento_aula as pa
+                JOIN modules.planejamento_aula_aee as pa
                     ON (pa.id = pab.planejamento_aula_aee_id)
                 JOIN modules.bncc_especificacao as be
 	                ON (be.id = pabe.bncc_especificacao_id)
