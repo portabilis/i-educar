@@ -515,14 +515,11 @@ class clsModulesProfessorTurma extends Model
 
     public function gravaComponentes($professor_turma_id, $componentes)
     {
-        $componentesAntigos = $this->retornaComponentesVinculados($professor_turma_id);
         $this->excluiComponentes($professor_turma_id);
         $db = new clsBanco();
         foreach ($componentes as $componente) {
             $db->Consulta("INSERT INTO modules.professor_turma_disciplina VALUES ({$professor_turma_id},{$componente})");
         }
-        $componentesNovos = $this->retornaComponentesVinculados($professor_turma_id);
-        $this->auditaComponentesVinculados($professor_turma_id, $componentesAntigos, $componentesNovos);
     }
 
     public function excluiComponentes($professor_turma_id)
