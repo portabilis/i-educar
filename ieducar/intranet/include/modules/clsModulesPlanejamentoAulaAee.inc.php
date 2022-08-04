@@ -255,19 +255,16 @@ class clsModulesPlanejamentoAulaAee extends Model
     {
         if (
             is_numeric($this->id)
-            && is_string($this->ddp)
-            && is_string($this->atividades)
-            && is_array($this->bnccs)
-            && is_array($this->conteudos)
-            && is_string($this->recursos_didaticos)
-            && is_string($this->outros)
+            // s
         ) {
             $db = new clsBanco();
 
-            $set = "
+            $set = "  
+                data_inicial = '{$this->data_inicial}',
+                data_final = '{$this->data_final}',
                 ddp = '{$db->escapeString($this->ddp)}',
-                atividades = '{$db->escapeString($this->atividades)}',
-                referencias = '{$db->escapeString($this->referencias)}',
+                recursos_didaticos = '{$db->escapeString($this->recursos_didaticos)}',
+                outros = '{$db->escapeString($this->outros)}',
                 data_atualizacao = (NOW() - INTERVAL '3 HOURS')
             ";
 
@@ -280,7 +277,27 @@ class clsModulesPlanejamentoAulaAee extends Model
                     id = '{$this->id}'
             ");
 
-            $obj = new clsModulesPlanejamentoAulaBNCC();
+            $obj = new clsModulesPlanejamentoAulaComponenteCurricularAee();
+            foreach ($obj->lista($this->id) as $key => $componenteCurriculares) {
+                $cc_atuais[] = $componenteCurriculares;
+            }
+
+            $obj = new clsModulesComponenteCurricular();
+            $cc_diferenca = $obj->retornaDiferencaEntreConjuntosCC($cc_atuais, $this->ref_componente_curricular_array);
+
+            foreach ($cc_diferenca['adicionar'] as $ccAdicionarArray){
+                if (isset($ccAdicionarArray[1]) && !empty($ccAdicionarArray[1])) {
+                    $obj = new clsModulesPlanejamentoAulaComponenteCurricularAee(null, $this->id, $ccAdicionarArray[1]);
+                    $obj->cadastra();
+                }
+            }
+
+            foreach ($cc_diferenca['remover'] as $cc_remover){
+                $obj = new clsModulesPlanejamentoAulaComponenteCurricularAee(null, $this->id, $cc_remover);
+                $obj->excluir();
+            }
+
+            $obj = new clsModulesPlanejamentoAulaBNCCAee();
             foreach ($obj->lista($this->id) as $key => $bncc) {
                 $bnccs_atuais[] = $bncc;
             }
@@ -289,32 +306,32 @@ class clsModulesPlanejamentoAulaAee extends Model
             $bncc_diferenca = $obj->retornaDiferencaEntreConjuntosBNCC($bnccs_atuais, $this->bnccs);
 
             foreach ($bncc_diferenca['adicionar'] as $key => $bncc_adicionar) {
-                $obj = new clsModulesPlanejamentoAulaBNCC(null, $this->id, $bncc_adicionar);
+                $obj = new clsModulesPlanejamentoAulaBNCCAee(null, $this->id, $bncc_adicionar);
                 $obj->cadastra();
             }
 
             foreach ($bncc_diferenca['remover'] as $key => $bncc_remover) {
-                $obj = new clsModulesPlanejamentoAulaBNCC(null, $this->id, $bncc_remover);
+                $obj = new clsModulesPlanejamentoAulaBNCCAee(null, $this->id, $bncc_remover);
                 $obj->excluir();
             }
 
 
-            $obj = new clsModulesPlanejamentoAulaConteudo();
+            $obj = new clsModulesPlanejamentoAulaConteudoAee();
             $conteudos_atuais = $obj->lista($this->id);
             $conteudo_diferenca = $obj->retornaDiferencaEntreConjuntosConteudos($conteudos_atuais, $this->conteudos);
 
             foreach ($conteudo_diferenca['adicionar'] as $key => $conteudo_adicionar) {
-                $obj = new clsModulesPlanejamentoAulaConteudo(null, $this->id, $conteudo_adicionar[1]);
+                $obj = new clsModulesPlanejamentoAulaConteudoAee(null, $this->id, $conteudo_adicionar[1]);
                 $obj->cadastra();
             }
 
             foreach ($conteudo_diferenca['remover'] as $key => $conteudo_remover) {
-                $obj = new clsModulesPlanejamentoAulaConteudo(null, $this->id, $conteudo_remover[2]);
+                $obj = new clsModulesPlanejamentoAulaConteudoAee(null, $this->id, $conteudo_remover[2]);
                 $obj->excluir();
             }
 
             foreach ($conteudo_diferenca['editar'] as $key => $conteudo_editar) {
-                $obj = new clsModulesPlanejamentoAulaConteudo($conteudo_editar[0], null, $conteudo_editar[1]);
+                $obj = new clsModulesPlanejamentoAulaConteudoAee($conteudo_editar[0], null, $conteudo_editar[1]);
                 $obj->edita();
             }
 
@@ -571,21 +588,21 @@ class clsModulesPlanejamentoAulaAee extends Model
             $db = new clsBanco();
             $db->Consulta("
                 SELECT
-                    conteudo_ministrado_id as id, COUNT(conteudo_ministrado_id)
+                conteudo_ministrado_aee_id as id, COUNT(conteudo_ministrado_aee_id)
                 FROM
-                    modules.planejamento_aula_conteudo as pac
+                    modules.planejamento_aula_conteudo_aee as pac
                 CROSS JOIN LATERAL (
                     SELECT
-                        cmc.conteudo_ministrado_id
+                        cmc.conteudo_ministrado_aee_id
                     FROM
-                        modules.conteudo_ministrado_conteudo as cmc
+                        modules.conteudo_ministrado_conteudo_aee as cmc
                     WHERE
-                        cmc.planejamento_aula_conteudo_id = pac.id
+                        cmc.planejamento_aula_conteudo_aee_id = pac.id
                 ) sub
                 WHERE
-                    pac.planejamento_aula_id = '{$this->id}'
+                    pac.planejamento_aula_aee_id = '{$this->id}'
                 GROUP BY
-                    conteudo_ministrado_id
+                    conteudo_ministrado_aee_id
             ");
 
             while ($db->ProximoRegistro()) {

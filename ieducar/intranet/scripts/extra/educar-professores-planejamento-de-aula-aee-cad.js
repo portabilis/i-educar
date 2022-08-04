@@ -5,12 +5,17 @@
 
     var anoField = getElementFor('ano');
     var turmaField = getElementFor('turma');
+    var id = $j('#id').val();
+    var planejamento_aula_aee_id    = document.getElementById('planejamento_aula_aee_id');
+
 
     var submitButton = $j('#btn_enviar');
     submitButton.removeAttr('onclick');
 
     submitButton.click(function () {
-      enviarFormulario();
+      if (planejamento_aula_aee_id.value == '' || isNaN(planejamento_aula_aee_id.value)) {
+        enviarFormulario();
+      }
     });
 
     consertarBNCCElementos();
@@ -316,7 +321,7 @@
       if (!ehDataValida(new Date(data_inicial))) { alert("Data inicial não é válida."); return; }
       if (!ehDataValida(new Date(data_final))) { alert("Data final não é válida."); return; }
       if (isNaN(parseInt(turma, 10))) { alert("Turma é obrigatória."); return; }
-      if (isNaN(parseInt(matricula, 10))) { alert("Aluno é obrigatório."); return; }
+      if (isNaN(parseInt(matricula, 10))) { alert("Aluno24 é obrigatório."); return; }
       if (isNaN(parseInt(faseEtapa, 10))) { alert("Etapa é obrigatória."); return; }
       if (ddp == null || ddp == '') { alert("Metodologia é obrigatória."); return; }     
       if (!ehComponentesCurricularesValidos(componentesCurriculares)) { alert("Os componentes curriculares são obrigatórios."); return; }
