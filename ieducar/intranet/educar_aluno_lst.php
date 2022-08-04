@@ -59,6 +59,8 @@ return new class extends clsListagem {
             $this->$var = ($val === '') ? null : $val;
         }
 
+        $this->ref_cod_instituicao ??= $configuracoes['ref_cod_instituicao'];
+
         $this->campoNumero('cod_aluno', _cl('aluno.detalhe.codigo_aluno'), $this->cod_aluno, 20, 9, false);
 
         if ($configuracoes['mostrar_codigo_inep_aluno']) {
