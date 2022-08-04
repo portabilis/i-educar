@@ -2,11 +2,19 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
+use App\Models\Builders\LegacySchoolAcademicYearBuilder;
+use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * LegacySchoolAcademicYear
+ *
+ * @method static LegacySchoolAcademicYearBuilder query()
+ */
 class LegacySchoolAcademicYear extends Model
 {
+    use LegacyAttribute;
+
     /**
      * @var string
      */
@@ -16,6 +24,22 @@ class LegacySchoolAcademicYear extends Model
      * @var string
      */
     protected $primaryKey = 'ref_cod_escola';
+
+    /**
+     * Builder dos filtros
+     *
+     * @var string
+     */
+    protected $builder = LegacySchoolAcademicYearBuilder::class;
+
+    /**
+     * Atributos legados para serem usados nas queries
+     *
+     * @var string[]
+     */
+    public $legacy = [
+        'year' => 'ano'
+    ];
 
     /**
      * @var array
@@ -37,18 +61,10 @@ class LegacySchoolAcademicYear extends Model
      */
     public $timestamps = false;
 
-    public function scopeActive(Builder $builder)
-    {
-        return $builder->where('escola_ano_letivo.ativo', 1);
-    }
-
-    public function scopeLastYear(Builder $query): Builder
-    {
-        return $query->where('escola_ano_letivo.ano', date('Y') - 1);
-    }
-
-    public function scopeCurrentYear(Builder $query): Builder
-    {
-        return $query->where('escola_ano_letivo.ano', date('Y'));
+    /**
+     * @return int
+     */
+    public function getYearAttribute(): int {
+        return $this->ano;
     }
 }

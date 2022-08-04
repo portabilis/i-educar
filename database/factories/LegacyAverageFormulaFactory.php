@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\LegacyAverageFormula;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use RegraAvaliacao_Model_Nota_TipoValor;
 use RegraAvaliacao_Model_TipoPresenca;
 use RegraAvaliacao_Model_TipoProgressao;

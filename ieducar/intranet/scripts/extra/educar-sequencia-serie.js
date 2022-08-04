@@ -1,56 +1,43 @@
-function getCurso(xml_curso) {
+function getCurso(cursos) {
   const campoCurso = document.getElementById('ref_curso_origem');
   const campoCurso_ = document.getElementById('ref_curso_destino');
-  const DOM_array = xml_curso.getElementsByTagName("curso");
 
-  if(DOM_array.length) {
-    campoCurso.length = 1;
-    campoCurso.options[0].text = 'Selecione um curso origem';
-    campoCurso.disabled = false;
+  if(cursos.length) {
+    setAttributes(campoCurso,'Selecione um curso origem',false);
+    setAttributes(campoCurso_,'Selecione um curso destino',false);
 
-    campoCurso_.length = 1;
-    campoCurso_.options[0].text = 'Selecione um curso destino';
-    campoCurso_.disabled = false;
-
-    for(let i = 0; i < DOM_array.length; i++ ) {
-      campoCurso.options[campoCurso.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_curso"),false,false);
-      campoCurso_.options[campoCurso_.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_curso"),false,false);
-    }
+    $j.each(cursos, function(i, item) {
+      campoCurso.options[campoCurso.options.length] = new Option(item.name,item.id,false,false);
+      campoCurso_.options[campoCurso_.options.length] = new Option(item.name,item.id,false,false);
+    });
   } else {
     campoCurso.options[0].text = 'A instituição não possui nenhum curso';
     campoCurso_.options[0].text = 'A instituição não possui nenhum curso';
   }
 }
 
-function getSerie(xml_serie) {
+function getSerie(series) {
   const campoSerie = document.getElementById('ref_serie_origem');
-  const DOM_array = xml_serie.getElementsByTagName("serie");
 
-  if(DOM_array.length) {
-    campoSerie.length = 1;
-    campoSerie.options[0].text = 'Selecione uma série origem';
-    campoSerie.disabled = false;
-
-    for(let i = 0; i < DOM_array.length; i++ ) {
-      campoSerie.options[campoSerie.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_serie"),false,false);
-    }
+  if(series.length) {
+    setAttributes(campoSerie,'Selecione uma série origem',false);
+    $j.each(series, function(i, item) {
+      campoSerie.options[campoSerie.options.length] = new Option(item.name,item.id,false,false);
+    });
   } else {
     campoSerie.options[0].text = 'O curso origem não possui nenhuma série';
   }
 }
 
-function getSerie_(xml_serie_) {
+function getSerie_(series) {
   const campoSerie_ = document.getElementById('ref_serie_destino');
-  const DOM_array = xml_serie_.getElementsByTagName("serie");
 
-  if(DOM_array.length) {
-    campoSerie_.length = 1;
-    campoSerie_.options[0].text = 'Selecione uma série destino';
-    campoSerie_.disabled = false;
+  if(series.length) {
+    setAttributes(campoSerie_,'Selecione uma série destino',false);
 
-    for(let i = 0; i < DOM_array.length; i++ ) {
-      campoSerie_.options[campoSerie_.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_serie"),false,false);
-    }
+    $j.each(series, function(i, item) {
+      campoSerie_.options[campoSerie_.options.length] = new Option(item.name,item.id,false,false);
+    });
   } else {
     campoSerie_.options[0].text = 'O curso origem não possui nenhuma série';
   }
@@ -59,40 +46,23 @@ function getSerie_(xml_serie_) {
 document.getElementById('ref_cod_instituicao').onchange = function() {
   const campoInstituicao = document.getElementById('ref_cod_instituicao').value;
   const campoCurso = document.getElementById('ref_curso_origem');
-
-  campoCurso.length = 1;
-  campoCurso.disabled = true;
-  campoCurso.options[0].text = 'Carregando curso origem';
-
+  setAttributes(campoCurso,'Carregando curso origem',true);
   const campoCurso_ = document.getElementById('ref_curso_destino');
-  campoCurso_.length = 1;
-  campoCurso_.disabled = true;
-  campoCurso_.options[0].text = 'Carregando curso destino';
-
-  const xml_curso = new ajax(getCurso);
-  xml_curso.envia( "educar_curso_xml2.php?ins="+campoInstituicao + '&showDescription=1');
+  setAttributes(campoCurso_,'Carregando curso destino',true);
+  getApiResource('/api/resource/course',getCurso,{institution:campoInstituicao})
 };
 
 document.getElementById('ref_curso_origem').onchange = function() {
   const campoCurso = document.getElementById('ref_curso_origem').value;
   const campoSerie = document.getElementById('ref_serie_origem');
+  setAttributes(campoSerie,'Carregando série origem',true);
 
-  campoSerie.length = 1;
-  campoSerie.disabled = true;
-  campoSerie.options[0].text = 'Carregando série origem';
-
-  const xml_serie = new ajax(getSerie);
-  xml_serie.envia( "educar_serie_xml.php?cur="+campoCurso + '&showDescription=1')
+  getApiResource('/api/resource/grade',getSerie,{course:campoCurso})
 };
 
 document.getElementById('ref_curso_destino').onchange = function() {
   const campoCurso_ = document.getElementById('ref_curso_destino').value;
   const campoSerie_ = document.getElementById('ref_serie_destino');
-
-  campoSerie_.length = 1;
-  campoSerie_.disabled = true;
-  campoSerie_.options[0].text = 'Carregando série destino';
-
-  const xml_serie_ = new ajax(getSerie_);
-  xml_serie_.envia( "educar_serie_xml.php?cur="+campoCurso_ + '&showDescription=1')
+  setAttributes(campoSerie_,'Carregando série destino',true);
+  getApiResource('/api/resource/grade',getSerie_,{course:campoCurso_})
 };

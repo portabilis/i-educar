@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacySchoolClassBuilder;
+use App\Traits\LegacyAttribute;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -29,9 +31,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property LegacySchool       $school
  * @property LegacySchoolGrade  $schoolGrade
  * @property LegacyEnrollment[] $enrollments
+ * @method static LegacySchoolClassBuilder query()
  */
 class LegacySchoolClass extends Model
 {
+    use LegacyAttribute;
+
     /**
      * @var string
      */
@@ -41,6 +46,25 @@ class LegacySchoolClass extends Model
      * @var string
      */
     protected $primaryKey = 'cod_turma';
+
+
+    /**
+     * Builder dos filtros
+     *
+     * @var string
+     */
+    protected $builder = LegacySchoolClassBuilder::class;
+
+    /**
+     * Atributos legados para serem usados nas queries
+     *
+     * @var string[]
+     */
+    public $legacy = [
+        'id' => 'cod_turma',
+        'name' => 'nm_turma',
+        'year' => 'ano'
+    ];
 
     /**
      * @var array
@@ -128,7 +152,11 @@ class LegacySchoolClass extends Model
      */
     public function getNameAttribute()
     {
-        return $this->nm_turma;
+        if (empty($this->year)) {
+            return $this->nm_turma;
+        }
+
+        return $this->nm_turma . ' (' . $this->year . ')';
     }
 
     /**
@@ -214,6 +242,25 @@ class LegacySchoolClass extends Model
         $calendar = $this->stages()->orderByDesc('sequencial')->first();
 
         return $calendar ? $calendar->data_fim : null;
+    }
+
+    /**
+     * Séries
+     *
+     * @return BelongsToMany
+     */
+    public function grades(): BelongsToMany {
+        return $this->belongsToMany(LegacyGrade::class,'turma_serie','turma_id','serie_id');
+    }
+
+
+    /**
+     * Anos Letivos
+     *
+     * @return HasMany
+     */
+    public function academic_years(): HasMany {
+        return $this->hasMany(LegacySchoolAcademicYear::class,'ref_cod_escola','ref_ref_cod_escola')->whereColumn('escola_ano_letivo.ano','turma.ano');
     }
 
     /**
@@ -477,15 +524,5 @@ class LegacySchoolClass extends Model
     public function period()
     {
         return $this->belongsTo(LegacyPeriod::class, 'turma_turno_id');
-    }
-
-    /**
-     * @param Builder $query
-     *
-     * @return Builder
-     */
-    public function scopeActive($query)
-    {
-        return $query->where('ativo', 1);
     }
 }
