@@ -6,11 +6,11 @@ use Illuminate\Support\Collection;
 
 class LegacyDisciplineAcademicYearBuilder extends LegacyBuilder
 {
-
     /**
      * Retorna o recurso para os selects dos formulários
      *
      * @param array $filters
+     *
      * @return Collection
      */
     public function getResource(array $filters = []): Collection
@@ -35,22 +35,24 @@ class LegacyDisciplineAcademicYearBuilder extends LegacyBuilder
      * Filtra por série
      *
      * @param int $grade
+     *
      * @return LegacyDisciplineAcademicYearBuilder
      */
-    public function whereGrade(int $grade ): self
+    public function whereGrade(int $grade): self
     {
-        return $this->where('ano_escolar_id',$grade);
+        return $this->where('ano_escolar_id', $grade);
     }
 
     /**
      * Filtra por curso
      *
      * @param int $course
+     *
      * @return LegacyDisciplineAcademicYearBuilder
      */
     public function whereCourse(int $course): self
     {
-        return $this->whereHas('grade',function ($q) use($course){
+        return $this->whereHas('grade', function ($q) use ($course) {
             $q->whereCourse($course);
         });
     }

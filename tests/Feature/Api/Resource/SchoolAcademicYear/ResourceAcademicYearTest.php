@@ -65,7 +65,7 @@ class ResourceAcademicYearTest extends TestCase
         ]);
 
         $response->assertJson(function (AssertableJson $json) use ($academic_years) {
-            $json->has('data',2);
+            $json->has('data', 2);
 
             foreach ($academic_years as $key => $academic_year) {
                 $json->has('data.'.$key, function ($json) use ($academic_year) {
@@ -80,7 +80,7 @@ class ResourceAcademicYearTest extends TestCase
         $response = $this->getJson(route($this->route));
 
         $response->assertOk();
-        $response->assertJsonCount(0,'data');
+        $response->assertJsonCount(0, 'data');
     }
 
     public function test_invalid_parameters(): void
@@ -88,7 +88,6 @@ class ResourceAcademicYearTest extends TestCase
         $response = $this->getJson(route($this->route, ['school' => 'Escola', 'year_gte' => '202', 'limit' => 'Limite']));
 
         $response->assertOk();
-        $response->assertJsonCount(0,'data');
+        $response->assertJsonCount(0, 'data');
     }
-
 }

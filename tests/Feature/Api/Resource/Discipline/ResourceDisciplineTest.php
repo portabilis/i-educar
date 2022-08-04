@@ -85,7 +85,6 @@ class ResourceDisciplineTest extends TestCase
         $this->grade = $this->course->grades()->first();
     }
 
-
     public function test_discipline_academic_year_exact_json_match()
     {
         $response = $this->getJson(route($this->route, ['grade' => $this->grade, 'course' => $this->course]));

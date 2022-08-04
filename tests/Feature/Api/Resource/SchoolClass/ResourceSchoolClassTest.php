@@ -81,7 +81,6 @@ class ResourceSchoolClassTest extends TestCase
                     'ref_cod_escola' => $school->id
                 ]);
 
-
                 //series
                 LegacyGradeFactory::new()->count(2)->create(['ref_cod_curso' => $course->id])->each(function ($grade) use ($school, $course) {
                     //escol_serie
@@ -102,7 +101,6 @@ class ResourceSchoolClassTest extends TestCase
             });
         });
 
-
         //curso
         $this->course = LegacyCourse::where('ref_cod_instituicao', $this->institution->id)->first();
         //serie
@@ -112,7 +110,6 @@ class ResourceSchoolClassTest extends TestCase
     public function test_exact_json_match(): void
     {
         $response = $this->getJson(route($this->route, ['institution' => $this->institution, 'school' => $this->school, 'course' => $this->course, 'grade' => $this->grade, 'in_progress_year' => $this->year]));
-
 
         $response->assertOk();
 
@@ -134,7 +131,7 @@ class ResourceSchoolClassTest extends TestCase
         ]);
 
         $response->assertJson(function (AssertableJson $json) use ($school_classes) {
-            $json->has('data',2);
+            $json->has('data', 2);
 
             foreach ($school_classes as $key => $school_class) {
                 $json->has('data.'.$key, function ($json) use ($school_class) {
@@ -147,11 +144,10 @@ class ResourceSchoolClassTest extends TestCase
 
     public function test_required_parameters(): void
     {
-
         $response = $this->getJson(route($this->route));
 
         $response->assertOk();
-        $response->assertJsonCount(0,'data');
+        $response->assertJsonCount(0, 'data');
     }
 
     public function test_invalid_parameters(): void
@@ -159,6 +155,6 @@ class ResourceSchoolClassTest extends TestCase
         $response = $this->getJson(route($this->route, ['institution' => 'Instituição', 'school' => 'Escola', 'course' => 'Curso', 'grade' => 'Serie', 'in_progress_year' => '202']));
 
         $response->assertOk();
-        $response->assertJsonCount(0,'data');
+        $response->assertJsonCount(0, 'data');
     }
 }

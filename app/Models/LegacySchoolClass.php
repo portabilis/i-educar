@@ -31,6 +31,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property LegacySchool       $school
  * @property LegacySchoolGrade  $schoolGrade
  * @property LegacyEnrollment[] $enrollments
+ *
  * @method static LegacySchoolClassBuilder query()
  */
 class LegacySchoolClass extends Model
@@ -46,7 +47,6 @@ class LegacySchoolClass extends Model
      * @var string
      */
     protected $primaryKey = 'cod_turma';
-
 
     /**
      * Builder dos filtros
@@ -249,18 +249,19 @@ class LegacySchoolClass extends Model
      *
      * @return BelongsToMany
      */
-    public function grades(): BelongsToMany {
-        return $this->belongsToMany(LegacyGrade::class,'turma_serie','turma_id','serie_id');
+    public function grades(): BelongsToMany
+    {
+        return $this->belongsToMany(LegacyGrade::class, 'turma_serie', 'turma_id', 'serie_id');
     }
-
 
     /**
      * Anos Letivos
      *
      * @return HasMany
      */
-    public function academic_years(): HasMany {
-        return $this->hasMany(LegacySchoolAcademicYear::class,'ref_cod_escola','ref_ref_cod_escola')->whereColumn('escola_ano_letivo.ano','turma.ano');
+    public function academic_years(): HasMany
+    {
+        return $this->hasMany(LegacySchoolAcademicYear::class, 'ref_cod_escola', 'ref_ref_cod_escola')->whereColumn('escola_ano_letivo.ano', 'turma.ano');
     }
 
     /**

@@ -56,7 +56,7 @@ class LegacyDisciplineAcademicYear extends Pivot
      */
     public function grade(): BelongsTo
     {
-        return $this->belongsTo(LegacyGrade::class,'ano_escolar_id','cod_serie');
+        return $this->belongsTo(LegacyGrade::class, 'ano_escolar_id', 'cod_serie');
     }
 
     /**
@@ -66,27 +66,30 @@ class LegacyDisciplineAcademicYear extends Pivot
      */
     public function discipline(): BelongsTo
     {
-        return $this->belongsTo(LegacyDiscipline::class,'componente_curricular_id');
+        return $this->belongsTo(LegacyDiscipline::class, 'componente_curricular_id');
     }
 
     /**
      * @return int
      */
-    public function getIdAttribute() {
+    public function getIdAttribute()
+    {
         return $this->componente_curricular_id;
     }
 
     /**
      * @return string
      */
-    public function getNameAttribute() {
+    public function getNameAttribute()
+    {
         return $this->discipline->name ?? null;
     }
 
     /**
      * @return int
      */
-    public function getWorkloadAttribute() {
+    public function getWorkloadAttribute()
+    {
         return $this->carga_horaria;
     }
 }

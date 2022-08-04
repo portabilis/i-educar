@@ -60,10 +60,10 @@ class ResourceEvaluationRuleTest extends TestCase
         ]);
 
         $response->assertJson(function (AssertableJson $json) use ($evaluation_rules) {
-            $json->has('data',2);
+            $json->has('data', 2);
 
             foreach ($evaluation_rules as $key => $evaluation_rule) {
-                $json->has('data.'.$key,  function ($json) use ($evaluation_rule) {
+                $json->has('data.'.$key, function ($json) use ($evaluation_rule) {
                     $json->where('id', $evaluation_rule['id']);
                     $json->where('name', $evaluation_rule['name']);
                 });
@@ -76,7 +76,7 @@ class ResourceEvaluationRuleTest extends TestCase
         $response = $this->getJson(route($this->route));
 
         $response->assertOk();
-        $response->assertJsonCount(0,'data');
+        $response->assertJsonCount(0, 'data');
     }
 
     public function test_invalid_parameters(): void
@@ -84,6 +84,6 @@ class ResourceEvaluationRuleTest extends TestCase
         $response = $this->getJson(route($this->route, ['institution' => 'Instituição']));
 
         $response->assertOk();
-        $response->assertJsonCount(0,'data');
+        $response->assertJsonCount(0, 'data');
     }
 }

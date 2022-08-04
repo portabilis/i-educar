@@ -10,11 +10,13 @@ class LegacySchoolAcademicYearBuilder extends LegacyBuilder
      * Retorna o recurso para os selects dos formulários
      *
      * @param array $filters
+     *
      * @return Collection
      */
     public function getResource(array $filters = []): Collection
     {
         $this->active()->orderByYear()->filter($filters);
+
         return $this->resource(['year']);
     }
 
@@ -22,6 +24,7 @@ class LegacySchoolAcademicYearBuilder extends LegacyBuilder
      * Filtra por anos maiores
      *
      * @param int $year
+     *
      * @return LegacySchoolAcademicYearBuilder
      */
     public function whereYearGte(int $year): self
@@ -33,6 +36,7 @@ class LegacySchoolAcademicYearBuilder extends LegacyBuilder
      * Filtra por Instituição
      *
      * @param int $school
+     *
      * @return LegacySchoolAcademicYearBuilder
      */
     public function whereSchool(int $school): self
@@ -47,7 +51,7 @@ class LegacySchoolAcademicYearBuilder extends LegacyBuilder
      */
     public function inProgress(): self
     {
-        return $this->where('escola_ano_letivo.andamento',1);
+        return $this->where('escola_ano_letivo.andamento', 1);
     }
 
     /**
@@ -84,21 +88,23 @@ class LegacySchoolAcademicYearBuilder extends LegacyBuilder
      * Ordena por Ano
      *
      * @param string $direction
+     *
      * @return LegacySchoolAcademicYearBuilder
      */
     public function orderByYear(string $direction = 'desc'): self
     {
-        return $this->orderBy('ano',$direction);
+        return $this->orderBy('ano', $direction);
     }
 
     /**
      * Filtra pelo ano
      *
      * @param int $year
+     *
      * @return LegacySchoolAcademicYearBuilder
      */
     public function whereYearEq(int $year): self
     {
-        return $this->where('escola_ano_letivo.ano',$year);
+        return $this->where('escola_ano_letivo.ano', $year);
     }
 }

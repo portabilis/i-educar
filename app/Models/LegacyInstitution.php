@@ -146,7 +146,7 @@ class LegacyInstitution extends Model implements RelocationDateProvider
      */
     public function evaluationRules(): HasMany
     {
-        return $this->hasMany(LegacyEvaluationRule::class,'instituicao_id');
+        return $this->hasMany(LegacyEvaluationRule::class, 'instituicao_id');
     }
 
     /**
@@ -154,8 +154,9 @@ class LegacyInstitution extends Model implements RelocationDateProvider
      *
      * @return HasMany
      */
-    public function educationNetworks() : HasMany{
-        return $this->hasMany(LegacyEducationNetwork::class,'ref_cod_instituicao');
+    public function educationNetworks(): HasMany
+    {
+        return $this->hasMany(LegacyEducationNetwork::class, 'ref_cod_instituicao');
     }
 
     public function getRelocationDate()

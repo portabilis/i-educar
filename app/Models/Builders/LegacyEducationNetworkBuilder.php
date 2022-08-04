@@ -2,22 +2,21 @@
 
 namespace App\Models\Builders;
 
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 
 class LegacyEducationNetworkBuilder extends LegacyBuilder
 {
-
     /**
      * Retorna o recurso para os selects dos formulários
      *
      * @param array $filters
+     *
      * @return Collection
      */
     public function getResource(array $filters = []): Collection
     {
         $this->active()->orderByName()->filter($filters);
+
         return $this->resource(['id', 'name']);
     }
 
@@ -25,11 +24,12 @@ class LegacyEducationNetworkBuilder extends LegacyBuilder
      * Ordena por nome
      *
      * @param string $direction
+     *
      * @return LegacyEducationNetworkBuilder
      */
     public function orderByName(string $direction = 'asc'): self
     {
-        return $this->orderBy('nm_rede',$direction);
+        return $this->orderBy('nm_rede', $direction);
     }
 
     /**
@@ -46,6 +46,7 @@ class LegacyEducationNetworkBuilder extends LegacyBuilder
      * Filtra por Instituição
      *
      * @param int $institution
+     *
      * @return LegacyEducationNetworkBuilder
      */
     public function whereInstitution(int $institution): self

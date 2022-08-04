@@ -10,6 +10,7 @@ class LegacyGradeBuilder extends LegacyBuilder
      * Retorna o recurso para os selects dos formulários
      *
      * @param array $filters
+     *
      * @return Collection
      */
     public function getResource(array $filters = []): Collection
@@ -33,6 +34,7 @@ class LegacyGradeBuilder extends LegacyBuilder
      * Filtra por Séries não presentes na escola
      *
      * @param int $school_exclude
+     *
      * @return LegacyGradeBuilder
      */
     public function whereSchoolExclude(int $school_exclude): self
@@ -46,6 +48,7 @@ class LegacyGradeBuilder extends LegacyBuilder
      * Filtra por séries presentes na escola
      *
      * @param int $school
+     *
      * @return LegacyGradeBuilder
      */
     public function whereSchool(int $school): self
@@ -59,18 +62,19 @@ class LegacyGradeBuilder extends LegacyBuilder
      * Filtra diferentes series
      *
      * @param int $serie_exclude
+     *
      * @return LegacyGradeBuilder
      */
     public function whereGradeExclude(int $serie_exclude): self
     {
-        return $this->where('cod_serie','<>',$serie_exclude);
+        return $this->where('cod_serie', '<>', $serie_exclude);
     }
-
 
     /**
      * Filtra por Curso
      *
      * @param int $course
+     *
      * @return LegacyGradeBuilder
      */
     public function whereCourse(int $course): self

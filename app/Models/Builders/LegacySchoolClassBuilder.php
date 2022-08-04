@@ -10,6 +10,7 @@ class LegacySchoolClassBuilder extends LegacyBuilder
      * Retorna o recurso para os selects dos formulários
      *
      * @param array $filters
+     *
      * @return Collection
      */
     public function getResource(array $filters = []): Collection
@@ -33,15 +34,16 @@ class LegacySchoolClassBuilder extends LegacyBuilder
      * Filtra por Serie
      *
      * @param int $grade
+     *
      * @return LegacySchoolClassBuilder
      */
     public function whereGrade(int $grade): self
     {
-        return $this->where(function ($q) use($grade){
-            $q->whereHas('grades',function ($q) use($grade){
-                $q->where('cod_serie',$grade);
+        return $this->where(function ($q) use ($grade) {
+            $q->whereHas('grades', function ($q) use ($grade) {
+                $q->where('cod_serie', $grade);
             });
-            $q->orWhere('ref_ref_cod_serie',$grade);
+            $q->orWhere('ref_ref_cod_serie', $grade);
         });
     }
 
@@ -49,6 +51,7 @@ class LegacySchoolClassBuilder extends LegacyBuilder
      * Filtra por Escola
      *
      * @param int $school
+     *
      * @return LegacySchoolClassBuilder
      */
     public function whereSchool(int $school): self
@@ -60,11 +63,12 @@ class LegacySchoolClassBuilder extends LegacyBuilder
      * Filtra por ano e em progresso
      *
      * @param int $year
+     *
      * @return LegacySchoolClassBuilder
      */
     public function whereInProgressYear(int $year): self
     {
-        return $this->whereHas('academic_years',function ($q) use($year){
+        return $this->whereHas('academic_years', function ($q) use ($year) {
             $q->inProgress();
             $q->whereYearEq($year);
         });
@@ -77,7 +81,7 @@ class LegacySchoolClassBuilder extends LegacyBuilder
      */
     public function whereInProgress(): self
     {
-        return $this->whereHas('academic_years',function ($q){
+        return $this->whereHas('academic_years', function ($q) {
             $q->inProgress();
         });
     }
@@ -86,6 +90,7 @@ class LegacySchoolClassBuilder extends LegacyBuilder
      * Filtra por Curso
      *
      * @param int $course
+     *
      * @return LegacySchoolClassBuilder
      */
     public function whereCourse(int $course): self
@@ -97,17 +102,19 @@ class LegacySchoolClassBuilder extends LegacyBuilder
      * Ordena por nome
      *
      * @param string $direction
+     *
      * @return LegacySchoolClassBuilder
      */
     public function orderByName(string $direction = 'asc'): self
     {
-        return $this->orderBy('nm_turma',$direction);
+        return $this->orderBy('nm_turma', $direction);
     }
 
     /**
      * Filtra por Instituição
      *
      * @param int $institution
+     *
      * @return LegacySchoolClassBuilder
      */
     public function whereInstitution(int $institution): self

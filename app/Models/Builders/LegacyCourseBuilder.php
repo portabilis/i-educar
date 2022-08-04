@@ -11,6 +11,7 @@ class LegacyCourseBuilder extends LegacyBuilder
      * Retorna o recurso para os selects dos formulários
      *
      * @param array $filters
+     *
      * @return Collection
      */
     public function getResource(array $filters = []): Collection
@@ -25,6 +26,7 @@ class LegacyCourseBuilder extends LegacyBuilder
      * Filtra por Instituição
      *
      * @param int $institution
+     *
      * @return LegacyCourseBuilder
      */
     public function whereInstitution(int $institution): self
@@ -36,39 +38,43 @@ class LegacyCourseBuilder extends LegacyBuilder
      * Ordena por nome
      *
      * @param string $direction
+     *
      * @return LegacyCourseBuilder
      */
     public function orderByName(string $direction = 'asc'): self
     {
-        return $this->orderBy('nm_curso',$direction);
+        return $this->orderBy('nm_curso', $direction);
     }
 
     /**
      * Filtra por Curso
      *
      * @param int $course
+     *
      * @return LegacyCourseBuilder
      */
-    public function whereCourse(int $course ): self
+    public function whereCourse(int $course): self
     {
-        return $this->where('cod_curso',$course);
+        return $this->where('cod_curso', $course);
     }
 
     /**
      * Filtra por  Padrão Ano Escolar
      *
      * @param int $standard_calendar
+     *
      * @return LegacyCourseBuilder
      */
     public function whereStandardCalendar(int $standard_calendar): self
     {
-        return $this->where('padrao_ano_escolar',$standard_calendar);
+        return $this->where('padrao_ano_escolar', $standard_calendar);
     }
 
     /**
      * Filtra por Escola
      *
      * @param int $school
+     *
      * @return LegacyCourseBuilder
      */
     public function whereSchool(int $school): self

@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  *
  * @property string            $name
  * @property LegacyInstitution $institution
+ *
  * @method static LegacySchoolBuilder query()
  */
 class LegacySchool extends Model
@@ -31,7 +32,6 @@ class LegacySchool extends Model
      * @var string
      */
     protected $primaryKey = 'cod_escola';
-
 
     /**
      * Builder dos filtros
@@ -122,7 +122,7 @@ class LegacySchool extends Model
      */
     public function academicYears(): HasMany
     {
-        return $this->hasMany(LegacySchoolAcademicYear::class,'ref_cod_escola');
+        return $this->hasMany(LegacySchoolAcademicYear::class, 'ref_cod_escola');
     }
 
     /**

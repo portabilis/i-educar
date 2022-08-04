@@ -46,7 +46,7 @@ class ResourceEducationNetworkTest extends TestCase
         $education_networks = LegacyEducationNetwork::getResource(['institution' => $this->institution->id]);
 
         $response->assertJson(function (AssertableJson $json) use ($education_networks) {
-            $json->has('data',2);
+            $json->has('data', 2);
 
             foreach ($education_networks as $key => $education_network) {
                 $json->has('data.'.$key, function ($json) use ($education_network) {
@@ -62,7 +62,7 @@ class ResourceEducationNetworkTest extends TestCase
         $response = $this->getJson(route($this->route));
 
         $response->assertOk();
-        $response->assertJsonCount(0,'data');
+        $response->assertJsonCount(0, 'data');
     }
 
     public function test_invalid_parameters(): void
@@ -70,7 +70,6 @@ class ResourceEducationNetworkTest extends TestCase
         $response = $this->getJson(route($this->route, ['institution' => 'Instituição']));
 
         $response->assertOk();
-        $response->assertJsonCount(0,'data');
+        $response->assertJsonCount(0, 'data');
     }
-
 }

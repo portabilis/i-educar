@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Builder;
 
 trait LegacyAttribute
 {
-
     public function newEloquentBuilder($query)
     {
         if (property_exists($this, 'builder')) {

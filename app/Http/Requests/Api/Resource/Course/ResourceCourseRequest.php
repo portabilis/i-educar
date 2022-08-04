@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Requests\Api\Resource\Course;
+
 use App\Http\Requests\Api\Resource\ResourceRequest;
 
 class ResourceCourseRequest extends ResourceRequest

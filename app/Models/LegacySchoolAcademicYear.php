@@ -64,7 +64,8 @@ class LegacySchoolAcademicYear extends Model
     /**
      * @return int
      */
-    public function getYearAttribute(): int {
+    public function getYearAttribute(): int
+    {
         return $this->ano;
     }
 }

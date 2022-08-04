@@ -7,7 +7,6 @@ use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-
 /**
  * LegacySchoolGradeDiscipline
  *
@@ -53,21 +52,24 @@ class LegacySchoolGradeDiscipline extends Model
     /**
      * @return int
      */
-    public function getIdAttribute() {
+    public function getIdAttribute()
+    {
         return $this->ref_cod_disciplina;
     }
 
     /**
      * @return string
      */
-    public function getNameAttribute() {
+    public function getNameAttribute()
+    {
         return $this->discipline->name ?? null;
     }
 
     /**
      * @return int
      */
-    public function getWorkloadAttribute() {
+    public function getWorkloadAttribute()
+    {
         return $this->carga_horaria;
     }
 

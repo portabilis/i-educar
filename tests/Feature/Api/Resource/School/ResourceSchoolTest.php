@@ -28,7 +28,6 @@ class ResourceSchoolTest extends TestCase
      */
     private string $route = 'api.resource.school';
 
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -43,13 +42,11 @@ class ResourceSchoolTest extends TestCase
 
         //escola
         $this->school = $schools->first();
-
     }
 
     public function test_exact_json_match(): void
     {
         $response = $this->getJson(route($this->route, ['institution' => $this->institution]));
-
 
         $response->assertOk();
         $response->assertJsonStructure([
@@ -66,7 +63,7 @@ class ResourceSchoolTest extends TestCase
         ]);
 
         $response->assertJson(function (AssertableJson $json) use ($schools) {
-            $json->has('data',2);
+            $json->has('data', 2);
 
             foreach ($schools as $key => $school) {
                 $json->has('data.'.$key, function ($json) use ($school) {
@@ -82,7 +79,7 @@ class ResourceSchoolTest extends TestCase
         $response = $this->getJson(route($this->route));
 
         $response->assertOk();
-        $response->assertJsonCount(0,'data');
+        $response->assertJsonCount(0, 'data');
     }
 
     public function test_invalid_parameters(): void
@@ -90,6 +87,6 @@ class ResourceSchoolTest extends TestCase
         $response = $this->getJson(route($this->route, ['institution' => 'Instituição']));
 
         $response->assertOk();
-        $response->assertJsonCount(0,'data');
+        $response->assertJsonCount(0, 'data');
     }
 }

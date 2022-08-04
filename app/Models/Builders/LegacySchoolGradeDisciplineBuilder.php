@@ -10,6 +10,7 @@ class LegacySchoolGradeDisciplineBuilder extends LegacyBuilder
      * Retorna o recurso para os selects dos formulários
      *
      * @param array $filters
+     *
      * @return Collection
      */
     public function getResource(array $filters = []): Collection
@@ -33,21 +34,23 @@ class LegacySchoolGradeDisciplineBuilder extends LegacyBuilder
      * Filtra por escola
      *
      * @param int $grade
+     *
      * @return LegacySchoolGradeDisciplineBuilder
      */
     public function whereGrade(int $grade): self
     {
-        return $this->where('ref_ref_cod_serie',$grade);
+        return $this->where('ref_ref_cod_serie', $grade);
     }
 
     /**
      * Filtra por escola
      *
      * @param int $school
+     *
      * @return LegacySchoolGradeDisciplineBuilder
      */
     public function whereSchool(int $school): self
     {
-        return $this->where('ref_ref_cod_escola',$school);
+        return $this->where('ref_ref_cod_escola', $school);
     }
 }

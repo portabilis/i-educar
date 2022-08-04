@@ -15,7 +15,6 @@ use Tests\TestCase;
 
 class ResourceCourseTest extends TestCase
 {
-
     use DatabaseTransactions;
 
     /**
@@ -57,19 +56,16 @@ class ResourceCourseTest extends TestCase
                     'ref_cod_escola' => $school->id
                 ]);
             });
-
         });
 
-        $this->course = LegacyCourse::whereHas('schools',function ($q) {
-            $q->where('cod_escola',$this->school->id);
+        $this->course = LegacyCourse::whereHas('schools', function ($q) {
+            $q->where('cod_escola', $this->school->id);
         })->first();
     }
-
 
     public function test_exact_json_match()
     {
         $response = $this->getJson(route($this->route, ['institution' => $this->institution, 'school' => $this->school,'course'=>$this->course]));
-
 
         $response->assertOk();
         $response->assertJsonStructure([
@@ -90,7 +86,7 @@ class ResourceCourseTest extends TestCase
         ]);
 
         $response->assertJson(function (AssertableJson $json) use ($courses) {
-            $json->has('data',1);
+            $json->has('data', 1);
 
             foreach ($courses as $key => $course) {
                 $json->has('data.'.$key, function ($json) use ($course) {
@@ -108,6 +104,6 @@ class ResourceCourseTest extends TestCase
         $response = $this->getJson(route($this->route, ['institution' => 'Instituição', 'school' => 'Escola', 'standard_calendar' => '2', 'course' => 'Curso']));
 
         $response->assertOk();
-        $response->assertJsonCount(0,'data');
+        $response->assertJsonCount(0, 'data');
     }
 }

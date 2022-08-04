@@ -116,7 +116,7 @@ class LegacyGrade extends Model
      */
     public function schools(): BelongsToMany
     {
-        return $this->belongsToMany(LegacySchool::class,'escola_serie','ref_cod_serie','ref_cod_escola')->wherePivot('ativo',1);
+        return $this->belongsToMany(LegacySchool::class, 'escola_serie', 'ref_cod_serie', 'ref_cod_escola')->wherePivot('ativo', 1);
     }
 
     /**

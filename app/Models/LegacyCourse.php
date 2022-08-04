@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  *
  * @property string        $name
  * @property LegacyGrade[] $grades
+ *
  * @method static LegacyCourseBuilder query()
  */
 class LegacyCourse extends Model
@@ -131,6 +132,6 @@ class LegacyCourse extends Model
      */
     public function schools(): BelongsToMany
     {
-        return $this->belongsToMany(LegacySchool::class,'escola_curso','ref_cod_curso','ref_cod_escola')->wherePivot('ativo',1);
+        return $this->belongsToMany(LegacySchool::class, 'escola_curso', 'ref_cod_curso', 'ref_cod_escola')->wherePivot('ativo', 1);
     }
 }

@@ -35,6 +35,7 @@ class LegacyBuilder extends Builder
      * Filtra por parametros
      *
      * @param array $data
+     *
      * @return $this
      */
     public function filter(array $data = []): LegacyBuilder
@@ -50,6 +51,7 @@ class LegacyBuilder extends Builder
      *
      * @param array $columns
      * @param array $additional
+     *
      * @return Collection
      */
     public function resource(array $columns = ['*'], array $additional = []): Collection
@@ -70,7 +72,8 @@ class LegacyBuilder extends Builder
      * Transforma o recurso com os novos parametros
      *
      * @param Collection $resource
-     * @param array $columnsNotExcept
+     * @param array      $columnsNotExcept
+     *
      * @return Collection
      */
     private function mapResource(Collection $resource, array $columnsNotExcept): Collection
@@ -94,6 +97,7 @@ class LegacyBuilder extends Builder
      * Colunas adicionais que não estão na query, mas é adicionado no recurso
      *
      * @param array $additional
+     *
      * @return LegacyBuilder
      */
     public function setAdditional(array $additional): LegacyBuilder
@@ -107,6 +111,7 @@ class LegacyBuilder extends Builder
      * Colunas a serem adicionadas na query, mas não retorna no recurso
      *
      * @param array $except
+     *
      * @return LegacyBuilder
      */
     public function setExcept(array $except): LegacyBuilder
@@ -153,6 +158,7 @@ class LegacyBuilder extends Builder
         if (!empty($data)) {
             $columns = $data;
         }
+
         return $columns;
     }
 
@@ -160,6 +166,7 @@ class LegacyBuilder extends Builder
      * Insere os filtros personalizados ou do request
      *
      * @param array $filters
+     *
      * @return void
      */
     private function setFilters(array $filters): void
@@ -178,6 +185,7 @@ class LegacyBuilder extends Builder
      * Transforma o nome do parametro para o nome de filtro
      *
      * @param $name
+     *
      * @return string
      */
     private function getFilterName($name): string
@@ -189,18 +197,20 @@ class LegacyBuilder extends Builder
      * Filtro Padrão a todos os Builders
      *
      * @param int|null $limit
+     *
      * @return $this
      */
     public function whereLimit(int $limit = null): self
     {
-        return $this->when($limit, fn($q) => $q->limit($limit));
+        return $this->when($limit, fn ($q) => $q->limit($limit));
     }
 
     /**
      * Obtem o valor de um filtro
      *
-     * @param string $name
+     * @param string          $name
      * @param int|string|null $default
+     *
      * @return mixed
      */
     public function getFilter(string $name, mixed $default = null): mixed

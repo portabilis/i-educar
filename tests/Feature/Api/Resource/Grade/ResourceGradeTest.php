@@ -42,7 +42,6 @@ class ResourceGradeTest extends TestCase
      */
     private string $route = 'api.resource.grade';
 
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -90,7 +89,7 @@ class ResourceGradeTest extends TestCase
         ]);
 
         $response->assertJson(function (AssertableJson $json) use ($grades) {
-            $json->has('data',3);
+            $json->has('data', 3);
 
             foreach ($grades as $key => $grade) {
                 $json->has('data.'.$key, function ($json) use ($grade) {
@@ -125,7 +124,7 @@ class ResourceGradeTest extends TestCase
         ]);
 
         $response->assertJson(function (AssertableJson $json) use ($grades) {
-            $json->has('data',3);
+            $json->has('data', 3);
 
             foreach ($grades as $key => $grade) {
                 $json->has('data.'.$key, function ($json) use ($grade) {
@@ -141,7 +140,7 @@ class ResourceGradeTest extends TestCase
         $response = $this->getJson(route($this->route));
 
         $response->assertOk();
-        $response->assertJsonCount(0,'data');
+        $response->assertJsonCount(0, 'data');
     }
 
     public function test_invalid_parameters(): void
@@ -149,6 +148,6 @@ class ResourceGradeTest extends TestCase
         $response = $this->getJson(route('api.resource.grade', ['course' => 'Curso', 'school' => 'Escola', 'grade_exclude' => 'Serie', 'school_exclude' => 'Escola']));
 
         $response->assertOk();
-        $response->assertJsonCount(0,'data');
+        $response->assertJsonCount(0, 'data');
     }
 }
