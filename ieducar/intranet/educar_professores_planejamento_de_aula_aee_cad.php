@@ -58,7 +58,7 @@ return new class extends clsCadastro
                     $this->titulo = 'Plano de aula AEE - Edição';
                 }
             } else {
-                $this->simpleRedirect('educar_professores_planejamento_de_aula_aee_lst.php');
+                $this->simpleRedirect('educar_professores_planejamento_de_aula_aee_lst2.php');
             }
         }
 
@@ -113,11 +113,7 @@ return new class extends clsCadastro
         $this->inputsHelper()->dynamic('dataInicial', ['required' => $obrigatorio]);    // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('dataFinal', ['required' => $obrigatorio]);      // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado]);
-        if (empty($this->id)) {
-            $this->inputsHelper()->dynamic(['matricula']);
-        } else {
-            $this->campoTextoDisabled('aluno', 'Aluno', $this->aluno);
-        }
+        $this->inputsHelper()->dynamic(['matricula']);
       
         $this->inputsHelper()->dynamic('faseEtapa', ['required' => $obrigatorio, 'label' => 'Etapa', 'disabled' => $desabilitado]);
 
@@ -136,8 +132,6 @@ return new class extends clsCadastro
 
         $this->campoOculto('ano', explode('/', dataToBrasil(NOW()))[2]);
     }
-
-
    
     public function __construct()
     {
