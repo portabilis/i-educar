@@ -58,7 +58,7 @@ class LegacyBuilder extends Builder
 
         $columnsNotExcept = $columns;
         $columns = array_merge($columns, $this->except);
-        $this->replaceAttribute($columns);
+        $columns = $this->replaceAttribute($columns);
 
         //original do laravel
         $resource = $this->get($columns);
@@ -124,28 +124,24 @@ class LegacyBuilder extends Builder
     private function executeFilters(): void
     {
         foreach ($this->filters as $filter => $parameter) {
-            if (method_exists($this, $method = 'where' . $filter)) {
-                $this->{$method}($parameter);
-            }
+            $method = 'where' . $filter;
+            $this->{$method}($parameter);
         }
     }
 
     /**
      * Substitui os atributos legados
-     *
-     * @param array $columns
-     * @return void
      */
-    private function replaceAttribute(array &$columns): void
+    private function replaceAttribute(array $columns): array
     {
         //parametro definido no model
         if (!property_exists($this->getModel(), 'legacy')) {
-            return;
+            return $columns;
         }
 
         $legacy = $this->getModel()->legacy;
         if (!is_array($legacy) || empty($legacy)) {
-            return;
+            return $columns;
         }
 
         $data = [];
@@ -157,6 +153,7 @@ class LegacyBuilder extends Builder
         if (!empty($data)) {
             $columns = $data;
         }
+        return $columns;
     }
 
     /**
