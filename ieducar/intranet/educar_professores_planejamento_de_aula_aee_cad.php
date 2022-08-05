@@ -113,8 +113,12 @@ return new class extends clsCadastro
         $this->inputsHelper()->dynamic('dataInicial', ['required' => $obrigatorio]);    // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('dataFinal', ['required' => $obrigatorio]);      // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado]);
-        $this->inputsHelper()->dynamic(['matricula']);
-      
+        if (empty($this->id)) {
+            $this->inputsHelper()->dynamic(['matricula']);
+        } else {
+            $this->campoTextoDisabled('aluno', 'Aluno', $this->aluno);
+        }
+
         $this->inputsHelper()->dynamic('faseEtapa', ['required' => $obrigatorio, 'label' => 'Etapa', 'disabled' => $desabilitado]);
 
         $this->adicionarBNCCMultiplaEscolha();
@@ -132,7 +136,7 @@ return new class extends clsCadastro
 
         $this->campoOculto('ano', explode('/', dataToBrasil(NOW()))[2]);
     }
-   
+
     public function __construct()
     {
         parent::__construct();
