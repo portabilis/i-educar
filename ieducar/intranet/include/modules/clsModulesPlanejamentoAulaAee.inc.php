@@ -255,7 +255,15 @@ class clsModulesPlanejamentoAulaAee extends Model
     {
         if (
             is_numeric($this->id)
-            // s
+            && $this->data_inicial != ''
+            && $this->data_final != ''
+            && is_string($this->ddp)
+            && is_array($this->bnccs)
+            && is_array($this->bncc_especificacoes)
+            && is_array($this->ref_componente_curricular_array)
+            && is_array($this->conteudos)
+            && is_string($this->recursos_didaticos)
+            && is_string($this->outros)
         ) {
             $db = new clsBanco();
 
@@ -305,13 +313,50 @@ class clsModulesPlanejamentoAulaAee extends Model
             $obj = new clsModulesBNCC(null, $this->id);
             $bncc_diferenca = $obj->retornaDiferencaEntreConjuntosBNCC($bnccs_atuais, $this->bnccs);
 
-            foreach ($bncc_diferenca['adicionar'] as $key => $bncc_adicionar) {
-                $obj = new clsModulesPlanejamentoAulaBNCCAee(null, $this->id, $bncc_adicionar);
-                $obj->cadastra();
+            foreach ($bncc_diferenca['adicionar'] as $bnccAdicionarArray){
+                foreach ($bnccAdicionarArray[1] as $bncc_id) {
+                    if (empty($bncc_id)) continue;
+                    $obj = new clsModulesPlanejamentoAulaBNCCAee(null, $this->id, $bncc_id);
+                    $obj->cadastra();
+                }
             }
 
-            foreach ($bncc_diferenca['remover'] as $key => $bncc_remover) {
+            foreach ($bncc_diferenca['remover'] as $bncc_remover){
                 $obj = new clsModulesPlanejamentoAulaBNCCAee(null, $this->id, $bncc_remover);
+                $obj->excluir();
+            }
+
+            $obj = new clsModulesPlanejamentoAulaBNCCEspecificacaoAee();
+            foreach ($obj->lista($this->id) as $key => $bncc_especificacao) {
+                $bnccs_especificacoes_atuais[] = $bncc_especificacao;
+            }
+
+            $obj = new clsModulesBNCCEspecificacao();
+            $bncc_especificacao_diferenca = $obj->retornaDiferencaEntreConjuntosBNCC($bnccs_especificacoes_atuais, $this->bncc_especificacoes);
+
+            foreach ($bncc_especificacao_diferenca['adicionar'] as $bnccEspecificacaoAdicionarArray){
+                foreach ($bnccEspecificacaoAdicionarArray[1] as $bncc_especificacao_id) {
+                    if (empty($bncc_especificacao_id)) continue;
+
+                    $obj = new clsModulesBNCCEspecificacao($bncc_especificacao_id);
+                    $bncc_id = $obj->detalhe()['bncc_id'];
+
+                    $obj = new clsModulesPlanejamentoAulaBNCCAee(null, $this->id, $bncc_id);
+                    $planejamento_aula_bncc_id = $obj->detalhe2()['id'];
+
+                    $obj = new clsModulesPlanejamentoAulaBNCCEspecificacaoAee(null, $planejamento_aula_bncc_id, $bncc_especificacao_id);
+                    $obj->cadastra();
+                }
+            }
+
+            foreach ($bncc_especificacao_diferenca['remover'] as $bncc_especificacao_remover){
+                $obj = new clsModulesBNCCEspecificacao($bncc_especificacao_remover);
+                $bncc_id = $obj->detalhe()['bncc_id'];
+
+                $obj = new clsModulesPlanejamentoAulaBNCC(null, $this->id, $bncc_id);
+                $planejamento_aula_bncc_id = $obj->detalhe2()['id'];
+
+                $obj = new clsModulesPlanejamentoAulaBNCCEspecificacaoAee(null, $planejamento_aula_bncc_id, $bncc_especificacao_remover);
                 $obj->excluir();
             }
 
@@ -320,17 +365,17 @@ class clsModulesPlanejamentoAulaAee extends Model
             $conteudos_atuais = $obj->lista($this->id);
             $conteudo_diferenca = $obj->retornaDiferencaEntreConjuntosConteudos($conteudos_atuais, $this->conteudos);
 
-            foreach ($conteudo_diferenca['adicionar'] as $key => $conteudo_adicionar) {
+            foreach ($conteudo_diferenca['adicionar'] as $key => $conteudo_adicionar){
                 $obj = new clsModulesPlanejamentoAulaConteudoAee(null, $this->id, $conteudo_adicionar[1]);
                 $obj->cadastra();
             }
 
-            foreach ($conteudo_diferenca['remover'] as $key => $conteudo_remover) {
+            foreach ($conteudo_diferenca['remover'] as $key => $conteudo_remover){
                 $obj = new clsModulesPlanejamentoAulaConteudoAee(null, $this->id, $conteudo_remover[2]);
                 $obj->excluir();
             }
 
-            foreach ($conteudo_diferenca['editar'] as $key => $conteudo_editar) {
+            foreach ($conteudo_diferenca['editar'] as $key => $conteudo_editar){
                 $obj = new clsModulesPlanejamentoAulaConteudoAee($conteudo_editar[0], null, $conteudo_editar[1]);
                 $obj->edita();
             }
@@ -340,6 +385,7 @@ class clsModulesPlanejamentoAulaAee extends Model
 
         return false;
     }
+
 
     /**
      * Retorna uma lista filtrados de acordo com os parametros

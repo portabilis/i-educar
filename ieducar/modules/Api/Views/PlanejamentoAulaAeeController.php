@@ -77,7 +77,7 @@ class PlanejamentoAulaAeeController extends ApiCoreController
 
     public function editarPlanoAula()
     {
-        $planejamento_aula_aee_id = $this->getRequest()->planejamento_aula_aee_id;
+        $planejamento_aula_aee_id = $this->getRequest()->planejamento_aula_id;
         $data_inicial = $this->getRequest()->data_inicial;
         $data_final = $this->getRequest()->data_final;
         $turma = $this->getRequest()->turma;
@@ -115,7 +115,7 @@ class PlanejamentoAulaAeeController extends ApiCoreController
                 $outros
             );
 
-            //die(var_dump($turma));
+            //die(var_dump(//$obj));
 
             $editou = $obj->edita();
 
@@ -184,9 +184,9 @@ class PlanejamentoAulaAeeController extends ApiCoreController
         return ["result" => "Cadastro não realizado."];
     }
 
-    public function getObjetivosAprendizagem()
+    public function getObjetivosAprendizagem ()
     {
-        $planejamento_aula_aee_id = $this->getRequest()->planejamento_aula_aee_id;
+        $planejamento_aula_aee_id = $this->getRequest()->planejamento_aula_id;
         $turma_id = $this->getRequest()->turma_id;
         $ano = $this->getRequest()->ano;
 
@@ -213,7 +213,7 @@ class PlanejamentoAulaAeeController extends ApiCoreController
                 }
 
                 if (!empty($planejamento_aula_bncc_ids)) {
-                    $objTemp = new clsModulesPlanejamentoAulaBNCCEspecificacao();
+                    $objTemp = new clsModulesPlanejamentoAulaBNCCEspecificacaoAee();
                     $especificacoesPABNCC[] = $objTemp->listaEspecificacoesByBNCCArray($planejamento_aula_bncc_ids);
                 }
 
@@ -228,11 +228,13 @@ class PlanejamentoAulaAeeController extends ApiCoreController
                         'especificacoes_geral_bncc' => $especificacoesGeralBNCC
                     ]
                 ];
+
             }
 
             $row['count_objetivos'] = count($row);
 
             return $row;
+
         }
 
         return [];
@@ -241,14 +243,14 @@ class PlanejamentoAulaAeeController extends ApiCoreController
     private function getBNCCTurma($turma = null, $ref_cod_componente_curricular = null)
     {
         if (is_numeric($turma)) {
-            $obj = new clsPmieducarTurma($turma);
-            $resultado = $obj->getGrau();
+            // $obj = new clsPmieducarTurma($turma);
+            // $resultado = $obj->getGrau();
 
             $bncc = [];
             $bncc_temp = [];
             $obj = new clsModulesBNCC();
 
-            if ($bncc_temp = $obj->listaTurma($resultado, $turma, $ref_cod_componente_curricular)) {
+            if ($bncc_temp = $obj->listaTurmaAee($turma, $ref_cod_componente_curricular)) {
                 foreach ($bncc_temp as $bncc_item) {
                     $id = $bncc_item['id'];
                     $codigo = $bncc_item['codigo'];
