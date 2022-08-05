@@ -35,6 +35,7 @@ class clsPmieducarAluno extends Model
     public $parentesco_quatro;
     public $autorizado_cinco;
     public $parentesco_cinco;
+    public $tipo_transporte;
 
     /**
      * Construtor.
@@ -64,7 +65,8 @@ class clsPmieducarAluno extends Model
         $autorizado_quatro = null,
         $parentesco_quatro = null,
         $autorizado_cinco = null,
-        $parentesco_cinco = null
+        $parentesco_cinco = null,
+        $tipo_transporte = null
     ) {
         $db = new clsBanco();
         $this->_schema = 'pmieducar.';
@@ -73,7 +75,11 @@ class clsPmieducarAluno extends Model
         $this->_campos_lista = $this->_todos_campos = 'a.cod_aluno, a.ref_cod_religiao, a.ref_usuario_exc,
         a.ref_usuario_cad, a.ref_idpes, a.data_cadastro, a.data_exclusao, a.ativo, a.analfabeto, tipo_responsavel, a.aluno_estado_id, a.recursos_prova_inep, a.recebe_escolarizacao_em_outro_espaco,
         a.justificativa_falta_documentacao, a.url_laudo_medico::text, a.codigo_sistema, a.veiculo_transporte_escolar, a.parentesco_um, a.autorizado_um, a.parentesco_dois, a.autorizado_dois,
-        a.parentesco_tres, a.autorizado_tres, a.parentesco_quatro, a.autorizado_quatro, a.parentesco_cinco, a.autorizado_cinco, a.url_documento::text, a.emancipado';
+        a.parentesco_tres, a.autorizado_tres, a.parentesco_quatro, a.autorizado_quatro, a.parentesco_cinco, a.autorizado_cinco, a.url_documento::text, a.emancipado, a.tipo_transporte';
+
+        if (is_numeric($tipo_transporte)) {
+            $this->tipo_transporte = $tipo_transporte;
+        }
 
         if (is_numeric($ref_usuario_exc)) {
             $this->ref_usuario_exc = $ref_usuario_exc;
@@ -177,6 +183,12 @@ class clsPmieducarAluno extends Model
             if (is_numeric($this->ref_cod_religiao)) {
                 $campos .= "{$gruda}ref_cod_religiao";
                 $valores .= "{$gruda}'{$this->ref_cod_religiao}'";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->tipo_transporte)) {
+                $campos .= "{$gruda}tipo_transporte";
+                $valores .= "{$gruda}'{$this->tipo_transporte}'";
                 $gruda = ', ';
             }
 
@@ -358,6 +370,11 @@ class clsPmieducarAluno extends Model
 
             if (is_numeric($this->ref_usuario_exc)) {
                 $set .= "{$gruda}ref_usuario_exc = '{$this->ref_usuario_exc}'";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->tipo_transporte)) {
+                $set .= "{$gruda}tipo_transporte = '{$this->tipo_transporte}'";
                 $gruda = ', ';
             }
 

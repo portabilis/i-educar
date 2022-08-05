@@ -6,6 +6,7 @@ use App\Models\LegacyDeficiency;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolHistory;
 use App\Models\LogUnification;
+use App\Models\TransportationProvider;
 use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
 use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
 use iEducar\Modules\Educacenso\Validator\InepExamValidator;
@@ -368,26 +369,9 @@ class AlunoController extends ApiCoreController
         return $turnoValido;
     }
 
-    protected function loadTransporte($alunoId)
+    protected function loadTransporte($responsavelTransporte): string
     {
-        $tiposTransporte = [
-            Transporte_Model_Responsavel::NENHUM => 'nenhum',
-            Transporte_Model_Responsavel::MUNICIPAL => 'municipal',
-            Transporte_Model_Responsavel::ESTADUAL => 'estadual'
-        ];
-
-        $dataMapper = $this->getDataMapperFor('transporte', 'aluno');
-        $entity = $this->tryGetEntityOf($dataMapper, $alunoId);
-
-        //Alterado para retornar null quando não houver transporte, pois
-        //na validação do censo este campo é obrigatório e não deve vir pré-populado
-        if (is_null($entity)) {
-            $tipo = $tiposTransporte[null];
-        } else {
-            $tipo = $tiposTransporte[$entity->get('responsavel')];
-        }
-
-        return $tipo;
+        return (new TransportationProvider())->getValueDescription($responsavelTransporte);
     }
 
     protected function saveSus($pessoaId)
@@ -396,28 +380,6 @@ class AlunoController extends ApiCoreController
         $sql = 'update cadastro.fisica set sus = $1 where idpes = $2';
 
         return $this->fetchPreparedQuery($sql, [$sus, $pessoaId]);
-    }
-
-    protected function createOrUpdateTransporte($alunoId)
-    {
-        $tiposTransporte = [
-            'nenhum' => Transporte_Model_Responsavel::NENHUM,
-            'municipal' => Transporte_Model_Responsavel::MUNICIPAL,
-            'estadual' => Transporte_Model_Responsavel::ESTADUAL
-        ];
-
-        $data = [
-            'aluno' => $alunoId,
-            'responsavel' => $tiposTransporte[$this->getRequest()->tipo_transporte],
-            'user' => \Illuminate\Support\Facades\Auth::id(),
-            'created_at' => 'NOW()',
-        ];
-
-        $dataMapper = $this->getDataMapperFor('transporte', 'aluno');
-        $entity = $this->getOrCreateEntityOf($dataMapper, $alunoId);
-        $entity->setOptions($data);
-
-        return $this->saveEntity($dataMapper, $entity);
     }
 
     protected function createOrUpdateFichaMedica($id)
@@ -589,8 +551,7 @@ class AlunoController extends ApiCoreController
         $aluno->cod_aluno = $id;
 
         $alunoEstadoId = mb_strtoupper($this->getRequest()->aluno_estado_id);
-        $alunoEstadoId = str_replace('.', '', $alunoEstadoId);
-        $alunoEstadoId = str_replace('-', '', $alunoEstadoId);
+        $alunoEstadoId = str_replace(['-','.'], '', $alunoEstadoId);
 
         if (strlen($alunoEstadoId) < 10) {
             $mask['pattern'] = '"(.{3})(.{3})(.{3})"';
@@ -600,9 +561,7 @@ class AlunoController extends ApiCoreController
             $mask['replacement'] = '\\1.\\2.\\3-\\4';
         }
 
-        $alunoEstadoId = preg_replace($mask['pattern'], $mask['replacement'], $alunoEstadoId);
-        $aluno->aluno_estado_id = $alunoEstadoId;
-
+        $aluno->aluno_estado_id = preg_replace($mask['pattern'], $mask['replacement'], $alunoEstadoId);
         $aluno->codigo_sistema = $this->getRequest()->codigo_sistema;
         $aluno->autorizado_um = $this->getRequest()->autorizado_um;
         $aluno->parentesco_um = $this->getRequest()->parentesco_um;
@@ -664,6 +623,8 @@ class AlunoController extends ApiCoreController
 
         //laudo medico
         $aluno->url_laudo_medico = $this->getRequest()->url_laudo_medico;
+
+        $aluno->tipo_transporte = (new TransportationProvider())->from($this->getRequest()->tipo_transporte);
 
         if (is_null($id)) {
             $id = $aluno->cadastra();
@@ -1130,9 +1091,7 @@ class AlunoController extends ApiCoreController
         if ($this->canGet()) {
             $id = $this->getRequest()->id;
 
-            $aluno = new clsPmieducarAluno();
-            $aluno->cod_aluno = $id;
-            $aluno = $aluno->detalhe();
+            $alunoDetalhe = (new clsPmieducarAluno($id))->detalhe();
 
             $attrs = [
                 'cod_aluno' => 'id',
@@ -1162,28 +1121,18 @@ class AlunoController extends ApiCoreController
                 'parentesco_quatro',
                 'autorizado_cinco',
                 'parentesco_cinco',
-                'emancipado'
+                'emancipado',
+                'tipo_transporte'
             ];
 
-            $aluno = Portabilis_Array_Utils::filter($aluno, $attrs);
+            $aluno = Portabilis_Array_Utils::filter($alunoDetalhe, $attrs);
 
             $aluno['nome'] = $this->loadNomeAluno($id);
-            $aluno['tipo_transporte'] = $this->loadTransporte($id);
+            $aluno['tipo_transporte'] = $this->loadTransporte($aluno['tipo_transporte']);
             $aluno['tipo_responsavel'] = $this->tipoResponsavel($aluno);
             $aluno['aluno_inep_id'] = $this->loadAlunoInepId($id);
             $aluno['ativo'] = $aluno['ativo'] == 1;
-            $aluno['aluno_estado_id'] = Portabilis_String_Utils::toUtf8($aluno['aluno_estado_id']);
-            $aluno['codigo_sistema'] = Portabilis_String_Utils::toUtf8($aluno['codigo_sistema']);
-            $aluno['autorizado_um'] = Portabilis_String_Utils::toUtf8($aluno['autorizado_um']);
-            $aluno['parentesco_um'] = Portabilis_String_Utils::toUtf8($aluno['parentesco_um']);
-            $aluno['autorizado_dois'] = Portabilis_String_Utils::toUtf8($aluno['autorizado_dois']);
-            $aluno['parentesco_dois'] = Portabilis_String_Utils::toUtf8($aluno['parentesco_dois']);
-            $aluno['autorizado_tres'] = Portabilis_String_Utils::toUtf8($aluno['autorizado_tres']);
-            $aluno['parentesco_tres'] = Portabilis_String_Utils::toUtf8($aluno['parentesco_tres']);
-            $aluno['autorizado_quatro'] = Portabilis_String_Utils::toUtf8($aluno['autorizado_quatro']);
-            $aluno['parentesco_quatro'] = Portabilis_String_Utils::toUtf8($aluno['parentesco_quatro']);
-            $aluno['autorizado_cinco'] = Portabilis_String_Utils::toUtf8($aluno['autorizado_cinco']);
-            $aluno['parentesco_cinco'] = Portabilis_String_Utils::toUtf8($aluno['parentesco_cinco']);
+
             $aluno['veiculo_transporte_escolar'] = Portabilis_Utils_Database::pgArrayToArray($aluno['veiculo_transporte_escolar']);
             $aluno['alfabetizado'] = $aluno['analfabeto'] == 0;
             unset($aluno['analfabeto']);
@@ -1210,11 +1159,6 @@ class AlunoController extends ApiCoreController
             $objMoradia = new clsModulesMoradiaAluno($id);
             if ($objMoradia->existe()) {
                 $objMoradia = $objMoradia->detalhe();
-
-                foreach ($objMoradia as $chave => $value) {
-                    $objMoradia[$chave] = Portabilis_String_Utils::toUtf8($value);
-                }
-
                 $aluno = Portabilis_Array_Utils::merge($objMoradia, $aluno);
             }
 
@@ -1222,10 +1166,6 @@ class AlunoController extends ApiCoreController
             $objPessoaTransporte = $objPessoaTransporte->detalhe();
 
             if ($objPessoaTransporte) {
-                foreach ($objPessoaTransporte as $chave => $value) {
-                    $objPessoaTransporte[$chave] = Portabilis_String_Utils::toUtf8($value);
-                }
-
                 $aluno = Portabilis_Array_Utils::merge($objPessoaTransporte, $aluno);
             }
 
@@ -1638,7 +1578,6 @@ class AlunoController extends ApiCoreController
                 $this->updateBeneficios($id);
                 $this->updateResponsavel();
                 $this->saveSus($pessoaId);
-                $this->createOrUpdateTransporte($id);
                 $this->createUpdateOrDestroyEducacensoAluno($id);
                 $this->updateDeficiencias();
                 $this->createOrUpdateFichaMedica($id);
@@ -1671,7 +1610,6 @@ class AlunoController extends ApiCoreController
             $this->updateBeneficios($id);
             $this->updateResponsavel();
             $this->saveSus($pessoaId);
-            $this->createOrUpdateTransporte($id);
             $this->createUpdateOrDestroyEducacensoAluno($id);
             $this->updateDeficiencias();
             $this->createOrUpdateFichaMedica($id);

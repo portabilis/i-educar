@@ -3,7 +3,7 @@
 use App\Support\Database\AsView;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateStudentsView extends Migration
+return new class extends Migration
 {
     use AsView;
 
@@ -14,8 +14,8 @@ class CreateStudentsView extends Migration
      */
     public function up()
     {
-        $this->dropView('students');
-        $this->createView('students', '2022-07-25');
+        $this->dropView('public.educacenso_record60');
+        $this->createView('public.educacenso_record60', '2022-07-26');
     }
 
     /**
@@ -25,6 +25,7 @@ class CreateStudentsView extends Migration
      */
     public function down()
     {
-        $this->dropView('students');
+        $this->dropView('public.educacenso_record60');
+        $this->createView('public.educacenso_record60', '2022-05-26');
     }
-}
+};

@@ -25,7 +25,7 @@ SELECT
     a.justificativa_falta_documentacao AS missing_docs_rationale,
     a.url_laudo_medico AS medical_report_path,
     a.codigo_sistema AS system_code,
-    a.tipo_transporte AS transportation_provider,
+    ta.responsavel AS transportation_provider,
     a.veiculo_transporte_escolar AS transportation_vehicle_type,
     a.autorizado_um AS pickup_authorized_first,
     a.parentesco_um AS pickup_kinship_first,
@@ -41,3 +41,4 @@ SELECT
     a.recebe_escolarizacao_em_outro_espaco AS schooling_in_other_space,
     a.recursos_prova_inep AS inep_test_resources
 FROM pmieducar.aluno a
+         LEFT JOIN modules.transporte_aluno ta ON ta.aluno_id = a.cod_aluno;
