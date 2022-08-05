@@ -117,7 +117,6 @@ return new class extends clsListagem {
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
         $aluno = new clsPmieducarAluno();
-        $aluno->setOrderby('pessoa.nome');
         $aluno->setLimite($this->limite, $this->offset);
 
         $alunos = $aluno->telaDeListagemDeAlunos(
