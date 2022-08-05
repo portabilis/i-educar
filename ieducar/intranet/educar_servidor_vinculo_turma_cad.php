@@ -206,8 +206,10 @@ return new class extends clsCadastro {
         }
 
         $professorTurma = new clsModulesProfessorTurma(null, $this->ano, $this->ref_cod_instituicao, $this->servidor_id, $this->ref_cod_turma, $this->funcao_exercida, $this->tipo_vinculo, $this->permite_lancar_faltas_componente, $this->turma_turno_id);
-        if ($professorTurma->existe2()) {
-            $this->mensagem = 'Já existe um vínculo para o(a) professor(a) nesta turma na escola e ano letivo selecionado.<br>';
+        $id = $professorTurma->existe2();
+        if ($id) {
+            $link = "<a href=\"educar_servidor_vinculo_turma_det.php?id=$id\"><b>Acesse aqui</b></a>";
+            $this->mensagem = "Já existe um vínculo para o(a) professor(a) nesta turma na escola e ano letivo selecionado. $link";
             return false;
         }
 
@@ -252,9 +254,10 @@ return new class extends clsCadastro {
             return false;
         }
 
-        if ($professorTurma->existe2()) {
-            $this->mensagem = 'Já existe um vínculo para o(a) professor(a) nesta turma na escola e ano letivo selecionado.<br>';
-
+        $id = $professorTurma->existe2();
+        if ($id) {
+            $link = "<a href=\"educar_servidor_vinculo_turma_det.php?id=$id\"><b>Acesse aqui</b></a>";
+            $this->mensagem = "Já existe um vínculo para o(a) professor(a) nesta turma na escola e ano letivo selecionado. $link";
             return false;
         }
 
