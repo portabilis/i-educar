@@ -168,7 +168,7 @@ function PadraoAnoEscolar(cursos) {
 
   $j.each(escola_curso_, function(i, item) {
     if (item.id == campoCurso) {
-      document.getElementById('padrao_ano_escolar').value = item.is_standard_calendar;
+      document.getElementById('padrao_ano_escolar').value = item.is_standard_calendar ? 1 : 0;
     }
   });
 
