@@ -68,7 +68,7 @@
             if(response.result) {
                 messageUtils.success('Plano de aula AEE excluído com sucesso!');
 
-                delay(1000).then(() => urlHelper("http://" + window.location.host + "/intranet/educar_professores_planejamento_de_aula_aee_lst2.php", '_self'));
+                delay(1000).then(() => urlHelper("http://" + window.location.host + "/intranet/educar_professores_planejamento_de_aula_aee_lst.php", '_self'));
             } else {
                 messageUtils.success('Erro desconhecido ocorreu.');
             }
