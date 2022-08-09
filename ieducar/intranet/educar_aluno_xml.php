@@ -32,6 +32,7 @@
         if (isset($_GET['data']) && !empty($_GET['data'])) {
             $dateSql = implode("-",array_reverse(explode("/",$_GET['data'])));
             $sql .= " AND T.data_enturmacao <= '{$dateSql}' AND (T.data_exclusao IS NULL OR T.data_exclusao >= '{$dateSql}') ";
+            $sql .= " AND m.ativo = '1' AND m.ultima_matricula = '1'";
         }
 
         $sql .= " ORDER BY p.nome ASC";
