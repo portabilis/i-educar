@@ -169,6 +169,7 @@ var validationUtils = {
 };
 
 function validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields, validateHiddenFields) {
+  validateHiddenFields = (typeof validateHiddenFields !== 'undefined') ? validateHiddenFields : true;
   var $emptyFields = [];
   requiredFields = $j('.obrigatorio:not(.skip-presence-validation)');
 
@@ -184,8 +185,8 @@ function validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields
     if ($requiredField.length > 0 &&
         /*$requiredField.css('display') != 'none' &&*/
         ($requiredField.is(':visible') || validateHiddenFields) &&
-        $requiredField.is(':enabled')           &&
-        ($requiredField.val() == '' || $requiredField.val() == null)               &&
+        $requiredField.is(':enabled') &&
+        ($requiredField.val() == '' || $requiredField.val() == null) &&
         $j.inArray($requiredField[0], exceptFields) < 0) {
 
       $emptyFields.push($requiredField);
