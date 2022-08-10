@@ -29,6 +29,14 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
      */
     protected $report;
 
+
+    /**
+     * Usada em relatório onde não possui ações cadastrar, atualizar ou excluir
+     *
+     * @var bool
+     */
+    protected $_onlyRead = true;
+
     /**
      * Portabilis_Controller_ReportCoreController constructor.
      */
