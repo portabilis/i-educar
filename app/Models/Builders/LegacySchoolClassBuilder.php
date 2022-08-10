@@ -40,10 +40,10 @@ class LegacySchoolClassBuilder extends LegacyBuilder
     public function whereGrade(int $grade): self
     {
         return $this->where(function ($q) use ($grade) {
-            $q->whereHas('grades', function ($q) use ($grade) {
+            $q->where('ref_ref_cod_serie', $grade);
+            $q->orWereHas('grades', function ($q) use ($grade) {
                 $q->where('cod_serie', $grade);
             });
-            $q->orWhere('ref_ref_cod_serie', $grade);
         });
     }
 
@@ -95,7 +95,12 @@ class LegacySchoolClassBuilder extends LegacyBuilder
      */
     public function whereCourse(int $course): self
     {
-        return $this->where('ref_cod_curso', $course);
+        return $this->where(function($q) use($course){
+            $q->where('ref_cod_curso', $course);
+            $q->orWhereHas('grades',function ($q) use($course){
+                $q->where('ref_cod_curso',$course);
+            });
+        });
     }
 
     /**
@@ -120,5 +125,45 @@ class LegacySchoolClassBuilder extends LegacyBuilder
     public function whereInstitution(int $institution): self
     {
         return $this->where('ref_cod_instituicao', $institution);
+    }
+
+    /**
+     * Filtra por ano
+     *
+     * @param int $year
+     * @return $this
+     */
+    public function whereYearGte(int $year): self {
+        return $this->where('ano',$year);
+    }
+
+    /**
+     * Filtra por turno
+     *
+     * @param int $shift_id
+     * @return $this
+     */
+    public function whereShift(int $shift_id): self {
+        return $this->where('turma_turno_id',$shift_id);
+    }
+
+    /**
+     * Filtra visibilidade
+     *
+     * @param bool $visible
+     * @return $this
+     */
+    public function whereVisible(bool $visible): self {
+        return $this->where('visivel',$visible);
+    }
+
+    /**
+     * Filtra por nome do curso
+     *
+     * @param string $name
+     * @return $this
+     */
+    public function whereName(string $name): self  {
+        return $this->whereRaw('unaccent(nm_turma) ~* unaccent(?)',$name);
     }
 }
