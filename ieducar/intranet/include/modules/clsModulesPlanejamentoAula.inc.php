@@ -623,9 +623,9 @@ class clsModulesPlanejamentoAula extends Model {
                  JOIN modules.planejamento_aula_componente_curricular as pacc
                     ON (pacc.planejamento_aula_id = pa.id)
                  WHERE
-                     '{$this->data_inicial}' BETWEEN DATE(pa.data_inicial) AND DATE(pa.data_final)
-                     AND
-                     '{$this->data_final}' BETWEEN DATE(pa.data_inicial) AND DATE(pa.data_final)
+                     ('{$this->data_inicial}' BETWEEN DATE(pa.data_inicial) AND DATE(pa.data_final)
+                     OR
+                     '{$this->data_final}' BETWEEN DATE(pa.data_inicial) AND DATE(pa.data_final))
                      AND pacc.componente_curricular_id IN (".implode(',', $refsComponentes).")
              ";
 
