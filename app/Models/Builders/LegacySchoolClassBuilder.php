@@ -41,7 +41,7 @@ class LegacySchoolClassBuilder extends LegacyBuilder
     {
         return $this->where(function ($q) use ($grade) {
             $q->where('ref_ref_cod_serie', $grade);
-            $q->orWereHas('grades', function ($q) use ($grade) {
+            $q->orWhereHas('grades', function ($q) use ($grade) {
                 $q->where('cod_serie', $grade);
             });
         });
