@@ -75,7 +75,7 @@ return new class extends clsListagem {
         $this->campoTexto('nome_responsavel', 'Nome do Responsável', $this->nome_responsavel, 50, 255);
         $this->campoRotulo('filtros_matricula', '<b>Filtros de alunos</b>');
 
-        $this->inputsHelper()->integer('ano', ['required' => true, 'value' => now()->year, 'max_length' => 4,'label_hint'=>'Retorna alunos com matrículas no ano selecionado']);
+        $this->inputsHelper()->integer('ano', ['required' => false,'max_length' => 4,'label_hint'=>'Retorna alunos com matrículas no ano selecionado']);
         $this->inputsHelper()->dynamic('instituicao', ['required' => false, 'value' => $configuracoes['ref_cod_instituicao']]);
         $this->inputsHelper()->dynamic('escolaSemFiltroPorUsuario', ['required' => false, 'value' => $this->ref_cod_escola,'label_hint'=>'Retorna alunos com matrículas na escola selecionada']);
         $this->inputsHelper()->dynamic('curso', ['required' => false,'label_hint'=>'Retorna alunos com matrículas no curso selecionado']);
