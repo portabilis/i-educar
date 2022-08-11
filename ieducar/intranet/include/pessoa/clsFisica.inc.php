@@ -714,6 +714,7 @@ class clsFisica
                 $person->slug = trim("{$slug} {$person->slug}");
                 $person->save();
 
+                $this->nome_social = str_replace("'", "''", $this->nome_social);
                 $set .= "$gruda nome_social = '{$this->nome_social}'";
             }
 

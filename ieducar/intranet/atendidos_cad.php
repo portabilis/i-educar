@@ -974,6 +974,10 @@ return new class extends clsCadastro {
             return false;
         }
 
+        if (!empty($this->nome_social) && !$this->validaNomeSocial()) {
+            return false;
+        }
+
         if (!empty($this->data_nasc) && !$this->validaDataNascimento()) {
             return false;
         }
@@ -1013,6 +1017,18 @@ return new class extends clsCadastro {
     private function validaNome()
     {
         $validator = new NameValidator($this->nm_pessoa);
+        if (!$validator->isValid()) {
+            $this->mensagem = $validator->getMessage();
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private function validaNomeSocial()
+    {
+        $validator = new NameValidator($this->nome_social);
         if (!$validator->isValid()) {
             $this->mensagem = $validator->getMessage();
 

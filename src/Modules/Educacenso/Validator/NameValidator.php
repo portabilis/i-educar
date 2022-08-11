@@ -24,7 +24,23 @@ class NameValidator implements EducacensoValidator
             return false;
         }
 
+        if (!$this->hasOnlyCharactersAllowed()) {
+            $this->message = 'O Nome ou Nome Social não pode conter números ou caracteres especiais como: (0-9!@#\$%^&*?_~-.)';
+
+            return false;
+        }
+
         return true;
+    }
+
+    /**
+     * @return bool
+     */
+    private function hasOnlyCharactersAllowed(): bool
+    {
+        $pattern = '/^[a-zA-Z\ \'àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇ]+$/';
+
+        return preg_match($pattern, mb_strtoupper($this->name));
     }
 
     /**
