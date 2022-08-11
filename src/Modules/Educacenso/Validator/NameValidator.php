@@ -25,7 +25,7 @@ class NameValidator implements EducacensoValidator
         }
 
         if (!$this->hasOnlyCharactersAllowed()) {
-            $this->message = 'O Nome ou Nome Social não pode conter números ou caracteres especiais como: (0-9!@#\$%^&*?_~-)';
+            $this->message = 'O Nome ou Nome Social não pode conter números ou caracteres especiais como: (0-9!@#\$%^&*?_~-.)';
 
             return false;
         }
