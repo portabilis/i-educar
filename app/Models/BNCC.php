@@ -17,6 +17,16 @@ class BNCC extends Model
      */
     protected $primaryKey = 'id';
 
+    protected $fillable = [
+        'BNCC_id',
+        'codigo',
+        'codigo_habilidade',
+        'descricao_habilidade',
+        'id_componente',
+        'status',
+    
+    ];
+
     /**
      * @var bool
      */
