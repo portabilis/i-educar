@@ -38,7 +38,7 @@ class NameValidator implements EducacensoValidator
      */
     private function hasOnlyCharactersAllowed(): bool
     {
-        $pattern = '/^[a-zA-Z\ \'àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸ]+$/';
+        $pattern = '/^[a-zA-Z\ \'àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇ]+$/';
 
         return preg_match($pattern, mb_strtoupper($this->name));
     }
