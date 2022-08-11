@@ -604,7 +604,7 @@ class clsModulesPlanejamentoAula extends Model {
     }
 
     public function existeComponentePeriodo () {
-         if ($this->data_inicial && $this->data_final && is_array($this->ref_componente_curricular_array)) {
+         if ($this->data_inicial && $this->data_final && $this->ref_cod_turma && is_array($this->ref_componente_curricular_array)) {
              $refsComponentes = [];
 
              foreach ($this->ref_componente_curricular_array as $refComponente) {
@@ -627,6 +627,7 @@ class clsModulesPlanejamentoAula extends Model {
                      OR
                      '{$this->data_final}' BETWEEN DATE(pa.data_inicial) AND DATE(pa.data_final))
                      AND pacc.componente_curricular_id IN (".implode(',', $refsComponentes).")
+                     AND pa.ref_cod_turma = '{$this->ref_cod_turma}'
              ";
 
              $db = new clsBanco();
