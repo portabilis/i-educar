@@ -25,7 +25,7 @@ return new class extends clsCadastro {
     public $ordens_aulas5;
     public $atividades;
     public $conteudos;
-    public $planejamento_aula_id;
+    public $planejamento_aula_ids;
 
     public function Inicializar () {
         $this->titulo = 'Frequência - Cadastro';
@@ -40,6 +40,7 @@ return new class extends clsCadastro {
         if (is_numeric($this->id)) {
             $tmp_obj = new clsModulesFrequencia($this->id);
             $registro = $tmp_obj->detalhe();
+
 
             if ($registro) {
                 // passa todos os valores obtidos no registro para atributos do objeto
@@ -124,7 +125,7 @@ return new class extends clsCadastro {
             $servidor_id = $this->pessoa_logada;
 
             $obj = new clsModulesPlanejamentoAula();
-            $id = $obj->lista(
+            $planejamentos = $obj->lista(
                 null,
                 null,
                 null,
@@ -138,9 +139,15 @@ return new class extends clsCadastro {
                 $this->fase_etapa,
                 $servidor_id,
                 Portabilis_Date_Utils::brToPgSQL($this->data)
-            )[0]['id'];
+            );
 
-            $this->planejamento_aula_id = $id;
+            $this->planejamento_aula_ids = [];
+
+            foreach ($planejamentos as $planejamento) {
+                if (!in_array($planejamento['id'], $this->planejamento_aula_ids)) {
+                    array_push($this->planejamento_aula_ids, $planejamento['id']);
+                }
+            }
         }
 
 
@@ -676,7 +683,7 @@ return new class extends clsCadastro {
             'objectName' => 'conteudos',
         ];
 
-        $todos_conteudos = $this->getConteudos($this->planejamento_aula_id);
+        $todos_conteudos = $this->getConteudos($this->planejamento_aula_ids);
 
         $options = [
             'label' => 'Objetivo(s) do conhecimento/conteúdo',
@@ -689,13 +696,13 @@ return new class extends clsCadastro {
         $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
     }
 
-    private function getConteudos($planejamento_aula_id = null)
+    private function getConteudos($planejamento_aula_ids = null)
     {
-        if (is_numeric($planejamento_aula_id)) {
+        if (is_array($planejamento_aula_ids)) {
             $rows = [];
 
             $obj = new clsModulesPlanejamentoAulaConteudo();
-            $conteudos = $obj->lista2($planejamento_aula_id);
+            $conteudos = $obj->listaByPlanejamentos($planejamento_aula_ids);
 
             foreach ($conteudos as $key => $conteudo) {
                 $rows[$conteudo['id']] = $conteudo['conteudo'];
