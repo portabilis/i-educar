@@ -33,7 +33,7 @@ class Process
     public const SETTINGS = 3000;
     public const RELEASE_PERIOD = 999848;
     public const POST_OUT_PERIOD = 999849;
-    public const CONFIG = 999909;
+    public const CONFIG = 999873;
     public const CONFIGURATIONS_TOOLS = 999910;
     public const MENU_SCHOOL_TOOLS = 999926;
     public const EDUCACENSO_IMPORTACOES = 9998848;
