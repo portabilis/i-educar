@@ -131,7 +131,7 @@ return new class extends clsListagem {
                 'institution' => $this->ref_cod_instituicao,
                 'shift' => $this->turma_turno_id,
                 'visible' => true,
-                'year_gte' => $this->ano,
+                'year_eq' => $this->ano,
             ])
             ->with([
                 'school' => fn($q)=>$q->select('cod_escola','ref_idpes')->with('organization:idpes,fantasia'),
