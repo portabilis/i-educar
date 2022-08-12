@@ -133,7 +133,7 @@ class LegacySchoolClassBuilder extends LegacyBuilder
      * @param int $year
      * @return $this
      */
-    public function whereYearGte(int $year): self
+    public function whereYearEq(int $year): self
     {
         return $this->where('ano', $year);
     }
