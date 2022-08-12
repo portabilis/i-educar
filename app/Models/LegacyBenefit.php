@@ -6,16 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class LegacyBenefit extends Model
 {
+    const CREATED_AT = 'data_cadastro';
+    const UPDATED_AT = null;
     /**
      * @var string
      */
     protected $table = 'pmieducar.aluno_beneficio';
-
     /**
      * @var string
      */
     protected $primaryKey = 'cod_aluno_beneficio';
-
     /**
      * @var array
      */
@@ -29,12 +29,14 @@ class LegacyBenefit extends Model
         'ativo',
     ];
 
+    /**
+     * @inheritDoc
+     */
     protected static function boot()
     {
         parent::boot();
-
         static::creating(function ($model) {
-            $model->data_cadastro = now();
+            $model->ativo = 1;
         });
     }
 }
