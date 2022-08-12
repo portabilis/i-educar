@@ -172,4 +172,17 @@ class LegacyIndividual extends Model
 
         return static::query()->where('cpf', $cpf)->first();
     }
+
+    /**
+     * Cpf formatado
+     *
+     * @param $value
+     * @return string|void
+     */
+    public function getCpfAttribute($value)
+    {
+        if ($value) {
+            return int2CPF($value);
+        }
+    }
 }
