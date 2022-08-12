@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\Ativo;
 
 class LegacyBenefit extends Model
 {
+    use Ativo;
     const CREATED_AT = 'data_cadastro';
     const UPDATED_AT = null;
     /**
@@ -28,15 +30,4 @@ class LegacyBenefit extends Model
         'data_exclusao',
         'ativo',
     ];
-
-    /**
-     * @inheritDoc
-     */
-    protected static function boot()
-    {
-        parent::boot();
-        static::creating(function ($model) {
-            $model->ativo = 1;
-        });
-    }
 }
