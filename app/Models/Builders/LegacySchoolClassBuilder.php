@@ -95,10 +95,10 @@ class LegacySchoolClassBuilder extends LegacyBuilder
      */
     public function whereCourse(int $course): self
     {
-        return $this->where(function($q) use($course){
+        return $this->where(function ($q) use ($course) {
             $q->where('ref_cod_curso', $course);
-            $q->orWhereHas('grades',function ($q) use($course){
-                $q->where('ref_cod_curso',$course);
+            $q->orWhereHas('grades', function ($q) use ($course) {
+                $q->where('ref_cod_curso', $course);
             });
         });
     }
@@ -133,8 +133,9 @@ class LegacySchoolClassBuilder extends LegacyBuilder
      * @param int $year
      * @return $this
      */
-    public function whereYearGte(int $year): self {
-        return $this->where('ano',$year);
+    public function whereYearGte(int $year): self
+    {
+        return $this->where('ano', $year);
     }
 
     /**
@@ -143,8 +144,9 @@ class LegacySchoolClassBuilder extends LegacyBuilder
      * @param int $shift_id
      * @return $this
      */
-    public function whereShift(int $shift_id): self {
-        return $this->where('turma_turno_id',$shift_id);
+    public function whereShift(int $shift_id): self
+    {
+        return $this->where('turma_turno_id', $shift_id);
     }
 
     /**
@@ -153,8 +155,9 @@ class LegacySchoolClassBuilder extends LegacyBuilder
      * @param bool $visible
      * @return $this
      */
-    public function whereVisible(bool $visible): self {
-        return $this->where('visivel',$visible);
+    public function whereVisible(bool $visible): self
+    {
+        return $this->where('visivel', $visible);
     }
 
     /**
@@ -163,7 +166,8 @@ class LegacySchoolClassBuilder extends LegacyBuilder
      * @param string $name
      * @return $this
      */
-    public function whereName(string $name): self  {
-        return $this->whereRaw('unaccent(nm_turma) ~* unaccent(?)',$name);
+    public function whereName(string $name): self
+    {
+        return $this->whereRaw('unaccent(nm_turma) ~* unaccent(?)', $name);
     }
 }
