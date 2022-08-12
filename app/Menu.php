@@ -261,7 +261,12 @@ class Menu extends Model
             return static::roots();
         }
 
-        $ids = $user->menu()->pluck('id')->sortBy('id')->toArray();
+        $excludes = [
+            Process::CONFIG,
+            Process::SETTINGS,
+        ];
+
+        $ids = $user->menu()->whereNotIn('process', $excludes)->pluck('id')->sortBy('id')->toArray();
 
         return self::getMenusByIds($ids);
     }
