@@ -28,4 +28,13 @@ class LegacyBenefit extends Model
         'data_exclusao',
         'ativo',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->data_cadastro = now();
+        });
+    }
 }

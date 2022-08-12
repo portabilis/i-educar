@@ -25,7 +25,7 @@ class LegacyBenefitFactory extends Factory
     public function definition()
     {
         return [
-            'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
+            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->unique()->make(),
             'nm_beneficio' => $this->faker->firstName(),
             'desc_beneficio' => $this->faker->paragraph(),
             'data_cadastro' => now(),
