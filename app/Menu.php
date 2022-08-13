@@ -2,12 +2,15 @@
 
 namespace App;
 
+use App\Models\LegacyUserType;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection as LaravelCollection;
+use Staudenmeir\LaravelAdjacencyList\Eloquent\HasRecursiveRelationships;
 
 /**
  * @property int               id
@@ -25,6 +28,8 @@ use Illuminate\Support\Collection as LaravelCollection;
  */
 class Menu extends Model
 {
+    use HasRecursiveRelationships;
+
     /**
      * @var array
      */
@@ -249,6 +254,23 @@ class Menu extends Model
     }
 
     /**
+     * Tipos de Usuário
+     *
+     * @return BelongsToMany
+     */
+    public function user_types(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            LegacyUserType::class,
+            'pmieducar.menu_tipo_usuario',
+            'menu_id',
+            'ref_cod_tipo_usuario',
+            'id',
+            'cod_tipo_usuario')
+            ->wherePivot('visualiza', 1);
+    }
+
+    /**
      * Retorna os menus disponíveis para um determinado usuário.
      *
      * @param User $user
@@ -261,9 +283,15 @@ class Menu extends Model
             return static::roots();
         }
 
-        $ids = $user->menu()->pluck('id')->sortBy('id')->toArray();
+        $menus = self::withRecursiveQueryConstraint(static function (Builder $query) {
+            $query->whereHas('user_types', function (Builder $query) {
+                $query->where('ref_cod_tipo_usuario', auth()->user()->ref_cod_tipo_usuario);
+            });
+        }, static function () {
+            return self::tree()->orderBy('order')->get();
+        });
 
-        return self::getMenusByIds($ids);
+        return $menus->toTree();
     }
 
     /**
@@ -273,11 +301,7 @@ class Menu extends Model
      */
     public static function roots()
     {
-        return static::query()
-            ->with('children.children.children.children.children')
-            ->whereNull('parent_id')
-            ->orderBy('order')
-            ->get();
+        return self::tree()->orderBy('order')->get()->toTree();
     }
 
     /**
