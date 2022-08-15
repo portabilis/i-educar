@@ -448,6 +448,16 @@ class clsModulesPlanejamentoAulaAee extends Model
             $whereAnd = ' AND ';
         }
 
+        if (is_numeric($int_ref_cod_componente_curricular)) {
+            $filtros .= "{$whereAnd} k.id = '{$int_ref_cod_componente_curricular}'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_ref_cod_turno)) {
+            $filtros .= "{$whereAnd} t.turma_turno_id = '{$int_ref_cod_turno}'";
+            $whereAnd = ' AND ';
+        }
+
         if (is_numeric($int_ref_cod_matricula)) {
             $filtros .= "{$whereAnd} pa.ref_cod_matricula = '{$int_ref_cod_matricula}'";
             $whereAnd = ' AND ';
