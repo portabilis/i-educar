@@ -839,7 +839,7 @@ class clsPmieducarAluno extends Model
                 SELECT distinct {$this->_campos_lista}
                 FROM {$this->_tabela}
                 INNER JOIN pmieducar.matricula m
-                ON m.ref_cod_aluno = a.cod_aluno AND m.ativo = 1 ";
+                ON m.ref_cod_aluno = a.cod_aluno ";
         } else {
             $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         }
@@ -910,6 +910,7 @@ class clsPmieducarAluno extends Model
         if ($filtra_baseado_matricula && (int) $situacao_matricula_id !== 10) {
             $filtros .= (int) $situacao_matricula_id === 9 ?
                 "{$whereAnd} m.aprovado not in (4,6)" : "{$whereAnd} m.aprovado = {$situacao_matricula_id}";
+            $filtros .= ' AND m.ativo = 1 ';
             $whereAnd = ' AND ';
         }
 
