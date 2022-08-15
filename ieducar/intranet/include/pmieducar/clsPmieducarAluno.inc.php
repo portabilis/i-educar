@@ -825,7 +825,7 @@ class clsPmieducarAluno extends Model
         $ref_cod_serie = null,
         $int_cpf_aluno = null,
         $int_rg_aluno = null,
-        $situacao_matricula_id = null,
+        $situacao_matricula_id = EnrollmentStatusFilter::ALL,
     ) {
         $filtra_baseado_matricula = is_numeric($ano) || is_numeric($ref_cod_instituicao) || is_numeric($ref_cod_escola) || is_numeric($ref_cod_curso) || is_numeric($ref_cod_serie);
 
@@ -839,10 +839,7 @@ class clsPmieducarAluno extends Model
                 SELECT distinct {$this->_campos_lista}
                 FROM {$this->_tabela}
                 INNER JOIN pmieducar.matricula m
-                ON m.ref_cod_aluno = a.cod_aluno
-                INNER JOIN relatorio.view_situacao s
-                ON s.cod_matricula = m.cod_matricula
-            ";
+                ON m.ref_cod_aluno = a.cod_aluno ";
         } else {
             $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         }
@@ -910,15 +907,10 @@ class clsPmieducarAluno extends Model
             $whereAnd = ' AND ';
         }
 
-        if ($filtra_baseado_matricula) {
-            $filtros .= "{$whereAnd} m.ativo = 1 ";
-            $whereAnd = ' AND ';
-        }
-
-        if ($filtra_baseado_matricula && $situacao_matricula_id) {
-            $situacao_matricula_id = (int)$situacao_matricula_id;
-            $filtros .= "{$whereAnd} s.cod_situacao = {$situacao_matricula_id} ";
-
+        if ($filtra_baseado_matricula && (int) $situacao_matricula_id !== 10) {
+            $filtros .= (int) $situacao_matricula_id === 9 ?
+                "{$whereAnd} m.aprovado not in (4,6)" : "{$whereAnd} m.aprovado = {$situacao_matricula_id}";
+            $filtros .= ' AND m.ativo = 1 ';
             $whereAnd = ' AND ';
         }
 
@@ -988,11 +980,7 @@ class clsPmieducarAluno extends Model
         if ($filtra_baseado_matricula) {
             $sqlCount = "
                 SELECT COUNT(DISTINCT a.cod_aluno) FROM {$this->_tabela}
-                INNER JOIN pmieducar.matricula m
-                ON (m.ref_cod_aluno = a.cod_aluno)
-                INNER JOIN relatorio.view_situacao s
-                ON s.cod_matricula = m.cod_matricula
-            ";
+                INNER JOIN pmieducar.matricula m ON m.ref_cod_aluno = a.cod_aluno ";
         } else {
             $sqlCount = "SELECT COUNT(0) FROM {$this->_tabela} ";
         }
