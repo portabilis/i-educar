@@ -124,13 +124,13 @@ class clsModulesPlanejamentoAulaConteudoAee extends Model {
                 SELECT
                     pac.*,
                     CASE
-                        WHEN cmc.planejamento_aula_conteudo_id IS NULL THEN false
-                        WHEN cmc.planejamento_aula_conteudo_id IS NOT NULL THEN true
+                        WHEN cmc.planejamento_aula_conteudo_aee_id IS NULL THEN false
+                        WHEN cmc.planejamento_aula_conteudo_aee_id IS NOT NULL THEN true
                     END usando
                 FROM
                     modules.planejamento_aula_conteudo_aee as pac
-                LEFT JOIN modules.conteudo_ministrado_conteudo as cmc
-                    ON (cmc.planejamento_aula_conteudo_id = pac.id)
+                LEFT JOIN modules.conteudo_ministrado_conteudo_aee as cmc
+                    ON (cmc.planejamento_aula_conteudo_aee_id = pac.id)
                 WHERE
                     pac.planejamento_aula_aee_id =  '{$planejamento_aula_aee_id}'
             ");
