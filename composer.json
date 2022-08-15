@@ -40,7 +40,7 @@
         "nuwave/lighthouse": "^5",
         "phpoffice/phpspreadsheet": "^1.8",
         "predis/predis": "^1.1",
-        "staudenmeir/laravel-cte": "^1.0",
+        "staudenmeir/laravel-adjacency-list": "^1.0",
         "symfony/http-client": "^6.0",
         "symfony/mailgun-mailer": "^6.0"
     },

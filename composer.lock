@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "29dfd71afbb6eeb92c0caffd10437ad8",
+    "content-hash": "9a7e62e6c8ef108c3b734851ddb8640e",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -114,16 +114,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.233.1",
+            "version": "3.233.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "1eeac24f921f146b7cef5beb61375d7852df7cf8"
+                "reference": "c804eb974240ae04b4ae5381f45003f25bbed56c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/1eeac24f921f146b7cef5beb61375d7852df7cf8",
-                "reference": "1eeac24f921f146b7cef5beb61375d7852df7cf8",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/c804eb974240ae04b4ae5381f45003f25bbed56c",
+                "reference": "c804eb974240ae04b4ae5381f45003f25bbed56c",
                 "shasum": ""
             },
             "require": {
@@ -200,9 +200,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.233.1"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.233.2"
             },
-            "time": "2022-08-12T18:18:34+00:00"
+            "time": "2022-08-15T18:16:30+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -5669,6 +5669,58 @@
                 }
             ],
             "time": "2021-04-20T08:33:46+00:00"
+        },
+        {
+            "name": "staudenmeir/laravel-adjacency-list",
+            "version": "v1.11.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/staudenmeir/laravel-adjacency-list.git",
+                "reference": "1e5d167fcb8962faa5bccc021e0299de120a9d4c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/staudenmeir/laravel-adjacency-list/zipball/1e5d167fcb8962faa5bccc021e0299de120a9d4c",
+                "reference": "1e5d167fcb8962faa5bccc021e0299de120a9d4c",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "^9.0",
+                "php": "^8.0.2",
+                "staudenmeir/laravel-cte": "^1.6"
+            },
+            "require-dev": {
+                "doctrine/dbal": "^3.3",
+                "phpunit/phpunit": "^9.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Staudenmeir\\LaravelAdjacencyList\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jonas Staudenmeir",
+                    "email": "mail@jonas-staudenmeir.de"
+                }
+            ],
+            "description": "Recursive Laravel Eloquent relationships with CTEs",
+            "support": {
+                "issues": "https://github.com/staudenmeir/laravel-adjacency-list/issues",
+                "source": "https://github.com/staudenmeir/laravel-adjacency-list/tree/v1.11.1"
+            },
+            "funding": [
+                {
+                    "url": "https://paypal.me/JonasStaudenmeir",
+                    "type": "custom"
+                }
+            ],
+            "time": "2022-06-05T13:29:54+00:00"
         },
         {
             "name": "staudenmeir/laravel-cte",
@@ -12135,5 +12187,5 @@
         "ext-pgsql": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.2.0"
 }
