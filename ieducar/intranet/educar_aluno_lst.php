@@ -1,5 +1,7 @@
 <?php
 
+use iEducar\Modules\Enrollments\Model\EnrollmentStatusFilter;
+
 return new class extends clsListagem {
     /**
      * Titulo no topo da pagina
@@ -80,7 +82,6 @@ return new class extends clsListagem {
         $this->inputsHelper()->dynamic('escolaSemFiltroPorUsuario', ['required' => false, 'value' => $this->ref_cod_escola,'label_hint'=>'Retorna alunos com matrículas na escola selecionada']);
         $this->inputsHelper()->dynamic('curso', ['required' => false,'label_hint'=>'Retorna alunos com matrículas no curso selecionado']);
         $this->inputsHelper()->dynamic('serie', ['required' => false,'label_hint'=>'Retorna alunos com matrículas na série selecionada']);
-        $this->inputsHelper()->dynamic(['situacaoMatricula'], ['required' => false,'label_hint'=>'Retorna alunos com matrículas compatíveis com esta situação']);
 
         $obj_permissoes = new clsPermissoes();
         $cod_escola = $obj_permissoes->getEscola($this->pessoa_logada);
@@ -134,8 +135,7 @@ return new class extends clsListagem {
             ref_cod_curso: $this->ref_cod_curso,
             ref_cod_serie: $this->ref_cod_serie,
             int_cpf_aluno: idFederal2int($this->cpf_aluno),
-            int_rg_aluno: idFederal2int($this->rg_aluno),
-            situacao_matricula_id: $this->situacao_matricula_id
+            int_rg_aluno: idFederal2int($this->rg_aluno)
         );
 
         $total = $aluno->_total;
