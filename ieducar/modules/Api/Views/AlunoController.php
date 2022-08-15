@@ -5,6 +5,7 @@ use App\Models\Individual;
 use App\Models\LegacyDeficiency;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolHistory;
+use App\Models\LegacyStudentBenefit;
 use App\Models\LogUnification;
 use App\Models\TransportationProvider;
 use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
