@@ -71,6 +71,10 @@ function fixAutoComplete() {
   });
 }
 
+function fixupFieldsChosen() {
+  $j(function(){navigator.userAgent.toLowerCase().indexOf("firefox")> -1&&($j(".chosen-container").css("position","absolute"),$j(".chosen-container").closest("span.form").css("display","inline-block").css("min-height","40px"))})
+}
+
 function fixupFieldsWidth(additionalFields, force){
   if (! $j(document).data('fixed-fields-width') || force) {
     var maxWidth = 0;

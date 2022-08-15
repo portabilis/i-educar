@@ -42,6 +42,7 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract
             $files = [$files];
         }
 
+
         foreach ($files as $file) {
             if (!in_array($file, self::$javascriptsLoaded)) {
                 self::$javascriptsLoaded[] = $file;
@@ -112,6 +113,12 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract
         Portabilis_View_Helper_Application::embedJavascript(
             $viewInstance,
             'fixupFieldsWidth();',
+            $afterReady = true
+        );
+
+        Portabilis_View_Helper_Application::embedJavascript(
+            $viewInstance,
+            'fixupFieldsChosen();',
             $afterReady = true
         );
     }
