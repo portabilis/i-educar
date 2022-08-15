@@ -839,7 +839,7 @@ class clsPmieducarAluno extends Model
                 SELECT distinct {$this->_campos_lista}
                 FROM {$this->_tabela}
                 INNER JOIN pmieducar.matricula m
-                ON m.ref_cod_aluno = a.cod_aluno ";
+                ON m.ref_cod_aluno = a.cod_aluno AND m.ativo = 1 ";
         } else {
             $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         }
