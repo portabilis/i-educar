@@ -825,7 +825,7 @@ class clsPmieducarAluno extends Model
         $ref_cod_serie = null,
         $int_cpf_aluno = null,
         $int_rg_aluno = null,
-        $situacao_matricula_id = null,
+        $situacao_matricula_id = EnrollmentStatusFilter::ALL,
     ) {
         $filtra_baseado_matricula = is_numeric($ano) || is_numeric($ref_cod_instituicao) || is_numeric($ref_cod_escola) || is_numeric($ref_cod_curso) || is_numeric($ref_cod_serie);
 
