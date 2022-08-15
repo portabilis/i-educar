@@ -72,7 +72,18 @@ function fixAutoComplete() {
 }
 
 function fixupFieldsChosen() {
-  $j(function(){navigator.userAgent.toLowerCase().indexOf("firefox")> -1&&($j(".chosen-container").css("position","absolute"),$j(".chosen-container").closest("span.form").css("display","inline-block").css("min-height","40px"))})
+  $j(function () {
+    if (navigator.userAgent.toLowerCase().indexOf("firefox") > -1) {
+      $j('span.form>.chosen-container').each(function (i,el) {
+        const container = $j(el);
+        const span = container.closest('span.form');
+        if (span.find('.chosen-container.chosen-container-single').length) {
+          container.css("position", "absolute");
+          span.css({"display": "inline-block", "min-height": "40px"});
+        }
+      });
+    }
+  })
 }
 
 function fixupFieldsWidth(additionalFields, force){
