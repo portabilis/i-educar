@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyBenefit;
+
 return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -27,8 +29,7 @@ return new class extends clsCadastro {
         $obj_permissoes->permissao_cadastra(581, $this->pessoa_logada, 3, 'educar_aluno_beneficio_lst.php');
 
         if (is_numeric($this->cod_aluno_beneficio)) {
-            $obj = new clsPmieducarAlunoBeneficio($this->cod_aluno_beneficio);
-            $registro  = $obj->detalhe();
+            $registro = LegacyBenefit::find($this->cod_aluno_beneficio)->toArray();
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
@@ -68,44 +69,49 @@ return new class extends clsCadastro {
 
     public function Novo()
     {
-        $obj = new clsPmieducarAlunoBeneficio($this->cod_aluno_beneficio, $this->pessoa_logada, $this->pessoa_logada, $this->nm_beneficio, $this->desc_beneficio, $this->data_cadastro, $this->data_exclusao, $this->ativo);
-        $cadastrou = $obj->cadastra();
-        if ($cadastrou) {
+        $classType = new LegacyBenefit();
+        $classType->ref_usuario_cad = $this->pessoa_logada;
+        $classType->ativo = 1;
+        $classType->nm_beneficio = $this->nm_beneficio;
+        $classType->desc_beneficio = $this->desc_beneficio;
+
+        if ($classType->save()) {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
             $this->simpleRedirect('educar_aluno_beneficio_lst.php');
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
-
         return false;
     }
 
     public function Editar()
     {
-        $obj = new clsPmieducarAlunoBeneficio($this->cod_aluno_beneficio, $this->pessoa_logada, $this->pessoa_logada, $this->nm_beneficio, $this->desc_beneficio, $this->data_cadastro, $this->data_exclusao, $this->ativo);
-        $editou = $obj->edita();
-        if ($editou) {
+        $classType = LegacyBenefit::find($this->cod_aluno_beneficio);
+        $classType->ref_usuario_cad = $this->pessoa_logada;
+        $classType->ativo = 1;
+        $classType->nm_beneficio = $this->nm_beneficio;
+        $classType->desc_beneficio = $this->desc_beneficio;
+
+        if ($classType->save()) {
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_aluno_beneficio_lst.php');
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
-
         return false;
     }
 
     public function Excluir()
     {
-        $obj = new clsPmieducarAlunoBeneficio($this->cod_aluno_beneficio, $this->pessoa_logada, $this->pessoa_logada, $this->nm_beneficio, $this->desc_beneficio, $this->data_cadastro, $this->data_exclusao, 0);
+        $classType = LegacyBenefit::find($this->cod_aluno_beneficio);
+        $classType->ativo = 0;
 
-        $excluiu = $obj->excluir();
-        if ($excluiu) {
+        if ($classType->save()) {
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_aluno_beneficio_lst.php');
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';
-
         return false;
     }
 
