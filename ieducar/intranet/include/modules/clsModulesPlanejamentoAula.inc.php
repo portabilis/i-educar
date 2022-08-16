@@ -415,7 +415,8 @@ class clsModulesPlanejamentoAula extends Model {
         $time_data_final = null,
         $int_etapa = null,
         $int_servidor_id = null,
-        $time_data = null
+        $time_data = null,
+        $arrayEscolasUsuario = null
     ) {
         $sql = "
             SELECT DISTINCT
@@ -493,13 +494,16 @@ class clsModulesPlanejamentoAula extends Model {
             $whereAnd = ' AND ';
         }
 
+        if (is_array($arrayEscolasUsuario) && count($arrayEscolasUsuario) >= 1) {
+            $filtros .= "{$whereAnd} e.cod_escola IN (" . implode(',', $arrayEscolasUsuario) . ")";
+        }
+
         $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
-        //dump($sql);
 
         $this->_total = $db->CampoUnico(
             "SELECT
