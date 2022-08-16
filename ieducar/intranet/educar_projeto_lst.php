@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyProject;
+
 return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -52,16 +54,17 @@ return new class extends clsListagem {
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-        $obj_projeto = new clsPmieducarProjeto();
-        $obj_projeto->setOrderby('nome ASC');
-        $obj_projeto->setLimite($this->limite, $this->offset);
+        $query = LegacyProject::query()
+            ->limit($this->limite)
+            ->offset($this->offset)
+            ->orderBy('nome', 'ASC');
 
-        $lista = $obj_projeto->lista(
-            null,
-            $this->nome
-        );
+        if (is_string($this->nome)) {
+            $query->where('nome', 'ilike', '%' . $this->nome . '%');
+        }
 
-        $total = $obj_projeto->_total;
+        $lista = $query->get()->toArray();
+        $total = $query->count();
 
         // monta a lista
         if (is_array($lista) && count($lista)) {

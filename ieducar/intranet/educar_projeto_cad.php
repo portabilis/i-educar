@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyProject;
+
 return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -22,8 +24,7 @@ return new class extends clsCadastro {
         $obj_permissoes->permissao_cadastra(21250, $this->pessoa_logada, 3, 'educar_projeto_lst.php');
 
         if (is_numeric($this->cod_projeto)) {
-            $obj = new clsPmieducarProjeto($this->cod_projeto);
-            $registro  = $obj->detalhe();
+            $registro = LegacyProject::find($this->cod_projeto)->toArray();
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
@@ -60,43 +61,41 @@ return new class extends clsCadastro {
 
     public function Novo()
     {
-        $obj = new clsPmieducarProjeto(null, $this->nome, $this->observacao);
-        $cadastrou = $obj->cadastra();
-        if ($cadastrou) {
+        $project = new LegacyProject();
+        $project->nome = $this->nome;
+        $project->observacao = $this->observacao;
+
+        if ($project->save()) {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
             $this->simpleRedirect('educar_projeto_lst.php');
         }
-
         $this->mensagem = 'Cadastro não realizado.<br>';
-
         return false;
     }
 
     public function Editar()
     {
-        $obj = new clsPmieducarProjeto($this->cod_projeto, $this->nome, $this->observacao);
-        $editou = $obj->edita();
-        if ($editou) {
+        $project = LegacyProject::find($this->cod_projeto);
+        $project->nome = $this->nome;
+        $project->observacao = $this->observacao;
+
+        if ($project->save()) {
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_projeto_lst.php');
         }
-
         $this->mensagem = 'Edição não realizada.<br>';
-
         return false;
     }
 
     public function Excluir()
     {
-        $obj = new clsPmieducarProjeto($this->cod_projeto);
-        $excluiu = $obj->excluir();
-        if ($excluiu) {
+        $project = LegacyProject::find($this->cod_projeto);
+
+        if ($project->delete()) {
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_projeto_lst.php');
         }
-
         $this->mensagem = 'Exclusão não realizada.<br>';
-
         return false;
     }
 

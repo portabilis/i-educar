@@ -2,6 +2,8 @@
 
 use App\Models\City;
 use App\Models\Country;
+use App\Models\LegacyProject;
+use App\Models\LegacyStudentProject;
 use App\Models\PersonHasPlace;
 use App\Services\UrlPresigner;
 use iEducar\Modules\Educacenso\Model\Nacionalidade;
@@ -854,9 +856,10 @@ return new class extends clsDetalhe {
             $this->addDetalhe(['Possui coleta de lixo', $reg['lixo']]);
         }
 
-        $objProjetos = new clsPmieducarProjeto();
-        $reg = $objProjetos->listaProjetosPorAluno($this->cod_aluno);
-        ;
+        $reg = LegacyProject::query()->where('pmieducar.projeto_aluno.ref_cod_aluno', $this->cod_aluno)
+            ->join('pmieducar.projeto_aluno', 'pmieducar.projeto_aluno.ref_cod_projeto', '=', 'pmieducar.projeto.cod_projeto')
+            ->orderBy('nome', 'ASC')
+            ->get()->toArray();
 
         if ($reg) {
             $tabela_projetos = '
@@ -896,7 +899,7 @@ return new class extends clsDetalhe {
                         <td %s align="center">%s</td>
                     </tr>',
                     $color,
-                    $projeto['projeto'],
+                    $projeto['nome'],
                     $color,
                     dataToBrasil($projeto['data_inclusao']),
                     $color,
