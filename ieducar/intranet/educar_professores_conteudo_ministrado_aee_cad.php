@@ -8,9 +8,10 @@ use App\Services\iDiarioService;
 use App\Services\SchoolLevelsService;
 use Illuminate\Support\Arr;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $id;
-    public $data_cadastro;
+    public $data;
     public $ref_cod_matricula;
     public $hora_inicio;
     public $hora_fim;
@@ -18,7 +19,8 @@ return new class extends clsCadastro {
     public $conteudos;
     public $planejamento_aula_aee_id;
 
-    public function Inicializar () {
+    public function Inicializar()
+    {
         $this->titulo = 'Atendimento AEE - Cadastro';
 
         $retorno = 'Novo';
@@ -26,7 +28,7 @@ return new class extends clsCadastro {
         $this->id = $_GET['id'];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(58, $this->pessoa_logada, 7, 'educar_professores_conteudo_ministrado_aee_lst.php');       
+        $obj_permissoes->permissao_cadastra(58, $this->pessoa_logada, 7, 'educar_professores_conteudo_ministrado_aee_lst.php');
 
         if (is_numeric($this->id)) {
             $tmp_obj = new clsModulesComponenteMinistradoAee($this->id);
@@ -66,16 +68,18 @@ return new class extends clsCadastro {
         return $retorno;
     }
 
-    public function Gerar () {
+    public function Gerar()
+    {
         if ($_POST) {
             foreach ($_POST as $campo => $val) {
                 $this->$campo = ($this->$campo) ? $this->$campo : $val;
             }
         }
-        $this->data_cadastro = dataToBrasil($this->data);
+        $this->data = dataToBrasil($this->data);
         $this->ano = explode('/', $this->data)[2];
 
-        if ($tipoacao == 'Edita' || !$_POST
+        if (
+            $tipoacao == 'Edita' || !$_POST
             && $this->data
             && is_numeric($this->ref_cod_turma)
             && is_numeric($this->fase_etapa)
@@ -85,7 +89,7 @@ return new class extends clsCadastro {
 
         if (is_numeric($this->ref_cod_turma)) {
             $this->campoOculto('data_', dataToBanco($this->data));
-            $this->campoOculto('ref_cod_turma_', $this->ref_cod_turma);
+            $this->campoOculto('ref_cod_matricula_', $this->ref_cod_matricula);
             $this->campoOculto('ref_cod_componente_curricular_', $this->ref_cod_componente_curricular);
             $this->campoOculto('fase_etapa_', $this->fase_etapa);
         }
@@ -101,42 +105,20 @@ return new class extends clsCadastro {
         $this->inputsHelper()->dynamic('data', ['required' => $obrigatorio, 'disabled' => $desabilitado]);  // Disabled não funciona; ação colocada no javascript.
         $this->campoHora('hora_inicio', 'Hora Início', $this->hora_inicio, ['required' => $obrigatorio]);    // Disabled não funciona; ação colocada no javascript.
         $this->campoHora('hora_fim', 'Hora Fim', $this->hora_fim, ['required' => $obrigatorio]);      // Disabled não funciona; ação colocada no javascript.  
-       
+
         if (empty($this->id)) {
             $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado]);
-        $this->inputsHelper()->dynamic('componenteCurricular', ['required' => !$obrigatorio, 'disabled' => $desabilitado]);
-        $this->inputsHelper()->dynamic('faseEtapa', ['required' => $obrigatorio, 'label' => 'Etapa', 'disabled' => $desabilitado]);
-        $this->inputsHelper()->dynamic(['matricula']);
+            $this->inputsHelper()->dynamic(['matricula']);
+            $this->inputsHelper()->dynamic('componenteCurricular', ['required' => !$obrigatorio, 'disabled' => $desabilitado]);
+            $this->inputsHelper()->dynamic('faseEtapa', ['required' => $obrigatorio, 'label' => 'Etapa', 'disabled' => $desabilitado]);
         } else {
             $this->campoTextoDisabled('aluno', 'Aluno', $this->aluno);
         }
        
-        if (is_numeric($this->id)) {
-            $servidor_id = $this->pessoa_logada;
+        $this->campoQuebra();
 
-            $obj = new clsModulesComponenteMinistradoAee();
-            $id = $obj->lista(
-                null,
-                null,
-                null,
-                null,
-                null,
-                $this->ref_cod_turma,
-                null,
-                null,
-                null,
-                null,
-                $this->fase_etapa,
-                $servidor_id,
-                Portabilis_Date_Utils::brToPgSQL($this->data)
-            )[0]['id'];
-
-            $this->planejamento_aula_aee_id = $id;
-        }
-       
-        $this->campoQuebra();        
-
-        $this->campoMemo('atividades',
+        $this->campoMemo(
+            'atividades',
             'Registro diário de aula',
             $this->atividades,
             100,
@@ -159,7 +141,8 @@ return new class extends clsCadastro {
         $this->campoOculto('ano', explode('/', dataToBrasil(NOW()))[2]);
     }
 
-    public function Novo() {       
+    public function Novo()
+    {
 
         $data_agora = new DateTime('now');
         $data_agora = new \DateTime($data_agora->format('Y-m-d'));
@@ -175,11 +158,11 @@ return new class extends clsCadastro {
             $data['inicio_periodo_lancamentos'] = explode(',', $data['inicio']);
             $data['fim_periodo_lancamentos'] = explode(',', $data['fim']);
 
-            array_walk($data['inicio_periodo_lancamentos'], function(&$data_inicio, $key) {
+            array_walk($data['inicio_periodo_lancamentos'], function (&$data_inicio, $key) {
                 $data_inicio = new \DateTime($data_inicio);
             });
 
-            array_walk($data['fim_periodo_lancamentos'], function(&$data_fim, $key) {
+            array_walk($data['fim_periodo_lancamentos'], function (&$data_fim, $key) {
                 $data_fim = new \DateTime($data_fim);
             });
         }
@@ -189,7 +172,7 @@ return new class extends clsCadastro {
 
         $podeRegistrar = false;
         if (is_array($data['inicio_periodo_lancamentos']) && is_array($data['fim_periodo_lancamentos'])) {
-            for ($i=0; $i < count($data['inicio_periodo_lancamentos']); $i++) {
+            for ($i = 0; $i < count($data['inicio_periodo_lancamentos']); $i++) {
                 $data_inicio = $data['inicio_periodo_lancamentos'][$i];
                 $data_fim = $data['fim_periodo_lancamentos'][$i];
 
@@ -207,24 +190,24 @@ return new class extends clsCadastro {
             $this->mensagem = 'Cadastro não realizado, pois não é mais possível submeter frequência para esta etapa.<br>';
             $this->simpleRedirect('educar_professores_conteudo_ministrado_aee_cad.php');
         }
-       
-            $obj = new clsModulesComponenteMinistradoAee(
-                null,
-                $this->data,
-                $this->hora_inicio,
-                $this->hora_fim,
-                $this->ref_cod_matricula,
-                $this->atividades,
-                $this->observacao,
-                $this->conteudos             
-            );
 
-            $cadastrou = $obj->cadastra();
+        $obj = new clsModulesComponenteMinistradoAee(
+            null,
+            $this->data,
+            $this->hora_inicio,
+            $this->hora_fim,
+            $this->ref_cod_matricula,
+            $this->atividades,
+            $this->observacao,
+            $this->conteudos
+        );
 
-            if (!$cadastrou) {
-                    $this->mensagem = 'Cadastro não realizado.<br>';
-                    $this->simpleRedirect('educar_professores_conteudo_ministrado_aee_cad.php');
-                } else {
+        $cadastrou = $obj->cadastra();
+
+        if (!$cadastrou) {
+            $this->mensagem = 'Cadastro não realizado.<br>';
+            $this->simpleRedirect('educar_professores_conteudo_ministrado_aee_cad.php');
+        } else {
 
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
             $this->simpleRedirect('educar_professores_conteudo_ministrado_aee_lst.php');
@@ -233,7 +216,8 @@ return new class extends clsCadastro {
         return false;
     }
 
-    public function Editar() {
+    public function Editar()
+    {
         // $this->data = $this->data_;
         // $this->ref_cod_turma = $this->ref_cod_turma_;
         // $this->ref_cod_componente_curricular = $this->ref_cod_componente_curricular_;
@@ -279,35 +263,33 @@ return new class extends clsCadastro {
         // )[0];
 
         // if ($componenteMinistrado) {
-            $obj = new clsModulesComponenteMinistradoAee(               
-                $this->id,
-                $this->data,
-                $this->hora_inicio,
-                $this->hora_fim,
-                $this->atividades,
-                $this->observacao,
-                $this->conteudos
-            );
+        $obj = new clsModulesComponenteMinistradoAee(
+            $this->id,
+            $this->data,
+            $this->hora_inicio,
+            $this->hora_fim,
+            $this->atividades,
+            $this->observacao,
+            $this->conteudos
+        );
 
-            $editou = $obj->edita();
+        $editou = $obj->edita();
 
-            //die(var_dump( $obj));
+        //die(var_dump( $obj));
 
-            if ($editou) {
-                $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
-                $this->simpleRedirect('educar_professores_conteudo_ministrado_aee_lst.php');
-            }
-    
-            $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
-    
-            return false;
+        if ($editou) {
+            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            $this->simpleRedirect('educar_professores_conteudo_ministrado_aee_lst.php');
+        }
+
+        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+
+        return false;
         //}
-
-
-        
     }
 
-    public function Excluir () {        
+    public function Excluir()
+    {
 
         $obj = new clsModulesComponenteMinistradoAee();
         $componenteMinistrado = $obj->lista(
@@ -326,28 +308,29 @@ return new class extends clsCadastro {
             $this->id
         )[0];
 
-        if ($componenteMinistrado) { 
+        if ($componenteMinistrado) {
             $obj = new clsModulesComponenteMinistradoAee($componenteMinistrado['id']);
             $excluiu = $obj->excluir();
 
             if ($excluiu) {
                 $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
-            $this->simpleRedirect('educar_professores_conteudo_ministrado_aee_lst.php');
+                $this->simpleRedirect('educar_professores_conteudo_ministrado_aee_lst.php');
             } else {
                 $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
             }
-            
-            return false;            
+
+            return false;
         }
-       
     }
 
-    public function __construct () {
+    public function __construct()
+    {
         parent::__construct();
         $this->loadAssets();
     }
 
-    public function loadAssets () {
+    public function loadAssets()
+    {
         $scripts = [
             '/modules/Cadastro/Assets/Javascripts/FrequenciaAee.js',
             '/modules/DynamicInput/Assets/Javascripts/TodasTurmas.js',
@@ -356,7 +339,8 @@ return new class extends clsCadastro {
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
     }
 
-    protected function adicionarConteudosMultiplaEscolha() {
+    protected function adicionarConteudosMultiplaEscolha()
+    {
         // ESPECIFICAÇÕES
         /*$helperOptions = [
             'objectName' => 'especificacoes',
@@ -397,7 +381,7 @@ return new class extends clsCadastro {
         if (is_numeric($planejamento_aula_aee_id)) {
             $rows = [];
 
-           $obj = new clsModulesPlanejamentoAulaConteudoAee();
+            $obj = new clsModulesPlanejamentoAulaConteudoAee();
             $conteudos = $obj->lista2($planejamento_aula_aee_id);
 
             foreach ($conteudos as $key => $conteudo) {
@@ -411,7 +395,8 @@ return new class extends clsCadastro {
         return [];
     }
 
-    public function Formular () {
+    public function Formular()
+    {
         $this->title = 'Atendimento AEE - Cadastro';
         $this->processoAp = '58';
     }
