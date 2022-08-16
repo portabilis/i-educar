@@ -131,6 +131,7 @@ class LegacySchoolClassBuilder extends LegacyBuilder
      * Filtra por ano
      *
      * @param int $year
+     *
      * @return $this
      */
     public function whereYearEq(int $year): self
@@ -142,6 +143,7 @@ class LegacySchoolClassBuilder extends LegacyBuilder
      * Filtra por turno
      *
      * @param int $shift_id
+     *
      * @return $this
      */
     public function whereShift(int $shift_id): self
@@ -153,6 +155,7 @@ class LegacySchoolClassBuilder extends LegacyBuilder
      * Filtra visibilidade
      *
      * @param bool $visible
+     *
      * @return $this
      */
     public function whereVisible(bool $visible): self
@@ -164,6 +167,7 @@ class LegacySchoolClassBuilder extends LegacyBuilder
      * Filtra por nome do curso
      *
      * @param string $name
+     *
      * @return $this
      */
     public function whereName(string $name): self
