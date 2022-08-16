@@ -232,7 +232,7 @@ class clsModulesPlanejamentoAulaAee extends Model
                     $obj = new clsModulesBNCCEspecificacao($bncc_especificacao_id);
                     $bncc_id = $obj->detalhe()['bncc_id'];
 
-                    $obj = new clsModulesPlanejamentoAulaBNCCAee(null, $id, $bncc_id);
+                    $obj = new clsModulesPlanejamentoAulaBNCC(null, $id, $bncc_id);
                     $planejamento_aula_bncc_aee_id = $obj->detalhe2()['id'];
 
                     $obj = new clsModulesPlanejamentoAulaBNCCEspecificacaoAee(null, $planejamento_aula_bncc_aee_id, $bncc_especificacao_id);
@@ -448,6 +448,16 @@ class clsModulesPlanejamentoAulaAee extends Model
             $whereAnd = ' AND ';
         }
 
+        if (is_numeric($int_ref_cod_componente_curricular)) {
+            $filtros .= "{$whereAnd} k.id = '{$int_ref_cod_componente_curricular}'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_ref_cod_turno)) {
+            $filtros .= "{$whereAnd} t.turma_turno_id = '{$int_ref_cod_turno}'";
+            $whereAnd = ' AND ';
+        }
+
         if (is_numeric($int_ref_cod_matricula)) {
             $filtros .= "{$whereAnd} pa.ref_cod_matricula = '{$int_ref_cod_matricula}'";
             $whereAnd = ' AND ';
@@ -469,8 +479,116 @@ class clsModulesPlanejamentoAulaAee extends Model
             $whereAnd = ' AND ';
         }
 
+        if (is_numeric($int_etapa)) {
+            $filtros .= "{$whereAnd} pa.etapa_sequencial = '{$int_etapa}'";
+            $whereAnd = ' AND ';
+        }
+
         if (is_numeric($int_servidor_id)) {
             $filtros .= "{$whereAnd} pt.servidor_id = '{$int_servidor_id}'";
+            $whereAnd = ' AND ';
+        }
+
+        $db = new clsBanco();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
+
+        $sql .= $filtros . $this->getOrderby() . $this->getLimite();
+
+        //dump($sql);
+
+        $this->_total = $db->CampoUnico(
+            "SELECT
+                COUNT(0)
+            FROM
+                {$this->_from}
+            {$filtros}"
+        );
+
+        $db->Consulta($sql);
+
+        if ($countCampos > 1) {
+            while ($db->ProximoRegistro()) {
+                $tupla = $db->Tupla();
+
+                $tupla['_total'] = $this->_total;
+                $resultado[] = $tupla;
+            }
+        } else {
+            while ($db->ProximoRegistro()) {
+                $tupla = $db->Tupla();
+                $resultado[] = $tupla[$this->_campos_lista];
+            }
+        }
+        if (count($resultado)) {
+            return $resultado;
+        }
+
+        return false;
+    }
+
+     /**
+     * Retorna uma lista filtrados de acordo com os parametros
+     *
+     * @return array
+     */
+    public function lista_conteudos(
+        $int_ano = null,        
+        $int_ref_cod_turma = null,
+        $int_ref_cod_matricula = null,
+        $int_ref_cod_componente_curricular = null,
+        $int_etapa = null
+    ) {
+        $sql = "
+            SELECT DISTINCT
+            pa.id,
+            pa.data_inicial,
+            pa.data_final,
+            pa.ref_cod_matricula,
+            pa.ref_cod_turma,
+            pa.etapa_sequencial AS fase_etapa,
+            t.nm_turma AS turma
+            FROM
+            modules.planejamento_aula_aee as pa
+            JOIN modules.planejamento_aula_componente_curricular_aee as pacc
+                ON (pacc.planejamento_aula_aee_id = pa.id)
+            JOIN pmieducar.turma t
+                ON (t.cod_turma = pa.ref_cod_turma)
+            JOIN pmieducar.matricula m
+                ON (m.cod_matricula = pa.ref_cod_matricula)  
+            JOIN pmieducar.aluno a
+                ON (a.cod_aluno = m.ref_cod_aluno)             
+            JOIN cadastro.pessoa p
+                ON (p.idpes = a.ref_idpes)         
+            LEFT JOIN modules.componente_curricular k
+                ON (k.id = pacc.componente_curricular_id)
+        ";
+
+        $whereAnd = ' AND ';
+        $filtros = " WHERE TRUE ";
+
+        if (is_numeric($int_ano)) {
+            $filtros .= "{$whereAnd} (EXTRACT(YEAR FROM pa.data_inicial) = '{$int_ano}' OR EXTRACT(YEAR FROM pa.data_final) = '{$int_ano}')";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_ref_cod_turma)) {
+            $filtros .= "{$whereAnd} t.cod_turma = '{$int_ref_cod_turma}'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_ref_cod_componente_curricular)) {
+            $filtros .= "{$whereAnd} k.id = '{$int_ref_cod_componente_curricular}'";
+            $whereAnd = ' AND ';
+        }
+        
+        if (is_numeric($int_ref_cod_matricula)) {
+            $filtros .= "{$whereAnd} pa.ref_cod_matricula = '{$int_ref_cod_matricula}'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_etapa)) {
+            $filtros .= "{$whereAnd} pa.etapa_sequencial = '{$int_etapa}'";
             $whereAnd = ' AND ';
         }
 
