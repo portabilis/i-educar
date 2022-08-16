@@ -5,7 +5,7 @@ use iEducar\Legacy\Model;
 class clsModulesComponenteMinistradoAee extends Model
 {
     public $id;
-    public $data_cadastro;
+    public $data;
     public $hora_inicio;
     public $hora_fim;
     public $ref_cod_matricula;
@@ -15,7 +15,7 @@ class clsModulesComponenteMinistradoAee extends Model
 
     public function __construct(
         $id = null,
-        $data_cadastro = null,
+        $data = null,
         $hora_inicio = null,
         $hora_fim = null,
         $ref_cod_matricula = null,
@@ -43,7 +43,7 @@ class clsModulesComponenteMinistradoAee extends Model
 
         $this->_campos_lista = $this->_todos_campos = '
             cm.id,
-            cm.data_cadastro,
+            cm.data,
             cm.ref_cod_matricula,
             cm.hora_inicio,
             cm.hora_fim,
@@ -56,8 +56,8 @@ class clsModulesComponenteMinistradoAee extends Model
             $this->id = $id;
         }
 
-        if (is_string($data_cadastro)) {
-            $this->data_cadastro = $data_cadastro;
+        if (is_string($data)) {
+            $this->data = $data;
         }
 
         if (is_string($hora_inicio)) {
@@ -96,14 +96,14 @@ class clsModulesComponenteMinistradoAee extends Model
         if (is_numeric($this->ref_cod_matricula)) {
             $db = new clsBanco();
 
-            $this->data_cadastro = Portabilis_Date_Utils::brToPgSQL($this->data_cadastro);
+            $this->data = Portabilis_Date_Utils::brToPgSQL($this->data);
 
-            $campos = "ref_cod_matricula";
-            $valores = "'{$this->ref_cod_matricula}'";
+            $campos = "ref_cod_matricula, created_at";
+            $valores = "'{$this->ref_cod_matricula}', (NOW() - INTERVAL '3 HOURS')";
 
-            if (is_string($this->data_cadastro)) {
-                $campos     .=  ", data_cadastro";
-                $valores    .=  ", '{($this->data_cadastro)}'";
+            if (is_string($this->data)) {
+                $campos     .=  ", data";
+                $valores    .=  ", '{($this->data)}'";
             }
             
             if (is_string($this->hora_inicio)) {
@@ -131,8 +131,6 @@ class clsModulesComponenteMinistradoAee extends Model
                     {$this->_tabela} ( $campos )
                     VALUES ( $valores )
             ");
-
-            //die(var_dump($valores));
            
             $id = $db->InsertId("{$this->_tabela}_id_seq");
 
@@ -156,15 +154,15 @@ class clsModulesComponenteMinistradoAee extends Model
     {
         if (is_numeric($this->id) && is_string($this->atividades)) {
 
-            $data_cadastro =  dataToBanco($this->data);
+            $data =  dataToBanco($this->data);
 
             $db = new clsBanco();
             $set = "atividades = '{$db->escapeString($this->atividades)}',
-            data_cadastro = NULLIF('{$db->escapeString($data_cadastro)}'),
+            data = NULLIF('{$db->escapeString($data)}'),
                     hora_inicio = NULLIF('{$db->escapeString($this->hora_inicio)}'),
                     hora_fim = NULLIF('{$db->escapeString($this->hora_fim)}'), 
                     observacao = NULLIF('{$db->escapeString($this->observacao)}',''),
-                    data_atualizacao = (NOW() - INTERVAL '3 HOURS')";
+                    updated_at = (NOW() - INTERVAL '3 HOURS')";
 
             $db->Consulta("
                 UPDATE
@@ -266,7 +264,7 @@ class clsModulesComponenteMinistradoAee extends Model
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
-        $sql .= $filtros . 'ORDER BY cm.data_cadastro DESC'. $this->getLimite();
+        $sql .= $filtros . 'ORDER BY cm.data DESC'. $this->getLimite();
 
         $this->_total = $db->CampoUnico(
             "SELECT

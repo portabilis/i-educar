@@ -59,10 +59,10 @@ class PlanejamentoAulaConteudoAeeController extends ApiCoreController
     {
         $ref_cod_turma = $this->getRequest()->campoTurma;
         $ref_cod_matricula = $this->getRequest()->campoMatricula;
-        $fase_etapa = $this->getRequest()->campoFaseEtapa;
-        $campoComponenteCurricular = $this->getRequest()->campoComponenteCurricular;
+         $fase_etapa = $this->getRequest()->campoFaseEtapa;
+         $campoComponenteCurricular = $this->getRequest()->campoComponenteCurricular;
 
-        if (is_numeric($ref_cod_turma)) {
+        if (is_numeric($ref_cod_matricula)) {
             $obj = new clsModulesPlanejamentoAulaAee();
             $id = $obj->lista(
                 null,
