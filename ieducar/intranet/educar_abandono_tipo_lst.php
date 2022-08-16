@@ -68,24 +68,21 @@ return new class extends clsListagem {
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-        $obj_abandono_tipo = new clsPmieducarAbandonoTipo();
-        $obj_abandono_tipo->setOrderby('nome ASC');
-        $obj_abandono_tipo->setLimite($this->limite, $this->offset);
+        $query = \App\Models\LegacyAbandonmentType::query()->where('ativo', 1)
+            ->limit($this->limite)
+            ->offset($this->offset)
+            ->orderBy('nome', 'ASC');
 
-        $lista = $obj_abandono_tipo->lista(
-            null,
-            null,
-            null,
-            $this->nome,
-            null,
-            null,
-            null,
-            null,
-            1,
-            $this->ref_cod_instituicao
-        );
+        if (is_string($this->nome)) {
+            $query->where('nome', 'ilike', '%' . $this->nome . '%');
+        }
 
-        $total = $obj_abandono_tipo->_total;
+        if (is_numeric($this->ref_cod_instituicao)) {
+            $query->where('ref_cod_instituicao', $this->ref_cod_instituicao);
+        }
+
+        $lista = $query->get()->toArray();
+        $total = $query->count();
 
         // monta a lista
         if (is_array($lista) && count($lista)) {

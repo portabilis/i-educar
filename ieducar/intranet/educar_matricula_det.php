@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyBenefit;
 use App\Process;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use Illuminate\Support\Facades\Auth;
@@ -268,12 +269,11 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['aprovado'] == App_Model_MatriculaSituacao::ABANDONO) {
-            $tipoAbandono = new clsPmieducarAbandonoTipo($registro['ref_cod_abandono_tipo']);
-            $tipoAbandono = $tipoAbandono->detalhe();
+            $tipoAbandono = LegacyBenefit::find($registro['ref_cod_abandono_tipo'])->toArray();
 
             $observacaoAbandono = $registro['observacao'];
 
-            $this->addDetalhe(['Motivo do Abandono', $tipoAbandono['nome']]);
+            $this->addDetalhe(['Motivo do Abandono', $tipoAbandono->nome]);
             $this->addDetalhe(['Observação', $observacaoAbandono]);
         }
 
