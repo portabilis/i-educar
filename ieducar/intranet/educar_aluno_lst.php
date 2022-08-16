@@ -1,5 +1,7 @@
 <?php
 
+use iEducar\Modules\Enrollments\Model\EnrollmentStatusFilter;
+
 return new class extends clsListagem {
     /**
      * Titulo no topo da pagina
@@ -75,12 +77,11 @@ return new class extends clsListagem {
         $this->campoTexto('nome_responsavel', 'Nome do Responsável', $this->nome_responsavel, 50, 255);
         $this->campoRotulo('filtros_matricula', '<b>Filtros de alunos</b>');
 
-        $this->inputsHelper()->integer('ano', ['required' => true, 'value' => now()->year, 'max_length' => 4,'label_hint'=>'Retorna alunos com matrículas no ano selecionado']);
+        $this->inputsHelper()->integer('ano', ['required' => false, 'value'=> $this->ano,'max_length' => 4,'label_hint'=>'Retorna alunos com matrículas no ano selecionado']);
         $this->inputsHelper()->dynamic('instituicao', ['required' => false, 'value' => $configuracoes['ref_cod_instituicao']]);
         $this->inputsHelper()->dynamic('escolaSemFiltroPorUsuario', ['required' => false, 'value' => $this->ref_cod_escola,'label_hint'=>'Retorna alunos com matrículas na escola selecionada']);
         $this->inputsHelper()->dynamic('curso', ['required' => false,'label_hint'=>'Retorna alunos com matrículas no curso selecionado']);
         $this->inputsHelper()->dynamic('serie', ['required' => false,'label_hint'=>'Retorna alunos com matrículas na série selecionada']);
-        $this->inputsHelper()->dynamic(['situacaoMatricula'], ['required' => false,'label_hint'=>'Retorna alunos com matrículas compatíveis com esta situação']);
 
         $obj_permissoes = new clsPermissoes();
         $cod_escola = $obj_permissoes->getEscola($this->pessoa_logada);
@@ -134,8 +135,7 @@ return new class extends clsListagem {
             ref_cod_curso: $this->ref_cod_curso,
             ref_cod_serie: $this->ref_cod_serie,
             int_cpf_aluno: idFederal2int($this->cpf_aluno),
-            int_rg_aluno: idFederal2int($this->rg_aluno),
-            situacao_matricula_id: $this->situacao_matricula_id
+            int_rg_aluno: idFederal2int($this->rg_aluno)
         );
 
         $total = $aluno->_total;
@@ -186,16 +186,7 @@ return new class extends clsListagem {
             $this->nome_acao = 'Novo';
         }
 
-        if ($_GET) {
-            $this->array_botao_script = ['dataExport("formcadastro", "students")'];
-            $this->array_botao = ['Exportar para planilha'];
-            $this->array_botao_id = ['export-btn'];
-        }
-
         $this->largura = '100%';
-
-        Portabilis_View_Helper_Application::loadJavascript($this, ['/intranet/scripts/exporter.js']);
-
         $this->breadcrumb('Alunos', ['/intranet/educar_index.php' => 'Escola']);
     }
 
