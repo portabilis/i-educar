@@ -2,12 +2,22 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacyEvaluationRuleBuilder;
+use App\Traits\LegacyAttribute;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+/**
+ * LegacyEvaluationRule
+ *
+ * @method static LegacyEvaluationRuleBuilder query()
+ */
 class LegacyEvaluationRule extends Model
 {
+    use LegacyAttribute;
+
     public const PARALLEL_REMEDIAL_NONE = 0;
     public const PARALLEL_REMEDIAL_PER_STAGE = 1;
     public const PARALLEL_REMEDIAL_PER_SPECIFIC_STAGE = 2;
@@ -31,6 +41,22 @@ class LegacyEvaluationRule extends Model
      */
     protected $casts = [
         'media_recuperacao_paralela' => 'float',
+    ];
+
+    /**
+     * Builder dos filtros
+     *
+     * @var string
+     */
+    protected $builder = LegacyEvaluationRuleBuilder::class;
+
+    /**
+     * Atributos legados para serem usados nas queries
+     *
+     * @var string[]
+     */
+    public $legacy = [
+        'name' => 'nome'
     ];
 
     /**
@@ -109,5 +135,13 @@ class LegacyEvaluationRule extends Model
     public function isGlobalScore()
     {
         return $this->nota_geral_por_etapa == 1;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNameAttribute()
+    {
+        return $this->nome;
     }
 }

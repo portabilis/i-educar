@@ -7,20 +7,20 @@ SELECT
     a.ref_idpes AS individual_id,
     a.data_cadastro::timestamp(0) AS created_at,
     (CASE
-        WHEN a.ativo = 0 THEN a.data_exclusao
-        ELSE NULL
-    END)::timestamp(0) AS deleted_at,
+         WHEN a.ativo = 0 THEN a.data_exclusao
+         ELSE NULL
+        END)::timestamp(0) AS deleted_at,
     a.caminho_foto AS picture_path,
     a.analfabeto AS illiterate,
     a.nm_pai AS father_name,
     a.nm_mae AS mother_name,
     (CASE a.tipo_responsavel
-        WHEN 'p' THEN 1 -- pai
-        WHEN 'm' THEN 2 -- mãe
-        WHEN 'a' THEN 3 -- pai e mãe
-        WHEN 'r' THEN 4 -- outra pessoa
-        ELSE NULL
-    END) AS guardian_type,
+         WHEN 'p' THEN 1 -- pai
+         WHEN 'm' THEN 2 -- mãe
+         WHEN 'a' THEN 3 -- pai e mãe
+         WHEN 'r' THEN 4 -- outra pessoa
+         ELSE NULL
+        END) AS guardian_type,
     a.aluno_estado_id AS registry_code, -- RA
     a.justificativa_falta_documentacao AS missing_docs_rationale,
     a.url_laudo_medico AS medical_report_path,

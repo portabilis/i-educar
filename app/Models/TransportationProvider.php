@@ -22,10 +22,9 @@ class TransportationProvider implements Enum
     public function from($value): int
     {
         return match ($value) {
-            'nenhum' => self::NONE,
             'municipal' => self::CITY,
             'estadual' => self::STATE,
-            default => throw new \Exception('Opção de transporte do aluno inválida')
+            default => self::NONE,
         };
     }
 
@@ -33,9 +32,8 @@ class TransportationProvider implements Enum
     {
         return match ((int)$value) {
             self::CITY => 'municipal',
-            self::NONE => 'nenhum',
             self::STATE => 'estadual',
-            default => throw new \Exception('Opção de transporte do aluno inválida')
+            default => 'nenhum',
         };
     }
 }

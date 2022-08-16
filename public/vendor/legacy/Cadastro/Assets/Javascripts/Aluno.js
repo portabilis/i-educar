@@ -2350,12 +2350,6 @@ function canShowParentsFields() {
               );
           }
 
-          bValid =
-            bValid &&
-            ($j("#postal_code").val() == ""
-              ? true
-              : validateEndereco());
-
           if (!validaObrigatoriedadeTelefone()) {
             bValid = false;
           }
@@ -2628,14 +2622,17 @@ function canShowParentsFields() {
         $j("#complement").val(person_details.complement);
         $j("#neighborhood").val(person_details.neighborhood);
         $j("#city_id").val(person_details.city_id);
-        $j("#city_city").val(
-          person_details.city_id +
-          " - " +
-          person_details.city_name +
-          " (" +
-          person_details.state_abbreviation +
-          ")"
-        );
+
+        if (person_details.city_id) {
+          $j("#city_city").val(
+            person_details.city_id +
+            " - " +
+            person_details.city_name +
+            " (" +
+            person_details.state_abbreviation +
+            ")"
+          );
+        }
       }
 
       $j("#dialog-form-pessoa-aluno").dialog("open");
@@ -3021,7 +3018,7 @@ function canShowParentsFields() {
   }
 
   function postEnderecoPessoa(pessoa_id) {
-    if (checkCepFields($j("#postal_code").val())) {
+   /* if (checkCepFields($j("#postal_code").val())) {*/
       var data = {
         person_id: pessoa_id,
         postal_code: $j("#postal_code").val(),
@@ -3046,9 +3043,9 @@ function canShowParentsFields() {
       };
 
       postResource(options);
-    } else {
+    /*} else {
       afterChangePessoa(null, null, pessoa_id);
-    }
+    }*/
   }
 
   $j("#beneficios_chzn ul").css("width", "307px");
