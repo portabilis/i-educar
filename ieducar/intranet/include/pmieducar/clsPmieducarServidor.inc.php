@@ -871,7 +871,7 @@ class clsPmieducarServidor extends Model
             $filtros .= "{$whereAnd}sa.ano = '{$int_ano_letivo}'";
             $whereAnd = ' AND ';
         }
-        
+
         if (is_string($str_nome_servidor)) {
             $filtros .= " AND translate(upper(p.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome_servidor}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
             $whereAnd = ' AND ';
@@ -1231,6 +1231,27 @@ class clsPmieducarServidor extends Model
             if (1 == $funcao['professor']) {
                 return true;
                 break;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Verifica se um servidor desempenha a função de coordenador.
+     *
+     * Primeiro, recuperamos todas as funções do servidor e procuramos
+     * por um dos itens que tenha o nome da função 'Coordenador' e o cod_funcao igual a 2.
+     *
+     * @return bool TRUE caso o servidor desempenhe a função de coordenador
+     *
+     */
+    public function isCoordenador()
+    {
+        $funcoes = $this->getServidorFuncoes();
+        foreach ($funcoes as $funcao) {
+            if ($funcao['nm_funcao'] == 'Coordenador' && $funcao['cod_funcao'] == 2) {
+                return true;
             }
         }
 
