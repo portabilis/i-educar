@@ -258,26 +258,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         'recebe_escolarizacao_em_outro_espaco' => ['label' => 'Recebe escolarização em outro espaço (diferente da escola)'],
 
-        'transporte_rota' => [
-            'label' => 'Rota',
-            'help' => '',
-        ],
-
-        'transporte_ponto' => [
-            'label' => 'Ponto de embarque',
-            'help' => '',
-        ],
-
-        'transporte_destino' => [
-            'label' => 'Destino (Caso for diferente da rota)',
-            'help' => '',
-        ],
-
-        'transporte_observacao' => [
-            'label' => 'Observações do transporte',
-            'help' => '',
-        ],
-
         'observacao_aluno' => [
             'label' => 'Observações do aluno',
             'help' => '',
