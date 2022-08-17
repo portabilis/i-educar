@@ -137,7 +137,7 @@ return new class extends clsListagem {
             $this->fase_etapa,
             $eh_professor ? $this->pessoa_logada : null,
             null,
-            empty($this->ref_cod_escola) ? $escolasUsuario : null,
+            empty($this->ref_cod_escola) ? $escolasUsuario : null
         );
 
         $total = $obj_plano->_total;
