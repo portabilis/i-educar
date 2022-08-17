@@ -307,14 +307,42 @@ function formularioValido() {
   submitFormExterno();
 }
 
+let removeLinkTransporte = function ()  {
+  let transporteLink = document.getElementById("transporte-link");
+  if (transporteLink) {
+    transporteLink.remove();
+  }
+
+  let span = document.getElementsByClassName("pessoa-links")[0];
+  if (span) {
+    span.remove();
+  }
+}
+
+let createLinkTransporte = function () {
+
+  removeLinkTransporte();
+
+  let transporteLink = $j("<span>")
+    .html("")
+    .addClass("pessoa-links")
+    .appendTo(veiculoField.parent());
+
+  $j("<a>")
+    .addClass("editar-pessoa")
+    .attr("id", "transporte-link")
+    .html("Informações de transporte")
+    .appendTo(transporteLink);
+}
+
 function camposTransporte() {
   let tipoTransporte = $j("#tipo_transporte");
+  removeLinkTransporte();
 
   $j("#veiculo_transporte_escolar").makeUnrequired();
-  document.getElementById("transporte-link").disabled = true;
   if (tipoTransporte.val() == "nenhum") {
     document.getElementById("veiculo_transporte_escolar").disabled = true;
-    document.getElementById("transporte-link").disabled = true;
+    removeLinkTransporte();
   } else if (
     tipoTransporte.val() == "municipal" ||
     (tipoTransporte.val() == "estadual" && tipoTransporte.val() != "nenhum")
@@ -323,10 +351,10 @@ function camposTransporte() {
       $j("#veiculo_transporte_escolar").makeRequired();
     }
     document.getElementById("veiculo_transporte_escolar").disabled = false;
-    document.getElementById("transporte-link").disabled = false;
+    createLinkTransporte();
   } else {
     document.getElementById("veiculo_transporte_escolar").disabled = true;
-    document.getElementById("transporte-link").disabled = true;
+    removeLinkTransporte();
   }
   $j("#veiculo_transporte_escolar").trigger("chosen:updated");
 }
@@ -1752,17 +1780,7 @@ function canShowParentsFields() {
       }
     };
 
-    let transporteLink = $j("<span>")
-      .html("")
-      .addClass("pessoa-links")
-      .appendTo(veiculoField.parent());
 
-    $j("<a>")
-      .hide()
-      .addClass("editar-pessoa")
-      .attr("id", "transporte-link")
-      .html("Informações de transporte")
-      .appendTo(transporteLink);
 
     $j("#transporte-link").click(function () {
       window.open('/intranet/transporte_aluno_cad.php?student_id='+ $j("#id").val(), '_blank').focus();
