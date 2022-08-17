@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\Ativo;
 
 class LegacyBenefit extends Model
 {
     use Ativo;
+    use HasFactory;
     const CREATED_AT = 'data_cadastro';
     const UPDATED_AT = null;
     /**

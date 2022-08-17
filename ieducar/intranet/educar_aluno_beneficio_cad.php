@@ -30,7 +30,7 @@ return new class extends clsCadastro {
 
         if (is_numeric($this->cod_aluno_beneficio)) {
             $registro = LegacyBenefit::find($this->cod_aluno_beneficio)->toArray();
-            if ($registro) {
+            if (!empty($registro)) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
                 }

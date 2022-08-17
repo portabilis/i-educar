@@ -414,7 +414,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe(['Raça', $det_raca['nm_raca']]);
         }
 
-        if ($obj_beneficios_lista) {
+        if (!empty($obj_beneficios_lista)) {
             $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#ccdce6" align="center"><td>Benefícios</td></tr>';
             $cor = '#D1DADF';
 

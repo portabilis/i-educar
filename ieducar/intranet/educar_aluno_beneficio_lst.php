@@ -68,8 +68,10 @@ return new class extends clsListagem {
             $query->where('nm_beneficio', 'ilike', '%' . $this->nm_beneficio . '%');
         }
 
-        $lista = $query->get()->toArray();
-        $total = $query->count();
+        $result = $query->get();
+
+        $lista = $result->toArray();
+        $total = $result->count();
 
         // monta a lista
         if (is_array($lista) && count($lista)) {
