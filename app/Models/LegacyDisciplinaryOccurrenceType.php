@@ -37,6 +37,4 @@ class LegacyDisciplinaryOccurrenceType extends Model
         'ref_cod_instituicao',
         'ativo'
     ];
-
-
 }

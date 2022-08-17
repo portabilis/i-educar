@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\LegacyDisciplinaryOccurrenceType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -9,6 +10,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class LegacyDisciplinaryOccurrenceTypeFactory extends Factory
 {
+    protected $model = LegacyDisciplinaryOccurrenceType::class;
+
     /**
      * Define the model's default state.
      *

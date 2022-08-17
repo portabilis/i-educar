@@ -740,7 +740,7 @@ class AlunoController extends ApiCoreController
         }
 
         if (!isset($this->_tiposOcorrenciasDisciplinares[$id])) {
-            $ocorrencia = LegacyDisciplinaryOccurrenceType::find($id)->toArray();
+            $ocorrencia = LegacyDisciplinaryOccurrenceType::find($id)?->toArray();
 
             $this->_tiposOcorrenciasDisciplinares[$id] = $this->toUtf8(
                 $ocorrencia['nm_tipo'],
