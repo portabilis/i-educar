@@ -861,7 +861,7 @@ return new class extends clsDetalhe {
             ->orderBy('nome', 'ASC')
             ->get()->toArray();
 
-        if ($reg) {
+        if (!empty($reg)) {
             $tabela_projetos = '
             <table>
               <tr align="center">
