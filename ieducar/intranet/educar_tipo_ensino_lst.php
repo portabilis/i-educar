@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyEducationType;
+
 return new class extends clsListagem {
     public $pessoa_logada;
     public $titulo;
@@ -51,22 +53,24 @@ return new class extends clsListagem {
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-        $obj_tipo_ensino = new clsPmieducarTipoEnsino();
-        $obj_tipo_ensino->setOrderby('nm_tipo ASC');
-        $obj_tipo_ensino->setLimite($this->limite, $this->offset);
+        $query = LegacyEducationType::query()
+            ->where('ativo', 1)
+            ->limit($this->limite)
+            ->offset($this->offset)
+            ->orderBy('nm_tipo', 'ASC');
 
-        $lista = $obj_tipo_ensino->lista(
-            $this->cod_tipo_ensino,
-            null,
-            null,
-            $this->nm_tipo,
-            null,
-            null,
-            1,
-            $this->ref_cod_instituicao
-        );
+        if (is_string($this->nm_tipo)) {
+            $query->where('nm_tipo', 'ilike', '%' . $this->nm_tipo . '%');
+        }
 
-        $total = $obj_tipo_ensino->_total;
+        if (is_numeric($this->ref_cod_instituicao)) {
+            $query->where('ref_cod_instituicao', $this->ref_cod_instituicao);
+        }
+
+        $result = $query->get();
+
+        $lista = $result->toArray();
+        $total = $result->count();
 
         // monta a lista
         if (is_array($lista) && count($lista)) {
