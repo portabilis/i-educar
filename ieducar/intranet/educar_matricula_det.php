@@ -273,7 +273,7 @@ return new class extends clsDetalhe {
 
             $observacaoAbandono = $registro['observacao'];
 
-            $this->addDetalhe(['Motivo do Abandono', $tipoAbandono['nome']]);
+            $this->addDetalhe(['Motivo do Abandono', $tipoAbandono ? $tipoAbandono['nome'] : '']);
             $this->addDetalhe(['Observação', $observacaoAbandono]);
         }
 
