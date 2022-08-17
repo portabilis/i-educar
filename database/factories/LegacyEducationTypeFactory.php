@@ -22,9 +22,8 @@ class LegacyEducationTypeFactory extends Factory
     public function definition(): array
     {
         return [
-            'ref_usuario_cad' => 1,
-            'nm_tipo' => $this->faker->word,
-            'data_cadastro' => now(),
+            'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
+            'nm_tipo' => $this->faker->firstName(),
             'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
         ];
     }
