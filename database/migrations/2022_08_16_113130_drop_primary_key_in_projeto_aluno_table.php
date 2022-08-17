@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use App\Support\Database\DropPrimaryKey;
+use Illuminate\Database\Schema\Blueprint;
 
 return new class extends Migration
 {
@@ -24,11 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        DB::unprepared(
-            '
-                ALTER TABLE ONLY pmieducar.projeto_aluno
-                    ADD CONSTRAINT pmieducar_projeto_aluno_pk PRIMARY KEY (ref_cod_projeto, ref_cod_aluno);
-            '
-        );
+        Schema::table('pmieducar.projeto_aluno', function (Blueprint $table) {
+            $table->primary(['ref_cod_projeto', 'ref_cod_aluno']);
+        });
     }
 };
