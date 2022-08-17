@@ -762,28 +762,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         ];
         $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-        $obj_rota = new clsModulesRotaTransporteEscolar();
-        $obj_rota->setOrderBy(' descricao asc ');
-        $lista_rota = $obj_rota->lista();
-        $rota_resources = ['' => 'Selecione uma rota'];
-        foreach ($lista_rota as $reg) {
-            $rota_resources["{$reg['cod_rota_transporte_escolar']}"] = "{$reg['descricao']}";
-        }
-
-        $options = ['label' => $this->_getLabel('transporte_rota'), 'required' => false, 'resources' => $rota_resources];
-        $this->inputsHelper()->select('transporte_rota', $options);
-
-
-        $options = ['label' => $this->_getLabel('transporte_ponto'), 'required' => false, 'resources' => ['' => 'Selecione uma rota acima']];
-        $this->inputsHelper()->select('transporte_ponto', $options);
-
-
-        $options = ['label' => $this->_getLabel('transporte_destino'), 'required' => false];
-        $this->inputsHelper()->simpleSearchPessoaj('transporte_destino', $options);
-
-        $options = ['label' => $this->_getLabel('transporte_observacao'), 'required' => false, 'size' => 50, 'max_length' => 255];
-        $this->inputsHelper()->textArea('transporte_observacao', $options);
-
         $this->inputsHelper()->religiao(['required' => false, 'label' => 'Religião']);
 
         $helperOptions = ['objectName' => 'beneficios'];
