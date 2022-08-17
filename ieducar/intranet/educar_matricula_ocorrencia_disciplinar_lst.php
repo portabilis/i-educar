@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyDisciplinaryOccurrenceType;
+
 return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -75,15 +77,11 @@ return new class extends clsListagem {
 
         $this->campoRotulo('nm_pessoa', 'Nome do Aluno', $det_aluno['nome_aluno']);
 
-        $opcoes = [ '' => 'Selecione' ];
-
-        $objTemp = new clsPmieducarTipoOcorrenciaDisciplinar();
-        $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, null, 1, $det_escola['ref_cod_instituicao']);
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $opcoes["{$registro['cod_tipo_ocorrencia_disciplinar']}"] = "{$registro['nm_tipo']}";
-            }
-        }
+        $opcoes = LegacyDisciplinaryOccurrenceType::query()
+            ->where('ativo', 1)
+            ->orderBy('nm_tipo', 'ASC')
+            ->pluck('nm_tipo', 'cod_tipo_ocorrencia_disciplinar')
+            ->prepend('Selecione', '');
 
         $this->campoLista(
             'ref_cod_tipo_ocorrencia_disciplinar',
@@ -133,8 +131,7 @@ return new class extends clsListagem {
                 $det_serie = $obj_serie->detalhe();
                 $registro['ref_ref_cod_serie'] = $det_serie['nm_serie'];
 
-                $obj_ref_cod_tipo_ocorrencia_disciplinar = new clsPmieducarTipoOcorrenciaDisciplinar($registro['ref_cod_tipo_ocorrencia_disciplinar']);
-                $det_ref_cod_tipo_ocorrencia_disciplinar = $obj_ref_cod_tipo_ocorrencia_disciplinar->detalhe();
+                $det_ref_cod_tipo_ocorrencia_disciplinar = LegacyDisciplinaryOccurrenceType::find($registro['ref_cod_tipo_ocorrencia_disciplinar'])->toArray();
                 $registro['nm_tipo'] = $det_ref_cod_tipo_ocorrencia_disciplinar['nm_tipo'];
 
                 $obj_mat_turma = new clsPmieducarMatriculaTurma();

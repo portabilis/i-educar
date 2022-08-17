@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyDisciplinaryOccurrenceType;
+
 return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -120,15 +122,11 @@ return new class extends clsCadastro {
         $this->campoData('data_cadastro', 'Data Atual', $this->data_cadastro, true);
         $this->campoHora('hora_cadastro', 'Horas', $this->hora_cadastro, true);
 
-        $opcoes = ['' => 'Selecione'];
-
-        $objTemp = new clsPmieducarTipoOcorrenciaDisciplinar();
-        $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, null, 1, $this->ref_cod_instituicao);
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $opcoes["{$registro['cod_tipo_ocorrencia_disciplinar']}"] = "{$registro['nm_tipo']}";
-            }
-        }
+        $opcoes = LegacyDisciplinaryOccurrenceType::query()
+            ->where('ativo', 1)
+            ->orderBy('nm_tipo', 'ASC')
+            ->pluck('nm_tipo', 'cod_tipo_ocorrencia_disciplinar')
+            ->prepend('Selecione', '');
 
         $this->campoLista('ref_cod_tipo_ocorrencia_disciplinar', 'Tipo Ocorrência Disciplinar', $opcoes, $this->ref_cod_tipo_ocorrencia_disciplinar);
 
@@ -256,9 +254,7 @@ return new class extends clsCadastro {
 
         $cod_escola = $det_tmp['ref_ref_cod_escola'];
 
-        $obj_tmp = new clsPmieducarTipoOcorrenciaDisciplinar($this->ref_cod_tipo_ocorrencia_disciplinar);
-        $det_tmp = $obj_tmp->detalhe();
-
+        $obj_tmp = LegacyDisciplinaryOccurrenceType::find($this->ref_cod_tipo_ocorrencia_disciplinar)->toArray();
         $tipo_ocorrencia = $det_tmp['nm_tipo'];
 
         $params = [
