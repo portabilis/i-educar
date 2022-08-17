@@ -71,6 +71,26 @@ function fixAutoComplete() {
   });
 }
 
+function fixupFieldsChosen() {
+  $j(function () {
+    if (navigator.userAgent.toLowerCase().indexOf("firefox") > -1) {
+      $j('span.form>.chosen-container').each(function (i, el) {
+        const container = $j(el);
+        const span = container.closest('span.form');
+        if (span.find('.chosen-container.chosen-container-single').length) {
+          container.css("position", "absolute");
+          span.css({"display": "inline-block", "min-height": "40px"});
+        } else if (span.find('.chosen-container.chosen-container-multi').length) {
+          const results = span.find('.chosen-container.chosen-container-multi .chosen-results');
+          results.on('click', 'li', function () {
+            $j('body').click();
+          })
+        }
+      });
+    }
+  })
+}
+
 function fixupFieldsWidth(additionalFields, force){
   if (! $j(document).data('fixed-fields-width') || force) {
     var maxWidth = 0;
