@@ -68,7 +68,8 @@ return new class extends clsListagem {
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-        $query = \App\Models\LegacyAbandonmentType::query()->where('ativo', 1)
+        $query = \App\Models\LegacyAbandonmentType::query()
+            ->where('ativo', 1)
             ->limit($this->limite)
             ->offset($this->offset)
             ->orderBy('nome', 'ASC');
@@ -81,8 +82,10 @@ return new class extends clsListagem {
             $query->where('ref_cod_instituicao', $this->ref_cod_instituicao);
         }
 
-        $lista = $query->get()->toArray();
-        $total = $query->count();
+        $result = $query->get();
+
+        $lista = $result->toArray();
+        $total = $result->count();
 
         // monta a lista
         if (is_array($lista) && count($lista)) {
