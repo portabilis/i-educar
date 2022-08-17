@@ -202,6 +202,10 @@ class clsModulesPlanejamentoAulaAee extends Model
             $valores .= "{$gruda}(NOW() - INTERVAL '3 HOURS')";
             $gruda = ', ';
 
+            $campos .= "{$gruda}created_at";
+            $valores .= "{$gruda}(NOW() - INTERVAL '3 HOURS')";
+            $gruda = ', ';
+
             $db->Consulta("
                 INSERT INTO
                     {$this->_tabela} ( $campos )
@@ -232,7 +236,7 @@ class clsModulesPlanejamentoAulaAee extends Model
                     $obj = new clsModulesBNCCEspecificacao($bncc_especificacao_id);
                     $bncc_id = $obj->detalhe()['bncc_id'];
 
-                    $obj = new clsModulesPlanejamentoAulaBNCC(null, $id, $bncc_id);
+                    $obj = new clsModulesPlanejamentoAulaBNCCAee(null, $id, $bncc_id);
                     $planejamento_aula_bncc_aee_id = $obj->detalhe2()['id'];
 
                     $obj = new clsModulesPlanejamentoAulaBNCCEspecificacaoAee(null, $planejamento_aula_bncc_aee_id, $bncc_especificacao_id);
