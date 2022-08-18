@@ -60,7 +60,7 @@ return new class extends clsCadastro {
         // text
         $this->campoTexto('nm_tipo', 'Tipo Ocorrência Disciplinar', $this->nm_tipo, 30, 255, true);
         $this->campoMemo('descricao', 'Descrição', $this->descricao, 60, 5, false);
-        $this->campoNumero('max_ocorrencias', 'Máximo Ocorrências', $this->max_ocorrencias, 4, 4, true);
+        $this->campoNumero('max_ocorrencias', 'Máximo Ocorrências', $this->max_ocorrencias, 4, 4, false);
     }
 
     public function Novo()
@@ -69,7 +69,7 @@ return new class extends clsCadastro {
         $ocorrencia->ref_usuario_cad = $this->pessoa_logada;
         $ocorrencia->nm_tipo = $this->nm_tipo;
         $ocorrencia->descricao = $this->descricao;
-        $ocorrencia->max_ocorrencias = $this->max_ocorrencias;
+        $ocorrencia->max_ocorrencias = is_numeric($this->max_ocorrencias) ? $this->max_ocorrencias : null;
         $ocorrencia->ref_cod_instituicao = $this->ref_cod_instituicao;
 
         if ($ocorrencia->save()) {
@@ -87,7 +87,7 @@ return new class extends clsCadastro {
         $ocorrencia->ref_usuario_exc = $this->pessoa_logada;
         $ocorrencia->nm_tipo = $this->nm_tipo;
         $ocorrencia->descricao = $this->descricao;
-        $ocorrencia->max_ocorrencias = $this->max_ocorrencias;
+        $ocorrencia->max_ocorrencias = is_numeric($this->max_ocorrencias) ? $this->max_ocorrencias : null;
         $ocorrencia->ref_cod_instituicao = $this->ref_cod_instituicao;
         $ocorrencia->ativo = 1;
 
