@@ -51,22 +51,20 @@ return new class extends clsListagem {
 
         $query = LegacyDisciplinaryOccurrenceType::query()
             ->where('ativo', 1)
-            ->limit($this->limite)
-            ->offset($this->offset)
             ->orderBy('nm_tipo', 'ASC');
 
         if (is_string($this->nm_tipo)) {
-            $query->where('nm_tipo', 'ilike', '%' . $this->nome . '%');
+            $query->where('nm_tipo', 'ilike', '%' . $this->nm_tipo . '%');
         }
 
         if (is_numeric($this->ref_cod_instituicao)) {
             $query->where('ref_cod_instituicao', $this->ref_cod_instituicao);
         }
 
-        $result = $query->get();
+        $result = $query->paginate(20,'*', 'pagina_'.$this->nome);
 
-        $lista = $result->toArray();
-        $total = $result->count();
+        $lista = $result->items();
+        $total = $result->total();
 
         // monta a lista
         if (is_array($lista) && count($lista)) {
