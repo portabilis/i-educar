@@ -59,19 +59,18 @@ return new class extends clsListagem {
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-        $query = LegacyBenefit::query()->where('ativo', 1)
-            ->limit($this->limite)
-            ->offset($this->offset)
+        $query = LegacyBenefit::query()
+            ->where('ativo', 1)
             ->orderBy('nm_beneficio', 'ASC');
 
         if (is_string($this->nm_beneficio)) {
             $query->where('nm_beneficio', 'ilike', '%' . $this->nm_beneficio . '%');
         }
 
-        $result = $query->get();
+        $result = $query->paginate($this->limite,'*', 'pagina_'.$this->nome);
 
-        $lista = $result->toArray();
-        $total = $result->count();
+        $lista = $result->items();
+        $total = $result->total();
 
         // monta a lista
         if (is_array($lista) && count($lista)) {
