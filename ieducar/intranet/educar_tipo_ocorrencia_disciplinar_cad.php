@@ -60,7 +60,7 @@ return new class extends clsCadastro {
         // text
         $this->campoTexto('nm_tipo', 'Tipo Ocorrência Disciplinar', $this->nm_tipo, 30, 255, true);
         $this->campoMemo('descricao', 'Descrição', $this->descricao, 60, 5, false);
-        $this->campoNumero('max_ocorrencias', 'Máximo Ocorrências', $this->max_ocorrencias, 4, 4, false);
+        $this->campoNumero('max_ocorrencias', 'Máximo Ocorrências', $this->max_ocorrencias, 4, 4, true);
     }
 
     public function Novo()
