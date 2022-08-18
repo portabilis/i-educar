@@ -25,6 +25,7 @@ class LegacyEducationTypeFactory extends Factory
             'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
             'nm_tipo' => $this->faker->firstName(),
             'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
+            'atividade_complementar' => $this->faker->boolean(),
         ];
     }
 }
