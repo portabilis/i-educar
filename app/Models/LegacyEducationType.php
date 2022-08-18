@@ -32,6 +32,7 @@ class LegacyEducationType extends Model
         'nm_tipo',
         'ativo',
         'ref_cod_instituicao',
-        'atividade_complementar'
+        'atividade_complementar',
+        'data_exclusao'
     ];
 }
