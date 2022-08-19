@@ -2,13 +2,18 @@
 
 namespace App\Models;
 
+use App\Models\Builders\EmployeeBuilder;
+use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Employee extends Model
 {
+    use LegacyAttribute;
+
     /**
      * @var string
      */
@@ -18,6 +23,13 @@ class Employee extends Model
      * @var string
      */
     protected $primaryKey = 'cod_servidor';
+
+    /**
+     * Builder dos filtros
+     *
+     * @var string
+     */
+    protected $builder = EmployeeBuilder::class;
 
     /**
      * @var bool
@@ -45,6 +57,46 @@ class Employee extends Model
     public function getIdAttribute()
     {
         return $this->cod_servidor;
+    }
+
+    /**
+     * Servidor alocação
+     *
+     * @return HasMany
+     */
+    public function employeeAllocations(): HasMany
+    {
+        return $this->hasMany(EmployeeAllocation::class, 'ref_cod_servidor', 'cod_servidor');
+    }
+
+    /**
+     * Servidor função
+     *
+     * @return HasMany
+     */
+    public function employeeRoles(): HasMany
+    {
+        return $this->hasMany(LegacyEmployeeRole::class, 'ref_cod_servidor');
+    }
+
+    /**
+     * Instituição
+     *
+     * @return BelongsTo
+     */
+    public function institution(): BelongsTo
+    {
+        return $this->belongsTo(LegacyInstitution::class, 'ref_cod_instituicao');
+    }
+
+    /**
+     * Pessoa física
+     *
+     * @return BelongsTo
+     */
+    public function individual(): BelongsTo
+    {
+        return $this->belongsTo(LegacyIndividual::class, 'cod_servidor');
     }
 
     /**
