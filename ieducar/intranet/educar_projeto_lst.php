@@ -55,18 +55,16 @@ return new class extends clsListagem {
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
         $query = LegacyProject::query()
-            ->limit($this->limite)
-            ->offset($this->offset)
             ->orderBy('nome', 'ASC');
 
         if (is_string($this->nome)) {
             $query->where('nome', 'ilike', '%' . $this->nome . '%');
         }
 
-        $result = $query->get();
-        
-        $lista = $result->toArray();
-        $total = $result->count();
+        $result = $query->paginate($this->limite,'*', 'pagina_'.$this->nome);
+
+        $lista = $result->items();
+        $total = $result->total();
 
         // monta a lista
         if (is_array($lista) && count($lista)) {
