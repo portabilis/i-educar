@@ -2,6 +2,7 @@
   $(document).ready(function(){
     var bncc_table = document.getElementById("objetivos_aprendizagem");
     var btn_add    = document.getElementById("btn_add_tab_add_1");
+    var copy = $j('#copy').val();
 
     var anoField   = getElementFor('ano');
     var turmaField = getElementFor('turma');
@@ -12,7 +13,8 @@
     submitButton.removeAttr('onclick');
 
     submitButton.click(function () {
-      if (planejamento_aula_id.value == '' || isNaN(planejamento_aula_id.value)) {
+      if ((planejamento_aula_id.value == '' || isNaN(planejamento_aula_id.value)) ||
+          (!isNaN(planejamento_aula_id.value)) && copy) {
         enviarFormulario();
       }
     });

@@ -247,10 +247,11 @@ return new class extends clsCadastro {
             'label' => 'Objetivos de aprendizagem/habilidades (BNCC)',
             'required' => true,
             'options' => [
-                'values' => $this->bncc,
+                'values' => null,
                 'all_values' => $todos_bncc
             ]
         ];
+
         $this->inputsHelper()->multipleSearchCustom('bncc', $options);
 
         // BNCCs Especificações
@@ -260,7 +261,7 @@ return new class extends clsCadastro {
             'label' => 'Especificações',
             'required' =>true,
             'options' => [
-                'values' => $this->bncc_especificacoes,
+                'values' => null,
                 'all_values' => $todos_bncc_especificacoes
             ]
         ];
