@@ -21,7 +21,7 @@ class LegacyAbandonmentTypeFactory extends Factory
     {
         return [
             'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
-            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->unique()->make(),
+            'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
             'nome' => $this->faker->firstName(),
         ];
     }
