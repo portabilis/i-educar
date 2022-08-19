@@ -132,6 +132,7 @@ class LegacyBuilder extends Builder
             $method = 'where' . $filter;
             if (is_array($parameter)) {
                 $this->{$method}(...$parameter);
+
                 continue;
             }
 

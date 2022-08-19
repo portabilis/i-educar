@@ -177,6 +177,7 @@ class LegacyIndividual extends Model
      * Cpf formatado
      *
      * @param $value
+     *
      * @return string|void
      */
     public function getCpfAttribute($value)
