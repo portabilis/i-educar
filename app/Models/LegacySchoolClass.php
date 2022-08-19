@@ -191,6 +191,11 @@ class LegacySchoolClass extends Model
         return $this->ref_ref_cod_serie;
     }
 
+    public function getVisibleAttribute(): bool
+    {
+        return $this->visivel;
+    }
+
     /**
      * @return int
      */
