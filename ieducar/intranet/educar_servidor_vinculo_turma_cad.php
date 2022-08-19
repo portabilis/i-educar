@@ -102,6 +102,7 @@ return new class extends clsCadastro {
             $objProfessorTurma = new clsModulesProfessorTurma($this->id);
             $detProfessorTurma = $objProfessorTurma->detalhe();
             $ano = $detProfessorTurma['ano'];
+            $this->ano = $ano; //o inputsHelper necessita do valor para poder filtrar as turmas deste ano
         }
 
         if (isset($_GET['copia'])) {
