@@ -5,7 +5,7 @@ namespace Tests\Unit\Eloquent;
 use App\Models\LegacyStudentBenefit;
 use Tests\EloquentTestCase;
 
-class LegacyBenefitTest extends EloquentTestCase
+class LegacyStudentBenefitTest extends EloquentTestCase
 {
     /**
      * @return string
