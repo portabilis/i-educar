@@ -21,7 +21,7 @@ class LegacyProjectFactory extends Factory
     {
         return [
             'nome' => $this->faker->firstName(),
-            'observacao' => $this->faker->paragraph(),
+            'observacao' => $this->faker->text(200)
         ];
     }
 }
