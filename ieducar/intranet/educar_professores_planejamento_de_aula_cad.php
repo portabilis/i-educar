@@ -92,17 +92,26 @@ return new class extends clsCadastro {
             && $this->data_final != ''
             && is_numeric($this->ref_cod_turma)
             && is_numeric($this->fase_etapa)
+            && empty($this->copy)
         ) {
             $desabilitado = true;
         }
 
         $obrigatorio = true;
+        $serie = '';
+
+        if (!empty($this->copy) && is_numeric($this->ref_cod_turma)) {
+            $obj = new clsPmieducarTurma($this->ref_cod_turma);
+            $turma = $obj->detalhe();
+            $serie = $turma['ref_ref_cod_serie'];
+        }
 
         $clsInstituicao = new clsPmieducarInstituicao();
         $instituicao = $clsInstituicao->primeiraAtiva();
         $obrigatorioConteudo = $instituicao['permitir_planeja_conteudos'];
 
         $this->campoOculto('id', $this->id);
+        $this->campoOculto('serie_id', $serie);
         $this->campoOculto('planejamento_aula_id', $this->id);
         $this->campoOculto('obrigatorio_conteudo', $obrigatorioConteudo);
         $this->inputsHelper()->dynamic('dataInicial', ['required' => $obrigatorio]);    // Disabled não funciona; ação colocada no javascript.
