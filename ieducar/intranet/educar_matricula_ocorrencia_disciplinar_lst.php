@@ -113,7 +113,7 @@ return new class extends clsListagem {
             $query->where('ref_cod_tipo_ocorrencia_disciplinar', $this->ref_cod_tipo_ocorrencia_disciplinar);
         }
 
-        $result = $query->paginate($this->limite,'*', 'pagina_'.$this->nome);
+        $result = $query->paginate($this->limite, pageName: 'pagina_'.$this->nome);
 
         $lista = $result->items();
         $total = $result->total();
