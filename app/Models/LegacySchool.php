@@ -186,6 +186,14 @@ class LegacySchool extends Model
     /**
      * @return HasMany
      */
+    public function schoolUsers()
+    {
+        return $this->hasMany(LegacyUserSchool::class,'ref_cod_escola','cod_escola');
+    }
+
+    /**
+     * @return HasMany
+     */
     public function schoolManagers()
     {
         return $this->hasMany(SchoolManager::class, 'school_id');
