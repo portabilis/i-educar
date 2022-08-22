@@ -3,13 +3,11 @@
 namespace App\Models;
 
 use App\Traits\Ativo;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class LegacyAbandonmentType extends Model
 {
     use Ativo;
-    use HasFactory;
 
     const CREATED_AT = 'data_cadastro';
     const UPDATED_AT = null;
