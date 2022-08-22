@@ -44,7 +44,13 @@ class clsModulesFichaAee extends Model
             JOIN cadastro.juridica j
                 ON (j.idpes = e.ref_idpes)
             JOIN pmieducar.curso c
-                ON (c.cod_curso = t.ref_cod_curso)                       
+                ON (c.cod_curso = t.ref_cod_curso) 
+            JOIN pmieducar.serie s
+                ON (s.cod_serie = t.ref_ref_cod_serie)
+            JOIN pmieducar.turma_turno u
+                ON (u.id = t.turma_turno_id)
+            LEFT JOIN pmieducar.turma_modulo q
+                ON (q.ref_cod_turma = t.cod_turma AND q.sequencial = 1)                              
         ";
 
         $this->_campos_lista = $this->_todos_campos = '
@@ -58,6 +64,7 @@ class clsModulesFichaAee extends Model
             j.fantasia AS escola,
             c.nm_curso AS curso,
             t.nm_turma AS turma,
+            s.nm_serie AS serie,
             pe.nome AS professor
         ';
 
@@ -69,6 +76,16 @@ class clsModulesFichaAee extends Model
         if (is_string($data)) {
             $this->data = $data;
         }
+
+        // if (is_numeric($int_ref_cod_curso)) {
+        //     $filtros .= "{$whereAnd} c.cod_curso = '{$int_ref_cod_curso}'";
+        //     $whereAnd = ' AND ';
+        // }
+
+        // if (is_numeric($int_ref_cod_serie)) {
+        //     $filtros .= "{$whereAnd} s.cod_serie = '{$int_ref_cod_serie}'";
+        //     $whereAnd = ' AND ';
+        // }
 
         if (is_numeric($ref_cod_turma)) {
             $this->ref_cod_turma = $ref_cod_turma;
