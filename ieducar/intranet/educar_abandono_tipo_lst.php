@@ -79,7 +79,7 @@ return new class extends clsListagem {
             $query->where('ref_cod_instituicao', $this->ref_cod_instituicao);
         }
 
-        $result = $query->paginate($this->limite,'*', 'pagina_'.$this->nome);
+        $result = $query->paginate($this->limite,'*', 'pagina_');
 
         $lista = $result->items();
         $total = $result->total();
@@ -101,7 +101,7 @@ return new class extends clsListagem {
                 $this->addLinhas($lista_busca);
             }
         }
-        $this->addPaginador2('educar_abandono_tipo_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $this->addPaginador2('educar_abandono_tipo_lst.php', $total, $_GET, null, $this->limite);
 
         if ($obj_permissoes->permissao_cadastra(950, $this->pessoa_logada, 7)) {
             $this->acao = 'go("educar_abandono_tipo_cad.php")';
