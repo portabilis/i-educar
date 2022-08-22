@@ -18,6 +18,7 @@ return new class extends Migration
     {
         Schema::table('pmieducar.matricula_ocorrencia_disciplinar', function (Blueprint $table) {
             $table->primary('cod_ocorrencia_disciplinar');
+            $table->unique(['ref_cod_matricula', 'ref_cod_tipo_ocorrencia_disciplinar', 'sequencial']);
         });
     }
 
@@ -29,6 +30,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('pmieducar.matricula_ocorrencia_disciplinar', function (Blueprint $table) {
+            $table->dropUnique(['ref_cod_matricula', 'ref_cod_tipo_ocorrencia_disciplinar', 'sequencial']);
             $this->dropPrimaryKeysFromTable('matricula_ocorrencia_disciplinar');
         });
     }
