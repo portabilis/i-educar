@@ -2,7 +2,8 @@
 
 use iEducar\Legacy\Model;
 
-class clsModulesComponenteMinistradoConteudoAee extends Model {
+class clsModulesComponenteMinistradoConteudoAee extends Model
+{
     public $id;
     public $conteudo_ministrado_aee_id;
     public $planejamento_aula_conteudo_aee_id;
@@ -41,7 +42,8 @@ class clsModulesComponenteMinistradoConteudoAee extends Model {
      *
      * @return bool
      */
-    public function cadastra() {
+    public function cadastra()
+    {
         if (is_numeric($this->conteudo_ministrado_aee_id) && is_numeric($this->planejamento_aula_conteudo_aee_id)) {
             $db = new clsBanco();
 
@@ -62,7 +64,8 @@ class clsModulesComponenteMinistradoConteudoAee extends Model {
      *
      * @return array
      */
-    public function lista($conteudo_ministrado_aee_id) {
+    public function lista($conteudo_ministrado_aee_id)
+    {
         if (is_numeric($conteudo_ministrado_aee_id)) {
             $db = new clsBanco();
             $db->Consulta("
@@ -74,7 +77,7 @@ class clsModulesComponenteMinistradoConteudoAee extends Model {
                     cmc.conteudo_ministrado_aee_id = '{$conteudo_ministrado_aee_id}'
             ");
 
-            while($db->ProximoRegistro()) {
+            while ($db->ProximoRegistro()) {
                 $cmc = $db->Tupla();
 
                 $obj = new clsModulesPlanejamentoAulaConteudoAee($cmc['planejamento_aula_conteudo_aee_id']);
@@ -94,21 +97,29 @@ class clsModulesComponenteMinistradoConteudoAee extends Model {
      *
      * @return array
      */
-    public function lista_conteudos($conteudo_ministrado_aee_id) {
+    public function lista_conteudos($conteudo_ministrado_aee_id)
+    {
         if (is_numeric($conteudo_ministrado_aee_id)) {
             $db = new clsBanco();
 
             $db->Consulta("
-                SELECT
-                    *
-                FROM
-                modules.conteudo_ministrado_conteudo_aee as cmc
-                WHERE
-                cmc.conteudo_ministrado_aee_id = '{$conteudo_ministrado_aee_id}'
+            SELECT
+            pac.id,
+            pac.conteudo
+        FROM
+            modules.conteudo_ministrado_aee as cm
+        JOIN modules.conteudo_ministrado_conteudo_aee as cmc
+            ON (cmc.conteudo_ministrado_aee_id = cm.id)
+        JOIN modules.planejamento_aula_conteudo_aee as pac
+            ON (pac.id = cmc.planejamento_aula_conteudo_aee_id)
+        JOIN modules.planejamento_aula_aee as pa
+            ON (pa.id = pac.planejamento_aula_aee_id)
+        WHERE
+            cm.id = '{$conteudo_ministrado_aee_id}'
                 ORDER BY cmc.id ASC
             ");
 
-            while($db->ProximoRegistro()) {
+            while ($db->ProximoRegistro()) {
                 $conteudos[] = $db->Tupla();
             }
 
@@ -123,7 +134,8 @@ class clsModulesComponenteMinistradoConteudoAee extends Model {
      *
      * @return array
      */
-    public function detalhe () {
+    public function detalhe()
+    {
         $data = [];
 
         if (is_numeric($this->id)) {
@@ -151,7 +163,8 @@ class clsModulesComponenteMinistradoConteudoAee extends Model {
      *
      * @return array
      */
-    public function existe () {
+    public function existe()
+    {
         return false;
     }
 
@@ -160,7 +173,8 @@ class clsModulesComponenteMinistradoConteudoAee extends Model {
      *
      * @return bool
      */
-    public function excluir () {
+    public function excluir()
+    {
         if (is_numeric($this->conteudo_ministrado_aee_id)) {
             $db = new clsBanco();
 
@@ -182,19 +196,20 @@ class clsModulesComponenteMinistradoConteudoAee extends Model {
      *
      * @return array
      */
-    public function retornaDiferencaEntreConjuntosConteudos($atuaisConteudos, $novosConteudos) {
+    public function retornaDiferencaEntreConjuntosConteudos($atuaisConteudos, $novosConteudos)
+    {
         $resultado = [];
         $resultado['adicionar'] = $novosConteudos;
 
-        for ($i=0; $i < count($atuaisConteudos); $i++) {
+        for ($i = 0; $i < count($atuaisConteudos); $i++) {
             $resultado['remover'][] = $atuaisConteudos[$i]['planejamento_aula_conteudo_aee_id'];
         }
         $atuaisConteudos = $resultado['remover'];
 
-        for ($i=0; $i < count($novosConteudos); $i++) {
+        for ($i = 0; $i < count($novosConteudos); $i++) {
             $novo = $novosConteudos[$i];
 
-            for ($j=0; $j < count($atuaisConteudos); $j++) {
+            for ($j = 0; $j < count($atuaisConteudos); $j++) {
                 $atual = $atuaisConteudos[$j];
 
                 if ($novo == $atual) {
@@ -212,7 +227,8 @@ class clsModulesComponenteMinistradoConteudoAee extends Model {
      *
      * @return array
      */
-    public function existeLigacaoRegistroAula ($planejamento_aula_conteudos_ids) {
+    public function existeLigacaoRegistroAula($planejamento_aula_conteudos_ids)
+    {
         if (is_array($planejamento_aula_conteudos_ids) && count($planejamento_aula_conteudos_ids) > 0) {
             $data = [];
 
@@ -238,7 +254,7 @@ class clsModulesComponenteMinistradoConteudoAee extends Model {
 
             $db->Consulta($sql);
 
-            while($db->ProximoRegistro()) {
+            while ($db->ProximoRegistro()) {
                 $data[] = [
                     'id' => $db->Campo('id'),
                     'frequencia_id' => $db->Campo('frequencia_id')
