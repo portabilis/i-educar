@@ -66,7 +66,6 @@ return new class extends clsListagem {
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
         $query = \App\Models\LegacyAbandonmentType::query()
             ->where('ativo', 1)
