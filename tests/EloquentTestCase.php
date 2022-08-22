@@ -89,7 +89,7 @@ abstract class EloquentTestCase extends TestCase
     {
         $modelCreated = $this->createNewModel();
 
-        $this->assertDatabaseHas($modelCreated->getTable(), $modelCreated->toArray());
+        $this->assertDatabaseHas($modelCreated->getTable(), $modelCreated->getAttributes());
     }
 
     /**
@@ -106,8 +106,8 @@ abstract class EloquentTestCase extends TestCase
         $modelUpdated->fill($this->getAttributesForUpdate());
         $modelUpdated->save();
 
-        $this->assertDatabaseMissing($modelUpdated->getTable(), $modelCreated->toArray());
-        $this->assertDatabaseHas($modelUpdated->getTable(), $modelUpdated->toArray());
+        $this->assertDatabaseMissing($modelUpdated->getTable(), $modelCreated->getAttributes());
+        $this->assertDatabaseHas($modelUpdated->getTable(), $modelUpdated->getAttributes());
     }
 
     /**
@@ -121,11 +121,11 @@ abstract class EloquentTestCase extends TestCase
     {
         $modelCreated = $this->createNewModel();
 
-        $this->assertDatabaseHas($modelCreated->getTable(), $modelCreated->toArray());
+        $this->assertDatabaseHas($modelCreated->getTable(), $modelCreated->getAttributes());
 
         $modelCreated->delete();
 
-        $this->assertDatabaseMissing($modelCreated->getTable(), $modelCreated->toArray());
+        $this->assertDatabaseMissing($modelCreated->getTable(), $modelCreated->getAttributes());
     }
 
     /**
