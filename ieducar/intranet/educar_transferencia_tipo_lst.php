@@ -44,13 +44,10 @@ return new class extends clsListagem {
         $this->campoTexto('nm_tipo', 'Transferência', $this->nm_tipo, 30, 255, false);
 
         // Paginador
-        $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+        $this->limite = 2;
 
         $query = LegacyTransferType::query()
             ->where('ativo', 1)
-            ->limit($this->limite)
-            ->offset($this->offset)
             ->orderBy('nm_tipo', 'ASC');
 
         if (is_string($this->nm_tipo)) {
@@ -61,10 +58,10 @@ return new class extends clsListagem {
             $query->where('ref_cod_instituicao', $this->ref_cod_instituicao);
         }
 
-        $result = $query->get();
+        $result = $query->paginate($this->limite,'*', 'pagina_'.$this->nome);
 
-        $lista = $result->toArray();
-        $total = $result->count();
+        $lista = $result->items();
+        $total = $result->total();
 
         // monta a lista
         if (is_array($lista) && count($lista)) {
