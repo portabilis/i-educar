@@ -114,6 +114,12 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract
             'fixupFieldsWidth();',
             $afterReady = true
         );
+
+        Portabilis_View_Helper_Application::embedJavascript(
+            $viewInstance,
+            'fixupFieldsChosen();',
+            $afterReady = true
+        );
     }
 
     public static function loadJQueryLib($viewInstance)
