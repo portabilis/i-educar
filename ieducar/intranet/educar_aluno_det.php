@@ -3,6 +3,7 @@
 use App\Models\City;
 use App\Models\Country;
 use App\Models\PersonHasPlace;
+use App\Models\TransportationProvider;
 use App\Services\UrlPresigner;
 use iEducar\Modules\Educacenso\Model\Nacionalidade;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -564,12 +565,11 @@ return new class extends clsDetalhe {
         } catch (Exception) {
         }
 
-        $this->addDetalhe([
-            'Transporte escolar',
-            isset($transporteAluno) && $transporteAluno->responsavel != 'Não utiliza' ? 'Sim' : 'Não utiliza'
-        ]);
-        if ($transporteAluno && $transporteAluno->responsavel != 'Não utiliza') {
-            $this->addDetalhe(['Responsável transporte', $transporteAluno->responsavel]);
+        $this->addDetalhe(['Transporte escolar', $registro['tipo_transporte'] === 0 ? 'Não utiliza' : 'Sim']);
+
+        if ($transporteAluno && $registro['tipo_transporte'] !== 0) {
+            $tipoTransporte = ucfirst((new TransportationProvider())->getValueDescription($registro['tipo_transporte']));
+            $this->addDetalhe(['Responsável transporte', $tipoTransporte]);
         }
 
         if ($registro['nis_pis_pasep']) {
