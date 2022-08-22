@@ -11,8 +11,8 @@
         if (isNaN(id) || id === '')
             return;
 
-        if (!isNaN(id) && copy)
-            return;
+        // if (!isNaN(id) && copy)
+        //     return;
 
         var registrosAula = [];
 
@@ -335,7 +335,9 @@
         submitButton.removeAttr('onclick');
 
         submitButton.click(function () {
+          if (!copy) {
             tentaEditarPlanoAula();
+          }
         });
 
         function tentaEditarPlanoAula () {
