@@ -109,6 +109,10 @@ return new class extends clsListagem {
             ->where('ativo', 1)
             ->orderBy('cod_ocorrencia_disciplinar', 'DESC');
 
+        if (is_numeric($this->ref_cod_tipo_ocorrencia_disciplinar)) {
+            $query->where('ref_cod_tipo_ocorrencia_disciplinar', $this->ref_cod_tipo_ocorrencia_disciplinar);
+        }
+
         $result = $query->paginate($this->limite,'*', 'pagina_'.$this->nome);
 
         $lista = $result->items();
