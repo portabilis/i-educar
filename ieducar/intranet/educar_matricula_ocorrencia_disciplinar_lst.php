@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyDisciplinaryOccurrenceType;
+use App\Models\LegacyRegistrationDisciplinaryOccurrenceType;
 
 return new class extends clsListagem {
     /**
@@ -103,23 +104,15 @@ return new class extends clsListagem {
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-        $obj_matricula_ocorrencia_disciplinar = new clsPmieducarMatriculaOcorrenciaDisciplinar();
-        $obj_matricula_ocorrencia_disciplinar->setOrderby('observacao ASC');
-        $obj_matricula_ocorrencia_disciplinar->setLimite($this->limite, $this->offset);
 
-        $lista = $obj_matricula_ocorrencia_disciplinar->lista(
-            $this->ref_cod_matricula,
-            $this->ref_cod_tipo_ocorrencia_disciplinar,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1
-        );
+        $query = LegacyRegistrationDisciplinaryOccurrenceType::query()
+            ->where('ativo', 1)
+            ->orderBy('cod_ocorrencia_disciplinar', 'DESC');
 
-        $total = $obj_matricula_ocorrencia_disciplinar->_total;
+        $result = $query->paginate($this->limite,'*', 'pagina_'.$this->nome);
+
+        $lista = $result->items();
+        $total = $result->total();
 
         // monta a lista
         if (is_array($lista) && count($lista)) {

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyDisciplinaryOccurrenceType;
+use App\Models\LegacyRegistrationDisciplinaryOccurrenceType;
 
 return new class extends clsDetalhe {
     /**
@@ -28,8 +29,15 @@ return new class extends clsDetalhe {
         $this->ref_cod_matricula=$_GET['ref_cod_matricula'];
         $this->ref_cod_tipo_ocorrencia_disciplinar=$_GET['ref_cod_tipo_ocorrencia_disciplinar'];
 
-        $tmp_obj = new clsPmieducarMatriculaOcorrenciaDisciplinar($this->ref_cod_matricula, $this->ref_cod_tipo_ocorrencia_disciplinar, $this->sequencial, null, null, null, null, null, 1);
-        $registro = $tmp_obj->detalhe();
+        $registro = LegacyRegistrationDisciplinaryOccurrenceType::query()
+            ->where('ref_cod_matricula', $this->ref_cod_matricula)
+            ->where('ref_cod_tipo_ocorrencia_disciplinar', $this->ref_cod_tipo_ocorrencia_disciplinar)
+            ->where('sequencial', $this->sequencial)
+            ->where('ativo', 1)
+            ->orderBy('cod_ocorrencia_disciplinar', 'DESC')
+            ->first()
+            ?->toArray();
+
         if (! $registro) {
             $this->simpleRedirect("educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}");
         }

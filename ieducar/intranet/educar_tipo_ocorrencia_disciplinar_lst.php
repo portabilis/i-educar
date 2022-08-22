@@ -61,7 +61,7 @@ return new class extends clsListagem {
             $query->where('ref_cod_instituicao', $this->ref_cod_instituicao);
         }
 
-        $result = $query->paginate(20,'*', 'pagina_'.$this->nome);
+        $result = $query->paginate($this->limite,'*', 'pagina_'.$this->nome);
 
         $lista = $result->items();
         $total = $result->total();
