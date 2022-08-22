@@ -44,7 +44,7 @@ return new class extends clsListagem {
         $this->campoTexto('nm_tipo', 'Transferência', $this->nm_tipo, 30, 255, false);
 
         // Paginador
-        $this->limite = 2;
+        $this->limite = 20;
 
         $query = LegacyTransferType::query()
             ->where('ativo', 1)
