@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Traits\Ativo;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -13,11 +12,10 @@ use Illuminate\Database\Eloquent\Model;
  */
 class LegacyExemptionType extends Model
 {
-    use HasFactory;
     use Ativo;
 
-    CONST CREATED_AT = "data_cadastro";
-    CONST UPDATED_AT = null;
+    const CREATED_AT = "data_cadastro";
+    const UPDATED_AT = null;
 
     /**
      * @var string
