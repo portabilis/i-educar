@@ -40,8 +40,10 @@ return new class extends clsCadastro
                     $this->$campo = $val;
                 }
 
+                //$this->conteudos = array_column($registro['planejamento_aula_aee']['conteudos'], 'planejamento_aula_aee_conteudo_id');
                 $this->conteudos = array_column($registro['conteudos'], 'planejamento_aula_conteudo_aee_id');
-                //$this->conteudos = array_column($registro['planejamento_aula_aee']['conteudo'], 'planejamento_aula_conteudo_aee_id');
+
+                 //die(var_dump($this->conteudos));
                 if (!$this->copy) {
                     $this->fexcluir = $obj_permissoes->permissao_excluir(58, $this->pessoa_logada, 7);
                     $retorno = 'Editar';
@@ -49,7 +51,7 @@ return new class extends clsCadastro
                     $this->titulo = 'Atendimento AEE - Edição';
                 }
             } else {
-                $this->simpleRedirect('educar_professores_ficha_aee_lst.php');
+                $this->simpleRedirect('educar_professores_conteudo_ministrado_aee_lst.php');
             }
         }
 
@@ -87,13 +89,6 @@ return new class extends clsCadastro
             $desabilitado = true;
         }
 
-        if (is_numeric($this->ref_cod_turma)) {
-            $this->campoOculto('data_', dataToBanco($this->data));
-            $this->campoOculto('ref_cod_matricula_', $this->ref_cod_matricula);
-            $this->campoOculto('ref_cod_componente_curricular_', $this->ref_cod_componente_curricular);
-            $this->campoOculto('fase_etapa_', $this->fase_etapa);
-        }
-
         $clsInstituicao = new clsPmieducarInstituicao();
         $instituicao = $clsInstituicao->primeiraAtiva();
         $obrigatorioRegistroDiarioAtividade = $instituicao['obrigatorio_registro_diario_atividade'];
@@ -109,10 +104,14 @@ return new class extends clsCadastro
         if (empty($this->id)) {
             $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado]);
             $this->inputsHelper()->dynamic(['matricula']);
-            $this->inputsHelper()->dynamic('componenteCurricular', ['required' => !$obrigatorio, 'disabled' => $desabilitado]);
             $this->inputsHelper()->dynamic('faseEtapa', ['required' => $obrigatorio, 'label' => 'Etapa', 'disabled' => $desabilitado]);
+            $this->inputsHelper()->dynamic('componenteCurricular', ['required' => !$obrigatorio, 'disabled' => $desabilitado]);
+            
         } else {
             $this->campoTextoDisabled('aluno', 'Aluno', $this->aluno);
+            $this->campoOculto('ref_cod_turma', $this->ref_cod_turma);
+            $this->campoOculto('ref_cod_matricula', $this->ref_cod_matricula);            
+            $this->campoOculto('fase_etapa', $this->fase_etapa);           
         }
        
         $this->campoQuebra();
@@ -217,52 +216,7 @@ return new class extends clsCadastro
     }
 
     public function Editar()
-    {
-        // $this->data = $this->data_;
-        // $this->ref_cod_turma = $this->ref_cod_turma_;
-        // $this->ref_cod_componente_curricular = $this->ref_cod_componente_curricular_;
-        // $this->fase_etapa = $this->fase_etapa_;
-
-        // $obj = new clsPmieducarTurma();
-        // $serie = $obj->lista($this->ref_cod_turma)[0]['ref_ref_cod_serie'];
-
-        // $obj = new clsModulesFrequencia(
-        //     $this->id,
-        //     null,
-        //     null,
-        //     null,
-        //     null,
-        //     $serie,
-        //     null,
-        //     $this->ref_cod_componente_curricular,
-        //     null,
-        //     $this->data,
-        //     null,
-        //     null,
-        //     $this->fase_etapa,
-        //     $this->justificativa,
-        // );
-
-        // $editou = $obj->edita();
-
-        // $obj = new clsModulesComponenteMinistradoAee();
-        // $componenteMinistrado = $obj->lista(
-        //     null,
-        //     null,
-        //     null,
-        //     null,
-        //     null,
-        //     null,
-        //     null,
-        //     null,
-        //     null,
-        //     null,
-        //     null,
-        //     null,
-        //     $this->id
-        // )[0];
-
-        // if ($componenteMinistrado) {
+    {        
         $obj = new clsModulesComponenteMinistradoAee(
             $this->id,
             $this->data,
@@ -275,41 +229,20 @@ return new class extends clsCadastro
 
         $editou = $obj->edita();
 
-        //die(var_dump( $obj));
-
-        if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+        if (!$editou) {
+            $this->mensagem = 'Edição não realizada.<br>';
+            $this->simpleRedirect('educar_professores_conteudo_ministrado_aee_cad.php');
+        } else {
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_professores_conteudo_ministrado_aee_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
-
         return false;
-        //}
     }
 
     public function Excluir()
-    {
-
-        $obj = new clsModulesComponenteMinistradoAee();
-        $componenteMinistrado = $obj->lista(
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            $this->id
-        )[0];
-
-        if ($componenteMinistrado) {
-            $obj = new clsModulesComponenteMinistradoAee($componenteMinistrado['id']);
+    { 
+            $obj = new clsModulesComponenteMinistradoAee($this->id);
             $excluiu = $obj->excluir();
 
             if ($excluiu) {
@@ -320,7 +253,6 @@ return new class extends clsCadastro
             }
 
             return false;
-        }
     }
 
     public function __construct()
@@ -341,23 +273,6 @@ return new class extends clsCadastro
 
     protected function adicionarConteudosMultiplaEscolha()
     {
-        // ESPECIFICAÇÕES
-        /*$helperOptions = [
-            'objectName' => 'especificacoes',
-        ];
-
-        //$todas_especificacoes = $this->getEspecificacoes($this->planejamento_aula_id);
-
-        $options = [
-            'label' => 'Especificações',
-            'required' => false,
-            'options' => [
-                'values' => $this->especificacoes,
-                'all_values' => /*$todas_especificacoes*//*[]
-            ]
-        ];
-        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);*/
-
         // CONTEUDOS
         $helperOptions = [
             'objectName' => 'conteudos',

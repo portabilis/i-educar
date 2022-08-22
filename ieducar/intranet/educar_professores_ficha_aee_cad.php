@@ -96,7 +96,7 @@ return new class extends clsCadastro
             // Montar o inputsHelper->select \/
             // Cria lista de Turmas
             $obj_turma = new clsPmieducarTurma();
-            $lista_turmas = $obj_turma->lista_turmas_aee();
+            $lista_turmas = $obj_turma->lista_turmas_aee($this->pessoa_logada);
             $turma_resources = ['' => 'Selecione uma Turma'];
             foreach ($lista_turmas as $reg) {
                 $turma_resources["{$reg['cod_turma']}"] = "{$reg['nm_turma']} - ({$reg['nome']})";

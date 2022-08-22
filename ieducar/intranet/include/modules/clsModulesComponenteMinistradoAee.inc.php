@@ -152,16 +152,16 @@ class clsModulesComponenteMinistradoAee extends Model
      */
     public function edita()
     {
-        if (is_numeric($this->id) && is_string($this->atividades)) {
+        if (is_numeric($this->id) && is_string($this->atividades) && is_string($this->observacao)) {
 
             $data =  dataToBanco($this->data);
 
             $db = new clsBanco();
-            $set = "atividades = '{$db->escapeString($this->atividades)}',
-            data = NULLIF('{$db->escapeString($data)}'),
+            $set = "data = NULLIF('{$db->escapeString($data)}'),
                     hora_inicio = NULLIF('{$db->escapeString($this->hora_inicio)}'),
                     hora_fim = NULLIF('{$db->escapeString($this->hora_fim)}'), 
-                    observacao = NULLIF('{$db->escapeString($this->observacao)}',''),
+                    atividades = '{$db->escapeString($this->atividades)}',
+                    observacao = NULLIF('{$db->escapeString($this->observacao)}'),
                     updated_at = (NOW() - INTERVAL '3 HOURS')";
 
             $db->Consulta("

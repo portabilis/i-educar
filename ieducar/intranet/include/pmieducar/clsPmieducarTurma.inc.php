@@ -2067,7 +2067,7 @@ class clsPmieducarTurma extends Model
          return false;
      }
 
-    public function lista_turmas_aee()
+    public function lista_turmas_aee($pessoa_logada)
     {
 
         $db = new clsBanco();
@@ -2076,9 +2076,11 @@ class clsPmieducarTurma extends Model
         FROM pmieducar.turma t
         JOIN pmieducar.escola e ON e.cod_escola = t.ref_ref_cod_escola
         JOIN cadastro.pessoa p ON p.idpes = e.ref_idpes
+        JOIN modules.professor_turma pt ON pt.turma_id = t.cod_turma
         WHERE t.tipo_atendimento = 5
                 AND t.ano =  $ano_turma
                 AND t.ativo = 1
+                AND pt.servidor_id = $pessoa_logada
                 ORDER BY t.nm_turma ASC";
 
         $db->Consulta($sql);

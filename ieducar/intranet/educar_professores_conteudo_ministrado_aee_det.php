@@ -38,29 +38,6 @@ return new class extends clsDetalhe {
         if (!$registro) {
             $this->simpleRedirect('educar_professores_conteudo_ministrado_aee_lst.php');
         }
-
-        // $obj = new clsModulesComponenteMinistradoAee();
-        // $componenteMinistrado = $obj->lista(
-        //     null,
-        //     null,
-        //     null,
-        //     null,
-        //     null,
-        //     null,
-        //     null,
-        //     null,
-        //     null,
-        //     null,
-        //     null,
-        //     null,
-        //     $this->id
-        // )[0];
-
-        // if (isset($componenteMinistrado) && !empty($componenteMinistrado)) {
-        //     $obj = new clsModulesComponenteMinistradoConteudoAee();
-        //     $componenteMinistrado['conteudos'] = $obj->lista($componenteMinistrado['id']);
-        // }
-
         
 
         if ($registro['detalhes']['id']) {
