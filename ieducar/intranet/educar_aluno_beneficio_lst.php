@@ -67,7 +67,7 @@ return new class extends clsListagem {
             $query->where('nm_beneficio', 'ilike', '%' . $this->nm_beneficio . '%');
         }
 
-        $result = $query->paginate($this->limite,'*', 'pagina_'.$this->nome);
+        $result = $query->paginate($this->limite, pageName: 'pagina_'.$this->nome);
 
         $lista = $result->items();
         $total = $result->total();
