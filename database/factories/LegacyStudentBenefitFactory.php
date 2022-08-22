@@ -25,8 +25,8 @@ class LegacyStudentBenefitFactory extends Factory
     public function definition()
     {
         return [
-            'aluno_id' => LegacyStudentFactory::new(),
-            'aluno_beneficio_id' => LegacyBenefitFactory::new(),
+            'aluno_id' => LegacyStudentFactory::new()->create(),
+            'aluno_beneficio_id' => LegacyBenefitFactory::new()->create(),
         ];
     }
 }
