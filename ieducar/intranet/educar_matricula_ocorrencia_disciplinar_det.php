@@ -36,7 +36,7 @@ return new class extends clsDetalhe {
             ->where('ativo', 1)
             ->orderBy('cod_ocorrencia_disciplinar', 'DESC')
             ->first()
-            ?->toArray();
+            ?->getAttributes();
 
         if (! $registro) {
             $this->simpleRedirect("educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}");

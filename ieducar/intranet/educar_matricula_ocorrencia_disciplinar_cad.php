@@ -62,7 +62,7 @@ return new class extends clsCadastro {
                 ->where('ativo', 1)
                 ->orderBy('cod_ocorrencia_disciplinar', 'DESC')
                 ->first()
-                ?->toArray();
+                ?->getAttributes();
 
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
