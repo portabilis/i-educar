@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyDisciplinaryOccurrenceType;
 use App\Models\LegacyTransferType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
