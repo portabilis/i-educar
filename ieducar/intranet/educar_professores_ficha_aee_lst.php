@@ -33,11 +33,11 @@ return new class extends clsListagem {
     public $data_final;
 
     public $etapa;
-   public $fase_etapa;
+    public $fase_etapa;
 
     public function Gerar()
     {
-        $this->titulo = 'Atendimento AEE - Listagem';
+        $this->titulo = 'Ficha AEE - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null: $val;
@@ -45,9 +45,10 @@ return new class extends clsListagem {
 
         $lista_busca = [
             'Data',
-            'Hora Início',
-            'Hora Fim',
-            'Aluno'
+            'Aluno',
+            'Turma',
+            'Escola',
+            'Professor'
         ];
 
         $this->addCabecalhos($lista_busca);
@@ -57,27 +58,28 @@ return new class extends clsListagem {
         }
 
         $this->inputsHelper()->dynamic(['ano'], ['required' => false]);
-        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie', 'turma', 'matricula']);
-        //$this->inputsHelper()->turmaTurno(['required' => false, 'label' => 'Turno']);
-  
+        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie', 'turma'], ['required' => false]);
+        $this->inputsHelper()->turmaTurno(['required' => false, 'label' => 'Turno']);
+        $this->inputsHelper()->dynamic('componenteCurricular', ['required' => false]);
+
         $this->campoQuebra();
         $this->campoRotulo('filtros_periodo', '<b>Filtros por período</b>');
 
         $this->inputsHelper()->dynamic(['dataInicial'], ['required' => false, 'value' => $this->data_inicial]);
         $this->inputsHelper()->dynamic(['dataFinal'], ['required' => false, 'value' => $this->data_final]);
-     
-        //$this->campoQuebra();
-        //$this->campoRotulo('filtros_etapa', '<b>Filtros por etapa</b>');
 
-        //$this->inputsHelper()->dynamic(['faseEtapa'], ['required' => false, 'label' => 'Etapa']);
+        $this->campoQuebra();
+        $this->campoRotulo('filtros_etapa', '<b>Filtros por etapa</b>');
+
+        $this->inputsHelper()->dynamic(['faseEtapa'], ['required' => false, 'label' => 'Etapa']);
 
         // Paginador
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-        $obj_turma = new clsModulesComponenteMinistradoAee();
-        $obj_turma->setOrderby('data DESC');
-        $obj_turma->setLimite($this->limite, $this->offset);
+        $obj_plano = new clsModulesFichaAee();
+        $obj_plano->setOrderby('data_inicial DESC');
+        $obj_plano->setLimite($this->limite, $this->offset);
 
         if ($this->data_inicial && Portabilis_Date_Utils::validaData($this->data_inicial) || !$this->data_inicial) {
             $this->data_inicial = dataToBanco($this->data_inicial);
@@ -105,54 +107,67 @@ return new class extends clsListagem {
         );
         $eh_professor = $obj_servidor->isProfessor();
 
-        $lista = $obj_turma->lista(
-            $this->ano,
+        $lista = $obj_plano->lista(
+            $this->data,
             $this->ref_cod_instituicao,
             $this->ref_cod_escola,
             $this->ref_cod_curso,
             $this->ref_cod_turma,
-            $this->ref_cod_matricula,
-            $this->data,
-            $this->data_fim,
-            $this->fase_etapa,
-            $eh_professor ? $this->pessoa_logada : null         // Passe o ID do servidor caso ele seja um professor
+            $this->ref_cod_matricula, 
+            $eh_professor ? $this->pessoa_logada : null         // Passe o ID do servidor caso ele seja um professor            
         );
 
-        $total = $obj_turma->_total;
+        $total = $obj_plano->_total;
         // monta a lista
         if (is_array($lista) && count($lista)) {
-            $ref_cod_escola = '';
-            $nm_escola = '';
             foreach ($lista as $registro) {
-                $data_formatada = dataToBrasil($registro['data']); 
+                // $obj = new clsModulesPlanejamentoAulaComponenteCurricular();
+                // $componentesCurriculares = $obj->lista($registro['id']);
+
+                // $obj = new clsPmieducarSerie();
+                // $tipo_presenca = $obj->tipoPresencaRegraAvaliacao($registro['cod_serie']);
+
+                $data_inicial_formatada = dataToBrasil($registro['data']);
 
                 $lista_busca = [
-                    "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$data_formatada}</a>",
-                    "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$registro['hora_inicio']}</a>",
-                    "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$registro['hora_fim']}</a>",
-                    "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$registro['aluno']}</a>"
+                    "<a href=\"educar_professores_ficha_aee_det.php?id={$registro['id']}\">{$data_inicial_formatada}</a>",
+                    "<a href=\"educar_professores_ficha_aee_det.php?id={$registro['id']}\">{$registro['aluno']}</a>",
+                    "<a href=\"educar_professores_ficha_aee_det.php?id={$registro['id']}\">{$registro['turma']}</a>",                   
+                    "<a href=\"educar_professores_ficha_aee_det.php?id={$registro['id']}\">{$registro['escola']}</a>",
                 ];
+
+                // if (isset($componentesCurriculares) && is_array($componentesCurriculares) && !empty($tipo_presenca) && $tipo_presenca == 2) {
+                //     $abreviatura = '';
+                //     foreach ($componentesCurriculares as $componenteCurricular) {
+                //         $abreviatura .= $componenteCurricular['abreviatura'].'<br>';
+                //     }
+                //     $lista_busca[] = "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">{$abreviatura}</a>";
+                // } else {
+                //     $lista_busca[] = "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">—</a>";
+                // }
+
+                $lista_busca[] = "<a href=\"educar_professores_ficha_aee_det.php?id={$registro['id']}\">{$registro['professor']}</a>";
 
                 $this->addLinhas($lista_busca);
             }
         }
 
-        $this->addPaginador2('educar_professores_conteudo_ministrado_aee_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $this->addPaginador2('educar_professores_ficha_aee_lst.php', $total, $_GET, $this->nome, $this->limite);
         $obj_permissoes = new clsPermissoes();
         if ($obj_permissoes->permissao_cadastra(58, $this->pessoa_logada, 7)) {
-            $this->acao = 'go("educar_professores_conteudo_ministrado_aee_cad.php")';
+            $this->acao = 'go("educar_professores_ficha_aee_cad.php")';
             $this->nome_acao = 'Novo';
         }
         $this->largura = '100%';
 
-        $this->breadcrumb('Listagem de Atendimentos - AEE', [
+        $this->breadcrumb('Listagem de Ficha AEE', [
             url('intranet/educar_professores_index.php') => 'Professores',
         ]);
     }
 
     public function Formular()
-    { 
-        $this->title = 'Atendimento  AEE - Listagem';
+    {
+        $this->title = 'Ficha AEE - Listagem';
         $this->processoAp = '58';
     }
 };
