@@ -47,11 +47,12 @@ class Menu extends Model
         'active',
     ];
 
-    private static function getMenusByUserType() : Collection{
-        return self::withRecursiveQueryConstraint(static function (Builder $query){
+    private static function getMenusByUserType(User $user): Collection
+    {
+        return self::withRecursiveQueryConstraint(static function (Builder $query) use ($user) {
             $query->whereNull('menus.process');
-            $query->orWhereHas('user_types', function (Builder $query) {
-                $query->where('ref_cod_tipo_usuario', auth()->user()->ref_cod_tipo_usuario);
+            $query->orWhereHas('userTypes', function (Builder $query) use ($user) {
+                $query->where('ref_cod_tipo_usuario', $user->ref_cod_tipo_usuario);
             });
         }, static function () {
             return self::tree()->orderBy('order')->get();
@@ -269,7 +270,7 @@ class Menu extends Model
      *
      * @return BelongsToMany
      */
-    public function user_types(): BelongsToMany
+    public function userTypes(): BelongsToMany
     {
         return $this->belongsToMany(
             LegacyUserType::class,
@@ -294,7 +295,7 @@ class Menu extends Model
             return static::roots();
         }
 
-        return static::getMenusByUserType();
+        return static::getMenusByUserType($user);
     }
 
     /**
