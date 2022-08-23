@@ -15,6 +15,3 @@ class LegacyDisciplinaryOccurrenceTypeTest extends EloquentTestCase
         return LegacyDisciplinaryOccurrenceType::class;
     }
 }
-
-
-
