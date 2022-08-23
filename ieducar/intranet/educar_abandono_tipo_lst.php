@@ -66,26 +66,23 @@ return new class extends clsListagem {
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-        $obj_abandono_tipo = new clsPmieducarAbandonoTipo();
-        $obj_abandono_tipo->setOrderby('nome ASC');
-        $obj_abandono_tipo->setLimite($this->limite, $this->offset);
+        $query = \App\Models\LegacyAbandonmentType::query()
+            ->where('ativo', 1)
+            ->orderBy('nome', 'ASC');
 
-        $lista = $obj_abandono_tipo->lista(
-            null,
-            null,
-            null,
-            $this->nome,
-            null,
-            null,
-            null,
-            null,
-            1,
-            $this->ref_cod_instituicao
-        );
+        if (is_string($this->nome)) {
+            $query->where('nome', 'ilike', '%' . $this->nome . '%');
+        }
 
-        $total = $obj_abandono_tipo->_total;
+        if (is_numeric($this->ref_cod_instituicao)) {
+            $query->where('ref_cod_instituicao', $this->ref_cod_instituicao);
+        }
+
+        $result = $query->paginate($this->limite, pageName: 'pagina_');
+
+        $lista = $result->items();
+        $total = $result->total();
 
         // monta a lista
         if (is_array($lista) && count($lista)) {
@@ -104,7 +101,7 @@ return new class extends clsListagem {
                 $this->addLinhas($lista_busca);
             }
         }
-        $this->addPaginador2('educar_abandono_tipo_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $this->addPaginador2('educar_abandono_tipo_lst.php', $total, $_GET, null, $this->limite);
 
         if ($obj_permissoes->permissao_cadastra(950, $this->pessoa_logada, 7)) {
             $this->acao = 'go("educar_abandono_tipo_cad.php")';
