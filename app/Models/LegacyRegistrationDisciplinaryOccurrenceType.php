@@ -11,8 +11,8 @@ class LegacyRegistrationDisciplinaryOccurrenceType extends Model
     use HasFactory;
     use Ativo;
 
-    CONST CREATED_AT = "data_cadastro";
-    CONST UPDATED_AT = null;
+    public const CREATED_AT = 'data_cadastro';
+    public const UPDATED_AT = null;
 
     /**
      * @var string
