@@ -37,7 +37,6 @@ return new class extends clsCadastro {
     public $employee_course_id;
     public $employee_completion_year;
     public $employee_college_id;
-    public $employee_discipline_id;
 
     public function Inicializar()
     {
@@ -929,7 +928,6 @@ JS;
                 'Curso',
                 'Ano de conclusão',
                 'Instituição de Educação Superior',
-                'Área de conhecimento/Disciplina de formação',
             ],
             $rows
         );
@@ -937,11 +935,6 @@ JS;
         $this->inputsHelper()->simpleSearchCursoSuperior(null, ['required' => false], ['objectName' => 'employee_course']);
         $this->campoTexto('employee_completion_year', null, null, null, 4);
         $this->inputsHelper()->simpleSearchIes(null, ['required' => false], ['objectName' => 'employee_college']);
-        $options = [
-            'resources' => SelectOptions::employeeGraduationDisciplines(),
-            'required' => false
-        ];
-        $this->inputsHelper()->select('employee_discipline_id', $options);
 
         $this->campoTabelaFim();
     }
@@ -998,7 +991,6 @@ JS;
                 $oldInputGraduation->completion_year = old('employee_completion_year')[$key];
                 $oldInputGraduation->college = old('employee_college')[$key];
                 $oldInputGraduation->college_id = old('employee_college_id')[$key];
-                $oldInputGraduation->discipline_id = old('employee_discipline_id')[$key];
                 $graduations[] = $oldInputGraduation;
             }
 
@@ -1026,7 +1018,6 @@ JS;
                 $graduation->course,
                 $graduation->completion_year,
                 $graduation->college,
-                $graduation->discipline_id,
                 $graduation->course_id,
                 $graduation->college_id,
             ];
@@ -1060,7 +1051,6 @@ JS;
             $valueObject->courseId = $this->employee_course_id[$key];
             $valueObject->completionYear = $this->employee_completion_year[$key];
             $valueObject->collegeId = $this->employee_college_id[$key];
-            $valueObject->disciplineId = $this->employee_discipline_id[$key] ?: null;
             $employeeGraduationService->storeGraduation($valueObject);
         }
     }
