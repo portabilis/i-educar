@@ -111,7 +111,18 @@ return new class extends clsListagem {
             1,      //  Ativo
             1,      //  Fixado na instituição de ID 1
         );
+
         $eh_professor = $obj_servidor->isProfessor();
+        $isCoordenador = $obj_servidor->isCoordenador();
+
+        $escolasUsuario = [];
+        if ($isCoordenador) {
+            $escolasUser = App_Model_IedFinder::getEscolasUser($this->pessoa_logada);
+
+            foreach ($escolasUser as $e) {
+                $escolasUsuario[] = $e['ref_cod_escola'];
+            }
+        }
 
         $lista = $obj_turma->lista(
             $this->ano,
@@ -125,7 +136,8 @@ return new class extends clsListagem {
             $this->data_inicial,
             $this->data_final,
             $this->fase_etapa,
-            $eh_professor ? $this->pessoa_logada : null         // Passe o ID do servidor caso ele seja um professor
+            $eh_professor ? $this->pessoa_logada : null,
+            empty($this->ref_cod_escola) ? $escolasUsuario : null
         );
 
         $total = $obj_turma->_total;

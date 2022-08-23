@@ -229,9 +229,7 @@ return new class extends clsDetalhe {
             url('intranet/educar_professores_index.php') => 'Professores',
         ]);
 
-//        $this->addBotao('Excluir', "");
-
-        //$this->addBotao('Copiar plano de aula', "/intranet/educar_professores_planejamento_de_aula_cad.php?id={$this->getRequest()->id}&copy=true");
+        $this->addBotao('Copiar plano de aula', "/intranet/educar_professores_planejamento_de_aula_cad.php?id={$this->getRequest()->id}&copy=true");
     }
 
     function montaListaBNCC ($bnccs) {
@@ -306,11 +304,6 @@ return new class extends clsDetalhe {
     }
 
     public function loadAssets () {
-        $scripts = [
-            '/modules/Cadastro/Assets/Javascripts/PlanoAulaExclusaoTemp.js',
-        ];
-
-        Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
     }
 
     public function Formular()

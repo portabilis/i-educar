@@ -2,6 +2,8 @@
   $(document).ready(function(){
     var bncc_table = document.getElementById("objetivos_aprendizagem");
     var btn_add    = document.getElementById("btn_add_tab_add_1");
+    var copy = $j('#copy').val();
+    var serie_id = $j('#serie_id').val();
 
     var anoField   = getElementFor('ano');
     var turmaField = getElementFor('turma');
@@ -12,7 +14,8 @@
     submitButton.removeAttr('onclick');
 
     submitButton.click(function () {
-      if (planejamento_aula_id.value == '' || isNaN(planejamento_aula_id.value)) {
+      if ((planejamento_aula_id.value == '' || isNaN(planejamento_aula_id.value)) ||
+          (!isNaN(planejamento_aula_id.value)) && copy) {
         enviarFormulario();
       }
     });
@@ -28,8 +31,38 @@
       consertarBNCCEspecificoesElementos();
     }
 
-    var updateComponentesCurriculares = function (clearComponent = true) {
-      if (anoField.val() && turmaField.val() && turmaField.is(':enabled')) {
+    function updateTurma() {
+      var data = {
+        turma_id : turmaField.attr('value')
+      };
+
+      var urlForGetComponentesCurriculares = getResourceUrlBuilder.buildUrl(
+        '/module/DynamicInput/turma', 'detalhe', data
+      );
+
+      var options = {
+        url : urlForGetComponentesCurriculares,
+        dataType : 'json',
+        success  : function (response) {
+          handleUpdateTurma(response)
+        }
+      };
+
+      getResources(options);
+    }
+
+    function handleUpdateTurma(response) {
+      let updateComponente = true;
+
+      if (copy && response && parseInt(response.ref_ref_cod_serie) == parseInt(serie_id)) {
+        updateComponente = false;
+      }
+
+      updateComponentesCurriculares(true, updateComponente);
+    }
+
+    var updateComponentesCurriculares = function (clearComponent = true, updateComponente = true) {
+      if (anoField.val() && turmaField.val() && turmaField.is(':enabled') && updateComponente) {
 
         var data = {
           ano      : anoField.attr('value'),
@@ -82,6 +115,12 @@
 
         // bind onchange event
         componenteCurricularElemento.addEventListener("change", trocaComponenteCurricular, false);
+
+        if (copy) {
+          var evt = document.createEvent("HTMLEvents");
+          evt.initEvent("change", false, true);
+          componenteCurricularElemento.dispatchEvent(evt);
+        }
       });
     }
 
@@ -201,6 +240,10 @@
       }
 
       $(elemento).trigger("chosen:updated");
+
+      if (copy) {
+        $(elemento).trigger("change");
+      }
     }
 
     function pegarId (id) {
@@ -475,6 +518,6 @@
   }
 
     // bind onchange event
-    turmaField.change(updateComponentesCurriculares);
+    turmaField.change(updateTurma);
   });
 })(jQuery);

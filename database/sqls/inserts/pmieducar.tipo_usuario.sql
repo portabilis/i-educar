@@ -1,0 +1,2 @@
+INSERT INTO pmieducar.tipo_usuario(cod_tipo_usuario, ref_funcionario_cad, ref_funcionario_exc, nm_tipo, descricao, nivel, data_cadastro, data_exclusao, ativo)
+	VALUES (1, 1, NULL, 'Secretaria Escolar', NULL, 4, 'now()', NULL, 1);
