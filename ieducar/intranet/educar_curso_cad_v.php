@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyEducationType;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
@@ -85,15 +86,11 @@ return new class extends clsCadastro {
 
         $this->campoLista('ref_cod_instituicao', 'Instituicão', $opcoes, $this->ref_cod_instituicao);
 
-        $opcoes = [ '' => 'Selecione' ];
-
-        $objTemp = new clsPmieducarTipoEnsino();
-        $lista = $objTemp->lista();
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $opcoes["{$registro['cod_tipo_ensino']}"] = "{$registro['nm_tipo']}";
-            }
-        }
+        $opcoes = LegacyEducationType::query()
+            ->where('ativo', 1)
+            ->orderBy('nm_tipo', 'ASC')
+            ->pluck('nm_tipo', 'cod_tipo_ensino')
+            ->prepend('Selecione', '');
 
         $this->campoLista('ref_cod_tipo_ensino', 'Tipo Ensino', $opcoes, $this->ref_cod_tipo_ensino);
 
