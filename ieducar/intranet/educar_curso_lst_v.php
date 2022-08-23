@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyEducationType;
+
 return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -86,15 +88,11 @@ return new class extends clsListagem {
 
         $this->campoLista('ref_cod_nivel_ensino', 'Nivel Ensino', $opcoes, $this->ref_cod_nivel_ensino);
 
-        $opcoes = [ '' => 'Selecione' ];
-
-        $objTemp = new clsPmieducarTipoEnsino();
-        $lista = $objTemp->lista();
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $opcoes["{$registro['cod_tipo_ensino']}"] = "{$registro['nm_ensino']}";
-            }
-        }
+        $opcoes = LegacyEducationType::query()
+            ->where('ativo', 1)
+            ->orderBy('nm_tipo', 'ASC')
+            ->pluck('nm_tipo', 'cod_tipo_ensino')
+            ->prepend('Selecione', '');
 
         $this->campoLista('ref_cod_tipo_ensino', 'Tipo Ensino', $opcoes, $this->ref_cod_tipo_ensino);
 
@@ -149,8 +147,7 @@ return new class extends clsListagem {
                 $det_ref_cod_nivel_ensino = $obj_ref_cod_nivel_ensino->detalhe();
                 $registro['ref_cod_nivel_ensino'] = $det_ref_cod_nivel_ensino['nm_nivel'];
 
-                $obj_ref_cod_tipo_ensino = new clsPmieducarTipoEnsino($registro['ref_cod_tipo_ensino']);
-                $det_ref_cod_tipo_ensino = $obj_ref_cod_tipo_ensino->detalhe();
+                $det_ref_cod_tipo_ensino = LegacyEducationType::find($registro['ref_cod_tipo_ensino'])?->toArray();
                 $registro['ref_cod_tipo_ensino'] = $det_ref_cod_tipo_ensino['nm_tipo'];
 
                 $obj_ref_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
