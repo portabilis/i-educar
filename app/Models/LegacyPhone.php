@@ -40,10 +40,6 @@ class LegacyPhone extends Model
         'data_cad',
         'idpes_rev',
         'data_rev',
-        'origem_gravacao',
-        'idpes_cad',
-        'data_cad',
-        'operacao',
     ];
 
     /**

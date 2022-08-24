@@ -750,41 +750,32 @@ if (cnpj !== null) {
   document.getElementById('cnpj').readOnly = true;
 }
 
-function getRedeEnsino(xml_escola_rede_ensino)
+function getRedeEnsino(redes)
 {
-    var campoRedeEnsino = document.getElementById('ref_cod_escola_rede_ensino');
-    var DOM_array = xml_escola_rede_ensino.getElementsByTagName( "escola_rede_ensino" );
-
-    if(DOM_array.length)
+  const campoRedeEnsino = document.getElementById('ref_cod_escola_rede_ensino');
+    if(redes.length)
     {
-        campoRedeEnsino.length = 1;
-        campoRedeEnsino.options[0].text = 'Selecione uma rede de ensino';
-        campoRedeEnsino.disabled = false;
+        setAttributes(campoRedeEnsino,'Selecione uma rede de ensino',false)
 
-        for( var i = 0; i < DOM_array.length; i++ )
-        {
-            campoRedeEnsino.options[campoRedeEnsino.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_escola_rede_ensino"),false,false);
-        }
+        $j.each(redes, function(i, item) {
+          campoRedeEnsino.options[campoRedeEnsino.options.length] = new Option(item.name,item.id, false, false);
+        });
     }
     else
         campoRedeEnsino.options[0].text = 'A instituição não possui nenhuma rede de ensino';
 }
 
-function getCurso(xml_curso)
+function getCurso(cursos)
 {
-    var campoCurso = document.getElementById('ref_cod_curso');
-    var DOM_array = xml_curso.getElementsByTagName( "curso" );
+  const campoCurso = document.getElementById('ref_cod_curso');
 
-    if(DOM_array.length)
+  if(cursos.length)
     {
-        campoCurso.length = 1;
-        campoCurso.options[0].text = 'Selecione um curso';
-        campoCurso.disabled = false;
+        setAttributes(campoCurso,'Selecione um curso',false);
 
-        for( var i = 0; i < DOM_array.length; i++ )
-        {
-            campoCurso.options[campoCurso.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_curso"),false,false);
-        }
+        $j.each(cursos, function(i, item) {
+            campoCurso.options[campoCurso.options.length] = new Option(item.name,item.id, false, false);
+        });
     }
     else
         campoCurso.options[0].text = 'A instituição não possui nenhum curso';
@@ -795,23 +786,16 @@ if ( document.getElementById('ref_cod_instituicao') )
 {
     document.getElementById('ref_cod_instituicao').onchange = function()
     {
-        var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
+        const campoInstituicao = document.getElementById('ref_cod_instituicao').value;
 
-        var campoRedeEnsino = document.getElementById('ref_cod_escola_rede_ensino');
-        campoRedeEnsino.length = 1;
-        campoRedeEnsino.disabled = true;
-        campoRedeEnsino.options[0].text = 'Carregando rede de ensino';
+        const campoRedeEnsino = document.getElementById('ref_cod_escola_rede_ensino');
+        setAttributes(campoRedeEnsino,'Carregando rede de ensino',true);
 
-        var campoCurso = document.getElementById('ref_cod_curso');
-        campoCurso.length = 1;
-        campoCurso.disabled = true;
-        campoCurso.options[0].text = 'Carregando curso';
+        const campoCurso = document.getElementById('ref_cod_curso');
+        setAttributes(campoCurso,'Carregando curso',true);
 
-        var xml_escola_rede_ensino = new ajax( getRedeEnsino );
-        xml_escola_rede_ensino.envia( "educar_escola_rede_ensino_xml.php?ins="+campoInstituicao );
-
-        var xml_curso = new ajax( getCurso );
-        xml_curso.envia( "educar_curso_xml2.php?ins="+campoInstituicao );
+        getApiResource("/api/resource/education-network",getRedeEnsino,{institution:campoInstituicao});
+        getApiResource("/api/resource/course",getCurso,{institution:campoInstituicao});
 
         if (this.value == '')
         {

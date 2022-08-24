@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacySchoolClassType;
+
 return new class extends clsDetalhe {
     public $titulo;
     public $ref_cod_matricula;
@@ -70,9 +72,7 @@ return new class extends clsDetalhe {
         }
 
         // Tipo da turma
-        $obj_ref_cod_turma_tipo = new clsPmieducarTurmaTipo($registro['ref_cod_turma_tipo']);
-        $det_ref_cod_turma_tipo = $obj_ref_cod_turma_tipo->detalhe();
-        $registro['ref_cod_turma_tipo'] = $det_ref_cod_turma_tipo['nm_tipo'];
+        $registro['ref_cod_turma_tipo'] = LegacySchoolClassType::findOrFail($registro['ref_cod_turma_tipo'])->nm_tipo;
 
         // Código da instituição
         $obj_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);

@@ -54,4 +54,12 @@ class LegacyOrganization extends Model
             }
         });
     }
+
+    /**
+     * @return string|null
+     */
+    public function getNameAttribute(): ?string
+    {
+        return $this->fantasia;
+    }
 }

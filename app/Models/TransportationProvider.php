@@ -18,4 +18,22 @@ class TransportationProvider implements Enum
             self::CITY => 'Municipal',
         ];
     }
+
+    public function from($value): int
+    {
+        return match ($value) {
+            'municipal' => self::CITY,
+            'estadual' => self::STATE,
+            default => self::NONE,
+        };
+    }
+
+    public function getValueDescription($value)
+    {
+        return match ((int)$value) {
+            self::CITY => 'municipal',
+            self::STATE => 'estadual',
+            default => 'nenhum',
+        };
+    }
 }

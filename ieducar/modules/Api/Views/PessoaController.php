@@ -484,6 +484,20 @@ class PessoaController extends ApiCoreController
         return true;
     }
 
+    private function validaNomeSocial()
+    {
+        if($this->getRequest()->nome_social) {
+            $validator = new NameValidator($this->getRequest()->nome_social);
+
+            if (!$validator->isValid()) {
+                $this->messenger->append($validator->getMessage());
+
+                return false;
+            }
+        }
+        return true;
+    }
+
     private function validateBirthDate()
     {
         if (empty($this->getRequest()->datanasc)) {
@@ -516,7 +530,7 @@ class PessoaController extends ApiCoreController
 
     protected function canPost()
     {
-        return $this->validateName() && $this->validateBirthDate() && $this->validateDifferentiatedLocation();
+        return $this->validateName() && $this->validaNomeSocial() && $this->validateBirthDate() && $this->validateDifferentiatedLocation();
     }
 
     protected function post()
@@ -609,7 +623,7 @@ class PessoaController extends ApiCoreController
         $this->neighborhood = $this->getRequest()->neighborhood;
         $this->city_id = $this->getRequest()->city_id;
 
-        $this->saveAddress($this->getRequest()->person_id);
+        $this->saveAddress($this->getRequest()->person_id,true);
     }
 
     protected function getInep($servidorId)

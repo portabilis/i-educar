@@ -5,6 +5,10 @@ namespace Database\Factories;
 use App\Models\LegacyLevel;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
+/**
+ * @deprecated
+ * @see LegacyGradeFactory
+ */
 class LegacyLevelFactory extends Factory
 {
     /**
@@ -28,6 +32,8 @@ class LegacyLevelFactory extends Factory
             'etapa_curso' => $this->faker->randomElement([1, 2, 3, 4]),
             'carga_horaria' => 800,
             'data_cadastro' => $this->faker->dateTime(),
+            'idade_inicial' => $initial = $this->faker->numberBetween(0, 20),
+            'idade_final' => $initial + 1,
         ];
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyGrade;
+
 return new class extends clsListagem {
     public $limite;
     public $offset;
@@ -30,7 +32,41 @@ return new class extends clsListagem {
         $lista_busca[] = 'Escola';
         $this->addCabecalhos($lista_busca);
 
-        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie'], [],['options' => ['required' => false]]);
+        $obrigatorio = false;
+        $get_escola = true;
+        $get_curso = true;
+        $get_serie = false;
+        $get_escola_serie = true;
+        $get_select_name_full = true;
+
+        include 'include/pmieducar/educar_campo_lista.php';
+
+        if ($this->ref_cod_escola_) {
+            $this->ref_cod_escola = $this->ref_cod_escola_;
+        }
+
+        if ($this->ref_cod_serie_) {
+            $this->ref_cod_serie = $this->ref_cod_serie_;
+        }
+
+        $opcoes_serie = ['' => 'Selecione uma série'];
+
+        // Editar
+        if ($this->ref_cod_curso) {
+            $series = LegacyGrade::where('ativo',1)->where('ref_cod_curso',$this->ref_cod_curso)->orderBy('nm_serie')->get(['nm_serie','cod_serie']);
+
+            foreach ($series as $serie) {
+                $opcoes_serie[$serie['cod_serie']] = $serie['nm_serie'];
+            }
+        }
+
+        $this->campoLista(
+            'ref_cod_serie',
+            'Série',
+            $opcoes_serie,
+            $this->ref_cod_serie,
+            obrigatorio: false
+        );
 
         // Paginador
         $this->limite = 20;
@@ -120,6 +156,12 @@ return new class extends clsListagem {
         $this->breadcrumb('Séries da escola', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
+    }
+
+
+    public function makeExtra()
+    {
+        return file_get_contents(public_path('/vendor/legacy/Cadastro/Assets/Javascripts/EscolaSerie.js'));
     }
 
     public function Formular()

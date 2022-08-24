@@ -684,7 +684,7 @@ return new class extends clsCadastro {
         // Religião
         $this->inputsHelper()->religiao(['required' => false, 'label' => 'Religião']);
 
-        $this->viewAddress();
+        $this->viewAddress(true);
 
         $this->inputsHelper()->select('pais_residencia', [
             'label' => 'País de residência',
@@ -974,6 +974,10 @@ return new class extends clsCadastro {
             return false;
         }
 
+        if (!empty($this->nome_social) && !$this->validaNomeSocial()) {
+            return false;
+        }
+
         if (!empty($this->data_nasc) && !$this->validaDataNascimento()) {
             return false;
         }
@@ -992,12 +996,18 @@ return new class extends clsCadastro {
             return false;
         }
 
+        if (!$this->validaCaracteresPermitidosComplemento()) {
+            $this->mensagem = 'O campo foi preenchido com valor não permitido. O campo Complemento só permite os caracteres: ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ª º – / . ,';
+
+            return false;
+        }
+
         $pessoaId = $this->createOrUpdatePessoa($pessoaIdOrNull);
         $this->savePhoto($pessoaId);
         $this->createOrUpdatePessoaFisica($pessoaId);
         $this->createOrUpdateDocumentos($pessoaId);
         $this->createOrUpdateTelefones($pessoaId);
-        $this->saveAddress($pessoaId);
+        $this->saveAddress($pessoaId,true);
         $this->afterChangePessoa($pessoaId);
         $this->saveFiles($pessoaId);
 
@@ -1007,6 +1017,18 @@ return new class extends clsCadastro {
     private function validaNome()
     {
         $validator = new NameValidator($this->nm_pessoa);
+        if (!$validator->isValid()) {
+            $this->mensagem = $validator->getMessage();
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private function validaNomeSocial()
+    {
+        $validator = new NameValidator($this->nome_social);
         if (!$validator->isValid()) {
             $this->mensagem = $validator->getMessage();
 
@@ -1178,6 +1200,15 @@ return new class extends clsCadastro {
         }
 
         return true;
+    }
+
+    protected function validaCaracteresPermitidosComplemento()
+    {
+        if (empty($this->complement)) {
+            return true;
+        }
+        $pattern = '/^[a-zA-Z0-9ªº\/–\ .,-]+$/';
+        return preg_match($pattern, $this->complement);
     }
 
     protected function createOrUpdatePessoa($pessoaId = null)

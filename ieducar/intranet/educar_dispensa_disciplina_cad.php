@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyDisciplineExemption;
+use App\Models\LegacyExemptionType;
 use App\Models\LegacyRegistration;
 use App\Services\Exemption\ExemptionService;
 
@@ -169,21 +170,11 @@ return new class extends clsCadastro {
             $this->inputsHelper()->multipleSearchComponenteCurricular(null, ['label' => 'Componentes lecionados', 'required' => true], ['searchForArea' => true]);
         }
 
-        $opcoes = ['' => 'Selecione'];
-
-        $objTemp = new clsPmieducarTipoDispensa();
-
-        if ($this->ref_cod_instituicao) {
-            $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, 1, $this->ref_cod_instituicao);
-        } else {
-            $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, 1);
-        }
-
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $opcoes[$registro['cod_tipo_dispensa']] = $registro['nm_tipo'];
-            }
-        }
+        $opcoes = LegacyExemptionType::query()
+            ->where('ativo', 1)
+            ->orderBy('nm_tipo', 'ASC')
+            ->pluck('nm_tipo', 'cod_tipo_dispensa')
+            ->prepend('Selecione', '');
 
         $this->campoLista(
             'ref_cod_tipo_dispensa',
