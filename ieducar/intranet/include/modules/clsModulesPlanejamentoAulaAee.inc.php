@@ -155,13 +155,11 @@ class clsModulesPlanejamentoAulaAee extends Model
             && is_array($this->ref_componente_curricular_array)
             && is_string($this->ddp)
             && is_array($this->bnccs)
-            && is_array($this->conteudos)
             && is_array($this->bncc_especificacoes)
             && is_string($this->recursos_didaticos)
             && is_string($this->outros)
         ) {
             $db = new clsBanco();
-
             $campos = '';
             $valores = '';
             $gruda = '';
@@ -265,7 +263,6 @@ class clsModulesPlanejamentoAulaAee extends Model
             && is_array($this->bnccs)
             && is_array($this->bncc_especificacoes)
             && is_array($this->ref_componente_curricular_array)
-            && is_array($this->conteudos)
             && is_string($this->recursos_didaticos)
             && is_string($this->outros)
         ) {
