@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyExemptionType;
 use iEducar\Legacy\Model;
 
 class clsPmieducarDispensaDisciplina extends Model
@@ -72,8 +73,8 @@ class clsPmieducarDispensaDisciplina extends Model
         }
 
         if (is_numeric($ref_cod_tipo_dispensa)) {
-            $tipoDispensa = new clsPmieducarTipoDispensa($ref_cod_tipo_dispensa);
-            if ($tipoDispensa->existe()) {
+            $tipoDispensa = LegacyExemptionType::find($ref_cod_tipo_dispensa);
+            if ($tipoDispensa) {
                 $this->ref_cod_tipo_dispensa = $ref_cod_tipo_dispensa;
             }
         }
