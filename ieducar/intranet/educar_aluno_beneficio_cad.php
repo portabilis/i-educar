@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyBenefit;
+use App\Models\LegacyStudentBenefit;
 
 return new class extends clsCadastro {
     /**
@@ -100,6 +101,15 @@ return new class extends clsCadastro {
 
     public function Excluir()
     {
+        $count = LegacyStudentBenefit::query()
+            ->where('aluno_beneficio_id', $this->cod_aluno_beneficio)
+            ->count();
+
+        if ($count > 0) {
+            $this->mensagem = 'Você não pode excluir esse benefício, pois ele possui alunos vinculados.<br>';
+            return false;
+        }
+
         $classType = LegacyBenefit::find($this->cod_aluno_beneficio);
         $classType->ativo = 0;
 
