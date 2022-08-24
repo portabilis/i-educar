@@ -106,7 +106,7 @@ return new class extends clsCadastro {
             ->count();
 
         if ($count > 0) {
-            $this->mensagem = 'Você não pode excluir esse benefício, pois ele possui alunos vinculados.<br>';
+            $this->mensagem = 'Você não pode excluir esse benefício, pois ele possui vínculo com aluno(s).<br>';
             return false;
         }
 
