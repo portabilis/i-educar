@@ -188,7 +188,7 @@ class LegacySchool extends Model
      */
     public function schoolUsers()
     {
-        return $this->hasMany(LegacyUserSchool::class,'ref_cod_escola','cod_escola');
+        return $this->hasMany(LegacyUserSchool::class, 'ref_cod_escola', 'cod_escola');
     }
 
     /**

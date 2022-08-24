@@ -63,6 +63,7 @@ class LegacySchoolClassBuilder extends LegacyBuilder
      * Filtra por acesso escola
      *
      * @param int $user
+     *
      * @return $this
      */
     public function whereSchoolUser(int $user): self
