@@ -3,19 +3,21 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\Ativo;
 
 class LegacyBenefit extends Model
 {
+    use Ativo;
+    const CREATED_AT = 'data_cadastro';
+    const UPDATED_AT = null;
     /**
      * @var string
      */
     protected $table = 'pmieducar.aluno_beneficio';
-
     /**
      * @var string
      */
     protected $primaryKey = 'cod_aluno_beneficio';
-
     /**
      * @var array
      */

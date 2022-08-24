@@ -1499,12 +1499,14 @@ class AlunoController extends ApiCoreController
 
     public function updateBeneficios($id)
     {
-        $obj = new clsPmieducarAlunoBeneficio();
-        $obj->deletaBeneficiosDoAluno($id);
-
+        LegacyStudentBenefit::query()->where('aluno_id', $id)->delete();
         foreach ($this->getRequest()->beneficios as $beneficioId) {
             if (!empty($beneficioId)) {
-                $obj->cadastraBeneficiosDoAluno($id, $beneficioId);
+                $alunoBeneficio = new LegacyStudentBenefit();
+                $alunoBeneficio->aluno_id = $id;
+                $alunoBeneficio->aluno_beneficio_id = $beneficioId;
+
+                $alunoBeneficio->save();
             }
         }
     }
