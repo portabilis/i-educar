@@ -740,9 +740,7 @@ class AlunoController extends ApiCoreController
         }
 
         if (!isset($this->_tiposOcorrenciasDisciplinares[$id])) {
-            $ocorrencia = new clsPmieducarTipoOcorrenciaDisciplinar;
-            $ocorrencia->cod_tipo_ocorrencia_disciplinar = $id;
-            $ocorrencia = $ocorrencia->detalhe();
+            $ocorrencia = LegacyDisciplinaryOccurrenceType::find($id)?->toArray();
 
             $this->_tiposOcorrenciasDisciplinares[$id] = $this->toUtf8(
                 $ocorrencia['nm_tipo'],

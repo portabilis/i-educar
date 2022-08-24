@@ -2,6 +2,7 @@
 
 use App\Models\LegacyCourseEducacensoStage;
 use App\Models\LegacyEducacensoStages;
+use App\Models\LegacyEducationType;
 
 return new class extends clsCadastro {
     public $pessoa_logada;
@@ -169,24 +170,11 @@ return new class extends clsCadastro {
         $opcoes = ['' => 'Selecione'];
 
         if ($this->ref_cod_instituicao) {
-            $objTemp = new clsPmieducarTipoEnsino();
-            $objTemp->setOrderby('nm_tipo');
-            $lista = $objTemp->lista(
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                1,
-                $this->ref_cod_instituicao
-            );
-
-            if (is_array($lista) && count($lista)) {
-                foreach ($lista as $registro) {
-                    $opcoes[$registro['cod_tipo_ensino']] = $registro['nm_tipo'];
-                }
-            }
+            $opcoes = LegacyEducationType::query()
+                ->where('ativo', 1)
+                ->orderBy('nm_tipo', 'ASC')
+                ->pluck('nm_tipo', 'cod_tipo_ensino')
+                ->prepend('Selecione', '');
         }
 
         $script = 'javascript:showExpansivelIframe(520, 150, \'educar_tipo_ensino_cad_pop.php\');';

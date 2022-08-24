@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyEducationType;
+
 return new class extends clsDetalhe {
     /**
      * Titulo no topo da pagina
@@ -55,8 +57,7 @@ return new class extends clsDetalhe {
         $det_ref_cod_tipo_regime = $obj_ref_cod_tipo_regime->detalhe();
         $registro['ref_cod_tipo_regime'] = $det_ref_cod_tipo_regime['nm_tipo'];
 
-        $obj_ref_cod_tipo_ensino = new clsPmieducarTipoEnsino($registro['ref_cod_tipo_ensino']);
-        $det_ref_cod_tipo_ensino = $obj_ref_cod_tipo_ensino->detalhe();
+        $det_ref_cod_tipo_ensino = LegacyEducationType::find($registro['ref_cod_tipo_ensino'])?->toArray();
         $registro['ref_cod_tipo_ensino'] = $det_ref_cod_tipo_ensino['nm_tipo'];
 
         $obj_ref_cod_tipo_avaliacao = new clsPmieducarTipoAvaliacao($registro['ref_cod_tipo_avaliacao']);

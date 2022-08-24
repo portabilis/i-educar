@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use App\Traits\Ativo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class LegacyTransferType extends Model
+class LegacyRegistrationDisciplinaryOccurrenceType extends Model
 {
+    use HasFactory;
     use Ativo;
 
     public const CREATED_AT = 'data_cadastro';
@@ -15,23 +17,26 @@ class LegacyTransferType extends Model
     /**
      * @var string
      */
-    protected $table = 'pmieducar.transferencia_tipo';
+    protected $table = 'pmieducar.matricula_ocorrencia_disciplinar';
 
     /**
      * @var string
      */
-    protected $primaryKey = 'cod_transferencia_tipo';
+    protected $primaryKey = 'cod_ocorrencia_disciplinar';
 
     /**
      * @var array
      */
     protected $fillable = [
+        'ref_cod_matricula',
+        'ref_cod_tipo_ocorrencia_disciplinar',
+        'sequencial',
         'ref_usuario_exc',
         'ref_usuario_cad',
-        'nm_tipo',
-        'desc_tipo',
+        'observacao',
         'data_exclusao',
         'ativo',
-        'ref_cod_instituicao',
+        'visivel_pais',
+        'updated_at'
     ];
 }

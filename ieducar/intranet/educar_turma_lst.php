@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyGrade;
+use App\Models\LegacySchoolClass;
 
 return new class extends clsListagem {
     public $pessoa_logada;
@@ -114,105 +115,77 @@ return new class extends clsListagem {
         } elseif ($this->visivel == 2) {
             $visivel = false;
         } else {
-            $visivel = ['true', 'false'];
+            $visivel = null;
         }
 
         if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
             $obj_turma->codUsuario = $this->pessoa_logada;
         }
 
-        $lista = $obj_turma->lista2(
-            null,
-            null,
-            null,
-            $this->ref_cod_serie,
-            $this->ref_cod_escola,
-            null,
-            $this->nm_turma,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            $this->ref_cod_curso,
-            $this->ref_cod_instituicao,
-            null,
-            null,
-            null,
-            null,
-            null,
-            $visivel,
-            $this->turma_turno_id,
-            null,
-            $this->ano
-        );
-
-        $total = $obj_turma->_total;
+        $lista = LegacySchoolClass::query()
+            ->filter([
+                'grade' => $this->ref_cod_serie,
+                'school' => $this->ref_cod_escola,
+                'school_user' => $obj_turma->codUsuario,
+                'name' => $this->nm_turma,
+                'course' => $this->ref_cod_curso,
+                'institution' => $this->ref_cod_instituicao,
+                'shift' => $this->turma_turno_id,
+                'visible' => $visivel,
+                'year_eq' => $this->ano
+            ])
+            ->with([
+                'school' => fn($q)=>$q->select('cod_escola','ref_idpes')->with('organization:idpes,fantasia'),
+                'course:cod_curso,nm_curso',
+                'grades'=> fn($q)=>$q->select('cod_serie','nm_serie','ref_cod_curso')->with('course:cod_curso,nm_curso')->orderBy('nm_serie'),
+                'grade:cod_serie,nm_serie',
+                'period:id,nome'
+            ])
+            ->active()
+            ->paginate($this->limite, ['cod_turma', 'ano','nm_turma','ref_ref_cod_escola','turma_turno_id','ref_ref_cod_serie','ref_cod_curso','visivel','multiseriada'], 'pagina_' . $this->nome);
 
         // monta a lista
-        if (is_array($lista) && count($lista)) {
-            $ref_cod_escola = '';
-            $nm_escola = '';
+        if ($lista->isNotEmpty()) {
             foreach ($lista as $registro) {
-                $ref_cod_escola = $registro['ref_ref_cod_escola'];
-                $obj_ref_cod_escola = new clsPmieducarEscola($registro['ref_ref_cod_escola']);
-                $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
-                $ref_cod_escola = $registro['ref_ref_cod_escola'] ;
-                $nm_escola = $det_ref_cod_escola['nome'];
-
-                $registro['nm_curso'] = empty($registro['descricao_curso']) ? $registro['nm_curso'] : "{$registro['nm_curso']} ({$registro['descricao_curso']})";
-                $registro['nm_serie'] = $registro['descricao_serie'];
+                $nm_escola = $registro->school->name;
+                $nm_serie = $registro->multiseriada ? $registro->grades->unique()->implode('name','<br>') : $registro->grade->name;
+                $nm_curso = $registro->multiseriada ? $registro->grades->unique('course.name')->implode('course.name','<br>') : $registro->course->name;
 
                 $lista_busca = [
-                    "<a href=\"educar_turma_det.php?cod_turma={$registro['cod_turma']}\">{$registro['ano']}</a>",
-                    "<a href=\"educar_turma_det.php?cod_turma={$registro['cod_turma']}\">{$registro['nm_turma']}</a>"
+                    "<a href=\"educar_turma_det.php?cod_turma={$registro->id}\">{$registro->year}</a>",
+                    "<a href=\"educar_turma_det.php?cod_turma={$registro->id}\">{$registro->nm_turma}</a>"
                 ];
 
-                if ($registro['turma_turno_id']) {
-                    $options = ['params' => $registro['turma_turno_id'], 'return_only' => 'first-field'];
-                    $turno   = Portabilis_Utils_Database::fetchPreparedQuery('select nome from pmieducar.turma_turno where id = $1', $options);
-
-                    $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro['cod_turma']}\">$turno</a>";
+                if ($registro->turma_turno_id) {
+                    $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro->id}\">{$registro->period->name}</a>";
                 } else {
-                    $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro['cod_turma']}\"></a>";
+                    $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro->id}\"></a>";
                 }
 
-                if ($registro['nm_serie']) {
-                    $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro['cod_turma']}\">{$registro['nm_serie']}</a>";
+                if ($nm_serie) {
+                    $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro->id}\">{$nm_serie}</a>";
                 } else {
-                    $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro['cod_turma']}\">-</a>";
+                    $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro->id}\">-</a>";
                 }
 
-                $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro['cod_turma']}\">{$registro['nm_curso']}</a>";
+                $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro->id}\">{$nm_curso}</a>";
 
                 if ($nm_escola) {
-                    $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro['cod_turma']}\">{$nm_escola}</a>";
+                    $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro->id}\">{$nm_escola}</a>";
                 } else {
-                    $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro['cod_turma']}\">-</a>";
+                    $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro->id}\">-</a>";
                 }
 
-                if (dbBool($registro['visivel'])) {
-                    $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro['cod_turma']}\">Ativo</a>";
+                if ($registro->visible) {
+                    $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro->id}\">Ativo</a>";
                 } else {
-                    $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro['cod_turma']}\">Inativo</a>";
+                    $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro->id}\">Inativo</a>";
                 }
                 $this->addLinhas($lista_busca);
             }
         }
 
-        $this->addPaginador2('educar_turma_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $this->addPaginador2('educar_turma_lst.php', $lista->total(), $_GET, $this->nome, $this->limite);
         $obj_permissoes = new clsPermissoes();
         if ($obj_permissoes->permissao_cadastra(586, $this->pessoa_logada, 7)) {
             $this->acao = 'go("educar_turma_cad.php")';
