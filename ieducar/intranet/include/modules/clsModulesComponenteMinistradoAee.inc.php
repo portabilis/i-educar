@@ -49,6 +49,7 @@ class clsModulesComponenteMinistradoAee extends Model
             cm.hora_fim,
             cm.atividades,
             cm.observacao,
+            pa.id as planejamento_aula_aee_id,
             p.nome as aluno            
         ';
 
@@ -152,8 +153,10 @@ class clsModulesComponenteMinistradoAee extends Model
      */
     public function edita()
     {
-        if (is_numeric($this->id) && is_string($this->atividades) && is_string($this->observacao)) {
+        if (is_numeric($this->id)) {
 
+            //die(var_dump($this->conteudos));
+            
             $data =  dataToBanco($this->data);
 
             $db = new clsBanco();
