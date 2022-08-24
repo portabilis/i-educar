@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyProject;
+use App\Models\LegacyStudentProject;
 
 return new class extends clsCadastro {
     /**
@@ -89,6 +90,15 @@ return new class extends clsCadastro {
 
     public function Excluir()
     {
+        $count = LegacyStudentProject::query()
+            ->where('ref_cod_projeto', $this->cod_projeto)
+            ->count();
+
+        if ($count > 0) {
+            $this->mensagem = 'Você não pode excluir esse projeto, pois ele possui alunos vinculados.<br>';
+            return false;
+        }
+
         $project = LegacyProject::find($this->cod_projeto);
 
         if ($project->delete()) {
