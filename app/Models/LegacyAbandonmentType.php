@@ -5,12 +5,7 @@ namespace App\Models;
 use App\Traits\Ativo;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * Class LegacyDisciplineExemption
- *
- * @property LegacyRegistration $registration
- */
-class LegacyExemptionType extends Model
+class LegacyAbandonmentType extends Model
 {
     use Ativo;
 
@@ -20,21 +15,22 @@ class LegacyExemptionType extends Model
     /**
      * @var string
      */
-    protected $table = 'pmieducar.tipo_dispensa';
+    protected $table = 'pmieducar.abandono_tipo';
 
-    protected $primaryKey = 'cod_tipo_dispensa';
+    /**
+     * @var string
+     */
+    protected $primaryKey = 'cod_abandono_tipo';
 
     /**
      * @var array
      */
     protected $fillable = [
+        'ref_cod_instituicao',
         'ref_usuario_exc',
         'ref_usuario_cad',
-        'nm_tipo',
-        'descricao',
-        'data_cadastro',
+        'nome',
         'data_exclusao',
-        'ativo',
-        'ref_cod_instituicao',
+        'ativo'
     ];
 }

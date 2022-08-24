@@ -3,16 +3,13 @@
 namespace App\Models;
 
 use App\Traits\Ativo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * Class LegacyDisciplineExemption
- *
- * @property LegacyRegistration $registration
- */
-class LegacyExemptionType extends Model
+class LegacyDisciplinaryOccurrenceType extends Model
 {
     use Ativo;
+    use HasFactory;
 
     public const CREATED_AT = 'data_cadastro';
     public const UPDATED_AT = null;
@@ -20,9 +17,12 @@ class LegacyExemptionType extends Model
     /**
      * @var string
      */
-    protected $table = 'pmieducar.tipo_dispensa';
+    protected $table = 'pmieducar.tipo_ocorrencia_disciplinar';
 
-    protected $primaryKey = 'cod_tipo_dispensa';
+    /**
+     * @var string
+     */
+    protected $primaryKey = 'cod_tipo_ocorrencia_disciplinar';
 
     /**
      * @var array
@@ -32,9 +32,9 @@ class LegacyExemptionType extends Model
         'ref_usuario_cad',
         'nm_tipo',
         'descricao',
-        'data_cadastro',
+        'max_ocorrencias',
         'data_exclusao',
-        'ativo',
         'ref_cod_instituicao',
+        'ativo'
     ];
 }
