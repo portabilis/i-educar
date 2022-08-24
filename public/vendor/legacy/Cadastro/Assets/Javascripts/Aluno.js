@@ -335,7 +335,7 @@ let createLinkTransporte = function () {
     .appendTo(transporteLink);
 }
 
-function camposTransporte() {
+let camposTransporte = function() {
   let tipoTransporte = $j("#tipo_transporte");
   removeLinkTransporte();
 
