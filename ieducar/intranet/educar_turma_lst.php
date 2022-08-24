@@ -115,7 +115,7 @@ return new class extends clsListagem {
         } elseif ($this->visivel == 2) {
             $visivel = false;
         } else {
-            $visivel = ['true', 'false'];
+            $visivel = null;
         }
 
         if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
@@ -126,12 +126,13 @@ return new class extends clsListagem {
             ->filter([
                 'grade' => $this->ref_cod_serie,
                 'school' => $this->ref_cod_escola,
+                'school_user' => $obj_turma->codUsuario,
                 'name' => $this->nm_turma,
                 'course' => $this->ref_cod_curso,
                 'institution' => $this->ref_cod_instituicao,
                 'shift' => $this->turma_turno_id,
-                'visible' => true,
-                'year_eq' => $this->ano,
+                'visible' => $visivel,
+                'year_eq' => $this->ano
             ])
             ->with([
                 'school' => fn($q)=>$q->select('cod_escola','ref_idpes')->with('organization:idpes,fantasia'),
