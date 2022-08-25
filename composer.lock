@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e333bc4a612b78928c1a9a999a801ae3",
+    "content-hash": "a449db193f932bef6770a7acd8f63edf",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -517,22 +517,23 @@
         },
         {
             "name": "dex/frontier",
-            "version": "0.2.0",
+            "version": "0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/edersoares/frontier.git",
-                "reference": "cd65180c1bd55c2fc66f9a02cf770c1878c57b00"
+                "reference": "82fcf3755b9aa323452a0f2f8c68cc4b39e24a04"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/edersoares/frontier/zipball/cd65180c1bd55c2fc66f9a02cf770c1878c57b00",
-                "reference": "cd65180c1bd55c2fc66f9a02cf770c1878c57b00",
+                "url": "https://api.github.com/repos/edersoares/frontier/zipball/82fcf3755b9aa323452a0f2f8c68cc4b39e24a04",
+                "reference": "82fcf3755b9aa323452a0f2f8c68cc4b39e24a04",
                 "shasum": ""
             },
             "require": {
                 "illuminate/support": "^8|^9"
             },
             "require-dev": {
+                "guzzlehttp/guzzle": "^7.4",
                 "orchestra/testbench": "^6.23",
                 "phpunit/phpunit": "^9.5"
             },
@@ -564,9 +565,9 @@
             "description": "The frontier between your Laravel app and your decoupled frontend",
             "support": {
                 "issues": "https://github.com/edersoares/frontier/issues",
-                "source": "https://github.com/edersoares/frontier/tree/0.2.0"
+                "source": "https://github.com/edersoares/frontier/tree/0.3.0"
             },
-            "time": "2022-02-12T16:36:59+00:00"
+            "time": "2022-08-19T02:32:44+00:00"
         },
         {
             "name": "dflydev/dot-access-data",

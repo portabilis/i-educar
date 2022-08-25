@@ -25,7 +25,7 @@ class LegacySchoolGradeFactory extends Factory
 
         return [
             'ref_cod_escola' => $schoolCourse->school,
-            'ref_cod_serie' => LegacyLevelFactory::new()->create([
+            'ref_cod_serie' => LegacyGradeFactory::new()->create([
                 'ref_cod_curso' => $schoolCourse->course,
             ]),
             'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),

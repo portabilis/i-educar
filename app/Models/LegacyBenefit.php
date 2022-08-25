@@ -2,20 +2,22 @@
 
 namespace App\Models;
 
+use App\Traits\Ativo;
 use Illuminate\Database\Eloquent\Model;
 
 class LegacyBenefit extends Model
 {
+    use Ativo;
+    public const CREATED_AT = 'data_cadastro';
+    public const UPDATED_AT = null;
     /**
      * @var string
      */
     protected $table = 'pmieducar.aluno_beneficio';
-
     /**
      * @var string
      */
     protected $primaryKey = 'cod_aluno_beneficio';
-
     /**
      * @var array
      */
@@ -28,4 +30,9 @@ class LegacyBenefit extends Model
         'data_exclusao',
         'ativo',
     ];
+
+    public function students()
+    {
+        return $this->belongsToMany(LegacyStudent::class, 'pmieducar.aluno_aluno_beneficio', 'aluno_beneficio_id', 'aluno_id');
+    }
 }

@@ -2,13 +2,22 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacyGradeBuilder;
+use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+/**
+ * LegacyGrade
+ *
+ * @method static LegacyGradeBuilder query()
+ */
 class LegacyGrade extends Model
 {
+    use LegacyAttribute;
+
     /**
      * @var string
      */
@@ -18,6 +27,24 @@ class LegacyGrade extends Model
      * @var string
      */
     protected $primaryKey = 'cod_serie';
+
+    /**
+     * Builder dos filtros
+     *
+     * @var string
+     */
+    protected $builder = LegacyGradeBuilder::class;
+
+    /**
+     * Atributos legados para serem usados nas queries
+     *
+     * @var string[]
+     */
+    public $legacy = [
+        'id' => 'cod_serie',
+        'name' => 'nm_serie',
+        'description' => 'descricao'
+    ];
 
     /**
      * @var array
@@ -32,11 +59,31 @@ class LegacyGrade extends Model
     public $timestamps = false;
 
     /**
+     * @return int
+     */
+    public function getIdAttribute()
+    {
+        return $this->cod_serie;
+    }
+
+    /**
      * @return string
      */
     public function getNameAttribute()
     {
-        return $this->nm_serie;
+        if (empty($this->description)) {
+            return $this->nm_serie;
+        }
+
+        return $this->nm_serie . ' (' . $this->description . ')';
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescriptionAttribute()
+    {
+        return $this->descricao;
     }
 
     /**
@@ -48,6 +95,8 @@ class LegacyGrade extends Model
     }
 
     /**
+     * Regras de avaliação
+     *
      * @return BelongsToMany
      */
     public function evaluationRules()
@@ -58,6 +107,16 @@ class LegacyGrade extends Model
             'serie_id',
             'regra_avaliacao_id'
         )->withPivot('ano_letivo', 'regra_avaliacao_diferenciada_id');
+    }
+
+    /**
+     * Escolas
+     *
+     * @return BelongsToMany
+     */
+    public function schools(): BelongsToMany
+    {
+        return $this->belongsToMany(LegacySchool::class, 'escola_serie', 'ref_cod_serie', 'ref_cod_escola')->wherePivot('ativo', 1);
     }
 
     /**
@@ -78,10 +137,5 @@ class LegacyGrade extends Model
     public function schoolClass()
     {
         return $this->hasMany(LegacySchoolClass::class, 'ref_ref_cod_serie');
-    }
-
-    public function scopeActive(Builder $builder)
-    {
-        return $builder->where('serie.ativo', 1);
     }
 }

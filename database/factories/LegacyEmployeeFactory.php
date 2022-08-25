@@ -27,6 +27,7 @@ class LegacyEmployeeFactory extends Factory
             },
             'matricula' => $this->faker->randomDigitNotNull(),
             'senha' => $this->faker->randomDigitNotNull(),
+            'email' => $this->faker->email(),
             'ativo' => 1
         ];
     }

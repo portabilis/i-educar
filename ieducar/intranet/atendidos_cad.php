@@ -965,6 +965,10 @@ return new class extends clsCadastro {
             return false;
         }
 
+        if (!empty($this->nome_social) && !$this->validaNomeSocial()) {
+            return false;
+        }
+
         if (!empty($this->data_nasc) && !$this->validaDataNascimento()) {
             return false;
         }
@@ -979,6 +983,12 @@ return new class extends clsCadastro {
 
         if (!$this->validaObrigatoriedadeTelefone()) {
             $this->mensagem = 'É necessário informar um Telefone residencial ou Celular.';
+
+            return false;
+        }
+
+        if (!$this->validaCaracteresPermitidosComplemento()) {
+            $this->mensagem = 'O campo foi preenchido com valor não permitido. O campo Complemento só permite os caracteres: ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ª º – / . ,';
 
             return false;
         }
@@ -998,6 +1008,18 @@ return new class extends clsCadastro {
     private function validaNome()
     {
         $validator = new NameValidator($this->nm_pessoa);
+        if (!$validator->isValid()) {
+            $this->mensagem = $validator->getMessage();
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private function validaNomeSocial()
+    {
+        $validator = new NameValidator($this->nome_social);
         if (!$validator->isValid()) {
             $this->mensagem = $validator->getMessage();
 
@@ -1169,6 +1191,15 @@ return new class extends clsCadastro {
         }
 
         return true;
+    }
+
+    protected function validaCaracteresPermitidosComplemento()
+    {
+        if (empty($this->complement)) {
+            return true;
+        }
+        $pattern = '/^[a-zA-Z0-9ªº\/–\ .,-]+$/';
+        return preg_match($pattern, $this->complement);
     }
 
     protected function createOrUpdatePessoa($pessoaId = null)
