@@ -61,7 +61,7 @@ return new class extends clsListagem {
             $query->where('nome', 'ilike', '%' . $this->nome . '%');
         }
 
-        $result = $query->paginate($this->limite, pageName: 'pagina_'.$this->nome);
+        $result = $query->paginate($this->limite, pageName: 'pagina_');
 
         $lista = $result->items();
         $total = $result->total();
@@ -75,7 +75,7 @@ return new class extends clsListagem {
                 ]);
             }
         }
-        $this->addPaginador2('educar_projeto_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $this->addPaginador2('educar_projeto_lst.php', $total, $_GET, null, $this->limite);
 
         //** Verificacao de permissao para cadastro
         $obj_permissao = new clsPermissoes();
