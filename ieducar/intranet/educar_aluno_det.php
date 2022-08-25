@@ -2,6 +2,9 @@
 
 use App\Models\City;
 use App\Models\Country;
+use App\Models\LegacyProject;
+use App\Models\LegacyStudentProject;
+use App\Models\LegacyBenefit;
 use App\Models\PersonHasPlace;
 use App\Services\UrlPresigner;
 use iEducar\Modules\Educacenso\Model\Nacionalidade;
@@ -174,8 +177,10 @@ return new class extends clsDetalhe {
             $obj_deficiencia_pessoa = new clsCadastroFisicaDeficiencia();
             $obj_deficiencia_pessoa_lista = $obj_deficiencia_pessoa->lista($this->ref_idpes);
 
-            $obj_beneficios = new clsPmieducarAlunoBeneficio();
-            $obj_beneficios_lista = $obj_beneficios->lista(null, null, null, null, null, null, null, null, null, null, $this->cod_aluno);
+            $obj_beneficios_lista = LegacyBenefit::query()->where('pmieducar.aluno_aluno_beneficio.aluno_id', $this->cod_aluno)
+                ->join('pmieducar.aluno_aluno_beneficio', 'pmieducar.aluno_beneficio.cod_aluno_beneficio', '=', 'pmieducar.aluno_aluno_beneficio.aluno_beneficio_id')
+                ->orderBy('nm_beneficio', 'ASC')
+                ->get()->toArray();
 
             if ($obj_deficiencia_pessoa_lista) {
                 $deficiencia_pessoa = [];
@@ -411,7 +416,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe(['Raça', $det_raca['nm_raca']]);
         }
 
-        if ($obj_beneficios_lista) {
+        if (!empty($obj_beneficios_lista)) {
             $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#ccdce6" align="center"><td>Benefícios</td></tr>';
             $cor = '#D1DADF';
 
@@ -854,11 +859,12 @@ return new class extends clsDetalhe {
             $this->addDetalhe(['Possui coleta de lixo', $reg['lixo']]);
         }
 
-        $objProjetos = new clsPmieducarProjeto();
-        $reg = $objProjetos->listaProjetosPorAluno($this->cod_aluno);
-        ;
+        $reg = LegacyProject::query()->where('pmieducar.projeto_aluno.ref_cod_aluno', $this->cod_aluno)
+            ->join('pmieducar.projeto_aluno', 'pmieducar.projeto_aluno.ref_cod_projeto', '=', 'pmieducar.projeto.cod_projeto')
+            ->orderBy('nome', 'ASC')
+            ->get()->toArray();
 
-        if ($reg) {
+        if (!empty($reg)) {
             $tabela_projetos = '
             <table>
               <tr align="center">
@@ -896,7 +902,7 @@ return new class extends clsDetalhe {
                         <td %s align="center">%s</td>
                     </tr>',
                     $color,
-                    $projeto['projeto'],
+                    $projeto['nome'],
                     $color,
                     dataToBrasil($projeto['data_inclusao']),
                     $color,

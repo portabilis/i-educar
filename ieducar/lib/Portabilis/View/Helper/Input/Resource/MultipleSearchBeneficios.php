@@ -1,18 +1,9 @@
 <?php
 
+use App\Models\LegacyBenefit;
+
 class Portabilis_View_Helper_Input_Resource_MultipleSearchBeneficios extends Portabilis_View_Helper_Input_MultipleSearch
 {
-    protected function getOptions($resources)
-    {
-        if (empty($resources)) {
-            $resources = new clsPmieducarAlunoBeneficio();
-            $resources = $resources->lista();
-            $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'cod_aluno_beneficio', 'nm_beneficio');
-        }
-
-        return $this->insertOption(null, '', $resources);
-    }
-
     public function multipleSearchBeneficios($attrName, $options = [])
     {
         $defaultOptions = [
@@ -27,6 +18,17 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchBeneficios extends Por
         $this->placeholderJs($options);
 
         parent::multipleSearch($options['objectName'], $attrName, $options);
+    }
+
+    protected function getOptions($resources)
+    {
+        if (empty($resources)) {
+            $resources = LegacyBenefit::query()
+                ->where('ativo', 1)
+                ->orderBy('nm_beneficio', 'ASC')
+                ->pluck('nm_beneficio', 'cod_aluno_beneficio');
+        }
+        return $this->insertOption(null, '', $resources);
     }
 
     protected function placeholderJs($options)
