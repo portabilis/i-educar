@@ -2,10 +2,20 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacyEducationNetworkBuilder;
+use App\Traits\LegacyAttribute;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * LegacyEducationNetwork
+ *
+ * @method static LegacyEducationNetworkBuilder query()
+ */
 class LegacyEducationNetwork extends Model
 {
+    use LegacyAttribute;
+
     /**
      * @var string
      */
@@ -15,6 +25,23 @@ class LegacyEducationNetwork extends Model
      * @var string
      */
     protected $primaryKey = 'cod_escola_rede_ensino';
+
+    /**
+     * Builder dos filtros
+     *
+     * @var string
+     */
+    protected $builder = LegacyEducationNetworkBuilder::class;
+
+    /**
+     * Atributos legados para serem usados nas queries
+     *
+     * @var string[]
+     */
+    public $legacy = [
+        'id' => 'cod_escola_rede_ensino',
+        'name' => 'nm_rede'
+    ];
 
     /**
      * @var array
@@ -31,4 +58,20 @@ class LegacyEducationNetwork extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    /**
+     * @return string
+     */
+    public function getIdAttribute()
+    {
+        return $this->cod_escola_rede_ensino;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNameAttribute()
+    {
+        return $this->nm_rede;
+    }
 }

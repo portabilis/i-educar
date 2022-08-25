@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyDisciplineSchoolClass;
+use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassType;
 use App\Models\LegacySchoolCourse;
 use iEducar\Modules\Educacenso\Model\UnidadesCurriculares;
@@ -178,6 +179,13 @@ return new class extends clsCadastro {
         }
 
         if (is_numeric($this->cod_turma)) {
+            if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
+                $not_access = LegacySchoolClass::filter(['school_user'=>$this->pessoa_logada])->where('cod_turma',$this->cod_turma)->doesntExist();
+                if ($not_access) {
+                    $this->simpleRedirect('educar_turma_lst.php');
+                }
+            }
+
             $obj_turma = new clsPmieducarTurma($this->cod_turma);
             $registro = $obj_turma->detalhe();
             $obj_esc = new clsPmieducarEscola($registro['ref_ref_cod_escola']);

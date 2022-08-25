@@ -7,18 +7,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyPersonFactory extends Factory
 {
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
     protected $model = LegacyPerson::class;
 
-    /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
     public function definition(): array
     {
         return [
@@ -28,6 +18,7 @@ class LegacyPersonFactory extends Factory
             'situacao' => $this->faker->randomElement(['A', 'I', 'P']),
             'origem_gravacao' => $this->faker->randomElement(['M', 'U', 'C', 'O']),
             'operacao' => $this->faker->randomElement(['I', 'A', 'E']),
+            'email' => $this->faker->email(),
         ];
     }
 }

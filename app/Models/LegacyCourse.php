@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
-use Illuminate\Database\Eloquent\Builder;
+use App\Models\Builders\LegacyCourseBuilder;
+use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -12,9 +13,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  *
  * @property string        $name
  * @property LegacyGrade[] $grades
+ *
+ * @method static LegacyCourseBuilder query()
  */
 class LegacyCourse extends Model
 {
+    use LegacyAttribute;
+
     /**
      * @var string
      */
@@ -24,6 +29,26 @@ class LegacyCourse extends Model
      * @var string
      */
     protected $primaryKey = 'cod_curso';
+
+    /**
+     * Builder dos filtros
+     *
+     * @var string
+     */
+    protected $builder = LegacyCourseBuilder::class;
+
+    /**
+     * Atributos legados para serem usados nas queries
+     *
+     * @var array
+     */
+    public $legacy = [
+        'id' => 'cod_curso',
+        'name' => 'nm_curso',
+        'is_standard_calendar' => 'padrao_ano_escolar',
+        'steps' => 'qtd_etapas',
+        'description' => 'descricao'
+    ];
 
     /**
      * @var array
@@ -57,9 +82,29 @@ class LegacyCourse extends Model
     /**
      * @return string
      */
+    public function getDescriptionAttribute()
+    {
+        return $this->descricao;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStepsAttribute()
+    {
+        return $this->qtd_etapas;
+    }
+
+    /**
+     * @return string
+     */
     public function getNameAttribute()
     {
-        return $this->nm_curso;
+        if (empty($this->description)) {
+            return $this->nm_curso;
+        }
+
+        return $this->nm_curso . ' (' . $this->description . ')';
     }
 
     /**
@@ -81,36 +126,22 @@ class LegacyCourse extends Model
     }
 
     /**
-     * @param Builder $query
+     * Relaciona com  as escolas
      *
-     * @return Builder
+     * @return BelongsToMany
      */
-    public function scopeIsEja($query)
+    public function schools(): BelongsToMany
     {
-        return $query->where('modalidade_curso', ModalidadeCurso::EJA);
+        return $this->belongsToMany(LegacySchool::class, 'escola_curso', 'ref_cod_curso', 'ref_cod_escola')->wherePivot('ativo', 1);
     }
 
-    public function scopeActive(Builder $query)
+    /**
+     * Relaciona com as habilitações
+     *
+     * @return BelongsToMany
+     */
+    public function qualifications(): BelongsToMany
     {
-        return $query->where('curso.ativo', 1);
-    }
-
-    public function scopeRegistrationsActiveLastYear(Builder $query): Builder
-    {
-        return $query->join('pmieducar.matricula', 'curso.cod_curso', '=', 'matricula.ref_cod_curso')
-            ->where('matricula.ano', date('Y') - 1)
-            ->where('matricula.ativo', 1);
-    }
-
-    public function scopeRegistrationsActiveCurrentYear(Builder $query): Builder
-    {
-        return $query->join('pmieducar.matricula', 'curso.cod_curso', '=', 'matricula.ref_cod_curso')
-            ->where('matricula.ano', date('Y'))
-            ->where('matricula.ativo', 1);
-    }
-
-    public function scopeHasModality(Builder $query): Builder
-    {
-        return $query->where('modalidade_curso', '>', 0);
+        return $this->belongsToMany(LegacyQualification::class, 'pmieducar.habilitacao_curso', 'ref_cod_curso', 'ref_cod_habilitacao');
     }
 }

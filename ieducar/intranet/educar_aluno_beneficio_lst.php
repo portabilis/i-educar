@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyBenefit;
+
 return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -57,22 +59,18 @@ return new class extends clsListagem {
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-        $obj_aluno_beneficio = new clsPmieducarAlunoBeneficio();
-        $obj_aluno_beneficio->setOrderby('nm_beneficio ASC');
-        $obj_aluno_beneficio->setLimite($this->limite, $this->offset);
+        $query = LegacyBenefit::query()
+            ->where('ativo', 1)
+            ->orderBy('nm_beneficio', 'ASC');
 
-        $lista = $obj_aluno_beneficio->lista(
-            null,
-            null,
-            null,
-            $this->nm_beneficio,
-            null,
-            null,
-            null,
-            1
-        );
+        if (is_string($this->nm_beneficio)) {
+            $query->where('nm_beneficio', 'ilike', '%' . $this->nm_beneficio . '%');
+        }
 
-        $total = $obj_aluno_beneficio->_total;
+        $result = $query->paginate($this->limite, pageName: 'pagina_'.$this->nome);
+
+        $lista = $result->items();
+        $total = $result->total();
 
         // monta a lista
         if (is_array($lista) && count($lista)) {

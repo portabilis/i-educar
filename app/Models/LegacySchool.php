@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacySchoolBuilder;
+use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,9 +16,13 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  *
  * @property string            $name
  * @property LegacyInstitution $institution
+ *
+ * @method static LegacySchoolBuilder query()
  */
 class LegacySchool extends Model
 {
+    use LegacyAttribute;
+
     /**
      * @var string
      */
@@ -26,6 +32,23 @@ class LegacySchool extends Model
      * @var string
      */
     protected $primaryKey = 'cod_escola';
+
+    /**
+     * Builder dos filtros
+     *
+     * @var string
+     */
+    protected $builder = LegacySchoolBuilder::class;
+
+    /**
+     * Atributos legados para serem usados nas queries
+     *
+     * @var string[]
+     */
+    public $legacy = [
+        'id' => 'cod_escola',
+        'name' => 'fantasia'
+    ];
 
     /**
      * @var array
@@ -79,7 +102,7 @@ class LegacySchool extends Model
      */
     public function getNameAttribute()
     {
-        return $this->person->nome;
+        return $this->organization->fantasia ?? null;
     }
 
     /**
@@ -90,6 +113,16 @@ class LegacySchool extends Model
     public function institution()
     {
         return $this->belongsTo(LegacyInstitution::class, 'ref_cod_instituicao');
+    }
+
+    /**
+     * Anos letivos
+     *
+     * @return HasMany
+     */
+    public function academicYears(): HasMany
+    {
+        return $this->hasMany(LegacySchoolAcademicYear::class, 'ref_cod_escola');
     }
 
     /**
@@ -153,18 +186,21 @@ class LegacySchool extends Model
     /**
      * @return HasMany
      */
+    public function schoolUsers()
+    {
+        return $this->hasMany(LegacyUserSchool::class, 'ref_cod_escola', 'cod_escola');
+    }
+
+    /**
+     * @return HasMany
+     */
     public function schoolManagers()
     {
-        return $this->hasMany('App\\Models\\SchoolManager', 'school_id');
+        return $this->hasMany(SchoolManager::class, 'school_id');
     }
 
     public function stages()
     {
         return $this->hasMany(LegacySchoolStage::class, 'ref_ref_cod_escola');
-    }
-
-    public function scopeActive(Builder $builder)
-    {
-        return $builder->where('escola.ativo', 1);
     }
 }

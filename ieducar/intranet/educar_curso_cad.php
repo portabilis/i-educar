@@ -2,6 +2,8 @@
 
 use App\Models\LegacyCourseEducacensoStage;
 use App\Models\LegacyEducacensoStages;
+use App\Models\LegacyEducationType;
+use App\Models\LegacyQualification;
 
 return new class extends clsCadastro {
     public $pessoa_logada;
@@ -169,24 +171,11 @@ return new class extends clsCadastro {
         $opcoes = ['' => 'Selecione'];
 
         if ($this->ref_cod_instituicao) {
-            $objTemp = new clsPmieducarTipoEnsino();
-            $objTemp->setOrderby('nm_tipo');
-            $lista = $objTemp->lista(
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                1,
-                $this->ref_cod_instituicao
-            );
-
-            if (is_array($lista) && count($lista)) {
-                foreach ($lista as $registro) {
-                    $opcoes[$registro['cod_tipo_ensino']] = $registro['nm_tipo'];
-                }
-            }
+            $opcoes = LegacyEducationType::query()
+                ->where('ativo', 1)
+                ->orderBy('nm_tipo', 'ASC')
+                ->pluck('nm_tipo', 'cod_tipo_ensino')
+                ->prepend('Selecione', '');
         }
 
         $script = 'javascript:showExpansivelIframe(520, 150, \'educar_tipo_ensino_cad_pop.php\');';
@@ -317,8 +306,7 @@ return new class extends clsCadastro {
                     $this->habilitacao_curso[$campo['ref_cod_habilitacao']] = null;
                     $this->excluir_ = null;
                 } else {
-                    $obj_habilitacao = new clsPmieducarHabilitacao($campo['ref_cod_habilitacao_']);
-                    $obj_habilitacao_det = $obj_habilitacao->detalhe();
+                    $obj_habilitacao = LegacyQualification::find($campo['ref_cod_habilitacao_'])?->toArray();
                     $nm_habilitacao = $obj_habilitacao_det['nm_tipo'];
 
                     $this->campoTextoInv(
@@ -347,32 +335,11 @@ return new class extends clsCadastro {
         $this->campoOculto('habilitacao_curso', serialize($this->habilitacao_curso));
 
         // Habilitação
-        $opcoes = ['' => 'Selecione'];
-
-        if ($this->ref_cod_instituicao) {
-            $objTemp = new clsPmieducarHabilitacao();
-            $objTemp->setOrderby('nm_tipo');
-
-            $lista = $objTemp->lista(
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                1,
-                $this->ref_cod_instituicao
-            );
-
-            if (is_array($lista) && count($lista)) {
-                foreach ($lista as $registro) {
-                    $opcoes[$registro['cod_habilitacao']] = $registro['nm_tipo'];
-                }
-            }
-        }
+        $opcoes = LegacyQualification::query()
+            ->where('ativo', 1)
+            ->orderBy('nm_tipo', 'ASC')
+            ->pluck('nm_tipo', 'cod_habilitacao')
+            ->prepend('Selecione', '');
 
         $script = 'javascript:showExpansivelIframe(520, 225, \'educar_habilitacao_cad_pop.php\');';
         $script = "<img id='img_habilitacao' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";

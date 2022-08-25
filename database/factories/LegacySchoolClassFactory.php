@@ -34,6 +34,7 @@ class LegacySchoolClassFactory extends Factory
             'sgl_turma' => mb_substr($name, 0, 3),
             'max_aluno' => $this->faker->numberBetween(10, 25),
             'data_cadastro' => now(),
+            'turma_turno_id' => fn () => LegacyPeriodFactory::new()->create(),
             'ref_cod_turma_tipo' => fn () => LegacySchoolClassTypeFactory::new()->unique()->make(),
             'ref_ref_cod_escola' => $schoolGrade->school_id,
             'ref_ref_cod_serie' => $schoolGrade->grade_id,

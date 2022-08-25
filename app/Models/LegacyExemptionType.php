@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Ativo;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -11,6 +12,11 @@ use Illuminate\Database\Eloquent\Model;
  */
 class LegacyExemptionType extends Model
 {
+    use Ativo;
+
+    public const CREATED_AT = 'data_cadastro';
+    public const UPDATED_AT = null;
+
     /**
      * @var string
      */
@@ -31,14 +37,4 @@ class LegacyExemptionType extends Model
         'ativo',
         'ref_cod_instituicao',
     ];
-
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
-
-    public function __toString()
-    {
-        return $this->nm_tipo;
-    }
 }
