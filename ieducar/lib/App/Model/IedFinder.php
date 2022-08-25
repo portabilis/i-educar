@@ -1192,6 +1192,8 @@ class App_Model_IedFinder extends CoreExt_Entity
     /**
      * Retorna um array com as informações de biblioteca a partir de seu código.
      *
+     * @deprecated TODO remover no futuro #library-package
+     *
      * @param int $id
      *
      * @return array
@@ -1200,6 +1202,12 @@ class App_Model_IedFinder extends CoreExt_Entity
      */
     public static function getBiblioteca($id)
     {
+        if (class_exists(clsPmieducarBiblioteca::class) === false) {
+            throw new App_Model_Exception(
+                sprintf('Seu usuário não está vinculado a nenhuma biblioteca.', $id)
+            );
+        }
+
         $biblioteca = self::addClassToStorage(
             'clsPmieducarBiblioteca',
             null,
@@ -1222,12 +1230,18 @@ class App_Model_IedFinder extends CoreExt_Entity
      * Retorna todas as bibliotecas cadastradas na tabela pmieducar.biblioteca, selecionando
      * opcionalmente pelo código da instituição e/ ou escola.
      *
+     * @deprecated TODO remover no futuro #library-package
+     *
      * @param int $instituicaoId
      *
      * @return array
      */
     public static function getBibliotecas($instituicaoId = null, $escolaId = null)
     {
+        if (class_exists(clsPmieducarBiblioteca::class) === false) {
+            return [];
+        }
+
         $_bibliotecas = self::addClassToStorage(
             'clsPmieducarBiblioteca',
             null,
@@ -1247,12 +1261,18 @@ class App_Model_IedFinder extends CoreExt_Entity
      * Retorna todas as situações cadastradas para as bibliotecas na tabela pmieducar.situacao, selecionando
      * opcionalmente pelo código da biblioteca.
      *
+     * @deprecated TODO remover no futuro #library-package
+     *
      * @param int $bibliotecaId
      *
      * @return array
      */
     public static function getBibliotecaSituacoes($bibliotecaId = null)
     {
+        if (class_exists(clsPmieducarSituacao::class) === false) {
+            return [];
+        }
+
         $_situacoes = self::addClassToStorage(
             'clsPmieducarSituacao',
             null,
@@ -1272,12 +1292,18 @@ class App_Model_IedFinder extends CoreExt_Entity
      * Retorna todas as fontes cadastradas para as bibliotecas na tabela pmieducar.fonte, selecionando
      * opcionalmente pelo código da biblioteca.
      *
+     * @deprecated TODO remover no futuro #library-package
+     *
      * @param int $bibliotecaId
      *
      * @return array
      */
     public static function getBibliotecaFontes($bibliotecaId = null)
     {
+        if (class_exists(clsPmieducarFonte::class) === false) {
+            return [];
+        }
+
         $_fontes = self::addClassToStorage(
             'clsPmieducarFonte',
             null,
@@ -1297,6 +1323,8 @@ class App_Model_IedFinder extends CoreExt_Entity
      * Retorna uma obra cadastrada para uma biblioteca na tabela pmieducar.acervo, selecionando
      * obrigatóriamente pelo código da biblioteca e opcionalmente pelo código da obra.
      *
+     * @deprecated TODO remover no futuro #library-package
+     *
      * @param int $bibliotecaId
      *
      * @return array
@@ -1305,6 +1333,12 @@ class App_Model_IedFinder extends CoreExt_Entity
      */
     public static function getBibliotecaObra($bibliotecaId, $id = null)
     {
+        if (class_exists(clsPmieducarAcervo::class) === false) {
+            throw new App_Model_Exception(
+                sprintf('Obra com o código "%d" não existe.', $id)
+            );
+        }
+
         $obra = self::addClassToStorage(
             'clsPmieducarAcervo',
             null,
@@ -1357,12 +1391,18 @@ class App_Model_IedFinder extends CoreExt_Entity
      * Retorna todos os tipos de cliente cadastrados para determinada biblioteca na tabela
      * pmieducar.cliente_tipo, selecionando obrigatoriamente pelo código da biblioteca.
      *
+     * @deprecated TODO remover no futuro #library-package
+     *
      * @param int $bibliotecaId
      *
      * @return array
      */
     public static function getBibliotecaTiposCliente($bibliotecaId)
     {
+        if (class_exists(clsPmieducarClienteTipo::class) === false) {
+            return [];
+        }
+
         $resources = self::addClassToStorage(
             'clsPmieducarClienteTipo',
             null,
