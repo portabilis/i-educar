@@ -49,7 +49,6 @@ class clsModulesComponenteMinistradoAee extends Model
             cm.hora_fim,
             cm.atividades,
             cm.observacao,
-            pa.id as planejamento_aula_aee_id,
             p.nome as aluno            
         ';
 

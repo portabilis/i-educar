@@ -278,7 +278,7 @@ return new class extends clsCadastro
             'objectName' => 'conteudos',
         ];
 
-        $todos_conteudos = $this->getConteudos($this->planejamento_aula_aee_id);
+        $todos_conteudos = $this->getConteudos($this->id);
 
         $options = [
             'label' => 'Objetivo(s) do conhecimento/conteúdo',
