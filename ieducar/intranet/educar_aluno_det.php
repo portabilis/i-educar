@@ -179,7 +179,7 @@ return new class extends clsDetalhe {
 
             $obj_beneficios_lista = LegacyBenefit::query()
                 ->whereHas('students', fn ($q) => $q->where('cod_aluno', $this->cod_aluno))
-                ->get(['nm_beneficio'])->toArray();
+                ->get(['nm_beneficio']);
 
             if ($obj_deficiencia_pessoa_lista) {
                 $deficiencia_pessoa = [];
