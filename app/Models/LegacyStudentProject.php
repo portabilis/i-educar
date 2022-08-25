@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class LegacyStudentProject extends Model
 {
-
     /**
      * @var bool
      */
