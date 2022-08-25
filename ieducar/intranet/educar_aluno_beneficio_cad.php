@@ -30,7 +30,7 @@ return new class extends clsCadastro {
         $obj_permissoes->permissao_cadastra(581, $this->pessoa_logada, 3, 'educar_aluno_beneficio_lst.php');
 
         if (is_numeric($this->cod_aluno_beneficio)) {
-            $registro = LegacyBenefit::find($this->cod_aluno_beneficio)->toArray();
+            $registro = LegacyBenefit::find($this->cod_aluno_beneficio)?->toArray();
             if (!empty($registro)) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
@@ -84,7 +84,7 @@ return new class extends clsCadastro {
 
     public function Editar()
     {
-        $classType = LegacyBenefit::find($this->cod_aluno_beneficio);
+        $classType = LegacyBenefit::findOrFail($this->cod_aluno_beneficio);
         $classType->ref_usuario_cad = $this->pessoa_logada;
         $classType->ativo = 1;
         $classType->nm_beneficio = $this->nm_beneficio;
@@ -110,7 +110,7 @@ return new class extends clsCadastro {
             return false;
         }
 
-        $classType = LegacyBenefit::find($this->cod_aluno_beneficio);
+        $classType = LegacyBenefit::findOrFail($this->cod_aluno_beneficio);
         $classType->ativo = 0;
 
         if ($classType->save()) {

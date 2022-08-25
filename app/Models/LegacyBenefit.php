@@ -30,4 +30,9 @@ class LegacyBenefit extends Model
         'data_exclusao',
         'ativo',
     ];
+
+    public function students()
+    {
+        return $this->belongsToMany(LegacyStudent::class, 'pmieducar.aluno_aluno_beneficio', 'aluno_beneficio_id', 'aluno_id');
+    }
 }

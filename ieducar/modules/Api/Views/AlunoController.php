@@ -1539,7 +1539,9 @@ class AlunoController extends ApiCoreController
                             $alunoProjeto = new LegacyStudentProject();
                             $alunoProjeto->ref_cod_aluno = $alunoId;
                             $alunoProjeto->data_inclusao = $dataInclusao;
-                            $alunoProjeto->data_desligamento = $dataDesligamento;
+                            if ($dataDesligamento && $dataDesligamento != "") {
+                                $alunoProjeto->data_desligamento = $dataDesligamento;
+                            }
                             $alunoProjeto->ref_cod_projeto = $projetoId;
                             $alunoProjeto->turno = $turnoId;
 
