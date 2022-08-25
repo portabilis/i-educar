@@ -23,7 +23,10 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchBeneficios extends Por
     protected function getOptions($resources)
     {
         if (empty($resources)) {
-            $resources = LegacyBenefit::orderBy('nm_beneficio', 'ASC')->pluck('nm_beneficio', 'cod_aluno_beneficio');
+            $resources = LegacyBenefit::query()
+                ->where('ativo', 1)
+                ->orderBy('nm_beneficio', 'ASC')
+                ->pluck('nm_beneficio', 'cod_aluno_beneficio');
         }
         return $this->insertOption(null, '', $resources);
     }
