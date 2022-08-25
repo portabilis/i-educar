@@ -2,9 +2,9 @@
 
 use App\Models\City;
 use App\Models\Country;
-use App\Models\LegacyProject;
-use App\Models\LegacyStudentProject;
 use App\Models\LegacyBenefit;
+use App\Models\LegacyProject;
+use App\Models\LegacyStudent;
 use App\Models\PersonHasPlace;
 use App\Services\UrlPresigner;
 use iEducar\Modules\Educacenso\Model\Nacionalidade;
@@ -177,10 +177,9 @@ return new class extends clsDetalhe {
             $obj_deficiencia_pessoa = new clsCadastroFisicaDeficiencia();
             $obj_deficiencia_pessoa_lista = $obj_deficiencia_pessoa->lista($this->ref_idpes);
 
-            $obj_beneficios_lista = LegacyBenefit::query()->where('pmieducar.aluno_aluno_beneficio.aluno_id', $this->cod_aluno)
-                ->join('pmieducar.aluno_aluno_beneficio', 'pmieducar.aluno_beneficio.cod_aluno_beneficio', '=', 'pmieducar.aluno_aluno_beneficio.aluno_beneficio_id')
-                ->orderBy('nm_beneficio', 'ASC')
-                ->get()->toArray();
+            $obj_beneficios_lista = LegacyBenefit::query()
+                ->whereHas('students', fn ($q) => $q->where('cod_aluno', $this->cod_aluno))
+                ->get(['nm_beneficio'])->toArray();
 
             if ($obj_deficiencia_pessoa_lista) {
                 $deficiencia_pessoa = [];
@@ -275,8 +274,8 @@ return new class extends clsDetalhe {
                 $this->addDetalhe([
                     'Nome Aluno',
                     $registro['nome_aluno'] . '<p><img id="student-picture" height="117" src="' . $url . '"/></p>'
-                        . '<div><a class="rotate-picture" data-angle="90" href="javascript:void(0)"><i class="fa fa-rotate-left"></i> Girar para esquerda</a></div>'
-                        . '<div><a class="rotate-picture" data-angle="-90" href="javascript:void(0)"><i class="fa fa-rotate-right"></i> Girar para direita</a></div>'
+                    . '<div><a class="rotate-picture" data-angle="90" href="javascript:void(0)"><i class="fa fa-rotate-left"></i> Girar para esquerda</a></div>'
+                    . '<div><a class="rotate-picture" data-angle="-90" href="javascript:void(0)"><i class="fa fa-rotate-right"></i> Girar para direita</a></div>'
                 ]);
             } else {
                 $this->addDetalhe(['Nome Aluno', $registro['nome_aluno']]);
