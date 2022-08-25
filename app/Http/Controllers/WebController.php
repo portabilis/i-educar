@@ -24,4 +24,13 @@ class WebController extends Controller
             'footer' => $config->get('legacy.config.ieducar_internal_footer'),
         ];
     }
+
+    public function fallback($uri)
+    {
+        if ($uri === 'web') {
+            return redirect('intranet/home.php');
+        }
+
+        return abort(404);
+    }
 }
