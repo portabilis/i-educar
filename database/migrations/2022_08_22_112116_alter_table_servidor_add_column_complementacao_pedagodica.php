@@ -31,7 +31,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('pmieducar.matricula_turma', function (Blueprint $table) {
+        Schema::table('pmieducar.servidor', function (Blueprint $table) {
             $table->dropColumn('complementacao_pedagogica');
         });
     }
