@@ -50,8 +50,6 @@ return new class extends clsDetalhe {
         $det_ref_cod_tipo_regime = $obj_ref_cod_tipo_regime->detalhe();
         $registro['ref_cod_tipo_regime'] = $det_ref_cod_tipo_regime['nm_tipo'];
 
-        $det_ref_cod_nivel_ensino = LegacyEducationLevel::findOrFail($registro['ref_cod_nivel_ensino']);
-
         $nm_nivel = LegacyEducationLevel::query()
                 ->select('nm_nivel')
                 ->where('cod_nivel_ensino', $registro['ref_cod_nivel_ensino'])
