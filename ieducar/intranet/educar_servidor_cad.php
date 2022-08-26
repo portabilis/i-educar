@@ -484,7 +484,7 @@ JS;
 
         $this->curso_formacao_continuada = transformDBArrayInString($this->curso_formacao_continuada);
 
-        $ensinoSuperior = LegacySchoolingDegree::find($this->ref_idesco)->escolaridade == Escolaridade::EDUCACAO_SUPERIOR;
+        $ensinoSuperior = LegacySchoolingDegree::findOrFail($this->ref_idesco)->escolaridade == Escolaridade::EDUCACAO_SUPERIOR;
         $this->complementacao_pedagogica = $ensinoSuperior ? transformDBArrayInString($this->complementacao_pedagogica) : null;
 
         $obj_permissoes = new clsPermissoes();
@@ -1066,7 +1066,7 @@ JS;
             return true;
         }
 
-        if (LegacySchoolingDegree::find($this->ref_idesco)->escolaridade != Escolaridade::EDUCACAO_SUPERIOR) {
+        if (LegacySchoolingDegree::findOrFail($this->ref_idesco)->escolaridade != Escolaridade::EDUCACAO_SUPERIOR) {
             return true;
         }
 
