@@ -10,20 +10,24 @@ class FaseEtapaController extends ApiCoreController
     protected function getEtapas()
     {
         if ($this->canGetEtapas()) {
+            $turma_id = $this->getRequest()->turma_id;
+            $data_inicial = $this->getRequest()->data_inicial;
+            $selected = '';
 
             $sql = "
                 SELECT
                     m.nm_tipo, m.num_etapas,
-                    t.data_inicio, t.data_fim
+                    t.data_inicio, t.data_fim,
+                    t.sequencial
                 FROM
                     pmieducar.modulo m
                 JOIN pmieducar.turma_modulo t
                     ON (t.ref_cod_modulo = m.cod_modulo)
                 WHERE t.ref_cod_turma = $1
-                ORDER BY T.data_inicio ASC
+                ORDER BY t.sequencial ASC
             ";
 
-            $data = $this->fetchPreparedQuery($sql, $this->getRequest()->turma_id);
+            $data = $this->fetchPreparedQuery($sql, $turma_id);
 
             $num_etapas = $data[0]['num_etapas'];
 
@@ -35,7 +39,29 @@ class FaseEtapaController extends ApiCoreController
                 $unidade++;
             }
 
-            return ['options' => $options];
+            if (!empty($data_inicial)) {
+                $sql = "
+                SELECT
+                    t.sequencial
+                FROM
+                    pmieducar.modulo m
+                JOIN pmieducar.turma_modulo t
+                    ON (t.ref_cod_modulo = m.cod_modulo)
+                WHERE t.ref_cod_turma = $1 AND
+                      $2 BETWEEN t.data_inicio AND t.data_fim
+                ORDER BY t.sequencial ASC
+                LIMIT 1
+                ";
+
+                $result = $this->fetchPreparedQuery($sql, [$turma_id, dataToBanco($data_inicial)])[0];
+
+                if ($result) {
+                    $selected = $result['sequencial'];
+                }
+            }
+
+            return ['options' => $options,
+                    'selected' => $selected];
         }
     }
 
