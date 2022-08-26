@@ -371,36 +371,7 @@ class clsModulesComponenteMinistradoAee extends Model
         }
 
         return $resultado;
-    }
-
-    /**
-     * Exclui um registro
-     *
-     * @return bool
-     */
-    public function teste($teste)
-    {
-        if (is_numeric($teste)) {
-            $db = new clsBanco();
-
-            $db->Consulta("
-            SELECT DISTINCT 
-            pa.id
-            FROM modules.conteudo_ministrado_aee as cm  
-            JOIN modules.conteudo_ministrado_conteudo_aee as cmc
-                ON (cmc.conteudo_ministrado_aee_id = cm.id)
-            JOIN modules.planejamento_aula_conteudo_aee as pac
-                ON (pac.id = cmc.planejamento_aula_conteudo_aee_id)
-            JOIN modules.planejamento_aula_aee as pa
-                ON (pac.planejamento_aula_aee_id = pa.id) 
-               WHERE cm.id = $teste
-            ");
-
-            return true;
-        }
-
-        return false;
-    }
+    }    
 
     /**
      * Exclui um registro
