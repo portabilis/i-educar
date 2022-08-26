@@ -154,16 +154,16 @@ class clsModulesComponenteMinistradoAee extends Model
     {
         if (is_numeric($this->id)) {
 
-            //die(var_dump($this->conteudos));
+            //die(dump($this->data));
 
             $data =  dataToBanco($this->data);
 
             $db = new clsBanco();
-            $set = "data = NULLIF('{$db->escapeString($data)}'),
-                    hora_inicio = NULLIF('{$db->escapeString($this->hora_inicio)}'),
-                    hora_fim = NULLIF('{$db->escapeString($this->hora_fim)}'), 
+            $set = "data = '{$db->escapeString($data)}',
+                    hora_inicio = '{$db->escapeString($this->hora_inicio)}',
+                    hora_fim = '{$db->escapeString($this->hora_fim)}', 
                     atividades = '{$db->escapeString($this->atividades)}',
-                    observacao = NULLIF('{$db->escapeString($this->observacao)}'),
+                    observacao = '{$db->escapeString($this->observacao)}',
                     updated_at = (NOW() - INTERVAL '3 HOURS')";
 
             $db->Consulta("
@@ -180,7 +180,7 @@ class clsModulesComponenteMinistradoAee extends Model
                 $conteudos_atuais[] = $conteudo;
             }
 
-            $obj = new clsModulesComponenteMinistradoConteudo(null, $this->id);
+            $obj = new clsModulesComponenteMinistradoConteudoAee(null, $this->id);
             $conteudos_diferenca = $obj->retornaDiferencaEntreConjuntosConteudos($conteudos_atuais, $this->conteudos);
 
             foreach ($conteudos_diferenca['adicionar'] as $key => $conteudo_adicionar) {
