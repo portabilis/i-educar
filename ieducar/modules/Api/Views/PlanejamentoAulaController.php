@@ -92,7 +92,27 @@ class PlanejamentoAulaController extends ApiCoreController
 
         if (is_numeric($planejamento_aula_id)) {
             $obj = new clsModulesPlanejamentoAula($planejamento_aula_id);
-            return ['result' => $obj->excluir()];
+            $result = $obj->excluir();
+
+            if ($result) {
+                $objConteudo = new clsModulesPlanejamentoAulaConteudo(null, $planejamento_aula_id);
+                $objConteudo->excluirByPlanoAula();
+
+                $objBncc = new clsModulesPlanejamentoAulaBNCC(null, $planejamento_aula_id);
+                $bnccsPlanoAula = $objBncc->lista($planejamento_aula_id);
+
+                $resultBncc = $objBncc->excluirByPlanejamentoAula();
+
+                if ($resultBncc) {
+                    $objEspecificacao = new clsModulesPlanejamentoAulaBNCCEspecificacao();
+
+                    foreach ($bnccsPlanoAula as $bnccPlanoAula) {
+                        $objEspecificacao->excluirByPlanoAulaBNCC($bnccPlanoAula['planejamento_aula_bncc_id']);
+                    }
+                }
+            }
+
+            return ['result' => $result];
         }
 
         return [];
