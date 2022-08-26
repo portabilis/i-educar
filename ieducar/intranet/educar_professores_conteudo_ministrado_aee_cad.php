@@ -1,12 +1,12 @@
 <?php
 
-use App\Models\LegacyDiscipline;
-use App\Models\LegacyGrade;
 use App\Process;
-use App\Services\CheckPostedDataService;
+use App\Models\LegacyGrade;
+use Illuminate\Support\Arr;
+use App\Models\LegacyDiscipline;
 use App\Services\iDiarioService;
 use App\Services\SchoolLevelsService;
-use Illuminate\Support\Arr;
+use App\Services\CheckPostedDataService;
 
 return new class extends clsCadastro
 {
@@ -292,12 +292,16 @@ return new class extends clsCadastro
     }
 
     private function getConteudos($planejamento_aula_aee_id = null)
-    {
-        if (is_numeric($planejamento_aula_aee_id)) {
+    {       
+       
+        if (is_numeric($this->id)) {
             $rows = [];
 
+            $obj = new clsModulesComponenteMinistradoAee();
+            $planejamento_aula_aee_id = $obj->getIdPlanejamento($this->id)[0]; 
+
             $obj = new clsModulesPlanejamentoAulaConteudoAee();
-            $conteudos = $obj->lista2($planejamento_aula_aee_id);
+            $conteudos = $obj->lista2($planejamento_aula_aee_id['id']);
 
             foreach ($conteudos as $key => $conteudo) {
                 $rows[$conteudo['id']] = $conteudo['conteudo'];
@@ -305,7 +309,6 @@ return new class extends clsCadastro
 
             return $rows;
         }
-
 
         return [];
     }
