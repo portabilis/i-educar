@@ -73,9 +73,9 @@ class Registro00Import implements RegistroImportInterface
      *
      * @return LegacySchool
      */
-    private function getOrCreateSchool()
+    protected function getOrCreateSchool()
     {
-        $schoolInep = SchoolInep::where('cod_escola_inep', $this->model->codigoInep)->first();
+        $schoolInep = $this->getSchool();
 
         if ($schoolInep) {
             return $schoolInep->school;
@@ -134,6 +134,11 @@ class Registro00Import implements RegistroImportInterface
         $this->createAddress($school);
         $this->createSchoolInep($school);
         $this->createPhones($school);
+    }
+
+    protected function getSchool()
+    {
+        return SchoolInep::where('cod_escola_inep', $this->model->codigoInep)->first();
     }
 
     private function getOrCreateEducationNetwork()
