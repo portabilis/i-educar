@@ -10,6 +10,7 @@ class FaseEtapaController extends ApiCoreController
     protected function getEtapas()
     {
         if ($this->canGetEtapas()) {
+            $turma_id = $this->getRequest()->turma_id;
             $data_inicial = $this->getRequest()->data_inicial;
             $selected = '';
 
@@ -26,7 +27,7 @@ class FaseEtapaController extends ApiCoreController
                 ORDER BY t.sequencial ASC
             ";
 
-            $data = $this->fetchPreparedQuery($sql, $this->getRequest()->turma_id);
+            $data = $this->fetchPreparedQuery($sql, $turma_id);
 
             $num_etapas = $data[0]['num_etapas'];
 
@@ -52,7 +53,7 @@ class FaseEtapaController extends ApiCoreController
                 LIMIT 1
                 ";
 
-                $result = $this->fetchPreparedQuery($sql, [$this->getRequest()->turma_id,dataToBanco($data_inicial)])[0];
+                $result = $this->fetchPreparedQuery($sql, [$turma_id, dataToBanco($data_inicial)])[0];
 
                 if ($result) {
                     $selected = $result['sequencial'];
