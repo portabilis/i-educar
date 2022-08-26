@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyCourse;
 use App\Models\LegacyEducationLevel;
 
 return new class extends clsCadastro {
@@ -105,6 +106,15 @@ return new class extends clsCadastro {
 
     public function Excluir()
     {
+        $count = LegacyCourse::query()
+            ->where('ref_cod_nivel_ensino', $this->cod_nivel_ensino)
+            ->count();
+
+        if ($count > 0) {
+            $this->mensagem = 'Você não pode excluir esse Nível de Ensino, pois ele possui vínculo com Curso(s).<br>';
+            return false;
+        }
+
         $level = LegacyEducationLevel::findOrFail($this->cod_nivel_ensino);
         $level->ref_usuario_exc = $this->pessoa_logada;
         $level->ativo = 0;
