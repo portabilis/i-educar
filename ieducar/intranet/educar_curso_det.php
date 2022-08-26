@@ -1,8 +1,8 @@
 <?php
 
 use App\Models\LegacyCourse;
+use App\Models\LegacyEducationLevel;
 use App\Models\LegacyEducationType;
-use App\Models\LegacyQualification;
 use App\Models\LegacyQualificationCourse;
 
 return new class extends clsDetalhe {
@@ -50,8 +50,7 @@ return new class extends clsDetalhe {
         $det_ref_cod_tipo_regime = $obj_ref_cod_tipo_regime->detalhe();
         $registro['ref_cod_tipo_regime'] = $det_ref_cod_tipo_regime['nm_tipo'];
 
-        $obj_ref_cod_nivel_ensino = new clsPmieducarNivelEnsino($registro['ref_cod_nivel_ensino']);
-        $det_ref_cod_nivel_ensino = $obj_ref_cod_nivel_ensino->detalhe();
+        $det_ref_cod_nivel_ensino = LegacyEducationLevel::find($registro['ref_cod_nivel_ensino'])?->toArray();
         $registro['ref_cod_nivel_ensino'] = $det_ref_cod_nivel_ensino['nm_nivel'];
 
         $det_ref_cod_tipo_ensino = LegacyEducationType::find($registro['ref_cod_tipo_ensino'])?->toArray();

@@ -2,6 +2,7 @@
 
 use App\Models\LegacyCourseEducacensoStage;
 use App\Models\LegacyEducacensoStages;
+use App\Models\LegacyEducationLevel;
 use App\Models\LegacyEducationType;
 use App\Models\LegacyQualification;
 
@@ -127,26 +128,12 @@ return new class extends clsCadastro {
         $opcoes = [ '' => 'Selecione' ];
 
         if ($this->ref_cod_instituicao) {
-            $objTemp = new clsPmieducarNivelEnsino();
-            $lista = $objTemp->lista(
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                1,
-                $this->ref_cod_instituicao
-            );
-
-            if (is_array($lista) && count($lista)) {
-                foreach ($lista as $registro) {
-                    $opcoes[$registro['cod_nivel_ensino']] = $registro['nm_nivel'];
-                }
-            }
+            $opcoes = LegacyEducationLevel::query()
+                ->where('ativo', 1)
+                ->where('ref_cod_instituicao', $this->ref_cod_instituicao)
+                ->orderBy('nm_nivel', 'ASC')
+                ->pluck('nm_nivel', 'cod_nivel_ensino')
+                ->prepend('Selecione', '');
         }
 
         $script = 'javascript:showExpansivelIframe(520, 230, \'educar_nivel_ensino_cad_pop.php\');';

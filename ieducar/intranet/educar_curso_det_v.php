@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyEducationLevel;
 use App\Models\LegacyEducationType;
 
 return new class extends clsDetalhe {
@@ -64,8 +65,7 @@ return new class extends clsDetalhe {
         $det_ref_cod_tipo_avaliacao = $obj_ref_cod_tipo_avaliacao->detalhe();
         $registro['ref_cod_tipo_avaliacao'] = $det_ref_cod_tipo_avaliacao['nm_tipo'];
 
-        $obj_ref_cod_nivel_ensino = new clsPmieducarNivelEnsino($registro['ref_cod_nivel_ensino']);
-        $det_ref_cod_nivel_ensino = $obj_ref_cod_nivel_ensino->detalhe();
+        $det_ref_cod_nivel_ensino = LegacyEducationLevel::findOrFail($registro['ref_cod_nivel_ensino'])?->toArray();
         $registro['ref_cod_nivel_ensino'] = $det_ref_cod_nivel_ensino['nm_nivel'];
 
         $obj_ref_usuario_cad = new clsPmieducarUsuario($registro['ref_usuario_cad']);
