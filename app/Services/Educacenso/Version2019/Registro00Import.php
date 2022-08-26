@@ -19,6 +19,7 @@ use App\Models\PersonHasPlace;
 use App\Models\Place;
 use App\Models\SchoolInep;
 use App\Services\Educacenso\RegistroImportInterface;
+use App\Services\Educacenso\Version2019\Models\Registro00Model;
 use App\User;
 use DateTime;
 use iEducar\Modules\Educacenso\Model\EsferaAdministrativa;
@@ -330,7 +331,7 @@ class Registro00Import implements RegistroImportInterface
 
     public static function getModel($arrayColumns)
     {
-        $registro = new Registro00();
+        $registro = new Registro00Model();
         $registro->hydrateModel($arrayColumns);
 
         return $registro;
