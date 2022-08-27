@@ -2059,13 +2059,13 @@ class clsPmieducarTurma extends Model
         return false;
     }
 
-     // Pega o tipo da turma (AEE -> 1 vs REGULAR -> 0)
-     public function getTipoTurma()
-     {
-         if ($this->cod_turma) {
-             $db = new clsBanco();
+    // Pega o tipo da turma (AEE -> 1 vs REGULAR -> 0)
+    public function getTipoTurma()
+    {
+        if ($this->cod_turma) {
+            $db = new clsBanco();
 
-             $sql = "
+            $sql = "
                  SELECT
                      CASE
                          WHEN t.tipo_atendimento = 5 THEN 1
@@ -2076,14 +2076,14 @@ class clsPmieducarTurma extends Model
                  WHERE t.cod_turma = {$this->cod_turma}
              ";
 
-             $db->Consulta($sql);
-             $db->ProximoRegistro();
+            $db->Consulta($sql);
+            $db->ProximoRegistro();
 
-             return $db->Tupla()[0];
-         }
+            return $db->Tupla()[0];
+        }
 
-         return false;
-     }
+        return false;
+    }
 
     public function lista_turmas_aee($pessoa_logada)
     {
