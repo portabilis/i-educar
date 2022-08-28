@@ -142,6 +142,11 @@ class PlanejamentoAulaController extends ApiCoreController
             $this->simpleRedirect('educar_professores_planejamento_de_aula_cad.php');
         }
 
+        if (!$this->verificarDatas($data_inicial, $data_final)) {
+            return [ "result" => "Cadastro não realizado, pois a data inicial é maior do que a data final" ];
+            $this->simpleRedirect('educar_professores_planejamento_de_aula_cad.php');
+        }
+
         if (is_numeric($planejamento_aula_id)) {
             $obj = new clsModulesPlanejamentoAula(
                 $planejamento_aula_id,
@@ -191,6 +196,14 @@ class PlanejamentoAulaController extends ApiCoreController
             return [ "result" => "Cadastro não realizado, pois o intervalo de datas não se adequa as etapas da turma." ];
             $this->simpleRedirect('educar_professores_planejamento_de_aula_cad.php');
         }
+
+        if (!$this->verificarDatas($data_inicial, $data_final)) {
+            return [ "result" => "Cadastro não realizado, pois a data inicial é maior do que a data final." ];
+            $this->simpleRedirect('educar_professores_planejamento_de_aula_cad.php');
+        }
+        echo $data_inicial;
+        echo $data_final;
+        exit;
 
         $obj = new clsModulesPlanejamentoAula(
            null,
@@ -372,6 +385,18 @@ class PlanejamentoAulaController extends ApiCoreController
         }
 
         return $podeRegistrar;
+    }
+
+    private function verificarDatas($data_inicial, $data_final) {
+        $dataInicial = new DateTime($data_inicial);
+        $dataFinal = new DateTime($data_final);
+
+        if ($dataInicial > $dataFinal) {
+            return false;
+        }
+
+        return true;
+
     }
 
     public function Gerar()
