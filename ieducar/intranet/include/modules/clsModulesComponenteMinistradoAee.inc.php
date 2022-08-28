@@ -10,7 +10,7 @@ class clsModulesComponenteMinistradoAee extends Model
     public $hora_fim;
     public $ref_cod_matricula;
     public $atividades;
-    public $observacao; 
+    public $observacao;
     public $conteudos;
 
     public function __construct(
@@ -105,7 +105,7 @@ class clsModulesComponenteMinistradoAee extends Model
                 $campos     .=  ", data";
                 $valores    .=  ", '{($this->data)}'";
             }
-            
+
             if (is_string($this->hora_inicio)) {
                 $campos     .=  ", hora_inicio";
                 $valores    .=  ", '{($this->hora_inicio)}'";
@@ -131,14 +131,14 @@ class clsModulesComponenteMinistradoAee extends Model
                     {$this->_tabela} ( $campos )
                     VALUES ( $valores )
             ");
-           
+
             $id = $db->InsertId("{$this->_tabela}_id_seq");
 
             foreach ($this->conteudos as $key => $conteudo) {
                 $obj = new clsModulesComponenteMinistradoConteudoAee(null, $id, $conteudo);
                 $obj->cadastra();
             }
-            
+
             return $id;
         }
 
@@ -147,12 +147,14 @@ class clsModulesComponenteMinistradoAee extends Model
 
     /**
      * Edita os dados de um registro
-     *sssssss
+     *
      * @return bool
      */
     public function edita()
     {
-        if (is_numeric($this->id) && is_string($this->atividades) && is_string($this->observacao)) {
+        if (is_numeric($this->id)) {
+
+            //die(var_dump($this->conteudos));
 
             $data =  dataToBanco($this->data);
 
@@ -223,7 +225,7 @@ class clsModulesComponenteMinistradoAee extends Model
                 ";
 
         $whereAnd = ' AND ';
-        $filtros = " WHERE TRUE ";        
+        $filtros = " WHERE TRUE ";
 
         // if (is_numeric($int_ref_cod_ins)) {
         //     $filtros .= "{$whereAnd} i.cod_instituicao = '{$int_ref_cod_ins}'";
@@ -264,7 +266,7 @@ class clsModulesComponenteMinistradoAee extends Model
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
-        $sql .= $filtros . 'ORDER BY cm.data DESC'. $this->getLimite();
+        $sql .= $filtros . 'ORDER BY cm.data DESC' . $this->getLimite();
 
         $this->_total = $db->CampoUnico(
             "SELECT
@@ -339,6 +341,37 @@ class clsModulesComponenteMinistradoAee extends Model
 
         return false;
     }
+
+    /**
+     * Retorna o ID do planejamento pelo ID do conteudo passado via parâmetro
+     *
+     * @return bool
+     */
+    public function getIdPlanejamento($id)
+    {
+
+        $db = new clsBanco();
+
+        $sql = "SELECT DISTINCT 
+                                pa.id
+                                FROM modules.conteudo_ministrado_aee as cm  
+                                JOIN modules.conteudo_ministrado_conteudo_aee as cmc
+                                    ON (cmc.conteudo_ministrado_aee_id = cm.id)
+                                JOIN modules.planejamento_aula_conteudo_aee as pac
+                                    ON (pac.id = cmc.planejamento_aula_conteudo_aee_id)
+                                JOIN modules.planejamento_aula_aee as pa
+                                    ON (pac.planejamento_aula_aee_id = pa.id) 
+                                   WHERE cm.id = $id";
+
+        $db->Consulta($sql);
+
+        while ($db->ProximoRegistro()) {
+            $tupla = $db->Tupla();
+            $resultado[] = $tupla;
+        }
+
+        return $resultado;
+    }    
 
     /**
      * Exclui um registro

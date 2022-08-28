@@ -1,4 +1,4 @@
-function updateSelect($targetElement, options, emptyOptionHtml) {
+function updateSelect($targetElement, options, emptyOptionHtml, optionSelected = null) {
   $targetElement.children().not('[value=""]').remove();
 
   var groups = new Array();
@@ -32,6 +32,10 @@ function updateSelect($targetElement, options, emptyOptionHtml) {
     $targetElement.children('[value=""]').first().html(emptyOptionHtml || "Selecione uma opção");
   } else {
     $targetElement.children(':first').html('Sem opções');
+  }
+
+  if (optionSelected) {
+    $targetElement.val(optionSelected).change();
   }
 }
 

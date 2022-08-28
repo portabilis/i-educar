@@ -1801,24 +1801,24 @@ class clsPmieducarTurma extends Model
     public function pegarTurma($ref_cod_matricula)
     {
         $sql = "
-        
+
         SELECT a.cod_serie,c.ref_cod_turma ,b.ref_cod_aluno, c.ref_cod_matricula, d.nm_turma
 
         FROM pmieducar.serie AS a
-        
+
         JOIN pmieducar.matricula AS b
-        
+
         ON a.cod_serie = b.ref_ref_cod_serie
-        
+
         JOIN  pmieducar.matricula_turma as c
-        
+
         ON b.cod_matricula = c.ref_cod_matricula
-        
+
         JOIN pmieducar.turma AS d
-        
+
         ON c.ref_cod_turma = d.cod_turma
-        
-        
+
+
         ";
         $filtros = '';
         $whereAnd = 'WHERE';
@@ -1869,6 +1869,24 @@ class clsPmieducarTurma extends Model
         if (is_numeric($this->cod_turma)) {
             $db = new clsBanco();
             $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} t WHERE t.cod_turma = '{$this->cod_turma}'");
+            $db->ProximoRegistro();
+
+            return $db->Tupla();
+        }
+
+        return false;
+    }
+
+    public function detalheWithCurso()
+    {
+        if (is_numeric($this->cod_turma)) {
+            $db = new clsBanco();
+            $db->Consulta("SELECT
+                                   {$this->_todos_campos},
+                                   c.multi_seriado as multi_seriado_curso
+                                   FROM {$this->_tabela} t
+                                   INNER JOIN pmieducar.curso c ON (t.ref_cod_curso = c.cod_curso)
+                                   WHERE t.cod_turma = '{$this->cod_turma}'");
             $db->ProximoRegistro();
 
             return $db->Tupla();
@@ -2041,38 +2059,38 @@ class clsPmieducarTurma extends Model
         return false;
     }
 
-     // Pega o tipo da turma (AEE -> 1 vs REGULAR -> 0)
-     public function getTipoTurma()
-     {
-         if ($this->cod_turma) {
-             $db = new clsBanco();
- 
-             $sql = "
+    // Pega o tipo da turma (AEE -> 1 vs REGULAR -> 0)
+    public function getTipoTurma()
+    {
+        if ($this->cod_turma) {
+            $db = new clsBanco();
+
+            $sql = "
                  SELECT
                      CASE
-                         WHEN t.tipo_atendimento = 5 THEN 1                        
+                         WHEN t.tipo_atendimento = 5 THEN 1
                          ELSE 0
                      END
                  FROM
                      pmieducar.turma as t
                  WHERE t.cod_turma = {$this->cod_turma}
              ";
- 
-             $db->Consulta($sql);
-             $db->ProximoRegistro();
- 
-             return $db->Tupla()[0];
-         }
- 
-         return false;
-     }
+
+            $db->Consulta($sql);
+            $db->ProximoRegistro();
+
+            return $db->Tupla()[0];
+        }
+
+        return false;
+    }
 
     public function lista_turmas_aee($pessoa_logada)
     {
 
         $db = new clsBanco();
         $ano_turma = date('Y');
-        $sql = "SELECT t.cod_turma, t.nm_turma, p.nome 
+        $sql = "SELECT t.cod_turma, t.nm_turma, p.nome
         FROM pmieducar.turma t
         JOIN pmieducar.escola e ON e.cod_escola = t.ref_ref_cod_escola
         JOIN cadastro.pessoa p ON p.idpes = e.ref_idpes

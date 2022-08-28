@@ -200,4 +200,21 @@ class clsModulesPlanejamentoAulaBNCCEspecificacao extends Model {
 
         return false;
     }
+
+    public function excluirByPlanoAulaBNCC ($planejamento_aula_bncc_id) {
+        if (is_numeric($planejamento_aula_bncc_id)) {
+            $db = new clsBanco();
+
+            $db->Consulta("
+                DELETE FROM
+                    {$this->_tabela}
+                WHERE
+                    planejamento_aula_bncc_id = '{$planejamento_aula_bncc_id}'
+            ");
+
+            return true;
+        }
+
+        return false;
+    }
 }

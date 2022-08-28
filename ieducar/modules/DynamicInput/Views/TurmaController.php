@@ -114,7 +114,7 @@ class TurmaController extends ApiCoreController
 
         if (is_numeric($turmaId)) {
             $obj = new clsPmieducarTurma($turmaId);
-            $turma = $obj->detalhe();
+            $turma = $obj->detalheWithCurso();
 
             return $turma;
         }

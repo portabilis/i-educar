@@ -92,7 +92,27 @@ class PlanejamentoAulaController extends ApiCoreController
 
         if (is_numeric($planejamento_aula_id)) {
             $obj = new clsModulesPlanejamentoAula($planejamento_aula_id);
-            return ['result' => $obj->excluir()];
+            $result = $obj->excluir();
+
+            if ($result) {
+                $objConteudo = new clsModulesPlanejamentoAulaConteudo(null, $planejamento_aula_id);
+                $objConteudo->excluirByPlanoAula();
+
+                $objBncc = new clsModulesPlanejamentoAulaBNCC(null, $planejamento_aula_id);
+                $bnccsPlanoAula = $objBncc->lista($planejamento_aula_id);
+
+                $resultBncc = $objBncc->excluirByPlanejamentoAula();
+
+                if ($resultBncc) {
+                    $objEspecificacao = new clsModulesPlanejamentoAulaBNCCEspecificacao();
+
+                    foreach ($bnccsPlanoAula as $bnccPlanoAula) {
+                        $objEspecificacao->excluirByPlanoAulaBNCC($bnccPlanoAula['planejamento_aula_bncc_id']);
+                    }
+                }
+            }
+
+            return ['result' => $result];
         }
 
         return [];
@@ -119,6 +139,11 @@ class PlanejamentoAulaController extends ApiCoreController
 
         if (!$podeEditar) {
             return [ "result" => "Edição não realizada, pois o intervalo de datas não se adequa as etapas da turma." ];
+            $this->simpleRedirect('educar_professores_planejamento_de_aula_cad.php');
+        }
+
+        if (!$this->verificarDatas($data_inicial, $data_final)) {
+            return [ "result" => "Cadastro não realizado, pois a data inicial é maior do que a data final" ];
             $this->simpleRedirect('educar_professores_planejamento_de_aula_cad.php');
         }
 
@@ -169,6 +194,11 @@ class PlanejamentoAulaController extends ApiCoreController
 
         if (!$podeRegistrar) {
             return [ "result" => "Cadastro não realizado, pois o intervalo de datas não se adequa as etapas da turma." ];
+            $this->simpleRedirect('educar_professores_planejamento_de_aula_cad.php');
+        }
+
+        if (!$this->verificarDatas($data_inicial, $data_final)) {
+            return [ "result" => "Cadastro não realizado, pois a data inicial é maior do que a data final." ];
             $this->simpleRedirect('educar_professores_planejamento_de_aula_cad.php');
         }
 
@@ -352,6 +382,18 @@ class PlanejamentoAulaController extends ApiCoreController
         }
 
         return $podeRegistrar;
+    }
+
+    private function verificarDatas($data_inicial, $data_final) {
+        $dataInicial = new DateTime($data_inicial);
+        $dataFinal = new DateTime($data_final);
+
+        if ($dataInicial > $dataFinal) {
+            return false;
+        }
+
+        return true;
+
     }
 
     public function Gerar()

@@ -54,7 +54,8 @@
     function handleUpdateTurma(response) {
       let updateComponente = true;
 
-      if (copy && response && parseInt(response.ref_ref_cod_serie) == parseInt(serie_id)) {
+      if (copy && response &&
+        ((parseInt(response.ref_ref_cod_serie) == parseInt(serie_id)) || (parseInt(response.multi_seriado_curso) == 1))) {
         updateComponente = false;
       }
 

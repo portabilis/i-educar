@@ -254,6 +254,23 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
         return false;
     }
 
+    public function excluirByPlanoAula () {
+        if (is_numeric($this->planejamento_aula_id)) {
+            $db = new clsBanco();
+
+            $db->Consulta("
+                DELETE FROM
+                    {$this->_tabela}
+                WHERE
+                    planejamento_aula_id = '{$this->planejamento_aula_id}'
+            ");
+
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * Retorna array com três arrays,
      * uma com os conteúdos a serem cadastrados,
