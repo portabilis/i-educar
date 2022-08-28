@@ -201,9 +201,6 @@ class PlanejamentoAulaController extends ApiCoreController
             return [ "result" => "Cadastro não realizado, pois a data inicial é maior do que a data final." ];
             $this->simpleRedirect('educar_professores_planejamento_de_aula_cad.php');
         }
-        echo $data_inicial;
-        echo $data_final;
-        exit;
 
         $obj = new clsModulesPlanejamentoAula(
            null,
