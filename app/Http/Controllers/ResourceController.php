@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Arr;
@@ -70,7 +71,7 @@ abstract class ResourceController extends Controller
                 $relation => function ($query) use ($columns) {
                     if ($columns) {
                         $columns = explode(',', $columns);
-                        $columns[] = $query->getForeignKeyName();
+                        $columns[] = $query instanceof BelongsTo ? $query->getOwnerKeyName() :$query->getForeignKeyName();
 
                         $this->includeColumns($columns, $query);
                     }
@@ -124,9 +125,18 @@ abstract class ResourceController extends Controller
         return $this->newResource($model);
     }
 
-    public function get(Model $model, Request $request): JsonResource
+    public function get(Model|int $model, Request $request, string $class = null): JsonResource
     {
         $this->can('view');
+
+        if ($class && is_int($model)) {
+            $query = (new $class)->newQuery();
+
+            $this->columns($request, $query);
+            $this->include($request, $query);
+
+            $model = $query->find($model);
+        }
 
         return $this->newResource($model);
     }
