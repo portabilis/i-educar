@@ -313,7 +313,7 @@ let removeLinkTransporte = function ()  {
     transporteLink.remove();
   }
 
-  let span = document.getElementsByClassName("pessoa-links")[0];
+  let span = document.getElementsByClassName("pessoa-transporte-link")[0];
   if (span) {
     span.remove();
   }
@@ -325,7 +325,7 @@ let createLinkTransporte = function () {
 
   let transporteLink = $j("<span>")
     .html("")
-    .addClass("pessoa-links")
+    .addClass("pessoa-transporte-link")
     .appendTo(veiculoField.parent());
 
   $j("<a>")
