@@ -2,7 +2,11 @@
 
 use App\Models\City;
 use App\Models\Country;
+use App\Models\LegacyBenefit;
+use App\Models\LegacyProject;
+use App\Models\LegacyStudent;
 use App\Models\PersonHasPlace;
+use App\Models\TransportationProvider;
 use App\Services\UrlPresigner;
 use iEducar\Modules\Educacenso\Model\Nacionalidade;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -174,8 +178,9 @@ return new class extends clsDetalhe {
             $obj_deficiencia_pessoa = new clsCadastroFisicaDeficiencia();
             $obj_deficiencia_pessoa_lista = $obj_deficiencia_pessoa->lista($this->ref_idpes);
 
-            $obj_beneficios = new clsPmieducarAlunoBeneficio();
-            $obj_beneficios_lista = $obj_beneficios->lista(null, null, null, null, null, null, null, null, null, null, $this->cod_aluno);
+            $obj_beneficios_lista = LegacyBenefit::query()
+                ->whereHas('students', fn ($q) => $q->where('cod_aluno', $this->cod_aluno))
+                ->get(['nm_beneficio']);
 
             if ($obj_deficiencia_pessoa_lista) {
                 $deficiencia_pessoa = [];
@@ -270,8 +275,8 @@ return new class extends clsDetalhe {
                 $this->addDetalhe([
                     'Nome Aluno',
                     $registro['nome_aluno'] . '<p><img id="student-picture" height="117" src="' . $url . '"/></p>'
-                        . '<div><a class="rotate-picture" data-angle="90" href="javascript:void(0)"><i class="fa fa-rotate-left"></i> Girar para esquerda</a></div>'
-                        . '<div><a class="rotate-picture" data-angle="-90" href="javascript:void(0)"><i class="fa fa-rotate-right"></i> Girar para direita</a></div>'
+                    . '<div><a class="rotate-picture" data-angle="90" href="javascript:void(0)"><i class="fa fa-rotate-left"></i> Girar para esquerda</a></div>'
+                    . '<div><a class="rotate-picture" data-angle="-90" href="javascript:void(0)"><i class="fa fa-rotate-right"></i> Girar para direita</a></div>'
                 ]);
             } else {
                 $this->addDetalhe(['Nome Aluno', $registro['nome_aluno']]);
@@ -411,7 +416,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe(['Raça', $det_raca['nm_raca']]);
         }
 
-        if ($obj_beneficios_lista) {
+        if (!empty($obj_beneficios_lista)) {
             $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#ccdce6" align="center"><td>Benefícios</td></tr>';
             $cor = '#D1DADF';
 
@@ -564,12 +569,11 @@ return new class extends clsDetalhe {
         } catch (Exception) {
         }
 
-        $this->addDetalhe([
-            'Transporte escolar',
-            isset($transporteAluno) && $transporteAluno->responsavel != 'Não utiliza' ? 'Sim' : 'Não utiliza'
-        ]);
-        if ($transporteAluno && $transporteAluno->responsavel != 'Não utiliza') {
-            $this->addDetalhe(['Responsável transporte', $transporteAluno->responsavel]);
+        $this->addDetalhe(['Transporte escolar', $registro['tipo_transporte'] === 0 ? 'Não utiliza' : 'Sim']);
+
+        if ($transporteAluno && $registro['tipo_transporte'] !== 0) {
+            $tipoTransporte = ucfirst((new TransportationProvider())->getValueDescription($registro['tipo_transporte']));
+            $this->addDetalhe(['Responsável transporte', $tipoTransporte]);
         }
 
         if ($registro['nis_pis_pasep']) {
@@ -854,11 +858,12 @@ return new class extends clsDetalhe {
             $this->addDetalhe(['Possui coleta de lixo', $reg['lixo']]);
         }
 
-        $objProjetos = new clsPmieducarProjeto();
-        $reg = $objProjetos->listaProjetosPorAluno($this->cod_aluno);
-        ;
+        $reg = LegacyProject::query()->where('pmieducar.projeto_aluno.ref_cod_aluno', $this->cod_aluno)
+            ->join('pmieducar.projeto_aluno', 'pmieducar.projeto_aluno.ref_cod_projeto', '=', 'pmieducar.projeto.cod_projeto')
+            ->orderBy('nome', 'ASC')
+            ->get()->toArray();
 
-        if ($reg) {
+        if (!empty($reg)) {
             $tabela_projetos = '
             <table>
               <tr align="center">
@@ -896,7 +901,7 @@ return new class extends clsDetalhe {
                         <td %s align="center">%s</td>
                     </tr>',
                     $color,
-                    $projeto['projeto'],
+                    $projeto['nome'],
                     $color,
                     dataToBrasil($projeto['data_inclusao']),
                     $color,

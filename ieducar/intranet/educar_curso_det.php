@@ -1,6 +1,9 @@
 <?php
 
+use App\Models\LegacyCourse;
 use App\Models\LegacyEducationType;
+use App\Models\LegacyQualification;
+use App\Models\LegacyQualificationCourse;
 
 return new class extends clsDetalhe {
     public $titulo;
@@ -101,10 +104,10 @@ return new class extends clsDetalhe {
             $this->addDetalhe(['Ato Poder P&uacute;blico', $registro['ato_poder_publico']]);
         }
 
-        $obj = new clsPmieducarHabilitacaoCurso(null, $this->cod_curso);
-        $lst = $obj->lista(null, $this->cod_curso);
+        $curso = LegacyCourse::find($this->cod_curso);
+        $lst = $curso->qualifications?->toArray();
 
-        if ($lst) {
+        if (!empty($lst)) {
             $tabela = '<TABLE>
                  <TR align=center>
                      <TD bgcolor=#ccdce6><B>Nome</B></TD>
@@ -118,9 +121,7 @@ return new class extends clsDetalhe {
                     $color = ' bgcolor=#FFFFFF ';
                 }
 
-                $obj = new clsPmieducarHabilitacao($valor['ref_cod_habilitacao']);
-                $obj_habilitacao = $obj->detalhe();
-                $habilitacao = $obj_habilitacao['nm_tipo'];
+                $habilitacao = $valor['nm_tipo'];
 
                 $tabela .= "<TR>
                   <TD {$color} align=left>{$habilitacao}</TD>
@@ -162,8 +163,8 @@ return new class extends clsDetalhe {
         $this->largura = '100%';
 
         $this->breadcrumb('Detalhe do curso', [
-        url('intranet/educar_index.php') => 'Escola',
-    ]);
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 
     public function Formular()
