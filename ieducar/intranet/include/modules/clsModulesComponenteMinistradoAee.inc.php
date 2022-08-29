@@ -154,8 +154,6 @@ class clsModulesComponenteMinistradoAee extends Model
     {
         if (is_numeric($this->id)) {
 
-            //die(dump($this->data));
-
             $data =  dataToBanco($this->data);
 
             $db = new clsBanco();
@@ -190,7 +188,7 @@ class clsModulesComponenteMinistradoAee extends Model
 
             foreach ($conteudos_diferenca['remover'] as $key => $conteudo_remover) {
                 $obj = new clsModulesComponenteMinistradoConteudoAee(null, $this->id, $conteudo_remover);
-                $obj->excluir();
+                $obj->excluirDiferencaConteudo();
             }
 
             return true;
@@ -371,7 +369,7 @@ class clsModulesComponenteMinistradoAee extends Model
         }
 
         return $resultado;
-    }    
+    }
 
     /**
      * Exclui um registro
@@ -383,12 +381,16 @@ class clsModulesComponenteMinistradoAee extends Model
         if (is_numeric($this->id)) {
             $db = new clsBanco();
 
+
             $db->Consulta("
                 DELETE FROM
                     modules.conteudo_ministrado_aee
                 WHERE
-                    id = '{$this->id}'
+                    id = '{$this->id}'                    
             ");
+
+            $obj = new clsModulesComponenteMinistradoConteudoAee(null, $this->id);
+            $obj->excluir();
 
             return true;
         }
