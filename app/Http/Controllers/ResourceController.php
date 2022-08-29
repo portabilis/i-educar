@@ -71,7 +71,7 @@ abstract class ResourceController extends Controller
                 $relation => function ($query) use ($columns) {
                     if ($columns) {
                         $columns = explode(',', $columns);
-                        $columns[] = $query instanceof BelongsTo ? $query->getOwnerKeyName() :$query->getForeignKeyName();
+                        $columns[] = $query instanceof BelongsTo ? $query->getOwnerKeyName() : $query->getForeignKeyName();
 
                         $this->includeColumns($columns, $query);
                     }
@@ -130,7 +130,7 @@ abstract class ResourceController extends Controller
         $this->can('view');
 
         if ($class && is_int($model)) {
-            $query = (new $class)->newQuery();
+            $query = (new $class())->newQuery();
 
             $this->columns($request, $query);
             $this->include($request, $query);
