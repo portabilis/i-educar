@@ -115,4 +115,9 @@ class LegacyStudent extends Model
         return $query->join('cadastro.fisica', 'aluno.ref_idpes', '=', 'fisica.idpes')
             ->where('sexo', 'F');
     }
+
+    public function benefits()
+    {
+        return $this->belongsToMany(LegacyBenefit::class, 'pmieducar.aluno_aluno_beneficio', 'aluno_id', 'aluno_beneficio_id');
+    }
 }
