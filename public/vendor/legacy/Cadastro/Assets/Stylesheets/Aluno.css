@@ -14,17 +14,6 @@
   cursor: pointer;
 }
 
-.pessoa-transporte-link {
-  display: block;
-  padding: 5px;
-  margin: 2px;
-}
-
-.pessoa-links-transporte-link a {
-  margin-right: 5px;
-  cursor: pointer;
-}
-
 #deficiencias_chzn ul {
   width: 307px;
 }
