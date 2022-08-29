@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyEducationLevel;
 use App\Models\LegacyEducationType;
 
 return new class extends clsDetalhe {
@@ -57,16 +58,21 @@ return new class extends clsDetalhe {
         $det_ref_cod_tipo_regime = $obj_ref_cod_tipo_regime->detalhe();
         $registro['ref_cod_tipo_regime'] = $det_ref_cod_tipo_regime['nm_tipo'];
 
-        $det_ref_cod_tipo_ensino = LegacyEducationType::find($registro['ref_cod_tipo_ensino'])?->toArray();
-        $registro['ref_cod_tipo_ensino'] = $det_ref_cod_tipo_ensino['nm_tipo'];
+        $nm_tipo = LegacyEducationType::query()
+            ->select('nm_tipo')
+            ->where('cod_tipo_ensino', $registro['ref_cod_tipo_ensino'])
+            ->first()?->nm_tipo;
+        $registro['ref_cod_tipo_ensino'] = $nm_tipo;
 
         $obj_ref_cod_tipo_avaliacao = new clsPmieducarTipoAvaliacao($registro['ref_cod_tipo_avaliacao']);
         $det_ref_cod_tipo_avaliacao = $obj_ref_cod_tipo_avaliacao->detalhe();
         $registro['ref_cod_tipo_avaliacao'] = $det_ref_cod_tipo_avaliacao['nm_tipo'];
 
-        $obj_ref_cod_nivel_ensino = new clsPmieducarNivelEnsino($registro['ref_cod_nivel_ensino']);
-        $det_ref_cod_nivel_ensino = $obj_ref_cod_nivel_ensino->detalhe();
-        $registro['ref_cod_nivel_ensino'] = $det_ref_cod_nivel_ensino['nm_nivel'];
+        $nm_nivel = LegacyEducationLevel::query()
+            ->select('nm_nivel')
+            ->where('cod_nivel_ensino', $registro['ref_cod_nivel_ensino'])
+            ->first()?->nm_nivel;
+        $registro['ref_cod_nivel_ensino'] = $nm_nivel;
 
         $obj_ref_usuario_cad = new clsPmieducarUsuario($registro['ref_usuario_cad']);
         $det_ref_usuario_cad = $obj_ref_usuario_cad->detalhe();
