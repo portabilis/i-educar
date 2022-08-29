@@ -45,20 +45,21 @@ return new class extends clsListagem {
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
         $query = LegacySchoolClassType::where('ativo', 1)
-            ->limit($this->limite)
-            ->offset($this->offset)
             ->orderBy('nm_tipo', 'ASC');
+
         if (is_string($this->nm_tipo)) {
             $query->where('nm_tipo', 'ilike', '%' . $this->nm_tipo . '%');
         }
         if (is_numeric($this->ref_cod_instituicao)) {
             $query->where('ref_cod_instituicao', $this->ref_cod_instituicao);
         }
-        $lista = $query->get()->toArray();
-        $total = $query->count();
+
+        $result = $query->paginate($this->limite, pageName: 'pagina_'.$this->nome);
+
+        $lista = $result->items();
+        $total = $result->total();
 
         // monta a lista
         if (is_array($lista) && count($lista)) {

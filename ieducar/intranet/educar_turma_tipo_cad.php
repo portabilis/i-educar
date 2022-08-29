@@ -69,9 +69,7 @@ return new class extends clsCadastro {
         $classType->ref_usuario_cad = $this->pessoa_logada;
         $classType->nm_tipo = $this->nm_tipo;
         $classType->sgl_tipo = $this->sgl_tipo;
-        $classType->data_cadastro = now();
         $classType->ref_cod_instituicao = $this->ref_cod_instituicao;
-        $classType->ativo = 1;
 
         if ($classType->save()) {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
@@ -84,7 +82,7 @@ return new class extends clsCadastro {
 
     public function Editar()
     {
-        $classType = LegacySchoolClassType::find($this->cod_turma_tipo);
+        $classType = LegacySchoolClassType::findOrFail($this->cod_turma_tipo);
         $classType->ref_usuario_cad = $this->pessoa_logada;
         $classType->nm_tipo = $this->nm_tipo;
         $classType->sgl_tipo = $this->sgl_tipo;
@@ -97,13 +95,12 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
-
         return false;
     }
 
     public function Excluir()
     {
-        $classType = LegacySchoolClassType::find($this->cod_turma_tipo);
+        $classType = LegacySchoolClassType::findOrFail($this->cod_turma_tipo);
         $classType->ativo = 0;
 
         if ($classType->save()) {
@@ -112,7 +109,6 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';
-
         return false;
     }
 
