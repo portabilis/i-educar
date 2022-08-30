@@ -163,24 +163,13 @@ return new class extends clsDetalhe {
 
         $this->addDetalhe(['<b>Turma selecionada</b>', '<b>' . $registro['nm_turma'] . '</b>']);
 
-        $objTurma = new clsPmieducarTurma($this->ref_cod_turma);
-
-        $capacidadeMaximaAlunosSala = $objTurma->maximoAlunosSala();
-
-        if ($capacidadeMaximaAlunosSala) {
-            $totalVagas = $capacidadeMaximaAlunosSala < $registro['max_aluno'] ? $capacidadeMaximaAlunosSala : $registro['max_aluno'];
-        } else {
-            $totalVagas = $registro['max_aluno'];
-        }
+        $totalVagas = $registro['max_aluno'];
 
         $this->addDetalhe(['Total de vagas', $totalVagas]);
 
         if (is_numeric($total_alunos)) {
             $this->addDetalhe(['Alunos enturmados', $total_alunos]);
             $this->addDetalhe(['Vagas disponíveis', $totalVagas - $total_alunos]);
-        }
-        if (is_numeric($capacidadeMaximaAlunosSala)) {
-            $this->addDetalhe(['Capacidade máxima de alunos na sala', $capacidadeMaximaAlunosSala]);
         }
 
         if ($this->possuiEnturmacao) {
