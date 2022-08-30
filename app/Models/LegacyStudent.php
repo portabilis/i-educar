@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacyStudentBuilder;
+use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,6 +11,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class LegacyStudent extends Model
 {
+    use LegacyAttribute;
+
+    public $builder = LegacyStudentBuilder::class;
+
     /**
      * @var string
      */
@@ -77,6 +83,57 @@ class LegacyStudent extends Model
             'cod_aluno',
             'idpes'
         );
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function personMaleIndividual()
+    {
+        return $this->belongsTo(
+            LegacyIndividual::class,
+            'pmieducar.responsaveis_aluno',
+            'ref_cod_aluno',
+            'ref_idpes'
+        );
+    }
+
+    public function getGuardianTypeAttribute()
+    {
+        return $this->tipo_responsavel;
+    }
+
+    public function getGuardianName(): ?string {
+
+        return match ($this->guardianType) {
+            'm' => $this->individual->mae->name,
+            'p' => $this->individual->pai->name,
+            'r' => $this->individual->responsavel->name,
+            'a' => $this->joinGuardionNames(),
+            default => null
+        };
+    }
+    public function getGuardianCpf()
+    {
+        return match ($this->guardianType) {
+            'm' => $this->individual->mae->individual->cpf,
+            'p' => $this->individual->pai->individual->cpf,
+            'r' => $this->individual->responsavel->individual->cpf,
+            'a' => $this->joinGuardionCpfs(),
+            default => null
+        };
+    }
+
+    private function joinGuardionCpfs(): ?string
+    {
+        $join = $this->individual->mae->individual->cpf . ', ' . $this->individual->pai->individual->cpf;
+        return strlen($join) < 3 ? null : $join;
+    }
+
+    private function joinGuardionNames(): ?string
+    {
+        $join = $this->individual->mae->name . ', ' . $this->individual->pai->name;
+        return strlen($join) < 3 ? null : $join;
     }
 
     public function getInepNumberAttribute()
