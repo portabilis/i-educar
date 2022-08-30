@@ -142,6 +142,7 @@ return new class extends clsListagem {
                 'period:id,nome'
             ])
             ->active()
+            ->orderBy('nm_turma')
             ->paginate($this->limite, ['cod_turma', 'ano','nm_turma','ref_ref_cod_escola','turma_turno_id','ref_ref_cod_serie','ref_cod_curso','visivel','multiseriada'], 'pagina_' . $this->nome);
 
         // monta a lista
