@@ -20,7 +20,7 @@ class LegacyBuilderTest extends TestCase
     private LegacySchool $school;
     private LegacySchool $schoolNotInstitution;
 
-    protected function setUp(): void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -48,13 +48,14 @@ class LegacyBuilderTest extends TestCase
 
     public function testBuilderReturnWithAliasXExpectResource(): void
     {
-        $filtered = $this->builder->filter(['institution' => $this->school->ref_cod_instituicao])->setExcept(['ref_idpes'])->resource(['id','sigla as abbr'],['name as label']);
+        $filtered = $this->builder->filter(['institution' => $this->school->ref_cod_instituicao])->setExcept(['ref_idpes'])->resource(['id','id as value'],['name','name as label']);
 
         $expect = new Collection([
             [
-                'id' => $this->school->id,
-                'abbr' => $this->school->sigla,
-                'label' => $this->school->name,
+                'id' => $this->school->id, //teste query sem alias
+                'value' => $this->school->id, //teste query com alias
+                'name' => $this->school->name, //teste adicional sem alias
+                'label' => $this->school->name, //teste adicional com alias
             ]
         ]);
 
