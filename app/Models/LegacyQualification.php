@@ -4,8 +4,9 @@ namespace App\Models;
 
 use App\Traits\Ativo;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class LegacyEducationLevel extends Model
+class LegacyQualification extends Model
 {
     use Ativo;
 
@@ -15,24 +16,27 @@ class LegacyEducationLevel extends Model
     /**
      * @var string
      */
-    protected $table = 'pmieducar.nivel_ensino';
+    protected $table = 'pmieducar.habilitacao';
 
     /**
      * @var string
      */
-    protected $primaryKey = 'cod_nivel_ensino';
+    protected $primaryKey = 'cod_habilitacao';
 
     /**
-     * @var array
+     * @var string[]
      */
     protected $fillable = [
         'ref_usuario_exc',
         'ref_usuario_cad',
-        'nm_nivel',
+        'nm_tipo',
         'descricao',
-        'data_cadastro',
         'data_exclusao',
-        'ativo',
         'ref_cod_instituicao',
     ];
+
+    public function courses(): BelongsToMany
+    {
+        return $this->belongsToMany(LegacyCourse::class, 'pmieducar.habilitacao_curso', 'ref_cod_habilitacao', 'ref_cod_curso');
+    }
 }

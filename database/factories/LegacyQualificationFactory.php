@@ -2,28 +2,23 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyEducationLevel;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class LegacyEducationLevelFactory extends Factory
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\LegacyQualification>
+ */
+class LegacyQualificationFactory extends Factory
 {
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
-    protected $model = LegacyEducationLevel::class;
-
     /**
      * Define the model's default state.
      *
-     * @return array
+     * @return array<string, mixed>
      */
-    public function definition(): array
+    public function definition()
     {
         return [
             'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
-            'nm_nivel' => $this->faker->firstName(),
+            'nm_tipo' => $this->faker->firstName(),
             'descricao' => $this->faker->paragraph(),
             'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
         ];
