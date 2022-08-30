@@ -60,6 +60,20 @@ class LegacySchoolClassBuilder extends LegacyBuilder
     }
 
     /**
+     * Filtra por acesso escola
+     *
+     * @param int $user
+     *
+     * @return $this
+     */
+    public function whereSchoolUser(int $user): self
+    {
+        return $this->whereHas('school.schoolUsers', function ($q) use ($user) {
+            $q->where('ref_cod_usuario', $user);
+        });
+    }
+
+    /**
      * Filtra por ano e em progresso
      *
      * @param int $year

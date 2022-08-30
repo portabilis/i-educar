@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassGrade;
 use App\Models\LegacySchoolClassType;
 use Illuminate\Support\Facades\DB;
@@ -45,6 +46,11 @@ return new class extends clsDetalhe {
             7 => 'Sábado'
         ];
 
+        $not_access = false;
+        if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
+            $not_access = LegacySchoolClass::filter(['school_user'=>$this->pessoa_logada])->where('cod_turma',$this->cod_turma)->doesntExist();
+        }
+
         $lst_obj = (new clsPmieducarTurma())->lista(
             int_cod_turma: $this->cod_turma,
             visivel: [
@@ -53,7 +59,8 @@ return new class extends clsDetalhe {
             ]
         );
 
-        if (empty($lst_obj)) {
+
+        if (empty($lst_obj) || $not_access) {
             $this->simpleRedirect('educar_turma_lst.php');
         }
 
