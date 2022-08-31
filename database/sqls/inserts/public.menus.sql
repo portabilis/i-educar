@@ -177,3 +177,4 @@ INSERT INTO public.menus VALUES (314, 313, 'Plano de aula', NULL, '/intranet/edu
 INSERT INTO public.menus VALUES (316, 305, 'AEE', NULL, NULL, NULL, 3, 1, 58, NULL, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (317, 316, 'Plano de aula - AEE', NULL, '/intranet/educar_professores_planejamento_de_aula_aee_lst.php', NULL, 1, 2, 58, NULL, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (318, 316, 'Atendimento - AEE', NULL, '/intranet/educar_professores_conteudo_ministrado_aee_lst', NULL, 2, 3, 58, NULL, NULL, true, NULL, NULL);
+INSERT INTO public.menus VALUES (335, 115, 'BNCC', 'BNCC', '/intranet/educar_bncc_lst.php', NULL, 0, 5, 9206, NULL, NULL, true, NULL, NULL);

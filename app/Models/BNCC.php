@@ -18,12 +18,12 @@ class BNCC extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = [
-        'BNCC_id',
+        'id',
         'codigo',
+        'habilidade',
         'codigo_habilidade',
-        'descricao_habilidade',
-        'id_componente',
-        'status',
+        'componente_curricular_id',
+        'inativo',
     
     ];
 
@@ -34,4 +34,10 @@ class BNCC extends Model
 
     
     use HasFactory;
+
+    //relação de n para n
+    public function series() 
+    { 
+        return $this->belongsToMany('App\Models\Serie', 'bncc_series', 'id_bncc', 'id_serie'); 
+    }
 }

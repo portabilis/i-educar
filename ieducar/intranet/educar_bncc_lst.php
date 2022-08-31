@@ -1,175 +1,201 @@
 <?php
+use iEducar\Legacy\Model;
+use App\Models\BNCC;
+use App\Models\Serie;
+use App\Models\ComponenteCurricular;
+use App\Models\bnccSeries;
 
 return new class extends clsListagem {
-
+    
     public $limite;
     public $offset;
-    public $ref_serie_origem;
-    public $ref_serie_destino;
-    public $ref_curso_origem;
-    public $ref_curso_destino;
-    public $ref_usuario_exc;
-    public $ref_usuario_cad;
-    public $data_cadastro;
-    public $data_exclusao;
-    public $ativo;
-    public $ref_cod_instituicao;
+    public $inativo;
+    public $pessoa_logada;
+    public $instituicao_id;
+    public $id;
+    public $codigo_habilidade;
+    public $series_ids;
+    public $componente_curricular_id;
+    public $habilidade;
+    public $retorno;
+    public $unidade_tematica;
+    public $campo_experiencia;
+ 
+
 
     public function Gerar()
     {
+     
         $this->titulo = 'BNCC - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null: $val;
         }
 
+       
+        $this->campoTexto('id', 'Código', $this->id, '50', '255', false);
+
+        $this->campoTexto('habilidade', 'Habilidade', $this->habilidade, '50', '255', false);
+
+        $selectOptionsComponente = [];
+
+        $componentes = ComponenteCurricular::all();
+        foreach($componentes as $componente){
+       
+            $selectOptionsComponente[$componente['id']] = $componente['nome'];
+           ;
+         }
+       
+
+        $selectOptionsComponente = Portabilis_Array_Utils::sortByValue($selectOptionsComponente);
+        $selectOptionsComponente = array_replace([null => 'Selecione'], $selectOptionsComponente);
+
+
+      
+
+        $this->campoLista('componente_curricular_id', 'Componente Curricular', $selectOptionsComponente, $this->componente_curricular_id, '', true, '', '', '', '');
+    
+
+        $this->largura = '100%';
+        
+
+ $selectOptionsComponente = [];
+
+        $componentes = ComponenteCurricular::all();
+        foreach($componentes as $componente){
+       
+            $selectOptionsComponente[$componente['id']] = $componente['nome'];
+           ;
+         }
+       
+
+        $selectOptionsComponente = Portabilis_Array_Utils::sortByValue($selectOptionsComponente);
+        $selectOptionsComponente = array_replace([null => 'Selecione'], $selectOptionsComponente);
+
+
+      
+        $this->campoLista('componente_curricular_id', 'Componente Curricular', $selectOptionsComponente, $this->componente_curricular_id, '', true, '', '', '', '');
+
         $lista_busca = [
             'Codigo',
             'Habilidade',
             'Séries',
-            'Componentes'
+            'Componente',
+            'Status'
         ];
 
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
-        if ($nivel_usuario == 1) {
-            $lista_busca[] = 'Institui&ccedil;&atilde;o';
-        }
+        
         $this->addCabecalhos($lista_busca);
 
-       
-        $opcoes = [ '' => 'Selecione' ];
-        $opcoes_ = [ '' => 'Selecione' ];
-
-        // EDITAR
-        if ($this->ref_cod_instituicao) {
-            $objTemp = new clsPmieducarCurso();
-            $objTemp->setOrderby('nm_curso');
-            $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1, null, $this->ref_cod_instituicao);
-            if (is_array($lista) && count($lista)) {
-                foreach ($lista as $registro) {
-                    $opcoes[$registro['cod_curso']] = $registro['nm_curso'];
-                    $opcoes_[$registro['cod_curso']] = $registro['nm_curso'];
-                }
-            }
-        }
-
-        $this->campoLista('ref_curso_origem', 'Curso Origem', $opcoes, $this->ref_curso_origem, '', true, '', '', false, false);
-        $this->campoLista('ref_curso_destino', ' Curso Destino', $opcoes_, $this->ref_curso_destino, '', false, '', '', false, false);
+        // Filtros de Foreign Keys
+    
 
         // primary keys
+    
 
-        $opcoes = [ '' => 'Selecione' ];
-        $opcoes_ = [ '' => 'Selecione' ];
 
-        if ($this->ref_curso_origem) {
-            $objTemp = new clsPmieducarSerie();
-            $lista = $objTemp->lista(null, null, null, $this->ref_curso_origem, null, null, null, null, null, null, null, null, 1);
-            if (is_array($lista) && count($lista)) {
-                foreach ($lista as $registro) {
-                    $opcoes[$registro['cod_serie']] = $registro['nm_serie'];
-                }
-            }
-        }
-        if ($this->ref_curso_destino) {
-            $objTemp = new clsPmieducarSerie();
-            $lista = $objTemp->lista(null, null, null, $this->ref_curso_destino, null, null, null, null, null, null, null, null, 1);
-            if (is_array($lista) && count($lista)) {
-                foreach ($lista as $registro) {
-                    $opcoes_[$registro['cod_serie']] = $registro['nm_serie'];
-                }
-            }
-        }
-
-        $this->campoLista('ref_serie_origem', 'S&eacute;rie Origem', $opcoes, $this->ref_serie_origem, null, true, '', '', false, false);
-        $this->campoLista('ref_serie_destino', ' S&eacute;rie Destino', $opcoes_, $this->ref_serie_destino, '', false, '', '', false, false);
-
+        
         // Paginador
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-        $obj_sequencia_serie = new clsPmieducarSequenciaSerie();
-        $obj_sequencia_serie->setOrderby('data_cadastro ASC');
-        $obj_sequencia_serie->setLimite($this->limite, $this->offset);
+        $obj_BNCC = new clsModulesBNCC();
+        $obj_BNCC->setOrderby('bncc.id DESC');
+        $obj_BNCC->setLimite($this->limite, $this->offset);
 
-        $lista = $obj_sequencia_serie->lista(
-            $this->ref_serie_origem,
-            $this->ref_serie_destino,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            $this->ref_curso_origem,
-            $this->ref_curso_destino,
-            $this->ref_cod_instituicao
+        $lista = $obj_BNCC->lista(
+           $this->id,
+           $this->codigo,
+           $this->habilidade,
+           $this->campo_experiencia,
+           $this->unidade_tematica,
+           $this->componente_curricular_id
         );
+       
 
-        $total = $obj_sequencia_serie->_total;
+       
 
-        // monta a lista
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $obj_ref_serie_origem = new clsPmieducarSerie($registro['ref_serie_origem']);
-                $det_ref_serie_origem = $obj_ref_serie_origem->detalhe();
-                $serie_origem = $det_ref_serie_origem['nm_serie'];
-                $registro['ref_curso_origem'] = $det_ref_serie_origem['ref_cod_curso'];
+        if(!empty($_GET['id'])){
+            $bnccs = BNCC::where('id', $_GET['id'])->get();
+            
+        }elseif(!empty($_GET['componente_curricular_id']) and !empty($_GET['habilidade'])  ){
+                $bnccs = BNCC::where('componente_curricular_id', $_GET['componente_curricular_id'])->where('habilidade', $_GET['habilidade'])->get();
+                
+        }elseif(!empty($_GET['componente_curricular_id']) and empty($_GET['habilidade'])  ){
+            $bnccs = BNCC::where('componente_curricular_id', $_GET['componente_curricular_id'])->get();
+            
+        }elseif(empty($_GET['componente_curricular_id']) and !empty($_GET['habilidade'])  ){
+            $bnccs = BNCC::where('habilidade', $_GET['habilidade'])->get();
 
-                $obj_ref_curso_origem = new clsPmieducarCurso($registro['ref_curso_origem']);
-                $det_ref_curso_origem = $obj_ref_curso_origem->detalhe();
-                $registro['ref_curso_origem'] = $det_ref_curso_origem['nm_curso'];
-                $registro['ref_cod_instituicao'] = $det_ref_curso_origem['ref_cod_instituicao'];
+        }else{
+    $bnccs = BNCC::all()->sortByDesc("id");
+   
 
-                $obj_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
-                $det_instituicao = $obj_instituicao->detalhe();
-                $registro['ref_cod_instituicao'] = $det_instituicao['nm_instituicao'];
+  }
 
-                $obj_ref_serie_destino = new clsPmieducarSerie($registro['ref_serie_destino']);
-                $det_ref_serie_destino = $obj_ref_serie_destino->detalhe();
-                $serie_destino = $det_ref_serie_destino['nm_serie'];
-                $registro['ref_curso_destino'] = $det_ref_serie_destino['ref_cod_curso'];
-
-                $obj_ref_curso_destino = new clsPmieducarCurso($registro['ref_curso_destino']);
-                $det_ref_curso_destino = $obj_ref_curso_destino->detalhe();
-                $registro['ref_curso_destino'] = $det_ref_curso_destino['nm_curso'];
-
+        $total = 0;
+        foreach($bnccs as $bncc){
+            $total ++;
+           array_push($a, $serie->cod_serie);
+           array_push($b, $serie->nm_serie);
+ 
+           $componente = ComponenteCurricular::find($bncc->componente_curricular_id);
+           $retorno ='<ul>';
+           foreach($bncc->series as $serie){
+           $retorno .= '<li>'.$serie->nm_serie.'</li>';
+           }
+           $retorno .= '</ul>';
+           $status= '';
+           if($bncc->inativo){
+            $status = 'Inativo';
+           }else{
+            $status = 'Ativo';
+           }
+           
+           
                 $lista_busca = [
-                    "<a href=\"educar_sequencia_serie_det.php?ref_serie_origem={$registro['ref_serie_origem']}&ref_serie_destino={$registro['ref_serie_destino']}\">{$registro['ref_curso_origem']}</a>",
-                    "<a href=\"educar_sequencia_serie_det.php?ref_serie_origem={$registro['ref_serie_origem']}&ref_serie_destino={$registro['ref_serie_destino']}\">{$serie_origem}</a>",
-                    "<a href=\"educar_sequencia_serie_det.php?ref_serie_origem={$registro['ref_serie_origem']}&ref_serie_destino={$registro['ref_serie_destino']}\">{$registro['ref_curso_destino']}</a>",
-                    "<a href=\"educar_sequencia_serie_det.php?ref_serie_origem={$registro['ref_serie_origem']}&ref_serie_destino={$registro['ref_serie_destino']}\">{$serie_destino}</a>"
+                    "<a href='educar_bncc_det.php?id=$bncc->id' >".$bncc->id."</a>",
+                    "<a href='educar_bncc_det.php?id=$bncc->id' >".$bncc->habilidade."</a>",
+                    "<a href='educar_bncc_det.php?id=$bncc->id' >".$retorno."</a>",
+                    "<a href='educar_bncc_det.php?id=$bncc->id' >".$componente->nome."</a>",
+                    "<a href='educar_bncc_det.php?id=$bncc->id' >".$status."</a>"
+                    
+                   
                 ];
 
-                if ($nivel_usuario == 1) {
-                    $lista_busca[] = "<a href=\"educar_sequencia_serie_det.php?ref_serie_origem={$registro['ref_serie_origem']}&ref_serie_destino={$registro['ref_serie_destino']}\">{$registro['ref_cod_instituicao']}</a>";
-                }
+               
                 $this->addLinhas($lista_busca);
             }
-        }
-        $this->addPaginador2('educar_sequencia_serie_lst.php', $total, $_GET, $this->nome, $this->limite);
+           
+       
+           
+        $this->addPaginador2('educar_bncc_lst.php', $total, $_GET, $this->nome, $this->limite);
         $obj_permissoes = new clsPermissoes();
-        if ($obj_permissoes->permissao_cadastra(587, $this->pessoa_logada, 3)) {
-            $this->acao = 'go("educar_sequencia_serie_cad.php")';
+        if ($obj_permissoes->permissao_cadastra(9206, $this->pessoa_logada, 3)) {
+            $this->acao = 'go("educar_bncc_cad.php")';
             $this->nome_acao = 'Novo';
         }
 
         $this->largura = '100%';
 
-        $this->breadcrumb('Listagem de sequências de enturmação', [
+        $this->breadcrumb('Listagem de BNCC', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
+        
     }
 
     public function makeExtra()
     {
-        return file_get_contents(__DIR__ . '/scripts/extra/educar-sequencia-serie-lst.js');
+        return file_get_contents(__DIR__ . '/include/bncc/dependencias.php');
     }
+
+ 
 
     public function Formular()
     {
-        $this->title = 'Sequência Enturmação';
-        $this->processoAp = 587;
+        $this->title = 'BNCC';
+        $this->processoAp = 9206;
     }
 };
