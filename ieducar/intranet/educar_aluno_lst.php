@@ -109,9 +109,6 @@ return new class extends clsListagem {
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
-        $aluno = new clsPmieducarAluno();
-        $aluno->setLimite($this->limite, $this->offset);
-
         $students = LegacyStudent::query()
             ->with(
                 [
