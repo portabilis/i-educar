@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
 class clsCadastro extends clsCampos
-{ 
+{
     public $target = '_self';
     public $largura;
     public $tipoacao;
@@ -334,7 +334,11 @@ class clsCadastro extends clsCampos
 
                             $retorno .= " mudaClassName( 'formdestaque', 'obrigatorio' );\n";
                             $retorno .= " $campo.className = \"formdestaque\";\n";
-                            $retorno .= " alert( 'Preencha o campo \'" . extendChars($nome_campos[$ct_campo], true) . "\' corretamente!' ); \n";
+
+                            if ($nomeCampo != 'custom_bncc' && $nomeCampo != 'custom_bncc_especificacoes' && $nomeCampo != 'ref_cod_componente_curricular_array') {
+                                $retorno .= " alert( 'Preencha o campo \'" . extendChars($nome_campos[$ct_campo], true) . "\' corretamente!' ); \n";
+                            }
+
                             $retorno .= " $campo.focus(); \n";
                             $retorno .= " return false;\n";
                             $retorno .= "}\n{$fim_for}";
@@ -635,7 +639,7 @@ class clsCadastro extends clsCampos
 
         return $this->_inputsHelper;
     }
- 
+
     protected function currentUserId()
     {
         return Portabilis_Utils_User::currentUserId();

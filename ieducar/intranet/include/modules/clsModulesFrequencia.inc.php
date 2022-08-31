@@ -561,7 +561,8 @@ class clsModulesFrequencia extends Model {
             $time_data_inicial = null,
             $time_data_final = null,
             $int_etapa = null,
-            $int_servidor_id = null
+            $int_servidor_id = null,
+            $arrayEscolasUsuario = null
         ) {
         $sql = "
                 SELECT DISTINCT
@@ -631,6 +632,10 @@ class clsModulesFrequencia extends Model {
         if (is_numeric($int_servidor_id)) {
             $filtros .= "{$whereAnd} pt.servidor_id = '{$int_servidor_id}'";
             $whereAnd = ' AND ';
+        }
+
+        if (is_array($arrayEscolasUsuario) && count($arrayEscolasUsuario) >= 1) {
+            $filtros .= "{$whereAnd} e.cod_escola IN (" . implode(',', $arrayEscolasUsuario) . ")";
         }
 
         $db = new clsBanco();
@@ -769,6 +774,8 @@ class clsModulesFrequencia extends Model {
             }
 
             $sql .= " AND T.data_enturmacao <= '{$data['detalhes']['data']}' AND (T.data_exclusao IS NULL OR T.data_exclusao >= '{$data['detalhes']['data']}') ";
+
+            $sql .= " AND m.ativo = '1' AND m.ultima_matricula = '1'";
 
             $sql .= " ORDER BY p.nome ASC";
 

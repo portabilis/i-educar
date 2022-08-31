@@ -11,8 +11,6 @@ class clsModulesPlanejamentoAulaAee extends Model
     public $ref_cod_matricula;
     public $etapa_sequencial;
     public $ddp;
-    public $necessidade_aprendizagem;
-    public $caracterizacao_pedagogica;
     public $conteudos;
     public $ref_componente_curricular_array;
     public $bnccs;
@@ -28,8 +26,6 @@ class clsModulesPlanejamentoAulaAee extends Model
         $ref_cod_matricula = null,
         $etapa_sequencial = null,
         $ddp = null,
-        $necessidade_aprendizagem = null,
-        $caracterizacao_pedagogica = null,
         $conteudos = null,
         $ref_componente_curricular_array = null,
         $bnccs = null,
@@ -42,8 +38,8 @@ class clsModulesPlanejamentoAulaAee extends Model
 
         $this->_from = "
                 modules.planejamento_aula_aee as pa
-            JOIN modules.planejamento_aula_componente_curricular as pacc
-                ON (pacc.planejamento_aula_id = pa.id)
+            JOIN modules.planejamento_aula_componente_curricular_aee as pacc
+                ON (pacc.planejamento_aula_aee_id = pa.id)
             JOIN pmieducar.turma t
                 ON (t.cod_turma = pa.ref_cod_turma)
             JOIN pmieducar.instituicao i
@@ -54,10 +50,20 @@ class clsModulesPlanejamentoAulaAee extends Model
                 ON (j.idpes = e.ref_idpes)
             JOIN pmieducar.curso c
                 ON (c.cod_curso = t.ref_cod_curso) 
+            JOIN pmieducar.serie s
+                ON (s.cod_serie = t.ref_ref_cod_serie)
+            JOIN pmieducar.turma_turno u
+                ON (u.id = t.turma_turno_id)
+            LEFT JOIN pmieducar.turma_modulo q
+                ON (q.ref_cod_turma = t.cod_turma AND q.sequencial = 1)
+            JOIN modules.professor_turma as pt
+                ON (pt.turma_id = pa.ref_cod_turma)
+            JOIN cadastro.pessoa AS pe
+                ON ( pe.idpes = pt.servidor_id )
             JOIN pmieducar.matricula m
                 ON (m.cod_matricula = pa.ref_cod_matricula)  
             JOIN pmieducar.aluno a
-                ON (a.cod_aluno = m.ref_cod_aluno) 
+                ON (a.cod_aluno = m.ref_cod_aluno)             
             JOIN cadastro.pessoa p
                 ON (p.idpes = a.ref_idpes)         
             LEFT JOIN modules.componente_curricular k
@@ -72,15 +78,16 @@ class clsModulesPlanejamentoAulaAee extends Model
             pa.ref_cod_matricula,
             pa.ref_cod_turma,
             pa.ddp,
-            pa.necessidade_aprendizagem,
             pa.recursos_didaticos,
-            pa.caracterizacao_pedagogica,
             pa.outros,
+            pa.etapa_sequencial AS fase_etapa,
             i.nm_instituicao AS instituicao,
             p.nome as aluno,
             j.fantasia AS escola,
             c.nm_curso AS curso,
-            t.nm_turma AS turma
+            t.nm_turma AS turma,
+            pe.nome as professor,
+            s.nm_serie AS serie
         ';
 
         if (is_numeric($id)) {
@@ -105,14 +112,6 @@ class clsModulesPlanejamentoAulaAee extends Model
 
         if (is_string($ddp)) {
             $this->ddp = $ddp;
-        }
-
-        if (is_string($necessidade_aprendizagem)) {
-            $this->necessidade_aprendizagem = $necessidade_aprendizagem;
-        }
-
-        if (is_string($caracterizacao_pedagogica)) {
-            $this->caracterizacao_pedagogica = $caracterizacao_pedagogica;
         }
 
         if (is_array($conteudos)) {
@@ -155,16 +154,12 @@ class clsModulesPlanejamentoAulaAee extends Model
             && is_numeric($this->ref_cod_matricula)
             && is_array($this->ref_componente_curricular_array)
             && is_string($this->ddp)
-            && is_string($this->necessidade_aprendizagem)
             && is_array($this->bnccs)
-            && is_array($this->conteudos)
-            && is_string($this->caracterizacao_pedagogica)
             && is_array($this->bncc_especificacoes)
             && is_string($this->recursos_didaticos)
             && is_string($this->outros)
         ) {
             $db = new clsBanco();
-
             $campos = '';
             $valores = '';
             $gruda = '';
@@ -193,14 +188,6 @@ class clsModulesPlanejamentoAulaAee extends Model
             $valores .= "{$gruda}'{$db->escapeString($this->ddp)}'";
             $gruda = ', ';
 
-            $campos .= "{$gruda}necessidade_aprendizagem";
-            $valores .= "{$gruda}'{$db->escapeString($this->necessidade_aprendizagem)}'";
-            $gruda = ', ';
-
-            $campos .= "{$gruda}caracterizacao_pedagogica";
-            $valores .= "{$gruda}'{$db->escapeString($this->caracterizacao_pedagogica)}'";
-            $gruda = ', ';
-
             $campos .= "{$gruda}recursos_didaticos";
             $valores .= "{$gruda}'{$db->escapeString($this->recursos_didaticos)}'";
             $gruda = ', ';
@@ -213,6 +200,10 @@ class clsModulesPlanejamentoAulaAee extends Model
             $valores .= "{$gruda}(NOW() - INTERVAL '3 HOURS')";
             $gruda = ', ';
 
+            $campos .= "{$gruda}created_at";
+            $valores .= "{$gruda}(NOW() - INTERVAL '3 HOURS')";
+            $gruda = ', ';
+
             $db->Consulta("
                 INSERT INTO
                     {$this->_tabela} ( $campos )
@@ -222,19 +213,19 @@ class clsModulesPlanejamentoAulaAee extends Model
             $id = $db->InsertId("{$this->_tabela}_id_seq");
 
             foreach ($this->ref_componente_curricular_array as $key => $ref_componente_curricular) {
-                $obj = new clsModulesPlanejamentoAulaComponenteCurricular(null, $id, $ref_componente_curricular[1]);
+                $obj = new clsModulesPlanejamentoAulaComponenteCurricularAee(null, $id, $ref_componente_curricular[1]);
                 $obj->cadastra();
             }
 
             foreach ($this->bnccs as $key => $bncc_array) {
                 foreach ($bncc_array[1] as $key => $bncc_id) {
-                    $obj = new clsModulesPlanejamentoAulaBNCC(null, $id, $bncc_id);
+                    $obj = new clsModulesPlanejamentoAulaBNCCAee(null, $id, $bncc_id);
                     $obj->cadastra();
                 }
             }
 
             foreach ($this->conteudos as $key => $conteudo) {
-                $obj = new clsModulesPlanejamentoAulaConteudo(null, $id, $conteudo[1]);
+                $obj = new clsModulesPlanejamentoAulaConteudoAee(null, $id, $conteudo[1]);
                 $obj->cadastra();
             }
 
@@ -243,10 +234,10 @@ class clsModulesPlanejamentoAulaAee extends Model
                     $obj = new clsModulesBNCCEspecificacao($bncc_especificacao_id);
                     $bncc_id = $obj->detalhe()['bncc_id'];
 
-                    $obj = new clsModulesPlanejamentoAulaBNCC(null, $id, $bncc_id);
-                    $planejamento_aula_bncc_id = $obj->detalhe2()['id'];
+                    $obj = new clsModulesPlanejamentoAulaBNCCAee(null, $id, $bncc_id);
+                    $planejamento_aula_bncc_aee_id = $obj->detalhe2()['id'];
 
-                    $obj = new clsModulesPlanejamentoAulaBNCCEspecificacao(null, $planejamento_aula_bncc_id, $bncc_especificacao_id);
+                    $obj = new clsModulesPlanejamentoAulaBNCCEspecificacaoAee(null, $planejamento_aula_bncc_aee_id, $bncc_especificacao_id);
                     $obj->cadastra();
                 }
             }
@@ -266,21 +257,23 @@ class clsModulesPlanejamentoAulaAee extends Model
     {
         if (
             is_numeric($this->id)
+            && $this->data_inicial != ''
+            && $this->data_final != ''
             && is_string($this->ddp)
-            && is_string($this->atividades)
             && is_array($this->bnccs)
-            && is_array($this->conteudos)
+            && is_array($this->bncc_especificacoes)
+            && is_array($this->ref_componente_curricular_array)
             && is_string($this->recursos_didaticos)
-            && is_string($this->necessidade_aprendizagem)
-            && is_string($this->caracterizacao_pedagogica)
             && is_string($this->outros)
         ) {
             $db = new clsBanco();
 
-            $set = "
+            $set = "  
+                data_inicial = '{$this->data_inicial}',
+                data_final = '{$this->data_final}',
                 ddp = '{$db->escapeString($this->ddp)}',
-                atividades = '{$db->escapeString($this->atividades)}',
-                referencias = '{$db->escapeString($this->referencias)}',
+                recursos_didaticos = '{$db->escapeString($this->recursos_didaticos)}',
+                outros = '{$db->escapeString($this->outros)}',
                 data_atualizacao = (NOW() - INTERVAL '3 HOURS')
             ";
 
@@ -293,7 +286,27 @@ class clsModulesPlanejamentoAulaAee extends Model
                     id = '{$this->id}'
             ");
 
-            $obj = new clsModulesPlanejamentoAulaBNCC();
+            $obj = new clsModulesPlanejamentoAulaComponenteCurricularAee();
+            foreach ($obj->lista($this->id) as $key => $componenteCurriculares) {
+                $cc_atuais[] = $componenteCurriculares;
+            }
+
+            $obj = new clsModulesComponenteCurricular();
+            $cc_diferenca = $obj->retornaDiferencaEntreConjuntosCC($cc_atuais, $this->ref_componente_curricular_array);
+
+            foreach ($cc_diferenca['adicionar'] as $ccAdicionarArray){
+                if (isset($ccAdicionarArray[1]) && !empty($ccAdicionarArray[1])) {
+                    $obj = new clsModulesPlanejamentoAulaComponenteCurricularAee(null, $this->id, $ccAdicionarArray[1]);
+                    $obj->cadastra();
+                }
+            }
+
+            foreach ($cc_diferenca['remover'] as $cc_remover){
+                $obj = new clsModulesPlanejamentoAulaComponenteCurricularAee(null, $this->id, $cc_remover);
+                $obj->excluir();
+            }
+
+            $obj = new clsModulesPlanejamentoAulaBNCCAee();
             foreach ($obj->lista($this->id) as $key => $bncc) {
                 $bnccs_atuais[] = $bncc;
             }
@@ -301,33 +314,70 @@ class clsModulesPlanejamentoAulaAee extends Model
             $obj = new clsModulesBNCC(null, $this->id);
             $bncc_diferenca = $obj->retornaDiferencaEntreConjuntosBNCC($bnccs_atuais, $this->bnccs);
 
-            foreach ($bncc_diferenca['adicionar'] as $key => $bncc_adicionar) {
-                $obj = new clsModulesPlanejamentoAulaBNCC(null, $this->id, $bncc_adicionar);
-                $obj->cadastra();
+            foreach ($bncc_diferenca['adicionar'] as $bnccAdicionarArray){
+                foreach ($bnccAdicionarArray[1] as $bncc_id) {
+                    if (empty($bncc_id)) continue;
+                    $obj = new clsModulesPlanejamentoAulaBNCCAee(null, $this->id, $bncc_id);
+                    $obj->cadastra();
+                }
             }
 
-            foreach ($bncc_diferenca['remover'] as $key => $bncc_remover) {
-                $obj = new clsModulesPlanejamentoAulaBNCC(null, $this->id, $bncc_remover);
+            foreach ($bncc_diferenca['remover'] as $bncc_remover){
+                $obj = new clsModulesPlanejamentoAulaBNCCAee(null, $this->id, $bncc_remover);
+                $obj->excluir();
+            }
+
+            $obj = new clsModulesPlanejamentoAulaBNCCEspecificacaoAee();
+            foreach ($obj->lista($this->id) as $key => $bncc_especificacao) {
+                $bnccs_especificacoes_atuais[] = $bncc_especificacao;
+            }
+
+            $obj = new clsModulesBNCCEspecificacao();
+            $bncc_especificacao_diferenca = $obj->retornaDiferencaEntreConjuntosBNCC($bnccs_especificacoes_atuais, $this->bncc_especificacoes);
+
+            foreach ($bncc_especificacao_diferenca['adicionar'] as $bnccEspecificacaoAdicionarArray){
+                foreach ($bnccEspecificacaoAdicionarArray[1] as $bncc_especificacao_id) {
+                    if (empty($bncc_especificacao_id)) continue;
+
+                    $obj = new clsModulesBNCCEspecificacao($bncc_especificacao_id);
+                    $bncc_id = $obj->detalhe()['bncc_id'];
+
+                    $obj = new clsModulesPlanejamentoAulaBNCCAee(null, $this->id, $bncc_id);
+                    $planejamento_aula_bncc_id = $obj->detalhe2()['id'];
+
+                    $obj = new clsModulesPlanejamentoAulaBNCCEspecificacaoAee(null, $planejamento_aula_bncc_id, $bncc_especificacao_id);
+                    $obj->cadastra();
+                }
+            }
+
+            foreach ($bncc_especificacao_diferenca['remover'] as $bncc_especificacao_remover){
+                $obj = new clsModulesBNCCEspecificacao($bncc_especificacao_remover);
+                $bncc_id = $obj->detalhe()['bncc_id'];
+
+                $obj = new clsModulesPlanejamentoAulaBNCC(null, $this->id, $bncc_id);
+                $planejamento_aula_bncc_id = $obj->detalhe2()['id'];
+
+                $obj = new clsModulesPlanejamentoAulaBNCCEspecificacaoAee(null, $planejamento_aula_bncc_id, $bncc_especificacao_remover);
                 $obj->excluir();
             }
 
 
-            $obj = new clsModulesPlanejamentoAulaConteudo();
+            $obj = new clsModulesPlanejamentoAulaConteudoAee();
             $conteudos_atuais = $obj->lista($this->id);
             $conteudo_diferenca = $obj->retornaDiferencaEntreConjuntosConteudos($conteudos_atuais, $this->conteudos);
 
-            foreach ($conteudo_diferenca['adicionar'] as $key => $conteudo_adicionar) {
-                $obj = new clsModulesPlanejamentoAulaConteudo(null, $this->id, $conteudo_adicionar[1]);
+            foreach ($conteudo_diferenca['adicionar'] as $key => $conteudo_adicionar){
+                $obj = new clsModulesPlanejamentoAulaConteudoAee(null, $this->id, $conteudo_adicionar[1]);
                 $obj->cadastra();
             }
 
-            foreach ($conteudo_diferenca['remover'] as $key => $conteudo_remover) {
-                $obj = new clsModulesPlanejamentoAulaConteudo(null, $this->id, $conteudo_remover[2]);
+            foreach ($conteudo_diferenca['remover'] as $key => $conteudo_remover){
+                $obj = new clsModulesPlanejamentoAulaConteudoAee(null, $this->id, $conteudo_remover[2]);
                 $obj->excluir();
             }
 
-            foreach ($conteudo_diferenca['editar'] as $key => $conteudo_editar) {
-                $obj = new clsModulesPlanejamentoAulaConteudo($conteudo_editar[0], null, $conteudo_editar[1]);
+            foreach ($conteudo_diferenca['editar'] as $key => $conteudo_editar){
+                $obj = new clsModulesPlanejamentoAulaConteudoAee($conteudo_editar[0], null, $conteudo_editar[1]);
                 $obj->edita();
             }
 
@@ -336,6 +386,7 @@ class clsModulesPlanejamentoAulaAee extends Model
 
         return false;
     }
+
 
     /**
      * Retorna uma lista filtrados de acordo com os parametros
@@ -388,8 +439,23 @@ class clsModulesPlanejamentoAulaAee extends Model
             $whereAnd = ' AND ';
         }
 
+        if (is_numeric($int_ref_cod_serie)) {
+            $filtros .= "{$whereAnd} s.cod_serie = '{$int_ref_cod_serie}'";
+            $whereAnd = ' AND ';
+        }
+
         if (is_numeric($int_ref_cod_turma)) {
             $filtros .= "{$whereAnd} t.cod_turma = '{$int_ref_cod_turma}'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_ref_cod_componente_curricular)) {
+            $filtros .= "{$whereAnd} k.id = '{$int_ref_cod_componente_curricular}'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_ref_cod_turno)) {
+            $filtros .= "{$whereAnd} t.turma_turno_id = '{$int_ref_cod_turno}'";
             $whereAnd = ' AND ';
         }
 
@@ -414,8 +480,116 @@ class clsModulesPlanejamentoAulaAee extends Model
             $whereAnd = ' AND ';
         }
 
+        if (is_numeric($int_etapa)) {
+            $filtros .= "{$whereAnd} pa.etapa_sequencial = '{$int_etapa}'";
+            $whereAnd = ' AND ';
+        }
+
         if (is_numeric($int_servidor_id)) {
             $filtros .= "{$whereAnd} pt.servidor_id = '{$int_servidor_id}'";
+            $whereAnd = ' AND ';
+        }
+
+        $db = new clsBanco();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
+
+        $sql .= $filtros . $this->getOrderby() . $this->getLimite();
+
+        //dump($sql);
+
+        $this->_total = $db->CampoUnico(
+            "SELECT
+                COUNT(0)
+            FROM
+                {$this->_from}
+            {$filtros}"
+        );
+
+        $db->Consulta($sql);
+
+        if ($countCampos > 1) {
+            while ($db->ProximoRegistro()) {
+                $tupla = $db->Tupla();
+
+                $tupla['_total'] = $this->_total;
+                $resultado[] = $tupla;
+            }
+        } else {
+            while ($db->ProximoRegistro()) {
+                $tupla = $db->Tupla();
+                $resultado[] = $tupla[$this->_campos_lista];
+            }
+        }
+        if (count($resultado)) {
+            return $resultado;
+        }
+
+        return false;
+    }
+
+     /**
+     * Retorna uma lista filtrados de acordo com os parametros
+     *
+     * @return array
+     */
+    public function lista_conteudos(
+        $int_ano = null,        
+        $int_ref_cod_turma = null,
+        $int_ref_cod_matricula = null,
+        $int_ref_cod_componente_curricular = null,
+        $int_etapa = null
+    ) {
+        $sql = "
+            SELECT DISTINCT
+            pa.id,
+            pa.data_inicial,
+            pa.data_final,
+            pa.ref_cod_matricula,
+            pa.ref_cod_turma,
+            pa.etapa_sequencial AS fase_etapa,
+            t.nm_turma AS turma
+            FROM
+            modules.planejamento_aula_aee as pa
+            JOIN modules.planejamento_aula_componente_curricular_aee as pacc
+                ON (pacc.planejamento_aula_aee_id = pa.id)
+            JOIN pmieducar.turma t
+                ON (t.cod_turma = pa.ref_cod_turma)
+            JOIN pmieducar.matricula m
+                ON (m.cod_matricula = pa.ref_cod_matricula)  
+            JOIN pmieducar.aluno a
+                ON (a.cod_aluno = m.ref_cod_aluno)             
+            JOIN cadastro.pessoa p
+                ON (p.idpes = a.ref_idpes)         
+            LEFT JOIN modules.componente_curricular k
+                ON (k.id = pacc.componente_curricular_id)
+        ";
+
+        $whereAnd = ' AND ';
+        $filtros = " WHERE TRUE ";
+
+        if (is_numeric($int_ano)) {
+            $filtros .= "{$whereAnd} (EXTRACT(YEAR FROM pa.data_inicial) = '{$int_ano}' OR EXTRACT(YEAR FROM pa.data_final) = '{$int_ano}')";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_ref_cod_turma)) {
+            $filtros .= "{$whereAnd} t.cod_turma = '{$int_ref_cod_turma}'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_ref_cod_componente_curricular)) {
+            $filtros .= "{$whereAnd} k.id = '{$int_ref_cod_componente_curricular}'";
+            $whereAnd = ' AND ';
+        }
+        
+        if (is_numeric($int_ref_cod_matricula)) {
+            $filtros .= "{$whereAnd} pa.ref_cod_matricula = '{$int_ref_cod_matricula}'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_etapa)) {
+            $filtros .= "{$whereAnd} pa.etapa_sequencial = '{$int_etapa}'";
             $whereAnd = ' AND ';
         }
 
@@ -481,16 +655,16 @@ class clsModulesPlanejamentoAulaAee extends Model
 
             $data['detalhes'] = $db->Tupla();
 
-            $obj = new clsModulesPlanejamentoAulaComponenteCurricular();
+            $obj = new clsModulesPlanejamentoAulaComponenteCurricularAee();
             $data['componentesCurriculares'] = $obj->lista($this->id);
 
-            $obj = new clsModulesPlanejamentoAulaBNCC();
+            $obj = new clsModulesPlanejamentoAulaBNCCAee();
             $data['bnccs'] = $obj->lista($this->id);
 
-            $obj = new clsModulesPlanejamentoAulaBNCCEspecificacao();
+            $obj = new clsModulesPlanejamentoAulaBNCCEspecificacaoAee();
             $data['especificacoes'] = $obj->lista($this->id);
 
-            $obj = new clsModulesPlanejamentoAulaConteudo();
+            $obj = new clsModulesPlanejamentoAulaConteudoAee();
             $data['conteudos'] = $obj->lista($this->id);
 
             return $data;
@@ -579,21 +753,21 @@ class clsModulesPlanejamentoAulaAee extends Model
             $db = new clsBanco();
             $db->Consulta("
                 SELECT
-                    conteudo_ministrado_id as id, COUNT(conteudo_ministrado_id)
+                conteudo_ministrado_aee_id as id, COUNT(conteudo_ministrado_aee_id)
                 FROM
-                    modules.planejamento_aula_conteudo as pac
+                    modules.planejamento_aula_conteudo_aee as pac
                 CROSS JOIN LATERAL (
                     SELECT
-                        cmc.conteudo_ministrado_id
+                        cmc.conteudo_ministrado_aee_id
                     FROM
-                        modules.conteudo_ministrado_conteudo as cmc
+                        modules.conteudo_ministrado_conteudo_aee as cmc
                     WHERE
-                        cmc.planejamento_aula_conteudo_id = pac.id
+                        cmc.planejamento_aula_conteudo_aee_id = pac.id
                 ) sub
                 WHERE
-                    pac.planejamento_aula_id = '{$this->id}'
+                    pac.planejamento_aula_aee_id = '{$this->id}'
                 GROUP BY
-                    conteudo_ministrado_id
+                    conteudo_ministrado_aee_id
             ");
 
             while ($db->ProximoRegistro()) {

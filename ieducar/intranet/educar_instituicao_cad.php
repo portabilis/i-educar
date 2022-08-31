@@ -58,6 +58,7 @@ return new class extends clsCadastro {
     public $permitir_edicao_frequencia;
     public $permitir_planeja_conteudos;
     public $obrigatorio_registro_diario_atividade;
+    public $utilizar_planejamento_aula;
 
     public function Inicializar()
     {
@@ -113,6 +114,7 @@ return new class extends clsCadastro {
         $this->permitir_edicao_frequencia = dbBool($this->permitir_edicao_frequencia);
         $this->permitir_planeja_conteudos = dbBool($this->permitir_planeja_conteudos);
         $this->obrigatorio_registro_diario_atividade = dbBool($this->obrigatorio_registro_diario_atividade);
+        $this->utilizar_planejamento_aula = dbBool($this->utilizar_planejamento_aula);
 
         return $retorno;
     }
@@ -379,6 +381,16 @@ return new class extends clsCadastro {
             false
         );
 
+        $this->campoCheck(
+            'utilizar_planejamento_aula',
+            'Utilizar planejamento de aula',
+            $this->utilizar_planejamento_aula,
+            null,
+            false,
+            false,
+            false
+        );
+
         $scripts = ['/modules/Cadastro/Assets/Javascripts/Instituicao.js'];
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
         $styles = ['/modules/Cadastro/Assets/Stylesheets/Instituicao.css'];
@@ -427,6 +439,7 @@ return new class extends clsCadastro {
             $this->permitir_edicao_frequencia,
             $this->permitir_planeja_conteudos,
             $this->obrigatorio_registro_diario_atividade,
+            $this->utilizar_planejamento_aula
         );
         $obj->data_base_remanejamento = Portabilis_Date_Utils::brToPgSQL($this->data_base_remanejamento);
         $obj->data_base_transferencia = Portabilis_Date_Utils::brToPgSQL($this->data_base_transferencia);
@@ -464,6 +477,7 @@ return new class extends clsCadastro {
         $obj->permitir_edicao_frequencia = !is_null($this->permitir_edicao_frequencia);
         $obj->permitir_planeja_conteudos = !is_null($this->permitir_planeja_conteudos);
         $obj->obrigatorio_registro_diario_atividade = !is_null($this->obrigatorio_registro_diario_atividade);
+        $obj->utilizar_planejamento_aula = !is_null($this->utilizar_planejamento_aula);
 
         $editou = $obj->edita();
 

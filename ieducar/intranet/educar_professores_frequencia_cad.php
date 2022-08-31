@@ -25,7 +25,7 @@ return new class extends clsCadastro {
     public $ordens_aulas5;
     public $atividades;
     public $conteudos;
-    public $planejamento_aula_id;
+    public $planejamento_aula_ids;
 
     public function Inicializar () {
         $this->titulo = 'Frequência - Cadastro';
@@ -40,6 +40,7 @@ return new class extends clsCadastro {
         if (is_numeric($this->id)) {
             $tmp_obj = new clsModulesFrequencia($this->id);
             $registro = $tmp_obj->detalhe();
+
 
             if ($registro) {
                 // passa todos os valores obtidos no registro para atributos do objeto
@@ -124,7 +125,7 @@ return new class extends clsCadastro {
             $servidor_id = $this->pessoa_logada;
 
             $obj = new clsModulesPlanejamentoAula();
-            $id = $obj->lista(
+            $planejamentos = $obj->lista(
                 null,
                 null,
                 null,
@@ -138,9 +139,15 @@ return new class extends clsCadastro {
                 $this->fase_etapa,
                 $servidor_id,
                 Portabilis_Date_Utils::brToPgSQL($this->data)
-            )[0]['id'];
+            );
 
-            $this->planejamento_aula_id = $id;
+            $this->planejamento_aula_ids = [];
+
+            foreach ($planejamentos as $planejamento) {
+                if (!in_array($planejamento['id'], $this->planejamento_aula_ids)) {
+                    array_push($this->planejamento_aula_ids, $planejamento['id']);
+                }
+            }
         }
 
 
@@ -290,6 +297,7 @@ return new class extends clsCadastro {
         $instituicao = $clsInstituicao->primeiraAtiva();
         $obrigatorioRegistroDiarioAtividade = $instituicao['obrigatorio_registro_diario_atividade'];
         $obrigatorioConteudo = $instituicao['permitir_planeja_conteudos'];
+        $utilizar_planejamento_aula = $instituicao['utilizar_planejamento_aula'];
 
         $this->campoMemo('atividades',
             'Registro diário de aula',
@@ -305,8 +313,8 @@ return new class extends clsCadastro {
             false
         );
 
-        if ($obrigatorioConteudo) {
-            $this->adicionarConteudosMultiplaEscolha($obrigatorioConteudo);
+        if ($obrigatorioConteudo && $utilizar_planejamento_aula) {
+            $this->adicionarConteudosMultiplaEscolha();
         }
 
 
@@ -382,6 +390,7 @@ return new class extends clsCadastro {
             $this->simpleRedirect('educar_professores_frequencia_cad.php');
         }
 
+
         $this->ordens_aulas = [];
 
         if (isset($this->ordens_aulas1) && !empty($this->ordens_aulas1)) array_push($this->ordens_aulas, '1');
@@ -390,6 +399,29 @@ return new class extends clsCadastro {
         if (isset($this->ordens_aulas4) && !empty($this->ordens_aulas4)) array_push($this->ordens_aulas, '4');
         if (isset($this->ordens_aulas5) && !empty($this->ordens_aulas5)) array_push($this->ordens_aulas, '5');
 
+        $clsInstituicao = new clsPmieducarInstituicao();
+        $instituicao = $clsInstituicao->primeiraAtiva();
+        $utilizarPlanejamentoAula = $instituicao['utilizar_planejamento_aula'];
+
+        if ($utilizarPlanejamentoAula) {
+            $componenteCurricular = (isset($this->ref_cod_componente_curricular) && !empty($this->ref_cod_componente_curricular)
+                                    ? [$this->ref_cod_componente_curricular]
+                                    : null);
+
+            $obj = new clsModulesPlanejamentoAula(
+                null,
+                $this->ref_cod_turma,
+                $componenteCurricular,
+                $this->fase_etapa
+            );
+
+            $existe = $obj->existeComponenteByData($data_cadastro);
+
+            if (!$existe) {
+                $this->mensagem = 'Cadastro não realizado, pois não há planejamento de aula para essa data.<br>';
+                $this->simpleRedirect('educar_professores_frequencia_cad.php');
+            }
+        }
 
         $obj = new clsModulesFrequencia(
             null,
@@ -651,7 +683,7 @@ return new class extends clsCadastro {
             'objectName' => 'conteudos',
         ];
 
-        $todos_conteudos = $this->getConteudos($this->planejamento_aula_id);
+        $todos_conteudos = $this->getConteudos($this->planejamento_aula_ids);
 
         $options = [
             'label' => 'Objetivo(s) do conhecimento/conteúdo',
@@ -664,13 +696,13 @@ return new class extends clsCadastro {
         $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
     }
 
-    private function getConteudos($planejamento_aula_id = null)
+    private function getConteudos($planejamento_aula_ids = null)
     {
-        if (is_numeric($planejamento_aula_id)) {
+        if (is_array($planejamento_aula_ids)) {
             $rows = [];
 
             $obj = new clsModulesPlanejamentoAulaConteudo();
-            $conteudos = $obj->lista2($planejamento_aula_id);
+            $conteudos = $obj->listaByPlanejamentos($planejamento_aula_ids);
 
             foreach ($conteudos as $key => $conteudo) {
                 $rows[$conteudo['id']] = $conteudo['conteudo'];
