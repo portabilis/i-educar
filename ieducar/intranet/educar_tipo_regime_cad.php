@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyRegimeType;
+
 return new class extends clsCadastro {
     public $pessoa_logada;
     public $cod_tipo_regime;
@@ -15,14 +17,13 @@ return new class extends clsCadastro {
     {
         $retorno = 'Novo';
 
-        $this->cod_tipo_regime=$_GET['cod_tipo_regime'];
+        $this->cod_tipo_regime = $_GET['cod_tipo_regime'];
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(568, $this->pessoa_logada, 3, 'educar_tipo_regime_lst.php');
 
         if (is_numeric($this->cod_tipo_regime)) {
-            $obj = new clsPmieducarTipoRegime($this->cod_tipo_regime);
-            $registro  = $obj->detalhe();
+            $registro = LegacyRegimeType::findOrFail($this->cod_tipo_regime)?->toArray();
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
@@ -61,43 +62,52 @@ return new class extends clsCadastro {
 
     public function Novo()
     {
-        $obj = new clsPmieducarTipoRegime($this->cod_tipo_regime, $this->pessoa_logada, $this->pessoa_logada, $this->nm_tipo, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->ref_cod_instituicao);
-        $cadastrou = $obj->cadastra();
-        if ($cadastrou) {
+        $type = new LegacyRegimeType();
+        $type->ref_usuario_exc = $this->pessoa_logada;
+        $type->ref_usuario_cad = $this->pessoa_logada;
+        $type->nm_tipo = $this->nm_tipo;
+        $type->ref_cod_instituicao = $this->ref_cod_instituicao;
+
+        if ($type->save()) {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
             $this->simpleRedirect('educar_tipo_regime_lst.php');
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
-
         return false;
     }
 
     public function Editar()
     {
-        $obj = new clsPmieducarTipoRegime($this->cod_tipo_regime, $this->pessoa_logada, $this->pessoa_logada, $this->nm_tipo, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->ref_cod_instituicao);
-        $editou = $obj->edita();
-        if ($editou) {
+        $type = LegacyRegimeType::findOrFail($this->cod_tipo_regime);
+        $type->ref_usuario_exc = $this->pessoa_logada;
+        $type->ref_usuario_cad = $this->pessoa_logada;
+        $type->nm_tipo = $this->nm_tipo;
+        $type->data_exclusao = now();
+        $type->ativo = 1;
+        $type->ref_cod_instituicao = $this->ref_cod_instituicao;
+
+        if ($type->save()) {
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_tipo_regime_lst.php');
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
-
         return false;
     }
 
     public function Excluir()
     {
-        $obj = new clsPmieducarTipoRegime($this->cod_tipo_regime, $this->pessoa_logada, $this->pessoa_logada, $this->nm_tipo, $this->data_cadastro, $this->data_exclusao, 0, $this->ref_cod_instituicao);
-        $excluiu = $obj->excluir();
-        if ($excluiu) {
+        $type = LegacyRegimeType::findOrFail($this->cod_tipo_regime);
+        $type->ref_usuario_exc = $this->pessoa_logada;
+        $type->ativo = 0;
+
+        if ($type->save()) {
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_tipo_regime_lst.php');
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';
-
         return false;
     }
 
