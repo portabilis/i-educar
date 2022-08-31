@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyEducationNetwork;
+
 return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -27,8 +29,8 @@ return new class extends clsCadastro {
         $obj_permissoes->permissao_cadastra(647, $this->pessoa_logada, 3, 'educar_escola_rede_ensino_lst.php');
 
         if (is_numeric($this->cod_escola_rede_ensino)) {
-            $obj = new clsPmieducarEscolaRedeEnsino($this->cod_escola_rede_ensino);
-            $registro  = $obj->detalhe();
+            $registro = LegacyEducationNetwork::findOrFail($this->cod_escola_rede_ensino)?->toArray();
+
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
@@ -71,15 +73,17 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(647, $this->pessoa_logada, 3, 'educar_escola_rede_ensino_lst.php');
 
-        $obj = new clsPmieducarEscolaRedeEnsino(null, null, $this->pessoa_logada, $this->nm_rede, null, null, 1, $this->ref_cod_instituicao);
-        $cadastrou = $obj->cadastra();
-        if ($cadastrou) {
+        $network = new LegacyEducationNetwork();
+        $network->ref_usuario_cad = $this->pessoa_logada;
+        $network->nm_rede = $this->nm_rede;
+        $network->ref_cod_instituicao = $this->ref_cod_instituicao;
+
+        if ($network->save()) {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
             $this->simpleRedirect('educar_escola_rede_ensino_lst.php');
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
-
         return false;
     }
 
@@ -88,15 +92,18 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(647, $this->pessoa_logada, 3, 'educar_escola_rede_ensino_lst.php');
 
-        $obj = new clsPmieducarEscolaRedeEnsino($this->cod_escola_rede_ensino, $this->pessoa_logada, null, $this->nm_rede, null, null, 1, $this->ref_cod_instituicao);
-        $editou = $obj->edita();
-        if ($editou) {
+        $network = LegacyEducationNetwork::findOrFail($this->cod_escola_rede_ensino);
+        $network->ref_usuario_exc = $this->pessoa_logada;
+        $network->nm_rede = $this->nm_rede;
+        $network->ativo = 1;
+        $network->ref_cod_instituicao = $this->ref_cod_instituicao;
+
+        if ($network->save()) {
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
-            $this->simpleRedirect('educar_escola_localizacao_lst.php');
+            $this->simpleRedirect('educar_escola_rede_ensino_lst.php');
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
-
         return false;
     }
 
@@ -105,15 +112,17 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir(647, $this->pessoa_logada, 3, 'educar_escola_rede_ensino_lst.php');
 
-        $obj = new clsPmieducarEscolaRedeEnsino($this->cod_escola_rede_ensino, $this->pessoa_logada, null, null, null, null, 0);
-        $excluiu = $obj->excluir();
-        if ($excluiu) {
+
+        $network = LegacyEducationNetwork::findOrFail($this->cod_escola_rede_ensino);
+        $network->ref_usuario_exc = $this->pessoa_logada;
+        $network->ativo = 0;
+
+        if ($network->save()) {
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
-            $this->simpleRedirect('educar_escola_localizacao_lst.php');
+            $this->simpleRedirect('educar_escola_rede_ensino_lst.php');
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';
-
         return false;
     }
 

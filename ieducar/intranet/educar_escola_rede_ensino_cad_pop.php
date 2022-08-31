@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyEducationNetwork;
+
 return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -43,12 +45,15 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(647, $this->pessoa_logada, 3, 'educar_escola_rede_ensino_lst.php');
 
-        $obj = new clsPmieducarEscolaRedeEnsino(null, null, $this->pessoa_logada, $this->nm_rede, null, null, 1, $this->ref_cod_instituicao);
-        $cadastrou = $obj->cadastra();
-        if ($cadastrou) {
+        $network = new LegacyEducationNetwork();
+        $network->ref_usuario_cad = $this->pessoa_logada;
+        $network->nm_rede = $this->nm_rede;
+        $network->ref_cod_instituicao = $this->ref_cod_instituicao;
+
+        if ($network->save()) {
             echo "<script>
-                        parent.document.getElementById('ref_cod_escola_rede_ensino').options[parent.document.getElementById('ref_cod_escola_rede_ensino').options.length] = new Option('$this->nm_rede', '$cadastrou', false, false);
-                        parent.document.getElementById('ref_cod_escola_rede_ensino').value = '$cadastrou';
+                        parent.document.getElementById('ref_cod_escola_rede_ensino').options[parent.document.getElementById('ref_cod_escola_rede_ensino').options.length] = new Option('$this->nm_rede', '$network->cod_escola_rede_ensino', false, false);
+                        parent.document.getElementById('ref_cod_escola_rede_ensino').value = '$network->cod_escola_rede_ensino';
                         parent.document.getElementById('ref_cod_escola_rede_ensino').disabled = false;
                         window.parent.fechaExpansivel('div_dinamico_'+(parent.DOM_divs.length-1));
                     </script>";
