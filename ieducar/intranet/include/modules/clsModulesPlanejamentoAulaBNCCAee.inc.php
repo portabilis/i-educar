@@ -174,6 +174,28 @@ class clsModulesPlanejamentoAulaBNCCAee extends Model {
         return false;
     }
 
+     /**
+     * Exclui um registro
+     *
+     * @return bool
+     */
+    public function excluirBNCCPlanejamentoAulaAee () {
+        if (is_numeric($this->planejamento_aula_aee_id)) {
+            $db = new clsBanco();
+
+            $db->Consulta("
+                DELETE FROM
+                    {$this->_tabela}
+                WHERE
+                    planejamento_aula_aee_id = '{$this->planejamento_aula_aee_id}'
+            ");
+
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * Exclui um registro
      *
