@@ -34,7 +34,7 @@ return new class extends clsCadastro {
                 $this->id
             );
             $registro = $tmp_obj->detalhe();
-            
+
             if ($registro) {
                 // passa todos os valores obtidos no registro para atributos do objeto
                 foreach ($registro['detalhes'] as $campo => $val) {
@@ -47,9 +47,9 @@ return new class extends clsCadastro {
 
                 $this->titulo = 'Frequência - Edição';
             }
-            
+
         }
-       
+
         $this->nome_url_cancelar = 'Cancelar';
         $this->url_cancelar = ($retorno == 'Editar')
             ? sprintf('educar_professores_conteudo_ministrado_det.php?id=%d', $this->id)
@@ -76,13 +76,13 @@ return new class extends clsCadastro {
         $this->campoOculto('cod_serie', 9);
         $this->campoOculto('cod_componente_curricular', 5);
 
-       
+
         if (is_numeric($this->frequencia)) {
             $desabilitado = true;
 
             $obj = new clsModulesFrequencia($this->frequencia);
             $freq = $obj->detalhe()['detalhes'];
-            
+
 
             $obj = new clsModulesPlanejamentoAula();
             $id = $obj->lista(
@@ -99,22 +99,59 @@ return new class extends clsCadastro {
                 $freq['fase_etapa'],
                 $this->servidor_id
             )[0]['id'];
-            
-            $this->planejamento_aula_id = $id;
-          
-            
-        }
-       
-        $this->campoOculto('id', $this->id);
-        $this->inputsHelper()->dynamic(['frequencia'], ['frequencia' => $this->frequencia, 'disabled' => $desabilitado]);     
-        $this->campoMemo('atividades', 'Registro diário de aula', $this->atividades, 100, 5, false);
 
-        $this->adicionarConteudosMultiplaEscolha();
-        
+            $this->planejamento_aula_id = $id;
+
+
+        }
+
+        $this->campoOculto('id', $this->id);
+        $this->inputsHelper()->dynamic(['frequencia'], ['frequencia' => $this->frequencia, 'disabled' => $desabilitado]);
+
+        $clsInstituicao = new clsPmieducarInstituicao();
+        $instituicao = $clsInstituicao->primeiraAtiva();
+        $obrigatorioRegistroDiarioAtividade = $instituicao['obrigatorio_registro_diario_atividade'];
+        $obrigatorioConteudo = $instituicao['permitir_planeja_conteudos'];
+        $utilizar_planejamento_aula = $instituicao['utilizar_planejamento_aula'];
+
+        $this->campoMemo('atividades', 'Registro diário de aula', $this->atividades, 100, 5, $obrigatorioRegistroDiarioAtividade);
+
+        if ($obrigatorioConteudo && $utilizar_planejamento_aula) {
+            $this->adicionarConteudosMultiplaEscolha();
+        }
+
         $this->campoMemo('observacao', 'Observação', $this->observacao, 100, 5, false);
     }
 
     public function Novo() {
+
+        $clsInstituicao = new clsPmieducarInstituicao();
+        $instituicao = $clsInstituicao->primeiraAtiva();
+        $utilizar_planejamento_aula = $instituicao['utilizar_planejamento_aula'];
+
+        if ($utilizar_planejamento_aula) {
+            $obj = new clsModulesFrequencia($this->frequencia);
+            $frequencia = $obj->detalhe();
+
+            $componenteCurricular = (isset($frequencia['detalhes']['ref_cod_componente_curricular']) && !empty($frequencia['detalhes']['ref_cod_componente_curricular'])
+                ? [$frequencia['detalhes']['ref_cod_componente_curricular']]
+                : null);
+
+            $obj = new clsModulesPlanejamentoAula(
+                null,
+                $frequencia['detalhes']['ref_cod_turma'],
+                $componenteCurricular,
+                $frequencia['detalhes']['fase_etapa']
+            );
+
+            $existe = $obj->existeComponenteByData($frequencia['detalhes']['data']);
+
+            if (!$existe) {
+                $this->mensagem = 'Cadastro não realizado, pois não há planejamento de aula para essa data.<br>';
+                $this->simpleRedirect('educar_professores_frequencia_cad.php');
+            }
+        }
+
         $obj = new clsModulesComponenteMinistrado(
             null,
             $this->frequencia,
@@ -173,7 +210,7 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
-        
+
         return false;
     }
 
@@ -184,14 +221,14 @@ return new class extends clsCadastro {
 
             $obj = new clsModulesPlanejamentoAulaConteudo();
             $conteudos = $obj->lista2($planejamento_aula_id);
-           
+
             foreach ($conteudos as $key => $conteudo) {
                 $rows[$conteudo['id']] = $conteudo['conteudo'];
             }
 
             return $rows;
         }
-        
+
 
         return [];
     }

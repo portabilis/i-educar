@@ -108,10 +108,27 @@ class TurmaController extends ApiCoreController
         }
     }
 
+    public function getDetalhe()
+    {
+        $turmaId = $this->getRequest()->turma_id;
+
+        if (is_numeric($turmaId)) {
+            $obj = new clsPmieducarTurma($turmaId);
+            $turma = $obj->detalheWithCurso();
+
+            return $turma;
+        }
+
+        return false;
+    }
+
     public function Gerar()
     {
         if ($this->isRequestFor('get', 'turmas')) {
             $this->appendResponse($this->getTurmas());
+        } else if ($this->isRequestFor('get', 'detalhe')) {
+            $this->appendResponse($this->getDetalhe());
+            $this->appendResponse($this->getDetalhe());
         } else {
             $this->notImplementedOperationError();
         }

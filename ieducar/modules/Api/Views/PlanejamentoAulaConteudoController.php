@@ -66,7 +66,7 @@ class PlanejamentoAulaConteudoController extends ApiCoreController
 
         if (is_numeric($ref_cod_turma) && is_numeric($fase_etapa) && !empty($data) && ($tipoPresenca == 1 || ($tipoPresenca == 2 && !empty($campoComponenteCurricular)))) {
             $obj = new clsModulesPlanejamentoAula();
-            $id = $obj->lista(
+            $planejamentos = $obj->lista(
                 null,
                 null,
                 null,
@@ -80,31 +80,30 @@ class PlanejamentoAulaConteudoController extends ApiCoreController
                 $fase_etapa,
                 null,
                 Portabilis_Date_Utils::brToPgSQL($data)
-            )[0]['id'];
+            );
 
-            if (is_numeric($id)) {
-                $obj = new clsModulesPlanejamentoAulaConteudo();
-                $conteudos = $obj->lista2($id);
+            if (isset($planejamentos) && is_array($planejamentos) && !empty($planejamentos)) {
+                $planejamentos_ids = [];
 
-                foreach ($conteudos as $key => $conteudo) {
-                    $lista[$conteudo['id']] = [$conteudo['conteudo'], $conteudo['usando']];
+                foreach ($planejamentos as $planejamento) {
+                    if (!in_array($planejamento['id'], $planejamentos_ids)) {
+                        array_push($planejamentos_ids, $planejamento['id']);
+                    }
                 }
-                $conteudos = $lista;
 
+                if (!empty($planejamentos_ids)) {
+                    $lista = [];
+                    $obj = new clsModulesPlanejamentoAulaConteudo();
+                    $conteudos = $obj->listaByPlanejamentos($planejamentos_ids);
 
-                $lista = [];
-                // $obj = new clsModulesPlanejamentoAulaBNCCEspecificacao();
-                // $especificacoes = $obj->lista($id);
+                    foreach ($conteudos as $key => $conteudo) {
+                        $lista[$conteudo['id']] = [$conteudo['conteudo'], $conteudo['usando']];
+                    }
 
-                // foreach ($especificacoes as $key => $especificacao) {
-                //     $lista[$especificacao['id']] = $especificacao['especificacao'];
-                // }
-                $especificacoes = $lista;
+                    return ['pac' => [[], $lista]];
 
-                return ['pac' => [$especificacoes, $conteudos]];
+                }
             }
-
-            return [];
         }
 
         return [];

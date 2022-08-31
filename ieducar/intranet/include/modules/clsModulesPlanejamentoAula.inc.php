@@ -415,7 +415,8 @@ class clsModulesPlanejamentoAula extends Model {
         $time_data_final = null,
         $int_etapa = null,
         $int_servidor_id = null,
-        $time_data = null
+        $time_data = null,
+        $arrayEscolasUsuario = null
     ) {
         $sql = "
             SELECT DISTINCT
@@ -493,13 +494,16 @@ class clsModulesPlanejamentoAula extends Model {
             $whereAnd = ' AND ';
         }
 
+        if (is_array($arrayEscolasUsuario) && count($arrayEscolasUsuario) >= 1) {
+            $filtros .= "{$whereAnd} e.cod_escola IN (" . implode(',', $arrayEscolasUsuario) . ")";
+        }
+
         $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
-        //dump($sql);
 
         $this->_total = $db->CampoUnico(
             "SELECT
@@ -604,7 +608,7 @@ class clsModulesPlanejamentoAula extends Model {
     }
 
     public function existeComponentePeriodo () {
-         if ($this->data_inicial && $this->data_final && is_array($this->ref_componente_curricular_array)) {
+         if ($this->data_inicial && $this->data_final && $this->ref_cod_turma && is_array($this->ref_componente_curricular_array)) {
              $refsComponentes = [];
 
              foreach ($this->ref_componente_curricular_array as $refComponente) {
@@ -623,10 +627,11 @@ class clsModulesPlanejamentoAula extends Model {
                  JOIN modules.planejamento_aula_componente_curricular as pacc
                     ON (pacc.planejamento_aula_id = pa.id)
                  WHERE
-                     '{$this->data_inicial}' BETWEEN DATE(pa.data_inicial) AND DATE(pa.data_final)
-                     AND
-                     '{$this->data_final}' BETWEEN DATE(pa.data_inicial) AND DATE(pa.data_final)
+                     ('{$this->data_inicial}' BETWEEN DATE(pa.data_inicial) AND DATE(pa.data_final)
+                     OR
+                     '{$this->data_final}' BETWEEN DATE(pa.data_inicial) AND DATE(pa.data_final))
                      AND pacc.componente_curricular_id IN (".implode(',', $refsComponentes).")
+                     AND pa.ref_cod_turma = '{$this->ref_cod_turma}'
              ";
 
              $db = new clsBanco();
@@ -635,6 +640,34 @@ class clsModulesPlanejamentoAula extends Model {
 
              return $db->Tupla();
          }
+
+        return false;
+    }
+
+    public function existeComponenteByData ($data) {
+        if (!empty($this->ref_cod_turma) && !empty($this->etapa_sequencial)) {
+            $sql = "
+             SELECT
+                 pa.*,
+                 pacc.componente_curricular_id
+             FROM
+                 modules.planejamento_aula as pa
+             JOIN modules.planejamento_aula_componente_curricular as pacc
+                ON (pacc.planejamento_aula_id = pa.id)
+             WHERE
+                 '{$data}' BETWEEN DATE(pa.data_inicial) AND DATE(pa.data_final)
+                 AND pa.ref_cod_turma = '{$this->ref_cod_turma}' AND pa.etapa_sequencial = '{$this->etapa_sequencial}'";
+
+            if (is_array($this->ref_componente_curricular_array)) {
+                $sql .= " AND pacc.componente_curricular_id IN (" . implode(',', $this->ref_componente_curricular_array) . ")";
+            }
+
+            $db = new clsBanco();
+            $db->Consulta($sql);
+            $db->ProximoRegistro();
+
+            return $db->Tupla();
+        }
 
         return false;
     }

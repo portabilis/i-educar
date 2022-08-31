@@ -15,6 +15,12 @@
                 @foreach($submenu->children->sortBy('order') as $c1)
                     @if($c1->hasLink())
                     <li>
+                        @if((isset($utilizarPlanejamentoAula) && (!$utilizarPlanejamentoAula || empty($utilizarPlanejamentoAula))) && $c1->title == 'Plano de aula')
+                            @php
+                                //TODO: Essa condição deveria ser pelo id, mas o id do menu Plano de aula, está diferente nos bancos de dados.
+                                continue;
+                            @endphp
+                        @endif
                         <a href="{{ $c1->link ?? 'javascript:void(0)' }}">{{ $c1->title }}</a>
                         @if($c1->hasLinkInSubmenu())
                             <ul class="ieducar-sub-menu">

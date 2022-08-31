@@ -32,12 +32,12 @@ return new class extends clsListagem {
     public $data_inicial;
     public $data_final;
 
-    //public $etapa;
-   //public $fase_etapa;
+    public $etapa;
+   public $fase_etapa;
 
     public function Gerar()
     {
-        $this->titulo = 'Registros de aula AEE - Listagem';
+        $this->titulo = 'Atendimento AEE - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null: $val;
@@ -45,10 +45,9 @@ return new class extends clsListagem {
 
         $lista_busca = [
             'Data',
-            'Aluno',
-            'Turma',
-            'Curso',
-            'Escola'
+            'Hora Início',
+            'Hora Fim',
+            'Aluno'
         ];
 
         $this->addCabecalhos($lista_busca);
@@ -119,8 +118,7 @@ return new class extends clsListagem {
             $eh_professor ? $this->pessoa_logada : null         // Passe o ID do servidor caso ele seja um professor
         );
 
-        $total = /*$obj_turma->_total*/count($lista);
-
+        $total = $obj_turma->_total;
         // monta a lista
         if (is_array($lista) && count($lista)) {
             $ref_cod_escola = '';
@@ -130,23 +128,16 @@ return new class extends clsListagem {
 
                 $lista_busca = [
                     "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$data_formatada}</a>",
-                    "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$registro['nome']}</a>",
-                    "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$registro['turma']}</a>", 
-                    "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$registro['curso']}</a>",
-                    "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$registro['escola']}</a>"
+                    "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$registro['hora_inicio']}</a>",
+                    "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$registro['hora_fim']}</a>",
+                    "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$registro['aluno']}</a>"
                 ];
-
-                if ($registro['componente_curricular']) {
-                    $lista_busca[] = "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$registro['componente_curricular']}</a>";
-                } else {
-                    $lista_busca[] = "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">—</a>";
-                }
 
                 $this->addLinhas($lista_busca);
             }
         }
 
-        $this->addPaginador2('educar_professores_frequencia_aee_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $this->addPaginador2('educar_professores_conteudo_ministrado_aee_lst.php', $total, $_GET, $this->nome, $this->limite);
         $obj_permissoes = new clsPermissoes();
         if ($obj_permissoes->permissao_cadastra(58, $this->pessoa_logada, 7)) {
             $this->acao = 'go("educar_professores_conteudo_ministrado_aee_cad.php")';
@@ -154,14 +145,14 @@ return new class extends clsListagem {
         }
         $this->largura = '100%';
 
-        $this->breadcrumb('Listagem de registros de aula - AEE', [
+        $this->breadcrumb('Listagem de Atendimentos - AEE', [
             url('intranet/educar_professores_index.php') => 'Professores',
         ]);
     }
 
     public function Formular()
     { 
-        $this->title = 'Registro de aula  AEE - Listagem';
+        $this->title = 'Atendimento  AEE - Listagem';
         $this->processoAp = '58';
     }
 };

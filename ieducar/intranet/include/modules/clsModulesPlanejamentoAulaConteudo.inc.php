@@ -139,6 +139,56 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
                 $conteudos[] = $db->Tupla();
             }
 
+//            echo "
+//                SELECT
+//                    pac.*,
+//                    CASE
+//                        WHEN cmc.planejamento_aula_conteudo_id IS NULL THEN false
+//                        WHEN cmc.planejamento_aula_conteudo_id IS NOT NULL THEN true
+//                    END usando
+//                FROM
+//                    modules.planejamento_aula_conteudo as pac
+//                LEFT JOIN modules.conteudo_ministrado_conteudo as cmc
+//                    ON (cmc.planejamento_aula_conteudo_id = pac.id)
+//                WHERE
+//                    pac.planejamento_aula_id =  '{$planejamento_aula_id}'
+//            ";exit;
+
+            return $conteudos;
+        }
+
+        return false;
+    }
+
+    /**
+     * Lista relacionamentos entre os conteúdos e o plano de aula retornando se os conteúdos estão sendo usados
+     * Filtro por array de ids de planejametno
+     *
+     * @return array
+     */
+    public function listaByPlanejamentos($planejamento_aula_ids) {
+        if (is_array($planejamento_aula_ids)) {
+            $db = new clsBanco();
+
+            $db->Consulta("
+                SELECT
+                    pac.*,
+                    CASE
+                        WHEN cmc.planejamento_aula_conteudo_id IS NULL THEN false
+                        WHEN cmc.planejamento_aula_conteudo_id IS NOT NULL THEN true
+                    END usando
+                FROM
+                    modules.planejamento_aula_conteudo as pac
+                LEFT JOIN modules.conteudo_ministrado_conteudo as cmc
+                    ON (cmc.planejamento_aula_conteudo_id = pac.id)
+                WHERE
+                    pac.planejamento_aula_id IN (".implode(',', $planejamento_aula_ids).")
+            ");
+
+            while($db->ProximoRegistro()) {
+                $conteudos[] = $db->Tupla();
+            }
+
             return $conteudos;
         }
 
@@ -196,6 +246,23 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
                     {$this->_tabela}
                 WHERE
                     planejamento_aula_id = '{$this->planejamento_aula_id}' AND conteudo = '{$db->escapeString($this->conteudo)}'
+            ");
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public function excluirByPlanoAula () {
+        if (is_numeric($this->planejamento_aula_id)) {
+            $db = new clsBanco();
+
+            $db->Consulta("
+                DELETE FROM
+                    {$this->_tabela}
+                WHERE
+                    planejamento_aula_id = '{$this->planejamento_aula_id}'
             ");
 
             return true;

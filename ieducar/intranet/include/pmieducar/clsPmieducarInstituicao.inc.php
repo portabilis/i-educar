@@ -54,6 +54,7 @@ class clsPmieducarInstituicao extends Model
     public $permitir_edicao_frequencia;
     public $permitir_planeja_conteudos;
     public $obrigatorio_registro_diario_atividade;
+    public $utilizar_planejamento_aula;
 
     public function __construct(
         $cod_instituicao = null,
@@ -89,7 +90,8 @@ class clsPmieducarInstituicao extends Model
         $obrigar_telefone_pessoa = null,
         $permitir_edicao_frequencia = null,
         $permitir_planeja_conteudos = null,
-        $obrigatorio_registro_diario_atividade = null
+        $obrigatorio_registro_diario_atividade = null,
+        $utilizar_planejamento_aula = null
     ) {
         $db = new clsBanco();
         $this->_schema = 'pmieducar.';
@@ -149,7 +151,8 @@ class clsPmieducarInstituicao extends Model
             obrigar_telefone_pessoa,
             permitir_edicao_frequencia,
             permitir_planeja_conteudos,
-            obrigatorio_registro_diario_atividade
+            obrigatorio_registro_diario_atividade,
+            utilizar_planejamento_aula
         ';
 
         if (is_numeric($ref_usuario_cad)) {
@@ -281,6 +284,10 @@ class clsPmieducarInstituicao extends Model
 
         if (is_bool($obrigatorio_registro_diario_atividade)) {
             $this->obrigatorio_registro_diario_atividade = $obrigatorio_registro_diario_atividade;
+        }
+
+        if (is_bool($utilizar_planejamento_aula)) {
+           $this->utilizar_planejamento_aula = $utilizar_planejamento_aula;
         }
 
     }
@@ -720,6 +727,16 @@ class clsPmieducarInstituicao extends Model
                 $gruda = ', ';
             }
 
+            if (dbBool($this->utilizar_planejamento_aula)) {
+                $campos .= "{$gruda}utilizar_planejamento_aula";
+                $valores .= "{$gruda} true ";
+                $gruda = ', ';
+            } else {
+                $campos .= "{$gruda}utilizar_planejamento_aula";
+                $valores .= "{$gruda} false ";
+                $gruda = ', ';
+            }
+
             if (is_string($this->orgao_regional) and !empty($this->orgao_regional)) {
                 $campos .= "{$gruda}orgao_regional";
                 $valores .= "{$gruda}'{$this->orgao_regional}'";
@@ -1117,6 +1134,14 @@ class clsPmieducarInstituicao extends Model
                 $gruda = ', ';
             } else {
                 $set .= "{$gruda}obrigatorio_registro_diario_atividade = false ";
+                $gruda = ', ';
+            }
+
+            if (dbBool($this->utilizar_planejamento_aula)) {
+                $set .= "{$gruda}utilizar_planejamento_aula = true ";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}utilizar_planejamento_aula = false ";
                 $gruda = ', ';
             }
 

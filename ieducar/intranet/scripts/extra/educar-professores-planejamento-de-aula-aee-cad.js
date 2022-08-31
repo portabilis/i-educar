@@ -5,12 +5,17 @@
 
     var anoField = getElementFor('ano');
     var turmaField = getElementFor('turma');
+    var id = $j('#id').val();
+    var planejamento_aula_aee_id    = document.getElementById('planejamento_aula_aee_id');
+
 
     var submitButton = $j('#btn_enviar');
     submitButton.removeAttr('onclick');
 
     submitButton.click(function () {
-      enviarFormulario();
+      if (planejamento_aula_aee_id.value == '' || isNaN(planejamento_aula_aee_id.value)) {
+        enviarFormulario();
+      }
     });
 
     consertarBNCCElementos();
@@ -304,9 +309,7 @@
       var turma = document.getElementById("ref_cod_turma").value;
       var matricula = document.getElementById("ref_cod_matricula").value;
       var faseEtapa = document.getElementById("fase_etapa").value;
-      var ddp = document.getElementById("ddp").value;
-      var necessidade_aprendizagem = document.getElementById("necessidade_aprendizagem").value;
-      var caracterizacao_pedagogica = document.getElementById("caracterizacao_pedagogica").value;
+      var ddp = document.getElementById("ddp").value;      
       var conteudos = pegarConteudos();
       var componentesCurriculares = pegarComponentesCurriculares();
       var bnccs = pegarBNCCs();
@@ -318,11 +321,9 @@
       if (!ehDataValida(new Date(data_inicial))) { alert("Data inicial não é válida."); return; }
       if (!ehDataValida(new Date(data_final))) { alert("Data final não é válida."); return; }
       if (isNaN(parseInt(turma, 10))) { alert("Turma é obrigatória."); return; }
-      if (isNaN(parseInt(matricula, 10))) { alert("Aluno é obrigatório."); return; }
+      if (isNaN(parseInt(matricula, 10))) { alert("Aluno24 é obrigatório."); return; }
       if (isNaN(parseInt(faseEtapa, 10))) { alert("Etapa é obrigatória."); return; }
-      if (ddp == null || ddp == '') { alert("Metodologia é obrigatória."); return; }
-      if (necessidade_aprendizagem == null) { alert("O campo Necessidade de Aprendizagem não é válido."); return; }
-      if (caracterizacao_pedagogica == null) { alert("O campo Caracterização Pedagógica não é válido."); return; }
+      if (ddp == null || ddp == '') { alert("Metodologia é obrigatória."); return; }     
       if (!ehComponentesCurricularesValidos(componentesCurriculares)) { alert("Os componentes curriculares são obrigatórios."); return; }
       if (!ehBNCCsValidos(bnccs)) { alert("As habilidades são obrigatórias."); return; }
       if (!ehBNCCEspecificacoesValidos(bnccEspecificacoes)) { alert("As especificações são obrigatórias."); return; }
@@ -336,9 +337,7 @@
         turma,
         matricula,        
         faseEtapa,
-        ddp,
-        necessidade_aprendizagem,
-        caracterizacao_pedagogica,
+        ddp,        
         conteudos,
         componentesCurriculares, 
         bnccs,
@@ -400,8 +399,7 @@
       return bnccEspecificacoes.every(bnccsEspecificacao => bnccsEspecificacao[1].length > 0);
     }
 
-    function novoPlanoAula(data_inicial, data_final, turma, matricula, faseEtapa, ddp, 
-      necessidade_aprendizagem, caracterizacao_pedagogica, conteudos, 
+    function novoPlanoAula(data_inicial, data_final, turma, matricula, faseEtapa, ddp, conteudos, 
       componentesCurriculares, bnccs, bnccEspecificacoes, recursos_didaticos, outros) {
       var urlForNovoPlanoAula = postResourceUrlBuilder.buildUrl('/module/Api/PlanejamentoAulaAee', 'novo-plano-aula-aee', {});
 
@@ -415,9 +413,7 @@
           turma: turma,
           matricula: matricula,
           faseEtapa: faseEtapa,
-          ddp: ddp,         
-          necessidade_aprendizagem: necessidade_aprendizagem,
-          caracterizacao_pedagogica: caracterizacao_pedagogica,
+          ddp: ddp,
           conteudos: conteudos,
           componentesCurriculares: componentesCurriculares,
           bnccs: bnccs,
