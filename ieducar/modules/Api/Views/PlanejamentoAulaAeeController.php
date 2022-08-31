@@ -36,14 +36,40 @@ class PlanejamentoAulaAeeController extends ApiCoreController
 
         return [];
     }
-
+    
     public function excluirPlanoAula()
     {
         $planejamento_aula_aee_id = $this->getRequest()->planejamento_aula_aee_id;
 
         if (is_numeric($planejamento_aula_aee_id)) {
-            $obj = new clsModulesPlanejamentoAulaAee($planejamento_aula_aee_id);
-            return ['result' => $obj->excluir()];
+
+            $objComponenteCurricular = new clsModulesPlanejamentoAulaComponenteCurricularAee(null, $planejamento_aula_aee_id);
+            $objComponenteCurricular->excluirComponenteCurricularPlanejamentoAulaAee();
+
+            $objConteudo = new clsModulesPlanejamentoAulaConteudoAee(null, $planejamento_aula_aee_id);
+            $objConteudo->excluirConteudoPlanejamentoAulaAee();
+
+            if ($objConteudo) {
+                $objBncc = new clsModulesPlanejamentoAulaBNCCAee(null, $planejamento_aula_aee_id);
+                $bnccsPlanoAula = $objBncc->lista($planejamento_aula_aee_id);
+
+                $resultBncc = $objBncc->excluirBNCCPlanejamentoAulaAee();
+
+                if ($resultBncc) {
+                    $objEspecificacao = new clsModulesPlanejamentoAulaBNCCEspecificacaoAee();
+
+                    foreach ($bnccsPlanoAula as $bnccPlanoAula) {
+                        $objEspecificacao->excluirBNCCEspecificacaoPlanejamentoAulaAee($bnccPlanoAula['planejamento_aula_bncc_id']);
+                    }
+                }
+
+                if ($objEspecificacao) {
+                    $obj = new clsModulesPlanejamentoAulaAee($planejamento_aula_aee_id);
+                    $result = $obj->excluir();
+                }
+            }
+
+            return ['result' => $result];
         }
 
         return [];
@@ -228,13 +254,11 @@ class PlanejamentoAulaAeeController extends ApiCoreController
                         'especificacoes_geral_bncc' => $especificacoesGeralBNCC
                     ]
                 ];
-
             }
 
             $row['count_objetivos'] = count($row);
 
             return $row;
-
         }
 
         return [];

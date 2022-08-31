@@ -222,9 +222,11 @@ return new class extends clsCadastro
             $this->data,
             $this->hora_inicio,
             $this->hora_fim,
+            null,
             $this->atividades,
             $this->observacao,
-            $this->conteudos
+            $this->conteudos,
+            $this->observacao            
         );
 
         $editou = $obj->edita();
