@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyStudent;
 use iEducar\Modules\Enrollments\Model\EnrollmentStatusFilter;
 
 return new class extends clsListagem {
@@ -94,22 +95,15 @@ return new class extends clsListagem {
             }
         }
 
-        if (!$configuracoes['mostrar_codigo_inep_aluno']) {
-            $cabecalhos = ['Código Aluno',
-                'Nome do Aluno',
-                'Nome da Mãe',
-                'Nome do Responsável',
-                'CPF Responsável',];
-        } else {
-            $cabecalhos = ['Código Aluno',
-                'Código INEP',
-                'Nome do Aluno',
-                'Nome da Mãe',
-                'Nome do Responsável',
-                'CPF Responsável',];
-        }
+        $cabecalhos = ['Código Aluno',
+            $configuracoes['mostrar_codigo_inep_aluno'] === 1 ? 'Código INEP' : null,
+            'Nome do Aluno',
+            'Nome da Mãe',
+            'Nome do Responsável',
+            'CPF Responsável'
+        ];
 
-        $this->addCabecalhos($cabecalhos);
+        $this->addCabecalhos(array_filter($cabecalhos));
 
         // Paginador
         $this->limite = 20;
@@ -118,64 +112,50 @@ return new class extends clsListagem {
         $aluno = new clsPmieducarAluno();
         $aluno->setLimite($this->limite, $this->offset);
 
-        $alunos = $aluno->telaDeListagemDeAlunos(
-            int_cod_aluno: $this->cod_aluno,
-            int_ativo: 1,
-            str_nome_aluno: $this->nome_aluno,
-            int_ref_cod_escola: $ref_cod_escola,
-            data_nascimento: $this->data_nascimento,
-            str_nm_pai2: $this->nome_pai,
-            str_nm_mae2: $this->nome_mae,
-            str_nm_responsavel2: $this->nome_responsavel,
-            cod_inep: $this->cod_inep,
-            aluno_estado_id: $this->aluno_estado_id,
-            ano: $this->ano,
-            ref_cod_instituicao: $this->ref_cod_instituicao,
-            ref_cod_escola: $this->ref_cod_escola,
-            ref_cod_curso: $this->ref_cod_curso,
-            ref_cod_serie: $this->ref_cod_serie,
-            int_cpf_aluno: idFederal2int($this->cpf_aluno),
-            int_rg_aluno: idFederal2int($this->rg_aluno)
-        );
+        $students = LegacyStudent::query()
+            ->with(
+                [
+                    'individual' => function(Illuminate\Database\Eloquent\Relations\BelongsTo $query) {
+                           $query->select(['idpes','idpes_mae','idpes_pai','nome_social']);
+                           $query
+                               ->with('pai:nome,idpes', 'pai.individual:cpf,idpes')
+                               ->with('mae:nome,idpes', 'mae.individual:cpf,idpes')
+                               ->with('responsavel:nome,idpes', 'responsavel.individual:cpf,idpes');
+                       },
+                    'person:idpes,nome',
+                    'inep:cod_aluno,cod_aluno_inep'
+                ]
+            )
+            ->paginate($this->limite,['ref_idpes','cod_aluno', 'tipo_responsavel'], "pagina_{$this->nome}");
 
-        $total = $aluno->_total;
 
-        foreach ($alunos as $registro) {
-            $nomeAluno = $registro['nome_aluno'];
-            $nomeSocial = $registro['nome_social'];
+        /** @var LegacyStudent $registro */
+        foreach ($students as $registro) {
+            $nomeAluno = $registro->person->name;
+            $nomeSocial = $registro->individual->nome_social;
 
             if ($nomeSocial) {
                 $nomeAluno = $nomeSocial . '<br> <i>Nome de registro: </i>' . $nomeAluno;
             }
 
-            // responsavel
-            $aluno->cod_aluno = $registro['cod_aluno'];
-            $responsavel = $aluno->getResponsavelAluno();
-            $nomeResponsavel = mb_strtoupper($responsavel['nome_responsavel']);
+            $nomeResponsavel = mb_strtoupper($registro->getGuardianName());
+            $cpfResponsavel = $registro->getGuardianCpf();
+            $nomeMae = mb_strtoupper($registro->individual->mae->name);
 
-            if (!$configuracoes['mostrar_codigo_inep_aluno']) {
-                $linhas = [
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$registro['cod_aluno']}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$nomeAluno}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$registro['nome_mae']}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$nomeResponsavel}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$responsavel['cpf_responsavel']}</a>"
-                ];
-            } else {
-                $linhas = [
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$registro['cod_aluno']}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$registro['codigo_inep']}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$nomeAluno}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$registro['nome_mae']}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$nomeResponsavel}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$responsavel['cpf_responsavel']}</a>"
-                ];
-            }
+            $linhas = array_filter([
+                "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">$registro->cod_aluno</a>",
+                $configuracoes['mostrar_codigo_inep_aluno'] ===  1 ? "<a href=\"educar_aluno_det.php?cod_aluno={$registro->cod_aluno}\">{$registro->inepNumber}</a>" : null,
+                "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">$nomeAluno</a>",
+                "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">$nomeMae</a>",
+                "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">$nomeResponsavel</a>",
+                "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">$cpfResponsavel</a>"
+                ]);
 
             $this->addLinhas($linhas);
         }
 
-        $this->addPaginador2('educar_aluno_lst.php', $total, $_GET, $this->nome, $this->limite);
+
+       $this->addPaginador2('educar_aluno_lst.php', $students->total(), $_GET, $this->nome, $this->limite);
 
         $bloquearCadastroAluno = dbBool($configuracoes['bloquear_cadastro_aluno']);
         $usuarioTemPermissaoCadastro = $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7);
