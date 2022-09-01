@@ -180,12 +180,12 @@ function validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields
 
   for (var i = 0; i < requiredFields.length; i++) {
     var $requiredField = $j(requiredFields[i]);
-
+    let requiredFieldChosen = $j('#'+ $requiredField[0].id + '_chosen');
     if ($requiredField.length > 0 &&
         /*$requiredField.css('display') != 'none' &&*/
-        ($requiredField.is(':visible') || validateHiddenFields) &&
-        $requiredField.is(':enabled')           &&
-        ($requiredField.val() == '' || $requiredField.val() == null)               &&
+        ($requiredField.is(':visible') || requiredFieldChosen.is(':visible') || validateHiddenFields) &&
+        $requiredField.is(':enabled') &&
+        ($requiredField.val() == '' || !($requiredField.val())) &&
         $j.inArray($requiredField[0], exceptFields) < 0) {
 
       $emptyFields.push($requiredField);
