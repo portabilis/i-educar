@@ -36,10 +36,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             'coluna' => 'idpes'
         ],
         [
-            'tabela' => 'pmieducar.biblioteca_usuario',
-            'coluna' => 'ref_cod_usuario'
-        ],
-        [
             'tabela' => 'pmieducar.escola_usuario',
             'coluna' => 'ref_cod_usuario'
         ],
@@ -137,10 +133,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
         [
             'tabela' => 'modules.pessoa_transporte',
             'coluna' => 'ref_idpes_destino'
-        ],
-        [
-            'tabela' => 'pmieducar.cliente',
-            'coluna' => 'ref_idpes'
         ],
         [
             'tabela' => 'cadastro.documento',
@@ -252,37 +244,9 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
 
     public function unifica()
     {
-        $this->unificaClientes();
         $unificadorServidor = new App_Unificacao_Servidor($this->codigoUnificador, $this->codigosDuplicados, $this->codPessoaLogada, $this->db, $this->unificationId);
         $unificadorServidor->unifica();
         parent::unifica();
-    }
-
-    protected function unificaClientes()
-    {
-        $chavesConsultar = $this->codigosDuplicados;
-        $chavesConsultar[] = $this->codigoUnificador;
-        $chavesConsultarString = implode(',', $chavesConsultar);
-
-        $this->db->consulta(
-            "
-            SELECT cod_cliente
-                FROM pmieducar.cliente
-                WHERE ref_idpes in ({$chavesConsultarString})
-                ORDER BY ref_idpes = {$this->codigoUnificador} DESC"
-        );
-
-        $codigoClientes = [];
-
-        while ($this->db->ProximoRegistro()) {
-            $reg = $this->db->Tupla();
-            $codigoClientes[] = $reg['cod_cliente'];
-        }
-        if (count($codigoClientes) < 2) {
-            return true;
-        }
-        $unificadorCliente = new App_Unificacao_Cliente(array_shift($codigoClientes), $codigoClientes, $this->codPessoaLogada, $this->db, $this->unificationId);
-        $unificadorCliente->unifica();
     }
 
     protected function validaParametros()

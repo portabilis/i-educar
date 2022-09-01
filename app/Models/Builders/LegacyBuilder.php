@@ -130,6 +130,12 @@ class LegacyBuilder extends Builder
     {
         foreach ($this->filters as $filter => $parameter) {
             $method = 'where' . $filter;
+            if (is_array($parameter)) {
+                $this->{$method}(...$parameter);
+
+                continue;
+            }
+
             $this->{$method}($parameter);
         }
     }

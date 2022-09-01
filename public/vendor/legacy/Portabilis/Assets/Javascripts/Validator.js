@@ -182,12 +182,12 @@ function validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields
     const $requiredField = $j(requiredFields[i]);
     const $requiredFieldMulti = $requiredField.parent().find('.chosen-container-multi ul.chosen-choices');
     const $requiredFieldSingle = $requiredField.parent().find('.chosen-container-single');
-
+    let requiredFieldChosen = $j('#'+ $requiredField[0].id + '_chosen');
     if ($requiredField.length > 0 &&
         /*$requiredField.css('display') != 'none' &&*/
-        ($requiredField.is(':visible') || validateHiddenFields) &&
-        $requiredField.is(':enabled')           &&
-        ($requiredField.val() == '' || $requiredField.val() == null)               &&
+        ($requiredField.is(':visible') || requiredFieldChosen.is(':visible') || validateHiddenFields) &&
+        $requiredField.is(':enabled') &&
+        ($requiredField.val() == '' || !($requiredField.val())) &&
         $j.inArray($requiredField[0], exceptFields) < 0) {
 
       $emptyFields.push($requiredField);
