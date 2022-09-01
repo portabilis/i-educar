@@ -2,10 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\Ativo;
 use Illuminate\Database\Eloquent\Model;
 
 class LegacyEducationType extends Model
 {
+    use Ativo;
+
+    public const CREATED_AT = 'data_cadastro';
+    public const UPDATED_AT = null;
+
     /**
      * @var string
      */
@@ -20,11 +26,12 @@ class LegacyEducationType extends Model
      * @var array
      */
     protected $fillable = [
-        'ref_usuario_cad', 'nm_tipo', 'data_cadastro', 'ref_cod_instituicao',
+        'ref_usuario_cad',
+        'ref_usuario_exc',
+        'nm_tipo',
+        'ativo',
+        'ref_cod_instituicao',
+        'atividade_complementar',
+        'data_exclusao'
     ];
-
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
 }

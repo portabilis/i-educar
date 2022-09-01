@@ -3029,14 +3029,15 @@ function setAutoComplete() {
     });
   });
 }
-
-setAutoComplete();
-
 var $addProjetoButton = $j("#btn_add_tab_add_2");
 
 $addProjetoButton.click(function () {
   setAutoComplete();
 });
+
+window.onload = function () {
+  setAutoComplete();
+}
 
 if ($j("#transporte_rota").length > 0) {
   $j("#transporte_rota").on("change", function () {

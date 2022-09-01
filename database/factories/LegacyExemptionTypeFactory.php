@@ -22,11 +22,9 @@ class LegacyExemptionTypeFactory extends Factory
     public function definition(): array
     {
         return [
-            'nm_tipo' => $this->faker->words(2, true),
-            'descricao' => $this->faker->words(5, true),
-            'ativo' => 1,
+            'nm_tipo' => $this->faker->firstName(),
+            'descricao' => $this->faker->paragraph(),
             'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
-            'data_cadastro' => now(),
             'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
         ];
     }

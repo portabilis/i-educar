@@ -134,4 +134,14 @@ class LegacyCourse extends Model
     {
         return $this->belongsToMany(LegacySchool::class, 'escola_curso', 'ref_cod_curso', 'ref_cod_escola')->wherePivot('ativo', 1);
     }
+
+    /**
+     * Relaciona com as habilitações
+     *
+     * @return BelongsToMany
+     */
+    public function qualifications(): BelongsToMany
+    {
+        return $this->belongsToMany(LegacyQualification::class, 'pmieducar.habilitacao_curso', 'ref_cod_curso', 'ref_cod_habilitacao');
+    }
 }

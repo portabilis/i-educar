@@ -5,6 +5,8 @@ use App\Models\Individual;
 use App\Models\LegacyDeficiency;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolHistory;
+use App\Models\LegacyStudentBenefit;
+use App\Models\LegacyStudentProject;
 use App\Models\LogUnification;
 use App\Models\TransportationProvider;
 use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
@@ -740,9 +742,7 @@ class AlunoController extends ApiCoreController
         }
 
         if (!isset($this->_tiposOcorrenciasDisciplinares[$id])) {
-            $ocorrencia = new clsPmieducarTipoOcorrenciaDisciplinar;
-            $ocorrencia->cod_tipo_ocorrencia_disciplinar = $id;
-            $ocorrencia = $ocorrencia->detalhe();
+            $ocorrencia = LegacyDisciplinaryOccurrenceType::find($id)?->toArray();
 
             $this->_tiposOcorrenciasDisciplinares[$id] = $this->toUtf8(
                 $ocorrencia['nm_tipo'],
@@ -1499,12 +1499,14 @@ class AlunoController extends ApiCoreController
 
     public function updateBeneficios($id)
     {
-        $obj = new clsPmieducarAlunoBeneficio();
-        $obj->deletaBeneficiosDoAluno($id);
-
+        LegacyStudentBenefit::query()->where('aluno_id', $id)->delete();
         foreach ($this->getRequest()->beneficios as $beneficioId) {
             if (!empty($beneficioId)) {
-                $obj->cadastraBeneficiosDoAluno($id, $beneficioId);
+                $alunoBeneficio = new LegacyStudentBenefit();
+                $alunoBeneficio->aluno_id = $id;
+                $alunoBeneficio->aluno_beneficio_id = $beneficioId;
+
+                $alunoBeneficio->save();
             }
         }
     }
@@ -1516,8 +1518,7 @@ class AlunoController extends ApiCoreController
 
     public function saveProjetos($alunoId)
     {
-        $obj = new clsPmieducarProjeto();
-        $obj->deletaProjetosDoAluno($alunoId);
+        LegacyStudentProject::query()->where('ref_cod_aluno', $alunoId)->delete();
 
         foreach ($this->getRequest()->projeto_turno as $key => $value) {
             $projetoId = $this->retornaCodigo($this->getRequest()->projeto_cod_projeto[$key]);
@@ -1529,8 +1530,22 @@ class AlunoController extends ApiCoreController
 
                 if (is_numeric($projetoId) && is_numeric($turnoId) && !empty($dataInclusao)) {
                     if ($this->validaTurnoProjeto($alunoId, $turnoId)) {
-                        if (!$obj->cadastraProjetoDoAluno($alunoId, $projetoId, $dataInclusao, $dataDesligamento, $turnoId)) {
+                        $count = LegacyStudentProject::query()->where('ref_cod_aluno', $alunoId)
+                            ->where('ref_cod_projeto', $projetoId)
+                            ->count();
+                        if ($count > 0) {
                             $this->messenger->append('O aluno não pode ser cadastrado no mesmo projeto mais de uma vez.');
+                        } else {
+                            $alunoProjeto = new LegacyStudentProject();
+                            $alunoProjeto->ref_cod_aluno = $alunoId;
+                            $alunoProjeto->data_inclusao = $dataInclusao;
+                            if ($dataDesligamento && $dataDesligamento != "") {
+                                $alunoProjeto->data_desligamento = $dataDesligamento;
+                            }
+                            $alunoProjeto->ref_cod_projeto = $projetoId;
+                            $alunoProjeto->turno = $turnoId;
+
+                            $alunoProjeto->save();
                         }
                     } else {
                         $this->messenger->append('O aluno não pode ser cadastrado em projetos no mesmo turno em que estuda, por favor, verifique.');
