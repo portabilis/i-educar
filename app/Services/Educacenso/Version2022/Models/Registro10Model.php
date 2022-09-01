@@ -66,6 +66,7 @@ class Registro10Model extends Registro10
         $this->dependenciaLaboratorioCiencias = $arrayColumns[53];
         $this->dependenciaLaboratorioInformatica = $arrayColumns[54];
         $this->dependenciaParqueInfantil = $arrayColumns[55];
+        $this->dependenciaLaboratorioEducacaoProfissional = $arrayColumns[55];
         $this->dependenciaPatioCoberto = $arrayColumns[56];
         $this->dependenciaPatioDescoberto = $arrayColumns[57];
         $this->dependenciaPiscina = $arrayColumns[58];
@@ -84,6 +85,7 @@ class Registro10Model extends Registro10
         $this->dependenciaSalaProfessores = $arrayColumns[71];
         $this->dependenciaSalaAee = $arrayColumns[72];
         $this->dependenciaSalaSecretaria = $arrayColumns[73];
+        $this->dependenciaSalaEducacaoProfissional = $arrayColumns[75];
         $this->dependenciaNenhumaRelacionada = $arrayColumns[74];
         $this->recursoCorrimao = $arrayColumns[75];
         $this->recursoElevador = $arrayColumns[76];
@@ -104,6 +106,7 @@ class Registro10Model extends Registro10
         $this->impressoras = $arrayColumns[91];
         $this->impressorasMultifuncionais = $arrayColumns[92];
         $this->equipamentosScanner = $arrayColumns[93];
+        $this->equipamentosNenhum = $arrayColumns[96];
         $this->dvds = $arrayColumns[94];
         $this->aparelhosDeSom = $arrayColumns[95];
         $this->televisoes = $arrayColumns[96];
@@ -138,13 +141,8 @@ class Registro10Model extends Registro10
         $this->qtdTecnicos = $arrayColumns[125];
         $this->qtdViceDiretor = $arrayColumns[126];
         $this->qtdOrientadorComunitario = $arrayColumns[127];
+        $this->semFuncionariosParaFuncoes = $arrayColumns[131];
         $this->alimentacaoEscolarAlunos = $arrayColumns[128];
-        $this->organizacaoEnsinoSerieAno = $arrayColumns[129];
-        $this->organizacaoEnsinoPeriodosSemestrais = $arrayColumns[130];
-        $this->organizacaoEnsinoCiclos = $arrayColumns[131];
-        $this->organizacaoEnsinoGrupos = $arrayColumns[132];
-        $this->organizacaoEnsinoModulos = $arrayColumns[133];
-        $this->organizacaoEnsinoAlternancia = $arrayColumns[134];
         $this->instrumentosPedagogicosAcervo = $arrayColumns[135];
         $this->instrumentosPedagogicosBrinquedos = $arrayColumns[136];
         $this->instrumentosPedagogicosMateriaisCientificos = $arrayColumns[137];
@@ -152,10 +150,12 @@ class Registro10Model extends Registro10
         $this->instrumentosPedagogicosInstrumentos = $arrayColumns[139];
         $this->instrumentosPedagogicosJogos = $arrayColumns[140];
         $this->instrumentosPedagogicosAtividadesCulturais = $arrayColumns[141];
+        $this->instrumentosPedagogicosEducacaoProfissional = $arrayColumns[140];
         $this->instrumentosPedagogicosPraticaDesportiva = $arrayColumns[142];
         $this->instrumentosPedagogicosEducacaoIndigena = $arrayColumns[143];
         $this->instrumentosPedagogicosEducacaoEtnicoRacial = $arrayColumns[144];
         $this->instrumentosPedagogicosEducacaoCampo = $arrayColumns[145];
+        $this->instrumentosPedagogicosNenhum = $arrayColumns[145];
         $this->educacaoIndigena = $arrayColumns[146];
         $this->linguaIndigena = $arrayColumns[147];
         $this->linguaPortuguesa = $arrayColumns[148];
