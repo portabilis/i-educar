@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyCourse;
 use App\Models\LegacyRegimeType;
 
 return new class extends clsCadastro {
@@ -98,6 +99,15 @@ return new class extends clsCadastro {
 
     public function Excluir()
     {
+        $count = LegacyCourse::query()
+            ->where('ref_cod_tipo_regime', $this->cod_tipo_regime)
+            ->count();
+
+        if ($count > 0) {
+            $this->mensagem = 'Você não pode excluir esse Tipo de Regime, pois ele possui vínculo com Curso(s).<br>';
+            return false;
+        }
+
         $type = LegacyRegimeType::findOrFail($this->cod_tipo_regime);
         $type->ref_usuario_exc = $this->pessoa_logada;
         $type->ativo = 0;
