@@ -34,6 +34,7 @@ function verificaDeficiencias() {
 function submitForm() {
   if (!validaServidor() ||
       !validaCursoFormacaoContinuada() ||
+      !validaComplementacaoPedagogica() ||
       !validationUtils.validatesFields(false) ||
       !validateGraduations() ||
       !validaCargaHoraria() ||
@@ -122,6 +123,17 @@ function validaCursoFormacaoContinuada() {
   return true;
 }
 
+function validaComplementacaoPedagogica() {
+    complementacaoPedagogica = $j('#complementacao_pedagogica').val() || [];
+
+    if (complementacaoPedagogica.length > 3) {
+      messageUtils.error(' O campo: <b>Formação/Complementação pedagógica</b> não pode ter mais de 3 opções selecionadas.');
+      return false;
+    }
+
+    return true;
+  }
+
 verificaCamposObrigatorio();
 
 let habilitaTipoEnsinoMedio = () => {
@@ -184,6 +196,14 @@ function checkPosgraduateTable() {
   }
 }
 
+function checkComplementacaoPedagogica() {
+    if (escolaridadeSuperior && $j('#tab2').hasClass('servidorTab-active')) {
+      $j('#tr_complementacao_pedagogica').show();
+    } else {
+      $j('#tr_complementacao_pedagogica').hide();
+    }
+  }
+
 function verificaCamposObrigatorio() {
   if($j('#ref_idesco').val()) {
     var options = {
@@ -197,6 +217,7 @@ function verificaCamposObrigatorio() {
         escolaridadeSuperior = dataResponse.escolaridade.escolaridade == '6'
         checkGraduationsTable();
         checkPosgraduateTable();
+        checkComplementacaoPedagogica();
       }
     }
     getResource(options);
@@ -204,6 +225,7 @@ function verificaCamposObrigatorio() {
     escolaridadeSuperior = false;
     checkGraduationsTable();
     checkPosgraduateTable();
+    checkComplementacaoPedagogica();
   }
 }
 
@@ -279,6 +301,7 @@ $j(document).ready(function() {
       });
       checkGraduationsTable();
       checkPosgraduateTable();
+      checkComplementacaoPedagogica();
     });
 
   // fix checkboxs

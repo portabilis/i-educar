@@ -13,7 +13,6 @@ class EmployeeGraduation extends Model
         'course_id',
         'completion_year',
         'college_id',
-        'discipline_id',
     ];
 
     /**
