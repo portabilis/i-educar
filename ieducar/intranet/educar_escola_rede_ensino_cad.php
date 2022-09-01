@@ -118,7 +118,7 @@ return new class extends clsCadastro {
             ->count();
 
         if ($count > 0) {
-            $this->mensagem = 'Você não pode excluir esse Nível de Ensino, pois ele possui vínculo com Curso(s).<br>';
+            $this->mensagem = 'Você não pode excluir essa Rede de Ensino, pois ele possui vínculo com Escola(s).<br>';
             return false;
         }
 
