@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyEducationNetwork;
+use App\Models\LegacySchool;
 
 return new class extends clsCadastro {
     /**
@@ -112,6 +113,14 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir(647, $this->pessoa_logada, 3, 'educar_escola_rede_ensino_lst.php');
 
+        $count = LegacySchool::query()
+            ->where('ref_cod_escola_rede_ensino', $this->cod_escola_rede_ensino)
+            ->count();
+
+        if ($count > 0) {
+            $this->mensagem = 'Você não pode excluir esse Nível de Ensino, pois ele possui vínculo com Curso(s).<br>';
+            return false;
+        }
 
         $network = LegacyEducationNetwork::findOrFail($this->cod_escola_rede_ensino);
         $network->ref_usuario_exc = $this->pessoa_logada;
