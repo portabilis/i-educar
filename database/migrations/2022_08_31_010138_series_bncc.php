@@ -20,7 +20,7 @@ class SeriesBncc extends Migration
           
         });
 
-        Schema::create('pmieducar.bncc_series', function (Blueprint $table) {
+        Schema::table('pmieducar.bncc_series', function (Blueprint $table) {
             $table->foreign('id_bncc')
                 ->references('id')
                 ->on('modules.bncc')
