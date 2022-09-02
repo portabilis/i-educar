@@ -116,6 +116,7 @@ return new class extends clsListagem {
             'nomePai' => $this->nome_pai,
             'nomeMae' => $this->nome_mae,
             'nomeResponsavel' => $this->nome_responsavel,
+            'nomeAluno' => $this->nome_aluno,
             'codAluno' => $this->cod_aluno,
             'redeEstatual' => $this->aluno_estado_id,
             'dataNascimento' => $this->data_nascimento,
