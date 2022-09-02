@@ -38,7 +38,7 @@ class CountryBuilder extends LegacyBuilder
      */
     public function active(): self
     {
-        return $this->withoutTrashed();
+        return $this->whereNull('deleted_at');
     }
 
 
