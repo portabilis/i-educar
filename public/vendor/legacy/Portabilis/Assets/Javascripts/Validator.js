@@ -179,7 +179,9 @@ function validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields
     simpleSearch.fixupRequiredFieldsValidation();
 
   for (var i = 0; i < requiredFields.length; i++) {
-    var $requiredField = $j(requiredFields[i]);
+    const $requiredField = $j(requiredFields[i]);
+    const $requiredFieldMulti = $requiredField.parent().find('.chosen-container-multi ul.chosen-choices');
+    const $requiredFieldSingle = $requiredField.parent().find('.chosen-container-single');
     let requiredFieldChosen = $j('#'+ $requiredField[0].id + '_chosen');
     if ($requiredField.length > 0 &&
         /*$requiredField.css('display') != 'none' &&*/
@@ -194,11 +196,18 @@ function validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields
         $requiredField.addClass('error');
 
       if ($requiredField.is(':hidden,select')) {
-        $requiredField.parent().find('ul.chosen-choices').addClass('error');
+        if ($requiredFieldMulti.length) {
+          $requiredFieldMulti.addClass('error');
+        } else if($requiredFieldSingle.length) {
+          $requiredFieldSingle.addClass('error');
+        }
       }
     }
-    else if ($requiredField.length > 0)
+    else if ($requiredField.length > 0) {
       $requiredField.removeClass('error');
+      $requiredFieldMulti.removeClass('error');
+      $requiredFieldSingle.removeClass('error');
+    }
   }
 
   if ($emptyFields.length == 0)
