@@ -49,6 +49,10 @@ return new class extends clsCadastro {
     public $localizacao_diferenciada;
     public $pais_residencia;
     public $cod_profissao;
+    public $banco;
+    public $agencia;
+    public $conta;
+    public $tipo_conta;
 
     // Variáveis para controle da foto
     public $objPhoto;
@@ -78,7 +82,8 @@ return new class extends clsCadastro {
                 $this->pai_id, $this->mae_id, $this->tipo_nacionalidade, $this->pais_origem, $this->naturalidade,
                 $this->letra, $this->sus, $this->nis_pis_pasep, $this->ocupacao, $this->empresa, $this->ddd_telefone_empresa,
                 $this->telefone_empresa, $this->pessoa_contato, $this->renda_mensal, $this->data_admissao, $this->falecido,
-                $this->religiao_id, $this->zona_localizacao_censo, $this->localizacao_diferenciada, $this->nome_social, $this->pais_residencia, $this->ref_cod_profissao
+                $this->religiao_id, $this->zona_localizacao_censo, $this->localizacao_diferenciada, $this->nome_social, $this->pais_residencia, $this->ref_cod_profissao,
+                $this->ref_cod_banco, $this->agencia, $this->conta, $this->tipo_conta
             ) =
             $objPessoa->queryRapida(
                 $this->cod_pessoa_fj,
@@ -119,6 +124,10 @@ return new class extends clsCadastro {
                 'nome_social',
                 'pais_residencia',
                 'ref_cod_profissao',
+                'ref_cod_banco',
+                'agencia',
+                'conta',
+                'tipo_conta'
             );
 
             $this->loadAddress($this->cod_pessoa_fj);
@@ -743,10 +752,42 @@ return new class extends clsCadastro {
         $this->campoTexto('ocupacao', 'Ocupação', $this->ocupacao, '50', '255', false);
         $this->campoMonetario('renda_mensal', 'Renda mensal (R$)', $this->renda_mensal, '9', '10');
         $this->campoData('data_admissao', 'Data de admissão', $this->data_admissao);
+    
+        $this->viewAddress();
         $this->campoTexto('empresa', 'Empresa', $this->empresa, '50', '255', false);
         $this->inputTelefone('empresa', 'Telefone da empresa');
         $this->campoTexto('pessoa_contato', 'Pessoa de contato na empresa', $this->pessoa_contato, '50', '255', false);
 
+          //conta bancaria
+          $conta_bancaria = new clsAgenciaBancaria();
+          $conta_bancaria->setOrderby('nome ASC');
+          $conta_bancaria->ref_cod_banco = $this->codigo;
+          $conta_bancaria->nome = $this->nome;
+          $conta_bancaria = $conta_bancaria->lista($this->codigo);
+          $selectOptionsBanco = [];
+  
+          foreach ($conta_bancaria as $banco){
+              $selectOptionsBanco[$banco['codigo']] = $banco['nome'];
+          }
+   
+          $selectOptionsBanco = array_replace([null => 'Selecione'], $selectOptionsBanco);
+   
+          $this->codigo = is_array($conta_bancaria) ? $conta_bancaria['ref_cod_banco'] : null;
+   
+          $this->campoLista('ref_cod_banco','Banco',$selectOptionsBanco,null,null, null, null, null, null, false);
+          
+          
+          $this->campoNumero('agencia', 'Agência', $this->agencia, '50','50', false);
+          $this->campoNumero('conta', 'Conta', $this->conta, '50','50', false);
+          //$this->campoNumero('tipo_conta', 'Tipo da Conta',$this->tipo_conta,'50','3',false);
+          $op_tipo = [
+              'required' => false,
+              'label' => 'Tipo da Conta',
+              'placeholder' => '',
+              'value' => $this->tipo_conta,
+              'max_length' => 3
+          ];
+          $this->inputsHelper()->integer('tipo_conta',$op_tipo);
         
 
         $fileService = new FileService(new UrlPresigner);
@@ -1259,6 +1300,10 @@ return new class extends clsCadastro {
         $fisica->nome_social = $this->nome_social;
         $fisica->pais_residencia = $this->pais_residencia;
         $fisica->ref_cod_profissao = $this->ref_cod_profissao;
+        $fisica->ref_cod_banco = $this->ref_cod_banco;
+        $fisica->agencia = $this->agencia;
+        $fisica->conta = $this->conta;
+        $fisica->tipo_conta = $this->tipo_conta;
 
         $sql = 'select 1 from cadastro.fisica WHERE idpes = $1 limit 1';
 
