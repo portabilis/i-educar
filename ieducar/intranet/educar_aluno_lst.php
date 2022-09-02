@@ -1,7 +1,7 @@
 <?php
 
+use App\Models\DataSearch\StudentFilter;
 use App\Models\LegacyStudent;
-use iEducar\Modules\Enrollments\Model\EnrollmentStatusFilter;
 
 return new class extends clsListagem {
     /**
@@ -105,25 +105,29 @@ return new class extends clsListagem {
 
         $this->addCabecalhos(array_filter($cabecalhos));
 
-        // Paginador
+        $dataFilter = [
+            'rg' => $this->rg_aluno,
+            'ano' => $this->ano,
+            'cpf' => $this->cpf_aluno,
+            'inep' => $this->cod_inep,
+            'curso' => $this->ref_cod_curso,
+            'serie' => $this->ref_cod_serie,
+            'escola' => $this->ref_cod_escola,
+            'nomePai' => $this->nome_pai,
+            'nomeMae' => $this->nome_mae,
+            'nomeResponsavel' => $this->nome_responsavel,
+            'codAluno' => $this->cod_aluno,
+            'redeEstatual' => $this->aluno_estado_id,
+            'dataNascimento' => $this->data_nascimento,
+            'perPage' => 20,
+            'pageName' => $this->nome,
+        ];
+
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
-        $students = LegacyStudent::query()
-            ->with(
-                [
-                    'individual' => function(Illuminate\Database\Eloquent\Relations\BelongsTo $query) {
-                           $query->select(['idpes','idpes_mae','idpes_pai','nome_social']);
-                           $query
-                               ->with('pai:nome,idpes', 'pai.individual:cpf,idpes')
-                               ->with('mae:nome,idpes', 'mae.individual:cpf,idpes')
-                               ->with('responsavel:nome,idpes', 'responsavel.individual:cpf,idpes');
-                       },
-                    'person:idpes,nome',
-                    'inep:cod_aluno,cod_aluno_inep'
-                ]
-            )
-            ->paginate($this->limite,['ref_idpes','cod_aluno', 'tipo_responsavel'], "pagina_{$this->nome}");
+        $studentFilter = new StudentFilter(...$dataFilter);
+        $students = LegacyStudent::query()->findStudentWithMultipleSearch($studentFilter);
 
 
         /** @var LegacyStudent $registro */
@@ -151,8 +155,7 @@ return new class extends clsListagem {
             $this->addLinhas($linhas);
         }
 
-
-       $this->addPaginador2('educar_aluno_lst.php', $students->total(), $_GET, $this->nome, $this->limite);
+        $this->addPaginador2('educar_aluno_lst.php', $students->total(), $_GET, $this->nome, $this->limite);
 
         $bloquearCadastroAluno = dbBool($configuracoes['bloquear_cadastro_aluno']);
         $usuarioTemPermissaoCadastro = $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7);
