@@ -13,7 +13,7 @@ class LegacyStudent extends Model
 {
     use LegacyAttribute;
 
-    public $builder = LegacyStudentBuilder::class;
+    public string $builder = LegacyStudentBuilder::class;
 
     /**
      * @var string
