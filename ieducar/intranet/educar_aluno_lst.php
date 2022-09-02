@@ -139,9 +139,9 @@ return new class extends clsListagem {
                 $nomeAluno = $nomeSocial . '<br> <i>Nome de registro: </i>' . $nomeAluno;
             }
 
-            $nomeResponsavel = mb_strtoupper($registro->getGuardianName());
-            $cpfResponsavel = $registro->getGuardianCpf();
-            $nomeMae = mb_strtoupper($registro->individual->mae->name);
+            $nomeResponsavel = mb_strtoupper($registro->getGuardianName() ?? '-');
+            $cpfResponsavel = ucfirst($registro->getGuardianCpf());
+            $nomeMae = mb_strtoupper($registro->individual->mae->name ?? '-');
 
             $linhas = array_filter([
                 "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">$registro->cod_aluno</a>",

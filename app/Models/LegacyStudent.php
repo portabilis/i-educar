@@ -116,9 +116,9 @@ class LegacyStudent extends Model
     public function getGuardianCpf()
     {
         return match ($this->guardianType) {
-            'm' => $this->individual->mae->individual->cpf,
-            'p' => $this->individual->pai->individual->cpf,
-            'r' => $this->individual->responsavel->individual->cpf,
+            'm' => $this->individual->mae->individual->cpf ?? 'não informado',
+            'p' => $this->individual->pai->individual->cpf ?? 'não informado',
+            'r' => $this->individual->responsavel->individual->cpf ?? 'não informado',
             'a' => $this->joinGuardionCpfs(),
             default => null
         };
@@ -126,7 +126,7 @@ class LegacyStudent extends Model
 
     private function joinGuardionCpfs(): ?string
     {
-        $join = $this->individual->mae->individual->cpf . ', ' . $this->individual->pai->individual->cpf;
+        $join = $this->individual->mae->individual->cpf ?? 'não informado' . ', ' . $this->individual->pai->individual->cpf ?? 'não informado';
         return strlen($join) < 3 ? null : $join;
     }
 
