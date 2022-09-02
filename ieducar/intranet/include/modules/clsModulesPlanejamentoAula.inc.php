@@ -767,4 +767,55 @@ class clsModulesPlanejamentoAula extends Model {
 
         return false;
     }
+
+    public function getHabilidadesEspecificacoesUtilizados ($turmaId, $ano, $userId)
+    {
+        $planejamentos = $this->lista($ano,
+            null,
+            ull,
+            null,
+            null,
+            $turmaId,
+            null,
+            null,
+            null,
+            null,
+            null,
+            $userId);
+
+
+        $bnccsUtilizados = [];
+        $escpecificacoesUtilizados = [];
+
+        foreach ($planejamentos as $planejamento) {
+            $obj = new clsModulesPlanejamentoAulaBNCC();
+            $bnccs = $obj->lista($planejamento['id']);
+
+            foreach ($bnccs as $bncc) {
+                if (in_array($bncc['id'], $bnccsUtilizados)) {
+                    continue;
+                }
+
+                $bnccsUtilizados[] = (int) $bncc['id'];
+            }
+
+            $obj = new clsModulesPlanejamentoAulaBNCCEspecificacao();
+            $especificacoes = $obj->lista($planejamento['id']);
+
+            foreach ($especificacoes as $especificacao) {
+
+                if (in_array($especificacao['bncc_especificacao_id'], $escpecificacoesUtilizados)) {
+                    continue;
+                }
+
+                $escpecificacoesUtilizados[] = $especificacao['bncc_especificacao_id'];
+            }
+        }
+
+        return [
+            'bncss_utilizados' => $bnccsUtilizados,
+            'especificacoes_utilizados' => $escpecificacoesUtilizados
+        ];
+
+    }
 }
