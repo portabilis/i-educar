@@ -39,13 +39,6 @@ class LegacyBuilderTest extends TestCase
         $this->builder = $this->school->query();
     }
 
-    public function testBuilderHasPublicMethods(): void
-    {
-        $this->assertTrue($this->hasMethod($this->builder, 'filter'));
-        $this->assertTrue($this->hasMethod($this->builder, 'resource'));
-        $this->assertTrue($this->hasMethod($this->builder, 'setExcept'));
-    }
-
     public function testBuilderReturnWithAliasXExpectResource(): void
     {
         $filtered = $this->builder->filter(['institution' => $this->school->ref_cod_instituicao])->setExcept(['ref_idpes'])->resource(['id','id as value'],['name','name as label']);
@@ -73,13 +66,5 @@ class LegacyBuilderTest extends TestCase
     {
         $this->expectException(QueryException::class);
         $this->builder->filter(['no_filter' => 0])->resource(['id']);
-    }
-
-    private function hasMethod($class, $method): bool
-    {
-        $reflector = new ReflectionClass($class);
-        $method = $reflector->hasMethod($method);
-
-        return $method;
     }
 }
