@@ -15,7 +15,7 @@ class InativoBncc extends Migration
     {
         Schema::table('modules.bncc', function (Blueprint $table) {
           
-            $table->boolean('inativo');
+            $table->boolean('inativo')->nullable();
          
           
 
