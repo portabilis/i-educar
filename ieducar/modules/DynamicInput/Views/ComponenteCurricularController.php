@@ -214,8 +214,11 @@ class ComponenteCurricularController extends ApiCoreController
 
             $options = [];
             $options = $this->agrupaComponentesCurriculares($componentesCurriculares);
+            $objPlanoAula = new clsModulesPlanejamentoAula();
+            $habilidadesEspecificacoes = $objPlanoAula->getHabilidadesEspecificacoesUtilizados($turmaId, $ano, $userId);
 
-            return ['options' => $options];
+            return ['options' => $options,
+                    'utilizados' => $habilidadesEspecificacoes];
         }
     }
 

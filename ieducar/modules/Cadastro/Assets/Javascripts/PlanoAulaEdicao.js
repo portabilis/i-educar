@@ -7,6 +7,8 @@
         var bncc_table = document.getElementById("objetivos_aprendizagem");
         var titleTable = document.getElementById("tr_objetivos_aprendizagem_tit");
         var btn_add    = document.getElementById("btn_add_tab_add_1");
+        var bnccsUtilizados = [];
+        var especificacoesUtilizados = [];
 
         if (isNaN(id) || id === '')
             return;
@@ -85,6 +87,9 @@
         for (let index = 0; index < response.count_objetivos; index++) {
           gerarObjetivoAprendizagem(index, response);
         }
+
+        bnccsUtilizados = response['utilizados']['bncss_utilizados'];
+        especificacoesUtilizados = response['utilizados']['especificacoes_utilizados'];
      }
 
       async function gerarObjetivoAprendizagem(index, response) {
@@ -95,8 +100,8 @@
         consertarBNCCEspecificoesElementos();
       }
 
-       await fillComponenteCurricular(index, response);
-       await fillHabilidadesAndEspecificacoes(index, response);
+        await fillComponenteCurricular(index, response);
+        await fillHabilidadesAndEspecificacoes(index, response);
 
         $(titleTable).children().first().html("Objetivo(s) de aprendizagem");
      }
@@ -126,6 +131,7 @@
 
         habilidadesGeralCC.forEach(function (habilidade, key) {
           let selected = '';
+          let styleBNCC = '';
           let id = habilidade[0];
           let value = habilidade[1].substring(0, maxCharacters).trimEnd();
           value = value.length < maxCharacters ? value : value.concat("...");
@@ -134,7 +140,11 @@
             selected = 'selected';
           }
 
-          $(bnccElemento).append(`<option value="${id}" ${selected}>${value}</option>`);
+          if (bnccsUtilizados.includes(parseInt(id))) {
+            styleBNCC = "style=\"color:blue\"";
+          }
+
+          $(bnccElemento).append(`<option value="${id}" ${styleBNCC} ${selected}>${value}</option>`);
           $(bnccElemento).trigger("chosen:updated");
 
           if (response[index].especificacoes.especificacoes_geral_bncc[id]) {
@@ -142,6 +152,7 @@
 
             escpecificacoesGeralBNCC.forEach(function (especificacao) {
               let selectedEspecificacao = '';
+              let styleEspecificacao = '';
               let idEspecificacao = especificacao[0];
               let valueEspecificacao = especificacao[1].substring(0, maxCharacters).trimEnd();
               valueEspecificacao = valueEspecificacao.length < maxCharacters ? valueEspecificacao : valueEspecificacao.concat("...");
@@ -150,7 +161,11 @@
                 selectedEspecificacao = 'selected';
               }
 
-              $(bnccEspecificoesElemento).append(`<option value="${idEspecificacao}" ${selectedEspecificacao}>${valueEspecificacao}</option>`);
+              if (especificacoesUtilizados.includes(parseInt(idEspecificacao))) {
+                styleEspecificacao = "style=\"color:blue\"";
+              }
+
+              $(bnccEspecificoesElemento).append(`<option value="${idEspecificacao}" ${styleEspecificacao} ${selectedEspecificacao}>${valueEspecificacao}</option>`);
               $(bnccEspecificoesElemento).trigger("chosen:updated");
             });
           }
@@ -236,6 +251,8 @@
 
       function handleGetComponentesCurriculares (response, clearComponent = true) {
         var selectOptions = jsonResourcesToSelectOptions(response['options']);
+        bnccsUtilizados = response['utilizados']['bncss_utilizados'];
+        especificacoesUtilizados = response['utilizados']['especificacoes_utilizados'];
 
         var linhasElemento = document.getElementsByName("tr_objetivos_aprendizagem[]");
         var componentesCurricularesElementos = []
@@ -307,14 +324,14 @@
             var obj = dataResponse.result;
             bnccEspeficacoesDados = dataResponse.result === null ? [] : Object.keys(obj).map((key) => [obj[key][0], obj[key][1], obj[key][2]]);
 
-            addOpcoesBNCC(bnccEspecificoesElemento, bnccEspeficacoesDados);
+            addOpcoesBNCC(bnccEspecificoesElemento, bnccEspeficacoesDados, false);
           });
         } else {
-          addOpcoesBNCC(bnccEspecificoesElemento, []);
+          addOpcoesBNCC(bnccEspecificoesElemento, [], false);
         }
       }
 
-      function addOpcoesBNCC (elemento, novasOpcoes) {
+      function addOpcoesBNCC (elemento, novasOpcoes, bncc = true) {
         const maxCharacters = 60;
 
         $(elemento).empty();
@@ -325,7 +342,18 @@
           var id = novaOpcao[2] != null ? novaOpcao[2] : novaOpcao[0];
           var value = novaOpcao[1].substring(0, maxCharacters).trimEnd();
           value = value.length < maxCharacters ? value : value.concat("...");
-          $(elemento).append(`<option value="${id}">${value}</option>`);
+
+          var style = '';
+
+          if (bncc && bnccsUtilizados.includes(parseInt(id))) {
+            style = "style=\"color:blue\"";
+          }
+
+          if (!bncc && especificacoesUtilizados.includes(parseInt(id))) {
+            style = "style=\"color:blue\"";
+          }
+
+          $(elemento).append(`<option value="${id}" ${style}>${value}</option>`);
         }
 
         $(elemento).trigger("chosen:updated");

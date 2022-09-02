@@ -9,6 +9,8 @@
     var turmaField = getElementFor('turma');
     var id = $j('#id').val();
     var planejamento_aula_id    = document.getElementById('planejamento_aula_id');
+    var bnccsUtilizados = [];
+    var especificacoesUtilizados = [];
 
     var submitButton = $j('#btn_enviar');
     submitButton.removeAttr('onclick');
@@ -88,6 +90,8 @@
 
     function handleGetComponentesCurriculares (response, clearComponent = true) {
       var selectOptions = jsonResourcesToSelectOptions(response['options']);
+      bnccsUtilizados = response['utilizados']['bncss_utilizados'];
+      especificacoesUtilizados = response['utilizados']['especificacoes_utilizados'];
 
       var linhasElemento = document.getElementsByName("tr_objetivos_aprendizagem[]");
       var componentesCurricularesElementos = []
@@ -219,14 +223,14 @@
           var obj = dataResponse.result;
           bnccEspeficacoesDados = dataResponse.result === null ? [] : Object.keys(obj).map((key) => [obj[key][0], obj[key][1], obj[key][2]]);
 
-          addOpcoesBNCC(bnccEspecificoesElemento, bnccEspeficacoesDados);
+          addOpcoesBNCC(bnccEspecificoesElemento, bnccEspeficacoesDados, false);
         });
       } else {
-        addOpcoesBNCC(bnccEspecificoesElemento, []);
+        addOpcoesBNCC(bnccEspecificoesElemento, [], false);
       }
     }
 
-    function addOpcoesBNCC (elemento, novasOpcoes) {
+    function addOpcoesBNCC (elemento, novasOpcoes, bncc = true) {
       const maxCharacters = 60;
 
       $(elemento).empty();
@@ -237,7 +241,17 @@
         var id = novaOpcao[2] != null ? novaOpcao[2] : novaOpcao[0];
         var value = novaOpcao[1].substring(0, maxCharacters).trimEnd();
         value = value.length < maxCharacters ? value : value.concat("...");
-        $(elemento).append(`<option value="${id}">${value}</option>`);
+        var style = '';
+
+        if (bncc && bnccsUtilizados.includes(parseInt(id))) {
+            style = "style=\"color:blue\"";
+        }
+
+        if (!bncc && especificacoesUtilizados.includes(parseInt(id))) {
+            style = "style=\"color:blue\"";
+        }
+
+        $(elemento).append(`<option value="${id}" ${style}>${value}</option>`);
       }
 
       $(elemento).trigger("chosen:updated");
