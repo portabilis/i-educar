@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class RemoveFieldPlanoAeeTablePlanejamentoAulaBncc extends Migration
+class AddForeignKeyBnccSeries extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,11 @@ class RemoveFieldPlanoAeeTablePlanejamentoAulaBncc extends Migration
      */
     public function up()
     {
-        Schema::table('modules.planejamento_aula_bncc', function (Blueprint $table) {
-            $table->dropColumn(['plano_aee']);
+        Schema::table('pmieducar.bncc_series', function (Blueprint $table) {
+            $table->foreign('id_bncc')
+                ->references('id')
+                ->on('modules.bncc')
+                ->onDelete('cascade');
         });
     }
 
@@ -25,8 +28,6 @@ class RemoveFieldPlanoAeeTablePlanejamentoAulaBncc extends Migration
      */
     public function down()
     {
-        Schema::table('modules.planejamento_aula_bncc', function (Blueprint $table) {
-            $table->char('plano_aee', 1)->nullable();
-        });
+        //
     }
 }

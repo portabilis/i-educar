@@ -173,8 +173,8 @@ INSERT INTO public.menus VALUES (311, 310, 'Portal do aluno', NULL, NULL, NULL, 
 INSERT INTO public.menus VALUES (312, 311, 'Histórico escolar', NULL, '/intranet/educar_portal_aluno_boletim_lst.php', NULL, 1, 3, NULL, NULL, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (313, 305, 'Planejamentos', NULL, NULL, NULL, 1, 2, 58, NULL, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (314, 313, 'Plano de aula', NULL, '/intranet/educar_professores_planejamento_de_aula_lst.php', NULL, 2, 2, 58, NULL, NULL, true, NULL, NULL);
-
 INSERT INTO public.menus VALUES (316, 305, 'AEE', NULL, NULL, NULL, 3, 1, 58, NULL, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (317, 316, 'Ficha - AEE', NULL, '/intranet/educar_professores_ficha_aee_lst.php', NULL, 1, 2, 58, NULL, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (318, 316, 'Plano de aula - AEE', NULL, '/intranet/educar_professores_planejamento_de_aula_aee_lst.php', NULL, 2, 2, 58, NULL, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (319, 316, 'Atendimento - AEE', NULL, '/intranet/educar_professores_conteudo_ministrado_aee_lst', NULL, 3, 3, 58, NULL, NULL, true, NULL, NULL);
+INSERT INTO public.menus VALUES (335, 115, 'BNCC', 'BNCC', '/intranet/educar_bncc_lst.php', NULL, 0, 5, 9206, NULL, NULL, true, NULL, NULL);
