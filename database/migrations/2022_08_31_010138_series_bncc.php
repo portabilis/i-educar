@@ -18,12 +18,15 @@ class SeriesBncc extends Migration
             $table->integer('id_bncc');
             $table->integer('id_serie');
           
+        });
 
+        Schema::create('pmieducar.bncc_series', function (Blueprint $table) {
             $table->foreign('id_bncc')
                 ->references('id')
                 ->on('modules.bncc')
                 ->onDelete('cascade');
         });
+
     }
 
     /**
