@@ -13,7 +13,7 @@ class InativoBncc extends Migration
      */
     public function up()
     {
-        Schema::create('modules.bncc', function (Blueprint $table) {
+        Schema::table('modules.bncc', function (Blueprint $table) {
           
             $table->boolean('inativo');
          
