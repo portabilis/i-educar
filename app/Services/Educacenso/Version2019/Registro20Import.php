@@ -269,7 +269,7 @@ class Registro20Import implements RegistroImportInterface
     /**
      * @return SchoolClassInep|null
      */
-    private function getSchoolClass()
+    protected function getSchoolClass()
     {
         if (empty($this->model->inepTurma)) {
             return;
@@ -281,7 +281,7 @@ class Registro20Import implements RegistroImportInterface
     /**
      * @param $arrayColumns
      *
-     * @return Registro10|RegistroEducacenso
+     * @return Registro20|RegistroEducacenso
      */
     public static function getModel($arrayColumns)
     {
