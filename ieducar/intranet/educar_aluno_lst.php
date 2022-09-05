@@ -89,9 +89,8 @@ return new class extends clsListagem {
 
         if ($cod_escola) {
             $this->campoCheck('meus_alunos', 'Meus Alunos', $_GET['meus_alunos']);
-            $ref_cod_escola = false;
             if ($_GET['meus_alunos']) {
-                $ref_cod_escola = $cod_escola;
+                $this->ref_cod_escola = $cod_escola;
             }
         }
 
