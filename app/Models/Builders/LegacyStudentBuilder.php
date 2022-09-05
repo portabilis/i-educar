@@ -84,7 +84,7 @@ class LegacyStudentBuilder extends LegacyBuilder
                     'registration' => [
                         'serieId' => $studentFilter->grade,
                         'codCurso' => $studentFilter->course,
-                        'escola' => $studentFilter->scholl,
+                        'escola' => $studentFilter->school,
                         'year' => $studentFilter->year,
                     ]
                 ])
