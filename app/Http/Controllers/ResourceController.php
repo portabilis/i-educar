@@ -80,6 +80,24 @@ abstract class ResourceController extends Controller
         }
     }
 
+    protected function order(Request $request, Builder $query): void
+    {
+        $order = $request->query('order');
+        if (empty($order)) {
+            return;
+        }
+
+        $columns = array_filter(explode('|', $order));
+
+        $columns = array_map(static function ($columns) {
+            return array_filter(explode(',', $columns));
+        }, $columns);
+
+        foreach ($columns as $column) {
+            $query->orderBy($column[0], $column[1] ?? 'asc');
+        }
+    }
+
     protected function includeColumns(array $columns, $query): void
     {
         $columns = array_unique($columns);
@@ -101,6 +119,7 @@ abstract class ResourceController extends Controller
 
         $this->columns($request, $query);
         $this->include($request, $query);
+        $this->order($request, $query);
 
         $page = $request->query('page', 1);
         $show = $request->query('show', $query->getModel()->getPerPage());
