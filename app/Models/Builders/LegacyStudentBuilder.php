@@ -15,28 +15,28 @@ class LegacyStudentBuilder extends LegacyBuilder
     public function whereMotherName($name)
     {
         return $this->whereHas('individual.father',
-            fn ($q) => $q->whereRaw('unaccent(slug) ~* unaccent(?)', $name)
+            fn ($q) => $q->whereRaw('slug ~* unaccent(?)', $name)
         );
     }
 
     public function whereStudentName($name)
     {
         return $this->whereHas('person',
-            fn ($q) => $q->whereRaw('unaccent(slug) ~* unaccent(?)', $name)
+            fn ($q) => $q->whereRaw('slug ~* unaccent(?)', $name)
         );
     }
 
     public function whereFatherName($name)
     {
         return $this->whereHas('individual.father',
-            fn ($q) => $q->whereRaw('unaccent(slug) ~* unaccent(?)', $name)
+            fn ($q) => $q->whereRaw('slug ~* unaccent(?)', $name)
         );
     }
 
     public function whereGuardianName($name)
     {
         return $this->whereHas('individual.responsible',
-            fn ($q) => $q->whereRaw('unaccent(slug) ~* unaccent(?)', $name)
+            fn ($q) => $q->whereRaw('slug ~* unaccent(?)', $name)
         );
     }
 
