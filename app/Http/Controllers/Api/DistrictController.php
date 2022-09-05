@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\ResourceController;
 use App\Models\District;
 use App\Rules\DistrictRestricOperationRule;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -24,9 +25,9 @@ class DistrictController extends ResourceController
         return $this->post($district, $request);
     }
 
-    public function show(District $district, Request $request): JsonResource
+    public function show(int $district, Request $request): JsonResource
     {
-        return $this->get($district, $request);
+        return $this->get($district, $request, District::class);
     }
 
     public function update(District $district, Request $request): JsonResource
@@ -45,5 +46,10 @@ class DistrictController extends ResourceController
         return [
             new DistrictRestricOperationRule($accessLevel)
         ];
+    }
+
+    public function filter(Builder $builder, Request $request): void
+    {
+        $builder->filter($request->only('name'))->orderBy('name');
     }
 }
