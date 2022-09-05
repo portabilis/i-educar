@@ -45,17 +45,31 @@ class LegacyStudentBuilder extends LegacyBuilder
         return $this->whereHas('inep', fn ($q) => $q->where('cod_aluno_inep', $codInep));
     }
 
-    public function whereRegistration($year = null, $codCurso = null, $serieId = null, $escola = null)
+    public function whereRegistrationYear($year)
     {
         return $this->whereHas('registrations',
-           function ($query) use ($year, $codCurso, $serieId, $escola) {
-               $query->when($year, fn ($q) => $q->where('ano', $year));
-               $query->when($year, fn ($q) => $q->where('ref_cod_curso', $codCurso));
-               $query->when($year, fn ($q) => $q->where('ref_ref_cod_escola', $escola));
-               $query->when($serieId, function ($q) use ($serieId) {
-                   $q->whereHas('enrollments.schoolClass', fn ($qs) => $qs->where('ref_ref_cod_serie', $serieId));
-               });
-           }
+            fn ($q) => $q->where('ano', $year)
+        );
+    }
+
+    public function whereSchool($school)
+    {
+        return $this->whereHas('registrations',
+            fn ($q) => $q->where('ref_ref_cod_escola', $school)
+        );
+    }
+
+    public function whereCourse($course)
+    {
+        return $this->whereHas('registrations',
+            fn ($q) => $q->where('ref_cod_curso', $course)
+        );
+    }
+
+    public function whereGrade($grade)
+    {
+        return $this->whereHas('registrations.enrollments.schoolClass',
+            fn ($q) => $q->where('ref_ref_cod_serie', $grade)
         );
     }
 
@@ -81,12 +95,10 @@ class LegacyStudentBuilder extends LegacyBuilder
                     'father_name' => $studentFilter->fatherName,
                     'guardian_name' => $studentFilter->responsableName,
                     'inep' => $studentFilter->inep,
-                    'registration' => [
-                        'serieId' => $studentFilter->grade,
-                        'codCurso' => $studentFilter->course,
-                        'escola' => $studentFilter->school,
-                        'year' => $studentFilter->year,
-                    ]
+                    'grade' => $studentFilter->grade,
+                    'course' => $studentFilter->course,
+                    'school' => $studentFilter->school,
+                    'registration_year' => $studentFilter->year,
                 ])
             ->orderBy('data_cadastro', 'desc')
             ->paginate(
