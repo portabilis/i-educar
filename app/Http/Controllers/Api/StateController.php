@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\ResourceController;
+use App\Http\Requests\Api\Addressing\AddressingStateRequest;
 use App\Models\State;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -14,17 +16,17 @@ class StateController extends ResourceController
         return $this->all($state, $request);
     }
 
-    public function store(State $state, Request $request): JsonResource
+    public function store(State $state, AddressingStateRequest $request): JsonResource
     {
         return $this->post($state, $request);
     }
 
-    public function show(State $state, Request $request): JsonResource
+    public function show(int $state, Request $request): JsonResource
     {
-        return $this->get($state, $request);
+        return $this->get($state, $request,State::class);
     }
 
-    public function update(State $state, Request $request): JsonResource
+    public function update(State $state, AddressingStateRequest $request): JsonResource
     {
         return $this->patch($state, $request);
     }
@@ -32,5 +34,10 @@ class StateController extends ResourceController
     public function destroy(State $state, Request $request): JsonResource
     {
         return $this->delete($state, $request);
+    }
+
+    public function filter(Builder $builder, Request $request): void
+    {
+        $builder->filter($request->only('name'))->orderBy('name');
     }
 }

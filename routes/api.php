@@ -54,4 +54,5 @@ Route::group(['prefix' => 'resource', 'as' => 'api.resource.','namespace' => 'Ap
     Route::get('evaluation-rule', 'EvaluationRule\ResourceEvaluationRuleController@index')->name('evaluation-rule');
     Route::get('education-network', 'EducationNetwork\ResourceEducationNetworkController@index')->name('education-network');
     Route::get('discipline', 'Discipline\ResourceDisciplineController@index')->name('discipline');
+    Route::get('country', 'Country\ResourceCountryController@index')->name('country');
 });
