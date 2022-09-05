@@ -17,7 +17,7 @@ class StudentFilter
         public readonly ?string $responsableName = null,
         public readonly ?int    $year = null,
         public readonly ?int    $institution = null,
-        public readonly ?int    $scholl = null,
+        public readonly ?int    $school = null,
         public readonly ?int    $course = null,
         public readonly ?int    $grade = null,
         public readonly ?int    $perPage = null,

@@ -111,7 +111,7 @@ return new class extends clsListagem {
             'cpf' => $this->cpf_aluno,
             'inep' => $this->cod_inep,
             'grade' => $this->ref_cod_serie,
-            'shool' => $this->ref_cod_escola,
+            'school' => $this->ref_cod_escola,
             'course' => $this->ref_cod_curso,
             'birthdate' => $this->data_nascimento,
             'fatherName' => $this->nome_pai,
@@ -119,7 +119,7 @@ return new class extends clsListagem {
             'studentName' => $this->nome_aluno,
             'studentCode' => $this->cod_aluno,
             'stateNetwork' => $this->aluno_estado_id,
-            'resposableName' => $this->nome_responsavel,
+            'responsableName' => $this->nome_responsavel,
             'perPage' => 20,
             'pageName' => $this->nome,
         ];
