@@ -9,7 +9,6 @@ use Database\Factories\LegacySchoolFactory;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Collection;
-use ReflectionClass;
 use Tests\TestCase;
 
 class LegacyBuilderTest extends TestCase
@@ -41,7 +40,7 @@ class LegacyBuilderTest extends TestCase
 
     public function testBuilderReturnWithAliasXExpectResource(): void
     {
-        $filtered = $this->builder->filter(['institution' => $this->school->ref_cod_instituicao])->setExcept(['ref_idpes'])->resource(['id','id as value'],['name','name as label']);
+        $filtered = $this->builder->filter(['institution' => $this->school->ref_cod_instituicao])->setExcept(['ref_idpes'])->resource(['id','id as value'], ['name','name as label']);
 
         $expect = new Collection([
             [
@@ -59,7 +58,7 @@ class LegacyBuilderTest extends TestCase
     {
         $filtered = $this->builder->filter(['institution' => 0])->setExcept(['ref_idpes'])->resource(['id'], ['name']);
 
-        $this->assertCount(0,$filtered);
+        $this->assertCount(0, $filtered);
     }
 
     public function testBuilderExpectFilterNotExistsResource(): void

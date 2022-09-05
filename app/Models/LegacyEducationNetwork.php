@@ -60,7 +60,6 @@ class LegacyEducationNetwork extends Model
         'ref_cod_instituicao',
     ];
 
-
     /**
      * @return string
      */
