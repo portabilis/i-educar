@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Builders\StateBuilder;
 use App\Models\Concerns\HasIbgeCode;
 use App\Support\Database\DateSerializer;
+use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -13,6 +15,8 @@ class State extends Model
 {
     use DateSerializer;
     use HasIbgeCode;
+    use LegacyAttribute;
+
 
     /**
      * @var array
@@ -20,6 +24,13 @@ class State extends Model
     protected $fillable = [
         'country_id', 'name', 'abbreviation', 'ibge_code',
     ];
+
+    /**
+     * Builder dos filtros
+     *
+     * @var string
+     */
+    protected $builder = StateBuilder::class;
 
     /**
      * @return BelongsTo
