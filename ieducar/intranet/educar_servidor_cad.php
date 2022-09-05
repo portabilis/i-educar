@@ -26,6 +26,7 @@ return new class extends clsCadastro {
     public $ativo;
     public $ref_cod_instituicao_original;
     public $curso_formacao_continuada;
+    public $complementacao_pedagogica;
     public $multi_seriado;
     public $tipo_ensino_medio_cursado;
     public $matricula = [];
@@ -36,7 +37,6 @@ return new class extends clsCadastro {
     public $employee_course_id;
     public $employee_completion_year;
     public $employee_college_id;
-    public $employee_discipline_id;
 
     public function Inicializar()
     {
@@ -148,7 +148,11 @@ return new class extends clsCadastro {
                 }
 
                 if (is_string($this->curso_formacao_continuada)) {
-                    $this->curso_formacao_continuada = explode(',', str_replace(['{', '}'], '', $this->curso_formacao_continuada));
+                    $this->curso_formacao_continuada = transformStringFromDBInArray($this->curso_formacao_continuada);
+                }
+
+                if (is_string($this->complementacao_pedagogica)) {
+                    $this->complementacao_pedagogica = transformStringFromDBInArray($this->complementacao_pedagogica);
                 }
 
                 $retorno = 'Editar';
@@ -419,6 +423,22 @@ return new class extends clsCadastro {
             2 => 'Em andamento'
         ];
 
+        $opcoesComplementacaoPedagogica = ComponenteCurricular_Model_CodigoEducacenso::getDescriptiveValues();
+        /** Desconsidera opções */
+        unset($opcoesComplementacaoPedagogica[32]);
+        unset($opcoesComplementacaoPedagogica[99]);
+
+        $helperOptions = ['objectName' => 'complementacao_pedagogica'];
+        $options = [
+            'label' => 'Formação/Complementação pedagógica',
+            'required' => false,
+            'options' => [
+                'values' => $this->complementacao_pedagogica,
+                'all_values' => $opcoesComplementacaoPedagogica,
+            ]
+        ];
+        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
         $this->addGraduationsTable();
 
         $this->addPosgraduateTable();
@@ -462,12 +482,11 @@ JS;
         $this->carga_horaria = $hour + $min;
         $this->carga_horaria = $hour + $min;
 
-        $cursoFormacaoContinuada = [];
-        if (is_array($this->curso_formacao_continuada)) {
-            $cursoFormacaoContinuada = array_filter($this->curso_formacao_continuada);
-        }
+        $this->curso_formacao_continuada = transformDBArrayInString($this->curso_formacao_continuada);
 
-        $this->curso_formacao_continuada = '{' . implode(',', $cursoFormacaoContinuada) . '}';
+        $escolaridade = $this->ref_idesco ? LegacySchoolingDegree::findOrFail($this->ref_idesco)->escolaridade : null;
+        $ensinoSuperior = $escolaridade == Escolaridade::EDUCACAO_SUPERIOR;
+        $this->complementacao_pedagogica = $ensinoSuperior ? transformDBArrayInString($this->complementacao_pedagogica) : null;
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, 'educar_servidor_lst.php');
@@ -535,12 +554,11 @@ JS;
         $this->carga_horaria = $hour + $min;
         $this->carga_horaria = $hour + $min;
 
-        $cursoFormacaoContinuada = [];
-        if (is_array($this->curso_formacao_continuada)) {
-            $cursoFormacaoContinuada = array_filter($this->curso_formacao_continuada);
-        }
+        $this->curso_formacao_continuada = transformDBArrayInString($this->curso_formacao_continuada);
 
-        $this->curso_formacao_continuada = '{' . implode(',', $cursoFormacaoContinuada) . '}';
+        $escolaridade = $this->ref_idesco ? LegacySchoolingDegree::findOrFail($this->ref_idesco)->escolaridade : null;
+        $ensinoSuperior = $escolaridade == Escolaridade::EDUCACAO_SUPERIOR;
+        $this->complementacao_pedagogica = $ensinoSuperior ? transformDBArrayInString($this->complementacao_pedagogica) : null;
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, 'educar_servidor_lst.php');
@@ -732,6 +750,7 @@ JS;
     {
         $obj->tipo_ensino_medio_cursado = $this->tipo_ensino_medio_cursado;
         $obj->curso_formacao_continuada = $this->curso_formacao_continuada;
+        $obj->complementacao_pedagogica = $this->complementacao_pedagogica;
 
         return $obj;
     }
@@ -911,7 +930,6 @@ JS;
                 'Curso',
                 'Ano de conclusão',
                 'Instituição de Educação Superior',
-                'Área de conhecimento/Disciplina de formação',
             ],
             $rows
         );
@@ -919,11 +937,6 @@ JS;
         $this->inputsHelper()->simpleSearchCursoSuperior(null, ['required' => false], ['objectName' => 'employee_course']);
         $this->campoTexto('employee_completion_year', null, null, null, 4);
         $this->inputsHelper()->simpleSearchIes(null, ['required' => false], ['objectName' => 'employee_college']);
-        $options = [
-            'resources' => SelectOptions::employeeGraduationDisciplines(),
-            'required' => false
-        ];
-        $this->inputsHelper()->select('employee_discipline_id', $options);
 
         $this->campoTabelaFim();
     }
@@ -980,7 +993,6 @@ JS;
                 $oldInputGraduation->completion_year = old('employee_completion_year')[$key];
                 $oldInputGraduation->college = old('employee_college')[$key];
                 $oldInputGraduation->college_id = old('employee_college_id')[$key];
-                $oldInputGraduation->discipline_id = old('employee_discipline_id')[$key];
                 $graduations[] = $oldInputGraduation;
             }
 
@@ -1008,7 +1020,6 @@ JS;
                 $graduation->course,
                 $graduation->completion_year,
                 $graduation->college,
-                $graduation->discipline_id,
                 $graduation->course_id,
                 $graduation->college_id,
             ];
@@ -1028,7 +1039,9 @@ JS;
             return true;
         }
 
-        if (LegacySchoolingDegree::find($this->ref_idesco)->escolaridade != Escolaridade::EDUCACAO_SUPERIOR) {
+        $escolaridade = $this->ref_idesco ? LegacySchoolingDegree::findOrFail($this->ref_idesco)->escolaridade : null;
+
+        if ($escolaridade != Escolaridade::EDUCACAO_SUPERIOR) {
             return true;
         }
 
@@ -1042,7 +1055,6 @@ JS;
             $valueObject->courseId = $this->employee_course_id[$key];
             $valueObject->completionYear = $this->employee_completion_year[$key];
             $valueObject->collegeId = $this->employee_college_id[$key];
-            $valueObject->disciplineId = $this->employee_discipline_id[$key] ?: null;
             $employeeGraduationService->storeGraduation($valueObject);
         }
     }
@@ -1058,7 +1070,9 @@ JS;
             return true;
         }
 
-        if (LegacySchoolingDegree::find($this->ref_idesco)->escolaridade != Escolaridade::EDUCACAO_SUPERIOR) {
+        $escolaridade = $this->ref_idesco ? LegacySchoolingDegree::findOrFail($this->ref_idesco)->escolaridade : null;
+
+        if ($escolaridade != Escolaridade::EDUCACAO_SUPERIOR) {
             return true;
         }
 

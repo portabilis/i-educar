@@ -270,11 +270,11 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['aprovado'] == App_Model_MatriculaSituacao::ABANDONO) {
-            $tipoAbandono = LegacyAbandonmentType::find($registro['ref_cod_abandono_tipo'])->toArray();
+            $tipoAbandono = LegacyAbandonmentType::find($registro['ref_cod_abandono_tipo'])?->toArray();
 
             $observacaoAbandono = $registro['observacao'];
 
-            $this->addDetalhe(['Motivo do Abandono', $tipoAbandono['nome']]);
+            $this->addDetalhe(['Motivo do Abandono', $tipoAbandono ? $tipoAbandono['nome'] : '']);
             $this->addDetalhe(['Observação', $observacaoAbandono]);
         }
 

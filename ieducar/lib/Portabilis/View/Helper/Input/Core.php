@@ -143,6 +143,7 @@ class Portabilis_View_Helper_Input_Core
             return $escola['ref_cod_instituicao'];
         }
 
+        // TODO remover no futuro #library-package
         if (isset($this->viewInstance->ref_cod_biblioteca) && is_numeric($this->viewInstance->ref_cod_biblioteca)) {
             $biblioteca = App_Model_IedFinder::getBiblioteca($this->viewInstance->ref_cod_biblioteca);
 
@@ -162,6 +163,7 @@ class Portabilis_View_Helper_Input_Core
             return $this->viewInstance->ref_cod_escola;
         }
 
+        // TODO remover no futuro #library-package
         if (isset($this->viewInstance->ref_cod_biblioteca) && is_numeric($this->viewInstance->ref_cod_biblioteca)) {
             $biblioteca = App_Model_IedFinder::getBiblioteca($this->viewInstance->ref_cod_biblioteca);
 
@@ -171,6 +173,7 @@ class Portabilis_View_Helper_Input_Core
         return $this->getPermissoes()->getEscola($this->getCurrentUserId());
     }
 
+    // TODO remover no futuro #library-package
     protected function getBibliotecaId($bibliotecaId = null)
     {
         if (!is_null($bibliotecaId) && is_numeric($bibliotecaId)) {

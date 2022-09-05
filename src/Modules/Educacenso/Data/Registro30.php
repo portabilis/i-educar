@@ -65,26 +65,10 @@ class Registro30 extends AbstractRegistro
             $record->formacaoAnoConclusao = Portabilis_Utils_Database::pgArrayToArray($record->formacaoAnoConclusao);
             $record->formacaoCurso = Portabilis_Utils_Database::pgArrayToArray($record->formacaoCurso);
             $record->formacaoInstituicao = Portabilis_Utils_Database::pgArrayToArray($record->formacaoInstituicao);
-            $record->formacaoComponenteCurricular = Portabilis_Utils_Database::pgArrayToArray($record->formacaoComponenteCurricular);
-            $record->formacaoComponenteCurricular = $this->validaFormacaoComponenteCurricular($record->formacaoComponenteCurricular);
+            $record->complementacaoPedagogica = Portabilis_Utils_Database::pgArrayToArray($record->complementacaoPedagogica);
         }
 
         return $this->modelArray;
-    }
-
-    private function validaFormacaoComponenteCurricular($componentes)
-    {
-        $anulaProximoComponente = false;
-        $componentesDesconsiderados = [32, 99];
-
-        foreach ($componentes as $key => $componente) {
-            if ($anulaProximoComponente === true || (int) $componente === 0 || in_array($componente, $componentesDesconsiderados)) {
-                $anulaProximoComponente = true;
-                $componentes[$key] = null;
-            }
-        }
-
-        return $componentes;
     }
 
     /**

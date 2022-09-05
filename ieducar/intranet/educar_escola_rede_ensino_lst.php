@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyEducationNetwork;
+
 return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -67,24 +69,18 @@ return new class extends clsListagem {
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-        $obj_escola_rede_ensino = new clsPmieducarEscolaRedeEnsino();
-        $obj_escola_rede_ensino->setOrderby('nm_rede ASC');
-        $obj_escola_rede_ensino->setLimite($this->limite, $this->offset);
+        $query = LegacyEducationNetwork::query()
+            ->where('ativo', 1)
+            ->orderBy('nm_rede', 'ASC');
 
-        $lista = $obj_escola_rede_ensino->lista(
-            null,
-            null,
-            null,
-            $this->nm_rede,
-            null,
-            null,
-            null,
-            null,
-            1,
-            $this->ref_cod_instituicao
-        );
+        if (is_string($this->nm_rede)) {
+            $query->where('nm_rede', 'ilike', '%' . $this->nm_rede . '%');
+        }
 
-        $total = $obj_escola_rede_ensino->_total;
+        $result = $query->paginate($this->limite, pageName: 'pagina_' . $this->nome);
+
+        $lista = $result->items();
+        $total = $result->total();
 
         // monta a lista
         if (is_array($lista) && count($lista)) {
