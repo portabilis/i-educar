@@ -176,16 +176,19 @@ class LegacyIndividual extends Model
     }
 
     /**
-     * @param string $cpf
+     * @param string|int $cpf
      *
-     * @return $this
+     * @return Model|null
      */
-    public static function findByCpf($cpf)
+    public static function findByCpf(string|int $cpf) :? Model
     {
-        $cpf = preg_replace('/[^0-9]/', '', $cpf);
-        $cpf = intval($cpf);
+        $cpf = preg_replace('/\D/', '', $cpf);
 
-        return static::query()->where('cpf', $cpf)->first();
+        if ($cpf === null) {
+            return  null;
+        }
+
+        return static::query()->where('cpf', (int) $cpf)->first();
     }
 
     /**
