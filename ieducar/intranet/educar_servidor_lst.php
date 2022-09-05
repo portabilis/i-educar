@@ -45,9 +45,6 @@ return new class extends clsListagem {
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET['pagina_' . $this->nome])
-            ? $_GET['pagina_' . $this->nome] * $this->limite - $this->limite
-            : 0;
 
         if (!$this->ref_idesco && $_GET['idesco']) {
             $this->ref_idesco = $_GET['idesco'];
