@@ -14,7 +14,7 @@ class LegacyStudentBuilder extends LegacyBuilder
 
     public function whereMotherName($name)
     {
-        return $this->whereHas('individual.mae',
+        return $this->whereHas('individual.father',
             fn ($q) => $q->whereRaw('unaccent(slug) ~* unaccent(?)', $name)
         );
     }
@@ -28,14 +28,14 @@ class LegacyStudentBuilder extends LegacyBuilder
 
     public function whereFatherName($name)
     {
-        return $this->whereHas('individual.pai',
+        return $this->whereHas('individual.father',
             fn ($q) => $q->whereRaw('unaccent(slug) ~* unaccent(?)', $name)
         );
     }
 
     public function whereGuardianName($name)
     {
-        return $this->whereHas('individual.responsavel',
+        return $this->whereHas('individual.responsible',
             fn ($q) => $q->whereRaw('unaccent(slug) ~* unaccent(?)', $name)
         );
     }
@@ -66,26 +66,26 @@ class LegacyStudentBuilder extends LegacyBuilder
                 'individual' => function (BelongsTo $query) {
                     $query->select(['idpes', 'idpes_mae', 'idpes_pai', 'nome_social']);
                     $query
-                        ->with('pai:nome,idpes', 'pai.individual:cpf,idpes')
-                        ->with('mae:nome,idpes', 'mae.individual:cpf,idpes')
-                        ->with('responsavel:nome,idpes', 'responsavel.individual:cpf,idpes');
+                        ->with('father:nome,idpes', 'father.individual:cpf,idpes')
+                        ->with('father:nome,idpes', 'father.individual:cpf,idpes')
+                        ->with('responsible:nome,idpes', 'responsible.individual:cpf,idpes');
                 },
                 'person:idpes,nome',
                 'inep:cod_aluno,cod_aluno_inep'
             ])
             ->filter(
                 [
-                    'student_code' => $studentFilter->codAluno,
-                    'student_name' => $studentFilter->nomeAluno,
-                    'mother_name' => $studentFilter->nomeMae,
-                    'father_name' => $studentFilter->nomePai,
-                    'guardian_name' => $studentFilter->nomeResponsavel,
+                    'student_code' => $studentFilter->studentCode,
+                    'student_name' => $studentFilter->studentName,
+                    'mother_name' => $studentFilter->motherName,
+                    'father_name' => $studentFilter->fatherName,
+                    'guardian_name' => $studentFilter->responsableName,
                     'inep' => $studentFilter->inep,
                     'registration' => [
-                        'serieId' => $studentFilter->serie,
-                        'codCurso' => $studentFilter->curso,
-                        'escola' => $studentFilter->escola,
-                        'year' => $studentFilter->ano,
+                        'serieId' => $studentFilter->grade,
+                        'codCurso' => $studentFilter->course,
+                        'escola' => $studentFilter->scholl,
+                        'year' => $studentFilter->year,
                     ]
                 ])
             ->orderBy('data_cadastro', 'desc')
