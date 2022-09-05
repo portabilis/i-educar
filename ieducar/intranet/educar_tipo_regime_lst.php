@@ -74,19 +74,15 @@ return new class extends clsListagem {
                 $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
                 $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
 
-                switch ($nivel_usuario) {
-                    case 1:
-                        $this->addLinhas([
-                            "<a href=\"educar_tipo_regime_det.php?cod_tipo_regime={$registro['cod_tipo_regime']}\">{$registro['nm_tipo']}</a>",
-                            "<a href=\"educar_tipo_regime_det.php?cod_tipo_regime={$registro['cod_tipo_regime']}\">{$registro['ref_cod_instituicao']}</a>"
-                        ]);
-                        break;
-
-                    default:
-                        $this->addLinhas([
-                            "<a href=\"educar_tipo_regime_det.php?cod_tipo_regime={$registro['cod_tipo_regime']}\">{$registro['nm_tipo']}</a>"
-                        ]);
-                        break;
+                if ($nivel_usuario == 1) {
+                    $this->addLinhas([
+                        "<a href=\"educar_tipo_regime_det.php?cod_tipo_regime={$registro['cod_tipo_regime']}\">{$registro['nm_tipo']}</a>",
+                        "<a href=\"educar_tipo_regime_det.php?cod_tipo_regime={$registro['cod_tipo_regime']}\">{$registro['ref_cod_instituicao']}</a>"
+                    ]);
+                } else {
+                    $this->addLinhas([
+                        "<a href=\"educar_tipo_regime_det.php?cod_tipo_regime={$registro['cod_tipo_regime']}\">{$registro['nm_tipo']}</a>"
+                    ]);
                 }
             }
         }
