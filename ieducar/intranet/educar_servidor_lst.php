@@ -36,14 +36,6 @@ return new class extends clsListagem {
 
         $this->inputsHelper()->dynamic(['instituicao', 'escola', 'anoLetivo'], [],['options' => ['required' => false]]);
 
-        if ($this->cod_servidor) {
-            $objTemp = new clsFuncionario($this->cod_servidor);
-            $detalhe = $objTemp->detalhe();
-
-            $opcoes[$detalhe['idpes']] = $detalhe['nome'];
-            $opcoes[$detalhe['ref_cod_pessoa_fj']] = $detalhe['matricula_servidor'];
-        }
-
         $parametros = new clsParametrosPesquisas();
         $parametros->setSubmit(0);
         $this->campoTexto('nome', 'Nome do servidor', $this->nome, 50, 255, false);
