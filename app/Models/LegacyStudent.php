@@ -84,20 +84,7 @@ class LegacyStudent extends Model
             'idpes'
         );
     }
-
-    /**
-     * @return BelongsToMany
-     */
-    public function personMaleIndividual()
-    {
-        return $this->belongsTo(
-            LegacyIndividual::class,
-            'pmieducar.responsaveis_aluno',
-            'ref_cod_aluno',
-            'ref_idpes'
-        );
-    }
-
+    
     public function getGuardianTypeAttribute()
     {
         return $this->tipo_responsavel;
