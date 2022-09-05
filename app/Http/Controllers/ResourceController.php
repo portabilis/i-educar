@@ -82,7 +82,8 @@ abstract class ResourceController extends Controller
 
     protected function order(Request $request, Builder $query): void
     {
-        if (empty($order = $request->query('order'))) {
+        $order = $request->query('order');
+        if (empty($order)) {
             return;
         }
 
@@ -93,7 +94,7 @@ abstract class ResourceController extends Controller
         }, $columns);
 
         foreach ($columns as $column) {
-            $query->orderBy($column[0],$column[1] ?? 'asc');
+            $query->orderBy($column[0], $column[1] ?? 'asc');
         }
     }
 
