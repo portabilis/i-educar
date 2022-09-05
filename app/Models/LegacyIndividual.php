@@ -129,17 +129,17 @@ class LegacyIndividual extends Model
         return $this->hasOne(LegacyStudent::class, 'ref_idpes', 'idpes');
     }
 
-    public function mae()
+    public function mother()
     {
         return $this->belongsTo(LegacyPerson::class, 'idpes_mae', 'idpes');
     }
 
-    public function pai()
+    public function father()
     {
         return $this->belongsTo(LegacyPerson::class, 'idpes_pai', 'idpes');
     }
 
-    public function responsavel()
+    public function responsible()
     {
         return $this->belongsTo(LegacyPerson::class, 'idpes_responsavel', 'idpes');
     }
