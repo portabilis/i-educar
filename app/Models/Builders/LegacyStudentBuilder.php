@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyStudentBuilder extends LegacyBuilder
 {
-    public function whereStudentCode($cod)
+    public function whereStudent($student)
     {
-        return $this->where('cod_aluno', $cod);
+        return $this->where('cod_aluno', $student);
     }
 
     public function whereMotherName($name)
@@ -40,9 +40,9 @@ class LegacyStudentBuilder extends LegacyBuilder
         );
     }
 
-    public function whereInep($codInep)
+    public function whereInep($inep)
     {
-        return $this->whereHas('inep', fn ($q) => $q->where('cod_aluno_inep', $codInep));
+        return $this->whereHas('inep', fn ($q) => $q->where('cod_aluno_inep', $inep));
     }
 
     public function whereRegistrationYear($year)
@@ -89,7 +89,7 @@ class LegacyStudentBuilder extends LegacyBuilder
             ])
             ->filter(
                 [
-                    'student_code' => $studentFilter->studentCode,
+                    'student' => $studentFilter->studentCode,
                     'student_name' => $studentFilter->studentName,
                     'mother_name' => $studentFilter->motherName,
                     'father_name' => $studentFilter->fatherName,
