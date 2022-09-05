@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyEducationNetwork;
+
 return new class extends clsDetalhe {
     /**
      * Titulo no topo da pagina
@@ -21,12 +23,11 @@ return new class extends clsDetalhe {
     {
         $this->titulo = 'Escola Rede Ensino - Detalhe';
 
-        $this->cod_escola_rede_ensino=$_GET['cod_escola_rede_ensino'];
+        $this->cod_escola_rede_ensino = $_GET['cod_escola_rede_ensino'];
 
-        $tmp_obj = new clsPmieducarEscolaRedeEnsino($this->cod_escola_rede_ensino);
-        $registro = $tmp_obj->detalhe();
+        $registro = LegacyEducationNetwork::findOrFail($this->cod_escola_rede_ensino)?->toArray();
 
-        if (! $registro) {
+        if (!$registro) {
             $this->simpleRedirect('educar_escola_rede_ensino_lst.php');
         }
 
@@ -38,11 +39,11 @@ return new class extends clsDetalhe {
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe([ 'Instituição', "{$registro['ref_cod_instituicao']}"]);
+                $this->addDetalhe(['Instituição', "{$registro['ref_cod_instituicao']}"]);
             }
         }
         if ($registro['nm_rede']) {
-            $this->addDetalhe([ 'Rede Ensino', "{$registro['nm_rede']}"]);
+            $this->addDetalhe(['Rede Ensino', "{$registro['nm_rede']}"]);
         }
 
         $obj_permissoes = new clsPermissoes();
