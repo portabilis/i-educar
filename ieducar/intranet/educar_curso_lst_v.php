@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyEducationLevel;
 use App\Models\LegacyEducationType;
 
 return new class extends clsListagem {
@@ -64,7 +65,7 @@ return new class extends clsListagem {
         $this->__titulo = 'Curso - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ($val === '') ? null: $val;
+            $this->$var = ($val === '') ? null : $val;
         }
 
         $this->addCabecalhos([
@@ -76,15 +77,11 @@ return new class extends clsListagem {
 
         $this->campoTexto('nm_curso', 'Curso', $this->nm_curso, 30, 255, false);
 
-        $opcoes = [ '' => 'Selecione' ];
-
-        $objTemp = new clsPmieducarNivelEnsino();
-        $lista = $objTemp->lista();
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $opcoes["{$registro['cod_nivel_ensino']}"] = "{$registro['nm_nivel']}";
-            }
-        }
+        $opcoes = LegacyEducationLevel::query()
+            ->where('ativo', 1)
+            ->orderBy('nm_nivel', 'ASC')
+            ->pluck('nm_nivel', 'cod_nivel_ensino')
+            ->prepend('Selecione', '');
 
         $this->campoLista('ref_cod_nivel_ensino', 'Nivel Ensino', $opcoes, $this->ref_cod_nivel_ensino);
 
@@ -98,7 +95,7 @@ return new class extends clsListagem {
 
         // Paginador
         $this->__limite = 20;
-        $this->__offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->__limite-$this->__limite: 0;
+        $this->__offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->__limite - $this->__limite : 0;
 
         $obj_curso = new clsPmieducarCurso();
         $obj_curso->setOrderby('nm_curso ASC');
@@ -143,8 +140,7 @@ return new class extends clsListagem {
                 $registro['data_exclusao_time'] = strtotime(substr($registro['data_exclusao'], 0, 16));
                 $registro['data_exclusao_br'] = date('d/m/Y H:i', $registro['data_exclusao_time']);
 
-                $obj_ref_cod_nivel_ensino = new clsPmieducarNivelEnsino($registro['ref_cod_nivel_ensino']);
-                $det_ref_cod_nivel_ensino = $obj_ref_cod_nivel_ensino->detalhe();
+                $det_ref_cod_nivel_ensino = LegacyEducationLevel::find($registro['ref_cod_nivel_ensino'])?->toArray();
                 $registro['ref_cod_nivel_ensino'] = $det_ref_cod_nivel_ensino['nm_nivel'];
 
                 $det_ref_cod_tipo_ensino = LegacyEducationType::find($registro['ref_cod_tipo_ensino'])?->toArray();
