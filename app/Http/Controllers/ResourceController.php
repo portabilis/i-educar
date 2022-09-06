@@ -115,11 +115,7 @@ abstract class ResourceController extends Controller
         }
 
         $filters = array_filter(explode(',', $filter));
-        $filterWithParameters = [];
-        foreach ($filters as $filter) {
-            $filterWithParameters[$filter] = $request->get($filter);
-        }
-        $builder->filter($filterWithParameters);
+        $builder->filter($request->only($filters));
     }
 
     public function all(Model $model, Request $request): JsonResource
