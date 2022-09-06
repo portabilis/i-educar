@@ -125,7 +125,11 @@ abstract class EloquentTestCase extends TestCase
 
         $modelCreated->delete();
 
-        $this->assertDatabaseMissing($modelCreated->getTable(), $modelCreated->getAttributes());
+        if (in_array('Illuminate\Database\Eloquent\SoftDeletes', class_uses($modelCreated))) {
+            $this->assertSoftDeleted($modelCreated);
+        } else {
+            $this->assertDatabaseMissing($modelCreated->getTable(), $modelCreated->getAttributes());
+        }
     }
 
     /**
