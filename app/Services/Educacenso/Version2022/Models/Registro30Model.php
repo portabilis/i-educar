@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Educacenso\Version2020\Models;
+namespace App\Services\Educacenso\Version2022\Models;
 
 use App\Models\Educacenso\Registro30;
 
@@ -48,57 +48,104 @@ class Registro30Model extends Registro30
         $this->recursoVideoLibras = $arrayColumns[36];
         $this->recursoBraile = $arrayColumns[37];
         $this->recursoNenhum = $arrayColumns[38];
-        $this->nis = $arrayColumns[39];
-        $this->certidaoNascimento = $arrayColumns[40];
-        $this->paisResidencia = $arrayColumns[41];
-        $this->cep = $arrayColumns[42];
-        $this->municipioResidencia = $arrayColumns[43];
-        $this->localizacaoResidencia = $arrayColumns[44];
-        $this->localizacaoDiferenciada = $arrayColumns[45];
-        $this->escolaridade = $arrayColumns[46];
-        $this->tipoEnsinoMedioCursado = $arrayColumns[47];
+        $this->certidaoNascimento = $arrayColumns[39];
+        $this->paisResidencia = $arrayColumns[40];
+        $this->cep = $arrayColumns[41];
+        $this->municipioResidencia = $arrayColumns[42];
+        $this->localizacaoResidencia = $arrayColumns[43];
+        $this->localizacaoDiferenciada = $arrayColumns[44];
+        $this->escolaridade = $arrayColumns[45];
+        $this->tipoEnsinoMedioCursado = $arrayColumns[46];
         $this->formacaoCurso = [
+            $arrayColumns[47],
+            $arrayColumns[50],
+            $arrayColumns[53],
+        ];
+        $this->formacaoAnoConclusao = [
             $arrayColumns[48],
             $arrayColumns[51],
             $arrayColumns[54],
         ];
-        $this->formacaoAnoConclusao = [
+        $this->formacaoInstituicao = [
             $arrayColumns[49],
             $arrayColumns[52],
             $arrayColumns[55],
         ];
-        $this->formacaoInstituicao = [
-            $arrayColumns[50],
-            $arrayColumns[53],
+
+        $this->complementacaoPedagogica = array_filter([
             $arrayColumns[56],
-        ];
-        $this->formacaoComponenteCurricular = [
             $arrayColumns[57],
             $arrayColumns[58],
-            $arrayColumns[59],
-        ];
-        $this->posGraduacaoEspecializacao = $arrayColumns[60];
-        $this->posGraduacaoMestrado = $arrayColumns[61];
-        $this->posGraduacaoDoutorado = $arrayColumns[62];
-        $this->posGraduacaoNaoPossui = $arrayColumns[63];
-        $this->formacaoContinuadaCreche = $arrayColumns[64];
-        $this->formacaoContinuadaPreEscola = $arrayColumns[65];
-        $this->formacaoContinuadaAnosIniciaisFundamental = $arrayColumns[66];
-        $this->formacaoContinuadaAnosFinaisFundamental = $arrayColumns[67];
-        $this->formacaoContinuadaEnsinoMedio = $arrayColumns[68];
-        $this->formacaoContinuadaEducacaoJovensAdultos = $arrayColumns[69];
-        $this->formacaoContinuadaEducacaoEspecial = $arrayColumns[70];
-        $this->formacaoContinuadaEducacaoIndigena = $arrayColumns[71];
-        $this->formacaoContinuadaEducacaoCampo = $arrayColumns[72];
-        $this->formacaoContinuadaEducacaoAmbiental = $arrayColumns[73];
-        $this->formacaoContinuadaEducacaoDireitosHumanos = $arrayColumns[74];
-        $this->formacaoContinuadaGeneroDiversidadeSexual = $arrayColumns[75];
-        $this->formacaoContinuadaDireitosCriancaAdolescente = $arrayColumns[76];
-        $this->formacaoContinuadaEducacaoRelacoesEticoRaciais = $arrayColumns[77];
-        $this->formacaoContinuadaEducacaoGestaoEscolar = $arrayColumns[78];
-        $this->formacaoContinuadaEducacaoOutros = $arrayColumns[79];
-        $this->formacaoContinuadaEducacaoNenhum = $arrayColumns[80];
-        $this->email = $arrayColumns[81];
+        ]);
+
+        $this->posgraduacoes = [];
+
+        if (!empty($arrayColumns[59])) {
+            $this->posgraduacoes[] = [
+                'tipo' => $arrayColumns[59],
+                'area' => $arrayColumns[60],
+                'ano_conclusao' => $arrayColumns[61],
+            ];
+        }
+
+        if (!empty($arrayColumns[62])) {
+            $this->posgraduacoes[] = [
+                'tipo' => $arrayColumns[62],
+                'area' => $arrayColumns[63],
+                'ano_conclusao' => $arrayColumns[64],
+            ];
+        }
+
+        if (!empty($arrayColumns[65])) {
+            $this->posgraduacoes[] = [
+                'tipo' => $arrayColumns[65],
+                'area' => $arrayColumns[66],
+                'ano_conclusao' => $arrayColumns[67],
+            ];
+        }
+
+        if (!empty($arrayColumns[68])) {
+            $this->posgraduacoes[] = [
+                'tipo' => $arrayColumns[68],
+                'area' => $arrayColumns[69],
+                'ano_conclusao' => $arrayColumns[70],
+            ];
+        }
+
+        if (!empty($arrayColumns[71])) {
+            $this->posgraduacoes[] = [
+                'tipo' => $arrayColumns[71],
+                'area' => $arrayColumns[72],
+                'ano_conclusao' => $arrayColumns[73],
+            ];
+        }
+
+        if (!empty($arrayColumns[74])) {
+            $this->posgraduacoes[] = [
+                'tipo' => $arrayColumns[74],
+                'area' => $arrayColumns[75],
+                'ano_conclusao' => $arrayColumns[76],
+            ];
+        }
+
+        $this->formacaoContinuadaCreche = $arrayColumns[78];
+        $this->formacaoContinuadaPreEscola = $arrayColumns[79];
+        $this->formacaoContinuadaAnosIniciaisFundamental = $arrayColumns[80];
+        $this->formacaoContinuadaAnosFinaisFundamental = $arrayColumns[81];
+        $this->formacaoContinuadaEnsinoMedio = $arrayColumns[82];
+        $this->formacaoContinuadaEducacaoJovensAdultos = $arrayColumns[83];
+        $this->formacaoContinuadaEducacaoEspecial = $arrayColumns[84];
+        $this->formacaoContinuadaEducacaoIndigena = $arrayColumns[85];
+        $this->formacaoContinuadaEducacaoCampo = $arrayColumns[86];
+        $this->formacaoContinuadaEducacaoAmbiental = $arrayColumns[87];
+        $this->formacaoContinuadaEducacaoDireitosHumanos = $arrayColumns[88];
+        $this->formacaoContinuadaGeneroDiversidadeSexual = $arrayColumns[89];
+        $this->formacaoContinuadaDireitosCriancaAdolescente = $arrayColumns[90];
+        $this->formacaoContinuadaEducacaoRelacoesEticoRaciais = $arrayColumns[91];
+        $this->formacaoContinuadaEducacaoGestaoEscolar = $arrayColumns[92];
+        $this->formacaoContinuadaEducacaoOutros = $arrayColumns[93];
+        $this->formacaoContinuadaEducacaoNenhum = $arrayColumns[94];
+        $this->email = $arrayColumns[95];
 
         if ($this->escolaridade) {
             $this->tipos[self::TIPO_TEACHER] = true;
