@@ -9,7 +9,14 @@ class Religion extends Model
 {
     use SoftDeletes;
 
+    protected $table = "pmieducar.religiao";
+
     protected $dates = ['deleted_at'];
+
+    protected $fillable = [
+        'created_by',
+        'name'
+    ];
 
     public function createdBy()
     {
