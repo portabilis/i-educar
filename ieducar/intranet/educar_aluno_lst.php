@@ -131,25 +131,25 @@ return new class extends clsListagem {
 
 
         /** @var LegacyStudent $registro */
-        foreach ($students as $registro) {
-            $nomeAluno = $registro->person->name;
-            $nomeSocial = $registro->individual->nome_social;
+        foreach ($students as $student) {
+            $nomeAluno = $student->person->name;
+            $nomeSocial = $student->individual->nome_social;
 
             if ($nomeSocial) {
                 $nomeAluno = $nomeSocial . '<br> <i>Nome de registro: </i>' . $nomeAluno;
             }
 
-            $nomeResponsavel = mb_strtoupper($registro->getGuardianName() ?? '-');
-            $cpfResponsavel = ucfirst($registro->getGuardianCpf());
-            $nomeMae = mb_strtoupper($registro->individual->mae->name ?? '-');
+            $nomeResponsavel = mb_strtoupper($student->getGuardianName() ?? '-');
+            $cpfResponsavel  = ucfirst($student->getGuardianCpf());
+            $nomeMae         = mb_strtoupper($student->individual->mother->name ?? '-');
 
             $linhas = array_filter([
-                "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">$registro->cod_aluno</a>",
-                $configuracoes['mostrar_codigo_inep_aluno'] ===  1 ? "<a href=\"educar_aluno_det.php?cod_aluno={$registro->cod_aluno}\">{$registro->inepNumber}</a>" : null,
-                "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">$nomeAluno</a>",
-                "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">$nomeMae</a>",
-                "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">$nomeResponsavel</a>",
-                "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">$cpfResponsavel</a>"
+                "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$student->cod_aluno</a>",
+                $configuracoes['mostrar_codigo_inep_aluno'] ===  1 ? "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$student->inepNumber</a>" : null,
+                "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$nomeAluno</a>",
+                "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$nomeMae</a>",
+                "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$nomeResponsavel</a>",
+                "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$cpfResponsavel</a>"
                 ]);
 
             $this->addLinhas($linhas);

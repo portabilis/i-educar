@@ -84,7 +84,7 @@ class LegacyStudent extends Model
             'idpes'
         );
     }
-    
+
     public function getGuardianTypeAttribute()
     {
         return $this->tipo_responsavel;
@@ -93,9 +93,9 @@ class LegacyStudent extends Model
     public function getGuardianName(): ?string {
 
         return match ($this->guardianType) {
-            'm' => $this->individual->mae->name,
-            'p' => $this->individual->pai->name,
-            'r' => $this->individual->responsavel->name,
+            'm' => $this->individual->mother->name,
+            'p' => $this->individual->father->name,
+            'r' => $this->individual->responsible->name,
             'a' => $this->joinGuardionNames(),
             default => null
         };
@@ -103,9 +103,9 @@ class LegacyStudent extends Model
     public function getGuardianCpf()
     {
         return match ($this->guardianType) {
-            'm' => $this->individual->mae->individual->cpf ?? 'não informado',
-            'p' => $this->individual->pai->individual->cpf ?? 'não informado',
-            'r' => $this->individual->responsavel->individual->cpf ?? 'não informado',
+            'm' => $this->individual->mother->individual->cpf ?? 'não informado',
+            'p' => $this->individual->father->individual->cpf ?? 'não informado',
+            'r' => $this->individual->responsible->individual->cpf ?? 'não informado',
             'a' => $this->joinGuardionCpfs(),
             default => null
         };
@@ -113,13 +113,13 @@ class LegacyStudent extends Model
 
     private function joinGuardionCpfs(): ?string
     {
-        $join = $this->individual->mae->individual->cpf ?? 'não informado' . ', ' . $this->individual->pai->individual->cpf ?? 'não informado';
+        $join = $this->individual->mother->individual->cpf ?? 'não informado' . ', ' . $this->individual->father->individual->cpf ?? 'não informado';
         return strlen($join) < 3 ? null : $join;
     }
 
     private function joinGuardionNames(): ?string
     {
-        $join = $this->individual->mae->name . ', ' . $this->individual->pai->name;
+        $join = $this->individual->mother->name . ', ' . $this->individual->father->name;
         return strlen($join) < 3 ? null : $join;
     }
 
