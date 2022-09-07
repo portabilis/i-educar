@@ -2,6 +2,7 @@
 
 use App\Models\City;
 use App\Models\EmployeeInep;
+use App\Models\LegacyEducationNetwork;
 use App\Models\LegacyPerson;
 use App\Models\SchoolManager;
 use App\Rules\SchoolManagerAtLeastOneChief;
@@ -580,14 +581,12 @@ return new class extends clsCadastro {
             $script = 'javascript:showExpansivelIframe(520, 120, \'educar_escola_rede_ensino_cad_pop.php\');';
             $display = "'display: none;'";
             if ($this->ref_cod_instituicao) {
-                $objTemp = new clsPmieducarEscolaRedeEnsino();
-                $lista = $objTemp->lista(null, null, null, null, null, null, null, null, 1, $this->ref_cod_instituicao);
-
-                if (is_array($lista) && count($lista)) {
-                    foreach ($lista as $registro) {
-                        $opcoes["{$registro['cod_escola_rede_ensino']}"] = "{$registro['nm_rede']}";
-                    }
-                }
+                $opcoes = LegacyEducationNetwork::query()
+                    ->where('ativo', 1)
+                    ->where('ref_cod_instituicao', $this->ref_cod_instituicao)
+                    ->orderBy('nm_rede', 'ASC')
+                    ->pluck('nm_rede', 'cod_escola_rede_ensino')
+                    ->prepend('Selecione', '');
 
                 $display = "'display: '';'";
             }
@@ -670,14 +669,12 @@ return new class extends clsCadastro {
             // EDITAR
             $script = 'javascript:showExpansivelIframe(520, 120, \'educar_escola_rede_ensino_cad_pop.php\');';
             if ($this->ref_cod_instituicao) {
-                $objTemp = new clsPmieducarEscolaRedeEnsino();
-                $lista = $objTemp->lista(null, null, null, null, null, null, null, null, 1, $this->ref_cod_instituicao);
-
-                if (is_array($lista) && count($lista)) {
-                    foreach ($lista as $registro) {
-                        $opcoes["{$registro['cod_escola_rede_ensino']}"] = "{$registro['nm_rede']}";
-                    }
-                }
+                $opcoes = LegacyEducationNetwork::query()
+                    ->where('ativo', 1)
+                    ->where('ref_cod_instituicao', $this->ref_cod_instituicao)
+                    ->orderBy('nm_rede', 'ASC')
+                    ->pluck('nm_rede', 'cod_escola_rede_ensino')
+                    ->prepend('Selecione', '');
 
                 $script = "<img id='img_rede_ensino' style='display:\'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
             } else {

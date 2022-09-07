@@ -80,6 +80,24 @@ abstract class ResourceController extends Controller
         }
     }
 
+    protected function order(Request $request, Builder $query): void
+    {
+        $order = $request->query('order');
+        if (empty($order)) {
+            return;
+        }
+
+        $columns = array_filter(explode('|', $order));
+
+        $columns = array_map(static function ($columns) {
+            return array_filter(explode(',', $columns));
+        }, $columns);
+
+        foreach ($columns as $column) {
+            $query->orderBy($column[0], $column[1] ?? 'asc');
+        }
+    }
+
     protected function includeColumns(array $columns, $query): void
     {
         $columns = array_unique($columns);
@@ -89,7 +107,16 @@ abstract class ResourceController extends Controller
         $query->select($columns);
     }
 
-    protected function filter(Builder $builder, Request $request): void {}
+    protected function filter(Builder $builder, Request $request): void
+    {
+        $filter = $request->query('filter');
+        if (empty($filter)) {
+            return;
+        }
+
+        $filters = array_filter(explode(',', $filter));
+        $builder->filter($request->only($filters));
+    }
 
     public function all(Model $model, Request $request): JsonResource
     {
@@ -99,6 +126,7 @@ abstract class ResourceController extends Controller
 
         $this->columns($request, $query);
         $this->include($request, $query);
+        $this->order($request, $query);
 
         $page = $request->query('page', 1);
         $show = $request->query('show', $query->getModel()->getPerPage());

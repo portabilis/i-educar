@@ -4,6 +4,7 @@ use App\Models\LegacyCourse;
 use App\Models\LegacyEducationLevel;
 use App\Models\LegacyEducationType;
 use App\Models\LegacyQualificationCourse;
+use App\Models\LegacyRegimeType;
 
 return new class extends clsDetalhe {
     public $titulo;
@@ -46,14 +47,16 @@ return new class extends clsDetalhe {
         $obj_instituicao_det = $obj_instituicao->detalhe();
         $registro['ref_cod_instituicao'] = $obj_instituicao_det['nm_instituicao'];
 
-        $obj_ref_cod_tipo_regime = new clsPmieducarTipoRegime($registro['ref_cod_tipo_regime']);
-        $det_ref_cod_tipo_regime = $obj_ref_cod_tipo_regime->detalhe();
-        $registro['ref_cod_tipo_regime'] = $det_ref_cod_tipo_regime['nm_tipo'];
+        $nm_tipo = LegacyRegimeType::query()
+            ->select('nm_tipo')
+            ->where('cod_tipo_regime', $registro['ref_cod_tipo_regime'])
+            ->first()?->nm_tipo;
+        $registro['ref_cod_tipo_regime'] = $nm_tipo;
 
         $nm_nivel = LegacyEducationLevel::query()
-                ->select('nm_nivel')
-                ->where('cod_nivel_ensino', $registro['ref_cod_nivel_ensino'])
-                ->first()?->nm_nivel;
+            ->select('nm_nivel')
+            ->where('cod_nivel_ensino', $registro['ref_cod_nivel_ensino'])
+            ->first()?->nm_nivel;
         $registro['ref_cod_nivel_ensino'] = $nm_nivel;
 
         $nm_tipo = LegacyEducationType::query()
