@@ -105,6 +105,7 @@ class LegacyStudentBuilder extends LegacyBuilder
                     'school' => $studentFilter->school,
                     'registration_year' => $studentFilter->year,
                 ])
+            ->active()
             ->orderBy('data_cadastro', 'desc')
             ->paginate(
                 $studentFilter->perPage,
