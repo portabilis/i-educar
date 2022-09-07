@@ -78,6 +78,19 @@ class LegacyStudentBuilder extends LegacyBuilder
         );
     }
 
+    public function whereRegistration($year, $codCurso, $serieId, $escola)
+    {
+        return $this->whereHas('registrations',
+            function ($query) use ($year, $codCurso, $serieId, $escola) {
+                $query->when($year, fn ($q) => $q->where('ano', $year));
+                $query->when($year, fn ($q) => $q->where('ref_cod_curso', $codCurso));
+                $query->when($year, fn ($q) => $q->where('ref_ref_cod_escola', $escola));
+                $query->when($serieId, function ($q) use ($serieId) {
+                    $q->whereHas('enrollments.schoolClass', fn ($qs) => $qs->where('ref_ref_cod_serie', $serieId));
+                });
+            });
+    }
+
     public function findStudentWithMultipleSearch(StudentFilter $studentFilter)
     {
         return $this->with(
@@ -100,10 +113,12 @@ class LegacyStudentBuilder extends LegacyBuilder
                     'father_name' => $studentFilter->fatherName,
                     'guardian_name' => $studentFilter->responsableName,
                     'inep' => $studentFilter->inep,
-                    'grade' => $studentFilter->grade,
-                    'course' => $studentFilter->course,
-                    'school' => $studentFilter->school,
-                    'registration_year' => $studentFilter->year,
+                    'registration' => [
+                        'serieId' => $studentFilter->grade,
+                        'codCurso' => $studentFilter->course,
+                        'escola' => $studentFilter->school,
+                        'year' => $studentFilter->year,
+                    ]
                 ])
             ->active()
             ->orderBy('data_cadastro', 'desc')
