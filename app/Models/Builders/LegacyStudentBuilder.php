@@ -40,6 +40,11 @@ class LegacyStudentBuilder extends LegacyBuilder
         );
     }
 
+    public function whereActive()
+    {
+        return $this->where('ativo', 1);
+    }
+
     public function whereInep($inep)
     {
         return $this->whereHas('inep', fn ($q) => $q->where('cod_aluno_inep', $inep));
