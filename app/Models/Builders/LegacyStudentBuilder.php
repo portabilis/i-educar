@@ -86,7 +86,7 @@ class LegacyStudentBuilder extends LegacyBuilder
                     $query->select(['idpes', 'idpes_mae', 'idpes_pai', 'nome_social']);
                     $query
                         ->with('father:nome,idpes', 'father.individual:cpf,idpes')
-                        ->with('father:nome,idpes', 'father.individual:cpf,idpes')
+                        ->with('mother:nome,idpes', 'mother.individual:cpf,idpes')
                         ->with('responsible:nome,idpes', 'responsible.individual:cpf,idpes');
                 },
                 'person:idpes,nome',
