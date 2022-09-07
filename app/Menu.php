@@ -278,7 +278,8 @@ class Menu extends Model
             'menu_id',
             'ref_cod_tipo_usuario',
             'id',
-            'cod_tipo_usuario')
+            'cod_tipo_usuario'
+        )
             ->wherePivot('visualiza', 1);
     }
 

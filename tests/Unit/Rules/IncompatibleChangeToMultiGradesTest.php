@@ -29,7 +29,6 @@ class IncompatibleChangeToMultiGradesTest extends TestCase
         $legacySchoolClass = $this->instance(
             LegacySchoolClass::class,
             Mockery::mock(LegacySchoolClass::class, function (MockInterface $mock) {
-
                 // Informação que a turma se tornará de multiseriada
                 $mock->shouldReceive('getAttribute')
                     ->with('multiseriada')
@@ -76,7 +75,6 @@ class IncompatibleChangeToMultiGradesTest extends TestCase
         $legacySchoolClass = $this->instance(
             LegacySchoolClass::class,
             Mockery::mock(LegacySchoolClass::class, function (MockInterface $mock) {
-
                 // Informação que a turma se tornará de multiseriada
                 $mock->shouldReceive('getAttribute')
                     ->with('multiseriada')
@@ -120,7 +118,6 @@ class IncompatibleChangeToMultiGradesTest extends TestCase
         $legacySchoolClass = $this->instance(
             LegacySchoolClass::class,
             Mockery::mock(LegacySchoolClass::class, function (MockInterface $mock) {
-
                 // Informação que a turma se tornará de multiseriada
                 $mock->shouldReceive('getAttribute')
                     ->with('multiseriada')
@@ -164,7 +161,6 @@ class IncompatibleChangeToMultiGradesTest extends TestCase
         $legacySchoolClass = $this->instance(
             LegacySchoolClass::class,
             Mockery::mock(LegacySchoolClass::class, function (MockInterface $mock) {
-
                 // Não se tornará uma turma multiseriada
                 $mock->shouldReceive('getAttribute')
                     ->with('multiseriada')
@@ -205,7 +201,6 @@ class IncompatibleChangeToMultiGradesTest extends TestCase
         $legacySchoolClass = $this->instance(
             LegacySchoolClass::class,
             Mockery::mock(LegacySchoolClass::class, function (MockInterface $mock) {
-
                 // Informação que a turma se tornará de multiseriada
                 $mock->shouldReceive('getAttribute')
                     ->with('multiseriada')

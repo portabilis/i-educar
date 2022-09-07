@@ -24,7 +24,6 @@ class LegacyEducationNetworkFactory extends Factory
         return [
             'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
             'nm_rede' => $this->faker->company,
-            'data_cadastro' => now(),
             'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
         ];
     }

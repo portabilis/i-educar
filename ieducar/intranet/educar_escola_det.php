@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyEducationNetwork;
 use App\Models\PersonHasPlace;
 
 return new class extends clsDetalhe {
@@ -72,9 +73,11 @@ return new class extends clsDetalhe {
             }
         }
 
-        $obj_ref_cod_escola_rede_ensino = new clsPmieducarEscolaRedeEnsino($registro['ref_cod_escola_rede_ensino']);
-        $det_ref_cod_escola_rede_ensino = $obj_ref_cod_escola_rede_ensino->detalhe();
-        $registro['ref_cod_escola_rede_ensino'] = $det_ref_cod_escola_rede_ensino['nm_rede'];
+        $nm_rede = LegacyEducationNetwork::query()
+            ->select('nm_rede')
+            ->where('cod_escola_rede_ensino', $registro['ref_cod_escola_rede_ensino'])
+            ->first()?->nm_rede;
+        $registro['ref_cod_escola_rede_ensino'] = $nm_rede;
 
         $obj_ref_idpes = new clsPessoaJuridica($registro['ref_idpes']);
         $det_ref_idpes = $obj_ref_idpes->detalhe();

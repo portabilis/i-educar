@@ -730,40 +730,6 @@ return new class extends clsCadastro {
                 );
             }
 
-            $objInstituicao = new clsPmieducarInstituicao($this->ref_cod_instituicao);
-            $detInstituicao = $objInstituicao->detalhe();
-            $controlaEspacoUtilizacaoAluno = $detInstituicao['controlar_espaco_utilizacao_aluno'];
-
-            //se o parametro de controle de utilização de espaço estiver setado como verdadeiro
-            if ($controlaEspacoUtilizacaoAluno) {
-                $objTurma = new clsPmieducarTurma($this->ref_cod_turma);
-                $maximoAlunosSala = $objTurma->maximoAlunosSala();
-                $excedeuLimiteMatriculas = (($matriculados + $reservados) >= $maximoAlunosSala);
-
-                if ($excedeuLimiteMatriculas) {
-                    echo sprintf(
-                        '<script>
-                            var msg = \'\';
-                            msg += \'A sala n\u00e3o comporta mais alunos!\\n\';
-                            msg += \'N\u00famero total de matriculados: %d\\n\';
-                            msg += \'N\u00famero total de vagas reservadas: %d\\n\';
-                            msg += \'N\u00famero total de vagas: %d\\n\';
-                            msg += \'M\u00e1ximo de alunos que a sala comporta: %d\\n\';
-                            msg += \'N\u00e3o ser\u00e1 poss\u00edvel efetuar a matr\u00edcula do aluno.\';
-                            alert(msg);
-                        window.location = \'educar_aluno_det.php?cod_aluno=%d\';
-                        </script>',
-                        $matriculados,
-                        $reservados,
-                        $total_vagas,
-                        $maximoAlunosSala,
-                        $this->ref_cod_aluno
-                    );
-
-                    return false;
-                }
-            }
-
             $obj_matricula_aluno = new clsPmieducarMatricula();
 
             $lst_matricula_aluno = $obj_matricula_aluno->lista(

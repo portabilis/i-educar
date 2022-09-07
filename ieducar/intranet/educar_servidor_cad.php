@@ -484,7 +484,8 @@ JS;
 
         $this->curso_formacao_continuada = transformDBArrayInString($this->curso_formacao_continuada);
 
-        $ensinoSuperior = LegacySchoolingDegree::findOrFail($this->ref_idesco)->escolaridade == Escolaridade::EDUCACAO_SUPERIOR;
+        $escolaridade = $this->ref_idesco ? LegacySchoolingDegree::findOrFail($this->ref_idesco)->escolaridade : null;
+        $ensinoSuperior = $escolaridade == Escolaridade::EDUCACAO_SUPERIOR;
         $this->complementacao_pedagogica = $ensinoSuperior ? transformDBArrayInString($this->complementacao_pedagogica) : null;
 
         $obj_permissoes = new clsPermissoes();
@@ -555,7 +556,8 @@ JS;
 
         $this->curso_formacao_continuada = transformDBArrayInString($this->curso_formacao_continuada);
 
-        $ensinoSuperior = LegacySchoolingDegree::findOrFail($this->ref_idesco)->escolaridade == Escolaridade::EDUCACAO_SUPERIOR;
+        $escolaridade = $this->ref_idesco ? LegacySchoolingDegree::findOrFail($this->ref_idesco)->escolaridade : null;
+        $ensinoSuperior = $escolaridade == Escolaridade::EDUCACAO_SUPERIOR;
         $this->complementacao_pedagogica = $ensinoSuperior ? transformDBArrayInString($this->complementacao_pedagogica) : null;
 
         $obj_permissoes = new clsPermissoes();
@@ -1037,7 +1039,9 @@ JS;
             return true;
         }
 
-        if (LegacySchoolingDegree::findOrFail($this->ref_idesco)->escolaridade != Escolaridade::EDUCACAO_SUPERIOR) {
+        $escolaridade = $this->ref_idesco ? LegacySchoolingDegree::findOrFail($this->ref_idesco)->escolaridade : null;
+
+        if ($escolaridade != Escolaridade::EDUCACAO_SUPERIOR) {
             return true;
         }
 
@@ -1066,7 +1070,9 @@ JS;
             return true;
         }
 
-        if (LegacySchoolingDegree::findOrFail($this->ref_idesco)->escolaridade != Escolaridade::EDUCACAO_SUPERIOR) {
+        $escolaridade = $this->ref_idesco ? LegacySchoolingDegree::findOrFail($this->ref_idesco)->escolaridade : null;
+
+        if ($escolaridade != Escolaridade::EDUCACAO_SUPERIOR) {
             return true;
         }
 
