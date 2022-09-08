@@ -2,10 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\Ativo;
 use Illuminate\Database\Eloquent\Model;
 
 class LegacyRace extends Model
 {
+    use Ativo;
+
+    public const CREATED_AT = 'data_cadastro';
+    public const UPDATED_AT = null;
+
     /**
      * @var string
      */
@@ -20,9 +26,11 @@ class LegacyRace extends Model
      * @var array
      */
     protected $fillable = [
+        'idpes_exc',
         'idpes_cad',
         'nm_raca',
-        'data_cadastro',
+        'data_exclusao',
+        'ativo',
         'raca_educacenso',
     ];
 
