@@ -65,6 +65,18 @@ class PlanejamentoAulaConteudoController extends ApiCoreController
 
 
         if (is_numeric($ref_cod_turma) && is_numeric($fase_etapa) && !empty($data) && ($tipoPresenca == 1 || ($tipoPresenca == 2 && !empty($campoComponenteCurricular)))) {
+            $obj_servidor = new clsPmieducarServidor(
+                $this->pessoa_logada,
+                null,
+                null,
+                null,
+                null,
+                null,
+                1,      //  Ativo
+                1,      //  Fixado na instituição de ID 1
+            );
+            $is_professor = $obj_servidor->isProfessor();
+
             $obj = new clsModulesPlanejamentoAula();
             $planejamentos = $obj->lista(
                 null,
@@ -78,7 +90,7 @@ class PlanejamentoAulaConteudoController extends ApiCoreController
                 null,
                 null,
                 $fase_etapa,
-                null,
+                $is_professor ? $this->pessoa_logada : null,
                 Portabilis_Date_Utils::brToPgSQL($data)
             );
 

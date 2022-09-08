@@ -122,7 +122,17 @@ return new class extends clsCadastro {
         }
 
         if (is_numeric($this->id)) {
-            $servidor_id = $this->pessoa_logada;
+            $obj_servidor = new clsPmieducarServidor(
+                $this->pessoa_logada,
+                null,
+                null,
+                null,
+                null,
+                null,
+                1,      //  Ativo
+                1,      //  Fixado na instituição de ID 1
+            );
+            $is_professor = $obj_servidor->isProfessor();
 
             $obj = new clsModulesPlanejamentoAula();
             $planejamentos = $obj->lista(
@@ -137,7 +147,7 @@ return new class extends clsCadastro {
                 null,
                 null,
                 $this->fase_etapa,
-                $servidor_id,
+                $is_professor ? $this->pessoa_logada : null,
                 Portabilis_Date_Utils::brToPgSQL($this->data)
             );
 
