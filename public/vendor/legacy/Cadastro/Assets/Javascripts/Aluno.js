@@ -53,7 +53,6 @@ var pessoaPaiOuMae;
 var $idField = $j("#id");
 var $nomeField = $j("#pessoa_nome");
 var $cpfField = $j("#id_federal");
-let veiculoField = $j("#veiculo_transporte_escolar");
 
 var $resourceNotice = $j("<span>")
   .html("")
