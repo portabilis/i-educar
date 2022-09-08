@@ -114,9 +114,9 @@ class LegacyStudentBuilder extends LegacyBuilder
                     'guardian_name' => $studentFilter->responsableName,
                     'inep' => $studentFilter->inep,
                     'registration' => [
-                        'serieId' => $studentFilter->grade,
-                        'codCurso' => $studentFilter->course,
-                        'escola' => $studentFilter->school,
+                        'grade' => $studentFilter->grade,
+                        'course' => $studentFilter->course,
+                        'school' => $studentFilter->school,
                         'year' => $studentFilter->year,
                     ]
                 ])
