@@ -95,7 +95,7 @@ return new class extends clsCadastro {
             ->exists();
 
         if ($exists) {
-            $this->mensagem = 'Você não pode excluir essa Religião, pois ele possui vínculo com Pessoas Físicas(s).<br>';
+            $this->mensagem = 'VVocê não pode excluir essa Religião, pois ela possui Pessoa(s) Física(s) vinculadas.<br>';
             return false;
         }
 
