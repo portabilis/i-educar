@@ -78,15 +78,15 @@ class LegacyStudentBuilder extends LegacyBuilder
         );
     }
 
-    public function whereRegistration($year, $codCurso, $serieId, $escola)
+    public function whereRegistration($year, $course, $grade, $school)
     {
         return $this->whereHas('registrations',
-            function ($query) use ($year, $codCurso, $serieId, $escola) {
+            function ($query) use ($year, $course, $grade, $school) {
                 $query->when($year, fn ($q) => $q->where('ano', $year));
-                $query->when($year, fn ($q) => $q->where('ref_cod_curso', $codCurso));
-                $query->when($year, fn ($q) => $q->where('ref_ref_cod_escola', $escola));
-                $query->when($serieId, function ($q) use ($serieId) {
-                    $q->whereHas('enrollments.schoolClass', fn ($qs) => $qs->where('ref_ref_cod_serie', $serieId));
+                $query->when($year, fn ($q) => $q->where('ref_cod_curso', $course));
+                $query->when($year, fn ($q) => $q->where('ref_ref_cod_escola', $school));
+                $query->when($grade, function ($q) use ($grade) {
+                    $q->whereHas('enrollments.schoolClass', fn ($qs) => $qs->where('ref_ref_cod_serie', $grade));
                 });
             });
     }
