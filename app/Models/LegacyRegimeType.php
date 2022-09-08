@@ -2,10 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\Ativo;
 use Illuminate\Database\Eloquent\Model;
 
 class LegacyRegimeType extends Model
 {
+    use Ativo;
+
+    public const CREATED_AT = 'data_cadastro';
+    public const UPDATED_AT = null;
+
     /**
      * @var string
      */
@@ -20,11 +26,12 @@ class LegacyRegimeType extends Model
      * @var array
      */
     protected $fillable = [
-        'ref_usuario_cad', 'nm_tipo', 'data_cadastro', 'ativo', 'ref_cod_instituicao',
+        'ref_usuario_exc',
+        'ref_usuario_cad',
+        'nm_tipo',
+        'data_cadastro',
+        'data_exclusao',
+        'ativo',
+        'ref_cod_instituicao',
     ];
-
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
 }

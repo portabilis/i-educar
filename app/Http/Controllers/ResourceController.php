@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Arr;
@@ -70,12 +71,30 @@ abstract class ResourceController extends Controller
                 $relation => function ($query) use ($columns) {
                     if ($columns) {
                         $columns = explode(',', $columns);
-                        $columns[] = $query->getForeignKeyName();
+                        $columns[] = $query instanceof BelongsTo ? $query->getOwnerKeyName() : $query->getForeignKeyName();
 
                         $this->includeColumns($columns, $query);
                     }
                 },
             ]);
+        }
+    }
+
+    protected function order(Request $request, Builder $query): void
+    {
+        $order = $request->query('order');
+        if (empty($order)) {
+            return;
+        }
+
+        $columns = array_filter(explode('|', $order));
+
+        $columns = array_map(static function ($columns) {
+            return array_filter(explode(',', $columns));
+        }, $columns);
+
+        foreach ($columns as $column) {
+            $query->orderBy($column[0], $column[1] ?? 'asc');
         }
     }
 
@@ -90,6 +109,13 @@ abstract class ResourceController extends Controller
 
     protected function filter(Builder $builder, Request $request): void
     {
+        $filter = $request->query('filter');
+        if (empty($filter)) {
+            return;
+        }
+
+        $filters = array_filter(explode(',', $filter));
+        $builder->filter($request->only($filters));
     }
 
     public function all(Model $model, Request $request): JsonResource
@@ -100,6 +126,7 @@ abstract class ResourceController extends Controller
 
         $this->columns($request, $query);
         $this->include($request, $query);
+        $this->order($request, $query);
 
         $page = $request->query('page', 1);
         $show = $request->query('show', $query->getModel()->getPerPage());
@@ -124,9 +151,18 @@ abstract class ResourceController extends Controller
         return $this->newResource($model);
     }
 
-    public function get(Model $model, Request $request): JsonResource
+    public function get(Model|int $model, Request $request, string $class = null): JsonResource
     {
         $this->can('view');
+
+        if ($class && is_int($model)) {
+            $query = (new $class())->newQuery();
+
+            $this->columns($request, $query);
+            $this->include($request, $query);
+
+            $model = $query->find($model);
+        }
 
         return $this->newResource($model);
     }

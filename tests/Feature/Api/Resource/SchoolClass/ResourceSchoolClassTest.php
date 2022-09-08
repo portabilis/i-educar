@@ -72,7 +72,6 @@ class ResourceSchoolClassTest extends TestCase
         $this->year = LegacySchoolAcademicYear::where('ref_cod_escola', $this->school->id)->first()->year;
 
         $schools->each(function ($school) {
-
             //cursos
             LegacyCourseFactory::new()->count(2)->create(['ref_cod_instituicao' => $this->institution->id])->each(function ($course) use ($school) {
                 //escola_curso

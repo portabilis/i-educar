@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyEducationLevel;
+
 return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -71,27 +73,19 @@ return new class extends clsListagem {
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-        $obj_nivel_ensino = new clsPmieducarNivelEnsino();
-        $obj_nivel_ensino->setOrderby('nm_nivel ASC');
-        $obj_nivel_ensino->setLimite($this->limite, $this->offset);
+        $query = LegacyEducationLevel::query()
+            ->where('ativo', 1)
+            ->orderBy('nm_nivel', 'ASC');
 
-        $lista = $obj_nivel_ensino->lista(
-            null,
-            null,
-            null,
-            $this->nm_nivel,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            $this->ref_cod_instituicao
-        );
+        if (is_string($this->nm_nivel)) {
+            $query->where('nm_nivel', 'ilike', '%' . $this->nm_nivel . '%');
+        }
 
-        $total = $obj_nivel_ensino->_total;
+        $result = $query->paginate($this->limite, pageName: 'pagina_'.$this->nome);
+
+        $lista = $result->items();
+        $total = $result->total();
 
         // monta a lista
         if (is_array($lista) && count($lista)) {
