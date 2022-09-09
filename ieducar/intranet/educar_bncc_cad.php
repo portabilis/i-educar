@@ -72,7 +72,7 @@ return new class extends clsCadastro {
     public function Gerar()
     {
        
-        $this->campoNumero('codigo_habilidade', 'Código da Habilidade', $this->codigo_habilidade, '50', '255', true); 
+        $this->campoTexto('codigo_habilidade', 'Código da Habilidade', $this->codigo_habilidade, '50', '255', true); 
         $this->campoTexto('habilidade', 'Habilidade', $this->habilidade, '50', '255', true);
        
        
