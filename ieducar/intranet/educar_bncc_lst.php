@@ -138,7 +138,7 @@ $selectOptionsComponente = [];
        
         $componente = ComponenteCurricular::find($bncc['componente_curricular_id']);
         $series =  $obj_BNCC->lista_series($bncc['id']);
-        $retorno = '';
+        $retorno = '<ul style="width: 200px">';
        foreach($series as $serie){
           $retorno .= '<li>'.$serie['serie'].'</li>';
        }
