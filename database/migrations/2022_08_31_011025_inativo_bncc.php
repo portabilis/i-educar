@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class RemoveFieldPlanoAeeTablePlanejamentoAulaBncc extends Migration
+class InativoBncc extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,13 @@ class RemoveFieldPlanoAeeTablePlanejamentoAulaBncc extends Migration
      */
     public function up()
     {
-        Schema::table('modules.planejamento_aula_bncc', function (Blueprint $table) {
-            $table->dropColumn(['plano_aee']);
+        Schema::table('modules.bncc', function (Blueprint $table) {
+          
+            $table->boolean('inativo')->nullable();
+         
+          
+
+           
         });
     }
 
@@ -25,8 +30,6 @@ class RemoveFieldPlanoAeeTablePlanejamentoAulaBncc extends Migration
      */
     public function down()
     {
-        Schema::table('modules.planejamento_aula_bncc', function (Blueprint $table) {
-            $table->char('plano_aee', 1)->nullable();
-        });
+        //
     }
 }

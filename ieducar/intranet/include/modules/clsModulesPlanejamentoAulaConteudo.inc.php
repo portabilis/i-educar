@@ -167,7 +167,7 @@ class clsModulesPlanejamentoAulaConteudo extends Model {
      * @return array
      */
     public function listaByPlanejamentos($planejamento_aula_ids) {
-        if (is_array($planejamento_aula_ids)) {
+        if (is_array($planejamento_aula_ids) && count($planejamento_aula_ids) > 0) {
             $db = new clsBanco();
 
             $db->Consulta("

@@ -243,10 +243,11 @@ class PlanejamentoAulaController extends ApiCoreController
         $planejamento_aula_id = $this->getRequest()->planejamento_aula_id;
         $turma_id = $this->getRequest()->turma_id;
         $ano = $this->getRequest()->ano;
+        $userId = \Illuminate\Support\Facades\Auth::id();
 
         if (is_numeric($planejamento_aula_id)) {
-            $obj = new clsModulesPlanejamentoAula($planejamento_aula_id);
-            $detalhePA = $obj->detalhe();
+            $objPlanoAula = new clsModulesPlanejamentoAula($planejamento_aula_id);
+            $detalhePA = $objPlanoAula->detalhe();
 
             $row = [];
 
@@ -271,6 +272,8 @@ class PlanejamentoAulaController extends ApiCoreController
                     $especificacoesPABNCC[] = $objTemp->listaEspecificacoesByBNCCArray($planejamento_aula_bncc_ids);
                 }
 
+                $habilidadesEspecificacoes = $objPlanoAula->getHabilidadesEspecificacoesUtilizados($turma_id, $ano, $userId);
+
                 $row[] = [
                     'componente_curricular_id' => $componenteCurricular['id'],
                     'habilidades' => [
@@ -286,6 +289,7 @@ class PlanejamentoAulaController extends ApiCoreController
             }
 
             $row['count_objetivos'] = count($row);
+            $row['utilizados'] = $habilidadesEspecificacoes;
 
             return $row;
 

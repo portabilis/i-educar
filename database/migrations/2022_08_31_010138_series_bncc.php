@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class RemoveFieldPlanoAeeTablePlanejamentoAulaConteudo extends Migration
+class SeriesBncc extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,15 @@ class RemoveFieldPlanoAeeTablePlanejamentoAulaConteudo extends Migration
      */
     public function up()
     {
-        Schema::table('modules.planejamento_aula_conteudo', function (Blueprint $table) {
-            $table->dropColumn(['plano_aee']);
+        Schema::create('pmieducar.bncc_series', function (Blueprint $table) {
+            $table->id();
+            $table->integer('id_bncc');
+            $table->integer('id_serie');
+          
         });
+
+     
+
     }
 
     /**
@@ -25,8 +31,6 @@ class RemoveFieldPlanoAeeTablePlanejamentoAulaConteudo extends Migration
      */
     public function down()
     {
-        Schema::table('modules.planejamento_aula_conteudo', function (Blueprint $table) {
-            $table->char('plano_aee', 1)->nullable();
-        });
+        //
     }
 }
