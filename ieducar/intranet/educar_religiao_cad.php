@@ -64,7 +64,6 @@ return new class extends clsCadastro {
     {
         $obj = new Religion();
         $obj->name = $this->nm_religiao;
-        $obj->created_by = $this->pessoa_logada;
 
         if ($obj->save()) {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
@@ -100,10 +99,8 @@ return new class extends clsCadastro {
         }
 
         $obj = Religion::findOrFail($this->cod_religiao);
-        $obj->deleted_by = $this->pessoa_logada;
-        $obj->deleted_at = now();
 
-        if ($obj->save()) {
+        if ($obj->delete()) {
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_religiao_lst.php');
         }
