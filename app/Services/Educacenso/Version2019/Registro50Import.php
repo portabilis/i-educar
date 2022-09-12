@@ -91,7 +91,7 @@ class Registro50Import implements RegistroImportInterface
     /**
      * @return LegacySchoolClass
      */
-    private function getSchoolClass(): ?LegacySchoolClass
+    protected function getSchoolClass(): ?LegacySchoolClass
     {
         if (empty($this->model->inepTurma)) {
             return null;
@@ -103,7 +103,7 @@ class Registro50Import implements RegistroImportInterface
     /**
      * @return Employee|null
      */
-    private function getEmployee(): ?Employee
+    protected function getEmployee(): ?Employee
     {
         $inepNumber = $this->model->inepDocente;
         if (!$inepNumber) {
