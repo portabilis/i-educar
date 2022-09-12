@@ -15,6 +15,7 @@ use App\Models\LegacySchoolClassTeacher;
 use App\Models\LegacySchoolClassTeacherDiscipline;
 use App\Models\SchoolClassInep;
 use App\Services\Educacenso\RegistroImportInterface;
+use App\Services\Educacenso\Version2019\Models\Registro50Model;
 use App\User;
 
 class Registro50Import implements RegistroImportInterface
@@ -81,7 +82,7 @@ class Registro50Import implements RegistroImportInterface
      */
     public static function getModel($arrayColumns)
     {
-        $registro = new Registro50();
+        $registro = new Registro50Model();
         $registro->hydrateModel($arrayColumns);
 
         return $registro;
