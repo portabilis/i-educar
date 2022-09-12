@@ -7,6 +7,7 @@ use App\Http\Requests\Api\ReligionRequest;
 use App\Models\Religion;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 class ReligionController extends ResourceController
 {
@@ -17,6 +18,9 @@ class ReligionController extends ResourceController
 
     public function store(Religion $religion, ReligionRequest $request): JsonResource
     {
+        $request->merge([
+            'created_by' => $request->user()->id
+        ]);
         return $this->post($religion, $request);
     }
 
@@ -32,6 +36,9 @@ class ReligionController extends ResourceController
 
     public function destroy(Religion $religion, Request $request): JsonResource
     {
+        $request->merge([
+            'deleted_by' => Auth::user()->id
+        ]);
         return $this->delete($religion, $request);
     }
 }
