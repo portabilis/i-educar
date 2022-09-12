@@ -22,8 +22,7 @@ class ReligionFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->name,
-            'created_by' => LegacyUserFactory::new()->unique()->make(),
+            'name' => $this->faker->name
         ];
     }
 }
