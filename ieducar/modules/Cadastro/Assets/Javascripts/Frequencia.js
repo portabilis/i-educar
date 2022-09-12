@@ -14,6 +14,14 @@
     }
 
     document.getElementById('fase_etapa').onchange = function () {
+      carregaConteudos();
+    };
+
+    document.getElementById('ref_cod_componente_curricular').onchange = function () {
+      carregaConteudos();
+    };
+
+    function carregaConteudos() {
       const campoTurma = document.getElementById('ref_cod_turma').value;
       const tipoPresenca = $('#ref_cod_turma').attr('tipo_presenca');
       const campoFaseEtapa = document.getElementById('fase_etapa').value;
@@ -54,8 +62,7 @@
       };
 
       getResource(options);
-
-    };
+    }
 
     document.getElementById('ref_cod_turma').onchange = function () {
       const campoTurma = document.getElementById('ref_cod_turma').value;
