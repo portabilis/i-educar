@@ -13,6 +13,7 @@ use App\Models\LegacyStudentTransport;
 use App\Models\SchoolClassInep;
 use App\Models\StudentInep;
 use App\Services\Educacenso\RegistroImportInterface;
+use App\Services\Educacenso\Version2019\Models\Registro60Model;
 use App\User;
 use App_Model_MatriculaSituacao;
 use DateTime;
@@ -105,7 +106,7 @@ class Registro60Import implements RegistroImportInterface
      */
     public static function getModel($arrayColumns)
     {
-        $registro = new Registro60();
+        $registro = new Registro60Model();
         $registro->hydrateModel($arrayColumns);
 
         return $registro;
