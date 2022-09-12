@@ -9,7 +9,7 @@ class Religion extends Model
 {
     use SoftDeletes;
 
-    protected $table = "pmieducar.religions";
+    protected $table = 'pmieducar.religions';
 
     protected $dates = ['deleted_at'];
 
