@@ -2,6 +2,7 @@
 
 use App\Support\Database\AsView;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 return new class () extends Migration {
     use AsView;
