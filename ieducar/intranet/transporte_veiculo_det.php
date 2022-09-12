@@ -52,7 +52,7 @@ return new class extends clsDetalhe {
         }
         $this->addDetalhe(['Empresa', $registro['nome_empresa']]);
         $this->addDetalhe(['Motorista responsável', $registro['nome_motorista']]);
-        $this->addDetalhe(['Observa&ccedil;&atilde;o', $registro['observacao']]);
+        $this->addDetalhe(['Observação', $registro['observacao']]);
         $this->url_cancelar = 'transporte_veiculo_lst.php';
 
         $this->largura = '100%';
@@ -64,14 +64,14 @@ return new class extends clsDetalhe {
             $this->url_editar = "../module/TransporteEscolar/Veiculo?id={$cod_veiculo}";
         }
 
-        $this->breadcrumb('Detalhe do ve&iacute;culo', [
+        $this->breadcrumb('Detalhe do veículo', [
         url('intranet/educar_transporte_escolar_index.php') => 'Transporte escolar',
     ]);
     }
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Veiculos';
+        $this->title = 'Veiculos';
         $this->processoAp = 21237;
     }
 };

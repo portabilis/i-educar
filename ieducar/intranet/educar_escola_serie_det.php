@@ -62,7 +62,7 @@ return new class extends clsDetalhe {
         }
 
         if ($nm_serie) {
-            $this->addDetalhe(['S&eacute;rie', $nm_serie]);
+            $this->addDetalhe(['Série', $nm_serie]);
         }
 
         if ($registro['hora_inicial']) {
@@ -77,7 +77,7 @@ return new class extends clsDetalhe {
 
         if ($registro['hora_inicio_intervalo']) {
             $registro['hora_inicio_intervalo'] = date('H:i', strtotime($registro['hora_inicio_intervalo']));
-            $this->addDetalhe(['Hora In&iacute;cio Intervalo', $registro['hora_inicio_intervalo']]);
+            $this->addDetalhe(['Hora Início Intervalo', $registro['hora_inicio_intervalo']]);
         }
 
         if ($registro['hora_fim_intervalo']) {
@@ -89,7 +89,7 @@ return new class extends clsDetalhe {
         $componentes = [];
         try {
             $componentes = App_Model_IedFinder::getEscolaSerieDisciplina($this->ref_cod_serie, $this->ref_cod_escola);
-        } catch (Exception $e) {
+        } catch (Exception) {
         }
 
         /** @var SchoolGradeDisciplineService $service */
@@ -152,7 +152,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Escola S&eacute;rie';
+        $this->title = 'Escola Série';
         $this->processoAp = '585';
     }
 };

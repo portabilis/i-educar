@@ -18,7 +18,8 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchComponenteCurricular e
             'objectName' => 'componentecurricular',
             'apiController' => 'ComponenteCurricular',
             'apiResource' => 'componentecurricular-search',
-            'searchForArea' => false
+            'searchForArea' => false,
+            'allDisciplinesMulti' => false
         ];
 
         $options = $this->mergeOptions($options, $defaultOptions);
@@ -33,11 +34,13 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchComponenteCurricular e
     {
         $optionsVarName = 'multipleSearch' . Portabilis_String_Utils::camelize($options['objectName']) . 'Options';
         $searchForArea = $options['searchForArea'] ? 'true' : 'false';
+        $allDisciplinesMulti = $options['allDisciplinesMulti'] ? 'true' : 'false';
         $js = "
             if (typeof $optionsVarName == 'undefined') { $optionsVarName = {} };
             $optionsVarName.placeholder = safeUtf8Decode('Selecione os componentes');
         ";
-        $js .= "var searchForArea = {$searchForArea}";
+        $js .= "var searchForArea = {$searchForArea};";
+        $js .= "var allDisciplinesMulti = {$allDisciplinesMulti};";
 
         Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = false);
     }
@@ -45,9 +48,9 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchComponenteCurricular e
     protected function loadAssets()
     {
         Portabilis_View_Helper_Application::loadChosenLib($this->viewInstance);
-        $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/MultipleSearch.js';
+        $jsFile = '/vendor/legacy/Portabilis/Assets/Javascripts/Frontend/Inputs/MultipleSearch.js';
         Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
-        $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/Resource/MultipleSearchComponenteCurricular.js';
+        $jsFile = '/vendor/legacy/Portabilis/Assets/Javascripts/Frontend/Inputs/Resource/MultipleSearchComponenteCurricular.js';
         Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
     }
 }

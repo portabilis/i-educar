@@ -2,13 +2,16 @@
 
 namespace App\Models\Educacenso;
 
+use App\Models\LegacySchoolClass;
 use App\Services\Educacenso\Version2019\Registro20Import;
-use App_Model_IedFinder;
 use App_Model_LocalFuncionamentoDiferenciado;
 use App_Model_TipoMediacaoDidaticoPedagogico;
+use iEducar\Modules\Educacenso\Model\EstruturaCurricular;
+use iEducar\Modules\Educacenso\Model\FormaOrganizacaoTurma;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
+use iEducar\Modules\Educacenso\Model\UnidadesCurriculares;
 
 class Registro20 implements RegistroEducacenso
 {
@@ -65,12 +68,32 @@ class Registro20 implements RegistroEducacenso
     /**
      * @var array
      */
+    public $estruturaCurricular;
+
+    /**
+     * @var array
+     */
     public $atividadesComplementares;
 
     /**
      * @var string
      */
     public $etapaEducacenso;
+
+    /**
+     * @var array
+     */
+    public $formasOrganizacaoTurma;
+
+    /**
+     * @var array
+     */
+    public $unidadesCurriculares;
+
+    /**
+     * @var array
+     */
+    public $unidadesCurricularesSemDocenteVinculado;
 
     /**
      * @var string
@@ -113,6 +136,11 @@ class Registro20 implements RegistroEducacenso
     public $possuiAlunoNecessitandoTradutor;
 
     /**
+     * @var array
+     */
+    public $disciplinasEducacensoComDocentes;
+
+    /**
      * @var string
      */
     public $possuiServidorNecessitandoTradutor;
@@ -133,7 +161,7 @@ class Registro20 implements RegistroEducacenso
     public $modalidadeCurso;
 
     /**
-     * @var array
+     * @var Collection
      */
     public $componentes;
 
@@ -289,15 +317,19 @@ class Registro20 implements RegistroEducacenso
         switch ($this->modalidadeCurso) {
             case ModalidadeCurso::ENSINO_REGULAR:
                 return "{$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL]} ou {$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA]}";
+
                 break;
             case ModalidadeCurso::EDUCACAO_ESPECIAL:
                 return "{$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL]} ou {$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL]}";
+
                 break;
             case ModalidadeCurso::EJA:
                 return "{$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL]}, {$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL]} ou {$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA]}";
+
                 break;
             case ModalidadeCurso::EDUCACAO_PROFISSIONAL:
                 return "{$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL]} ou {$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA]}";
+
                 break;
         }
     }
@@ -312,6 +344,7 @@ class Registro20 implements RegistroEducacenso
             case 18:
             case 69:
                 return [1, 2, 4, 17, 25, 29];
+
                 break;
             case 19:
             case 20:
@@ -319,15 +352,18 @@ class Registro20 implements RegistroEducacenso
             case 41:
             case 70:
                 return [17, 25, 28];
+
                 break;
             case 23:
             case 22:
             case 56:
             case 72:
                 return [17, 25];
+
                 break;
             case 73:
                 return [25];
+
                 break;
             case 25:
             case 26:
@@ -336,6 +372,7 @@ class Registro20 implements RegistroEducacenso
             case 29:
             case 71:
                 return [5, 17, 25, 28];
+
                 break;
             case 30:
             case 31:
@@ -345,21 +382,25 @@ class Registro20 implements RegistroEducacenso
             case 74:
             case 67:
                 return [5, 25, 28];
+
                 break;
             case 35:
             case 36:
             case 37:
             case 38:
                 return [17, 28];
+
                 break;
             case 39:
             case 40:
             case 64:
             case 68:
                 return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 23, 25, 26, 27, 28, 29, 30, 31, 99];
+
                 break;
             default:
                 return [];
+
                 break;
         }
     }
@@ -394,10 +435,11 @@ class Registro20 implements RegistroEducacenso
     public function componentesCodigosEducacenso()
     {
         $componentes = $this->componentes();
+        $componentes = $componentes->map(function ($componente) {
+            return $componente->codigo_educacenso;
+        })->toArray();
 
-        return array_map(function ($componente) {
-            return $componente->get('codigo_educacenso');
-        }, $componentes);
+        return array_unique($componentes);
     }
 
     /**
@@ -406,19 +448,20 @@ class Registro20 implements RegistroEducacenso
     public function componentesIds()
     {
         $componentes = $this->componentes();
+        $componentes = $componentes->map(function ($componente) {
+            return $componente->id;
+        })->toArray();
 
-        return array_map(function ($componente) {
-            return $componente->get('id');
-        }, $componentes);
+        return array_unique($componentes);
     }
 
     /**
-     * @return array
+     * @return Collection
      */
     public function componentes()
     {
         if (!isset($this->componentes)) {
-            $this->componentes = App_Model_IedFinder::getComponentesTurma($this->codSerie, $this->codEscola, $this->codTurma, null, null, null, null, true, $this->anoTurma);
+            $this->componentes = LegacySchoolClass::find($this->codTurma)->getDisciplines();
         }
 
         return $this->componentes;
@@ -454,5 +497,59 @@ class Registro20 implements RegistroEducacenso
         }
 
         return $componentesExistentes;
+    }
+
+    public function etapaEducacensoDescritiva()
+    {
+        $etapasEducacenso = loadJson('educacenso_json/etapas_ensino.json');
+
+        return $etapasEducacenso[$this->etapaEducacenso];
+    }
+
+    public function unidadesCurricularesSemDocenteVinculado()
+    {
+        $unidadesCurriculares = UnidadesCurriculares::getDescriptiveValues();
+        $unidadesSemDocente = [];
+
+        foreach ($this->unidadesCurricularesSemDocenteVinculado as $unidadeCurricular) {
+            $unidadesSemDocente[$unidadeCurricular] = $unidadesCurriculares[$unidadeCurricular];
+        }
+
+        return $unidadesSemDocente;
+    }
+
+    public function formaOrganizacaoTurmaDescritiva()
+    {
+        $descriptiveValues = FormaOrganizacaoTurma::getDescriptiveValues();
+
+        return $descriptiveValues[$this->formasOrganizacaoTurma];
+    }
+
+    public function itinerarioFormativo()
+    {
+        return in_array(EstruturaCurricular::ITINERARIO_FORMATIVO, $this->estruturaCurricular);
+    }
+
+    public function formacaoGeralBasica()
+    {
+        return in_array(EstruturaCurricular::FORMACAO_GERAL_BASICA, $this->estruturaCurricular);
+    }
+
+    public function estruturaCurricularNaoSeAplica()
+    {
+        return in_array(EstruturaCurricular::NAO_SE_APLICA, $this->estruturaCurricular);
+    }
+
+    public function requereFormasOrganizacaoTurma()
+    {
+        return $this->escolarizacao() && !in_array($this->etapaEducacenso, [1, 2, 3, 24]);
+    }
+
+    public function requereEtapaEducacenso()
+    {
+        return in_array($this->estruturaCurricular, [
+            EstruturaCurricular::FORMACAO_GERAL_BASICA,
+            EstruturaCurricular::NAO_SE_APLICA
+        ]);
     }
 }

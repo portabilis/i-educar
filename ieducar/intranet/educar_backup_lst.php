@@ -80,8 +80,6 @@ return new class extends clsListagem {
         }
         $this->addPaginador2('educar_backup_lst.php', $total, $_GET, $this->data_backup, $this->__limite);
 
-        $obj_permissao = new clsPermissoes();
-
         $this->largura = '100%';
 
         $this->breadcrumb('Backups', [

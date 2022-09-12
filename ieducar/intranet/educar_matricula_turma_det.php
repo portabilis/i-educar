@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacySchoolClassType;
+
 return new class extends clsDetalhe {
     public $titulo;
     public $ref_cod_matricula;
@@ -52,16 +54,6 @@ return new class extends clsDetalhe {
             $this->sequencial = $det_mat_turma['sequencial'];
         }
 
-        // #TODO adicionar ano da matricula atual
-        #$tmp_obj = new clsPmieducarMatriculaTurma( );
-        #$lista = $tmp_obj->lista(NULL, $this->ref_cod_turma, NULL, NULL, NULL, NULL,
-        #  NULL, NULL, 1);
-
-        #$total_alunos = 0;
-        #if ($lista) {
-        #  $total_alunos = count($lista);
-        #}
-
         $tmp_obj = new clsPmieducarTurma();
         $lst_obj = $tmp_obj->lista($this->ref_cod_turma);
         $registro = array_shift($lst_obj);
@@ -80,9 +72,7 @@ return new class extends clsDetalhe {
         }
 
         // Tipo da turma
-        $obj_ref_cod_turma_tipo = new clsPmieducarTurmaTipo($registro['ref_cod_turma_tipo']);
-        $det_ref_cod_turma_tipo = $obj_ref_cod_turma_tipo->detalhe();
-        $registro['ref_cod_turma_tipo'] = $det_ref_cod_turma_tipo['nm_tipo'];
+        $registro['ref_cod_turma_tipo'] = LegacySchoolClassType::findOrFail($registro['ref_cod_turma_tipo'])->nm_tipo;
 
         // Código da instituição
         $obj_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
@@ -155,7 +145,7 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['ref_ref_cod_serie']) {
-            $this->addDetalhe(['S&eacute;rie', $registro['ref_ref_cod_serie']]);
+            $this->addDetalhe(['Série', $registro['ref_ref_cod_serie']]);
         }
 
         //(enturmações) turma atual
@@ -173,24 +163,13 @@ return new class extends clsDetalhe {
 
         $this->addDetalhe(['<b>Turma selecionada</b>', '<b>' . $registro['nm_turma'] . '</b>']);
 
-        $objTurma = new clsPmieducarTurma($this->ref_cod_turma);
-
-        $capacidadeMaximaAlunosSala = $objTurma->maximoAlunosSala();
-
-        if ($capacidadeMaximaAlunosSala) {
-            $totalVagas = $capacidadeMaximaAlunosSala < $registro['max_aluno'] ? $capacidadeMaximaAlunosSala : $registro['max_aluno'];
-        } else {
-            $totalVagas = $registro['max_aluno'];
-        }
+        $totalVagas = $registro['max_aluno'];
 
         $this->addDetalhe(['Total de vagas', $totalVagas]);
 
         if (is_numeric($total_alunos)) {
             $this->addDetalhe(['Alunos enturmados', $total_alunos]);
             $this->addDetalhe(['Vagas disponíveis', $totalVagas - $total_alunos]);
-        }
-        if (is_numeric($capacidadeMaximaAlunosSala)) {
-            $this->addDetalhe(['Capacidade máxima de alunos na sala', $capacidadeMaximaAlunosSala]);
         }
 
         if ($this->possuiEnturmacao) {
@@ -369,7 +348,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Matricula Turma';
+        $this->title = 'Matricula Turma';
         $this->processoAp = 578;
     }
 };

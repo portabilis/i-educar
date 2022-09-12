@@ -364,7 +364,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             $this->requiresLogin(true);
             $this->validatesPresenceAndValueInSetOfAtt(true);
             $this->validatesPresenceAndValueInSetOfOper(true);
-        } catch (Exception $e) {
+        } catch (Exception) {
             return false;
         }
 
@@ -720,7 +720,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     {
         $this->deleteHistoricoDisplinas($alunoId, $historicoSequencial);
 
-        if ($this->getRequest()->disciplinas == 'buscar-boletim') {
+        if ($this->getRequest()->disciplinas === 'buscar-boletim') {
             $tpNota = $this->getService()->getRegra()->get('tipoNota');
             $situacaoFaltasCc = $this->getService()->getSituacaoFaltas()->componentesCurriculares;
             $mediasCc = $this->getService()->getMediasComponentes();
@@ -778,10 +778,17 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                 }
 
                 if ($mediaAreaConhecimento) {
-                    $nota = str_replace(',', '.', $nota);
+                    $nota = (float) str_replace(',', '.', $nota);
                     $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nome'] = $componenteCurricular->area_conhecimento->nome;
+                    if ($arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota'] === null) {
+                        $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota'] = 0;
+                    }
+
+                    $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota_conceitual_numerica'] ??= 0 ;
+                    $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['falta'] ??= 0;
+
                     $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota'] += $nota;
-                    $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota_conceitual_numerica'] += $notaConceitualNumerica;
+                    $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota_conceitual_numerica'] += is_numeric($notaConceitualNumerica) ? $notaConceitualNumerica : 0;
                     $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['falta'] += $this->getFalta($situacaoFaltasCc[$ccId]);
                     $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['ordenamento'] = $componenteCurricular->area_conhecimento->ordenamento;
                     $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['carga_horaria_disciplina'] = $componenteCurricular->area_conhecimento->carga_horaria_disciplina;
@@ -835,10 +842,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                 }
             }
             if ($processarMediaGeral) {
-                $componentesCurriculares['media_geral'] = $this->insereComponenteMediaGeral(
-                    $historicoSequencial,
-                    $alunoId
-                );
+                $this->insereComponenteMediaGeral($historicoSequencial, $alunoId);
             }
         } else {
             $i = 0;
@@ -887,7 +891,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     protected function getFalta($situacaoFaltaComponenteCurricular = null)
     {
         if ($this->getRequest()->faltas == 'buscar-boletim') {
-            $cnsPresenca = RegraAvaliacao_Model_TipoPresenca;
+            $cnsPresenca = RegraAvaliacao_Model_TipoPresenca::class;
             $tpPresenca = $this->getService()->getRegra()->get('tipoPresenca');
 
             //retorna '' caso não exista situacaoFalta para o componente curricular,
@@ -903,7 +907,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             $falta = $this->getRequest()->faltas;
         }
 
-        return $falta;
+        return empty($falta) ? 0 : $falta;
     }
 
     protected function getDadosMatricula($matriculaId)
@@ -1131,7 +1135,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     {
         try {
             $this->getService()->save();
-        } catch (CoreExt_Service_Exception $e) {
+        } catch (CoreExt_Service_Exception) {
         }
     }
 
@@ -1168,7 +1172,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             if ($validatesPresenceOfMatriculaId) {
                 $this->validatesPresenceOfMatriculaId(true);
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
             return false;
         }
 

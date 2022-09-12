@@ -1,12 +1,18 @@
 <?php
 
+use App\Http\Controllers\ExportController;
+use App\Http\Controllers\SchoolClassController;
+use App\Http\Controllers\WebController;
 use App\Process;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Auth::routes(['register' => false]);
 
-Route::redirect('/', 'intranet/index.php');
+Route::redirect('/', '/web');
+
+Route::redirect('intranet/index.php', '/web')
+    ->name('home');
 
 Route::any('module/Api/{uri}', 'LegacyController@api')->where('uri', '.*');
 
@@ -22,6 +28,10 @@ Route::group(['middleware' => ['auth']], function () {
 });
 
 Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.xssbypass', 'ieducar.suspended', 'auth', 'ieducar.checkresetpassword']], function () {
+    Route::get('/config', [WebController::class, 'config']);
+    Route::get('/user', [WebController::class, 'user']);
+    Route::get('/menus', [WebController::class, 'menus']);
+
     Route::get('/intranet/educar_matricula_turma_lst.php', 'LegacyController@intranet')
         ->defaults('uri', 'educar_matricula_turma_lst.php')
         ->name('enrollments.index');
@@ -31,6 +41,12 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
         ->name('enrollments.enroll');
     Route::get('/enrollment-history/{id}', 'EnrollmentHistoryController@show')
         ->name('enrollments.enrollment-history');
+    Route::get('/enrollment-formative-itinerary-list/{id}', 'EnrollmentFormativeItineraryController@list')
+        ->name('enrollments.enrollment-formative-itinerary-list');
+    Route::get('/enrollment-formative-itinerary/{id}', 'EnrollmentFormativeItineraryController@viewFormativeItinerary')
+        ->name('enrollments.enrollment-formative-itinerary');
+    Route::post('/enrollment-formative-itinerary/{id}', 'EnrollmentFormativeItineraryController@storeFormativeItinerary')
+        ->name('enrollments.enrollment-formative-itinerary-store');
 
     Route::get('/educacenso/consulta', 'EducacensoController@consult')
         ->name('educacenso.consult');
@@ -69,10 +85,6 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::get('/unificacao-pessoa', 'PersonLogUnificationController@index')->name('person-log-unification.index');
     Route::get('/unificacao-pessoa/{unification}', 'PersonLogUnificationController@show')->name('person-log-unification.show');
 
-    Route::get('intranet/index.php', 'LegacyController@intranet')
-        ->defaults('uri', 'index.php')
-        ->name('home');
-
     Route::get('intranet/educar_configuracoes_index.php', 'LegacyController@intranet')
         ->defaults('uri', 'educar_configuracoes_index.php')
         ->name('settings');
@@ -110,7 +122,7 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::post('/notificacoes/marca-todas-como-lidas', 'NotificationController@markAllRead')->name('notifications.mark-all-read');
 
     Route::get('/exportacoes', 'ExportController@index')->middleware('can:view:' . Process::DATA_EXPORT)->name('export.index');
-    Route::get('/exportacoes/novo', 'ExportController@form')->middleware('can:modify:' . Process::DATA_EXPORT)->name('export.form');
+    Route::get('/exportacoes/novo', [ExportController::class,'form'])->middleware('can:modify:' . Process::DATA_EXPORT)->name('export.form');
     Route::post('/exportacoes/exportar', 'ExportController@export')->middleware('can:modify:' . Process::DATA_EXPORT)->name('export.export');
 
     Route::get('/atualiza-data-entrada', 'UpdateRegistrationDateController@index')->middleware('can:view:' . Process::UPDATE_REGISTRATION_DATE)->name('update-registration-date.index');
@@ -132,6 +144,11 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
 
     Route::get('/dispensa-lote', 'BatchExemptionController@index')->middleware('can:modify:' . Process::BATCH_EXEMPTION)->name('batch-exemption.index');
     Route::post('/dispensa-lote', 'BatchExemptionController@exempt')->middleware('can:modify:' . Process::BATCH_EXEMPTION)->name('batch-exemption.exempt');
+
+    Route::post('/turma', [SchoolClassController::class, 'store'])
+        ->name('schoolclass.store');
+    Route::delete('/turma', [SchoolClassController::class, 'delete'])
+        ->name('schoolclass.delete');
 });
 
 Route::group(['namespace' => 'Exports', 'prefix' => 'exports'], function () {

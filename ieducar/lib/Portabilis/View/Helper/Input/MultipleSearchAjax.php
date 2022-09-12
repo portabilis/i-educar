@@ -36,7 +36,7 @@ class Portabilis_View_Helper_Input_MultipleSearchAjax extends Portabilis_View_He
         Portabilis_View_Helper_Application::loadChosenLib($this->viewInstance);
         Portabilis_View_Helper_Application::loadAjaxChosenLib($this->viewInstance);
 
-        $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/MultipleSearchAjax.js';
+        $jsFile = '/vendor/legacy/Portabilis/Assets/Javascripts/Frontend/Inputs/MultipleSearchAjax.js';
         Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
     }
 

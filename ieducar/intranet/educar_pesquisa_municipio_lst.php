@@ -68,7 +68,6 @@ return new class extends clsListagem {
 
         $this->campoLista('sigla_uf', 'UF', $array_uf, $this->sigla_uf, '', false, '', '', $disabled);
         $this->campoTexto('nome', 'Cidade', $this->nome, 30, 255, false);
-        //  $this->campoTexto( "sigla_uf", "Sigla Uf", $this->sigla_uf, 30, 255, false );
 
         // Paginador
         $this->limite = 20;
@@ -106,7 +105,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Municipio';
+        $this->title = 'Municipio';
         $this->processoAp = '0';
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;

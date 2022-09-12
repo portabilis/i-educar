@@ -605,7 +605,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
         if (true === array_key_exists($search, self::$_classStorage)) {
             self::_setStorageClassInstance($search, $instance, $sticky);
         } else {
-            if (!is_null($file)) {
+            if (!is_null($file) && !class_exists($class)) {
                 require_once $file;
             }
             self::$_classStorage[$search] = [

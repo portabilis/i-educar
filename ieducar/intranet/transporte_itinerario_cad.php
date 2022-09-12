@@ -109,14 +109,14 @@ return new class extends clsCadastro {
 
         // carrega estilo para feedback messages, para exibir msg validação frequencia.
 
-        $style = '/modules/Portabilis/Assets/Stylesheets/Frontend.css';
+        $style = '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend.css';
         Portabilis_View_Helper_Application::loadStylesheet($this, $style);
 
         Portabilis_View_Helper_Application::loadJavascript(
             $this,
-            ['/modules/Portabilis/Assets/Javascripts/Utils.js',
-                        '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js',
-                        '/modules/Portabilis/Assets/Javascripts/Validator.js']
+            ['/vendor/legacy/Portabilis/Assets/Javascripts/Utils.js',
+                        '/vendor/legacy/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js',
+                        '/vendor/legacy/Portabilis/Assets/Javascripts/Validator.js']
         );
         $this->addBotao('Excluir todos', "transporte_itinerario_del.php?cod_rota={$this->cod_rota}");
     }
@@ -150,14 +150,14 @@ return new class extends clsCadastro {
                     );
                     $cadastrou1 = $obj->cadastra();
                     if (!$cadastrou1) {
-                        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+                        $this->mensagem = 'Cadastro não realizado.<br>';
 
                         return false;
                     }
                     $sequencial++;
                 }
             }
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect("transporte_rota_det.php?cod_rota={$this->cod_rota}");
         }
     }
@@ -189,7 +189,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Itinerário';
+        $this->title = 'Itinerário';
         $this->processoAp = '21238';
     }
 };

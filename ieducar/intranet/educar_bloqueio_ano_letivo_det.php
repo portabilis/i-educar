@@ -28,7 +28,7 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['instituicao']) {
-            $this->addDetalhe([ 'Institui&ccedil;&atilde;o', "{$registro['instituicao']}"]);
+            $this->addDetalhe([ 'Instituição', "{$registro['instituicao']}"]);
         }
         if ($registro['ref_ano']) {
             $this->addDetalhe([ 'Ano', "{$registro['ref_ano']}"]);
@@ -58,7 +58,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Bloqueio do ano letivo';
+        $this->title = 'Bloqueio do ano letivo';
         $this->processoAp = '21251';
     }
 };

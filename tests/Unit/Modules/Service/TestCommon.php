@@ -570,6 +570,10 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
             ->method('execPreparedQuery')
             ->willReturn(true);
 
+        Portabilis_Utils_Database::$_db
+            ->method('setFetchMode')
+            ->willReturn($this->getDbMock());
+
         $returnCallback = function ($reset = false) use ($return) {
             static $total = 0;
 
@@ -762,6 +766,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
     /**
      * @throws Exception
+     *
      * @return $this
      */
     protected function _setUpDispensaDisciplinaMock()

@@ -12,7 +12,6 @@ return new class extends clsDetalhe {
         $cod_pessoa = (int) $this->getQueryString('cod_pessoa');
 
         $objPessoa = new clsPessoaFisica($cod_pessoa);
-        $db = new clsBanco();
 
         $detalhe = $objPessoa->queryRapida(
             $cod_pessoa,
@@ -54,7 +53,7 @@ return new class extends clsDetalhe {
         }
 
         if ($detalhe['nome_social']) {
-            $this->addDetalhe(['Nome social', $detalhe['nome_social']]);
+            $this->addDetalhe(['Nome social e/ou afetivo', $detalhe['nome_social']]);
         }
 
         $this->addDetalhe(['CPF', int2cpf($detalhe['cpf'])]);
@@ -145,7 +144,7 @@ return new class extends clsDetalhe {
         $fileService = new FileService(new UrlPresigner);
         $files = $fileService->getFiles(LegacyIndividual::find($cod_pessoa));
 
-        if (count($files) > 0) {
+        if (is_array($files) && count($files) > 0) {
             $this->addHtml(view('uploads.upload-details', ['files' => $files])->render());
         }
 

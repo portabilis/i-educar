@@ -22,6 +22,7 @@ use iEducar\Modules\Educacenso\ExportRule\ComponentesCurriculares;
 use iEducar\Modules\Educacenso\ExportRule\CriterioAcessoGestor;
 use iEducar\Modules\Educacenso\ExportRule\DependenciaAdministrativa;
 use iEducar\Modules\Educacenso\ExportRule\EsferaAdministrativa;
+use iEducar\Modules\Educacenso\ExportRule\ItinerarioFormativoAluno;
 use iEducar\Modules\Educacenso\ExportRule\PoderPublicoResponsavelTransporte;
 use iEducar\Modules\Educacenso\ExportRule\RecebeEscolarizacaoOutroEspaco;
 use iEducar\Modules\Educacenso\ExportRule\RegrasEspecificasRegistro30;
@@ -29,11 +30,14 @@ use iEducar\Modules\Educacenso\ExportRule\RegrasGeraisRegistro30;
 use iEducar\Modules\Educacenso\ExportRule\Regulamentacao;
 use iEducar\Modules\Educacenso\ExportRule\SituacaoFuncionamento;
 use iEducar\Modules\Educacenso\ExportRule\TiposAee;
+use iEducar\Modules\Educacenso\ExportRule\TipoVinculoGestor;
 use iEducar\Modules\Educacenso\ExportRule\TipoVinculoServidor;
 use iEducar\Modules\Educacenso\ExportRule\TransporteEscolarPublico;
 use iEducar\Modules\Educacenso\ExportRule\TurmaMulti;
+use iEducar\Modules\Educacenso\ExportRule\UnidadesCurricularesServidor;
 use iEducar\Modules\Educacenso\ExportRule\VeiculoTransporte;
 use iEducar\Modules\Educacenso\Formatters;
+use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento as ModelSituacaoFuncionamento;
 
 /**
  * Class EducacensoExportController
@@ -269,64 +273,14 @@ class EducacensoExportController extends ApiCoreController
         $educacensoRepository = new EducacensoRepository();
         $registro00Model = new Registro00();
         $registro00 = new Registro00Data($educacensoRepository, $registro00Model);
-        $escola = $registro00->getExportFormatData($escolaId, $ano);
+        $data = $registro00->getExportFormatData($escolaId, $ano);
 
-        if (empty($escola->codigoInep)) {
-            $this->msg .= "Dados para formular o registro 00 da escola {$escolaId} não encontrados. Verifique se a escola possuí endereço normalizado, código do INEP e dados do gestor cadastrados.<br/>";
+        if (empty($registro00->codigoInep)) {
+            $this->msg .= "Dados para formular o registro 00 da escola {$registro00->nomeEscola} não encontrados. Verifique se a escola possuí endereço normalizado, código do INEP e dados do gestor cadastrados.<br/>";
             $this->error = true;
         }
 
-        $escola = SituacaoFuncionamento::handle($escola);
-        $escola = DependenciaAdministrativa::handle($escola);
-        $escola = Regulamentacao::handle($escola);
-        $escola = EsferaAdministrativa::handle($escola);
-
-        $continuaExportacao = !in_array($escola->situacaoFuncionamento, [2, 3]);
-
-        $data = [
-            $escola->registro,
-            $escola->codigoInep,
-            $escola->situacaoFuncionamento,
-            $escola->inicioAnoLetivo,
-            $escola->fimAnoLetivo,
-            $escola->nome,
-            $escola->cep,
-            $escola->codigoIbgeMunicipio,
-            $escola->codigoIbgeDistrito,
-            $escola->logradouro,
-            $escola->numero,
-            $escola->complemento,
-            $escola->bairro,
-            $escola->ddd,
-            $escola->telefone,
-            $escola->telefoneOutro,
-            $escola->email,
-            $escola->orgaoRegional,
-            $escola->zonaLocalizacao,
-            $escola->localizacaoDiferenciada,
-            $escola->dependenciaAdministrativa,
-            $escola->orgaoEducacao,
-            $escola->orgaoSeguranca,
-            $escola->orgaoSaude,
-            $escola->orgaoOutro,
-            $escola->mantenedoraEmpresa,
-            $escola->mantenedoraSindicato,
-            $escola->mantenedoraOng,
-            $escola->mantenedoraInstituicoes,
-            $escola->mantenedoraSistemaS,
-            $escola->mantenedoraOscip,
-            $escola->categoriaEscolaPrivada,
-            $escola->conveniadaPoderPublico,
-            $escola->cnpjMantenedoraPrincipal,
-            $escola->cnpjEscolaPrivada,
-            $escola->regulamentacao,
-            $escola->esferaFederal,
-            $escola->esferaEstadual,
-            $escola->esferaMunicipal,
-            $escola->unidadeVinculada,
-            $escola->inepEscolaSede,
-            $escola->codigoIes,
-        ];
+        $continuaExportacao = !in_array($registro00->situacaoFuncionamento, [ModelSituacaoFuncionamento::EXTINTA, ModelSituacaoFuncionamento::PARALISADA]);
 
         return ArrayToCenso::format($data) . PHP_EOL;
     }
@@ -427,7 +381,6 @@ class EducacensoExportController extends ApiCoreController
                 $pessoa->recursoVideoLibras,
                 $pessoa->recursoBraile,
                 $pessoa->recursoNenhum,
-                $pessoa->nis,
                 $pessoa->certidaoNascimento,
                 $pessoa->paisResidencia,
                 $pessoa->cep,
@@ -445,12 +398,27 @@ class EducacensoExportController extends ApiCoreController
                 $pessoa->formacaoCurso[2],
                 $pessoa->formacaoAnoConclusao[2],
                 $pessoa->formacaoInstituicao[2],
-                $pessoa->formacaoComponenteCurricular[0],
-                $pessoa->formacaoComponenteCurricular[1],
-                $pessoa->formacaoComponenteCurricular[2],
-                $pessoa->posGraduacaoEspecializacao,
-                $pessoa->posGraduacaoMestrado,
-                $pessoa->posGraduacaoDoutorado,
+                $pessoa->complementacaoPedagogica[0],
+                $pessoa->complementacaoPedagogica[1],
+                $pessoa->complementacaoPedagogica[2],
+                $pessoa->posGraduacoes[0]->type_id,
+                $pessoa->posGraduacoes[0]->area_id,
+                $pessoa->posGraduacoes[0]->completion_year,
+                $pessoa->posGraduacoes[1]->type_id,
+                $pessoa->posGraduacoes[1]->area_id,
+                $pessoa->posGraduacoes[1]->completion_year,
+                $pessoa->posGraduacoes[2]->type_id,
+                $pessoa->posGraduacoes[2]->area_id,
+                $pessoa->posGraduacoes[2]->completion_year,
+                $pessoa->posGraduacoes[3]->type_id,
+                $pessoa->posGraduacoes[3]->area_id,
+                $pessoa->posGraduacoes[3]->completion_year,
+                $pessoa->posGraduacoes[4]->type_id,
+                $pessoa->posGraduacoes[4]->area_id,
+                $pessoa->posGraduacoes[4]->completion_year,
+                $pessoa->posGraduacoes[5]->type_id,
+                $pessoa->posGraduacoes[5]->area_id,
+                $pessoa->posGraduacoes[5]->completion_year,
                 $pessoa->posGraduacaoNaoPossui,
                 $pessoa->formacaoContinuadaCreche,
                 $pessoa->formacaoContinuadaPreEscola,
@@ -492,6 +460,8 @@ class EducacensoExportController extends ApiCoreController
             $gestor = CargoGestor::handle($gestor);
             /** @var Registro40 $gestor */
             $gestor = CriterioAcessoGestor::handle($gestor);
+            /** @var Registro40 $gestor */
+            $gestor = TipoVinculoGestor::handle($gestor);
 
             $data = [
                 $gestor->registro,
@@ -516,6 +486,7 @@ class EducacensoExportController extends ApiCoreController
         $registro50 = new Registro50Data($educacensoRepository, $registro50Model);
 
         $quantidadeComponentes = 15;
+        $quantidadeUnidadesCurriculares = 8;
 
         /** @var Registro50[] $docentes */
         $docentes = $registro50->getExportFormatData($escolaId, $ano);
@@ -525,6 +496,8 @@ class EducacensoExportController extends ApiCoreController
             $docente = TipoVinculoServidor::handle($docente);
             /** @var Registro50 $docente */
             $docente = ComponentesCurriculares::handle($docente);
+            /** @var Registro50 $docente */
+            $docente = UnidadesCurricularesServidor::handle($docente);
 
             $data = [
                 $docente->registro,
@@ -539,6 +512,10 @@ class EducacensoExportController extends ApiCoreController
 
             for ($count = 0; $count <= $quantidadeComponentes - 1; $count++) {
                 $data[] = $docente->componentes[$count];
+            }
+
+            for ($count = 1; $count <= $quantidadeUnidadesCurriculares; $count++) {
+                $data[] = $docente->unidadesCurriculares === null ? '' : (int) in_array($count, $docente->unidadesCurriculares);
             }
 
             $stringCenso .= ArrayToCenso::format($data) . PHP_EOL;
@@ -565,6 +542,7 @@ class EducacensoExportController extends ApiCoreController
             $aluno = VeiculoTransporte::handle($aluno);
             /** @var Registro60 $aluno */
             $aluno = PoderPublicoResponsavelTransporte::handle($aluno);
+            $aluno = ItinerarioFormativoAluno::handle($aluno);
 
             $data = [
                 $aluno->registro,
@@ -575,6 +553,19 @@ class EducacensoExportController extends ApiCoreController
                 $aluno->inepTurma,
                 $aluno->matriculaAluno,
                 $aluno->etapaAluno,
+                $aluno->tipoItinerarioLinguagens,
+                $aluno->tipoItinerarioMatematica,
+                $aluno->tipoItinerarioCienciasNatureza,
+                $aluno->tipoItinerarioCienciasHumanas,
+                $aluno->tipoItinerarioFormacaoTecnica,
+                $aluno->tipoItinerarioIntegrado,
+                $aluno->composicaoItinerarioLinguagens,
+                $aluno->composicaoItinerarioMatematica,
+                $aluno->composicaoItinerarioCienciasNatureza,
+                $aluno->composicaoItinerarioCienciasHumanas,
+                $aluno->composicaoItinerarioFormacaoTecnica,
+                $aluno->cursoItinerario,
+                $aluno->itinerarioConcomitante,
                 $aluno->tipoAtendimentoDesenvolvimentoFuncoesGognitivas,
                 $aluno->tipoAtendimentoDesenvolvimentoVidaAutonoma,
                 $aluno->tipoAtendimentoEnriquecimentoCurricular,

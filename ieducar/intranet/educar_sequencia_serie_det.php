@@ -1,13 +1,7 @@
 <?php
 
 return new class extends clsDetalhe {
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
     public $titulo;
-
     public $ref_serie_origem;
     public $ref_serie_destino;
     public $ref_usuario_exc;
@@ -18,7 +12,7 @@ return new class extends clsDetalhe {
 
     public function Gerar()
     {
-        $this->titulo = 'Sequ&ecirc;ncia Enturma&ccedil;&atilde;o - Detalhe';
+        $this->titulo = 'Sequência Enturmação - Detalhe';
 
         $this->ref_serie_origem = $_GET['ref_serie_origem'];
         $this->ref_serie_destino = $_GET['ref_serie_destino'];
@@ -56,20 +50,20 @@ return new class extends clsDetalhe {
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe([ 'Institui&ccedil;&atilde;o', "{$registro['ref_cod_instituicao']}"]);
+                $this->addDetalhe([ 'Instituição', "{$registro['ref_cod_instituicao']}"]);
             }
         }
         if ($nm_curso_origem) {
             $this->addDetalhe([ 'Curso Origem', "{$nm_curso_origem}"]);
         }
         if ($nm_serie_origem) {
-            $this->addDetalhe([ 'S&eacute;rie Origem', "{$nm_serie_origem}"]);
+            $this->addDetalhe([ 'Série Origem', "{$nm_serie_origem}"]);
         }
         if ($nm_curso_destino) {
             $this->addDetalhe([ 'Curso Destino', "{$nm_curso_destino}"]);
         }
         if ($nm_serie_destino) {
-            $this->addDetalhe([ 'S&eacute;rie Destino', "{$nm_serie_destino}"]);
+            $this->addDetalhe([ 'Série Destino', "{$nm_serie_destino}"]);
         }
 
         $obj_permissoes = new clsPermissoes();
@@ -88,7 +82,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Sequ&ecirc;ncia Enturma&ccedil;&atilde;o';
+        $this->title = 'Sequência Enturmação';
         $this->processoAp = '587';
     }
 };

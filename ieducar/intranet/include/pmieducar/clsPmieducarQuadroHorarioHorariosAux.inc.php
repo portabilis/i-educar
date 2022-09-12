@@ -154,8 +154,8 @@ class clsPmieducarQuadroHorarioHorariosAux extends Model
     {
         if (is_numeric($this->ref_cod_quadro_horario) && is_numeric($this->sequencial)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
-
             if (is_numeric($this->ref_cod_disciplina)) {
                 $set .= "{$gruda}ref_cod_disciplina = '{$this->ref_cod_disciplina}'";
                 $gruda = ', ';
@@ -227,14 +227,6 @@ class clsPmieducarQuadroHorarioHorariosAux extends Model
 
         $whereAnd = ' WHERE ';
 
-        if (is_numeric($int_ref_cod_quadro_horario)) {
-            $filtros .= "{$whereAnd} ref_cod_quadro_horario = '{$int_ref_cod_quadro_horario}'";
-            $whereAnd = ' AND ';
-        }
-        if (is_numeric($int_sequencial)) {
-            $filtros .= "{$whereAnd} sequencial = '{$int_sequencial}'";
-            $whereAnd = ' AND ';
-        }
         if (is_numeric($int_ref_cod_disciplina)) {
             $filtros .= "{$whereAnd} ref_cod_disciplina = '{$int_ref_cod_disciplina}'";
             $whereAnd = ' AND ';

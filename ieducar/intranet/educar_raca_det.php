@@ -19,7 +19,7 @@ return new class extends clsDetalhe {
 
     public function Gerar()
     {
-        $this->titulo = 'Ra&ccedil;a - Detalhe';
+        $this->titulo = 'Raça - Detalhe';
 
         $this->cod_raca=$_GET['cod_raca'];
 
@@ -31,7 +31,7 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['nm_raca']) {
-            $this->addDetalhe([ 'Ra&ccedil;a', "{$registro['nm_raca']}"]);
+            $this->addDetalhe([ 'Raça', "{$registro['nm_raca']}"]);
         }
 
         $obj_permissao = new clsPermissoes();
@@ -50,7 +50,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Ra&ccedil;a';
+        $this->title = 'Raça';
         $this->processoAp = '678';
     }
 };

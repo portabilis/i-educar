@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Http\RedirectResponse;
+use App\Models\LegacyCourse;
+use App\Models\LegacyEducationLevel;
 
 return new class extends clsCadastro {
     /**
@@ -31,8 +31,8 @@ return new class extends clsCadastro {
         $obj_permissoes->permissao_cadastra(571, $this->pessoa_logada, 3, 'educar_nivel_ensino_lst.php');
 
         if (is_numeric($this->cod_nivel_ensino)) {
-            $obj = new clsPmieducarNivelEnsino($this->cod_nivel_ensino);
-            $registro  = $obj->detalhe();
+            $registro = LegacyEducationLevel::find($this->cod_nivel_ensino)?->toArray();
+
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
@@ -65,64 +65,72 @@ return new class extends clsCadastro {
         include('include/pmieducar/educar_campo_lista.php');
 
         // text
-        $this->campoTexto('nm_nivel', 'N&iacute;vel Ensino', $this->nm_nivel, 30, 255, true);
-        $this->campoMemo('descricao', 'Descri&ccedil;&atilde;o', $this->descricao, 60, 5, false);
+        $this->campoTexto('nm_nivel', 'Nível Ensino', $this->nm_nivel, 30, 255, true);
+        $this->campoMemo('descricao', 'Descrição', $this->descricao, 60, 5, false);
     }
 
     public function Novo()
     {
-        $obj = new clsPmieducarNivelEnsino(null, null, $this->pessoa_logada, $this->nm_nivel, $this->descricao, null, null, 1, $this->ref_cod_instituicao);
-        $cadastrou = $obj->cadastra();
-        if ($cadastrou) {
-            $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+        $level = new LegacyEducationLevel();
+        $level->ref_usuario_cad = $this->pessoa_logada;
+        $level->nm_nivel = $this->nm_nivel;
+        $level->descricao = $this->descricao;
+        $level->ref_cod_instituicao = $this->ref_cod_instituicao;
 
-            throw new HttpResponseException(
-                new RedirectResponse('educar_nivel_ensino_lst.php')
-            );
+        if ($level->save()) {
+            $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+            $this->simpleRedirect('educar_nivel_ensino_lst.php');
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
-
+        $this->mensagem = 'Cadastro não realizado.<br>';
         return false;
     }
 
     public function Editar()
     {
-        $obj = new clsPmieducarNivelEnsino($this->cod_nivel_ensino, $this->pessoa_logada, null, $this->nm_nivel, $this->descricao, null, null, 1, $this->ref_cod_instituicao);
-        $editou = $obj->edita();
-        if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+        $level = LegacyEducationLevel::findOrFail($this->cod_nivel_ensino);
+        $level->ativo = 1;
+        $level->ref_usuario_exc = $this->pessoa_logada;
+        $level->nm_nivel = $this->nm_nivel;
+        $level->descricao = $this->descricao;
+        $level->ref_cod_instituicao = $this->ref_cod_instituicao;
 
-            throw new HttpResponseException(
-                new RedirectResponse('educar_nivel_ensino_lst.php')
-            );
+        if ($level->save()) {
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
+            $this->simpleRedirect('educar_nivel_ensino_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
-
+        $this->mensagem = 'Edição não realizada.<br>';
         return false;
     }
 
     public function Excluir()
     {
-        $obj = new clsPmieducarNivelEnsino($this->cod_nivel_ensino, $this->pessoa_logada, null, null, null, null, null, 0);
-        $excluiu = $obj->excluir();
-        if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+        $count = LegacyCourse::query()
+            ->where('ref_cod_nivel_ensino', $this->cod_nivel_ensino)
+            ->count();
 
-            throw new HttpResponseException(
-                new RedirectResponse('educar_nivel_ensino_lst.php')
-            );
+        if ($count > 0) {
+            $this->mensagem = 'Você não pode excluir esse Nível de Ensino, pois ele possui vínculo com Curso(s).<br>';
+            return false;
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $level = LegacyEducationLevel::findOrFail($this->cod_nivel_ensino);
+        $level->ref_usuario_exc = $this->pessoa_logada;
+        $level->ativo = 0;
 
+        if ($level->save()) {
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
+            $this->simpleRedirect('educar_nivel_ensino_lst.php');
+        }
+
+        $this->mensagem = 'Exclusão não realizada.<br>';
         return false;
     }
 
     public function Formular()
     {
-        $this->title = 'i-Educar - N&iacute;vel Ensino';
+        $this->title = 'Nível Ensino';
         $this->processoAp = '571';
     }
 };

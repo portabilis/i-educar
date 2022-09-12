@@ -2,13 +2,11 @@
 
 return new class extends clsDetalhe {
     public $titulo;
-
     public $id;
     public $ano;
     public $servidor_id;
     public $funcao_exercida;
     public $tipo_vinculo;
-
     public $ref_cod_instituicao;
     public $ref_cod_escola;
     public $ref_cod_curso;
@@ -34,7 +32,10 @@ return new class extends clsDetalhe {
                                 3    => 'Profissional/Monitor de atividade complementar',
                                 4    => 'Tradutor Intérprete de LIBRAS',
                                 5    => 'Docente titular - Coordenador de tutoria (de módulo ou disciplina) - EAD',
-                                6    => 'Docente tutor - Auxiliar (de módulo ou disciplina) - EAD'];
+                                6    => 'Docente tutor - Auxiliar (de módulo ou disciplina) - EAD',
+                                7    => 'Guia-Intérprete',
+                                8    => 'Profissional de apoio escolar para aluno(a)s com deficiência (Lei 13.146/2015)',
+                                9    => 'Instrutor da Educação Profissional'];
 
         $resources_tipo = [  null => 'Selecione',
                               1    => 'Concursado/efetivo/estável',
@@ -107,8 +108,6 @@ return new class extends clsDetalhe {
                 $registro['instituicao_id'],
                 $registro['servidor_id']
             );
-
-            "go(\"educar_servidor_vinculo_turma_copia_cad.php?{$get_padrao}\");";
         }
 
         $this->url_cancelar = sprintf(

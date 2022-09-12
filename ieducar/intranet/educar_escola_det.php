@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyEducationNetwork;
 use App\Models\PersonHasPlace;
 
 return new class extends clsDetalhe {
@@ -72,9 +73,11 @@ return new class extends clsDetalhe {
             }
         }
 
-        $obj_ref_cod_escola_rede_ensino = new clsPmieducarEscolaRedeEnsino($registro['ref_cod_escola_rede_ensino']);
-        $det_ref_cod_escola_rede_ensino = $obj_ref_cod_escola_rede_ensino->detalhe();
-        $registro['ref_cod_escola_rede_ensino'] = $det_ref_cod_escola_rede_ensino['nm_rede'];
+        $nm_rede = LegacyEducationNetwork::query()
+            ->select('nm_rede')
+            ->where('cod_escola_rede_ensino', $registro['ref_cod_escola_rede_ensino'])
+            ->first()?->nm_rede;
+        $registro['ref_cod_escola_rede_ensino'] = $nm_rede;
 
         $obj_ref_idpes = new clsPessoaJuridica($registro['ref_idpes']);
         $det_ref_idpes = $obj_ref_idpes->detalhe();
@@ -104,7 +107,7 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['ref_idpes']) {
-            $this->addDetalhe(['Raz&atilde;o Social', "{$registro['ref_idpes']}"]);
+            $this->addDetalhe(['Razão Social', "{$registro['ref_idpes']}"]);
         }
 
         if (isset($place)) {
@@ -188,7 +191,7 @@ return new class extends clsDetalhe {
             $this->array_botao_url = ["educar_escola_ano_letivo_cad.php?cod_escola={$registro['cod_escola']}"];
         }
 
-        $styles = ['/modules/Cadastro/Assets/Stylesheets/EscolaAnosLetivos.css'];
+        $styles = ['/vendor/legacy/Cadastro/Assets/Stylesheets/EscolaAnosLetivos.css'];
 
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
 
@@ -264,13 +267,13 @@ return new class extends clsDetalhe {
             $tabela .= '</table></td></tr>';
             $tabela .= '<tr>
                             <td>
-                                <span class=\'formlttd\'><b>*Somente &eacute; poss&iacute;vel finalizar um ano letivo ap&oacute;s n&atilde;o existir mais nenhuma matr&iacute;cula em andamento.</b></span>
+                                <span class=\'formlttd\'><b>*Somente é possível finalizar um ano letivo após não existir mais nenhuma matrícula em andamento.</b></span>
                             </td>
                         </tr>';
             if (!$canEdit) {
                 $tabela .= '<tr>
                             <td>
-                                <span class=\'formlttd\'><b>**Somente usu&aacute;rios com permiss&atilde;o de edição de escola podem alterar anos letivos.</b></span>
+                                <span class=\'formlttd\'><b>**Somente usuários com permissão de edição de escola podem alterar anos letivos.</b></span>
                             </td>
                         </tr>';
             }
@@ -297,7 +300,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Escola';
+        $this->title = 'Escola';
         $this->processoAp = '561';
     }
 };

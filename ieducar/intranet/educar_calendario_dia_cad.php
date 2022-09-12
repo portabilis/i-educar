@@ -67,7 +67,7 @@ return new class extends clsCadastro {
             $this->_getCalendarioTurmaDataMapper()->find($args);
 
             return true;
-        } catch (Exception $e) {
+        } catch (Exception) {
         }
 
         return false;
@@ -445,7 +445,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Calendário Dia';
+        $this->title = 'Calendário Dia';
         $this->processoAp = 620;
     }
 };

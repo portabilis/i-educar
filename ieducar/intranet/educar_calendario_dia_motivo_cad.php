@@ -82,9 +82,9 @@ return new class extends clsCadastro {
         $this->inputsHelper()->dynamic(['instituicao','escola']);
         $this->campoTexto('nm_motivo', 'Motivo', $this->nm_motivo, 30, 255, true);
         $this->campoTexto('sigla', 'Sigla', $this->sigla, 15, 15, true);
-        $this->campoMemo('descricao', 'Descric&atilde;o', $this->descricao, 60, 5, false);
+        $this->campoMemo('descricao', 'Descricão', $this->descricao, 60, 5, false);
 
-        $opcoes = [ '' => 'Selecione', 'e' => 'extra', 'n' => 'n&atilde;o-letivo' ];
+        $opcoes = [ '' => 'Selecione', 'e' => 'extra', 'n' => 'não-letivo' ];
         $this->campoLista('tipo', 'Tipo', $opcoes, $this->tipo);
     }
 
@@ -99,7 +99,7 @@ return new class extends clsCadastro {
             );
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -126,20 +126,20 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarCalendarioDiaMotivo($this->cod_calendario_dia_motivo, null, $this->pessoa_logada, null, null, null, null, null, null, 0);
         $excluiu = $obj->excluir();
         if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             throw new HttpResponseException(
                 new RedirectResponse('educar_calendario_dia_motivo_lst')
             );
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Calend&aacute;rio Dia Motivo';
+        $this->title = 'Calendário Dia Motivo';
         $this->processoAp = '576';
     }
 };

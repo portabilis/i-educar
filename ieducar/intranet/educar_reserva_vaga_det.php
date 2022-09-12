@@ -107,7 +107,7 @@ return new class extends clsDetalhe {
 
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe(['Institui&ccedil;&atilde;o', $registro['ref_cod_instituicao']]);
+                $this->addDetalhe(['Instituição', $registro['ref_cod_instituicao']]);
             }
         }
 
@@ -122,7 +122,7 @@ return new class extends clsDetalhe {
         }
 
         if ($nm_serie) {
-            $this->addDetalhe(['S&eacute;rie', $nm_serie]);
+            $this->addDetalhe(['Série', $nm_serie]);
         }
 
         $obj_turmas = new clsPmieducarTurma();
@@ -206,7 +206,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Reserva Vaga';
+        $this->title = 'Reserva Vaga';
         $this->processoAp = '639';
     }
 };

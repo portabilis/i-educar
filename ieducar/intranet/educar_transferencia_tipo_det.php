@@ -1,16 +1,11 @@
 <?php
 
+use App\Models\LegacyTransferType;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
 return new class extends clsDetalhe {
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
     public $titulo;
-
     public $cod_transferencia_tipo;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -27,8 +22,7 @@ return new class extends clsDetalhe {
 
         $this->cod_transferencia_tipo=$_GET['cod_transferencia_tipo'];
 
-        $tmp_obj = new clsPmieducarTransferenciaTipo($this->cod_transferencia_tipo);
-        $registro = $tmp_obj->detalhe();
+        $registro = LegacyTransferType::find($this->cod_transferencia_tipo)?->toArray();
 
         if (! $registro) {
             throw new HttpResponseException(
@@ -44,14 +38,14 @@ return new class extends clsDetalhe {
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe([ 'Institui&ccedil;&atilde;o', "{$registro['ref_cod_instituicao']}"]);
+                $this->addDetalhe([ 'Instituição', "{$registro['ref_cod_instituicao']}"]);
             }
         }
         if ($registro['nm_tipo']) {
-            $this->addDetalhe([ 'Motivo Transfer&ecirc;ncia', "{$registro['nm_tipo']}"]);
+            $this->addDetalhe([ 'Motivo Transferência', "{$registro['nm_tipo']}"]);
         }
         if ($registro['desc_tipo']) {
-            $this->addDetalhe([ 'Descri&ccedil;&atilde;o', "{$registro['desc_tipo']}"]);
+            $this->addDetalhe([ 'Descrição', "{$registro['desc_tipo']}"]);
         }
 
         if ($obj_permissoes->permissao_cadastra(575, $this->pessoa_logada, 7)) {
@@ -68,7 +62,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Motivo Transfer&ecirc;ncia';
+        $this->title = 'Motivo Transferência';
         $this->processoAp = '575';
     }
 };

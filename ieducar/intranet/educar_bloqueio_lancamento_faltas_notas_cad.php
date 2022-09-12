@@ -143,11 +143,11 @@ return new class extends clsCadastro {
 
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br />';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br />';
             $this->simpleRedirect('educar_bloqueio_lancamento_faltas_notas_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o nÃ£o realizada.<br />';
+        $this->mensagem = 'Edição não realizada.<br />';
 
         return false;
     }
@@ -162,18 +162,18 @@ return new class extends clsCadastro {
         $excluiu = $obj->excluir();
 
         if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br />';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br />';
             $this->simpleRedirect('educar_bloqueio_lancamento_faltas_notas_lst.php');
         }
 
-        $this->mensagem = 'Exclus&atilde;o nÃ£o realizada.<br />';
+        $this->mensagem = 'Exclusão não realizada.<br />';
 
         return false;
     }
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Bloqueio de lanÃ§amento de notas e faltas por etapa';
+        $this->title = 'Bloqueio de lanÃ§amento de notas e faltas por etapa';
         $this->processoAp = 999848;
     }
 };

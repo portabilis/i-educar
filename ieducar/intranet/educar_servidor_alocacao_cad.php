@@ -210,7 +210,7 @@ return new class extends clsCadastro {
         $objFuncionarioVinculo = new clsPmieducarFuncionarioVinculo;
         $opcoes = ['' => 'Selecione'] + $objFuncionarioVinculo->lista();
 
-        $this->campoLista('ref_cod_funcionario_vinculo', 'V&iacute;nculo', $opcoes, $this->ref_cod_funcionario_vinculo, null, false, '', '', false, false);
+        $this->campoLista('ref_cod_funcionario_vinculo', 'Vínculo', $opcoes, $this->ref_cod_funcionario_vinculo, null, false, '', '', false, false);
 
         $this->campoRotulo('informacao_carga_horaria', '<b>Informações sobre carga horária</b>');
         $this->campoHora('hora_inicial', 'Hora de início', $this->hora_inicial);

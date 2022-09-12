@@ -1,13 +1,9 @@
 <?php
 
-return new class extends clsDetalhe {
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
-    public $titulo;
+use App\Models\LegacySchoolClassType;
 
+return new class extends clsDetalhe {
+    public $titulo;
     public $cod_turma_tipo;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -25,8 +21,7 @@ return new class extends clsDetalhe {
 
         $this->cod_turma_tipo=$_GET['cod_turma_tipo'];
 
-        $tmp_obj = new clsPmieducarTurmaTipo($this->cod_turma_tipo);
-        $registro = $tmp_obj->detalhe();
+        $registro = LegacySchoolClassType::find($this->cod_turma_tipo)->toArray();
 
         if (! $registro) {
             $this->simpleRedirect('educar_turma_tipo_lst.php');
@@ -40,7 +35,7 @@ return new class extends clsDetalhe {
         $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe([ 'Institui&ccedil;&atilde;o', "{$registro['ref_cod_instituicao']}"]);
+                $this->addDetalhe([ 'Instituição', "{$registro['ref_cod_instituicao']}"]);
             }
         }
 
@@ -66,7 +61,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Turma Tipo';
+        $this->title = 'Turma Tipo';
         $this->processoAp = '570';
     }
 };

@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyAbandonmentType;
+
 return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -64,16 +66,9 @@ return new class extends clsCadastro {
             $this->campoTexto('nm_aluno', 'Aluno', $this->nm_aluno, 30, 255, false, false, false, '', '', '', '', true);
         }
 
-        $this->ref_cod_instituicao = $det_aluno['ref_cod_abandono_tipo'];
-
-        $tiposAbandono  = new clsPmieducarAbandonoTipo();
-        $tiposAbandono  = $tiposAbandono->lista(null, null, null, null, null, null, null, null, 1, $ref_cod_instituicao);
-
-        foreach ($tiposAbandono as $tipoAbandono) {
-            $selectOptions[$tipoAbandono['cod_abandono_tipo']] = $tipoAbandono['nome'];
-        }
-
-        $selectOptions = Portabilis_Array_Utils::sortByValue($selectOptions);
+        $selectOptions = LegacyAbandonmentType::query()->where('ativo', 1)
+            ->orderBy('nome', 'ASC')
+            ->pluck('nome', 'cod_abandono_tipo');
 
         $options = ['label' => 'Motivo do abandono', 'resources' => $selectOptions, 'value' => ''];
 
@@ -81,12 +76,11 @@ return new class extends clsCadastro {
 
         $this->inputsHelper()->date('data_cancel', ['label' => 'Data do abandono', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')]);
         // text
-        $this->campoMemo('observacao', 'Observa&ccedil;&atilde;o', $this->observacao, 60, 5, false);
+        $this->campoMemo('observacao', 'Observação', $this->observacao, 60, 5, false);
     }
 
     public function Novo()
     {
-        $db = new clsBanco();
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
 
@@ -128,7 +122,7 @@ return new class extends clsCadastro {
                     $enturmacao->data_enturmacao = $detEnturmacao;
 
                     if (! $enturmacao->edita()) {
-                        $this->mensagem = 'N&atilde;o foi poss&iacute;vel desativar as enturma&ccedil;&otilde;es da matr&iacute;cula.';
+                        $this->mensagem = 'Não foi possível desativar as enturmações da matrícula.';
 
                         return false;
                     } else {
@@ -165,7 +159,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Transfer&ecirc;ncia Solicita&ccedil;&atilde;o';
+        $this->title = 'Transferência Solicitação';
         $this->processoAp = '578';
     }
 };

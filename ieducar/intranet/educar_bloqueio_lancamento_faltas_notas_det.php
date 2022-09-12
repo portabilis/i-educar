@@ -7,7 +7,7 @@ return new class extends clsDetalhe {
 
     public function Gerar()
     {
-        $this->titulo = 'Bloqueio de lan&ccedil;amento de notas e faltas por etapa - Detalhe';
+        $this->titulo = 'Bloqueio de lançamento de notas e faltas por etapa - Detalhe';
 
         $this->cod_bloqueio = $_GET['cod_bloqueio'];
 
@@ -46,7 +46,7 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['data_inicio']) {
-            $this->addDetalhe(['Data in&iacute;cio', dataToBrasil($registro['data_inicio'])]);
+            $this->addDetalhe(['Data início', dataToBrasil($registro['data_inicio'])]);
         }
 
         if ($registro['data_fim']) {
@@ -70,7 +70,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Bloqueio de lanÃ§amento de notas e faltas por etapa';
+        $this->title = 'Bloqueio de lanÃ§amento de notas e faltas por etapa';
         $this->processoAp = 999848;
     }
 };

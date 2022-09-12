@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Enrollment;
+
 return new class extends clsCadastro {
     public $cod_matricula;
     public $ref_cod_aluno;
@@ -7,7 +9,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Turno do aluno';
+        $this->title = 'Turno do aluno';
         $this->processoAp = '578';
     }
 
@@ -27,8 +29,8 @@ return new class extends clsCadastro {
         $this->campoOculto('cod_matricula', $this->cod_matricula);
         $this->campoOculto('ref_cod_aluno', $this->ref_cod_aluno);
 
-        $this->nome_url_cancelar = 'Voltar';
-        $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->cod_matricula}";
+        $this->array_botao[] = 'Voltar';
+        $this->array_botao_url[] = "educar_matricula_det.php?cod_matricula={$this->cod_matricula}";
 
         $this->breadcrumb('Turno do aluno', [
             $_SERVER['SERVER_NAME'] . '/intranet' => 'Início',
@@ -95,6 +97,8 @@ return new class extends clsCadastro {
 
             $this->campoLista("turno[{$enturmacao['ref_cod_turma']}-{$enturmacao['sequencial']}]", "Turno do aluno na turma: {$enturmacao['nm_turma']}", $turnos, $enturmacao['turno_id'], '', false, 'Não é necessário preencher o campo quando o aluno cursar o turno INTEGRAL', '', false, false);
         }
+
+        $this->acao_enviar = 'showConfirmationMessage(this)';
     }
 
     public function Editar()
@@ -102,20 +106,33 @@ return new class extends clsCadastro {
         $this->validaPermissao();
         $this->validaParametros();
 
+        $is_change = false;
         foreach ($this->turno as $codTurmaESequencial => $turno) {
             // Necessário pois chave é Turma + Matrícula + Sequencial
             $codTurmaESequencial = explode('-', $codTurmaESequencial);
             $codTurma = $codTurmaESequencial[0];
             $sequencial = $codTurmaESequencial[1];
-            $obj = new clsPmieducarMatriculaTurma($this->cod_matricula, $codTurma, $this->pessoa_logada);
-            $obj->sequencial = $sequencial;
-            $obj->turno_id = $turno;
-            $obj->edita();
+
+
+            if (Enrollment::where('ref_cod_matricula',$this->cod_matricula)->where('ref_cod_turma',$codTurma)->value('turno_id') !=  (int)$turno) {
+                $is_change = true;
+
+                $obj = new clsPmieducarMatriculaTurma($this->cod_matricula, $codTurma, $this->pessoa_logada);
+                $obj->sequencial = $sequencial;
+                $obj->turno_id = $turno;
+                $obj->edita();
+            }
         }
 
-        $this->mensagem .= 'Turno atualizado com sucesso.<br>';
 
-        return true;
+        session()->flash('success', $is_change ? 'Turno alterado com sucesso!' : 'Não houve alteração no valor do campo Turno.');
+
+        $this->simpleRedirect(url('intranet/educar_matricula_det.php?cod_matricula='.$this->cod_matricula));
+    }
+
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-matricula-turma-turno.js');
     }
 
     private function validaPermissao()

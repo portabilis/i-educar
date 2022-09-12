@@ -46,13 +46,13 @@ return new class extends clsListagem {
         }
 
         $this->addCabecalhos([
-            'Nome Religi&atilde;o'
+            'Nome Religião'
         ]);
 
         // Filtros de Foreign Keys
 
         // outros Filtros
-        $this->campoTexto('nm_religiao', 'Nome Religi&atilde;o', $this->nm_religiao, 30, 255, false);
+        $this->campoTexto('nm_religiao', 'Nome Religião', $this->nm_religiao, 30, 255, false);
 
         // Paginador
         $this->limite = 20;
@@ -101,7 +101,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Religiao';
+        $this->title = 'Religiao';
         $this->processoAp = '579';
     }
 };

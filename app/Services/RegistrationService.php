@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\LegacyEnrollment;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClass;
+use App\Models\LegacySchoolClassGrade;
 use App\Models\LegacyTransferRequest;
 use App\User;
 use App_Model_MatriculaSituacao;
@@ -46,10 +47,22 @@ class RegistrationService
      */
     public function getRegistrationsNotEnrolled($schoolClass)
     {
+        $grades = [
+            $schoolClass->grade_id,
+        ];
+
+        if ($schoolClass->multiseriada == 1) {
+            $grades = LegacySchoolClassGrade::query()
+                ->where('turma_id', $schoolClass->getKey())
+                ->get()
+                ->pluck('serie_id')
+                ->toArray();
+        }
+
         return LegacyRegistration::query()
             ->with('student.person', 'lastEnrollment')
             ->where('ref_cod_curso', $schoolClass->course_id)
-            ->where('ref_ref_cod_serie', $schoolClass->grade_id)
+            ->whereIn('ref_ref_cod_serie', $grades)
             ->where('ref_ref_cod_escola', $schoolClass->school_id)
             ->where('ativo', 1)
             ->where('ultima_matricula', 1)
@@ -192,23 +205,89 @@ class RegistrationService
      *
      * @param LegacyRegistration $registration
      * @param DateTime           $date
-     * @param boolean            $relocated
+     * @param bool               $ignoreRelocation
      */
-    public function updateEnrollmentsDate(LegacyRegistration $registration, DateTime $date, $relocated)
+    public function updateEnrollmentsDate(LegacyRegistration $registration, DateTime $date, bool $ignoreRelocation)
     {
         $date = $date->format('Y-m-d');
 
-        $enrollment = $registration->lastEnrollment;
+        foreach ($registration->enrollments as $enrollment) {
+            if ($ignoreRelocation === false && $enrollment->remanejado) {
+                continue;
+            }
 
-        if (empty($enrollment)) {
-            return;
+            $enrollment->data_enturmacao = $date;
+            $enrollment->save();
+
+            $sequencial = $enrollment->sequencial;
+            $this->processEnrollmentsDates($registration, $sequencial, $date);
         }
+    }
 
-        if (!$relocated && $enrollment->remanejado) {
-            return;
+    private function processEnrollmentsDates(LegacyRegistration $registration, int $sequencial, string $date): void
+    {
+        $allEnrollments = $registration->enrollments()->get();
+
+        $nextEnrollments = $allEnrollments->filter(
+            fn ($item) => $item->sequencial > $sequencial
+        );
+
+        $previousEnrollments = $allEnrollments->filter(
+            fn ($item) => $item->sequencial < $sequencial
+        );
+
+        $this->updateNextEnrollmentsRegistrationDate($nextEnrollments, $date);
+        $this->updatePreviousEnrollmentsRegistrationDate($previousEnrollments, $date);
+    }
+
+    private function updateNextEnrollmentsRegistrationDate(Collection $nextEnrollments, $date)
+    {
+        foreach ($nextEnrollments as $enrollment) {
+            if (strtotime($enrollment->data_enturmacao->format('Y-m-d')) < strtotime($date)) {
+                $enrollment->data_enturmacao = $date;
+            }
+
+            if ($enrollment->data_exclusao !== null &&
+                strtotime($enrollment->data_exclusao->format('Y-m-d')) < strtotime($date)
+            ) {
+                $enrollment->data_exclusao = $date;
+            }
+
+            $enrollment->save();
         }
+    }
 
-        $enrollment->data_enturmacao = $date;
-        $enrollment->save();
+    private function updatePreviousEnrollmentsRegistrationDate(Collection $previousEnrollments, string $date)
+    {
+        foreach ($previousEnrollments as $enrollment) {
+            if (strtotime($enrollment->data_enturmacao->format('Y-m-d')) > strtotime($date)) {
+                $enrollment->data_enturmacao = $date;
+            }
+
+            if ($enrollment->data_exclusao !== null &&
+                strtotime($enrollment->data_exclusao->format('Y-m-d')) > strtotime($date)) {
+                $enrollment->data_exclusao = $date;
+            }
+
+            $enrollment->save();
+        }
+    }
+
+    /**
+     * Atualiza a data de saida de uma matrícula
+     *
+     * @param LegacyRegistration $registration
+     * @param DateTime           $date
+     *
+     * @return LegacyRegistration
+     */
+    public function updateCancelDate(LegacyRegistration $registration, DateTime $date)
+    {
+        $date = $date->format('Y-m-d');
+
+        $registration->data_cancel = $date;
+        $registration->save();
+
+        return $registration;
     }
 }

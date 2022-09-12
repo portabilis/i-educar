@@ -15,9 +15,9 @@ class SchoolHistory
     private $formatScoresGreaterThanTen;
     public $disciplines;
 
-    const GRADE_SERIE = 1;
-    const GRADE_ANO = 2;
-    const GRADE_EJA = 3;
+    public const GRADE_SERIE = 1;
+    public const GRADE_ANO = 2;
+    public const GRADE_EJA = 3;
 
     public function __construct(SchoolHistoryService $service, $seriesYearsModel)
     {
@@ -43,6 +43,7 @@ class SchoolHistory
         $discipline->nm_disciplina = $data['nm_disciplina'];
         $discipline->cod_aluno = $data['cod_aluno'];
         $discipline->nome_aluno = $data['nome_aluno'];
+        $discipline->nome_social_aluno = $data['nome_social_aluno'];
         $discipline->nm_escola = $data['nm_escola'];
         $discipline->cod_inep = $data['cod_inep'];
         $discipline->cidade_nascimento_uf = $data['cidade_nascimento_uf'];
@@ -86,7 +87,7 @@ class SchoolHistory
     public function getDiscipline($studentId, $disciplineName)
     {
         if (!$this->disciplines[$studentId][$disciplineName]) {
-            $this->disciplines[$studentId][$disciplineName] = new DisciplineGroup;
+            $this->disciplines[$studentId][$disciplineName] = new DisciplineGroup();
         }
 
         return $this->disciplines[$studentId][$disciplineName];
@@ -160,7 +161,7 @@ class SchoolHistory
         $column = $this->service->getLevelByName($levelName);
 
         if ($this->service->isEightYears($gradeType) && $this->seriesYearsModel) {
-            return $column + 1;
+            return ((int) $column) + 1;
         }
 
         return $column;
@@ -172,7 +173,7 @@ class SchoolHistory
             $score = str_replace('.', ',', $score);
         }
 
-        if ($this->formatScoresGreaterThanTen && $score > 10) {
+        if ($this->formatScoresGreaterThanTen && (int) $score > 10) {
             $score = '*' . $score;
         }
 
@@ -186,7 +187,7 @@ class SchoolHistory
 
     public function getStatus($status)
     {
-        $allStatus = (new SchoolHistoryStatus)->getDescriptiveValues();
+        $allStatus = (new SchoolHistoryStatus())->getDescriptiveValues();
 
         return $allStatus[$status];
     }

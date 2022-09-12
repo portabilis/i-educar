@@ -49,10 +49,8 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
-        // primary keys
         $this->campoOculto('idpais', $this->idpais);
 
-        // text
         $this->campoTexto('nome', 'Nome', $this->nome, 30, 60, true);
 
         $this->inputsHelper()->integer(

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Os parâmetros passados para esta página de listagem devem estar dentro da classe clsParametrosPesquisas.inc.php
- *
- * @author Adriano Erik Weiguert Nagasava
- *
- */
-
 use Illuminate\Support\Facades\Session;
 
 return new class extends clsListagem {
@@ -41,8 +34,6 @@ return new class extends clsListagem {
             $parametros->preencheAtributosComArray(Session::get('campos'));
         }
 
-        $submit = false;
-
         foreach ($_GET as $key => $value) {
             $this->$key = $value;
         }
@@ -52,7 +43,7 @@ return new class extends clsListagem {
 
             // Filtros de Busca
             $this->campoTexto('campo_busca', 'Pessoa', $this->campo_busca, 35, 255, false, false, false, 'Código/Nome');
-            $this->campoCpf('cpf', 'CPF', ($this->cpf)?int2CPF(idFederal2int($this->cpf)):'');
+            $this->campoCpf('cpf', 'CPF', !empty($this->cpf) ? int2CPF(idFederal2int($this->cpf)) : '');
 
             $chave_busca = @$_GET['campo_busca'];
             $cpf = @$_GET['cpf'];
@@ -90,7 +81,8 @@ return new class extends clsListagem {
 
                     foreach ($parametros->getCampoNome() as $campo) {
                         if ($parametros->getCampoTipo($cont) == 'text') {
-                            $funcao .= "{$virgula} '{$campo}{$chave}', '{$pessoa[$parametros->getCampoValor($cont)]}'";
+                            $campoTexto = addslashes($pessoa[$parametros->getCampoValor($cont)]);
+                            $funcao .= "{$virgula} '{$campo}{$chave}', '{$campoTexto}'";
                             $virgula = ',';
                         } elseif ($parametros->getCampoTipo($cont) == 'select') {
                             $campoTexto = addslashes($pessoa[$parametros->getCampoValor($cont)]);
@@ -152,13 +144,13 @@ return new class extends clsListagem {
                     $cont           = 0;
                     $pessoa['cnpj'] = (is_numeric($pessoa['cnpj'])) ? int2CNPJ($pessoa['cnpj']) : null;
                     foreach ($parametros->getCampoNome() as $campo) {
-                        if ($parametros->getCampoTipo($cont) == 'text') {
-                            $funcao .= "{$virgula} '{$campo}', '{$pessoa[$parametros->getCampoValor($cont)]}'";
-                            $virgula = ',';
-                        } elseif ($parametros->getCampoTipo($cont) == 'select') {
-                            $funcao .= "{$virgula} '{$campo}', '{$pessoa[$parametros->getCampoIndice($cont)]}', '{$pessoa[$parametros->getCampoValor($cont)]}'";
-                            $virgula = ',';
+                        $campoTexto = addslashes($pessoa[$parametros->getCampoValor($cont)]);
+                        if ($parametros->getCampoTipo($cont) === 'text') {
+                            $funcao .= "{$virgula} '{$campo}', '{$campoTexto}'";
+                        } elseif ($parametros->getCampoTipo($cont) === 'select') {
+                            $funcao .= "{$virgula} '{$campo}', '{$pessoa[$parametros->getCampoIndice($cont)]}', '{$campoTexto}'";
                         }
+                        $virgula = ',';
                         $cont++;
                     }
                     if ($parametros->getSubmit()) {
@@ -205,13 +197,13 @@ return new class extends clsListagem {
                     $virgula              = '';
                     $cont                 = 0;
                     foreach ($parametros->getCampoNome() as $campo) {
-                        if ($parametros->getCampoTipo($cont) == 'text') {
-                            $funcao .= "{$virgula} '{$campo}', '{$pessoa[$parametros->getCampoValor($cont)]}'";
-                            $virgula = ',';
-                        } elseif ($parametros->getCampoTipo($cont) == 'select') {
-                            $funcao .= "{$virgula} '{$campo}', '{$pessoa[$parametros->getCampoIndice($cont)]}', '{$pessoa[$parametros->getCampoValor($cont)]}'";
-                            $virgula = ',';
+                        $campoTexto = addslashes($pessoa[$parametros->getCampoValor($cont)]);
+                        if ($parametros->getCampoTipo($cont) === 'text') {
+                            $funcao .= "{$virgula} '{$campo}', '{$campoTexto}'";
+                        } elseif ($parametros->getCampoTipo($cont) === 'select') {
+                            $funcao .= "{$virgula} '{$campo}', '{$pessoa[$parametros->getCampoIndice($cont)]}', '{$campoTexto}'";
                         }
+                        $virgula = ',';
                         $cont++;
                     }
                     if ($parametros->getSubmit()) {
@@ -279,13 +271,13 @@ return new class extends clsListagem {
                     $cont          = 0;
                     $pessoa['cpf'] = (is_numeric($pessoa['cpf'])) ? int2CPF($pessoa['cpf']) : null;
                     foreach ($parametros->getCampoNome() as $campo) {
-                        if ($parametros->getCampoTipo($cont) == 'text') {
-                            $funcao .= "{$virgula} '{$campo}', '{$pessoa[$parametros->getCampoValor($cont)]}'";
-                            $virgula = ',';
-                        } elseif ($parametros->getCampoTipo($cont) == 'select') {
-                            $funcao .= "{$virgula} '{$campo}', '{$pessoa[$parametros->getCampoIndice($cont)]}', '{$pessoa[$parametros->getCampoValor($cont)]}'";
-                            $virgula = ',';
+                        $campoTexto = addslashes($pessoa[$parametros->getCampoValor($cont)]);
+                        if ($parametros->getCampoTipo($cont) === 'text') {
+                            $funcao .= "{$virgula} '{$campo}', '{$campoTexto}'";
+                        } elseif ($parametros->getCampoTipo($cont) === 'select') {
+                            $funcao .= "{$virgula} '{$campo}', '{$pessoa[$parametros->getCampoIndice($cont)]}', '{$campoTexto}'";
                         }
+                        $virgula = ',';
                         $cont++;
                     }
                     if ($parametros->getSubmit()) {

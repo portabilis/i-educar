@@ -1,37 +1,51 @@
 <?php
 
+namespace Database\Factories;
+
 use App\Models\LegacyEnrollment;
-use App\Models\LegacyRegistration;
-use App\Models\LegacySchoolClass;
-use App\Models\LegacyUser;
-use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-/** @var Factory $factory */
+class LegacyEnrollmentFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = LegacyEnrollment::class;
 
-$factory->define(LegacyEnrollment::class, function (Faker $faker) {
-    return [
-        'ref_cod_matricula' => factory(LegacyRegistration::class)->create(),
-        'ref_cod_turma' => factory(LegacySchoolClass::class)->create(),
-        'sequencial' => 1,
-        'ref_usuario_cad' => factory(LegacyUser::class)->state('unique')->make(),
-        'data_cadastro' => now(),
-        'data_enturmacao' => now(),
-    ];
-});
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition(): array
+    {
+        return [
+            'ref_cod_matricula' => fn () => LegacyRegistrationFactory::new()->create(),
+            'ref_cod_turma' => fn () => LegacySchoolClassFactory::new()->create(),
+            'sequencial' => 1,
+            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->unique()->make(),
+            'data_cadastro' => now(),
+            'data_enturmacao' => now(),
+        ];
+    }
 
-$factory->state(LegacyEnrollment::class, 'active', function (Faker $faker) use ($factory) {
-    $enrollment = $factory->raw(LegacyEnrollment::class);
+    public function active(): self
+    {
+        return $this->state(function (array $attributes) {
+            return array_merge($attributes, [
+                'ativo' => 1
+            ]);
+        });
+    }
 
-    return array_merge($enrollment, [
-        'ativo' => 1
-    ]);
-});
-
-$factory->state(LegacyEnrollment::class, 'inactive', function (Faker $faker) use ($factory) {
-    $enrollment = $factory->raw(LegacyEnrollment::class);
-
-    return array_merge($enrollment, [
-        'ativo' => 0
-    ]);
-});
+    public function inactive(): self
+    {
+        return $this->state(function (array $attributes) {
+            return array_merge($attributes, [
+                'ativo' => 0
+            ]);
+        });
+    }
+}

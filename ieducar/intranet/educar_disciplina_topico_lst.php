@@ -40,20 +40,20 @@ return new class extends clsListagem {
 
     public function Gerar()
     {
-        $this->titulo = 'Disciplina T&oacute;pico - Listagem';
+        $this->titulo = 'Disciplina Tópico - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null: $val;
         }
 
         $this->addCabecalhos([
-            'Nome T&oacute;pico'
+            'Nome Tópico'
         ]);
 
         // Filtros de Foreign Keys
 
         // outros Filtros
-        $this->campoTexto('nm_topico', 'Nome T&oacute;pico', $this->nm_topico, 30, 255, false);
+        $this->campoTexto('nm_topico', 'Nome Tópico', $this->nm_topico, 30, 255, false);
 
         // Paginador
         $this->limite = 20;
@@ -98,7 +98,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Disciplina T&oacute;pico';
+        $this->title = 'Disciplina Tópico';
         $this->processoAp = '565';
     }
 };

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\LegacySchoolClass;
-use App\Services\SchoolClassService;
+use App\Services\SchoolClass\SchoolClassService;
 use Illuminate\Http\Request;
 
 class SchoolClassController extends Controller

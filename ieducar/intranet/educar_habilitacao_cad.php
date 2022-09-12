@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyQualification;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
@@ -32,8 +33,7 @@ return new class extends clsCadastro {
         $obj_permissoes->permissao_cadastra(573, $this->pessoa_logada, 3, 'educar_habilitacao_lst.php');
 
         if (is_numeric($this->cod_habilitacao)) {
-            $obj = new clsPmieducarHabilitacao($this->cod_habilitacao);
-            $registro  = $obj->detalhe();
+            $registro = LegacyQualification::find($this->cod_habilitacao)?->toArray();
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
@@ -68,64 +68,63 @@ return new class extends clsCadastro {
         $obrigatorio = true;
         include('include/pmieducar/educar_campo_lista.php');
         // text
-        $this->campoTexto('nm_tipo', 'Habilita&ccedil;&atilde;o', $this->nm_tipo, 30, 255, true);
-        $this->campoMemo('descricao', 'Descri&ccedil;&atilde;o', $this->descricao, 60, 5, false);
+        $this->campoTexto('nm_tipo', 'Habilitação', $this->nm_tipo, 30, 255, true);
+        $this->campoMemo('descricao', 'Descrição', $this->descricao, 60, 5, false);
     }
 
     public function Novo()
     {
-        $obj = new clsPmieducarHabilitacao(null, null, $this->pessoa_logada, $this->nm_tipo, $this->descricao, null, null, 1, $this->ref_cod_instituicao);
-        $cadastrou = $obj->cadastra();
-        if ($cadastrou) {
-            $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+        $habilitacao = new LegacyQualification();
+        $habilitacao->ref_usuario_cad = $this->pessoa_logada;
+        $habilitacao->nm_tipo = $this->nm_tipo;
+        $habilitacao->descricao = $this->descricao;
+        $habilitacao->ref_cod_instituicao = $this->ref_cod_instituicao;
 
-            throw new HttpResponseException(
-                new RedirectResponse('educar_habilitacao_lst.php')
-            );
+        if ($habilitacao->save()) {
+            $this->mensagem = 'Cadastro efetuado com sucesso.<br>';
+            $this->simpleRedirect('educar_habilitacao_lst.php');
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
-
+        $this->mensagem = 'Cadastro não realizado.<br>';
         return false;
     }
 
     public function Editar()
     {
-        $obj = new clsPmieducarHabilitacao($this->cod_habilitacao, $this->pessoa_logada, null, $this->nm_tipo, $this->descricao, null, null, 1, $this->ref_cod_instituicao);
-        $editou = $obj->edita();
-        if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+        $habilitacao = LegacyQualification::find($this->cod_habilitacao);
+        $habilitacao->ref_usuario_exc = $this->pessoa_logada;
+        $habilitacao->ativo = 1;
+        $habilitacao->nm_tipo = $this->nm_tipo;
+        $habilitacao->descricao = $this->descricao;
+        $habilitacao->ref_cod_instituicao = $this->ref_cod_instituicao;
 
-            throw new HttpResponseException(
-                new RedirectResponse('educar_habilitacao_lst.php')
-            );
+        if ($habilitacao->save()) {
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
+            $this->simpleRedirect('educar_habilitacao_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
-
+        $this->mensagem = 'Edição não realizada.<br>';
         return false;
     }
 
     public function Excluir()
     {
-        $obj = new clsPmieducarHabilitacao($this->cod_habilitacao, $this->pessoa_logada, null, null, null, null, null, 0, $this->ref_cod_instituicao);
-        $excluiu = $obj->excluir();
-        if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+        $habilitacao = LegacyQualification::find($this->cod_habilitacao);
+        $habilitacao->ref_usuario_exc = $this->pessoa_logada;
+        $habilitacao->ativo = 0;
 
-            throw new HttpResponseException(
-                new RedirectResponse('educar_habilitacao_lst.php')
-            );
+        if ($habilitacao->save()) {
+            $this->mensagem = 'Exclusão efetuada com sucesso.<br>';
+            $this->simpleRedirect('educar_habilitacao_lst.php');
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
-
+        $this->mensagem = 'Exclusão não realizada.<br>';
         return false;
     }
 
     public function Formular()
     {
-        $this->titulo = 'i-Educar - Habilita&ccedil;&atilde;o';
+        $this->titulo = 'i-Educar - Habilitação';
         $this->processoAp = '573';
     }
 };

@@ -222,13 +222,13 @@ class clsAgenda
                         $objAgenda->cadastra();
                     }
                 } else {
-                    $this->erro_msg .= 'Voc&ecirc; deve preencher o campo Hora de Inicio corretamente. Formato hora: hh:mm<br>';
+                    $this->erro_msg .= 'Você deve preencher o campo Hora de Inicio corretamente. Formato hora: hh:mm<br>';
                 }
             } else {
-                $this->erro_msg .= 'Voc&ecirc; deve preencher o campo Data corretamente. Formato data: dd/mm/aaaa<br>';
+                $this->erro_msg .= 'Você deve preencher o campo Data corretamente. Formato data: dd/mm/aaaa<br>';
             }
         } else {
-            $this->erro_msg .= 'Voc&ecirc; deve preencher o campo Titulo ou o campo Descricao<br>';
+            $this->erro_msg .= 'Você deve preencher o campo Titulo ou o campo Descricao<br>';
         }
     }
 
@@ -255,15 +255,15 @@ class clsAgenda
                             }
                         }
                     } else {
-                        $this->erro_msg .= 'Voc&ecirc; deve preencher o campo Hora de Inicio corretamente. Formato hora: hh:mm<br>';
+                        $this->erro_msg .= 'Você deve preencher o campo Hora de Inicio corretamente. Formato hora: hh:mm<br>';
                         $verifica = false;
                     }
                 } else {
-                    $this->erro_msg .= 'Voc&ecirc; deve preencher o campo Data corretamente. Formato data: dd/mm/aaaa<br>';
+                    $this->erro_msg .= 'Você deve preencher o campo Data corretamente. Formato data: dd/mm/aaaa<br>';
                     $verifica = false;
                 }
             } else {
-                $this->erro_msg .= 'Voc&ecirc; deve preencher o campo Titulo ou o campo Descricao<br>';
+                $this->erro_msg .= 'Você deve preencher o campo Titulo ou o campo Descricao<br>';
                 $verifica = false;
             }
             if (isset($publico)) {
@@ -301,7 +301,7 @@ class clsAgenda
 
                 $this->edita_compromisso($cod_compromisso, $titulo, $descricao, $data_inicio, $hora_inicio, $hora_fim, $publico, $importante);
             } else {
-                $this->erro_msg .= 'Voc&ecirc; deve preencher o campo Hora de Fim corretamente. Formato hora: hh:mm<br>';
+                $this->erro_msg .= 'Você deve preencher o campo Hora de Fim corretamente. Formato hora: hh:mm<br>';
             }
         }
     }
@@ -312,7 +312,7 @@ class clsAgenda
         if ($this->compromissoPertenceAgenda($cod_compromisso)) {
             $db->Consulta("UPDATE portal.agenda_compromisso SET ativo = 0 WHERE cod_agenda_compromisso = '{$cod_compromisso}'");
             $db->Consulta("UPDATE portal.agenda_compromisso SET ativo = 1 WHERE cod_agenda_compromisso = '{$cod_compromisso}' AND versao = '{$versao}'");
-            $this->erro_msg .= "Vers&atilde;o {$versao} restaurada com sucesso.<br>";
+            $this->erro_msg .= "Versão {$versao} restaurada com sucesso.<br>";
         }
     }
 
@@ -414,7 +414,7 @@ class clsAgenda
                     if ($encaminha['ref_cod_juris_processo'] && $encaminha['ref_versao_processo']) {
                         $objProcesso = new clsProcesso($encaminha['ref_cod_juris_processo'], $encaminha['ref_versao_processo']);
                         $detalheProcesso = $objProcesso->detalhe();
-                        if ($detalheProcesso['ativo'] == 1 && !$detalheProcesso['ref_pessoa_finalizadora'] && $qtd<3) {
+                        if ($detalheProcesso['ativo'] == 1 && !$detalheProcesso['ref_pessoa_finalizadora']) {
                             $temp_arr_compromisso2['data_inicio'] = $detalheProcesso['data_envio'];
                             $temp_arr_compromisso2['versao'] = '1';
                             $temp_arr_compromisso2['data_fim'] =$detalheProcesso['data_envio'];
@@ -431,7 +431,7 @@ class clsAgenda
                         $detalheTramite = $objTramite->detalhe();
                         $objProcesso = new clsProcesso($detalheTramite['ref_cod_juris_processo'], $detalheTramite['ref_versao_processo']);
                         $detalheProcesso = $objProcesso->detalhe();
-                        if ($detalheTramite['ativo'] == 1 && !$detalheProcesso['ref_pessoa_finalizadora'] && $qtd<3) {
+                        if ($detalheTramite['ativo'] == 1 && !$detalheProcesso['ref_pessoa_finalizadora']) {
                             $temp_arr_compromisso2['data_inicio'] = $detalheProcesso['data_envio'];
                             $temp_arr_compromisso2['versao'] = '1';
                             $temp_arr_compromisso2['data_fim'] =$detalheProcesso['data_envio'];

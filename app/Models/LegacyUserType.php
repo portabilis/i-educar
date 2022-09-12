@@ -21,14 +21,14 @@ use Illuminate\Support\Collection as SupportCollection;
  */
 class LegacyUserType extends Model
 {
-    const LEVEL_ADMIN = 1;
-    const LEVEL_INSTITUTIONAL = 2;
-    const LEVEL_SCHOOLING = 4;
-    const LEVEL_LIBRARY = 8;
+    public const LEVEL_ADMIN = 1;
+    public const LEVEL_INSTITUTIONAL = 2;
+    public const LEVEL_SCHOOLING = 4;
+    public const LEVEL_LIBRARY = 8;
 
-    const CAN_VIEW = 1;
-    const CAN_MODIFY = 2;
-    const CAN_REMOVE = 3;
+    public const CAN_VIEW = 1;
+    public const CAN_MODIFY = 2;
+    public const CAN_REMOVE = 3;
 
     /**
      * @var string
@@ -52,11 +52,6 @@ class LegacyUserType extends Model
         'ref_funcionario_cad',
         'data_cadastro',
     ];
-
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * @return int

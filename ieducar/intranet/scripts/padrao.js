@@ -455,46 +455,10 @@ function formataMonetario(campo, e)
 
 function formataCNPJ(campo, e)
 {
-  if (typeof window.event != 'undefined') {
-    if (window.event.keyCode != 46) {
-      if ((campo.value.length == 2) || (campo.value.length == 6)) {
-        campo.value += '.';
-      }
-    }
-
-    if (window.event.keyCode != 47) {
-      if (campo.value.length == 10) {
-        campo.value += '/';
-      }
-    }
-
-    if (window.event.keyCode != 45) {
-      if (campo.value.length == 15) {
-        campo.value += '-';
-      }
-    }
-  }
-  else {
-    if (e.which != 8) {
-      if (e.which != 46) {
-        if ((campo.value.length == 2) || (campo.value.length == 6)) {
-          campo.value += '.';
-        }
-      }
-
-      if (e.which != 47) {
-        if (campo.value.length == 10) {
-          campo.value += '/';
-        }
-      }
-
-      if (e.which != 45) {
-        if (campo.value.length == 15) {
-          campo.value += '-';
-        }
-      }
-    }
-  }
+  document.getElementById(campo.id).addEventListener('input', function (e) {
+    let x = e.target.value.replace(/\D/g, '').match(/(\d{0,2})(\d{0,3})(\d{0,3})(\d{0,4})(\d{0,2})/);
+    e.target.value = !x[2] ? x[1] : x[1] + '.' + x[2] + '.' + x[3] + '/' + x[4] + (x[5] ? '-' + x[5] : '');
+  });
 }
 
 /**
@@ -512,14 +476,15 @@ function pesquisa_valores_f(caminho, campo, flag, pag_cadastro)
 
 function pesquisa_valores_popless(caminho, campo)
 {
-  new_id = DOM_divs.length;
-  div    = 'div_dinamico_' + new_id;
+  let host =  window.location.protocol + '//' +  window.location.host + '/intranet/' + caminho;
+  let new_id = DOM_divs.length;
+  let div = 'div_dinamico_' + new_id;
 
-  if (caminho.indexOf('?') == -1) {
-    showExpansivel(500, 500, '<iframe src="' + caminho + '?campo=' + campo + '&div=' + div + '&popless=1" frameborder="0" height="100%" width="500" marginheight="0" marginwidth="0" name="temp_win_popless"></iframe>', 'Pesquisa de valores');
+  if (host.indexOf('?') === -1) {
+    showExpansivel(500, 500, '<iframe src="' + host + '?campo=' + campo + '&div=' + div + '&popless=1" frameborder="0" height="100%" width="500" marginheight="0" marginwidth="0" name="temp_win_popless"></iframe>', 'Pesquisa de valores');
   }
   else {
-    showExpansivel(500, 500, '<iframe src="' + caminho + '&campo=' + campo + '&div=' + div + '&popless=1" frameborder="0" height="100%" width="500" marginheight="0" marginwidth="0" name="temp_win_popless"></iframe>', 'Pesquisa de valores');
+    showExpansivel(500, 500, '<iframe src="' + host + '&campo=' + campo + '&div=' + div + '&popless=1" frameborder="0" height="100%" width="500" marginheight="0" marginwidth="0" name="temp_win_popless"></iframe>', 'Pesquisa de valores');
   }
 }
 

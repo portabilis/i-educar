@@ -47,7 +47,7 @@
         if ($get_escola && $get_curso) {
             $retorno .= '<tr id="tr_status" class="input_quadro_horario">
                          <td valign="top" class="formlttd">
-                         <span class="form">Institui&ccedil;&atilde;o</span>
+                         <span class="form">Instituição</span>
                          <span class="campo_obrigatorio">*</span>
                          <br/>
                          <sub style="vertical-align: top;"/>
@@ -55,7 +55,7 @@
             $retorno .= '<td valign="top" class="formlttd"><span class="form">';
             $retorno .= '<select onchange="getEscola();" class=\'geral\' name=\'ref_cod_instituicao\' id=\'ref_cod_instituicao\'>';
             reset($opcoes);
-            while (list($chave, $texto) = each($opcoes)) {
+            foreach ($opcoes as $chave => $texto) {
                 $retorno .=  '<option id="ref_cod_instituicao_'.urlencode($chave).'" value="'.urlencode($chave).'"';
 
                 if ($chave == $this->ref_cod_instituicao) {
@@ -70,15 +70,16 @@
         } else {
             $retorno .= '<tr id="tr_status" class="input_quadro_horario">
                          <td valign="top" class="formlttd">
-                         <span class="form">Institui&ccedil;&atilde;o</span>
+                         <span class="form">Instituição</span>
                          <span class="campo_obrigatorio">*</span>
                          <br/>
                          <sub style="vertical-align: top;"/>
                          </td>';
             $retorno .= '<td valign="top" class="formlttd"><span class="form">';
             $retorno .= '<select class=\'geral\' name=\'ref_cod_instituicao\' id=\'ref_cod_instituicao\'>';
+
             reset($opcoes);
-            while (list($chave, $texto) = each($opcoes)) {
+            foreach ($opcoes as $chave => $texto) {
                 $retorno .=  '<option id="ref_cod_instituicao_'.urlencode($chave).'" value="'.urlencode($chave).'"';
 
                 if ($chave==$this->ref_cod_instituicao) {
@@ -135,7 +136,7 @@
                 $retorno .=  " <select onchange=\"getCurso();getAnoLetivo();\" class='geral' name='ref_cod_escola' {$disabled} id='ref_cod_escola'>";
 
                 reset($opcoes_escola);
-                while (list($chave, $texto) = each($opcoes_escola)) {
+                foreach ($opcoes_escola as $chave => $texto) {
                     $retorno .=  '<option id="ref_cod_escola_'.urlencode($chave).'" value="'.urlencode($chave).'"';
 
                     if ($chave == $this->ref_cod_escola) {
@@ -174,10 +175,8 @@
             $disabled = !$this->ano && $nivel_usuario == 1 ?  'disabled=\'true\' ' : '' ;
             $retorno .=  " <select onchange=\"getSerie();\" class='geral' name='ano' {$disabled} id='ano'>";
 
-            if (is_array($opcoes_ano)) {
-                reset($opcoes_ano);
-            }
-            while (list($chave, $texto) = each($opcoes_ano)) {
+            reset($opcoes_ano);
+            foreach ($opcoes_ano as $chave => $texto) {
                 $retorno .=  '<option id="ano'.urlencode($chave).'" value="'.urlencode($chave).'"';
 
                 if ($chave == $this->ano) {
@@ -215,10 +214,8 @@
             $disabled = !$this->ref_cod_curso && $nivel_usuario == 1 /*&& !$this->ref_cod_curso*/ ?  'disabled=\'true\' ' : '' ;
             $retorno .=  " <select onchange=\"getSerie();\" class='geral' name='ref_cod_curso' {$disabled} id='ref_cod_curso'>";
 
-            if (is_array($opcoes_curso)) {
-                reset($opcoes_curso);
-            }
-            while (list($chave, $texto) = each($opcoes_curso)) {
+            reset($opcoes_curso);
+            foreach ($opcoes_curso as $chave => $texto) {
                 $retorno .=  '<option id="ref_cod_curso_'.urlencode($chave).'" value="'.urlencode($chave).'"';
 
                 if ($chave == $this->ref_cod_curso) {
@@ -226,6 +223,7 @@
                 }
                 $retorno .=  ">$texto</option>";
             }
+
             $retorno .=  '</select>';
             $retorno .= '</span>
                             </td>
@@ -246,7 +244,7 @@
             }
             $retorno .= '<tr id="tr_curso" class="input_quadro_horario">
                          <td valign="top" class="formmdtd">
-                         <span class="form">S&eacute;rie</span>
+                         <span class="form">Série</span>
                          <span class="campo_obrigatorio">*</span>
                          <br/>
                          <sub style="vertical-align: top;"/>
@@ -256,10 +254,8 @@
             $disabled = !$this->ref_cod_serie && $nivel_usuario == 1 /*&& !$this->ref_cod_curso*/ ?  'disabled=\'true\' ' : '' ;
             $retorno .=  " <select onchange=\"getTurma();\" class='geral' name='ref_cod_serie' {$disabled} id='ref_cod_serie'>";
 
-            if (is_array($opcoes_serie)) {
-                reset($opcoes_serie);
-            }
-            while (list($chave, $texto) = each($opcoes_serie)) {
+            reset($opcoes_serie);
+            foreach ($opcoes_serie as $chave => $texto) {
                 $retorno .=  '<option id="ref_cod_serie_'.urlencode($chave).'" value="'.urlencode($chave).'"';
 
                 if ($chave == $this->ref_cod_serie) {
@@ -297,10 +293,8 @@
             $disabled = (!$this->ref_cod_turma && $nivel_usuario == 1) ?  'disabled=\'true\' ' : '' ;
             $retorno .=  " <select onchange=\"\" class='geral' name='ref_cod_turma' {$disabled} id='ref_cod_turma'>";
 
-            if (is_array($opcoes_turma)) {
-                reset($opcoes_turma);
-            }
-            while (list($chave, $texto) = each($opcoes_turma)) {
+            reset($opcoes_turma);
+            foreach ($opcoes_turma as $chave => $texto) {
                 $retorno .=  '<option id="ref_cod_turma_'.urlencode($chave).'" value="'.urlencode($chave).'"';
 
                 if ($chave == $this->ref_cod_turma) {
@@ -308,6 +302,7 @@
                 }
                 $retorno .=  ">$texto</option>";
             }
+
             $retorno .=  '</select>';
             $retorno .= '</span>
                             </td>
@@ -316,14 +311,14 @@
         if (isset($get_cabecalho)) {
             if ($nivel_usuario == 1 || $nivel_usuario == 2 || $nivel_usuario == 4) {
                 ${$get_cabecalho}[] = 'Curso';
-                ${$get_cabecalho}[] = 'S&eacute;rie';
+                ${$get_cabecalho}[] = 'Série';
                 ${$get_cabecalho}[] = 'Turma';
             }
             if ($nivel_usuario == 1 || $nivel_usuario == 2) {
                 ${$get_cabecalho}[] = 'Escola';
             }
             if ($nivel_usuario == 1) {
-                ${$get_cabecalho}[] = 'Institui&ccedil;&atilde;o';
+                ${$get_cabecalho}[] = 'Instituição';
             }
         }
 
@@ -375,63 +370,20 @@
                      </tr><tr><td>&nbsp;</td></tr>";
 ?>
 <script>
-/*
-function desabilitaCampos()
-{
-    var obj_instituicao;
-    var obj_escola;
-    var obj_curso;
-    var obj_serie;
-    var obj_turma;
-
-    if ( document.getElementById('ref_cod_instituicao') )
-    {
-        obj_instituicao          = document.getElementById( 'ref_cod_instituicao' );
-        obj_instituicao.disabled = false;
-    }
-
-    if ( document.getElementById( 'ref_cod_escola' ) )
-    {
-        obj_escola          = document.getElementById('ref_cod_escola');
-        obj_escola.disabled = false;
-    }
-
-    if ( document.getElementById('ref_cod_curso') ) {
-        obj_curso          = document.getElementById('ref_cod_curso');
-        obj_curso.disabled = false;
-    }
-
-    if ( document.getElementById('ref_cod_serie') )
-    {
-        obj_serie          = document.getElementById('ref_cod_serie');
-        obj_serie.disabled = false;
-    }
-
-    if ( document.getElementById('ref_cod_turma') )
-    {
-        obj_turma          = document.getElementById('ref_cod_turma');
-        obj_turma.disabled = false;
-    }
-}
-*/
 
 <?php
 if ($nivel_usuario == 1 || $nivel_usuario == 2) {
     ?>
-    function getEscola( xml_escola )
+    function getEscola( escolas )
     {
-        var DOM_array = xml_escola.getElementsByTagName( "escola" );
 
-        if(DOM_array.length)
+        if(escolas.length)
         {
-            campoEscola.length = 1;
-            campoEscola.options[0].text = 'Selecione uma escola';
-            campoEscola.disabled = false;
+            setAttributes(campoEscola,'Selecione uma escola',false);
 
-            for( var i = 0; i < DOM_array.length; i++ )
-            {
-                campoEscola.options[campoEscola.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_escola"),false,false);
-            }
+            $j.each(escolas, function(i, item) {
+                campoEscola.options[campoEscola.options.length] = new Option(item.name,item.id, false, false);
+            });
         }
         else
             campoEscola.options[0].text = 'A instituição não possui nenhuma escola';
@@ -440,79 +392,56 @@ if ($nivel_usuario == 1 || $nivel_usuario == 2) {
 }
 ?>
 
-function getCurso( xml_curso )
+function getCurso(cursos)
 {
-    var DOM_array = xml_curso.getElementsByTagName( "curso" );
-
-    if(DOM_array.length)
-    {
-        campoCurso.length = 1;
-        campoCurso.options[0].text = 'Selecione um curso';
-        campoCurso.disabled = false;
-
-        for( var i = 0; i < DOM_array.length; i++ )
-        {
-            campoCurso.options[campoCurso.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_curso"),false,false);
-        }
+    if(cursos.length)    {
+        setAttributes(campoCurso,'Selecione um curso',false);
+        $j.each(cursos, function(i, item) {
+            campoCurso.options[campoCurso.options.length] = new Option(item.name,item.id, false, false);
+        });
     }
     else
         campoCurso.options[0].text = 'A escola não possui nenhum curso';
 }
 
-function getAnoLetivo( xml_ano )
+function getAnoLetivo(anos)
 {
-    var DOM_array = xml_ano.getElementsByTagName( "ano" );
-
-    if(DOM_array.length)
+    if(anos.length)
     {
-        campoAno.length = 1;
-        campoAno.options[0].text = 'Selecione um ano';
-        campoAno.disabled = false;
+        setAttributes(campoAno,'Selecione um ano',false);
 
-        for( var i = 0; i < DOM_array.length; i++ )
-        {
-            campoAno.options[campoAno.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].firstChild.data,false,false);
-        }
+        $j.each(anos, function(i, item) {
+            campoAno.options[campoAno.options.length] = new Option(item.year,item.year, false, false);
+        });
     }
     else
         campoAno.options[0].text = 'A escola não possui nenhum ano';
 }
 
-function getSerie( xml_serie )
+function getSerie(series)
 {
-    var DOM_array = xml_serie.getElementsByTagName( "serie" );
-
-    if(DOM_array.length)
+    if(series.length)
     {
-        campoSerie.length = 1;
-        campoSerie.options[0].text = 'Selecione uma série';
-        campoSerie.disabled = false;
+        setAttributes(campoSerie,'Selecione uma série',false);
 
-        for( var i = 0; i < DOM_array.length; i++ )
-        {
-            campoSerie.options[campoSerie.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_serie"),false,false);
-        }
+        $j.each(series, function(i, item) {
+            campoSerie.options[campoSerie.options.length] = new Option(item.name,item.id, false, false);
+        });
     }
     else
         campoSerie.options[0].text = 'A escola/curso não possui nenhuma série';
 }
 
-function getTurma( xml_turma )
+function getTurma(turmas)
 {
 
-    console.log(xml_turma);
-    var DOM_array = xml_turma.getElementsByTagName( "turma" );
-
-    if(DOM_array.length)
+    if(turmas.length)
     {
-        campoTurma.length = 1;
-        campoTurma.options[0].text = 'Selecione uma turma';
-        campoTurma.disabled = false;
+        setAttributes(campoTurma,'Selecione uma turma',false);
 
-        for( var i = 0; i < DOM_array.length; i++ )
-        {
-            campoTurma.options[campoTurma.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_turma"),false,false);
-        }
+        $j.each(turmas, function(i, item) {
+            campoTurma.options[campoTurma.options.length] = new Option(item.name,item.id, false, false);
+        });
     }
     else
         campoTurma.options[0].text = 'A escola/série não possui nenhuma turma';

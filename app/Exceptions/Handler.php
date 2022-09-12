@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use App\Http\Controllers\LegacyController;
 use App_Model_Exception;
 use iEducar\Modules\ErrorTracking\Tracker;
+use iEducar\Support\Exceptions\DisciplinesWithoutInformedHoursException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -17,6 +18,7 @@ class Handler extends ExceptionHandler
      */
     protected $dontReport = [
         App_Model_Exception::class,
+        DisciplinesWithoutInformedHoursException::class
     ];
 
     /**
@@ -94,7 +96,9 @@ class Handler extends ExceptionHandler
             return null;
         }
 
-        return explode('@', $this->getActionName())[1];
+        $action = explode('@', $this->getActionName());
+
+        return $action[1] ?? $action[0];
     }
 
     /**

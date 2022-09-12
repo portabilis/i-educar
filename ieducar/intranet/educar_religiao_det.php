@@ -30,10 +30,10 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['cod_religiao']) {
-            $this->addDetalhe([ 'Religi&atilde;o', "{$registro['cod_religiao']}"]);
+            $this->addDetalhe([ 'Religião', "{$registro['cod_religiao']}"]);
         }
         if ($registro['nm_religiao']) {
-            $this->addDetalhe([ 'Nome Religi&atilde;o', "{$registro['nm_religiao']}"]);
+            $this->addDetalhe([ 'Nome Religião', "{$registro['nm_religiao']}"]);
         }
 
         //** Verificacao de permissao para cadastro
@@ -55,7 +55,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Religiao';
+        $this->title = 'Religiao';
         $this->processoAp = '579';
     }
 };

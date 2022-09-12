@@ -3,6 +3,7 @@
 use App\Events\TransferEvent;
 use App\Models\LegacyRegistration;
 use App\Models\LegacyTransferRequest;
+use App\Models\LegacyTransferType;
 use App\Services\PromotionService;
 use Illuminate\Support\Facades\DB;
 
@@ -34,10 +35,10 @@ return new class extends clsCadastro {
     {
         parent::__construct();
         Portabilis_View_Helper_Application::loadStylesheet($this, [
-            '/modules/Portabilis/Assets/Stylesheets/Frontend/Resource.css'
+            '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend/Resource.css'
         ]);
         Portabilis_View_Helper_Application::loadJavascript($this, [
-            '/modules/Cadastro/Assets/Javascripts/TransferenciaSolicitacao.js'
+            '/vendor/legacy/Cadastro/Assets/Javascripts/TransferenciaSolicitacao.js'
         ]);
     }
 
@@ -135,17 +136,13 @@ return new class extends clsCadastro {
         $this->campoTexto('estado_escola_destino_externa', 'Estado da escola ', '', 20, 50, false, false, false, '');
         $this->campoTexto('municipio_escola_destino_externa', 'Município da escola ', '', 20, 50, false, false, false, '');
 
-        $objTemp = new clsPmieducarTransferenciaTipo();
-        $objTemp->setOrderby(' nm_tipo ASC ');
-        $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, null, $ref_cod_instituicao);
 
-        $opcoesMotivo = ['' => 'Selecione'];
-
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $opcoesMotivo[$registro['cod_transferencia_tipo']] = $registro['nm_tipo'];
-            }
-        }
+        $opcoesMotivo = LegacyTransferType::query()
+            ->where('ativo', 1)
+            ->where('ref_cod_instituicao', $ref_cod_instituicao)
+            ->orderBy('nm_tipo', 'ASC')
+            ->pluck('nm_tipo', 'cod_transferencia_tipo')
+            ->prepend('Selecione', '');
 
         $this->campoLista('ref_cod_transferencia_tipo', 'Motivo', $opcoesMotivo, $this->ref_cod_transferencia_tipo);
         $this->inputsHelper()->date('data_cancel', ['label' => 'Data', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')]);
@@ -213,7 +210,7 @@ return new class extends clsCadastro {
                 }
             }
         }
-        clsPmieducarHistoricoEscolar::gerarHistoricoTransferencia($this->ref_cod_matricula, $this->pessoa_logada, $this->ref_cod_escola);
+        clsPmieducarHistoricoEscolar::gerarHistoricoTransferencia($this->ref_cod_matricula, $this->pessoa_logada);
 
         if ($this->escola_em_outro_municipio === 'on') {
             $this->ref_cod_escola = null;
@@ -244,7 +241,7 @@ return new class extends clsCadastro {
                 try {
                     (new Avaliacao_Model_NotaComponenteMediaDataMapper())
                         ->updateSituation($notaAlunoId, App_Model_MatriculaSituacao::TRANSFERIDO);
-                } catch (\Throwable $exception) {
+                } catch (\Throwable) {
                     DB::rollback();
                 }
             }
@@ -277,7 +274,7 @@ return new class extends clsCadastro {
             $obj = new clsPmieducarTransferenciaSolicitacao($this->cod_transferencia_solicitacao, null, $this->pessoa_logada, null, null, null, null, null, null, 0);
             $excluiu = $obj->excluir();
             if ($excluiu) {
-                $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
+                $this->mensagem = 'Exclusão efetuada com sucesso.<br>';
                 $this->simpleRedirect("educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
             }
         } else {
@@ -293,7 +290,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Transferência Solicitação';
+        $this->title = 'Transferência Solicitação';
         $this->processoAp = '578';
     }
 };

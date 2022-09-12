@@ -731,6 +731,55 @@ class EscolaController extends ApiCoreController
         return false;
     }
 
+    protected function getEscolaSerieDisciplinasAnosLetivos()
+    {
+        $escolaId = $this->getRequest()->escola ?? 0;
+        $modified = $this->getRequest()->modified;
+        $whereModified = '';
+
+        if ($modified) {
+            $whereModified = " WHERE updated_at >= '$modified' ";
+        }
+
+        $sql = "
+            SELECT
+                escola_id,
+                json_agg(
+                    json_build_object(
+                        'serie_id', serie_id,
+                        'disciplinas_anos_letivos', disciplinas_anos_letivos
+                    )
+                ) AS series_disciplinas_anos_letivos
+            FROM (
+                SELECT
+                    ref_ref_cod_escola AS escola_id,
+                    ref_ref_cod_serie AS serie_id,
+                    json_agg(
+                        json_build_object(
+                            ref_cod_disciplina, anos_letivos
+                        )
+                    ) AS disciplinas_anos_letivos
+                FROM pmieducar.escola_serie_disciplina
+                $whereModified
+                GROUP BY
+                ref_ref_cod_escola,
+                ref_ref_cod_serie
+            ) esd
+            WHERE escola_id in ($escolaId)
+            GROUP BY escola_id;
+        ";
+
+        $escolas = $this->fetchPreparedQuery($sql);
+        $attrs = ['escola_id','series_disciplinas_anos_letivos'];
+        $escolas = Portabilis_Array_Utils::filterSet($escolas, $attrs);
+
+        foreach ($escolas as $key => $escola) {
+            $escolas[$key]['series_disciplinas_anos_letivos'] = json_decode($escola['series_disciplinas_anos_letivos']);
+        }
+
+        return ['escolas' => $escolas];
+    }
+
     public function Gerar()
     {
         if ($this->isRequestFor('get', 'escola')) {
@@ -763,6 +812,8 @@ class EscolaController extends ApiCoreController
             $this->appendResponse($this->getParametrosEscolas());
         } elseif ($this->isRequestFor('get', 'endereco-escola')) {
             $this->appendResponse($this->getSchoolAddress());
+        } elseif ($this->isRequestFor('get', 'escola-serie-disciplinas-anos-letivos')) {
+            $this->appendResponse($this->getEscolaSerieDisciplinasAnosLetivos());
         } else {
             $this->notImplementedOperationError();
         }

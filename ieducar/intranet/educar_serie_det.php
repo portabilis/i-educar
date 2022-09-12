@@ -20,7 +20,7 @@ return new class extends clsDetalhe {
 
     public function Gerar()
     {
-        $this->titulo = 'S&eacute;rie - Detalhe';
+        $this->titulo = 'Série - Detalhe';
 
         $this->cod_serie=$_GET['cod_serie'];
 
@@ -46,7 +46,7 @@ return new class extends clsDetalhe {
 
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe(['Institui&ccedil;&atilde;o',
+                $this->addDetalhe(['Instituição',
           $registro['ref_cod_instituicao']]);
             }
         }
@@ -56,7 +56,7 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['nm_serie']) {
-            $this->addDetalhe(['S&eacute;rie', $registro['nm_serie']]);
+            $this->addDetalhe(['Série', $registro['nm_serie']]);
         }
 
         if ($registro['etapa_curso']) {
@@ -71,7 +71,7 @@ return new class extends clsDetalhe {
 
         if ($registro['concluinte']) {
             if ($registro['concluinte'] == 1) {
-                $registro['concluinte'] = 'n&atilde;o';
+                $registro['concluinte'] = 'não';
             } elseif ($registro['concluinte'] == 2) {
                 $registro['concluinte'] = 'sim';
             }
@@ -80,7 +80,7 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['carga_horaria']) {
-            $this->addDetalhe(['Carga Hor&aacute;ria', $registro['carga_horaria']]);
+            $this->addDetalhe(['Carga Horária', $registro['carga_horaria']]);
         }
 
         $this->addDetalhe(['Dias letivos', $registro['dias_letivos']]);
@@ -156,7 +156,7 @@ SQL;
 
     public function Formular()
     {
-        $this->title = 'i-Educar - S&eacute;rie';
+        $this->title = 'Série';
         $this->processoAp = '583';
     }
 };

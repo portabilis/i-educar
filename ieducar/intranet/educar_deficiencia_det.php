@@ -13,7 +13,7 @@ return new class extends clsDetalhe {
 
     public function Gerar()
     {
-        $this->titulo = 'Defici&ecirc;ncia - Detalhe';
+        $this->titulo = 'Deficiência - Detalhe';
 
         $this->cod_deficiencia=$_GET['cod_deficiencia'];
 
@@ -42,7 +42,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Defici&ecirc;ncia';
+        $this->title = 'Deficiência';
         $this->processoAp = '631';
     }
 };

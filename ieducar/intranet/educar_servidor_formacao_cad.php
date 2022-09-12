@@ -2,7 +2,6 @@
 
 return new class extends clsCadastro {
     public $pessoa_logada;
-
     public $cod_formacao;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -417,7 +416,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Servidor Formação';
+        $this->title = 'Servidor Formação';
         $this->processoAp = 635;
     }
 };

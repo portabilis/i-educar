@@ -22,7 +22,7 @@ return new class extends clsListagem {
         }
 
         $lista_busca = [
-      'S&eacute;rie',
+      'Série',
       'Curso'
     ];
 
@@ -94,14 +94,14 @@ return new class extends clsListagem {
         url('intranet/educar_index.php') => 'Escola',
     ]);
 
-        $scripts = ['/modules/Cadastro/Assets/Javascripts/ComponentesSerieFiltros.js'];
+        $scripts = ['/vendor/legacy/Cadastro/Assets/Javascripts/ComponentesSerieFiltros.js'];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
     }
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Componentes da série';
+        $this->title = 'Componentes da série';
         $this->processoAp = '9998859';
     }
 };

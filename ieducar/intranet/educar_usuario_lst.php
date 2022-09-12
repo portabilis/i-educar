@@ -12,12 +12,12 @@ return new class extends clsListagem {
             $this->$var = ($val === '') ? null : $val;
         }
 
-        $this->addCabecalhos(['Nome', 'Matrícula', 'Matrícula Interna', 'Status', 'Tipo usu&aacute;rio', 'N&iacute;vel de Acesso']);
+        $this->addCabecalhos(['Nome', 'Matrícula', 'Matrícula Interna', 'Status', 'Tipo usuário', 'Nível de Acesso']);
 
         // Filtros de Busca
         $this->campoTexto('nm_pessoa', 'Nome', $this->nm_pessoa, 42, 255);
-        $this->campoTexto('matricula', 'Matr&iacute;cula', $this->matricula, 20, 15);
-        $this->campoTexto('matricula_interna', 'Matr&iacute;cula Interna', $this->matricula_interna, 20, 30);
+        $this->campoTexto('matricula', 'Matrícula', $this->matricula, 20, 15);
+        $this->campoTexto('matricula_interna', 'Matrícula Interna', $this->matricula_interna, 20, 30);
 
         $opcoes = ['' => 'Selecione'];
 
@@ -30,7 +30,7 @@ return new class extends clsListagem {
             }
         }
 
-        $this->campoLista('ref_cod_tipo_usuario', 'Tipo Usu&aacute;rio', $opcoes, $this->ref_cod_tipo_usuario, null, null, null, null, null, false);
+        $this->campoLista('ref_cod_tipo_usuario', 'Tipo Usuário', $opcoes, $this->ref_cod_tipo_usuario, null, null, null, null, null, false);
 
         $obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
         $detalhe = $obj_usuario->detalhe();
@@ -51,7 +51,7 @@ return new class extends clsListagem {
         } elseif ($tipo_usuario['nivel'] == 4) {
             $opcoes = ['' => 'Selecione', '8' => 'Biblioteca'];
         }
-        $this->campoLista('ref_cod_nivel_usuario', 'N&iacute;vel de Acesso', $opcoes, $this->ref_cod_nivel_usuario, null, null, null, null, null, false);
+        $this->campoLista('ref_cod_nivel_usuario', 'Nível de Acesso', $opcoes, $this->ref_cod_nivel_usuario, null, null, null, null, null, false);
 
         $this->inputsHelper()->dynamic('instituicao', ['required' => false, 'show-select' => true, 'value' => $this->ref_cod_instituicao]);
         $this->inputsHelper()->dynamic('escola', ['required' => false, 'show-select' => true, 'value' => $this->ref_cod_escola]);
@@ -144,7 +144,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'Usu&aacute;rios!';
+        $this->title = 'Usuários';
         $this->processoAp = '555';
     }
 };

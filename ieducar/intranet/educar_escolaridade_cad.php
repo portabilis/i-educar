@@ -16,7 +16,7 @@ return new class extends clsCadastro {
 
     protected function loadAssets()
     {
-        $jsFile = '/modules/Cadastro/Assets/Javascripts/ModalExclusaoEscolaridade.js';
+        $jsFile = '/vendor/legacy/Cadastro/Assets/Javascripts/ModalExclusaoEscolaridade.js';
         Portabilis_View_Helper_Application::loadJavascript($this, $jsFile);
     }
 
@@ -75,7 +75,7 @@ return new class extends clsCadastro {
         $this->campoOculto('idesco', $this->idesco);
 
         // Outros campos
-        $this->campoTexto('descricao', 'Descri&ccedil;&atilde;o', $this->descricao, 30, 255, true);
+        $this->campoTexto('descricao', 'Descrição', $this->descricao, 30, 255, true);
 
         $options = ['label' => 'Escolaridade educacenso', 'resources' => SelectOptions::escolaridades(), 'value' => $this->escolaridade];
         $this->inputsHelper()->select('escolaridade', $options);
@@ -98,7 +98,7 @@ return new class extends clsCadastro {
             $this->simpleRedirect('educar_escolaridade_lst.php');
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }

@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyBenefit;
+
 return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -40,7 +42,7 @@ return new class extends clsListagem {
 
     public function Gerar()
     {
-        $this->titulo = 'Benef&iacute;cio Aluno - Listagem';
+        $this->titulo = 'Benefício Aluno - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null: $val;
@@ -50,34 +52,25 @@ return new class extends clsListagem {
             'Beneficio'
         ]);
 
-        // Filtros de Foreign Keys
-
-        //$obrigatorio = true;
-        //include("include/pmieducar/educar_pesquisa_instituicao_escola.php");
-
         // outros Filtros
-        $this->campoTexto('nm_beneficio', 'Benef&iacute;cio', $this->nm_beneficio, 30, 255, false);
+        $this->campoTexto('nm_beneficio', 'Benefício', $this->nm_beneficio, 30, 255, false);
 
         // Paginador
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-        $obj_aluno_beneficio = new clsPmieducarAlunoBeneficio();
-        $obj_aluno_beneficio->setOrderby('nm_beneficio ASC');
-        $obj_aluno_beneficio->setLimite($this->limite, $this->offset);
+        $query = LegacyBenefit::query()
+            ->where('ativo', 1)
+            ->orderBy('nm_beneficio', 'ASC');
 
-        $lista = $obj_aluno_beneficio->lista(
-            null,
-            null,
-            null,
-            $this->nm_beneficio,
-            null,
-            null,
-            null,
-            1
-        );
+        if (is_string($this->nm_beneficio)) {
+            $query->where('nm_beneficio', 'ilike', '%' . $this->nm_beneficio . '%');
+        }
 
-        $total = $obj_aluno_beneficio->_total;
+        $result = $query->paginate($this->limite, pageName: 'pagina_'.$this->nome);
+
+        $lista = $result->items();
+        $total = $result->total();
 
         // monta a lista
         if (is_array($lista) && count($lista)) {
@@ -89,14 +82,12 @@ return new class extends clsListagem {
         }
         $this->addPaginador2('educar_aluno_beneficio_lst.php', $total, $_GET, $this->nome, $this->limite);
 
-        //** Verificacao de permissao para cadastro
         $obj_permissao = new clsPermissoes();
 
         if ($obj_permissao->permissao_cadastra(581, $this->pessoa_logada, 3)) {
             $this->acao = 'go("educar_aluno_beneficio_cad.php")';
             $this->nome_acao = 'Novo';
         }
-        //**
 
         $this->largura = '100%';
 
@@ -107,7 +98,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Benefício do aluno';
+        $this->title = 'Benefício do aluno';
         $this->processoAp = '581';
     }
 };

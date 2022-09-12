@@ -69,7 +69,7 @@ return new class extends clsCadastro {
         $this->inputsHelper()->hidden('escola_em_andamento', [ 'value' => $this->escola_em_andamento ]);
 
         if (!empty($this->ref_cod_escola)) {
-            Portabilis_View_Helper_Application::loadJavascript($this, '/modules/Educacenso/Assets/Javascripts/Educacenso.js');
+            Portabilis_View_Helper_Application::loadJavascript($this, '/vendor/legacy/Educacenso/Assets/Javascripts/Educacenso.js');
         }
     }
 
@@ -85,7 +85,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Exportação Educacenso';
+        $this->title = 'Exportação Educacenso';
         $this->processoAp = ($_REQUEST['fase2'] == 1 ? 9998845 : 846);
     }
 };

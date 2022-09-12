@@ -1,5 +1,7 @@
 <?php
 
+use iEducar\Modules\Enrollments\Model\EnrollmentStatusFilter;
+
 return new class extends clsListagem {
     /**
      * Titulo no topo da pagina
@@ -22,9 +24,9 @@ return new class extends clsListagem {
      */
     public $offset;
 
+    public $cod_inep;
+    public $aluno_estado_id;
     public $cod_aluno;
-    public $ref_idpes_responsavel;
-    public $ref_cod_aluno_beneficio;
     public $ref_cod_religiao;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -36,7 +38,6 @@ return new class extends clsListagem {
     public $matriculado;
     public $inativado;
     public $nome_responsavel;
-    public $cpf_responsavel;
     public $nome_pai;
     public $nome_mae;
     public $data_nascimento;
@@ -47,6 +48,7 @@ return new class extends clsListagem {
     public $ref_cod_serie;
     public $cpf_aluno;
     public $rg_aluno;
+    public $situacao_matricula_id;
 
     public function Gerar()
     {
@@ -73,12 +75,13 @@ return new class extends clsListagem {
         $this->campoTexto('nome_pai', 'Nome do Pai', $this->nome_pai, 50, 255);
         $this->campoTexto('nome_mae', 'Nome da Mãe', $this->nome_mae, 50, 255);
         $this->campoTexto('nome_responsavel', 'Nome do Responsável', $this->nome_responsavel, 50, 255);
-        $this->campoRotulo('filtros_matricula', '<b>Filtros de matrículas em andamento</b>');
+        $this->campoRotulo('filtros_matricula', '<b>Filtros de alunos</b>');
 
-        $this->inputsHelper()->integer('ano', ['required' => false, 'value' => $this->ano, 'max_length' => 4]);
+        $this->inputsHelper()->integer('ano', ['required' => false, 'value'=> $this->ano,'max_length' => 4,'label_hint'=>'Retorna alunos com matrículas no ano selecionado']);
         $this->inputsHelper()->dynamic('instituicao', ['required' => false, 'value' => $this->ref_cod_instituicao]);
-        $this->inputsHelper()->dynamic('escolaSemFiltroPorUsuario', ['required' => false, 'value' => $this->ref_cod_escola]);
-        $this->inputsHelper()->dynamic(['curso', 'serie'], ['required' => false]);
+        $this->inputsHelper()->dynamic('escolaSemFiltroPorUsuario', ['required' => false, 'value' => $this->ref_cod_escola,'label_hint'=>'Retorna alunos com matrículas na escola selecionada']);
+        $this->inputsHelper()->dynamic('curso', ['required' => false,'label_hint'=>'Retorna alunos com matrículas no curso selecionado']);
+        $this->inputsHelper()->dynamic('serie', ['required' => false,'label_hint'=>'Retorna alunos com matrículas na série selecionada']);
 
         $obj_permissoes = new clsPermissoes();
         $cod_escola = $obj_permissoes->getEscola($this->pessoa_logada);
@@ -115,51 +118,24 @@ return new class extends clsListagem {
         $aluno = new clsPmieducarAluno();
         $aluno->setLimite($this->limite, $this->offset);
 
-        $alunos = $aluno->lista2(
-            $this->cod_aluno,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            null,
-            $this->nome_aluno,
-            null,
-            idFederal2int($this->cpf_responsavel),
-            null,
-            null,
-            null,
-            $ref_cod_escola,
-            null,
-            $this->data_nascimento,
-            $this->nome_pai,
-            $this->nome_mae,
-            $this->nome_responsavel,
-            $this->cod_inep,
-            $this->aluno_estado_id,
-            $this->ano,
-            $this->ref_cod_instituicao,
-            $this->ref_cod_escola,
-            $this->ref_cod_curso,
-            $this->ref_cod_serie,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            idFederal2int($this->cpf_aluno),
-            idFederal2int($this->rg_aluno)
+        $alunos = $aluno->telaDeListagemDeAlunos(
+            int_cod_aluno: $this->cod_aluno,
+            int_ativo: 1,
+            str_nome_aluno: $this->nome_aluno,
+            int_ref_cod_escola: $ref_cod_escola,
+            data_nascimento: $this->data_nascimento,
+            str_nm_pai2: $this->nome_pai,
+            str_nm_mae2: $this->nome_mae,
+            str_nm_responsavel2: $this->nome_responsavel,
+            cod_inep: $this->cod_inep,
+            aluno_estado_id: $this->aluno_estado_id,
+            ano: $this->ano,
+            ref_cod_instituicao: $this->ref_cod_instituicao,
+            ref_cod_escola: $this->ref_cod_escola,
+            ref_cod_curso: $this->ref_cod_curso,
+            ref_cod_serie: $this->ref_cod_serie,
+            int_cpf_aluno: idFederal2int($this->cpf_aluno),
+            int_rg_aluno: idFederal2int($this->rg_aluno)
         );
 
         $total = $aluno->_total;
@@ -205,31 +181,18 @@ return new class extends clsListagem {
         $usuarioTemPermissaoCadastro = $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7);
         $usuarioPodeCadastrar = $usuarioTemPermissaoCadastro && $bloquearCadastroAluno == false;
 
-        // Verifica se o usuário tem permissão para cadastrar um aluno.
-        // O sistema irá validar o cadastro de permissões e o parâmetro
-        // "bloquear_cadastro_aluno" da instituição.
-
         if ($usuarioPodeCadastrar) {
             $this->acao = 'go("/module/Cadastro/aluno")';
             $this->nome_acao = 'Novo';
         }
 
-        if ($_GET) {
-            $this->array_botao_script = ['dataExport("formcadastro", "students")'];
-            $this->array_botao = ['Exportar para planilha'];
-            $this->array_botao_id = ['export-btn'];
-        }
-
         $this->largura = '100%';
-
-        Portabilis_View_Helper_Application::loadJavascript($this, ['/intranet/scripts/exporter.js']);
-
         $this->breadcrumb('Alunos', ['/intranet/educar_index.php' => 'Escola']);
     }
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Aluno';
+        $this->title = 'Aluno';
         $this->processoAp = '578';
     }
 };

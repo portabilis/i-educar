@@ -1,19 +1,32 @@
 <?php
 
-use App\Models\LegacyDiscipline;
-use App\Models\LegacyLevel;
-use App\Models\LegacySchool;
+namespace Database\Factories;
+
 use App\Models\LegacySchoolGradeDiscipline;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-/** @var Factory $factory */
+class LegacySchoolGradeDisciplineFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = LegacySchoolGradeDiscipline::class;
 
-$factory->define(LegacySchoolGradeDiscipline::class, function () {
-    return [
-        'ref_ref_cod_escola' => factory(LegacySchool::class)->create(),
-        'ref_ref_cod_serie' => factory(LegacyLevel::class)->create(),
-        'ref_cod_disciplina' => factory(LegacyDiscipline::class)->create(),
-        'ativo' => 1,
-        'anos_letivos' => '{' . now()->year . '}',
-    ];
-});
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition(): array
+    {
+        return [
+            'ref_ref_cod_escola' => LegacySchoolFactory::new()->create(),
+            'ref_ref_cod_serie' => LegacyGradeFactory::new()->create(),
+            'ref_cod_disciplina' => LegacyDisciplineFactory::new()->create(),
+            'ativo' => 1,
+            'anos_letivos' => '{' . now()->year . '}',
+        ];
+    }
+}

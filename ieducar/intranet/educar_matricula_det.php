@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyAbandonmentType;
+use App\Models\LegacyBenefit;
 use App\Process;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use Illuminate\Support\Facades\Auth;
@@ -38,7 +40,11 @@ return new class extends clsDetalhe {
             return $description;
         }
 
-        $lessDescription = substr($description, 0, strpos($description, ' ', 200)) . '...';
+        $lessDescription = $description;
+        if (strlen($description) >= 200) {
+            $lessDescription = substr($description, 0, strpos($description, ' ', 200)) . '...';
+        }
+
 
         return "<div align='justify'> <span class='desc-red'>{$lessDescription}</span> <span class='descricao' style='display: none'>{$description}</span><a href='javascript:void(0)' class='ver-mais'>Mostrar mais</a><a href='javascript:void(0)' style='display: none' class='ver-menos'>Mostrar menos</a></div>";
     }
@@ -46,7 +52,7 @@ return new class extends clsDetalhe {
     public function Gerar()
     {
         // carrega estilo para feedback messages, exibindo msgs da api.
-        $style = '/modules/Portabilis/Assets/Stylesheets/Frontend.css';
+        $style = '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend.css';
         Portabilis_View_Helper_Application::loadStylesheet($this, $style);
 
         $this->titulo = 'Matrícula - Detalhe';
@@ -153,16 +159,28 @@ return new class extends clsDetalhe {
         $existeTurmaMulti = false;
         $existeTurmaTurnoIntegral = false;
         $existeAtendimentoEspecializado = false;
+        $existeTurmaItineraria = false;
         $nomesTurmas = [];
         $datasEnturmacoes = [];
+        $nomesTurnos = [];
 
         foreach ($enturmacoes as $enturmacao) {
             $turma = new clsPmieducarTurma($enturmacao['ref_cod_turma']);
-            $turma = $turma->detalhe();
+            $turma = $turma->detalhe() ?? [];
             $turma_id = $enturmacao['ref_cod_turma'];
 
             if (in_array($turma['etapa_educacenso'], App_Model_Educacenso::etapas_multisseriadas())) {
                 $existeTurmaMulti = true;
+            }
+
+            $estruturaCurricular = transformStringFromDBInArray($turma['estrutura_curricular']) ?? [];
+            $turmaItineraria = in_array(2, $estruturaCurricular);
+            $turmaFormacaoBasica = in_array(1, $estruturaCurricular);
+            $etapasItinerario = [25, 26, 27, 28, 30, 31, 32, 33, 35, 36, 37, 38, 71, 74];
+
+            if (($turmaItineraria && count($estruturaCurricular) === 1) ||
+                ($turmaItineraria && $turmaFormacaoBasica && in_array($turma['etapa_educacenso'], $etapasItinerario))) {
+                $existeTurmaItineraria = true;
             }
 
             if ($enturmacao['ativo'] == 0) {
@@ -179,16 +197,38 @@ return new class extends clsDetalhe {
             if ($turma['tipo_atendimento'] == TipoAtendimentoTurma::AEE) {
                 $existeAtendimentoEspecializado = true;
             }
+
+            if ($enturmacao['turno_id']) {
+                $nomesTurnos[] = match ((int)$enturmacao['turno_id']) {
+                    clsPmieducarTurma::TURNO_MATUTINO =>  'Matutino',
+                    clsPmieducarTurma::TURNO_VESPERTINO => 'Vespertino',
+                    default => null
+                };
+            }
         }
         $nomesTurmas = implode('<br />', $nomesTurmas);
         $datasEnturmacoes = implode('<br />', $datasEnturmacoes);
 
+        if (empty($nomesTurnos)) {
+            $nomesTurnos = match ((int)$turma['turma_turno_id']) {
+                clsPmieducarTurma::TURNO_MATUTINO =>  'Matutino',
+                clsPmieducarTurma::TURNO_VESPERTINO => 'Vespertino',
+                clsPmieducarTurma::TURNO_NOTURNO => 'Noturno',
+                clsPmieducarTurma::TURNO_INTEGRAL => 'Integral',
+                default => null
+            };
+        } else {
+            $nomesTurnos = implode('<br />', $nomesTurnos);
+        }
+
         if ($nomesTurmas) {
             $this->addDetalhe(['Turma', $nomesTurmas]);
+            $this->addDetalhe(['Turno', $nomesTurnos]);
             $this->addDetalhe(['Data Enturmação', $datasEnturmacoes]);
             $existeTurma = true;
         } else {
             $this->addDetalhe(['Turma', '']);
+            $this->addDetalhe(['Turno', '']);
             $this->addDetalhe(['Data Enturmação', '']);
         }
 
@@ -230,12 +270,11 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['aprovado'] == App_Model_MatriculaSituacao::ABANDONO) {
-            $tipoAbandono = new clsPmieducarAbandonoTipo($registro['ref_cod_abandono_tipo']);
-            $tipoAbandono = $tipoAbandono->detalhe();
+            $tipoAbandono = LegacyAbandonmentType::find($registro['ref_cod_abandono_tipo'])?->toArray();
 
             $observacaoAbandono = $registro['observacao'];
 
-            $this->addDetalhe(['Motivo do Abandono', $tipoAbandono['nome']]);
+            $this->addDetalhe(['Motivo do Abandono', $tipoAbandono ? $tipoAbandono['nome'] : '']);
             $this->addDetalhe(['Observação', $observacaoAbandono]);
         }
 
@@ -243,7 +282,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe(['Descrição', $this->getDescription($registro['descricao_reclassificacao'])]);
         }
 
-        $this->addDetalhe(['Formando', $registro['formando'] == 0 ? 'N&atilde;o' : 'Sim']);
+        $this->addDetalhe(['Formando', $registro['formando'] == 0 ? 'Não' : 'Sim']);
 
         $obj_permissoes = new clsPermissoes();
 
@@ -286,7 +325,7 @@ return new class extends clsDetalhe {
                 // Verificar se tem permissao para executar cancelamento de matricula
                 if ($this->permissao_cancelar()) {
                     $this->array_botao[] = 'Cancelar matrícula';
-                    $this->array_botao_url_script[] = "if(confirm(\"Deseja realmente cancelar esta matrícula?\"))go(\"educar_matricula_cad.php?cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
+                   $this->array_botao_url_script[] = "showConfirmationMessage(\"educar_matricula_cad.php?cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
                 }
 
                 $this->array_botao[] = 'Ocorrências disciplinares';
@@ -343,6 +382,12 @@ return new class extends clsDetalhe {
                 $this->array_botao_url_script[] = "go(\"educar_matricula_turma_turno_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
             }
 
+            if ($existeTurmaItineraria) {
+                $this->array_botao[] = 'Itinerário formativo';
+                $link = route('enrollments.enrollment-formative-itinerary-list', ['id' => $registro['cod_matricula']]);
+                $this->array_botao_url_script[] = "go(\"{$link}\")";
+            }
+
             if ($registro['aprovado'] != 4 && $registro['aprovado'] != 6) {
                 if (is_array($lst_transferencia) && isset($data_transferencia)) {
                     $this->array_botao[] = 'Cancelar solicitação transferência';
@@ -366,12 +411,14 @@ return new class extends clsDetalhe {
             }
 
             $ultimaMatricula = $obj_matricula->getEndMatricula($registro['ref_cod_aluno']);
-            if ($registro['aprovado'] == App_Model_MatriculaSituacao::TRANSFERIDO && $this->canCancelTransferencia($registro['cod_matricula'])) {
+            $permiteCancelarTransferencia = new clsPermissoes();
+            $permiteCancelarTransferencia = $permiteCancelarTransferencia->permissao_excluir(578, $this->pessoa_logada, 7);
+            if ($permiteCancelarTransferencia && $registro['aprovado'] == App_Model_MatriculaSituacao::TRANSFERIDO && $this->canCancelTransferencia($registro['cod_matricula'])) {
                 $this->array_botao[] = 'Cancelar transferência';
 
                 # TODO ver se código, seta matricula como em andamento, ativa ultima matricula_turma for matricula, e desativa transferencia solicitacao
                 $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&cancela=true&reabrir_matricula=true&ano={$registro['ano']}&escola={$escola_id}&curso={$curso_id}&serie={$serie_id}&turma={$turma_id}\")";
-            } elseif ($registro['aprovado'] == App_Model_MatriculaSituacao::TRANSFERIDO && $ultimaMatricula == 4) {
+            } elseif ($permiteCancelarTransferencia && $registro['aprovado'] == App_Model_MatriculaSituacao::TRANSFERIDO && $ultimaMatricula == 4) {
                 $this->array_botao[] = 'Cancelar transferência';
 
                 # TODO ver se código, seta matricula como em andamento, ativa ultima matricula_turma for matricula, e desativa transferencia solicitacao
@@ -420,12 +467,17 @@ return new class extends clsDetalhe {
 
         // js
         $scripts = [
-            '/modules/Portabilis/Assets/Javascripts/Utils.js',
-            '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
-            '/modules/Cadastro/Assets/Javascripts/MatriculaShow.js'
+            '/vendor/legacy/Portabilis/Assets/Javascripts/Utils.js',
+            '/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/MatriculaShow.js'
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+    }
+
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-matricula.js');
     }
 
     // Verificar se pode cancelar matricula
@@ -469,7 +521,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Matrícula';
+        $this->title = 'Matrícula';
         $this->processoAp = 578;
     }
 };

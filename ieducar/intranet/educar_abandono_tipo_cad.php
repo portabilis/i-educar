@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyAbandonmentType;
+
 return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -27,9 +29,7 @@ return new class extends clsCadastro {
         $obj_permissoes->permissao_cadastra(950, $this->pessoa_logada, 7, 'educar_abandono_tipo_lst.php');
 
         if (is_numeric($this->cod_abandono_tipo)) {
-            $obj = new clsPmieducarAbandonoTipo();
-            $lst  = $obj->lista($this->cod_abandono_tipo);
-            $registro  = array_shift($lst);
+            $registro = LegacyAbandonmentType::find($this->cod_abandono_tipo)?->toArray();
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
@@ -65,61 +65,56 @@ return new class extends clsCadastro {
 
     public function Novo()
     {
-        $obj = new clsPmieducarAbandonoTipo(
-            null,
-            null,
-            $this->pessoa_logada,
-            $this->nome,
-            null,
-            null,
-            1,
-            $this->ref_cod_instituicao
-        );
-        $cadastrou = $obj->cadastra();
-        if ($cadastrou) {
-            $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+        $abandono = new LegacyAbandonmentType();
+        $abandono->ref_usuario_cad = $this->pessoa_logada;
+        $abandono->nome = $this->nome;
+        $abandono->ref_cod_instituicao = $this->ref_cod_instituicao;
 
+        if ($abandono->save()) {
+            $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
             $this->simpleRedirect('educar_abandono_tipo_lst.php');
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
-
+        $this->mensagem = 'Cadastro não realizado.<br>';
         return false;
     }
 
     public function Editar()
     {
-        $obj = new clsPmieducarAbandonoTipo($this->cod_abandono_tipo, $this->pessoa_logada, null, $this->nome, null, null, 1, $this->ref_cod_instituicao);
-        $editou = $obj->edita();
-        if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+        $abandono = LegacyAbandonmentType::find($this->cod_abandono_tipo);
+        $abandono->ref_usuario_exc = $this->pessoa_logada;
+        $abandono->nome = $this->nome;
+        $abandono->ativo = 1;
+        $abandono->ref_cod_instituicao = $this->ref_cod_instituicao;
+
+        if ($abandono->save()) {
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
 
             $this->simpleRedirect('educar_abandono_tipo_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
-
+        $this->mensagem = 'Edição não realizada.<br>';
         return false;
     }
 
     public function Excluir()
     {
-        $obj = new clsPmieducarAbandonoTipo($this->cod_abandono_tipo, $this->pessoa_logada);
-        $excluiu = $obj->excluir();
-        if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+        $abandono = LegacyAbandonmentType::find($this->cod_abandono_tipo);
+        $abandono->ativo = 0;
+        $abandono->ref_usuario_exc = $this->pessoa_logada;
 
+        if ($abandono->save()) {
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_abandono_tipo_lst.php');
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
-
+        $this->mensagem = 'Exclusão não realizada.<br>';
         return false;
     }
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Motivo Abandono';
+        $this->title = 'Motivo Abandono';
         $this->processoAp = '950';
     }
 };

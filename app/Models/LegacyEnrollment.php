@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int                $id
  * @property int                $registration_id
  * @property int                $school_class_id
+ * @property int                $etapa_educacenso
  * @property string             $studentName
  * @property DateTime           $date
  * @property LegacyRegistration $registration
@@ -45,7 +46,13 @@ class LegacyEnrollment extends Model
         'data_cadastro',
         'data_enturmacao',
         'sequencial_fechamento',
+        'remanejado_mesma_turma',
         'ativo',
+        'tipo_itinerario',
+        'composicao_itinerario',
+        'curso_itinerario',
+        'itinerario_concomitante',
+        'etapa_educacenso'
     ];
 
     /**
@@ -160,5 +167,10 @@ class LegacyEnrollment extends Model
     public function updatedBy()
     {
         return $this->belongsTo(User::class, 'ref_usuario_exc');
+    }
+
+    public function getStudentId()
+    {
+        return $this->registration->student->cod_aluno;
     }
 }

@@ -119,6 +119,7 @@ class clsPmieducarSubnivel extends Model
     {
         if (is_numeric($this->cod_subnivel) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_usuario_exc)) {
@@ -335,7 +336,7 @@ class clsPmieducarSubnivel extends Model
     public function desativaTodos($niveis_not_in)
     {
         if (is_array($niveis_not_in)) {
-            $niveis_not_in = implode($niveis_not_in, ',');
+            $niveis_not_in = implode(',', $niveis_not_in);
 
             $db = new clsBanco();
             $db->Consulta("UPDATE {$this->_tabela} set ativo = false, ref_usuario_exc = '{$this->ref_usuario_exc}', ref_cod_subnivel_anterior = NULL WHERE ref_cod_nivel NOT IN ($niveis_not_in)");

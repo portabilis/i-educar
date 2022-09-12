@@ -1,34 +1,12 @@
 <?php
 
+use App\Models\LegacyExemptionType;
+
 return new class extends clsListagem {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
     public $pessoa_logada;
-
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
     public $titulo;
-
-    /**
-     * Quantidade de registros a ser apresentada em cada pagina
-     *
-     * @var int
-     */
     public $limite;
-
-    /**
-     * Inicio dos registros a serem exibidos (limit)
-     *
-     * @var int
-     */
     public $offset;
-
     public $cod_tipo_dispensa;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -54,7 +32,7 @@ return new class extends clsListagem {
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
-            $lista_busca[] = 'Institui&ccedil;&atilde;o';
+            $lista_busca[] = 'Instituição';
         }
         $this->addCabecalhos($lista_busca);
 
@@ -66,27 +44,23 @@ return new class extends clsListagem {
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-        $obj_tipo_dispensa = new clsPmieducarTipoDispensa();
-        $obj_tipo_dispensa->setOrderby('nm_tipo ASC');
-        $obj_tipo_dispensa->setLimite($this->limite, $this->offset);
+        $query = LegacyExemptionType::query()
+            ->where('ativo', 1)
+            ->orderBy('nm_tipo', 'ASC');
 
-        $lista = $obj_tipo_dispensa->lista(
-            null,
-            null,
-            null,
-            $this->nm_tipo,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            $this->ref_cod_instituicao
-        );
+        if (is_string($this->nm_tipo)) {
+            $query->where('nm_tipo', 'ilike', '%' . $this->nm_tipo . '%');
+        }
 
-        $total = $obj_tipo_dispensa->_total;
+        if (is_numeric($this->ref_cod_instituicao)) {
+            $query->where('ref_cod_instituicao', $this->ref_cod_instituicao);
+        }
+
+        $result = $query->paginate($this->limite, pageName: 'pagina_'.$this->nome);
+
+        $lista = $result->items();
+        $total = $result->total();
 
         // monta a lista
         if (is_array($lista) && count($lista)) {
@@ -120,7 +94,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Tipo Dispensa';
+        $this->title = 'Tipo Dispensa';
         $this->processoAp = '577';
     }
 };

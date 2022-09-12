@@ -6,6 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 class AlteraViewSituacaoV2 extends Migration
 {
     use AsView;
+
     /**
      * Run the migrations.
      *

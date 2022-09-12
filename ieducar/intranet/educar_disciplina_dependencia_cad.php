@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacySchoolClass;
+
 return new class extends clsCadastro {
     public $pessoa_logada;
 
@@ -107,11 +109,11 @@ return new class extends clsCadastro {
         /**
          * Busca dados da matricula
          */
-        $obj_ref_cod_matricula = new clsPmieducarMatricula();
-        $detalhe_aluno = array_shift($obj_ref_cod_matricula->lista($this->ref_cod_matricula));
+        $obj_ref_cod_matricula = (new clsPmieducarMatricula())->lista($this->ref_cod_matricula);
+        $detalhe_aluno = array_shift($obj_ref_cod_matricula);
 
         $obj_aluno = new clsPmieducarAluno();
-        $det_aluno = array_shift($det_aluno = $obj_aluno->lista(
+        $det_aluno = $obj_aluno->lista(
             $detalhe_aluno['ref_cod_aluno'],
             null,
             null,
@@ -123,7 +125,9 @@ return new class extends clsCadastro {
             null,
             null,
             1
-        ));
+        );
+
+        $det_aluno = array_shift($det_aluno);
 
         $obj_escola = new clsPmieducarEscola(
             $this->ref_cod_escola,
@@ -167,7 +171,7 @@ return new class extends clsCadastro {
         $this->campoRotulo('nm_aluno', 'Nome do Aluno', $det_aluno['nome_aluno']);
 
         if (!isset($this->ref_cod_turma)) {
-            $this->mensagem = 'Para cadastrar uma disciplina de depend&ecirc;ncia de um aluno, &eacute; necess&aacute;rio que este esteja enturmado.';
+            $this->mensagem = 'Para cadastrar uma disciplina de dependência de um aluno, é necessário que este esteja enturmado.';
 
             return;
         }
@@ -179,13 +183,15 @@ return new class extends clsCadastro {
 
         $opcoes = ['' => 'Selecione'];
 
+        $ano = LegacySchoolClass::find($this->ref_cod_turma)->ano;
         // Seleciona os componentes curriculares da turma
 
         try {
             $componentes = App_Model_IedFinder::getComponentesTurma(
-                $this->ref_cod_serie,
-                $this->ref_cod_escola,
-                $this->ref_cod_turma
+                serieId: $this->ref_cod_serie,
+                escola: $this->ref_cod_escola,
+                turma: $this->ref_cod_turma,
+                ano: $ano
             );
         } catch (App_Model_Exception $e) {
             $this->mensagem = $e->getMessage();
@@ -209,7 +215,7 @@ return new class extends clsCadastro {
             );
         }
 
-        $this->campoMemo('observacao', 'Observa&ccedil;&atilde;o', $this->observacao, 60, 10, false);
+        $this->campoMemo('observacao', 'Observação', $this->observacao, 60, 10, false);
     }
 
     public function existeComponenteSerie()
@@ -264,7 +270,7 @@ SQL;
         $valid = $qtdDisciplinas < $qtdDisciplinasLimite;
 
         if (!$valid) {
-            $this->mensagem .= "A regra desta s&eacute;rie limita a quantidade de disciplinas de depend&ecirc;ncia para {$qtdDisciplinasLimite}. <br/>";
+            $this->mensagem .= "A regra desta série limita a quantidade de disciplinas de dependência para {$qtdDisciplinasLimite}. <br/>";
         }
 
         return $valid;
@@ -296,7 +302,7 @@ SQL;
         $db = new clsBanco();
         $max_cod_disciplina_dependencia = $db->CampoUnico($sql);
 
-        // Caso nÃ£o exista nenhuma dispensa, atribui o cÃ³digo 1, tabela nÃ£o utiliza sequences
+        // Caso não exista nenhuma dispensa, atribui o cÃ³digo 1, tabela não utiliza sequences
         $max_cod_disciplina_dependencia = $max_cod_disciplina_dependencia > 0 ? $max_cod_disciplina_dependencia : 1;
 
         $obj = new clsPmieducarDisciplinaDependencia(
@@ -327,7 +333,7 @@ SQL;
             $this->simpleRedirect('educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br />';
+        $this->mensagem = 'Cadastro não realizado.<br />';
 
         return false;
     }
@@ -352,11 +358,11 @@ SQL;
 
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br />';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br />';
             $this->simpleRedirect('educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o nÃ£o realizada.<br />';
+        $this->mensagem = 'Edição não realizada.<br />';
 
         return false;
     }
@@ -382,18 +388,18 @@ SQL;
         $excluiu = $obj->excluir();
 
         if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br />';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br />';
             $this->simpleRedirect('educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
         }
 
-        $this->mensagem = 'Exclus&atilde;o nÃ£o realizada.<br />';
+        $this->mensagem = 'Exclusão não realizada.<br />';
 
         return false;
     }
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Dispensa Componente Curricular';
+        $this->title = 'Dispensa Componente Curricular';
         $this->processoAp = 578;
     }
 };

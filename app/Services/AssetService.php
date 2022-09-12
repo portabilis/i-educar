@@ -17,22 +17,22 @@ class AssetService implements AssetServiceContract
         $this->automaticVersioning = $automaticVersioning;
     }
 
-    public function getVersion() : ?string
+    public function getVersion(): ?string
     {
         return $this->version;
     }
 
-    public function isAutomaticVersioning() : bool
+    public function isAutomaticVersioning(): bool
     {
         return $this->automaticVersioning;
     }
 
-    public function getSecure() : ?bool
+    public function getSecure(): ?bool
     {
         return $this->secure;
     }
 
-    public function get(string $path, bool $secure = null) : string
+    public function get(string $path, bool $secure = null): string
     {
         if ($secure === null) {
             $secure = $this->getSecure();
@@ -43,10 +43,16 @@ class AssetService implements AssetServiceContract
 
     /**
      * @param string $path
+     *
      * @return string
      */
-    protected function appendVersionToPath(string $path) : string
+    protected function appendVersionToPath(string $path): string
     {
+        $dataUrl = explode('.', $path);
+        if ($dataUrl !== false && ! in_array(last($dataUrl), ['css','js'], true)) {
+            return $path;
+        }
+
         if (!$this->automaticVersioning) {
             return ($this->version) ? ($path . '?v=' . $this->version) : ($path);
         }
@@ -65,7 +71,7 @@ class AssetService implements AssetServiceContract
         return $path;
     }
 
-    protected function getFileVersion(string $path, array $pathUrl) : string
+    protected function getFileVersion(string $path, array $pathUrl): string
     {
         if (preg_match('#^(//|http)#i', $path)) {
             return ($this->version ?: '');
@@ -91,6 +97,7 @@ class AssetService implements AssetServiceContract
 
     /**
      * @param string $path
+     *
      * @return null|string
      */
     public function findRealPath(string $path): ?string

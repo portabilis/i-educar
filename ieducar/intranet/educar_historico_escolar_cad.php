@@ -197,8 +197,17 @@ return new class extends clsCadastro {
 
         $this->campoLista('escola_uf', 'Estado da Escola', $lista_estado, $this->escola_uf);
 
-        // text
-        $this->campoTexto('escola_cidade', 'Cidade da Escola', mb_strtoupper($this->escola_cidade), 30, 255, true);
+        $options = ['label' => 'Cidade da Escola', 'required' => true];
+
+        $helperOptions = [
+            'objectName' => 'escola_cidade',
+            'hiddenInputOptions' => ['options' => ['value' => mb_strtoupper($this->escola_cidade)]],
+            'apiResource' => 'municipio-name-search',
+            'placeholder' => 'Informe o nome da cidade',
+            'checkIfExists' => false,
+        ];
+
+        $this->inputsHelper()->simpleSearchMunicipio('', $options, $helperOptions);
 
         $this->campoTexto('nm_curso', 'Curso', $this->nm_curso, 30, 255, false, false, false, _cl('historico.cadastro.curso_detalhe'));
 
@@ -213,7 +222,7 @@ return new class extends clsCadastro {
             $this->campoNumero('posicao', 'Posição', $this->posicao, 1, 1, true, 'Informe a coluna equivalente a série/ano/etapa a qual o histórico pertence. Ex.: 1º ano informe 1, 2º ano informe 2');
         }
 
-        $this->campoNumero('carga_horaria', 'Carga Hor&aacute;ria', $this->carga_horaria, 8, 8, false);
+        $this->campoNumero('carga_horaria', 'Carga Horária', $this->carga_horaria, 8, 8, false);
         $this->campoCheck('cb_faltas_globalizadas', 'Faltas Globalizadas', is_numeric($this->faltas_globalizadas) ? 'on' : '');
         $this->campoNumero('faltas_globalizadas', 'Faltas Globalizadas', $this->faltas_globalizadas, 4, 4, false);
         $this->campoNumero('dias_letivos', 'Dias Letivos', $this->dias_letivos, 3, 3, false);
@@ -241,7 +250,7 @@ return new class extends clsCadastro {
             14 => 'Reprovado por faltas'
         ];
 
-        $this->campoLista('aprovado', 'Situa&ccedil;&atilde;o', $opcoes, $this->aprovado);
+        $this->campoLista('aprovado', 'Situação', $opcoes, $this->aprovado);
         $this->campoTexto('registro', 'Registro (arquivo)', $this->registro, 30, 50, false);
         $this->campoTexto('livro', 'Livro', $this->livro, 30, 50, false);
         $this->campoTexto('folha', 'Folha', $this->folha, 30, 50, false);
@@ -291,16 +300,16 @@ return new class extends clsCadastro {
 
         // carrega estilo para feedback messages, para exibir msg validação frequencia.
 
-        $style = '/modules/Portabilis/Assets/Stylesheets/Frontend.css';
+        $style = '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend.css';
         Portabilis_View_Helper_Application::loadStylesheet($this, $style);
 
         Portabilis_View_Helper_Application::loadJavascript(
             $this,
             [
-                '/modules/Portabilis/Assets/Javascripts/Utils.js',
-                '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js',
-                '/modules/Portabilis/Assets/Javascripts/Validator.js',
-                '/modules/Cadastro/Assets/Javascripts/HistoricoEscolar.js'
+                '/vendor/legacy/Portabilis/Assets/Javascripts/Utils.js',
+                '/vendor/legacy/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js',
+                '/vendor/legacy/Portabilis/Assets/Javascripts/Validator.js',
+                '/vendor/legacy/Cadastro/Assets/Javascripts/HistoricoEscolar.js'
             ]
         );
     }
@@ -532,7 +541,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Histórico Escolar';
+        $this->title = 'Histórico Escolar';
         $this->processoAp = '578';
     }
 };

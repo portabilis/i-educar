@@ -15,8 +15,8 @@ class AddForeignKeysInPmieducarAbandonoTipoTable extends Migration
     {
         Schema::table('pmieducar.abandono_tipo', function (Blueprint $table) {
             $table->foreign('ref_cod_instituicao')
-               ->references('cod_instituicao')
-               ->on('pmieducar.instituicao');
+                ->references('cod_instituicao')
+                ->on('pmieducar.instituicao');
         });
     }
 

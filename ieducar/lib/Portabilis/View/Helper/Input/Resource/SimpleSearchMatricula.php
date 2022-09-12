@@ -22,7 +22,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchMatricula extends Portab
 
     protected function loadAssets()
     {
-        $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/Resource/SimpleSearchMatricula.js';
+        $jsFile = '/vendor/legacy/Portabilis/Assets/Javascripts/Frontend/Inputs/Resource/SimpleSearchMatricula.js';
         Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
     }
 }

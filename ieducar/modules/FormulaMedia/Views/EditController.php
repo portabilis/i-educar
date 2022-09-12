@@ -54,7 +54,7 @@ class EditController extends Core_Controller_Page_EditController
 
     public function _preRender()
     {
-        Portabilis_View_Helper_Application::loadJavascript($this, '/modules/FormulaMedia/Assets/Javascripts/FormulaMedia.js');
+        Portabilis_View_Helper_Application::loadJavascript($this, '/vendor/legacy/FormulaMedia/Assets/Javascripts/FormulaMedia.js');
 
         $nomeMenu = $this->getRequest()->id == null ? 'Cadastrar' : 'Editar';
 
@@ -159,7 +159,7 @@ class EditController extends Core_Controller_Page_EditController
             parent::Excluir();
         } catch (HttpResponseException $exception) {
             throw $exception;
-        } catch (Throwable $throwable) {
+        } catch (Throwable) {
             return false;
         }
 
@@ -206,7 +206,7 @@ class EditController extends Core_Controller_Page_EditController
             $this->getDataMapper()->save($this->getEntity());
 
             return true;
-        } catch (Exception $e) {
+        } catch (Exception) {
             // TODO: ver @todo do docblock
             $this->mensagem = 'Erro no preenchimento do formulário. ';
 

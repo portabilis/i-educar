@@ -32,7 +32,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe(['Vencimento da habilitação', Portabilis_Date_Utils::pgSQLToBr($registro['vencimento_cnh']) ]);
         }
 
-        $this->addDetalhe(['Observa&ccedil;&atilde;o', $registro['observacao']]);
+        $this->addDetalhe(['Observação', $registro['observacao']]);
         $this->url_cancelar = 'transporte_motorista_lst.php';
 
         $obj_permissao = new clsPermissoes();
@@ -51,7 +51,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Motoristas';
+        $this->title = 'Motoristas';
         $this->processoAp = 21236;
     }
 };

@@ -180,7 +180,7 @@ return new class extends clsCadastro {
             }
         }
 
-        $script = ['/modules/Cadastro/Assets/Javascripts/Matricula.js'];
+        $script = ['/vendor/legacy/Cadastro/Assets/Javascripts/Matricula.js'];
         Portabilis_View_Helper_Application::loadJavascript($this, $script);
 
         $this->acao_enviar = 'formUtils.submit()';
@@ -281,7 +281,7 @@ return new class extends clsCadastro {
         try {
             $enturmacoesNaTurmaDestino = $this->getEnturmacoesNaTurma($this->ref_cod_turma);
             $enturmacoesParaCopiar = $this->getEnturmacoesNaTurma($this->ref_cod_turma_copiar_enturmacoes);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->mensagem = 'Houve um erro ao buscar informações das turmas.';
 
             return false;
@@ -337,6 +337,11 @@ return new class extends clsCadastro {
         DB::beginTransaction();
 
         $dependencia = $this->dependencia == 'on';
+
+        if (!$this->validaPeriodoDeMatriculasPelaDataFechamento()) {
+            $this->mensagem = 'Não é possível matricular alunos após a data de fechamento.';
+            return false;
+        }
 
         if ($dependencia && !$this->verificaQtdeDependenciasPermitida()) {
             return false;
@@ -428,7 +433,7 @@ return new class extends clsCadastro {
                 $cursoDeAtividadeComplementar = $cursoADeferir->cursoDeAtividadeComplementar();
 
                 if ($m['ref_ref_cod_serie'] == $this->ref_cod_serie && !$cursoDeAtividadeComplementar) {
-                    $this->mensagem = 'Este aluno j&aacute; est&aacute; matriculado nesta s&eacute;rie e curso, n&atilde;o &eacute; possivel matricular um aluno mais de uma vez na mesma s&eacute;rie.<br />';
+                    $this->mensagem = 'Este aluno já está matriculado nesta série e curso, não é possivel matricular um aluno mais de uma vez na mesma série.<br />';
 
                     return false;
                 } elseif ($curso['multi_seriado'] != 1) {
@@ -441,7 +446,7 @@ return new class extends clsCadastro {
                         $nomeSerie = '';
                     }
 
-                    $this->mensagem = "Este aluno j&aacute; est&aacute; matriculado no(a) '$nomeSerie' deste curso e escola. Como este curso n&atilde;o &eacute; multisseriado, n&atilde;o &eacute; possivel manter mais de uma matricula em andamento para o mesmo curso.<br />";
+                    $this->mensagem = "Este aluno já está matriculado no(a) '$nomeSerie' deste curso e escola. Como este curso não é multisseriado, não é possivel manter mais de uma matricula em andamento para o mesmo curso.<br />";
 
                     return false;
                 }
@@ -490,7 +495,7 @@ return new class extends clsCadastro {
                             $curso = '';
                         }
 
-                        $this->mensagem = "Este aluno j&aacute; est&aacute; matriculado no(a) '$serie' do curso '$curso' na escola '$escola', para matricular este aluno na sua escola solicite transfer&ecirc;ncia ao secret&aacute;rio(a) da escola citada.<br />";
+                        $this->mensagem = "Este aluno já está matriculado no(a) '$serie' do curso '$curso' na escola '$escola', para matricular este aluno na sua escola solicite transferência ao secretário(a) da escola citada.<br />";
 
                         return false;
                     }
@@ -555,7 +560,7 @@ return new class extends clsCadastro {
             $exigeInep = $serieDet['exigir_inep'];
 
             if (!$alunoInep && $exigeInep) {
-                $this->mensagem = 'N&atilde;o foi poss&iacute;vel realizar matr&iacute;cula, necess&aacute;rio inserir o INEP no cadastro do aluno.';
+                $this->mensagem = 'Não foi possível realizar matrícula, necessário inserir o INEP no cadastro do aluno.';
 
                 return false;
             }
@@ -649,7 +654,7 @@ return new class extends clsCadastro {
                         $total_vagas += $turmas['max_aluno'];
                     }
                 } else {
-                    $this->mensagem = 'A s&eacute;rie selecionada n&atilde;o possui turmas cadastradas.<br />';
+                    $this->mensagem = 'A série selecionada não possui turmas cadastradas.<br />';
 
                     return false;
                 }
@@ -725,40 +730,6 @@ return new class extends clsCadastro {
                 );
             }
 
-            $objInstituicao = new clsPmieducarInstituicao($this->ref_cod_instituicao);
-            $detInstituicao = $objInstituicao->detalhe();
-            $controlaEspacoUtilizacaoAluno = $detInstituicao['controlar_espaco_utilizacao_aluno'];
-
-            //se o parametro de controle de utilização de espaço estiver setado como verdadeiro
-            if ($controlaEspacoUtilizacaoAluno) {
-                $objTurma = new clsPmieducarTurma($this->ref_cod_turma);
-                $maximoAlunosSala = $objTurma->maximoAlunosSala();
-                $excedeuLimiteMatriculas = (($matriculados + $reservados) >= $maximoAlunosSala);
-
-                if ($excedeuLimiteMatriculas) {
-                    echo sprintf(
-                        '<script>
-                            var msg = \'\';
-                            msg += \'A sala n\u00e3o comporta mais alunos!\\n\';
-                            msg += \'N\u00famero total de matriculados: %d\\n\';
-                            msg += \'N\u00famero total de vagas reservadas: %d\\n\';
-                            msg += \'N\u00famero total de vagas: %d\\n\';
-                            msg += \'M\u00e1ximo de alunos que a sala comporta: %d\\n\';
-                            msg += \'N\u00e3o ser\u00e1 poss\u00edvel efetuar a matr\u00edcula do aluno.\';
-                            alert(msg);
-                        window.location = \'educar_aluno_det.php?cod_aluno=%d\';
-                        </script>',
-                        $matriculados,
-                        $reservados,
-                        $total_vagas,
-                        $maximoAlunosSala,
-                        $this->ref_cod_aluno
-                    );
-
-                    return false;
-                }
-            }
-
             $obj_matricula_aluno = new clsPmieducarMatricula();
 
             $lst_matricula_aluno = $obj_matricula_aluno->lista(
@@ -793,7 +764,7 @@ return new class extends clsCadastro {
             $m = $db->Tupla();
 
             if (is_array($m) && count($m) && $dependencia) {
-                $this->mensagem = 'Esse aluno j&aacute; tem uma matr&iacute;cula de depend&ecirc;ncia nesta escola e s&eacute;rie.';
+                $this->mensagem = 'Esse aluno já tem uma matrícula de dependência nesta escola e série.';
 
                 return false;
             }
@@ -980,7 +951,7 @@ return new class extends clsCadastro {
                 $this->simpleRedirect('educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
             }
 
-            $this->mensagem = 'Cadastro n&atilde;o realizado.<br />';
+            $this->mensagem = 'Cadastro não realizado.<br />';
 
             return false;
         } else {
@@ -1087,6 +1058,21 @@ return new class extends clsCadastro {
         return false;
     }
 
+    private function validaPeriodoDeMatriculasPelaDataFechamento() : bool
+    {
+        $instituicao = app(LegacyInstitution::class);
+
+        if (empty($instituicao->data_fechamento)) {
+            return true;
+        }
+
+        $dataFechamento = explode('-', $instituicao->data_fechamento);
+        $dataFechamento = $this->ano . '-' . $dataFechamento[1] . '-' . $dataFechamento[2];
+        $dataMatricula = Portabilis_Date_Utils::brToPgSQL($this->data_matricula);
+
+        return $dataMatricula <= $dataFechamento;
+    }
+
     public function desativaEnturmacoesMatricula($matriculaId)
     {
         $result = true;
@@ -1130,8 +1116,8 @@ return new class extends clsCadastro {
         }
 
         if (!$result) {
-            $this->mensagem = 'N&atilde;o foi poss&iacute;vel desativar as ' .
-                'enturma&ccedil;&otilde;es da matr&iacute;cula.';
+            $this->mensagem = 'Não foi possível desativar as ' .
+                'enturmações da matrícula.';
         }
 
         return $result;
@@ -1221,7 +1207,7 @@ return new class extends clsCadastro {
                 $editou1 = $obj->edita();
 
                 if (!$editou1) {
-                    $this->mensagem = 'N&atilde;o foi poss&iacute;vel editar a "&Uacute;ltima Matr&iacute;cula da Sequ&ecirc;ncia".<br />';
+                    $this->mensagem = 'Não foi possível editar a "&Uacute;ltima Matrícula da Sequência".<br />';
 
                     return false;
                 }
@@ -1245,7 +1231,7 @@ return new class extends clsCadastro {
         $excluiu = $obj->excluir();
 
         if ($excluiu) {
-            $this->mensagem = 'Exclus&atilde;o efetuada com sucesso.<br />';
+            $this->mensagem = 'Exclusão efetuada com sucesso.<br />';
 
             throw new HttpResponseException(
                 new RedirectResponse("educar_aluno_det.php?cod_aluno={$this->ref_cod_aluno}")
@@ -1501,7 +1487,7 @@ return new class extends clsCadastro {
             $dependencia = 'f'
         );
 
-        return count($lst_mt);
+        return $obj_mt->_total;
     }
 
     private function availableTimeService()
@@ -1517,7 +1503,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Matrícula';
+        $this->title = 'Matrícula';
         $this->processoAp = 578;
     }
 };

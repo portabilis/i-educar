@@ -47,6 +47,7 @@ class clsModulesAuditoriaNota
         $this->_tabela = "{$this->_schema}auditoria";
         $separador = '';
         $valores = '';
+        $campos = '';
 
         if (!is_null($this->stringNotaAntiga) && !is_null($this->stringNotaNova)) {
             $this->operacao = self::OPERACAO_ALTERACAO;

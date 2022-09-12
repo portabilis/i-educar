@@ -78,8 +78,7 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
             $retorno .= '<select onchange="habilitaCampos(\'ref_cod_instituicao\');" class="geral" name="ref_cod_instituicao" id="ref_cod_instituicao">';
 
             reset($opcoes);
-
-            while (list($chave, $texto) = each($opcoes)) {
+            foreach ($opcoes as $chave => $texto) {
                 $retorno .= sprintf(
                     '<option id="ref_cod_instituicao_%s" value="%s"',
                     urlencode($chave),
@@ -203,8 +202,7 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
             );
 
             reset($opcoes_escola);
-
-            while (list($chave, $texto) = each($opcoes_escola)) {
+            foreach ($opcoes_escola as $chave => $texto) {
                 $retorno .= sprintf(
                     '<option id="ref_cod_escola_%s" value="%s"',
                     urlencode($chave),

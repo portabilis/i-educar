@@ -26,7 +26,7 @@ return new class extends clsDetalhe {
         $this->url_cancelar = 'funcionario_vinculo_lst.php';
         $this->largura = '100%';
 
-        $this->breadcrumb('Detalhe do v&iacute;nculo');
+        $this->breadcrumb('Detalhe do vínculo');
     }
 
     public function Formular()

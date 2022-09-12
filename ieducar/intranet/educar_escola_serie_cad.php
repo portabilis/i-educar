@@ -97,11 +97,8 @@ return new class extends clsCadastro {
         }
 
         arsort($anosLetivos);
-        $anoLetivoSelected = max($anosLetivos);
 
-        if (request('ano_letivo')) {
-            $anoLetivoSelected = request('ano_letivo');
-        }
+        $anoLetivoSelected = request('ano_letivo') ?? (empty($anosLetivos) ? null : max($anosLetivos));
 
         $this->definirComponentePorEtapa = $this->escolaSerieService->levelAllowDefineDisciplinePerStage(
             $this->ref_cod_serie,
@@ -173,7 +170,7 @@ return new class extends clsCadastro {
             'objectName' => 'anos_letivos'
         ];
 
-        $this->anos_letivos = array_values(array_intersect($this->anos_letivos, $this->getAnosLetivosDisponiveis()));
+        $this->anos_letivos = array_values(array_intersect($this->anos_letivos ?? [], $this->getAnosLetivosDisponiveis()));
 
         $options = [
             'label' => 'Anos letivos',
@@ -194,7 +191,7 @@ return new class extends clsCadastro {
         // hora
         $this->campoHora('hora_inicial', 'Hora Inicial', $this->hora_inicial, false);
         $this->campoHora('hora_final', 'Hora Final', $this->hora_final, false);
-        $this->campoHora('hora_inicio_intervalo', 'Hora In&iacute;cio Intervalo', $this->hora_inicio_intervalo, false);
+        $this->campoHora('hora_inicio_intervalo', 'Hora Início Intervalo', $this->hora_inicio_intervalo, false);
         $this->campoHora('hora_fim_intervalo', 'Hora Fim Intervalo', $this->hora_fim_intervalo, false);
         $this->campoCheck('bloquear_enturmacao_sem_vagas', 'Bloquear enturmação após atingir limite de vagas', $this->bloquear_enturmacao_sem_vagas);
         $this->campoCheck('bloquear_cadastro_turma_para_serie_com_vagas', 'Bloquear cadastro de novas turmas antes de atingir limite de vagas (no mesmo turno)', $this->bloquear_cadastro_turma_para_serie_com_vagas);
@@ -326,13 +323,13 @@ return new class extends clsCadastro {
                                 multiple='multiple' class='anos_letivos' id='anos_letivos_{$registro->id}' data-id='$registro->id'> ";
 
                     foreach ($this->anos_letivos as $anoLetivo) {
-                        $seletected = in_array($anoLetivo, $anosLetivosComponente) ? 'selected=selected' : '';
+                        $seletected = in_array($anoLetivo, $anosLetivosComponente, true) ? 'selected=selected' : '';
                         $conteudo .= "<option value='{$anoLetivo}' {$seletected}>{$anoLetivo}</option>";
                     }
                     $conteudo .= ' </select>';
 
                     if ($this->definirComponentePorEtapa) {
-                        $conteudo .= "  <input style='margin-left:30px; float:left;' type='checkbox' id='etapas_especificas[]' name='etapas_especificas[$registro->id]' value='1' " . $checkedEtapaEspecifica . '></label>';
+                        $conteudo .= "  <input style='margin-left:30px; float:left;margin-top: 13px' type='checkbox' id='etapas_especificas[]' name='etapas_especificas[$registro->id]' value='1' " . $checkedEtapaEspecifica . '></label>';
                         $conteudo .= "  <label style='display: block; float: left; width: 260px;'>Etapas utilizadas: <input type='text' class='etapas_utilizadas' name='etapas_utilizadas[$registro->id]' value='{$etapas_utilizadas}' size='5' maxlength='7'></label>";
                     }
 
@@ -482,7 +479,7 @@ return new class extends clsCadastro {
             $this->anos_letivos ?: []
         );
 
-        $sombra = json_decode(urldecode($this->componentes_sombra), true);
+        $sombra = json_decode(urldecode($this->componentes_sombra), true) ?? [];
         $disciplinas = $this->montaDisciplinas();
         $analise = $this->analisaAlteracoes($sombra, $disciplinas);
 
@@ -493,7 +490,7 @@ return new class extends clsCadastro {
 
             $this->mensagem = $msgs;
 
-            return $this->simpleRedirect(\Request::getRequestUri());
+            $this->simpleRedirect(\Request::getRequestUri());
         }
 
         $editou = $obj->edita();
@@ -617,9 +614,9 @@ return new class extends clsCadastro {
     public function loadAssets()
     {
         $scripts = [
-            '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
-            '/modules/Cadastro/Assets/Javascripts/EscolaSerie.js',
-            '/modules/Cadastro/Assets/Javascripts/ModalDispensas.js'
+            '/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/EscolaSerie.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/ModalDispensas.js'
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
@@ -753,10 +750,12 @@ return new class extends clsCadastro {
                     SELECT COUNT(cct.*), cc.nome
                     FROM modules.componente_curricular_turma cct
                     INNER JOIN modules.componente_curricular cc ON cc.id = cct.componente_curricular_id
+                    INNER JOIN pmieducar.turma t ON t.cod_turma = cct.turma_id
                     WHERE TRUE
                         AND cct.componente_curricular_id = $1
                         AND cct.ano_escolar_id = $2
                         AND cct.escola_id = $3
+                        AND t.ativo = 1
                     GROUP BY cc.nome
                 ', ['params' => [
                     (int) $componenteId,
@@ -863,7 +862,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Escola Série';
+        $this->title = 'Escola Série';
         $this->processoAp = 585;
     }
 };

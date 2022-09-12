@@ -1,13 +1,9 @@
 <?php
 
-return new class extends clsCadastro {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
-    public $pessoa_logada;
+use App\Models\LegacyTransferType;
 
+return new class extends clsCadastro {
+    public $pessoa_logada;
     public $cod_transferencia_tipo;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -28,9 +24,7 @@ return new class extends clsCadastro {
         $obj_permissoes->permissao_cadastra(575, $this->pessoa_logada, 7, 'educar_transferencia_tipo_lst.php');
 
         if (is_numeric($this->cod_transferencia_tipo)) {
-            $obj = new clsPmieducarTransferenciaTipo();
-            $lst  = $obj->lista($this->cod_transferencia_tipo);
-            $registro  = array_shift($lst);
+            $registro = LegacyTransferType::find($this->cod_transferencia_tipo)?->toArray();
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
@@ -62,55 +56,64 @@ return new class extends clsCadastro {
         include('include/pmieducar/educar_campo_lista.php');
 
         // text
-        $this->campoTexto('nm_tipo', 'Motivo Transfer&ecirc;ncia', $this->nm_tipo, 30, 255, true);
-        $this->campoMemo('desc_tipo', 'Descri&ccedil;&atilde;o', $this->desc_tipo, 60, 5, false);
+        $this->campoTexto('nm_tipo', 'Motivo Transferência', $this->nm_tipo, 30, 255, true);
+        $this->campoMemo('desc_tipo', 'Descrição', $this->desc_tipo, 60, 5, false);
     }
 
     public function Novo()
     {
-        $obj = new clsPmieducarTransferenciaTipo(null, null, $this->pessoa_logada, $this->nm_tipo, $this->desc_tipo, null, null, 1, $this->ref_cod_instituicao);
-        $cadastrou = $obj->cadastra();
-        if ($cadastrou) {
+        $object = new LegacyTransferType();
+        $object->ref_usuario_cad = $this->pessoa_logada;
+        $object->nm_tipo = $this->nm_tipo;
+        $object->desc_tipo = $this->desc_tipo;
+        $object->ref_cod_instituicao = $this->ref_cod_instituicao;
+
+        if ($object->save()) {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
             $this->simpleRedirect('educar_transferencia_tipo_lst.php');
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
 
     public function Editar()
     {
-        $obj = new clsPmieducarTransferenciaTipo($this->cod_transferencia_tipo, $this->pessoa_logada, null, $this->nm_tipo, $this->desc_tipo, null, null, 1, $this->ref_cod_instituicao);
-        $editou = $obj->edita();
-        if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+        $object = LegacyTransferType::find($this->cod_transferencia_tipo);
+        $object->ativo = 1;
+        $object->ref_usuario_exc = $this->pessoa_logada;
+        $object->nm_tipo = $this->nm_tipo;
+        $object->desc_tipo = $this->desc_tipo;
+        $object->ref_cod_instituicao = $this->ref_cod_instituicao;
+
+        if ($object->save()) {
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_transferencia_tipo_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
-
+        $this->mensagem = 'Edição não realizada.<br>';
         return false;
     }
 
     public function Excluir()
     {
-        $obj = new clsPmieducarTransferenciaTipo($this->cod_transferencia_tipo, $this->pessoa_logada, null, null, null, null, null, 0);
-        $excluiu = $obj->excluir();
-        if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+        $object = LegacyTransferType::find($this->cod_transferencia_tipo);
+        $object->ativo = 0;
+        $object->ref_usuario_exc = $this->pessoa_logada;
+
+        if ($object->save()) {
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_transferencia_tipo_lst.php');
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
-
+        $this->mensagem = 'Exclusão não realizada.<br>';
         return false;
     }
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Motivo Transfer&ecirc;ncia';
+        $this->title = 'Motivo Transferência';
         $this->processoAp = '575';
     }
 };

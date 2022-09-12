@@ -62,7 +62,7 @@ class FileControllerPdf
                 if ($size < $this->maxSize) {
                     return true;
                 } else {
-                    $this->errorMessage = 'NÃ£o sÃ£o permitidos arquivos com mais de 2MB.';
+                    $this->errorMessage = 'não são permitidos arquivos com mais de 2MB.';
 
                     return false;
                 }
@@ -76,9 +76,6 @@ class FileControllerPdf
 
             return false;
         }
-        $this->errorMessage = 'Arquivo invÃ¡lido.';
-
-        return false;
     }
 
     public function getErrorMessage()

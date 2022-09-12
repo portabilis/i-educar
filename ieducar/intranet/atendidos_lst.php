@@ -44,7 +44,7 @@ return new class extends clsListagem {
         $this->largura = '100%';
         $this->addPaginador2('atendidos_lst.php', $total, $_GET, $this->nome, $limite);
 
-        $this->breadcrumb('Pessoa física', ['educar_pessoas_index.php' => 'Pessoas']);
+        $this->breadcrumb('Listagem de pessoa física', ['educar_pessoas_index.php' => 'Pessoas']);
     }
 
     public function Formular()

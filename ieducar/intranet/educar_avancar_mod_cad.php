@@ -33,8 +33,8 @@ return new class extends clsCadastro {
         $this->inputsHelper()->date('data_matricula', ['label' => 'Data da matricula', 'placeholder' => 'dd/mm/yyyy']);
 
         Portabilis_View_Helper_Application::loadJavascript($this, [
-            '/modules/Cadastro/Assets/Javascripts/RematriculaAutomatica.js',
-            '/modules/Cadastro/Assets/Javascripts/RematriculaAutomaticaModal.js'
+            '/vendor/legacy/Cadastro/Assets/Javascripts/RematriculaAutomatica.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/RematriculaAutomaticaModal.js'
         ]);
     }
 
@@ -311,8 +311,6 @@ return new class extends clsCadastro {
         } else {
             throw new Exception('Não foi possível obter a próxima série da sequência de enturmação');
         }
-
-        return false;
     }
 
     protected function rematricularAlunoReprovado($escolaId, $cursoId, $serieId, $ano, $alunoId)
@@ -352,7 +350,7 @@ return new class extends clsCadastro {
 
         $escolaSerie = $escolaSerie->detalhe();
 
-        if (count($escolaSerie) > 0) {
+        if (is_array($escolaSerie) && count($escolaSerie) > 0) {
             if ($escolaSerie['ativo'] == '1') {
                 return true;
             }
@@ -363,7 +361,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->titulo = 'i-Educar';
+        $this->titulo = 'Rematrícula automática';
         $this->processoAp = '845';
     }
 };

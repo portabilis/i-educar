@@ -573,7 +573,7 @@ class clsPmieducarSerie extends Model
 
             $filtros[] = $condicao;
         } elseif (isset($ano)) {
-            $filtros[] = "{$whereAnd} EXISTS (SELECT 1
+            $filtros[] = " EXISTS (SELECT 1
                                          FROM pmieducar.escola_serie es
                                         WHERE s.cod_serie = es.ref_cod_serie
                                           AND es.ativo = 1
@@ -604,11 +604,8 @@ class clsPmieducarSerie extends Model
                 $resultado[] = $tupla[$this->_campos_lista];
             }
         }
-        if (count($resultado)) {
-            return $resultado;
-        }
 
-        return false;
+        return $resultado;
     }
 
     public function listaSeriesComComponentesVinculados(

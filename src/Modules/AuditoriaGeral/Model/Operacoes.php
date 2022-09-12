@@ -4,9 +4,9 @@ namespace iEducar\Modules\AuditoriaGeral\Model;
 
 class Operacoes
 {
-    const NOVO = 1;
-    const EDICAO = 2;
-    const EXCLUSAO = 3;
+    public const NOVO = 1;
+    public const EDICAO = 2;
+    public const EXCLUSAO = 3;
 
     public static function getDescriptiveValues()
     {

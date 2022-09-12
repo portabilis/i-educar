@@ -1,19 +1,32 @@
 <?php
 
-use App\Models\LegacyDiscipline;
+namespace Database\Factories;
+
 use App\Models\LegacyDisciplineAcademicYear;
-use App\Models\LegacySchool;
-use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-/** @var Factory $factory */
+class LegacyDisciplineAcademicYearFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = LegacyDisciplineAcademicYear::class;
 
-$factory->define(LegacyDisciplineAcademicYear::class, function (Faker $faker) {
-    return [
-        'componente_curricular_id' => factory(LegacyDiscipline::class)->create(),
-        'ano_escolar_id' => factory(LegacySchool::class)->create(),
-        'carga_horaria' => 100,
-        'tipo_nota' => $faker->randomElement([1, 2]),
-        'anos_letivos' => '{' . now()->year . '}',
-    ];
-});
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition(): array
+    {
+        return [
+            'componente_curricular_id' => LegacyDisciplineFactory::new()->create(),
+            'ano_escolar_id' => LegacySchoolFactory::new()->create(),
+            'carga_horaria' => 100,
+            'tipo_nota' => $this->faker->randomElement([1, 2]),
+            'anos_letivos' => '{' . now()->year . '}',
+        ];
+    }
+}

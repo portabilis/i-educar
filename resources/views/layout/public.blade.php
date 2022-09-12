@@ -2,10 +2,11 @@
 <html lang="pt-br">
 <head>
     <meta charset="utf-8"/>
-    <title>i-Educar</title>
+    <link rel="shortcut icon" href="{{ url('favicon.ico') }}" />
+    <title>@if(isset($title)) {!! html_entity_decode($title) !!} - @endif {{ html_entity_decode(config('legacy.app.entity.name')) }} - i-Educar</title>
 
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans">
-    <link rel="stylesheet" type="text/css" href="{{ url('intranet/styles/login.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ Asset::get('intranet/styles/login.css') }}">
 
     <!-- Google Tag Manager -->
     <script>
@@ -80,13 +81,13 @@
             <div class="social-icons">
                 <p> Siga-nos nas redes sociais&nbsp;&nbsp;</p>
                 @if(config('legacy.config.facebook_url'))
-                    <a target="_blank" href="{{ config('legacy.config.facebook_url')}}"><img src="{{ url('intranet/imagens/icon-social-facebook.png') }}"></a>
+                    <a target="_blank" href="{{ config('legacy.config.facebook_url')}}" rel="noopener"><img src="{{ Asset::get('intranet/imagens/icon-social-facebook.png') }}"></a>
                 @endif
                 @if(config('legacy.config.linkedin_url'))
-                    <a target="_blank" href="{{ config('legacy.config.linkedin_url')}}"><img src="{{ url('intranet/imagens/icon-social-linkedin.png') }}"></a>
+                    <a target="_blank" href="{{ config('legacy.config.linkedin_url')}}" rel="noopener"><img src="{{ Asset::get('intranet/imagens/icon-social-linkedin.png') }}"></a>
                 @endif
                 @if(config('legacy.config.twitter_url'))
-                    <a target="_blank" href="{{ config('legacy.config.twitter_url')}}"><img src="{{ url('intranet/imagens/icon-social-twitter.png') }}"></a>
+                    <a target="_blank" href="{{ config('legacy.config.twitter_url')}}" rel="noopener"><img src="{{ Asset::get('intranet/imagens/icon-social-twitter.png') }}"></a>
                 @endif
             </div>
         @endif

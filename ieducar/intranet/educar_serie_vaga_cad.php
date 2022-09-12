@@ -105,8 +105,8 @@ return new class extends clsCadastro {
         );
 
         $lista = $obj->lista($this->ano, $this->ref_cod_escola, $this->ref_cod_curso, $this->ref_cod_serie, $this->turno);
-        if (count($lista[0])) {
-            $this->mensagem = 'J&aacute; existe cadastro para est&aacute; s&eacute;rie/ano!<br />';
+        if (is_array($lista[0]) && count($lista[0])) {
+            $this->mensagem = 'Já; existe cadastro para está; série/ano!<br />';
 
             return false;
         }
@@ -117,7 +117,7 @@ return new class extends clsCadastro {
             $this->simpleRedirect('educar_serie_vaga_lst.php');
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado. Verifique se j&aacute; n&atilde;o existe cadastro para est&aacute; s&eacute;rie/ano!<br />';
+        $this->mensagem = 'Cadastro não realizado. Verifique se já não existe cadastro para está série/ano!<br />';
 
         return false;
     }
@@ -132,11 +132,11 @@ return new class extends clsCadastro {
 
         $editou = $obj->edita();
         if ($editou) {
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br />';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br />';
             $this->simpleRedirect('educar_serie_vaga_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o nÃ£o realizada.<br />';
+        $this->mensagem = 'Edição não realizada.<br />';
 
         return false;
     }
@@ -151,18 +151,18 @@ return new class extends clsCadastro {
         $excluiu = $obj->excluir();
 
         if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br />';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br />';
             $this->simpleRedirect('educar_serie_vaga_lst.php');
         }
 
-        $this->mensagem = 'Exclus&atilde;o nÃ£o realizada.<br />';
+        $this->mensagem = 'Exclusão não realizada.<br />';
 
         return false;
     }
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Vagas por sÃ©rie';
+        $this->title = 'Vagas por sÃ©rie';
         $this->processoAp = 21253;
     }
 };

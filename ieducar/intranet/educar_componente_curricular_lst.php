@@ -47,13 +47,13 @@ return new class extends clsListagem {
             'Nome',
             'Abreviatura',
             'Base',
-            '&Aacute;rea de conhecimento'
+            'área de conhecimento'
         ];
 
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
-            $lista_busca[] = 'Institui&ccedil;&atilde;o';
+            $lista_busca[] = 'Instituição';
         }
 
         $this->addCabecalhos($lista_busca);
@@ -154,7 +154,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Componentes curriculares';
+        $this->title = 'Componentes curriculares';
         $this->processoAp = '946';
     }
 };

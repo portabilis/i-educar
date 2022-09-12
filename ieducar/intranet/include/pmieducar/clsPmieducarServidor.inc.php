@@ -14,6 +14,7 @@ class clsPmieducarServidor extends Model
     public $ref_cod_subnivel;
     public $pos_graduacao;
     public $curso_formacao_continuada;
+    public $complementacao_pedagogica;
     public $multi_seriado;
     public $tipo_ensino_medio_cursado;
     public $_campos_lista2;
@@ -34,10 +35,10 @@ class clsPmieducarServidor extends Model
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'servidor';
         $this->_campos_lista = $this->_todos_campos = 'cod_servidor, ref_idesco, carga_horaria, data_cadastro, data_exclusao, ativo, ref_cod_instituicao,ref_cod_subnivel,
-    pos_graduacao, curso_formacao_continuada, multi_seriado, tipo_ensino_medio_cursado
+    pos_graduacao, curso_formacao_continuada, multi_seriado, tipo_ensino_medio_cursado, complementacao_pedagogica
     ';
         $this->_campos_lista2 = $this->_todos_campos2 = 's.cod_servidor, s.ref_idesco, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.ref_cod_instituicao,s.ref_cod_subnivel,
-    s.pos_graduacao, s.curso_formacao_continuada, s.multi_seriado, s.tipo_ensino_medio_cursado,
+    s.pos_graduacao, s.curso_formacao_continuada, s.multi_seriado, s.tipo_ensino_medio_cursado, complementacao_pedagogica,
     (SELECT replace(textcat_all(matricula),\' <br>\',\',\')
           FROM pmieducar.servidor_funcao sf
          WHERE s.cod_servidor = sf.ref_cod_servidor) as matricula_servidor
@@ -130,6 +131,11 @@ class clsPmieducarServidor extends Model
                 $valores .= "{$gruda}'{$this->curso_formacao_continuada}'";
                 $gruda = ', ';
             }
+            if (is_string($this->complementacao_pedagogica)) {
+                $campos .= "{$gruda}complementacao_pedagogica";
+                $valores .= "{$gruda}'{$this->complementacao_pedagogica}'";
+                $gruda = ', ';
+            }
             if (dbBool($this->multi_seriado)) {
                 $campos .= "{$gruda}multi_seriado";
                 $valores .= "{$gruda} TRUE ";
@@ -156,8 +162,8 @@ class clsPmieducarServidor extends Model
     {
         if (is_numeric($this->cod_servidor) && is_numeric($this->ref_cod_instituicao)) {
             $db = new clsBanco();
-            $set = '';
             $gruda = '';
+            $set = '';
 
             if (is_numeric($this->ref_idesco)) {
                 $set .= "{$gruda}ref_idesco = '{$this->ref_idesco}'";
@@ -198,6 +204,13 @@ class clsPmieducarServidor extends Model
             }
             if (is_string($this->curso_formacao_continuada)) {
                 $set .= "{$gruda}curso_formacao_continuada = '{$this->curso_formacao_continuada}'";
+                $gruda = ', ';
+            }
+            if (is_string($this->complementacao_pedagogica)) {
+                $set .= "{$gruda}complementacao_pedagogica = '{$this->complementacao_pedagogica}'";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}complementacao_pedagogica = NULL";
                 $gruda = ', ';
             }
             if (dbBool($this->multi_seriado)) {
@@ -715,14 +728,12 @@ class clsPmieducarServidor extends Model
                 $disciplinas = $servidorDisciplina->lista(null, null, $str_not_in_servidor);
                 $servidorDisciplinas = [];
                 if (is_array($disciplinas)) {
-                    foreach ($disciplinas as $disciplina) {
-                        $servidorDisciplinas[] = sprintf(
-                            '(sd.ref_cod_disciplina = %d AND sd.ref_cod_curso = %d)',
-                            $disciplina['ref_cod_disciplina'],
-                            $disciplina['ref_cod_curso']
-                        );
-                    }
-                    $servidorDisciplinas = sprintf('AND (%s)', implode(' AND ', $servidorDisciplinas));
+                    $codDisciplinas = array_column($disciplinas, 'ref_cod_disciplina');
+                    $codDisciplinas = implode(',', $codDisciplinas);
+                    $servidorDisciplinas = "
+                        group by sd.ref_cod_servidor
+                        having array[$codDisciplinas] <@ array_agg(sd.ref_cod_disciplina)
+                    ";
                 } else {
                     $servidorDisciplinas = '';
                 }

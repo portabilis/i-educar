@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyAbandonmentType;
+
 return new class extends clsDetalhe {
     /**
      * Titulo no topo da pagina
@@ -23,8 +25,7 @@ return new class extends clsDetalhe {
 
         $this->cod_abandono_tipo=$_GET['cod_abandono_tipo'];
 
-        $tmp_obj = new clsPmieducarAbandonoTipo($this->cod_abandono_tipo);
-        $registro = $tmp_obj->detalhe();
+        $registro = LegacyAbandonmentType::find($this->cod_abandono_tipo)?->toArray();
 
         if (! $registro) {
             $this->simpleRedirect('educar_abandono_tipo_lst.php');
@@ -38,7 +39,7 @@ return new class extends clsDetalhe {
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe([ 'Institui&ccedil;&atilde;o', "{$registro['ref_cod_instituicao']}"]);
+                $this->addDetalhe([ 'Instituição', "{$registro['ref_cod_instituicao']}"]);
             }
         }
         if ($registro['nome']) {
@@ -58,7 +59,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Motivo Abandono';
+        $this->title = 'Motivo Abandono';
         $this->processoAp = '950';
     }
 };

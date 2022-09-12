@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyEducationNetwork;
+
 return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -25,25 +27,6 @@ return new class extends clsCadastro {
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(647, $this->pessoa_logada, 3, 'educar_escola_rede_ensino_lst.php');
-
-        /*if( is_numeric( $this->cod_escola_rede_ensino ) )
-        {
-
-            $obj = new clsPmieducarEscolaRedeEnsino( $this->cod_escola_rede_ensino );
-            $registro  = $obj->detalhe();
-            if( $registro )
-            {
-                foreach( $registro AS $campo => $val )  // passa todos os valores obtidos no registro para atributos do objeto
-                    $this->$campo = $val;
-
-                if( $obj_permissoes->permissao_excluir( 647, $this->pessoa_logada, 3 ) )
-                {
-                    $this->fexcluir = true;
-                }
-                $retorno = "Editar";
-            }
-        }*/
-//      $this->url_cancelar = ($retorno == "Editar") ? "educar_escola_rede_ensino_det.php?cod_escola_rede_ensino={$registro["cod_escola_rede_ensino"]}" : "educar_escola_rede_ensino_lst.php";
         $this->nome_url_cancelar = 'Cancelar';
         $this->script_cancelar = 'window.parent.fechaExpansivel("div_dinamico_"+(parent.DOM_divs.length-1));';
 
@@ -52,14 +35,8 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
-        // primary keys
         $this->campoOculto('cod_escola_rede_ensino', $this->cod_escola_rede_ensino);
-
-        // Filtros de Foreign Keys
-//      $obrigatorio = true;
-//      include("include/pmieducar/educar_campo_lista.php");
         $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
-        // text
         $this->campoTexto('nm_rede', 'Rede Ensino', $this->nm_rede, 30, 255, true);
     }
 
@@ -68,12 +45,15 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(647, $this->pessoa_logada, 3, 'educar_escola_rede_ensino_lst.php');
 
-        $obj = new clsPmieducarEscolaRedeEnsino(null, null, $this->pessoa_logada, $this->nm_rede, null, null, 1, $this->ref_cod_instituicao);
-        $cadastrou = $obj->cadastra();
-        if ($cadastrou) {
+        $network = new LegacyEducationNetwork();
+        $network->ref_usuario_cad = $this->pessoa_logada;
+        $network->nm_rede = $this->nm_rede;
+        $network->ref_cod_instituicao = $this->ref_cod_instituicao;
+
+        if ($network->save()) {
             echo "<script>
-                        parent.document.getElementById('ref_cod_escola_rede_ensino').options[parent.document.getElementById('ref_cod_escola_rede_ensino').options.length] = new Option('$this->nm_rede', '$cadastrou', false, false);
-                        parent.document.getElementById('ref_cod_escola_rede_ensino').value = '$cadastrou';
+                        parent.document.getElementById('ref_cod_escola_rede_ensino').options[parent.document.getElementById('ref_cod_escola_rede_ensino').options.length] = new Option('$this->nm_rede', '$network->cod_escola_rede_ensino', false, false);
+                        parent.document.getElementById('ref_cod_escola_rede_ensino').value = '$network->cod_escola_rede_ensino';
                         parent.document.getElementById('ref_cod_escola_rede_ensino').disabled = false;
                         window.parent.fechaExpansivel('div_dinamico_'+(parent.DOM_divs.length-1));
                     </script>";
@@ -83,7 +63,7 @@ return new class extends clsCadastro {
             return true;
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -103,7 +83,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Escola Rede Ensino';
+        $this->title = 'Escola Rede Ensino';
         $this->processoAp = '647';
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;

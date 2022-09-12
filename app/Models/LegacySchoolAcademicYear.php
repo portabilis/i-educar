@@ -2,10 +2,19 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacySchoolAcademicYearBuilder;
+use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * LegacySchoolAcademicYear
+ *
+ * @method static LegacySchoolAcademicYearBuilder query()
+ */
 class LegacySchoolAcademicYear extends Model
 {
+    use LegacyAttribute;
+
     /**
      * @var string
      */
@@ -15,6 +24,22 @@ class LegacySchoolAcademicYear extends Model
      * @var string
      */
     protected $primaryKey = 'ref_cod_escola';
+
+    /**
+     * Builder dos filtros
+     *
+     * @var string
+     */
+    protected $builder = LegacySchoolAcademicYearBuilder::class;
+
+    /**
+     * Atributos legados para serem usados nas queries
+     *
+     * @var string[]
+     */
+    public $legacy = [
+        'year' => 'ano'
+    ];
 
     /**
      * @var array
@@ -35,4 +60,12 @@ class LegacySchoolAcademicYear extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    /**
+     * @return int
+     */
+    public function getYearAttribute(): int
+    {
+        return $this->ano;
+    }
 }

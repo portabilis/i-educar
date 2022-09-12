@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyProject;
+
 return new class extends clsDetalhe {
     /**
      * Titulo no topo da pagina
@@ -18,21 +20,20 @@ return new class extends clsDetalhe {
 
         $this->cod_projeto=$_GET['cod_projeto'];
 
-        $tmp_obj = new clsPmieducarProjeto($this->cod_projeto);
-        $registro = $tmp_obj->detalhe();
+        $registro = LegacyProject::find($this->cod_projeto)?->toArray();
 
         if (! $registro) {
             $this->simpleRedirect('educar_projeto_lst.php');
         }
 
         if ($registro['cod_projeto']) {
-            $this->addDetalhe([ 'C&oacute;digo projeto', "{$registro['cod_projeto']}"]);
+            $this->addDetalhe([ 'Código projeto', "{$registro['cod_projeto']}"]);
         }
         if ($registro['nome']) {
             $this->addDetalhe([ 'Nome do projeto', "{$registro['nome']}"]);
         }
         if ($registro['observacao']) {
-            $this->addDetalhe([ 'Observa&ccedil;&atilde;o', nl2br("{$registro['observacao']}")]);
+            $this->addDetalhe([ 'Observação', nl2br("{$registro['observacao']}")]);
         }
 
         //** Verificacao de permissao para cadastro
@@ -53,7 +54,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Projeto';
+        $this->title = 'Projeto';
         $this->processoAp = '21250';
     }
 };

@@ -106,10 +106,8 @@ return new class extends clsListagem {
         $hr_not  = $string2.':'.$string1;
         $hora_inicial_ = explode(':', Session::get('hora_inicial'));
         $hora_final_   = explode(':', Session::get('hora_final'));
-        $horas_ini     = sprintf('%02d', (int) abs($hora_final_[0]) - abs($hora_inicial_[0]));
-        $minutos_ini   = sprintf('%02d', (int) abs($hora_final_[1]) - abs($hora_inicial_[1]));
-        $h_m_ini = ($hora_inicial_[0] * 60) + $hora_inicial_[1];
-        $h_m_fim = ($hora_final_[0]   * 60) + $hora_final_[1];
+        $h_m_ini = ((int)$hora_inicial_[0] * 60) + $hora_inicial_[1];
+        $h_m_fim = ((int)$hora_final_[0]   * 60) + $hora_final_[1];
         if ($h_m_ini >= 480 && $h_m_ini <= 720) {
             $this->matutino = true;
             if ($h_m_fim >= 721 && $h_m_fim <= 1080) {
@@ -127,8 +125,8 @@ return new class extends clsListagem {
         }
         $this->addCabecalhos([
       'Nome do Servidor',
-      'Matr&iacute;cula',
-      'Institui&ccedil;&atilde;o'
+      'Matrícula',
+      'Instituição'
     ]);
         $this->campoTexto('nome_servidor', 'Nome Servidor', $this->nome_servidor, 30, 255, false);
         $this->campoOculto('tipo', $_GET['tipo']);
@@ -145,13 +143,13 @@ return new class extends clsListagem {
           Session::get('hora_final')
       ];
         }
-        // Marca a disciplina como NULL se nÃ£o for informada, restringindo a busca
-        // aos professores e nÃ£o selecionar aqueles em que o curso nÃ£o seja
+        // Marca a disciplina como NULL se não for informada, restringindo a busca
+        // aos professores e não selecionar aqueles em que o curso não seja
         // globalizado e sem disciplinas cadastradas
         $this->ref_cod_disciplina = $this->ref_cod_disciplina ?
       $this->ref_cod_disciplina : null;
-        // Passa NULL para $alocacao_escola_instituicao senÃ£o o seu filtro anula
-        // um anterior (referente a selecionar somente servidores nÃ£o alocados),
+        // Passa NULL para $alocacao_escola_instituicao senão o seu filtro anula
+        // um anterior (referente a selecionar somente servidores não alocados),
         // selecionando apenas servidores alocados na instituiÃ§Ã£o
         $lista = $obj_servidor->lista(
             null,
@@ -229,20 +227,20 @@ return new class extends clsListagem {
                 if (Session::get('tipo')) {
                     if (is_string($campo1) && is_string($campo2)) {
                         if (is_string(Session::get('horario'))) {
-                            $script = " onclick=\"addVal1('{$campo1}','{$registro['nome']}','{$registro['cod_servidor']}'); addVal1('{$campo2}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
+                            $script = " onclick=\"addVal1('{$campo1}','{$registro['nome']}','{$registro['cod_servidor']}'); addVal1('{$campo2}','{$registro['cod_servidor']}','{$registro['nome']}'); fecha();\"";
                         } else {
-                            $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_servidor']}', '{$registro['nome']}'); addVal1('{$campo2}','{$registro['nome']}', '{$registro['cod_servidor']}'); $setAll fecha();\"";
+                            $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_servidor']}', '{$registro['nome']}'); addVal1('{$campo2}','{$registro['nome']}', '{$registro['cod_servidor']}'); fecha();\"";
                         }
                     } elseif (is_string($campo1)) {
-                        $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
+                        $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_servidor']}','{$registro['nome']}'); fecha();\"";
                     }
                 } else {
                     if (is_string($campo1) && is_string($campo2)) {
-                        $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_servidor']}','{$registro['nome']}'); addVal1('{$campo2}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
+                        $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_servidor']}','{$registro['nome']}'); addVal1('{$campo2}','{$registro['cod_servidor']}','{$registro['nome']}'); fecha();\"";
                     } elseif (is_string($campo2)) {
-                        $script = " onclick=\"addVal1('{$campo2}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
+                        $script = " onclick=\"addVal1('{$campo2}','{$registro['cod_servidor']}','{$registro['nome']}'); fecha();\"";
                     } elseif (is_string($campo1)) {
-                        $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
+                        $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_servidor']}','{$registro['nome']}'); fecha();\"";
                     }
                 }
                 $this->addLinhas([
@@ -270,7 +268,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Servidor';
+        $this->title = 'Servidor';
         $this->processoAp = '0';
         $this->renderMenu = true;
         $this->renderMenuSuspenso = false;

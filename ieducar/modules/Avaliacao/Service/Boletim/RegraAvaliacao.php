@@ -72,7 +72,7 @@ trait Avaliacao_Service_Boletim_RegraAvaliacao
      */
     public function getRegraAvaliacaoTipoParecerDescritivo()
     {
-        return $this->getRegraAvaliacao()->get('parecerDescritivo');
+        return (int) $this->getRegraAvaliacao()->get('parecerDescritivo');
     }
 
     /**
@@ -100,7 +100,7 @@ trait Avaliacao_Service_Boletim_RegraAvaliacao
      */
     public function getRegraAvaliacaoTipoProgressao()
     {
-        return $this->getRegraAvaliacao()->get('tipoProgressao');
+        return (int) $this->getRegraAvaliacao()->get('tipoProgressao');
     }
 
     /**
@@ -152,7 +152,7 @@ trait Avaliacao_Service_Boletim_RegraAvaliacao
      */
     public function getRegraAvaliacaoQtdDisciplinasDependencia()
     {
-        return $this->getRegraAvaliacao()->get('qtdDisciplinasDependencia');
+        return (int) $this->getRegraAvaliacao()->get('qtdDisciplinasDependencia');
     }
 
     /**

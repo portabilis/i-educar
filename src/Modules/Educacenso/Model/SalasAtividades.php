@@ -4,13 +4,14 @@ namespace iEducar\Modules\Educacenso\Model;
 
 class SalasAtividades
 {
-    const LEITURA = 1;
-    const ATELIE = 2;
-    const MUSICA = 3;
-    const ESTUDIO_DANCA = 4;
-    const MULTIUSO = 5;
-    const RECURSOS_AEE = 6;
-    const REPOUSO_ALUNO = 7;
+    public const LEITURA = 1;
+    public const ATELIE = 2;
+    public const MUSICA = 3;
+    public const ESTUDIO_DANCA = 4;
+    public const MULTIUSO = 5;
+    public const RECURSOS_AEE = 6;
+    public const REPOUSO_ALUNO = 7;
+    public const EDUCACAO_PROFISSIONAL = 8;
 
     public static function getDescriptiveValues()
     {
@@ -22,6 +23,7 @@ class SalasAtividades
             self::MULTIUSO => 'Sala multiúso (música, dança e artes)',
             self::RECURSOS_AEE => 'Sala de recursos multifuncionais para Atendimento Educacional Especializado (AEE)',
             self::REPOUSO_ALUNO => 'Sala de repouso para aluno(a)',
+            self::EDUCACAO_PROFISSIONAL => 'Salas de oficinas da educação profissional',
         ];
     }
 }

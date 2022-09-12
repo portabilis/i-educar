@@ -1,5 +1,6 @@
 <?php
 
+use App\Facades\Asset;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyInstitution;
 use App\Services\FileService;
@@ -123,7 +124,7 @@ return new class extends clsCadastro {
 
             $this->id_federal = is_numeric($this->id_federal) ? int2CPF($this->id_federal) : '';
             $this->nis_pis_pasep = int2Nis($this->nis_pis_pasep);
-            $this->renda_mensal = number_format($this->renda_mensal, 2, ',', '.');
+            $this->renda_mensal = number_format((float) $this->renda_mensal, 2, ',', '.');
             // $this->data_nasc = $this->data_nasc ? dataFromPgToBr($this->data_nasc) : '';
             $this->data_admissao = $this->data_admissao ? dataFromPgToBr($this->data_admissao) : '';
 
@@ -132,14 +133,16 @@ return new class extends clsCadastro {
             $this->naturalidade_id = $this->naturalidade;
         }
 
-        $this->fexcluir = $obj_permissoes->permissao_excluir(
+        $this->fexcluir = is_numeric($this->cod_pessoa_fj) && $obj_permissoes->permissao_excluir(
             43,
             $this->pessoa_logada,
             7
         );
 
+        $nomeMenu = $this->retorno === 'Editar' ? $this->retorno : 'Cadastrar';
+
         $this->nome_url_cancelar = 'Cancelar';
-        $this->breadcrumb('Pessoa física', ['educar_pessoas_index.php' => 'Pessoas']);
+        $this->breadcrumb("{$nomeMenu} pessoa física", ['educar_pessoas_index.php' => 'Pessoas']);
 
         return $this->retorno;
     }
@@ -153,7 +156,6 @@ return new class extends clsCadastro {
         $this->url_cancelar = $this->retorno == 'Editar' ?
         'atendidos_det.php?cod_pessoa=' . $this->cod_pessoa_fj : 'atendidos_lst.php';
 
-        $this->cod_pessoa_fj;
         $objPessoa = new clsPessoaFisica($this->cod_pessoa_fj);
         $db = new clsBanco();
 
@@ -189,13 +191,13 @@ return new class extends clsCadastro {
 
         $this->campoOculto('cod_pessoa_fj', $this->cod_pessoa_fj);
         $this->campoTexto('nm_pessoa', 'Nome', $this->nm_pessoa, '50', '255', true);
-        $this->campoTexto('nome_social', 'Nome social', $this->nome_social, '50', '255', false);
+        $this->campoTexto('nome_social', 'Nome social e/ou afetivo', $this->nome_social, '50', '255', false);
 
         $foto = false;
         if (is_numeric($this->cod_pessoa_fj)) {
             $objFoto = new clsCadastroFisicaFoto($this->cod_pessoa_fj);
             $detalheFoto = $objFoto->detalhe();
-            if (count($detalheFoto)) {
+            if (is_array($detalheFoto) && count($detalheFoto)) {
                 $foto = $detalheFoto['caminho'];
             }
         } else {
@@ -621,7 +623,7 @@ return new class extends clsCadastro {
 
         $raca = new clsCadastroFisicaRaca($this->cod_pessoa_fj);
         $raca = $raca->detalhe();
-        $this->cod_raca = is_array($raca) ? $raca['ref_cod_raca'] : null;
+        $this->cod_raca = is_array($raca) ? $raca['ref_cod_raca'] : $this->cor_raca;
 
         $this->campoLista('cor_raca', 'Raça', $selectOptionsRaca, $this->cod_raca, '', false, '', '', '', $obrigarCamposCenso);
 
@@ -682,7 +684,7 @@ return new class extends clsCadastro {
         // Religião
         $this->inputsHelper()->religiao(['required' => false, 'label' => 'Religião']);
 
-        $this->viewAddress();
+        $this->viewAddress(true);
 
         $this->inputsHelper()->select('pais_residencia', [
             'label' => 'País de residência',
@@ -737,19 +739,19 @@ return new class extends clsCadastro {
         }
 
         $styles = [
-            '/modules/Portabilis/Assets/Stylesheets/Frontend.css',
-            '/modules/Portabilis/Assets/Stylesheets/Frontend/Resource.css',
-            '/modules/Cadastro/Assets/Stylesheets/PessoaFisica.css',
-            '/modules/Cadastro/Assets/Stylesheets/ModalCadastroPais.css',
+            '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend.css',
+            '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend/Resource.css',
+            '/vendor/legacy/Cadastro/Assets/Stylesheets/PessoaFisica.css',
+            '/vendor/legacy/Cadastro/Assets/Stylesheets/ModalCadastroPais.css',
         ];
 
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
 
         $script = [
-            '/modules/Cadastro/Assets/Javascripts/PessoaFisica.js',
-            '/modules/Cadastro/Assets/Javascripts/Addresses.js',
-            '/modules/Cadastro/Assets/Javascripts/Endereco.js',
-            '/modules/Cadastro/Assets/Javascripts/ModalCadastroPais.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/PessoaFisica.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/Addresses.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/Endereco.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/ModalCadastroPais.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $script);
@@ -811,15 +813,6 @@ return new class extends clsCadastro {
             return false;
         }
 
-        $cliente = new clsPmieducarCliente();
-        $cliente = $cliente->lista(null, null, null, $idPes, null, null, null, null, null, null, 1);
-
-        if ($cliente) {
-            $this->mensagem = 'Não foi possível excluir. Esta pessoa possuí vínculo com cliente.';
-
-            return false;
-        }
-
         $usuarioTransporte = new clsModulesPessoaTransporte();
         $usuarioTransporte = $usuarioTransporte->lista(null, $idPes);
 
@@ -852,7 +845,7 @@ return new class extends clsCadastro {
 
         if(window.opener &&  window.opener.afterChangePessoa) {
             var parentType = \$j('#parent_type').val();
-
+            alert('Alteração realizada com sucesso!');
             if (parentType)
             window.opener.afterChangePessoa(self, parentType, $id, \$j('#nm_pessoa').val());
             else
@@ -861,7 +854,7 @@ return new class extends clsCadastro {
         else
             document.location = 'atendidos_lst.php';
 
-        ", $afterReady = true);
+        ", $afterReady = false);
     }
 
     protected function loadAlunoByPessoaId($id)
@@ -972,6 +965,10 @@ return new class extends clsCadastro {
             return false;
         }
 
+        if (!empty($this->nome_social) && !$this->validaNomeSocial()) {
+            return false;
+        }
+
         if (!empty($this->data_nasc) && !$this->validaDataNascimento()) {
             return false;
         }
@@ -990,12 +987,18 @@ return new class extends clsCadastro {
             return false;
         }
 
+        if (!$this->validaCaracteresPermitidosComplemento()) {
+            $this->mensagem = 'O campo foi preenchido com valor não permitido. O campo Complemento só permite os caracteres: ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ª º – / . ,';
+
+            return false;
+        }
+
         $pessoaId = $this->createOrUpdatePessoa($pessoaIdOrNull);
         $this->savePhoto($pessoaId);
         $this->createOrUpdatePessoaFisica($pessoaId);
         $this->createOrUpdateDocumentos($pessoaId);
         $this->createOrUpdateTelefones($pessoaId);
-        $this->saveAddress($pessoaId);
+        $this->saveAddress($pessoaId,true);
         $this->afterChangePessoa($pessoaId);
         $this->saveFiles($pessoaId);
 
@@ -1005,6 +1008,18 @@ return new class extends clsCadastro {
     private function validaNome()
     {
         $validator = new NameValidator($this->nm_pessoa);
+        if (!$validator->isValid()) {
+            $this->mensagem = $validator->getMessage();
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private function validaNomeSocial()
+    {
+        $validator = new NameValidator($this->nome_social);
         if (!$validator->isValid()) {
             $this->mensagem = $validator->getMessage();
 
@@ -1041,7 +1056,7 @@ return new class extends clsCadastro {
     //envia foto e salva caminha no banco
     protected function savePhoto($id)
     {
-        $caminhoFoto = url('intranet/imagens/user-perfil.png');
+        $caminhoFoto = Asset::get('intranet/imagens/user-perfil.png');
         if ($this->objPhoto != null) {
             $caminhoFoto = $this->objPhoto->sendPicture();
             if ($caminhoFoto != '') {
@@ -1087,8 +1102,6 @@ return new class extends clsCadastro {
 
                 return false;
             }
-
-            return false;
         } else {
             $this->objPhoto = null;
 
@@ -1180,6 +1193,15 @@ return new class extends clsCadastro {
         return true;
     }
 
+    protected function validaCaracteresPermitidosComplemento()
+    {
+        if (empty($this->complement)) {
+            return true;
+        }
+        $pattern = '/^[a-zA-Z0-9ªº\/–\ .,-]+$/';
+        return preg_match($pattern, $this->complement);
+    }
+
     protected function createOrUpdatePessoa($pessoaId = null)
     {
         $pessoa = new clsPessoa_();
@@ -1217,7 +1239,7 @@ return new class extends clsCadastro {
         $fisica->nacionalidade = $_REQUEST['tipo_nacionalidade'];
         $fisica->idpais_estrangeiro = $_REQUEST['pais_origem_id'];
         $fisica->idmun_nascimento = $_REQUEST['naturalidade_id'] ?: 'NULL';
-        $fisica->sus = $this->sus;
+        $fisica->sus = trim($this->sus);
         $fisica->nis_pis_pasep = $this->nis_pis_pasep ? $this->nis_pis_pasep : 'NULL';
         $fisica->ocupacao = $db->escapeString($this->ocupacao);
         $fisica->empresa = $db->escapeString($this->empresa);
@@ -1422,7 +1444,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'Pessoas Físicas - Cadastro';
+        $this->title = 'Pessoa Física - Cadastro';
         $this->processoAp = 43;
     }
 };

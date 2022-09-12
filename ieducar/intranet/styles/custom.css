@@ -83,6 +83,15 @@ span.select2-selection.select2-selection--multiple{
   background-position: -18 10px !important;
 }
 
+.chosen-container.error {
+  padding: 0;
+}
+
+.chosen-container.chosen-container-single.error .chosen-single {
+  color: #ff4e4e !important;
+  background-color: #ffeeee !important;
+}
+
 input[type="button"] {
   background-color: #FFF !important;
   font-size: 14px !important;
@@ -1325,7 +1334,7 @@ p.title-table-matricula {
   width: auto !important;
   font-size: 14px;
   font-weight: normal;
-  padding: 6px 20px 12px 20px;
+  padding: 6px 20px 12px 10px;
   border-radius: 0px !important;
   border: 0 !important;
   color: #47728f;
@@ -1353,6 +1362,24 @@ p.title-table-matricula {
   background-color: #0ac336 !important;
   border: 0 !important;
   color: #FFF !important;
+}
+
+btn-danger, input.btn-danger {
+  color:#fff !important;
+  background-color:#aa2e28 !important;
+  border-color:#aa2e28
+}
+
+input.continuar-processo {
+  margin: 10px 5px 10px 0;
+}
+
+span.qnt-matriculas {
+  font-size: 15px !important;
+}
+
+input.proximo-matricula {
+  margin: 10px 10px;
 }
 
 input.btn_small {
@@ -1466,6 +1493,14 @@ a.btn-detalhes {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
+}
+
+#turma_serie.tabela-adicao td.mult_curso_id,
+#turma_serie.tabela-adicao td.mult_serie_id,
+#turma_serie.tabela-adicao td.mult_boletim_id,
+#turma_serie.tabela-adicao td.mult_boletim_diferenciado_id,
+#turma_serie td.tr_turma_serie {
+  width: 23%;
 }
 
 .btn-disabled#btn_enviar {

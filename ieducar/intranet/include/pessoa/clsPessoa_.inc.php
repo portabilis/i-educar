@@ -83,8 +83,6 @@ class clsPessoa_
             }
             if ($this->nome || $this->nome === '') {
                 $this->nome = $this->cleanUpName($this->nome);
-                $this->nome = str_replace('\'', '\'\'', $this->nome);
-
                 $slug = Str::lower(Str::slug($this->nome, ' '));
 
                 $set .= "$gruda nome = '$this->nome', slug = '{$slug}' ";
@@ -160,13 +158,8 @@ class clsPessoa_
         }
 
         if (is_string($str_data_cad_ini)) {
-            if (!$str_data_edicao_fim) {
-                $where .= "{$whereAnd}data_cad >= '$str_data_cad_ini 00:00:00' AND data_cad <= '$str_data_cad_ini 23:59:59'";
-                $whereAnd = ' AND ';
-            } else {
-                $where .= "{$whereAnd}data_cad >= '$str_data_cad_ini'";
-                $whereAnd = ' AND ';
-            }
+            $where .= "{$whereAnd}data_cad >= '$str_data_cad_ini'";
+            $whereAnd = ' AND ';
         }
 
         if (is_string($str_data_cad_fim)) {

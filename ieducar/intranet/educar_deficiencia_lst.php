@@ -34,14 +34,14 @@ return new class extends clsListagem {
 
     public function Gerar()
     {
-        $this->titulo = 'Defici&ecirc;ncia - Listagem';
+        $this->titulo = 'Deficiência - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null: $val;
         }
 
         $this->addCabecalhos([
-            'Defici&ecirc;ncia'
+            'Deficiência'
         ]);
 
         // Filtros de Foreign Keys
@@ -91,7 +91,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Defici&ecirc;ncia';
+        $this->title = 'Deficiência';
         $this->processoAp = '631';
     }
 };

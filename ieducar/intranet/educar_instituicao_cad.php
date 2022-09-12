@@ -143,8 +143,6 @@ return new class extends clsCadastro {
 
         $this->inputsHelper()->simpleSearchPessoa('coordenador_transporte', $options);
 
-        $opcoes = [];
-
         if (!empty($this->ref_sigla_uf)) {
             $opcoes = [null => 'Selecione'];
             $orgaoRegional = new Educacenso_Model_OrgaoRegionalDataMapper();
@@ -155,7 +153,7 @@ return new class extends clsCadastro {
                 false
             );
             foreach ($orgaosRegionais as $orgaoRegional) {
-                $opcoes[$orgaoRegional->codigo] = $orgaoRegional->codigo;
+                $opcoes[strtoupper($orgaoRegional->codigo)] = strtoupper($orgaoRegional->codigo);
             }
         } else {
             $opcoes = [null => 'Informe uma UF'];
@@ -343,9 +341,9 @@ return new class extends clsCadastro {
             false
         );
 
-        $scripts = ['/modules/Cadastro/Assets/Javascripts/Instituicao.js'];
+        $scripts = ['/vendor/legacy/Cadastro/Assets/Javascripts/Instituicao.js'];
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
-        $styles = ['/modules/Cadastro/Assets/Stylesheets/Instituicao.css'];
+        $styles = ['/vendor/legacy/Cadastro/Assets/Stylesheets/Instituicao.css'];
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
     }
 
@@ -452,7 +450,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Instituição';
+        $this->title = 'Instituição';
         $this->processoAp = '559';
     }
 };

@@ -292,7 +292,7 @@ class clsPmieducarHistoricoEscolar extends Model
                 $gruda = ', ';
             }
 
-            if (is_numeric($aceleracao)) {
+            if (is_numeric($this->aceleracao)) {
                 $campos .= "{$gruda}aceleracao";
                 $valores .= "{$gruda}'{$this->aceleracao}'";
                 $gruda = ', ';
@@ -354,6 +354,7 @@ class clsPmieducarHistoricoEscolar extends Model
     {
         if (is_numeric($this->ref_cod_aluno) && is_numeric($this->sequencial) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
+            $gruda = '';
             $set = '';
 
             if (is_numeric($this->ref_usuario_exc)) {
@@ -740,7 +741,7 @@ class clsPmieducarHistoricoEscolar extends Model
         return false;
     }
 
-    public static function gerarHistoricoTransferencia($ref_cod_matricula, $pessoa_logada, $ref_cod_escola)
+    public static function gerarHistoricoTransferencia($ref_cod_matricula, $pessoa_logada)
     {
         $detMatricula = self::dadosMatricula($ref_cod_matricula);
 
@@ -778,7 +779,7 @@ class clsPmieducarHistoricoEscolar extends Model
                 $detMatricula['nome_curso'],
                 $grade_curso_id,
                 null,
-                $ref_cod_escola
+                $detMatricula['ref_ref_cod_escola'],
             );
 
             if ($historicoEscolar->cadastra()) {

@@ -1,19 +1,32 @@
 <?php
 
+namespace Database\Factories;
+
 use App\Models\LegacyDiscipline;
-use App\Models\LegacyInstitution;
-use App\Models\LegacyKnowledgeArea;
-use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-/** @var Factory $factory */
+class LegacyDisciplineFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = LegacyDiscipline::class;
 
-$factory->define(LegacyDiscipline::class, function (Faker $faker) {
-    return [
-        'instituicao_id' => factory(LegacyInstitution::class)->state('unique')->make(),
-        'area_conhecimento_id' => factory(LegacyKnowledgeArea::class)->state('unique')->make(),
-        'nome' => $faker->colorName,
-        'abreviatura' => $faker->hexColor,
-        'tipo_base' => 0,
-    ];
-});
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition(): array
+    {
+        return [
+            'instituicao_id' => LegacyInstitutionFactory::new()->unique()->make(),
+            'area_conhecimento_id' => LegacyKnowledgeAreaFactory::new()->unique()->make(),
+            'nome' => $this->faker->colorName,
+            'abreviatura' => $this->faker->hexColor,
+            'tipo_base' => 0,
+        ];
+    }
+}

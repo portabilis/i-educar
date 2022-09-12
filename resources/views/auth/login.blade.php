@@ -3,10 +3,10 @@
 @section('content')
     <h2>Acesse sua conta</h2>
     @if(config('legacy.config.url_cadastro_usuario'))
-        <div>Não possui uma conta? <a target="_blank" href="{{ config('legacy.config.url_cadastro_usuario') }}">Crie sua conta agora</a>.</div>
+        <div>Não possui uma conta? <a target="_blank" href="{{ config('legacy.config.url_cadastro_usuario') }}" rel="noopener">Crie sua conta agora</a>.</div>
     @endif
 
-    <form action="{{ route('login') }}" method="post" id="form-login">
+    <form action="{{ Asset::get('login') }}" method="post" id="form-login">
 
         <label for="login">Matrícula:</label>
         <input type="text" name="login" id="login">

@@ -4,15 +4,15 @@ namespace iEducar\Modules\Educacenso\Model;
 
 class AreasExternas
 {
-    const QUADRA_COBERTA = 1;
-    const QUADRA_DESCOBERTA = 2;
-    const PATIO_COBERTO = 3;
-    const PATIO_DESCOBERTO = 4;
-    const PARQUE_INFANTIL = 5;
-    const PISCINA = 6;
-    const AREA_VERDE = 7;
-    const TERREIRAO = 8;
-    const VIVEIRO = 9;
+    public const QUADRA_COBERTA = 1;
+    public const QUADRA_DESCOBERTA = 2;
+    public const PATIO_COBERTO = 3;
+    public const PATIO_DESCOBERTO = 4;
+    public const PARQUE_INFANTIL = 5;
+    public const PISCINA = 6;
+    public const AREA_VERDE = 7;
+    public const TERREIRAO = 8;
+    public const VIVEIRO = 9;
 
     public static function getDescriptiveValues()
     {

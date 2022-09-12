@@ -20,11 +20,6 @@ return new class extends clsCadastro {
 
     public function Inicializar()
     {
-        //  print_r($_POST);die;
-        $retorno = 'Novo';
-
-        //$this->ref_cod_turma=$_GET["ref_cod_turma"];
-
         foreach ($_GET as $key =>$value) {
             $this->$key = $value;
         }
@@ -48,7 +43,7 @@ return new class extends clsCadastro {
             }
         }
 
-        $this->simpleRedirect('educar_matricula_lst.php');
+        $this->simpleRedirect("educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
     }
 
     public function Gerar()
@@ -70,7 +65,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Matricula Turma';
+        $this->title = 'Matricula Turma';
         $this->processoAp = '578';
     }
 };

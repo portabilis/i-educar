@@ -278,7 +278,7 @@ return new class extends clsListagem {
                                 $obj_calendario->adicionarLegenda('Extra Letivo', 'LARANJA_ESCURO');
                                 $obj_calendario->adicionarArrayDias('Extra Letivo', [$dia['dia']]);
                             } elseif (mb_strtoupper($det_motivo['tipo']) == 'N') {
-                                $obj_calendario->adicionarLegenda('Não Letivo', '#VERDE_ESCURO');
+                                $obj_calendario->adicionarLegenda('Não Letivo', 'VERDE_ESCURO');
                                 $obj_calendario->adicionarArrayDias('Não Letivo', [$dia['dia']]);
                             }
 
@@ -476,7 +476,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Calendários';
+        $this->title = 'Calendários';
         $this->processoAp = 620;
     }
 };

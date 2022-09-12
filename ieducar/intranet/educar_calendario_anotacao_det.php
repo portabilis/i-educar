@@ -45,13 +45,13 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['cod_calendario_anotacao']) {
-            $this->addDetalhe([ 'Calendario Anotac&atilde;o', "{$registro['cod_calendario_anotacao']}"]);
+            $this->addDetalhe([ 'Calendario Anotacão', "{$registro['cod_calendario_anotacao']}"]);
         }
         if ($registro['nm_anotacao']) {
-            $this->addDetalhe([ 'Nome Anotac&atilde;o', "{$registro['nm_anotacao']}"]);
+            $this->addDetalhe([ 'Nome Anotacão', "{$registro['nm_anotacao']}"]);
         }
         if ($registro['descricao']) {
-            $this->addDetalhe([ 'Descric&atilde;o', "{$registro['descricao']}"]);
+            $this->addDetalhe([ 'Descricão', "{$registro['descricao']}"]);
         }
 
         $obj_permissoes = new clsPermissoes();
@@ -66,7 +66,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Calendario Anotacao';
+        $this->title = 'Calendario Anotacao';
         $this->processoAp = '620';
     }
 };

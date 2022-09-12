@@ -270,6 +270,7 @@ class clsModulesVeiculo extends Model
         if (is_numeric($this->cod_veiculo)) {
             $db = new clsBanco();
             $set = '';
+            $gruda = '';
 
             if (is_numeric($this->cod_veiculo)) {
                 $set .= "{$gruda}cod_veiculo = '{$this->cod_veiculo}'";

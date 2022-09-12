@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Closure;
 use clsBase;
 use CoreExt_Exception_FileNotFoundException;
 use Exception;
@@ -19,6 +20,11 @@ class LegacyController extends Controller
     private $request;
 
     /**
+     * @var array
+     */
+    private static array $resolvers = [];
+
+    /**
      * LegacyController constructor.
      *
      * @param Request $request
@@ -26,6 +32,31 @@ class LegacyController extends Controller
     public function __construct(Request $request)
     {
         $this->request = $request;
+    }
+
+    /**
+     * @param Closure $resolver
+     *
+     * @return void
+     */
+    public static function resolver(Closure $resolver): void
+    {
+        static::$resolvers[] = $resolver;
+    }
+
+    /**
+     * @param string $uri
+     * @param string $path
+     *
+     * @return string
+     */
+    public static function resolve(string $uri, string $path): string
+    {
+        foreach (static::$resolvers as $resolver) {
+            $path = $resolver($uri) ?? $path;
+        }
+
+        return $path;
     }
 
     /**
@@ -71,7 +102,7 @@ class LegacyController extends Controller
      */
     private function loadLegacyFile($filename)
     {
-        $legacyFile = $this->getLegacyPath() . '/' . $filename;
+        $legacyFile = static::resolve($filename, $this->getLegacyPath() . '/' . $filename);
 
         if (false === file_exists($legacyFile)) {
             throw new NotFoundHttpException('Legacy file not found.');
@@ -103,20 +134,17 @@ class LegacyController extends Controller
 
             return;
         } catch (HttpResponseException $exception) {
-
             // Para evitar encerrar a aplicação com `die` ou `exit`, é lançada
             // uma exceção do tipo `HttpResponseException` com uma `Response`
             // interna que será a resposta devolvida pela aplicação.
 
             throw $exception;
         } catch (CoreExt_Exception_FileNotFoundException $exception) {
-
             // Caso a página não seja encontrada no módulo legado, lança um erro 404
             // ao invés de 500
 
             throw new NotFoundHttpException($exception->getMessage(), $exception);
         } catch (Exception $exception) {
-
             // A maioria das vezes será pega a Exception neste catch, apenas
             // será pega por Throwable quando for ErrorException ou uma exceção
             // customizada que implementa apenas Throwable e não extende a
@@ -124,7 +152,6 @@ class LegacyController extends Controller
             //
             // http://php.net/manual/en/class.throwable.php
         } catch (Throwable $throwable) {
-
             // Converte uma exceção que implementa apenas Throwable para
             // Exception nativa do PHP. Isto é feito devido o Exception
             // Handler do Laravel aceitar apenas exceções nativas.

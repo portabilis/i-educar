@@ -46,7 +46,7 @@ return new class extends clsCadastro {
                 $retorno = 'Editar';
             }
         }
-//      $this->url_cancelar = ($retorno == "Editar") ? "educar_pre_requisito_det.php?cod_pre_requisito={$registro["cod_pre_requisito"]}" : "educar_pre_requisito_lst.php";
+
         $this->nome_url_cancelar = 'Cancelar';
         $this->script_cancelar = 'window.parent.fechaExpansivel("div_dinamico_"+(parent.DOM_divs.length-1));';
 
@@ -94,7 +94,7 @@ return new class extends clsCadastro {
             return true;
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -109,7 +109,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Pre Requisito';
+        $this->title = 'Pre Requisito';
         $this->processoAp = '601';
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;

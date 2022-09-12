@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyQualification;
+
 return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -42,7 +44,7 @@ return new class extends clsListagem {
 
     public function Gerar()
     {
-        $this->titulo = 'Habilita&ccedil;&atilde;o - Listagem';
+        $this->titulo = 'Habilitação - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null: $val;
@@ -57,44 +59,40 @@ return new class extends clsListagem {
         switch ($nivel_usuario) {
             case 1:
                 $this->addCabecalhos([
-                    'Institui&ccedil;&atilde;o',
-                    'Habilitac&atilde;o'
+                    'Instituição',
+                    'Habilitacão'
                 ]);
                 break;
 
             default:
                 $this->addCabecalhos([
-                    'Habilitac&atilde;o'
+                    'Habilitacão'
                 ]);
                 break;
         }
 
         // outros Filtros
-        $this->campoTexto('nm_tipo', 'Habilita&ccedil;&atilde;o', $this->nm_tipo, 30, 255, false);
+        $this->campoTexto('nm_tipo', 'Habilitação', $this->nm_tipo, 30, 255, false);
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-        $obj_habilitacao = new clsPmieducarHabilitacao();
-        $obj_habilitacao->setOrderby('nm_tipo ASC');
-        $obj_habilitacao->setLimite($this->limite, $this->offset);
+        $query = LegacyQualification::query()
+            ->where('ativo', 1)
+            ->orderBy('nm_tipo', 'ASC');
 
-        $lista = $obj_habilitacao->lista(
-            null,
-            null,
-            null,
-            $this->nm_tipo,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            $this->ref_cod_instituicao
-        );
+        if (is_string($this->nm_tipo)) {
+            $query->where('nm_tipo', 'ilike', '%' . $this->nm_tipo . '%');
+        }
 
-        $total = $obj_habilitacao->_total;
+        if (is_numeric($this->ref_cod_instituicao)) {
+            $query->where('ref_cod_instituicao', $this->ref_cod_instituicao);
+        }
+
+        $result = $query->paginate($this->limite, pageName: 'pagina_'.$this->nome);
+
+        $lista = $result->items();
+        $total = $result->total();
 
         // monta a lista
         if (is_array($lista) && count($lista)) {
@@ -134,7 +132,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->titulo = 'i-Educar - Habilita&ccedil;&atilde;o';
+        $this->titulo = 'i-Educar - Habilitação';
         $this->processoAp = '573';
     }
 };

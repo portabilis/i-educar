@@ -2,10 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\Ativo;
 use Illuminate\Database\Eloquent\Model;
 
 class LegacySchoolClassType extends Model
 {
+    use Ativo;
+
+    public const CREATED_AT = 'data_cadastro';
+    public const UPDATED_AT = null;
+
     /**
      * @var string
      */
@@ -23,12 +29,7 @@ class LegacySchoolClassType extends Model
         'ref_usuario_cad',
         'nm_tipo',
         'sgl_tipo',
-        'data_cadastro',
         'ref_cod_instituicao',
+        'ativo'
     ];
-
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
 }

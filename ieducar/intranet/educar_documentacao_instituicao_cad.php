@@ -25,7 +25,7 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
-        Portabilis_View_Helper_Application::loadJavascript($this, ['/modules/Cadastro/Assets/Javascripts/DocumentacaoPadrao.js']);
+        Portabilis_View_Helper_Application::loadJavascript($this, ['/vendor/legacy/Cadastro/Assets/Javascripts/DocumentacaoPadrao.js']);
 
         $obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
         $obj_usuario_det = $obj_usuario->detalhe();
@@ -48,7 +48,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Documentação padrão';
+        $this->title = 'Documentação padrão';
         $this->processoAp = '578';
     }
 };

@@ -140,6 +140,7 @@ class clsModulesPessoaTransporte extends Model
         if (is_numeric($this->cod_pessoa_transporte)) {
             $db = new clsBanco();
             $set = '';
+            $gruda = '';
 
             if (is_numeric($this->ref_cod_rota_transporte_escolar)) {
                 $set .= "{$gruda}ref_cod_rota_transporte_escolar = '{$this->ref_cod_rota_transporte_escolar}'";

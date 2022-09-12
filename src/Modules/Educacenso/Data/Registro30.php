@@ -45,6 +45,8 @@ class Registro30 extends AbstractRegistro
         $arrayEmployeeId = $this->getArrayEmployeeId();
         $employeeData = $this->repository->getEmployeeDataForRecord30($arrayEmployeeId);
         foreach ($employeeData as $data) {
+            $data->posGraduacaoNaoPossui = empty($data->posGraduacoes) ? '1' : '';
+            $data->posGraduacoes = $this->formatPosGraduateToArray($data->posGraduacoes);
             $data->email = mb_strtoupper($data->email);
             $this->model = $this->modelArray[$data->codigoPessoa];
             $this->hydrateModel($data);
@@ -59,14 +61,11 @@ class Registro30 extends AbstractRegistro
             $this->modelArray[$data->codigoPessoa] = $this->model;
         }
 
-        $unconsideredKnowledgeArea = [27, 17, 32, 99];
-
         foreach ($this->modelArray as &$record) {
             $record->formacaoAnoConclusao = Portabilis_Utils_Database::pgArrayToArray($record->formacaoAnoConclusao);
             $record->formacaoCurso = Portabilis_Utils_Database::pgArrayToArray($record->formacaoCurso);
             $record->formacaoInstituicao = Portabilis_Utils_Database::pgArrayToArray($record->formacaoInstituicao);
-            $record->formacaoComponenteCurricular = Portabilis_Utils_Database::pgArrayToArray($record->formacaoComponenteCurricular);
-            $record->formacaoComponenteCurricular = array_diff($record->formacaoComponenteCurricular, $unconsideredKnowledgeArea);
+            $record->complementacaoPedagogica = Portabilis_Utils_Database::pgArrayToArray($record->complementacaoPedagogica);
         }
 
         return $this->modelArray;
@@ -172,5 +171,16 @@ class Registro30 extends AbstractRegistro
         }
 
         return $arrayId;
+    }
+
+    private function formatPosGraduateToArray($posGraduate)
+    {
+        $posGraduate = explode('}","{', $posGraduate);
+
+        foreach ($posGraduate as $key => $pos) {
+            $posGraduate[$key] = json_decode('{' . str_replace(['\\', '{"{', '}"}'], '', $pos) . '}');
+        }
+
+        return $posGraduate;
     }
 }

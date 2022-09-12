@@ -14,7 +14,9 @@ use Illuminate\Support\Facades\View;
 
 class Controller extends BaseController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    use AuthorizesRequests;
+    use DispatchesJobs;
+    use ValidatesRequests;
 
     protected $beta = false;
 
@@ -75,8 +77,30 @@ class Controller extends BaseController
         }
 
         View::share('menu', $menu);
-        View::share('title', '');
+        View::share('title', $this->getPageTitle());
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    private function getPageTitle()
+    {
+        if (isset($this->title)) {
+            return $this->title;
+        }
+
+        if (isset($this->_title)) {
+            return $this->_title;
+        }
+
+        if (isset($this->titulo)) {
+            return $this->titulo;
+        }
+
+        if (isset($this->_titulo)) {
+            return $this->_titulo;
+        }
     }
 }

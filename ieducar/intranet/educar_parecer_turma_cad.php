@@ -66,30 +66,14 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
-        // primary keys
+
         $this->campoOculto('cod_turma', $this->cod_turma);
         $this->campoOculto('ano', $this->ano);
 
-        $obj_aluno = new clsPmieducarAluno();
-        // text
-
-        $cont = 0;
-
-        // if(!count($etapas) > 0){
-
-        //   foreach ($this->etapas as $key => $etapa) {
-        //     $cont++;
-        //     if($cont > 4)
-        //       break;
-
-        //     $this->campoMemo( "parecer_{$cont}_etapa", "Parecer {$cont}º ".strtolower($etapa['nome']), $this->{'parecer_'.$cont.'_etapa'}, 60, 5, false );
-        //   }
-        // }else{
         $this->campoMemo('parecer_1_etapa', 'Relatório global da turma - 1° Semestre', $this->parecer_1_etapa, 60, 5, false);
         $this->campoMemo('parecer_2_etapa', 'Relatório global de educação física - 1° Semestre', $this->parecer_2_etapa, 60, 5, false);
         $this->campoMemo('parecer_3_etapa', 'Relatório global da turma - 2° Semestre', $this->parecer_3_etapa, 60, 5, false);
         $this->campoMemo('parecer_4_etapa', 'Relatório global de educação física - 2° Semestre', $this->parecer_4_etapa, 60, 5, false);
-        // }
     }
 
     public function Editar()
@@ -115,7 +99,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Parecer da turma';
+        $this->title = 'Parecer da turma';
         $this->processoAp = '586';
     }
 };

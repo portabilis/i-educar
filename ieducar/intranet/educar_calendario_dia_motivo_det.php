@@ -22,7 +22,7 @@ return new class extends clsDetalhe {
 
     public function Gerar()
     {
-        $this->titulo = 'Calend&aacute;rio Dia Motivo - Detalhe';
+        $this->titulo = 'Calendário Dia Motivo - Detalhe';
 
         $this->cod_calendario_dia_motivo=$_GET['cod_calendario_dia_motivo'];
 
@@ -43,7 +43,7 @@ return new class extends clsDetalhe {
         $nm_instituicao = $obj_instituicao_det['nm_instituicao'];
 
         if ($nm_instituicao) {
-            $this->addDetalhe([ 'Institui&ccedil;&atilde;o', "{$nm_instituicao}" ]);
+            $this->addDetalhe([ 'Instituição', "{$nm_instituicao}" ]);
         }
         if ($registro['ref_cod_escola']) {
             $this->addDetalhe([ 'Escola', "{$registro['ref_cod_escola']}"]);
@@ -55,13 +55,13 @@ return new class extends clsDetalhe {
             $this->addDetalhe([ 'Sigla', "{$registro['sigla']}"]);
         }
         if ($registro['descricao']) {
-            $this->addDetalhe([ 'Descric&atilde;o', "{$registro['descricao']}"]);
+            $this->addDetalhe([ 'Descricão', "{$registro['descricao']}"]);
         }
         if ($registro['tipo']) {
             if ($registro['tipo'] == 'e') {
                 $registro['tipo'] = 'extra';
             } elseif ($registro['tipo'] == 'n') {
-                $registro['tipo'] = 'n&atilde;o-letivo';
+                $registro['tipo'] = 'não-letivo';
             }
             $this->addDetalhe([ 'Tipo', "{$registro['tipo']}"]);
         }
@@ -81,7 +81,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Calend&aacute;rio Dia Motivo';
+        $this->title = 'Calendário Dia Motivo';
         $this->processoAp = '576';
     }
 };

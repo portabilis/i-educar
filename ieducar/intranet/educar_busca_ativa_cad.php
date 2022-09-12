@@ -191,7 +191,7 @@ return new class extends clsCadastro {
             DB::beginTransaction();
             $activeLookingService->delete($legacyActiveLooking);
             DB::commit();
-        } catch (Exception $e) {
+        } catch (Exception) {
             DB::rollBack();
             $this->mensagem = 'Exclusão não realizada.';
             return false;
@@ -205,13 +205,13 @@ return new class extends clsCadastro {
 
     protected function loadAssets()
     {
-        $jsFiles = ['/modules/BuscaAtiva/BuscaAtiva.js', '/modules/BuscaAtiva/educar-busca-ativa-cad.js'];
+        $jsFiles = ['/vendor/legacy/BuscaAtiva/BuscaAtiva.js', '/vendor/legacy/BuscaAtiva/educar-busca-ativa-cad.js'];
         Portabilis_View_Helper_Application::loadJavascript($this, $jsFiles);
     }
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Busca Ativa';
+        $this->title = 'Busca Ativa';
         $this->processoAp = '578';
 
     }

@@ -3,7 +3,8 @@
 use iEducar\Modules\Addressing\LegacyAddressingFields;
 use Illuminate\Support\Facades\Auth;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     use LegacyAddressingFields;
 
     // Dados do Juridico
@@ -36,7 +37,7 @@ return new class extends clsCadastro {
 
     public function Inicializar()
     {
-        $this->cod_pessoa_fj = is_numeric($_GET['idpes']) ? (int) $_GET['idpes'] : null;
+        $this->cod_pessoa_fj = is_numeric($_GET['idpes']) ? (int)$_GET['idpes'] : null;
         $this->idpes_cad = $this->pessoa_logada;
 
         $this->retorno = 'Novo';
@@ -109,13 +110,13 @@ return new class extends clsCadastro {
         $this->campoTexto('insc_est', 'Inscrição Estadual', $this->insc_est, '20', '30');
 
         Portabilis_View_Helper_Application::loadJavascript($this, [
-            '/modules/Cadastro/Assets/Javascripts/Addresses.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/Addresses.js',
         ]);
     }
 
     public function Novo()
     {
-        if (! empty($this->cnpj) && validaCNPJ($this->cnpj) === false) {
+        if (!empty($this->cnpj) && validaCNPJ($this->cnpj) === false) {
             $this->mensagem = 'CNPJ inválido';
             return false;
         }
@@ -125,6 +126,12 @@ return new class extends clsCadastro {
         $contemPessoaJuridica = (new clsJuridica(false, $this->cnpj))->detalhe();
         if ($this->cnpj !== null && $contemPessoaJuridica) {
             $this->mensagem = 'Já existe uma empresa cadastrada com este CNPJ.';
+            return false;
+        }
+
+        if (!$this->validaCaracteresPermitidosComplemento()) {
+            $this->mensagem = 'O campo foi preenchido com valor não permitido. O campo Complemento só permite os caracteres: ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ª º – / . ,';
+
             return false;
         }
 
@@ -145,28 +152,28 @@ return new class extends clsCadastro {
         $this->cod_pessoa_fj = $objPessoa->cadastra();
 
         (new clsJuridica(
-           $this->cod_pessoa_fj,
-           $this->cnpj,
-           $this->fantasia,
-           $this->insc_est,
-           $this->capital_social
+            $this->cod_pessoa_fj,
+            $this->cnpj,
+            $this->fantasia,
+            $this->insc_est,
+            $this->capital_social
         ))->cadastra();
 
 
         if ($this->telefone_1) {
-            $this->cadastraTelefone($this->cod_pessoa_fj,1, $this->telefone_1, $this->ddd_telefone_1);
+            $this->cadastraTelefone($this->cod_pessoa_fj, 1, $this->telefone_1, $this->ddd_telefone_1);
         }
 
         if ($this->telefone_2) {
-            $this->cadastraTelefone($this->cod_pessoa_fj, 2,$this->telefone_2, $this->ddd_telefone_2);
+            $this->cadastraTelefone($this->cod_pessoa_fj, 2, $this->telefone_2, $this->ddd_telefone_2);
         }
 
         if ($this->telefone_mov) {
-            $this->cadastraTelefone($this->cod_pessoa_fj, 3,$this->telefone_mov, $this->ddd_telefone_mov);
+            $this->cadastraTelefone($this->cod_pessoa_fj, 3, $this->telefone_mov, $this->ddd_telefone_mov);
         }
 
         if ($this->telefone_fax) {
-            $this->cadastraTelefone($this->cod_pessoa_fj, 4,$this->telefone_fax, $this->ddd_telefone_fax);
+            $this->cadastraTelefone($this->cod_pessoa_fj, 4, $this->telefone_fax, $this->ddd_telefone_fax);
         }
 
         $this->saveAddress($this->cod_pessoa_fj);
@@ -202,14 +209,29 @@ return new class extends clsCadastro {
         return is_numeric($telefone) && (strlen($telefone) < 12);
     }
 
+    protected function validaCaracteresPermitidosComplemento()
+    {
+        if (empty($this->complement)) {
+            return true;
+        }
+        $pattern = '/^[a-zA-Z0-9ªº\/–\ .,-]+$/';
+        return preg_match($pattern, $this->complement);
+    }
+
     public function Editar()
     {
-        if (! empty($this->cnpj) && validaCNPJ($this->cnpj) === false) {
+        if (!empty($this->cnpj) && validaCNPJ($this->cnpj) === false) {
             $this->mensagem = 'CNPJ inválido';
             return false;
         }
 
-        $this->cnpj = validaCNPJ($this->cnpj) ? idFederal2int(urldecode($this->cnpj)) : false;
+        $this->cnpj = validaCNPJ($this->cnpj) ? idFederal2int(urldecode($this->cnpj)) : null;
+
+        if (!$this->validaCaracteresPermitidosComplemento()) {
+            $this->mensagem = 'O campo foi preenchido com valor não permitido. O campo Complemento só permite os caracteres: ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ª º – / . ,';
+
+            return false;
+        }
 
         $objJuridica = new clsJuridica(false, $this->cnpj);
 
@@ -229,7 +251,6 @@ return new class extends clsCadastro {
             return false;
         }
 
-        $this->cnpj = idFederal2int($this->cnpj);
         $this->insc_est = idFederal2int($this->insc_est);
 
         $objPessoa = new clsPessoa_(
@@ -314,7 +335,6 @@ return new class extends clsCadastro {
 
         $this->saveAddress($this->cod_pessoa_fj);
         $this->mensagem = 'Edição efetuada com sucesso.';
-
         $this->simpleRedirect('empresas_lst.php');
     }
 
@@ -386,7 +406,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->_titulo = 'Empresas!';
+        $this->_titulo = 'Pessoa Jurídica - Cadastro';
         $this->processoAp = 41;
     }
 };

@@ -27,8 +27,8 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
     public function Gerar()
     {
         Portabilis_View_Helper_Application::loadStylesheet($this, [
-            '/modules/HistoricoEscolar/Static/styles/processamento.css',
-            '/modules/Portabilis/Assets/Plugins/Chosen/chosen.css'
+            '/vendor/legacy/HistoricoEscolar/Static/styles/processamento.css',
+            '/vendor/legacy/Portabilis/Assets/Plugins/Chosen/chosen.css'
         ]);
 
         $this->inputsHelper()->dynamic(['ano', 'instituicao', 'escola']);
@@ -93,7 +93,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
             </tr>
 
             <tr>
-                <td><label for='percentual-frequencia'>% Frequ&ecirc;ncia *</label></td>
+                <td><label for='percentual-frequencia'>% Frequência *</label></td>
                 <td>
                     <select id='percentual-frequencia' class='obrigatorio disable-on-search'>
                         <option value=''>Selecione</option>
@@ -105,7 +105,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
             </tr>
 
             <tr>
-                <td><label for='situacao'>Situa&ccedil;&atilde;o *</label></td>
+                <td><label for='situacao'>Situação *</label></td>
                 <td colspan='2'>
                     <select id='situacao' class='obrigatorio disable-on-search'>
                         <option value=''>Selecione</option>
@@ -135,7 +135,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
                             <th>Nome</th>
                             <th>Nota</th>
                             <th>Falta</th>
-                            <th>A&ccedil;&atilde;o</th>
+                            <th>Ação</th>
                         </tr>
                         <tr class='disciplina'>
                             <td><input class='nome obrigatorio disable-on-search change-state-with-parent' style='display:none;'></input></td>
@@ -161,7 +161,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
                 <td>
                     <select id='notas' class='obrigatorio disable-on-search disable-and-hide-wen-disciplinas-manual'>
                         <option value=''>Selecione</option>
-                        <option value='buscar-boletim'>Lan&ccedil;adas no boletim</option>
+                        <option value='buscar-boletim'>Lançadas no boletim</option>
                         <option value='AP'>AP</option>
                         <option value='informar-manualmente'>Informar manualmente</option>
                     </select>
@@ -174,7 +174,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
                 <td>
                     <select id='faltas' class='obrigatorio disable-on-search disable-and-hide-wen-disciplinas-manual'>
                         <option value=''>Selecione</option>
-                        <option value='buscar-boletim'>Lan&ccedil;adas no boletim</option>
+                        <option value='buscar-boletim'>Lançadas no boletim</option>
                         <option value='informar-manualmente'>Informar manualmente</option>
                     </select>
                 </td>
@@ -207,7 +207,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
             </tr>
 
             <tr>
-                <td><label for=\'observacao\'>Observa&ccedil;&atilde;o</label></td>
+                <td><label for=\'observacao\'>Observação</label></td>
                 <td colspan=\'2\'><textarea id=\'observacao\' name=\'observacao\' cols=\'60\' rows=\'5\'></textarea></td>
             </tr>
 
@@ -218,14 +218,14 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
 
             <tr>
                                 <td>
-                                        <label for=\'media-area-conhecimento\'>Fechar m&eacute;dia por &aacute;rea de conhecimento</label><br>
+                                        <label for=\'media-area-conhecimento\'>Fechar média por área de conhecimento</label><br>
                                         <sub style=\'vertical-align:top;\'>Caso esse campo seja selecionado, será gerado o histórico das áreas de conhecimento e não dos componentes curriculares</sub>
                                 </td>
                 <td colspan=\'2\'><input type=\'checkbox\' id=\'media-area-conhecimento\' name=\'media-area-conhecimento\'></input></td>
             </tr>
 
             <tr>
-                <td><label for=\'processar-media-geral\'>Processar m&eacute;dia geral dos alunos</label><br></td>
+                <td><label for=\'processar-media-geral\'>Processar média geral dos alunos</label><br></td>
                 <td colspan=\'2\'><input type=\'checkbox\' id=\'processar-media-geral\' name=\'processar-media-geral\'></input></td>
             </tr>
 
@@ -236,11 +236,11 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
         Portabilis_View_Helper_Application::loadJavascript(
             $this,
             [
-                '/modules/Portabilis/Assets/Javascripts/Utils.js',
-                '/modules/Portabilis/Assets/Plugins/Chosen/chosen.jquery.min.js',
-                '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/MultipleSearch.js',
-                '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js',
-                '/modules/HistoricoEscolar/Static/scripts/processamento.js'
+                '/vendor/legacy/Portabilis/Assets/Javascripts/Utils.js',
+                '/vendor/legacy/Portabilis/Assets/Plugins/Chosen/chosen.jquery.min.js',
+                '/vendor/legacy/Portabilis/Assets/Javascripts/Frontend/Inputs/MultipleSearch.js',
+                '/vendor/legacy/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js',
+                '/vendor/legacy/HistoricoEscolar/Static/scripts/processamento.js'
             ]
         );
     }

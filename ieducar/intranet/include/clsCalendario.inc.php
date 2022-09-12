@@ -569,6 +569,8 @@ class clsCalendario
             }
         }
 
+        $mensagens = '';
+
         while ($diaCorrente <= $NumeroDiasMes) {
             // Seventh column (Saturday) reached. Start a new row.
             if ($DiaSemana == 7) {
@@ -710,7 +712,7 @@ class clsCalendario
             $cont = 0;
 
             foreach ($this->array_icone as $key => $legenda) {
-                if ($legenda['utilizado']) {
+                if (!empty($legenda['utilizado'])) {
                     $style = sprintf('style="background-color: %s;"', $this->array_cor[$key]);
                     $icone = '';
 

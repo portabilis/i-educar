@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyDisciplineExemption;
+use App\Models\LegacyExemptionType;
 use App\Models\LegacyRegistration;
 use App\Services\Exemption\ExemptionService;
 
@@ -105,8 +106,7 @@ return new class extends clsCadastro {
             $this->ano = $detalhe_matricula['ano'];
 
             $obj_aluno = new clsPmieducarAluno();
-
-            $det_aluno =  $obj_aluno->lista($detalhe_matricula['ref_cod_aluno'], null, null, null, null, null, null, null, null, null, 1);
+            $det_aluno = $obj_aluno->lista(int_cod_aluno: $detalhe_matricula['ref_cod_aluno'], int_ativo: 1);
             $det_aluno = array_shift($det_aluno);
         }
 
@@ -135,6 +135,7 @@ return new class extends clsCadastro {
         // primary keys
         $this->campoOculto('ref_cod_matricula', $this->ref_cod_matricula);
         $this->campoOculto('ref_cod_serie', $this->ref_cod_serie);
+        $this->campoOculto('ref_cod_serie_busca', $this->ref_cod_serie);
         $this->campoOculto('ref_cod_escola', $this->ref_cod_escola);
         $this->campoOculto('cod_dispensa', $this->cod_dispensa);
 
@@ -169,21 +170,11 @@ return new class extends clsCadastro {
             $this->inputsHelper()->multipleSearchComponenteCurricular(null, ['label' => 'Componentes lecionados', 'required' => true], ['searchForArea' => true]);
         }
 
-        $opcoes = ['' => 'Selecione'];
-
-        $objTemp = new clsPmieducarTipoDispensa();
-
-        if ($this->ref_cod_instituicao) {
-            $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, 1, $this->ref_cod_instituicao);
-        } else {
-            $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, 1);
-        }
-
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $opcoes[$registro['cod_tipo_dispensa']] = $registro['nm_tipo'];
-            }
-        }
+        $opcoes = LegacyExemptionType::query()
+            ->where('ativo', 1)
+            ->orderBy('nm_tipo', 'ASC')
+            ->pluck('nm_tipo', 'cod_tipo_dispensa')
+            ->prepend('Selecione', '');
 
         $this->campoLista(
             'ref_cod_tipo_dispensa',
@@ -204,7 +195,7 @@ return new class extends clsCadastro {
                 null,
                 $disciplinaId
             );
-        } catch (Exception $e) {
+        } catch (Exception) {
             return false;
         }
 
@@ -326,6 +317,7 @@ return new class extends clsCadastro {
         $objModulo           = new clsPmieducarModulo();
         $dadosModulo         = $objModulo->lista($dadosEtapa[0]['ref_cod_modulo']);
         $nomeModulo          = $dadosModulo[0]['nm_tipo'];
+        $conteudoHtml = '';
 
         foreach ($dadosEtapa as $modulo) {
             $checked = '';
@@ -395,8 +387,8 @@ return new class extends clsCadastro {
     public function loadAssets()
     {
         $scripts = [
-            '/modules/Cadastro/Assets/Javascripts/ModalDispensasDisciplinaCad.js',
-            '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/ModalDispensasDisciplinaCad.js',
+            '/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
@@ -404,7 +396,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Dispensa Componente Curricular';
+        $this->title = 'Dispensa Componente Curricular';
         $this->processoAp = 578;
     }
 };

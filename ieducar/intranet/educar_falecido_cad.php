@@ -47,7 +47,7 @@ return new class extends clsCadastro {
 
         $this->inputsHelper()->date('data_cancel', ['label' => 'Data do falecimento', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')]);
 
-        $this->campoMemo('observacao', 'Observa&ccedil;&atilde;o', $this->observacao, 60, 5, false);
+        $this->campoMemo('observacao', 'Observação', $this->observacao, 60, 5, false);
     }
 
     public function Novo()
@@ -90,7 +90,7 @@ return new class extends clsCadastro {
                     $enturmacao = new clsPmieducarMatriculaTurma($this->ref_cod_matricula, $enturmacao['ref_cod_turma'], $this->pessoa_logada, null, null, null, 0, null, $enturmacao['sequencial']);
 
                     if (! $enturmacao->edita()) {
-                        $this->mensagem = 'N&atilde;o foi poss&iacute;vel desativar as enturma&ccedil;&otilde;es da matr&iacute;cula.';
+                        $this->mensagem = 'Não foi possível desativar as enturmações da matrícula.';
 
                         return false;
                     } else {
@@ -121,7 +121,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Transfer&ecirc;ncia Solicita&ccedil;&atilde;o';
+        $this->title = 'Transferência Solicitação';
         $this->processoAp = '578';
     }
 };

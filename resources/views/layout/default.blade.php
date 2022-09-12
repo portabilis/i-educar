@@ -5,8 +5,8 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="-1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>i-Educar @if(isset($title)) - {!! $title !!} @endif</title>
+    <link rel="shortcut icon" href="{{ url('favicon.ico') }}" />
+    <title>@if(isset($title)) {!! html_entity_decode($title) !!} - @endif {{ html_entity_decode(config('legacy.app.entity.name')) }} - i-Educar</title>
 
     <script>
         dataLayer = [{
@@ -78,75 +78,13 @@
     <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/ied/phpjs.js") }} "></script>
     <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/jquery/jquery-1.8.3.min.js") }} "></script>
     <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/jquery/jquery.modal.min.js") }} "></script>
-    <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/prototype/prototype-1.7.1.0.js") }} "></script>
-    <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/scriptaculous/effects.js") }} "></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prototype/1.7.1.0/prototype.min.js" integrity="sha512-BfwTGy/vhB1IOMlnxjnHLDQFX9FAidk1uYzXB6JOj9adeMoKlO3Bi3rZGGOrYfCOhBMZggeXTBmmdkfscYOQ/w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/jquery.mask.min.js") }} "></script>
-    <script type='text/javascript' src='{{ Asset::get('/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js') }}'></script>
-    <script type='text/javascript' src='{{ Asset::get('/modules/Portabilis/Assets/Javascripts/Utils.js') }}'></script>
+    <script type='text/javascript' src='{{ Asset::get('/vendor/legacy/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js') }}'></script>
+    <script type='text/javascript' src='{{ Asset::get('/vendor/legacy/Portabilis/Assets/Javascripts/Utils.js') }}'></script>
     <script type='text/javascript' src='{{ Asset::get('/intranet/scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js') }}'></script>
     <script type='text/javascript' src='{{ Asset::get('/intranet/scripts/summernote/summernote-lite.js') }}'></script>
     <script type='text/javascript' src='{{ Asset::get('/intranet/scripts/summernote/summernote-pt-BR.js') }}'></script>
-
-    <script type="text/javascript">
-        window.ambiente = 'development';
-
-        var running = false;
-        var altura = null;
-
-        function changeImage(div_id) {
-            var id = /[0-9]+/.exec(div_id.element.id);
-            var imagem = $('seta_' + id);
-            var src = imagem.src.indexOf('arrow-up');
-
-            imagem.src = (src != -1)
-                ? 'imagens/arrow-down2.png'
-                : 'imagens/arrow-up2.png';
-
-            imagem.title = (src != -1)
-                ? imagem.title.replace('Abrir', 'Fechar')
-                : imagem.title.replace('Fechar', 'Abrir');
-
-            if (src != -1) {
-                setCookie('menu_' + id, 'I', 30);
-            } else {
-                setCookie('menu_' + id, 'V', 30);
-            }
-
-            running = false;
-
-            $('tablenum1').style.height = $('tablenum1').offsetHeight - altura;
-        }
-
-        function teste(div_id) {
-            altura = div_id.element.offsetHeight;
-        }
-
-        function toggleMenu(div_id) {
-            if (running) {
-                return;
-            }
-
-            var src = $('link1_' + div_id).title.indexOf('Abrir');
-
-            $('link1_' + div_id).title = (src != -1)
-                ? $('link1_' + div_id).title.replace('Abrir', 'Fechar')
-                : $('link1_' + div_id).title.replace('Fechar', 'Abrir');
-
-            $('link2_' + div_id).title = (src != -1)
-                ? $('link2_' + div_id).title.replace('Abrir', 'Fechar')
-                : $('link2_' + div_id).title.replace('Fechar', 'Abrir');
-
-            running = true;
-
-            new Effect.toggle($('div_' + div_id), 'slide', {
-                afterFinish: changeImage,
-                duration: 0.3,
-                beforeStart: teste
-            });
-        }
-    </script>
-
-    <!-- #&SCRIPT&# -->
 </head>
 <body>
 
@@ -163,24 +101,23 @@
         <td colspan="2">
             <header class="ieducar-header">
                 <div class="ieducar-header-logo">
-                    <h1><a href="{{ url('/') }}">i-Educar</a></h1>
+                    <h1><a href="{{ Asset::get('/') }}">i-Educar</a></h1>
                 </div>
                 <div class="ieducar-header-links">
                     <div class="dropdown">
                         <div class="dropbtn">{{ $loggedUser->name }}</div>
                         <div class="dropdown-content">
-                            <a href="{{ url('intranet/agenda.php') }}">Agenda</a>
-                            <a href="{{ url('intranet/index.php') }}">Calendário</a>
-                            <a href="{{ url('intranet/meusdados.php') }}">Meus dados</a>
-                            <a href="{{ url('intranet/logof.php') }}" id="logout">Sair</a>
+                            <a href="{{ Asset::get('intranet/agenda.php') }}">Agenda</a>
+                            <a href="{{ Asset::get('intranet/meusdados.php') }}">Meus dados</a>
+                            <a href="{{ Asset::get('intranet/logof.php') }}" id="logout">Sair</a>
                         </div>
                     </div>
-                    <a href="{{ url('intranet/meusdados.php') }}" class="avatar" title="Meus dados">
+                    <a href="{{ Asset::get('intranet/meusdados.php') }}" class="avatar" title="Meus dados">
                         <img class="avatar-35" src="{{ session('logged_user_picture') }}" alt="Perfil">
                     </a>
                     <div class="dropdown notifications">
                         <div class="dropbtn notifications">
-                            <img alt="Notificação" src="{{ url('intranet/imagens/icon-nav-notifications.png') }}">
+                            <img alt="Notificação" src="{{ Asset::get('intranet/imagens/icon-nav-notifications.png') }}">
                             <span class="notification-balloon"></span>
                         </div>
                         <div class="dropdown-content-notifications">
@@ -293,8 +230,6 @@
         }
     }
 </script>
-
-<script type='text/javascript' src='{{ Asset::get('/modules/Portabilis/Assets/Javascripts/Utils.js') }}'></script>
 
 <script type='text/javascript'>(function ($) {
     $(document).ready(function () {

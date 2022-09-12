@@ -15,8 +15,8 @@ class AddForeignKeysInPmieducarDispensaEtapaTable extends Migration
     {
         Schema::table('pmieducar.dispensa_etapa', function (Blueprint $table) {
             $table->foreign('ref_cod_dispensa')
-               ->references('cod_dispensa')
-               ->on('pmieducar.dispensa_disciplina');
+                ->references('cod_dispensa')
+                ->on('pmieducar.dispensa_disciplina');
         });
     }
 

@@ -2,7 +2,11 @@
 
 use App\Models\City;
 use App\Models\Country;
+use App\Models\LegacyBenefit;
+use App\Models\LegacyProject;
+use App\Models\LegacyStudent;
 use App\Models\PersonHasPlace;
+use App\Models\TransportationProvider;
 use App\Services\UrlPresigner;
 use iEducar\Modules\Educacenso\Model\Nacionalidade;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -174,8 +178,9 @@ return new class extends clsDetalhe {
             $obj_deficiencia_pessoa = new clsCadastroFisicaDeficiencia();
             $obj_deficiencia_pessoa_lista = $obj_deficiencia_pessoa->lista($this->ref_idpes);
 
-            $obj_beneficios = new clsPmieducarAlunoBeneficio();
-            $obj_beneficios_lista = $obj_beneficios->lista(null, null, null, null, null, null, null, null, null, null, $this->cod_aluno);
+            $obj_beneficios_lista = LegacyBenefit::query()
+                ->whereHas('students', fn ($q) => $q->where('cod_aluno', $this->cod_aluno))
+                ->get(['nm_beneficio']);
 
             if ($obj_deficiencia_pessoa_lista) {
                 $deficiencia_pessoa = [];
@@ -270,8 +275,8 @@ return new class extends clsDetalhe {
                 $this->addDetalhe([
                     'Nome Aluno',
                     $registro['nome_aluno'] . '<p><img id="student-picture" height="117" src="' . $url . '"/></p>'
-                        . '<div><a class="rotate-picture" data-angle="90" href="javascript:void(0)"><i class="fa fa-rotate-left"></i> Girar para esquerda</a></div>'
-                        . '<div><a class="rotate-picture" data-angle="-90" href="javascript:void(0)"><i class="fa fa-rotate-right"></i> Girar para direita</a></div>'
+                    . '<div><a class="rotate-picture" data-angle="90" href="javascript:void(0)"><i class="fa fa-rotate-left"></i> Girar para esquerda</a></div>'
+                    . '<div><a class="rotate-picture" data-angle="-90" href="javascript:void(0)"><i class="fa fa-rotate-right"></i> Girar para direita</a></div>'
                 ]);
             } else {
                 $this->addDetalhe(['Nome Aluno', $registro['nome_aluno']]);
@@ -279,7 +284,7 @@ return new class extends clsDetalhe {
         }
 
         if ($det_fisica['nome_social']) {
-            $this->addDetalhe(['Nome Social', mb_strtoupper($det_fisica['nome_social'])]);
+            $this->addDetalhe(['Nome social e/ou afetivo', mb_strtoupper($det_fisica['nome_social'])]);
         }
 
         if (idFederal2int($registro['cpf'])) {
@@ -400,8 +405,8 @@ return new class extends clsDetalhe {
             $this->addDetalhe(['Página Pessoal', $registro['url']]);
         }
 
-        if ($registro['ref_cod_religiao']) {
-            $obj_religiao = new clsPmieducarReligiao($registro['ref_cod_religiao']);
+        if ($det_fisica['ref_cod_religiao']) {
+            $obj_religiao = new clsPmieducarReligiao($det_fisica['ref_cod_religiao']);
             $obj_religiao_det = $obj_religiao->detalhe();
 
             $this->addDetalhe(['Religião', $obj_religiao_det['nm_religiao']]);
@@ -411,7 +416,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe(['Raça', $det_raca['nm_raca']]);
         }
 
-        if ($obj_beneficios_lista) {
+        if (!empty($obj_beneficios_lista)) {
             $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#ccdce6" align="center"><td>Benefícios</td></tr>';
             $cor = '#D1DADF';
 
@@ -461,7 +466,7 @@ return new class extends clsDetalhe {
                         align=\'center\'>
                           <td>
                             <a href=\'' . $this->urlPresigner()->getPresignedUrl($documento->url) . '\'
-                               target=\'_blank\' > Visualizar documento ' . (count($documento) > 1 ? ($key + 1) : '') . '
+                               target=\'_blank\' > Visualizar documento ' . (count((array)$documento) > 1 ? ($key + 1) : '') . '
                             </a>
                           </td>
                     </tr>';
@@ -503,9 +508,6 @@ return new class extends clsDetalhe {
             $this->addDetalhe(['Estado Expedidor', $registro['sigla_uf_exp_rg']]);
         }
 
-        /**
-         * @todo CoreExt_Enum?
-         */
         if (!$registro['tipo_cert_civil'] && $registro['certidao_nascimento']) {
             $this->addDetalhe(['Tipo Certidão Civil', 'Nascimento (novo formato)']);
             $this->addDetalhe(['Número Certidão Civil', $registro['certidao_nascimento']]);
@@ -564,24 +566,19 @@ return new class extends clsDetalhe {
         $transporteAluno = null;
         try {
             $transporteAluno = $transporteMapper->find(['aluno' => $this->cod_aluno]);
-        } catch (Exception $e) {
+        } catch (Exception) {
         }
 
-        $this->addDetalhe([
-            'Transporte escolar',
-            isset($transporteAluno) && $transporteAluno->responsavel != 'Não utiliza' ? 'Sim' : 'Não utiliza'
-        ]);
-        if ($transporteAluno && $transporteAluno->responsavel != 'Não utiliza') {
-            $this->addDetalhe(['Responsável transporte', $transporteAluno->responsavel]);
+        $this->addDetalhe(['Transporte escolar', $registro['tipo_transporte'] === 0 ? 'Não utiliza' : 'Sim']);
+
+        if ($transporteAluno && $registro['tipo_transporte'] !== 0) {
+            $tipoTransporte = ucfirst((new TransportationProvider())->getValueDescription($registro['tipo_transporte']));
+            $this->addDetalhe(['Responsável transporte', $tipoTransporte]);
         }
 
         if ($registro['nis_pis_pasep']) {
             $this->addDetalhe(['NIS', $registro['nis_pis_pasep']]);
         }
-
-        // Verifica se o usuário tem permissão para cadastrar um aluno.
-        // O sistema irá validar o cadastro de permissões e o parâmetro
-        // "bloquear_cadastro_aluno" da instituição.
 
         if ($this->obj_permissao->permissao_cadastra(578, $this->pessoa_logada, 7)) {
             $bloquearCadastroAluno = dbBool($configuracoes['bloquear_cadastro_aluno']);
@@ -766,6 +763,8 @@ return new class extends clsDetalhe {
                 ]);
                 $this->addDetalhe(['Quantidade de camisetas (manga curta)', $reg['camiseta_curta_qtd'] ?: '0']);
                 $this->addDetalhe(['Quantidade de camisetas (manga longa)', $reg['camiseta_longa_qtd'] ?: '0']);
+                $this->addDetalhe(['Quantidade de camisetas infantis (sem manga)', $reg['camiseta_infantil_qtd'] ?: '0']);
+                $this->addDetalhe(['Quantidade de calça jeans', $reg['calca_jeans_qtd'] ?: '0']);
                 $this->addDetalhe(['Quantidade de meias', $reg['meias_qtd'] ?: '0']);
                 $this->addDetalhe(['Bermudas tectels (masculino)', $reg['bermudas_tectels_qtd'] ?: '0']);
                 $this->addDetalhe(['Bermudas coton (feminino)', $reg['bermudas_coton_qtd'] ?: '0']);
@@ -807,7 +806,6 @@ return new class extends clsDetalhe {
             }
 
             $this->addDetalhe(['<span id="fmoradia"></span>Moradia', $moradia]);
-            $situacao;
 
             switch ($reg['moradia_situacao']) {
                 case 1:
@@ -845,7 +843,9 @@ return new class extends clsDetalhe {
             $this->addDetalhe(['Possui telefone', $reg['telefone']]);
 
             $recursosTecnlogicos = json_decode($reg['recursos_tecnologicos']);
-            $recursosTecnlogicos = implode(', ', $recursosTecnlogicos);
+            if (is_array($recursosTecnlogicos)) {
+                $recursosTecnlogicos = implode(', ', $recursosTecnlogicos);
+            }
             $this->addDetalhe(['Possui acesso à recursos técnologicos?', $recursosTecnlogicos]);
 
             $this->addDetalhe(['Quantidade de pessoas', $reg['quant_pessoas']]);
@@ -858,11 +858,12 @@ return new class extends clsDetalhe {
             $this->addDetalhe(['Possui coleta de lixo', $reg['lixo']]);
         }
 
-        $objProjetos = new clsPmieducarProjeto();
-        $reg = $objProjetos->listaProjetosPorAluno($this->cod_aluno);
-        ;
+        $reg = LegacyProject::query()->where('pmieducar.projeto_aluno.ref_cod_aluno', $this->cod_aluno)
+            ->join('pmieducar.projeto_aluno', 'pmieducar.projeto_aluno.ref_cod_projeto', '=', 'pmieducar.projeto.cod_projeto')
+            ->orderBy('nome', 'ASC')
+            ->get()->toArray();
 
-        if ($reg) {
+        if (!empty($reg)) {
             $tabela_projetos = '
             <table>
               <tr align="center">
@@ -900,7 +901,7 @@ return new class extends clsDetalhe {
                         <td %s align="center">%s</td>
                     </tr>',
                     $color,
-                    $projeto['projeto'],
+                    $projeto['nome'],
                     $color,
                     dataToBrasil($projeto['data_inclusao']),
                     $color,
@@ -924,14 +925,14 @@ return new class extends clsDetalhe {
         $this->breadcrumb('Aluno', ['/intranet/educar_index.php' => 'Escola']);
         // js
         $scripts = [
-            '/modules/Portabilis/Assets/Javascripts/Utils.js',
-            '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
-            '/modules/Cadastro/Assets/Javascripts/AlunoShow.js?version=3'
+            '/vendor/legacy/Portabilis/Assets/Javascripts/Utils.js',
+            '/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/AlunoShow.js?version=3'
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
 
-        $styles = ['/modules/Cadastro/Assets/Stylesheets/Aluno.css'];
+        $styles = ['/vendor/legacy/Cadastro/Assets/Stylesheets/Aluno.css'];
 
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
     }
@@ -947,7 +948,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Aluno';
+        $this->title = 'Aluno';
         $this->processoAp = 578;
     }
 };

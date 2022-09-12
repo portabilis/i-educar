@@ -12,6 +12,13 @@ abstract class Core_Controller_Page_EditController extends clsCadastro implement
     protected $_formMap = [];
 
     /**
+     * Usada em relatório onde não possui ações cadastrar, atualizar ou excluir
+     *
+     * @var bool
+     */
+    protected $_onlyRead = false;
+
+    /**
      * Determina se "Cadastrar" ou "Atualizar" são ações disponíveis na interface.
      *
      * @var bool
@@ -385,6 +392,10 @@ abstract class Core_Controller_Page_EditController extends clsCadastro implement
      */
     protected function _save()
     {
+        if ($this->_onlyRead) {
+            return false;
+        }
+
         $data = [];
 
         foreach ($_POST as $key => $val) {
@@ -408,7 +419,7 @@ abstract class Core_Controller_Page_EditController extends clsCadastro implement
             $this->getDataMapper()->save($this->getEntity());
 
             return true;
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->mensagem = 'Erro no preenchimento do formulário. ';
 
             return false;

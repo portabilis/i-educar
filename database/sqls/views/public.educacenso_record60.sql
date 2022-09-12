@@ -21,9 +21,9 @@ SELECT
     COALESCE((ARRAY [11] <@ matricula_turma.tipo_atendimento)::INT, 0) "tipoAtendimentoEnsinoRecursosOpticosNaoOpticos",
     aluno.recebe_escolarizacao_em_outro_espaco AS "recebeEscolarizacaoOutroEspacao",
     (CASE
-         WHEN transporte_aluno.responsavel > 0 THEN 1
-         ELSE transporte_aluno.responsavel END) AS "transportePublico",
-    transporte_aluno.responsavel AS "poderPublicoResponsavelTransporte",
+         WHEN aluno.tipo_transporte > 0 THEN 1
+         ELSE aluno.tipo_transporte END) AS "transportePublico",
+    aluno.tipo_transporte AS "poderPublicoResponsavelTransporte",
     (ARRAY [4] <@ aluno.veiculo_transporte_escolar)::INT "veiculoTransporteBicicleta",
     (ARRAY [2] <@ aluno.veiculo_transporte_escolar)::INT "veiculoTransporteMicroonibus",
     (ARRAY [3] <@ aluno.veiculo_transporte_escolar)::INT "veiculoTransporteOnibus",
@@ -39,9 +39,24 @@ SELECT
     aluno.cod_aluno "codigoAluno",
     turma.tipo_atendimento "tipoAtendimentoTurma",
     turma.etapa_educacenso "etapaTurma",
+    turma.estrutura_curricular "estruturaCurricularTurma",
     matricula.cod_matricula "codigoMatricula",
     turma.nm_turma "nomeTurma",
     matricula_turma.tipo_atendimento "tipoAtendimentoMatricula",
+    (ARRAY[1::smallint] <@ matricula_turma.tipo_itinerario)::INT "tipoItinerarioLinguagens",
+    (ARRAY[2::smallint] <@ matricula_turma.tipo_itinerario)::INT "tipoItinerarioMatematica",
+    (ARRAY[3::smallint] <@ matricula_turma.tipo_itinerario)::INT "tipoItinerarioCienciasNatureza",
+    (ARRAY[4::smallint] <@ matricula_turma.tipo_itinerario)::INT "tipoItinerarioCienciasHumanas",
+    (ARRAY[5::smallint] <@ matricula_turma.tipo_itinerario)::INT "tipoItinerarioFormacaoTecnica",
+    (ARRAY[6::smallint] <@ matricula_turma.tipo_itinerario)::INT "tipoItinerarioIntegrado",
+    (ARRAY[1::smallint] <@ matricula_turma.composicao_itinerario)::INT "composicaoItinerarioLinguagens",
+    (ARRAY[2::smallint] <@ matricula_turma.composicao_itinerario)::INT "composicaoItinerarioMatematica",
+    (ARRAY[3::smallint] <@ matricula_turma.composicao_itinerario)::INT "composicaoItinerarioCienciasNatureza",
+    (ARRAY[4::smallint] <@ matricula_turma.composicao_itinerario)::INT "composicaoItinerarioCienciasHumanas",
+    (ARRAY[5::smallint] <@ matricula_turma.composicao_itinerario)::INT "composicaoItinerarioFormacaoTecnica",
+    matricula_turma.curso_itinerario "cursoItinerario",
+    matricula_turma.itinerario_concomitante "itinerarioConcomitante",
+    matricula_turma.id "enturmacaoId",
     turma.tipo_mediacao_didatico_pedagogico "tipoMediacaoTurma",
     aluno.veiculo_transporte_escolar "veiculoTransporteEscolar",
     curso.modalidade_curso as "modalidadeCurso",
@@ -50,42 +65,41 @@ SELECT
     matricula.ano AS "anoTurma",
     escola.cod_escola AS "codEscola"
 FROM pmieducar.aluno
-JOIN pmieducar.matricula ON matricula.ref_cod_aluno = aluno.cod_aluno
-JOIN pmieducar.escola ON escola.cod_escola = matricula.ref_ref_cod_escola
-JOIN pmieducar.matricula_turma ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
-JOIN pmieducar.instituicao ON instituicao.cod_instituicao = escola.ref_cod_instituicao
-JOIN pmieducar.turma ON turma.cod_turma = matricula_turma.ref_cod_turma
-JOIN pmieducar.curso ON curso.cod_curso = turma.ref_cod_curso
-JOIN cadastro.pessoa ON pessoa.idpes = aluno.ref_idpes
-JOIN cadastro.fisica ON fisica.idpes = pessoa.idpes
-LEFT JOIN modules.educacenso_cod_escola ON educacenso_cod_escola.cod_escola = escola.cod_escola
-LEFT JOIN modules.educacenso_cod_turma ON educacenso_cod_turma.cod_turma = turma.cod_turma
-LEFT JOIN modules.educacenso_cod_aluno ON educacenso_cod_aluno.cod_aluno = aluno.cod_aluno
-LEFT JOIN modules.transporte_aluno ON transporte_aluno.aluno_id = aluno.cod_aluno
+         JOIN pmieducar.matricula ON matricula.ref_cod_aluno = aluno.cod_aluno
+         JOIN pmieducar.escola ON escola.cod_escola = matricula.ref_ref_cod_escola
+         JOIN pmieducar.matricula_turma ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
+         JOIN pmieducar.instituicao ON instituicao.cod_instituicao = escola.ref_cod_instituicao
+         JOIN pmieducar.turma ON turma.cod_turma = matricula_turma.ref_cod_turma
+         JOIN pmieducar.curso ON curso.cod_curso = turma.ref_cod_curso
+         JOIN cadastro.pessoa ON pessoa.idpes = aluno.ref_idpes
+         JOIN cadastro.fisica ON fisica.idpes = pessoa.idpes
+         LEFT JOIN modules.educacenso_cod_escola ON educacenso_cod_escola.cod_escola = escola.cod_escola
+         LEFT JOIN modules.educacenso_cod_turma ON educacenso_cod_turma.cod_turma = turma.cod_turma
+         LEFT JOIN modules.educacenso_cod_aluno ON educacenso_cod_aluno.cod_aluno = aluno.cod_aluno
 WHERE true
   AND matricula.ativo = 1
   AND turma.ativo = 1
   AND COALESCE(turma.nao_informar_educacenso, 0) = 0
   AND (
         (
-                matricula_turma.data_enturmacao < instituicao.data_educacenso
+                    matricula_turma.data_enturmacao < instituicao.data_educacenso
                 AND coalesce(matricula_turma.data_exclusao, '2999-01-01'::date) >= instituicao.data_educacenso
             )
         OR (
-                matricula_turma.data_enturmacao = instituicao.data_educacenso AND
-                (
-                    NOT EXISTS(
-                        SELECT
-                            1
-                        FROM pmieducar.matricula_turma smt
-                        JOIN pmieducar.matricula sm
-                             ON sm.cod_matricula = smt.ref_cod_matricula
-                        WHERE sm.ref_cod_aluno = matricula.ref_cod_aluno
-                          AND sm.ativo = 1
-                          AND sm.ano = matricula.ano
-                          AND smt.data_enturmacao < matricula_turma.data_enturmacao
-                          AND coalesce(smt.data_exclusao, '2999-01-01'::date) >= instituicao.data_educacenso
+                    matricula_turma.data_enturmacao = instituicao.data_educacenso AND
+                    (
+                        NOT EXISTS(
+                            SELECT
+                                1
+                            FROM pmieducar.matricula_turma smt
+                                     JOIN pmieducar.matricula sm
+                                          ON sm.cod_matricula = smt.ref_cod_matricula
+                            WHERE sm.ref_cod_aluno = matricula.ref_cod_aluno
+                              AND sm.ativo = 1
+                              AND sm.ano = matricula.ano
+                              AND smt.data_enturmacao < matricula_turma.data_enturmacao
+                              AND coalesce(smt.data_exclusao, '2999-01-01'::date) >= instituicao.data_educacenso
+                            )
                         )
-                    )
             )
     )

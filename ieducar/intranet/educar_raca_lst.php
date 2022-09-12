@@ -41,18 +41,18 @@ return new class extends clsListagem {
     {
         $this->__pessoa_logada = $this->pessoa_logada;
 
-        $this->__titulo = 'Ra&ccedil;a - Listagem';
+        $this->__titulo = 'Raça - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null: $val;
         }
 
         $this->addCabecalhos([
-            'Ra&ccedil;a'
+            'Raça'
         ]);
 
         // outros Filtros
-        $this->campoTexto('nm_raca', 'Ra&ccedil;a', $this->nm_raca, 30, 255, false);
+        $this->campoTexto('nm_raca', 'Raça', $this->nm_raca, 30, 255, false);
 
         // Paginador
         $this->__limite = 20;
@@ -106,7 +106,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Ra&ccedil;a';
+        $this->title = 'Raça';
         $this->processoAp = '678';
     }
 };

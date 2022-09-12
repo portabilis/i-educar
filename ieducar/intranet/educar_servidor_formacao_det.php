@@ -57,7 +57,7 @@ return new class extends clsDetalhe {
             if ($registro['tipo'] == 'C') {
                 $registro['tipo'] = 'Curso';
             } elseif ($registro['tipo'] == 'T') {
-                $registro['tipo'] = 'T&iacute;tulo';
+                $registro['tipo'] = 'Título';
             } else {
                 $registro['tipo'] = 'Concurso';
             }
@@ -115,7 +115,7 @@ return new class extends clsDetalhe {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Servidor Formação';
+        $this->title = 'Servidor Formação';
         $this->processoAp = 635;
     }
 };

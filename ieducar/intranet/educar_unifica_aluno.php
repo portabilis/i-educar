@@ -30,9 +30,9 @@ return new class extends clsCadastro {
         $this->campoTexto('aluno_duplicado', 'Aluno duplicado', $this->aluno_duplicado, 50, 255, false, true, false, '', '', '', 'onfocus');
         $this->campoTabelaFim();
 
-        $styles = ['/modules/Cadastro/Assets/Stylesheets/UnificaAluno.css'];
+        $styles = ['/vendor/legacy/Cadastro/Assets/Stylesheets/UnificaAluno.css'];
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
-        $scripts = ['/modules/Portabilis/Assets/Javascripts/ClientApi.js'];
+        $scripts = ['/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js'];
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
     }
 
@@ -104,7 +104,7 @@ return new class extends clsCadastro {
 
         try {
             DB::commit();
-        } catch (Throwable $throable) {
+        } catch (Throwable) {
             DB::rollBack();
             $this->mensagem = 'Não foi possível realizar a unificação';
 
@@ -151,7 +151,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Unificação de alunos';
+        $this->title = 'Unificação de alunos';
         $this->processoAp = '999847';
     }
 };

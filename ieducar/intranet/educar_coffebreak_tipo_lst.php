@@ -56,7 +56,7 @@ return new class extends clsListagem {
 
         // outros Filtros
         $this->campoTexto('nm_tipo', 'Tipo Coffee Break', $this->nm_tipo, 30, 255, false);
-        $this->campoNumero('custo_unitario', 'Custo Unit&aacute;rio', $this->custo_unitario, 15, 255, false);
+        $this->campoNumero('custo_unitario', 'Custo Unitário', $this->custo_unitario, 15, 255, false);
 
         // Paginador
         $this->limite = 20;
@@ -110,7 +110,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'i-Educar - Tipo Coffebreak';
+        $this->title = 'Tipo Coffebreak';
         $this->processoAp = '564';
     }
 };
