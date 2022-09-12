@@ -19,7 +19,6 @@ return new class extends clsListagem {
     public $ref_usuario_cad;
     public $ref_usuario_exc;
     public $ref_cod_instituicao;
-    public $ref_cod_escola_rede_ensino;
     public $ref_idpes;
     public $sigla;
     public $data_cadastro;

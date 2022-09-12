@@ -325,7 +325,7 @@ class clsPmieducarEscola extends Model
     {
         if (is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_instituicao) &&
             is_numeric($this->zona_localizacao) &&
-            is_numeric($this->ref_cod_escola_rede_ensino) && is_string($this->sigla)
+            is_string($this->sigla)
         ) {
             $db = new clsBanco();
 
@@ -1329,7 +1329,7 @@ class clsPmieducarEscola extends Model
 
             return $recordId;
         } else {
-            echo "<Hbr><br>is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_instituicao) && is_numeric($this->zona_localizacao) && is_numeric($this->ref_cod_escola_rede_ensino) && is_string($this->sigla )";
+            echo "<Hbr><br>is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_instituicao) && is_numeric($this->zona_localizacao) && is_string($this->sigla )";
         }
 
         return false;
