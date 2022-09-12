@@ -77,12 +77,23 @@ class LegacyCourseBuilder extends LegacyBuilder
      *
      * @return LegacyCourseBuilder
      */
-    public function whereSchool(int $school): self
+    public function whereSchool(int $school, ?int $year = null): self
     {
-        return $this->whereHas('schools', function ($q) use ($school) {
+        return $this->whereHas('schools', function ($q) use ($school, $year) {
             $q->where('cod_escola', $school);
+            $q->when($year, function ($q) use ($year) {
+                $q->whereRaw("anos_letivos @> ('{{$year}}')");
+            });
         });
     }
+
+    public function whereYearEq(int $year): self
+    {
+        return $this->whereHas('schools', function ($q) use ($year) {
+            $q->whereRaw("anos_letivos @> ('{{$year}}')");
+        });
+    }
+
 
     /**
      * Filtra por modalidade
