@@ -78,10 +78,10 @@ class Registro30Model extends Registro30
             $arrayColumns[58],
         ]);
 
-        $this->posgraduacoes = [];
+        $this->posGraduacoes = [];
 
         if (!empty($arrayColumns[59])) {
-            $this->posgraduacoes[] = [
+            $this->posGraduacoes[] = [
                 'tipo' => $arrayColumns[59],
                 'area' => $arrayColumns[60],
                 'ano_conclusao' => $arrayColumns[61],
@@ -89,7 +89,7 @@ class Registro30Model extends Registro30
         }
 
         if (!empty($arrayColumns[62])) {
-            $this->posgraduacoes[] = [
+            $this->posGraduacoes[] = [
                 'tipo' => $arrayColumns[62],
                 'area' => $arrayColumns[63],
                 'ano_conclusao' => $arrayColumns[64],
@@ -97,7 +97,7 @@ class Registro30Model extends Registro30
         }
 
         if (!empty($arrayColumns[65])) {
-            $this->posgraduacoes[] = [
+            $this->posGraduacoes[] = [
                 'tipo' => $arrayColumns[65],
                 'area' => $arrayColumns[66],
                 'ano_conclusao' => $arrayColumns[67],
@@ -105,7 +105,7 @@ class Registro30Model extends Registro30
         }
 
         if (!empty($arrayColumns[68])) {
-            $this->posgraduacoes[] = [
+            $this->posGraduacoes[] = [
                 'tipo' => $arrayColumns[68],
                 'area' => $arrayColumns[69],
                 'ano_conclusao' => $arrayColumns[70],
@@ -113,7 +113,7 @@ class Registro30Model extends Registro30
         }
 
         if (!empty($arrayColumns[71])) {
-            $this->posgraduacoes[] = [
+            $this->posGraduacoes[] = [
                 'tipo' => $arrayColumns[71],
                 'area' => $arrayColumns[72],
                 'ano_conclusao' => $arrayColumns[73],
@@ -121,7 +121,7 @@ class Registro30Model extends Registro30
         }
 
         if (!empty($arrayColumns[74])) {
-            $this->posgraduacoes[] = [
+            $this->posGraduacoes[] = [
                 'tipo' => $arrayColumns[74],
                 'area' => $arrayColumns[75],
                 'ano_conclusao' => $arrayColumns[76],
