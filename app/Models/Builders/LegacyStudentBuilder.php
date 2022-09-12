@@ -12,6 +12,32 @@ class LegacyStudentBuilder extends LegacyBuilder
         return $this->where('cod_aluno', $student);
     }
 
+    public function whereStateNetwork($stateNetwork)
+    {
+        return $this->whereRaw('aluno_estado_id like ?', $stateNetwork);
+    }
+
+    public function whereBirthDate($birthDate)
+    {
+        return  $this->whereHas('individual',
+            fn ($q) => $q->whereRaw("TO_CHAR(data_nasc,'DD/MM/YYYY') = '?')", $birthDate)
+        );
+    }
+
+    public function whereCpf($cpf)
+    {
+        return  $this->whereHas('individual',
+            fn ($q) => $q->where('cpf', $cpf)
+        );
+    }
+
+    public function whereRg($rg)
+    {
+        return  $this->whereHas('individual.document',
+            fn ($q) => $q->whereRaw( "translate(cd.rg, './-', '') = '?'", $rg)
+        );
+    }
+
     public function whereMotherName($name)
     {
         return $this->whereHas('individual.father',
