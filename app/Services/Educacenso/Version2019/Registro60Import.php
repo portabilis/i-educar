@@ -82,7 +82,7 @@ class Registro60Import implements RegistroImportInterface
     /**
      * @return LegacySchoolClass
      */
-    private function getSchoolClass(): ?LegacySchoolClass
+    protected function getSchoolClass(): ?LegacySchoolClass
     {
         if (empty($this->model->inepTurma)) {
             return null;
@@ -94,7 +94,7 @@ class Registro60Import implements RegistroImportInterface
     /**
      * @return LegacyStudent|null
      */
-    private function getStudent()
+    protected function getStudent()
     {
         return StudentInep::where('cod_aluno_inep', $this->model->inepAluno)->first()->student ?? null;
     }
