@@ -404,3 +404,8 @@ function isArrayEmpty($value): bool
 
     return null;
 }
+
+function transformDBArrayInString($value): ?string
+{
+    return is_array($value) ? '{' . implode(',', array_filter($value)) . '}' : null;
+}

@@ -15,7 +15,6 @@ return new class extends clsCadastro {
     public $ref_cod_serie;
     public $ref_cod_serie_;
     public $ref_ref_cod_escola;
-    public $ref_cod_infra_predio_comodo;
     public $nm_turma;
     public $sgl_turma;
     public $max_aluno;
@@ -286,69 +285,6 @@ return new class extends clsCadastro {
         $this->campoLista('mult_boletim_diferenciado_id', 'Boletim diferenciado', $tiposBoletim, $this->mult_boletim_diferenciado_id, null, null, null, null, null, false);
         $this->campoOculto('mult_padrao_ano_escolar', $this->mult_padrao_ano_escolar);
         $this->campoTabelaFim();
-
-        // Infra prédio cômodo
-        $opcoes = ['' => 'Selecione'];
-
-        // Editar
-        if ($this->ref_ref_cod_escola) {
-            $obj_infra_predio = new clsPmieducarInfraPredio();
-            $obj_infra_predio->setOrderby('nm_predio ASC');
-            $lst_infra_predio = $obj_infra_predio->lista(
-                null,
-                null,
-                null,
-                $this->ref_ref_cod_escola,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                1
-            );
-
-            if (is_array($lst_infra_predio) && count($lst_infra_predio)) {
-                foreach ($lst_infra_predio as $predio) {
-                    $obj_infra_predio_comodo = new clsPmieducarInfraPredioComodo();
-                    $lst_infra_predio_comodo = $obj_infra_predio_comodo->lista(
-                        null,
-                        null,
-                        null,
-                        null,
-                        $predio['cod_infra_predio'],
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        1
-                    );
-
-                    if (is_array($lst_infra_predio_comodo) && count($lst_infra_predio_comodo)) {
-                        foreach ($lst_infra_predio_comodo as $comodo) {
-                            $opcoes[$comodo['cod_infra_predio_comodo']] = $comodo['nm_comodo'];
-                        }
-                    }
-                }
-            }
-        }
-
-        $this->campoLista(
-            'ref_cod_infra_predio_comodo',
-            'Sala',
-            $opcoes,
-            $this->ref_cod_infra_predio_comodo,
-            null,
-            null,
-            null,
-            null,
-            null,
-            false
-        );
 
         $array_servidor = ['' => 'Selecione um servidor'];
         if ($this->ref_cod_regente) {

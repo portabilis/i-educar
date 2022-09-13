@@ -134,20 +134,17 @@ class LegacyController extends Controller
 
             return;
         } catch (HttpResponseException $exception) {
-
             // Para evitar encerrar a aplicação com `die` ou `exit`, é lançada
             // uma exceção do tipo `HttpResponseException` com uma `Response`
             // interna que será a resposta devolvida pela aplicação.
 
             throw $exception;
         } catch (CoreExt_Exception_FileNotFoundException $exception) {
-
             // Caso a página não seja encontrada no módulo legado, lança um erro 404
             // ao invés de 500
 
             throw new NotFoundHttpException($exception->getMessage(), $exception);
         } catch (Exception $exception) {
-
             // A maioria das vezes será pega a Exception neste catch, apenas
             // será pega por Throwable quando for ErrorException ou uma exceção
             // customizada que implementa apenas Throwable e não extende a
@@ -155,7 +152,6 @@ class LegacyController extends Controller
             //
             // http://php.net/manual/en/class.throwable.php
         } catch (Throwable $throwable) {
-
             // Converte uma exceção que implementa apenas Throwable para
             // Exception nativa do PHP. Isto é feito devido o Exception
             // Handler do Laravel aceitar apenas exceções nativas.
