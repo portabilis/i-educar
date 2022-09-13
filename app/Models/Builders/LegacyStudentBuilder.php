@@ -120,8 +120,8 @@ class LegacyStudentBuilder extends LegacyBuilder
         return $this->whereHas('registrations',
             function ($query) use ($year, $course, $grade, $school) {
                 $query->when($year, fn ($q) => $q->where('ano', $year));
-                $query->when($year, fn ($q) => $q->where('ref_cod_curso', $course));
-                $query->when($year, fn ($q) => $q->where('ref_ref_cod_escola', $school));
+                $query->when($course, fn ($q) => $q->where('ref_cod_curso', $course));
+                $query->when($school, fn ($q) => $q->where('ref_ref_cod_escola', $school));
                 $query->when($grade, function ($q) use ($grade) {
                     $q->whereHas('enrollments.schoolClass', fn ($qs) => $qs->where('ref_ref_cod_serie', $grade));
                 });
