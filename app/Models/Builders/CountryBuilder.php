@@ -33,22 +33,6 @@ class CountryBuilder extends LegacyBuilder
     }
 
     /**
-     * Filtra por nome e id do país
-     *
-     * @param string $search
-     * @return $this
-     */
-    public function whereSearch(string $search): self
-    {
-        return $this->where(static function ($q) use ($search) {
-            $q->whereName($search);
-            $q->when(is_numeric($search), static function ($q) use ($search) {
-                $q->orWhere(static fn($q) => $q->whereKey($search));
-            });
-        });
-    }
-
-    /**
      * Filtra por ativo
      *
      * @return $this
