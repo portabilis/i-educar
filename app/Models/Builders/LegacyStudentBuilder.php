@@ -17,24 +17,35 @@ class LegacyStudentBuilder extends LegacyBuilder
         return $this->whereRaw('aluno_estado_id like ?', $stateNetwork);
     }
 
-    public function whereBirthDate($birthDate)
+    public function whereBirthdate($birthdate)
     {
         return  $this->whereHas('individual',
-            fn ($q) => $q->whereRaw("TO_CHAR(data_nasc,'DD/MM/YYYY') = '?')", $birthDate)
+            function ($query) use ($birthdate) {
+                $query->when($birthdate, function($q) use ($birthdate) {
+
+                    [$day, $month, $year] = explode('/', $birthdate);
+                    $birthdate = sprintf('%d-%d-%d', $year, $month, $day);
+
+                    $q->where('data_nasc', $birthdate);
+                });
+            }
         );
     }
 
     public function whereCpf($cpf)
     {
         return  $this->whereHas('individual',
-            fn ($q) => $q->where('cpf', $cpf)
-        );
+            function ($query) use ($cpf) {
+                $query->when($cpf, fn ($q) => $q->where('cpf', $cpf));
+            });
     }
 
     public function whereRg($rg)
     {
         return  $this->whereHas('individual.document',
-            fn ($q) => $q->whereRaw( "translate(cd.rg, './-', '') = '?'", $rg)
+            function ($query) use ($rg) {
+                $query->when($rg, fn ($q) => $q->where('rg', $rg));
+            }
         );
     }
 
@@ -139,6 +150,10 @@ class LegacyStudentBuilder extends LegacyBuilder
                     'father_name' => $studentFilter->fatherName,
                     'guardian_name' => $studentFilter->responsableName,
                     'inep' => $studentFilter->inep,
+                    'cpf' => $studentFilter->cpf,
+                    'rg' => $studentFilter->rg,
+                    'state_network' => $studentFilter->stateNetwork,
+                    'birthdate' => $studentFilter->birthdate,
                     'registration' => [
                         'grade' => $studentFilter->grade,
                         'course' => $studentFilter->course,
