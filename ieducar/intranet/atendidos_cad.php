@@ -150,7 +150,7 @@ return new class extends clsCadastro {
         );
 
         $nomeMenu = $this->retorno === 'Editar' ? $this->retorno : 'Cadastrar';
-        
+
         $this->nome_url_cancelar = 'Cancelar';
         $this->breadcrumb("{$nomeMenu} pessoa física", ['educar_pessoas_index.php' => 'Pessoas']);
 
@@ -278,19 +278,19 @@ return new class extends clsCadastro {
 
         $documentos = new clsDocumento();
         $documentos->idpes = $this->cod_pessoa_fj;
-        $documentos = $documentos->detalhe();       
+        $documentos = $documentos->detalhe();
         // rg
 
         // o rg é obrigatorio ao cadastrar pai ou mãe, exceto se configurado como opcional.
 
         $required = (! empty($parentType));
 
-        if ($required && config('legacy.app.rg_pessoa_fisica_pais_opcional')) {
-            $required = false;
-        }
+//        if ($required && config('legacy.app.rg_pessoa_fisica_pais_opcional')) {
+//            $required = false;
+//        }
 
         $options = [
-            'required' => $required,
+            'required' => false,
             'label' => 'RG / Data emissão',
             'placeholder' => 'Documento identidade',
             'value' => $documentos['rg'],
@@ -691,14 +691,14 @@ return new class extends clsCadastro {
 
         // Religião
         $this->inputsHelper()->religiao(['required' => false, 'label' => 'Religião']);
-        
+
        //Profissão
        $profissao = new clsProfissao();
        $profissao->setOrderby('nm_profissao ASC');
        $profissao->ref_cod_profissao = $this->cod_profissao;
        $profissao->nm_profissao = $this->nm_profissao;
        $profissao = $profissao->lista($this->cod_profissao);
-       
+
        $selectOptionsProfissao = [];
 
        foreach ($profissao as $profissao){
@@ -711,7 +711,7 @@ return new class extends clsCadastro {
        $this->cod_profissao = is_array($profissao) ? $profissao['ref_cod_profissao'] : null;
 
         $this->campoLista('ref_cod_profissao','Profissão',$selectOptionsProfissao ,null,null, null, null, null, null, false);
-       
+
         $this->viewAddress();
 
         $this->inputsHelper()->select('pais_residencia', [
@@ -752,7 +752,7 @@ return new class extends clsCadastro {
         $this->campoTexto('ocupacao', 'Ocupação', $this->ocupacao, '50', '255', false);
         $this->campoMonetario('renda_mensal', 'Renda mensal (R$)', $this->renda_mensal, '9', '10');
         $this->campoData('data_admissao', 'Data de admissão', $this->data_admissao);
-    
+
         $this->viewAddress();
         $this->campoTexto('empresa', 'Empresa', $this->empresa, '50', '255', false);
         $this->inputTelefone('empresa', 'Telefone da empresa');
@@ -765,18 +765,18 @@ return new class extends clsCadastro {
           $conta_bancaria->nome = $this->nome;
           $conta_bancaria = $conta_bancaria->lista($this->codigo);
           $selectOptionsBanco = [];
-  
+
           foreach ($conta_bancaria as $banco){
               $selectOptionsBanco[$banco['codigo']] = $banco['nome'];
           }
-   
+
           $selectOptionsBanco = array_replace([null => 'Selecione'], $selectOptionsBanco);
-   
+
           $this->codigo = is_array($conta_bancaria) ? $conta_bancaria['ref_cod_banco'] : null;
-   
+
           $this->campoLista('ref_cod_banco','Banco',$selectOptionsBanco,null,null, null, null, null, null, false);
-          
-          
+
+
           $this->campoNumero('agencia', 'Agência', $this->agencia, '50','50', false);
           $this->campoNumero('conta', 'Conta', $this->conta, '50','50', false);
           //$this->campoNumero('tipo_conta', 'Tipo da Conta',$this->tipo_conta,'50','3',false);
@@ -788,7 +788,7 @@ return new class extends clsCadastro {
               'max_length' => 3
           ];
           $this->inputsHelper()->integer('tipo_conta',$op_tipo);
-        
+
 
         $fileService = new FileService(new UrlPresigner);
         $files = $this->cod_pessoa_fj ? $fileService->getFiles(LegacyIndividual::find($this->cod_pessoa_fj)) : [];
