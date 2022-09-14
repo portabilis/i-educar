@@ -12,8 +12,12 @@
           $('#ordens_aulas' + i).val('').empty().hide();
         }
       }
-  
-      document.getElementById('fase_etapa').onchange = function () {
+
+      document.getElementById('ref_cod_matricula').onchange = function () {
+        carregaConteudos();
+      };
+
+      function carregaConteudos() {
         const campoTurma = document.getElementById('ref_cod_turma').value;
         const campoMatricula = document.getElementById('ref_cod_matricula').value;
         const campoFaseEtapa = document.getElementById('fase_etapa').value;
@@ -52,8 +56,8 @@
         };
   
         getResource(options);
+      }
   
-      };
   
       document.getElementById('ref_cod_turma').onchange = function () {
         const campoTurma = document.getElementById('ref_cod_turma').value;

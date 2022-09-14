@@ -35,3 +35,4 @@ class Serie extends Model
 
 
 }
+}
