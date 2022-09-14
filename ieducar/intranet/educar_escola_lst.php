@@ -89,7 +89,6 @@ return new class extends clsListagem {
             null,
             null,
             null,
-            null,
             1,
             $this->nm_escola,
             null,
