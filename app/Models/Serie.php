@@ -30,10 +30,4 @@ class Serie extends Model
      */
     public $timestamps = false;
 
-    
-  
-
-
-}
-}
 }

@@ -41,5 +41,3 @@ class BNCC extends Model
         return $this->belongsToMany('App\Models\Serie', 'bncc_series', 'id_bncc', 'id_serie'); 
     }
 }
-}
-}
