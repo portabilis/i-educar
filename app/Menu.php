@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\LegacyLevel;
 use App\Models\LegacyUserType;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -194,15 +195,25 @@ class Menu extends Model
      *
      * @return mixed
      */
-    public function processes($path, $process)
+    public function processes($path, $process, $userLevel)
     {
-        $collect = $this->children->reduce(function (LaravelCollection $collect, Menu $menu) use ($path, $process) {
-            return $collect->merge($menu->processes($path . ' > ' . $menu->title, $process));
+        $collect = $this->children->reduce(
+            function (LaravelCollection $collect, Menu $menu) use ($path, $process, $userLevel) {
+            return $collect->merge($menu->processes($path . ' > ' . $menu->title, $process, $userLevel));
         }, new LaravelCollection());
 
         $this->description = $path;
 
         if ($this->process && $this->parent_id) {
+            $excludes = [
+                Process::CONFIG,
+                Process::SETTINGS,
+            ];
+
+            if ($userLevel !== LegacyUserType::LEVEL_ADMIN && in_array($this->process, $excludes,true)) {
+                return $collect;
+            }
+
             $collect->push(new LaravelCollection([
                 'title' => $this->title,
                 'description' => $this->description,
