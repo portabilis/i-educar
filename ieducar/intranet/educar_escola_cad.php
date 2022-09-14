@@ -489,7 +489,7 @@ return new class extends clsCadastro {
 
     private function pessoaJuridicaContemEscola($pessoaj_id)
     {
-        $escola = (new clsPmieducarEscola())->lista(null, null, null, null, null, null, $pessoaj_id);
+        $escola = (new clsPmieducarEscola())->lista(null, null,  null, null, null, $pessoaj_id);
 
         if (is_array($escola) && count($escola) > 0) {
             $current = current($escola);
