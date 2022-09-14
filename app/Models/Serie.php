@@ -36,3 +36,4 @@ class Serie extends Model
 
 }
 }
+}

@@ -42,3 +42,4 @@ class BNCC extends Model
     }
 }
 }
+}
