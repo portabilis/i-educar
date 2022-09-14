@@ -2610,24 +2610,6 @@ class clsPmieducarEscola extends Model
             $whereAnd = ' AND ';
         }
 
-        //todo Remover variável inexistente
-        if (isset($date_data_cadastro_fim) && is_string($date_data_cadastro_fim)) {
-            $filtros .= "{$whereAnd} data_cadastro <= '{$date_data_cadastro_fim}'";
-            $whereAnd = ' AND ';
-        }
-
-        //todo Remover variável inexistente
-        if (isset($date_data_exclusao_ini) && is_string($date_data_exclusao_ini)) {
-            $filtros .= "{$whereAnd} data_exclusao >= '{$date_data_exclusao_ini}'";
-            $whereAnd = ' AND ';
-        }
-
-        //todo Remover variável inexistente
-        if (isset($date_data_exclusao_fim) && is_string($date_data_exclusao_fim)) {
-            $filtros .= "{$whereAnd} data_exclusao <= '{$date_data_exclusao_fim}'";
-            $whereAnd = ' AND ';
-        }
-
         if (is_numeric($int_ativo)) {
             $filtros .= "{$whereAnd} ativo = '{$int_ativo}'";
             $whereAnd = ' AND ';
