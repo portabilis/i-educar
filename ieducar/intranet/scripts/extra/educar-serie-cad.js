@@ -18,7 +18,7 @@ function getRegra()
     if (cursos.length) {
       setAttributes(campoEtapas,'Selecione uma etapa',false);
 
-      for (var i = 1; i<=cursos.steps;i++) {
+      for (var i = 1; i<=cursos[0].steps;i++) {
           campoEtapas.options[i] = new Option("Etapa "+i , i, false, false);
       }
     } else {
