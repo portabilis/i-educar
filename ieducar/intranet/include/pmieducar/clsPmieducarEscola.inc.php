@@ -2605,11 +2605,6 @@ class clsPmieducarEscola extends Model
             $whereAnd = ' AND ';
         }
 
-        if (isset($date_data_cadastro_ini) && is_string($date_data_cadastro_ini)) {
-            $filtros .= "{$whereAnd} data_cadastro >= '{$date_data_cadastro_ini}'";
-            $whereAnd = ' AND ';
-        }
-
         if (is_numeric($int_ativo)) {
             $filtros .= "{$whereAnd} ativo = '{$int_ativo}'";
             $whereAnd = ' AND ';
