@@ -109,13 +109,7 @@ abstract class ResourceController extends Controller
 
     protected function filter(Builder $builder, Request $request): void
     {
-        $filter = $request->query('filter');
-        if (empty($filter)) {
-            return;
-        }
-
-        $filters = array_filter(explode(',', $filter));
-        $builder->filter($request->only($filters));
+        $builder->filter($request->except('only','include','order','page'));
     }
 
     public function all(Model $model, Request $request): JsonResource

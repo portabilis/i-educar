@@ -197,8 +197,9 @@ class LegacyBuilder extends Builder
     {
         $data = [];
         foreach ($filters as $key => $value) {
-            if ($value !== null) {
-                $data[$this->getFilterName($key)] = $value;
+            $filter = $this->getFilterName($key);
+            if ($value !== null && method_exists($this, 'where' . $filter)) {
+                $data[$filter] = $value;
             }
         }
 
@@ -245,6 +246,28 @@ class LegacyBuilder extends Builder
                 $q->whereName($search);
             }
         });
+    }
+
+    public function whereFilter(string $filters): self
+    {
+        $filters = array_filter(explode('|', $filters));
+        $groupRelations = new Collection();
+        foreach ($filters as $filter) {
+            if (str_contains($filter, '.')) {
+                $groupRelations->push(array_filter(explode('.', $filter)));
+                continue;
+            }
+            $this->where(...array_filter(explode(',', $filter)));
+        }
+        //execução agrupada dos relacionamentos
+        foreach ($groupRelations->groupBy(0) as $groupRelation => $groupRows) {
+            $this->whereHas($groupRelation, static function ($q) use ($groupRows) {
+                foreach ($groupRows as $groupRow) {
+                    $q->where(...array_filter(explode(',', $groupRow[1])));
+                }
+            });
+        }
+        return $this;
     }
 
     /**
