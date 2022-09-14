@@ -25,7 +25,7 @@ class LegacyUserFactory extends Factory
             'cod_usuario' => function () {
                 return LegacyEmployeeFactory::new()->create()->ref_cod_pessoa_fj;
             },
-            'ref_cod_instituicao' => 1,
+            'ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()->unique()->make(),
             'ref_funcionario_cad' => function () {
                 return LegacyEmployeeFactory::new()->create()->ref_cod_pessoa_fj;
             },
