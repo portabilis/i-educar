@@ -377,6 +377,70 @@ class clsModulesBNCC extends Model
         return false;
     }
 
+
+
+    public function lista_bncc()
+    {
+        $sql = "SELECT * FROM modules.bncc";
+
+        
+      
+        $db = new clsBanco();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
+
+        $sql .= $filtros . $this->getOrderby() . $this->getLimite();
+
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM modules.bncc");
+
+        $db->Consulta($sql);
+
+       
+            while ($db->ProximoRegistro()) {
+                $tupla = $db->Tupla();
+
+                $tupla['_total'] = $this->_total;
+                $resultado[] = $tupla;
+            }
+       
+        if (count($resultado)) {
+            return $resultado;
+        }
+
+        return false;
+    }
+
+    public function lista_series($id_bncc)
+    {
+
+        
+        $sql = "SELECT *, nm_serie as serie  FROM bncc_series LEFT JOIN serie
+         ON serie.cod_serie = bncc_series.id_serie WHERE id_bncc = {$id_bncc}";
+
+        
+      
+        $db = new clsBanco();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
+
+        
+
+
+        $db->Consulta($sql);
+
+       
+            while ($db->ProximoRegistro()) {
+                $tupla = $db->Tupla();
+                $resultado[] = $tupla;
+            }
+       
+        if (count($resultado)) {
+            return $resultado;
+        }
+
+        return false;
+    }
+
     /**
      * Retorna array com duas arrays, uma com os BNCC a serem cadastrados e a outra com os que devem ser removidos
      *

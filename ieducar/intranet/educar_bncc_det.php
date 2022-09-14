@@ -65,7 +65,7 @@ return new class extends clsDetalhe {
         $this->largura = '100%';
 
         $this->breadcrumb('Detalhe do BNCC', [
-            url('intranet/educar_bncc_lst.php') => 'BNCC',
+            url('intranet/educar_bncc_lst.php') => 'bncc',
         ]);
     }
 
