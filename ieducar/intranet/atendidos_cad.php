@@ -710,7 +710,7 @@ return new class extends clsCadastro {
 
        $this->cod_profissao = is_array($profissao) ? $profissao['ref_cod_profissao'] : null;
 
-        $this->campoLista('ref_cod_profissao','Profissão',$selectOptionsProfissao ,null,null, null, null, null, null, false);
+        $this->campoLista('ref_cod_profissao','Profissão',$selectOptionsProfissao ,$this->ref_cod_profissao,null, null, null, null, null, false);
        
         $this->viewAddress();
 
@@ -770,17 +770,11 @@ return new class extends clsCadastro {
               $selectOptionsBanco[$banco['codigo']] = $banco['nome'];
           }
         
-         
+          $selectOptionsBanco = array_replace([null => 'Selecione'], $selectOptionsBanco);
           $this->codigo = is_array($conta_bancaria) ? $conta_bancaria['ref_cod_banco'] : null;
-   
-          $this->inputsHelper()->select('ref_cod_banco',[
-          'label' => 'Banco',
-          'value' => $this->ref_cod_banco,
-          'resources' => $selectOptionsBanco,
-          'required' => false
-         ]);
           
-          
+          $this->campoLista('ref_cod_banco','Banco',$selectOptionsBanco,$this->ref_cod_banco,null, null, null, null, null, false);
+           
           $this->campoNumero('agencia', 'Agência', $this->agencia, '50','50', false);
           $this->campoNumero('conta', 'Conta', $this->conta, '50','50', false);
           //$this->campoNumero('tipo_conta', 'Tipo da Conta',$this->tipo_conta,'50','3',false, null, null, str_pad($this->conta,3,0));
