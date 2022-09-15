@@ -2,7 +2,6 @@
 
 namespace App;
 
-use App\Models\LegacyLevel;
 use App\Models\LegacyUserType;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -55,7 +54,7 @@ class Menu extends Model
             Process::SETTINGS,
         ];
 
-        return self::withRecursiveQueryConstraint(static function (Builder $query) use ($user,$excludes) {
+        return self::withRecursiveQueryConstraint(static function (Builder $query) use ($user, $excludes) {
             $query->whereNull('menus.process');
             $query->orWhere(function ($query) use ($user, $excludes) {
                 $query->whereNotNull('menus.process');
@@ -199,8 +198,10 @@ class Menu extends Model
     {
         $collect = $this->children->reduce(
             function (LaravelCollection $collect, Menu $menu) use ($path, $process, $userLevel) {
-            return $collect->merge($menu->processes($path . ' > ' . $menu->title, $process, $userLevel));
-        }, new LaravelCollection());
+                return $collect->merge($menu->processes($path . ' > ' . $menu->title, $process, $userLevel));
+            },
+            new LaravelCollection()
+        );
 
         $this->description = $path;
 
@@ -210,7 +211,7 @@ class Menu extends Model
                 Process::SETTINGS,
             ];
 
-            if ($userLevel !== LegacyUserType::LEVEL_ADMIN && in_array($this->process, $excludes,true)) {
+            if ($userLevel !== LegacyUserType::LEVEL_ADMIN && in_array($this->process, $excludes, true)) {
                 return $collect;
             }
 
