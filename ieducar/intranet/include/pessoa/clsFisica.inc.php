@@ -68,6 +68,10 @@ class clsFisica
     public $tabela;
     public $schema;
     public $ref_cod_profissao;
+    public $ref_cod_banco;
+    public $agencia;
+    public $conta;
+    public $tipo_conta;
 
     public function __construct(
         $idpes = false,
@@ -111,7 +115,11 @@ class clsFisica
         $horario_final_trabalho = false,
         $nome_social = false,
         $observacao = false,
-        $ref_cod_profissao = false
+        $ref_cod_profissao = false,
+        $ref_cod_banco = false,
+        $agencia = false,
+        $conta = false,
+        $tipo_conta = false
     ) {
         $objPessoa = new clsPessoa_($idpes);
         if ($objPessoa->detalhe()) {
@@ -166,6 +174,11 @@ class clsFisica
             $this->ref_cod_profissao = $ref_cod_profissao;
         }
 
+        $objBanco = new clsAgenciaBancaria($ref_cod_banco);
+        if($objBanco->detalhe()){
+            $this->ref_cod_banco = $ref_cod_banco;
+        }
+
         $this->data_nasc                = $data_nasc;
         $this->sexo                     = $sexo;
         $this->data_uniao               = $data_uniao;
@@ -196,6 +209,10 @@ class clsFisica
         $this->nome_social              = $nome_social;
         $this->observacao               = $observacao;
         $this->ref_cod_profissao        = $ref_cod_profissao;
+        $this->ref_cod_banco            = $ref_cod_banco;
+        $this->agencia                  = $agencia;
+        $this->conta                    = $conta;
+        $this->tipo_conta               = $tipo_conta;
 
         $cpf = idFederal2int($cpf);
 
@@ -465,6 +482,25 @@ class clsFisica
                 $valores .= ", '$this->ref_cod_profissao'";
             }
 
+            if(is_numeric($this->ref_cod_banco)){
+                $campos .= ', ref_cod_banco';
+                $valores .= ", '$this->ref_cod_banco'";
+            }
+
+            if(is_numeric($this->agencia)){
+                $campos .= ', agencia';
+                $valores .= ", '$this->agencia'";
+            }
+
+            if(is_numeric($this->conta)){
+                $campos .= ', conta';
+                $valores .= ", '$this->conta'";
+            }
+
+            if(is_numeric($this->tipo_conta)){
+                $campos .= ', tipo_conta';
+                $valores .= ", '$this->tipo_conta'";
+            }
 
             $db->Consulta("INSERT INTO {$this->schema}.{$this->tabela} (idpes, origem_gravacao, data_cad, operacao, idpes_cad $campos) VALUES ( '{$this->idpes}', 'M', NOW(), 'I', '$this->idpes_cad' $valores )");
 
@@ -725,6 +761,25 @@ class clsFisica
                 $gruda = ', ';
                
             }
+            if(is_numeric($this->ref_cod_banco)){
+                $set .= "$gruda ref_cod_banco = '{$this->ref_cod_banco}'";
+                $gruda = ', ';
+               
+            }
+            if(is_numeric($this->agencia)){
+                $set .= "$gruda agencia = '{$this->agencia}'";
+                $gruda = ', ';
+               
+            }
+            if(is_numeric($this->conta)){
+                $set .= "$gruda conta = '{$this->conta}'";
+                $gruda = ', ';
+               
+            }
+            if(is_numeric($this->tipo_conta)){
+                $set .= "$gruda tipo_conta = '{$this->tipo_conta}'";
+                $gruda = ', '; 
+            }
 
             if (is_string($this->nome_social)) {
                 $slug = Str::lower(Str::slug($this->nome_social, ' '));
@@ -787,7 +842,7 @@ class clsFisica
      *
      * @return Array
      */
-    public function lista($int_idpes = false, $data_data_nasc = false, $str_sexo = false, $int_idpes_mae = false, $int_idpes_pai = false, $int_idpes_responsavel = false, $int_idesco = false, $int_ideciv = false, $int_idpes_con = false, $data_data_uniao = false, $data_data_obito = false, $int_nacionalidade = false, $int_idpais_estrangeiro = false, $data_data_chagada_brasil = false, $int_idmun_nascimento = false, $str_ultima_empresa = false, $int_idocup = false, $str_nome_mae = false, $str_nome_pai = false, $str_nome_conjuge = false, $str_nome_responsavel = false, $str_justificativa_provisorio = false, $str_ordenacao = false, $int_limite_ini = 0, $int_limite_qtd = 20, $arrayint_idisin = false, $arrayint_idnotin = false, $str_data_nasc_ini = false, $str_data_nasc_fim = false, $int_mes_aniversario = false, $int_ref_cod_sistema = false, $int_cpf = false, $ref_cod_profissao = false)
+    public function lista($int_idpes = false, $data_data_nasc = false, $str_sexo = false, $int_idpes_mae = false, $int_idpes_pai = false, $int_idpes_responsavel = false, $int_idesco = false, $int_ideciv = false, $int_idpes_con = false, $data_data_uniao = false, $data_data_obito = false, $int_nacionalidade = false, $int_idpais_estrangeiro = false, $data_data_chagada_brasil = false, $int_idmun_nascimento = false, $str_ultima_empresa = false, $int_idocup = false, $str_nome_mae = false, $str_nome_pai = false, $str_nome_conjuge = false, $str_nome_responsavel = false, $str_justificativa_provisorio = false, $str_ordenacao = false, $int_limite_ini = 0, $int_limite_qtd = 20, $arrayint_idisin = false, $arrayint_idnotin = false, $str_data_nasc_ini = false, $str_data_nasc_fim = false, $int_mes_aniversario = false, $int_ref_cod_sistema = false, $int_cpf = false, $ref_cod_profissao = false, $ref_cod_banco = false, $agencia = false, $conta = false, $tipo_conta = false)
     {
         $whereAnd = 'WHERE ';
 
@@ -899,6 +954,18 @@ class clsFisica
         if(is_numeric($this->ref_cod_profissao)){
            $where .= "{$whereAnd} ref_cod_profissao = '$ref_cod_profissao'";
         }
+        if(is_numeric($this->ref_cod_banco)){
+            $where .= "{$whereAnd} ref_cod_banco = '$ref_cod_banco'";
+        }
+        if(is_numeric($this->agencia)){
+            $where .= "{$whereAnd} agencia = '$agencia'";
+        }
+        if(is_numeric($this->conta)){
+            $where .= "{$whereAnd} conta = '$conta'";
+        }
+        if(is_numeric($this->tipo_conta)){
+            $where .= "{$whereAnd} tipo_conta = '$tipo_conta'";
+        }
 
         if (is_array($arrayint_idisin)) {
             $ok = true;
@@ -983,7 +1050,7 @@ class clsFisica
         $db->Consulta("SELECT COUNT(0) AS total FROM {$this->schema}.{$this->tabela} $where");
         $db->ProximoRegistro();
         $total = $db->Campo('total');
-        $db->Consulta("SELECT idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio, ref_cod_religiao, ref_cod_profissao FROM {$this->schema}.{$this->tabela} $where $orderBy $limit");
+        $db->Consulta("SELECT idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideiv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio, ref_cod_religiao, ref_cod_profissaoc, ref_cod_banco, agencia, conta, tipo_conta FROM {$this->schema}.{$this->tabela} $where $orderBy $limit");
         $resultado = [];
         while ($db->ProximoRegistro()) {
             $tupla = $db->Tupla();
@@ -1010,7 +1077,7 @@ class clsFisica
     {
         if ($this->idpes) {
             $db = new clsBanco();
-            $db->Consulta("SELECT fisica.idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio, cpf , ref_cod_religiao, sus, nis_pis_pasep, ocupacao, empresa, ddd_telefone_empresa, telefone_empresa, pessoa_contato, data_admissao, renda_mensal, falecido, ativo, data_exclusao, zona_localizacao_censo, nome, nome_social, pais_residencia, localizacao_diferenciada, observacao, ref_cod_profissao FROM {$this->schema}.{$this->tabela}
+            $db->Consulta("SELECT fisica.idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio, cpf , ref_cod_religiao, sus, nis_pis_pasep, ocupacao, empresa, ddd_telefone_empresa, telefone_empresa, pessoa_contato, data_admissao, renda_mensal, falecido, ativo, data_exclusao, zona_localizacao_censo, nome, nome_social, pais_residencia, localizacao_diferenciada, observacao, ref_cod_profissao, ref_cod_banco, agencia, conta, tipo_conta FROM {$this->schema}.{$this->tabela}
             INNER JOIN cadastro.pessoa ON (pessoa.idpes = fisica.idpes) 
              WHERE fisica.idpes = {$this->idpes}");
             if ($db->ProximoRegistro()) {
@@ -1024,7 +1091,7 @@ class clsFisica
             }
         } elseif ($this->cpf) {
             $db = new clsBanco();
-            $db->Consulta("SELECT idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio,cpf, ref_cod_religiao, ocupacao, empresa, ddd_telefone_empresa, telefone_empresa, pessoa_contato, data_admissao, renda_mensal, ativo, data_exclusao, zona_localizacao_censo, ref_cod_profissao FROM {$this->schema}.{$this->tabela} WHERE cpf = '{$this->cpf}'");
+            $db->Consulta("SELECT idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio,cpf, ref_cod_religiao, ocupacao, empresa, ddd_telefone_empresa, telefone_empresa, pessoa_contato, data_admissao, renda_mensal, ativo, data_exclusao, zona_localizacao_censo, ref_cod_profissao, ref_cod_banco, agencia, conta, tipo_conta FROM {$this->schema}.{$this->tabela} WHERE cpf = '{$this->cpf}'");
             if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
 
