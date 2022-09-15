@@ -15,5 +15,4 @@ class StateBuilder extends LegacyBuilder
     {
         return $this->whereRaw('unaccent(name) ~* unaccent(?)', $name);
     }
-
 }

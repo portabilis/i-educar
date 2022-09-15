@@ -2,6 +2,7 @@
 
 namespace App\Models\Builders;
 
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 
 class CountryBuilder extends LegacyBuilder

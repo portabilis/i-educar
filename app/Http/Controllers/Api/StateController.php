@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\ResourceController;
 use App\Http\Requests\Api\Addressing\AddressingStateRequest;
 use App\Models\State;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -34,10 +33,5 @@ class StateController extends ResourceController
     public function destroy(State $state, Request $request): JsonResource
     {
         return $this->delete($state, $request);
-    }
-
-    public function filter(Builder $builder, Request $request): void
-    {
-        $builder->filter($request->only('name'))->orderBy('name');
     }
 }

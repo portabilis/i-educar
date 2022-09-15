@@ -10,6 +10,6 @@ class DistrictBuilder extends LegacyBuilder
      */
     public function whereName(string $name): self
     {
-        return $this->whereRaw('name ~* unaccent(?)', $name);
+        return $this->whereRaw('unaccent(name) ~* unaccent(?)', $name);
     }
 }
