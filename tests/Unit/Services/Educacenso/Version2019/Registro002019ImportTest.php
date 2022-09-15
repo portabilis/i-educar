@@ -30,7 +30,7 @@ class Registro002019ImportTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = UserFactory::new()->admin()->make();
+        $this->user = UserFactory::new()->make();
     }
 
     /**
