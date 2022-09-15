@@ -770,11 +770,14 @@ return new class extends clsCadastro {
               $selectOptionsBanco[$banco['codigo']] = $banco['nome'];
           }
 
-          $selectOptionsBanco = array_replace([null => 'Selecione'], $selectOptionsBanco);
-
           $this->codigo = is_array($conta_bancaria) ? $conta_bancaria['ref_cod_banco'] : null;
 
-          $this->campoLista('ref_cod_banco','Banco',$selectOptionsBanco,null,null, null, null, null, null, false);
+          $this->inputsHelper()->select('ref_cod_banco',[
+            'label' => 'Banco',
+            'value' => $this->ref_cod_banco,
+            'resources' => $selectOptionsBanco,
+            'required' => false
+           ]);
 
 
           $this->campoNumero('agencia', 'Agência', $this->agencia, '50','50', false);
