@@ -49,10 +49,6 @@ return new class extends clsCadastro {
     public $localizacao_diferenciada;
     public $pais_residencia;
     public $cod_profissao;
-    public $banco;
-    public $agencia;
-    public $conta;
-    public $tipo_conta;
 
     // Variáveis para controle da foto
     public $objPhoto;
@@ -82,53 +78,48 @@ return new class extends clsCadastro {
                 $this->pai_id, $this->mae_id, $this->tipo_nacionalidade, $this->pais_origem, $this->naturalidade,
                 $this->letra, $this->sus, $this->nis_pis_pasep, $this->ocupacao, $this->empresa, $this->ddd_telefone_empresa,
                 $this->telefone_empresa, $this->pessoa_contato, $this->renda_mensal, $this->data_admissao, $this->falecido,
-                $this->religiao_id, $this->zona_localizacao_censo, $this->localizacao_diferenciada, $this->nome_social, $this->pais_residencia, $this->ref_cod_profissao,
-                $this->ref_cod_banco, $this->agencia, $this->conta, $this->tipo_conta
-            ) =
-            $objPessoa->queryRapida(
-                $this->cod_pessoa_fj,
-                'nome',
-                'cpf',
-                'data_nasc',
-                'ddd_1',
-                'fone_1',
-                'ddd_2',
-                'fone_2',
-                'ddd_mov',
-                'fone_mov',
-                'ddd_fax',
-                'fone_fax',
-                'email',
-                'tipo',
-                'sexo',
-                'ideciv',
-                'idpes_pai',
-                'idpes_mae',
-                'nacionalidade',
-                'idpais_estrangeiro',
-                'idmun_nascimento',
-                'letra',
-                'sus',
-                'nis_pis_pasep',
-                'ocupacao',
-                'empresa',
-                'ddd_telefone_empresa',
-                'telefone_empresa',
-                'pessoa_contato',
-                'renda_mensal',
-                'data_admissao',
-                'falecido',
-                'ref_cod_religiao',
-                'zona_localizacao_censo',
-                'localizacao_diferenciada',
-                'nome_social',
-                'pais_residencia',
-                'ref_cod_profissao',
-                'ref_cod_banco',
-                'agencia',
-                'conta',
-                'tipo_conta'
-            );
+                $this->religiao_id, $this->zona_localizacao_censo, $this->localizacao_diferenciada, $this->nome_social, $this->pais_residencia, $this->ref_cod_profissao
+                ) =
+                $objPessoa->queryRapida(
+                    $this->cod_pessoa_fj,
+                    'nome',
+                    'cpf',
+                    'data_nasc',
+                    'ddd_1',
+                    'fone_1',
+                    'ddd_2',
+                    'fone_2',
+                    'ddd_mov',
+                    'fone_mov',
+                    'ddd_fax',
+                    'fone_fax',
+                    'email',
+                    'tipo',
+                    'sexo',
+                    'ideciv',
+                    'idpes_pai',
+                    'idpes_mae',
+                    'nacionalidade',
+                    'idpais_estrangeiro',
+                    'idmun_nascimento',
+                    'letra',
+                    'sus',
+                    'nis_pis_pasep',
+                    'ocupacao',
+                    'empresa',
+                    'ddd_telefone_empresa',
+                    'telefone_empresa',
+                    'pessoa_contato',
+                    'renda_mensal',
+                    'data_admissao',
+                    'falecido',
+                    'ref_cod_religiao',
+                    'zona_localizacao_censo',
+                    'localizacao_diferenciada',
+                    'nome_social',
+                    'pais_residencia',
+                    'ref_cod_profissao',
+                );
 
             $this->loadAddress($this->cod_pessoa_fj);
 
@@ -144,10 +135,10 @@ return new class extends clsCadastro {
         }
 
         $this->fexcluir = is_numeric($this->cod_pessoa_fj) && $obj_permissoes->permissao_excluir(
-            43,
-            $this->pessoa_logada,
-            7
-        );
+                43,
+                $this->pessoa_logada,
+                7
+            );
 
         $nomeMenu = $this->retorno === 'Editar' ? $this->retorno : 'Cadastrar';
 
@@ -164,7 +155,7 @@ return new class extends clsCadastro {
         $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
         $this->campoOculto('obrigar_campos_censo', (int) $obrigarCamposCenso);
         $this->url_cancelar = $this->retorno == 'Editar' ?
-        'atendidos_det.php?cod_pessoa=' . $this->cod_pessoa_fj : 'atendidos_lst.php';
+            'atendidos_det.php?cod_pessoa=' . $this->cod_pessoa_fj : 'atendidos_lst.php';
 
         $objPessoa = new clsPessoaFisica($this->cod_pessoa_fj);
         $db = new clsBanco();
@@ -692,23 +683,23 @@ return new class extends clsCadastro {
         // Religião
         $this->inputsHelper()->religiao(['required' => false, 'label' => 'Religião']);
 
-       //Profissão
-       $profissao = new clsProfissao();
-       $profissao->setOrderby('nm_profissao ASC');
-       $profissao->ref_cod_profissao = $this->cod_profissao;
-       $profissao->nm_profissao = $this->nm_profissao;
-       $profissao = $profissao->lista($this->cod_profissao);
+        //Profissão
+        $profissao = new clsProfissao();
+        $profissao->setOrderby('nm_profissao ASC');
+        $profissao->ref_cod_profissao = $this->cod_profissao;
+        $profissao->nm_profissao = $this->nm_profissao;
+        $profissao = $profissao->lista($this->cod_profissao);
 
-       $selectOptionsProfissao = [];
+        $selectOptionsProfissao = [];
 
-       foreach ($profissao as $profissao){
-           $selectOptionsProfissao[$profissao['cod_profissao']] = $profissao['nm_profissao'];
-       }
+        foreach ($profissao as $profissao){
+            $selectOptionsProfissao[$profissao['cod_profissao']] = $profissao['nm_profissao'];
+        }
 
-       //$selectOptionsProfissao = Portabilis_Array_Utils::sortByValue($selectOptionsProfissao);
-       $selectOptionsProfissao = array_replace([null => 'Selecione'], $selectOptionsProfissao);
+        //$selectOptionsProfissao = Portabilis_Array_Utils::sortByValue($selectOptionsProfissao);
+        $selectOptionsProfissao = array_replace([null => 'Selecione'], $selectOptionsProfissao);
 
-       $this->cod_profissao = is_array($profissao) ? $profissao['ref_cod_profissao'] : null;
+        $this->cod_profissao = is_array($profissao) ? $profissao['ref_cod_profissao'] : null;
 
         $this->campoLista('ref_cod_profissao','Profissão',$selectOptionsProfissao ,null,null, null, null, null, null, false);
 
@@ -752,45 +743,10 @@ return new class extends clsCadastro {
         $this->campoTexto('ocupacao', 'Ocupação', $this->ocupacao, '50', '255', false);
         $this->campoMonetario('renda_mensal', 'Renda mensal (R$)', $this->renda_mensal, '9', '10');
         $this->campoData('data_admissao', 'Data de admissão', $this->data_admissao);
-
-        $this->viewAddress();
         $this->campoTexto('empresa', 'Empresa', $this->empresa, '50', '255', false);
         $this->inputTelefone('empresa', 'Telefone da empresa');
         $this->campoTexto('pessoa_contato', 'Pessoa de contato na empresa', $this->pessoa_contato, '50', '255', false);
 
-          //conta bancaria
-          $conta_bancaria = new clsAgenciaBancaria();
-          $conta_bancaria->setOrderby('nome ASC');
-          $conta_bancaria->ref_cod_banco = $this->codigo;
-          $conta_bancaria->nome = $this->nome;
-          $conta_bancaria = $conta_bancaria->lista($this->codigo);
-          $selectOptionsBanco = [];
-
-          foreach ($conta_bancaria as $banco){
-              $selectOptionsBanco[$banco['codigo']] = $banco['nome'];
-          }
-
-          $this->codigo = is_array($conta_bancaria) ? $conta_bancaria['ref_cod_banco'] : null;
-
-          $this->inputsHelper()->select('ref_cod_banco',[
-            'label' => 'Banco',
-            'value' => $this->ref_cod_banco,
-            'resources' => $selectOptionsBanco,
-            'required' => false
-           ]);
-
-
-          $this->campoNumero('agencia', 'Agência', $this->agencia, '50','50', false);
-          $this->campoNumero('conta', 'Conta', $this->conta, '50','50', false);
-          //$this->campoNumero('tipo_conta', 'Tipo da Conta',$this->tipo_conta,'50','3',false);
-          $op_tipo = [
-              'required' => false,
-              'label' => 'Tipo da Conta',
-              'placeholder' => '',
-              'value' => $this->tipo_conta,
-              'max_length' => 3
-          ];
-          $this->inputsHelper()->integer('tipo_conta',$op_tipo);
 
 
         $fileService = new FileService(new UrlPresigner);
@@ -968,8 +924,8 @@ return new class extends clsCadastro {
             $nome = $this->_aluno['nm_' . $parentType];
 
             $inputHint = '<br /><b>Dica:</b> Foi informado o nome "' . $nome .
-            '" no cadastro de aluno,<br />tente pesquisar esta pessoa ' .
-            'pelo CPF ou RG, caso não encontre, cadastre uma nova pessoa.';
+                '" no cadastro de aluno,<br />tente pesquisar esta pessoa ' .
+                'pelo CPF ou RG, caso não encontre, cadastre uma nova pessoa.';
         }
 
         $hiddenInputOptions = ['options' => ['value' => $parentId]];
@@ -999,7 +955,7 @@ return new class extends clsCadastro {
 
             if ($fisica['cpf'] && $this->cod_pessoa_fj != $fisica['idpes']) {
                 $link = '<a class=\'decorated\' target=\'__blank\' href=\'/intranet/atendidos_cad.php?cod_pessoa_fj=' .
-                "{$fisica['idpes']}'>{$fisica['idpes']}</a>";
+                    "{$fisica['idpes']}'>{$fisica['idpes']}</a>";
 
                 $this->erros['id_federal'] = "CPF já utilizado pela pessoa $link.";
                 $isValid = false;
@@ -1183,10 +1139,10 @@ return new class extends clsCadastro {
         $certidaoCasamentoNovoFormato = $this->certidao_casamento;
 
         return $this->id_federal ||
-           $this->rg ||
-           $certidaoCivil ||
-           $certidaoCasamentoNovoFormato ||
-           $certidaoNascimentoNovoFormato;
+            $this->rg ||
+            $certidaoCivil ||
+            $certidaoCasamentoNovoFormato ||
+            $certidaoNascimentoNovoFormato;
     }
 
     protected function validaCertidao()
@@ -1303,10 +1259,6 @@ return new class extends clsCadastro {
         $fisica->nome_social = $this->nome_social;
         $fisica->pais_residencia = $this->pais_residencia;
         $fisica->ref_cod_profissao = $this->ref_cod_profissao;
-        $fisica->ref_cod_banco = $this->ref_cod_banco;
-        $fisica->agencia = $this->agencia;
-        $fisica->conta = $this->conta;
-        $fisica->tipo_conta = $this->tipo_conta;
 
         $sql = 'select 1 from cadastro.fisica WHERE idpes = $1 limit 1';
 
