@@ -81,12 +81,24 @@ class LegacyBuilder extends Builder
         return $resource->map(function (Model $item) use ($columnsNotExcept) {
             $resource = [];
 
+            //Trata colunas com alias do banco de dados
             foreach ($columnsNotExcept as $key) {
-                $resource[$key] = $item->{$key};
+                if (Str::contains($key, ' as ')) {
+                    [, $alias] = explode(' as ', $key);
+                    $resource[$alias] = $item->{$alias};
+                } else {
+                    $resource[$key] = $item->{$key};
+                }
             }
 
-            foreach ($this->additional as $add) {
-                $resource[$add] = $item->{$add} ?? null;
+            //Trata colunas com alias adicionais
+            foreach ($this->additional as $key) {
+                if (Str::contains($key, ' as ')) {
+                    [$key, $alias] = explode(' as ', $key);
+                    $resource[$alias] = $item->{$key};
+                } else {
+                    $resource[$key] = $item->{$key};
+                }
             }
 
             return $resource;
@@ -100,7 +112,7 @@ class LegacyBuilder extends Builder
      *
      * @return LegacyBuilder
      */
-    public function setAdditional(array $additional): LegacyBuilder
+    private function setAdditional(array $additional): LegacyBuilder
     {
         $this->additional = $additional;
 
@@ -158,7 +170,13 @@ class LegacyBuilder extends Builder
         $data = [];
 
         foreach ($columns as $key) {
-            $data[] = $legacy[$key] ?? $key;
+            if (Str::contains($key, ' as ')) {
+                [$key, $alias] = explode(' as ', $key);
+                $legacyKey = $legacy[$key] ?? $key;
+                $data[] = $legacyKey . ' as ' . $alias ;
+            } else {
+                $data[] = $legacy[$key] ?? $key;
+            }
         }
 
         if (!empty($data)) {

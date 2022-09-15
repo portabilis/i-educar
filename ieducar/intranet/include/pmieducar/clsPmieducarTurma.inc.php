@@ -1650,33 +1650,6 @@ class clsPmieducarTurma extends Model
         return false;
     }
 
-    public function maximoAlunosSala()
-    {
-        $detTurma = $this->detalhe();
-        $objInstituicao = new clsPmieducarInstituicao($detTurma['ref_cod_instituicao']);
-        $detInstituicao = $objInstituicao->detalhe();
-        $controlaEspacoUtilizacaoAluno = $detInstituicao['controlar_espaco_utilizacao_aluno'];
-        //se o parametro de controle de utilização de espaço estiver setado como verdadeiro
-        if ($controlaEspacoUtilizacaoAluno) {
-            $percentagemMaximaUtilizacaoSala = $detInstituicao['percentagem_maxima_ocupacao_salas'];
-            $quantidadeAlunosPorMetroQuadrado = $detInstituicao['quantidade_alunos_metro_quadrado'];
-            $codSalaUtilizada = $detTurma['ref_cod_infra_predio_comodo'];
-
-            $objInfraPredioComodo = new clsPmieducarInfraPredioComodo($codSalaUtilizada);
-            $detInfraPredioComodo = $objInfraPredioComodo->detalhe();
-            $areaSala = $detInfraPredioComodo['area'];
-
-            if (is_numeric($percentagemMaximaUtilizacaoSala) and (is_numeric($quantidadeAlunosPorMetroQuadrado)) and is_numeric($areaSala)) {
-                $metragemMaximaASerUtilizadaSala = ($areaSala * ($percentagemMaximaUtilizacaoSala / 100.00));
-                $maximoAlunosSala = ($quantidadeAlunosPorMetroQuadrado * $metragemMaximaASerUtilizadaSala);
-
-                return round($maximoAlunosSala);
-            }
-        }
-
-        return false;
-    }
-
     public static function verificaDisciplinaDispensada($turmaId, $componenteId)
     {
         return static::getDisciplinaDispensada($turmaId) == $componenteId;

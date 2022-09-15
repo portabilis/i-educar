@@ -7,16 +7,6 @@
 @endpush
 
 @section('content')
-
-    <div class="flex gap-4 justify-between items-center border-l-8 border-solid py-2 px-4 border-warning bg-warning"
-        style="flex-grow: 1; padding-left: 1rem; padding-right: 1rem; padding-top: 0.5rem; padding-bottom: 0.5rem;
-        border-color: rgb(223 195 46); background-color: rgb(255 248 214);
-        color: rgb(149 143 115);">
-        <p class="flex-grow text-warning">
-            Atenção, a partir do dia 05/08/2022 <strong>as notificações do i-Educar ficarão disponíveis para visualização por 180 dias</strong>. Após esse período, elas serão permanentemente excluídas.
-        </p>
-    </div>
-
     <form id="formcadastro" action="" method="get">
         <table class="tablecadastro" width="100%" border="0" cellpadding="2" cellspacing="0">
             <tbody>

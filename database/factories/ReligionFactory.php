@@ -2,17 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyRegimeType;
+use App\Models\Religion;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class LegacyRegimeTypeFactory extends Factory
+class ReligionFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = LegacyRegimeType::class;
+    protected $model = Religion::class;
 
     /**
      * Define the model's default state.
@@ -22,9 +22,7 @@ class LegacyRegimeTypeFactory extends Factory
     public function definition(): array
     {
         return [
-            'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
-            'nm_tipo' => $this->faker->firstName(),
-            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
+            'name' => $this->faker->name
         ];
     }
 }

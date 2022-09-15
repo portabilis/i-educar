@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Builders\LegacyEducationNetworkBuilder;
+use App\Traits\Ativo;
 use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -15,6 +16,10 @@ use Illuminate\Database\Eloquent\Model;
 class LegacyEducationNetwork extends Model
 {
     use LegacyAttribute;
+    use Ativo;
+
+    public const CREATED_AT = 'data_cadastro';
+    public const UPDATED_AT = null;
 
     /**
      * @var string
@@ -49,15 +54,11 @@ class LegacyEducationNetwork extends Model
     protected $fillable = [
         'cod_escola_rede_ensino',
         'ref_usuario_cad',
+        'ref_usuario_exc',
         'nm_rede',
         'data_cadastro',
         'ref_cod_instituicao',
     ];
-
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * @return string
