@@ -290,7 +290,7 @@ return new class extends clsCadastro {
         }
 
         $options = [
-            'required' => $required,
+            'required' => false,
             'label' => 'RG / Data emissão',
             'placeholder' => 'Documento identidade',
             'value' => $documentos['rg'],
