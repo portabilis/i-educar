@@ -32,6 +32,7 @@ jobs:
       CACHE_DRIVER: array
       QUEUE_CONNECTION: sync
       SESSION_DRIVER: array
+      LEGACY_SEED_DATA: false
 
     services:
       postgres:
