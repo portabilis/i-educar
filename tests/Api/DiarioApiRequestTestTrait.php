@@ -167,7 +167,7 @@ trait DiarioApiRequestTestTrait
     /**
      * Recebe um array com as etapas e quantidade de faltas e retorna o response da ultima chamada
      *
-     * @param array $absences
+     * @param array            $absences
      * @param LegacyDiscipline $discipline
      *
      * @return array|null
@@ -186,7 +186,7 @@ trait DiarioApiRequestTestTrait
     /**
      * Recebe um array com as etapas e quantidade de notas e retorna o response da ultima chamada
      *
-     * @param array $scores
+     * @param array            $scores
      * @param LegacyDiscipline $discipline
      *
      * @return array|null

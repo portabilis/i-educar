@@ -12,7 +12,6 @@ use App\User;
 use Database\Factories\LegacySchoolFactory;
 use Database\Factories\LegacyUserFactory;
 use Database\Factories\SchoolInepFactory;
-use Database\Factories\UserFactory;
 use Faker\Factory;
 use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento;
 use Illuminate\Foundation\Testing\DatabaseTransactions;

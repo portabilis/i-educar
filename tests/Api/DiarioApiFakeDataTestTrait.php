@@ -84,7 +84,7 @@ trait DiarioApiFakeDataTestTrait
      *
      * @param LegacySchool $school
      * @param              $number
-     * @param null $year
+     * @param null         $year
      */
     public function addAcademicYearStage($school, $number, $year = null)
     {
@@ -145,7 +145,7 @@ trait DiarioApiFakeDataTestTrait
 
     /**
      * @param LegacySchoolClass $schoolClass
-     * @param integer $disciplines
+     * @param integer           $disciplines
      */
     public function createDisciplines($schoolClass, $disciplines)
     {
