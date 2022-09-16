@@ -44,12 +44,13 @@ class LegacyStudentBuilder extends LegacyBuilder
 
     public function whereRg($rg)
     {
-        return  $this->whereHas(
-            'individual.document',
-            function ($query) use ($rg) {
-                $query->when($rg, fn ($q) => $q->where('rg', $rg));
-            }
-        );
+        return $this->when($rg, function () use ($rg) {
+            $this->whereHas(
+                'individual.document',
+                function ($query) use ($rg) {
+                    $query->when($rg, fn ($q) => $q->where('rg', $rg));
+                });
+        });
     }
 
     public function whereMotherName($name)
