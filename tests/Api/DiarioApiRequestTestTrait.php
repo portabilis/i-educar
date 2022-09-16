@@ -6,9 +6,12 @@ use App\Models\LegacyDiscipline;
 use App\Models\LegacyEnrollment;
 use Database\Factories\LegacyUserFactory;
 use Illuminate\Foundation\Testing\TestResponse;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 
 trait DiarioApiRequestTestTrait
 {
+    use WithoutMiddleware;
+
     /**
      * @param LegacyEnrollment $enrollment
      * @param                  $disciplineId
