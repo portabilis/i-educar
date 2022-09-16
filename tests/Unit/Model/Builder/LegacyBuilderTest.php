@@ -60,10 +60,4 @@ class LegacyBuilderTest extends TestCase
 
         $this->assertCount(0, $filtered);
     }
-
-    public function testBuilderExpectFilterNotExistsResource(): void
-    {
-        $this->expectException(QueryException::class);
-        $this->builder->filter(['no_filter' => 0])->resource(['id']);
-    }
 }
