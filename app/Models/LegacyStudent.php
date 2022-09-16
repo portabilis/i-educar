@@ -90,8 +90,8 @@ class LegacyStudent extends Model
         return $this->tipo_responsavel;
     }
 
-    public function getGuardianName(): ?string {
-
+    public function getGuardianName(): ?string
+    {
         return match ($this->guardianType) {
             'm' => $this->individual->mother->name,
             'p' => $this->individual->father->name,
@@ -103,7 +103,6 @@ class LegacyStudent extends Model
     public function getGuardianCpf()
     {
         return match ($this->guardianType) {
-
             'm' => $this->individual->mother->individual->cpf ?? 'não informado',
             'p' => $this->individual->father->individual->cpf ?? 'não informado',
             'r' => $this->individual->responsible->individual->cpf ?? 'não informado',
@@ -115,12 +114,14 @@ class LegacyStudent extends Model
     private function joinGuardionCpfs(): ?string
     {
         $join = ($this->individual->mother->individual->cpf ?? 'não informado') . ', ' . ($this->individual->father->individual->cpf ?? 'não informado');
+
         return strlen($join) < 3 ? null : $join;
     }
 
     private function joinGuardionNames(): ?string
     {
         $join = $this->individual->mother->name . ', ' . $this->individual->father->name;
+
         return strlen($join) < 3 ? null : $join;
     }
 
