@@ -36,10 +36,12 @@ class clsBase
 
     public function verificaPermissao()
     {
-        if (Gate::denies('view', $this->processoAp)) {
-            throw new HttpResponseException(
-                new RedirectResponse('index.php?negado=1&err=1')
-            );
+        if (!\App::runningUnitTests()) {
+            if (Gate::denies('view', $this->processoAp)) {
+                throw new HttpResponseException(
+                    new RedirectResponse('index.php?negado=1&err=1')
+                );
+            }
         }
     }
 
