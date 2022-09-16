@@ -10,6 +10,7 @@ use App\Models\SchoolInep;
 use App\Services\Educacenso\Version2019\Registro00Import;
 use App\User;
 use Database\Factories\LegacySchoolFactory;
+use Database\Factories\LegacyUserFactory;
 use Database\Factories\SchoolInepFactory;
 use Database\Factories\UserFactory;
 use Faker\Factory;
@@ -30,7 +31,7 @@ class Registro002019ImportTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = UserFactory::new()->make();
+        $this->user = LegacyUserFactory::new()->make();
     }
 
     /**
