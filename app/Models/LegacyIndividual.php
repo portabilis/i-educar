@@ -180,7 +180,7 @@ class LegacyIndividual extends Model
      *
      * @return Model|null
      */
-    public static function findByCpf(string|int $cpf) :? Model
+    public static function findByCpf(string|int $cpf): ?Model
     {
         $cpf = preg_replace('/\D/', '', $cpf);
 

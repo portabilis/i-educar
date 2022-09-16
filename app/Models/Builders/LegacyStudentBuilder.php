@@ -19,10 +19,10 @@ class LegacyStudentBuilder extends LegacyBuilder
 
     public function whereBirthdate($birthdate)
     {
-        return  $this->whereHas('individual',
+        return  $this->whereHas(
+            'individual',
             function ($query) use ($birthdate) {
-                $query->when($birthdate, function($q) use ($birthdate) {
-
+                $query->when($birthdate, function ($q) use ($birthdate) {
                     [$day, $month, $year] = explode('/', $birthdate);
                     $birthdate = sprintf('%d-%d-%d', $year, $month, $day);
 
@@ -34,15 +34,18 @@ class LegacyStudentBuilder extends LegacyBuilder
 
     public function whereCpf($cpf)
     {
-        return  $this->whereHas('individual',
+        return  $this->whereHas(
+            'individual',
             function ($query) use ($cpf) {
                 $query->when($cpf, fn ($q) => $q->where('cpf', $cpf));
-            });
+            }
+        );
     }
 
     public function whereRg($rg)
     {
-        return  $this->whereHas('individual.document',
+        return  $this->whereHas(
+            'individual.document',
             function ($query) use ($rg) {
                 $query->when($rg, fn ($q) => $q->where('rg', $rg));
             }
@@ -51,28 +54,32 @@ class LegacyStudentBuilder extends LegacyBuilder
 
     public function whereMotherName($name)
     {
-        return $this->whereHas('individual.father',
+        return $this->whereHas(
+            'individual.father',
             fn ($q) => $q->whereRaw('slug ~* unaccent(?)', $name)
         );
     }
 
     public function whereStudentName($name)
     {
-        return $this->whereHas('person',
+        return $this->whereHas(
+            'person',
             fn ($q) => $q->whereRaw('slug ~* unaccent(?)', $name)
         );
     }
 
     public function whereFatherName($name)
     {
-        return $this->whereHas('individual.father',
+        return $this->whereHas(
+            'individual.father',
             fn ($q) => $q->whereRaw('slug ~* unaccent(?)', $name)
         );
     }
 
     public function whereGuardianName($name)
     {
-        return $this->whereHas('individual.responsible',
+        return $this->whereHas(
+            'individual.responsible',
             fn ($q) => $q->whereRaw('slug ~* unaccent(?)', $name)
         );
     }
@@ -89,35 +96,40 @@ class LegacyStudentBuilder extends LegacyBuilder
 
     public function whereRegistrationYear($year)
     {
-        return $this->whereHas('registrations',
+        return $this->whereHas(
+            'registrations',
             fn ($q) => $q->where('ano', $year)
         );
     }
 
     public function whereSchool($school)
     {
-        return $this->whereHas('registrations',
+        return $this->whereHas(
+            'registrations',
             fn ($q) => $q->where('ref_ref_cod_escola', $school)
         );
     }
 
     public function whereCourse($course)
     {
-        return $this->whereHas('registrations',
+        return $this->whereHas(
+            'registrations',
             fn ($q) => $q->where('ref_cod_curso', $course)
         );
     }
 
     public function whereGrade($grade)
     {
-        return $this->whereHas('registrations.enrollments.schoolClass',
+        return $this->whereHas(
+            'registrations.enrollments.schoolClass',
             fn ($q) => $q->where('ref_ref_cod_serie', $grade)
         );
     }
 
     public function whereRegistration($year, $course, $grade, $school)
     {
-        return $this->whereHas('registrations',
+        return $this->whereHas(
+            'registrations',
             function ($query) use ($year, $course, $grade, $school) {
                 $query->when($year, fn ($q) => $q->where('ano', $year));
                 $query->when($course, fn ($q) => $q->where('ref_cod_curso', $course));
@@ -125,7 +137,8 @@ class LegacyStudentBuilder extends LegacyBuilder
                 $query->when($grade, function ($q) use ($grade) {
                     $q->whereHas('enrollments.schoolClass', fn ($qs) => $qs->where('ref_ref_cod_serie', $grade));
                 });
-            });
+            }
+        );
     }
 
     public function findStudentWithMultipleSearch(StudentFilter $studentFilter)
@@ -141,7 +154,8 @@ class LegacyStudentBuilder extends LegacyBuilder
                 },
                 'person:idpes,nome',
                 'inep:cod_aluno,cod_aluno_inep'
-            ])
+            ]
+        )
             ->filter(
                 [
                     'student' => $studentFilter->studentCode,
@@ -160,7 +174,8 @@ class LegacyStudentBuilder extends LegacyBuilder
                         'school' => $studentFilter->school,
                         'year' => $studentFilter->year,
                     ]
-                ])
+                ]
+            )
             ->active()
             ->orderBy('data_cadastro', 'desc')
             ->paginate(
