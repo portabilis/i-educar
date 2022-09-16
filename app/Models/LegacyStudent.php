@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacyStudentBuilder;
+use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,6 +11,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class LegacyStudent extends Model
 {
+    use LegacyAttribute;
+
+    public string $builder = LegacyStudentBuilder::class;
+
     /**
      * @var string
      */
@@ -77,6 +83,45 @@ class LegacyStudent extends Model
             'cod_aluno',
             'idpes'
         );
+    }
+
+    public function getGuardianTypeAttribute()
+    {
+        return $this->tipo_responsavel;
+    }
+
+    public function getGuardianName(): ?string {
+
+        return match ($this->guardianType) {
+            'm' => $this->individual->mother->name,
+            'p' => $this->individual->father->name,
+            'r' => $this->individual->responsible->name,
+            'a' => $this->joinGuardionNames(),
+            default => null
+        };
+    }
+    public function getGuardianCpf()
+    {
+        return match ($this->guardianType) {
+
+            'm' => $this->individual->mother->individual->cpf ?? 'não informado',
+            'p' => $this->individual->father->individual->cpf ?? 'não informado',
+            'r' => $this->individual->responsible->individual->cpf ?? 'não informado',
+            'a' => $this->joinGuardionCpfs(),
+            default => null
+        };
+    }
+
+    private function joinGuardionCpfs(): ?string
+    {
+        $join = ($this->individual->mother->individual->cpf ?? 'não informado') . ', ' . ($this->individual->father->individual->cpf ?? 'não informado');
+        return strlen($join) < 3 ? null : $join;
+    }
+
+    private function joinGuardionNames(): ?string
+    {
+        $join = $this->individual->mother->name . ', ' . $this->individual->father->name;
+        return strlen($join) < 3 ? null : $join;
     }
 
     public function getInepNumberAttribute()
