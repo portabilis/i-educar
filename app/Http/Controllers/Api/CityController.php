@@ -21,9 +21,9 @@ class CityController extends ResourceController
         return $this->post($city, $request);
     }
 
-    public function show(City $city, Request $request): JsonResource
+    public function show(int $city, Request $request): JsonResource
     {
-        return $this->get($city, $request);
+        return $this->get($city, $request, City::class);
     }
 
     public function update(City $city, Request $request): JsonResource
