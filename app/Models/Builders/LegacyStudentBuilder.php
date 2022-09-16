@@ -49,7 +49,8 @@ class LegacyStudentBuilder extends LegacyBuilder
                 'individual.document',
                 function ($query) use ($rg) {
                     $query->when($rg, fn ($q) => $q->where('rg', $rg));
-                });
+                }
+            );
         });
     }
 
