@@ -4,11 +4,14 @@ namespace Tests\Api;
 
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyEnrollment;
-use Database\Factories\UserFactory;
+use Database\Factories\LegacyUserFactory;
 use Illuminate\Foundation\Testing\TestResponse;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 
 trait DiarioApiRequestTestTrait
 {
+    use WithoutMiddleware;
+
     /**
      * @param LegacyEnrollment $enrollment
      * @param                  $disciplineId
@@ -42,7 +45,7 @@ trait DiarioApiRequestTestTrait
 
         $_GET = $data;
 
-        $user = UserFactory::new()->admin()->make();
+        $user = LegacyUserFactory::new()->admin()->make();
 
         /** @var TestResponse $response */
         $response = $this->actingAs($user)->get('/module/Avaliacao/diarioApi?' . http_build_query($data));
@@ -80,7 +83,7 @@ trait DiarioApiRequestTestTrait
 
         $_GET = $data;
 
-        $user = UserFactory::new()->admin()->make();
+        $user = LegacyUserFactory::new()->admin()->make();
 
         /** @var TestResponse $response */
         $response = $this->actingAs($user)->get('/module/Avaliacao/diarioApi?' . http_build_query($data));
@@ -112,7 +115,7 @@ trait DiarioApiRequestTestTrait
 
         $_GET = $data;
 
-        $user = UserFactory::new()->admin()->make();
+        $user = LegacyUserFactory::new()->admin()->make();
 
         /** @var TestResponse $response */
         $response = $this->actingAs($user)->get('/module/Avaliacao/diarioApi?' . http_build_query($data));
@@ -144,7 +147,7 @@ trait DiarioApiRequestTestTrait
 
         $_GET = $data;
 
-        $user = UserFactory::new()->admin()->make();
+        $user = LegacyUserFactory::new()->admin()->make();
 
         /** @var TestResponse $response */
         $response = $this->actingAs($user)->get('/module/Avaliacao/diarioApi?' . http_build_query($data));
@@ -164,7 +167,7 @@ trait DiarioApiRequestTestTrait
     /**
      * Recebe um array com as etapas e quantidade de faltas e retorna o response da ultima chamada
      *
-     * @param array            $absences
+     * @param array $absences
      * @param LegacyDiscipline $discipline
      *
      * @return array|null
@@ -183,7 +186,7 @@ trait DiarioApiRequestTestTrait
     /**
      * Recebe um array com as etapas e quantidade de notas e retorna o response da ultima chamada
      *
-     * @param array            $scores
+     * @param array $scores
      * @param LegacyDiscipline $discipline
      *
      * @return array|null
