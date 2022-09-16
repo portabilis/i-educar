@@ -117,7 +117,7 @@ return new class extends clsListagem {
             'fatherName' => $this->nome_pai,
             'motherName' => $this->nome_mae,
             'studentName' => $this->nome_aluno,
-            'studentCode' => $this->cod_aluno,
+            'studentCode' => is_int($this->cod_aluno) ? $this->cod_aluno : null,
             'stateNetwork' => $this->aluno_estado_id,
             'responsableName' => $this->nome_responsavel,
             'perPage' => 20,
