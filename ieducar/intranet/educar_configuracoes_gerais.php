@@ -35,7 +35,7 @@ return new class extends clsCadastro {
 
         $nivel = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
-        if ($nivel != 1 && !\App::runningUnitTests()) {
+        if ($nivel != 1) {
             $this->simpleRedirect('educar_index.php');
         }
 
