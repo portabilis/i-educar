@@ -30,22 +30,24 @@ return new class extends clsCadastro {
 
         $customLabel = new CustomLabel();
         $defaults = $customLabel->getDefaults();
-        ksort($defaults);
-        $rotulo = null;
-        foreach ($defaults as $k => $v) {
-            $rotulo2 = explode('.', $k)[0];
+        if (is_array($defaults)) {
+            ksort($defaults);
+            $rotulo = null;
+            foreach ($defaults as $k => $v) {
+                $rotulo2 = explode('.', $k)[0];
 
-            if ($rotulo2 != $rotulo) {
-                $rotulo2 = ucfirst($rotulo2);
-                $this->campoRotulo($rotulo2, '<strong>' . $rotulo2 . '</strong>');
+                if ($rotulo2 != $rotulo) {
+                    $rotulo2 = ucfirst($rotulo2);
+                    $this->campoRotulo($rotulo2, '<strong>' . $rotulo2 . '</strong>');
+                }
+                $this->inputsHelper()->text('custom_labels[' . $k . ']', [
+                    'label' => $k,
+                    'size' => 100,
+                    'required' => false,
+                    'placeholder' => $v,
+                    'value' => (!empty($this->custom_labels[$k])) ? $this->custom_labels[$k] : ''
+                ]);
             }
-            $this->inputsHelper()->text('custom_labels[' . $k . ']', [
-            'label' => $k,
-            'size' => 100,
-            'required' => false,
-            'placeholder' => $v,
-            'value' => (!empty($this->custom_labels[$k])) ? $this->custom_labels[$k] : ''
-        ]);
         }
     }
 
