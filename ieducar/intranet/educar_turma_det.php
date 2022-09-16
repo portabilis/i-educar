@@ -95,6 +95,8 @@ return new class extends clsDetalhe {
 
         $obj_permissoes = new clsPermissoes();
 
+        $this->addDetalhe(['Ano', $this->ano]);
+
         if ($registro['ref_cod_instituicao']) {
             $this->addDetalhe(
                 [
