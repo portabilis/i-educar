@@ -341,7 +341,7 @@ class LegacyBuilder extends Builder
         return parent::groupBy($groups);
     }
 
-    private function getLegacyColumn(string $column): string
+    private function getLegacyColumn($column)
     {
         return $this->getModel()->legacy[$column] ?? $column;
     }
