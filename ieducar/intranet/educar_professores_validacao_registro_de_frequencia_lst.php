@@ -187,16 +187,16 @@ return new class extends clsListagem {
                         >
                             <i class='fa fa-check' aria-hidden='true' alt='Validar Aula'></i><span>
                         </button>
-                        <button
+                        <a
                             id='enviar_mensagem_btn[{$registro['id']}]'
                             name='enviar_mensagem_btn[]'
                             style='width: 40px;cursor: pointer;'
                             class='btn btn-info'
-                            onclick='(function(e){modalEnviarMensagem(e, {$registro['id']})})(event)'
+                            onclick='modalOpen(this, {$registro['id']}, 2, {$registro['cod_professor']})'
                             alt='Enviar mensagem ao professor'
                         >
                             <i class='fa fa-send' aria-hidden='true' alt='Enviar mensagem ao professor'></i><span>
-                        </button>
+                        </a>
                     ";
 
                 $this->addLinhas($lista_busca);
@@ -221,6 +221,7 @@ return new class extends clsListagem {
     public function loadAssets () {
         $scripts = [
             '/modules/Cadastro/Assets/Javascripts/ValidacaoFrequenciaAula.js',
+            '/modules/Cadastro/Assets/Javascripts/ValidacaoEnviarMensagemModal.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);

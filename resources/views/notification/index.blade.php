@@ -60,6 +60,7 @@
             <th>Texto</th>
             <th>Status</th>
             <th>Data</th>
+            <th>Ação</th>
         </tr>
         </thead>
         <tbody>
@@ -68,6 +69,22 @@
                 <td><a onclick="markAsRead(this, true)" href="{{ $presigner->getNotificationUrl($notification) }}" data-id="{{$notification->id}}" target="_blank">{!! $notification->text !!}</a></td>
                 <td><a onclick="markAsRead(this, true)" href="{{ $presigner->getNotificationUrl($notification) }}" data-id="{{$notification->id}}" target="_blank" class="text-status"> @if($notification->read_at) Lida @else Não lida @endif </a></td>
                 <td>{{$notification->created_at->format('d/m/Y H:i')}}</td>
+                <td>
+                    @if($notification->type_id == '5')
+                        <button
+                        id="enviar_mensagem_btn[{$registro['id']}]"
+                        name="enviar_mensagem_btn[]"
+                        style="width: 40px;cursor: pointer;"
+                        class="btn btn-info"
+                        onclick="modalOpen(this, {{$notification->register_id}}, 3, {{$notification->issuer_id}}, '{{$notification->link}}')"
+                        alt="Enviar mensagem ao coordenador"
+                        >
+                        <i class="fa fa-send" aria-hidden="true" alt="Enviar mensagem ao coordenador"></i><span>
+                        </button>
+                    @else
+                        --
+                    @endif
+                </td>
             </tr>
         @empty
             <tr>
@@ -111,4 +128,6 @@
             src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Serie.js") }}"></script>
     <script type="text/javascript"
             src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Turma.js") }}"></script>
+    <script type="text/javascript"
+            src="{{ Asset::get("/modules/Cadastro/Assets/Javascripts/ValidacaoEnviarMensagemModal.js") }}"></script>
 @endprepend

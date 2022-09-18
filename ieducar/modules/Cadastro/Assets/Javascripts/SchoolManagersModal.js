@@ -44,7 +44,6 @@ $j("#modal_school_managers").dialog({
 function modalOpen(thisElement) {
     var elementLine = $j(thisElement).closest('td').attr('id');
     var line = elementLine.replace(/\D/g, '');
-    console.log(line)
     idLastLineUsed = line;
     fillInputs();
     $j("#modal_school_managers").dialog("open");

@@ -85,6 +85,7 @@ class clsModulesPlanejamentoAula extends Model {
             u.nome AS turno,
             l.nm_tipo AS etapa,
             pa.etapa_sequencial AS fase_etapa,
+            pt.servidor_id,
             pe.nome as professor,
             s.cod_serie
         ';
