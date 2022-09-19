@@ -1,11 +1,8 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class () extends Migration {
     /**
      * Run the migrations.
      *
@@ -14,12 +11,12 @@ return new class extends Migration
     public function up()
     {
         DB::statement(
-            "DELETE FROM pmieducar.menu_tipo_usuario
-                WHERE menu_id IN (SELECT id FROM public.menus WHERE process in (647));"
+            'DELETE FROM pmieducar.menu_tipo_usuario
+                WHERE menu_id IN (SELECT id FROM public.menus WHERE process in (647));'
         );
         DB::statement(
-            "DELETE FROM public.menus
-                WHERE process in (647);"
+            'DELETE FROM public.menus
+                WHERE process in (647);'
         );
     }
 
