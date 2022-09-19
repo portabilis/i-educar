@@ -2,6 +2,7 @@
 
 use App\Models\LegacyGeneralConfiguration;
 use App\Setting;
+use App\SettingCategory;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -39,19 +40,18 @@ return new class extends Migration
     private function getCategoryId($rotulo)
     {
         $id = 1;
-        switch ($rotulo) {
-            case "aluno":
-                $id = 10;
-                break;
-            case "matricula":
-                $id = 10;
-                break;
-            case "turma":
-                $id = 10;
-                break;
-            case "report":
-                $id = 9;
-                break;
+        if (
+            $rotulo == "aluno" ||
+            $rotulo == "matricula" ||
+            $rotulo == "turma"
+        ) {
+            $id = SettingCategory::query()
+                ->where('name', "Validações de sistema")
+                ->value('id');
+        } else if ($rotulo == "report" ) {
+            $id = SettingCategory::query()
+                ->where('name', "Validações de relatórios")
+                ->value('id');
         }
         return $id;
     }
