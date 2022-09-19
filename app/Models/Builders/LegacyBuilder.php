@@ -254,7 +254,9 @@ class LegacyBuilder extends Builder
         $groupRelations = new Collection();
         foreach ($filters as $filter) {
             if (str_contains($filter, '.')) {
-                $groupRelations->push(array_filter(explode('.', $filter)));
+                $relation = substr("$filter",0, strrpos($filter,'.'));
+                $column = substr("$filter", (strrpos($filter,'.') + 1));
+                $groupRelations->push([$relation,$column]);
                 continue;
             }
             $this->where(...array_filter(explode(',', $filter)));
