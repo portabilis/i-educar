@@ -24,7 +24,7 @@ class DistrictFactory extends Factory
         return [
             'city_id' => CityFactory::new()->create(),
             'name' => $this->faker->dayOfWeek() . ' District',
-            'ibge_code' => $this->faker->numerify('########'),
+            'ibge_code' => (int)$this->faker->unique()->numerify('########'),
         ];
     }
 }
