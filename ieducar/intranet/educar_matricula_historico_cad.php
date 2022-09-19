@@ -79,6 +79,12 @@ return new class extends clsCadastro {
         $this->campoRotulo('situacao', 'Situação', $situacao);
         $this->inputsHelper()->date('data_enturmacao', ['label' => 'Data enturmação', 'value' => dataToBrasil($enturmacao['data_enturmacao']), 'placeholder' => '']);
         $this->inputsHelper()->date('data_exclusao', ['label' => 'Data de saí­da', 'value' => dataToBrasil($enturmacao['data_exclusao']), 'placeholder' => '', 'required' => $required]);
+
+        $this->campoCheck('transferido','Transferido', dbBool($enturmacao['transferido']));
+        $this->campoCheck('remanejado','Remanejado', dbBool($enturmacao['remanejado']));
+        $this->campoCheck('reclassificado','Reclassificado', dbBool($enturmacao['reclassificado']));
+        $this->campoCheck('abandono','Abandono', dbBool($enturmacao['abandono']));
+        $this->campoCheck('falecido','Falecido', dbBool($enturmacao['falecido']));
     }
 
     public function Editar()
@@ -90,6 +96,12 @@ return new class extends clsCadastro {
         $enturmacao->ref_usuario_exc = $this->pessoa_logada;
         $enturmacao->data_enturmacao = dataToBanco($this->data_enturmacao);
         $enturmacao->data_exclusao = dataToBanco($this->data_exclusao);
+
+        $enturmacao->transferido = !is_null($this->transferido);
+        $enturmacao->remanejado = !is_null($this->remanejado);
+        $enturmacao->reclassificado = !is_null($this->reclassificado);
+        $enturmacao->abandono = !is_null($this->abandono);
+        $enturmacao->falecido = !is_null($this->falecido);
 
         $dataSaidaEnturmacaoAnterior = $enturmacao->getDataSaidaEnturmacaoAnterior($this->ref_cod_matricula, $this->sequencial);
         $dataEntradaEnturmacaoSeguinte = $enturmacao->getDataEntradaEnturmacaoSeguinte($this->ref_cod_matricula, $this->sequencial);
