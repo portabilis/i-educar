@@ -32,13 +32,15 @@ class NotificationService
         }
     }
 
-    public function createByUser($userId, $text, $link, $type)
+    public function createByUser($userId, $text, $link, $type, $register_id = null, $issuer_id = null)
     {
         $notification = Notification::create([
             'text' => $text,
             'link' => $link,
             'type_id' => $type,
             'user_id' => $userId,
+            'register_id' => $register_id,
+            'issuer_id' => $issuer_id,
         ]);
 
         $url = (new NotificationUrlPresigner())->getNotificationUrl($notification);

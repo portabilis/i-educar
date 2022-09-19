@@ -1,0 +1,40 @@
+<?php
+
+class ValidaPlanoRegistroAulaController extends ApiCoreController
+{
+
+    public function validaPlanejamentoAula ()
+    {
+        $planejamento_aula_id = $this->getRequest()->planejamento_aula_id;
+        $result = false;
+
+        if (is_numeric($planejamento_aula_id)) {
+            $obj = new clsModulesPlanejamentoAula($planejamento_aula_id);
+            $result = $obj->validaPlanejamentoAula();
+        }
+
+        return ['result' => $result];
+    }
+
+    public function validaRegistroAula ()
+    {
+        $frequencia_id = $this->getRequest()->frequencia_id;
+        $result = false;
+
+        if (is_numeric($frequencia_id)) {
+            $obj = new clsModulesFrequencia($frequencia_id);
+            $result = $obj->validaFrequencia();
+        }
+
+        return ['result' => $result];
+    }
+
+    public function Gerar()
+    {
+        if ($this->isRequestFor('post', 'validar-planejamento-aula')) {
+            $this->appendResponse($this->validaPlanejamentoAula());
+        } else if ($this->isRequestFor('post', 'validar-registro-aula')) {
+            $this->appendResponse($this->validaRegistroAula());
+        }
+    }
+}

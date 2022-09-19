@@ -10,6 +10,7 @@ class NotificationType extends Model
     public const OTHER = 2;
     public const EXPORT_STUDENT = 3;
     public const EXPORT_TEACHER = 4;
+    public const VALIDATION_CLASS = 5;
 
     /**
      * @var string

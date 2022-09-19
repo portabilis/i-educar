@@ -8,7 +8,8 @@
 
     function hideOrdensAulas() {
       for (let i = 1; i <= 5; i++) {
-        $('#tr_ordens_aulas' + i).hide();
+        $('#tr_ordens_aulas' + i)
+          .hide();
         $('#ordens_aulas' + i).val('').empty().hide();
       }
     }

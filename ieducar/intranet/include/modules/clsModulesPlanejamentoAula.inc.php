@@ -85,6 +85,7 @@ class clsModulesPlanejamentoAula extends Model {
             u.nome AS turno,
             l.nm_tipo AS etapa,
             pa.etapa_sequencial AS fase_etapa,
+            pt.servidor_id,
             pe.nome as professor,
             s.cod_serie
         ';
@@ -416,7 +417,8 @@ class clsModulesPlanejamentoAula extends Model {
         $int_etapa = null,
         $int_servidor_id = null,
         $time_data = null,
-        $arrayEscolasUsuario = null
+        $arrayEscolasUsuario = null,
+        $bool_validado = null
     ) {
         $sql = "
             SELECT DISTINCT
@@ -496,6 +498,15 @@ class clsModulesPlanejamentoAula extends Model {
 
         if (is_array($arrayEscolasUsuario) && count($arrayEscolasUsuario) >= 1) {
             $filtros .= "{$whereAnd} e.cod_escola IN (" . implode(',', $arrayEscolasUsuario) . ")";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_bool($bool_validado) && $bool_validado) {
+            $filtros .= "{$whereAnd} pa.fl_validado = 'true' ";
+        }
+
+        if (is_bool($bool_validado) && !$bool_validado) {
+            $filtros .= "{$whereAnd} pa.fl_validado = 'false' ";
         }
 
         $db = new clsBanco();
@@ -503,7 +514,6 @@ class clsModulesPlanejamentoAula extends Model {
         $resultado = [];
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
-
 
         $this->_total = $db->CampoUnico(
             "SELECT
@@ -817,5 +827,26 @@ class clsModulesPlanejamentoAula extends Model {
             'especificacoes_utilizados' => $escpecificacoesUtilizados
         ];
 
+    }
+
+    public function validaPlanejamentoAula () {
+        if (is_numeric($this->id)) {
+            $db = new clsBanco();
+
+            $set = "fl_validado = true ";
+
+            $db->Consulta("
+                UPDATE
+                    {$this->_tabela}
+                SET
+                    $set
+                WHERE
+                    id = '{$this->id}'
+            ");
+
+            return true;
+        }
+
+        return false;
     }
 }
