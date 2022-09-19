@@ -22,10 +22,10 @@ class LegacyStudentBuilder extends LegacyBuilder
         return  $this->whereHas(
             'individual',
             function ($query) use ($birthdate) {
+                [$day, $month, $year] = explode('/', $birthdate);
+                $birthdate = sprintf('%d-%d-%d', $year, $month, $day);
+                $birthdate = $birthdate === '0-0-0' ? null : $birthdate;
                 $query->when($birthdate, function ($q) use ($birthdate) {
-                    [$day, $month, $year] = explode('/', $birthdate);
-                    $birthdate = sprintf('%d-%d-%d', $year, $month, $day);
-
                     $q->where('data_nasc', $birthdate);
                 });
             }

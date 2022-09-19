@@ -149,16 +149,6 @@ class LegacyInstitution extends Model implements RelocationDateProvider
         return $this->hasMany(LegacyEvaluationRule::class, 'instituicao_id');
     }
 
-    /**
-     * Redes de ensino
-     *
-     * @return HasMany
-     */
-    public function educationNetworks(): HasMany
-    {
-        return $this->hasMany(LegacyEducationNetwork::class, 'ref_cod_instituicao');
-    }
-
     public function getRelocationDate()
     {
         if ($this->getRelocationDateAttribute()) {

@@ -5,7 +5,6 @@ namespace App\Services\Educacenso\Version2019;
 use App\Models\City;
 use App\Models\Educacenso\Registro00;
 use App\Models\Educacenso\RegistroEducacenso;
-use App\Models\LegacyEducationNetwork;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyOrganization;
 use App\Models\LegacyPerson;
@@ -100,8 +99,6 @@ class Registro00Import implements RegistroImportInterface
             'fantasia' => $this->model->nome,
         ]);
 
-        $educationNetword = self::getOrCreateEducationNetwork($this->user);
-
         $school = LegacySchool::create([
             'situacao_funcionamento' => $this->model->situacaoFuncionamento,
             'sigla' => mb_substr($this->model->nome, 0, 5, 'UTF-8'),
@@ -109,7 +106,6 @@ class Registro00Import implements RegistroImportInterface
             'ativo' => 1,
             'ref_idpes' => $organization->getKey(),
             'ref_usuario_cad' => $this->user->id,
-            'ref_cod_escola_rede_ensino' => $educationNetword->getKey(),
             'ref_cod_instituicao' => $this->institution->id,
             'zona_localizacao' => $this->model->zonaLocalizacao,
             'localizacao_diferenciada' => $this->model->localizacaoDiferenciada,
@@ -133,23 +129,6 @@ class Registro00Import implements RegistroImportInterface
         $this->createAddress($school);
         $this->createSchoolInep($school);
         $this->createPhones($school);
-    }
-
-    private function getOrCreateEducationNetwork()
-    {
-        $educationNetwork = LegacyEducationNetwork::all()->first();
-
-        if ($educationNetwork) {
-            return $educationNetwork;
-        }
-
-        return LegacyEducationNetwork::create([
-            'ref_usuario_cad' => $this->user->id,
-            'nm_rede' => 'Importação Educacenso',
-            'ativo' => 1,
-            'ref_cod_instituicao' => $this->institution->id,
-            'data_cadastro' => now(),
-        ]);
     }
 
     private function createAddress($school)
