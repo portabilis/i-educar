@@ -44,10 +44,29 @@ class ValidacaoEnviarMensagemController extends ApiCoreController
         return false;
     }
 
+    public function getMensagens () {
+        $registro_id = $this->getRequest()->registro_id;
+        $mensagens = [];
+
+        if (is_numeric($registro_id)) {
+            $user_logado_id = Auth::id();
+
+            $mensagens = Mensagem::where('registro_id', $registro_id)->where(function ($query) use ($user_logado_id) {
+                $query->where('emissor_user_id', '=', $user_logado_id)
+                    ->orWhere('receptor_user_id', '=', $user_logado_id);
+            })->get();
+
+        }
+
+        return ['result' => $mensagens];
+    }
+
     public function Gerar()
     {
         if ($this->isRequestFor('post', 'enviar-mensagem')) {
             $this->appendResponse($this->enviarMensagem());
+        } else if ($this->isRequestFor('get', 'get-mensagens')) {
+            $this->appendResponse($this->getMensagens());
         }
     }
 }

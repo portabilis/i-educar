@@ -5,6 +5,8 @@ var idLastLineUsed = null;
 var typeValidation = null;
 var receptor_user_id = null;
 var urlExistNotification = null;
+var idUserLogado = null;
+var isProfessor = false;
 
 $j("#modal_enviar_mensagem").dialog({
   autoOpen: false,
@@ -44,13 +46,62 @@ $j("#modal_enviar_mensagem").dialog({
   }
 });
 
-function modalOpen(thisElement, registroId, type, user_id, url =null) {
+function modalOpen(thisElement, registroId, type, user_id, url = null, auth_id, professor = false) {
   idLastLineUsed = registroId;
   typeValidation = type;
   receptor_user_id = user_id;
   urlExistNotification = url;
+  idUserLogado = auth_id;
+  isProfessor = professor;
+
+  fillMensagens();
   fillInputs();
   $j("#modal_enviar_mensagem").dialog("open");
+}
+
+function fillMensagens() {
+  var data = {
+    registro_id: idLastLineUsed
+  };
+
+  var options = {
+    url: getResourceUrlBuilder.buildUrl('/module/Api/ValidacaoEnviarMensagem', 'get-mensagens', {}),
+    dataType: 'json',
+    data: data,
+    success: function (dataResponse) {
+      let html = '';
+      console.log(dataResponse)
+      console.log(typeof dataResponse)
+
+      if (dataResponse) {
+        for (let i = 0; i < dataResponse.result.length; i++) {
+          let classePosicionamento = '';
+          let tituloMensagem = '';
+          let data = dataResponse.result[i].created_at;
+
+          if (dataResponse.result[i].emissor_user_id == idUserLogado) {
+            classePosicionamento = 'right';
+            tituloMensagem = 'Você - '+ data;
+          } else {
+            classePosicionamento = 'left';
+            tituloMensagem = (isProfessor ? 'Coordenador - ' + data : 'Professor - ' + data);
+          }
+
+          html += `<div class="${classePosicionamento}" style="margin-top: 2rem;">
+                        <p><b>${tituloMensagem}</b></p>
+                        <div>
+                            <p>${dataResponse.result[i].texto}</p>
+                        </div>
+                    </div>`;
+        }
+
+        $j('#box-mensagens').html(html);
+
+      }
+    }
+  };
+
+  getResources(options);
 }
 
 function fillInputs() {
@@ -66,30 +117,17 @@ function htmlFormModal() {
                         <p><b>Mensagens enviadas</b></p>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="right">
-                        <p><b>Você:</b></p>
+                <div class="row" id="box-mensagens">
+                    <div class="text-center">
                         <div>
-                            <p>Testee</p>
-                        </div>
-                    </div>
-                    <div class="right">
-                        <p><b>Você:</b></p>
-                        <div>
-                            <p>Testee</p>
-                        </div>
-                    </div>
-                    <div class="left">
-                        <p><b>Professor</b></p>
-                        <div>
-                            <p>msg prof</p>
+                            <p>Carregando...</p>
                         </div>
                     </div>
                 </div>
 
                <div class="row">
                 <form>
-                  <label for="mensagem">Mensagem</label>
+                  <label for="mensagem"><b>Mensagem:</b></label>
                   <textarea name="novaMensagem" id="novaMensagem" rows="3" cols="50" style="resize: none;"></textarea>
                 </form>
                </div>
@@ -134,14 +172,11 @@ function addMensagem() {
     dataType: 'json',
     data: data,
     success: function (dataResponse) {
-      console.log(dataResponse)
-      console.log(typeof dataResponse)
-
       if (dataResponse) {
-        $j("#dialog-form-pessoa-parent").dialog('close');
+        // $j("#dialog-form-pessoa-parent").dialog('close');
         messageUtils.success('Mensagem enviada com sucesso!');
 
-       delay(1000).then(() => urlHelper("http://" + window.location.host + complementoUrlRedirect, '_self'));
+       // delay(1000).then(() => urlHelper("http://" + window.location.host + complementoUrlRedirect, '_self'));
 
       } else {
         messageUtils.error("Houve algum erro ao enviar a mensagem");

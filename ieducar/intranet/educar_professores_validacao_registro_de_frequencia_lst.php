@@ -192,7 +192,7 @@ return new class extends clsListagem {
                             name='enviar_mensagem_btn[]'
                             style='width: 40px;cursor: pointer;'
                             class='btn btn-info'
-                            onclick='modalOpen(this, {$registro['id']}, 2, {$registro['cod_professor']})'
+                            onclick='modalOpen(this, {$registro['id']}, 2, {$registro['cod_professor']}, null, {$this->pessoa_logada})'
                             alt='Enviar mensagem ao professor'
                         >
                             <i class='fa fa-send' aria-hidden='true' alt='Enviar mensagem ao professor'></i><span>

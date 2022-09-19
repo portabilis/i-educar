@@ -18,7 +18,7 @@ html{
 }
 body{
   font-size: 16px;
-  
+
 }
 
 body, html{
@@ -453,34 +453,34 @@ h6, .h6 {
   @media only screen and (max-width: 1023px) {
     span  {
       font-size: 3.4rem; }
-    
+
     h1, .h1 {
       font-size: 5.5rem; }
-    
+
     h2, .h2 {
       font-size: 5rem; }
-    
+
     h3, .h3 {
       font-size: 4.75rem; }
-    
+
     h4, .h4 {
       font-size: 4.5rem; }
-    
+
     h5, .h5 {
       font-size: 4.25rem; }
-    
+
     h6, .h6 {
       font-size: 4rem; }
 
     #localizacao span {
       font-size: 3.5rem; }
-    
+
     .fundoCalendarioTopo {
       font-size: 3rem; }
 
     label {
       font-size: .7em;}
-    
+
   }
 
 /**************************************
@@ -490,7 +490,7 @@ h6, .h6 {
   display: flex;
   align-items: unset;
   contain: content;
-  
+
 }
 
 .sidebar{
@@ -2155,7 +2155,7 @@ input.btn_small {
 }
 
 @media only screen and (max-width: 1023px) {
-  
+
   .ieducar-header, .col-8 {}
   select {width: 100vh;}
   .r3c1 {display: none;}
@@ -2180,10 +2180,10 @@ input.btn_small {
   td p {font-size: 2.75rem !important}
   input[type=checkbox] {width: auto !important; transform: scale(2); -webkit-transform: scale(2)}
   .in-ex{width: 1.8em !important;}
-  
+
   table {font-size: 4rem !important;}
   table.paginacao td a.nvp_paginador { font-size: 4.5rem !important;}
-  .nvp_paginador, .nvp_paginador_ativo a {font-size: 5rem !important;} 
+  .nvp_paginador, .nvp_paginador_ativo a {font-size: 5rem !important;}
   table.paginacao{width:95vw !important; margin-top: 3vh !important; margin-bottom: 7vh !important;}
   .tableDetalhe th{font-size: 4.5rem; padding-right: 15rem !important;}
   .avatar-35{width: 70px !important; padding: 5px 0px !important; height: 70px !important;}
@@ -2204,7 +2204,7 @@ input.btn_small {
   #form_resultado {width: 1023px; overflow-x: auto;}
   .tableDetalheMobile { display: block; max-width: fit-content; overflow-x: auto; white-space: nowrap;}
   .scroll{ margin: 0 4px; width: 900px; overflow: auto;}
-  
+
   #tablelistagem .formmdtd{ font-size: 1.7rem; width: calc(100% - 15px); margin: 5px; float: left; }
   #ref_cod_escola_chosen a.chosen-single,
   #escola_chosen a.chosen-single{ font-size: 3.4rem !important;}
@@ -2213,7 +2213,7 @@ input.btn_small {
   #tablelistagem .formlttd, #tablelistagem .formmdtd  { font-size: 4rem !important; line-height: 3; font-weight:bold}
   td.formlttd table.tableDetalhe {width: 1023px;}
   .ieducar-quick-searchM{width: 90%; padding-top: 5rem;}
-  
+
   #expandido:checked ~ .r3c1 {display: table-cell; left: 0;}
   #expandido:checked ~ .Mobile {display: visible; left: 0}
   #expandido:checked ~ .expandir-btn {margin-left: 74.8%; }

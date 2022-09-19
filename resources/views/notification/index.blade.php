@@ -76,7 +76,7 @@
                         name="enviar_mensagem_btn[]"
                         style="width: 40px;cursor: pointer;"
                         class="btn btn-info"
-                        onclick="modalOpen(this, {{$notification->register_id}}, 3, {{$notification->issuer_id}}, '{{$notification->link}}')"
+                        onclick="modalOpen(this, {{$notification->register_id}}, 3, {{$notification->issuer_id}}, '{{$notification->link}}', {{$auth_id}}, {{$isProfessor}})"
                         alt="Enviar mensagem ao coordenador"
                         >
                         <i class="fa fa-send" aria-hidden="true" alt="Enviar mensagem ao coordenador"></i><span>
