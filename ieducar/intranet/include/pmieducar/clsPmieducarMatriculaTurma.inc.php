@@ -19,9 +19,13 @@ class clsPmieducarMatriculaTurma extends Model
     public $reabrirMatricula;
     public $etapa_educacenso;
     public $turma_unificada;
-    public $remanejado;
     public $turno_id;
     public $tipo_atendimento = false;
+    public $transferido = false;
+    public $remanejado = false;
+    public $reclassificado = false;
+    public $falecido = false;
+    public $abandono = false;
 
     public function __construct(
         $ref_cod_matricula = null,
