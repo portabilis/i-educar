@@ -20,10 +20,10 @@ class LegacyModel extends Model
     public function __set($key, $value)
     {
         if (array_key_exists($key, $this->legacy)) {
-            return parent::__set($this->legacy[$key], $value);
+            parent::__set($this->legacy[$key], $value);
         }
 
-        return parent::__set($key, $value);
+        parent::__set($key, $value);
     }
 
     public function newEloquentBuilder($query)
