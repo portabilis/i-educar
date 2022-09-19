@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\EmployeeWithdrawalController;
+use App\Http\Controllers\Api\People\LegacyDeficiencyController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,9 +16,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group([
-    'middleware' => 'auth:sanctum',
+   'middleware' => 'auth:sanctum',
 ], function () {
-    Route::apiResources([]);
+    Route::apiResources([
+        'person/deficiency' => LegacyDeficiencyController::class
+    ]);
 });
 
 Route::get('version', 'Api\\VersionController@version');
