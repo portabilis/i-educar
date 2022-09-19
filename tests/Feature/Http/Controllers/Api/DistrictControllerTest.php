@@ -63,7 +63,7 @@ class DistrictControllerTest extends ResourceTestCase
     {
         $this->actingAs(LegacyUserFactory::new()->institutional()->create());
 
-        $model = $this->createDistrictIntoBrasil();
+        $model = $this->makeDistrictIntoBrasil();
 
         $response = $this->post(
             $this->getUri(), $model->toArray()
@@ -99,5 +99,14 @@ class DistrictControllerTest extends ResourceTestCase
         $city = (new CityFactory())->create(['state_id' => $state]);
 
         return (new DistrictFactory())->createOne(['city_id' => $city]);
+    }
+
+    private function makeDistrictIntoBrasil(): District
+    {
+        $country = (new CountryFactory())->make(['id' => Country::BRASIL]);
+        $state = (new StateFactory())->make(['country_id' => $country]);
+        $city = (new CityFactory())->make(['state_id' => $state]);
+
+        return (new DistrictFactory())->makeOne(['city_id' => $city]);
     }
 }

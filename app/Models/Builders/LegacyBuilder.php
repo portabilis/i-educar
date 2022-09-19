@@ -253,12 +253,28 @@ class LegacyBuilder extends Builder
         $filters = array_filter(explode('|', $filters));
         $groupRelations = new Collection();
         foreach ($filters as $filter) {
+            //relacionamentos
             if (str_contains($filter, '.')) {
-                $groupRelations->push(array_filter(explode('.', $filter)));
+                $relation = substr($filter, 0, strrpos($filter, '.'));
+                $column = substr($filter, (strrpos($filter, '.') + 1));
+                $groupRelations->push([$relation, $column]);
                 continue;
             }
-            $this->where(...array_filter(explode(',', $filter)));
+
+            //filtros
+            $data = array_filter(explode(',', $filter));
+            $method = 'where' . $this->getFilterName($data[0]);
+            if (method_exists($this, $method)) {
+                $parameter = $data[1] ?? null;
+                if ($parameter !== null) {
+                    $this->{$method}($data[1]);
+                }
+            } else {
+                //normal
+                $this->where(...$data);
+            }
         }
+
         //execução agrupada dos relacionamentos
         foreach ($groupRelations->groupBy(0) as $groupRelation => $groupRows) {
             $this->whereHas($groupRelation, static function ($q) use ($groupRows) {
