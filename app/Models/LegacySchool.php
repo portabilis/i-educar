@@ -58,7 +58,6 @@ class LegacySchool extends Model
         'ref_usuario_cad',
         'ref_usuario_exc',
         'ref_cod_instituicao',
-        'ref_cod_escola_rede_ensino',
         'sigla',
         'data_cadastro',
         'data_exclusao',
