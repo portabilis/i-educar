@@ -7,7 +7,7 @@ use App\Models\State;
 use App_Model_NivelTipoUsuario;
 use Illuminate\Contracts\Validation\Rule;
 
-class CityRestricOperationRule implements Rule
+class CityRestrictOperationRule implements Rule
 {
     private $accessLevel;
 

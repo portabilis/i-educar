@@ -7,7 +7,7 @@ use App\Http\Requests\Api\Addressing\AddressingCityRequest;
 use App\Models\City;
 use App\Rules\Addressing\AddressingCityDistrictRule;
 use App\Rules\Addressing\AddressingCityPlaceRule;
-use App\Rules\CityRestricOperationRule;
+use App\Rules\CityRestrictOperationRule;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -45,7 +45,7 @@ class CityController extends ResourceController
     {
         $accessLevel = $request->user()->getLevel();
         return [
-            new CityRestricOperationRule($accessLevel)
+            new CityRestrictOperationRule($accessLevel)
         ];
     }
 
@@ -53,7 +53,7 @@ class CityController extends ResourceController
     {
         $accessLevel = $request->user()->getLevel();
         return [
-            new CityRestricOperationRule($accessLevel),
+            new CityRestrictOperationRule($accessLevel),
             new AddressingCityDistrictRule(),
             new AddressingCityPlaceRule()
         ];

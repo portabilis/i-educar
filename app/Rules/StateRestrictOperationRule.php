@@ -9,7 +9,7 @@ use App\Models\State;
 use App_Model_NivelTipoUsuario;
 use Illuminate\Contracts\Validation\Rule;
 
-class StateRestricOperationRule implements Rule
+class StateRestrictOperationRule implements Rule
 {
 
     private int $accessLevel;

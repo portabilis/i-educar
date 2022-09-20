@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\ResourceController;
 use App\Http\Requests\Api\Addressing\AddressingDistrictRequest;
 use App\Models\District;
-use App\Rules\DistrictRestricOperationRule;
+use App\Rules\DistrictRestrictOperationRule;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -42,7 +42,7 @@ class DistrictController extends ResourceController
     {
         $accessLevel = $request->user()->getLevel();
         return [
-            new DistrictRestricOperationRule($accessLevel)
+            new DistrictRestrictOperationRule($accessLevel)
         ];
     }
 }

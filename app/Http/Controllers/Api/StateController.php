@@ -6,7 +6,7 @@ use App\Http\Controllers\ResourceController;
 use App\Http\Requests\Api\Addressing\AddressingStateRequest;
 use App\Models\State;
 use App\Rules\Addressing\AddressingStateRule;
-use App\Rules\StateRestricOperationRule;
+use App\Rules\StateRestrictOperationRule;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -44,7 +44,7 @@ class StateController extends ResourceController
     {
         $accessLevel = $request->user()->getLevel();
         return [
-            new StateRestricOperationRule($accessLevel)
+            new StateRestrictOperationRule($accessLevel)
         ];
     }
 
@@ -52,7 +52,7 @@ class StateController extends ResourceController
     {
         $accessLevel = $request->user()->getLevel();
         return [
-            new StateRestricOperationRule($accessLevel),
+            new StateRestrictOperationRule($accessLevel),
             new AddressingStateRule()
         ];
     }
