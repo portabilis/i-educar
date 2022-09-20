@@ -70,7 +70,7 @@ class CountryControllerTest extends ResourceTestCase
             $this->getUri([$model->getKey()])
         );
         $response->assertStatus(422);
-        $response->assertJson(['message' => 'Não é permitido exclusão de países brasileiros, pois já estão previamente cadastrados.']);
+        $response->assertJson(['message' => 'Não é permitido exclusão do Brasil, pois já está previamente cadastrado.']);
         $this->assertCount(1, $response->json('errors'));
     }
 

@@ -44,6 +44,6 @@ class CountryRestrictOperationRule implements Rule
      */
     public function message()
     {
-        return 'Não é permitido exclusão de países brasileiros, pois já estão previamente cadastrados.';
+        return 'Não é permitido exclusão do Brasil, pois já está previamente cadastrado.';
     }
 }
