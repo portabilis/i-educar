@@ -13,20 +13,12 @@ class LegacyModel extends Model
 
     public function __get($key)
     {
-        if (array_key_exists($key, $this->legacy)) {
-            return parent::__get($this->legacy[$key]);
-        }
-
-        return parent::__get($key);
+        return parent::__get($this->getLegacyColumn($key));
     }
 
     public function __set($key, $value)
     {
-        if (array_key_exists($key, $this->legacy)) {
-            parent::__set($this->legacy[$key], $value);
-        }
-
-        parent::__set($key, $value);
+        parent::__set($this->getLegacyColumn($key), $value);
     }
 
     public function newEloquentBuilder($query)
@@ -44,7 +36,7 @@ class LegacyModel extends Model
             $legacy = array_flip($this->legacy);
             $newAttributes = [];
             foreach (parent::attributesToArray() as $key => $value) {
-                $newAttributes[$legacy[$key] ?? $key] = $value;
+                $newAttributes[$this->getLegacyColumn($key)] = $value;
             }
 
             return $newAttributes;
@@ -57,7 +49,7 @@ class LegacyModel extends Model
     {
         if (property_exists($this, 'legacy')) {
             foreach ($attributes as $key => $value) {
-                $this->setAttribute($this->legacy[$key] ?? $key, $value);
+                $this->setAttribute($this->getLegacyColumn($key), $value);
             }
 
             return $this;
@@ -66,8 +58,8 @@ class LegacyModel extends Model
         return parent::fill($attributes);
     }
 
-    public function getLegacyColumn($column)
+    public function getLegacyColumn($key)
     {
-        return $this->legacy[$column] ?? $column;
+        return $this->legacy[$key] ?? $key;
     }
 }
