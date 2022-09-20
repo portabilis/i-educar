@@ -102,6 +102,28 @@
         carregarAlunos();
       }
     });
+
+    var id = $j('#id').val();
+    var servidor_id = $j('#servidor_id').val();
+    var auth_id = $j('#auth_id').val();
+    var is_professor = $j('#is_professor').val();
+
+    function addBtnEnviarMensagem() {
+      if (servidor_id) {
+        let html = "<a" +
+          "          id='enviar_mensagem_btn["+id+"]'\n" +
+          "          name='enviar_mensagem_btn[]'\n" +
+          "          style='width: 80px;cursor: pointer;text-decoration: none;font-size: 13px;float: right;'\n" +
+          "          class='btn btn-info'\n" +
+          "          onClick='modalOpen(this, "+id+", 1, "+servidor_id+", null, "+auth_id+", "+Boolean(is_professor)+")'\n" +
+          "        ><i class='fa fa-send' aria-hidden='true'></i>" +
+          "        </a>";
+
+        $('.tablelistagem').append(html);
+      }
+    }
+
+    addBtnEnviarMensagem();
   });
 })(jQuery);
 

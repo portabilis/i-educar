@@ -164,7 +164,7 @@ function addMensagem() {
     registro_id: idLastLineUsed,
     typeValidation: typeValidation,
     receptor_user_id: receptor_user_id,
-    url: "http://" + window.location.host + complementoUrlNotification
+    url: complementoUrlNotification
   };
 
   var options = {

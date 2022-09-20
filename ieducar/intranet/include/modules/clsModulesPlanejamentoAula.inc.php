@@ -849,4 +849,28 @@ class clsModulesPlanejamentoAula extends Model {
 
         return false;
     }
+
+    public function getMensagem ($receptor_user_id) {
+        if (is_numeric($this->id)) {
+            $data = [];
+
+            $db = new clsBanco();
+            $db->Consulta("
+                SELECT
+                    emissor_user_id
+                FROM
+                    public.mensagens
+                WHERE
+                    registro_id = '{$this->id}' AND
+                    receptor_user_id = '{$receptor_user_id}'
+                LIMIT 1
+            ");
+
+            $db->ProximoRegistro();
+
+            return $db->Tupla();
+        }
+
+        return false;
+    }
 }
