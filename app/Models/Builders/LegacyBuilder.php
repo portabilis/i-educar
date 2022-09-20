@@ -343,6 +343,10 @@ class LegacyBuilder extends Builder
 
     private function getLegacyColumn($column)
     {
-        return $this->getModel()->getLegacyColumn($column);
+        if(method_exists($this->getModel(), "getLegacyColumn")) {
+            return $this->getModel()->getLegacyColumn($column);
+        }
+
+        return $column;
     }
 }
