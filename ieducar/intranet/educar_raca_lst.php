@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyRace;
+
 return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -58,22 +60,19 @@ return new class extends clsListagem {
         $this->__limite = 20;
         $this->__offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->__limite-$this->__limite: 0;
 
-        $obj_raca = new clsCadastroRaca();
-        $obj_raca->setOrderby('nm_raca ASC');
-        $obj_raca->setLimite($this->__limite, $this->__offset);
+        $query =  LegacyRace::query()
+            ->where('ativo', true)
+            ->orderBy('nm_raca','ASC');
 
-        $lista = $obj_raca->lista(
-            null,
-            null,
-            $this->nm_raca,
-            null,
-            null,
-            null,
-            null,
-            't'
-        );
 
-        $total = $obj_raca->_total;
+        if (is_string($this->nm_raca)) {
+            $query->where('nm_raca', 'ilike', '%' . $this->nm_raca . '%');
+        }
+
+        $result = $query->paginate($this->__limite, pageName: 'pagina_'.$this->nome);
+
+        $lista = $result->items();
+        $total = $result->total();
 
         // monta a lista
         if (is_array($lista) && count($lista)) {
