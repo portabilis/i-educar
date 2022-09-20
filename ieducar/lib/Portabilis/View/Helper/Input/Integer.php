@@ -7,7 +7,7 @@ class Portabilis_View_Helper_Input_Integer extends Portabilis_View_Helper_Input_
         // fixup para remover caracteres não numericos
         // inclusive pontos '.', não removidos pela super classe
         $js = '
-            $j(\'#' . $inputOptions['id'] . "').keyup(function(){
+            $j(\'#' . $inputOptions['id'] . "').on('keyup change',function(){
                 var oldValue = this.value;
 
                 this.value = this.value.replace(/[^0-9\.]/g, '');

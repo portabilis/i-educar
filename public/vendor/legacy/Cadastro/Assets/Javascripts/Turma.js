@@ -13,7 +13,7 @@ $j('#codigo_inep_educacenso').closest('tr').attr('id','tr_codigo_inep_educacenso
 $j('.tableDetalheLinhaSeparador').closest('tr').attr('id','stop');
 
 // Pega o número dessa linha
-linha_inicial_tipo = $j('#tr_codigo_inep_educacenso').index()-2;
+linha_inicial_tipo = $j('#tr_codigo_inep_educacenso').index()-3;
 
 // hide nos campos das outras abas (deixando só os campos da primeira aba)
 $j('.tablecadastro >tbody  > tr').each(function(index, row) {
