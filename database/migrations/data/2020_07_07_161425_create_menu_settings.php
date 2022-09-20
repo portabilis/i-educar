@@ -14,7 +14,7 @@ class CreateMenuSettings extends Migration
     public function up()
     {
         Menu::query()->create([
-            'parent_id' => Menu::query()->where('old', Process::CONFIG)->firstOrFail()->getKey(),
+            'parent_id' => Menu::query()->where('process', Process::CONFIG)->firstOrFail()->getKey(),
             'title' => 'Configurações de sistema',
             'link' => '/configuracoes/configuracoes-de-sistema',
             'process' => Process::SETTINGS,
