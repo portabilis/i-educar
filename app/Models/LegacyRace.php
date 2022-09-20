@@ -10,7 +10,8 @@ class LegacyRace extends Model
     use Ativo;
 
     public const CREATED_AT = 'data_cadastro';
-    public const UPDATED_AT = null;
+    public const DELETED_AT = 'data_exclusao';
+    public const UPDATED_AT =  null;
 
     /**
      * @var string
@@ -29,13 +30,6 @@ class LegacyRace extends Model
         'idpes_exc',
         'idpes_cad',
         'nm_raca',
-        'data_exclusao',
-        'ativo',
         'raca_educacenso',
     ];
-
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
 }
