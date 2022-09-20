@@ -3,11 +3,14 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Builders\LegacyBuilder;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class LegacyModel extends Model
 {
+    public array $legacy = [];
+
     public function __get($key)
     {
         if (array_key_exists($key, $this->legacy)) {
@@ -32,19 +35,19 @@ class LegacyModel extends Model
             return new $this->builder($query);
         }
 
-        return new Builder($query);
+        return new LegacyBuilder($query);
     }
 
     public function attributesToArray()
     {
         if (property_exists($this, 'legacy')) {
             $legacy = array_flip($this->legacy);
-            $new_attributes = [];
+            $newAttributes = [];
             foreach (parent::attributesToArray() as $key => $value) {
-                $new_attributes[$legacy[$key] ?? $key] = $value;
+                $newAttributes[$legacy[$key] ?? $key] = $value;
             }
 
-            return $new_attributes;
+            return $newAttributes;
         }
 
         return parent::attributesToArray();
@@ -61,5 +64,10 @@ class LegacyModel extends Model
         }
 
         return parent::fill($attributes);
+    }
+
+    public function getLegacyColumn($column)
+    {
+        return $this->legacy[$column] ?? $column;
     }
 }
