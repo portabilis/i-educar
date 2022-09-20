@@ -10,7 +10,7 @@ use App\Support\View\Settings\Inputs\StringInput;
 
 class SettingView
 {
-    public function makeInput($id, $description, $type, $key, $value, $enabled, $hint,$maxlength)
+    public function makeInput($id, $description, $type, $key, $value, $enabled, $hint, $maxlength)
     {
         return $this->getInput($type)->getInputView($id, $description, $key, $value, $enabled, $hint, $maxlength);
     }

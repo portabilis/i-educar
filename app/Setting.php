@@ -3,12 +3,11 @@
 namespace App;
 
 use App\Support\Database\DateSerializer;
-use App\Traits\SettingTrait;
 use Illuminate\Database\Eloquent\Model;
 
 class Setting extends Model
 {
-    use DateSerializer, SettingTrait;
+    use DateSerializer;
 
     public const TYPE_STRING = 'string';
     public const TYPE_FLOAT = 'float';
@@ -19,7 +18,7 @@ class Setting extends Model
      * @var array
      */
     protected $fillable = [
-        'key', 'value', 'type', 'description', 'setting_category_id', 'hint','maxlength'
+        'key', 'value', 'type', 'description', 'setting_category_id', 'hint', 'maxlength'
     ];
 
     /**

@@ -27,7 +27,7 @@ class SettingController extends Controller
             return back()->withErrors(['Error' => ['Você não tem permissão para acessar este recurso']]);
         }
 
-        $categories = SettingCategory::whereHas('settings')->with(['settings'=> function($q) {
+        $categories = SettingCategory::whereHas('settings')->with(['settings' => function ($q) {
             $q->orderBy('description')->orderBy('key');
         }])->orderBy('id', 'desc')->get();
 
