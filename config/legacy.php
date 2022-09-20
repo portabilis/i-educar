@@ -49,6 +49,7 @@ return [
     */
 
     'migrations' => [
+        env('LEGACY_SEED_DATA', true) ? database_path('migrations/data') : database_path('migrations/nothing'),
         database_path('migrations/extras'),
         database_path('migrations/legacy'),
     ],
