@@ -2,20 +2,18 @@
 
 namespace App\Rules;
 
+use App\Models\City;
 use App\Models\Country;
+use App\Models\District;
 use App\Models\State;
 use App_Model_NivelTipoUsuario;
 use Illuminate\Contracts\Validation\Rule;
 
-class CityRestricOperationRule implements Rule
+class StateRestrictOperationRule implements Rule
 {
-    private $accessLevel;
 
-    /**
-     * Create a new rule instance.
-     *
-     * @return void
-     */
+    private int $accessLevel;
+
     public function __construct(int $accessLevel)
     {
         $this->accessLevel = $accessLevel;
@@ -25,21 +23,18 @@ class CityRestricOperationRule implements Rule
      * Determine if the validation rule passes.
      *
      * @param  string  $attribute
-     * @param  mixed  $value
+     * @param  District  $value
      * @return bool
      */
     public function passes($attribute, $value)
     {
-        $stateId = $value->getOriginal('state_id') ?? $value->state_id;
-
-        $state = State::query()->find($stateId);
+        $country_id = $value->getOriginal('country_id') ?? $value->country_id;
 
         if ($this->accessLevel === App_Model_NivelTipoUsuario::POLI_INSTITUCIONAL) {
             return true;
         }
 
-        return $state->country_id !== Country::BRASIL;
-
+        return $country_id !== Country::BRASIL;
     }
 
     /**
@@ -49,6 +44,6 @@ class CityRestricOperationRule implements Rule
      */
     public function message()
     {
-        return 'Não é permitido edição de municípios brasileiros, pois já estão previamente cadastrados.';
+        return 'Não é permitido exclusão de estados brasileiros, pois já estão previamente cadastrados.';
     }
 }

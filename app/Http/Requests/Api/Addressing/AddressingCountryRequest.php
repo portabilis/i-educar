@@ -11,7 +11,7 @@ class AddressingCountryRequest extends FormRequest
     {
         return [
             'name' => ['required', 'max:255', Rule::unique('countries')->ignore($this->route('country'))],
-            'ibge_code' => ['nullable', 'integer', Rule::unique('countries')->ignore($this->route('country'))]
+            'ibge_code' => ['nullable', Rule::unique('countries')->ignore($this->route('country'))]
         ];
     }
 
