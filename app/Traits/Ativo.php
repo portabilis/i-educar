@@ -2,6 +2,9 @@
 
 namespace App\Traits;
 
+/**
+ * @property ativo
+ */
 trait Ativo
 {
     protected static function bootAtivo(): void
