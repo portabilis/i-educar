@@ -42,7 +42,7 @@ class DistrictControllerTest extends ResourceTestCase
         $this->destroy();
     }
 
-    public function testeFailUpdateDistrict()
+    public function testFailUpdateDistrict()
     {
         $this->actingAs(LegacyUserFactory::new()->institutional()->create());
 
@@ -59,7 +59,7 @@ class DistrictControllerTest extends ResourceTestCase
         $response->assertJson(['message' => 'This action is unauthorized.']);
     }
 
-    public function testeFailCreateDistrict()
+    public function testFailCreateDistrict()
     {
         $this->actingAs(LegacyUserFactory::new()->institutional()->create());
 
@@ -74,7 +74,7 @@ class DistrictControllerTest extends ResourceTestCase
         $response->assertJson(['message' => 'This action is unauthorized.']);
     }
 
-    public function testeFailDestroyDistrict()
+    public function testFailDestroyDistrict()
     {
         $user = LegacyUserFactory::new()->institutional()->withAccess(759)->create();
         $this->actingAs($user);

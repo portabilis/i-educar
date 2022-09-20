@@ -41,7 +41,7 @@ class CityControllerTest extends ResourceTestCase
         $this->destroy();
     }
 
-    public function testeFailUpdateCity()
+    public function testFailUpdateCity()
     {
         $this->actingAs(LegacyUserFactory::new()->institutional()->create());
 

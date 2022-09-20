@@ -40,7 +40,7 @@ class StateControllerTest extends ResourceTestCase
         $this->destroy();
     }
 
-    public function testeFailUpdateState()
+    public function testFailUpdateState()
     {
         $this->actingAs(LegacyUserFactory::new()->institutional()->create());
         $model = $this->createStateIntoBrasil();
@@ -52,7 +52,7 @@ class StateControllerTest extends ResourceTestCase
         $response->assertJson(['message' => 'This action is unauthorized.']);
     }
 
-    public function testeFailCreateState()
+    public function testFailCreateState()
     {
         $this->actingAs(LegacyUserFactory::new()->institutional()->create());
         $model = $this->makeStateIntoBrasil();
@@ -63,7 +63,7 @@ class StateControllerTest extends ResourceTestCase
         $response->assertJson(['message' => 'This action is unauthorized.']);
     }
 
-    public function testeFailDestroyState()
+    public function testFailDestroyState()
     {
         $user = LegacyUserFactory::new()->institutional()->withAccess(754)->create();
         $this->actingAs($user);
