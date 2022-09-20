@@ -103,9 +103,9 @@ class DistrictControllerTest extends ResourceTestCase
 
     private function makeDistrictIntoBrasil(): District
     {
-        $country = (new CountryFactory())->make(['id' => Country::BRASIL]);
-        $state = (new StateFactory())->make(['country_id' => $country]);
-        $city = (new CityFactory())->make(['state_id' => $state]);
+        $country = (new CountryFactory())->create(['id' => Country::BRASIL]);
+        $state = (new StateFactory())->create(['country_id' => $country]);
+        $city = (new CityFactory())->create(['state_id' => $state]);
 
         return (new DistrictFactory())->makeOne(['city_id' => $city]);
     }

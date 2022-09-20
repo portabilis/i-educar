@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\ResourceController;
+use App\Http\Requests\Api\Addressing\AddressingCityRequest;
 use App\Models\City;
+use App\Rules\Addressing\AddressingCityDistrictRule;
+use App\Rules\Addressing\AddressingCityPlaceRule;
 use App\Rules\CityRestricOperationRule;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -11,12 +14,14 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class CityController extends ResourceController
 {
+    public int $process = 755;
+
     public function index(City $city, Request $request): JsonResource
     {
         return $this->all($city, $request);
     }
 
-    public function store(City $city, Request $request): JsonResource
+    public function store(City $city, AddressingCityRequest $request): JsonResource
     {
         return $this->post($city, $request);
     }
@@ -26,7 +31,7 @@ class CityController extends ResourceController
         return $this->get($city, $request, City::class);
     }
 
-    public function update(City $city, Request $request): JsonResource
+    public function update(City $city, AddressingCityRequest $request): JsonResource
     {
         return $this->patch($city, $request);
     }
@@ -41,6 +46,16 @@ class CityController extends ResourceController
         $accessLevel = $request->user()->getLevel();
         return [
             new CityRestricOperationRule($accessLevel)
+        ];
+    }
+
+    protected function deleteRules(Model $model, Request $request)
+    {
+        $accessLevel = $request->user()->getLevel();
+        return [
+            new CityRestricOperationRule($accessLevel),
+            new AddressingCityDistrictRule(),
+            new AddressingCityPlaceRule()
         ];
     }
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\ResourceController;
 use App\Http\Requests\Api\Addressing\AddressingStateRequest;
 use App\Models\State;
 use App\Rules\Addressing\AddressingStateRule;
+use App\Rules\StateRestricOperationRule;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -39,9 +40,19 @@ class StateController extends ResourceController
         return $this->delete($state, $request);
     }
 
+    public function rules($district, Request $request): array
+    {
+        $accessLevel = $request->user()->getLevel();
+        return [
+            new StateRestricOperationRule($accessLevel)
+        ];
+    }
+
     protected function deleteRules(Model $model, Request $request)
     {
+        $accessLevel = $request->user()->getLevel();
         return [
+            new StateRestricOperationRule($accessLevel),
             new AddressingStateRule()
         ];
     }
