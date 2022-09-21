@@ -14,6 +14,8 @@ Route::redirect('/', '/web');
 Route::redirect('intranet/index.php', '/web')
     ->name('home');
 
+Route::redirect('intranet/educar_enderecamento_index.php', '/web/enderecamento');
+
 Route::redirect('intranet/public_pais_lst.php', '/web/enderecamento/pais');
 Route::redirect('intranet/public_uf_lst.php', '/web/enderecamento/estado');
 Route::redirect('intranet/public_municipio_lst.php', '/web/enderecamento/municipio');
