@@ -104,6 +104,8 @@ return new class extends clsListagem {
 
         $this->addCabecalhos(array_filter($cabecalhos));
 
+        $this->data_nascimento = formatDateParse($this->data_nascimento);
+        $this->cod_aluno = preg_replace('/\D/', '', $this->cod_aluno);
 
         $dataFilter = [
             'rg' => preg_replace('/\D/', '', $this->rg_aluno),
@@ -113,7 +115,7 @@ return new class extends clsListagem {
             'grade' => $this->ref_cod_serie,
             'school' => $this->ref_cod_escola,
             'course' => $this->ref_cod_curso,
-            'birthdate' => trim($this->data_nascimento),
+            'birthdate' => $this->data_nascimento,
             'fatherName' => $this->nome_pai,
             'motherName' => $this->nome_mae,
             'studentName' => $this->nome_aluno,
