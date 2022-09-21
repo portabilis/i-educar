@@ -242,6 +242,17 @@ class LegacyBuilder extends Builder
         return parent::get($columns);
     }
 
+    public function first($columns = ['*'])
+    {
+        $columns = is_array($columns) ? $columns : func_get_args();
+
+        foreach ($columns as $key => $column) {
+            $columns[$key] = $this->getLegacyColumn($column);
+        }
+
+        return parent::first($columns);
+    }
+
     public function select($columns = ['*'])
     {
         $columns = is_array($columns) ? $columns : func_get_args();
