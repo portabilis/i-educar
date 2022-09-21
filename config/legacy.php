@@ -77,7 +77,6 @@ return [
             'username' => env('DB_USERNAME'),
             'password' => env('DB_PASSWORD'),
         ],
-        'administrative_tools_url' => env('ADMISNISTRATIVE_TOOLS_URL'),
         'administrative_pending' => [
             'exist' => '',
             'msg' => '',
