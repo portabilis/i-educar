@@ -6,7 +6,10 @@
         "action": "composer fix-style"
       },
       {
-        "action": "git commit -m \"Style Code\""
+        "action": "git commit -am \"Style Code\""
+      },
+      {
+        "action": "php artisan test"
       }
     ]
   },
