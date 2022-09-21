@@ -70,7 +70,7 @@ class LegacyBuilder extends Builder
      * Transforma o recurso com os novos parametros
      *
      * @param Collection $resource
-     * @param array $columnsNotExcept
+     * @param array      $columnsNotExcept
      *
      * @return Collection
      */
@@ -140,6 +140,7 @@ class LegacyBuilder extends Builder
             $method = 'where' . $filter;
             if (is_array($parameter)) {
                 $this->{$method}(...$parameter);
+
                 continue;
             }
             $this->{$method}($parameter);
@@ -215,13 +216,13 @@ class LegacyBuilder extends Builder
      */
     public function whereLimit(int $limit = null): self
     {
-        return $this->when($limit, fn($q) => $q->limit($limit));
+        return $this->when($limit, fn ($q) => $q->limit($limit));
     }
 
     /**
      * Obtem o valor de um filtro
      *
-     * @param string $name
+     * @param string          $name
      * @param int|string|null $default
      *
      * @return mixed

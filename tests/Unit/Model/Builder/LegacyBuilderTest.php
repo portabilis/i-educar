@@ -67,33 +67,35 @@ class LegacyBuilderTest extends TestCase
         $this->builder->filter(['no_filter' => 0])->resource(['id']);
     }
 
-    public function testBuilderSelectArray() {
+    public function testBuilderSelectArray()
+    {
         $school = $this->builder->select(['sigla', 'orgao_vinculado_escola', 'esfera_administrativa', 'unidade_vinculada_outra_instituicao'])->where('cod_escola', $this->school->id)->first();
 
-        $this->assertArrayHasKey('sigla',$school->toArray());
-        $this->assertArrayHasKey('orgao_vinculado_escola',$school->toArray());
-        $this->assertArrayHasKey('esfera_administrativa',$school->toArray());
-        $this->assertArrayHasKey('unidade_vinculada_outra_instituicao',$school->toArray());
+        $this->assertArrayHasKey('sigla', $school->toArray());
+        $this->assertArrayHasKey('orgao_vinculado_escola', $school->toArray());
+        $this->assertArrayHasKey('esfera_administrativa', $school->toArray());
+        $this->assertArrayHasKey('unidade_vinculada_outra_instituicao', $school->toArray());
     }
 
     public function testBuilderSelectString()
     {
         $school = $this->builder->select('sigla', 'orgao_vinculado_escola', 'esfera_administrativa', 'unidade_vinculada_outra_instituicao')->where('cod_escola', $this->school->id)->first();
 
-        $this->assertArrayHasKey('sigla',$school->toArray());
-        $this->assertArrayHasKey('orgao_vinculado_escola',$school->toArray());
-        $this->assertArrayHasKey('esfera_administrativa',$school->toArray());
-        $this->assertArrayHasKey('unidade_vinculada_outra_instituicao',$school->toArray());
+        $this->assertArrayHasKey('sigla', $school->toArray());
+        $this->assertArrayHasKey('orgao_vinculado_escola', $school->toArray());
+        $this->assertArrayHasKey('esfera_administrativa', $school->toArray());
+        $this->assertArrayHasKey('unidade_vinculada_outra_instituicao', $school->toArray());
     }
 
-    public function testBuilderGetArray() {
+    public function testBuilderGetArray()
+    {
         $school = $this->builder->where('cod_escola', $this->school->id)->get(['sigla', 'orgao_vinculado_escola', 'esfera_administrativa', 'unidade_vinculada_outra_instituicao']);
 
         $school = $school->first();
-        $this->assertArrayHasKey('sigla',$school->toArray());
-        $this->assertArrayHasKey('orgao_vinculado_escola',$school->toArray());
-        $this->assertArrayHasKey('esfera_administrativa',$school->toArray());
-        $this->assertArrayHasKey('unidade_vinculada_outra_instituicao',$school->toArray());
+        $this->assertArrayHasKey('sigla', $school->toArray());
+        $this->assertArrayHasKey('orgao_vinculado_escola', $school->toArray());
+        $this->assertArrayHasKey('esfera_administrativa', $school->toArray());
+        $this->assertArrayHasKey('unidade_vinculada_outra_instituicao', $school->toArray());
     }
 
     public function testBuilderGetString()
@@ -101,28 +103,29 @@ class LegacyBuilderTest extends TestCase
         $school = $this->builder->where('cod_escola', $this->school->id)->get('sigla', 'orgao_vinculado_escola', 'esfera_administrativa', 'unidade_vinculada_outra_instituicao');
 
         $school = $school->first();
-        $this->assertArrayHasKey('sigla',$school->toArray());
-        $this->assertArrayHasKey('orgao_vinculado_escola',$school->toArray());
-        $this->assertArrayHasKey('esfera_administrativa',$school->toArray());
-        $this->assertArrayHasKey('unidade_vinculada_outra_instituicao',$school->toArray());
+        $this->assertArrayHasKey('sigla', $school->toArray());
+        $this->assertArrayHasKey('orgao_vinculado_escola', $school->toArray());
+        $this->assertArrayHasKey('esfera_administrativa', $school->toArray());
+        $this->assertArrayHasKey('unidade_vinculada_outra_instituicao', $school->toArray());
     }
 
-    public function testBuilderFirstArray() {
+    public function testBuilderFirstArray()
+    {
         $school = $this->builder->where('cod_escola', $this->school->id)->first(['sigla', 'orgao_vinculado_escola', 'esfera_administrativa', 'unidade_vinculada_outra_instituicao']);
 
-        $this->assertArrayHasKey('sigla',$school->toArray());
-        $this->assertArrayHasKey('orgao_vinculado_escola',$school->toArray());
-        $this->assertArrayHasKey('esfera_administrativa',$school->toArray());
-        $this->assertArrayHasKey('unidade_vinculada_outra_instituicao',$school->toArray());
+        $this->assertArrayHasKey('sigla', $school->toArray());
+        $this->assertArrayHasKey('orgao_vinculado_escola', $school->toArray());
+        $this->assertArrayHasKey('esfera_administrativa', $school->toArray());
+        $this->assertArrayHasKey('unidade_vinculada_outra_instituicao', $school->toArray());
     }
 
     public function testBuilderFirstString()
     {
         $school = $this->builder->where('cod_escola', $this->school->id)->first('sigla', 'orgao_vinculado_escola', 'esfera_administrativa', 'unidade_vinculada_outra_instituicao');
 
-        $this->assertArrayHasKey('sigla',$school->toArray());
-        $this->assertArrayHasKey('orgao_vinculado_escola',$school->toArray());
-        $this->assertArrayHasKey('esfera_administrativa',$school->toArray());
-        $this->assertArrayHasKey('unidade_vinculada_outra_instituicao',$school->toArray());
+        $this->assertArrayHasKey('sigla', $school->toArray());
+        $this->assertArrayHasKey('orgao_vinculado_escola', $school->toArray());
+        $this->assertArrayHasKey('esfera_administrativa', $school->toArray());
+        $this->assertArrayHasKey('unidade_vinculada_outra_instituicao', $school->toArray());
     }
 }
