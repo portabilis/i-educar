@@ -57,11 +57,9 @@ class LegacyBuilder extends Builder
     public function resource(array $columns = ['*'], array $additional = []): Collection
     {
         $this->setAdditional($additional);
-
         $columnsNotExcept = $columns;
         $columns = array_merge($columns, $this->except);
         $columns = $this->replaceAttribute($columns);
-
         //original do laravel
         $resource = $this->get($columns);
 
@@ -72,7 +70,7 @@ class LegacyBuilder extends Builder
      * Transforma o recurso com os novos parametros
      *
      * @param Collection $resource
-     * @param array      $columnsNotExcept
+     * @param array $columnsNotExcept
      *
      * @return Collection
      */
@@ -80,7 +78,6 @@ class LegacyBuilder extends Builder
     {
         return $resource->map(function (Model $item) use ($columnsNotExcept) {
             $resource = [];
-
             //Trata colunas com alias do banco de dados
             foreach ($columnsNotExcept as $key) {
                 if (Str::contains($key, ' as ')) {
@@ -90,7 +87,6 @@ class LegacyBuilder extends Builder
                     $resource[$key] = $item->{$key};
                 }
             }
-
             //Trata colunas com alias adicionais
             foreach ($this->additional as $key) {
                 if (Str::contains($key, ' as ')) {
@@ -144,10 +140,8 @@ class LegacyBuilder extends Builder
             $method = 'where' . $filter;
             if (is_array($parameter)) {
                 $this->{$method}(...$parameter);
-
                 continue;
             }
-
             $this->{$method}($parameter);
         }
     }
@@ -161,24 +155,20 @@ class LegacyBuilder extends Builder
         if (!property_exists($this->getModel(), 'legacy')) {
             return $columns;
         }
-
         $legacy = $this->getModel()->legacy;
         if (!is_array($legacy) || empty($legacy)) {
             return $columns;
         }
-
         $data = [];
-
         foreach ($columns as $key) {
             if (Str::contains($key, ' as ')) {
                 [$key, $alias] = explode(' as ', $key);
                 $legacyKey = $legacy[$key] ?? $key;
-                $data[] = $legacyKey . ' as ' . $alias ;
+                $data[] = $legacyKey . ' as ' . $alias;
             } else {
                 $data[] = $legacy[$key] ?? $key;
             }
         }
-
         if (!empty($data)) {
             $columns = $data;
         }
@@ -201,7 +191,6 @@ class LegacyBuilder extends Builder
                 $data[$this->getFilterName($key)] = $value;
             }
         }
-
         $this->filters = $data;
     }
 
@@ -226,13 +215,13 @@ class LegacyBuilder extends Builder
      */
     public function whereLimit(int $limit = null): self
     {
-        return $this->when($limit, fn ($q) => $q->limit($limit));
+        return $this->when($limit, fn($q) => $q->limit($limit));
     }
 
     /**
      * Obtem o valor de um filtro
      *
-     * @param string          $name
+     * @param string $name
      * @param int|string|null $default
      *
      * @return mixed
@@ -244,6 +233,8 @@ class LegacyBuilder extends Builder
 
     public function get($columns = ['*'])
     {
+        $columns = is_array($columns) ? $columns : func_get_args();
+
         foreach ($columns as $key => $column) {
             $columns[$key] = $this->getLegacyColumn($column);
         }
@@ -253,6 +244,8 @@ class LegacyBuilder extends Builder
 
     public function select($columns = ['*'])
     {
+        $columns = is_array($columns) ? $columns : func_get_args();
+
         foreach ($columns as $key => $column) {
             $columns[$key] = $this->getLegacyColumn($column);
         }
