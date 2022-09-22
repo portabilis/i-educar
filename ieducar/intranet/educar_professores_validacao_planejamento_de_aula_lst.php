@@ -66,6 +66,7 @@ return new class extends clsListagem {
         $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie', 'turma'], ['required' => false]);
         $this->inputsHelper()->turmaTurno(['required' => false, 'label' => 'Turno']);
         $this->inputsHelper()->dynamic('componenteCurricular', ['required' => false]);
+        $this->campoLista('bool_validacao', 'Validados', [ '1' => 'Não', '2' => 'Sim' ],  $this->bool_validacao,null, null, null, null, null, false);
 
         $this->campoQuebra();
         $this->campoRotulo('filtros_periodo', '<b>Filtros por período</b>');
@@ -140,7 +141,7 @@ return new class extends clsListagem {
             $eh_professor ? $this->pessoa_logada : null,
             null,
             empty($this->ref_cod_escola) ? $escolasUsuario : null,
-            false
+            ($this->bool_validacao == '2')
         );
 
         $total = $obj_plano->_total;
@@ -178,8 +179,19 @@ return new class extends clsListagem {
 
                 $lista_busca[] = "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['professor']}</a>";
 
-                $lista_busca[] =
-                    "<button
+                if ($registro['fl_validado']) {
+                    $buttonValidacao = "<button
+                            id='validar_aula_btn[{$registro['id']}]'
+                            name='validar_aula_btn[]'
+                            style='width: 40px;cursor: pointer;'
+                            class='btn btn-danger'
+                            onclick='(function(e){removerValidacaoPlanoAula(e, {$registro['id']})})(event)'
+                            alt='Validar Aula'
+                        >
+                            <i class='fa fa-times' aria-hidden='true' alt='Validar Aula'></i><span>
+                        </button>";
+                } else {
+                    $buttonValidacao = "<button
                             id='validar_aula_btn[{$registro['id']}]'
                             name='validar_aula_btn[]'
                             style='width: 40px;cursor: pointer;'
@@ -188,11 +200,15 @@ return new class extends clsListagem {
                             alt='Validar Aula'
                         >
                             <i class='fa fa-check' aria-hidden='true' alt='Validar Aula'></i><span>
-                        </button>
-                        <a
+                        </button>";
+                }
+
+                $lista_busca[] =
+                    $buttonValidacao .
+                    " <a
                             id='enviar_mensagem_btn[{$registro['id']}]'
                             name='enviar_mensagem_btn[]'
-                            style='width: 40px;cursor: pointer;'
+                            style='width: 27px;cursor: pointer;padding: 0.375rem 0.75rem;'
                             class='btn btn-info'
                             onclick='modalOpen(this, {$registro['id']}, 1, {$registro['servidor_id']}, null, {$this->pessoa_logada})'
                             alt='Enviar mensagem ao professor'
@@ -217,7 +233,12 @@ return new class extends clsListagem {
             url('intranet/educar_professores_index.php') => 'Professores',
         ]);
 
-        $this->array_botao[] = ['name' => 'Validar aula(s) selecionada(s)', 'css-extra' => 'botoes-selecao-usuarios-servidores'];
+        if ($this->bool_validacao == '2') {
+            $this->array_botao[] = ['name' => 'Remover validação aula(s) selecionada(s)', 'css-extra' => 'botoes-selecao-usuarios-servidores'];
+        } else {
+            $this->array_botao[] = ['name' => 'Validar aula(s) selecionada(s)', 'css-extra' => 'botoes-selecao-usuarios-servidores'];
+        }
+
     }
 
     public function __construct () {

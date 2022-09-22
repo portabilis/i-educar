@@ -77,6 +77,7 @@ class clsModulesPlanejamentoAula extends Model {
             pa.recursos_didaticos,
             pa.registro_adaptacao,
             pa.referencias,
+            pa.fl_validado,
             i.nm_instituicao AS instituicao,
             j.fantasia AS escola,
             c.nm_curso AS curso,
@@ -829,11 +830,12 @@ class clsModulesPlanejamentoAula extends Model {
 
     }
 
-    public function validaPlanejamentoAula () {
+    public function updateValidacao ($bool_validacao) {
         if (is_numeric($this->id)) {
             $db = new clsBanco();
 
-            $set = "fl_validado = true ";
+
+           $set = "fl_validado = " . ($bool_validacao ? "true" : "false ");
 
             $db->Consulta("
                 UPDATE
@@ -844,6 +846,7 @@ class clsModulesPlanejamentoAula extends Model {
                     id = '{$this->id}'
             ");
 
+
             return true;
         }
 
@@ -852,17 +855,15 @@ class clsModulesPlanejamentoAula extends Model {
 
     public function getMensagem ($receptor_user_id) {
         if (is_numeric($this->id)) {
-            $data = [];
-
             $db = new clsBanco();
             $db->Consulta("
                 SELECT
-                    emissor_user_id
+                    emissor_user_id,
+                    receptor_user_id
                 FROM
                     public.mensagens
                 WHERE
-                    registro_id = '{$this->id}' AND
-                    receptor_user_id = '{$receptor_user_id}'
+                    registro_id = '{$this->id}'
                 LIMIT 1
             ");
 
@@ -873,4 +874,5 @@ class clsModulesPlanejamentoAula extends Model {
 
         return false;
     }
+
 }

@@ -129,7 +129,7 @@ return new class extends clsCadastro {
         $this->campoOculto('serie_id', $serie);
         $this->campoOculto('planejamento_aula_id', $this->id);
         $this->campoOculto('obrigatorio_conteudo', $obrigatorioConteudo);
-        $this->campoOculto('servidor_id', $resultado['emissor_user_id']);
+        $this->campoOculto('servidor_id', ($this->pessoa_logada == $resultado['emissor_user_id'] ? $resultado['receptor_user_id'] : $resultado['emissor_user_id']));
         $this->campoOculto('auth_id', $this->pessoa_logada);
         $this->campoOculto('is_professor', $isProfessor);
         $this->inputsHelper()->dynamic('dataInicial', ['required' => $obrigatorio]);    // Disabled não funciona; ação colocada no javascript.
