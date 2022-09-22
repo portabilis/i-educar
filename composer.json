@@ -47,6 +47,7 @@
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.7",
         "brianium/paratest": "^6.3",
+        "captainhook/captainhook": "^5.10",
         "fakerphp/faker": "^1.15",
         "filp/whoops": "^2.14",
         "friendsofphp/php-cs-fixer": "^3.2",
