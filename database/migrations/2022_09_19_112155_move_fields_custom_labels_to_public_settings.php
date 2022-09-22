@@ -26,7 +26,7 @@ return new class () extends Migration {
                 $setting->key = $k;
                 $setting->value = $custom_labels[$k];
                 $setting->type = 'string';
-                $setting->description = $this->getLabel($v);
+                $setting->description = $this->getLabel($k, $v);
                 $setting->setting_category_id = $this->getCategoryId($rotulo2);
                 $setting->hint = $k;
                 $setting->save();
@@ -55,10 +55,10 @@ return new class () extends Migration {
         return $id;
     }
 
-    private function getLabel($v)
+    private function getLabel($k, $v)
     {
         $label = $v;
-        switch ($v) {
+        switch ($k) {
             case 'aluno.detalhe.codigo_estado':
                 $label = 'Código rede estadual do aluno (detalhes do aluno)';
 
