@@ -409,3 +409,23 @@ function transformDBArrayInString($value): ?string
 {
     return is_array($value) ? '{' . implode(',', array_filter($value)) . '}' : null;
 }
+
+if (! function_exists('formatDateParse')) {
+    function formatDateParse($date, $outputFormat = 'd/m/Y')
+    {
+        $formats = [
+            'd/m/Y',
+            'Y-m-d'
+        ];
+        foreach ($formats as $format) {
+            $dateObj = DateTime::createFromFormat($format, $date);
+            if ($dateObj !== false) {
+                break;
+            }
+        }
+        if ($dateObj === false) {
+            return null;
+        }
+        return $dateObj->format($outputFormat);
+    }
+}
