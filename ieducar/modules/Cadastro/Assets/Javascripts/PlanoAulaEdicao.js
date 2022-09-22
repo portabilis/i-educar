@@ -32,6 +32,7 @@
         var componentesCurriculares;
 
 
+        console.log(servidor_id)
       function addBtnEnviarMensagem() {
         if (servidor_id) {
           let html = "<a" +

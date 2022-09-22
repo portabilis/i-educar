@@ -78,6 +78,7 @@ class clsModulesFrequencia extends Model {
             f.id,
             f.data,
             f.ordens_aulas,
+            f.fl_validado,
             i.nm_instituicao AS instituicao,
             j.fantasia AS escola,
             c.nm_curso AS curso,
@@ -992,11 +993,11 @@ class clsModulesFrequencia extends Model {
        return $matriculas;
     }
 
-    public function validaFrequencia () {
+    public function updateValidacao ($bool_validacao) {
         if (is_numeric($this->id)) {
             $db = new clsBanco();
 
-            $set = "fl_validado = true ";
+            $set = "fl_validado = " . ($bool_validacao ? "true" : "false ");
 
             $db->Consulta("
                 UPDATE
@@ -1012,4 +1013,5 @@ class clsModulesFrequencia extends Model {
 
         return false;
     }
+
 }
