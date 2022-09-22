@@ -4,11 +4,8 @@ use App\Models\LegacyGeneralConfiguration;
 use App\Setting;
 use App\SettingCategory;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class () extends Migration {
     public function up()
     {
         $configutarion = LegacyGeneralConfiguration::query()->first();
@@ -41,18 +38,20 @@ return new class extends Migration
     {
         $id = 1;
         if (
-            $rotulo == "aluno" ||
-            $rotulo == "matricula" ||
-            $rotulo == "turma"
+            $rotulo == 'aluno' ||
+            $rotulo == 'historico' ||
+            $rotulo == 'matricula' ||
+            $rotulo == 'turma'
         ) {
             $id = SettingCategory::query()
-                ->where('name', "Validações de sistema")
+                ->where('name', 'Validações de sistema')
                 ->value('id');
-        } else if ($rotulo == "report" ) {
+        } elseif ($rotulo == 'report') {
             $id = SettingCategory::query()
-                ->where('name', "Validações de relatórios")
+                ->where('name', 'Validações de relatórios')
                 ->value('id');
         }
+
         return $id;
     }
 
@@ -60,16 +59,44 @@ return new class extends Migration
     {
         $label = $v;
         switch ($v) {
-            case "report.boletim_professor.modelo_padrao":
-                $label = "Boletim do professsor - Modelo padrão";
+            case 'aluno.detalhe.codigo_estado':
+                $label = 'Código rede estadual do aluno (detalhes do aluno)';
+
                 break;
-            case "report.boletim_professor.modelo_recuperacao_paralela":
-                $label = "Boletim do professsor - Modelo rec. por etapa";
+            case 'historico.cadastro.curso_detalhe':
+                $label = 'Curso no cadastro do histórico';
+
                 break;
-            case "report.boletim_professor.modelo_recuperacao_por_etapa":
-                $label = "Boletim do professsor - Modelo rec. específica";
+            case 'historico.cadastro.serie':
+                $label = 'Série no cadastro do histórico';
+
+                break;
+            case 'report.boletim_professor.modelo_padrao':
+                $label = 'Boletim do professsor - Modelo padrão';
+
+                break;
+            case 'turma.detalhe.sigla':
+                $label = 'Sigla da turma';
+
+                break;
+            case 'report.boletim_professor.modelo_recuperacao_paralela':
+                $label = 'Boletim do professsor - Modelo rec. por etapa';
+
+                break;
+            case 'report.boletim_professor.modelo_recuperacao_por_etapa':
+                $label = 'Boletim do professsor - Modelo rec. específica';
+
+                break;
+            case 'matricula.detalhe.enturmar':
+                $label = 'Nome do botão "[Enturmar]" em visualizar matrícula';
+
+                break;
+            case 'matricula.detalhe.solicitar_transferencia':
+                $label = 'Nome do botão "[Solicitar transferência]" em visualizar matrícula';
+
                 break;
         }
+
         return $label;
     }
 };
