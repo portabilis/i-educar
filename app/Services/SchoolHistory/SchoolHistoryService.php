@@ -26,6 +26,7 @@ class SchoolHistoryService
         $year = 0;
         $level = 0;
         $certificationText = '';
+        $eja_show_course = config('legacy.report.historico_escolar.eja_exibir_curso', false);
 
         foreach ($data as $history) {
             if (!$this->isValidLevelName($history['nm_serie'])) {
@@ -47,14 +48,19 @@ class SchoolHistoryService
             $year = $history['ano'];
             $level = $history['nm_serie'];
 
-            $certificationText = $history['aprovado'] == SchoolHistoryStatus::ONGOING ? 'está cursando ' : 'concluiu ';
-
-            if ($this->isConclusiveLevelByGrade($history['nm_serie'], $history['historico_grade_curso_id'])) {
-                $certificationText .= 'o ENSINO FUNDAMENTAL';
+            if ($eja_show_course && $history['historico_grade_curso_id'] === SchoolHistory::GRADE_EJA) {
+                $certificationText = $history['aprovado'] == SchoolHistoryStatus::ONGOING ? 'está cursando no ' : 'está aprovado no ';
+                $certificationText .= mb_strtoupper(trim($history['nome_curso']));
             } else {
-                $certificationText .= $history['historico_grade_curso_id'] == SchoolHistory::GRADE_SERIE ? 'a ' : 'o ';
-                $certificationText .= $this->getLevelByName($history['nm_serie']);
-                $certificationText .= $history['historico_grade_curso_id'] == SchoolHistory::GRADE_SERIE ? 'ª série' : 'º ano';
+                $certificationText = $history['aprovado'] == SchoolHistoryStatus::ONGOING ? 'está cursando ' : 'concluiu ';
+
+                if ($this->isConclusiveLevelByGrade($history['nm_serie'], $history['historico_grade_curso_id'])) {
+                    $certificationText .= 'o ENSINO FUNDAMENTAL';
+                } else {
+                    $certificationText .= $history['historico_grade_curso_id'] == SchoolHistory::GRADE_SERIE ? 'a ' : 'o ';
+                    $certificationText .= $this->getLevelByName($history['nm_serie']);
+                    $certificationText .= $history['historico_grade_curso_id'] == SchoolHistory::GRADE_SERIE ? 'ª série' : 'º ano';
+                }
             }
         }
 
