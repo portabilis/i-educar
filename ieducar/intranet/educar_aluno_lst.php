@@ -106,6 +106,7 @@ return new class extends clsListagem {
 
         $this->data_nascimento = formatDateParse($this->data_nascimento);
         $this->cod_aluno = preg_replace('/\D/', '', $this->cod_aluno);
+        $this->cod_inep = preg_replace('/\D/', '', $this->cod_inep);
         $this->nome_aluno = $this->cleanNameSearch($this->nome_aluno);
         $this->nome_pai = $this->cleanNameSearch($this->nome_pai);
         $this->nome_mae = $this->cleanNameSearch($this->nome_mae);
