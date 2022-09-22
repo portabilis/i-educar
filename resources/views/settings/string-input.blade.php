@@ -5,6 +5,6 @@
         <sub style="vertical-align:top;">{{$hint}}</sub>
     </td>
     <td>
-        <input name="{{$id}}" type="text" value="{{$value}}" size="40" @if(!$enabled) disabled @endif />
+        <input name="{{$id}}" type="text" value="{{$value}}" maxlength="{{$maxlength}}" size="40" @if(!$enabled) disabled @endif />
     </td>
 </tr>

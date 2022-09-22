@@ -36,7 +36,7 @@ class clsModulesPessoaTransporte extends Model
         }
 
         if (is_numeric($ref_cod_rota_transporte_escolar)) {
-            $this->ref_idpes = $ref_idpes;
+            $this->ref_cod_rota_transporte_escolar = $ref_cod_rota_transporte_escolar;
         }
 
         if (is_numeric($ref_idpes)) {

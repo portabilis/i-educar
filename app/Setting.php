@@ -18,7 +18,7 @@ class Setting extends Model
      * @var array
      */
     protected $fillable = [
-        'key', 'value', 'type', 'description', 'setting_category_id', 'hint'
+        'key', 'value', 'type', 'description', 'setting_category_id', 'hint', 'maxlength'
     ];
 
     /**

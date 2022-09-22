@@ -55,6 +55,10 @@ class LegacyPerson extends Model
         });
     }
 
+    public function getIdAttribute()
+    {
+        return $this->idpes;
+    }
     /**
      * @return string
      */
