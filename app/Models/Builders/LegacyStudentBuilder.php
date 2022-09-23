@@ -141,7 +141,7 @@ class LegacyStudentBuilder extends LegacyBuilder
                         $q->whereHas('enrollments.schoolClass', fn ($qs) => $qs->where('ref_ref_cod_serie', $grade));
                     });
                 }
-            )->orWhereDoesntHave('registrations');
+            );
         });
     }
 
