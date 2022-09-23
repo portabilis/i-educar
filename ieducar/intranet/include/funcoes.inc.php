@@ -320,7 +320,7 @@ function int2Nis($nis)
 
 function _cl($key)
 {
-    return CustomLabel::getInstance()->customize($key);
+    return config($key);
 }
 
 function validaCNPJ($cnpj = null)
