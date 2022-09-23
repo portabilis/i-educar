@@ -44,9 +44,9 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
 
     Route::get('registration/{registration}/formative-itinerary', 'EnrollmentFormativeItineraryController@index')
         ->name('registration.formative-itinerary.index');
+    Route::get('registration/{registration}/formative-itinerary/{enrollment}/edit', 'EnrollmentFormativeItineraryController@edit')
+        ->name('registration.formative-itinerary.edit');
 
-    Route::get('/enrollment-formative-itinerary/{id}', 'EnrollmentFormativeItineraryController@viewFormativeItinerary')
-        ->name('enrollments.enrollment-formative-itinerary');
     Route::post('/enrollment-formative-itinerary/{id}', 'EnrollmentFormativeItineraryController@storeFormativeItinerary')
         ->name('enrollments.enrollment-formative-itinerary-store');
 

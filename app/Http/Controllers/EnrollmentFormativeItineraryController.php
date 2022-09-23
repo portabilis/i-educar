@@ -8,11 +8,9 @@ use App\Services\EnrollmentFormativeItineraryService;
 use iEducar\Modules\Educacenso\Model\TipoCursoItinerario;
 use iEducar\Modules\Educacenso\Model\TipoItinerarioFormativo;
 use iEducar\Modules\ValueObjects\EnrollmentFormativeItineraryValueObject;
-use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -45,21 +43,20 @@ class EnrollmentFormativeItineraryController extends Controller
     }
 
     /**
-     * Lista enturmações da matrícula para definir itinerário formativo.
      *
-     * @param int $id enturmação
+     * @param int $registration matrícula
+     *
+     * @param  LegacyEnrollment $enrollment enturmação
      *
      * @return Application|Factory|View
      */
-    public function viewFormativeItinerary($id)
+    public function edit(int $registration, LegacyEnrollment $enrollment)
     {
         $this->breadcrumb('Itinerário formativo do aluno', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
 
         $this->menu(578);
-
-        $enrollment = LegacyEnrollment::find($id);
 
         return view('enrollments.enrollmentFormativeItinerary', [
             'enrollment' => $enrollment,

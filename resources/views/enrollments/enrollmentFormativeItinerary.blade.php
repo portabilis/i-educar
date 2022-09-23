@@ -87,7 +87,9 @@
             <tr>
                 <td colspan="13" align="center">
                     <input type="button" class="btn-green btn-submit botaolistagem" value=" Salvar ">
-                    <input type="button" class="botaolistagem" onclick="javascript: go('/intranet/educar_matricula_det.php?cod_matricula={{ $enrollment->registration->id }}')" value=" Cancelar ">
+                    <a href="{{ route('registration.formative-itinerary.index', [$enrollment->ref_cod_matricula]) }}" >
+                        <input type="button" class="botaolistagem" value=" Cancelar ">
+                    </a>
                 </td>
             </tr>
         </table>
