@@ -20,7 +20,7 @@
         "cossou/jasperphp": "^2.8",
         "dex/composer-plug-and-play": "^0.12.0",
         "dex/frontier": "^0.3.0",
-        "doctrine/dbal": "^2.13",
+        "doctrine/dbal": "^3.3",
         "fruitcake/laravel-cors": "^2.0",
         "google/recaptcha": "^1.2",
         "guzzlehttp/guzzle": "^7.3",
