@@ -43,9 +43,10 @@ function getNotifications() {
       let className = unread ? 'unread' : 'read';
       let dateObj = new Date(value.created_at);
       let dateString = dateObj.toLocaleString('pt-BR');
+      let url = (value.type_id == 5 ? "/notificacoes" : value.link);
 
       $j('.dropdown-content-notifications').append(`
-        <a href="` + value.link + `" onclick="markAsRead(this)" data-id="` + value.id + `" class="` +className+ `" target="_blank">
+        <a href="` + url + `" onclick="markAsRead(this)" data-id="` + value.id + `" class="` +className+ `" target="_blank">
           <p>` + value.text  + `</p>
           <p class="date-notification"> ` + dateString + `</p>
         </a>`);

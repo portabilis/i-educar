@@ -128,7 +128,7 @@ function htmlFormModal() {
                <div class="row">
                 <form>
                   <label for="mensagem"><b>Mensagem:</b></label>
-                  <textarea name="novaMensagem" id="novaMensagem" rows="3" cols="50" style="resize: none;"></textarea>
+                  <textarea name="novaMensagem" id="novaMensagem" rows="3" cols="50" style="resize: none;" maxlength="250"></textarea>
                 </form>
                </div>
             </div>`;
