@@ -13,7 +13,7 @@ class CreateMensagensTable extends Migration
      */
     public function up()
     {
-        Schema::create('mensagens', function (Blueprint $table) {
+        Schema::create('public.mensagens', function (Blueprint $table) {
             $table->id();
             $table->integer('registro_id')->comment('Armazena ID que vincula ao plano de aula ou a frequência');
             $table->integer('emissor_user_id')->comment('Armazena ID do usuário que enviou a mensagem');

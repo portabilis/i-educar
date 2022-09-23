@@ -34,7 +34,8 @@ class ValidacaoEnviarMensagemController extends ApiCoreController
                     $url,
                     NotificationType::VALIDATION_CLASS,
                     $registro_id,
-                    $emissor_user_id
+                    $emissor_user_id,
+                    $mensagem,
                 );
 
                 return true;
