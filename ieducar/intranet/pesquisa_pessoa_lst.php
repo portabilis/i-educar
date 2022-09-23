@@ -49,10 +49,10 @@ return new class extends clsListagem {
             if ($this->cpf == null || validaCPF($this->cpf)) {
                 $this->campoCpf('cpf', 'CPF', !empty($this->cpf) ? int2CPF(idFederal2int($this->cpf)) : '');
 
-                if (!empty($_GET['campo_busca'])) {
-                    $chave_busca = $_GET['campo_busca'];
-                    $cpf = $_GET['cpf'] ?? '';
-                    $busca = $_GET['busca'] ?? '';
+                if (!empty(request('campo_busca'))) {
+                    $chave_busca = request('campo_busca');
+                    $cpf = request('cpf', '');
+                    $busca = $request('busca', '');
                 }
 
                 // Paginador
