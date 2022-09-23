@@ -11,7 +11,9 @@ var isProfessor = false;
 $j("#modal_enviar_mensagem").dialog({
   autoOpen: false,
   height: 'auto',
-  width: 'auto',
+  width: '500px',
+  minWidth: '500px',
+  maxWidth: '500px',
   modal: true,
   resizable: false,
   draggable: false,
@@ -70,8 +72,6 @@ function fillMensagens() {
     data: data,
     success: function (dataResponse) {
       let html = '';
-      console.log(dataResponse)
-      console.log(typeof dataResponse)
 
       if (dataResponse) {
         for (let i = 0; i < dataResponse.result.length; i++) {
@@ -197,3 +197,4 @@ function urlHelper(href, mode) {
     href: href,
   }).click();
 }
+

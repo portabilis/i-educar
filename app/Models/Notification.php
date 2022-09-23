@@ -20,6 +20,7 @@ class Notification extends Model
         'type_id',
         'register_id',
         'issuer_id',
+        'subtext',
     ];
 
     /**
@@ -37,4 +38,5 @@ class Notification extends Model
             NotificationType::EXPORT_TEACHER,
         ]);
     }
+
 }

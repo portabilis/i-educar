@@ -66,7 +66,13 @@
         <tbody>
         @forelse($notifications as $notification)
             <tr @if(!$notification->read_at) class="unread" @endif>
-                <td><a onclick="markAsRead(this, true)" href="{{ $presigner->getNotificationUrl($notification) }}" data-id="{{$notification->id}}" target="_blank">{!! $notification->text !!}</a></td>
+                <td><a onclick="markAsRead(this, true)" href="{{ $presigner->getNotificationUrl($notification) }}" data-id="{{$notification->id}}" target="_blank">
+                        {!! $notification->text !!}
+                        @if($notification->type_id == '5')
+                        <br> <b>Mensagem:</b> {!! $notification->subtext !!}
+                        @endif
+                    </a>
+                </td>
                 <td><a onclick="markAsRead(this, true)" href="{{ $presigner->getNotificationUrl($notification) }}" data-id="{{$notification->id}}" target="_blank" class="text-status"> @if($notification->read_at) Lida @else Não lida @endif </a></td>
                 <td>{{$notification->created_at->format('d/m/Y H:i')}}</td>
                 <td>
