@@ -32,24 +32,6 @@
         var componentesCurriculares;
 
 
-        console.log(servidor_id)
-      function addBtnEnviarMensagem() {
-        if (servidor_id) {
-          let html = "<a" +
-            "          id='enviar_mensagem_btn["+planejamento_aula_id+"]'\n" +
-            "          name='enviar_mensagem_btn[]'\n" +
-            "          style='width: 80px;cursor: pointer;text-decoration: none;font-size: 13px;float: right;'\n" +
-            "          class='btn btn-info'\n" +
-            "          onClick='modalOpen(this, "+planejamento_aula_id+", 1, "+servidor_id+", null, "+auth_id+", "+Boolean(is_professor)+")'\n" +
-            "        ><i class='fa fa-send' aria-hidden='true'></i>" +
-            "        </a>";
-
-          $('.tablelistagem').append(html);
-        }
-      }
-
-      addBtnEnviarMensagem();
-
       btn_add.onclick = function () {
         tab_add_1.addRow();
 
