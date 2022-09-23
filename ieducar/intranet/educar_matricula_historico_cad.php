@@ -78,13 +78,15 @@ return new class extends clsCadastro {
 
         $this->campoRotulo('situacao', 'Situação', $situacao);
         $this->inputsHelper()->date('data_enturmacao', ['label' => 'Data enturmação', 'value' => dataToBrasil($enturmacao['data_enturmacao']), 'placeholder' => '']);
-        $this->inputsHelper()->date('data_exclusao', ['label' => 'Data de saí­da', 'value' => dataToBrasil($enturmacao['data_exclusao']), 'placeholder' => '', 'required' => $required]);
+        $this->inputsHelper()->date('data_exclusao', ['label' => 'Data de saída', 'value' => dataToBrasil($enturmacao['data_exclusao']), 'placeholder' => '', 'required' => $required]);
 
         $this->campoCheck('transferido','Transferido', dbBool($enturmacao['transferido']));
         $this->campoCheck('remanejado','Remanejado', dbBool($enturmacao['remanejado']));
         $this->campoCheck('reclassificado','Reclassificado', dbBool($enturmacao['reclassificado']));
         $this->campoCheck('abandono','Abandono', dbBool($enturmacao['abandono']));
         $this->campoCheck('falecido','Falecido', dbBool($enturmacao['falecido']));
+
+        Portabilis_View_Helper_Application::loadJavascript($this, '/vendor/legacy/intranet/scripts/extra/matricua-historico.js');
     }
 
     public function Editar()
