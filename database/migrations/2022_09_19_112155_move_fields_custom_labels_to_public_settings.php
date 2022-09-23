@@ -95,6 +95,10 @@ return new class () extends Migration {
                 $label = 'Nome do botão "[Solicitar transferência]" em visualizar matrícula';
 
                 break;
+            case 'report.termo_recuperacao_final':
+                $label = 'Recuperação final';
+
+                break;
         }
 
         return $label;
