@@ -52,7 +52,7 @@ return new class extends clsListagem {
                 if (!empty(request('campo_busca'))) {
                     $chave_busca = request('campo_busca');
                     $cpf = request('cpf', '');
-                    $busca = $request('busca', '');
+                    $busca = request('busca', '');
                 }
 
                 // Paginador
