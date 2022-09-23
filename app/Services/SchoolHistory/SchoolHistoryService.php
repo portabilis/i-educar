@@ -29,30 +29,30 @@ class SchoolHistoryService
         $eja_show_course = config('legacy.report.historico_escolar.eja_exibir_curso', false);
 
         foreach ($data as $history) {
-            if (!$this->isValidLevelName($history['nm_serie'])) {
-                continue;
-            }
-
-            if (!in_array($history['aprovado'], $consideredStatus)) {
-                continue;
-            }
-
-            if ($history['ano'] < $year) {
-                continue;
-            }
-
-            if ($this->getLevelByName($history['nm_serie']) < $level) {
-                continue;
-            }
-
             $year = $history['ano'];
             $level = $history['nm_serie'];
             $course = trim($history['nome_curso']);
 
-            if ($course && $eja_show_course && $history['historico_grade_curso_id'] === SchoolHistory::GRADE_EJA) {
+            if ($eja_show_course && $course  && $history['historico_grade_curso_id'] === SchoolHistory::GRADE_EJA) {
                 $certificationText = $history['aprovado'] == SchoolHistoryStatus::ONGOING ? 'está cursando no ' : 'está aprovado no ';
                 $certificationText .= mb_strtoupper($course);
             } else {
+                if (!$this->isValidLevelName($history['nm_serie'])) {
+                    continue;
+                }
+
+                if (!in_array($history['aprovado'], $consideredStatus)) {
+                    continue;
+                }
+
+                if ($history['ano'] < $year) {
+                    continue;
+                }
+
+                if ($this->getLevelByName($history['nm_serie']) < $level) {
+                    continue;
+                }
+
                 $certificationText = $history['aprovado'] == SchoolHistoryStatus::ONGOING ? 'está cursando ' : 'concluiu ';
 
                 if ($this->isConclusiveLevelByGrade($history['nm_serie'], $history['historico_grade_curso_id'])) {
