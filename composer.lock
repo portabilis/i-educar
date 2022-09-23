@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "03d1416ee08231d0aef29211fe2bf3bc",
+    "content-hash": "4b6509cfe486348b6bec655335848999",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -114,16 +114,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.235.14",
+            "version": "3.235.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "d6a696800e1eceec47e8f84ded88a88f4790d016"
+                "reference": "635914c29fc875c58a85fdf981c27f1f561eaf50"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/d6a696800e1eceec47e8f84ded88a88f4790d016",
-                "reference": "d6a696800e1eceec47e8f84ded88a88f4790d016",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/635914c29fc875c58a85fdf981c27f1f561eaf50",
+                "reference": "635914c29fc875c58a85fdf981c27f1f561eaf50",
                 "shasum": ""
             },
             "require": {
@@ -202,9 +202,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.235.14"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.235.15"
             },
-            "time": "2022-09-22T18:16:42+00:00"
+            "time": "2022-09-23T18:16:52+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -465,26 +465,26 @@
         },
         {
             "name": "dex/composer-plug-and-play",
-            "version": "0.12.0",
+            "version": "0.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/edersoares/composer-plug-and-play.git",
-                "reference": "229d986675092d451366ac2c6d87d5ee221d98c6"
+                "reference": "7ea0281a50b5ffe584ee65cf2a0b3d9ba00517f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/edersoares/composer-plug-and-play/zipball/229d986675092d451366ac2c6d87d5ee221d98c6",
-                "reference": "229d986675092d451366ac2c6d87d5ee221d98c6",
+                "url": "https://api.github.com/repos/edersoares/composer-plug-and-play/zipball/7ea0281a50b5ffe584ee65cf2a0b3d9ba00517f2",
+                "reference": "7ea0281a50b5ffe584ee65cf2a0b3d9ba00517f2",
                 "shasum": ""
             },
             "require": {
-                "composer-plugin-api": "^2.0",
+                "composer-plugin-api": "^2.3",
                 "ext-json": "*",
-                "php": ">=7.3"
+                "php": "^8.0"
             },
             "require-dev": {
                 "composer/composer": "^2.3.0",
-                "phpunit/phpunit": "^9.4"
+                "phpunit/phpunit": "^9.5"
             },
             "type": "composer-plugin",
             "extra": {
@@ -509,9 +509,9 @@
             "description": "Plug and play packages for Composer",
             "support": {
                 "issues": "https://github.com/edersoares/composer-plug-and-play/issues",
-                "source": "https://github.com/edersoares/composer-plug-and-play/tree/0.12.0"
+                "source": "https://github.com/edersoares/composer-plug-and-play/tree/0.15.0"
             },
-            "time": "2022-07-02T15:22:37+00:00"
+            "time": "2022-09-23T18:54:24+00:00"
         },
         {
             "name": "dex/frontier",
