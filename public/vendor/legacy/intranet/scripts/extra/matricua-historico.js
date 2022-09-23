@@ -62,12 +62,21 @@ window.onload = function () {
 
     if (evt.target.checked === true) {
       makeRequired('data_exclusao');
-      deletationDate.setAttribute('required', 'required');
+
+      document.getElementById('transferido').disabled = true;
+      document.getElementById('reclassificado').disabled = true;
+      document.getElementById('abandono').disabled = true;
+      document.getElementById('falecido').disabled = true;
+
       return;
     }
 
+    document.getElementById('transferido').disabled = false;
+    document.getElementById('reclassificado').disabled = false;
+    document.getElementById('abandono').disabled = false;
+    document.getElementById('falecido').disabled = false;
+
     makeUnrequired('data_exclusao');
-    deletationDate.removeAttribute('required');
   });
 }
 
