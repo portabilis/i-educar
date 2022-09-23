@@ -47,10 +47,11 @@ class SchoolHistoryService
 
             $year = $history['ano'];
             $level = $history['nm_serie'];
+            $course = trim($history['nome_curso']);
 
-            if ($eja_show_course && $history['historico_grade_curso_id'] === SchoolHistory::GRADE_EJA) {
+            if ($course && $eja_show_course && $history['historico_grade_curso_id'] === SchoolHistory::GRADE_EJA) {
                 $certificationText = $history['aprovado'] == SchoolHistoryStatus::ONGOING ? 'está cursando no ' : 'está aprovado no ';
-                $certificationText .= mb_strtoupper(trim($history['nome_curso']));
+                $certificationText .= mb_strtoupper($course);
             } else {
                 $certificationText = $history['aprovado'] == SchoolHistoryStatus::ONGOING ? 'está cursando ' : 'concluiu ';
 
