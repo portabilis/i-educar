@@ -221,12 +221,7 @@ return new class extends clsListagem {
             }
         }
 
-        $this->addPaginador2('educar_professores_planejamento_de_aula_lst.php', $total, $_GET, $this->nome, $this->limite);
-        $obj_permissoes = new clsPermissoes();
-        if ($obj_permissoes->permissao_cadastra(58, $this->pessoa_logada, 7)) {
-            $this->acao = 'go("educar_professores_planejamento_de_aula_cad.php")';
-            $this->nome_acao = 'Novo';
-        }
+        $this->addPaginador2('educar_professores_validacao_planejamento_de_aula_lst.php', $total, $_GET, $this->nome, $this->limite);
         $this->largura = '100%';
 
         $this->breadcrumb('Listagem validações de planos de aula', [
@@ -238,7 +233,6 @@ return new class extends clsListagem {
         } else {
             $this->array_botao[] = ['name' => 'Validar aula(s) selecionada(s)', 'css-extra' => 'botoes-selecao-usuarios-servidores'];
         }
-
     }
 
     public function __construct () {
