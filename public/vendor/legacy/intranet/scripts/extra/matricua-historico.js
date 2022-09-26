@@ -58,9 +58,9 @@ window.onload = function () {
     validationDateExclutionRule();
   }
 
-  remanejado.addEventListener('change', function (evt) {
+  const valitadeDateExclution = function () {
 
-    if (evt.target.checked === true) {
+    if (remanejado.checked === true) {
       makeRequired('data_exclusao');
 
       document.getElementById('transferido').disabled = true;
@@ -77,7 +77,13 @@ window.onload = function () {
     document.getElementById('falecido').disabled = false;
 
     makeUnrequired('data_exclusao');
-  });
+  };
+
+  remanejado.addEventListener('change', valitadeDateExclution)
+
+  valitadeDateExclution();
 }
+
+
 
 
