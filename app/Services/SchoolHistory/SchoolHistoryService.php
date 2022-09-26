@@ -34,7 +34,12 @@ class SchoolHistoryService
             $course = trim($history['nome_curso']);
 
             if ($eja_show_course && $course  && $history['historico_grade_curso_id'] === SchoolHistory::GRADE_EJA) {
-                $certificationText = $history['aprovado'] == SchoolHistoryStatus::ONGOING ? 'está cursando no ' : 'está aprovado no ';
+                if (in_array($history['aprovado'], [SchoolHistoryStatus::REPROVED, SchoolHistoryStatus::REPROVED_BY_ABSENCE])) {
+                    $history['aprovado'] = 'está reprovado no';
+                } else {
+                    $certificationText = $history['aprovado'] == SchoolHistoryStatus::ONGOING ? 'está cursando no ' : 'está aprovado no ';
+                }
+
                 $certificationText .= mb_strtoupper($course);
             } else {
                 if (!$this->isValidLevelName($history['nm_serie'])) {
