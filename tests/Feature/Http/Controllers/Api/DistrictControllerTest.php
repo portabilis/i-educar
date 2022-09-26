@@ -42,7 +42,7 @@ class DistrictControllerTest extends ResourceTestCase
         $this->destroy();
     }
 
-    public function testeFailUpdateDistrict()
+    public function testFailUpdateDistrict()
     {
         $this->actingAs(LegacyUserFactory::new()->institutional()->create());
 
@@ -59,11 +59,11 @@ class DistrictControllerTest extends ResourceTestCase
         $response->assertJson(['message' => 'This action is unauthorized.']);
     }
 
-    public function testeFailCreateDistrict()
+    public function testFailCreateDistrict()
     {
         $this->actingAs(LegacyUserFactory::new()->institutional()->create());
 
-        $model = $this->createDistrictIntoBrasil();
+        $model = $this->makeDistrictIntoBrasil();
 
         $response = $this->post(
             $this->getUri(), $model->toArray()
@@ -74,7 +74,7 @@ class DistrictControllerTest extends ResourceTestCase
         $response->assertJson(['message' => 'This action is unauthorized.']);
     }
 
-    public function testeFailDestroyDistrict()
+    public function testFailDestroyDistrict()
     {
         $user = LegacyUserFactory::new()->institutional()->withAccess(759)->create();
         $this->actingAs($user);
@@ -99,5 +99,14 @@ class DistrictControllerTest extends ResourceTestCase
         $city = (new CityFactory())->create(['state_id' => $state]);
 
         return (new DistrictFactory())->createOne(['city_id' => $city]);
+    }
+
+    private function makeDistrictIntoBrasil(): District
+    {
+        $country = (new CountryFactory())->create(['id' => Country::BRASIL]);
+        $state = (new StateFactory())->create(['country_id' => $country]);
+        $city = (new CityFactory())->create(['state_id' => $state]);
+
+        return (new DistrictFactory())->makeOne(['city_id' => $city]);
     }
 }

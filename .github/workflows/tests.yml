@@ -32,6 +32,7 @@ jobs:
       CACHE_DRIVER: array
       QUEUE_CONNECTION: sync
       SESSION_DRIVER: array
+      LEGACY_SEED_DATA: false
 
     services:
       postgres:
@@ -75,4 +76,4 @@ jobs:
       - name: Page tests
         run: |
           php artisan legacy:create:tests
-          php artisan test --parallel --testsuite Pages
+          php artisan test --testsuite Pages

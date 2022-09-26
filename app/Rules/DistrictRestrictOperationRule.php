@@ -8,7 +8,7 @@ use App\Models\District;
 use App_Model_NivelTipoUsuario;
 use Illuminate\Contracts\Validation\Rule;
 
-class DistrictRestricOperationRule implements Rule
+class DistrictRestrictOperationRule implements Rule
 {
 
     private int $accessLevel;

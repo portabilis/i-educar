@@ -12,4 +12,16 @@ class DistrictBuilder extends LegacyBuilder
     {
         return $this->whereRaw('unaccent(name) ~* unaccent(?)', $name);
     }
+
+    /**
+     * Filtra pelo Id do País
+     *
+     * @param int $countryId
+     * @return $this
+     */
+    public function whereCountryId(int $countryId): self {
+        return $this->whereHas('city.state',function ($q) use($countryId){
+            $q->where('country_id',$countryId);
+        });
+    }
 }
