@@ -53,13 +53,6 @@ return new class extends clsListagem {
 
     public function Gerar()
     {
-        /*$validator = Validator::make(request()->only(['data_nascimento']), [
-            'data_nascimento' => 'nullable|date_format:d/m/Y|after_or_equal:1900-01-01',
-        ]);
-        if ($validator->fails()) {
-            $this->data_nascimento = null
-        }*/
-
         $this->titulo = 'Aluno - Listagem';
 
         $configuracoes = new clsPmieducarConfiguracoesGerais();
