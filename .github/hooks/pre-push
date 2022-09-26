@@ -1,0 +1,56 @@
+#!/usr/bin/php
+<?php
+
+$localHook = sha1_file('.github/hooks/pre-push');
+$gitHook = sha1_file('.git/hooks/pre-push');
+
+if ($localHook !== $gitHook) {
+    echo 'Copying pre-push hook' . PHP_EOL;
+    system('cp -f config/git/hooks/pre-push .git/hooks/pre-push');
+    echo 'Your git pre-push hook was deprecated, a new one was provided and already installed.' . PHP_EOL;
+    echo 'Please run your push again' . PHP_EOL . PHP_EOL;
+    exit(1);
+} else {
+    echo 'YOUR GIT HOOK IS ALREADY THE NEWEST VERSION' . PHP_EOL;
+}
+
+echo PHP_EOL;
+echo '=================================================================================' . PHP_EOL;
+echo '                               STARTING FIXER CODE                               ' . PHP_EOL;
+echo '=================================================================================' . PHP_EOL;
+echo PHP_EOL;
+
+system('vendor/bin/php-cs-fixer --diff --verbose fix');
+
+echo PHP_EOL;
+echo 'ALL FIXER PASSED.' . PHP_EOL;
+echo PHP_EOL;
+
+echo PHP_EOL;
+echo '=================================================================================' . PHP_EOL;
+echo '                               STARTING UNIT TESTS                               ' . PHP_EOL;
+echo '=================================================================================' . PHP_EOL;
+echo PHP_EOL;
+
+system('./vendor/bin/phpunit', $unitReturnCode);
+
+if ($unitReturnCode !== 0) {
+    echo 'TEST SUITE FAILED: '.PHP_EOL;
+    echo PHP_EOL;
+    echo 'Commit failed, please fix all PHPUnit errors and try again!';
+    echo PHP_EOL;
+    exit(1);
+} else {
+    echo PHP_EOL;
+    echo 'ALL TESTS PASSED.' . PHP_EOL;
+    echo PHP_EOL;
+}
+
+echo PHP_EOL;
+echo '  _____      ______ _____  _    _  _____          _____  ' . PHP_EOL;
+echo ' |_   _|    |  ____|  __ \| |  | |/ ____|   /\   |  __ \ ' . PHP_EOL;
+echo '   | |______| |__  | |  | | |  | | |       /  \  | |__) |' . PHP_EOL;
+echo '   | |______|  __| | |  | | |  | | |      / /\ \ |  _  / ' . PHP_EOL;
+echo '  _| |_     | |____| |__| | |__| | |____ / ____ \| | \ \ ' . PHP_EOL;
+echo ' |_____|    |______|_____/ \____/ \_____/_/    \_\_|  \_\\' . PHP_EOL;
+echo PHP_EOL;
