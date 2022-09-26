@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e48e7dc63b0a41a6aa4883dac623e834",
+    "content-hash": "58c970ff8889b20d4f33858ac0126afa",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -465,16 +465,16 @@
         },
         {
             "name": "dex/composer-plug-and-play",
-            "version": "0.15.0",
+            "version": "0.16.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/edersoares/composer-plug-and-play.git",
-                "reference": "7ea0281a50b5ffe584ee65cf2a0b3d9ba00517f2"
+                "reference": "e71ee7a34e689dc8677db05eeba4b57937e175ee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/edersoares/composer-plug-and-play/zipball/7ea0281a50b5ffe584ee65cf2a0b3d9ba00517f2",
-                "reference": "7ea0281a50b5ffe584ee65cf2a0b3d9ba00517f2",
+                "url": "https://api.github.com/repos/edersoares/composer-plug-and-play/zipball/e71ee7a34e689dc8677db05eeba4b57937e175ee",
+                "reference": "e71ee7a34e689dc8677db05eeba4b57937e175ee",
                 "shasum": ""
             },
             "require": {
@@ -509,9 +509,9 @@
             "description": "Plug and play packages for Composer",
             "support": {
                 "issues": "https://github.com/edersoares/composer-plug-and-play/issues",
-                "source": "https://github.com/edersoares/composer-plug-and-play/tree/0.15.0"
+                "source": "https://github.com/edersoares/composer-plug-and-play/tree/0.16.0"
             },
-            "time": "2022-09-23T18:54:24+00:00"
+            "time": "2022-09-26T17:30:50+00:00"
         },
         {
             "name": "dex/frontier",
