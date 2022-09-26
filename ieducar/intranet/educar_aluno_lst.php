@@ -105,11 +105,19 @@ return new class extends clsListagem {
         $this->addCabecalhos(array_filter($cabecalhos));
 
         $this->data_nascimento = formatDateParse($this->data_nascimento);
+        if (!preg_match('^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$', $this->data_nascimento)) {
+            $this->data_nascimento = null;
+        }
         $this->cod_aluno = preg_replace('/\D/', '', $this->cod_aluno);
         $this->cod_inep = preg_replace('/\D/', '', $this->cod_inep);
         $this->nome_aluno = $this->cleanNameSearch($this->nome_aluno);
         $this->nome_pai = $this->cleanNameSearch($this->nome_pai);
         $this->nome_mae = $this->cleanNameSearch($this->nome_mae);
+
+
+        if($this->data_nascimento <= '01/01/1900') {
+            $this->data_nascimento = null;
+        }
 
         $dataFilter = [
             'rg' => preg_replace('/\D/', '', $this->rg_aluno),
