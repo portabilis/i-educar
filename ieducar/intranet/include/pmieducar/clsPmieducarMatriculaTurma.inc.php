@@ -19,9 +19,13 @@ class clsPmieducarMatriculaTurma extends Model
     public $reabrirMatricula;
     public $etapa_educacenso;
     public $turma_unificada;
-    public $remanejado;
     public $turno_id;
     public $tipo_atendimento = false;
+    public $transferido = false;
+    public $remanejado = false;
+    public $reclassificado = false;
+    public $falecido = false;
+    public $abandono = false;
 
     public function __construct(
         $ref_cod_matricula = null,
@@ -231,17 +235,6 @@ class clsPmieducarMatriculaTurma extends Model
             if (is_numeric($this->ativo)) {
                 $set .= "{$gruda}ativo = '{$this->ativo}'";
                 $gruda = ', ';
-                if ($this->ativo == 1) {
-                    $set .= "{$gruda}remanejado = null, transferido = null";
-                    $gruda = ', ';
-                }
-            }
-
-            if (!$this->ativo) {
-                if ($this->remanejado) {
-                    $set .= "{$gruda}remanejado = true";
-                    $gruda = ', ';
-                }
             }
 
             if (is_numeric($this->ref_cod_turma_transf)) {
@@ -284,6 +277,44 @@ class clsPmieducarMatriculaTurma extends Model
                 $gruda = ', ';
             } elseif (is_string($this->turno_id) && !empty($this->turno_id)) {
                 $set .= "{$gruda}turno_id = '{$this->turno_id}'";
+                $gruda = ', ';
+            }
+
+            if (is_bool($this->transferido)) {
+                $transferido = $this->transferido ? 'true' : 'false';
+                if ((int)$this->ativo === 1) {
+                    $transferido = 'false';
+                }
+
+                $set .= "{$gruda}transferido = '$transferido'";
+                $gruda = ', ';
+            }
+
+            if (is_bool($this->remanejado)) {
+                $remanejado = $this->remanejado ? 'true' : 'false';
+                if ((int)$this->ativo === 1) {
+                    $remanejado = 'false';
+                }
+
+                $set .= "{$gruda}remanejado = '$remanejado'";
+                $gruda = ', ';
+            }
+
+            if (is_bool($this->reclassificado)) {
+                $reclassificado = $this->reclassificado ? 'true' : 'false';
+                $set .= "{$gruda}reclassificado = '$reclassificado'";
+                $gruda = ', ';
+            }
+
+            if (is_bool($this->falecido)) {
+                $falecido = $this->falecido ? 'true' : 'false';
+                $set .= "{$gruda}falecido = '$falecido'";
+                $gruda = ', ';
+            }
+
+            if (is_bool($this->abandono)) {
+                $abandono = $this->abandono ? 'true' : 'false';
+                $set .= "{$gruda}abandono = '$abandono'";
                 $gruda = ', ';
             }
 
