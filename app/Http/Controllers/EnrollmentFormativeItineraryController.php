@@ -2,30 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EnrollmentFormativeItineraryRequest;
 use App\Models\LegacyEnrollment;
 use App\Models\LegacyRegistration;
-use App\Services\EnrollmentFormativeItineraryService;
 use iEducar\Modules\Educacenso\Model\TipoCursoItinerario;
 use iEducar\Modules\Educacenso\Model\TipoItinerarioFormativo;
-use iEducar\Modules\ValueObjects\EnrollmentFormativeItineraryValueObject;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 
 class EnrollmentFormativeItineraryController extends Controller
 {
-    /**
-     * Lista enturmações da matrícula para definir itinerário formativo.
-     *
-     * @param int $id matrícula
-     *
-     * @return View
-     */
-    public function index($id)
+
+    public function index(int $id):View
     {
         $this->breadcrumb('Itinerário formativo do aluno', [
             url('intranet/educar_index.php') => 'Escola',
@@ -42,15 +30,7 @@ class EnrollmentFormativeItineraryController extends Controller
         return view('enrollments.enrollmentFormativeItineraryList', ['registration' => $registration]);
     }
 
-    /**
-     *
-     * @param int $registration matrícula
-     *
-     * @param  LegacyEnrollment $enrollment enturmação
-     *
-     * @return Application|Factory|View
-     */
-    public function edit(int $registration, LegacyEnrollment $enrollment)
+    public function edit(int $registration, LegacyEnrollment $enrollment):View
     {
         $this->breadcrumb('Itinerário formativo do aluno', [
             url('intranet/educar_index.php') => 'Escola',
@@ -66,51 +46,20 @@ class EnrollmentFormativeItineraryController extends Controller
         ]);
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse|Redirector|RedirectResponse|Application
-     */
-    public function storeFormativeItinerary(Request $request): JsonResponse|Redirector|RedirectResponse|Application
+    public function update(int $registration, LegacyEnrollment $enrollment, EnrollmentFormativeItineraryRequest $request):JsonResponse
     {
-        $fields = $request->all();
-        $enrollment = LegacyEnrollment::find($fields['enrollment_id']);
+        $enrollment->tipo_itinerario = $request->get('itinerary_type');
+        $enrollment->composicao_itinerario = $request->get('itinerary_composition');
+        $enrollment->curso_itinerario = $request->get('itinerary_course');
+        $enrollment->itinerario_concomitante = $request->get('concomitant_itinerary');
 
-        if (!isset($fields['itinerary_type'])) {
-            $fields['itinerary_type'] = [];
-        }
-        if (!isset($fields['itinerary_composition'])) {
-            $fields['itinerary_composition'] = [];
-        }
-        if (!isset($fields['itinerary_course'])) {
-            $fields['itinerary_course'] = null;
-        }
-        if (!isset($fields['concomitant_itinerary'])) {
-            $fields['concomitant_itinerary'] = null;
-        }
+        $enrollment->save();
 
-        $itineraryData = new EnrollmentFormativeItineraryValueObject();
-        $itineraryData->enrollmentId = $fields['enrollment_id'];
-        $itineraryData->itineraryType = $fields['itinerary_type'];
-        $itineraryData->itineraryComposition = $fields['itinerary_composition'];
-        $itineraryData->itineraryCourse = $fields['itinerary_course'];
-        $itineraryData->concomitantItinerary = $fields['concomitant_itinerary'];
-
-        $service = new EnrollmentFormativeItineraryService();
-
-        try {
-            $service->saveFormativeItinerary($enrollment, $itineraryData);
-        } catch (\Throwable $th) {
-            return response()->json(
-                ['message' => $th->getMessage()],
-                400
-            );
-        }
+        session()->flash('success', 'Itinerário formativo salvo com sucesso.');
 
         return response()->json(
             [
-                'registration_id' => $enrollment->registration_id,
-                'message' => 'Itinerário formativo salvo com sucesso.'
+                'registration_id' => $registration,
             ]
         );
     }

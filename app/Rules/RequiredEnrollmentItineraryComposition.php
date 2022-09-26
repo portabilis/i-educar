@@ -17,7 +17,8 @@ class RequiredEnrollmentItineraryComposition implements Rule
      */
     public function passes($attribute, $value)
     {
-        if (in_array(TipoItinerarioFormativo::ITINERARIO_INTEGRADO, $value->itineraryType) && count($value->itineraryComposition) == 0) {
+        $itineraryType = request('itinerary_type', []);
+        if (in_array(TipoItinerarioFormativo::ITINERARIO_INTEGRADO, $itineraryType) && empty($value)) {
             return false;
         }
 

@@ -17,7 +17,8 @@ class RequiredEnrollmentItineraryCourse implements Rule
      */
     public function passes($attribute, $value)
     {
-        if (in_array(TipoItinerarioFormativo::FORMACAO_TECNICA, $value->itineraryComposition) && empty($value->itineraryCourse)) {
+        $itineraryComposition = request('itinerary_composition', []);
+        if (in_array(TipoItinerarioFormativo::FORMACAO_TECNICA, $itineraryComposition) && empty($value)) {
             return false;
         }
 
