@@ -115,9 +115,6 @@ return new class extends clsListagem {
         $this->nome_mae = $this->cleanNameSearch($this->nome_mae);
 
 
-        if($this->data_nascimento <= '01/01/1900') {
-            $this->data_nascimento = null;
-        }
 
         $dataFilter = [
             'rg' => preg_replace('/\D/', '', $this->rg_aluno),
