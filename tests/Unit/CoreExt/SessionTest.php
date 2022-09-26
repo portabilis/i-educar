@@ -56,6 +56,7 @@ class CoreExt_SessionTest extends TestCase
 
     /**
      * @backupGlobals disabled
+     *
      * @depends       testArrayAccess
      */
     public function testCountable()

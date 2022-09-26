@@ -33,6 +33,35 @@ function idFederal2int($str)
     return str_replace(' ', '', ltrim($id_federal, '0'));
 }
 
+
+
+function validaCPF($cpf) {
+    // Extrai somente os números
+    $cpf = preg_replace('/[^0-9]/is', '', $cpf);
+
+    // Verifica se foi informado todos os digitos corretamente
+    if (strlen($cpf) != 11) {
+        return false;
+    }
+    // Verifica se foi informada uma sequência de digitos repetidos. Ex: 111.111.111-11
+    if (preg_match('/(\d)\1{10}/', $cpf)) {
+        return false;
+    }
+    // Faz o calculo para validar o CPF
+    for ($t = 9; $t < 11; $t++) {
+        for ($d = 0, $c = 0; $c < $t; $c++) {
+            $d += $cpf[$c] * (($t + 1) - $c);
+        }
+        $d = ((10 * $d) % 11) % 10;
+        if ($cpf[$c] != $d) {
+            return false;
+        }
+    }
+    return true;
+}
+
+
+
 function int2CPF($int)
 {
     $str = str_repeat('0', 11 - strlen($int)) . $int;
@@ -320,7 +349,7 @@ function int2Nis($nis)
 
 function _cl($key)
 {
-    return CustomLabel::getInstance()->customize($key);
+    return config($key);
 }
 
 function validaCNPJ($cnpj = null)
@@ -408,4 +437,24 @@ function isArrayEmpty($value): bool
 function transformDBArrayInString($value): ?string
 {
     return is_array($value) ? '{' . implode(',', array_filter($value)) . '}' : null;
+}
+
+if (! function_exists('formatDateParse')) {
+    function formatDateParse($date, $outputFormat = 'd/m/Y')
+    {
+        $formats = [
+            'd/m/Y',
+            'Y-m-d'
+        ];
+        foreach ($formats as $format) {
+            $dateObj = DateTime::createFromFormat($format, $date);
+            if ($dateObj !== false) {
+                break;
+            }
+        }
+        if ($dateObj === false) {
+            return null;
+        }
+        return $dateObj->format($outputFormat);
+    }
 }

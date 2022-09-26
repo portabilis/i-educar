@@ -146,8 +146,8 @@ abstract class EloquentTestCase extends TestCase
             ->newQuery()
             ->find($modelCreated->getKey());
 
-        $created = $modelCreated->toArray();
-        $found = $modelFound->toArray();
+        $created = $modelCreated->getAttributes();
+        $found = $modelFound->getAttributes();
 
         $expected = array_intersect_key($created, $found);
 
