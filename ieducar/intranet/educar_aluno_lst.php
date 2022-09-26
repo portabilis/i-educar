@@ -53,6 +53,13 @@ return new class extends clsListagem {
 
     public function Gerar()
     {
+        /*$validator = Validator::make(request()->only(['data_nascimento']), [
+            'data_nascimento' => 'nullable|date_format:d/m/Y|after_or_equal:1900-01-01',
+        ]);
+        if ($validator->fails()) {
+            $this->data_nascimento = null
+        }*/
+
         $this->titulo = 'Aluno - Listagem';
 
         $configuracoes = new clsPmieducarConfiguracoesGerais();
@@ -105,7 +112,7 @@ return new class extends clsListagem {
         $this->addCabecalhos(array_filter($cabecalhos));
 
         $this->data_nascimento = formatDateParse($this->data_nascimento);
-        if (!preg_match('^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$', $this->data_nascimento)) {
+        if ($this->data_nascimento <= '01/01/1900') {
             $this->data_nascimento = null;
         }
         $this->cod_aluno = preg_replace('/\D/', '', $this->cod_aluno);
@@ -113,8 +120,6 @@ return new class extends clsListagem {
         $this->nome_aluno = $this->cleanNameSearch($this->nome_aluno);
         $this->nome_pai = $this->cleanNameSearch($this->nome_pai);
         $this->nome_mae = $this->cleanNameSearch($this->nome_mae);
-
-
 
         $dataFilter = [
             'rg' => preg_replace('/\D/', '', $this->rg_aluno),
