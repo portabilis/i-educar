@@ -20,7 +20,7 @@
         "cossou/jasperphp": "^2.8",
         "dex/composer-plug-and-play": "^0.12.0",
         "dex/frontier": "^0.3.0",
-        "doctrine/dbal": "^2.13",
+        "doctrine/dbal": "^3.3",
         "fruitcake/laravel-cors": "^2.0",
         "google/recaptcha": "^1.2",
         "guzzlehttp/guzzle": "^7.3",
@@ -40,6 +40,7 @@
         "nuwave/lighthouse": "^5",
         "phpoffice/phpspreadsheet": "^1.8",
         "predis/predis": "^1.1",
+        "psr/simple-cache": "^2.0",
         "staudenmeir/laravel-adjacency-list": "^1.0",
         "symfony/http-client": "^6.0",
         "symfony/mailgun-mailer": "^6.0"
@@ -47,6 +48,7 @@
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.7",
         "brianium/paratest": "^6.3",
+        "captainhook/captainhook": "^5.10",
         "fakerphp/faker": "^1.15",
         "filp/whoops": "^2.14",
         "friendsofphp/php-cs-fixer": "^3.2",
