@@ -2,16 +2,16 @@
 
 namespace Tests\Unit\Eloquent;
 
-use App\Models\LegacyEducationNetwork;
+use App\Models\Religion;
 use Tests\EloquentTestCase;
 
-class LegacyEducationNetworkTest extends EloquentTestCase
+class ReligionTest extends EloquentTestCase
 {
     /**
      * @return string
      */
     protected function getEloquentModelName()
     {
-        return LegacyEducationNetwork::class;
+        return Religion::class;
     }
 }

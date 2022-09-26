@@ -5,6 +5,7 @@ namespace Tests;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 abstract class EloquentTestCase extends TestCase
@@ -125,7 +126,11 @@ abstract class EloquentTestCase extends TestCase
 
         $modelCreated->delete();
 
-        $this->assertDatabaseMissing($modelCreated->getTable(), $modelCreated->getAttributes());
+        if (in_array(SoftDeletes::class, class_uses($modelCreated))) {
+            $this->assertSoftDeleted($modelCreated);
+        } else {
+            $this->assertDatabaseMissing($modelCreated->getTable(), $modelCreated->getAttributes());
+        }
     }
 
     /**
@@ -141,8 +146,8 @@ abstract class EloquentTestCase extends TestCase
             ->newQuery()
             ->find($modelCreated->getKey());
 
-        $created = $modelCreated->toArray();
-        $found = $modelFound->toArray();
+        $created = $modelCreated->getAttributes();
+        $found = $modelFound->getAttributes();
 
         $expected = array_intersect_key($created, $found);
 

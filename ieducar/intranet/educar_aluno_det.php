@@ -6,6 +6,7 @@ use App\Models\LegacyBenefit;
 use App\Models\LegacyProject;
 use App\Models\LegacyStudent;
 use App\Models\PersonHasPlace;
+use App\Models\Religion;
 use App\Models\TransportationProvider;
 use App\Services\UrlPresigner;
 use iEducar\Modules\Educacenso\Model\Nacionalidade;
@@ -406,10 +407,11 @@ return new class extends clsDetalhe {
         }
 
         if ($det_fisica['ref_cod_religiao']) {
-            $obj_religiao = new clsPmieducarReligiao($det_fisica['ref_cod_religiao']);
-            $obj_religiao_det = $obj_religiao->detalhe();
+            $nm_religiao = Religion::query()
+                    ->where('id', $det_fisica['ref_cod_religiao'])
+                    ->value('name');
 
-            $this->addDetalhe(['Religião', $obj_religiao_det['nm_religiao']]);
+            $this->addDetalhe(['Religião', $nm_religiao]);
         }
 
         if ($det_raca['nm_raca']) {

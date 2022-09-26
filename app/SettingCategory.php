@@ -17,6 +17,6 @@ class SettingCategory extends Model
 
     public function settings()
     {
-        return $this->hasMany(Setting::class, 'setting_category_id');
+        return $this->hasMany(Setting::class, 'setting_category_id')->orderBy('description');
     }
 }

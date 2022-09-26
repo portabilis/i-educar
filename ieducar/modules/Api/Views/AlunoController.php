@@ -31,20 +31,6 @@ class AlunoController extends ApiCoreController
         );
     }
 
-    protected function validatesReligiaoId()
-    {
-        $isValid = true;
-
-        // beneficio is optional
-        if (is_numeric($this->getRequest()->religiao_id)) {
-            $isValid = ($this->validatesPresenceOf('religiao_id') &&
-                $this->validatesExistenceOf('religiao', $this->getRequest()->religiao_id)
-            );
-        }
-
-        return $isValid;
-    }
-
     protected function validatesBeneficioId()
     {
         // TODO Alterar pois foi alterado relacionamento para N:N
@@ -213,7 +199,6 @@ class AlunoController extends ApiCoreController
         return ($this->validatesPessoaId() &&
             $this->validatesResponsavel() &&
             $this->validatesTransporte() &&
-            $this->validatesReligiaoId() &&
             $this->validatesUniquenessOfAlunoInepId() &&
             $this->validatesUniquenessOfAlunoEstadoId()
         );
