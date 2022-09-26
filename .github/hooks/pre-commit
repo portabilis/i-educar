@@ -6,7 +6,7 @@ $gitHook = sha1_file('.git/hooks/pre-commit');
 
 if ($localHook !== $gitHook) {
     echo 'Copying pre-commit hook' . PHP_EOL;
-    system('cp -f config/git/hooks/pre-commit .git/hooks/pre-commit');
+    system('cp -f .github/hooks/pre-commit .git/hooks/pre-commit');
     echo 'Your git pre-commit hook was deprecated, a new one was provided and already installed.' . PHP_EOL;
     echo 'Please run your commit again' . PHP_EOL . PHP_EOL;
     exit(1);

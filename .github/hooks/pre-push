@@ -6,7 +6,7 @@ $gitHook = sha1_file('.git/hooks/pre-push');
 
 if ($localHook !== $gitHook) {
     echo 'Copying pre-push hook' . PHP_EOL;
-    system('cp -f config/git/hooks/pre-push .git/hooks/pre-push');
+    system('cp -f .github/hooks/pre-push .git/hooks/pre-push');
     echo 'Your git pre-push hook was deprecated, a new one was provided and already installed.' . PHP_EOL;
     echo 'Please run your push again' . PHP_EOL . PHP_EOL;
     exit(1);
