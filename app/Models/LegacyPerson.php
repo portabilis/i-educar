@@ -68,14 +68,6 @@ class LegacyPerson extends Model
     }
 
     /**
-     * @return HasOne
-     */
-    public function address()
-    {
-        return $this->hasOne(LegacyPersonAddress::class, 'idpes', 'idpes');
-    }
-
-    /**
      * @return HasMany
      */
     public function phone()
