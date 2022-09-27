@@ -1,4 +1,4 @@
-#!/usr/bin/php
+#!/usr/bin/env php
 <?php
 
 $localHook = sha1_file('.github/hooks/pre-commit');
