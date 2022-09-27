@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Support\Output;
 
-use Tests\TestCase;
 use App\Contracts\Output;
 use iEducar\Support\Output\NullOutput;
+use Tests\TestCase;
 
 class NullOutputTest extends TestCase
 {
