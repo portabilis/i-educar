@@ -374,8 +374,10 @@ return new class extends clsCadastro {
                 }
             }
         }
-
         if ($this->retornar_servidor != EmployeeReturn::SIM) {
+            if ($this->id == "") {
+                $this->id = null;
+            }
             $fileService = new FileService(new UrlPresigner());
             $files = $fileService->getFiles(EmployeeWithdrawal::find($this->id));
             $this->addHtml(view('uploads.upload', ['files' => $files])->render());
@@ -384,8 +386,13 @@ return new class extends clsCadastro {
 
     public function Novo()
     {
+        $this->data_saida = formatDateParse($this->data_saida, 'Y-m-d');
+        if ($this->data_saida == null || $this->data_saida <= date('Y-m-d', strtotime('-1 year'))) {
+            $this->data_saida = null;
+            $this->mensagem = 'Data de Afastamento Inválida.<br>';
+            return false;
+        }
         $this->data_retorno = dataToBanco($this->data_retorno);
-        $this->data_saida = dataToBanco($this->data_saida);
 
         $this->ref_cod_servidor = isset($_POST['ref_cod_servidor']) ? $_POST['ref_cod_servidor'] : null;
 
