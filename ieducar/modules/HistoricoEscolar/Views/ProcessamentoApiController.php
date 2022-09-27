@@ -476,24 +476,16 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
     protected function getdadosEscola($escolaId)
     {
-        $sql = 'select
-            (select pes.nome from pmieducar.escola esc, cadastro.pessoa pes
-            where esc.ref_cod_instituicao = $1 and esc.cod_escola = $2
-            and pes.idpes = esc.ref_idpes) as nome,
+        $sql = "
+            SELECT
+                nome,
+                municipio AS cidade,
+                uf_municipio AS uf
+            FROM relatorio.view_dados_escola
+            WHERE cod_escola = $1
+        ";
 
-            (select municipio.nome from public.municipio,
-            cadastro.endereco_pessoa, cadastro.juridica, public.bairro, pmieducar.escola
-            where endereco_pessoa.idbai = bairro.idbai and bairro.idmun = municipio.idmun and
-            juridica.idpes = endereco_pessoa.idpes and juridica.idpes = escola.ref_idpes and
-            escola.cod_escola = $2) as cidade,
-
-            (select municipio.sigla_uf from public.municipio,
-            cadastro.endereco_pessoa, cadastro.juridica, public.bairro, pmieducar.escola
-            where endereco_pessoa.idbai = bairro.idbai and bairro.idmun = municipio.idmun and
-            juridica.idpes = endereco_pessoa.idpes and juridica.idpes = escola.ref_idpes and
-            escola.cod_escola = $2) as uf';
-
-        $params = ['params' => [$this->getrequest()->instituicao_id, $escolaId], 'return_only' => 'first-line'];
+        $params = ['params' => [$escolaId], 'return_only' => 'first-line'];
 
         return Portabilis_Utils_Database::fetchPreparedQuery($sql, $params);
     }
