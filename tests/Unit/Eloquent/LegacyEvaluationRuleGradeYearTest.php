@@ -12,6 +12,7 @@ class LegacyEvaluationRuleGradeYearTest extends EloquentTestCase
      */
     protected function getEloquentModelName()
     {
+        $this->markTestSkipped();
         return LegacyEvaluationRuleGradeYear::class;
     }
 }
