@@ -188,7 +188,7 @@ class LegacyBuilder extends Builder
     {
         $data = [];
         foreach ($filters as $key => $value) {
-            if ($value !== null) {
+            if ((!is_array($value) && $value !== null && $value !== '') || (is_array($value) && count(array_filter($value)) > 0)) {
                 $data[$this->getFilterName($key)] = $value;
             }
         }
