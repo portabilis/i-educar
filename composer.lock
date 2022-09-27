@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f68bd8ae0861751a3f86dafceeda1d18",
+    "content-hash": "58c970ff8889b20d4f33858ac0126afa",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -465,26 +465,26 @@
         },
         {
             "name": "dex/composer-plug-and-play",
-            "version": "0.12.0",
+            "version": "0.16.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/edersoares/composer-plug-and-play.git",
-                "reference": "229d986675092d451366ac2c6d87d5ee221d98c6"
+                "reference": "e71ee7a34e689dc8677db05eeba4b57937e175ee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/edersoares/composer-plug-and-play/zipball/229d986675092d451366ac2c6d87d5ee221d98c6",
-                "reference": "229d986675092d451366ac2c6d87d5ee221d98c6",
+                "url": "https://api.github.com/repos/edersoares/composer-plug-and-play/zipball/e71ee7a34e689dc8677db05eeba4b57937e175ee",
+                "reference": "e71ee7a34e689dc8677db05eeba4b57937e175ee",
                 "shasum": ""
             },
             "require": {
-                "composer-plugin-api": "^2.0",
+                "composer-plugin-api": "^2.3",
                 "ext-json": "*",
-                "php": ">=7.3"
+                "php": "^8.0"
             },
             "require-dev": {
                 "composer/composer": "^2.3.0",
-                "phpunit/phpunit": "^9.4"
+                "phpunit/phpunit": "^9.5"
             },
             "type": "composer-plugin",
             "extra": {
@@ -509,9 +509,9 @@
             "description": "Plug and play packages for Composer",
             "support": {
                 "issues": "https://github.com/edersoares/composer-plug-and-play/issues",
-                "source": "https://github.com/edersoares/composer-plug-and-play/tree/0.12.0"
+                "source": "https://github.com/edersoares/composer-plug-and-play/tree/0.16.0"
             },
-            "time": "2022-07-02T15:22:37+00:00"
+            "time": "2022-09-26T17:30:50+00:00"
         },
         {
             "name": "dex/frontier",
@@ -3395,23 +3395,24 @@
         },
         {
             "name": "maatwebsite/excel",
-            "version": "3.1.40",
+            "version": "3.1.41",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SpartnerNL/Laravel-Excel.git",
-                "reference": "8a54972e3d616c74687c3cbff15765555761885c"
+                "reference": "f7a1c3159fab8b4069a67c30e71810b358a2797e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SpartnerNL/Laravel-Excel/zipball/8a54972e3d616c74687c3cbff15765555761885c",
-                "reference": "8a54972e3d616c74687c3cbff15765555761885c",
+                "url": "https://api.github.com/repos/SpartnerNL/Laravel-Excel/zipball/f7a1c3159fab8b4069a67c30e71810b358a2797e",
+                "reference": "f7a1c3159fab8b4069a67c30e71810b358a2797e",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "illuminate/support": "5.8.*|^6.0|^7.0|^8.0|^9.0",
                 "php": "^7.0|^8.0",
-                "phpoffice/phpspreadsheet": "^1.18"
+                "phpoffice/phpspreadsheet": "^1.18",
+                "psr/simple-cache": "^1.0|^2.0"
             },
             "require-dev": {
                 "orchestra/testbench": "^6.0|^7.0",
@@ -3457,7 +3458,7 @@
             ],
             "support": {
                 "issues": "https://github.com/SpartnerNL/Laravel-Excel/issues",
-                "source": "https://github.com/SpartnerNL/Laravel-Excel/tree/3.1.40"
+                "source": "https://github.com/SpartnerNL/Laravel-Excel/tree/3.1.41"
             },
             "funding": [
                 {
@@ -3469,7 +3470,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-05-02T13:50:01+00:00"
+            "time": "2022-09-26T14:55:28+00:00"
         },
         {
             "name": "maennchen/zipstream-php",
