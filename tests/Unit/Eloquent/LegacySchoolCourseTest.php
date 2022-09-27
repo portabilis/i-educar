@@ -9,7 +9,6 @@ class LegacySchoolCourseTest extends EloquentTestCase
 {
     protected function getEloquentModelName()
     {
-        $this->markTestSkipped();
         return LegacySchoolCourse::class;
     }
 }
