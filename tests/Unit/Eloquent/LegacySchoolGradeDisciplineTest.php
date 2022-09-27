@@ -12,7 +12,6 @@ class LegacySchoolGradeDisciplineTest extends EloquentTestCase
      */
     protected function getEloquentModelName()
     {
-        $this->markTestSkipped();
         return LegacySchoolGradeDiscipline::class;
     }
 }

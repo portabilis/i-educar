@@ -12,7 +12,6 @@ class PersonHasPlaceTest extends EloquentTestCase
      */
     protected function getEloquentModelName()
     {
-        $this->markTestSkipped();
         return PersonHasPlace::class;
     }
 }
