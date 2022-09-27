@@ -2,16 +2,17 @@
 
 namespace Tests\Unit\Eloquent;
 
-use App\Menu;
+use App\Models\PersonHasPlace;
 use Tests\EloquentTestCase;
 
-class MenuTest extends EloquentTestCase
+class PersonHasPlaceTest extends EloquentTestCase
 {
     /**
      * @return string
      */
     protected function getEloquentModelName()
     {
-        return Menu::class;
+        $this->markTestSkipped();
+        return PersonHasPlace::class;
     }
 }
