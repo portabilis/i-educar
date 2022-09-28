@@ -9,6 +9,8 @@ abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
 
+    protected $backupGlobals = true;
+
     /**
      * Utilizar este método pode permitir falta de integridade nos testes com o
      * banco de dados. Para suprir a falta de integridade, factories devem ser
