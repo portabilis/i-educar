@@ -16,6 +16,10 @@ class PersonHasPlace extends Pivot
         'type',
     ];
 
+    protected $relatedKey = 'person_id';
+    protected $foreignKey = 'place_id';
+    public $incrementing = true;
+
     /**
      * @return BelongsTo
      */

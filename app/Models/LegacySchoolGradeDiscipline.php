@@ -35,6 +35,8 @@ class LegacySchoolGradeDiscipline extends Model
         'workload' => 'carga_horaria'
     ];
 
+    protected $primaryKey = 'ref_cod_disciplina';
+
     protected $fillable = [
         'ref_ref_cod_serie',
         'ref_ref_cod_escola',
