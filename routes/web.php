@@ -47,6 +47,7 @@ Route::group(['middleware' => ['auth']], function () {
 Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.xssbypass', 'ieducar.suspended', 'auth', 'ieducar.checkresetpassword']], function () {
     Route::get('/config', [WebController::class, 'config']);
     Route::get('/user', [WebController::class, 'user']);
+    Route::get('/institution', [WebController::class, 'institution']);
     Route::get('/menus', [WebController::class, 'menus']);
 
     Route::get('/intranet/educar_matricula_turma_lst.php', 'LegacyController@intranet')
