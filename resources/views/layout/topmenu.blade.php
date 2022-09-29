@@ -15,13 +15,6 @@
                 @foreach($submenu->children->sortBy('order') as $c1)
                     @if($c1->hasLink())
                     <li>
-                        @if((isset($utilizarPlanejamentoAula) && (!$utilizarPlanejamentoAula || empty($utilizarPlanejamentoAula))) && $c1->title == 'Plano de aula')
-                            @php
-                                //TODO: Essa condição deveria ser pelo id, mas o id do menu Plano de aula, está diferente nos bancos de dados.
-                                continue;
-                            @endphp
-                        @endif
-
                         @if((isset($utilizarPlanejamentoAulaAee) && (!$utilizarPlanejamentoAulaAee || empty($utilizarPlanejamentoAulaAee))) && $c1->title == 'Plano de aula - AEE')
                             @php
                                 //TODO: Essa condição deveria ser pelo id, mas o id do menu Plano de aula, está diferente nos bancos de dados.

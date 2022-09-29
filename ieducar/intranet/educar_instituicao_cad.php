@@ -389,7 +389,7 @@ return new class extends clsCadastro {
 
         $this->campoCheck(
             'utilizar_planejamento_aula',
-            'Utilizar planejamento de aula',
+            'Checa existência de plano de aula para registro da frequência',
             $this->utilizar_planejamento_aula,
             null,
             false,
