@@ -27,7 +27,7 @@ class CountryController extends ResourceController
     public int $process = 753;
 
     #[
-        GET('/api/country', ['Addressing'], 'Get all countries'),
+        GET('/api/country', ['Country'], 'Get all countries'),
         Response(200, schemaType: SchemaType::ARRAY, ref: Country::class)
     ]
     public function index(Country $country, Request $request): JsonResource
@@ -36,7 +36,7 @@ class CountryController extends ResourceController
     }
 
     #[
-        POST('/api/country', ['Addressing'], 'Create a country'),
+        POST('/api/country', ['Country'], 'Create a country'),
         Property(Type::STRING, 'name', 'Name of the country', 'Brasil'),
         Property(Type::INT, 'ibge_code', 'IBGE code of the country', 12345),
         Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: Country::class),
@@ -47,7 +47,7 @@ class CountryController extends ResourceController
     }
 
     #[
-        GET('/api/country/{id}', ['Addressing'], 'Get country with ID'),
+        GET('/api/country/{id}', ['Country'], 'Get country with ID'),
         PathParameter('id', Type::INT, required: true, example: 1),
         Response(200, ref: Country::class)
     ]
@@ -57,7 +57,7 @@ class CountryController extends ResourceController
     }
 
     #[
-        PATCH('/api/country/{id}', ['Addressing'], 'Update country with ID'),
+        PATCH('/api/country/{id}', ['Country'], 'Update country with ID'),
         Property(Type::STRING, 'name', 'Name of the country', 'Brasil'),
         Property(Type::INT, 'ibge_code', 'IBGE code of the country', 12345),
         PathParameter('id', Type::INT, required: true, example: 1),
@@ -69,7 +69,7 @@ class CountryController extends ResourceController
     }
 
     #[
-        DELETE('/api/country/{id}', ['Addressing'], 'Delete country with ID'),
+        DELETE('/api/country/{id}', ['Country'], 'Delete country with ID'),
         PathParameter('id', Type::INT, required: true, example: 1),
         Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: Country::class),
     ]
