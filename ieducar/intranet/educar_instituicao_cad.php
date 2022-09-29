@@ -421,7 +421,7 @@ return new class extends clsCadastro {
 
         $this->campoCheck(
             'utilizar_planejamento_aula_aee',
-            'Utilizar planejamento de aula AEE',
+            'Checa existência de plano de aula AEE para registro de atendiemento?',
             $this->utilizar_planejamento_aula_aee,
             null,
             false,
