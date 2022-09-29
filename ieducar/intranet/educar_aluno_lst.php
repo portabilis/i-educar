@@ -140,7 +140,6 @@ return new class extends clsListagem {
         $students = LegacyStudent::query()->findStudentWithMultipleSearch($studentFilter);
 
 
-        /** @var LegacyStudent $registro */
         foreach ($students as $student) {
             $nomeAluno = $student->person->name;
             $nomeSocial = $student->individual->nome_social;
