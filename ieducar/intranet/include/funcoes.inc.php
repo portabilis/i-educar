@@ -119,14 +119,18 @@ function limpa_acentos($str_nome)
 /**
  * Formata a data para o formato brasileiro
  *
- * @param string $data_original data que será transformada
+ * @param string|null $data_original data que será transformada
  * @param bool $h_m           determina se o a data retornada incluirá hora e minuto
  * @param bool $h_m_s         determina se o a data retornada incluirá hora, minuto e segundo
  *
  * @return string
  */
-function dataToBrasil(string $data_original, bool $h_m = false, bool $h_m_s = false)
+function dataToBrasil(?string $data_original, bool $h_m = false, bool $h_m_s = false)
 {
+    if ($data_original === null) {
+        return false;
+    }
+
     $arr_data = explode(' ', $data_original);
     $data = date('d/m/Y', strtotime($arr_data[0]));
     if ($h_m) {
