@@ -8,7 +8,18 @@ use App\Support\Database\DateSerializer;
 use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use OpenApiGenerator\Attributes\Property;
+use OpenApiGenerator\Attributes\Schema;
+use OpenApiGenerator\Type;
 
+#[
+    Schema,
+    Property(Type::INT, 'id'),
+    Property(Type::STRING, 'name'),
+    Property(Type::STRING, 'ibge_code'),
+    Property(Type::STRING, 'created_at'),
+    Property(Type::STRING, 'updated_at'),
+]
 class Country extends Model
 {
     use LegacyAttribute;
