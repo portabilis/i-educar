@@ -84,6 +84,7 @@ class CityController extends ResourceController
     public function rules(City|Model $city, Request $request): array
     {
         $accessLevel = $request->user()->getLevel();
+
         return [
             new CityRestrictOperationRule($accessLevel)
         ];
@@ -92,6 +93,7 @@ class CityController extends ResourceController
     protected function deleteRules(Model $model, Request $request)
     {
         $accessLevel = $request->user()->getLevel();
+
         return [
             new CityRestrictOperationRule($accessLevel),
             new AddressingCityDistrictRule(),

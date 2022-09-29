@@ -85,6 +85,7 @@ class StateController extends ResourceController
     public function rules($district, Request $request): array
     {
         $accessLevel = $request->user()->getLevel();
+
         return [
             new StateRestrictOperationRule($accessLevel)
         ];
@@ -93,6 +94,7 @@ class StateController extends ResourceController
     protected function deleteRules(Model $model, Request $request)
     {
         $accessLevel = $request->user()->getLevel();
+
         return [
             new StateRestrictOperationRule($accessLevel),
             new AddressingStateRule()

@@ -30,7 +30,6 @@ class State extends Model
     use HasIbgeCode;
     use LegacyAttribute;
 
-
     /**
      * @var array
      */

@@ -80,6 +80,7 @@ class DistrictController extends ResourceController
     public function rules($district, Request $request): array
     {
         $accessLevel = $request->user()->getLevel();
+
         return [
             new DistrictRestrictOperationRule($accessLevel)
         ];

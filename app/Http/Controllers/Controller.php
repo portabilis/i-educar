@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Menu;
 use App\Services\MenuCacheService;
-use http\Url;
 use iEducar\Support\Navigation\Breadcrumb;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -15,8 +14,8 @@ use Illuminate\Support\Facades\View;
 use OpenApiGenerator\Attributes\Info;
 use OpenApiGenerator\Attributes\Server;
 
-#[Info("API i-EDUCAR", "1.0.0", "Documentação de acesso a nossa API", "API para Integração ao i-EDUCAR")]
-#[Server("http://ieducar.test", "Endereço do servidor da Aplicação")]
+#[Info('API i-EDUCAR', '1.0.0', 'Documentação de acesso a nossa API', 'API para Integração ao i-EDUCAR')]
+#[Server('http://ieducar.test', 'Endereço do servidor da Aplicação')]
 class Controller extends BaseController
 {
     use AuthorizesRequests;
