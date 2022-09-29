@@ -15,7 +15,7 @@ class clsCadastroDeficiencia extends Model
      */
     public function __construct($cod_deficiencia = null, $nm_deficiencia = null, $deficiencia_educacenso = null, $desconsidera_regra_diferenciada = null, $exigir_laudo_medico = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'cadastro.';
         $this->_tabela = "{$this->_schema}deficiencia";
 
