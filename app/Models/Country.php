@@ -14,11 +14,11 @@ use OpenApiGenerator\Type;
 
 #[
     Schema,
-    Property(Type::INT, 'id'),
-    Property(Type::STRING, 'name'),
-    Property(Type::STRING, 'ibge_code'),
-    Property(Type::STRING, 'created_at'),
-    Property(Type::STRING, 'updated_at'),
+    Property(Type::INT, 'id', 'Country ID', 1),
+    Property(Type::STRING, 'name', 'Country name', 'Brasil'),
+    Property(Type::STRING, 'ibge_code', 'IBGE code', 12345),
+    Property(Type::STRING, 'created_at', 'Creation date', '2022-01-01 00:00:00'),
+    Property(Type::STRING, 'updated_at', 'Edition Date', '2022-01-01 00:00:00'),
 ]
 class Country extends Model
 {

@@ -13,10 +13,10 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use OpenApiGenerator\Attributes\Controller;
 use OpenApiGenerator\Attributes\DELETE;
 use OpenApiGenerator\Attributes\GET;
-use OpenApiGenerator\Attributes\PATCH;
 use OpenApiGenerator\Attributes\PathParameter;
 use OpenApiGenerator\Attributes\POST;
 use OpenApiGenerator\Attributes\Property;
+use OpenApiGenerator\Attributes\PUT;
 use OpenApiGenerator\Attributes\Response;
 use OpenApiGenerator\Type;
 use OpenApiGenerator\Types\SchemaType;
@@ -57,7 +57,7 @@ class CountryController extends ResourceController
     }
 
     #[
-        PATCH('/api/country/{id}', ['Country'], 'Update country with ID'),
+        PUT('/api/country/{id}', ['Country'], 'Update country with ID'),
         Property(Type::STRING, 'name', 'Name of the country', 'Brasil'),
         Property(Type::INT, 'ibge_code', 'IBGE code of the country', 12345),
         PathParameter('id', Type::INT, required: true, example: 1),
