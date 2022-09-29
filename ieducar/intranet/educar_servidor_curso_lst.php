@@ -63,7 +63,6 @@ return new class extends clsCadastro {
     {
         $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
         $this->campoOculto('ref_cod_servidor_funcao', $this->ref_cod_servidor_funcao);
-        $opcoes = $opcoes_curso = ['' => 'Selecione'];
 
         $obj_cursos = new clsPmieducarCurso();
         $obj_cursos->setOrderby('nm_curso');

@@ -22,8 +22,6 @@ return new class extends clsCadastro {
         $this->ref_cod_aluno=$_GET['ref_cod_aluno'];
         $this->escola=$_GET['escola'];
 
-        $cancela=$_GET['cancela'];
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
 
