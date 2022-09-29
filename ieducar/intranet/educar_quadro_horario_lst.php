@@ -31,7 +31,7 @@ return new class {
         $obj_permissoes = new clsPermissoes();
 
         if ($obj_permissoes->nivel_acesso($this->pessoa_logada) > 7) {
-            $retorno .= '
+            return $retorno . '
         <table width="100%" height="40%" cellspacing="1" cellpadding="2" border="0" class="tablelistagem">
           <tbody>
             <tr>
@@ -41,8 +41,6 @@ return new class {
             </tr>
           </tbody>
         </table>';
-
-            return $retorno;
         }
 
         app(Breadcrumb::class)->current('Quadros de horários', [
@@ -256,10 +254,8 @@ return new class {
             </tr>';
         }
 
-        $retorno .='</tbody>
+        return $retorno . '</tbody>
       </table>';
-
-        return $retorno;
     }
     public function organizarHorariosIguais($valores)
     {

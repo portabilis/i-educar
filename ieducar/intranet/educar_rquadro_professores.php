@@ -23,9 +23,7 @@ return new class extends clsCadastro {
 
     public function Inicializar()
     {
-        $retorno = 'Novo';
-
-        return $retorno;
+        return 'Novo';
     }
 
     public function Gerar()
