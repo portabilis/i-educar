@@ -15,7 +15,7 @@ class clsPmieducarEscolaAnoLetivo extends Model
 
     public function __construct($ref_cod_escola = null, $ano = null, $ref_usuario_cad = null, $ref_usuario_exc = null, $andamento = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $turmas_por_ano = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}escola_ano_letivo";
 

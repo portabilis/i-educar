@@ -10,7 +10,7 @@ class clsPmieducarDisciplinaSerie extends Model
 
     public function __construct($ref_cod_disciplina = null, $ref_cod_serie = null, $ativo = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}disciplina_serie";
 
