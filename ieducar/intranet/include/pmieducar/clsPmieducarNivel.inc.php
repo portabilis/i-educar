@@ -186,7 +186,7 @@ class clsPmieducarNivel extends Model
      * @param string date_data_exclusao_fim
      * @param bool bool_ativo
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_cod_nivel = null, $int_ref_cod_categoria_nivel = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_cod_nivel_anterior = null, $str_nm_nivel = null, $int_salario_base = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $bool_ativo = null)
     {
@@ -281,7 +281,7 @@ class clsPmieducarNivel extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {

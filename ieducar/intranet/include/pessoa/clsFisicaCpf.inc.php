@@ -58,7 +58,7 @@ class clsFisicaCpf
     /**
      * Exibe uma lista baseada nos parametros de filtragem passados
      *
-     * @return Array
+     * @return array|false
      */
     public function lista($int_idpes = false, $int_cpf = false, $str_ordenacao = 'idpes', $int_limite_ini = false, $int_limite_qtd = false)
     {
@@ -103,7 +103,7 @@ class clsFisicaCpf
     /**
      * Exibe uma lista de idpes baseada nos parametros de filtragem passados
      *
-     * @return Array
+     * @return array|false
      */
     public function listaCod($int_idpes = false, $int_cpf = false, $str_ordenacao = 'idpes', $int_limite_ini = false, $int_limite_qtd = false)
     {
@@ -146,7 +146,7 @@ class clsFisicaCpf
     /**
      * Retorna um array com os detalhes do objeto
      *
-     * @return Array
+     * @return array|false
      */
     public function detalhe()
     {

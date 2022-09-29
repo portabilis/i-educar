@@ -181,7 +181,7 @@ class clsPmieducarSequenciaSerie extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_ref_serie_origem = null, $int_ref_serie_destino = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_curso_origem = null, $int_ref_curso_destino = null, $int_ref_cod_instituicao = null)
     {
@@ -275,7 +275,7 @@ class clsPmieducarSequenciaSerie extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -293,7 +293,7 @@ class clsPmieducarSequenciaSerie extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

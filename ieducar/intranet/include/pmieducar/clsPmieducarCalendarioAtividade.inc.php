@@ -144,7 +144,7 @@ class clsPmieducarCalendarioAtividade extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_cod_calendario_atividade = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_atividade = null, $str_descricao = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null)
     {
@@ -230,7 +230,7 @@ class clsPmieducarCalendarioAtividade extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -248,7 +248,7 @@ class clsPmieducarCalendarioAtividade extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {
