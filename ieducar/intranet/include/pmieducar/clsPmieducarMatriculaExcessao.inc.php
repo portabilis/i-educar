@@ -203,7 +203,7 @@ class clsPmieducarMatriculaExcessao extends Model
      * @param bool bool_precisa_exame
      * @param bool bool_permite_exame
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_ref_cod_matricula = null, $int_ref_cod_turma = null, $int_ref_sequencial = null, $int_ref_cod_serie = null, $int_ref_cod_escola = null, $int_ref_cod_disciplina = null, $bool_reprovado_faltas = null, $bool_precisa_exame = null, $bool_permite_exame = null)
     {
@@ -298,7 +298,7 @@ class clsPmieducarMatriculaExcessao extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {

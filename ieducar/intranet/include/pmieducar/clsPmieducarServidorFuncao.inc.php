@@ -128,7 +128,7 @@ class clsPmieducarServidorFuncao extends Model
      * Retorna uma lista filtrados de acordo com os parametros
      *
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_ref_ref_cod_instituicao = null, $int_ref_cod_servidor = null, $int_ref_cod_funcao = null)
     {
@@ -183,7 +183,7 @@ class clsPmieducarServidorFuncao extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {

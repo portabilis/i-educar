@@ -193,7 +193,7 @@ class clsModulesPessoaTransporte extends Model
     /**
      * Retorna uma lista de registros filtrados de acordo com os parâmetros.
      *
-     * @return array
+     * @return array|false
      */
     public function lista(
         $cod_pessoa_transporte = null,
@@ -320,7 +320,7 @@ class clsModulesPessoaTransporte extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -381,7 +381,7 @@ class clsModulesPessoaTransporte extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

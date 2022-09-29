@@ -95,7 +95,7 @@ class clsPmieducarDisciplinaDisciplinaTopico extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_ref_ref_cod_disciplina = null, $int_ref_ref_ref_cod_escola = null, $int_ref_ref_ref_cod_serie = null, $int_ref_cod_disciplina_topico = null)
     {
@@ -154,7 +154,7 @@ class clsPmieducarDisciplinaDisciplinaTopico extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -172,7 +172,7 @@ class clsPmieducarDisciplinaDisciplinaTopico extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {
