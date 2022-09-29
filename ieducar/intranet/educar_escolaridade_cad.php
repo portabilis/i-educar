@@ -8,7 +8,7 @@ return new class extends clsCadastro {
      *
      * @var int
      */
-    public $pessoa_logada = null;
+    public $pessoa_logada;
     public $idesco;
     public $descricao;
     public $escolaridade;

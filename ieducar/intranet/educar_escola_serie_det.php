@@ -47,7 +47,7 @@ return new class extends clsDetalhe {
         $registro['ref_cod_curso'] = $det_curso['nm_curso'];
 
         $obj_permissao = new clsPermissoes();
-        $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
+        $obj_permissao->nivel_acesso($this->pessoa_logada);
 
         if ($registro['ref_cod_instituicao']) {
             $this->addDetalhe(['Instituição', $registro['ref_cod_instituicao']]);
