@@ -18,7 +18,7 @@ use OpenApiGenerator\Type;
     Property(Type::STRING, 'name', 'Country name', 'Brasil'),
     Property(Type::STRING, 'ibge_code', 'IBGE code', 12345),
     Property(Type::STRING, 'created_at', 'Creation date', '2022-01-01 00:00:00'),
-    Property(Type::STRING, 'updated_at', 'Edition Date', '2022-01-01 00:00:00'),
+    Property(Type::STRING, 'updated_at', 'Update date', '2022-01-01 00:00:00'),
 ]
 class Country extends Model
 {
