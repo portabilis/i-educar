@@ -19,7 +19,7 @@ class clsPmieducarDisciplinaDependencia extends Model
         $observacao = null,
         $cod_disciplina_dependencia = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'disciplina_dependencia';
 
