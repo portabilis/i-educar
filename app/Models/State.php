@@ -10,7 +10,20 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
+use OpenApiGenerator\Attributes\Property;
+use OpenApiGenerator\Attributes\Schema;
+use OpenApiGenerator\Type;
 
+#[
+    Schema,
+    Property(Type::INT, 'id', 'State ID', 1),
+    Property(Type::INT, 'country_id', 'Country ID', 1),
+    Property(Type::STRING, 'name', 'State name', 'Paraná'),
+    Property(Type::STRING, 'abbreviation', 'Name Abbreviation', 'PR'),
+    Property(Type::STRING, 'ibge_code', 'IBGE code', 12345),
+    Property(Type::STRING, 'created_at', 'Creation date', '2022-01-01 00:00:00'),
+    Property(Type::STRING, 'updated_at', 'Update date', '2022-01-01 00:00:00'),
+]
 class State extends Model
 {
     use DateSerializer;
