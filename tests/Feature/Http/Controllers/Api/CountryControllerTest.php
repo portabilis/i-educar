@@ -26,7 +26,7 @@ class CountryControllerTest extends ResourceTestCase
 
     #[
         GET('/api/country', ['Country'], 'Get all countries'),
-        Response(200, schemaType: SchemaType::ARRAY, ref: Country::class)
+        Response(200, schemaType: SchemaType::ARRAY, ref: 'Country')
     ]
     public function testIndex(): void
     {
@@ -37,7 +37,7 @@ class CountryControllerTest extends ResourceTestCase
         POST('/api/country', ['Country'], 'Create a country'),
         Property(Type::STRING, 'name', 'Name of the country', 'Brasil'),
         Property(Type::INT, 'ibge_code', 'IBGE code of the country', 12345),
-        Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: Country::class),
+        Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: 'Country'),
     ]
     public function testStore(): void
     {
@@ -47,7 +47,7 @@ class CountryControllerTest extends ResourceTestCase
     #[
         GET('/api/country/{id}', ['Country'], 'Get country with ID'),
         PathParameter('id', Type::INT, required: true, example: 1),
-        Response(200, ref: Country::class)
+        Response(200, ref: 'Country')
     ]
     public function testShow(): void
     {
@@ -59,7 +59,7 @@ class CountryControllerTest extends ResourceTestCase
         Property(Type::STRING, 'name', 'Name of the country', 'Brasil'),
         Property(Type::INT, 'ibge_code', 'IBGE code of the country', 12345),
         PathParameter('id', Type::INT, required: true, example: 1),
-        Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: Country::class),
+        Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: 'Country'),
     ]
     public function testUpdate(): void
     {
@@ -69,7 +69,7 @@ class CountryControllerTest extends ResourceTestCase
     #[
         DELETE('/api/country/{id}', ['Country'], 'Delete country with ID'),
         PathParameter('id', Type::INT, required: true, example: 1),
-        Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: Country::class),
+        Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: 'Country'),
     ]
     public function testDelete(): void
     {

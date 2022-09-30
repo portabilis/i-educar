@@ -29,7 +29,7 @@ class DistrictControllerTest extends ResourceTestCase
 
     #[
         GET('/api/district', ['District'], 'Get all districts'),
-        Response(200, schemaType: SchemaType::ARRAY, ref: District::class)
+        Response(200, schemaType: SchemaType::ARRAY, ref: 'District')
     ]
     public function testIndex(): void
     {
@@ -41,7 +41,7 @@ class DistrictControllerTest extends ResourceTestCase
         Property(Type::INT, 'city_id', 'ID of the city', 1),
         Property(Type::STRING, 'name', 'Name of the District', 'São Miguel'),
         Property(Type::INT, 'ibge_code', 'IBGE code of the district', 12345),
-        Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: District::class),
+        Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: 'District'),
     ]
     public function testStore(): void
     {
@@ -51,7 +51,7 @@ class DistrictControllerTest extends ResourceTestCase
     #[
         GET('/api/district/{id}', ['District'], 'Get district with ID'),
         PathParameter('id', Type::INT, required: true, example: 1),
-        Response(200, ref: District::class)
+        Response(200, ref: 'District')
     ]
     public function testShow(): void
     {
@@ -64,7 +64,7 @@ class DistrictControllerTest extends ResourceTestCase
         Property(Type::STRING, 'name', 'Name of the District', 'São Miguel'),
         Property(Type::INT, 'ibge_code', 'IBGE code of the district', 12345),
         PathParameter('id', Type::INT, required: true, example: 1),
-        Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: District::class),
+        Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: 'District'),
     ]
     public function testUpdate(): void
     {
@@ -74,7 +74,7 @@ class DistrictControllerTest extends ResourceTestCase
     #[
         DELETE('/api/district/{id}', ['District'], 'Delete district with ID'),
         PathParameter('id', Type::INT, required: true, example: 1),
-        Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: District::class),
+        Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: 'District'),
     ]
     public function testDelete(): void
     {

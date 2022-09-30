@@ -9,7 +9,7 @@ use OpenApiGenerator\Type;
 use Tests\EloquentTestCase;
 
 #[
-    Schema,
+    Schema(name: 'District'),
     Property(Type::INT, 'id', 'District ID', 1),
     Property(Type::INT, 'city_id', 'City ID', 1),
     Property(Type::STRING, 'name', 'District name', 'São Miguel'),

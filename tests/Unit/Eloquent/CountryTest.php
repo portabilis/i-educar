@@ -9,7 +9,7 @@ use OpenApiGenerator\Type;
 use Tests\EloquentTestCase;
 
 #[
-    Schema,
+    Schema(name: 'Country'),
     Property(Type::INT, 'id', 'Country ID', 1),
     Property(Type::STRING, 'name', 'Country name', 'Brasil'),
     Property(Type::STRING, 'ibge_code', 'IBGE code', 12345),

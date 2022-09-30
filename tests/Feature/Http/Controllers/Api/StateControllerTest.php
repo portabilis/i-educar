@@ -28,7 +28,7 @@ class StateControllerTest extends ResourceTestCase
 
     #[
         GET('/api/state', ['State'], 'Get all states'),
-        Response(200, schemaType: SchemaType::ARRAY, ref: State::class)
+        Response(200, schemaType: SchemaType::ARRAY, ref: 'State')
     ]
     public function testIndex(): void
     {
@@ -41,7 +41,7 @@ class StateControllerTest extends ResourceTestCase
         Property(Type::STRING, 'name', 'Name of the State', 'Paraná'),
         Property(Type::STRING, 'abbreviation', 'Abbreviation of the State', 'PR'),
         Property(Type::INT, 'ibge_code', 'IBGE code of the state', 12345),
-        Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: State::class),
+        Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: 'State'),
     ]
     public function testStore(): void
     {
@@ -51,7 +51,7 @@ class StateControllerTest extends ResourceTestCase
     #[
         GET('/api/state/{id}', ['State'], 'Get state with ID'),
         PathParameter('id', Type::INT, required: true, example: 1),
-        Response(200, ref: State::class)
+        Response(200, ref: 'State')
     ]
     public function testShow(): void
     {
@@ -65,7 +65,7 @@ class StateControllerTest extends ResourceTestCase
         Property(Type::STRING, 'abbreviation', 'Abbreviation of the State', 'PR'),
         Property(Type::INT, 'ibge_code', 'IBGE code of the state', 12345),
         PathParameter('id', Type::INT, required: true, example: 1),
-        Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: State::class),
+        Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: 'State'),
     ]
     public function testUpdate(): void
     {
@@ -75,7 +75,7 @@ class StateControllerTest extends ResourceTestCase
     #[
         DELETE('/api/state/{id}', ['State'], 'Delete state with ID'),
         PathParameter('id', Type::INT, required: true, example: 1),
-        Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: State::class),
+        Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: 'State'),
     ]
     public function testDelete(): void
     {

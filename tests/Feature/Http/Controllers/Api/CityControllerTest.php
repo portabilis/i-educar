@@ -19,6 +19,7 @@ use OpenApiGenerator\Attributes\Response;
 use OpenApiGenerator\Type;
 use OpenApiGenerator\Types\SchemaType;
 use Tests\ResourceTestCase;
+use Tests\Unit\Eloquent\CityTest;
 
 #[Controller]
 class CityControllerTest extends ResourceTestCase
@@ -29,7 +30,7 @@ class CityControllerTest extends ResourceTestCase
 
     #[
         GET('/api/city', ['City'], 'Get all cities'),
-        Response(200, schemaType: SchemaType::ARRAY, ref: City::class)
+        Response(200, schemaType: SchemaType::ARRAY, ref: 'City')
     ]
     public function testIndex(): void
     {
@@ -41,7 +42,7 @@ class CityControllerTest extends ResourceTestCase
         Property(Type::INT, 'state_id', 'ID of the state', 1),
         Property(Type::STRING, 'name', 'Name of the City', 'Francisco Beltrão'),
         Property(Type::INT, 'ibge_code', 'IBGE code of the city', 12345),
-        Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: City::class),
+        Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: 'City'),
     ]
     public function testStore(): void
     {
@@ -51,7 +52,7 @@ class CityControllerTest extends ResourceTestCase
     #[
         GET('/api/city/{id}', ['City'], 'Get city with ID'),
         PathParameter('id', Type::INT, required: true, example: 1),
-        Response(200, ref: City::class)
+        Response(200, ref: 'City')
     ]
     public function testShow(): void
     {
@@ -64,7 +65,7 @@ class CityControllerTest extends ResourceTestCase
         Property(Type::STRING, 'name', 'Name of the City', 'Francisco Beltrão'),
         Property(Type::INT, 'ibge_code', 'IBGE code of the city', 12345),
         PathParameter('id', Type::INT, required: true, example: 1),
-        Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: City::class),
+        Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: 'City'),
     ]
     public function testUpdate(): void
     {
@@ -74,7 +75,7 @@ class CityControllerTest extends ResourceTestCase
     #[
         DELETE('/api/city/{id}', ['City'], 'Delete city with ID'),
         PathParameter('id', Type::INT, required: true, example: 1),
-        Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: City::class),
+        Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: 'City'),
     ]
     public function testDelete(): void
     {
