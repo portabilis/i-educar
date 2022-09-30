@@ -106,10 +106,28 @@ return new class extends clsCadastro {
             $tipo_presenca = $obj->tipoPresencaRegraAvaliacao($this->ref_cod_serie);
         }
 
-
         $obrigatorio = true;
 
+        $obj_servidor = new clsPmieducarServidor(
+            $this->pessoa_logada,
+            null,
+            null,
+            null,
+            null,
+            null,
+            1,      //  Ativo
+            1,      //  Fixado na instituição de ID 1
+        );
+        $isProfessor = $obj_servidor->isProfessor();
+
+        $obj = new clsModulesPlanejamentoAula($this->id);
+        $resultado = $obj->getMensagem($this->pessoa_logada);
+
         $this->campoOculto('id', $this->id);
+        $this->campoOculto('servidor_id', $resultado['emissor_user_id']);
+        $this->campoOculto('auth_id', $this->pessoa_logada);
+        $this->campoOculto('is_professor', $isProfessor);
+
         $this->inputsHelper()->dynamic('data', ['required' => $obrigatorio, 'disabled' => $desabilitado]);  // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('componenteCurricular', ['required' => !$obrigatorio, 'disabled' => $desabilitado]);
@@ -665,6 +683,7 @@ return new class extends clsCadastro {
         $scripts = [
             '/modules/Cadastro/Assets/Javascripts/Frequencia.js',
             '/modules/DynamicInput/Assets/Javascripts/TodasTurmas.js',
+            '/modules/Cadastro/Assets/Javascripts/ValidacaoEnviarMensagemModal.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);

@@ -77,6 +77,7 @@ class clsModulesPlanejamentoAula extends Model {
             pa.recursos_didaticos,
             pa.registro_adaptacao,
             pa.referencias,
+            pa.fl_validado,
             i.nm_instituicao AS instituicao,
             j.fantasia AS escola,
             c.nm_curso AS curso,
@@ -85,6 +86,7 @@ class clsModulesPlanejamentoAula extends Model {
             u.nome AS turno,
             l.nm_tipo AS etapa,
             pa.etapa_sequencial AS fase_etapa,
+            pt.servidor_id,
             pe.nome as professor,
             s.cod_serie
         ';
@@ -416,7 +418,8 @@ class clsModulesPlanejamentoAula extends Model {
         $int_etapa = null,
         $int_servidor_id = null,
         $time_data = null,
-        $arrayEscolasUsuario = null
+        $arrayEscolasUsuario = null,
+        $bool_validado = null
     ) {
         $sql = "
             SELECT DISTINCT
@@ -469,10 +472,10 @@ class clsModulesPlanejamentoAula extends Model {
         }
 
         if ($time_data_inicial) {
-            $time_data_inicial = Portabilis_Date_Utils::brToPgSQL($time_data_inicial);
             $filtros .= "{$whereAnd} pa.data_inicial >= '{$time_data_inicial}'";
             $whereAnd = ' AND ';
         }
+
 
         if ($time_data_final) {
             $filtros .= "{$whereAnd} pa.data_final <= '{$time_data_final}'";
@@ -496,6 +499,15 @@ class clsModulesPlanejamentoAula extends Model {
 
         if (is_array($arrayEscolasUsuario) && count($arrayEscolasUsuario) >= 1) {
             $filtros .= "{$whereAnd} e.cod_escola IN (" . implode(',', $arrayEscolasUsuario) . ")";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_bool($bool_validado) && $bool_validado) {
+            $filtros .= "{$whereAnd} pa.fl_validado = 'true' ";
+        }
+
+        if (is_bool($bool_validado) && !$bool_validado) {
+            $filtros .= "{$whereAnd} pa.fl_validado = 'false' ";
         }
 
         $db = new clsBanco();
@@ -503,7 +515,6 @@ class clsModulesPlanejamentoAula extends Model {
         $resultado = [];
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
-
 
         $this->_total = $db->CampoUnico(
             "SELECT
@@ -818,4 +829,50 @@ class clsModulesPlanejamentoAula extends Model {
         ];
 
     }
+
+    public function updateValidacao ($bool_validacao) {
+        if (is_numeric($this->id)) {
+            $db = new clsBanco();
+
+
+           $set = "fl_validado = " . ($bool_validacao ? "true" : "false ");
+
+            $db->Consulta("
+                UPDATE
+                    {$this->_tabela}
+                SET
+                    $set
+                WHERE
+                    id = '{$this->id}'
+            ");
+
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public function getMensagem ($receptor_user_id) {
+        if (is_numeric($this->id)) {
+            $db = new clsBanco();
+            $db->Consulta("
+                SELECT
+                    emissor_user_id,
+                    receptor_user_id
+                FROM
+                    public.mensagens
+                WHERE
+                    registro_id = '{$this->id}'
+                LIMIT 1
+            ");
+
+            $db->ProximoRegistro();
+
+            return $db->Tupla();
+        }
+
+        return false;
+    }
+
 }

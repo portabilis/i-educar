@@ -7,6 +7,7 @@ use App\Services\CheckPostedDataService;
 use App\Services\iDiarioService;
 use App\Services\SchoolLevelsService;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 
 return new class extends clsCadastro {
     public $id;
@@ -71,7 +72,6 @@ return new class extends clsCadastro {
 
         $this->nome_url_cancelar = 'Cancelar';
 
-
         return $retorno;
     }
 
@@ -110,10 +110,28 @@ return new class extends clsCadastro {
         $instituicao = $clsInstituicao->primeiraAtiva();
         $obrigatorioConteudo = $instituicao['permitir_planeja_conteudos'];
 
+        $obj_servidor = new clsPmieducarServidor(
+            $this->pessoa_logada,
+            null,
+            null,
+            null,
+            null,
+            null,
+            1,      //  Ativo
+            1,      //  Fixado na instituição de ID 1
+        );
+        $isProfessor = $obj_servidor->isProfessor();
+
+        $obj = new clsModulesPlanejamentoAula($this->id);
+        $resultado = $obj->getMensagem($this->pessoa_logada);
+
         $this->campoOculto('id', $this->id);
         $this->campoOculto('serie_id', $serie);
         $this->campoOculto('planejamento_aula_id', $this->id);
         $this->campoOculto('obrigatorio_conteudo', $obrigatorioConteudo);
+        $this->campoOculto('servidor_id', ($this->pessoa_logada == $resultado['emissor_user_id'] ? $resultado['receptor_user_id'] : $resultado['emissor_user_id']));
+        $this->campoOculto('auth_id', $this->pessoa_logada);
+        $this->campoOculto('is_professor', $isProfessor);
         $this->inputsHelper()->dynamic('dataInicial', ['required' => $obrigatorio]);    // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('dataFinal', ['required' => $obrigatorio]);      // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado]);
@@ -223,6 +241,7 @@ return new class extends clsCadastro {
             '/modules/Cadastro/Assets/Javascripts/PlanoAulaExclusao.js',
             '/modules/Cadastro/Assets/Javascripts/PlanoAulaEdicao.js',
             '/modules/Cadastro/Assets/Javascripts/PlanoAulaDuplicacao.js',
+            '/modules/Cadastro/Assets/Javascripts/ValidacaoEnviarMensagemModal.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);

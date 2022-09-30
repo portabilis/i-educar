@@ -19,6 +19,9 @@
         var registrosAula = [];
 
         var planejamento_aula_id = $j('#id').val();
+        var servidor_id = $j('#servidor_id').val();
+        var auth_id = $j('#auth_id').val();
+        var is_professor = $j('#is_professor').val();
         var turma_id = $j('#ref_cod_turma').val();
         var ano = $j('#ano').val();
         var ddp;
@@ -27,6 +30,7 @@
         var conteudos;
         var referencias;
         var componentesCurriculares;
+
 
       btn_add.onclick = function () {
         tab_add_1.addRow();

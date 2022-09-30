@@ -646,3 +646,15 @@ ul.menu li.nvp_cor_nao#busca-menu{
 }
 
 
+#modal_enviar_mensagem {
+  overflow-x: hidden;
+}
+
+#box-mensagens {
+  max-height: 400px;
+  min-height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+
