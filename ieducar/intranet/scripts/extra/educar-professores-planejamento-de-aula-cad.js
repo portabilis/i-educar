@@ -61,6 +61,7 @@
         updateComponente = false;
       }
 
+      $('#ref_cod_escola').val(response.ref_ref_cod_escola);
       updateComponentesCurriculares(true, updateComponente);
     }
 
@@ -393,7 +394,8 @@
       var bnccEspecificacoes        = pegarBNCCEspecificacoes();
       var recursos_didaticos        = document.getElementById("recursos_didaticos").value;
       var registro_adaptacao        = document.getElementById("registro_adaptacao").value;
-      var obrigatorio_conteudo        = document.getElementById("obrigatorio_conteudo").value;
+      var obrigatorio_conteudo      = document.getElementById("obrigatorio_conteudo").value;
+      var ref_cod_escola            = document.getElementById("ref_cod_escola").value;
 
       // VALIDAÇÃO
       if (!ehDataValida(new Date(data_inicial))) { alert("Data inicial não é válida."); return; }
@@ -427,7 +429,8 @@
         bnccs,
         bnccEspecificacoes,
         recursos_didaticos,
-        registro_adaptacao
+        registro_adaptacao,
+        ref_cod_escola
       );
     }
 
@@ -483,7 +486,7 @@
       return bnccEspecificacoes.every(bnccsEspecificacao => bnccsEspecificacao[1].length > 0);
     }
 
-    function novoPlanoAula (data_inicial, data_final, turma, faseEtapa, ddp, atividades, referencias, conteudos, componentesCurriculares, bnccs, bnccEspecificacoes, recursos_didaticos, registro_adaptacao) {
+    function novoPlanoAula (data_inicial, data_final, turma, faseEtapa, ddp, atividades, referencias, conteudos, componentesCurriculares, bnccs, bnccEspecificacoes, recursos_didaticos, registro_adaptacao, ref_cod_escola) {
       var urlForNovoPlanoAula = postResourceUrlBuilder.buildUrl('/module/Api/PlanejamentoAula', 'novo-plano-aula', {});
 
       var options = {
@@ -503,7 +506,8 @@
             bnccs                   : bnccs,
             bnccEspecificacoes      : bnccEspecificacoes,
             recursos_didaticos      : recursos_didaticos,
-            registro_adaptacao      : registro_adaptacao
+            registro_adaptacao      : registro_adaptacao,
+            ref_cod_escola          : ref_cod_escola
           },
           success  : handleNovoPlanoAula
       };

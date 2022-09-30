@@ -176,7 +176,8 @@ return new class extends clsDetalhe {
             $sequencia = $registro['detalhes']['fase_etapa'];
             $obj = new clsPmieducarTurmaModulo();
 
-            $data = $obj->pegaPeriodoLancamentoNotasFaltas($turma, $sequencia);
+
+            $data = $obj->pegaPeriodoLancamentoNotasFaltas($turma, $sequencia, $registro['detalhes']['ref_cod_escola']);
             if ($data['inicio'] != null && $data['fim'] != null) {
                 $data['inicio'] = explode(',', $data['inicio']);
                 $data['fim'] = explode(',', $data['fim']);

@@ -88,7 +88,8 @@ class clsModulesPlanejamentoAula extends Model {
             pa.etapa_sequencial AS fase_etapa,
             pt.servidor_id,
             pe.nome as professor,
-            s.cod_serie
+            s.cod_serie,
+            e.cod_escola
         ';
 
         if (is_numeric($id)) {

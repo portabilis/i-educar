@@ -351,7 +351,8 @@ return new class extends clsCadastro {
 
     public function Novo() {
         $obj = new clsPmieducarTurma();
-        $serie = $obj->lista($this->ref_cod_turma)[0]['ref_ref_cod_serie'];
+        $turmaDetalhes = $obj->lista($this->ref_cod_turma)[0];
+        $serie = $turmaDetalhes['ref_ref_cod_serie'];
 
         $obj = new clsPmieducarSerie();
         $tipo_presenca = $obj->tipoPresencaRegraAvaliacao($serie);
@@ -380,7 +381,7 @@ return new class extends clsCadastro {
         $sequencia = $this->fase_etapa;
         $obj = new clsPmieducarTurmaModulo();
 
-        $data = $obj->pegaPeriodoLancamentoNotasFaltas($turma, $sequencia);
+        $data = $obj->pegaPeriodoLancamentoNotasFaltas($turma, $sequencia, $turmaDetalhes['ref_ref_cod_escola']);
         if ($data['inicio'] != null && $data['fim'] != null) {
             $data['inicio_periodo_lancamentos'] = explode(',', $data['inicio']);
             $data['fim_periodo_lancamentos'] = explode(',', $data['fim']);
@@ -403,7 +404,7 @@ return new class extends clsCadastro {
                 $data_inicio = $data['inicio_periodo_lancamentos'][$i];
                 $data_fim = $data['fim_periodo_lancamentos'][$i];
 
-                $podeRegistrar = $data_inicio >= $data_agora && $data_fim <= $data_agora;
+                $podeRegistrar = $data_agora >= $data_inicio && $data_agora <= $data_fim;
 
                 if ($podeRegistrar) break;
             }
@@ -510,7 +511,9 @@ return new class extends clsCadastro {
         $this->fase_etapa = $this->fase_etapa_;
 
         $obj = new clsPmieducarTurma();
-        $serie = $obj->lista($this->ref_cod_turma)[0]['ref_ref_cod_serie'];
+        $turmaDetalhes = $obj->lista($this->ref_cod_turma)[0];
+        $serie = $turmaDetalhes['ref_ref_cod_serie'];
+
 
         $obj = new clsModulesFrequencia(
             $this->id,
