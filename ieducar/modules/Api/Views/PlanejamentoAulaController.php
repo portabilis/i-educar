@@ -370,16 +370,23 @@ class PlanejamentoAulaController extends ApiCoreController
         $data['inicio'] = new \DateTime($obj->pegaEtapaSequenciaDataInicio($turma, $sequencia));
         $data['fim'] = new \DateTime($obj->pegaEtapaSequenciaDataFim($turma, $sequencia));
 
+        echo '<pre>';
+
         if (is_array($data['inicio_periodo_lancamentos']) && is_array($data['fim_periodo_lancamentos'])) {
             for ($i=0; $i < count($data['inicio_periodo_lancamentos']); $i++) {
                 $data_inicio = $data['inicio_periodo_lancamentos'][$i];
                 $data_fim = $data['fim_periodo_lancamentos'][$i];
 
-                $podeRegistrar = $data_inicio >= $data_agora && $data_fim <= $data_agora;
+                var_dump($data_inicio);
+                var_dump($data_fim);
+
+                //30/09 >= 01/01 && 30/09 30/06
+                $podeRegistrar = $data_agora >= $data_inicio && $data_agora <= $data_fim;
 
                 if ($podeRegistrar) break;
             }
 
+            dd('bla', $podeRegistrar);
             $podeRegistrar = $podeRegistrar && new DateTime($data_inicial) >= $data['inicio'] && new DateTime($data_final) <= $data['fim'];
 
         } else {
@@ -387,6 +394,7 @@ class PlanejamentoAulaController extends ApiCoreController
             $podeRegistrar = $podeRegistrar && $data['inicio'] >= $data_agora && $data['fim'] <= $data_agora;
         }
 
+        dd('bla2', $podeRegistrar);
         return $podeRegistrar;
     }
 
