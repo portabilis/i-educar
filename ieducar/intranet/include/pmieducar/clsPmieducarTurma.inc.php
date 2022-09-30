@@ -1887,6 +1887,7 @@ class clsPmieducarTurma extends Model
                                    FROM {$this->_tabela} t
                                    INNER JOIN pmieducar.curso c ON (t.ref_cod_curso = c.cod_curso)
                                    WHERE t.cod_turma = '{$this->cod_turma}'");
+
             $db->ProximoRegistro();
 
             return $db->Tupla();

@@ -24,6 +24,7 @@ return new class extends clsCadastro {
     public $bncc_especificacoes;
     public $recursos_didaticos;
     public $registro_adaptacao;
+    public $cod_escola;
 
     public function Inicializar () {
         $this->titulo = 'Plano de aula - Cadastro';
@@ -132,6 +133,7 @@ return new class extends clsCadastro {
         $this->campoOculto('servidor_id', ($this->pessoa_logada == $resultado['emissor_user_id'] ? $resultado['receptor_user_id'] : $resultado['emissor_user_id']));
         $this->campoOculto('auth_id', $this->pessoa_logada);
         $this->campoOculto('is_professor', $isProfessor);
+        $this->campoOculto('ref_cod_escola', $this->cod_escola);
         $this->inputsHelper()->dynamic('dataInicial', ['required' => $obrigatorio]);    // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('dataFinal', ['required' => $obrigatorio]);      // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado]);

@@ -485,7 +485,7 @@ class clsPmieducarTurmaModulo extends Model
         return $data;
     }
 
-    public function pegaPeriodoLancamentoNotasFaltas ($int_cod_turma, $int_sequencial) {
+    public function pegaPeriodoLancamentoNotasFaltas ($int_cod_turma, $int_sequencial, $cod_escola) {
         $sql = "
             SELECT
                 STRING_AGG (d.start_date::character varying, ',') as data_inicio,
@@ -494,10 +494,12 @@ class clsPmieducarTurmaModulo extends Model
                 public.release_period_dates d
             JOIN public.release_periods p
                 ON (p.id = d.release_period_id)
+            JOIN PUBLIC.release_period_schools PS
+                ON ( PS.release_period_id = d.release_period_id )
             JOIN pmieducar.turma_modulo t
                 ON (p.stage_type_id = t.ref_cod_modulo AND p.stage = t.sequencial)
             WHERE
-                t.ref_cod_turma = {$int_cod_turma} AND t.sequencial = {$int_sequencial}
+                t.ref_cod_turma = {$int_cod_turma} AND t.sequencial = {$int_sequencial} AND PS.school_id = {$cod_escola}
         ";
 
         $db = new clsBanco();
