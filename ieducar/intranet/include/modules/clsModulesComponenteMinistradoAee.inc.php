@@ -28,32 +28,31 @@ class clsModulesComponenteMinistradoAee extends Model
         $this->_tabela = "{$this->_schema}conteudo_ministrado_aee";
 
         $this->_from = "
-                modules.conteudo_ministrado_aee as cm  
-            JOIN modules.planejamento_aula_aee as pa
-                ON (pa.ref_cod_matricula = cm.ref_cod_matricula)
-			LEFT JOIN pmieducar.turma t
-                ON (t.cod_turma = pa.ref_cod_turma)
-            JOIN modules.professor_turma as pt
-                ON (pt.turma_id = pa.ref_cod_turma)
-            JOIN cadastro.pessoa AS pe
-                ON ( pe.idpes = pt.servidor_id )
-            JOIN pmieducar.matricula m
-                ON (m.cod_matricula = cm.ref_cod_matricula)  
-            JOIN pmieducar.aluno a
-                ON (a.cod_aluno = m.ref_cod_aluno)             
-            JOIN cadastro.pessoa p
-                ON (p.idpes = a.ref_idpes) 
+        modules.conteudo_ministrado_aee as cm 
+        JOIN pmieducar.matricula m
+            ON (m.cod_matricula = cm.ref_cod_matricula)  
+        JOIN pmieducar.aluno a
+            ON (a.cod_aluno = m.ref_cod_aluno) 
+        JOIN pmieducar.matricula_turma mt
+            ON (mt.ref_cod_matricula = cm.ref_cod_matricula)
+        JOIN cadastro.pessoa p
+            ON (p.idpes = a.ref_idpes)				
+        JOIN modules.professor_turma as pt
+            ON (pt.turma_id = mt.ref_cod_turma)
+        JOIN cadastro.pessoa AS pe
+            ON (pe.idpes = pt.servidor_id) 
         ";
 
         $this->_campos_lista = $this->_todos_campos = '
-            cm.id,
-            cm.data,
-            cm.ref_cod_matricula,
-            cm.hora_inicio,
-            cm.hora_fim,
-            cm.atividades,
-            cm.observacao,
-            p.nome as aluno            
+        cm.id,
+        cm.data,
+        cm.ref_cod_matricula,
+        cm.hora_inicio,
+        cm.hora_fim,
+        cm.atividades,
+        cm.observacao,
+        p.nome as aluno,
+        pe.nome as professor            
         ';
 
         if (is_numeric($id)) {
