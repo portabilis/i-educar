@@ -12,144 +12,6 @@
         }
     ],
     "paths": {
-        "/api/district": {
-            "get": {
-                "tags": [
-                    "District"
-                ],
-                "summary": "Get all districts",
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/District"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/district/{id}": {
-            "get": {
-                "tags": [
-                    "District"
-                ],
-                "summary": "Get district with ID",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "schema": {
-                            "type": "integer",
-                            "example": 1
-                        },
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/District"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "District"
-                ],
-                "summary": "Update district with ID",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "schema": {
-                            "type": "integer",
-                            "example": 1
-                        },
-                        "required": true
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "city_id": {
-                                        "type": "integer",
-                                        "description": "ID of the city",
-                                        "example": 1
-                                    },
-                                    "name": {
-                                        "type": "string",
-                                        "description": "Name of the District",
-                                        "example": "S\u00e3o Miguel"
-                                    },
-                                    "ibge_code": {
-                                        "type": "integer",
-                                        "description": "IBGE code of the district",
-                                        "example": 12345
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/District"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "District"
-                ],
-                "summary": "Delete district with ID",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "schema": {
-                            "type": "integer",
-                            "example": 1
-                        },
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/District"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/api/city": {
             "get": {
                 "tags": [
@@ -695,10 +557,183 @@
                     }
                 }
             }
+        },
+        "/api/district": {
+            "get": {
+                "tags": [
+                    "District"
+                ],
+                "summary": "Get all districts",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/District"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/district/{id}": {
+            "get": {
+                "tags": [
+                    "District"
+                ],
+                "summary": "Get district with ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        },
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/District"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "District"
+                ],
+                "summary": "Update district with ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        },
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "city_id": {
+                                        "type": "integer",
+                                        "description": "ID of the city",
+                                        "example": 1
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Name of the District",
+                                        "example": "S\u00e3o Miguel"
+                                    },
+                                    "ibge_code": {
+                                        "type": "integer",
+                                        "description": "IBGE code of the district",
+                                        "example": 12345
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/District"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "District"
+                ],
+                "summary": "Delete district with ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        },
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/District"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
         "schemas": {
+            "City": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "City ID",
+                        "example": 1
+                    },
+                    "state_id": {
+                        "type": "integer",
+                        "description": "State ID",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "City name",
+                        "example": "Francisco Beltr\u00e3o"
+                    },
+                    "ibge_code": {
+                        "type": "string",
+                        "description": "IBGE code",
+                        "example": 12345
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "description": "Creation date",
+                        "example": "2022-01-01 00:00:00"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "description": "Update date",
+                        "example": "2022-01-01 00:00:00"
+                    }
+                }
+            },
             "District": {
                 "type": "object",
                 "properties": {
@@ -746,41 +781,6 @@
                         "type": "string",
                         "description": "Country name",
                         "example": "Brasil"
-                    },
-                    "ibge_code": {
-                        "type": "string",
-                        "description": "IBGE code",
-                        "example": 12345
-                    },
-                    "created_at": {
-                        "type": "string",
-                        "description": "Creation date",
-                        "example": "2022-01-01 00:00:00"
-                    },
-                    "updated_at": {
-                        "type": "string",
-                        "description": "Update date",
-                        "example": "2022-01-01 00:00:00"
-                    }
-                }
-            },
-            "City": {
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "integer",
-                        "description": "City ID",
-                        "example": 1
-                    },
-                    "state_id": {
-                        "type": "integer",
-                        "description": "State ID",
-                        "example": 1
-                    },
-                    "name": {
-                        "type": "string",
-                        "description": "City name",
-                        "example": "Francisco Beltr\u00e3o"
                     },
                     "ibge_code": {
                         "type": "string",
