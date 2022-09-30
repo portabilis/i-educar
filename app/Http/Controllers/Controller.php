@@ -11,11 +11,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
-use OpenApiGenerator\Attributes\Info;
-use OpenApiGenerator\Attributes\Server;
 
-#[Info('API i-EDUCAR', '1.0.0', 'Documentação de acesso a nossa API', 'API para Integração ao i-EDUCAR')]
-#[Server('https://ieducar.com.br', 'Endereço do servidor da Aplicação')]
 class Controller extends BaseController
 {
     use AuthorizesRequests;
