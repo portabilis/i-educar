@@ -68,31 +68,8 @@ return new class extends clsCadastro {
         $obj_cursos->setOrderby('nm_curso');
 
         $lst_cursos = $obj_cursos->lista(
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            null,
-            $this->ref_cod_instituicao
+            int_ativo: 1,
+            int_ref_cod_instituicao: $this->ref_cod_instituicao
         );
 
         if ($lst_cursos) {
