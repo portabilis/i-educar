@@ -375,14 +375,16 @@ class PlanejamentoAulaController extends ApiCoreController
                 $data_inicio = $data['inicio_periodo_lancamentos'][$i];
                 $data_fim = $data['fim_periodo_lancamentos'][$i];
 
-                $podeRegistrar = $data_agora >= $data_inicio && $data_agora <= $data_fim;
+                $podeRegistrar = $data_inicio >= $data_agora && $data_fim <= $data_agora;
 
                 if ($podeRegistrar) break;
             }
+
             $podeRegistrar = $podeRegistrar && new DateTime($data_inicial) >= $data['inicio'] && new DateTime($data_final) <= $data['fim'];
+
         } else {
             $podeRegistrar = new DateTime($data_inicial) >= $data['inicio'] && new DateTime($data_final) <= $data['fim'];
-            $podeRegistrar = $podeRegistrar && $data_agora >= $data['inicio'] && $data_agora <= $data['fim'];
+            $podeRegistrar = $podeRegistrar && $data['inicio'] >= $data_agora && $data['fim'] <= $data_agora;
         }
 
         return $podeRegistrar;
