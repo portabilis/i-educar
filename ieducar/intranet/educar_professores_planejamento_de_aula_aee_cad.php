@@ -105,11 +105,11 @@ return new class extends clsCadastro
 
         $clsInstituicao = new clsPmieducarInstituicao();
         $instituicao = $clsInstituicao->primeiraAtiva();
-        $obrigatorioConteudo = $instituicao['permitir_planeja_conteudos'];
+        $obrigatorioConteudoAee = $instituicao['permitir_planeja_conteudos_aee'];
 
         $this->campoOculto('id', $this->id);
         $this->campoOculto('planejamento_aula_aee_id', $this->id);
-        $this->campoOculto('obrigatorio_conteudo', $obrigatorioConteudo);
+        $this->campoOculto('obrigatorio_conteudo', $obrigatorioConteudoAee);
         $this->inputsHelper()->dynamic('dataInicial', ['required' => $obrigatorio]);    // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('dataFinal', ['required' => $obrigatorio]);      // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado]);
@@ -123,8 +123,8 @@ return new class extends clsCadastro
 
         $this->adicionarBNCCMultiplaEscolha();
 
-        if ($obrigatorioConteudo) {
-            $this->adicionarConteudosTabela($obrigatorioConteudo);
+        if ($obrigatorioConteudoAee) {
+            $this->adicionarConteudosTabela($obrigatorioConteudoAee);
         }
 
         $this->campoMemo('ddp', 'Metodologia', $this->ddp, 100, 5, $obrigatorio);

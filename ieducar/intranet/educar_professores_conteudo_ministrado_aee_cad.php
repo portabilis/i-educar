@@ -91,8 +91,9 @@ return new class extends clsCadastro
 
         $clsInstituicao = new clsPmieducarInstituicao();
         $instituicao = $clsInstituicao->primeiraAtiva();
-        $obrigatorioRegistroDiarioAtividade = $instituicao['obrigatorio_registro_diario_atividade'];
-        $obrigatorioConteudo = $instituicao['permitir_planeja_conteudos'];
+        $obrigatorioRegistroDiarioAtividadeAee = $instituicao['obrigatorio_registro_diario_atividade_aee'];
+        $obrigatorioConteudoAee = $instituicao['permitir_planeja_conteudos_aee'];
+        $utilizarPlanejamentoAulaAee = $instituicao['utilizar_planejamento_aula_aee'];
 
         $obrigatorio = true;
 
@@ -122,7 +123,7 @@ return new class extends clsCadastro
             $this->atividades,
             100,
             5,
-            $obrigatorioRegistroDiarioAtividade,
+            $obrigatorioRegistroDiarioAtividadeAee,
             '',
             '',
             false,
@@ -131,8 +132,8 @@ return new class extends clsCadastro
             false
         );
 
-        if ($obrigatorioConteudo) {
-            $this->adicionarConteudosMultiplaEscolha($obrigatorioConteudo);
+        if ($obrigatorioConteudoAee && $utilizarPlanejamentoAulaAee) {
+            $this->adicionarConteudosMultiplaEscolha();
         }
 
         $this->campoMemo('observacao', 'Observação', $this->observacao, 100, 5, false);
