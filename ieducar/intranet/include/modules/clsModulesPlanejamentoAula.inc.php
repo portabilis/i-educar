@@ -830,12 +830,18 @@ class clsModulesPlanejamentoAula extends Model {
 
     }
 
-    public function updateValidacao ($bool_validacao) {
+    public function updateValidacao($bool_validacao, $ref_validacao_user_id = null, $data_validacao  = null) {
         if (is_numeric($this->id)) {
             $db = new clsBanco();
 
 
            $set = "fl_validado = " . ($bool_validacao ? "true" : "false ");
+
+            if ($bool_validacao) {
+                $set .= ", ref_validacao_user_id = '{$ref_validacao_user_id}'";
+                $set .= ", data_validacao = '{$data_validacao}'";
+
+            }
 
             $db->Consulta("
                 UPDATE

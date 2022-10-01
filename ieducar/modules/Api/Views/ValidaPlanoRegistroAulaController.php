@@ -10,7 +10,9 @@ class ValidaPlanoRegistroAulaController extends ApiCoreController
 
         if (is_numeric($planejamento_aula_id)) {
             $obj = new clsModulesPlanejamentoAula($planejamento_aula_id);
-            $result = $obj->updateValidacao(true);
+
+            $date = date('Y-m-d H:i:s');
+            $result = $obj->updateValidacao(true, Auth::id(), $date);
         }
 
         return ['result' => $result];
@@ -36,7 +38,8 @@ class ValidaPlanoRegistroAulaController extends ApiCoreController
 
         if (is_numeric($frequencia_id)) {
             $obj = new clsModulesFrequencia($frequencia_id);
-            $result = $obj->updateValidacao(true);
+            $date = date('Y-m-d H:i:s');
+            $result = $obj->updateValidacao(true, Auth::id(), $date);
         }
 
         return ['result' => $result];
