@@ -119,6 +119,8 @@ class clsBase
         $instituicao = $clsInstituicao->primeiraAtiva();
         $utilizarPlanejamentoAula = $instituicao['utilizar_planejamento_aula'];
         View::share('utilizarPlanejamentoAula', $utilizarPlanejamentoAula);
+        $utilizarPlanejamentoAulaAee = $instituicao['utilizar_planejamento_aula_aee'];
+        View::share('utilizarPlanejamentoAulaAee', $utilizarPlanejamentoAulaAee);
 
         $menu = app(MenuCacheService::class)->getMenuByUser($user);
 
