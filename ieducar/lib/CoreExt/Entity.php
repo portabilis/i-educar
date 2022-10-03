@@ -525,20 +525,22 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
      *
      * @return bool
      */
-    private function _isReferenceOf(?string $subClass, ?string $subClassFile, string $parentClass): bool
+    private function _isReferenceOf($subClass, $subClassFile, $parentClass): bool
     {
         static $required = [];
 
-        if ($subClass === null || $subClassFile === null) {
-            return false;
+        if (is_string($subClass)) {
+            if (!in_array($subClassFile, $required, true)) {
+                // Inclui o arquivo com a definição de subclasse para que o interpretador
+                // tenha o símbolo de comparação.
+                require_once $subClassFile;
+                $required[] = $subClassFile;
+            }
+
+            return (is_subclass_of($subClass, $parentClass));
         }
 
-        if (!in_array($subClassFile, $required, true)) {
-            require_once $subClassFile;
-            $required[] = $subClassFile;
-        }
-
-        return (is_subclass_of($subClass, $parentClass));
+        return false;
     }
 
     /**
