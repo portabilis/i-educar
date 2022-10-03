@@ -4,15 +4,12 @@ interface CoreExt_Controller_Dispatcher_Strategy_Interface
 {
     /**
      * Construtor.
-     *
-     * @param CoreExt_Controller_Interface $controller
      */
     public function __construct(CoreExt_Controller_Interface $controller);
 
     /**
      * Setter para a instância de CoreExt_Controller_Interface.
      *
-     * @param CoreExt_Controller_Interface $controller
      *
      * @return CoreExt_Controller_Strategy_Interface Provê interface fluída
      */
