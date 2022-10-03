@@ -35,21 +35,21 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
      *
      * @var Core_View
      */
-    protected $_view = null;
+    protected $_view;
 
     /**
      * Instância de CoreExt_DataMapper
      *
      * @var CoreExt_DataMapper
      */
-    protected $_dataMapper = null;
+    protected $_dataMapper;
 
     /**
      * Instância de CoreExt_Entity
      *
      * @var CoreExt_Entity
      */
-    protected $_entity = null;
+    protected $_entity;
 
     /**
      * Identificador do número de processo para verificação de autorização.
@@ -58,14 +58,14 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
      *
      * @var int
      */
-    protected $_processoAp = null;
+    protected $_processoAp;
 
     /**
      * Título a ser utilizado na barra de título.
      *
      * @var string
      */
-    protected $_titulo = null;
+    protected $_titulo;
 
     /**
      * Array com labels para botões, inseridos no HTML via RenderHTML(). Marcado
@@ -74,7 +74,7 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
      *
      * @var array|NULL
      */
-    public $array_botao = null;
+    public $array_botao;
 
     /**
      * Array com labels para botões, inseridos no HTML via RenderHTML(). Marcado
@@ -83,12 +83,12 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
      *
      * @var array|NULL
      */
-    public $array_botao_url = null;
+    public $array_botao_url;
 
     /**
      * @var string
      */
-    public $url_cancelar = null;
+    public $url_cancelar;
 
     /**
      * @var array
@@ -98,12 +98,12 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
     /**
      * @var integer
      */
-    public $pessoa_logada = null;
+    public $pessoa_logada;
 
     /**
      * @var string
      */
-    public $locale = null;
+    public $locale;
 
     /**
      * Construtor.
@@ -219,7 +219,6 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
     /**
      * Setter.
      *
-     * @param CoreExt_Entity $entity
      *
      * @return Core_Controller_Page_Abstract Provê interface fluída
      */
@@ -323,7 +322,7 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
      */
     public function setBaseTitulo($titulo)
     {
-        $this->_titulo = (string) $titulo;
+        $this->_titulo = $titulo;
 
         return $this;
     }
