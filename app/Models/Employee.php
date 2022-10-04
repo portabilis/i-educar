@@ -14,6 +14,9 @@ class Employee extends Model
 {
     use LegacyAttribute;
 
+    public const CREATED_AT = 'data_cadastro';
+    public const UPDATED_AT = null;
+
     /**
      * @var string
      */
@@ -30,11 +33,6 @@ class Employee extends Model
      * @var string
      */
     protected $builder = EmployeeBuilder::class;
-
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
 
     protected $fillable = [
         'cod_servidor',
