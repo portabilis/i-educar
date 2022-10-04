@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Traits;
-use App\Models\LegacyUser;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 trait HasLegacyDates
 {
