@@ -164,6 +164,7 @@ class Employee extends Model
         return $query->join('pmieducar.servidor_alocacao', 'servidor.cod_servidor', '=', 'servidor_alocacao.ref_cod_servidor')
             ->where('servidor_alocacao.ano', date('Y') - 1);
     }
+
     public function scopeCurrentYear(Builder $query): Builder
     {
         return $query->join('pmieducar.servidor_alocacao', 'servidor.cod_servidor', '=', 'servidor_alocacao.ref_cod_servidor')
