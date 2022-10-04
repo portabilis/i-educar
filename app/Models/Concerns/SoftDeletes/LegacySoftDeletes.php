@@ -71,6 +71,10 @@ trait LegacySoftDeletes {
         if ( ! isset($this->casts[ $this->getDeletedAtColumn() ])) {
             $this->casts[ $this->getDeletedAtColumn() ] = 'integer';
         }
+
+        $this->legacy = array_unique(array_merge($this->legacy, [
+            'active' => 'ativo'
+        ]));
     }
 
     /**
