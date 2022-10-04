@@ -21,11 +21,6 @@ class Student extends Model
         return $this->belongsTo(Religion::class);
     }
 
-    public function census()
-    {
-        return $this->hasOne(CensusStudent::class);
-    }
-
     public function registrations()
     {
         return $this->hasMany(Registration::class);
