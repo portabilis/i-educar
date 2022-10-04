@@ -10,6 +10,10 @@ trait HasLegacyUserAction
     public function initializeHasLegacyUserAction(): void
     {
         $this->fillable = array_unique(array_merge($this->fillable, ['ref_usuario_exc', 'ref_usuario_cad']));
+        $this->legacy = array_unique(array_merge($this->legacy, [
+            'deleted_by_user_id' => 'ref_usuario_exc',
+            'created_by_user_id' => 'ref_usuario_cad'
+        ]));
     }
 
     /**
