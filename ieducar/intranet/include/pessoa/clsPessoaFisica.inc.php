@@ -38,6 +38,10 @@ class clsPessoaFisica extends clsPessoaFj
     public $banco = 'pmi';
     public $schema_cadastro = 'cadastro';
     public $ref_cod_profissao;
+    public $ref_cod_banco;
+    public $agencia;
+    public $conta;
+    public $tipo_conta;
 
     /**
      * Construtor.
@@ -94,7 +98,7 @@ class clsPessoaFisica extends clsPessoaFj
         if (is_numeric($ativo)) {
             $where .= "{$whereAnd} ativo = $ativo";
             $whereAnd = ' AND ';
-        }
+        } 
 
         if (is_numeric($this->tipo_endereco)) {
             // Interno
@@ -221,6 +225,10 @@ class clsPessoaFisica extends clsPessoaFj
                 $this->nome_social = $detalhe_fisica['nome_social'];
                 $this->pais_residencia = $detalhe_fisica['pais_residencia'];
                 $this->ref_cod_profissao = $detalhe_fisica['ref_cod_profissao'];
+                $this->ref_cod_banco = $detalhe_fisica['ref_cod_banco'];
+                $this->agencia = $detalhe_fisica['agencia'];
+                $this->conta = $detalhe_fisica['conta'];
+                $this->tipo_conta = $detalhe_fisica['tipo_conta'];
 
                 $tupla['idpes'] = $this->idpes;
                 $tupla[] = &$tupla['idpes'];
@@ -318,6 +326,18 @@ class clsPessoaFisica extends clsPessoaFj
                 $tupla['ref_cod_profissao'] = $this->ref_cod_profissao;
                 $tupla[] = &$tupla['ref_cod_profissao'];
 
+                $tupla['ref_cod_banco'] = $this->ref_cod_banco;
+                $tupla[] = &$tupla['ref_cod_banco'];
+
+                $tupla['agencia'] = $this->agencia;
+                $tupla[] = &$tupla['agencia'];
+
+                $tupla['conta'] = $this->conta;
+                $tupla[] = &$tupla['conta'];
+
+                $tupla['tipo_conta'] = $this->tipo_conta;
+                $tupla[] = &$tupla['tipo_conta'];
+
                 return $tupla;
             }
         } elseif ($this->cpf) {
@@ -357,6 +377,9 @@ class clsPessoaFisica extends clsPessoaFj
                 false,
                 false,
                 $this->cpf,
+                false, 
+                false,
+                false,
                 false
             );
 
@@ -402,6 +425,11 @@ class clsPessoaFisica extends clsPessoaFj
                     $this->nome_social = $detalhe_fisica['nome_social'];
                     $this->pais_residencia = $detalhe_fisica['pais_residencia'];
                     $this->ref_cod_profissao = $detalhe_fisica['ref_cod_profissao'];
+                    $this->ref_cod_banco = $detalhe_fisica['ref_cod_banco'];
+                    $this->agencia = $detalhe_fisica['agencia'];
+                    $this->conta = $detalhe_fisica['conta'];
+                    $this->tipo_conta = $detalhe_fisica['tipo_conta'];
+
 
                     $tupla['idpes'] = $this->idpes;
                     $tupla[] = &$tupla['idpes'];
@@ -492,6 +520,18 @@ class clsPessoaFisica extends clsPessoaFj
 
                     $tupla['ref_cod_profissao'] = $this->ref_cod_profissao;
                     $tupla[] = &$tupla['ref_cod_profissao'];
+                    
+                    $tupla['ref_cod_banco'] = $this->ref_cod_banco;
+                    $tupla[] = &$tupla['ref_cod_banco'];
+
+                    $tupla['agencia'] = $this->agencia;
+                    $tupla[] = &$tupla['agencia'];
+
+                    $tupla['conta'] = $this->conta;
+                    $tupla[] = &$tupla['conta'];
+
+                    $tupla['tipo_conta'] = $this->tipo;
+                    $tupla[] = &$tupla['tipo_conta'];
 
                     return $tupla;
                 }

@@ -18,6 +18,9 @@ class Notification extends Model
         'read_at',
         'user_id',
         'type_id',
+        'register_id',
+        'issuer_id',
+        'subtext',
     ];
 
     /**
@@ -35,4 +38,5 @@ class Notification extends Model
             NotificationType::EXPORT_TEACHER,
         ]);
     }
+
 }

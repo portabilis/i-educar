@@ -106,10 +106,28 @@ return new class extends clsCadastro {
             $tipo_presenca = $obj->tipoPresencaRegraAvaliacao($this->ref_cod_serie);
         }
 
-
         $obrigatorio = true;
 
+        $obj_servidor = new clsPmieducarServidor(
+            $this->pessoa_logada,
+            null,
+            null,
+            null,
+            null,
+            null,
+            1,      //  Ativo
+            1,      //  Fixado na instituição de ID 1
+        );
+        $isProfessor = $obj_servidor->isProfessor();
+
+        $obj = new clsModulesPlanejamentoAula($this->id);
+        $resultado = $obj->getMensagem($this->pessoa_logada);
+
         $this->campoOculto('id', $this->id);
+        $this->campoOculto('servidor_id', $resultado['emissor_user_id']);
+        $this->campoOculto('auth_id', $this->pessoa_logada);
+        $this->campoOculto('is_professor', $isProfessor);
+
         $this->inputsHelper()->dynamic('data', ['required' => $obrigatorio, 'disabled' => $desabilitado]);  // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('componenteCurricular', ['required' => !$obrigatorio, 'disabled' => $desabilitado]);
@@ -333,7 +351,8 @@ return new class extends clsCadastro {
 
     public function Novo() {
         $obj = new clsPmieducarTurma();
-        $serie = $obj->lista($this->ref_cod_turma)[0]['ref_ref_cod_serie'];
+        $turmaDetalhes = $obj->lista($this->ref_cod_turma)[0];
+        $serie = $turmaDetalhes['ref_ref_cod_serie'];
 
         $obj = new clsPmieducarSerie();
         $tipo_presenca = $obj->tipoPresencaRegraAvaliacao($serie);
@@ -362,7 +381,7 @@ return new class extends clsCadastro {
         $sequencia = $this->fase_etapa;
         $obj = new clsPmieducarTurmaModulo();
 
-        $data = $obj->pegaPeriodoLancamentoNotasFaltas($turma, $sequencia);
+        $data = $obj->pegaPeriodoLancamentoNotasFaltas($turma, $sequencia, $turmaDetalhes['ref_ref_cod_escola']);
         if ($data['inicio'] != null && $data['fim'] != null) {
             $data['inicio_periodo_lancamentos'] = explode(',', $data['inicio']);
             $data['fim_periodo_lancamentos'] = explode(',', $data['fim']);
@@ -392,7 +411,7 @@ return new class extends clsCadastro {
             $podeRegistrar = $podeRegistrar && new DateTime($data_cadastro) >= $data['inicio'] && new DateTime($data_cadastro) <= $data['fim'];
         } else {
             $podeRegistrar = new DateTime($data_cadastro) >= $data['inicio'] && new DateTime($data_cadastro) <= $data['fim'];
-            $podeRegistrar = $podeRegistrar && $data_agora >= $data['inicio'] && $data_agora <= $data['fim'];
+            $podeRegistrar = $podeRegistrar && $data['inicio'] >= $data_agora && $data['fim'] <= $data_agora;
         }
 
         if (!$podeRegistrar) {
@@ -492,7 +511,9 @@ return new class extends clsCadastro {
         $this->fase_etapa = $this->fase_etapa_;
 
         $obj = new clsPmieducarTurma();
-        $serie = $obj->lista($this->ref_cod_turma)[0]['ref_ref_cod_serie'];
+        $turmaDetalhes = $obj->lista($this->ref_cod_turma)[0];
+        $serie = $turmaDetalhes['ref_ref_cod_serie'];
+
 
         $obj = new clsModulesFrequencia(
             $this->id,
@@ -665,6 +686,7 @@ return new class extends clsCadastro {
         $scripts = [
             '/modules/Cadastro/Assets/Javascripts/Frequencia.js',
             '/modules/DynamicInput/Assets/Javascripts/TodasTurmas.js',
+            '/modules/Cadastro/Assets/Javascripts/ValidacaoEnviarMensagemModal.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);

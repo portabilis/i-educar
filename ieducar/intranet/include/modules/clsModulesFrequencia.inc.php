@@ -78,6 +78,7 @@ class clsModulesFrequencia extends Model {
             f.id,
             f.data,
             f.ordens_aulas,
+            f.fl_validado,
             i.nm_instituicao AS instituicao,
             j.fantasia AS escola,
             c.nm_curso AS curso,
@@ -562,7 +563,8 @@ class clsModulesFrequencia extends Model {
             $time_data_final = null,
             $int_etapa = null,
             $int_servidor_id = null,
-            $arrayEscolasUsuario = null
+            $arrayEscolasUsuario = null,
+            $bool_validado = null
         ) {
         $sql = "
                 SELECT DISTINCT
@@ -636,6 +638,14 @@ class clsModulesFrequencia extends Model {
 
         if (is_array($arrayEscolasUsuario) && count($arrayEscolasUsuario) >= 1) {
             $filtros .= "{$whereAnd} e.cod_escola IN (" . implode(',', $arrayEscolasUsuario) . ")";
+        }
+
+        if (is_bool($bool_validado) && $bool_validado) {
+            $filtros .= "{$whereAnd} f.fl_validado = 'true' ";
+        }
+
+        if (is_bool($bool_validado) && !$bool_validado) {
+            $filtros .= "{$whereAnd} f.fl_validado = 'false' ";
         }
 
         $db = new clsBanco();
@@ -982,4 +992,32 @@ class clsModulesFrequencia extends Model {
 
        return $matriculas;
     }
+
+    public function updateValidacao($bool_validacao, $ref_validacao_user_id = null, $data_validacao  = null) {
+        if (is_numeric($this->id)) {
+            $db = new clsBanco();
+
+            $set = "fl_validado = " . ($bool_validacao ? "true" : "false ");
+
+            if ($bool_validacao) {
+                $set .= ", ref_validacao_user_id = '{$ref_validacao_user_id}'";
+                $set .= ", data_validacao = '{$data_validacao}'";
+
+            }
+
+            $db->Consulta("
+                UPDATE
+                    {$this->_tabela}
+                SET
+                    $set
+                WHERE
+                    id = '{$this->id}'
+            ");
+
+            return true;
+        }
+
+        return false;
+    }
+
 }

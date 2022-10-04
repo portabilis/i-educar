@@ -6,8 +6,10 @@ use App\Models\Notification;
 use App\Process;
 use App\Services\NotificationUrlPresigner;
 use App\User;
+use clsPmieducarServidor;
 use iEducar\Modules\Notifications\Status;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class NotificationController extends Controller
@@ -23,6 +25,7 @@ class NotificationController extends Controller
         $this->breadcrumb('Notificações', []);
 
         $this->menu(Process::SCHEDULE);
+
 
         $query = Notification::query();
 
@@ -48,7 +51,19 @@ class NotificationController extends Controller
 
         $query->orderBy('created_at', 'desc');
 
-        return view('notification.index', ['notifications' => $query->paginate()]);
+        $obj_servidor = new clsPmieducarServidor(
+            Auth::id(),
+            null,
+            null,
+            null,
+            null,
+            null,
+            1,      //  Ativo
+            1,      //  Fixado na instituição de ID 1
+        );
+        $isProfessor = $obj_servidor->isProfessor();
+
+        return view('notification.index', ['notifications' => $query->paginate(), 'auth_id' => Auth::id(), 'isProfessor' => $isProfessor]);
     }
 
     public function markAsRead(Request $request, User $user)

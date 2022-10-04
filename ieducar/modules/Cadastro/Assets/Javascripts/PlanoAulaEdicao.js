@@ -19,6 +19,9 @@
         var registrosAula = [];
 
         var planejamento_aula_id = $j('#id').val();
+        var servidor_id = $j('#servidor_id').val();
+        var auth_id = $j('#auth_id').val();
+        var is_professor = $j('#is_professor').val();
         var turma_id = $j('#ref_cod_turma').val();
         var ano = $j('#ano').val();
         var ddp;
@@ -27,6 +30,7 @@
         var conteudos;
         var referencias;
         var componentesCurriculares;
+
 
       btn_add.onclick = function () {
         tab_add_1.addRow();
@@ -540,6 +544,7 @@
           let turma                     = document.getElementById("ref_cod_turma").value;
           let faseEtapa                 = document.getElementById("fase_etapa").value;
           let obrigatorio_conteudo        = document.getElementById("obrigatorio_conteudo").value;
+          var ref_cod_escola            = document.getElementById("ref_cod_escola").value;
 
           // VALIDAÇÃO
           if (!ehDataValida(new Date(data_inicial))) { alert("Data inicial não é válida."); return; }
@@ -577,7 +582,8 @@
                     bnccs                   : bnccs,
                     bnccEspecificacoes      : bnccEspecificacoes,
                     recursos_didaticos      : recursos_didaticos,
-                    registro_adaptacao      : registro_adaptacao
+                    registro_adaptacao      : registro_adaptacao,
+                    ref_cod_escola          : ref_cod_escola
                 },
                 success  : handleEditarPlanoAula
             };
