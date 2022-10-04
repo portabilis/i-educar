@@ -2,26 +2,28 @@
 
 namespace App\Models;
 
+use App\Traits\HasLegacyDates;
+use App\Traits\HasLegacyUserAction;
 use Illuminate\Database\Eloquent\Model;
 
 class EmployeeAllocation extends Model
 {
+    use HasLegacyUserAction;
+    use HasLegacyDates;
+
     protected $primaryKey = 'cod_servidor_alocacao';
 
     protected $table = 'pmieducar.servidor_alocacao';
 
     protected $fillable = [
-        'ativo',
         'carga_horaria',
         'periodo',
         'hora_final',
         'hora_inicial',
-        'dia_seaman',
+        'dia_semana',
         'ano',
         'data_admissao',
         'ref_ref_cod_instituicao',
-        'ref_usuario_exc',
-        'ref_usuario_cad',
         'ref_cod_escola',
         'ref_cod_servidor',
         'ref_cod_servidor_funcao',
@@ -31,6 +33,8 @@ class EmployeeAllocation extends Model
         'data_saida'
     ];
 
-    public const CREATED_AT = 'data_cadastro';
-    public const UPDATED_AT = 'data_exclusao';
+    public function school()
+    {
+        return $this->belongsTo(LegacySchool::class, 'ref_cod_escola', 'cod_escola');
+    }
 }
