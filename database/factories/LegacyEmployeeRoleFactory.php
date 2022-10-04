@@ -2,8 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Employee;
-use App\Models\EmployeeAllocation;
 use App\Models\LegacyEmployeeRole;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -24,11 +22,10 @@ class LegacyEmployeeRoleFactory extends Factory
     public function definition(): array
     {
         return [
-            'cod_servidor_funcao',
-            'matricula',
-            'ref_cod_funcao',
-            'ref_cod_servidor',
-            'ref_ref_cod_instituicao',
+            'matricula' => $this->faker->randomDigitNotNull(),
+            'ref_cod_funcao' => LegacyRoleFactory::new()->create(),
+            'ref_cod_servidor' => EmployeeFactory::new()->create(),
+            'ref_ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
         ];
     }
 }

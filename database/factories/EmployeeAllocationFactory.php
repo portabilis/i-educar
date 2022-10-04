@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Employee;
 use App\Models\EmployeeAllocation;
+use App\Models\LegacyEmployeeRole;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class EmployeeAllocationFactory extends Factory
@@ -23,21 +24,22 @@ class EmployeeAllocationFactory extends Factory
     public function definition(): array
     {
         return [
-            'carga_horaria',
-            'periodo',
-            'hora_final',
-            'hora_inicial',
-            'dia_semana',
-            'ano',
-            'data_admissao',
-            'ref_ref_cod_instituicao',
+            'carga_horaria' => $this->faker->randomNumber(3),
+            'periodo' => $this->faker->numberBetween(1, 3),
+            'hora_inicial' => '07:45',
+            'hora_final' => '11:45',
+            'dia_semana' => $this->faker->numberBetween(0, 7),
+            'ano' => now()->year,
+            'data_admissao' => $this->faker->date(),
+            'ref_ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
             'ref_cod_escola' => LegacySchoolFactory::new()->create(),
-            'ref_cod_servidor' => Employee::new()->create(),
-            'ref_cod_servidor_funcao',
-            'ref_cod_funcionario_vinculo',
-            'hora_atividade',
-            'horas_excedentes',
-            'data_saida'
+            'ref_cod_servidor' => EmployeeFactory::new()->create(),
+            'ref_cod_servidor_funcao' => LegacyEmployeeRoleFactory::new()->create(),
+            'ref_cod_funcionario_vinculo' => $this->faker->randomDigitNotZero(),
+            'hora_atividade' => $this->faker->time(),
+            'horas_excedentes' => $this->faker->time(),
+            'data_saida' => now(),
+            'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
         ];
     }
 }

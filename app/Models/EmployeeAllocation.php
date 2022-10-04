@@ -4,9 +4,8 @@ namespace App\Models;
 
 use App\Traits\HasLegacyDates;
 use App\Traits\HasLegacyUserAction;
-use Illuminate\Database\Eloquent\Model;
 
-class EmployeeAllocation extends Model
+class EmployeeAllocation extends LegacyModel
 {
     use HasLegacyUserAction;
     use HasLegacyDates;

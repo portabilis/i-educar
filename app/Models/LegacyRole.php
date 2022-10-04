@@ -2,26 +2,27 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\SoftDeletes\LegacySoftDeletes;
+use App\Traits\HasLegacyDates;
+use App\Traits\HasLegacyUserAction;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 
-class LegacyRole extends Model
+class LegacyRole extends LegacyModel
 {
+    use LegacySoftDeletes;
+    use HasLegacyDates;
+    use HasLegacyUserAction;
+
     protected $table = 'pmieducar.funcao';
+
     protected $primaryKey = 'cod_funcao';
+
     protected $fillable = [
-        'cod_funcao',
-        'ref_usuario_exc',
-        'ref_usuario_cad',
         'nm_funcao',
         'abreviatura',
         'professor',
-        'data_cadastro',
-        'data_exclusao',
-        'ativo',
         'ref_cod_instituicao',
     ];
-    public $timestamps = false;
 
     public function scopeAtivo(Builder $query): Builder
     {
@@ -36,14 +37,5 @@ class LegacyRole extends Model
     public function getIdAttribute(): int
     {
         return $this->cod_funcao;
-    }
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            $model->data_cadastro = now();
-        });
     }
 }
