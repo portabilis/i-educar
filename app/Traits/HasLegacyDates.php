@@ -6,6 +6,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 trait HasLegacyDates
 {
+    public function initializeHasLegacyDates(): void
+    {
+        $this->legacy = array_unique(array_merge($this->legacy, [
+            'created_at' => 'data_cadastro'
+        ]));
+    }
+
     /**
      * Get the name of the "created at" column.
      *
@@ -15,7 +22,6 @@ trait HasLegacyDates
     {
         return 'data_cadastro';
     }
-
 
     /**
      * Get the name of the "updated at" column.
