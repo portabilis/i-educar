@@ -41,6 +41,7 @@ class StateTest extends EloquentTestCase
     {
         $state = State::findByAbbreviation($this->state->abbreviation);
 
+        $this->assertInstanceOf(State::class, $state);
         $this->assertArrayHasKey('abbreviation', $state->toArray());
         $this->assertEquals($state->abbreviation, $this->state->abbreviation);
     }
