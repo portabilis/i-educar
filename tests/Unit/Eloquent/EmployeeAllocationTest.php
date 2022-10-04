@@ -3,7 +3,7 @@
 namespace Tests\Unit\Eloquent;
 
 use App\Models\EmployeeAllocation;
-use App\Models\School;
+use App\Models\LegacySchool;
 use Database\Factories\EmployeeAllocationFactory;
 use Tests\EloquentTestCase;
 
@@ -26,6 +26,6 @@ class EmployeeAllocationTest extends EloquentTestCase
 
     public function testRelationshipSchool()
     {
-        $this->assertInstanceOf(School::class, $this->employeeAllocation->school);
+        $this->assertInstanceOf(LegacySchool::class, $this->employeeAllocation->school);
     }
 }
