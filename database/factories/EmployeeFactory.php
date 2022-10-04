@@ -22,6 +22,7 @@ class EmployeeFactory extends Factory
     public function definition(): array
     {
         return [
+            'cod_servidor' => LegacyPersonFactory::new()->create(),
             'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
             'carga_horaria' => $this->faker->randomNumber(3),
         ];
