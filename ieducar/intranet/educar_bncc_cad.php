@@ -5,6 +5,7 @@ use App\Models\BNCC;
 use App\Models\Serie;
 use App\Models\ComponenteCurricular;
 use App\Models\bnccSeries;
+use App\Models\EspecificacaoBncc;
 
 return new class extends clsCadastro {
 
@@ -17,6 +18,8 @@ return new class extends clsCadastro {
     public $habilidade;
     public $retorno;
     public $inativo;
+    public $especificacao_bncc = [];
+    public $especificacoes_cod = [];
 
     public function Inicializar(){
         $retorno = 'Novo';
@@ -41,6 +44,11 @@ return new class extends clsCadastro {
                     $this->codigo_habilidade = $bncc->codigo;
                     $this->componente_curricular_id = $bncc->componente_curricular_id;
                     $this->inativo = $bncc->inativo;
+                    $especificacao = EspecificacaoBncc::where('bncc_id', $bncc->id)->get();
+                    //caso editar, popula a lista de especificações
+                    foreach($especificacao as $list) {
+                        $this->especificacoes_cod[] = [ $list->especificacao ];   
+                    }
                     $series_bncc = '';
                     foreach($bncc->series as $serie){
            $series_bncc .= $serie->cod_serie.', ';
@@ -87,7 +95,7 @@ return new class extends clsCadastro {
         foreach($componentes as $componente){
        
             $selectOptionsComponente[$componente['id']] = $componente['nome'];
-           ;
+           
          }
        
 
@@ -128,6 +136,41 @@ return new class extends clsCadastro {
 
        $this->inputsHelper()->checkbox('inativo', $options);
 
+
+        //especificações bncc
+        $contador = 0;
+        
+     
+       
+
+            // especificação BNCC
+    
+            $this->campoTabelaInicio(
+                'especificacoes_cod',
+                'Especificações BNCC',
+                [
+                    'Especificação'
+                ], ($this->especificacoes_cod)
+            );
+    
+         
+            
+          
+            
+            $this->campoTexto('especificacao_bncc', 'Especificação BNCC', $this->especificacao_bncc); 
+        
+            
+    
+          
+    
+            $this->campoTabelaFim();
+    
+
+
+       $scripts = ['/modules/Cadastro/Assets/Javascripts/especificacao_bncc.js'];
+       Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+       $styles = ['/modules/Cadastro/Assets/Stylesheets/especificacao_bncc.css'];
+       Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
  
     }
 
@@ -156,6 +199,21 @@ return new class extends clsCadastro {
                 'id_serie' => $serie_id
 
             ] );
+
+
+        }
+
+        $this->especficacoes_cad  = $_POST['especificacao_bncc'];
+        foreach ($this->especficacoes_cad as $especficacao_text ) {
+            $data = EspecificacaoBncc::latest('id')->first();
+            $id_especificacao = $data->id + 1;
+            EspecificacaoBncc::create( [
+                'id' => $id_especificacao,
+                'bncc_id' => $bncc_id,
+                'especificacao' => $especficacao_text
+
+            ] );
+            
 
         }
 
@@ -195,6 +253,21 @@ return new class extends clsCadastro {
             ] );
 
         }
+        EspecificacaoBncc::where('bncc_id', $_GET['id'])->delete();
+
+        $this->especficacoes_cad  = $_POST['especificacao_bncc'];
+        foreach ($this->especficacoes_cad as $especficacao_text ) {
+            $data = EspecificacaoBncc::latest('id')->first();
+            $id_especificacao = $data->id + 1;
+            EspecificacaoBncc::create( [
+                'id' => $id_especificacao,
+                'bncc_id' => $bncc_id,
+                'especificacao' => $especficacao_text
+
+            ] );
+            
+
+        }
         $this->simpleRedirect('educar_bncc_lst.php');
     }
 
@@ -203,6 +276,7 @@ return new class extends clsCadastro {
        
         BNCC::where('id', $_GET['id'])->delete(); 
         bnccSeries::where('id_bncc', $_GET['id'])->delete();
+        EspecificacaoBncc::where('bncc_id', $_GET['id'])->delete();
         $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
         $this->simpleRedirect('educar_bncc_lst.php');
     }

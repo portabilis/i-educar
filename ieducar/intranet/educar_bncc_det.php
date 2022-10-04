@@ -4,6 +4,7 @@ use App\Models\BNCC;
 use App\Models\Serie;
 use App\Models\ComponenteCurricular;
 use App\Models\bnccSeries;
+use App\Models\EspecificacaoBncc;
 
 return new class extends clsDetalhe {
     /**
@@ -32,11 +33,20 @@ return new class extends clsDetalhe {
         }
 
         $componente = ComponenteCurricular::find($bncc->componente_curricular_id);
-           $retorno ='<ul>';
+           $retorno ='<ul  class="list-group">';
            foreach($bncc->series as $serie){
-           $retorno .= '<li>'.$serie->nm_serie.'</li>';
+           $retorno .= '<li  class="list-group-item">'.$serie->nm_serie.'</li>';
            }
            $retorno .= '</ul>';
+
+          
+           $retorno_especificacoes ='<ol>';
+           $especificacao = EspecificacaoBncc::where('bncc_id', $bncc->id)->get();
+           foreach($especificacao as $list) {
+            $retorno_especificacoes .= '<li>'.$list->especificacao.'</li><br>';   
+           }
+           $retorno_especificacoes .= '</ol>';
+
 
            $this->addDetalhe([ 'Código', $bncc->id]);
            $this->addDetalhe([ 'Código da Habilidade', $bncc->codigo]);
@@ -51,6 +61,7 @@ return new class extends clsDetalhe {
            }
            
            $this->addDetalhe([ 'Status', $status]);
+           $this->addDetalhe([ 'Especificações', $retorno_especificacoes]);
         
 
        
