@@ -25,7 +25,7 @@ class DatabaseToCsvExporter implements ShouldQueue
     /**
      * @var int
      */
-    public $timeout = 1800;
+    public $timeout = 3000;
 
     /**
      * @var Export
