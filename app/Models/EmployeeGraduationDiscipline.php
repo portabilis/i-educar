@@ -7,4 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class EmployeeGraduationDiscipline extends Model
 {
     public $timestamps = false;
+
+    protected $fillable = [
+        'name',
+    ];
 }
