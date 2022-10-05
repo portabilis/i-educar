@@ -15,6 +15,7 @@ class clsModulesPlanejamentoAula extends Model {
     public $conteudos;
     public $referencias;
     public $bncc_especificacoes;
+    public $servidor_id;
 
     public function __construct(
         $id = null,
@@ -30,7 +31,8 @@ class clsModulesPlanejamentoAula extends Model {
         $referencias = null,
         $bncc_especificacoes = null,
         $recursos_didaticos = null,
-        $registro_adaptacao = null
+        $registro_adaptacao = null,
+        $servidor_id = null
     ) {
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}planejamento_aula";
@@ -142,6 +144,10 @@ class clsModulesPlanejamentoAula extends Model {
         if (is_string($registro_adaptacao)) {
             $this->registro_adaptacao = $registro_adaptacao;
         }
+
+        if (is_numeric($servidor_id)) {
+            $this->servidor_id = $servidor_id;
+        }
     }
 
     /**
@@ -162,6 +168,7 @@ class clsModulesPlanejamentoAula extends Model {
             && is_array($this->bncc_especificacoes)
             && is_string($this->recursos_didaticos)
             && is_string($this->registro_adaptacao)
+            && is_numeric($this->servidor_id)
         ) {
             $db = new clsBanco();
 
@@ -203,6 +210,10 @@ class clsModulesPlanejamentoAula extends Model {
 
             $campos .= "{$gruda}registro_adaptacao";
             $valores .= "{$gruda}'{$db->escapeString($this->registro_adaptacao)}'";
+            $gruda = ', ';
+
+            $campos .= "{$gruda}servidor_id";
+            $valores .= "{$gruda}'{$this->servidor_id}'";
             $gruda = ', ';
 
             $campos .= "{$gruda}data_cadastro";

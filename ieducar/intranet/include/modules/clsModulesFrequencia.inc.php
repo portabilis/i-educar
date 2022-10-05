@@ -174,6 +174,10 @@ class clsModulesFrequencia extends Model {
             $valores .= "{$gruda}'{$this->etapa_sequencial}'";
             $gruda = ', ';
 
+            $campos .= "{$gruda}servidor_id";
+            $valores .= "{$gruda}'{$this->servidor_id}'";
+            $gruda = ', ';
+
             $campos .= "{$gruda}data_cadastro";
             $valores .= "{$gruda}(NOW() - INTERVAL '3 HOURS')";
             $gruda = ', ';
