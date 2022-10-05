@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Individual;
+use App\Models\LegacyIndividual;
 use App\Models\LogUnification;
 use App\Services\ValidationDataService;
 use iEducar\Modules\Unification\PersonLogUnification;
@@ -41,8 +41,8 @@ return new class extends clsCadastro {
     {
         $this->acao_enviar = 'carregaDadosPessoas()';
         $this->campoTabelaInicio('tabela_pessoas', '', ['Pessoa duplicada', 'Campo Pessoa duplicada'], $this->tabela_pessoas);
-            $this->campoRotulo('pessoa_label', '', 'Pessoa física a ser unificada <span class="campo_obrigatorio">*</span>');
-            $this->campoTexto('pessoa_duplicada', 'Pessoa duplicada', $this->pessoa_duplicada, 50, 255, false, true, false, '', '', '', 'onfocus');
+        $this->campoRotulo('pessoa_label', '', 'Pessoa física a ser unificada <span class="campo_obrigatorio">*</span>');
+        $this->campoTexto('pessoa_duplicada', 'Pessoa duplicada', $this->pessoa_duplicada, 50, 255, false, true, false, '', '', '', 'onfocus');
         $this->campoTabelaFim();
 
         $styles = ['/vendor/legacy/Cadastro/Assets/Stylesheets/UnificaPessoa.css'];
@@ -78,14 +78,14 @@ return new class extends clsCadastro {
             return false;
         }
 
-        if (! $this->validaDadosDaUnificacao($pessoas)) {
+        if (!$this->validaDadosDaUnificacao($pessoas)) {
             $this->mensagem = 'Dados enviados inválidos, recarregue a tela e tente novamente!';
             return false;
         }
 
         $validationData = new ValidationDataService();
 
-        if (! $validationData->verifyQuantityByKey($pessoas,'pessoa_principal', 0)) {
+        if (!$validationData->verifyQuantityByKey($pessoas, 'pessoa_principal', 0)) {
             $this->mensagem = 'Pessoa principal não informada';
             return false;
         }
@@ -95,7 +95,7 @@ return new class extends clsCadastro {
             return false;
         }
 
-        if (! $validationData->verifyDataContainsDuplicatesByKey($pessoas, 'idpes')) {
+        if (!$validationData->verifyDataContainsDuplicatesByKey($pessoas, 'idpes')) {
             $this->mensagem = 'Erro ao tentar unificar Pessoas, foi inserido cadastro duplicados';
             return false;
         }
@@ -124,11 +124,11 @@ return new class extends clsCadastro {
     private function validaDadosDaUnificacao($pessoa)
     {
         foreach ($pessoa as $item) {
-            if (! array_key_exists('idpes',$item)) {
+            if (!array_key_exists('idpes', $item)) {
                 return false;
             }
 
-            if (! array_key_exists('pessoa_principal',$item)) {
+            if (!array_key_exists('pessoa_principal', $item)) {
                 return false;
             }
         }
@@ -138,15 +138,15 @@ return new class extends clsCadastro {
 
     private function buscaIdesDasPessoasParaUnificar($pessoas)
     {
-       return array_map(static fn ($item) => (int) $item['idpes'],
-            array_filter($pessoas, static fn ($pessoas) => $pessoas['pessoa_principal'] === false)
+        return array_map(static fn($item) => (int)$item['idpes'],
+            array_filter($pessoas, static fn($pessoas) => $pessoas['pessoa_principal'] === false)
         );
     }
 
     private function buscaPessoaPrincipal($pessoas)
     {
         $pessoas = array_values(array_filter($pessoas,
-                static fn ($pessoas) => $pessoas['pessoa_principal'] === true)
+                static fn($pessoas) => $pessoas['pessoa_principal'] === true)
         );
 
         return current($pessoas)['idpes'];
@@ -178,7 +178,7 @@ return new class extends clsCadastro {
         $names = [];
 
         foreach ($duplicatesId as $personId) {
-            $names[] = Individual::findOrFail($personId)->real_name;
+            $names[] = LegacyIndividual::findOrFail($personId)->real_name;
         }
 
         return $names;

@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Individual;
+use App\Models\LegacyIndividual;
 use App\Models\LogUnification;
 use iEducar\Modules\Unification\PersonLogUnification;
 use iEducar\Modules\Unification\StudentLogUnification;
@@ -38,7 +38,7 @@ return new class {
 
     private function splitInformations($item): ?array
     {
-        $cleanData = substr(substr($item->alunos,1),0, -1);
+        $cleanData = substr(substr($item->alunos, 1), 0, -1);
 
         return explode(',', $cleanData);
     }
@@ -69,7 +69,7 @@ return new class {
 
         $alunosPrincipal = $this->getStudentDetails($principal);
         $codPessoaPrincipal = $alunosPrincipal['ref_idpes'];
-        $codPessoas  = $this->buscaCodPessoas($studentCods);
+        $codPessoas = $this->buscaCodPessoas($studentCods);
 
         $this->unificaPessoas($codPessoaPrincipal, $codPessoas);
 
@@ -143,7 +143,7 @@ return new class {
         $names = [];
 
         foreach ($duplicatesId as $personId) {
-            $names[] = Individual::query()->findOrFail($personId)->real_name;
+            $names[] = LegacyIndividual::query()->findOrFail($personId)->real_name;
         }
 
         return $names;

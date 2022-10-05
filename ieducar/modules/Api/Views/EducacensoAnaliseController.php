@@ -7,7 +7,7 @@ use App\Models\Educacenso\Registro30;
 use App\Models\Educacenso\Registro40;
 use App\Models\Educacenso\Registro50;
 use App\Models\Educacenso\Registro60;
-use App\Models\Individual;
+use App\Models\LegacyIndividual;
 use App\Models\LegacyInstitution;
 use App\Models\LegacySchool;
 use App\Models\School;
@@ -26,13 +26,11 @@ use iEducar\Modules\Educacenso\Data\Registro30 as Registro30Data;
 use iEducar\Modules\Educacenso\Data\Registro40 as Registro40Data;
 use iEducar\Modules\Educacenso\Data\Registro50 as Registro50Data;
 use iEducar\Modules\Educacenso\Data\Registro60 as Registro60Data;
-use iEducar\Modules\Educacenso\ExportRule\PoderPublicoConveniado as ExportRulePoderPublicoConveniado;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\EstruturaCurricular;
 use iEducar\Modules\Educacenso\Model\LinguaMinistrada;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
-use iEducar\Modules\Educacenso\Model\MantenedoraDaEscolaPrivada;
 use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
 use iEducar\Modules\Educacenso\Model\PoderPublicoConveniado;
 use iEducar\Modules\Educacenso\Model\Regulamentacao;
@@ -40,13 +38,12 @@ use iEducar\Modules\Educacenso\Model\SchoolManagerAccessCriteria;
 use iEducar\Modules\Educacenso\Model\SchoolManagerRole;
 use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
-use iEducar\Modules\Educacenso\Model\TipoItinerarioFormativo;
 use iEducar\Modules\Educacenso\Model\TipoMediacaoDidaticoPedagogico;
 use iEducar\Modules\Educacenso\Model\UnidadeVinculadaComOutraInstituicao;
 use iEducar\Modules\Educacenso\Validator\AdministrativeDomainValidator;
 use iEducar\Modules\Educacenso\Validator\CnpjMantenedoraPrivada;
-use iEducar\Modules\Educacenso\Validator\FormasContratacaoEscolaValidator;
 use iEducar\Modules\Educacenso\Validator\FormaOrganizacaoTurma;
+use iEducar\Modules\Educacenso\Validator\FormasContratacaoEscolaValidator;
 use iEducar\Modules\Educacenso\Validator\InepNumberValidator;
 use iEducar\Modules\Educacenso\Validator\Telefone;
 use iEducar\Modules\Servidores\Model\FuncaoExercida;
@@ -71,7 +68,7 @@ class EducacensoAnaliseController extends ApiCoreController
     protected function analisaEducacensoRegistro00()
     {
         $escolaId = $this->getRequest()->escola;
-        $ano    = $this->getRequest()->ano;
+        $ano = $this->getRequest()->ano;
 
         $educacensoRepository = new EducacensoRepository();
         $registro00Model = new Registro00();
@@ -94,8 +91,8 @@ class EducacensoAnaliseController extends ApiCoreController
         $codInstituicao = $escola->idInstituicao;
         $codDistrito = $escola->idDistrito;
         $anoAtual = $ano;
-        $anoAnterior = $anoAtual-1;
-        $anoPosterior = $anoAtual+1;
+        $anoAnterior = $anoAtual - 1;
+        $anoPosterior = $anoAtual + 1;
 
         $mensagem = [];
 
@@ -238,11 +235,11 @@ class EducacensoAnaliseController extends ApiCoreController
         }
 
         if (!(new AdministrativeDomainValidator(
-                $escola->esferaAdministrativa,
-                $escola->regulamentacao,
-                $escola->dependenciaAdministrativa,
-                $escola->codigoIbgeMunicipio
-            ))->isValid()) {
+            $escola->esferaAdministrativa,
+            $escola->regulamentacao,
+            $escola->dependenciaAdministrativa,
+            $escola->codigoIbgeMunicipio
+        ))->isValid()) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 00 da escola {$nomeEscola} possui valor inválido. Verificamos que a esfera administrativa foi preenchida incorretamente.",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais >  Campo: Esfera administrativa do conselho ou órgão responsável pela Regulamentação/Autorização)',
@@ -345,7 +342,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
         if (
             (in_array(PoderPublicoConveniado::MUNICIPAL, $escola->poderPublicoConveniado) ||
-            in_array(PoderPublicoConveniado::ESTADUAL, $escola->poderPublicoConveniado))
+                in_array(PoderPublicoConveniado::ESTADUAL, $escola->poderPublicoConveniado))
             && empty(array_filter($escola->formasContratacaoPoderPublico))
         ) {
             $mensagem[] = [
@@ -373,7 +370,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
         if (
             (in_array(PoderPublicoConveniado::MUNICIPAL, $escola->poderPublicoConveniado) ||
-            in_array(PoderPublicoConveniado::ESTADUAL, $escola->poderPublicoConveniado)) &&
+                in_array(PoderPublicoConveniado::ESTADUAL, $escola->poderPublicoConveniado)) &&
             $escola->NaoPossuiQuantidadeDeMatriculasAtendidas()
         ) {
             $mensagem[] = [
@@ -767,7 +764,7 @@ class EducacensoAnaliseController extends ApiCoreController
         }
 
         return ['mensagens' => $mensagem,
-                 'title'     => 'Análise exportação - Registro 10'];
+            'title' => 'Análise exportação - Registro 10'];
     }
 
     protected function analisaEducacensoRegistro20()
@@ -1089,7 +1086,7 @@ class EducacensoAnaliseController extends ApiCoreController
                     $valid = in_array($turma->etapaEducacenso, $opcoesValidas);
                 }
 
-                if(!$valid) {
+                if (!$valid) {
                     $opcoesValidas = implode(', ', $opcoesValidas);
                     $mensagem[] = [
                         'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} possui valor inválido. Verificamos que a estrutura curricular da turma {$nomeTurma} é: {$estruturaCurricularDescritiva}, portanto a etapa de ensino deve ser uma das seguintes opções: {$opcoesValidas}",
@@ -1376,15 +1373,15 @@ class EducacensoAnaliseController extends ApiCoreController
 
         if (count($gestores) > 3) {
             $mensagem[] = [
-                    'text' => "Dados para formular o registro 40 da escola {$nomeEscola} possui valor inválido. A escola não pode ter mais de 3 gestores escolares.",
-                    'path' => '(Escola > Cadastros > Escolas > Editar > Aba: dados gerais > Tabela Gestores escolares)',
-                    'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
-                    'fail' => true
-                ];
+                'text' => "Dados para formular o registro 40 da escola {$nomeEscola} possui valor inválido. A escola não pode ter mais de 3 gestores escolares.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: dados gerais > Tabela Gestores escolares)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
         }
 
         foreach ($gestores as $gestor) {
-            $nomeGestor = Individual::find($gestor->codigoPessoa)->realName;
+            $nomeGestor = LegacyIndividual::find($gestor->codigoPessoa)->realName;
 
             if (empty($gestor->cargo)) {
                 $mensagem[] = [
@@ -1508,7 +1505,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
             $tipoAtendimentoDesc = TipoAtendimentoTurma::getDescriptiveValues()[$docente->tipoAtendimentoTurma];
 
-            if ($docente->funcaoDocente == FuncaoExercida::AUXILIAR_EDUCACIONAL  && $docente->tipoAtendimentoTurma != TipoAtendimentoTurma::ESCOLARIZACAO) {
+            if ($docente->funcaoDocente == FuncaoExercida::AUXILIAR_EDUCACIONAL && $docente->tipoAtendimentoTurma != TipoAtendimentoTurma::ESCOLARIZACAO) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 50 da escola {$docente->nomeEscola} possui valor inválido. Verificamos que o tipo de atendimento da turma {$docente->nomeTurma} é {$tipoAtendimentoDesc}, portanto a função exercida do(a) docente {$docente->nomeDocente} não pode ser auxiliar/assistente educacional.",
                     'path' => '(Servidores > Cadastros > Servidores > Vincular professor a turmas > Editar > Campo: Função exercida)',
@@ -1517,7 +1514,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 ];
             }
 
-            if ($docente->funcaoDocente == FuncaoExercida::MONITOR_ATIVIDADE_COMPLEMENTAR  && $docente->tipoAtendimentoTurma != TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR) {
+            if ($docente->funcaoDocente == FuncaoExercida::MONITOR_ATIVIDADE_COMPLEMENTAR && $docente->tipoAtendimentoTurma != TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 50 da escola {$docente->nomeEscola} possui valor inválido. Verificamos que o tipo de atendimento da turma {$docente->nomeTurma} é {$tipoAtendimentoDesc}, portanto a função exercida do(a) docente {$docente->nomeDocente} não pode ser profissional/monitor de atividade complementar.",
                     'path' => '(Servidores > Cadastros > Servidores > Vincular professor a turmas > Editar > Campo: Função exercida)',
@@ -1936,7 +1933,7 @@ class EducacensoAnaliseController extends ApiCoreController
     {
         $institution = LegacyInstitution::find($this->getRequest()->instituicao);
 
-        return [ 'valid' => $institution && !empty($institution->data_educacenso)];
+        return ['valid' => $institution && !empty($institution->data_educacenso)];
     }
 
     public function Gerar()
