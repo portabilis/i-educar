@@ -218,6 +218,9 @@ abstract class CoreExt_Controller_Abstract implements CoreExt_Controller_Interfa
             $code = 302;
         }
 
+        ob_end_flush();
+        ob_get_clean();
+
         throw new HttpResponseException(
             new RedirectResponse($url, $code)
         );
