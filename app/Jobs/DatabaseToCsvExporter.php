@@ -106,36 +106,40 @@ class DatabaseToCsvExporter implements ShouldQueue
      */
     public function handle(NotificationService $notification, DatabaseManager $manager)
     {
-        $manager->setDefaultConnection(
-            $sftp = $this->export->getConnectionName()
-        );
+        try {
+            $manager->setDefaultConnection(
+                $sftp = $this->export->getConnectionName()
+            );
 
-        $exporter = $this->getExporter();
+            $exporter = $this->getExporter();
 
-        $file = $this->export->hash;
+            $file = $this->export->hash;
 
-        $manager->unprepared(
-            "COPY ({$exporter->query()}) TO '/tmp/{$file}' CSV HEADER;"
-        );
+            $manager->unprepared(
+                "COPY ({$exporter->query()}) TO '/tmp/{$file}' CSV HEADER;"
+            );
 
-        Storage::disk()->put(
-            $filename = $this->transformTenantFilename($this->export),
-            Storage::disk($sftp)->get("/tmp/{$file}")
-        );
+            Storage::disk()->writeStream(
+                $filename = $this->transformTenantFilename($this->export),
+                Storage::disk($sftp)->readStream("/tmp/{$file}")
+            );
 
-        Storage::disk($sftp)->delete("/tmp/{$file}");
+            Storage::disk($sftp)->delete("/tmp/{$file}");
 
-        $url = $this->transformTenantUrl($filename);
+            $url = $this->transformTenantUrl($filename);
 
-        $notification->createByUser(
-            $this->export->user_id,
-            $this->getMessageToNotification($exporter),
-            $url,
-            NotificationType::EXPORT_STUDENT
-        );
+            $notification->createByUser(
+                $this->export->user_id,
+                $this->getMessageToNotification($exporter),
+                $url,
+                NotificationType::EXPORT_STUDENT
+            );
 
-        $this->export->url = $url;
-        $this->export->save();
+            $this->export->url = $url;
+            $this->export->save();
+        } catch (\Exception $exception) {
+            echo $exception->getMessage();
+        }
     }
 
     public function tags()
