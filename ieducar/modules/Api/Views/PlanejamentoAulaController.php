@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
+
 class PlanejamentoAulaController extends ApiCoreController
 {
     public function verificarPlanoAulaSendoUsado ()
@@ -191,6 +193,7 @@ class PlanejamentoAulaController extends ApiCoreController
         $recursos_didaticos = $this->getRequest()->recursos_didaticos;
         $registro_adaptacao = $this->getRequest()->registro_adaptacao;
         $cod_escola = $this->getRequest()->ref_cod_escola;
+        $servidor_id = Auth::id();
 
         $podeRegistrar = $this->verificarDatasTurma($faseEtapa, $turma, $data_inicial, $data_final, $cod_escola);
 
@@ -218,7 +221,8 @@ class PlanejamentoAulaController extends ApiCoreController
            $referencias,
            $bnccEspecificacoes,
            $recursos_didaticos,
-           $registro_adaptacao
+           $registro_adaptacao,
+           $servidor_id
         );
 
         $existe = $obj->existeComponentePeriodo();
