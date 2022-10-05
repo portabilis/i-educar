@@ -9,23 +9,15 @@ use Tests\EloquentTestCase;
 
 class EmployeeAllocationTest extends EloquentTestCase
 {
+    protected $relations = [
+        'school' => LegacySchool::class,
+    ];
+
     /**
      * @return string
      */
     protected function getEloquentModelName()
     {
         return EmployeeAllocation::class;
-    }
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->employeeAllocation = EmployeeAllocationFactory::new()->create();
-
-    }
-
-    public function testRelationshipSchool()
-    {
-        $this->assertInstanceOf(LegacySchool::class, $this->employeeAllocation->school);
     }
 }

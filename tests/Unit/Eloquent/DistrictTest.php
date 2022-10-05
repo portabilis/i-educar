@@ -12,21 +12,17 @@ use Tests\EloquentTestCase;
 class DistrictTest extends EloquentTestCase
 {
     /**
+     * @var string[]
+     */
+    protected $relations = [
+        'city' => City::class,
+    ];
+
+    /**
      * @return string
      */
     protected function getEloquentModelName()
     {
         return District::class;
-    }
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->district = DistrictFactory::new()->create();
-    }
-
-    public function testRelationshipCity()
-    {
-        $this->assertInstanceOf(City::class, $this->district->city);
     }
 }

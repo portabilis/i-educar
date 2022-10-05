@@ -12,6 +12,10 @@ use Tests\EloquentTestCase;
 class StateTest extends EloquentTestCase
 {
 
+    protected $relations = [
+        'country' => Country::class
+    ];
+
     /**
      * @return string
      */
@@ -24,11 +28,6 @@ class StateTest extends EloquentTestCase
     {
         parent::setUp();
         $this->state = StateFactory::new()->hasCities()->create();
-    }
-
-    public function testRelationshipCountry()
-    {
-        $this->assertInstanceOf(Country::class, $this->state->country);
     }
 
     public function testRelationshipCities()
