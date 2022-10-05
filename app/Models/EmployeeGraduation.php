@@ -3,10 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class EmployeeGraduation extends Model
+class EmployeeGraduation extends LegacyModel
 {
     protected $fillable = [
         'employee_id',

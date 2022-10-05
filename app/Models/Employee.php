@@ -3,19 +3,19 @@
 namespace App\Models;
 
 use App\Models\Builders\EmployeeBuilder;
+use App\Traits\HasInstitution;
+use App\Traits\HasLegacyDates;
 use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Employee extends Model
+class Employee extends LegacyModel
 {
     use LegacyAttribute;
-
-    public const CREATED_AT = 'data_cadastro';
-    public const UPDATED_AT = null;
+    use HasLegacyDates;
+    use HasInstitution;
 
     /**
      * @var string
@@ -75,16 +75,6 @@ class Employee extends Model
     public function employeeRoles(): HasMany
     {
         return $this->hasMany(LegacyEmployeeRole::class, 'ref_cod_servidor');
-    }
-
-    /**
-     * Instituição
-     *
-     * @return BelongsTo
-     */
-    public function institution(): BelongsTo
-    {
-        return $this->belongsTo(LegacyInstitution::class, 'ref_cod_instituicao');
     }
 
     /**

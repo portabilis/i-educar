@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\SoftDeletes\LegacySoftDeletes;
+use App\Traits\HasInstitution;
 use App\Traits\HasLegacyDates;
 use App\Traits\HasLegacyUserAction;
 use Illuminate\Database\Eloquent\Builder;
@@ -12,6 +13,7 @@ class LegacyRole extends LegacyModel
     use LegacySoftDeletes;
     use HasLegacyDates;
     use HasLegacyUserAction;
+    use HasInstitution;
 
     protected $table = 'pmieducar.funcao';
 
@@ -21,7 +23,6 @@ class LegacyRole extends LegacyModel
         'nm_funcao',
         'abreviatura',
         'professor',
-        'ref_cod_instituicao',
     ];
 
     public function scopeAtivo(Builder $query): Builder
