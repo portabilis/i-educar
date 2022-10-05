@@ -5,13 +5,11 @@ namespace Tests\Unit\Eloquent;
 use App\Models\City;
 use App\Models\Country;
 use App\Models\State;
-use Database\Factories\CityFactory;
 use Database\Factories\StateFactory;
 use Tests\EloquentTestCase;
 
 class StateTest extends EloquentTestCase
 {
-
     protected $relations = [
         'country' => Country::class
     ];

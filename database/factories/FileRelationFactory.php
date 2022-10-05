@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\FileRelation;
-use App\Models\LegacyIndividual;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class FileRelationFactory extends Factory

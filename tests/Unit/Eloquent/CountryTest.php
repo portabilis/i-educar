@@ -28,5 +28,4 @@ class CountryTest extends EloquentTestCase
         $this->assertCount(1, $this->country->states);
         $this->assertInstanceOf(State::class, $this->country->states->first());
     }
-
 }

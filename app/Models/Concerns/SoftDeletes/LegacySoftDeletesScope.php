@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
 
-class LegacySoftDeletesScope implements Scope {
-
+class LegacySoftDeletesScope implements Scope
+{
     /**
      * All of the extensions to be added to the builder.
      *
@@ -19,11 +19,12 @@ class LegacySoftDeletesScope implements Scope {
      * Apply the scope to a given Eloquent query builder.
      *
      * @param Builder $builder
-     * @param Model $model
+     * @param Model   $model
      *
      * @return void
      */
-    public function apply(Builder $builder, Model $model) {
+    public function apply(Builder $builder, Model $model)
+    {
         $builder->where($model->getQualifiedDeletedAtColumn(), 1);
     }
 
@@ -34,7 +35,8 @@ class LegacySoftDeletesScope implements Scope {
      *
      * @return void
      */
-    public function extend(Builder $builder) {
+    public function extend(Builder $builder)
+    {
         foreach ($this->extensions as $extension) {
             $this->{"add{$extension}"}($builder);
         }
@@ -55,7 +57,8 @@ class LegacySoftDeletesScope implements Scope {
      *
      * @return string
      */
-    protected function getDeletedAtColumn(Builder $builder) {
+    protected function getDeletedAtColumn(Builder $builder)
+    {
         if (count((array) $builder->getQuery()->joins) > 0) {
             return $builder->getModel()->getQualifiedDeletedAtColumn();
         }
@@ -70,7 +73,8 @@ class LegacySoftDeletesScope implements Scope {
      *
      * @return void
      */
-    protected function addRestore(Builder $builder) {
+    protected function addRestore(Builder $builder)
+    {
         $builder->macro('restore', function (Builder $builder) {
             $builder->withTrashed();
 
@@ -85,9 +89,10 @@ class LegacySoftDeletesScope implements Scope {
      *
      * @return void
      */
-    protected function addWithTrashed(Builder $builder) {
+    protected function addWithTrashed(Builder $builder)
+    {
         $builder->macro('withTrashed', function (Builder $builder, $withTrashed = true) {
-            if ( ! $withTrashed) {
+            if (! $withTrashed) {
                 return $builder->withoutTrashed();
             }
 
@@ -102,7 +107,8 @@ class LegacySoftDeletesScope implements Scope {
      *
      * @return void
      */
-    protected function addWithoutTrashed(Builder $builder) {
+    protected function addWithoutTrashed(Builder $builder)
+    {
         $builder->macro('withoutTrashed', function (Builder $builder) {
             $model = $builder->getModel();
             $builder->withoutGlobalScope($this)->where($model->getQualifiedDeletedAtColumn(), 1);
@@ -118,7 +124,8 @@ class LegacySoftDeletesScope implements Scope {
      *
      * @return void
      */
-    protected function addOnlyTrashed(Builder $builder) {
+    protected function addOnlyTrashed(Builder $builder)
+    {
         $builder->macro('onlyTrashed', function (Builder $builder) {
             $model = $builder->getModel();
             $builder->withoutGlobalScope($this)->where($model->getQualifiedDeletedAtColumn(), 0);

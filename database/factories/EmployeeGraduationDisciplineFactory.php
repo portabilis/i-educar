@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\EmployeeGraduation;
 use App\Models\EmployeeGraduationDiscipline;
 use Illuminate\Database\Eloquent\Factories\Factory;
 

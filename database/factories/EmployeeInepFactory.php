@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Employee;
 use App\Models\EmployeeInep;
 use Illuminate\Database\Eloquent\Factories\Factory;
 

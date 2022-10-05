@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\EmployeeGraduation;
-use App\Models\LegacyEmployee;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class EmployeeGraduationFactory extends Factory

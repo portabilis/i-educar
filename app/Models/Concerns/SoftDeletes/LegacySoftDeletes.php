@@ -2,7 +2,6 @@
 
 namespace App\Models\Concerns\SoftDeletes;
 
-
 use Closure;
 use Illuminate\Database\Query\Builder;
 
@@ -11,8 +10,8 @@ use Illuminate\Database\Query\Builder;
  * @method static static|\Illuminate\Database\Eloquent\Builder|Builder onlyTrashed()
  * @method static static|\Illuminate\Database\Eloquent\Builder|Builder withoutTrashed()
  */
-trait LegacySoftDeletes {
-
+trait LegacySoftDeletes
+{
     /**
      * Indicates if the model is currently force deleting.
      *
@@ -25,7 +24,8 @@ trait LegacySoftDeletes {
      *
      * @return void
      */
-    public static function bootLegacySoftDeletes(): void {
+    public static function bootLegacySoftDeletes(): void
+    {
         static::addGlobalScope(new LegacySoftDeletesScope());
     }
 
@@ -36,7 +36,8 @@ trait LegacySoftDeletes {
      *
      * @return void
      */
-    public static function restoring($callback): void {
+    public static function restoring($callback): void
+    {
         static::registerModelEvent('restoring', $callback);
     }
 
@@ -47,7 +48,8 @@ trait LegacySoftDeletes {
      *
      * @return void
      */
-    public static function restored($callback) {
+    public static function restored($callback)
+    {
         static::registerModelEvent('restored', $callback);
     }
 
@@ -58,7 +60,8 @@ trait LegacySoftDeletes {
      *
      * @return void
      */
-    public static function forceDeleted($callback) {
+    public static function forceDeleted($callback)
+    {
         static::registerModelEvent('forceDeleted', $callback);
     }
 
@@ -82,7 +85,8 @@ trait LegacySoftDeletes {
      *
      * @return string
      */
-    public function getDeletedAtColumn() {
+    public function getDeletedAtColumn()
+    {
         return 'ativo';
     }
 
@@ -91,7 +95,8 @@ trait LegacySoftDeletes {
      *
      * @return bool|null
      */
-    public function forceDelete() {
+    public function forceDelete()
+    {
         $this->forceDeleting = true;
 
         return tap($this->delete(), function ($deleted) {
@@ -108,7 +113,8 @@ trait LegacySoftDeletes {
      *
      * @return bool|null
      */
-    public function restore() {
+    public function restore()
+    {
         // If the restoring event does not return false, we will proceed with this
         // restore operation. Otherwise, we bail out so the developer will stop
         // the restore totally. We will clear the deleted timestamp and save.
@@ -135,7 +141,8 @@ trait LegacySoftDeletes {
      *
      * @return bool
      */
-    public function trashed() {
+    public function trashed()
+    {
         return $this->{$this->getDeletedAtColumn()} === 0;
     }
 
@@ -144,7 +151,8 @@ trait LegacySoftDeletes {
      *
      * @return bool
      */
-    public function isForceDeleting() {
+    public function isForceDeleting()
+    {
         return $this->forceDeleting;
     }
 
@@ -153,7 +161,8 @@ trait LegacySoftDeletes {
      *
      * @return string
      */
-    public function getQualifiedDeletedAtColumn() {
+    public function getQualifiedDeletedAtColumn()
+    {
         return $this->qualifyColumn($this->getDeletedAtColumn());
     }
 
@@ -162,7 +171,8 @@ trait LegacySoftDeletes {
      *
      * @return mixed
      */
-    protected function performDeleteOnModel() {
+    protected function performDeleteOnModel()
+    {
         if ($this->forceDeleting) {
             $this->exists = false;
 
@@ -177,8 +187,8 @@ trait LegacySoftDeletes {
      *
      * @return void
      */
-    protected function runSoftDelete() {
-
+    protected function runSoftDelete()
+    {
         $query = $this->setKeysForSaveQuery($this->newModelQuery());
 
         $time = $this->freshTimestamp();

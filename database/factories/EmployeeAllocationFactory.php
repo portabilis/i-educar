@@ -2,9 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Employee;
 use App\Models\EmployeeAllocation;
-use App\Models\LegacyEmployeeRole;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class EmployeeAllocationFactory extends Factory

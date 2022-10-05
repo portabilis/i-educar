@@ -4,9 +4,7 @@ namespace Tests\Unit\Eloquent;
 
 use App\Models\Employee;
 use App\Models\EmployeeInep;
-use App\Models\LegacyIndividual;
 use App\Models\LegacyPerson;
-use App\Models\LegacySchoolingDegree;
 use Database\Factories\EmployeeFactory;
 use Database\Factories\EmployeeInepFactory;
 use Tests\EloquentTestCase;
