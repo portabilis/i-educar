@@ -127,12 +127,10 @@
         "post-install-cmd": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
             "php -r \"system('cp .github/hooks/pre-commit .git/hooks/pre-commit');\"",
-            "php -r \"system('cp .github/hooks/pre-push .git/hooks/pre-push');\"",
             "chmod ug+x .git/hooks/*"
         ],
         "post-update-cmd": [
             "php -r \"system('cp .github/hooks/pre-commit .git/hooks/pre-commit');\"",
-            "php -r \"system('cp .github/hooks/pre-push .git/hooks/pre-push');\"",
             "chmod ug+x .git/hooks/*"
         ],
         "post-create-project-cmd": [
