@@ -1201,19 +1201,6 @@ class clsPmieducarTurma extends Model
         return Portabilis_Utils_Database::fetchPreparedQuery($sql, $params);
     }
 
-    public function updateInep($codigo_inep_educacenso)
-    {
-        if ($this->cod_turma) {
-            $db = new clsBanco();
-            $db->Consulta("DELETE FROM modules.educacenso_cod_turma WHERE cod_turma = '{$this->cod_turma}'");
-
-            if ($codigo_inep_educacenso) {
-                $db->Consulta("INSERT INTO modules.educacenso_cod_turma (cod_turma, cod_turma_inep, created_at)
-                           VALUES ('{$this->cod_turma}', '{$codigo_inep_educacenso}', NOW());");
-            }
-        }
-    }
-
     public function getInep()
     {
         if ($this->cod_turma) {
