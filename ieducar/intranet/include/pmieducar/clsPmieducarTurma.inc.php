@@ -1603,24 +1603,6 @@ class clsPmieducarTurma extends Model
         return false;
     }
 
-    /**
-     * Retorna um array com os dados de um registro
-     *
-     * @return array
-     */
-    public function existe()
-    {
-        if (is_numeric($this->cod_turma)) {
-            $db = new clsBanco();
-            $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE cod_turma = '{$this->cod_turma}'");
-            $db->ProximoRegistro();
-
-            return $db->Tupla();
-        }
-
-        return false;
-    }
-
     public function checaAnoLetivoEmAndamento()
     {
         if (is_numeric($this->cod_turma)) {
