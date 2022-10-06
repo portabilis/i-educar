@@ -1,6 +1,7 @@
 <?php
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -12,8 +13,8 @@ return new class extends clsCadastro {
     {
         $retorno = 'Novo';
 
-        $this->ref_cod_matricula=$_GET['ref_cod_matricula'];
-        $this->ref_cod_aluno=$_GET['ref_cod_aluno'];
+        $this->ref_cod_matricula = $_GET['ref_cod_matricula'];
+        $this->ref_cod_aluno = $_GET['ref_cod_aluno'];
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
@@ -80,6 +81,15 @@ return new class extends clsCadastro {
                 return false;
             }
         }
+        
+        $frequencia = new clsModulesFrequencia();
+        $dataFrequencia = $frequencia->selectDataFrequenciaByTurma($_GET['turma']);
+       
+        if ($obj_matricula->data_cancel <= $dataFrequencia['data']) {
+            $this->mensagem = 'Existe(m) frequência(s) registrada(s) após a data solicitada <br>';
+
+            return false;
+        }
 
         if ($obj_matricula->edita()) {
             if ($obj_matricula->cadastraObservacaoFalecido($this->observacao)) {
@@ -89,7 +99,7 @@ return new class extends clsCadastro {
                 foreach ($enturmacoes as $enturmacao) {
                     $enturmacao = new clsPmieducarMatriculaTurma($this->ref_cod_matricula, $enturmacao['ref_cod_turma'], $this->pessoa_logada, null, null, null, 0, null, $enturmacao['sequencial']);
 
-                    if (! $enturmacao->edita()) {
+                    if (!$enturmacao->edita()) {
                         $this->mensagem = 'N&atilde;o foi poss&iacute;vel desativar as enturma&ccedil;&otilde;es da matr&iacute;cula.';
 
                         return false;
@@ -99,7 +109,7 @@ return new class extends clsCadastro {
                 }
 
                 $notaAluno = (new Avaliacao_Model_NotaAlunoDataMapper())
-                                    ->findAll(['id'], ['matricula_id' => $obj_matricula->cod_matricula])[0] ?? null;
+                    ->findAll(['id'], ['matricula_id' => $obj_matricula->cod_matricula])[0] ?? null;
 
                 if (!empty($notaAluno)) {
                     (new Avaliacao_Model_NotaComponenteMediaDataMapper())
