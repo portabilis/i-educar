@@ -1020,4 +1020,26 @@ class clsModulesFrequencia extends Model {
         return false;
     }
 
+    public function selectDataFrequenciaByTurma($turma_aluno)
+    {
+        if ($turma_aluno) {
+            $db = new clsBanco();
+
+            $sql = "
+                 SELECT data
+                 FROM
+                     modules.frequencia
+                 WHERE ref_cod_turma = $turma_aluno
+                 ORDER BY data DESC LIMIT 1
+             ";
+
+            $db->Consulta($sql);
+            $db->ProximoRegistro();
+
+            return $db->Tupla();
+        }
+
+        return false;
+    }
+
 }
