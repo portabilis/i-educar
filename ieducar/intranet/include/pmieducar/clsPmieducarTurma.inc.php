@@ -673,28 +673,6 @@ class clsPmieducarTurma extends Model
     }
 
     /**
-     * Retorna o menor modulo dos alunos matriculados nessa turma
-     *
-     * @return bool
-     */
-    public function moduloMinimo()
-    {
-        if (is_numeric($this->cod_turma)) {
-            $db = new clsBanco();
-
-            // verifica se ainda existe alguem no primeiro modulo
-            $modulo = $db->CampoUnico("
-                SELECT COALESCE(MIN(modulo),1) AS modulo
-                FROM pmieducar.v_matricula_matricula_turma
-                WHERE ref_cod_turma = '{$this->cod_turma}'
-                AND aprovado = 3 AND ativo = 1
-            ");
-
-            return $modulo;
-        }
-    }
-
-    /**
      * volta o maior modulo comum (antes do exame) permitido nessa turma
      *
      * @return unknown
