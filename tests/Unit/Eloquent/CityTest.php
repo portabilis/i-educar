@@ -4,7 +4,6 @@ namespace Tests\Unit\Eloquent;
 
 use App\Models\City;
 use App\Models\District;
-use Database\Factories\CityFactory;
 use Tests\EloquentTestCase;
 
 class CityTest extends EloquentTestCase

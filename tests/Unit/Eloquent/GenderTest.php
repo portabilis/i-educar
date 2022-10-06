@@ -2,15 +2,13 @@
 
 namespace Tests\Unit\Eloquent;
 
-use App\Models\City;
-use App\Models\District;
 use App\Models\Gender;
-use Database\Factories\CityFactory;
 use Tests\TestCase;
 
 class GenderTest extends TestCase
 {
-    public function test_get_array_values(){
+    public function test_get_array_values()
+    {
         $gender = new Gender();
         $genres = $gender->getDescriptiveValues();
 
