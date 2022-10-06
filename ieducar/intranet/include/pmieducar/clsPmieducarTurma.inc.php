@@ -1621,22 +1621,6 @@ class clsPmieducarTurma extends Model
         return false;
     }
 
-    /**
-     * Exclui um registro
-     *
-     * @return bool
-     */
-    public function excluir()
-    {
-        if (is_numeric($this->cod_turma) && is_numeric($this->ref_usuario_exc)) {
-            $this->ativo = 0;
-
-            return $this->edita();
-        }
-
-        return false;
-    }
-
     public function checaAnoLetivoEmAndamento()
     {
         if (is_numeric($this->cod_turma)) {
