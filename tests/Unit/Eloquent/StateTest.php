@@ -11,7 +11,8 @@ use Tests\EloquentTestCase;
 class StateTest extends EloquentTestCase
 {
     protected $relations = [
-        'country' => Country::class
+        'country' => Country::class,
+        'cities' => [City::class]
     ];
 
     /**
@@ -25,13 +26,7 @@ class StateTest extends EloquentTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->state = StateFactory::new()->hasCities()->create();
-    }
-
-    public function testRelationshipCities()
-    {
-        $this->assertCount(1, $this->state->cities);
-        $this->assertInstanceOf(City::class, $this->state->cities->first());
+        $this->state = $this->createNewModel();
     }
 
     public function testFindByAbbreviation()

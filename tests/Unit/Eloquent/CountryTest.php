@@ -9,23 +9,15 @@ use Tests\EloquentTestCase;
 
 class CountryTest extends EloquentTestCase
 {
+    protected $relations = [
+        'states' => [State::class]
+    ];
+
     /**
      * @return string
      */
     protected function getEloquentModelName()
     {
         return Country::class;
-    }
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->country = CountryFactory::new()->hasStates()->create();
-    }
-
-    public function testRelationshipStates()
-    {
-        $this->assertCount(1, $this->country->states);
-        $this->assertInstanceOf(State::class, $this->country->states->first());
     }
 }
