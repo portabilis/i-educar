@@ -2,7 +2,7 @@
 
 namespace App\Exceptions\Unification;
 
-use App\Models\LegacyIndividual;
+use App\Models\Individual;
 use App\Models\Student;
 use RuntimeException;
 
@@ -14,7 +14,7 @@ class InactiveMainUnification extends RuntimeException
             $message = 'O aluno está inativo ou foi unificado com outro aluno.';
         }
 
-        if ($unification->type == LegacyIndividual::class) {
+        if ($unification->type == Individual::class) {
             $message = 'A pessoa está inativa ou foi unificada com outra pessoa.';
         }
 

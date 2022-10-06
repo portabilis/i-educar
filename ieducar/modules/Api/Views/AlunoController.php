@@ -1,8 +1,8 @@
 <?php
 
 use App\Models\Educacenso\Registro30;
+use App\Models\Individual;
 use App\Models\LegacyDeficiency;
-use App\Models\LegacyIndividual;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolHistory;
 use App\Models\LegacyStudentBenefit;
@@ -231,7 +231,7 @@ class AlunoController extends ApiCoreController
      */
     private function validateDeficiencies()
     {
-        $deficiencias = array_filter((array)$this->getRequest()->deficiencias);
+        $deficiencias = array_filter((array) $this->getRequest()->deficiencias);
 
         $deficiencias = $this->replaceByEducacensoDeficiencies($deficiencias);
 
@@ -252,7 +252,7 @@ class AlunoController extends ApiCoreController
     private function validateBirthCertificate()
     {
         $usesBirthCertificate = $this->getRequest()->tipo_certidao_civil == CertificateType::BIRTH_NEW_FORMAT;
-        $individual = LegacyIndividual::find($this->getRequest()->pessoa_id);
+        $individual = Individual::find($this->getRequest()->pessoa_id);
         if (!$usesBirthCertificate || empty($this->getRequest()->certidao_nascimento) || !$individual || empty($individual->birthdate)) {
             return true;
         }
@@ -305,8 +305,8 @@ class AlunoController extends ApiCoreController
      */
     private function validateInepExam()
     {
-        $resources = array_filter((array)$this->getRequest()->recursos_prova_inep__);
-        $deficiencies = array_filter((array)$this->getRequest()->deficiencias);
+        $resources = array_filter((array) $this->getRequest()->recursos_prova_inep__);
+        $deficiencies = array_filter((array) $this->getRequest()->deficiencias);
 
         $deficiencies = $this->replaceByEducacensoDeficiencies($deficiencies);
 
@@ -538,7 +538,7 @@ class AlunoController extends ApiCoreController
         $aluno->cod_aluno = $id;
 
         $alunoEstadoId = mb_strtoupper($this->getRequest()->aluno_estado_id);
-        $alunoEstadoId = str_replace(['-', '.'], '', $alunoEstadoId);
+        $alunoEstadoId = str_replace(['-','.'], '', $alunoEstadoId);
 
         if (strlen($alunoEstadoId) < 10) {
             $mask['pattern'] = '"(.{3})(.{3})(.{3})"';
@@ -570,7 +570,7 @@ class AlunoController extends ApiCoreController
             $aluno->analfabeto = $this->getRequest()->alfabetizado ? 0 : 1;
         }
 
-        $aluno->emancipado = (bool)$this->getRequest()->emancipado;
+        $aluno->emancipado = (bool) $this->getRequest()->emancipado;
         $aluno->tipo_responsavel = $tiposResponsavel[$this->getRequest()->tipo_responsavel];
         $aluno->ref_usuario_exc = \Illuminate\Support\Facades\Auth::id();
 
@@ -1960,7 +1960,7 @@ class AlunoController extends ApiCoreController
             });
         });
 
-        return ['unificacoes' => $unificationsQuery->get(['main_id', 'duplicates_id', 'created_at', 'active'])->all()];
+        return  ['unificacoes' => $unificationsQuery->get(['main_id', 'duplicates_id', 'created_at', 'active'])->all()];
     }
 
     protected function dadosUnificacaoAlunos()

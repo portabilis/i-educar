@@ -2,7 +2,7 @@
 
 namespace iEducar\Modules\Unification;
 
-use App\Models\LegacyIndividual;
+use App\Models\Individual;
 use App\Models\LogUnification;
 
 class PersonLogUnification implements LogUnificationTypeInterface
@@ -28,7 +28,7 @@ class PersonLogUnification implements LogUnificationTypeInterface
      */
     public function getDuplicatedPeopleName(LogUnification $logUnification)
     {
-        return (array)json_decode($logUnification->duplicates_name);
+        return (array) json_decode($logUnification->duplicates_name);
     }
 
     /**
@@ -36,7 +36,7 @@ class PersonLogUnification implements LogUnificationTypeInterface
      */
     public static function getType()
     {
-        return LegacyIndividual::class;
+        return Individual::class;
     }
 
     public function undo(LogUnification $logUnification)

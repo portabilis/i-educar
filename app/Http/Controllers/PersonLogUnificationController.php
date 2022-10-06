@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\LegacyIndividual;
+use App\Models\Individual;
 use App\Models\LogUnification;
 use Illuminate\Http\Request;
 
@@ -17,7 +17,7 @@ class PersonLogUnificationController extends Controller
         $this->menu(9998878);
 
         $unificationsQuery = LogUnification::query()->with('main')
-            ->where('type', LegacyIndividual::class)
+            ->where('type', Individual::class)
             ->when($request->get('name'), function ($query, $name) {
                 $query->whereHas('personMain', function ($personQuery) use ($name) {
                     $personQuery->where('slug', 'ilike', '%' . $name . '%');
