@@ -648,31 +648,6 @@ class clsPmieducarTurma extends Model
     }
 
     /**
-     * Retorna os alunos matriculados nessa turma
-     *
-     * @return bool
-     */
-    public function matriculados()
-    {
-        $retorno = [];
-        if (is_numeric($this->cod_turma)) {
-            $db = new clsBanco();
-
-            $db->Consulta("SELECT cod_matricula FROM pmieducar.v_matricula_matricula_turma WHERE ref_cod_turma = '{$this->cod_turma}' AND ativo = 1 AND aprovado = 3");
-            if ($db->numLinhas()) {
-                while ($db->ProximoRegistro()) {
-                    list($matricula) = $db->Tupla();
-                    $retorno[$matricula] = $matricula;
-                }
-
-                return $retorno;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * volta o maior modulo comum (antes do exame) permitido nessa turma
      *
      * @return unknown
