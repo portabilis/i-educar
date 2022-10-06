@@ -68,6 +68,7 @@ abstract class EloquentTestCase extends TestCase
      * Create a new Eloquent model.
      *
      * @return Model
+     *
      * @see Model::save()
      *
      */
@@ -115,6 +116,7 @@ abstract class EloquentTestCase extends TestCase
      * Delete a Eloquent model.
      *
      * @return void
+     *
      * @throws Exception
      *
      */
