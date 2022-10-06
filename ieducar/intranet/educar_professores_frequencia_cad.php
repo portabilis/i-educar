@@ -562,6 +562,16 @@ return new class extends clsCadastro {
             );
 
             $obj->edita();
+        } else {
+            $obj = new clsModulesComponenteMinistrado(
+                null,
+                $this->id,
+                $this->atividades,
+                null,
+                $this->conteudos,
+            );
+
+            $obj->cadastra();
         }
 
 
