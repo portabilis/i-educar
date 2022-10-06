@@ -4,9 +4,9 @@ namespace App\Models\Concerns\SoftDeletes;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Scope;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class LegacySoftDeletesScope implements Scope
+class LegacySoftDeletesScope extends SoftDeletingScope
 {
     /**
      * All of the extensions to be added to the builder.
@@ -19,13 +19,13 @@ class LegacySoftDeletesScope implements Scope
      * Apply the scope to a given Eloquent query builder.
      *
      * @param Builder $builder
-     * @param Model   $model
+     * @param Model $model
      *
      * @return void
      */
     public function apply(Builder $builder, Model $model)
     {
-        $builder->where($model->getQualifiedDeletedAtColumn(), 1);
+        $builder->withoutGlobalScope(SoftDeletingScope::class)->where($model->getQualifiedDeletedAtColumn(), 1);
     }
 
     /**
@@ -59,7 +59,7 @@ class LegacySoftDeletesScope implements Scope
      */
     protected function getDeletedAtColumn(Builder $builder)
     {
-        if (count((array) $builder->getQuery()->joins) > 0) {
+        if (count((array)$builder->getQuery()->joins) > 0) {
             return $builder->getModel()->getQualifiedDeletedAtColumn();
         }
 
@@ -92,7 +92,7 @@ class LegacySoftDeletesScope implements Scope
     protected function addWithTrashed(Builder $builder)
     {
         $builder->macro('withTrashed', function (Builder $builder, $withTrashed = true) {
-            if (! $withTrashed) {
+            if (!$withTrashed) {
                 return $builder->withoutTrashed();
             }
 

@@ -3,6 +3,7 @@
 namespace App\Models\Concerns\SoftDeletes;
 
 use Closure;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 
 /**
@@ -12,12 +13,8 @@ use Illuminate\Database\Query\Builder;
  */
 trait LegacySoftDeletes
 {
-    /**
-     * Indicates if the model is currently force deleting.
-     *
-     * @var bool
-     */
-    protected $forceDeleting = false;
+
+    use SoftDeletes;
 
     /**
      * Boot the soft deleting trait for a model.
@@ -27,42 +24,6 @@ trait LegacySoftDeletes
     public static function bootLegacySoftDeletes(): void
     {
         static::addGlobalScope(new LegacySoftDeletesScope());
-    }
-
-    /**
-     * Register a "restoring" model event callback with the dispatcher.
-     *
-     * @param Closure|string $callback
-     *
-     * @return void
-     */
-    public static function restoring($callback): void
-    {
-        static::registerModelEvent('restoring', $callback);
-    }
-
-    /**
-     * Register a "restored" model event callback with the dispatcher.
-     *
-     * @param Closure|string $callback
-     *
-     * @return void
-     */
-    public static function restored($callback)
-    {
-        static::registerModelEvent('restored', $callback);
-    }
-
-    /**
-     * Register a "forceDeleted" model event callback with the dispatcher.
-     *
-     * @param Closure|string $callback
-     *
-     * @return void
-     */
-    public static function forceDeleted($callback)
-    {
-        static::registerModelEvent('forceDeleted', $callback);
     }
 
     /**
@@ -80,21 +41,11 @@ trait LegacySoftDeletes
         ]));
     }
 
-    /**
-     * Get the name of the "deleted at" column.
-     *
-     * @return string
-     */
     public function getDeletedAtColumn()
     {
         return 'ativo';
     }
 
-    /**
-     * Force a hard delete on a soft deleted model.
-     *
-     * @return bool|null
-     */
     public function forceDelete()
     {
         $this->forceDeleting = true;
@@ -108,11 +59,6 @@ trait LegacySoftDeletes
         });
     }
 
-    /**
-     * Restore a soft-deleted model instance.
-     *
-     * @return bool|null
-     */
     public function restore()
     {
         // If the restoring event does not return false, we will proceed with this
@@ -136,34 +82,9 @@ trait LegacySoftDeletes
         return $result;
     }
 
-    /**
-     * Determine if the model instance has been soft-deleted.
-     *
-     * @return bool
-     */
     public function trashed()
     {
         return $this->{$this->getDeletedAtColumn()} === 0;
-    }
-
-    /**
-     * Determine if the model is currently force deleting.
-     *
-     * @return bool
-     */
-    public function isForceDeleting()
-    {
-        return $this->forceDeleting;
-    }
-
-    /**
-     * Get the fully qualified "deleted at" column.
-     *
-     * @return string
-     */
-    public function getQualifiedDeletedAtColumn()
-    {
-        return $this->qualifyColumn($this->getDeletedAtColumn());
     }
 
     /**
@@ -182,11 +103,6 @@ trait LegacySoftDeletes
         return $this->runSoftDelete();
     }
 
-    /**
-     * Perform the actual delete query on this model instance.
-     *
-     * @return void
-     */
     protected function runSoftDelete()
     {
         $query = $this->setKeysForSaveQuery($this->newModelQuery());
