@@ -817,27 +817,6 @@ class clsPmieducarTurma extends Model
     }
 
     /**
-     * Retorna as disciplinas do exame
-     *
-     * @return bool
-     */
-    public function moduloExameDisciplina($verifica_aluno_possui_nota = false)
-    {
-        if (is_numeric($this->cod_turma)) {
-            $cod_curso = $this->getCurso();
-            $objCurso = new clsPmieducarCurso($cod_curso);
-            $detCurso = $objCurso->detalhe();
-
-            $modulos = $this->maxModulos();
-            $objNotaAluno = new clsPmieducarNotaAluno();
-
-            return $objNotaAluno->getDisciplinasExame($this->cod_turma, $modulos, $detCurso['media'], $verifica_aluno_possui_nota);
-        }
-
-        return false;
-    }
-
-    /**
      * volta o maior modulo comum (antes do exame) permitido nessa turma
      *
      * @return unknown
