@@ -10,7 +10,6 @@ use App\Models\Educacenso\Registro60;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyInstitution;
 use App\Models\LegacySchool;
-use App\Models\School;
 use App\Repositories\EducacensoRepository;
 use App\Services\SchoolClass\AvailableTimeService;
 use iEducar\Modules\Educacenso\Analysis\Register30CommonDataAnalysis;
@@ -57,7 +56,7 @@ class EducacensoAnaliseController extends ApiCoreController
     private function schoolIsActive()
     {
         $schoolId = $this->getRequest()->school_id;
-        $school = School::findOrFail($schoolId);
+        $school = LegacySchool::findOrFail($schoolId);
         $active = !in_array($school->situacao_funcionamento, ['2', '3']);
 
         return [
@@ -804,6 +803,7 @@ class EducacensoAnaliseController extends ApiCoreController
                     'linkPath' => "/intranet/educar_turma_lst.php?busca=S&ano={$ano}&ref_cod_escola={$escola}&ref_cod_curso={$turma->codCurso}&ref_cod_serie={$turma->codSerie}&nm_turma={$turma->nomeTurma}",
                     'fail' => true
                 ]];
+
                 break;
             } else {
                 $chavesTurmas[$chaveTurma] = true;
@@ -812,15 +812,19 @@ class EducacensoAnaliseController extends ApiCoreController
             switch ($turma->tipoAtendimento) {
                 case 0:
                     $nomeAtendimento = 'Não se aplica';
+
                     break;
                 case 1:
                     $nomeAtendimento = 'Classe hospitalar';
+
                     break;
                 case 2:
                     $nomeAtendimento = 'Unidade de internação socioeducativa';
+
                     break;
                 case 3:
                     $nomeAtendimento = 'Unidade prisional';
+
                     break;
             }
 
@@ -1012,24 +1016,28 @@ class EducacensoAnaliseController extends ApiCoreController
                             $opcoesEtapaEducacenso = '1, 2, 3, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 35, 36, 37, 38, 41 ou 56';
                             $valid = false;
                         }
+
                         break;
                     case ModalidadeCurso::EDUCACAO_ESPECIAL:
                         if (!in_array($turma->etapaEducacenso, [1, 2, 3, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 41, 56, 39, 40, 69, 70, 71, 72, 73, 74, 64, 67, 68])) {
                             $opcoesEtapaEducacenso = '1, 2, 3, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 41, 56, 39, 40, 69, 70, 71, 72, 73, 74, 64, 67 ou 68';
                             $valid = false;
                         }
+
                         break;
                     case ModalidadeCurso::EJA:
                         if (!in_array($turma->etapaEducacenso, [69, 70, 71, 72])) {
                             $opcoesEtapaEducacenso = '69, 70, 71 ou 72';
                             $valid = false;
                         }
+
                         break;
                     case ModalidadeCurso::EDUCACAO_PROFISSIONAL:
                         if (!in_array($turma->etapaEducacenso, [30, 31, 32, 33, 34, 39, 40, 73, 74, 64, 67, 68])) {
                             $opcoesEtapaEducacenso = '30, 31, 32, 33, 34, 39, 40, 73, 74, 64, 67 ou 68';
                             $valid = false;
                         }
+
                         break;
                 }
 
@@ -1052,12 +1060,14 @@ class EducacensoAnaliseController extends ApiCoreController
                             $opcoesEtapaEducacenso = '69, 70, 71 ou 72';
                             $valid = false;
                         }
+
                         break;
                     case App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA:
                         if (!in_array($turma->etapaEducacenso, [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 70, 71, 73, 74, 64, 67, 68])) {
                             $opcoesEtapaEducacenso = '25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 70, 71, 73, 74, 64, 67 ou 68';
                             $valid = false;
                         }
+
                         break;
                 }
 
@@ -1112,7 +1122,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 $mensagem[] = [
                     'text' => "<span class='avisos-educacenso'><b>Aviso não impeditivo:</b> Dados para formular o registro 20 da escola {$turma->nomeEscola} sujeito à valor inválido. Verificamos que a turma {$nomeTurma} é de formação geral básica e itinerário formativo, e a etapa de ensino é {$descricaoEtapa}, portanto você pode definir os itinerários dos alunos individualmente.",
                     'path' => '(Escola > Cadastros > Alunos > Visualizar > Itinerário formativo > Campo: Tipo do itinerário formativo)',
-                    'linkPath' => "/intranet/educar_aluno_lst.php",
+                    'linkPath' => '/intranet/educar_aluno_lst.php',
                     'fail' => false
                 ];
             }
@@ -1175,6 +1185,7 @@ class EducacensoAnaliseController extends ApiCoreController
                     'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
                     'fail' => true
                 ];
+
                 continue;
             }
 
@@ -1207,6 +1218,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 foreach ($componentes as $componente) {
                     if (empty($componente->codigo_educacenso)) {
                         $componenteNulo = $componente;
+
                         break;
                     }
 
