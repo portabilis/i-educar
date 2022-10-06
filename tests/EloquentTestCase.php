@@ -67,9 +67,9 @@ abstract class EloquentTestCase extends TestCase
     /**
      * Create a new Eloquent model.
      *
+     * @return Model
      * @see Model::save()
      *
-     * @return Model
      */
     protected function createNewModel()
     {
@@ -114,9 +114,9 @@ abstract class EloquentTestCase extends TestCase
     /**
      * Delete a Eloquent model.
      *
+     * @return void
      * @throws Exception
      *
-     * @return void
      */
     public function testDeleteUsingEloquent()
     {
@@ -168,7 +168,15 @@ abstract class EloquentTestCase extends TestCase
         $model = $factory->create();
 
         foreach ($this->relations as $relation => $class) {
-            $this->assertInstanceOf($class, $model->{$relation});
+            if (is_array($class)) {
+                $fake = 'has' . ucfirst($relation);
+                $model->$relation = $factory->{$fake}()->create()->$relation;
+
+                $this->assertCount(1, $model->$relation);
+                $this->assertInstanceOf($class[0], $model->$relation->first());
+            } else {
+                $this->assertInstanceOf($class, $model->{$relation});
+            }
         }
 
         $this->assertInstanceOf($this->getEloquentModelName(), $model);
