@@ -23,7 +23,7 @@ class LegacyGradeFactory extends Factory
             'descricao' => $this->faker->word(),
             'concluinte' => $this->faker->randomNumber(1),
             'ativo' => 1,
-            'importar_serie_pre_matricula' => $this->faker->boolean(),
+            'importar_serie_pre_matricula' => false,
             'dias_letivos' => $this->faker->numberBetween(100, 200),
         ];
     }
