@@ -31,17 +31,12 @@ class EmployeeTest extends EloquentTestCase
         return Employee::class;
     }
 
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->employee = EmployeeFactory::new()->create();
-        $this->employee->inep = EmployeeInepFactory::new()->create([
-            'cod_servidor' => $this->employee->cod_servidor,
-        ]);
-    }
-
     public function testRelationshipInep()
     {
-        $this->assertInstanceOf(EmployeeInep::class, $this->employee->inep);
+        $employee = EmployeeFactory::new()->create();
+        $employee->inep = EmployeeInepFactory::new()->create([
+            'cod_servidor' => $employee->cod_servidor,
+        ]);
+        $this->assertInstanceOf(EmployeeInep::class, $employee->inep);
     }
 }
