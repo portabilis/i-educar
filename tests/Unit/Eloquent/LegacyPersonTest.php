@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\App\Models;
 
-use App\Models\LegacyIndividual;
 use App\Models\LegacyPerson;
 use App\Models\LegacyPhone;
 use Tests\EloquentTestCase;

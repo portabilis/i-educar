@@ -7,12 +7,9 @@ use App\Models\LegacyEnrollment;
 use App\Models\LegacyLevel;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolClass;
-use App\Models\LegacySchoolClassGrade;
-use App\Models\LegacySchoolClassStage;
 use Database\Factories\LegacyEnrollmentFactory;
 use Database\Factories\LegacyRegistrationFactory;
 use Database\Factories\LegacySchoolClassFactory;
-use Illuminate\Support\Collection;
 use Tests\EloquentTestCase;
 
 class LegacySchoolClassTest extends EloquentTestCase

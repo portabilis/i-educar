@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Support\Database\DateSerializer;
-use App\User;
 use DateTime;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
