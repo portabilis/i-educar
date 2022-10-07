@@ -1,6 +1,7 @@
 <?php
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -32,8 +33,8 @@ return new class extends clsCadastro {
     {
         $retorno = 'Novo';
 
-        $this->ref_cod_matricula=$_GET['ref_cod_matricula'];
-        $this->ref_cod_aluno=$_GET['ref_cod_aluno'];
+        $this->ref_cod_matricula = $_GET['ref_cod_matricula'];
+        $this->ref_cod_aluno = $_GET['ref_cod_aluno'];
 
         $obj_permissoes = new clsPermissoes();
 
@@ -90,6 +91,7 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
 
+
         $tamanhoObs = strlen($this->observacao);
         if ($tamanhoObs > 300) {
             $this->mensagem = 'O campo observação deve conter no máximo 300 caracteres.<br>';
@@ -116,6 +118,15 @@ return new class extends clsCadastro {
             }
         }
 
+        $frequencia = new clsModulesFrequencia();
+        $dataFrequencia = $frequencia->selectDataFrequenciaByTurma($_GET['turma']);
+        
+        if ($obj_matricula->data_cancel <= $dataFrequencia['data']) {
+            $this->mensagem = 'Existe(m) frequência(s) registrada(s) após a data solicitada <br>';
+
+            return false;
+        }        
+
         if ($obj_matricula->edita()) {
             if ($obj_matricula->cadastraObs($this->observacao, $this->abandono_tipo)) {
                 $enturmacoes = new clsPmieducarMatriculaTurma();
@@ -127,7 +138,7 @@ return new class extends clsCadastro {
                     $detEnturmacao = $detEnturmacao['data_enturmacao'];
                     $enturmacao->data_enturmacao = $detEnturmacao;
 
-                    if (! $enturmacao->edita()) {
+                    if (!$enturmacao->edita()) {
                         $this->mensagem = 'N&atilde;o foi poss&iacute;vel desativar as enturma&ccedil;&otilde;es da matr&iacute;cula.';
 
                         return false;

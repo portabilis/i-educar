@@ -452,6 +452,7 @@ return new class extends clsCadastro {
             }
         }
 
+        $servidor_id = $this->pessoa_logada;
         $obj = new clsModulesFrequencia(
             null,
             null,
@@ -467,7 +468,7 @@ return new class extends clsCadastro {
             null,
             $this->fase_etapa,
             $this->justificativa,
-            null,
+            $servidor_id,
             $this->ordens_aulas
         );
 
@@ -561,6 +562,16 @@ return new class extends clsCadastro {
             );
 
             $obj->edita();
+        } else {
+            $obj = new clsModulesComponenteMinistrado(
+                null,
+                $this->id,
+                $this->atividades,
+                null,
+                $this->conteudos,
+            );
+
+            $obj->cadastra();
         }
 
 
