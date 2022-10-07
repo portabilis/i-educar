@@ -87,7 +87,9 @@ return new class extends clsDetalhe {
             $this->addDetalhe(
                 [
                     'Professor',
-                    $registro['detalhes']['professor']
+                    !empty($registro['detalhes']['cod_professor_registro'])
+                        ? $registro['detalhes']['professor_registro']
+                        : $registro['detalhes']['professor_turma']
                 ]
             );
         }
@@ -207,6 +209,11 @@ return new class extends clsDetalhe {
             } else {
                 $podeEditar = $data_agora >= $data['inicio'] && $data_agora <= $data['fim'];
             }
+
+            $podeEditar = $podeEditar &&
+                          ((!empty($registro['detalhes']['cod_professor_registro']) && $registro['detalhes']['cod_professor_registro'] == $this->pessoa_logada) ||
+                           empty($registro['detalhes']['cod_professor_registro']));
+
 
             if ($podeEditar)
                 $this->url_editar = 'educar_professores_frequencia_cad.php?id=' . $registro['detalhes']['id'];
