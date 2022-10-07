@@ -44,9 +44,16 @@ class DatabaseToCsvExporter implements ShouldQueue
      */
     public function handle(NotificationService $notification, DatabaseManager $manager)
     {
-
         $export = new ExportService($this->export, $notification, $manager);
 
         $export->execute();
+    }
+
+    public function tags(): array
+    {
+        return [
+            $this->export->getConnectionName(),
+            'csv-export'
+        ];
     }
 }

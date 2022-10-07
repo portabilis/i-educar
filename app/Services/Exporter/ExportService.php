@@ -7,14 +7,12 @@ use App\Exports\ExporterQueryExport;
 use App\Jobs\NotifyUserExporter;
 use App\Jobs\UpdateUrlExport;
 use App\Models\Exporter\Export;
-use App\Services\NotificationService;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Excel;
 
 class ExportService
 {
-    private string $disk;
     private string $connection;
     private string $filename;
     private EloquentExporter $exporter;
@@ -22,13 +20,11 @@ class ExportService
     private int $querySize;
 
     /**
-     * @param Export              $export
-     * @param NotificationService $notification
-     * @param DatabaseManager     $manager
+     * @param Export          $export
+     * @param DatabaseManager $manager
      */
     public function __construct(
         private Export              $export,
-        private NotificationService $notification,
         private DatabaseManager     $manager
     ) {
         $this->setExporter();
@@ -47,10 +43,10 @@ class ExportService
         //exporta a query
         $exporter = new ExporterQueryExport($this->manager, $this->connection, $this->export->model, $this->export->fields, $this->export->filters, $this->querySize);
         //guarda o arquivo no disco em jobs divididas e no final dispara outras jobs
-        $exporter->store($this->filename, $this->disk, $this->fileType)
+        $exporter->store($this->filename, writerType: $this->fileType)
             ->chain([
-                new UpdateUrlExport($this->export, $this->getUrl($this->filename)),
-                new NotifyUserExporter($this->export->user_id, $this->getMessage(), $this->getUrl($this->filename))
+                new UpdateUrlExport($this->export, $this->getUrl()),
+                new NotifyUserExporter($this->export->user_id, $this->getMessage(), $this->getUrl())
             ]);
     }
 
@@ -60,10 +56,7 @@ class ExportService
     private function setConnection(): void
     {
         $this->connection = $this->export->getConnectionName();
-        $this->disk = $this->connection;
-        $this->manager->setDefaultConnection(
-            $this->connection
-        );
+        $this->manager->setDefaultConnection($this->connection);
     }
 
     /**
@@ -71,7 +64,12 @@ class ExportService
      */
     private function setFilename(): void
     {
-        $this->filename = $this->transformTenantFilename($this->export);
+        $this->filename = sprintf(
+            '%s/csv/%s/%s',
+            $this->connection,
+            $this->export->hash,
+            $this->export->filename
+        );
     }
 
     /**
@@ -85,36 +83,11 @@ class ExportService
     }
 
     /**
-     * @param Export $export
-     *
      * @return string
      */
-    private function transformTenantFilename(Export $export): string
+    private function getUrl(): string
     {
-        return sprintf(
-            '%s/csv/%s/%s',
-            $export->getConnectionName(),
-            $export->hash,
-            $export->filename
-        );
-    }
-
-    /**
-     * @param string $filename
-     *
-     * @return string
-     */
-    private function getUrl(string $filename): string
-    {
-        return Storage::url($filename);
-    }
-
-    private function tags(): array
-    {
-        return [
-            $this->export->getConnectionName(),
-            'csv-export'
-        ];
+        return Storage::url($this->filename);
     }
 
     /**
