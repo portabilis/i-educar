@@ -6,7 +6,6 @@ use Tests\TestCase;
 
 class CommandsTest extends TestCase
 {
-
     public function test_console_command_inspire()
     {
         $this->artisan('inspire')->assertExitCode(0);
