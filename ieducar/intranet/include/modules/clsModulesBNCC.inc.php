@@ -1,6 +1,6 @@
 <?php
-
 use iEducar\Legacy\Model;
+use App\Models\BNCC;
 
 class clsModulesBNCC extends Model
 {

@@ -137,12 +137,22 @@ $selectOptionsComponente = [];
        foreach($bnccs as $bncc){
        
         $componente = ComponenteCurricular::find($bncc['componente_curricular_id']);
-        $series =  $obj_BNCC->lista_series($bncc['id']);
+        $bncc_serie = BNCC::find($bncc['id']);
+        $series[] =  $bncc_serie->serie_ids;
         $retorno = '<ul style="width: 200px">';
-       foreach($series as $serie){
-          $retorno .= '<li>'.$serie['serie'].'</li>';
+       foreach($series as $serie_id){
+        $limpa =  substr($serie_id, 1);
+        $limpa =  substr($limpa, 0, -1);
+
+        $array = explode(',',$limpa);
+        foreach($array  as $serie_id){
+        $serie = Serie::find($serie_id);
+          $retorno .= '<li>'.$serie->nm_serie.'</li>';
+        }
+          unset($series);
        }
        $retorno .= '</ul>';
+    
           $status= '';
           if($bncc['inativo']){
            $status = 'Inativo';

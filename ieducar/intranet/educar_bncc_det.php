@@ -33,11 +33,22 @@ return new class extends clsDetalhe {
         }
 
         $componente = ComponenteCurricular::find($bncc->componente_curricular_id);
-           $retorno ='<ul  class="list-group">';
-           foreach($bncc->series as $serie){
-           $retorno .= '<li  class="list-group-item">'.$serie->nm_serie.'</li>';
-           }
-           $retorno .= '</ul>';
+
+
+        $series[] =  $bncc->serie_ids;
+        $retorno = '<ul style="width: 200px">';
+       foreach($series as $serie_id){
+        $limpa =  substr($serie_id, 1);
+        $limpa =  substr($limpa, 0, -1);
+
+        $array = explode(',',$limpa);
+        foreach($array  as $serie_id){
+        $serie = Serie::find($serie_id);
+          $retorno .= '<li>'.$serie->nm_serie.'</li>';
+        }
+          unset($series);
+       }
+       $retorno .= '</ul>';
 
           
            $retorno_especificacoes ='<ol>';

@@ -177,31 +177,37 @@ return new class extends clsCadastro {
     public function Novo(){
         $data = BNCC::latest('id')->first();
         $id_bncc = $data->id + 1;
+
+
+        $retorno = '{';
+            $this->series_ids  = $_POST['custom'];
+            $contador = 0;
+            foreach ($this->series_ids as $serie_id ) {
+                if($contador>0){
+                    $retorno .= ', '.$serie_id;
+                }else{
+                    $retorno .= ''.$serie_id;  
+                }
+               
+                  $contador++;
+            }
+    
+          
+        
+        $retorno .= '}';
+
         $cadastrou =   BNCC::create( [
             'id' => $id_bncc,
             'habilidade' => $this->habilidade,
             'codigo' => $this->codigo_habilidade,
             'componente_curricular_id' => $this->componente_curricular_id,
-            'inativo' => $this->inativo
-
+            'inativo' => $this->inativo,
+            'serie_ids' => $retorno
           ]);
 
         
       //Recupera o id e cadastra na tabela intermediaria
         $bncc_id = $cadastrou->id;
-        $this->series_ids  = $_POST['custom'];
-        foreach ($this->series_ids as $serie_id ) {
-            $data = bnccSeries::latest('id')->first();
-            $id_bncc_series = $data->id + 1;
-            bnccSeries::create( [
-                'id' => $id_bncc_series,
-                'id_bncc' => $bncc_id,
-                'id_serie' => $serie_id
-
-            ] );
-
-
-        }
 
         $this->especficacoes_cad  = $_POST['especificacao_bncc'];
         foreach ($this->especficacoes_cad as $especficacao_text ) {
@@ -230,29 +236,34 @@ return new class extends clsCadastro {
 
     public function Editar()
     {
+        $retorno = '{';
+            $this->series_ids  = $_POST['custom'];
+            $contador = 0;
+            foreach ($this->series_ids as $serie_id ) {
+                if($contador>0){
+                    $retorno .= ', '.$serie_id;
+                }else{
+                    $retorno .= ''.$serie_id;  
+                }
+               
+                  $contador++;
+            }
+    
+          
+        
+        $retorno .= '}';
        
         BNCC::where('id', $_GET['id'])->update([
             'habilidade' => $this->habilidade,
             'codigo' => $this->codigo_habilidade,
             'componente_curricular_id' => $this->componente_curricular_id,
-            'inativo' => $this->inativo
+            'inativo' => $this->inativo,
+            'serie_ids' => $retorno
         ]);
        
-        bnccSeries::where('id_bncc', $_GET['id'])->delete();
+        
 
         $bncc_id = $_GET['id'];
-        $this->series_ids  = $_POST['custom'];
-        foreach ($this->series_ids as $serie_id ) {
-             $data = bnccSeries::latest('id')->first();
-            $id_bncc_series = $data->id + 1;
-            bnccSeries::create( [
-                'id' => $id_bncc_series,
-                'id_bncc' => $bncc_id,
-                'id_serie' => $serie_id
-
-            ] );
-
-        }
         EspecificacaoBncc::where('bncc_id', $_GET['id'])->delete();
 
         $this->especficacoes_cad  = $_POST['especificacao_bncc'];

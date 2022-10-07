@@ -24,6 +24,7 @@ class BNCC extends Model
         'codigo_habilidade',
         'componente_curricular_id',
         'inativo',
+        'serie_ids'
     
     ];
 
