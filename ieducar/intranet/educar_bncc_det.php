@@ -44,7 +44,11 @@ return new class extends clsDetalhe {
         $array = explode(',',$limpa);
         foreach($array  as $serie_id){
         $serie = Serie::find($serie_id);
-          $retorno .= '<li>'.$serie->nm_serie.'</li>';
+        if(empty($serie->nm_serie)){
+
+        }else{
+            $retorno .= '<li>'.$serie->nm_serie.'</li>';
+        }
         }
           unset($series);
        }
