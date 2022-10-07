@@ -54,7 +54,14 @@ return new class extends clsCadastro {
                 $this->atividades = $registro['planejamento_aula']['atividades'];
                 $this->conteudos = array_column($registro['planejamento_aula']['conteudos'], 'planejamento_aula_conteudo_id');
 
-                $this->fexcluir = $obj_permissoes->permissao_excluir(58, $this->pessoa_logada, 7);
+
+                $podeExcluir = (!empty($registro['detalhes']['cod_professor_registro']) && $registro['detalhes']['cod_professor_registro'] == $this->pessoa_logada) || empty($registro['detalhes']['cod_professor_registro']);
+
+                if ($podeExcluir) {
+                    $this->fexcluir = $obj_permissoes->permissao_excluir(58, $this->pessoa_logada, 7);
+                }
+
+
                 $retorno = 'Editar';
 
                 $this->titulo = 'Frequência - Edição';
