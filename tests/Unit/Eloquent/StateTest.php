@@ -22,18 +22,13 @@ class StateTest extends EloquentTestCase
         return State::class;
     }
 
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->state = $this->createNewModel();
-    }
-
     public function testFindByAbbreviation()
     {
-        $state = State::findByAbbreviation($this->state->abbreviation);
+        $state = $this->createNewModel();
+        $stateReturn = State::findByAbbreviation($state->abbreviation);
 
-        $this->assertInstanceOf(State::class, $state);
-        $this->assertArrayHasKey('abbreviation', $state->toArray());
-        $this->assertEquals($state->abbreviation, $this->state->abbreviation);
+        $this->assertInstanceOf(State::class, $stateReturn);
+        $this->assertArrayHasKey('abbreviation', $stateReturn->toArray());
+        $this->assertEquals($stateReturn->abbreviation, $state->abbreviation);
     }
 }
