@@ -49,7 +49,9 @@ return new class extends clsCadastro {
                 $this->bncc_especificacoes = array_column($registro['especificacoes'], 'id');
                 $this->ref_cod_componente_curricular_array = $registro['componentesCurriculas'];
 
-                if (!$this->copy) {
+                $podeExcluir = (!empty($registro['detalhes']['cod_professor_registro']) && $registro['detalhes']['cod_professor_registro'] == $this->pessoa_logada) || empty($registro['detalhes']['cod_professor_registro']);
+
+                if (!$this->copy && $podeExcluir) {
                     $this->fexcluir = $obj_permissoes->permissao_excluir(58, $this->pessoa_logada, 7);
                     $retorno = 'Editar';
 

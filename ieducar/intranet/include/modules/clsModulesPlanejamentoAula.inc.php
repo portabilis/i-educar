@@ -63,6 +63,8 @@ class clsModulesPlanejamentoAula extends Model {
                 ON (l.cod_modulo = q.ref_cod_modulo)
             JOIN modules.professor_turma as pt
                 ON (pt.turma_id = pa.ref_cod_turma)
+            LEFT JOIN cadastro.pessoa AS pe_registro
+                ON ( pe_registro.idpes = pa.servidor_id )
             JOIN cadastro.pessoa AS pe
                 ON ( pe.idpes = pt.servidor_id )
             JOIN modules.professor_turma_disciplina as ptd
@@ -80,6 +82,7 @@ class clsModulesPlanejamentoAula extends Model {
             pa.registro_adaptacao,
             pa.referencias,
             pa.fl_validado,
+            pa.servidor_id AS cod_professor_registro,
             i.nm_instituicao AS instituicao,
             j.fantasia AS escola,
             c.nm_curso AS curso,
@@ -89,8 +92,10 @@ class clsModulesPlanejamentoAula extends Model {
             l.nm_tipo AS etapa,
             pa.etapa_sequencial AS fase_etapa,
             pt.servidor_id,
-            pe.nome as professor,
-            s.cod_serie
+            pe.nome AS professor_turma,
+	        pe_registro.nome AS professor_registro,
+            s.cod_serie,
+            e.cod_escola
         ';
 
         if (is_numeric($id)) {

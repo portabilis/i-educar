@@ -217,6 +217,10 @@ return new class extends clsDetalhe {
                 $podeEditar = $data_agora >= $data['inicio'] && $data_agora <= $data['fim'];
             }
 
+            $podeEditar = $podeEditar &&
+                ((!empty($registro['detalhes']['cod_professor_registro']) && $registro['detalhes']['cod_professor_registro'] == $this->pessoa_logada) ||
+                    empty($registro['detalhes']['cod_professor_registro']));
+
              if ($podeEditar)
                  $this->url_editar = 'educar_professores_planejamento_de_aula_cad.php?id=' . $registro['detalhes']['id'];
 
