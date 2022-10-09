@@ -2,6 +2,14 @@ document.getElementById('ref_cod_servidor_lupa').onclick = function() {
     validaCampoServidor();
 }
 
+document.getElementById('ref_cod_servidor_substituto_1_lupa').onclick = function() {
+  validaCampoServidor();
+}
+
+document.getElementById('ref_cod_servidor_substituto_2_lupa').onclick = function() {
+  validaCampoServidor();
+}
+
 document.getElementById('ref_cod_escola').onchange = function() {
     getEscolaCurso();
 }
