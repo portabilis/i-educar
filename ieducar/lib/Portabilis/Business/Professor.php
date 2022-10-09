@@ -273,7 +273,7 @@ class Portabilis_Business_Professor
                 INNER JOIN modules.area_conhecimento ac
                 ON (cc.area_conhecimento_id = ac.id)
                 WHERE qh.ref_cod_turma = $1
-                AND qhh.ref_servidor = $2
+                AND (qhh.ref_servidor = $2 OR qhh.ref_cod_servidor_substituto_1 = $2 OR qhh.ref_cod_servidor_substituto_2 = $2)
                 AND qhh.ativo = 1
                 AND qh.ativo = 1
                 ORDER BY ac.secao, ac.nome, cc.nome
