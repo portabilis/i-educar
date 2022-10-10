@@ -2,7 +2,6 @@
 
 namespace App\Models\Concerns\SoftDeletes;
 
-use Closure;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 
@@ -13,7 +12,6 @@ use Illuminate\Database\Query\Builder;
  */
 trait LegacySoftDeletes
 {
-
     use SoftDeletes;
 
     /**
