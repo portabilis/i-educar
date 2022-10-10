@@ -70,6 +70,8 @@ class clsModulesFrequencia extends Model {
                     (ptd.componente_curricular_id = f.ref_componente_curricular OR f.ref_componente_curricular IS NULL))
             JOIN pmieducar.servidor se
                 ON (pt.servidor_id = se.cod_servidor)
+            LEFT JOIN cadastro.pessoa AS pe_registro
+                ON ( pe_registro.idpes = f.servidor_id )
             JOIN cadastro.pessoa AS pe
                 ON ( pe.idpes = pt.servidor_id )
         ";
@@ -79,6 +81,7 @@ class clsModulesFrequencia extends Model {
             f.data,
             f.ordens_aulas,
             f.fl_validado,
+            f.servidor_id AS cod_professor_registro,
             i.nm_instituicao AS instituicao,
             j.fantasia AS escola,
             c.nm_curso AS curso,
@@ -89,7 +92,8 @@ class clsModulesFrequencia extends Model {
             l.nm_tipo AS etapa,
             f.etapa_sequencial AS fase_etapa,
             pt.servidor_id AS cod_professor,
-            pe.nome AS professor
+            pe.nome AS professor_turma,
+            pe_registro.nome AS professor_registro
         ';
 
 
@@ -658,7 +662,6 @@ class clsModulesFrequencia extends Model {
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
-        //dump($sql);
 
         $this->_total = $db->CampoUnico(
             "SELECT
@@ -711,6 +714,7 @@ class clsModulesFrequencia extends Model {
                     t.cod_turma as ref_cod_turma,
                     f.ref_componente_curricular as ref_cod_componente_curricular,
                     f.ordens_aulas as ordens_aulas,
+                    f.servidor_id,
                     pe.nome as professor
                 FROM
                     {$this->_from}

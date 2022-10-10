@@ -5,7 +5,8 @@ use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
-return new class extends clsDetalhe {
+return new class extends clsDetalhe
+{
     public $titulo;
 
     public $ref_cod_matricula;
@@ -279,14 +280,29 @@ return new class extends clsDetalhe {
                 $data_transferencia = $det_transferencia['data_transferencia'];
             }
 
-            if ($registro['aprovado'] == 3 &&
+            if (
+                $registro['aprovado'] == 3 &&
                 (!is_array($lst_transferencia) && !isset($data_transferencia))
             ) {
 
                 // Verificar se tem permissao para executar cancelamento de matricula
                 if ($this->permissao_cancelar()) {
-                    $this->array_botao[] = 'Cancelar matrícula';
-                    $this->array_botao_url_script[] = "if(confirm(\"Deseja realmente cancelar esta matrícula?\"))go(\"educar_matricula_cad.php?cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
+                    $notaAluno = new clsModulesNotaAluno();
+                    $notaAlunoId = $notaAluno->selectNotaAlunoIdByMatricula($registro['cod_matricula']);
+
+                    $notaComponenteCurricular = new clsModulesNotaComponenteCurricular($notaAlunoId['id']);
+                    $resultNotaComponenteCurricular = $notaComponenteCurricular->existe();
+
+                    $parecerComponenteCurricular = new clsModulesParecerComponenteCurricular($notaAlunoId['id']);
+                    $resultParecerComponenteCurricular = $parecerComponenteCurricular->existe();
+
+                    if ($resultNotaComponenteCurricular || $resultParecerComponenteCurricular) {
+                        $this->array_botao[] = 'Cancelar matrícula';
+                        $this->array_botao_url_script[] = "(onclick=alert(\"Não é possível excluir. Aluno com nota ou parecer lançado!\"))";
+                    } else {
+                        $this->array_botao[] = 'Cancelar matrícula';
+                        $this->array_botao_url_script[] = "if(confirm(\"Deseja realmente cancelar esta matrícula?\"))go(\"educar_matricula_cad.php?cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
+                    }
                 }
 
                 $this->array_botao[] = 'Ocorrências disciplinares';
@@ -352,7 +368,8 @@ return new class extends clsDetalhe {
                     $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&ano={$registro['ano']}&escola={$escola_id}&curso={$curso_id}&serie={$serie_id}&turma={$turma_id}\")";
                 }
 
-                if ($registro['aprovado'] == 3 &&
+                if (
+                    $registro['aprovado'] == 3 &&
                     (!is_array($lst_transferencia) && !isset($data_transferencia))
                 ) {
                     if ($registro['formando'] == 0) {
@@ -385,13 +402,15 @@ return new class extends clsDetalhe {
                 $this->array_botao_url_script[] = "deleteAbandono({$registro['cod_matricula']})";
             }
 
-            if (!$existeSaidaEscola &&
+            if (
+                !$existeSaidaEscola &&
                 $verificaMatriculaUltimoAno &&
                 ($registro['aprovado'] == App_Model_MatriculaSituacao::APROVADO ||
                     $registro['aprovado'] == App_Model_MatriculaSituacao::REPROVADO ||
                     $registro['aprovado'] == App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA ||
                     $registro['aprovado'] == App_Model_MatriculaSituacao::APROVADO_PELO_CONSELHO ||
-                    $registro['aprovado'] == App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS)) {
+                    $registro['aprovado'] == App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS)
+            ) {
                 $this->array_botao[] = 'Saída da escola';
                 $this->array_botao_url_script[] = "go(\"educar_saida_escola_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&escola={$registro['ref_ref_cod_escola']}\");";
             }
