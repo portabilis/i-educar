@@ -155,7 +155,7 @@ class clsPmieducarEscolaAnoLetivo extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_ref_cod_escola = null, $int_ano = null, $int_ref_usuario_cad = null, $int_ref_usuario_exc = null, $int_andamento = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $str_andamento_in = null)
     {
@@ -244,7 +244,7 @@ class clsPmieducarEscolaAnoLetivo extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -282,7 +282,7 @@ class clsPmieducarEscolaAnoLetivo extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

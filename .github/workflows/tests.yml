@@ -67,13 +67,8 @@ jobs:
       - name: Install Dependencies
         run: composer new-install
 
+      - name: Prepare tests
+        run: php artisan legacy:create:tests
+
       - name: Unit tests
         run: vendor/bin/phpunit
-
-      - name: Integration tests
-        run: vendor/bin/phpunit --testsuite=Diario
-
-      - name: Page tests
-        run: |
-          php artisan legacy:create:tests
-          php artisan test --testsuite Pages

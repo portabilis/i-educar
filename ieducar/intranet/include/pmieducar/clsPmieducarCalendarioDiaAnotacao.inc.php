@@ -95,7 +95,7 @@ class clsPmieducarCalendarioDiaAnotacao extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_ref_dia = null, $int_ref_mes = null, $int_ref_ref_cod_calendario_ano_letivo = null, $int_ref_cod_calendario_anotacao = null, $is_ativo = null)
     {
@@ -158,7 +158,7 @@ class clsPmieducarCalendarioDiaAnotacao extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -176,7 +176,7 @@ class clsPmieducarCalendarioDiaAnotacao extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

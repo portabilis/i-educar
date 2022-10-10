@@ -11,25 +11,26 @@
     convertWarningsToExceptions="true"
     processIsolation="false"
     stopOnFailure="false"
-    defaultTestSuite="Unit,Feature">
+    defaultTestSuite="Feature,Pages,Diario,Unit">
   <coverage processUncoveredFiles="true">
     <include>
       <directory suffix=".php">./app</directory>
     </include>
   </coverage>
   <testsuites>
-    <testsuite name="Unit">
-      <directory suffix="Test.php">./tests/Unit</directory>
-    </testsuite>
+      <testsuite name="Diario">
+          <directory suffix="Test.php">./tests/Api</directory>
+      </testsuite>
     <testsuite name="Feature">
+      <directory suffix="Test.php">./tests/Extra</directory>
       <directory suffix="Test.php">./tests/Feature</directory>
     </testsuite>
     <testsuite name="Pages">
         <directory suffix="Test.php">./tests/Pages/</directory>
     </testsuite>
-    <testsuite name="Diario">
-      <directory suffix="Test.php">./tests/Api</directory>
-    </testsuite>
+      <testsuite name="Unit">
+          <directory suffix="Test.php">./tests/Unit</directory>
+      </testsuite>
   </testsuites>
   <php>
     <ini name="memory_limit" value="384M"/>

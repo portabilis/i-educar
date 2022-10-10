@@ -167,7 +167,7 @@ class clsPmieducarTipoUsuario extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista(
         $int_cod_tipo_usuario = null,
@@ -252,7 +252,7 @@ class clsPmieducarTipoUsuario extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -270,7 +270,7 @@ class clsPmieducarTipoUsuario extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

@@ -205,7 +205,7 @@ class clsModulesRotaTransporteEscolar extends Model
     /**
      * Retorna uma lista de registros filtrados de acordo com os parâmetros.
      *
-     * @return array
+     * @return array|false
      */
     public function lista(
         $cod_rota_transporte_escolar = null,
@@ -328,7 +328,7 @@ class clsModulesRotaTransporteEscolar extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -360,7 +360,7 @@ class clsModulesRotaTransporteEscolar extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

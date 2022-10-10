@@ -90,6 +90,6 @@ class LegacyDisciplineAcademicYear extends Pivot
      */
     public function getWorkloadAttribute()
     {
-        return $this->carga_horaria;
+        return (int) $this->carga_horaria;
     }
 }

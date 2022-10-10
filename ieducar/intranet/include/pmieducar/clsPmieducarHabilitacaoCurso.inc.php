@@ -81,7 +81,7 @@ class clsPmieducarHabilitacaoCurso extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_ref_cod_habilitacao = null, $int_ref_cod_curso = null)
     {
@@ -132,7 +132,7 @@ class clsPmieducarHabilitacaoCurso extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -150,7 +150,7 @@ class clsPmieducarHabilitacaoCurso extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {
