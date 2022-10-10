@@ -256,7 +256,7 @@ class clsPmieducarDispensaDisciplina extends Model
     /**
      * Retorna uma lista de registros filtrados de acordo com os parâmetros.
      *
-     * @return array
+     * @return array|false
      */
     public function lista(
         $int_ref_cod_matricula = null,
@@ -484,7 +484,7 @@ class clsPmieducarDispensaDisciplina extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -504,7 +504,7 @@ class clsPmieducarDispensaDisciplina extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

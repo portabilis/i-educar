@@ -122,7 +122,7 @@ class clsPmieducarArredondamento extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_ref_cod_curso = null, $int_sequencial = null, $int_valor = null, $int_valor_min = null, $int_valor_max = null)
     {
@@ -185,7 +185,7 @@ class clsPmieducarArredondamento extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -203,7 +203,7 @@ class clsPmieducarArredondamento extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

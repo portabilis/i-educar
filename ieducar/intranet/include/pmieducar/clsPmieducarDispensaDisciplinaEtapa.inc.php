@@ -91,7 +91,7 @@ class clsPmieducarDispensaDisciplinaEtapa extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista(
         $ref_cod_dispensa = null,
@@ -146,7 +146,7 @@ class clsPmieducarDispensaDisciplinaEtapa extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {
