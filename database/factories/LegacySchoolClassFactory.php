@@ -4,30 +4,18 @@ namespace Database\Factories;
 
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolCourse;
+use App\Models\LegacySchoolGrade;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacySchoolClassFactory extends Factory
 {
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
     protected $model = LegacySchoolClass::class;
 
-    /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
+    protected LegacySchoolGrade $schoolGrade;
+
     public function definition(): array
     {
-        $schoolGrade = LegacySchoolGradeFactory::new()->create();
-
-        LegacyEvaluationRuleGradeYearFactory::new()->create([
-            'serie_id' => $schoolGrade->grade,
-            'ano_letivo' => now()->year,
-        ]);
+        $schoolGrade = $this->getSchoolGrade();
 
         return [
             'ref_usuario_cad' => fn () => LegacyUserFactory::new()->unique()->make(),
@@ -78,6 +66,23 @@ class LegacySchoolClassFactory extends Factory
         });
     }
 
+    public function inGrades(array $grades): static
+    {
+        return $this->afterCreating(function (LegacySchoolClass $schoolClass) use ($grades) {
+            $schoolClass->update([
+                'multiseriada' => true,
+            ]);
+
+            foreach ($grades as $grade) {
+                LegacySchoolClassGradeFactory::new()->create([
+                    'escola_id' => $schoolClass->school,
+                    'serie_id' => $grade,
+                    'turma_id' => $schoolClass,
+                ]);
+            }
+        });
+    }
+
     public function isMulti(): static
     {
         return $this->afterCreating(function (LegacySchoolClass $schoolClass) {
@@ -114,5 +119,28 @@ class LegacySchoolClassFactory extends Factory
                 'turma_id' => $schoolClass,
             ]);
         });
+    }
+
+    public function getSchoolGrade(): LegacySchoolGrade
+    {
+        if (empty($this->schoolGrade)) {
+            $schoolGrade = LegacySchoolGradeFactory::new()->create();
+
+            LegacyEvaluationRuleGradeYearFactory::new()->create([
+                'serie_id' => $schoolGrade->grade,
+                'ano_letivo' => now()->year,
+            ]);
+
+            return $schoolGrade;
+        }
+
+        return $this->schoolGrade;
+    }
+
+    public function useSchoolGrade(LegacySchoolGrade $schoolGrade): static
+    {
+        $this->schoolGrade = $schoolGrade;
+
+        return $this;
     }
 }
