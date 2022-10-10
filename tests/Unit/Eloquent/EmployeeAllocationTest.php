@@ -2,14 +2,14 @@
 
 namespace Tests\Unit\Eloquent;
 
-use App\Models\City;
-use App\Models\District;
+use App\Models\EmployeeAllocation;
+use App\Models\LegacySchool;
 use Tests\EloquentTestCase;
 
-class CityTest extends EloquentTestCase
+class EmployeeAllocationTest extends EloquentTestCase
 {
     protected $relations = [
-        'districts' => [District::class],
+        'school' => LegacySchool::class,
     ];
 
     /**
@@ -17,6 +17,6 @@ class CityTest extends EloquentTestCase
      */
     protected function getEloquentModelName()
     {
-        return City::class;
+        return EmployeeAllocation::class;
     }
 }

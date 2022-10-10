@@ -2,14 +2,14 @@
 
 namespace Tests\Unit\Eloquent;
 
-use App\Models\City;
-use App\Models\District;
+use App\Models\File;
+use App\Models\FileRelation;
 use Tests\EloquentTestCase;
 
-class CityTest extends EloquentTestCase
+class FileTest extends EloquentTestCase
 {
     protected $relations = [
-        'districts' => [District::class],
+        'relations' => [FileRelation::class],
     ];
 
     /**
@@ -17,6 +17,6 @@ class CityTest extends EloquentTestCase
      */
     protected function getEloquentModelName()
     {
-        return City::class;
+        return File::class;
     }
 }

@@ -6,14 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class File extends Model
 {
+    /**
+     * @var string
+     */
+    protected $table = 'public.files';
+
     protected $fillable = [
         'url',
-        'type',
         'size',
         'original_name',
         'extension',
-        'created_at',
-        'updated_at',
     ];
 
     public function relations()

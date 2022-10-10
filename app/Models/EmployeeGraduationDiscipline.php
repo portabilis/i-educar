@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class EmployeeGraduationDiscipline extends Model
+class EmployeeGraduationDiscipline extends LegacyModel
 {
     public $timestamps = false;
+
+    protected $fillable = [
+        'name',
+    ];
 }
