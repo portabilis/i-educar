@@ -10,8 +10,6 @@ class CoreExt_Controller_Request implements CoreExt_Controller_Request_Interface
 
     /**
      * Construtor.
-     *
-     * @param array $options
      */
     public function __construct(array $options = [])
     {

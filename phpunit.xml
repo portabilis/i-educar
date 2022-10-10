@@ -22,6 +22,7 @@
           <directory suffix="Test.php">./tests/Api</directory>
       </testsuite>
     <testsuite name="Feature">
+      <directory suffix="Test.php">./tests/Extra</directory>
       <directory suffix="Test.php">./tests/Feature</directory>
     </testsuite>
     <testsuite name="Pages">

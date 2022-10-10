@@ -21,7 +21,7 @@ class CursoAlunoController extends ApiCoreController
                 $options[$curso['id']] = Portabilis_String_Utils::toUtf8($curso['nome']);
             }
 
-            return ['options' => $options];
+            return ['options' => array_filter($options)];
         }
     }
 
