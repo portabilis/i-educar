@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -89,7 +88,7 @@ class LegacyDisciplineExemption extends Model
 
     public function createdBy()
     {
-        return $this->belongsTo(User::class, 'ref_usuario_cad');
+        return $this->belongsTo(LegacyUser::class, 'ref_usuario_cad');
     }
 
     /**

@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Support\Database\DateSerializer;
-use App\User;
 use DateTime;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -156,7 +155,7 @@ class LegacyEnrollment extends Model
      */
     public function createdBy()
     {
-        return $this->belongsTo(User::class, 'ref_usuario_cad');
+        return $this->belongsTo(LegacyUser::class, 'ref_usuario_cad');
     }
 
     /**
@@ -166,7 +165,7 @@ class LegacyEnrollment extends Model
      */
     public function updatedBy()
     {
-        return $this->belongsTo(User::class, 'ref_usuario_exc');
+        return $this->belongsTo(LegacyUser::class, 'ref_usuario_exc');
     }
 
     public function getStudentId()
