@@ -108,7 +108,7 @@ class clsPmieducarBloqueioAnoLetivo extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($ref_cod_instituicao = null, $ref_ano = null)
     {
@@ -160,7 +160,7 @@ class clsPmieducarBloqueioAnoLetivo extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -178,7 +178,7 @@ class clsPmieducarBloqueioAnoLetivo extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

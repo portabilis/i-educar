@@ -159,7 +159,7 @@ class clsPmieducarTipoAvaliacao extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_cod_tipo_avaliacao = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_tipo = null, $date_data_cadastro = null, $date_data_exclusao = null, $int_ativo = null, $int_conceitual = null, $int_ref_cod_instituicao = null)
     {
@@ -230,7 +230,7 @@ class clsPmieducarTipoAvaliacao extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -248,7 +248,7 @@ class clsPmieducarTipoAvaliacao extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

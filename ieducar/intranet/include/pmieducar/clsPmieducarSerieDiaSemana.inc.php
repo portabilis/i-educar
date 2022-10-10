@@ -98,7 +98,7 @@ class clsPmieducarSerieDiaSemana extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_dia_semana = null, $int_ref_ref_cod_serie = null, $int_ref_ref_cod_escola = null)
     {
@@ -153,7 +153,7 @@ class clsPmieducarSerieDiaSemana extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -171,7 +171,7 @@ class clsPmieducarSerieDiaSemana extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

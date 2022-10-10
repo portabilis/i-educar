@@ -170,7 +170,7 @@ class clsPmieducarPreRequisito extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_cod_pre_requisito = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_schema_ = null, $str_tabela = null, $str_nome = null, $str_sql = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null)
     {
@@ -264,7 +264,7 @@ class clsPmieducarPreRequisito extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -282,7 +282,7 @@ class clsPmieducarPreRequisito extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

@@ -120,7 +120,7 @@ class clsPmieducarFaltas extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_ref_cod_matricula = null, $int_sequencial = null, $int_ref_usuario_cad = null, $int_falta = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null)
     {
@@ -202,7 +202,7 @@ class clsPmieducarFaltas extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -220,7 +220,7 @@ class clsPmieducarFaltas extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

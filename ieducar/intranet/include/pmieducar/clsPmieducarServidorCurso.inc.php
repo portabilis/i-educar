@@ -120,7 +120,7 @@ class clsPmieducarServidorCurso extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_cod_servidor_curso = null, $int_ref_cod_formacao = null, $date_data_conclusao_ini = null, $date_data_conclusao_fim = null, $date_data_registro_ini = null, $date_data_registro_fim = null, $str_diplomas_registros = null)
     {
@@ -191,7 +191,7 @@ class clsPmieducarServidorCurso extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -215,7 +215,7 @@ class clsPmieducarServidorCurso extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {
