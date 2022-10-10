@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\LegacySchoolClass;
+use App\Models\LegacySchoolCourse;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacySchoolClassFactory extends Factory
@@ -81,7 +82,7 @@ class LegacySchoolClassFactory extends Factory
     {
         return $this->afterCreating(function (LegacySchoolClass $schoolClass) {
             $schoolClass->update([
-                'multisseriada' => true,
+                'multiseriada' => true,
             ]);
 
             LegacySchoolClassGradeFactory::new()->create([
@@ -96,12 +97,20 @@ class LegacySchoolClassFactory extends Factory
     {
         return $this->afterCreating(function (LegacySchoolClass $schoolClass) {
             $schoolClass->update([
-                'multisseriada' => true,
+                'multiseriada' => true,
             ]);
+
+            # TODO works only 1 year
+            $schoolCourse = LegacySchoolCourse::query()
+                ->where('ref_cod_escola', $schoolClass->ref_ref_cod_escola)
+                ->where('ref_cod_curso', $schoolClass->ref_cod_curso)
+                ->first();
+
+            $schoolGrade = LegacySchoolGradeFactory::new()->useSchoolCourse($schoolCourse)->create();
 
             LegacySchoolClassGradeFactory::new()->create([
                 'escola_id' => $schoolClass->ref_ref_cod_escola,
-                'serie_id' => $schoolClass->ref_ref_cod_serie,
+                'serie_id' => $schoolGrade->ref_cod_serie,
                 'turma_id' => $schoolClass,
             ]);
         });

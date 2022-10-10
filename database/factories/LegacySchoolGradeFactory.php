@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\LegacySchoolCourse;
 use App\Models\LegacySchoolGrade;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -9,9 +10,11 @@ class LegacySchoolGradeFactory extends Factory
 {
     protected $model = LegacySchoolGrade::class;
 
+    protected LegacySchoolCourse $schoolCourse;
+
     public function definition(): array
     {
-        $schoolCourse = LegacySchoolCourseFactory::new()->create();
+        $schoolCourse = $this->getSchoolCourse();
 
         return [
             'ref_cod_escola' => $schoolCourse->school,
@@ -23,5 +26,21 @@ class LegacySchoolGradeFactory extends Factory
             'ativo' => 1,
             'anos_letivos' => $schoolCourse->anos_letivos,
         ];
+    }
+
+    public function useSchoolCourse(LegacySchoolCourse $schoolCourse): static
+    {
+        $this->schoolCourse = $schoolCourse;
+
+        return $this;
+    }
+
+    public function getSchoolCourse()
+    {
+        if (empty($this->schoolCourse)) {
+            return LegacySchoolCourseFactory::new()->create();
+        }
+
+        return $this->schoolCourse;
     }
 }
