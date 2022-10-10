@@ -117,7 +117,6 @@ class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract imple
     /**
      * Cria uma tabela HTML usando os valores passados para os métodos add*().
      *
-     * @param array $tableAttributes
      *
      * @return string
      */
@@ -243,7 +242,6 @@ class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract imple
     /**
      * Cria uma string de atributos HTML.
      *
-     * @param array $attributes
      *
      * @return string
      */

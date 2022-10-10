@@ -15,7 +15,7 @@ abstract class CoreExt_Session_Abstract implements CoreExt_Configurable, ArrayAc
     /**
      * @var CoreExt_Session_Storage_Interface
      */
-    protected $_sessionStorage = null;
+    protected $_sessionStorage;
 
     /**
      * @var array
@@ -24,8 +24,6 @@ abstract class CoreExt_Session_Abstract implements CoreExt_Configurable, ArrayAc
 
     /**
      * Construtor.
-     *
-     * @param array $options
      */
     public function __construct(array $options = [])
     {
@@ -92,8 +90,6 @@ abstract class CoreExt_Session_Abstract implements CoreExt_Configurable, ArrayAc
 
     /**
      * Setter.
-     *
-     * @param CoreExt_Session_Storage_Interface $storage
      */
     public function setSessionStorage(CoreExt_Session_Storage_Interface $storage)
     {
@@ -262,7 +258,7 @@ abstract class CoreExt_Session_Abstract implements CoreExt_Configurable, ArrayAc
     #[\ReturnTypeWillChange]
     public function key()
     {
-        $data = $this->getSessionData();
+        $this->getSessionData();
 
         return key($this->_sessionData);
     }
@@ -273,7 +269,7 @@ abstract class CoreExt_Session_Abstract implements CoreExt_Configurable, ArrayAc
     #[\ReturnTypeWillChange]
     public function next()
     {
-        $data = $this->getSessionData();
+        $this->getSessionData();
 
         next($this->_sessionData);
     }
@@ -284,7 +280,7 @@ abstract class CoreExt_Session_Abstract implements CoreExt_Configurable, ArrayAc
     #[\ReturnTypeWillChange]
     public function rewind()
     {
-        $data = $this->getSessionData();
+        $this->getSessionData();
 
         reset($this->_sessionData);
     }
@@ -297,6 +293,6 @@ abstract class CoreExt_Session_Abstract implements CoreExt_Configurable, ArrayAc
     {
         $key = key($this->_sessionData);
 
-        return isset($key) ? true : false;
+        return isset($key);
     }
 }
