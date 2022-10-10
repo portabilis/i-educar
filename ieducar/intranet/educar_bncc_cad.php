@@ -42,7 +42,12 @@ return new class extends clsCadastro {
             if ($bncc) {
                     $this->habilidade = $bncc->habilidade;
                     $this->codigo_habilidade = $bncc->codigo;
-                    $this->componente_curricular_id = $bncc->componente_curricular_id;
+                    if(empty($bncc->componente_curricular_id)){
+                        $this->componente_curricular_id = $bncc->campo_experiencia;
+                       }else{
+                        $this->componente_curricular_id = $bncc->componente_curricular_id;
+                       }
+                    
                     $this->inativo = $bncc->inativo;
                     $especificacao = EspecificacaoBncc::where('bncc_id', $bncc->id)->get();
                     //caso editar, popula a lista de especificações

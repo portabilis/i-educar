@@ -40,7 +40,7 @@ return new class extends clsListagem {
        foreach($componentes as $componente){
      
            $selectOptionsComponente[$componente['id']] = $componente['nome'];
-          ;
+          
         }
      
  
@@ -135,8 +135,12 @@ $selectOptionsComponente = [];
     
      
        foreach($bnccs as $bncc){
-       
+
+       if(empty($bncc['componente_curricular_id'])){
+        $componente = ComponenteCurricular::find($bncc['campo_experiencia']);
+       }else{
         $componente = ComponenteCurricular::find($bncc['componente_curricular_id']);
+       }
         $bncc_serie = BNCC::find($bncc['id']);
         $series[] =  $bncc_serie->serie_ids;
         $retorno = '<ul style="width: 200px">';

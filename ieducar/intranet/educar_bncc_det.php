@@ -32,8 +32,12 @@ return new class extends clsDetalhe {
             $this->simpleRedirect('educar_bncc_lst.php');
         }
 
-        $componente = ComponenteCurricular::find($bncc->componente_curricular_id);
-
+       
+        if(empty($bncc->componente_curricular_id)){
+            $componente = ComponenteCurricular::find($bncc->campo_experiencia);
+           }else{
+            $componente = ComponenteCurricular::find($bncc->componente_curricular_id);
+           }
 
         $series[] =  $bncc->serie_ids;
         $retorno = '<ul style="width: 200px">';
