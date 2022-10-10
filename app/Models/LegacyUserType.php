@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use App\Menu;
+use App\Traits\HasLegacyDates;
 use App\User;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection as SupportCollection;
@@ -19,8 +19,10 @@ use Illuminate\Support\Collection as SupportCollection;
  * @property Collection|Menu[] $menus
  * @property Collection|User[] $users
  */
-class LegacyUserType extends Model
+class LegacyUserType extends LegacyModel
 {
+    use HasLegacyDates;
+
     public const LEVEL_ADMIN = 1;
     public const LEVEL_INSTITUTIONAL = 2;
     public const LEVEL_SCHOOLING = 4;
@@ -50,7 +52,6 @@ class LegacyUserType extends Model
         'nm_tipo',
         'descricao',
         'ref_funcionario_cad',
-        'data_cadastro',
     ];
 
     /**

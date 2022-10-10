@@ -3,16 +3,12 @@
 namespace App\Models;
 
 use App\Traits\Ativo;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasLegacyDates;
 
-class LegacyRegistrationDisciplinaryOccurrenceType extends Model
+class LegacyRegistrationDisciplinaryOccurrenceType extends LegacyModel
 {
-    use HasFactory;
     use Ativo;
-
-    public const CREATED_AT = 'data_cadastro';
-    public const UPDATED_AT = null;
+    use HasLegacyDates;
 
     /**
      * @var string

@@ -32,7 +32,7 @@ class LegacyDisciplineAcademicYear extends Pivot
      *
      * @var string[]
      */
-    public $legacy = [
+    public array $legacy = [
         'id' => 'componente_curricular_id',
         'workload' => 'carga_horaria'
     ];
