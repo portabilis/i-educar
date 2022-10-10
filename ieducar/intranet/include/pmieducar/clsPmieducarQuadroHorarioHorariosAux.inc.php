@@ -218,7 +218,7 @@ class clsPmieducarQuadroHorarioHorariosAux extends Model
      * @param string time_hora_final_fim
      * @param string str_identificador
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_ref_cod_disciplina = null, $int_ref_cod_escola = null, $int_ref_cod_serie = null, $int_ref_cod_instituicao_servidor = null, $int_ref_servidor = null, $int_dia_semana = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $str_identificador = null, $str_data_cadastro_ini = null, $str_data_cadastro_fim = null)
     {
@@ -314,7 +314,7 @@ class clsPmieducarQuadroHorarioHorariosAux extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {

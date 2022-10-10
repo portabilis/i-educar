@@ -161,7 +161,7 @@ class clsPmieducarEscolaCurso extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_ref_cod_escola = null, $int_ref_cod_curso = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $busca_nome_curso = false, $int_ref_cod_instituicao = null, $bool_curso_ativo = null)
     {
@@ -256,7 +256,7 @@ class clsPmieducarEscolaCurso extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -274,7 +274,7 @@ class clsPmieducarEscolaCurso extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

@@ -35,7 +35,7 @@ class clsPmieducarBackup extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista(
         $idBackup = null,

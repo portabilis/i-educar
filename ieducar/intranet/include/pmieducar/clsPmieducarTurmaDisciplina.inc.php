@@ -95,7 +95,7 @@ class clsPmieducarTurmaDisciplina extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_ref_cod_turma = null, $int_ref_cod_disciplina = null, $int_ref_cod_escola = null, $int_ref_cod_serie = null, $str_disciplina_not_in = null)
     {
@@ -159,7 +159,7 @@ class clsPmieducarTurmaDisciplina extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -177,7 +177,7 @@ class clsPmieducarTurmaDisciplina extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

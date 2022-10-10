@@ -9,7 +9,7 @@ class CoreExt_Controller_Dispatcher_Strategy_PageStrategy extends CoreExt_Contro
      *
      * @var CoreExt_Controller_Interface
      */
-    protected $_controller = null;
+    protected $_controller;
 
     /**
      * Construtor.

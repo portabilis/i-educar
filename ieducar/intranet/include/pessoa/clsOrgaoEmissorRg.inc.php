@@ -78,7 +78,7 @@ class clsOrgaoEmissorRg
     /**
      * Exibe uma lista baseada nos parametros de filtragem passados
      *
-     * @return Array
+     * @return array|false
      */
     public function lista($str_sigla = false, $str_descricao = false, $str_situacao = false, $int_limite_ini = 0, $int_limite_qtd = false, $str_orderBy = false)
     {
@@ -128,7 +128,7 @@ class clsOrgaoEmissorRg
     /**
      * Retorna um array com os detalhes do objeto
      *
-     * @return Array
+     * @return array|false
      */
     public function detalhe()
     {

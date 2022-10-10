@@ -395,8 +395,7 @@ class Portabilis_View_Helper_Inputs
         }
 
         $defaultOptions = ['options' => $inputOptions];
-        $options = Portabilis_Array_Utils::merge($helperOptions, $defaultOptions);
 
-        return $options;
+        return Portabilis_Array_Utils::merge($helperOptions, $defaultOptions);
     }
 }
