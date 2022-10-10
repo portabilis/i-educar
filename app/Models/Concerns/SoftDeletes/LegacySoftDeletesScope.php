@@ -19,7 +19,7 @@ class LegacySoftDeletesScope extends SoftDeletingScope
      * Apply the scope to a given Eloquent query builder.
      *
      * @param Builder $builder
-     * @param Model $model
+     * @param Model   $model
      *
      * @return void
      */
