@@ -4,10 +4,8 @@ namespace App\Jobs;
 
 use App\Models\Exporter\Export;
 use App\Services\Exporter\ExportService;
-use App\Services\NotificationService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Database\DatabaseManager;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
@@ -37,14 +35,11 @@ class DatabaseToCsvExporter implements ShouldQueue
     /**
      * Execute the job.
      *
-     * @param NotificationService $notification
-     * @param DatabaseManager     $manager
-     *
      * @return void
      */
-    public function handle(NotificationService $notification, DatabaseManager $manager)
+    public function handle()
     {
-        $export = new ExportService($this->export, $manager);
+        $export = new ExportService($this->export);
 
         $export->execute();
     }

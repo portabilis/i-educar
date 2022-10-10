@@ -3,9 +3,9 @@
 namespace App\Exports;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromQuery;
@@ -16,9 +16,9 @@ class ExporterQueryExport implements FromQuery, ShouldQueue, WithCustomQuerySize
 {
     use Exportable;
 
-    public function __construct(DatabaseManager $manager, private string $connection, private string $model, private array $fields, private array $filters, private int $querySize)
+    public function __construct(private string $connection, private string $model, private array $fields, private array $filters, private int $querySize)
     {
-        $manager->setDefaultConnection($connection);
+        DB::setDefaultConnection($connection);
     }
 
     public function querySize(): int

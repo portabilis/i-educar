@@ -7,7 +7,7 @@ use App\Exports\ExporterQueryExport;
 use App\Jobs\NotifyUserExporter;
 use App\Jobs\UpdateUrlExport;
 use App\Models\Exporter\Export;
-use Illuminate\Database\DatabaseManager;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Excel;
 
@@ -20,14 +20,11 @@ class ExportService
     private int $querySize;
 
     /**
-     * @param Export          $export
-     * @param DatabaseManager $manager
+     * @param Export $export
      */
     public function __construct(
-        private Export              $export,
-        private DatabaseManager     $manager
+        private Export $export,
     ) {
-        $this->setExporter();
         $this->setConnection();
         $this->setFilename();
     }
@@ -41,7 +38,7 @@ class ExportService
         //obtem o total para ser usado na divisão das jobs de gerar o csv e para a mensagem de notificação
         $this->querySize = $this->export->getExportQuery()->count();
         //exporta a query
-        $exporter = new ExporterQueryExport($this->manager, $this->connection, $this->export->model, $this->export->fields, $this->export->filters, $this->querySize);
+        $exporter = new ExporterQueryExport($this->connection, $this->export->model, $this->export->fields, $this->export->filters, $this->querySize);
         //guarda o arquivo no disco em jobs divididas e no final dispara outras jobs
         $exporter->store($this->filename, writerType: $this->fileType)
             ->chain([
@@ -56,7 +53,7 @@ class ExportService
     private function setConnection(): void
     {
         $this->connection = $this->export->getConnectionName();
-        $this->manager->setDefaultConnection($this->connection);
+        DB::setDefaultConnection($this->connection);
     }
 
     /**
