@@ -76,4 +76,34 @@ class LegacySchoolClassFactory extends Factory
             ]);
         });
     }
+
+    public function isMulti(): static
+    {
+        return $this->afterCreating(function (LegacySchoolClass $schoolClass) {
+            $schoolClass->update([
+                'multisseriada' => true,
+            ]);
+
+            LegacySchoolClassGradeFactory::new()->create([
+                'escola_id' => $schoolClass->ref_ref_cod_escola,
+                'serie_id' => $schoolClass->ref_ref_cod_serie,
+                'turma_id' => $schoolClass,
+            ]);
+        });
+    }
+
+    public function addGrade(): static
+    {
+        return $this->afterCreating(function (LegacySchoolClass $schoolClass) {
+            $schoolClass->update([
+                'multisseriada' => true,
+            ]);
+
+            LegacySchoolClassGradeFactory::new()->create([
+                'escola_id' => $schoolClass->ref_ref_cod_escola,
+                'serie_id' => $schoolClass->ref_ref_cod_serie,
+                'turma_id' => $schoolClass,
+            ]);
+        });
+    }
 }
