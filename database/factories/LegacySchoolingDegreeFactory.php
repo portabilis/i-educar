@@ -17,4 +17,19 @@ class LegacySchoolingDegreeFactory extends Factory
             'schooling' => 1,
         ];
     }
+
+    public function unique(): self
+    {
+        return $this->state(function () {
+            $schooling = LegacySchoolingDegree::query()->first();
+
+            if (empty($schooling)) {
+                $schooling = LegacySchoolingDegreeFactory::new()->create();
+            }
+
+            return [
+                'id' => $schooling->getKey()
+            ];
+        });
+    }
 }
