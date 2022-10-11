@@ -5,21 +5,15 @@ return new class extends clsListagem {
     public $titulo;
     public $limite;
     public $offset;
-
-    public $cod_falta_atraso        = null;
-    public $ref_cod_escola          = null;
-    public $ref_ref_cod_instituicao = null;
-    public $ref_usuario_exc         = null;
-    public $ref_usuario_cad         = null;
-    public $ref_cod_servidor        = null;
-    public $tipo                    = null;
-    public $data_falta_atraso       = null;
-    public $qtd_horas               = null;
-    public $qtd_min                 = null;
-    public $justificada             = null;
-    public $data_cadastro           = null;
-    public $data_exclusao           = null;
-    public $ativo                   = null;
+    public $ref_cod_escola;
+    public $ref_ref_cod_instituicao;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $ref_cod_servidor;
+    public $tipo;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
 
     public function Gerar()
     {
@@ -30,7 +24,7 @@ return new class extends clsListagem {
         }
 
         $tmp_obj = new clsPmieducarServidor($this->ref_cod_servidor, null, null, null, null, null, null, $this->ref_cod_instituicao);
-        $registro = $tmp_obj->detalhe();
+        $tmp_obj->detalhe();
 
         $this->addCabecalhos([
             'Escola',

@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use App\Traits\HasLegacyDates;
 use App_Model_MatriculaSituacao;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -26,8 +26,10 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property LegacyCourse         $course
  * @property Collection           $enrollments
  */
-class LegacyRegistration extends Model
+class LegacyRegistration extends LegacyModel
 {
+    use HasLegacyDates;
+
     /**
      * @var string
      */
@@ -46,7 +48,6 @@ class LegacyRegistration extends Model
         'ref_ref_cod_escola',
         'ref_cod_curso',
         'ref_cod_aluno',
-        'data_cadastro',
         'ano',
         'ref_usuario_cad',
         'dependencia',
@@ -121,10 +122,10 @@ class LegacyRegistration extends Model
     /**
      * Relação com a série.
      *
-     * @deprecated
-     * @see grade()
-     *
      * @return BelongsTo
+     *
+     * @see grade()
+     * @deprecated
      */
     public function level()
     {
@@ -265,7 +266,7 @@ class LegacyRegistration extends Model
      */
     public function getStatusDescriptionAttribute()
     {
-        return (new RegistrationStatus())->getDescriptiveValues()[(int) $this->aprovado];
+        return (new RegistrationStatus())->getDescriptiveValues()[(int)$this->aprovado];
     }
 
     public function scopeMale(Builder $query): Builder

@@ -65,26 +65,16 @@ return new class extends clsDetalhe {
         $lista = $obj->lista(
             null,
             $this->ref_cod_instituicao,
-            null,
-            null,
-            null,
-            $this->cod_servidor,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            date('Y'),
-            true
+            int_ref_cod_servidor: $this->cod_servidor,
+            bool_busca_nome: null,
+            boo_professor: 1,
+            ano: date('Y'),
+            desconsiderarAlocacoesComDataDeSaida: true
         );
 
         if ($lista) {
             // Passa todos os valores do registro para atributos do objeto
-            foreach ($lista as $campo => $val) {
+            foreach ($lista as $val) {
                 $temp = [];
                 $temp['carga_horaria'] = $val['carga_horaria'];
                 $temp['periodo'] = $val['periodo'];

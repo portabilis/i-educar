@@ -44,10 +44,6 @@ if ($privilegio == 4) {
             $series .= " curso['_{$registro['ref_cod_curso']}'] = new Array();\n";
             $obj_esc_ser = new clsPmieducarEscolaSerie($permissoes->getEscola($this->pessoa_logada), null, null, null, null, null, null, null, null, 1);
             $lst_esc_ser = $obj_esc_ser->lista($permissoes->getEscola($this->pessoa_logada), null, null, null, null, null, null, null, null, null, null, null, null, 1, $permissoes->getInstituicao($this->pessoa_logada), $registro['ref_cod_curso']);
-            if ($lst_esc_ser) {
-                foreach ($lst_esc_ser as $esc_ser) {
-                }
-            }
         }
         echo $script = "<script> var curso = new Array(); \n {$series}</script>\n";
     }

@@ -16,7 +16,7 @@ class clsModulesPontoTransporteEscolar extends Model
 
     public function __construct($cod_ponto_transporte_escolar = null, $descricao = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}ponto_transporte_escolar";
 
@@ -100,7 +100,7 @@ class clsModulesPontoTransporteEscolar extends Model
             $this->cod_ponto_transporte_escolar = $db->InsertId("{$this->_tabela}_seq");
 
             if ($this->cod_ponto_transporte_escolar) {
-                $detalhe = $this->detalhe();
+                $this->detalhe();
             }
 
             return $this->cod_ponto_transporte_escolar;
@@ -164,7 +164,7 @@ class clsModulesPontoTransporteEscolar extends Model
             }
 
             if ($set) {
-                $detalheAntigo = $this->detalhe();
+                $this->detalhe();
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_ponto_transporte_escolar = '{$this->cod_ponto_transporte_escolar}'");
 
                 return true;
@@ -318,7 +318,7 @@ class clsModulesPontoTransporteEscolar extends Model
     public function excluir()
     {
         if (is_numeric($this->cod_ponto_transporte_escolar)) {
-            $detalhe = $this->detalhe();
+            $this->detalhe();
 
             $sql = "DELETE FROM {$this->_tabela} WHERE cod_ponto_transporte_escolar = '{$this->cod_ponto_transporte_escolar}'";
             $db = new clsBanco();

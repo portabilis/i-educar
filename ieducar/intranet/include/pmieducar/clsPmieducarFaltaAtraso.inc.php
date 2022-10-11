@@ -37,7 +37,7 @@ class clsPmieducarFaltaAtraso extends Model
         $ativo = null,
         $ref_cod_servidor_funcao = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'falta_atraso';
 

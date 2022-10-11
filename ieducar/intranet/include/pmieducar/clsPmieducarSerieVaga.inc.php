@@ -24,7 +24,7 @@ class clsPmieducarSerieVaga extends Model
         $turno = null,
         $vagas = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'serie_vaga';
 

@@ -2446,14 +2446,14 @@ return new class extends clsCadastro {
 
     protected function validaSalasUtilizadasDentroEscola()
     {
+        if ($this->local_funcionamento != LocalFuncionamento::PREDIO_ESCOLAR) {
+            return true;
+        }
+
         if ($this->numero_salas_utilizadas_dentro_predio == '0') {
             $this->mensagem = 'O campo: <b>Número de salas de aula utilizadas na escola dentro do prédio escolar</b> não pode ser preenchido com 0';
 
             return false;
-        }
-
-        if ($this->local_funcionamento != LocalFuncionamento::PREDIO_ESCOLAR) {
-            return true;
         }
 
         return true;

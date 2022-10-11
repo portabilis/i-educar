@@ -6,7 +6,7 @@ return new class extends clsListagem {
      *
      * @var int
      */
-    public $pessoa_logada = null;
+    public $pessoa_logada;
 
     /**
      * Título no topo da página
@@ -30,25 +30,25 @@ return new class extends clsListagem {
     public $offset = 0;
 
     // Atributos de mapeamento da tabela pmieducar.reserva_vaga
-    public $cod_reserva_vaga   = null;
-    public $ref_ref_cod_escola = null;
-    public $ref_ref_cod_serie  = null;
-    public $ref_usuario_exc    = null;
-    public $ref_usuario_cad    = null;
-    public $ref_cod_aluno      = null;
-    public $data_cadastro      = null;
-    public $data_exclusao      = null;
-    public $ativo              = null;
+    public $cod_reserva_vaga;
+    public $ref_ref_cod_escola;
+    public $ref_ref_cod_serie;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $ref_cod_aluno;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
 
     /**
      * Atributos para apresentação
      *
      * @var mixed
      */
-    public $ref_cod_escola      = null;
-    public $ref_cod_curso       = null;
-    public $ref_cod_instituicao = null;
-    public $nm_aluno            = null;
+    public $ref_cod_escola;
+    public $ref_cod_curso;
+    public $ref_cod_instituicao;
+    public $nm_aluno;
 
     /**
      * Sobrescreve clsListagem::Gerar().

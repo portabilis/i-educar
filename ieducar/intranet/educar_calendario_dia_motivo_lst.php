@@ -59,15 +59,12 @@ return new class extends clsListagem {
         ];
 
         $obj_permissao = new clsPermissoes();
-        $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
+        $obj_permissao->nivel_acesso($this->pessoa_logada);
         $this->addCabecalhos($lista_busca);
-
-        // Filtros de Foreign Keys
-        $get_escola = true;
 
         // outros Filtros
         $this->inputsHelper()->dynamic(['instituicao', 'escola'], ['required' => false]);
-        $this->campoTexto('nm_motivo', 'Motivo', $this->tipo, 30, 255, false);
+        $this->campoTexto('nm_motivo', 'Motivo', $this->tipo, 30, 255);
 
         // Paginador
         $this->limite = 20;

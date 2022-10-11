@@ -68,7 +68,7 @@ class clsOrgaoEmissorRg
         if (is_numeric($this->idorg_rg)) {
             $objDocumento = new clsDocumento(false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, $this->idorg_rg);
             if (!count($objDocumento->lista(false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, $this->idorg_rg))) {
-                $db = new clsBanco();
+
 
                 return true;
             }

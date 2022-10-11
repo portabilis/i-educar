@@ -3,19 +3,19 @@
 namespace App\Models;
 
 use App\Traits\Ativo;
-use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasInstitution;
+use App\Traits\HasLegacyDates;
 
 /**
  * Class LegacyDisciplineExemption
  *
  * @property LegacyRegistration $registration
  */
-class LegacyExemptionType extends Model
+class LegacyExemptionType extends LegacyModel
 {
     use Ativo;
-
-    public const CREATED_AT = 'data_cadastro';
-    public const UPDATED_AT = null;
+    use HasLegacyDates;
+    use HasInstitution;
 
     /**
      * @var string
@@ -32,9 +32,7 @@ class LegacyExemptionType extends Model
         'ref_usuario_cad',
         'nm_tipo',
         'descricao',
-        'data_cadastro',
         'data_exclusao',
         'ativo',
-        'ref_cod_instituicao',
     ];
 }

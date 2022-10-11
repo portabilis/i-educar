@@ -752,7 +752,7 @@ class clsFisica
     public function exclui()
     {
         if (is_numeric($this->idpes)) {
-            $detalheAntigo = $this->detalheSimples();
+            $this->detalheSimples();
 
             $db = new clsBanco();
             $db->Consulta("DELETE FROM {$this->schema}.{$this->tabela} WHERE idpes = {$this->idpes}");
@@ -1017,9 +1017,7 @@ class clsFisica
         $db = new clsBanco();
         $db->Consulta("SELECT idpes, cpf FROM {$this->schema}.{$this->tabela} WHERE cpf = {$this->cpf}");
         if ($db->ProximoRegistro()) {
-            $tupla = $db->Tupla();
-
-            return $tupla;
+            return $db->Tupla();
         }
 
         return false;

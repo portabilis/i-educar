@@ -37,7 +37,7 @@ class clsPmieducarQuadroHorarioHorarios extends Model
         $ativo = null,
         $dia_semana = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'quadro_horario_horarios';
 

@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use App\Services\RelocationDate\RelocationDateProvider;
+use App\Traits\HasLegacyDates;
 use DateTime;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -18,8 +18,10 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property DateTime $relocation_date Data base para remanejamento
  * @property DateTime $educacenso_date Data de corte do Educacenso
  */
-class LegacyInstitution extends Model implements RelocationDateProvider
+class LegacyInstitution extends LegacyModel implements RelocationDateProvider
 {
+    use HasLegacyDates;
+
     /**
      * @var string
      */
@@ -34,15 +36,23 @@ class LegacyInstitution extends Model implements RelocationDateProvider
      * @var array
      */
     protected $fillable = [
-        'ref_usuario_cad', 'ref_idtlog', 'ref_sigla_uf', 'cep', 'cidade', 'bairro', 'logradouro', 'nm_responsavel',
-        'data_cadastro', 'nm_instituicao',
+        'ref_usuario_cad',
+        'ref_idtlog',
+        'ref_sigla_uf',
+        'cep',
+        'cidade',
+        'bairro',
+        'logradouro',
+        'nm_responsavel',
+        'nm_instituicao',
     ];
 
     /**
      * @var array
      */
     protected $dates = [
-        'data_base_remanejamento', 'data_educacenso',
+        'data_base_remanejamento',
+        'data_educacenso',
     ];
 
     /**

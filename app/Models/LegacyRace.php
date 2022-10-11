@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasLegacyDates;
 
-class LegacyRace extends Model
+class LegacyRace extends LegacyModel
 {
+    use HasLegacyDates;
+
     /**
      * @var string
      */
@@ -22,7 +24,6 @@ class LegacyRace extends Model
     protected $fillable = [
         'idpes_cad',
         'nm_raca',
-        'data_cadastro',
         'raca_educacenso',
     ];
 

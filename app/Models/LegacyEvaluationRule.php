@@ -55,7 +55,7 @@ class LegacyEvaluationRule extends Model
      *
      * @var string[]
      */
-    public $legacy = [
+    public array $legacy = [
         'name' => 'nome'
     ];
 

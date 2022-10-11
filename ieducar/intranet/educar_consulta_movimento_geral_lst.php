@@ -80,7 +80,6 @@ return new class extends clsListagem {
                     case 'aee':
                     case 'localizacao':
                         continue;
-                        break;
                     default:
                         $paramsCopy = $params;
                         $paramsCopy['escola'] = $value['cod_escola'];

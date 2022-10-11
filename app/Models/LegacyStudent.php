@@ -3,15 +3,16 @@
 namespace App\Models;
 
 use App\Models\Builders\LegacyStudentBuilder;
+use App\Traits\HasLegacyDates;
 use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class LegacyStudent extends Model
+class LegacyStudent extends LegacyModel
 {
     use LegacyAttribute;
+    use HasLegacyDates;
 
     public string $builder = LegacyStudentBuilder::class;
 
@@ -29,7 +30,8 @@ class LegacyStudent extends Model
      * @var array
      */
     protected $fillable = [
-        'ref_idpes', 'data_cadastro', 'tipo_responsavel',
+        'ref_idpes',
+        'tipo_responsavel',
     ];
 
     /**
@@ -100,6 +102,7 @@ class LegacyStudent extends Model
             default => null
         };
     }
+
     public function getGuardianCpf()
     {
         return match ($this->guardianType) {

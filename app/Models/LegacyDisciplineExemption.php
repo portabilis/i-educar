@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
+use App\Traits\HasLegacyDates;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -13,8 +13,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property LegacyRegistration $registration
  * @property integer            cod_dispensa
  */
-class LegacyDisciplineExemption extends Model
+class LegacyDisciplineExemption extends LegacyModel
 {
+    use HasLegacyDates;
+
     /**
      * @var string
      */
@@ -33,7 +35,6 @@ class LegacyDisciplineExemption extends Model
         'ref_usuario_exc',
         'ref_usuario_cad',
         'ref_cod_tipo_dispensa',
-        'data_cadastro',
         'data_exclusao',
         'ativo',
         'observacao',
@@ -42,7 +43,6 @@ class LegacyDisciplineExemption extends Model
     ];
 
     protected $dates = [
-        'data_cadastro',
         'data_exclusao',
         'updated_at'
     ];

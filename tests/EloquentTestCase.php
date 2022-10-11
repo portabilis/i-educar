@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use App\Models\Concerns\SoftDeletes\LegacySoftDeletes;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Model;
@@ -128,8 +129,8 @@ abstract class EloquentTestCase extends TestCase
 
         $modelCreated->delete();
 
-        if (in_array(SoftDeletes::class, class_uses($modelCreated))) {
-            $this->assertSoftDeleted($modelCreated);
+        if (in_array(SoftDeletes::class, class_uses($modelCreated), true) || in_array(LegacySoftDeletes::class, class_uses($modelCreated), true)) {
+            $this->assertSoftDeleted($modelCreated, deletedAtColumn: $modelCreated->getDeletedAtColumn());
         } else {
             $this->assertDatabaseMissing($modelCreated->getTable(), $modelCreated->getAttributes());
         }

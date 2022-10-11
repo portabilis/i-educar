@@ -30,7 +30,7 @@ class LegacySchoolGradeDiscipline extends Model
      *
      * @var string[]
      */
-    public $legacy = [
+    public array $legacy = [
         'id' => 'ref_cod_disciplina',
         'workload' => 'carga_horaria'
     ];

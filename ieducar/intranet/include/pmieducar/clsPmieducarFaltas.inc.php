@@ -12,7 +12,7 @@ class clsPmieducarFaltas extends Model
 
     public function __construct($ref_cod_matricula = null, $sequencial = null, $ref_usuario_cad = null, $falta = null, $data_cadastro = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}faltas";
 
@@ -242,9 +242,6 @@ class clsPmieducarFaltas extends Model
      */
     public function excluir()
     {
-        if (is_numeric($this->ref_cod_matricula) && is_numeric($this->sequencial)) {
-        }
-
         return false;
     }
 }

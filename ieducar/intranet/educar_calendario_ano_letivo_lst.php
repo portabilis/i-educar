@@ -29,7 +29,7 @@ return new class extends clsListagem {
         $retorno = null;
 
         if ($nivel > 7) {
-            $retorno = '
+            return '
                 <table width="100%" height="40%" cellspacing="1" cellpadding="2" border="0" class="tablelistagem">
                     <tbody>
                         <tr>
@@ -39,8 +39,6 @@ return new class extends clsListagem {
                         </tr>
                     </tbody>
                 </table>';
-
-            return $retorno;
         }
 
         $this->breadcrumb('Calendários', [
@@ -117,8 +115,6 @@ return new class extends clsListagem {
               break;
       }
 
-        $total = $obj_calendario_ano_letivo->_total;
-
         if (empty($lista)) {
             if ($nivel == 4) {
                 $retorno .= '
@@ -142,7 +138,7 @@ return new class extends clsListagem {
 
         // Monta a lista
         if (is_array($lista) && count($lista)) {
-            foreach ($lista as $key => $registro) {
+            foreach ($lista as $registro) {
                 Session::put('calendario', [
                   'cod_calendario_ano_letivo' => $registro['cod_calendario_ano_letivo'],
                   'ref_cod_instituicao' => $this->ref_cod_instituicao,
@@ -319,12 +315,8 @@ return new class extends clsListagem {
 
                         $obj_calendario->setLegendaPadrao('Não Letivo');
 
-                        if (!empty($dias)) {
-                            $obj_calendario->adicionarArrayDias('Não Letivo', $dias);
-                        }
+                        $obj_calendario->adicionarArrayDias('Não Letivo', $dias);
                     } else {
-                        $dia_inicio;
-
                         for ($d = 1; $d < $dia_inicio; $d++) {
                             $dias[] = $d;
                         }
@@ -348,9 +340,7 @@ return new class extends clsListagem {
 
                         $obj_calendario->setLegendaPadrao('Não Letivo');
 
-                        if (!empty($dias)) {
-                            $obj_calendario->adicionarArrayDias('Não Letivo', $dias);
-                        }
+                        $obj_calendario->adicionarArrayDias('Não Letivo', $dias);
                     } else {
                         $NumeroDiasMes = (int)date('t', $this->mes);
 
