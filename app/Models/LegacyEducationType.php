@@ -4,14 +4,13 @@ namespace App\Models;
 
 use App\Traits\Ativo;
 use App\Traits\HasInstitution;
+use App\Traits\HasLegacyDates;
 
 class LegacyEducationType extends LegacyModel
 {
     use Ativo;
     use HasInstitution;
-
-    public const CREATED_AT = 'data_cadastro';
-    public const UPDATED_AT = null;
+    use HasLegacyDates;
 
     /**
      * @var string

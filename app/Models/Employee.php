@@ -36,7 +36,6 @@ class Employee extends LegacyModel
 
     protected $fillable = [
         'cod_servidor',
-        'data_cadastro',
         'carga_horaria',
     ];
 

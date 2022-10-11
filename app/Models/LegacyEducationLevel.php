@@ -4,14 +4,13 @@ namespace App\Models;
 
 use App\Traits\Ativo;
 use App\Traits\HasInstitution;
+use App\Traits\HasLegacyDates;
 
 class LegacyEducationLevel extends LegacyModel
 {
     use Ativo;
+    use HasLegacyDates;
     use HasInstitution;
-
-    public const CREATED_AT = 'data_cadastro';
-    public const UPDATED_AT = null;
 
     /**
      * @var string
@@ -31,7 +30,6 @@ class LegacyEducationLevel extends LegacyModel
         'ref_usuario_cad',
         'nm_nivel',
         'descricao',
-        'data_cadastro',
         'data_exclusao',
         'ativo',
     ];

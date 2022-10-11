@@ -4,15 +4,14 @@ namespace App\Models;
 
 use App\Traits\Ativo;
 use App\Traits\HasInstitution;
+use App\Traits\HasLegacyDates;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class LegacyQualification extends LegacyModel
 {
     use Ativo;
+    use HasLegacyDates;
     use HasInstitution;
-
-    public const CREATED_AT = 'data_cadastro';
-    public const UPDATED_AT = null;
 
     /**
      * @var string

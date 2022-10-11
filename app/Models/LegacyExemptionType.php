@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\Ativo;
 use App\Traits\HasInstitution;
+use App\Traits\HasLegacyDates;
 
 /**
  * Class LegacyDisciplineExemption
@@ -13,10 +14,8 @@ use App\Traits\HasInstitution;
 class LegacyExemptionType extends LegacyModel
 {
     use Ativo;
+    use HasLegacyDates;
     use HasInstitution;
-
-    public const CREATED_AT = 'data_cadastro';
-    public const UPDATED_AT = null;
 
     /**
      * @var string
@@ -33,7 +32,6 @@ class LegacyExemptionType extends LegacyModel
         'ref_usuario_cad',
         'nm_tipo',
         'descricao',
-        'data_cadastro',
         'data_exclusao',
         'ativo',
     ];

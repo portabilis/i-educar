@@ -4,10 +4,12 @@ namespace App\Models;
 
 use App\Traits\Ativo;
 use App\Traits\HasInstitution;
+use App\Traits\HasLegacyDates;
 
 class LegacyAbandonmentType extends LegacyModel
 {
     use Ativo;
+    use HasLegacyDates;
     use HasInstitution;
 
     public const CREATED_AT = 'data_cadastro';
