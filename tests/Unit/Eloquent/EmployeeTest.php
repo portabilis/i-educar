@@ -22,7 +22,7 @@ class EmployeeTest extends EloquentTestCase
         'employeeAllocations' => [EmployeeAllocation::class],
         'employeeRoles' => [LegacyEmployeeRole::class],
         'graduations' => [EmployeeGraduation::class],
-        //'schoolingDegree' => LegacySchoolingDegree::class,
+        'schoolingDegree' => LegacySchoolingDegree::class,
     ];
 
     /**
@@ -61,10 +61,41 @@ class EmployeeTest extends EloquentTestCase
         $this->assertEquals($employee->cod_servidor, $employee->id);
     }
 
-    public function testSchoolingDegree()
+    public function testScopeProfessor()
     {
-        $employee = $this->createNewModel();
+        try {
+            Employee::query()
+                ->professor()
+                ->first();
+            $this->assertTrue(true);
+        } catch (\Exception $exception) {
+            $this->fail("Exception thrown due to scope error");
+        }
+    }
 
-        $this->assertTrue(true);
+    public function testScopeLastYear()
+    {
+        try {
+            Employee::query()
+                ->lastYear()
+                ->first();
+
+            $this->assertTrue(true);
+        } catch (\Exception $exception) {
+            $this->fail("Exception thrown due to scope error");
+        }
+    }
+
+    public function testScopeCurrentYear()
+    {
+        try {
+            Employee::query()
+                ->currentYear()
+                ->first();
+
+            $this->assertTrue(true);
+        } catch (\Exception $exception) {
+            $this->fail("Exception thrown due to scope error");
+        }
     }
 }
