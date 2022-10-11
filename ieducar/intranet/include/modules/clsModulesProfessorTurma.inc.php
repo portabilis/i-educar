@@ -272,9 +272,9 @@ class clsModulesProfessorTurma extends Model
             $gruda = ', ';
 
             if ($set) {
-                $detalheAntigo = $this->detalhe();
+                $this->detalhe();
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE id = '{$this->id}'");
-                $detalheAtual = $this->detalhe();
+                $this->detalhe();
 
                 return true;
             }
@@ -502,7 +502,7 @@ class clsModulesProfessorTurma extends Model
     public function excluir()
     {
         if (is_numeric($this->id)) {
-            $detalhe = $this->detalhe();
+            $this->detalhe();
             $sql = "DELETE FROM {$this->_tabela} pt WHERE id = '{$this->id}'";
             $db = new clsBanco();
             $db->Consulta($sql);
