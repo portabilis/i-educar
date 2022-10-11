@@ -103,10 +103,10 @@ class Core_Controller_Page_ListController extends clsListagem implements Core_Vi
 
         foreach ($entries as $entry) {
             $item = [];
-            $data = $entry->toArray();
+            $entry->toArray();
             $options = ['query' => ['id' => $entry->id]];
 
-            foreach ($headers as $label => $attr) {
+            foreach ($headers as $attr) {
                 $item[] = CoreExt_View_Helper_UrlHelper::l(
                     $entry->$attr,
                     'view',

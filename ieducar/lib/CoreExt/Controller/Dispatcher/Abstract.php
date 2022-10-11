@@ -7,7 +7,7 @@ abstract class CoreExt_Controller_Dispatcher_Abstract implements CoreExt_Control
      *
      * @var CoreExt_Controller_Request_Interface
      */
-    protected $_request = null;
+    protected $_request;
 
     /**
      * Opções de configuração geral da classe.
