@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class LegacyEmployeeRole extends Model
+class LegacyEmployeeRole extends LegacyModel
 {
     /**
      * @var string
@@ -21,7 +20,6 @@ class LegacyEmployeeRole extends Model
      * @var array
      */
     protected $fillable = [
-        'cod_servidor_funcao',
         'matricula',
         'ref_cod_funcao',
         'ref_cod_servidor',

@@ -2,17 +2,17 @@
 
 namespace Tests\Unit\Eloquent;
 
-use App\Models\City;
-use App\Models\District;
+use App\Models\Employee;
+use App\Models\EmployeePosgraduate;
 use Tests\EloquentTestCase;
 
-class DistrictTest extends EloquentTestCase
+class EmployeePosgraduateTest extends EloquentTestCase
 {
     /**
-     * @var string[]
+     * @var array
      */
     protected $relations = [
-        'city' => City::class,
+        'employee' => Employee::class,
     ];
 
     /**
@@ -20,6 +20,6 @@ class DistrictTest extends EloquentTestCase
      */
     protected function getEloquentModelName()
     {
-        return District::class;
+        return EmployeePosgraduate::class;
     }
 }
