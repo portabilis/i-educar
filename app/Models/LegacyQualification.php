@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use App\Traits\Ativo;
-use App\Traits\HasLegacyDates;
 use App\Traits\HasInstitution;
+use App\Traits\HasLegacyDates;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class LegacyQualification extends LegacyModel

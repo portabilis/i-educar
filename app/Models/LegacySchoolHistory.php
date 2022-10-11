@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Traits\HasLegacyDates;
 use App\Traits\HasInstitution;
+use App\Traits\HasLegacyDates;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacySchoolHistory extends LegacyModel

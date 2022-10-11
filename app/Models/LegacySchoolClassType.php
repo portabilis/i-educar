@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use App\Traits\Ativo;
-use App\Traits\HasLegacyDates;
 use App\Traits\HasInstitution;
+use App\Traits\HasLegacyDates;
 
 class LegacySchoolClassType extends LegacyModel
 {
