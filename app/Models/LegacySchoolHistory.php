@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use App\Traits\HasLegacyDates;
+use App\Traits\HasInstitution;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacySchoolHistory extends LegacyModel
 {
+    use HasInstitution;
     use HasLegacyDates;
 
     /**
@@ -34,7 +36,6 @@ class LegacySchoolHistory extends LegacyModel
         'origem',
         'extra_curricular',
         'ref_cod_matricula',
-        'ref_cod_instituicao',
         'import',
         'frequencia',
         'registro',

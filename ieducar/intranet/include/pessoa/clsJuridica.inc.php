@@ -161,7 +161,7 @@ class clsJuridica
     /**
      * Exibe uma lista baseada nos parametros de filtragem passados
      *
-     * @return Array
+     * @return array|false
      */
     public function lista($str_fantasia = false, $str_insc_estadual = false, $int_cnpj = false, $str_ordenacao = false, $int_limite_ini = false, $int_limite_qtd = false, $arrayint_idisin = false, $arrayint_idnotin = false, $int_idpes = false)
     {
@@ -259,7 +259,7 @@ class clsJuridica
     /**
      * Retorna um array com os detalhes do objeto
      *
-     * @return Array
+     * @return array|false
      */
     public function detalhe()
     {

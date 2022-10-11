@@ -4,11 +4,13 @@ namespace App\Models;
 
 use App\Traits\Ativo;
 use App\Traits\HasLegacyDates;
+use App\Traits\HasInstitution;
 
 class LegacySchoolClassType extends LegacyModel
 {
     use Ativo;
     use HasLegacyDates;
+    use HasInstitution;
 
     /**
      * @var string
@@ -27,7 +29,6 @@ class LegacySchoolClassType extends LegacyModel
         'ref_usuario_cad',
         'nm_tipo',
         'sgl_tipo',
-        'ref_cod_instituicao',
         'ativo'
     ];
 }

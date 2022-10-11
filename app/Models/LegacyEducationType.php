@@ -4,10 +4,12 @@ namespace App\Models;
 
 use App\Traits\Ativo;
 use App\Traits\HasLegacyDates;
+use App\Traits\HasInstitution;
 
 class LegacyEducationType extends LegacyModel
 {
     use Ativo;
+    use HasInstitution;
     use HasLegacyDates;
 
     /**
@@ -28,7 +30,6 @@ class LegacyEducationType extends LegacyModel
         'ref_usuario_exc',
         'nm_tipo',
         'ativo',
-        'ref_cod_instituicao',
         'atividade_complementar',
         'data_exclusao'
     ];

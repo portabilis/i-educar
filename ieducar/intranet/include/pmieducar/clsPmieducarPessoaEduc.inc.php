@@ -241,7 +241,7 @@ class clsPmieducarPessoaEduc extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_cod_pessoa_educ = null, $int_ref_idpes_responsavel = null, $int_ref_idpais_origem = null, $int_ref_idmun_natural = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nome = null, $str_url = null, $str_email = null, $date_data_nascimento_ini = null, $date_data_nascimento_fim = null, $str_sexo = null, $int_nacionalidade = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null)
     {
@@ -359,7 +359,7 @@ class clsPmieducarPessoaEduc extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -377,7 +377,7 @@ class clsPmieducarPessoaEduc extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

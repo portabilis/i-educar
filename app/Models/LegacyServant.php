@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use App\Traits\HasLegacyDates;
+use App\Traits\HasInstitution;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LegacyServant extends LegacyModel
 {
+    use HasInstitution;
     use HasLegacyDates;
 
     /**
@@ -26,7 +28,6 @@ class LegacyServant extends LegacyModel
 
     protected $fillable = [
         'cod_servidor',
-        'ref_cod_instituicao',
         'carga_horaria',
     ];
 

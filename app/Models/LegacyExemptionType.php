@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\Ativo;
 use App\Traits\HasLegacyDates;
+use App\Traits\HasInstitution;
 
 /**
  * Class LegacyDisciplineExemption
@@ -14,6 +15,7 @@ class LegacyExemptionType extends LegacyModel
 {
     use Ativo;
     use HasLegacyDates;
+    use HasInstitution;
 
     /**
      * @var string
@@ -32,6 +34,5 @@ class LegacyExemptionType extends LegacyModel
         'descricao',
         'data_exclusao',
         'ativo',
-        'ref_cod_instituicao',
     ];
 }

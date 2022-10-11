@@ -4,12 +4,14 @@ namespace App\Models;
 
 use App\Traits\Ativo;
 use App\Traits\HasLegacyDates;
+use App\Traits\HasInstitution;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class LegacyQualification extends LegacyModel
 {
     use Ativo;
     use HasLegacyDates;
+    use HasInstitution;
 
     /**
      * @var string
@@ -30,7 +32,6 @@ class LegacyQualification extends LegacyModel
         'nm_tipo',
         'descricao',
         'data_exclusao',
-        'ref_cod_instituicao',
     ];
 
     public function courses(): BelongsToMany

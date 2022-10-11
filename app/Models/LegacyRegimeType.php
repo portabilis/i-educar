@@ -4,10 +4,12 @@ namespace App\Models;
 
 use App\Traits\Ativo;
 use App\Traits\HasLegacyDates;
+use App\Traits\HasInstitution;
 
 class LegacyRegimeType extends LegacyModel
 {
     use Ativo;
+    use HasInstitution;
     use HasLegacyDates;
 
     /**
@@ -29,6 +31,5 @@ class LegacyRegimeType extends LegacyModel
         'nm_tipo',
         'data_exclusao',
         'ativo',
-        'ref_cod_instituicao',
     ];
 }

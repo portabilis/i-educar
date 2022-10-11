@@ -4,11 +4,13 @@ namespace App\Models;
 
 use App\Traits\Ativo;
 use App\Traits\HasLegacyDates;
+use App\Traits\HasInstitution;
 
 class LegacyTransferType extends LegacyModel
 {
     use Ativo;
     use HasLegacyDates;
+    use HasInstitution;
 
     /**
      * @var string
@@ -30,6 +32,5 @@ class LegacyTransferType extends LegacyModel
         'desc_tipo',
         'data_exclusao',
         'ativo',
-        'ref_cod_instituicao',
     ];
 }

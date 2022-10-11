@@ -49,7 +49,7 @@ class App_Unificacao_Base
     {
         $stringCodigosDuplicados = implode(',', $this->codigosDuplicados);
 
-        foreach ($this->chavesDeletarDuplicados as $key => $value) {
+        foreach ($this->chavesDeletarDuplicados as $value) {
             $oldKeys = explode(',', $stringCodigosDuplicados);
             $this->storeLogOldDataByKeys($oldKeys, $value['tabela'], $value['coluna']);
             try {
@@ -81,7 +81,7 @@ class App_Unificacao_Base
     {
         $stringCodigosDuplicados = implode(',', $this->codigosDuplicados);
 
-        foreach ($this->chavesManterTodosVinculos as $key => $value) {
+        foreach ($this->chavesManterTodosVinculos as $value) {
             $oldKeys = explode(',', $stringCodigosDuplicados);
             $this->storeLogOldDataByKeys($oldKeys, $value['tabela'], $value['coluna']);
             $addSql = $this->buildSqlExtraBeforeUnification($value['tabela']);
@@ -103,7 +103,7 @@ class App_Unificacao_Base
         $chavesConsultar[] = $this->codigoUnificador;
         $chavesConsultarString = implode(',', $chavesConsultar);
 
-        foreach ($this->chavesManterPrimeiroVinculo as $key => $value) {
+        foreach ($this->chavesManterPrimeiroVinculo as $value) {
             $oldKeys = explode(',', $chavesConsultarString);
             $this->storeLogOldDataByKeys($oldKeys, $value['tabela'], $value['coluna']);
 
@@ -137,7 +137,7 @@ class App_Unificacao_Base
         $todasChaves = array_merge($this->chavesManterPrimeiroVinculo, $this->chavesManterTodosVinculos);
         $todasTabelas = [];
 
-        foreach ($todasChaves as $key => $value) {
+        foreach ($todasChaves as $value) {
             $todasTabelas[$value['tabela']] = $value['tabela'];
         }
 
@@ -155,7 +155,7 @@ class App_Unificacao_Base
     {
         $tabelasEnvolvidas = $this->tabelasEnvolvidas();
 
-        foreach ($tabelasEnvolvidas as $key => $tabela) {
+        foreach ($tabelasEnvolvidas as $tabela) {
             $this->db->Consulta("ALTER TABLE {$tabela} DISABLE TRIGGER ALL");
         }
     }
@@ -164,7 +164,7 @@ class App_Unificacao_Base
     {
         $tabelasEnvolvidas = $this->tabelasEnvolvidas();
 
-        foreach ($tabelasEnvolvidas as $key => $tabela) {
+        foreach ($tabelasEnvolvidas as $tabela) {
             $this->db->Consulta("ALTER TABLE {$tabela} ENABLE TRIGGER ALL");
         }
     }

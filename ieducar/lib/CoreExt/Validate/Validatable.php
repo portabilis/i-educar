@@ -15,7 +15,6 @@ interface CoreExt_Validate_Validatable
      * Configura um CoreExt_Validate_Interface para uma propriedade da classe.
      *
      * @param string                     $key
-     * @param CoreExt_Validate_Interface $validator
      *
      * @return CoreExt_Validate_Validatable Provê interface fluída
      */

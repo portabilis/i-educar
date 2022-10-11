@@ -143,7 +143,7 @@ class clsCadastroDeficiencia extends Model
     /**
      * Retorna uma lista de registros filtrados de acordo com os parâmetros.
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_cod_deficiencia = null, $str_nm_deficiencia = null)
     {
@@ -195,7 +195,7 @@ class clsCadastroDeficiencia extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
