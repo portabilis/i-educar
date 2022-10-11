@@ -11,7 +11,7 @@ class clsPmieducarCalendarioDiaAnotacao extends Model
 
     public function __construct($ref_dia = null, $ref_mes = null, $ref_ref_cod_calendario_ano_letivo = null, $ref_cod_calendario_anotacao = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}calendario_dia_anotacao";
 
@@ -59,7 +59,6 @@ class clsPmieducarCalendarioDiaAnotacao extends Model
             if (is_numeric($this->ref_cod_calendario_anotacao)) {
                 $campos .= "{$gruda}ref_cod_calendario_anotacao";
                 $valores .= "{$gruda}'{$this->ref_cod_calendario_anotacao}'";
-                $gruda = ', ';
             }
 
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
@@ -79,7 +78,6 @@ class clsPmieducarCalendarioDiaAnotacao extends Model
     {
         if (is_numeric($this->ref_dia) && is_numeric($this->ref_mes) && is_numeric($this->ref_ref_cod_calendario_ano_letivo) && is_numeric($this->ref_cod_calendario_anotacao)) {
             $db = new clsBanco();
-            $gruda = '';
             $set = '';
 
             if ($set) {
@@ -198,9 +196,6 @@ class clsPmieducarCalendarioDiaAnotacao extends Model
      */
     public function excluir()
     {
-        if (is_numeric($this->ref_dia) && is_numeric($this->ref_mes) && is_numeric($this->ref_ref_cod_calendario_ano_letivo) && is_numeric($this->ref_cod_calendario_anotacao)) {
-        }
-
         return false;
     }
 }

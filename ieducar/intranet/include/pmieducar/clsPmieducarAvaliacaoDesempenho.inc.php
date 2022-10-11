@@ -17,7 +17,7 @@ class clsPmieducarAvaliacaoDesempenho extends Model
 
     public function __construct($sequencial = null, $ref_cod_servidor = null, $ref_ref_cod_instituicao = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $descricao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $titulo_avaliacao = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}avaliacao_desempenho";
 
