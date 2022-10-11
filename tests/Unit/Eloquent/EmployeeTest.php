@@ -7,9 +7,12 @@ use App\Models\EmployeeAllocation;
 use App\Models\EmployeeGraduation;
 use App\Models\EmployeeInep;
 use App\Models\LegacyEmployeeRole;
+use App\Models\LegacyIndividual;
 use App\Models\LegacyPerson;
+use App\Models\LegacySchoolingDegree;
 use Database\Factories\EmployeeFactory;
 use Database\Factories\EmployeeInepFactory;
+use Database\Factories\LegacyIndividualFactory;
 use Tests\EloquentTestCase;
 
 class EmployeeTest extends EloquentTestCase
@@ -19,6 +22,7 @@ class EmployeeTest extends EloquentTestCase
         'employeeAllocations' => [EmployeeAllocation::class],
         'employeeRoles' => [LegacyEmployeeRole::class],
         'graduations' => [EmployeeGraduation::class],
+        //'schoolingDegree' => LegacySchoolingDegree::class,
     ];
 
     /**
@@ -33,8 +37,34 @@ class EmployeeTest extends EloquentTestCase
     {
         $employee = EmployeeFactory::new()->create();
         $employee->inep = EmployeeInepFactory::new()->create([
-            'cod_servidor' => $employee->cod_servidor,
+            'cod_servidor' => $employee->id,
         ]);
         $this->assertInstanceOf(EmployeeInep::class, $employee->inep);
+    }
+
+    public function testRelationshipIndividual()
+    {
+        $employee = EmployeeFactory::new()->create();
+        $employee->individual = LegacyIndividualFactory::new()->create([
+            'idpes' => $employee->id,
+        ]);
+        $this->assertInstanceOf(LegacyIndividual::class, $employee->individual);
+    }
+
+    public function testGetIdAttribute()
+    {
+        $employee = $this->createNewModel();
+
+        $this->assertInstanceOf(Employee::class, $employee);
+        $this->assertEquals($employee->id, $employee->getIdAttribute());
+        $this->assertIsInt($employee->getIdAttribute());
+        $this->assertEquals($employee->cod_servidor, $employee->id);
+    }
+
+    public function testSchoolingDegree()
+    {
+        $employee = $this->createNewModel();
+
+        $this->assertTrue(true);
     }
 }
