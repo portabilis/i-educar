@@ -69,7 +69,7 @@ class EmployeeTest extends EloquentTestCase
                 ->first();
             $this->assertTrue(true);
         } catch (\Exception $exception) {
-            $this->fail("Exception thrown due to scope error");
+            $this->fail('Exception thrown due to scope error');
         }
     }
 
@@ -82,7 +82,7 @@ class EmployeeTest extends EloquentTestCase
 
             $this->assertTrue(true);
         } catch (\Exception $exception) {
-            $this->fail("Exception thrown due to scope error");
+            $this->fail('Exception thrown due to scope error');
         }
     }
 
@@ -95,7 +95,7 @@ class EmployeeTest extends EloquentTestCase
 
             $this->assertTrue(true);
         } catch (\Exception $exception) {
-            $this->fail("Exception thrown due to scope error");
+            $this->fail('Exception thrown due to scope error');
         }
     }
 }
