@@ -73,12 +73,6 @@ return new class extends clsCadastro {
             $this->ref_cod_instituicao = $det_ref_cod_escola['ref_cod_instituicao'];
         }
 
-        // foreign keys
-        $obrigatorio = true;
-        $get_escola = true;
-        // foreign keys
-
-        // text
         $this->inputsHelper()->dynamic(['instituicao','escola']);
         $this->campoTexto('nm_motivo', 'Motivo', $this->nm_motivo, 30, 255, true);
         $this->campoTexto('sigla', 'Sigla', $this->sigla, 15, 15, true);

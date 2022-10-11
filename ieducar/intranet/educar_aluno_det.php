@@ -441,7 +441,7 @@ return new class extends clsDetalhe {
             $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#ccdce6" align="center"><td>Deficiências</td></tr>';
             $cor = '#D1DADF';
 
-            foreach ($deficiencia_pessoa as $indice => $valor) {
+            foreach ($deficiencia_pessoa as $valor) {
                 $cor = $cor == '#D1DADF' ? '#f5f9fd' : '#D1DADF';
 
                 $tabela .= sprintf(
