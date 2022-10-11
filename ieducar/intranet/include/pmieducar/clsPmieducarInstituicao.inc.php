@@ -85,7 +85,7 @@ class clsPmieducarInstituicao extends Model
         $ordenar_alunos_sequencial_enturmacao = null,
         $obrigar_telefone_pessoa = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}instituicao";
         $this->_campos_lista = $this->_todos_campos = '

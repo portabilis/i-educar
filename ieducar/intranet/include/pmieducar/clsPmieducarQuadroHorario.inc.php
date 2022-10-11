@@ -15,7 +15,7 @@ class clsPmieducarQuadroHorario extends Model
 
     public function __construct($cod_quadro_horario = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_cod_turma = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ano = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}quadro_horario";
 

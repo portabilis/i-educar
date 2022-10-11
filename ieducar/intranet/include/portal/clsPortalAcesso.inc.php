@@ -14,7 +14,7 @@ class clsPortalAcesso extends Model
 
     public function __construct($cod_acesso = null, $data_hora = null, $ip_externo = null, $ip_interno = null, $cod_pessoa = null, $obs = null, $sucesso = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'portal.';
         $this->_tabela = "{$this->_schema}acesso";
 
@@ -372,9 +372,6 @@ SELECT COUNT(0) FROM (
      */
     public function excluir()
     {
-        if (is_numeric($this->cod_acesso)) {
-        }
-
         return false;
     }
 }
