@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use App\Traits\Ativo;
-use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasInstitution;
 
-class LegacyAbandonmentType extends Model
+class LegacyAbandonmentType extends LegacyModel
 {
     use Ativo;
+    use HasInstitution;
 
     public const CREATED_AT = 'data_cadastro';
     public const UPDATED_AT = null;
@@ -26,7 +27,6 @@ class LegacyAbandonmentType extends Model
      * @var array
      */
     protected $fillable = [
-        'ref_cod_instituicao',
         'ref_usuario_exc',
         'ref_usuario_cad',
         'nome',

@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasInstitution;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class LegacySchoolHistory extends Model
+class LegacySchoolHistory extends LegacyModel
 {
+    use HasInstitution;
+
     /**
      * @var string
      */
@@ -33,7 +35,6 @@ class LegacySchoolHistory extends Model
         'origem',
         'extra_curricular',
         'ref_cod_matricula',
-        'ref_cod_instituicao',
         'import',
         'frequencia',
         'registro',

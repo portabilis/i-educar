@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasInstitution;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class LegacyServant extends Model
+class LegacyServant extends LegacyModel
 {
+    use HasInstitution;
+
     /**
      * @var string
      */
@@ -24,7 +26,6 @@ class LegacyServant extends Model
 
     protected $fillable = [
         'cod_servidor',
-        'ref_cod_instituicao',
         'data_cadastro',
         'carga_horaria',
     ];

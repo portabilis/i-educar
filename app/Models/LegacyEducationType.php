@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use App\Traits\Ativo;
-use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasInstitution;
 
-class LegacyEducationType extends Model
+class LegacyEducationType extends LegacyModel
 {
     use Ativo;
+    use HasInstitution;
 
     public const CREATED_AT = 'data_cadastro';
     public const UPDATED_AT = null;
@@ -30,7 +31,6 @@ class LegacyEducationType extends Model
         'ref_usuario_exc',
         'nm_tipo',
         'ativo',
-        'ref_cod_instituicao',
         'atividade_complementar',
         'data_exclusao'
     ];
