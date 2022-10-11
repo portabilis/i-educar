@@ -38,7 +38,7 @@ class ExportService
         //obtem o total para ser usado na divisão das jobs de gerar o csv e para a mensagem de notificação
         $this->querySize = $this->export->getExportQuery()->count();
         //exporta a query
-        $exporter = new ExporterQueryExport($this->connection, $this->export->model, $this->export->fields, $this->export->filters, $this->querySize);
+        $exporter = new ExporterQueryExport($this->connection, $this->export, $this->querySize);
         //guarda o arquivo no disco em jobs divididas e no final dispara outras jobs
         $exporter->store($this->filename, writerType: $this->fileType)
             ->chain([

@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Models\Exporter\Export;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -16,7 +17,7 @@ class ExporterQueryExport implements FromQuery, ShouldQueue, WithCustomQuerySize
 {
     use Exportable;
 
-    public function __construct(private string $connection, private string $model, private array $fields, private array $filters, private int $querySize)
+    public function __construct(private string $connection, private Export $export, private int $querySize)
     {
         DB::setDefaultConnection($connection);
     }
@@ -35,9 +36,10 @@ class ExporterQueryExport implements FromQuery, ShouldQueue, WithCustomQuerySize
     {
         $select = [];
         $relations = [];
-        foreach ($this->fields as $field) {
+        foreach ($this->export->fields as $field) {
             if (!Str::contains($field, '.')) {
                 $select[] = $field;
+
                 continue;
             }
             [$relation, $column] = explode('.', $field);
@@ -54,17 +56,19 @@ class ExporterQueryExport implements FromQuery, ShouldQueue, WithCustomQuerySize
 
     public function applyFilters(Builder $query): void
     {
-        foreach ($this->filters as $filter) {
+        foreach ($this->export->filters as $filter) {
             $column = $filter['column'];
             $operator = $filter['operator'];
             $value = $filter['value'];
             switch ($operator) {
                 case '=':
                     $query->whereRaw("{$column} {$operator} {$value}");
+
                     break;
                 case 'in':
                     $value = implode(', ', $value);
                     $query->whereRaw("{$column} {$operator} ({$value})");
+
                     break;
             }
         }
@@ -77,7 +81,7 @@ class ExporterQueryExport implements FromQuery, ShouldQueue, WithCustomQuerySize
 
     public function newExportModel(): Model
     {
-        $model = $this->model;
+        $model = $this->export->model;
 
         return new $model();
     }
@@ -86,6 +90,6 @@ class ExporterQueryExport implements FromQuery, ShouldQueue, WithCustomQuerySize
     {
         return array_map(function ($column) {
             return $this->newExportModel()->alias($column);
-        }, $this->fields);
+        }, $this->export->fields);
     }
 }
