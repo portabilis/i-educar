@@ -15,7 +15,7 @@ class clsPmieducarDisciplinaTopico extends Model
 
     public function __construct($cod_disciplina_topico = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_topico = null, $desc_topico = null, $data_cadastro = null, $data_exclusao = null, $ativo = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}disciplina_topico";
 
