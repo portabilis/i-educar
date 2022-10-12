@@ -15,8 +15,6 @@ class LegacySchoolClassFactory extends Factory
 
     public function definition(): array
     {
-        $schoolGrade = $this->getSchoolGrade();
-
         return [
             'ref_usuario_cad' => fn () => LegacyUserFactory::new()->unique()->make(),
             'nm_turma' => $name = $this->faker->colorName,
@@ -25,9 +23,9 @@ class LegacySchoolClassFactory extends Factory
             'data_cadastro' => now(),
             'turma_turno_id' => fn () => LegacyPeriodFactory::new()->create(),
             'ref_cod_turma_tipo' => fn () => LegacySchoolClassTypeFactory::new()->unique()->make(),
-            'ref_ref_cod_escola' => $schoolGrade->school_id,
-            'ref_ref_cod_serie' => $schoolGrade->grade_id,
-            'ref_cod_curso' => $schoolGrade->grade->course_id,
+            'ref_ref_cod_escola' => fn () => $this->getSchoolGrade()->school_id,
+            'ref_ref_cod_serie' => fn () => $this->getSchoolGrade()->grade_id,
+            'ref_cod_curso' => fn () => $this->getSchoolGrade()->grade->course_id,
             'ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()->unique()->make(),
             'dias_semana' => [2, 3, 4, 5, 6],
             'multiseriada' => false,
@@ -131,16 +129,9 @@ class LegacySchoolClassFactory extends Factory
                 'ano_letivo' => now()->year,
             ]);
 
-            return $schoolGrade;
+            $this->schoolGrade = $schoolGrade;
         }
 
         return $this->schoolGrade;
-    }
-
-    public function useSchoolGrade(LegacySchoolGrade $schoolGrade): static
-    {
-        $this->schoolGrade = $schoolGrade;
-
-        return $this;
     }
 }
