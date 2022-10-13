@@ -189,13 +189,18 @@ class LegacyBuilder extends Builder
         $data = [];
         foreach ($filters as $key => $value) {
             $filter = $this->getFilterName($key);
-            if ($value !== null && method_exists($this, 'where' . $filter)) {
+            if ($this->checkWhereParameters($value, $filter)) {
                 $data[$filter] = $value;
-            if ((!is_array($value) && $value !== null && $value !== '') || (is_array($value) && count(array_filter($value)) > 0)) {
-                $data[$this->getFilterName($key)] = $value;
             }
+            $this->filters = $data;
         }
-        $this->filters = $data;
+    }
+
+    public function checkWhereParameters($value, $filter)
+    {
+        return ((!is_array($value) && $value !== null && $value !== '') ||
+                (is_array($value) && count(array_filter($value)) > 0)) &&
+            method_exists($this, 'where' . $filter);
     }
 
     /**
