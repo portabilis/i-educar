@@ -76,22 +76,22 @@
             <td style="font-weight:bold;">Feito em lote</td>
         </tr>
         @forelse($exemptions as $exemption)
-            @php $exemptionUrl = url('intranet/educar_dispensa_disciplina_det.php?ref_cod_matricula=' . $exemption->ref_cod_matricula . '&ref_cod_serie=' . $exemption->ref_cod_serie . '&ref_cod_escola=' . $exemption->ref_cod_escola . '&ref_cod_disciplina=' . $exemption->ref_cod_disciplina) @endphp
+            @php $exemptionUrl = url('intranet/educar_dispensa_disciplina_det.php?ref_cod_matricula=' . $exemption->registration_id . '&ref_cod_serie=' . $exemption->ref_cod_serie . '&ref_cod_escola=' . $exemption->school_id . '&ref_cod_disciplina=' . $exemption->discipline_id) @endphp
             <tr>
                 <td>
-                    <a href="{{ $exemptionUrl }}" target="_blank" rel="noopener">{{ $exemption->registration->ano }}</a>
+                    <a href="{{ $exemptionUrl }}" target="_blank" rel="noopener">{{ $exemption->registration->year }}</a>
                 </td>
                 <td>
-                    <a href="{{ $exemptionUrl }}" target="_blank" rel="noopener">{{ $exemption->registration->student->person->nome }}</a>
+                    <a href="{{ $exemptionUrl }}" target="_blank" rel="noopener">{{ $exemption->registration->student->person->name }}</a>
                 </td>
                 <td>
-                    <a href="{{ $exemptionUrl }}" target="_blank" rel="noopener">{{ $exemption->discipline->nome }}</a>
+                    <a href="{{ $exemptionUrl }}" target="_blank" rel="noopener">{{ $exemption->discipline->name }}</a>
                 </td>
                 <td>
-                    <a href="{{ $exemptionUrl }}" target="_blank" rel="noopener">{{ $exemption->type }}</a>
+                    <a href="{{ $exemptionUrl }}" target="_blank" rel="noopener">{{ $exemption->type->name }}</a>
                 </td>
                 <td>
-                    <a href="{{ $exemptionUrl }}" target="_blank" rel="noopener">{{ $exemption->data_cadastro->format('d/m/Y') }}</a>
+                    <a href="{{ $exemptionUrl }}" target="_blank" rel="noopener">{{ $exemption->created_at->format('d/m/Y') }}</a>
                 </td>
                 <td>
                     <a href="{{ $exemptionUrl }}" target="_blank" rel="noopener">{{ $exemption->createdBy->name }}</a>
