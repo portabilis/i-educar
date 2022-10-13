@@ -120,7 +120,6 @@ class clsPmieducarHistoricoEscolar extends Model
         if (is_numeric($ref_cod_escola)) {
             $this->ref_cod_escola = $ref_cod_escola;
             $db = new clsBanco();
-            $resultado = [];
             $db->Consulta("SELECT COALESCE((SELECT COALESCE (fcn_upper(ps.nome),fcn_upper(juridica.fantasia))
                                       FROM cadastro.pessoa ps, cadastro.juridica
                                      WHERE escola.ref_idpes = juridica.idpes
@@ -336,7 +335,7 @@ class clsPmieducarHistoricoEscolar extends Model
             $db->Consulta("INSERT INTO {$this->_tabela} ( sequencial, $campos ) VALUES( $this->sequencial, $valores )");
 
             if ($this->ref_cod_aluno) {
-                $detalhe = $this->detalhe();
+                $this->detalhe();
             }
 
             return $this->sequencial;
@@ -508,7 +507,7 @@ class clsPmieducarHistoricoEscolar extends Model
             }
 
             if ($set) {
-                $detalheAntigo = $this->detalhe();
+                $this->detalhe();
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_aluno = '{$this->ref_cod_aluno}' AND sequencial = '{$this->sequencial}'");
 
                 return true;
@@ -521,7 +520,7 @@ class clsPmieducarHistoricoEscolar extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_ref_cod_aluno = null, $int_sequencial = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_serie = null, $int_ano = null, $int_carga_horaria = null, $int_dias_letivos = null, $str_escola = null, $str_escola_cidade = null, $str_escola_uf = null, $str_observacao = null, $int_aprovado = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_faltas_globalizadas = null, $int_ref_cod_instituicao = null, $int_origem = null, $int_extra_curricular = null, $int_ref_cod_matricula = null, $int_frequencia = null)
     {
@@ -665,7 +664,7 @@ class clsPmieducarHistoricoEscolar extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -683,7 +682,7 @@ class clsPmieducarHistoricoEscolar extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {
@@ -733,9 +732,8 @@ class clsPmieducarHistoricoEscolar extends Model
     {
         if (is_numeric($ref_cod_aluno)) {
             $db = new clsBanco();
-            $sequencial = $db->campoUnico("SELECT COALESCE( MAX(sequencial), 0 ) FROM pmieducar.historico_escolar WHERE ref_cod_aluno = {$ref_cod_aluno}");
 
-            return $sequencial;
+            return $db->campoUnico("SELECT COALESCE( MAX(sequencial), 0 ) FROM pmieducar.historico_escolar WHERE ref_cod_aluno = {$ref_cod_aluno}");
         }
 
         return false;

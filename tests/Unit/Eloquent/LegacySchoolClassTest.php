@@ -3,13 +3,13 @@
 namespace Tests\Unit\Eloquent;
 
 use App\Models\LegacyCourse;
+use App\Models\LegacyEnrollment;
 use App\Models\LegacyLevel;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolClass;
 use Database\Factories\LegacyEnrollmentFactory;
 use Database\Factories\LegacyRegistrationFactory;
 use Database\Factories\LegacySchoolClassFactory;
-use Illuminate\Support\Collection;
 use Tests\EloquentTestCase;
 
 class LegacySchoolClassTest extends EloquentTestCase
@@ -21,7 +21,7 @@ class LegacySchoolClassTest extends EloquentTestCase
         'course' => LegacyCourse::class,
         'grade' => LegacyLevel::class,
         'school' => LegacySchool::class,
-        'enrollments' => Collection::class,
+        'enrollments' => [LegacyEnrollment::class],
     ];
 
     /**

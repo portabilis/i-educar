@@ -17,7 +17,7 @@ class clsPmieducarCalendarioDia extends Model
 
     public function __construct($ref_cod_calendario_ano_letivo = null, $mes = null, $dia = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_cod_calendario_dia_motivo = null/*, $ref_cod_calendario_atividade = null*/, $descricao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}calendario_dia";
 
@@ -173,7 +173,7 @@ class clsPmieducarCalendarioDia extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_ref_cod_calendario_ano_letivo = null, $int_mes = null, $int_dia = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_cod_calendario_dia_motivo = null/*, $int_ref_cod_calendario_atividade = null*/, $str_descricao = null, $date_descricao_fim = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $str_tipo_dia_in = null)
     {
@@ -272,7 +272,7 @@ class clsPmieducarCalendarioDia extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -290,7 +290,7 @@ class clsPmieducarCalendarioDia extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

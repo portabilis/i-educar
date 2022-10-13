@@ -76,7 +76,7 @@ return new class extends clsCadastro {
 
             if ($lista) {
                 // passa todos os valores obtidos no registro para atributos do objeto
-                foreach ($lista as $campo => $val) {
+                foreach ($lista as $val) {
                     $temp = [];
                     $temp['carga_horaria']  = $val['carga_horaria'];
                     $temp['periodo']        = $val['periodo'];
@@ -115,7 +115,6 @@ return new class extends clsCadastro {
         $this->campoRotulo('nm_instituicao', 'Instituição', $inst_det['nm_instituicao']);
         $this->campoOculto('ref_ref_cod_instituicao', $this->ref_ref_cod_instituicao);
 
-        $opcoes = ['' => 'Selecione'];
         $objTemp = new clsPmieducarServidor($this->ref_cod_servidor);
         $det = $objTemp->detalhe();
         if ($det) {
@@ -188,7 +187,7 @@ return new class extends clsCadastro {
 
         if ($this->alocacao_array) {
             // Substitui todas as alocações
-            foreach ($this->alocacao_array as $key => $alocacao) {
+            foreach ($this->alocacao_array as $alocacao) {
                 $obj = new clsPmieducarServidorAlocacao(
                     null,
                     $this->ref_ref_cod_instituicao,
@@ -204,18 +203,11 @@ return new class extends clsCadastro {
                 );
 
                 $return = $obj->lista(
-                    null,
-                    $this->ref_ref_cod_instituicao,
-                    null,
-                    null,
-                    $alocacao['ref_cod_escola'],
-                    $this->ref_cod_servidor,
-                    null,
-                    null,
-                    null,
-                    null,
-                    1,
-                    $alocacao['carga_horaria']
+                    int_ref_ref_cod_instituicao: $this->ref_ref_cod_instituicao,
+                    int_ref_cod_escola: $alocacao['ref_cod_escola'],
+                    int_ref_cod_servidor: $this->ref_cod_servidor,
+                    int_ativo: 1,
+                    int_carga_horaria: $alocacao['carga_horaria']
                 );
 
                 if (false !== $return) {

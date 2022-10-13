@@ -544,7 +544,7 @@ class clsDocumento
     public function exclui()
     {
         if (is_numeric($this->idpes)) {
-            $db = new clsBanco();
+
 
             return true;
         }
@@ -555,7 +555,7 @@ class clsDocumento
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {
@@ -573,7 +573,7 @@ class clsDocumento
     /**
      * Exibe uma lista baseada nos parametros de filtragem passados
      *
-     * @return Array
+     * @return array|false
      */
     public function lista(
         $int_rg = false,
@@ -711,7 +711,7 @@ class clsDocumento
     /**
      * Retorna um array com os detalhes do objeto
      *
-     * @return Array
+     * @return array|false
      */
     public function detalhe()
     {

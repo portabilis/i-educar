@@ -39,7 +39,7 @@ class clsModulesUniformeAluno extends Model
         $quantidade_meia = null,
         $tamanho_meia = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}uniforme_aluno";
 
@@ -295,7 +295,7 @@ class clsModulesUniformeAluno extends Model
     /**
      * Retorna uma lista de registros filtrados de acordo com os parâmetros.
      *
-     * @return array
+     * @return array|false
      */
     public function lista()
     {
@@ -334,7 +334,7 @@ class clsModulesUniformeAluno extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -352,7 +352,7 @@ class clsModulesUniformeAluno extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

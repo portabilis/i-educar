@@ -10,7 +10,7 @@ class clsModulesNotaExame extends Model
 
     public function __construct($ref_cod_matricula = null, $ref_cod_componente_curricular = null, $nota_exame = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}nota_exame";
 
@@ -95,7 +95,7 @@ class clsModulesNotaExame extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -113,7 +113,7 @@ class clsModulesNotaExame extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

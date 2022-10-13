@@ -13,7 +13,7 @@ class clsPmieducarResponsaveisAluno extends Model
         $ref_idpes = null,
         $vinculo_familiar = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}responsaveis_aluno";
 
@@ -71,7 +71,7 @@ class clsPmieducarResponsaveisAluno extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista()
     {

@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Eloquent;
 
+use App\Models\City;
 use App\Models\District;
 use OpenApiGenerator\Attributes\Property;
 use OpenApiGenerator\Attributes\Schema;
@@ -19,6 +20,13 @@ use Tests\EloquentTestCase;
 ]
 class DistrictTest extends EloquentTestCase
 {
+    /**
+     * @var string[]
+     */
+    protected $relations = [
+        'city' => City::class,
+    ];
+
     /**
      * @return string
      */

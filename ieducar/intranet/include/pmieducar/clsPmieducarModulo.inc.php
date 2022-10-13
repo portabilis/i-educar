@@ -42,7 +42,7 @@ class clsPmieducarModulo extends Model
         $ref_cod_instituicao = null,
         $num_etapas = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}modulo";
 
@@ -229,14 +229,9 @@ class clsPmieducarModulo extends Model
             if (is_string($this->num_etapas)) {
                 $set[] = "num_etapas = '{$this->num_etapas}'";
             }
-
-            if (!empty($set)) {
-                $set = join(', ', $set);
-
-                $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_modulo = '{$this->cod_modulo}'");
-
-                return true;
-            }
+            $set = implode(', ', $set);
+            $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_modulo = '{$this->cod_modulo}'");
+            return true;
         }
 
         return false;
@@ -245,7 +240,7 @@ class clsPmieducarModulo extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista(
         $int_cod_modulo = null,
@@ -361,7 +356,7 @@ class clsPmieducarModulo extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -379,7 +374,7 @@ class clsPmieducarModulo extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

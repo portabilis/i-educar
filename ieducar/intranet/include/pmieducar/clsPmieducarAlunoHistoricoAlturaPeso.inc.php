@@ -18,7 +18,7 @@ class clsPmieducarAlunoHistoricoAlturaPeso extends Model
         $altura = null,
         $peso = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}aluno_historico_altura_peso";
 
@@ -118,7 +118,7 @@ class clsPmieducarAlunoHistoricoAlturaPeso extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($ref_cod_aluno = null)
     {
@@ -166,7 +166,7 @@ class clsPmieducarAlunoHistoricoAlturaPeso extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -184,7 +184,7 @@ class clsPmieducarAlunoHistoricoAlturaPeso extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

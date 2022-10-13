@@ -12,7 +12,7 @@ class clsPmieducarSeriePeriodoData extends Model
 
     public function __construct($ref_cod_serie = null, $sequencial = null, $ref_cod_serie_tipo_periodo_ano = null, $data_inicial = null, $data_final = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}serie_periodo_data";
 
@@ -122,7 +122,7 @@ class clsPmieducarSeriePeriodoData extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_ref_cod_serie = null, $int_sequencial = null, $int_ref_cod_serie_tipo_periodo_ano = null, $date_data_inicial_ini = null, $date_data_inicial_fim = null, $date_data_final_ini = null, $date_data_final_fim = null)
     {
@@ -193,7 +193,7 @@ class clsPmieducarSeriePeriodoData extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -211,7 +211,7 @@ class clsPmieducarSeriePeriodoData extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {
@@ -233,9 +233,6 @@ class clsPmieducarSeriePeriodoData extends Model
      */
     public function excluir()
     {
-        if (is_numeric($this->ref_cod_serie) && is_numeric($this->sequencial)) {
-        }
-
         return false;
     }
 

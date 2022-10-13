@@ -10,7 +10,7 @@ class clsPmieducarSerieDiaSemana extends Model
 
     public function __construct($dia_semana = null, $ref_ref_cod_serie = null, $ref_ref_cod_escola = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}serie_dia_semana";
 
@@ -98,7 +98,7 @@ class clsPmieducarSerieDiaSemana extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_dia_semana = null, $int_ref_ref_cod_serie = null, $int_ref_ref_cod_escola = null)
     {
@@ -153,7 +153,7 @@ class clsPmieducarSerieDiaSemana extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -171,7 +171,7 @@ class clsPmieducarSerieDiaSemana extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {
@@ -193,9 +193,6 @@ class clsPmieducarSerieDiaSemana extends Model
      */
     public function excluir()
     {
-        if (is_numeric($this->dia_semana)) {
-        }
-
         return false;
     }
 }

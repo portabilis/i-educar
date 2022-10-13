@@ -346,7 +346,7 @@ return new class extends clsCadastro {
     public function arrayHhmmToMinutes($array)
     {
         $total = 0;
-        foreach ($array as $key => $value) {
+        foreach ($array as $value) {
             $total += $this->hhmmToMinutes($value);
         }
 

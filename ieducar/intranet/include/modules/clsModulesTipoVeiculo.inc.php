@@ -9,7 +9,7 @@ class clsModulesTipoVeiculo extends Model
 
     public function __construct($cod_tipo_veiculo = null, $descricao = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}tipo_veiculo";
 
@@ -76,7 +76,7 @@ class clsModulesTipoVeiculo extends Model
     /**
      * Retorna uma lista de registros filtrados de acordo com os parâmetros.
      *
-     * @return array
+     * @return array|false
      */
     public function lista($cod_tipo_veiculo = null, $descricao = null)
     {
@@ -127,7 +127,7 @@ class clsModulesTipoVeiculo extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -152,7 +152,7 @@ class clsModulesTipoVeiculo extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

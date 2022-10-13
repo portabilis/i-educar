@@ -68,7 +68,7 @@ class clsOrgaoEmissorRg
         if (is_numeric($this->idorg_rg)) {
             $objDocumento = new clsDocumento(false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, $this->idorg_rg);
             if (!count($objDocumento->lista(false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, $this->idorg_rg))) {
-                $db = new clsBanco();
+
 
                 return true;
             }
@@ -78,7 +78,7 @@ class clsOrgaoEmissorRg
     /**
      * Exibe uma lista baseada nos parametros de filtragem passados
      *
-     * @return Array
+     * @return array|false
      */
     public function lista($str_sigla = false, $str_descricao = false, $str_situacao = false, $int_limite_ini = 0, $int_limite_qtd = false, $str_orderBy = false)
     {
@@ -128,7 +128,7 @@ class clsOrgaoEmissorRg
     /**
      * Retorna um array com os detalhes do objeto
      *
-     * @return Array
+     * @return array|false
      */
     public function detalhe()
     {

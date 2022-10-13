@@ -3,10 +3,9 @@
 namespace App\Models;
 
 use App\Support\Database\DateSerializer;
-use App\User;
+use App\Traits\HasLegacyDates;
 use DateTime;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
@@ -21,9 +20,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property LegacyRegistration $registration
  * @property LegacySchoolClass  $schoolClass
  */
-class LegacyEnrollment extends Model
+class LegacyEnrollment extends LegacyModel
 {
     use DateSerializer;
+    use HasLegacyDates;
 
     /**
      * @var string
@@ -43,7 +43,6 @@ class LegacyEnrollment extends Model
         'ref_cod_turma',
         'sequencial',
         'ref_usuario_cad',
-        'data_cadastro',
         'data_enturmacao',
         'sequencial_fechamento',
         'remanejado_mesma_turma',
@@ -156,7 +155,7 @@ class LegacyEnrollment extends Model
      */
     public function createdBy()
     {
-        return $this->belongsTo(User::class, 'ref_usuario_cad');
+        return $this->belongsTo(LegacyUser::class, 'ref_usuario_cad');
     }
 
     /**
@@ -166,7 +165,7 @@ class LegacyEnrollment extends Model
      */
     public function updatedBy()
     {
-        return $this->belongsTo(User::class, 'ref_usuario_exc');
+        return $this->belongsTo(LegacyUser::class, 'ref_usuario_exc');
     }
 
     public function getStudentId()

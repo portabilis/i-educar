@@ -11,7 +11,7 @@ class clsPmieducarSeriePreRequisito extends Model
 
     public function __construct($ref_cod_pre_requisito = null, $ref_cod_operador = null, $ref_cod_serie = null, $valor = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}serie_pre_requisito";
 
@@ -105,7 +105,7 @@ class clsPmieducarSeriePreRequisito extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_ref_cod_pre_requisito = null, $int_ref_cod_operador = null, $int_ref_cod_serie = null, $str_valor = null)
     {
@@ -164,7 +164,7 @@ class clsPmieducarSeriePreRequisito extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -182,7 +182,7 @@ class clsPmieducarSeriePreRequisito extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

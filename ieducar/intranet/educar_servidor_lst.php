@@ -65,7 +65,7 @@ return new class extends clsListagem {
             'pessoa.nome as name',
             'ref_cod_instituicao',
             'cod_servidor',
-        ], 'pagina_' . $this->nome);
+        ], 'pagina_');
 
 
         // UrlHelper

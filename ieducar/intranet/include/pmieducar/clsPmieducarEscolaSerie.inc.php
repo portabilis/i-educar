@@ -22,7 +22,7 @@ class clsPmieducarEscolaSerie extends Model
 
     public function __construct($ref_cod_escola = null, $ref_cod_serie = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $hora_inicial = null, $hora_final = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $hora_inicio_intervalo = null, $hora_fim_intervalo = null, $bloquear_enturmacao_sem_vagas = null, $bloquear_cadastro_turma_para_serie_com_vagas = null, $anos_letivos = [])
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}escola_serie";
 
@@ -141,7 +141,6 @@ class clsPmieducarEscolaSerie extends Model
             if (is_array($this->anos_letivos)) {
                 $campos .= "{$gruda}anos_letivos";
                 $valores .= "{$gruda} " . Portabilis_Utils_Database::arrayToPgArray($this->anos_letivos) . ' ';
-                $grupo = ', ';
             }
 
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
@@ -226,7 +225,7 @@ class clsPmieducarEscolaSerie extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_ref_cod_escola = null, $int_ref_cod_serie = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $time_hora_inicio_intervalo_ini = null, $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_instituicao = null, $int_ref_cod_curso = null, $bloquear_enturmacao_sem_vagas = null, $bloquear_cadastro_turma_para_serie_com_vagas = null)
     {
@@ -364,7 +363,7 @@ class clsPmieducarEscolaSerie extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -382,7 +381,7 @@ class clsPmieducarEscolaSerie extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

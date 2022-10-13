@@ -15,7 +15,7 @@ class clsPmieducarEscolaDiasLetivos extends Model
 
     public function __construct($ref_cod_escola = null, $ano = null, $ref_usuario_cad = null, $ref_usuario_exc = null, $num_dias = null, $data_cadastro = null, $data_exclusao = null, $ativo = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}escola_dias_letivos";
 
@@ -145,7 +145,7 @@ class clsPmieducarEscolaDiasLetivos extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_ref_cod_escola = null, $int_ano = null, $int_ref_usuario_cad = null, $int_ref_usuario_exc = null, $int_num_dias = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null)
     {
@@ -231,7 +231,7 @@ class clsPmieducarEscolaDiasLetivos extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -249,7 +249,7 @@ class clsPmieducarEscolaDiasLetivos extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

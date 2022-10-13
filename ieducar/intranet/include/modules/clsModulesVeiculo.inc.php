@@ -43,7 +43,7 @@ class clsModulesVeiculo extends Model
         $ref_cod_motorista = null,
         $observacao = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}veiculo";
 
@@ -251,7 +251,7 @@ class clsModulesVeiculo extends Model
             $this->cod_veiculo = $db->InsertId("{$this->_tabela}_seq");
 
             if ($this->cod_veiculo) {
-                $detalhe = $this->detalhe();
+                $this->detalhe();
             }
 
             return $this->cod_veiculo;
@@ -362,7 +362,7 @@ class clsModulesVeiculo extends Model
                 $gruda = ', ';
             }
             if ($set) {
-                $detalheAntigo = $this->detalhe();
+                $this->detalhe();
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_veiculo = '{$this->cod_veiculo}'");
 
                 return true;
@@ -375,7 +375,7 @@ class clsModulesVeiculo extends Model
     /**
      * Retorna uma lista de registros filtrados de acordo com os parâmetros.
      *
-     * @return array
+     * @return array|false
      */
     public function lista(
         $cod_veiculo = null,
@@ -484,7 +484,7 @@ class clsModulesVeiculo extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -516,7 +516,7 @@ class clsModulesVeiculo extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {
@@ -539,7 +539,7 @@ class clsModulesVeiculo extends Model
     public function excluir()
     {
         if (is_numeric($this->cod_veiculo)) {
-            $detalhe = $this->detalhe();
+            $this->detalhe();
 
             $sql = "DELETE FROM {$this->_tabela} WHERE cod_veiculo = '{$this->cod_veiculo}'";
             $db = new clsBanco();

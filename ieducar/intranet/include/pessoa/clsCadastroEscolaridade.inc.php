@@ -14,7 +14,7 @@ class clsCadastroEscolaridade extends Model
      */
     public function __construct($idesco = null, $descricao = null, $escolaridade = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'cadastro.';
         $this->_tabela = "{$this->_schema}escolaridade";
 
@@ -113,7 +113,7 @@ class clsCadastroEscolaridade extends Model
     /**
      * Retorna uma lista de registros filtrados de acordo com os parâmetros.
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_idesco = null, $str_descricao = null, $escolaridade = null)
     {
@@ -170,7 +170,7 @@ class clsCadastroEscolaridade extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {

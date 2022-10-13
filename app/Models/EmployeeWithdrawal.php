@@ -2,12 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Concerns\SoftDeletes\LegacySoftDeletes;
+use App\Traits\HasLegacyDates;
+use App\Traits\HasLegacyUserAction;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class EmployeeWithdrawal extends Model
+class EmployeeWithdrawal extends LegacyModel
 {
     use HasFiles;
+    use HasLegacyDates;
+    use HasLegacyUserAction;
+    use LegacySoftDeletes;
 
     protected $table = 'pmieducar.servidor_afastamento';
 
@@ -16,26 +21,14 @@ class EmployeeWithdrawal extends Model
         'sequencial',
         'ref_ref_cod_instituicao',
         'ref_cod_motivo_afastamento',
-        'ref_usuario_exc',
-        'ref_usuario_cad',
-        'data_cadastro',
-        'data_exclusao',
         'data_retorno',
         'data_saida',
-        'ativo',
     ];
 
     protected $dates = [
-        'data_cadastro',
-        'data_exclusao',
         'data_retorno',
         'data_saida',
     ];
-
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * @return BelongsTo

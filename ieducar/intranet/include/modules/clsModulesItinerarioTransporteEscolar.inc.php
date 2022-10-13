@@ -21,7 +21,7 @@ class clsModulesItinerarioTransporteEscolar extends Model
         $hora = null,
         $tipo = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}itinerario_transporte_escolar";
 
@@ -176,7 +176,7 @@ class clsModulesItinerarioTransporteEscolar extends Model
     /**
      * Retorna uma lista de registros filtrados de acordo com os parâmetros.
      *
-     * @return array
+     * @return array|false
      */
     public function lista(
         $cod_itinerario_transporte_escolar = null,
@@ -307,7 +307,7 @@ class clsModulesItinerarioTransporteEscolar extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -327,7 +327,7 @@ class clsModulesItinerarioTransporteEscolar extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

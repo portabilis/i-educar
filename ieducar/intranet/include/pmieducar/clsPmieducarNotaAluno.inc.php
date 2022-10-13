@@ -23,7 +23,7 @@ class clsPmieducarNotaAluno extends Model
 
     public function __construct($cod_nota_aluno = null, $ref_sequencial = null, $ref_ref_cod_tipo_avaliacao = null, $ref_cod_serie = null, $ref_cod_escola = null, $ref_cod_disciplina = null, $ref_cod_matricula = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $modulo = null, $ref_cod_curso_disciplina = null, $nota = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}nota_aluno";
 
@@ -230,7 +230,7 @@ class clsPmieducarNotaAluno extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_cod_nota_aluno = null, $int_ref_sequencial = null, $int_ref_ref_cod_tipo_avaliacao = null, $int_ref_cod_serie = null, $int_ref_cod_escola = null, $int_ref_cod_disciplina = null, $int_ref_cod_matricula = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_modulo = null, $int_ref_cod_curso_disciplina = null, $int_nota = null)
     {
@@ -344,7 +344,7 @@ class clsPmieducarNotaAluno extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -362,7 +362,7 @@ class clsPmieducarNotaAluno extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {
@@ -570,7 +570,7 @@ class clsPmieducarNotaAluno extends Model
             $disciplinas_acima_media = 0;
             $total_disciplinas = count($listaEscolaSerieDisciplina);
             if ($listaEscolaSerieDisciplina) {
-                foreach ($listaEscolaSerieDisciplina as $key => $disciplina) {
+                foreach ($listaEscolaSerieDisciplina as $disciplina) {
                     $objNotaAluno = new clsPmieducarNotaAluno();
                     $media = $objNotaAluno->getMediaAluno($cod_matricula, $disciplina['ref_cod_disciplina'], $disciplina['ref_ref_cod_serie'], $qtd_modulos);
                     if ($media >= $media_curso_sem_exame) {
@@ -601,33 +601,6 @@ class clsPmieducarNotaAluno extends Model
         }
     }
 
-    /**
-     * retorna a quantidade de disciplinas que a matricula $cod_matricula pegou exame
-     *
-     * @param int   $cod_matricula
-     * @param int   $qtd_modulos_normais
-     * @param float $media
-     *
-     * return int
-     *
-     */
-    public function getQtdMateriasExame($cod_matricula, $qtd_modulos_normais, $media, $nao_arredondar_nota = false)
-    {
-        $exames = 0;
-        if (is_numeric($cod_matricula) && is_numeric($qtd_modulos_normais) && is_numeric($media)) {
-            $medias = $this->getMediasAluno($cod_matricula, $qtd_modulos_normais, $nao_arredondar_nota);
-
-            if (is_array($medias)) {
-                foreach ($medias as $value) {
-                    if ($value['media'] < $media) {
-                        $exames++;
-                    }
-                }
-            }
-        }
-
-        return $exames;
-    }
 
     /**
      * retorna a quantidade de disciplinas que a matricula $cod_matricula ja recebeu nota no exame
@@ -660,11 +633,9 @@ class clsPmieducarNotaAluno extends Model
         $exames = [];
         if (is_numeric($cod_matricula) && is_numeric($qtd_modulos_normais) && is_numeric($media)) {
             $medias = $this->getMediasAluno($cod_matricula, $qtd_modulos_normais, $arredondar_nota);
-            if (is_array($medias)) {
-                foreach ($medias as $value) {
-                    if ($value['media'] < $media) {
-                        $exames[] = ['cod_disciplina' => $value['cod_disciplina'], 'cod_serie' => $value['cod_serie']];
-                    }
+            foreach ($medias as $value) {
+                if ($value['media'] < $media) {
+                    $exames[] = ['cod_disciplina' => $value['cod_disciplina'], 'cod_serie' => $value['cod_serie']];
                 }
             }
         }
@@ -1054,9 +1025,7 @@ class clsPmieducarNotaAluno extends Model
                    AND disc_ref_cod_turma      = {$int_ref_ref_cod_turma}
                    AND ref_ref_cod_turma       = {$int_ref_cod_turma}";
 
-        $qtd_nota = $db->CampoUnico($sql);
-
-        return $qtd_nota;
+        return $db->CampoUnico($sql);
     }
 
     /**
@@ -1082,9 +1051,7 @@ class clsPmieducarNotaAluno extends Model
                 ) AS sub1
             ";
 
-            $qtd_nota = $db->CampoUnico($sql);
-
-            return $qtd_nota;
+            return $db->CampoUnico($sql);
         }
 
         return false;
@@ -1120,9 +1087,7 @@ class clsPmieducarNotaAluno extends Model
                 $sql .= " AND ref_cod_curso_disciplina = '{$int_ref_cod_curso_disciplina}'";
             }
 
-            $qtd_nota = $db->CampoUnico($sql);
-
-            return $qtd_nota;
+            return $db->CampoUnico($sql);
         }
 
         return false;
@@ -1145,9 +1110,7 @@ class clsPmieducarNotaAluno extends Model
                         ref_cod_matricula = '{$int_ref_cod_matricula}'
                         AND ativo = 1";
 
-            $max_nota = $db->CampoUnico($sql);
-
-            return $max_nota;
+            return $db->CampoUnico($sql);
         }
 
         return false;
@@ -1166,8 +1129,7 @@ class clsPmieducarNotaAluno extends Model
      */
     public function getUltimaNotaModulo($cod_matricula, $cod_disciplina, $cod_serie, $ultimo_modulo)
     {
-        if (is_numeric($cod_matricula) && is_numeric($cod_disciplina) && is_numeric($cod_serie) && is_numeric($ultimo_modulo)) {
-            $sql = "SELECT tav.valor
+        $sql = "SELECT tav.valor
                     FROM pmieducar.nota_aluno na
                     , pmieducar.tipo_avaliacao_valores tav
                     WHERE na.ref_cod_matricula = '{$cod_matricula}'
@@ -1177,11 +1139,7 @@ class clsPmieducarNotaAluno extends Model
                     AND tav.ref_cod_tipo_avaliacao = na.ref_ref_cod_tipo_avaliacao
                     AND tav.sequencial = na.ref_sequencial
                     AND na.modulo = '{$ultimo_modulo}'";
-            $db = new clsBanco();
-
-            return $db->CampoUnico($sql);
-        }
-
-        return false;
+        $db = new clsBanco();
+        return $db->CampoUnico($sql);
     }
 }

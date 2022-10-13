@@ -11,7 +11,7 @@ class clsPmieducarServidorTituloConcurso extends Model
 
     public function __construct($cod_servidor_titulo = null, $ref_cod_formacao = null, $data_vigencia_homolog = null, $data_publicacao = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}servidor_titulo_concurso";
 
@@ -108,7 +108,7 @@ class clsPmieducarServidorTituloConcurso extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_cod_servidor_titulo = null, $int_ref_cod_formacao = null, $date_data_vigencia_homolog_ini = null, $date_data_vigencia_homolog_fim = null, $date_data_publicacao_ini = null, $date_data_publicacao_fim = null)
     {
@@ -175,7 +175,7 @@ class clsPmieducarServidorTituloConcurso extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -199,7 +199,7 @@ class clsPmieducarServidorTituloConcurso extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {
@@ -221,9 +221,6 @@ class clsPmieducarServidorTituloConcurso extends Model
      */
     public function excluir()
     {
-        if (is_numeric($this->cod_servidor_titulo)) {
-        }
-
         return false;
     }
 }

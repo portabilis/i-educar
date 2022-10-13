@@ -17,7 +17,7 @@ class clsPmieducarSubnivel extends Model
 
     public function __construct($cod_subnivel = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_cod_subnivel_anterior = null, $ref_cod_nivel = null, $nm_subnivel = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $salario = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}subnivel";
 
@@ -182,7 +182,7 @@ class clsPmieducarSubnivel extends Model
      * @param string date_data_exclusao_fim
      * @param bool bool_ativo
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_cod_subnivel = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_cod_subnivel_anterior = null, $int_ref_cod_nivel = null, $str_nm_nivel = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $bool_ativo = null, $int_salario = null)
     {
@@ -277,7 +277,7 @@ class clsPmieducarSubnivel extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {

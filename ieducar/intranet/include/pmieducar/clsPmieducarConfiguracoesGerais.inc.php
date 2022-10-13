@@ -319,20 +319,16 @@ class clsPmieducarConfiguracoesGerais
             $set[] = "emitir_ato_criacao_credenciamento = {$flag}";
         }
 
-        if (!empty($set)) {
-            $set = join(', ', $set);
-            $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_instituicao = '{$ref_cod_instituicao}'");
+        $set = implode(', ', $set);
+        $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_instituicao = '{$ref_cod_instituicao}'");
 
-            return true;
-        }
-
-        return false;
+        return true;
     }
 
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {

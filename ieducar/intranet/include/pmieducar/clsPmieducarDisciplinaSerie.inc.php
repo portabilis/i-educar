@@ -10,7 +10,7 @@ class clsPmieducarDisciplinaSerie extends Model
 
     public function __construct($ref_cod_disciplina = null, $ref_cod_serie = null, $ativo = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}disciplina_serie";
 
@@ -94,7 +94,7 @@ class clsPmieducarDisciplinaSerie extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_ref_cod_disciplina = null, $int_ref_cod_serie = null, $int_ativo = null)
     {
@@ -149,7 +149,7 @@ class clsPmieducarDisciplinaSerie extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -167,7 +167,7 @@ class clsPmieducarDisciplinaSerie extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

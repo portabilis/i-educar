@@ -19,9 +19,13 @@ class clsPmieducarMatriculaTurma extends Model
     public $reabrirMatricula;
     public $etapa_educacenso;
     public $turma_unificada;
-    public $remanejado;
     public $turno_id;
     public $tipo_atendimento = false;
+    public $transferido = false;
+    public $remanejado = false;
+    public $reclassificado = false;
+    public $falecido = false;
+    public $abandono = false;
 
     public function __construct(
         $ref_cod_matricula = null,
@@ -170,7 +174,7 @@ class clsPmieducarMatriculaTurma extends Model
 
             $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
 
-            $detalhe = $this->detalhe();
+            $this->detalhe();
 
             return true;
         }
@@ -231,17 +235,6 @@ class clsPmieducarMatriculaTurma extends Model
             if (is_numeric($this->ativo)) {
                 $set .= "{$gruda}ativo = '{$this->ativo}'";
                 $gruda = ', ';
-                if ($this->ativo == 1) {
-                    $set .= "{$gruda}remanejado = null, transferido = null";
-                    $gruda = ', ';
-                }
-            }
-
-            if (!$this->ativo) {
-                if ($this->remanejado) {
-                    $set .= "{$gruda}remanejado = true";
-                    $gruda = ', ';
-                }
             }
 
             if (is_numeric($this->ref_cod_turma_transf)) {
@@ -287,6 +280,44 @@ class clsPmieducarMatriculaTurma extends Model
                 $gruda = ', ';
             }
 
+            if (is_bool($this->transferido)) {
+                $transferido = $this->transferido ? 'true' : 'false';
+                if ((int)$this->ativo === 1) {
+                    $transferido = 'false';
+                }
+
+                $set .= "{$gruda}transferido = '$transferido'";
+                $gruda = ', ';
+            }
+
+            if (is_bool($this->remanejado)) {
+                $remanejado = $this->remanejado ? 'true' : 'false';
+                if ((int)$this->ativo === 1) {
+                    $remanejado = 'false';
+                }
+
+                $set .= "{$gruda}remanejado = '$remanejado'";
+                $gruda = ', ';
+            }
+
+            if (is_bool($this->reclassificado)) {
+                $reclassificado = $this->reclassificado ? 'true' : 'false';
+                $set .= "{$gruda}reclassificado = '$reclassificado'";
+                $gruda = ', ';
+            }
+
+            if (is_bool($this->falecido)) {
+                $falecido = $this->falecido ? 'true' : 'false';
+                $set .= "{$gruda}falecido = '$falecido'";
+                $gruda = ', ';
+            }
+
+            if (is_bool($this->abandono)) {
+                $abandono = $this->abandono ? 'true' : 'false';
+                $set .= "{$gruda}abandono = '$abandono'";
+                $gruda = ', ';
+            }
+
             if (is_string($this->tipo_atendimento)) {
                 $set .= "{$gruda}tipo_atendimento = '{{$this->tipo_atendimento}}'";
                 $gruda = ', ';
@@ -296,7 +327,7 @@ class clsPmieducarMatriculaTurma extends Model
             }
 
             if ($set) {
-                $detalheAntigo = $this->detalhe();
+                $this->detalhe();
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_turma = '{$this->ref_cod_turma}' and sequencial = '$this->sequencial' ");
 
                 return true;
@@ -309,7 +340,7 @@ class clsPmieducarMatriculaTurma extends Model
     /**
      * Retorna uma lista de registros filtrados de acordo com os parâmetros.
      *
-     * @return array
+     * @return array|false
      */
     public function lista(
         $int_ref_cod_matricula = null,
@@ -1136,7 +1167,7 @@ class clsPmieducarMatriculaTurma extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -1155,7 +1186,7 @@ class clsPmieducarMatriculaTurma extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {
@@ -1210,12 +1241,11 @@ class clsPmieducarMatriculaTurma extends Model
     {
         if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_turma)) {
             $db = new clsBanco();
-            $max = $db->CampoUnico("SELECT COALESCE(MAX(sequencial),0) + 1 AS MAX FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}'");
 
             //removido filtro pois tornou-se possivel enturmar uma matricula em mais de uma turma
             //AND ref_cod_turma = '{$this->ref_cod_turma}'");
 
-            return $max;
+            return $db->CampoUnico("SELECT COALESCE(MAX(sequencial),0) + 1 AS MAX FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}'");
         }
 
         return false;
@@ -1437,13 +1467,8 @@ class clsPmieducarMatriculaTurma extends Model
         if ($this->ref_cod_matricula && $this->sequencial) {
             $dataBaseTransferencia = $this->getDataBaseTransferencia();
             $data = $data ? $data : date('Y-m-d');
-            if (is_null($dataBaseTransferencia) || strtotime($dataBaseTransferencia) < strtotime($data)) {
-                $db = new clsBanco();
-                $db->CampoUnico("UPDATE pmieducar.matricula_turma SET transferido = true, remanejado = false, abandono = false, reclassificado = false, falecido = false, data_exclusao = '$data' WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND sequencial = {$this->sequencial}");
-            } else {
-                $db = new clsBanco();
-                $db->CampoUnico("UPDATE pmieducar.matricula_turma SET transferido = true, remanejado = false, abandono = false, reclassificado = false, falecido = false, data_exclusao = '$data' WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND sequencial = {$this->sequencial}");
-            }
+            $db = new clsBanco();
+            $db->CampoUnico("UPDATE pmieducar.matricula_turma SET transferido = true, remanejado = false, abandono = false, reclassificado = false, falecido = false, data_exclusao = '$data' WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND sequencial = {$this->sequencial}");
         }
     }
 

@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Eloquent;
 
+use App\Models\State;
 use App\Models\Country;
 use OpenApiGenerator\Attributes\Property;
 use OpenApiGenerator\Attributes\Schema;
@@ -18,6 +19,10 @@ use Tests\EloquentTestCase;
 ]
 class CountryTest extends EloquentTestCase
 {
+    protected $relations = [
+        'states' => [State::class]
+    ];
+
     /**
      * @return string
      */

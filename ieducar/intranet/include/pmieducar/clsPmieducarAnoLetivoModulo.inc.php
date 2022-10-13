@@ -26,7 +26,7 @@ class clsPmieducarAnoLetivoModulo extends Model
         $data_fim = null,
         $dias_letivos = null
     ) {
-        $db = new clsBanco();
+
 
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}ano_letivo_modulo";
@@ -188,7 +188,7 @@ class clsPmieducarAnoLetivoModulo extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista(
         $int_ref_ano = null,
@@ -273,7 +273,7 @@ class clsPmieducarAnoLetivoModulo extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -291,7 +291,7 @@ class clsPmieducarAnoLetivoModulo extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {
@@ -340,15 +340,14 @@ class clsPmieducarAnoLetivoModulo extends Model
     {
         if (is_numeric($ref_ano) && is_numeric($ref_ref_cod_escola)) {
             $db = new clsBanco();
-            $resultado = $db->CampoUnico("SELECT
+
+            return $db->CampoUnico("SELECT
                     MIN( data_inicio )
                 FROM
                     pmieducar.ano_letivo_modulo
                 WHERE
                     ref_ano = '{$ref_ano}'
                     AND ref_ref_cod_escola = '{$ref_ref_cod_escola}'");
-
-            return $resultado;
         }
 
         return false;
@@ -363,15 +362,14 @@ class clsPmieducarAnoLetivoModulo extends Model
     {
         if (is_numeric($ref_ano) && is_numeric($ref_ref_cod_escola)) {
             $db = new clsBanco();
-            $resultado = $db->CampoUnico("SELECT
+
+            return $db->CampoUnico("SELECT
                     MAX( data_fim )
                 FROM
                     pmieducar.ano_letivo_modulo
                 WHERE
                     ref_ano = '{$ref_ano}'
                     AND ref_ref_cod_escola = '{$ref_ref_cod_escola}'");
-
-            return $resultado;
         }
 
         return false;
@@ -386,14 +384,13 @@ class clsPmieducarAnoLetivoModulo extends Model
     {
         if (is_numeric($this->ref_ano) && is_numeric($this->ref_ref_cod_escola) && is_numeric($this->sequencial)) {
             $db = new clsBanco();
-            $resultado = $db->CampoUnico("SELECT sequencial || 'º ' || nm_tipo AS nome_modulo
+
+            return $db->CampoUnico("SELECT sequencial || 'º ' || nm_tipo AS nome_modulo
                                             FROM pmieducar.ano_letivo_modulo
                                            INNER JOIN pmieducar.modulo ON (modulo.cod_modulo = ano_letivo_modulo.ref_cod_modulo)
                                            WHERE ref_ano = {$this->ref_ano}
                                              AND ref_ref_cod_escola = {$this->ref_ref_cod_escola}
                                              AND sequencial = {$this->sequencial}");
-
-            return $resultado;
         }
 
         return false;

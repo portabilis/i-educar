@@ -191,6 +191,8 @@ class LegacyBuilder extends Builder
             $filter = $this->getFilterName($key);
             if ($value !== null && method_exists($this, 'where' . $filter)) {
                 $data[$filter] = $value;
+            if ((!is_array($value) && $value !== null && $value !== '') || (is_array($value) && count(array_filter($value)) > 0)) {
+                $data[$this->getFilterName($key)] = $value;
             }
         }
         $this->filters = $data;

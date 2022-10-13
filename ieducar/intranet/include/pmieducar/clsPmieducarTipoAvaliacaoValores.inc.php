@@ -14,7 +14,7 @@ class clsPmieducarTipoAvaliacaoValores extends Model
 
     public function __construct($ref_cod_tipo_avaliacao = null, $sequencial = null, $nome = null, $valor = null, $valor_min = null, $valor_max = null, $ativo = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}tipo_avaliacao_valores";
 
@@ -146,7 +146,7 @@ class clsPmieducarTipoAvaliacaoValores extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_ref_cod_tipo_avaliacao = null, $int_sequencial = null, $str_nome = null, $int_valor = null, $int_valor_min = null, $int_valor_max = null, $bool_ativo = null)
     {
@@ -222,7 +222,7 @@ class clsPmieducarTipoAvaliacaoValores extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -240,7 +240,7 @@ class clsPmieducarTipoAvaliacaoValores extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

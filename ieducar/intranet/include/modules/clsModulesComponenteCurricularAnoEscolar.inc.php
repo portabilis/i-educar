@@ -145,10 +145,6 @@ class clsModulesComponenteCurricularAnoEscolar extends Model
             $componentesSerie[] = $tupla['componente_curricular_id'];
         }
 
-        if ($componentesSerie) {
-            return $componentesSerie;
-        }
-
         return $componentesSerie;
     }
 

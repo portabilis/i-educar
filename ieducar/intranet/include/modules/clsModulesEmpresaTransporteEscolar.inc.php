@@ -15,7 +15,7 @@ class clsModulesEmpresaTransporteEscolar extends Model
         $ref_resp_idpes = null,
         $observacao = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}empresa_transporte_escolar";
 
@@ -76,7 +76,7 @@ class clsModulesEmpresaTransporteEscolar extends Model
             $this->cod_empresa_transporte_escolar = $db->InsertId("{$this->_tabela}_seq");
 
             if ($this->cod_empresa_transporte_escolar) {
-                $detalhe = $this->detalhe();
+                $this->detalhe();
             }
 
             return $this->cod_empresa_transporte_escolar;
@@ -126,7 +126,7 @@ class clsModulesEmpresaTransporteEscolar extends Model
     /**
      * Retorna uma lista de registros filtrados de acordo com os parâmetros.
      *
-     * @return array
+     * @return array|false
      */
     public function lista(
         $cod_empresa_transporte_escolar = null,
@@ -224,7 +224,7 @@ class clsModulesEmpresaTransporteEscolar extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -249,7 +249,7 @@ class clsModulesEmpresaTransporteEscolar extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {
@@ -272,7 +272,7 @@ class clsModulesEmpresaTransporteEscolar extends Model
     public function excluir()
     {
         if (is_numeric($this->cod_empresa_transporte_escolar)) {
-            $detalhe = $this->detalhe();
+            $this->detalhe();
 
             $sql = "DELETE FROM {$this->_tabela} WHERE cod_empresa_transporte_escolar = '{$this->cod_empresa_transporte_escolar}'";
             $db = new clsBanco();

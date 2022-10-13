@@ -32,7 +32,7 @@ class LegacyDisciplineAcademicYear extends Pivot
      *
      * @var string[]
      */
-    public $legacy = [
+    public array $legacy = [
         'id' => 'componente_curricular_id',
         'workload' => 'carga_horaria'
     ];
@@ -90,6 +90,6 @@ class LegacyDisciplineAcademicYear extends Pivot
      */
     public function getWorkloadAttribute()
     {
-        return $this->carga_horaria;
+        return (int) $this->carga_horaria;
     }
 }
