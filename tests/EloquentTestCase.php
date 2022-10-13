@@ -3,6 +3,7 @@
 namespace Tests;
 
 use App\Models\Concerns\SoftDeletes\LegacySoftDeletes;
+use App\Models\LegacyModel;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Model;
@@ -202,10 +203,10 @@ abstract class EloquentTestCase extends TestCase
 
     public function testHasLegacyAttributes()
     {
-        if (empty($this->getLegacyAttributes())) {
-            $this->assertTrue(true);
-        } else {
+        if (get_parent_class($this->getEloquentModelName()) === LegacyModel::class) {
             $this->assertEquals($this->createNewModel()->legacy, $this->getLegacyAttributes());
         }
+
+        $this->assertTrue(true);
     }
 }
