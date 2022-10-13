@@ -20,7 +20,7 @@ class District extends Model
      *
      * @var string
      */
-    protected string $builder = DistrictBuilder::Class;
+    protected string $builder = DistrictBuilder::class;
     /**
      * @var array
      */

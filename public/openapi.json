@@ -1,0 +1,845 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API i-EDUCAR",
+        "version": "1.0.0",
+        "description": "API para Integra\u00e7\u00e3o ao i-EDUCAR"
+    },
+    "servers": [
+        {
+            "url": "https://ieducar.com.br",
+            "description": "Endere\u00e7o do servidor da Aplica\u00e7\u00e3o"
+        }
+    ],
+    "paths": {
+        "/api/city": {
+            "get": {
+                "tags": [
+                    "City"
+                ],
+                "summary": "Get all cities",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/City"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "City"
+                ],
+                "summary": "Create a city",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "state_id": {
+                                        "type": "integer",
+                                        "description": "ID of the state",
+                                        "example": 1
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Name of the City",
+                                        "example": "Francisco Beltr\u00e3o"
+                                    },
+                                    "ibge_code": {
+                                        "type": "integer",
+                                        "description": "IBGE code of the city",
+                                        "example": 12345
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/City"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/city/{id}": {
+            "get": {
+                "tags": [
+                    "City"
+                ],
+                "summary": "Get city with ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        },
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/City"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "City"
+                ],
+                "summary": "Update city with ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        },
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "state_id": {
+                                        "type": "integer",
+                                        "description": "ID of the state",
+                                        "example": 1
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Name of the City",
+                                        "example": "Francisco Beltr\u00e3o"
+                                    },
+                                    "ibge_code": {
+                                        "type": "integer",
+                                        "description": "IBGE code of the city",
+                                        "example": 12345
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/City"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "City"
+                ],
+                "summary": "Delete city with ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        },
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/City"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/state": {
+            "get": {
+                "tags": [
+                    "State"
+                ],
+                "summary": "Get all states",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/State"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "State"
+                ],
+                "summary": "Create a state",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "country_id": {
+                                        "type": "integer",
+                                        "description": "ID of the country",
+                                        "example": 1
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Name of the State",
+                                        "example": "Paran\u00e1"
+                                    },
+                                    "abbreviation": {
+                                        "type": "string",
+                                        "description": "Abbreviation of the State",
+                                        "example": "PR"
+                                    },
+                                    "ibge_code": {
+                                        "type": "integer",
+                                        "description": "IBGE code of the state",
+                                        "example": 12345
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/State"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/state/{id}": {
+            "get": {
+                "tags": [
+                    "State"
+                ],
+                "summary": "Get state with ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        },
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/State"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "State"
+                ],
+                "summary": "Update state with ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        },
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "country_id": {
+                                        "type": "integer",
+                                        "description": "ID of the country",
+                                        "example": 1
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Name of the State",
+                                        "example": "Paran\u00e1"
+                                    },
+                                    "abbreviation": {
+                                        "type": "string",
+                                        "description": "Abbreviation of the State",
+                                        "example": "PR"
+                                    },
+                                    "ibge_code": {
+                                        "type": "integer",
+                                        "description": "IBGE code of the state",
+                                        "example": 12345
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/State"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "State"
+                ],
+                "summary": "Delete state with ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        },
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/State"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/country": {
+            "get": {
+                "tags": [
+                    "Country"
+                ],
+                "summary": "Get all countries",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Country"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Country"
+                ],
+                "summary": "Create a country",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Name of the country",
+                                        "example": "Brasil"
+                                    },
+                                    "ibge_code": {
+                                        "type": "integer",
+                                        "description": "IBGE code of the country",
+                                        "example": 12345
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Country"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/country/{id}": {
+            "get": {
+                "tags": [
+                    "Country"
+                ],
+                "summary": "Get country with ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        },
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Country"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Country"
+                ],
+                "summary": "Update country with ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        },
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Name of the country",
+                                        "example": "Brasil"
+                                    },
+                                    "ibge_code": {
+                                        "type": "integer",
+                                        "description": "IBGE code of the country",
+                                        "example": 12345
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Country"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Country"
+                ],
+                "summary": "Delete country with ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        },
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Country"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/district": {
+            "get": {
+                "tags": [
+                    "District"
+                ],
+                "summary": "Get all districts",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/District"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/district/{id}": {
+            "get": {
+                "tags": [
+                    "District"
+                ],
+                "summary": "Get district with ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        },
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/District"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "District"
+                ],
+                "summary": "Update district with ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        },
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "city_id": {
+                                        "type": "integer",
+                                        "description": "ID of the city",
+                                        "example": 1
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Name of the District",
+                                        "example": "S\u00e3o Miguel"
+                                    },
+                                    "ibge_code": {
+                                        "type": "integer",
+                                        "description": "IBGE code of the district",
+                                        "example": 12345
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/District"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "District"
+                ],
+                "summary": "Delete district with ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        },
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/District"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "City": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "City ID",
+                        "example": 1
+                    },
+                    "state_id": {
+                        "type": "integer",
+                        "description": "State ID",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "City name",
+                        "example": "Francisco Beltr\u00e3o"
+                    },
+                    "ibge_code": {
+                        "type": "string",
+                        "description": "IBGE code",
+                        "example": 12345
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "description": "Creation date",
+                        "example": "2022-01-01 00:00:00"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "description": "Update date",
+                        "example": "2022-01-01 00:00:00"
+                    }
+                }
+            },
+            "District": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "District ID",
+                        "example": 1
+                    },
+                    "city_id": {
+                        "type": "integer",
+                        "description": "City ID",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "District name",
+                        "example": "S\u00e3o Miguel"
+                    },
+                    "ibge_code": {
+                        "type": "string",
+                        "description": "IBGE code",
+                        "example": 12345
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "description": "Creation date",
+                        "example": "2022-01-01 00:00:00"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "description": "Update date",
+                        "example": "2022-01-01 00:00:00"
+                    }
+                }
+            },
+            "Country": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "Country ID",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Country name",
+                        "example": "Brasil"
+                    },
+                    "ibge_code": {
+                        "type": "string",
+                        "description": "IBGE code",
+                        "example": 12345
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "description": "Creation date",
+                        "example": "2022-01-01 00:00:00"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "description": "Update date",
+                        "example": "2022-01-01 00:00:00"
+                    }
+                }
+            },
+            "State": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "State ID",
+                        "example": 1
+                    },
+                    "country_id": {
+                        "type": "integer",
+                        "description": "Country ID",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "State name",
+                        "example": "Paran\u00e1"
+                    },
+                    "abbreviation": {
+                        "type": "string",
+                        "description": "Name Abbreviation",
+                        "example": "PR"
+                    },
+                    "ibge_code": {
+                        "type": "string",
+                        "description": "IBGE code",
+                        "example": 12345
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "description": "Creation date",
+                        "example": "2022-01-01 00:00:00"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "description": "Update date",
+                        "example": "2022-01-01 00:00:00"
+                    }
+                }
+            }
+        }
+    },
+    "security": []
+}

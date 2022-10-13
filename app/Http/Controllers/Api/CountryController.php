@@ -27,7 +27,7 @@ class CountryController extends ResourceController
 
     public function show(int $country, Request $request): JsonResource
     {
-        return $this->get($country, $request,Country::class);
+        return $this->get($country, $request, Country::class);
     }
 
     public function update(Country $country, AddressingCountryRequest $request): JsonResource
@@ -43,6 +43,7 @@ class CountryController extends ResourceController
     public function rules($district, Request $request): array
     {
         $accessLevel = $request->user()->getLevel();
+
         return [
             new CountryRestrictOperationRule($accessLevel)
         ];
@@ -51,6 +52,7 @@ class CountryController extends ResourceController
     protected function deleteRules(Model $model, Request $request)
     {
         $accessLevel = $request->user()->getLevel();
+
         return [
             new CountryRestrictOperationRule($accessLevel),
             new AddressingCountryRule()

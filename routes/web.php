@@ -11,6 +11,8 @@ Auth::routes(['register' => false]);
 
 Route::redirect('/', '/web');
 
+Route::view('/docs-api', 'docs/api/index');
+
 Route::redirect('intranet/index.php', '/web')
     ->name('home');
 

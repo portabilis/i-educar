@@ -27,7 +27,7 @@ class StateController extends ResourceController
 
     public function show(int $state, Request $request): JsonResource
     {
-        return $this->get($state, $request,State::class);
+        return $this->get($state, $request, State::class);
     }
 
     public function update(State $state, AddressingStateRequest $request): JsonResource
@@ -43,6 +43,7 @@ class StateController extends ResourceController
     public function rules($district, Request $request): array
     {
         $accessLevel = $request->user()->getLevel();
+
         return [
             new StateRestrictOperationRule($accessLevel)
         ];
@@ -51,6 +52,7 @@ class StateController extends ResourceController
     protected function deleteRules(Model $model, Request $request)
     {
         $accessLevel = $request->user()->getLevel();
+
         return [
             new StateRestrictOperationRule($accessLevel),
             new AddressingStateRule()
