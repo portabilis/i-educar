@@ -119,7 +119,7 @@ class EnrollmentEloquentBuilder extends Builder
         //pessoa
         if ($only = $this->model->getLegacyExportedColumns('father.person', $columns)) {
             $this->addSelect($only);
-            $this->leftJoin('cadastro.pessoa as father', 'exporter_student.father_id', 'f.idpes');
+            $this->leftJoin('cadastro.pessoa as f', 'exporter_student.father_id', 'f.idpes');
         }
 
         //fisica
@@ -145,7 +145,7 @@ class EnrollmentEloquentBuilder extends Builder
         //pessoa
         if ($only = $this->model->getLegacyExportedColumns('guardian.person', $columns)) {
             $this->addSelect($only);
-            $this->leftJoin('cadastro.pessoa as guardian', 'exporter_student.guardian_id', 'g.idpes');
+            $this->leftJoin('cadastro.pessoa as g', 'exporter_student.guardian_id', 'g.idpes');
         }
 
         //fisica
