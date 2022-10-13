@@ -203,7 +203,7 @@ abstract class EloquentTestCase extends TestCase
 
     public function testHasLegacyAttributes()
     {
-        if (get_parent_class($this->getEloquentModelName()) === LegacyModel::class) {
+        if (!empty($this->getLegacyAttributes()) && get_parent_class($this->getEloquentModelName()) === LegacyModel::class) {
             $this->assertEquals($this->createNewModel()->legacy, $this->getLegacyAttributes());
         }
 
