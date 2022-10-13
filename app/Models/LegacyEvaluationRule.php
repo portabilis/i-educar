@@ -48,7 +48,7 @@ class LegacyEvaluationRule extends Model
      *
      * @var string
      */
-    protected $builder = LegacyEvaluationRuleBuilder::class;
+    protected string $builder = LegacyEvaluationRuleBuilder::class;
 
     /**
      * Atributos legados para serem usados nas queries

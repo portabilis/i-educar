@@ -53,7 +53,7 @@ class LegacySchoolClass extends Model
      *
      * @var string
      */
-    protected $builder = LegacySchoolClassBuilder::class;
+    protected string $builder = LegacySchoolClassBuilder::class;
 
     /**
      * Atributos legados para serem usados nas queries
