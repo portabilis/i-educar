@@ -118,11 +118,14 @@ return new class extends clsCadastro
             }
         }
 
+        $frequenciaAluno = new clsModulesFrequenciaAluno();
+        $aulasFaltou = $frequenciaAluno->existe($_GET['ref_cod_matricula']);
+
         $frequencia = new clsModulesFrequencia();
         $dataFrequencia = $frequencia->selectDataFrequenciaByTurma($_GET['turma']);
-        
-        if ($obj_matricula->data_cancel <= $dataFrequencia['data']) {
-            $this->mensagem = 'Existe(m) frequência(s) registrada(s) após a data solicitada <br>';
+
+        if ($obj_matricula->data_cancel <= $dataFrequencia['data'] || !$aulasFaltou) {            
+            $this->mensagem = 'Não é possível realizar a operação, existem frequências registradas no período<br>';
 
             return false;
         }        
