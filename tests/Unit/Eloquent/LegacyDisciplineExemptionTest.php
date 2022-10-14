@@ -45,5 +45,4 @@ class LegacyDisciplineExemptionTest extends EloquentTestCase
             'created_by' => 'ref_usuario_cad'
         ];
     }
-
 }

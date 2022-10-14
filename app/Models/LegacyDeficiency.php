@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class LegacyDeficiency extends Model
+class LegacyDeficiency extends LegacyModel
 {
     /**
      * @var string
@@ -22,6 +20,17 @@ class LegacyDeficiency extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'nm_deficiencia', 'deficiencia_educacenso', 'desconsidera_regra_diferenciada', 'exigir_laudo_medico',
+        'nm_deficiencia',
+        'deficiencia_educacenso',
+        'desconsidera_regra_diferenciada',
+        'exigir_laudo_medico',
+    ];
+
+    public array $legacy = [
+        'id' => 'cod_deficiencia',
+        'name' => 'nm_deficiencia',
+        'educacenso' => 'deficiencia_educacenso',
+        'disregards_different_rule' => 'desconsidera_regra_diferenciada',
+        'require_medical_report' => 'exigir_laudo_medico'
     ];
 }

@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class LegacySchoolingDegree extends Model
+class LegacySchoolingDegree extends LegacyModel
 {
     /**
      * @var string
@@ -20,7 +18,15 @@ class LegacySchoolingDegree extends Model
      * @var array
      */
     protected $fillable = [
-        'idesco', 'descricao', 'escolaridade',
+        'idesco',
+        'descricao',
+        'escolaridade',
+    ];
+
+    public array $legacy = [
+        'id' => 'idesco',
+        'description' => 'descricao',
+        'schooling' => 'escolaridade',
     ];
 
     /**
