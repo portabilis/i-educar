@@ -22,11 +22,11 @@ class LegacyDisciplineFactory extends Factory
     public function definition(): array
     {
         return [
-            'instituicao_id' => LegacyInstitutionFactory::new()->unique()->make(),
-            'area_conhecimento_id' => LegacyKnowledgeAreaFactory::new()->unique()->make(),
-            'nome' => $this->faker->colorName,
-            'abreviatura' => $this->faker->hexColor,
-            'tipo_base' => 0,
+            'institution_id' => LegacyInstitutionFactory::new()->unique()->make(),
+            'knowledge_area_id' => LegacyKnowledgeAreaFactory::new()->unique()->make(),
+            'name' => $this->faker->colorName,
+            'abbreviation' => $this->faker->hexColor,
+            'tipo_base' => 0
         ];
     }
 }
