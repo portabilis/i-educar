@@ -23,7 +23,8 @@ class EmployeePosgraduateTest extends EloquentTestCase
         return EmployeePosgraduate::class;
     }
 
-    public function testScopeProfessor()
+    /** @test  */
+    public function scopeProfessor()
     {
         $employeePosGraduation = $this->createNewModel();
 

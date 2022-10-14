@@ -20,7 +20,8 @@ class EmployeeInepTest extends EloquentTestCase
         return EmployeeInep::class;
     }
 
-    public function testGetNumberAttribute()
+    /** @test */
+    public function getNumberAttribute()
     {
         $employeeInep = $this->createNewModel();
         $this->assertEquals($employeeInep->cod_docente_inep, $employeeInep->getNumberAttribute());

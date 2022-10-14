@@ -33,7 +33,8 @@ class EmployeeTest extends EloquentTestCase
         return Employee::class;
     }
 
-    public function testRelationshipInep()
+    /** @test  */
+    public function relationshipInep()
     {
         $employee = EmployeeFactory::new()->create();
         $employee->inep = EmployeeInepFactory::new()->create([
@@ -42,7 +43,8 @@ class EmployeeTest extends EloquentTestCase
         $this->assertInstanceOf(EmployeeInep::class, $employee->inep);
     }
 
-    public function testRelationshipIndividual()
+    /** @test  */
+    public function relationshipIndividual()
     {
         $employee = EmployeeFactory::new()->create();
         $employee->individual = LegacyIndividualFactory::new()->create([
@@ -51,7 +53,8 @@ class EmployeeTest extends EloquentTestCase
         $this->assertInstanceOf(LegacyIndividual::class, $employee->individual);
     }
 
-    public function testGetIdAttribute()
+    /** @test  */
+    public function getIdAttribute()
     {
         $employee = $this->createNewModel();
 
@@ -61,7 +64,8 @@ class EmployeeTest extends EloquentTestCase
         $this->assertEquals($employee->cod_servidor, $employee->id);
     }
 
-    public function testScopeProfessor()
+    /** @test  */
+    public function scopeProfessor()
     {
         try {
             Employee::query()
@@ -73,7 +77,8 @@ class EmployeeTest extends EloquentTestCase
         }
     }
 
-    public function testScopeLastYear()
+    /** @test  */
+    public function scopeLastYear()
     {
         try {
             Employee::query()
@@ -86,7 +91,8 @@ class EmployeeTest extends EloquentTestCase
         }
     }
 
-    public function testScopeCurrentYear()
+    /** @test  */
+    public function scopeCurrentYear()
     {
         try {
             Employee::query()
