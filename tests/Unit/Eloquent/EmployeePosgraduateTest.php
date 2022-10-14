@@ -22,4 +22,18 @@ class EmployeePosgraduateTest extends EloquentTestCase
     {
         return EmployeePosgraduate::class;
     }
+
+    /** @test  */
+    public function scopeProfessor()
+    {
+        $employeePosGraduation = $this->createNewModel();
+
+        $employeeQuery = EmployeePosgraduate::query()
+            ->ofEmployee($employeePosGraduation->employee->id)
+            ->first();
+
+        $this->assertInstanceOf(EmployeePosgraduate::class, $employeeQuery);
+        $this->assertInstanceOf(Employee::class, $employeeQuery->employee);
+        $this->assertEquals($employeePosGraduation->id, $employeeQuery->id);
+    }
 }

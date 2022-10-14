@@ -39,6 +39,11 @@ class Employee extends LegacyModel
         'carga_horaria',
     ];
 
+    public array $legacy = [
+        'id' => 'cod_servidor',
+        'workload' => 'carga_horaria'
+    ];
+
     /**
      * @return BelongsTo
      */

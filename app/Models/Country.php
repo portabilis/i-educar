@@ -18,7 +18,8 @@ class Country extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'ibge_code',
+        'name',
+        'ibge_code',
     ];
 
     /**

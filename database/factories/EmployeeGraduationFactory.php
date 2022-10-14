@@ -22,7 +22,7 @@ class EmployeeGraduationFactory extends Factory
     public function definition(): array
     {
         return [
-            'employee_id' => LegacyEmployeeFactory::new()->create(),
+            'employee_id' => EmployeeFactory::new()->create(),
             'course_id' => EducacensoDegreeFactory::new()->create(),
             'completion_year' => now()->year,
             'college_id' => EducacensoInstitutionFactory::new()->create(),
