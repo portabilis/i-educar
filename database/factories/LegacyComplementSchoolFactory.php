@@ -30,7 +30,7 @@ class LegacyComplementSchoolFactory extends Factory
             'complement' => $this->faker->word,
             'address' => $this->faker->address,
             'district' => $this->faker->word,
-            'created_by_user_id' => fn () => LegacyUserFactory::new()->unique()->make(),
+            'created_by' => fn () => LegacyUserFactory::new()->unique()->make(),
             'ddd_phone' => $this->faker->randomNumber(2),
             'phone' => $this->faker->randomNumber(8),
             'ddd_faz' => $this->faker->randomNumber(2),
