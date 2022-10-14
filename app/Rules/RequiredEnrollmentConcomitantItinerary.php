@@ -7,6 +7,14 @@ use Illuminate\Contracts\Validation\Rule;
 
 class RequiredEnrollmentConcomitantItinerary implements Rule
 {
+
+    private array $itineraryComposition;
+
+    public function __construct(array|null $itineraryComposition)
+    {
+        $this->itineraryComposition = $itineraryComposition ?? [];
+    }
+
     /**
      * Determine if the validation rule passes.
      *
@@ -17,8 +25,7 @@ class RequiredEnrollmentConcomitantItinerary implements Rule
      */
     public function passes($attribute, $value)
     {
-        $itineraryComposition = request('itinerary_composition', []);
-        if (in_array(TipoItinerarioFormativo::FORMACAO_TECNICA, $itineraryComposition) && $value === null) {
+        if (in_array(TipoItinerarioFormativo::FORMACAO_TECNICA, $this->itineraryComposition) && $value === null) {
             return false;
         }
 
