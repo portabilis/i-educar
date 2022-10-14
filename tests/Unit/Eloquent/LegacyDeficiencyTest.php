@@ -7,7 +7,7 @@ namespace Tests\Unit\Eloquent;
 use App\Models\LegacyDeficiency;
 use Tests\EloquentTestCase;
 
-class DeficiencyTest extends EloquentTestCase
+class LegacyDeficiencyTest extends EloquentTestCase
 {
     /**
      * @return string
