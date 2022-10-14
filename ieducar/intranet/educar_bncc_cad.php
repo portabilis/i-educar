@@ -96,12 +96,13 @@ return new class extends clsCadastro {
       
         $selectOptionsComponente = [];
 
-        $componentes = ComponenteCurricular::all();
-        foreach($componentes as $componente){
        
-            $selectOptionsComponente[$componente['id']] = $componente['nome'];
-           
-         }
+        $componentes = loadJsonBncc('educacenso_json/componentes_bncc.json');
+     
+        foreach($componentes as $componente){
+            $selectOptionsComponente[$componente->id] = $componente->nome;
+        }
+       
        
 
         $selectOptionsComponente = Portabilis_Array_Utils::sortByValue($selectOptionsComponente);
@@ -118,11 +119,15 @@ return new class extends clsCadastro {
         $a = array();
         $b = array();
 
-    
-        foreach($series as $serie){
-       
-           array_push($a, $serie->cod_serie);
-           array_push($b, $serie->nm_serie);
+      
+        
+        // Decodifica o formato JSON e retorna um Objeto
+        $json = loadJsonBncc('educacenso_json/series_educacenso.json');
+     
+        foreach($json as $serie){
+           
+                array_push($a, $serie->id);
+                array_push($b, $serie->nm_serie);
         }
         $c = array_combine($a, $b);
         $options = [
@@ -187,7 +192,9 @@ return new class extends clsCadastro {
         $retorno = '{';
             $this->series_ids  = $_POST['custom'];
             $contador = 0;
+            $contador_campo_experiencia = 0;
             foreach ($this->series_ids as $serie_id ) {
+        
                 if($contador>0){
                     $retorno .= ', '.$serie_id;
                 }else{
@@ -195,20 +202,35 @@ return new class extends clsCadastro {
                 }
                
                   $contador++;
+                  if( $serie_id == 1 || $serie_id == 2 || $serie_id == 3){
+                    $contador_campo_experiencia++;
+                  }
             }
     
           
         
         $retorno .= '}';
-
-        $cadastrou =   BNCC::create( [
-            'id' => $id_bncc,
-            'habilidade' => $this->habilidade,
-            'codigo' => $this->codigo_habilidade,
-            'componente_curricular_id' => $this->componente_curricular_id,
-            'inativo' => $this->inativo,
-            'serie_ids' => $retorno
-          ]);
+        if($contador_campo_experiencia>0){
+            $cadastrou =   BNCC::create( [
+                'id' => $id_bncc,
+                'habilidade' => $this->habilidade,
+                'codigo' => $this->codigo_habilidade,
+                'campo_experiencia' => $this->componente_curricular_id,
+                'inativo' => $this->inativo,
+                'serie_ids' => $retorno
+              ]);
+        }else{
+            $cadastrou =   BNCC::create( [
+                'id' => $id_bncc,
+                'habilidade' => $this->habilidade,
+                'codigo' => $this->codigo_habilidade,
+                'componente_curricular_id' => $this->componente_curricular_id,
+                'inativo' => $this->inativo,
+                'serie_ids' => $retorno
+              ]);
+        }
+       
+        
 
         
       //Recupera o id e cadastra na tabela intermediaria

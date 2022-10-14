@@ -1,0 +1,168 @@
+{ "series":
+[
+    {
+    "id"  : "1",
+    "nm_serie"  : "1 - Educação Infantil - Creche (0 a 3 anos)"
+    },
+    {
+    "id"  : "2",
+    "nm_serie"  : "2 - Educação Infantil - Pré-escola (4 e 5 anos)"
+    },
+    {
+    "id"  : "3",
+    "nm_serie"  : "3 - Educação Infantil - Unificada (0 a 5 anos)"
+    },
+    {
+    "id"  : "14",
+    "nm_serie"  : "14 - Ensino Fundamental de 9 anos - 1º Ano"
+    },
+    {
+    "id"  : "15",
+    "nm_serie"  : "15 - Ensino Fundamental de 9 anos - 2º Ano"
+    },
+    {
+    "id"  : "16",
+    "nm_serie"  : "16 - Ensino Fundamental de 9 anos - 3º Ano"
+    },
+    {
+    "id"  : "17",
+    "nm_serie"  : "17 - Ensino Fundamental de 9 anos - 4º Ano"
+    },
+    {
+    "id"  : "18",
+    "nm_serie"  : "18 - Ensino Fundamental de 9 anos - 5º Ano"
+    },
+    {
+    "id"  : "19",
+    "nm_serie"  : "19 - Ensino Fundamental de 9 anos - 6º Ano"
+    },
+    {
+    "id"  : "20",
+    "nm_serie"  : "20 - Ensino Fundamental de 9 anos - 7º Ano"
+    },
+    {
+    "id"  : "21",
+    "nm_serie"  : "21 - Ensino Fundamental de 9 anos - 8º Ano"
+    },
+    {
+    "id"  : "22",
+    "nm_serie"  : "22 - Ensino Fundamental de 9 anos - Multi"
+    },
+    {
+    "id"  : "23",
+    "nm_serie"  : "23 - Ensino Fundamental de 9 anos - Correção de Fluxo"
+    },
+    {
+    "id"  : "24",
+    "nm_serie"  : "24 - Ensino Fundamental de 8 e 9 anos - Multi 8 e 9 anos"
+    },
+    {
+    "id"  : "25",
+    "nm_serie"  : "25 - Ensino Médio - 1ª Série"
+    },
+    {
+    "id"  : "26",
+    "nm_serie"  : "26 - Ensino Médio - 2ª Série"
+    },
+    {
+    "id"  : "27",
+    "nm_serie"  : "27 - Ensino Médio - 3ª Série"
+    },
+    {
+    "id"  : "28",
+    "nm_serie"  : "28 - Ensino Médio - 4ª Série"
+    },  
+    {
+    "id"  : "29",
+    "nm_serie"  : "29 - Ensino Médio - Não Seriad"
+    },
+    {
+    "id"  : "30",
+    "nm_serie"  : "30 - Curso Técnico Integrado (Ensino Médio Integrado) 1ª Série"
+    },
+    {
+    "id"  : "31",
+    "nm_serie"  : "31 - Curso Técnico Integrado (Ensino Médio Integrado) 2ª Série"
+    },
+    {
+    "id"  : "32",
+    "nm_serie"  : "32 - Curso Técnico Integrado (Ensino Médio Integrado) 3ª Série"
+    },
+    {
+    "id"  : "33",
+    "nm_serie"  : "33 - Curso Técnico Integrado (Ensino Médio Integrado) 4ª Série"
+    },
+    {
+    "id"  : "34",
+    "nm_serie"  : "34 - Curso Técnico Integrado (Ensino Médio Integrado) Não Seriada"
+    },
+    {
+    "id"  : "35",
+    "nm_serie"  : "35 - Ensino Médio - Normal/Magistério 1ª Série"
+    },
+    {
+    "id"  : "36",
+    "nm_serie"  : "36 - Ensino Médio - Normal/Magistério 2ª Série"
+    },
+    {
+    "id"  : "37",
+    "nm_serie"  : "37 - Ensino Médio - Normal/Magistério 3ª Série"
+    },
+    {
+    "id"  : "38",
+    "nm_serie"  : "38 - Ensino Médio - Normal/Magistério 4ª Série"
+    },
+    {
+    "id"  : "39",
+    "nm_serie"  : "39 - Curso Técnico - Concomitante"
+    },
+    {
+    "id"  : "40",
+    "nm_serie"  : "40 - Curso Técnico - Subsequente"
+    },
+    {
+    "id"  : "41",
+    "nm_serie"  : "41 - Ensino Fundamental de 9 anos - 9º Ano"
+    },
+    {
+    "id"  : "69",
+    "nm_serie"  : "69 - EJA - Ensino Fundamental - Anos iniciais"
+    },
+    {
+    "id"  : "70",
+    "nm_serie"  : "70 - EJA - Ensino Fundamental - Anos finais"
+    },
+    {
+    "id"  : "71",
+    "nm_serie"  : "71 - EJA - Ensino Médio"
+    },
+    {
+    "id"  : "72",
+    "nm_serie"  : "72 - EJA - Ensino Fundamental - Anos iniciais e Anos finais"
+    },
+    {
+    "id"  : "56",
+    "nm_serie"  : "56 - Educação Infantil e Ensino Fundamental de 9 anos - Multietapa"
+    },                         
+    {
+    "id"  : "73",
+    "nm_serie"  : "73 - Curso FIC integrado na modalidade EJA - Nível Fundamental (EJA integrada à Educação Profissional de Nível Fundamental)"
+    },
+    {
+    "id"  : "74",
+    "nm_serie"  : "74 - Curso Técnico Integrado na Modalidade EJA (EJA integrada à Educação Profissional de Nível Médio)"
+    },
+    {
+    "id"  : "64",
+    "nm_serie"  : "64 - Curso Técnico Misto"
+    },
+    {
+    "id"  : "67",
+    "nm_serie"  : "67 - Curso FIC integrado na modalidade EJA - Nível Médio"
+    },
+    {
+    "id"  : "68",
+    "nm_serie"  : "68 - Curso FIC Concomitante"
+    },                                                                                                           
+]
+}
