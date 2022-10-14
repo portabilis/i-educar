@@ -55,7 +55,7 @@ class LegacyComplementSchool extends LegacyModel
         'address' => 'logradouro',
         'ddd_phone' => 'ddd_telefone',
         'phone' => 'telefone',
-        'ddd_faz' => 'ddd_fax',
+        'ddd_fax' => 'ddd_fax',
         'fax' => 'fax',
     ];
 
