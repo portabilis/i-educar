@@ -99,8 +99,9 @@ return new class extends clsCadastro {
        
         $componentes = loadJsonBncc('educacenso_json/componentes_bncc.json');
      
+        $componentes = ComponenteCurricular::all();
         foreach($componentes as $componente){
-            $selectOptionsComponente[$componente->id] = $componente->nome;
+            $selectOptionsComponente[$componente->id] = $componente->id.' - '.$componente->nome;
         }
        
        
