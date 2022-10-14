@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Eloquent;
 
-use App\Models\Country;
 use App\Models\LegacyActiveLooking;
 use App\Models\LegacyRegistration;
 use Tests\EloquentTestCase;

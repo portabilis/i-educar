@@ -36,6 +36,4 @@ class LegacyAccess extends LegacyModel
             ->orderBy('data_hora', 'DESC')
             ->first();
     }
-
-
 }
