@@ -47,13 +47,20 @@ return new class extends clsDetalhe {
 
         $array = explode(',',$limpa);
         foreach($array  as $serie_id){
-        $serie = Serie::find($serie_id);
-        if(empty($serie->nm_serie)){
-
-        }else{
-            $retorno .= '<li>'.$serie->nm_serie.'</li>';
-        }
-        }
+        
+            $json = loadJsonBncc('educacenso_json/series_educacenso.json');
+         
+            foreach($json as $registro){
+               
+                     if($registro->id==$serie_id){
+                        $retorno .= '<li>'.$registro->nm_serie.'</li>';
+                     }
+                   
+            }
+                
+           
+             
+            }
           unset($series);
        }
        $retorno .= '</ul>';
