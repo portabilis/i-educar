@@ -5,6 +5,8 @@ on:
     branches:
       - 2.*
       - main
+      
+  pull_request:
 
 permissions:
   contents: read
