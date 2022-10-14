@@ -3,28 +3,21 @@
 namespace App\Exports;
 
 use App\Models\Exporter\Export;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromQuery;
-use Maatwebsite\Excel\Concerns\WithCustomQuerySize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class ExporterQueryExport implements FromQuery, ShouldQueue, WithCustomQuerySize, WithHeadings
+class ExporterQueryExport implements FromQuery, WithHeadings
 {
     use Exportable;
 
     public function __construct(private string $connection, private Export $export, private int $querySize)
     {
         DB::setDefaultConnection($connection);
-    }
-
-    public function querySize(): int
-    {
-        return $this->querySize;
     }
 
     public function query()

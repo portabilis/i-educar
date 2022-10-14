@@ -35,16 +35,13 @@ class ExportService
      */
     public function execute(): void
     {
-        //obtem o total para ser usado na divisão das jobs de gerar o csv e para a mensagem de notificação
         $this->querySize = $this->export->getExportQuery()->count();
-        //exporta a query
         $exporter = new ExporterQueryExport($this->connection, $this->export, $this->querySize);
-        //guarda o arquivo no disco em jobs divididas e no final dispara outras jobs
-        $exporter->store($this->filename, writerType: $this->fileType)
-            ->chain([
-                new UpdateUrlExport($this->export, $this->getUrl()),
-                new NotifyUserExporter($this->export->user_id, $this->getMessage(), $this->getUrl())
-            ]);
+        $success = $exporter->store($this->filename, writerType: $this->fileType);
+        if ($success) {
+            UpdateUrlExport::dispatch($this->export, $this->getUrl());
+            NotifyUserExporter::dispatch($this->export->user_id, $this->getMessage(), $this->getUrl());
+        }
     }
 
     /**

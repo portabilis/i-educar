@@ -99,13 +99,13 @@ class EnrollmentEloquentBuilder extends Builder
         //fisica
         if ($only = $this->model->getLegacyExportedColumns('mother.individual', $columns)) {
             $this->addSelect($only);
-            $this->join('cadastro.fisica as mf', 'mf.idpes', 'm.idpes');
+            $this->leftJoin('cadastro.fisica as mf', 'exporter_student.mother_id', 'mf.idpes');
         }
 
         //documento
         if ($only = $this->model->getLegacyExportedColumns('mother.document', $columns)) {
             $this->addSelect($only);
-            $this->join('cadastro.documento as md', 'md.idpes', 'm.idpes');
+            $this->leftJoin('cadastro.documento as md', 'exporter_student.mother_id', 'md.idpes');
         }
     }
 
@@ -125,13 +125,13 @@ class EnrollmentEloquentBuilder extends Builder
         //fisica
         if ($only = $this->model->getLegacyExportedColumns('father.individual', $columns)) {
             $this->addSelect($only);
-            $this->join('cadastro.fisica as ff', 'ff.idpes', 'f.idpes');
+            $this->leftJoin('cadastro.fisica as ff', 'exporter_student.father_id', 'ff.idpes');
         }
 
         //documento
         if ($only = $this->model->getLegacyExportedColumns('mother.document', $columns)) {
             $this->addSelect($only);
-            $this->join('cadastro.documento as fd', 'fd.idpes', 'f.idpes');
+            $this->leftJoin('cadastro.documento as fd', 'exporter_student.father_id', 'fd.idpes');
         }
     }
 
@@ -151,13 +151,13 @@ class EnrollmentEloquentBuilder extends Builder
         //fisica
         if ($only = $this->model->getLegacyExportedColumns('guardian.individual', $columns)) {
             $this->addSelect($only);
-            $this->join('cadastro.fisica as gf', 'gf.idpes', 'g.idpes');
+            $this->leftJoin('cadastro.fisica as gf', 'exporter_student.guardian_id', 'gf.idpes');
         }
 
         //documento
         if ($only = $this->model->getLegacyExportedColumns('guardian.document', $columns)) {
             $this->addSelect($only);
-            $this->join('cadastro.documento as gd', 'gd.idpes', 'g.idpes');
+            $this->leftJoin('cadastro.documento as gd', 'exporter_student.guardian_id', 'gd.idpes');
         }
     }
 
