@@ -27,4 +27,23 @@ class LegacyDisciplineExemptionTest extends EloquentTestCase
     {
         return LegacyDisciplineExemption::class;
     }
+
+    protected function getLegacyAttributes(): array
+    {
+        return [
+            'id' => 'cod_dispensa',
+            'registration_id' => 'ref_cod_matricula',
+            'discipline_id' => 'ref_cod_disciplina',
+            'school_id' => 'ref_cod_escola',
+            'grade_id' => 'ref_cod_serie',
+            'exemption_type_id' => 'ref_cod_tipo_dispensa',
+            'observation' => 'observacao',
+            'created_at' => 'data_cadastro',
+            'deleted_at' => 'data_exclusao',
+            'active' => 'ativo',
+            'deleted_by' => 'ref_usuario_exc',
+            'created_by' => 'ref_usuario_cad'
+        ];
+    }
+
 }

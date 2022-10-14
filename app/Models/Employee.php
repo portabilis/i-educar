@@ -32,7 +32,7 @@ class Employee extends LegacyModel
      *
      * @var string
      */
-    protected $builder = EmployeeBuilder::class;
+    protected string $builder = EmployeeBuilder::class;
 
     protected $fillable = [
         'cod_servidor',
