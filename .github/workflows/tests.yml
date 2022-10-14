@@ -5,8 +5,6 @@ on:
     branches:
       - 2.*
       - main
-      - tc-gh-actions
-  pull_request:
 
 permissions:
   contents: read
