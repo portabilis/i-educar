@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasLegacyDates;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class LegacySchoolGrade extends Model
+class LegacySchoolGrade extends LegacyModel
 {
+    use HasLegacyDates;
+
     /**
      * @var string
      */
@@ -24,7 +26,6 @@ class LegacySchoolGrade extends Model
         'ref_cod_escola',
         'ref_cod_serie',
         'ref_usuario_cad',
-        'data_cadastro',
         'anos_letivos',
         'hora_inicial',
         'hora_final',

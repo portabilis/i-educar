@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasLegacyDates;
 
-class LegacyTransferRequest extends Model
+class LegacyTransferRequest extends LegacyModel
 {
+    use HasLegacyDates;
+
     /**
      * @var string
      */
@@ -26,7 +28,6 @@ class LegacyTransferRequest extends Model
         'ref_cod_matricula_entrada',
         'ref_cod_matricula_saida',
         'observacao',
-        'data_cadastro',
         'data_exclusao',
         'ativo',
         'data_transferencia',

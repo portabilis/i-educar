@@ -10,20 +10,16 @@
  */
 function addLeadingZero($num, $digitos = 2)
 {
-    if (is_numeric($num)) {
-        if ($digitos > 1) {
-            for ($i = 1; $i < $digitos; $i++) {
-                if ($num < pow(10, $i)) {
-                    $num = str_repeat('0', $digitos - $i) . $num;
-                    break;
-                }
+    if ($digitos > 1) {
+        for ($i = 1; $i < $digitos; $i++) {
+            if ($num < pow(10, $i)) {
+                $num = str_repeat('0', $digitos - $i) . $num;
+                break;
             }
         }
-
-        return $num;
     }
 
-    return str_repeat('0', $digitos);
+    return $num;
 }
 
 function idFederal2int($str)
@@ -99,7 +95,7 @@ function int2CNPJ($int)
 function int2CEP($int)
 {
     if ($int) {
-        $int = (string) str_pad($int, 8, '0', STR_PAD_LEFT);
+        $int = str_pad($int, 8, '0', STR_PAD_LEFT);
 
         return substr($int, 0, 5) . '-' . substr($int, 5, 3);
     } else {
@@ -116,37 +112,36 @@ function limpa_acentos($str_nome)
     $substitui2 = ['A', 'E', 'I', 'O', 'U', 'A', 'E', 'I', 'O', 'U', 'A', 'E', 'I', 'O', 'U', 'C', 'A', 'O', 'E', 'O'];
 
     $str_nome = str_replace($procura1, $substitui1, $str_nome);
-    $str_nome = str_replace($procura2, $substitui2, $str_nome);
 
-    return $str_nome;
+    return str_replace($procura2, $substitui2, $str_nome);
 }
 
 /**
  * Formata a data para o formato brasileiro
  *
- * @param string $data_original data que será transformada
- * @param bool   $h_m           determina se o a data retornada incluirá hora e minuto
- * @param bool   $h_m_s         determina se o a data retornada incluirá hora, minuto e segundo
+ * @param string|null $data_original data que será transformada
+ * @param bool $h_m           determina se o a data retornada incluirá hora e minuto
+ * @param bool $h_m_s         determina se o a data retornada incluirá hora, minuto e segundo
  *
  * @return string
  */
-function dataToBrasil($data_original, $h_m = false, $h_m_s = false)
+function dataToBrasil(?string $data_original, bool $h_m = false, bool $h_m_s = false)
 {
-    if (is_string($data_original)) {
-        $arr_data = explode(' ', $data_original);
-
-        $data = date('d/m/Y', strtotime($arr_data[0]));
-
-        if ($h_m) {
-            return "{$data} " . substr($arr_data[1], 0, 5);
-        } elseif ($h_m_s) {
-            return "{$data} " . substr($arr_data[1], 0, 8);
-        }
-
-        return $data;
+    if ($data_original === null) {
+        return false;
     }
 
-    return false;
+    $arr_data = explode(' ', $data_original);
+    $data = date('d/m/Y', strtotime($arr_data[0]));
+    if ($h_m) {
+        return "{$data} " . substr($arr_data[1], 0, 5);
+    }
+
+    if ($h_m_s) {
+        return "{$data} " . substr($arr_data[1], 0, 8);
+    }
+
+    return $data;
 }
 
 /**
@@ -290,9 +285,7 @@ function int2IdFederal($int)
             $temp .= '-';
         }
 
-        $temp .= substr($str, 12, 2);
-
-        return $temp;
+        return $temp . substr($str, 12, 2);
     } else {
         if (strlen($int) < 11) {
             $str = str_repeat('0', 11 - strlen($int)) . $int;
@@ -321,9 +314,7 @@ function int2IdFederal($int)
             $temp .= '-';
         }
 
-        $temp .= substr($str, 9, 2);
-
-        return $temp;
+        return $temp . substr($str, 9, 2);
     }
 }
 

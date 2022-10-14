@@ -127,9 +127,7 @@ class clsEstadoCivil
             $db = new clsBanco();
             $db->Consulta("SELECT ideciv, descricao FROM {$this->schema}.{$this->tabela} WHERE ideciv = {$this->ideciv}");
             if ($db->ProximoRegistro()) {
-                $tupla = $db->Tupla();
-
-                return $tupla;
+                return $db->Tupla();
             }
         }
 

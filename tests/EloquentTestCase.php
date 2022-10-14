@@ -2,6 +2,8 @@
 
 namespace Tests;
 
+use App\Models\Concerns\SoftDeletes\LegacySoftDeletes;
+use App\Models\LegacyModel;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Model;
@@ -109,7 +111,16 @@ abstract class EloquentTestCase extends TestCase
         $modelUpdated->save();
 
         $this->assertDatabaseMissing($modelUpdated->getTable(), $modelCreated->getAttributes());
-        $this->assertDatabaseHas($modelUpdated->getTable(), $modelUpdated->getAttributes());
+        $this->assertDatabaseHas($modelUpdated->getTable(), $this->removeTimestamps($modelUpdated->getAttributes()));
+    }
+
+    private function removeTimestamps(array $attributes): array
+    {
+        if (array_key_exists('updated_at', $attributes)) {
+            unset($attributes['updated_at']);
+        }
+
+        return $attributes;
     }
 
     /**
@@ -128,8 +139,8 @@ abstract class EloquentTestCase extends TestCase
 
         $modelCreated->delete();
 
-        if (in_array(SoftDeletes::class, class_uses($modelCreated))) {
-            $this->assertSoftDeleted($modelCreated);
+        if (in_array(SoftDeletes::class, class_uses($modelCreated), true) || in_array(LegacySoftDeletes::class, class_uses($modelCreated), true)) {
+            $this->assertSoftDeleted($modelCreated, deletedAtColumn: $modelCreated->getDeletedAtColumn());
         } else {
             $this->assertDatabaseMissing($modelCreated->getTable(), $modelCreated->getAttributes());
         }
@@ -183,5 +194,19 @@ abstract class EloquentTestCase extends TestCase
                 $this->assertInstanceOf($class, $model->{$relation});
             }
         }
+    }
+
+    protected function getLegacyAttributes(): array
+    {
+        return [];
+    }
+
+    public function testHasLegacyAttributes()
+    {
+        if (!empty($this->getLegacyAttributes()) && get_parent_class($this->getEloquentModelName()) === LegacyModel::class) {
+            $this->assertEquals($this->createNewModel()->legacy, $this->getLegacyAttributes());
+        }
+
+        $this->assertTrue(true);
     }
 }

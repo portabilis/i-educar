@@ -17,7 +17,7 @@ class clsCadastroFisicaRaca extends Model
      */
     public function __construct($ref_idpes = null, $ref_cod_raca = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'cadastro.';
         $this->_tabela = "{$this->_schema}fisica_raca";
 

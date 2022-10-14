@@ -12,7 +12,7 @@ class clsPmieducarServidorCurso extends Model
 
     public function __construct($cod_servidor_curso = null, $ref_cod_formacao = null, $data_conclusao = null, $data_registro = null, $diplomas_registros = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}servidor_curso";
 
@@ -237,9 +237,6 @@ class clsPmieducarServidorCurso extends Model
      */
     public function excluir()
     {
-        if (is_numeric($this->cod_servidor_curso)) {
-        }
-
         return false;
     }
 }

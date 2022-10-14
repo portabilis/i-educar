@@ -22,7 +22,7 @@ return new class extends clsCadastro {
     /**
      * @var Calendario_Model_TurmaDataMapper
      */
-    public $_calendarioTurmaDataMapper = null;
+    public $_calendarioTurmaDataMapper;
 
     /**
      * Getter.

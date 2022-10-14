@@ -9,7 +9,7 @@ class clsPmieducarHabilitacaoCurso extends Model
 
     public function __construct($ref_cod_habilitacao = null, $ref_cod_curso = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}habilitacao_curso";
 
@@ -65,7 +65,6 @@ class clsPmieducarHabilitacaoCurso extends Model
     {
         if (is_numeric($this->ref_cod_habilitacao) && is_numeric($this->ref_cod_curso)) {
             $db = new clsBanco();
-            $gruda = '';
             $set = '';
 
             if ($set) {
@@ -187,9 +186,6 @@ class clsPmieducarHabilitacaoCurso extends Model
      */
     public function excluir()
     {
-        if (is_numeric($this->ref_cod_habilitacao) && is_numeric($this->ref_cod_curso)) {
-        }
-
         return false;
     }
 }

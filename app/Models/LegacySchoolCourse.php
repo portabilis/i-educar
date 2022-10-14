@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasLegacyDates;
 
-class LegacySchoolCourse extends Model
+class LegacySchoolCourse extends LegacyModel
 {
+    use HasLegacyDates;
+
     /**
      * @var string
      */
@@ -24,7 +26,6 @@ class LegacySchoolCourse extends Model
         'ref_cod_curso',
         'ref_usuario_exc',
         'ref_usuario_cad',
-        'data_cadastro',
         'data_exclusao',
         'ativo',
         'autorizacao',

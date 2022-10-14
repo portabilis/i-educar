@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasLegacyDates;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property string $name
  */
-class LegacyComplementSchool extends Model
+class LegacyComplementSchool extends LegacyModel
 {
+    use HasLegacyDates;
+
     /**
      * @var string
      */
@@ -29,7 +31,6 @@ class LegacyComplementSchool extends Model
         'ref_usuario_cad',
         'email',
         'nm_escola',
-        'data_cadastro',
         'ativo',
         'cep',
         'municipio'

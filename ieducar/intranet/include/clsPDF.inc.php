@@ -223,7 +223,6 @@ class clsPDF
         $r = hexdec(substr($color, 1, 2)) / 255;
         $g = hexdec(substr($color, 3, 2)) / 255;
         $b = hexdec(substr($color, 5, 2)) / 255;
-        $a = $transparency;
 
         PDF_setcolor($this->pdf, 'fill', 'rgb', $r, $g, $b, 0);
 
@@ -247,7 +246,6 @@ class clsPDF
         $r = hexdec(substr($color, 1, 2)) / 255;
         $g = hexdec(substr($color, 3, 2)) / 255;
         $b = hexdec(substr($color, 5, 2)) / 255;
-        $a = $transparency;
 
         PDF_setcolor($this->pdf, 'both', 'rgb', $r, $g, $b, 0);
 

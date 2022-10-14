@@ -1,0 +1,38 @@
+#!/usr/bin/env php
+<?php
+
+$localHook = sha1_file('.github/hooks/pre-commit');
+$gitHook = sha1_file('.git/hooks/pre-commit');
+
+if ($localHook !== $gitHook) {
+    echo 'Copying pre-commit hook' . PHP_EOL;
+    system('cp -f .github/hooks/pre-commit .git/hooks/pre-commit');
+    echo 'Your git pre-commit hook was deprecated, a new one was provided and already installed.' . PHP_EOL;
+    echo 'Please run your commit again' . PHP_EOL . PHP_EOL;
+    exit(1);
+} else {
+    echo 'YOUR GIT HOOK IS ALREADY THE NEWEST VERSION' . PHP_EOL;
+}
+
+
+echo PHP_EOL;
+echo '=================================================================================' . PHP_EOL;
+echo '                               STARTING FIXER CODE                               ' . PHP_EOL;
+echo '=================================================================================' . PHP_EOL;
+echo PHP_EOL;
+
+system('vendor/bin/php-cs-fixer --diff --verbose fix');
+
+echo PHP_EOL;
+echo 'ALL FIXER PASSED.' . PHP_EOL;
+echo PHP_EOL;
+
+echo PHP_EOL;
+echo '  _____      ______ _____  _    _  _____          _____  ' . PHP_EOL;
+echo ' |_   _|    |  ____|  __ \| |  | |/ ____|   /\   |  __ \ ' . PHP_EOL;
+echo '   | |______| |__  | |  | | |  | | |       /  \  | |__) |' . PHP_EOL;
+echo '   | |______|  __| | |  | | |  | | |      / /\ \ |  _  / ' . PHP_EOL;
+echo '  _| |_     | |____| |__| | |__| | |____ / ____ \| | \ \ ' . PHP_EOL;
+echo ' |_____|    |______|_____/ \____/ \_____/_/    \_\_|  \_\\' . PHP_EOL;
+echo PHP_EOL;
+

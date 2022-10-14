@@ -48,14 +48,14 @@ class LegacyEvaluationRule extends Model
      *
      * @var string
      */
-    protected $builder = LegacyEvaluationRuleBuilder::class;
+    protected string $builder = LegacyEvaluationRuleBuilder::class;
 
     /**
      * Atributos legados para serem usados nas queries
      *
      * @var string[]
      */
-    public $legacy = [
+    public array $legacy = [
         'name' => 'nome'
     ];
 

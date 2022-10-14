@@ -173,7 +173,6 @@ return new class extends clsCadastro {
 
         // Regra de avaliação
         $mapper = new RegraAvaliacao_Model_RegraDataMapper();
-        $regras = [];
 
         // @TODO entender como funciona a tabela para poder popular os campos de regra
         // baseado na instituição escolhida

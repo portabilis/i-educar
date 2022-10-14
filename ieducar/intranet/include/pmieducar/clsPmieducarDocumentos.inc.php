@@ -21,7 +21,7 @@ class clsPmieducarDocumentos extends Model
 
     public function __construct($ref_cod_pessoa_educ = null, $ref_idorg_rg = null, $sigla_uf_cert_civil = null, $sigla_uf_exp_rg = null, $rg = null, $data_expedicao_rg = null, $num_titulo_eleitor = null, $zona_titulo_eleitor = null, $secao_titulo_eleitor = null, $tipo_certidao_civil = null, $num_termo = null, $num_folha = null, $num_livro = null, $data_emissao_certidao_civil = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}documentos";
 
@@ -390,9 +390,6 @@ class clsPmieducarDocumentos extends Model
      */
     public function excluir()
     {
-        if (is_numeric($this->ref_cod_pessoa_educ)) {
-        }
-
         return false;
     }
 }

@@ -18,7 +18,7 @@ class clsPmieducarServidorFormacao extends Model
 
     public function __construct($cod_formacao = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_cod_servidor = null, $nm_formacao = null, $tipo = null, $descricao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_ref_cod_instituicao = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}servidor_formacao";
 

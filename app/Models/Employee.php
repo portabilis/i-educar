@@ -3,16 +3,19 @@
 namespace App\Models;
 
 use App\Models\Builders\EmployeeBuilder;
+use App\Traits\HasInstitution;
+use App\Traits\HasLegacyDates;
 use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Employee extends Model
+class Employee extends LegacyModel
 {
     use LegacyAttribute;
+    use HasLegacyDates;
+    use HasInstitution;
 
     /**
      * @var string
@@ -29,17 +32,10 @@ class Employee extends Model
      *
      * @var string
      */
-    protected $builder = EmployeeBuilder::class;
-
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
+    protected string $builder = EmployeeBuilder::class;
 
     protected $fillable = [
         'cod_servidor',
-        'ref_cod_instituicao',
-        'data_cadastro',
         'carga_horaria',
     ];
 
@@ -77,16 +73,6 @@ class Employee extends Model
     public function employeeRoles(): HasMany
     {
         return $this->hasMany(LegacyEmployeeRole::class, 'ref_cod_servidor');
-    }
-
-    /**
-     * Instituição
-     *
-     * @return BelongsTo
-     */
-    public function institution(): BelongsTo
-    {
-        return $this->belongsTo(LegacyInstitution::class, 'ref_cod_instituicao');
     }
 
     /**
@@ -164,6 +150,7 @@ class Employee extends Model
         return $query->join('pmieducar.servidor_alocacao', 'servidor.cod_servidor', '=', 'servidor_alocacao.ref_cod_servidor')
             ->where('servidor_alocacao.ano', date('Y') - 1);
     }
+
     public function scopeCurrentYear(Builder $query): Builder
     {
         return $query->join('pmieducar.servidor_alocacao', 'servidor.cod_servidor', '=', 'servidor_alocacao.ref_cod_servidor')

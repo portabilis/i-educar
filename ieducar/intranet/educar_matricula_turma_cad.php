@@ -222,8 +222,7 @@ return new class extends clsCadastro {
         );
         $detEnturmacao = $enturmacao->detalhe();
 
-        $detEnturmacao = $detEnturmacao['data_enturmacao'];
-        $enturmacao->data_enturmacao = $detEnturmacao;
+        $enturmacao->data_enturmacao = $detEnturmacao['data_enturmacao'];
 
         $instituicao = $enturmacao->getInstituicao($matriculaId);
         $instituicao = new clsPmieducarInstituicao($instituicao);

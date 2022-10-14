@@ -11,7 +11,7 @@ class clsPmieducarSeriePreRequisito extends Model
 
     public function __construct($ref_cod_pre_requisito = null, $ref_cod_operador = null, $ref_cod_serie = null, $valor = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}serie_pre_requisito";
 

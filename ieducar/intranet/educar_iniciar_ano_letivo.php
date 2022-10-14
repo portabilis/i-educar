@@ -14,8 +14,6 @@ return new class extends clsCadastro {
 
     public function Inicializar()
     {
-        $retorno = 'Novo';
-
         /**
          * verifica permissao para realizar operacao
          */

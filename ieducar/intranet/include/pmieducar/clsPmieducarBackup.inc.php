@@ -13,7 +13,7 @@ class clsPmieducarBackup extends Model
         $caminho = null,
         $dataBackup = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}backup";
 

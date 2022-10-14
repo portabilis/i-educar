@@ -28,7 +28,7 @@ class clsCadastroRaca extends Model
      */
     public function __construct($cod_raca = null, $idpes_exc = null, $idpes_cad = null, $nm_raca = null, $data_cadastro = null, $data_exclusao = null, $ativo = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'cadastro.';
         $this->_tabela = "{$this->_schema}raca";
 

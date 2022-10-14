@@ -3,14 +3,14 @@
 namespace App\Models;
 
 use App\Traits\Ativo;
-use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasInstitution;
+use App\Traits\HasLegacyDates;
 
-class LegacyTransferType extends Model
+class LegacyTransferType extends LegacyModel
 {
     use Ativo;
-
-    public const CREATED_AT = 'data_cadastro';
-    public const UPDATED_AT = null;
+    use HasLegacyDates;
+    use HasInstitution;
 
     /**
      * @var string
@@ -32,6 +32,5 @@ class LegacyTransferType extends Model
         'desc_tipo',
         'data_exclusao',
         'ativo',
-        'ref_cod_instituicao',
     ];
 }
