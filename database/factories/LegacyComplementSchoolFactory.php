@@ -33,7 +33,7 @@ class LegacyComplementSchoolFactory extends Factory
             'created_by' => fn () => LegacyUserFactory::new()->unique()->make(),
             'ddd_phone' => $this->faker->randomNumber(2),
             'phone' => $this->faker->randomNumber(8),
-            'ddd_faz' => $this->faker->randomNumber(2),
+            'ddd_fax' => $this->faker->randomNumber(2),
             'fax' => $this->faker->randomNumber(8),
         ];
     }
