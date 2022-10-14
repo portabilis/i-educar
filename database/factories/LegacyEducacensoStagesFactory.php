@@ -22,7 +22,7 @@ class LegacyEducacensoStagesFactory extends Factory
     public function definition(): array
     {
         return [
-            'id' => $this->faker->randomDigitNotZero(),
+            'id' => $this->faker->randomDigit(),
             'name' => $this->faker->name,
         ];
     }
