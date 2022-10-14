@@ -21,7 +21,7 @@ class EnrollmentFormativeItineraryController extends Controller
 
         $this->menu(578);
 
-        $registration = LegacyRegistration::with([
+        $registration = LegacyRegistration::query()->with([
                 'enrollments:id,ref_cod_matricula,ref_cod_turma,sequencial,ativo,data_enturmacao,data_exclusao',
                 'enrollments.schoolClass:cod_turma,nm_turma,ano'
             ])
