@@ -5,6 +5,7 @@ on:
     branches:
       - 2.*
       - main
+      - tc-gh-actions
   pull_request:
 
 permissions:
@@ -15,7 +16,7 @@ jobs:
 
     name: Unit, Integration and Pages
 
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     env:
       APP_URL: http://localhost:8000
@@ -66,6 +67,8 @@ jobs:
 
       - name: Install Dependencies
         run: composer new-install
+        env:
+          COMPOSER_ALLOW_SUPERUSER: 1
 
       - name: Prepare tests
         run: php artisan legacy:create:tests
