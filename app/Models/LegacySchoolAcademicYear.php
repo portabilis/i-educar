@@ -31,7 +31,7 @@ class LegacySchoolAcademicYear extends LegacyModel
      *
      * @var string
      */
-    protected $builder = LegacySchoolAcademicYearBuilder::class;
+    protected string $builder = LegacySchoolAcademicYearBuilder::class;
 
     /**
      * Atributos legados para serem usados nas queries

@@ -23,7 +23,7 @@ class LegacySchoolGradeDiscipline extends Model
      *
      * @var string
      */
-    protected $builder = LegacySchoolGradeDisciplineBuilder::class;
+    protected string $builder = LegacySchoolGradeDisciplineBuilder::class;
 
     /**
      * Atributos legados para serem usados nas queries
