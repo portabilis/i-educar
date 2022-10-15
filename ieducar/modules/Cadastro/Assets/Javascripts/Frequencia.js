@@ -168,6 +168,7 @@ function getAluno(xml_aluno) {
   if (DOM_array.length) {
     conteudo += '<td class="tableDetalheLinhaSeparador" colspan="3"></td><tr><td><div class="scroll"><table class="tableDetalhe tableDetalheMobile" width="100%"><tr class="tableHeader">';
     conteudo += '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' + "Nome" + '</span></th>';
+    conteudo += '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' + "Falta(s)" + '</span></th>';
 
     if (qtdAulas == 0) {
       conteudo += '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' + "Presença" + '</span></th>';
@@ -183,7 +184,9 @@ function getAluno(xml_aluno) {
 
     for (var i = 0; i < DOM_array.length; i++) {
       id = DOM_array[i].getAttribute("cod_aluno");
+      qtd_faltas = DOM_array[i].getAttribute("qtd_faltas");
       conteudo += ' <td class="sizeFont colorFont"><p>' + DOM_array[i].firstChild.data + '</p></td>';
+      conteudo += ' <td class="sizeFont colorFont"><p>' + qtd_faltas + '</p></td>';
 
       if (qtdAulas == 0) {
         conteudo += ` <td class="sizeFont colorFont" > \
