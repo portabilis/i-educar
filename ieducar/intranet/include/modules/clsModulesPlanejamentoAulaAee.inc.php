@@ -17,6 +17,7 @@ class clsModulesPlanejamentoAulaAee extends Model
     public $bncc_especificacoes;
     public $recursos_didaticos;
     public $outros;
+    public $servidor_id;
 
     public function __construct(
         $id = null,
@@ -31,7 +32,8 @@ class clsModulesPlanejamentoAulaAee extends Model
         $bnccs = null,
         $bncc_especificacoes = null,
         $recursos_didaticos = null,
-        $outros = null
+        $outros = null,
+        $servidor_id = null
     ) {
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}planejamento_aula_aee";
@@ -137,6 +139,10 @@ class clsModulesPlanejamentoAulaAee extends Model
         if (is_string($outros)) {
             $this->outros = $outros;
         }
+
+        if (is_numeric($servidor_id)) {
+            $this->servidor_id = $servidor_id;
+        }
     }
 
     /**
@@ -158,6 +164,7 @@ class clsModulesPlanejamentoAulaAee extends Model
             && is_array($this->bncc_especificacoes)
             && is_string($this->recursos_didaticos)
             && is_string($this->outros)
+            && is_numeric($this->servidor_id)
         ) {
             $db = new clsBanco();
             $campos = '';
@@ -203,6 +210,10 @@ class clsModulesPlanejamentoAulaAee extends Model
             $campos .= "{$gruda}created_at";
             $valores .= "{$gruda}(NOW() - INTERVAL '3 HOURS')";
             $gruda = ', ';
+
+            $campos .= "{$gruda}servidor_id";
+            $valores .= "{$gruda}'{$this->servidor_id}'";
+            $gruda = ', ';            
 
             $db->Consulta("
                 INSERT INTO
