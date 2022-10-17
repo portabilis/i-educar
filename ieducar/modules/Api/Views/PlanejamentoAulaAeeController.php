@@ -167,6 +167,7 @@ class PlanejamentoAulaAeeController extends ApiCoreController
         $bnccEspecificacoes = $this->getRequest()->bnccEspecificacoes;
         $recursos_didaticos = $this->getRequest()->recursos_didaticos;
         $outros = $this->getRequest()->outros;
+        $servidor_id = $this->pessoa_logada;
 
         $podeRegistrar = $this->verificarDatasTurma($faseEtapa, $turma, $data_inicial, $data_final);
 
@@ -188,7 +189,8 @@ class PlanejamentoAulaAeeController extends ApiCoreController
             $bnccs,
             $bnccEspecificacoes,
             $recursos_didaticos,
-            $outros
+            $outros,
+            $servidor_id
         );
 
         $existe = $obj->existe();
