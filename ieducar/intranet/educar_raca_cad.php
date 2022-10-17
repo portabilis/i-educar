@@ -97,7 +97,7 @@ return new class extends clsCadastro {
 
     public function Editar()
     {
-        $race = LegacyRace::query()->find($this->cod_raca);
+        $race = LegacyRace::query()->findOrFail($this->cod_raca);
 
         $race->ativo = 1;
         $race->nm_raca = $this->nm_raca;
@@ -117,7 +117,7 @@ return new class extends clsCadastro {
 
     public function Excluir()
     {
-        $race = LegacyRace::query()->find($this->cod_raca);
+        $race = LegacyRace::query()->findOrFail($this->cod_raca);
 
         $race->ativo = 0;
         $race->idpes_cad = $this->pessoa_logada;

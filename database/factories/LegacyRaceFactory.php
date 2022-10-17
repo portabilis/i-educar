@@ -13,7 +13,7 @@ class LegacyRaceFactory extends Factory
     {
        return [
            'idpes_cad' => LegacyUserFactory::new()->unique()->make(),
-           'nm_raca' => $this->faker->firstName(),
+           'nm_raca' => $this->faker->colorName(),
            'raca_educacenso' => random_int(0,5),
        ];
     }
