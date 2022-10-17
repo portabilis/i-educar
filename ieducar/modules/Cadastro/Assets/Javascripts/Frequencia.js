@@ -168,7 +168,7 @@ function getAluno(xml_aluno) {
   if (DOM_array.length) {
     conteudo += '<td class="tableDetalheLinhaSeparador" colspan="3"></td><tr><td><div class="scroll"><table class="tableDetalhe tableDetalheMobile" width="100%"><tr class="tableHeader">';
     conteudo += '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' + "Nome" + '</span></th>';
-    conteudo += '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' + "Falta(s)" + '</span></th>';
+    conteudo += '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' + "FA" + '</span></th>';
 
     if (qtdAulas == 0) {
       conteudo += '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' + "Presença" + '</span></th>';
@@ -234,21 +234,33 @@ function presencaMudou (presenca) {
   let elementJustificativaAulas = document.getElementsByName("justificativa[" + presenca.value + "][aulas]")[0];
 
   let aula_id = presenca.dataset.aulaid;
-  let aulasValue = elementJustificativaAulas.value;
+  let aulasValue = '';
+  let qtdValue = '';
+
+  if (elementJustificativaQtd) {
+    qtdValue = elementJustificativaQtd.value;
+  }
+
+  if (elementJustificativaAulas) {
+    aulasValue = elementJustificativaAulas.value;
+  }
 
   if (presenca.checked) {
     elementJustificativaQtd.value = parseInt(elementJustificativaQtd.value) - 1;
 
-    if (aulasValue.indexOf(aula_id + ',') > -1) {
+    if (aulasValue != '' && aulasValue.indexOf(aula_id + ',') > -1) {
       elementJustificativaAulas.value = aulasValue.replace(aula_id + ',', '');
     }
 
-  } else if (elementJustificativaQtd.value != '' || parseInt(elementJustificativaQtd.value) >= 0) {
-    elementJustificativaQtd.value = parseInt(elementJustificativaQtd.value) + 1;
-    elementJustificativaAulas.value = aulasValue + aula_id + ',';
+  } else if (qtdValue != '' || parseInt(qtdValue) >= 0) {
+    elementJustificativaQtd.value = parseInt(qtdValue) + 1;
+    if (aulasValue != '') {
+      elementJustificativaAulas.value = aulasValue + aula_id + ',';
+    }
+
   }
 
-  if (presenca.checked && parseInt(elementJustificativaQtd.value) > 0){
+  if (presenca.checked && parseInt(qtdValue) > 0){
     elementJustificativa.disabled = !presenca.checked;
   } else {
     elementJustificativa.disabled = presenca.checked;

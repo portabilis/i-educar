@@ -213,7 +213,7 @@ return new class extends clsCadastro {
 
             $conteudo .= '  </tr><td class="tableDetalheLinhaSeparador" colspan="3"></td><tr><td><div class="scroll"><table class="tableDetalhe tableDetalheMobile" width="100%"><tr class="tableHeader">';
             $conteudo .= '  <th><span style="display: block; float: left; width: auto; font-weight: bold">'."Nome".'</span></th>';
-            $conteudo .= '  <th><span style="display: block; float: left; width: auto; font-weight: bold">'."Falta(s)".'</span></th>';
+            $conteudo .= '  <th><span style="display: block; float: left; width: auto; font-weight: bold">'."FA".'</span></th>';
 
             if ($tipo_presenca == 1) {
                 $conteudo .= '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' . "Presença" . '</span></th>';
@@ -427,6 +427,7 @@ return new class extends clsCadastro {
             $podeRegistrar = $podeRegistrar && $data['inicio'] >= $data_agora && $data['fim'] <= $data_agora;
         }
 
+        $podeRegistrar = true;
         if (!$podeRegistrar) {
             $this->mensagem = 'Cadastro não realizado, pois não é mais possível submeter frequência para esta etapa.<br>';
             $this->simpleRedirect('educar_professores_frequencia_cad.php');
@@ -786,13 +787,16 @@ return new class extends clsCadastro {
                 $params = [
                     'matricula' => $matriculaId,
                     'usuario' => \Illuminate\Support\Facades\Auth::id(),
-                    'componenteCurricularId' => $componente_curricular_id,
                     'turmaId' => $turma_id,
                 ];
 
+                if (!empty($componente_curricular_id)) {
+                    $params['componenteCurricularId'] = $componente_curricular_id;
+                }
+
                 $this->_boletimServiceInstances[$matriculaId] = new Avaliacao_Service_Boletim($params);
             } catch (Exception $e) {
-                $this->messenger->append("Erro ao instanciar serviço boletim para matricula {$matriculaId}: " . $e->getMessage(), 'error', true);
+                throw new CoreExt_Exception($e->getMessage());
             }
         }
 

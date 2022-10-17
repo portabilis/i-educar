@@ -248,7 +248,7 @@ return new class extends clsDetalhe {
 
         $this->tabela .= ' </tr><td class="tableDetalheLinhaSeparador" colspan="3"></td><tr><td><div class="scroll"><table class="tableDetalhe tableDetalheMobile" width="100%">';
         $this->tabela .= ' <th><span style="display: block; float: left; width: auto; font-weight: bold">Nome</span></th>';
-        $this->tabela .= ' <th><span style="display: block; float: left; width: auto; font-weight: bold">Falta(s)</span></th>';
+        $this->tabela .= ' <th><span style="display: block; float: left; width: auto; font-weight: bold">FA</span></th>';
 
         if ($tipo_presenca == 1) {
             $this->tabela .= ' <th><span style="display: block; float: left; width: 100px; font-weight: bold">Presença</span></th>';
@@ -334,13 +334,16 @@ return new class extends clsDetalhe {
                 $params = [
                     'matricula' => $matriculaId,
                     'usuario' => \Illuminate\Support\Facades\Auth::id(),
-                    'componenteCurricularId' => $componente_curricular_id,
                     'turmaId' => $turma_id,
                 ];
 
+                if (!empty($componente_curricular_id)) {
+                    $params['componenteCurricularId'] = $componente_curricular_id;
+                }
+
                 $this->_boletimServiceInstances[$matriculaId] = new Avaliacao_Service_Boletim($params);
             } catch (Exception $e) {
-                $this->messenger->append("Erro ao instanciar serviço boletim para matricula {$matriculaId}: " . $e->getMessage(), 'error', true);
+                throw new CoreExt_Exception($e->getMessage());
             }
         }
 

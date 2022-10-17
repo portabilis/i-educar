@@ -195,6 +195,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             $faltas = $this->getFaltasGerais();
         }
 
+
         $qtdFaltas = 0;
         foreach ($faltas as $falta) {
             $qtdFaltas += $falta->quantidade;
