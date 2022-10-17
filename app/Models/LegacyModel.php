@@ -58,6 +58,9 @@ class LegacyModel extends Model
 
     public function getLegacyColumn($key)
     {
-        return $this->legacy[$key] ?? $key;
+        if (is_string($key)) {
+            return $this->legacy[$key] ?? $key;
+        }
+        return $key;
     }
 }
