@@ -5,12 +5,14 @@ namespace App\Models;
 use App\Traits\Ativo;
 use App\Traits\HasInstitution;
 use App\Traits\HasLegacyDates;
+use App\Traits\HasLegacyUserAction;
 
 class LegacyDisciplinaryOccurrenceType extends LegacyModel
 {
     use Ativo;
     use HasLegacyDates;
     use HasInstitution;
+    use HasLegacyUserAction;
 
     /**
      * @var string
@@ -26,12 +28,18 @@ class LegacyDisciplinaryOccurrenceType extends LegacyModel
      * @var array
      */
     protected $fillable = [
-        'ref_usuario_exc',
-        'ref_usuario_cad',
         'nm_tipo',
         'descricao',
         'max_ocorrencias',
         'data_exclusao',
         'ativo'
+    ];
+
+    public array $legacy = [
+        'name' => 'nm_tipo',
+        'description' => 'descricao',
+        'max' => 'max_ocorrencias',
+        'deleted_at' => 'data_exclusao',
+        'active' => 'ativo'
     ];
 }
