@@ -79,13 +79,51 @@ return new class extends clsCadastro {
         $this->inputsHelper()->date('data_enturmacao', ['label' => 'Data enturmação', 'value' => dataToBrasil($enturmacao['data_enturmacao']), 'placeholder' => '']);
         $this->inputsHelper()->date('data_exclusao', ['label' => 'Data de saída', 'value' => dataToBrasil($enturmacao['data_exclusao']), 'placeholder' => '', 'required' => $required]);
 
-        $this->campoCheck('transferido','Transferido', dbBool($enturmacao['transferido']));
-        $this->campoCheck('remanejado','Remanejado', dbBool($enturmacao['remanejado']));
-        $this->campoCheck('reclassificado','Reclassificado', dbBool($enturmacao['reclassificado']));
-        $this->campoCheck('abandono','Abandono', dbBool($enturmacao['abandono']));
-        $this->campoCheck('falecido','Falecido', dbBool($enturmacao['falecido']));
+        $situacoesMatricula = [
+            '' => 'Selecione',
+            'transferido' => 'Transferido',
+            'remanejado' => 'Remanejado',
+            'reclassificado' => 'Reclassificado',
+            'abandono' => 'Abandono',
+            'falecido' => 'Falecido',
+        ];
+
+        $options = [
+            'label' => 'Situação',
+            'value' => $this->buscaSituacao($enturmacao),
+            'resources' => $situacoesMatricula,
+            'inline' => true,
+            'required' => false
+        ];
+
+        $this->inputsHelper()->select('matricula_situacao', $options);
 
         Portabilis_View_Helper_Application::loadJavascript($this, '/vendor/legacy/intranet/scripts/extra/matricua-historico.js');
+    }
+
+    public function buscaSituacao(array $enturmacao): string
+    {
+        if (dbBool($enturmacao['transferido'])) {
+            return 'transferido';
+        }
+
+        if (dbBool($enturmacao['remanejado'])) {
+            return 'remanejado';
+        }
+
+        if (dbBool($enturmacao['reclassificado'])) {
+            return 'reclassificado';
+        }
+
+        if (dbBool($enturmacao['abandono'])) {
+            return 'abandono';
+        }
+
+        if (dbBool($enturmacao['falecido'])) {
+            return 'falecido';
+        }
+
+        return '';
     }
 
     public function Editar()
