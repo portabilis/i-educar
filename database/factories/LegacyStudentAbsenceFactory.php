@@ -2,17 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyEducacensoStages;
+use App\Models\LegacyStudentAbsence;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class LegacyEducacensoStagesFactory extends Factory
+class LegacyStudentAbsenceFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = LegacyEducacensoStages::class;
+    protected $model = LegacyStudentAbsence::class;
 
     /**
      * Define the model's default state.
@@ -22,8 +22,8 @@ class LegacyEducacensoStagesFactory extends Factory
     public function definition(): array
     {
         return [
-            'id' => $this->faker->randomNumber(),
-            'name' => $this->faker->name,
+            'matricula_id' => fn () => LegacyRegistrationFactory::new()->create(),
+            'tipo_falta' => $this->faker->numberBetween(1, 2),
         ];
     }
 }
