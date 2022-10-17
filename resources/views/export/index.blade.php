@@ -21,9 +21,9 @@
         <tr>
           <td>{{ $export->filename }}</td>
           <td>
-            @if(empty($export->url) && $export->created_at < now()->subMinutes(30))
+            @if(empty($export->url) && $export->created_at < now()->subMinutes(15))
               O arquivo não pode ser exportado
-              @elseif($export->url)
+            @elseif($export->url)
               <a href="{{ $presigner->getPresignedUrl($export->url) }}" style="font-size: 14px">Fazer download</a>
             @else
               Aguardando a exportação do arquivo ser finalizada

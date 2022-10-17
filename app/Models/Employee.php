@@ -32,11 +32,16 @@ class Employee extends LegacyModel
      *
      * @var string
      */
-    protected $builder = EmployeeBuilder::class;
+    protected string $builder = EmployeeBuilder::class;
 
     protected $fillable = [
         'cod_servidor',
         'carga_horaria',
+    ];
+
+    public array $legacy = [
+        'id' => 'cod_servidor',
+        'workload' => 'carga_horaria'
     ];
 
     /**
