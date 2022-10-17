@@ -70,7 +70,7 @@ return new class extends clsCadastro {
         include('include/pmieducar/educar_campo_lista.php');
 
         $obj_permissoes = new clsPermissoes();
-        $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+        $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
         $option = false;
         if ($this->existeEtapaNaEscola() or $this->existeEtapaNaTurma()) {

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
@@ -11,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property Employee $employee
  *
  */
-class EmployeeInep extends Model
+class EmployeeInep extends LegacyModel
 {
     /**
      * @var string
@@ -23,7 +22,14 @@ class EmployeeInep extends Model
      */
     protected $primaryKey = 'cod_servidor';
 
-    protected $fillable = ['cod_servidor', 'cod_docente_inep'];
+    protected $fillable = [
+        'cod_servidor',
+        'cod_docente_inep'
+    ];
+
+    public array $legacy = [
+        'id' => 'cod_servidor',
+    ];
 
     public function getNumberAttribute()
     {

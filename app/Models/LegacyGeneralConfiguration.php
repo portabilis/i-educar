@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasLegacyDates;
 
-class LegacyGeneralConfiguration extends Model
+class LegacyGeneralConfiguration extends LegacyModel
 {
+    use HasLegacyDates;
+
     /**
      * @var string
      */
@@ -33,7 +35,6 @@ class LegacyGeneralConfiguration extends Model
         'nm_responsavel',
         'ddd_telefone',
         'telefone',
-        'data_cadastro',
         'data_exclusao',
         'ativo',
         'nm_instituicao',

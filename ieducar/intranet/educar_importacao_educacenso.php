@@ -61,12 +61,10 @@ return new class extends clsCadastro {
 
     public function Novo()
     {
-        return;
     }
 
     public function Editar()
     {
-        return;
     }
 
     public function Formular()

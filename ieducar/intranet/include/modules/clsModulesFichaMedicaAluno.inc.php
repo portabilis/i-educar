@@ -98,7 +98,7 @@ class clsModulesFichaMedicaAluno extends Model
         $aceita_hospital_proximo = null,
         $desc_aceita_hospital_proximo = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}ficha_medica_aluno";
 

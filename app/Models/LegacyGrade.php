@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use App\Models\Builders\LegacyGradeBuilder;
+use App\Traits\HasLegacyDates;
 use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
@@ -14,9 +14,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  *
  * @method static LegacyGradeBuilder query()
  */
-class LegacyGrade extends Model
+class LegacyGrade extends LegacyModel
 {
     use LegacyAttribute;
+    use HasLegacyDates;
 
     /**
      * @var string
@@ -33,14 +34,14 @@ class LegacyGrade extends Model
      *
      * @var string
      */
-    protected $builder = LegacyGradeBuilder::class;
+    protected string $builder = LegacyGradeBuilder::class;
 
     /**
      * Atributos legados para serem usados nas queries
      *
      * @var string[]
      */
-    public $legacy = [
+    public array $legacy = [
         'id' => 'cod_serie',
         'name' => 'nm_serie',
         'description' => 'descricao'
@@ -50,7 +51,11 @@ class LegacyGrade extends Model
      * @var array
      */
     protected $fillable = [
-        'nm_serie', 'ref_usuario_cad', 'ref_cod_curso', 'etapa_curso', 'carga_horaria', 'data_cadastro',
+        'nm_serie',
+        'ref_usuario_cad',
+        'ref_cod_curso',
+        'etapa_curso',
+        'carga_horaria',
     ];
 
     /**

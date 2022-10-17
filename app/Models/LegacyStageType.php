@@ -2,11 +2,15 @@
 
 namespace App\Models;
 
+use App\Traits\HasInstitution;
+use App\Traits\HasLegacyDates;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 
-class LegacyStageType extends Model
+class LegacyStageType extends LegacyModel
 {
+    use HasLegacyDates;
+    use HasInstitution;
+
     /**
      * @var string
      */
@@ -24,8 +28,6 @@ class LegacyStageType extends Model
         'cod_modulo',
         'ref_usuario_cad',
         'nm_tipo',
-        'data_cadastro',
-        'ref_cod_instituicao',
         'num_etapas',
         'descricao'
     ];

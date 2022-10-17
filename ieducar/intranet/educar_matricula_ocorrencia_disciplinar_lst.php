@@ -71,7 +71,7 @@ return new class extends clsListagem {
         $matricula = (new clsPmieducarMatricula())->lista($this->ref_cod_matricula);
         $detalhe_aluno = array_shift($matricula);
 
-        $det_escola = (new clsPmieducarEscola($detalhe_aluno['ref_ref_cod_escola']))->detalhe();
+        (new clsPmieducarEscola($detalhe_aluno['ref_ref_cod_escola']))->detalhe();
         $det_aluno = (new clsPmieducarAluno())->lista($detalhe_aluno['ref_cod_aluno'], null, null, null, null, null, null, null, null, null, 1);
 
         $det_aluno = array_shift($det_aluno);

@@ -3,16 +3,14 @@
 namespace App\Models;
 
 use App\Traits\Ativo;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasInstitution;
+use App\Traits\HasLegacyDates;
 
-class LegacyDisciplinaryOccurrenceType extends Model
+class LegacyDisciplinaryOccurrenceType extends LegacyModel
 {
     use Ativo;
-    use HasFactory;
-
-    public const CREATED_AT = 'data_cadastro';
-    public const UPDATED_AT = null;
+    use HasLegacyDates;
+    use HasInstitution;
 
     /**
      * @var string
@@ -34,7 +32,6 @@ class LegacyDisciplinaryOccurrenceType extends Model
         'descricao',
         'max_ocorrencias',
         'data_exclusao',
-        'ref_cod_instituicao',
         'ativo'
     ];
 }

@@ -25,14 +25,14 @@ class LegacyDisciplineAcademicYear extends Pivot
      *
      * @var string
      */
-    protected $builder = LegacyDisciplineAcademicYearBuilder::class;
+    protected string $builder = LegacyDisciplineAcademicYearBuilder::class;
 
     /**
      * Atributos legados para serem usados nas queries
      *
      * @var string[]
      */
-    public $legacy = [
+    public array $legacy = [
         'id' => 'componente_curricular_id',
         'workload' => 'carga_horaria'
     ];

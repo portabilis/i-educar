@@ -18,7 +18,7 @@ class clsPmieducarServidorAfastamento extends Model
 
     public function __construct($ref_cod_servidor = null, $sequencial = null, $ref_cod_motivo_afastamento = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $data_cadastro = null, $data_exclusao = null, $data_retorno = null, $data_saida = null, $ativo = null, $ref_cod_instituicao = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}servidor_afastamento";
 

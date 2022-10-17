@@ -12,7 +12,7 @@ class clsPmieducarSeriePeriodoData extends Model
 
     public function __construct($ref_cod_serie = null, $sequencial = null, $ref_cod_serie_tipo_periodo_ano = null, $data_inicial = null, $data_final = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}serie_periodo_data";
 
@@ -233,9 +233,6 @@ class clsPmieducarSeriePeriodoData extends Model
      */
     public function excluir()
     {
-        if (is_numeric($this->ref_cod_serie) && is_numeric($this->sequencial)) {
-        }
-
         return false;
     }
 

@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use App\Models\Builders\LegacyCourseBuilder;
+use App\Traits\HasLegacyDates;
 use App\Traits\LegacyAttribute;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -16,9 +16,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  *
  * @method static LegacyCourseBuilder query()
  */
-class LegacyCourse extends Model
+class LegacyCourse extends LegacyModel
 {
     use LegacyAttribute;
+    use HasLegacyDates;
 
     /**
      * @var string
@@ -35,14 +36,14 @@ class LegacyCourse extends Model
      *
      * @var string
      */
-    protected $builder = LegacyCourseBuilder::class;
+    protected string $builder = LegacyCourseBuilder::class;
 
     /**
      * Atributos legados para serem usados nas queries
      *
      * @var array
      */
-    public $legacy = [
+    public array $legacy = [
         'id' => 'cod_curso',
         'name' => 'nm_curso',
         'is_standard_calendar' => 'padrao_ano_escolar',
@@ -54,9 +55,20 @@ class LegacyCourse extends Model
      * @var array
      */
     protected $fillable = [
-        'ref_usuario_cad', 'ref_cod_tipo_regime', 'ref_cod_nivel_ensino', 'ref_cod_tipo_ensino', 'nm_curso',
-        'sgl_curso', 'qtd_etapas', 'carga_horaria', 'data_cadastro', 'ref_cod_instituicao', 'hora_falta', 'ativo',
-        'modalidade_curso', 'padrao_ano_escolar', 'multi_seriado'
+        'ref_usuario_cad',
+        'ref_cod_tipo_regime',
+        'ref_cod_nivel_ensino',
+        'ref_cod_tipo_ensino',
+        'nm_curso',
+        'sgl_curso',
+        'qtd_etapas',
+        'carga_horaria',
+        'ref_cod_instituicao',
+        'hora_falta',
+        'ativo',
+        'modalidade_curso',
+        'padrao_ano_escolar',
+        'multi_seriado'
     ];
 
     /**

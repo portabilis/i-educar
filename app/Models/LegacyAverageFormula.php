@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class LegacyAverageFormula extends Model
+class LegacyAverageFormula extends LegacyModel
 {
     /**
      * @var string
@@ -20,11 +18,23 @@ class LegacyAverageFormula extends Model
      * @var array
      */
     protected $fillable = [
-        'instituicao_id', 'nome', 'formula_media',
+        'instituicao_id',
+        'nome',
+        'formula_media',
+        'tipo_formula',
+        'substitui_menor_nota_rc'
     ];
 
     /**
      * @var bool
      */
     public $timestamps = false;
+
+    public array $legacy = [
+        'institution_id' => 'instituicao_id',
+        'name' => 'nome',
+        'average' => 'formula_media',
+        'type' => 'tipo_formula',
+        'replace_minor_note_rc' => 'substitui_menor_nota_rc',
+    ];
 }

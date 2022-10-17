@@ -2,22 +2,11 @@
 
 namespace App\Models;
 
-use App\Traits\Ativo;
-use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasLegacyDates;
 
-/**
- * @property int idpes_exc
- * @property int idpes_cad
- * @property string nm_raca
- * @property int raca_educacenso,
- */
-class LegacyRace extends Model
+class LegacyRace extends LegacyModel
 {
-    use Ativo;
-
-    public const CREATED_AT = 'data_cadastro';
-    public const DELETED_AT = 'data_exclusao';
-    public const UPDATED_AT =  null;
+    use HasLegacyDates;
 
     /**
      * @var string
@@ -33,9 +22,13 @@ class LegacyRace extends Model
      * @var array
      */
     protected $fillable = [
-        'idpes_exc',
         'idpes_cad',
         'nm_raca',
         'raca_educacenso',
     ];
+
+    /**
+     * @var bool
+     */
+    public $timestamps = false;
 }

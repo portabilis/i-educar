@@ -10,7 +10,7 @@ class clsPmieducarServidorCursoMinistra extends Model
 
     public function __construct($ref_cod_curso = null, $ref_ref_cod_instituicao = null, $ref_cod_servidor = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}servidor_curso_ministra";
 
@@ -72,7 +72,6 @@ class clsPmieducarServidorCursoMinistra extends Model
     {
         if (is_numeric($this->ref_cod_curso) && is_numeric($this->ref_ref_cod_instituicao) && is_numeric($this->ref_cod_servidor)) {
             $db = new clsBanco();
-            $gruda = '';
             $set = '';
 
             if ($set) {
@@ -195,9 +194,6 @@ class clsPmieducarServidorCursoMinistra extends Model
      */
     public function excluir()
     {
-        if (is_numeric($this->ref_cod_curso) && is_numeric($this->ref_ref_cod_instituicao) && is_numeric($this->ref_cod_servidor)) {
-        }
-
         return false;
     }
 

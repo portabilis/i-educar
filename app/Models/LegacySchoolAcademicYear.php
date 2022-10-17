@@ -3,17 +3,18 @@
 namespace App\Models;
 
 use App\Models\Builders\LegacySchoolAcademicYearBuilder;
+use App\Traits\HasLegacyDates;
 use App\Traits\LegacyAttribute;
-use Illuminate\Database\Eloquent\Model;
 
 /**
  * LegacySchoolAcademicYear
  *
  * @method static LegacySchoolAcademicYearBuilder query()
  */
-class LegacySchoolAcademicYear extends Model
+class LegacySchoolAcademicYear extends LegacyModel
 {
     use LegacyAttribute;
+    use HasLegacyDates;
 
     /**
      * @var string
@@ -30,14 +31,14 @@ class LegacySchoolAcademicYear extends Model
      *
      * @var string
      */
-    protected $builder = LegacySchoolAcademicYearBuilder::class;
+    protected string $builder = LegacySchoolAcademicYearBuilder::class;
 
     /**
      * Atributos legados para serem usados nas queries
      *
      * @var string[]
      */
-    public $legacy = [
+    public array $legacy = [
         'year' => 'ano'
     ];
 
@@ -50,7 +51,6 @@ class LegacySchoolAcademicYear extends Model
         'ref_usuario_cad',
         'ref_usuario_exc',
         'andamento',
-        'data_cadastro',
         'data_exclusao',
         'ativo',
         'turmas_por_ano',

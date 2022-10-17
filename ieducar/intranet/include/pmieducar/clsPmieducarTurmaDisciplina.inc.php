@@ -11,7 +11,7 @@ class clsPmieducarTurmaDisciplina extends Model
 
     public function __construct($ref_cod_turma = null, $ref_cod_disciplina = null, $ref_cod_escola = null, $ref_cod_serie = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}turma_disciplina";
 
@@ -79,7 +79,6 @@ class clsPmieducarTurmaDisciplina extends Model
     {
         if (is_numeric($this->ref_cod_turma) && is_numeric($this->ref_cod_disciplina) && is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_serie)) {
             $db = new clsBanco();
-            $gruda = '';
             $set = '';
 
             if ($set) {
@@ -199,9 +198,6 @@ class clsPmieducarTurmaDisciplina extends Model
      */
     public function excluir()
     {
-        if (is_numeric($this->ref_cod_turma) && is_numeric($this->ref_cod_disciplina) && is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_serie)) {
-        }
-
         return false;
     }
 
@@ -274,7 +270,8 @@ class clsPmieducarTurmaDisciplina extends Model
     {
         if (is_numeric($disciplina) && is_numeric($this->ref_cod_turma) && is_numeric($this->ref_cod_serie) && is_numeric($this->ref_cod_escola)) {
             $db = new clsBanco();
-            $resultado = $db->CampoUnico("SELECT 1
+
+            return $db->CampoUnico("SELECT 1
                             FROM pmieducar.dispensa_disciplina dd
                             WHERE
                                     dd.disc_ref_ref_cod_disciplina = {$disciplina}
@@ -312,8 +309,6 @@ class clsPmieducarTurmaDisciplina extends Model
                                 AND qhh.ref_ref_cod_turma = {$this->ref_cod_turma}
                                 AND qhh.ref_ref_cod_serie = {$this->ref_cod_serie}
                                 AND qhh.ref_ref_cod_escola = {$this->ref_cod_escola}");
-
-            return $resultado;
         }
 
         return false;

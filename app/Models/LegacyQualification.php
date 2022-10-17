@@ -3,15 +3,15 @@
 namespace App\Models;
 
 use App\Traits\Ativo;
-use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasInstitution;
+use App\Traits\HasLegacyDates;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class LegacyQualification extends Model
+class LegacyQualification extends LegacyModel
 {
     use Ativo;
-
-    public const CREATED_AT = 'data_cadastro';
-    public const UPDATED_AT = null;
+    use HasLegacyDates;
+    use HasInstitution;
 
     /**
      * @var string
@@ -32,7 +32,6 @@ class LegacyQualification extends Model
         'nm_tipo',
         'descricao',
         'data_exclusao',
-        'ref_cod_instituicao',
     ];
 
     public function courses(): BelongsToMany

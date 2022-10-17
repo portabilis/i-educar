@@ -17,7 +17,7 @@ class clsPmieducarCalendarioDia extends Model
 
     public function __construct($ref_cod_calendario_ano_letivo = null, $mes = null, $dia = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_cod_calendario_dia_motivo = null/*, $ref_cod_calendario_atividade = null*/, $descricao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}calendario_dia";
 

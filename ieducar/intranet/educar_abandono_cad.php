@@ -118,8 +118,7 @@ return new class extends clsCadastro {
                 foreach ($enturmacoes as $enturmacao) {
                     $enturmacao = new clsPmieducarMatriculaTurma($this->ref_cod_matricula, $enturmacao['ref_cod_turma'], $this->pessoa_logada, null, null, null, 0, null, $enturmacao['sequencial']);
                     $detEnturmacao = $enturmacao->detalhe();
-                    $detEnturmacao = $detEnturmacao['data_enturmacao'];
-                    $enturmacao->data_enturmacao = $detEnturmacao;
+                    $enturmacao->data_enturmacao = $detEnturmacao['data_enturmacao'];
 
                     if (! $enturmacao->edita()) {
                         $this->mensagem = 'Não foi possível desativar as enturmações da matrícula.';

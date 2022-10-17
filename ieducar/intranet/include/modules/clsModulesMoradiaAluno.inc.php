@@ -65,7 +65,7 @@ class clsModulesMoradiaAluno extends Model
         $fossa = null,
         $lixo = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}moradia_aluno";
 
@@ -559,7 +559,6 @@ class clsModulesMoradiaAluno extends Model
     {
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = '';
-        $whereAnd = ' WHERE ';
 
         $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista)) + 2;
