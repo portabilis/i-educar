@@ -1018,7 +1018,7 @@ class MatriculaController extends ApiCoreController
             $legacyActiveLooking->whereIn('ref_ref_cod_escola', explode(',', $escola));
         }
 
-        $buscaAtiva = $legacyActiveLooking->get();
+        $buscaAtiva = $legacyActiveLooking->getAttributes();
 
         return ['busca_ativa' => $buscaAtiva];
     }
