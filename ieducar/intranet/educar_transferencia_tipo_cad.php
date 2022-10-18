@@ -24,7 +24,7 @@ return new class extends clsCadastro {
         $obj_permissoes->permissao_cadastra(575, $this->pessoa_logada, 7, 'educar_transferencia_tipo_lst.php');
 
         if (is_numeric($this->cod_transferencia_tipo)) {
-            $registro = LegacyTransferType::find($this->cod_transferencia_tipo)?->toArray();
+            $registro = LegacyTransferType::find($this->cod_transferencia_tipo)?->getAttributes();
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;

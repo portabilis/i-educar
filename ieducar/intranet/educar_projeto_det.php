@@ -20,7 +20,7 @@ return new class extends clsDetalhe {
 
         $this->cod_projeto=$_GET['cod_projeto'];
 
-        $registro = LegacyProject::find($this->cod_projeto)?->toArray();
+        $registro = LegacyProject::find($this->cod_projeto)?->getAttributes();
 
         if (! $registro) {
             $this->simpleRedirect('educar_projeto_lst.php');
