@@ -153,7 +153,7 @@ return new class extends clsCadastro
         $sequencia = $this->fase_etapa;
         $obj = new clsPmieducarTurmaModulo();
 
-        $data = $obj->pegaPeriodoLancamentoNotasFaltas($turma, $sequencia);
+        $data = $obj->pegaPeriodoLancamentoNotasFaltasAee($turma, $sequencia);
         if ($data['inicio'] != null && $data['fim'] != null) {
             $data['inicio_periodo_lancamentos'] = explode(',', $data['inicio']);
             $data['fim_periodo_lancamentos'] = explode(',', $data['fim']);

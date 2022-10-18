@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 class PlanejamentoAulaAeeController extends ApiCoreController
 {
     public function verificarPlanoAulaSendoUsado()
@@ -141,8 +142,6 @@ class PlanejamentoAulaAeeController extends ApiCoreController
                 $outros
             );
 
-            //die(var_dump(//$obj));
-
             $editou = $obj->edita();
 
             if ($editou)
@@ -167,14 +166,16 @@ class PlanejamentoAulaAeeController extends ApiCoreController
         $bnccEspecificacoes = $this->getRequest()->bnccEspecificacoes;
         $recursos_didaticos = $this->getRequest()->recursos_didaticos;
         $outros = $this->getRequest()->outros;
-        $servidor_id = $this->pessoa_logada;
+        $servidor_id = Auth::id();
 
-        $podeRegistrar = $this->verificarDatasTurma($faseEtapa, $turma, $data_inicial, $data_final);
+        //die(dump($servidor_id));
 
-        if (!$podeRegistrar) {
-            return ["result" => "Cadastro não realizado, pois o intervalo de datas não se adequa as etapas da turma."];
-            $this->simpleRedirect('educar_professores_planejamento_de_aula_aee_cad.php');
-        }
+        //$podeRegistrar = $this->verificarDatasTurma($faseEtapa, $turma, $data_inicial, $data_final);
+
+        // if (!$podeRegistrar) {
+        //     return ["result" => "Cadastro não realizado, pois o intervalo de datas não se adequa as etapas da turma."];
+        //     $this->simpleRedirect('educar_professores_planejamento_de_aula_aee_cad.php');
+        // }
 
         $obj = new clsModulesPlanejamentoAulaAee(
             null,
@@ -322,7 +323,7 @@ class PlanejamentoAulaAeeController extends ApiCoreController
         $sequencia = $faseEtapa;
         $obj = new clsPmieducarTurmaModulo();
 
-        $data = $obj->pegaPeriodoLancamentoNotasFaltas($turma, $sequencia);
+        $data = $obj->pegaPeriodoLancamentoNotasFaltasAee($turma, $sequencia);
         if ($data['inicio'] != null && $data['fim'] != null) {
             $data['inicio_periodo_lancamentos'] = explode(',', $data['inicio']);
             $data['fim_periodo_lancamentos'] = explode(',', $data['fim']);
