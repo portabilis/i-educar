@@ -61,6 +61,7 @@ class LegacyModel extends Model
         if (is_string($key)) {
             return $this->legacy[$key] ?? $key;
         }
+
         return $key;
     }
 }
