@@ -164,7 +164,7 @@ class clsModulesPlanejamentoAulaAee extends Model
             && is_array($this->bncc_especificacoes)
             && is_string($this->recursos_didaticos)
             && is_string($this->outros)
-            && is_numeric($this->servidor_id)
+            && is_numeric($this->servidor_id)            
         ) {
             $db = new clsBanco();
             $campos = '';
@@ -213,7 +213,9 @@ class clsModulesPlanejamentoAulaAee extends Model
 
             $campos .= "{$gruda}servidor_id";
             $valores .= "{$gruda}'{$this->servidor_id}'";
-            $gruda = ', ';            
+            $gruda = ', '; 
+            
+            //die(dump($this->servidor_id));
 
             $db->Consulta("
                 INSERT INTO

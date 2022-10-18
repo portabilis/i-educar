@@ -178,10 +178,12 @@ return new class extends clsDetalhe {
             $sequencia = $registro['detalhes']['fase_etapa'];
             $obj = new clsPmieducarTurmaModulo();
 
-            $data = $obj->pegaPeriodoLancamentoNotasFaltas($turma, $sequencia);
+            $data = $obj->pegaPeriodoLancamentoNotasFaltasAee($turma, $sequencia);
             if ($data['inicio'] != null && $data['fim'] != null) {
                 $data['inicio'] = explode(',', $data['inicio']);
                 $data['fim'] = explode(',', $data['fim']);
+
+                die(dump($data['inicio']));
 
                 array_walk($data['inicio'], function(&$data_inicio, $key) {
                     $data_inicio = new \DateTime($data_inicio);
