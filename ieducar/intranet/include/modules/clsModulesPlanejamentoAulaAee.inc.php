@@ -214,8 +214,6 @@ class clsModulesPlanejamentoAulaAee extends Model
             $campos .= "{$gruda}servidor_id";
             $valores .= "{$gruda}'{$this->servidor_id}'";
             $gruda = ', '; 
-            
-            //die(dump($this->servidor_id));
 
             $db->Consulta("
                 INSERT INTO

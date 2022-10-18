@@ -168,14 +168,12 @@ class PlanejamentoAulaAeeController extends ApiCoreController
         $outros = $this->getRequest()->outros;
         $servidor_id = Auth::id();
 
-        //die(dump($servidor_id));
+        $podeRegistrar = $this->verificarDatasTurma($faseEtapa, $turma, $data_inicial, $data_final);
 
-        //$podeRegistrar = $this->verificarDatasTurma($faseEtapa, $turma, $data_inicial, $data_final);
-
-        // if (!$podeRegistrar) {
-        //     return ["result" => "Cadastro não realizado, pois o intervalo de datas não se adequa as etapas da turma."];
-        //     $this->simpleRedirect('educar_professores_planejamento_de_aula_aee_cad.php');
-        // }
+        if (!$podeRegistrar) {
+            return ["result" => "Cadastro não realizado, pois o intervalo de datas não se adequa as etapas da turma."];
+            $this->simpleRedirect('educar_professores_planejamento_de_aula_aee_cad.php');
+        }
 
         $obj = new clsModulesPlanejamentoAulaAee(
             null,
