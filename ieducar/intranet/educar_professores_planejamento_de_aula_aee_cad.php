@@ -50,6 +50,7 @@ return new class extends clsCadastro
                 $this->bncc = array_column($registro['bnccs'], 'id');
                 $this->bncc_especificacoes = array_column($registro['especificacoes'], 'id');
                 $this->ref_cod_componente_curricular_array = $registro['componentesCurriculas'];
+                $this->conteudos_ids = $registro['conteudos'][1];
 
                 if (!$this->copy) {
                     $this->fexcluir = $obj_permissoes->permissao_excluir(58, $this->pessoa_logada, 7);
@@ -110,6 +111,7 @@ return new class extends clsCadastro
         $this->campoOculto('id', $this->id);
         $this->campoOculto('planejamento_aula_aee_id', $this->id);
         $this->campoOculto('obrigatorio_conteudo', $obrigatorioConteudoAee);
+        $this->campoOculto('conteudos_ids', $this->conteudos_ids);        
         $this->inputsHelper()->dynamic('dataInicial', ['required' => $obrigatorio]);    // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('dataFinal', ['required' => $obrigatorio]);      // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado]);
