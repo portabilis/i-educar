@@ -341,7 +341,7 @@
         function tentaEditarPlanoAula() {
             conteudos = pegarConteudos();
 
-            var urlForVerificarPlanoAulaSendoUsado = postResourceUrlBuilder.buildUrl('/module/Api/PlanejamentoAula', 'verificar-plano-aula-sendo-usado-conteudo', {});
+            var urlForVerificarPlanoAulaSendoUsado = postResourceUrlBuilder.buildUrl('/module/Api/PlanejamentoAulaAee', 'verificar-plano-aula-aee-sendo-usado-conteudo', {});
 
             var options = {
                 type: 'POST',
@@ -349,7 +349,7 @@
                 dataType: 'json',
                 data: {
                     planejamento_aula_id: planejamento_aula_id,
-                    conteudos: conteudos,
+                    conteudos: conteudos
                 },
                 success: handleTentaEditarPlanoAula
             };
@@ -603,19 +603,19 @@
             return ` \
               <span> \
                   Não é possível prosseguir com a edição porque <b> um ou mais conteúdos </b> estão sendo utilizados em \
-                  <b>${quantidadeRegistrosAula}</b> registro(s) de aula. O que deseja fazer? \
+                  <b>${quantidadeRegistrosAula}</b> atendimento(s) \
               </span><br> \
           `;
         }
 
-        function verRegistrosAula() {
-            for (let index = 0; index < registrosAula.length; index++) {
-                const registroAula = registrosAula[index];
+        // function verRegistrosAula() {
+        //     for (let index = 0; index < registrosAula.length; index++) {
+        //         const registroAula = registrosAula[index];
 
-                const url = "http://" + window.location.host + "/intranet/educar_professores_frequencia_cad.php?id=" + registroAula;
-                urlHelper(url, '_blank');
-            }
-        }
+        //         const url = "http://" + window.location.host + "/intranet/educar_professores_frequencia_cad.php?id=" + registroAula;
+        //         urlHelper(url, '_blank');
+        //     }
+        // }
 
         function urlHelper(href, mode) {
             Object.assign(document.createElement('a'), {
@@ -694,9 +694,9 @@
                 "Cancelar": function () {
                     closeModal();
                 },
-                "Ver registro(s) afetado(s)": function () {
-                    verRegistrosAula();
-                }
+                // "Ver registro(s) afetado(s)": function () {
+                //     verRegistrosAula();
+                // }
             }
         });
     });
