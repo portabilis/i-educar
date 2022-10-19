@@ -6,6 +6,7 @@ return new class extends clsCadastro {
     public $ref_cod_matricula;
     public $ref_cod_turma;
     public $sequencial;
+    public $matricula_situacao;
 
     public function Inicializar()
     {
@@ -136,11 +137,11 @@ return new class extends clsCadastro {
         $enturmacao->data_enturmacao = dataToBanco($this->data_enturmacao);
         $enturmacao->data_exclusao = dataToBanco($this->data_exclusao);
 
-        $enturmacao->transferido = !is_null($this->transferido);
-        $enturmacao->remanejado = !is_null($this->remanejado);
-        $enturmacao->reclassificado = !is_null($this->reclassificado);
-        $enturmacao->abandono = !is_null($this->abandono);
-        $enturmacao->falecido = !is_null($this->falecido);
+        $enturmacao->transferido = $this->matricula_situacao === 'transferido';
+        $enturmacao->remanejado = $this->matricula_situacao === 'remanejado';
+        $enturmacao->reclassificado = $this->matricula_situacao === 'reclassificado';
+        $enturmacao->abandono = $this->matricula_situacao === 'abandono';
+        $enturmacao->falecido = $this->matricula_situacao === 'falecido';
 
         $dataSaidaEnturmacaoAnterior = $enturmacao->getDataSaidaEnturmacaoAnterior($this->ref_cod_matricula, $this->sequencial);
         $dataEntradaEnturmacaoSeguinte = $enturmacao->getDataEntradaEnturmacaoSeguinte($this->ref_cod_matricula, $this->sequencial);

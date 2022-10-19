@@ -39,13 +39,13 @@ window.onload = function () {
     });
   }
 
-  const remanejado = document.getElementById('remanejado');
+  const matriculaSituacao = document.getElementById('matricula_situacao').value;
   const deletationDate = document.getElementById('data_exclusao');
 
   const validationDateExclutionRule = function () {
     const deletationDateValue = deletationDate.value;
 
-    if (remanejado.checked && typeof deletationDateValue === 'string' && deletationDateValue === '') {
+    if (matriculaSituacao === 'remanejado' && typeof deletationDateValue === 'string' && deletationDateValue === '') {
       defaultModal('A data de saída é obrigatória quando é marcado o remanejamento.')
       return false;
     }
@@ -59,27 +59,16 @@ window.onload = function () {
   }
 
   const valitadeDateExclution = function () {
-
-    if (remanejado.checked === true) {
+    document.getElementById('matricula_situacao').trigger('chosen:updated');
+    if (document.getElementById('matricula_situacao').value === 'remanejado') {
       makeRequired('data_exclusao');
-
-      document.getElementById('transferido').disabled = true;
-      document.getElementById('reclassificado').disabled = true;
-      document.getElementById('abandono').disabled = true;
-      document.getElementById('falecido').disabled = true;
-
       return;
     }
-
-    document.getElementById('transferido').disabled = false;
-    document.getElementById('reclassificado').disabled = false;
-    document.getElementById('abandono').disabled = false;
-    document.getElementById('falecido').disabled = false;
 
     makeUnrequired('data_exclusao');
   };
 
-  remanejado.addEventListener('change', valitadeDateExclution)
+  document.getElementById('matricula_situacao').addEventListener('change', valitadeDateExclution)
 
   valitadeDateExclution();
 }
