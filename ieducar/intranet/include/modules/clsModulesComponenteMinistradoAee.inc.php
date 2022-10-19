@@ -12,6 +12,7 @@ class clsModulesComponenteMinistradoAee extends Model
     public $atividades;
     public $observacao;
     public $conteudos;
+    public $servidor_id;
 
     public function __construct(
         $id = null,
@@ -21,7 +22,8 @@ class clsModulesComponenteMinistradoAee extends Model
         $ref_cod_matricula = null,
         $atividades = null,
         $observacao = null,
-        $conteudos = null
+        $conteudos = null,
+        $servidor_id = null
     ) {
         $db = new clsBanco();
         $this->_schema = 'modules.';
@@ -86,6 +88,10 @@ class clsModulesComponenteMinistradoAee extends Model
         if (is_array($conteudos)) {
             $this->conteudos = $conteudos;
         }
+
+        if (is_numeric($servidor_id)) {
+            $this->servidor_id = $servidor_id;
+        }
     }
 
     /**
@@ -129,6 +135,11 @@ class clsModulesComponenteMinistradoAee extends Model
                 $valores    .=  ", '{$db->escapeString($this->observacao)}'";
             }
 
+            if (is_numeric($this->servidor_id)) {
+                $campos     .=  ", servidor_id";
+                $valores    .=  ", '{$this->servidor_id}'";
+            }
+            
             $db->Consulta("
                 INSERT INTO
                     {$this->_tabela} ( $campos )

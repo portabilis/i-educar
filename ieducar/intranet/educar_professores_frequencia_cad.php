@@ -213,6 +213,7 @@ return new class extends clsCadastro {
 
             $conteudo .= '  </tr><td class="tableDetalheLinhaSeparador" colspan="3"></td><tr><td><div class="scroll"><table class="tableDetalhe tableDetalheMobile" width="100%"><tr class="tableHeader">';
             $conteudo .= '  <th><span style="display: block; float: left; width: auto; font-weight: bold">'."Nome".'</span></th>';
+            $conteudo .= '  <th><span style="display: block; float: left; width: auto; font-weight: bold">'."FA".'</span></th>';
 
             if ($tipo_presenca == 1) {
                 $conteudo .= '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' . "Presença" . '</span></th>';
@@ -231,12 +232,17 @@ return new class extends clsCadastro {
 
             foreach ($this->alunos as $key => $aluno) {
                 $id = $aluno['matricula'];
+
+                $serviceBoletim = $this->serviceBoletim($id, $this->ref_cod_componente_curricular, $this->ref_cod_turma);
+                $qtdFaltasGravadas = $serviceBoletim->getFaltaSemEtapa($this->ref_cod_componente_curricular);
+
                 $name = "alunos[" . $id . "]";
                 $checked = !$aluno['presenca'] ? "checked='true'" : '';
                 $disabled = !$aluno['presenca'] ? "disabled='true'" : '';
 
                 $conteudo .= '  <tr>';
                 $conteudo .= '  <td class="sizeFont colorFont"><p>' . $aluno['nome'] . '</p></td>';
+                $conteudo .= '  <td class="sizeFont colorFont"><p>' . $qtdFaltasGravadas . '</p></td>';
                 if ($tipo_presenca == 1) {
                     $conteudo .= "  <td class='sizeFont colorFont'>
                                     <input
@@ -421,6 +427,7 @@ return new class extends clsCadastro {
             $podeRegistrar = $podeRegistrar && $data['inicio'] >= $data_agora && $data['fim'] <= $data_agora;
         }
 
+        $podeRegistrar = true;
         if (!$podeRegistrar) {
             $this->mensagem = 'Cadastro não realizado, pois não é mais possível submeter frequência para esta etapa.<br>';
             $this->simpleRedirect('educar_professores_frequencia_cad.php');
@@ -673,6 +680,7 @@ return new class extends clsCadastro {
             $this->tabela .= '  <td  class="colorFont">';
             $this->tabela .= "  <p>{$aluno['nome']}</p></td>";
 
+
             if(!$aluno['presenca']) {
                 $this->tabela .= '  <td >
                                         <input type="checkbox" disabled Checked={false}>
@@ -763,6 +771,41 @@ return new class extends clsCadastro {
 
 
         return [];
+    }
+
+    protected function serviceBoletim($matricula_id, $componente_curricular_id, $turma_id, $reload = false)
+    {
+        $matriculaId = $matricula_id;
+
+        if (!isset($this->_boletimServiceInstances)) {
+            $this->_boletimServiceInstances = [];
+        }
+
+        // set service
+        if (!isset($this->_boletimServiceInstances[$matriculaId]) || $reload) {
+            try {
+                $params = [
+                    'matricula' => $matriculaId,
+                    'usuario' => \Illuminate\Support\Facades\Auth::id(),
+                    'turmaId' => $turma_id,
+                ];
+
+                if (!empty($componente_curricular_id)) {
+                    $params['componenteCurricularId'] = $componente_curricular_id;
+                }
+
+                $this->_boletimServiceInstances[$matriculaId] = new Avaliacao_Service_Boletim($params);
+            } catch (Exception $e) {
+                throw new CoreExt_Exception($e->getMessage());
+            }
+        }
+
+        // validates service
+        if (is_null($this->_boletimServiceInstances[$matriculaId])) {
+            throw new CoreExt_Exception("Não foi possivel instanciar o serviço boletim para a matricula $matriculaId.");
+        }
+
+        return $this->_boletimServiceInstances[$matriculaId];
     }
 
     public function Formular () {

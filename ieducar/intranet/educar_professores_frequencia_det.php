@@ -165,7 +165,9 @@ return new class extends clsDetalhe {
             $registro['matriculas']['refs_cod_matricula'],
             $registro['matriculas']['justificativas'],
             $registro['matriculas']['aulas_faltou'],
-            $registro['alunos']
+            $registro['alunos'],
+            $registro['detalhes']['ref_cod_componente_curricular'],
+            $registro['detalhes']['ref_cod_turma']
         );
 
         if ($obj_permissoes->permissao_cadastra(58, $this->pessoa_logada, 7)) {
@@ -227,7 +229,7 @@ return new class extends clsDetalhe {
         ]);
     }
 
-    function montaListaFrequenciaAlunos ($ref_cod_serie, $ordensAulasArray, $matriculas, $justificativas, $aulas_faltou, $alunos) {
+    function montaListaFrequenciaAlunos ($ref_cod_serie, $ordensAulasArray, $matriculas, $justificativas, $aulas_faltou, $alunos, $ref_componente_curricular, $ref_turma) {
         $obj = new clsPmieducarSerie();
         $tipo_presenca = $obj->tipoPresencaRegraAvaliacao($ref_cod_serie);
 
@@ -246,6 +248,7 @@ return new class extends clsDetalhe {
 
         $this->tabela .= ' </tr><td class="tableDetalheLinhaSeparador" colspan="3"></td><tr><td><div class="scroll"><table class="tableDetalhe tableDetalheMobile" width="100%">';
         $this->tabela .= ' <th><span style="display: block; float: left; width: auto; font-weight: bold">Nome</span></th>';
+        $this->tabela .= ' <th><span style="display: block; float: left; width: auto; font-weight: bold">FA</span></th>';
 
         if ($tipo_presenca == 1) {
             $this->tabela .= ' <th><span style="display: block; float: left; width: 100px; font-weight: bold">Presença</span></th>';
@@ -260,9 +263,13 @@ return new class extends clsDetalhe {
         $this->tabela .= ' <th><span style="display: block; float: left; width: auto; font-weight: bold">Justificativa</span></th></tr>';
 
         foreach ($alunos as $aluno) {
+            $serviceBoletim = $this->serviceBoletim($aluno['matricula'], $ref_componente_curricular, $ref_turma);
+            $qtdFaltasGravadas = $serviceBoletim->getFaltaSemEtapa($ref_componente_curricular);
+
              $checked = !$aluno['presenca'] ? "checked='true'" : '';
 
              $this->tabela .= "  <tr><td class='formlttd'><p>{$aluno['nome']}</p></td>";
+             $this->tabela .= "  <td class='formlttd'><p>{$qtdFaltasGravadas}</p></td>";
 
             if ($tipo_presenca == 1) {
                 $this->tabela .= "  <td style='margin: auto'><input type='checkbox' disabled {$checked}></td>";
@@ -311,6 +318,41 @@ return new class extends clsDetalhe {
                 $conteudo
             ]
         );
+    }
+
+    protected function serviceBoletim($matricula_id, $componente_curricular_id, $turma_id, $reload = false)
+    {
+        $matriculaId = $matricula_id;
+
+        if (!isset($this->_boletimServiceInstances)) {
+            $this->_boletimServiceInstances = [];
+        }
+
+        // set service
+        if (!isset($this->_boletimServiceInstances[$matriculaId]) || $reload) {
+            try {
+                $params = [
+                    'matricula' => $matriculaId,
+                    'usuario' => \Illuminate\Support\Facades\Auth::id(),
+                    'turmaId' => $turma_id,
+                ];
+
+                if (!empty($componente_curricular_id)) {
+                    $params['componenteCurricularId'] = $componente_curricular_id;
+                }
+
+                $this->_boletimServiceInstances[$matriculaId] = new Avaliacao_Service_Boletim($params);
+            } catch (Exception $e) {
+                throw new CoreExt_Exception($e->getMessage());
+            }
+        }
+
+        // validates service
+        if (is_null($this->_boletimServiceInstances[$matriculaId])) {
+            throw new CoreExt_Exception("Não foi possivel instanciar o serviço boletim para a matricula $matriculaId.");
+        }
+
+        return $this->_boletimServiceInstances[$matriculaId];
     }
 
     public function Formular()

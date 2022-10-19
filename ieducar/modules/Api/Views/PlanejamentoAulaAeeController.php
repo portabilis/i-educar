@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 class PlanejamentoAulaAeeController extends ApiCoreController
 {
     public function verificarPlanoAulaSendoUsado()
@@ -141,8 +142,6 @@ class PlanejamentoAulaAeeController extends ApiCoreController
                 $outros
             );
 
-            //die(var_dump(//$obj));
-
             $editou = $obj->edita();
 
             if ($editou)
@@ -167,6 +166,7 @@ class PlanejamentoAulaAeeController extends ApiCoreController
         $bnccEspecificacoes = $this->getRequest()->bnccEspecificacoes;
         $recursos_didaticos = $this->getRequest()->recursos_didaticos;
         $outros = $this->getRequest()->outros;
+        $servidor_id = Auth::id();
 
         $podeRegistrar = $this->verificarDatasTurma($faseEtapa, $turma, $data_inicial, $data_final);
 
@@ -188,7 +188,8 @@ class PlanejamentoAulaAeeController extends ApiCoreController
             $bnccs,
             $bnccEspecificacoes,
             $recursos_didaticos,
-            $outros
+            $outros,
+            $servidor_id
         );
 
         $existe = $obj->existe();
@@ -320,7 +321,7 @@ class PlanejamentoAulaAeeController extends ApiCoreController
         $sequencia = $faseEtapa;
         $obj = new clsPmieducarTurmaModulo();
 
-        $data = $obj->pegaPeriodoLancamentoNotasFaltas($turma, $sequencia);
+        $data = $obj->pegaPeriodoLancamentoNotasFaltasAee($turma, $sequencia);
         if ($data['inicio'] != null && $data['fim'] != null) {
             $data['inicio_periodo_lancamentos'] = explode(',', $data['inicio']);
             $data['fim_periodo_lancamentos'] = explode(',', $data['fim']);
