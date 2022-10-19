@@ -1,664 +1,703 @@
-(function($){
-  $(document).ready(function(){
-    //TODO: Refatorar Edição do plano de aula
+(function ($) {
+    $(document).ready(function () {
+        //TODO: Refatorar Edição do plano de aula
 
-      var id = $j('#id').val();
-      var copy = $j('#copy').val();
-      var bncc_table = document.getElementById("objetivos_aprendizagem");
-      var titleTable = document.getElementById("tr_objetivos_aprendizagem_tit");
-      var btn_add    = document.getElementById("btn_add_tab_add_1");
+        var id = $j('#id').val();
+        var copy = $j('#copy').val();
+        var bncc_table = document.getElementById("objetivos_aprendizagem");
+        var titleTable = document.getElementById("tr_objetivos_aprendizagem_tit");
+        var btn_add = document.getElementById("btn_add_tab_add_1");
 
-      if (isNaN(id) || id === '')
-          return;
+        if (isNaN(id) || id === '')
+            return;
 
-      if (!isNaN(id) && copy)
-          return;
+        // if (!isNaN(id) && copy)
+        //     return;
 
-      var registrosAula = [];
+        var registrosAula = [];
 
-      var planejamento_aula_id = $j('#id').val();
-      var turma_id = $j('#ref_cod_turma').val();
-      var ano = $j('#ano').val();
-      var ddp;
-      var atividades;
-      var bncc;
-      var conteudos;
-      var referencias;
-      var componentesCurriculares;
+        var planejamento_aula_id = $j('#id').val();
+        var turma_id = $j('#ref_cod_turma').val();
+        var ano = $j('#ano').val();
+        var conteudos_ids = $j('#conteudos_ids').val();
+        var ddp;
+        var atividades;
+        var bncc;
+        var conteudos;
+        var referencias;
+        var componentesCurriculares;
 
-    btn_add.onclick = function () {
-      tab_add_1.addRow();
+        btn_add.onclick = function () {
+            tab_add_1.addRow();
 
-      updateComponentesCurriculares(false);
-      consertarBNCCElementos();
-      consertarBNCCEspecificoesElementos();
-    }
-
-    getObjetivosAprendizagem();
-
-    function getComponentesCurriculares () {
-      if (ano && turma_id) {
-
-        var data = {
-          ano      : ano,
-          turma_id : turma_id
-        };
-
-        var urlForGetComponentesCurriculares = getResourceUrlBuilder.buildUrl(
-          '/module/DynamicInput/componenteCurricular', 'componentesCurriculares', data
-        );
-
-        var options = {
-          url : urlForGetComponentesCurriculares,
-          dataType : 'json',
-          success  : function (response) {
-            componentesCurriculares = response['options'];
-          }
-        };
-
-        getResources(options);
-      }
-    }
-
-    async function getObjetivosAprendizagem() {
-      $(titleTable).children().first().html("Aguarde, carregando Objetivo(s) de aprendizagem...");
-
-      await getComponentesCurriculares();
-
-      var urlForGetObjetivosAprendizagem = getResourceUrlBuilder.buildUrl('/module/Api/PlanejamentoAulaAee', 'get-objetivos-aprendizagem', {});
-
-      var options = {
-        url: urlForGetObjetivosAprendizagem,
-        dataType: 'json',
-        data: {
-          planejamento_aula_id: planejamento_aula_id,
-          turma_id: turma_id,
-          ano: ano,
-        },
-        success: handleFillObjetivosAprendizagem
-      };
-
-      getResources(options);
-    }
-
-    function handleFillObjetivosAprendizagem(response) {
-      for (let index = 0; index < response.count_objetivos; index++) {
-        gerarObjetivoAprendizagem(index, response);
-      }
-   }
-
-    async function gerarObjetivoAprendizagem(index, response) {
-
-    if (index > 0) {
-      tab_add_1.addRow();
-      consertarBNCCElementos();
-      consertarBNCCEspecificoesElementos();
-    }
-
-     await fillComponenteCurricular(index, response);
-     await fillHabilidadesAndEspecificacoes(index, response);
-
-      $(titleTable).children().first().html("Objetivo(s) de aprendizagem");
-   }
-
-    function fillComponenteCurricular(index, response) {
-      let ccElement = document.getElementById(`ref_cod_componente_curricular_array[${index}]`);
-      $.each(componentesCurriculares, function (id, mapValue) {
-        let selected = '';
-        if (id.indexOf && id.substr && id.indexOf('__') == 0) {
-          id = id.substr(2);
-
-          if (parseInt(id) == response[index].componente_curricular_id) {
-            selected = 'selected';
-          }
-
-          $(ccElement).append(`<option value="${id}" ${selected}>${mapValue.value}</option>`);
-        }
-        ccElement.addEventListener("change", trocaComponenteCurricular, false);
-      });
-    }
-
-    function fillHabilidadesAndEspecificacoes(index, response) {
-      let bnccElemento = document.getElementById(`custom_bncc[${index}]`);
-      let bnccEspecificoesElemento = document.getElementById(`custom_bncc_especificacoes[${index}]`);
-      let habilidadesGeralCC = Object.entries(response[index].habilidades.habilidades_geral_cc);
-      const maxCharacters = 60;
-
-      habilidadesGeralCC.forEach(function (habilidade, key) {
-        let selected = '';
-        let id = habilidade[0];
-        let value = habilidade[1].substring(0, maxCharacters).trimEnd();
-        value = value.length < maxCharacters ? value : value.concat("...");
-
-        if ($.inArray(id, response[index].habilidades.habilidades_planejamento_aula_cc) !== -1) {
-          selected = 'selected';
+            updateComponentesCurriculares(false);
+            consertarBNCCElementos();
+            consertarBNCCEspecificoesElementos();
         }
 
-        $(bnccElemento).append(`<option value="${id}" ${selected}>${value}</option>`);
-        $(bnccElemento).trigger("chosen:updated");
+        getObjetivosAprendizagem();
 
-        if (response[index].especificacoes.especificacoes_geral_bncc[id]) {
-          let escpecificacoesGeralBNCC = Object.entries(response[index].especificacoes.especificacoes_geral_bncc[id]);
+        function getComponentesCurriculares() {
+            if (ano && turma_id) {
 
-          escpecificacoesGeralBNCC.forEach(function (especificacao) {
-            let selectedEspecificacao = '';
-            let idEspecificacao = especificacao[0];
-            let valueEspecificacao = especificacao[1].substring(0, maxCharacters).trimEnd();
-            valueEspecificacao = valueEspecificacao.length < maxCharacters ? valueEspecificacao : valueEspecificacao.concat("...");
+                var data = {
+                    ano: ano,
+                    turma_id: turma_id
+                };
 
-            if ($.inArray(parseInt(idEspecificacao), response[index].especificacoes.especificacoes_pa_bncc[0]) !== -1) {
-              selectedEspecificacao = 'selected';
+                var urlForGetComponentesCurriculares = getResourceUrlBuilder.buildUrl(
+                    '/module/DynamicInput/componenteCurricular', 'componentesCurriculares', data
+                );
+
+                var options = {
+                    url: urlForGetComponentesCurriculares,
+                    dataType: 'json',
+                    success: function (response) {
+                        componentesCurriculares = response['options'];
+                    }
+                };
+
+                getResources(options);
+            }
+        }
+
+        async function getObjetivosAprendizagem() {
+            $(titleTable).children().first().html("Aguarde, carregando Objetivo(s) de aprendizagem...");
+
+            await getComponentesCurriculares();
+
+            var urlForGetObjetivosAprendizagem = getResourceUrlBuilder.buildUrl('/module/Api/PlanejamentoAulaAee', 'get-objetivos-aprendizagem', {});
+
+            var options = {
+                url: urlForGetObjetivosAprendizagem,
+                dataType: 'json',
+                data: {
+                    planejamento_aula_id: planejamento_aula_id,
+                    turma_id: turma_id,
+                    ano: ano,
+                },
+                success: handleFillObjetivosAprendizagem
+            };
+
+            getResources(options);
+        }
+
+        function handleFillObjetivosAprendizagem(response) {
+            for (let index = 0; index < response.count_objetivos; index++) {
+                gerarObjetivoAprendizagem(index, response);
+            }
+        }
+
+        async function gerarObjetivoAprendizagem(index, response) {
+
+            if (index > 0) {
+                tab_add_1.addRow();
+                consertarBNCCElementos();
+                consertarBNCCEspecificoesElementos();
             }
 
-            $(bnccEspecificoesElemento).append(`<option value="${idEspecificacao}" ${selectedEspecificacao}>${valueEspecificacao}</option>`);
-            $(bnccEspecificoesElemento).trigger("chosen:updated");
-          });
-        }
-      });
-    }
+            await fillComponenteCurricular(index, response);
+            await fillHabilidadesAndEspecificacoes(index, response);
 
-    function consertarBNCCElementos () {
-      count = bncc_table.children[0].childElementCount - 4;
-      id = 0;
-      index = 0;
-      while (index !== count) {
-        if (id > 1000) break;
-        var bnccField = document.getElementById(`custom_bncc[${id}]`);
-
-        if (bnccField !== null) {
-          bnccField.setAttribute("multiple", "multiple");
-
-          $j(bnccField).chosen({
-            no_results_text: "Sem resultados para ",
-            width: '100% !important',
-            height: '28px',
-            placeholder_text_multiple: "Selecione as opções",
-            search_contains: true
-          }).change(async function(e){
-            await trocaBNCC(pegarId(e.currentTarget.id), $(this).val());
-          });
-
-          index++;
+            $(titleTable).children().first().html("Objetivo(s) de aprendizagem");
         }
 
-        id++;
-      }
-    }
+        function fillComponenteCurricular(index, response) {
+            let ccElement = document.getElementById(`ref_cod_componente_curricular_array[${index}]`);
+            $.each(componentesCurriculares, function (id, mapValue) {
+                let selected = '';
+                if (id.indexOf && id.substr && id.indexOf('__') == 0) {
+                    id = id.substr(2);
 
-    function consertarBNCCEspecificoesElementos () {
-      count = bncc_table.children[0].childElementCount - 4;
-      id = 0;
-      index = 0;
-      while (index !== count) {
-        var bncc_especificaoes = document.getElementById(`custom_bncc_especificacoes[${id}]`);
+                    if (parseInt(id) == response[index].componente_curricular_id) {
+                        selected = 'selected';
+                    }
 
-        if (bncc_especificaoes !== null) {
-          bncc_especificaoes.setAttribute("multiple", "multiple");
-
-          $j(bncc_especificaoes).chosen({
-            no_results_text: "Sem resultados para ",
-            width: '100% !important',
-            height: '28px',
-            placeholder_text_multiple: "Selecione as opções",
-            search_contains: true
-          });
-
-          index++;
+                    $(ccElement).append(`<option value="${id}" ${selected}>${mapValue.value}</option>`);
+                }
+                ccElement.addEventListener("change", trocaComponenteCurricular, false);
+            });
         }
 
-        id++;
-      }
-    }
+        function fillHabilidadesAndEspecificacoes(index, response) {
+            let bnccElemento = document.getElementById(`custom_bncc[${index}]`);
+            let bnccEspecificoesElemento = document.getElementById(`custom_bncc_especificacoes[${index}]`);
+            let habilidadesGeralCC = Object.entries(response[index].habilidades.habilidades_geral_cc);
+            const maxCharacters = 60;
 
-    function updateComponentesCurriculares (clearComponent = true) {
-      if (ano && turma_id) {
+            habilidadesGeralCC.forEach(function (habilidade, key) {
+                let selected = '';
+                let id = habilidade[0];
+                let value = habilidade[1].substring(0, maxCharacters).trimEnd();
+                value = value.length < maxCharacters ? value : value.concat("...");
 
-        var data = {
-          ano      : ano,
-          turma_id : turma_id
-        };
+                if ($.inArray(id, response[index].habilidades.habilidades_planejamento_aula_cc) !== -1) {
+                    selected = 'selected';
+                }
 
-        var urlForGetComponentesCurriculares = getResourceUrlBuilder.buildUrl(
-          '/module/DynamicInput/componenteCurricular', 'componentesCurriculares', data
-        );
+                $(bnccElemento).append(`<option value="${id}" ${selected}>${value}</option>`);
+                $(bnccElemento).trigger("chosen:updated");
 
-        var options = {
-          url : urlForGetComponentesCurriculares,
-          dataType : 'json',
-          success  : function (response) {
-            handleGetComponentesCurriculares(response, clearComponent)
-          }
-        };
+                if (response[index].especificacoes.especificacoes_geral_bncc[id]) {
+                    let escpecificacoesGeralBNCC = Object.entries(response[index].especificacoes.especificacoes_geral_bncc[id]);
 
-        getResources(options);
-      }
-    }
+                    escpecificacoesGeralBNCC.forEach(function (especificacao) {
+                        let selectedEspecificacao = '';
+                        let idEspecificacao = especificacao[0];
+                        let valueEspecificacao = especificacao[1].substring(0, maxCharacters).trimEnd();
+                        valueEspecificacao = valueEspecificacao.length < maxCharacters ? valueEspecificacao : valueEspecificacao.concat("...");
 
-    function handleGetComponentesCurriculares (response, clearComponent = true) {
-      var selectOptions = jsonResourcesToSelectOptions(response['options']);
+                        if ($.inArray(parseInt(idEspecificacao), response[index].especificacoes.especificacoes_pa_bncc[0]) !== -1) {
+                            selectedEspecificacao = 'selected';
+                        }
 
-      var linhasElemento = document.getElementsByName("tr_objetivos_aprendizagem[]");
-      var componentesCurricularesElementos = []
-
-      // get disciplines elements
-      linhasElemento.forEach(linhaElemento => {
-        componentesCurricularesElementos.push(linhaElemento.children[0].children[0]);
-      });
-
-      componentesCurricularesElementos.forEach(componenteCurricularElemento => {
-        var jComponenteCurricularElemento = $(componenteCurricularElemento);
-
-        if (clearComponent) {
-          $(componenteCurricularElemento).empty();
-          var optionOne = '<option id="ref_cod_componente_curricular_array[0]_" value="">Selecione o componente curricular</option>';
-          jComponenteCurricularElemento.append(optionOne);
+                        $(bnccEspecificoesElemento).append(`<option value="${idEspecificacao}" ${selectedEspecificacao}>${valueEspecificacao}</option>`);
+                        $(bnccEspecificoesElemento).trigger("chosen:updated");
+                    });
+                }
+            });
         }
 
-        // add disciplines
-        selectOptions.forEach(option => {
-          jComponenteCurricularElemento.append(option[0]);
+        function consertarBNCCElementos() {
+            count = bncc_table.children[0].childElementCount - 4;
+            id = 0;
+            index = 0;
+            while (index !== count) {
+                if (id > 1000) break;
+                var bnccField = document.getElementById(`custom_bncc[${id}]`);
+
+                if (bnccField !== null) {
+                    bnccField.setAttribute("multiple", "multiple");
+
+                    $j(bnccField).chosen({
+                        no_results_text: "Sem resultados para ",
+                        width: '100% !important',
+                        height: '28px',
+                        placeholder_text_multiple: "Selecione as opções",
+                        search_contains: true
+                    }).change(async function (e) {
+                        await trocaBNCC(pegarId(e.currentTarget.id), $(this).val());
+                    });
+
+                    index++;
+                }
+
+                id++;
+            }
+        }
+
+        function consertarBNCCEspecificoesElementos() {
+            count = bncc_table.children[0].childElementCount - 4;
+            id = 0;
+            index = 0;
+            while (index !== count) {
+                var bncc_especificaoes = document.getElementById(`custom_bncc_especificacoes[${id}]`);
+
+                if (bncc_especificaoes !== null) {
+                    bncc_especificaoes.setAttribute("multiple", "multiple");
+
+                    $j(bncc_especificaoes).chosen({
+                        no_results_text: "Sem resultados para ",
+                        width: '100% !important',
+                        height: '28px',
+                        placeholder_text_multiple: "Selecione as opções",
+                        search_contains: true
+                    });
+
+                    index++;
+                }
+
+                id++;
+            }
+        }
+
+        function updateComponentesCurriculares(clearComponent = true) {
+            if (ano && turma_id) {
+
+                var data = {
+                    ano: ano,
+                    turma_id: turma_id
+                };
+
+                var urlForGetComponentesCurriculares = getResourceUrlBuilder.buildUrl(
+                    '/module/DynamicInput/componenteCurricular', 'componentesCurriculares', data
+                );
+
+                var options = {
+                    url: urlForGetComponentesCurriculares,
+                    dataType: 'json',
+                    success: function (response) {
+                        handleGetComponentesCurriculares(response, clearComponent)
+                    }
+                };
+
+                getResources(options);
+            }
+        }
+
+        function handleGetComponentesCurriculares(response, clearComponent = true) {
+            var selectOptions = jsonResourcesToSelectOptions(response['options']);
+
+            var linhasElemento = document.getElementsByName("tr_objetivos_aprendizagem[]");
+            var componentesCurricularesElementos = []
+
+            // get disciplines elements
+            linhasElemento.forEach(linhaElemento => {
+                componentesCurricularesElementos.push(linhaElemento.children[0].children[0]);
+            });
+
+            componentesCurricularesElementos.forEach(componenteCurricularElemento => {
+                var jComponenteCurricularElemento = $(componenteCurricularElemento);
+
+                if (clearComponent) {
+                    $(componenteCurricularElemento).empty();
+                    var optionOne = '<option id="ref_cod_componente_curricular_array[0]_" value="">Selecione o componente curricular</option>';
+                    jComponenteCurricularElemento.append(optionOne);
+                }
+
+                // add disciplines
+                selectOptions.forEach(option => {
+                    jComponenteCurricularElemento.append(option[0]);
+                });
+
+                // bind onchange event
+                componenteCurricularElemento.addEventListener("change", trocaComponenteCurricular, false);
+            });
+        }
+
+        async function trocaComponenteCurricular(event) {
+            var bnccDados = [];
+
+            var componenteCurricularId = pegarId(event.currentTarget.id);
+            var componenteCurricularValue = event.currentTarget.value || null;
+            var turma = document.getElementById("ref_cod_turma").value;
+
+            var bnccElemento = document.getElementById(`custom_bncc[${componenteCurricularId}]`);
+
+            if (turma !== null && componenteCurricularValue !== null) {
+                var searchPathBNCCTurma = '/module/Api/BNCC?oper=get&resource=bncc_turma',
+                    paramsBNCCTurma = {
+                        turma: document.getElementById("ref_cod_turma").value,
+                        componente_curricular: componenteCurricularValue
+                    };
+
+                await $j.get(searchPathBNCCTurma, paramsBNCCTurma, function (dataResponse) {
+                    bnccDados = dataResponse.bncc === null ? [] : Object.entries(dataResponse.bncc);
+                    addOpcoesBNCC(bnccElemento, bnccDados);
+                });
+            } else {
+                addOpcoesBNCC(bnccElemento, []);
+            }
+        }
+
+        async function trocaBNCC(bnccElementoId, bnccArray) {
+            var bnccEspeficacoesDados = [];
+
+            var bnccEspecificoesElemento = document.getElementById(`custom_bncc_especificacoes[${bnccElementoId}]`);
+
+            if (bnccElementoId !== null && bnccArray !== null && bnccArray.length > 0) {
+                var searchPathBNCCEspeficacoesTurma = '/module/Api/BNCCEspecificacao?oper=get&resource=list',
+                    paramsBNCCEspecificacoesTurma = {
+                        bnccArray: bnccArray
+                    };
+
+                await $j.get(searchPathBNCCEspeficacoesTurma, paramsBNCCEspecificacoesTurma, function (dataResponse) {
+                    var obj = dataResponse.result;
+                    bnccEspeficacoesDados = dataResponse.result === null ? [] : Object.keys(obj).map((key) => [obj[key][0], obj[key][1], obj[key][2]]);
+
+                    addOpcoesBNCC(bnccEspecificoesElemento, bnccEspeficacoesDados);
+                });
+            } else {
+                addOpcoesBNCC(bnccEspecificoesElemento, []);
+            }
+        }
+
+        function addOpcoesBNCC(elemento, novasOpcoes) {
+            const maxCharacters = 60;
+
+            $(elemento).empty();
+
+            for (let index = 0; index < novasOpcoes.length; index++) {
+                const novaOpcao = novasOpcoes[index];
+
+                var id = novaOpcao[2] != null ? novaOpcao[2] : novaOpcao[0];
+                var value = novaOpcao[1].substring(0, maxCharacters).trimEnd();
+                value = value.length < maxCharacters ? value : value.concat("...");
+                $(elemento).append(`<option value="${id}">${value}</option>`);
+            }
+
+            $(elemento).trigger("chosen:updated");
+        }
+
+        var submitButton = $j('#btn_enviar');
+        submitButton.removeAttr('onclick');
+
+        submitButton.click(function () {
+            if (!copy) {
+                tentaEditarPlanoAula();
+            }
         });
 
-        // bind onchange event
-        componenteCurricularElemento.addEventListener("change", trocaComponenteCurricular, false);
-      });
-    }
+        function tentaEditarPlanoAula() {
+            conteudos = pegarConteudos();
 
-    async function trocaComponenteCurricular (event) {
-      var bnccDados = [];
+            var urlForVerificarPlanoAulaSendoUsado = postResourceUrlBuilder.buildUrl('/module/Api/PlanejamentoAulaAee', 'verificar-plano-aula-aee-sendo-usado-conteudo', {});
 
-      var componenteCurricularId = pegarId(event.currentTarget.id);
-      var componenteCurricularValue = event.currentTarget.value || null;
-      var turma = document.getElementById("ref_cod_turma").value;
+            var options = {
+                type: 'POST',
+                url: urlForVerificarPlanoAulaSendoUsado,
+                dataType: 'json',
+                data: {
+                    planejamento_aula_id: planejamento_aula_id,
+                    conteudos: conteudos
+                },
+                success: handleTentaEditarPlanoAula
+            };
 
-      var bnccElemento = document.getElementById(`custom_bncc[${componenteCurricularId}]`);
+            postResource(options);
+        }
 
-      if (turma !== null && componenteCurricularValue !== null) {
-        var searchPathBNCCTurma = '/module/Api/BNCC?oper=get&resource=bncc_turma',
-          paramsBNCCTurma  = {
-            turma                 : document.getElementById("ref_cod_turma").value,
-            componente_curricular : componenteCurricularValue
-          };
+        function handleTentaEditarPlanoAula(response) {
+            registrosAula = response.frequencia_ids;
 
-        await $j.get(searchPathBNCCTurma, paramsBNCCTurma, function (dataResponse) {
-          bnccDados = dataResponse.bncc === null ? [] : Object.entries(dataResponse.bncc);
-          addOpcoesBNCC(bnccElemento, bnccDados);
-        });
-      } else {
-        addOpcoesBNCC(bnccElemento, []);
-      }
-    }
+            if (registrosAula.length == 0) {
+                editarPlanoAula();
+            } else {
+                openModal();
+            }
+        }
 
-    async function trocaBNCC (bnccElementoId, bnccArray) {
-      var bnccEspeficacoesDados = [];
+        function ehDataValida(d) {
+            return d instanceof Date && !isNaN(d);
+        }
 
-      var bnccEspecificoesElemento = document.getElementById(`custom_bncc_especificacoes[${bnccElementoId}]`);
+        function ehComponentesCurricularesValidos(componentesCurriculares) {
+            return componentesCurriculares.every(componenteCurricular => !isNaN(parseInt(componenteCurricular[1], 10)));
+        }
 
-      if (bnccElementoId !== null && bnccArray !== null && bnccArray.length > 0) {
-        var searchPathBNCCEspeficacoesTurma = '/module/Api/BNCCEspecificacao?oper=get&resource=list',
-          paramsBNCCEspecificacoesTurma  = {
-            bnccArray  : bnccArray
-          };
+        function componentesCurricularesPreenchidos(componentesCurriculares, componentesCurricularesGeral) {
+            let componentesCurricularesFiltrados = [];
+            let componentesUnique = [];
 
-        await $j.get(searchPathBNCCEspeficacoesTurma, paramsBNCCEspecificacoesTurma, function (dataResponse) {
-          var obj = dataResponse.result;
-          bnccEspeficacoesDados = dataResponse.result === null ? [] : Object.keys(obj).map((key) => [obj[key][0], obj[key][1], obj[key][2]]);
+            $.each(componentesCurricularesGeral, function (i, el) {
+                if ($.inArray(el, componentesUnique) === -1) componentesUnique.push(el);
+            });
 
-          addOpcoesBNCC(bnccEspecificoesElemento, bnccEspeficacoesDados);
-        });
-      } else {
-        addOpcoesBNCC(bnccEspecificoesElemento, []);
-      }
-    }
+            componentesCurriculares.forEach(componenteCurricular => {
+                componentesCurricularesFiltrados.push(componenteCurricular[1]);
+            });
 
-    function addOpcoesBNCC (elemento, novasOpcoes) {
-      const maxCharacters = 60;
+            return JSON.stringify(componentesCurricularesFiltrados) == JSON.stringify(componentesUnique);
+        }
 
-      $(elemento).empty();
+        function ehBNCCsValidos(bnccs) {
+            return bnccs.every(bncc => bncc[1].length > 0);
+        }
 
-      for (let index = 0; index < novasOpcoes.length; index++) {
-        const novaOpcao = novasOpcoes[index];
+        function ehBNCCEspecificacoesValidos(bnccEspecificacoes) {
+            return bnccEspecificacoes.every(bnccsEspecificacao => bnccsEspecificacao[1].length > 0);
+        }
 
-        var id = novaOpcao[2] != null ? novaOpcao[2] : novaOpcao[0];
-        var value = novaOpcao[1].substring(0, maxCharacters).trimEnd();
-        value = value.length < maxCharacters ? value : value.concat("...");
-        $(elemento).append(`<option value="${id}">${value}</option>`);
-      }
+        function ehConteudosValidos(conteudos) {
+            return conteudos.every(conteudo => conteudo[1] !== "" && conteudo[1] != null);
+        }
 
-      $(elemento).trigger("chosen:updated");
-    }
+        function pegarComponentesCurriculares() {
+            var componentesCurriculares = []
 
-      var submitButton = $j('#btn_enviar');
-      submitButton.removeAttr('onclick');
+            tr_objetivos_aprendizagens = document.getElementsByName("tr_objetivos_aprendizagem[]");
+            tr_objetivos_aprendizagens.forEach(tr_objetivos_aprendizagem => {
+                var id = tr_objetivos_aprendizagem.children[0].children[0].id;
+                var componenteCurricularElemento = document.getElementById(id);
+                var componenteCurricularId = pegarId(componenteCurricularElemento.name);
+                var componenteCurricularValor = componenteCurricularElemento.value;
 
-      submitButton.click(function () {
-          tentaEditarPlanoAula();
-      });
+                var componenteCurricular = [];
+                componenteCurricular.push(componenteCurricularId);
+                componenteCurricular.push(componenteCurricularValor);
+                componentesCurriculares.push(componenteCurricular);
+            });
 
-      function tentaEditarPlanoAula () {
-          conteudos = pegarConteudos();
+            return componentesCurriculares;
+        }
 
-          var urlForVerificarPlanoAulaSendoUsado = postResourceUrlBuilder.buildUrl('/module/Api/PlanejamentoAula', 'verificar-plano-aula-sendo-usado-conteudo', {});
+        function pegarBNCCs() {
+            var BNCCs = []
 
-          var options = {
-              type     : 'POST',
-              url      : urlForVerificarPlanoAulaSendoUsado,
-              dataType : 'json',
-              data     : {
-                  planejamento_aula_id    : planejamento_aula_id,
-                  conteudos               : conteudos,
-              },
-              success  : handleTentaEditarPlanoAula
-          };
+            tr_objetivos_aprendizagens = document.getElementsByName("tr_objetivos_aprendizagem[]");
+            tr_objetivos_aprendizagens.forEach(tr_objetivos_aprendizagem => {
+                var id = tr_objetivos_aprendizagem.children[1].children[0].id;
+                var BNCCElemento = document.getElementById(id);
+                var BNCCId = pegarId(BNCCElemento.name);
+                var BNCCValores = Array.from(BNCCElemento.selectedOptions).map(({
+                    value
+                }) => value);
 
-          postResource(options);
-      }
+                var BNCC = [];
+                BNCC.push(BNCCId);
+                BNCC.push(BNCCValores);
+                BNCCs.push(BNCC);
+            });
 
-      function handleTentaEditarPlanoAula (response) {
-          registrosAula = response.frequencia_ids;
+            return BNCCs;
+        }
 
-          if (registrosAula.length == 0) {
-              editarPlanoAula();
-          } else {
-              openModal();
-          }
-      }
+        function pegarBNCCEspecificacoes() {
+            var BNCCEspecificacoes = []
 
-      function ehDataValida (d) {
-        return d instanceof Date && !isNaN(d);
-      }
+            tr_objetivos_aprendizagens = document.getElementsByName("tr_objetivos_aprendizagem[]");
+            tr_objetivos_aprendizagens.forEach(tr_objetivos_aprendizagem => {
+                var id = tr_objetivos_aprendizagem.children[2].children[0].id;
+                var BNCCEspecificacaoElemento = document.getElementById(id);
+                var BNCCEspecificacaoId = pegarId(BNCCEspecificacaoElemento.name);
+                var BNCCEspecificacaoValores = Array.from(BNCCEspecificacaoElemento.selectedOptions).map(({
+                    value
+                }) => value);
 
-      function ehComponentesCurricularesValidos (componentesCurriculares) {
-        return componentesCurriculares.every(componenteCurricular => !isNaN(parseInt(componenteCurricular[1], 10)));
-      }
+                var BNCCEspecificacao = [];
+                BNCCEspecificacao.push(BNCCEspecificacaoId);
+                BNCCEspecificacao.push(BNCCEspecificacaoValores);
+                BNCCEspecificacoes.push(BNCCEspecificacao);
+            });
 
-      function componentesCurricularesPreenchidos (componentesCurriculares, componentesCurricularesGeral) {
-        let componentesCurricularesFiltrados = [];
-        let componentesUnique = [];
+            return BNCCEspecificacoes;
+        }
 
-        $.each(componentesCurricularesGeral, function(i, el){
-          if($.inArray(el, componentesUnique) === -1) componentesUnique.push(el);
-        });
+        function pegarComponentesCurricularesGeral() {
+            let componentesCurricularesGeral = [];
+            let linhasElemento = document.getElementsByName("tr_objetivos_aprendizagem[]");
+            let componentesCurricularesElementos = []
 
-        componentesCurriculares.forEach(componenteCurricular => {
-          componentesCurricularesFiltrados.push(componenteCurricular[1]);
-        });
+            linhasElemento.forEach(linhaElemento => {
+                componentesCurricularesElementos.push(linhaElemento.children[0].children[0]);
+            });
 
-        return JSON.stringify(componentesCurricularesFiltrados) == JSON.stringify(componentesUnique);
-      }
+            componentesCurricularesElementos.forEach(componenteCurricularElemento => {
+                $(componenteCurricularElemento).find('option').each(function () {
+                    if ($(this).val() != '' && $(this).val() != 0) {
+                        componentesCurricularesGeral.push($(this).val());
+                    }
+                });
+            });
 
-      function ehBNCCsValidos (bnccs) {
-        return bnccs.every(bncc => bncc[1].length > 0);
-      }
+            return componentesCurricularesGeral;
+        }
 
-      function ehBNCCEspecificacoesValidos (bnccEspecificacoes) {
-        return bnccEspecificacoes.every(bnccsEspecificacao => bnccsEspecificacao[1].length > 0);
-      }
-
-      function ehConteudosValidos (conteudos) {
-        return conteudos.every(conteudo => conteudo[1] !== "" && conteudo[1] != null);
-      }
-
-    function pegarComponentesCurriculares () {
-      var componentesCurriculares = []
-
-      tr_objetivos_aprendizagens = document.getElementsByName("tr_objetivos_aprendizagem[]");
-      tr_objetivos_aprendizagens.forEach(tr_objetivos_aprendizagem => {
-        var id = tr_objetivos_aprendizagem.children[0].children[0].id;
-        var componenteCurricularElemento = document.getElementById(id);
-        var componenteCurricularId = pegarId(componenteCurricularElemento.name);
-        var componenteCurricularValor = componenteCurricularElemento.value;
-
-        var componenteCurricular = [];
-        componenteCurricular.push(componenteCurricularId);
-        componenteCurricular.push(componenteCurricularValor);
-        componentesCurriculares.push(componenteCurricular);
-      });
-
-      return componentesCurriculares;
-    }
-
-    function pegarBNCCs () {
-      var BNCCs = []
-
-      tr_objetivos_aprendizagens = document.getElementsByName("tr_objetivos_aprendizagem[]");
-      tr_objetivos_aprendizagens.forEach(tr_objetivos_aprendizagem => {
-        var id = tr_objetivos_aprendizagem.children[1].children[0].id;
-        var BNCCElemento = document.getElementById(id);
-        var BNCCId = pegarId(BNCCElemento.name);
-        var BNCCValores = Array.from(BNCCElemento.selectedOptions).map(({ value }) => value);
-
-        var BNCC = [];
-        BNCC.push(BNCCId);
-        BNCC.push(BNCCValores);
-        BNCCs.push(BNCC);
-      });
-
-      return BNCCs;
-    }
-
-    function pegarBNCCEspecificacoes () {
-      var BNCCEspecificacoes = []
-
-      tr_objetivos_aprendizagens = document.getElementsByName("tr_objetivos_aprendizagem[]");
-      tr_objetivos_aprendizagens.forEach(tr_objetivos_aprendizagem => {
-        var id = tr_objetivos_aprendizagem.children[2].children[0].id;
-        var BNCCEspecificacaoElemento = document.getElementById(id);
-        var BNCCEspecificacaoId = pegarId(BNCCEspecificacaoElemento.name);
-        var BNCCEspecificacaoValores = Array.from(BNCCEspecificacaoElemento.selectedOptions).map(({ value }) => value);
-
-        var BNCCEspecificacao = [];
-        BNCCEspecificacao.push(BNCCEspecificacaoId);
-        BNCCEspecificacao.push(BNCCEspecificacaoValores);
-        BNCCEspecificacoes.push(BNCCEspecificacao);
-      });
-
-      return BNCCEspecificacoes;
-    }
-
-    function pegarComponentesCurricularesGeral() {
-      let componentesCurricularesGeral = [];
-      let linhasElemento = document.getElementsByName("tr_objetivos_aprendizagem[]");
-      let componentesCurricularesElementos = []
-
-      linhasElemento.forEach(linhaElemento => {
-        componentesCurricularesElementos.push(linhaElemento.children[0].children[0]);
-      });
-
-      componentesCurricularesElementos.forEach(componenteCurricularElemento => {
-        $(componenteCurricularElemento).find('option').each(function() {
-          if ($(this).val() != '' && $(this).val() != 0) {
-            componentesCurricularesGeral.push($(this).val());
-          }
-        });
-      });
-
-      return componentesCurricularesGeral;
-    }
-
-      function editarPlanoAula () {
-        let data_inicial              = dataParaBanco(document.getElementById("data_inicial").value);
-        let data_final                = dataParaBanco(document.getElementById("data_final").value);
-        let ddp = $j('#ddp').val(); //metodologia
-        let recursos_didaticos = $j('#recursos_didaticos').val();
-        let outros = $j('#outros').val();
-        let componentesCurriculares   = pegarComponentesCurriculares();
-        let componentesCurricularesGeral   = pegarComponentesCurricularesGeral();
-        let bnccs                     = pegarBNCCs();
-        let bnccEspecificacoes        = pegarBNCCEspecificacoes();
-        let turma                     = document.getElementById("ref_cod_turma").value;
-        let faseEtapa                 = document.getElementById("fase_etapa").value;
-        let obrigatorio_conteudo        = document.getElementById("obrigatorio_conteudo").value;
+        function editarPlanoAula() {
+            let data_inicial = dataParaBanco(document.getElementById("data_inicial").value);
+            let data_final = dataParaBanco(document.getElementById("data_final").value);
+            let ddp = $j('#ddp').val(); //metodologia
+            let recursos_didaticos = $j('#recursos_didaticos').val();
+            let outros = $j('#outros').val();
+            let componentesCurriculares = pegarComponentesCurriculares();
+            let componentesCurricularesGeral = pegarComponentesCurricularesGeral();
+            let bnccs = pegarBNCCs();
+            let bnccEspecificacoes = pegarBNCCEspecificacoes();
+            let turma = document.getElementById("ref_cod_turma").value;
+            let faseEtapa = document.getElementById("fase_etapa").value;
+            let obrigatorio_conteudo = document.getElementById("obrigatorio_conteudo").value;
 
 
-        console.log(obrigatorio_conteudo)
-        console.log(obrigatorio_conteudo.length)
-        console.log((obrigatorio_conteudo == '1'))
-        console.log((obrigatorio_conteudo.length == 1 && obrigatorio_conteudo == '1'))
-        console.log(conteudos)
+            // VALIDAÇÃO
+            if (!ehDataValida(new Date(data_inicial))) {
+                alert("Data inicial não é válida.");
+                return;
+            }
+            if (!ehDataValida(new Date(data_final))) {
+                alert("Data final não é válida.");
+                return;
+            }
+            if (isNaN(parseInt(turma, 10))) {
+                alert("Turma é obrigatória.");
+                return;
+            }
+            if (isNaN(parseInt(faseEtapa, 10))) {
+                alert("Etapa é obrigatória.");
+                return;
+            }
+            if (ddp == null || ddp == '') {
+                alert("Metodologia é obrigatória.");
+                return;
+            }
+            if (!ehComponentesCurricularesValidos(componentesCurriculares)) {
+                alert("Os componentes curriculares são obrigatórios.");
+                return;
+            }
+            if (!componentesCurricularesPreenchidos(componentesCurriculares, componentesCurricularesGeral)) {
+                alert("Existem componentes sem planejamento.");
+            }
+            if (!ehBNCCsValidos(bnccs)) {
+                alert("As habilidades são obrigatórias.");
+                return;
+            }
+            if (!ehBNCCEspecificacoesValidos(bnccEspecificacoes)) {
+                alert("As especificações são obrigatórias.");
+                return;
+            }
+            if (conteudos_ids != "") {
+                if (obrigatorio_conteudo.length == 1 && obrigatorio_conteudo == '1' && !ehConteudosValidos(conteudos)) {
+                    alert("Os conteúdos são obrigatórios.");
+                    return;
+                }
+            }
 
-        // VALIDAÇÃO
-        if (!ehDataValida(new Date(data_inicial))) { alert("Data inicial não é válida."); return; }
-        if (!ehDataValida(new Date(data_final))) { alert("Data final não é válida."); return; }
-        if (isNaN(parseInt(turma, 10))) { alert("Turma é obrigatória."); return; }
-        if (isNaN(parseInt(faseEtapa, 10))) { alert("Etapa é obrigatória."); return; }
-        if (ddp == null || ddp == '') { alert("Metodologia é obrigatória."); return; }
-        if (!ehComponentesCurricularesValidos(componentesCurriculares)) { alert("Os componentes curriculares são obrigatórios."); return; }
-        if (!componentesCurricularesPreenchidos(componentesCurriculares, componentesCurricularesGeral)) { alert("Existem componentes sem planejamento."); }
-        if (!ehBNCCsValidos(bnccs)) { alert("As habilidades são obrigatórias."); return; }
-        if (!ehBNCCEspecificacoesValidos(bnccEspecificacoes)) { alert("As especificações são obrigatórias."); return; }
-        if (obrigatorio_conteudo.length == 1 && obrigatorio_conteudo == '1' && !ehConteudosValidos(conteudos)) { alert("Os conteúdos são obrigatórios."); return; }
-        if (recursos_didaticos == null) { alert("O campo recursos didáticos não é válido."); return; }
-        if (outros == null) { alert("O campo Outros não é válido."); return; }
+            if (recursos_didaticos == null) {
+                alert("O campo recursos didáticos não é válido.");
+                return;
+            }
+            if (outros == null) {
+                alert("O campo Outros não é válido.");
+                return;
+            }
 
-          var urlForEditarPlanoAula = postResourceUrlBuilder.buildUrl('/module/Api/PlanejamentoAulaAee', 'editar-plano-aula-aee', {});
+            var urlForEditarPlanoAula = postResourceUrlBuilder.buildUrl('/module/Api/PlanejamentoAulaAee', 'editar-plano-aula-aee', {});
 
-          var options = {
-              type     : 'POST',
-              url      : urlForEditarPlanoAula,
-              dataType : 'json',
-              data     : {
-                  planejamento_aula_id    : planejamento_aula_id,
-                  data_inicial            : data_inicial,
-                  data_final              : data_final,
-                  turma                   : turma,
-                  faseEtapa               : faseEtapa,
-                  ddp                     : ddp,
-                  conteudos               : conteudos,
-                  componentesCurriculares : componentesCurriculares,
-                  bnccs                   : bnccs,
-                  bnccEspecificacoes      : bnccEspecificacoes,
-                  recursos_didaticos      : recursos_didaticos,
-                  outros      : outros
-              },
-              success  : handleEditarPlanoAula
-          };
+            var options = {
+                type: 'POST',
+                url: urlForEditarPlanoAula,
+                dataType: 'json',
+                data: {
+                    planejamento_aula_id: planejamento_aula_id,
+                    data_inicial: data_inicial,
+                    data_final: data_final,
+                    turma: turma,
+                    faseEtapa: faseEtapa,
+                    ddp: ddp,
+                    conteudos: conteudos,
+                    componentesCurriculares: componentesCurriculares,
+                    bnccs: bnccs,
+                    bnccEspecificacoes: bnccEspecificacoes,
+                    recursos_didaticos: recursos_didaticos,
+                    outros: outros
+                },
+                success: handleEditarPlanoAula
+            };
 
-          postResource(options);
-      }
+            postResource(options);
+        }
 
-      function handleEditarPlanoAula (response) {
-          if(response.result == "Edição efetuada com sucesso.") {
-              messageUtils.success('Plano de aula AEE editado com sucesso!');
+        function handleEditarPlanoAula(response) {
+            if (response.result == "Edição efetuada com sucesso.") {
+                messageUtils.success('Plano de aula AEE editado com sucesso!');
 
-              delay(1000).then(() => urlHelper("http://" + window.location.host + "/intranet/educar_professores_planejamento_de_aula_aee_lst.php", '_self'));
-          } else {
-              messageUtils.success('Erro desconhecido ocorreu.');
-          }
-      }
+                delay(1000).then(() => urlHelper("http://" + window.location.host + "/intranet/educar_professores_planejamento_de_aula_aee_lst.php", '_self'));
+            } else {
+                messageUtils.success('Erro desconhecido ocorreu.');
+            }
+        }
 
-      function openModal() {
-          var quantidadeRegistrosAula = registrosAula.length;
+        function openModal() {
+            var quantidadeRegistrosAula = registrosAula.length;
 
-          $j("#dialog-warning-editar-plano-aula").find('#msg').html(getMessageEditarPlanoAula(quantidadeRegistrosAula));
-          $j("#dialog-warning-editar-plano-aula").dialog("open");
-      }
+            $j("#dialog-warning-editar-plano-aula").find('#msg').html(getMessageEditarPlanoAula(quantidadeRegistrosAula));
+            $j("#dialog-warning-editar-plano-aula").dialog("open");
+        }
 
-      function closeModal() {
-          registrosAula = [];
+        function closeModal() {
+            registrosAula = [];
 
-          $j("#dialog-warning-editar-plano-aula").dialog('close');
-      }
+            $j("#dialog-warning-editar-plano-aula").dialog('close');
+        }
 
-      function getMessageEditarPlanoAula(quantidadeRegistrosAula) {
-          return ` \
+        function getMessageEditarPlanoAula(quantidadeRegistrosAula) {
+            return ` \
               <span> \
                   Não é possível prosseguir com a edição porque <b> um ou mais conteúdos </b> estão sendo utilizados em \
-                  <b>${quantidadeRegistrosAula}</b> registro(s) de aula. O que deseja fazer? \
+                  <b>${quantidadeRegistrosAula}</b> atendimento(s) \
               </span><br> \
           `;
-      }
-
-      function verRegistrosAula () {
-          for (let index = 0; index < registrosAula.length; index++) {
-              const registroAula = registrosAula[index];
-
-              const url = "http://" + window.location.host + "/intranet/educar_professores_frequencia_cad.php?id=" + registroAula;
-              urlHelper(url, '_blank');
-          }
-      }
-
-      function urlHelper (href, mode) {
-          Object.assign(document.createElement('a'), {
-          target: mode,
-          href: href,
-          }).click();
-      }
-
-      function delay (time) {
-          return new Promise(resolve => setTimeout(resolve, time));
-      }
-
-      function pegarConteudos () {
-          var conteudos = []
-
-          tr_conteudos = document.getElementsByName("tr_conteudos[]");
-          tr_conteudos.forEach(tr_conteudo => {
-              var id = tr_conteudo.children[0].children[0].id;
-              var conteudoElemento = document.getElementById(id);
-              var conteudoId = pegarId(conteudoElemento.name);
-              var conteudoValor = conteudoElemento.value;
-
-              var conteudo = [];
-              conteudo.push(conteudoId);
-              conteudo.push(conteudoValor);
-              conteudos.push(conteudo);
-          });
-
-          return conteudos;
-      }
-
-      function pegarId (name) {
-          let id = name;
-          id = id.substring(id.indexOf('[') + 1, id.indexOf(']'));
-
-          return id;
-      }
-
-    function dataParaBanco (dataFromBrasil) {
-      var data = "";
-      var data_fragmentos = dataFromBrasil.split('/');
-
-      for (let index = data_fragmentos.length - 1; index >= 0; index--) {
-        const data_fragmento = data_fragmentos[index];
-
-        if (index !== 0) {
-          data += data_fragmento + '-';
-        } else {
-          data += data_fragmento;
         }
-      }
 
-      return data
-    }
+        // function verRegistrosAula() {
+        //     for (let index = 0; index < registrosAula.length; index++) {
+        //         const registroAula = registrosAula[index];
 
-      $j('body').append(
-          '<div id="dialog-warning-editar-plano-aula' + '" style="max-height: 80vh; width: 820px; overflow: auto;">' +
-          '<div id="msg" class="msg"></div>' +
-          '</div>'
-      );
+        //         const url = "http://" + window.location.host + "/intranet/educar_professores_frequencia_cad.php?id=" + registroAula;
+        //         urlHelper(url, '_blank');
+        //     }
+        // }
 
-      $j('#dialog-warning-editar-plano-aula').find(':input').css('display', 'block');
+        function urlHelper(href, mode) {
+            Object.assign(document.createElement('a'), {
+                target: mode,
+                href: href,
+            }).click();
+        }
 
-      $j("#dialog-warning-editar-plano-aula").dialog({
-          autoOpen: false,
-          closeOnEscape: false,
-          draggable: false,
-          width: 820,
-          modal: true,
-          resizable: false,
-          title: 'Dependências detectadas',
-          open: function(event, ui) {
-              $j(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
-          },
-          buttons: {
-              "Cancelar": function () {
-                  closeModal();
-              },
-              "Ver registro(s) afetado(s)": function () {
-                  verRegistrosAula();
-              }
-          }
-      });
-  });
+        function delay(time) {
+            return new Promise(resolve => setTimeout(resolve, time));
+        }
+
+        function pegarConteudos() {
+            var conteudos = []
+
+            tr_conteudos = document.getElementsByName("tr_conteudos[]");
+            tr_conteudos.forEach(tr_conteudo => {
+                var id = tr_conteudo.children[0].children[0].id;
+                var conteudoElemento = document.getElementById(id);
+                var conteudoId = pegarId(conteudoElemento.name);
+                var conteudoValor = conteudoElemento.value;
+
+                var conteudo = [];
+                conteudo.push(conteudoId);
+                conteudo.push(conteudoValor);
+                conteudos.push(conteudo);
+            });
+
+            return conteudos;
+        }
+
+        function pegarId(name) {
+            let id = name;
+            id = id.substring(id.indexOf('[') + 1, id.indexOf(']'));
+
+            return id;
+        }
+
+        function dataParaBanco(dataFromBrasil) {
+            var data = "";
+            var data_fragmentos = dataFromBrasil.split('/');
+
+            for (let index = data_fragmentos.length - 1; index >= 0; index--) {
+                const data_fragmento = data_fragmentos[index];
+
+                if (index !== 0) {
+                    data += data_fragmento + '-';
+                } else {
+                    data += data_fragmento;
+                }
+            }
+
+            return data
+        }
+
+        $j('body').append(
+            '<div id="dialog-warning-editar-plano-aula' + '" style="max-height: 80vh; width: 820px; overflow: auto;">' +
+            '<div id="msg" class="msg"></div>' +
+            '</div>'
+        );
+
+        $j('#dialog-warning-editar-plano-aula').find(':input').css('display', 'block');
+
+        $j("#dialog-warning-editar-plano-aula").dialog({
+            autoOpen: false,
+            closeOnEscape: false,
+            draggable: false,
+            width: 820,
+            modal: true,
+            resizable: false,
+            title: 'Dependências detectadas',
+            open: function (event, ui) {
+                $j(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
+            },
+            buttons: {
+                "Cancelar": function () {
+                    closeModal();
+                },
+                // "Ver registro(s) afetado(s)": function () {
+                //     verRegistrosAula();
+                // }
+            }
+        });
+    });
 })(jQuery);

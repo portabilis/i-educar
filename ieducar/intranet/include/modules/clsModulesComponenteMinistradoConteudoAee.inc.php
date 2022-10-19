@@ -261,7 +261,7 @@ class clsModulesComponenteMinistradoConteudoAee extends Model
             $sql = "
                 SELECT DISTINCT
                     conteudo_ministrado_aee_id as id,
-                    cm.frequencia_id
+                    cm.ref_cod_matricula
                 FROM
                     modules.conteudo_ministrado_conteudo_aee as cmc
                 INNER JOIN modules.conteudo_ministrado_aee cm
@@ -281,7 +281,7 @@ class clsModulesComponenteMinistradoConteudoAee extends Model
             while ($db->ProximoRegistro()) {
                 $data[] = [
                     'id' => $db->Campo('id'),
-                    'frequencia_id' => $db->Campo('frequencia_id')
+                    'ref_cod_matricula' => $db->Campo('ref_cod_matricula')
                 ];
             }
 

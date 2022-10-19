@@ -183,8 +183,6 @@ return new class extends clsDetalhe {
                 $data['inicio'] = explode(',', $data['inicio']);
                 $data['fim'] = explode(',', $data['fim']);
 
-                die(dump($data['inicio']));
-
                 array_walk($data['inicio'], function(&$data_inicio, $key) {
                     $data_inicio = new \DateTime($data_inicio);
                 });
