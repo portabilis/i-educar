@@ -77,28 +77,28 @@ class PlanejamentoAulaAeeController extends ApiCoreController
 
     public function verificarPlanoAulaSendoByConteudo()
     {
-        // $planejamento_aula_aee_id = $this->getRequest()->planejamento_aula_aee_id;
-        // $conteudos = $this->getRequest()->conteudos;
+        $planejamento_aula_aee_id = $this->getRequest()->planejamento_aula_id;
+        $conteudos = $this->getRequest()->conteudos;
 
-        // if (is_numeric($planejamento_aula_aee_id) && is_array($conteudos) && count($conteudos) > 0) {
-        //     $frequencia_ids = [];
-        //     $conteudosVerificar = [];
+        if (is_numeric($planejamento_aula_aee_id) && is_array($conteudos) && count($conteudos) > 0) {
+            $frequencia_ids = [];
+            $conteudosVerificar = [];
 
-        //     foreach ($conteudos as $conteudo) {
-        //         $conteudosVerificar[] = $conteudo[0];
-        //     }
+            foreach ($conteudos as $conteudo) {
+                $conteudosVerificar[] = $conteudo[0];
+            }
 
-        //     $obj = new clsModulesComponenteMinistradoConteudoAee();
-        //     $frequenciaUtilizadas = $obj->existeLigacaoRegistroAula($conteudosVerificar);
+            $obj = new clsModulesComponenteMinistradoConteudoAee();
+            $frequenciaUtilizadas = $obj->existeLigacaoRegistroAula($conteudosVerificar);
 
-        //     foreach ($frequenciaUtilizadas as $frequencia) {
-        //         $frequencia_ids[] = $frequencia['frequencia_id'];
-        //     }
+            foreach ($frequenciaUtilizadas as $frequencia) {
+                $frequencia_ids[] = $frequencia['ref_cod_matricula'];
+            }
 
-        //     return ['frequencia_ids' => $frequencia_ids];
-        // }
+            return ['frequencia_ids' => $frequencia_ids];
+        }
 
-        // return [];
+        return [];
     }
 
     public function editarPlanoAula()
@@ -371,7 +371,7 @@ class PlanejamentoAulaAeeController extends ApiCoreController
             $this->appendResponse($this->criarPlanoAula());
         } else if ($this->isRequestFor('get', 'get-objetivos-aprendizagem')) {
             $this->appendResponse($this->getObjetivosAprendizagem());
-        } else if ($this->isRequestFor('post', 'verificar-plano-aula-sendo-usado-conteudo')) {
+        } else if ($this->isRequestFor('post', 'verificar-plano-aula-aee-sendo-usado-conteudo')) {
             $this->appendResponse($this->verificarPlanoAulaSendoByConteudo());
         }
     }

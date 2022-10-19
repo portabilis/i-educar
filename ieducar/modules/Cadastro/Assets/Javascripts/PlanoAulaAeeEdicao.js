@@ -270,6 +270,18 @@
       var componenteCurricularId = pegarId(event.currentTarget.id);
       var componenteCurricularValue = event.currentTarget.value || null;
       var turma = document.getElementById("ref_cod_turma").value;
+            var urlForVerificarPlanoAulaSendoUsado = postResourceUrlBuilder.buildUrl('/module/Api/PlanejamentoAulaAee', 'verificar-plano-aula-aee-sendo-usado-conteudo', {});
+
+            var options = {
+                type: 'POST',
+                url: urlForVerificarPlanoAulaSendoUsado,
+                dataType: 'json',
+                data: {
+                    planejamento_aula_id: planejamento_aula_id,
+                    conteudos: conteudos
+                },
+                success: handleTentaEditarPlanoAula
+            };
 
       var bnccElemento = document.getElementById(`custom_bncc[${componenteCurricularId}]`);
 
@@ -564,7 +576,7 @@
           return ` \
               <span> \
                   Não é possível prosseguir com a edição porque <b> um ou mais conteúdos </b> estão sendo utilizados em \
-                  <b>${quantidadeRegistrosAula}</b> registro(s) de aula. O que deseja fazer? \
+                  <b>${quantidadeRegistrosAula}</b> atendimento(s) \
               </span><br> \
           `;
       }
@@ -637,6 +649,14 @@
           '<div id="msg" class="msg"></div>' +
           '</div>'
       );
+        // function verRegistrosAula() {
+        //     for (let index = 0; index < registrosAula.length; index++) {
+        //         const registroAula = registrosAula[index];
+
+        //         const url = "http://" + window.location.host + "/intranet/educar_professores_frequencia_cad.php?id=" + registroAula;
+        //         urlHelper(url, '_blank');
+        //     }
+        // }
 
       $j('#dialog-warning-editar-plano-aula').find(':input').css('display', 'block');
 
@@ -661,4 +681,80 @@
           }
       });
   });
+        function delay(time) {
+            return new Promise(resolve => setTimeout(resolve, time));
+        }
+
+        function pegarConteudos() {
+            var conteudos = []
+
+            tr_conteudos = document.getElementsByName("tr_conteudos[]");
+            tr_conteudos.forEach(tr_conteudo => {
+                var id = tr_conteudo.children[0].children[0].id;
+                var conteudoElemento = document.getElementById(id);
+                var conteudoId = pegarId(conteudoElemento.name);
+                var conteudoValor = conteudoElemento.value;
+
+                var conteudo = [];
+                conteudo.push(conteudoId);
+                conteudo.push(conteudoValor);
+                conteudos.push(conteudo);
+            });
+
+            return conteudos;
+        }
+
+        function pegarId(name) {
+            let id = name;
+            id = id.substring(id.indexOf('[') + 1, id.indexOf(']'));
+
+            return id;
+        }
+
+        function dataParaBanco(dataFromBrasil) {
+            var data = "";
+            var data_fragmentos = dataFromBrasil.split('/');
+
+            for (let index = data_fragmentos.length - 1; index >= 0; index--) {
+                const data_fragmento = data_fragmentos[index];
+
+                if (index !== 0) {
+                    data += data_fragmento + '-';
+                } else {
+                    data += data_fragmento;
+                }
+            }
+
+            return data
+        }
+
+        $j('body').append(
+            '<div id="dialog-warning-editar-plano-aula' + '" style="max-height: 80vh; width: 820px; overflow: auto;">' +
+            '<div id="msg" class="msg"></div>' +
+            '</div>'
+        );
+
+        $j('#dialog-warning-editar-plano-aula').find(':input').css('display', 'block');
+
+        $j("#dialog-warning-editar-plano-aula").dialog({
+            autoOpen: false,
+            closeOnEscape: false,
+            draggable: false,
+            width: 820,
+            modal: true,
+            resizable: false,
+            title: 'Dependências detectadas',
+            open: function (event, ui) {
+                $j(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
+            },
+            buttons: {
+                "Cancelar": function () {
+                    closeModal();
+                },
+                // "Ver registro(s) afetado(s)": function () {
+                //     verRegistrosAula();
+                // }
+            }
+        });
+    });
 })(jQuery);
