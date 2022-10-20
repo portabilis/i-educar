@@ -300,10 +300,7 @@ return new class extends clsDetalhe {
             $this->array_botao[] = 'Alterar Nível';
             $this->array_botao_url_script[] = 'popless();';
 
-            if ($lista) {
-                $this->array_botao[] = 'Substituir Horário Servidor';
-                $this->array_botao_url_script[] = "go(\"educar_servidor_substituicao_cad.php?{$get_padrao}\");";
-            }
+          
 
             $obj_afastamento = new clsPmieducarServidorAfastamento();
             $afastamento = $obj_afastamento->afastado($this->cod_servidor, $this->ref_cod_instituicao);
