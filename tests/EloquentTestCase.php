@@ -19,6 +19,15 @@ abstract class EloquentTestCase extends TestCase
      */
     protected $relations = [];
 
+    protected Model $model;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->model = $this->createNewModel();
+    }
+
     /**
      * Return the Eloquent model name to be used in tests.
      *
@@ -91,9 +100,7 @@ abstract class EloquentTestCase extends TestCase
      */
     public function testCreateUsingEloquent()
     {
-        $modelCreated = $this->createNewModel();
-
-        $this->assertDatabaseHas($modelCreated->getTable(), $modelCreated->getAttributes());
+        $this->assertDatabaseHas($this->model->getTable(), $this->model->getAttributes());
     }
 
     /**
@@ -103,14 +110,12 @@ abstract class EloquentTestCase extends TestCase
      */
     public function testUpdateUsingEloquent()
     {
-        $modelCreated = $this->createNewModel();
-
-        $modelUpdated = clone $modelCreated;
+        $modelUpdated = clone $this->model;
 
         $modelUpdated->fill($this->getAttributesForUpdate());
         $modelUpdated->save();
 
-        $this->assertDatabaseMissing($modelUpdated->getTable(), $modelCreated->getAttributes());
+        $this->assertDatabaseMissing($modelUpdated->getTable(), $this->model->getAttributes());
         $this->assertDatabaseHas($modelUpdated->getTable(), $this->removeTimestamps($modelUpdated->getAttributes()));
     }
 
@@ -133,16 +138,14 @@ abstract class EloquentTestCase extends TestCase
      */
     public function testDeleteUsingEloquent()
     {
-        $modelCreated = $this->createNewModel();
+        $this->assertDatabaseHas($this->model->getTable(), $this->model->getAttributes());
 
-        $this->assertDatabaseHas($modelCreated->getTable(), $modelCreated->getAttributes());
+        $this->model->delete();
 
-        $modelCreated->delete();
-
-        if (in_array(SoftDeletes::class, class_uses($modelCreated), true) || in_array(LegacySoftDeletes::class, class_uses($modelCreated), true)) {
-            $this->assertSoftDeleted($modelCreated, deletedAtColumn: $modelCreated->getDeletedAtColumn());
+        if (in_array(SoftDeletes::class, class_uses($this->model), true) || in_array(LegacySoftDeletes::class, class_uses($this->model), true)) {
+            $this->assertSoftDeleted($this->model, deletedAtColumn: $this->model->getDeletedAtColumn());
         } else {
-            $this->assertDatabaseMissing($modelCreated->getTable(), $modelCreated->getAttributes());
+            $this->assertDatabaseMissing($this->model->getTable(), $this->model->getAttributes());
         }
     }
 
@@ -153,13 +156,11 @@ abstract class EloquentTestCase extends TestCase
      */
     public function testFindUsingEloquent()
     {
-        $modelCreated = $this->createNewModel();
-
         $modelFound = $this->instanceNewEloquentModel()
             ->newQuery()
-            ->find($modelCreated->getKey());
+            ->find($this->model->getKey());
 
-        $created = $modelCreated->getAttributes();
+        $created = $this->model->getAttributes();
         $found = $modelFound->getAttributes();
 
         $expected = array_intersect_key($created, $found);
