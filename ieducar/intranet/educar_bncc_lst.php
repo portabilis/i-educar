@@ -40,7 +40,7 @@ return new class extends clsListagem {
        foreach($componentes as $componente){
      
            $selectOptionsComponente[$componente['id']] = $componente['nome'];
-          ;
+          
         }
      
  
@@ -135,14 +135,39 @@ $selectOptionsComponente = [];
     
      
        foreach($bnccs as $bncc){
-       
+
+       if(empty($bncc['componente_curricular_id'])){
+        $componente = ComponenteCurricular::find($bncc['campo_experiencia']);
+       }else{
         $componente = ComponenteCurricular::find($bncc['componente_curricular_id']);
-        $series =  $obj_BNCC->lista_series($bncc['id']);
+       }
+        $bncc_serie = BNCC::find($bncc['id']);
+        $series[] =  $bncc_serie->serie_ids;
         $retorno = '<ul style="width: 200px">';
-       foreach($series as $serie){
-          $retorno .= '<li>'.$serie['serie'].'</li>';
+       foreach($series as $serie_id){
+        $limpa =  substr($serie_id, 1);
+        $limpa =  substr($limpa, 0, -1);
+
+        $array = explode(',',$limpa);
+        foreach($array  as $serie_id){
+        
+        $json = loadJsonBncc('educacenso_json/series_educacenso.json');
+     
+        foreach($json as $registro){
+           
+                 if($registro->id==$serie_id){
+                    $retorno .= '<li>'.$registro->nm_serie.'</li>';
+                 }
+               
+        }
+            
+       
+         
+        }
+          unset($series);
        }
        $retorno .= '</ul>';
+    
           $status= '';
           if($bncc['inativo']){
            $status = 'Inativo';

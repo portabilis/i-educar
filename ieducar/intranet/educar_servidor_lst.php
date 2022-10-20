@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyIndividual;
+use App\Models\Funcao;
 
 return new class extends clsListagem {
     public $limite;
@@ -18,6 +19,7 @@ return new class extends clsListagem {
     public $ref_cod_instituicao;
     public $servidor_sem_alocacao;
     public $ano_letivo;
+    public $cod_ref_funcao;
 
     public function Gerar()
     {
@@ -34,7 +36,7 @@ return new class extends clsListagem {
             'Instituição'
         ]);
 
-        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'anoLetivo'], [],['options' => ['required' => false]]);
+        $this->inputsHelper()->dynamic(['instituicao', 'escola',  'anoLetivo'], [],['options' => ['required' => false]]);
 
         if ($this->cod_servidor) {
             $objTemp = new clsFuncionario($this->cod_servidor);
@@ -52,6 +54,27 @@ return new class extends clsListagem {
         $this->campoTexto('nome', 'Nome do servidor', $this->nome, 50, 255, false);
         $this->campoTexto('matricula_servidor', 'Matrícula', $this->matricula_servidor, 50, 255, false);
         $this->inputsHelper()->dynamic('escolaridade', ['required' => false]);
+
+          // Componente Curricular.
+
+      
+          
+
+       
+       
+     
+          $funcoes = Funcao::all();
+          foreach($funcoes as $funcao){
+              $selectOptionsFuncao[$funcao->cod_funcao] = $funcao->cod_funcao.' - '.$funcao->nm_funcao;
+          }
+         
+         
+  
+          $selectOptionsFuncao = Portabilis_Array_Utils::sortByValue($selectOptionsFuncao);
+          $selectOptionsFuncao = array_replace([null => 'Selecione'], $selectOptionsFuncao);
+              
+        $this->campoLista('cod_ref_funcao', 'Função', $selectOptionsFuncao, $this->cod_ref_funcao, '', false, '', '', '', '');
+
         $this->campoCheck('servidor_sem_alocacao', 'Incluir servidores sem alocação', isset($this->servidor_sem_alocacao));
 
         // Paginador
@@ -102,8 +125,10 @@ return new class extends clsListagem {
             null,
             isset($_GET['servidor_sem_alocacao']),
             $this->ano_letivo,
-            $this->matricula_servidor
+            $this->matricula_servidor,
+            $this->cod_ref_funcao
         );
+        
         $total = $obj_servidor->_total;
 
         // UrlHelper

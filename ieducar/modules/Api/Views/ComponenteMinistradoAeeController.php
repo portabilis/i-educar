@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 class ComponenteMinistradoAeeController extends ApiCoreController
 {
     // public function verificarPlanoAulaSendoUsado()
@@ -115,8 +116,6 @@ class ComponenteMinistradoAeeController extends ApiCoreController
                 $outros
             );
 
-            //die(var_dump(//$obj));
-
             $editou = $obj->edita();
 
             if ($editou)
@@ -136,6 +135,9 @@ class ComponenteMinistradoAeeController extends ApiCoreController
         $atividades = $this->getRequest()->atividades;
         $conteudos = $this->getRequest()->conteudos;
         $observacao = $this->getRequest()->observacao;
+        $servidor_id = Auth::id();
+
+        die(dump($servidor_id));
 
         // $podeRegistrar = $this->verificarDatasTurma($faseEtapa, $turma, $data_inicial, $data_final);
 
@@ -152,7 +154,8 @@ class ComponenteMinistradoAeeController extends ApiCoreController
             $ref_cod_matricula,
             $atividades,
             $conteudos,
-            $observacao
+            $observacao,
+            $servidor_id
         );
 
         // $existe = $obj->existe();
@@ -286,7 +289,7 @@ class ComponenteMinistradoAeeController extends ApiCoreController
         $sequencia = $faseEtapa;
         $obj = new clsPmieducarTurmaModulo();
 
-        $data = $obj->pegaPeriodoLancamentoNotasFaltas($turma, $sequencia);
+        $data = $obj->pegaPeriodoLancamentoNotasFaltasAee($turma, $sequencia);
         if ($data['inicio'] != null && $data['fim'] != null) {
             $data['inicio_periodo_lancamentos'] = explode(',', $data['inicio']);
             $data['fim_periodo_lancamentos'] = explode(',', $data['fim']);

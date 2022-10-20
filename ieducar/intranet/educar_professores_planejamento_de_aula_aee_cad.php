@@ -50,6 +50,7 @@ return new class extends clsCadastro
                 $this->bncc = array_column($registro['bnccs'], 'id');
                 $this->bncc_especificacoes = array_column($registro['especificacoes'], 'id');
                 $this->ref_cod_componente_curricular_array = $registro['componentesCurriculas'];
+                $this->conteudos_ids = $registro['conteudos'][1];
 
                 if (!$this->copy) {
                     $this->fexcluir = $obj_permissoes->permissao_excluir(58, $this->pessoa_logada, 7);

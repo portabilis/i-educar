@@ -345,11 +345,10 @@ class clsModulesFrequencia extends Model {
                         id = '{$this->id}'
                 ");
 
-                $matriculas_antigas = $this->detalhe($this->id)['matriculas']['refs_cod_matricula'];
+                $matriculas_antigas = $this->detalhe()['matriculas']['refs_cod_matricula'];
                 if ($matriculas_antigas != '') $matriculas_antigas = explode(',', $this->detalhe($this->id)['matriculas']['refs_cod_matricula']);
 
                 $matriculas_novas = $this->alunos;
-
 
                 for ($i=0; $i < count($matriculas_antigas); $i++) {
                     $matricula_antiga = $matriculas_antigas[$i];
@@ -412,8 +411,18 @@ class clsModulesFrequencia extends Model {
                                         {$where}
                                 ");
                             }
+                        } else {
+                            $from = 'modules.falta_geral';
+                            $where = "falta_aluno_id = '{$falta_aluno_id}' AND etapa = '{$this->etapa_sequencial}'";
 
-
+                            $db->Consulta("
+                                UPDATE
+                                    {$from}
+                                SET
+                                    quantidade = quantidade + 1
+                                WHERE
+                                    {$where}
+                            ");
                         }
 
                         unset($matriculas_novas[$matricula_antiga]);
@@ -456,7 +465,6 @@ class clsModulesFrequencia extends Model {
                         ");
                     }
                 }
-
 
                 foreach ($matriculas_novas as $matricula_id => $info) {
                     $justificativa = $info[0];
@@ -1023,6 +1031,28 @@ class clsModulesFrequencia extends Model {
             ");
 
             return true;
+        }
+
+        return false;
+    }
+
+    public function selectDataFrequenciaByTurma($turma_aluno)
+    {
+        if ($turma_aluno) {
+            $db = new clsBanco();
+
+            $sql = "
+                 SELECT data
+                 FROM
+                     modules.frequencia
+                 WHERE ref_cod_turma = $turma_aluno
+                 ORDER BY data DESC LIMIT 1
+             ";
+
+            $db->Consulta($sql);
+            $db->ProximoRegistro();
+
+            return $db->Tupla();
         }
 
         return false;

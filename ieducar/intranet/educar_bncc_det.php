@@ -4,6 +4,7 @@ use App\Models\BNCC;
 use App\Models\Serie;
 use App\Models\ComponenteCurricular;
 use App\Models\bnccSeries;
+use App\Models\EspecificacaoBncc;
 
 return new class extends clsDetalhe {
     /**
@@ -31,12 +32,47 @@ return new class extends clsDetalhe {
             $this->simpleRedirect('educar_bncc_lst.php');
         }
 
-        $componente = ComponenteCurricular::find($bncc->componente_curricular_id);
-           $retorno ='<ul>';
-           foreach($bncc->series as $serie){
-           $retorno .= '<li>'.$serie->nm_serie.'</li>';
+       
+        if(empty($bncc->componente_curricular_id)){
+            $componente = ComponenteCurricular::find($bncc->campo_experiencia);
+           }else{
+            $componente = ComponenteCurricular::find($bncc->componente_curricular_id);
            }
-           $retorno .= '</ul>';
+
+        $series[] =  $bncc->serie_ids;
+        $retorno = '<ul style="width: 200px">';
+       foreach($series as $serie_id){
+        $limpa =  substr($serie_id, 1);
+        $limpa =  substr($limpa, 0, -1);
+
+        $array = explode(',',$limpa);
+        foreach($array  as $serie_id){
+        
+            $json = loadJsonBncc('educacenso_json/series_educacenso.json');
+         
+            foreach($json as $registro){
+               
+                     if($registro->id==$serie_id){
+                        $retorno .= '<li>'.$registro->nm_serie.'</li>';
+                     }
+                   
+            }
+                
+           
+             
+            }
+          unset($series);
+       }
+       $retorno .= '</ul>';
+
+          
+           $retorno_especificacoes ='<ol>';
+           $especificacao = EspecificacaoBncc::where('bncc_id', $bncc->id)->get();
+           foreach($especificacao as $list) {
+            $retorno_especificacoes .= '<li>'.$list->especificacao.'</li><br>';   
+           }
+           $retorno_especificacoes .= '</ol>';
+
 
            $this->addDetalhe([ 'Código', $bncc->id]);
            $this->addDetalhe([ 'Código da Habilidade', $bncc->codigo]);
@@ -51,6 +87,7 @@ return new class extends clsDetalhe {
            }
            
            $this->addDetalhe([ 'Status', $status]);
+           $this->addDetalhe([ 'Especificações', $retorno_especificacoes]);
         
 
        

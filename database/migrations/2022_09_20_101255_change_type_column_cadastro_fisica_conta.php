@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class SeriesBncc extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,9 @@ class SeriesBncc extends Migration
      */
     public function up()
     {
-        Schema::create('pmieducar.bncc_series', function (Blueprint $table) {
-            $table->id();
-            $table->integer('id_bncc');
-            $table->integer('id_serie');
-          
+        Schema::table('cadastro.fisica', function (Blueprint $table){
+            $table->bigInteger('conta')->nullable()->change();
         });
-
-     
-
     }
 
     /**
@@ -31,6 +25,8 @@ class SeriesBncc extends Migration
      */
     public function down()
     {
-        //
-    }
-}
+        Schema::table('cadastro.fisica', function (Blueprint $table){
+            $table->bigInteger('conta')->nullable()->change();
+        });
+    }    
+};

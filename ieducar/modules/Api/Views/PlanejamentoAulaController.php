@@ -136,8 +136,9 @@ class PlanejamentoAulaController extends ApiCoreController
         $registro_adaptacao = $this->getRequest()->registro_adaptacao;
         $turma = $this->getRequest()->turma;
         $faseEtapa = $this->getRequest()->faseEtapa;
+        $cod_escola = $this->getRequest()->ref_cod_escola;
 
-        $podeEditar = $this->verificarDatasTurma($faseEtapa, $turma, $data_inicial, $data_final);
+        $podeEditar = $this->verificarDatasTurma($faseEtapa, $turma, $data_inicial, $data_final, $cod_escola);
 
         if (!$podeEditar) {
             return [ "result" => "Edição não realizada, pois o intervalo de datas não se adequa as etapas da turma." ];
@@ -193,7 +194,7 @@ class PlanejamentoAulaController extends ApiCoreController
         $registro_adaptacao = $this->getRequest()->registro_adaptacao;
         $servidor_id = Auth::id();
 
-        $podeRegistrar = $this->verificarDatasTurma($faseEtapa, $turma, $data_inicial, $data_final);
+        $podeRegistrar = $this->verificarDatasTurma($faseEtapa, $turma, $data_inicial, $data_final, $cod_escola);
 
         if (!$podeRegistrar) {
             return [ "result" => "Cadastro não realizado, pois o intervalo de datas não se adequa as etapas da turma." ];
@@ -349,7 +350,7 @@ class PlanejamentoAulaController extends ApiCoreController
         return [];
     }
 
-    private function verificarDatasTurma($faseEtapa, $turma, $data_inicial, $data_final) {
+    private function verificarDatasTurma($faseEtapa, $turma, $data_inicial, $data_final, $cod_escola) {
         $podeRegistrar = false;
         $data_agora = new DateTime('now');
         $data_agora = new \DateTime($data_agora->format('Y-m-d'));
@@ -357,7 +358,7 @@ class PlanejamentoAulaController extends ApiCoreController
         $sequencia = $faseEtapa;
         $obj = new clsPmieducarTurmaModulo();
 
-        $data = $obj->pegaPeriodoLancamentoNotasFaltas($turma, $sequencia);
+        $data = $obj->pegaPeriodoLancamentoNotasFaltas($turma, $sequencia, $cod_escola);
         if ($data['inicio'] != null && $data['fim'] != null) {
             $data['inicio_periodo_lancamentos'] = explode(',', $data['inicio']);
             $data['fim_periodo_lancamentos'] = explode(',', $data['fim']);
@@ -383,10 +384,12 @@ class PlanejamentoAulaController extends ApiCoreController
 
                 if ($podeRegistrar) break;
             }
+
             $podeRegistrar = $podeRegistrar && new DateTime($data_inicial) >= $data['inicio'] && new DateTime($data_final) <= $data['fim'];
+
         } else {
             $podeRegistrar = new DateTime($data_inicial) >= $data['inicio'] && new DateTime($data_final) <= $data['fim'];
-            $podeRegistrar = $podeRegistrar && $data_agora >= $data['inicio'] && $data_agora <= $data['fim'];
+            $podeRegistrar = $podeRegistrar && $data['inicio'] >= $data_agora && $data['fim'] <= $data_agora;
         }
 
         return $podeRegistrar;

@@ -6,7 +6,8 @@ use App\Models\LegacyTransferRequest;
 use App\Services\PromotionService;
 use Illuminate\Support\Facades\DB;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $cod_transferencia_solicitacao;
     public $ref_cod_transferencia_tipo;
     public $ref_usuario_exc;
@@ -169,8 +170,8 @@ return new class extends clsCadastro {
                 return false;
             }
         } elseif (substr($det_matricula['data_matricula'], 0, 10) > $this->data_cancel) {
-                $this->mensagem = 'Data de transferência não pode ser inferior a data da matrícula.<br>';
-                return false;
+            $this->mensagem = 'Data de transferência não pode ser inferior a data da matrícula.<br>';
+            return false;
         }
 
         $obj->data_cancel = $this->data_cancel;
@@ -229,6 +230,19 @@ return new class extends clsCadastro {
 
             return false;
         }
+
+        $frequenciaAluno = new clsModulesFrequenciaAluno();
+        $aulasFaltou = $frequenciaAluno->existe($_GET['ref_cod_matricula']);
+
+        $frequencia = new clsModulesFrequencia();
+        $dataFrequencia = $frequencia->selectDataFrequenciaByTurma($_GET['turma']);
+
+        if ($obj_matricula->data_cancel <= $dataFrequencia['data'] || !$aulasFaltou) {            
+            $this->mensagem = 'Não é possível realizar a operação, existem frequências registradas no período<br>';
+
+            return false;
+        }
+
         $cadastrou = $obj->cadastra();
 
         if ($cadastrou) {

@@ -40,7 +40,7 @@ return new class extends clsCadastro {
 
     public function Inicializar()
     {
-        $retorno = 'Novo';
+        $retorno = 'Novo'; 
 
         $this->cod_servidor = $this->getQueryString('cod_servidor');
         $this->ref_cod_instituicao = $this->getQueryString('ref_cod_instituicao');

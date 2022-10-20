@@ -7,7 +7,7 @@ use App\Models\LegacyDiscipline;
 use App\Services\iDiarioService;
 use App\Services\SchoolLevelsService;
 use App\Services\CheckPostedDataService;
-
+use Illuminate\Support\Facades\Auth;
 return new class extends clsCadastro
 {
     public $id;
@@ -39,11 +39,9 @@ return new class extends clsCadastro
                 foreach ($registro['detalhes'] as $campo => $val) {
                     $this->$campo = $val;
                 }
-
-                //$this->conteudos = array_column($registro['planejamento_aula_aee']['conteudos'], 'planejamento_aula_aee_conteudo_id');
+               
                 $this->conteudos = array_column($registro['conteudos'], 'planejamento_aula_conteudo_aee_id');
-
-                 //die(var_dump($this->conteudos));
+                
                 if (!$this->copy) {
                     $this->fexcluir = $obj_permissoes->permissao_excluir(58, $this->pessoa_logada, 7);
                     $retorno = 'Editar';
@@ -151,9 +149,11 @@ return new class extends clsCadastro
 
         $turma = $this->ref_cod_turma;
         $sequencia = $this->fase_etapa;
+        $this->servidor_id = Auth::id();
+        
         $obj = new clsPmieducarTurmaModulo();
 
-        $data = $obj->pegaPeriodoLancamentoNotasFaltas($turma, $sequencia);
+        $data = $obj->pegaPeriodoLancamentoNotasFaltasAee($turma, $sequencia);
         if ($data['inicio'] != null && $data['fim'] != null) {
             $data['inicio_periodo_lancamentos'] = explode(',', $data['inicio']);
             $data['fim_periodo_lancamentos'] = explode(',', $data['fim']);
@@ -199,7 +199,8 @@ return new class extends clsCadastro
             $this->ref_cod_matricula,
             $this->atividades,
             $this->observacao,
-            $this->conteudos
+            $this->conteudos,
+            $this->servidor_id            
         );
 
         $cadastrou = $obj->cadastra();
