@@ -107,7 +107,7 @@ class LegacyEmployee extends Model
      */
     public function getActiveAttribute()
     {
-        return boolval($this->ativo);
+        return (bool) $this->ativo;
     }
 
     public function getEnabledUserDate(): ?Carbon
