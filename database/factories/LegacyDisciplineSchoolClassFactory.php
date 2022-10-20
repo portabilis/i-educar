@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\LegacyDisciplineSchoolClass;
-use App\Models\LegacySchoolClass;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyDisciplineSchoolClassFactory extends Factory
