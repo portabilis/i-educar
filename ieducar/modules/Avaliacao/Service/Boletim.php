@@ -174,6 +174,37 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     }
 
     /**
+     * Retorna um número inteiro referente a quantidade de faltas do aluno.
+     * Realiza a soma de faltas de todas as etapas por componente
+     *
+     * @param int|null $id    O identificador de ComponenteCurricular_Model_Componente
+     *
+     * @return Avaliacao_Model_FaltaAbstract|null
+     */
+    public function getFaltaSemEtapa($id = null)
+    {
+        if ($this->getRegraAvaliacaoTipoPresenca() == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
+            $faltas = $this->getFaltasComponentes();
+
+            if (!isset($faltas[$id])) {
+                return null;
+            }
+
+            $faltas = $faltas[$id];
+        } else {
+            $faltas = $this->getFaltasGerais();
+        }
+
+
+        $qtdFaltas = 0;
+        foreach ($faltas as $falta) {
+            $qtdFaltas += $falta->quantidade;
+        }
+
+        return $qtdFaltas;
+    }
+
+    /**
      * Retorna uma instância de Avaliacao_Model_ParecerDescritivoAbstract.
      *
      * @param int      $etapa A etapa para o qual o parecer foi lançado

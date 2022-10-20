@@ -1,5 +1,5 @@
 <?php
-
+ 
 use iEducar\Legacy\Model;
 
 class clsPmieducarServidor extends Model
@@ -282,7 +282,8 @@ class clsPmieducarServidor extends Model
         $this->_schema = 'pmieducar.';
         $tabela_compl = 'LEFT JOIN cadastro.pessoa p ON (s.cod_servidor = p.idpes)
                       LEFT JOIN portal.funcionario func ON (s.cod_servidor = func.ref_cod_pessoa_fj)
-                      LEFT JOIN pmieducar.servidor_funcao as sf ON s.cod_servidor = sf.ref_cod_servidor';
+                      LEFT JOIN pmieducar.servidor_funcao as sf ON s.cod_servidor = sf.ref_cod_servidor ';
+        
         $filtros = "WHERE s.ativo = '1'
                         AND s.ref_cod_instituicao = $cod_instituicao
                         AND (s.cod_servidor IN (SELECT a.ref_cod_servidor
@@ -369,7 +370,8 @@ class clsPmieducarServidor extends Model
         $int_ref_cod_subnivel = null,
         $bool_servidor_sem_alocacao = false,
         $ano_alocacao = null,
-        $matricula_funcionario = null
+        $matricula_funcionario = null,
+        $int_funcao = null
     ) {
         // Extrai as informações de hora inicial e hora final, para definir melhor
         // o lookup de carga horária de servidores alocados, para operações como
@@ -453,6 +455,10 @@ class clsPmieducarServidor extends Model
             $filtros .= "{$whereAnd} public.fcn_upper(sf.matricula) LIKE public.fcn_upper('%{$matricula_funcionario}%')";
             $whereAnd = ' AND ';
         }
+        if (is_numeric($int_funcao)) {
+            $filtros .= "{$whereAnd}sf.ref_cod_funcao = '{$int_funcao}'";
+            $whereAnd = ' AND ';
+        }
 
         $where = '';
 
@@ -462,6 +468,7 @@ class clsPmieducarServidor extends Model
             $filtros .= "{$whereAnd} EXISTS (SELECT 1 FROM cadastro.pessoa WHERE idpes = cod_servidor and unaccent(nome) ILIKE unaccent('%{$nome_servidor}%'))";
             $whereAnd = ' AND ';
         }
+        
         // Seleciona apenas servidores que tenham a carga atual maior ou igual ao
         // do servidor atual
         if (is_string($str_tipo) && $str_tipo == 'livre') {
