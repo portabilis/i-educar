@@ -90,6 +90,11 @@ return new class extends clsCadastro
 
         if ($obj_matricula->data_cancel <= $dataFrequencia['data'] || !$aulasFaltou) {            
             $this->mensagem = 'Não é possível realizar a operação, existem frequências registradas no período<br>';
+        $frequencia = new clsModulesFrequencia();
+        $dataFrequencia = $frequencia->selectDataFrequenciaByTurma($_GET['turma']);
+       
+        if ($obj_matricula->data_cancel <= $dataFrequencia['data']) {
+            $this->mensagem = 'Existe(m) frequência(s) registrada(s) após a data solicitada <br>';
 
             return false;
         }
