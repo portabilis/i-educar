@@ -5,6 +5,7 @@ namespace App\Services\Educacenso\Version2019;
 use App\Models\City;
 use App\Models\Educacenso\Registro00;
 use App\Models\Educacenso\RegistroEducacenso;
+use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyOrganization;
 use App\Models\LegacyPerson;
@@ -12,7 +13,6 @@ use App\Models\LegacyPersonAddress;
 use App\Models\LegacyPhone;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolAcademicYear;
-use App\Models\LegacySchoolStage;
 use App\Models\LegacyStageType;
 use App\Models\PersonHasPlace;
 use App\Models\Place;
@@ -146,7 +146,7 @@ class Registro00Import implements RegistroImportInterface
         $place = Place::firstOrCreate([
             'city_id' => $city->getKey(),
             'address' => $this->model->logradouro,
-            'number' => (int) (is_numeric($this->model->numero) ? $this->model->numero : null),
+            'number' => (int)(is_numeric($this->model->numero) ? $this->model->numero : null),
             'complement' => $this->model->complemento,
             'neighborhood' => $this->model->bairro,
             'postal_code' => $this->model->cep,
@@ -225,7 +225,7 @@ class Registro00Import implements RegistroImportInterface
             ]);
         }
 
-        LegacySchoolStage::create([
+        LegacyAcademicYearStage::create([
             'ref_ano' => $this->year,
             'ref_ref_cod_escola' => $school->getKey(),
             'sequencial' => 1,
