@@ -38,11 +38,6 @@ class LegacyTransferRequest extends LegacyModel
     ];
 
     /**
-     * @var boolean
-     */
-    public $timestamps = false;
-
-    /**
      * Relação com a matricula de saída.
      *
      * @return BelongsTo
