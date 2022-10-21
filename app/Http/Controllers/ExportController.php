@@ -122,6 +122,7 @@ class ExportController extends Controller
 
         return $data;
     }
+     
 
     /**
      * @param Request $request
@@ -146,6 +147,13 @@ class ExportController extends Controller
                 'column' => $table . '.year',
                 'operator' => '=',
                 'value' => intval($year),
+            ];
+        }
+        if ($cod_turma = $request->input('ref_cod_turma')) {
+            $data['filters'][] = [
+                'column' => $table . '.school_class_id',
+                'operator' => '=',
+                'value' => intval($cod_turma),
             ];
         }
 
