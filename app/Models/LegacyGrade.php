@@ -34,7 +34,7 @@ class LegacyGrade extends LegacyModel
      *
      * @var string
      */
-    protected $builder = LegacyGradeBuilder::class;
+    protected string $builder = LegacyGradeBuilder::class;
 
     /**
      * Atributos legados para serem usados nas queries

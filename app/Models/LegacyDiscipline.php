@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class LegacyDiscipline extends Model
+class LegacyDiscipline extends LegacyModel
 {
     /**
      * @var string
@@ -21,7 +20,24 @@ class LegacyDiscipline extends Model
      * @var array
      */
     protected $fillable = [
-        'instituicao_id', 'area_conhecimento_id', 'nome', 'abreviatura', 'tipo_base', 'ordenamento', 'codigo_educacenso', 'desconsidera_para_progressao'
+        'instituicao_id',
+        'area_conhecimento_id',
+        'nome',
+        'abreviatura',
+        'tipo_base',
+        'ordenamento',
+        'codigo_educacenso',
+        'desconsidera_para_progressao'
+    ];
+
+    public array $legacy = [
+        'institution_id' => 'instituicao_id',
+        'knowledge_area_id' => 'area_conhecimento_id',
+        'name' => 'nome',
+        'abbreviation' => 'abreviatura',
+        'foundation_type' => 'tipo_base',
+        'order' => 'ordenamento',
+        'educacenso_code' => 'codigo_educacenso',
     ];
 
     /**

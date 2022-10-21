@@ -23,7 +23,7 @@
           <td>
             @if(empty($export->url) && $export->created_at < now()->subMinutes(30))
               O arquivo não pode ser exportado
-              @elseif($export->url)
+            @elseif($export->url)
               <a href="{{ $presigner->getPresignedUrl($export->url) }}" style="font-size: 14px">Fazer download</a>
             @else
               Aguardando a exportação do arquivo ser finalizada
