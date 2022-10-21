@@ -30,18 +30,16 @@ class StateTest extends EloquentTestCase
         $this->assertEquals($stateReturn->abbreviation, $this->model->abbreviation);
     }
 
-    public function testGetListKeyAbbreviation()
+    public function testGetListKeyAbbreviation(): void
     {
         $list = State::getListKeyAbbreviation();
 
-        $except = collect([
-            $this->model->abbreviation => $this->model->name
-        ]);
+        $except = State::orderBy('name')->pluck('name', 'abbreviation');
 
         $this->assertJsonStringEqualsJsonString($except, $list);
     }
 
-    public function testGetNameByAbbreviation()
+    public function testGetNameByAbbreviation(): void
     {
         $name = State::getNameByAbbreviation($this->model->abbreviation);
         $expect = $this->model->name;
