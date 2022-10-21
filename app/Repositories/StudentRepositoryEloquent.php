@@ -79,7 +79,7 @@ class StudentRepositoryEloquent implements StudentRepository
                 }
             });
         }
-
+ 
         $year = $this->param($params, 'year');
         $schoolId = $this->param($params, 'school_id');
         $courseId = $this->param($params, 'course_id');
