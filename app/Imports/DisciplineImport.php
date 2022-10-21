@@ -5,10 +5,10 @@ namespace App\Imports;
 use App\Models\LegacyDiscipline;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Concerns\Importable;
-use Maatwebsite\Excel\Concerns\ToModel;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Maatwebsite\Excel\Concerns\WithProgressBar;
+use Maatwebsite\\Concerns\Importable;
+use Maatwebsite\\Concerns\ToModel;
+use Maatwebsite\\Concerns\WithHeadingRow;
+use Maatwebsite\\Concerns\WithProgressBar;
 
 class DisciplineImport implements ToModel, WithHeadingRow, WithProgressBar
 {

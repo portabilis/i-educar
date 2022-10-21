@@ -40,6 +40,7 @@ class StudentsExport extends FormRequest
             'ref_cod_escola' => 'nullable|numeric',
             'ref_cod_curso' => 'nullable|numeric',
             'ref_cod_serie' => 'nullable|numeric',
+            'ref_cod_turma' => 'nullable|numeric',
         ];
     }
 
