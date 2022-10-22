@@ -18,8 +18,9 @@ class clsPmieducarQuadroHorarioHorariosAux extends Model
     public $data_cadastro;
     public $ref_cod_servidor_substituto_1;
     public $ref_cod_servidor_substituto_2;
+    public $qtd_aulas;
 
-    public function __construct($ref_cod_quadro_horario = null, $sequencial = null, $ref_cod_disciplina = null, $ref_cod_escola = null, $ref_cod_serie = null, $ref_cod_instituicao_servidor = null, $ref_servidor = null, $dia_semana = null, $hora_inicial = null, $hora_final = null, $identificador = null, $ref_cod_servidor_substituto_1 = null, $ref_cod_servidor_substituto_2 = null)
+    public function __construct($ref_cod_quadro_horario = null, $sequencial = null, $ref_cod_disciplina = null, $ref_cod_escola = null, $ref_cod_serie = null, $ref_cod_instituicao_servidor = null, $ref_servidor = null, $dia_semana = null, $hora_inicial = null, $hora_final = null, $identificador = null, $ref_cod_servidor_substituto_1 = null, $ref_cod_servidor_substituto_2 = null, $qtd_aulas = null)
     {
         $db = new clsBanco();
         $this->_schema = 'pmieducar.';
@@ -62,6 +63,10 @@ class clsPmieducarQuadroHorarioHorariosAux extends Model
 
         if (is_numeric($ref_cod_servidor_substituto_2)) {
             $this->ref_cod_servidor_substituto_2 = $ref_cod_servidor_substituto_2;
+        }
+
+        if (is_numeric($qtd_aulas)) {
+            $this->qtd_aulas = $qtd_aulas;
         }
 
         $this->excluirRegistrosAntigos();
@@ -152,6 +157,13 @@ class clsPmieducarQuadroHorarioHorariosAux extends Model
             if (is_numeric($this->ref_cod_servidor_substituto_2)) {
                 $campos .= "{$gruda}ref_cod_servidor_substituto_2";
                 $valores .= "{$gruda}'{$this->ref_cod_servidor_substituto_2}'";
+                $gruda = ', ';
+            }
+
+
+            if (is_numeric($this->qtd_aulas)) {
+                $campos .= "{$gruda}qtd_aulas";
+                $valores .= "{$gruda}'{$this->qtd_aulas}'";
                 $gruda = ', ';
             }
 

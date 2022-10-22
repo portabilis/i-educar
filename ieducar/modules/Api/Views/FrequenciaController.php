@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Carbon;
+
 class FrequenciaController extends ApiCoreController
 {
     protected function getTipoPresenca()
@@ -41,10 +43,64 @@ class FrequenciaController extends ApiCoreController
         return [];
     }
 
+    protected function getQtdAulasQuadroHorario()
+    {
+        $turmaId = $this->getRequest()->id;
+        $dataFrequencia = $this->getRequest()->data;
+        $userId = \Illuminate\Support\Facades\Auth::id();
+
+        if (is_numeric($turmaId)) {
+            $clsInstituicao = new clsPmieducarInstituicao();
+            $instituicao = $clsInstituicao->primeiraAtiva();
+
+            $isOnlyProfessor = Portabilis_Business_Professor::isOnlyProfessor($instituicao['cod_instituicao'], $userId);
+
+            if ($isOnlyProfessor) {
+                $diaSemana =  Carbon::createFromFormat('d/m/Y', $dataFrequencia)->dayOfWeek;
+                $diaSemanaConvertido = $this->converterDiaSemanaQuadroHorario($diaSemana);
+
+                $quadroHorario = Portabilis_Business_Professor::quadroHorarioAlocado($turmaId, $userId, $diaSemanaConvertido);
+
+                $qtdAulas = 0;
+
+                if (count($quadroHorario) > 0) {
+                    foreach ($quadroHorario as $horario) {
+                        $qtdAulas += $horario['qtd_aulas'];
+                    }
+                }
+
+                return ['isProfessor' => true,
+                        'qtdAulas' => $qtdAulas];
+            } else {
+                return ['isProfessor' => false,
+                        'qtdAulas' => 5]; //admin/coordenador
+            }
+        }
+
+        return [];
+    }
+
+    protected function converterDiaSemanaQuadroHorario(int $diaSemana)
+    {
+        $arrDiasSemanaIeducar = [
+            0 => 1,
+            1 => 2,
+            2 => 3,
+            3 => 4,
+            4 => 5,
+            5 => 6,
+            6 => 7,
+        ];
+
+      return $arrDiasSemanaIeducar[$diaSemana];
+    }
+
     public function Gerar()
     {
         if ($this->isRequestFor('get', 'getTipoPresenca')) {
             $this->appendResponse($this->getTipoPresenca());
+        } else if ($this->isRequestFor('get', 'getQtdAulasQuadroHorario')) {
+            $this->appendResponse($this->getQtdAulasQuadroHorario());
         }
     }
 }

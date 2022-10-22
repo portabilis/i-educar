@@ -291,6 +291,39 @@ class Portabilis_Business_Professor
         return $componentes;
     }
 
+
+    public static function quadroHorarioAlocado($turmaId, $userId, $diaSemana = null)
+    {
+        $quadroHorario = [];
+
+        if (is_numeric($turmaId) && is_numeric($userId)) {
+            $sql = '
+                SELECT
+                    qhh.*
+                FROM pmieducar.quadro_horario qh
+                INNER JOIN pmieducar.quadro_horario_horarios qhh
+                ON (qh.cod_quadro_horario = qhh.ref_cod_quadro_horario)
+                WHERE qh.ref_cod_turma = $1
+                AND (qhh.ref_servidor = $2 OR qhh.ref_cod_servidor_substituto_1 = $2 OR qhh.ref_cod_servidor_substituto_2 = $2)
+                AND qhh.ativo = 1
+                AND qh.ativo = 1
+            ';
+
+            $params = ['params' => [$turmaId, $userId]];
+
+            if (!empty($diaSemana)) {
+                $sql .= ' AND qhh.dia_semana = $3';
+                $params['params'][] = $diaSemana;
+            }
+
+            $sql .= ' ORDER BY qhh.qtd_aulas DESC';
+
+            $quadroHorario = self::fetchPreparedQuery($sql, $params);
+        }
+
+        return $quadroHorario;
+    }
+
     protected static function componentesCurricularesTurmaAlocado($turmaId, $anoLetivo, $userId)
     {
         $sql = '
