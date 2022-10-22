@@ -81,14 +81,7 @@
         success: function (response) {
           $('#ref_cod_turma').attr('tipo_presenca', response.tipo_presenca);
 
-          if (response.tipo_presenca == 2 || response.tipo_presenca == '2') {
-            for (let i = 1; i <= 5; i++) {
-              $('#tr_ordens_aulas' + i).show();
-              $('#ordens_aulas' + i).show();
-            }
-          } else {
-            carregarAlunos();
-          }
+          carregarAulas(response.tipo_presenca, campoTurma);
         },
       };
 
@@ -122,6 +115,46 @@
         $('.tablelistagem').append(html);
       }
     }
+
+    function carregarAulas(tipo_presenca, campoTurma) {
+      if (tipo_presenca == 2 || tipo_presenca == '2') {
+        const campoData = document.getElementById('data').value;
+
+        let params = {
+          id: campoTurma,
+          data: campoData
+        };
+
+        let options = {
+          url: getResourceUrlBuilder.buildUrl('/module/Api/Frequencia', 'getQtdAulasQuadroHorario', params),
+          dataType: 'json',
+          data: {},
+          success: function (response) {
+            let qtdAulas = 5;
+
+            if (response.isProfessor) {
+              qtdAulas = response.qtdAulas;
+            }
+
+            if (qtdAulas > 0) {
+              for (let i = 1; i <= qtdAulas; i++) {
+                $('#tr_ordens_aulas' + i).show();
+                $('#ordens_aulas' + i).show();
+              }
+            } else {
+              alert('A data não está alocada no quadro de horário');
+              return false;
+            }
+          },
+        };
+
+        getResource(options);
+
+      } else {
+        carregarAlunos();
+      }
+    }
+
 
     addBtnEnviarMensagem();
   });
