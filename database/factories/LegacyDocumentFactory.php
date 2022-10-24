@@ -25,6 +25,7 @@ class LegacyDocumentFactory extends Factory
             'idpes' => LegacyUserFactory::new()->unique()->make(),
             'rg' => $this->faker->randomNumber(8),
             'certidao_nascimento' => $this->faker->randomNumber(8),
+            'origem_gravacao' => 'M'
         ];
     }
 }
