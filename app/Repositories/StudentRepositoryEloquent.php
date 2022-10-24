@@ -16,6 +16,8 @@ class StudentRepositoryEloquent implements StudentRepository
         if ($id = $this->param($params, 'id')) {
             $query->where('id', $id);
         }
+       
+
 
         if ($inepCode = $this->param($params, 'inep_code')) {
             $query->whereHas('census', function ($query) use ($inepCode) {
@@ -110,6 +112,9 @@ class StudentRepositoryEloquent implements StudentRepository
                 if ($levelId) {
                     $query->where('level_id', $levelId);
                 }
+                if ($school_class_id = $this->param($params, 'school_class_id')) {
+                    $query->join('matricula_turma', 'matricula_turma.ref_cod_matricula', '=', 'registrations.id')
+            ->where('matricula_turma.ref_cod_turma', $school_class_id);
             });
         }
 
