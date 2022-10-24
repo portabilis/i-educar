@@ -24,7 +24,7 @@ return new class extends clsDetalhe {
 
         $this->cod_religiao=$_GET['cod_religiao'];
 
-        $registro = Religion::findOrFail($this->cod_religiao, ['id', 'name'])?->toArray();
+        $registro = Religion::findOrFail($this->cod_religiao, ['id', 'name'])?->getAttributes();
 
         if (! $registro) {
             $this->simpleRedirect('educar_religiao_lst.php');
