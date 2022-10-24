@@ -151,7 +151,7 @@ class ExportController extends Controller
         }
         if ($cod_turma = $request->input('ref_cod_turma')) {
             $data['filters'][] = [
-                'column' => $table . '.school_class_id',
+                'column' => 'mt.ref_cod_turma',
                 'operator' => '=',
                 'value' => intval($cod_turma),
             ];
