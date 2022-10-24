@@ -16,10 +16,7 @@ class StudentRepositoryEloquent implements StudentRepository
         if ($id = $this->param($params, 'id')) {
             $query->where('id', $id);
         }
-        if ($school_class_id = $this->param($params, 'school_class_id')) {
-            $query->where('school_class_id', $school_class_id);
-        }
-        
+
         if ($inepCode = $this->param($params, 'inep_code')) {
             $query->whereHas('census', function ($query) use ($inepCode) {
                 $query->where('inep_code', $inepCode);
