@@ -18,6 +18,15 @@ class LegacyRemedialRule extends Model
         'nota_maxima' => 'float',
     ];
 
+    protected $fillable = [
+        'regra_avaliacao_id',
+        'descricao',
+        'etapas_recuperadas',
+        'substitui_menor_nota',
+        'media',
+        'nota_maxima',
+    ];
+
     /**
      * @var bool
      */
