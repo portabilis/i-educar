@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Models\StudentInep;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Carbon;
 
 class StudentInepFactory extends Factory
 {
@@ -13,9 +12,10 @@ class StudentInepFactory extends Factory
     public function definition(): array
     {
         return [
-            'cod_aluno_inep' => $this->faker->randomNumber(),
-            'created_at' => Carbon::now(),
-            'cod_aluno' => static fn () => LegacyStudentFactory::new()->create(),
+            'student_id' => LegacyStudentFactory::new()->create(),
+            'number' => $this->faker->randomNumber(),
+            'name' => $this->faker->word(),
+            'font' => $this->faker->word()
         ];
     }
 }

@@ -2,14 +2,14 @@
 
 namespace Tests\Unit\Eloquent;
 
-use App\Models\City;
-use App\Models\Place;
+use App\Models\ReleasePeriod;
+use App\Models\ReleasePeriodDate;
 use Tests\EloquentTestCase;
 
-class PlaceTest extends EloquentTestCase
+class ReleasePeriodDateTest extends EloquentTestCase
 {
     protected $relations = [
-        'city' => City::class
+        'releasePeriod' => ReleasePeriod::class
     ];
 
     /**
@@ -17,6 +17,6 @@ class PlaceTest extends EloquentTestCase
      */
     protected function getEloquentModelName(): string
     {
-        return Place::class;
+        return ReleasePeriodDate::class;
     }
 }

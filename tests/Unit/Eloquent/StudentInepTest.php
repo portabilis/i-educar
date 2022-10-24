@@ -2,14 +2,14 @@
 
 namespace Tests\Unit\Eloquent;
 
-use App\Models\City;
-use App\Models\Place;
+use App\Models\LegacyStudent;
+use App\Models\StudentInep;
 use Tests\EloquentTestCase;
 
-class PlaceTest extends EloquentTestCase
+class StudentInepTest extends EloquentTestCase
 {
     protected $relations = [
-        'city' => City::class
+        'student' => LegacyStudent::class,
     ];
 
     /**
@@ -17,6 +17,6 @@ class PlaceTest extends EloquentTestCase
      */
     protected function getEloquentModelName(): string
     {
-        return Place::class;
+        return StudentInep::class;
     }
 }

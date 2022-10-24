@@ -3,6 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Student extends Model
@@ -11,37 +15,37 @@ class Student extends Model
 
     protected $dates = ['deleted_at'];
 
-    public function individual()
+    public function individual(): BelongsTo
     {
         return $this->belongsTo(Individual::class);
     }
 
-    public function religion()
+    public function religion(): BelongsTo
     {
         return $this->belongsTo(Religion::class);
     }
 
-    public function census()
+    public function census(): HasOne
     {
         return $this->hasOne(CensusStudent::class);
     }
 
-    public function registrations()
+    public function registrations(): HasMany
     {
         return $this->hasMany(Registration::class);
     }
 
-    public function createdBy()
+    public function createdBy(): BelongsTo
     {
         return $this->belongsTo(Individual::class, 'created_by', 'id');
     }
 
-    public function deletedBy()
+    public function deletedBy(): BelongsTo
     {
         return $this->belongsTo(Individual::class, 'deleted_by', 'id');
     }
 
-    public function getGuardianTypeAttribute($value)
+    public function getGuardianTypeAttribute($value): int|null
     {
         if ($value) {
             return $value;
@@ -62,27 +66,24 @@ class Student extends Model
         return null;
     }
 
-    public function getGuardianTypeDescriptionAttribute()
+    public function getGuardianTypeDescriptionAttribute(): string
     {
         return (new GuardianType())->getDescriptiveValues()[(int) $this->guardian_type];
     }
 
-    public function getTransportationProviderDescriptionAttribute()
+    public function getTransportationProviderDescriptionAttribute(): string
     {
         return (new TransportationProvider())->getDescriptiveValues()[(int) $this->transportation_provider];
     }
 
-    public function getTransportationVehicleTypeDescriptionAttribute()
+    public function getTransportationVehicleTypeDescriptionAttribute(): string
     {
         $value = str_replace(['{','}'], '', $this->transportation_vehicle_type);
 
         return (new TransportationVehicleType())->getDescriptiveValues()[(int) $value];
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
-     */
-    public function unification()
+    public function unification(): MorphOne
     {
         return $this->morphOne(LogUnification::class, 'main', 'type', 'main_id');
     }
