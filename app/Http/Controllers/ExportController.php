@@ -151,19 +151,13 @@ class ExportController extends Controller
         }
         if ($cod_turma = $request->input('ref_cod_turma')) {
             $data['filters'][] = [
-                'column' => 'mt.ref_cod_turma',
+                'column' => $table . '.school_class_id',
                 'operator' => '=',
                 'value' => intval($cod_turma),
             ];
         }
 
-        if ($request->input('ref_cod_escola')) {
-            $data['filters'][] = [
-                'column' => $table . '.school_id',
-                'operator' => 'in',
-                'value' => [$request->input('ref_cod_escola')]
-            ];
-        } elseif ($request->user()->isSchooling()) {
+       elseif ($request->user()->isSchooling()) {
             $data['filters'][] = [
                 'column' => $table . '.school_id',
                 'operator' => 'in',
