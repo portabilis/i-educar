@@ -1,11 +1,11 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+use App\Support\Database\MigrationUtils;
 
 class StudentViewEdit extends Migration
 {
+    use MigrationUtils;
     /**
      * Run the migrations.
      *
@@ -27,6 +27,6 @@ class StudentViewEdit extends Migration
      */
     public function down()
     {
-        //
+        $this->dropView('public.exporter_student');
     }
 }
