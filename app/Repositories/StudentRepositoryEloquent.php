@@ -113,7 +113,7 @@ class StudentRepositoryEloquent implements StudentRepository
                     $query->where('level_id', $levelId);
                 }
                 if ($school_class_id) {
-                    $query->join('matricula_turma', 'matricula_turma.ref_cod_matricula', '=', 'registrations.id')->where('matricula_turma.ref_cod_turma', $school_class_id);
+                    $query->leftJoin('matricula_turma', 'matricula_turma.ref_cod_matricula', '=', 'registrations.id')->where('matricula_turma.ref_cod_turma', $school_class_id);
                 }
             });
         }
