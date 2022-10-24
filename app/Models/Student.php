@@ -74,7 +74,9 @@ class Student extends Model
 
     public function getTransportationVehicleTypeDescriptionAttribute()
     {
-        return (new TransportationVehicleType())->getDescriptiveValues()[(int) $this->transportation_vehicle_type];
+        $value = str_replace(['{','}'], '', $this->transportation_vehicle_type);
+
+        return (new TransportationVehicleType())->getDescriptiveValues()[(int) $value];
     }
 
     /**
