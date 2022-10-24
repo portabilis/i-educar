@@ -20,5 +20,6 @@ return new class () extends Migration {
         DB::unprepared('DROP INDEX IF EXISTS pmieducar.pmieducar_turma_turma_turno_id_index;');
         DB::unprepared('DROP INDEX IF EXISTS pmieducar.pmieducar_turma_ref_ref_cod_escola_index;');
         DB::unprepared('DROP INDEX IF EXISTS pmieducar.pmieducar_turma_ref_ref_cod_serie_index;');
+        DB::unprepared('DROP INDEX IF EXISTS pmieducar.pmieducar_turma_ref_cod_curso_index;');
     }
 };
