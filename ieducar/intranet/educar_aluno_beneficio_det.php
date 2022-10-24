@@ -25,7 +25,7 @@ return new class extends clsDetalhe {
 
         $this->cod_aluno_beneficio=$_GET['cod_aluno_beneficio'];
 
-        $registro = LegacyBenefit::find($this->cod_aluno_beneficio)?->toArray();
+        $registro = LegacyBenefit::find($this->cod_aluno_beneficio)?->getAttributes();
 
         if (! $registro) {
             $this->simpleRedirect('educar_aluno_beneficio_lst.php');

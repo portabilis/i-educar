@@ -38,6 +38,6 @@ class LegacyEmployeeRole extends LegacyModel
 
     public function role(): BelongsTo
     {
-        return $this->belongsTo('App\\Models\\LegacyRole', 'ref_cod_funcao');
+        return $this->belongsTo(LegacyRole::class, 'ref_cod_funcao');
     }
 }

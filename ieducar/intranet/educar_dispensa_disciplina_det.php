@@ -88,7 +88,7 @@ return new class extends clsDetalhe {
         $registro['ref_cod_curso'] = $det_ref_cod_curso['nm_curso'];
 
         // Tipo de dispensa
-        $det_ref_cod_tipo_dispensa = LegacyExemptionType::find($registro['ref_cod_tipo_dispensa'])?->toArray();
+        $det_ref_cod_tipo_dispensa = LegacyExemptionType::find($registro['ref_cod_tipo_dispensa'])?->getAttributes();
         $registro['ref_cod_tipo_dispensa'] = $det_ref_cod_tipo_dispensa['nm_tipo'];
 
         if ($registro['ref_cod_matricula']) {

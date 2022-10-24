@@ -2,16 +2,16 @@
 
 namespace Tests\Unit\Eloquent;
 
-use App\Models\LegacySchoolStage;
+use App\Models\LegacyDisciplineSchoolClass;
 use Tests\EloquentTestCase;
 
-class LegacySchoolStageTest extends EloquentTestCase
+class LegacyDisciplineSchoolClassTest extends EloquentTestCase
 {
     /**
      * @return string
      */
     protected function getEloquentModelName()
     {
-        return LegacySchoolStage::class;
+        return LegacyDisciplineSchoolClass::class;
     }
 }

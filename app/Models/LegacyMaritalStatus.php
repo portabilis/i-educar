@@ -20,6 +20,7 @@ class LegacyMaritalStatus extends Model
      * @var array
      */
     protected $fillable = [
+        'ideciv',
         'descricao',
     ];
 

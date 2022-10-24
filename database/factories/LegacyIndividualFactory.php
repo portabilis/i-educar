@@ -26,6 +26,9 @@ class LegacyIndividualFactory extends Factory
             'data_cad' => now(),
             'operacao' => $this->faker->randomElement(['I', 'A', 'E']),
             'origem_gravacao' => $this->faker->randomElement(['M', 'U', 'C', 'O']),
+            'idpes_mae' => LegacyPersonFactory::new()->create(),
+            'idpes_pai' => LegacyPersonFactory::new()->create(),
+            'idpes_responsavel' => LegacyPersonFactory::new()->create(),
         ];
     }
 

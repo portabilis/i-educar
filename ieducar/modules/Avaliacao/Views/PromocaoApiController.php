@@ -1,8 +1,8 @@
 <?php
 
+use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClassStage;
-use App\Models\LegacySchoolStage;
 
 class PromocaoApiController extends ApiCoreController
 {
@@ -244,7 +244,7 @@ class PromocaoApiController extends ApiCoreController
             ->orderBy('sequencial');
 
         if (!$stages->exists()) {
-            $stages = LegacySchoolStage::query(['sequencial'])
+            $stages = LegacyAcademicYearStage::query(['sequencial'])
                 ->where([
                     'ref_ref_cod_escola' => $escolaId,
                     'ref_ano' => $ano
@@ -497,6 +497,6 @@ class PromocaoApiController extends ApiCoreController
             'ref_ano' => $registration->ano,
         ];
 
-        return LegacySchoolStage::query()->where($where)->count();
+        return LegacyAcademicYearStage::query()->where($where)->count();
     }
 }

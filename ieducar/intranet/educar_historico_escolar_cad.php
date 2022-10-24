@@ -189,7 +189,7 @@ return new class extends clsCadastro {
             $countryId = $state->country_id;
         }
 
-        $lista_pais_origem = ['' => 'Selecione um país'] + Country::query()->orderBy('name')->pluck('name', 'id')->toArray();
+        $lista_pais_origem = Country::query()->orderBy('name')->pluck('name', 'id')->prepend('Selecione um país', '');
 
         $this->campoLista('idpais', 'País da Escola', $lista_pais_origem, $countryId ?? 45);
 
