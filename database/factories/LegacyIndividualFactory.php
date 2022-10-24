@@ -28,4 +28,30 @@ class LegacyIndividualFactory extends Factory
             'origem_gravacao' => $this->faker->randomElement(['M', 'U', 'C', 'O']),
         ];
     }
+
+    public function father(): self
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'idpes_pai' => LegacyIndividualFactory::new()->create(),
+            ];
+        });
+    }
+
+    public function mother(): self
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'idpes_mae' => LegacyIndividualFactory::new()->create(),
+            ];
+        });
+    }
+    public function guardian(): self
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'idpes_responsavel' => LegacyIndividualFactory::new()->create(),
+            ];
+        });
+    }
 }
