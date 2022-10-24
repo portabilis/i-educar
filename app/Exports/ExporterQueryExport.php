@@ -22,7 +22,7 @@ class ExporterQueryExport implements FromQuery, WithHeadings
 
     public function query()
     {
-        return $this->getExportQuery();
+        return $this->getExportQuery()->orderByRaw('1');
     }
 
     public function getExportQuery(): Builder
