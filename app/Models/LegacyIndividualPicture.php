@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class LegacyIndividualPicture extends Model
 {
+    public const CREATED_AT = null;
+
+    public const UPDATED_AT = 'updated_at';
+
     /**
      * @var string
      */
@@ -16,10 +20,10 @@ class LegacyIndividualPicture extends Model
      */
     protected $primaryKey = 'idpes';
 
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
+    public $fillable = [
+        'idpes',
+        'caminho',
+    ];
 
     /**
      * @return string
