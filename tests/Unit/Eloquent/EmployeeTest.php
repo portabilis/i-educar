@@ -19,9 +19,9 @@ class EmployeeTest extends EloquentTestCase
 {
     protected $relations = [
         'person' => LegacyPerson::class,
-        'employeeAllocations' => [EmployeeAllocation::class],
-        'employeeRoles' => [LegacyEmployeeRole::class],
-        'graduations' => [EmployeeGraduation::class],
+        'employeeAllocations' => EmployeeAllocation::class,
+        'employeeRoles' => LegacyEmployeeRole::class,
+        'graduations' => EmployeeGraduation::class,
         'schoolingDegree' => LegacySchoolingDegree::class,
     ];
 

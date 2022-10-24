@@ -17,10 +17,10 @@ class LegacySchoolTest extends EloquentTestCase
      */
     protected $relations = [
         'institution' => LegacyInstitution::class,
-        'academicYears' => [LegacySchoolAcademicYear::class],
+        'academicYears' => LegacySchoolAcademicYear::class,
         'person' => LegacyPerson::class,
         'organization' => LegacyOrganization::class,
-        'schoolUsers' => [LegacyUserSchool::class],
+        'schoolUsers' => LegacyUserSchool::class,
     ];
 
     /**

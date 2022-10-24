@@ -9,7 +9,7 @@ use Tests\EloquentTestCase;
 class LegacyExemptionTypeTest extends EloquentTestCase
 {
     public $relations = [
-        'disciplineExemptions' => [LegacyDisciplineExemption::class],
+        'disciplineExemptions' => LegacyDisciplineExemption::class,
     ];
 
     /**

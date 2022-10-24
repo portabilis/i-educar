@@ -28,9 +28,9 @@ class LegacySchoolClassTest extends EloquentTestCase
         'grade' => LegacyLevel::class,
         'school' => LegacySchool::class,
         'period' => LegacyPeriod::class,
-        'enrollments' => [LegacyEnrollment::class],
-        'schoolClassStages' => [LegacySchoolClassStage::class],
-        'multigrades' => [LegacySchoolClassGrade::class],
+        'enrollments' => LegacyEnrollment::class,
+        'schoolClassStages' => LegacySchoolClassStage::class,
+        'multigrades' => LegacySchoolClassGrade::class,
     ];
 
     /**

@@ -11,7 +11,7 @@ class LegacyEvaluationRuleTest extends EloquentTestCase
     private LegacyEvaluationRule $evaluationRule;
 
     public $relations = [
-        'remedialRules' => [LegacyRemedialRule::class]
+        'remedialRules' => LegacyRemedialRule::class,
     ];
 
     /**

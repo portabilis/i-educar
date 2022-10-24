@@ -9,7 +9,7 @@ use Tests\EloquentTestCase;
 class LegacyCourseTest extends EloquentTestCase
 {
     protected $relations = [
-        'grades' => [LegacyGrade::class],
+        'grades' => LegacyGrade::class,
     ];
 
     private LegacyCourse $course;

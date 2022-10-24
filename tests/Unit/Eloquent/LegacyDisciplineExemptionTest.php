@@ -16,7 +16,7 @@ class LegacyDisciplineExemptionTest extends EloquentTestCase
         'registration' => LegacyRegistration::class,
         'discipline' => LegacyDiscipline::class,
         'type' => LegacyExemptionType::class,
-        'stages' => [LegacyExemptionStage::class],
+        'stages' => LegacyExemptionStage::class,
         'createdBy' => LegacyUser::class,
     ];
 

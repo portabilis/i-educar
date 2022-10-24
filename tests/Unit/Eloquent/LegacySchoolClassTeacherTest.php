@@ -11,7 +11,7 @@ class LegacySchoolClassTeacherTest extends EloquentTestCase
 {
     protected $relations = [
         'schoolClass' => LegacySchoolClass::class,
-        'schoolClassTeacherDisciplines' => [LegacySchoolClassTeacherDiscipline::class],
+        'schoolClassTeacherDisciplines' => LegacySchoolClassTeacherDiscipline::class,
     ];
 
     /**
