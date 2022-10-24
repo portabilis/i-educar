@@ -111,6 +111,16 @@ class StudentRepositoryEloquent implements StudentRepository
                     $query->where('level_id', $levelId);
                 }
             });
+
+        }
+        $school_class_id = $this->param($params, 'school_class_id');
+        
+        if ($school_class_id) {
+            $query->whereHas('exporter_student', function ($query) use ($school_class_id) {
+                if ($school_class_id) {
+                    $query->where('school_class_id', $school_class_id);
+                }
+            });
         }
 
         return $query->get();
