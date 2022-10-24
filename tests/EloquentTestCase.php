@@ -92,7 +92,8 @@ abstract class EloquentTestCase extends TestCase
         $model = $this->instanceNewEloquentModel();
 
         $model->fill($this->getAttributesForCreate());
-        $model->save();
+
+        $model->saveQuietly();
 
         return $model;
     }
