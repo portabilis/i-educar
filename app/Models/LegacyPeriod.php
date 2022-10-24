@@ -15,7 +15,8 @@ class LegacyPeriod extends Model
      * @var array
      */
     protected $fillable = [
-        'nome', 'ativo',
+        'nome',
+        'ativo',
     ];
 
     /**

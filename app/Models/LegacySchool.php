@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Models\Builders\LegacySchoolBuilder;
 use App\Traits\LegacyAttribute;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -200,6 +199,6 @@ class LegacySchool extends Model
 
     public function stages()
     {
-        return $this->hasMany(LegacySchoolStage::class, 'ref_ref_cod_escola');
+        return $this->hasMany(LegacyAcademicYearStage::class, 'ref_ref_cod_escola');
     }
 }
