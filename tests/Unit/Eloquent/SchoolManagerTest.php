@@ -4,10 +4,10 @@ namespace Tests\Unit\Eloquent;
 
 use App\Models\Employee;
 use App\Models\Individual;
+use App\Models\LegacySchool;
 use App\Models\ManagerAccessCriteria;
 use App\Models\ManagerLinkType;
 use App\Models\ManagerRole;
-use App\Models\School;
 use App\Models\SchoolManager;
 use Database\Factories\LegacySchoolFactory;
 use Database\Factories\SchoolManagerFactory;
@@ -16,8 +16,8 @@ use Tests\EloquentTestCase;
 class SchoolManagerTest extends EloquentTestCase
 {
     protected $relations = [
-       'individual' => Individual::class,
-        'school' => School::class,
+        'individual' => Individual::class,
+        'school' => LegacySchool::class,
         'employee' => Employee::class,
         'role' => ManagerRole::class,
         'accessCriteria' => ManagerAccessCriteria::class,
