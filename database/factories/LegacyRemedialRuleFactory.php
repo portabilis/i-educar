@@ -23,7 +23,7 @@ class LegacyRemedialRuleFactory extends Factory
     {
         return [
             'regra_avaliacao_id' => LegacyEvaluationRuleFactory::new()->create(),
-            'descricao' => $this->faker->words(1, true),
+            'descricao' => $this->faker->text(20),
             'etapas_recuperadas' => $this->faker->randomElement(['1', '2', '3', '4']),
             'substitui_menor_nota' => $this->faker->boolean,
             'media' => $this->faker->randomFloat(1, 0, 10),
