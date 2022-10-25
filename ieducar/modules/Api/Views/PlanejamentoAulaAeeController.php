@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Auth;
+
 class PlanejamentoAulaAeeController extends ApiCoreController
 {
     public function verificarPlanoAulaSendoUsado()
@@ -37,13 +38,12 @@ class PlanejamentoAulaAeeController extends ApiCoreController
 
         return [];
     }
-    
+
     public function excluirPlanoAula()
     {
         $planejamento_aula_aee_id = $this->getRequest()->planejamento_aula_aee_id;
 
         if (is_numeric($planejamento_aula_aee_id)) {
-
             $objComponenteCurricular = new clsModulesPlanejamentoAulaComponenteCurricularAee(null, $planejamento_aula_aee_id);
             $objComponenteCurricular->excluirComponenteCurricularPlanejamentoAulaAee();
 
@@ -121,7 +121,7 @@ class PlanejamentoAulaAeeController extends ApiCoreController
         $podeEditar = $this->verificarDatasTurma($faseEtapa, $turma, $data_inicial, $data_final);
 
         if (!$podeEditar) {
-            return ["result" => "Edição não realizada, pois o intervalo de datas não se adequa as etapas da turma."];
+            return ['result' => 'Edição não realizada, pois o intervalo de datas não se adequa as etapas da turma.'];
             $this->simpleRedirect('educar_professores_planejamento_de_aula_aee_cad2.php');
         }
 
@@ -144,16 +144,16 @@ class PlanejamentoAulaAeeController extends ApiCoreController
 
             $editou = $obj->edita();
 
-            if ($editou)
+            if ($editou) {
                 return ['result' => 'Edição efetuada com sucesso.'];
+            }
         }
 
-        return ['result' => "Edição não realizada."];
+        return ['result' => 'Edição não realizada.'];
     }
 
     public function criarPlanoAula()
     {
-
         $data_inicial = $this->getRequest()->data_inicial;
         $data_final = $this->getRequest()->data_final;
         $turma = $this->getRequest()->turma;
@@ -166,12 +166,12 @@ class PlanejamentoAulaAeeController extends ApiCoreController
         $bnccEspecificacoes = $this->getRequest()->bnccEspecificacoes;
         $recursos_didaticos = $this->getRequest()->recursos_didaticos;
         $outros = $this->getRequest()->outros;
-        $servidor_id = $this->pessoa_logada;
+        $servidor_id = Auth::id();
 
         $podeRegistrar = $this->verificarDatasTurma($faseEtapa, $turma, $data_inicial, $data_final);
 
         if (!$podeRegistrar) {
-            return ["result" => "Cadastro não realizado, pois o intervalo de datas não se adequa as etapas da turma."];
+            return ['result' => 'Cadastro não realizado, pois o intervalo de datas não se adequa as etapas da turma.'];
             $this->simpleRedirect('educar_professores_planejamento_de_aula_aee_cad.php');
         }
 
@@ -195,23 +195,23 @@ class PlanejamentoAulaAeeController extends ApiCoreController
         $existe = $obj->existe();
 
         if ($existe) {
-            return ["result" => "Cadastro não realizado, pois já há um planejamento para esse componente nesse período."];
+            return ['result' => 'Cadastro não realizado, pois já há um planejamento para esse componente nesse período.'];
             $this->simpleRedirect('educar_professores_planejamento_de_aula_aee_cad.php');
         }
 
         $cadastrou = $obj->cadastra();
         if (!$cadastrou) {
-            return ["result" => "Cadastro não realizado."];
+            return ['result' => 'Cadastro não realizado.'];
             $this->simpleRedirect('educar_professores_planejamento_de_aula_aee_cad.php');
         } else {
-            return ["result" => "Cadastro efetuado com sucesso."];
+            return ['result' => 'Cadastro efetuado com sucesso.'];
             $this->simpleRedirect('educar_professores_planejamento_de_aula_aee_lst.php');
         }
 
-        return ["result" => "Cadastro não realizado."];
+        return ['result' => 'Cadastro não realizado.'];
     }
 
-    public function getObjetivosAprendizagem ()
+    public function getObjetivosAprendizagem()
     {
         $planejamento_aula_aee_id = $this->getRequest()->planejamento_aula_id;
         $turma_id = $this->getRequest()->turma_id;
@@ -232,10 +232,10 @@ class PlanejamentoAulaAeeController extends ApiCoreController
                 $habilidadesGeralCC = $this->getBNCCTurma($turma_id, $componenteCurricular['id']);
 
                 foreach ($detalhePA['bnccs'] as $key => $bnccPA) {
-                    if (array_key_exists($bnccPA["id"], $habilidadesGeralCC['bncc'])) {
-                        $especificacoesGeralBNCC[$bnccPA["id"]] = $this->getEspecificacaoBNCC($bnccPA['id'])['bncc_especificacao'];
-                        $habilidadesPaCC[] = $bnccPA["id"];
-                        $planejamento_aula_bncc_ids[] = $bnccPA["planejamento_aula_bncc_id"];
+                    if (array_key_exists($bnccPA['id'], $habilidadesGeralCC['bncc'])) {
+                        $especificacoesGeralBNCC[$bnccPA['id']] = $this->getEspecificacaoBNCC($bnccPA['id'])['bncc_especificacao'];
+                        $habilidadesPaCC[] = $bnccPA['id'];
+                        $planejamento_aula_bncc_ids[] = $bnccPA['planejamento_aula_bncc_id'];
                     }
                 }
 
@@ -248,12 +248,12 @@ class PlanejamentoAulaAeeController extends ApiCoreController
                     'componente_curricular_id' => $componenteCurricular['id'],
                     'habilidades' => [
                         'habilidades_planejamento_aula_cc' => $habilidadesPaCC,
-                        'habilidades_geral_cc' => $habilidadesGeralCC['bncc']
+                        'habilidades_geral_cc' => $habilidadesGeralCC['bncc'],
                     ],
                     'especificacoes' => [
                         'especificacoes_pa_bncc' => $especificacoesPABNCC,
-                        'especificacoes_geral_bncc' => $especificacoesGeralBNCC
-                    ]
+                        'especificacoes_geral_bncc' => $especificacoesGeralBNCC,
+                    ],
                 ];
             }
 
@@ -281,7 +281,7 @@ class PlanejamentoAulaAeeController extends ApiCoreController
                     $codigo = $bncc_item['codigo'];
                     $habilidade = $bncc_item['habilidade'];
 
-                    $bncc[$id] = $codigo . ' - ' . $habilidade;
+                    $bncc[$id] = $codigo.' - '.$habilidade;
                 }
             }
 
@@ -302,7 +302,7 @@ class PlanejamentoAulaAeeController extends ApiCoreController
                     $id = $bncc_especificacao_item['id'];
                     $especificacao = $bncc_especificacao_item['especificacao'];
 
-                    $bncc_especificacao[$id] = $id . ' - ' . $especificacao;
+                    $bncc_especificacao[$id] = $id.' - '.$especificacao;
                 }
             }
 
@@ -339,13 +339,15 @@ class PlanejamentoAulaAeeController extends ApiCoreController
         $data['fim'] = new \DateTime($obj->pegaEtapaSequenciaDataFim($turma, $sequencia));
 
         if (is_array($data['inicio_periodo_lancamentos']) && is_array($data['fim_periodo_lancamentos'])) {
-            for ($i = 0; $i < count($data['inicio_periodo_lancamentos']); $i++) {
+            for ($i = 0; $i < count($data['inicio_periodo_lancamentos']); ++$i) {
                 $data_inicio = $data['inicio_periodo_lancamentos'][$i];
                 $data_fim = $data['fim_periodo_lancamentos'][$i];
 
                 $podeRegistrar = $data_agora >= $data_inicio && $data_agora <= $data_fim;
 
-                if ($podeRegistrar) break;
+                if ($podeRegistrar) {
+                    break;
+                }
             }
             $podeRegistrar = $podeRegistrar && new DateTime($data_inicial) >= $data['inicio'] && new DateTime($data_final) <= $data['fim'];
         } else {
@@ -360,17 +362,17 @@ class PlanejamentoAulaAeeController extends ApiCoreController
     {
         if ($this->isRequestFor('post', 'verificar-plano-aula-aee-sendo-usado')) {
             $this->appendResponse($this->verificarPlanoAulaSendoUsado());
-        } else if ($this->isRequestFor('post', 'verificar-plano-aula-aee-sendo-usado2')) {
+        } elseif ($this->isRequestFor('post', 'verificar-plano-aula-aee-sendo-usado2')) {
             $this->appendResponse($this->verificarPlanoAulaSendoUsado2());
-        } else if ($this->isRequestFor('post', 'excluir-plano-aula-aee')) {
+        } elseif ($this->isRequestFor('post', 'excluir-plano-aula-aee')) {
             $this->appendResponse($this->excluirPlanoAula());
-        } else if ($this->isRequestFor('post', 'editar-plano-aula-aee')) {
+        } elseif ($this->isRequestFor('post', 'editar-plano-aula-aee')) {
             $this->appendResponse($this->editarPlanoAula());
-        } else if ($this->isRequestFor('post', 'novo-plano-aula-aee')) {
+        } elseif ($this->isRequestFor('post', 'novo-plano-aula-aee')) {
             $this->appendResponse($this->criarPlanoAula());
-        } else if ($this->isRequestFor('get', 'get-objetivos-aprendizagem')) {
+        } elseif ($this->isRequestFor('get', 'get-objetivos-aprendizagem')) {
             $this->appendResponse($this->getObjetivosAprendizagem());
-        } else if ($this->isRequestFor('post', 'verificar-plano-aula-aee-sendo-usado-conteudo')) {
+        } elseif ($this->isRequestFor('post', 'verificar-plano-aula-aee-sendo-usado-conteudo')) {
             $this->appendResponse($this->verificarPlanoAulaSendoByConteudo());
         }
     }

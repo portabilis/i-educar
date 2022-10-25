@@ -111,6 +111,7 @@ return new class extends clsCadastro
         $this->campoOculto('id', $this->id);
         $this->campoOculto('planejamento_aula_aee_id', $this->id);
         $this->campoOculto('obrigatorio_conteudo', $obrigatorioConteudoAee);
+        $this->campoOculto('conteudos_ids', $this->conteudos_ids);        
         $this->inputsHelper()->dynamic('dataInicial', ['required' => $obrigatorio]);    // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('dataFinal', ['required' => $obrigatorio]);      // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado]);
