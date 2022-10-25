@@ -218,8 +218,6 @@ class LegacyCreateTestsCommand extends Command
             'file_check_just_pdf.php',
             'educar_arruma_nota_avaliacao.php',
             'educar_exemplar_emprestimo_cad.php',
-            'educar_servidor_nivel_cad.php',
-            'educar_subniveis_cad.php',
             'educar_coffebreak_tipo_lst.php',
             'transporte_itinerario_del.php',
             'educar_turma_cad.php',

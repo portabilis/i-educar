@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class NotificationType extends Model
 {
@@ -11,12 +12,19 @@ class NotificationType extends Model
     public const EXPORT_STUDENT = 3;
     public const EXPORT_TEACHER = 4;
 
+    public $timestamps = false;
+
     /**
      * @var string
      */
     protected $table = 'public.notification_type';
 
     protected $fillable = [
-        'name',
+        'name'
     ];
+
+    public function notifications(): HasMany
+    {
+        return $this->hasMany(Notification::class, 'type_id');
+    }
 }

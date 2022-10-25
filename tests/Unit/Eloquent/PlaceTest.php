@@ -9,13 +9,13 @@ use Tests\EloquentTestCase;
 class PlaceTest extends EloquentTestCase
 {
     protected $relations = [
-        'city' => City::class,
+        'city' => City::class
     ];
 
     /**
      * @return string
      */
-    protected function getEloquentModelName()
+    protected function getEloquentModelName(): string
     {
         return Place::class;
     }

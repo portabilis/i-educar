@@ -523,9 +523,7 @@ class LegacySchoolClass extends Model
     /**
      * Retorna o turno da turma.
      *
-     * Relação com turma_turno.
-     *
-     * @return bool | string
+     * @return BelongsTo
      */
     public function period()
     {

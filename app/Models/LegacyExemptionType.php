@@ -45,7 +45,7 @@ class LegacyExemptionType extends LegacyModel
         'active' => 'ativo'
     ];
 
-    public function discipline_exemptions(): HasMany
+    public function disciplineExemptions(): HasMany
     {
         return $this->hasMany(LegacyDisciplineExemption::class, 'ref_cod_tipo_dispensa');
     }

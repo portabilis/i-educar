@@ -11,6 +11,8 @@ use Tests\EloquentTestCase;
 
 class LegacyEnrollmentTest extends EloquentTestCase
 {
+    private LegacyEnrollment $legacyEnrollment;
+
     /**
      * @var array
      */
@@ -19,6 +21,7 @@ class LegacyEnrollmentTest extends EloquentTestCase
         'schoolClass' => LegacySchoolClass::class,
         'period' => LegacyPeriod::class,
         'createdBy' => LegacyUser::class,
+        'updatedBy' => LegacyUser::class,
     ];
 
     /**
@@ -27,5 +30,42 @@ class LegacyEnrollmentTest extends EloquentTestCase
     protected function getEloquentModelName()
     {
         return LegacyEnrollment::class;
+    }
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->legacyEnrollment = $this->createNewModel();
+    }
+
+    /** @test */
+    public function getRegistrationIdAttribute()
+    {
+        $this->assertEquals($this->legacyEnrollment->getRegistrationIdAttribute(), $this->legacyEnrollment->ref_cod_matricula);
+    }
+
+    /** @test */
+    public function getStudentNameAttribute()
+    {
+        $this->assertEquals($this->legacyEnrollment->getStudentNameAttribute(), $this->legacyEnrollment->registration->student->person->nome);
+    }
+
+    /** @test */
+    public function getDateAttribute()
+    {
+        $this->assertEquals($this->legacyEnrollment->getDateAttribute(), $this->legacyEnrollment->data_enturmacao);
+    }
+
+    /** @test */
+    public function getDateDepartedAttribute()
+    {
+        $this->assertEquals($this->legacyEnrollment->getDateDepartedAttribute(), $this->legacyEnrollment->data_exclusao);
+    }
+
+    /** @test */
+    public function getSchoolClassIdAttribute()
+    {
+        $this->assertEquals($this->legacyEnrollment->getSchoolClassIdAttribute(), $this->legacyEnrollment->ref_cod_turma);
     }
 }

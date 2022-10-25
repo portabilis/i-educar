@@ -20,12 +20,14 @@ class Place extends Model
         'complement',
         'neighborhood',
         'postal_code',
+        'latitude',
+        'longitude'
     ];
 
     /**
      * @return BelongsTo
      */
-    public function city()
+    public function city(): BelongsTo
     {
         return $this->belongsTo(City::class);
     }
