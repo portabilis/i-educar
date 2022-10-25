@@ -773,34 +773,22 @@ return new class extends clsCadastro {
           $selectOptionsBanco = array_replace([null => 'Selecione'], $selectOptionsBanco);
           $this->codigo = is_array($conta_bancaria) ? $conta_bancaria['ref_cod_banco'] : null;
           
-         //Lista de Agências Bancarias
-         $this->campoLista('ref_cod_banco','Banco',$selectOptionsBanco,$this->ref_cod_banco,null, null, null, null, null, false);
+          $this->campoLista('ref_cod_banco','Banco',$selectOptionsBanco,$this->ref_cod_banco,null, null, null, null, null, false);
+           
+          $this->campoNumero('agencia', 'Agência', $this->agencia, '50','50', false);
+          $this->campoNumero('conta', 'Conta', $this->conta, '50','50', false);
+          //$this->campoNumero('tipo_conta', 'Tipo da Conta',$this->tipo_conta,'50','3',false, null, null, str_pad($this->conta,3,0));
+          $op_tipo = [
+              'required' => false,
+              'label' => 'Tipo da Conta',
+              'placeholder' => '',
+              'value' => $this->tipo_conta,
+              'max_length' => 3,
+              'str_pad' => 3,
+          ];
+          $this->inputsHelper()->integer('tipo_conta',$op_tipo);
+        
 
-         //Número da Agência Bancaria  
-         if($this->agencia == ''){
-             $this->campoNumero('agencia', 'Agência', $this->agencia, '50','6', false);
-         }else{
-           $this->agencia = str_pad((string)$this->agencia, 6, '0', STR_PAD_LEFT);
-           $this->campoNumero('agencia', 'Agência', $this->agencia, '50','6', false);
-         }
- 
-          //Número da Conta Bancaria
-         if($this->conta == ''){
-             $this->campoNumero('conta', 'Conta', $this->conta, '50','15', false);
- 
-         }else{
-           $this->conta = str_pad((string)$this->conta, 15, '0', STR_PAD_LEFT);
-           $this->campoNumero('conta', 'Conta', $this->conta, '50','15', false);
-           }
-         
-           //Tipo da conta com um check pro campo vazio, se não ele preenche com 0
-         if($this->tipo_conta == ''){
-             $this->campoNumero('tipo_conta', 'Tipo da Conta',$this->tipo_conta,'50','3',false);
-         }else{
-           $this->tipo_conta = str_pad((string)$this->tipo_conta, 3, '0', STR_PAD_LEFT);
-           $this->campoNumero('tipo_conta', 'Tipo da Conta',$this->tipo_conta,'50','3',false);
-         }
-    
         $fileService = new FileService(new UrlPresigner);
         $files = $this->cod_pessoa_fj ? $fileService->getFiles(LegacyIndividual::find($this->cod_pessoa_fj)) : [];
         $this->addHtml(view('uploads.upload', ['files' => $files])->render());

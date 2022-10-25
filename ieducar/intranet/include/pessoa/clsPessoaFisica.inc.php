@@ -8,7 +8,7 @@ class clsPessoaFisica extends clsPessoaFj
     public $data_nasc;
     public $sexo;
     public $idpes_mae;
-    public $idpes_pai;
+    public $idpes_pai; 
     public $idpes_responsavel;
     public $idesco;
     public $ideciv;

@@ -275,7 +275,7 @@ class clsFisica
             }
             if (is_numeric($this->idesco)) {
                 $campos .= ', idesco';
-                $valores .= ", '$this->idesco' ";
+                $valores .= ", '$this->idesco' "; 
             }
             if (is_numeric($this->ideciv)) {
                 $campos .= ', ideciv';

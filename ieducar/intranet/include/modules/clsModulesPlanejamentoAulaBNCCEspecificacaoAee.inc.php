@@ -93,35 +93,6 @@ class clsModulesPlanejamentoAulaBNCCEspecificacaoAee extends Model {
     }
 
     /**
-     * Retorna o ID do planejamento pelo ID do conteudo passado via parâmetro
-     *
-     * @return bool
-     */
-    public function getIdPlanejamentoAulaBNCCAee($id)
-    {
-
-        $db = new clsBanco();
-
-        $sql = "SELECT DISTINCT 
-        pabe.planejamento_aula_bncc_aee_id
-        FROM modules.planejamento_aula_bncc_especificacao_aee as pabe  
-        JOIN modules.planejamento_aula_bncc_aee as pab
-            ON (pab.id = pabe.planejamento_aula_bncc_aee_id)
-        JOIN modules.planejamento_aula_aee as pa
-            ON (pa.id = pab.planejamento_aula_aee_id)
-           WHERE pa.id = $id";
-
-        $db->Consulta($sql);
-
-        while ($db->ProximoRegistro()) {
-            $tupla = $db->Tupla();
-            $resultado[] = $tupla;
-        }
-
-        return $resultado;
-    }
-
-    /**
      * Lista relacionamentos entre BNCC e o plano de aula
      * Através de um array de PABE
      *
@@ -205,28 +176,6 @@ class clsModulesPlanejamentoAulaBNCCEspecificacaoAee extends Model {
      * @return array
      */
     public function existe () {
-        return false;
-    }
-
-    /**
-     * Exclui um registro
-     *
-     * @return bool
-     */
-    public function excluirBNCCEspecificacaoPlanejamentoAulaAee ($planejamento_aula_bncc_aee_id) {
-        if (is_numeric($planejamento_aula_bncc_aee_id)) {
-            $db = new clsBanco();
-
-            $db->Consulta("
-                DELETE FROM
-                    {$this->_tabela}
-                WHERE
-                    planejamento_aula_bncc_aee_id = $planejamento_aula_bncc_aee_id
-            ");
-
-            return true;
-        }
-
         return false;
     }
 

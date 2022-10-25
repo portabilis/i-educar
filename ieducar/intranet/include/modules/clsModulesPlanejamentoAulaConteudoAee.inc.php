@@ -187,28 +187,6 @@ class clsModulesPlanejamentoAulaConteudoAee extends Model {
      *
      * @return bool
      */
-    public function excluirConteudoPlanejamentoAulaAee () {
-        if (is_numeric($this->planejamento_aula_aee_id)) {
-            $db = new clsBanco();
-
-            $db->Consulta("
-                DELETE FROM
-                    {$this->_tabela}
-                WHERE
-                    planejamento_aula_aee_id = '{$this->planejamento_aula_aee_id}'
-            ");
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Exclui um registro
-     *
-     * @return bool
-     */
     public function excluir () {
         if (is_numeric($this->planejamento_aula_aee_id) && is_string($this->conteudo)) {
             $db = new clsBanco();

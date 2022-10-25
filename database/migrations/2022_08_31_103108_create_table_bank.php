@@ -28,6 +28,6 @@ class CreateTableBank extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cadastro.banco')->onCascade('cascade');
+        Schema::dropIfExists('cadastro.banco');
     }
 }
