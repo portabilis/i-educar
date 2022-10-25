@@ -5,15 +5,21 @@ namespace Tests\Unit\Eloquent;
 use App\Models\LegacyCourse;
 use App\Models\LegacyEnrollment;
 use App\Models\LegacyLevel;
+use App\Models\LegacyPeriod;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolClass;
+use App\Models\LegacySchoolClassGrade;
+use App\Models\LegacySchoolClassStage;
 use Database\Factories\LegacyEnrollmentFactory;
 use Database\Factories\LegacyRegistrationFactory;
 use Database\Factories\LegacySchoolClassFactory;
+use Illuminate\Support\Collection;
 use Tests\EloquentTestCase;
 
 class LegacySchoolClassTest extends EloquentTestCase
 {
+    private LegacySchoolClass $schoolClass;
+
     /**
      * @var array
      */
@@ -21,7 +27,10 @@ class LegacySchoolClassTest extends EloquentTestCase
         'course' => LegacyCourse::class,
         'grade' => LegacyLevel::class,
         'school' => LegacySchool::class,
+        'period' => LegacyPeriod::class,
         'enrollments' => [LegacyEnrollment::class],
+        'schoolClassStages' => [LegacySchoolClassStage::class],
+        'multigrades' => [LegacySchoolClassGrade::class],
     ];
 
     /**
@@ -30,6 +39,13 @@ class LegacySchoolClassTest extends EloquentTestCase
     protected function getEloquentModelName()
     {
         return LegacySchoolClass::class;
+    }
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->schoolClass = $this->createNewModel();
     }
 
     public function testCreateUsingEloquent()
@@ -85,5 +101,39 @@ class LegacySchoolClassTest extends EloquentTestCase
         ]);
 
         $this->assertEquals(1, $schoolClass->getTotalEnrolled());
+    }
+
+    /** @test */
+    public function getVisibleAttribute()
+    {
+        $this->assertEquals($this->schoolClass->visivel, $this->schoolClass->getVisibleAttribute());
+    }
+
+    /** @test */
+    public function getExemptedDisciplineIdAttribute()
+    {
+        $this->assertEquals($this->schoolClass->ref_cod_disciplina_dispensada, $this->schoolClass->getExemptedDisciplineIdAttribute());
+    }
+
+    /** @test */
+    public function getActiveEnrollments()
+    {
+        $this->assertInstanceOf(Collection::class, $this->schoolClass->getActiveEnrollments());
+    }
+
+    /** @test */
+    public function denyEnrollmentsWhenNoVacancy()
+    {
+        $this->schoolClass->schoolGrade = null;
+
+        $this->assertEquals(true, $this->schoolClass->denyEnrollmentsWhenNoVacancy());
+    }
+
+    /** @test */
+    public function getClassTime()
+    {
+        $this->schoolClass->hora_inicial = null;
+
+        $this->assertEquals(0, $this->schoolClass->getClassTime());
     }
 }

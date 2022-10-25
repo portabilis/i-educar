@@ -24,11 +24,26 @@ class StateTest extends EloquentTestCase
 
     public function testFindByAbbreviation()
     {
-        $state = $this->createNewModel();
-        $stateReturn = State::findByAbbreviation($state->abbreviation);
-
+        $stateReturn = State::findByAbbreviation($this->model->abbreviation);
         $this->assertInstanceOf(State::class, $stateReturn);
         $this->assertArrayHasKey('abbreviation', $stateReturn->toArray());
-        $this->assertEquals($stateReturn->abbreviation, $state->abbreviation);
+        $this->assertEquals($stateReturn->abbreviation, $this->model->abbreviation);
+    }
+
+    public function testGetListKeyAbbreviation(): void
+    {
+        $list = State::getListKeyAbbreviation();
+
+        $except = State::orderBy('name')->pluck('name', 'abbreviation');
+
+        $this->assertJsonStringEqualsJsonString($except, $list);
+    }
+
+    public function testGetNameByAbbreviation(): void
+    {
+        $name = State::getNameByAbbreviation($this->model->abbreviation);
+        $expect = $this->model->name;
+
+        $this->assertEquals($expect, $name);
     }
 }

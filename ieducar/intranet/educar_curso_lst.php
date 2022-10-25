@@ -65,8 +65,7 @@ return new class extends clsListagem {
             ->select(['cod_nivel_ensino', 'nm_nivel', 'ref_cod_instituicao'])
             ->where('ativo', 1)
             ->orderBy('nm_nivel', 'ASC')
-            ->get()
-            ->toArray();
+            ->get();
 
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
@@ -104,7 +103,7 @@ return new class extends clsListagem {
             ->limit($this->limite)
             ->offset($this->offset)
             ->orderBy('nm_tipo', 'ASC');
-        $lista = $query->get()->toArray();
+        $lista = $query->get();
 
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
@@ -176,10 +175,10 @@ return new class extends clsListagem {
         // monta a lista
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
-                $det_ref_cod_nivel_ensino = LegacyEducationLevel::findOrFail($registro['ref_cod_nivel_ensino'])?->toArray();
+                $det_ref_cod_nivel_ensino = LegacyEducationLevel::findOrFail($registro['ref_cod_nivel_ensino'])?->getAttributes();
                 $registro['ref_cod_nivel_ensino'] = $det_ref_cod_nivel_ensino['nm_nivel'];
 
-                $det_ref_cod_tipo_ensino = LegacyEducationType::find($registro['ref_cod_tipo_ensino'])?->toArray();
+                $det_ref_cod_tipo_ensino = LegacyEducationType::find($registro['ref_cod_tipo_ensino'])?->getAttributes();
                 $registro['ref_cod_tipo_ensino'] = $det_ref_cod_tipo_ensino['nm_tipo'];
 
                 $obj_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);

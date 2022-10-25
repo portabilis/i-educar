@@ -15,8 +15,13 @@ class SchoolInepTest extends EloquentTestCase
     /**
      * @return string
      */
-    protected function getEloquentModelName()
+    protected function getEloquentModelName(): string
     {
         return SchoolInep::class;
+    }
+
+    public function testNumberAttribute(): void
+    {
+        $this->assertEquals($this->model->cod_escola_inep, $this->model->number);
     }
 }

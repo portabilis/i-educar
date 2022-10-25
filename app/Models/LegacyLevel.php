@@ -40,11 +40,6 @@ class LegacyLevel extends LegacyGrade
     ];
 
     /**
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
      * @return string
      */
     public function getNameAttribute()

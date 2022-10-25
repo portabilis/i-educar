@@ -7,6 +7,10 @@ use App\Models\LegacyModel;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
@@ -88,6 +92,7 @@ abstract class EloquentTestCase extends TestCase
         $model = $this->instanceNewEloquentModel();
 
         $model->fill($this->getAttributesForCreate());
+
         $model->save();
 
         return $model;
@@ -175,22 +180,28 @@ abstract class EloquentTestCase extends TestCase
      */
     public function testRelationships()
     {
-        $factory = Factory::factoryForModel(
-            $this->getEloquentModelName()
-        );
-
         if (empty($this->relations)) {
             $this->assertTrue(true);
         }
 
+        $factory = Factory::factoryForModel(
+            $this->getEloquentModelName()
+        );
+
         foreach ($this->relations as $relation => $class) {
-            if (is_array($class)) {
+            $type = $this->model->{$relation}();
+
+            if ($type instanceof HasMany || $type instanceof HasOne || $type instanceof BelongsToMany) {
                 $method = 'has' . ucfirst($relation);
                 $model = $factory->{$method}()->create();
 
-                $this->assertCount(1, $model->$relation);
-                $this->assertInstanceOf($class[0], $model->$relation->first());
-            } else {
+                if (is_array($class)) {
+                    $this->assertCount(1, $model->{$relation});
+                    $this->assertInstanceOf($class[0], $model->{$relation}->first());
+                } else {
+                    $this->assertInstanceOf($class, $model->{$relation});
+                }
+            } elseif ($type instanceof BelongsTo) {
                 $model = $factory->create();
                 $this->assertInstanceOf($class, $model->{$relation});
             }

@@ -24,7 +24,7 @@ class State extends Model
     /**
      * @return BelongsTo
      */
-    public function country()
+    public function country(): BelongsTo
     {
         return $this->belongsTo(Country::class);
     }
@@ -32,17 +32,15 @@ class State extends Model
     /**
      * @return HasMany
      */
-    public function cities()
+    public function cities(): HasMany
     {
         return $this->hasMany(City::class);
     }
 
     /**
      * @param string $abbreviation
-     *
-     * @return $this
      */
-    public static function findByAbbreviation($abbreviation)
+    public static function findByAbbreviation($abbreviation): self|null
     {
         return static::query()->where('abbreviation', $abbreviation)->first();
     }
@@ -50,7 +48,7 @@ class State extends Model
     /**
      * @return Collection
      */
-    public static function getListKeyAbbreviation()
+    public static function getListKeyAbbreviation(): Collection
     {
         return static::query()->orderBy('name')->pluck('name', 'abbreviation');
     }
@@ -60,7 +58,7 @@ class State extends Model
      *
      * @return string
      */
-    public static function getNameByAbbreviation($abbreviation)
+    public static function getNameByAbbreviation($abbreviation): string
     {
         $state = static::findByAbbreviation($abbreviation);
 

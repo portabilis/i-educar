@@ -16,7 +16,9 @@ class LegacyRoundingTable extends Model
      * @var array
      */
     protected $fillable = [
-        'instituicao_id', 'nome', 'tipo_nota'
+        'instituicao_id',
+        'nome',
+        'tipo_nota'
     ];
 
     /**

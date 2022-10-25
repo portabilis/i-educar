@@ -23,7 +23,7 @@ class PersonHasPlace extends Pivot
     /**
      * @return BelongsTo
      */
-    public function place()
+    public function place(): BelongsTo
     {
         return $this->belongsTo(Place::class);
     }
@@ -31,7 +31,7 @@ class PersonHasPlace extends Pivot
     /**
      * @return BelongsTo
      */
-    public function person()
+    public function person(): BelongsTo
     {
         return $this->belongsTo(Person::class);
     }
