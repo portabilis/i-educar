@@ -192,7 +192,6 @@ class PlanejamentoAulaController extends ApiCoreController
         $bnccEspecificacoes = $this->getRequest()->bnccEspecificacoes;
         $recursos_didaticos = $this->getRequest()->recursos_didaticos;
         $registro_adaptacao = $this->getRequest()->registro_adaptacao;
-        $cod_escola = $this->getRequest()->ref_cod_escola;
         $servidor_id = Auth::id();
 
         $podeRegistrar = $this->verificarDatasTurma($faseEtapa, $turma, $data_inicial, $data_final, $cod_escola);

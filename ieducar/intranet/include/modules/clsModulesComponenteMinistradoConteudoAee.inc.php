@@ -192,30 +192,6 @@ class clsModulesComponenteMinistradoConteudoAee extends Model
     }
 
     /**
-     * Exclui um registro
-     *
-     * @return bool
-     */
-    public function excluirDiferencaConteudo()
-    {
-        if (is_numeric($this->conteudo_ministrado_aee_id) && is_numeric($this->planejamento_aula_conteudo_aee_id)) {
-            $db = new clsBanco();
-
-            $db->Consulta("
-                DELETE FROM
-                    {$this->_tabela}
-                WHERE
-                conteudo_ministrado_aee_id = '{$this->conteudo_ministrado_aee_id}' 
-                AND planejamento_aula_conteudo_aee_id = '{$this->planejamento_aula_conteudo_aee_id}'
-            ");
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * Retorna array com duas arrays, uma com os conteúdos a serem cadastrados e a outra com os que devem ser removidos
      *
      * @return array

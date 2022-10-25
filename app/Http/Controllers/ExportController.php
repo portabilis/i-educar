@@ -157,13 +157,7 @@ class ExportController extends Controller
             ];
         }
 
-        if ($request->input('ref_cod_escola')) {
-            $data['filters'][] = [
-                'column' => $table . '.school_id',
-                'operator' => 'in',
-                'value' => [$request->input('ref_cod_escola')]
-            ];
-        } elseif ($request->user()->isSchooling()) {
+       elseif ($request->user()->isSchooling()) {
             $data['filters'][] = [
                 'column' => $table . '.school_id',
                 'operator' => 'in',

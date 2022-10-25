@@ -585,4 +585,3 @@ return new class extends clsCadastro {
         $this->processoAp = '559';
     }
 };
-
