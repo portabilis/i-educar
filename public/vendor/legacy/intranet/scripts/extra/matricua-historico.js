@@ -39,13 +39,15 @@ window.onload = function () {
     });
   }
 
-  const matriculaSituacao = document.getElementById('matricula_situacao').value;
-  const deletationDate = document.getElementById('data_exclusao');
+  $j('#matricula_situacao').trigger('chosen:updated');
+
+
 
   const validationDateExclutionRule = function () {
-    const deletationDateValue = deletationDate.value;
+    const matriculaSituacao = $j('#matricula_situacao').val();
+    const deletationDate = $j('#data_exclusao').val();
 
-    if (matriculaSituacao === 'remanejado' && typeof deletationDateValue === 'string' && deletationDateValue === '') {
+    if (matriculaSituacao === 'remanejado' && typeof deletationDate === 'string' && deletationDate === '') {
       defaultModal('A data de saída é obrigatória quando é marcado o remanejamento.')
       return false;
     }
@@ -59,7 +61,8 @@ window.onload = function () {
   }
 
   const valitadeDateExclution = function () {
-    document.getElementById('matricula_situacao').trigger('chosen:updated');
+    $j('#matricula_situacao').trigger('chosen:updated');
+    document.getElementById('matricula_situacao');
     if (document.getElementById('matricula_situacao').value === 'remanejado') {
       makeRequired('data_exclusao');
       return;
