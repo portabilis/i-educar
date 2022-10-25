@@ -14,7 +14,7 @@ class AddColumnsChecaQuadroHorarioOnInstituicao extends Migration
     public function up()
     {
         Schema::table('pmieducar.instituicao', function (Blueprint $table) {
-            $table->boolean('checa_qtd_aulas_quadro_horario')->default(true);
+            $table->boolean('checa_qtd_aulas_quadro_horario')->default(false);
         });
     }
 
