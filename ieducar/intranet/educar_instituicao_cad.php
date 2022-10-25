@@ -63,6 +63,7 @@ return new class extends clsCadastro {
     public $obrigatorio_registro_diario_atividade_aee;
     public $utilizar_planejamento_aula_aee;
     public $checa_qtd_aulas_quadro_horario;
+    public $utiliza_sabado_alternado;
 
     public function Inicializar()
     {
@@ -123,6 +124,7 @@ return new class extends clsCadastro {
         $this->obrigatorio_registro_diario_atividade_aee = dbBool($this->obrigatorio_registro_diario_atividade_aee);
         $this->utilizar_planejamento_aula_aee = dbBool($this->utilizar_planejamento_aula_aee);
         $this->checa_qtd_aulas_quadro_horario = dbBool($this->checa_qtd_aulas_quadro_horario);
+        $this->utiliza_sabado_alternado = dbBool($this->utiliza_sabado_alternado);
 
         return $retorno;
     }
@@ -441,6 +443,16 @@ return new class extends clsCadastro {
             false
         );
 
+        $this->campoCheck(
+            'utiliza_sabado_alternado',
+            'Utiliza sábado alternado?',
+            $this->utiliza_sabado_alternado,
+            null,
+            false,
+            false,
+            false
+        );
+
         $scripts = ['/modules/Cadastro/Assets/Javascripts/Instituicao.js'];
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
         $styles = ['/modules/Cadastro/Assets/Stylesheets/Instituicao.css'];
@@ -493,7 +505,8 @@ return new class extends clsCadastro {
             $this->permitir_planeja_conteudos_aee,
             $this->obrigatorio_registro_diario_atividade_aee,
             $this->utilizar_planejamento_aula_aee,
-            $this->checa_qtd_aulas_quadro_horario
+            $this->checa_qtd_aulas_quadro_horario,
+            $this->utiliza_sabado_alternado
         );
         $obj->data_base_remanejamento = Portabilis_Date_Utils::brToPgSQL($this->data_base_remanejamento);
         $obj->data_base_transferencia = Portabilis_Date_Utils::brToPgSQL($this->data_base_transferencia);
@@ -536,6 +549,7 @@ return new class extends clsCadastro {
         $obj->obrigatorio_registro_diario_atividade_aee = !is_null($this->obrigatorio_registro_diario_atividade_aee);
         $obj->utilizar_planejamento_aula_aee = !is_null($this->utilizar_planejamento_aula_aee);
         $obj->checa_qtd_aulas_quadro_horario = !is_null($this->checa_qtd_aulas_quadro_horario);
+        $obj->utiliza_sabado_alternado = !is_null($this->utiliza_sabado_alternado);
 
         $editou = $obj->edita();
 

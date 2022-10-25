@@ -52,11 +52,13 @@ class FrequenciaController extends ApiCoreController
         if (is_numeric($turmaId)) {
             $clsInstituicao = new clsPmieducarInstituicao();
             $instituicao = $clsInstituicao->primeiraAtiva();
+            $utilizaSabadoAlternado = $instituicao['utiliza_sabado_alternado'];
 
             $isOnlyProfessor = Portabilis_Business_Professor::isOnlyProfessor($instituicao['cod_instituicao'], $userId);
+            $diaSemana =  Carbon::createFromFormat('d/m/Y', $dataFrequencia)->dayOfWeek;
 
-            if ($isOnlyProfessor) {
-                $diaSemana =  Carbon::createFromFormat('d/m/Y', $dataFrequencia)->dayOfWeek;
+
+            if ($isOnlyProfessor && !$utilizaSabadoAlternado) {
                 $diaSemanaConvertido = $this->converterDiaSemanaQuadroHorario($diaSemana);
 
                 $quadroHorario = Portabilis_Business_Professor::quadroHorarioAlocado($turmaId, $userId, $diaSemanaConvertido);

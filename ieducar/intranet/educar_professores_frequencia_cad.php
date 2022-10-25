@@ -472,6 +472,7 @@ return new class extends clsCadastro {
         $clsInstituicao = new clsPmieducarInstituicao();
         $instituicao = $clsInstituicao->primeiraAtiva();
         $checaQtdAulasQuadroHorario = $instituicao['checa_qtd_aulas_quadro_horario'];
+        $utilizaSabadoAlternado = $instituicao['utiliza_sabado_alternado'];
 
         $obj_servidor = new clsPmieducarServidor(
             $servidor_id,
@@ -485,12 +486,16 @@ return new class extends clsCadastro {
         );
 
         $isProfessor = $obj_servidor->isProfessor();
+        $diaSemana =  Carbon::parse($data_cadastro)->dayOfWeek;
+
+        if ($utilizaSabadoAlternado && $diaSemana == 6) {
+            $checaQtdAulasQuadroHorario = false;
+        }
 
         if ($checaQtdAulasQuadroHorario && $isProfessor) {
-            $diaSemana =  Carbon::parse($data_cadastro)->dayOfWeek;
             $diaSemanaConvertido = $this->converterDiaSemanaQuadroHorario($diaSemana);
-            $quadroHorario = Portabilis_Business_Professor::quadroHorarioAlocado($this->ref_cod_turma, $servidor_id, $diaSemanaConvertido);
             $verificacaoQuadroHorario = false;
+            $quadroHorario = Portabilis_Business_Professor::quadroHorarioAlocado($this->ref_cod_turma, $servidor_id, $diaSemanaConvertido);
 
             if(($tipo_presenca == 1 && $diaSemanaConvertido != 1) || ($tipo_presenca == 2 && (count($quadroHorario) > 0 || $diaSemanaConvertido == 7))) {
                 $verificacaoQuadroHorario = true;
