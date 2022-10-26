@@ -25,7 +25,7 @@ class Registration extends Model
      *
      * @return RegistrationBuilder
      */
-    public function newEloquentBuilder($query)
+    public function newEloquentBuilder($query): RegistrationBuilder
     {
         return new RegistrationBuilder($query);
     }
