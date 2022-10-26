@@ -2,9 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\RequiredEnrollmentConcomitantItinerary;
-use App\Rules\RequiredEnrollmentItineraryComposition;
-use App\Rules\RequiredEnrollmentItineraryCourse;
 use iEducar\Modules\Educacenso\Model\TipoItinerarioFormativo;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -24,11 +21,42 @@ class EnrollmentFormativeItineraryRequest extends FormRequest
         return [
             'itinerary_type' => 'nullable|array|max:4',
             'itinerary_type.*' => ['required', 'integer', Rule::in($itineraryTypes)],
-            'itinerary_composition' => [new RequiredEnrollmentItineraryComposition(), 'nullable', 'array', 'max:4'],
+            'itinerary_composition' => ['nullable', 'array', 'max:4'],
             'itinerary_composition.*' => ['required', 'integer', Rule::in($itineraryCompositions)],
-            'itinerary_course' => [new RequiredEnrollmentItineraryCourse($this->get('itinerary_composition')), 'nullable', 'in:1,2'],
-            'concomitant_itinerary' => [new RequiredEnrollmentConcomitantItinerary($this->get('itinerary_composition')), 'nullable', 'boolean'],
+            'itinerary_course' => ['nullable', 'in:1,2'],
+            'concomitant_itinerary' => ['nullable', 'boolean'],
         ];
+    }
+
+    protected function getValidatorInstance()
+    {
+        $validator = parent::getValidatorInstance();
+
+        $validator->sometimes(
+            'itinerary_composition',
+            'required',
+            function ($input) {
+                return in_array(TipoItinerarioFormativo::ITINERARIO_INTEGRADO, $input->itinerary_type ?: []);
+            }
+        );
+
+        $validator->sometimes(
+            'itinerary_course',
+            'required',
+            function ($input) {
+                return in_array(TipoItinerarioFormativo::FORMACAO_TECNICA, $input->itinerary_composition ?: []);
+            }
+        );
+
+        $validator->sometimes(
+            'concomitant_itinerary',
+            'required',
+            function ($input) {
+                return in_array(TipoItinerarioFormativo::FORMACAO_TECNICA, $input->itinerary_composition ?: []);
+            }
+        );
+
+        return $validator;
     }
 
     public function messages()
@@ -36,6 +64,9 @@ class EnrollmentFormativeItineraryRequest extends FormRequest
         return [
             'itinerary_type.max' => 'O campo <b>Tipo do itinerário formativo</b> não pode ter mais de 4 opções selecionadas.',
             'itinerary_composition.max' => 'O campo <b>Composição do itinerário formativo integrado</b> não pode ter mais de 4 opções selecionadas.',
+            'itinerary_composition.required' => 'O campo <b>Tipo do curso do itinerário de formação técnica e profissional</b> deve ser preenchido quando o campo <b>Composição do itinerário formativo integrado</b> for <b>Formação técnica profissional</b>.',
+            'itinerary_course.required' => 'O campo <b>Tipo do curso do itinerário de formação técnica e profissional</b> deve ser preenchido quando o campo <b>Composição do itinerário formativo integrado</b> for <b>Formação técnica profissional</b>.',
+            'concomitant_itinerary.required' => 'O campo <b>Itinerário concomitante intercomplementar à matrícula de formação geral básica</b> deve ser preenchido quando o campo <b>Composição do itinerário formativo integrado</b> for <b>Formação técnica profissional</b>.',
         ];
     }
 
