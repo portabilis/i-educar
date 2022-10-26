@@ -15,7 +15,7 @@ class LegacyTransferTypeTest extends EloquentTestCase
     /**
      * @return string
      */
-    protected function getEloquentModelName()
+    protected function getEloquentModelName(): string
     {
         return LegacyTransferType::class;
     }
