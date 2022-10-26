@@ -1,5 +1,5 @@
 <?php
-
+ 
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -40,6 +40,7 @@ class StudentsExport extends FormRequest
             'ref_cod_escola' => 'nullable|numeric',
             'ref_cod_curso' => 'nullable|numeric',
             'ref_cod_serie' => 'nullable|numeric',
+            'ref_cod_turma' => 'nullable|numeric',
         ];
     }
 
@@ -58,6 +59,7 @@ class StudentsExport extends FormRequest
             'ref_cod_escola' => 'school_id',
             'ref_cod_curso' => 'course_id',
             'ref_cod_serie' => 'level_id',
+            'ref_cod_turma' => 'school_class_id',
         ];
 
         $params = $this->all();

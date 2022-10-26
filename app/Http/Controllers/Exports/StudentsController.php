@@ -25,3 +25,4 @@ class StudentsController extends Controller
         return Excel::download($export, 'alunos.xlsx');
     }
 }
+ 

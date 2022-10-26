@@ -79,19 +79,21 @@ class StudentRepositoryEloquent implements StudentRepository
                 }
             });
         }
-
+ 
         $year = $this->param($params, 'year');
         $schoolId = $this->param($params, 'school_id');
         $courseId = $this->param($params, 'course_id');
         $levelId = $this->param($params, 'level_id');
+        $school_class_id = $this->param($params, 'school_class_id');
 
         if (
             $year ||
             $schoolId ||
             $courseId ||
-            $levelId
+            $levelId ||
+            $school_class_id
         ) {
-            $query->whereHas('registrations', function ($query) use ($year, $schoolId, $courseId, $levelId) {
+            $query->whereHas('registrations', function ($query) use ($year, $schoolId, $courseId, $levelId,  $school_class_id) {
                 $query->whereNull('deleted_at')
                     ->where('status', RegistrationStatus::ONGOING);
 
@@ -110,8 +112,12 @@ class StudentRepositoryEloquent implements StudentRepository
                 if ($levelId) {
                     $query->where('level_id', $levelId);
                 }
+                if ($school_class_id) {
+                    $query->leftJoin('matricula_turma', 'matricula_turma.ref_cod_matricula', '=', 'registrations.id')->where('matricula_turma.ref_cod_turma', $school_class_id);
+                }
             });
         }
+       
 
         return $query->get();
     }

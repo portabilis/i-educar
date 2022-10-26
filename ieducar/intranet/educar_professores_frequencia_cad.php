@@ -7,6 +7,7 @@ use App\Services\CheckPostedDataService;
 use App\Services\iDiarioService;
 use App\Services\SchoolLevelsService;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
 
 return new class extends clsCadastro {
     public $id;
@@ -467,6 +468,41 @@ return new class extends clsCadastro {
         }
 
         $servidor_id = $this->pessoa_logada;
+
+        $clsInstituicao = new clsPmieducarInstituicao();
+        $instituicao = $clsInstituicao->primeiraAtiva();
+        $checaQtdAulasQuadroHorario = $instituicao['checa_qtd_aulas_quadro_horario'];
+
+        $obj_servidor = new clsPmieducarServidor(
+            $servidor_id,
+            null,
+            null,
+            null,
+            null,
+            null,
+            1,      //  Ativo
+            1,      //  Fixado na instituição de ID 1
+        );
+
+        $isProfessor = $obj_servidor->isProfessor();
+
+        if ($checaQtdAulasQuadroHorario && $isProfessor) {
+            $diaSemana =  Carbon::parse($data_cadastro)->dayOfWeek;
+            $diaSemanaConvertido = $this->converterDiaSemanaQuadroHorario($diaSemana);
+            $quadroHorario = Portabilis_Business_Professor::quadroHorarioAlocado($this->ref_cod_turma, $servidor_id, $diaSemanaConvertido);
+            $verificacaoQuadroHorario = false;
+
+            if(($tipo_presenca == 1 && $diaSemanaConvertido != 1) || ($tipo_presenca == 2 && (count($quadroHorario) > 0 || $diaSemanaConvertido == 7))) {
+                $verificacaoQuadroHorario = true;
+            }
+
+            if (!$verificacaoQuadroHorario) {
+                $this->mensagem = 'Cadastro não realizado, pois a data não está alocada no quadro de horário.<br>';
+                $this->simpleRedirect('educar_professores_frequencia_cad.php');
+            }
+        }
+
+
         $obj = new clsModulesFrequencia(
             null,
             null,
@@ -806,6 +842,21 @@ return new class extends clsCadastro {
         }
 
         return $this->_boletimServiceInstances[$matriculaId];
+    }
+
+    private function converterDiaSemanaQuadroHorario(int $diaSemana)
+    {
+        $arrDiasSemanaIeducar = [
+            0 => 1,
+            1 => 2,
+            2 => 3,
+            3 => 4,
+            4 => 5,
+            5 => 6,
+            6 => 7,
+        ];
+
+        return $arrDiasSemanaIeducar[$diaSemana];
     }
 
     public function Formular () {
