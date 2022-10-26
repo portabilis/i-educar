@@ -38,9 +38,9 @@ class RegistrationTest extends ViewTestCase
         //registration with father
         $individual2 = LegacyIndividualFactory::new()->create(['idpes_pai' => LegacyPersonFactory::new()]);
         $student2 = LegacyStudentFactory::new()->create(['ref_idpes' => $individual2]);
-        $model2 = $this->factory->forView($student2->cod_aluno)->make();
+        $this->factory->forView($student2->cod_aluno)->make();
 
-        $collection = $this->instanceNewViewModel()->doesntHaveFather()->whereIn('id', [$model1->id, $model2->id])->get();
+        $collection = $this->instanceNewViewModel()->doesntHaveFather()->get();
         $found = array_intersect_key($model1->getAttributes(), $collection->first()->getAttributes());
 
         $this->assertCount(1, $collection);
@@ -52,7 +52,7 @@ class RegistrationTest extends ViewTestCase
         $student = LegacyStudentFactory::new()->inactive()->create();
         $registration = $this->factory->forView($student->cod_aluno)->make();
 
-        $collection = $this->instanceNewViewModel()->studentIsActive()->whereIn('id', [$registration->id, $this->model->id])->get();
+        $collection = $this->instanceNewViewModel()->studentIsActive()->get();
 
         $this->assertCount(1, $collection);
     }
@@ -68,7 +68,7 @@ class RegistrationTest extends ViewTestCase
     public function testYear(): void
     {
         $registration = LegacyRegistrationFactory::new()->create(['ano'=>$this->model->year-1]);
-        $collection = $this->instanceNewViewModel()->year($this->model->year)->whereIn('id', [$registration->id, $this->model->id])->get();
+        $collection = $this->instanceNewViewModel()->year($this->model->year)->get();
 
         $this->assertCount(1, $collection);
     }
@@ -76,7 +76,7 @@ class RegistrationTest extends ViewTestCase
     public function testInProgress(): void
     {
         $registration = LegacyRegistrationFactory::new()->create(['aprovado'=> 1]);
-        $collection = $this->instanceNewViewModel()->inProgress()->whereIn('id', [$registration->id, $this->model->id])->get();
+        $collection = $this->instanceNewViewModel()->inProgress()->get();
 
         $this->assertCount(1, $collection);
     }
