@@ -166,7 +166,8 @@ class clsPmieducarInstituicao extends Model
             permitir_planeja_conteudos_aee,
             obrigatorio_registro_diario_atividade_aee,
             utilizar_planejamento_aula_aee,
-            checa_qtd_aulas_quadro_horario
+            checa_qtd_aulas_quadro_horario,
+            utiliza_sabado_alternado
         ';
 
         if (is_numeric($ref_usuario_cad)) {
