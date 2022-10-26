@@ -24,10 +24,10 @@ class EnrollmentFormativeItineraryRequest extends FormRequest
         return [
             'itinerary_type' => 'nullable|array|max:4',
             'itinerary_type.*' => ['required', 'integer', Rule::in($itineraryTypes)],
-            'itinerary_composition' => [new RequiredEnrollmentItineraryComposition(), 'array', 'max:4'],
+            'itinerary_composition' => [new RequiredEnrollmentItineraryComposition(), 'nullable', 'array', 'max:4'],
             'itinerary_composition.*' => ['required', 'integer', Rule::in($itineraryCompositions)],
-            'itinerary_course' => [new RequiredEnrollmentItineraryCourse($this->get('itinerary_composition')), 'in:1,2'],
-            'concomitant_itinerary' => [new RequiredEnrollmentConcomitantItinerary($this->get('itinerary_composition')), 'boolean'],
+            'itinerary_course' => [new RequiredEnrollmentItineraryCourse($this->get('itinerary_composition')), 'nullable', 'in:1,2'],
+            'concomitant_itinerary' => [new RequiredEnrollmentConcomitantItinerary($this->get('itinerary_composition')), 'nullable', 'boolean'],
         ];
     }
 
