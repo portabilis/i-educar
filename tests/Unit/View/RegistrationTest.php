@@ -38,9 +38,9 @@ class RegistrationTest extends ViewTestCase
         //registration with father
         $individual2 = LegacyIndividualFactory::new()->create(['idpes_pai' => LegacyPersonFactory::new()]);
         $student2 = LegacyStudentFactory::new()->create(['ref_idpes' => $individual2]);
-        $this->factory->forView($student2->cod_aluno)->make();
+        $model2 = $this->factory->forView($student2->cod_aluno)->make();
 
-        $collection = $this->instanceNewViewModel()->doesntHaveFather()->get();
+        $collection = $this->instanceNewViewModel()->doesntHaveFather()->whereIn('id', [$model1->id, $model2->id])->get();
         $found = array_intersect_key($model1->getAttributes(), $collection->first()->getAttributes());
 
         $this->assertCount(1, $collection);
