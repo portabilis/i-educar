@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Auth;
+
 class ComponenteMinistradoAeeController extends ApiCoreController
 {
     // public function verificarPlanoAulaSendoUsado()
@@ -44,6 +45,7 @@ class ComponenteMinistradoAeeController extends ApiCoreController
 
         if (is_numeric($componente_ministrado_aee_id)) {
             $obj = new clsModulesComponenteMinistradoAee($componente_ministrado_aee_id);
+
             return ['result' => $obj->excluir()];
         }
 
@@ -95,7 +97,7 @@ class ComponenteMinistradoAeeController extends ApiCoreController
         $podeEditar = $this->verificarDatasTurma($faseEtapa, $turma, $data_inicial, $data_final);
 
         if (!$podeEditar) {
-            return ["result" => "Edição não realizada, pois o intervalo de datas não se adequa as etapas da turma."];
+            return ['result' => 'Edição não realizada, pois o intervalo de datas não se adequa as etapas da turma.'];
             $this->simpleRedirect('educar_professores_planejamento_de_aula_aee_cad2.php');
         }
 
@@ -118,16 +120,16 @@ class ComponenteMinistradoAeeController extends ApiCoreController
 
             $editou = $obj->edita();
 
-            if ($editou)
+            if ($editou) {
                 return ['result' => 'Edição efetuada com sucesso.'];
+            }
         }
 
-        return ['result' => "Edição não realizada."];
+        return ['result' => 'Edição não realizada.'];
     }
 
     public function criarComponenteMinistradoAee()
     {
-
         $data_cadastro = $this->getRequest()->data;
         $hora_inicio = $this->getRequest()->hora_inicio;
         $hora_fim = $this->getRequest()->hora_fim;
@@ -136,8 +138,6 @@ class ComponenteMinistradoAeeController extends ApiCoreController
         $conteudos = $this->getRequest()->conteudos;
         $observacao = $this->getRequest()->observacao;
         $servidor_id = Auth::id();
-
-        die(dump($servidor_id));
 
         // $podeRegistrar = $this->verificarDatasTurma($faseEtapa, $turma, $data_inicial, $data_final);
 
@@ -167,17 +167,17 @@ class ComponenteMinistradoAeeController extends ApiCoreController
 
         $cadastrou = $obj->cadastra();
         if (!$cadastrou) {
-            return ["result" => "Cadastro não realizado."];
+            return ['result' => 'Cadastro não realizado.'];
             $this->simpleRedirect('educar_professores_conteudo_ministrado_aee_cad.php');
         } else {
-            return ["result" => "Cadastro efetuado com sucesso."];
+            return ['result' => 'Cadastro efetuado com sucesso.'];
             $this->simpleRedirect('educar_professores_conteudo_ministrado_aee_lst.php');
         }
 
-        return ["result" => "Cadastro não realizado."];
+        return ['result' => 'Cadastro não realizado.'];
     }
 
-    public function getObjetivosAprendizagem ()
+    public function getObjetivosAprendizagem()
     {
         $componente_ministrado_aee_id = $this->getRequest()->planejamento_aula_id;
         $turma_id = $this->getRequest()->turma_id;
@@ -198,10 +198,10 @@ class ComponenteMinistradoAeeController extends ApiCoreController
                 $habilidadesGeralCC = $this->getBNCCTurma($turma_id, $componenteCurricular['id']);
 
                 foreach ($detalhePA['bnccs'] as $key => $bnccPA) {
-                    if (array_key_exists($bnccPA["id"], $habilidadesGeralCC['bncc'])) {
-                        $especificacoesGeralBNCC[$bnccPA["id"]] = $this->getEspecificacaoBNCC($bnccPA['id'])['bncc_especificacao'];
-                        $habilidadesPaCC[] = $bnccPA["id"];
-                        $planejamento_aula_bncc_ids[] = $bnccPA["planejamento_aula_bncc_id"];
+                    if (array_key_exists($bnccPA['id'], $habilidadesGeralCC['bncc'])) {
+                        $especificacoesGeralBNCC[$bnccPA['id']] = $this->getEspecificacaoBNCC($bnccPA['id'])['bncc_especificacao'];
+                        $habilidadesPaCC[] = $bnccPA['id'];
+                        $planejamento_aula_bncc_ids[] = $bnccPA['planejamento_aula_bncc_id'];
                     }
                 }
 
@@ -214,20 +214,18 @@ class ComponenteMinistradoAeeController extends ApiCoreController
                     'componente_curricular_id' => $componenteCurricular['id'],
                     'habilidades' => [
                         'habilidades_planejamento_aula_cc' => $habilidadesPaCC,
-                        'habilidades_geral_cc' => $habilidadesGeralCC['bncc']
+                        'habilidades_geral_cc' => $habilidadesGeralCC['bncc'],
                     ],
                     'especificacoes' => [
                         'especificacoes_pa_bncc' => $especificacoesPABNCC,
-                        'especificacoes_geral_bncc' => $especificacoesGeralBNCC
-                    ]
+                        'especificacoes_geral_bncc' => $especificacoesGeralBNCC,
+                    ],
                 ];
-
             }
 
             $row['count_objetivos'] = count($row);
 
             return $row;
-
         }
 
         return [];
@@ -249,7 +247,7 @@ class ComponenteMinistradoAeeController extends ApiCoreController
                     $codigo = $bncc_item['codigo'];
                     $habilidade = $bncc_item['habilidade'];
 
-                    $bncc[$id] = $codigo . ' - ' . $habilidade;
+                    $bncc[$id] = $codigo.' - '.$habilidade;
                 }
             }
 
@@ -270,7 +268,7 @@ class ComponenteMinistradoAeeController extends ApiCoreController
                     $id = $bncc_especificacao_item['id'];
                     $especificacao = $bncc_especificacao_item['especificacao'];
 
-                    $bncc_especificacao[$id] = $id . ' - ' . $especificacao;
+                    $bncc_especificacao[$id] = $id.' - '.$especificacao;
                 }
             }
 
@@ -307,13 +305,15 @@ class ComponenteMinistradoAeeController extends ApiCoreController
         $data['fim'] = new \DateTime($obj->pegaEtapaSequenciaDataFim($turma, $sequencia));
 
         if (is_array($data['inicio_periodo_lancamentos']) && is_array($data['fim_periodo_lancamentos'])) {
-            for ($i = 0; $i < count($data['inicio_periodo_lancamentos']); $i++) {
+            for ($i = 0; $i < count($data['inicio_periodo_lancamentos']); ++$i) {
                 $data_inicio = $data['inicio_periodo_lancamentos'][$i];
                 $data_fim = $data['fim_periodo_lancamentos'][$i];
 
                 $podeRegistrar = $data_agora >= $data_inicio && $data_agora <= $data_fim;
 
-                if ($podeRegistrar) break;
+                if ($podeRegistrar) {
+                    break;
+                }
             }
             $podeRegistrar = $podeRegistrar && new DateTime($data_inicial) >= $data['inicio'] && new DateTime($data_final) <= $data['fim'];
         } else {
@@ -328,17 +328,17 @@ class ComponenteMinistradoAeeController extends ApiCoreController
     {
         if ($this->isRequestFor('post', 'verificar-plano-aula-aee-sendo-usado')) {
             $this->appendResponse($this->verificarPlanoAulaSendoUsado());
-        } else if ($this->isRequestFor('post', 'verificar-plano-aula-aee-sendo-usado2')) {
+        } elseif ($this->isRequestFor('post', 'verificar-plano-aula-aee-sendo-usado2')) {
             $this->appendResponse($this->verificarPlanoAulaSendoUsado2());
-        } else if ($this->isRequestFor('post', 'excluir-plano-aula-aee')) {
+        } elseif ($this->isRequestFor('post', 'excluir-plano-aula-aee')) {
             $this->appendResponse($this->excluirPlanoAula());
-        } else if ($this->isRequestFor('post', 'editar-plano-aula-aee')) {
+        } elseif ($this->isRequestFor('post', 'editar-plano-aula-aee')) {
             $this->appendResponse($this->editarPlanoAula());
-        } else if ($this->isRequestFor('post', 'novo-componente-ministrado-aee')) {
+        } elseif ($this->isRequestFor('post', 'novo-componente-ministrado-aee')) {
             $this->appendResponse($this->criarComponenteMinistradoAee());
-        } else if ($this->isRequestFor('get', 'get-objetivos-aprendizagem')) {
+        } elseif ($this->isRequestFor('get', 'get-objetivos-aprendizagem')) {
             $this->appendResponse($this->getObjetivosAprendizagem());
-        } else if ($this->isRequestFor('post', 'verificar-plano-aula-sendo-usado-conteudo')) {
+        } elseif ($this->isRequestFor('post', 'verificar-plano-aula-sendo-usado-conteudo')) {
             $this->appendResponse($this->verificarPlanoAulaSendoByConteudo());
         }
     }
