@@ -4,6 +4,7 @@ namespace Tests\Unit\Eloquent;
 
 use App\Models\LegacyEvaluationRule;
 use App\Models\LegacyRemedialRule;
+use App\Models\LegacyRoundingTable;
 use Tests\EloquentTestCase;
 
 class LegacyEvaluationRuleTest extends EloquentTestCase
@@ -12,6 +13,10 @@ class LegacyEvaluationRuleTest extends EloquentTestCase
 
     public $relations = [
         'remedialRules' => LegacyRemedialRule::class,
+        'roundingTable' => LegacyRoundingTable::class,
+        'conceptualRoundingTable' => LegacyRoundingTable::class,
+        //'deficiencyEvaluationRule' => LegacyEvaluationRule::class,
+        //'deficiencyEvaluationRules' => LegacyEvaluationRule::class,
     ];
 
     /**

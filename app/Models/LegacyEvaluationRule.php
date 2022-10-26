@@ -32,11 +32,6 @@ class LegacyEvaluationRule extends Model
     protected $table = 'modules.regra_avaliacao';
 
     /**
-     * @var string
-     */
-    protected $primaryKey = 'id';
-
-    /**
      * @var array
      */
     protected $casts = [
@@ -63,7 +58,13 @@ class LegacyEvaluationRule extends Model
      * @var array
      */
     protected $fillable = [
-        'instituicao_id', 'nome', 'formula_media_id', 'formula_recuperacao_id', 'tipo_nota', 'tipo_progressao', 'tipo_presenca',
+        'instituicao_id',
+        'nome',
+        'formula_media_id',
+        'formula_recuperacao_id',
+        'tipo_nota',
+        'tipo_progressao',
+        'tipo_presenca',
     ];
 
     /**
@@ -84,7 +85,7 @@ class LegacyEvaluationRule extends Model
      */
     public function roundingTable()
     {
-        return $this->hasOne(LegacyRoundingTable::class, 'id', 'tabela_arredondamento_id');
+        return $this->belongsTo(LegacyRoundingTable::class, 'tabela_arredondamento_id');
     }
 
     /**
@@ -92,7 +93,7 @@ class LegacyEvaluationRule extends Model
      */
     public function conceptualRoundingTable()
     {
-        return $this->hasOne(LegacyRoundingTable::class, 'id', 'tabela_arredondamento_id_conceitual');
+        return $this->belongsTo(LegacyRoundingTable::class, 'tabela_arredondamento_id_conceitual');
     }
 
     /**
@@ -100,7 +101,15 @@ class LegacyEvaluationRule extends Model
      */
     public function deficiencyEvaluationRule()
     {
-        return $this->hasOne(LegacyEvaluationRule::class, 'id', 'regra_diferenciada_id');
+        return $this->belongsTo(__CLASS__, 'regra_diferenciada_id');
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function deficiencyEvaluationRules()
+    {
+        return $this->hasMany(__CLASS__, 'regra_diferenciada_id');
     }
 
     /**
