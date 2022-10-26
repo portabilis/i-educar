@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Builders\LegacySchoolBuilder;
 use App\Traits\LegacyAttribute;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -87,20 +88,18 @@ class LegacySchool extends Model
      */
     public $timestamps = false;
 
-    /**
-     * @return int
-     */
-    public function getIdAttribute()
+    protected function id(): Attribute
     {
-        return $this->cod_escola;
+        return Attribute::make(
+            get: fn ($value) => $this->cod_escola,
+        );
     }
 
-    /**
-     * @return string
-     */
-    public function getNameAttribute()
+    protected function name(): Attribute
     {
-        return $this->organization->fantasia ?? null;
+        return Attribute::make(
+            get: fn ($value) => $this->organization->fantasia ?? null,
+        );
     }
 
     /**
@@ -108,7 +107,7 @@ class LegacySchool extends Model
      *
      * @return BelongsTo
      */
-    public function institution()
+    public function institution(): BelongsTo
     {
         return $this->belongsTo(LegacyInstitution::class, 'ref_cod_instituicao');
     }
@@ -126,7 +125,7 @@ class LegacySchool extends Model
     /**
      * @return BelongsTo
      */
-    public function person()
+    public function person(): BelongsTo
     {
         return $this->belongsTo(LegacyPerson::class, 'ref_idpes');
     }
@@ -134,7 +133,7 @@ class LegacySchool extends Model
     /**
      * @return BelongsToMany
      */
-    public function courses()
+    public function courses(): BelongsToMany
     {
         return $this->belongsToMany(
             LegacyCourse::class,
@@ -147,7 +146,7 @@ class LegacySchool extends Model
     /**
      * @return BelongsTo
      */
-    public function organization()
+    public function organization(): BelongsTo
     {
         return $this->belongsTo(LegacyOrganization::class, 'ref_idpes');
     }
@@ -155,7 +154,7 @@ class LegacySchool extends Model
     /**
      * @return HasOne
      */
-    public function inep()
+    public function inep(): HasOne
     {
         return $this->hasOne(SchoolInep::class, 'cod_escola', 'cod_escola');
     }
@@ -163,10 +162,10 @@ class LegacySchool extends Model
     /**
      * @return BelongsToMany
      */
-    public function grades()
+    public function grades(): BelongsToMany
     {
         return $this->belongsToMany(
-            LegacyLevel::class,
+            LegacyGrade::class,
             'pmieducar.escola_serie',
             'ref_cod_escola',
             'ref_cod_serie'
@@ -176,7 +175,7 @@ class LegacySchool extends Model
     /**
      * @return HasMany
      */
-    public function schoolClasses()
+    public function schoolClasses(): HasMany
     {
         return $this->hasMany(LegacySchoolClass::class, 'ref_ref_cod_escola');
     }
@@ -184,7 +183,7 @@ class LegacySchool extends Model
     /**
      * @return HasMany
      */
-    public function schoolUsers()
+    public function schoolUsers(): HasMany
     {
         return $this->hasMany(LegacyUserSchool::class, 'ref_cod_escola', 'cod_escola');
     }
@@ -192,12 +191,12 @@ class LegacySchool extends Model
     /**
      * @return HasMany
      */
-    public function schoolManagers()
+    public function schoolManagers(): HasMany
     {
         return $this->hasMany(SchoolManager::class, 'school_id');
     }
 
-    public function stages()
+    public function stages(): HasMany
     {
         return $this->hasMany(LegacyAcademicYearStage::class, 'ref_ref_cod_escola');
     }
@@ -205,7 +204,7 @@ class LegacySchool extends Model
     /**
      * @return Enrollment[]
      */
-    public function enrollments()
+    public function enrollments(): array
     {
         return $this->hasMany(Enrollment::class, 'ref_cod_turma', 'cod_turma');
     }
