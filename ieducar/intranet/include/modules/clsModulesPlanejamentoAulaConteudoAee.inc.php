@@ -2,7 +2,8 @@
 
 use iEducar\Legacy\Model;
 
-class clsModulesPlanejamentoAulaConteudoAee extends Model {
+class clsModulesPlanejamentoAulaConteudoAee extends Model
+{
     public $id;
     public $planejamento_aula_aee_id;
     public $conteudo;
@@ -15,9 +16,9 @@ class clsModulesPlanejamentoAulaConteudoAee extends Model {
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}planejamento_aula_conteudo_aee";
 
-        $this->_from = "
+        $this->_from = '
             modules.planejamento_aula_conteudo_aee as pac
-        ";
+        ';
 
         $this->_campos_lista = $this->_todos_campos = '
             *
@@ -37,18 +38,34 @@ class clsModulesPlanejamentoAulaConteudoAee extends Model {
     }
 
     /**
-     * Cria um novo registro
+     * Cria um novo registro.
      *
      * @return bool
      */
-    public function cadastra() {
+    public function cadastra()
+    {
         if (is_numeric($this->planejamento_aula_aee_id) && is_string($this->conteudo)) {
             $db = new clsBanco();
+            $campos = '';
+            $valores = '';
+            $gruda = '';
+
+            $campos .= "{$gruda}planejamento_aula_aee_id";
+            $valores .= "{$gruda}'{$this->planejamento_aula_aee_id}'";
+            $gruda = ', ';
+
+            $campos .= "{$gruda}conteudo";
+            $valores .= "{$gruda}'{$db->escapeString($this->conteudo)}'";
+            $gruda = ', ';
+
+            $campos .= "{$gruda}updated_at";
+            $valores .= "{$gruda}(NOW() - INTERVAL '3 HOURS')";
+            $gruda = ', ';
 
             $db->Consulta("
-                INSERT INTO {$this->_tabela}
-                    (planejamento_aula_aee_id, conteudo)
-                VALUES ('{$this->planejamento_aula_aee_id}', '{$db->escapeString($this->conteudo)}')
+                INSERT INTO
+                    {$this->_tabela} ( $campos )
+                    VALUES ( $valores )
             ");
 
             return true;
@@ -58,12 +75,13 @@ class clsModulesPlanejamentoAulaConteudoAee extends Model {
     }
 
     /**
-     * Edita os dados de um registro
+     * Edita os dados de um registro.
      *
      * @return bool
      */
-    public function edita() {
-        if (is_numeric($this->id) && is_string($this->conteudo) && $this->conteudo !== "") {
+    public function edita()
+    {
+        if (is_numeric($this->id) && is_string($this->conteudo) && $this->conteudo !== '') {
             $db = new clsBanco();
             $sql = "
                 UPDATE
@@ -83,11 +101,12 @@ class clsModulesPlanejamentoAulaConteudoAee extends Model {
     }
 
     /**
-     * Lista relacionamentos entre os conteudos e o plano de aula
+     * Lista relacionamentos entre os conteudos e o plano de aula.
      *
      * @return array
      */
-    public function lista($planejamento_aula_aee_id) {
+    public function lista($planejamento_aula_aee_id)
+    {
         if (is_numeric($planejamento_aula_aee_id)) {
             $db = new clsBanco();
 
@@ -101,7 +120,7 @@ class clsModulesPlanejamentoAulaConteudoAee extends Model {
                 ORDER BY pac.id ASC
             ");
 
-            while($db->ProximoRegistro()) {
+            while ($db->ProximoRegistro()) {
                 $conteudos[] = $db->Tupla();
             }
 
@@ -112,11 +131,12 @@ class clsModulesPlanejamentoAulaConteudoAee extends Model {
     }
 
     /**
-     * Lista relacionamentos entre os conteúdos e o plano de aula retornando se os conteúdos estão sendo usados
+     * Lista relacionamentos entre os conteúdos e o plano de aula retornando se os conteúdos estão sendo usados.
      *
      * @return array
      */
-    public function lista2($planejamento_aula_aee_id) {
+    public function lista2($planejamento_aula_aee_id)
+    {
         if (is_numeric($planejamento_aula_aee_id)) {
             $db = new clsBanco();
 
@@ -135,7 +155,7 @@ class clsModulesPlanejamentoAulaConteudoAee extends Model {
                     pac.planejamento_aula_aee_id =  '{$planejamento_aula_aee_id}'
             ");
 
-            while($db->ProximoRegistro()) {
+            while ($db->ProximoRegistro()) {
                 $conteudos[] = $db->Tupla();
             }
 
@@ -146,11 +166,12 @@ class clsModulesPlanejamentoAulaConteudoAee extends Model {
     }
 
     /**
-     * Retorna um array com os dados de um registro
+     * Retorna um array com os dados de um registro.
      *
      * @return array
      */
-    public function detalhe () {
+    public function detalhe()
+    {
         $data = [];
 
         if (is_numeric($this->id)) {
@@ -174,20 +195,22 @@ class clsModulesPlanejamentoAulaConteudoAee extends Model {
     }
 
     /**
-     * Retorna um array com os dados de um registro
+     * Retorna um array com os dados de um registro.
      *
      * @return array
      */
-    public function existe () {
+    public function existe()
+    {
         return false;
     }
 
     /**
-     * Exclui um registro
+     * Exclui um registro.
      *
      * @return bool
      */
-    public function excluir () {
+    public function excluir()
+    {
         if (is_numeric($this->planejamento_aula_aee_id) && is_string($this->conteudo)) {
             $db = new clsBanco();
 
@@ -208,17 +231,18 @@ class clsModulesPlanejamentoAulaConteudoAee extends Model {
      * Retorna array com três arrays,
      * uma com os conteúdos a serem cadastrados,
      * outra com os que devem ser removidos,
-     * e outra com os que devem ser editados
+     * e outra com os que devem ser editados.
      *
      * @return array
      */
-    public function retornaDiferencaEntreConjuntosConteudos ($conteudosAtuais, $conteudosNovos) {
+    public function retornaDiferencaEntreConjuntosConteudos($conteudosAtuais, $conteudosNovos)
+    {
         $resultado = ['adicionar' => [], 'remover' => [], 'editar' => []];
 
         $conteudosAtuaisClone = array_merge($conteudosAtuais);
         $conteudosNovosClone = array_merge($conteudosNovos);
 
-        for ($i = count($conteudosNovos) - 1; $i >= 0; $i--) {
+        for ($i = count($conteudosNovos) - 1; $i >= 0; --$i) {
             $novo = $conteudosNovos[$i];
 
             $chaveId = array_search($novo[0], array_column($conteudosAtuais, 'id'));
@@ -231,10 +255,11 @@ class clsModulesPlanejamentoAulaConteudoAee extends Model {
                     unset($conteudosAtuaisClone[$chaveId]);
                     array_pop($conteudosNovos);
                 } else {
-                    if ($chaveId === $valueId)
+                    if ($chaveId === $valueId) {
                         unset($conteudosAtuaisClone[$chaveId]);
-                    else
-                        dd("Algum conteúdo foi trocado de lugar; isso não é suportado pelo sistema. É possível apenas removê-lo ou editá-lo.");
+                    } else {
+                        dd('Algum conteúdo foi trocado de lugar; isso não é suportado pelo sistema. É possível apenas removê-lo ou editá-lo.');
+                    }
                 }
             } else {
                 $resultado['adicionar'][] = $conteudosNovosClone[$i];
@@ -249,24 +274,25 @@ class clsModulesPlanejamentoAulaConteudoAee extends Model {
     }
 
     /**
-     * Retorna array com conteudos os que devem ser removidos
+     * Retorna array com conteudos os que devem ser removidos.
      *
      * @return array
      */
-    public function retornaConteudosRemovidos($atuaisConteudos, $novosConteudos) {
+    public function retornaConteudosRemovidos($atuaisConteudos, $novosConteudos)
+    {
         $resultado = [];
         $resultado['adicionar'] = $novosConteudos;
 
-        for ($i=0; $i < count($atuaisConteudos); $i++) {
+        for ($i = 0; $i < count($atuaisConteudos); ++$i) {
             $resultado['remover'][$i]['id'] = $atuaisConteudos[$i]['id'];
             $resultado['remover'][$i]['conteudo'] = $atuaisConteudos[$i]['conteudo'];
         }
         $atuaisConteudos = $resultado['remover'];
 
-        for ($i=0; $i < count($novosConteudos); $i++) {
+        for ($i = 0; $i < count($novosConteudos); ++$i) {
             $novo = $novosConteudos[$i];
 
-            for ($j=0; $j < count($atuaisConteudos); $j++) {
+            for ($j = 0; $j < count($atuaisConteudos); ++$j) {
                 $atual = $atuaisConteudos[$j];
 
                 if ($novo == $atual['conteudo']) {
@@ -278,5 +304,23 @@ class clsModulesPlanejamentoAulaConteudoAee extends Model {
         $resultado = array_column($resultado['remover'], 'id');
 
         return $resultado;
+    }
+
+    public function excluirConteudoPlanejamentoAulaAee()
+    {
+        if (is_numeric($this->planejamento_aula_aee_id)) {
+            $db = new clsBanco();
+
+            $db->Consulta("
+                DELETE FROM
+                    {$this->_tabela}
+                WHERE
+                    planejamento_aula_aee_id = '{$this->planejamento_aula_aee_id}'
+            ");
+
+            return true;
+        }
+
+        return false;
     }
 }

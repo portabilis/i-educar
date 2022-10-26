@@ -91,19 +91,19 @@
           return ` \
                 <span> \
                     Não é possível prosseguir com a exclusão porque <b> um ou mais conteúdos </b> estão sendo utilizados em \
-                    <b>${quantidadeRegistrosAula}</b> registro(s) de aula. O que deseja fazer? \
+                    <b>${quantidadeRegistrosAula}</b> registro(s) de aula. \
                 </span><br> \
             `;
         }
 
-        function verRegistrosAula () {
-            for (let index = 0; index < registrosAula.length; index++) {
-                const registroAula = registrosAula[index];
+        // function verRegistrosAula () {
+        //     for (let index = 0; index < registrosAula.length; index++) {
+        //         const registroAula = registrosAula[index];
 
-                const url = "http://" + window.location.host + "/intranet/educar_professores_frequencia_cad.php?id=" + registroAula;
-                urlHelper(url, '_blank');
-            }
-        }
+        //         const url = "http://" + window.location.host + "/intranet/educar_professores_frequencia_cad.php?id=" + registroAula;
+        //         urlHelper(url, '_blank');
+        //     }
+        // }
 
         function urlHelper(href, mode) {
             Object.assign(document.createElement('a'), {
@@ -138,10 +138,11 @@
             buttons: {
                 "Cancelar": function () {
                     closeModal();
-                },
-                "Ver registro(s) afetado(s)": function () {
-                    verRegistrosAula();
                 }
+                // ,
+                // "Ver registro(s) afetado(s)": function () {
+                //     verRegistrosAula();
+                // }
             }
         });
     });

@@ -16,9 +16,9 @@ class clsModulesComponenteMinistradoConteudoAee extends Model
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}conteudo_ministrado_conteudo_aee";
 
-        $this->_from = "
+        $this->_from = '
             modules.conteudo_ministrado_conteudo_aee as cmc
-        ";
+        ';
 
         $this->_campos_lista = $this->_todos_campos = '
             *
@@ -38,7 +38,7 @@ class clsModulesComponenteMinistradoConteudoAee extends Model
     }
 
     /**
-     * Cria um novo registro
+     * Cria um novo registro.
      *
      * @return bool
      */
@@ -46,11 +46,26 @@ class clsModulesComponenteMinistradoConteudoAee extends Model
     {
         if (is_numeric($this->conteudo_ministrado_aee_id) && is_numeric($this->planejamento_aula_conteudo_aee_id)) {
             $db = new clsBanco();
+            $campos = '';
+            $valores = '';
+            $gruda = '';
+
+            $campos .= "{$gruda}conteudo_ministrado_aee_id";
+            $valores .= "{$gruda}'{$this->conteudo_ministrado_aee_id}'";
+            $gruda = ', ';
+
+            $campos .= "{$gruda}planejamento_aula_conteudo_aee_id";
+            $valores .= "{$gruda}'{$this->planejamento_aula_conteudo_aee_id}'";
+            $gruda = ', ';
+
+            $campos .= "{$gruda}updated_at";
+            $valores .= "{$gruda}(NOW() - INTERVAL '3 HOURS')";
+            $gruda = ', ';
 
             $db->Consulta("
-                INSERT INTO {$this->_tabela}
-                    (conteudo_ministrado_aee_id, planejamento_aula_conteudo_aee_id, created_at)
-                VALUES ('{$this->conteudo_ministrado_aee_id}', '{$this->planejamento_aula_conteudo_aee_id}', (NOW() - INTERVAL '3 HOURS'))
+                INSERT INTO
+                    {$this->_tabela} ( $campos )
+                    VALUES ( $valores )
             ");
 
             return true;
@@ -60,7 +75,7 @@ class clsModulesComponenteMinistradoConteudoAee extends Model
     }
 
     /**
-     * Lista relacionamentos entre os conteudos e o plano de aula
+     * Lista relacionamentos entre os conteudos e o plano de aula.
      *
      * @return array
      */
@@ -93,7 +108,7 @@ class clsModulesComponenteMinistradoConteudoAee extends Model
     }
 
     /**
-     * Lista relacionamentos entre os conteudos e o plano de aula
+     * Lista relacionamentos entre os conteudos e o plano de aula.
      *
      * @return array
      */
@@ -130,7 +145,7 @@ class clsModulesComponenteMinistradoConteudoAee extends Model
     }
 
     /**
-     * Retorna um array com os dados de um registro
+     * Retorna um array com os dados de um registro.
      *
      * @return array
      */
@@ -159,7 +174,7 @@ class clsModulesComponenteMinistradoConteudoAee extends Model
     }
 
     /**
-     * Retorna um array com os dados de um registro
+     * Retorna um array com os dados de um registro.
      *
      * @return array
      */
@@ -169,7 +184,7 @@ class clsModulesComponenteMinistradoConteudoAee extends Model
     }
 
     /**
-     * Exclui um registro
+     * Exclui um registro.
      *
      * @return bool
      */
@@ -192,7 +207,7 @@ class clsModulesComponenteMinistradoConteudoAee extends Model
     }
 
     /**
-     * Retorna array com duas arrays, uma com os conteúdos a serem cadastrados e a outra com os que devem ser removidos
+     * Retorna array com duas arrays, uma com os conteúdos a serem cadastrados e a outra com os que devem ser removidos.
      *
      * @return array
      */
@@ -201,15 +216,15 @@ class clsModulesComponenteMinistradoConteudoAee extends Model
         $resultado = [];
         $resultado['adicionar'] = $novosConteudos;
 
-        for ($i = 0; $i < count($atuaisConteudos); $i++) {
+        for ($i = 0; $i < count($atuaisConteudos); ++$i) {
             $resultado['remover'][] = $atuaisConteudos[$i]['planejamento_aula_conteudo_aee_id'];
         }
         $atuaisConteudos = $resultado['remover'];
 
-        for ($i = 0; $i < count($novosConteudos); $i++) {
+        for ($i = 0; $i < count($novosConteudos); ++$i) {
             $novo = $novosConteudos[$i];
 
-            for ($j = 0; $j < count($atuaisConteudos); $j++) {
+            for ($j = 0; $j < count($atuaisConteudos); ++$j) {
                 $atual = $atuaisConteudos[$j];
 
                 if ($novo == $atual) {
@@ -223,7 +238,7 @@ class clsModulesComponenteMinistradoConteudoAee extends Model
     }
 
     /**
-     * Retorna array com registro(s) de aula com ligação com o conteúdo informado, no caso de ausência, vazio
+     * Retorna array com registro(s) de aula com ligação com o conteúdo informado, no caso de ausência, vazio.
      *
      * @return array
      */
@@ -234,7 +249,7 @@ class clsModulesComponenteMinistradoConteudoAee extends Model
 
             $db = new clsBanco();
 
-            $sql = "
+            $sql = '
                 SELECT DISTINCT
                     conteudo_ministrado_aee_id as id,
                     cm.ref_cod_matricula
@@ -242,12 +257,14 @@ class clsModulesComponenteMinistradoConteudoAee extends Model
                     modules.conteudo_ministrado_conteudo_aee as cmc
                 INNER JOIN modules.conteudo_ministrado_aee cm
                     ON cm.id = cmc.conteudo_ministrado_aee_id
-            ";
+            ';
 
             $whereAnd = ' WHERE';
 
             foreach ($planejamento_aula_conteudos_ids as $key => $planejamento_aula_conteudo_aee_id) {
-                if (empty($planejamento_aula_conteudo_aee_id)) continue;
+                if (empty($planejamento_aula_conteudo_aee_id)) {
+                    continue;
+                }
                 $sql .= "{$whereAnd} cmc.planejamento_aula_conteudo_aee_id = {$planejamento_aula_conteudo_aee_id}";
                 $whereAnd = ' OR';
             }
@@ -257,7 +274,7 @@ class clsModulesComponenteMinistradoConteudoAee extends Model
             while ($db->ProximoRegistro()) {
                 $data[] = [
                     'id' => $db->Campo('id'),
-                    'ref_cod_matricula' => $db->Campo('ref_cod_matricula')
+                    'ref_cod_matricula' => $db->Campo('ref_cod_matricula'),
                 ];
             }
 
