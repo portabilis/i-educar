@@ -50,9 +50,9 @@ class RegistrationTest extends ViewTestCase
     public function testStudentIsActive(): void
     {
         $student = LegacyStudentFactory::new()->inactive()->create();
-        $this->factory->forView($student->cod_aluno)->make();
+        $registration = $this->factory->forView($student->cod_aluno)->make();
 
-        $collection = $this->instanceNewViewModel()->studentIsActive()->get();
+        $collection = $this->instanceNewViewModel()->studentIsActive()->whereIn('id', [$registration->id, $this->model->id])->get();
 
         $this->assertCount(1, $collection);
     }
@@ -67,16 +67,16 @@ class RegistrationTest extends ViewTestCase
 
     public function testYear(): void
     {
-        LegacyRegistrationFactory::new()->create(['ano'=>$this->model->year-1]);
-        $collection = $this->instanceNewViewModel()->year($this->model->year)->get();
+        $registration = LegacyRegistrationFactory::new()->create(['ano'=>$this->model->year-1]);
+        $collection = $this->instanceNewViewModel()->year($this->model->year)->whereIn('id', [$registration->id, $this->model->id])->get();
 
         $this->assertCount(1, $collection);
     }
 
-    public function testinProgress(): void
+    public function testInProgress(): void
     {
-        LegacyRegistrationFactory::new()->create(['aprovado'=> 1]);
-        $collection = $this->instanceNewViewModel()->inProgress()->get();
+        $registration = LegacyRegistrationFactory::new()->create(['aprovado'=> 1]);
+        $collection = $this->instanceNewViewModel()->inProgress()->whereIn('id', [$registration->id, $this->model->id])->get();
 
         $this->assertCount(1, $collection);
     }
