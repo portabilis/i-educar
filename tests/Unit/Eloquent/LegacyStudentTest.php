@@ -16,7 +16,7 @@ class LegacyStudentTest extends EloquentTestCase
     protected $relations = [
         'individual' => LegacyIndividual::class,
         'person' => LegacyPerson::class,
-        'registrations' => [LegacyRegistration::class],
+        'registrations' => LegacyRegistration::class,
     ];
 
     /**

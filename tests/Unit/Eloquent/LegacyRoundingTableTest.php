@@ -9,7 +9,7 @@ use Tests\EloquentTestCase;
 class LegacyRoundingTableTest extends EloquentTestCase
 {
     protected $relations = [
-        'roundingValues' => [LegacyValueRoundingTable::class],
+        'roundingValues' => LegacyValueRoundingTable::class,
     ];
 
     public function getEloquentModelName()

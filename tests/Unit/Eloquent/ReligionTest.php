@@ -9,7 +9,8 @@ use Tests\EloquentTestCase;
 class ReligionTest extends EloquentTestCase
 {
     protected $relations = [
-        'individual' => [LegacyIndividual::class]];
+        'individual' => LegacyIndividual::class,
+    ];
 
     /**
      * @return string

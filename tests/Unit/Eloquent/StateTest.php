@@ -11,7 +11,7 @@ class StateTest extends EloquentTestCase
 {
     protected $relations = [
         'country' => Country::class,
-        'cities' => [City::class]
+        'cities' => City::class,
     ];
 
     /**

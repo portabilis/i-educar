@@ -9,7 +9,7 @@ use Tests\EloquentTestCase;
 class NotificationTypeTest extends EloquentTestCase
 {
     protected $relations = [
-        'notifications' => [Notification::class]
+        'notifications' => Notification::class,
     ];
 
     /**

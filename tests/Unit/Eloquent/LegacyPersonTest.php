@@ -11,7 +11,7 @@ class LegacyPersonTest extends EloquentTestCase
     private LegacyPerson $person;
 
     protected $relations = [
-        'phone' => [LegacyPhone::class],
+        'phone' => LegacyPhone::class,
     ];
 
     /**

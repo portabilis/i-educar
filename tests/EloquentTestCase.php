@@ -195,9 +195,9 @@ abstract class EloquentTestCase extends TestCase
                 $method = 'has' . ucfirst($relation);
                 $model = $factory->{$method}()->create();
 
-                if (is_array($class)) {
+                if ($type instanceof HasMany || $type instanceof BelongsToMany) {
                     $this->assertCount(1, $model->{$relation});
-                    $this->assertInstanceOf($class[0], $model->{$relation}->first());
+                    $this->assertInstanceOf($class, $model->{$relation}->first());
                 } else {
                     $this->assertInstanceOf($class, $model->{$relation});
                 }

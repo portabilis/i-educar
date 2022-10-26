@@ -9,7 +9,7 @@ use Tests\EloquentTestCase;
 class ManagerRoleTest extends EloquentTestCase
 {
     protected $relations = [
-        'schoolManagers' => [SchoolManager::class]
+        'schoolManagers' => SchoolManager::class,
     ];
 
     /**

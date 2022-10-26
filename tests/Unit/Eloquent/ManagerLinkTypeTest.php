@@ -9,8 +9,9 @@ use Tests\EloquentTestCase;
 class ManagerLinkTypeTest extends EloquentTestCase
 {
     protected $relations = [
-        'schoolManagers' => [SchoolManager::class]
+        'schoolManagers' => SchoolManager::class,
     ];
+
     /**
      * @return string
      */

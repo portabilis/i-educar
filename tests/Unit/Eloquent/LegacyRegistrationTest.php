@@ -21,9 +21,9 @@ class LegacyRegistrationTest extends EloquentTestCase
         'level' => LegacyLevel::class,
         'grade' => LegacyGrade::class,
         'course' => LegacyCourse::class,
-        'enrollments' => [LegacyEnrollment::class],
-        'activeEnrollments' => [LegacyEnrollment::class],
-        'exemptions' => [LegacyDisciplineExemption::class],
+        'enrollments' => LegacyEnrollment::class,
+        'activeEnrollments' => LegacyEnrollment::class,
+        'exemptions' => LegacyDisciplineExemption::class,
     ];
 
     /**
