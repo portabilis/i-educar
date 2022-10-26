@@ -201,12 +201,9 @@ class LegacySchool extends Model
         return $this->hasMany(LegacyAcademicYearStage::class, 'ref_ref_cod_escola');
     }
 
-    /**
-     * @return Enrollment[]
-     */
-    public function enrollments(): array
+    public function enrollments(): HasMany
     {
-        return $this->hasMany(Enrollment::class, 'ref_cod_turma', 'cod_turma');
+        return $this->hasMany(LegacyEnrollment::class, 'ref_cod_turma', 'cod_turma');
     }
 
     /**
