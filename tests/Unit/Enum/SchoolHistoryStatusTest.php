@@ -3,15 +3,13 @@
 namespace Tests\Unit\Enum;
 
 use App\Models\SchoolHistoryStatus;
-use Tests\TestCase;
+use Tests\EnumTestCase;
 
-class SchoolHistoryStatusTest extends TestCase
+class SchoolHistoryStatusTest extends EnumTestCase
 {
-    public function testDescriptiveValues(): void
+    public function getDescriptiveValues(): array
     {
-        $values = (new SchoolHistoryStatus())->getDescriptiveValues();
-        $this->assertIsArray($values);
-        $except = [
+        return [
             1 => 'Apro',
             2 => 'Repr',
             3 => 'Curs',
@@ -22,6 +20,10 @@ class SchoolHistoryStatusTest extends TestCase
             13 => 'AprCo',
             14 => 'RpFt',
         ];
-        $this->assertJsonStringEqualsJsonString(collect($except), collect($values));
+    }
+
+    protected function getEnumName(): string
+    {
+        return  SchoolHistoryStatus::class;
     }
 }
