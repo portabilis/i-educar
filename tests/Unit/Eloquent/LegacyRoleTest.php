@@ -2,12 +2,17 @@
 
 namespace Tests\Unit\Eloquent;
 
+use App\Models\LegacyInstitution;
 use App\Models\LegacyRole;
 use Tests\EloquentTestCase;
 
 class LegacyRoleTest extends EloquentTestCase
 {
     private LegacyRole $role;
+
+    public $relations = [
+        'institution' => LegacyInstitution::class,
+    ];
 
     /**
      * @return string

@@ -8,6 +8,7 @@ use App\Models\EmployeeGraduation;
 use App\Models\EmployeeInep;
 use App\Models\LegacyEmployeeRole;
 use App\Models\LegacyIndividual;
+use App\Models\LegacyInstitution;
 use App\Models\LegacyPerson;
 use App\Models\LegacySchoolingDegree;
 use Database\Factories\EmployeeFactory;
@@ -23,6 +24,7 @@ class EmployeeTest extends EloquentTestCase
         'employeeRoles' => LegacyEmployeeRole::class,
         'graduations' => EmployeeGraduation::class,
         'schoolingDegree' => LegacySchoolingDegree::class,
+        'institution' => LegacyInstitution::class,
     ];
 
     /**
