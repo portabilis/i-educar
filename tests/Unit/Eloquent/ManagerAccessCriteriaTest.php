@@ -9,9 +9,8 @@ use Tests\EloquentTestCase;
 class ManagerAccessCriteriaTest extends EloquentTestCase
 {
     protected $relations = [
-        'schoolManagers' => [SchoolManager::class]
+        'schoolManagers' => SchoolManager::class,
     ];
-    /**
 
     /**
      * @return string
