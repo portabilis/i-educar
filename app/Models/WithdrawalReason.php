@@ -18,7 +18,10 @@ class WithdrawalReason extends LegacyModel
 
     protected $primaryKey = 'cod_motivo_afastamento';
 
-    protected $fillable = ['nm_motivo', 'descricao'];
+    protected $fillable = [
+        'nm_motivo',
+        'descricao'
+    ];
 
     public array $legacy = [
         'id' => 'cod_motivo_afastamento',

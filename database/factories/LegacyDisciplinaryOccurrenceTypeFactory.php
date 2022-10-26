@@ -21,6 +21,7 @@ class LegacyDisciplinaryOccurrenceTypeFactory extends Factory
     {
         return [
             'created_by' => fn () => LegacyUserFactory::new()->unique()->make(),
+            'deleted_by' => fn () => LegacyUserFactory::new()->unique()->make(),
             'name' => $this->faker->firstName(),
             'description' => $this->faker->paragraph(),
             'max' => $this->faker->numberBetween(1, 5),

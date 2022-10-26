@@ -5,12 +5,18 @@ namespace Tests\Unit\Eloquent;
 use App\Models\LegacyBenefit;
 use App\Models\LegacyStudent;
 use App\Models\LegacyStudentBenefit;
+use App\Models\LegacyUser;
 use Database\Factories\LegacyBenefitFactory;
 use Database\Factories\LegacyStudentFactory;
 use Tests\EloquentTestCase;
 
 class LegacyBenefitTest extends EloquentTestCase
 {
+    public $relations = [
+        'deletedByUser' => LegacyUser::class,
+        'createdByUser' => LegacyUser::class,
+    ];
+
     /**
      * @return string
      */
