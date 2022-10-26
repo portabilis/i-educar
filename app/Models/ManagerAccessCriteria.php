@@ -11,8 +11,8 @@ class ManagerAccessCriteria extends Model
 
     protected $fillable = ['name'];
 
-    public function schoolManager(): HasMany
+    public function schoolManagers(): HasMany
     {
-        return $this->hasMany(SchoolManager::class, 'link_type_id');
+        return $this->hasMany(SchoolManager::class, 'access_criteria_id');
     }
 }

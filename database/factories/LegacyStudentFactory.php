@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\LegacyStudent;
 use App\Models\TransportationVehicleType;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyStudentFactory extends Factory
@@ -31,6 +32,16 @@ class LegacyStudentFactory extends Factory
             'data_cadastro' => now(),
             'veiculo_transporte_escolar' => '{'.TransportationVehicleType::VAN.'}'
         ];
+    }
+
+    public function inactive()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'ativo' => 0,
+                'data_exclusao' => Carbon::now()
+            ];
+        });
     }
 
     public function notGuardian()

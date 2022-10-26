@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -18,7 +19,7 @@ class Person extends Model
 
     public function createdBy(): BelongsTo
     {
-        return $this->belongsTo(Individual::class, 'created_by', 'id');
+        return $this->belongsTo(Individual::class, 'created_by');
     }
 
     public function updatedBy(): BelongsTo
@@ -26,14 +27,18 @@ class Person extends Model
         return $this->belongsTo(Individual::class, 'updated_by', 'id');
     }
 
-    public function getTypeDescriptionAttribute(): string
+    protected function typeDescription(): Attribute
     {
-        return (new PersonType())->getDescriptiveValues()[(int) $this->type];
+        return Attribute::make(
+            get: fn ($value) => (new PersonType())->getDescriptiveValues()[(int) $this->type],
+        );
     }
 
-    public function getRegistryOriginDescriptionAttribute(): string
+    protected function registryOriginDescription(): Attribute
     {
-        return (new RegistryOrigin())->getDescriptiveValues()[(int) $this->registry_origin];
+        return Attribute::make(
+            get: fn ($value) => (new RegistryOrigin())->getDescriptiveValues()[(int) $this->registry_origin],
+        );
     }
 
     /**

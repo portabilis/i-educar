@@ -40,8 +40,8 @@ class SchoolManagerTest extends EloquentTestCase
     public function testScopeOfSchool(): void
     {
         $school = LegacySchoolFactory::new()->create();
-        $schoolManager1 = SchoolManagerFactory::new()->create(['school_id' => $school]);
-        $schoolManager2 = SchoolManagerFactory::new()->create();
+        SchoolManagerFactory::new()->create(['school_id' => $school]);
+        SchoolManagerFactory::new()->create();
 
         $modelSearch = $this->instanceNewEloquentModel()->ofSchool($school->id)->get();
         $this->assertCount(1, $modelSearch);
