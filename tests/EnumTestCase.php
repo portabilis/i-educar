@@ -4,7 +4,7 @@ namespace Tests;
 
 abstract class EnumTestCase extends TestCase
 {
-    private $enum;
+    public $enum;
 
     public function setUp(): void
     {
