@@ -25,7 +25,7 @@ class SchoolManagerFactory extends Factory
             'school_id' => static fn () => LegacySchoolFactory::new()->create(),
             'role_id' => static fn () => ManagerRoleFactory::new()->create(),
             'access_criteria_id' => static fn () => ManagerAccessCriteriaFactory::new()->create(),
-            'link_type_id' => static fn () => ManagerLinkTypeFactory::new()->create(),
+           // 'link_type_id' => static fn () => ManagerLinkTypeFactory::new()->create(),
         ];
     }
 }
