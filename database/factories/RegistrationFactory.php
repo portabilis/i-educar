@@ -14,11 +14,10 @@ class RegistrationFactory extends Factory
         return [];
     }
 
-    public function view(int $id): self
+    public function forView(int|null $id = null): self
     {
-        $model = LegacyRegistrationFactory::new([
-            'ref_cod_aluno' => $id
-        ])->create();
+        $attributes = $id ? ['ref_cod_aluno' => $id] : [];
+        $model = LegacyRegistrationFactory::new($attributes)->create();
 
         return $this->state(function (array $attributes) use ($model) {
             return [
@@ -31,7 +30,6 @@ class RegistrationFactory extends Factory
                 'year' => $model->ano,
                 'created_by' => $model->ref_usuario_cad,
                 'status' => $model->aprovado
-
             ];
         });
     }
