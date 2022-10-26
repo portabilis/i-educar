@@ -38,4 +38,16 @@ class EnrollmentFormativeItineraryRequest extends FormRequest
             'itinerary_composition.max' => 'O campo <b>Composição do itinerário formativo integrado</b> não pode ter mais de 4 opções selecionadas.',
         ];
     }
+
+    public function attributes()
+    {
+        return [
+            'itinerary_type' => 'Tipo do itinerário formativo',
+            'itinerary_composition' => 'Composição do itinerário formativo integrado',
+            'itinerary_course' => 'Tipo do curso do itinerário de formação técnica e profissional',
+            'concomitant_itinerary' => 'Itinerário concomitante intercomplementar à matrícula de formação geral básica',
+        ];
+    }
+
+
 }
