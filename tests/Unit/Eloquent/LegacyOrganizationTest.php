@@ -24,6 +24,6 @@ class LegacyOrganizationTest extends EloquentTestCase
     /** @test */
     public function getNameAttribute()
     {
-        $this->assertEquals($this->organization->getNameAttribute(), $this->organization->fantasia);
+        $this->assertEquals($this->organization->name, $this->organization->fantasia);
     }
 }
