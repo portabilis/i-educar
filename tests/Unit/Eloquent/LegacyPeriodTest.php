@@ -24,6 +24,6 @@ class LegacyPeriodTest extends EloquentTestCase
     /** @test */
     public function getNameAttribute()
     {
-        $this->assertEquals($this->period->getNameAttribute(), $this->period->nome);
+        $this->assertEquals($this->period->name, $this->period->nome);
     }
 }

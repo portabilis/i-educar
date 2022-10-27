@@ -95,7 +95,7 @@ class LegacySchool extends Model
         );
     }
 
-    protected function name(): Attribute
+    protected function getNameAttribute(): Attribute
     {
         return Attribute::make(
             get: fn ($value) => $this->organization->fantasia ?? null,

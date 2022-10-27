@@ -46,7 +46,7 @@ class LegacyCourseTest extends EloquentTestCase
     /** @test  */
     public function getNameAttribute()
     {
-        $this->assertEquals($this->course->getNameAttribute(), $this->course->nm_curso);
+        $this->assertEquals($this->course->name, $this->course->nm_curso);
     }
 
     /** @test  */

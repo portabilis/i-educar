@@ -32,6 +32,6 @@ class LegacyPersonTest extends EloquentTestCase
     /** @test */
     public function getIdAttribute()
     {
-        $this->assertEquals($this->person->getIdAttribute(), $this->person->idpes);
+        $this->assertEquals($this->person->id, $this->person->idpes);
     }
 }
