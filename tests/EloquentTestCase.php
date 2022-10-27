@@ -24,13 +24,11 @@ abstract class EloquentTestCase extends TestCase
     protected $relations = [];
 
     protected Model $model;
-    protected Factory $factory;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->factory = $this->createNewFactory();
         $this->model = $this->createNewModel();
     }
 
@@ -41,13 +39,6 @@ abstract class EloquentTestCase extends TestCase
      */
     abstract protected function getEloquentModelName();
 
-    private function createNewFactory(): Factory
-    {
-        return Factory::factoryForModel(
-            $this->getEloquentModelName()
-        )->new();
-    }
-
     /**
      * Return attributes to be used in create action.
      *
@@ -55,7 +46,11 @@ abstract class EloquentTestCase extends TestCase
      */
     protected function getAttributesForCreate()
     {
-        return $this->factory->make()->toArray();
+        $factory = Factory::factoryForModel(
+            $this->getEloquentModelName()
+        );
+
+        return $factory->make()->toArray();
     }
 
     /**
@@ -65,7 +60,11 @@ abstract class EloquentTestCase extends TestCase
      */
     protected function getAttributesForUpdate()
     {
-        return $this->factory->make()->toArray();
+        $factory = Factory::factoryForModel(
+            $this->getEloquentModelName()
+        );
+
+        return $factory->make()->toArray();
     }
 
     /**
