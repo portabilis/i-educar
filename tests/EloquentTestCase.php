@@ -24,11 +24,13 @@ abstract class EloquentTestCase extends TestCase
     protected $relations = [];
 
     protected Model $model;
+    protected Factory $factory;
 
     public function setUp(): void
     {
         parent::setUp();
 
+        $this->factory = $this->createNewFactory();
         $this->model = $this->createNewModel();
     }
 
@@ -39,6 +41,13 @@ abstract class EloquentTestCase extends TestCase
      */
     abstract protected function getEloquentModelName();
 
+    private function createNewFactory(): Factory
+    {
+        return Factory::factoryForModel(
+            $this->getEloquentModelName()
+        )->new();
+    }
+
     /**
      * Return attributes to be used in create action.
      *
@@ -46,11 +55,7 @@ abstract class EloquentTestCase extends TestCase
      */
     protected function getAttributesForCreate()
     {
-        $factory = Factory::factoryForModel(
-            $this->getEloquentModelName()
-        );
-
-        return $factory->make()->toArray();
+        return $this->factory->make()->toArray();
     }
 
     /**
@@ -60,11 +65,7 @@ abstract class EloquentTestCase extends TestCase
      */
     protected function getAttributesForUpdate()
     {
-        $factory = Factory::factoryForModel(
-            $this->getEloquentModelName()
-        );
-
-        return $factory->make()->toArray();
+        return $this->factory->make()->toArray();
     }
 
     /**
@@ -191,11 +192,22 @@ abstract class EloquentTestCase extends TestCase
         foreach ($this->relations as $relation => $class) {
             $type = $this->model->{$relation}();
 
-            if ($type instanceof HasMany || $type instanceof HasOne || $type instanceof BelongsToMany) {
+            if ($type instanceof BelongsToMany) {
+                if (is_array($class)) {
+                    [$modelClass,$pivotData] = $class;
+                } else {
+                    $modelClass = $class;
+                    $pivotData = [];
+                }
+                $class = is_array($class) ? $class[0] : $class;
+                $model = $factory->hasAttached(Factory::factoryForModel($modelClass)->new(), $pivotData, $relation)->create();
+                $this->assertCount(1, $model->{$relation});
+                $this->assertInstanceOf($class, $model->{$relation}->first());
+            } elseif ($type instanceof HasMany || $type instanceof HasOne) {
                 $method = 'has' . ucfirst($relation);
                 $model = $factory->{$method}()->create();
 
-                if ($type instanceof HasMany || $type instanceof BelongsToMany) {
+                if ($type instanceof HasMany) {
                     $this->assertCount(1, $model->{$relation});
                     $this->assertInstanceOf($class, $model->{$relation}->first());
                 } else {
