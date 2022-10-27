@@ -3,7 +3,6 @@
 namespace Tests\Unit\App\Models;
 
 use App\Models\Employee;
-use App\Models\LegacyDeficiency;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyPerson;
 use App\Models\LegacyPhone;
@@ -16,9 +15,7 @@ class LegacyPersonTest extends EloquentTestCase
     protected $relations = [
         'phone' => LegacyPhone::class,
         'individual' => LegacyIndividual::class,
-        //'deficiencies' => LegacyDeficiency::class,
         'employee' => Employee::class,
-        //'considerableDeficiencies' => LegacyDeficiency::class,
     ];
 
     /**

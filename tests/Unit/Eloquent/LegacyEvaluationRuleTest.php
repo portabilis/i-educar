@@ -15,8 +15,6 @@ class LegacyEvaluationRuleTest extends EloquentTestCase
         'remedialRules' => LegacyRemedialRule::class,
         'roundingTable' => LegacyRoundingTable::class,
         'conceptualRoundingTable' => LegacyRoundingTable::class,
-        //'deficiencyEvaluationRule' => LegacyEvaluationRule::class,
-        //'deficiencyEvaluationRules' => LegacyEvaluationRule::class,
     ];
 
     /**
