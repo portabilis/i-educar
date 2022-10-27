@@ -6,7 +6,6 @@ use App\Models\LegacyCourse;
 use App\Models\LegacyDisciplineExemption;
 use App\Models\LegacyEnrollment;
 use App\Models\LegacyGrade;
-use App\Models\LegacyLevel;
 use App\Models\LegacyRegistration;
 use App\Models\LegacyStudent;
 use Tests\EloquentTestCase;
@@ -18,7 +17,7 @@ class LegacyRegistrationTest extends EloquentTestCase
      */
     protected $relations = [
         'student' => LegacyStudent::class,
-        'level' => LegacyLevel::class,
+        'level' => LegacyGrade::class,
         'grade' => LegacyGrade::class,
         'course' => LegacyCourse::class,
         'enrollments' => LegacyEnrollment::class,

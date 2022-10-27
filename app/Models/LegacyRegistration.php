@@ -129,7 +129,7 @@ class LegacyRegistration extends LegacyModel
      */
     public function level()
     {
-        return $this->belongsTo(LegacyLevel::class, 'ref_ref_cod_serie');
+        return $this->belongsTo(LegacyGrade::class, 'ref_ref_cod_serie');
     }
 
     /**
