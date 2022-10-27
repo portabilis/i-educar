@@ -15,7 +15,6 @@ class LegacyModel extends Model
 
     public function __get($key)
     {
-        //laravel accessors
         if (is_string($key) && method_exists($this, $key)) {
             return parent::__get($key);
         }
