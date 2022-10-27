@@ -3,12 +3,15 @@
 namespace Tests\Unit\Eloquent;
 
 use App\Models\LegacyCourse;
+use App\Models\LegacyDisciplineDependence;
 use App\Models\LegacyDisciplineExemption;
 use App\Models\LegacyEnrollment;
 use App\Models\LegacyGrade;
 use App\Models\LegacyLevel;
 use App\Models\LegacyRegistration;
+use App\Models\LegacySchool;
 use App\Models\LegacyStudent;
+use App\Models\LegacyStudentDescriptiveOpinion;
 use Tests\EloquentTestCase;
 
 class LegacyRegistrationTest extends EloquentTestCase
@@ -18,12 +21,15 @@ class LegacyRegistrationTest extends EloquentTestCase
      */
     protected $relations = [
         'student' => LegacyStudent::class,
+        'school' => LegacySchool::class,
         'level' => LegacyLevel::class,
         'grade' => LegacyGrade::class,
         'course' => LegacyCourse::class,
         'enrollments' => LegacyEnrollment::class,
         'activeEnrollments' => LegacyEnrollment::class,
         'exemptions' => LegacyDisciplineExemption::class,
+        'studentDescriptiveOpinion' => LegacyStudentDescriptiveOpinion::class,
+        'dependencies' => LegacyDisciplineDependence::class,
     ];
 
     /**

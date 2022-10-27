@@ -118,7 +118,7 @@ class LegacyIndividual extends Model
      */
     public function person()
     {
-        return $this->hasOne(LegacyPerson::class, 'idpes', 'idpes');
+        return $this->belongsTo(LegacyPerson::class, 'idpes', 'idpes');
     }
 
     /**
