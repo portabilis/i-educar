@@ -123,19 +123,6 @@ class LegacyRegistration extends LegacyModel
      * Relação com a série.
      *
      * @return BelongsTo
-     *
-     * @see grade()
-     * @deprecated
-     */
-    public function level()
-    {
-        return $this->belongsTo(LegacyGrade::class, 'ref_ref_cod_serie');
-    }
-
-    /**
-     * Relação com a série.
-     *
-     * @return BelongsTo
      */
     public function grade()
     {

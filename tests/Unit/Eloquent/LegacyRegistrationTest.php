@@ -17,7 +17,6 @@ class LegacyRegistrationTest extends EloquentTestCase
      */
     protected $relations = [
         'student' => LegacyStudent::class,
-        'level' => LegacyGrade::class,
         'grade' => LegacyGrade::class,
         'course' => LegacyCourse::class,
         'enrollments' => LegacyEnrollment::class,
