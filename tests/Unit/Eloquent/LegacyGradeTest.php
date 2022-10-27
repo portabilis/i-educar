@@ -16,7 +16,10 @@ class LegacyGradeTest extends EloquentTestCase
     protected $relations = [
         'course' => LegacyCourse::class,
         'evaluationRules' => [LegacyEvaluationRule::class, ['ano_letivo' => 1]],
-        'schools' => [LegacySchool::class,['ref_usuario_cad' => 1,'data_cadastro' => '2022-01-01 00:00:00']],
+        'schools' => [LegacySchool::class, [
+            'ref_usuario_cad' => 1,
+            'data_cadastro' => '2022-01-01 00:00:00'
+        ]],
     ];
 
     /**
@@ -66,8 +69,13 @@ class LegacyGradeTest extends EloquentTestCase
 
     public function testRelationshipSchoolClass(): void
     {
-        $schoolGrade = LegacySchoolGradeFactory::new()->create(['ref_cod_serie'=> $this->model->id]);
-        LegacySchoolClassFactory::new()->create(['ref_ref_cod_serie' => $schoolGrade->ref_cod_serie, 'ref_ref_cod_escola' => $schoolGrade->ref_cod_escola]);
+        $schoolGrade = LegacySchoolGradeFactory::new()->create([
+            'ref_cod_serie'=> $this->model->id
+        ]);
+        LegacySchoolClassFactory::new()->create([
+            'ref_ref_cod_serie' => $schoolGrade->ref_cod_serie,
+            'ref_ref_cod_escola' => $schoolGrade->ref_cod_escola
+        ]);
 
         $this->assertCount(1, $this->model->schoolClass);
         $this->assertInstanceOf(LegacySchoolClass::class, $this->model->schoolClass->first());

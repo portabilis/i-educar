@@ -194,7 +194,7 @@ abstract class EloquentTestCase extends TestCase
 
             if ($type instanceof BelongsToMany) {
                 if (is_array($class)) {
-                    [$modelClass,$pivotData] = $class;
+                    [$modelClass, $pivotData] = $class;
                 } else {
                     $modelClass = $class;
                     $pivotData = [];
