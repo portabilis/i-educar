@@ -12,8 +12,6 @@ class Religion extends Model
 
     protected $table = 'pmieducar.religions';
 
-    protected $dates = ['deleted_at'];
-
     protected $fillable = [
         'name'
     ];
