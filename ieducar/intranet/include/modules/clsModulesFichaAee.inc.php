@@ -10,6 +10,7 @@ class clsModulesFichaAee extends Model
     public $ref_cod_matricula;
     public $necessidades_aprendizagem;
     public $caracterizacao_pedagogica;
+    public $servidor_id;
 
     public function __construct(
         $id = null,
@@ -17,13 +18,14 @@ class clsModulesFichaAee extends Model
         $ref_cod_turma = null,
         $ref_cod_matricula = null,
         $necessidades_aprendizagem = null,
-        $caracterizacao_pedagogica = null
+        $caracterizacao_pedagogica = null,
+        $servidor_id = null
     ) {
         $db = new clsBanco();
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}ficha_aee";
 
-        $this->_from = "
+        $this->_from = '
                 modules.ficha_aee as fa            
             JOIN pmieducar.turma t
                 ON (t.cod_turma = fa.ref_cod_turma)
@@ -51,7 +53,7 @@ class clsModulesFichaAee extends Model
                 ON (u.id = t.turma_turno_id)
             LEFT JOIN pmieducar.turma_modulo q
                 ON (q.ref_cod_turma = t.cod_turma AND q.sequencial = 1)                              
-        ";
+        ';
 
         $this->_campos_lista = $this->_todos_campos = '
             fa.id,
@@ -68,7 +70,6 @@ class clsModulesFichaAee extends Model
             pe.nome AS professor
         ';
 
-
         if (is_numeric($id)) {
             $this->id = $id;
         }
@@ -76,16 +77,6 @@ class clsModulesFichaAee extends Model
         if (is_string($data)) {
             $this->data = $data;
         }
-
-        // if (is_numeric($int_ref_cod_curso)) {
-        //     $filtros .= "{$whereAnd} c.cod_curso = '{$int_ref_cod_curso}'";
-        //     $whereAnd = ' AND ';
-        // }
-
-        // if (is_numeric($int_ref_cod_serie)) {
-        //     $filtros .= "{$whereAnd} s.cod_serie = '{$int_ref_cod_serie}'";
-        //     $whereAnd = ' AND ';
-        // }
 
         if (is_numeric($ref_cod_turma)) {
             $this->ref_cod_turma = $ref_cod_turma;
@@ -102,10 +93,14 @@ class clsModulesFichaAee extends Model
         if (is_string($caracterizacao_pedagogica)) {
             $this->caracterizacao_pedagogica = $caracterizacao_pedagogica;
         }
+
+        if (is_numeric($servidor_id)) {
+            $this->servidor_id = $servidor_id;
+        }
     }
 
     /**
-     * Cria um novo registro
+     * Cria um novo registro.
      *
      * @return bool
      */
@@ -114,30 +109,34 @@ class clsModulesFichaAee extends Model
         if (is_numeric($this->ref_cod_turma)) {
             $db = new clsBanco();
 
-            $campos = "data, created_at";
+            $campos = 'data, created_at';
             $valores = "'{($this->data)}', (NOW() - INTERVAL '3 HOURS')";
 
-
             if (is_numeric($this->ref_cod_turma)) {
-                $campos     .=  ", ref_cod_turma";
-                $valores    .=  ", '$this->ref_cod_turma'";
+                $campos .= ', ref_cod_turma';
+                $valores .= ", '$this->ref_cod_turma'";
             }
 
             if (is_numeric($this->ref_cod_matricula)) {
-                $campos     .=  ", ref_cod_matricula";
-                $valores    .=  ", '$this->ref_cod_matricula'";
+                $campos .= ', ref_cod_matricula';
+                $valores .= ", '$this->ref_cod_matricula'";
             }
 
             if (is_string($this->necessidades_aprendizagem)) {
-                $campos     .=  ", necessidades_aprendizagem";
-                $valores    .=  ", '{$db->escapeString($this->necessidades_aprendizagem)}'";
+                $campos .= ', necessidades_aprendizagem';
+                $valores .= ", '{$db->escapeString($this->necessidades_aprendizagem)}'";
             }
 
             if (is_string($this->caracterizacao_pedagogica)) {
-                $campos     .=  ", caracterizacao_pedagogica";
-                $valores    .=  ", '{$db->escapeString($this->caracterizacao_pedagogica)}'";
+                $campos .= ', caracterizacao_pedagogica';
+                $valores .= ", '{$db->escapeString($this->caracterizacao_pedagogica)}'";
             }
-            
+
+            if (is_numeric($this->servidor_id)) {
+                $campos .= ', servidor_id';
+                $valores .= ", '$this->servidor_id'";
+            }
+
             $db->Consulta("
                 INSERT INTO
                     {$this->_tabela} ( $campos )
@@ -151,7 +150,7 @@ class clsModulesFichaAee extends Model
     }
 
     /**
-     * Edita os dados de um registro
+     * Edita os dados de um registro.
      *
      * @return bool
      */
@@ -185,7 +184,7 @@ class clsModulesFichaAee extends Model
     }
 
     /**
-     * Retorna uma lista filtrados de acordo com os parametros
+     * Retorna uma lista filtrados de acordo com os parametros.
      *
      * @return array
      */
@@ -198,7 +197,6 @@ class clsModulesFichaAee extends Model
         $int_ref_cod_matricula = null,
         $int_servidor_id = null
     ) {
-
         $sql = "
                 SELECT DISTINCT
                     {$this->_campos_lista}
@@ -207,7 +205,7 @@ class clsModulesFichaAee extends Model
                 ";
 
         $whereAnd = ' AND ';
-        $filtros = " WHERE TRUE ";
+        $filtros = ' WHERE TRUE ';
 
         if (is_numeric($int_ref_cod_ins)) {
             $filtros .= "{$whereAnd} i.cod_instituicao = '{$int_ref_cod_ins}'";
@@ -238,7 +236,7 @@ class clsModulesFichaAee extends Model
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
-        $sql .= $filtros . 'ORDER BY fa.data DESC' . $this->getLimite();
+        $sql .= $filtros.'ORDER BY fa.data DESC'.$this->getLimite();
 
         $this->_total = $db->CampoUnico(
             "SELECT
@@ -271,7 +269,7 @@ class clsModulesFichaAee extends Model
     }
 
     /**
-     * Retorna um array com os dados de um registro
+     * Retorna um array com os dados de um registro.
      *
      * @return array
      */
@@ -300,12 +298,13 @@ class clsModulesFichaAee extends Model
         return false;
     }
 
-     /**
-     * Retorna um array com os dados de um registro
+    /**
+     * Retorna um array com os dados de um registro.
      *
      * @return array
      */
-    public function existe () {
+    public function existe()
+    {
         if (is_numeric($this->ref_cod_turma) && is_numeric($this->ref_cod_matricula)) {
             $sql = "
                 SELECT
@@ -327,7 +326,7 @@ class clsModulesFichaAee extends Model
     }
 
     /**
-     * Exclui um registro
+     * Exclui um registro.
      *
      * @return bool
      */
