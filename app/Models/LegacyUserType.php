@@ -6,7 +6,6 @@ use App\Menu;
 use App\Traits\HasLegacyDates;
 use App\User;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection as SupportCollection;
@@ -81,9 +80,8 @@ class LegacyUserType extends LegacyModel
     /**
      * Retorna os processos e níveis de permissão em uma coleção chave => valor.
      *
-     * @return Collection
      */
-    public function getProcesses(): Collection
+    public function getProcesses(): SupportCollection
     {
         if ($this->level === self::LEVEL_ADMIN) {
             return collect(Menu::all()->pluck('id')->mapWithKeys(static fn ($id) => [$id => self::CAN_REMOVE]));
