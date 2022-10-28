@@ -28,7 +28,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property Carbon             $begin_academic_year
  * @property Carbon             $end_academic_year
  * @property LegacyCourse       $course
- * @property LegacyLevel        $grade
+ * @property LegacyGrade        $grade
  * @property LegacySchool       $school
  * @property LegacySchoolGrade  $schoolGrade
  * @property LegacyEnrollment[] $enrollments
@@ -272,7 +272,7 @@ class LegacySchoolClass extends Model
      */
     public function grade(): BelongsTo
     {
-        return $this->belongsTo(LegacyLevel::class, 'ref_ref_cod_serie');
+        return $this->belongsTo(LegacyGrade::class, 'ref_ref_cod_serie');
     }
 
     /**

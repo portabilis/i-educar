@@ -1,6 +1,6 @@
 <?php
 
-use Database\Factories\LegacyLevelFactory;
+use Database\Factories\LegacyGradeFactory;
 use Database\Factories\LegacyRegistrationFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -42,7 +42,7 @@ class AvaliacaoServiceSituacaoTest extends Avaliacao_Service_TestCommon
         $registration = LegacyRegistrationFactory::new()
             ->create(
                 [
-                    'ref_ref_cod_serie' => LegacyLevelFactory::new()->create(),
+                    'ref_ref_cod_serie' => LegacyGradeFactory::new()->create(),
                     'dependencia' => true,
                 ]
             );

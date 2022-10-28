@@ -43,7 +43,7 @@ class LegacyDisciplineTest extends EloquentTestCase
     /** @teste */
     public function getNameAttribute()
     {
-        $this->assertEquals($this->legacyDiscipline, $this->legacyDiscipline->getNameAttribute());
+        $this->assertEquals($this->legacyDiscipline, $this->legacyDiscipline->name);
     }
 
     /** @teste */

@@ -84,26 +84,32 @@ class LegacyUserType extends LegacyModel
     public function getProcesses(): SupportCollection
     {
         if ($this->level === self::LEVEL_ADMIN) {
-            return collect(Menu::all()->pluck('id')->mapWithKeys(static fn ($id) => [$id => self::CAN_REMOVE]));
+            return collect(
+                Menu::all()
+                    ->pluck('id')
+                    ->mapWithKeys(static fn ($id) => [$id => self::CAN_REMOVE])
+            );
         }
 
-        return $this->menus()->get()->mapWithKeys(function ($menu) {
-            $level = 0;
+        return $this->menus()
+            ->get()
+            ->mapWithKeys(static function ($menu) {
+                $level = 0;
 
-            if ($menu->pivot->visualiza ?? false) {
-                $level = 1;
-            }
+                if ($menu->pivot->visualiza ?? false) {
+                    $level = 1;
+                }
 
-            if ($menu->pivot->cadastra ?? false) {
-                $level = 2;
-            }
+                if ($menu->pivot->cadastra ?? false) {
+                    $level = 2;
+                }
 
-            if ($menu->pivot->exclui ?? false) {
-                $level = 3;
-            }
+                if ($menu->pivot->exclui ?? false) {
+                    $level = 3;
+                }
 
-            return [$menu->id => $level];
-        });
+                return [$menu->id => $level];
+            });
     }
 
     public function getLevelDescriptions(): SupportCollection

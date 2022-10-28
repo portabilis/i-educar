@@ -21,9 +21,7 @@ trait RegistrationScopes
      */
     public function studentIsActive()
     {
-        return $this->whereHas('student', static function (Builder $query) {
-            // Soft deletes já faz o filtro
-        });
+        return $this->whereHas('student');
     }
 
     /**

@@ -15,6 +15,10 @@ class LegacyModel extends Model
 
     public function __get($key)
     {
+        if (is_string($key) && method_exists($this, $key)) {
+            return parent::__get($key);
+        }
+
         return parent::__get($this->getLegacyColumn($key));
     }
 

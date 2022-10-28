@@ -51,7 +51,6 @@ class LegacyUser extends DefaultUser
     {
         return $this->belongsTo(LegacyUserType::class, 'ref_cod_tipo_usuario');
     }
-    //LegacyEmployee
 
     public function createdByEmployee(): BelongsTo
     {

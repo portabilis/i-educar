@@ -6,7 +6,7 @@ use App\Models\LegacyCourse;
 use App\Models\LegacyEnrollment;
 use App\Models\LegacyEvaluationRuleGradeYear;
 use App\Models\LegacyGrade;
-use App\Models\LegacyLevel;
+use App\Models\LegacyGrade;
 use App\Models\LegacyPeriod;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolAcademicYear;
@@ -36,7 +36,7 @@ class LegacySchoolClassTest extends EloquentTestCase
      */
     protected $relations = [
         'course' => LegacyCourse::class,
-        'grade' => LegacyLevel::class,
+        'grade' => LegacyGrade::class,
         'school' => LegacySchool::class,
         'period' => LegacyPeriod::class,
         'enrollments' => LegacyEnrollment::class,

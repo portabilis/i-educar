@@ -123,19 +123,6 @@ class LegacyRegistration extends LegacyModel
      * Relação com a série.
      *
      * @return BelongsTo
-     *
-     * @see grade()
-     * @deprecated
-     */
-    public function level()
-    {
-        return $this->belongsTo(LegacyLevel::class, 'ref_ref_cod_serie');
-    }
-
-    /**
-     * Relação com a série.
-     *
-     * @return BelongsTo
      */
     public function grade()
     {
@@ -173,11 +160,7 @@ class LegacyRegistration extends LegacyModel
      */
     public function lastEnrollment()
     {
-        $hasOne = $this->hasOne(LegacyEnrollment::class, 'ref_cod_matricula');
-
-        $hasOne->getQuery()->orderByDesc('sequencial');
-
-        return $hasOne;
+        return $this->hasOne(LegacyEnrollment::class, 'ref_cod_matricula')->orderBy('sequencial', 'DESC');
     }
 
     /**
