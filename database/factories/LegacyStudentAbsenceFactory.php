@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\LegacyStudentAbsence;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use RegraAvaliacao_Model_TipoPresenca;
 
 class LegacyStudentAbsenceFactory extends Factory
 {
@@ -22,8 +23,8 @@ class LegacyStudentAbsenceFactory extends Factory
     public function definition(): array
     {
         return [
-            'matricula_id' => fn () => LegacyRegistrationFactory::new()->create(),
-            'tipo_falta' => $this->faker->numberBetween(1, 2),
+            'matricula_id' => static fn () => LegacyRegistrationFactory::new()->create(),
+            'tipo_falta' => RegraAvaliacao_Model_TipoPresenca::GERAL,
         ];
     }
 }
