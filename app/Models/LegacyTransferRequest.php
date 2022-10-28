@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use App\Models\Builders\LegacyTransferRequestBuilder;
+use App\Models\Concerns\SoftDeletes\LegacySoftDeletes;
 use App\Traits\HasLegacyDates;
 use App\Traits\HasLegacyUserAction;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyTransferRequest extends LegacyModel
 {
+    use LegacySoftDeletes;
     use HasLegacyUserAction;
     use HasLegacyDates;
 
