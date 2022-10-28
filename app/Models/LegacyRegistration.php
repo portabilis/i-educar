@@ -160,11 +160,7 @@ class LegacyRegistration extends LegacyModel
      */
     public function lastEnrollment()
     {
-        $hasOne = $this->hasOne(LegacyEnrollment::class, 'ref_cod_matricula');
-
-        $hasOne->getQuery()->orderByDesc('sequencial');
-
-        return $hasOne;
+        return $this->hasOne(LegacyEnrollment::class, 'ref_cod_matricula')->orderBy('sequencial', 'DESC');
     }
 
     /**

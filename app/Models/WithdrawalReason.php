@@ -6,6 +6,7 @@ use App\Models\Concerns\SoftDeletes\LegacySoftDeletes;
 use App\Traits\HasInstitution;
 use App\Traits\HasLegacyDates;
 use App\Traits\HasLegacyUserAction;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class WithdrawalReason extends LegacyModel
 {
@@ -28,4 +29,12 @@ class WithdrawalReason extends LegacyModel
         'name' => 'nm_motivo',
         'description' => 'descricao'
     ];
+
+    /**
+     * @return HasMany
+     */
+    public function employeeWithdrawals(): HasMany
+    {
+        return $this->hasMany(EmployeeWithdrawal::class, 'ref_cod_motivo_afastamento');
+    }
 }

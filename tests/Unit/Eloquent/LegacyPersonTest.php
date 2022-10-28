@@ -2,6 +2,8 @@
 
 namespace Tests\Unit\App\Models;
 
+use App\Models\Employee;
+use App\Models\LegacyIndividual;
 use App\Models\LegacyPerson;
 use App\Models\LegacyPhone;
 use Tests\EloquentTestCase;
@@ -12,6 +14,8 @@ class LegacyPersonTest extends EloquentTestCase
 
     protected $relations = [
         'phone' => LegacyPhone::class,
+        'individual' => LegacyIndividual::class,
+        'employee' => Employee::class,
     ];
 
     /**
@@ -32,6 +36,6 @@ class LegacyPersonTest extends EloquentTestCase
     /** @test */
     public function getIdAttribute()
     {
-        $this->assertEquals($this->person->getIdAttribute(), $this->person->idpes);
+        $this->assertEquals($this->person->id, $this->person->idpes);
     }
 }

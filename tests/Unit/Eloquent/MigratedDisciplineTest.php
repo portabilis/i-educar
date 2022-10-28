@@ -20,7 +20,7 @@ class MigratedDisciplineTest extends EloquentTestCase
     /**
      * @return string
      */
-    protected function getEloquentModelName()
+    protected function getEloquentModelName(): string
     {
         return MigratedDiscipline::class;
     }

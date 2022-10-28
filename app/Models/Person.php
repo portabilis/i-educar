@@ -27,6 +27,18 @@ class Person extends Model
         return $this->belongsTo(Individual::class, 'updated_by', 'id');
     }
 
+    public function place(): HasOneThrough
+    {
+        return $this->hasOneThrough(
+            Place::class,
+            PersonHasPlace::class,
+            'person_id',
+            'id',
+            'id',
+            'place_id'
+        )->orderBy('type');
+    }
+
     protected function typeDescription(): Attribute
     {
         return Attribute::make(
@@ -39,20 +51,5 @@ class Person extends Model
         return Attribute::make(
             get: fn ($value) => (new RegistryOrigin())->getDescriptiveValues()[(int) $this->registry_origin],
         );
-    }
-
-    /**
-     * @return HasOneThrough
-     */
-    public function place(): HasOneThrough
-    {
-        return $this->hasOneThrough(
-            Place::class,
-            PersonHasPlace::class,
-            'person_id',
-            'id',
-            'id',
-            'place_id'
-        )->orderBy('type');
     }
 }

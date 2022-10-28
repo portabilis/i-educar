@@ -2,11 +2,11 @@
 
 namespace Tests\Unit\Eloquent;
 
+use App\Models\LegacyGeneralConfiguration;
 use App\Models\LegacyInstitution;
-use App\Models\LegacyTransferType;
 use Tests\EloquentTestCase;
 
-class LegacyTransferTypeTest extends EloquentTestCase
+class LegacyGeneralConfigurationTest extends EloquentTestCase
 {
     public $relations = [
         'institution' => LegacyInstitution::class,
@@ -15,8 +15,8 @@ class LegacyTransferTypeTest extends EloquentTestCase
     /**
      * @return string
      */
-    protected function getEloquentModelName(): string
+    protected function getEloquentModelName()
     {
-        return LegacyTransferType::class;
+        return LegacyGeneralConfiguration::class;
     }
 }
