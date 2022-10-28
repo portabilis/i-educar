@@ -78,7 +78,7 @@ class LegacyStudentTest extends EloquentTestCase
     {
         LegacyStudentFactory::new()->create(['ativo' => 0]);
         $found = $this->instanceNewEloquentModel()->active()->get();
-        $this->assertCount(2, $found);
+        $this->assertCount(1, $found);
     }
 
     public function testScopeMale(): void
@@ -97,7 +97,7 @@ class LegacyStudentTest extends EloquentTestCase
         $student2 = LegacyStudentFactory::new()->create([
             'ref_idpes' => $individual
         ]);
-        $found = $this->instanceNewEloquentModel()->female()->whereIn('cod_aluno', [$student2->cod_aluno,$this->model->cod_aluno])->get();
+        $found = $this->instanceNewEloquentModel()->female()->whereIn('cod_aluno', [$student2->cod_aluno, $this->model->cod_aluno])->get();
         $this->assertCount(1, $found);
     }
 }

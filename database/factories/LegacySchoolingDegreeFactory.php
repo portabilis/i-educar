@@ -12,7 +12,7 @@ class LegacySchoolingDegreeFactory extends Factory
     public function definition(): array
     {
         return [
-            'id' => $this->faker->randomDigitNotZero(),
+            'id' => $this->faker->unique()->randomDigitNotZero(),
             'description' => $this->faker->name,
             'schooling' => 1,
         ];
