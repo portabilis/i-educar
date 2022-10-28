@@ -17,7 +17,6 @@ class LegacySchoolClassBuilder extends LegacyBuilder
     {
         $this->active()->orderByName()->filter($filters);
 
-        //year é usado na query, mas não aparece no recurso
         return $this->setExcept(['year'])->resource(['id', 'name']);
     }
 
