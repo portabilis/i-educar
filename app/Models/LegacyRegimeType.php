@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\Ativo;
 use App\Traits\HasInstitution;
 use App\Traits\HasLegacyDates;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LegacyRegimeType extends LegacyModel
 {
@@ -32,4 +33,9 @@ class LegacyRegimeType extends LegacyModel
         'data_exclusao',
         'ativo',
     ];
+
+    public function courses(): HasMany
+    {
+        return $this->hasMany(LegacyCourse::class, 'ref_cod_tipo_regime');
+    }
 }

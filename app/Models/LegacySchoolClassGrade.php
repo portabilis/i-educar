@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacySchoolClassGrade extends Model
 {
@@ -22,7 +23,12 @@ class LegacySchoolClassGrade extends Model
         'boletim_diferenciado_id',
     ];
 
-    public function grade()
+    public function schoolClass(): BelongsTo
+    {
+        return $this->belongsTo(LegacySchoolClass::class, 'turma_id');
+    }
+
+    public function grade(): BelongsTo
     {
         return $this->belongsTo(LegacyGrade::class, 'serie_id');
     }
