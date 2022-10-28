@@ -149,6 +149,10 @@ return new class extends clsListagem {
             foreach ($lista as $registro) {
                 $data_formatada = dataToBrasil($registro['data']);
 
+                if (!$eh_professor && $registro['professor_turma'] != $registro['professor_registro']) {
+                    continue;
+                }
+
                 $lista_busca = [
                     "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">{$data_formatada}</a>",
                     "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">{$registro['turma']}</a>",
