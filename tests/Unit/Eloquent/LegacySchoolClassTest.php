@@ -6,7 +6,6 @@ use App\Models\LegacyCourse;
 use App\Models\LegacyEnrollment;
 use App\Models\LegacyEvaluationRuleGradeYear;
 use App\Models\LegacyGrade;
-use App\Models\LegacyGrade;
 use App\Models\LegacyPeriod;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolAcademicYear;
