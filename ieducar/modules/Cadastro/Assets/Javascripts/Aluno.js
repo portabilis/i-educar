@@ -1080,8 +1080,7 @@ var handleGetPersonDetails = function (dataResponse) {
   person_details = dataResponse;
 
   mae_details = dataResponse.mae_details;
-
-  responsavel_details = dataResponse.responsavel_details;
+  
 
   pai_details = dataResponse.pai_details;
 
@@ -1151,7 +1150,6 @@ var handleGetPersonDetails = function (dataResponse) {
   $j("#mae_id").trigger("change");
 
   if (dataResponse.responsavel_id) {
-    responsavel_details.nome = nomeResponsavel;
     $j("#responsavel_nome").val(
       dataResponse.responsavel_id + " - " + nomeResponsavel
     );
