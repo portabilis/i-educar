@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Models\Builders\LegacyEvaluationRuleBuilder;
 use App\Traits\LegacyAttribute;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -146,11 +146,10 @@ class LegacyEvaluationRule extends Model
         return $this->nota_geral_por_etapa == 1;
     }
 
-    /**
-     * @return string
-     */
-    public function getNameAttribute()
+    protected function name(): Attribute
     {
-        return $this->nome;
+        return Attribute::make(
+            get: fn ($value) => $this->nome,
+        );
     }
 }
