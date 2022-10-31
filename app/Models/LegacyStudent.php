@@ -5,8 +5,8 @@ namespace App\Models;
 use App\Models\Builders\LegacyStudentBuilder;
 use App\Traits\HasLegacyDates;
 use App\Traits\LegacyAttribute;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
@@ -62,7 +62,7 @@ class LegacyStudent extends LegacyModel
 
     protected function name(): Attribute
     {
-        return Attribute::make (
+        return Attribute::make(
             get: fn ($value) => $this->individual->person->name
         );
     }
