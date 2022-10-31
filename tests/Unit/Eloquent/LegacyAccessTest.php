@@ -14,4 +14,13 @@ class LegacyAccessTest extends EloquentTestCase
     {
         return LegacyAccess::class;
     }
+
+    /** @test */
+    public function getLastAccess()
+    {
+        $query = $this->model->getLastAccess();
+
+        $this->assertNotNull($query);
+        $this->assertInstanceOf(LegacyAccess::class, $query);
+    }
 }

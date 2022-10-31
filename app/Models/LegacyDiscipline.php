@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyDiscipline extends LegacyModel
@@ -45,39 +46,53 @@ class LegacyDiscipline extends LegacyModel
      */
     public $timestamps = false;
 
-    public function getInstitutionIdAttribute()
+    protected function institutionId(): Attribute
     {
-        return $this->instituicao_id;
+        return Attribute::make(
+            get: fn ($value) => $this->instituicao_id,
+        );
     }
 
-    public function getKnowledgeAreaIdAttribute()
+    protected function knowledgeAreaId(): Attribute
     {
-        return $this->area_conhecimento_id;
+        return Attribute::make(
+            get: fn ($value) => $this->area_conhecimento_id,
+        );
     }
 
-    public function getNameAttribute()
+    protected function name(): Attribute
     {
-        return $this->nome;
+        return Attribute::make(
+            get: fn ($value) => $this->nome,
+        );
     }
 
-    public function getAbbreviationAttribute()
+    protected function abbreviation(): Attribute
     {
-        return $this->abreviatura;
+        return Attribute::make(
+            get: fn ($value) => $this->abreviatura,
+        );
     }
 
-    public function getFoundationTypeAttribute()
+    protected function foundationType(): Attribute
     {
-        return $this->tipo_base;
+        return Attribute::make(
+            get: fn ($value) => $this->tipo_base,
+        );
     }
 
-    public function getOrderAttribute()
+    protected function order(): Attribute
     {
-        return $this->ordenamento;
+        return Attribute::make(
+            get: fn ($value) => $this->ordenamento,
+        );
     }
 
-    public function getEducacensoCodeAttribute()
+    protected function educacensoCode(): Attribute
     {
-        return $this->codigo_educacenso;
+        return Attribute::make(
+            get: fn ($value) => $this->codigo_educacenso,
+        );
     }
 
     /**
