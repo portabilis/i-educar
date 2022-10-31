@@ -6,8 +6,7 @@ use App\Models\LegacyTransferRequest;
 use App\Services\PromotionService;
 use Illuminate\Support\Facades\DB;
 
-return new class extends clsCadastro
-{
+return new class() extends clsCadastro {
     public $cod_transferencia_solicitacao;
     public $ref_cod_transferencia_tipo;
     public $ref_usuario_exc;
@@ -35,10 +34,10 @@ return new class extends clsCadastro
     {
         parent::__construct();
         Portabilis_View_Helper_Application::loadStylesheet($this, [
-            '/modules/Portabilis/Assets/Stylesheets/Frontend/Resource.css'
+            '/modules/Portabilis/Assets/Stylesheets/Frontend/Resource.css',
         ]);
         Portabilis_View_Helper_Application::loadJavascript($this, [
-            '/modules/Cadastro/Assets/Javascripts/TransferenciaSolicitacao.js'
+            '/modules/Cadastro/Assets/Javascripts/TransferenciaSolicitacao.js',
         ]);
     }
 
@@ -167,10 +166,12 @@ return new class extends clsCadastro
         if (is_null($det_matricula['data_matricula'])) {
             if (substr($det_matricula['data_cadastro'], 0, 10) > $this->data_cancel) {
                 $this->mensagem = 'Data de transferência não pode ser inferior a data da matrícula.<br>';
+
                 return false;
             }
         } elseif (substr($det_matricula['data_matricula'], 0, 10) > $this->data_cancel) {
             $this->mensagem = 'Data de transferência não pode ser inferior a data da matrícula.<br>';
+
             return false;
         }
 
@@ -236,10 +237,10 @@ return new class extends clsCadastro
 
         $atendimento = new clsModulesComponenteMinistradoAee();
         $dataAtendimento = $atendimento->selectDataAtendimentoByMatricula($_GET['ref_cod_matricula']);
-        
-        if (($obj_matricula->data_cancel <= $dataFrequencia['data']) || ($obj_matricula->data_cancel <= $dataAtendimento['data'])) {
+
+        if (($this->data_cancel <= $dataFrequencia['data']) || ($this->data_cancel <= $dataAtendimento['data'])) {
             $this->mensagem = 'Não é possível realizar a operação, existem frequências registradas no período <br>';
-           
+
             return false;
         }
 
