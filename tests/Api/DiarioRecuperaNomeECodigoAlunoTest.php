@@ -6,23 +6,31 @@ use Database\Factories\LegacyStudentFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
-class DiarioRecuperaNomeECodigoAluno extends TestCase
+class DiarioRecuperaNomeECodigoAlunoTest extends TestCase
 {
     use DatabaseTransactions;
-    use DiarioApiRequest;
-
-    protected function setUp(): void
-    {
-        dump(1);
-        parent::setUp();
-    }
+    use DiarioApiRequestTestTrait;
 
     public function testGetNomeCodigoAluno()
     {
-        $student = LegacyStudentFactory::new()->create()->name;
+        $student = LegacyStudentFactory::new()->create();
+        $data = [
+            'oper'=> 'get',
+            'resource' => 'aluno-search',
+            'query' =>  $student->name
+        ];
+        $response = $this->getResource('/module/Api/Aluno?', $data);
 
-       $response =  $this->get('/module/Api/Aluno?oper=get&', 'resource=aluno-search&query=' . $student);
+        $response->assertJsonStructure(
+            [
+                'result',
+                'oper',
+                'resource',
+                'msgs',
+                'any_error_msg'
+            ]
+        );
 
-       assert(true);
+        $this->assertStringContainsString($student->name, $response->getContent());
     }
 }
