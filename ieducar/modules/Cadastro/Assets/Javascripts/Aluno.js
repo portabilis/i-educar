@@ -14,8 +14,8 @@ if (modoCadastro) {
 $j("#autorizado_um").closest("tr").show();
 $j("#parentesco_um").closest("tr").show();
 
-$j('input[id^="historico_altura"]').mask("0.00", {reverse: true});
-$j('input[id^="historico_peso"]').mask("000.00", {reverse: true});
+$j('input[id^="historico_altura"]').mask("0.00", { reverse: true });
+$j('input[id^="historico_peso"]').mask("000.00", { reverse: true });
 
 $j("#autorizado_um").change(abriCampoDois);
 $j("#autorizado_dois").change(abriCampoTres);
@@ -49,6 +49,7 @@ var editar_pessoa = false;
 var person_details;
 var pai_details;
 var mae_details;
+var responsavel_details;
 var pessoaPaiOuMae;
 var $idField = $j("#id");
 var $nomeField = $j("#pessoa_nome");
@@ -119,7 +120,7 @@ function addLaudoMedico(url, data) {
             .attr("id", "link_excluir_laudo_medico_" + $id)
             .css("cursor", "pointer")
             .css("margin-left", "10px")
-            .click({i: $id}, excluirLaudoMedico)
+            .click({ i: $id }, excluirLaudoMedico)
         )
         .append(
           $j("<a>")
@@ -367,7 +368,7 @@ function addDocumento(url, data) {
             .attr("id", "link_excluir_documento_" + $id)
             .css("cursor", "pointer")
             .css("margin-left", "10px")
-            .click({i: $id}, excluirDocumento)
+            .click({ i: $id }, excluirDocumento)
         )
         .append(
           $j("<a>")
@@ -467,6 +468,14 @@ var $linkToCreatePessoaResponsavel = $linkToCreatePessoaPai
   .removeClass("cadastrar-pessoa-pai")
   .attr("id", "cadastrar-pessoa-responsavel-link")
   .addClass("cadastrar-pessoa-responsavel")
+  .appendTo($pessoaResponsavelActionBar)
+  .css("display", "none");
+
+var $linkToEditPessoaResponsavel = $linkToEditPessoaPai
+  .clone()
+  .removeClass("editar-pessoa-pai")
+  .addClass("editar-pessoa-responsavel")
+  .attr("id", "editar-pessoa-responsavel-link")
   .appendTo($pessoaResponsavelActionBar)
   .css("display", "none");
 
@@ -780,7 +789,7 @@ resourceOptions.handleGet = function (dataResponse) {
     $j("#aceita_hospital_proximo").val("on");
   }
 
-  if(dataResponse.vacina_covid == "S"){
+  if (dataResponse.vacina_covid == "S") {
     $j("#vacina_covid").attr("checked", true);
     $j("#vacina_covid").val("on");
   }
@@ -808,7 +817,7 @@ resourceOptions.handleGet = function (dataResponse) {
   $j("#desc_aceita_hospital_proximo").val(
     dataResponse.desc_aceita_hospital_proximo
   );
-  
+
 
   $j("#responsavel").val(dataResponse.responsavel);
   $j("#responsavel_parentesco").val(dataResponse.responsavel_parentesco);
@@ -1015,15 +1024,15 @@ var changeVisibilityOfLinksToPessoaResponsavel = function () {
 };
 
 var simpleSearchPaiOptions = {
-  autocompleteOptions: {close: changeVisibilityOfLinksToPessoaPai},
+  autocompleteOptions: { close: changeVisibilityOfLinksToPessoaPai },
 };
 
 var simpleSearchMaeOptions = {
-  autocompleteOptions: {close: changeVisibilityOfLinksToPessoaMae},
+  autocompleteOptions: { close: changeVisibilityOfLinksToPessoaMae },
 };
 
 var simpleSearchResponsavelOptions = {
-  autocompleteOptions: {close: changeVisibilityOfLinksToPessoaResponsavel},
+  autocompleteOptions: { close: changeVisibilityOfLinksToPessoaResponsavel },
 };
 
 $paiIdField.change(changeVisibilityOfLinksToPessoaPai);
@@ -1075,6 +1084,8 @@ var handleGetPersonDetails = function (dataResponse) {
 =======
   
 >>>>>>> 3255b70af... Em escolas - cadastros - alunos no campo do Responsável, adicionar a opção editar pessoa
+
+  responsavel_details = dataResponse.responsavel_details;
 
   pai_details = dataResponse.pai_details;
 
@@ -1144,6 +1155,7 @@ var handleGetPersonDetails = function (dataResponse) {
   $j("#mae_id").trigger("change");
 
   if (dataResponse.responsavel_id) {
+    responsavel_details.nome = nomeResponsavel;
     $j("#responsavel_nome").val(
       dataResponse.responsavel_id + " - " + nomeResponsavel
     );
@@ -1448,11 +1460,12 @@ var clearPersonDetails = function () {
   $j("#pessoa_id").val("");
   $j("#pai").val("");
   $j("#mae").val("");
+  $j("#responsavel").val("");
   $j(".pessoa-links .editar-pessoa").hide();
 };
 
 var simpleSearchPessoaOptions = {
-  autocompleteOptions: {close: updatePersonDetails},
+  autocompleteOptions: { close: updatePersonDetails },
 };
 
 function pegaDominio() {
@@ -2416,7 +2429,7 @@ function canShowParentsFields() {
         .add(estadocivilParent)
         .add(datanascParent)
         .add(falecidoParent);
-       
+
 
     $j("#dialog-form-pessoa-parent").dialog({
       autoOpen: false,
@@ -2639,6 +2652,7 @@ function canShowParentsFields() {
       }
     });
 
+
     $j("#editar-pessoa-pai-link").click(function () {
       if ($j("#pessoa_id").val()) {
         openEditModalParent("pai");
@@ -2648,6 +2662,12 @@ function canShowParentsFields() {
     $j("#editar-pessoa-mae-link").click(function () {
       if ($j("#pessoa_id").val()) {
         openEditModalParent("mae");
+      }
+    });
+
+    $j("#editar-pessoa-responsavel-link").click(function () {
+      if ($j("#pessoa_id").val()) {
+        openEditModalParent("responsavel");
       }
     });
 
@@ -2714,7 +2734,7 @@ function canShowParentsFields() {
       estadocivilParent.val(window[parentType + "_details"].estadocivil);
       sexoParent.val(window[parentType + "_details"].sexo);
       datanascParent.val(window[parentType + "_details"].data_nascimento);
-      
+
       falecidoParent.prop(
         "checked",
         window[parentType + "_details"].falecido
@@ -2830,7 +2850,7 @@ function canShowParentsFields() {
 
       if (cpf && !ignoreValidation.includes(cpf) && validatesCpf()) {
         getPersonByCpf(cpf);
-      }else{
+      } else {
         handleShowSubmit();
       }
     };
@@ -2859,7 +2879,7 @@ function canShowParentsFields() {
           .appendTo($cpfNotice);
 
         $j("body,html").animate(
-          {scrollTop: $j("body").offset().top},
+          { scrollTop: $j("body").offset().top },
           "fast"
         );
 
@@ -2876,7 +2896,7 @@ function canShowParentsFields() {
           "pessoa"
         ),
         dataType: "json",
-        data: {cpf: cpf},
+        data: { cpf: cpf },
         success: handleGetPersonByCpf,
         async: false,
       };
@@ -3025,7 +3045,7 @@ var handleSelect = function (event, ui) {
 
 var searchProjeto = function (request, response) {
   var searchPath = "/module/Api/Projeto?oper=get&resource=projeto-search";
-  var params = {query: request.term};
+  var params = { query: request.term };
 
   $j.get(searchPath, params, function (dataResponse) {
     simpleSearch.handleSearch(dataResponse, response);
