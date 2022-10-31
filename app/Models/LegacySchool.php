@@ -23,6 +23,8 @@ class LegacySchool extends Model
 {
     use LegacyAttribute;
 
+    public const CREATED_AT = 'data_cadastro';
+
     /**
      * @var string
      */
@@ -45,7 +47,7 @@ class LegacySchool extends Model
      *
      * @var string[]
      */
-    public $legacy = [
+    public array $legacy = [
         'id' => 'cod_escola',
         'name' => 'fantasia'
     ];
@@ -82,11 +84,6 @@ class LegacySchool extends Model
         'latitude',
         'longitude',
     ];
-
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
 
     protected function id(): Attribute
     {
@@ -199,42 +196,5 @@ class LegacySchool extends Model
     public function stages(): HasMany
     {
         return $this->hasMany(LegacyAcademicYearStage::class, 'ref_ref_cod_escola');
-    }
-
-    public function enrollments(): HasMany
-    {
-        return $this->hasMany(LegacyEnrollment::class, 'ref_cod_turma', 'cod_turma');
-    }
-
-    /**
-     * Retorna os dias da semana em um array
-     *
-     * @param string $value
-     *
-     * @return array|null
-     */
-    public function getDiasSemanaAttribute($value)
-    {
-        if (is_string($value)) {
-            $value = explode(',', str_replace(['{', '}'], '', $value));
-        }
-
-        return (array) $value;
-    }
-
-    /**
-     * Seta os dias da semana transformando um array em uma string
-     *
-     * @param array $values
-     *
-     * @return void
-     */
-    public function setDiasSemanaAttribute($values)
-    {
-        if (is_array($values)) {
-            $values = '{' . implode(',', $values) . '}';
-        }
-
-        $this->attributes['dias_semana'] = $values;
     }
 }
