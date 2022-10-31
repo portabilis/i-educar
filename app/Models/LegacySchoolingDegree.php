@@ -16,6 +16,14 @@ class LegacySchoolingDegree extends LegacyModel
      */
     protected $primaryKey = 'idesco';
 
+    public static function boot()
+    {
+        parent::boot();
+        static::creating(static function (self $legacySchoolingDegree) {
+            $legacySchoolingDegree->idesco = self::query()->max('idesco') + 1;
+        });
+    }
+
     /**
      * @var array
      */
