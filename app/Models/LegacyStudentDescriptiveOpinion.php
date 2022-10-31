@@ -30,7 +30,7 @@ class LegacyStudentDescriptiveOpinion extends Model
     /**
      * @return BelongsTo
      */
-    public function registration()
+    public function registration(): BelongsTo
     {
         return $this->belongsTo(LegacyRegistration::class, 'matricula_id');
     }
@@ -38,7 +38,7 @@ class LegacyStudentDescriptiveOpinion extends Model
     /**
      * @return HasMany
      */
-    public function descriptiveOpinions()
+    public function descriptiveOpinions(): HasMany
     {
         if ($this->isByDiscipline()) {
             return $this->hasMany(LegacyDisciplineDescriptiveOpinion::class, 'parecer_aluno_id');
@@ -47,10 +47,23 @@ class LegacyStudentDescriptiveOpinion extends Model
         return $this->hasMany(LegacyGeneralDescriptiveOpinion::class, 'parecer_aluno_id');
     }
 
+    public function descriptiveOpinionByDiscipline(): HasMany
+    {
+        return $this->hasMany(LegacyDisciplineDescriptiveOpinion::class, 'parecer_aluno_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function generalDescriptiveOpinion(): HasMany
+    {
+        return $this->hasMany(LegacyGeneralDescriptiveOpinion::class, 'parecer_aluno_id');
+    }
+
     /**
      * @return bool
      */
-    public function isByDiscipline()
+    public function isByDiscipline(): bool
     {
         return $this->parecer_descritivo == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE
             || $this->parecer_descritivo == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE;
@@ -59,19 +72,9 @@ class LegacyStudentDescriptiveOpinion extends Model
     /**
      * @return bool
      */
-    public function isGeneral()
+    public function isGeneral(): bool
     {
         return $this->parecer_descritivo == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL
             || $this->parecer_descritivo == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL;
-    }
-
-    public function descriptiveOpinionByDiscipline()
-    {
-        return $this->hasMany(LegacyDisciplineDescriptiveOpinion::class, 'parecer_aluno_id');
-    }
-
-    public function generalDescriptiveOpinion()
-    {
-        return $this->hasMany(LegacyGeneralDescriptiveOpinion::class, 'parecer_aluno_id');
     }
 }

@@ -21,6 +21,7 @@ class LegacyTransferTypeFactory extends Factory
     {
         return [
             'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
+            'ref_usuario_exc' => LegacyUserFactory::new()->unique()->make(),
             'nm_tipo' => $this->faker->firstName(),
             'desc_tipo' => $this->faker->paragraph(),
             'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make()

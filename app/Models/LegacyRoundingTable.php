@@ -12,6 +12,8 @@ class LegacyRoundingTable extends Model
      */
     protected $table = 'modules.tabela_arredondamento';
 
+    public const CREATED_AT = null;
+
     /**
      * @var array
      */
@@ -22,15 +24,18 @@ class LegacyRoundingTable extends Model
     ];
 
     /**
-     * @var bool
+     * @return HasMany
      */
-    public $timestamps = false;
+    public function roundingValues(): HasMany
+    {
+        return $this->hasMany(LegacyValueRoundingTable::class, 'tabela_arredondamento_id', 'id');
+    }
 
     /**
      * @return HasMany
      */
-    public function roundingValues()
+    public function evaluationRules(): HasMany
     {
-        return $this->hasMany(LegacyValueRoundingTable::class, 'tabela_arredondamento_id', 'id');
+        return $this->hasMany(LegacyEvaluationRule::class, 'tabela_arredondamento_id');
     }
 }
