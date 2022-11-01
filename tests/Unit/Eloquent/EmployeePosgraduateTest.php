@@ -18,13 +18,13 @@ class EmployeePosgraduateTest extends EloquentTestCase
     /**
      * @return string
      */
-    protected function getEloquentModelName()
+    protected function getEloquentModelName(): string
     {
         return EmployeePosgraduate::class;
     }
 
     /** @test  */
-    public function scopeProfessor()
+    public function scopeProfessor(): void
     {
         $employeePosGraduation = $this->createNewModel();
 

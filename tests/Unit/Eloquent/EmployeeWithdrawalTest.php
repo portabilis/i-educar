@@ -22,7 +22,7 @@ class EmployeeWithdrawalTest extends EloquentTestCase
     /**
      * @return string
      */
-    protected function getEloquentModelName()
+    protected function getEloquentModelName(): string
     {
         return EmployeeWithdrawal::class;
     }
