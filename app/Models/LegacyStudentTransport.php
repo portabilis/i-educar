@@ -23,7 +23,11 @@ class LegacyStudentTransport extends Model
      */
     protected $primaryKey = 'aluno_id';
 
-    protected $fillable = ['responsavel', 'user_id', 'aluno_id'];
+    protected $fillable = [
+        'responsavel',
+        'user_id',
+        'aluno_id'
+    ];
 
     public function student(): BelongsTo
     {
