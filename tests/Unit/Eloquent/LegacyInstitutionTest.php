@@ -69,7 +69,7 @@ class LegacyInstitutionTest extends EloquentTestCase
 
     public function testGetAllowRegistrationOutAcademicYearAttribute(): void
     {
-        $this->assertEquals((bool)$this->model->permitir_matricula_fora_periodo_letivo, $this->model->getAllowRegistrationOutAcademicYearAttribute());
+        $this->assertEquals((bool)$this->model->permitir_matricula_fora_periodo_letivo, $this->model->allowRegistrationOutAcademicYear);
     }
 
     public function testRelationshipEvaluationRules()
