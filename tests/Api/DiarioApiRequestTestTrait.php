@@ -205,8 +205,8 @@ trait DiarioApiRequestTestTrait
     public function getResource($uri, $params): \Illuminate\Testing\TestResponse
     {
         $data = [
-            'access_key' => env('API_ACCESS_KEY'),
-            'secret_key' => env('API_SECRET_KEY'),
+            'access_key' => config('legacy.apis.access_key'),
+            'secret_key' => config('legacy.apis.secret_key'),
         ];
 
         $data = array_merge($data, $params);
