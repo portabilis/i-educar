@@ -2,9 +2,10 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class AlterColumnChecaQuadroHorarioOnInstituicao extends Migration
+class UpdateChecaQuadroHorarioOnInstituicao extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +14,7 @@ class AlterColumnChecaQuadroHorarioOnInstituicao extends Migration
      */
     public function up()
     {
-        Schema::table('pmieducar.instituicao', function (Blueprint $table) {
-            $table->boolean('checa_qtd_aulas_quadro_horario')->default(false)->change();
-        });
+        DB::update('UPDATE pmieducar.instituicao SET checa_qtd_aulas_quadro_horario = ?', ['false']);
     }
 
     /**

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddColumnsChecaQuadroHorarioOnInstituicao extends Migration
+class AddColumnSabadoAlternadoQuadroHorarioOnInstituicao extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddColumnsChecaQuadroHorarioOnInstituicao extends Migration
     public function up()
     {
         Schema::table('pmieducar.instituicao', function (Blueprint $table) {
-            $table->boolean('checa_qtd_aulas_quadro_horario')->default(false);
+            $table->boolean('utiliza_sabado_alternado')->default(false);
         });
     }
 

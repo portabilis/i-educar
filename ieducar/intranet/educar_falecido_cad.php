@@ -1,9 +1,8 @@
 <?php
 
-return new class extends clsCadastro
-{
+return new class() extends clsCadastro {
     /**
-     * Referencia pega da session para o idpes do usuario atual
+     * Referencia pega da session para o idpes do usuario atual.
      *
      * @var int
      */
@@ -81,20 +80,15 @@ return new class extends clsCadastro
                 return false;
             }
         }
-        
-        $frequenciaAluno = new clsModulesFrequenciaAluno();
-        $aulasFaltou = $frequenciaAluno->existe($_GET['ref_cod_matricula']);
 
         $frequencia = new clsModulesFrequencia();
         $dataFrequencia = $frequencia->selectDataFrequenciaByTurma($_GET['turma']);
 
-        if ($obj_matricula->data_cancel <= $dataFrequencia['data'] || !$aulasFaltou) {            
-            $this->mensagem = 'Não é possível realizar a operação, existem frequências registradas no período<br>';
-        $frequencia = new clsModulesFrequencia();
-        $dataFrequencia = $frequencia->selectDataFrequenciaByTurma($_GET['turma']);
-       
-        if ($obj_matricula->data_cancel <= $dataFrequencia['data']) {
-            $this->mensagem = 'Existe(m) frequência(s) registrada(s) após a data solicitada <br>';
+        $atendimento = new clsModulesComponenteMinistradoAee();
+        $dataAtendimento = $atendimento->selectDataAtendimentoByMatricula($_GET['ref_cod_matricula']);
+
+        if (($obj_matricula->data_cancel <= $dataFrequencia['data']) || ($obj_matricula->data_cancel <= $dataAtendimento['data'])) {
+            $this->mensagem = 'Não é possível realizar a operação, existem frequências registradas no período <br>';
 
             return false;
         }
