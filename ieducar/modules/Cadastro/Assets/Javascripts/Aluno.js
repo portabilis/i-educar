@@ -1080,10 +1080,6 @@ var handleGetPersonDetails = function (dataResponse) {
   person_details = dataResponse;
 
   mae_details = dataResponse.mae_details;
-<<<<<<< HEAD
-=======
-  
->>>>>>> 3255b70af... Em escolas - cadastros - alunos no campo do Responsável, adicionar a opção editar pessoa
 
   responsavel_details = dataResponse.responsavel_details;
 
