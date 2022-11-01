@@ -47,6 +47,13 @@ class LegacyStudent extends LegacyModel
         return $this->belongsTo(LegacyIndividual::class, 'ref_idpes');
     }
 
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $this->individual->person->name
+        );
+    }
+
     /**
      * @return BelongsTo
      */

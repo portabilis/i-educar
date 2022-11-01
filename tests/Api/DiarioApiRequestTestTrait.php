@@ -201,4 +201,19 @@ trait DiarioApiRequestTestTrait
 
         return $response;
     }
+
+    public function getResource($uri, $params): \Illuminate\Testing\TestResponse
+    {
+        $data = [
+            'access_key' => config('legacy.apis.access_key'),
+            'secret_key' => config('legacy.apis.secret_key'),
+        ];
+
+        $data = array_merge($data, $params);
+        $_GET = $data;
+
+        $user = LegacyUserFactory::new()->admin()->make();
+
+        return $this->actingAs($user)->get($uri . http_build_query($data));
+    }
 }
