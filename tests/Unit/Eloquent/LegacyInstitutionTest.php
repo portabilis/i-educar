@@ -29,7 +29,7 @@ class LegacyInstitutionTest extends EloquentTestCase
     {
         $found = $this->instanceNewEloquentModel()->newQuery()->active()->get();
 
-        $this->assertCount(2, $found);
+        $this->assertCount(1, $found);
     }
 
     public function testIdAttribute(): void
