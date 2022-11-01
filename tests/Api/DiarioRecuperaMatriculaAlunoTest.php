@@ -21,7 +21,7 @@ class DiarioRecuperaMatriculaAlunoTest extends TestCase
             'aluno_id' =>  $enrollment->getStudentId()
         ];
 
-        $response = $this->getResource('/module/Api/Aluno?', $data);
+        $response = $this->getResource('/module/Api/Aluno', $data);
         $response->assertJsonStructure(
             [
                 'any_error_msg',
