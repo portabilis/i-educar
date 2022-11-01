@@ -321,7 +321,6 @@ class LegacySchoolClass extends Model
         return $this->hasMany(LegacySchoolClassGrade::class, 'turma_id');
     }
 
-
     /**
      * Retorna os dias da semana em um array
      *
