@@ -160,7 +160,9 @@ return new class() extends clsCadastro {
         $atendimento = new clsModulesComponenteMinistradoAee();
         $dataAtendimento = $atendimento->selectDataAtendimentoByMatricula($_GET['ref_cod_matricula']);
 
-        if (($this->data_cancel <= $dataFrequencia['data']) || ($this->data_cancel <= $dataAtendimento['data'])) {
+        $data_cancel = Portabilis_Date_Utils::brToPgSQL($this->data_cancel);
+
+        if (($data_cancel <= $dataFrequencia['data']) || ($data_cancel <= $dataAtendimento['data'])) {
             $this->mensagem = 'Não é possível realizar a operação, existem frequências registradas no período <br>';
 
             return false;
