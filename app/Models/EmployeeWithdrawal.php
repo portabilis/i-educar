@@ -33,16 +33,16 @@ class EmployeeWithdrawal extends LegacyModel
     /**
      * @return BelongsTo
      */
-    public function employee()
+    public function employee(): BelongsTo
     {
-        return $this->belongsTo(Employee::class, 'ref_cod_servidor', 'cod_servidor');
+        return $this->belongsTo(Employee::class, 'ref_cod_servidor');
     }
 
     /**
      * @return BelongsTo
      */
-    public function reason()
+    public function reason(): BelongsTo
     {
-        return $this->belongsTo(WithdrawalReason::class, 'ref_cod_motivo_afastamento', 'cod_motivo_afastamento');
+        return $this->belongsTo(WithdrawalReason::class, 'ref_cod_motivo_afastamento');
     }
 }

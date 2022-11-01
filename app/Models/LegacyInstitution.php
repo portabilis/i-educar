@@ -126,12 +126,11 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
         );
     }
 
-    /**
-     * @return bool
-     */
-    public function getAllowRegistrationOutAcademicYearAttribute(): bool
+    protected function allowRegistrationOutAcademicYear(): Attribute
     {
-        return (bool)$this->permitir_matricula_fora_periodo_letivo;
+        return Attribute::make(
+            get: fn ($value) => (bool)$this->permitir_matricula_fora_periodo_letivo
+        );
     }
 
     /**
