@@ -16,6 +16,8 @@ class LegacySingleQueueCriteria extends Model
      */
     protected $primaryKey = 'cod_criterio_fila_unica';
 
+    protected $fillable = ['nm_criterio'];
+
     /**
      * @var bool
      */

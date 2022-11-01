@@ -6,10 +6,10 @@ use App\Models\LegacyGeneralConfiguration;
 use App\Models\LegacyInstitution;
 use Tests\EloquentTestCase;
 
-class LegacyInstitutionTest extends EloquentTestCase
+class LegacyGeneralConfigurationTest extends EloquentTestCase
 {
     public $relations = [
-        'generalConfiguration' => LegacyGeneralConfiguration::class
+        'institution' => LegacyInstitution::class,
     ];
 
     /**
@@ -17,6 +17,6 @@ class LegacyInstitutionTest extends EloquentTestCase
      */
     protected function getEloquentModelName()
     {
-        return LegacyInstitution::class;
+        return LegacyGeneralConfiguration::class;
     }
 }

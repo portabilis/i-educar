@@ -61,8 +61,8 @@ class EmployeeTest extends EloquentTestCase
         $employee = $this->createNewModel();
 
         $this->assertInstanceOf(Employee::class, $employee);
-        $this->assertEquals($employee->id, $employee->getIdAttribute());
-        $this->assertIsInt($employee->getIdAttribute());
+        $this->assertEquals($employee->id, $employee->id);
+        $this->assertIsInt($employee->id);
         $this->assertEquals($employee->cod_servidor, $employee->id);
     }
 

@@ -2,16 +2,18 @@
 
 namespace App\Models;
 
-use App\Traits\HasLegacyDates;
+use App\Traits\HasInstitution;
 
 class LegacyGeneralConfiguration extends LegacyModel
 {
-    use HasLegacyDates;
+    use HasInstitution;
 
     /**
      * @var string
      */
     protected $table = 'pmieducar.configuracoes_gerais';
+
+    public $incrementing = false;
 
     /**
      * @var string
@@ -22,56 +24,30 @@ class LegacyGeneralConfiguration extends LegacyModel
      * @var array
      */
     protected $fillable = [
-        'ref_usuario_exc',
-        'ref_usuario_cad',
-        'ref_idtlog',
-        'ref_sigla_uf',
-        'cep',
-        'cidade',
-        'bairro',
-        'logradouro',
-        'numero',
-        'complemento',
-        'nm_responsavel',
-        'ddd_telefone',
-        'telefone',
-        'data_exclusao',
-        'ativo',
-        'nm_instituicao',
-        'data_base_remanejamento',
-        'data_base_transferencia',
-        'controlar_espaco_utilizacao_aluno',
-        'percentagem_maxima_ocupacao_salas',
-        'quantidade_alunos_metro_quadrado',
-        'exigir_vinculo_turma_professor',
-        'gerar_historico_transferencia',
-        'matricula_apenas_bairro_escola',
-        'restringir_historico_escolar',
-        'coordenador_transporte',
-        'restringir_multiplas_enturmacoes',
-        'permissao_filtro_abandono_transferencia',
-        'data_base_matricula',
-        'multiplas_reserva_vaga',
-        'reserva_integral_somente_com_renda',
-        'data_expiracao_reserva_vaga',
-        'data_fechamento',
-        'componente_curricular_turma',
-        'reprova_dependencia_ano_concluinte',
-        'controlar_posicao_historicos',
-        'data_educacenso',
-        'bloqueia_matricula_serie_nao_seguinte',
-        'permitir_carga_horaria',
-        'exigir_dados_socioeconomicos',
-        'altera_atestado_para_declaracao',
-        'orgao_regional',
-        'obrigar_campos_censo',
-        'obrigar_documento_pessoa',
-        'exigir_lancamentos_anteriores',
-        'exibir_apenas_professores_alocados',
+        'permite_relacionamento_posvendas',
+        'url_novo_educacao',
+        'mostrar_codigo_inep_aluno',
+        'justificativa_falta_documentacao_obrigatorio',
+        'tamanho_min_rede_estadual',
+        'modelo_boletim_professor',
+        'custom_labels',
+        'url_cadastro_usuariO',
+        'active_on_ieducar',
+        'ieducar_image',
+        'ieducar_entity_name',
+        'ieducar_login_footer',
+        'ieducar_external_footer',
+        'ieducar_internal_footer',
+        'facebook_url',
+        'twitter_url',
+        'linkedin_url',
+        'ieducar_suspension_message',
+        'bloquear_cadastro_aluno',
+        'token_novo_educacao',
+        'situacoes_especificas_atestados',
+        'emitir_ato_autorizativo',
+        'emitir_ato_criacao_credenciamento',
     ];
 
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 }

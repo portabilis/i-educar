@@ -19,7 +19,7 @@ class NotificationTest extends EloquentTestCase
         return Notification::class;
     }
 
-    public function testNeedsPresignerUrl()
+    public function testNeedsPresignerUrl(): void
     {
         $expect = in_array($this->model->type_id, [
             NotificationType::EXPORT_STUDENT,

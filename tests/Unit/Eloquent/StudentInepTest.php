@@ -19,4 +19,14 @@ class StudentInepTest extends EloquentTestCase
     {
         return StudentInep::class;
     }
+
+    protected function getLegacyAttributes(): array
+    {
+        return [
+            'student_id' => 'cod_aluno',
+            'number' => 'cod_aluno_inep',
+            'name' => 'nome_inep',
+            'font' => 'fonte'
+        ];
+    }
 }

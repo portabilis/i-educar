@@ -8,8 +8,6 @@ use Tests\EloquentTestCase;
 
 class LegacyDisciplineTest extends EloquentTestCase
 {
-    private LegacyDiscipline $legacyDiscipline;
-
     protected $relations = [
         'knowledgeArea' => LegacyKnowledgeArea::class,
     ];
@@ -22,51 +20,45 @@ class LegacyDisciplineTest extends EloquentTestCase
         return LegacyDiscipline::class;
     }
 
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->legacyDiscipline = $this->createNewModel();
-    }
-
-    /** @teste */
+    /** @test */
     public function getInstitutionIdAttribute()
     {
-        $this->assertEquals($this->legacyDiscipline, $this->legacyDiscipline->getInstitutionIdAttribute());
+        $this->assertEquals($this->model->instituicao_id, $this->model->institution_id);
     }
 
-    /** @teste */
+    /** @test */
     public function getKnowledgeAreaIdAttribute()
     {
-        $this->assertEquals($this->legacyDiscipline, $this->legacyDiscipline->getKnowledgeAreaIdAttribute());
+        $this->assertEquals($this->model->area_conhecimento_id, $this->model->knowledge_area_id);
     }
 
-    /** @teste */
+    /** @test */
     public function getNameAttribute()
     {
-        $this->assertEquals($this->legacyDiscipline, $this->legacyDiscipline->getNameAttribute());
+        $this->assertEquals($this->model->nome, $this->model->name);
     }
 
-    /** @teste */
+    /** @test */
     public function getAbbreviationAttribute()
     {
-        $this->assertEquals($this->legacyDiscipline, $this->legacyDiscipline->getAbbreviationAttribute());
+        $this->assertEquals($this->model->abreviatura, $this->model->abbreviation);
     }
 
-    /** @teste */
+    /** @test */
     public function getFoundationTypeAttribute()
     {
-        $this->assertEquals($this->legacyDiscipline, $this->legacyDiscipline->getFoundationTypeAttribute());
+        $this->assertEquals($this->model->tipo_base, $this->model->foundation_type);
     }
 
-    /** @teste */
+    /** @test */
     public function getOrderAttribute()
     {
-        $this->assertEquals($this->legacyDiscipline, $this->legacyDiscipline->getOrderAttribute());
+        $this->assertEquals($this->model->ordenamento, $this->model->order);
     }
 
-    /** @teste */
+    /** @test */
     public function getEducacensoCodeAttribute()
     {
-        $this->assertEquals($this->legacyDiscipline, $this->legacyDiscipline->getEducacensoCodeAttribute());
+        $this->assertEquals($this->model->codigo_educacenso, $this->model->educacenso_code);
     }
 }

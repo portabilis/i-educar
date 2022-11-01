@@ -26,9 +26,4 @@ class LegacyRace extends LegacyModel
         'nm_raca',
         'raca_educacenso',
     ];
-
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
 }

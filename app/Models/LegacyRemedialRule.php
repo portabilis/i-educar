@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyRemedialRule extends Model
 {
@@ -10,6 +11,8 @@ class LegacyRemedialRule extends Model
      * @var string
      */
     protected $table = 'modules.regra_avaliacao_recuperacao';
+
+    public const CREATED_AT = null;
 
     /**
      * @var array
@@ -28,14 +31,9 @@ class LegacyRemedialRule extends Model
     ];
 
     /**
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
      * @return array
      */
-    public function getStages()
+    public function getStages(): array
     {
         return explode(';', $this->etapas_recuperadas);
     }
@@ -43,8 +41,13 @@ class LegacyRemedialRule extends Model
     /**
      * @return int
      */
-    public function getLastStage()
+    public function getLastStage(): int
     {
         return max($this->getStages());
+    }
+
+    public function evaluationRule(): BelongsTo
+    {
+        return $this->belongsTo(LegacyEvaluationRule::class, 'regra_avaliacao_id');
     }
 }

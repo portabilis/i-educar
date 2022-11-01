@@ -2,18 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Models\LegacyStudentAbsence;
+use App\Models\LegacyGeneralConfiguration;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use RegraAvaliacao_Model_TipoPresenca;
 
-class LegacyStudentAbsenceFactory extends Factory
+class LegacyGeneralConfigurationFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = LegacyStudentAbsence::class;
+    protected $model = LegacyGeneralConfiguration::class;
 
     /**
      * Define the model's default state.
@@ -23,8 +22,7 @@ class LegacyStudentAbsenceFactory extends Factory
     public function definition(): array
     {
         return [
-            'matricula_id' => static fn () => LegacyRegistrationFactory::new()->create(),
-            'tipo_falta' => RegraAvaliacao_Model_TipoPresenca::GERAL,
+            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->create(),
         ];
     }
 }
