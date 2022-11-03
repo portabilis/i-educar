@@ -46,7 +46,7 @@ AS SELECT p.idpes AS id,
      LEFT JOIN cadastro.documento d ON d.idpes = p.idpes
      LEFT JOIN cadastro.estado_civil es ON es.ideciv = f.ideciv
      LEFT JOIN cadastro.fone_pessoa fon ON fon.idpes = p.idpes
-     LEFT JOIN cadastro.profissao pfs ON pfs.cod_profissao::varchar = f.ref_cod_profissao
+     LEFT JOIN cadastro.profissao pfs ON pfs.cod_profissao::varchar = f.ref_cod_profissao::varchar
      LEFT JOIN public.person_has_place plc ON plc.person_id = p.idpes
      LEFT JOIN public.places pl ON pl.id = plc.place_id
      LEFT JOIN public.cities ci ON ci.id = f.idmun_nascimento
