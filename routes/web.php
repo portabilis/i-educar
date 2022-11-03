@@ -136,4 +136,5 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
 
 Route::group(['namespace' => 'Exports', 'prefix' => 'exports'], function () {
     Route::get('students', 'StudentsController@export');
+    Route::get('responsavel', 'ResponsavelController@export');
 });
