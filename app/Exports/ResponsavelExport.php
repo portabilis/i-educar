@@ -38,6 +38,8 @@ class ResponsavelExport implements FromCollection, ShouldAutoSize, WithColumnFor
         $row[] = $responsavel->nis;
         $row[] = $responsavel->sus_number;
         $row[] = $responsavel->certidao;
+        $row[] = $responsavel->estado_emissao_cn;
+        $row[] = $responsavel->cartorio_emissao;
         $row[] = $responsavel->data_exp_certidao;
         $row[] = $responsavel->titulo;
         $row[] = $responsavel->zona;
@@ -52,7 +54,7 @@ class ResponsavelExport implements FromCollection, ShouldAutoSize, WithColumnFor
         $row[] = $responsavel->bank_account;
         $row[] = $responsavel->type_bank_account;
         
-
+ 
         return $row;
     }
 
@@ -68,6 +70,8 @@ class ResponsavelExport implements FromCollection, ShouldAutoSize, WithColumnFor
             'NIS',
             'Carteira do SUS',
             'Certidão de nascimento',
+            'Estado Emissão CN',
+            'Cartório Emissão',
             'Data Exp.Certidão',
             'Título de Eleitor',
             'Zona',
