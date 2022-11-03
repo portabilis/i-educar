@@ -42,14 +42,14 @@ class LegacySchoolGrade extends LegacyModel
     protected function schoolId(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->ref_cod_escola
+            get: fn () => $this->ref_cod_escola
         );
     }
 
     protected function gradeId(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->ref_cod_serie
+            get: fn () => $this->ref_cod_serie
         );
     }
 

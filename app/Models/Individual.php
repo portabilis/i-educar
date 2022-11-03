@@ -34,35 +34,35 @@ class Individual extends Model
     protected function genderDescription(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (new Gender())->getDescriptiveValues()[$this->gender]
+            get: fn () => (new Gender())->getDescriptiveValues()[$this->gender]
         );
     }
 
     protected function nationalityDescription(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (new Nationality())->getDescriptiveValues()[$this->nationality]
+            get: fn () => (new Nationality())->getDescriptiveValues()[$this->nationality]
         );
     }
 
     protected function registryOriginDescription(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (new RegistryOrigin())->getDescriptiveValues()[$this->registry_origin]
+            get: fn () => (new RegistryOrigin())->getDescriptiveValues()[$this->registry_origin]
         );
     }
 
     protected function localizationZoneDescription(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (new LocalizationZone())->getDescriptiveValues()[$this->localization_zone]
+            get: fn () => (new LocalizationZone())->getDescriptiveValues()[$this->localization_zone]
         );
     }
 
     protected function realName(): Attribute
     {
         return Attribute::make(
-            get: function ($value) {
+            get: function () {
                 if (empty($this->social_name)) {
                     return $this->person->name;
                 }

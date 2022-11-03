@@ -80,35 +80,35 @@ class LegacyEnrollment extends LegacyModel
     protected function date(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->data_enturmacao,
+            get: fn () => $this->data_enturmacao,
         );
     }
 
     protected function dateDeparted(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->data_exclusao,
+            get: fn () => $this->data_exclusao,
         );
     }
 
     protected function schoolClassId(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->ref_cod_turma,
+            get: fn () => $this->ref_cod_turma,
         );
     }
 
     protected function registrationId(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->ref_cod_matricula,
+            get: fn () => $this->ref_cod_matricula,
         );
     }
 
     protected function studentName(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->registration->student->person->nome,
+            get: fn () => $this->registration->student->person->nome ?? null,
         );
     }
 

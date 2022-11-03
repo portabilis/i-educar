@@ -46,14 +46,14 @@ class LegacyEmployee extends Model
     protected function login(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->matricula,
+            get: fn () => $this->matricula,
         );
     }
 
     protected function password(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->senha,
+            get: fn () => $this->senha,
             set: static fn ($value) => [
                 'senha' => $value,
             ],
@@ -63,21 +63,21 @@ class LegacyEmployee extends Model
     protected function departmentId(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->ref_cod_setor_new,
+            get: fn () => $this->ref_cod_setor_new,
         );
     }
 
     protected function menuType(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->tipo_menu,
+            get: fn () => $this->tipo_menu,
         );
     }
 
     protected function rememberToken(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->status_token,
+            get: fn () => $this->status_token,
             set: static fn ($value) => [
                 'status_token' => $value,
             ],
@@ -87,7 +87,7 @@ class LegacyEmployee extends Model
     protected function active(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->ativo,
+            get: fn () => $this->ativo,
         );
     }
 

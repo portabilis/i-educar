@@ -29,7 +29,7 @@ class LegacyIndividualPicture extends Model
     protected function url(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->caminho,
+            get: fn () => $this->caminho,
             set: fn ($value) => [
                 'caminho' => $value,
             ],
