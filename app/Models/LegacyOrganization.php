@@ -25,6 +25,14 @@ class LegacyOrganization extends Model
     /**
      * @var array
      */
+    protected $dates = [
+        'data_rev',
+        'data_cad',
+    ];
+
+    /**
+     * @var array
+     */
     protected $fillable = [
         'idpes',
         'cnpj',
