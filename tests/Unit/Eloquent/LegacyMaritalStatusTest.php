@@ -3,13 +3,13 @@
 namespace Tests\Unit\Eloquent;
 
 use App\Models\LegacyIndividual;
-use App\Models\LegacyRace;
+use App\Models\LegacyMaritalStatus;
 use Tests\EloquentTestCase;
 
-class LegacyRaceTest extends EloquentTestCase
+class LegacyMaritalStatusTest extends EloquentTestCase
 {
     protected $relations = [
-        'individual' => LegacyIndividual::class
+        'individuals' => LegacyIndividual::class
     ];
 
     /**
@@ -17,6 +17,6 @@ class LegacyRaceTest extends EloquentTestCase
      */
     protected function getEloquentModelName(): string
     {
-        return LegacyRace::class;
+        return LegacyMaritalStatus::class;
     }
 }
