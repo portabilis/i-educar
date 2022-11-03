@@ -24,7 +24,7 @@ class LegacyRegistrationDisciplinaryOccurrenceTypeFactory extends Factory
             'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
             'observacao' => $this->faker->paragraph(),
             'data_exclusao' => null,
-            'visivel_pais' => $this->faker->boolean()
+            'visivel_pais' => fn () => $this->faker->boolean()
         ];
     }
 }
