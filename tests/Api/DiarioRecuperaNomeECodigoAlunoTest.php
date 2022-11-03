@@ -19,7 +19,7 @@ class DiarioRecuperaNomeECodigoAlunoTest extends TestCase
             'resource' => 'aluno-search',
             'query' =>  $student->name
         ];
-        $response = $this->getResource('/module/Api/Aluno?', $data);
+        $response = $this->getResource('/module/Api/Aluno', $data);
 
         $response->assertJsonStructure(
             [
