@@ -1,5 +1,5 @@
 <?php
-
+ 
 namespace App\Http\Controllers;
 
 use App\Jobs\DatabaseToCsvExporter;
@@ -7,6 +7,7 @@ use App\Models\Exporter\Export;
 use App\Models\Exporter\SocialAssistance;
 use App\Models\Exporter\Stage;
 use App\Models\Exporter\Student;
+use App\Models\Exporter\Responsavel;
 use App\Models\Exporter\Teacher;
 use App\Process;
 use Illuminate\Http\RedirectResponse;
@@ -107,6 +108,9 @@ class ExportController extends Controller
         if ($model === Student::class) {
             $data = $this->filterStudents($request, $data, 'exporter_student');
         }
+        if ($model === Responsavel::class) {
+            $data = $this->filterResponsavel($request, $data, 'exporter_person');
+        }
 
         if ($model === Teacher::class) {
             $data = $this->filterTeachers($request, $data);
@@ -167,6 +171,32 @@ class ExportController extends Controller
 
         return $data;
     }
+
+    
+    /**
+     * @param Request $request
+     * @param array   $data
+     *
+     * @return array
+     */
+    protected function filterResponsavel(Request $request, $data, $table)
+    {
+        $data['filename'] = 'responsavel.csv';
+
+      
+        if ($cod_pessoa_fj = $request->input('cod_pessoa_fj')) {
+            $data['filters'][] = [
+                'column' => $table . '.id',
+                'operator' => '=',
+                'value' => intval($cod_pessoa_fj),
+            ];
+        }
+
+ 
+
+        return $data;
+    }
+
 
     /**
      * @param Request $request

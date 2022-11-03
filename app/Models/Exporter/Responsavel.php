@@ -1,18 +1,18 @@
 <?php
- 
+
 namespace App\Models\Exporter;
 
-use App\Models\Exporter\Builders\StudentEloquentBuilder;
+use App\Models\Exporter\Builders\ResponsavelEloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 
-class Student extends Model
+class Responsavel extends Model
 {
     /**
      * @var string
      */
-    protected $table = 'exporter_student';
+    protected $table = 'exporter_responsavel';
 
     /**
      * @var Collection
@@ -22,11 +22,11 @@ class Student extends Model
     /**
      * @param Builder $query
      *
-     * @return StudentEloquentBuilder
+     * @return ResponsavelEloquentBuilder
      */
     public function newEloquentBuilder($query)
     {
-        return new StudentEloquentBuilder($query);
+        return new ResponsavelEloquentBuilder($query);
     }
 
     /**
@@ -35,16 +35,8 @@ class Student extends Model
     public function getExportedColumnsByGroup()
     {
         return [
-            'Códigos' => [
-                'id' => 'ID Pessoa',
-                'student_id' => 'ID Aluno',
-                'registration_id' => 'ID Matrícula',
-                'school_id' => 'ID Escola',
-                'school_class_id' => 'ID Turma',
-                'grade_id' => 'ID Série',
-                'course_id' => 'ID Curso',
-            ],
             'Aluno' => [
+                'id' => 'ID',
                 'name' => 'Nome',
                 'social_name' => 'Nome social e/ou afetivo',
                 'cpf' => 'CPF',
@@ -59,28 +51,8 @@ class Student extends Model
                 'organization' => 'Empresa',
                 'monthly_income' => 'Renda Mensal',
                 'gender' => 'Gênero',
-            ],
-            'Escola' => [
-                'school' => 'Escola',
-                'school_inep' => 'Código INEP',
-                'school_class' => 'Turma',
-                'grade' => 'Série',
-                'course' => 'Curso',
-                'registration_date' => 'Data da Matrícula',
-                'registration_out' => 'Data de saída da matrícula',
-                'year' => 'Ano',
-                'status_text' => 'Situação da Matrícula',
-                'period' => 'Turno',
-                'school_class_stage' => 'Etapa Educacenso',
-            ],
-            'Informações' => [
-                'nationality' => 'Nacionalidade',
-                'birthplace' => 'Naturalidade',
                 'phones.phones' => 'Telefones',
-                'benefits.benefits' => 'Benefícios',
                 'disabilities.disabilities' => 'Deficiências',
-                'modalidade_ensino' => 'Modalidade de ensino cursada',
-                'technological_resources' => 'Recursos tecnológicos',
             ],
             'Endereço' => [
                 'place.address' => 'Logradouro',
@@ -154,7 +126,7 @@ class Student extends Model
      */
     public function getLabel()
     {
-        return 'Alunos';
+        return 'Pessoas';
     }
 
     /**

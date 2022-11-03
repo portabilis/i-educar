@@ -215,7 +215,7 @@ return new class extends clsListagem {
             $this->acao = 'go("/module/Cadastro/aluno")';
             $this->nome_acao = 'Novo';
         }
-
+ 
         if ($_GET) {
             $this->array_botao_script = ['dataExport("formcadastro", "students")'];
             $this->array_botao = ['Exportar para planilha'];

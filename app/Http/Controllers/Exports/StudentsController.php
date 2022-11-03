@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StudentsExport as Request;
 use iEducar\Support\Repositories\StudentRepository;
 use Maatwebsite\Excel\Facades\Excel;
-
+ 
 class StudentsController extends Controller
 {
     protected $studentRepository;
