@@ -1151,6 +1151,7 @@ var handleGetPersonDetails = function (dataResponse) {
   $j("#mae_id").trigger("change");
 
   if (dataResponse.responsavel_id) {
+
     $j("#responsavel_nome").val(
       dataResponse.responsavel_id + " - " + nomeResponsavel
     );
