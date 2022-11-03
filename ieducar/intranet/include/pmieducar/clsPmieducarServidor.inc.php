@@ -1,5 +1,5 @@
 <?php
-
+ 
 use iEducar\Legacy\Model;
 
 class clsPmieducarServidor extends Model
@@ -283,7 +283,7 @@ class clsPmieducarServidor extends Model
         $tabela_compl = 'LEFT JOIN cadastro.pessoa p ON (s.cod_servidor = p.idpes)
                       LEFT JOIN portal.funcionario func ON (s.cod_servidor = func.ref_cod_pessoa_fj)
                       LEFT JOIN pmieducar.servidor_funcao as sf ON s.cod_servidor = sf.ref_cod_servidor ';
-
+        
         $filtros = "WHERE s.ativo = '1'
                         AND s.ref_cod_instituicao = $cod_instituicao
                         AND (s.cod_servidor IN (SELECT a.ref_cod_servidor
@@ -468,7 +468,7 @@ class clsPmieducarServidor extends Model
             $filtros .= "{$whereAnd} EXISTS (SELECT 1 FROM cadastro.pessoa WHERE idpes = cod_servidor and unaccent(nome) ILIKE unaccent('%{$nome_servidor}%'))";
             $whereAnd = ' AND ';
         }
-
+        
         // Seleciona apenas servidores que tenham a carga atual maior ou igual ao
         // do servidor atual
         if (is_string($str_tipo) && $str_tipo == 'livre') {
@@ -1250,8 +1250,6 @@ class clsPmieducarServidor extends Model
      * Primeiro, recuperamos todas as funções do servidor e procuramos
      * por um dos itens que tenha o nome da função 'Coordenador' e o cod_funcao igual a 2.
      *
-     * A condição cod_funcao == 4 é devido ao primeiro cliente não está padronizado.
-     *
      * @return bool TRUE caso o servidor desempenhe a função de coordenador
      *
      */
@@ -1259,8 +1257,7 @@ class clsPmieducarServidor extends Model
     {
         $funcoes = $this->getServidorFuncoes();
         foreach ($funcoes as $funcao) {
-            if (($funcao['nm_funcao'] == 'Coordenador' && $funcao['cod_funcao'] == 2) ||
-                ($funcao['nm_funcao'] == 'Coordenador' && $funcao['cod_funcao'] == 4)) {
+            if ($funcao['nm_funcao'] == 'Coordenador' && $funcao['cod_funcao'] == 2) {
                 return true;
             }
         }
