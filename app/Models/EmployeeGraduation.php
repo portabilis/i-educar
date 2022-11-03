@@ -18,9 +18,19 @@ class EmployeeGraduation extends LegacyModel
     /**
      * @return BelongsTo
      */
-    public function employee()
+    public function employee(): BelongsTo
     {
-        return $this->belongsTo(Employee::class, 'employee_id', 'cod_servidor');
+        return $this->belongsTo(Employee::class, 'employee_id');
+    }
+
+    public function educacensoDegree(): BelongsTo
+    {
+        return $this->belongsTo(EducacensoDegree::class, 'course_id');
+    }
+
+    public function educacensoInstitution(): BelongsTo
+    {
+        return $this->belongsTo(EducacensoInstitution::class, 'college_id');
     }
 
     /**

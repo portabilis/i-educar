@@ -2,6 +2,8 @@
 
 namespace Tests\Unit\Eloquent;
 
+use App\Models\EducacensoDegree;
+use App\Models\EducacensoInstitution;
 use App\Models\Employee;
 use App\Models\EmployeeGraduation;
 use Tests\EloquentTestCase;
@@ -10,18 +12,20 @@ class EmployeeGraduationTest extends EloquentTestCase
 {
     public $relations = [
         'employee' => Employee::class,
+        'educacensoDegree' => EducacensoDegree::class,
+        'educacensoInstitution' => EducacensoInstitution::class
     ];
 
     /**
      * @return string
      */
-    protected function getEloquentModelName()
+    protected function getEloquentModelName(): string
     {
         return EmployeeGraduation::class;
     }
 
     /** @test  */
-    public function scopeProfessor()
+    public function scopeProfessor(): void
     {
         $employeeGraduation = $this->createNewModel();
 

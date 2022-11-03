@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class EducacensoDegree extends Model
 {
@@ -29,4 +30,14 @@ class EducacensoDegree extends Model
         'created_at',
         'grau_academico'
     ];
+
+    public function employeeGraduations(): HasMany
+    {
+        return $this->hasMany(EmployeeGraduation::class, 'course_id');
+    }
+
+    public function employees(): HasMany
+    {
+        return $this->hasMany(Employee::class, 'codigo_curso_superior_2');
+    }
 }

@@ -63,7 +63,7 @@ class LegacySchoolAcademicYear extends LegacyModel
     protected function year(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->ano
+            get: fn () => $this->ano
         );
     }
 

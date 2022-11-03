@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\HasLegacyDates;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacySchoolGrade extends LegacyModel
@@ -38,20 +39,18 @@ class LegacySchoolGrade extends LegacyModel
      */
     public $timestamps = false;
 
-    /**
-     * @return int
-     */
-    public function getSchoolIdAttribute()
+    protected function schoolId(): Attribute
     {
-        return $this->ref_cod_escola;
+        return Attribute::make(
+            get: fn () => $this->ref_cod_escola
+        );
     }
 
-    /**
-     * @return int
-     */
-    public function getGradeIdAttribute()
+    protected function gradeId(): Attribute
     {
-        return $this->ref_cod_serie;
+        return Attribute::make(
+            get: fn () => $this->ref_cod_serie
+        );
     }
 
     /**
@@ -59,7 +58,7 @@ class LegacySchoolGrade extends LegacyModel
      *
      * @return BelongsTo
      */
-    public function grade()
+    public function grade(): BelongsTo
     {
         return $this->belongsTo(LegacyGrade::class, 'ref_cod_serie');
     }
