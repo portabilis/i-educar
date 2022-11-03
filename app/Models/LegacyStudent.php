@@ -85,7 +85,7 @@ class LegacyStudent extends LegacyModel
     protected function guardianType(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->tipo_responsavel
+            get: fn () => $this->tipo_responsavel
         );
     }
 
