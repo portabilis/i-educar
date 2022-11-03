@@ -72,7 +72,7 @@ class LegacyRegistration extends LegacyModel
     protected function id(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) =>  $this->cod_matricula
+            get: fn () =>  $this->cod_matricula
         );
     }
 
@@ -84,14 +84,14 @@ class LegacyRegistration extends LegacyModel
     protected function isDependency(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) =>  $this->dependencia
+            get: fn () =>  $this->dependencia
         );
     }
 
     protected function year(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) =>  $this->ano
+            get: fn () =>  $this->ano
         );
     }
 
@@ -180,21 +180,21 @@ class LegacyRegistration extends LegacyModel
     protected function isTransferred(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) =>  $this->aprovado == App_Model_MatriculaSituacao::TRANSFERIDO
+            get: fn () =>  $this->aprovado == App_Model_MatriculaSituacao::TRANSFERIDO
         );
     }
 
     protected function isAbandoned(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) =>  $this->aprovado == App_Model_MatriculaSituacao::ABANDONO
+            get: fn () =>  $this->aprovado == App_Model_MatriculaSituacao::ABANDONO
         );
     }
 
     protected function isCanceledA(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) =>  $this->ativo === 0
+            get: fn () =>  $this->ativo === 0
         );
     }
 
@@ -249,7 +249,7 @@ class LegacyRegistration extends LegacyModel
     protected function statusDescription(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (new RegistrationStatus())->getDescriptiveValues()[(int)$this->aprovado]
+            get: fn () => (new RegistrationStatus())->getDescriptiveValues()[(int)$this->aprovado]
         );
     }
 

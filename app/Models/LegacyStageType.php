@@ -54,7 +54,7 @@ class LegacyStageType extends LegacyModel
     protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => sprintf('%s - %d etapa(s)', $this->nm_tipo, $this->num_etapas)
+            get: fn () => sprintf('%s - %d etapa(s)', $this->nm_tipo, $this->num_etapas)
         );
     }
 

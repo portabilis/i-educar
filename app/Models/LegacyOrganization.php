@@ -58,7 +58,7 @@ class LegacyOrganization extends Model
     protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->fantasia
+            get: fn () => $this->fantasia
         );
     }
 

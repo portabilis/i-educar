@@ -35,7 +35,7 @@ class EmployeeInep extends LegacyModel
     protected function number(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->cod_docente_inep
+            get: fn () => $this->cod_docente_inep
         );
     }
 

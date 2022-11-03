@@ -77,35 +77,35 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
     protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->nm_instituicao
+            get: fn () => $this->nm_instituicao
         );
     }
 
     protected function city(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->cidade
+            get: fn () => $this->cidade
         );
     }
 
     protected function state(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->ref_sigla_uf
+            get: fn () => $this->ref_sigla_uf
         );
     }
 
     protected function relocationDate(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->data_base_remanejamento
+            get: fn () => $this->data_base_remanejamento
         );
     }
 
     protected function educacensoDate(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->data_educacenso
+            get: fn () => $this->data_educacenso
         );
     }
 
@@ -122,14 +122,14 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
     protected function id(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->cod_instituicao
+            get: fn () => $this->cod_instituicao
         );
     }
 
     protected function allowRegistrationOutAcademicYear(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (bool)$this->permitir_matricula_fora_periodo_letivo
+            get: fn () => (bool)$this->permitir_matricula_fora_periodo_letivo
         );
     }
 

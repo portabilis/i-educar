@@ -140,7 +140,7 @@ class LegacySchoolClass extends Model
     protected function id(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->cod_turma,
+            get: fn () => $this->cod_turma,
         );
     }
 
@@ -160,42 +160,42 @@ class LegacySchoolClass extends Model
     protected function year(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->ano,
+            get: fn () => $this->ano,
         );
     }
 
     protected function schoolId(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->ref_ref_cod_escola,
+            get: fn () => $this->ref_ref_cod_escola,
         );
     }
 
     protected function courseId(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->ref_cod_curso,
+            get: fn () => $this->ref_cod_curso,
         );
     }
 
     protected function gradeId(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->ref_ref_cod_serie,
+            get: fn () => $this->ref_ref_cod_serie,
         );
     }
 
     protected function visible(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->visivel,
+            get: fn () => $this->visivel,
         );
     }
 
     protected function exemptedDisciplineId(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->ref_cod_disciplina_dispensada,
+            get: fn () => $this->ref_cod_disciplina_dispensada,
         );
     }
 

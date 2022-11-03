@@ -63,14 +63,14 @@ class LegacyPerson extends Model
     protected function id(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->idpes
+            get: fn () => $this->idpes
         );
     }
 
     protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) =>  $this->nome
+            get: fn () =>  $this->nome
         );
     }
 

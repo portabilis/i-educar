@@ -35,7 +35,7 @@ class LegacyEmployeeRole extends LegacyModel
     protected function id(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->cod_servidor_funcao
+            get: fn () => $this->cod_servidor_funcao
         );
     }
 
