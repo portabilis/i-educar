@@ -9,7 +9,7 @@ use Tests\EloquentTestCase;
 class FileTest extends EloquentTestCase
 {
     protected $relations = [
-        'relations' => [FileRelation::class],
+        'relations' => FileRelation::class,
     ];
 
     /**

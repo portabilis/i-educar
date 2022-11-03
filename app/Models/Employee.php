@@ -7,6 +7,7 @@ use App\Traits\HasInstitution;
 use App\Traits\HasLegacyDates;
 use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -52,12 +53,11 @@ class Employee extends LegacyModel
         return $this->belongsTo(EmployeeInep::class, 'cod_servidor', 'cod_servidor');
     }
 
-    /**
-     * @return int
-     */
-    public function getIdAttribute()
+    protected function id(): Attribute
     {
-        return $this->cod_servidor;
+        return Attribute::make(
+            get: fn ($value) => $this->cod_servidor,
+        );
     }
 
     /**

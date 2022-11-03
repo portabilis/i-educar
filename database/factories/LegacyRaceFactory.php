@@ -7,15 +7,24 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyRaceFactory extends Factory
 {
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
     protected $model = LegacyRace::class;
 
-    public function definition()
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition(): array
     {
-       return [
-           'idpes_cad' => LegacyUserFactory::new()->unique()->make(),
-           'nm_raca' => $this->faker->colorName(),
-           'raca_educacenso' => random_int(0,5),
-       ];
+        return [
+            'idpes_cad' => LegacyUserFactory::new()->unique()->make(),
+            'nm_raca' => $this->faker->colorName(),
+            'raca_educacenso' => random_int(0, 5),
+        ];
     }
-
 }

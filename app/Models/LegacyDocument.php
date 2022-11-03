@@ -11,6 +11,10 @@ use Illuminate\Database\Eloquent\Model;
  */
 class LegacyDocument extends Model
 {
+    public const CREATED_AT = 'data_cad';
+
+    public const UPDATED_AT = null;
+
     /**
      * @var string
      */
@@ -25,13 +29,12 @@ class LegacyDocument extends Model
      * @var array
      */
     protected $fillable = [
-        'idpes', 'rg', 'certidao_nascimento', 'data_cad', 'operacao', 'origem_gravacao'
+        'idpes',
+        'rg',
+        'certidao_nascimento',
+        'operacao',
+        'origem_gravacao'
     ];
-
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * The "booting" method of the model.
@@ -45,7 +48,6 @@ class LegacyDocument extends Model
         static::creating(function ($model) {
             $model->origem_gravacao = 'M';
             $model->operacao = 'I';
-            $model->data_cad = now()->format('Y-m-d');
         });
     }
 }

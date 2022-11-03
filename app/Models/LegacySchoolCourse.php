@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use App\Traits\HasLegacyDates;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacySchoolCourse extends LegacyModel
 {
     use HasLegacyDates;
+
+    public const CREATED_AT = 'data_cadastro';
 
     /**
      * @var string
@@ -33,17 +36,12 @@ class LegacySchoolCourse extends LegacyModel
         'updated_at',
     ];
 
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
-
-    public function school()
+    public function school(): BelongsTo
     {
         return $this->belongsTo(LegacySchool::class, 'ref_cod_escola');
     }
 
-    public function course()
+    public function course(): BelongsTo
     {
         return $this->belongsTo(LegacyCourse::class, 'ref_cod_curso');
     }

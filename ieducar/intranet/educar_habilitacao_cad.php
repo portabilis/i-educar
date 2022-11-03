@@ -33,7 +33,7 @@ return new class extends clsCadastro {
         $obj_permissoes->permissao_cadastra(573, $this->pessoa_logada, 3, 'educar_habilitacao_lst.php');
 
         if (is_numeric($this->cod_habilitacao)) {
-            $registro = LegacyQualification::find($this->cod_habilitacao)?->toArray();
+            $registro = LegacyQualification::find($this->cod_habilitacao)?->getAttributes();
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;

@@ -12,8 +12,8 @@ class CityTest extends EloquentTestCase
 {
     protected $relations = [
         'state' => State::class,
-        'districts' => [District::class],
-        'places' => [Place::class],
+        'districts' => District::class,
+        'places' => Place::class,
     ];
 
     /**
@@ -22,5 +22,21 @@ class CityTest extends EloquentTestCase
     protected function getEloquentModelName()
     {
         return City::class;
+    }
+
+    /** @test */
+    public function queryFindByName()
+    {
+        $query = City::queryFindByName($this->model->name)->first();
+
+        $this->assertEquals($this->model->name, $query->name);
+    }
+
+    /** @test */
+    public function getNameById()
+    {
+        $query = City::getNameById($this->model->id);
+
+        $this->assertEquals($this->model->name, $query);
     }
 }

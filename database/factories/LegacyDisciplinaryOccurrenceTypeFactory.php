@@ -20,11 +20,12 @@ class LegacyDisciplinaryOccurrenceTypeFactory extends Factory
     public function definition()
     {
         return [
-            'ref_usuario_cad' => fn () => LegacyUserFactory::new()->unique()->make(),
-            'nm_tipo' => $this->faker->firstName(),
-            'descricao' => $this->faker->paragraph(),
-            'max_ocorrencias' => $this->faker->numberBetween(1, 5),
-            'ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()->unique()->make()
+            'created_by' => fn () => LegacyUserFactory::new()->unique()->make(),
+            'deleted_by' => fn () => LegacyUserFactory::new()->unique()->make(),
+            'name' => $this->faker->firstName(),
+            'description' => $this->faker->paragraph(),
+            'max' => $this->faker->numberBetween(1, 5),
+            'institution_id' => fn () => LegacyInstitutionFactory::new()->unique()->make()
         ];
     }
 }

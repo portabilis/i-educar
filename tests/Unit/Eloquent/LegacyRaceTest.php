@@ -7,6 +7,9 @@ use Tests\EloquentTestCase;
 
 class LegacyRaceTest extends EloquentTestCase
 {
+    /**
+     * @return string
+     */
     protected function getEloquentModelName()
     {
         return LegacyRace::class;

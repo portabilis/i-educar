@@ -8,6 +8,7 @@ use App\Models\EmployeeGraduation;
 use App\Models\EmployeeInep;
 use App\Models\LegacyEmployeeRole;
 use App\Models\LegacyIndividual;
+use App\Models\LegacyInstitution;
 use App\Models\LegacyPerson;
 use App\Models\LegacySchoolingDegree;
 use Database\Factories\EmployeeFactory;
@@ -19,10 +20,11 @@ class EmployeeTest extends EloquentTestCase
 {
     protected $relations = [
         'person' => LegacyPerson::class,
-        'employeeAllocations' => [EmployeeAllocation::class],
-        'employeeRoles' => [LegacyEmployeeRole::class],
-        'graduations' => [EmployeeGraduation::class],
+        'employeeAllocations' => EmployeeAllocation::class,
+        'employeeRoles' => LegacyEmployeeRole::class,
+        'graduations' => EmployeeGraduation::class,
         'schoolingDegree' => LegacySchoolingDegree::class,
+        'institution' => LegacyInstitution::class,
     ];
 
     /**
@@ -59,8 +61,8 @@ class EmployeeTest extends EloquentTestCase
         $employee = $this->createNewModel();
 
         $this->assertInstanceOf(Employee::class, $employee);
-        $this->assertEquals($employee->id, $employee->getIdAttribute());
-        $this->assertIsInt($employee->getIdAttribute());
+        $this->assertEquals($employee->id, $employee->id);
+        $this->assertIsInt($employee->id);
         $this->assertEquals($employee->cod_servidor, $employee->id);
     }
 

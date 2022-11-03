@@ -4,15 +4,15 @@ namespace Tests\Unit\Eloquent;
 
 use App\Models\LegacyCourse;
 use App\Models\LegacyGrade;
+use App\Models\LegacyQualification;
 use Tests\EloquentTestCase;
 
 class LegacyCourseTest extends EloquentTestCase
 {
     protected $relations = [
-        'grades' => [LegacyGrade::class],
+        'grades' => LegacyGrade::class,
+        'qualifications' => LegacyQualification::class,
     ];
-
-    private LegacyCourse $course;
 
     /**
      * @return string
@@ -22,34 +22,37 @@ class LegacyCourseTest extends EloquentTestCase
         return LegacyCourse::class;
     }
 
-    public function setUp(): void
+    /** @test  */
+    public function getIdAttribute()
     {
-        parent::setUp();
-
-        $this->course = $this->createNewModel();
+        $this->assertEquals($this->model->id, $this->model->cod_curso);
     }
 
     /** @test  */
     public function getDescriptionAttribute()
     {
-        $this->assertEquals($this->course->getDescriptionAttribute(), $this->course->descricao);
+        $this->assertEquals($this->model->description, $this->model->descricao);
     }
 
     /** @test  */
     public function getStepsAttribute()
     {
-        $this->assertEquals($this->course->getStepsAttribute(), $this->course->qtd_etapas);
+        $this->assertEquals($this->model->steps, $this->model->qtd_etapas);
     }
 
     /** @test  */
     public function getNameAttribute()
     {
-        $this->assertEquals($this->course->getNameAttribute(), $this->course->nm_curso);
+        $expected = $this->model->nm_curso . ' (' . $this->model->description . ')';
+        $this->assertEquals($expected, $this->model->name);
+
+        $this->model->description = null;
+        $this->assertEquals($this->model->name, $this->model->nm_curso);
     }
 
     /** @test  */
     public function getIsStandardCalendarAttribute()
     {
-        $this->assertEquals($this->course->getIsStandardCalendarAttribute(), $this->course->padrao_ano_escolar);
+        $this->assertEquals($this->model->isStandardCalendar, $this->model->padrao_ano_escolar);
     }
 }
