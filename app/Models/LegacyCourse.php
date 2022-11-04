@@ -6,6 +6,7 @@ use App\Models\Builders\LegacyCourseBuilder;
 use App\Traits\HasLegacyDates;
 use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -21,6 +22,8 @@ class LegacyCourse extends LegacyModel
 {
     use LegacyAttribute;
     use HasLegacyDates;
+
+    public const CREATED_AT = 'data_cadastro';
 
     /**
      * @var string
@@ -79,11 +82,6 @@ class LegacyCourse extends LegacyModel
     protected $casts = [
         'padrao_ano_escolar' => 'boolean',
     ];
-
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
 
     protected function id(): Attribute
     {
@@ -154,5 +152,15 @@ class LegacyCourse extends LegacyModel
     public function qualifications(): BelongsToMany
     {
         return $this->belongsToMany(LegacyQualification::class, 'pmieducar.habilitacao_curso', 'ref_cod_curso', 'ref_cod_habilitacao');
+    }
+
+    public function educationType(): BelongsTo
+    {
+        return $this->belongsTo(LegacyEducationType::class, 'ref_cod_tipo_ensino');
+    }
+
+    public function educationLevel(): BelongsTo
+    {
+        return $this->belongsTo(LegacyEducationLevel::class, 'ref_cod_nivel_ensino');
     }
 }

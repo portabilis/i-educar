@@ -3,6 +3,8 @@
 namespace Tests\Unit\Eloquent;
 
 use App\Models\LegacyCourse;
+use App\Models\LegacyEducationLevel;
+use App\Models\LegacyEducationType;
 use App\Models\LegacyGrade;
 use App\Models\LegacyQualification;
 use Tests\EloquentTestCase;
@@ -12,6 +14,8 @@ class LegacyCourseTest extends EloquentTestCase
     protected $relations = [
         'grades' => LegacyGrade::class,
         'qualifications' => LegacyQualification::class,
+        'educationType' => LegacyEducationType::class,
+        'educationLevel' => LegacyEducationLevel::class,
     ];
 
     /**
