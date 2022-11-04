@@ -27,7 +27,7 @@ class LegacyInstitutionTest extends EloquentTestCase
 
     public function testScopeActive(): void
     {
-        $found = $this->instanceNewEloquentModel()->newQuery()->active()->get();
+        $found = LegacyInstitution::active()->get();
 
         $this->assertCount(1, $found);
     }

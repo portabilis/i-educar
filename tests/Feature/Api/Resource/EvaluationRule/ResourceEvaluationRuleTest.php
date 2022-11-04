@@ -29,7 +29,7 @@ class ResourceEvaluationRuleTest extends TestCase
     {
         parent::setUp();
 
-        $this->institution = LegacyInstitutionFactory::new()->create();
+        $this->institution = LegacyInstitutionFactory::new()->unique()->make();
 
         $average_formula = LegacyAverageFormulaFactory::new()->create([
             'instituicao_id' => $this->institution->id
