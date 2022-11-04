@@ -84,10 +84,10 @@ return new class() extends clsCadastro {
         $frequencia = new clsModulesFrequencia();
         $dataFrequencia = $frequencia->selectDataFrequenciaByTurma($_GET['turma']);
 
-        $atendimento = new clsModulesComponenteMinistradoAee();
-        $dataAtendimento = $atendimento->selectDataAtendimentoByMatricula($_GET['ref_cod_matricula']);
+        // $atendimento = new clsModulesComponenteMinistradoAee();
+        // $dataAtendimento = $atendimento->selectDataAtendimentoByMatricula($_GET['ref_cod_matricula']);
         
-        if (($obj_matricula->data_cancel <= $dataFrequencia['data']) || ($obj_matricula->data_cancel <= $dataAtendimento['data'])) {
+        if (($obj_matricula->data_cancel <= $dataFrequencia['data'])) {
             $this->mensagem = 'Não é possível realizar a operação, existem frequências registradas no período <br>';
            
             return false;
