@@ -76,7 +76,7 @@ class EnrollmentEloquentBuilder extends Builder
                 'gender' => 'gf.sexo as Gênero do responsável'
             ],
             'guardian.document' => [
-                'rg' => 'gd.rg as RG do pai',
+                'rg' => 'gd.rg as RG do responsável',
                 'rg_issue_date' => 'gd.data_exp_rg as RG (Data Emissão) do responsável',
                 'rg_state_abbreviation' => 'gd.sigla_uf_exp_rg as RG (Estado) do responsável'
             ]
@@ -107,6 +107,8 @@ class EnrollmentEloquentBuilder extends Builder
             $this->addSelect($only);
             $this->leftJoin('cadastro.documento as md', 'exporter_student.mother_id', 'md.idpes');
         }
+
+        return $this;
     }
 
     /**
@@ -129,10 +131,12 @@ class EnrollmentEloquentBuilder extends Builder
         }
 
         //documento
-        if ($only = $this->model->getLegacyExportedColumns('mother.document', $columns)) {
+        if ($only = $this->model->getLegacyExportedColumns('father.document', $columns)) {
             $this->addSelect($only);
             $this->leftJoin('cadastro.documento as fd', 'exporter_student.father_id', 'fd.idpes');
         }
+
+        return $this;
     }
 
     /**
@@ -159,6 +163,8 @@ class EnrollmentEloquentBuilder extends Builder
             $this->addSelect($only);
             $this->leftJoin('cadastro.documento as gd', 'exporter_student.guardian_id', 'gd.idpes');
         }
+
+        return $this;
     }
 
     /**
