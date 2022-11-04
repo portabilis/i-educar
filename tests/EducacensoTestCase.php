@@ -2,13 +2,24 @@
 
 namespace Tests;
 
+use App\Models\Employee;
+use App\Models\EmployeeGraduation;
 use App\Models\LegacyAcademicYearStage;
+use App\Models\LegacyCourse;
+use App\Models\LegacyEducationLevel;
+use App\Models\LegacyEducationType;
+use App\Models\LegacyGrade;
+use App\Models\LegacyIndividual;
 use App\Models\LegacyOrganization;
 use App\Models\LegacyPerson;
 use App\Models\LegacySchool;
+use App\Models\LegacySchoolGradeDiscipline;
+use App\Models\LegacySchoolingDegree;
 use App\Models\LegacyStageType;
+use App\Models\LegacyStudent;
 use App\Models\Place;
 use App\Models\SchoolInep;
+use App\Models\SchoolManager;
 use App\User;
 use Database\Factories\CityFactory;
 use Database\Factories\CountryFactory;
@@ -30,7 +41,10 @@ abstract class EducacensoTestCase extends TestCase
         parent::setUp();
         \Artisan::call('db:seed', ['--class' => 'DefaultPmieducarTurmaTurnoTableSeeder']);
         \Artisan::call('db:seed', ['--class' => 'DefaultManagerRolesTableSeeder']);
+        \Artisan::call('db:seed', ['--class' => 'DefaultManagerLinkTypesTableSeeder']);
         \Artisan::call('db:seed', ['--class' => 'DefaultManagerAccessCriteriasTableSeeder']);
+        \Artisan::call('db:seed', ['--class' => 'DefaultModulesEducacensoIesTableSeeder']);
+        \Artisan::call('db:seed', ['--class' => 'DefaultModulesEducacensoCursoSuperiorTableSeeder']);
 
         CityFactory::new()->create([
             'state_id' => StateFactory::new()->create([
@@ -93,7 +107,7 @@ abstract class EducacensoTestCase extends TestCase
         $this->assertEquals('J', $person->tipo);
 
         $this->assertNotNull($legacySchool->address);
-        $this->assertEquals(1, $legacySchool->address->count());
+        $this->assertCount(1, $legacySchool->address);
         $address = $legacySchool->address->first();
         $this->assertInstanceOf(Place::class, $address);
         $this->assertTrue($address->created_at->isToday());
@@ -105,7 +119,7 @@ abstract class EducacensoTestCase extends TestCase
         $this->assertEquals('76', $address->city->state->country->ibge_code);
 
         $this->assertNotNull($legacySchool->stages);
-        $this->assertEquals(1, $legacySchool->stages->count());
+        $this->assertCount(1, $legacySchool->stages);
         $legacyAcademicYearStage = $legacySchool->stages->first();
         $this->assertNotNull($legacyAcademicYearStage);
         $this->assertInstanceOf(LegacyAcademicYearStage::class, $legacyAcademicYearStage);
@@ -125,13 +139,17 @@ abstract class EducacensoTestCase extends TestCase
         $this->assertEquals($legacySchool->ref_cod_instituicao, $module->ref_cod_instituicao);
         $this->assertEquals(1, $module->num_etapas);
         $this->assertEquals(1, $module->ativo);
+
+        return $legacySchool;
     }
 
-    /** @test */
-    public function validationImportRegister10()
+    /**
+     * @test
+     *
+     * @depends validationImportRegister00
+     */
+    public function validationImportRegister10(LegacySchool $legacySchool)
     {
-        $legacySchool = LegacySchool::first();
-
         $this->assertEquals('{3}', $legacySchool->local_funcionamento);
         $this->assertEquals(1, $legacySchool->agua_potavel_consumo);
         $this->assertEquals('{4}', $legacySchool->abastecimento_agua);
@@ -146,14 +164,196 @@ abstract class EducacensoTestCase extends TestCase
     /** @test */
     public function validationImportRegister20()
     {
-        //Código da Turma na Entidade/Escola
-        //Nome da Turma
-        //tem que ser da mesma escola 00
-        //Disciplinas
         $legacySchool = LegacySchool::first();
 
-        dd($legacySchool->schoolClasses);
+        $this->assertNotNull($legacySchool->schoolClasses);
+        $this->assertCount(2, $legacySchool->schoolClasses);
 
-        $this->assertTrue(true);
+        list($schoolClasses01, $schoolClasses02) = $legacySchool->schoolClasses;
+
+        $this->assertEquals($this->user->cod_usuario, $schoolClasses01->ref_usuario_cad);
+        $this->assertEquals($legacySchool->cod_escola, $schoolClasses01->ref_ref_cod_escola);
+        $this->assertEquals($legacySchool->ref_cod_instituicao, $schoolClasses01->ref_cod_instituicao);
+        $this->assertEquals($this->user->ref_cod_instituicao, $schoolClasses01->ref_cod_instituicao);
+        $this->assertTrue($schoolClasses01->data_cadastro->isToday());
+        $this->assertEquals($this->year, $schoolClasses01->ano);
+        $this->assertEquals(2, $schoolClasses01->turma_turno_id);
+        $this->assertEquals(1, $schoolClasses01->ativo);
+        $this->assertEquals(22, $schoolClasses01->etapa_educacenso);
+        $this->assertEquals('13:15:00', $schoolClasses01->hora_inicial);
+        $this->assertEquals('17:15:00', $schoolClasses01->hora_final);
+
+        $this->assertEquals($this->user->cod_usuario, $schoolClasses02->ref_usuario_cad);
+        $this->assertEquals($legacySchool->cod_escola, $schoolClasses02->ref_ref_cod_escola);
+        $this->assertEquals($legacySchool->ref_cod_instituicao, $schoolClasses02->ref_cod_instituicao);
+        $this->assertEquals($this->user->ref_cod_instituicao, $schoolClasses02->ref_cod_instituicao);
+        $this->assertTrue($schoolClasses02->data_cadastro->isToday());
+        $this->assertEquals($this->year, $schoolClasses02->ano);
+        $this->assertEquals(2, $schoolClasses02->turma_turno_id);
+        $this->assertEquals(1, $schoolClasses02->ativo);
+        $this->assertEquals(22, $schoolClasses02->etapa_educacenso);
+        $this->assertEquals('13:15:00', $schoolClasses02->hora_inicial);
+        $this->assertEquals('17:15:00', $schoolClasses02->hora_final);
+
+        $this->assertEquals($schoolClasses01->grade->getKey(), $schoolClasses02->grade->getKey());
+
+        $grade = $schoolClasses01->grade;
+        $this->assertNotNull($grade);
+        $this->assertInstanceOf(LegacyGrade::class, $grade);
+        $this->assertEquals($this->user->cod_usuario, $grade->ref_usuario_cad);
+        $this->assertTrue($grade->data_cadastro->isToday());
+        $this->assertEquals(1, $grade->ativo);
+        $this->assertEquals(200, $grade->dias_letivos);
+        $this->assertEquals('800', $grade->carga_horaria);
+        $this->assertEquals(1, $grade->etapa_curso);
+
+        $course = $grade->course;
+        $this->assertNotNull($course);
+        $this->assertInstanceOf(LegacyCourse::class, $course);
+        $this->assertEquals($this->user->cod_usuario, $course->ref_usuario_cad);
+        $this->assertEquals('800', $course->carga_horaria);
+        $this->assertTrue($course->data_cadastro->isToday());
+        $this->assertEquals(1, $course->ativo);
+        $this->assertEquals(1, $course->padrao_ano_escolar);
+        $this->assertEquals('Ensino Fundamental de 9 anos - Multi', $course->name);
+        $this->assertEquals('Ensino Fundamen', $course->sgl_curso);
+        $this->assertEquals($legacySchool->ref_cod_instituicao, $course->ref_cod_instituicao);
+
+        $educationType = $course->educationType;
+        $this->assertNotNull($educationType);
+        $this->assertInstanceOf(LegacyEducationType::class, $educationType);
+        $this->assertEquals($legacySchool->ref_cod_instituicao, $educationType->ref_cod_instituicao);
+        $this->assertEquals($this->user->cod_usuario, $educationType->ref_usuario_cad);
+        $this->assertEquals(1, $educationType->ativo);
+        $this->assertEquals('Padrão', $educationType->nm_tipo);
+        $this->assertTrue($educationType->data_cadastro->isToday());
+
+        $educationLevel = $course->educationLevel;
+        $this->assertNotNull($educationLevel);
+        $this->assertInstanceOf(LegacyEducationLevel::class, $educationLevel);
+        $this->assertEquals($legacySchool->ref_cod_instituicao, $educationLevel->ref_cod_instituicao);
+        $this->assertEquals($this->user->cod_usuario, $educationLevel->ref_usuario_cad);
+        $this->assertEquals('Ano', $educationLevel->nm_nivel);
+        $this->assertTrue($educationLevel->data_cadastro->isToday());
+        $this->assertEquals(1, $educationLevel->ativo);
+
+        $schoolGradeDisciplines = LegacySchoolGradeDiscipline::query()
+            ->where('ref_ref_cod_escola', $legacySchool->getKey())
+            ->where('ref_ref_cod_serie', $grade->getKey())
+            ->get();
+
+        $this->assertNotEmpty($schoolGradeDisciplines);
+        $this->assertCount(8, $schoolGradeDisciplines);
+        foreach ($schoolGradeDisciplines as $schoolGradeDiscipline) {
+            $this->assertEquals(1, $schoolGradeDiscipline->ativo);
+            $this->assertEquals('{' . $this->year . '}', $schoolGradeDiscipline->anos_letivos);
+        }
+    }
+
+    /** @test */
+    public function validationImportRegister30()
+    {
+        $students = LegacyStudent::all();
+
+        $this->assertNotEmpty($students);
+        $this->assertCount(10, $students);
+
+        foreach ($students as $student) {
+            $this->assertInstanceOf(LegacyStudent::class, $student);
+            $this->assertTrue($student->data_cadastro->isToday());
+            $this->assertEquals(1, $student->ativo);
+
+            $individual = $student->individual;
+            $this->assertNotNull($individual);
+            $this->assertInstanceOf(LegacyIndividual::class, $individual);
+            $this->assertTrue($individual->data_cad->isToday());
+            $this->assertEquals(1, $individual->ativo);
+            $this->assertEquals('I', $individual->operacao);
+            $this->assertNotNull($individual->pais_residencia);
+            $this->assertNotNull($individual->idpes_pai);
+            $this->assertNotNull($individual->idpes_mae);
+            $this->assertNotNull($individual->idmun_nascimento);
+            $this->assertNotNull($individual->nacionalidade);
+            $this->assertNotNull($individual->sexo);
+            $this->assertNotNull($individual->data_nasc);
+
+            $person = $student->person;
+            $this->assertNotNull($person);
+            $this->assertInstanceOf(LegacyPerson::class, $person);
+            $this->assertEquals('F', $person->tipo);
+            $this->assertTrue($person->data_cad->isToday());
+            $this->assertNotNull($person->nome);
+            $this->assertEquals('I', $person->operacao);
+            $this->assertNotNull($person->slug);
+        }
+
+        $employees = Employee::all();
+
+        $this->assertNotEmpty($employees);
+        $this->assertCount(3, $employees);
+
+        foreach ($employees as $employee) {
+            $this->assertInstanceOf(Employee::class, $employee);
+            $this->assertTrue($employee->data_cadastro->isToday());
+            $this->assertEquals(1, $employee->ativo);
+            $this->assertEquals($this->user->ref_cod_instituicao, $employee->ref_cod_instituicao);
+
+            $this->assertNotNull($employee->schoolingDegree);
+            $this->assertInstanceOf(LegacySchoolingDegree::class, $employee->schoolingDegree);
+            $this->assertNotNull($employee->schoolingDegree->descricao);
+            $this->assertNotNull($employee->schoolingDegree->escolaridade);
+
+            if ($employee->schoolingDegree->escolaridade == 6) {
+                foreach ($employee->graduations as $graduation) {
+                    $this->assertInstanceOf(EmployeeGraduation::class, $graduation);
+                    $this->assertNotNull($graduation->course_id);
+                    $this->assertNotNull($graduation->completion_year);
+                    $this->assertNotNull($graduation->college_id);
+                }
+            }
+
+            $individual = $employee->individual;
+            $this->assertNotNull($individual);
+            $this->assertInstanceOf(LegacyIndividual::class, $individual);
+            $this->assertTrue($individual->data_cad->isToday());
+            $this->assertEquals(1, $individual->ativo);
+            $this->assertEquals('I', $individual->operacao);
+            $this->assertNotNull($individual->cpf);
+            $this->assertTrue(validaCPF($individual->cpf));
+            $this->assertNotNull($individual->pais_residencia);
+            $this->assertNotNull($individual->idmun_nascimento);
+            $this->assertNotNull($individual->nacionalidade);
+            $this->assertNotNull($individual->sexo);
+            $this->assertNotNull($individual->data_nasc);
+
+            $person = $employee->person;
+            $this->assertNotNull($person);
+            $this->assertInstanceOf(LegacyPerson::class, $person);
+            $this->assertEquals('F', $person->tipo);
+            $this->assertTrue($person->data_cad->isToday());
+            $this->assertNotNull($person->nome);
+            $this->assertEquals('I', $person->operacao);
+            $this->assertNotNull($person->slug);
+
+            if ($person->email) {
+                $this->assertSame($person->email, filter_var($person->email, FILTER_VALIDATE_EMAIL));
+            }
+        }
+    }
+
+    /** @test */
+    public function validationImportRegister40()
+    {
+        $schoolManager = SchoolManager::all();
+
+        $this->assertNotNull($schoolManager);
+        $this->assertCount(1, $schoolManager);
+
+        $schoolManager = $schoolManager->first();
+        $this->assertNotNull($schoolManager->employee->inep->number);
+        $this->assertIsNumeric($schoolManager->employee->inep->number);
+        $this->assertEquals(12, strlen($schoolManager->employee->inep->number));
+
+        //faltaTipoVinculo
     }
 }
