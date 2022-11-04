@@ -13,7 +13,6 @@ class DiarioRecuperaCursosTest extends TestCase
 
     public function testRecuperaCurso()
     {
-
         $course = LegacyCourseFactory::new()->create();
 
         $data = [
