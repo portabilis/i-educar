@@ -13,6 +13,11 @@
   window.dataExport = dataExport
   document.getElementById('export-btn').style.marginTop = 0;
 
+})()
+
+(function () {
+  'use strict'
+
   const dataExportResponsaveis = (formId, resource) => {
     const form = document.getElementById(formId)
     const data = new FormData(form)
