@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ResponsavelTurma extends Model
 {
+    protected $table = 'exporter_responsaveis_turma';
     use SoftDeletes;
 
     protected $dates = ['deleted_at'];
