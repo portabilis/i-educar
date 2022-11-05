@@ -5,14 +5,14 @@ namespace App\Http\Controllers\Exports;
 use App\Exports\ResponsavelTurmaExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ResponsavelTurmaExport as Request;
-use iEducar\Support\Repositories\ResponsavelRepository;
+use iEducar\Support\Repositories\ResponsaveisTurmaRepository;
 use Maatwebsite\Excel\Facades\Excel;
  
 class ResponsavelTurmaController extends Controller
 {
     protected $responsavelTurmaRepository;
 
-    public function __construct(ResponsavelRepository $responsavelTurmaRepository)
+    public function __construct(ResponsaveisTurmaRepository $responsavelTurmaRepository)
     {
         $this->responsavelTurmaRepository = $responsavelTurmaRepository;
     }
