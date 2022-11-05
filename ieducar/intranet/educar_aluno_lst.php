@@ -229,6 +229,7 @@ return new class extends clsListagem {
         $this->largura = '100%';
 
         Portabilis_View_Helper_Application::loadJavascript($this, ['/intranet/scripts/exporter.js']);
+        Portabilis_View_Helper_Application::loadJavascript($this, ['/intranet/scripts/exporter_responsaveis.js']);
 
         $this->breadcrumb('Alunos', ['/intranet/educar_index.php' => 'Escola']);
     }
