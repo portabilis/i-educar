@@ -8,7 +8,7 @@ use App\Http\Requests\ResponsavelTurmaExport as Request;
 use iEducar\Support\Repositories\ResponsavelTurmaRepository;
 use Maatwebsite\Excel\Facades\Excel;
  
-class ResponsaveTurmaController extends Controller
+class ResponsavelTurmaController extends Controller
 {
     protected $responsavelTurmaRepository;
 

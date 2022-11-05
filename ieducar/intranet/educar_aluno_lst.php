@@ -221,9 +221,9 @@ return new class extends clsListagem {
             $this->array_botao_id = ['export-btn'];
         }
         if ($_GET) {
-            $this->array_botao_script = ['dataExport("formcadastro", "responsaveis_turma")'];
+            $this->array_botao_script = ['dataExportResponsaveis("formcadastro", "responsaveis_turma")'];
             $this->array_botao = ['Exportar responsáveis para planilha'];
-            $this->array_botao_id = ['export-btn'];
+            $this->array_botao_id = ['export-btn-responsaveis'];
         }
 
         $this->largura = '100%';
