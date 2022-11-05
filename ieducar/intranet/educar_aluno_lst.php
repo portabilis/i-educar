@@ -221,15 +221,14 @@ return new class extends clsListagem {
             $this->array_botao_id = ['export-btn'];
         }
         if ($_GET) {
-            $this->array_botao_script = ['dataExportResponsaveis("formcadastro", "responsaveis_turma")'];
+            $this->array_botao_script = ['dataExport("formcadastro", "responsaveis_turma")'];
             $this->array_botao = ['Exportar responsáveis para planilha'];
-            $this->array_botao_id = ['export-btn-responsaveis'];
+            $this->array_botao_id = ['export-btn'];
         }
 
         $this->largura = '100%';
 
         Portabilis_View_Helper_Application::loadJavascript($this, ['/intranet/scripts/exporter.js']);
-       
 
         $this->breadcrumb('Alunos', ['/intranet/educar_index.php' => 'Escola']);
     }
