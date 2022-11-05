@@ -4,7 +4,7 @@
  
  use Illuminate\Foundation\Http\FormRequest;
  
- class ResponsavelExport extends FormRequest
+ class ResponsavelTurmaExport extends FormRequest
  {
      /**
       * Determine if the user is authorized to make this request.
