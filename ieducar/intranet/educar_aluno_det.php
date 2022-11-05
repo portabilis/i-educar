@@ -945,7 +945,7 @@ return new class extends clsDetalhe {
 
         if ($_GET) {
             $this->array_botao_script = ['dataExport("formcadastro", "students")'];
-            $this->array_botao = ['Exportar para planilha'];
+            $this->array_botao = [' para planilha'];
             $this->array_botao_id = ['export-btn'];
         }
 
