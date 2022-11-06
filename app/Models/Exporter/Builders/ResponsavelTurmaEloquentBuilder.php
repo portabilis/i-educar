@@ -21,8 +21,8 @@ class ResponsavelTurmaEloquentBuilder extends Builder
             $this->joinColumns('mother', $columns)
         );
 
-        return $this->leftJoin('exporter_responsavel as mother', function (JoinClause $join) {
-            $join->on('exporter_responsavel.mother_id', '=', 'mother.id');
+        return $this->leftJoin('exporter_responsaveis_turma as mother', function (JoinClause $join) {
+            $join->on('exporter_responsaveis_turma.mother_id', '=', 'mother.id');
         });
     }
 
@@ -37,8 +37,8 @@ class ResponsavelTurmaEloquentBuilder extends Builder
             $this->joinColumns('father', $columns)
         );
 
-        return $this->leftJoin('exporter_responsavel as father', function (JoinClause $join) {
-            $join->on('exporter_responsavel.father_id', '=', 'father.id');
+        return $this->leftJoin('exporter_responsaveis_turma as father', function (JoinClause $join) {
+            $join->on('exporter_responsaveis_turma.father_id', '=', 'father.id');
         });
     }
 
@@ -53,8 +53,8 @@ class ResponsavelTurmaEloquentBuilder extends Builder
             $this->joinColumns('guardian', $columns)
         );
 
-        return $this->leftJoin('exporter_responsavel as guardian', function (JoinClause $join) {
-            $join->on('exporter_responsavel.guardian_id', '=', 'guardian.id');
+        return $this->leftJoin('exporter_responsaveis_turma as guardian', function (JoinClause $join) {
+            $join->on('exporter_responsaveis_turma.guardian_id', '=', 'guardian.id');
         });
     }
 
@@ -68,7 +68,7 @@ class ResponsavelTurmaEloquentBuilder extends Builder
         );
 
         return $this->leftJoin('exporter_disabilities as disabilities', function (JoinClause $join) {
-            $join->on('exporter_responsavel.id', '=', 'disabilities.person_id');
+            $join->on('exporter_responsaveis_turma.id', '=', 'disabilities.person_id');
         });
     }
 
@@ -82,7 +82,7 @@ class ResponsavelTurmaEloquentBuilder extends Builder
         );
 
         return $this->leftJoin('exporter_phones as phones', function (JoinClause $join) {
-            $join->on('exporter_responsavel.id', '=', 'phones.person_id');
+            $join->on('exporter_responsaveis_turma.id', '=', 'phones.person_id');
         });
     }
 
@@ -98,7 +98,7 @@ class ResponsavelTurmaEloquentBuilder extends Builder
         );
 
         return $this->leftJoin('person_has_place', function (JoinClause $join) {
-            $join->on('exporter_responsavel.id', '=', 'person_has_place.person_id');
+            $join->on('exporter_responsaveis_turma.id', '=', 'person_has_place.person_id');
         })->leftJoin('addresses as place', function (JoinClause $join) {
             $join->on('person_has_place.place_id', '=', 'place.id');
         });
