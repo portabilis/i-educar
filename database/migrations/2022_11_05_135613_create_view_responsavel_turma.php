@@ -16,7 +16,7 @@ class CreateViewResponsavelTurma extends Migration
         
 
         $this->executeSqlFile(
-            __DIR__ . '/../sqls/views/public.exporter_responsavel_turma.sql'
+            __DIR__ . '/../sqls/views/public.exporter_.sql'
         );
        
         
