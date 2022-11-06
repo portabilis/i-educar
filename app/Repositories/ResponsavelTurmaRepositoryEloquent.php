@@ -94,9 +94,7 @@ class ResponsavelTurmaRepositoryEloquent implements ResponsavelTurmaRepository
             $school_class_id
         ) {
             $query->whereHas('registrations', function ($query) use ($year, $schoolId, $courseId, $levelId,  $school_class_id) {
-                $query->whereNull('deleted_at')
-                    ->where('status', RegistrationStatus::ONGOING);
-
+               
                 if ($year) {
                     $query->where('year', $year);
                 }
@@ -112,7 +110,9 @@ class ResponsavelTurmaRepositoryEloquent implements ResponsavelTurmaRepository
                 if ($levelId) {
                     $query->where('level_id', $levelId);
                 }
-              
+                if ($school_class_id) {
+                    $query->leftJoin('matricula_turma', 'matricula_turma.ref_cod_matricula', '=', 'registrations.id')->where('matricula_turma.ref_cod_turma', $school_class_id);
+                }
             });
         }
        
