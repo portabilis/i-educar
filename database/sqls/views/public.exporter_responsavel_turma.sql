@@ -90,20 +90,16 @@ SELECT p.id,
      JOIN pessoa ep ON ep.idpes = e.ref_idpes::numeric
      JOIN serie s ON s.cod_serie = m.ref_ref_cod_serie
      JOIN curso c ON c.cod_curso = m.ref_cod_curso
-     LEFT JOIN matricula_turma mt ON mt.ref_cod_matricula = m.cod_matricula
-
-     JOIN cadastro.fisica f ON f.idpes = guardian_id
-     JOIN cadastro.pessoa pr ON pr.idpes = guardian_id
-     
-
-
+     JOIN matricula_turma mt ON mt.ref_cod_matricula = m.cod_matricula
      JOIN relatorio.view_situacao vs ON vs.cod_matricula = m.cod_matricula AND vs.cod_turma = mt.ref_cod_turma AND vs.sequencial = mt.sequencial
-     JOIN turma t ON t.cod_turma = mt.ref_cod_turma
+     LEFT JOIN turma t ON t.cod_turma = mt.ref_cod_turma
      LEFT JOIN educacenso_cod_escola ece ON e.cod_escola = ece.cod_escola
      LEFT JOIN turma_turno tt ON tt.id = t.turma_turno_id
      LEFT JOIN turma_turno tm ON tm.id = mt.turno_id
      LEFT JOIN moradia_aluno ma ON ma.ref_cod_aluno = a.cod_aluno
 
+     LEFT JOIN cadastro.fisica f ON f.idpes = guardian_id
+     LEFT JOIN cadastro.pessoa pr ON pr.idpes = guardian_id
      LEFT JOIN cadastro.documento d ON d.idpes = guardian_id
      LEFT JOIN cadastro.estado_civil es ON es.ideciv = f.ideciv
      LEFT JOIN cadastro.fone_pessoa fon ON fon.idpes = guardian_id
