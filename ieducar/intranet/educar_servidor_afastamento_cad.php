@@ -8,22 +8,22 @@ use Illuminate\Support\Carbon;
 
 return new class extends clsCadastro {
 
-    public $pessoa_logada = null;
-    public $id = null;
-    public $ref_cod_servidor = null;
-    public $sequencial = null;
-    public $ref_cod_instituicao = null;
-    public $ref_cod_motivo_afastamento = null;
-    public $ref_usuario_exc = null;
-    public $ref_usuario_cad = null;
-    public $data_cadastro = null;
-    public $data_exclusao = null;
-    public $data_retorno = null;
-    public $data_saida = null;
-    public $ativo = null;
-    public $status = null;
-    public $alocacao_array = null;
-    public $parametros = null;
+    public $pessoa_logada;
+    public $id;
+    public $ref_cod_servidor;
+    public $sequencial;
+    public $ref_cod_instituicao;
+    public $ref_cod_motivo_afastamento;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $data_retorno;
+    public $data_saida;
+    public $ativo;
+    public $status;
+    public $alocacao_array;
+    public $parametros;
     public $dias_da_semana = [
         '' => 'Selecione',
         1  => 'Domingo',
@@ -188,7 +188,7 @@ return new class extends clsCadastro {
         $det_servidor = $obj_servidor->detalhe();
 
         if ($det_servidor) {
-            $obj_funcao = new clsPmieducarFuncao(
+            new clsPmieducarFuncao(
                 $det_servidor['ref_cod_funcao'],
                 null,
                 null,
@@ -233,7 +233,7 @@ return new class extends clsCadastro {
                 if ($lista) {
 
                     // Passa todos os valores obtidos no registro para atributos do objeto
-                    foreach ($lista as $campo => $val) {
+                    foreach ($lista as $val) {
                         $temp = [];
                         $temp['hora_inicial']       = $val['hora_inicial'];
                         $temp['hora_final']         = $val['hora_final'];
@@ -374,8 +374,10 @@ return new class extends clsCadastro {
                 }
             }
         }
-
         if ($this->retornar_servidor != EmployeeReturn::SIM) {
+            if ($this->id == "") {
+                $this->id = null;
+            }
             $fileService = new FileService(new UrlPresigner());
             $files = $fileService->getFiles(EmployeeWithdrawal::find($this->id));
             $this->addHtml(view('uploads.upload', ['files' => $files])->render());
@@ -384,8 +386,13 @@ return new class extends clsCadastro {
 
     public function Novo()
     {
+        $this->data_saida = formatDateParse($this->data_saida, 'Y-m-d');
+        if ($this->data_saida == null || $this->data_saida <= date('Y-m-d', strtotime('-1 year'))) {
+            $this->data_saida = null;
+            $this->mensagem = 'Data de Afastamento Inválida.<br>';
+            return false;
+        }
         $this->data_retorno = dataToBanco($this->data_retorno);
-        $this->data_saida = dataToBanco($this->data_saida);
 
         $this->ref_cod_servidor = isset($_POST['ref_cod_servidor']) ? $_POST['ref_cod_servidor'] : null;
 

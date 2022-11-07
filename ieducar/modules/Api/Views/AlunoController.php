@@ -3,6 +3,7 @@
 use App\Models\Educacenso\Registro30;
 use App\Models\Individual;
 use App\Models\LegacyDeficiency;
+use App\Models\LegacyIndividual;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolHistory;
 use App\Models\LegacyStudentBenefit;
@@ -29,20 +30,6 @@ class AlunoController extends ApiCoreController
         return ($this->validatesPresenceOf('pessoa_id') &&
             $this->validatesExistenceOf('fisica', $this->getRequest()->pessoa_id, $existenceOptions)
         );
-    }
-
-    protected function validatesReligiaoId()
-    {
-        $isValid = true;
-
-        // beneficio is optional
-        if (is_numeric($this->getRequest()->religiao_id)) {
-            $isValid = ($this->validatesPresenceOf('religiao_id') &&
-                $this->validatesExistenceOf('religiao', $this->getRequest()->religiao_id)
-            );
-        }
-
-        return $isValid;
     }
 
     protected function validatesBeneficioId()
@@ -213,7 +200,6 @@ class AlunoController extends ApiCoreController
         return ($this->validatesPessoaId() &&
             $this->validatesResponsavel() &&
             $this->validatesTransporte() &&
-            $this->validatesReligiaoId() &&
             $this->validatesUniquenessOfAlunoInepId() &&
             $this->validatesUniquenessOfAlunoEstadoId()
         );
@@ -534,14 +520,15 @@ class AlunoController extends ApiCoreController
 
     protected function updateDeficiencias()
     {
-        $sql = 'delete from cadastro.fisica_deficiencia where ref_idpes = $1';
-        $this->fetchPreparedQuery($sql, $this->getRequest()->pessoa_id, false);
+        $individual = LegacyIndividual::find($this->getRequest()->pessoa_id,['idpes']);
+        $old = $individual->deficiency()->pluck('ref_cod_deficiencia')->toArray();
+        $news = array_filter($this->getRequest()->deficiencias);
+        $individual->deficiency()->sync($news);
 
-        foreach ($this->getRequest()->deficiencias as $id) {
-            if (!empty($id)) {
-                $deficiencia = new clsCadastroFisicaDeficiencia($this->getRequest()->pessoa_id, $id);
-                $deficiencia->cadastra();
-            }
+        $diff = array_merge(array_diff($old, $news),array_diff($news,$old));
+
+        if (! empty($diff)) {
+            LegacyDeficiency::whereIn('cod_deficiencia', $diff)->update(['updated_at' => now()]);
         }
     }
 

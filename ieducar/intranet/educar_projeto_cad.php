@@ -25,7 +25,7 @@ return new class extends clsCadastro {
         $obj_permissoes->permissao_cadastra(21250, $this->pessoa_logada, 3, 'educar_projeto_lst.php');
 
         if (is_numeric($this->cod_projeto)) {
-            $registro = LegacyProject::find($this->cod_projeto)?->toArray();
+            $registro = LegacyProject::find($this->cod_projeto)?->getAttributes();
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;

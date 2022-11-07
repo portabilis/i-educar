@@ -19,7 +19,7 @@ class clsPmieducarBloqueioLancamentoFaltasNotas extends Model
         $data_inicio = null,
         $data_fim = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'bloqueio_lancamento_faltas_notas';
 
@@ -150,7 +150,7 @@ class clsPmieducarBloqueioLancamentoFaltasNotas extends Model
     /**
      * Retorna uma lista de registros filtrados de acordo com os parâmetros.
      *
-     * @return array
+     * @return array|false
      */
     public function lista($ano = null, $ref_cod_escola = null)
     {
@@ -202,7 +202,7 @@ class clsPmieducarBloqueioLancamentoFaltasNotas extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -220,7 +220,7 @@ class clsPmieducarBloqueioLancamentoFaltasNotas extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

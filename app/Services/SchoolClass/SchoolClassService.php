@@ -2,7 +2,7 @@
 
 namespace App\Services\SchoolClass;
 
-use App\Models\LegacyLevel;
+use App\Models\LegacyGrade;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassStage;
 use App\Rules\CanAlterSchoolClassGrade;
@@ -66,7 +66,7 @@ class SchoolClassService
      */
     public function isRequiredAlternativeReportCard($levelId, $academicYear): bool
     {
-        $evaluationRule = LegacyLevel::findOrFail($levelId)->evaluationRules()
+        $evaluationRule = LegacyGrade::findOrFail($levelId)->evaluationRules()
             ->wherePivot('ano_letivo', $academicYear)
             ->get()
             ->first();

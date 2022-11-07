@@ -36,14 +36,6 @@ return new class extends clsListagem {
 
         $this->inputsHelper()->dynamic(['instituicao', 'escola', 'anoLetivo'], [],['options' => ['required' => false]]);
 
-        if ($this->cod_servidor) {
-            $objTemp = new clsFuncionario($this->cod_servidor);
-            $detalhe = $objTemp->detalhe();
-
-            $opcoes[$detalhe['idpes']] = $detalhe['nome'];
-            $opcoes[$detalhe['ref_cod_pessoa_fj']] = $detalhe['matricula_servidor'];
-        }
-
         $parametros = new clsParametrosPesquisas();
         $parametros->setSubmit(0);
         $this->campoTexto('nome', 'Nome do servidor', $this->nome, 50, 255, false);
@@ -53,9 +45,6 @@ return new class extends clsListagem {
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET['pagina_' . $this->nome])
-            ? $_GET['pagina_' . $this->nome] * $this->limite - $this->limite
-            : 0;
 
         if (!$this->ref_idesco && $_GET['idesco']) {
             $this->ref_idesco = $_GET['idesco'];
@@ -76,7 +65,7 @@ return new class extends clsListagem {
             'pessoa.nome as name',
             'ref_cod_instituicao',
             'cod_servidor',
-        ], 'pagina_' . $this->nome);
+        ], 'pagina_');
 
 
         // UrlHelper

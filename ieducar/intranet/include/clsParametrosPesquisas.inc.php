@@ -124,9 +124,8 @@ class clsParametrosPesquisas
         $parametros_serializados['ref_cod_sistema'] = $this->ref_cod_sistema;
         $parametros_serializados['pessoa_cpf']      = $this->pessoa_cpf;
         $parametros_serializados                    = serialize($parametros_serializados);
-        $parametros_serializados                    = urlencode($parametros_serializados);
 
-        return $parametros_serializados;
+        return urlencode($parametros_serializados);
     }
 
     /**

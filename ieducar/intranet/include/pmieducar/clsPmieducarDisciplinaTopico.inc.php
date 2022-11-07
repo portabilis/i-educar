@@ -15,7 +15,7 @@ class clsPmieducarDisciplinaTopico extends Model
 
     public function __construct($cod_disciplina_topico = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_topico = null, $desc_topico = null, $data_cadastro = null, $data_exclusao = null, $ativo = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}disciplina_topico";
 
@@ -144,7 +144,7 @@ class clsPmieducarDisciplinaTopico extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_cod_disciplina_topico = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_topico = null, $str_desc_topico = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null)
     {
@@ -227,7 +227,7 @@ class clsPmieducarDisciplinaTopico extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -245,7 +245,7 @@ class clsPmieducarDisciplinaTopico extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

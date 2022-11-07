@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-use App\User;
+use Database\Factories\LegacyUserFactory;
 
 trait LoginFirstUser
 {
@@ -13,6 +13,8 @@ trait LoginFirstUser
      */
     public function loginWithFirstUser()
     {
-        $this->actingAs(User::query()->first());
+        $user = LegacyUserFactory::new()->admin()->create();
+
+        $this->actingAs($user);
     }
 }

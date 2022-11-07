@@ -14,7 +14,7 @@ class clsPmieducarSequenciaCurso extends Model
 
     public function __construct($ref_curso_origem = null, $ref_curso_destino = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $data_cadastro = null, $data_exclusao = null, $ativo = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}sequencia_curso";
 
@@ -132,7 +132,7 @@ class clsPmieducarSequenciaCurso extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_ref_curso_origem = null, $int_ref_curso_destino = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null)
     {
@@ -214,7 +214,7 @@ class clsPmieducarSequenciaCurso extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -232,7 +232,7 @@ class clsPmieducarSequenciaCurso extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {
