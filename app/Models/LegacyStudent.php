@@ -128,7 +128,7 @@ class LegacyStudent extends LegacyModel
     protected function inepNumber(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->inep->number ?? null
+            get: fn () => $this->inep?->number
         );
     }
 
