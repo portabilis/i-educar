@@ -8,11 +8,14 @@ use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacyCourse;
 use App\Models\LegacyEducationLevel;
 use App\Models\LegacyEducationType;
+use App\Models\LegacyEnrollment;
 use App\Models\LegacyGrade;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyOrganization;
 use App\Models\LegacyPerson;
+use App\Models\LegacyRegistration;
 use App\Models\LegacySchool;
+use App\Models\LegacySchoolClassTeacher;
 use App\Models\LegacySchoolGradeDiscipline;
 use App\Models\LegacySchoolingDegree;
 use App\Models\LegacyStageType;
@@ -21,6 +24,7 @@ use App\Models\Place;
 use App\Models\SchoolInep;
 use App\Models\SchoolManager;
 use App\User;
+use Carbon\Carbon;
 use Database\Factories\CityFactory;
 use Database\Factories\CountryFactory;
 use Database\Factories\DistrictFactory;
@@ -36,6 +40,7 @@ abstract class EducacensoTestCase extends TestCase
 
     protected int $year;
     protected User $user;
+    protected Carbon $dateEnrollment;
 
     public function setUp(): void
     {
@@ -145,6 +150,11 @@ abstract class EducacensoTestCase extends TestCase
         $this->assertEquals(1, $module->num_etapas);
         $this->assertEquals(1, $module->ativo);
 
+        $this->assertNotNull($legacySchool->inep);
+        $this->assertIsNumeric($legacySchool->inep->cod_escola_inep);
+        $this->assertEquals(8, strlen($legacySchool->inep->cod_escola_inep));
+        $this->assertTrue($legacySchool->inep->created_at->isToday());
+
         return $legacySchool;
     }
 
@@ -187,6 +197,10 @@ abstract class EducacensoTestCase extends TestCase
         $this->assertEquals(22, $schoolClasses01->etapa_educacenso);
         $this->assertEquals('13:15:00', $schoolClasses01->hora_inicial);
         $this->assertEquals('17:15:00', $schoolClasses01->hora_final);
+        $this->assertNotNull($schoolClasses01->inep);
+        $this->assertIsNumeric($schoolClasses01->inep->cod_turma_inep);
+        $this->assertEquals(8, strlen($schoolClasses01->inep->cod_turma_inep));
+        $this->assertTrue($schoolClasses01->inep->created_at->isToday());
 
         $this->assertEquals($this->user->cod_usuario, $schoolClasses02->ref_usuario_cad);
         $this->assertEquals($legacySchool->cod_escola, $schoolClasses02->ref_ref_cod_escola);
@@ -199,6 +213,10 @@ abstract class EducacensoTestCase extends TestCase
         $this->assertEquals(22, $schoolClasses02->etapa_educacenso);
         $this->assertEquals('13:15:00', $schoolClasses02->hora_inicial);
         $this->assertEquals('17:15:00', $schoolClasses02->hora_final);
+        $this->assertNotNull($schoolClasses02->inep);
+        $this->assertIsNumeric($schoolClasses02->inep->cod_turma_inep);
+        $this->assertEquals(8, strlen($schoolClasses02->inep->cod_turma_inep));
+        $this->assertTrue($schoolClasses02->inep->created_at->isToday());
 
         $this->assertEquals($schoolClasses01->grade->getKey(), $schoolClasses02->grade->getKey());
 
@@ -358,24 +376,62 @@ abstract class EducacensoTestCase extends TestCase
         $this->assertNotNull($schoolManager->employee->inep->number);
         $this->assertIsNumeric($schoolManager->employee->inep->number);
         $this->assertEquals(12, strlen($schoolManager->employee->inep->number));
-
-        //faltaTipoVinculo Bonot vai validar se está importando certo
     }
 
     /** @test */
     public function validationImportRegister50()
     {
-        $this->assertTrue(true);
-        //Código da Turma na Entidade/Escola
-        //Função que exerce na escola/Turma
+        $schoollClassTeachers = LegacySchoolClassTeacher::all();
+        $this->assertNotNull($schoollClassTeachers);
+        $this->assertCount(2, $schoollClassTeachers);
+
+        foreach ($schoollClassTeachers as $schoollClassTeacher) {
+            $this->assertNotNull($schoollClassTeacher->schoolClassTeacherDisciplines);
+            $this->assertCount(8, $schoollClassTeacher->schoolClassTeacherDisciplines);
+
+            $this->assertNotNull($schoollClassTeacher->funcao_exercida);
+            $this->assertNotNull($schoollClassTeacher->tipo_vinculo);
+            $this->assertEquals('2', $schoollClassTeacher->tipo_vinculo);
+            $this->assertEquals($this->year, $schoollClassTeacher->ano);
+        }
     }
 
     /** @test */
     public function validationImportRegister60()
     {
-        $this->assertTrue(true);
-        //Código da Turma na Entidade/Escola
-        //Turma Multi
-        //Tipo de Atendimento Educacional Especializado
+        $enrollments = LegacyEnrollment::all();
+
+        $this->assertNotNull($enrollments);
+        $this->assertCount(10, $enrollments);
+
+        foreach ($enrollments as $enrollment) {
+            $this->assertEquals($this->user->cod_usuario, $enrollment->ref_usuario_cad);
+            $this->assertTrue($enrollment->data_cadastro->isToday());
+            $this->assertEquals(1, $enrollment->ativo);
+            $this->assertEquals($this->dateEnrollment->format('Y-m-d'), $enrollment->data_enturmacao->format('Y-m-d'));
+            $this->assertNotNull($enrollment->etapa_educacenso);
+            $this->assertEquals('{}', $enrollment->tipo_atendimento);
+        }
+
+        $students = LegacyStudent::all();
+
+        foreach ($students as $student) {
+            $this->assertEquals(1, $student->recebe_escolarizacao_em_outro_espaco);
+            $this->assertEquals(0, $student->tipo_transporte);
+        }
+
+        $registrations = LegacyRegistration::all();
+
+        $this->assertNotNull($registrations);
+        $this->assertCount(10, $registrations);
+
+        foreach ($registrations as $registration) {
+            $this->assertEquals($this->user->cod_usuario, $registration->ref_usuario_cad);
+            $this->assertTrue($registration->data_cadastro->isToday());
+            $this->assertEquals(1, $registration->ativo);
+            $this->assertEquals(1, $registration->aprovado);
+            $this->assertEquals($this->year, $registration->ano);
+            $this->assertEquals(1, $registration->ultima_matricula);
+        }
     }
 }
