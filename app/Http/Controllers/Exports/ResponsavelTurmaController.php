@@ -20,8 +20,7 @@ class ResponsavelTurmaController extends Controller
     public function export(Request $request)
     {
         $collection = $this->responsavelTurmaRepository->list($request->allWithTranslatedKeys());
-        $uniqueCollection = $collection->unique('Nome');
-        $export = new ResponsavelTurmaExport($uniqueCollection);
+        $export = new ResponsavelTurmaExport($collection);
 
         return Excel::download($export, 'responsaveis_turma.xlsx');
     }
