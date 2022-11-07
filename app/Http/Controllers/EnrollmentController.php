@@ -51,8 +51,40 @@ class EnrollmentController extends Controller
         LegacyRegistration $registration,
         LegacySchoolClass $schoolClass
     ) {
-        $dataUltimaFrequencia = DB::table('modules.frequencia')
-        ->where([['ref_cod_turma', '=', $schoolClass['cod_turma']]])->orderBy('data', 'desc')->get(['data'])->take(1);
+
+        $tipoTurma = DB::table('pmieducar.turma')
+            ->select(DB::raw('CASE WHEN tipo_atendimento = 5 THEN 1
+                     ELSE 0 END'))
+            ->where([['cod_turma', '=', $schoolClass['cod_turma']]])
+            ->get();
+
+        if ($tipoTurma[0]->case == 0) {
+            $dataUltimaFrequencia = DB::table('modules.frequencia')
+                ->where([['ref_cod_turma', '=', $schoolClass['cod_turma']]])->orderBy('data', 'desc')->get(['data'])->take(1);
+
+            $data_solicitacao = dataToBanco($request->input('enrollment_date'));
+
+            if ($data_solicitacao <= $dataUltimaFrequencia[0]->data) {
+                return redirect()->back()->with('error', 'Não é possível realizar a operação, existem frequências registradas no período');
+                die();
+            }
+        }
+
+        if ($tipoTurma[0]->case == 1) {
+
+            $dataUltimoAtendimento = DB::table('modules.conteudo_ministrado_aee')
+                ->where([['ref_cod_matricula', '=', $registration['cod_matricula']]])->orderBy('data', 'desc')->get(['data'])->take(1);
+
+            $data_solicitacao = dataToBanco($request->input('enrollment_date'));
+
+            if ($data_solicitacao <= $dataUltimoAtendimento[0]->data) {
+                return redirect()->back()->with('error', 'Não é possível realizar a operação, existem frequências registradas no período');
+                die();
+            }
+        }
+
+        DB::beginTransaction();
+        $date = Carbon::createFromFormat('d/m/Y', $request->input('enrollment_date'));
 
         $dataUltimoAtendimento = DB::table('modules.conteudo_ministrado_aee')
         ->where([['ref_cod_matricula', '=', $registration['cod_matricula']]])->orderBy('data', 'desc')->get(['data'])->take(1);

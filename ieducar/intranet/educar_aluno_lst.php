@@ -75,7 +75,6 @@ return new class extends clsListagem {
         $this->campoTexto('nome_mae', 'Nome da Mãe', $this->nome_mae, 50, 255);
         $this->campoTexto('nome_responsavel', 'Nome do Responsável', $this->nome_responsavel, 50, 255);
         $this->campoRotulo('filtros_matricula', '<b>Filtros de matrículas em andamento</b>');
-
         $this->inputsHelper()->integer('ano', ['required' => false, 'value' => $this->ano, 'max_length' => 4]);
         $this->inputsHelper()->dynamic('instituicao', ['required' => false, 'instituicao' => $this->ref_cod_instituicao]);
         $this->inputsHelper()->dynamic('escolaSemFiltroPorUsuario', ['required' => false, 'value' => $this->ref_cod_escola]);

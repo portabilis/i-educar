@@ -45,6 +45,8 @@ class Export extends Model
             2 => new Teacher(),
             3 => new SocialAssistance(),
             4 => new Stage(),
+            5 => new Responsavel(),
+            4 => new ResponsavelTurma(),
         ];
     }
 

@@ -2,7 +2,8 @@
 
 use iEducar\Legacy\Model;
 
-class clsModulesPlanejamentoAulaComponenteCurricularAee extends Model {
+class clsModulesPlanejamentoAulaComponenteCurricularAee extends Model
+{
     public $id;
     public $planejamento_aula_aee_id;
     public $componente_curricular_id;
@@ -15,9 +16,9 @@ class clsModulesPlanejamentoAulaComponenteCurricularAee extends Model {
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}planejamento_aula_componente_curricular_aee";
 
-        $this->_from = "
+        $this->_from = '
             modules.planejamento_aula_componente_curricular_aee as pacc
-        ";
+        ';
 
         $this->_campos_lista = $this->_todos_campos = '
             *
@@ -37,18 +38,34 @@ class clsModulesPlanejamentoAulaComponenteCurricularAee extends Model {
     }
 
     /**
-     * Cria um novo registro
+     * Cria um novo registro.
      *
      * @return bool
      */
-    public function cadastra() {
+    public function cadastra()
+    {
         if (is_numeric($this->planejamento_aula_aee_id) && is_numeric($this->componente_curricular_id)) {
             $db = new clsBanco();
+            $campos = '';
+            $valores = '';
+            $gruda = '';
+
+            $campos .= "{$gruda}planejamento_aula_aee_id";
+            $valores .= "{$gruda}'{$this->planejamento_aula_aee_id}'";
+            $gruda = ', ';
+
+            $campos .= "{$gruda}componente_curricular_id";
+            $valores .= "{$gruda}'{$this->componente_curricular_id}'";
+            $gruda = ', ';
+
+            $campos .= "{$gruda}updated_at";
+            $valores .= "{$gruda}(NOW() - INTERVAL '3 HOURS')";
+            $gruda = ', ';
 
             $db->Consulta("
-                INSERT INTO {$this->_tabela}
-                    (planejamento_aula_aee_id, componente_curricular_id)
-                VALUES ({$this->planejamento_aula_aee_id}, {$this->componente_curricular_id})
+                INSERT INTO
+                    {$this->_tabela} ( $campos )
+                    VALUES ( $valores )
             ");
 
             return true;
@@ -58,11 +75,12 @@ class clsModulesPlanejamentoAulaComponenteCurricularAee extends Model {
     }
 
     /**
-     * Lista relacionamentos entre CC e o plano de aula
+     * Lista relacionamentos entre CC e o plano de aula.
      *
      * @return array
      */
-    public function lista($planejamento_aula_aee_id) {
+    public function lista($planejamento_aula_aee_id)
+    {
         if (is_numeric($planejamento_aula_aee_id)) {
             $db = new clsBanco();
 
@@ -81,7 +99,7 @@ class clsModulesPlanejamentoAulaComponenteCurricularAee extends Model {
 
             $componentes = [];
 
-            while($db->ProximoRegistro()) {
+            while ($db->ProximoRegistro()) {
                 $componentes[] = [
                     'id' => $db->Tupla()['componente_curricular_id'],
                     'abreviatura' => $db->Tupla()['abreviatura'],
@@ -96,11 +114,12 @@ class clsModulesPlanejamentoAulaComponenteCurricularAee extends Model {
     }
 
     /**
-     * Retorna um array com os dados de um registro
+     * Retorna um array com os dados de um registro.
      *
      * @return array
      */
-    public function detalhe () {
+    public function detalhe()
+    {
         $data = [];
 
         if (is_numeric($this->planejamento_aula_aee_id)) {
@@ -125,20 +144,22 @@ class clsModulesPlanejamentoAulaComponenteCurricularAee extends Model {
     }
 
     /**
-     * Retorna um array com os dados de um registro
+     * Retorna um array com os dados de um registro.
      *
      * @return array
      */
-    public function existe () {
+    public function existe()
+    {
         return false;
     }
 
     /**
-     * Exclui um registro
+     * Exclui um registro.
      *
      * @return bool
      */
-    public function excluir () {
+    public function excluir()
+    {
         if (is_numeric($this->planejamento_aula_aee_id) && is_numeric($this->componente_curricular_id)) {
             $db = new clsBanco();
 
@@ -147,6 +168,29 @@ class clsModulesPlanejamentoAulaComponenteCurricularAee extends Model {
                     {$this->_tabela}
                 WHERE
                     planejamento_aula_aee_id = '{$this->planejamento_aula_aee_id}' AND componente_curricular_id = '{$this->componente_curricular_id}'
+            ");
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Exclui um registro.
+     *
+     * @return bool
+     */
+    public function excluirComponenteCurricularPlanejamentoAulaAee()
+    {
+        if (is_numeric($this->planejamento_aula_aee_id)) {
+            $db = new clsBanco();
+
+            $db->Consulta("
+                DELETE FROM
+                    {$this->_tabela}
+                WHERE
+                    planejamento_aula_aee_id = '{$this->planejamento_aula_aee_id}'
             ");
 
             return true;

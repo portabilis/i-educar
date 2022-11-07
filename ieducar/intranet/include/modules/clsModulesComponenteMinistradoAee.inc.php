@@ -411,4 +411,26 @@ class clsModulesComponenteMinistradoAee extends Model
 
         return false;
     }
+
+    public function selectDataAtendimentoByMatricula($ref_cod_matricula)
+    {
+        if ($ref_cod_matricula) {
+            $db = new clsBanco();
+
+            $sql = "
+                 SELECT data
+                 FROM
+                     modules.conteudo_ministrado_aee
+                 WHERE ref_cod_matricula = $ref_cod_matricula
+                 ORDER BY data DESC LIMIT 1
+             ";
+
+            $db->Consulta($sql);
+            $db->ProximoRegistro();
+
+            return $db->Tupla();
+        }
+
+        return false;
+    }
 }

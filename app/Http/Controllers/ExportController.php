@@ -111,6 +111,9 @@ class ExportController extends Controller
         if ($model === Responsavel::class) {
             $data = $this->filterResponsavel($request, $data, 'exporter_person');
         }
+        if ($model === ResponsavelTurma::class) {
+            $data = $this->filterResponsavelTurma($request, $data, 'exporter_person');
+        }
 
         if ($model === Teacher::class) {
             $data = $this->filterTeachers($request, $data);
@@ -180,6 +183,50 @@ class ExportController extends Controller
      * @return array
      */
     protected function filterResponsavel(Request $request, $data, $table)
+    {
+        $data['filename'] = 'responsaveis_turma.csv';
+
+      
+        if ($status = $request->input('situacao_matricula')) {
+            $data['filters'][] = [
+                'column' => $table . '.status',
+                'operator' => '=',
+                'value' => $status,
+            ];
+        }
+
+        if ($year = $request->input('ano')) {
+            $data['filters'][] = [
+                'column' => $table . '.year',
+                'operator' => '=',
+                'value' => intval($year),
+            ];
+        }
+        if ($cod_turma = $request->input('ref_cod_turma')) {
+            $data['filters'][] = [
+                'column' => $table . '.school_class_id',
+                'operator' => '=',
+                'value' => intval($cod_turma),
+            ];
+        }
+
+       elseif ($request->user()->isSchooling()) {
+            $data['filters'][] = [
+                'column' => $table . '.school_id',
+                'operator' => 'in',
+                'value' => $request->user()->schools->pluck('cod_escola')->all(),
+            ];
+        }
+
+        return $data;
+        }
+     /**
+     * @param Request $request
+     * @param array   $data
+     *
+     * @return array
+     */
+    protected function filterResponsavelTurma(Request $request, $data, $table)
     {
         $data['filename'] = 'responsavel.csv';
 

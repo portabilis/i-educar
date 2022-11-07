@@ -2,7 +2,8 @@
 
 use iEducar\Legacy\Model;
 
-class clsModulesPlanejamentoAulaBNCCEspecificacaoAee extends Model {
+class clsModulesPlanejamentoAulaBNCCEspecificacaoAee extends Model
+{
     public $id;
     public $planejamento_aula_bncc_aee_id;
     public $bncc_especificacao_id;
@@ -15,9 +16,9 @@ class clsModulesPlanejamentoAulaBNCCEspecificacaoAee extends Model {
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}planejamento_aula_bncc_especificacao_aee";
 
-        $this->_from = "
+        $this->_from = '
             modules.planejamento_aula_bncc_especificacao_aee as pabe
-        ";
+        ';
 
         $this->_campos_lista = $this->_todos_campos = '
             *
@@ -37,18 +38,34 @@ class clsModulesPlanejamentoAulaBNCCEspecificacaoAee extends Model {
     }
 
     /**
-     * Cria um novo registro
+     * Cria um novo registro.
      *
      * @return bool
      */
-    public function cadastra() {
+    public function cadastra()
+    {
         if (is_numeric($this->planejamento_aula_bncc_aee_id) && is_numeric($this->bncc_especificacao_id)) {
             $db = new clsBanco();
+            $campos = '';
+            $valores = '';
+            $gruda = '';
+
+            $campos .= "{$gruda}planejamento_aula_bncc_aee_id";
+            $valores .= "{$gruda}'{$this->planejamento_aula_bncc_aee_id}'";
+            $gruda = ', ';
+
+            $campos .= "{$gruda}bncc_especificacao_id";
+            $valores .= "{$gruda}'{$this->bncc_especificacao_id}'";
+            $gruda = ', ';
+
+            $campos .= "{$gruda}updated_at";
+            $valores .= "{$gruda}(NOW() - INTERVAL '3 HOURS')";
+            $gruda = ', ';
 
             $db->Consulta("
-                INSERT INTO {$this->_tabela}
-                    (planejamento_aula_bncc_aee_id, bncc_especificacao_id)
-                VALUES ({$this->planejamento_aula_bncc_aee_id}, {$this->bncc_especificacao_id})
+                INSERT INTO
+                    {$this->_tabela} ( $campos )
+                    VALUES ( $valores )
             ");
 
             return true;
@@ -58,11 +75,12 @@ class clsModulesPlanejamentoAulaBNCCEspecificacaoAee extends Model {
     }
 
     /**
-     * Lista relacionamentos entre BNCC e o plano de aula
+     * Lista relacionamentos entre BNCC e o plano de aula.
      *
      * @return array
      */
-    public function lista($planejamento_aula_aee_id) {
+    public function lista($planejamento_aula_aee_id)
+    {
         if (is_numeric($planejamento_aula_aee_id)) {
             $db = new clsBanco();
 
@@ -82,7 +100,7 @@ class clsModulesPlanejamentoAulaBNCCEspecificacaoAee extends Model {
                     pa.id = '{$planejamento_aula_aee_id}'
             ");
 
-            while($db->ProximoRegistro()) {
+            while ($db->ProximoRegistro()) {
                 $especificacoes[] = $db->Tupla();
             }
 
@@ -94,15 +112,16 @@ class clsModulesPlanejamentoAulaBNCCEspecificacaoAee extends Model {
 
     /**
      * Lista relacionamentos entre BNCC e o plano de aula
-     * Através de um array de PABE
+     * Através de um array de PABE.
      *
      * @return array
      */
-    public function listaEspecificacoesByBNCCArray($planejamento_aula_bncc_aee_idsArray) {
+    public function listaEspecificacoesByBNCCArray($planejamento_aula_bncc_aee_idsArray)
+    {
         if (is_array($planejamento_aula_bncc_aee_idsArray)) {
             $db = new clsBanco();
 
-            $sql = "
+            $sql = '
                 SELECT
                     pabe.*,
                     be.especificacao
@@ -116,22 +135,22 @@ class clsModulesPlanejamentoAulaBNCCEspecificacaoAee extends Model {
 	                ON (be.id = pabe.bncc_especificacao_id)
                 WHERE
                     pabe.planejamento_aula_bncc_aee_id IN (
-            ";
+            ';
 
-            for ($i=0; $i < count($planejamento_aula_bncc_aee_idsArray); $i++) {
-                $separador = $i < count($planejamento_aula_bncc_aee_idsArray) -1 ? ',' : '';
+            for ($i = 0; $i < count($planejamento_aula_bncc_aee_idsArray); ++$i) {
+                $separador = $i < count($planejamento_aula_bncc_aee_idsArray) - 1 ? ',' : '';
                 $pa_bncc_id = $planejamento_aula_bncc_aee_idsArray[$i];
 
-                $sql .= $pa_bncc_id . $separador;
+                $sql .= $pa_bncc_id.$separador;
             }
 
-            $sql .= ")";
+            $sql .= ')';
 
             $db->Consulta($sql);
 
             $especificacoes = [];
 
-            while($db->ProximoRegistro()) {
+            while ($db->ProximoRegistro()) {
                 $especificacoes[] = $db->Tupla()['bncc_especificacao_id'];
             }
 
@@ -142,11 +161,12 @@ class clsModulesPlanejamentoAulaBNCCEspecificacaoAee extends Model {
     }
 
     /**
-     * Retorna um array com os dados de um registro
+     * Retorna um array com os dados de um registro.
      *
      * @return array
      */
-    public function detalhe () {
+    public function detalhe()
+    {
         $data = [];
 
         if (is_numeric($this->id)) {
@@ -171,20 +191,45 @@ class clsModulesPlanejamentoAulaBNCCEspecificacaoAee extends Model {
     }
 
     /**
-     * Retorna um array com os dados de um registro
+     * Retorna um array com os dados de um registro.
      *
      * @return array
      */
-    public function existe () {
+    public function existe()
+    {
         return false;
     }
 
+    public function getIdPlanejamentoAulaBNCCAee($id)
+    {
+        $db = new clsBanco();
+
+        $sql = "SELECT DISTINCT 
+        pabe.planejamento_aula_bncc_aee_id
+        FROM modules.planejamento_aula_bncc_especificacao_aee as pabe  
+        JOIN modules.planejamento_aula_bncc_aee as pab
+            ON (pab.id = pabe.planejamento_aula_bncc_aee_id)
+        JOIN modules.planejamento_aula_aee as pa
+            ON (pa.id = pab.planejamento_aula_aee_id)
+           WHERE pa.id = $id";
+
+        $db->Consulta($sql);
+
+        while ($db->ProximoRegistro()) {
+            $tupla = $db->Tupla();
+            $resultado[] = $tupla;
+        }
+
+        return $resultado;
+    }
+
     /**
-     * Exclui um registro
+     * Exclui um registro.
      *
      * @return bool
      */
-    public function excluir () {
+    public function excluir()
+    {
         if (is_numeric($this->planejamento_aula_bncc_aee_id) && is_numeric($this->bncc_especificacao_id)) {
             $db = new clsBanco();
 
@@ -193,6 +238,24 @@ class clsModulesPlanejamentoAulaBNCCEspecificacaoAee extends Model {
                     {$this->_tabela}
                 WHERE
                     planejamento_aula_bncc_aee_id = '{$this->planejamento_aula_bncc_aee_id}' AND bncc_especificacao_id = '{$this->bncc_especificacao_id}'
+            ");
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public function excluirBNCCEspecificacaoPlanejamentoAulaAee($planejamento_aula_bncc_aee_id)
+    {
+        if (is_numeric($planejamento_aula_bncc_aee_id)) {
+            $db = new clsBanco();
+
+            $db->Consulta("
+                DELETE FROM
+                    {$this->_tabela}
+                WHERE
+                    planejamento_aula_bncc_aee_id = $planejamento_aula_bncc_aee_id
             ");
 
             return true;

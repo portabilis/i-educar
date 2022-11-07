@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use App\Support\Database\MigrationUtils;
 
-class CreateTableExportResponsavel extends Migration
+class AddLevelId extends Migration
 {
     use MigrationUtils;
     /**
@@ -13,10 +13,10 @@ class CreateTableExportResponsavel extends Migration
      */
     public function up()
     {
-       
+        $this->dropView('public.exporter_responsaveis_turma');
 
         $this->executeSqlFile(
-            __DIR__ . '/../sqls/views/public.exporter_responsavel.sql'
+            __DIR__ . '/../sqls/views/public.exporter_responsavel_turma.sql'
         );
        
         
