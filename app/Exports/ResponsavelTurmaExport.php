@@ -61,7 +61,7 @@ class ResponsavelTurmaExport implements FromCollection, ShouldAutoSize, WithColu
     public function headings(): array
     {
         return [
-            'Aluno'
+            'Aluno',
             'Nome',
             'Nascimento',
             'CPF',
