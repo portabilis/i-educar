@@ -26,6 +26,8 @@ class LegacyEnrollment extends LegacyModel
     use DateSerializer;
     use HasLegacyDates;
 
+    public const CREATED_AT = 'data_cadastro';
+
     /**
      * @var string
      */
@@ -61,11 +63,6 @@ class LegacyEnrollment extends LegacyModel
     protected $dates = [
         'data_enturmacao', 'data_exclusao'
     ];
-
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * @param Builder $query
