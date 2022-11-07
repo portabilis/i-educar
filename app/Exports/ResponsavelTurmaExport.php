@@ -110,7 +110,7 @@ class ResponsavelTurmaExport implements FromCollection, ShouldAutoSize, WithColu
             $row[] = $responsavel->cpf_pai.", ".$responsavel->cpf_mae;
             $row[] = $responsavel->gender_pai.", ".$responsavel->gender_mae;
             $row[] = $responsavel->estado_civil_pai.", ".$responsavel->estado_civil_mae;
-            $row[] = $responsavel->rg_pai.", ";.$responsavel->rg_mae
+            $row[] = $responsavel->rg_pai.", ".$responsavel->rg_mae;
             $row[] = $responsavel->nis_pai.", ".$responsavel->nis_mae;
             $row[] = $responsavel->sus_number_pai.", ".$responsavel->sus_number_mae;
             $row[] = $responsavel->certidao_pai.", ".$responsavel->certidao_mae;
