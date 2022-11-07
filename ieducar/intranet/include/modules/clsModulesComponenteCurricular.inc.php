@@ -25,7 +25,7 @@ class clsModulesComponenteCurricular extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($instituicao_id = null, $nome = null, $abreviatura = null, $tipo_base = null, $area_conhecimento_id = null)
     {

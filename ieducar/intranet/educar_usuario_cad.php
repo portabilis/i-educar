@@ -195,13 +195,13 @@ return new class extends clsCadastro {
             'required' => false
         ]);
 
-        $scripts = ['/modules/Cadastro/Assets/Javascripts/Usuario.js'];
+        $scripts = ['/vendor/legacy/Cadastro/Assets/Javascripts/Usuario.js'];
 
         $this->acao_enviar = 'valida()';
         if (!$this->canChange($user, $this->ref_pessoa)) {
             $this->acao_enviar = null;
             $this->fexcluir = null;
-            $scripts[] = '/modules/Cadastro/Assets/Javascripts/disableAllFields.js';
+            $scripts[] = '/vendor/legacy/Cadastro/Assets/Javascripts/disableAllFields.js';
         }
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
@@ -307,35 +307,6 @@ return new class extends clsCadastro {
             }
 
             $this->insereUsuarioEscolas($this->ref_pessoa, $this->escola);
-
-            if ($this->nivel_usuario_ == 8) {
-                $obj_tipo = new clsPmieducarTipoUsuario($this->ref_cod_tipo_usuario);
-                $det_tipo = $obj_tipo->detalhe();
-                if ($det_tipo['nivel'] != 8) {
-                    $obj_usuario_bib = new clsPmieducarBibliotecaUsuario();
-                    $lista_bibliotecas_usuario = $obj_usuario_bib->lista(null, $this->pessoa_logada);
-
-                    if ($lista_bibliotecas_usuario) {
-                        foreach ($lista_bibliotecas_usuario as $usuario) {
-                            $obj_usuario_bib = new clsPmieducarBibliotecaUsuario($usuario['ref_cod_biblioteca'], $this->pessoa_logada);
-                            if (!$obj_usuario_bib->excluir()) {
-                                return false;
-                            }
-                        }
-                    }
-                }
-            }
-
-            if ($this->ref_cod_instituicao != $this->ref_cod_instituicao_) {
-                $obj_biblio = new clsPmieducarBiblioteca();
-                $lista_biblio_inst = $obj_biblio->lista(null, $this->ref_cod_instituicao_);
-                if ($lista_biblio_inst) {
-                    foreach ($lista_biblio_inst as $biblioteca) {
-                        $obj_usuario_bib = new clsPmieducarBibliotecaUsuario($biblioteca['cod_biblioteca'], $this->pessoa_logada);
-                        $obj_usuario_bib->excluir();
-                    }
-                }
-            }
 
             if ($editou) {
                 $this->mensagem .= 'Edição efetuada com sucesso.<br>';

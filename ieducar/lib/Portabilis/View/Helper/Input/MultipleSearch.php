@@ -37,7 +37,7 @@ class Portabilis_View_Helper_Input_MultipleSearch extends Portabilis_View_Helper
     {
         Portabilis_View_Helper_Application::loadChosenLib($this->viewInstance);
 
-        $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/MultipleSearch.js';
+        $jsFile = '/vendor/legacy/Portabilis/Assets/Javascripts/Frontend/Inputs/MultipleSearch.js';
         Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
     }
 

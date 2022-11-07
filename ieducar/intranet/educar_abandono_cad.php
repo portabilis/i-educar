@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyAbandonmentType;
+
 return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -64,17 +66,9 @@ return new class extends clsCadastro {
             $this->campoTexto('nm_aluno', 'Aluno', $this->nm_aluno, 30, 255, false, false, false, '', '', '', '', true);
         }
 
-        $this->ref_cod_instituicao = $det_aluno['ref_cod_abandono_tipo'];
-
-        $tiposAbandono  = new clsPmieducarAbandonoTipo();
-        $tiposAbandono  = $tiposAbandono->lista(null, null, null, null, null, null, null, null, 1, $ref_cod_instituicao);
-
-        $selectOptions = [];
-        foreach ($tiposAbandono as $tipoAbandono) {
-            $selectOptions[$tipoAbandono['cod_abandono_tipo']] = $tipoAbandono['nome'];
-        }
-
-        $selectOptions = Portabilis_Array_Utils::sortByValue($selectOptions);
+        $selectOptions = LegacyAbandonmentType::query()->where('ativo', 1)
+            ->orderBy('nome', 'ASC')
+            ->pluck('nome', 'cod_abandono_tipo');
 
         $options = ['label' => 'Motivo do abandono', 'resources' => $selectOptions, 'value' => ''];
 
@@ -124,8 +118,7 @@ return new class extends clsCadastro {
                 foreach ($enturmacoes as $enturmacao) {
                     $enturmacao = new clsPmieducarMatriculaTurma($this->ref_cod_matricula, $enturmacao['ref_cod_turma'], $this->pessoa_logada, null, null, null, 0, null, $enturmacao['sequencial']);
                     $detEnturmacao = $enturmacao->detalhe();
-                    $detEnturmacao = $detEnturmacao['data_enturmacao'];
-                    $enturmacao->data_enturmacao = $detEnturmacao;
+                    $enturmacao->data_enturmacao = $detEnturmacao['data_enturmacao'];
 
                     if (! $enturmacao->edita()) {
                         $this->mensagem = 'Não foi possível desativar as enturmações da matrícula.';

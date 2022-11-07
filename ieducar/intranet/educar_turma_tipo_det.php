@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacySchoolClassType;
+
 return new class extends clsDetalhe {
     public $titulo;
     public $cod_turma_tipo;
@@ -19,8 +21,7 @@ return new class extends clsDetalhe {
 
         $this->cod_turma_tipo=$_GET['cod_turma_tipo'];
 
-        $tmp_obj = new clsPmieducarTurmaTipo($this->cod_turma_tipo);
-        $registro = $tmp_obj->detalhe();
+        $registro = LegacySchoolClassType::find($this->cod_turma_tipo)->getAttributes();
 
         if (! $registro) {
             $this->simpleRedirect('educar_turma_tipo_lst.php');

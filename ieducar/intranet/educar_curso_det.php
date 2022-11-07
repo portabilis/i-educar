@@ -1,5 +1,11 @@
 <?php
 
+use App\Models\LegacyCourse;
+use App\Models\LegacyEducationLevel;
+use App\Models\LegacyEducationType;
+use App\Models\LegacyQualificationCourse;
+use App\Models\LegacyRegimeType;
+
 return new class extends clsDetalhe {
     public $titulo;
 
@@ -41,17 +47,23 @@ return new class extends clsDetalhe {
         $obj_instituicao_det = $obj_instituicao->detalhe();
         $registro['ref_cod_instituicao'] = $obj_instituicao_det['nm_instituicao'];
 
-        $obj_ref_cod_tipo_regime = new clsPmieducarTipoRegime($registro['ref_cod_tipo_regime']);
-        $det_ref_cod_tipo_regime = $obj_ref_cod_tipo_regime->detalhe();
-        $registro['ref_cod_tipo_regime'] = $det_ref_cod_tipo_regime['nm_tipo'];
+        $nm_tipo = LegacyRegimeType::query()
+            ->select('nm_tipo')
+            ->where('cod_tipo_regime', $registro['ref_cod_tipo_regime'])
+            ->first()?->nm_tipo;
+        $registro['ref_cod_tipo_regime'] = $nm_tipo;
 
-        $obj_ref_cod_nivel_ensino = new clsPmieducarNivelEnsino($registro['ref_cod_nivel_ensino']);
-        $det_ref_cod_nivel_ensino = $obj_ref_cod_nivel_ensino->detalhe();
-        $registro['ref_cod_nivel_ensino'] = $det_ref_cod_nivel_ensino['nm_nivel'];
+        $nm_nivel = LegacyEducationLevel::query()
+            ->select('nm_nivel')
+            ->where('cod_nivel_ensino', $registro['ref_cod_nivel_ensino'])
+            ->first()?->nm_nivel;
+        $registro['ref_cod_nivel_ensino'] = $nm_nivel;
 
-        $obj_ref_cod_tipo_ensino = new clsPmieducarTipoEnsino($registro['ref_cod_tipo_ensino']);
-        $det_ref_cod_tipo_ensino = $obj_ref_cod_tipo_ensino->detalhe();
-        $registro['ref_cod_tipo_ensino'] = $det_ref_cod_tipo_ensino['nm_tipo'];
+        $nm_tipo = LegacyEducationType::query()
+            ->select('nm_tipo')
+            ->where('cod_tipo_ensino', $registro['ref_cod_tipo_ensino'])
+            ->first()?->nm_tipo;
+        $registro['ref_cod_tipo_ensino'] = $nm_tipo;
 
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
@@ -100,10 +112,10 @@ return new class extends clsDetalhe {
             $this->addDetalhe(['Ato Poder P&uacute;blico', $registro['ato_poder_publico']]);
         }
 
-        $obj = new clsPmieducarHabilitacaoCurso(null, $this->cod_curso);
-        $lst = $obj->lista(null, $this->cod_curso);
+        $curso = LegacyCourse::find($this->cod_curso);
+        $lst = $curso->qualifications?->toArray();
 
-        if ($lst) {
+        if (!empty($lst)) {
             $tabela = '<TABLE>
                  <TR align=center>
                      <TD bgcolor=#ccdce6><B>Nome</B></TD>
@@ -117,9 +129,7 @@ return new class extends clsDetalhe {
                     $color = ' bgcolor=#FFFFFF ';
                 }
 
-                $obj = new clsPmieducarHabilitacao($valor['ref_cod_habilitacao']);
-                $obj_habilitacao = $obj->detalhe();
-                $habilitacao = $obj_habilitacao['nm_tipo'];
+                $habilitacao = $valor['nm_tipo'];
 
                 $tabela .= "<TR>
                   <TD {$color} align=left>{$habilitacao}</TD>
@@ -161,8 +171,8 @@ return new class extends clsDetalhe {
         $this->largura = '100%';
 
         $this->breadcrumb('Detalhe do curso', [
-        url('intranet/educar_index.php') => 'Escola',
-    ]);
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 
     public function Formular()

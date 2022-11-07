@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\LegacyDisciplineSchoolClass;
+use App\Models\LegacySchoolClass;
+use App\Models\LegacySchoolClassType;
 use App\Models\LegacySchoolCourse;
 use iEducar\Modules\Educacenso\Model\UnidadesCurriculares;
 use iEducar\Support\View\SelectOptions;
@@ -13,7 +15,6 @@ return new class extends clsCadastro {
     public $ref_cod_serie;
     public $ref_cod_serie_;
     public $ref_ref_cod_escola;
-    public $ref_cod_infra_predio_comodo;
     public $nm_turma;
     public $sgl_turma;
     public $max_aluno;
@@ -177,6 +178,13 @@ return new class extends clsCadastro {
         }
 
         if (is_numeric($this->cod_turma)) {
+            if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
+                $not_access = LegacySchoolClass::filter(['school_user'=>$this->pessoa_logada])->where('cod_turma',$this->cod_turma)->doesntExist();
+                if ($not_access) {
+                    $this->simpleRedirect('educar_turma_lst.php');
+                }
+            }
+
             $obj_turma = new clsPmieducarTurma($this->cod_turma);
             $registro = $obj_turma->detalhe();
             $obj_esc = new clsPmieducarEscola($registro['ref_ref_cod_escola']);
@@ -278,69 +286,6 @@ return new class extends clsCadastro {
         $this->campoOculto('mult_padrao_ano_escolar', $this->mult_padrao_ano_escolar);
         $this->campoTabelaFim();
 
-        // Infra prédio cômodo
-        $opcoes = ['' => 'Selecione'];
-
-        // Editar
-        if ($this->ref_ref_cod_escola) {
-            $obj_infra_predio = new clsPmieducarInfraPredio();
-            $obj_infra_predio->setOrderby('nm_predio ASC');
-            $lst_infra_predio = $obj_infra_predio->lista(
-                null,
-                null,
-                null,
-                $this->ref_ref_cod_escola,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                1
-            );
-
-            if (is_array($lst_infra_predio) && count($lst_infra_predio)) {
-                foreach ($lst_infra_predio as $predio) {
-                    $obj_infra_predio_comodo = new clsPmieducarInfraPredioComodo();
-                    $lst_infra_predio_comodo = $obj_infra_predio_comodo->lista(
-                        null,
-                        null,
-                        null,
-                        null,
-                        $predio['cod_infra_predio'],
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        1
-                    );
-
-                    if (is_array($lst_infra_predio_comodo) && count($lst_infra_predio_comodo)) {
-                        foreach ($lst_infra_predio_comodo as $comodo) {
-                            $opcoes[$comodo['cod_infra_predio_comodo']] = $comodo['nm_comodo'];
-                        }
-                    }
-                }
-            }
-        }
-
-        $this->campoLista(
-            'ref_cod_infra_predio_comodo',
-            'Sala',
-            $opcoes,
-            $this->ref_cod_infra_predio_comodo,
-            null,
-            null,
-            null,
-            null,
-            null,
-            false
-        );
-
         $array_servidor = ['' => 'Selecione um servidor'];
         if ($this->ref_cod_regente) {
             $obj_pessoa = new clsPessoa_($this->ref_cod_regente);
@@ -351,30 +296,14 @@ return new class extends clsCadastro {
         $this->campoListaPesq('ref_cod_regente', 'Professor/Regente', $array_servidor, $this->ref_cod_regente, '', '', false, '', '', null, null, '', true, false, false);
 
         // Turma tipo
-        $opcoes = ['' => 'Selecione'];
-
-        // Editar
-        $objTemp = new clsPmieducarTurmaTipo();
-        $objTemp->setOrderby('nm_tipo ASC');
-        $lista = $objTemp->lista(
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            $this->ref_cod_instituicao
-        );
-
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $opcoes[$registro['cod_turma_tipo']] = $registro['nm_tipo'];
-            }
+        $query = LegacySchoolClassType::query()->where('ativo', 1)
+            ->orderBy('nm_tipo', 'ASC');
+        if (is_numeric($this->ref_cod_instituicao)) {
+            $query->where('ref_cod_instituicao', $this->ref_cod_instituicao);
         }
+        $opcoes = $query->orderBy('nm_tipo', 'ASC')
+            ->pluck('nm_tipo', 'cod_turma_tipo')
+            ->prepend('Selecione', '');
 
         $script = 'javascript:showExpansivelIframe(520, 170, \'educar_turma_tipo_cad_pop.php\');';
 
@@ -394,7 +323,7 @@ return new class extends clsCadastro {
             $script
         );
 
-        $this->campoTexto('nm_turma', 'Nome da turma', $this->nm_turma, 30, 255, true);
+        $this->campoTexto('nm_turma', 'Nome da turma', e($this->nm_turma), 30, 255, true);
 
         $this->campoTexto('sgl_turma', _cl('turma.detalhe.sigla'), $this->sgl_turma, 15, 15, false);
 
@@ -669,15 +598,15 @@ return new class extends clsCadastro {
         $this->inputsHelper()->checkbox('nao_informar_educacenso', $options);
 
         $scripts = [
-            '/modules/Cadastro/Assets/Javascripts/Turma.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/Turma.js',
             '/intranet/scripts/etapas.js',
             '/intranet/scripts/tabelaSerieMult.js',
-            '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
+            '/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
 
-        $styles = ['/modules/Cadastro/Assets/Stylesheets/Turma.css'];
+        $styles = ['/vendor/legacy/Cadastro/Assets/Stylesheets/Turma.css'];
 
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
     }

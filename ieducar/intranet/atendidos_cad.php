@@ -157,7 +157,7 @@ return new class extends clsCadastro {
         'atendidos_det.php?cod_pessoa=' . $this->cod_pessoa_fj : 'atendidos_lst.php';
 
         $objPessoa = new clsPessoaFisica($this->cod_pessoa_fj);
-        $db = new clsBanco();
+
 
         $detalhe = $objPessoa->queryRapida(
             $this->cod_pessoa_fj,
@@ -491,11 +491,6 @@ return new class extends clsCadastro {
 
         $this->inputsHelper()->date('data_emissao_certidao_civil', $options);
 
-        $options = [
-            'label' => '',
-            'required' => false
-        ];
-
         // cartório emissão certidão civil
         $options = [
             'required' => false,
@@ -684,7 +679,7 @@ return new class extends clsCadastro {
         // Religião
         $this->inputsHelper()->religiao(['required' => false, 'label' => 'Religião']);
 
-        $this->viewAddress();
+        $this->viewAddress(true);
 
         $this->inputsHelper()->select('pais_residencia', [
             'label' => 'País de residência',
@@ -739,19 +734,19 @@ return new class extends clsCadastro {
         }
 
         $styles = [
-            '/modules/Portabilis/Assets/Stylesheets/Frontend.css',
-            '/modules/Portabilis/Assets/Stylesheets/Frontend/Resource.css',
-            '/modules/Cadastro/Assets/Stylesheets/PessoaFisica.css',
-            '/modules/Cadastro/Assets/Stylesheets/ModalCadastroPais.css',
+            '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend.css',
+            '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend/Resource.css',
+            '/vendor/legacy/Cadastro/Assets/Stylesheets/PessoaFisica.css',
+            '/vendor/legacy/Cadastro/Assets/Stylesheets/ModalCadastroPais.css',
         ];
 
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
 
         $script = [
-            '/modules/Cadastro/Assets/Javascripts/PessoaFisica.js',
-            '/modules/Cadastro/Assets/Javascripts/Addresses.js',
-            '/modules/Cadastro/Assets/Javascripts/Endereco.js',
-            '/modules/Cadastro/Assets/Javascripts/ModalCadastroPais.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/PessoaFisica.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/Addresses.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/Endereco.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/ModalCadastroPais.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $script);
@@ -809,15 +804,6 @@ return new class extends clsCadastro {
 
         if ($servidor) {
             $this->mensagem = 'Não foi possível excluir. Esta pessoa possuí vínculo com servidor.';
-
-            return false;
-        }
-
-        $cliente = new clsPmieducarCliente();
-        $cliente = $cliente->lista(null, null, null, $idPes, null, null, null, null, null, null, 1);
-
-        if ($cliente) {
-            $this->mensagem = 'Não foi possível excluir. Esta pessoa possuí vínculo com cliente.';
 
             return false;
         }
@@ -974,6 +960,10 @@ return new class extends clsCadastro {
             return false;
         }
 
+        if (!empty($this->nome_social) && !$this->validaNomeSocial()) {
+            return false;
+        }
+
         if (!empty($this->data_nasc) && !$this->validaDataNascimento()) {
             return false;
         }
@@ -992,12 +982,18 @@ return new class extends clsCadastro {
             return false;
         }
 
+        if (!$this->validaCaracteresPermitidosComplemento()) {
+            $this->mensagem = 'O campo foi preenchido com valor não permitido. O campo Complemento só permite os caracteres: ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ª º – / . ,';
+
+            return false;
+        }
+
         $pessoaId = $this->createOrUpdatePessoa($pessoaIdOrNull);
         $this->savePhoto($pessoaId);
         $this->createOrUpdatePessoaFisica($pessoaId);
         $this->createOrUpdateDocumentos($pessoaId);
         $this->createOrUpdateTelefones($pessoaId);
-        $this->saveAddress($pessoaId);
+        $this->saveAddress($pessoaId,true);
         $this->afterChangePessoa($pessoaId);
         $this->saveFiles($pessoaId);
 
@@ -1007,6 +1003,18 @@ return new class extends clsCadastro {
     private function validaNome()
     {
         $validator = new NameValidator($this->nm_pessoa);
+        if (!$validator->isValid()) {
+            $this->mensagem = $validator->getMessage();
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private function validaNomeSocial()
+    {
+        $validator = new NameValidator($this->nome_social);
         if (!$validator->isValid()) {
             $this->mensagem = $validator->getMessage();
 
@@ -1178,6 +1186,15 @@ return new class extends clsCadastro {
         }
 
         return true;
+    }
+
+    protected function validaCaracteresPermitidosComplemento()
+    {
+        if (empty($this->complement)) {
+            return true;
+        }
+        $pattern = '/^[a-zA-Z0-9ªº\/–\ .,-]+$/';
+        return preg_match($pattern, $this->complement);
     }
 
     protected function createOrUpdatePessoa($pessoaId = null)

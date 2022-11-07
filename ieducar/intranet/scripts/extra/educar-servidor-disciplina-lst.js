@@ -9,29 +9,23 @@ function trocaCurso(id_campo) {
     campoDisciplina.disabled = true;
     campoDisciplina.options[0].text = 'Carregando Disciplinas';
 
-    var xml = new ajax(atualizaLstDisciplina, 'ref_cod_disciplina[' + id + ']');
-    xml.envia('educar_disciplina_xml.php?cur=' + campoCurso);
+    getApiResource("/api/resource/discipline",atualizaLstDisciplina,{course:campoCurso},id);
   } else {
     campoFuncao.options[0].text = 'Selecione';
   }
 }
 
-function atualizaLstDisciplina(xml) {
-  var campoDisciplina = document.getElementById(arguments[1]);
-
-  campoDisciplina.length = 1;
-  campoDisciplina.options[0].text = 'Selecione uma Disciplina';
-  campoDisciplina.disabled = false;
-
-  var disciplinas = xml.getElementsByTagName('disciplina');
+function atualizaLstDisciplina(disciplinas,id) {
+  const campoDisciplina = document.getElementById('ref_cod_disciplina[' + id + ']');
+  setAttributes(campoDisciplina,'Selecione uma Disciplina',false)
 
   if (disciplinas.length) {
     campoDisciplina.options[campoDisciplina.options.length] =
       new Option('Todas as disciplinas', 'todas_disciplinas', false, false);
-    for (var i = 0; i < disciplinas.length; i++) {
-      campoDisciplina.options[campoDisciplina.options.length] =
-        new Option(disciplinas[i].firstChild.data, disciplinas[i].getAttribute('cod_disciplina'), false, false);
-    }
+
+    $j.each(disciplinas, function(i, item) {
+      campoDisciplina.options[campoDisciplina.options.length] = new Option(item.name,item.id, false, false);
+    });
   } else {
     campoDisciplina.options[0].text = 'A instituição não possui nenhuma disciplina';
   }

@@ -57,7 +57,7 @@ class clsPmieducarTurma extends Model
 
     public function __construct($cod_turma = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_ref_cod_serie = null, $ref_ref_cod_escola = null, $ref_cod_infra_predio_comodo = null, $nm_turma = null, $sgl_turma = null, $max_aluno = null, $multiseriada = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_turma_tipo = null, $hora_inicial = null, $hora_final = null, $hora_inicio_intervalo = null, $hora_fim_intervalo = null, $ref_cod_regente = null, $ref_cod_instituicao_regente = null, $ref_cod_instituicao = null, $ref_cod_curso = null, $ref_ref_cod_serie_mult = null, $ref_ref_cod_escola_mult = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null, $data_fechamento = null, $ref_cod_disciplina_dispensada = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}turma";
 
@@ -954,7 +954,7 @@ class clsPmieducarTurma extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_cod_turma = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_ref_cod_serie = null, $int_ref_ref_cod_escola = null, $int_ref_cod_infra_predio_comodo = null, $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_turma_tipo = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null, $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = null, $int_ref_cod_instituicao = null, $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null, $bool_verifica_serie_multiseriada = false, $bool_tem_alunos_aguardando_nota = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null, $somenteAnoLetivoEmAndamento = false)
     {
@@ -1172,13 +1172,13 @@ class clsPmieducarTurma extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista2($int_cod_turma = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_ref_cod_serie = null, $int_ref_ref_cod_escola = null, $int_ref_cod_infra_predio_comodo = null, $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_turma_tipo = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null, $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = null, $int_ref_cod_instituicao = null, $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null)
     {
         $db = new clsBanco();
 
-        $sql = "SELECT {$this->_campos_lista},c.nm_curso,textcat_all(s.nm_serie ORDER BY s.nm_serie) AS nm_serie, textcat_all(s.nm_serie || ' ' || coalesce('(' || s.descricao || ')', '') ORDER BY s.nm_serie) AS descricao_serie, i.nm_instituicao FROM {$this->_tabela} t LEFT JOIN pmieducar.turma_serie ts ON (ts.turma_id  = t.cod_turma) LEFT JOIN {$this->_schema}serie s ON (s.cod_serie = COALESCE(ts.serie_id, t.ref_ref_cod_serie)), {$this->_schema}curso c, {$this->_schema}instituicao i ";
+        $sql = "SELECT {$this->_campos_lista},(CASE WHEN coalesce(c.descricao,'') <> '' THEN c.nm_curso || ' (' || c.descricao || ')' ELSE c.nm_curso END) as nm_curso,textcat_all(s.nm_serie ORDER BY s.nm_serie) AS nm_serie, textcat_all((CASE WHEN coalesce(s.descricao,'') <> '' THEN s.nm_serie || ' (' || s.descricao || ')' ELSE s.nm_serie END) ORDER BY s.nm_serie) AS descricao_serie, i.nm_instituicao FROM {$this->_tabela} t LEFT JOIN pmieducar.turma_serie ts ON (ts.turma_id  = t.cod_turma) LEFT JOIN {$this->_schema}serie s ON (s.cod_serie = COALESCE(ts.serie_id, t.ref_ref_cod_serie)), {$this->_schema}curso c, {$this->_schema}instituicao i ";
         $filtros = '';
 
         $whereAnd = ' WHERE t.ref_cod_curso = c.cod_curso AND c.ref_cod_instituicao = i.cod_instituicao AND ';
@@ -1372,7 +1372,7 @@ class clsPmieducarTurma extends Model
      * Retorna uma lista filtrados de acordo com os parametros
      * (Modificação da lista2, agora trazendo somente turmas do ano atual)
      *
-     * @return array
+     * @return array|false
      */
     public function lista3($int_cod_turma = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_ref_cod_serie = null, $int_ref_ref_cod_escola = null, $int_ref_cod_infra_predio_comodo = null, $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_turma_tipo = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null, $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = null, $int_ref_cod_instituicao = null, $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null)
     {
@@ -1588,7 +1588,7 @@ class clsPmieducarTurma extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -1606,7 +1606,7 @@ class clsPmieducarTurma extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {
@@ -1645,33 +1645,6 @@ class clsPmieducarTurma extends Model
             $db->ProximoRegistro();
 
             return $db->Tupla();
-        }
-
-        return false;
-    }
-
-    public function maximoAlunosSala()
-    {
-        $detTurma = $this->detalhe();
-        $objInstituicao = new clsPmieducarInstituicao($detTurma['ref_cod_instituicao']);
-        $detInstituicao = $objInstituicao->detalhe();
-        $controlaEspacoUtilizacaoAluno = $detInstituicao['controlar_espaco_utilizacao_aluno'];
-        //se o parametro de controle de utilização de espaço estiver setado como verdadeiro
-        if ($controlaEspacoUtilizacaoAluno) {
-            $percentagemMaximaUtilizacaoSala = $detInstituicao['percentagem_maxima_ocupacao_salas'];
-            $quantidadeAlunosPorMetroQuadrado = $detInstituicao['quantidade_alunos_metro_quadrado'];
-            $codSalaUtilizada = $detTurma['ref_cod_infra_predio_comodo'];
-
-            $objInfraPredioComodo = new clsPmieducarInfraPredioComodo($codSalaUtilizada);
-            $detInfraPredioComodo = $objInfraPredioComodo->detalhe();
-            $areaSala = $detInfraPredioComodo['area'];
-
-            if (is_numeric($percentagemMaximaUtilizacaoSala) and (is_numeric($quantidadeAlunosPorMetroQuadrado)) and is_numeric($areaSala)) {
-                $metragemMaximaASerUtilizadaSala = ($areaSala * ($percentagemMaximaUtilizacaoSala / 100.00));
-                $maximoAlunosSala = ($quantidadeAlunosPorMetroQuadrado * $metragemMaximaASerUtilizadaSala);
-
-                return round($maximoAlunosSala);
-            }
         }
 
         return false;
@@ -1785,6 +1758,7 @@ class clsPmieducarTurma extends Model
                 t.atividades_aee,
                 t.local_funcionamento_diferenciado,
                 c.nm_curso,
+                c.descricao,
                 i.nm_instituicao
         ";
     }

@@ -102,6 +102,7 @@ return new class extends clsCadastro {
             $objProfessorTurma = new clsModulesProfessorTurma($this->id);
             $detProfessorTurma = $objProfessorTurma->detalhe();
             $ano = $detProfessorTurma['ano'];
+            $this->ano = $ano; //o inputsHelper necessita do valor para poder filtrar as turmas deste ano
         }
 
         if (isset($_GET['copia'])) {
@@ -175,7 +176,7 @@ return new class extends clsCadastro {
         $this->inputsHelper()->multipleSearchComponenteCurricular(null, ['label' => 'Componentes lecionados', 'required' => true], ['searchForArea' => true, 'allDisciplinesMulti' => true]);
 
         $scripts = [
-            '/modules/Cadastro/Assets/Javascripts/ServidorVinculoTurma.js'
+            '/vendor/legacy/Cadastro/Assets/Javascripts/ServidorVinculoTurma.js'
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
@@ -206,15 +207,17 @@ return new class extends clsCadastro {
         }
 
         $professorTurma = new clsModulesProfessorTurma(null, $this->ano, $this->ref_cod_instituicao, $this->servidor_id, $this->ref_cod_turma, $this->funcao_exercida, $this->tipo_vinculo, $this->permite_lancar_faltas_componente, $this->turma_turno_id);
-        if ($professorTurma->existe2()) {
-            $this->mensagem = 'Não é possível cadastrar pois já existe um vínculo com essa turma.<br>';
+        $id = $professorTurma->existe2();
+        if ($id) {
+            $link = "<a href=\"educar_servidor_vinculo_turma_det.php?id=$id\"><b>Acesse aqui</b></a>";
+            $this->mensagem = "Já existe um vínculo para o(a) professor(a) nesta turma na escola e ano letivo selecionado. $link";
             return false;
         }
 
         $professorTurmaId = $professorTurma->cadastra();
         $professorTurma->gravaComponentes($professorTurmaId, $this->componentecurricular);
 
-        $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+        $this->mensagem = 'Cadastro efetuado com sucesso.<br>';
         $this->simpleRedirect($backUrl);
     }
 
@@ -252,9 +255,10 @@ return new class extends clsCadastro {
             return false;
         }
 
-        if ($professorTurma->existe2()) {
-            $this->mensagem .= 'Não é possível cadastrar pois já existe um vínculo com essa turma.<br>';
-
+        $id = $professorTurma->existe2();
+        if ($id) {
+            $link = "<a href=\"educar_servidor_vinculo_turma_det.php?id=$id\"><b>Acesse aqui</b></a>";
+            $this->mensagem = "Já existe um vínculo para o(a) professor(a) nesta turma na escola e ano letivo selecionado. $link";
             return false;
         }
 
@@ -262,7 +266,7 @@ return new class extends clsCadastro {
 
         if ($editou) {
             $professorTurma->gravaComponentes($this->id, $this->componentecurricular);
-            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
+            $this->mensagem = 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect($backUrl);
         }
 
@@ -290,7 +294,7 @@ return new class extends clsCadastro {
         $professorTurma->excluiComponentes($this->id);
         $professorTurma->excluir();
 
-        $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
+        $this->mensagem = 'Exclusão efetuada com sucesso.<br>';
         $this->simpleRedirect($backUrl);
     }
 

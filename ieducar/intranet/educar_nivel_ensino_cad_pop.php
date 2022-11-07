@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyEducationLevel;
+
 return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -22,14 +24,13 @@ return new class extends clsCadastro {
     {
         $retorno = 'Novo';
 
-        $this->cod_nivel_ensino=$_GET['cod_nivel_ensino'];
+        $this->cod_nivel_ensino = $_GET['cod_nivel_ensino'];
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(571, $this->pessoa_logada, 3, 'educar_nivel_ensino_lst.php');
 
         if (is_numeric($this->cod_nivel_ensino)) {
-            $obj = new clsPmieducarNivelEnsino($this->cod_nivel_ensino);
-            $registro  = $obj->detalhe();
+            $registro = LegacyEducationLevel::find($this->cod_nivel_ensino)?->getAttributes();
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
@@ -64,24 +65,25 @@ return new class extends clsCadastro {
 
     public function Novo()
     {
-        $obj = new clsPmieducarNivelEnsino(null, null, $this->pessoa_logada, $this->nm_nivel, $this->descricao, null, null, 1, $this->ref_cod_instituicao);
-        $cadastrou = $obj->cadastra();
-        if ($cadastrou) {
+        $level = new LegacyEducationLevel();
+        $level->ref_usuario_cad = $this->pessoa_logada;
+        $level->nm_nivel = $this->nm_nivel;
+        $level->descricao = $this->descricao;
+        $level->ref_cod_instituicao = $this->ref_cod_instituicao;
+
+        if ($level->save()) {
             echo "<script>
                         if (parent.document.getElementById('ref_cod_nivel_ensino').disabled)
                             parent.document.getElementById('ref_cod_nivel_ensino').options[0] = new Option('Selecione um nível de ensino', '', false, false);
-                        parent.document.getElementById('ref_cod_nivel_ensino').options[parent.document.getElementById('ref_cod_nivel_ensino').options.length] = new Option('$this->nm_nivel', '$cadastrou', false, false);
-                        parent.document.getElementById('ref_cod_nivel_ensino').value = '$cadastrou';
+                        parent.document.getElementById('ref_cod_nivel_ensino').options[parent.document.getElementById('ref_cod_nivel_ensino').options.length] = new Option('$this->nm_nivel', '$level->cod_nivel_ensino', false, false);
+                        parent.document.getElementById('ref_cod_nivel_ensino').value = '$level->cod_nivel_ensino';
                         parent.document.getElementById('ref_cod_nivel_ensino').disabled = false;
                         window.parent.fechaExpansivel('div_dinamico_'+(parent.DOM_divs.length-1));
                     </script>";
             die();
-
-            return true;
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
-
         return false;
     }
 
@@ -95,7 +97,7 @@ return new class extends clsCadastro {
 
     public function makeExtra()
     {
-        if (! $_GET['ref_cod_instituicao']) {
+        if (!$_GET['ref_cod_instituicao']) {
             return file_get_contents(__DIR__ . '/scripts/extra/educar-habilitacao-cad-pop.js');
         }
 

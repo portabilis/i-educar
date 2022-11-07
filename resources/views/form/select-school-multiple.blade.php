@@ -9,12 +9,12 @@
 </span>
 
 @push('scripts')
-    <link type='text/css' rel='stylesheet' href='{{ Asset::get("/modules/Portabilis/Assets/Plugins/Chosen/chosen.css") }}'>
-    <script type='text/javascript' src='{{ Asset::get('/modules/Portabilis/Assets/Plugins/Chosen/chosen.jquery.min.js') }}'></script>
+    <link type='text/css' rel='stylesheet' href='{{ Asset::get("/vendor/legacy/Portabilis/Assets/Plugins/Chosen/chosen.css") }}'>
+    <script type='text/javascript' src='{{ Asset::get('/vendor/legacy/Portabilis/Assets/Plugins/Chosen/chosen.jquery.min.js') }}'></script>
     <script type="text/javascript"
-            src="{{ Asset::get("/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/MultipleSearch.js") }}"></script>
+            src="{{ Asset::get("/vendor/legacy/Portabilis/Assets/Javascripts/Frontend/Inputs/MultipleSearch.js") }}"></script>
     <script type="text/javascript"
-            src="{{ Asset::get("/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/Resource/MultipleSearchEscola.js") }}"></script>
+            src="{{ Asset::get("/vendor/legacy/Portabilis/Assets/Javascripts/Frontend/Inputs/Resource/MultipleSearchEscola.js") }}"></script>
     <script type='text/javascript'>
         (function ($) {
             $(document).ready(function () {

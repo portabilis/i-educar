@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyAbandonmentType;
+use App\Models\LegacyBenefit;
 use App\Process;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use Illuminate\Support\Facades\Auth;
@@ -50,7 +52,7 @@ return new class extends clsDetalhe {
     public function Gerar()
     {
         // carrega estilo para feedback messages, exibindo msgs da api.
-        $style = '/modules/Portabilis/Assets/Stylesheets/Frontend.css';
+        $style = '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend.css';
         Portabilis_View_Helper_Application::loadStylesheet($this, $style);
 
         $this->titulo = 'Matrícula - Detalhe';
@@ -268,12 +270,12 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['aprovado'] == App_Model_MatriculaSituacao::ABANDONO) {
-            $tipoAbandono = new clsPmieducarAbandonoTipo($registro['ref_cod_abandono_tipo']);
-            $tipoAbandono = $tipoAbandono->detalhe();
+
+            $tipoAbandono = LegacyAbandonmentType::find($registro['ref_cod_abandono_tipo'])?->getAttributes();
 
             $observacaoAbandono = $registro['observacao'];
 
-            $this->addDetalhe(['Motivo do Abandono', $tipoAbandono['nome']]);
+            $this->addDetalhe(['Motivo do Abandono', $tipoAbandono ? $tipoAbandono['nome'] : '']);
             $this->addDetalhe(['Observação', $observacaoAbandono]);
         }
 
@@ -466,9 +468,9 @@ return new class extends clsDetalhe {
 
         // js
         $scripts = [
-            '/modules/Portabilis/Assets/Javascripts/Utils.js',
-            '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
-            '/modules/Cadastro/Assets/Javascripts/MatriculaShow.js'
+            '/vendor/legacy/Portabilis/Assets/Javascripts/Utils.js',
+            '/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/MatriculaShow.js'
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);

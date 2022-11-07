@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyExemptionType;
+
 return new class extends clsListagem {
     public $pessoa_logada;
     public $titulo;
@@ -80,33 +82,11 @@ return new class extends clsListagem {
             'Data Dispensa'
         ]);
 
-        // Filtros de Foreign Keys
-        $opcoes = ['' => 'Selecione'];
-        $objTemp = new clsPmieducarTipoDispensa();
-
-        if ($this->ref_cod_instituicao) {
-            $lista = $objTemp->lista(
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                1,
-                $this->ref_cod_instituicao
-            );
-        } else {
-            $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, 1);
-        }
-
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $opcoes[$registro['cod_tipo_dispensa']] = $registro['nm_tipo'];
-            }
-        }
+        $opcoes = LegacyExemptionType::query()
+            ->where('ativo', 1)
+            ->orderBy('nm_tipo', 'ASC')
+            ->pluck('nm_tipo', 'cod_tipo_dispensa')
+            ->prepend('Selecione', '');
 
         $this->campoLista(
             'ref_cod_tipo_dispensa',
@@ -187,8 +167,7 @@ return new class extends clsListagem {
                 $registro['data_cadastro_br']   = date('d/m/Y', $registro['data_cadastro_time']);
 
                 // Tipo da dispensa
-                $obj_ref_cod_tipo_dispensa = new clsPmieducarTipoDispensa($registro['ref_cod_tipo_dispensa']);
-                $det_ref_cod_tipo_dispensa = $obj_ref_cod_tipo_dispensa->detalhe();
+                $det_ref_cod_tipo_dispensa = LegacyExemptionType::find($registro['ref_cod_tipo_dispensa'])?->getAttributes();
                 $registro['ref_cod_tipo_dispensa'] = $det_ref_cod_tipo_dispensa['nm_tipo'];
 
                 // Componente curricular

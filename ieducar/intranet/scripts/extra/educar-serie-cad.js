@@ -1,42 +1,29 @@
-
-
-  function getRegra()
+function getRegra()
   {
-    var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
+    const campoInstituicao = document.getElementById('ref_cod_instituicao').value;
 
-    var campoRegras = document.getElementById('regra_avaliacao_id');
-    campoRegras.length = 1;
-    campoRegras.disabled = true;
-    campoRegras.options[0].text = 'Carregando regras';
+    const campoRegras = document.getElementById('regra_avaliacao_id');
+    setAttributes(campoRegras,'Carregando regras',true);
 
-    var campoRegrasDiferenciadas = document.getElementById('regra_avaliacao_diferenciada_id');
-    campoRegrasDiferenciadas.length = 1;
-    campoRegrasDiferenciadas.disabled = true;
-    campoRegrasDiferenciadas.options[0].text = 'Carregando regras';
+    const campoRegrasDiferenciadas = document.getElementById('regra_avaliacao_diferenciada_id');
+    setAttributes(campoRegrasDiferenciadas,'Carregando regras',true)
 
-    var xml_qtd_etapas = new ajax(RegrasInstituicao);
-    xml_qtd_etapas.envia("educar_serie_regra_xml.php?ins=" + campoInstituicao);
+    getApiResource('/api/resource/evaluation-rule',RegrasInstituicao,{institution:campoInstituicao})
   }
 
-  function EtapasCurso(xml_qtd_etapas)
+  function EtapasCurso(cursos)
   {
-    var campoEtapas = document.getElementById('etapa_curso');
-    var DOM_array = xml_qtd_etapas.getElementsByTagName('curso');
+    const campoEtapas = document.getElementById('etapa_curso');
 
-    if (DOM_array.length) {
-    campoEtapas.length = 1;
-    campoEtapas.options[0].text = 'Selecione uma etapa';
-    campoEtapas.disabled = false;
+    if (cursos.length) {
+      setAttributes(campoEtapas,'Selecione uma etapa',false);
 
-    var etapas;
-    etapas = DOM_array[0].getAttribute("qtd_etapas");
-
-    for (var i = 1; i<=etapas;i++) {
-    campoEtapas.options[i] = new Option("Etapa "+i , i, false, false);
-  }
-  } else {
-    campoEtapas.options[0].text = 'O curso não possui nenhuma etapa';
-  }
+      for (var i = 1; i<=cursos[0].steps;i++) {
+          campoEtapas.options[i] = new Option("Etapa "+i , i, false, false);
+      }
+    } else {
+      campoEtapas.options[0].text = 'O curso não possui nenhuma etapa';
+    }
   }
 
   var validaAnosLetivos = function(){
@@ -52,27 +39,19 @@
 }
   $j('body').on('change', 'input[name^="anos_letivos["]', validaAnosLetivos);
 
-  function RegrasInstituicao(xml_qtd_regras)
+  function RegrasInstituicao(regras)
   {
-    var campoRegras = document.getElementById('regra_avaliacao_id');
-    var campoRegrasDiferenciadas = document.getElementById('regra_avaliacao_diferenciada_id');
-    var DOM_array = xml_qtd_regras.getElementsByTagName('regra');
+    const campoRegras = document.getElementById('regra_avaliacao_id');
+    const campoRegrasDiferenciadas = document.getElementById('regra_avaliacao_diferenciada_id');
 
-    if (DOM_array.length) {
-    campoRegras.length = 1;
-    campoRegras.options[0].text = 'Selecione uma regra';
-    campoRegras.disabled = false;
+    if (regras.length) {
+      setAttributes(campoRegras,'Selecione uma regra',false)
+      setAttributes(campoRegrasDiferenciadas,'Selecione uma regra',false)
 
-    campoRegrasDiferenciadas.length = 1;
-    campoRegrasDiferenciadas.options[0].text = 'Selecione uma regra';
-    campoRegrasDiferenciadas.disabled = false;
-
-    var loop = DOM_array.length;
-
-    for (var i = 0; i < loop;i++) {
-    campoRegras.options[i] = new Option(DOM_array[i].firstChild.data, DOM_array[i].id, false, false);
-    campoRegrasDiferenciadas.options[i] = new Option(DOM_array[i].firstChild.data, DOM_array[i].id, false, false);
-  }
+      $j.each(regras, function(i, item) {
+        campoRegras.options[campoRegras.options.length] = new Option(item.name,item.id,false,false);
+        campoRegrasDiferenciadas.options[campoRegrasDiferenciadas.options.length] = new Option(item.name,item.id,false,false);
+      });
   }
     else {
     campoRegras.options[0].text = 'A instituição não possui uma Regra de Avaliação';
@@ -88,15 +67,12 @@
 
   document.getElementById('ref_cod_curso').onchange = function()
   {
-    var campoCurso = document.getElementById('ref_cod_curso').value;
-    var campoEtapas = document.getElementById('etapa_curso');
+    const campoCurso = document.getElementById('ref_cod_curso').value;
+    const campoEtapas = document.getElementById('etapa_curso');
 
-    campoEtapas.length = 1;
-    campoEtapas.disabled = true;
-    campoEtapas.options[0].text = 'Carregando etapas';
+    setAttributes(campoEtapas,'Carregando etapas',true);
 
-    var xml_qtd_etapas = new ajax(EtapasCurso);
-    xml_qtd_etapas.envia("educar_curso_xml2.php?cur=" + campoCurso);
+    getApiResource('/api/resource/course',EtapasCurso,{course:campoCurso})
   }
 
   /**

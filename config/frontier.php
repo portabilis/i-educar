@@ -13,6 +13,8 @@ return [
             'frontier' => env('FRONTIER_VIEWS_PATH') ? base_path(env('FRONTIER_VIEWS_PATH')) : __DIR__ . '/../resources/html',
         ],
 
+        'type' => env('FRONTIER_TYPE', 'view'),
+
         // https://laravel.com/docs/packages#publishing-views
         // https://laravel.com/docs/packages#publishing-file-groups
         'publishes' => [

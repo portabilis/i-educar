@@ -76,9 +76,9 @@ class PontoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->text('longitude', ['required' => false]);
 
         $script = [
-            '/modules/Cadastro/Assets/Javascripts/Addresses.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/Addresses.js',
             '/lib/Utils/gmaps.js',
-            '/modules/Portabilis/Assets/Javascripts/Frontend/ieducar.singleton_gmap.js'
+            '/vendor/legacy/Portabilis/Assets/Javascripts/Frontend/ieducar.singleton_gmap.js'
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $script);

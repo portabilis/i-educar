@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyEducationLevel;
+
 return new class extends clsDetalhe {
     /**
      * Titulo no topo da pagina
@@ -22,12 +24,11 @@ return new class extends clsDetalhe {
     {
         $this->titulo = 'Nível Ensino - Detalhe';
 
-        $this->cod_nivel_ensino=$_GET['cod_nivel_ensino'];
+        $this->cod_nivel_ensino = $_GET['cod_nivel_ensino'];
 
-        $tmp_obj = new clsPmieducarNivelEnsino($this->cod_nivel_ensino);
-        $registro = $tmp_obj->detalhe();
+        $registro = LegacyEducationLevel::find($this->cod_nivel_ensino)?->getAttributes();
 
-        if (! $registro) {
+        if (!$registro) {
             $this->simpleRedirect('educar_nivel_ensino_lst.php');
         }
 
@@ -39,14 +40,14 @@ return new class extends clsDetalhe {
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe([ 'Instituição', "{$registro['ref_cod_instituicao']}"]);
+                $this->addDetalhe(['Instituição', "{$registro['ref_cod_instituicao']}"]);
             }
         }
         if ($registro['nm_nivel']) {
-            $this->addDetalhe([ 'Nível Ensino', "{$registro['nm_nivel']}"]);
+            $this->addDetalhe(['Nível Ensino', "{$registro['nm_nivel']}"]);
         }
         if ($registro['descricao']) {
-            $this->addDetalhe([ 'Descrição', "{$registro['descricao']}"]);
+            $this->addDetalhe(['Descrição', "{$registro['descricao']}"]);
         }
 
         if ($obj_permissoes->permissao_cadastra(571, $this->pessoa_logada, 3)) {

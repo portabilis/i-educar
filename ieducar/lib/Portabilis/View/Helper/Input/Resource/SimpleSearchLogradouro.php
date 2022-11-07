@@ -41,7 +41,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchLogradouro extends Porta
 
     protected function loadAssets()
     {
-        $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/Resource/SimpleSearchLogradouro.js';
+        $jsFile = '/vendor/legacy/Portabilis/Assets/Javascripts/Frontend/Inputs/Resource/SimpleSearchLogradouro.js';
         Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
     }
 }

@@ -30,9 +30,9 @@ return new class extends clsCadastro {
         $this->campoTexto('aluno_duplicado', 'Aluno duplicado', $this->aluno_duplicado, 50, 255, false, true, false, '', '', '', 'onfocus');
         $this->campoTabelaFim();
 
-        $styles = ['/modules/Cadastro/Assets/Stylesheets/UnificaAluno.css'];
+        $styles = ['/vendor/legacy/Cadastro/Assets/Stylesheets/UnificaAluno.css'];
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
-        $scripts = ['/modules/Portabilis/Assets/Javascripts/ClientApi.js'];
+        $scripts = ['/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js'];
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
     }
 

@@ -2,20 +2,49 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Builders\LegacySchoolAcademicYearBuilder;
+use App\Traits\HasLegacyDates;
+use App\Traits\LegacyAttribute;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class LegacySchoolAcademicYear extends Model
+/**
+ * LegacySchoolAcademicYear
+ *
+ * @method static LegacySchoolAcademicYearBuilder query()
+ */
+class LegacySchoolAcademicYear extends LegacyModel
 {
+    use LegacyAttribute;
+    use HasLegacyDates;
+
     /**
      * @var string
      */
     protected $table = 'pmieducar.escola_ano_letivo';
 
+    public const CREATED_AT = null;
+
     /**
      * @var string
      */
     protected $primaryKey = 'ref_cod_escola';
+
+    /**
+     * Builder dos filtros
+     *
+     * @var string
+     */
+    protected string $builder = LegacySchoolAcademicYearBuilder::class;
+
+    /**
+     * Atributos legados para serem usados nas queries
+     *
+     * @var string[]
+     */
+    public array $legacy = [
+        'year' => 'ano'
+    ];
 
     /**
      * @var array
@@ -26,29 +55,20 @@ class LegacySchoolAcademicYear extends Model
         'ref_usuario_cad',
         'ref_usuario_exc',
         'andamento',
-        'data_cadastro',
         'data_exclusao',
         'ativo',
         'turmas_por_ano',
     ];
 
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
-
-    public function scopeActive(Builder $builder)
+    protected function year(): Attribute
     {
-        return $builder->where('escola_ano_letivo.ativo', 1);
+        return Attribute::make(
+            get: fn () => $this->ano
+        );
     }
 
-    public function scopeLastYear(Builder $query): Builder
+    public function school(): BelongsTo
     {
-        return $query->where('escola_ano_letivo.ano', date('Y') - 1);
-    }
-
-    public function scopeCurrentYear(Builder $query): Builder
-    {
-        return $query->where('escola_ano_letivo.ano', date('Y'));
+        return $this->belongsTo(LegacySchool::class, 'ref_cod_escola');
     }
 }

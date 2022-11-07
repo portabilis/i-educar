@@ -3,6 +3,7 @@
 use App\Events\TransferEvent;
 use App\Models\LegacyRegistration;
 use App\Models\LegacyTransferRequest;
+use App\Models\LegacyTransferType;
 use App\Services\PromotionService;
 use Illuminate\Support\Facades\DB;
 
@@ -34,10 +35,10 @@ return new class extends clsCadastro {
     {
         parent::__construct();
         Portabilis_View_Helper_Application::loadStylesheet($this, [
-            '/modules/Portabilis/Assets/Stylesheets/Frontend/Resource.css'
+            '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend/Resource.css'
         ]);
         Portabilis_View_Helper_Application::loadJavascript($this, [
-            '/modules/Cadastro/Assets/Javascripts/TransferenciaSolicitacao.js'
+            '/vendor/legacy/Cadastro/Assets/Javascripts/TransferenciaSolicitacao.js'
         ]);
     }
 
@@ -104,8 +105,7 @@ return new class extends clsCadastro {
 
         $enturmacao = new clsPmieducarMatriculaTurma($matriculaId, $ultimaEnturmacao['ref_cod_turma'], $this->pessoa_logada, null, null, null, 1, null, $ultimaEnturmacao['sequencial']);
         $detEnturmacao = $enturmacao->detalhe();
-        $detEnturmacao = $detEnturmacao['data_enturmacao'];
-        $enturmacao->data_enturmacao = $detEnturmacao;
+        $enturmacao->data_enturmacao = $detEnturmacao['data_enturmacao'];
         $enturmacao->edita();
     }
 
@@ -135,17 +135,13 @@ return new class extends clsCadastro {
         $this->campoTexto('estado_escola_destino_externa', 'Estado da escola ', '', 20, 50, false, false, false, '');
         $this->campoTexto('municipio_escola_destino_externa', 'Município da escola ', '', 20, 50, false, false, false, '');
 
-        $objTemp = new clsPmieducarTransferenciaTipo();
-        $objTemp->setOrderby(' nm_tipo ASC ');
-        $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, null, $ref_cod_instituicao);
 
-        $opcoesMotivo = ['' => 'Selecione'];
-
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $opcoesMotivo[$registro['cod_transferencia_tipo']] = $registro['nm_tipo'];
-            }
-        }
+        $opcoesMotivo = LegacyTransferType::query()
+            ->where('ativo', 1)
+            ->where('ref_cod_instituicao', $ref_cod_instituicao)
+            ->orderBy('nm_tipo', 'ASC')
+            ->pluck('nm_tipo', 'cod_transferencia_tipo')
+            ->prepend('Selecione', '');
 
         $this->campoLista('ref_cod_transferencia_tipo', 'Motivo', $opcoesMotivo, $this->ref_cod_transferencia_tipo);
         $this->inputsHelper()->date('data_cancel', ['label' => 'Data', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')]);
@@ -201,8 +197,7 @@ return new class extends clsCadastro {
                 foreach ($enturmacoes as $enturmacao) {
                     $enturmacao = new clsPmieducarMatriculaTurma($this->ref_cod_matricula, $enturmacao['ref_cod_turma'], $this->pessoa_logada, null, null, null, 0, null, $enturmacao['sequencial'], $this->data_enturmacao);
                     $detEnturmacao = $enturmacao->detalhe();
-                    $detEnturmacao = $detEnturmacao['data_enturmacao'];
-                    $enturmacao->data_enturmacao = $detEnturmacao;
+                    $enturmacao->data_enturmacao = $detEnturmacao['data_enturmacao'];
                     if (!$enturmacao->edita()) {
                         $this->mensagem = 'Não foi possível desativar as enturmações da matrícula.';
 

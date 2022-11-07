@@ -189,7 +189,7 @@ return new class extends clsCadastro {
             $countryId = $state->country_id;
         }
 
-        $lista_pais_origem = ['' => 'Selecione um país'] + Country::query()->orderBy('name')->pluck('name', 'id')->toArray();
+        $lista_pais_origem = Country::query()->orderBy('name')->pluck('name', 'id')->prepend('Selecione um país', '');
 
         $this->campoLista('idpais', 'País da Escola', $lista_pais_origem, $countryId ?? 45);
 
@@ -300,16 +300,16 @@ return new class extends clsCadastro {
 
         // carrega estilo para feedback messages, para exibir msg validação frequencia.
 
-        $style = '/modules/Portabilis/Assets/Stylesheets/Frontend.css';
+        $style = '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend.css';
         Portabilis_View_Helper_Application::loadStylesheet($this, $style);
 
         Portabilis_View_Helper_Application::loadJavascript(
             $this,
             [
-                '/modules/Portabilis/Assets/Javascripts/Utils.js',
-                '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js',
-                '/modules/Portabilis/Assets/Javascripts/Validator.js',
-                '/modules/Cadastro/Assets/Javascripts/HistoricoEscolar.js'
+                '/vendor/legacy/Portabilis/Assets/Javascripts/Utils.js',
+                '/vendor/legacy/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js',
+                '/vendor/legacy/Portabilis/Assets/Javascripts/Validator.js',
+                '/vendor/legacy/Cadastro/Assets/Javascripts/HistoricoEscolar.js'
             ]
         );
     }
@@ -480,7 +480,7 @@ return new class extends clsCadastro {
         $obj_permissoes->permissao_excluir(578, $this->pessoa_logada, 7, "educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
 
         $obj = new clsPmieducarHistoricoEscolar($this->ref_cod_aluno, $this->sequencial, $this->pessoa_logada, null, null, null, null, null, null, null, null, null, null, null, null, 0);
-        $historicoEscolar = $obj->detalhe();
+
         $excluiu = $obj->excluir();
         if ($excluiu) {
             $obj = new clsPmieducarHistoricoDisciplinas();
@@ -510,9 +510,8 @@ return new class extends clsCadastro {
     {
         $obj_instituicao = new clsPmieducarInstituicao($instituicao);
         $detalhe_instituicao = $obj_instituicao->detalhe();
-        $valorPermitirCargaHoraria = dbBool($detalhe_instituicao['permitir_carga_horaria']);
 
-        return $valorPermitirCargaHoraria;
+        return dbBool($detalhe_instituicao['permitir_carga_horaria']);
     }
 
     public function getOpcoesGradeCurso()

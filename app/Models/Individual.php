@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\User;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -30,96 +31,72 @@ class Individual extends Model
         'localization_zone' => 'integer',
     ];
 
-    /**
-     * @return string
-     */
-    public function getGenderDescriptionAttribute()
+    protected function genderDescription(): Attribute
     {
-        return (new Gender())->getDescriptiveValues()[$this->gender];
+        return Attribute::make(
+            get: fn () => (new Gender())->getDescriptiveValues()[$this->gender]
+        );
     }
 
-    /**
-     * @return string
-     */
-    public function getNationalityDescriptionAttribute()
+    protected function nationalityDescription(): Attribute
     {
-        return (new Nationality())->getDescriptiveValues()[$this->nationality];
+        return Attribute::make(
+            get: fn () => (new Nationality())->getDescriptiveValues()[$this->nationality]
+        );
     }
 
-    /**
-     * @return string
-     */
-    public function getRegistryOriginDescriptionAttribute()
+    protected function registryOriginDescription(): Attribute
     {
-        return (new RegistryOrigin())->getDescriptiveValues()[$this->registry_origin];
+        return Attribute::make(
+            get: fn () => (new RegistryOrigin())->getDescriptiveValues()[$this->registry_origin]
+        );
     }
 
-    /**
-     * @return string
-     */
-    public function getLocalizationZoneDescriptionAttribute()
+    protected function localizationZoneDescription(): Attribute
     {
-        return (new LocalizationZone())->getDescriptiveValues()[$this->localization_zone];
+        return Attribute::make(
+            get: fn () => (new LocalizationZone())->getDescriptiveValues()[$this->localization_zone]
+        );
     }
 
-    /**
-     * @return string
-     */
-    public function getRealNameAttribute()
+    protected function realName(): Attribute
     {
-        if (empty($this->social_name)) {
-            return $this->person->name;
-        }
+        return Attribute::make(
+            get: function () {
+                if (empty($this->social_name)) {
+                    return $this->person->name;
+                }
 
-        return $this->social_name;
+                return $this->social_name;
+            }
+        );
     }
 
-    /**
-     * @param $value
-     *
-     * @return string
-     */
-    public function getMotherNameAttribute($value)
+    protected function motherName(): Attribute
     {
-        if ($this->mother) {
-            return $this->mother->real_name;
-        }
-
-        return $value;
+        return Attribute::make(
+            get: fn ($value) => $this->mother->real_name ?? $value
+        );
     }
 
-    /**
-     * @param $value
-     *
-     * @return string
-     */
-    public function getFatherNameAttribute($value)
+    protected function fatherName(): Attribute
     {
-        if ($this->father) {
-            return $this->father->real_name;
-        }
-
-        return $value;
+        return Attribute::make(
+            get: fn ($value) => $this->father->real_name ?? $value
+        );
     }
 
-    /**
-     * @param $value
-     *
-     * @return string
-     */
-    public function getGuardianNameAttribute($value)
+    protected function guardianName(): Attribute
     {
-        if ($this->guardian) {
-            return $this->guardian->real_name;
-        }
-
-        return $value;
+        return Attribute::make(
+            get: fn ($value) => $this->guardian->real_name ?? $value
+        );
     }
 
     /**
      * @return HasOne
      */
-    public function student()
+    public function student(): HasOne
     {
         return $this->hasOne(Student::class);
     }
@@ -127,7 +104,7 @@ class Individual extends Model
     /**
      * @return BelongsTo
      */
-    public function person()
+    public function person(): BelongsTo
     {
         return $this->belongsTo(Person::class);
     }
@@ -135,7 +112,7 @@ class Individual extends Model
     /**
      * @return BelongsTo
      */
-    public function mother()
+    public function mother(): BelongsTo
     {
         return $this->belongsTo(Individual::class, 'mother_individual_id', 'id');
     }
@@ -143,7 +120,7 @@ class Individual extends Model
     /**
      * @return BelongsTo
      */
-    public function father()
+    public function father(): BelongsTo
     {
         return $this->belongsTo(Individual::class, 'father_individual_id', 'id');
     }
@@ -151,7 +128,7 @@ class Individual extends Model
     /**
      * @return BelongsTo
      */
-    public function guardian()
+    public function guardian(): BelongsTo
     {
         return $this->belongsTo(Individual::class, 'guardian_individual_id', 'id');
     }
@@ -159,7 +136,7 @@ class Individual extends Model
     /**
      * @return HasOne
      */
-    public function place()
+    public function place(): HasOne
     {
         $hasOne = $this->hasOne(Place::class, 'person_id');
 
@@ -171,7 +148,7 @@ class Individual extends Model
     /**
      * @return BelongsTo
      */
-    public function birthplace()
+    public function birthplace(): BelongsTo
     {
         return $this->belongsTo(City::class, 'idmun_nascimento');
     }
@@ -179,7 +156,7 @@ class Individual extends Model
     /**
      * @return HasOne
      */
-    public function phone()
+    public function phone(): HasOne
     {
         $hasOne = $this->hasOne(Phone::class, 'person_id');
 
@@ -191,7 +168,7 @@ class Individual extends Model
     /**
      * @return BelongsTo
      */
-    public function country()
+    public function country(): BelongsTo
     {
         return $this->belongsTo(Country::class);
     }
@@ -199,7 +176,7 @@ class Individual extends Model
     /**
      * @return BelongsTo
      */
-    public function city()
+    public function city(): BelongsTo
     {
         return $this->belongsTo(City::class);
     }
@@ -207,7 +184,7 @@ class Individual extends Model
     /**
      * @return BelongsTo
      */
-    public function religion()
+    public function religion(): BelongsTo
     {
         return $this->belongsTo(Religion::class);
     }
@@ -215,7 +192,7 @@ class Individual extends Model
     /**
      * @return BelongsTo
      */
-    public function updatedBy()
+    public function updatedBy(): BelongsTo
     {
         return $this->belongsTo(Individual::class, 'updated_by', 'id');
     }
@@ -223,7 +200,7 @@ class Individual extends Model
     /**
      * @return BelongsTo
      */
-    public function createdBy()
+    public function createdBy(): BelongsTo
     {
         return $this->belongsTo(Individual::class, 'created_by', 'id');
     }
@@ -231,7 +208,7 @@ class Individual extends Model
     /**
      * @return BelongsTo
      */
-    public function deletedBy()
+    public function deletedBy(): BelongsTo
     {
         return $this->belongsTo(Individual::class, 'deleted_by', 'id');
     }
@@ -239,7 +216,7 @@ class Individual extends Model
     /**
      * @return MorphOne
      */
-    public function unification()
+    public function unification(): MorphOne
     {
         return $this->morphOne(LogUnification::class, 'main', 'type', 'main_id');
     }
@@ -247,7 +224,7 @@ class Individual extends Model
     /**
      * @return BelongsTo
      */
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id', 'cod_usuario');
     }
@@ -255,7 +232,7 @@ class Individual extends Model
     /**
      * @return HasOne
      */
-    public function employee()
+    public function employee(): HasOne
     {
         return $this->hasOne(Employee::class, 'cod_servidor', 'id');
     }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyDisciplineExemption;
+use App\Models\LegacyExemptionType;
 use App\Models\LegacyRegistration;
 use App\Services\Exemption\ExemptionService;
 
@@ -169,21 +170,11 @@ return new class extends clsCadastro {
             $this->inputsHelper()->multipleSearchComponenteCurricular(null, ['label' => 'Componentes lecionados', 'required' => true], ['searchForArea' => true]);
         }
 
-        $opcoes = ['' => 'Selecione'];
-
-        $objTemp = new clsPmieducarTipoDispensa();
-
-        if ($this->ref_cod_instituicao) {
-            $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, 1, $this->ref_cod_instituicao);
-        } else {
-            $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, 1);
-        }
-
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $opcoes[$registro['cod_tipo_dispensa']] = $registro['nm_tipo'];
-            }
-        }
+        $opcoes = LegacyExemptionType::query()
+            ->where('ativo', 1)
+            ->orderBy('nm_tipo', 'ASC')
+            ->pluck('nm_tipo', 'cod_tipo_dispensa')
+            ->prepend('Selecione', '');
 
         $this->campoLista(
             'ref_cod_tipo_dispensa',
@@ -358,7 +349,7 @@ return new class extends clsCadastro {
 
     public function obtemDadosDaDispensa()
     {
-        $dadosDaDispensa = [
+        return [
             'cod_dispensa' => $this->cod_dispensa,
             'ref_cod_matricula' => $this->ref_cod_matricula,
             'ref_cod_serie' => $this->ref_cod_serie,
@@ -370,13 +361,11 @@ return new class extends clsCadastro {
             'observacao' => $this->observacao,
             'etapas' => $this->etapa
         ];
-
-        return $dadosDaDispensa;
     }
 
     public function montaObjetoDispensa($dadosDaDispensa = [])
     {
-        $objetoDispensa = new clsPmieducarDispensaDisciplina(
+        return new clsPmieducarDispensaDisciplina(
             $dadosDaDispensa['ref_cod_matricula'],
             $dadosDaDispensa['ref_cod_serie'],
             $dadosDaDispensa['ref_cod_escola'],
@@ -389,15 +378,13 @@ return new class extends clsCadastro {
             1,
             $dadosDaDispensa['observacao']
         );
-
-        return $objetoDispensa;
     }
 
     public function loadAssets()
     {
         $scripts = [
-            '/modules/Cadastro/Assets/Javascripts/ModalDispensasDisciplinaCad.js',
-            '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/ModalDispensasDisciplinaCad.js',
+            '/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);

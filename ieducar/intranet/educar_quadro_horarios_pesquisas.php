@@ -370,63 +370,20 @@
                      </tr><tr><td>&nbsp;</td></tr>";
 ?>
 <script>
-/*
-function desabilitaCampos()
-{
-    var obj_instituicao;
-    var obj_escola;
-    var obj_curso;
-    var obj_serie;
-    var obj_turma;
-
-    if ( document.getElementById('ref_cod_instituicao') )
-    {
-        obj_instituicao          = document.getElementById( 'ref_cod_instituicao' );
-        obj_instituicao.disabled = false;
-    }
-
-    if ( document.getElementById( 'ref_cod_escola' ) )
-    {
-        obj_escola          = document.getElementById('ref_cod_escola');
-        obj_escola.disabled = false;
-    }
-
-    if ( document.getElementById('ref_cod_curso') ) {
-        obj_curso          = document.getElementById('ref_cod_curso');
-        obj_curso.disabled = false;
-    }
-
-    if ( document.getElementById('ref_cod_serie') )
-    {
-        obj_serie          = document.getElementById('ref_cod_serie');
-        obj_serie.disabled = false;
-    }
-
-    if ( document.getElementById('ref_cod_turma') )
-    {
-        obj_turma          = document.getElementById('ref_cod_turma');
-        obj_turma.disabled = false;
-    }
-}
-*/
 
 <?php
 if ($nivel_usuario == 1 || $nivel_usuario == 2) {
     ?>
-    function getEscola( xml_escola )
+    function getEscola( escolas )
     {
-        var DOM_array = xml_escola.getElementsByTagName( "escola" );
 
-        if(DOM_array.length)
+        if(escolas.length)
         {
-            campoEscola.length = 1;
-            campoEscola.options[0].text = 'Selecione uma escola';
-            campoEscola.disabled = false;
+            setAttributes(campoEscola,'Selecione uma escola',false);
 
-            for( var i = 0; i < DOM_array.length; i++ )
-            {
-                campoEscola.options[campoEscola.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_escola"),false,false);
-            }
+            $j.each(escolas, function(i, item) {
+                campoEscola.options[campoEscola.options.length] = new Option(item.name,item.id, false, false);
+            });
         }
         else
             campoEscola.options[0].text = 'A instituição não possui nenhuma escola';
@@ -435,79 +392,56 @@ if ($nivel_usuario == 1 || $nivel_usuario == 2) {
 }
 ?>
 
-function getCurso( xml_curso )
+function getCurso(cursos)
 {
-    var DOM_array = xml_curso.getElementsByTagName( "curso" );
-
-    if(DOM_array.length)
-    {
-        campoCurso.length = 1;
-        campoCurso.options[0].text = 'Selecione um curso';
-        campoCurso.disabled = false;
-
-        for( var i = 0; i < DOM_array.length; i++ )
-        {
-            campoCurso.options[campoCurso.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_curso"),false,false);
-        }
+    if(cursos.length)    {
+        setAttributes(campoCurso,'Selecione um curso',false);
+        $j.each(cursos, function(i, item) {
+            campoCurso.options[campoCurso.options.length] = new Option(item.name,item.id, false, false);
+        });
     }
     else
         campoCurso.options[0].text = 'A escola não possui nenhum curso';
 }
 
-function getAnoLetivo( xml_ano )
+function getAnoLetivo(anos)
 {
-    var DOM_array = xml_ano.getElementsByTagName( "ano" );
-
-    if(DOM_array.length)
+    if(anos.length)
     {
-        campoAno.length = 1;
-        campoAno.options[0].text = 'Selecione um ano';
-        campoAno.disabled = false;
+        setAttributes(campoAno,'Selecione um ano',false);
 
-        for( var i = 0; i < DOM_array.length; i++ )
-        {
-            campoAno.options[campoAno.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].firstChild.data,false,false);
-        }
+        $j.each(anos, function(i, item) {
+            campoAno.options[campoAno.options.length] = new Option(item.year,item.year, false, false);
+        });
     }
     else
         campoAno.options[0].text = 'A escola não possui nenhum ano';
 }
 
-function getSerie( xml_serie )
+function getSerie(series)
 {
-    var DOM_array = xml_serie.getElementsByTagName( "serie" );
-
-    if(DOM_array.length)
+    if(series.length)
     {
-        campoSerie.length = 1;
-        campoSerie.options[0].text = 'Selecione uma série';
-        campoSerie.disabled = false;
+        setAttributes(campoSerie,'Selecione uma série',false);
 
-        for( var i = 0; i < DOM_array.length; i++ )
-        {
-            campoSerie.options[campoSerie.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_serie"),false,false);
-        }
+        $j.each(series, function(i, item) {
+            campoSerie.options[campoSerie.options.length] = new Option(item.name,item.id, false, false);
+        });
     }
     else
         campoSerie.options[0].text = 'A escola/curso não possui nenhuma série';
 }
 
-function getTurma( xml_turma )
+function getTurma(turmas)
 {
 
-    console.log(xml_turma);
-    var DOM_array = xml_turma.getElementsByTagName( "turma" );
-
-    if(DOM_array.length)
+    if(turmas.length)
     {
-        campoTurma.length = 1;
-        campoTurma.options[0].text = 'Selecione uma turma';
-        campoTurma.disabled = false;
+        setAttributes(campoTurma,'Selecione uma turma',false);
 
-        for( var i = 0; i < DOM_array.length; i++ )
-        {
-            campoTurma.options[campoTurma.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_turma"),false,false);
-        }
+        $j.each(turmas, function(i, item) {
+            campoTurma.options[campoTurma.options.length] = new Option(item.name,item.id, false, false);
+        });
     }
     else
         campoTurma.options[0].text = 'A escola/série não possui nenhuma turma';

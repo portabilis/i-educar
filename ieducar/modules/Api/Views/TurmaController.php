@@ -234,6 +234,7 @@ class TurmaController extends ApiCoreController
                     t.ano,
                     t.ref_ref_cod_escola as escola_id,
                     t.turma_turno_id as turno_id,
+                    t.ref_cod_regente,
                     json_agg(
                         json_build_object(
                             'serie_id', s.cod_serie,
@@ -274,7 +275,7 @@ class TurmaController extends ApiCoreController
 
             $turmas = $this->fetchPreparedQuery($sql, $params);
 
-            $attrs = ['id', 'nome', 'ano', 'escola_id', 'turno_id', 'curso_id', 'series_regras', 'updated_at', 'deleted_at'];
+            $attrs = ['id', 'nome', 'ano', 'escola_id', 'turno_id', 'curso_id', 'series_regras','ref_cod_regente', 'updated_at', 'deleted_at'];
             $turmas = Portabilis_Array_Utils::filterSet($turmas, $attrs);
 
             foreach ($turmas as $key => $turma) {

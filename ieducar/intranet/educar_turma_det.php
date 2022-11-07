@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassGrade;
+use App\Models\LegacySchoolClassType;
 use Illuminate\Support\Facades\DB;
 
 return new class extends clsDetalhe {
@@ -10,7 +12,6 @@ return new class extends clsDetalhe {
     public $ref_usuario_cad;
     public $ref_ref_cod_serie;
     public $ref_ref_cod_escola;
-    public $ref_cod_infra_predio_comodo;
     public $nm_turma;
     public $sgl_turma;
     public $max_aluno;
@@ -44,6 +45,11 @@ return new class extends clsDetalhe {
             7 => 'Sábado'
         ];
 
+        $not_access = false;
+        if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
+            $not_access = LegacySchoolClass::filter(['school_user'=>$this->pessoa_logada])->where('cod_turma',$this->cod_turma)->doesntExist();
+        }
+
         $lst_obj = (new clsPmieducarTurma())->lista(
             int_cod_turma: $this->cod_turma,
             visivel: [
@@ -52,7 +58,8 @@ return new class extends clsDetalhe {
             ]
         );
 
-        if (empty($lst_obj)) {
+
+        if (empty($lst_obj) || $not_access) {
             $this->simpleRedirect('educar_turma_lst.php');
         }
 
@@ -62,20 +69,7 @@ return new class extends clsDetalhe {
             $this->$key = $value;
         }
 
-
-        $obj_ref_cod_turma_tipo = new clsPmieducarTurmaTipo(
-            $registro['ref_cod_turma_tipo']
-        );
-
-        $det_ref_cod_turma_tipo = $obj_ref_cod_turma_tipo->detalhe();
-        $registro['ref_cod_turma_tipo'] = $det_ref_cod_turma_tipo['nm_tipo'];
-
-        $obj_ref_cod_infra_predio_comodo = new clsPmieducarInfraPredioComodo(
-            $registro['ref_cod_infra_predio_comodo']
-        );
-
-        $det_ref_cod_infra_predio_comodo = $obj_ref_cod_infra_predio_comodo->detalhe();
-        $registro['ref_cod_infra_predio_comodo'] = $det_ref_cod_infra_predio_comodo['nm_comodo'];
+        $registro['ref_cod_turma_tipo'] = LegacySchoolClassType::findOrFail($registro['ref_cod_turma_tipo'])->nm_tipo;
 
         $obj_cod_instituicao = new clsPmieducarInstituicao(
             $registro['ref_cod_instituicao']
@@ -101,6 +95,8 @@ return new class extends clsDetalhe {
 
         $obj_permissoes = new clsPermissoes();
 
+        $this->addDetalhe(['Ano', $this->ano]);
+
         if ($registro['ref_cod_instituicao']) {
             $this->addDetalhe(
                 [
@@ -124,7 +120,7 @@ return new class extends clsDetalhe {
                 ->where('turma_id', $this->cod_turma)
                 ->with('grade')
                 ->get()
-                ->map(function($turmaSerie){
+                ->map(function ($turmaSerie) {
                     return $turmaSerie->grade->nm_serie;
                 })
                 ->implode('</br>');
@@ -147,15 +143,6 @@ return new class extends clsDetalhe {
                 [
                     'Professor/Regente',
                     $det['nome']
-                ]
-            );
-        }
-
-        if ($registro['ref_cod_infra_predio_comodo']) {
-            $this->addDetalhe(
-                [
-                    'Sala',
-                    $registro['ref_cod_infra_predio_comodo']
                 ]
             );
         }
@@ -367,9 +354,9 @@ return new class extends clsDetalhe {
         ]);
 
         $scripts = [
-            '/modules/Portabilis/Assets/Javascripts/Utils.js',
-            '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
-            '/modules/Cadastro/Assets/Javascripts/TurmaDet.js'
+            '/vendor/legacy/Portabilis/Assets/Javascripts/Utils.js',
+            '/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/TurmaDet.js'
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
@@ -377,7 +364,7 @@ return new class extends clsDetalhe {
 
     public function montaListaComponentes()
     {
-        $this->tabela3    = '';
+        $this->tabela3 = '';
 
         try {
             $lista = App_Model_IedFinder::getEscolaSerieDisciplina(
@@ -438,7 +425,7 @@ return new class extends clsDetalhe {
                 $registro->cargaHoraria = '';
             }
 
-            $disciplinas  = '<table cellspacing="0" cellpadding="0" border="0">';
+            $disciplinas = '<table cellspacing="0" cellpadding="0" border="0">';
             $disciplinas .= sprintf('<tr align="left"><td>%s</td></tr>', $this->tabela3);
             $disciplinas .= '</table>';
         } else {
@@ -474,7 +461,7 @@ return new class extends clsDetalhe {
                 $this->tabela3 .= '<br style="clear: left" />';
             }
 
-            $disciplinas  = '<table cellspacing="0" cellpadding="0" border="0">';
+            $disciplinas = '<table cellspacing="0" cellpadding="0" border="0">';
             $disciplinas .= sprintf('<tr align="left"><td>%s</td></tr>', $this->tabela3);
             $disciplinas .= '</table>';
         } else {
@@ -488,33 +475,34 @@ return new class extends clsDetalhe {
         );
     }
 
-    public function getComponentesTurmaMulti($turmaId) {
+    public function getComponentesTurmaMulti($turmaId)
+    {
         return DB::table('pmieducar.turma as t')
-        ->selectRaw("cc.id, cc.nome, coalesce(esd.carga_horaria, ccae.carga_horaria)::int AS carga_horaria,s.nm_serie as serie")
-        ->join('pmieducar.turma_serie as ts', 'ts.turma_id', '=', 't.cod_turma')
-        ->leftJoin('pmieducar.serie as s', 's.cod_serie', 'ts.serie_id')
-        ->join('pmieducar.escola_serie as es', function($join) {
-            $join->on('es.ref_cod_serie', '=', 'ts.serie_id');
-            $join->on('es.ref_cod_escola', '=', 't.ref_ref_cod_escola');
-        })
-        ->join('pmieducar.escola_serie_disciplina as esd', function($join) {
-            $join->on('esd.ref_ref_cod_serie', '=', 'es.ref_cod_serie');
-            $join->on('esd.ref_ref_cod_escola', '=', 'es.ref_cod_escola');
-        })
-        ->join('modules.componente_curricular as cc', 'cc.id', '=', 'esd.ref_cod_disciplina')
-        ->join('modules.componente_curricular_ano_escolar as ccae', function($join) {
-            $join->on('ccae.componente_curricular_id', '=', 'cc.id');
-            $join->on('ccae.ano_escolar_id', '=', 'es.ref_cod_serie');
-        })
-        ->where('t.cod_turma', $turmaId)
-        ->whereRaw('t.ano = ANY(esd.anos_letivos)')
-        ->where('t.multiseriada', 1)
-        ->get()
-        ->unique(function ($item) {
-                return $item->id.$item->nome.$item->carga_horaria;
+            ->selectRaw("cc.id, cc.nome, coalesce(esd.carga_horaria, ccae.carga_horaria)::int AS carga_horaria,s.nm_serie as serie")
+            ->join('pmieducar.turma_serie as ts', 'ts.turma_id', '=', 't.cod_turma')
+            ->leftJoin('pmieducar.serie as s', 's.cod_serie', 'ts.serie_id')
+            ->join('pmieducar.escola_serie as es', function ($join) {
+                $join->on('es.ref_cod_serie', '=', 'ts.serie_id');
+                $join->on('es.ref_cod_escola', '=', 't.ref_ref_cod_escola');
             })
-        ->sortBy('nome')
-        ->toArray();
+            ->join('pmieducar.escola_serie_disciplina as esd', function ($join) {
+                $join->on('esd.ref_ref_cod_serie', '=', 'es.ref_cod_serie');
+                $join->on('esd.ref_ref_cod_escola', '=', 'es.ref_cod_escola');
+            })
+            ->join('modules.componente_curricular as cc', 'cc.id', '=', 'esd.ref_cod_disciplina')
+            ->join('modules.componente_curricular_ano_escolar as ccae', function ($join) {
+                $join->on('ccae.componente_curricular_id', '=', 'cc.id');
+                $join->on('ccae.ano_escolar_id', '=', 'es.ref_cod_serie');
+            })
+            ->where('t.cod_turma', $turmaId)
+            ->whereRaw('t.ano = ANY(esd.anos_letivos)')
+            ->where('t.multiseriada', 1)
+            ->get()
+            ->unique(function ($item) {
+                return $item->id . $item->nome . $item->carga_horaria;
+            })
+            ->sortBy('nome')
+            ->toArray();
     }
 
     public function Formular()

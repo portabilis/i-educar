@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyQualification;
+
 return new class extends clsDetalhe {
     /**
      * Titulo no topo da pagina
@@ -25,8 +27,7 @@ return new class extends clsDetalhe {
 
         $this->cod_habilitacao=$_GET['cod_habilitacao'];
 
-        $tmp_obj = new clsPmieducarHabilitacao($this->cod_habilitacao);
-        $registro = $tmp_obj->detalhe();
+        $registro = LegacyQualification::find($this->cod_habilitacao)?->getAttributes();
 
         if (! $registro) {
             $this->simpleRedirect('educar_habilitacao_lst.php');

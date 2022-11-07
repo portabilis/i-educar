@@ -12,7 +12,9 @@ use App\Listeners\LoginLegacySession;
 use App\Listeners\MessageSendingListener;
 use App\Listeners\NotificationWhenResetPassword;
 use App\Listeners\TransferNotificationListener;
+use App\Models\LegacyRegistrationDisciplinaryOccurrenceType;
 use App\Models\SchoolManager;
+use App\Observers\LegacyRegistrationDisciplinaryOccurrenceTypeObserver;
 use App\Observers\SchoolManagerObserver;
 use Illuminate\Auth\Events\Authenticated;
 use Illuminate\Auth\Events\Login;
@@ -65,6 +67,7 @@ class EventServiceProvider extends ServiceProvider
         parent::boot();
 
         SchoolManager::observe(SchoolManagerObserver::class);
+        LegacyRegistrationDisciplinaryOccurrenceType::observe(LegacyRegistrationDisciplinaryOccurrenceTypeObserver::class);
     }
 
     /**

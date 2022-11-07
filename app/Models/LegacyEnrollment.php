@@ -3,10 +3,10 @@
 namespace App\Models;
 
 use App\Support\Database\DateSerializer;
-use App\User;
+use App\Traits\HasLegacyDates;
 use DateTime;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
@@ -15,14 +15,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int                $id
  * @property int                $registration_id
  * @property int                $school_class_id
+ * @property int                $etapa_educacenso
  * @property string             $studentName
  * @property DateTime           $date
  * @property LegacyRegistration $registration
  * @property LegacySchoolClass  $schoolClass
  */
-class LegacyEnrollment extends Model
+class LegacyEnrollment extends LegacyModel
 {
     use DateSerializer;
+    use HasLegacyDates;
 
     /**
      * @var string
@@ -42,7 +44,6 @@ class LegacyEnrollment extends Model
         'ref_cod_turma',
         'sequencial',
         'ref_usuario_cad',
-        'data_cadastro',
         'data_enturmacao',
         'sequencial_fechamento',
         'remanejado_mesma_turma',
@@ -50,7 +51,8 @@ class LegacyEnrollment extends Model
         'tipo_itinerario',
         'composicao_itinerario',
         'curso_itinerario',
-        'itinerario_concomitante'
+        'itinerario_concomitante',
+        'etapa_educacenso'
     ];
 
     /**
@@ -75,44 +77,39 @@ class LegacyEnrollment extends Model
         return $query->where('ativo', true);
     }
 
-    /**
-     * @return DateTime
-     */
-    public function getDateAttribute()
+    protected function date(): Attribute
     {
-        return $this->data_enturmacao;
+        return Attribute::make(
+            get: fn () => $this->data_enturmacao,
+        );
     }
 
-    /**
-     * @return DateTime
-     */
-    public function getDateDepartedAttribute()
+    protected function dateDeparted(): Attribute
     {
-        return $this->data_exclusao;
+        return Attribute::make(
+            get: fn () => $this->data_exclusao,
+        );
     }
 
-    /**
-     * @return int
-     */
-    public function getSchoolClassIdAttribute()
+    protected function schoolClassId(): Attribute
     {
-        return $this->ref_cod_turma;
+        return Attribute::make(
+            get: fn () => $this->ref_cod_turma,
+        );
     }
 
-    /**
-     * @return int
-     */
-    public function getRegistrationIdAttribute()
+    protected function registrationId(): Attribute
     {
-        return $this->ref_cod_matricula;
+        return Attribute::make(
+            get: fn () => $this->ref_cod_matricula,
+        );
     }
 
-    /**
-     * @return string
-     */
-    public function getStudentNameAttribute()
+    protected function studentName(): Attribute
     {
-        return $this->registration->student->person->nome;
+        return Attribute::make(
+            get: fn () => $this->registration->student->person->nome ?? null,
+        );
     }
 
     /**
@@ -154,7 +151,7 @@ class LegacyEnrollment extends Model
      */
     public function createdBy()
     {
-        return $this->belongsTo(User::class, 'ref_usuario_cad');
+        return $this->belongsTo(LegacyUser::class, 'ref_usuario_cad');
     }
 
     /**
@@ -164,7 +161,7 @@ class LegacyEnrollment extends Model
      */
     public function updatedBy()
     {
-        return $this->belongsTo(User::class, 'ref_usuario_exc');
+        return $this->belongsTo(LegacyUser::class, 'ref_usuario_exc');
     }
 
     public function getStudentId()

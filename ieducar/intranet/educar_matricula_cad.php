@@ -180,7 +180,7 @@ return new class extends clsCadastro {
             }
         }
 
-        $script = ['/modules/Cadastro/Assets/Javascripts/Matricula.js'];
+        $script = ['/vendor/legacy/Cadastro/Assets/Javascripts/Matricula.js'];
         Portabilis_View_Helper_Application::loadJavascript($this, $script);
 
         $this->acao_enviar = 'formUtils.submit()';
@@ -516,10 +516,6 @@ return new class extends clsCadastro {
                 $instituicao = new clsPmieducarInstituicao($this->ref_cod_instituicao);
                 $instituicao = $instituicao->detalhe();
 
-                $dataCorte = $instituicao['data_base_matricula'];
-                $idadeInicial = $detSerie['idade_inicial'];
-                $idadeFinal = $detSerie['idade_final'];
-
                 $objAluno = new clsPmieducarAluno($this->ref_cod_aluno);
                 $detAluno = $objAluno->detalhe();
 
@@ -730,51 +726,9 @@ return new class extends clsCadastro {
                 );
             }
 
-            $objInstituicao = new clsPmieducarInstituicao($this->ref_cod_instituicao);
-            $detInstituicao = $objInstituicao->detalhe();
-            $controlaEspacoUtilizacaoAluno = $detInstituicao['controlar_espaco_utilizacao_aluno'];
-
-            //se o parametro de controle de utilização de espaço estiver setado como verdadeiro
-            if ($controlaEspacoUtilizacaoAluno) {
-                $objTurma = new clsPmieducarTurma($this->ref_cod_turma);
-                $maximoAlunosSala = $objTurma->maximoAlunosSala();
-                $excedeuLimiteMatriculas = (($matriculados + $reservados) >= $maximoAlunosSala);
-
-                if ($excedeuLimiteMatriculas) {
-                    echo sprintf(
-                        '<script>
-                            var msg = \'\';
-                            msg += \'A sala n\u00e3o comporta mais alunos!\\n\';
-                            msg += \'N\u00famero total de matriculados: %d\\n\';
-                            msg += \'N\u00famero total de vagas reservadas: %d\\n\';
-                            msg += \'N\u00famero total de vagas: %d\\n\';
-                            msg += \'M\u00e1ximo de alunos que a sala comporta: %d\\n\';
-                            msg += \'N\u00e3o ser\u00e1 poss\u00edvel efetuar a matr\u00edcula do aluno.\';
-                            alert(msg);
-                        window.location = \'educar_aluno_det.php?cod_aluno=%d\';
-                        </script>',
-                        $matriculados,
-                        $reservados,
-                        $total_vagas,
-                        $maximoAlunosSala,
-                        $this->ref_cod_aluno
-                    );
-
-                    return false;
-                }
-            }
-
             $obj_matricula_aluno = new clsPmieducarMatricula();
 
-            $lst_matricula_aluno = $obj_matricula_aluno->lista(
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                $this->ref_cod_aluno
-            );
+            $obj_matricula_aluno->lista(ref_cod_aluno: $this->ref_cod_aluno);
 
             if ($this->is_padrao == 1) {
                 $this->semestre = null;
@@ -850,7 +804,7 @@ return new class extends clsCadastro {
 
                     return true;
                 } elseif (($countEscolasDiferentes > 0) && ($reloadReserva == 1)) {
-                    $updateCandidatoReservaVaga = $obj_CandidatoReservaVaga->atualizaDesistente(
+                    $obj_CandidatoReservaVaga->atualizaDesistente(
                         $this->ano,
                         $this->ref_cod_serie,
                         $this->ref_cod_aluno,
@@ -1044,18 +998,15 @@ return new class extends clsCadastro {
         $pessoa = new clsPessoaFisica($aluno['ref_idpes']);
         $pessoa = $pessoa->detalhe();
 
-        $falecido = dbBool($pessoa['falecido']);
-
-        return $falecido;
+        return dbBool($pessoa['falecido']);
     }
 
     public function bloqueiaMatriculaSerieNaoSeguinte()
     {
         $instituicao = new clsPmieducarInstituicao($this->ref_cod_instituicao);
         $instituicao = $instituicao->detalhe();
-        $bloqueia = dbBool($instituicao['bloqueia_matricula_serie_nao_seguinte']);
 
-        return $bloqueia;
+        return dbBool($instituicao['bloqueia_matricula_serie_nao_seguinte']);
     }
 
     public function permiteMatriculaSerieDestino()
@@ -1140,8 +1091,7 @@ return new class extends clsCadastro {
 
                 $enturmacao->removerSequencial = true;
                 $detEnturmacao = $enturmacao->detalhe();
-                $detEnturmacao = $detEnturmacao['data_enturmacao'];
-                $enturmacao->data_enturmacao = $detEnturmacao;
+                $enturmacao->data_enturmacao = $detEnturmacao['data_enturmacao'];
 
                 if ($result && !$enturmacao->edita()) {
                     $result = false;
@@ -1483,7 +1433,7 @@ return new class extends clsCadastro {
         $det_t = $obj_t->detalhe();
         $obj_mt = new clsPmieducarMatriculaTurma();
 
-        $lst_mt = $obj_mt->lista(
+        $obj_mt->lista(
             $int_ref_cod_matricula = null,
             $int_ref_cod_turma = null,
             $int_ref_usuario_exc = null,

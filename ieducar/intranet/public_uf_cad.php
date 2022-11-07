@@ -65,7 +65,7 @@ return new class extends clsCadastro {
         $this->campoNumero('cod_ibge', 'Código INEP', $this->cod_ibge);
 
         $scripts = [
-            '/modules/Portabilis/Assets/Javascripts/cad_uf.js'
+            '/vendor/legacy/Portabilis/Assets/Javascripts/cad_uf.js'
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);

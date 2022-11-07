@@ -66,13 +66,13 @@ class Portabilis_View_Helper_Input_Core
         // carrega estilo para feedback messages, devido algumas validações de inuts
         // adicionarem mensagens
 
-        $style = '/modules/Portabilis/Assets/Stylesheets/Frontend.css';
+        $style = '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend.css';
 
         Portabilis_View_Helper_Application::loadStylesheet($this->viewInstance, $style);
 
         $dependencies = [
-            '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
-            '/modules/Portabilis/Assets/Javascripts/Validator.js'
+            '/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js',
+            '/vendor/legacy/Portabilis/Assets/Javascripts/Validator.js'
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $dependencies);
@@ -80,9 +80,9 @@ class Portabilis_View_Helper_Input_Core
 
     protected function loadAssets()
     {
-        $rootPath = dirname(dirname(dirname(dirname(dirname(__DIR__)))));
-        $style = "/modules/DynamicInput/Assets/Stylesheets/{$this->helperName()}.css";
-        $script = "/modules/DynamicInput/Assets/Javascripts/{$this->helperName()}.js";
+        $rootPath = public_path();
+        $style = "/vendor/legacy/DynamicInput/Assets/Stylesheets/{$this->helperName()}.css";
+        $script = "/vendor/legacy/DynamicInput/Assets/Javascripts/{$this->helperName()}.js";
 
         if (file_exists($rootPath . $style)) {
             Portabilis_View_Helper_Application::loadStylesheet($this->viewInstance, $style);
@@ -143,6 +143,7 @@ class Portabilis_View_Helper_Input_Core
             return $escola['ref_cod_instituicao'];
         }
 
+        // TODO remover no futuro #library-package
         if (isset($this->viewInstance->ref_cod_biblioteca) && is_numeric($this->viewInstance->ref_cod_biblioteca)) {
             $biblioteca = App_Model_IedFinder::getBiblioteca($this->viewInstance->ref_cod_biblioteca);
 
@@ -162,6 +163,7 @@ class Portabilis_View_Helper_Input_Core
             return $this->viewInstance->ref_cod_escola;
         }
 
+        // TODO remover no futuro #library-package
         if (isset($this->viewInstance->ref_cod_biblioteca) && is_numeric($this->viewInstance->ref_cod_biblioteca)) {
             $biblioteca = App_Model_IedFinder::getBiblioteca($this->viewInstance->ref_cod_biblioteca);
 
@@ -171,6 +173,7 @@ class Portabilis_View_Helper_Input_Core
         return $this->getPermissoes()->getEscola($this->getCurrentUserId());
     }
 
+    // TODO remover no futuro #library-package
     protected function getBibliotecaId($bibliotecaId = null)
     {
         if (!is_null($bibliotecaId) && is_numeric($bibliotecaId)) {

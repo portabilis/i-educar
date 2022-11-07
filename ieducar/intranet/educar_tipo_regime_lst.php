@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyRegimeType;
+
 return new class extends clsListagem {
     public $pessoa_logada;
     public $titulo;
@@ -20,7 +22,7 @@ return new class extends clsListagem {
         $this->titulo = 'Tipo Regime - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ($val === '') ? null: $val;
+            $this->$var = ($val === '') ? null : $val;
         }
 
         $obj_permissao = new clsPermissoes();
@@ -50,26 +52,20 @@ return new class extends clsListagem {
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
-        $obj_tipo_regime = new clsPmieducarTipoRegime();
-        $obj_tipo_regime->setOrderby('nm_tipo ASC');
-        $obj_tipo_regime->setLimite($this->limite, $this->offset);
+        $query = LegacyRegimeType::query()
+            ->where('ativo', 1)
+            ->orderBy('nm_tipo', 'ASC');
 
-        $lista = $obj_tipo_regime->lista(
-            $this->cod_tipo_regime,
-            null,
-            null,
-            $this->nm_tipo,
-            null,
-            null,
-            null,
-            null,
-            1,
-            $this->ref_cod_instituicao
-        );
+        if (is_string($this->nm_tipo)) {
+            $query->where('nm_tipo', 'ilike', '%' . $this->nm_tipo . '%');
+        }
 
-        $total = $obj_tipo_regime->_total;
+        $result = $query->paginate($this->limite, pageName: 'pagina_' . $this->nome);
+
+        $lista = $result->items();
+        $total = $result->total();
 
         // monta a lista
         if (is_array($lista) && count($lista)) {
@@ -78,19 +74,15 @@ return new class extends clsListagem {
                 $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
                 $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
 
-                switch ($nivel_usuario) {
-                    case 1:
-                            $this->addLinhas([
-                                "<a href=\"educar_tipo_regime_det.php?cod_tipo_regime={$registro['cod_tipo_regime']}\">{$registro['nm_tipo']}</a>",
-                                "<a href=\"educar_tipo_regime_det.php?cod_tipo_regime={$registro['cod_tipo_regime']}\">{$registro['ref_cod_instituicao']}</a>"
-                            ]);
-                        break;
-
-                    default:
-                            $this->addLinhas([
-                                "<a href=\"educar_tipo_regime_det.php?cod_tipo_regime={$registro['cod_tipo_regime']}\">{$registro['nm_tipo']}</a>"
-                            ]);
-                        break;
+                if ($nivel_usuario == 1) {
+                    $this->addLinhas([
+                        "<a href=\"educar_tipo_regime_det.php?cod_tipo_regime={$registro['cod_tipo_regime']}\">{$registro['nm_tipo']}</a>",
+                        "<a href=\"educar_tipo_regime_det.php?cod_tipo_regime={$registro['cod_tipo_regime']}\">{$registro['ref_cod_instituicao']}</a>"
+                    ]);
+                } else {
+                    $this->addLinhas([
+                        "<a href=\"educar_tipo_regime_det.php?cod_tipo_regime={$registro['cod_tipo_regime']}\">{$registro['nm_tipo']}</a>"
+                    ]);
                 }
             }
         }

@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\LegacyIndividual;
+use App\Models\Religion;
+
 return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -12,9 +15,6 @@ return new class extends clsCadastro {
     public $ref_usuario_exc;
     public $ref_usuario_cad;
     public $nm_religiao;
-    public $data_cadastro;
-    public $data_exclusao;
-    public $ativo;
 
     public function Inicializar()
     {
@@ -29,12 +29,10 @@ return new class extends clsCadastro {
         //**
 
         if (is_numeric($this->cod_religiao)) {
-            $obj = new clsPmieducarReligiao($this->cod_religiao);
-            $registro  = $obj->detalhe();
+            $registro = Religion::findOrFail($this->cod_religiao, ['id', 'name']);
             if ($registro) {
-                foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
-                    $this->$campo = $val;
-                }
+                $this->nm_religiao = $registro->name;
+                $this->cod_religiao = $registro->id;
 
                 //** verificao de permissao para exclusao
                 $this->fexcluir = $obj_permissao->permissao_excluir(579, $this->pessoa_logada, 3);
@@ -43,7 +41,7 @@ return new class extends clsCadastro {
                 $retorno = 'Editar';
             }
         }
-        $this->url_cancelar = ($retorno == 'Editar') ? "educar_religiao_det.php?cod_religiao={$registro['cod_religiao']}" : 'educar_religiao_lst.php';
+        $this->url_cancelar = ($retorno == 'Editar') ? "educar_religiao_det.php?cod_religiao={$registro['id']}" : 'educar_religiao_lst.php';
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
@@ -64,43 +62,50 @@ return new class extends clsCadastro {
 
     public function Novo()
     {
-        $obj = new clsPmieducarReligiao($this->cod_religiao, $this->pessoa_logada, $this->pessoa_logada, $this->nm_religiao, $this->data_cadastro, $this->data_exclusao, $this->ativo);
-        $cadastrou = $obj->cadastra();
-        if ($cadastrou) {
+        $obj = new Religion();
+        $obj->name = $this->nm_religiao;
+
+        if ($obj->save()) {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
             $this->simpleRedirect('educar_religiao_lst.php');
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
-
         return false;
     }
 
     public function Editar()
     {
-        $obj = new clsPmieducarReligiao($this->cod_religiao, $this->pessoa_logada, $this->pessoa_logada, $this->nm_religiao, $this->data_cadastro, $this->data_exclusao, $this->ativo);
-        $editou = $obj->edita();
-        if ($editou) {
+        $obj = Religion::findOrFail($this->cod_religiao);
+        $obj->name = $this->nm_religiao;
+
+        if ($obj->save()) {
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_religiao_lst.php');
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
-
         return false;
     }
 
     public function Excluir()
     {
-        $obj = new clsPmieducarReligiao($this->cod_religiao, $this->pessoa_logada, $this->pessoa_logada, $this->nm_religiao, $this->data_cadastro, $this->data_exclusao, 0);
-        $excluiu = $obj->excluir();
-        if ($excluiu) {
+        $exists = LegacyIndividual::where('ref_cod_religiao', $this->cod_religiao)
+            ->exists();
+
+        if ($exists) {
+            $this->mensagem = 'Você não pode excluir essa Religião, pois ela possui Pessoa(s) Física(s) vinculadas.<br>';
+            return false;
+        }
+
+        $obj = Religion::findOrFail($this->cod_religiao);
+
+        if ($obj->delete()) {
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_religiao_lst.php');
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';
-
         return false;
     }
 

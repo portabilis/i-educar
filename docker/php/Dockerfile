@@ -1,4 +1,4 @@
-FROM php:8.0-fpm-alpine
+FROM php:8.1-fpm-alpine
 
 LABEL maintainer="Portabilis <contato@portabilis.com.br>"
 
@@ -39,7 +39,7 @@ RUN docker-php-ext-install zip
 
 RUN apk add libc-dev
 
-RUN echo "@v3.4 http://nl.alpinelinux.org/alpine/v3.4/main" >> /etc/apk/repositories && \
+RUN echo "@v3.4 http://mirror.uepg.br/alpine/v3.4/main" >> /etc/apk/repositories && \
     apk update && \
     apk add --no-cache "postgresql-client@v3.4>=9.5"
 

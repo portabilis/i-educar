@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\LegacyDisciplinaryOccurrenceType;
+use App\Models\LegacyRegistrationDisciplinaryOccurrenceType;
+
 return new class extends clsDetalhe {
     /**
      * Titulo no topo da pagina
@@ -26,8 +29,15 @@ return new class extends clsDetalhe {
         $this->ref_cod_matricula=$_GET['ref_cod_matricula'];
         $this->ref_cod_tipo_ocorrencia_disciplinar=$_GET['ref_cod_tipo_ocorrencia_disciplinar'];
 
-        $tmp_obj = new clsPmieducarMatriculaOcorrenciaDisciplinar($this->ref_cod_matricula, $this->ref_cod_tipo_ocorrencia_disciplinar, $this->sequencial, null, null, null, null, null, 1);
-        $registro = $tmp_obj->detalhe();
+        $registro = LegacyRegistrationDisciplinaryOccurrenceType::query()
+            ->where('ref_cod_matricula', $this->ref_cod_matricula)
+            ->where('ref_cod_tipo_ocorrencia_disciplinar', $this->ref_cod_tipo_ocorrencia_disciplinar)
+            ->where('sequencial', $this->sequencial)
+            ->where('ativo', 1)
+            ->orderBy('cod_ocorrencia_disciplinar', 'DESC')
+            ->first()
+            ?->getAttributes();
+
         if (! $registro) {
             $this->simpleRedirect("educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}");
         }
@@ -38,8 +48,7 @@ return new class extends clsDetalhe {
         $det_serie = $obj_serie->detalhe();
         $registro['ref_ref_cod_serie'] = $det_serie['nm_serie'];
 
-        $obj_ref_cod_tipo_ocorrencia_disciplinar = new clsPmieducarTipoOcorrenciaDisciplinar($registro['ref_cod_tipo_ocorrencia_disciplinar']);
-        $det_ref_cod_tipo_ocorrencia_disciplinar = $obj_ref_cod_tipo_ocorrencia_disciplinar->detalhe();
+        $det_ref_cod_tipo_ocorrencia_disciplinar = LegacyDisciplinaryOccurrenceType::find($registro['ref_cod_tipo_ocorrencia_disciplinar'])?->getAttributes();
         $registro['nm_tipo'] = $det_ref_cod_tipo_ocorrencia_disciplinar['nm_tipo'];
 
         $obj_mat_turma = new clsPmieducarMatriculaTurma();
@@ -49,10 +58,6 @@ return new class extends clsDetalhe {
         if ($det_mat_turma) {
             $det_mat_turma = array_shift($det_mat_turma);
         }
-
-        $obj_ref_cod_tipo_ocorrencia_disciplinar = new clsPmieducarTipoOcorrenciaDisciplinar($registro['ref_cod_tipo_ocorrencia_disciplinar']);
-        $det_ref_cod_tipo_ocorrencia_disciplinar = $obj_ref_cod_tipo_ocorrencia_disciplinar->detalhe();
-        $registro['nm_tipo'] = $det_ref_cod_tipo_ocorrencia_disciplinar['nm_tipo'];
 
         if ($registro['ref_cod_matricula']) {
             $this->addDetalhe([ 'Matrícula', "{$registro['ref_cod_matricula']}"]);

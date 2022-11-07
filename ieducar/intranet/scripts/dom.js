@@ -1,3 +1,24 @@
+function getApiResource(url,callback,data = null,id = null) {
+  $j.ajax({
+    url: url,
+    data: data,
+    dataType: "json",
+    type: "GET",
+    success: function(e) {
+      callback(e.data,id);
+    },
+    error: function(e){
+      alert('Erro: '+e.status);
+    }
+  })
+}
+
+function setAttributes(element,text,disabled = true,length = 1) {
+  element.length = length;
+  element.disabled = disabled;
+  element.options[0].text = text
+}
+
 function ajax( funcaoRetorno, id_campo = null, hostInformation = window.location) {
   let host = hostInformation.protocol + '//' + hostInformation.host + '/intranet/';
   let args = null;

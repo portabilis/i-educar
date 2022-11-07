@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacySchoolClassType;
+
 return new class extends clsDetalhe {
     public $titulo;
     public $ref_cod_matricula;
@@ -70,9 +72,7 @@ return new class extends clsDetalhe {
         }
 
         // Tipo da turma
-        $obj_ref_cod_turma_tipo = new clsPmieducarTurmaTipo($registro['ref_cod_turma_tipo']);
-        $det_ref_cod_turma_tipo = $obj_ref_cod_turma_tipo->detalhe();
-        $registro['ref_cod_turma_tipo'] = $det_ref_cod_turma_tipo['nm_tipo'];
+        $registro['ref_cod_turma_tipo'] = LegacySchoolClassType::findOrFail($registro['ref_cod_turma_tipo'])->nm_tipo;
 
         // Código da instituição
         $obj_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
@@ -90,7 +90,6 @@ return new class extends clsDetalhe {
         $obj_ref_cod_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
         $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
         $registro['ref_cod_curso'] = $det_ref_cod_curso['nm_curso'];
-        $padrao_ano_escolar = $det_ref_cod_curso['padrao_ano_escolar'];
 
         // Nome da série
         $obj_ser = new clsPmieducarSerie($registro['ref_ref_cod_serie']);
@@ -99,22 +98,17 @@ return new class extends clsDetalhe {
 
         // Matrícula
         $obj_ref_cod_matricula = new clsPmieducarMatricula();
-        $detalhe_aluno = array_shift($obj_ref_cod_matricula->lista($this->ref_cod_matricula));
+        $objMatricula = $obj_ref_cod_matricula->lista($this->ref_cod_matricula);
+        $detalhe_aluno = array_shift($objMatricula);
 
         $obj_aluno = new clsPmieducarAluno();
-        $det_aluno = array_shift($det_aluno = $obj_aluno->lista(
-            $detalhe_aluno['ref_cod_aluno'],
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1
-        ));
+
+        $det_aluno = $obj_aluno->lista(
+            int_cod_aluno: $detalhe_aluno['ref_cod_aluno'],
+            int_ativo:1
+        );
+
+        $det_aluno = array_shift($det_aluno);
 
         $obj_escola = new clsPmieducarEscola(
             $this->ref_cod_escola,
@@ -129,12 +123,12 @@ return new class extends clsDetalhe {
             null,
             1
         );
-        $det_escola = $obj_escola->detalhe();
+        $obj_escola->detalhe();
 
         $this->addDetalhe(['Nome do Aluno', $det_aluno['nome_aluno']]);
 
         $objTemp = new clsPmieducarTurma($this->ref_cod_turma);
-        $det_turma = $objTemp->detalhe();
+        $objTemp->detalhe();
 
         if ($registro['ref_ref_cod_escola']) {
             $this->addDetalhe(['Escola', $registro['ref_ref_cod_escola']]);
@@ -163,24 +157,13 @@ return new class extends clsDetalhe {
 
         $this->addDetalhe(['<b>Turma selecionada</b>', '<b>' . $registro['nm_turma'] . '</b>']);
 
-        $objTurma = new clsPmieducarTurma($this->ref_cod_turma);
-
-        $capacidadeMaximaAlunosSala = $objTurma->maximoAlunosSala();
-
-        if ($capacidadeMaximaAlunosSala) {
-            $totalVagas = $capacidadeMaximaAlunosSala < $registro['max_aluno'] ? $capacidadeMaximaAlunosSala : $registro['max_aluno'];
-        } else {
-            $totalVagas = $registro['max_aluno'];
-        }
+        $totalVagas = $registro['max_aluno'];
 
         $this->addDetalhe(['Total de vagas', $totalVagas]);
 
         if (is_numeric($total_alunos)) {
             $this->addDetalhe(['Alunos enturmados', $total_alunos]);
             $this->addDetalhe(['Vagas disponíveis', $totalVagas - $total_alunos]);
-        }
-        if (is_numeric($capacidadeMaximaAlunosSala)) {
-            $this->addDetalhe(['Capacidade máxima de alunos na sala', $capacidadeMaximaAlunosSala]);
         }
 
         if ($this->possuiEnturmacao) {

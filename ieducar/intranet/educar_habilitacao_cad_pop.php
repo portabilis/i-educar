@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyQualification;
+
 return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -53,20 +55,22 @@ return new class extends clsCadastro {
 
     public function Novo()
     {
-        $obj = new clsPmieducarHabilitacao(null, null, $this->pessoa_logada, $this->nm_tipo, $this->descricao, null, null, 1, $this->ref_cod_instituicao);
-        $cadastrou = $obj->cadastra();
-        if ($cadastrou) {
+        $habilitacao = new LegacyQualification();
+        $habilitacao->ref_usuario_cad = $this->pessoa_logada;
+        $habilitacao->nm_tipo = $this->nm_tipo;
+        $habilitacao->descricao = $this->descricao;
+        $habilitacao->ref_cod_instituicao = $this->ref_cod_instituicao;
+
+        if ($habilitacao->save()) {
             echo "<script>
                         if (parent.document.getElementById('habilitacao').disabled)
                             parent.document.getElementById('habilitacao').options[0] = new Option('Selectione', '', false, false);
-                        parent.document.getElementById('habilitacao').options[parent.document.getElementById('habilitacao').options.length] = new Option('$this->nm_tipo', '$cadastrou', false, false);
-                        parent.document.getElementById('habilitacao').value = '$cadastrou';
+                        parent.document.getElementById('habilitacao').options[parent.document.getElementById('habilitacao').options.length] = new Option('$this->nm_tipo', '$habilitacao->cod_habilitacao', false, false);
+                        parent.document.getElementById('habilitacao').value = '$habilitacao->cod_habilitacao';
                         parent.document.getElementById('habilitacao').disabled = false;
                         window.parent.fechaExpansivel('div_dinamico_'+(parent.DOM_divs.length-1));
                     </script>";
             die();
-
-            return true;
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';

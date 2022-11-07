@@ -69,7 +69,7 @@ return new class extends clsCadastro {
             $legacyActiveLookings = LegacyActiveLooking::find($this->id);
 
             if ($legacyActiveLookings) {
-                foreach ($legacyActiveLookings->toArray() as $campo => $val) {
+                foreach ($legacyActiveLookings->getAttributes() as $campo => $val) {
                     $this->$campo = $val;
                 }
                 $obj_permissoes = new clsPermissoes();
@@ -205,7 +205,7 @@ return new class extends clsCadastro {
 
     protected function loadAssets()
     {
-        $jsFiles = ['/modules/BuscaAtiva/BuscaAtiva.js', '/modules/BuscaAtiva/educar-busca-ativa-cad.js'];
+        $jsFiles = ['/vendor/legacy/BuscaAtiva/BuscaAtiva.js', '/vendor/legacy/BuscaAtiva/educar-busca-ativa-cad.js'];
         Portabilis_View_Helper_Application::loadJavascript($this, $jsFiles);
     }
 

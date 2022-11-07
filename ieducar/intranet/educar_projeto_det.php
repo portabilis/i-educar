@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyProject;
+
 return new class extends clsDetalhe {
     /**
      * Titulo no topo da pagina
@@ -18,8 +20,7 @@ return new class extends clsDetalhe {
 
         $this->cod_projeto=$_GET['cod_projeto'];
 
-        $tmp_obj = new clsPmieducarProjeto($this->cod_projeto);
-        $registro = $tmp_obj->detalhe();
+        $registro = LegacyProject::find($this->cod_projeto)?->getAttributes();
 
         if (! $registro) {
             $this->simpleRedirect('educar_projeto_lst.php');

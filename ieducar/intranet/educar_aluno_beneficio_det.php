@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyBenefit;
+
 return new class extends clsDetalhe {
     /**
      * Titulo no topo da pagina
@@ -23,8 +25,7 @@ return new class extends clsDetalhe {
 
         $this->cod_aluno_beneficio=$_GET['cod_aluno_beneficio'];
 
-        $tmp_obj = new clsPmieducarAlunoBeneficio($this->cod_aluno_beneficio);
-        $registro = $tmp_obj->detalhe();
+        $registro = LegacyBenefit::find($this->cod_aluno_beneficio)?->getAttributes();
 
         if (! $registro) {
             $this->simpleRedirect('educar_aluno_beneficio_lst.php');

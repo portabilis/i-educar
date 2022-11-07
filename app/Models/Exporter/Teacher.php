@@ -66,6 +66,7 @@ class Teacher extends Model
                 'course' => 'Curso',
                 'year' => 'Ano',
                 'disciplines.disciplines' => 'Disciplinas',
+                'enrollments' => 'Matrículas',
             ],
             'Informações' => [
                 'phones.phones' => 'Telefones',

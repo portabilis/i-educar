@@ -16,7 +16,9 @@ class District extends Model
      * @var array
      */
     protected $fillable = [
-        'city_id', 'name', 'ibge_code',
+        'city_id',
+        'name',
+        'ibge_code',
     ];
 
     /**

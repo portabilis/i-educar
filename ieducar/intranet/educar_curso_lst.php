@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\LegacyEducationLevel;
+use App\Models\LegacyEducationType;
+
 return new class extends clsListagem {
     public $pessoa_logada;
     public $titulo;
@@ -36,10 +39,10 @@ return new class extends clsListagem {
         }
 
         $lista_busca = [
-      'Curso',
-      'Nível Ensino',
-      'Tipo Ensino'
-    ];
+            'Curso',
+            'Nível Ensino',
+            'Tipo Ensino'
+        ];
 
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
@@ -58,19 +61,11 @@ return new class extends clsListagem {
         $opcoes = ['' => 'Selecione'];
 
         $todos_niveis_ensino = "nivel_ensino = new Array();\n";
-        $objTemp = new clsPmieducarNivelEnsino();
-        $lista = $objTemp->lista(
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1
-        );
+        $lista = LegacyEducationLevel::query()
+            ->select(['cod_nivel_ensino', 'nm_nivel', 'ref_cod_instituicao'])
+            ->where('ativo', 1)
+            ->orderBy('nm_nivel', 'ASC')
+            ->get();
 
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
@@ -80,26 +75,10 @@ return new class extends clsListagem {
         echo "<script>{$todos_niveis_ensino}</script>";
 
         if ($this->ref_cod_instituicao) {
-            $objTemp = new clsPmieducarNivelEnsino();
-            $lista = $objTemp->lista(
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                1,
-                $this->ref_cod_instituicao
-            );
-
-            if (is_array($lista) && count($lista)) {
-                foreach ($lista as $registro) {
-                    $opcoes[$registro['cod_nivel_ensino']] = $registro['nm_nivel'];
-                }
-            }
+            $opcoes = LegacyEducationLevel::query()
+                ->where('ativo', 1)
+                ->orderBy('nm_nivel', 'ASC')
+                ->pluck('nm_nivel', 'cod_nivel_ensino');
         }
 
         $this->campoLista(
@@ -118,9 +97,13 @@ return new class extends clsListagem {
         $opcoes = ['' => 'Selecione'];
 
         $todos_tipos_ensino = "tipo_ensino = new Array();\n";
-        $objTemp = new clsPmieducarTipoEnsino();
-        $objTemp->setOrderby('nm_tipo');
-        $lista = $objTemp->lista(null, null, null, null, null, null, 1);
+
+        $query = LegacyEducationType::query()
+            ->where('ativo', 1)
+            ->limit($this->limite)
+            ->offset($this->offset)
+            ->orderBy('nm_tipo', 'ASC');
+        $lista = $query->get();
 
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
@@ -130,25 +113,11 @@ return new class extends clsListagem {
         echo "<script>{$todos_tipos_ensino}</script>";
 
         if ($this->ref_cod_instituicao) {
-            $objTemp = new clsPmieducarTipoEnsino();
-            $objTemp->setOrderby('nm_tipo');
-
-            $lista = $objTemp->lista(
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                1,
-                $this->ref_cod_instituicao
-            );
-
-            if (is_array($lista) && count($lista)) {
-                foreach ($lista as $registro) {
-                    $opcoes["{$registro['cod_tipo_ensino']}"] = $registro['nm_tipo'];
-                }
-            }
+            $opcoes = LegacyEducationType::query()
+                ->where('ativo', 1)
+                ->orderBy('nm_tipo', 'ASC')
+                ->pluck('nm_tipo', 'cod_tipo_ensino')
+                ->prepend('Selecione', '');
         }
 
         $this->campoLista(
@@ -167,7 +136,7 @@ return new class extends clsListagem {
         // Paginador
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ?
-      $_GET["pagina_{$this->nome}"] * $this->limite-$this->limite : 0;
+            $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
         $obj_curso = new clsPmieducarCurso();
         $obj_curso->setOrderby('nm_curso ASC');
@@ -206,12 +175,10 @@ return new class extends clsListagem {
         // monta a lista
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
-                $obj_ref_cod_nivel_ensino = new clsPmieducarNivelEnsino($registro['ref_cod_nivel_ensino']);
-                $det_ref_cod_nivel_ensino = $obj_ref_cod_nivel_ensino->detalhe();
+                $det_ref_cod_nivel_ensino = LegacyEducationLevel::findOrFail($registro['ref_cod_nivel_ensino'])?->getAttributes();
                 $registro['ref_cod_nivel_ensino'] = $det_ref_cod_nivel_ensino['nm_nivel'];
 
-                $obj_ref_cod_tipo_ensino = new clsPmieducarTipoEnsino($registro['ref_cod_tipo_ensino']);
-                $det_ref_cod_tipo_ensino = $obj_ref_cod_tipo_ensino->detalhe();
+                $det_ref_cod_tipo_ensino = LegacyEducationType::find($registro['ref_cod_tipo_ensino'])?->getAttributes();
                 $registro['ref_cod_tipo_ensino'] = $det_ref_cod_tipo_ensino['nm_tipo'];
 
                 $obj_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
@@ -245,13 +212,13 @@ return new class extends clsListagem {
         $this->largura = '100%';
 
         $this->breadcrumb('Listagem de cursos', [
-        url('intranet/educar_index.php') => 'Escola',
-    ]);
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 
     public function makeExtra()
     {
-        return file_get_contents(__DIR__ .'/scripts/extra/educar-curso-lst.js');
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-curso-lst.js');
     }
 
     public function Formular()

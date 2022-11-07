@@ -45,7 +45,7 @@ $j(function () {
                 if (validationUtils.validatesFields(true)) {
                     if (parseInt($j('#padrao_ano_escolar').val(), 10) === 1) {
                         if (typeof window.valida !== "undefined") {
-                            // reproduzindo função encontrada em modules/Cadastro/Assets/Javascripts/Turma.js:332
+                            // reproduzindo função encontrada em vendor/legacy/Cadastro/Assets/Javascripts/Turma.js:332
                             if (validationUtils.validatesFields(true)) {
                                 window.valida();
                             }
@@ -81,7 +81,7 @@ $j(function () {
 
                     if (valid) {
                         if (typeof window.valida !== "undefined") {
-                            // reproduzindo função encontrada em modules/Cadastro/Assets/Javascripts/Turma.js:332
+                            // reproduzindo função encontrada em vendor/legacy/Cadastro/Assets/Javascripts/Turma.js:332
                             if (validationUtils.validatesFields(true)) {
                                 window.valida();
                             }

@@ -2,7 +2,7 @@
 
 class Portabilis_Controller_Page_EditController extends Core_Controller_Page_EditController
 {
-    protected $_dataMapper = null;
+    protected $_dataMapper;
 
     protected $_nivelAcessoInsuficiente = '/intranet/index.php?negado=1';
 
@@ -100,8 +100,8 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
         $controllerName = ucwords($dispatcher->getControllerName());
         $actionName = ucwords($dispatcher->getActionName());
 
-        $style = "/modules/$controllerName/Assets/Stylesheets/$actionName.css";
-        $script = "/modules/$controllerName/Assets/Javascripts/$actionName.js";
+        $style = "/vendor/legacy/$controllerName/Assets/Stylesheets/$actionName.css";
+        $script = "/vendor/legacy/$controllerName/Assets/Javascripts/$actionName.js";
 
         if (file_exists($rootPath . $style)) {
             Portabilis_View_Helper_Application::loadStylesheet($this, $style);
@@ -117,20 +117,20 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
         Portabilis_View_Helper_Application::loadJQueryFormLib($this);
 
         $styles = [
-            '/modules/Portabilis/Assets/Stylesheets/Frontend.css',
-            '/modules/Portabilis/Assets/Stylesheets/Frontend/Resource.css',
+            '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend.css',
+            '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend/Resource.css',
         ];
 
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
 
         $scripts = [
-            '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
-            '/modules/Portabilis/Assets/Javascripts/Validator.js',
-            '/modules/Portabilis/Assets/Javascripts/Utils.js'
+            '/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js',
+            '/vendor/legacy/Portabilis/Assets/Javascripts/Validator.js',
+            '/vendor/legacy/Portabilis/Assets/Javascripts/Utils.js'
         ];
 
         if (!$this->backwardCompatibility) {
-            $scripts[] = '/modules/Portabilis/Assets/Javascripts/Frontend/Resource.js';
+            $scripts[] = '/vendor/legacy/Portabilis/Assets/Javascripts/Frontend/Resource.js';
         }
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);

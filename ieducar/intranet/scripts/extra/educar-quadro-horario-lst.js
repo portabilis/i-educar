@@ -1,108 +1,53 @@
+  const campoInstituicao = document.getElementById('ref_cod_instituicao');
+  const campoEscola = document.getElementById('ref_cod_escola');
+  const campoCurso = document.getElementById('ref_cod_curso');
+  const campoSerie = document.getElementById('ref_cod_serie');
+  const campoTurma = document.getElementById('ref_cod_turma');
+  const campoAno = document.getElementById('ano');
 
-  var campoInstituicao = document.getElementById('ref_cod_instituicao');
-  var campoEscola = document.getElementById('ref_cod_escola');
-  var campoCurso = document.getElementById('ref_cod_curso');
-  var campoSerie = document.getElementById('ref_cod_serie');
-  var campoTurma = document.getElementById('ref_cod_turma');
-  var campoAno   = document.getElementById('ano');
+  $j(function () {
+    if (campoInstituicao.length === 2) {
+    $j('#ref_cod_instituicao option:eq(1)').prop('selected', true).change();
+    }
+  });
 
   campoInstituicao.onchange = function()
   {
-    var campoInstituicao_ = document.getElementById('ref_cod_instituicao').value;
-
-    campoEscola.length = 1;
-    campoEscola.disabled = true;
-    campoEscola.options[0].text = 'Carregando escola';
-
-    campoCurso.length = 1;
-    campoCurso.disabled = true;
-    campoCurso.options[0].text = 'Selecione uma escola antes';
-
-    campoSerie.length = 1;
-    campoSerie.disabled = true;
-    campoSerie.options[0].text = 'Selecione um curso antes';
-
-    campoTurma.length = 1;
-    campoTurma.disabled = true;
-    campoTurma.options[0].text = 'Selecione uma Série antes';
-
-    var xml_escola = new ajax(getEscola);
-    xml_escola.envia('educar_escola_xml2.php?ins=' + campoInstituicao_);
+    setAttributes(campoEscola,'Carregando escola');
+    setAttributes(campoCurso,'Selecione uma escola antes');
+    setAttributes(campoSerie,'Selecione um curso antes');
+    setAttributes(campoTurma,'Selecione uma Série antes');
+    getApiResource("/api/resource/school",getEscola,{institution:campoInstituicao.value});
   };
 
   campoEscola.onchange = function()
   {
-    var campoEscola_ = document.getElementById( 'ref_cod_escola' ).value;
-
-    campoAno.length = 1;
-    campoAno.disabled = true;
-    campoAno.options[0].text = 'Selecione uma escola antes';
-
-    campoCurso.length = 1;
-    campoCurso.disabled = true;
-    campoCurso.options[0].text = 'Carregando curso';
-
-    campoSerie.length = 1;
-    campoSerie.disabled = true;
-    campoSerie.options[0].text = 'Selecione um curso antes';
-
-    campoTurma.length = 1;
-    campoTurma.disabled = true;
-    campoTurma.options[0].text = 'Selecione uma série antes';
-
-    var xml_curso = new ajax(getCurso);
-    xml_curso.envia('educar_curso_xml.php?esc=' + campoEscola_);
-
-    var xml_ano = new ajax(getAnoLetivo);
-    xml_ano.envia('educar_escola_ano_letivo_xml.php?esc=' + campoEscola_);
+    setAttributes(campoAno,'Selecione uma escola antes');
+    setAttributes(campoCurso,'Carregando curso');
+    setAttributes(campoSerie,'Selecione um curso antes');
+    setAttributes(campoTurma,'Selecione uma série antes');
+    getApiResource("/api/resource/course",getCurso,{school:$j(this).val()});
+    getApiResource("/api/resource/school-academic-year",getAnoLetivo,{school:campoEscola.value});
   };
 
   campoCurso.onchange = function()
   {
-    var campoEscola_ = document.getElementById('ref_cod_escola').value;
-    var campoCurso_ = document.getElementById('ref_cod_curso').value;
-
-    campoSerie.length = 1;
-    campoSerie.disabled = true;
-    campoSerie.options[0].text = 'Carregando série';
-
-    campoTurma.length = 1;
-    campoTurma.disabled = true;
-    campoTurma.options[0].text = 'Selecione uma Série antes';
-
-    var xml_serie = ajax(getSerie);
-    xml_serie.envia('educar_escola_curso_serie_xml.php?esc=' + campoEscola_ + '&cur=' + campoCurso_);
+    setAttributes(campoSerie,'Carregando série');
+    setAttributes(campoSerie,'Selecione uma Série antes');
+    getApiResource("/api/resource/grade",getSerie,{school:campoEscola.value,course:campoCurso.value});
   };
 
   campoAno.onchange = function()
   {
-    var campoEscola_ = document.getElementById('ref_cod_escola').value;
-    var campoCurso_ = document.getElementById('ref_cod_curso').value;
-
-    campoSerie.length = 1;
-    campoSerie.disabled = true;
-    campoSerie.options[0].text = 'Carregando série';
-
-    campoTurma.length = 1;
-    campoTurma.disabled = true;
-    campoTurma.options[0].text = 'Selecione uma Série antes';
-
-    var xml_serie = ajax(getSerie);
-    xml_serie.envia('educar_escola_curso_serie_xml.php?esc=' + campoEscola_ + '&cur=' + campoCurso_);
+    setAttributes(campoSerie,'Carregando série');
+    setAttributes(campoTurma,'Selecione uma Série antes');
+    getApiResource("/api/resource/grade",getSerie,{school:campoEscola.value,course:campoCurso.value});
   };
 
   campoSerie.onchange = function()
   {
-    var campoEscola_ = document.getElementById('ref_cod_escola').value;
-    var campoSerie_ = document.getElementById('ref_cod_serie').value;
-    var campoAno_ = document.getElementById('ano').value;
-
-    campoTurma.length = 1;
-    campoTurma.disabled = true;
-    campoTurma.options[0].text = 'Carregando turma';
-
-    var xml_turma = new ajax(getTurma);
-    xml_turma.envia('educar_turma_xml.php?esc=' + campoEscola_ + '&ser=' + campoSerie_ + '&ano=' + campoAno_);
+    setAttributes(campoTurma,'Carregando turma');
+    getApiResource("/api/resource/school-class",getTurma,{school:campoEscola.value,grade:campoSerie.value,in_progress_year:campoAno.value});
   };
 
   if (document.getElementById('botao_busca')) {

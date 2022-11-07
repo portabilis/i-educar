@@ -12,7 +12,7 @@ class clsPmieducarArredondamento extends Model
 
     public function __construct($ref_cod_curso = null, $sequencial = null, $valor = null, $valor_min = null, $valor_max = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}arredondamento";
 
@@ -122,7 +122,7 @@ class clsPmieducarArredondamento extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_ref_cod_curso = null, $int_sequencial = null, $int_valor = null, $int_valor_min = null, $int_valor_max = null)
     {
@@ -185,7 +185,7 @@ class clsPmieducarArredondamento extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -203,7 +203,7 @@ class clsPmieducarArredondamento extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {
@@ -225,9 +225,6 @@ class clsPmieducarArredondamento extends Model
      */
     public function excluir()
     {
-        if (is_numeric($this->ref_cod_curso) && is_numeric($this->sequencial)) {
-        }
-
         return false;
     }
 }

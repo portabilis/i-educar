@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyTransferType;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
@@ -21,8 +22,7 @@ return new class extends clsDetalhe {
 
         $this->cod_transferencia_tipo=$_GET['cod_transferencia_tipo'];
 
-        $tmp_obj = new clsPmieducarTransferenciaTipo($this->cod_transferencia_tipo);
-        $registro = $tmp_obj->detalhe();
+        $registro = LegacyTransferType::find($this->cod_transferencia_tipo)?->getAttributes();
 
         if (! $registro) {
             throw new HttpResponseException(

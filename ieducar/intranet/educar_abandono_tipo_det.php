@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyAbandonmentType;
+
 return new class extends clsDetalhe {
     /**
      * Titulo no topo da pagina
@@ -23,8 +25,7 @@ return new class extends clsDetalhe {
 
         $this->cod_abandono_tipo=$_GET['cod_abandono_tipo'];
 
-        $tmp_obj = new clsPmieducarAbandonoTipo($this->cod_abandono_tipo);
-        $registro = $tmp_obj->detalhe();
+        $registro = LegacyAbandonmentType::find($this->cod_abandono_tipo)?->getAttributes();
 
         if (! $registro) {
             $this->simpleRedirect('educar_abandono_tipo_lst.php');

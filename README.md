@@ -80,7 +80,7 @@ facilitar o desenvolvimento.
 
 #### Servidor
 
-- [PHP](http://php.net/) versão 8.0
+- [PHP](http://php.net/) versão 8.1
 - [Composer](https://getcomposer.org/)
 - [Postgres](https://www.postgresql.org/)
 - [Nginx](https://www.nginx.com/)
