@@ -214,7 +214,7 @@ SELECT p.id,
      LEFT JOIN cadastro.fisica fmae ON fmae.idpes = mother_id
      LEFT JOIN cadastro.pessoa prmae ON prmae.idpes = mother_id
      LEFT JOIN cadastro.documento dmae ON dmae.idpes = mother_id
-     LEFT JOIN cadastro.estado_civil esmae ON esmae.ideciv = mae.ideciv
+     LEFT JOIN cadastro.estado_civil esmae ON esmae.ideciv = fmae.ideciv
      LEFT JOIN cadastro.fone_pessoa fonmae ON fonmae.idpes = mother_id
      LEFT JOIN cadastro.profissao pfsmae ON pfsmae.cod_profissao::varchar = fmae.ref_cod_profissao::varchar
      LEFT JOIN public.person_has_place plcmae ON plcmae.person_id = mother_id
