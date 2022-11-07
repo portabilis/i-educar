@@ -82,8 +82,7 @@ SELECT p.id,
           end as nationality,
     COALESCE( ci."name"||' - '||st.abbreviation , 'Não informado') as birthplace
 
-   FROM exporter_person p
-
+   FROM pessoa p
      JOIN aluno a ON p.id = a.ref_idpes::numeric
      JOIN matricula m ON m.ref_cod_aluno = a.cod_aluno
      JOIN escola e ON e.cod_escola = m.ref_ref_cod_escola
@@ -91,19 +90,14 @@ SELECT p.id,
      JOIN serie s ON s.cod_serie = m.ref_ref_cod_serie
      JOIN curso c ON c.cod_curso = m.ref_cod_curso
      JOIN matricula_turma mt ON mt.ref_cod_matricula = m.cod_matricula
-
      JOIN cadastro.fisica f ON f.idpes = guardian_id
      JOIN cadastro.pessoa pr ON pr.idpes = guardian_id
-     
-
-
      JOIN relatorio.view_situacao vs ON vs.cod_matricula = m.cod_matricula AND vs.cod_turma = mt.ref_cod_turma AND vs.sequencial = mt.sequencial
      JOIN turma t ON t.cod_turma = mt.ref_cod_turma
-     LEFT JOIN educacenso_cod_escola ece ON e.cod_escola = ece.cod_escola
-     LEFT JOIN turma_turno tt ON tt.id = t.turma_turno_id
-     LEFT JOIN turma_turno tm ON tm.id = mt.turno_id
+     JOIN educacenso_cod_escola ece ON e.cod_escola = ece.cod_escola
+     JOIN turma_turno tt ON tt.id = t.turma_turno_id
+     JOIN turma_turno tm ON tm.id = mt.turno_id
      LEFT JOIN moradia_aluno ma ON ma.ref_cod_aluno = a.cod_aluno
-
      LEFT JOIN cadastro.documento d ON d.idpes = guardian_id
      LEFT JOIN cadastro.estado_civil es ON es.ideciv = f.ideciv
      LEFT JOIN cadastro.fone_pessoa fon ON fon.idpes = guardian_id
