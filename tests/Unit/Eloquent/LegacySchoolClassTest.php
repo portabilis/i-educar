@@ -14,6 +14,7 @@ use App\Models\LegacySchoolClassGrade;
 use App\Models\LegacySchoolClassStage;
 use App\Models\LegacySchoolGrade;
 use App\Models\LegacySchoolGradeDiscipline;
+use App\Models\SchoolClassInep;
 use Database\Factories\LegacyDisciplineFactory;
 use Database\Factories\LegacyDisciplineSchoolClassFactory;
 use Database\Factories\LegacyEnrollmentFactory;
@@ -42,7 +43,8 @@ class LegacySchoolClassTest extends EloquentTestCase
         'schoolClassStages' => LegacySchoolClassStage::class,
         'multigrades' => LegacySchoolClassGrade::class,
         'academicYears' => LegacySchoolAcademicYear::class,
-        'schoolGrade' => LegacySchoolGrade::class
+        'schoolGrade' => LegacySchoolGrade::class,
+        'inep' => SchoolClassInep::class,
     ];
 
     /**
