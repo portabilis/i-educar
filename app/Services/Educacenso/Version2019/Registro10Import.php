@@ -161,7 +161,7 @@ class Registro10Import implements RegistroImportInterface
         return SchoolInep::where('cod_escola_inep', $this->model->codigoInep)->first();
     }
 
-    private function getPostgresIntegerArray($array)
+    protected function getPostgresIntegerArray($array)
     {
         return '{' . implode(',', $array) . '}';
     }
@@ -358,7 +358,7 @@ class Registro10Import implements RegistroImportInterface
         return $this->getPostgresIntegerArray($arrayDormitorios);
     }
 
-    private function getArrayLaboratorios()
+    protected function getArrayLaboratorios()
     {
         $arrayLaboratorios = [];
 
@@ -466,7 +466,7 @@ class Registro10Import implements RegistroImportInterface
         return $this->getPostgresIntegerArray($arraySalas);
     }
 
-    private function getArraySalasAtividades()
+    protected function getArraySalasAtividades()
     {
         $arraySalas = [];
 
@@ -559,7 +559,7 @@ class Registro10Import implements RegistroImportInterface
         ));
     }
 
-    private function getArrayEquipamentos()
+    protected function getArrayEquipamentos()
     {
         $arrayEquipamentos = [];
 
@@ -682,7 +682,7 @@ class Registro10Import implements RegistroImportInterface
         return $this->getPostgresIntegerArray($arrayOrganizacaoEnsino);
     }
 
-    private function getArrayInstrumentosPedagogicos()
+    protected function getArrayInstrumentosPedagogicos()
     {
         $arrayInstrumentosPedagogicos = [];
 
