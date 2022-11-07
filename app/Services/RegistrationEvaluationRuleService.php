@@ -15,7 +15,7 @@ class RegistrationEvaluationRuleService
     public function getEvaluationRule(LegacyRegistration $registration)
     {
         $escolaUsaRegraDiferenciada = $registration->school->utiliza_regra_diferenciada;
-        $level = $registration->level;
+        $level = $registration->grade;
         $evaluationRuleLevel = $level->evaluationRules()
             ->wherePivot('ano_letivo', $registration->ano)
             ->first();

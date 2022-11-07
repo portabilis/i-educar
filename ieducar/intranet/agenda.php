@@ -118,16 +118,11 @@ return new class extends clsCadastro {
         $diasArr = [ 'Domingo', 'Segunda Feira', 'Terça Feira', 'Quarta Feira', 'Quinta Feira', 'Sexta Feira', 'Sábado' ];
 
         $this->arr_data_atual = [ date('d', $this->time_atual), date('n', $this->time_atual), date('Y', $this->time_atual), date('w', $this->time_atual) ];
-        $amanhaArr = [ date('d', $this->time_amanha), date('n', $this->time_amanha), date('Y', $this->time_amanha), date('w', $this->time_amanha) ];
-        $ontemArr = [ date('d', $this->time_ontem), date('n', $this->time_ontem), date('Y', $this->time_ontem), date('w', $this->time_ontem) ];
 
         $nm_agenda = $objAgenda->getNome();
         $this->publica = $objAgenda->getPublica();
         $this->dono = $objAgenda->getCodPessoaDono();
 
-        /*
-            TOPO
-        */
         if ($this->editor == $this->dono) {
             $preferencias = '<a class="small" href="agenda_preferencias.php">
                                 <div><i class="fa fa-gear" aria-hidden="true"></i> Preferências</div>
@@ -432,14 +427,13 @@ return new class extends clsCadastro {
             $conteudo .= "<tr><td><input class=\"notas\" type=\"text\" name=\"nota_{$i}\" id=\"nota_{$i}\" value=\"{$titulo}\"></td><td><a href=\"javascript: salvaNota( {$cod_agenda_compromisso} );\"><img src=\"imagens/nvp_agenda_compromisso.gif\" border=\"0\" alt=\"Salvar\" title=\"Salvar como Compromisso\"></a></td></tr>";
             $i++;
         }
-        $conteudo .= '
+
+        return $conteudo . '
                         </table>
                     </form>
                 </td>
             </tr>
         </table>';
-
-        return $conteudo;
     }
 
     public function Formular()

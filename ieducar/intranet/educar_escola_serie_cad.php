@@ -486,9 +486,7 @@ return new class extends clsCadastro {
         try {
             $this->validaAlteracoes($analise);
         } catch (Exception $e) {
-            $msgs = explode("\n", $e->getMessage());
-
-            $this->mensagem = $msgs;
+            $this->mensagem = explode("\n", $e->getMessage());
 
             $this->simpleRedirect(\Request::getRequestUri());
         }

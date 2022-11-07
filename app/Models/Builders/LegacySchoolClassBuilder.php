@@ -16,7 +16,7 @@ class LegacySchoolClassBuilder extends LegacyBuilder
     public function getResource(array $filters = []): Collection
     {
         $this->active()->orderByName()->filter($filters);
-        //year é usado na query, mas não aparece no recurso
+
         return $this->setExcept(['year'])->resource(['id', 'name']);
     }
 
@@ -82,7 +82,7 @@ class LegacySchoolClassBuilder extends LegacyBuilder
      */
     public function whereInProgressYear(int $year): self
     {
-        return $this->whereHas('academic_years', function ($q) use ($year) {
+        return $this->whereHas('academicYears', function ($q) use ($year) {
             $q->inProgress();
             $q->whereYearEq($year);
         });
@@ -95,7 +95,7 @@ class LegacySchoolClassBuilder extends LegacyBuilder
      */
     public function whereInProgress(): self
     {
-        return $this->whereHas('academic_years', function ($q) {
+        return $this->whereHas('academicYears', function ($q) {
             $q->inProgress();
         });
     }

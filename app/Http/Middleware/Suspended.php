@@ -23,7 +23,7 @@ class Suspended
         $active = Config::get('legacy.config.active_on_ieducar');
         $level = Session::get('nivel');
 
-        if ($active || $level === 1) {
+        if ($active || $level === 1 || $request->user()?->isAdmin()) {
             return $next($request);
         }
 

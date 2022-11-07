@@ -33,12 +33,7 @@ return new class extends clsListagem {
         $this->inputsHelper()->dynamic(['ano', 'instituicao', 'escola', 'curso', 'serie'], ['required' => false]);
 
         $obj_permissao = new clsPermissoes();
-        $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
-
-        $get_escola = true;
-        $get_escola_curso_serie = true;
-        $sem_padrao = true;
-        $get_curso = true;
+        $obj_permissao->nivel_acesso($this->pessoa_logada);
 
         if ($this->ref_cod_escola) {
             $this->ref_ref_cod_escola = $this->ref_cod_escola;

@@ -264,7 +264,7 @@ return new class extends clsCadastro {
 
         $cod_escola = $det_tmp['ref_ref_cod_escola'];
 
-        $obj_tmp = LegacyDisciplinaryOccurrenceType::find($this->ref_cod_tipo_ocorrencia_disciplinar)?->toArray();
+        $obj_tmp = LegacyDisciplinaryOccurrenceType::find($this->ref_cod_tipo_ocorrencia_disciplinar)?->getAttributes();
         $tipo_ocorrencia = $det_tmp['nm_tipo'];
 
         $params = [

@@ -239,7 +239,6 @@ class clsAgenda
             $verifica = true;
 
             $versaoAtual = $db->CampoUnico("SELECT MAX( versao ) FROM portal.agenda_compromisso WHERE cod_agenda_compromisso = '{$cod_compromisso}'");
-            $versaoNova = $versaoAtual + 1;
             $campos = '';
             $valores = '';
             // faz as verificacoes dos campos postados
@@ -289,7 +288,6 @@ class clsAgenda
             if (preg_match('/[0-9]{2}:[0-9]{2}/', $hora_fim)) {
                 // pega a versao da nota
                 $versaoAtual = $db->CampoUnico("SELECT MAX( versao ) FROM portal.agenda_compromisso WHERE cod_agenda_compromisso = '{$cod_compromisso}'");
-                $versaoNova = $versaoAtual + 1;
 
                 // pega os dados da nota
                 $db->Consulta("SELECT data_inicio, titulo, descricao, importante, publico FROM portal.agenda_compromisso WHERE cod_agenda_compromisso = '{$cod_compromisso}' AND versao = '{$versaoAtual}'");
@@ -374,9 +372,7 @@ class clsAgenda
     {
         $db = new clsBanco();
         if ($this->compromissoPertenceAgenda($cod_compromisso)) {
-            $maxVersao = $db->CampoUnico("SELECT MAX( versao ) FROM portal.agenda_compromisso WHERE cod_agenda_compromisso = '{$cod_compromisso}'");
-
-            return $maxVersao;
+            return $db->CampoUnico("SELECT MAX( versao ) FROM portal.agenda_compromisso WHERE cod_agenda_compromisso = '{$cod_compromisso}'");
         }
 
         return 0;
@@ -403,7 +399,7 @@ class clsAgenda
 
     public function add_compromisso_externo_1()
     {
-        $db = new clsBanco();
+
         // seleciona os dados
         //$db->Consulta();
         if ($this->time_atual) {

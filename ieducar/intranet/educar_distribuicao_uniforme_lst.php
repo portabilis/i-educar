@@ -51,7 +51,7 @@ return new class extends clsListagem {
         $this->addCabecalhos([ 'Ano', 'Kit completo', 'Data da distribução']);
 
         $obj_permissao = new clsPermissoes();
-        $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
+        $obj_permissao->nivel_acesso($this->pessoa_logada);
 
         $obj_aluno = new clsPmieducarAluno();
         $lst_aluno = $obj_aluno->lista($this->ref_cod_aluno, null, null, null, null, null, null, null, null, null, 1);

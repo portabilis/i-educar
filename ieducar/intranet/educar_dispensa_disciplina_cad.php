@@ -349,7 +349,7 @@ return new class extends clsCadastro {
 
     public function obtemDadosDaDispensa()
     {
-        $dadosDaDispensa = [
+        return [
             'cod_dispensa' => $this->cod_dispensa,
             'ref_cod_matricula' => $this->ref_cod_matricula,
             'ref_cod_serie' => $this->ref_cod_serie,
@@ -361,13 +361,11 @@ return new class extends clsCadastro {
             'observacao' => $this->observacao,
             'etapas' => $this->etapa
         ];
-
-        return $dadosDaDispensa;
     }
 
     public function montaObjetoDispensa($dadosDaDispensa = [])
     {
-        $objetoDispensa = new clsPmieducarDispensaDisciplina(
+        return new clsPmieducarDispensaDisciplina(
             $dadosDaDispensa['ref_cod_matricula'],
             $dadosDaDispensa['ref_cod_serie'],
             $dadosDaDispensa['ref_cod_escola'],
@@ -380,8 +378,6 @@ return new class extends clsCadastro {
             1,
             $dadosDaDispensa['observacao']
         );
-
-        return $objetoDispensa;
     }
 
     public function loadAssets()

@@ -21,7 +21,7 @@ class clsPmieducarDocumentos extends Model
 
     public function __construct($ref_cod_pessoa_educ = null, $ref_idorg_rg = null, $sigla_uf_cert_civil = null, $sigla_uf_exp_rg = null, $rg = null, $data_expedicao_rg = null, $num_titulo_eleitor = null, $zona_titulo_eleitor = null, $secao_titulo_eleitor = null, $tipo_certidao_civil = null, $num_termo = null, $num_folha = null, $num_livro = null, $data_emissao_certidao_civil = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}documentos";
 
@@ -243,7 +243,7 @@ class clsPmieducarDocumentos extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_ref_cod_pessoa_educ = null, $int_ref_idorg_rg = null, $str_sigla_uf_cert_civil = null, $str_sigla_uf_exp_rg = null, $int_rg = null, $date_data_expedicao_rg_ini = null, $date_data_expedicao_rg_fim = null, $int_num_titulo_eleitor = null, $int_zona_titulo_eleitor = null, $int_secao_titulo_eleitor = null, $int_tipo_certidao_civil = null, $int_num_termo = null, $int_num_folha = null, $int_num_livro = null, $date_data_emissao_certidao_civil_ini = null, $date_data_emissao_certidao_civil_fim = null)
     {
@@ -350,7 +350,7 @@ class clsPmieducarDocumentos extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -368,7 +368,7 @@ class clsPmieducarDocumentos extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {
@@ -390,9 +390,6 @@ class clsPmieducarDocumentos extends Model
      */
     public function excluir()
     {
-        if (is_numeric($this->ref_cod_pessoa_educ)) {
-        }
-
         return false;
     }
 }
