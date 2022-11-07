@@ -111,7 +111,7 @@ class ResponsavelTurmaRepositoryEloquent implements ResponsavelTurmaRepository
                     $query->where('level_id', $levelId);
                 }
                 if ($school_class_id) {
-                    $query->leftJoin('matricula_turma', 'matricula_turma.ref_cod_matricula', '=', 'm.id')->where('m.ref_cod_turma', $school_class_id);
+                    $query->leftJoin('matricula_turma', 'matricula_turma.ref_cod_matricula', '=', 'matricula.id')->where('matricula_turma.ref_cod_turma', $school_class_id);
                 }
            
         }
