@@ -30,7 +30,6 @@ class ResponsavelExport implements FromCollection, ShouldAutoSize, WithColumnFor
         $row = [];
         
         $row[] = $responsavel->name;
-        $row[] = $responsavel->nome_aluno;
         $row[] = $responsavel->date_of_birth;
         $row[] = $responsavel->cpf;
         $row[] = $responsavel->gender;
@@ -63,7 +62,6 @@ class ResponsavelExport implements FromCollection, ShouldAutoSize, WithColumnFor
     {
         return [
             'Nome',
-            'Responsável pôr',
             'Nascimento',
             'CPF',
             'Sexo',

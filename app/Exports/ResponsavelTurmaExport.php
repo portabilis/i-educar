@@ -30,6 +30,7 @@ class ResponsavelTurmaExport implements FromCollection, ShouldAutoSize, WithColu
         $row = [];
         if($responsavel->tipo_responsavel=='r'){
             $row[] = $responsavel->name;
+            $row[] = $responsavel->nome_aluno;
             $row[] = $responsavel->date_of_birth;
             $row[] = $responsavel->cpf;
             $row[] = $responsavel->gender;
@@ -56,6 +57,7 @@ class ResponsavelTurmaExport implements FromCollection, ShouldAutoSize, WithColu
 
         }elseif($responsavel->tipo_responsavel=='m'){
             $row[] = $responsavel->name_mae;
+            $row[] = $responsavel->nome_aluno;
             $row[] = $responsavel->date_of_birth_mae;
             $row[] = $responsavel->cpf_mae;
             $row[] = $responsavel->gender_mae;
@@ -81,6 +83,7 @@ class ResponsavelTurmaExport implements FromCollection, ShouldAutoSize, WithColu
             $row[] = $responsavel->type_bank_account_mae;  
         }elseif($responsavel->tipo_responsavel=='p'){
             $row[] = $responsavel->name_pai;
+            $row[] = $responsavel->nome_aluno;
             $row[] = $responsavel->date_of_birth_pai;
             $row[] = $responsavel->cpf_pai;
             $row[] = $responsavel->gender_pai;
@@ -106,6 +109,7 @@ class ResponsavelTurmaExport implements FromCollection, ShouldAutoSize, WithColu
             $row[] = $responsavel->type_bank_account_pai;  
         }else{
             $row[] = $responsavel->name_pai.", ".$responsavel->name_mae;
+            $row[] = $responsavel->nome_aluno;
             $row[] = $responsavel->date_of_birth_pai.", ".$responsavel->date_of_birth_mae;
             $row[] = $responsavel->cpf_pai.", ".$responsavel->cpf_mae;
             $row[] = $responsavel->gender_pai.", ".$responsavel->gender_mae;
@@ -138,6 +142,7 @@ class ResponsavelTurmaExport implements FromCollection, ShouldAutoSize, WithColu
     {
         return [
             'Nome',
+            'Responsável pôr'
             'Nascimento',
             'CPF',
             'Sexo',
