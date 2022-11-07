@@ -23,6 +23,7 @@ use App\Models\SchoolManager;
 use App\User;
 use Database\Factories\CityFactory;
 use Database\Factories\CountryFactory;
+use Database\Factories\DistrictFactory;
 use Database\Factories\LegacyUserFactory;
 use Database\Factories\StateFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -46,19 +47,23 @@ abstract class EducacensoTestCase extends TestCase
         \Artisan::call('db:seed', ['--class' => 'DefaultModulesEducacensoIesTableSeeder']);
         \Artisan::call('db:seed', ['--class' => 'DefaultModulesEducacensoCursoSuperiorTableSeeder']);
 
-        CityFactory::new()->create([
-            'state_id' => StateFactory::new()->create([
-                'country_id' => CountryFactory::new()->create([
-                    'id' => 1,
-                    'name' => 'Brasil',
-                    'ibge_code' => '76',
-                ]),
-                'name' => 'Santa Catarina',
-                'abbreviation' => 'SC',
-                'ibge_code' => '42',
-            ]),
+        DistrictFactory::new()->create([
             'name' => 'IÇARA',
-            'ibge_code' => '4207007',
+            'ibge_code' => '420700705',
+            'city_id' => CityFactory::new()->create([
+                'state_id' => StateFactory::new()->create([
+                    'country_id' => CountryFactory::new()->create([
+                        'id' => 1,
+                        'name' => 'Brasil',
+                        'ibge_code' => '76',
+                    ]),
+                    'name' => 'Santa Catarina',
+                    'abbreviation' => 'SC',
+                    'ibge_code' => '42',
+                ]),
+                'name' => 'IÇARA',
+                'ibge_code' => '4207007',
+            ])
         ]);
 
         $this->user = LegacyUserFactory::new()->admin()->create();
@@ -354,6 +359,23 @@ abstract class EducacensoTestCase extends TestCase
         $this->assertIsNumeric($schoolManager->employee->inep->number);
         $this->assertEquals(12, strlen($schoolManager->employee->inep->number));
 
-        //faltaTipoVinculo
+        //faltaTipoVinculo Bonot vai validar se está importando certo
+    }
+
+    /** @test */
+    public function validationImportRegister50()
+    {
+        $this->assertTrue(true);
+        //Código da Turma na Entidade/Escola
+        //Função que exerce na escola/Turma
+    }
+
+    /** @test */
+    public function validationImportRegister60()
+    {
+        $this->assertTrue(true);
+        //Código da Turma na Entidade/Escola
+        //Turma Multi
+        //Tipo de Atendimento Educacional Especializado
     }
 }
