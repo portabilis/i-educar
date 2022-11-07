@@ -166,6 +166,7 @@ class ResponsavelTurmaExport implements FromCollection, ShouldAutoSize, WithColu
             'Agência',
             'Conta',
             'Tipo de Conta',
+            
            
         ];
     }
