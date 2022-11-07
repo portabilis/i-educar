@@ -53,7 +53,8 @@ class ResponsavelTurmaExport implements FromCollection, ShouldAutoSize, WithColu
             $row[] = $responsavel->email_address;
             $row[] = $responsavel->bank_branch;
             $row[] = $responsavel->bank_account;
-            $row[] = $responsavel->type_bank_account;  
+            $row[] = $responsavel->type_bank_account;
+              
 
         }elseif($responsavel->tipo_responsavel=='m'){
             $row[] = $responsavel->name_mae;
