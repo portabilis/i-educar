@@ -14,6 +14,7 @@ SELECT p.id,
     vs.cod_situacao AS status,
     vs.texto_situacao AS status_text,
     a.cod_aluno AS student_id,
+    a.tipo_responsavel AS tipo_responsavel,
     m.cod_matricula AS registration_id,
     m.ref_cod_curso AS course_id,
     m.ref_ref_cod_serie AS grade_id,
@@ -80,7 +81,97 @@ SELECT p.id,
               when 3 then 'Estrangeira'::varchar
               else 'Não informado'::varchar
           end as nationality,
-    COALESCE( ci."name"||' - '||st.abbreviation , 'Não informado') as birthplace
+    COALESCE( ci."name"||' - '||st.abbreviation , 'Não informado') as birthplace,
+
+    prpai.idpes AS id_pai,
+          prpai.nome AS name_pai,
+          fpai.nome_social AS social_name_pai,
+          fpai.cpf AS cpf_pai,
+          dpai.rg AS rg_pai,
+          plpai.address AS endereco_pai,
+          plpai.number AS numero_casa_pai,
+          plpai.neighborhood AS bairro_pai,
+          cipai.name AS naturalidade_pai,
+          plpai.postal_code AS cep_pai,
+          plpai.complement AS complemento_pai,
+          fonpai.ddd AS ddd_pai,
+          fonpai.fone AS telefone_pai,
+          espai.descricao AS estado_civil_pai,
+          dpai.data_exp_rg AS rg_issue_date_pai,
+          dpai.sigla_uf_exp_rg AS rg_state_abbreviation_pai,
+          dpai.zona_tit_eleitor AS zona_pai,
+          dpai.secao_tit_eleitor AS secao_pai,
+          dpai.num_tit_eleitor AS titulo_pai,
+          dpai.certidao_nascimento AS certidao_pai,
+          dpai.cartorio_cert_civil AS cartorio_emissao_pai,
+          dpai.sigla_uf_cert_civil AS estado_emissao_cn_pai,
+          dpai.data_emissao_cert_civil AS data_exp_certidao_pai,
+          pfspai.nm_profissao AS profession_pai,
+          fpai.data_nasc AS date_of_birth_pai,
+          prpai.email AS email_address_pai,
+          fpai.sus AS sus_number_pai,
+          fpai.nis_pis_pasep AS nis_pai,
+          fpai.empresa AS organization_pai,
+          fpai.agencia AS bank_branch_pai,
+          fpai.conta AS bank_account_pai,
+          fpai.tipo_conta AS type_bank_account_pai,
+          fpai.renda_mensal AS monthly_income_pai,
+          fpai.sexo AS gender_pai,
+          fpai.idpes_mae AS mother_id_resp_pai,
+          fpai.idpes_pai AS father_id_resp_pai,
+          fpai.idpes_responsavel AS guardian_id_responsavel_pai,
+           case fpai.nacionalidade
+              when 1 then 'Brasileira'::varchar
+              when 2 then 'Naturalizado brasileiro'::varchar
+              when 3 then 'Estrangeira'::varchar
+              else 'Não informado'::varchar
+          end as nationality_pai,
+    COALESCE( ci."name"||' - '||st.abbreviation , 'Não informado') as birthplace_pai,
+
+    prmae.idpes AS id_mae,
+          prmae.nome AS name_mae,
+          fmae.nome_social AS social_name_mae,
+          fmae.cpf AS cpf_mae,
+          dmae.rg AS rg_mae,
+          plmae.address AS endereco_mae,
+          plmae.number AS numero_casa_mae,
+          plmae.neighborhood AS bairro_mae,
+          cimae.name AS naturalidade_mae,
+          plmae.postal_code AS cep_mae,
+          plmae.complement AS complemento_mae,
+          fonmae.ddd AS ddd_mae,
+          fonmae.fone AS telefone_mae,
+          esmae.descricao AS estado_civil_mae,
+          dmae.data_exp_rg AS rg_issue_date_mae,
+          dmae.sigla_uf_exp_rg AS rg_state_abbreviation_mae,
+          dmae.zona_tit_eleitor AS zona_mae,
+          dmae.secao_tit_eleitor AS secao_mae,
+          dmae.num_tit_eleitor AS titulo_mae,
+          dmae.certidao_nascimento AS certidao_mae,
+          dmae.cartorio_cert_civil AS cartorio_emissao_mae,
+          dmae.sigla_uf_cert_civil AS estado_emissao_cn_mae,
+          dmae.data_emissao_cert_civil AS data_exp_certidao_mae,
+          pfsmae.nm_profissao AS profession_mae,
+          fmae.data_nasc AS date_of_birth_mae,
+          prmae.email AS email_address_mae,
+          fmae.sus AS sus_number_mae,
+          fmae.nis_pis_pasep AS nis_mae,
+          fmae.empresa AS organization_mae,
+          fmae.agencia AS bank_branch_mae,
+          fmae.conta AS bank_account_mae,
+          fmae.tipo_conta AS type_bank_account_mae,
+          fmae.renda_mensal AS monthly_income_mae,
+          fmae.sexo AS gender_mae,
+          fmae.idpes_mae AS mother_id_resp_mae,
+          fmae.idpes_pai AS father_id_resp_mae,
+          fmae.idpes_responsavel AS guardian_id_responsavel_mae,
+           case fmae.nacionalidade
+              when 1 then 'Brasileira'::varchar
+              when 2 then 'Naturalizado brasileiro'::varchar
+              when 3 then 'Estrangeira'::varchar
+              else 'Não informado'::varchar
+          end as nationality_mae,
+    COALESCE( ci."name"||' - '||st.abbreviation , 'Não informado') as birthplace_mae
 
    FROM exporter_person p
 
@@ -109,5 +200,27 @@ SELECT p.id,
      LEFT JOIN public.cities ci ON ci.id = f.idmun_nascimento
      LEFT JOIN public.states st on ci.state_id = st.id
 
+     LEFT JOIN cadastro.fisica fpai ON fpai.idpes = father_id
+     LEFT JOIN cadastro.pessoa prpai ON prpai.idpes = father_id
+     LEFT JOIN cadastro.documento dpai ON dpai.idpes = father_id
+     LEFT JOIN cadastro.estado_civil espai ON espai.ideciv = fpai.ideciv
+     LEFT JOIN cadastro.fone_pessoa fonpai ON fonpai.idpes = father_id
+     LEFT JOIN cadastro.profissao pfspai ON pfspai.cod_profissao::varchar = fpai.ref_cod_profissao::varchar
+     LEFT JOIN public.person_has_place plcpai ON plcpai.person_id = father_id
+     LEFT JOIN public.places plpai ON plpai.id = plcpai.place_id
+     LEFT JOIN public.cities cipai ON cipai.id = fpai.idmun_nascimento
+     LEFT JOIN public.states stpai ON cipai.state_id = stpai.id
+
+     LEFT JOIN cadastro.fisica fmae ON fmae.idpes = mother_id
+     LEFT JOIN cadastro.pessoa prmae ON prmae.idpes = mother_id
+     LEFT JOIN cadastro.documento dmae ON dmae.idpes = mother_id
+     LEFT JOIN cadastro.estado_civil esmae ON esmae.ideciv = mae.ideciv
+     LEFT JOIN cadastro.fone_pessoa fonmae ON fonmae.idpes = mother_id
+     LEFT JOIN cadastro.profissao pfsmae ON pfsmae.cod_profissao::varchar = fmae.ref_cod_profissao::varchar
+     LEFT JOIN public.person_has_place plcmae ON plcmae.person_id = mother_id
+     LEFT JOIN public.places plmae ON plmae.id = plcmae.place_id
+     LEFT JOIN public.cities cimae ON cimae.id = fmae.idmun_nascimento
+     LEFT JOIN public.states stmae ON cimae.state_id = stmae.id
+    
   WHERE true AND a.ativo = 1 AND m.ativo = 1
   ORDER BY a.ref_idpes;
