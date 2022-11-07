@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services\Educacenso\Version2022;
 
 use App\Services\Educacenso\Version2020\ImportService as ImportServiceVersion2020;
@@ -22,7 +23,6 @@ class ImportService extends ImportServiceVersion2020
     {
         return 2022;
     }
-
 
     /**
      * Retorna a classe responsável por importar o registro da linha
