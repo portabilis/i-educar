@@ -3,6 +3,7 @@
 use App\Models\Educacenso\Registro30;
 use App\Models\Individual;
 use App\Models\LegacyDeficiency;
+use App\Models\LegacyIndividual;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolHistory;
 use App\Models\LegacyStudentBenefit;
@@ -519,14 +520,15 @@ class AlunoController extends ApiCoreController
 
     protected function updateDeficiencias()
     {
-        $sql = 'delete from cadastro.fisica_deficiencia where ref_idpes = $1';
-        $this->fetchPreparedQuery($sql, $this->getRequest()->pessoa_id, false);
+        $individual = LegacyIndividual::find($this->getRequest()->pessoa_id,['idpes']);
+        $old = $individual->deficiency()->pluck('ref_cod_deficiencia')->toArray();
+        $news = array_filter($this->getRequest()->deficiencias);
+        $individual->deficiency()->sync($news);
 
-        foreach ($this->getRequest()->deficiencias as $id) {
-            if (!empty($id)) {
-                $deficiencia = new clsCadastroFisicaDeficiencia($this->getRequest()->pessoa_id, $id);
-                $deficiencia->cadastra();
-            }
+        $diff = array_merge(array_diff($old, $news),array_diff($news,$old));
+
+        if (! empty($diff)) {
+            LegacyDeficiency::whereIn('cod_deficiencia', $diff)->update(['updated_at' => now()]);
         }
     }
 

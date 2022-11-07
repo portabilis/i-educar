@@ -28,4 +28,33 @@ trait JoinableBuilder
 
         return parent::select($columns);
     }
+
+    /**
+     * Obtem dinamicamente filtrado a lista de colunas da relação
+     *
+     * @param string $relation
+     * @param array  $columns
+     *
+     * @return array|null
+     */
+    public function getLegacyExportedColumns(string $relation, array $columns): array|null
+    {
+        $legacy = $this->getLegacyColumns();
+        $legacyColumns = $legacy[$relation];
+        $keys = array_keys($legacyColumns);
+        $filterColumns = array_intersect($keys, $columns);
+        $newColumns = [];
+
+        foreach ($filterColumns as $column) {
+            if (array_key_exists($column, $legacyColumns)) {
+                $newColumns[$column] = $legacyColumns[$column];
+            }
+        }
+
+        if (empty($newColumns)) {
+            return null;
+        }
+
+        return $newColumns;
+    }
 }

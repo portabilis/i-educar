@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LegacyProject extends Model
 {
@@ -25,4 +26,9 @@ class LegacyProject extends Model
         'nome',
         'observacao'
     ];
+
+    public function studentProjects(): HasMany
+    {
+        return $this->hasMany(LegacyStudentProject::class, 'ref_cod_projeto');
+    }
 }

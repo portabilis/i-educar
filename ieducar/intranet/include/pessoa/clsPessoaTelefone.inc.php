@@ -170,17 +170,13 @@ class clsPessoaTelefone
             $db = new clsBanco();
             $db->Consulta("SELECT tipo, ddd, fone FROM cadastro.fone_pessoa WHERE idpes = $this->idpes AND tipo = '$this->tipo' ");
             if ($db->ProximoRegistro()) {
-                $tupla = $db->Tupla();
-
-                return $tupla;
+                return $db->Tupla();
             }
         } elseif ($this->idpes && !$this->tipo) {
             $db = new clsBanco();
             $db->Consulta("SELECT tipo, ddd, fone FROM cadastro.fone_pessoa WHERE idpes = $this->idpes ");
             if ($db->ProximoRegistro()) {
-                $tupla = $db->Tupla();
-
-                return $tupla;
+                return $db->Tupla();
             }
         }
 

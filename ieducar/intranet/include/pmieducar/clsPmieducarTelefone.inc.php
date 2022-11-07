@@ -11,7 +11,7 @@ class clsPmieducarTelefone extends Model
 
     public function __construct($ref_cod_pessoa_educ = null, $tipo = null, $ddd = null, $fone = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}telefone";
 
@@ -109,7 +109,7 @@ class clsPmieducarTelefone extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_ref_cod_pessoa_educ = null, $int_tipo = null, $int_ddd = null, $int_fone = null)
     {
@@ -168,7 +168,7 @@ class clsPmieducarTelefone extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -186,7 +186,7 @@ class clsPmieducarTelefone extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {
@@ -208,9 +208,6 @@ class clsPmieducarTelefone extends Model
      */
     public function excluir()
     {
-        if (is_numeric($this->ref_cod_pessoa_educ) && is_numeric($this->tipo)) {
-        }
-
         return false;
     }
 }

@@ -45,12 +45,12 @@ abstract class Core_Controller_Page_EditController extends clsCadastro implement
      *
      * @var string
      */
-    protected $_nivelAcessoInsuficiente = null;
+    protected $_nivelAcessoInsuficiente;
 
     /**
      * @var clsPermissoes
      */
-    protected $_clsPermissoes = null;
+    protected $_clsPermissoes;
 
     /**
      * Chama o construtor da superclasse para atribuir $tipoacao do $_POST.
@@ -240,7 +240,6 @@ abstract class Core_Controller_Page_EditController extends clsCadastro implement
     /**
      * Setter.
      *
-     * @param clsPermissoes $instance
      *
      * @return Core_Controller_Page_EditController
      */

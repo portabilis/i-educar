@@ -9,7 +9,13 @@ class EducacensoImport extends Model
 {
     protected $table = 'educacenso_imports';
 
-    protected $fillable = ['year', 'school', 'user_id', 'finished', 'registration_date'];
+    protected $fillable = [
+        'year',
+        'school',
+        'user_id',
+        'finished',
+        'registration_date'
+    ];
 
     protected $dates = [
         'registration_date',

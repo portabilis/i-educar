@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Phone
@@ -28,24 +30,48 @@ class Phone extends Model
         'updated_by' => 'integer',
     ];
 
+    protected $keyType = 'string';
+
     /**
-     * @return string|null
+     * @return BelongsTo
      */
-    public function getFormattedNumberAttribute()
+    public function person(): BelongsTo
     {
-        $areaCode = $this->area_code;
-        $number = $this->number;
+        return $this->belongsTo(LegacyPerson::class, 'person_id');
+    }
 
-        if (empty($number)) {
-            return null;
-        }
+    public function createdBy(): BelongsTo
+    {
+        return $this->belongsTo(LegacyUser::class, 'created_by');
+    }
 
-        $number = preg_replace('/(\d{4,5})(\d{4})/', '$1-$2', $number);
+    public function updatedBy(): BelongsTo
+    {
+        return $this->belongsTo(LegacyUser::class, 'updated_by');
+    }
 
-        if ($areaCode) {
-            return "({$areaCode}) {$number}";
-        }
+    /**
+     * @return Attribute
+     */
+    protected function formattedNumber(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                $areaCode = $this->area_code;
+                $number = $this->number;
 
-        return $number;
+                if (empty($number)) {
+                    return null;
+                }
+
+                $number = preg_replace('/(\d{4,5})(\d{4})/', '$1-$2', $number);
+
+                if ($areaCode) {
+                    return "({$areaCode}) {$number}";
+                }
+
+                return $number;
+            },
+        );
     }
 }

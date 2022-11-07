@@ -15,7 +15,7 @@ class clsPmieducarCalendarioAnotacao extends Model
 
     public function __construct($cod_calendario_anotacao = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_anotacao = null, $descricao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}calendario_anotacao";
 
@@ -144,7 +144,7 @@ class clsPmieducarCalendarioAnotacao extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_cod_calendario_anotacao = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_anotacao = null, $str_descricao = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null)
     {
@@ -230,7 +230,7 @@ class clsPmieducarCalendarioAnotacao extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -248,7 +248,7 @@ class clsPmieducarCalendarioAnotacao extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

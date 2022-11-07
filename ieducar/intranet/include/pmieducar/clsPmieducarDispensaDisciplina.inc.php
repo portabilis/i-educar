@@ -32,7 +32,7 @@ class clsPmieducarDispensaDisciplina extends Model
         $observacao = null,
         $cod_dispensa = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'dispensa_disciplina';
 
@@ -242,9 +242,9 @@ class clsPmieducarDispensaDisciplina extends Model
             }
 
             if ($set) {
-                $detalheAntigo = $this->detalhe();
+                $this->detalhe();
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_serie = '{$this->ref_cod_serie}' AND ref_cod_escola = '{$this->ref_cod_escola}' AND ref_cod_disciplina = '{$this->ref_cod_disciplina}'");
-                $detalheAtual = $this->detalhe();
+                $this->detalhe();
 
                 return true;
             }
@@ -256,7 +256,7 @@ class clsPmieducarDispensaDisciplina extends Model
     /**
      * Retorna uma lista de registros filtrados de acordo com os parâmetros.
      *
-     * @return array
+     * @return array|false
      */
     public function lista(
         $int_ref_cod_matricula = null,
@@ -484,7 +484,7 @@ class clsPmieducarDispensaDisciplina extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -504,7 +504,7 @@ class clsPmieducarDispensaDisciplina extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {
@@ -532,7 +532,7 @@ class clsPmieducarDispensaDisciplina extends Model
             is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_disciplina) &&
             is_numeric($this->ref_usuario_exc)
         ) {
-            $detalhe = $this->detalhe();
+            $this->detalhe();
             $db = new clsBanco();
             $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_disciplina = '{$this->ref_cod_disciplina}'");
 

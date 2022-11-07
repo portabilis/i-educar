@@ -104,7 +104,10 @@ return new class extends clsListagem {
 
         $this->addCabecalhos(array_filter($cabecalhos));
 
-        $this->data_nascimento = formatDateParse($this->data_nascimento);
+        $validator_date = Validator::make(request()->only('data_nascimento'), ['data_nascimento' => ['nullable', 'date_format:d/m/Y', 'after_or_equal:1990-01-01']]);
+        if ($validator_date->fails()) {
+            $this->data_nascimento = null;
+        }
         $this->cod_aluno = preg_replace('/\D/', '', $this->cod_aluno);
         $this->cod_inep = preg_replace('/\D/', '', $this->cod_inep);
         $this->nome_aluno = $this->cleanNameSearch($this->nome_aluno);
@@ -136,8 +139,6 @@ return new class extends clsListagem {
         $studentFilter = new StudentFilter(...$dataFilter);
         $students = LegacyStudent::query()->findStudentWithMultipleSearch($studentFilter);
 
-
-        /** @var LegacyStudent $registro */
         foreach ($students as $student) {
             $nomeAluno = $student->person->name;
             $nomeSocial = $student->individual->nome_social;

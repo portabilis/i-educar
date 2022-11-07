@@ -71,7 +71,7 @@ return new class extends clsListagem {
         $matricula = (new clsPmieducarMatricula())->lista($this->ref_cod_matricula);
         $detalhe_aluno = array_shift($matricula);
 
-        $det_escola = (new clsPmieducarEscola($detalhe_aluno['ref_ref_cod_escola']))->detalhe();
+        (new clsPmieducarEscola($detalhe_aluno['ref_ref_cod_escola']))->detalhe();
         $det_aluno = (new clsPmieducarAluno())->lista($detalhe_aluno['ref_cod_aluno'], null, null, null, null, null, null, null, null, null, 1);
 
         $det_aluno = array_shift($det_aluno);
@@ -128,7 +128,7 @@ return new class extends clsListagem {
                 $det_serie = $obj_serie->detalhe();
                 $registro['ref_ref_cod_serie'] = $det_serie['nm_serie'];
 
-                $det_ref_cod_tipo_ocorrencia_disciplinar = LegacyDisciplinaryOccurrenceType::find($registro['ref_cod_tipo_ocorrencia_disciplinar'])?->toArray();
+                $det_ref_cod_tipo_ocorrencia_disciplinar = LegacyDisciplinaryOccurrenceType::find($registro['ref_cod_tipo_ocorrencia_disciplinar'])?->getAttributes();
                 $registro['nm_tipo'] = $det_ref_cod_tipo_ocorrencia_disciplinar['nm_tipo'];
 
                 $obj_mat_turma = new clsPmieducarMatriculaTurma();
