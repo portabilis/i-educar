@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Religion;
+
 return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -56,29 +58,23 @@ return new class extends clsListagem {
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-        $obj_religiao = new clsPmieducarReligiao();
-        $obj_religiao->setOrderby('nm_religiao ASC');
-        $obj_religiao->setLimite($this->limite, $this->offset);
+        $query = Religion::query()->orderBy("name");
 
-        $lista = $obj_religiao->lista(
-            null,
-            null,
-            null,
-            $this->nm_religiao,
-            null,
-            null,
-            1
-        );
+        if (is_string($this->nm_religiao)) {
+            $query->where('name', 'ilike', '%' . $this->nm_religiao . '%');
+        }
 
-        $total = $obj_religiao->_total;
+        $result = $query->paginate($this->limite, pageName: 'pagina_' . $this->nome);
+
+        $lista = $result->items();
+        $total = $result->total();
 
         // monta a lista
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
                 $this->addLinhas([
-                    "<a href=\"educar_religiao_det.php?cod_religiao={$registro['cod_religiao']}\">{$registro['nm_religiao']}</a>"
+                    "<a href=\"educar_religiao_det.php?cod_religiao={$registro['id']}\">{$registro['name']}</a>"
                 ]);
             }
         }

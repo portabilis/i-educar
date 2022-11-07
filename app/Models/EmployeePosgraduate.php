@@ -26,7 +26,7 @@ class EmployeePosgraduate extends Model
     /**
      * @return BelongsTo
      */
-    public function employee()
+    public function employee(): BelongsTo
     {
         return $this->belongsTo(Employee::class, 'employee_id', 'cod_servidor');
     }

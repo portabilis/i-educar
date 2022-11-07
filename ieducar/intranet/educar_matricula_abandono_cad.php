@@ -27,8 +27,6 @@ return new class extends clsCadastro {
 
     public function Inicializar()
     {
-        $retorno = 'Novo';
-
         $this->cod_matricula=$_GET['ref_cod_matricula'];
         $this->ref_cod_aluno=$_GET['ref_cod_aluno'];
 
@@ -51,8 +49,6 @@ return new class extends clsCadastro {
         }
 
         die();
-
-        return;
     }
 
     public function Gerar()

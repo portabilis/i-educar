@@ -17,14 +17,14 @@ abstract class CoreExt_Validate_Abstract implements CoreExt_Validate_Interface
      *
      * @var mixed
      */
-    protected $_value = null;
+    protected $_value;
 
     /**
      * Valor sanitizado.
      *
      * @var mixed
      */
-    protected $_sanitized = null;
+    protected $_sanitized;
 
     /**
      * Mensagem padrão para erros de valor obrigatório.

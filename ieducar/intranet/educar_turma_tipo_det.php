@@ -21,7 +21,7 @@ return new class extends clsDetalhe {
 
         $this->cod_turma_tipo=$_GET['cod_turma_tipo'];
 
-        $registro = LegacySchoolClassType::find($this->cod_turma_tipo)->toArray();
+        $registro = LegacySchoolClassType::find($this->cod_turma_tipo)->getAttributes();
 
         if (! $registro) {
             $this->simpleRedirect('educar_turma_tipo_lst.php');

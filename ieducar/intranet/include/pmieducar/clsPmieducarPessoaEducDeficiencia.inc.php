@@ -9,7 +9,7 @@ class clsPmieducarPessoaEducDeficiencia extends Model
 
     public function __construct($ref_cod_pessoa_educ = null, $ref_cod_deficiencia = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}pessoa_educ_deficiencia";
 
@@ -65,7 +65,6 @@ class clsPmieducarPessoaEducDeficiencia extends Model
     {
         if (is_numeric($this->ref_cod_pessoa_educ) && is_numeric($this->ref_cod_deficiencia)) {
             $db = new clsBanco();
-            $gruda = '';
             $set = '';
 
             if ($set) {
@@ -81,7 +80,7 @@ class clsPmieducarPessoaEducDeficiencia extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_ref_cod_pessoa_educ = null, $int_ref_cod_deficiencia = null)
     {
@@ -132,7 +131,7 @@ class clsPmieducarPessoaEducDeficiencia extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -150,7 +149,7 @@ class clsPmieducarPessoaEducDeficiencia extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {
@@ -172,9 +171,6 @@ class clsPmieducarPessoaEducDeficiencia extends Model
      */
     public function excluir()
     {
-        if (is_numeric($this->ref_cod_pessoa_educ) && is_numeric($this->ref_cod_deficiencia)) {
-        }
-
         return false;
     }
 }

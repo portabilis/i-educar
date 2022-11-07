@@ -3,9 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LegacySchoolClassTeacher extends Model
 {
+    public const CREATED_AT = null;
+
     protected $fillable = [
         'ano',
         'instituicao_id',
@@ -20,18 +24,18 @@ class LegacySchoolClassTeacher extends Model
      */
     protected $table = 'modules.professor_turma';
 
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
-
-    public function schoolClassTeacherDisciplines()
+    public function schoolClassTeacherDisciplines(): HasMany
     {
         return $this->hasMany(LegacySchoolClassTeacherDiscipline::class, 'professor_turma_id');
     }
 
-    public function schoolClass()
+    public function schoolClass(): BelongsTo
     {
         return $this->belongsTo(LegacySchoolClass::class, 'turma_id');
+    }
+
+    public function period(): BelongsTo
+    {
+        return $this->belongsTo(LegacyPeriod::class, 'turno_id');
     }
 }

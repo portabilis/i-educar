@@ -52,7 +52,7 @@ class UserFactory extends Factory
     public function admin(): self
     {
         return $this->state(function () {
-            return User::query()->find(1)->toArray();
+            return User::query()->find(1)->getAttributes();
         });
     }
 }

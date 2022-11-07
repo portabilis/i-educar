@@ -29,7 +29,7 @@ return new class extends clsCadastro {
         $obj_permissoes->permissao_cadastra(950, $this->pessoa_logada, 7, 'educar_abandono_tipo_lst.php');
 
         if (is_numeric($this->cod_abandono_tipo)) {
-            $registro = LegacyAbandonmentType::find($this->cod_abandono_tipo)?->toArray();
+            $registro = LegacyAbandonmentType::find($this->cod_abandono_tipo)?->getAttributes();
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;

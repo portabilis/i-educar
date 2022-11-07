@@ -126,14 +126,6 @@
                                 <a href="/notificacoes" class="btn-all-notifications">Ver todas</a>
                                 <a class="btn-mark-all-read">Marcar todas como lidas (<span class="not-read-count">0</span>)</a>
                             </div>
-                            <a class="unread" target="_blank" style="background-color: #FFF8D6; color: #958F73">
-                                <p style="font-weight: normal;">
-                                    Atenção, a partir de 05/08/2022 <strong>as notificações do i-Educar ficarão disponíveis para visualização por 180 dias.</strong>
-                                </p>
-                                <p class="date-notification" style="text-align: left; color: #958F73">
-                                    Após esse período elas serão permanentemente excluídas.
-                                </p>
-                            </a>
                         </div>
                     </div>
                 </div>
