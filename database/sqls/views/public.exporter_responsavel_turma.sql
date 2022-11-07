@@ -84,15 +84,15 @@ SELECT p.id,
 
    FROM exporter_person p
 
-     JOIN aluno a ON p.id = a.ref_idpes::numeric
-     JOIN matricula m ON m.ref_cod_aluno = a.cod_aluno
+     LEFT JOIN aluno a ON p.id = a.ref_idpes::numeric
+     LEFT JOIN matricula m ON m.ref_cod_aluno = a.cod_aluno
      JOIN escola e ON e.cod_escola = m.ref_ref_cod_escola
      JOIN pessoa ep ON ep.idpes = e.ref_idpes::numeric
      JOIN serie s ON s.cod_serie = m.ref_ref_cod_serie
      JOIN curso c ON c.cod_curso = m.ref_cod_curso
      JOIN matricula_turma mt ON mt.ref_cod_matricula = m.cod_matricula
      JOIN relatorio.view_situacao vs ON vs.cod_matricula = m.cod_matricula AND vs.cod_turma = mt.ref_cod_turma AND vs.sequencial = mt.sequencial
-     LEFT JOIN turma t ON t.cod_turma = mt.ref_cod_turma
+     JOIN turma t ON t.cod_turma = mt.ref_cod_turma
      LEFT JOIN educacenso_cod_escola ece ON e.cod_escola = ece.cod_escola
      LEFT JOIN turma_turno tt ON tt.id = t.turma_turno_id
      LEFT JOIN turma_turno tm ON tm.id = mt.turno_id
