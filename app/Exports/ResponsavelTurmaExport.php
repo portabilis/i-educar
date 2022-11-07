@@ -142,7 +142,7 @@ class ResponsavelTurmaExport implements FromCollection, ShouldAutoSize, WithColu
     {
         return [
             'Nome',
-            'Responsável pôr'
+            'Responsável pôr',
             'Nascimento',
             'CPF',
             'Sexo',
