@@ -24,7 +24,7 @@
                         <a href="/enrollment-formative-itinerary/{{ $enrollment->id }}">{{ $enrollment->sequencial }}</a>
                     </td>
                     <td {!! ($loop->iteration % 2) == 1 ? 'class="formlttd"' : 'class="formmdtd"' !!} valign="top" align="left">
-                        <a href="/enrollment-formative-itinerary/{{ $enrollment->id }}">{{ $enrollment->schoolClass->getNameAttribute() }}</a>
+                        <a href="/enrollment-formative-itinerary/{{ $enrollment->id }}">{{ $enrollment->schoolClass->name }}</a>
                     </td>
                     <td {!! ($loop->iteration % 2) == 1 ? 'class="formlttd"' : 'class="formmdtd"' !!} valign="top" align="left">
                         <a href="/enrollment-formative-itinerary/{{ $enrollment->id }}">{{ $enrollment->ativo ? 'Sim' : 'Não'}}</a>

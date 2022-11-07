@@ -24,7 +24,7 @@ class clsModulesPessoaTransporte extends Model
         $observacao = null,
         $turno = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}pessoa_transporte";
 
@@ -36,7 +36,7 @@ class clsModulesPessoaTransporte extends Model
         }
 
         if (is_numeric($ref_cod_rota_transporte_escolar)) {
-            $this->ref_idpes = $ref_idpes;
+            $this->ref_cod_rota_transporte_escolar = $ref_cod_rota_transporte_escolar;
         }
 
         if (is_numeric($ref_idpes)) {
@@ -121,7 +121,7 @@ class clsModulesPessoaTransporte extends Model
             $this->cod_pessoa_transporte = $db->InsertId("{$this->_tabela}_seq");
 
             if ($this->cod_pessoa_transporte) {
-                $detalhe = $this->detalhe();
+                $this->detalhe();
             }
 
             return $this->cod_pessoa_transporte;
@@ -180,7 +180,7 @@ class clsModulesPessoaTransporte extends Model
             }
 
             if ($set) {
-                $detalheAntigo = $this->detalhe();
+                $this->detalhe();
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_pessoa_transporte = '{$this->cod_pessoa_transporte}'");
 
                 return true;
@@ -193,7 +193,7 @@ class clsModulesPessoaTransporte extends Model
     /**
      * Retorna uma lista de registros filtrados de acordo com os parâmetros.
      *
-     * @return array
+     * @return array|false
      */
     public function lista(
         $cod_pessoa_transporte = null,
@@ -320,7 +320,7 @@ class clsModulesPessoaTransporte extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -381,7 +381,7 @@ class clsModulesPessoaTransporte extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {
@@ -404,7 +404,7 @@ class clsModulesPessoaTransporte extends Model
     public function excluir()
     {
         if (is_numeric($this->cod_pessoa_transporte)) {
-            $detalhe = $this->detalhe();
+            $this->detalhe();
 
             $sql = "DELETE FROM {$this->_tabela} WHERE cod_pessoa_transporte = '{$this->cod_pessoa_transporte}'";
             $db = new clsBanco();

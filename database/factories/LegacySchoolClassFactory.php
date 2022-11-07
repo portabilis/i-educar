@@ -43,6 +43,7 @@ class LegacySchoolClassFactory extends Factory
             'dias_semana' => [2, 3, 4, 5, 6],
             'ano' => now()->year,
             'visivel' => true,
+            'ativo' => 1
         ];
     }
 

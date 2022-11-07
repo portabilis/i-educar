@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LegacyPeriod extends Model
 {
@@ -15,7 +17,8 @@ class LegacyPeriod extends Model
      * @var array
      */
     protected $fillable = [
-        'nome', 'ativo',
+        'nome',
+        'ativo',
     ];
 
     /**
@@ -23,11 +26,20 @@ class LegacyPeriod extends Model
      */
     public $timestamps = false;
 
-    /**
-     * @return string
-     */
-    public function getNameAttribute()
+    protected function name(): Attribute
     {
-        return $this->nome;
+        return Attribute::make(
+            get: fn () => $this->nome
+        );
+    }
+
+    public function schoolClass(): HasMany
+    {
+        return $this->hasMany(LegacySchoolClass::class, 'turma_turno_id');
+    }
+
+    public function schoolClassTeacher(): HasMany
+    {
+        return $this->hasMany(LegacySchoolClassTeacher::class, 'turno_id');
     }
 }

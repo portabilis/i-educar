@@ -70,7 +70,7 @@ class ResourceTestCase extends TestCase
             'data' => $model->toArray(),
         ]);
 
-        $this->assertDatabaseHas($this->model, $model->toArray());
+        $this->assertDatabaseHas($this->model, $model->getAttributes());
 
         return $response;
     }
@@ -106,8 +106,8 @@ class ResourceTestCase extends TestCase
             'data' => $updatedModel->toArray(),
         ]);
 
-        $this->assertDatabaseMissing($this->model, $model->toArray());
-        $this->assertDatabaseHas($this->model, $updatedModel->toArray());
+        $this->assertDatabaseMissing($this->model, $model->getAttributes());
+        $this->assertDatabaseHas($this->model, $updatedModel->getAttributes());
 
         return $response;
     }
@@ -125,7 +125,7 @@ class ResourceTestCase extends TestCase
             'data' => $model->toArray(),
         ]);
 
-        $this->assertDatabaseMissing($this->model, $model->toArray());
+        $this->assertDatabaseMissing($this->model, $model->getAttributes());
 
         return $response;
     }

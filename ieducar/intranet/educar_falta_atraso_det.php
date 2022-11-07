@@ -52,7 +52,6 @@ return new class extends clsDetalhe {
                  </tr>';
 
             $cont  = 0;
-            $total = 0;
             $corpo = '';
 
             foreach ($registro as $falta) {

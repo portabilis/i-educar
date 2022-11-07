@@ -9,7 +9,6 @@ class clsPmieducarEscola extends Model
     public $ref_usuario_exc;
     public $ref_cod_instituicao;
     public $zona_localizacao;
-    public $ref_cod_escola_rede_ensino;
     public $ref_idpes;
     public $sigla;
     public $data_cadastro;
@@ -178,7 +177,6 @@ class clsPmieducarEscola extends Model
         $ref_usuario_exc = null,
         $ref_cod_instituicao = null,
         $zona_localizacao = null,
-        $ref_cod_escola_rede_ensino = null,
         $ref_idpes = null,
         $sigla = null,
         $data_cadastro = null,
@@ -187,11 +185,11 @@ class clsPmieducarEscola extends Model
         $bloquear_lancamento_diario_anos_letivos_encerrados = null,
         $utiliza_regra_diferenciada = false
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'escola';
 
-        $this->_campos_lista = $this->_todos_campos = 'e.cod_escola, e.ref_usuario_cad, e.ref_usuario_exc, e.ref_cod_instituicao, e.zona_localizacao, e.ref_cod_escola_rede_ensino, e.ref_idpes, e.sigla, e.data_cadastro,
+        $this->_campos_lista = $this->_todos_campos = 'e.cod_escola, e.ref_usuario_cad, e.ref_usuario_exc, e.ref_cod_instituicao, e.zona_localizacao, e.ref_idpes, e.sigla, e.data_cadastro,
             e.data_exclusao, e.ativo, e.bloquear_lancamento_diario_anos_letivos_encerrados, e.situacao_funcionamento, e.dependencia_administrativa, e.latitude, e.longitude, e.regulamentacao, e.acesso, e.cargo_gestor, e.ref_idpes_gestor,
             e.condicao, e.predio_compartilhado_outra_escola, e.decreto_criacao, e.agua_potavel_consumo, e.abastecimento_agua, e.abastecimento_energia, e.esgoto_sanitario, e.destinacao_lixo, e.tratamento_lixo,
             e.alimentacao_escolar_alunos, e.compartilha_espacos_atividades_integracao, e.usa_espacos_equipamentos_atividades_regulares,
@@ -284,10 +282,6 @@ class clsPmieducarEscola extends Model
             $this->zona_localizacao = $zona_localizacao;
         }
 
-        if (is_numeric($ref_cod_escola_rede_ensino)) {
-            $this->ref_cod_escola_rede_ensino = $ref_cod_escola_rede_ensino;
-        }
-
         if (is_numeric($ref_idpes)) {
             $this->ref_idpes = $ref_idpes;
         }
@@ -325,7 +319,7 @@ class clsPmieducarEscola extends Model
     {
         if (is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_instituicao) &&
             is_numeric($this->zona_localizacao) &&
-            is_numeric($this->ref_cod_escola_rede_ensino) && is_string($this->sigla)
+            is_string($this->sigla)
         ) {
             $db = new clsBanco();
 
@@ -354,12 +348,6 @@ class clsPmieducarEscola extends Model
             if (is_numeric($this->zona_localizacao)) {
                 $campos .= "{$gruda}zona_localizacao";
                 $valores .= "{$gruda}{$this->zona_localizacao}";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->ref_cod_escola_rede_ensino)) {
-                $campos .= "{$gruda}ref_cod_escola_rede_ensino";
-                $valores .= "{$gruda}'{$this->ref_cod_escola_rede_ensino}'";
                 $gruda = ', ';
             }
 
@@ -1325,11 +1313,10 @@ class clsPmieducarEscola extends Model
             }
 
             $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
-            $recordId = $db->InsertId("{$this->_tabela}_cod_escola_seq");
 
-            return $recordId;
+            return $db->InsertId("{$this->_tabela}_cod_escola_seq");
         } else {
-            echo "<Hbr><br>is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_instituicao) && is_numeric($this->zona_localizacao) && is_numeric($this->ref_cod_escola_rede_ensino) && is_string($this->sigla )";
+            echo "<Hbr><br>is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_instituicao) && is_numeric($this->zona_localizacao) && is_string($this->sigla )";
         }
 
         return false;
@@ -1364,11 +1351,6 @@ class clsPmieducarEscola extends Model
 
             if (is_numeric($this->zona_localizacao)) {
                 $set .= "{$gruda}zona_localizacao = '{$this->zona_localizacao}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->ref_cod_escola_rede_ensino)) {
-                $set .= "{$gruda}ref_cod_escola_rede_ensino = '{$this->ref_cod_escola_rede_ensino}'";
                 $gruda = ', ';
             }
 
@@ -2547,7 +2529,7 @@ class clsPmieducarEscola extends Model
     /**
      * Retorna uma lista de registros filtrados de acordo com os parâmetros.
      *
-     * @return array
+     * @return array|false
      */
     public function lista(
         $int_cod_escola = null,
@@ -2555,7 +2537,6 @@ class clsPmieducarEscola extends Model
         $int_ref_usuario_exc = null,
         $int_ref_cod_instituicao = null,
         $zona_localizacao = null,
-        $int_ref_cod_escola_rede_ensino = null,
         $int_ref_idpes = null,
         $str_sigla = null,
         $date_data_cadastro = null,
@@ -2613,11 +2594,6 @@ class clsPmieducarEscola extends Model
             $whereAnd = ' AND ';
         }
 
-        if (is_numeric($int_ref_cod_escola_rede_ensino)) {
-            $filtros .= "{$whereAnd} ref_cod_escola_rede_ensino = '{$int_ref_cod_escola_rede_ensino}'";
-            $whereAnd = ' AND ';
-        }
-
         if (is_numeric($int_ref_idpes)) {
             $filtros .= "{$whereAnd} ref_idpes = '{$int_ref_idpes}'";
             $whereAnd = ' AND ';
@@ -2625,29 +2601,6 @@ class clsPmieducarEscola extends Model
 
         if (is_string($str_sigla)) {
             $filtros .= "{$whereAnd} sigla LIKE '%{$str_sigla}%'";
-            $whereAnd = ' AND ';
-        }
-
-        if (isset($date_data_cadastro_ini) && is_string($date_data_cadastro_ini)) {
-            $filtros .= "{$whereAnd} data_cadastro >= '{$date_data_cadastro_ini}'";
-            $whereAnd = ' AND ';
-        }
-
-        //todo Remover variável inexistente
-        if (isset($date_data_cadastro_fim) && is_string($date_data_cadastro_fim)) {
-            $filtros .= "{$whereAnd} data_cadastro <= '{$date_data_cadastro_fim}'";
-            $whereAnd = ' AND ';
-        }
-
-        //todo Remover variável inexistente
-        if (isset($date_data_exclusao_ini) && is_string($date_data_exclusao_ini)) {
-            $filtros .= "{$whereAnd} data_exclusao >= '{$date_data_exclusao_ini}'";
-            $whereAnd = ' AND ';
-        }
-
-        //todo Remover variável inexistente
-        if (isset($date_data_exclusao_fim) && is_string($date_data_exclusao_fim)) {
-            $filtros .= "{$whereAnd} data_exclusao <= '{$date_data_exclusao_fim}'";
             $whereAnd = ' AND ';
         }
 
@@ -2777,7 +2730,7 @@ class clsPmieducarEscola extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -2811,7 +2764,7 @@ class clsPmieducarEscola extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

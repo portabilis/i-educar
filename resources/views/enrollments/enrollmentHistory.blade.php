@@ -15,7 +15,7 @@
             <tbody>
                 <tr>
                     <td>Escola:</td>
-                    <td>{{ $registration->school->getNameAttribute() ?? null }}</td>
+                    <td>{{ $registration->school->name ?? null }}</td>
                 </tr>
                 <tr>
                     <td>Nome do aluno:</td>
@@ -27,7 +27,7 @@
                 </tr>
                 <tr>
                     <td>Situação:</td>
-                    <td>{{ $registration->getStatusDescriptionAttribute() ?? null }}</td>
+                    <td>{{ $registration->status_description ?? null }}</td>
                 </tr>
                 <tr>
                     <td>Data saída:</td>
@@ -66,10 +66,10 @@
                         <a href="/intranet/educar_matricula_historico_cad.php?ref_cod_matricula={{ $registration->id }}&ref_cod_turma={{ $enrollment->schoolClass->id }}&sequencial={{ $enrollment->sequencial }}">{{ $enrollment->sequencial }}</a>
                     </td>
                     <td {!! ($loop->iteration % 2) == 1 ? 'class="formlttd"' : 'class="formmdtd"' !!} valign="top" align="left">
-                        <a href="/intranet/educar_matricula_historico_cad.php?ref_cod_matricula={{ $registration->id }}&ref_cod_turma={{ $enrollment->schoolClass->id }}&sequencial={{ $enrollment->sequencial }}">{{ $enrollment->schoolClass->getNameAttribute() }}</a>
+                        <a href="/intranet/educar_matricula_historico_cad.php?ref_cod_matricula={{ $registration->id }}&ref_cod_turma={{ $enrollment->schoolClass->id }}&sequencial={{ $enrollment->sequencial }}">{{ $enrollment->schoolClass->name }}</a>
                     </td>
                     <td {!! ($loop->iteration % 2) == 1 ? 'class="formlttd"' : 'class="formmdtd"' !!} valign="top" align="left">
-                        <a href="/intranet/educar_matricula_historico_cad.php?ref_cod_matricula={{ $registration->id }}&ref_cod_turma={{ $enrollment->schoolClass->id }}&sequencial={{ $enrollment->sequencial }}">{{ $enrollment->period->getNameAttribute() }}</a>
+                        <a href="/intranet/educar_matricula_historico_cad.php?ref_cod_matricula={{ $registration->id }}&ref_cod_turma={{ $enrollment->schoolClass->id }}&sequencial={{ $enrollment->sequencial }}">{{ $enrollment->period->name }}</a>
                     </td>
                     <td {!! ($loop->iteration % 2) == 1 ? 'class="formlttd"' : 'class="formmdtd"' !!} valign="top" align="left">
                         <a href="/intranet/educar_matricula_historico_cad.php?ref_cod_matricula={{ $registration->id }}&ref_cod_turma={{ $enrollment->schoolClass->id }}&sequencial={{ $enrollment->sequencial }}">{{ $enrollment->ativo ? 'Sim' : 'Não'}}</a>

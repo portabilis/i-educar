@@ -6,6 +6,7 @@ use App\Models\LegacyBenefit;
 use App\Models\LegacyProject;
 use App\Models\LegacyStudent;
 use App\Models\PersonHasPlace;
+use App\Models\Religion;
 use App\Models\TransportationProvider;
 use App\Services\UrlPresigner;
 use iEducar\Modules\Educacenso\Model\Nacionalidade;
@@ -406,10 +407,11 @@ return new class extends clsDetalhe {
         }
 
         if ($det_fisica['ref_cod_religiao']) {
-            $obj_religiao = new clsPmieducarReligiao($det_fisica['ref_cod_religiao']);
-            $obj_religiao_det = $obj_religiao->detalhe();
+            $nm_religiao = Religion::query()
+                    ->where('id', $det_fisica['ref_cod_religiao'])
+                    ->value('name');
 
-            $this->addDetalhe(['Religião', $obj_religiao_det['nm_religiao']]);
+            $this->addDetalhe(['Religião', $nm_religiao]);
         }
 
         if ($det_raca['nm_raca']) {
@@ -439,7 +441,7 @@ return new class extends clsDetalhe {
             $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#ccdce6" align="center"><td>Deficiências</td></tr>';
             $cor = '#D1DADF';
 
-            foreach ($deficiencia_pessoa as $indice => $valor) {
+            foreach ($deficiencia_pessoa as $valor) {
                 $cor = $cor == '#D1DADF' ? '#f5f9fd' : '#D1DADF';
 
                 $tabela .= sprintf(
@@ -861,7 +863,7 @@ return new class extends clsDetalhe {
         $reg = LegacyProject::query()->where('pmieducar.projeto_aluno.ref_cod_aluno', $this->cod_aluno)
             ->join('pmieducar.projeto_aluno', 'pmieducar.projeto_aluno.ref_cod_projeto', '=', 'pmieducar.projeto.cod_projeto')
             ->orderBy('nome', 'ASC')
-            ->get()->toArray();
+            ->get();
 
         if (!empty($reg)) {
             $tabela_projetos = '
@@ -880,7 +882,7 @@ return new class extends clsDetalhe {
                 $color = ($cont++ % 2 == 0) ? ' bgcolor="#f5f9fd" ' : ' bgcolor="#FFFFFF" ';
                 $turno = '';
 
-                switch ($projeto['turno']) {
+                switch ($projeto->turno) {
                     case 1:
                         $turno = 'Matutino';
                         break;
@@ -901,11 +903,11 @@ return new class extends clsDetalhe {
                         <td %s align="center">%s</td>
                     </tr>',
                     $color,
-                    $projeto['nome'],
+                    $projeto->nome,
                     $color,
-                    dataToBrasil($projeto['data_inclusao']),
+                    dataToBrasil($projeto->data_inclusao),
                     $color,
-                    dataToBrasil($projeto['data_desligamento']),
+                    dataToBrasil($projeto->data_desligamento),
                     $color,
                     $turno
                 );

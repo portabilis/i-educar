@@ -3,21 +3,21 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Religion extends Model
 {
     use SoftDeletes;
 
-    protected $dates = ['deleted_at'];
+    protected $table = 'pmieducar.religions';
 
-    public function createdBy()
-    {
-        return $this->belongsTo(Individual::class, 'created_by', 'id');
-    }
+    protected $fillable = [
+        'name'
+    ];
 
-    public function deletedBy()
+    public function individual(): HasMany
     {
-        return $this->belongsTo(Individual::class, 'deleted_by', 'id');
+        return $this->hasMany(LegacyIndividual::class, 'ref_cod_religiao');
     }
 }

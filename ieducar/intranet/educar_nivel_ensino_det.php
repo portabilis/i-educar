@@ -26,7 +26,7 @@ return new class extends clsDetalhe {
 
         $this->cod_nivel_ensino = $_GET['cod_nivel_ensino'];
 
-        $registro = LegacyEducationLevel::find($this->cod_nivel_ensino)?->toArray();
+        $registro = LegacyEducationLevel::find($this->cod_nivel_ensino)?->getAttributes();
 
         if (!$registro) {
             $this->simpleRedirect('educar_nivel_ensino_lst.php');

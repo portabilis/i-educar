@@ -38,70 +38,80 @@ return new class extends clsListagem {
             $this->$key = $value;
         }
 
-        if ($parametros->getPessoa() == 'F' || $parametros->getPessoa() == '') {
+
+        if ($parametros->getPessoa() == null || $parametros->getPessoa() == 'F' || $parametros->getPessoa() == '') {
+
             $this->addCabecalhos(['CPF', 'Nome']);
 
             // Filtros de Busca
             $this->campoTexto('campo_busca', 'Pessoa', $this->campo_busca, 35, 255, false, false, false, 'Código/Nome');
-            $this->campoCpf('cpf', 'CPF', !empty($this->cpf) ? int2CPF(idFederal2int($this->cpf)) : '');
 
-            $chave_busca = @$_GET['campo_busca'];
-            $cpf = @$_GET['cpf'];
-            $busca = @$_GET['busca'];
+            if ($this->cpf == null || validaCPF($this->cpf)) {
+                $this->campoCpf('cpf', 'CPF', !empty($this->cpf) ? int2CPF(idFederal2int($this->cpf)) : '');
 
-            // Paginador
-            $limite      = 10;
-            $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite - $limite: 0;
+                if (!empty(request('campo_busca'))) {
+                    $chave_busca = request('campo_busca');
+                    $cpf = request('cpf', '');
+                    $busca = request('busca', '');
+                }
 
-            if (is_numeric($this->chave_campo)) {
-                $chave = "[$this->chave_campo]";
-            } else {
-                $chave = '';
-            }
+                // Paginador
+                $limite      = 10;
+                $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite - $limite: 0;
 
-            if ($busca == 'S') {
-                if (is_numeric($chave_busca)) {
-                    $obj_pessoa = new clsPessoaFisica();
-                    $lst_pessoa = $obj_pessoa->lista(null, (($cpf) ? idFederal2int($cpf) : null), $iniciolimit, $limite, false, $parametros->getCodSistema(), $chave_busca);
+                if (is_numeric($this->chave_campo)) {
+                    $chave = "[$this->chave_campo]";
+                } else {
+                    $chave = '';
+                }
+
+                if ($busca == 'S') {
+
+                    if (is_numeric($chave_busca)) {
+                        $obj_pessoa = new clsPessoaFisica();
+                        $lst_pessoa = $obj_pessoa->lista(null, (($cpf) ? idFederal2int($cpf) : null), $iniciolimit, $limite, false, $parametros->getCodSistema(), $chave_busca);
+                    } else {
+                        $obj_pessoa = new clsPessoaFisica();
+                        $lst_pessoa = $obj_pessoa->lista($chave_busca, (($cpf) ? idFederal2int($cpf) : null), $iniciolimit, $limite, false, $parametros->getCodSistema());
+                    }
                 } else {
                     $obj_pessoa = new clsPessoaFisica();
-                    $lst_pessoa = $obj_pessoa->lista($chave_busca, (($cpf) ? idFederal2int($cpf) : null), $iniciolimit, $limite, false, $parametros->getCodSistema());
+                    $lst_pessoa = $obj_pessoa->lista(null, null, $iniciolimit, $limite, false, $parametros->getCodSistema());
                 }
-            } else {
-                $obj_pessoa = new clsPessoaFisica();
-                $lst_pessoa = $obj_pessoa->lista(null, null, $iniciolimit, $limite, false, $parametros->getCodSistema());
-            }
 
-            if ($lst_pessoa) {
-                foreach ($lst_pessoa as $pessoa) {
-                    $funcao = ' set_campo_pesquisa(';
-                    $virgula = '';
-                    $cont = 0;
-                    $pessoa['cpf'] = (is_numeric($pessoa['cpf'])) ? int2CPF($pessoa['cpf']) : null;
+                if ($lst_pessoa) {
+                    foreach ($lst_pessoa as $pessoa) {
+                        $funcao = ' set_campo_pesquisa(';
+                        $virgula = '';
+                        $cont = 0;
+                        $pessoa['cpf'] = (is_numeric($pessoa['cpf'])) ? int2CPF($pessoa['cpf']) : null;
 
-                    foreach ($parametros->getCampoNome() as $campo) {
-                        if ($parametros->getCampoTipo($cont) == 'text') {
-                            $campoTexto = addslashes($pessoa[$parametros->getCampoValor($cont)]);
-                            $funcao .= "{$virgula} '{$campo}{$chave}', '{$campoTexto}'";
-                            $virgula = ',';
-                        } elseif ($parametros->getCampoTipo($cont) == 'select') {
-                            $campoTexto = addslashes($pessoa[$parametros->getCampoValor($cont)]);
-                            $funcao .= "{$virgula} '{$campo}{$chave}', '{$pessoa[$parametros->getCampoIndice($cont)]}', '{$campoTexto}'";
-                            $virgula = ',';
+                        foreach ($parametros->getCampoNome() as $campo) {
+                            if ($parametros->getCampoTipo($cont) == 'text') {
+                                $campoTexto = addslashes($pessoa[$parametros->getCampoValor($cont)]);
+                                $funcao .= "{$virgula} '{$campo}{$chave}', '{$campoTexto}'";
+                                $virgula = ',';
+                            } elseif ($parametros->getCampoTipo($cont) == 'select') {
+                                $campoTexto = addslashes($pessoa[$parametros->getCampoValor($cont)]);
+                                $funcao .= "{$virgula} '{$campo}{$chave}', '{$pessoa[$parametros->getCampoIndice($cont)]}', '{$campoTexto}'";
+                                $virgula = ',';
+                            }
+                            $cont++;
                         }
-                        $cont++;
-                    }
-                    if ($parametros->getSubmit()) {
-                        $funcao .= "{$virgula} 'submit' )";
-                    } else {
-                        $funcao .= ' )';
-                    }
+                        if ($parametros->getSubmit()) {
+                            $funcao .= "{$virgula} 'submit' )";
+                        } else {
+                            $funcao .= ' )';
+                        }
 
-                    $this->addLinhas([ "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['cpf']}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['nome']}</a>" ]);
-                    $total = $pessoa['total'];
+                        $this->addLinhas([ "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['cpf']}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa['nome']}</a>" ]);
+                        $total = $pessoa['total'];
+                    }
+                } else {
+                    $this->addLinhas([ 'Não existe nenhum resultado a ser apresentado.' ]);
                 }
             } else {
-                $this->addLinhas([ 'Não existe nenhum resultado a ser apresentado.' ]);
+                $this->addLinhas([ 'Informado um CPF Inválido' ]);
             }
         } elseif ($parametros->getPessoa() == 'J') {
             $this->addCabecalhos([ 'CNPJ', 'Nome' ]);
