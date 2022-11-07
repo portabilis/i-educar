@@ -5,7 +5,7 @@ on:
     branches:
       - 2.*
       - main
-      
+
   pull_request:
 
 permissions:
@@ -16,7 +16,7 @@ jobs:
 
     name: Unit, Integration and Pages
 
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     env:
       APP_URL: http://localhost:8000
