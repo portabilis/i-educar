@@ -36,6 +36,14 @@ class Registration extends Model
     {
         return $this->belongsTo(Student::class);
     }
+    
+        /**
+     * @return BelongsTo
+     */
+    public function responsavelturma()
+    {
+        return $this->belongsTo(ResponsavelTurma::class);
+    }
 
     /**
      * @return string
