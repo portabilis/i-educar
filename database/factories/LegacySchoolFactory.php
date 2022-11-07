@@ -14,7 +14,6 @@ class LegacySchoolFactory extends Factory
         return [
             'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
             'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
-            'ref_cod_escola_rede_ensino' => LegacyEducationNetworkFactory::new()->create(),
             'sigla' => $this->faker->asciify(),
             'data_cadastro' => now(),
             'ref_idpes' => LegacyOrganizationFactory::new()->create(),

@@ -21,7 +21,7 @@ return new class extends clsDetalhe {
 
         $this->cod_tipo_dispensa=$_GET['cod_tipo_dispensa'];
 
-        $registro = LegacyExemptionType::find($this->cod_tipo_dispensa)?->toArray();
+        $registro = LegacyExemptionType::find($this->cod_tipo_dispensa)?->getAttributes();
         if (! $registro) {
             $this->simpleRedirect('educar_tipo_dispensa_lst.php');
         }

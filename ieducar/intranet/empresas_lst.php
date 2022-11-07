@@ -14,8 +14,6 @@ return new class extends clsListagem {
         // Paginador
         $limite = 10;
         $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$limite-$limite: 0;
-
-        $par_nome = false;
         $par_razao = false;
         $par_cnpj = false;
         $opcoes = false;

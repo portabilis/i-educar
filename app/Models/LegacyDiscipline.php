@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class LegacyDiscipline extends Model
+class LegacyDiscipline extends LegacyModel
 {
     /**
      * @var string
@@ -21,7 +21,24 @@ class LegacyDiscipline extends Model
      * @var array
      */
     protected $fillable = [
-        'instituicao_id', 'area_conhecimento_id', 'nome', 'abreviatura', 'tipo_base', 'ordenamento', 'codigo_educacenso', 'desconsidera_para_progressao'
+        'instituicao_id',
+        'area_conhecimento_id',
+        'nome',
+        'abreviatura',
+        'tipo_base',
+        'ordenamento',
+        'codigo_educacenso',
+        'desconsidera_para_progressao'
+    ];
+
+    public array $legacy = [
+        'institution_id' => 'instituicao_id',
+        'knowledge_area_id' => 'area_conhecimento_id',
+        'name' => 'nome',
+        'abbreviation' => 'abreviatura',
+        'foundation_type' => 'tipo_base',
+        'order' => 'ordenamento',
+        'educacenso_code' => 'codigo_educacenso',
     ];
 
     /**
@@ -29,39 +46,53 @@ class LegacyDiscipline extends Model
      */
     public $timestamps = false;
 
-    public function getInstitutionIdAttribute()
+    protected function institutionId(): Attribute
     {
-        return $this->instituicao_id;
+        return Attribute::make(
+            get: fn () => $this->instituicao_id,
+        );
     }
 
-    public function getKnowledgeAreaIdAttribute()
+    protected function knowledgeAreaId(): Attribute
     {
-        return $this->area_conhecimento_id;
+        return Attribute::make(
+            get: fn () => $this->area_conhecimento_id,
+        );
     }
 
-    public function getNameAttribute()
+    protected function name(): Attribute
     {
-        return $this->nome;
+        return Attribute::make(
+            get: fn () => $this->nome,
+        );
     }
 
-    public function getAbbreviationAttribute()
+    protected function abbreviation(): Attribute
     {
-        return $this->abreviatura;
+        return Attribute::make(
+            get: fn () => $this->abreviatura,
+        );
     }
 
-    public function getFoundationTypeAttribute()
+    protected function foundationType(): Attribute
     {
-        return $this->tipo_base;
+        return Attribute::make(
+            get: fn () => $this->tipo_base,
+        );
     }
 
-    public function getOrderAttribute()
+    protected function order(): Attribute
     {
-        return $this->ordenamento;
+        return Attribute::make(
+            get: fn () => $this->ordenamento,
+        );
     }
 
-    public function getEducacensoCodeAttribute()
+    protected function educacensoCode(): Attribute
     {
-        return $this->codigo_educacenso;
+        return Attribute::make(
+            get: fn () => $this->codigo_educacenso,
+        );
     }
 
     /**

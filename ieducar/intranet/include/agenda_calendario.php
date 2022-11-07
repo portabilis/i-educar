@@ -133,8 +133,6 @@ class calendario
                 $comeco = false;
             }
             $d = date('d', $data);
-            $m = date('m', $data);
-            $Y = date('Y', $data);
             $classe = ($aux <= 0 || $aux > $this->ultimo_dia + 2) ? 'calendario_outromes' : 'calendario_dias';
             if ($data <= $this->time && $data + 86400 > $this->time) {
                 $classe = 'calendario_dia_sel';
@@ -151,9 +149,8 @@ class calendario
         foreach ($this->meses_dias as $mes => $dias) {
             $retorno .= "\n$mes => $dias";
         }
-        $retorno .= "\n-->";
 
-        return $retorno;
+        return $retorno . "\n-->";
     }
 
     public function print_calendario()

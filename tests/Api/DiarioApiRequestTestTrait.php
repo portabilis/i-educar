@@ -4,11 +4,15 @@ namespace Tests\Api;
 
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyEnrollment;
-use Database\Factories\UserFactory;
+use Database\Factories\LegacyUserFactory;
 use Illuminate\Foundation\Testing\TestResponse;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Testing\TestResponse as TestResponseResource;
 
 trait DiarioApiRequestTestTrait
 {
+    use WithoutMiddleware;
+
     /**
      * @param LegacyEnrollment $enrollment
      * @param                  $disciplineId
@@ -42,7 +46,7 @@ trait DiarioApiRequestTestTrait
 
         $_GET = $data;
 
-        $user = UserFactory::new()->admin()->make();
+        $user = LegacyUserFactory::new()->admin()->make();
 
         /** @var TestResponse $response */
         $response = $this->actingAs($user)->get('/module/Avaliacao/diarioApi?' . http_build_query($data));
@@ -80,7 +84,7 @@ trait DiarioApiRequestTestTrait
 
         $_GET = $data;
 
-        $user = UserFactory::new()->admin()->make();
+        $user = LegacyUserFactory::new()->admin()->make();
 
         /** @var TestResponse $response */
         $response = $this->actingAs($user)->get('/module/Avaliacao/diarioApi?' . http_build_query($data));
@@ -112,7 +116,7 @@ trait DiarioApiRequestTestTrait
 
         $_GET = $data;
 
-        $user = UserFactory::new()->admin()->make();
+        $user = LegacyUserFactory::new()->admin()->make();
 
         /** @var TestResponse $response */
         $response = $this->actingAs($user)->get('/module/Avaliacao/diarioApi?' . http_build_query($data));
@@ -144,7 +148,7 @@ trait DiarioApiRequestTestTrait
 
         $_GET = $data;
 
-        $user = UserFactory::new()->admin()->make();
+        $user = LegacyUserFactory::new()->admin()->make();
 
         /** @var TestResponse $response */
         $response = $this->actingAs($user)->get('/module/Avaliacao/diarioApi?' . http_build_query($data));
@@ -197,5 +201,20 @@ trait DiarioApiRequestTestTrait
         }
 
         return $response;
+    }
+
+    public function getResource($uri, $params): TestResponseResource
+    {
+        $data = [
+            'access_key' => config('legacy.apis.access_key'),
+            'secret_key' => config('legacy.apis.secret_key'),
+        ];
+
+        $data = array_merge($data, $params);
+        $_GET = $data;
+
+        $user = LegacyUserFactory::new()->admin()->make();
+
+        return $this->actingAs($user)->get($uri . '?' . http_build_query($data));
     }
 }

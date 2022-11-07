@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Models\Builders\LegacyEvaluationRuleBuilder;
 use App\Traits\LegacyAttribute;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -32,11 +32,6 @@ class LegacyEvaluationRule extends Model
     protected $table = 'modules.regra_avaliacao';
 
     /**
-     * @var string
-     */
-    protected $primaryKey = 'id';
-
-    /**
      * @var array
      */
     protected $casts = [
@@ -48,14 +43,14 @@ class LegacyEvaluationRule extends Model
      *
      * @var string
      */
-    protected $builder = LegacyEvaluationRuleBuilder::class;
+    protected string $builder = LegacyEvaluationRuleBuilder::class;
 
     /**
      * Atributos legados para serem usados nas queries
      *
      * @var string[]
      */
-    public $legacy = [
+    public array $legacy = [
         'name' => 'nome'
     ];
 
@@ -63,7 +58,13 @@ class LegacyEvaluationRule extends Model
      * @var array
      */
     protected $fillable = [
-        'instituicao_id', 'nome', 'formula_media_id', 'formula_recuperacao_id', 'tipo_nota', 'tipo_progressao', 'tipo_presenca',
+        'instituicao_id',
+        'nome',
+        'formula_media_id',
+        'formula_recuperacao_id',
+        'tipo_nota',
+        'tipo_progressao',
+        'tipo_presenca',
     ];
 
     /**
@@ -84,7 +85,7 @@ class LegacyEvaluationRule extends Model
      */
     public function roundingTable()
     {
-        return $this->hasOne(LegacyRoundingTable::class, 'id', 'tabela_arredondamento_id');
+        return $this->belongsTo(LegacyRoundingTable::class, 'tabela_arredondamento_id');
     }
 
     /**
@@ -92,7 +93,7 @@ class LegacyEvaluationRule extends Model
      */
     public function conceptualRoundingTable()
     {
-        return $this->hasOne(LegacyRoundingTable::class, 'id', 'tabela_arredondamento_id_conceitual');
+        return $this->belongsTo(LegacyRoundingTable::class, 'tabela_arredondamento_id_conceitual');
     }
 
     /**
@@ -100,7 +101,15 @@ class LegacyEvaluationRule extends Model
      */
     public function deficiencyEvaluationRule()
     {
-        return $this->hasOne(LegacyEvaluationRule::class, 'id', 'regra_diferenciada_id');
+        return $this->belongsTo(__CLASS__, 'regra_diferenciada_id');
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function deficiencyEvaluationRules()
+    {
+        return $this->hasMany(__CLASS__, 'regra_diferenciada_id');
     }
 
     /**
@@ -137,11 +146,10 @@ class LegacyEvaluationRule extends Model
         return $this->nota_geral_por_etapa == 1;
     }
 
-    /**
-     * @return string
-     */
-    public function getNameAttribute()
+    protected function name(): Attribute
     {
-        return $this->nome;
+        return Attribute::make(
+            get: fn () => $this->nome,
+        );
     }
 }

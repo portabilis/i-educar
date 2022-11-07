@@ -137,7 +137,6 @@ return new class extends clsListagem {
                     case 'mat_final_f':
                     case 'mat_final_t':
                         continue;
-                        break;
                     default:
                         $paramsCopy = $params;
                         $paramsCopy['serie'] = $value['cod_serie'];

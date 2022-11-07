@@ -76,7 +76,6 @@ class clsPmieducarServidorDisciplina extends Model
             is_numeric($this->ref_cod_curso)
         ) {
             $db = new clsBanco();
-            $gruda = '';
             $set = '';
 
             if ($set) {
@@ -186,7 +185,6 @@ class clsPmieducarServidorDisciplina extends Model
     }
 
     /**
-     * @return bool
      * @throws Exception
      */
     public function existe(): bool
@@ -217,13 +215,6 @@ class clsPmieducarServidorDisciplina extends Model
      */
     public function excluir()
     {
-        if (is_numeric($this->ref_cod_disciplina) &&
-            is_numeric($this->ref_ref_cod_instituicao) &&
-            is_numeric($this->ref_cod_servidor) &&
-            is_numeric($this->ref_cod_curso)
-        ) {
-        }
-
         return false;
     }
 

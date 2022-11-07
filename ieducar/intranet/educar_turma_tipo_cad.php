@@ -25,7 +25,7 @@ return new class extends clsCadastro {
         $obj_permissoes->permissao_cadastra(570, $this->pessoa_logada, 7, 'educar_turma_tipo_lst.php');
 
         if (is_numeric($this->cod_turma_tipo)) {
-            $registro = LegacySchoolClassType::findOrFail($this->cod_turma_tipo)->toArray();
+            $registro = LegacySchoolClassType::findOrFail($this->cod_turma_tipo)->getAttributes();
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;

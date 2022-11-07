@@ -12,7 +12,7 @@ class clsPmieducarFaltas extends Model
 
     public function __construct($ref_cod_matricula = null, $sequencial = null, $ref_usuario_cad = null, $falta = null, $data_cadastro = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}faltas";
 
@@ -120,7 +120,7 @@ class clsPmieducarFaltas extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_ref_cod_matricula = null, $int_sequencial = null, $int_ref_usuario_cad = null, $int_falta = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null)
     {
@@ -202,7 +202,7 @@ class clsPmieducarFaltas extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -220,7 +220,7 @@ class clsPmieducarFaltas extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {
@@ -242,9 +242,6 @@ class clsPmieducarFaltas extends Model
      */
     public function excluir()
     {
-        if (is_numeric($this->ref_cod_matricula) && is_numeric($this->sequencial)) {
-        }
-
         return false;
     }
 }

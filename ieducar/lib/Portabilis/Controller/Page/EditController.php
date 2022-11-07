@@ -2,7 +2,7 @@
 
 class Portabilis_Controller_Page_EditController extends Core_Controller_Page_EditController
 {
-    protected $_dataMapper = null;
+    protected $_dataMapper;
 
     protected $_nivelAcessoInsuficiente = '/intranet/index.php?negado=1';
 
