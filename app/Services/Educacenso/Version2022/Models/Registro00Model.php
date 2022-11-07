@@ -46,7 +46,6 @@ class Registro00Model extends Registro00
         $this->mantenedoraOscip = $arrayColumns[31];
         $this->categoriaEscolaPrivada = $arrayColumns[32];
 
-
         $this->poderPublicoConveniado = array_filter([
             $arrayColumns[33] ? PoderPublicoConveniado::ESTADUAL : null,
             $arrayColumns[34] ? PoderPublicoConveniado::MUNICIPAL : null,
