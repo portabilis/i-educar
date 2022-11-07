@@ -28,7 +28,7 @@ class ResponsavelTurmaExport implements FromCollection, ShouldAutoSize, WithColu
     public function map($responsavel): array
     {
         $row = [];
-        
+        $row[] = $responsavel->nome_aluno;
         $row[] = $responsavel->name;
         $row[] = $responsavel->date_of_birth;
         $row[] = $responsavel->cpf;
@@ -61,6 +61,7 @@ class ResponsavelTurmaExport implements FromCollection, ShouldAutoSize, WithColu
     public function headings(): array
     {
         return [
+            'Aluno'
             'Nome',
             'Nascimento',
             'CPF',
