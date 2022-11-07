@@ -132,6 +132,11 @@ class Registro00Import implements RegistroImportInterface
         $this->createPhones($school);
     }
 
+    protected function getSchool()
+    {
+        return SchoolInep::where('cod_escola_inep', $this->model->codigoInep)->first();
+    }
+
     private function createAddress($school)
     {
         $personAddress = LegacyPersonAddress::where('idpes', $school->ref_idpes)->exists();
