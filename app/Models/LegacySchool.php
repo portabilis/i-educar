@@ -95,7 +95,7 @@ class LegacySchool extends Model
     protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->organization->fantasia ?? null,
+            get: fn () => $this->organization?->fantasia,
         );
     }
 

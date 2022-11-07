@@ -62,7 +62,7 @@ class LegacySchoolGradeDiscipline extends Model
     protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->discipline->name ?? null
+            get: fn () => $this->discipline?->name
         );
     }
 
