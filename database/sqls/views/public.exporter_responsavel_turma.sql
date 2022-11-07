@@ -222,5 +222,4 @@ SELECT DISTINCT p.id,
      LEFT JOIN public.cities cimae ON cimae.id = fmae.idmun_nascimento
      LEFT JOIN public.states stmae ON cimae.state_id = stmae.id
     
-  WHERE true AND a.ativo = 1 AND m.ativo = 1
-  ORDER BY a.ref_idpes;
+  WHERE true AND a.ativo = 1 AND m.ativo = 1;
