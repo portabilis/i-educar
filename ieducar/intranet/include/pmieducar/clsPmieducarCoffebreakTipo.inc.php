@@ -16,7 +16,7 @@ class clsPmieducarCoffebreakTipo extends Model
 
     public function __construct($cod_coffebreak_tipo = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_tipo = null, $desc_tipo = null, $custo_unitario = null, $data_cadastro = null, $data_exclusao = null, $ativo = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}coffebreak_tipo";
 
@@ -157,7 +157,7 @@ class clsPmieducarCoffebreakTipo extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_cod_coffebreak_tipo = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_tipo = null, $str_desc_tipo = null, $int_custo_unitario = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null)
     {
@@ -244,7 +244,7 @@ class clsPmieducarCoffebreakTipo extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -262,7 +262,7 @@ class clsPmieducarCoffebreakTipo extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

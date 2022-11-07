@@ -10,7 +10,7 @@ return new class extends clsDetalhe {
         $objPessoaJuridica = new clsPessoaJuridica();
         [$cod_pessoa_fj, $nm_pessoa, $id_federal, $endereco, $cep, $nm_bairro, $cidade, $ddd_telefone_1, $telefone_1, $ddd_telefone_2, $telefone_2, $ddd_telefone_mov, $telefone_mov, $ddd_telefone_fax, $telefone_fax, $http, $email, $ins_est, $tipo_pessoa, $razao_social, $capital_social, $ins_mun, $idtlog] = $objPessoaJuridica->queryRapida($cod_empresa, 'idpes', 'fantasia', 'cnpj', 'logradouro', 'cep', 'bairro', 'cidade', 'ddd_1', 'fone_1', 'ddd_2', 'fone_2', 'ddd_mov', 'fone_mov', 'ddd_fax', 'fone_fax', 'url', 'email', 'insc_estadual', 'tipo', 'nome', 'insc_municipal', 'idtlog');
         $endereco = "$idtlog $endereco";
-        $db = new clsBanco();
+
 
         $this->addDetalhe(['Razão Social', $razao_social]);
         $this->addDetalhe(['Nome Fantasia', $nm_pessoa]);

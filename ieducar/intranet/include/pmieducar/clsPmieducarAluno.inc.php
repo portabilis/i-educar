@@ -577,7 +577,7 @@ class clsPmieducarAluno extends Model
     /**
      * Retorna uma lista de registros filtrados de acordo com os parâmetros.
      *
-     * @return array
+     * @return array|false
      */
     public function lista(
         $int_cod_aluno = null,
@@ -800,221 +800,9 @@ class clsPmieducarAluno extends Model
     }
 
     /**
-     * Não utilizar mais este método.
-     *
-     * Este método é utilizado na tela de listagem de alunos e não deve ser
-     * reaproveitado, pois deverá ser refatorado.
-     *
-     * @deprecated
-     */
-    public function telaDeListagemDeAlunos(
-        $int_cod_aluno = null,
-        $int_ativo = null,
-        $str_nome_aluno = null,
-        $int_ref_cod_escola = null,
-        $data_nascimento = null,
-        $str_nm_pai2 = null,
-        $str_nm_mae2 = null,
-        $str_nm_responsavel2 = null,
-        $cod_inep = null,
-        $aluno_estado_id = null,
-        $ano = null,
-        $ref_cod_instituicao = null,
-        $ref_cod_escola = null,
-        $ref_cod_curso = null,
-        $ref_cod_serie = null,
-        $int_cpf_aluno = null,
-        $int_rg_aluno = null,
-        $situacao_matricula_id = EnrollmentStatusFilter::ALL,
-    ) {
-        $filtra_baseado_matricula = is_numeric($ano) || is_numeric($ref_cod_instituicao) || is_numeric($ref_cod_escola) || is_numeric($ref_cod_curso) || is_numeric($ref_cod_serie);
-
-        $filtros = '';
-        $this->resetCamposLista();
-
-        $this->_campos_lista .= ', pessoa.nome AS nome_aluno, fisica.nome_social, COALESCE(nome_social, pessoa.nome) AS ordem_aluno, pessoa_mae.nome AS nome_mae, educacenso_cod_aluno.cod_aluno_inep AS codigo_inep';
-
-        if ($filtra_baseado_matricula) {
-            $sql = "
-                SELECT distinct {$this->_campos_lista}
-                FROM {$this->_tabela}
-                INNER JOIN pmieducar.matricula m
-                ON m.ref_cod_aluno = a.cod_aluno ";
-        } else {
-            $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
-        }
-        $db = new clsBanco();
-
-        $joins = '
-             INNER JOIN cadastro.pessoa ON pessoa.idpes = a.ref_idpes
-             INNER JOIN cadastro.fisica ON fisica.idpes = a.ref_idpes
-             LEFT JOIN cadastro.pessoa AS pessoa_mae ON pessoa_mae.idpes = fisica.idpes_mae
-             LEFT JOIN modules.educacenso_cod_aluno ON educacenso_cod_aluno.cod_aluno = a.cod_aluno';
-
-        $sql .= $joins;
-
-        $whereAnd = ' WHERE a.ativo = 1 AND ';
-
-        if (is_numeric($int_cod_aluno)) {
-            $filtros .= "{$whereAnd} a.cod_aluno = {$int_cod_aluno}";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_string($aluno_estado_id)) {
-            $filtros .= "{$whereAnd} a.aluno_estado_id LIKE '%{$aluno_estado_id}%'";
-            $whereAnd = ' AND ';
-        }
-
-        if ($int_ativo) {
-            $filtros .= "{$whereAnd} a.ativo = '1'";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_string($str_nome_aluno)) {
-            $str_nm_aluno = $db->escapeString($str_nome_aluno);
-            $filtros .= "{$whereAnd}  unaccent(coalesce(fisica.nome_social, '') || pessoa.nome) LIKE unaccent('%{$str_nm_aluno}%')";
-
-            $whereAnd = ' AND ';
-        }
-
-        if (is_numeric($int_cpf_aluno)) {
-            $filtros .= "{$whereAnd}  fisica.cpf = '{$int_cpf_aluno}'";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_numeric($int_rg_aluno)) {
-            $filtros .= "{$whereAnd} EXISTS (
-                            SELECT 1
-                            FROM cadastro.documento cd
-                            WHERE cd.idpes = a.ref_idpes
-                            AND translate(cd.rg, './-', '') = '{$int_rg_aluno}'
-                        )";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_numeric($int_ref_cod_escola)) {
-            $filtros .= "{$whereAnd} a.cod_aluno IN ( SELECT ref_cod_aluno FROM pmieducar.matricula WHERE ref_ref_cod_escola = '{$int_ref_cod_escola}' AND ultima_matricula = 1)";
-            $whereAnd = ' AND ';
-        }
-
-        if (!empty($data_nascimento)) {
-            $filtros .= "{$whereAnd} EXISTS (SELECT 1 FROM cadastro.fisica f WHERE f.idpes = ref_idpes AND TO_CHAR(data_nasc,'DD/MM/YYYY') = '{$data_nascimento}')";
-            $whereAnd = ' AND ';
-        }
-
-        if (!empty($cod_inep) && is_numeric($cod_inep)) {
-            $filtros .= "{$whereAnd} a.cod_aluno IN( SELECT cod_aluno FROM modules.educacenso_cod_aluno WHERE cod_aluno_inep = {$cod_inep})";
-            $whereAnd = ' AND ';
-        }
-
-        if ($filtra_baseado_matricula && (int) $situacao_matricula_id !== 10) {
-            $filtros .= (int) $situacao_matricula_id === 9 ?
-                "{$whereAnd} m.aprovado not in (4,6)" : "{$whereAnd} m.aprovado = {$situacao_matricula_id}";
-            $filtros .= ' AND m.ativo = 1 ';
-            $whereAnd = ' AND ';
-        }
-
-        if (is_numeric($ano)) {
-            $filtros .= "{$whereAnd} m.ano = {$ano}";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_numeric($ref_cod_escola)) {
-            $filtros .= "{$whereAnd} m.ref_ref_cod_escola = {$ref_cod_escola}";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_numeric($ref_cod_serie)) {
-            $filtros .= "{$whereAnd} m.ref_ref_cod_serie = {$ref_cod_serie}";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_numeric($ref_cod_curso)) {
-            $filtros .= "{$whereAnd} m.ref_cod_curso = {$ref_cod_curso}";
-            $whereAnd = ' AND ';
-        }
-
-        if (!empty($str_nm_pai2) || !empty($str_nm_mae2) || !empty($str_nm_responsavel2)) {
-            $complemento_sql = '';
-            $complemento_where = '';
-            $and_where = '';
-
-            if (!empty($str_nm_pai2)) {
-                $str_nome_pai2 = $db->escapeString($str_nm_pai2);
-                $complemento_sql .= ' LEFT OUTER JOIN cadastro.pessoa AS pessoa_pai ON (pessoa_pai.idpes = f.idpes_pai)';
-                $complemento_where .= "{$and_where} (pessoa_pai.slug ILIKE unaccent('%{$str_nome_pai2}%'))";
-                $and_where = ' AND ';
-            }
-
-            if (!empty($str_nm_mae2)) {
-                $str_nome_mae2 = $db->escapeString($str_nm_mae2);
-                $complemento_sql .= ' LEFT OUTER JOIN cadastro.pessoa AS pessoa_mae ON (pessoa_mae.idpes = f.idpes_mae)';
-                $complemento_where .= "{$and_where} (pessoa_mae.slug ILIKE unaccent('%{$str_nome_mae2}%'))";
-                $and_where = ' AND ';
-            }
-
-            if (!empty($str_nm_responsavel2)) {
-                $str_nome_responsavel2 = $db->escapeString($str_nm_responsavel2);
-                $complemento_sql .= ' LEFT OUTER JOIN cadastro.pessoa AS pessoa_responsavel ON (pessoa_responsavel.idpes = f.idpes_responsavel)';
-                $complemento_where .= "{$and_where} (pessoa_responsavel.slug ILIKE unaccent('%{$str_nome_responsavel2}%'))";
-            }
-
-            $filtros .= "
-        {$whereAnd} EXISTS
-          (SELECT 1 FROM cadastro.fisica f
-             {$complemento_sql}
-           WHERE
-              f.idpes = ref_idpes
-              AND ({$complemento_where}))";
-        }
-
-        $countCampos = count(explode(',', $this->_campos_lista));
-        $resultado = [];
-
-        if (!$this->getOrderby()) {
-            $this->setOrderby('ordem_aluno');
-        }
-
-        $sql .= $filtros . $this->getOrderby() . $this->getLimite();
-
-        if ($filtra_baseado_matricula) {
-            $sqlCount = "
-                SELECT COUNT(DISTINCT a.cod_aluno) FROM {$this->_tabela}
-                INNER JOIN pmieducar.matricula m ON m.ref_cod_aluno = a.cod_aluno ";
-        } else {
-            $sqlCount = "SELECT COUNT(0) FROM {$this->_tabela} ";
-        }
-
-        $sqlCount .= $joins;
-        $sqlCount .= $filtros;
-
-        $this->_total = $db->CampoUnico($sqlCount);
-
-        $db->Consulta($sql);
-
-        if ($countCampos > 1) {
-            while ($db->ProximoRegistro()) {
-                $tupla = $db->Tupla();
-                $tupla['_total'] = $this->_total;
-                $resultado[] = $tupla;
-            }
-        } else {
-            while ($db->ProximoRegistro()) {
-                $tupla = $db->Tupla();
-                $resultado[] = $tupla[$this->_campos_lista];
-            }
-        }
-        if (count($resultado)) {
-            return $resultado;
-        }
-
-        return false;
-    }
-
-    /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -1038,7 +826,7 @@ class clsPmieducarAluno extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

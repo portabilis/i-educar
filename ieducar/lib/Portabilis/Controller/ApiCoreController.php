@@ -14,7 +14,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
 
     // adicionar classe do data mapper que se deseja usar, em tais casos.
 
-    protected $_dataMapper = null;
+    protected $_dataMapper;
 
     // Variaveis utilizadas pelos validadores validatesAuthorizationToDestroy
     // e validatesAuthorizationToChange.

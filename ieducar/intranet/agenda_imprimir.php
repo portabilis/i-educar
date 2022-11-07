@@ -97,7 +97,6 @@ return new class extends clsCadastro {
         }
 
         $compromissos = [];
-        $msg = '';
 
         //busca nome da agenda para titulo do relatorio
         $dba = new clsBanco();

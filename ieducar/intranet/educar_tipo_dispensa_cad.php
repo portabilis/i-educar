@@ -25,7 +25,7 @@ return new class extends clsCadastro {
         $obj_permissoes->permissao_cadastra(577, $this->pessoa_logada, 7, 'educar_tipo_dispensa_lst.php');
 
         if (is_numeric($this->cod_tipo_dispensa)) {
-            $registro = LegacyExemptionType::find($this->cod_tipo_dispensa)?->toArray();
+            $registro = LegacyExemptionType::find($this->cod_tipo_dispensa)?->getAttributes();
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;

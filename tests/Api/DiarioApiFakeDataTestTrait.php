@@ -12,15 +12,15 @@ use Database\Factories\LegacyDisciplineAcademicYearFactory;
 use Database\Factories\LegacyDisciplineFactory;
 use Database\Factories\LegacyEnrollmentFactory;
 use Database\Factories\LegacyEvaluationRuleFactory;
-use Database\Factories\LegacyLevelFactory;
+use Database\Factories\LegacyGradeFactory;
 use Database\Factories\LegacyRegistrationFactory;
 use Database\Factories\LegacyRoundingTableFactory;
 use Database\Factories\LegacySchoolAcademicYearFactory;
 use Database\Factories\LegacySchoolClassFactory;
 use Database\Factories\LegacySchoolGradeDisciplineFactory;
 use Database\Factories\LegacySchoolGradeFactory;
+use Database\Factories\LegacyUserFactory;
 use Database\Factories\LegacyValueRoundingTableFactory;
-use Database\Factories\UserFactory;
 
 trait DiarioApiFakeDataTestTrait
 {
@@ -35,7 +35,7 @@ trait DiarioApiFakeDataTestTrait
     {
         $course = LegacyCourseFactory::new()->standardAcademicYear()->create();
 
-        $level = LegacyLevelFactory::new()->create([
+        $level = LegacyGradeFactory::new()->create([
             'ref_cod_curso' => $course,
             'dias_letivos' => '200'
         ]);
@@ -59,7 +59,7 @@ trait DiarioApiFakeDataTestTrait
         $school->courses()->attach($schoolClass->course_id, [
             'ativo' => 1,
             'anos_letivos' => '{' . now()->year . '}',
-            'ref_usuario_cad' => UserFactory::new()->admin()->make()->id,
+            'ref_usuario_cad' => LegacyUserFactory::new()->admin()->make()->id,
             'data_cadastro' => now(),
         ]);
 

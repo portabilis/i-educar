@@ -10,9 +10,9 @@ use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineAcademicYear;
 use App\Models\LegacyEducationLevel;
 use App\Models\LegacyEducationType;
+use App\Models\LegacyGrade;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyKnowledgeArea;
-use App\Models\LegacyLevel;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassType;
@@ -417,7 +417,7 @@ class Registro20Import implements RegistroImportInterface
             $levelData = $this->getDataAee();
         }
 
-        $level = LegacyLevel::where('ref_cod_curso', $course->getKey())
+        $level = LegacyGrade::where('ref_cod_curso', $course->getKey())
             ->where('etapa_curso', $levelData['etapa'])
             ->first();
 
@@ -952,7 +952,7 @@ class Registro20Import implements RegistroImportInterface
      */
     private function createLevel($levelData, $course)
     {
-        return LegacyLevel::create([
+        return LegacyGrade::create([
             'nm_serie' => $levelData['serie'],
             'ref_usuario_cad' => $this->user->id,
             'ref_cod_curso' => $course->getKey(),

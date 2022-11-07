@@ -91,10 +91,10 @@ class AccessLevelController extends Controller
 
         $userProcesses = $user->type->getProcesses();
 
-        $menus = Menu::user($user)->map(function (Menu $menu) use ($userProcesses) {
+        $menus = Menu::user($user)->map(function (Menu $menu) use ($userProcesses, $userType) {
             return new Collection([
                 'menu' => $menu,
-                'processes' => $menu->processes($menu->title, $userProcesses),
+                'processes' => $menu->processes($menu->title, $userProcesses, $userType->nivel),
             ]);
         });
 

@@ -17,35 +17,35 @@ abstract class clsBancoSQL_
      *
      * @var string
      */
-    protected $strHost = null;
+    protected $strHost;
 
     /**
      * Nome do banco de dados.
      *
      * @var string
      */
-    protected $strBanco = null;
+    protected $strBanco;
 
     /**
      * Usuário devidamente autorizado a acessar o banco.
      *
      * @var string
      */
-    protected $strUsuario = null;
+    protected $strUsuario;
 
     /**
      * Senha do usuário do banco
      *
      * @var string
      */
-    protected $strSenha = null;
+    protected $strSenha;
 
     /**
      * Porta do servidor de banco de dados.
      *
      * @var string
      */
-    protected $strPort = null;
+    protected $strPort;
 
     /**
      * Identificador da conexão.
@@ -484,16 +484,15 @@ abstract class clsBancoSQL_
      *
      * @param unknown_type $consulta
      *
-     * @return unknown_type
+     * @return array|null|false
      */
     public function UnicoCampo($consulta)
     {
         $this->Consulta($consulta);
         if ($this->ProximoRegistro()) {
             $campo = $this->Tupla();
-            $campo = array_shift($campo);
 
-            return $campo;
+            return array_shift($campo);
         }
 
         return false;
@@ -542,7 +541,6 @@ abstract class clsBancoSQL_
     /**
      * Método mockavel para execução de query
      *
-     * @param string $query
      * @param array  $params
      * @param bool   $forceUseWritePdo Força o método publicRun a usar a conexão de escrita
      */

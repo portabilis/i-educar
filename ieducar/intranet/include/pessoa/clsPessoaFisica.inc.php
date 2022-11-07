@@ -43,14 +43,12 @@ class clsPessoaFisica extends clsPessoaFj
      */
     public function __construct(
         $int_idpes = false,
-        $numeric_cpf = false,
-        $date_data_nasc = false,
-        $str_sexo = false,
-        $int_idpes_mae = false,
-        $int_idpes_pai = false
+        $numeric_cpf = false
     ) {
         $this->idpes = $int_idpes;
         $this->cpf = $numeric_cpf;
+        
+        parent::__construct($this->idpes);
     }
 
     public function lista(
