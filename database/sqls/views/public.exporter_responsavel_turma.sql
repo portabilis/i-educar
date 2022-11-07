@@ -1,5 +1,5 @@
 create view public.exporter_responsaveis_turma as
-SELECT DISTINCT ON (nome_aluno) p.id,
+SELECT DISTINCT ON (id_aluno) p.id AS id_aluno,
     p.name as nome_aluno,
     p.guardian_id as guardian_id,
     p.mother_id,
