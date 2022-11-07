@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  *
  * @property Employee $employee
  *
+ * @deprecated
+ *
+ * TODO remover no futuro #transport-package
  */
 class LegacyStudentTransport extends Model
 {
