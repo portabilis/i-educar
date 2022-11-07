@@ -19,6 +19,10 @@ SELECT p.id,
     m.ref_ref_cod_serie AS grade_id,
     m.ref_ref_cod_escola AS school_id,
     m.ref_ref_cod_serie AS level_id,
+     CASE
+        WHEN m.ativo = 0 THEN m.data_exclusao
+        ELSE NULL::timestamp without time zone
+    END::timestamp(0) without time zone AS deleted_at,
     m.cod_matricula as id_matricula,
     t.cod_turma AS school_class_id,
     t.tipo_atendimento AS attendance_type,
