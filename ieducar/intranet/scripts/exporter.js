@@ -12,4 +12,5 @@
 
   window.dataExport = dataExport
   document.getElementById('export-btn').style.marginTop = 0;
+  document.getElementById('export-btn-responsaveis').style.marginTop = 0;
 })()
