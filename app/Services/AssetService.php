@@ -34,11 +34,7 @@ class AssetService implements AssetServiceContract
 
     public function get(string $path, bool $secure = null): string
     {
-        if ($secure === null) {
-            $secure = $this->getSecure();
-        }
-
-        return asset($this->appendVersionToPath($path), $secure);
+        return asset($this->appendVersionToPath($path));
     }
 
     /**
