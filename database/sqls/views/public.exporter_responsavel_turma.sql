@@ -1,9 +1,10 @@
 create view public.exporter_responsaveis_turma as
 SELECT p.id,
-    p.name as nome_aluno,
-    p.guardian_id as guardian_id,
-    p.mother_id,
-    p.father_id,
+    p.idpes as id,
+    p.nome as nome_aluno,
+    fs.guardian_id as responsavel_id,
+    fs.mother_id,
+    fs.father_id,
     ep.nome AS school,
     t.nm_turma AS school_class,
     s.nm_serie AS grade,
@@ -173,8 +174,8 @@ SELECT p.id,
           end as nationality_mae,
     COALESCE( ci."name"||' - '||st.abbreviation , 'Não informado') as birthplace_mae
 
-   FROM exporter_person p
-
+   FROM cadastro.pessoa p
+     JOIN cadastro.fisica fs on fs.idpes = p.idpes
      LEFT JOIN aluno a ON p.id = a.ref_idpes::numeric
      LEFT JOIN matricula m ON m.ref_cod_aluno = a.cod_aluno
      JOIN escola e ON e.cod_escola = m.ref_ref_cod_escola
@@ -189,13 +190,13 @@ SELECT p.id,
      LEFT JOIN turma_turno tm ON tm.id = mt.turno_id
      LEFT JOIN moradia_aluno ma ON ma.ref_cod_aluno = a.cod_aluno
 
-     LEFT JOIN cadastro.fisica f ON f.idpes = guardian_id
-     LEFT JOIN cadastro.pessoa pr ON pr.idpes = guardian_id
-     LEFT JOIN cadastro.documento d ON d.idpes = guardian_id
+     LEFT JOIN cadastro.fisica f ON f.idpes = responsavel_id
+     LEFT JOIN cadastro.pessoa pr ON pr.idpes = responsavel_id
+     LEFT JOIN cadastro.documento d ON d.idpes = responsavel_id
      LEFT JOIN cadastro.estado_civil es ON es.ideciv = f.ideciv
-     LEFT JOIN cadastro.fone_pessoa fon ON fon.idpes = guardian_id
+     LEFT JOIN cadastro.fone_pessoa fon ON fon.idpes = responsavel_id
      LEFT JOIN cadastro.profissao pfs ON pfs.cod_profissao::varchar = f.ref_cod_profissao::varchar
-     LEFT JOIN public.person_has_place plc ON plc.person_id = guardian_id
+     LEFT JOIN public.person_has_place plc ON plc.person_id = responsavel_id
      LEFT JOIN public.places pl ON pl.id = plc.place_id
      LEFT JOIN public.cities ci ON ci.id = f.idmun_nascimento
      LEFT JOIN public.states st on ci.state_id = st.id
