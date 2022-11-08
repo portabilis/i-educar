@@ -15,6 +15,7 @@ class SerieController extends ApiCoreController
             $ano = $this->getRequest()->ano ?: null;
             $cursoId = $this->getRequest()->curso_id;
             $ativo = $this->getRequest()->ativo;
+            $modified = $this->getRequest()->modified ?: null;
 
             if (is_array($escolaId)) {
                 $escolaId = implode(',', $escolaId);
