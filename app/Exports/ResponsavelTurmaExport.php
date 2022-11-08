@@ -32,8 +32,8 @@ class ResponsavelTurmaExport implements FromCollection, ShouldAutoSize, WithColu
             $row[] = $responsavel->name;
             $row[] = $responsavel->nome_aluno;
             $row[] = $responsavel->date_of_birth;
-            $row[] = $responsavel->tipo_responsavel;
-            $row[] = $responsavel->guardian_id;
+            $row[] = $responsavel->cpf;
+            $row[] = $responsavel->gender;
             $row[] = $responsavel->estado_civil;
             $row[] = $responsavel->rg;
             $row[] = $responsavel->nis;
@@ -60,8 +60,8 @@ class ResponsavelTurmaExport implements FromCollection, ShouldAutoSize, WithColu
             $row[] = $responsavel->name_mae;
             $row[] = $responsavel->nome_aluno;
             $row[] = $responsavel->date_of_birth_mae;
-            $row[] = $responsavel->tipo_responsavel;
-            $row[] = $responsavel->guardian_id;
+            $row[] = $responsavel->cpf_mae;
+            $row[] = $responsavel->gender_mae;
             $row[] = $responsavel->estado_civil_mae;
             $row[] = $responsavel->rg_mae;
             $row[] = $responsavel->nis_mae;
@@ -86,8 +86,8 @@ class ResponsavelTurmaExport implements FromCollection, ShouldAutoSize, WithColu
             $row[] = $responsavel->name_pai;
             $row[] = $responsavel->nome_aluno;
             $row[] = $responsavel->date_of_birth_pai;
-            $row[] = $responsavel->tipo_responsavel;
-            $row[] = $responsavel->guardian_id;
+            $row[] = $responsavel->cpf_pai;
+            $row[] = $responsavel->gender_pai;
             $row[] = $responsavel->estado_civil_pai;
             $row[] = $responsavel->rg_pai;
             $row[] = $responsavel->nis_pai;
@@ -135,35 +135,7 @@ class ResponsavelTurmaExport implements FromCollection, ShouldAutoSize, WithColu
             $row[] = $responsavel->bank_account_pai.", ".$responsavel->bank_account_mae;
             $row[] = $responsavel->type_bank_account_pai.", ".$responsavel->type_bank_account_mae;  
         }
-        else{
-            $row[] = $responsavel->name;
-            $row[] = $responsavel->nome_aluno;
-            $row[] = $responsavel->date_of_birth;
-            $row[] = $responsavel->tipo_responsavel;
-            $row[] = $responsavel->guardian_id;
-            $row[] = $responsavel->estado_civil;
-            $row[] = $responsavel->rg;
-            $row[] = $responsavel->nis;
-            $row[] = $responsavel->sus_number;
-            $row[] = $responsavel->certidao;
-            $row[] = $responsavel->estado_emissao_cn;
-            $row[] = $responsavel->cartorio_emissao;
-            $row[] = $responsavel->data_exp_certidao;
-            $row[] = $responsavel->titulo;
-            $row[] = $responsavel->zona;
-            $row[] = $responsavel->secao;
-            $row[] = $responsavel->nationality;
-            $row[] = $responsavel->naturalidade;
-            $row[] = $responsavel->profession;
-            $row[] = $responsavel->endereco.' '.$responsavel->numero_casa.' '.$responsavel->bairro.' '.$responsavel->cep.' '.$responsavel->complemento;
-            $row[] = $responsavel->ddd.' '.$responsavel->telefone;
-            $row[] = $responsavel->email_address;
-            $row[] = $responsavel->bank_branch;
-            $row[] = $responsavel->bank_account;
-            $row[] = $responsavel->type_bank_account;
-              
-
-        }
+        
  
         return $row;
     }
