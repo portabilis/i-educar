@@ -3,8 +3,8 @@ SELECT
     p.idpes as id,
     p.nome as nome_aluno,
     fs.idpes_responsavel as responsavel_id,
-    fs.mother_id,
-    fs.father_id,
+    fs.idpes_pai AS father_id,
+    fs.idpes_mae AS mother_id,
     ep.nome AS school,
     t.nm_turma AS school_class,
     s.nm_serie AS grade,
@@ -201,24 +201,24 @@ SELECT
      LEFT JOIN public.cities ci ON ci.id = f.idmun_nascimento
      LEFT JOIN public.states st on ci.state_id = st.id
 
-     LEFT JOIN cadastro.fisica fpai ON fpai.idpes = father_id
-     LEFT JOIN cadastro.pessoa prpai ON prpai.idpes = father_id
-     LEFT JOIN cadastro.documento dpai ON dpai.idpes = father_id
+     LEFT JOIN cadastro.fisica fpai ON fpai.idpes = fs.idpes_pai
+     LEFT JOIN cadastro.pessoa prpai ON prpai.idpes = fs.idpes_pai
+     LEFT JOIN cadastro.documento dpai ON dpai.idpes = fs.idpes_pai
      LEFT JOIN cadastro.estado_civil espai ON espai.ideciv = fpai.ideciv
-     LEFT JOIN cadastro.fone_pessoa fonpai ON fonpai.idpes = father_id
+     LEFT JOIN cadastro.fone_pessoa fonpai ON fonpai.idpes = fs.idpes_pai
      LEFT JOIN cadastro.profissao pfspai ON pfspai.cod_profissao::varchar = fpai.ref_cod_profissao::varchar
-     LEFT JOIN public.person_has_place plcpai ON plcpai.person_id = father_id
+     LEFT JOIN public.person_has_place plcpai ON plcpai.person_id = fs.idpes_pai
      LEFT JOIN public.places plpai ON plpai.id = plcpai.place_id
      LEFT JOIN public.cities cipai ON cipai.id = fpai.idmun_nascimento
      LEFT JOIN public.states stpai ON cipai.state_id = stpai.id
 
-     LEFT JOIN cadastro.fisica fmae ON fmae.idpes = mother_id
-     LEFT JOIN cadastro.pessoa prmae ON prmae.idpes = mother_id
-     LEFT JOIN cadastro.documento dmae ON dmae.idpes = mother_id
+     LEFT JOIN cadastro.fisica fmae ON fmae.idpes = fs.idpes_mae
+     LEFT JOIN cadastro.pessoa prmae ON prmae.idpes = fs.idpes_mae
+     LEFT JOIN cadastro.documento dmae ON dmae.idpes = fs.idpes_mae
      LEFT JOIN cadastro.estado_civil esmae ON esmae.ideciv = fmae.ideciv
-     LEFT JOIN cadastro.fone_pessoa fonmae ON fonmae.idpes = mother_id
+     LEFT JOIN cadastro.fone_pessoa fonmae ON fonmae.idpes = fs.idpes_mae
      LEFT JOIN cadastro.profissao pfsmae ON pfsmae.cod_profissao::varchar = fmae.ref_cod_profissao::varchar
-     LEFT JOIN public.person_has_place plcmae ON plcmae.person_id = mother_id
+     LEFT JOIN public.person_has_place plcmae ON plcmae.person_id = fs.idpes_mae
      LEFT JOIN public.places plmae ON plmae.id = plcmae.place_id
      LEFT JOIN public.cities cimae ON cimae.id = fmae.idmun_nascimento
      LEFT JOIN public.states stmae ON cimae.state_id = stmae.id
