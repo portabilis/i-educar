@@ -1,5 +1,5 @@
 create view public.exporter_responsaveis_turma as
-SELECT p.id,
+SELECT
     p.idpes as id,
     p.nome as nome_aluno,
     fs.guardian_id as responsavel_id,
@@ -176,7 +176,7 @@ SELECT p.id,
 
    FROM cadastro.pessoa p
      JOIN cadastro.fisica fs on fs.idpes = p.idpes
-     LEFT JOIN aluno a ON p.id = a.ref_idpes::numeric
+     LEFT JOIN aluno a ON id = a.ref_idpes::numeric
      LEFT JOIN matricula m ON m.ref_cod_aluno = a.cod_aluno
      JOIN escola e ON e.cod_escola = m.ref_ref_cod_escola
      LEFT JOIN pessoa ep ON ep.idpes = e.ref_idpes::numeric
