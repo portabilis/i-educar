@@ -2,7 +2,7 @@ create view public.exporter_responsaveis_turma as
 SELECT
     p.idpes as id,
     p.nome as nome_aluno,
-    fs.guardian_id as responsavel_id,
+    fs.idpes_responsavel as responsavel_id,
     fs.mother_id,
     fs.father_id,
     ep.nome AS school,
@@ -190,13 +190,13 @@ SELECT
      LEFT JOIN turma_turno tm ON tm.id = mt.turno_id
      LEFT JOIN moradia_aluno ma ON ma.ref_cod_aluno = a.cod_aluno
 
-     LEFT JOIN cadastro.fisica f ON f.idpes = responsavel_id
-     LEFT JOIN cadastro.pessoa pr ON pr.idpes = responsavel_id
-     LEFT JOIN cadastro.documento d ON d.idpes = responsavel_id
+     LEFT JOIN cadastro.fisica f ON f.idpes = fs.idpes_responsavel
+     LEFT JOIN cadastro.pessoa pr ON pr.idpes = fs.idpes_responsavel
+     LEFT JOIN cadastro.documento d ON d.idpes = fs.idpes_responsavel
      LEFT JOIN cadastro.estado_civil es ON es.ideciv = f.ideciv
-     LEFT JOIN cadastro.fone_pessoa fon ON fon.idpes = responsavel_id
+     LEFT JOIN cadastro.fone_pessoa fon ON fon.idpes = fs.idpes_responsavel
      LEFT JOIN cadastro.profissao pfs ON pfs.cod_profissao::varchar = f.ref_cod_profissao::varchar
-     LEFT JOIN public.person_has_place plc ON plc.person_id = responsavel_id
+     LEFT JOIN public.person_has_place plc ON plc.person_id = fs.idpes_responsavel
      LEFT JOIN public.places pl ON pl.id = plc.place_id
      LEFT JOIN public.cities ci ON ci.id = f.idmun_nascimento
      LEFT JOIN public.states st on ci.state_id = st.id
