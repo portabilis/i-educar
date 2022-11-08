@@ -257,7 +257,7 @@ return new class extends clsListagem {
             $this->nome,
             $this->limite
         );
-        new clsPermissoes();
+
         $this->largura = '100%';
     }
 
