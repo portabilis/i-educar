@@ -1,5 +1,5 @@
 create view public.exporter_responsaveis_turma as
-SELECT
+SELECT 
     p.idpes as id,
     p.nome as nome_aluno,
     fs.idpes_responsavel as responsavel_id,
