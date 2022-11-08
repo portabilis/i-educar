@@ -32,8 +32,8 @@ class ResponsavelTurmaExport implements FromCollection, ShouldAutoSize, WithColu
             $row[] = $responsavel->name;
             $row[] = $responsavel->nome_aluno;
             $row[] = $responsavel->date_of_birth;
-            $row[] = $responsavel->cpf;
-            $row[] = $responsavel->gender;
+            $row[] = $responsavel->tipo_responsavel;
+            $row[] = $responsavel->guardian_id;
             $row[] = $responsavel->estado_civil;
             $row[] = $responsavel->rg;
             $row[] = $responsavel->nis;
@@ -60,8 +60,8 @@ class ResponsavelTurmaExport implements FromCollection, ShouldAutoSize, WithColu
             $row[] = $responsavel->name_mae;
             $row[] = $responsavel->nome_aluno;
             $row[] = $responsavel->date_of_birth_mae;
-            $row[] = $responsavel->cpf_mae;
-            $row[] = $responsavel->gender_mae;
+            $row[] = $responsavel->tipo_responsavel;
+            $row[] = $responsavel->guardian_id;
             $row[] = $responsavel->estado_civil_mae;
             $row[] = $responsavel->rg_mae;
             $row[] = $responsavel->nis_mae;
@@ -86,8 +86,8 @@ class ResponsavelTurmaExport implements FromCollection, ShouldAutoSize, WithColu
             $row[] = $responsavel->name_pai;
             $row[] = $responsavel->nome_aluno;
             $row[] = $responsavel->date_of_birth_pai;
-            $row[] = $responsavel->cpf_pai;
-            $row[] = $responsavel->gender_pai;
+            $row[] = $responsavel->tipo_responsavel;
+            $row[] = $responsavel->guardian_id;
             $row[] = $responsavel->estado_civil_pai;
             $row[] = $responsavel->rg_pai;
             $row[] = $responsavel->nis_pai;
@@ -139,8 +139,8 @@ class ResponsavelTurmaExport implements FromCollection, ShouldAutoSize, WithColu
             $row[] = $responsavel->name;
             $row[] = $responsavel->nome_aluno;
             $row[] = $responsavel->date_of_birth;
-            $row[] = $responsavel->responsavel_id;
-            $row[] = $responsavel->gender;
+            $row[] = $responsavel->tipo_responsavel;
+            $row[] = $responsavel->guardian_id;
             $row[] = $responsavel->estado_civil;
             $row[] = $responsavel->rg;
             $row[] = $responsavel->nis;
