@@ -1154,8 +1154,9 @@ class AlunoController extends ApiCoreController
                 $objPessoaTransporte = new clsModulesPessoaTransporte(null, null, $aluno['pessoa_id']);
                 $objPessoaTransporte = $objPessoaTransporte->detalhe();
 
-            if ($objPessoaTransporte) {
-                $aluno = Portabilis_Array_Utils::merge($objPessoaTransporte, $aluno);
+                if ($objPessoaTransporte) {
+                    $aluno = Portabilis_Array_Utils::merge($objPessoaTransporte, $aluno);
+                }
             }
 
             $sql = 'select sus, ref_cod_religiao, observacao from cadastro.fisica where idpes = $1';
