@@ -16,14 +16,10 @@ class LegacyIndividualPictureTest extends EloquentTestCase
     }
 
     /** @test */
-    public function getUrlAttribute()
+    public function attributes()
     {
         $this->assertEquals($this->model->caminho, $this->model->url);
-    }
 
-    /** @test */
-    public function setUrlAttribute()
-    {
         $this->model->url = 'http://www.example.com';
 
         $this->assertEquals('http://www.example.com', $this->model->url);

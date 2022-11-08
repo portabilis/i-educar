@@ -32,23 +32,12 @@ class LegacyInstitutionTest extends EloquentTestCase
         $this->assertCount(1, $found);
     }
 
-    public function testIdAttribute(): void
+    /** @test */
+    public function attributes()
     {
         $this->assertEquals($this->model->cod_instituicao, $this->model->id);
-    }
-
-    public function testNameAttribute(): void
-    {
         $this->assertEquals($this->model->nm_instituicao, $this->model->name);
-    }
-
-    public function testCityAttribute(): void
-    {
         $this->assertEquals($this->model->cidade, $this->model->city);
-    }
-
-    public function testStateAttribute(): void
-    {
         $this->assertEquals($this->model->state, $this->model->ref_sigla_uf);
     }
 
