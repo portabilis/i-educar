@@ -4,6 +4,7 @@ SELECT p.id,
     p.guardian_id as guardian_id,
     p.mother_id,
     p.father_id,
+    fs.idpes_responsavel AS id_pes_responsavel,
     ep.nome AS school,
     t.nm_turma AS school_class,
     s.nm_serie AS grade,
@@ -174,7 +175,7 @@ SELECT p.id,
     COALESCE( ci."name"||' - '||st.abbreviation , 'Não informado') as birthplace_mae
 
    FROM exporter_person p
-
+     LEFT JOIN fisica fs ON p.id = f.idpes
      LEFT JOIN aluno a ON p.id = a.ref_idpes::numeric
      LEFT JOIN matricula m ON m.ref_cod_aluno = a.cod_aluno
      JOIN escola e ON e.cod_escola = m.ref_ref_cod_escola
@@ -189,13 +190,13 @@ SELECT p.id,
      LEFT JOIN turma_turno tm ON tm.id = mt.turno_id
      LEFT JOIN moradia_aluno ma ON ma.ref_cod_aluno = a.cod_aluno
 
-     LEFT JOIN cadastro.fisica f ON f.idpes = p.guardian_id
-     LEFT JOIN cadastro.pessoa pr ON pr.idpes = p.guardian_id
-     LEFT JOIN cadastro.documento d ON d.idpes = p.guardian_id
+     LEFT JOIN cadastro.fisica f ON f.idpes = fs.idpes_responsavel
+     LEFT JOIN cadastro.pessoa pr ON pr.idpes = fs.idpes_responsavel
+     LEFT JOIN cadastro.documento d ON d.idpes = fs.idpes_responsavel
      LEFT JOIN cadastro.estado_civil es ON es.ideciv = f.ideciv
-     LEFT JOIN cadastro.fone_pessoa fon ON fon.idpes = p.guardian_id
+     LEFT JOIN cadastro.fone_pessoa fon ON fon.idpes = fs.idpes_responsavel
      LEFT JOIN cadastro.profissao pfs ON pfs.cod_profissao::varchar = f.ref_cod_profissao::varchar
-     LEFT JOIN public.person_has_place plc ON plc.person_id = p.guardian_id
+     LEFT JOIN public.person_has_place plc ON plc.person_id = fs.idpes_responsavel
      LEFT JOIN public.places pl ON pl.id = plc.place_id
      LEFT JOIN public.cities ci ON ci.id = f.idmun_nascimento
      LEFT JOIN public.states st on ci.state_id = st.id
