@@ -188,19 +188,6 @@ return new class extends clsCadastro {
         $det_servidor = $obj_servidor->detalhe();
 
         if ($det_servidor) {
-            new clsPmieducarFuncao(
-                $det_servidor['ref_cod_funcao'],
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                1,
-                $this->ref_cod_instituicao
-            );
-
             // Se for professor
             if (true == $obj_servidor->isProfessor()) {
                 $obj = new clsPmieducarQuadroHorarioHorarios();
