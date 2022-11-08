@@ -181,7 +181,7 @@ return new class extends clsCadastro {
         // Foreign keys
         $obrigatorio = true;
         $get_instituicao = true;
-        include 'include/pmieducar/educar_campo_lista.php';
+        include_once 'include/pmieducar/educar_campo_lista.php';
 
         $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
         $this->campoOculto('obrigar_campos_censo', (int) $obrigarCamposCenso);

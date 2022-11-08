@@ -83,7 +83,7 @@ return new class extends clsCadastro {
         $obrigatorio     = true;
         $get_instituicao = true;
         $get_escola      = true;
-        include 'include/pmieducar/educar_campo_lista.php';
+        include_once 'include/pmieducar/educar_campo_lista.php';
 
         // Data
         $this->campoData('data_inicio', 'Data Inicio', $this->data_inicio, true);

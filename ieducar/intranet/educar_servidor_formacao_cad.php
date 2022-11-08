@@ -141,7 +141,7 @@ return new class extends clsCadastro {
                 $obrigatorio     = true;
                 $get_instituicao = true;
 
-                include 'include/pmieducar/educar_campo_lista.php';
+                include_once 'include/pmieducar/educar_campo_lista.php';
 
                 $this->campoRotulo('nm_tipo', 'Tipo de Formação', ($this->tipo == 'C') ? 'Curso' : 'Error');
                 $this->campoTexto('nm_formacao', 'Nome do Curso', $this->nm_formacao, 30, 255, true);
@@ -187,7 +187,7 @@ return new class extends clsCadastro {
                 $obrigatorio     = true;
                 $get_instituicao = true;
 
-                include 'include/pmieducar/educar_campo_lista.php';
+                include_once 'include/pmieducar/educar_campo_lista.php';
 
                 $this->campoRotulo('nm_tipo', 'Tipo de Formação', ($this->tipo == 'T') ? 'Título' : 'Error');
                 $this->campoTexto('nm_formacao', 'Nome do Título', $this->nm_formacao, 30, 255, true);
@@ -224,7 +224,7 @@ return new class extends clsCadastro {
                 $obrigatorio     = true;
                 $get_instituicao = true;
 
-                include 'include/pmieducar/educar_campo_lista.php';
+                include_once 'include/pmieducar/educar_campo_lista.php';
 
                 $this->campoRotulo('nm_tipo', 'Tipo de Formação', ($this->tipo == 'O') ? 'Formação' : 'Error');
                 $this->campoTexto('nm_formacao', 'Nome do Concurso', $this->nm_formacao, 30, 255, true);

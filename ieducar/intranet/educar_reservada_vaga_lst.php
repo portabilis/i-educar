@@ -86,7 +86,7 @@ return new class extends clsListagem {
         $get_escola = true;
         $get_curso  = true;
         $get_escola_curso_serie = true;
-        include 'include/pmieducar/educar_campo_lista.php';
+        include_once 'include/pmieducar/educar_campo_lista.php';
 
         // Referência de escola
         if ($this->ref_cod_escola) {
