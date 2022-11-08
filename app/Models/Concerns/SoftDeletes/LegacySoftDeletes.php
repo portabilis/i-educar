@@ -85,17 +85,19 @@ trait LegacySoftDeletes
     /**
      * Perform the actual delete query on this model instance.
      *
-     * @return mixed
+     * @return void
      */
     protected function performDeleteOnModel()
     {
         if ($this->forceDeleting) {
             $this->exists = false;
 
-            return $this->setKeysForSaveQuery($this->newModelQuery())->forceDelete();
+            $this->setKeysForSaveQuery($this->newModelQuery())->forceDelete();
+
+            return;
         }
 
-        return $this->runSoftDelete();
+        $this->runSoftDelete();
     }
 
     protected function runSoftDelete()
