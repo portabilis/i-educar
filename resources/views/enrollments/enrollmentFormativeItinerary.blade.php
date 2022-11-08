@@ -13,7 +13,7 @@
 @section('content')
 <form >
     <div>
-        <table class="table-default">
+        <table class="table-default" role="none">
             <thead>
                 <tr>
                     <td colspan="2"><strong>Novo</strong></td>
