@@ -217,4 +217,19 @@ trait DiarioApiRequestTestTrait
 
         return $this->actingAs($user)->get($uri . '?' . http_build_query($data));
     }
+
+    public function postResource($uri, $params): TestResponseResource
+    {
+        $data = [
+            'access_key' => config('legacy.apis.access_key'),
+            'secret_key' => config('legacy.apis.secret_key'),
+        ];
+
+        $data = array_merge($data, $params);
+        $_POST = $data;
+
+        $user = LegacyUserFactory::new()->admin()->make();
+
+        return $this->actingAs($user)->post($uri . '?' . http_build_query($data));
+    }
 }
