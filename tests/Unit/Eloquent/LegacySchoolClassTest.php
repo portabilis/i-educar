@@ -98,96 +98,35 @@ class LegacySchoolClassTest extends EloquentTestCase
     }
 
     /** @test */
-    public function getVisibleAttribute()
+    public function attributes()
     {
         $this->assertEquals($this->model->visivel, $this->model->visible);
-    }
-
-    /** @test */
-    public function getExemptedDisciplineIdAttribute()
-    {
         $this->assertEquals($this->model->ref_cod_disciplina_dispensada, $this->model->exemptedDisciplineId);
-    }
-
-    /** @test */
-    public function getActiveEnrollments()
-    {
         $this->assertInstanceOf(Collection::class, $this->model->getActiveEnrollments());
-    }
-
-    /** @test */
-    public function denyEnrollmentsWhenNoVacancy()
-    {
         $this->model->schoolGrade = null;
         $this->assertEquals(true, $this->model->denyEnrollmentsWhenNoVacancy());
-    }
-
-    /** @test */
-    public function getClassTime()
-    {
         $this->model->hora_inicial = null;
         $this->assertEquals(0, $this->model->getClassTime());
-    }
-
-    /** @test */
-    public function idAttribute(): void
-    {
         $this->assertEquals($this->model->cod_turma, $this->model->id);
-    }
 
-    /** @test */
-    public function nameAttribute(): void
-    {
         if (empty($this->model->year)) {
             $expected = $this->model->nm_turma;
         } else {
             $expected = $this->model->nm_turma . ' (' . $this->model->year . ')';
         }
         $this->assertEquals($expected, $this->model->name);
-    }
-
-    /** @test */
-    public function yearAttribute(): void
-    {
         $this->assertEquals($this->model->ano, $this->model->year);
-    }
-
-    /** @test */
-    public function schoolIdAttribute(): void
-    {
         $this->assertEquals($this->model->ref_ref_cod_escola, $this->model->schoolId);
-    }
-
-    /** @test */
-    public function courselIdAttribute(): void
-    {
         $this->assertEquals($this->model->ref_cod_curso, $this->model->courseId);
-    }
-
-    /** @test */
-    public function gradelIdAttribute(): void
-    {
         $this->assertEquals($this->model->ref_ref_cod_serie, $this->model->gradeId);
-    }
 
-    /** @test */
-    public function vacanciesAttribute(): void
-    {
         $vacancies = $this->model->max_aluno - $this->model->getTotalEnrolled();
         $expected = max($vacancies, 0);
         $this->assertEquals($expected, $this->model->vacancies);
-    }
 
-    /** @test */
-    public function beginAcademicYearAttribute(): void
-    {
         $expected = $this->model->stages()->orderBy('sequencial')->value('data_inicio');
         $this->assertEquals($expected, $this->model->beginAcademicYearAttribute);
-    }
 
-    /** @test */
-    public function endAcademicYearAttribute(): void
-    {
         $expected = $this->model->stages()->orderByDesc('sequencial')->value('data_fim');
         $this->assertEquals($expected, $this->model->endAcademicYearAttribute);
     }
