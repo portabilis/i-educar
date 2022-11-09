@@ -1,7 +1,7 @@
 create view public.exporter_responsaveis_turma as
 SELECT p.id,
     p.name as nome_aluno,
-    p.guardian_id as guardian_id,
+    p.guardian_id,
     p.mother_id,
     p.father_id,
     fs.idpes_responsavel AS id_pes_responsavel,
@@ -121,6 +121,7 @@ SELECT p.id,
           fpai.idpes_mae AS mother_id_resp_pai,
           fpai.idpes_pai AS father_id_resp_pai,
           fpai.idpes_responsavel AS guardian_id_responsavel_pai,
+          
            case fpai.nacionalidade
               when 1 then 'Brasileira'::varchar
               when 2 then 'Naturalizado brasileiro'::varchar
@@ -190,13 +191,13 @@ SELECT p.id,
      LEFT JOIN turma_turno tm ON tm.id = mt.turno_id
      LEFT JOIN moradia_aluno ma ON ma.ref_cod_aluno = a.cod_aluno
 
-     LEFT JOIN cadastro.fisica f ON f.idpes = fs.idpes_responsavel
-     LEFT JOIN cadastro.pessoa pr ON pr.idpes = fs.idpes_responsavel
-     LEFT JOIN cadastro.documento d ON d.idpes = fs.idpes_responsavel
+     LEFT JOIN cadastro.fisica f ON f.idpes = guardian_id
+     LEFT JOIN cadastro.pessoa pr ON pr.idpes = guardian_id
+     LEFT JOIN cadastro.documento d ON d.idpes = guardian_id
      LEFT JOIN cadastro.estado_civil es ON es.ideciv = f.ideciv
-     LEFT JOIN cadastro.fone_pessoa fon ON fon.idpes = fs.idpes_responsavel
+     LEFT JOIN cadastro.fone_pessoa fon ON fon.idpes = guardian_id
      LEFT JOIN cadastro.profissao pfs ON pfs.cod_profissao::varchar = f.ref_cod_profissao::varchar
-     LEFT JOIN public.person_has_place plc ON plc.person_id = fs.idpes_responsavel
+     LEFT JOIN public.person_has_place plc ON plc.person_id = guardian_id
      LEFT JOIN public.places pl ON pl.id = plc.place_id
      LEFT JOIN public.cities ci ON ci.id = f.idmun_nascimento
      LEFT JOIN public.states st on ci.state_id = st.id
