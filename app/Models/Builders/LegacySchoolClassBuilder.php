@@ -186,6 +186,8 @@ class LegacySchoolClassBuilder extends LegacyBuilder
      */
     public function whereName(string $name): self
     {
-        return $this->whereRaw('unaccent(nm_turma) ~* unaccent(?)', $name);
+        $name = str_replace(['(',')', '[', ']'], '', $name);
+
+        return $this->whereRaw('unaccent(nm_turma) ~* unaccent(?)', preg_replace("/\([^)]+\)/", '', $name));
     }
 }
