@@ -135,7 +135,54 @@ class ResponsavelTurmaExport implements FromCollection, ShouldAutoSize, WithColu
             $row[] = $responsavel->bank_account_pai.", ".$responsavel->bank_account_mae;
             $row[] = $responsavel->type_bank_account_pai.", ".$responsavel->type_bank_account_mae;  
         }else{
-            $row[] = $responsavel->name;
+
+            $fatherName = $responsavel->individual->father_name;
+            $motherName = $responsavel->individual->mother_name;
+            $guardianName = $responsavel->individual->guardian_name;
+    
+            $fatherDocument = $responsavel->individual->father->cpf ?? null;
+            $motherDocument = $responsavel->individual->mother->cpf ?? null;
+            $guardianDocument = $responsavel->individual->guardian->cpf ?? null;
+    
+            switch ($responsavel->guardian_type) {
+                case GuardianType::FATHER:
+                    $guardianName = $fatherName;
+                    $guardianDocument = $fatherDocument;
+    
+                    break;
+    
+                case GuardianType::MOTHER:
+                    $guardianName = $motherName;
+                    $guardianDocument = $motherDocument;
+    
+                    break;
+    
+                case GuardianType::BOTH:
+                    $names = [];
+                    $documents = [];
+    
+                    if (!is_null($fatherName)) {
+                        $names[] = $fatherName;
+                    }
+    
+                    if (!is_null($motherName)) {
+                        $names[] = $motherName;
+                    }
+    
+                    if (!is_null($fatherDocument)) {
+                        $documents[] = $fatherDocument;
+                    }
+    
+                    if (!is_null($motherDocument)) {
+                        $documents[] = $motherDocument;
+                    }
+    
+                    $guardianName = join(', ', $names);
+                    $guardianDocument = join(', ', $documents);
+    
+                    break;
+            }
+            $row[] =  $guardianName;
             $row[] = $responsavel->nome_aluno;
             $row[] = $responsavel->date_of_birth;
             $row[] = $responsavel->cpf;
