@@ -138,7 +138,7 @@ class ResponsavelTurmaExport implements FromCollection, ShouldAutoSize, WithColu
             $row[] = $responsavel->name;
             $row[] = $responsavel->nome_aluno;
             $row[] = $responsavel->date_of_birth;
-            $row[] = $responsavel->cpf;
+            $row[] = $responsavel->nome_responsavel;
             $row[] = $responsavel->gender;
             $row[] = $responsavel->estado_civil;
             $row[] = $responsavel->rg;
