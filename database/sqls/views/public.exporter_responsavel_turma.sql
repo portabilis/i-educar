@@ -177,7 +177,7 @@ SELECT p.id,
 
    FROM exporter_person p
      JOIN fisica fs ON p.id = fs.idpes
-     LEFT JOIN aluno a ON p.id = a.ref_idpes::numeric
+     JOIN aluno a ON p.id = a.ref_idpes::numeric
      LEFT JOIN matricula m ON m.ref_cod_aluno = a.cod_aluno
      JOIN escola e ON e.cod_escola = m.ref_ref_cod_escola
      LEFT JOIN pessoa ep ON ep.idpes = e.ref_idpes::numeric

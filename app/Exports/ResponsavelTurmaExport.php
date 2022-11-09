@@ -147,7 +147,7 @@ class ResponsavelTurmaExport implements FromCollection, ShouldAutoSize, WithColu
             $row[] = $responsavel->nome_aluno;
             $row[] = $responsavel->id_pes_responsavel;
             $row[] = $responsavel->student_id;
-            $row[] = $responsavel->gender;
+            $row[] = $responsavel->tipo_responsavel;
             $row[] = $responsavel->estado_civil;
             $row[] = $responsavel->rg;
             $row[] = $responsavel->nis;
