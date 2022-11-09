@@ -176,7 +176,7 @@ SELECT p.id,
     COALESCE( ci."name"||' - '||st.abbreviation , 'Não informado') as birthplace_mae
 
    FROM exporter_person p
-     LEFT JOIN fisica fs ON p.id = fs.idpes
+     JOIN fisica fs ON p.id = fs.idpes
      LEFT JOIN aluno a ON p.id = a.ref_idpes::numeric
      LEFT JOIN matricula m ON m.ref_cod_aluno = a.cod_aluno
      JOIN escola e ON e.cod_escola = m.ref_ref_cod_escola

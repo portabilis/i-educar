@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use App\Support\Database\MigrationUtils;
 
-class UpdateViewExporterResponsavel extends Migration
+class CorrigeResp extends Migration
 {
     use MigrationUtils;
     /**
@@ -17,7 +17,10 @@ class UpdateViewExporterResponsavel extends Migration
 
         $this->executeSqlFile(
             __DIR__ . '/../sqls/views/public.exporter_responsavel_turma.sql'
-        );     
+        );
+       
+        
+        
     }
 
     /**
@@ -30,3 +33,4 @@ class UpdateViewExporterResponsavel extends Migration
        
     }
 }
+
