@@ -128,6 +128,13 @@ class LegacyIndividual extends Model
     {
         return $this->hasOne(LegacyStudent::class, 'ref_idpes', 'idpes');
     }
+     /**
+     * @return HasOne
+     */
+    public function responsavelTurma()
+    {
+        return $this->hasOne(LegacyResponsavelTurma::class, 'ref_idpes', 'idpes');
+    }
 
     /**
      * @return HasOne

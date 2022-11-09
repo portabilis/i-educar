@@ -60,4 +60,4 @@ SELECT p.id,
      LEFT JOIN turma_turno tm ON tm.id = mt.turno_id
      LEFT JOIN moradia_aluno ma ON ma.ref_cod_aluno = a.cod_aluno
   WHERE true AND a.ativo = 1 AND m.ativo = 1
-  ORDER BY a.ref_idpes;
+  ORDER BY p.name ASC;

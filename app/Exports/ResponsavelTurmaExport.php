@@ -57,6 +57,7 @@ class ResponsavelTurmaExport implements FromCollection, ShouldAutoSize, WithColu
               
 
         }elseif($responsavel->tipo_responsavel=='m'){
+
             $row[] = $responsavel->name_mae;
             $row[] = $responsavel->nome_aluno;
             $row[] = $responsavel->date_of_birth_mae;
@@ -82,7 +83,9 @@ class ResponsavelTurmaExport implements FromCollection, ShouldAutoSize, WithColu
             $row[] = $responsavel->bank_branch_mae;
             $row[] = $responsavel->bank_account_mae;
             $row[] = $responsavel->type_bank_account_mae;  
+
         }elseif($responsavel->tipo_responsavel=='p'){
+            
             $row[] = $responsavel->name_pai;
             $row[] = $responsavel->nome_aluno;
             $row[] = $responsavel->date_of_birth_pai;
@@ -108,7 +111,9 @@ class ResponsavelTurmaExport implements FromCollection, ShouldAutoSize, WithColu
             $row[] = $responsavel->bank_branch_pai;
             $row[] = $responsavel->bank_account_pai;
             $row[] = $responsavel->type_bank_account_pai;  
-        }else{
+
+        }elseif($responsavel->tipo_responsavel=='a'){
+
             $row[] = $responsavel->name_pai.", ".$responsavel->name_mae;
             $row[] = $responsavel->nome_aluno;
             $row[] = $responsavel->date_of_birth_pai.", ".$responsavel->date_of_birth_mae;
@@ -134,7 +139,9 @@ class ResponsavelTurmaExport implements FromCollection, ShouldAutoSize, WithColu
             $row[] = $responsavel->bank_branch_pai.", ".$responsavel->bank_branch_mae;
             $row[] = $responsavel->bank_account_pai.", ".$responsavel->bank_account_mae;
             $row[] = $responsavel->type_bank_account_pai.", ".$responsavel->type_bank_account_mae;  
+
         }
+        
  
         return $row;
     }

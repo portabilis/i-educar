@@ -124,6 +124,15 @@ class Individual extends Model
         return $this->hasOne(Student::class);
     }
 
+    
+    /**
+     * @return HasOne
+     */
+    public function responsavelTurma()
+    {
+        return $this->hasOne(ResponsavelTurma::class);
+    }
+
     /**
      * @return BelongsTo
      */

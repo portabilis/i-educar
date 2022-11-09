@@ -1,9 +1,10 @@
 create view public.exporter_responsaveis_turma as
 SELECT p.id,
     p.name as nome_aluno,
-    p.guardian_id as guardian_id,
+    p.guardian_id,
     p.mother_id,
     p.father_id,
+    fs.idpes_responsavel AS id_pes_responsavel,
     ep.nome AS school,
     t.nm_turma AS school_class,
     s.nm_serie AS grade,
@@ -120,6 +121,7 @@ SELECT p.id,
           fpai.idpes_mae AS mother_id_resp_pai,
           fpai.idpes_pai AS father_id_resp_pai,
           fpai.idpes_responsavel AS guardian_id_responsavel_pai,
+          
            case fpai.nacionalidade
               when 1 then 'Brasileira'::varchar
               when 2 then 'Naturalizado brasileiro'::varchar
@@ -174,8 +176,8 @@ SELECT p.id,
     COALESCE( ci."name"||' - '||st.abbreviation , 'Não informado') as birthplace_mae
 
    FROM exporter_person p
-
-     LEFT JOIN aluno a ON p.id = a.ref_idpes::numeric
+     JOIN fisica fs ON p.id = fs.idpes
+     JOIN aluno a ON p.id = a.ref_idpes::numeric
      LEFT JOIN matricula m ON m.ref_cod_aluno = a.cod_aluno
      JOIN escola e ON e.cod_escola = m.ref_ref_cod_escola
      LEFT JOIN pessoa ep ON ep.idpes = e.ref_idpes::numeric
