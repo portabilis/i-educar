@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use App\Support\Database\MigrationUtils;
 
-class UpdateViewExporterRespon extends Migration
+class UpdateViewExporterResponTurma extends Migration
 {   
     use MigrationUtils;
     /**
