@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use App\Support\Database\MigrationUtils;
 
 class CorrigeResp extends Migration
-{
+{  
     use MigrationUtils;
     /**
      * Run the migrations.
