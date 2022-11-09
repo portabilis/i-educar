@@ -18,7 +18,7 @@ class DiarioRecuperaAlunosRecuperacaoTest extends TestCase
         $school = LegacySchoolFactory::new()->create();
 
         $registration = LegacyRegistrationFactory::new()->create([
-            'ref_ref_cod_escola' => $school->getKey(),
+            'ref_ref_cod_escola' => $school,
             'dependencia' => 't',
             'aprovado' => 12
         ]);
