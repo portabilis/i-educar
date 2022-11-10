@@ -571,35 +571,6 @@ class DiarioController extends ApiCoreController
         }
     }
 
-    protected function postPareceresAnualGeral()
-    {
-        if ($this->canPostPareceresAnualGeral()) {
-            $pareceres = $this->getRequest()->pareceres;
-
-            foreach ($pareceres as $turmaId => $parecerTurma) {
-                foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
-                    $parecer = $this->removeHtmlTags($parecerTurmaAluno['valor']);
-                    $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
-
-                    if (!empty($matriculaId)) {
-                        if ($this->getRegra($matriculaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL) {
-                            throw new CoreExt_Exception("A regra da turma {$turmaId} não permite lançamento de pareceres anual geral.");
-                        }
-
-                        $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoGeral([
-                            'parecer' => $parecer,
-                        ]);
-
-                        $this->serviceBoletim($turmaId, $alunoId)->addParecer($parecerDescritivo);
-                        $this->trySaveServiceBoletim($turmaId, $alunoId);
-                    }
-                }
-            }
-
-            $this->messenger->append('Pareceres postados com sucesso!', 'success');
-        }
-    }
-
     protected function atualizaNotaNecessariaExame($turmaId, $alunoId, $componenteCurricularId)
     {
         $notaExame = urldecode($this->serviceBoletim($turmaId, $alunoId)->preverNotaRecuperacao($componenteCurricularId));
@@ -669,8 +640,6 @@ class DiarioController extends ApiCoreController
             $this->appendResponse($this->postPareceresPorEtapaGeral());
         } elseif ($this->isRequestFor('post', 'pareceres-anual-por-componente')) {
             $this->appendResponse($this->postPareceresAnualPorComponente());
-        } elseif ($this->isRequestFor('post', 'pareceres-anual-geral')) {
-            $this->appendResponse($this->postPareceresAnualGeral());
         } else {
             $this->notImplementedOperationError();
         }
