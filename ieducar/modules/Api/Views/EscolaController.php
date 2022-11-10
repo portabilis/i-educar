@@ -79,15 +79,6 @@ class EscolaController extends ApiCoreController
         return ['id' => $id];
     }
 
-    protected function canGetEscolas()
-    {
-        return (
-            $this->validatesPresenceOf('instituicao_id') && $this->validatesPresenceOf('ano') &&
-            $this->validatesPresenceOf('curso_id')  && $this->validatesPresenceOf('serie_id') &&
-            $this->validatesPresenceOf('turma_turno_id')
-        );
-    }
-
     protected function canGetEtapasPorEscola()
     {
         return $this->validatesPresenceOf('instituicao_id');
@@ -288,78 +279,6 @@ class EscolaController extends ApiCoreController
         $etapas = Portabilis_Array_Utils::filterSet($etapas, $attrs_etapas);
 
         return ['etapas' => $etapas];
-    }
-
-    protected function getEscolas()
-    {
-        if ($this->canGetEscolas()) {
-            $instituicaoId = $this->getRequest()->instituicao_id;
-            $ano = $this->getRequest()->ano;
-            $cursoId = $this->getRequest()->curso_id;
-            $serieId = $this->getRequest()->serie_id;
-            $turmaTurnoId = $this->getRequest()->turma_turno_id;
-
-            $sql = ' SELECT DISTINCT cod_escola
-                FROM pmieducar.escola e
-                INNER JOIN pmieducar.escola_curso ec
-                ON (e.cod_escola = ec.ref_cod_escola
-                AND $1 = ANY(ec.anos_letivos)
-                )
-                INNER JOIN pmieducar.curso c ON (c.cod_curso = ec.ref_cod_curso)
-                INNER JOIN pmieducar.escola_serie es ON (
-                es.ref_cod_escola = e.cod_escola
-                AND $1 = ANY(es.anos_letivos)
-                )
-                INNER JOIN pmieducar.serie s ON (s.cod_serie = es.ref_cod_serie)
-                INNER JOIN pmieducar.turma t ON (s.cod_serie = t.ref_ref_cod_serie AND t.ref_ref_cod_escola = e.cod_escola )
-                INNER JOIN pmieducar.escola_ano_letivo eal ON(e.cod_escola = eal.ref_cod_escola)
-                WHERE t.ano = $1
-                AND t.turma_turno_id = $2
-                AND c.cod_curso = $3
-                AND e.ref_cod_instituicao = $4
-                AND s.cod_serie = $5
-                AND ec.ativo = 1
-                AND c.ativo = 1
-                AND e.ativo = 1
-                AND es.ativo = 1
-                AND s.ativo = 1
-                AND t.ativo = 1
-                AND eal.ativo = 1
-                AND eal.andamento <> 2
-                AND eal.ano = $1';
-
-            $escolaIds = $this->fetchPreparedQuery($sql, [$ano, $turmaTurnoId, $cursoId, $instituicaoId, $serieId]);
-
-            foreach ($escolaIds as $escolaId) {
-                // $this->messenger->append("Escola: " . $escolaId[0] . " Maximo de alunos no turno: " . $this->_getMaxAlunoTurno($escolaId[0]) . " Quantidade alunos fila: " . $this->_getQtdAlunosFila($escolaId[0]) . " Quantidade matriculas turno: " . $this->_getQtdMatriculaTurno($escolaId[0]));
-
-                if (!$this->existeVagasDisponiveis($escolaId[0])) {
-                    if (($key = array_search($escolaId, $escolaIds)) !== false) {
-                        unset($escolaIds[$key]);
-                    }
-                }
-            }
-
-            if (empty($escolaIds)) {
-                $this->messenger->append('Desculpe, mas aparentemente não existem mais vagas disponíveis para a seleção informada. Altere a seleção e tente novamente.');
-
-                return [ 'escolas' => 0];
-            } else {
-                $attrs = ['cod_escola'];
-
-                return [ 'escolas' => Portabilis_Array_Utils::filterSet($escolaIds, $attrs)];
-            }
-        }
-    }
-
-    public function existeVagasDisponiveis($escolaId)
-    {
-        // Caso a capacidade de alunos naquele turno seja menor ou igual ao ao número de alunos matrículados + alunos na reserva de vaga externa deve bloquear
-        if ($this->_getMaxAlunoTurno($escolaId) <= ($this->_getQtdAlunosFila($escolaId) + $this->_getQtdMatriculaTurno($escolaId))) {
-            return false;
-        }
-
-        return true;
     }
 
     public function _getQtdAlunosFila($escolaId)
@@ -788,8 +707,6 @@ class EscolaController extends ApiCoreController
             $this->appendResponse($this->search());
         } elseif ($this->isRequestFor('put', 'escola')) {
             $this->appendResponse($this->put());
-        } elseif ($this->isRequestFor('get', 'escolas')) {
-            $this->appendResponse($this->getEscolas());
         } elseif ($this->isRequestFor('get', 'etapas-por-escola')) {
             $this->appendResponse($this->getEtapasPorEscola());
         } elseif ($this->isRequestFor('get', 'etapas-da-escola-por-ano')) {
