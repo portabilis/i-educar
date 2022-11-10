@@ -149,6 +149,8 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
         ->name('schoolclass.store');
     Route::delete('/turma', [SchoolClassController::class, 'delete'])
         ->name('schoolclass.delete');
+
+    Route::fallback([WebController::class, 'fallback']);
 });
 
 Route::group(['namespace' => 'Exports', 'prefix' => 'exports'], function () {
