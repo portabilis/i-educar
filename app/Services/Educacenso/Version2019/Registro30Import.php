@@ -449,7 +449,7 @@ class Registro30Import implements RegistroImportInterface
             return null;
         }
 
-        $country = Country::where('cod_ibge', $countryIbge)->first();
+        $country = Country::where('ibge_code', $countryIbge)->first();
 
         return $country ? $country->getKey() : null;
     }
