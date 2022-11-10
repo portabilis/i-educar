@@ -163,7 +163,7 @@ class Registro10Import implements RegistroImportInterface
 
     protected function getPostgresIntegerArray($array)
     {
-        return '{' . implode(',', $array) . '}';
+        return '{' . implode(',', array_filter($array)) . '}';
     }
 
     private function getArrayLocalFuncionamento()

@@ -122,7 +122,7 @@ class Registro10Model extends Registro10
         $this->acessoInternetNaoPossui = $arrayColumns[109];
         $this->computadoresMesaAcessoInternet = $arrayColumns[110];
         $this->dispositovosPessoaisAcessoInternet = $arrayColumns[111];
-        $this->acessoInternet = $arrayColumns[112];
+        $this->acessoInternet = $arrayColumns[112] ?: null;
         $this->redeLocalCabo = $arrayColumns[113];
         $this->redeLocalWireless = $arrayColumns[114];
         $this->redeLocalNaoExiste = $arrayColumns[115];
