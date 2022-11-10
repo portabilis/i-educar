@@ -2,13 +2,15 @@
 
 namespace App\Services\Educacenso\Version2022;
 
-use App\Services\Educacenso\Version2019\Registro20Import;
-use App\Services\Educacenso\Version2019\Registro50Import;
-use App\Services\Educacenso\Version2019\Registro60Import;
 use App\Services\Educacenso\Version2020\ImportService as ImportServiceVersion2020;
-use App\Services\Educacenso\Version2020\Registro10Import;
-use App\Services\Educacenso\Version2020\Registro30Import;
+use App\Services\Educacenso\Version2022\Registro00Import;
+use App\Services\Educacenso\Version2022\Registro10Import;
+use App\Services\Educacenso\Version2022\Registro20Import;
+use App\Services\Educacenso\Version2022\Registro30Import;
 use App\Services\Educacenso\Version2020\Registro40Import;
+use App\Services\Educacenso\Version2022\Registro50Import;
+use App\Services\Educacenso\Version2022\Registro60Import;
+
 
 class ImportService extends ImportServiceVersion2020
 {

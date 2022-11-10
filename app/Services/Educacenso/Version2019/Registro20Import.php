@@ -2,6 +2,7 @@
 
 namespace App\Services\Educacenso\Version2019;
 
+use App\Services\Educacenso\Version2019\Models\Registro20Model;
 use App\Models\Educacenso\Registro20;
 use App\Models\Educacenso\RegistroEducacenso;
 use App\Models\LegacyCourse;
@@ -268,7 +269,7 @@ class Registro20Import implements RegistroImportInterface
     /**
      * @return SchoolClassInep|null
      */
-    private function getSchoolClass()
+    protected function getSchoolClass()
     {
         if (empty($this->model->inepTurma)) {
             return;
@@ -280,11 +281,11 @@ class Registro20Import implements RegistroImportInterface
     /**
      * @param $arrayColumns
      *
-     * @return Registro10|RegistroEducacenso
+     * @return Registro20|RegistroEducacenso
      */
     public static function getModel($arrayColumns)
     {
-        $registro = new Registro20();
+        $registro = new Registro20Model();
         $registro->hydrateModel($arrayColumns);
 
         return $registro;
