@@ -14,7 +14,7 @@ class Registro60Model extends Registro60
         $this->inepEscola = $arrayColumns[2];
         $this->inepAluno = $arrayColumns[4];
         $this->inepTurma = $arrayColumns[6];
-        $this->etapaAluno = $arrayColumns[8];
+        $this->etapaAluno = $arrayColumns[8] ?: null;
         $this->tipoItinerarioLinguagens = $arrayColumns[9];
         $this->tipoItinerarioMatematica = $arrayColumns[10];
         $this->tipoItinerarioCienciasNatureza = $arrayColumns[11];
