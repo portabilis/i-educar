@@ -21,7 +21,7 @@ class Registro50Model extends Registro50
         $this->tipoVinculo = $arrayColumns[8];
         $this->componentes = [];
 
-        for ($index = 9; $index <= count($arrayColumns); $index++) {
+        for ($index = 9; $index <= 23; $index++) {
             if (!empty($arrayColumns[$index])) {
                 $this->componentes[] = $arrayColumns[$index];
             }
