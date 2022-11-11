@@ -18,6 +18,7 @@ use App\Models\PersonHasPlace;
 use App\Models\Place;
 use App\Models\SchoolInep;
 use App\Services\Educacenso\RegistroImportInterface;
+use App\Services\Educacenso\Version2019\Models\Registro00Model;
 use App\User;
 use DateTime;
 use iEducar\Modules\Educacenso\Model\EsferaAdministrativa;
@@ -71,9 +72,9 @@ class Registro00Import implements RegistroImportInterface
      *
      * @return LegacySchool
      */
-    private function getOrCreateSchool()
+    protected function getOrCreateSchool()
     {
-        $schoolInep = SchoolInep::where('cod_escola_inep', $this->model->codigoInep)->first();
+        $schoolInep = $this->getSchool();
 
         if ($schoolInep) {
             return $schoolInep->school;
@@ -131,6 +132,11 @@ class Registro00Import implements RegistroImportInterface
         $this->createPhones($school);
     }
 
+    protected function getSchool()
+    {
+        return SchoolInep::where('cod_escola_inep', $this->model->codigoInep)->first();
+    }
+
     private function createAddress($school)
     {
         $personAddress = LegacyPersonAddress::where('idpes', $school->ref_idpes)->exists();
@@ -146,7 +152,7 @@ class Registro00Import implements RegistroImportInterface
         $place = Place::firstOrCreate([
             'city_id' => $city->getKey(),
             'address' => $this->model->logradouro,
-            'number' => (int)(is_numeric($this->model->numero) ? $this->model->numero : null),
+            'number' => (int) (is_numeric($this->model->numero) ? $this->model->numero : null),
             'complement' => $this->model->complemento,
             'neighborhood' => $this->model->bairro,
             'postal_code' => $this->model->cep,
@@ -309,7 +315,7 @@ class Registro00Import implements RegistroImportInterface
 
     public static function getModel($arrayColumns)
     {
-        $registro = new Registro00();
+        $registro = new Registro00Model();
         $registro->hydrateModel($arrayColumns);
 
         return $registro;
