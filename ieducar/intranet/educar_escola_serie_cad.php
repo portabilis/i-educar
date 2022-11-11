@@ -8,7 +8,7 @@ use App\Services\iDiarioService;
 use App\Services\SchoolLevelsService;
 use Illuminate\Support\Arr;
 
-return new class extends clsCadastro {
+return new class () extends clsCadastro {
     public $ref_cod_escola_;
     public $ref_cod_serie;
     public $ref_cod_serie_;
@@ -53,6 +53,12 @@ return new class extends clsCadastro {
         if (is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_serie)) {
             $tmp_obj = new clsPmieducarEscolaSerie();
             $lst_obj = $tmp_obj->lista($this->ref_cod_escola, $this->ref_cod_serie);
+
+            if (!is_array($lst_obj)) {
+                $this->mensagem .= 'Registro não localizado.<br>';
+                $this->simpleRedirect('educar_escola_serie_lst.php');
+            }
+
             $registro = array_shift($lst_obj);
 
             if ($registro) {
@@ -738,7 +744,7 @@ return new class extends clsCadastro {
         }
 
         if ($analise['remover']) {
-            $service = new CheckPostedDataService;
+            $service = new CheckPostedDataService();
             $schoolClass = LegacyGrade::find($this->ref_cod_serie)->schoolClass()
                 ->where('ref_ref_cod_escola', $this->ref_cod_escola)
                 ->pluck('cod_turma');
@@ -782,7 +788,7 @@ return new class extends clsCadastro {
         }
 
         if ($analise['atualizar']) {
-            $service = new CheckPostedDataService;
+            $service = new CheckPostedDataService();
             foreach ($analise['atualizar'] as $update) {
                 if (!empty($update['anos_letivos_remover'])) {
                     foreach ($update['anos_letivos_remover'] as $ano) {
