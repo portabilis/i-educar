@@ -9,7 +9,6 @@ use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacyStudent;
-use App\Models\LegacyStudentTransport;
 use App\Models\SchoolClassInep;
 use App\Models\StudentInep;
 use App\Services\Educacenso\RegistroImportInterface;

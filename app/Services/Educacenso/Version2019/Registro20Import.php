@@ -2,7 +2,6 @@
 
 namespace App\Services\Educacenso\Version2019;
 
-use App\Services\Educacenso\Version2019\Models\Registro20Model;
 use App\Models\Educacenso\Registro20;
 use App\Models\Educacenso\RegistroEducacenso;
 use App\Models\LegacyCourse;
@@ -22,6 +21,7 @@ use App\Models\LegacySchoolGradeDiscipline;
 use App\Models\SchoolClassInep;
 use App\Models\SchoolInep;
 use App\Services\Educacenso\RegistroImportInterface;
+use App\Services\Educacenso\Version2019\Models\Registro20Model;
 use App\Services\SchoolClass\PeriodService;
 use App\User;
 use Exception;
