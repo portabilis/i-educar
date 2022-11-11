@@ -20,7 +20,7 @@ class Registro10Model extends Registro10
         $this->localFuncionamentoUnidadePrisional = $arrayColumns[7];
         $this->localFuncionamentoOutros = $arrayColumns[8];
         $this->condicao = $arrayColumns[9];
-        $this->predioCompartilhadoOutraEscola = $arrayColumns[10];
+        $this->predioCompartilhadoOutraEscola = (int) $arrayColumns[10];
         $this->codigoInepEscolaCompartilhada = $arrayColumns[11];
         $this->codigoInepEscolaCompartilhada2 = $arrayColumns[12];
         $this->codigoInepEscolaCompartilhada3 = $arrayColumns[13];
@@ -122,7 +122,7 @@ class Registro10Model extends Registro10
         $this->acessoInternetNaoPossui = $arrayColumns[109];
         $this->computadoresMesaAcessoInternet = $arrayColumns[110];
         $this->dispositovosPessoaisAcessoInternet = $arrayColumns[111];
-        $this->acessoInternet = $arrayColumns[112];
+        $this->acessoInternet = $arrayColumns[112] ?: null;
         $this->redeLocalCabo = $arrayColumns[113];
         $this->redeLocalWireless = $arrayColumns[114];
         $this->redeLocalNaoExiste = $arrayColumns[115];
@@ -156,7 +156,7 @@ class Registro10Model extends Registro10
         $this->instrumentosPedagogicosEducacaoEtnicoRacial = $arrayColumns[143];
         $this->instrumentosPedagogicosEducacaoCampo = $arrayColumns[144];
         $this->instrumentosPedagogicosNenhum = $arrayColumns[145];
-        $this->educacaoIndigena = $arrayColumns[146];
+        $this->educacaoIndigena = (int) $arrayColumns[146];
         $this->linguaIndigena = $arrayColumns[147];
         $this->linguaPortuguesa = $arrayColumns[148];
         $this->linguaIndigena1 = $arrayColumns[149];

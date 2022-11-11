@@ -83,6 +83,8 @@ class LegacySchool extends Model
         'qtd_orientador_comunitario',
         'latitude',
         'longitude',
+        'predio_compartilhado_outra_escola',
+        'educacao_indigena',
     ];
 
     protected function id(): Attribute

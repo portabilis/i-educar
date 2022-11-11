@@ -75,7 +75,7 @@ class Registro10Import implements RegistroImportInterface
 
         $school->local_funcionamento = $this->getArrayLocalFuncionamento();
         $school->condicao = $model->condicao ?: null;
-        $school->predio_compartilhado_outra_escola = $model->predioCompartilhadoOutraEscola ?: null;
+        $school->predio_compartilhado_outra_escola = $model->predioCompartilhadoOutraEscola;
         $school->codigo_inep_escola_compartilhada = $model->codigoInepEscolaCompartilhada ?: null;
         $school->codigo_inep_escola_compartilhada2 = $model->codigoInepEscolaCompartilhada2 ?: null;
         $school->codigo_inep_escola_compartilhada3 = $model->codigoInepEscolaCompartilhada3 ?: null;
@@ -130,12 +130,11 @@ class Registro10Import implements RegistroImportInterface
         $school->alimentacao_escolar_alunos = $model->alimentacaoEscolarAlunos ?: null;
         $school->organizacao_ensino = $this->getArrayOrganizacaoEnsino();
         $school->instrumentos_pedagogicos = $this->getArrayInstrumentosPedagogicos();
-        $school->educacao_indigena = $model->educacaoIndigena ?: null;
+        $school->educacao_indigena = $model->educacaoIndigena;
         $school->lingua_ministrada = $model->linguaIndigena ? LinguaMinistrada::INDIGENA : LinguaMinistrada::PORTUGUESA;
         $school->codigo_lingua_indigena = $this->getArrayLinguaIndigena();
         $school->exame_selecao_ingresso = $model->exameSelecaoIngresso ?: null;
         $school->reserva_vagas_cotas = $this->getArrayReservaVagas();
-        $school->predio_compartilhado_outra_escola = $model->predioCompartilhadoOutraEscola ?: null;
         $school->usa_espacos_equipamentos_atividades_regulares = $model->usaEspacosEquipamentosAtividadesRegulares ?: null;
         $school->orgaos_colegiados = $this->getArrayOrgaosColegiados();
         $school->projeto_politico_pedagogico = $model->projetoPoliticoPedagogico ?: null;
@@ -163,7 +162,7 @@ class Registro10Import implements RegistroImportInterface
 
     protected function getPostgresIntegerArray($array)
     {
-        return '{' . implode(',', $array) . '}';
+        return '{' . implode(',', array_filter($array)) . '}';
     }
 
     private function getArrayLocalFuncionamento()
