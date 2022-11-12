@@ -281,13 +281,13 @@ function presencaMudou (presenca) {
   if (presenca.checked) {
     elementJustificativaQtd.value = parseInt(elementJustificativaQtd.value) - 1;
 
-    if (aulasValue != '' && aulasValue.indexOf(aula_id + ',') > -1) {
+    if (aulasValue != undefined && aulasValue.indexOf(aula_id + ',') > -1) {
       elementJustificativaAulas.value = aulasValue.replace(aula_id + ',', '');
     }
 
   } else if (qtdValue != '' || parseInt(qtdValue) >= 0) {
     elementJustificativaQtd.value = parseInt(qtdValue) + 1;
-    if (aulasValue != '') {
+    if (aulasValue != undefined) {
       elementJustificativaAulas.value = aulasValue + aula_id + ',';
     }
 
