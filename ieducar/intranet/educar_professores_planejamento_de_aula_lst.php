@@ -147,7 +147,7 @@ return new class extends clsListagem {
                 $obj = new clsModulesPlanejamentoAulaComponenteCurricular();
                 $componentesCurriculares = $obj->lista($registro['id']);
 
-                if (!$eh_professor && $registro['professor_turma'] != $registro['professor_registro']) {
+                if (!$eh_professor && ($registro['professor_turma'] != $registro['professor_registro'] && $registro['professor_registro'] != 'Administrador' && $registro['professor_registro'] != 'Coordenador')) {
                     continue;
                 }
 
