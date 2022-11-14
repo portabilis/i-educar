@@ -149,7 +149,7 @@ return new class extends clsListagem {
             foreach ($lista as $registro) {
                 $data_formatada = dataToBrasil($registro['data']);
 
-                if (!$eh_professor && $registro['professor_turma'] != $registro['professor_registro']) {
+                if (!$eh_professor && ($registro['professor_turma'] != $registro['professor_registro'] && $registro['professor_registro'] != 'Administrador' && $registro['professor_registro'] != 'Coordenador')) {
                     continue;
                 }
 
