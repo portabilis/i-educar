@@ -24,6 +24,12 @@ return new class extends clsDetalhe {
 
         $tmp_obj = new clsPmieducarEscolaSerie();
         $lst_obj = $tmp_obj->lista($this->ref_cod_escola, $this->ref_cod_serie);
+
+        if (!is_array($lst_obj)) {
+            $this->mensagem .= 'Registro não localizado.<br>';
+            $this->simpleRedirect('educar_escola_serie_lst.php');
+        }
+
         $registro = array_shift($lst_obj);
 
         if (!$registro) {
@@ -47,7 +53,7 @@ return new class extends clsDetalhe {
         $registro['ref_cod_curso'] = $det_curso['nm_curso'];
 
         $obj_permissao = new clsPermissoes();
-        $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
+        $obj_permissao->nivel_acesso($this->pessoa_logada);
 
         if ($registro['ref_cod_instituicao']) {
             $this->addDetalhe(['Instituição', $registro['ref_cod_instituicao']]);

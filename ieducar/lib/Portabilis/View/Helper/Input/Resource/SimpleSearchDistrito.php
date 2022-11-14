@@ -22,9 +22,8 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchDistrito extends Portabi
     {
         if ($id) {
             $district = District::query()->find($id);
-            $distrito = $id . ' - ' . $district->name;
 
-            return $distrito;
+            return $id . ' - ' . $district->name;
         }
     }
 

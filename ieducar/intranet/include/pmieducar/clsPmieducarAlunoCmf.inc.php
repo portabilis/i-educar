@@ -11,7 +11,7 @@ class clsPmieducarAlunoCMF extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($nome_aluno = null, $cpf_aluno = null, $nome_responsavel = null, $cpf_responsavel = null, $cod_sistema = 1)
     {

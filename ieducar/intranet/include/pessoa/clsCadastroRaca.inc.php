@@ -28,7 +28,7 @@ class clsCadastroRaca extends Model
      */
     public function __construct($cod_raca = null, $idpes_exc = null, $idpes_cad = null, $nm_raca = null, $data_cadastro = null, $data_exclusao = null, $ativo = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'cadastro.';
         $this->_tabela = "{$this->_schema}raca";
 
@@ -169,7 +169,7 @@ class clsCadastroRaca extends Model
      * @param string date_data_exclusao_fim
      * @param bool bool_ativo
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_idpes_exc = null, $int_idpes_cad = null, $str_nm_raca = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $bool_ativo = null, $racaEducacenso = null)
     {
@@ -252,7 +252,7 @@ class clsCadastroRaca extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -270,7 +270,7 @@ class clsCadastroRaca extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

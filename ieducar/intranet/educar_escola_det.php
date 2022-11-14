@@ -220,7 +220,6 @@ return new class extends clsDetalhe {
             $existe_ano_andamento = $obj_ano_letivo->lista($this->cod_escola, null, null, null, 1, null, null, null, null, 1);
 
             foreach ($lista_ano_letivo as $ano) {
-                $incluir = $excluir = '';
                 if (!$existe_ano_andamento && $ano['andamento'] != 2 && $canEdit) {
                     $incluir = "<td class='evento'><a href='#' onclick=\"preencheForm('{$ano['ano']}','{$ano['ref_cod_escola']}','iniciar');\"><img src=\"imagens/i-educar/start.gif\"> Iniciar ano letivo</a></td>";
                 } elseif ($ano['andamento'] == 0) {
