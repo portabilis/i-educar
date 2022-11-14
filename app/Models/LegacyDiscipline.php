@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyDiscipline extends LegacyModel
 {
+    public const CREATED_AT = null;
+
     /**
      * @var string
      */
@@ -40,11 +42,6 @@ class LegacyDiscipline extends LegacyModel
         'order' => 'ordenamento',
         'educacenso_code' => 'codigo_educacenso',
     ];
-
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
 
     protected function institutionId(): Attribute
     {
