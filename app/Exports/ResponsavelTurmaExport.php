@@ -140,6 +140,65 @@ class ResponsavelTurmaExport implements FromCollection, ShouldAutoSize, WithColu
             $row[] = $responsavel->bank_account_pai.", ".$responsavel->bank_account_mae;
             $row[] = $responsavel->type_bank_account_pai.", ".$responsavel->type_bank_account_mae;  
 
+        }elseif(empty($responsavel->tipo_responsavel)){
+            if(!empty($responsavel->name_pai)){
+
+                $row[] = $responsavel->name_pai;
+                $row[] = $responsavel->nome_aluno;
+                $row[] = $responsavel->date_of_birth_pai;
+                $row[] = $responsavel->cpf_pai;
+                $row[] = $responsavel->gender_pai;
+                $row[] = $responsavel->estado_civil_pai;
+                $row[] = $responsavel->rg_pai;
+                $row[] = $responsavel->nis_pai;
+                $row[] = $responsavel->sus_number_pai;
+                $row[] = $responsavel->certidao_pai;
+                $row[] = $responsavel->estado_emissao_cn_pai;
+                $row[] = $responsavel->cartorio_emissao_pai;
+                $row[] = $responsavel->data_exp_certidao_pai;
+                $row[] = $responsavel->titulo_pai;
+                $row[] = $responsavel->zona_pai;
+                $row[] = $responsavel->secao_pai;
+                $row[] = $responsavel->nationality_pai;
+                $row[] = $responsavel->naturalidade_pai;
+                $row[] = $responsavel->profession_pai;
+                $row[] = $responsavel->endereco_pai.' '.$responsavel->numero_casa_pai.' '.$responsavel->bairro_pai.' '.$responsavel->cep_pai.' '.$responsavel->complemento_pai;
+                $row[] = $responsavel->ddd.' '.$responsavel->telefone_pai;
+                $row[] = $responsavel->email_address_pai;
+                $row[] = $responsavel->bank_branch_pai;
+                $row[] = $responsavel->bank_account_pai;
+                $row[] = $responsavel->type_bank_account_pai;  
+
+            }else{
+                
+            $row[] = $responsavel->name_mae;
+            $row[] = $responsavel->nome_aluno;
+            $row[] = $responsavel->date_of_birth_mae;
+            $row[] = $responsavel->cpf_mae;
+            $row[] = $responsavel->gender_mae;
+            $row[] = $responsavel->estado_civil_mae;
+            $row[] = $responsavel->rg_mae;
+            $row[] = $responsavel->nis_mae;
+            $row[] = $responsavel->sus_number_mae;
+            $row[] = $responsavel->certidao_mae;
+            $row[] = $responsavel->estado_emissao_cn_mae;
+            $row[] = $responsavel->cartorio_emissao_mae;
+            $row[] = $responsavel->data_exp_certidao_mae;
+            $row[] = $responsavel->titulo_mae;
+            $row[] = $responsavel->zona_mae;
+            $row[] = $responsavel->secao_mae;
+            $row[] = $responsavel->nationality_mae;
+            $row[] = $responsavel->naturalidade_mae;
+            $row[] = $responsavel->profession_mae;
+            $row[] = $responsavel->endereco_mae.' '.$responsavel->numero_casa_mae.' '.$responsavel->bairro_mae.' '.$responsavel->cep_mae.' '.$responsavel->complemento_mae;
+            $row[] = $responsavel->ddd.' '.$responsavel->telefone_mae;
+            $row[] = $responsavel->email_address_mae;
+            $row[] = $responsavel->bank_branch_mae;
+            $row[] = $responsavel->bank_account_mae;
+            $row[] = $responsavel->type_bank_account_mae;  
+            }
+              
+
         }
         
  
