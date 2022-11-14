@@ -22,7 +22,7 @@ class ResponsavelTurmaController extends Controller
         $turma_id = $request->query('ref_cod_turma');
 
         $collection = $this->responsavelTurmaRepository->list($request->allWithTranslatedKeys());
-        $uniqueCollection = $collection->unique('id')->where('school_class_id', $turma_id);
+        $uniqueCollection = $collection->unique('id')->where('school_class_id', $turma_id)->where('school_class_id', $turma_id)->where('ativo', 1);
         $export = new ResponsavelTurmaExport($uniqueCollection);
 
         return Excel::download($export, 'responsaveis_turma.xlsx');
