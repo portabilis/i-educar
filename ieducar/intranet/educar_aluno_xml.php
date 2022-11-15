@@ -40,23 +40,12 @@
 
         $db->Consulta("{$sql}");
 
+
+        $objFrequencia = new clsModulesFrequencia();
         while ($db->ProximoRegistro()) {
             list($cod, $nome) = $db->Tupla();
 
-            $params = [
-                'matricula' => $cod,
-                'usuario' => \Illuminate\Support\Facades\Auth::id(),
-                'componenteCurricularId' => $_GET['ccur'],
-                'turmaId' => $_GET['tur'],
-            ];
-
-            $serviceBoletim = new Avaliacao_Service_Boletim($params);
-
-            $qtdFaltas = 0;
-            if(isset($serviceBoletim) && !empty($serviceBoletim)) {
-                $qtdFaltas = $serviceBoletim->getFaltaSemEtapa($_GET['ccur']);
-                $qtdFaltas = is_numeric($qtdFaltas) ? $qtdFaltas : 0;
-            }
+            $qtdFaltas = $objFrequencia->getTotalFaltas($cod, $_GET['ccur']);
 
             echo "  <aluno cod_aluno=\"{$cod}\" qtd_faltas=\"{$qtdFaltas}\">{$nome}</aluno>\n";
         }
