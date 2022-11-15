@@ -1103,7 +1103,7 @@ class clsModulesFrequencia extends Model {
 
         $db = new clsBanco();
 
-        if (!empty($geral_falta_aluno_id) && !empty($componente_curricular_id)) {
+        if (!empty($geral_falta_aluno_id)) {
             $db->Consulta("
                 SELECT
                     *
@@ -1128,20 +1128,15 @@ class clsModulesFrequencia extends Model {
        $componente_falta_aluno_id = $this->getFaltasAlunoId($matricula_id, 2);
 
 
-       if (!empty($componente_falta_aluno_id)) {
-           $sql = "
-               SELECT
-                    *
-               FROM
-                    modules.falta_componente_curricular
-               WHERE falta_aluno_id IN ('{$componente_falta_aluno_id}')
-            ";
-
-           if (!empty($componente_curricular_id)) {
-               $sql .= " AND componente_curricular_id = '{$componente_curricular_id}'";
-           }
-
-           $db->Consulta($sql);
+       if (!empty($componente_falta_aluno_id) && !empty($componente_curricular_id)) {
+           $db->Consulta("
+           SELECT
+                *
+           FROM
+                modules.falta_componente_curricular
+           WHERE falta_aluno_id IN ('{$componente_falta_aluno_id}')
+           AND componente_curricular_id = '{$componente_curricular_id}'
+        ");
 
            $faltasComponentes = [];
 
