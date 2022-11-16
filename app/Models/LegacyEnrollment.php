@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Support\Database\DateSerializer;
-use App\Traits\HasLegacyDates;
 use DateTime;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -24,7 +23,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class LegacyEnrollment extends LegacyModel
 {
     use DateSerializer;
-    use HasLegacyDates;
+
+    public const CREATED_AT = 'data_cadastro';
+    public const UPDATED_AT = 'updated_at';
 
     /**
      * @var string
@@ -59,13 +60,9 @@ class LegacyEnrollment extends LegacyModel
      * @var array
      */
     protected $dates = [
-        'data_enturmacao', 'data_exclusao'
+        'data_enturmacao',
+        'data_exclusao'
     ];
-
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * @param Builder $query
