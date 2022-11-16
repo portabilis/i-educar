@@ -20,7 +20,7 @@ class clsPmieducarFaltaAluno extends Model
 
     public function __construct($cod_falta_aluno = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_cod_serie = null, $ref_cod_escola = null, $ref_cod_disciplina = null, $ref_cod_matricula = null, $faltas = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $modulo = null, $ref_cod_curso_disciplina = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}falta_aluno";
 
@@ -336,11 +336,7 @@ class clsPmieducarFaltaAluno extends Model
     public function total_faltas_disciplina($cod_matricula, $cod_disciplina, $cod_serie)
     {
         $db = new clsBanco();
-        if (is_numeric($cod_matricula) && is_numeric($cod_disciplina)) {
-            return $db->CampoUnico("SELECT SUM(faltas) FROM {$this->_tabela} WHERE ref_cod_matricula = '{$cod_matricula}' AND ref_cod_disciplina = '{$cod_disciplina}' AND ref_cod_serie = '{$cod_serie}'");
-        }
-
-        return 0;
+        return $db->CampoUnico("SELECT SUM(faltas) FROM {$this->_tabela} WHERE ref_cod_matricula = '{$cod_matricula}' AND ref_cod_disciplina = '{$cod_disciplina}' AND ref_cod_serie = '{$cod_serie}'");
     }
 
     /**

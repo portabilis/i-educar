@@ -16,7 +16,7 @@ class clsPmieducarUsuario extends Model
 
     public function __construct($cod_usuario = null, $ref_cod_escola = null, $ref_cod_instituicao = null, $ref_funcionario_cad = null, $ref_funcionario_exc = null, $ref_cod_tipo_usuario = null, $data_cadastro = null, $data_exclusao = null, $ativo = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}usuario";
 

@@ -12,7 +12,7 @@ use Database\Factories\LegacyDisciplineAcademicYearFactory;
 use Database\Factories\LegacyDisciplineFactory;
 use Database\Factories\LegacyEnrollmentFactory;
 use Database\Factories\LegacyEvaluationRuleFactory;
-use Database\Factories\LegacyLevelFactory;
+use Database\Factories\LegacyGradeFactory;
 use Database\Factories\LegacyRegistrationFactory;
 use Database\Factories\LegacyRoundingTableFactory;
 use Database\Factories\LegacySchoolAcademicYearFactory;
@@ -35,7 +35,7 @@ trait DiarioApiFakeDataTestTrait
     {
         $course = LegacyCourseFactory::new()->standardAcademicYear()->create();
 
-        $level = LegacyLevelFactory::new()->create([
+        $level = LegacyGradeFactory::new()->create([
             'ref_cod_curso' => $course,
             'dias_letivos' => '200'
         ]);

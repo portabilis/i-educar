@@ -3,20 +3,20 @@
 namespace App\Models;
 
 use App\Models\Builders\LegacyGradeBuilder;
-use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * LegacyGrade
  *
  * @method static LegacyGradeBuilder query()
  */
-class LegacyGrade extends Model
+class LegacyGrade extends LegacyModel
 {
-    use LegacyAttribute;
+    public const CREATED_AT = 'data_cadastro';
 
     /**
      * @var string
@@ -33,65 +33,60 @@ class LegacyGrade extends Model
      *
      * @var string
      */
-    protected $builder = LegacyGradeBuilder::class;
+    protected string $builder = LegacyGradeBuilder::class;
 
     /**
      * Atributos legados para serem usados nas queries
      *
      * @var string[]
      */
-    public $legacy = [
+    public array $legacy = [
         'id' => 'cod_serie',
         'name' => 'nm_serie',
-        'description' => 'descricao'
+        'description' => 'descricao',
+        'created_at' => 'data_cadastro',
+        'course_id' => 'ref_cod_curso'
     ];
 
     /**
      * @var array
      */
     protected $fillable = [
-        'nm_serie', 'ref_usuario_cad', 'ref_cod_curso', 'etapa_curso', 'carga_horaria', 'data_cadastro',
+        'ref_usuario_exc',
+        'ref_usuario_cad',
+        'ref_cod_curso',
+        'nm_serie',
+        'etapa_curso',
+        'concluinte',
+        'carga_horaria',
+        'data_cadastro',
+        'ativo',
+        'intervalo',
+        'idade_inicial',
+        'idade_final',
+        'regra_avaliacao_id',
+        'observacao_historico',
+        'dias_letivos',
+        'regra_avaliacao_diferenciada_id',
+        'alerta_faixa_etaria',
+        'bloquear_matricula_faixa_etaria',
+        'idade_ideal',
+        'exigir_inep',
+        'importar_serie_pre_matricula',
+        'descricao'
     ];
 
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
-     * @return int
-     */
-    public function getIdAttribute()
+    protected function name(): Attribute
     {
-        return $this->cod_serie;
-    }
+        return Attribute::make(
+            get: function () {
+                if (empty($this->descricao)) {
+                    return $this->nm_serie;
+                }
 
-    /**
-     * @return string
-     */
-    public function getNameAttribute()
-    {
-        if (empty($this->description)) {
-            return $this->nm_serie;
-        }
-
-        return $this->nm_serie . ' (' . $this->description . ')';
-    }
-
-    /**
-     * @return string
-     */
-    public function getDescriptionAttribute()
-    {
-        return $this->descricao;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCourseIdAttribute()
-    {
-        return $this->ref_cod_curso;
+                return $this->nm_serie . ' (' . $this->descricao . ')';
+            },
+        );
     }
 
     /**
@@ -99,7 +94,7 @@ class LegacyGrade extends Model
      *
      * @return BelongsToMany
      */
-    public function evaluationRules()
+    public function evaluationRules(): BelongsToMany
     {
         return $this->belongsToMany(
             LegacyEvaluationRule::class,
@@ -124,7 +119,7 @@ class LegacyGrade extends Model
      *
      * @return BelongsTo
      */
-    public function course()
+    public function course(): BelongsTo
     {
         return $this->belongsTo(LegacyCourse::class, 'ref_cod_curso');
     }
@@ -134,7 +129,7 @@ class LegacyGrade extends Model
      *
      * @return HasMany
      */
-    public function schoolClass()
+    public function schoolClass(): HasMany
     {
         return $this->hasMany(LegacySchoolClass::class, 'ref_ref_cod_serie');
     }

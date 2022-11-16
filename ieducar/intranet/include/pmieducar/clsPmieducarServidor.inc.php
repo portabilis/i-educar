@@ -31,7 +31,6 @@ class clsPmieducarServidor extends Model
         $ref_cod_instituicao = null,
         $ref_cod_subnivel = null
     ) {
-        $db = new clsBanco();
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'servidor';
         $this->_campos_lista = $this->_todos_campos = 'cod_servidor, ref_idesco, carga_horaria, data_cadastro, data_exclusao, ativo, ref_cod_instituicao,ref_cod_subnivel,
@@ -697,8 +696,7 @@ class clsPmieducarServidor extends Model
               AND a.periodo = 3 ) OR s.multi_seriado) ";
                     }
                 }
-                if (is_string($str_horario) && $str_horario == 'S') {
-                } else {
+                if (!(is_string($str_horario) && $str_horario == 'S')) {
                     $filtros .= "
       {$whereAnd} ((s.carga_horaria >= COALESCE(
                     (SELECT sum(hora_final - qhh.hora_inicial) + '" . abs($horas) . ':' . abs($minutos) . "'
@@ -713,7 +711,7 @@ class clsPmieducarServidor extends Model
             $whereAnd = ' AND ';
         }
         $obj_curso = new clsPmieducarCurso($int_ref_cod_curso);
-        $det_curso = $obj_curso->detalhe();
+        $obj_curso->detalhe();
         // Seleciona apenas servidor cuja uma de suas funções seja a de professor
         // @todo Extract method
         if ($boo_professor) {
@@ -726,7 +724,6 @@ class clsPmieducarServidor extends Model
             if (!$int_ref_cod_disciplina && !$int_ref_cod_curso) {
                 $servidorDisciplina = new clsPmieducarServidorDisciplina();
                 $disciplinas = $servidorDisciplina->lista(null, null, $str_not_in_servidor);
-                $servidorDisciplinas = [];
                 if (is_array($disciplinas)) {
                     $codDisciplinas = array_column($disciplinas, 'ref_cod_disciplina');
                     $codDisciplinas = implode(',', $codDisciplinas);
@@ -1116,7 +1113,6 @@ class clsPmieducarServidor extends Model
         foreach ($funcoes as $funcao) {
             if (1 == $funcao['professor']) {
                 return true;
-                break;
             }
         }
 

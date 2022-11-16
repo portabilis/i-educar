@@ -25,7 +25,7 @@ return new class extends clsDetalhe {
 
         $this->cod_abandono_tipo=$_GET['cod_abandono_tipo'];
 
-        $registro = LegacyAbandonmentType::find($this->cod_abandono_tipo)?->toArray();
+        $registro = LegacyAbandonmentType::find($this->cod_abandono_tipo)?->getAttributes();
 
         if (! $registro) {
             $this->simpleRedirect('educar_abandono_tipo_lst.php');

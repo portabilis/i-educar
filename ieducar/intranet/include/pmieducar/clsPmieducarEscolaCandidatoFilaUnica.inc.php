@@ -13,7 +13,7 @@ class clsPmieducarEscolaCandidatoFilaUnica extends Model
         $ref_cod_escola = null,
         $sequencial = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}escola_candidato_fila_unica";
 

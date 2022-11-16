@@ -11,7 +11,7 @@ class clsPmieducarServidorTituloConcurso extends Model
 
     public function __construct($cod_servidor_titulo = null, $ref_cod_formacao = null, $data_vigencia_homolog = null, $data_publicacao = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}servidor_titulo_concurso";
 
@@ -221,9 +221,6 @@ class clsPmieducarServidorTituloConcurso extends Model
      */
     public function excluir()
     {
-        if (is_numeric($this->cod_servidor_titulo)) {
-        }
-
         return false;
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 return new class extends clsCadastro {
-    public $pessoa_logada = null;
+    public $pessoa_logada;
     public $ref_cod_escola;
     public $ref_cod_serie;
     public $ref_cod_aluno;

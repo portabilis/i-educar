@@ -14,7 +14,7 @@ class clsPmieducarSequenciaSerie extends Model
 
     public function __construct($ref_serie_origem = null, $ref_serie_destino = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $data_cadastro = null, $data_exclusao = null, $ativo = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}sequencia_serie";
 

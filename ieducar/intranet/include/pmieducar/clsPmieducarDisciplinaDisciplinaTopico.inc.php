@@ -11,7 +11,7 @@ class clsPmieducarDisciplinaDisciplinaTopico extends Model
 
     public function __construct($ref_ref_cod_disciplina = null, $ref_ref_ref_cod_escola = null, $ref_ref_ref_cod_serie = null, $ref_cod_disciplina_topico = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}disciplina_disciplina_topico";
 
@@ -79,7 +79,6 @@ class clsPmieducarDisciplinaDisciplinaTopico extends Model
     {
         if (is_numeric($this->ref_ref_cod_disciplina) && is_numeric($this->ref_ref_ref_cod_escola) && is_numeric($this->ref_ref_ref_cod_serie) && is_numeric($this->ref_cod_disciplina_topico)) {
             $db = new clsBanco();
-            $gruda = '';
             $set = '';
 
             if ($set) {
@@ -194,9 +193,6 @@ class clsPmieducarDisciplinaDisciplinaTopico extends Model
      */
     public function excluir()
     {
-        if (is_numeric($this->ref_ref_cod_disciplina) && is_numeric($this->ref_ref_ref_cod_escola) && is_numeric($this->ref_ref_ref_cod_serie) && is_numeric($this->ref_cod_disciplina_topico)) {
-        }
-
         return false;
     }
 }

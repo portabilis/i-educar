@@ -125,9 +125,7 @@ class clsEscolaridade
             $db = new clsBanco();
             $db->Consulta("SELECT idesco, descricao FROM {$this->schema}.{$this->tabela} WHERE idesco = {$this->idesco}");
             if ($db->ProximoRegistro()) {
-                $tupla = $db->Tupla();
-
-                return $tupla;
+                return $db->Tupla();
             }
         }
 

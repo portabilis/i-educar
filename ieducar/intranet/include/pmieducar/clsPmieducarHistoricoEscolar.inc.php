@@ -120,7 +120,6 @@ class clsPmieducarHistoricoEscolar extends Model
         if (is_numeric($ref_cod_escola)) {
             $this->ref_cod_escola = $ref_cod_escola;
             $db = new clsBanco();
-            $resultado = [];
             $db->Consulta("SELECT COALESCE((SELECT COALESCE (fcn_upper(ps.nome),fcn_upper(juridica.fantasia))
                                       FROM cadastro.pessoa ps, cadastro.juridica
                                      WHERE escola.ref_idpes = juridica.idpes
@@ -336,7 +335,7 @@ class clsPmieducarHistoricoEscolar extends Model
             $db->Consulta("INSERT INTO {$this->_tabela} ( sequencial, $campos ) VALUES( $this->sequencial, $valores )");
 
             if ($this->ref_cod_aluno) {
-                $detalhe = $this->detalhe();
+                $this->detalhe();
             }
 
             return $this->sequencial;
@@ -508,7 +507,7 @@ class clsPmieducarHistoricoEscolar extends Model
             }
 
             if ($set) {
-                $detalheAntigo = $this->detalhe();
+                $this->detalhe();
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_aluno = '{$this->ref_cod_aluno}' AND sequencial = '{$this->sequencial}'");
 
                 return true;
@@ -733,9 +732,8 @@ class clsPmieducarHistoricoEscolar extends Model
     {
         if (is_numeric($ref_cod_aluno)) {
             $db = new clsBanco();
-            $sequencial = $db->campoUnico("SELECT COALESCE( MAX(sequencial), 0 ) FROM pmieducar.historico_escolar WHERE ref_cod_aluno = {$ref_cod_aluno}");
 
-            return $sequencial;
+            return $db->campoUnico("SELECT COALESCE( MAX(sequencial), 0 ) FROM pmieducar.historico_escolar WHERE ref_cod_aluno = {$ref_cod_aluno}");
         }
 
         return false;

@@ -153,9 +153,7 @@ class clsLogAcesso
             $db = new clsBanco();
             $db->Consulta("SELECT cod_acesso, ip_interno, ip_externo, data_hora, obs, cod_pessoa, sucesso FROM {$this->tabela} WHERE cod_acesso='{$this->cod_acesso}'");
             if ($db->ProximoRegistro()) {
-                $tupla = $db->Tupla();
-
-                return $tupla;
+                return $db->Tupla();
             }
         }
 

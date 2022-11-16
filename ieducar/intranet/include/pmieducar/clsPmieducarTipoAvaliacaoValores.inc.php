@@ -14,7 +14,7 @@ class clsPmieducarTipoAvaliacaoValores extends Model
 
     public function __construct($ref_cod_tipo_avaliacao = null, $sequencial = null, $nome = null, $valor = null, $valor_min = null, $valor_max = null, $ativo = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}tipo_avaliacao_valores";
 

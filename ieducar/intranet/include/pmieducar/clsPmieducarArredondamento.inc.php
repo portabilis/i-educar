@@ -12,7 +12,7 @@ class clsPmieducarArredondamento extends Model
 
     public function __construct($ref_cod_curso = null, $sequencial = null, $valor = null, $valor_min = null, $valor_max = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}arredondamento";
 
@@ -225,9 +225,6 @@ class clsPmieducarArredondamento extends Model
      */
     public function excluir()
     {
-        if (is_numeric($this->ref_cod_curso) && is_numeric($this->sequencial)) {
-        }
-
         return false;
     }
 }

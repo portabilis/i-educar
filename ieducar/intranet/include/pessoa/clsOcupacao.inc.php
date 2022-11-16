@@ -121,9 +121,7 @@ class clsOcupacao
             $db = new clsBanco();
             $db->Consulta("SELECT idocup, descricao FROM {$this->schema}.{$this->tabela} WHERE idocup = {$this->idocup}");
             if ($db->ProximoRegistro()) {
-                $tupla = $db->Tupla();
-
-                return $tupla;
+                return $db->Tupla();
             }
         }
 

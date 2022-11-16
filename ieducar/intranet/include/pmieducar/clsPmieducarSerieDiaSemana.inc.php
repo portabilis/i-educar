@@ -10,7 +10,7 @@ class clsPmieducarSerieDiaSemana extends Model
 
     public function __construct($dia_semana = null, $ref_ref_cod_serie = null, $ref_ref_cod_escola = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}serie_dia_semana";
 
@@ -193,9 +193,6 @@ class clsPmieducarSerieDiaSemana extends Model
      */
     public function excluir()
     {
-        if (is_numeric($this->dia_semana)) {
-        }
-
         return false;
     }
 }

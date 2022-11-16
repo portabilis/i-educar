@@ -2,15 +2,22 @@
 
 namespace Tests\Unit\Eloquent;
 
+use App\Models\LegacyCourse;
+use App\Models\LegacyInstitution;
 use App\Models\LegacyRegimeType;
 use Tests\EloquentTestCase;
 
 class LegacyRegimeTypeTest extends EloquentTestCase
 {
+    public $relations = [
+        'institution' => LegacyInstitution::class,
+        'courses' => LegacyCourse::class
+    ];
+
     /**
      * @return string
      */
-    protected function getEloquentModelName()
+    protected function getEloquentModelName(): string
     {
         return LegacyRegimeType::class;
     }

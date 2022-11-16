@@ -9,7 +9,7 @@ class clsPmieducarPessoaEducDeficiencia extends Model
 
     public function __construct($ref_cod_pessoa_educ = null, $ref_cod_deficiencia = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}pessoa_educ_deficiencia";
 
@@ -65,7 +65,6 @@ class clsPmieducarPessoaEducDeficiencia extends Model
     {
         if (is_numeric($this->ref_cod_pessoa_educ) && is_numeric($this->ref_cod_deficiencia)) {
             $db = new clsBanco();
-            $gruda = '';
             $set = '';
 
             if ($set) {
@@ -172,9 +171,6 @@ class clsPmieducarPessoaEducDeficiencia extends Model
      */
     public function excluir()
     {
-        if (is_numeric($this->ref_cod_pessoa_educ) && is_numeric($this->ref_cod_deficiencia)) {
-        }
-
         return false;
     }
 }

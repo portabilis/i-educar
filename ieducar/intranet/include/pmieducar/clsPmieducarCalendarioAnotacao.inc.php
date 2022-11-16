@@ -15,7 +15,7 @@ class clsPmieducarCalendarioAnotacao extends Model
 
     public function __construct($cod_calendario_anotacao = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_anotacao = null, $descricao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}calendario_anotacao";
 

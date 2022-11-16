@@ -270,7 +270,8 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['aprovado'] == App_Model_MatriculaSituacao::ABANDONO) {
-            $tipoAbandono = LegacyAbandonmentType::find($registro['ref_cod_abandono_tipo'])?->toArray();
+
+            $tipoAbandono = LegacyAbandonmentType::find($registro['ref_cod_abandono_tipo'])?->getAttributes();
 
             $observacaoAbandono = $registro['observacao'];
 
