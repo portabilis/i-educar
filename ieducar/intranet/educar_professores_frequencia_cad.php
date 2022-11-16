@@ -496,11 +496,10 @@ return new class extends clsCadastro {
 
             $existe = $obj->existeComponenteByData($data_cadastro);
 
-            $existe = true;
-//            if (!$existe) {
-//                $this->mensagem = 'Cadastro não realizado, pois não há planejamento de aula para essa data.<br>';
-//                $this->simpleRedirect('educar_professores_frequencia_cad.php');
-//            }
+            if (!$existe) {
+                $this->mensagem = 'Cadastro não realizado, pois não há planejamento de aula para essa data.<br>';
+                $this->simpleRedirect('educar_professores_frequencia_cad.php');
+            }
         }
 
         $servidor_id = $this->pessoa_logada;
