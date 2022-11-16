@@ -45,7 +45,9 @@
         while ($db->ProximoRegistro()) {
             list($cod, $nome) = $db->Tupla();
 
-            $qtdFaltas = $objFrequencia->getTotalFaltas($cod, $_GET['ccur']);
+            $ccur = is_numeric($_GET['ccur']) ? $_GET['ccur'] : null;
+
+            $qtdFaltas = $objFrequencia->getTotalFaltas($cod, $ccur);
 
             echo "  <aluno cod_aluno=\"{$cod}\" qtd_faltas=\"{$qtdFaltas}\">{$nome}</aluno>\n";
         }
