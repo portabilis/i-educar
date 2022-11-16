@@ -28,8 +28,6 @@ class LegacyEnrollment extends LegacyModel
     public const CREATED_AT = 'data_cadastro';
     public const UPDATED_AT = 'updated_at';
 
-    public const CREATED_AT = 'data_cadastro';
-
     /**
      * @var string
      */
