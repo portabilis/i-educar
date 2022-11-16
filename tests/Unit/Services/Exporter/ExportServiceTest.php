@@ -95,22 +95,19 @@ class ExportServiceTest extends TestCase
         ]);
     }
 
-    public function testDatabaseToCsvExporter()
+    public function testExportService(): void
     {
         Queue::fake();
         Queue::assertNothingPushed();
         Queue::assertNotPushed(DatabaseToCsvExporter::class);
         DatabaseToCsvExporter::dispatch($this->export);
         Queue::assertPushed(DatabaseToCsvExporter::class, 1);
-    }
 
-    public function testExportService()
-    {
         Storage::fake('s3');
-        Storage::assertMissing($this->getFilename());
-        $service = new ExportService($this->export);
+        Storage::disk('s3')->assertMissing($this->getFilename());
+        $service = new ExportService($this->export, 's3');
         $service->execute();
-        Storage::assertExists($this->getFilename());
+        Storage::disk('s3')->assertExists($this->getFilename());
     }
 
     private function getFilename(): string
