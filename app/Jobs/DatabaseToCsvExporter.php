@@ -17,6 +17,10 @@ class DatabaseToCsvExporter implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
+    public $tries = 5;
+    public $timeout = 1800;
+    public $retryAfter = 5;
+
     /**
      * @var Export
      */
