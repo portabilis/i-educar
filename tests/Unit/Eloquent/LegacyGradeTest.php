@@ -41,23 +41,13 @@ class LegacyGradeTest extends EloquentTestCase
         ];
     }
 
-    public function testIdAttribute(): void
+    /** @test */
+    public function attributes()
     {
         $this->assertEquals($this->model->cod_serie, $this->model->id);
-    }
-
-    public function testDescriptionAttribute(): void
-    {
         $this->assertEquals($this->model->descricao, $this->model->description);
-    }
-
-    public function testCourseIdAttribute(): void
-    {
         $this->assertEquals($this->model->ref_cod_curso, $this->model->course_id);
-    }
 
-    public function testNameAttribute(): void
-    {
         if (empty($this->model->descricao)) {
             $except = $this->model->nm_serie;
         } else {
