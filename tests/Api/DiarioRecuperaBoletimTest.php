@@ -4,9 +4,9 @@ namespace Tests\Api;
 
 use Database\Factories\LegacyEnrollmentFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Tests\TestCase;
+use UnitBaseTest;
 
-class DiarioRecuperaBoletimTest extends TestCase
+class DiarioRecuperaBoletimTest extends UnitBaseTest
 {
     use DatabaseTransactions;
     use DiarioApiRequestTestTrait;
@@ -20,6 +20,13 @@ class DiarioRecuperaBoletimTest extends TestCase
             'matricula_id' =>  $enrollment->ref_cod_matricula,
             'escola_id' =>  $enrollment->schoolClass()->first()->schoolId
         ];
+
+        $mock = $this->getCleanMock('ReportController');
+        $mock->expects($this->once())
+            ->method('canGetBoletim')
+            ->willReturn(true)
+            ->method('generationBoletion')
+            ->willReturn('base64Encoded');
 
         $response = $this->getResource('/module/Api/Report?', $data);
 
