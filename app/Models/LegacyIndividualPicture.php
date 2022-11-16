@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class LegacyIndividualPicture extends Model
@@ -25,19 +26,13 @@ class LegacyIndividualPicture extends Model
         'caminho',
     ];
 
-    /**
-     * @return string
-     */
-    public function getUrlAttribute()
+    protected function url(): Attribute
     {
-        return $this->caminho;
-    }
-
-    /**
-     * @return void
-     */
-    public function setUrlAttribute($url)
-    {
-        $this->caminho = $url;
+        return Attribute::make(
+            get: fn () => $this->caminho,
+            set: fn ($value) => [
+                'caminho' => $value,
+            ],
+        );
     }
 }

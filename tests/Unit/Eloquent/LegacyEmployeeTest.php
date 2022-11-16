@@ -7,8 +7,6 @@ use Tests\EloquentTestCase;
 
 class LegacyEmployeeTest extends EloquentTestCase
 {
-    private LegacyEmployee $employee;
-
     /**
      * @return string
      */
@@ -17,72 +15,20 @@ class LegacyEmployeeTest extends EloquentTestCase
         return LegacyEmployee::class;
     }
 
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->employee = $this->createNewModel();
-    }
-
     /** @test */
-    public function getLoginAttribute()
+    public function attributes()
     {
-        $this->assertEquals($this->employee->getLoginAttribute(), $this->employee->login);
-    }
-
-    /** @test */
-    public function getPasswordAttribute()
-    {
-        $this->assertEquals($this->employee->getPasswordAttribute(), $this->employee->password);
-    }
-
-    /** @test */
-    public function setPasswordAttribute()
-    {
-        $this->employee->setPasswordAttribute('password');
-        $this->assertEquals($this->employee->getPasswordAttribute(), 'password');
-    }
-
-    /** @test */
-    public function getDepartmentIdAttribute()
-    {
-        $this->assertEquals($this->employee->getDepartmentIdAttribute(), $this->employee->ref_cod_setor_new);
-    }
-
-    /** @test */
-    public function menuTypeAttribute()
-    {
-        $this->assertEquals($this->employee->getMenuTypeAttribute(), $this->employee->tipo_menu);
-    }
-
-    /** @test */
-    public function getRememberTokenAttribute()
-    {
-        $this->assertEquals($this->employee->getRememberTokenAttribute(), $this->employee->status_token);
-    }
-
-    /** @test */
-    public function setRememberTokenAttribute()
-    {
-        $this->employee->setRememberTokenAttribute('token');
-        $this->assertEquals($this->employee->getRememberTokenAttribute(), 'token');
-    }
-
-    /** @test */
-    public function getActiveAttribute()
-    {
-        $this->assertEquals($this->employee->getActiveAttribute(), $this->employee->ativo);
-    }
-
-    /** @test */
-    public function getEnabledUserDate()
-    {
-        $this->assertEquals($this->employee->getEnabledUserDate(), $this->employee->data_reativa_conta);
-    }
-
-    /** @test */
-    public function getPasswordUpdatedDate()
-    {
-        $this->assertEquals($this->employee->getPasswordUpdatedDate(), $this->employee->data_troca_senha);
+        $this->assertEquals($this->model->matricula, $this->model->login);
+        $this->assertEquals($this->model->senha, $this->model->password);
+        $this->model->password = 'password';
+        $this->assertEquals('password', $this->model->password);
+        $this->assertEquals($this->model->ref_cod_setor_new, $this->model->department_id);
+        $this->assertEquals($this->model->tipo_menu, $this->model->menu_type);
+        $this->assertEquals($this->model->status_token, $this->model->remember_token);
+        $this->model->remember_token = 'token';
+        $this->assertEquals('token', $this->model->remember_token);
+        $this->assertEquals($this->model->ativo, $this->model->active);
+        $this->assertEquals($this->model->data_reativa_conta, $this->model->getEnabledUserDate());
+        $this->assertEquals($this->model->data_troca_senha, $this->model->getPasswordUpdatedDate());
     }
 }

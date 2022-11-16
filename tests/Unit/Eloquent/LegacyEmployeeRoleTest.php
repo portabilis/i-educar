@@ -29,9 +29,9 @@ class LegacyEmployeeRoleTest extends EloquentTestCase
         $this->legacyEmployeeRole = $this->createNewModel();
     }
 
-    /** @test  */
-    public function getIdAttribute()
+    /** @test */
+    public function attributes()
     {
-        $this->assertEquals($this->legacyEmployeeRole->getIdAttribute(), $this->legacyEmployeeRole->cod_servidor_funcao);
+        $this->assertEquals($this->legacyEmployeeRole->id, $this->legacyEmployeeRole->cod_servidor_funcao);
     }
 }

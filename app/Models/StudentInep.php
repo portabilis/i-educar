@@ -22,7 +22,12 @@ class StudentInep extends LegacyModel
      */
     protected $primaryKey = 'cod_aluno';
 
-    protected $fillable = ['cod_aluno', 'cod_aluno_inep', 'nome_inep', 'fonte'];
+    protected $fillable = [
+        'cod_aluno',
+        'cod_aluno_inep',
+        'nome_inep',
+        'fonte'
+    ];
 
     public array $legacy = [
         'student_id' => 'cod_aluno',
@@ -36,6 +41,6 @@ class StudentInep extends LegacyModel
      */
     public function student(): BelongsTo
     {
-        return $this->belongsTo(LegacyStudent::class, 'cod_aluno', 'cod_aluno');
+        return $this->belongsTo(LegacyStudent::class, 'cod_aluno');
     }
 }

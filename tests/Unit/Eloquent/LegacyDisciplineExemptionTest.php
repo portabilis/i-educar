@@ -16,7 +16,9 @@ class LegacyDisciplineExemptionTest extends EloquentTestCase
         'registration' => LegacyRegistration::class,
         'discipline' => LegacyDiscipline::class,
         'type' => LegacyExemptionType::class,
-        'stages' => [LegacyExemptionStage::class],
+        'stages' => LegacyExemptionStage::class,
+        'deletedByUser' => LegacyUser::class,
+        'createdByUser' => LegacyUser::class,
         'createdBy' => LegacyUser::class,
     ];
 
@@ -26,6 +28,16 @@ class LegacyDisciplineExemptionTest extends EloquentTestCase
     protected function getEloquentModelName()
     {
         return LegacyDisciplineExemption::class;
+    }
+
+    /** @test  */
+    public function scopeActive()
+    {
+        $query = LegacyDisciplineExemption::query()
+            ->active()
+            ->first();
+        $this->assertInstanceOf(LegacyDisciplineExemption::class, $query);
+        $this->assertEquals(1, $query->ativo);
     }
 
     protected function getLegacyAttributes(): array

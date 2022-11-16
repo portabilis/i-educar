@@ -4,14 +4,15 @@ namespace Tests\Unit\Eloquent;
 
 use App\Models\LegacyEvaluationRule;
 use App\Models\LegacyRemedialRule;
+use App\Models\LegacyRoundingTable;
 use Tests\EloquentTestCase;
 
 class LegacyEvaluationRuleTest extends EloquentTestCase
 {
-    private LegacyEvaluationRule $evaluationRule;
-
     public $relations = [
-        'remedialRules' => [LegacyRemedialRule::class]
+        'remedialRules' => LegacyRemedialRule::class,
+        'roundingTable' => LegacyRoundingTable::class,
+        'conceptualRoundingTable' => LegacyRoundingTable::class,
     ];
 
     /**
@@ -22,10 +23,13 @@ class LegacyEvaluationRuleTest extends EloquentTestCase
         return LegacyEvaluationRule::class;
     }
 
-    public function setUp(): void
+    /** @test */
+    public function isGlobalScoreRule()
     {
-        parent::setUp();
-
-        $this->evaluationRule = $this->createNewModel();
+        if ($this->model->nota_geral_por_etapa == 1) {
+            $this->assertEquals(true, $this->model->isGlobalScore());
+        } else {
+            $this->assertEquals(false, $this->model->isGlobalScore());
+        }
     }
 }

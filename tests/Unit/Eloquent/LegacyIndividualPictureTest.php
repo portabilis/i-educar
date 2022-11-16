@@ -7,8 +7,6 @@ use Tests\EloquentTestCase;
 
 class LegacyIndividualPictureTest extends EloquentTestCase
 {
-    private LegacyIndividualPicture $picture;
-
     /**
      * @return string
      */
@@ -17,25 +15,13 @@ class LegacyIndividualPictureTest extends EloquentTestCase
         return LegacyIndividualPicture::class;
     }
 
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->picture = $this->createNewModel();
-    }
-
     /** @test */
-    public function getUrlAttribute()
+    public function attributes()
     {
-        $this->assertEquals($this->picture->getUrlAttribute(), $this->picture->url);
-    }
+        $this->assertEquals($this->model->caminho, $this->model->url);
 
-    /** @test */
-    public function setUrlAttribute()
-    {
-        $this->picture->setUrlAttribute('http://www.example.com');
+        $this->model->url = 'http://www.example.com';
 
-        $this->assertEquals('http://www.example.com', $this->picture->getUrlAttribute());
-        $this->assertEquals('http://www.example.com', $this->picture->url);
+        $this->assertEquals('http://www.example.com', $this->model->url);
     }
 }

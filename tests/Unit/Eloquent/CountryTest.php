@@ -9,7 +9,7 @@ use Tests\EloquentTestCase;
 class CountryTest extends EloquentTestCase
 {
     protected $relations = [
-        'states' => [State::class]
+        'states' => State::class,
     ];
 
     /**

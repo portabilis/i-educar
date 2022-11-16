@@ -284,7 +284,7 @@ class User extends Authenticatable
 
     public function getCreatedAtCustom(): ?Carbon
     {
-        return Carbon::createFromTimestamp((new \DateTime($this->getCreatedAtAttribute()))->getTimestamp());
+        return Carbon::createFromTimestamp((new \DateTime($this->created_at))->getTimestamp());
     }
 
     public function getEnabledUserDate(): ?Carbon

@@ -6,6 +6,7 @@ use App\Services\RelocationDate\RelocationDateProvider;
 use App\Traits\HasLegacyDates;
 use DateTime;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -56,11 +57,6 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
     ];
 
     /**
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
      * @param Builder $query
      *
      * @return Builder
@@ -78,44 +74,39 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
         return $this->hasOne(LegacyGeneralConfiguration::class, 'ref_cod_instituicao', 'cod_instituicao');
     }
 
-    /**
-     * @return string
-     */
-    public function getNameAttribute()
+    protected function name(): Attribute
     {
-        return $this->nm_instituicao;
+        return Attribute::make(
+            get: fn () => $this->nm_instituicao
+        );
     }
 
-    /**
-     * @return string
-     */
-    public function getCityAttribute()
+    protected function city(): Attribute
     {
-        return $this->cidade;
+        return Attribute::make(
+            get: fn () => $this->cidade
+        );
     }
 
-    /**
-     * @return string
-     */
-    public function getStateAttribute()
+    protected function state(): Attribute
     {
-        return $this->ref_sigla_uf;
+        return Attribute::make(
+            get: fn () => $this->ref_sigla_uf
+        );
     }
 
-    /**
-     * @return DateTime
-     */
-    public function getRelocationDateAttribute()
+    protected function relocationDate(): Attribute
     {
-        return $this->data_base_remanejamento;
+        return Attribute::make(
+            get: fn () => $this->data_base_remanejamento
+        );
     }
 
-    /**
-     * @return DateTime
-     */
-    public function getEducacensoDateAttribute()
+    protected function educacensoDate(): Attribute
     {
-        return $this->data_educacenso;
+        return Attribute::make(
+            get: fn () => $this->data_educacenso
+        );
     }
 
     /**
@@ -123,28 +114,29 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
      *
      * @return bool
      */
-    public function isMandatoryCensoFields()
+    public function isMandatoryCensoFields(): bool
     {
-        return boolval($this->obrigar_campos_censo);
+        return (bool)$this->obrigar_campos_censo;
     }
 
-    public function getIdAttribute()
+    protected function id(): Attribute
     {
-        return $this->cod_instituicao;
+        return Attribute::make(
+            get: fn () => $this->cod_instituicao
+        );
     }
 
-    /**
-     * @return bool
-     */
-    public function getAllowRegistrationOutAcademicYearAttribute()
+    protected function allowRegistrationOutAcademicYear(): Attribute
     {
-        return boolval($this->permitir_matricula_fora_periodo_letivo);
+        return Attribute::make(
+            get: fn () => (bool)$this->permitir_matricula_fora_periodo_letivo
+        );
     }
 
     /**
      * @return HasMany
      */
-    public function schools()
+    public function schools(): HasMany
     {
         return $this->hasMany(LegacySchool::class, 'ref_cod_instituicao', 'cod_instituicao');
     }
@@ -159,12 +151,8 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
         return $this->hasMany(LegacyEvaluationRule::class, 'instituicao_id');
     }
 
-    public function getRelocationDate()
+    public function getRelocationDate(): string|null
     {
-        if ($this->getRelocationDateAttribute()) {
-            return $this->getRelocationDateAttribute()->format('Y-m-d');
-        }
-
-        return null;
+        return $this->relocationDate?->format('Y-m-d');
     }
 }

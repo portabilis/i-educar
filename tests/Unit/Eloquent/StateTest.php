@@ -11,18 +11,18 @@ class StateTest extends EloquentTestCase
 {
     protected $relations = [
         'country' => Country::class,
-        'cities' => [City::class]
+        'cities' => City::class,
     ];
 
     /**
      * @return string
      */
-    protected function getEloquentModelName()
+    protected function getEloquentModelName(): string
     {
         return State::class;
     }
 
-    public function testFindByAbbreviation()
+    public function testFindByAbbreviation(): void
     {
         $stateReturn = State::findByAbbreviation($this->model->abbreviation);
         $this->assertInstanceOf(State::class, $stateReturn);

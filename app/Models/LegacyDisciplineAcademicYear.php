@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Builders\LegacyDisciplineAcademicYearBuilder;
 use App\Traits\LegacyAttribute;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
@@ -69,27 +70,24 @@ class LegacyDisciplineAcademicYear extends Pivot
         return $this->belongsTo(LegacyDiscipline::class, 'componente_curricular_id');
     }
 
-    /**
-     * @return int
-     */
-    public function getIdAttribute()
+    protected function id(): Attribute
     {
-        return $this->componente_curricular_id;
+        return Attribute::make(
+            get: fn () => $this->componente_curricular_id,
+        );
     }
 
-    /**
-     * @return string
-     */
-    public function getNameAttribute()
+    protected function name(): Attribute
     {
-        return $this->discipline->name ?? null;
+        return Attribute::make(
+            get: fn () => $this->discipline?->name,
+        );
     }
 
-    /**
-     * @return int
-     */
-    public function getWorkloadAttribute()
+    protected function workload(): Attribute
     {
-        return (int) $this->carga_horaria;
+        return Attribute::make(
+            get: fn () => $this->carga_horaria,
+        );
     }
 }

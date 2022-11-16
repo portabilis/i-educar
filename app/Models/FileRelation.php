@@ -25,12 +25,4 @@ class FileRelation extends Model
     {
         return $this->belongsTo(File::class, 'file_id');
     }
-
-    /**
-     * @return MorphTo
-     */
-    public function relation()
-    {
-        return $this->morphTo(null, 'type', 'relation_id');
-    }
 }

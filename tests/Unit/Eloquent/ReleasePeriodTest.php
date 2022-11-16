@@ -10,7 +10,7 @@ use Tests\EloquentTestCase;
 class ReleasePeriodTest extends EloquentTestCase
 {
     protected $relations = [
-        'periodDates' => [ReleasePeriodDate::class],
+        'periodDates' => ReleasePeriodDate::class,
         'stageType' => LegacyStageType::class
     ];
 

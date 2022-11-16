@@ -3,27 +3,23 @@
 namespace Tests\Unit\Eloquent;
 
 use App\Models\LegacyOrganization;
+use App\Models\LegacyPerson;
 use Tests\EloquentTestCase;
 
 class LegacyOrganizationTest extends EloquentTestCase
 {
-    private LegacyOrganization $organization;
+    protected $relations = [
+        'person' => LegacyPerson::class
+    ];
 
-    protected function getEloquentModelName()
+    protected function getEloquentModelName(): string
     {
         return LegacyOrganization::class;
     }
 
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->organization = $this->createNewModel();
-    }
-
     /** @test */
-    public function getNameAttribute()
+    public function getNameAttribute(): void
     {
-        $this->assertEquals($this->organization->getNameAttribute(), $this->organization->fantasia);
+        $this->assertEquals($this->model->name, $this->model->fantasia);
     }
 }

@@ -11,8 +11,6 @@ use Tests\EloquentTestCase;
 
 class LegacyEnrollmentTest extends EloquentTestCase
 {
-    private LegacyEnrollment $legacyEnrollment;
-
     /**
      * @var array
      */
@@ -32,40 +30,14 @@ class LegacyEnrollmentTest extends EloquentTestCase
         return LegacyEnrollment::class;
     }
 
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->legacyEnrollment = $this->createNewModel();
-    }
-
     /** @test */
-    public function getRegistrationIdAttribute()
+    public function attributes()
     {
-        $this->assertEquals($this->legacyEnrollment->getRegistrationIdAttribute(), $this->legacyEnrollment->ref_cod_matricula);
-    }
-
-    /** @test */
-    public function getStudentNameAttribute()
-    {
-        $this->assertEquals($this->legacyEnrollment->getStudentNameAttribute(), $this->legacyEnrollment->registration->student->person->nome);
-    }
-
-    /** @test */
-    public function getDateAttribute()
-    {
-        $this->assertEquals($this->legacyEnrollment->getDateAttribute(), $this->legacyEnrollment->data_enturmacao);
-    }
-
-    /** @test */
-    public function getDateDepartedAttribute()
-    {
-        $this->assertEquals($this->legacyEnrollment->getDateDepartedAttribute(), $this->legacyEnrollment->data_exclusao);
-    }
-
-    /** @test */
-    public function getSchoolClassIdAttribute()
-    {
-        $this->assertEquals($this->legacyEnrollment->getSchoolClassIdAttribute(), $this->legacyEnrollment->ref_cod_turma);
+        $this->assertEquals($this->model->ref_cod_matricula, $this->model->registration_id);
+        $this->assertEquals($this->model->registration->student->person->nome, $this->model->student_name);
+        $this->assertEquals($this->model->data_enturmacao, $this->model->date);
+        $this->assertEquals($this->model->date_departed, $this->model->data_exclusao);
+        $this->assertEquals($this->model->ref_cod_turma, $this->model->school_class_id);
+        $this->assertEquals($this->model->registration->student->cod_aluno, $this->model->getStudentId());
     }
 }

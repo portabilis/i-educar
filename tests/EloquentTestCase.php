@@ -191,13 +191,24 @@ abstract class EloquentTestCase extends TestCase
         foreach ($this->relations as $relation => $class) {
             $type = $this->model->{$relation}();
 
-            if ($type instanceof HasMany || $type instanceof HasOne || $type instanceof BelongsToMany) {
+            if ($type instanceof BelongsToMany) {
+                if (is_array($class)) {
+                    [$modelClass, $pivotData] = $class;
+                } else {
+                    $modelClass = $class;
+                    $pivotData = [];
+                }
+                $class = is_array($class) ? $class[0] : $class;
+                $model = $factory->hasAttached(Factory::factoryForModel($modelClass)->new(), $pivotData, $relation)->create();
+                $this->assertCount(1, $model->{$relation});
+                $this->assertInstanceOf($class, $model->{$relation}->first());
+            } elseif ($type instanceof HasMany || $type instanceof HasOne) {
                 $method = 'has' . ucfirst($relation);
                 $model = $factory->{$method}()->create();
 
-                if (is_array($class)) {
+                if ($type instanceof HasMany) {
                     $this->assertCount(1, $model->{$relation});
-                    $this->assertInstanceOf($class[0], $model->{$relation}->first());
+                    $this->assertInstanceOf($class, $model->{$relation}->first());
                 } else {
                     $this->assertInstanceOf($class, $model->{$relation});
                 }

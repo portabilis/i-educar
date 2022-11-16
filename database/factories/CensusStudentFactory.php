@@ -15,7 +15,7 @@ class CensusStudentFactory extends Factory
         ];
     }
 
-    public function view(int $id): self
+    public function forView(int $id): self
     {
         $model = StudentInepFactory::new([
             'cod_aluno' => $id

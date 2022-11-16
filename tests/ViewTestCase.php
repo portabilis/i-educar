@@ -63,6 +63,10 @@ abstract class ViewTestCase extends TestCase
      */
     protected function makeNewModel(): Model
     {
+        if (method_exists($this->factory, 'forView')) {
+            return $this->factory->forView()->make();
+        }
+
         return $this->factory->make();
     }
 
@@ -80,8 +84,8 @@ abstract class ViewTestCase extends TestCase
         if ($type instanceof HasOne || $type instanceof HasMany) {
             $factory = Factory::factoryForModel($class);
             $instance = $factory::new();
-            if (method_exists($instance, 'view')) {
-                $instance->view($model->getKey())->make();
+            if (method_exists($instance, 'forView')) {
+                $instance->forView($model->getKey())->make();
             }
         } elseif ($type instanceof MorphOne) {
             $instance = Factory::factoryForModel($class)->new();

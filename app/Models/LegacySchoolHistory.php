@@ -52,8 +52,13 @@ class LegacySchoolHistory extends LegacyModel
     /**
      * @return BelongsTo
      */
-    public function student()
+    public function student(): BelongsTo
     {
         return $this->belongsTo(LegacyStudent::class, 'ref_cod_aluno');
+    }
+
+    public function school(): void
+    {
+        $this->belongsTo(LegacySchool::class, 'ref_cod_escola');
     }
 }

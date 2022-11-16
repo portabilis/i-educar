@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\HasLegacyDates;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class LegacyRace extends LegacyModel
 {
@@ -27,8 +28,8 @@ class LegacyRace extends LegacyModel
         'raca_educacenso',
     ];
 
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
+    public function individual(): BelongsToMany
+    {
+        return $this->belongsToMany(LegacyIndividual::class, 'fisica_raca', 'ref_cod_raca', 'ref_idpes');
+    }
 }

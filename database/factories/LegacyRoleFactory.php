@@ -26,6 +26,7 @@ class LegacyRoleFactory extends Factory
             'abreviatura' => $this->faker->hexColor,
             'professor' => 1,
             'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
+            'ref_usuario_exc' => LegacyUserFactory::new()->unique()->make(),
             'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
         ];
     }

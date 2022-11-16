@@ -15,8 +15,17 @@ class LegacyScoreExamTest extends EloquentTestCase
     /**
      * @return string
      */
-    protected function getEloquentModelName()
+    protected function getEloquentModelName(): string
     {
         return LegacyScoreExam::class;
+    }
+
+    protected function getLegacyAttributes(): array
+    {
+        return [
+            'id' => 'idesco',
+            'description' => 'descricao',
+            'schooling' => 'escolaridade',
+        ];
     }
 }

@@ -38,6 +38,7 @@ class EmployeeAllocationFactory extends Factory
             'horas_excedentes' => $this->faker->time(),
             'data_saida' => now(),
             'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
+            'ref_usuario_exc' => LegacyUserFactory::new()->create(),
         ];
     }
 }
