@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\LegacyArray;
 use App\Support\Database\DateSerializer;
 use DateTime;
 use Illuminate\Database\Eloquent\Builder;
@@ -54,6 +55,11 @@ class LegacyEnrollment extends LegacyModel
         'curso_itinerario',
         'itinerario_concomitante',
         'etapa_educacenso'
+    ];
+
+    protected $casts = [
+        'tipo_itinerario' => LegacyArray::class,
+        'composicao_itinerario' => LegacyArray::class,
     ];
 
     /**
