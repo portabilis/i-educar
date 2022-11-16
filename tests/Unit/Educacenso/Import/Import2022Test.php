@@ -29,4 +29,11 @@ class Import2022Test extends EducacensoTestCase
             'importacao_educacenso_2022.txt'
         ));
     }
+
+    public function validationImportRegister00Especific()
+    {
+        $legacyAcademicYearStage = LegacySchool::first()->stages->first();
+        $this->assertEquals($this->year . '-03-01', $legacyAcademicYearStage->data_inicio->format('Y-m-d'));
+        $this->assertEquals($this->year . '-12-10', $legacyAcademicYearStage->data_fim->format('Y-m-d'));
+    }
 }

@@ -6,6 +6,7 @@ use App\Models\Employee;
 use App\Models\EmployeeGraduation;
 use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacyCourse;
+use App\Models\LegacyDiscipline;
 use App\Models\LegacyEducationLevel;
 use App\Models\LegacyEducationType;
 use App\Models\LegacyEnrollment;
@@ -136,8 +137,6 @@ abstract class EducacensoTestCase extends TestCase
         $this->assertEquals($this->year, $legacyAcademicYearStage->ref_ano);
         $this->assertEquals($legacySchool->cod_escola, $legacyAcademicYearStage->ref_ref_cod_escola);
         $this->assertEquals(1, $legacyAcademicYearStage->sequencial);
-        $this->assertEquals($this->year . '-03-03', $legacyAcademicYearStage->data_inicio->format('Y-m-d'));
-        $this->assertEquals($this->year . '-12-12', $legacyAcademicYearStage->data_fim->format('Y-m-d'));
         $this->assertEquals(200, $legacyAcademicYearStage->dias_letivos);
 
         $module = $legacyAcademicYearStage->module;
@@ -194,13 +193,18 @@ abstract class EducacensoTestCase extends TestCase
         $this->assertEquals($this->year, $schoolClasses01->ano);
         $this->assertEquals(2, $schoolClasses01->turma_turno_id);
         $this->assertEquals(1, $schoolClasses01->ativo);
-        $this->assertEquals(22, $schoolClasses01->etapa_educacenso);
+        $this->assertNotNull($schoolClasses01->etapa_educacenso);
+        $this->assertTrue(in_array($schoolClasses01->etapa_educacenso, [
+            22,
+            35
+        ]));
         $this->assertEquals('13:15:00', $schoolClasses01->hora_inicial);
         $this->assertEquals('17:15:00', $schoolClasses01->hora_final);
         $this->assertNotNull($schoolClasses01->inep);
         $this->assertIsNumeric($schoolClasses01->inep->cod_turma_inep);
         $this->assertEquals(8, strlen($schoolClasses01->inep->cod_turma_inep));
         $this->assertTrue($schoolClasses01->inep->created_at->isToday());
+        $this->assertNotNull($schoolClasses01->grade);
 
         $this->assertEquals($this->user->cod_usuario, $schoolClasses02->ref_usuario_cad);
         $this->assertEquals($legacySchool->cod_escola, $schoolClasses02->ref_ref_cod_escola);
@@ -210,15 +214,18 @@ abstract class EducacensoTestCase extends TestCase
         $this->assertEquals($this->year, $schoolClasses02->ano);
         $this->assertEquals(2, $schoolClasses02->turma_turno_id);
         $this->assertEquals(1, $schoolClasses02->ativo);
-        $this->assertEquals(22, $schoolClasses02->etapa_educacenso);
+        $this->assertNotNull($schoolClasses02->etapa_educacenso);
+        $this->assertTrue(in_array($schoolClasses02->etapa_educacenso, [
+            22,
+            35
+        ]));
         $this->assertEquals('13:15:00', $schoolClasses02->hora_inicial);
         $this->assertEquals('17:15:00', $schoolClasses02->hora_final);
         $this->assertNotNull($schoolClasses02->inep);
         $this->assertIsNumeric($schoolClasses02->inep->cod_turma_inep);
         $this->assertEquals(8, strlen($schoolClasses02->inep->cod_turma_inep));
         $this->assertTrue($schoolClasses02->inep->created_at->isToday());
-
-        $this->assertEquals($schoolClasses01->grade->getKey(), $schoolClasses02->grade->getKey());
+        $this->assertNotNull($schoolClasses02->grade);
 
         $grade = $schoolClasses01->grade;
         $this->assertNotNull($grade);
@@ -270,6 +277,11 @@ abstract class EducacensoTestCase extends TestCase
         foreach ($schoolGradeDisciplines as $schoolGradeDiscipline) {
             $this->assertEquals(1, $schoolGradeDiscipline->ativo);
             $this->assertEquals('{' . $this->year . '}', $schoolGradeDiscipline->anos_letivos);
+
+            $discipline = $schoolGradeDiscipline->discipline;
+            $this->assertNotNull($discipline);
+            $this->assertInstanceOf(LegacyDiscipline::class, $discipline);
+            $this->assertNotNull($discipline->codigo_educacenso);
         }
     }
 
@@ -388,7 +400,6 @@ abstract class EducacensoTestCase extends TestCase
         foreach ($schoollClassTeachers as $schoollClassTeacher) {
             $this->assertNotNull($schoollClassTeacher->schoolClassTeacherDisciplines);
             $this->assertCount(8, $schoollClassTeacher->schoolClassTeacherDisciplines);
-
             $this->assertNotNull($schoollClassTeacher->funcao_exercida);
             $this->assertNotNull($schoollClassTeacher->tipo_vinculo);
             $this->assertEquals('2', $schoollClassTeacher->tipo_vinculo);
@@ -409,7 +420,16 @@ abstract class EducacensoTestCase extends TestCase
             $this->assertTrue($enrollment->data_cadastro->isToday());
             $this->assertEquals(1, $enrollment->ativo);
             $this->assertEquals($this->dateEnrollment->format('Y-m-d'), $enrollment->data_enturmacao->format('Y-m-d'));
-            $this->assertNotNull($enrollment->etapa_educacenso);
+            if (in_array($enrollment->schoolClass->etapa_educacenso, [
+                3,
+                22,
+                23,
+                56,
+                64,
+                72
+            ])) {
+                $this->assertNotNull($enrollment->etapa_educacenso);
+            }
             $this->assertEquals('{}', $enrollment->tipo_atendimento);
         }
 
