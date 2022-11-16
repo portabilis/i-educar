@@ -25,16 +25,12 @@ class CityTest extends EloquentTestCase
     }
 
     /** @test */
-    public function queryFindByName()
+    public function attributes()
     {
         $query = City::queryFindByName($this->model->name)->first();
 
         $this->assertEquals($this->model->name, $query->name);
-    }
 
-    /** @test */
-    public function getNameById()
-    {
         $query = City::getNameById($this->model->id);
 
         $this->assertEquals($this->model->name, $query);
