@@ -65,12 +65,9 @@ class EmployeeTest extends EloquentTestCase
     /** @test  */
     public function getIdAttribute()
     {
-        $employee = $this->createNewModel();
-
-        $this->assertInstanceOf(Employee::class, $employee);
-        $this->assertEquals($employee->id, $employee->id);
-        $this->assertIsInt($employee->id);
-        $this->assertEquals($employee->cod_servidor, $employee->id);
+        $this->assertInstanceOf(Employee::class, $this->model);
+        $this->assertIsInt($this->model->id);
+        $this->assertEquals($this->model->cod_servidor, $this->model->id);
     }
 
     /** @test  */

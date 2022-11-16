@@ -33,9 +33,12 @@ class LegacyStudentTest extends EloquentTestCase
         return LegacyStudent::class;
     }
 
-    public function testGuardianTypeAttribute(): void
+    /** @test */
+    public function attributes()
     {
         $this->assertEquals($this->model->tipo_responsavel, $this->model->guardianType);
+        $this->assertEquals($this->model->inep ? $this->model->inep->number : null, $this->model->inepNumber);
+        $this->assertEquals($this->model->aluno_estado_id, $this->model->stateRegistrationId);
     }
 
     public function testGetGuardianName(): void
@@ -64,16 +67,6 @@ class LegacyStudentTest extends EloquentTestCase
         $this->assertEquals($expected, $this->model->getGuardianCpf());
     }
 
-    public function testInepNumberAttribute(): void
-    {
-        $this->assertEquals($this->model->inep ? $this->model->inep->number : null, $this->model->inepNumber);
-    }
-
-    public function testStateRegistrationIdAttribute(): void
-    {
-        $this->assertEquals($this->model->aluno_estado_id, $this->model->stateRegistrationId);
-    }
-
     public function testScopeActive(): void
     {
         LegacyStudentFactory::new()->create(['ativo' => 0]);
@@ -97,7 +90,10 @@ class LegacyStudentTest extends EloquentTestCase
         $student2 = LegacyStudentFactory::new()->create([
             'ref_idpes' => $individual
         ]);
-        $found = $this->instanceNewEloquentModel()->female()->whereIn('cod_aluno', [$student2->cod_aluno, $this->model->cod_aluno])->get();
+        $found = $this->instanceNewEloquentModel()->female()->whereIn('cod_aluno', [
+            $student2->cod_aluno,
+            $this->model->cod_aluno
+        ])->get();
         $this->assertCount(1, $found);
     }
 }

@@ -50,24 +50,17 @@ class LegacyRegistrationTest extends EloquentTestCase
         return LegacyRegistration::class;
     }
 
-    public function testIdAttribute(): void
+    /** @test */
+    public function attributes()
     {
         $this->assertEquals($this->model->cod_matricula, $this->model->id);
-    }
-
-    public function testIsLockedToChangeStatus(): void
-    {
         $this->assertEquals($this->model->bloquear_troca_de_situacao, $this->model->isLockedToChangeStatus());
-    }
-
-    public function testIsDependencyAttributee(): void
-    {
         $this->assertEquals($this->model->dependencia, $this->model->isDependency);
-    }
-
-    public function testYearAttributee(): void
-    {
         $this->assertEquals($this->model->ano, $this->model->year);
+        $this->assertEquals($this->model->aprovado == App_Model_MatriculaSituacao::TRANSFERIDO, $this->model->isTransferred);
+        $this->assertEquals($this->model->aprovado == App_Model_MatriculaSituacao::ABANDONO, $this->model->isAbandoned);
+        $this->assertEquals($this->model->ativo === 0, $this->model->isCanceled);
+        $this->assertEquals((new RegistrationStatus())->getDescriptiveValues()[(int)$this->model->aprovado], $this->model->statusDescription);
     }
 
     public function testScopeActive(): void
@@ -76,21 +69,6 @@ class LegacyRegistrationTest extends EloquentTestCase
         $found = $this->instanceNewEloquentModel()->newQuery()->active()->get();
 
         $this->assertCount(1, $found);
-    }
-
-    public function testIsTransferred(): void
-    {
-        $this->assertEquals($this->model->aprovado == App_Model_MatriculaSituacao::TRANSFERIDO, $this->model->isTransferred);
-    }
-
-    public function testIsAbandoned(): void
-    {
-        $this->assertEquals($this->model->aprovado == App_Model_MatriculaSituacao::ABANDONO, $this->model->isAbandoned);
-    }
-
-    public function testIsCanceled(): void
-    {
-        $this->assertEquals($this->model->ativo === 0, $this->model->isCanceled);
     }
 
     public function testGetEvaluationRule()
@@ -107,15 +85,10 @@ class LegacyRegistrationTest extends EloquentTestCase
         if ($this->model->school->utiliza_regra_diferenciada && $evaluationRuleGradeYear->differentiatedEvaluationRule) {
             $expected = $evaluationRuleGradeYear->differentiatedEvaluationRule;
         } else {
-            $expected  = $evaluationRuleGradeYear->evaluationRule;
+            $expected = $evaluationRuleGradeYear->evaluationRule;
         }
 
         $this->assertEquals($expected, $this->model->getEvaluationRule());
-    }
-
-    public function testStatusDescriptionAttribute(): void
-    {
-        $this->assertEquals((new RegistrationStatus())->getDescriptiveValues()[(int)$this->model->aprovado], $this->model->statusDescription);
     }
 
     public function testScopeMale(): void
@@ -175,7 +148,7 @@ class LegacyRegistrationTest extends EloquentTestCase
     public function testLastYear(): void
     {
         LegacyRegistrationFactory::new()->create([
-           'ano' =>  date('Y') - 1
+            'ano' => date('Y') - 1
         ]);
 
         $found = $this->instanceNewEloquentModel()->lastYear()->get();

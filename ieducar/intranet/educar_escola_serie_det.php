@@ -24,6 +24,12 @@ return new class extends clsDetalhe {
 
         $tmp_obj = new clsPmieducarEscolaSerie();
         $lst_obj = $tmp_obj->lista($this->ref_cod_escola, $this->ref_cod_serie);
+
+        if (!is_array($lst_obj)) {
+            $this->mensagem .= 'Registro não localizado.<br>';
+            $this->simpleRedirect('educar_escola_serie_lst.php');
+        }
+
         $registro = array_shift($lst_obj);
 
         if (!$registro) {

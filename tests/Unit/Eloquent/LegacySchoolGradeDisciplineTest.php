@@ -28,18 +28,11 @@ class LegacySchoolGradeDisciplineTest extends EloquentTestCase
         ];
     }
 
-    public function testIdAttribute(): void
+    /** @test */
+    public function attributes()
     {
         $this->assertEquals($this->model->ref_cod_disciplina, $this->model->id);
-    }
-
-    public function testNameAttribute(): void
-    {
         $this->assertEquals($this->model->discipline->name ?? null, $this->model->name);
-    }
-
-    public function testWorkloadAttribute(): void
-    {
         $this->assertEquals($this->model->carga_horaria, $this->model->workload);
     }
 }
