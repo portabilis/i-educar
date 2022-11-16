@@ -84,7 +84,11 @@ class ReportController extends ApiCoreController
 
     protected function generationBoletion($dadosMatricula)
     {
-        $boletimReport = new BoletimReport();
+        if (class_exists(BoletimReport::class) === false) {
+            return '';
+        }
+
+        $boletimReport =  new BoletimReport();
 
         $boletimReport->addArg('matricula', (int)$dadosMatricula['id']);
         $boletimReport->addArg('ano', (int)$dadosMatricula['ano']);
