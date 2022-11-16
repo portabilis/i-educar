@@ -58,7 +58,7 @@ class clsPmieducarCurso extends Model
         $importar_curso_pre_matricula = null,
         $descricao = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'curso';
 

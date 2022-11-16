@@ -157,7 +157,7 @@ return new class extends clsCadastro {
         'atendidos_det.php?cod_pessoa=' . $this->cod_pessoa_fj : 'atendidos_lst.php';
 
         $objPessoa = new clsPessoaFisica($this->cod_pessoa_fj);
-        $db = new clsBanco();
+
 
         $detalhe = $objPessoa->queryRapida(
             $this->cod_pessoa_fj,
@@ -490,11 +490,6 @@ return new class extends clsCadastro {
         ];
 
         $this->inputsHelper()->date('data_emissao_certidao_civil', $options);
-
-        $options = [
-            'label' => '',
-            'required' => false
-        ];
 
         // cartório emissão certidão civil
         $options = [

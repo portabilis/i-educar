@@ -4,15 +4,15 @@ use iEducar\Legacy\Model;
 
 class clsPmieducarMotivoAfastamento extends Model
 {
-    public $cod_motivo_afastamento = null;
-    public $ref_usuario_exc = null;
-    public $ref_usuario_cad = null;
-    public $nm_motivo = null;
-    public $descricao = null;
-    public $data_cadastro = null;
-    public $data_exclusao = null;
-    public $ativo = null;
-    public $ref_cod_instituicao = null;
+    public $cod_motivo_afastamento;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $nm_motivo;
+    public $descricao;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $ref_cod_instituicao;
 
     public function __construct(
         $cod_motivo_afastamento = null,
@@ -25,7 +25,7 @@ class clsPmieducarMotivoAfastamento extends Model
         $ativo = null,
         $ref_cod_instituicao = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}motivo_afastamento";
 

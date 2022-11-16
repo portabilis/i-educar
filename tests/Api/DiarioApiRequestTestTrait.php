@@ -7,6 +7,7 @@ use App\Models\LegacyEnrollment;
 use Database\Factories\LegacyUserFactory;
 use Illuminate\Foundation\Testing\TestResponse;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Testing\TestResponse as TestResponseResource;
 
 trait DiarioApiRequestTestTrait
 {
@@ -200,5 +201,20 @@ trait DiarioApiRequestTestTrait
         }
 
         return $response;
+    }
+
+    public function getResource($uri, $params): TestResponseResource
+    {
+        $data = [
+            'access_key' => config('legacy.apis.access_key'),
+            'secret_key' => config('legacy.apis.secret_key'),
+        ];
+
+        $data = array_merge($data, $params);
+        $_GET = $data;
+
+        $user = LegacyUserFactory::new()->admin()->make();
+
+        return $this->actingAs($user)->get($uri . '?' . http_build_query($data));
     }
 }

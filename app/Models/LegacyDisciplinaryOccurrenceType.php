@@ -3,16 +3,16 @@
 namespace App\Models;
 
 use App\Traits\Ativo;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasInstitution;
+use App\Traits\HasLegacyDates;
+use App\Traits\HasLegacyUserAction;
 
-class LegacyDisciplinaryOccurrenceType extends Model
+class LegacyDisciplinaryOccurrenceType extends LegacyModel
 {
     use Ativo;
-    use HasFactory;
-
-    public const CREATED_AT = 'data_cadastro';
-    public const UPDATED_AT = null;
+    use HasLegacyDates;
+    use HasInstitution;
+    use HasLegacyUserAction;
 
     /**
      * @var string
@@ -28,13 +28,18 @@ class LegacyDisciplinaryOccurrenceType extends Model
      * @var array
      */
     protected $fillable = [
-        'ref_usuario_exc',
-        'ref_usuario_cad',
         'nm_tipo',
         'descricao',
         'max_ocorrencias',
         'data_exclusao',
-        'ref_cod_instituicao',
         'ativo'
+    ];
+
+    public array $legacy = [
+        'name' => 'nm_tipo',
+        'description' => 'descricao',
+        'max' => 'max_ocorrencias',
+        'deleted_at' => 'data_exclusao',
+        'active' => 'ativo'
     ];
 }

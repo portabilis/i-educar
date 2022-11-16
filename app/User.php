@@ -5,8 +5,8 @@ namespace App;
 use App\Models\LegacyAccess;
 use App\Models\LegacyEmployee;
 use App\Models\LegacyPerson;
+use App\Models\LegacySchool;
 use App\Models\LegacyUserType;
-use App\Models\School;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -273,7 +273,7 @@ class User extends Authenticatable
     public function schools()
     {
         return $this->belongsToMany(
-            School::class,
+            LegacySchool::class,
             'pmieducar.escola_usuario',
             'ref_cod_usuario',
             'ref_cod_escola',
@@ -284,7 +284,7 @@ class User extends Authenticatable
 
     public function getCreatedAtCustom(): ?Carbon
     {
-        return Carbon::createFromTimestamp((new \DateTime($this->getCreatedAtAttribute()))->getTimestamp());
+        return Carbon::createFromTimestamp((new \DateTime($this->created_at))->getTimestamp());
     }
 
     public function getEnabledUserDate(): ?Carbon

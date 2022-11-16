@@ -66,31 +66,26 @@ return new class extends clsListagem {
             ->orderBy('id', 'DESC')
             ->limit($this->limite)
             ->offset($this->offset)
-            ->get()
-            ->toArray();
+            ->get();
 
         $total = count($legacyActiveLookings);
 
         if ($total > 0) {
             foreach ($legacyActiveLookings as $legacyActiveLooking) {
-
                 $row = [];
 
-                $startDate = new DateTime($legacyActiveLooking['data_inicio']);
-                $endDate = empty($legacyActiveLooking['data_fim']) ? null : (new DateTime($legacyActiveLooking['data_fim']));
-
-                $row['data_inicio_br'] = $startDate->format('d/m/Y');
-                $row['data_fim_br'] = $endDate ? $endDate->format('d/m/Y') : '-';
+                $row['data_inicio_br'] = $legacyActiveLooking->start->format('d/m/Y');
+                $row['data_fim_br'] = $legacyActiveLooking->end?->format('d/m/Y');
 
                 $url = 'educar_busca_ativa_cad.php';
                 $options = ['query' =>
                     [
-                        'id' => $legacyActiveLooking['id'],
+                        'id' => $legacyActiveLooking->id,
                         'ref_cod_matricula' => $this->ref_cod_matricula
                     ]
                 ];
 
-                $row['active_looking_result'] = ActiveLooking::getDescription($legacyActiveLooking['resultado_busca_ativa']);
+                $row['active_looking_result'] = ActiveLooking::getDescription($legacyActiveLooking->result);
 
                 $this->addLinhas([
                     $urlHelper->l($row['data_inicio_br'], $url, $options),

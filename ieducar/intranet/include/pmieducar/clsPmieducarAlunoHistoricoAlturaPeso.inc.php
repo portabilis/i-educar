@@ -18,7 +18,7 @@ class clsPmieducarAlunoHistoricoAlturaPeso extends Model
         $altura = null,
         $peso = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}aluno_historico_altura_peso";
 

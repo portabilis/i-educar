@@ -2,6 +2,7 @@
 
 namespace App\Services\Educacenso\Version2019;
 
+use App\Models\Country;
 use App\Models\Educacenso\Registro30;
 use App\Models\Educacenso\RegistroEducacenso;
 use App\Models\EducacensoDegree;
@@ -10,7 +11,6 @@ use App\Models\Employee;
 use App\Models\EmployeeGraduation;
 use App\Models\EmployeeInep;
 use App\Models\LegacyCity;
-use App\Models\LegacyCountry;
 use App\Models\LegacyDeficiency;
 use App\Models\LegacyDocument;
 use App\Models\LegacyIndividual;
@@ -441,7 +441,7 @@ class Registro30Import implements RegistroImportInterface
     /**
      * @param $countryIbge
      *
-     * @return LegacyCountry|null
+     * @return Country|null
      */
     private function getCountry($countryIbge)
     {
@@ -449,9 +449,9 @@ class Registro30Import implements RegistroImportInterface
             return null;
         }
 
-        $legacyCountry = LegacyCountry::where('cod_ibge', $countryIbge)->first();
+        $country = Country::where('cod_ibge', $countryIbge)->first();
 
-        return $legacyCountry ? $legacyCountry->getKey() : null;
+        return $country ? $country->getKey() : null;
     }
 
     protected function createRecursosProvaInep(LegacyStudent $student)

@@ -16,7 +16,7 @@ class clsModulesRotaTransporteEscolar extends Model
 
     public function __construct($cod_rota_transporte_escolar = null, $ref_idpes_destino = null, $descricao = null, $ano = null, $tipo_rota = null, $km_pav = null, $km_npav = null, $ref_cod_empresa_transporte_escolar = null, $tercerizado = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}rota_transporte_escolar";
 
@@ -129,7 +129,7 @@ class clsModulesRotaTransporteEscolar extends Model
             $this->cod_rota_transporte_escolar = $db->InsertId("{$this->_tabela}_seq");
 
             if ($this->cod_rota_transporte_escolar) {
-                $detalhe = $this->detalhe();
+                $this->detalhe();
             }
 
             return $this->cod_rota_transporte_escolar;
@@ -192,7 +192,7 @@ class clsModulesRotaTransporteEscolar extends Model
             }
 
             if ($set) {
-                $detalheAntigo = $this->detalhe();
+                $this->detalhe();
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_rota_transporte_escolar = '{$this->cod_rota_transporte_escolar}'");
 
                 return true;
@@ -383,8 +383,7 @@ class clsModulesRotaTransporteEscolar extends Model
     public function excluir()
     {
         if (is_numeric($this->cod_rota_transporte_escolar)) {
-            $detalhe = $this->detalhe();
-
+            $this->detalhe();
             $sql = "DELETE FROM {$this->_tabela} WHERE cod_rota_transporte_escolar = '{$this->cod_rota_transporte_escolar}'";
             $db = new clsBanco();
             $db->Consulta($sql);

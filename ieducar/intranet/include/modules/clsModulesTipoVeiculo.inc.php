@@ -9,7 +9,7 @@ class clsModulesTipoVeiculo extends Model
 
     public function __construct($cod_tipo_veiculo = null, $descricao = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}tipo_veiculo";
 

@@ -25,7 +25,7 @@ class clsPmieducarTipoUsuario extends Model
         $data_exclusao = null,
         $ativo = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}tipo_usuario";
 

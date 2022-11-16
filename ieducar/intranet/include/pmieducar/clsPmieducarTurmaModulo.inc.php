@@ -245,9 +245,6 @@ class clsPmieducarTurmaModulo extends Model
      */
     public function excluir()
     {
-        if (is_numeric($this->ref_cod_turma) && is_numeric($this->ref_cod_modulo) && is_numeric($this->sequencial)) {
-        }
-
         return false;
     }
 

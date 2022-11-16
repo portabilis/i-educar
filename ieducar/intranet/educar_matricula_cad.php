@@ -516,10 +516,6 @@ return new class extends clsCadastro {
                 $instituicao = new clsPmieducarInstituicao($this->ref_cod_instituicao);
                 $instituicao = $instituicao->detalhe();
 
-                $dataCorte = $instituicao['data_base_matricula'];
-                $idadeInicial = $detSerie['idade_inicial'];
-                $idadeFinal = $detSerie['idade_final'];
-
                 $objAluno = new clsPmieducarAluno($this->ref_cod_aluno);
                 $detAluno = $objAluno->detalhe();
 
@@ -732,15 +728,7 @@ return new class extends clsCadastro {
 
             $obj_matricula_aluno = new clsPmieducarMatricula();
 
-            $lst_matricula_aluno = $obj_matricula_aluno->lista(
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                $this->ref_cod_aluno
-            );
+            $obj_matricula_aluno->lista(ref_cod_aluno: $this->ref_cod_aluno);
 
             if ($this->is_padrao == 1) {
                 $this->semestre = null;
@@ -816,7 +804,7 @@ return new class extends clsCadastro {
 
                     return true;
                 } elseif (($countEscolasDiferentes > 0) && ($reloadReserva == 1)) {
-                    $updateCandidatoReservaVaga = $obj_CandidatoReservaVaga->atualizaDesistente(
+                    $obj_CandidatoReservaVaga->atualizaDesistente(
                         $this->ano,
                         $this->ref_cod_serie,
                         $this->ref_cod_aluno,
@@ -1010,18 +998,15 @@ return new class extends clsCadastro {
         $pessoa = new clsPessoaFisica($aluno['ref_idpes']);
         $pessoa = $pessoa->detalhe();
 
-        $falecido = dbBool($pessoa['falecido']);
-
-        return $falecido;
+        return dbBool($pessoa['falecido']);
     }
 
     public function bloqueiaMatriculaSerieNaoSeguinte()
     {
         $instituicao = new clsPmieducarInstituicao($this->ref_cod_instituicao);
         $instituicao = $instituicao->detalhe();
-        $bloqueia = dbBool($instituicao['bloqueia_matricula_serie_nao_seguinte']);
 
-        return $bloqueia;
+        return dbBool($instituicao['bloqueia_matricula_serie_nao_seguinte']);
     }
 
     public function permiteMatriculaSerieDestino()
@@ -1106,8 +1091,7 @@ return new class extends clsCadastro {
 
                 $enturmacao->removerSequencial = true;
                 $detEnturmacao = $enturmacao->detalhe();
-                $detEnturmacao = $detEnturmacao['data_enturmacao'];
-                $enturmacao->data_enturmacao = $detEnturmacao;
+                $enturmacao->data_enturmacao = $detEnturmacao['data_enturmacao'];
 
                 if ($result && !$enturmacao->edita()) {
                     $result = false;
@@ -1449,7 +1433,7 @@ return new class extends clsCadastro {
         $det_t = $obj_t->detalhe();
         $obj_mt = new clsPmieducarMatriculaTurma();
 
-        $lst_mt = $obj_mt->lista(
+        $obj_mt->lista(
             $int_ref_cod_matricula = null,
             $int_ref_cod_turma = null,
             $int_ref_usuario_exc = null,

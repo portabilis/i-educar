@@ -14,7 +14,7 @@ class clsCadastroFisicaFoto extends Model
      */
     public function __construct($idpes = null, $caminho = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'cadastro.';
         $this->_tabela = "{$this->_schema}fisica_foto";
 

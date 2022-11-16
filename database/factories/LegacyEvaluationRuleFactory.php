@@ -31,6 +31,8 @@ class LegacyEvaluationRuleFactory extends Factory
             'tipo_nota' => $this->faker->randomElement([1, 2, 3, 4]),
             'tipo_progressao' => $this->faker->randomElement([1, 2, 3, 4]),
             'tipo_presenca' => $this->faker->randomElement([1, 2]),
+            'tabela_arredondamento_id' => LegacyRoundingTableFactory::new()->create(),
+            'tabela_arredondamento_id_conceitual' => LegacyRoundingTableFactory::new()->create(),
         ];
     }
 

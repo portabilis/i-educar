@@ -174,7 +174,7 @@ class clsPmieducarMatriculaTurma extends Model
 
             $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
 
-            $detalhe = $this->detalhe();
+            $this->detalhe();
 
             return true;
         }
@@ -327,7 +327,7 @@ class clsPmieducarMatriculaTurma extends Model
             }
 
             if ($set) {
-                $detalheAntigo = $this->detalhe();
+                $this->detalhe();
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_turma = '{$this->ref_cod_turma}' and sequencial = '$this->sequencial' ");
 
                 return true;
@@ -1241,12 +1241,11 @@ class clsPmieducarMatriculaTurma extends Model
     {
         if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_turma)) {
             $db = new clsBanco();
-            $max = $db->CampoUnico("SELECT COALESCE(MAX(sequencial),0) + 1 AS MAX FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}'");
 
             //removido filtro pois tornou-se possivel enturmar uma matricula em mais de uma turma
             //AND ref_cod_turma = '{$this->ref_cod_turma}'");
 
-            return $max;
+            return $db->CampoUnico("SELECT COALESCE(MAX(sequencial),0) + 1 AS MAX FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}'");
         }
 
         return false;
@@ -1468,13 +1467,8 @@ class clsPmieducarMatriculaTurma extends Model
         if ($this->ref_cod_matricula && $this->sequencial) {
             $dataBaseTransferencia = $this->getDataBaseTransferencia();
             $data = $data ? $data : date('Y-m-d');
-            if (is_null($dataBaseTransferencia) || strtotime($dataBaseTransferencia) < strtotime($data)) {
-                $db = new clsBanco();
-                $db->CampoUnico("UPDATE pmieducar.matricula_turma SET transferido = true, remanejado = false, abandono = false, reclassificado = false, falecido = false, data_exclusao = '$data' WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND sequencial = {$this->sequencial}");
-            } else {
-                $db = new clsBanco();
-                $db->CampoUnico("UPDATE pmieducar.matricula_turma SET transferido = true, remanejado = false, abandono = false, reclassificado = false, falecido = false, data_exclusao = '$data' WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND sequencial = {$this->sequencial}");
-            }
+            $db = new clsBanco();
+            $db->CampoUnico("UPDATE pmieducar.matricula_turma SET transferido = true, remanejado = false, abandono = false, reclassificado = false, falecido = false, data_exclusao = '$data' WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND sequencial = {$this->sequencial}");
         }
     }
 

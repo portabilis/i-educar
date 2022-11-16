@@ -19,7 +19,7 @@ class clsPmieducarBloqueioLancamentoFaltasNotas extends Model
         $data_inicio = null,
         $data_fim = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'bloqueio_lancamento_faltas_notas';
 
