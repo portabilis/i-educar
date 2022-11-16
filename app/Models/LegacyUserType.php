@@ -127,28 +127,28 @@ class LegacyUserType extends LegacyModel
     protected function level(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->nivel
+            get: fn () => $this->nivel
         );
     }
 
     protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->nm_tipo
+            get: fn () => $this->nm_tipo
         );
     }
 
     protected function description(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->descricao
+            get: fn () => $this->descricao
         );
     }
 
     protected function active(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (bool)$this->ativo
+            get: fn () => (bool)$this->ativo
         );
     }
 }

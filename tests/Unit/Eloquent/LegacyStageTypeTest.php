@@ -27,10 +27,14 @@ class LegacyStageTypeTest extends EloquentTestCase
         return LegacyStageType::class;
     }
 
-    public function testNameAttribute(): void
+    /** @test */
+    public function attributes()
     {
         $expected = sprintf('%s - %d etapa(s)', $this->model->nm_tipo, $this->model->num_etapas);
         $this->assertEquals($expected, $this->model->name);
+
+        $expected = str_replace(["\r\n", "\r", "\n"], '<br />', $this->model->getRawOriginal('descricao'));
+        $this->assertEquals($expected, $this->model->descricao);
     }
 
     public function testScopeActive(): void
@@ -53,11 +57,5 @@ class LegacyStageTypeTest extends EloquentTestCase
             })
             ->exists();
         $this->assertEquals($expected, $this->instanceNewEloquentModel()->alreadyExists($name, $stagesNumber, $id));
-    }
-
-    public function testDescricaoAttribute(): void
-    {
-        $expected = str_replace(["\r\n", "\r", "\n"], '<br />', $this->model->getRawOriginal('descricao'));
-        $this->assertEquals($expected, $this->model->descricao);
     }
 }

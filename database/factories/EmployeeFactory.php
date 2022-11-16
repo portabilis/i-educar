@@ -26,6 +26,7 @@ class EmployeeFactory extends Factory
             'institution_id' => LegacyInstitutionFactory::new()->unique()->make(),
             'workload' => $this->faker->randomNumber(3),
             'ref_idesco' => LegacySchoolingDegreeFactory::new()->unique()->make(),
+            'curso_formacao_continuada' => '{1}'
         ];
     }
 }

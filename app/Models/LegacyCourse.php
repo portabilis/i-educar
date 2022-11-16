@@ -88,21 +88,21 @@ class LegacyCourse extends LegacyModel
     protected function id(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->cod_curso,
+            get: fn () => $this->cod_curso,
         );
     }
 
     protected function description(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->descricao,
+            get: fn () => $this->descricao,
         );
     }
 
     protected function steps(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->qtd_etapas,
+            get: fn () => $this->qtd_etapas,
         );
     }
 
@@ -122,7 +122,7 @@ class LegacyCourse extends LegacyModel
     protected function isStandardCalendar(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->padrao_ano_escolar,
+            get: fn () => $this->padrao_ano_escolar,
         );
     }
 

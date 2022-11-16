@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\HasLegacyDates;
 use App_Model_MatriculaSituacao;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -34,6 +35,9 @@ class LegacyRegistration extends LegacyModel
      * @var string
      */
     protected $table = 'pmieducar.matricula';
+
+    public const CREATED_AT = 'data_cadastro';
+    public const UPDATED_AT = 'updated_at';
 
     /**
      * @var string
@@ -65,38 +69,30 @@ class LegacyRegistration extends LegacyModel
         'data_matricula'
     ];
 
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
-     * @return int
-     */
-    public function getIdAttribute()
+    protected function id(): Attribute
     {
-        return $this->cod_matricula;
+        return Attribute::make(
+            get: fn () =>  $this->cod_matricula
+        );
     }
 
     public function isLockedToChangeStatus(): bool
     {
-        return $this->bloquear_troca_de_situacao;
+        return (bool)$this->bloquear_troca_de_situacao;
     }
 
-    /**
-     * @return boolean
-     */
-    public function getIsDependencyAttribute()
+    protected function isDependency(): Attribute
     {
-        return $this->dependencia;
+        return Attribute::make(
+            get: fn () =>  $this->dependencia
+        );
     }
 
-    /**
-     * @return int
-     */
-    public function getYearAttribute()
+    protected function year(): Attribute
     {
-        return $this->ano;
+        return Attribute::make(
+            get: fn () =>  $this->ano
+        );
     }
 
     /**
@@ -104,7 +100,7 @@ class LegacyRegistration extends LegacyModel
      *
      * @return BelongsTo
      */
-    public function student()
+    public function student(): BelongsTo
     {
         return $this->belongsTo(LegacyStudent::class, 'ref_cod_aluno');
     }
@@ -114,7 +110,7 @@ class LegacyRegistration extends LegacyModel
      *
      * @return BelongsTo
      */
-    public function school()
+    public function school(): BelongsTo
     {
         return $this->belongsTo(LegacySchool::class, 'ref_ref_cod_escola');
     }
@@ -124,7 +120,7 @@ class LegacyRegistration extends LegacyModel
      *
      * @return BelongsTo
      */
-    public function grade()
+    public function grade(): BelongsTo
     {
         return $this->belongsTo(LegacyGrade::class, 'ref_ref_cod_serie');
     }
@@ -134,7 +130,7 @@ class LegacyRegistration extends LegacyModel
      *
      * @return BelongsTo
      */
-    public function course()
+    public function course(): BelongsTo
     {
         return $this->belongsTo(LegacyCourse::class, 'ref_cod_curso');
     }
@@ -142,7 +138,7 @@ class LegacyRegistration extends LegacyModel
     /**
      * @return HasMany
      */
-    public function enrollments()
+    public function enrollments(): HasMany
     {
         return $this->hasMany(LegacyEnrollment::class, 'ref_cod_matricula');
     }
@@ -150,7 +146,7 @@ class LegacyRegistration extends LegacyModel
     /**
      * @return HasMany
      */
-    public function activeEnrollments()
+    public function activeEnrollments(): HasMany
     {
         return $this->hasMany(LegacyEnrollment::class, 'ref_cod_matricula')->where('ativo', 1);
     }
@@ -166,7 +162,7 @@ class LegacyRegistration extends LegacyModel
     /**
      * @return HasMany
      */
-    public function exemptions()
+    public function exemptions(): HasMany
     {
         return $this->hasMany(LegacyDisciplineExemption::class, 'ref_cod_matricula', 'cod_matricula');
     }
@@ -181,25 +177,31 @@ class LegacyRegistration extends LegacyModel
         return $query->where('matricula.ativo', 1);
     }
 
-    public function getIsTransferredAttribute()
+    protected function isTransferred(): Attribute
     {
-        return $this->aprovado == App_Model_MatriculaSituacao::TRANSFERIDO;
+        return Attribute::make(
+            get: fn () =>  $this->aprovado == App_Model_MatriculaSituacao::TRANSFERIDO
+        );
     }
 
-    public function getIsAbandonedAttribute()
+    protected function isAbandoned(): Attribute
     {
-        return $this->aprovado == App_Model_MatriculaSituacao::ABANDONO;
+        return Attribute::make(
+            get: fn () =>  $this->aprovado == App_Model_MatriculaSituacao::ABANDONO
+        );
     }
 
-    public function getIsCanceledAttribute()
+    protected function isCanceledA(): Attribute
     {
-        return $this->ativo === 0;
+        return Attribute::make(
+            get: fn () =>  $this->ativo === 0
+        );
     }
 
     /**
      * @return HasOne
      */
-    public function studentAbsence()
+    public function studentAbsence(): HasOne
     {
         return $this->hasOne(LegacyStudentAbsence::class, 'matricula_id');
     }
@@ -207,7 +209,7 @@ class LegacyRegistration extends LegacyModel
     /**
      * @return HasOne
      */
-    public function studentScore()
+    public function studentScore(): HasOne
     {
         return $this->hasOne(LegacyStudentScore::class, 'matricula_id');
     }
@@ -215,7 +217,7 @@ class LegacyRegistration extends LegacyModel
     /**
      * @return HasOne
      */
-    public function studentDescriptiveOpinion()
+    public function studentDescriptiveOpinion(): HasOne
     {
         return $this->hasOne(LegacyStudentDescriptiveOpinion::class, 'matricula_id');
     }
@@ -223,7 +225,7 @@ class LegacyRegistration extends LegacyModel
     /**
      * @return HasMany
      */
-    public function dependencies()
+    public function dependencies(): HasMany
     {
         return $this->hasMany(LegacyDisciplineDependence::class, 'ref_cod_matricula', 'cod_matricula');
     }
@@ -244,12 +246,11 @@ class LegacyRegistration extends LegacyModel
         return $evaluationRuleGradeYear->evaluationRule;
     }
 
-    /**
-     * @return string
-     */
-    public function getStatusDescriptionAttribute()
+    protected function statusDescription(): Attribute
     {
-        return (new RegistrationStatus())->getDescriptiveValues()[(int)$this->aprovado];
+        return Attribute::make(
+            get: fn () => (new RegistrationStatus())->getDescriptiveValues()[(int)$this->aprovado]
+        );
     }
 
     public function scopeMale(Builder $query): Builder

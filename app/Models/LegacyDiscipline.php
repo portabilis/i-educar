@@ -49,49 +49,49 @@ class LegacyDiscipline extends LegacyModel
     protected function institutionId(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->instituicao_id,
+            get: fn () => $this->instituicao_id,
         );
     }
 
     protected function knowledgeAreaId(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->area_conhecimento_id,
+            get: fn () => $this->area_conhecimento_id,
         );
     }
 
     protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->nome,
+            get: fn () => $this->nome,
         );
     }
 
     protected function abbreviation(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->abreviatura,
+            get: fn () => $this->abreviatura,
         );
     }
 
     protected function foundationType(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->tipo_base,
+            get: fn () => $this->tipo_base,
         );
     }
 
     protected function order(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->ordenamento,
+            get: fn () => $this->ordenamento,
         );
     }
 
     protected function educacensoCode(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->codigo_educacenso,
+            get: fn () => $this->codigo_educacenso,
         );
     }
 

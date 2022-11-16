@@ -30,7 +30,7 @@ class SchoolClassInep extends Model
     protected function number(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->cod_turma_inep,
+            get: fn () => $this->cod_turma_inep,
         );
     }
 

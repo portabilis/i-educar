@@ -4,6 +4,7 @@ namespace Tests\Unit\Eloquent;
 
 use App\Models\Employee;
 use App\Models\EmployeeWithdrawal;
+use App\Models\File;
 use App\Models\LegacyUser;
 use App\Models\WithdrawalReason;
 use Tests\EloquentTestCase;
@@ -15,13 +16,13 @@ class EmployeeWithdrawalTest extends EloquentTestCase
         'reason' => WithdrawalReason::class,
         'deletedByUser' => LegacyUser::class,
         'createdByUser' => LegacyUser::class,
-
+        'files' => [File::class, ['type' => 1]]
     ];
 
     /**
      * @return string
      */
-    protected function getEloquentModelName()
+    protected function getEloquentModelName(): string
     {
         return EmployeeWithdrawal::class;
     }

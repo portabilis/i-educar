@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Eloquent;
 
+use App\Models\LegacyEmployeeRole;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyRole;
 use App\Models\LegacyUser;
@@ -9,10 +10,9 @@ use Tests\EloquentTestCase;
 
 class LegacyRoleTest extends EloquentTestCase
 {
-    private LegacyRole $role;
-
     public $relations = [
         'institution' => LegacyInstitution::class,
+        'employeeRoles' => LegacyEmployeeRole::class,
         'deletedByUser' => LegacyUser::class,
         'createdByUser' => LegacyUser::class,
     ];
@@ -20,26 +20,19 @@ class LegacyRoleTest extends EloquentTestCase
     /**
      * @return string
      */
-    protected function getEloquentModelName()
+    protected function getEloquentModelName(): string
     {
         return LegacyRole::class;
     }
 
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->role = $this->createNewModel();
-    }
-
     /** @test */
-    public function getIdAttribute()
+    public function getIdAttribute(): void
     {
-        $this->assertEquals($this->role->id, $this->role->cod_funcao);
+        $this->assertEquals($this->model->id, $this->model->cod_funcao);
     }
 
     /** @test  */
-    public function scopeProfessor()
+    public function scopeProfessor(): void
     {
         $this->createNewModel();
 
