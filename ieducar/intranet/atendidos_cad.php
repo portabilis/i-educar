@@ -988,6 +988,10 @@ return new class extends clsCadastro {
             return false;
         }
 
+        if (!$this->validaDadosTelefones()) {
+            return false;
+        }
+
         $pessoaId = $this->createOrUpdatePessoa($pessoaIdOrNull);
         $this->savePhoto($pessoaId);
         $this->createOrUpdatePessoaFisica($pessoaId);
@@ -996,6 +1000,34 @@ return new class extends clsCadastro {
         $this->saveAddress($pessoaId,true);
         $this->afterChangePessoa($pessoaId);
         $this->saveFiles($pessoaId);
+
+        return true;
+    }
+
+    protected function validaDadosTelefones()
+    {
+        return $this->validaDDDTelefone($this->ddd_telefone_1, $this->telefone_1, 'Telefone residencial') &&
+            $this->validaDDDTelefone($this->ddd_telefone_2, $this->telefone_2, 'Celular') &&
+            $this->validaDDDTelefone($this->ddd_telefone_mov, $this->telefone_mov, 'Telefone adicional') &&
+            $this->validaDDDTelefone($this->ddd_telefone_fax, $this->telefone_fax, 'Fax');
+    }
+
+    protected function validaDDDTelefone($valorDDD, $valorTelefone, $nomeCampo)
+    {
+        $msgRequereTelefone = "O campo: {$nomeCampo}, deve ser preenchido quando o DDD estiver preenchido.";
+        $msgRequereDDD = "O campo: DDD, deve ser preenchido quando o {$nomeCampo} estiver preenchido.";
+
+        if (!empty($valorDDD) && empty($valorTelefone)) {
+            $this->mensagem = $msgRequereTelefone;
+
+            return false;
+        }
+
+        if (empty($valorDDD) && !empty($valorTelefone)) {
+            $this->mensagem = $msgRequereDDD;
+
+            return false;
+        }
 
         return true;
     }
