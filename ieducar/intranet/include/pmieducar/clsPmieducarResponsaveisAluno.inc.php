@@ -13,7 +13,7 @@ class clsPmieducarResponsaveisAluno extends Model
         $ref_idpes = null,
         $vinculo_familiar = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}responsaveis_aluno";
 

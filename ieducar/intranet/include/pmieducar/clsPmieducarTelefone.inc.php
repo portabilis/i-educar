@@ -11,7 +11,7 @@ class clsPmieducarTelefone extends Model
 
     public function __construct($ref_cod_pessoa_educ = null, $tipo = null, $ddd = null, $fone = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}telefone";
 
@@ -208,9 +208,6 @@ class clsPmieducarTelefone extends Model
      */
     public function excluir()
     {
-        if (is_numeric($this->ref_cod_pessoa_educ) && is_numeric($this->tipo)) {
-        }
-
         return false;
     }
 }

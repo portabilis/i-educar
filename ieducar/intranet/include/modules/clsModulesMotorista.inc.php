@@ -26,7 +26,7 @@ class clsModulesMotorista extends Model
         $ref_cod_empresa_transporte_escolar = null,
         $observacao = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}motorista";
 
@@ -133,7 +133,7 @@ class clsModulesMotorista extends Model
             $this->cod_motorista = $db->InsertId("{$this->_tabela}_seq");
 
             if ($this->cod_motorista) {
-                $detalhe = $this->detalhe();
+                $this->detalhe();
             }
 
             return $this->cod_motorista;
@@ -196,7 +196,7 @@ class clsModulesMotorista extends Model
             }
 
             if ($set) {
-                $detalheAntigo = $this->detalhe();
+                $this->detalhe();
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_motorista = '{$this->cod_motorista}'");
 
                 return true;
@@ -344,7 +344,7 @@ class clsModulesMotorista extends Model
     public function excluir()
     {
         if (is_numeric($this->cod_motorista)) {
-            $detalhe = $this->detalhe();
+            $this->detalhe();
 
             $sql = "DELETE FROM {$this->_tabela} WHERE cod_motorista = '{$this->cod_motorista}'";
             $db = new clsBanco();

@@ -21,7 +21,7 @@ class clsModulesItinerarioTransporteEscolar extends Model
         $hora = null,
         $tipo = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}itinerario_transporte_escolar";
 

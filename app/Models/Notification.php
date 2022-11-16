@@ -23,16 +23,21 @@ class Notification extends Model
     /**
      * @return BelongsTo
      */
-    public function type()
+    public function type(): BelongsTo
     {
         return $this->belongsTo(NotificationType::class);
     }
 
-    public function needsPresignerUrl()
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(LegacyUser::class, 'user_id');
+    }
+
+    public function needsPresignerUrl(): bool
     {
         return in_array($this->type_id, [
             NotificationType::EXPORT_STUDENT,
             NotificationType::EXPORT_TEACHER,
-        ]);
+        ], true);
     }
 }

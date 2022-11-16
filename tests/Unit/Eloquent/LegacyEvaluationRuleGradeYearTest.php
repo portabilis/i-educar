@@ -10,6 +10,7 @@ class LegacyEvaluationRuleGradeYearTest extends EloquentTestCase
 {
     protected $relations = [
         'evaluationRule' => LegacyEvaluationRule::class,
+        'differentiatedEvaluationRule' => LegacyEvaluationRule::class,
     ];
 
     /**

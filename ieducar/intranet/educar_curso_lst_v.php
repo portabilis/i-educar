@@ -140,10 +140,10 @@ return new class extends clsListagem {
                 $registro['data_exclusao_time'] = strtotime(substr($registro['data_exclusao'], 0, 16));
                 $registro['data_exclusao_br'] = date('d/m/Y H:i', $registro['data_exclusao_time']);
 
-                $det_ref_cod_nivel_ensino = LegacyEducationLevel::find($registro['ref_cod_nivel_ensino'])?->toArray();
+                $det_ref_cod_nivel_ensino = LegacyEducationLevel::find($registro['ref_cod_nivel_ensino'])?->getAttributes();
                 $registro['ref_cod_nivel_ensino'] = $det_ref_cod_nivel_ensino['nm_nivel'];
 
-                $det_ref_cod_tipo_ensino = LegacyEducationType::find($registro['ref_cod_tipo_ensino'])?->toArray();
+                $det_ref_cod_tipo_ensino = LegacyEducationType::find($registro['ref_cod_tipo_ensino'])?->getAttributes();
                 $registro['ref_cod_tipo_ensino'] = $det_ref_cod_tipo_ensino['nm_tipo'];
 
                 $obj_ref_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);

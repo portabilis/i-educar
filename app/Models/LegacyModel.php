@@ -11,8 +11,14 @@ class LegacyModel extends Model
 {
     public array $legacy = [];
 
+    protected string $builder = LegacyBuilder::class;
+
     public function __get($key)
     {
+        if (is_string($key) && method_exists($this, $key)) {
+            return parent::__get($key);
+        }
+
         return parent::__get($this->getLegacyColumn($key));
     }
 
@@ -23,11 +29,7 @@ class LegacyModel extends Model
 
     public function newEloquentBuilder($query)
     {
-        if (property_exists($this, 'builder')) {
-            return new $this->builder($query);
-        }
-
-        return new LegacyBuilder($query);
+        return new $this->builder($query);
     }
 
     public function attributesToArray()
@@ -60,6 +62,10 @@ class LegacyModel extends Model
 
     public function getLegacyColumn($key)
     {
-        return $this->legacy[$key] ?? $key;
+        if (is_string($key)) {
+            return $this->legacy[$key] ?? $key;
+        }
+
+        return $key;
     }
 }

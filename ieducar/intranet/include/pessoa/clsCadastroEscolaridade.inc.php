@@ -14,7 +14,7 @@ class clsCadastroEscolaridade extends Model
      */
     public function __construct($idesco = null, $descricao = null, $escolaridade = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'cadastro.';
         $this->_tabela = "{$this->_schema}escolaridade";
 

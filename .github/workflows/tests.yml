@@ -5,6 +5,7 @@ on:
     branches:
       - 2.*
       - main
+      
   pull_request:
 
 permissions:
@@ -15,7 +16,7 @@ jobs:
 
     name: Unit, Integration and Pages
 
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     env:
       APP_URL: http://localhost:8000
@@ -33,6 +34,8 @@ jobs:
       QUEUE_CONNECTION: sync
       SESSION_DRIVER: array
       LEGACY_SEED_DATA: false
+      COMPOSER_ALLOW_SUPERUSER: 1
+      NODE_OPTIONS: --max_old_space_size=1024
 
     services:
       postgres:

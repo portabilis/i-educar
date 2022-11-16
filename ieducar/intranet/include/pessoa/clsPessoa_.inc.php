@@ -60,7 +60,7 @@ class clsPessoa_
             $db->Consulta("INSERT INTO {$this->schema_cadastro}.{$this->tabela_pessoa} (nome, slug, data_cad,tipo,situacao,origem_gravacao, operacao $campos) VALUES ('$this->nome', '{$slug}', NOW(), '$this->tipo', 'P', 'U', 'I' $valores)");
             $this->idpes = $db->InsertId("{$this->schema_cadastro}.seq_pessoa");
             if ($this->idpes) {
-                $detalhe = $this->detalhe();
+                $this->detalhe();
             }
 
             return $this->idpes;
@@ -94,7 +94,7 @@ class clsPessoa_
             }
             if ($set) {
                 $db = new clsBanco();
-                $detalheAntigo = $this->detalhe();
+                $this->detalhe();
                 $db->Consulta("UPDATE {$this->schema_cadastro}.{$this->tabela_pessoa} SET $set, data_rev = 'NOW()' WHERE idpes = $this->idpes");
 
                 return true;

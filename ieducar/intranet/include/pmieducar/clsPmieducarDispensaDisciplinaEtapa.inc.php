@@ -11,7 +11,7 @@ class clsPmieducarDispensaDisciplinaEtapa extends Model
         $ref_cod_dispensa = null,
         $etapa = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}dispensa_etapa";
 

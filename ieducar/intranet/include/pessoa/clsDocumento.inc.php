@@ -544,7 +544,7 @@ class clsDocumento
     public function exclui()
     {
         if (is_numeric($this->idpes)) {
-            $db = new clsBanco();
+
 
             return true;
         }

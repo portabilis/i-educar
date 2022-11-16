@@ -23,7 +23,7 @@ class clsPmieducarEscolaSerieDisciplina extends Model
         $etapas_utilizadas = false,
         $anos_letivos = []
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'escola_serie_disciplina';
 
@@ -135,7 +135,6 @@ class clsPmieducarEscolaSerieDisciplina extends Model
             if (is_array($this->anos_letivos)) {
                 $campos .= "{$gruda}anos_letivos";
                 $valores .= "{$gruda} " . Portabilis_Utils_Database::arrayToPgArray($this->anos_letivos) . ' ';
-                $grupo = ', ';
             }
 
             $campos .= "{$gruda}ativo";

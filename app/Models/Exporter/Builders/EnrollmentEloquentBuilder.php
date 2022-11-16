@@ -11,35 +11,132 @@ class EnrollmentEloquentBuilder extends Builder
     use JoinableBuilder;
 
     /**
-     * @param array $columns
+     * Colunas legadas usadas para gerar a query do exportador dinámicamente sem a view
      *
-     * @return EnrollmentEloquentBuilder
      */
-    public function mother($columns)
+    public function getLegacyColumns(): array
     {
-        $this->addSelect(
-            $this->joinColumns('mother', $columns)
-        );
-
-        return $this->leftJoin('exporter_person as mother', function (JoinClause $join) {
-            $join->on('exporter_student.mother_id', '=', 'mother.id');
-        });
+        return [
+            'mother.person' => [
+                'id' => 'm.idpes as ID da mãe',
+                'name' => 'm.nome as Nome da mãe',
+                'email' => 'm.email as E-mail da mãe'
+            ],
+            'mother.individual' => [
+                'social_name' => 'mf.nome_social as Nome social e/ou afetivo da mãe',
+                'cpf' => 'mf.cpf as CPF da mãe',
+                'date_of_birth' => 'mf.data_nasc as Data de nascimento da mãe',
+                'sus' => 'mf.sus as Número SUS da mãe',
+                'nis' => 'mf.nis_pis_pasep as NIS (PIS/PASEP) da mãe',
+                'occupation' => 'mf.ocupacao as Ocupação da mãe',
+                'organization' => 'mf.empresa as Empresa da mãe',
+                'monthly_income' => 'mf.renda_mensal as Renda Mensal da mãe',
+                'gender' => 'mf.sexo as Gênero da mãe'
+            ],
+            'mother.document' => [
+                'rg' => 'md.rg as RG da mãe',
+                'rg_issue_date' => 'md.data_exp_rg as RG (Data Emissão) da mãe',
+                'rg_state_abbreviation' => 'md.sigla_uf_exp_rg as RG (Estado) da mãe'
+            ],
+            'father.person' => [
+                'id' => 'f.idpes as ID do pai',
+                'name' => 'f.nome as Nome do pai',
+                'email' => 'f.email as E-mail do pai'
+            ],
+            'father.individual' => [
+                'social_name' => 'ff.nome_social as Nome social e/ou afetivo do pai',
+                'cpf' => 'ff.cpf as CPF do pai',
+                'date_of_birth' => 'ff.data_nasc as Data de nascimento do pai',
+                'sus' => 'ff.sus as Número SUS do pai',
+                'nis' => 'ff.nis_pis_pasep as NIS (PIS/PASEP) do pai',
+                'occupation' => 'ff.ocupacao as Ocupação do pai',
+                'organization' => 'ff.empresa as Empresa do pai',
+                'monthly_income' => 'ff.renda_mensal as Renda Mensal do pai',
+                'gender' => 'ff.sexo as Gênero do pai'
+            ],
+            'father.document' => [
+                'rg' => 'fd.rg as RG do pai',
+                'rg_issue_date' => 'fd.data_exp_rg as RG (Data Emissão) do pai',
+                'rg_state_abbreviation' => 'fd.sigla_uf_exp_rg as RG (Estado) do pai'
+            ],
+            'guardian.person' => [
+                'id' => 'g.idpes as ID do responsável',
+                'name' => 'g.nome as Nome do responsável',
+                'email' => 'g.email as E-mail do responsável'
+            ],
+            'guardian.individual' => [
+                'social_name' => 'gf.nome_social as Nome social e/ou afetivo do responsável',
+                'cpf' => 'gf.cpf as CPF do responsável',
+                'date_of_birth' => 'gf.data_nasc as Data de nascimento do responsável',
+                'sus' => 'gf.sus as Número SUS do responsável',
+                'nis' => 'gf.nis_pis_pasep as NIS (PIS/PASEP) do responsável',
+                'occupation' => 'gf.ocupacao as Ocupação do responsável',
+                'organization' => 'gf.empresa as Empresa do responsável',
+                'monthly_income' => 'gf.renda_mensal as Renda Mensal do responsável',
+                'gender' => 'gf.sexo as Gênero do responsável'
+            ],
+            'guardian.document' => [
+                'rg' => 'gd.rg as RG do responsável',
+                'rg_issue_date' => 'gd.data_exp_rg as RG (Data Emissão) do responsável',
+                'rg_state_abbreviation' => 'gd.sigla_uf_exp_rg as RG (Estado) do responsável'
+            ]
+        ];
     }
 
     /**
      * @param array $columns
      *
-     * @return EnrollmentEloquentBuilder
+     * @return void
+     */
+    public function mother($columns)
+    {
+        //pessoa
+        if ($only = $this->model->getLegacyExportedColumns('mother.person', $columns)) {
+            $this->addSelect($only);
+            $this->leftJoin('cadastro.pessoa as m', 'exporter_student.mother_id', 'm.idpes');
+        }
+
+        //fisica
+        if ($only = $this->model->getLegacyExportedColumns('mother.individual', $columns)) {
+            $this->addSelect($only);
+            $this->leftJoin('cadastro.fisica as mf', 'exporter_student.mother_id', 'mf.idpes');
+        }
+
+        //documento
+        if ($only = $this->model->getLegacyExportedColumns('mother.document', $columns)) {
+            $this->addSelect($only);
+            $this->leftJoin('cadastro.documento as md', 'exporter_student.mother_id', 'md.idpes');
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param array $columns
+     *
+     * @return void
      */
     public function father($columns)
     {
-        $this->addSelect(
-            $this->joinColumns('father', $columns)
-        );
+        //pessoa
+        if ($only = $this->model->getLegacyExportedColumns('father.person', $columns)) {
+            $this->addSelect($only);
+            $this->leftJoin('cadastro.pessoa as f', 'exporter_student.father_id', 'f.idpes');
+        }
 
-        return $this->leftJoin('exporter_person as father', function (JoinClause $join) {
-            $join->on('exporter_student.father_id', '=', 'father.id');
-        });
+        //fisica
+        if ($only = $this->model->getLegacyExportedColumns('father.individual', $columns)) {
+            $this->addSelect($only);
+            $this->leftJoin('cadastro.fisica as ff', 'exporter_student.father_id', 'ff.idpes');
+        }
+
+        //documento
+        if ($only = $this->model->getLegacyExportedColumns('father.document', $columns)) {
+            $this->addSelect($only);
+            $this->leftJoin('cadastro.documento as fd', 'exporter_student.father_id', 'fd.idpes');
+        }
+
+        return $this;
     }
 
     /**
@@ -49,13 +146,25 @@ class EnrollmentEloquentBuilder extends Builder
      */
     public function guardian($columns)
     {
-        $this->addSelect(
-            $this->joinColumns('guardian', $columns)
-        );
+        //pessoa
+        if ($only = $this->model->getLegacyExportedColumns('guardian.person', $columns)) {
+            $this->addSelect($only);
+            $this->leftJoin('cadastro.pessoa as g', 'exporter_student.guardian_id', 'g.idpes');
+        }
 
-        return $this->leftJoin('exporter_person as guardian', function (JoinClause $join) {
-            $join->on('exporter_student.guardian_id', '=', 'guardian.id');
-        });
+        //fisica
+        if ($only = $this->model->getLegacyExportedColumns('guardian.individual', $columns)) {
+            $this->addSelect($only);
+            $this->leftJoin('cadastro.fisica as gf', 'exporter_student.guardian_id', 'gf.idpes');
+        }
+
+        //documento
+        if ($only = $this->model->getLegacyExportedColumns('guardian.document', $columns)) {
+            $this->addSelect($only);
+            $this->leftJoin('cadastro.documento as gd', 'exporter_student.guardian_id', 'gd.idpes');
+        }
+
+        return $this;
     }
 
     /**

@@ -15,7 +15,7 @@ class clsPmieducarCalendarioAnoLetivo extends Model
 
     public function __construct($cod_calendario_ano_letivo = null, $ref_cod_escola = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ano = null, $data_cadastra = null, $data_exclusao = null, $ativo = null/*, $inicio_ano_letivo = null, $termino_ano_letivo = null*/)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}calendario_ano_letivo";
 

@@ -39,7 +39,7 @@ class clsModulesUniformeAluno extends Model
         $quantidade_meia = null,
         $tamanho_meia = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}uniforme_aluno";
 
