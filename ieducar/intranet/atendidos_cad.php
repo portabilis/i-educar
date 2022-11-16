@@ -1006,9 +1006,9 @@ return new class extends clsCadastro {
 
     protected function validaDadosTelefones()
     {
-        return $this->validaDDDTelefone($this->ddd_telefone_1, $this->telefone_1, 'Telefone 1') &&
-            $this->validaDDDTelefone($this->ddd_telefone_2, $this->telefone_2, 'Telefone 2') &&
-            $this->validaDDDTelefone($this->ddd_telefone_mov, $this->telefone_mov, 'Celular') &&
+        return $this->validaDDDTelefone($this->ddd_telefone_1, $this->telefone_1, 'Telefone residencial') &&
+            $this->validaDDDTelefone($this->ddd_telefone_2, $this->telefone_2, 'Celular') &&
+            $this->validaDDDTelefone($this->ddd_telefone_mov, $this->telefone_mov, 'Telefone adicional') &&
             $this->validaDDDTelefone($this->ddd_telefone_fax, $this->telefone_fax, 'Fax');
     }
 
