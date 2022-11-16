@@ -9,7 +9,7 @@ class EnrollmentTest extends ViewTestCase
 {
     public function testEnrollment(): void
     {
-        $found = Enrollment::query()->get();
+        $found = Enrollment::query()->where('id', $this->model->id)->get();
         $this->assertEquals(9, $found[0]->status);
         $this->assertEquals(10, $found[1]->status);
         $this->assertEquals(3, $found[2]->status);

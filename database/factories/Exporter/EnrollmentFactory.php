@@ -39,11 +39,11 @@ class EnrollmentFactory extends Factory
         ]);
         $person = LegacyPersonFactory::new()->create();
         LegacyIndividualFactory::new()->create([
-            'idpes' => $person->idpes,
+            'idpes' => $person,
             'ativo' => 1
         ]);
         $student = LegacyStudentFactory::new()->create([
-            'ref_idpes' => $person->idpes,
+            'ref_idpes' => $person,
             'ativo' => 1
         ]);
         $benefit = LegacyBenefitFactory::new()->create();
@@ -66,7 +66,7 @@ class EnrollmentFactory extends Factory
             'ref_cod_serie' => $grade->id
         ]);
         $registration = LegacyRegistrationFactory::new()->create([
-            'ref_cod_aluno' => $student->cod_aluno,
+            'ref_cod_aluno' => $student,
             'ref_ref_cod_serie' => $grade->id,
             'ref_cod_curso' => $course->id,
             'ref_ref_cod_escola' => $school->id,
