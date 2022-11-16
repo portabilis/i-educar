@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use App\Models\Country;
 use App\Models\Employee;
 use App\Models\EmployeeGraduation;
 use App\Models\LegacyAcademicYearStage;
@@ -27,7 +28,6 @@ use App\Models\SchoolManager;
 use App\User;
 use Carbon\Carbon;
 use Database\Factories\CityFactory;
-use Database\Factories\CountryFactory;
 use Database\Factories\DistrictFactory;
 use Database\Factories\LegacyUserFactory;
 use Database\Factories\StateFactory;
@@ -53,16 +53,18 @@ abstract class EducacensoTestCase extends TestCase
         \Artisan::call('db:seed', ['--class' => 'DefaultModulesEducacensoIesTableSeeder']);
         \Artisan::call('db:seed', ['--class' => 'DefaultModulesEducacensoCursoSuperiorTableSeeder']);
 
+        $country = Country::updateOrCreate([
+            'id' => 1,
+            'name' => 'Brasil',
+            'ibge_code' => '76',
+        ]);
+
         DistrictFactory::new()->create([
             'name' => 'IÇARA',
             'ibge_code' => '420700705',
             'city_id' => CityFactory::new()->create([
                 'state_id' => StateFactory::new()->create([
-                    'country_id' => CountryFactory::new()->create([
-                        'id' => 1,
-                        'name' => 'Brasil',
-                        'ibge_code' => '76',
-                    ]),
+                    'country_id' => $country,
                     'name' => 'Santa Catarina',
                     'abbreviation' => 'SC',
                     'ibge_code' => '42',
@@ -138,6 +140,8 @@ abstract class EducacensoTestCase extends TestCase
         $this->assertEquals($legacySchool->cod_escola, $legacyAcademicYearStage->ref_ref_cod_escola);
         $this->assertEquals(1, $legacyAcademicYearStage->sequencial);
         $this->assertEquals(200, $legacyAcademicYearStage->dias_letivos);
+        $this->assertNotNull($legacyAcademicYearStage->data_inicio);
+        $this->assertNotNull($legacyAcademicYearStage->data_fim);
 
         $module = $legacyAcademicYearStage->module;
         $this->assertNotNull($module);

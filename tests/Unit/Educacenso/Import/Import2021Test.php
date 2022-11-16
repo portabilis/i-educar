@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Educacenso\Import;
 
-use App\Models\LegacySchool;
 use App\Services\Educacenso\HandleFileService;
 use App\Services\Educacenso\ImportServiceFactory;
 use Carbon\Carbon;
@@ -29,12 +28,5 @@ class Import2021Test extends EducacensoTestCase
             resource_path('../tests/Unit/assets/importacao_educacenso_2021.txt'),
             'importacao_educacenso_2021.txt'
         ));
-    }
-
-    public function validationImportRegister00Especific()
-    {
-        $legacyAcademicYearStage = LegacySchool::first()->stages->first();
-        $this->assertEquals($this->year . '-03-03', $legacyAcademicYearStage->data_inicio->format('Y-m-d'));
-        $this->assertEquals($this->year . '-12-12', $legacyAcademicYearStage->data_fim->format('Y-m-d'));
     }
 }
