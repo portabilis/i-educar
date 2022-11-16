@@ -40,7 +40,7 @@ class LegacyUser extends DefaultUser
     protected function id(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->cod_usuario,
+            get: fn () => $this->cod_usuario,
         );
     }
 

@@ -88,14 +88,14 @@ class LegacySchool extends Model
     protected function id(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->cod_escola,
+            get: fn () => $this->cod_escola,
         );
     }
 
     protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->organization->fantasia ?? null,
+            get: fn () => $this->organization?->fantasia,
         );
     }
 
