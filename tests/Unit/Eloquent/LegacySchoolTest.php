@@ -54,13 +54,10 @@ class LegacySchoolTest extends EloquentTestCase
         ];
     }
 
-    public function testId(): void
+    /** @test */
+    public function attributes()
     {
         $this->assertEquals($this->model->cod_escola, $this->model->id);
-    }
-
-    public function testName(): void
-    {
         $this->assertEquals($this->model->organization->fantasia, $this->model->name);
     }
 
