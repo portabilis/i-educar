@@ -388,6 +388,11 @@ abstract class EducacensoTestCase extends TestCase
         $this->assertNotNull($schoolManager->employee->inep->number);
         $this->assertIsNumeric($schoolManager->employee->inep->number);
         $this->assertEquals(12, strlen($schoolManager->employee->inep->number));
+
+        if ($this->year === 2022) {
+            $this->assertNotNull($schoolManager->employee->individual->deficiency);
+            $this->assertCount(2, $schoolManager->employee->individual->deficiency);
+        }
     }
 
     /** @test */

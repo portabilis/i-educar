@@ -14,6 +14,8 @@ class Import2022Test extends EducacensoTestCase
     {
         parent::setUp();
 
+        \Artisan::call('db:seed', ['--class' => 'DefaultCadastroDeficienciaTableSeeder']);
+
         $this->year = 2022;
         $this->dateEnrollment = new Carbon('2022-01-01');
 
