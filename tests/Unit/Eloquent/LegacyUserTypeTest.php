@@ -19,23 +19,12 @@ class LegacyUserTypeTest extends EloquentTestCase
         return LegacyUserType::class;
     }
 
-    public function testLevelAttribute(): void
+    /** @test */
+    public function attributes()
     {
         $this->assertEquals($this->model->nivel, $this->model->level);
-    }
-
-    public function testNameAttribute(): void
-    {
         $this->assertEquals($this->model->nm_tipo, $this->model->name);
-    }
-
-    public function testDescriptionAttribute(): void
-    {
         $this->assertEquals($this->model->descricao, $this->model->description);
-    }
-
-    public function testActiveAttribute(): void
-    {
         $this->assertEquals((bool)$this->model->ativo, $this->model->active);
     }
 

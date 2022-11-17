@@ -168,9 +168,7 @@ class Student extends Model
     public function alias($column)
     {
         if (empty($this->alias)) {
-            $this->alias = collect($this->getExportedColumnsByGroup())->flatMap(function ($item) {
-                return $item;
-            });
+            $this->alias = collect($this->getExportedColumnsByGroup())->flatMap(static fn ($item) => $item);
         }
 
         return $this->alias->get($column, $column);

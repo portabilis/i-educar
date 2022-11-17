@@ -18,6 +18,8 @@ class LegacyEvaluationRule extends Model
 {
     use LegacyAttribute;
 
+    public const CREATED_AT = null;
+
     public const PARALLEL_REMEDIAL_NONE = 0;
     public const PARALLEL_REMEDIAL_PER_STAGE = 1;
     public const PARALLEL_REMEDIAL_PER_SPECIFIC_STAGE = 2;
@@ -66,11 +68,6 @@ class LegacyEvaluationRule extends Model
         'tipo_progressao',
         'tipo_presenca',
     ];
-
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * @return HasMany
