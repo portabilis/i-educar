@@ -23,11 +23,6 @@ Route::redirect('intranet/public_uf_lst.php', '/web/enderecamento/estado');
 Route::redirect('intranet/public_municipio_lst.php', '/web/enderecamento/municipio');
 Route::redirect('intranet/public_distrito_lst.php', '/web/enderecamento/distrito');
 
-Route::redirect('intranet/public_pais_det.php', '/web/enderecamento/pais');
-Route::redirect('intranet/public_uf_det.php', '/web/enderecamento/estado');
-Route::redirect('intranet/public_municipio_det.php', '/web/enderecamento/municipio');
-Route::redirect('intranet/public_distrito_det.php', '/web/enderecamento/distrito');
-
 Route::redirect('intranet/public_pais_cad.php', '/web/enderecamento/pais/novo');
 Route::redirect('intranet/public_uf_cad.php', '/web/enderecamento/estado/novo');
 Route::redirect('intranet/public_municipio_cad.php', '/web/enderecamento/municipio/novo');
