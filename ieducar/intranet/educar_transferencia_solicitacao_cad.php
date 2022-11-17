@@ -168,7 +168,8 @@ return new class() extends clsCadastro
         }
         if($contador>0){
             $this->mensagem = 'Não é possível realizar a operação, existem frequências 
-            registradas na data informada.'.$dateformated.' >= '.$_POST['data_cancel'].'<br>';
+            registradas na data informada. 
+            Data da frequência: '.$dateformated.' Data informada: '.$_POST['data_cancel'].'<br>';
 
                 return false;
            
