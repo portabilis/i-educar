@@ -12,8 +12,7 @@ use Illuminate\Http\JsonResponse;
 
 class EnrollmentFormativeItineraryController extends Controller
 {
-
-    public function index(int $id):View
+    public function index(int $id): View
     {
         $this->breadcrumb('Itinerário formativo do aluno', [
             url('intranet/educar_index.php') => 'Escola',
@@ -30,7 +29,7 @@ class EnrollmentFormativeItineraryController extends Controller
         return view('enrollments.enrollmentFormativeItineraryList', ['registration' => $registration]);
     }
 
-    public function edit(int $registration, LegacyEnrollment $enrollment):View
+    public function edit(int $registration, LegacyEnrollment $enrollment): View
     {
         $this->breadcrumb('Itinerário formativo do aluno', [
             url('intranet/educar_index.php') => 'Escola',
@@ -46,7 +45,7 @@ class EnrollmentFormativeItineraryController extends Controller
         ]);
     }
 
-    public function update(int $registration, LegacyEnrollment $enrollment, EnrollmentFormativeItineraryRequest $request):JsonResponse
+    public function update(int $registration, LegacyEnrollment $enrollment, EnrollmentFormativeItineraryRequest $request): JsonResponse
     {
         $enrollment->tipo_itinerario = $request->get('itinerary_type');
         $enrollment->composicao_itinerario = $request->get('itinerary_composition');

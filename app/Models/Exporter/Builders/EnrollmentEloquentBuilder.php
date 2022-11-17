@@ -79,14 +79,25 @@ class EnrollmentEloquentBuilder extends Builder
                 'rg' => 'gd.rg as RG do responsável',
                 'rg_issue_date' => 'gd.data_exp_rg as RG (Data Emissão) do responsável',
                 'rg_state_abbreviation' => 'gd.sigla_uf_exp_rg as RG (Estado) do responsável'
+            ],
+            'place' => [
+                'address' => 'p.address as Logradouro',
+                'number' => 'p.number as Número',
+                'complement' => 'p.complement as Complemento',
+                'neighborhood' => 'p.neighborhood as Bairro',
+                'postal_code' => 'p.postal_code as CEP',
+                'latitude' => 'p.latitude as Latitude',
+                'longitude' => 'p.longitude as Longitude',
+                'city' => 'c.name as Cidade',
+                'state_abbreviation' => 's.abbreviation as Sigla do Estado',
+                'state' => 's.name as Estado',
+                'country' => 'cn.name as País'
             ]
         ];
     }
 
     /**
      * @param array $columns
-     *
-     * @return void
      */
     public function mother($columns)
     {
@@ -209,21 +220,21 @@ class EnrollmentEloquentBuilder extends Builder
         });
     }
 
-    /**
-     * @param array $columns
-     *
-     * @return EnrollmentEloquentBuilder
-     */
     public function place($columns)
     {
-        $this->addSelect(
-            $this->joinColumns('place', $columns)
-        );
-
-        return $this->leftJoin('person_has_place', function (JoinClause $join) {
+        $this->leftJoin('person_has_place', static function (JoinClause $join) {
             $join->on('exporter_student.id', '=', 'person_has_place.person_id');
-        })->leftJoin('addresses as place', function (JoinClause $join) {
-            $join->on('person_has_place.place_id', '=', 'place.id');
         });
+
+        if ($only = $this->model->getLegacyExportedColumns('place', $columns)) {
+            $this->addSelect($only);
+
+            $this->leftJoin('places as p', 'p.id', 'person_has_place.id')
+                ->leftJoin('cities as c', 'c.id', 'p.city_id')
+                ->leftJoin('states as s', 's.id', 'c.state_id')
+                ->leftJoin('countries as cn', 'cn.id', 's.country_id');
+        }
+
+        return $this;
     }
 }

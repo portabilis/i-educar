@@ -38,7 +38,6 @@ class Enrollment extends Model
             'Códigos' => [
                 'id' => 'ID Pessoa',
                 'student_id' => 'ID Aluno',
-
                 'registration_id' => 'ID Matrícula',
                 'school_id' => 'ID Escola',
                 'school_class_id' => 'ID Turma',
@@ -174,7 +173,7 @@ class Enrollment extends Model
     public function alias($column)
     {
         if (empty($this->alias)) {
-            $this->alias = collect($this->getExportedColumnsByGroup())->flatMap(fn ($item) => $item);
+            $this->alias = collect($this->getExportedColumnsByGroup())->flatMap(static fn ($item) => $item);
         }
 
         return $this->alias->get($column, $column);
