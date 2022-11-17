@@ -292,7 +292,7 @@ class Portabilis_Business_Professor
     }
 
 
-    public static function quadroHorarioAlocado($turmaId, $userId, $diaSemana = null)
+    public static function quadroHorarioAlocado($turmaId, $userId, $diaSemana = null, $registroDiarioIndividual = null)
     {
         $quadroHorario = [];
 
@@ -314,6 +314,11 @@ class Portabilis_Business_Professor
             if (!empty($diaSemana)) {
                 $sql .= ' AND qhh.dia_semana = $3';
                 $params['params'][] = $diaSemana;
+            }
+
+            if (!empty($registroDiarioIndividual)) {
+                $sql .= ' AND qhh.registra_diario_individual = $4';
+                $params['params'][] = $registroDiarioIndividual;
             }
 
             $sql .= ' ORDER BY qhh.qtd_aulas DESC';

@@ -173,6 +173,46 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         return null;
     }
 
+    public function getFaltaGeraisSemEtapa()
+    {
+        $qtdFaltas = 0;
+        $faltas = $this->getFaltasGerais();
+
+        if ($faltas) {
+            foreach ($faltas as $falta) {
+                $qtdFaltas += $falta->quantidade;
+            }
+        }
+
+        return $qtdFaltas;
+    }
+
+    public function getFaltaComponenteSemEtapa($id)
+    {
+        $qtdFaltas = 0;
+        $faltas = $this->getFaltasComponentes();
+
+        if (isset($faltas[$id])) {
+            $faltas = $faltas[$id];
+
+            foreach ($faltas as $falta) {
+                $qtdFaltas += $falta->quantidade;
+            }
+        }
+
+        return $qtdFaltas;
+    }
+
+    public function getTotalFaltasSemEtapa($componente_curricular_id)
+    {
+        $qtdFaltasGerais = $this->getFaltaGeraisSemEtapa();
+        $qtdFaltasComponentes = $this->getFaltaComponenteSemEtapa($componente_curricular_id);
+        $qtdFaltas = $qtdFaltasGerais + $qtdFaltasComponentes;
+
+
+        return $qtdFaltas;
+    }
+
     /**
      * Retorna um número inteiro referente a quantidade de faltas do aluno.
      * Realiza a soma de faltas de todas as etapas por componente

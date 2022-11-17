@@ -19,14 +19,15 @@ class clsPmieducarQuadroHorarioHorariosAux extends Model
     public $ref_cod_servidor_substituto_1;
     public $ref_cod_servidor_substituto_2;
     public $qtd_aulas;
+    public $registra_diario_individual;
 
-    public function __construct($ref_cod_quadro_horario = null, $sequencial = null, $ref_cod_disciplina = null, $ref_cod_escola = null, $ref_cod_serie = null, $ref_cod_instituicao_servidor = null, $ref_servidor = null, $dia_semana = null, $hora_inicial = null, $hora_final = null, $identificador = null, $ref_cod_servidor_substituto_1 = null, $ref_cod_servidor_substituto_2 = null, $qtd_aulas = null)
+    public function __construct($ref_cod_quadro_horario = null, $sequencial = null, $ref_cod_disciplina = null, $ref_cod_escola = null, $ref_cod_serie = null, $ref_cod_instituicao_servidor = null, $ref_servidor = null, $dia_semana = null, $hora_inicial = null, $hora_final = null, $identificador = null, $ref_cod_servidor_substituto_1 = null, $ref_cod_servidor_substituto_2 = null, $qtd_aulas = null, $registra_diario_individual = null)
     {
         $db = new clsBanco();
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}quadro_horario_horarios_aux";
 
-        $this->_campos_lista = $this->_todos_campos = 'ref_cod_quadro_horario, sequencial, ref_cod_disciplina, ref_cod_escola, ref_cod_serie, ref_cod_instituicao_servidor, ref_servidor, ref_cod_servidor_substituto_1, ref_cod_servidor_substituto_2, dia_semana, hora_inicial, hora_final, identificador, data_cadastro';
+        $this->_campos_lista = $this->_todos_campos = 'ref_cod_quadro_horario, sequencial, ref_cod_disciplina, ref_cod_escola, ref_cod_serie, ref_cod_instituicao_servidor, ref_servidor, ref_cod_servidor_substituto_1, ref_cod_servidor_substituto_2, dia_semana, hora_inicial, hora_final, identificador, data_cadastro, registra_diario_individual, qtd_aulas';
 
         if (is_numeric($ref_servidor) && is_numeric($ref_cod_instituicao_servidor)) {
             $this->ref_servidor = $ref_servidor;
@@ -67,6 +68,10 @@ class clsPmieducarQuadroHorarioHorariosAux extends Model
 
         if (is_numeric($qtd_aulas)) {
             $this->qtd_aulas = $qtd_aulas;
+        }
+
+        if (is_bool($registra_diario_individual)) {
+            $this->registra_diario_individual = $registra_diario_individual;
         }
 
         $this->excluirRegistrosAntigos();
@@ -160,16 +165,26 @@ class clsPmieducarQuadroHorarioHorariosAux extends Model
                 $gruda = ', ';
             }
 
-
             if (is_numeric($this->qtd_aulas)) {
                 $campos .= "{$gruda}qtd_aulas";
                 $valores .= "{$gruda}'{$this->qtd_aulas}'";
                 $gruda = ', ';
             }
 
+            if (dbBool($this->registra_diario_individual)) {
+                $campos .= "{$gruda}registra_diario_individual";
+                $valores .= "{$gruda} true ";
+                $gruda = ', ';
+            } else {
+                $campos .= "{$gruda}registra_diario_individual";
+                $valores .= "{$gruda} false ";
+                $gruda = ', ';
+            }
+
             $campos .= "{$gruda}data_cadastro";
             $valores .= "{$gruda}NOW()";
             $gruda = ', ';
+
 
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
@@ -232,6 +247,19 @@ class clsPmieducarQuadroHorarioHorariosAux extends Model
             }
             if (is_numeric($this->ref_cod_servidor_substituto_2)) {
                 $set .= "{$gruda}ref_cod_servidor_substituto_1 = '{$this->ref_cod_servidor_substituto_2}'";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->qtd_aulas)) {
+                $set .= "{$gruda}qtd_aulas = '{$this->qtd_aulas}'";
+                $gruda = ', ';
+            }
+
+            if (dbBool($this->registra_diario_individual)) {
+                $set .= "{$gruda}registra_diario_individual = true ";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}registra_diario_individual = false ";
                 $gruda = ', ';
             }
 

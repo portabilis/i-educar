@@ -22,6 +22,7 @@ class clsPmieducarQuadroHorarioHorarios extends Model
     public $ref_cod_servidor_substituto_1;
     public $ref_cod_servidor_substituto_2;
     public $qtd_aulas;
+    public $registra_diario_individual;
 
     public function __construct(
         $ref_cod_quadro_horario = null,
@@ -41,13 +42,14 @@ class clsPmieducarQuadroHorarioHorarios extends Model
         $dia_semana = null,
         $ref_cod_servidor_substituto_1 = null,
         $ref_cod_servidor_substituto_2 = null,
-        $qtd_aulas = null
+        $qtd_aulas = null,
+        $registra_diario_individual = null
     ) {
         $db = new clsBanco();
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'quadro_horario_horarios';
 
-        $this->_campos_lista = $this->_todos_campos = 'ref_cod_quadro_horario, ref_cod_serie, ref_cod_escola, ref_cod_disciplina, sequencial, ref_cod_instituicao_substituto, ref_cod_instituicao_servidor, ref_servidor_substituto, ref_servidor, hora_inicial, hora_final, data_cadastro, data_exclusao, ativo, dia_semana, ref_cod_servidor_substituto_1, ref_cod_servidor_substituto_2, qtd_aulas';
+        $this->_campos_lista = $this->_todos_campos = 'ref_cod_quadro_horario, ref_cod_serie, ref_cod_escola, ref_cod_disciplina, sequencial, ref_cod_instituicao_substituto, ref_cod_instituicao_servidor, ref_servidor_substituto, ref_servidor, hora_inicial, hora_final, data_cadastro, data_exclusao, ativo, dia_semana, ref_cod_servidor_substituto_1, ref_cod_servidor_substituto_2, qtd_aulas, registra_diario_individual';
 
         if (is_numeric($ref_servidor_substituto) && is_numeric($ref_cod_instituicao_substituto)) {
             $this->ref_servidor_substituto = $ref_servidor_substituto;
@@ -120,6 +122,10 @@ class clsPmieducarQuadroHorarioHorarios extends Model
 
         if (is_numeric($qtd_aulas)) {
             $this->qtd_aulas = $qtd_aulas;
+        }
+
+        if (is_bool($registra_diario_individual)) {
+            $this->registra_diario_individual = $registra_diario_individual;
         }
 
     }
@@ -236,6 +242,16 @@ class clsPmieducarQuadroHorarioHorarios extends Model
                 $gruda = ', ';
             }
 
+            if (dbBool($this->registra_diario_individual)) {
+                $campos .= "{$gruda}registra_diario_individual";
+                $valores .= "{$gruda} true ";
+                $gruda = ', ';
+            } else {
+                $campos .= "{$gruda}registra_diario_individual";
+                $valores .= "{$gruda} false ";
+                $gruda = ', ';
+            }
+
             $campos .= "{$gruda}data_cadastro";
             $valores .= "{$gruda}NOW()";
             $gruda = ', ';
@@ -339,6 +355,14 @@ class clsPmieducarQuadroHorarioHorarios extends Model
 
             if (is_numeric($this->qtd_aulas)) {
                 $set .= "{$gruda}qtd_aulas = '{$this->qtd_aulas}'";
+                $gruda = ', ';
+            }
+
+            if (dbBool($this->registra_diario_individual)) {
+                $set .= "{$gruda}registra_diario_individual = true ";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}registra_diario_individual = false ";
                 $gruda = ', ';
             }
 

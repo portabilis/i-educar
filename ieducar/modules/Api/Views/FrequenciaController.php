@@ -83,6 +83,46 @@ class FrequenciaController extends ApiCoreController
         return [];
     }
 
+    protected function getRegistroDiarioQuadroHorario()
+    {
+        $turmaId = $this->getRequest()->id;
+        $dataFrequencia = $this->getRequest()->data;
+        $userId = \Illuminate\Support\Facades\Auth::id();
+
+        if (is_numeric($turmaId)) {
+            $clsInstituicao = new clsPmieducarInstituicao();
+            $instituicao = $clsInstituicao->primeiraAtiva();
+
+            $isOnlyProfessor = Portabilis_Business_Professor::isOnlyProfessor($instituicao['cod_instituicao'], $userId);
+            $diaSemana =  Carbon::createFromFormat('d/m/Y', $dataFrequencia)->dayOfWeek;
+
+
+            if ($isOnlyProfessor) {
+                $diaSemanaConvertido = $this->converterDiaSemanaQuadroHorario($diaSemana);
+                $componentesCurriculares = [];
+                $registraDiarioIndividual = false;
+
+                $quadroHorario = Portabilis_Business_Professor::quadroHorarioAlocado($turmaId, $userId, $diaSemanaConvertido, true);
+
+                if (count($quadroHorario) > 0) {
+                    $registraDiarioIndividual = true;
+                    foreach ($quadroHorario as $horario) {
+                        $componentesCurriculares[] = $horario['ref_cod_disciplina'];
+                    }
+                }
+
+                return ['isProfessor' => true,
+                        'registraDiarioIndividual' => $registraDiarioIndividual,
+                        'componentesCurriculares' => $componentesCurriculares];
+            } else {
+                return ['isProfessor' => false,
+                        'registraDiarioIndividual' => false]; //admin/coordenador
+            }
+        }
+
+        return [];
+    }
+
     protected function converterDiaSemanaQuadroHorario(int $diaSemana)
     {
         $arrDiasSemanaIeducar = [
@@ -104,6 +144,8 @@ class FrequenciaController extends ApiCoreController
             $this->appendResponse($this->getTipoPresenca());
         } else if ($this->isRequestFor('get', 'getQtdAulasQuadroHorario')) {
             $this->appendResponse($this->getQtdAulasQuadroHorario());
+        } else if ($this->isRequestFor('get', 'getRegistroDiarioQuadroHorario')) {
+            $this->appendResponse($this->getRegistroDiarioQuadroHorario());
         }
     }
 }
