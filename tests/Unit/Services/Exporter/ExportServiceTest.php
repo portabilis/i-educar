@@ -1,9 +1,10 @@
 <?php
 
-namespace Database\Factories\Exporter;
+namespace Tests\Unit\Services;
 
-use App\Models\Exporter\Enrollment;
-use Database\Factories\LegacyBenefitFactory;
+use App\Jobs\DatabaseToCsvExporter;
+use App\Services\Exporter\ExportService;
+use Database\Factories\Exporter\ExportFactory;
 use Database\Factories\LegacyCourseFactory;
 use Database\Factories\LegacyEnrollmentFactory;
 use Database\Factories\LegacyEvaluationRuleGradeYearFactory;
@@ -16,18 +17,29 @@ use Database\Factories\LegacySchoolClassFactory;
 use Database\Factories\LegacySchoolCourseFactory;
 use Database\Factories\LegacySchoolFactory;
 use Database\Factories\LegacySchoolGradeFactory;
-use Database\Factories\LegacyStudentBenefitFactory;
 use Database\Factories\LegacyStudentFactory;
 use Database\Seeders\DefaultRelatorioSituacaoMatriculaTableSeeder;
-use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Queue;
+use Illuminate\Support\Facades\Storage;
+use Tests\TestCase;
 
-class EnrollmentFactory extends Factory
+class ExportServiceTest extends TestCase
 {
-    protected $model = Enrollment::class;
+    use DatabaseTransactions;
 
-    public function definition(): array
+    public function setUp(): void
     {
+        parent::setUp();
+        $this->export = ExportFactory::new()->create();
+        $this->fullPath = sprintf(
+            '%s/csv/%s/%s',
+            $this->export->getConnectionName(),
+            $this->export->hash,
+            $this->export->filename
+        );
+
         $count = DB::table('relatorio.situacao_matricula')->count();
         if ($count === 0) {
             $seed = new DefaultRelatorioSituacaoMatriculaTableSeeder();
@@ -39,17 +51,12 @@ class EnrollmentFactory extends Factory
         ]);
         $person = LegacyPersonFactory::new()->create();
         LegacyIndividualFactory::new()->create([
-            'idpes' => $person,
+            'idpes' => $person->idpes,
             'ativo' => 1
         ]);
         $student = LegacyStudentFactory::new()->create([
-            'ref_idpes' => $person,
+            'ref_idpes' => $person->idpes,
             'ativo' => 1
-        ]);
-        $benefit = LegacyBenefitFactory::new()->create();
-        LegacyStudentBenefitFactory::new()->create([
-            'aluno_beneficio_id' => $benefit,
-            'aluno_id' => $student
         ]);
         $course = LegacyCourseFactory::new()->create([
             'ref_cod_instituicao' => $institution->id
@@ -66,7 +73,7 @@ class EnrollmentFactory extends Factory
             'ref_cod_serie' => $grade->id
         ]);
         $registration = LegacyRegistrationFactory::new()->create([
-            'ref_cod_aluno' => $student,
+            'ref_cod_aluno' => $student->cod_aluno,
             'ref_ref_cod_serie' => $grade->id,
             'ref_cod_curso' => $course->id,
             'ref_ref_cod_escola' => $school->id,
@@ -86,8 +93,30 @@ class EnrollmentFactory extends Factory
             'ref_cod_matricula' => $registration->id,
             'ref_cod_turma' => $schoolClass->id
         ]);
-        $instance = new $this->model();
+    }
 
-        return $instance->query()->find($person->id)->getAttributes();
+    public function testExportService(): void
+    {
+        Queue::fake();
+        Queue::assertNothingPushed();
+        Queue::assertNotPushed(DatabaseToCsvExporter::class);
+        DatabaseToCsvExporter::dispatch($this->export);
+        Queue::assertPushed(DatabaseToCsvExporter::class, 1);
+
+        Storage::fake('s3');
+        Storage::disk('s3')->assertMissing($this->getFilename());
+        $service = new ExportService($this->export, 's3');
+        $service->execute();
+        Storage::disk('s3')->assertExists($this->getFilename());
+    }
+
+    private function getFilename(): string
+    {
+        return sprintf(
+            '%s/csv/%s/%s',
+            $this->export->getConnectionName(),
+            $this->export->hash,
+            $this->export->filename
+        );
     }
 }

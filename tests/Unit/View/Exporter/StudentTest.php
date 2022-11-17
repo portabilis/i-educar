@@ -2,23 +2,22 @@
 
 namespace Tests\Unit\View\Exporter;
 
-use App\Models\Exporter\Enrollment;
+use App\Models\Exporter\Student;
 use Tests\ViewTestCase;
 
-class EnrollmentTest extends ViewTestCase
+class StudentTest extends ViewTestCase
 {
-    public function testEnrollment(): void
+    public function testStudent(): void
     {
-        $found = Enrollment::query()->where('id', $this->model->id)->get();
-        $this->assertEquals(9, $found[0]->status);
-        $this->assertEquals(10, $found[1]->status);
-        $this->assertEquals(3, $found[2]->status);
+        $found = Student::query()->get();
+        $this->assertEquals(9, $found[1]->status);
+        $this->assertEquals(10, $found[2]->status);
         $this->assertJsonStringEqualsJsonString($this->model, $found->first());
     }
 
     public function testRelationshipMother(): void
     {
-        $found = Enrollment::query()->mother([
+        $found = Student::query()->mother([
             'id',
             'name',
             'email',
@@ -52,13 +51,13 @@ class EnrollmentTest extends ViewTestCase
             'RG (Data Emissão) da mãe',
             'RG (Estado) da mãe'
         ];
-        $this->assertInstanceOf(Enrollment::class, $found);
+        $this->assertInstanceOf(Student::class, $found);
         $this->assertEquals($expected, array_keys($found->getAttributes()));
     }
 
     public function testRelationshipFather(): void
     {
-        $found = Enrollment::query()->father([
+        $found = Student::query()->father([
             'id',
             'name',
             'email',
@@ -92,13 +91,13 @@ class EnrollmentTest extends ViewTestCase
             'RG (Data Emissão) do pai',
             'RG (Estado) do pai'
         ];
-        $this->assertInstanceOf(Enrollment::class, $found);
+        $this->assertInstanceOf(Student::class, $found);
         $this->assertEquals($expected, array_keys($found->getAttributes()));
     }
 
     public function testRelationshipGuardian(): void
     {
-        $found = Enrollment::query()->guardian([
+        $found = Student::query()->guardian([
             'id',
             'name',
             'email',
@@ -132,14 +131,14 @@ class EnrollmentTest extends ViewTestCase
             'RG (Data Emissão) do responsável',
             'RG (Estado) do responsável'
         ];
-        $this->assertInstanceOf(Enrollment::class, $found);
+        $this->assertInstanceOf(Student::class, $found);
         $this->assertEquals($expected, array_keys($found->getAttributes()));
     }
 
     public function testRelationshipBenefits(): void
     {
-        $found = Enrollment::query()->benefits()->first();
-        $this->assertInstanceOf(Enrollment::class, $found);
+        $found = Student::query()->benefits()->first();
+        $this->assertInstanceOf(Student::class, $found);
         $expected = [
             'Benefícios'
         ];
@@ -148,8 +147,8 @@ class EnrollmentTest extends ViewTestCase
 
     public function testRelationshipDisabilities(): void
     {
-        $found = Enrollment::query()->disabilities()->first();
-        $this->assertInstanceOf(Enrollment::class, $found);
+        $found = Student::query()->disabilities()->first();
+        $this->assertInstanceOf(Student::class, $found);
         $expected = [
             'Deficiências'
         ];
@@ -158,8 +157,8 @@ class EnrollmentTest extends ViewTestCase
 
     public function testRelationshipPhones(): void
     {
-        $found = Enrollment::query()->phones()->first();
-        $this->assertInstanceOf(Enrollment::class, $found);
+        $found = Student::query()->phones()->first();
+        $this->assertInstanceOf(Student::class, $found);
         $expected = [
             'Telefones'
         ];
@@ -168,7 +167,7 @@ class EnrollmentTest extends ViewTestCase
 
     public function testRelationshipPlace(): void
     {
-        $found = Enrollment::query()->place([
+        $found = Student::query()->place([
             'address',
             'number',
             'complement',
@@ -181,7 +180,7 @@ class EnrollmentTest extends ViewTestCase
             'state',
             'country'
         ])->first();
-        $this->assertInstanceOf(Enrollment::class, $found);
+        $this->assertInstanceOf(Student::class, $found);
         $expected = [
             'Logradouro',
             'Número',
@@ -206,12 +205,12 @@ class EnrollmentTest extends ViewTestCase
 
     public function testGetLabel(): void
     {
-        $this->assertEquals('Matrículas', $this->model->getLabel());
+        $this->assertEquals('Alunos', $this->model->getLabel());
     }
 
     public function testGetDescription(): void
     {
-        $this->assertEquals('Os dados exportados serão contabilizados por quantidade de matrículas, duplicando o(a) aluno(a) caso o mesmo possua mais de uma matrícula no ano filtrado.', $this->model->getDescription());
+        $this->assertEquals('Os dados exportados serão contabilizados por quantidade de alunos(as), agrupando as informações de séries, cursos, turmas quando o(a) aluno(a) possuir mais de uma matrícula para a situação e ano filtrados.', $this->model->getDescription());
     }
 
     public function testGetExportedColumnsByGroup(): void
@@ -220,7 +219,6 @@ class EnrollmentTest extends ViewTestCase
             'Códigos' => [
                 'id' => 'ID Pessoa',
                 'student_id' => 'ID Aluno',
-                'registration_id' => 'ID Matrícula',
                 'school_id' => 'ID Escola',
                 'school_class_id' => 'ID Turma',
                 'grade_id' => 'ID Série',
@@ -251,12 +249,8 @@ class EnrollmentTest extends ViewTestCase
                 'school_class' => 'Turma',
                 'grade' => 'Série',
                 'course' => 'Curso',
-                'registration_date' => 'Data da Matrícula',
-                'registration_out' => 'Data de saída da matrícula',
                 'year' => 'Ano',
-                'status_text' => 'Situação da Matrícula',
                 'period' => 'Turno',
-                'school_class_stage' => 'Etapa Educacenso',
             ],
             'Informações' => [
                 'nationality' => 'Nacionalidade',
@@ -330,8 +324,9 @@ class EnrollmentTest extends ViewTestCase
                 'guardian.organization' => 'Empresa do responsável',
                 'guardian.monthly_income' => 'Renda Mensal do responsável',
                 'guardian.gender' => 'Gênero do responsável',
-            ]
+            ],
         ];
+
         $this->assertJsonStringEqualsJsonString(collect($expected), collect($this->model->getExportedColumnsByGroup()));
     }
 
@@ -415,11 +410,12 @@ class EnrollmentTest extends ViewTestCase
                 'country' => 'cn.name as País'
             ]
         ];
+
         $this->assertJsonStringEqualsJsonString(collect($expected), collect($this->model->getLegacyColumns()));
     }
 
     protected function getViewModelName(): string
     {
-        return Enrollment::class;
+        return Student::class;
     }
 }
