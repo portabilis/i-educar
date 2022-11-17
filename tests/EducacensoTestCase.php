@@ -143,6 +143,8 @@ abstract class EducacensoTestCase extends TestCase
         $this->assertEquals(200, $legacyAcademicYearStage->dias_letivos);
         $this->assertNotNull($legacyAcademicYearStage->data_inicio);
         $this->assertNotNull($legacyAcademicYearStage->data_fim);
+        $this->assertEquals($this->year, $legacyAcademicYearStage->data_inicio->year);
+        $this->assertEquals($this->year, $legacyAcademicYearStage->data_fim->year);
 
         $module = $legacyAcademicYearStage->module;
         $this->assertNotNull($module);
