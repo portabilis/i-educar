@@ -13,6 +13,10 @@ class DiarioRecuperaBoletimTest extends UnitBaseTest
 
     public function testRecuperaBoletimEstrutura()
     {
+        if (class_exists(\BoletimReport::class)) {
+            $this->markTestSkipped('Pacote de boletim instalado, o render em teste unitário não estar disponível');
+        }
+
         $enrollment = LegacyEnrollmentFactory::new()->create();
         $data = [
             'oper'=> 'get',
