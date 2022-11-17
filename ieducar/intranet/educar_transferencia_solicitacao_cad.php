@@ -161,13 +161,14 @@ return new class() extends clsCadastro
         $frequencia = Frequencia::where('ref_cod_turma', $_GET['turma'])->get();
         $contador = 0;
         foreach($frequencia as $list) {
-           if($list->data >= $_POST['data_cancel']){
+            $dateformated = date("d/m/Y", $list->data);
+           if($dateformated >= $_POST['data_cancel']){
             $contador++;
            }   
         }
         if($contador>0){
             $this->mensagem = 'Não é possível realizar a operação, existem frequências 
-            registradas na data informada.'.$list->data.' >= '.$_POST['data_cancel'].'<br>';
+            registradas na data informada.'.$dateformated.' >= '.$_POST['data_cancel'].'<br>';
 
                 return false;
            
