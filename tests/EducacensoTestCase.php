@@ -54,7 +54,8 @@ abstract class EducacensoTestCase extends TestCase
         \Artisan::call('db:seed', ['--class' => 'DefaultModulesEducacensoCursoSuperiorTableSeeder']);
 
         $country = Country::updateOrCreate([
-            'id' => 1,
+            'id' => 1
+        ], [
             'name' => 'Brasil',
             'ibge_code' => '76',
         ]);
