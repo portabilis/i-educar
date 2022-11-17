@@ -22,7 +22,6 @@ class LegacyMaritalStatusFactory extends Factory
     public function definition(): array
     {
         return [
-            'ideciv' => $this->faker->randomDigitNotZero(),
             'descricao' => $this->faker->unique()->word,
         ];
     }
