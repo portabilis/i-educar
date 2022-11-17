@@ -44,8 +44,8 @@ class Registro60Import extends Registro60Import2019
                 ->where('ref_cod_turma', $schoolClass->getKey())
                 ->first();
 
-            $enrollment->tipo_itinerario = transformDBArrayInString($arrayItineraryType);
-            $enrollment->composicao_itinerario = transformDBArrayInString($arrayItineraryComposition);
+            $enrollment->tipo_itinerario = $arrayItineraryType;
+            $enrollment->composicao_itinerario = $arrayItineraryComposition;
             $enrollment->curso_itinerario = $this->model->cursoItinerario ?: null;
             $enrollment->itinerario_concomitante = $this->model->cursoItinerario ? (bool) $this->model->itinerarioConcomitante : null;
 
