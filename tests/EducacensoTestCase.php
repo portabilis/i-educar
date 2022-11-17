@@ -86,7 +86,6 @@ abstract class EducacensoTestCase extends TestCase
     {
         $count = LegacySchool::count();
         $legacySchool = LegacySchool::first();
-        dd($legacySchool->institution);
         $this->assertNotNull($legacySchool->institution->orgao_regional);
 
         $this->assertEquals(1, $count);
