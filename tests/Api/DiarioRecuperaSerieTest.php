@@ -2,7 +2,10 @@
 
 namespace Tests\Api;
 
+use Database\Factories\LegacyCourseFactory;
 use Database\Factories\LegacyGradeFactory;
+use Database\Factories\LegacySchoolFactory;
+use Database\Factories\LegacySchoolGradeFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
@@ -13,32 +16,54 @@ class DiarioRecuperaSerieTest extends TestCase
 
     public function testRecuperaCurso()
     {
-        $grade = LegacyGradeFactory::new()->create();
+        $school = LegacySchoolFactory::new()->create();
+
+        $course = LegacyCourseFactory::new()->standardAcademicYear()->create();
+
+        $level = LegacyGradeFactory::new()->create([
+            'ref_cod_curso' => $course,
+            'dias_letivos' => '200'
+        ]);
+
+        LegacySchoolGradeFactory::new()->create([
+            'ref_cod_serie' => $level,
+            'ref_cod_escola' => $school,
+        ]);
 
         $data = [
-            'oper'=> 'get',
+            'oper' => 'get',
             'resource' => 'series',
-            'instituicao_id' =>  $grade->course->ref_cod_instituicao
+            'instituicao_id' => $course->ref_cod_instituicao
         ];
 
         $response = $this->getResource('/module/Api/Serie', $data);
-        $response->assertJsonStructure(
-            [
-                'any_error_msg',
-                'series' => [
-                    [
-                        'id',
-                        'nome',
-                        'idade_padrao',
-                        'curso_id',
-                        'updated_at',
-                        'deleted_at',
-                    ]
-                ],
-                'msgs',
-                'oper',
-                'resource'
-            ]
-        );
+
+        $response->assertSuccessful()
+            ->assertJsonCount(1, 'series')
+            ->assertJson(
+                [
+                    'series' => [
+                        0 => [
+                            'id' => $level->getKey(),
+                            'nome' => mb_strtoupper($level->name),
+                            'idade_padrao' => $level->idade_ideal,
+                            'curso_id' => $level->course_id,
+                            'deleted_at' => null
+                        ]
+                    ],
+                    'oper' => 'get',
+                    'resource' => 'series',
+                    'msgs' => [],
+                    'any_error_msg' => false
+                ]
+            )->assertJsonStructure(
+                [
+                    'series' => [
+                        [
+                            'updated_at',
+                        ]
+                    ],
+                ]
+            );
     }
 }
