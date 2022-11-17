@@ -151,7 +151,3 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::delete('/turma', [SchoolClassController::class, 'delete'])
         ->name('schoolclass.delete');
 });
-
-Route::group(['namespace' => 'Exports', 'prefix' => 'exports'], function () {
-    Route::get('students', 'StudentsController@export');
-});
