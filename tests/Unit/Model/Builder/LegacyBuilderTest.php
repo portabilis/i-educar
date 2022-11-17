@@ -6,7 +6,6 @@ use App\Models\Builders\LegacyBuilder;
 use App\Models\LegacySchool;
 use Database\Factories\LegacyInstitutionFactory;
 use Database\Factories\LegacySchoolFactory;
-use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Collection;
 use Tests\TestCase;

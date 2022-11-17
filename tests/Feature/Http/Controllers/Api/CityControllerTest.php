@@ -19,7 +19,6 @@ use OpenApiGenerator\Attributes\Response;
 use OpenApiGenerator\Type;
 use OpenApiGenerator\Types\SchemaType;
 use Tests\ResourceTestCase;
-use Tests\Unit\Eloquent\CityTest;
 
 #[Controller]
 class CityControllerTest extends ResourceTestCase

@@ -10,7 +10,6 @@ use Illuminate\Contracts\Validation\Rule;
 
 class DistrictRestrictOperationRule implements Rule
 {
-
     private int $accessLevel;
 
     public function __construct(int $accessLevel)
@@ -21,13 +20,13 @@ class DistrictRestrictOperationRule implements Rule
     /**
      * Determine if the validation rule passes.
      *
-     * @param  string  $attribute
-     * @param  District  $value
+     * @param string   $attribute
+     * @param District $value
+     *
      * @return bool
      */
     public function passes($attribute, $value)
     {
-
         $city = $value->getOriginal('city_id') ?? $value->city_id;
 
         $city = City::query()->find($city);

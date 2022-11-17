@@ -110,7 +110,7 @@ abstract class ResourceController extends Controller
     protected function filter(Builder $builder, Request $request): void
     {
         if (method_exists($builder, 'filter')) {
-            $builder->filter($request->except('only','include','order','page'));
+            $builder->filter($request->except('only', 'include', 'order', 'page'));
         }
     }
 

@@ -10,7 +10,7 @@ class AddressingDistrictRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'city_id' => ['required', 'integer', Rule::exists('cities','id')],
+            'city_id' => ['required', 'integer', Rule::exists('cities', 'id')],
             'name' => ['required', 'max:255'],
             'ibge_code' => ['nullable', 'integer', Rule::unique('districts')->ignore($this->route('district'))]
         ];

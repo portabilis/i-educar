@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\LegacyConfiguration;
 use App\Models\LegacyInstitution;
 use App\Services\MenuCacheService;
 use Illuminate\Contracts\Config\Repository;
@@ -27,8 +26,8 @@ class WebController extends Controller
         ];
     }
 
-    public function institution() {
-
+    public function institution()
+    {
         return [
             'name' => LegacyInstitution::value('nm_instituicao'),
             'logo' => config('legacy.report.logo_file_name')

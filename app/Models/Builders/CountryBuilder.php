@@ -2,7 +2,6 @@
 
 namespace App\Models\Builders;
 
-use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 
 class CountryBuilder extends LegacyBuilder
@@ -17,6 +16,7 @@ class CountryBuilder extends LegacyBuilder
     public function getResource(array $filters = []): Collection
     {
         $this->active()->orderByName()->filter($filters);
+
         return $this->resource(['id as value', 'name as label']);
     }
 
@@ -41,7 +41,6 @@ class CountryBuilder extends LegacyBuilder
     {
         return $this->whereNull('deleted_at');
     }
-
 
     /**
      * Ordena por nome

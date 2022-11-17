@@ -8,7 +8,6 @@ use App\Models\State;
 use OpenApiGenerator\Attributes\Property;
 use OpenApiGenerator\Attributes\Schema;
 use OpenApiGenerator\Type;
-use OpenApiGenerator\Types\SchemaType;
 use Tests\EloquentTestCase;
 
 #[

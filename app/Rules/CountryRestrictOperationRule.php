@@ -2,16 +2,13 @@
 
 namespace App\Rules;
 
-use App\Models\City;
 use App\Models\Country;
 use App\Models\District;
-use App\Models\State;
 use App_Model_NivelTipoUsuario;
 use Illuminate\Contracts\Validation\Rule;
 
 class CountryRestrictOperationRule implements Rule
 {
-
     private int $accessLevel;
 
     public function __construct(int $accessLevel)
@@ -22,8 +19,9 @@ class CountryRestrictOperationRule implements Rule
     /**
      * Determine if the validation rule passes.
      *
-     * @param  string  $attribute
-     * @param  District  $value
+     * @param string   $attribute
+     * @param District $value
+     *
      * @return bool
      */
     public function passes($attribute, $value)

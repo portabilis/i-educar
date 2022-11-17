@@ -227,18 +227,18 @@ class LegacyBuilder extends Builder
         return $this->when($limit, fn ($q) => $q->limit($limit));
     }
 
-
     /**
      * Filtra por nome e id do país
      *
      * @param string $search
+     *
      * @return $this
      */
     public function whereSearch(string $search): self
     {
         return $this->where(function ($q) use ($search) {
-            if (is_numeric($search) || str_contains($search,',')) {
-                $q->whereIn($this->model->getKeyName(),explode(',',$search));
+            if (is_numeric($search) || str_contains($search, ',')) {
+                $q->whereIn($this->model->getKeyName(), explode(',', $search));
             } else {
                 $q->whereName($search);
             }
@@ -255,6 +255,7 @@ class LegacyBuilder extends Builder
                 $relation = substr($filter, 0, strrpos($filter, '.'));
                 $column = substr($filter, (strrpos($filter, '.') + 1));
                 $groupRelations->push([$relation, $column]);
+
                 continue;
             }
 
@@ -280,6 +281,7 @@ class LegacyBuilder extends Builder
                 }
             });
         }
+
         return $this;
     }
 
