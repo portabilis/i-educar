@@ -166,7 +166,10 @@ return new class() extends clsCadastro
            }   
         }
         if($contador>0){
-            echo"<script>alert('Não é possível realizar a operação, existem frequências registradas na data informada');</script>";
+            $this->mensagem = 'Não é possível realizar a operação, existem frequências registradas na data informada.<br>';
+
+                return false;
+           
         }else{
                 $turma = new clsPmieducarTurma($_GET['turma']);
                 $tipoTurma = $turma->getTipoTurma();
