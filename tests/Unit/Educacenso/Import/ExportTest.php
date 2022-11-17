@@ -49,7 +49,7 @@ class ExportTest extends TestCase
 
         DistrictFactory::new()->create([
             'name' => 'IÇARA',
-            'ibge_code' => '420700705',
+            'ibge_code' => '05',
             'city_id' => CityFactory::new()->create([
                 'state_id' => StateFactory::new()->create([
                     'country_id' => $country,
