@@ -80,6 +80,12 @@ class Registro00Import implements RegistroImportInterface
             return $schoolInep->school;
         }
 
+        $institution = LegacyInstitution::whereNull('orgao_regional')->first();
+        if ($institution instanceof LegacyInstitution) {
+            $institution->orgao_regional = $this->model->orgaoRegional;
+            $institution->save();
+        }
+
         $person = LegacyPerson::create([
             'nome' => $this->model->nome,
             'tipo' => 'J',
@@ -152,7 +158,7 @@ class Registro00Import implements RegistroImportInterface
         $place = Place::firstOrCreate([
             'city_id' => $city->getKey(),
             'address' => $this->model->logradouro,
-            'number' => (int) (is_numeric($this->model->numero) ? $this->model->numero : null),
+            'number' => (int)(is_numeric($this->model->numero) ? $this->model->numero : null),
             'complement' => $this->model->complemento,
             'neighborhood' => $this->model->bairro,
             'postal_code' => $this->model->cep,
