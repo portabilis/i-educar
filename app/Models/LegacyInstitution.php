@@ -46,6 +46,7 @@ class LegacyInstitution extends LegacyModel implements RelocationDateProvider
         'logradouro',
         'nm_responsavel',
         'nm_instituicao',
+        'orgao_regional'
     ];
 
     /**
