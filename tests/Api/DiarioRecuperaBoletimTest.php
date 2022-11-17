@@ -30,6 +30,7 @@ class DiarioRecuperaBoletimTest extends UnitBaseTest
                 'msgs',
                 'any_error_msg',
                 'encoded',
+                'encoding',
                 'matricula_id',
             ]
         );
