@@ -46,7 +46,8 @@ class DiarioPostaFaltasGeralTest extends TestCase
         ]);
 
         $evaluationRule = LegacyEvaluationRuleFactory::new()->create([
-            'parecer_descritivo' => 6
+            'parecer_descritivo' => 6,
+            'tipo_presenca' => 1,
         ]);
 
         $discipline = LegacyDisciplineFactory::new()->create();

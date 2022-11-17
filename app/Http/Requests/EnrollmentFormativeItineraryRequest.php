@@ -79,6 +79,4 @@ class EnrollmentFormativeItineraryRequest extends FormRequest
             'concomitant_itinerary' => 'Itinerário concomitante intercomplementar à matrícula de formação geral básica',
         ];
     }
-
-
 }
