@@ -52,6 +52,7 @@ abstract class EducacensoTestCase extends TestCase
         \Artisan::call('db:seed', ['--class' => 'DefaultManagerAccessCriteriasTableSeeder']);
         \Artisan::call('db:seed', ['--class' => 'DefaultModulesEducacensoIesTableSeeder']);
         \Artisan::call('db:seed', ['--class' => 'DefaultModulesEducacensoCursoSuperiorTableSeeder']);
+        \Artisan::call('db:seed', ['--class' => 'DefaultModulesEducacensoOrgaoRegionalTableSeeder']);
 
         $country = Country::updateOrCreate([
             'id' => 1
@@ -85,6 +86,8 @@ abstract class EducacensoTestCase extends TestCase
     {
         $count = LegacySchool::count();
         $legacySchool = LegacySchool::first();
+        dd($legacySchool->institution);
+        $this->assertNotNull($legacySchool->institution->orgao_regional);
 
         $this->assertEquals(1, $count);
         $this->assertEquals('ESCOLA PORTABILIS', $legacySchool->name);
