@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyEmployeeRole extends LegacyModel
@@ -31,13 +32,15 @@ class LegacyEmployeeRole extends LegacyModel
      */
     public $timestamps = false;
 
-    public function getIdAttribute(): int
+    protected function id(): Attribute
     {
-        return $this->cod_servidor_funcao;
+        return Attribute::make(
+            get: fn () => $this->cod_servidor_funcao
+        );
     }
 
     public function role(): BelongsTo
     {
-        return $this->belongsTo('App\\Models\\LegacyRole', 'ref_cod_funcao');
+        return $this->belongsTo(LegacyRole::class, 'ref_cod_funcao');
     }
 }

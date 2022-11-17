@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\Ativo;
 use App\Traits\HasInstitution;
 use App\Traits\HasLegacyDates;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class LegacyDisciplineExemption
@@ -35,4 +36,17 @@ class LegacyExemptionType extends LegacyModel
         'data_exclusao',
         'ativo',
     ];
+
+    public array $legacy = [
+        'id' => 'cod_tipo_dispensa',
+        'name' => 'nm_tipo',
+        'description' => 'descricao',
+        'deleted_at' => 'data_exclusao',
+        'active' => 'ativo'
+    ];
+
+    public function disciplineExemptions(): HasMany
+    {
+        return $this->hasMany(LegacyDisciplineExemption::class, 'ref_cod_tipo_dispensa');
+    }
 }

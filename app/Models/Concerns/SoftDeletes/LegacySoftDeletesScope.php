@@ -25,7 +25,7 @@ class LegacySoftDeletesScope extends SoftDeletingScope
      */
     public function apply(Builder $builder, Model $model)
     {
-        $builder->withoutGlobalScope(SoftDeletingScope::class)->where($model->getQualifiedDeletedAtColumn(), 1);
+        $builder->where($model->getQualifiedDeletedAtColumn(), 1);
     }
 
     /**
@@ -111,7 +111,7 @@ class LegacySoftDeletesScope extends SoftDeletingScope
     {
         $builder->macro('withoutTrashed', function (Builder $builder) {
             $model = $builder->getModel();
-            $builder->withoutGlobalScope($this)->where($model->getQualifiedDeletedAtColumn(), 1);
+            $builder->withoutGlobalScope(SoftDeletingScope::class)->withoutGlobalScope($this)->where($model->getQualifiedDeletedAtColumn(), 1);
 
             return $builder;
         });
@@ -128,7 +128,17 @@ class LegacySoftDeletesScope extends SoftDeletingScope
     {
         $builder->macro('onlyTrashed', function (Builder $builder) {
             $model = $builder->getModel();
-            $builder->withoutGlobalScope($this)->where($model->getQualifiedDeletedAtColumn(), 0);
+            $builder->withoutGlobalScope(SoftDeletingScope::class)->withoutGlobalScope($this)->where($model->getQualifiedDeletedAtColumn(), 0);
+
+            return $builder;
+        });
+    }
+
+    protected function addActive(Builder $builder)
+    {
+        $builder->macro('active', function (Builder $builder) {
+            $model = $builder->getModel();
+            $builder->withoutGlobalScope(SoftDeletingScope::class)->withoutGlobalScope($this)->where($model->getQualifiedDeletedAtColumn(), 1);
 
             return $builder;
         });

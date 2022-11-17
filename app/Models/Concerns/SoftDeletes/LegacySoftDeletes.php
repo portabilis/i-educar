@@ -3,6 +3,7 @@
 namespace App\Models\Concerns\SoftDeletes;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Database\Query\Builder;
 
 /**
@@ -14,13 +15,9 @@ trait LegacySoftDeletes
 {
     use SoftDeletes;
 
-    /**
-     * Boot the soft deleting trait for a model.
-     *
-     * @return void
-     */
-    public static function bootLegacySoftDeletes(): void
+    public static function bootSoftDeletes(): void
     {
+        static::withoutGlobalScope(new SoftDeletingScope());
         static::addGlobalScope(new LegacySoftDeletesScope());
     }
 

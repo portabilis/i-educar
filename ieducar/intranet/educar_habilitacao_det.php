@@ -27,7 +27,7 @@ return new class extends clsDetalhe {
 
         $this->cod_habilitacao=$_GET['cod_habilitacao'];
 
-        $registro = LegacyQualification::find($this->cod_habilitacao)?->toArray();
+        $registro = LegacyQualification::find($this->cod_habilitacao)?->getAttributes();
 
         if (! $registro) {
             $this->simpleRedirect('educar_habilitacao_lst.php');

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -9,6 +10,10 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class LegacyIndividual extends Model
 {
     use HasFiles;
+
+    public const CREATED_AT = 'data_cad';
+
+    public const UPDATED_AT = null;
 
     /**
      * @var string
@@ -83,11 +88,6 @@ class LegacyIndividual extends Model
     ];
 
     /**
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
      * @return BelongsToMany
      */
     public function race()
@@ -118,7 +118,7 @@ class LegacyIndividual extends Model
      */
     public function person()
     {
-        return $this->hasOne(LegacyPerson::class, 'idpes', 'idpes');
+        return $this->belongsTo(LegacyPerson::class, 'idpes', 'idpes');
     }
 
     /**
@@ -191,17 +191,10 @@ class LegacyIndividual extends Model
         return static::query()->where('cpf', (int) $cpf)->first();
     }
 
-    /**
-     * Cpf formatado
-     *
-     * @param $value
-     *
-     * @return string|void
-     */
-    public function getCpfAttribute($value)
+    protected function cpf(): Attribute
     {
-        if ($value) {
-            return int2CPF($value);
-        }
+        return Attribute::make(
+            get: fn ($value) => int2CPF($value),
+        );
     }
 }

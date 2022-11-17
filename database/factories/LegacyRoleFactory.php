@@ -24,8 +24,9 @@ class LegacyRoleFactory extends Factory
         return [
             'nm_funcao' => $this->faker->colorName,
             'abreviatura' => $this->faker->hexColor,
-            'professor' => $this->faker->numberBetween(0, 1),
+            'professor' => 1,
             'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
+            'ref_usuario_exc' => LegacyUserFactory::new()->unique()->make(),
             'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
         ];
     }

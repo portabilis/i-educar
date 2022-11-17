@@ -12,23 +12,30 @@ class LegacyRoundingTable extends Model
      */
     protected $table = 'modules.tabela_arredondamento';
 
+    public const CREATED_AT = null;
+
     /**
      * @var array
      */
     protected $fillable = [
-        'instituicao_id', 'nome', 'tipo_nota'
+        'instituicao_id',
+        'nome',
+        'tipo_nota'
     ];
-
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * @return HasMany
      */
-    public function roundingValues()
+    public function roundingValues(): HasMany
     {
         return $this->hasMany(LegacyValueRoundingTable::class, 'tabela_arredondamento_id', 'id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function evaluationRules(): HasMany
+    {
+        return $this->hasMany(LegacyEvaluationRule::class, 'tabela_arredondamento_id');
     }
 }

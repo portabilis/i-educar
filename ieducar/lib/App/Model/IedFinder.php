@@ -1,11 +1,11 @@
 <?php
 
+use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineAcademicYear;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassStage;
-use App\Models\LegacySchoolStage;
 use iEducar\Modules\AcademicYear\Exceptions\DisciplineNotLinkedToRegistrationException;
 use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
 use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotDefinedInLevel;
@@ -1162,7 +1162,7 @@ class App_Model_IedFinder extends CoreExt_Entity
             $key = json_encode($where);
 
             return Cache::store('array')->remember("getQuantidadeDeModulosMatricula:{$key}", now()->addMinute(), function () use ($where) {
-                return LegacySchoolStage::query()->where($where)->count();
+                return LegacyAcademicYearStage::query()->where($where)->count();
             });
         }
 

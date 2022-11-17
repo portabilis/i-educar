@@ -4,10 +4,14 @@ namespace App\Models;
 
 use App\Traits\HasInstitution;
 use App\Traits\HasLegacyDates;
+use App\Traits\HasLegacyUserAction;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LegacyStageType extends LegacyModel
 {
+    use HasLegacyUserAction;
     use HasLegacyDates;
     use HasInstitution;
 
@@ -37,12 +41,21 @@ class LegacyStageType extends LegacyModel
      */
     public $timestamps = false;
 
-    /**
-     * @return string
-     */
-    public function getNameAttribute()
+    public function academicYearStages(): HasMany
     {
-        return sprintf('%s - %d etapa(s)', $this->nm_tipo, $this->num_etapas);
+        return $this->hasMany(LegacyAcademicYearStage::class, 'ref_cod_modulo');
+    }
+
+    public function schoolClassStage(): HasMany
+    {
+        return $this->hasMany(LegacySchoolClassStage::class, 'ref_cod_modulo');
+    }
+
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => sprintf('%s - %d etapa(s)', $this->nm_tipo, $this->num_etapas)
+        );
     }
 
     /**
@@ -50,7 +63,7 @@ class LegacyStageType extends LegacyModel
      *
      * @return Builder
      */
-    public function scopeActive($query)
+    public function scopeActive($query): Builder
     {
         return $query->where('ativo', 1);
     }
@@ -65,7 +78,7 @@ class LegacyStageType extends LegacyModel
      *
      * @return bool
      */
-    public static function alreadyExists($name, $stagesNumber, $id = null)
+    public static function alreadyExists($name, $stagesNumber, $id = null): bool
     {
         return self::query()
             ->where('ativo', 1)
@@ -77,8 +90,10 @@ class LegacyStageType extends LegacyModel
             ->exists();
     }
 
-    public function getDescricaoAttribute()
+    protected function descricao(): Attribute
     {
-        return str_replace(["\r\n", "\r", "\n"], '<br />', $this->attributes['descricao']);
+        return Attribute::make(
+            get: fn ($value) => str_replace(["\r\n", "\r", "\n"], '<br />', $value)
+        );
     }
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Builders\LegacySchoolGradeDisciplineBuilder;
 use App\Traits\LegacyAttribute;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -18,12 +19,14 @@ class LegacySchoolGradeDiscipline extends Model
 
     protected $table = 'pmieducar.escola_serie_disciplina';
 
+    public const CREATED_AT = null;
+
     /**
      * Builder dos filtros
      *
      * @var string
      */
-    protected $builder = LegacySchoolGradeDisciplineBuilder::class;
+    protected string $builder = LegacySchoolGradeDisciplineBuilder::class;
 
     /**
      * Atributos legados para serem usados nas queries
@@ -49,36 +52,31 @@ class LegacySchoolGradeDiscipline extends Model
         'anos_letivos',
     ];
 
-    public $timestamps = false;
-
-    /**
-     * @return int
-     */
-    public function getIdAttribute()
+    protected function id(): Attribute
     {
-        return $this->ref_cod_disciplina;
+        return Attribute::make(
+            get: fn () => $this->ref_cod_disciplina
+        );
     }
 
-    /**
-     * @return string
-     */
-    public function getNameAttribute()
+    protected function name(): Attribute
     {
-        return $this->discipline->name ?? null;
+        return Attribute::make(
+            get: fn () => $this->discipline?->name
+        );
     }
 
-    /**
-     * @return int
-     */
-    public function getWorkloadAttribute()
+    protected function workload(): Attribute
     {
-        return $this->carga_horaria;
+        return Attribute::make(
+            get: fn () => $this->carga_horaria
+        );
     }
 
     /**
      * @return BelongsTo
      */
-    public function discipline()
+    public function discipline(): BelongsTo
     {
         return $this->belongsTo(LegacyDiscipline::class, 'ref_cod_disciplina');
     }

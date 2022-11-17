@@ -2,10 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacyTransferRequestBuilder;
+use App\Models\Concerns\SoftDeletes\LegacySoftDeletes;
 use App\Traits\HasLegacyDates;
+use App\Traits\HasLegacyUserAction;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyTransferRequest extends LegacyModel
 {
+    use LegacySoftDeletes;
+    use HasLegacyUserAction;
     use HasLegacyDates;
 
     /**
@@ -17,6 +23,8 @@ class LegacyTransferRequest extends LegacyModel
      * @var string
      */
     protected $primaryKey = 'cod_transferencia_solicitacao';
+
+    public string $builder = LegacyTransferRequestBuilder::class;
 
     /**
      * @var array
@@ -38,16 +46,11 @@ class LegacyTransferRequest extends LegacyModel
     ];
 
     /**
-     * @var boolean
-     */
-    public $timestamps = false;
-
-    /**
      * Relação com a matricula de saída.
      *
      * @return BelongsTo
      */
-    public function oldRegistration()
+    public function oldRegistration(): BelongsTo
     {
         return $this->belongsTo(LegacyRegistration::class, 'ref_cod_matricula_saida');
     }
@@ -57,28 +60,24 @@ class LegacyTransferRequest extends LegacyModel
      *
      * @return BelongsTo
      */
-    public function newRegistration()
+    public function newRegistration(): BelongsTo
     {
         return $this->belongsTo(LegacyRegistration::class, 'ref_cod_matricula_entrada');
     }
 
     /**
-     * @param Builder $query
-     *
-     * @return Builder
+     * @return BelongsTo
      */
-    public function scopeActive($query)
+    public function transferType(): BelongsTo
     {
-        return $query->where('ativo', 1);
+        return $this->belongsTo(LegacyTransferType::class, 'ref_cod_transferencia_tipo');
     }
 
     /**
-     * @param Builder $query
-     *
-     * @return Builder
+     * @return BelongsTo
      */
-    public function scopeUnattended($query)
+    public function destinationSchool(): BelongsTo
     {
-        return $query->whereNull('ref_cod_matricula_entrada');
+        return $this->belongsTo(LegacySchool::class, 'ref_cod_escola_destino');
     }
 }

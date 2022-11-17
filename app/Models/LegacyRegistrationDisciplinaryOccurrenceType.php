@@ -4,11 +4,14 @@ namespace App\Models;
 
 use App\Traits\Ativo;
 use App\Traits\HasLegacyDates;
+use App\Traits\HasLegacyUserAction;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyRegistrationDisciplinaryOccurrenceType extends LegacyModel
 {
     use Ativo;
     use HasLegacyDates;
+    use HasLegacyUserAction;
 
     /**
      * @var string
@@ -35,4 +38,14 @@ class LegacyRegistrationDisciplinaryOccurrenceType extends LegacyModel
         'visivel_pais',
         'updated_at'
     ];
+
+    public function registration(): BelongsTo
+    {
+        return $this->belongsTo(LegacyRegistration::class, 'ref_cod_matricula');
+    }
+
+    public function disciplinarOccurrenceType(): BelongsTo
+    {
+        return $this->belongsTo(LegacyDisciplinaryOccurrenceType::class, 'ref_cod_tipo_ocorrencia_disciplinar');
+    }
 }

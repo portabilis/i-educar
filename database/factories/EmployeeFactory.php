@@ -22,9 +22,11 @@ class EmployeeFactory extends Factory
     public function definition(): array
     {
         return [
-            'cod_servidor' => LegacyPersonFactory::new()->create(),
-            'ref_cod_instituicao' => LegacyInstitutionFactory::new()->unique()->make(),
-            'carga_horaria' => $this->faker->randomNumber(3),
+            'id' => LegacyPersonFactory::new()->create(),
+            'institution_id' => LegacyInstitutionFactory::new()->unique()->make(),
+            'workload' => $this->faker->randomNumber(3),
+            'ref_idesco' => LegacySchoolingDegreeFactory::new()->unique()->make(),
+            'curso_formacao_continuada' => '{1}'
         ];
     }
 }

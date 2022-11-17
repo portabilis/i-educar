@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Builders\LegacyCourseBuilder;
 use App\Traits\HasLegacyDates;
 use App\Traits\LegacyAttribute;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -36,7 +37,7 @@ class LegacyCourse extends LegacyModel
      *
      * @var string
      */
-    protected $builder = LegacyCourseBuilder::class;
+    protected string $builder = LegacyCourseBuilder::class;
 
     /**
      * Atributos legados para serem usados nas queries
@@ -60,6 +61,7 @@ class LegacyCourse extends LegacyModel
         'ref_cod_nivel_ensino',
         'ref_cod_tipo_ensino',
         'nm_curso',
+        'descricao',
         'sgl_curso',
         'qtd_etapas',
         'carga_horaria',
@@ -83,48 +85,45 @@ class LegacyCourse extends LegacyModel
      */
     public $timestamps = false;
 
-    /**
-     * @return int
-     */
-    public function getIdAttribute()
+    protected function id(): Attribute
     {
-        return $this->cod_curso;
+        return Attribute::make(
+            get: fn () => $this->cod_curso,
+        );
     }
 
-    /**
-     * @return string
-     */
-    public function getDescriptionAttribute()
+    protected function description(): Attribute
     {
-        return $this->descricao;
+        return Attribute::make(
+            get: fn () => $this->descricao,
+        );
     }
 
-    /**
-     * @return int
-     */
-    public function getStepsAttribute()
+    protected function steps(): Attribute
     {
-        return $this->qtd_etapas;
+        return Attribute::make(
+            get: fn () => $this->qtd_etapas,
+        );
     }
 
-    /**
-     * @return string
-     */
-    public function getNameAttribute()
+    protected function name(): Attribute
     {
-        if (empty($this->description)) {
-            return $this->nm_curso;
-        }
+        return Attribute::make(
+            get: function () {
+                if (empty($this->description)) {
+                    return $this->nm_curso;
+                }
 
-        return $this->nm_curso . ' (' . $this->description . ')';
+                return $this->nm_curso . ' (' . $this->description . ')';
+            },
+        );
     }
 
-    /**
-     * @return bool
-     */
-    public function getIsStandardCalendarAttribute()
+    protected function isStandardCalendar(): Attribute
     {
-        return $this->padrao_ano_escolar;
+        return Attribute::make(
+            get: fn () => $this->padrao_ano_escolar,
+        );
     }
 
     /**

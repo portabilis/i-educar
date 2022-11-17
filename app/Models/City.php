@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Collection;
 
 class City extends Model
 {
@@ -22,7 +21,9 @@ class City extends Model
      * @var array
      */
     protected $fillable = [
-        'state_id', 'name', 'ibge_code',
+        'state_id',
+        'name',
+        'ibge_code',
     ];
 
     /**
@@ -76,17 +77,5 @@ class City extends Model
         $city = static::query()->find($id);
 
         return $city->name ?? '';
-    }
-
-    /**
-     * @param string $abbreviation
-     *
-     * @return Collection
-     */
-    public static function getListByAbbreviation($abbreviation)
-    {
-        return static::query()->whereHas('state', function ($query) use ($abbreviation) {
-            $query->where('abbreviation', $abbreviation);
-        })->orderBy('name')->pluck('name', 'id');
     }
 }

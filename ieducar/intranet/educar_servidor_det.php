@@ -125,13 +125,6 @@ return new class extends clsDetalhe {
             $this->addDetalhe(['Escolaridade', $registro['ref_idesco']]);
         }
 
-        if ($registro['ref_cod_subnivel']) {
-            $obj_nivel = new clsPmieducarSubnivel($registro['ref_cod_subnivel']);
-            $det_nivel = $obj_nivel->detalhe();
-
-            $this->addDetalhe(['Nível', $det_nivel['nm_subnivel']]);
-        }
-
         if ($registro['ref_cod_funcao']) {
             $this->addDetalhe(['Função', $registro['ref_cod_funcao']]);
         }
@@ -286,9 +279,6 @@ return new class extends clsDetalhe {
 
             $this->array_botao[] = 'Alocar Servidor';
             $this->array_botao_url_script[] = "go(\"educar_servidor_alocacao_lst.php?{$get_padrao}\");";
-
-            $this->array_botao[] = 'Alterar Nível';
-            $this->array_botao_url_script[] = 'popless();';
 
             if ($lista) {
                 $this->array_botao[] = 'Substituir Horário Servidor';

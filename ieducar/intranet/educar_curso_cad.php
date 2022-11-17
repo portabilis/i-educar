@@ -279,7 +279,7 @@ return new class extends clsCadastro {
                     $this->habilitacao_curso[$campo['ref_cod_habilitacao']] = null;
                     $this->excluir_ = null;
                 } else {
-                    $obj_habilitacao_det = LegacyQualification::find($campo['ref_cod_habilitacao_'])?->toArray();
+                    $obj_habilitacao_det = LegacyQualification::find($campo['ref_cod_habilitacao_'])?->getAttributes();
                     $nm_habilitacao = $obj_habilitacao_det['nm_tipo'];
 
                     $this->campoTextoInv(

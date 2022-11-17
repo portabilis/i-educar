@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
+use App\Casts\LegacyArray;
 use App\Support\Database\DateSerializer;
-use App\Traits\HasLegacyDates;
 use DateTime;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
@@ -23,7 +24,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class LegacyEnrollment extends LegacyModel
 {
     use DateSerializer;
-    use HasLegacyDates;
+
+    public const CREATED_AT = 'data_cadastro';
+    public const UPDATED_AT = 'updated_at';
 
     /**
      * @var string
@@ -54,17 +57,18 @@ class LegacyEnrollment extends LegacyModel
         'etapa_educacenso'
     ];
 
+    protected $casts = [
+        'tipo_itinerario' => LegacyArray::class,
+        'composicao_itinerario' => LegacyArray::class,
+    ];
+
     /**
      * @var array
      */
     protected $dates = [
-        'data_enturmacao', 'data_exclusao'
+        'data_enturmacao',
+        'data_exclusao'
     ];
-
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * @param Builder $query
@@ -76,44 +80,39 @@ class LegacyEnrollment extends LegacyModel
         return $query->where('ativo', true);
     }
 
-    /**
-     * @return DateTime
-     */
-    public function getDateAttribute()
+    protected function date(): Attribute
     {
-        return $this->data_enturmacao;
+        return Attribute::make(
+            get: fn () => $this->data_enturmacao,
+        );
     }
 
-    /**
-     * @return DateTime
-     */
-    public function getDateDepartedAttribute()
+    protected function dateDeparted(): Attribute
     {
-        return $this->data_exclusao;
+        return Attribute::make(
+            get: fn () => $this->data_exclusao,
+        );
     }
 
-    /**
-     * @return int
-     */
-    public function getSchoolClassIdAttribute()
+    protected function schoolClassId(): Attribute
     {
-        return $this->ref_cod_turma;
+        return Attribute::make(
+            get: fn () => $this->ref_cod_turma,
+        );
     }
 
-    /**
-     * @return int
-     */
-    public function getRegistrationIdAttribute()
+    protected function registrationId(): Attribute
     {
-        return $this->ref_cod_matricula;
+        return Attribute::make(
+            get: fn () => $this->ref_cod_matricula,
+        );
     }
 
-    /**
-     * @return string
-     */
-    public function getStudentNameAttribute()
+    protected function studentName(): Attribute
     {
-        return $this->registration->student->person->nome;
+        return Attribute::make(
+            get: fn () => $this->registration->student->person->nome ?? null,
+        );
     }
 
     /**

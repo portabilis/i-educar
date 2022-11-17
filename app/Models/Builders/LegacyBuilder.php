@@ -389,7 +389,11 @@ class LegacyBuilder extends Builder
             $columns[$key] = $this->getLegacyColumn($column);
         }
 
-        return parent::find($this->getLegacyColumn($id), $columns);
+        if (is_string($id)) {
+            $id = $this->getLegacyColumn($id);
+        }
+
+        return parent::find($id, $columns);
     }
 
     public function findOrFail($id, $columns = ['*'])

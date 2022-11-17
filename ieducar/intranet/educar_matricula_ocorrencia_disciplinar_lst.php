@@ -128,7 +128,7 @@ return new class extends clsListagem {
                 $det_serie = $obj_serie->detalhe();
                 $registro['ref_ref_cod_serie'] = $det_serie['nm_serie'];
 
-                $det_ref_cod_tipo_ocorrencia_disciplinar = LegacyDisciplinaryOccurrenceType::find($registro['ref_cod_tipo_ocorrencia_disciplinar'])?->toArray();
+                $det_ref_cod_tipo_ocorrencia_disciplinar = LegacyDisciplinaryOccurrenceType::find($registro['ref_cod_tipo_ocorrencia_disciplinar'])?->getAttributes();
                 $registro['nm_tipo'] = $det_ref_cod_tipo_ocorrencia_disciplinar['nm_tipo'];
 
                 $obj_mat_turma = new clsPmieducarMatriculaTurma();

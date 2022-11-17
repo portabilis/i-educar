@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Models\Builders\LegacySchoolAcademicYearBuilder;
 use App\Traits\HasLegacyDates;
 use App\Traits\LegacyAttribute;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * LegacySchoolAcademicYear
@@ -21,6 +23,8 @@ class LegacySchoolAcademicYear extends LegacyModel
      */
     protected $table = 'pmieducar.escola_ano_letivo';
 
+    public const CREATED_AT = null;
+
     /**
      * @var string
      */
@@ -31,7 +35,7 @@ class LegacySchoolAcademicYear extends LegacyModel
      *
      * @var string
      */
-    protected $builder = LegacySchoolAcademicYearBuilder::class;
+    protected string $builder = LegacySchoolAcademicYearBuilder::class;
 
     /**
      * Atributos legados para serem usados nas queries
@@ -56,16 +60,15 @@ class LegacySchoolAcademicYear extends LegacyModel
         'turmas_por_ano',
     ];
 
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
-     * @return int
-     */
-    public function getYearAttribute(): int
+    protected function year(): Attribute
     {
-        return $this->ano;
+        return Attribute::make(
+            get: fn () => $this->ano
+        );
+    }
+
+    public function school(): BelongsTo
+    {
+        return $this->belongsTo(LegacySchool::class, 'ref_cod_escola');
     }
 }

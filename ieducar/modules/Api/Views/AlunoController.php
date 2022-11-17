@@ -3,6 +3,7 @@
 use App\Models\Educacenso\Registro30;
 use App\Models\Individual;
 use App\Models\LegacyDeficiency;
+use App\Models\LegacyIndividual;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolHistory;
 use App\Models\LegacyStudentBenefit;
@@ -519,14 +520,15 @@ class AlunoController extends ApiCoreController
 
     protected function updateDeficiencias()
     {
-        $sql = 'delete from cadastro.fisica_deficiencia where ref_idpes = $1';
-        $this->fetchPreparedQuery($sql, $this->getRequest()->pessoa_id, false);
+        $individual = LegacyIndividual::find($this->getRequest()->pessoa_id,['idpes']);
+        $old = $individual->deficiency()->pluck('ref_cod_deficiencia')->toArray();
+        $news = array_filter($this->getRequest()->deficiencias);
+        $individual->deficiency()->sync($news);
 
-        foreach ($this->getRequest()->deficiencias as $id) {
-            if (!empty($id)) {
-                $deficiencia = new clsCadastroFisicaDeficiencia($this->getRequest()->pessoa_id, $id);
-                $deficiencia->cadastra();
-            }
+        $diff = array_merge(array_diff($old, $news),array_diff($news,$old));
+
+        if (! empty($diff)) {
+            LegacyDeficiency::whereIn('cod_deficiencia', $diff)->update(['updated_at' => now()]);
         }
     }
 
@@ -742,6 +744,11 @@ class AlunoController extends ApiCoreController
     {
         $escola = $this->getRequest()->escola;
         $modified = $this->getRequest()->modified;
+        $alunoId = $this->getRequest()->aluno_id;
+
+        if (is_array($alunoId)) {
+            $alunoId = implode(',', $alunoId);
+        }
 
         if (is_array($escola)) {
             $escola = implode(',', $escola);
@@ -753,6 +760,11 @@ class AlunoController extends ApiCoreController
         if ($modified) {
             $where = ' AND od.updated_at >= $1';
             $params[] = $modified;
+        }
+
+        $alunoFilter = '';
+        if ($alunoId) {
+            $alunoFilter = "AND m.ref_cod_aluno in ({$alunoId})";
         }
 
         $sql = "
@@ -778,6 +790,7 @@ class AlunoController extends ApiCoreController
             on tod.cod_tipo_ocorrencia_disciplinar = od.ref_cod_tipo_ocorrencia_disciplinar
             where true
                 and od.visivel_pais = 1
+                {$alunoFilter}
                 and m.ref_ref_cod_escola IN ({$escola})
                 {$where}
         ";
