@@ -5,6 +5,8 @@ use App\Models\LegacyRegistration;
 use App\Models\LegacyTransferRequest;
 use App\Services\PromotionService;
 use Illuminate\Support\Facades\DB;
+use iEducar\Legacy\Model;
+use App\Models\Frequencia;
 
 return new class() extends clsCadastro
 {
@@ -147,7 +149,7 @@ return new class() extends clsCadastro
                 $opcoesMotivo[$registro['cod_transferencia_tipo']] = $registro['nm_tipo'];
             }
         }
-
+ 
         $this->campoLista('ref_cod_transferencia_tipo', 'Motivo', $opcoesMotivo, $this->ref_cod_transferencia_tipo);
         $this->inputsHelper()->date('data_cancel', ['label' => 'Data', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')]);
         $this->campoMemo('observacao', 'Observação', $this->observacao, 60, 5, false);
@@ -156,34 +158,44 @@ return new class() extends clsCadastro
     public function Novo()
     {
 
-        $turma = new clsPmieducarTurma($_GET['turma']);
-        $tipoTurma = $turma->getTipoTurma();
-
-        if ($tipoTurma == 1) {
-
-            $atendimento = new clsModulesComponenteMinistradoAee();
-            $dataAtendimento = $atendimento->selectDataAtendimentoByMatricula($_GET['ref_cod_matricula']);
-
-            $data_cancel = Portabilis_Date_Utils::brToPgSQL($this->data_cancel);
-
-            if (($data_cancel <= $dataAtendimento['data'])) {
-                $this->mensagem = 'Não é possível realizar a operação, existem frequências registradas no período <br>';
-
-                return false;
-            }
+        $frequencia = Frequencia::where('ref_cod_turma', $_GET['turma'])->get();
+        $contador = 0;
+        foreach($frequencia as $list) {
+           if($list->data >= $_POST['data_cancel']){
+            $contador++;
+           }   
         }
+        if($contador>0){
+            echo"<script>alert('Não é possível realizar a operação, existem frequências registradas na data informada');</script>";
+        }else{
+                $turma = new clsPmieducarTurma($_GET['turma']);
+                $tipoTurma = $turma->getTipoTurma();
 
-        if ($tipoTurma == 0) {
+                if ($tipoTurma == 1) {
 
-            $frequencia = new clsModulesFrequencia();
-            $dataFrequencia = $frequencia->selectDataFrequenciaByTurma($_GET['turma']);
+                    $atendimento = new clsModulesComponenteMinistradoAee();
+                    $dataAtendimento = $atendimento->selectDataAtendimentoByMatricula($_GET['ref_cod_matricula']);
 
-            $data_cancel = Portabilis_Date_Utils::brToPgSQL($this->data_cancel);
+                    $data_cancel = Portabilis_Date_Utils::brToPgSQL($this->data_cancel);
 
-            if (($data_cancel <= $dataFrequencia['data'])) {
-                $this->mensagem = 'Não é possível realizar a operação, existem frequências registradas no período <br>';
+                    if (($data_cancel <= $dataAtendimento['data'])) {
+                        $this->mensagem = 'Não é possível realizar a operação, existem frequências registradas no período <br>';
 
-                return false;
+                        return false;
+                    }
+                }
+
+                if ($tipoTurma == 0) {
+
+                    $frequencia = new clsModulesFrequencia();
+                    $dataFrequencia = $frequencia->selectDataFrequenciaByTurma($_GET['turma']);
+
+                    $data_cancel = Portabilis_Date_Utils::brToPgSQL($this->data_cancel);
+
+                    if (($data_cancel <= $dataFrequencia['data'])) {
+                        $this->mensagem = 'Não é possível realizar a operação, existem frequências registradas no período <br>';
+
+                        return false;
             }
         }
 
@@ -298,6 +310,7 @@ return new class() extends clsCadastro
         $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
+    }
     }
 
     public function Excluir()
