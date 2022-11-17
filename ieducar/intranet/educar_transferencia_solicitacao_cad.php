@@ -161,7 +161,7 @@ return new class() extends clsCadastro
         $frequencia = Frequencia::where('ref_cod_turma', $_GET['turma'])->get();
         $contador = 0;
         foreach($frequencia as $list) {
-            $dateformated = date("d/m/Y", $list->data);
+            $dateformated = date('d/m/Y', strtotime($list->data));
            if($dateformated >= $_POST['data_cancel']){
             $contador++;
            }   
