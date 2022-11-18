@@ -75,15 +75,13 @@ return new class extends clsCadastro {
         $this->db2 = new clsBanco();
         $this->db3 = new clsBanco();
 
-        $result = $this->rematricularAlunos(
+        return $this->rematricularAlunos(
             $this->ref_cod_escola,
             $this->ref_cod_curso,
             $this->ref_cod_serie,
             $this->ref_cod_turma,
             $_POST['ano']
         );
-
-        return $result;
     }
 
     public function Editar()
@@ -135,14 +133,10 @@ return new class extends clsCadastro {
         if ($result) {
             if ($count > 0) {
                 $mensagem = '';
-
-                if ($count > 0) {
-                    $mensagem .= "O(s) aluno(s) foram rematriculados com sucesso em $this->ano_letivo. Clique <a href='#' onclick='ModalAlunos.init(\"alunos_rematriculados\");'>aqui</a> para conferir os alunos rematrículados</br>";
-
-                    $mensagem .= '</br> As enturmações podem ser realizadas em: Movimentação > Enturmação.';
-                    if (count($alunosComSaidaDaEscola) > 0) {
-                        $mensagem .= '</br></br>Alguns alunos não foram rematriculados, pois possuem saída na escola. Clique <a href=\'#\' onclick=\'ModalAlunos.init("alunos_com_saida");\'>aqui</a> para ver esses alunos</br>';
-                    }
+                $mensagem .= "O(s) aluno(s) foram rematriculados com sucesso em $this->ano_letivo. Clique <a href='#' onclick='ModalAlunos.init(\"alunos_rematriculados\");'>aqui</a> para conferir os alunos rematrículados</br>";
+                $mensagem .= '</br> As enturmações podem ser realizadas em: Movimentação > Enturmação.';
+                if (count($alunosComSaidaDaEscola) > 0) {
+                    $mensagem .= '</br></br>Alguns alunos não foram rematriculados, pois possuem saída na escola. Clique <a href=\'#\' onclick=\'ModalAlunos.init("alunos_com_saida");\'>aqui</a> para ver esses alunos</br>';
                 }
 
                 $this->inputsHelper()->hidden('alunos_rematriculados', ['value' => implode(',', $nomesAlunos)]);

@@ -28,6 +28,7 @@ class LegacyDisciplineExemptionFactory extends Factory
             'ref_cod_serie' => LegacyGradeFactory::new()->create(),
             'ref_cod_tipo_dispensa' => LegacyExemptionTypeFactory::new()->create(),
             'ref_usuario_cad' => LegacyUserFactory::new()->unique()->make(),
+            'ref_usuario_exc' => LegacyUserFactory::new()->unique()->make(),
             'data_cadastro' => now(),
             'ativo' => 1,
         ];

@@ -21,8 +21,8 @@ class ChangeUserPasswordService
 
     public function execute(LegacyEmployee $legacyEmployee, string $password)
     {
-        $this->validate($password, $legacyEmployee->getPasswordAttribute());
-        $legacyEmployee->setPasswordAttribute($this->hash->make($password));
+        $this->validate($password, $legacyEmployee->password);
+        $legacyEmployee->password = $this->hash->make($password);
         $legacyEmployee->force_reset_password = false;
         $legacyEmployee->data_troca_senha = $this->carbon->nowWithSameTz();
         $legacyEmployee->save();

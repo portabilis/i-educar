@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Exceptions\Console\MissingSchoolCourseException;
 use App\Exceptions\Console\MissingSchoolGradeException;
 use App\Models\LegacyEnrollment;
-use App\Models\LegacyLevel;
+use App\Models\LegacyGrade;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolCourse;
 use App\Models\LegacySchoolGrade;
@@ -29,7 +29,7 @@ class UpdateSchoolClassGrade extends Command
     protected $description = 'Atualiza a série da turma';
 
     /**
-     * @var LegacyLevel
+     * @var LegacyGrade
      */
     private $grade;
 
@@ -45,7 +45,7 @@ class UpdateSchoolClassGrade extends Command
      */
     public function handle()
     {
-        $this->grade = LegacyLevel::findOrFail($this->argument('grade'));
+        $this->grade = LegacyGrade::findOrFail($this->argument('grade'));
         $this->schoolClass = LegacySchoolClass::findOrFail($this->argument('schoolclass'));
 
         $this->validateSchoolGrade();

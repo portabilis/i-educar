@@ -157,7 +157,7 @@ return new class extends clsCadastro {
         'atendidos_det.php?cod_pessoa=' . $this->cod_pessoa_fj : 'atendidos_lst.php';
 
         $objPessoa = new clsPessoaFisica($this->cod_pessoa_fj);
-        $db = new clsBanco();
+
 
         $detalhe = $objPessoa->queryRapida(
             $this->cod_pessoa_fj,
@@ -491,11 +491,6 @@ return new class extends clsCadastro {
 
         $this->inputsHelper()->date('data_emissao_certidao_civil', $options);
 
-        $options = [
-            'label' => '',
-            'required' => false
-        ];
-
         // cartório emissão certidão civil
         $options = [
             'required' => false,
@@ -813,24 +808,6 @@ return new class extends clsCadastro {
             return false;
         }
 
-        $usuarioTransporte = new clsModulesPessoaTransporte();
-        $usuarioTransporte = $usuarioTransporte->lista(null, $idPes);
-
-        if ($usuarioTransporte) {
-            $this->mensagem = 'Não foi possível excluir. Esta pessoa possuí vínculo com usuário de transporte.';
-
-            return false;
-        }
-
-        $motorista = new clsModulesMotorista();
-        $motorista = $motorista->lista(null, null, null, null, null, $idPes);
-
-        if ($motorista) {
-            $this->mensagem = 'Não foi possível excluir. Esta pessoa possuí vínculo com motorista.';
-
-            return false;
-        }
-
         $pessoaFisica = new clsPessoaFisica($idPes);
         $pessoaFisica->excluir();
 
@@ -993,6 +970,10 @@ return new class extends clsCadastro {
             return false;
         }
 
+        if (!$this->validaDadosTelefones()) {
+            return false;
+        }
+
         $pessoaId = $this->createOrUpdatePessoa($pessoaIdOrNull);
         $this->savePhoto($pessoaId);
         $this->createOrUpdatePessoaFisica($pessoaId);
@@ -1001,6 +982,34 @@ return new class extends clsCadastro {
         $this->saveAddress($pessoaId,true);
         $this->afterChangePessoa($pessoaId);
         $this->saveFiles($pessoaId);
+
+        return true;
+    }
+
+    protected function validaDadosTelefones()
+    {
+        return $this->validaDDDTelefone($this->ddd_telefone_1, $this->telefone_1, 'Telefone residencial') &&
+            $this->validaDDDTelefone($this->ddd_telefone_2, $this->telefone_2, 'Celular') &&
+            $this->validaDDDTelefone($this->ddd_telefone_mov, $this->telefone_mov, 'Telefone adicional') &&
+            $this->validaDDDTelefone($this->ddd_telefone_fax, $this->telefone_fax, 'Fax');
+    }
+
+    protected function validaDDDTelefone($valorDDD, $valorTelefone, $nomeCampo)
+    {
+        $msgRequereTelefone = "O campo: {$nomeCampo}, deve ser preenchido quando o DDD estiver preenchido.";
+        $msgRequereDDD = "O campo: DDD, deve ser preenchido quando o {$nomeCampo} estiver preenchido.";
+
+        if (!empty($valorDDD) && empty($valorTelefone)) {
+            $this->mensagem = $msgRequereTelefone;
+
+            return false;
+        }
+
+        if (empty($valorDDD) && !empty($valorTelefone)) {
+            $this->mensagem = $msgRequereDDD;
+
+            return false;
+        }
 
         return true;
     }

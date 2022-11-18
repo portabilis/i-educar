@@ -215,7 +215,7 @@ return new class extends clsCadastro {
                     $qtd_registros++;
                 }
             } else {
-                foreach ($this->etapas as $key => $campo) {
+                foreach ($this->etapas as $campo) {
                     $this->ano_letivo_modulo[$qtd_registros][] = dataFromPgToBr($campo['data_inicio']);
                     $this->ano_letivo_modulo[$qtd_registros][] = dataFromPgToBr($campo['data_fim']);
                     $this->ano_letivo_modulo[$qtd_registros][] = $campo['dias_letivos'];

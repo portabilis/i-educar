@@ -29,7 +29,7 @@ class LegacyGeneralAbsence extends Model
     /**
      * @return BelongsTo
      */
-    public function studentAbsence()
+    public function studentAbsence(): BelongsTo
     {
         return $this->belongsTo(LegacyStudentAbsence::class, 'falta_aluno_id');
     }

@@ -17,7 +17,7 @@ class clsCadastroFisicaRaca extends Model
      */
     public function __construct($ref_idpes = null, $ref_cod_raca = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'cadastro.';
         $this->_tabela = "{$this->_schema}fisica_raca";
 
@@ -88,7 +88,7 @@ class clsCadastroFisicaRaca extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_ref_idpes = null, $int_ref_cod_raca = null)
     {
@@ -139,7 +139,7 @@ class clsCadastroFisicaRaca extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -157,7 +157,7 @@ class clsCadastroFisicaRaca extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {
