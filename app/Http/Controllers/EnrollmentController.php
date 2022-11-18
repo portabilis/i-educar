@@ -65,7 +65,7 @@ class EnrollmentController extends Controller
             $data_solicitacao = dataToBanco($request->input('enrollment_date'));
 
             if ($data_solicitacao <= $dataUltimaFrequencia[0]->data) {
-                return redirect()->back()->with('error', 'Não é possível realizar a operação, existem frequências registradas no período');
+                return redirect()->back()->with('error', 'Não é possível realizar a operação, existem frequências registradas no período. Data de solicitação: '.$data_solicitacao.'; Data da frequencia: '.$dataUltimaFrequencia[0]->data.'.');
                 die();
             }
         }
@@ -78,7 +78,7 @@ class EnrollmentController extends Controller
             $data_solicitacao = dataToBanco($request->input('enrollment_date'));
 
             if ($data_solicitacao <= $dataUltimoAtendimento[0]->data) {
-                return redirect()->back()->with('error', 'Não é possível realizar a operação, existem frequências registradas no período');
+                return redirect()->back()->with('error', 'AEE - Não é possível realizar a operação, existem frequências registradas no período. Data de solicitação: '.$data_solicitacao.'; Data da frequencia: '.$dataUltimoAtendimento[0]->data.'.');
                 die();
             }
         }
