@@ -41,7 +41,7 @@ class BatchEnrollmentRequest extends FormRequest
         $registrationMax = [
             '{0} Não há vaga(s) na turma, você tentou enturmar ' . $count . ' aluno(s).',
             '{1} Há somente 1 vaga na turma, você tentou enturmar ' . $count . ' aluno(s).',
-            '[2,*] Há :max vagas na turma, você tentou enturmar ' . $count . ' aluno(s).',
+            '[2,*] Há :max vagas na turma, você tentou  ' . $count . ' aluno(s).',
         ];
 
         return [
