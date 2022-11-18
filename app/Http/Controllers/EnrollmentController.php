@@ -55,12 +55,12 @@ class EnrollmentController extends Controller
         $tipoTurma = DB::table('pmieducar.turma')
             ->select(DB::raw('CASE WHEN tipo_atendimento = 5 THEN 1
                      ELSE 0 END'))
-            ->where([['cod_turma', '=', $schoolClass['cod_turma']]])
-            ->get();
+            ->where([['cod_turma', '=', $request->input('cod_turma_origem')]])
+            ->get(); 
 
         if ($tipoTurma[0]->case == 0) {
             $dataUltimaFrequencia = DB::table('modules.frequencia')
-                ->where([['ref_cod_turma', '=', $schoolClass['cod_turma']]])->orderBy('data', 'desc')->get(['data'])->take(1);
+                ->where([['ref_cod_turma', '=', $request->input('cod_turma_origem')]])->orderBy('data', 'desc')->get(['data'])->take(1);
 
             $data_solicitacao = dataToBanco($request->input('enrollment_date'));
 
