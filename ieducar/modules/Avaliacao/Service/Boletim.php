@@ -2166,13 +2166,14 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         //TODO: A exceção está sendo estourada mesmo passando uma etapa que consideramos válida
         //não identificamos porque a etapa não é válida. Como solução paliativa comentamos o código abaixo
         //precisamos voltar nesse ponto para analisar os últimos merges
-//        if (!is_null($instance->etapa)) {
-//            if ($instance->isValid('etapa')) {
-//                return $instance;
-//            } else {
+        if (!is_null($instance->etapa)) {
+            if ($instance->isValid('etapa')) {
+                return $instance;
+            }
+//            else {
 //                throw new CoreExt_Exception_InvalidArgumentException('A etapa informada é inválida.');
 //            }
-//        }
+        }
 
         $proximaEtapa = 1;
 
