@@ -14,8 +14,6 @@ use Illuminate\Support\Collection;
 
 class State extends Model
 {
-    use SoftDeletes;
-
     use DateSerializer;
     use HasIbgeCode;
     use LegacyAttribute;
