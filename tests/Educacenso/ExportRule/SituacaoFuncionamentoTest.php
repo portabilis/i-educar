@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Educacenso\ExportRule;
+namespace Tests\Educacenso\ExportRule;
 
 use App\Models\Educacenso\Registro00;
 use iEducar\Modules\Educacenso\ExportRule\SituacaoFuncionamento;

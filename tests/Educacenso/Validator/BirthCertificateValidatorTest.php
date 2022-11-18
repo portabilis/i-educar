@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Educacenso\Validator;
+namespace Tests\Educacenso\Validator;
 
 use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
 use Tests\TestCase;

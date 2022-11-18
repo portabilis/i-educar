@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Educacenso\Validator;
+namespace Tests\Educacenso\Validator;
 
 use App_Model_ZonaLocalizacao;
 use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaPessoa;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Educacenso\Validator;
+namespace Tests\Educacenso\Validator;
 
 use Faker\Factory;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
