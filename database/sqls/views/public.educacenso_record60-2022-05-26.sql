@@ -20,10 +20,8 @@ SELECT
     COALESCE((ARRAY [10] <@ matricula_turma.tipo_atendimento)::INT, 0) "tipoAtendimentoEnsinoCaa",
     COALESCE((ARRAY [11] <@ matricula_turma.tipo_atendimento)::INT, 0) "tipoAtendimentoEnsinoRecursosOpticosNaoOpticos",
     aluno.recebe_escolarizacao_em_outro_espaco AS "recebeEscolarizacaoOutroEspacao",
-    (CASE
-         WHEN transporte_aluno.responsavel > 0 THEN 1
-         ELSE transporte_aluno.responsavel END) AS "transportePublico",
-    transporte_aluno.responsavel AS "poderPublicoResponsavelTransporte",
+    0 AS "transportePublico",
+    0 AS "poderPublicoResponsavelTransporte",
     (ARRAY [4] <@ aluno.veiculo_transporte_escolar)::INT "veiculoTransporteBicicleta",
     (ARRAY [2] <@ aluno.veiculo_transporte_escolar)::INT "veiculoTransporteMicroonibus",
     (ARRAY [3] <@ aluno.veiculo_transporte_escolar)::INT "veiculoTransporteOnibus",
@@ -76,7 +74,6 @@ JOIN cadastro.fisica ON fisica.idpes = pessoa.idpes
 LEFT JOIN modules.educacenso_cod_escola ON educacenso_cod_escola.cod_escola = escola.cod_escola
 LEFT JOIN modules.educacenso_cod_turma ON educacenso_cod_turma.cod_turma = turma.cod_turma
 LEFT JOIN modules.educacenso_cod_aluno ON educacenso_cod_aluno.cod_aluno = aluno.cod_aluno
-LEFT JOIN modules.transporte_aluno ON transporte_aluno.aluno_id = aluno.cod_aluno
 WHERE true
   AND matricula.ativo = 1
   AND turma.ativo = 1
