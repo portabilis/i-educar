@@ -403,7 +403,7 @@ class Registro20Import implements RegistroImportInterface
      * @param LegacySchool $school
      * @param LegacyCourse $course
      *
-     * @return LegacyLevel
+     * @return LegacyGrade
      */
     private function getOrCreateLevel(LegacySchool $school, LegacyCourse $course)
     {

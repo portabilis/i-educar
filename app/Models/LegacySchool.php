@@ -199,4 +199,15 @@ class LegacySchool extends Model
     {
         return $this->hasMany(LegacyAcademicYearStage::class, 'ref_ref_cod_escola');
     }
+
+    public function address(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Place::class,
+            'person_has_place',
+            'person_id',
+            'place_id',
+            'ref_idpes',
+        );
+    }
 }
