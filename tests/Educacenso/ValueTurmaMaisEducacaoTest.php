@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Educacenso;
+namespace Tests\Educacenso;
 
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\ModalidadeCurso;

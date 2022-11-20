@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Educacenso\Validator;
+namespace Tests\Educacenso\Validator;
 
 use App\Models\Educacenso\Registro00;
 use iEducar\Modules\Educacenso\Model\MantenedoraDaEscolaPrivada;
