@@ -9,7 +9,7 @@ class EnrollmentTest extends ViewTestCase
 {
     public function testEnrollment(): void
     {
-        $found = Enrollment::query()->get();
+        $found = Enrollment::query()->where('id', $this->model->id)->get();
         $this->assertEquals(9, $found[0]->status);
         $this->assertEquals(10, $found[1]->status);
         $this->assertEquals(3, $found[2]->status);
@@ -400,6 +400,19 @@ class EnrollmentTest extends ViewTestCase
                 'rg' => 'gd.rg as RG do responsável',
                 'rg_issue_date' => 'gd.data_exp_rg as RG (Data Emissão) do responsável',
                 'rg_state_abbreviation' => 'gd.sigla_uf_exp_rg as RG (Estado) do responsável'
+            ],
+            'place' => [
+                'address' => 'p.address as Logradouro',
+                'number' => 'p.number as Número',
+                'complement' => 'p.complement as Complemento',
+                'neighborhood' => 'p.neighborhood as Bairro',
+                'postal_code' => 'p.postal_code as CEP',
+                'latitude' => 'p.latitude as Latitude',
+                'longitude' => 'p.longitude as Longitude',
+                'city' => 'c.name as Cidade',
+                'state_abbreviation' => 's.abbreviation as Sigla do Estado',
+                'state' => 's.name as Estado',
+                'country' => 'cn.name as País'
             ]
         ];
         $this->assertJsonStringEqualsJsonString(collect($expected), collect($this->model->getLegacyColumns()));
