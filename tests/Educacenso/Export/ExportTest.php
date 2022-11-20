@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Api;
+namespace Tests\Educacenso\Export;
 
 use App\Models\Country;
 use App\Models\LegacySchool;

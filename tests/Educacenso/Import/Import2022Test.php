@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Educacenso\Import;
+namespace Tests\Educacenso\Import;
 
 use App\Models\LegacyEnrollment;
 use App\Models\LegacySchool;

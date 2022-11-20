@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Educacenso\Import;
+namespace Tests\Educacenso\Import;
 
 use App\Services\Educacenso\HandleFileService;
 use App\Services\Educacenso\ImportServiceFactory;
