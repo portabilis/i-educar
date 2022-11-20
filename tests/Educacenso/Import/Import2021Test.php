@@ -25,7 +25,7 @@ class Import2021Test extends EducacensoTestCase
         $importFileService = new HandleFileService($yearImportService, $this->user);
 
         $importFileService->handleFile(new UploadedFile(
-            resource_path('../tests/Unit/assets/importacao_educacenso_2021.txt'),
+            resource_path('../tests/Educacenso/importacao_educacenso_2021.txt'),
             'importacao_educacenso_2021.txt'
         ));
     }
