@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Events\ForgetCachedUserEvent;
 use App\Models\LegacyAccess;
 use App\Models\LegacyEmployee;
 use App\Models\LegacyPerson;
@@ -365,5 +366,13 @@ class User extends Authenticatable
         $this->employee->save();
         $this->ativo = 0;
         $this->save();
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+        static::updated(static function (self $model) {
+            ForgetCachedUserEvent::dispatch($model->getKey());
+        });
     }
 }

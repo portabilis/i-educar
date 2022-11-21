@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\ForgetCachedUserEvent;
 use App\User as DefaultUser;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -60,5 +61,13 @@ class LegacyUser extends DefaultUser
     public function deletedByEmployee(): BelongsTo
     {
         return $this->belongsTo(LegacyEmployee::class, 'ref_funcionario_exc');
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+        static::updated(static function (self $model) {
+            ForgetCachedUserEvent::dispatch($model->getKey());
+        });
     }
 }
