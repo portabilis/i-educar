@@ -185,7 +185,7 @@ return new class() extends clsCadastro
                     $data_cancel = Portabilis_Date_Utils::brToPgSQL($this->data_cancel);
 
                     if (($data_cancel <= $dataAtendimento['data'])) {
-                        $this->mensagem = 'Não é possível realizar a operação, existem frequências registradas no período <br>';
+                        $this->mensagem = 'Não é possível realizar a operação, existem frequências registradas no período <br> Data da frequência: '.$dateformated.' Data informada: '.$dateformated2.'<br>';
 
                         return false;
                     }
@@ -199,7 +199,7 @@ return new class() extends clsCadastro
                     $data_cancel = Portabilis_Date_Utils::brToPgSQL($this->data_cancel);
 
                     if (($data_cancel <= $dataFrequencia['data'])) {
-                        $this->mensagem = 'Não é possível realizar a operação, existem frequências registradas no período <br>';
+                        $this->mensagem = 'Não é possível realizar a operação, existem frequências registradas no período <br> Data da frequência: '.$dateformated.' Data informada: '.$dateformated2.'<br>';
 
                         return false;
             
