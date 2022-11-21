@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\ForgetCachedUserEvent;
 use App\Facades\Asset;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyInstitution;
@@ -759,6 +760,7 @@ return new class extends clsCadastro {
 
     public function Editar()
     {
+        ForgetCachedUserEvent::dispatch($this->cod_pessoa_fj);
         return $this->createOrUpdate($this->cod_pessoa_fj);
     }
 
