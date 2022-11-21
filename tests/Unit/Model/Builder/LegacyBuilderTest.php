@@ -6,7 +6,6 @@ use App\Models\Builders\LegacyBuilder;
 use App\Models\LegacySchool;
 use Database\Factories\LegacyInstitutionFactory;
 use Database\Factories\LegacySchoolFactory;
-use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
@@ -59,12 +58,6 @@ class LegacyBuilderTest extends TestCase
         $filtered = $this->builder->filter(['institution' => 0])->setExcept(['ref_idpes'])->resource(['id'], ['name']);
 
         $this->assertCount(0, $filtered);
-    }
-
-    public function testBuilderExpectFilterNotExistsResource(): void
-    {
-        $this->expectException(QueryException::class);
-        $this->builder->filter(['no_filter' => 0])->resource(['id']);
     }
 
     public function testBuilderSelectArray()

@@ -533,7 +533,9 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
             if (!in_array($subClassFile, $required, true)) {
                 // Inclui o arquivo com a definição de subclasse para que o interpretador
                 // tenha o símbolo de comparação.
-                require_once $subClassFile;
+                if (class_exists($subClass) === false) {
+                    require_once $subClassFile;
+                }
                 $required[] = $subClassFile;
             }
 

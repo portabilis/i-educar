@@ -2,20 +2,20 @@
 
 namespace App\Models;
 
+use App\Models\Builders\StateBuilder;
 use App\Models\Concerns\HasIbgeCode;
 use App\Support\Database\DateSerializer;
+use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 
 class State extends Model
 {
-    use SoftDeletes;
-
     use DateSerializer;
     use HasIbgeCode;
+    use LegacyAttribute;
 
     /**
      * @var array
@@ -26,6 +26,13 @@ class State extends Model
         'abbreviation',
         'ibge_code',
     ];
+
+    /**
+     * Builder dos filtros
+     *
+     * @var string
+     */
+    protected $builder = StateBuilder::class;
 
     /**
      * @return BelongsTo
@@ -66,7 +73,7 @@ class State extends Model
      *
      * @return string
      */
-    public static function getNameByAbbreviation(string $abbreviation): string
+    public static function getNameByAbbreviation(string|null $abbreviation): string
     {
         $state = static::findByAbbreviation($abbreviation);
 
