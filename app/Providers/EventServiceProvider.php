@@ -2,12 +2,14 @@
 
 namespace App\Providers;
 
+use App\Events\ForgetCachedUserEvent;
 use App\Events\RegistrationEvent;
 use App\Events\TransferEvent;
 use App\Listeners\AcceptTransferRequestListener;
 use App\Listeners\AuthenticatedUser;
 use App\Listeners\ConfigureAuthenticatedUserForAudit;
 use App\Listeners\CopyTransferDataListener;
+use App\Listeners\ForgetCachedUserListener;
 use App\Listeners\LoginLegacySession;
 use App\Listeners\MessageSendingListener;
 use App\Listeners\NotificationWhenResetPassword;
@@ -54,6 +56,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         MessageSending::class => [
             MessageSendingListener::class,
+        ],
+        ForgetCachedUserEvent::class => [
+            ForgetCachedUserListener::class,
         ]
     ];
 
