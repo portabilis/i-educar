@@ -158,7 +158,7 @@ return new class() extends clsCadastro
     public function Novo()  
     {
 
-        $frequencia = Frequencia::where('ref_cod_turma', $_GET['turma'])->get();
+        $frequencia = Frequencia::where('ref_cod_turma', $_GET['turma'])->orderBy('id', 'DESC')->get();
         $contador = 0;
         foreach($frequencia as $list) {
             $dateformated = date('d/m/Y', strtotime($list->data));
