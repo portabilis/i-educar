@@ -162,12 +162,13 @@ return new class() extends clsCadastro
         $contador = 0;
         foreach($frequencia as $list) {
             $dateformated = date('d/m/Y', strtotime($list->data));
-           if($dateformated >= $_POST['data_cancel']){
+            $dateformated2 = date('d/m/Y', strtotime($_POST['data_cancel']));
+           if($dateformated >= $dateformated2){
 
             
             $this->mensagem = 'Não é possível realizar a operação, existem frequências 
             registradas na data informada. 
-            Data da frequência: '.$dateformated.' Data informada: '.$_POST['data_cancel'].'<br>';
+            Data da frequência: '.$dateformated.' Data informada: '.$dateformated2.'<br>';
 
             return false;
             
