@@ -66,7 +66,7 @@ class State extends Model
      *
      * @return string
      */
-    public static function getNameByAbbreviation(string $abbreviation): string
+    public static function getNameByAbbreviation(string|null $abbreviation): string
     {
         $state = static::findByAbbreviation($abbreviation);
 
