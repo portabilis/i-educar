@@ -163,17 +163,15 @@ return new class() extends clsCadastro
         foreach($frequencia as $list) {
             $dateformated = date('d/m/Y', strtotime($list->data));
            if($dateformated >= $_POST['data_cancel']){
-            $contador++;
-           }   
-        }
-        if($contador>0){
+
+            break;
             $this->mensagem = 'Não é possível realizar a operação, existem frequências 
             registradas na data informada. 
             Data da frequência: '.$dateformated.' Data informada: '.$_POST['data_cancel'].'<br>';
 
-                return false;
-           
-        }else{
+            return false;
+           }}
+   
                 $turma = new clsPmieducarTurma($_GET['turma']);
                 $tipoTurma = $turma->getTipoTurma();
 
@@ -202,7 +200,7 @@ return new class() extends clsCadastro
                         $this->mensagem = 'Não é possível realizar a operação, existem frequências registradas no período <br>';
 
                         return false;
-            }
+            
         }
 
         DB::beginTransaction();
