@@ -943,11 +943,7 @@ return new class extends clsDetalhe {
 
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
 
-        if ($_GET) {
-            $this->array_botao_script = ['dataExport("formcadastro", "students")','dataExport("formcadastro", "responsaveis_turma")'];
-            $this->array_botao = ['Exportar para planilha','Exportar responsáveis para planilha'];
-            $this->array_botao_id = ['export-btn','export-btn-responsaveis'];
-        }
+      
 
         Portabilis_View_Helper_Application::loadJavascript($this, ['/intranet/scripts/exporter.js']);
     }
