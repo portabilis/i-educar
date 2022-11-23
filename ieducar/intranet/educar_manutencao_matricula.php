@@ -189,7 +189,7 @@ return new class extends clsListagem {
                 $linhas = [
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$registro['cod_aluno']}</a>",
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$nomeAluno}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$nomeResponsavel}</a>",
+                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\"> </a>",
                     "<button style='margin:2px' class='btn btn-info'> Transferência</button> <button  class='btn btn-danger' style='margin:2px'> Abandono</button>
                     <button style='margin:2px; color:white; background-color: grey' class='btn '> Falecido </button> <button  class='btn btn-success' style='margin:2px'> Enturmação</button>"
                 ];
@@ -213,11 +213,7 @@ return new class extends clsListagem {
             $this->nome_acao = 'Novo';
         }
        
-        if ($_GET) {
-            $this->array_botao_script = ['dataExport("formcadastro", "students")','dataExport("formcadastro", "responsaveis_turma")'];
-            $this->array_botao = ['Exportar para planilha','Exportar responsáveis para planilha'];
-            $this->array_botao_id = ['export-btn','export-btn-responsaveis'];
-        }
+     
        
 
         $this->largura = '100%';
