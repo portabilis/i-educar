@@ -183,7 +183,7 @@ return new class extends clsListagem {
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$nomeAluno}</a>",
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$nomeResponsavel}</a>",
                     "<button style='margin:2px' class='btn btn-info'> Transferência</button> <button  class='btn btn-danger' style='margin:2px'> Abandono</button>
-                    <button style='margin:2px' class='btn btn-success'> Falecido </button> <button  class='btn btn-danger' style='margin:2px'> Enturmação</button>"
+                    <button style='margin:2px; color:white; background-color: grey' class='btn '> Falecido </button> <button  class='btn btn-success' style='margin:2px'> Enturmação</button>"
                 ];
             } else {
                 $linhas = [
@@ -191,14 +191,14 @@ return new class extends clsListagem {
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$nomeAluno}</a>",
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$nomeResponsavel}</a>",
                     "<button style='margin:2px' class='btn btn-info'> Transferência</button> <button  class='btn btn-danger' style='margin:2px'> Abandono</button>
-                    <button style='margin:2px' class='btn btn-success'> Falecido </button> <button  class='btn btn-danger' style='margin:2px'> Enturmação</button>"
+                    <button style='margin:2px; color:white; background-color: grey' class='btn '> Falecido </button> <button  class='btn btn-success' style='margin:2px'> Enturmação</button>"
                 ];
             }
 
             $this->addLinhas($linhas);
         }
 
-        $this->addPaginador2('educar_aluno_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $this->addPaginador2('educar_manutencao_matricula.php', $total, $_GET, $this->nome, $this->limite);
 
         $bloquearCadastroAluno = dbBool($configuracoes['bloquear_cadastro_aluno']);
         $usuarioTemPermissaoCadastro = $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7);
