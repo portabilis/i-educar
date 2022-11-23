@@ -19,7 +19,7 @@ class Registro50Model extends Registro50
         $this->codigoTurma = $arrayColumns[5];
         $this->inepTurma = $arrayColumns[6];
         $this->funcaoDocente = $arrayColumns[7];
-        $this->tipoVinculo = $arrayColumns[8];
+        $this->tipoVinculo = $arrayColumns[8] ?: null;
         $this->componentes = [];
 
         for ($index = 9; $index <= count($arrayColumns); $index++) {
