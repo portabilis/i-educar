@@ -51,7 +51,7 @@ return new class extends clsListagem {
 
     public function Gerar()
     {
-        $this->titulo = 'Aluno - Listagem';
+        $this->titulo = 'Manutenção de matrículas';
 
         $configuracoes = new clsPmieducarConfiguracoesGerais();
         $configuracoes = $configuracoes->detalhe();
