@@ -94,16 +94,15 @@ return new class extends clsListagem {
         if (!$configuracoes['mostrar_codigo_inep_aluno']) {
             $cabecalhos = ['Código Aluno',
                 'Nome do Aluno',
-                'Nome da Mãe',
-                'Nome do Responsável',
-                'CPF Responsável',];
+                'Matrículas',
+                'Ações',
+                ];
         } else {
             $cabecalhos = ['Código Aluno',
-                'Código INEP',
                 'Nome do Aluno',
-                'Nome da Mãe',
-                'Nome do Responsável',
-                'CPF Responsável',];
+                'Matrículas',
+                'Ações',
+                ];
         }
 
         $this->addCabecalhos($cabecalhos);
@@ -182,18 +181,15 @@ return new class extends clsListagem {
                 $linhas = [
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$registro['cod_aluno']}</a>",
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$nomeAluno}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$registro['nome_mae']}</a>",
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$nomeResponsavel}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$responsavel['cpf_responsavel']}</a>"
+                    "<button style='margin:2px' class='btn btn-info'> Teste</button> <button  class='btn btn-danger' style='margin:2px'> Teste</button>"
                 ];
             } else {
                 $linhas = [
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$registro['cod_aluno']}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$registro['codigo_inep']}</a>",
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$nomeAluno}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$registro['nome_mae']}</a>",
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$nomeResponsavel}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$responsavel['cpf_responsavel']}</a>"
+                    "<button style='margin:2px' class='btn btn-info'> Teste</button> <button  class='btn btn-danger' style='margin:2px'> Teste</button>"
                 ];
             }
 
@@ -227,7 +223,7 @@ return new class extends clsListagem {
         Portabilis_View_Helper_Application::loadJavascript($this, ['/intranet/scripts/exporter.js']);
         Portabilis_View_Helper_Application::loadJavascript($this, ['/intranet/scripts/exporter_responsaveis.js']);
 
-        $this->breadcrumb('Alunos', ['/intranet/educar_index.php' => 'Escola']);
+        $this->breadcrumb('Alunos', ['/intranet/educar_index.php' => 'Configuração']);
     }
 
     public function Formular()
