@@ -205,10 +205,10 @@ return new class extends clsListagem {
 
                     }
                 }
-                if(isset($_REQUEST['ref_cod_turma'] and !empty($_REQUEST['ref_cod_turma'])){
+                if(isset($_REQUEST['ref_cod_turma']) and !empty($_REQUEST['ref_cod_turma'])){
 
                     if($codigo_turma==$_REQUEST['ref_cod_turma']){
-                        
+
                         $situacao = App_Model_MatriculaSituacao::getSituacao($matricula['aprovado']);
                         $conteudo_matricula .= "<li class='list-group-item'><a >".$nome_turma." - ".$situacao."</a> </li> ";
                         if($situacao=='Cursando'){
