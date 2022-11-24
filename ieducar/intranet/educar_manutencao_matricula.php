@@ -200,7 +200,7 @@ return new class extends clsListagem {
                     }
                 }
                 $situacao = App_Model_MatriculaSituacao::getSituacao($matricula['aprovado']);
-                $conteudo_matricula .= "<li class='list-group-item'><a >{$nome_turma." - ".$situacao}</a> </li> ";
+                $conteudo_matricula .= "<li class='list-group-item'><a >".$nome_turma." - ".$situacao}."</a> </li> ";
                 $conteudo_acoes_matricula .= "<button style='margin:2px' class='btn btn-info'> Transferência</button> <button  class='btn btn-danger' style='margin:2px'> Abandono</button><button style='margin:2px; color:white; background-color: grey' class='btn '> Falecido </button> <button  class='btn btn-success' style='margin:2px'> Enturmação</button><br>";
             }
             $conteudo_matricula .="</ul>";
