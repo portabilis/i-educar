@@ -215,11 +215,13 @@ return new class extends clsListagem {
                         $conteudo_matricula .= "<li class='list-group-item'><a >".$nome_turma." - ".$situacao."</a> </li> ";
                         if($situacao=='Cursando'){
                          
+                           
                             $conteudo_acoes_matricula .= "
-                            <button style='margin:2px' href='educar_transferencia_solicitacao_cad.php?ref_cod_matricula=".$matricula['cod_matricula']."&ref_cod_aluno=".$registro['cod_aluno']."&ano=".$matricula['ano']."&escola=".$matricula['ref_ref_cod_escola']."&curso=".$matricula['ref_cod_curso']."&serie=".$matricula['ref_ref_cod_serie']."&turma=".$codigo_turma."' class='btn btn-info'> Transferência</button>
-                            <button  class='btn btn-danger' href='educar_abandono_cad.php?ref_cod_matricula=".$matricula['cod_matricula']."&ref_cod_aluno=".$registro['cod_aluno']."&turma=".$codigo_turma."' style='margin:2px'> Abandono</button>
+                            <a style='margin:2px; color:white;' href='educar_transferencia_solicitacao_cad.php?ref_cod_matricula=".$matricula['cod_matricula']."&ref_cod_aluno=".$registro['cod_aluno']."&ano=".$matricula['ano']."&escola=".$matricula['ref_ref_cod_escola']."&curso=".$matricula['ref_cod_curso']."&serie=".$matricula['ref_ref_cod_serie']."&turma=".$codigo_turma."' class='btn btn-info'> Transferência</a>
+                            <a  class='btn btn-danger' href='educar_abandono_cad.php?ref_cod_matricula=".$matricula['cod_matricula']."&ref_cod_aluno=".$registro['cod_aluno']."&turma=".$codigo_turma."' style='margin:2px; color:white;'> Abandono</a>
                             <a style='margin:2px; color:white; background-color: grey' href='educar_falecido_cad.php?ref_cod_matricula=".$matricula['cod_matricula']."&ref_cod_aluno=".$registro['cod_aluno']."&turma=".$codigo_turma."' class='btn '> Falecido </a>
                             <a  class='btn btn-success' style='margin:2px; color:white;' href='educar_matricula_turma_lst.php?ref_cod_matricula=".$matricula['cod_matricula']."&ano_letivo=".$matricula['ano']."' > Enturmar </a><br>";
+                       
                         }elseif($situacao=='Aprovado'){
                          
                             $conteudo_acoes_matricula .= "<button style='margin:2px' class='btn btn-info'> Transferência</button><br>"; 
@@ -251,8 +253,8 @@ return new class extends clsListagem {
                         if($situacao=='Cursando'){
                          
                             $conteudo_acoes_matricula .= "
-                            <button style='margin:2px' href='educar_transferencia_solicitacao_cad.php?ref_cod_matricula=".$matricula['cod_matricula']."&ref_cod_aluno=".$registro['cod_aluno']."&ano=".$matricula['ano']."&escola=".$matricula['ref_ref_cod_escola']."&curso=".$matricula['ref_cod_curso']."&serie=".$matricula['ref_ref_cod_serie']."&turma=".$codigo_turma."' class='btn btn-info'> Transferência</button>
-                            <button  class='btn btn-danger' href='educar_abandono_cad.php?ref_cod_matricula=".$matricula['cod_matricula']."&ref_cod_aluno=".$registro['cod_aluno']."&turma=".$codigo_turma."' style='margin:2px'> Abandono</button>
+                            <a style='margin:2px; color:white;' href='educar_transferencia_solicitacao_cad.php?ref_cod_matricula=".$matricula['cod_matricula']."&ref_cod_aluno=".$registro['cod_aluno']."&ano=".$matricula['ano']."&escola=".$matricula['ref_ref_cod_escola']."&curso=".$matricula['ref_cod_curso']."&serie=".$matricula['ref_ref_cod_serie']."&turma=".$codigo_turma."' class='btn btn-info'> Transferência</a>
+                            <a  class='btn btn-danger' href='educar_abandono_cad.php?ref_cod_matricula=".$matricula['cod_matricula']."&ref_cod_aluno=".$registro['cod_aluno']."&turma=".$codigo_turma."' style='margin:2px; color:white;'> Abandono</a>
                             <a style='margin:2px; color:white; background-color: grey' href='educar_falecido_cad.php?ref_cod_matricula=".$matricula['cod_matricula']."&ref_cod_aluno=".$registro['cod_aluno']."&turma=".$codigo_turma."' class='btn '> Falecido </a>
                             <a  class='btn btn-success' style='margin:2px; color:white;' href='educar_matricula_turma_lst.php?ref_cod_matricula=".$matricula['cod_matricula']."&ano_letivo=".$matricula['ano']."' > Enturmar </a><br>";
                        
@@ -282,12 +284,13 @@ return new class extends clsListagem {
                         $conteudo_matricula .= "<li class='list-group-item'><a >".$nome_turma." - ".$situacao."</a> </li> ";
                         if($situacao=='Cursando'){
                         
+                           
                             $conteudo_acoes_matricula .= "
-                            <button style='margin:2px' href='educar_transferencia_solicitacao_cad.php?ref_cod_matricula=".$matricula['cod_matricula']."&ref_cod_aluno=".$registro['cod_aluno']."&ano=".$matricula['ano']."&escola=".$matricula['ref_ref_cod_escola']."&curso=".$matricula['ref_cod_curso']."&serie=".$matricula['ref_ref_cod_serie']."&turma=".$codigo_turma."' class='btn btn-info'> Transferência</button>
-                            <button  class='btn btn-danger' href='educar_abandono_cad.php?ref_cod_matricula=".$matricula['cod_matricula']."&ref_cod_aluno=".$registro['cod_aluno']."&turma=".$codigo_turma."' style='margin:2px'> Abandono</button>
+                            <a style='margin:2px; color:white;' href='educar_transferencia_solicitacao_cad.php?ref_cod_matricula=".$matricula['cod_matricula']."&ref_cod_aluno=".$registro['cod_aluno']."&ano=".$matricula['ano']."&escola=".$matricula['ref_ref_cod_escola']."&curso=".$matricula['ref_cod_curso']."&serie=".$matricula['ref_ref_cod_serie']."&turma=".$codigo_turma."' class='btn btn-info'> Transferência</a>
+                            <a  class='btn btn-danger' href='educar_abandono_cad.php?ref_cod_matricula=".$matricula['cod_matricula']."&ref_cod_aluno=".$registro['cod_aluno']."&turma=".$codigo_turma."' style='margin:2px; color:white;'> Abandono</a>
                             <a style='margin:2px; color:white; background-color: grey' href='educar_falecido_cad.php?ref_cod_matricula=".$matricula['cod_matricula']."&ref_cod_aluno=".$registro['cod_aluno']."&turma=".$codigo_turma."' class='btn '> Falecido </a>
                             <a  class='btn btn-success' style='margin:2px; color:white;' href='educar_matricula_turma_lst.php?ref_cod_matricula=".$matricula['cod_matricula']."&ano_letivo=".$matricula['ano']."' > Enturmar </a><br>";
-        
+                       
                         }elseif($situacao=='Aprovado'){
                         
                             $conteudo_acoes_matricula .= "<button style='margin:2px' class='btn btn-info'> Transferência</button><br>"; 
