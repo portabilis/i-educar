@@ -7,5 +7,36 @@ use Illuminate\Database\Eloquent\Model;
 
 class Matricula extends Model
 {
+/**
+     * @var string
+     */
+    protected $table = 'pmieducar.matricula';
+
+    /**
+     * @var string
+     */
+    protected $primaryKey = 'cod_matricula';
+
+    protected $fillable = [
+        'cod_matricula',
+        'ref_cod_aluno',
+        'ativo',
+        'aprovado',
+        'ref_cod_abandono',
+        'saida_escola',
+        'ref_ref_cod_serie',
+        'ref_ref_cod_escola'
+    
+    ]; 
+
+    /**
+     * @var bool
+     */
+    public $timestamps = false;
+
+    
     use HasFactory;
+
+  
+
 }
