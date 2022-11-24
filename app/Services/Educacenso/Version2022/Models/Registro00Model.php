@@ -110,7 +110,7 @@ class Registro00Model extends Registro00
         $this->esferaFederal = $arrayColumns[88];
         $this->esferaEstadual = $arrayColumns[89];
         $this->esferaMunicipal = $arrayColumns[90];
-        $this->unidadeVinculada = $arrayColumns[91];
+        $this->unidadeVinculada = (int) $arrayColumns[91];
         $this->inepEscolaSede = $arrayColumns[92];
         $this->codigoIes = $arrayColumns[93];
     }
