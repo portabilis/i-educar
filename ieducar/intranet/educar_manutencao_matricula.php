@@ -97,13 +97,15 @@ return new class extends clsListagem {
         if (!$configuracoes['mostrar_codigo_inep_aluno']) {
             $cabecalhos = ['Código Aluno',
                 'Nome do Aluno',
-                'Matrículas/Ações'
+                'Matrículas',
+                'Ações'
               
                 ];
         } else {
             $cabecalhos = ['Código Aluno',
                 'Nome do Aluno',
-                'Matrículas/Ações'
+                'Matrículas',
+                'Ações'
                 
                 ];
         }
@@ -203,7 +205,10 @@ return new class extends clsListagem {
                 $conteudo_matricula .= "<li class='list-group-item'><a >".$nome_turma." - ".$situacao."</a> </li> ";
                 if($situacao=='Cursando'){
                  
-                    $conteudo_acoes_matricula .= "<button style='margin:2px' class='btn btn-info'> Transferência</button> <button  class='btn btn-danger' style='margin:2px'> Abandono</button><button style='margin:2px; color:white; background-color: grey' class='btn '> Falecido </button> <button  class='btn btn-success' style='margin:2px'> Enturmação</button><br>";
+                    $conteudo_acoes_matricula .= "<button style='margin:2px' class='btn btn-info'> Transferência</button>
+                     <button  class='btn btn-danger' style='margin:2px'> Abandono</button>
+                     <button style='margin:2px; color:white; background-color: grey' class='btn '> Falecido </button>
+                      <button  class='btn btn-success' style='margin:2px' onclick='go(´educar_matricula_turma_lst.php?ref_cod_matricula=".$matricula['cod_matricula']."&ano_letivo=".$matricula['ano']."´)' > Enturmar </button><br>";
  
                 }elseif($situacao=='Aprovado'){
                  
@@ -231,13 +236,15 @@ return new class extends clsListagem {
                 $linhas = [
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$registro['cod_aluno']}</a>",
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$nomeAluno}</a>",
-                    $conteudo_matricula." - ".$conteudo_acoes_matricula 
+                    $conteudo_matricula,
+                    $conteudo_acoes_matricula 
                 ];
             } else {
                 $linhas = [
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$registro['cod_aluno']}</a>",
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$nomeAluno}</a>",
-                    $conteudo_matricula." - ".$conteudo_acoes_matricula 
+                    $conteudo_matricula,
+                    $conteudo_acoes_matricula 
                 ];
             }
 

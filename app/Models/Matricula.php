@@ -25,7 +25,8 @@ class Matricula extends Model
         'ref_cod_abandono',
         'saida_escola',
         'ref_ref_cod_serie',
-        'ref_ref_cod_escola'
+        'ref_ref_cod_escola',
+        'ano'
     
     ]; 
 
