@@ -97,14 +97,14 @@ return new class extends clsListagem {
         if (!$configuracoes['mostrar_codigo_inep_aluno']) {
             $cabecalhos = ['Código Aluno',
                 'Nome do Aluno',
-                'Matrículas',
-                'Ações',
+                'Matrículas/Ações'
+              
                 ];
         } else {
             $cabecalhos = ['Código Aluno',
                 'Nome do Aluno',
-                'Matrículas',
-                'Ações',
+                'Matrículas/Ações'
+                
                 ];
         }
 
@@ -179,7 +179,7 @@ return new class extends clsListagem {
             $aluno->cod_aluno = $registro['cod_aluno'];
             $responsavel = $aluno->getResponsavelAluno();
             $nomeResponsavel = mb_strtoupper($responsavel['nome_responsavel']);
-            
+             
             //matriculas
             $matriculas = Matricula::where('ref_cod_aluno', $registro['cod_aluno'])->get();
             $conteudo_matricula = "<ul class='list-group'>";
@@ -201,7 +201,30 @@ return new class extends clsListagem {
                 }
                 $situacao = App_Model_MatriculaSituacao::getSituacao($matricula['aprovado']);
                 $conteudo_matricula .= "<li class='list-group-item'><a >".$nome_turma." - ".$situacao."</a> </li> ";
+                if($situacao=='Cursando'){
+                 
+                    $conteudo_acoes_matricula .= "<button style='margin:2px' class='btn btn-info'> Transferência</button> <button  class='btn btn-danger' style='margin:2px'> Abandono</button><button style='margin:2px; color:white; background-color: grey' class='btn '> Falecido </button> <button  class='btn btn-success' style='margin:2px'> Enturmação</button><br>";
+ 
+                }elseif($situacao=='Aprovado'){
+                 
+                    $conteudo_acoes_matricula .= "<button style='margin:2px' class='btn btn-info'> Transferência</button><br>"; 
+                }
                 $conteudo_acoes_matricula .= "<button style='margin:2px' class='btn btn-info'> Transferência</button> <button  class='btn btn-danger' style='margin:2px'> Abandono</button><button style='margin:2px; color:white; background-color: grey' class='btn '> Falecido </button> <button  class='btn btn-success' style='margin:2px'> Enturmação</button><br>";
+                elseif($situacao=='Transferido'){
+                 
+                    $conteudo_acoes_matricula .= ""; 
+                }
+                elseif($situacao=='Abandono'){
+                 
+                    $conteudo_acoes_matricula .= ""; 
+                }
+                elseif($situacao=='Falecido'){
+                 
+                    $conteudo_acoes_matricula .= ""; 
+                }
+                else{
+                    $conteudo_acoes_matricula .= "";  
+                }
             }
             $conteudo_matricula .="</ul>";
 
@@ -209,15 +232,13 @@ return new class extends clsListagem {
                 $linhas = [
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$registro['cod_aluno']}</a>",
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$nomeAluno}</a>",
-                    $conteudo_matricula,
-                    $conteudo_acoes_matricula
+                    $conteudo_matricula." - ".$conteudo_acoes_matricula 
                 ];
             } else {
                 $linhas = [
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$registro['cod_aluno']}</a>",
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$nomeAluno}</a>",
-                    $conteudo_matricula,
-                    $conteudo_acoes_matricula
+                    $conteudo_matricula." - ".$conteudo_acoes_matricula 
                 ];
             }
 
