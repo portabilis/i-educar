@@ -207,7 +207,7 @@ return new class extends clsListagem {
                     }
                 }
                 //se o filtro conter a série
-                if(isset($_REQUEST['ref_cod_serie']) and !empty($_REQUEST['ref_cod_serie'])){
+                if(isset($_REQUEST['ref_cod_serie']) and !empty($_REQUEST['ref_cod_serie']) and empty($_REQUEST['ref_cod_turma'])){
 
                     if($codigo_serie==$_REQUEST['ref_cod_serie']){
 
