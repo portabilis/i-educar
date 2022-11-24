@@ -186,22 +186,24 @@ return new class extends clsListagem {
             $conteudo_acoes_matricula = "";
             $nome_turma = "";
             foreach($matriculas as $matricula){
+
                 $matriculasturma = MatriculaTurma::where('ref_cod_matricula', $matricula['cod_matricula'])->get();
+
                 foreach($matriculasturma as $matriculaturma){
+
                     $turmas = Turma::where('cod_turma', $matriculaturma['ref_cod_turma'])->get();
+
                     foreach($turmas as $turma){
+
                         $nome_turma = $turma['nm_turma'];
+
                     }
                 }
                 $conteudo_matricula =. "<li class='list-group-item'><a >{$nome_turma}</a> </li> ";
               
             }
             $conteudo_matricula =."</ul>";
-            $conteudo_acoes_matricula =. "
-            <button style='margin:2px' class='btn btn-info'> Transferência</button> 
-            <button  class='btn btn-danger' style='margin:2px'> Abandono</button>
-            <button style='margin:2px; color:white; background-color: grey' class='btn '> Falecido </button> 
-            <button  class='btn btn-success' style='margin:2px'> Enturmação</button><br>";
+            $conteudo_acoes_matricula =. "<button style='margin:2px' class='btn btn-info'> Transferência</button> <button  class='btn btn-danger' style='margin:2px'> Abandono</button><button style='margin:2px; color:white; background-color: grey' class='btn '> Falecido </button> <button  class='btn btn-success' style='margin:2px'> Enturmação</button><br>";
 
             if (!$configuracoes['mostrar_codigo_inep_aluno']) {
                 $linhas = [
