@@ -16,7 +16,7 @@ class Registro20Model extends Registro20
         $this->codigoEscolaInep = $arrayColumns[2];
         $this->codTurma = $arrayColumns[3];
         $this->inepTurma = $arrayColumns[4];
-        $this->nomeTurma = $arrayColumns[5];
+        $this->nomeTurma = utf8_decode($arrayColumns[5]);
         $this->tipoMediacaoDidaticoPedagogico = $arrayColumns[6];
         $this->horaInicial = $arrayColumns[7];
         $this->horaInicialMinuto = $arrayColumns[8];

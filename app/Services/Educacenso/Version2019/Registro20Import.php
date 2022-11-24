@@ -335,7 +335,7 @@ class Registro20Import implements RegistroImportInterface
             throw new Exception('Não foi possível encontrar os dados do curso');
         }
 
-        $course = LegacyCourse::where('nm_curso', 'ilike', utf8_encode($courseData['curso']))->first();
+        $course = LegacyCourse::where('nm_curso', 'ilike', $courseData['curso'])->first();
 
         if (empty($course)) {
             $course = $this->createCourse($educationLevel, $educationType, $courseData);
@@ -979,8 +979,8 @@ class Registro20Import implements RegistroImportInterface
             'ref_usuario_cad' => $this->user->id,
             'ref_cod_nivel_ensino' => $educationLevel->getKey(),
             'ref_cod_tipo_ensino' => $educationType->getKey(),
-            'nm_curso' => utf8_encode($courseData['curso']),
-            'sgl_curso' => utf8_encode(substr($courseData['curso'], 0, 15)),
+            'nm_curso' => $courseData['curso'],
+            'sgl_curso' => substr($courseData['curso'], 0, 15),
             'qtd_etapas' => $courseData['etapas'],
             'carga_horaria' => 800 * $courseData['etapas'],
             'data_cadastro' => now(),
