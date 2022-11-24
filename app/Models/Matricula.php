@@ -26,7 +26,10 @@ class Matricula extends Model
         'saida_escola',
         'ref_ref_cod_serie',
         'ref_ref_cod_escola',
-        'ano'
+        'ano',
+        'ref_ref_cod_escola',
+        'ref_cod_curso',
+        'ref_ref_cod_serie'
     
     ]; 
 

@@ -97,14 +97,14 @@ return new class extends clsListagem {
         if (!$configuracoes['mostrar_codigo_inep_aluno']) {
             $cabecalhos = ['Código Aluno',
                 'Nome do Aluno',
-                'Matrículas',
+                'Matrículas / Situação',
                 'Ações'
               
                 ];
         } else {
             $cabecalhos = ['Código Aluno',
                 'Nome do Aluno',
-                'Matrículas',
+                'Matrículas / Situação',
                 'Ações'
                 
                 ];
@@ -246,8 +246,8 @@ return new class extends clsListagem {
                         if($situacao=='Cursando'){
                         
                             $conteudo_acoes_matricula .= "
-                            <button style='margin:2px' class='btn btn-info'> Transferência</button>
-                            <button  class='btn btn-danger' style='margin:2px'> Abandono</button>
+                            <button style='margin:2px' href='educar_transferencia_solicitacao_cad.php?ref_cod_matricula=".$matricula['cod_matricula']."&ref_cod_aluno=".$registro['cod_aluno']."&ano=".$matricula['ano']."&escola=".$matricula['ref_ref_cod_escola']."&curso=".$matricula['ref_cod_curso']."&serie=".$matricula['ref_ref_cod_serie']."&turma=".$codigo_turma."' class='btn btn-info'> Transferência</button>
+                            <button  class='btn btn-danger' href='educar_abandono_cad.php?ref_cod_matricula=".$matricula['cod_matricula']."&ref_cod_aluno=".$registro['cod_aluno']."&turma=".$codigo_turma."' style='margin:2px'> Abandono</button>
                             <a style='margin:2px; color:white; background-color: grey' href='educar_falecido_cad.php?ref_cod_matricula=".$matricula['cod_matricula']."&ref_cod_aluno=".$registro['cod_aluno']."&turma=".$codigo_turma."' class='btn '> Falecido </a>
                             <a  class='btn btn-success' style='margin:2px; color:white;' href='educar_matricula_turma_lst.php?ref_cod_matricula=".$matricula['cod_matricula']."&ano_letivo=".$matricula['ano']."' > Enturmar </a><br>";
         
@@ -316,7 +316,7 @@ return new class extends clsListagem {
         Portabilis_View_Helper_Application::loadJavascript($this, ['/intranet/scripts/exporter.js']);
         Portabilis_View_Helper_Application::loadJavascript($this, ['/intranet/scripts/exporter_responsaveis.js']);
 
-        $this->breadcrumb('Alunos', ['/intranet/educar_index.php' => 'Configuração']);
+        $this->breadcrumb('Manutenção de matrículas', ['/intranet/educar_index.php' => 'Configuração']);
     }
 
     public function Formular()
