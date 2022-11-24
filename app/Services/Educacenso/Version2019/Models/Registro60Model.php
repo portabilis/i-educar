@@ -14,7 +14,7 @@ class Registro60Model extends Registro60
         $this->inepEscola = $arrayColumns[2];
         $this->inepAluno = $arrayColumns[4];
         $this->inepTurma = $arrayColumns[6];
-        $this->etapaAluno = $arrayColumns[8];
+        $this->etapaAluno = $arrayColumns[8] ?: null;
         $this->tipoAtendimentoDesenvolvimentoFuncoesGognitivas = $arrayColumns[9];
         $this->tipoAtendimentoDesenvolvimentoVidaAutonoma = $arrayColumns[10];
         $this->tipoAtendimentoEnriquecimentoCurricular = $arrayColumns[11];
@@ -26,9 +26,9 @@ class Registro60Model extends Registro60
         $this->tipoAtendimentoEnsinoOrientacaoMobilidade = $arrayColumns[17];
         $this->tipoAtendimentoEnsinoCaa = $arrayColumns[18];
         $this->tipoAtendimentoEnsinoRecursosOpticosNaoOpticos = $arrayColumns[19];
-        $this->recebeEscolarizacaoOutroEspacao = $arrayColumns[20];
-        $this->transportePublico = $arrayColumns[21];
-        $this->poderPublicoResponsavelTransporte = $arrayColumns[22];
+        $this->recebeEscolarizacaoOutroEspacao = $arrayColumns[20] ?: null;
+        $this->transportePublico = $arrayColumns[21] ?: null;
+        $this->poderPublicoResponsavelTransporte = $arrayColumns[22] ?: null;
         $this->veiculoTransporteBicicleta = $arrayColumns[23];
         $this->veiculoTransporteMicroonibus = $arrayColumns[24];
         $this->veiculoTransporteOnibus = $arrayColumns[25];
