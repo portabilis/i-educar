@@ -21,6 +21,7 @@ class Turma extends Model
     protected $fillable = [
         'ref_cod_matricula',
         'nm_turma',
+        'cod_turma'
         
     
     ]; 
