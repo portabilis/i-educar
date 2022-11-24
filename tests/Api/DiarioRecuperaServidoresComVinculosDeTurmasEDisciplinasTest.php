@@ -25,7 +25,6 @@ class DiarioRecuperaServidoresComVinculosDeTurmasEDisciplinasTest extends TestCa
 
     public function testRecuperaServidoresComVinculosDeTurmasEDisciplinas()
     {
-
         $school = LegacySchoolFactory::new()->create();
 
         $course = LegacyCourseFactory::new()->standardAcademicYear()->create();
@@ -39,7 +38,6 @@ class DiarioRecuperaServidoresComVinculosDeTurmasEDisciplinasTest extends TestCa
             'ref_cod_serie' => $grade,
             'ref_cod_escola' => $school,
         ]);
-
 
         $schoolClass = LegacySchoolClassFactory::new()->create([
             'ref_ref_cod_escola' => $schoolGrade->school_id,
