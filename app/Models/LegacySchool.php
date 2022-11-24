@@ -85,6 +85,9 @@ class LegacySchool extends Model
         'longitude',
         'predio_compartilhado_outra_escola',
         'educacao_indigena',
+        'compartilha_espacos_atividades_integracao',
+        'usa_espacos_equipamentos_atividades_regulares',
+        'exame_selecao_ingresso',
     ];
 
     protected function id(): Attribute

@@ -80,7 +80,7 @@ class Registro10Import extends Registro10Import2020
 
     protected function getArrayEquipamentos()
     {
-        $equipamentos = parent::getArraySalasAtividades();
+        $equipamentos = parent::getArrayEquipamentos();
         $arrayEquipamentos = transformStringFromDBInArray($equipamentos) ?: [];
 
         if ($this->model->equipamentosNenhum) {
@@ -92,7 +92,7 @@ class Registro10Import extends Registro10Import2020
 
     protected function getArrayInstrumentosPedagogicos()
     {
-        $instrumentos = parent::getArraySalasAtividades();
+        $instrumentos = parent::getArrayInstrumentosPedagogicos();
         $arrayInstrumentos = transformStringFromDBInArray($instrumentos) ?: [];
 
         if ($this->model->instrumentosPedagogicosEducacaoProfissional) {

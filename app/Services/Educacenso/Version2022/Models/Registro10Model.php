@@ -162,7 +162,7 @@ class Registro10Model extends Registro10
         $this->linguaIndigena1 = $arrayColumns[149];
         $this->linguaIndigena2 = $arrayColumns[150];
         $this->linguaIndigena3 = $arrayColumns[151];
-        $this->exameSelecaoIngresso = $arrayColumns[152];
+        $this->exameSelecaoIngresso = (int) $arrayColumns[152];
         $this->reservaVagasCotasAutodeclaracao = $arrayColumns[153];
         $this->reservaVagasCotasRenda = $arrayColumns[154];
         $this->reservaVagasCotasEscolaPublica = $arrayColumns[155];
@@ -170,8 +170,8 @@ class Registro10Model extends Registro10
         $this->reservaVagasCotasOutros = $arrayColumns[157];
         $this->reservaVagasCotasNaoFaz = $arrayColumns[158];
         $this->url = $arrayColumns[159];
-        $this->compartilhaEspacosAtividadesIntegracao = $arrayColumns[160];
-        $this->usaEspacosEquipamentosAtividadesRegulares = $arrayColumns[161];
+        $this->compartilhaEspacosAtividadesIntegracao = (int) $arrayColumns[160];
+        $this->usaEspacosEquipamentosAtividadesRegulares = (int) $arrayColumns[161];
         $this->orgaoColegiadoAssociacaoPais = $arrayColumns[162];
         $this->orgaoColegiadoAssociacaoPaisMestres = $arrayColumns[163];
         $this->orgaoColegiadoConselho = $arrayColumns[164];
