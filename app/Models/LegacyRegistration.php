@@ -7,6 +7,7 @@ use App_Model_MatriculaSituacao;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -145,6 +146,17 @@ class LegacyRegistration extends LegacyModel
     public function enrollments()
     {
         return $this->hasMany(LegacyEnrollment::class, 'ref_cod_matricula');
+    }
+
+    public function schoolClasses(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            LegacySchoolClass::class,
+            'pmieducar.matricula_turma',
+            'ref_cod_matricula',
+            'ref_cod_turma',
+        )->wherePivot('ativo', 1)
+            ->where('pmieducar.turma.ativo', 1);
     }
 
     /**
