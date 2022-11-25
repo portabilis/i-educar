@@ -191,7 +191,7 @@ return new class extends clsListagem {
                 $matriculas = Matricula::where('ref_cod_aluno', $registro['cod_aluno'])->get();
             }
            
-            $conteudo_matricula = "<ul class='list-group'>";
+            $conteudo_matricula = "<ol class='list-group'>";
             $conteudo_acoes_matricula = "";
             $nome_turma = "";
             foreach($matriculas as $matricula){
@@ -234,7 +234,7 @@ return new class extends clsListagem {
                        
                         }elseif($situacao=='Aprovado'){
                         
-                            $conteudo_acoes_matricula .= "<a style='margin:2px; color:white;' href='educar_transferencia_solicitacao_cad.php?ref_cod_matricula=".$matricula['cod_matricula']."&ref_cod_aluno=".$registro['cod_aluno']."&ano=".$matricula['ano']."&escola=".$matricula['ref_ref_cod_escola']."&curso=".$matricula['ref_cod_curso']."&serie=".$matricula['ref_ref_cod_serie']."&turma=".$codigo_turma."' class='btn btn-info'> Transferência</a>"; 
+                            $conteudo_acoes_matricula .= "<a style='margin:2px; color:white;' href='educar_transferencia_solicitacao_cad.php?ref_cod_matricula=".$matricula['cod_matricula']."&ref_cod_aluno=".$registro['cod_aluno']."&ano=".$matricula['ano']."&escola=".$matricula['ref_ref_cod_escola']."&curso=".$matricula['ref_cod_curso']."&serie=".$matricula['ref_ref_cod_serie']."&turma=".$codigo_turma."' class='btn btn-info'> Transferência</a><br>"; 
                         }
                         elseif($situacao=='Transferido'){
                         
@@ -253,7 +253,7 @@ return new class extends clsListagem {
                         }
                     }
             }
-            $conteudo_matricula .="</ul>";
+            $conteudo_matricula .="</ol>";
 
             if (!$configuracoes['mostrar_codigo_inep_aluno']) {
                 $linhas = [
