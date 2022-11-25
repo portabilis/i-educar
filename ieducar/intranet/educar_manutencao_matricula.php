@@ -192,9 +192,7 @@ return new class extends clsListagem {
                 $matriculasturma = MatriculaTurma::where('ref_cod_matricula', $matricula['cod_matricula'])->where('ativo', 1)->get();
                 $codigo_serie = $matricula['ref_ref_cod_serie'];
 
-               if(!empty($_REQUEST['ref_cod_turma'])){
-
-               }
+   
                 foreach($matriculasturma as $matriculaturma){
 
                     $turmas = Turma::where('cod_turma', $matriculaturma['ref_cod_turma'])->get();
@@ -209,7 +207,7 @@ return new class extends clsListagem {
                 //se o filtro conter a série
                 if(isset($_REQUEST['ref_cod_serie']) and !empty($_REQUEST['ref_cod_serie']) and empty($_REQUEST['ref_cod_turma'])){
 
-                    if($codigo_serie==$_REQUEST['ref_cod_serie']){
+                    if($matricula['ref_ref_cod_serie']==$_REQUEST['ref_cod_serie']){
 
                         $situacao = App_Model_MatriculaSituacao::getSituacao($matricula['aprovado']);
                         $conteudo_matricula .= "<li class='list-group-item'><a >".$nome_turma." - ".$situacao."</a> </li> ";
