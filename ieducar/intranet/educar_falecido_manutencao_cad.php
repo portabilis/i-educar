@@ -51,9 +51,8 @@ return new class() extends clsCadastro {
 
         $this->campoMemo('observacao', 'Observa&ccedil;&atilde;o', $this->observacao, 60, 5, false);
 
-        $styles = ['/modules/Cadastro/Assets/Stylesheets/UnificaPessoa.css'];
-        $scripts = ['/modules/Portabilis/Assets/Javascripts/ClientApi.js'];
-        Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
+       
+        $scripts = ['/script/extra/educar-confirmar-exclusao.js'];
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
         
     }
@@ -157,5 +156,9 @@ return new class() extends clsCadastro {
     {
         $this->title = 'Transfer&ecirc;ncia Solicita&ccedil;&atilde;o';
         $this->processoAp = '578';
+    }
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-confirmar-exclusao.js');
     }
 };
