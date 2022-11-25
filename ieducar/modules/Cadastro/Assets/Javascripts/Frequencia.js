@@ -18,6 +18,7 @@
 
     document.getElementById('fase_etapa').onchange = function () {
       delay(1000).then(() => alterarComponente());
+      delay(1000).then(() => carregaConteudos());
     };
 
     document.getElementById('ref_cod_componente_curricular').onchange = function () {
