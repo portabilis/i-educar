@@ -1,4 +1,6 @@
 <?php
+use App\Models\Frequencia;
+use App\Models\FrequenciaAluno;
 
 return new class() extends clsCadastro {
     /**
@@ -48,6 +50,12 @@ return new class() extends clsCadastro {
         $this->inputsHelper()->date('data_cancel', ['label' => 'Data do falecimento', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')]);
 
         $this->campoMemo('observacao', 'Observa&ccedil;&atilde;o', $this->observacao, 60, 5, false);
+
+        $styles = ['/modules/Cadastro/Assets/Stylesheets/UnificaPessoa.css'];
+        $scripts = ['/modules/Portabilis/Assets/Javascripts/ClientApi.js'];
+        Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
+        Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+        
     }
 
     public function Novo()
@@ -89,11 +97,11 @@ return new class() extends clsCadastro {
             $atendimento = new clsModulesComponenteMinistradoAee();
             $dataAtendimento = $atendimento->selectDataAtendimentoByMatricula($_GET['ref_cod_matricula']);
 
-            if (($obj_matricula->data_cancel <= $dataAtendimento['data'])) {
-                $this->mensagem = 'Não é possível realizar a operação, existem frequências registradas no período <br>';
-
-                return false;
+            $frequencia = Frequencia::where('ref_cod_turma', $_GET['turma'])->where('data', '>=', $obj_matricula->data_cancel)->orderBy('id', 'DESC')->get();
+            foreach($frequencia as $list) {
+                FrequenciaAluno::where('ref_frequencia',$list['id'])->where('ref_cod_matricula',$_GET['cod_matricula'])->delete();
             }
+           
         }
 
         if ($tipoTurma == 0) {
@@ -101,10 +109,9 @@ return new class() extends clsCadastro {
             $frequencia = new clsModulesFrequencia();
             $dataFrequencia = $frequencia->selectDataFrequenciaByTurma($_GET['turma']);
 
-            if (($obj_matricula->data_cancel <= $dataFrequencia['data'])) {
-                $this->mensagem = 'Não é possível realizar a operação, existem frequências registradas no período <br>';
-
-                return false;
+            $frequencia = Frequencia::where('ref_cod_turma', $_GET['turma'])->where('data', '>=', $obj_matricula->data_cancel)->orderBy('id', 'DESC')->get();
+            foreach($frequencia as $list) {
+                FrequenciaAluno::where('ref_frequencia',$list['id'])->where('ref_cod_matricula',$_GET['cod_matricula'])->delete();
             }
         }
 

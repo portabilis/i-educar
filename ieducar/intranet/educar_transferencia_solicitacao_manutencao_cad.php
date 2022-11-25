@@ -1,4 +1,4 @@
-_<?php
+<?php
 
 use App\Events\TransferEvent;
 use App\Models\LegacyRegistration;
@@ -162,7 +162,7 @@ return new class() extends clsCadastro
         $data_cancel = Portabilis_Date_Utils::brToPgSQL($this->data_cancel);
         $frequencia = Frequencia::where('ref_cod_turma', $_GET['turma'])->where('data', '>=', $data_cancel)->orderBy('id', 'DESC')->get();
         foreach($frequencia as $list) {
-            FrequenciaAluno::where('ref_frequencia',$list['id'])->where('ref_cod_matricula',$_REQUEST['cod_matricula'])->delete();
+            FrequenciaAluno::where('ref_frequencia',$list['id'])->where('ref_cod_matricula', $_GET['cod_matricula'])->delete();
         }
    
                 $turma = new clsPmieducarTurma($_GET['turma']);
