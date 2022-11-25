@@ -183,18 +183,29 @@ return new class extends clsListagem {
             $nomeResponsavel = mb_strtoupper($responsavel['nome_responsavel']);
              
             //matriculas
-            $matriculas = Matricula::where('ref_cod_aluno', $registro['cod_aluno'])->get();
+            if(isset($_REQUEST['ref_cod_serie']) and !empty($_REQUEST['ref_cod_serie']) and empty($_REQUEST['ref_cod_turma'])){
+
+                $matriculas = Matricula::where('ref_cod_aluno', $registro['cod_aluno'])->where('ref_ref_cod_serie', $_REQUEST['ref_cod_serie'])->get();  
+          
+            }elseif(isset($_REQUEST['ref_cod_turma']) and !empty($_REQUEST['ref_cod_turma'])){
+
+                $matriculas = Matricula::where('ref_cod_aluno', $registro['cod_aluno'])->where('ref_ref_cod_serie', $_REQUEST['ref_cod_serie'])->where('ref_ref_cod_turma', $_REQUEST['ref_cod_turma'])->get();   
+            }else{
+                $matriculas = Matricula::where('ref_cod_aluno', $registro['cod_aluno'])->get();
+            }
+           
             $conteudo_matricula = "<ul class='list-group'>";
             $conteudo_acoes_matricula = "";
             $nome_turma = "";
             foreach($matriculas as $matricula){
+                
 
                 $matriculasturma = MatriculaTurma::where('ref_cod_matricula', $matricula['cod_matricula'])->where('ativo', 1)->get();
                 $codigo_serie = $matricula['ref_ref_cod_serie'];
 
    
                 foreach($matriculasturma as $matriculaturma){
-
+            
                     $turmas = Turma::where('cod_turma', $matriculaturma['ref_cod_turma'])->get();
 
                     foreach($turmas as $turma){
@@ -204,80 +215,6 @@ return new class extends clsListagem {
                         
                     }
                 }
-                //se o filtro conter a série
-                if(isset($_REQUEST['ref_cod_serie']) and !empty($_REQUEST['ref_cod_serie']) and empty($_REQUEST['ref_cod_turma'])){
-
-                    if($matricula['ref_ref_cod_serie']==$_REQUEST['ref_cod_serie']){
-
-                        $situacao = App_Model_MatriculaSituacao::getSituacao($matricula['aprovado']);
-                        $conteudo_matricula .= "<li class='list-group-item'><a >".$nome_turma." - ".$situacao."</a> </li> ";
-                        if($situacao=='Cursando'){
-                         
-                           
-                            $conteudo_acoes_matricula .= "
-                            <a style='margin:2px; color:white;' href='educar_transferencia_solicitacao_cad.php?ref_cod_matricula=".$matricula['cod_matricula']."&ref_cod_aluno=".$registro['cod_aluno']."&ano=".$matricula['ano']."&escola=".$matricula['ref_ref_cod_escola']."&curso=".$matricula['ref_cod_curso']."&serie=".$matricula['ref_ref_cod_serie']."&turma=".$codigo_turma."' class='btn btn-info'> Transferência</a>
-                            <a  class='btn btn-danger' href='educar_abandono_cad.php?ref_cod_matricula=".$matricula['cod_matricula']."&ref_cod_aluno=".$registro['cod_aluno']."&turma=".$codigo_turma."' style='margin:2px; color:white;'> Abandono</a>
-                            <a style='margin:2px; color:white; background-color: grey' href='educar_falecido_cad.php?ref_cod_matricula=".$matricula['cod_matricula']."&ref_cod_aluno=".$registro['cod_aluno']."&turma=".$codigo_turma."' class='btn '> Falecido </a>
-                            <a  class='btn btn-success' style='margin:2px; color:white;' href='educar_matricula_turma_lst.php?ref_cod_matricula=".$matricula['cod_matricula']."&ano_letivo=".$matricula['ano']."' > Enturmar </a><br>";
-                       
-                        }elseif($situacao=='Aprovado'){
-                         
-                            $conteudo_acoes_matricula .= "<button style='margin:2px' class='btn btn-info'> Transferência</button><br>"; 
-                        }
-                        elseif($situacao=='Transferido'){
-                         
-                            $conteudo_acoes_matricula .= ""; 
-                        }
-                        elseif($situacao=='Abandono'){
-                         
-                            $conteudo_acoes_matricula .= ""; 
-                        }
-                        elseif($situacao=='Falecido'){
-                         
-                            $conteudo_acoes_matricula .= ""; 
-                        }
-                        else{
-                            $conteudo_acoes_matricula .= "";  
-                        }
-
-                    }else{ }
-                }//se o filtro conter a turma
-                elseif(isset($_REQUEST['ref_cod_turma']) and !empty($_REQUEST['ref_cod_turma'])){
-
-                    if($codigo_turma==$_REQUEST['ref_cod_turma']){
-
-                        $situacao = App_Model_MatriculaSituacao::getSituacao($matricula['aprovado']);
-                        $conteudo_matricula .= "<li class='list-group-item'><a >".$nome_turma." - ".$situacao."</a> </li> ";
-                        if($situacao=='Cursando'){
-                         
-                            $conteudo_acoes_matricula .= "
-                            <a style='margin:2px; color:white;' href='educar_transferencia_solicitacao_cad.php?ref_cod_matricula=".$matricula['cod_matricula']."&ref_cod_aluno=".$registro['cod_aluno']."&ano=".$matricula['ano']."&escola=".$matricula['ref_ref_cod_escola']."&curso=".$matricula['ref_cod_curso']."&serie=".$matricula['ref_ref_cod_serie']."&turma=".$codigo_turma."' class='btn btn-info'> Transferência</a>
-                            <a  class='btn btn-danger' href='educar_abandono_cad.php?ref_cod_matricula=".$matricula['cod_matricula']."&ref_cod_aluno=".$registro['cod_aluno']."&turma=".$codigo_turma."' style='margin:2px; color:white;'> Abandono</a>
-                            <a style='margin:2px; color:white; background-color: grey' href='educar_falecido_cad.php?ref_cod_matricula=".$matricula['cod_matricula']."&ref_cod_aluno=".$registro['cod_aluno']."&turma=".$codigo_turma."' class='btn '> Falecido </a>
-                            <a  class='btn btn-success' style='margin:2px; color:white;' href='educar_matricula_turma_lst.php?ref_cod_matricula=".$matricula['cod_matricula']."&ano_letivo=".$matricula['ano']."' > Enturmar </a><br>";
-                       
-                        }elseif($situacao=='Aprovado'){
-                         
-                            $conteudo_acoes_matricula .= "<button style='margin:2px' class='btn btn-info'> Transferência</button><br>"; 
-                        }
-                        elseif($situacao=='Transferido'){
-                         
-                            $conteudo_acoes_matricula .= ""; 
-                        }
-                        elseif($situacao=='Abandono'){
-                         
-                            $conteudo_acoes_matricula .= ""; 
-                        }
-                        elseif($situacao=='Falecido'){
-                         
-                            $conteudo_acoes_matricula .= ""; 
-                        }
-                        else{
-                            $conteudo_acoes_matricula .= "";  
-                        }
-
-                    }else{ }
-                }else{
                         $situacao = App_Model_MatriculaSituacao::getSituacao($matricula['aprovado']);
                         $conteudo_matricula .= "<li class='list-group-item'><a >".$nome_turma." - ".$situacao."</a> </li> ";
                         if($situacao=='Cursando'){
@@ -308,7 +245,7 @@ return new class extends clsListagem {
                         else{
                             $conteudo_acoes_matricula .= "";  
                         }
-                }
+                
             }
             $conteudo_matricula .="</ul>";
 
