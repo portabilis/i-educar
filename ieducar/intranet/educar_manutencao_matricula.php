@@ -196,26 +196,36 @@ return new class extends clsListagem {
             $nome_turma = "";
             foreach($matriculas as $matricula){
                 
-                if(isset($_REQUEST['ref_cod_turma']) and !empty($_REQUEST['ref_cod_turma'])){
-
-                $matriculasturma = MatriculaTurma::where('ref_cod_matricula', $matricula['cod_matricula'])->where('ref_cod_turma', $_REQUEST['ref_cod_turma'])->where('ativo', 1)->get();             
-            
-            }else{
+                
                 $matriculasturma = MatriculaTurma::where('ref_cod_matricula', $matricula['cod_matricula'])->where('ativo', 1)->get();
   
-            }
                 $codigo_serie = $matricula['ref_ref_cod_serie'];
 
    
                 foreach($matriculasturma as $matriculaturma){
                     $nome_turma = "";
                     $codigo_turma = "";
+                    if(isset($_REQUEST['ref_cod_turma']) and !empty($_REQUEST['ref_cod_turma'])){
+
+                        if($matriculaturma['ref_cod_turma']== $_REQUEST['ref_cod_turma']){
+
+                            $turmas = Turma::where('cod_turma', $matriculaturma['ref_cod_turma'])->get();
+                            foreach($turmas as $turma){
+
+                                $nome_turma = $turma['nm_turma'];
+                                $codigo_turma = $turma['cod_turma'];
+
+                            }
+                    }
+                    }else{
+                        
                     $turmas = Turma::where('cod_turma', $matriculaturma['ref_cod_turma'])->get();
                     foreach($turmas as $turma){
 
                         $nome_turma = $turma['nm_turma'];
                         $codigo_turma = $turma['cod_turma'];
                         
+                    }
                     }
                 }
                 if(empty($nome_turma) or empty($codigo_turma) ){ 
