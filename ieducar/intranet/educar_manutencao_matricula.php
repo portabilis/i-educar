@@ -215,6 +215,9 @@ return new class extends clsListagem {
                         
                     }
                 }
+                if(empty($nome_turma)){ 
+
+                }else{
                         $situacao = App_Model_MatriculaSituacao::getSituacao($matricula['aprovado']);
                         $conteudo_matricula .= "<li class='list-group-item'><a >".$nome_turma." - ".$situacao."</a> </li> ";
                         if($situacao=='Cursando'){
@@ -228,7 +231,7 @@ return new class extends clsListagem {
                        
                         }elseif($situacao=='Aprovado'){
                         
-                            $conteudo_acoes_matricula .= "<button style='margin:2px' class='btn btn-info'> Transferência</button><br>"; 
+                            $conteudo_acoes_matricula .= "<a style='margin:2px; color:white;' href='educar_transferencia_solicitacao_cad.php?ref_cod_matricula=".$matricula['cod_matricula']."&ref_cod_aluno=".$registro['cod_aluno']."&ano=".$matricula['ano']."&escola=".$matricula['ref_ref_cod_escola']."&curso=".$matricula['ref_cod_curso']."&serie=".$matricula['ref_ref_cod_serie']."&turma=".$codigo_turma."' class='btn btn-info'> Transferência</a>"; 
                         }
                         elseif($situacao=='Transferido'){
                         
@@ -245,7 +248,7 @@ return new class extends clsListagem {
                         else{
                             $conteudo_acoes_matricula .= "";  
                         }
-                
+                    }
             }
             $conteudo_matricula .="</ul>";
 
