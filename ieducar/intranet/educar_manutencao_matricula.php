@@ -187,9 +187,6 @@ return new class extends clsListagem {
 
                 $matriculas = Matricula::where('ref_cod_aluno', $registro['cod_aluno'])->where('ref_ref_cod_serie', $_REQUEST['ref_cod_serie'])->get();  
           
-            }elseif(isset($_REQUEST['ref_cod_turma']) and !empty($_REQUEST['ref_cod_turma'])){
-
-                $matriculas = Matricula::where('ref_cod_aluno', $registro['cod_aluno'])->where('ref_ref_cod_serie', $_REQUEST['ref_cod_serie'])->where('ref_ref_cod_turma', $_REQUEST['ref_cod_turma'])->get();   
             }else{
                 $matriculas = Matricula::where('ref_cod_aluno', $registro['cod_aluno'])->get();
             }
@@ -199,15 +196,21 @@ return new class extends clsListagem {
             $nome_turma = "";
             foreach($matriculas as $matricula){
                 
+                if(isset($_REQUEST['ref_cod_turma']) and !empty($_REQUEST['ref_cod_turma'])){
 
+                $matriculasturma = MatriculaTurma::where('ref_cod_matricula', $matricula['cod_matricula'])->where('ref_cod_turma', $_REQUEST['ref_cod_turma'])->where('ativo', 1)->get();             
+            
+            }else{
                 $matriculasturma = MatriculaTurma::where('ref_cod_matricula', $matricula['cod_matricula'])->where('ativo', 1)->get();
+  
+            }
                 $codigo_serie = $matricula['ref_ref_cod_serie'];
 
    
                 foreach($matriculasturma as $matriculaturma){
-            
+                    $nome_turma = "";
+                    $codigo_turma = "";
                     $turmas = Turma::where('cod_turma', $matriculaturma['ref_cod_turma'])->get();
-
                     foreach($turmas as $turma){
 
                         $nome_turma = $turma['nm_turma'];
@@ -215,7 +218,7 @@ return new class extends clsListagem {
                         
                     }
                 }
-                if(empty($nome_turma)){ 
+                if(empty($nome_turma) or empty($codigo_turma) ){ 
 
                 }else{
                         $situacao = App_Model_MatriculaSituacao::getSituacao($matricula['aprovado']);
