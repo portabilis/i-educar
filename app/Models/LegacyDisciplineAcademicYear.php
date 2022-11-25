@@ -73,21 +73,21 @@ class LegacyDisciplineAcademicYear extends Pivot
     protected function id(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->componente_curricular_id,
+            get: fn () => $this->componente_curricular_id,
         );
     }
 
     protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->discipline->name ?? null,
+            get: fn () => $this->discipline?->name,
         );
     }
 
     protected function workload(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->carga_horaria,
+            get: fn () => $this->carga_horaria,
         );
     }
 }

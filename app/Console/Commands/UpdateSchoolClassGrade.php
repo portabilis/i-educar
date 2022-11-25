@@ -29,7 +29,7 @@ class UpdateSchoolClassGrade extends Command
     protected $description = 'Atualiza a série da turma';
 
     /**
-     * @var LegacyLevel
+     * @var LegacyGrade
      */
     private $grade;
 

@@ -291,8 +291,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $configuracoes = new clsPmieducarConfiguracoesGerais();
         $configuracoes = $configuracoes->detalhe();
 
-        $labels_botucatu = config('legacy.app.mostrar_aplicacao') == 'botucatu';
-
         if ($configuracoes['justificativa_falta_documentacao_obrigatorio']) {
             $this->inputsHelper()->hidden('justificativa_falta_documentacao_obrigatorio');
         }

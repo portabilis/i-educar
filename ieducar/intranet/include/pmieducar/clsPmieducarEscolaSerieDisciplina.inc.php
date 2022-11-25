@@ -378,29 +378,6 @@ class clsPmieducarEscolaSerieDisciplina extends Model
         return false;
     }
 
-    public function eh_usado($disciplina)
-    {
-        if (is_numeric($disciplina) && is_numeric($this->ref_ref_cod_serie) && is_numeric($this->ref_ref_cod_escola)) {
-            $db = new clsBanco();
-
-            return $db->CampoUnico("SELECT 1
-               FROM pmieducar.turma_disciplina td
-              WHERE td.ref_cod_disciplina = {$disciplina}
-                AND td.ref_cod_escola = {$this->ref_ref_cod_escola}
-                AND td.ref_cod_serie = {$this->ref_ref_cod_serie}
-
-              UNION
-
-              SELECT 1
-               FROM pmieducar.disciplina_disciplina_topico ddt
-              WHERE ddt.ref_ref_cod_disciplina = {$disciplina}
-                AND ddt.ref_ref_ref_cod_escola = {$this->ref_ref_cod_escola}
-                AND ddt.ref_ref_ref_cod_serie = {$this->ref_ref_cod_serie}");
-        }
-
-        return false;
-    }
-
     public function setAtivoDisciplinaSerie($ativo)
     {
         if (is_numeric($this->ref_cod_disciplina) && is_numeric($this->ref_ref_cod_serie) && is_numeric($ativo)) {

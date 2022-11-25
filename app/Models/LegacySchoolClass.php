@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * LegacySchoolClass
@@ -140,7 +141,7 @@ class LegacySchoolClass extends Model
     protected function id(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->cod_turma,
+            get: fn () => $this->cod_turma,
         );
     }
 
@@ -160,42 +161,42 @@ class LegacySchoolClass extends Model
     protected function year(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->ano,
+            get: fn () => $this->ano,
         );
     }
 
     protected function schoolId(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->ref_ref_cod_escola,
+            get: fn () => $this->ref_ref_cod_escola,
         );
     }
 
     protected function courseId(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->ref_cod_curso,
+            get: fn () => $this->ref_cod_curso,
         );
     }
 
     protected function gradeId(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->ref_ref_cod_serie,
+            get: fn () => $this->ref_ref_cod_serie,
         );
     }
 
     protected function visible(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->visivel,
+            get: fn () => $this->visivel,
         );
     }
 
     protected function exemptedDisciplineId(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->ref_cod_disciplina_dispensada,
+            get: fn () => $this->ref_cod_disciplina_dispensada,
         );
     }
 
@@ -331,7 +332,10 @@ class LegacySchoolClass extends Model
     public function getDiasSemanaAttribute($value)
     {
         if (is_string($value)) {
-            $value = explode(',', str_replace(['{', '}'], '', $value));
+            $value = explode(',', str_replace([
+                '{',
+                '}'
+            ], '', $value));
         }
 
         return $value;
@@ -362,7 +366,11 @@ class LegacySchoolClass extends Model
                 'registration' => function ($query) {
                     /** @var Builder $query */
                     $query->where('ano', $this->year);
-                    $query->whereIn('aprovado', [1, 2, 3]);
+                    $query->whereIn('aprovado', [
+                        1,
+                        2,
+                        3
+                    ]);
                     $query->with('student.person');
                 }
             ])
@@ -510,5 +518,10 @@ class LegacySchoolClass extends Model
     public function period(): BelongsTo
     {
         return $this->belongsTo(LegacyPeriod::class, 'turma_turno_id');
+    }
+
+    public function inep(): HasOne
+    {
+        return $this->hasOne(SchoolClassInep::class, 'cod_turma');
     }
 }

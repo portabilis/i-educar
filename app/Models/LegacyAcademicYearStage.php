@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Support\Database\DateSerializer;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  *
@@ -48,4 +49,9 @@ class LegacyAcademicYearStage extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    public function module(): BelongsTo
+    {
+        return $this->belongsTo(LegacyStageType::class, 'ref_cod_modulo');
+    }
 }

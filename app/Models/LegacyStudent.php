@@ -50,7 +50,7 @@ class LegacyStudent extends LegacyModel
     protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->individual->person->name
+            get: fn () => $this->individual->person->name
         );
     }
 
@@ -85,7 +85,7 @@ class LegacyStudent extends LegacyModel
     protected function guardianType(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->tipo_responsavel
+            get: fn () => $this->tipo_responsavel
         );
     }
 
@@ -128,14 +128,14 @@ class LegacyStudent extends LegacyModel
     protected function inepNumber(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->inep ? $this->inep->number : null
+            get: fn () => $this->inep?->number
         );
     }
 
     protected function stateRegistrationId(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->aluno_estado_id
+            get: fn () => $this->aluno_estado_id
         );
     }
 

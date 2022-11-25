@@ -32,7 +32,7 @@
                     <td>Tipo do itinerário formativo:</td>
                     <td>
                         @php
-                            $types = transformStringFromDBInArray($enrollment->tipo_itinerario) ?? [];
+                            $types = $enrollment->tipo_itinerario;
                         @endphp
                         <select name="itinerary_type" id="itinerary_type" multiple="multiple" class="select-default">
                             @foreach($itineraryType as $key => $type)
@@ -45,7 +45,7 @@
                     <td>Composição do itinerário formativo integrado:</td>
                     <td>
                         @php
-                            $compositions = transformStringFromDBInArray($enrollment->composicao_itinerario) ?? [];
+                            $compositions = $enrollment->composicao_itinerario;
                         @endphp
                         <select name="itinerary_composition" id="itinerary_composition" multiple="multiple" class="select-default">
                             @foreach($itineraryComposition as $key => $composition)
@@ -87,7 +87,9 @@
             <tr>
                 <td colspan="13" align="center">
                     <input type="button" class="btn-green btn-submit botaolistagem" value=" Salvar ">
-                    <input type="button" class="botaolistagem" onclick="javascript: go('/intranet/educar_matricula_det.php?cod_matricula={{ $enrollment->registration->id }}')" value=" Cancelar ">
+                    <a href="{{ route('registration.formative-itinerary.index', [$enrollment->ref_cod_matricula]) }}" >
+                        <input type="button" class="botaolistagem" value=" Cancelar ">
+                    </a>
                 </td>
             </tr>
         </table>
@@ -126,12 +128,11 @@
                 };
 
                 $.ajax({
-                    type:'POST',
-                    url:"{{ Asset::get('/enrollment-formative-itinerary/' . $enrollment->id) }}",
+                    type:'PUT',
+                    url:"{{ route('registration.formative-itinerary.update', [$enrollment->ref_cod_matricula, $enrollment]) }}",
                     data: dataToSend,
                     success:function(data) {
-                        messageUtils.success(data.message);
-                        windowUtils.redirect('/intranet/educar_matricula_det.php?cod_matricula=' + data.registration_id)
+                        windowUtils.redirect("{{ route('registration.formative-itinerary.index', [$enrollment->ref_cod_matricula]) }}")
                     },
                     error:function(data) {
                         messageUtils.error(decodeURIComponent(JSON.parse(data.responseText).message));

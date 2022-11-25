@@ -2,78 +2,66 @@
 
 namespace App\Services\Exporter;
 
-use App\Exports\EloquentExporter;
-use App\Exports\ExporterQueryExport;
-use App\Jobs\NotifyUserExporter;
-use App\Jobs\UpdateUrlExport;
+use App\Exports\ExporterSqlExport;
 use App\Models\Exporter\Export;
+use App\Models\NotificationType;
+use App\Services\NotificationService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Excel;
 
 class ExportService
 {
-    private string $connection;
-    private string $filename;
-    private EloquentExporter $exporter;
     private string $fileType = Excel::CSV;
-    private int $querySize;
 
     /**
-     * @param Export $export
+     * @param Export      $export
+     * @param string|null $disk
      */
     public function __construct(
         private Export $export,
+        private string|null $disk = null
     ) {
-        $this->setConnection();
-        $this->setFilename();
     }
 
     /**
-     * @return void
+     * @param null $disk
      *
+     * @return void
      */
     public function execute(): void
     {
-        $this->querySize = $this->export->getExportQuery()->count();
-        $exporter = new ExporterQueryExport($this->connection, $this->export, $this->querySize);
-        $success = $exporter->store($this->filename, writerType: $this->fileType);
+        DB::setDefaultConnection($this->export->getConnectionName());
+
+        $exporter = new ExporterSqlExport($this->export->getExportQuery()->toSql());
+        $success = $exporter->store($this->getFilename(), $this->disk, $this->fileType);
         if ($success) {
-            UpdateUrlExport::dispatch($this->export, $this->getUrl());
-            NotifyUserExporter::dispatch($this->export->user_id, $this->getMessage(), $this->getUrl());
+            $url =  $this->getUrl();
+            $this->export->update(['url' => $url]);
+            (new NotificationService())->createByUser(
+                $this->export->user_id,
+                $this->getMessage(),
+                $url,
+                NotificationType::EXPORT_STUDENT
+            );
         }
     }
 
-    /**
-     * @return void
-     */
-    private function setConnection(): void
+    private function getFilename(): string
     {
-        $this->connection = $this->export->getConnectionName();
-        DB::setDefaultConnection($this->connection);
-    }
-
-    /**
-     * @return void
-     */
-    private function setFilename(): void
-    {
-        $this->filename = sprintf(
+        return sprintf(
             '%s/csv/%s/%s',
-            $this->connection,
+            $this->export->getConnectionName(),
             $this->export->hash,
             $this->export->filename
         );
     }
 
-    /**
-     * @return void
-     */
-    private function setExporter(): void
+    private function getMessage(): string
     {
-        if (empty($this->exporter)) {
-            $this->exporter = new EloquentExporter($this->export);
-        }
+        $count = $this->export->getExportQuery()->count();
+
+        return "Foram exportados {$count} registros. Clique aqui para fazer download do arquivo {$this->export->filename}.";
     }
 
     /**
@@ -81,14 +69,6 @@ class ExportService
      */
     private function getUrl(): string
     {
-        return Storage::url($this->filename);
-    }
-
-    /**
-     * @return string
-     */
-    private function getMessage(): string
-    {
-        return "Foram exportados {$this->querySize} registros. Clique aqui para fazer download do arquivo {$this->export->filename}.";
+        return Storage::disk($this->disk)->url($this->getFilename());
     }
 }

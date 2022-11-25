@@ -44,7 +44,7 @@ class Registration extends Model
     protected function statusDescription(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (new RegistrationStatus())->getDescriptiveValues()[(int)$this->status],
+            get: fn () => (new RegistrationStatus())->getDescriptiveValues()[(int)$this->status],
         );
     }
 }

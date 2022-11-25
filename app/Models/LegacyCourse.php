@@ -6,6 +6,7 @@ use App\Models\Builders\LegacyCourseBuilder;
 use App\Traits\HasLegacyDates;
 use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -21,6 +22,8 @@ class LegacyCourse extends LegacyModel
 {
     use LegacyAttribute;
     use HasLegacyDates;
+
+    public const CREATED_AT = 'data_cadastro';
 
     /**
      * @var string
@@ -80,29 +83,24 @@ class LegacyCourse extends LegacyModel
         'padrao_ano_escolar' => 'boolean',
     ];
 
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
-
     protected function id(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->cod_curso,
+            get: fn () => $this->cod_curso,
         );
     }
 
     protected function description(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->descricao,
+            get: fn () => $this->descricao,
         );
     }
 
     protected function steps(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->qtd_etapas,
+            get: fn () => $this->qtd_etapas,
         );
     }
 
@@ -122,7 +120,7 @@ class LegacyCourse extends LegacyModel
     protected function isStandardCalendar(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->padrao_ano_escolar,
+            get: fn () => $this->padrao_ano_escolar,
         );
     }
 
@@ -154,5 +152,15 @@ class LegacyCourse extends LegacyModel
     public function qualifications(): BelongsToMany
     {
         return $this->belongsToMany(LegacyQualification::class, 'pmieducar.habilitacao_curso', 'ref_cod_curso', 'ref_cod_habilitacao');
+    }
+
+    public function educationType(): BelongsTo
+    {
+        return $this->belongsTo(LegacyEducationType::class, 'ref_cod_tipo_ensino');
+    }
+
+    public function educationLevel(): BelongsTo
+    {
+        return $this->belongsTo(LegacyEducationLevel::class, 'ref_cod_nivel_ensino');
     }
 }

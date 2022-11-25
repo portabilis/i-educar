@@ -15,15 +15,21 @@ class EmployeeInepTest extends EloquentTestCase
     /**
      * @return string
      */
-    protected function getEloquentModelName()
+    protected function getEloquentModelName(): string
     {
         return EmployeeInep::class;
     }
 
     /** @test */
-    public function getNumberAttribute()
+    public function getNumberAttribute(): void
     {
-        $employeeInep = $this->createNewModel();
-        $this->assertEquals($employeeInep->cod_docente_inep, $employeeInep->getNumberAttribute());
+        $this->assertEquals($this->model->cod_docente_inep, $this->model->number);
+    }
+
+    protected function getLegacyAttributes(): array
+    {
+        return [
+            'id' => 'cod_servidor',
+        ];
     }
 }
