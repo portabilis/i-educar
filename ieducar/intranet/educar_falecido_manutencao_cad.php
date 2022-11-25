@@ -52,8 +52,7 @@ return new class() extends clsCadastro {
         $this->campoMemo('observacao', 'Observa&ccedil;&atilde;o', $this->observacao, 60, 5, false);
 
        
-        $scripts = ['/script/extra/educar-confirmar-exclusao.js'];
-        Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+        
         
     }
 
