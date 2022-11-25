@@ -1103,7 +1103,7 @@ class clsModulesFrequencia extends Model {
 
         $db = new clsBanco();
 
-        if (!empty($geral_falta_aluno_id)) {
+        if (!empty($geral_falta_aluno_id) && !empty($componente_curricular_id)) {
             $db->Consulta("
                 SELECT
                     *
