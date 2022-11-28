@@ -108,12 +108,9 @@
                         $("#check_confirma_exclusao").on("change", function(e){
                         if($("#check_confirma_exclusao").attr("checked")){
                             $("#btn-remanejar").button("enable");
-                            $('#unifica_pessoa').addClass('btn-green');
-                            $('#unifica_pessoa').removeClass('btn-disabled');
                         } else {
                             $("#btn-remanejar").button("disable");
-                            $('#btn-remanejar').removeClass('btn-green');
-                            $('#btn-remanejar').addClass('btn-disabled')
+                            
                         }
                         
                         });
