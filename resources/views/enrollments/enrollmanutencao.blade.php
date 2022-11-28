@@ -100,7 +100,7 @@
             @else
                 <button class="btn" type="submit">Enturmar</button>
                 @if($anotherClassroomEnrollments->count())
-                    <button class="btn btn-disabled btn-green" type="submit" name="is_relocation" value="1"  >Transferir para turma (remanejar)</button>
+                    <button class="btn btn-disabled btn-green" type="submit" name="is_relocation" value="1" id="btn-remanejar" >Transferir para turma (remanejar)</button>
                 @endif
             @endif
             <a href="{{ route('enrollments.indexmanutencao', ['ref_cod_matricula' => $registration->id, 'ano_letivo' => $registration->year]) }}" class="btn">Cancelar</a>
@@ -110,13 +110,14 @@
 @endsection
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 <script>
+document.getElementById("btn-remanejar").disabled = true;
 
 $("#check_confirma_exclusao").click(function() {
     var checked_status = this.checked;
     if (checked_status == true) {
-       $("#btn_enviar").removeAttr("disabled");
+        document.getElementById("btn-remanejar").disabled = false;
     } else {
-       $("#btn_enviar").attr("disabled", "disabled");
+        document.getElementById("btn-remanejar").disabled = true;
     }
 });
 
