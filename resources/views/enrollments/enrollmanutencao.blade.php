@@ -5,6 +5,9 @@
 @endpush
 
 @section('content')
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+	<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
     <form action="{{ route('enrollments.enrollmanutencao', ['schoolClass' => $schoolClass, 'registration' => $registration]) }}" method="post">
         <table class="table-default">
             <thead>
@@ -100,21 +103,18 @@
             @else
                 <button class="btn" type="submit">Enturmar</button>
                 @if($anotherClassroomEnrollments->count())
-                    <button class="btn btn-disabled btn-green" type="submit" name="is_relocation" value="1" id="btn-remanejar" >Transferir para turma (remanejar)</button>
-                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+                    <button class="btn btn-disabled btn-green" type="submit" name="is_relocation" value="1" id="btn-remanejar" disabled>Transferir para turma (remanejar)</button>
                     <script>
-                    document.getElementById("btn-remanejar").disabled = true;
-
-                    $("#check_confirma_exclusao").click(function() {
-                        var checked_status = this.checked;
-                        if (checked_status == true) {
-                            document.getElementById("btn-remanejar").disabled = false;
+                        $("#check_confirma_exclusao").on("change", function(e){
+                        if($("#check_confirma_exclusao").attr("checked")){
+                            $("#btn-remanejar").button("enable");
                         } else {
-                            document.getElementById("btn-remanejar").disabled = true;
+                            $("#btn-remanejar").button("disable");
                         }
-                    });
-
+                        
+                        });
                     </script>
+                   
                 @endif
             @endif
             <a href="{{ route('enrollments.indexmanutencao', ['ref_cod_matricula' => $registration->id, 'ano_letivo' => $registration->year]) }}" class="btn">Cancelar</a>
