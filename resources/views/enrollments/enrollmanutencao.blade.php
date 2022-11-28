@@ -89,7 +89,7 @@
                 <tr id="tr_confirma_dados_unificacao">
                 <td colspan="2">
               
-                <label for="check_confirma_exclusao" style="color:red !important;">Atenção! Ao remanejar o aluno esta rotina excluirá todas as informações do diário do aluno posteriormente a data de movimentação, assinale se concorda.</label>
+                <label for="check_confirma_exclusao" style="color:red !important;">Atenção! Ao remanejar o aluno esta rotina excluirá todas as informações do diário do aluno posteriormente a data de movimentação.</label>
                 </td>
                 </tr>
             </tbody>
