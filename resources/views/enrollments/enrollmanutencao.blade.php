@@ -110,40 +110,15 @@
 @endsection
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 <script>
+$("#btn_enviar").attr("disabled", "disabled");
 
- $('#btn_enviar').prop('disabled', true);
- $('#btn_enviar').addClass('btn-disabled');
-
-
-  
-
-  $('#tr_confirma_dados_unificacao').html(htmlCheckbox);
-
-  function confirmaAnalise() {
-  let checked = $('#check_confirma_exclusao').is(':checked');
-
-  if (checked) {
-    habilitaBotaoUnificar();
-    return;
-  }
-
-  if (!checked) {
-    desabilitaBotaoUnificar();
-    return;
-  }
-
-}
-
-function habilitaBotaoUnificar() {
-    $('#btn_enviar').prop('disabled', false);
-    $('#btn_enviar').addClass('btn-green');
-    $('#btn_enviar').removeClass('btn-disabled');
-  }
-
-  function desabilitaBotaoUnificar() {
-    $('#btn_enviar').prop('disabled', true);
-    $('#btn_enviar').removeClass('btn-green');
-    $('#btn_enviar').addClass('btn-disabled');
-  }
+$("#check_confirma_exclusao").click(function() {
+    var checked_status = this.checked;
+    if (checked_status == true) {
+       $("#btn_enviar").removeAttr("disabled");
+    } else {
+       $("#btn_enviar").attr("disabled", "disabled");
+    }
+});
 
 </script>

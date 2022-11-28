@@ -174,10 +174,13 @@ class EnrollmentController extends Controller
 
             $data_solicitacao = dataToBanco($request->input('enrollment_date'));
 
-            if ($data_solicitacao <= $dataUltimaFrequencia[0]->data) {
-                return redirect()->back()->with('error', 'Não é possível realizar a operação, existem frequências registradas no período. Data de enturmação/saída: '.$data_solicitacao.'; Data da frequencia: '.$dataUltimaFrequencia[0]->data.'.');
-                die();
+
+            $frequencia = Frequencia::where('ref_cod_turma', $request->input('cod_turma_origem'))->where('data', '>=', $data_solicitacao)->orderBy('id', 'DESC')->get();
+            foreach($frequencia as $list) {
+                FrequenciaAluno::where('ref_frequencia',$list['id'])->where('ref_cod_matricula', $registration['cod_matricula'])->delete();
             }
+
+           
         }
 
         if ($tipoTurma[0]->case == 1) {
@@ -187,9 +190,9 @@ class EnrollmentController extends Controller
 
             $data_solicitacao = dataToBanco($request->input('enrollment_date'));
 
-            if ($data_solicitacao <= $dataUltimoAtendimento[0]->data) {
-                return redirect()->back()->with('error', 'AEE - Não é possível realizar a operação, existem frequências registradas no período. Data de enturmação/saída: '.$data_solicitacao.'; Data da frequencia: '.$dataUltimoAtendimento[0]->data.'.');
-                die();
+            $frequencia = Frequencia::where('ref_cod_turma', $request->input('cod_turma_origem'))->where('data', '>=', $data_solicitacao)->orderBy('id', 'DESC')->get();
+            foreach($frequencia as $list) {
+                FrequenciaAluno::where('ref_frequencia',$list['id'])->where('ref_cod_matricula', $registration['cod_matricula'])->delete();
             }
         }
 
