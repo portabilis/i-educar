@@ -103,7 +103,7 @@
             @else
                 <button class="btn" type="submit">Enturmar</button>
                 @if($anotherClassroomEnrollments->count())
-                    <button class="btn btn-disabled" type="submit" name="is_relocation" value="1" id="btn-remanejar" disabled>Transferir para turma (remanejar)</button>
+                    <button class="btn btn-disabled" type="submit" name="is_relocation" value="1" id="btn-remanejar" >Transferir para turma (remanejar)</button>
                     <script>
                         $("#check_confirma_exclusao").on("change", function(e){
                         if($("#check_confirma_exclusao").attr("checked")){
