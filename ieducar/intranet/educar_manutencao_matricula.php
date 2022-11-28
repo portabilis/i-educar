@@ -248,18 +248,18 @@ return new class extends clsListagem {
                         }
                         elseif($situacao=='Transferido'){
                         
-                            $conteudo_acoes_matricula .= ""; 
+                            $conteudo_acoes_matricula .= "<br>"; 
                         }
                         elseif($situacao=='Abandono'){
                         
-                            $conteudo_acoes_matricula .= ""; 
+                            $conteudo_acoes_matricula .= "<br>"; 
                         }
                         elseif($situacao=='Falecido'){
                         
-                            $conteudo_acoes_matricula .= ""; 
+                            $conteudo_acoes_matricula .= "<br>"; 
                         }
                         else{
-                            $conteudo_acoes_matricula .= "";  
+                            $conteudo_acoes_matricula .= "<br>";  
                         }
                     }
             }
