@@ -94,15 +94,12 @@ class FrequenciaController extends ApiCoreController
             $instituicao = $clsInstituicao->primeiraAtiva();
 
             $isOnlyProfessor = Portabilis_Business_Professor::isOnlyProfessor($instituicao['cod_instituicao'], $userId);
-            $diaSemana =  Carbon::createFromFormat('d/m/Y', $dataFrequencia)->dayOfWeek;
-
 
             if ($isOnlyProfessor) {
-                $diaSemanaConvertido = $this->converterDiaSemanaQuadroHorario($diaSemana);
                 $componentesCurriculares = [];
                 $registraDiarioIndividual = false;
 
-                $quadroHorario = Portabilis_Business_Professor::quadroHorarioAlocado($turmaId, $userId, $diaSemanaConvertido, true);
+                $quadroHorario = Portabilis_Business_Professor::quadroHorarioAlocado($turmaId, $userId, null, true);
 
                 if (count($quadroHorario) > 0) {
                     $registraDiarioIndividual = true;
