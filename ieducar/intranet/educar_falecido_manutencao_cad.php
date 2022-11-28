@@ -158,6 +158,6 @@ return new class() extends clsCadastro {
     }
     public function makeExtra()
     {
-        return file_get_contents(__DIR__ . '/scripts/extra/educar-confirmar-exclusao.js');
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-unifica-aluno.js');
     }
 };
