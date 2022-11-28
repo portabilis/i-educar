@@ -1,12 +1,12 @@
 
-
-  document.getElementById("btn_enviar").disabled = true;
+ $j('#btn_enviar').prop('disabled', true);
+ $j('#btn_enviar').addClass('btn-disabled');
 
   $j('<tr id="tr_confirma_dados_unificacao"></tr>').insertBefore($j('#btn_enviar'));
 
   let htmlCheckbox = '<td colspan="2">'
   htmlCheckbox += '<input onchange="confirmaAnalise()" id="check_confirma_exclusao" type="checkbox" />';
-  htmlCheckbox += '<label for="check_confirma_exclusao">Esta rotina excluirá todas as informações do diário do aluno posteriormente a data de movimentação, assinale se concorda.</label>';
+  htmlCheckbox += '<label for="check_confirma_exclusao" style="color:red !important;">Esta rotina excluirá todas as informações do diário do aluno posteriormente a data de movimentação, assinale se concorda.</label>';
   htmlCheckbox += '</td>';
 
   $j('#tr_confirma_dados_unificacao').html(htmlCheckbox);
