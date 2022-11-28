@@ -85,7 +85,7 @@
                 </tr>
                 <tr id="tr_confirma_dados_unificacao">
                 <td colspan="2">
-                <input onchange="confirmaAnalise()" id="check_confirma_exclusao" type="checkbox" />
+                <input id="check_confirma_exclusao" type="checkbox" />
                 <label for="check_confirma_exclusao" style="color:red !important;">Esta rotina excluirá todas as informações do diário do aluno posteriormente a data de movimentação, assinale se concorda.</label>
                 </td>
                 </tr>
