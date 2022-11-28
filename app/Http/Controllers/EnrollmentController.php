@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\EnrollmentRequest;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClass;
+use App\Models\Frequencia;
+use App\Models\FrequenciaAluno;
 use App\Services\EnrollmentService;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;

@@ -87,7 +87,12 @@
         </table>
 
         <div class="separator"></div>
-
+        <tr id="tr_confirma_dados_unificacao">
+        <td colspan="2">
+        <input onchange="confirmaAnalise()" id="check_confirma_exclusao" type="checkbox" />
+        <label for="check_confirma_exclusao" style="color:red !important;">Esta rotina excluirá todas as informações do diário do aluno posteriormente a data de movimentação, assinale se concorda.</label>
+        </td>
+        </tr>
         <div style="text-align: center" id="btn-botoes">
             @if($enableCancelButton)
                 <button class="btn" type="submit" name="is_cancellation" value="1">Desenturmar</button>
@@ -108,12 +113,8 @@
  $('#btn_enviar').prop('disabled', true);
  $('#btn_enviar').addClass('btn-disabled');
 
-  $('<tr id="tr_confirma_dados_unificacao"></tr>').insertBefore($('#btn_botoes'));
 
-  let htmlCheckbox = '<td colspan="2">'
-  htmlCheckbox += '<input onchange="confirmaAnalise()" id="check_confirma_exclusao" type="checkbox" />';
-  htmlCheckbox += '<label for="check_confirma_exclusao" style="color:red !important;">Esta rotina excluirá todas as informações do diário do aluno posteriormente a data de movimentação, assinale se concorda.</label>';
-  htmlCheckbox += '</td>';
+  
 
   $('#tr_confirma_dados_unificacao').html(htmlCheckbox);
 
