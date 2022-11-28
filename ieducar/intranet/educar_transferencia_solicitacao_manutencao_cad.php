@@ -76,7 +76,7 @@ return new class() extends clsCadastro
             $this->Excluir();
         }
 
-        $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}";
+        $this->url_cancelar = "educar_manutencao_matricula.php";
         $this->nome_url_cancelar = 'Cancelar';
 
         $this->breadcrumb('Registro da solicitação de transferência da matrícula', [

@@ -42,7 +42,7 @@ return new class extends clsCadastro
 
         $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
 
-        $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}";
+        $this->url_cancelar = "educar_manutencao_matricula.php";
 
         $this->breadcrumb('Registro do abandono de matrícula', [
             url('intranet/educar_index.php') => 'Escola',
