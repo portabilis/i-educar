@@ -1,6 +1,6 @@
 
 function adicionaCheckboxConfirmacao() {
-  $j('<tr id="tr_confirma_dados_unificacao"></tr>').insertBefore($j('.linhaBotoes'));
+  $j('<tr id="tr_confirma_dados_unificacao"></tr>').insertBefore($j('#tr_observacao'));
 
   let htmlCheckbox = '<td colspan="2">'
   htmlCheckbox += '<input onchange="confirmaAnalise()" id="check_confirma_dados_unificacao" type="checkbox" />';
