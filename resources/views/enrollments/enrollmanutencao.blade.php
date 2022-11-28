@@ -83,16 +83,17 @@
                         <input name="enrollment_date" value="{{ old('enrollment_date') }}" onkeypress="formataData(this, event);" class="form-input {{ $errors->has('enrollment_date') ? 'error' : '' }}" type="text" maxlength="10">
                     </td>
                 </tr>
+                <tr id="tr_confirma_dados_unificacao">
+                <td colspan="2">
+                <input onchange="confirmaAnalise()" id="check_confirma_exclusao" type="checkbox" />
+                <label for="check_confirma_exclusao" style="color:red !important;">Esta rotina excluirá todas as informações do diário do aluno posteriormente a data de movimentação, assinale se concorda.</label>
+                </td>
+                </tr>
             </tbody>
         </table>
 
         <div class="separator"></div>
-        <tr id="tr_confirma_dados_unificacao">
-        <td colspan="2">
-        <input onchange="confirmaAnalise()" id="check_confirma_exclusao" type="checkbox" />
-        <label for="check_confirma_exclusao" style="color:red !important;">Esta rotina excluirá todas as informações do diário do aluno posteriormente a data de movimentação, assinale se concorda.</label>
-        </td>
-        </tr>
+     
         <div style="text-align: center" id="btn-botoes">
             @if($enableCancelButton)
                 <button class="btn" type="submit" name="is_cancellation" value="1">Desenturmar</button>
