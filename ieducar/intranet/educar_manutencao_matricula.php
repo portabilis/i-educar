@@ -240,7 +240,7 @@ return new class extends clsListagem {
                             <a style='margin:2px; color:white;' href='educar_transferencia_solicitacao_manutencao_cad.php?ref_cod_matricula=".$matricula['cod_matricula']."&ref_cod_aluno=".$registro['cod_aluno']."&ano=".$matricula['ano']."&escola=".$matricula['ref_ref_cod_escola']."&curso=".$matricula['ref_cod_curso']."&serie=".$matricula['ref_ref_cod_serie']."&turma=".$codigo_turma."' class='btn btn-info'> Transferência</a>
                             <a  class='btn btn-danger' href='educar_abandono_manutencao_cad.php?ref_cod_matricula=".$matricula['cod_matricula']."&ref_cod_aluno=".$registro['cod_aluno']."&turma=".$codigo_turma."' style='margin:2px; color:white;'> Abandono</a>
                             <a style='margin:2px; color:white; background-color: grey' href='educar_falecido_manutencao_cad.php?ref_cod_matricula=".$matricula['cod_matricula']."&ref_cod_aluno=".$registro['cod_aluno']."&turma=".$codigo_turma."' class='btn '> Falecido </a>
-                            <a  class='btn btn-success' style='margin:2px; color:white;' href='educar_matriculas_turma_manutencao_lst.php?ref_cod_matricula=".$matricula['cod_matricula']."&ano_letivo=".$matricula['ano']."' > Enturmar </a>";
+                            <a  class='btn btn-success' style='margin:2px; color:white;' href='educar_matricula_turma_manutencao_lst.php?ref_cod_matricula=".$matricula['cod_matricula']."&ano_letivo=".$matricula['ano']."' > Enturmar </a>";
                        
                         }elseif($situacao=='Aprovado'){
                         
@@ -312,7 +312,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'Aluno';
+        $this->title = 'Manutenção de Matrículas';
         $this->processoAp = '7797';
     }
 };
