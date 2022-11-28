@@ -32,7 +32,7 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     
     Route::get('/intranet/educar_matricula_turma_manutencao_lst.php', 'LegacyController@intranet')
         ->defaults('uri', 'educar_matricula_turma_manutencao_lst.php')
-        ->name('enrollments.indexmanutencao')
+        ->name('enrollments.indexmanutencao');
     Route::get('/matricula/{registration}/enturmar/{schoolClass}', 'EnrollmentController@viewEnrollManutencao')
         ->name('enrollments.enrollmanutencao.create');
     Route::post('/matricula/{registration}/enturmar/{schoolClass}', 'EnrollmentController@enrollManutencao')
