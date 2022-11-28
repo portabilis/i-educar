@@ -197,4 +197,8 @@ return new class extends clsCadastro
         $this->title = 'Transfer&ecirc;ncia Solicita&ccedil;&atilde;o';
         $this->processoAp = '578';
     }
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-confirmar-exclusao.js');
+    }
 };
