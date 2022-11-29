@@ -20,10 +20,9 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchLogradouro extends Porta
     {
         if ($id) {
             $sql = '
-                select nome, descricao as tipo_logradouro
+                select nome,
+                \'\'::character varying tipo_logradouro
                 from public.logradouro l
-                left join urbano.tipo_logradouro tl
-                on (l.idtlog = tl.idtlog)
                 where idlog = $1
             ';
 
