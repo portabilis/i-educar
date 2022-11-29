@@ -22,7 +22,7 @@
     };
 
     document.getElementById('ref_cod_componente_curricular').onchange = function () {
-      // delay(1000).then(() => carregaConteudos());
+       delay(1000).then(() => carregaConteudos());
     };
 
     function alterarComponente() {
@@ -59,6 +59,7 @@
           $('#conteudos').val([]).empty().trigger('chosen:updated');
 
           if (dataResponse.pac != null) {
+            console.log(dataResponse.pac[1])
             $('#conteudos').html(
               (Object.keys(dataResponse.pac[1] || [])
                 .map(key => !dataResponse.pac[1][key][1]

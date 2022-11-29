@@ -311,14 +311,17 @@ class Portabilis_Business_Professor
 
             $params = ['params' => [$turmaId, $userId]];
 
+            $paramNumber = 3;
             if (!empty($diaSemana)) {
-                $sql .= ' AND qhh.dia_semana = $3';
+                $sql .= " AND qhh.dia_semana = $".$paramNumber;
                 $params['params'][] = $diaSemana;
+                $paramNumber++;
             }
 
             if (!empty($registroDiarioIndividual)) {
-                $sql .= ' AND qhh.registra_diario_individual = $4';
+                $sql .= " AND qhh.registra_diario_individual = $".$paramNumber;
                 $params['params'][] = $registroDiarioIndividual;
+                $paramNumber++;
             }
 
             $sql .= ' ORDER BY qhh.qtd_aulas DESC';
