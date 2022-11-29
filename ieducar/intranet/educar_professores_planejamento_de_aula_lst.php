@@ -151,6 +151,14 @@ return new class extends clsListagem {
                     continue;
                 }
 
+                if($eh_professor) {
+                    $quadroHorario = Portabilis_Business_Professor::quadroHorarioAlocado($registro['ref_cod_turma'], $this->pessoa_logada, null, true);
+
+                    if (count($quadroHorario) > 0 && $registro['professor_turma'] != $registro['professor_registro']) {
+                        continue;
+                    }
+                }
+
                 $obj = new clsPmieducarSerie();
                 $tipo_presenca = $obj->tipoPresencaRegraAvaliacao($registro['cod_serie']);
 
