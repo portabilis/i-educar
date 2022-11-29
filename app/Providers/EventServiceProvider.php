@@ -2,9 +2,10 @@
 
 namespace App\Providers;
 
-use App\Events\ForgetCachedUserEvent;
 use App\Events\RegistrationEvent;
 use App\Events\TransferEvent;
+use App\Events\UserDeleted;
+use App\Events\UserUpdated;
 use App\Listeners\AcceptTransferRequestListener;
 use App\Listeners\AuthenticatedUser;
 use App\Listeners\ConfigureAuthenticatedUserForAudit;
@@ -57,9 +58,12 @@ class EventServiceProvider extends ServiceProvider
         MessageSending::class => [
             MessageSendingListener::class,
         ],
-        ForgetCachedUserEvent::class => [
+        UserUpdated::class => [
             ForgetCachedUserListener::class,
-        ]
+        ],
+        UserDeleted::class => [
+            ForgetCachedUserListener::class,
+        ],
     ];
 
     /**
