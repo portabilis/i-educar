@@ -181,3 +181,4 @@ INSERT INTO public.menus VALUES (335, 115, 'BNCC', 'BNCC', '/intranet/educar_bnc
 INSERT INTO public.menus VALUES (320, 305, 'Validações', NULL, NULL, NULL, 3, 1, 58, NULL, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (321, 320, 'Validar Plano de Aula', NULL, '/intranet/educar_professores_validacao_planejamento_de_aula_lst.php', NULL, 1, 2, 58, NULL, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (322, 320, 'Validar Registro de Frequência', NULL, '/intranet/educar_professores_validacao_registro_de_frequencia_lst.php', NULL, 2, 2, 58, NULL, NULL, true, NULL, NULL);
+INSERT INTO public.menus VALUES (396, 13, 'Manutenção de Matrículas', 'Manutenção de Matrículas', '/intranet/educar_manutencao_matricula.php', NULL, 100, 1, 7797, NULL, NULL, true, NULL, NULL);

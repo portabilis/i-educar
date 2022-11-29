@@ -1,5 +1,5 @@
 <?php
-
+ 
 use iEducar\Legacy\Model;
 use App\Models\BNCC;
 use App\Models\Serie;

@@ -167,7 +167,8 @@ return new class extends clsDetalhe {
             $registro['matriculas']['aulas_faltou'],
             $registro['alunos'],
             $registro['detalhes']['ref_cod_componente_curricular'],
-            $registro['detalhes']['ref_cod_turma']
+            $registro['detalhes']['ref_cod_turma'],
+            $registro['detalhes']['fase_etapa']
         );
 
         if ($obj_permissoes->permissao_cadastra(58, $this->pessoa_logada, 7)) {
@@ -229,7 +230,7 @@ return new class extends clsDetalhe {
         ]);
     }
 
-    function montaListaFrequenciaAlunos ($ref_cod_serie, $ordensAulasArray, $matriculas, $justificativas, $aulas_faltou, $alunos, $ref_componente_curricular, $ref_turma) {
+    function montaListaFrequenciaAlunos ($ref_cod_serie, $ordensAulasArray, $matriculas, $justificativas, $aulas_faltou, $alunos, $ref_componente_curricular, $ref_turma, $fase_etapa) {
         $obj = new clsPmieducarSerie();
         $tipo_presenca = $obj->tipoPresencaRegraAvaliacao($ref_cod_serie);
 
@@ -262,9 +263,10 @@ return new class extends clsDetalhe {
 
         $this->tabela .= ' <th><span style="display: block; float: left; width: auto; font-weight: bold">Justificativa</span></th></tr>';
 
+        $objFrequencia = new clsModulesFrequencia();
         foreach ($alunos as $aluno) {
-            $serviceBoletim = $this->serviceBoletim($aluno['matricula'], $ref_componente_curricular, $ref_turma);
-            $qtdFaltasGravadas = $serviceBoletim->getFaltaSemEtapa($ref_componente_curricular);
+            $qtdFaltasGravadas = $objFrequencia->getTotalFaltas($aluno['matricula'], $ref_componente_curricular);
+
 
              $checked = !$aluno['presenca'] ? "checked='true'" : '';
 

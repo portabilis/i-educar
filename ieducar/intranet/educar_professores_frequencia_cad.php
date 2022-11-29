@@ -27,6 +27,7 @@ return new class extends clsCadastro {
     public $atividades;
     public $conteudos;
     public $planejamento_aula_ids;
+    public $componente_curricular_registro_individual;
 
     public function Inicializar () {
         $this->titulo = 'Frequência - Cadastro';
@@ -135,6 +136,7 @@ return new class extends clsCadastro {
         $this->campoOculto('servidor_id', $resultado['emissor_user_id']);
         $this->campoOculto('auth_id', $this->pessoa_logada);
         $this->campoOculto('is_professor', $isProfessor);
+        $this->campoOculto('componente_curricular_registro_individual', '');
 
         $this->inputsHelper()->dynamic('data', ['required' => $obrigatorio, 'disabled' => $desabilitado]);  // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado]);
@@ -231,11 +233,11 @@ return new class extends clsCadastro {
             $conteudo .= '  <tr><td class="tableDetalheLinhaSeparador" colspan="3"></td></tr>';
 
 
+            $objFrequencia = new clsModulesFrequencia();
             foreach ($this->alunos as $key => $aluno) {
                 $id = $aluno['matricula'];
 
-                $serviceBoletim = $this->serviceBoletim($id, $this->ref_cod_componente_curricular, $this->ref_cod_turma);
-                $qtdFaltasGravadas = $serviceBoletim->getFaltaSemEtapa($this->ref_cod_componente_curricular);
+                $qtdFaltasGravadas = $objFrequencia->getTotalFaltas($aluno['matricula'], $this->ref_cod_componente_curricular);
 
                 $name = "alunos[" . $id . "]";
                 $checked = !$aluno['presenca'] ? "checked='true'" : '';
@@ -245,6 +247,14 @@ return new class extends clsCadastro {
                 $conteudo .= '  <td class="sizeFont colorFont"><p>' . $aluno['nome'] . '</p></td>';
                 $conteudo .= '  <td class="sizeFont colorFont"><p>' . $qtdFaltasGravadas . '</p></td>';
                 if ($tipo_presenca == 1) {
+                    $aulasFaltou = '';
+                    $qtdFaltas = 0;
+
+                    if ($aluno['presenca']) {
+                        $aulasFaltou = 1 . ',';
+                        $qtdFaltas = 1;
+                    }
+
                     $conteudo .= "  <td class='sizeFont colorFont'>
                                     <input
                                         type='checkbox'
@@ -252,10 +262,35 @@ return new class extends clsCadastro {
                                         id='alunos[]'
                                         name={$name}
                                         value={$id}
+                                        data-aulaid='1'
                                         {$checked}
                                         autocomplete='off'
                                     >
                                     </td>";
+                    $conteudo .= "  <input
+                                    type='hidden'
+                                    name='justificativa[${id}][qtd]'
+                                    style='display: flex;'
+                                    value='{$qtdFaltas}'
+                                    readonly
+                                    autocomplete='off'
+                                />";
+                    $conteudo .= "  <input
+                                    type='hidden'
+                                    name='justificativa[${id}][qtdFaltasFreqAntiga]'
+                                    style='display: flex;'
+                                    value='{$qtdFaltas}'
+                                    readonly
+                                    autocomplete='off'
+                                />";
+                    $conteudo .= "  <input
+                                    type='hidden'
+                                    name='justificativa[${id}][aulas]'
+                                    style='display: flex;'
+                                    value='{$aulasFaltou}'
+                                    readonly
+                                    autocomplete='off'
+                                />";
                 }
                 if ($tipo_presenca == 2) {
                  $qtdFaltas = 0;
@@ -428,12 +463,19 @@ return new class extends clsCadastro {
             $podeRegistrar = $podeRegistrar && $data['inicio'] >= $data_agora && $data['fim'] <= $data_agora;
         }
 
-        $podeRegistrar = true;
         if (!$podeRegistrar) {
             $this->mensagem = 'Cadastro não realizado, pois não é mais possível submeter frequência para esta etapa.<br>';
             $this->simpleRedirect('educar_professores_frequencia_cad.php');
         }
 
+        $dataHoje = Carbon::now();
+        $dataCadastro = Carbon::parse($data_cadastro);
+        $resultData = $dataCadastro->lt($dataHoje);
+
+        if (!$resultData) {
+            $this->mensagem = 'Cadastro não realizado, pois a data informada é maior que a data atual.<br>';
+            $this->simpleRedirect('educar_professores_frequencia_cad.php');
+        }
 
         $this->ordens_aulas = [];
 
@@ -534,7 +576,7 @@ return new class extends clsCadastro {
             $this->simpleRedirect('educar_professores_frequencia_cad.php');
         }
 
-        $cadastrou = $obj->cadastra();
+        $cadastrou = $obj->cadastra($this->componente_curricular_registro_individual);
 
 
         if (!$cadastrou) {
@@ -588,7 +630,7 @@ return new class extends clsCadastro {
             $this->justificativa,
         );
 
-        $editou = $obj->edita();
+        $editou = $obj->edita($this->ref_cod_componente_curricular);
 
         $obj = new clsModulesComponenteMinistrado();
         $componenteMinistrado = $obj->lista(

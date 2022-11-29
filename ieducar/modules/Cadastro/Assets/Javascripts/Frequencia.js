@@ -1,6 +1,8 @@
 (function($){
   $(document).ready(function(){
     var refCodTurma = $('#ref_cod_turma').val();
+    var componenteCurricularRegistrioDiario;
+    var registroDiarioIndividual;
 
     if (refCodTurma == '') {
       hideOrdensAulas();
@@ -15,12 +17,18 @@
     }
 
     document.getElementById('fase_etapa').onchange = function () {
-      carregaConteudos();
+      delay(1000).then(() => alterarComponente());
+      delay(1000).then(() => carregaConteudos());
     };
 
     document.getElementById('ref_cod_componente_curricular').onchange = function () {
-      carregaConteudos();
+      // delay(1000).then(() => carregaConteudos());
     };
+
+    function alterarComponente() {
+      $('#ref_cod_componente_curricular').val(componenteCurricularRegistrioDiario);
+      $('#componente_curricular_registro_individual').val(componenteCurricularRegistrioDiario);
+    }
 
     function carregaConteudos() {
       const campoTurma = document.getElementById('ref_cod_turma').value;
@@ -80,12 +88,34 @@
         data: {},
         success: function (response) {
           $('#ref_cod_turma').attr('tipo_presenca', response.tipo_presenca);
-
-          carregarAulas(response.tipo_presenca, campoTurma);
         },
       };
 
       getResource(options);
+
+      const campoData = document.getElementById('data').value;
+      let paramsRegistroDiarioQuadroHorario = {
+        id: campoTurma,
+        data: campoData
+      };
+
+      let optionsRegistroDiarioQuadroHorario = {
+        url: getResourceUrlBuilder.buildUrl('/module/Api/Frequencia', 'getRegistroDiarioQuadroHorario', paramsRegistroDiarioQuadroHorario),
+        dataType: 'json',
+        data: {},
+        success: function (response) {
+          let tipoPresenca = $('#ref_cod_turma').attr('tipo_presenca');
+
+         if (response.registraDiarioIndividual) {
+           componenteCurricularRegistrioDiario = response.componentesCurriculares[0];
+         }
+
+          carregarAulas(tipoPresenca, campoTurma, componenteCurricularRegistrioDiario);
+
+        },
+      };
+
+      getResource(optionsRegistroDiarioQuadroHorario);
 
     }
 
@@ -116,7 +146,7 @@
       }
     }
 
-    function carregarAulas(tipo_presenca, campoTurma) {
+    function carregarAulas(tipo_presenca, campoTurma, componenteCurricularRegistrioDiario) {
       if (tipo_presenca == 2 || tipo_presenca == '2') {
         const campoData = document.getElementById('data').value;
 
@@ -151,7 +181,7 @@
         getResource(options);
 
       } else {
-        carregarAlunos();
+        carregarAlunos(componenteCurricularRegistrioDiario);
       }
     }
 
@@ -249,7 +279,7 @@ function getAluno(xml_aluno) {
   }
 }
 
-function carregarAlunos() {
+function carregarAlunos(componenteCurricularRegistrioDiario = null) {
     var campoTurma = document.getElementById('ref_cod_turma').value;
     var campoComponenteCurricular = document.getElementById('ref_cod_componente_curricular').value;
     var campoData = document.getElementById('data').value;
@@ -257,8 +287,10 @@ function carregarAlunos() {
     var campoAlunos = document.getElementById('alunos');
     campoAlunos.innerHTML = "Carregando alunos...";
 
+    let ccur = campoComponenteCurricular != '' ? campoComponenteCurricular : componenteCurricularRegistrioDiario;
+
     var xml_disciplina = new ajax(getAluno);
-    xml_disciplina.envia("educar_aluno_xml.php?tur=" + campoTurma + "&ccur=" + campoComponenteCurricular + "&data=" + campoData);
+    xml_disciplina.envia("educar_aluno_xml.php?tur=" + campoTurma + "&ccur=" + ccur + "&data=" + campoData);
 }
 
 function presencaMudou (presenca) {
