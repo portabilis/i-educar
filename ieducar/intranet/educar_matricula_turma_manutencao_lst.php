@@ -284,7 +284,7 @@ return new class extends clsListagem {
                 $enturmado = 'Não';
             }
 
-            $link = route('enrollments.enrollmanutencao.create', [
+            $link = route('manutencao.enrollmanutencao.create', [
                 'registration' => $this->ref_cod_matricula,
                 'schoolClass' => $turma['cod_turma'],
             ]);

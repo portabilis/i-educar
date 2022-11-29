@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
 	<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
 	<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
-    <form action="{{ route('enrollments.enrollmanutencao', ['schoolClass' => $schoolClass, 'registration' => $registration]) }}" method="post">
+    <form action="{{ route('manutencao.enrollmanutencao', ['schoolClass' => $schoolClass, 'registration' => $registration]) }}" method="post">
         <table class="table-default">
             <thead>
                 <tr>
@@ -115,10 +115,10 @@
                         
                         });
                     </script>
-                   
+                    
                 @endif
             @endif
-            <a href="{{ route('enrollments.indexmanutencao', ['ref_cod_matricula' => $registration->id, 'ano_letivo' => $registration->year]) }}" class="btn">Cancelar</a>
+            <a href="{{ route('manutencao.indexmanutencao', ['ref_cod_matricula' => $registration->id, 'ano_letivo' => $registration->year]) }}" class="btn">Cancelar</a>
         </div>
 
     </form>
