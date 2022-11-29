@@ -1,6 +1,7 @@
 <?php
 
-use App\Events\ForgetCachedUserEvent;
+use App\Events\UserDeleted;
+use App\Events\UserUpdated;
 use App\Models\LegacyEmployee;
 use App\Services\ChangeUserPasswordService;
 use App\Services\ValidateUserPasswordService;
@@ -248,8 +249,6 @@ return new class extends clsCadastro {
             $this->insereUsuarioEscolas($this->ref_pessoa, $this->escola);
 
             if ($cadastrou) {
-                ForgetCachedUserEvent::dispatch($this->ref_pessoa);
-
                 $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
                 $this->simpleRedirect('educar_usuario_lst.php');
             }
@@ -311,7 +310,7 @@ return new class extends clsCadastro {
             $this->insereUsuarioEscolas($this->ref_pessoa, $this->escola);
 
             if ($editou) {
-                ForgetCachedUserEvent::dispatch($this->ref_pessoa);
+                UserUpdated::dispatch(User::findOrFail($this->ref_pessoa));
 
                 $this->mensagem .= 'Edição efetuada com sucesso.<br>';
                 $this->simpleRedirect('educar_usuario_lst.php');
@@ -334,7 +333,7 @@ return new class extends clsCadastro {
         $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa);
 
         if ($obj_funcionario->excluir()) {
-            ForgetCachedUserEvent::dispatch($this->ref_pessoa);
+            UserDeleted::dispatch(User::findOrFail($this->ref_pessoa));
 
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_usuario_lst.php');

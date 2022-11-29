@@ -1,9 +1,11 @@
 <?php
 
-use App\Events\ForgetCachedUserEvent;
+use App\Events\UserDeleted;
+use App\Events\UserUpdated;
 use App\Facades\Asset;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyInstitution;
+use App\Models\LegacyUser;
 use App\Services\FileService;
 use App\Services\UrlPresigner;
 use iEducar\Modules\Addressing\LegacyAddressingFields;
@@ -760,7 +762,7 @@ return new class extends clsCadastro {
 
     public function Editar()
     {
-        ForgetCachedUserEvent::dispatch($this->cod_pessoa_fj);
+        UserUpdated::dispatch(LegacyUser::findOrFail($this->cod_pessoa_fj));
         return $this->createOrUpdate($this->cod_pessoa_fj);
     }
 
@@ -812,6 +814,8 @@ return new class extends clsCadastro {
 
         $pessoaFisica = new clsPessoaFisica($idPes);
         $pessoaFisica->excluir();
+
+        UserDeleted::dispatch(LegacyUser::findOrFail($idPes));
 
         $this->mensagem = 'Exclusão efetuada com sucesso.';
 
