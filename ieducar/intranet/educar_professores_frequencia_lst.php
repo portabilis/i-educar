@@ -147,10 +147,19 @@ return new class extends clsListagem {
             $ref_cod_escola = '';
             $nm_escola = '';
             foreach ($lista as $registro) {
+                $registraDiarioIndividual = false;
                 $data_formatada = dataToBrasil($registro['data']);
 
                 if (!$eh_professor && ($registro['professor_turma'] != $registro['professor_registro'] && $registro['professor_registro'] != 'Administrador' && $registro['professor_registro'] != 'Coordenador')) {
                     continue;
+                }
+
+                if($eh_professor) {
+                    $quadroHorario = Portabilis_Business_Professor::quadroHorarioAlocado($registro['ref_cod_turma'], $this->pessoa_logada, null, true);
+
+                    if (count($quadroHorario) > 0 && $registro['professor_turma'] != $registro['professor_registro']) {
+                        continue;
+                    }
                 }
 
                 $lista_busca = [

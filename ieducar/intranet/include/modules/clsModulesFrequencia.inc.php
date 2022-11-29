@@ -81,6 +81,7 @@ class clsModulesFrequencia extends Model {
             f.data,
             f.ordens_aulas,
             f.fl_validado,
+            f.ref_cod_turma,
             f.servidor_id AS cod_professor_registro,
             i.nm_instituicao AS instituicao,
             j.fantasia AS escola,
