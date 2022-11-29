@@ -2,21 +2,14 @@
 
 namespace App\Listeners;
 
-use App\Events\ForgetCachedUserEvent;
+use App\Events\UserDeleted;
+use App\Events\UserUpdated;
 use Cache;
-use DB;
 
 class ForgetCachedUserListener
 {
-    /**
-     * Handle the event.
-     *
-     * @param \App\Events\ForgetCachedUserEvent $event
-     *
-     * @return void
-     */
-    public function handle(ForgetCachedUserEvent $event)
+    public function handle(UserUpdated|UserDeleted $event)
     {
-        Cache::forget(DB::connection()->getDatabaseName() . '_user_' . $event->id);
+        Cache::forget('user_' . $event->user->getKey());
     }
 }
