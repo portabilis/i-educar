@@ -26,9 +26,9 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::get('/intranet/educar_matricula_turma_manutencao_lst.php', 'LegacyController@intranet')
         ->defaults('uri', 'educar_matricula_turma_manutencao_lst.php')
         ->name('manutencao.indexmanutencao');
-    Route::get('/matricula/{registration}/enturmar/{schoolClass}', 'ManutencaoController@viewEnrollManutencao')
+    Route::get('/manutencaomatricula/{registration}/manutencaoenturmar/{schoolClass}', 'ManutencaoController@viewEnrollManutencao')
         ->name('manutencao.enrollmanutencao.createmanutencao');
-    Route::post('/matricula/{registration}/enturmar/{schoolClass}', 'ManutencaoController@enrollManutencao')
+    Route::post('/manutencaomatricula/{registration}/manutencaoenturmar/{schoolClass}', 'ManutencaoController@enrollManutencao')
         ->name('manutencao.enrollmanutencao');
 
     Route::get('/intranet/educar_matricula_turma_lst.php', 'LegacyController@intranet')
