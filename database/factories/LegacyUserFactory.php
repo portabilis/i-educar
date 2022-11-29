@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\LegacyUser;
+use App_Model_NivelTipoUsuario;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyUserFactory extends Factory
@@ -37,7 +38,18 @@ class LegacyUserFactory extends Factory
         return $this->state([
             'ref_cod_tipo_usuario' => function () {
                 return LegacyUserTypeFactory::new()->create([
-                    'nivel' => 1,
+                    'nivel' => App_Model_NivelTipoUsuario::POLI_INSTITUCIONAL,
+                ]);
+            },
+        ]);
+    }
+
+    public function institutional(): static
+    {
+        return $this->state([
+            'ref_cod_tipo_usuario' => function () {
+                return LegacyUserTypeFactory::new()->create([
+                    'nivel' => App_Model_NivelTipoUsuario::INSTITUCIONAL,
                 ]);
             },
         ]);
