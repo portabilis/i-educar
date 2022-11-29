@@ -1,10 +1,6 @@
 <?php
 
-<<<<<<< HEAD
-namespace App\Models; 
-=======
 namespace App\Models;
->>>>>>> 2.6-tecsis-homologacao
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
