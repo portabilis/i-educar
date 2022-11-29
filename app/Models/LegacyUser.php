@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-use App\Events\ForgetCachedUserEvent;
+use App\Events\UserDeleted;
+use App\Events\UserUpdated;
 use App\User as DefaultUser;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -38,6 +39,11 @@ class LegacyUser extends DefaultUser
         'ativo',
     ];
 
+    protected $dispatchesEvents = [
+        'updated' => UserUpdated::class,
+        'deleted' => UserDeleted::class,
+    ];
+
     protected function id(): Attribute
     {
         return Attribute::make(
@@ -61,13 +67,5 @@ class LegacyUser extends DefaultUser
     public function deletedByEmployee(): BelongsTo
     {
         return $this->belongsTo(LegacyEmployee::class, 'ref_funcionario_exc');
-    }
-
-    public static function boot()
-    {
-        parent::boot();
-        static::updated(static function (self $model) {
-            ForgetCachedUserEvent::dispatch($model->getKey());
-        });
     }
 }
