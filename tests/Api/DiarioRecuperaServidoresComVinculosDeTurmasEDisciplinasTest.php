@@ -100,7 +100,7 @@ class DiarioRecuperaServidoresComVinculosDeTurmasEDisciplinasTest extends TestCa
                             'turno_id' => $period->getKey(),
                             'permite_lancar_faltas_componente' => 0,
                             'tipo_nota' => null,
-                            'updated_at' => $legacySchoolClassTeacher->updated_at ,
+                            'updated_at' => $legacySchoolClassTeacher->updated_at->format('Y-m-d H:i:s'),
                             'deleted_at' => null,
                                 'disciplinas' => [
                                     $discipline->getKey() . ' ' . $legacyDisciplineAcademicYear->tipo_nota
