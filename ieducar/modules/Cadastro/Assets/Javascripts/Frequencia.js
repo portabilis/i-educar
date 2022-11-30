@@ -59,7 +59,6 @@
           $('#conteudos').val([]).empty().trigger('chosen:updated');
 
           if (dataResponse.pac != null) {
-            console.log(dataResponse.pac[1])
             $('#conteudos').html(
               (Object.keys(dataResponse.pac[1] || [])
                 .map(key => !dataResponse.pac[1][key][1]
