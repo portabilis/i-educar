@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\DB;
 use iEducar\Legacy\Model;
 use App\Models\Frequencia;
 
-return new class() extends clsCadastro {
+return new class() extends clsCadastro
+{
     public $cod_transferencia_solicitacao;
     public $ref_cod_transferencia_tipo;
     public $ref_usuario_exc;
@@ -156,8 +157,6 @@ return new class() extends clsCadastro {
 
     public function Novo()  
     {
-        $frequencia = new clsModulesFrequencia();
-        $dataFrequencia = $frequencia->selectDataFrequenciaByTurma($_GET['turma']);
 
         $frequencia = Frequencia::where('ref_cod_turma', $_GET['turma'])->orderBy('id', 'DESC')->get();
         $contador = 0;
@@ -201,116 +200,117 @@ return new class() extends clsCadastro {
             
         }
 
-            $obj_permissoes = new clsPermissoes();
-            $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
+        DB::beginTransaction();
 
-            $this->data_cancel = Portabilis_Date_Utils::brToPgSQL($this->data_cancel);
-            $obj = new clsPmieducarMatricula($this->ref_cod_matricula, null, null, null, $this->pessoa_logada);
-            $det_matricula = $obj->detalhe();
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
 
-            if (is_null($det_matricula['data_matricula'])) {
-                if (substr($det_matricula['data_cadastro'], 0, 10) > $this->data_cancel) {
-                    $this->mensagem = 'Data de transferência não pode ser inferior a data da matrícula.<br>';
+        $this->data_cancel = Portabilis_Date_Utils::brToPgSQL($this->data_cancel);
+        $obj = new clsPmieducarMatricula($this->ref_cod_matricula, null, null, null, $this->pessoa_logada);
+        $det_matricula = $obj->detalhe();
 
-                    return false;
-                }
-            } elseif (substr($det_matricula['data_matricula'], 0, 10) > $this->data_cancel) {
+        if (is_null($det_matricula['data_matricula'])) {
+            if (substr($det_matricula['data_cadastro'], 0, 10) > $this->data_cancel) {
                 $this->mensagem = 'Data de transferência não pode ser inferior a data da matrícula.<br>';
 
                 return false;
             }
+        } elseif (substr($det_matricula['data_matricula'], 0, 10) > $this->data_cancel) {
+            $this->mensagem = 'Data de transferência não pode ser inferior a data da matrícula.<br>';
 
+            return false;
+        }
+
+        $obj->data_cancel = $this->data_cancel;
+
+        $this->data_transferencia = date('Y-m-d');
+        $this->ativo = 1;
+
+        $obj_matricula = new clsPmieducarMatricula($this->ref_cod_matricula);
+        $det_matricula = $obj_matricula->detalhe();
+        $aprovado = $det_matricula['aprovado'];
+
+        if ($aprovado == 3) {
+            $obj = new clsPmieducarMatricula($this->ref_cod_matricula, null, null, null, $this->pessoa_logada, null, null, 4, null, null, 1);
             $obj->data_cancel = $this->data_cancel;
-
-            $this->data_transferencia = date('Y-m-d');
-            $this->ativo = 1;
-
-            $obj_matricula = new clsPmieducarMatricula($this->ref_cod_matricula);
-            $det_matricula = $obj_matricula->detalhe();
-            $aprovado = $det_matricula['aprovado'];
-
-            if ($aprovado == 3) {
-                $obj = new clsPmieducarMatricula($this->ref_cod_matricula, null, null, null, $this->pessoa_logada, null, null, 4, null, null, 1);
-                $obj->data_cancel = $this->data_cancel;
-                $editou = $obj->edita();
-                if (!$editou) {
-                    $this->mensagem = 'Não foi possível editar a Matrícula do Aluno.<br>';
-
-                    return false;
-                }
-
-                $enturmacoes = new clsPmieducarMatriculaTurma();
-                $enturmacoes = $enturmacoes->lista($this->ref_cod_matricula, null, null, null, null, null, null, null, 1);
-
-                if ($enturmacoes) {
-                    // foreach necessário pois metodo edita e exclui da classe clsPmieducarMatriculaTurma, necessitam do
-                    // código da turma e do sequencial
-                    foreach ($enturmacoes as $enturmacao) {
-                        $enturmacao = new clsPmieducarMatriculaTurma($this->ref_cod_matricula, $enturmacao['ref_cod_turma'], $this->pessoa_logada, null, null, null, 0, null, $enturmacao['sequencial'], $this->data_enturmacao);
-                        $detEnturmacao = $enturmacao->detalhe();
-                        $detEnturmacao = $detEnturmacao['data_enturmacao'];
-                        $enturmacao->data_enturmacao = $detEnturmacao;
-                        if (!$enturmacao->edita()) {
-                            $this->mensagem = 'Não foi possível desativar as enturmações da matrícula.';
-
-                            return false;
-                        } else {
-                            $enturmacao->marcaAlunoTransferido($this->data_cancel);
-                        }
-                    }
-                }
-            }
-            clsPmieducarHistoricoEscolar::gerarHistoricoTransferencia($this->ref_cod_matricula, $this->pessoa_logada);
-
-            if ($this->escola_em_outro_municipio === 'on') {
-                $this->ref_cod_escola = null;
-            } else {
-                $this->escola_destino_externa = null;
-                $this->estado_escola_destino_externa = null;
-                $this->municipio_escola_destino_externa = null;
-            }
-
-            $obj = new clsPmieducarTransferenciaSolicitacao(null, $this->ref_cod_transferencia_tipo, null, $this->pessoa_logada, null, $this->ref_cod_matricula, $this->observacao, null, null, $this->ativo, $this->data_transferencia, $this->escola_destino_externa, $this->ref_cod_escola, $this->estado_escola_destino_externa, $this->municipio_escola_destino_externa);
-            if ($obj->existSolicitacaoTransferenciaAtiva()) {
-                $this->mensagem = 'Já existe uma solitação de transferência ativa.<br>';
+            $editou = $obj->edita();
+            if (!$editou) {
+                $this->mensagem = 'Não foi possível editar a Matrícula do Aluno.<br>';
 
                 return false;
             }
 
-            $cadastrou = $obj->cadastra();
+            $enturmacoes = new clsPmieducarMatriculaTurma();
+            $enturmacoes = $enturmacoes->lista($this->ref_cod_matricula, null, null, null, null, null, null, null, 1);
 
-            if ($cadastrou) {
-                $obj = new clsPmieducarMatricula($this->ref_cod_matricula, null, null, null, $this->pessoa_logada);
-                $obj->data_cancel = $this->data_cancel;
-                $obj->edita();
+            if ($enturmacoes) {
+                // foreach necessário pois metodo edita e exclui da classe clsPmieducarMatriculaTurma, necessitam do
+                // código da turma e do sequencial
+                foreach ($enturmacoes as $enturmacao) {
+                    $enturmacao = new clsPmieducarMatriculaTurma($this->ref_cod_matricula, $enturmacao['ref_cod_turma'], $this->pessoa_logada, null, null, null, 0, null, $enturmacao['sequencial'], $this->data_enturmacao);
+                    $detEnturmacao = $enturmacao->detalhe();
+                    $detEnturmacao = $detEnturmacao['data_enturmacao'];
+                    $enturmacao->data_enturmacao = $detEnturmacao;
+                    if (!$enturmacao->edita()) {
+                        $this->mensagem = 'Não foi possível desativar as enturmações da matrícula.';
 
-                $notasAluno = (new Avaliacao_Model_NotaAlunoDataMapper())->findAll(['id'], ['matricula_id' => $obj->cod_matricula]);
-
-                if ($notasAluno && count($notasAluno)) {
-                    $notaAlunoId = $notasAluno[0]->get('id');
-
-                    try {
-                        (new Avaliacao_Model_NotaComponenteMediaDataMapper())
-                        ->updateSituation($notaAlunoId, App_Model_MatriculaSituacao::TRANSFERIDO);
-                    } catch (\Throwable $exception) {
-                        DB::rollback();
+                        return false;
+                    } else {
+                        $enturmacao->marcaAlunoTransferido($this->data_cancel);
                     }
                 }
-
-                DB::commit();
-
-                event(new TransferEvent(LegacyTransferRequest::findOrFail($cadastrou)));
-
-                $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-                $this->simpleRedirect("educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
             }
+        }
+        clsPmieducarHistoricoEscolar::gerarHistoricoTransferencia($this->ref_cod_matricula, $this->pessoa_logada);
 
-            DB::rollback();
+        if ($this->escola_em_outro_municipio === 'on') {
+            $this->ref_cod_escola = null;
+        } else {
+            $this->escola_destino_externa = null;
+            $this->estado_escola_destino_externa = null;
+            $this->municipio_escola_destino_externa = null;
+        }
 
-            $this->mensagem = 'Cadastro não realizado.<br>';
+        $obj = new clsPmieducarTransferenciaSolicitacao(null, $this->ref_cod_transferencia_tipo, null, $this->pessoa_logada, null, $this->ref_cod_matricula, $this->observacao, null, null, $this->ativo, $this->data_transferencia, $this->escola_destino_externa, $this->ref_cod_escola, $this->estado_escola_destino_externa, $this->municipio_escola_destino_externa);
+        if ($obj->existSolicitacaoTransferenciaAtiva()) {
+            $this->mensagem = 'Já existe uma solitação de transferência ativa.<br>';
 
             return false;
         }
+
+        $cadastrou = $obj->cadastra();
+
+        if ($cadastrou) {
+            $obj = new clsPmieducarMatricula($this->ref_cod_matricula, null, null, null, $this->pessoa_logada);
+            $obj->data_cancel = $this->data_cancel;
+            $obj->edita();
+
+            $notasAluno = (new Avaliacao_Model_NotaAlunoDataMapper())->findAll(['id'], ['matricula_id' => $obj->cod_matricula]);
+
+            if ($notasAluno && count($notasAluno)) {
+                $notaAlunoId = $notasAluno[0]->get('id');
+
+                try {
+                    (new Avaliacao_Model_NotaComponenteMediaDataMapper())
+                        ->updateSituation($notaAlunoId, App_Model_MatriculaSituacao::TRANSFERIDO);
+                } catch (\Throwable $exception) {
+                    DB::rollback();
+                }
+            }
+
+            DB::commit();
+
+            event(new TransferEvent(LegacyTransferRequest::findOrFail($cadastrou)));
+
+            $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+            $this->simpleRedirect("educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
+        }
+
+        DB::rollback();
+
+        $this->mensagem = 'Cadastro não realizado.<br>';
+
+        return false;
     }
     }
 

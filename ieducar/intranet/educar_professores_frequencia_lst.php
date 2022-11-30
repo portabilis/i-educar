@@ -67,6 +67,7 @@ return new class extends clsListagem {
         $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie', 'turma'], ['required' => true]);
         $this->inputsHelper()->turmaTurno(['required' => false, 'label' => 'Turno']);
         $this->inputsHelper()->dynamic('componenteCurricular', ['required' => false]);
+        
 
         $this->campoQuebra();
         $this->campoRotulo('filtros_periodo', '<b>Filtros por período</b>');

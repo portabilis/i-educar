@@ -173,6 +173,7 @@ return new class() extends clsCadastro
                 }
 
                 if ($tipoTurma == 0) {
+                    
 
                 
 
