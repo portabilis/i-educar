@@ -563,17 +563,9 @@ return new class extends clsDetalhe {
             $this->addDetalhe(['Seção', $registro['secao_tit_eleitor']]);
         }
 
-        // Transporte escolar.
-        $transporteMapper = new Transporte_Model_AlunoDataMapper();
-        $transporteAluno = null;
-        try {
-            $transporteAluno = $transporteMapper->find(['aluno' => $this->cod_aluno]);
-        } catch (Exception) {
-        }
-
         $this->addDetalhe(['Transporte escolar', $registro['tipo_transporte'] === 0 ? 'Não utiliza' : 'Sim']);
 
-        if ($transporteAluno && $registro['tipo_transporte'] !== 0) {
+        if ($registro['tipo_transporte'] !== 0) {
             $tipoTransporte = ucfirst((new TransportationProvider())->getValueDescription($registro['tipo_transporte']));
             $this->addDetalhe(['Responsável transporte', $tipoTransporte]);
         }
