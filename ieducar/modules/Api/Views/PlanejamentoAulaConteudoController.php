@@ -94,12 +94,26 @@ class PlanejamentoAulaConteudoController extends ApiCoreController
                 Portabilis_Date_Utils::brToPgSQL($data)
             );
 
+
             if (isset($planejamentos) && is_array($planejamentos) && !empty($planejamentos)) {
                 $planejamentos_ids = [];
+                $componentesCurriculares = [];
 
+                $quadroHorario = Portabilis_Business_Professor::quadroHorarioAlocado($ref_cod_turma, null, null, true);
+                if (count($quadroHorario) > 0) {
+                    foreach ($quadroHorario as $horario) {
+                        $componentesCurriculares[] = $horario['ref_cod_disciplina'];
+                    }
+                }
+
+                $objPlanoCC = new clsModulesPlanejamentoAulaComponenteCurricular();
                 foreach ($planejamentos as $planejamento) {
-                    if (!in_array($planejamento['id'], $planejamentos_ids)) {
-                        array_push($planejamentos_ids, $planejamento['id']);
+                    $componentesCurricularesPlano = $objPlanoCC->lista($planejamento['id']);
+
+                    foreach ($componentesCurricularesPlano as $componenteCurricular) {
+                        if (!in_array($componenteCurricular['id'], $componentesCurriculares) && !in_array($planejamento['id'], $planejamentos_ids)) {
+                            array_push($planejamentos_ids, $planejamento['id']);
+                        }
                     }
                 }
 
