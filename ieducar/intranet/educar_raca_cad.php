@@ -42,7 +42,7 @@ return new class extends clsCadastro {
                 $retorno = 'Editar';
             }
         }
-        $this->url_cancelar = ($retorno == 'Editar') ? "educar_raca_det.php?cod_raca=$races->cod_raca" : 'educar_raca_lst.php';
+        $this->url_cancelar = ($retorno == 'Editar') ? "educar_raca_det.php?cod_raca=$this->cod_raca" : 'educar_raca_lst.php';
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
