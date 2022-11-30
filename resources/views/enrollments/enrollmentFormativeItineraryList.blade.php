@@ -21,19 +21,19 @@
                 @foreach($registration->enrollments->sortBy('sequencial') as $enrollment)
                 <tr>
                     <td {!! ($loop->iteration % 2) == 1 ? 'class="formlttd"' : 'class="formmdtd"' !!} valign="top" align="left">
-                        <a href="/enrollment-formative-itinerary/{{ $enrollment->id }}">{{ $enrollment->sequencial }}</a>
+                        <a href="{{ route('registration.formative-itinerary.edit', [$registration, $enrollment]) }}">{{ $enrollment->sequencial }}</a>
                     </td>
                     <td {!! ($loop->iteration % 2) == 1 ? 'class="formlttd"' : 'class="formmdtd"' !!} valign="top" align="left">
-                        <a href="/enrollment-formative-itinerary/{{ $enrollment->id }}">{{ $enrollment->schoolClass->getNameAttribute() }}</a>
+                        <a href="{{ route('registration.formative-itinerary.edit', [$registration, $enrollment]) }}">{{ $enrollment->schoolClass->name }}</a>
                     </td>
                     <td {!! ($loop->iteration % 2) == 1 ? 'class="formlttd"' : 'class="formmdtd"' !!} valign="top" align="left">
-                        <a href="/enrollment-formative-itinerary/{{ $enrollment->id }}">{{ $enrollment->ativo ? 'Sim' : 'Não'}}</a>
+                        <a href="{{ route('registration.formative-itinerary.edit', [$registration, $enrollment]) }}">{{ $enrollment->ativo ? 'Sim' : 'Não'}}</a>
                     </td>
                     <td {!! ($loop->iteration % 2) == 1 ? 'class="formlttd"' : 'class="formmdtd"' !!} valign="top" align="left">
-                        <a href="/enrollment-formative-itinerary/{{ $enrollment->id }}">{{ $enrollment->date?->format('d/m/Y') }}</a>
+                        <a href="{{ route('registration.formative-itinerary.edit', [$registration, $enrollment]) }}">{{ $enrollment->date?->format('d/m/Y') }}</a>
                     </td>
                     <td {!! ($loop->iteration % 2) == 1 ? 'class="formlttd"' : 'class="formmdtd"' !!} valign="top" align="left">
-                        <a href="/enrollment-formative-itinerary/{{ $enrollment->id }}">{{ $enrollment->date_departed?->format('d/m/Y') }}</a>
+                        <a href="{{ route('registration.formative-itinerary.edit', [$registration, $enrollment]) }}">{{ $enrollment->date_departed?->format('d/m/Y') }}</a>
                     </td>
                 </tr>
                 @endforeach

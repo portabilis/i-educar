@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Enrollment;
+use App\Models\LegacyEnrollment;
 
 return new class extends clsCadastro {
     public $cod_matricula;
@@ -114,7 +114,7 @@ return new class extends clsCadastro {
             $sequencial = $codTurmaESequencial[1];
 
 
-            if (Enrollment::where('ref_cod_matricula',$this->cod_matricula)->where('ref_cod_turma',$codTurma)->value('turno_id') !=  (int)$turno) {
+            if (LegacyEnrollment::where('ref_cod_matricula', $this->cod_matricula)->where('ref_cod_turma', $codTurma)->value('turno_id') != (int) $turno) {
                 $is_change = true;
 
                 $obj = new clsPmieducarMatriculaTurma($this->cod_matricula, $codTurma, $this->pessoa_logada);

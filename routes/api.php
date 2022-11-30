@@ -1,6 +1,10 @@
 <?php
 
+use App\Http\Controllers\Api\CityController;
+use App\Http\Controllers\Api\CountryController;
+use App\Http\Controllers\Api\DistrictController;
 use App\Http\Controllers\Api\EmployeeWithdrawalController;
+use App\Http\Controllers\Api\StateController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,11 +18,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group([
+Route::group(
+    [
     'middleware' => 'auth:sanctum',
-], function () {
-    Route::apiResources([]);
-});
+],
+    static fn () =>
+    Route::apiResources([
+        'country' => CountryController::class,
+        'state' => StateController::class,
+        'district' => DistrictController::class,
+        'city' => CityController::class,
+    ])
+);
 
 Route::get('version', 'Api\\VersionController@version');
 
@@ -43,6 +54,6 @@ Route::group(['prefix' => 'resource', 'as' => 'api.resource.','namespace' => 'Ap
     Route::get('school', 'School\ResourceSchoolController@index')->name('school');
     Route::get('school-class', 'SchoolClass\ResourceSchoolClassController@index')->name('school-class');
     Route::get('evaluation-rule', 'EvaluationRule\ResourceEvaluationRuleController@index')->name('evaluation-rule');
-    Route::get('education-network', 'EducationNetwork\ResourceEducationNetworkController@index')->name('education-network');
     Route::get('discipline', 'Discipline\ResourceDisciplineController@index')->name('discipline');
+    Route::get('country', 'Country\ResourceCountryController@index')->name('country');
 });

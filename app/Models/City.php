@@ -2,25 +2,36 @@
 
 namespace App\Models;
 
+use App\Models\Builders\CityBuilder;
 use App\Models\Concerns\HasIbgeCode;
 use App\Support\Database\DateSerializer;
+use App\Traits\LegacyAttribute;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Collection;
 
 class City extends Model
 {
     use DateSerializer;
     use HasIbgeCode;
+    use LegacyAttribute;
 
     /**
      * @var array
      */
     protected $fillable = [
-        'state_id', 'name', 'ibge_code',
+        'state_id',
+        'name',
+        'ibge_code',
     ];
+
+    /**
+     * Builder dos filtros
+     *
+     * @var string
+     */
+    protected $builder = CityBuilder::class;
 
     /**
      * @return BelongsTo
@@ -66,17 +77,5 @@ class City extends Model
         $city = static::query()->find($id);
 
         return $city->name ?? '';
-    }
-
-    /**
-     * @param string $abbreviation
-     *
-     * @return Collection
-     */
-    public static function getListByAbbreviation($abbreviation)
-    {
-        return static::query()->whereHas('state', function ($query) use ($abbreviation) {
-            $query->where('abbreviation', $abbreviation);
-        })->orderBy('name')->pluck('name', 'id');
     }
 }

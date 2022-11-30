@@ -69,7 +69,7 @@ return new class extends clsDetalhe {
             null,
             1
         );
-        $det_escola = $obj_escola->detalhe();
+        $obj_escola->detalhe();
 
         $nm_aluno = $det_aluno['nome_aluno'];
 

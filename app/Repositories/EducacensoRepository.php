@@ -212,10 +212,8 @@ class EducacensoRepository
             LEFT JOIN public.municipio ON (municipio.idmun = bairro.idmun)
             LEFT JOIN public.uf ON (uf.sigla_uf = municipio.sigla_uf)
             LEFT JOIN public.districts ON (districts.id = e.iddis)
-
-            LEFT JOIN urbano.cep_logradouro_bairro clb ON (clb.idbai = ep.idbai AND clb.idlog = ep.idlog AND clb.cep = ep.cep)
-            LEFT JOIN urbano.cep_logradouro cl ON (cl.idlog = clb.idlog AND clb.cep = cl.cep)
-            LEFT JOIN public.logradouro l ON (l.idlog = cl.idlog)
+            LEFT JOIN public.places places ON (places.id = ep.idbai AND places.id = ep.idlog AND places.postal_code = ep.cep)
+	        LEFT JOIN public.logradouro l ON (l.idlog = places.id)
             WHERE e.cod_escola = :school
 SQL;
 

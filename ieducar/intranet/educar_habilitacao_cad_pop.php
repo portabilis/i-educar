@@ -71,8 +71,6 @@ return new class extends clsCadastro {
                         window.parent.fechaExpansivel('div_dinamico_'+(parent.DOM_divs.length-1));
                     </script>";
             die();
-
-            return true;
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';

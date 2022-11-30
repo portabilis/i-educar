@@ -25,7 +25,7 @@ return new class extends clsCadastro {
         $obj_permissoes->permissao_cadastra(570, $this->pessoa_logada, 7, 'educar_turma_tipo_lst.php');
 
         if (is_numeric($this->cod_turma_tipo)) {
-            $registro = LegacySchoolClassType::findOrFail($this->cod_turma_tipo)->toArray();
+            $registro = LegacySchoolClassType::findOrFail($this->cod_turma_tipo)->getAttributes();
             if ($registro) {
                 foreach ($registro as $campo => $val) {
                     $this->$campo = $val;
@@ -81,8 +81,6 @@ return new class extends clsCadastro {
                         window.parent.fechaExpansivel('div_dinamico_'+(parent.DOM_divs.length-1));
                     </script>";
             die();
-
-            return true;
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';

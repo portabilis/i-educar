@@ -258,26 +258,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         'recebe_escolarizacao_em_outro_espaco' => ['label' => 'Recebe escolarização em outro espaço (diferente da escola)'],
 
-        'transporte_rota' => [
-            'label' => 'Rota',
-            'help' => '',
-        ],
-
-        'transporte_ponto' => [
-            'label' => 'Ponto de embarque',
-            'help' => '',
-        ],
-
-        'transporte_destino' => [
-            'label' => 'Destino (Caso for diferente da rota)',
-            'help' => '',
-        ],
-
-        'transporte_observacao' => [
-            'label' => 'Observações do transporte',
-            'help' => '',
-        ],
-
         'observacao_aluno' => [
             'label' => 'Observações do aluno',
             'help' => '',
@@ -309,8 +289,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $configuracoes = new clsPmieducarConfiguracoesGerais();
         $configuracoes = $configuracoes->detalhe();
-
-        $labels_botucatu = config('legacy.app.mostrar_aplicacao') == 'botucatu';
 
         if ($configuracoes['justificativa_falta_documentacao_obrigatorio']) {
             $this->inputsHelper()->hidden('justificativa_falta_documentacao_obrigatorio');
@@ -781,28 +759,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             ]
         ];
         $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
-
-        $obj_rota = new clsModulesRotaTransporteEscolar();
-        $obj_rota->setOrderBy(' descricao asc ');
-        $lista_rota = $obj_rota->lista();
-        $rota_resources = ['' => 'Selecione uma rota'];
-        foreach ($lista_rota as $reg) {
-            $rota_resources["{$reg['cod_rota_transporte_escolar']}"] = "{$reg['descricao']}";
-        }
-
-        $options = ['label' => $this->_getLabel('transporte_rota'), 'required' => false, 'resources' => $rota_resources];
-        $this->inputsHelper()->select('transporte_rota', $options);
-
-
-        $options = ['label' => $this->_getLabel('transporte_ponto'), 'required' => false, 'resources' => ['' => 'Selecione uma rota acima']];
-        $this->inputsHelper()->select('transporte_ponto', $options);
-
-
-        $options = ['label' => $this->_getLabel('transporte_destino'), 'required' => false];
-        $this->inputsHelper()->simpleSearchPessoaj('transporte_destino', $options);
-
-        $options = ['label' => $this->_getLabel('transporte_observacao'), 'required' => false, 'size' => 50, 'max_length' => 255];
-        $this->inputsHelper()->textArea('transporte_observacao', $options);
 
         $this->inputsHelper()->religiao(['required' => false, 'label' => 'Religião']);
 

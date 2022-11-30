@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\LegacyEducationNetwork;
 use App\Models\PersonHasPlace;
 
 return new class extends clsDetalhe {
@@ -8,7 +7,6 @@ return new class extends clsDetalhe {
     public $ref_usuario_cad;
     public $ref_usuario_exc;
     public $ref_cod_instituicao;
-    public $ref_cod_escola_rede_ensino;
     public $ref_idpes;
     public $sigla;
     public $data_cadastro;
@@ -73,12 +71,6 @@ return new class extends clsDetalhe {
             }
         }
 
-        $nm_rede = LegacyEducationNetwork::query()
-            ->select('nm_rede')
-            ->where('cod_escola_rede_ensino', $registro['ref_cod_escola_rede_ensino'])
-            ->first()?->nm_rede;
-        $registro['ref_cod_escola_rede_ensino'] = $nm_rede;
-
         $obj_ref_idpes = new clsPessoaJuridica($registro['ref_idpes']);
         $det_ref_idpes = $obj_ref_idpes->detalhe();
         $registro['ref_idpes'] = $det_ref_idpes['nome'];
@@ -100,10 +92,6 @@ return new class extends clsDetalhe {
             $this->addDetalhe([
                 'Zona Localização', $zona->getValue($registro['zona_localizacao'])
             ]);
-        }
-
-        if ($registro['ref_cod_escola_rede_ensino']) {
-            $this->addDetalhe(['Rede Ensino', "{$registro['ref_cod_escola_rede_ensino']}"]);
         }
 
         if ($registro['ref_idpes']) {
@@ -232,7 +220,6 @@ return new class extends clsDetalhe {
             $existe_ano_andamento = $obj_ano_letivo->lista($this->cod_escola, null, null, null, 1, null, null, null, null, 1);
 
             foreach ($lista_ano_letivo as $ano) {
-                $incluir = $excluir = '';
                 if (!$existe_ano_andamento && $ano['andamento'] != 2 && $canEdit) {
                     $incluir = "<td class='evento'><a href='#' onclick=\"preencheForm('{$ano['ano']}','{$ano['ref_cod_escola']}','iniciar');\"><img src=\"imagens/i-educar/start.gif\"> Iniciar ano letivo</a></td>";
                 } elseif ($ano['andamento'] == 0) {

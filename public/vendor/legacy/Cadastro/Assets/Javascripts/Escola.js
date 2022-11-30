@@ -750,21 +750,6 @@ if (cnpj !== null) {
   document.getElementById('cnpj').readOnly = true;
 }
 
-function getRedeEnsino(redes)
-{
-  const campoRedeEnsino = document.getElementById('ref_cod_escola_rede_ensino');
-    if(redes.length)
-    {
-        setAttributes(campoRedeEnsino,'Selecione uma rede de ensino',false)
-
-        $j.each(redes, function(i, item) {
-          campoRedeEnsino.options[campoRedeEnsino.options.length] = new Option(item.name,item.id, false, false);
-        });
-    }
-    else
-        campoRedeEnsino.options[0].text = 'A instituição não possui nenhuma rede de ensino';
-}
-
 function getCurso(cursos)
 {
   const campoCurso = document.getElementById('ref_cod_curso');
@@ -788,13 +773,9 @@ if ( document.getElementById('ref_cod_instituicao') )
     {
         const campoInstituicao = document.getElementById('ref_cod_instituicao').value;
 
-        const campoRedeEnsino = document.getElementById('ref_cod_escola_rede_ensino');
-        setAttributes(campoRedeEnsino,'Carregando rede de ensino',true);
-
         const campoCurso = document.getElementById('ref_cod_curso');
         setAttributes(campoCurso,'Carregando curso',true);
 
-        getApiResource("/api/resource/education-network",getRedeEnsino,{institution:campoInstituicao});
         getApiResource("/api/resource/course",getCurso,{institution:campoInstituicao});
 
         if (this.value == '')

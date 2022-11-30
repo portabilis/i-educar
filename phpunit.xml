@@ -11,34 +11,38 @@
     convertWarningsToExceptions="true"
     processIsolation="false"
     stopOnFailure="false"
-    defaultTestSuite="Unit,Feature">
-  <coverage processUncoveredFiles="true">
-    <include>
-      <directory suffix=".php">./app</directory>
-    </include>
-  </coverage>
-  <testsuites>
-    <testsuite name="Unit">
-      <directory suffix="Test.php">./tests/Unit</directory>
-    </testsuite>
-    <testsuite name="Feature">
-      <directory suffix="Test.php">./tests/Feature</directory>
-    </testsuite>
-    <testsuite name="Pages">
-        <directory suffix="Test.php">./tests/Pages/</directory>
-    </testsuite>
-    <testsuite name="Diario">
-      <directory suffix="Test.php">./tests/Api</directory>
-    </testsuite>
-  </testsuites>
-  <php>
-    <ini name="memory_limit" value="384M"/>
-    <server name="APP_ENV" value="testing"/>
-    <server name="BCRYPT_ROUNDS" value="4"/>
-    <server name="CACHE_DRIVER" value="array"/>
-    <server name="MAIL_MAILER" value="array"/>
-    <server name="QUEUE_CONNECTION" value="sync"/>
-    <server name="SESSION_DRIVER" value="array"/>
-    <server name="TELESCOPE_ENABLED" value="false"/>
-  </php>
+    defaultTestSuite="Feature,Pages,Diario,Educacenso,Unit">
+    <coverage processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">./app</directory>
+        </include>
+    </coverage>
+    <testsuites>
+        <testsuite name="Diario">
+            <directory suffix="Test.php">./tests/Api</directory>
+        </testsuite>
+        <testsuite name="Feature">
+            <directory suffix="Test.php">./tests/Extra</directory>
+            <directory suffix="Test.php">./tests/Feature</directory>
+        </testsuite>
+        <testsuite name="Pages">
+            <directory suffix="Test.php">./tests/Pages/</directory>
+        </testsuite>
+        <testsuite name="Educacenso">
+            <directory suffix="Test.php">./tests/Educacenso</directory>
+        </testsuite>
+        <testsuite name="Unit">
+            <directory suffix="Test.php">./tests/Unit</directory>
+        </testsuite>
+    </testsuites>
+    <php>
+        <ini name="memory_limit" value="384M"/>
+        <server name="APP_ENV" value="testing"/>
+        <server name="BCRYPT_ROUNDS" value="4"/>
+        <server name="CACHE_DRIVER" value="array"/>
+        <server name="MAIL_MAILER" value="array"/>
+        <server name="QUEUE_CONNECTION" value="sync"/>
+        <server name="SESSION_DRIVER" value="array"/>
+        <server name="TELESCOPE_ENABLED" value="false"/>
+    </php>
 </phpunit>
