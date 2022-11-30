@@ -123,8 +123,8 @@ class LegacyStudentBuilder extends LegacyBuilder
     public function whereGrade($grade)
     {
         return $this->whereHas(
-            'registrations.enrollments.schoolClass.multigrades',
-            fn ($q) => $q->where('serie_id', $grade)
+            'registrations',
+            fn ($q) => $q->where('ref_ref_cod_serie', $grade)
         );
     }
 
@@ -138,14 +138,7 @@ class LegacyStudentBuilder extends LegacyBuilder
                     $query->when($year, fn ($q) => $q->where('ano', $year));
                     $query->when($course, fn ($q) => $q->where('ref_cod_curso', $course));
                     $query->when($school, fn ($q) => $q->where('ref_ref_cod_escola', $school));
-                    $query->when($grade, function ($q) use ($grade) {
-                        $q->where(function ($q) use ($grade) {
-                            $q->where('ref_ref_cod_serie', $grade);
-                            $q->orWhereHas('schoolClasses', function ($q) use ($grade) {
-                                $q->where('ref_ref_cod_serie', $grade);
-                            });
-                        });
-                    });
+                    $query->when($school, fn ($q) => $q->where('ref_ref_cod_serie', $grade));
                 }
             );
         });
