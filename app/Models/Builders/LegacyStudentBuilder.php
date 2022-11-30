@@ -138,7 +138,7 @@ class LegacyStudentBuilder extends LegacyBuilder
                     $query->when($year, fn ($q) => $q->where('ano', $year));
                     $query->when($course, fn ($q) => $q->where('ref_cod_curso', $course));
                     $query->when($school, fn ($q) => $q->where('ref_ref_cod_escola', $school));
-                    $query->when($school, fn ($q) => $q->where('ref_ref_cod_serie', $grade));
+                    $query->when($grade, fn ($q) => $q->where('ref_ref_cod_serie', $grade));
                 }
             );
         });
