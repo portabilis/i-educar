@@ -31,9 +31,10 @@ return new class extends clsCadastro {
         if (is_numeric($this->cod_raca)) {
             $races = LegacyRace::query()->find($this->cod_raca)?->toArray();
             if ($races) {
-                foreach ($races as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
-                    $this->$campo = $val;
-                }
+
+                $this->nm_race = $races->nm_race;
+                $this->cod_raca = $races->cod_raca;
+
                 $this->data_cadastro = dataFromPgToBr($this->data_cadastro);
                 $this->data_exclusao = dataFromPgToBr($this->data_exclusao);
 
