@@ -90,6 +90,7 @@ class DiarioRecuperaServidoresComVinculosDeTurmasEDisciplinasTest extends TestCa
         $response = $this->getResource('/module/Api/Servidor', $data);
 
         $response->assertSuccessful()
+            ->assertJsonCount(1, 'vinculos')
             ->assertJson(
                 [
                     'vinculos' => [
@@ -100,7 +101,6 @@ class DiarioRecuperaServidoresComVinculosDeTurmasEDisciplinasTest extends TestCa
                             'turno_id' => $period->getKey(),
                             'permite_lancar_faltas_componente' => 0,
                             'tipo_nota' => null,
-                            'updated_at' => $legacySchoolClassTeacher->updated_at->format('Y-m-d H:i:s'),
                             'deleted_at' => null,
                                 'disciplinas' => [
                                     $discipline->getKey() . ' ' . $legacyDisciplineAcademicYear->tipo_nota
@@ -111,6 +111,27 @@ class DiarioRecuperaServidoresComVinculosDeTurmasEDisciplinasTest extends TestCa
                     'resource' => 'servidores-disciplinas-turmas',
                     'msgs' => [],
                     'any_error_msg' => false
+                ]
+            )
+            ->assertJsonStructure(
+                [
+                    'vinculos' => [
+                        '*' => [
+                            'id',
+                            'servidor_id',
+                            'turma_id',
+                            'turno_id',
+                            'permite_lancar_faltas_componente',
+                            'tipo_nota',
+                            'updated_at',
+                            'deleted_at',
+                            'disciplinas'
+                        ]
+                    ],
+                    'oper',
+                    'resource',
+                    'msgs',
+                    'any_error_msg'
                 ]
             );
     }
