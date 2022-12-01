@@ -2,6 +2,7 @@
 
 namespace Tests\Api;
 
+use App\Models\LegacyDisciplineScore;
 use Database\Factories\LegacyCourseFactory;
 use Database\Factories\LegacyDisciplineAcademicYearFactory;
 use Database\Factories\LegacyDisciplineFactory;
@@ -79,7 +80,6 @@ class DiarioGravaNotaTest extends TestCase
 
         LegacyEnrollmentFactory::new()->create([
             'ref_cod_matricula' => $registration,
-            'ref_cod_turma' => $schoolClass
         ]);
 
         LegacySchoolGradeDisciplineFactory::new()->create([
@@ -120,5 +120,7 @@ class DiarioGravaNotaTest extends TestCase
                     'any_error_msg'=> false
                 ]
             );
+
+
     }
 }
