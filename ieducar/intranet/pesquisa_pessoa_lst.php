@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Session;
 
-return new class extends clsListagem {
+return new class () extends clsListagem {
     public $cpf;
     public $cnpj;
     public $matricula;
@@ -38,18 +38,18 @@ return new class extends clsListagem {
             $this->$key = $value;
         }
 
-
         if ($parametros->getPessoa() == null || $parametros->getPessoa() == 'F' || $parametros->getPessoa() == '') {
-
             $this->addCabecalhos(['CPF', 'Nome']);
 
             // Filtros de Busca
             $this->campoTexto('campo_busca', 'Pessoa', $this->campo_busca, 35, 255, false, false, false, 'Código/Nome');
 
-            if ($this->cpf == null || validaCPF($this->cpf)) {
-                $this->campoCpf('cpf', 'CPF', !empty($this->cpf) ? int2CPF(idFederal2int($this->cpf)) : '');
+            $this->campoCpf('cpf', 'CPF', !empty($this->cpf) ? $this->cpf : '');
 
-                if (!empty(request('campo_busca'))) {
+            if ($this->cpf == null || validaCPF($this->cpf)) {
+
+
+                if (!empty(request('campo_busca') || !empty(request('cpf')))) {
                     $chave_busca = request('campo_busca');
                     $cpf = request('cpf', '');
                     $busca = request('busca', '');
@@ -57,7 +57,7 @@ return new class extends clsListagem {
 
                 // Paginador
                 $limite      = 10;
-                $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite - $limite: 0;
+                $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite - $limite : 0;
 
                 if (is_numeric($this->chave_campo)) {
                     $chave = "[$this->chave_campo]";
@@ -66,7 +66,6 @@ return new class extends clsListagem {
                 }
 
                 if ($busca == 'S') {
-
                     if (is_numeric($chave_busca)) {
                         $obj_pessoa = new clsPessoaFisica();
                         $lst_pessoa = $obj_pessoa->lista(null, (($cpf) ? idFederal2int($cpf) : null), $iniciolimit, $limite, false, $parametros->getCodSistema(), $chave_busca);
@@ -133,7 +132,7 @@ return new class extends clsListagem {
 
             // Paginador
             $limite      = 10;
-            $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite - $limite: 0;
+            $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite - $limite : 0;
 
             if ($busca == 'S') {
                 if (is_numeric($chave_busca)) {
@@ -180,7 +179,7 @@ return new class extends clsListagem {
 
             // Filtros de Busca
             $this->campoTexto('campo_busca', 'Pessoa', $this->campo_busca, 50, 255, false, false, false, 'Código/Nome');
-            $this->campoIdFederal('id_federal', 'CNPJ/CPF', ($this->id_federal)?int2IdFederal($this->id_federal):'');
+            $this->campoIdFederal('id_federal', 'CNPJ/CPF', ($this->id_federal) ? int2IdFederal($this->id_federal) : '');
 
             $chave_busca = @$_GET['campo_busca'];
             $id_federal  = @$_GET['id_federal'];
@@ -188,7 +187,7 @@ return new class extends clsListagem {
 
             // Paginador
             $limite      = 10;
-            $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite - $limite: 0;
+            $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite - $limite : 0;
             if ($busca == 'S') {
                 if (is_numeric($chave_busca)) {
                     $obj_pessoa = new clsPessoaFj();
@@ -222,7 +221,7 @@ return new class extends clsListagem {
                         $funcao .= ' )';
                     }
                     $pessoa['cnpj'] = ($pessoa['tipo'] == 'J' && $pessoa['cnpj']) ? int2CNPJ($pessoa['cnpj']) : null;
-                    $pessoa['cpf'] = ($pessoa['tipo'] == 'F' && $pessoa['cpf']) ?  int2CPF($pessoa['cpf']) : null;
+                    $pessoa['cpf'] = ($pessoa['tipo'] == 'F' && $pessoa['cpf']) ? int2CPF($pessoa['cpf']) : null;
                     $obj_pes = new clsPessoa_($pessoa['idpes']);
                     $det_pes = $obj_pes->detalhe();
                     if ($parametros->getPessoaEditar() == 'S') {
@@ -260,7 +259,7 @@ return new class extends clsListagem {
 
             // Paginador
             $limite      = 10;
-            $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite - $limite: 0;
+            $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite - $limite : 0;
 
             if ($busca == 'S') {
                 if (is_numeric($chave_busca)) {
