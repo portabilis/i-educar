@@ -2,7 +2,6 @@
 
 namespace Tests\Api;
 
-use App\Models\LegacyDisciplineScore;
 use Database\Factories\LegacyCourseFactory;
 use Database\Factories\LegacyDisciplineAcademicYearFactory;
 use Database\Factories\LegacyDisciplineFactory;
@@ -27,7 +26,6 @@ class DiarioGravaNotaTest extends TestCase
 
     public function testGravaNota()
     {
-
         $school = LegacySchoolFactory::new()->create();
 
         $course = LegacyCourseFactory::new()->standardAcademicYear()->create();
@@ -109,17 +107,17 @@ class DiarioGravaNotaTest extends TestCase
         $response = $this->getResource('/module/Api/Diario', $data);
         $response->assertSuccessful()
             ->assertJson(
-                    [
-                        'oper'=> 'post',
-                        'resource'=> 'notas',
-                        'msgs'=> [
-                            [
-                                'msg'=> 'Notas postadas com sucesso!',
-                                'type'=> 'success'
-                            ]
-                        ],
-                        'any_error_msg'=> false
-                    ]
+                [
+                    'oper'=> 'post',
+                    'resource'=> 'notas',
+                    'msgs'=> [
+                        [
+                            'msg'=> 'Notas postadas com sucesso!',
+                            'type'=> 'success'
+                        ]
+                    ],
+                    'any_error_msg'=> false
+                ]
             );
     }
 }

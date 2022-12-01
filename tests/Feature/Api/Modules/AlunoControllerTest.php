@@ -20,5 +20,5 @@ class AlunoControllerTest extends TestCase
         $this->get(self::ROUTE . '&id=' . $student->cod_aluno)
             ->assertSuccessful()
             ->assertJsonFragment(['nome' => $student->person->name]);
-   }
+    }
 }
