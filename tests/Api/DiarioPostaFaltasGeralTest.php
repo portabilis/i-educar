@@ -93,7 +93,6 @@ class DiarioPostaFaltasGeralTest extends TestCase
             'faltas' => [
                 $enrollment->ref_cod_turma => [
                     $registration->ref_cod_aluno => [
-                        'etapa' => 1,
                         'valor' => 2,
                     ]
                 ]
