@@ -6,6 +6,7 @@ use App\Models\LegacyEvaluationRule;
 use App\Models\LegacyGeneralConfiguration;
 use App\Models\LegacyInstitution;
 use App\Models\LegacySchool;
+use Database\Factories\LegacyAverageFormulaFactory;
 use Database\Factories\LegacyEvaluationRuleFactory;
 use Database\Factories\LegacyRoundingTableFactory;
 use Tests\EloquentTestCase;
@@ -63,8 +64,15 @@ class LegacyInstitutionTest extends EloquentTestCase
 
     public function testRelationshipEvaluationRules()
     {
-        LegacyRoundingTableFactory::new()->create(['instituicao_id' => $this->model]);
-        LegacyEvaluationRuleFactory::new()->create(['instituicao_id' => $this->model]);
+        LegacyRoundingTableFactory::new()->create([
+            'instituicao_id' => $this->model
+        ]);
+        LegacyEvaluationRuleFactory::new()->create([
+            'formula_media_id' => LegacyAverageFormulaFactory::new()->create([
+                'institution_id' => $this->model,
+            ]),
+            'instituicao_id' => $this->model
+        ]);
 
         $this->assertCount(1, $this->model->evaluationRules);
         $this->assertInstanceOf(LegacyEvaluationRule::class, $this->model->evaluationRules->first());
