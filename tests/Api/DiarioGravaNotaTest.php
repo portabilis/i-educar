@@ -79,6 +79,7 @@ class DiarioGravaNotaTest extends TestCase
 
         LegacyEnrollmentFactory::new()->create([
             'ref_cod_matricula' => $registration,
+            'ref_cod_turma' => $schoolClass
         ]);
 
         LegacySchoolGradeDisciplineFactory::new()->create([
