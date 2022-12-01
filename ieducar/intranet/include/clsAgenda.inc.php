@@ -68,7 +68,7 @@ class clsAgenda
         if (count($nomeArr) > 1) {
             $nome .= ' ' . $nomeArr[ count($nomeArr) - 1 ];
         }
-
+        $nome = str_replace("'", "''", $nome);
         $db->Consulta("INSERT INTO portal.agenda ( ref_ref_cod_pessoa_cad, ref_ref_cod_pessoa_own, nm_agenda, data_cad ) VALUES ( $this->cod_pessoa_dono, $this->cod_pessoa_dono, quote_literal('{$nome}') , NOW() )");
         $this->agenda = $db->InsertId('agenda_cod_agenda_seq');
 
