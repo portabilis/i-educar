@@ -2,6 +2,7 @@
 
 namespace Tests\Api;
 
+use App\Models\LegacyGeneralAbsence;
 use Database\Factories\LegacyCourseFactory;
 use Database\Factories\LegacyDisciplineAcademicYearFactory;
 use Database\Factories\LegacyDisciplineFactory;
@@ -115,5 +116,17 @@ class DiarioPostaFaltasGeralTest extends TestCase
                     'any_error_msg' => false
                 ]
             );
+
+        $absence = LegacyGeneralAbsence::first();
+
+        $this->assertDatabaseHas($absence->studentAbsence->getTable(), [
+            'matricula_id' => $registration->getKey(),
+            'tipo_falta' => 1,
+        ])->assertDatabaseHas($absence->getTable(), [
+            'falta_aluno_id' => $absence->studentAbsence->getKey(),
+            'quantidade' => 2,
+            'etapa' => 1,
+        ])->assertDatabaseCount($absence->studentAbsence->getTable(), 1)
+            ->assertDatabaseCount($absence->getTable(), 1);
     }
 }
