@@ -2,7 +2,7 @@
 
 namespace Tests\Api;
 
-use App\Models\LegacyGeneralAbsence;
+use App\Models\LegacyDisciplineAbsence;
 use Database\Factories\LegacyCourseFactory;
 use Database\Factories\LegacyDisciplineAcademicYearFactory;
 use Database\Factories\LegacyDisciplineFactory;
@@ -16,15 +16,16 @@ use Database\Factories\LegacySchoolClassFactory;
 use Database\Factories\LegacySchoolFactory;
 use Database\Factories\LegacySchoolGradeDisciplineFactory;
 use Database\Factories\LegacySchoolGradeFactory;
+use Database\Factories\LegacyStudentFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
-class DiarioPostaFaltasGeralTest extends TestCase
+class DiarioPostaFaltasPorComponente extends TestCase
 {
     use DatabaseTransactions;
     use DiarioApiRequestTestTrait;
 
-    public function testPostaFaltasGeral()
+    public function testPostaFaltasPorComponente()
     {
         $school = LegacySchoolFactory::new()->create();
 
@@ -47,8 +48,8 @@ class DiarioPostaFaltasGeralTest extends TestCase
         ]);
 
         $evaluationRule = LegacyEvaluationRuleFactory::new()->create([
-            'parecer_descritivo' => 6,
-            'tipo_presenca' => 1,
+            'parecer_descritivo' => 3,
+            'tipo_presenca' => 2,
         ]);
 
         $discipline = LegacyDisciplineFactory::new()->create();
@@ -69,7 +70,10 @@ class DiarioPostaFaltasGeralTest extends TestCase
             'serie_id' => $level,
         ]);
 
+        $student = LegacyStudentFactory::new()->create();
+
         $registration = LegacyRegistrationFactory::new()->create([
+            'ref_cod_aluno' => $student,
             'ano' => $evaluationRuleGradeYear->ano_letivo,
             'ref_ref_cod_serie' => $level,
             'ref_ref_cod_escola' => $school,
@@ -77,35 +81,38 @@ class DiarioPostaFaltasGeralTest extends TestCase
 
         $enrollment = LegacyEnrollmentFactory::new()->create([
             'ref_cod_matricula' => $registration,
+            'ref_cod_turma' => $schoolClass,
         ]);
 
         $schoolGradeDiscipline = LegacySchoolGradeDisciplineFactory::new()->create([
             'ref_ref_cod_escola' => $schoolGrade->ref_cod_escola,
             'ref_ref_cod_serie' => $schoolGrade->ref_cod_serie,
             'ref_cod_disciplina' => $discipline,
-            'anos_letivos' => $schoolGrade->anos_letivos,
+            'etapas_especificas' => 1,
         ]);
 
         $data = [
             'oper' => 'post',
-            'resource' => 'faltas-geral',
+            'resource' => 'faltas-por-componente',
             'etapa' => 1,
             'faltas' => [
                 $enrollment->ref_cod_turma => [
                     $registration->ref_cod_aluno => [
-                        'valor' => 2,
+                        $discipline->getKey() => [
+                            'valor' => 2,
+                        ],
                     ]
                 ]
             ]
         ];
 
-        $response = $this->postResource('/module/Api/Diario', $data);
+        $response = $this->getResource('/module/Api/Diario', $data);
 
         $response->assertSuccessful()
             ->assertJson(
                 [
                     'oper' => 'post',
-                    'resource' => 'faltas-geral',
+                    'resource' => 'faltas-por-componente',
                     'msgs' => [
                         0 => [
                             'msg' => 'Faltas postadas com sucesso!',
@@ -116,11 +123,11 @@ class DiarioPostaFaltasGeralTest extends TestCase
                 ]
             );
 
-        $absence = LegacyGeneralAbsence::first();
+        $absence = LegacyDisciplineAbsence::first();
 
         $this->assertDatabaseHas($absence->studentAbsence->getTable(), [
             'matricula_id' => $registration->getKey(),
-            'tipo_falta' => 1,
+            'tipo_falta' => 2,
         ])->assertDatabaseHas($absence->getTable(), [
             'falta_aluno_id' => $absence->studentAbsence->getKey(),
             'quantidade' => 2,
