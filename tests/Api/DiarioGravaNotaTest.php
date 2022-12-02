@@ -2,9 +2,7 @@
 
 namespace Tests\Api;
 
-use App\Models\LegacyDisciplineScore;
 use Database\Factories\LegacyAcademicYearStageFactory;
-use Database\Factories\LegacyAverageFormulaFactory;
 use Database\Factories\LegacyCourseFactory;
 use Database\Factories\LegacyDisciplineAcademicYearFactory;
 use Database\Factories\LegacyDisciplineFactory;
@@ -13,9 +11,7 @@ use Database\Factories\LegacyEnrollmentFactory;
 use Database\Factories\LegacyEvaluationRuleFactory;
 use Database\Factories\LegacyEvaluationRuleGradeYearFactory;
 use Database\Factories\LegacyGradeFactory;
-use Database\Factories\LegacyInstitutionFactory;
 use Database\Factories\LegacyRegistrationFactory;
-use Database\Factories\LegacyRoundingTableFactory;
 use Database\Factories\LegacySchoolAcademicYearFactory;
 use Database\Factories\LegacySchoolClassFactory;
 use Database\Factories\LegacySchoolFactory;
@@ -24,9 +20,6 @@ use Database\Factories\LegacySchoolGradeFactory;
 use Database\Factories\LegacyStageTypeFactory;
 use Database\Factories\LegacyStudentFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use RegraAvaliacao_Model_Nota_TipoValor;
-use RegraAvaliacao_Model_TipoPresenca;
-use RegraAvaliacao_Model_TipoProgressao;
 use Tests\TestCase;
 
 class DiarioGravaNotaTest extends TestCase
