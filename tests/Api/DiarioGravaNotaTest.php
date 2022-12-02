@@ -3,6 +3,8 @@
 namespace Tests\Api;
 
 use App\Models\LegacyDisciplineScore;
+use Database\Factories\LegacyAcademicYearStageFactory;
+use Database\Factories\LegacyAverageFormulaFactory;
 use Database\Factories\LegacyCourseFactory;
 use Database\Factories\LegacyDisciplineAcademicYearFactory;
 use Database\Factories\LegacyDisciplineFactory;
@@ -11,13 +13,20 @@ use Database\Factories\LegacyEnrollmentFactory;
 use Database\Factories\LegacyEvaluationRuleFactory;
 use Database\Factories\LegacyEvaluationRuleGradeYearFactory;
 use Database\Factories\LegacyGradeFactory;
+use Database\Factories\LegacyInstitutionFactory;
 use Database\Factories\LegacyRegistrationFactory;
+use Database\Factories\LegacyRoundingTableFactory;
+use Database\Factories\LegacySchoolAcademicYearFactory;
 use Database\Factories\LegacySchoolClassFactory;
 use Database\Factories\LegacySchoolFactory;
 use Database\Factories\LegacySchoolGradeDisciplineFactory;
 use Database\Factories\LegacySchoolGradeFactory;
+use Database\Factories\LegacyStageTypeFactory;
 use Database\Factories\LegacyStudentFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use RegraAvaliacao_Model_Nota_TipoValor;
+use RegraAvaliacao_Model_TipoPresenca;
+use RegraAvaliacao_Model_TipoProgressao;
 use Tests\TestCase;
 
 class DiarioGravaNotaTest extends TestCase
@@ -29,11 +38,28 @@ class DiarioGravaNotaTest extends TestCase
     {
         $school = LegacySchoolFactory::new()->create();
 
-        $course = LegacyCourseFactory::new()->standardAcademicYear()->create();
+        $course = LegacyCourseFactory::new()
+            ->standardAcademicYear()
+            ->create(['ref_cod_instituicao' => $school->ref_cod_instituicao]);
 
         $level = LegacyGradeFactory::new()->create([
             'ref_cod_curso' => $course,
             'dias_letivos' => '200'
+        ]);
+
+        $year = LegacySchoolAcademicYearFactory::new()->create([
+            'ref_cod_escola' => $school,
+        ]);
+
+        $stage = LegacyStageTypeFactory::new()->create([
+            'ref_cod_instituicao' => $school->ref_cod_instituicao,
+            'num_etapas' => 4,
+        ]);
+
+        LegacyAcademicYearStageFactory::new()->create([
+            'ref_ano' => $year->ano,
+            'ref_ref_cod_escola' => $school,
+            'ref_cod_modulo' => $stage,
         ]);
 
         $schoolGrade = LegacySchoolGradeFactory::new()->create([
@@ -76,10 +102,12 @@ class DiarioGravaNotaTest extends TestCase
             'ano' => $evaluationRuleGradeYear->ano_letivo,
             'ref_ref_cod_serie' => $level,
             'ref_ref_cod_escola' => $school,
+            'ref_cod_curso' => $course,
         ]);
 
         LegacyEnrollmentFactory::new()->create([
             'ref_cod_matricula' => $registration,
+            'ref_cod_turma' => $schoolClass
         ]);
 
         LegacySchoolGradeDisciplineFactory::new()->create([
@@ -97,8 +125,8 @@ class DiarioGravaNotaTest extends TestCase
                 $schoolClass->getKey() => [
                     $student->getKey() => [
                         $discipline->getKey() => [
-                            'nota' => '6.0',
-                            'recuperacao' => '2.0'
+                            'nota' => 6,
+                            'recuperacao' => 2
                         ]
                     ]
                 ]
@@ -106,6 +134,7 @@ class DiarioGravaNotaTest extends TestCase
         ];
 
         $response = $this->getResource('/module/Api/Diario', $data);
+
         $response->assertSuccessful()
             ->assertJson(
                 [
@@ -120,7 +149,5 @@ class DiarioGravaNotaTest extends TestCase
                     'any_error_msg'=> false
                 ]
             );
-
-
     }
 }
