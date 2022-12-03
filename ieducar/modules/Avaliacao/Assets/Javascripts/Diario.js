@@ -1748,6 +1748,7 @@ function updateResourceRow(dataResponse) {
   var $fieldNotaEspecifica = $j('#nota_recuperacao_especifica-matricula-' + matriculaId + '-cc-' + ccId);
   var $fieldNN = $j('#nn-matricula-' + matriculaId + '-cc-' + ccId);
   var $fieldMedia = $j('#media-matricula-' + matriculaId + '-cc-' + ccId);
+  var $fieldMediaAtual = $j('#media-atual-matricula-' + matriculaId + '-cc-' + ccId);
 
   var regra = $situacaoField.closest('tr').data('regra');
 
@@ -1785,6 +1786,7 @@ function updateResourceRow(dataResponse) {
       $fieldNotaEspecifica.hide();
   }
   changeMediaValue($fieldMedia.attr('id'), dataResponse.media, dataResponse.media_arredondada, regra);
+  changeMediaAtualValue($fieldMediaAtual.attr('id'), dataResponse.media);
 }
 
 function changeMediaValue(elementId, nota, notaArredondada, regra){
@@ -1808,6 +1810,12 @@ function changeMediaValue(elementId, nota, notaArredondada, regra){
       $j('#' + elementId).val(notaArredondada);
     }
   }
+}
+
+function changeMediaAtualValue(elementId, media) {
+  if(media != undefined){
+      $j('#' + elementId).val(media);
+    }
 }
 
 function situacaoFinalField($matriculaId, $situacao, value){
