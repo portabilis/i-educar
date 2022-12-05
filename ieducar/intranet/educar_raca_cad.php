@@ -32,8 +32,8 @@ return new class extends clsCadastro {
             $races = LegacyRace::query()->find($this->cod_raca)?->toArray();
             if ($races) {
 
-                $this->nm_race = $races->nm_race;
-                $this->cod_raca = $races->cod_raca;
+                $this->nm_raca = $races['nm_raca'];
+                $this->cod_raca = $races['cod_raca'];
 
                 $this->data_cadastro = dataFromPgToBr($this->data_cadastro);
                 $this->data_exclusao = dataFromPgToBr($this->data_exclusao);

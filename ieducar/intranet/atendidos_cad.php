@@ -613,7 +613,7 @@ return new class extends clsCadastro {
             ->toArray()
         ;
 
-        $this->campoLista('cor_raca', 'Raça', $race, $this->cod_raca, desabilitado: $obrigarCamposCenso);
+        $this->campoLista('cor_raca', 'Raça', $race, $this->cod_raca, obrigatorio: $obrigarCamposCenso);
 
         // nacionalidade
 
