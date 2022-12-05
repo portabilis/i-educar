@@ -613,6 +613,10 @@ return new class extends clsCadastro {
             ->toArray()
         ;
 
+        $raca = new clsCadastroFisicaRaca($this->cod_pessoa_fj);
+        $raca = $raca->detalhe();
+        $this->cod_raca = is_array($raca) ? $raca['ref_cod_raca'] : $this->cor_raca;
+
         $this->campoLista('cor_raca', 'Raça', $race, $this->cod_raca, obrigatorio: $obrigarCamposCenso);
 
         // nacionalidade
