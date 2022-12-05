@@ -756,6 +756,7 @@ return new class extends clsCadastro {
 
     public function Editar()
     {
+        UserUpdated::dispatch(LegacyUser::findOrFail($this->cod_pessoa_fj));
         return $this->createOrUpdate($this->cod_pessoa_fj);
     }
 
@@ -807,6 +808,8 @@ return new class extends clsCadastro {
 
         $pessoaFisica = new clsPessoaFisica($idPes);
         $pessoaFisica->excluir();
+
+        UserDeleted::dispatch(LegacyUser::findOrFail($idPes));
 
         $this->mensagem = 'Exclusão efetuada com sucesso.';
 
