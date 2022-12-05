@@ -1,11 +1,9 @@
 <?php
 
-use App\Events\UserDeleted;
-use App\Events\UserUpdated;
 use App\Facades\Asset;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyInstitution;
-use App\Models\LegacyUser;
+use App\Models\LegacyRace;
 use App\Services\FileService;
 use App\Services\UrlPresigner;
 use iEducar\Modules\Addressing\LegacyAddressingFields;
@@ -607,23 +605,19 @@ return new class extends clsCadastro {
 
         // Cor/raça.
 
-        $racas = new clsCadastroRaca();
-        $racas = $racas->lista(null, null, null, null, null, null, null, true);
-
-        $selectOptionsRaca = [];
-
-        foreach ($racas as $raca) {
-            $selectOptionsRaca[$raca['cod_raca']] = $raca['nm_raca'];
-        }
-
-        $selectOptionsRaca = Portabilis_Array_Utils::sortByValue($selectOptionsRaca);
-        $selectOptionsRaca = array_replace([null => 'Selecione'], $selectOptionsRaca);
+        $race =  LegacyRace::query()
+            ->where('ativo', true)
+            ->orderBy('nm_raca')
+            ->pluck('nm_raca', 'cod_raca')
+            ->prepend( 'Selecione','')
+            ->toArray()
+        ;
 
         $raca = new clsCadastroFisicaRaca($this->cod_pessoa_fj);
         $raca = $raca->detalhe();
         $this->cod_raca = is_array($raca) ? $raca['ref_cod_raca'] : $this->cor_raca;
 
-        $this->campoLista('cor_raca', 'Raça', $selectOptionsRaca, $this->cod_raca, '', false, '', '', '', $obrigarCamposCenso);
+        $this->campoLista('cor_raca', 'Raça', $race, $this->cod_raca, obrigatorio: $obrigarCamposCenso);
 
         // nacionalidade
 
