@@ -34,6 +34,7 @@ return new class extends clsCadastro {
 
                 $this->nm_raca = $races['nm_raca'];
                 $this->cod_raca = $races['cod_raca'];
+                $this->raca_educacenso = $races['raca_educacenso'];
 
                 $this->data_cadastro = dataFromPgToBr($this->data_cadastro);
                 $this->data_exclusao = dataFromPgToBr($this->data_exclusao);
