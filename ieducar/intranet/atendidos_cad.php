@@ -1,9 +1,12 @@
 <?php
 
+use App\Events\UserDeleted;
+use App\Events\UserUpdated;
 use App\Facades\Asset;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyRace;
+use App\Models\LegacyUser;
 use App\Services\FileService;
 use App\Services\UrlPresigner;
 use iEducar\Modules\Addressing\LegacyAddressingFields;
@@ -80,52 +83,52 @@ return new class extends clsCadastro {
                 $this->letra, $this->sus, $this->nis_pis_pasep, $this->ocupacao, $this->empresa, $this->ddd_telefone_empresa,
                 $this->telefone_empresa, $this->pessoa_contato, $this->renda_mensal, $this->data_admissao, $this->falecido,
                 $this->religiao_id, $this->zona_localizacao_censo, $this->localizacao_diferenciada, $this->nome_social, $this->pais_residencia
-            ) =
-            $objPessoa->queryRapida(
-                $this->cod_pessoa_fj,
-                'nome',
-                'cpf',
-                'data_nasc',
-                'ddd_1',
-                'fone_1',
-                'ddd_2',
-                'fone_2',
-                'ddd_mov',
-                'fone_mov',
-                'ddd_fax',
-                'fone_fax',
-                'email',
-                'tipo',
-                'sexo',
-                'ideciv',
-                'idpes_pai',
-                'idpes_mae',
-                'nacionalidade',
-                'idpais_estrangeiro',
-                'idmun_nascimento',
-                'letra',
-                'sus',
-                'nis_pis_pasep',
-                'ocupacao',
-                'empresa',
-                'ddd_telefone_empresa',
-                'telefone_empresa',
-                'pessoa_contato',
-                'renda_mensal',
-                'data_admissao',
-                'falecido',
-                'ref_cod_religiao',
-                'zona_localizacao_censo',
-                'localizacao_diferenciada',
-                'nome_social',
-                'pais_residencia'
-            );
+                ) =
+                $objPessoa->queryRapida(
+                    $this->cod_pessoa_fj,
+                    'nome',
+                    'cpf',
+                    'data_nasc',
+                    'ddd_1',
+                    'fone_1',
+                    'ddd_2',
+                    'fone_2',
+                    'ddd_mov',
+                    'fone_mov',
+                    'ddd_fax',
+                    'fone_fax',
+                    'email',
+                    'tipo',
+                    'sexo',
+                    'ideciv',
+                    'idpes_pai',
+                    'idpes_mae',
+                    'nacionalidade',
+                    'idpais_estrangeiro',
+                    'idmun_nascimento',
+                    'letra',
+                    'sus',
+                    'nis_pis_pasep',
+                    'ocupacao',
+                    'empresa',
+                    'ddd_telefone_empresa',
+                    'telefone_empresa',
+                    'pessoa_contato',
+                    'renda_mensal',
+                    'data_admissao',
+                    'falecido',
+                    'ref_cod_religiao',
+                    'zona_localizacao_censo',
+                    'localizacao_diferenciada',
+                    'nome_social',
+                    'pais_residencia'
+                );
 
             $this->loadAddress($this->cod_pessoa_fj);
 
             $this->id_federal = is_numeric($this->id_federal) ? int2CPF($this->id_federal) : '';
             $this->nis_pis_pasep = int2Nis($this->nis_pis_pasep);
-            $this->renda_mensal = number_format((float) $this->renda_mensal, 2, ',', '.');
+            $this->renda_mensal = number_format((float)$this->renda_mensal, 2, ',', '.');
             // $this->data_nasc = $this->data_nasc ? dataFromPgToBr($this->data_nasc) : '';
             $this->data_admissao = $this->data_admissao ? dataFromPgToBr($this->data_admissao) : '';
 
@@ -135,10 +138,10 @@ return new class extends clsCadastro {
         }
 
         $this->fexcluir = is_numeric($this->cod_pessoa_fj) && $obj_permissoes->permissao_excluir(
-            43,
-            $this->pessoa_logada,
-            7
-        );
+                43,
+                $this->pessoa_logada,
+                7
+            );
 
         $nomeMenu = $this->retorno === 'Editar' ? $this->retorno : 'Cadastrar';
 
@@ -153,9 +156,9 @@ return new class extends clsCadastro {
         $this->form_enctype = ' enctype=\'multipart/form-data\'';
         $camposObrigatorios = !config('legacy.app.remove_obrigatorios_cadastro_pessoa') == 1;
         $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
-        $this->campoOculto('obrigar_campos_censo', (int) $obrigarCamposCenso);
+        $this->campoOculto('obrigar_campos_censo', (int)$obrigarCamposCenso);
         $this->url_cancelar = $this->retorno == 'Editar' ?
-        'atendidos_det.php?cod_pessoa=' . $this->cod_pessoa_fj : 'atendidos_lst.php';
+            'atendidos_det.php?cod_pessoa=' . $this->cod_pessoa_fj : 'atendidos_lst.php';
 
         $objPessoa = new clsPessoaFisica($this->cod_pessoa_fj);
 
@@ -202,7 +205,7 @@ return new class extends clsCadastro {
                 $foto = $detalheFoto['caminho'];
             }
         } else {
-            $foto=false;
+            $foto = false;
         }
 
         if ($foto) {
@@ -226,9 +229,9 @@ return new class extends clsCadastro {
 
         // sugere sexo quando cadastrando o pai ou mãe
 
-        if (! $sexo && $parentType == 'pai') {
+        if (!$sexo && $parentType == 'pai') {
             $sexo = 'M';
-        } elseif (! $sexo && $parentType == 'mae') {
+        } elseif (!$sexo && $parentType == 'mae') {
             $sexo = 'F';
         }
 
@@ -248,7 +251,10 @@ return new class extends clsCadastro {
 
         // estado civil
 
-        $this->inputsHelper()->estadoCivil(['label' => '', 'required' => empty($parentType) && $camposObrigatorios]);
+        $this->inputsHelper()->estadoCivil([
+            'label' => '',
+            'required' => empty($parentType) && $camposObrigatorios
+        ]);
 
         // data nascimento
 
@@ -275,7 +281,7 @@ return new class extends clsCadastro {
 
         // o rg é obrigatorio ao cadastrar pai ou mãe, exceto se configurado como opcional.
 
-        $required = (! empty($parentType));
+        $required = (!empty($parentType));
 
         if ($required && config('legacy.app.rg_pessoa_fisica_pais_opcional')) {
             $required = false;
@@ -307,7 +313,7 @@ return new class extends clsCadastro {
 
         // orgão emissão rg
 
-        $selectOptions = [ null => 'Órgão emissor' ];
+        $selectOptions = [null => 'Órgão emissor'];
         $orgaos = new clsOrgaoEmissorRg();
         $orgaos = $orgaos->lista();
 
@@ -379,9 +385,9 @@ return new class extends clsCadastro {
 
         // caso certidao nascimento novo formato tenha sido informado,
         // considera este o tipo da certidão
-        if (! empty($documentos['certidao_nascimento'])) {
+        if (!empty($documentos['certidao_nascimento'])) {
             $tipoCertidaoCivil = 'certidao_nascimento_novo_formato';
-        } elseif (! empty($documentos['certidao_casamento'])) {
+        } elseif (!empty($documentos['certidao_casamento'])) {
             $tipoCertidaoCivil = 'certidao_casamento_novo_formato';
         } else {
             $tipoCertidaoCivil = $documentos['tipo_cert_civil'];
@@ -605,13 +611,12 @@ return new class extends clsCadastro {
 
         // Cor/raça.
 
-        $race =  LegacyRace::query()
+        $race = LegacyRace::query()
             ->where('ativo', true)
             ->orderBy('nm_raca')
             ->pluck('nm_raca', 'cod_raca')
-            ->prepend( 'Selecione','')
-            ->toArray()
-        ;
+            ->prepend('Selecione', '')
+            ->toArray();
 
         $raca = new clsCadastroFisicaRaca($this->cod_pessoa_fj);
         $raca = $raca->detalhe();
@@ -658,13 +663,20 @@ return new class extends clsCadastro {
         $this->inputsHelper()->simpleSearchPaisSemBrasil('nome', $options, $helperOptions);
 
         //Falecido
-        $options = ['label' => 'Falecido?', 'required' => false, 'value' => dbBool($this->falecido)];
+        $options = [
+            'label' => 'Falecido?',
+            'required' => false,
+            'value' => dbBool($this->falecido)
+        ];
 
         $this->inputsHelper()->checkbox('falecido', $options);
 
         // naturalidade
 
-        $options = ['label' => 'Naturalidade', 'required' => $naturalidadeObrigatoria && $camposObrigatorios];
+        $options = [
+            'label' => 'Naturalidade',
+            'required' => $naturalidadeObrigatoria && $camposObrigatorios
+        ];
 
         $helperOptions = [
             'objectName' => 'naturalidade',
@@ -674,13 +686,16 @@ return new class extends clsCadastro {
         $this->inputsHelper()->simpleSearchMunicipio('nome', $options, $helperOptions);
 
         // Religião
-        $this->inputsHelper()->religiao(['required' => false, 'label' => 'Religião']);
+        $this->inputsHelper()->religiao([
+            'required' => false,
+            'label' => 'Religião'
+        ]);
 
         $this->viewAddress(true);
 
         $this->inputsHelper()->select('pais_residencia', [
             'label' => 'País de residência',
-            'value' => $this->pais_residencia ?: PaisResidencia::BRASIL ,
+            'value' => $this->pais_residencia ?: PaisResidencia::BRASIL,
             'resources' => PaisResidencia::getDescriptiveValues(),
             'required' => true,
         ]);
@@ -756,7 +771,10 @@ return new class extends clsCadastro {
 
     public function Editar()
     {
-        UserUpdated::dispatch(LegacyUser::findOrFail($this->cod_pessoa_fj));
+        $user = LegacyUser::find($this->cod_pessoa_fj);
+        if ($user) {
+            UserUpdated::dispatch($user);
+        }
         return $this->createOrUpdate($this->cod_pessoa_fj);
     }
 
@@ -809,7 +827,10 @@ return new class extends clsCadastro {
         $pessoaFisica = new clsPessoaFisica($idPes);
         $pessoaFisica->excluir();
 
-        UserDeleted::dispatch(LegacyUser::findOrFail($idPes));
+        $user = LegacyUser::find($idPes);
+        if ($user) {
+            UserDeleted::dispatch($user);
+        }
 
         $this->mensagem = 'Exclusão efetuada com sucesso.';
 
@@ -854,11 +875,11 @@ return new class extends clsCadastro {
 
     protected function addParentsInput($parentType, $parentTypeLabel = '')
     {
-        if (! $parentTypeLabel) {
+        if (!$parentTypeLabel) {
             $parentTypeLabel = $parentType;
         }
 
-        if (! isset($this->_aluno)) {
+        if (!isset($this->_aluno)) {
             $this->_aluno = $this->loadAlunoByPessoaId($this->cod_pessoa_fj);
         }
 
@@ -867,16 +888,19 @@ return new class extends clsCadastro {
         // mostra uma dica nos casos em que foi informado apenas o nome dos pais,
         //pela antiga interface do cadastro de alunos.
 
-        if (! $parentId && $this->_aluno['nm_' . $parentType]) {
+        if (!$parentId && $this->_aluno['nm_' . $parentType]) {
             $nome = $this->_aluno['nm_' . $parentType];
 
             $inputHint = '<br /><b>Dica:</b> Foi informado o nome "' . $nome .
-            '" no cadastro de aluno,<br />tente pesquisar esta pessoa ' .
-            'pelo CPF ou RG, caso não encontre, cadastre uma nova pessoa.';
+                '" no cadastro de aluno,<br />tente pesquisar esta pessoa ' .
+                'pelo CPF ou RG, caso não encontre, cadastre uma nova pessoa.';
         }
 
         $hiddenInputOptions = ['options' => ['value' => $parentId]];
-        $helperOptions = ['objectName' => $parentType, 'hiddenInputOptions' => $hiddenInputOptions];
+        $helperOptions = [
+            'objectName' => $parentType,
+            'hiddenInputOptions' => $hiddenInputOptions
+        ];
 
         $options = [
             'label' => 'Pessoa ' . $parentTypeLabel,
@@ -892,7 +916,7 @@ return new class extends clsCadastro {
     {
         $isValid = true;
 
-        if ($cpf && ! Portabilis_Utils_Validation::validatesCpf($cpf)) {
+        if ($cpf && !Portabilis_Utils_Validation::validatesCpf($cpf)) {
             $this->erros['id_federal'] = 'CPF inválido.';
             $isValid = false;
         } elseif ($cpf) {
@@ -902,7 +926,7 @@ return new class extends clsCadastro {
 
             if ($fisica['cpf'] && $this->cod_pessoa_fj != $fisica['idpes']) {
                 $link = '<a class=\'decorated\' target=\'__blank\' href=\'/intranet/atendidos_cad.php?cod_pessoa_fj=' .
-                "{$fisica['idpes']}'>{$fisica['idpes']}</a>";
+                    "{$fisica['idpes']}'>{$fisica['idpes']}</a>";
 
                 $this->erros['id_federal'] = "CPF já utilizado pela pessoa $link.";
                 $isValid = false;
@@ -926,7 +950,7 @@ return new class extends clsCadastro {
             return false;
         }
 
-        if (! $this->validatesCpf($this->id_federal)) {
+        if (!$this->validatesCpf($this->id_federal)) {
             return false;
         }
 
@@ -979,7 +1003,7 @@ return new class extends clsCadastro {
         $this->createOrUpdatePessoaFisica($pessoaId);
         $this->createOrUpdateDocumentos($pessoaId);
         $this->createOrUpdateTelefones($pessoaId);
-        $this->saveAddress($pessoaId,true);
+        $this->saveAddress($pessoaId, true);
         $this->afterChangePessoa($pessoaId);
         $this->saveFiles($pessoaId);
 
@@ -1138,10 +1162,10 @@ return new class extends clsCadastro {
         $certidaoCasamentoNovoFormato = $this->certidao_casamento;
 
         return $this->id_federal ||
-           $this->rg ||
-           $certidaoCivil ||
-           $certidaoCasamentoNovoFormato ||
-           $certidaoNascimentoNovoFormato;
+            $this->rg ||
+            $certidaoCivil ||
+            $certidaoCasamentoNovoFormato ||
+            $certidaoNascimentoNovoFormato;
     }
 
     protected function validaCertidao()
@@ -1220,7 +1244,7 @@ return new class extends clsCadastro {
 
         $sql = 'select 1 from cadastro.pessoa WHERE idpes = $1 limit 1';
 
-        if (! $pessoaId || Portabilis_Utils_Database::selectField($sql, $pessoaId) != 1) {
+        if (!$pessoaId || Portabilis_Utils_Database::selectField($sql, $pessoaId) != 1) {
             $pessoa->tipo = 'F';
             $pessoa->idpes_cad = $this->currentUserId();
             $pessoaId = $pessoa->cadastra();
@@ -1279,8 +1303,8 @@ return new class extends clsCadastro {
 
     public function createOrUpdateRaca($pessoaId, $corRaca)
     {
-        $pessoaId = (int) $pessoaId;
-        $corRaca  = (int) $corRaca;
+        $pessoaId = (int)$pessoaId;
+        $corRaca = (int)$corRaca;
 
         if ($corRaca == 0) {
             return false;
@@ -1396,7 +1420,7 @@ return new class extends clsCadastro {
 
     protected function inputTelefone($type, $typeLabel = '')
     {
-        if (! $typeLabel) {
+        if (!$typeLabel) {
             $typeLabel = "Telefone {$type}";
         }
 
