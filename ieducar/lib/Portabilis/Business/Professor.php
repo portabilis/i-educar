@@ -264,7 +264,8 @@ class Portabilis_Business_Professor
                 SELECT
                     cc.id, cc.nome,
                     ac.nome as area_conhecimento,
-                    ac.secao as secao_area_conhecimento
+                    ac.secao as secao_area_conhecimento,
+                    qhh.ref_servidor
                 FROM pmieducar.quadro_horario qh
                 INNER JOIN pmieducar.quadro_horario_horarios qhh
                 ON (qh.cod_quadro_horario = qhh.ref_cod_quadro_horario)
@@ -292,11 +293,11 @@ class Portabilis_Business_Professor
     }
 
 
-    public static function quadroHorarioAlocado($turmaId, $userId, $diaSemana = null, $registroDiarioIndividual = null)
+    public static function quadroHorarioAlocado($turmaId, $userId = null, $diaSemana = null, $registroDiarioIndividual = null)
     {
         $quadroHorario = [];
 
-        if (is_numeric($turmaId) && is_numeric($userId)) {
+        if (is_numeric($turmaId)) {
             $sql = '
                 SELECT
                     qhh.*
@@ -304,14 +305,19 @@ class Portabilis_Business_Professor
                 INNER JOIN pmieducar.quadro_horario_horarios qhh
                 ON (qh.cod_quadro_horario = qhh.ref_cod_quadro_horario)
                 WHERE qh.ref_cod_turma = $1
-                AND (qhh.ref_servidor = $2 OR qhh.ref_cod_servidor_substituto_1 = $2 OR qhh.ref_cod_servidor_substituto_2 = $2)
                 AND qhh.ativo = 1
                 AND qh.ativo = 1
             ';
 
-            $params = ['params' => [$turmaId, $userId]];
+            $params = ['params' => [$turmaId]];
 
-            $paramNumber = 3;
+            $paramNumber = 2;
+            if (!empty($userId)) {
+                $sql .= "AND (qhh.ref_servidor = $".$paramNumber." OR qhh.ref_cod_servidor_substituto_1 = $".$paramNumber." OR qhh.ref_cod_servidor_substituto_2 = $".$paramNumber.")";
+                $params['params'][] = $userId;
+                $paramNumber++;
+            }
+
             if (!empty($diaSemana)) {
                 $sql .= " AND qhh.dia_semana = $".$paramNumber;
                 $params['params'][] = $diaSemana;

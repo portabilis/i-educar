@@ -76,7 +76,7 @@ var postResourceUrlBuilder = {
 
 var getResourceUrlBuilder = {
   buildUrl : function(urlBase, resourceName, additionalVars) {
-    
+
     var vars = {
       resource : resourceName,
       oper : 'get',
@@ -1193,6 +1193,7 @@ function handleSearch($resultTable, dataResponse) {
   var $mediaFields = $resultTable.find('.media-cc');
   var $situacaoField = $resultTable.find('.situacao-cc');
   let bloqueioField = $resultTable.find('.bloqueio-matricula');
+  var $mediaAtualFields = $resultTable.find('.media-atual-matricula-cc');
 
   $notaFields.on('change', changeNota);
   $notaExameFields.on('change', changeNotaExame);
@@ -1230,6 +1231,8 @@ function handleSearch($resultTable, dataResponse) {
   if(!dataResponse.instituicao.permitir_edicao_frequencia) {
     $faltaFields.prop('disabled', true);
   }
+
+  $mediaAtualFields.prop('disabled', true);
 
 }
 
@@ -1384,6 +1387,21 @@ function faltaField(matriculaId, componenteCurricularId, value) {
 
   setNextTabIndex($faltaField);
   return $j('<td />').html($faltaField).addClass('center');
+}
+
+function mediaAtualField(matriculaId, componenteCurricularId, value) {
+  var $mediaAtualField = $j('<input />').addClass('media-atual-matricula-cc')
+    .addClass('media-atual-matricula-' + matriculaId + '-cc')
+    .attr('id', 'media-atual-matricula-' + matriculaId + '-cc-' + componenteCurricularId)
+    .attr('maxlength', '4')
+    .attr('size', '4')
+    .val(value)
+    .data('old_value', value)
+    .data('matricula_id', matriculaId)
+    .data('componente_curricular_id', componenteCurricularId);
+
+  setNextTabIndex($mediaAtualField);
+  return $j('<td />').html($mediaAtualField).addClass('center');
 }
 
 function parecerField(matriculaId, componenteCurricularId, value) {
@@ -1577,6 +1595,7 @@ function updateComponenteCurricular($targetElement, matriculaId, cc, regra) {
     $emptyTd.clone().appendTo($targetElement);
   }
 
+  mediaAtualField(matriculaId, cc.id, cc.media).appendTo($targetElement);
   faltaField(matriculaId, cc.id, cc.falta_atual).appendTo($targetElement);
 
   if (useParecer){
@@ -1644,6 +1663,7 @@ function updateComponenteCurricularHeaders($targetElement, $tagElement) {
   if(hUsaNotaGeralPorEtapa){
     $tagElement.clone().addClass('center').html('Nota geral da etapa').appendTo($targetElement);
   }
+  $tagElement.clone().addClass('center').html('Média Atual').appendTo($targetElement);
   $tagElement.clone().addClass('center').html('Falta').appendTo($targetElement);
 
   if (hUseParecer)
@@ -1728,6 +1748,7 @@ function updateResourceRow(dataResponse) {
   var $fieldNotaEspecifica = $j('#nota_recuperacao_especifica-matricula-' + matriculaId + '-cc-' + ccId);
   var $fieldNN = $j('#nn-matricula-' + matriculaId + '-cc-' + ccId);
   var $fieldMedia = $j('#media-matricula-' + matriculaId + '-cc-' + ccId);
+  var $fieldMediaAtual = $j('#media-atual-matricula-' + matriculaId + '-cc-' + ccId);
 
   var regra = $situacaoField.closest('tr').data('regra');
 
@@ -1765,6 +1786,7 @@ function updateResourceRow(dataResponse) {
       $fieldNotaEspecifica.hide();
   }
   changeMediaValue($fieldMedia.attr('id'), dataResponse.media, dataResponse.media_arredondada, regra);
+  changeMediaAtualValue($fieldMediaAtual.attr('id'), dataResponse.media);
 }
 
 function changeMediaValue(elementId, nota, notaArredondada, regra){
@@ -1788,6 +1810,12 @@ function changeMediaValue(elementId, nota, notaArredondada, regra){
       $j('#' + elementId).val(notaArredondada);
     }
   }
+}
+
+function changeMediaAtualValue(elementId, media) {
+  if(media != undefined){
+      $j('#' + elementId).val(media);
+    }
 }
 
 function situacaoFinalField($matriculaId, $situacao, value){
