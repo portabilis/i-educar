@@ -5,6 +5,9 @@ use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
 use App\Models\LegacyRemedialRule;
 use App\Models\LegacySchoolClass;
+use App\Models\LegacyDisciplineScore;
+use App\Models\LegacyDisciplineScoreAverage;
+use App\Models\LegacyDisciplineScoreStudent;
 use App\Process;
 use App\Services\ReleasePeriodService;
 use App\Services\RemoveHtmlTagsStringService;
@@ -589,6 +592,28 @@ class DiarioApiController extends ApiCoreController
             $this->serviceBoletim()->addNota($nota);
             $this->trySaveServiceBoletim();
             $this->messenger->append('Nota de recuperação da matrícula ' . $this->getRequest()->matricula_id . ' alterada com sucesso.', 'success');
+
+            $nota_alunos = LegacyDisciplineScoreStudent::where('matricula_id', $this->getRequest()->matricula_id)->get();
+            foreach($nota_alunos as $nota_aluno) {
+            $contador =0;
+            $soma_notas =0;
+            $soma_notas_arredondadas =0;
+            $nota_componente_curricular = LegacyDisciplineScore::where('nota_aluno_id', $nota_aluno->id)->get();
+            foreach($nota_componente_curricular as $list) {
+                $contador++;
+                $soma_notas = $soma_notas + $list->nota;
+                $soma_notas_arredondadas = $soma_notas_arredondadas + $list->nota_arredondada;   
+            }
+            $media = $soma_notas / $contador;
+            $media_arredondada = $soma_notas_arredondadas / $contador;
+
+            LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->update([
+                'media' => $media,
+                'media_arredondada' => $media_arredondada
+               
+            ]);
+        }
+
         }
 
         // Se está sendo lançada nota de recuperação, obviamente o campo deve ser visível
