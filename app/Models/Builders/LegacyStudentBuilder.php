@@ -57,7 +57,7 @@ class LegacyStudentBuilder extends LegacyBuilder
     public function whereMotherName($name)
     {
         return $this->whereHas(
-            'individual.father',
+            'individual.mother',
             fn ($q) => $q->whereRaw('slug ~* unaccent(?)', $name)
         );
     }
