@@ -563,13 +563,28 @@ class DiarioApiController extends ApiCoreController
         if ($this->canPostNota()) {
             $notaOriginal = $this->getNotaOriginal();
             $notaRecuperacaoParalela = urldecode($this->getRequest()->att_value);
+            $notaRecuperacaoParalela2 = str_replace(',', '.', $notaRecuperacaoParalela);
+            $nova_nota = 0;
 
-            $nota = new Avaliacao_Model_NotaComponente([
-                'componenteCurricular' => $this->getRequest()->componente_curricular_id,
-                'etapa' => $this->getRequest()->etapa,
-                'nota' => $notaOriginal,
-                'notaRecuperacaoEspecifica' => $notaRecuperacaoParalela,
-                'notaOriginal' => $notaOriginal]);
+            if($notaOriginal<$notaRecuperacaoParalela2){
+                $nota = new Avaliacao_Model_NotaComponente([
+                    'componenteCurricular' => $this->getRequest()->componente_curricular_id,
+                    'etapa' => $this->getRequest()->etapa,
+                    'nota' => $notaOriginal,
+                    'notaRecuperacaoEspecifica' => $notaRecuperacaoParalela,
+                    'notaOriginal' =>  $notaRecuperacaoParalela]);
+
+            }else{
+                $nota = new Avaliacao_Model_NotaComponente([
+                    'componenteCurricular' => $this->getRequest()->componente_curricular_id,
+                    'etapa' => $this->getRequest()->etapa,
+                    'nota' => $notaOriginal,
+                    'notaRecuperacaoEspecifica' => $notaRecuperacaoParalela,
+                    'notaOriginal' => $notaOriginal]);
+
+            }
+
+            
 
             $this->serviceBoletim()->addNota($nota);
             $this->trySaveServiceBoletim();
@@ -1464,7 +1479,7 @@ class DiarioApiController extends ApiCoreController
                         'notaRecuperacaoParalela' => $notaRecuperacao->notaRecuperacaoParalela,
                     ]);
 
-                    $this->serviceBoletim()->addNota(10);
+                    $this->serviceBoletim()->addNota($nota);
                     $this->trySaveServiceBoletim();
                 }
 
