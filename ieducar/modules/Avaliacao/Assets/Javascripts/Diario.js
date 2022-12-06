@@ -29,7 +29,7 @@ var locked = false;
 $(function() {
     navegacaoTab(dataResponse.navegacao_tab);
 });
-
+ 
 //url builders
 var deleteResourceUrlBuilder = {
   buildUrl : function(urlBase, resourceName, additionalVars) {

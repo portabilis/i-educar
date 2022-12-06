@@ -1,4 +1,5 @@
 <?php
+ 
 
 class DiarioController extends Portabilis_Controller_Page_ListController
 {
