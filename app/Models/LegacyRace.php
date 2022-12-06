@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\Ativo;
 use App\Traits\HasLegacyDates;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class LegacyRace extends LegacyModel
 {
+    use Ativo;
     use HasLegacyDates;
 
     /**

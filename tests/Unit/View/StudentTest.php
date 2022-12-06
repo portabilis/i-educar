@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\View;
 
-use App\Models\CensusStudent;
 use App\Models\GuardianType;
 use App\Models\Individual;
 use App\Models\LogUnification;
@@ -18,7 +17,6 @@ class StudentTest extends ViewTestCase
     protected $relations = [
         'individual' => Individual::class,
         'religion' => Religion::class,
-        'census' => CensusStudent::class,
         'registrations' => Registration::class,
         'createdBy' => Individual::class,
         'deletedBy' => Individual::class,
