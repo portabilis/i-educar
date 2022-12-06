@@ -562,14 +562,23 @@ class DiarioApiController extends ApiCoreController
     {
         if ($this->canPostNota()) {
             $notaOriginal = $this->getNotaOriginal();
+
             $notaRecuperacaoParalela = urldecode($this->getRequest()->att_value);
+            $notaRecuperacaoParalela = str_replace(',', '.', $notaRecuperacaoParalela);
+            $nova_nota = 0;
+
+            if($notaOriginal<$notaRecuperacaoParalela){
+                $nova_nota = $notaRecuperacaoParalela;
+            }else{
+                $nova_nota = $notaOriginal;
+            }
 
             $nota = new Avaliacao_Model_NotaComponente([
                 'componenteCurricular' => $this->getRequest()->componente_curricular_id,
                 'etapa' => $this->getRequest()->etapa,
                 'nota' => $notaOriginal,
                 'notaRecuperacaoEspecifica' => $notaRecuperacaoParalela,
-                'notaOriginal' => $notaOriginal]);
+                'notaOriginal' => $nova_nota]);
 
             $this->serviceBoletim()->addNota($nota);
             $this->trySaveServiceBoletim();
@@ -1464,7 +1473,7 @@ class DiarioApiController extends ApiCoreController
                         'notaRecuperacaoParalela' => $notaRecuperacao->notaRecuperacaoParalela,
                     ]);
 
-                    $this->serviceBoletim()->addNota($nota);
+                    $this->serviceBoletim()->addNota(10);
                     $this->trySaveServiceBoletim();
                 }
 
