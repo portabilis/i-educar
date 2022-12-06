@@ -570,7 +570,7 @@ class DiarioApiController extends ApiCoreController
                 $nota = new Avaliacao_Model_NotaComponente([
                     'componenteCurricular' => $this->getRequest()->componente_curricular_id,
                     'etapa' => $this->getRequest()->etapa,
-                    'nota' => $notaOriginal,
+                    'nota' => $notaRecuperacaoParalela,
                     'notaRecuperacaoEspecifica' => $notaRecuperacaoParalela,
                     'notaOriginal' =>  $notaRecuperacaoParalela]);
 
