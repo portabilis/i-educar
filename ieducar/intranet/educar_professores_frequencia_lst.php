@@ -150,7 +150,7 @@ return new class extends clsListagem {
                 $registraDiarioIndividual = false;
                 $data_formatada = dataToBrasil($registro['data']);
 
-                if (!$eh_professor && ($registro['professor_turma'] != $registro['professor_registro'] && $registro['professor_registro'] != 'Administrador' && $registro['professor_registro'] != 'Coordenador')) {
+                if (!$eh_professor && (!empty($registro['professor_registro']) && $registro['professor_turma'] != $registro['professor_registro'] && $registro['professor_registro'] != 'Administrador' && $registro['professor_registro'] != 'Coordenador')) {
                     continue;
                 }
 
