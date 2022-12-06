@@ -566,26 +566,17 @@ class DiarioApiController extends ApiCoreController
         if ($this->canPostNota()) {
             $notaOriginal = $this->getNotaOriginal();
             $notaRecuperacaoParalela = urldecode($this->getRequest()->att_value);
-            $notaRecuperacaoParalela2 = str_replace(',', '.', $notaRecuperacaoParalela);
-            $nova_nota = 0;
+          
 
-            if($notaOriginal<$notaRecuperacaoParalela2){
-                $nota = new Avaliacao_Model_NotaComponente([
-                    'componenteCurricular' => $this->getRequest()->componente_curricular_id,
-                    'etapa' => $this->getRequest()->etapa,
-                    'nota' => $notaRecuperacaoParalela,
-                    'notaRecuperacaoEspecifica' => $notaRecuperacaoParalela,
-                    'notaOriginal' =>  $notaRecuperacaoParalela]);
-
-            }else{
-                $nota = new Avaliacao_Model_NotaComponente([
+                    $nota = new Avaliacao_Model_NotaComponente([
                     'componenteCurricular' => $this->getRequest()->componente_curricular_id,
                     'etapa' => $this->getRequest()->etapa,
                     'nota' => $notaOriginal,
                     'notaRecuperacaoEspecifica' => $notaRecuperacaoParalela,
-                    'notaOriginal' => $notaOriginal]);
+                    'notaOriginal' => $notaOriginal
+                ]);
 
-            }
+            
 
             
 
@@ -595,13 +586,43 @@ class DiarioApiController extends ApiCoreController
 
             $nota_alunos = LegacyDisciplineScoreStudent::where('matricula_id', $this->getRequest()->matricula_id)->get();
             foreach($nota_alunos as $nota_aluno) {
+           
             $contador =0;
             $soma_notas =0;
             $soma_notas_arredondadas =0;
-            $nota_componente_curricular = LegacyDisciplineScore::where('nota_aluno_id', $nota_aluno->id)->get();
+            $nota_componente_curricular = LegacyDisciplineScore::whereNotNull('nota_recuperacao_especifica')->where('nota_aluno_id', $nota_aluno->id)->get();
             foreach($nota_componente_curricular as $list) {
+                $nota1 = 0;
+                $nota2 = 0;
                 $contador++;
-                $soma_notas = $soma_notas + $list->nota;
+                $nota1 = $list->nota_arredondada;
+                $notaRecuperacao = $list->nota_recuperacao_especifica;
+                $etapa_anterior = $list->etapa-1;
+                $nota_componente_curricular_anterior = LegacyDisciplineScore::where('nota_aluno_id', $nota_aluno->id)->where('etapa', $etapa_anterior)->get();
+                foreach($nota_componente_curricular_anterior as $list2) {
+                    $contador++;
+                    $nota2 = $list2->nota_arredondada;
+                }
+                if($nota1<$nota2){
+                    if($notaRecuperacao>$nota1){
+                        $nota1 = $notaRecuperacao;   
+                    }
+                    
+                }elseif($nota2<$nota1){
+                    if($notaRecuperacao>$nota2){
+                        $nota2 = $notaRecuperacao;   
+                    }
+                   
+                }elseif($nota2==$nota1){
+
+                    if($notaRecuperacao>$nota1){
+                        $nota1 = $notaRecuperacao;   
+                    }
+                  
+                }
+
+               
+                $soma_notas = $soma_notas + ($nota1 + $nota2);
                 $soma_notas_arredondadas = $soma_notas_arredondadas + $list->nota_arredondada;   
             }
             $media = $soma_notas / $contador;
@@ -609,12 +630,12 @@ class DiarioApiController extends ApiCoreController
 
             LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->update([
                 'media' => $media,
-                'media_arredondada' => $media_arredondada
+                'media_arredondada' => $media
                
             ]);
         }
 
-        }
+    }
 
         // Se está sendo lançada nota de recuperação, obviamente o campo deve ser visível
         $this->appendResponse('should_show_recuperacao_especifica', true);
