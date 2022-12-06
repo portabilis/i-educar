@@ -579,6 +579,7 @@ class DiarioApiController extends ApiCoreController
                 'nota' => $notaOriginal,
                 'notaRecuperacaoEspecifica' => $notaRecuperacaoParalela,
                 'notaOriginal' => $nova_nota]);
+                
 
             $this->serviceBoletim()->addNota($nota);
             $this->trySaveServiceBoletim();
