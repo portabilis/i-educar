@@ -25,6 +25,10 @@ class LegacyIndividual extends Model
      */
     protected $primaryKey = 'idpes';
 
+    protected $dates = [
+        'data_nasc',
+    ];
+
     /**
      * @var array
      */
