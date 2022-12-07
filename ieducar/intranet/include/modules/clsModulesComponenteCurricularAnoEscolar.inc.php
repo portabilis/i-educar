@@ -95,6 +95,7 @@ class clsModulesComponenteCurricularAnoEscolar extends Model
     public function updateInfo()
     {
         $c = $u = $i = $d = 0;
+        $componentesArray = [];
 
         foreach ($this->componentes as $componente) {
             $componentesArray[$c] = $componente['id'];
