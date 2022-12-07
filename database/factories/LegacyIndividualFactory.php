@@ -28,6 +28,10 @@ class LegacyIndividualFactory extends Factory
             'idpes_mae' => static fn () => LegacyPersonFactory::new()->create(),
             'idpes_pai' => static fn () => LegacyPersonFactory::new()->create(),
             'idpes_responsavel' => static fn () =>LegacyPersonFactory::new()->create(),
+            'sexo' => $this->faker->randomElement(['M', 'F']),
+            'data_nasc' => $this->faker->date(),
+            'zona_localizacao_censo' => $this->faker->randomElement([1, 2]),
+            'idmun_nascimento' => CityFactory::new()->create(),
         ];
     }
 
