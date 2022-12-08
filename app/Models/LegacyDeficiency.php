@@ -21,7 +21,7 @@ class LegacyDeficiency extends LegacyModel
      */
     public $timestamps = false;
 
-    public $builder = LegacyDeficiencyBuilder::class;
+    public string $builder = LegacyDeficiencyBuilder::class;
 
     protected $fillable = [
         'nm_deficiencia',
