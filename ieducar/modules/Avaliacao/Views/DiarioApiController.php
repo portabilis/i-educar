@@ -450,7 +450,7 @@ class DiarioApiController extends ApiCoreController
             $media = round($media , 2);
            
 
-            LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->update([
+            LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->update([
                 'media' => $media,
                 'media_arredondada' => $media
                
@@ -652,7 +652,7 @@ class DiarioApiController extends ApiCoreController
             $media = round($media , 2);
             $media_arredondada = $soma_notas_arredondadas / $contador;
 
-            LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->update([
+            LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->update([
                 'media' => $media,
                 'media_arredondada' => $media
                
@@ -763,7 +763,7 @@ class DiarioApiController extends ApiCoreController
         $media = round($media , 2);
        
 
-        LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->update([
+        LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->update([
             'media' => $media,
             'media_arredondada' => $media
            
