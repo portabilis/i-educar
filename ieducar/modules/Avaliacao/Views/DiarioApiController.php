@@ -439,10 +439,10 @@ class DiarioApiController extends ApiCoreController
            
             $contador =0;
             $soma_notas =0;
-            $nota_componente_curricular = LegacyDisciplineScore::whereNotNull('nota_arredondada')->where('nota_aluno_id', $nota_aluno->id)->get();
+            $nota_componente_curricular = LegacyDisciplineScore::whereNotNull('nota')->where('nota_aluno_id', $nota_aluno->id)->get();
             foreach($nota_componente_curricular as $list) {
                 $contador++;
-                $nota = $list->nota_arredondada;
+                $nota = $list->nota;
                 $soma_notas = $soma_notas + $nota;
                   
             }
@@ -745,6 +745,28 @@ class DiarioApiController extends ApiCoreController
         $this->appendResponse('situacao', $this->getSituacaoComponente());
         $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
         $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
+        $nota_alunos = LegacyDisciplineScoreStudent::where('matricula_id', $this->getRequest()->matricula_id)->get();
+        foreach($nota_alunos as $nota_aluno) {
+       
+        $contador =0;
+        $soma_notas =0;
+        $nota_componente_curricular = LegacyDisciplineScore::whereNotNull('nota')->where('nota_aluno_id', $nota_aluno->id)->get();
+        foreach($nota_componente_curricular as $list) {
+            $contador++;
+            $nota = $list->nota;
+            $soma_notas = $soma_notas + $nota;
+              
+        }
+        $media = $soma_notas / $contador;
+       
+
+        LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->update([
+            'media' => $media,
+            'media_arredondada' => $media
+           
+        ]);
+    }
+
     }
 
     protected function deleteNotaRecuperacaoParalela()
