@@ -86,14 +86,16 @@ class App_Unificacao_Base
             $this->storeLogOldDataByKeys($oldKeys, $value['tabela'], $value['coluna']);
             $addSql = $this->buildSqlExtraBeforeUnification($value['tabela']);
 
-            $this->db->Consulta(
-                "
+            if (Schema::hasTable($value['tabela'])) {
+                $this->db->Consulta(
+                    "
                     UPDATE {$value['tabela']}
                     SET {$value['coluna']} = {$this->codigoUnificador}
                     {$addSql}
                     WHERE {$value['coluna']} IN ({$stringCodigosDuplicados})
                 "
-            );
+                );
+            }
         }
     }
 
@@ -107,8 +109,9 @@ class App_Unificacao_Base
             $oldKeys = explode(',', $chavesConsultarString);
             $this->storeLogOldDataByKeys($oldKeys, $value['tabela'], $value['coluna']);
 
-            $this->db->Consulta(
-                "
+            if (Schema::hasTable($value['tabela'])) {
+                $this->db->Consulta(
+                    "
                     DELETE FROM {$value['tabela']}
                     WHERE {$value['coluna']} <>
                     (
@@ -120,15 +123,16 @@ class App_Unificacao_Base
                     )
                     AND {$value['coluna']} in ({$chavesConsultarString})
                 "
-            );
+                );
 
-            $this->db->Consulta(
-                "
+                $this->db->Consulta(
+                    "
                     UPDATE {$value['tabela']}
                     SET {$value['coluna']} = {$this->codigoUnificador}
                     WHERE {$value['coluna']} IN ({$chavesConsultarString})
                 "
-            );
+                );
+            }
         }
     }
 
@@ -165,7 +169,9 @@ class App_Unificacao_Base
         $tabelasEnvolvidas = $this->tabelasEnvolvidas();
 
         foreach ($tabelasEnvolvidas as $tabela) {
-            $this->db->Consulta("ALTER TABLE {$tabela} ENABLE TRIGGER ALL");
+            if (Schema::hasTable($tabela)) {
+                $this->db->Consulta("ALTER TABLE {$tabela} ENABLE TRIGGER ALL");
+            }
         }
     }
 
@@ -220,7 +226,10 @@ class App_Unificacao_Base
      */
     private function getOldData($table, $key, $value)
     {
-        return DB::table($table)->whereIn($key, [$value])->get();
+        if (Schema::hasTable($table)) {
+            return DB::table($table)->whereIn($key, [$value])->get();
+        }
+        return collect();
     }
 
     /**
