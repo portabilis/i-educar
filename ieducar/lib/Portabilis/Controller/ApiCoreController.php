@@ -14,7 +14,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
 
     // adicionar classe do data mapper que se deseja usar, em tais casos.
 
-    protected $_dataMapper = null;
+    protected $_dataMapper;
 
     // Variaveis utilizadas pelos validadores validatesAuthorizationToDestroy
     // e validatesAuthorizationToChange.
@@ -364,6 +364,9 @@ class ApiCoreController extends Core_Controller_Page_EditController
     protected function tryGetEntityOf($dataMapper, $id)
     {
         try {
+            if (is_null($id) || !is_numeric($id)) {
+                return null;
+            }
             $entity = $this->getEntityOf($dataMapper, $id);
         } catch (Exception) {
             $entity = null;

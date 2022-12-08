@@ -306,6 +306,30 @@ function formularioValido() {
   submitFormExterno();
 }
 
+let camposTransporte = function() {
+  let tipoTransporte = $j("#tipo_transporte");
+
+  $j("#veiculo_transporte_escolar").makeUnrequired();
+  if (tipoTransporte.val() == "nenhum") {
+    document.getElementById("veiculo_transporte_escolar").disabled = true;
+  } else if (
+    tipoTransporte.val() == "municipal" ||
+    (tipoTransporte.val() == "estadual" && tipoTransporte.val() != "nenhum")
+  ) {
+    if (obrigarCamposCenso) {
+      $j("#veiculo_transporte_escolar").makeRequired();
+    }
+    document.getElementById("veiculo_transporte_escolar").disabled = false;
+  } else {
+    document.getElementById("veiculo_transporte_escolar").disabled = true;
+  }
+  $j("#veiculo_transporte_escolar").trigger("chosen:updated");
+}
+
+$j("#tipo_transporte").on("change", function () {
+  camposTransporte();
+});
+
 function validaObrigatoriedadeRecursosTecnologicos() {
   let obrigarRecursosTecnologicos =
     $j("#obrigar_recursos_tecnologicos").val() == "1";
@@ -955,17 +979,22 @@ resourceOptions.handleGet = function (dataResponse) {
 
     $j("#transporte_observacao").val(dataResponse.observacao);
 
-    if (dataResponse.ref_idpes_destino) {
-      $j("#pessoaj_transporte_destino").val(
-        dataResponse.ref_idpes_destino +
-        " - " +
-        dataResponse.nome_destino
-      );
-      $j("#pessoaj_id").val(dataResponse.ref_idpes_destino);
-    }
   }
 
   camposTransporte();
+
+  function verificaObrigatoriedadeRg() {
+    $j("#data_emissao_rg").makeUnrequired();
+    $j("#orgao_emissao_rg").makeUnrequired();
+    $j("#uf_emissao_rg").makeUnrequired();
+    if ($j("#rg").val().trim().length && obrigarCamposCenso) {
+      $j("#data_emissao_rg").makeRequired();
+      $j("#orgao_emissao_rg").makeRequired();
+      $j("#uf_emissao_rg").makeRequired();
+    }
+  }
+
+  $j("#rg").on("change", verificaObrigatoriedadeRg);
 
   setTimeout(function () {
     $veiculo_transporte_escolar = $j("#veiculo_transporte_escolar");
@@ -2494,7 +2523,7 @@ function canShowParentsFields() {
       );
       $j("#dialog-form-pessoa-aluno").dialog("open");
       $j("#postal_code").val("");
-      permiteEditarEndereco();
+
       checkTipoNacionalidade();
 
       $j(".ui-widget-overlay").click(function () {
@@ -2599,7 +2628,6 @@ function canShowParentsFields() {
 
       editar_pessoa = true;
 
-      permiteEditarEndereco();
       checkTipoNacionalidade();
     });
 
@@ -3086,63 +3114,6 @@ if ($j("#transporte_rota").length > 0) {
       campoPonto.options[0].text = "Rota sem pontos";
     }
   }
-
-  function camposTransporte() {
-    $tipoTransporte = $j("#tipo_transporte");
-
-    $j("#veiculo_transporte_escolar").makeUnrequired();
-    if ($tipoTransporte.val() == "nenhum") {
-      document.getElementById(
-        "veiculo_transporte_escolar"
-      ).disabled = true;
-      $j("#transporte_rota").closest("tr").hide();
-      $j("#transporte_ponto").closest("tr").hide();
-      $j("#pessoaj_transporte_destino").closest("tr").hide();
-      $j("#transporte_observacao").closest("tr").hide();
-    } else if (
-      $tipoTransporte.val() == "municipal" ||
-      ($tipoTransporte.val() == "estadual" &&
-        $tipoTransporte.val() != "nenhum")
-    ) {
-      if (obrigarCamposCenso) {
-        $j("#veiculo_transporte_escolar").makeRequired();
-      }
-      document.getElementById(
-        "veiculo_transporte_escolar"
-      ).disabled = false;
-      $j("#transporte_rota").closest("tr").show();
-      $j("#transporte_ponto").closest("tr").show();
-      $j("#pessoaj_transporte_destino").closest("tr").show();
-      $j("#transporte_observacao").closest("tr").show();
-    } else {
-      document.getElementById(
-        "veiculo_transporte_escolar"
-      ).disabled = true;
-      $j("#transporte_rota").closest("tr").hide();
-      $j("#transporte_ponto").closest("tr").hide();
-      $j("#pessoaj_transporte_destino").closest("tr").hide();
-      $j("#transporte_observacao").closest("tr").hide();
-    }
-
-    $j("#veiculo_transporte_escolar").trigger("chosen:updated");
-  }
-
-  $j("#tipo_transporte").on("change", function () {
-    camposTransporte();
-  });
-
-  function verificaObrigatoriedadeRg() {
-    $j("#data_emissao_rg").makeUnrequired();
-    $j("#orgao_emissao_rg").makeUnrequired();
-    $j("#uf_emissao_rg").makeUnrequired();
-    if ($j("#rg").val().trim().length && obrigarCamposCenso) {
-      $j("#data_emissao_rg").makeRequired();
-      $j("#orgao_emissao_rg").makeRequired();
-      $j("#uf_emissao_rg").makeRequired();
-    }
-  }
-
-  $j("#rg").on("change", verificaObrigatoriedadeRg);
 }
 
 aluno_inep_id.on("keyup change", function () {

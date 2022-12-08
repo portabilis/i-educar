@@ -2,7 +2,6 @@
 
 use App\Models\City;
 use App\Models\EmployeeInep;
-use App\Models\LegacyEducationNetwork;
 use App\Models\LegacyPerson;
 use App\Models\SchoolManager;
 use App\Rules\SchoolManagerAtLeastOneChief;
@@ -58,7 +57,6 @@ return new class extends clsCadastro {
     public $ref_usuario_cad;
     public $ref_usuario_exc;
     public $ref_cod_instituicao;
-    public $ref_cod_escola_rede_ensino;
     public $ref_idpes;
     public $cnpj;
     public $sigla;
@@ -186,8 +184,8 @@ return new class extends clsCadastro {
     public $qtd_vice_diretor;
     public $qtd_orientador_comunitario;
     public $iddis;
-    public  $pessoaj_idpes;
-    public  $pessoaj_id;
+    public $pessoaj_idpes;
+    public $pessoaj_id;
     public bool $pesquisaPessoaJuridica = true;
     public $poder_publico_parceria_convenio;
     public $formas_contratacao_adm_publica_e_outras_instituicoes;
@@ -270,7 +268,7 @@ return new class extends clsCadastro {
         $this->pesquisaPessoaJuridica = true;
 
         if (is_numeric($_POST['pessoaj_id']) && !$this->cod_escola) {
-            $pessoaJuridicaId = (int) $_POST['pessoaj_id'];
+            $pessoaJuridicaId = (int)$_POST['pessoaj_id'];
             if (!$this->pessoaJuridicaContemEscola($pessoaJuridicaId)) {
                 return false;
             }
@@ -491,7 +489,7 @@ return new class extends clsCadastro {
 
     private function pessoaJuridicaContemEscola($pessoaj_id)
     {
-        $escola = (new clsPmieducarEscola())->lista(null, null, null, null, null, null, $pessoaj_id);
+        $escola = (new clsPmieducarEscola())->lista(null, null,  null, null, null, $pessoaj_id);
 
         if (is_array($escola) && count($escola) > 0) {
             $current = current($escola);
@@ -525,12 +523,12 @@ return new class extends clsCadastro {
 
         $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
 
-        $this->campoOculto('obrigar_campos_censo', (int) $obrigarCamposCenso);
+        $this->campoOculto('obrigar_campos_censo', (int)$obrigarCamposCenso);
         $this->campoOculto('pessoaj_id_oculto', $this->pessoaj_id);
         $this->campoOculto('pessoaj_id', $this->pessoaj_id);
 
         if ($this->pesquisaPessoaJuridica) {
-            $this->inputsHelper()->simpleSearchPessoaj('idpes', ['label'=> 'Pessoa Jurídica']);
+            $this->inputsHelper()->simpleSearchPessoaj('idpes', ['label' => 'Pessoa Jurídica']);
             $this->acao_enviar = false;
             $this->url_cancelar = false;
             $this->array_botao = ['Continuar', 'Cancelar'];
@@ -574,26 +572,6 @@ return new class extends clsCadastro {
                     die('Usuário não é do nivel poli-institucional e não possui uma instituição');
                 }
             }
-
-            $opcoes = ['' => 'Selecione'];
-
-            // EDITAR
-            $script = 'javascript:showExpansivelIframe(520, 120, \'educar_escola_rede_ensino_cad_pop.php\');';
-            $display = "'display: none;'";
-            if ($this->ref_cod_instituicao) {
-                $opcoes = LegacyEducationNetwork::query()
-                    ->where('ativo', 1)
-                    ->where('ref_cod_instituicao', $this->ref_cod_instituicao)
-                    ->orderBy('nm_rede', 'ASC')
-                    ->pluck('nm_rede', 'cod_escola_rede_ensino')
-                    ->prepend('Selecione', '');
-
-                $display = "'display: '';'";
-            }
-
-            $script = "<img id='img_rede_ensino' style={$display}  src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
-
-            $this->campoLista('ref_cod_escola_rede_ensino', 'Rede Ensino', $opcoes, $this->ref_cod_escola_rede_ensino, '', false, '', $script);
 
             $zonas = App_Model_ZonaLocalizacao::getInstance();
             $zonas = [null => 'Selecione'] + $zonas->getEnums();
@@ -664,25 +642,6 @@ return new class extends clsCadastro {
                 }
             }
 
-            $opcoes = ['' => 'Selecione'];
-
-            // EDITAR
-            $script = 'javascript:showExpansivelIframe(520, 120, \'educar_escola_rede_ensino_cad_pop.php\');';
-            if ($this->ref_cod_instituicao) {
-                $opcoes = LegacyEducationNetwork::query()
-                    ->where('ativo', 1)
-                    ->where('ref_cod_instituicao', $this->ref_cod_instituicao)
-                    ->orderBy('nm_rede', 'ASC')
-                    ->pluck('nm_rede', 'cod_escola_rede_ensino')
-                    ->prepend('Selecione', '');
-
-                $script = "<img id='img_rede_ensino' style='display:\'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
-            } else {
-                $script = "<img id='img_rede_ensino' style='display: none;'  src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
-            }
-
-            $this->campoLista('ref_cod_escola_rede_ensino', 'Rede Ensino', $opcoes, $this->ref_cod_escola_rede_ensino, '', false, '', $script);
-
             $zonas = App_Model_ZonaLocalizacao::getInstance();
             $zonas = [null => 'Selecione'] + $zonas->getEnums();
 
@@ -737,7 +696,7 @@ return new class extends clsCadastro {
             $this->inputsHelper()->select('dependencia_administrativa', $options);
 
             $orgaos = OrgaoVinculadoEscola::getDescriptiveValues();
-            $helperOptions = ['objectName'  => 'orgao_vinculado_escola'];
+            $helperOptions = ['objectName' => 'orgao_vinculado_escola'];
             $options = [
                 'label' => 'Órgão ao qual a escola pública está vinculada',
                 'size' => 50,
@@ -883,11 +842,11 @@ return new class extends clsCadastro {
             $this->addSchoolManagersTable();
 
             if ($_POST['escola_curso']) {
-                $this->escola_curso = unserialize(urldecode($_POST['escola_curso']),['stdclass']);
+                $this->escola_curso = unserialize(urldecode($_POST['escola_curso']), ['stdclass']);
             }
 
             if ($_POST['escola_curso_autorizacao']) {
-                $this->escola_curso_autorizacao = unserialize(urldecode($_POST['escola_curso_autorizacao']),['stdclass']);
+                $this->escola_curso_autorizacao = unserialize(urldecode($_POST['escola_curso_autorizacao']), ['stdclass']);
             }
 
             if ($_POST['escola_curso_anos_letivos']) {
@@ -938,7 +897,7 @@ return new class extends clsCadastro {
                         $anosLetivos = $this->escola_curso_anos_letivos[$curso] ?: [];
                         $this->campoTextoInv("ref_cod_curso_{$curso}", '', $nm_curso, 50, 255, false, false, true);
                         $this->campoTextoInv("autorizacao_{$curso}", '', $nm_autorizacao, 20, 255);
-                        $this->campoTextoInv("anos_letivos_{$curso}", '', 'Anos: '.implode(',', $anosLetivos), 20, 255, false, false, false, '', "<a href='#' onclick=\"getElementById('excluir_curso').value = '{$curso}'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>");
+                        $this->campoTextoInv("anos_letivos_{$curso}", '', 'Anos: ' . implode(',', $anosLetivos), 20, 255, false, false, false, '', "<a href='#' onclick=\"getElementById('excluir_curso').value = '{$curso}'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>");
                         $aux[$curso] = $curso;
                         $aux_autorizacao[$curso] = $nm_autorizacao;
                         $auxAnosLetivos[$curso] = $anosLetivos;
@@ -1579,8 +1538,8 @@ return new class extends clsCadastro {
             return false;
         }
 
-        if (! isset($this->pessoaj_id_oculto) ||
-            ! is_int((int)$this->pessoaj_id_oculto)
+        if (!isset($this->pessoaj_id_oculto) ||
+            !is_int((int)$this->pessoaj_id_oculto)
         ) {
             $this->mensagem = 'Erro ao selecionar a pessoa jurídica';
             return false;
@@ -1626,8 +1585,8 @@ return new class extends clsCadastro {
     {
         for ($i = 1; $i <= 6; $i++) {
             $seq = $i == 1 ? '' : $i;
-            $campo = 'codigo_inep_escola_compartilhada'.$seq;
-            $ret = $this->validaDigitosInepEscola($this->$campo, 'Código da escola que compartilha o prédio '.$i);
+            $campo = 'codigo_inep_escola_compartilhada' . $seq;
+            $ret = $this->validaDigitosInepEscola($this->$campo, 'Código da escola que compartilha o prédio ' . $i);
             if (!$ret) {
                 return false;
             }
@@ -1637,7 +1596,7 @@ return new class extends clsCadastro {
 
     public function validaCnpjMantenedora(): bool
     {
-        if((int)$this->dependencia_administrativa === DependenciaAdministrativaEscola::PRIVADA &&
+        if ((int)$this->dependencia_administrativa === DependenciaAdministrativaEscola::PRIVADA &&
             !empty($this->cnpj_mantenedora_principal) &&
             !validaCNPJ($this->cnpj_mantenedora_principal)) {
             $this->mensagem = 'O CNPJ da mantenedora principal é inválido. Favor verificar.';
@@ -1676,10 +1635,10 @@ return new class extends clsCadastro {
 
     private function constroiObjetoEscola($pessoaj_id_oculto, $escola = null)
     {
-        if($escola instanceof clsPmieducarEscola) {
+        if ($escola instanceof clsPmieducarEscola) {
             $obj = $escola;
         } else {
-            $obj = new clsPmieducarEscola(null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->zona_localizacao, $this->ref_cod_escola_rede_ensino,$pessoaj_id_oculto, $this->sigla, null, null, 1, null, $this->bloquear_lancamento_diario_anos_letivos_encerrados);
+            $obj = new clsPmieducarEscola(null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->zona_localizacao, $pessoaj_id_oculto, $this->sigla, null, null, 1, null, $this->bloquear_lancamento_diario_anos_letivos_encerrados);
         }
 
         $obj->situacao_funcionamento = $this->situacao_funcionamento;
@@ -1783,11 +1742,11 @@ return new class extends clsCadastro {
         $this->cadastraTelefone($idpes, 1, str_replace('-', '', $this->p_telefone_1), $this->p_ddd_telefone_1);
         $this->cadastraTelefone($idpes, 2, str_replace('-', '', $this->p_telefone_2), $this->p_ddd_telefone_2);
         $this->cadastraTelefone($idpes, 3, str_replace('-', '', $this->p_telefone_mov), $this->p_ddd_telefone_mov);
-        $this->cadastraTelefone($idpes,4, str_replace('-', '', $this->p_telefone_fax), $this->p_ddd_telefone_fax);
+        $this->cadastraTelefone($idpes, 4, str_replace('-', '', $this->p_telefone_fax), $this->p_ddd_telefone_fax);
 
     }
 
-    private function cadastraTelefone($idpes,$tipo,$telefone, $ddd)
+    private function cadastraTelefone($idpes, $tipo, $telefone, $ddd)
     {
         return (new clsPessoaTelefone($idpes, $tipo, $telefone, $ddd, $this->pessoa_logada))->cadastra();
     }
@@ -1796,7 +1755,7 @@ return new class extends clsCadastro {
     {
         $escola = $this->constroiObjetoEscola($pessoaj_id_oculto);
 
-        $cod_escola =  $escola->cadastra();
+        $cod_escola = $escola->cadastra();
 
         if ($cod_escola === false) {
             $this->mensagem = 'Cadastro não realizado<br>';
@@ -1831,7 +1790,7 @@ return new class extends clsCadastro {
         $this->uso_internet = $this->transformArrayInString($this->uso_internet);
         $this->rede_local = $this->transformArrayInString($this->rede_local);
         $this->equipamentos_acesso_internet = $this->transformArrayInString($this->equipamentos_acesso_internet);
-        $this->organizacao_ensino = $this->transformArrayInString( $this->organizacao_ensino);
+        $this->organizacao_ensino = $this->transformArrayInString($this->organizacao_ensino);
         $this->instrumentos_pedagogicos = $this->transformArrayInString($this->instrumentos_pedagogicos);
         $this->orgaos_colegiados = $this->transformArrayInString($this->orgaos_colegiados);
         $this->reserva_vagas_cotas = $this->transformArrayInString($this->reserva_vagas_cotas);
@@ -1895,7 +1854,7 @@ return new class extends clsCadastro {
         $this->bloquear_lancamento_diario_anos_letivos_encerrados = is_null($this->bloquear_lancamento_diario_anos_letivos_encerrados) ? 0 : 1;
         $this->utiliza_regra_diferenciada = !is_null($this->utiliza_regra_diferenciada);
 
-        $obj = new clsPmieducarEscola($this->cod_escola, null, $this->pessoa_logada, $this->ref_cod_instituicao, $this->zona_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, $this->bloquear_lancamento_diario_anos_letivos_encerrados, $this->utiliza_regra_diferenciada);
+        $obj = new clsPmieducarEscola($this->cod_escola, null, $this->pessoa_logada, $this->ref_cod_instituicao, $this->zona_localizacao, $this->ref_idpes, $this->sigla, null, null, 1, $this->bloquear_lancamento_diario_anos_letivos_encerrados, $this->utiliza_regra_diferenciada);
 
         $escola = $this->constroiObjetoEscola($this->ref_idpes, $obj);
 
@@ -1910,7 +1869,7 @@ return new class extends clsCadastro {
 
         $this->saveAddress($this->ref_idpes);
 
-        if (!$this->cadastraEscolaCurso($this->cod_escola,true)) {
+        if (!$this->cadastraEscolaCurso($this->cod_escola, true)) {
             return false;
         }
 
@@ -1988,24 +1947,23 @@ return new class extends clsCadastro {
         }
 
         return $this->validaEscolaPrivada() &&
-                $this->validaOcupacaoPredio() &&
-                $this->validaLocalizacaoDiferenciada() &&
-                $this->validaEsferaAdministrativa() &&
-                $this->validaDigitosInepEscola($this->inep_escola_sede, 'Código escola sede') &&
-                $this->inepEscolaSedeDiferenteDaEscolaPrincipal() &&
-                $this->validateCensusManagerRules() &&
-                $this->validaEscolaCompartilhaPredio() &&
-                $this->validaSalasUtilizadasDentroEscola() &&
-                $this->validaSalasUtilizadasForaEscola() &&
-                $this->validaSalasClimatizadas() &&
-                $this->validaSalasAcessibilidade() &&
-                $this->validaEquipamentosAcessoInternet() &&
-                $this->validaQuantidadeComputadoresAlunos() &&
-                $this->validaQuantidadeEquipamentosEnsino() &&
-                $this->validaLinguasIndigenas() &&
-                $this->validaFormasDeContratacaoEntreAdministracaoPublicaEOutrasInstituicoes() &&
-                $this->validaMatriculasAtendidasPorConvenio()
-            ;
+            $this->validaOcupacaoPredio() &&
+            $this->validaLocalizacaoDiferenciada() &&
+            $this->validaEsferaAdministrativa() &&
+            $this->validaDigitosInepEscola($this->inep_escola_sede, 'Código escola sede') &&
+            $this->inepEscolaSedeDiferenteDaEscolaPrincipal() &&
+            $this->validateCensusManagerRules() &&
+            $this->validaEscolaCompartilhaPredio() &&
+            $this->validaSalasUtilizadasDentroEscola() &&
+            $this->validaSalasUtilizadasForaEscola() &&
+            $this->validaSalasClimatizadas() &&
+            $this->validaSalasAcessibilidade() &&
+            $this->validaEquipamentosAcessoInternet() &&
+            $this->validaQuantidadeComputadoresAlunos() &&
+            $this->validaQuantidadeEquipamentosEnsino() &&
+            $this->validaLinguasIndigenas() &&
+            $this->validaFormasDeContratacaoEntreAdministracaoPublicaEOutrasInstituicoes() &&
+            $this->validaMatriculasAtendidasPorConvenio();
     }
 
     protected function validaFormasDeContratacaoEntreAdministracaoPublicaEOutrasInstituicoes(): bool
@@ -2017,7 +1975,7 @@ return new class extends clsCadastro {
         if (is_array($formasDeContratacao) && in_array((int)$this->dependencia_administrativa, $acceptDependenciaAdministrativa, true)) {
 
             $data = array_filter($formasDeContratacao,
-                static fn($forma)  => in_array((int)$forma, $notAcceptFormasDeContratoInDependenciaAdministrativa, true)
+                static fn($forma) => in_array((int)$forma, $notAcceptFormasDeContratoInDependenciaAdministrativa, true)
             );
 
             if (count($data) !== 0) {
@@ -2026,12 +1984,12 @@ return new class extends clsCadastro {
             }
         }
 
-        $categoriaEscolaPrivadaLista = [2,3,4];
-        $notAcceptFormasDeContratoInDependenciaAdministrativa = [5,6];
+        $categoriaEscolaPrivadaLista = [2, 3, 4];
+        $notAcceptFormasDeContratoInDependenciaAdministrativa = [5, 6];
         if (is_array($formasDeContratacao) && in_array((int)$this->categoria_escola_privada, $categoriaEscolaPrivadaLista, true)) {
 
             $data = array_filter($formasDeContratacao,
-                static fn($forma)  => !in_array((int)$forma, $notAcceptFormasDeContratoInDependenciaAdministrativa, true)
+                static fn($forma) => !in_array((int)$forma, $notAcceptFormasDeContratoInDependenciaAdministrativa, true)
             );
 
             if (count($data) === 0) {
@@ -2047,7 +2005,7 @@ return new class extends clsCadastro {
                 return false;
             }
 
-            if (count($formasDeContratacao) > 1)    {
+            if (count($formasDeContratacao) > 1) {
                 $this->mensagem = 'Quando o campo "Categoria da escola privada" for igual à "Particular" só é possível cadastrar "Contrato de prestação de serviço"';
                 return false;
             }
@@ -2101,7 +2059,7 @@ return new class extends clsCadastro {
             $cityIBGE
         ));
 
-        if (! $esferaAdministrativaValidator->isValid()) {
+        if (!$esferaAdministrativaValidator->isValid()) {
             $this->mensagem = $esferaAdministrativaValidator->getMessage();
             return false;
         }
@@ -2123,8 +2081,8 @@ return new class extends clsCadastro {
 
         if (empty($this->mantenedora_escola_privada) ||
             (is_array($this->mantenedora_escola_privada) &&
-            count($this->mantenedora_escola_privada) == 1 &&
-            empty($this->mantenedora_escola_privada[0]))) {
+                count($this->mantenedora_escola_privada) == 1 &&
+                empty($this->mantenedora_escola_privada[0]))) {
             $this->mensagem = 'O campo mantenedora da escola privada é obrigatório para escolas em atividade de administração privada.';
 
             return false;
@@ -2164,7 +2122,7 @@ return new class extends clsCadastro {
         $msgRequereTelefone = "O campo: {$nomeCampo}, deve ser preenchido quando o DDD estiver preenchido.";
         $msgRequereDDD = "O campo: DDD, deve ser preenchido quando o {$nomeCampo} estiver preenchido.";
         $msgDDDInvalido = "O campo: DDD, possui um valor inválido";
-        $listDDDInvalidos = [0,1,2,3,4,5,6,7,8,9,10,20,23,25,26,29,30,36,39,40,50,52,56,57,58,59,60,70,72,76,78,80,90];
+        $listDDDInvalidos = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 23, 25, 26, 29, 30, 36, 39, 40, 50, 52, 56, 57, 58, 59, 60, 70, 72, 76, 78, 80, 90];
 
         if (!empty($valorDDD) && empty($valorTelefone)) {
             $this->mensagem = $msgRequereTelefone;
@@ -2178,7 +2136,7 @@ return new class extends clsCadastro {
             return false;
         }
 
-        if (!empty($valorDDD) && (strlen((int)$valorDDD) !== 2 || in_array((int)$valorDDD,$listDDDInvalidos))) {
+        if (!empty($valorDDD) && (strlen((int)$valorDDD) !== 2 || in_array((int)$valorDDD, $listDDDInvalidos))) {
             $this->mensagem = $msgDDDInvalido;
 
             return false;
@@ -2233,14 +2191,14 @@ return new class extends clsCadastro {
     protected function geraCamposCodigoInepEscolaCompartilhada()
     {
         $options = ['label_hint' => 'Caso compartilhe o prédio escolar com outra escola preencha com o código INEP',
-                        'required' => false, 'size' => 8, 'max_length' => 8, 'placeholder' => ''];
+            'required' => false, 'size' => 8, 'max_length' => 8, 'placeholder' => ''];
 
         for ($i = 1; $i <= 6; $i++) {
             $seq = $i == 1 ? '' : $i;
-            $options['label'] = 'Código da escola que compartilha o prédio '.$i;
-            $campo = 'codigo_inep_escola_compartilhada'.$seq;
+            $options['label'] = 'Código da escola que compartilha o prédio ' . $i;
+            $campo = 'codigo_inep_escola_compartilhada' . $seq;
             $options['value'] = $this->$campo;
-            $this->inputsHelper()->integer('codigo_inep_escola_compartilhada'.$seq, $options);
+            $this->inputsHelper()->integer('codigo_inep_escola_compartilhada' . $seq, $options);
         }
     }
 
@@ -2301,9 +2259,9 @@ return new class extends clsCadastro {
         $this->campoOculto('managers_email', null);
 
         $resources = [
-                0 => 'Não',
-                1 => 'Sim',
-            ];
+            0 => 'Não',
+            1 => 'Sim',
+        ];
         $options =
             [
                 'resources' => $resources,
@@ -2322,15 +2280,15 @@ return new class extends clsCadastro {
     protected function makeRowManagerTable($key, $schoolManager)
     {
         return [
-            $this->managers_inep_id[$key] ?? $schoolManager->employee->inep->number,
-            $this->managers_individual_nome[$key] ?? $schoolManager->individual->real_name,
-            $this->managers_role_id[$key] ?? $schoolManager->role_id,
+                $this->managers_inep_id[$key] ?? $schoolManager->employee->inep->number,
+                $this->managers_individual_nome[$key] ?? $schoolManager->individual->real_name,
+                $this->managers_role_id[$key] ?? $schoolManager->role_id,
             null,
-            $this->managers_chief[$key] ?? (int)$schoolManager->chief,
-            $this->servidor_id[$key] ?? $schoolManager->employee_id,
-            $this->managers_access_criteria_id[$key] ?? $schoolManager->access_criteria_id,
-            $this->managers_link_type_id[$key] ?? $schoolManager->link_type_id,
-            $this->managers_email[$key] ?? $schoolManager->individual->person->email,
+                $this->managers_chief[$key] ?? (int)$schoolManager->chief,
+                $this->servidor_id[$key] ?? $schoolManager->employee_id,
+                $this->managers_access_criteria_id[$key] ?? $schoolManager->access_criteria_id,
+                $this->managers_link_type_id[$key] ?? $schoolManager->link_type_id,
+                $this->managers_email[$key] ?? $schoolManager->individual->person->email,
         ];
     }
 
@@ -2488,14 +2446,14 @@ return new class extends clsCadastro {
 
     protected function validaSalasUtilizadasDentroEscola()
     {
+        if ($this->local_funcionamento != LocalFuncionamento::PREDIO_ESCOLAR) {
+            return true;
+        }
+
         if ($this->numero_salas_utilizadas_dentro_predio == '0') {
             $this->mensagem = 'O campo: <b>Número de salas de aula utilizadas na escola dentro do prédio escolar</b> não pode ser preenchido com 0';
 
             return false;
-        }
-
-        if ($this->local_funcionamento != LocalFuncionamento::PREDIO_ESCOLAR) {
-            return true;
         }
 
         return true;
@@ -2661,7 +2619,7 @@ return new class extends clsCadastro {
                 return false;
             }
 
-            if ((int) $this->{$key} > 0) {
+            if ((int)$this->{$key} > 0) {
                 $algumCampoPreenchido = true;
             }
         }
@@ -2681,7 +2639,7 @@ return new class extends clsCadastro {
             return true;
         }
 
-        if (!in_array(1, $this->poder_publico_parceria_convenio) && !in_array(2, $this->poder_publico_parceria_convenio)){
+        if (!in_array(1, $this->poder_publico_parceria_convenio) && !in_array(2, $this->poder_publico_parceria_convenio)) {
             return true;
         }
 
@@ -2693,7 +2651,7 @@ return new class extends clsCadastro {
                 return false;
             }
 
-            if ((int) $this->{$key} > 0) {
+            if ((int)$this->{$key} > 0) {
                 $algumCampoPreenchido = true;
             }
         }

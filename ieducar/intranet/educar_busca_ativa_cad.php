@@ -69,7 +69,7 @@ return new class extends clsCadastro {
             $legacyActiveLookings = LegacyActiveLooking::find($this->id);
 
             if ($legacyActiveLookings) {
-                foreach ($legacyActiveLookings->toArray() as $campo => $val) {
+                foreach ($legacyActiveLookings->getAttributes() as $campo => $val) {
                     $this->$campo = $val;
                 }
                 $obj_permissoes = new clsPermissoes();

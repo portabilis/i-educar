@@ -30,7 +30,7 @@ class LegacyStudentAbsence extends Model
     /**
      * @return BelongsTo
      */
-    public function registration()
+    public function registration(): BelongsTo
     {
         return $this->belongsTo(LegacyRegistration::class, 'matricula_id');
     }
@@ -38,7 +38,7 @@ class LegacyStudentAbsence extends Model
     /**
      * @return HasMany
      */
-    public function absences()
+    public function absences(): HasMany
     {
         if ($this->isByDiscipline()) {
             return $this->hasMany(LegacyDisciplineAbsence::class, 'falta_aluno_id');
@@ -50,7 +50,7 @@ class LegacyStudentAbsence extends Model
     /**
      * @return HasMany
      */
-    public function absencesByDiscipline()
+    public function absencesByDiscipline(): HasMany
     {
         return $this->hasMany(LegacyDisciplineAbsence::class, 'falta_aluno_id');
     }
@@ -58,15 +58,15 @@ class LegacyStudentAbsence extends Model
     /**
      * @return HasMany
      */
-    public function generalAbsences()
+    public function generalAbsences(): HasMany
     {
-        return $this->hasMany(LegacyGeneralAbsence::class, 'falta_aluno_id');
+        return $this->hasMany(LegacyGeneralAbsence::class, 'falta_aluno_id', 'id');
     }
 
     /**
      * @return bool
      */
-    public function isByDiscipline()
+    public function isByDiscipline(): bool
     {
         return $this->tipo_falta == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE;
     }
@@ -74,7 +74,7 @@ class LegacyStudentAbsence extends Model
     /**
      * @return bool
      */
-    public function isGeneral()
+    public function isGeneral(): bool
     {
         return $this->tipo_falta == RegraAvaliacao_Model_TipoPresenca::GERAL;
     }

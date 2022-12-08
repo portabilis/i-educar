@@ -22,8 +22,14 @@ class LegacyValueRoundingTableFactory extends Factory
     public function definition(): array
     {
         return [
-            'tabela_arredondamento_id' => LegacyRoundingTableFactory::new()->make(),
-            'nome' => $this->faker->randomNumber(1),
+            'tabela_arredondamento_id' => fn () => LegacyRoundingTableFactory::new()->create(),
+            'nome' => $this->faker->text(5),
+            'descricao' => $this->faker->text(50),
+            'valor_minimo' => $this->faker->randomNumber(1),
+            'valor_maximo' => $this->faker->randomNumber(1),
+            'casa_decimal_exata' => $this->faker->randomNumber(1),
+            'acao' => $this->faker->randomNumber(1),
+            'observacao' => $this->faker->text(50)
         ];
     }
 }

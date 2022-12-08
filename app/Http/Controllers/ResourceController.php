@@ -109,6 +109,9 @@ abstract class ResourceController extends Controller
 
     protected function filter(Builder $builder, Request $request): void
     {
+        if (method_exists($builder, 'filter')) {
+            $builder->filter($request->except('only', 'include', 'order', 'page'));
+        }
     }
 
     public function all(Model $model, Request $request): JsonResource

@@ -95,6 +95,7 @@ class clsModulesComponenteCurricularAnoEscolar extends Model
     public function updateInfo()
     {
         $c = $u = $i = $d = 0;
+        $componentesArray = [];
 
         foreach ($this->componentes as $componente) {
             $componentesArray[$c] = $componente['id'];
@@ -143,10 +144,6 @@ class clsModulesComponenteCurricularAnoEscolar extends Model
         while ($db->ProximoRegistro()) {
             $tupla = $db->Tupla();
             $componentesSerie[] = $tupla['componente_curricular_id'];
-        }
-
-        if ($componentesSerie) {
-            return $componentesSerie;
         }
 
         return $componentesSerie;

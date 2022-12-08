@@ -65,7 +65,7 @@ class clsModulesMoradiaAluno extends Model
         $fossa = null,
         $lixo = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}moradia_aluno";
 
@@ -553,13 +553,12 @@ class clsModulesMoradiaAluno extends Model
     /**
      * Retorna uma lista de registros filtrados de acordo com os parâmetros.
      *
-     * @return array
+     * @return array|false
      */
     public function lista()
     {
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = '';
-        $whereAnd = ' WHERE ';
 
         $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista)) + 2;
@@ -593,7 +592,7 @@ class clsModulesMoradiaAluno extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -611,7 +610,7 @@ class clsModulesMoradiaAluno extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

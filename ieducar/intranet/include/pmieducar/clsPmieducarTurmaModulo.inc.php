@@ -130,7 +130,7 @@ class clsPmieducarTurmaModulo extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_ref_cod_turma = null, $int_ref_cod_modulo = null, $int_sequencial = null, $date_data_inicio_ini = null, $date_data_inicio_fim = null, $date_data_fim_ini = null, $date_data_fim_fim = null, $dias_letivos = null)
     {
@@ -205,7 +205,7 @@ class clsPmieducarTurmaModulo extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -223,7 +223,7 @@ class clsPmieducarTurmaModulo extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {
@@ -245,9 +245,6 @@ class clsPmieducarTurmaModulo extends Model
      */
     public function excluir()
     {
-        if (is_numeric($this->ref_cod_turma) && is_numeric($this->ref_cod_modulo) && is_numeric($this->sequencial)) {
-        }
-
         return false;
     }
 

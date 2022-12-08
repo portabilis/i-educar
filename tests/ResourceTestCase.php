@@ -5,7 +5,11 @@ namespace Tests;
 use Database\Factories\LegacyUserFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Testing\TestResponse;
+use OpenApiGenerator\Attributes\Info;
+use OpenApiGenerator\Attributes\Server;
 
+#[Info('API i-EDUCAR', '1.0.0', 'Documentação de acesso a nossa API', 'API para Integração ao i-EDUCAR')]
+#[Server('https://ieducar.com.br', 'Endereço do servidor da Aplicação')]
 class ResourceTestCase extends TestCase
 {
     use DatabaseTransactions;
@@ -70,7 +74,7 @@ class ResourceTestCase extends TestCase
             'data' => $model->toArray(),
         ]);
 
-        $this->assertDatabaseHas($this->model, $model->toArray());
+        $this->assertDatabaseHas($this->model, $model->getAttributes());
 
         return $response;
     }
@@ -106,8 +110,8 @@ class ResourceTestCase extends TestCase
             'data' => $updatedModel->toArray(),
         ]);
 
-        $this->assertDatabaseMissing($this->model, $model->toArray());
-        $this->assertDatabaseHas($this->model, $updatedModel->toArray());
+        $this->assertDatabaseMissing($this->model, $model->getAttributes());
+        $this->assertDatabaseHas($this->model, $updatedModel->getAttributes());
 
         return $response;
     }
@@ -125,7 +129,7 @@ class ResourceTestCase extends TestCase
             'data' => $model->toArray(),
         ]);
 
-        $this->assertDatabaseMissing($this->model, $model->toArray());
+        $this->assertDatabaseMissing($this->model, $model->getAttributes());
 
         return $response;
     }

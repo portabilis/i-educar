@@ -437,7 +437,7 @@ class clsPmieducarServidorAlocacao extends Model
     /**
      * Retorna uma lista de registros filtrados de acordo com os parâmetros.
      *
-     * @return array
+     * @return array|false
      *
      * @throws Exception
      */

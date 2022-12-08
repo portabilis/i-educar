@@ -39,7 +39,7 @@ class LegacyStageTypeFactory extends Factory
                 $stageType = LegacyStageTypeFactory::new()->create();
             }
 
-            return $stageType->toArray();
+            return $stageType->getAttributes();
         });
     }
 }

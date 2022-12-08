@@ -4,7 +4,7 @@ namespace App\Rules;
 
 use App\Models\LegacyCourse;
 use App\Models\LegacyInstitution;
-use App\Models\School;
+use App\Models\LegacySchool;
 use App_Model_LocalFuncionamentoDiferenciado;
 use App_Model_TipoMediacaoDidaticoPedagogico;
 use iEducar\Modules\Educacenso\Model\EstruturaCurricular;
@@ -301,7 +301,7 @@ class CheckMandatoryCensoFields implements Rule
 
     protected function validaCampoLocalFuncionamentoDiferenciado($params)
     {
-        $school = School::find($params->ref_ref_cod_escola);
+        $school = LegacySchool::find($params->ref_ref_cod_escola);
         $localFuncionamentoEscola = $school->local_funcionamento;
         if (is_string($localFuncionamentoEscola)) {
             $localFuncionamentoEscola = explode(',', str_replace(['{', '}'], '', $localFuncionamentoEscola));

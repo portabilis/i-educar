@@ -14,7 +14,7 @@ class clsCadastroFisicaDeficiencia extends Model
      */
     public function __construct($ref_idpes = null, $ref_cod_deficiencia = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'cadastro.';
         $this->_tabela = "{$this->_schema}fisica_deficiencia";
 
@@ -87,7 +87,7 @@ class clsCadastroFisicaDeficiencia extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_ref_idpes = null, $int_ref_cod_deficiencia = null)
     {
@@ -138,7 +138,7 @@ class clsCadastroFisicaDeficiencia extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -156,7 +156,7 @@ class clsCadastroFisicaDeficiencia extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {
