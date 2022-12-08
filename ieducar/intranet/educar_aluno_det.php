@@ -4,6 +4,7 @@ use App\Models\City;
 use App\Models\Country;
 use App\Models\LegacyBenefit;
 use App\Models\LegacyProject;
+use App\Models\LegacyRace;
 use App\Models\LegacyStudent;
 use App\Models\PersonHasPlace;
 use App\Models\Religion;
@@ -73,10 +74,10 @@ return new class extends clsDetalhe {
             $obj_fisica_raca = new clsCadastroFisicaRaca();
             $lst_fisica_raca = $obj_fisica_raca->lista($this->ref_idpes);
 
+            $nameRace = null;
             if ($lst_fisica_raca) {
                 $det_fisica_raca = array_shift($lst_fisica_raca);
-                $obj_raca = new clsCadastroRaca($det_fisica_raca['ref_cod_raca']);
-                $det_raca = $obj_raca->detalhe();
+                $nameRace = LegacyRace::query()->whereKey($det_fisica_raca['ref_cod_raca'])->value('nm_raca');
             }
 
             $objFoto = new clsCadastroFisicaFoto($this->ref_idpes);
@@ -414,8 +415,8 @@ return new class extends clsDetalhe {
             $this->addDetalhe(['Religião', $nm_religiao]);
         }
 
-        if ($det_raca['nm_raca']) {
-            $this->addDetalhe(['Raça', $det_raca['nm_raca']]);
+        if ($nameRace) {
+            $this->addDetalhe(['Raça', $nameRace]);
         }
 
         if (!empty($obj_beneficios_lista)) {
@@ -563,17 +564,9 @@ return new class extends clsDetalhe {
             $this->addDetalhe(['Seção', $registro['secao_tit_eleitor']]);
         }
 
-        // Transporte escolar.
-        $transporteMapper = new Transporte_Model_AlunoDataMapper();
-        $transporteAluno = null;
-        try {
-            $transporteAluno = $transporteMapper->find(['aluno' => $this->cod_aluno]);
-        } catch (Exception) {
-        }
-
         $this->addDetalhe(['Transporte escolar', $registro['tipo_transporte'] === 0 ? 'Não utiliza' : 'Sim']);
 
-        if ($transporteAluno && $registro['tipo_transporte'] !== 0) {
+        if ($registro['tipo_transporte'] !== 0) {
             $tipoTransporte = ucfirst((new TransportationProvider())->getValueDescription($registro['tipo_transporte']));
             $this->addDetalhe(['Responsável transporte', $tipoTransporte]);
         }

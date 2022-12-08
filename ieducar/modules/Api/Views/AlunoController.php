@@ -1982,7 +1982,7 @@ class AlunoController extends ApiCoreController
             });
         });
 
-        return  ['unificacoes' => $unificationsQuery->get(['main_id', 'duplicates_id', 'created_at', 'active'])->all()];
+        return  ['unificacoes' => $unificationsQuery->get(['id', 'main_id', 'duplicates_id', 'created_at', 'active'])->all()];
     }
 
     protected function dadosUnificacaoAlunos()

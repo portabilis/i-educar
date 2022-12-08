@@ -47,7 +47,7 @@ class clsPessoaFisica extends clsPessoaFj
     ) {
         $this->idpes = $int_idpes;
         $this->cpf = $numeric_cpf;
-        
+
         parent::__construct($this->idpes);
     }
 
@@ -67,29 +67,29 @@ class clsPessoaFisica extends clsPessoaFj
 
         if (is_string($str_nome) && $str_nome != '') {
             $str_nome = $db->escapeString($str_nome);
-            $where .= "{$whereAnd} coalesce(slug, unaccent(nome)) ILIKE unaccent('%{$str_nome}%')";
+            $where .= "{$whereAnd} coalesce(slug, unaccent(p.nome)) ILIKE unaccent('%{$str_nome}%')";
             $whereAnd = ' AND ';
         }
 
         if (is_string($numeric_cpf)) {
             $numeric_cpf = pg_escape_string($numeric_cpf);
 
-            $where .= "{$whereAnd} cpf::varchar ILIKE E'%{$numeric_cpf}%' ";
+            $where .= "{$whereAnd} f.cpf::varchar ILIKE E'%{$numeric_cpf}%' ";
             $whereAnd = ' AND ';
         }
 
         if (is_numeric($int_ref_cod_sistema)) {
-            $where .= "{$whereAnd} (ref_cod_sistema = '{$int_ref_cod_sistema}' OR cpf is not null  )";
+            $where .= "{$whereAnd} (f.ref_cod_sistema = '{$int_ref_cod_sistema}' OR cpf is not null  )";
             $whereAnd = ' AND ';
         }
 
         if (is_numeric($int_idpes)) {
-            $where .= "{$whereAnd} idpes = '$int_idpes'";
+            $where .= "{$whereAnd} p.idpes = '$int_idpes'";
             $whereAnd = ' AND ';
         }
 
         if (is_numeric($ativo)) {
-            $where .= "{$whereAnd} ativo = $ativo";
+            $where .= "{$whereAnd} f.ativo = $ativo";
             $whereAnd = ' AND ';
         }
 
@@ -102,7 +102,7 @@ class clsPessoaFisica extends clsPessoaFj
         if ($str_orderBy) {
             $orderBy .= $str_orderBy . ' ';
         } else {
-            $orderBy .= 'COALESCE(nome_social, nome) ';
+            $orderBy .= 'COALESCE(f.nome_social, p.nome) ';
         }
 
         $dba = new clsBanco();
@@ -114,11 +114,17 @@ class clsPessoaFisica extends clsPessoaFj
         if (!$where) {
             $total = $db->CampoUnico('SELECT COUNT(0) FROM cadastro.fisica ' . $where);
         } else {
-            $total = $db->CampoUnico('SELECT COUNT(0) FROM cadastro.v_pessoa_fisica ' . $where);
+            $total = $db->CampoUnico('SELECT COUNT(0) FROM cadastro.pessoa p INNER JOIN cadastro.fisica f ON true AND f.idpes = p.idpes ' . $where);
         }
 
         $db->Consulta(sprintf(
-            'SELECT idpes, nome, nome_social, url, \'F\' AS tipo, email, cpf FROM cadastro.v_pessoa_fisica %s %s %s',
+            'SELECT p.idpes AS idpes,
+                    p.nome as nome,
+                    f.nome_social as nome_social,
+                    p.url as url,
+                    \'F\' AS tipo,
+                    p.email as email,
+                    f.cpf FROM cadastro.pessoa p INNER JOIN cadastro.fisica f ON true AND f.idpes = p.idpes %s %s %s',
             $where,
             $orderBy,
             $limite

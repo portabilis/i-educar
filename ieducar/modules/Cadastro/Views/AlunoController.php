@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyRace;
 use App\Services\UrlPresigner;
 use iEducar\Modules\Addressing\LegacyAddressingFields;
 use iEducar\Modules\Educacenso\Model\PaisResidencia;
@@ -289,8 +290,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $configuracoes = new clsPmieducarConfiguracoesGerais();
         $configuracoes = $configuracoes->detalhe();
-
-        $labels_botucatu = config('legacy.app.mostrar_aplicacao') == 'botucatu';
 
         if ($configuracoes['justificativa_falta_documentacao_obrigatorio']) {
             $this->inputsHelper()->hidden('justificativa_falta_documentacao_obrigatorio');
@@ -1199,16 +1198,15 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->CampoOculto('obrigar_documento_pessoa', (int) $obrigarDocumentoPessoa);
         $this->CampoOculto('obrigar_telefone_pessoa', (int) $obrigarTelefonePessoa);
 
-        $racas         = new clsCadastroRaca();
-        $racas         = $racas->lista(null, null, null, null, null, null, null, true);
+        $race =  LegacyRace::query()
+            ->where('ativo', true)
+            ->orderBy('nm_raca')
+            ->pluck('nm_raca', 'cod_raca')
+            ->prepend( 'Selecione','')
+            ->toArray()
+        ;
 
-        foreach ($racas as $raca) {
-            $selectOptions[$raca['cod_raca']] = $raca['nm_raca'];
-        }
-
-        $selectOptions = [null => 'Selecione'] + Portabilis_Array_Utils::sortByValue($selectOptions);
-
-        $this->campoLista('cor_raca', 'Raça', $selectOptions, $this->cod_raca, '', false, '', '', '', $obrigarCamposCenso);
+        $this->campoLista('cor_raca', 'Raça', $race, $this->cod_raca, '', false, '', '', '', $obrigarCamposCenso);
 
         $zonas = [
             '' => 'Selecione',

@@ -2,6 +2,7 @@
 
 namespace App\Extensions;
 
+use App\Helpers\UserCache;
 use App\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
@@ -33,7 +34,7 @@ class LegacyUserProvider implements UserProvider
      */
     public function retrieveById($identifier)
     {
-        return User::query()->find($identifier);
+        return UserCache::user($identifier);
     }
 
     /**
@@ -41,10 +42,15 @@ class LegacyUserProvider implements UserProvider
      */
     public function retrieveByToken($identifier, $token)
     {
-        $user = $this->retrieveById($identifier);
+        $model = UserCache::user($identifier);
 
-        return $user && $user->getRememberToken() && hash_equals($user->getRememberToken(), $token)
-            ? $user : null;
+        if (!$model) {
+            return;
+        }
+
+        $rememberToken = $model->getRememberToken();
+
+        return $rememberToken && hash_equals($rememberToken, $token) ? $model : null;
     }
 
     /**
