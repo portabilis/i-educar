@@ -5,6 +5,7 @@ namespace Tests\Api;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyStudent;
 use App\Models\LogUnification;
+use App\Models\LogUnificationOldData;
 use Database\Factories\LegacyDocumentFactory;
 use Database\Factories\LegacyIndividualFactory;
 use Database\Factories\LegacyPersonFactory;
@@ -99,6 +100,83 @@ class LegacyUnificationPersonSuccessfulTest extends TestCase
         $this->assertEquals($log->duplicates_id, [$individualSecondary->getKey()]);
         $this->assertTrue($log->created_at->isToday());
         $this->assertTrue($log->updated_at->isToday());
+
+        $logsOldData = LogUnificationOldData::query()
+            ->where('unification_id', $log->getKey())
+            ->where('table', $fone->getTable())
+            ->get();
+
+        $this->assertNotNull($logsOldData);
+        $this->assertCount(2, $logsOldData);
+        $this->assertEquals($logsOldData[0]->keys[0], [
+            'idpes_rev' => $individualSecondary->getKey()
+        ]);
+        $this->assertEquals($logsOldData[1]->keys[0], [
+            'idpes_cad' => $individualSecondary->getKey()
+        ]);
+
+        $logsOldData = LogUnificationOldData::query()
+            ->where('unification_id', $log->getKey())
+            ->where('table', $race->getTable())
+            ->get();
+
+        $this->assertNotNull($logsOldData);
+        $this->assertCount(2, $logsOldData);
+        $this->assertEquals($logsOldData[0]->keys[0], [
+            'idpes_exc' => $individualSecondary->getKey()
+        ]);
+        $this->assertEquals($logsOldData[1]->keys[0], [
+            'idpes_cad' => $individualSecondary->getKey()
+        ]);
+
+        $logsOldData = LogUnificationOldData::query()
+            ->where('unification_id', $log->getKey())
+            ->where('table', $document->getTable())
+            ->get();
+
+        $this->assertNotNull($logsOldData);
+        $this->assertCount(3, $logsOldData);
+        $this->assertEquals($logsOldData[0]->keys[0], [
+            'idpes' => $individualSecondary->getKey()
+        ]);
+        $this->assertEquals($logsOldData[1]->keys[0], [
+            'idpes_rev' => $individualSecondary->getKey()
+        ]);
+        $this->assertEquals($logsOldData[2]->keys[0], [
+            'idpes_cad' => $individualSecondary->getKey()
+        ]);
+
+        $logsOldData = LogUnificationOldData::query()
+            ->where('unification_id', $log->getKey())
+            ->where('table', $person->getTable())
+            ->get();
+
+        $this->assertNotNull($logsOldData);
+        $this->assertCount(8, $logsOldData);
+        $this->assertEquals($logsOldData[0]->keys[0], [
+            'idpes' => $individualSecondary->getKey()
+        ]);
+        $this->assertEquals($logsOldData[1]->keys[0], [
+            'idpes' => $individual->getKey()
+        ]);
+        $this->assertEquals($logsOldData[2]->keys[0], [
+            'idpes_mae' => $individualSecondary->getKey()
+        ]);
+        $this->assertEquals($logsOldData[3]->keys[0], [
+            'idpes_pai' => $individualSecondary->getKey()
+        ]);
+        $this->assertEquals($logsOldData[4]->keys[0], [
+            'idpes_responsavel' => $individualSecondary->getKey()
+        ]);
+        $this->assertEquals($logsOldData[5]->keys[0], [
+            'idpes_con' => $individualSecondary->getKey()
+        ]);
+        $this->assertEquals($logsOldData[6]->keys[0], [
+            'idpes_rev' => $individualSecondary->getKey()
+        ]);
+        $this->assertEquals($logsOldData[7]->keys[0], [
+            'idpes_cad' => $individualSecondary->getKey()
+        ]);
 
         $this->assertDatabaseHas($fone, [
             'idpes_rev' => $individual->getKey(),
