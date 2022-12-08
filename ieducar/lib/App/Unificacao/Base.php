@@ -156,7 +156,7 @@ class App_Unificacao_Base
         $tabelasEnvolvidas = $this->tabelasEnvolvidas();
 
         foreach ($tabelasEnvolvidas as $tabela) {
-            $this->db->Consulta("ALTER TABLE {$tabela} DISABLE TRIGGER ALL");
+            $this->db->Consulta("ALTER TABLE IF EXISTS {$tabela} DISABLE TRIGGER ALL");
         }
     }
 
