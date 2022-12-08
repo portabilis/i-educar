@@ -12,6 +12,7 @@ use App\Models\LegacyStudent;
 use App\Models\SchoolClassInep;
 use App\Models\StudentInep;
 use App\Services\Educacenso\RegistroImportInterface;
+use App\Services\Educacenso\Version2019\Models\Registro60Model;
 use App\User;
 use App_Model_MatriculaSituacao;
 use DateTime;
@@ -80,7 +81,7 @@ class Registro60Import implements RegistroImportInterface
     /**
      * @return LegacySchoolClass
      */
-    private function getSchoolClass(): ?LegacySchoolClass
+    protected function getSchoolClass(): ?LegacySchoolClass
     {
         if (empty($this->model->inepTurma)) {
             return null;
@@ -92,7 +93,7 @@ class Registro60Import implements RegistroImportInterface
     /**
      * @return LegacyStudent|null
      */
-    private function getStudent()
+    protected function getStudent()
     {
         return StudentInep::where('cod_aluno_inep', $this->model->inepAluno)->first()->student ?? null;
     }
@@ -104,7 +105,7 @@ class Registro60Import implements RegistroImportInterface
      */
     public static function getModel($arrayColumns)
     {
-        $registro = new Registro60();
+        $registro = new Registro60Model();
         $registro->hydrateModel($arrayColumns);
 
         return $registro;
