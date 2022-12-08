@@ -433,6 +433,27 @@ class DiarioApiController extends ApiCoreController
         } else {
             $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
         }
+
+        $nota_alunos = LegacyDisciplineScoreStudent::where('matricula_id', $this->getRequest()->matricula_id)->get();
+            foreach($nota_alunos as $nota_aluno) {
+           
+            $contador =0;
+            $soma_notas =0;
+            $nota_componente_curricular = LegacyDisciplineScore::whereNotNull('nota_arredondada')->where('nota_aluno_id', $nota_aluno->id)->get();
+            foreach($nota_componente_curricular as $list) {
+                $contador++;
+                $nota = $list->nota_arredondada;
+                $soma_notas = $soma_notas + $nota;
+                  
+            }
+            $media = $soma_notas / $contador;
+           
+
+            LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->update([
+                'media' => $media,
+                'media_arredondada' => $media
+               
+            ]);
     }
 
     protected function postNotaGeral()
