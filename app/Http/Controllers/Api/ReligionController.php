@@ -7,7 +7,6 @@ use App\Http\Requests\Api\ReligionRequest;
 use App\Models\Religion;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Auth;
 
 class ReligionController extends ResourceController
 {
