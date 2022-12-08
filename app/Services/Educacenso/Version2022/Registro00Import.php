@@ -2,6 +2,8 @@
 
 namespace App\Services\Educacenso\Version2022;
 
+use App\Models\City;
+use App\Models\District;
 use App\Models\Educacenso\Registro00;
 use App\Models\Educacenso\RegistroEducacenso;
 use App\Models\LegacySchool;
@@ -31,6 +33,17 @@ class Registro00Import extends Registro00Import2019
         /** @var LegacySchool $school */
         $school = $schoolInep->school;
         $model = $this->model;
+
+        if (!$school->iddis) {
+            $ibge_code = explode($model->codigoIbgeMunicipio, $model->codigoIbgeDistrito)[1];
+            $city = City::where('ibge_code', $model->codigoIbgeMunicipio)->first();
+
+            $district = District::where('city_id', $city->id)
+                ->where('ibge_code', $ibge_code)
+                ->first();
+
+            $school->iddis = $district->getKey();
+        }
 
         $school->poder_publico_parceria_convenio = transformDBArrayInString($model->poderPublicoConveniado) ?: null;
         $school->formas_contratacao_adm_publica_e_outras_instituicoes = transformDBArrayInString($model->formasContratacaoPoderPublico) ?: null;

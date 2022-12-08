@@ -20,7 +20,7 @@ class Registro10Model extends Registro10
         $this->localFuncionamentoUnidadePrisional = $arrayColumns[7];
         $this->localFuncionamentoOutros = $arrayColumns[8];
         $this->condicao = $arrayColumns[9];
-        $this->predioCompartilhadoOutraEscola = $arrayColumns[10];
+        $this->predioCompartilhadoOutraEscola = (int) $arrayColumns[10];
         $this->codigoInepEscolaCompartilhada = $arrayColumns[11];
         $this->codigoInepEscolaCompartilhada2 = $arrayColumns[12];
         $this->codigoInepEscolaCompartilhada3 = $arrayColumns[13];
@@ -122,7 +122,7 @@ class Registro10Model extends Registro10
         $this->acessoInternetNaoPossui = $arrayColumns[109];
         $this->computadoresMesaAcessoInternet = $arrayColumns[110];
         $this->dispositovosPessoaisAcessoInternet = $arrayColumns[111];
-        $this->acessoInternet = $arrayColumns[112];
+        $this->acessoInternet = $arrayColumns[112] ?: null;
         $this->redeLocalCabo = $arrayColumns[113];
         $this->redeLocalWireless = $arrayColumns[114];
         $this->redeLocalNaoExiste = $arrayColumns[115];
@@ -156,13 +156,13 @@ class Registro10Model extends Registro10
         $this->instrumentosPedagogicosEducacaoEtnicoRacial = $arrayColumns[143];
         $this->instrumentosPedagogicosEducacaoCampo = $arrayColumns[144];
         $this->instrumentosPedagogicosNenhum = $arrayColumns[145];
-        $this->educacaoIndigena = $arrayColumns[146];
+        $this->educacaoIndigena = (int) $arrayColumns[146];
         $this->linguaIndigena = $arrayColumns[147];
         $this->linguaPortuguesa = $arrayColumns[148];
         $this->linguaIndigena1 = $arrayColumns[149];
         $this->linguaIndigena2 = $arrayColumns[150];
         $this->linguaIndigena3 = $arrayColumns[151];
-        $this->exameSelecaoIngresso = $arrayColumns[152];
+        $this->exameSelecaoIngresso = (int) $arrayColumns[152];
         $this->reservaVagasCotasAutodeclaracao = $arrayColumns[153];
         $this->reservaVagasCotasRenda = $arrayColumns[154];
         $this->reservaVagasCotasEscolaPublica = $arrayColumns[155];
@@ -170,8 +170,8 @@ class Registro10Model extends Registro10
         $this->reservaVagasCotasOutros = $arrayColumns[157];
         $this->reservaVagasCotasNaoFaz = $arrayColumns[158];
         $this->url = $arrayColumns[159];
-        $this->compartilhaEspacosAtividadesIntegracao = $arrayColumns[160];
-        $this->usaEspacosEquipamentosAtividadesRegulares = $arrayColumns[161];
+        $this->compartilhaEspacosAtividadesIntegracao = (int) $arrayColumns[160];
+        $this->usaEspacosEquipamentosAtividadesRegulares = (int) $arrayColumns[161];
         $this->orgaoColegiadoAssociacaoPais = $arrayColumns[162];
         $this->orgaoColegiadoAssociacaoPaisMestres = $arrayColumns[163];
         $this->orgaoColegiadoConselho = $arrayColumns[164];

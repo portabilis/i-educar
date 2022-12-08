@@ -14,11 +14,6 @@ class LegacySchoolClassTeacherDiscipline extends Model
         'componente_curricular_id',
     ];
 
-    public $primaryKey = [
-        'professor_turma_id',
-        'componente_curricular_id',
-    ];
-
     /**
      * @var string
      */

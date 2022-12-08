@@ -6,7 +6,6 @@ use App\Models\Educacenso\Registro60;
 use App\Models\Educacenso\RegistroEducacenso;
 use App\Models\LegacyEnrollment;
 use App\Models\LegacyRegistration;
-use App\Models\LegacySchoolClassTeacher;
 use App\Services\Educacenso\Version2019\Registro60Import as Registro60Import2019;
 use App\Services\Educacenso\Version2022\Models\Registro60Model;
 use iEducar\Modules\Educacenso\Model\TipoItinerarioFormativo;
@@ -33,7 +32,7 @@ class Registro60Import extends Registro60Import2019
         $arrayItineraryType = $this->getArrayItineraryType();
         $arrayItineraryComposition = $this->getArrayItineraryComposition();
 
-        if (count($arrayItineraryType) > 0 ) {
+        if (count($arrayItineraryType) > 0) {
             $schoolClass = parent::getSchoolClass();
             $student = parent::getStudent();
             $registration = LegacyRegistration::where('ref_ref_cod_serie', $schoolClass->grade->getKey())
@@ -45,8 +44,8 @@ class Registro60Import extends Registro60Import2019
                 ->where('ref_cod_turma', $schoolClass->getKey())
                 ->first();
 
-            $enrollment->tipo_itinerario = transformDBArrayInString($arrayItineraryType);
-            $enrollment->composicao_itinerario = transformDBArrayInString($arrayItineraryComposition);
+            $enrollment->tipo_itinerario = $arrayItineraryType;
+            $enrollment->composicao_itinerario = $arrayItineraryComposition;
             $enrollment->curso_itinerario = $this->model->cursoItinerario ?: null;
             $enrollment->itinerario_concomitante = $this->model->cursoItinerario ? (bool) $this->model->itinerarioConcomitante : null;
 

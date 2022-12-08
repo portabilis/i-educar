@@ -27,7 +27,6 @@ use iEducar\Modules\Educacenso\Model\Deficiencias;
 use iEducar\Modules\Educacenso\Model\Escolaridade;
 use iEducar\Modules\Educacenso\Model\FormacaoContinuada;
 use iEducar\Modules\Educacenso\Model\Nacionalidade;
-use iEducar\Modules\Educacenso\Model\PosGraduacao;
 use iEducar\Modules\Educacenso\Model\RecursosRealizacaoProvas;
 
 class Registro30Import implements RegistroImportInterface
@@ -449,7 +448,7 @@ class Registro30Import implements RegistroImportInterface
             return null;
         }
 
-        $country = Country::where('cod_ibge', $countryIbge)->first();
+        $country = Country::where('ibge_code', $countryIbge)->first();
 
         return $country ? $country->getKey() : null;
     }
