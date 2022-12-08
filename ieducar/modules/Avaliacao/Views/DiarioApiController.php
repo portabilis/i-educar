@@ -454,6 +454,7 @@ class DiarioApiController extends ApiCoreController
                 'media_arredondada' => $media
                
             ]);
+        }
     }
 
     protected function postNotaGeral()
