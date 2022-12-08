@@ -27,7 +27,7 @@ class LegacyEnrollmentFactory extends Factory
             'sequencial' => 1,
             'ref_usuario_cad' => fn () => LegacyUserFactory::new()->unique()->make(),
             'ref_usuario_exc' => fn () => LegacyUserFactory::new()->unique()->make(),
-            'data_cadastro' => now(),
+            'turno_id' => 1,
             'data_enturmacao' => now(),
         ];
     }

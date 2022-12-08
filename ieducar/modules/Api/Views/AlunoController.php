@@ -739,6 +739,11 @@ class AlunoController extends ApiCoreController
     {
         $escola = $this->getRequest()->escola;
         $modified = $this->getRequest()->modified;
+        $alunoId = $this->getRequest()->aluno_id;
+
+        if (is_array($alunoId)) {
+            $alunoId = implode(',', $alunoId);
+        }
 
         if (is_array($escola)) {
             $escola = implode(',', $escola);
@@ -750,6 +755,11 @@ class AlunoController extends ApiCoreController
         if ($modified) {
             $where = ' AND od.updated_at >= $1';
             $params[] = $modified;
+        }
+
+        $alunoFilter = '';
+        if ($alunoId) {
+            $alunoFilter = "AND m.ref_cod_aluno in ({$alunoId})";
         }
 
         $sql = "
@@ -775,6 +785,7 @@ class AlunoController extends ApiCoreController
             on tod.cod_tipo_ocorrencia_disciplinar = od.ref_cod_tipo_ocorrencia_disciplinar
             where true
                 and od.visivel_pais = 1
+                {$alunoFilter}
                 and m.ref_ref_cod_escola IN ({$escola})
                 {$where}
         ";
@@ -1467,6 +1478,11 @@ class AlunoController extends ApiCoreController
 
     protected function createOrUpdatePessoaTransporte($ref_idpes)
     {
+        // TODO remover no futuro o uso deste método createOrUpdatePessoaTransporte #transport-package
+        if (class_exists(clsModulesPessoaTransporte::class) === false) {
+            return;
+        }
+
         $pt = new clsModulesPessoaTransporte(null, null, $ref_idpes);
         $det = $pt->detalhe();
 
@@ -1797,7 +1813,7 @@ class AlunoController extends ApiCoreController
             });
         });
 
-        return  ['unificacoes' => $unificationsQuery->get(['main_id', 'duplicates_id', 'created_at', 'active'])->all()];
+        return  ['unificacoes' => $unificationsQuery->get(['id', 'main_id', 'duplicates_id', 'created_at', 'active'])->all()];
     }
 
     protected function dadosUnificacaoAlunos()

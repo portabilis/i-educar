@@ -231,7 +231,7 @@ class CursoController extends ApiCoreController
             $dadosCurso = LegacyCourse::query()
                 ->where('cod_curso', $cursoId)
                 ->first()
-                ->toArray();
+                ->getAttributes();
 
             return ['dados_curso' => $dadosCurso];
         }
