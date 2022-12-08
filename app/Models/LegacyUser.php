@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Events\UserDeleted;
+use App\Events\UserUpdated;
 use App\User as DefaultUser;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -35,6 +37,11 @@ class LegacyUser extends DefaultUser
         'ref_cod_tipo_usuario',
         'data_cadastro',
         'ativo',
+    ];
+
+    protected $dispatchesEvents = [
+        'updated' => UserUpdated::class,
+        'deleted' => UserDeleted::class,
     ];
 
     protected function id(): Attribute
