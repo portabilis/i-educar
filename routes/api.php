@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\CityController;
 use App\Http\Controllers\Api\CountryController;
 use App\Http\Controllers\Api\DistrictController;
 use App\Http\Controllers\Api\EmployeeWithdrawalController;
+use App\Http\Controllers\Api\ReligionController;
 use App\Http\Controllers\Api\People\LegacyDeficiencyController;
 use App\Http\Controllers\Api\StateController;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +30,7 @@ Route::group(
         'state' => StateController::class,
         'district' => DistrictController::class,
         'city' => CityController::class,
+        'religion' => ReligionController::class
         'person/deficiency' => LegacyDeficiencyController::class
     ])
 );
