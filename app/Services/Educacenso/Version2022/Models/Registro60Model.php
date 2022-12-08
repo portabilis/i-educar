@@ -26,7 +26,7 @@ class Registro60Model extends Registro60
         $this->composicaoItinerarioCienciasNatureza = $arrayColumns[17];
         $this->composicaoItinerarioCienciasHumanas = $arrayColumns[18];
         $this->composicaoItinerarioFormacaoTecnica = $arrayColumns[19];
-        $this->cursoItinerario = $arrayColumns[20];
+        $this->cursoItinerario = $arrayColumns[20] ?: null;
         $this->itinerarioConcomitante = $arrayColumns[21];
         $this->tipoAtendimentoDesenvolvimentoFuncoesGognitivas = $arrayColumns[22];
         $this->tipoAtendimentoDesenvolvimentoVidaAutonoma = $arrayColumns[23];
@@ -40,8 +40,8 @@ class Registro60Model extends Registro60
         $this->tipoAtendimentoEnsinoCaa = $arrayColumns[31];
         $this->tipoAtendimentoEnsinoRecursosOpticosNaoOpticos = $arrayColumns[32];
         $this->recebeEscolarizacaoOutroEspacao = $arrayColumns[33];
-        $this->transportePublico = $arrayColumns[34];
-        $this->poderPublicoResponsavelTransporte = $arrayColumns[35];
+        $this->transportePublico = $arrayColumns[34] ?: null;
+        $this->poderPublicoResponsavelTransporte = $arrayColumns[35] ?: null;
         $this->veiculoTransporteBicicleta = $arrayColumns[36];
         $this->veiculoTransporteMicroonibus = $arrayColumns[37];
         $this->veiculoTransporteOnibus = $arrayColumns[38];

@@ -25,7 +25,7 @@ class Registro20Import extends Registro20Import2019
         $schoolClass = LegacySchoolClass::find($schoolClassInep->cod_turma);
 
         $schoolClass->estrutura_curricular = transformDBArrayInString($model->estruturaCurricular) ?: null;
-        $schoolClass->formas_organizacao_turma = $model->formasOrganizacaoTurma[0] ?: null;
+        $schoolClass->formas_organizacao_turma = $model->formasOrganizacaoTurma ?: null;
         $schoolClass->unidade_curricular = transformDBArrayInString($model->unidadesCurriculares) ?: null;
 
         $schoolClass->save();

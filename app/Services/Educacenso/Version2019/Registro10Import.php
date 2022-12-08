@@ -138,6 +138,9 @@ class Registro10Import implements RegistroImportInterface
         $school->usa_espacos_equipamentos_atividades_regulares = $model->usaEspacosEquipamentosAtividadesRegulares ?: null;
         $school->orgaos_colegiados = $this->getArrayOrgaosColegiados();
         $school->projeto_politico_pedagogico = $model->projetoPoliticoPedagogico ?: null;
+        $school->compartilha_espacos_atividades_integracao = $model->compartilhaEspacosAtividadesIntegracao;
+        $school->usa_espacos_equipamentos_atividades_regulares = $model->usaEspacosEquipamentosAtividadesRegulares;
+        $school->exame_selecao_ingresso = $model->exameSelecaoIngresso;
 
         $school->save();
     }

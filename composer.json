@@ -104,7 +104,7 @@
     "scripts": {
         "check-style": "vendor/bin/php-cs-fixer --diff --dry-run --verbose fix",
         "fix-style": "vendor/bin/php-cs-fixer fix",
-        "openapi": "vendor/uderline/openapi-php-attributes/opag tests/Feature public/openapi.json",
+        "openapi": "vendor/uderline/openapi-php-attributes/opag tests public/openapi.json",
         "set-permissions": "find bootstrap/cache -type d -exec chmod 777 {} + && find storage -type d -exec chmod 777 {} +",
         "npm": "yarn install",
         "new-install": [
@@ -113,7 +113,7 @@
             "@set-permissions",
             "@php artisan key:generate --ansi",
             "@php artisan legacy:link --ansi",
-            "@php artisan migrate --seed --force --ansi",
+            "@php artisan migrate --force --ansi",
             "@npm"
         ],
         "update-install": [
