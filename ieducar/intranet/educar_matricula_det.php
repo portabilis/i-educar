@@ -270,7 +270,8 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['aprovado'] == App_Model_MatriculaSituacao::ABANDONO) {
-            $tipoAbandono = LegacyAbandonmentType::find($registro['ref_cod_abandono_tipo'])?->toArray();
+
+            $tipoAbandono = LegacyAbandonmentType::find($registro['ref_cod_abandono_tipo'])?->getAttributes();
 
             $observacaoAbandono = $registro['observacao'];
 
@@ -384,7 +385,7 @@ return new class extends clsDetalhe {
 
             if ($existeTurmaItineraria) {
                 $this->array_botao[] = 'Itinerário formativo';
-                $link = route('enrollments.enrollment-formative-itinerary-list', ['id' => $registro['cod_matricula']]);
+                $link = route('registration.formative-itinerary.index', $registro['cod_matricula']);
                 $this->array_botao_url_script[] = "go(\"{$link}\")";
             }
 

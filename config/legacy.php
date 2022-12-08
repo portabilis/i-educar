@@ -192,7 +192,7 @@ return [
             'show_details' => true,
             'track' => false,
             'tracker_name' => 'EMAIL',
-            'honeybadger_key' => '',
+            'honeybadger_key' => env('HONEYBADGER_API_KEY', ''),
             'email_recipient' => '',
         ],
     ],

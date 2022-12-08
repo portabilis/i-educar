@@ -24,7 +24,7 @@ return new class extends clsCadastro {
         $obj_permissoes->permissao_cadastra(568, $this->pessoa_logada, 3, 'educar_tipo_regime_lst.php');
 
         if (is_numeric($this->cod_tipo_regime)) {
-            $registro = LegacyRegimeType::findOrFail($this->cod_tipo_regime)?->toArray();
+            $registro = LegacyRegimeType::findOrFail($this->cod_tipo_regime)?->getAttributes();
             if ($registro) {
                 foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;

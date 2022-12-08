@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Menu;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyMenuUserType extends Model
 {
@@ -13,7 +14,7 @@ class LegacyMenuUserType extends Model
     protected $table = 'pmieducar.menu_tipo_usuario';
 
     public $timestamps = false;
-    public $primaryKey = null;
+    public $primaryKey = 'ref_cod_tipo_usuario';
     public $incrementing = false;
 
     protected $fillable = [
@@ -24,8 +25,13 @@ class LegacyMenuUserType extends Model
         'exclui',
     ];
 
-    public function menus()
+    public function menus(): BelongsTo
     {
-        return $this->belongsTo(Menu::class);
+        return $this->belongsTo(Menu::class, 'menu_id');
+    }
+
+    public function userType(): BelongsTo
+    {
+        return $this->belongsTo(LegacyUserType::class, 'ref_cod_tipo_usuario');
     }
 }

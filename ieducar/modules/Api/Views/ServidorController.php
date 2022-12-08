@@ -264,7 +264,7 @@ class ServidorController extends ApiCoreController
 
         $unificationsQuery->person();
 
-        return ['unificacoes' => $unificationsQuery->get(['main_id', 'duplicates_id', 'created_at', 'active'])];
+        return ['unificacoes' => $unificationsQuery->get(['id', 'main_id', 'duplicates_id', 'created_at', 'active'])];
     }
 
     /**

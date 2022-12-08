@@ -272,7 +272,7 @@ return new class extends clsCadastro {
             $opcoesCursos = array_replace($opcoesCursos, $cursosDaEscola);
         }
 
-        $this->inputsHelper()->dynamic(['curso', 'serie'], ['disabled' => $desabilitado]);
+        $this->inputsHelper()->dynamic(['curso', 'serie'], ['disabled' => $desabilitado, 'ano' => $this->ano]);
 
         $tiposBoletim = Portabilis_Model_Report_TipoBoletim::getInstance()->getEnums();
         asort($tiposBoletim);
@@ -323,7 +323,7 @@ return new class extends clsCadastro {
             $script
         );
 
-        $this->campoTexto('nm_turma', 'Nome da turma', $this->nm_turma, 30, 255, true);
+        $this->campoTexto('nm_turma', 'Nome da turma', e($this->nm_turma), 30, 255, true);
 
         $this->campoTexto('sgl_turma', _cl('turma.detalhe.sigla'), $this->sgl_turma, 15, 15, false);
 

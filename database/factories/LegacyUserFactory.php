@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\LegacyUser;
+use App_Model_NivelTipoUsuario;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyUserFactory extends Factory
@@ -22,16 +23,11 @@ class LegacyUserFactory extends Factory
     public function definition(): array
     {
         return [
-            'cod_usuario' => function () {
-                return LegacyEmployeeFactory::new()->create()->ref_cod_pessoa_fj;
-            },
-            'ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()->unique()->make(),
-            'ref_funcionario_cad' => function () {
-                return LegacyEmployeeFactory::new()->create()->ref_cod_pessoa_fj;
-            },
-            'ref_cod_tipo_usuario' => function () {
-                return LegacyUserTypeFactory::new()->create()->cod_tipo_usuario;
-            },
+            'cod_usuario' => static fn () => LegacyEmployeeFactory::new()->create()->ref_cod_pessoa_fj,
+            'ref_cod_instituicao' => static fn () => LegacyInstitutionFactory::new()->unique()->make(),
+            'ref_funcionario_cad' => static fn () => LegacyEmployeeFactory::new()->create()->ref_cod_pessoa_fj,
+            'ref_funcionario_exc' => static fn () => LegacyEmployeeFactory::new()->create()->ref_cod_pessoa_fj,
+            'ref_cod_tipo_usuario' => static fn () => LegacyUserTypeFactory::new()->create()->cod_tipo_usuario,
             'data_cadastro' => $this->faker->dateTime,
             'ativo' => 1,
         ];
@@ -42,7 +38,18 @@ class LegacyUserFactory extends Factory
         return $this->state([
             'ref_cod_tipo_usuario' => function () {
                 return LegacyUserTypeFactory::new()->create([
-                    'nivel' => 1,
+                    'nivel' => App_Model_NivelTipoUsuario::POLI_INSTITUCIONAL,
+                ]);
+            },
+        ]);
+    }
+
+    public function institutional(): static
+    {
+        return $this->state([
+            'ref_cod_tipo_usuario' => function () {
+                return LegacyUserTypeFactory::new()->create([
+                    'nivel' => App_Model_NivelTipoUsuario::INSTITUCIONAL,
                 ]);
             },
         ]);

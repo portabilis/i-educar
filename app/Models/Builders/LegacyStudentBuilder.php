@@ -22,10 +22,10 @@ class LegacyStudentBuilder extends LegacyBuilder
         return  $this->whereHas(
             'individual',
             function ($query) use ($birthdate) {
+                [$day, $month, $year] = explode('/', $birthdate);
+                $birthdate = sprintf('%d-%d-%d', $year, $month, $day);
+                $birthdate = $birthdate === '0-0-0' ? null : $birthdate;
                 $query->when($birthdate, function ($q) use ($birthdate) {
-                    [$day, $month, $year] = explode('/', $birthdate);
-                    $birthdate = sprintf('%d-%d-%d', $year, $month, $day);
-
                     $q->where('data_nasc', $birthdate);
                 });
             }
@@ -44,18 +44,20 @@ class LegacyStudentBuilder extends LegacyBuilder
 
     public function whereRg($rg)
     {
-        return  $this->whereHas(
-            'individual.document',
-            function ($query) use ($rg) {
-                $query->when($rg, fn ($q) => $q->where('rg', $rg));
-            }
-        );
+        return $this->when($rg, function () use ($rg) {
+            $this->whereHas(
+                'individual.document',
+                function ($query) use ($rg) {
+                    $query->when($rg, fn ($q) => $q->where('rg', $rg));
+                }
+            );
+        });
     }
 
     public function whereMotherName($name)
     {
         return $this->whereHas(
-            'individual.father',
+            'individual.mother',
             fn ($q) => $q->whereRaw('slug ~* unaccent(?)', $name)
         );
     }
@@ -121,24 +123,25 @@ class LegacyStudentBuilder extends LegacyBuilder
     public function whereGrade($grade)
     {
         return $this->whereHas(
-            'registrations.enrollments.schoolClass',
+            'registrations',
             fn ($q) => $q->where('ref_ref_cod_serie', $grade)
         );
     }
 
     public function whereRegistration($year, $course, $grade, $school)
     {
-        return $this->whereHas(
-            'registrations',
-            function ($query) use ($year, $course, $grade, $school) {
-                $query->when($year, fn ($q) => $q->where('ano', $year));
-                $query->when($course, fn ($q) => $q->where('ref_cod_curso', $course));
-                $query->when($school, fn ($q) => $q->where('ref_ref_cod_escola', $school));
-                $query->when($grade, function ($q) use ($grade) {
-                    $q->whereHas('enrollments.schoolClass', fn ($qs) => $qs->where('ref_ref_cod_serie', $grade));
-                });
-            }
-        );
+        return $this->where(function ($query) use ($year, $course, $grade, $school) {
+            $query->whereHas(
+                'registrations',
+                function ($query) use ($year, $course, $grade, $school) {
+                    $query->active();
+                    $query->when($year, fn ($q) => $q->where('ano', $year));
+                    $query->when($course, fn ($q) => $q->where('ref_cod_curso', $course));
+                    $query->when($school, fn ($q) => $q->where('ref_ref_cod_escola', $school));
+                    $query->when($grade, fn ($q) => $q->where('ref_ref_cod_serie', $grade));
+                }
+            );
+        });
     }
 
     public function findStudentWithMultipleSearch(StudentFilter $studentFilter)

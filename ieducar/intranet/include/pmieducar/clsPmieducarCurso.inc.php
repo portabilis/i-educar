@@ -58,7 +58,7 @@ class clsPmieducarCurso extends Model
         $importar_curso_pre_matricula = null,
         $descricao = null
     ) {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'curso';
 
@@ -438,7 +438,7 @@ class clsPmieducarCurso extends Model
     /**
      * Retorna uma lista de registros filtrados de acordo com os parâmetros.
      *
-     * @return array
+     * @return array|false
      */
     public function lista(
         $int_cod_curso = null,
@@ -619,7 +619,7 @@ class clsPmieducarCurso extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {

@@ -11,7 +11,7 @@ trait RegistrationScopes
      */
     public function doesntHaveFather()
     {
-        return $this->whereHas('student.individual', function (Builder $query) {
+        return $this->whereHas('student.individual', static function (Builder $query) {
             $query->whereNull('father_individual_id');
         });
     }
@@ -21,9 +21,7 @@ trait RegistrationScopes
      */
     public function studentIsActive()
     {
-        return $this->whereHas('student', function (Builder $query) {
-            // Soft deletes já faz o filtro
-        });
+        return $this->whereHas('student');
     }
 
     /**

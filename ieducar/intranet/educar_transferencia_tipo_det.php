@@ -22,7 +22,7 @@ return new class extends clsDetalhe {
 
         $this->cod_transferencia_tipo=$_GET['cod_transferencia_tipo'];
 
-        $registro = LegacyTransferType::find($this->cod_transferencia_tipo)?->toArray();
+        $registro = LegacyTransferType::find($this->cod_transferencia_tipo)?->getAttributes();
 
         if (! $registro) {
             throw new HttpResponseException(

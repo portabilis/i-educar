@@ -87,8 +87,7 @@ class clsPmieducarMatricula extends Model
         $observacoes = false,
         $modalidadeEnsino = self::MODELO_PRESENCIAL
     ) {
-        $db = new clsBanco();
-        $this->db = $db;
+        $this->db = new clsBanco();
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'matricula';
 
@@ -346,7 +345,7 @@ class clsPmieducarMatricula extends Model
             $this->cod_matricula = $db->InsertId("{$this->_tabela}_cod_matricula_seq");
 
             if ($this->cod_matricula) {
-                $detalhe = $this->detalhe();
+                $this->detalhe();
             }
 
             return $this->cod_matricula;
@@ -509,7 +508,7 @@ class clsPmieducarMatricula extends Model
             }
 
             if ($set) {
-                $detalheAntigo = $this->detalhe();
+                $this->detalhe();
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_matricula = '{$this->cod_matricula}'");
 
                 return true;
@@ -522,7 +521,7 @@ class clsPmieducarMatricula extends Model
     /**
      * Retorna uma lista de registros filtrados de acordo com os parâmetros.
      *
-     * @return array
+     * @return array|false
      */
     public function lista(
         $int_cod_matricula = null,
@@ -1048,7 +1047,7 @@ class clsPmieducarMatricula extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -1085,7 +1084,7 @@ class clsPmieducarMatricula extends Model
     /**
      * Retorna um array com os dados de um registro.
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {
@@ -1187,7 +1186,8 @@ class clsPmieducarMatricula extends Model
     public function getEndMatricula($codAluno)
     {
         $db = new clsBanco();
-        $situacaoUltimaMatricula = $db->CampoUnico("SELECT matricula.aprovado
+
+        return $db->CampoUnico("SELECT matricula.aprovado
                                                       FROM pmieducar.matricula
                                                      WHERE matricula.ref_cod_aluno = $codAluno
                                                        AND matricula.ativo = 1
@@ -1195,8 +1195,6 @@ class clsPmieducarMatricula extends Model
                                                                                         FROM pmieducar.matricula AS m
                                                                                        WHERE m.ref_cod_aluno = matricula.ref_cod_aluno
                                                                                          AND m.ativo = 1)");
-
-        return $situacaoUltimaMatricula;
     }
 
     public function getInicioSequencia()
@@ -1490,8 +1488,7 @@ class clsPmieducarMatricula extends Model
             $db = new clsBanco();
 
             foreach ($array_inicio_sequencias as $serie_inicio) {
-                $serie_inicio = $serie_inicio[0];
-                $seq_ini = $serie_inicio;
+                $seq_ini = $serie_inicio[0];
                 $seq_correta = false;
                 $series[$cod_serie] = $cod_serie;
 
@@ -1511,7 +1508,6 @@ class clsPmieducarMatricula extends Model
                     $db->Consulta($sql);
                     $db->ProximoRegistro();
                     $tupla = $db->Tupla();
-                    $serie_origem = $tupla['ref_serie_origem'];
                     $seq_ini = $serie_destino = $tupla['ref_serie_destino'];
                     $series[$tupla['ref_serie_destino']] = $tupla['ref_serie_destino'];
                     $sql = "SELECT 1
@@ -1522,7 +1518,7 @@ class clsPmieducarMatricula extends Model
                 } while ($true);
 
                 $obj_serie = new clsPmieducarSerie($serie_destino);
-                $det_serie = $obj_serie->detalhe();
+                $obj_serie->detalhe();
 
                 if ($cod_serie == $serie_destino) {
                     $seq_correta = true;
@@ -1612,8 +1608,7 @@ class clsPmieducarMatricula extends Model
             $db = new clsBanco();
 
             foreach ($array_inicio_sequencias as $serie_inicio) {
-                $serie_inicio = $serie_inicio[0];
-                $seq_ini = $serie_inicio;
+                $seq_ini = $serie_inicio[0];
                 $seq_correta = false;
                 $series[$cod_serie] = $cod_serie;
                 do {
@@ -1632,7 +1627,6 @@ class clsPmieducarMatricula extends Model
                     $db->Consulta($sql);
                     $db->ProximoRegistro();
                     $tupla = $db->Tupla();
-                    $serie_origem = $tupla['ref_serie_origem'];
                     $seq_ini = $serie_destino = $tupla['ref_serie_destino'];
                     $series[$tupla['ref_serie_destino']] = $tupla['ref_serie_destino'];
                     $sql = "SELECT 1
@@ -1643,7 +1637,7 @@ class clsPmieducarMatricula extends Model
                 } while ($true);
 
                 $obj_serie = new clsPmieducarSerie($serie_destino);
-                $det_serie = $obj_serie->detalhe();
+                $obj_serie->detalhe();
 
                 if ($cod_serie == $serie_destino) {
                     $seq_correta = true;

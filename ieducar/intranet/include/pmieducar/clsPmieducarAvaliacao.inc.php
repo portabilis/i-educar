@@ -20,7 +20,7 @@ class clsPmieducarAvaliacao extends Model
 
     public function __construct($cod_avaliacao = null, $disc_ref_ref_cod_serie = null, $disc_ref_ref_cod_escola = null, $disc_ref_ref_cod_disciplina = null, $disc_ref_ref_cod_turma = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $titulo = null, $descricao = null, $aplicada = null, $data_cadastro = null, $data_exclusao = null, $ativo = null)
     {
-        $db = new clsBanco();
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}avaliacao";
 
@@ -203,7 +203,7 @@ class clsPmieducarAvaliacao extends Model
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
-     * @return array
+     * @return array|false
      */
     public function lista($int_cod_avaliacao = null, $int_disc_ref_ref_cod_serie = null, $int_disc_ref_ref_cod_escola = null, $int_disc_ref_ref_cod_disciplina = null, $int_disc_ref_ref_cod_turma = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_titulo = null, $str_descricao = null, $int_aplicada = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null)
     {
@@ -309,7 +309,7 @@ class clsPmieducarAvaliacao extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function detalhe()
     {
@@ -327,7 +327,7 @@ class clsPmieducarAvaliacao extends Model
     /**
      * Retorna um array com os dados de um registro
      *
-     * @return array
+     * @return array|false
      */
     public function existe()
     {

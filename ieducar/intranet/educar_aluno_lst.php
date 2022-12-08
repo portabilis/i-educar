@@ -104,6 +104,15 @@ return new class extends clsListagem {
 
         $this->addCabecalhos(array_filter($cabecalhos));
 
+        $validator_date = Validator::make(request()->only('data_nascimento'), ['data_nascimento' => ['nullable', 'date_format:d/m/Y', 'after_or_equal:1990-01-01']]);
+        if ($validator_date->fails()) {
+            $this->data_nascimento = null;
+        }
+        $this->cod_aluno = preg_replace('/\D/', '', $this->cod_aluno);
+        $this->cod_inep = preg_replace('/\D/', '', $this->cod_inep);
+        $this->nome_aluno = $this->cleanNameSearch($this->nome_aluno);
+        $this->nome_pai = $this->cleanNameSearch($this->nome_pai);
+        $this->nome_mae = $this->cleanNameSearch($this->nome_mae);
 
         $dataFilter = [
             'rg' => preg_replace('/\D/', '', $this->rg_aluno),
@@ -113,11 +122,11 @@ return new class extends clsListagem {
             'grade' => $this->ref_cod_serie,
             'school' => $this->ref_cod_escola,
             'course' => $this->ref_cod_curso,
-            'birthdate' => trim($this->data_nascimento),
+            'birthdate' => $this->data_nascimento,
             'fatherName' => $this->nome_pai,
             'motherName' => $this->nome_mae,
             'studentName' => $this->nome_aluno,
-            'studentCode' => $this->cod_aluno,
+            'studentCode' => (int) $this->cod_aluno > 0 ? $this->cod_aluno : null,
             'stateNetwork' => $this->aluno_estado_id,
             'responsableName' => $this->nome_responsavel,
             'perPage' => 20,
@@ -130,8 +139,6 @@ return new class extends clsListagem {
         $studentFilter = new StudentFilter(...$dataFilter);
         $students = LegacyStudent::query()->findStudentWithMultipleSearch($studentFilter);
 
-
-        /** @var LegacyStudent $registro */
         foreach ($students as $student) {
             $nomeAluno = $student->person->name;
             $nomeSocial = $student->individual->nome_social;
@@ -175,5 +182,10 @@ return new class extends clsListagem {
     {
         $this->title = 'Aluno';
         $this->processoAp = '578';
+    }
+
+    public function cleanNameSearch($name)
+    {
+        return trim(preg_replace('/\W/', ' ', limpa_acentos($name)));
     }
 };

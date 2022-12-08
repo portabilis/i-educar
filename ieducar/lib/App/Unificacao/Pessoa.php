@@ -107,14 +107,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             'coluna' => 'idpes_cad'
         ],
         [
-            'tabela' => 'cadastro.religiao',
-            'coluna' => 'idpes_exc'
-        ],
-        [
-            'tabela' => 'cadastro.religiao',
-            'coluna' => 'idpes_cad'
-        ],
-        [
             'tabela' => 'modules.motorista',
             'coluna' => 'ref_idpes'
         ],

@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class LegacyDisciplineSchoolClass extends Pivot
 {
+    public const CREATED_AT = null;
+
+    public const UPDATED_AT = 'updated_at';
+
     protected $table = 'modules.componente_curricular_turma';
 
     protected $primaryKey = 'componente_curricular_id';
@@ -20,8 +24,6 @@ class LegacyDisciplineSchoolClass extends Pivot
         'etapas_especificas',
         'etapas_utilizadas',
     ];
-
-    public $timestamps = false;
 
     public $incrementing = false;
 }

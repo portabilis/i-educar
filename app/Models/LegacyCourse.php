@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use App\Models\Builders\LegacyCourseBuilder;
+use App\Traits\HasLegacyDates;
 use App\Traits\LegacyAttribute;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -16,9 +18,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  *
  * @method static LegacyCourseBuilder query()
  */
-class LegacyCourse extends Model
+class LegacyCourse extends LegacyModel
 {
     use LegacyAttribute;
+    use HasLegacyDates;
+
+    public const CREATED_AT = 'data_cadastro';
 
     /**
      * @var string
@@ -35,14 +40,14 @@ class LegacyCourse extends Model
      *
      * @var string
      */
-    protected $builder = LegacyCourseBuilder::class;
+    protected string $builder = LegacyCourseBuilder::class;
 
     /**
      * Atributos legados para serem usados nas queries
      *
      * @var array
      */
-    public $legacy = [
+    public array $legacy = [
         'id' => 'cod_curso',
         'name' => 'nm_curso',
         'is_standard_calendar' => 'padrao_ano_escolar',
@@ -54,9 +59,21 @@ class LegacyCourse extends Model
      * @var array
      */
     protected $fillable = [
-        'ref_usuario_cad', 'ref_cod_tipo_regime', 'ref_cod_nivel_ensino', 'ref_cod_tipo_ensino', 'nm_curso',
-        'sgl_curso', 'qtd_etapas', 'carga_horaria', 'data_cadastro', 'ref_cod_instituicao', 'hora_falta', 'ativo',
-        'modalidade_curso', 'padrao_ano_escolar', 'multi_seriado'
+        'ref_usuario_cad',
+        'ref_cod_tipo_regime',
+        'ref_cod_nivel_ensino',
+        'ref_cod_tipo_ensino',
+        'nm_curso',
+        'descricao',
+        'sgl_curso',
+        'qtd_etapas',
+        'carga_horaria',
+        'ref_cod_instituicao',
+        'hora_falta',
+        'ativo',
+        'modalidade_curso',
+        'padrao_ano_escolar',
+        'multi_seriado'
     ];
 
     /**
@@ -66,53 +83,45 @@ class LegacyCourse extends Model
         'padrao_ano_escolar' => 'boolean',
     ];
 
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
-     * @return int
-     */
-    public function getIdAttribute()
+    protected function id(): Attribute
     {
-        return $this->cod_curso;
+        return Attribute::make(
+            get: fn () => $this->cod_curso,
+        );
     }
 
-    /**
-     * @return string
-     */
-    public function getDescriptionAttribute()
+    protected function description(): Attribute
     {
-        return $this->descricao;
+        return Attribute::make(
+            get: fn () => $this->descricao,
+        );
     }
 
-    /**
-     * @return int
-     */
-    public function getStepsAttribute()
+    protected function steps(): Attribute
     {
-        return $this->qtd_etapas;
+        return Attribute::make(
+            get: fn () => $this->qtd_etapas,
+        );
     }
 
-    /**
-     * @return string
-     */
-    public function getNameAttribute()
+    protected function name(): Attribute
     {
-        if (empty($this->description)) {
-            return $this->nm_curso;
-        }
+        return Attribute::make(
+            get: function () {
+                if (empty($this->description)) {
+                    return $this->nm_curso;
+                }
 
-        return $this->nm_curso . ' (' . $this->description . ')';
+                return $this->nm_curso . ' (' . $this->description . ')';
+            },
+        );
     }
 
-    /**
-     * @return bool
-     */
-    public function getIsStandardCalendarAttribute()
+    protected function isStandardCalendar(): Attribute
     {
-        return $this->padrao_ano_escolar;
+        return Attribute::make(
+            get: fn () => $this->padrao_ano_escolar,
+        );
     }
 
     /**
@@ -143,5 +152,15 @@ class LegacyCourse extends Model
     public function qualifications(): BelongsToMany
     {
         return $this->belongsToMany(LegacyQualification::class, 'pmieducar.habilitacao_curso', 'ref_cod_curso', 'ref_cod_habilitacao');
+    }
+
+    public function educationType(): BelongsTo
+    {
+        return $this->belongsTo(LegacyEducationType::class, 'ref_cod_tipo_ensino');
+    }
+
+    public function educationLevel(): BelongsTo
+    {
+        return $this->belongsTo(LegacyEducationLevel::class, 'ref_cod_nivel_ensino');
     }
 }
