@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyRace;
+
 return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -27,12 +29,13 @@ return new class extends clsCadastro {
         $obj_permissao->permissao_cadastra(678, $this->pessoa_logada, 7, 'educar_raca_lst.php');
 
         if (is_numeric($this->cod_raca)) {
-            $obj = new clsCadastroRaca($this->cod_raca);
-            $registro  = $obj->detalhe();
-            if ($registro) {
-                foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
-                    $this->$campo = $val;
-                }
+            $races = LegacyRace::query()->find($this->cod_raca)?->toArray();
+            if ($races) {
+
+                $this->nm_raca = $races['nm_raca'];
+                $this->cod_raca = $races['cod_raca'];
+                $this->raca_educacenso = $races['raca_educacenso'];
+
                 $this->data_cadastro = dataFromPgToBr($this->data_cadastro);
                 $this->data_exclusao = dataFromPgToBr($this->data_exclusao);
 
@@ -41,7 +44,7 @@ return new class extends clsCadastro {
                 $retorno = 'Editar';
             }
         }
-        $this->url_cancelar = ($retorno == 'Editar') ? "educar_raca_det.php?cod_raca={$registro['cod_raca']}" : 'educar_raca_lst.php';
+        $this->url_cancelar = ($retorno == 'Editar') ? "educar_raca_det.php?cod_raca=$this->cod_raca" : 'educar_raca_lst.php';
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
@@ -74,11 +77,18 @@ return new class extends clsCadastro {
 
     public function Novo()
     {
-        $obj = new clsCadastroRaca($this->cod_raca, null, $this->pessoa_logada, $this->nm_raca, $this->data_cadastro, $this->data_exclusao, $this->ativo);
-        $obj->raca_educacenso = $this->raca_educacenso;
-        $cadastrou = $obj->cadastra();
-        if ($cadastrou) {
-            $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+        $race = LegacyRace::query()
+            ->create(
+                 [
+                     'idpes_cad' => $this->pessoa_logada,
+                     'nm_raca' => $this->nm_raca,
+                     'raca_educacenso' => $this->raca_educacenso
+                 ]
+             )
+         ;
+
+        if ($race) {
+            $this->mensagem = 'Cadastro efetuado com sucesso.<br>';
             $this->simpleRedirect('educar_raca_lst.php');
         }
 
@@ -89,11 +99,16 @@ return new class extends clsCadastro {
 
     public function Editar()
     {
-        $obj = new clsCadastroRaca($this->cod_raca, $this->pessoa_logada, null, $this->nm_raca, $this->data_cadastro, $this->data_exclusao, $this->ativo);
-        $obj->raca_educacenso = $this->raca_educacenso;
-        $editou = $obj->edita();
-        if ($editou) {
-            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
+        $race = LegacyRace::query()->findOrFail($this->cod_raca);
+
+        $race->ativo = 1;
+        $race->nm_raca = $this->nm_raca;
+        $race->idpes_cad = $this->pessoa_logada;
+        $race->raca_educacenso = $this->raca_educacenso;
+
+
+        if ($race->save()) {
+            $this->mensagem = 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_raca_lst.php');
         }
 
@@ -104,11 +119,13 @@ return new class extends clsCadastro {
 
     public function Excluir()
     {
-        $obj = new clsCadastroRaca($this->cod_raca, $this->pessoa_logada, null, $this->nm_raca, $this->data_cadastro, $this->data_exclusao, 0);
+        $race = LegacyRace::query()->findOrFail($this->cod_raca);
 
-        $excluiu = $obj->excluir();
-        if ($excluiu) {
-            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
+        $race->ativo = 0;
+        $race->idpes_cad = $this->pessoa_logada;
+
+        if ($race->save()) {
+            $this->mensagem = 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_raca_lst.php');
         }
 
