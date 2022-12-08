@@ -159,7 +159,7 @@ class ExportTest extends TestCase
                 [
                     'mensagens' => [
                         0 => [
-                            'text' => '<span class=\'avisos-educacenso\'><b>Aviso não impeditivo:</b> Dados para formular o registro 20 da escola ESCOLA PORTABILIS sujeito à valor inválido. Verificamos que a turma MULTI 4Âº 5Âº ANO U VESP 2021 é de formação geral básica e itinerário formativo, e a etapa de ensino é 35 - Ensino Médio - Normal/Magistério 1ª Série, portanto você pode definir os itinerários dos alunos individualmente.',
+                            'text' => '<span class=\'avisos-educacenso\'><b>Aviso não impeditivo:</b> Dados para formular o registro 20 da escola ESCOLA PORTABILIS sujeito à valor inválido. Verificamos que a turma MULTI 4&ORDM; 5&ORDM; ANO U VESP 2021 é de formação geral básica e itinerário formativo, e a etapa de ensino é 35 - Ensino Médio - Normal/Magistério 1ª Série, portanto você pode definir os itinerários dos alunos individualmente.',
                             'path' => '(Escola > Cadastros > Alunos > Visualizar > Itinerário formativo > Campo: Tipo do itinerário formativo)',
                             'linkPath' => '/intranet/educar_aluno_lst.php',
                             'fail' => false,
