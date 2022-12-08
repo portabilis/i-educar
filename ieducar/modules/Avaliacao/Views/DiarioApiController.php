@@ -447,6 +447,7 @@ class DiarioApiController extends ApiCoreController
                   
             }
             $media = $soma_notas / $contador;
+            $media = round($media , 1);
            
 
             LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->update([
@@ -758,6 +759,7 @@ class DiarioApiController extends ApiCoreController
               
         }
         $media = $soma_notas / $contador;
+        $media = round($media , 1);
        
 
         LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->update([
