@@ -439,7 +439,7 @@ class DiarioApiController extends ApiCoreController
            
             $contador =0;
             $soma_notas =0;
-            $nota_componente_curricular = LegacyDisciplineScore::whereNotNull('nota')->where('nota_aluno_id', $nota_aluno->id)->get();
+            $nota_componente_curricular = LegacyDisciplineScore::whereNotNull('nota')->where('nota_aluno_id', $nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->get();
             foreach($nota_componente_curricular as $list) {
                 $contador++;
                 $nota = $list->nota;
@@ -613,7 +613,7 @@ class DiarioApiController extends ApiCoreController
             $contador =0;
             $soma_notas =0;
             $soma_notas_arredondadas =0;
-            $nota_componente_curricular = LegacyDisciplineScore::whereNotNull('nota_recuperacao_especifica')->where('nota_aluno_id', $nota_aluno->id)->get();
+            $nota_componente_curricular = LegacyDisciplineScore::whereNotNull('nota_recuperacao_especifica')->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->where('nota_aluno_id', $nota_aluno->id)->get();
             foreach($nota_componente_curricular as $list) {
                 $nota1 = 0;
                 $nota2 = 0;
@@ -621,7 +621,7 @@ class DiarioApiController extends ApiCoreController
                 $nota1 = $list->nota_arredondada;
                 $notaRecuperacao = $list->nota_recuperacao_especifica;
                 $etapa_anterior = $list->etapa-1;
-                $nota_componente_curricular_anterior = LegacyDisciplineScore::where('nota_aluno_id', $nota_aluno->id)->where('etapa', $etapa_anterior)->get();
+                $nota_componente_curricular_anterior = LegacyDisciplineScore::where('nota_aluno_id', $nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->where('etapa', $etapa_anterior)->get();
                 foreach($nota_componente_curricular_anterior as $list2) {
                     $contador++;
                     $nota2 = $list2->nota_arredondada;
@@ -752,7 +752,7 @@ class DiarioApiController extends ApiCoreController
        
         $contador =0;
         $soma_notas =0;
-        $nota_componente_curricular = LegacyDisciplineScore::whereNotNull('nota')->where('nota_aluno_id', $nota_aluno->id)->get();
+        $nota_componente_curricular = LegacyDisciplineScore::whereNotNull('nota')->where('nota_aluno_id', $nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->get();
         foreach($nota_componente_curricular as $list) {
             $contador++;
             $nota = $list->nota;
