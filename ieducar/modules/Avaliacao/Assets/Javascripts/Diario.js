@@ -27,7 +27,7 @@ var showBotaoReplicarNotas;
 var locked = false;
 
 $(function() {
-    navegacaoTab(dataResponse.navegacao_tab);
+  navegacaoTab(dataResponse.navegacao_tab);
 });
 
 //url builders
@@ -76,7 +76,7 @@ var postResourceUrlBuilder = {
 
 var getResourceUrlBuilder = {
   buildUrl : function(urlBase, resourceName, additionalVars) {
-    
+
     var vars = {
       resource : resourceName,
       oper : 'get',
@@ -149,44 +149,44 @@ var lockedAverage = function ($element, callback) {
     }
 
     dialogElm.dialog({
-        width: 600,
-        title: 'Atenção!',
-        modal: true,
-        open: function(event, ui) {
-          $j('.ui-dialog-titlebar-close', ui.dialog | ui).hide();
-        },
-        buttons: [
-          {
-            text: 'Sim',
-            click: function () {
-              var options = {
-                url: postResourceUrlBuilder.buildUrl(API_URL_BASE, 'media_desbloqueia', additionalVars),
-                dataType: 'json',
-                success: function (dataResponse) {
-                  if (dataResponse.any_error_msg === false) {
-                    campoSituacao.data('media_bloqueada', false);
-                    callback();
-                  } else {
-                    alert(dataResponse.msgs[0].msg);
-                  }
-                },
-                error: function () {
-                  alert('Não foi possível desbloquear a média. Tente novamente!');
+      width: 600,
+      title: 'Atenção!',
+      modal: true,
+      open: function(event, ui) {
+        $j('.ui-dialog-titlebar-close', ui.dialog | ui).hide();
+      },
+      buttons: [
+        {
+          text: 'Sim',
+          click: function () {
+            var options = {
+              url: postResourceUrlBuilder.buildUrl(API_URL_BASE, 'media_desbloqueia', additionalVars),
+              dataType: 'json',
+              success: function (dataResponse) {
+                if (dataResponse.any_error_msg === false) {
+                  campoSituacao.data('media_bloqueada', false);
+                  callback();
+                } else {
+                  alert(dataResponse.msgs[0].msg);
                 }
-              };
+              },
+              error: function () {
+                alert('Não foi possível desbloquear a média. Tente novamente!');
+              }
+            };
 
-              $j.ajax(options);
-              dialogElm.dialog('close');
-            }
-          }, {
-            text: 'Não',
-            click: function () {
-              callback();
-              dialogElm.dialog('close');
-            }
+            $j.ajax(options);
+            dialogElm.dialog('close');
           }
-        ]
-      })
+        }, {
+          text: 'Não',
+          click: function () {
+            callback();
+            dialogElm.dialog('close');
+          }
+        }
+      ]
+    })
   } else {
     callback();
   }
@@ -257,8 +257,8 @@ var changeFalta = function(event) {
   // se presenca geral, muda o valor em todas faltas da mesma matricula
   if (regra.tipo_presenca == 'geral') {
     var $fieldsFaltaMatricula = $element.closest('table').find('.falta-matricula-' + $element
-                                                               .data('matricula_id') + '-cc')
-                                                               .not($element);
+      .data('matricula_id') + '-cc')
+      .not($element);
 
     $fieldsFaltaMatricula.val($element.val());
     $fieldsFaltaMatricula.data('old_value', $element.val());
@@ -277,12 +277,12 @@ var changeParecer = function(element) {
 
   // se parecer geral, muda o valor em todos pareceres da mesma matricula
   var parecerGeral = $j.inArray(regra.tipo_parecer_descritivo,
-          ['etapa_geral', 'anual_geral']) > -1;
+    ['etapa_geral', 'anual_geral']) > -1;
 
   if (parecerGeral) {
     var $fieldsParecerMatricula = element.closest('table').find('.parecer-matricula-' + element
-            .data('matricula_id') + '-cc')
-        .not(element);
+      .data('matricula_id') + '-cc')
+      .not(element);
 
     $fieldsParecerMatricula.val(element.val());
     $fieldsParecerMatricula.data('old_value', element.val());
@@ -367,8 +367,8 @@ function postNota($notaFieldElement) {
   $notaFieldElement.val($notaFieldElement.val().replace(',', '.'));
 
   if (validatesIfValueIsNumeric($notaFieldElement.val(), $notaFieldElement.attr('id')) &&
-      validatesIfNumericValueIsInRange($notaFieldElement.val(), $notaFieldElement.attr('id'), regra.nota_minima_geral, regra.nota_maxima_geral) &&
-      validatesIfDecimalPlacesInRange($notaFieldElement.val(), $notaFieldElement.attr('id'), 0, regra.qtd_casas_decimais)) {
+    validatesIfNumericValueIsInRange($notaFieldElement.val(), $notaFieldElement.attr('id'), regra.nota_minima_geral, regra.nota_maxima_geral) &&
+    validatesIfDecimalPlacesInRange($notaFieldElement.val(), $notaFieldElement.attr('id'), 0, regra.qtd_casas_decimais)) {
 
     beforeChangeResource($notaFieldElement);
 
@@ -386,7 +386,7 @@ function postNota($notaFieldElement) {
         afterChangeResource($notaFieldElement);
         handleChange(dataResponse);
         checkIfShowNotaRecuperacaoParalelaField($notaFieldElement.val(), dataResponse);
-       // setDefaultFaltaIfEmpty($notaFieldElement.data('matricula_id'), $notaFieldElement.data('componente_curricular_id'));
+        // setDefaultFaltaIfEmpty($notaFieldElement.data('matricula_id'), $notaFieldElement.data('componente_curricular_id'));
       }
     };
 
@@ -431,8 +431,8 @@ function postNotaExame($notaExameFieldElement) {
   $notaExameFieldElement.val($notaExameFieldElement.val().replace(',', '.'));
 
   if (validatesIfValueIsNumeric($notaExameFieldElement.val(), $notaExameFieldElement.attr('id')) &&
-      validatesIfNumericValueIsInRange($notaExameFieldElement.val(), $notaExameFieldElement.attr('id'), 0, regra.nota_maxima_exame_final) &&
-      validatesIfDecimalPlacesInRange($notaExameFieldElement.val(), $notaExameFieldElement.attr('id'), 0, regra.qtd_casas_decimais)) {
+    validatesIfNumericValueIsInRange($notaExameFieldElement.val(), $notaExameFieldElement.attr('id'), 0, regra.nota_maxima_exame_final) &&
+    validatesIfDecimalPlacesInRange($notaExameFieldElement.val(), $notaExameFieldElement.attr('id'), 0, regra.qtd_casas_decimais)) {
 
     beforeChangeResource($notaExameFieldElement);
 
@@ -467,8 +467,8 @@ function postNotaRecuperacaoParalela($notaRecuperacaoParalelaElement) {
   $notaRecuperacaoParalelaElement.val($notaRecuperacaoParalelaElement.val().replace(',', '.'));
 
   if (validatesIfValueIsNumeric($notaRecuperacaoParalelaElement.val(), $notaRecuperacaoParalelaElement.attr('id')) &&
-      validatesIfNumericValueIsInRange($notaRecuperacaoParalelaElement.val(), $notaRecuperacaoParalelaElement.attr('id'), regra.nota_minima_geral, regra.nota_maxima_geral) &&
-      validatesIfDecimalPlacesInRange($notaRecuperacaoParalelaElement.val(), $notaRecuperacaoParalelaElement.attr('id'), 0, regra.qtd_casas_decimais)) {
+    validatesIfNumericValueIsInRange($notaRecuperacaoParalelaElement.val(), $notaRecuperacaoParalelaElement.attr('id'), regra.nota_minima_geral, regra.nota_maxima_geral) &&
+    validatesIfDecimalPlacesInRange($notaRecuperacaoParalelaElement.val(), $notaRecuperacaoParalelaElement.attr('id'), 0, regra.qtd_casas_decimais)) {
 
     beforeChangeResource($notaRecuperacaoParalelaElement);
 
@@ -500,8 +500,8 @@ function postNotaRecuperacaoEspecifica($notaRecuperacaoEspecificaElement) {
   $notaRecuperacaoEspecificaElement.val($notaRecuperacaoEspecificaElement.val().replace(',', '.'));
 
   if (validatesIfValueIsNumeric($notaRecuperacaoEspecificaElement.val(), $notaRecuperacaoEspecificaElement.attr('id')) &&
-      validatesIfNumericValueIsInRange($notaRecuperacaoEspecificaElement.val(), $notaRecuperacaoEspecificaElement.attr('id'), 0, regra.tipo_recuperacao_paralela_nota_maxima) &&
-      validatesIfDecimalPlacesInRange($notaRecuperacaoEspecificaElement.val(), $notaRecuperacaoEspecificaElement.attr('id'), 0, regra.qtd_casas_decimais)) {
+    validatesIfNumericValueIsInRange($notaRecuperacaoEspecificaElement.val(), $notaRecuperacaoEspecificaElement.attr('id'), 0, regra.tipo_recuperacao_paralela_nota_maxima) &&
+    validatesIfDecimalPlacesInRange($notaRecuperacaoEspecificaElement.val(), $notaRecuperacaoEspecificaElement.attr('id'), 0, regra.qtd_casas_decimais)) {
 
     beforeChangeResource($notaRecuperacaoEspecificaElement);
 
@@ -534,7 +534,7 @@ function postFalta($faltaFieldElement) {
   if ($j.isNumeric($faltaFieldElement.val()))
     $faltaFieldElement.val(parseInt($faltaFieldElement.val()).toString());
   if (validatesIfValueIsNumeric($faltaFieldElement.val(), $faltaFieldElement.attr('id')) &&
-      validatesIfNumericValueIsInRange($faltaFieldElement.val(), $faltaFieldElement.attr('id'), regra.falta_minima_geral, regra.falta_maxima_geral)) {
+    validatesIfNumericValueIsInRange($faltaFieldElement.val(), $faltaFieldElement.attr('id'), regra.falta_minima_geral, regra.falta_maxima_geral)) {
 
     beforeChangeResource($faltaFieldElement);
 
@@ -597,13 +597,13 @@ function postParecer($parecerFieldElement) {
     .done(function(dataResponse) {
       afterChangeResource($parecerFieldElement);
       handleChange(dataResponse);
-        $parecerFieldElement.closest('td').find('.note-editable').removeClass('summernote-parecer-bg-red')
-            .addClass('summernote-parecer-bg-green');
+      $parecerFieldElement.closest('td').find('.note-editable').removeClass('summernote-parecer-bg-red')
+        .addClass('summernote-parecer-bg-green');
     })
     .fail(function() {
-        $parecerFieldElement.closest('td').find('.note-editable').removeClass('summernote-parecer-bg-green')
-            .addClass('summernote-parecer-bg-red');
-        errorCallback || handleErrorOnDeleteResource;
+      $parecerFieldElement.closest('td').find('.note-editable').removeClass('summernote-parecer-bg-green')
+        .addClass('summernote-parecer-bg-red');
+      errorCallback || handleErrorOnDeleteResource;
     });
 }
 
@@ -666,7 +666,7 @@ function deleteMedia($mediaFieldElement){
     componente_curricular_id : $mediaFieldElement.data('componente_curricular_id'),
     etapa : $j('#etapa').val(),
     matricula_id : $mediaFieldElement.data('matricula_id')
-   };
+  };
 
   var options = {
     url : deleteResourceUrlBuilder.buildUrl(API_URL_BASE, resourceName, additionalVars),
@@ -755,7 +755,7 @@ function deleteNota($notaFieldElement) {
     componente_curricular_id : $notaFieldElement.data('componente_curricular_id'),
     etapa : $j('#etapa').val(),
     matricula_id : $notaFieldElement.data('matricula_id')
-   };
+  };
 
   var options = {
     url : deleteResourceUrlBuilder.buildUrl(API_URL_BASE, resourceName, additionalVars),
@@ -777,7 +777,7 @@ function deleteNotaRecuperacaoParalela($notaRecuperacaoParalelaElement) {
     componente_curricular_id : $notaRecuperacaoParalelaElement.data('componente_curricular_id'),
     etapa : $j('#etapa').val(),
     matricula_id : $notaRecuperacaoParalelaElement.data('matricula_id')
-   };
+  };
 
   var options = {
     url : deleteResourceUrlBuilder.buildUrl(API_URL_BASE, resourceName, additionalVars),
@@ -797,7 +797,7 @@ function deleteNotaRecuperacaoEspecifica($notaRecuperacaoEspecificaElement) {
     componente_curricular_id : $notaRecuperacaoEspecificaElement.data('componente_curricular_id'),
     etapa : $j('#etapa').val(),
     matricula_id : $notaRecuperacaoEspecificaElement.data('matricula_id')
-   };
+  };
 
   var options = {
     url : deleteResourceUrlBuilder.buildUrl(API_URL_BASE, resourceName, additionalVars),
@@ -818,7 +818,7 @@ function deleteNotaExame($notaExameFieldElement) {
     componente_curricular_id : $notaExameFieldElement.data('componente_curricular_id'),
     etapa : 'Rc',
     matricula_id : $notaExameFieldElement.data('matricula_id')
-   };
+  };
 
   var options = {
     url : deleteResourceUrlBuilder.buildUrl(API_URL_BASE, resourceName, additionalVars),
@@ -844,15 +844,15 @@ function deleteFalta($faltaFieldElement) {
   var $parecerField = $j('#parecer-matricula-'+ matriculaId + '-cc-' + ccId);
 
   if(($notaField.length < 1 || $notaField.val() == '') &&
-     ($notaExameField.length < 1 || $notaExameField.val() == '') &&
-     ($parecerField.length < 1 || $j.trim($parecerField.val()) == '')
-    ) {
+    ($notaExameField.length < 1 || $notaExameField.val() == '') &&
+    ($parecerField.length < 1 || $j.trim($parecerField.val()) == '')
+  ) {
     var resourceName = 'falta';
 
     var additionalVars = {
       componente_curricular_id : $faltaFieldElement.data('componente_curricular_id'),
       matricula_id : $faltaFieldElement.data('matricula_id')
-     };
+    };
 
     var options = {
       url : deleteResourceUrlBuilder.buildUrl(API_URL_BASE, resourceName, additionalVars),
@@ -882,7 +882,7 @@ function deleteParecer($parecerFieldElement) {
     componente_curricular_id : $parecerFieldElement.data('componente_curricular_id'),
     matricula_id             : $parecerFieldElement.data('matricula_id'),
     etapa                    : getEtapaParecer(regra)
-   };
+  };
 
   var options = {
     url : deleteResourceUrlBuilder.buildUrl(API_URL_BASE, resourceName, additionalVars),
@@ -901,7 +901,7 @@ function deleteNotaGeral($notaGeralElementField) {
 
   var additionalVars = {
     matricula_id             : $notaGeralElementField.data('matricula_id')
-   };
+  };
 
   var options = {
     url : deleteResourceUrlBuilder.buildUrl(API_URL_BASE, resourceName, additionalVars),
@@ -922,7 +922,7 @@ function handleChange(dataResponse) {
   var componenteCurricularId = dataResponse.componente_curricular_id ? dataResponse.componente_curricular_id : "";
 
   var targetId = dataResponse.resource + '-matricula-' + dataResponse.matricula_id +
-                 '-cc-' + componenteCurricularId;
+    '-cc-' + componenteCurricularId;
 
   handleMessagesDiario(dataResponse.msgs, targetId);
   updateResourceRow(dataResponse);
@@ -1033,7 +1033,7 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
 
     //field escola pode ser diferente de select caso usuario comum
     var $htmlEscolaField = $j('#ref_cod_escola').children("[selected='selected']").html() ||
-                           $j('#tr_nm_escola span:last').html();
+      $j('#tr_nm_escola span:last').html();
 
     $j('<td />').html(safeToUpperCase($htmlEscolaField)).appendTo($linha);
     var descricaoCompletaRegra = regra.id + ' - ' +safeToUpperCase(regra.nome);
@@ -1076,8 +1076,8 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
     var $tfoot = $j('<tfoot/>').attr('style', 'position: absolute;margin-top: 30px;');
     $j('<tr/>').append(
       $j('<td/>').attr('style', 'text-align: left;')
-                 .attr('colspan', tfootColspan)
-                 .text(REGRA_DIFERENCIADA_TEXT)
+        .attr('colspan', tfootColspan)
+        .text(REGRA_DIFERENCIADA_TEXT)
     ).appendTo($tfoot)
 
     $tableSearchDetails.append($tfoot);
@@ -1133,8 +1133,8 @@ function handleSearch($resultTable, dataResponse) {
       descricaoAluno = `* ${descricaoAluno}`;
     }
     $j('<td />').html(descricaoAluno)
-                .attr('colspan', componenteCurricularSelected ? 0 : 5)
-                .appendTo($linha);
+      .attr('colspan', componenteCurricularSelected ? 0 : 5)
+      .appendTo($linha);
 
     if (value.componentes_curriculares){
       if (componenteCurricularSelected && value.componentes_curriculares.length > 0)
@@ -1142,12 +1142,12 @@ function handleSearch($resultTable, dataResponse) {
     }else{
       if(value.situacao_deslocamento){
         var $situacaoTdDeslocamento = $j('<td />').addClass('situacao-matricula-cc')
-                                  .attr('id', 'situacao-matricula-' + value.matricula_id)
-                                  .data('matricula_id', value.matricula_id)
-                                  .addClass('center')
-                                  .addClass('matricula-situacao-deslocamento')
-                                  .html(value.situacao_deslocamento)
-                                  .appendTo($linha);
+          .attr('id', 'situacao-matricula-' + value.matricula_id)
+          .data('matricula_id', value.matricula_id)
+          .addClass('center')
+          .addClass('matricula-situacao-deslocamento')
+          .html(value.situacao_deslocamento)
+          .appendTo($linha);
 
         var colCount = 0;
         $resultTable.find('tr:nth-child(1) th').each(function () {
@@ -1177,7 +1177,7 @@ function handleSearch($resultTable, dataResponse) {
   });
   // seta colspan [th, td].aluno quando exibe nota exame
   if (useNota &&
-      (ultimaEtapa || definirComponentesEtapa)) {
+    (ultimaEtapa || definirComponentesEtapa)) {
     $resultTable.find('[colspan]:not(.area-conhecimento)').attr('colspan', componenteCurricularSelected ? 1 : 10);
   }
 
@@ -1193,6 +1193,7 @@ function handleSearch($resultTable, dataResponse) {
   var $mediaFields = $resultTable.find('.media-cc');
   var $situacaoField = $resultTable.find('.situacao-cc');
   let bloqueioField = $resultTable.find('.bloqueio-matricula');
+  var $mediaAtualFields = $resultTable.find('.media-atual-matricula-cc');
 
   $notaFields.on('change', changeNota);
   $notaExameFields.on('change', changeNotaExame);
@@ -1231,6 +1232,8 @@ function handleSearch($resultTable, dataResponse) {
     $faltaFields.prop('disabled', true);
   }
 
+  $mediaAtualFields.prop('disabled', true);
+
 }
 
 function _notaField(matriculaId, componenteCurricularId, klass, id, value, areaConhecimentoId, maxLength, tipoNota, regra) {
@@ -1240,11 +1243,11 @@ function _notaField(matriculaId, componenteCurricularId, klass, id, value, areaC
 
   if(regra.tipo_nota == 'conceitual' || notaConceitual) {
     var $notaField = $j('<select />')
-                     .addClass(klass)
-                     .addClass(areaConhecimentoId)
-                     .attr('id', id)
-                     .data('matricula_id', matriculaId)
-                     .data('componente_curricular_id', componenteCurricularId);
+      .addClass(klass)
+      .addClass(areaConhecimentoId)
+      .attr('id', id)
+      .data('matricula_id', matriculaId)
+      .data('componente_curricular_id', componenteCurricularId);
 
     // adiciona opcoes notas ao select
     var $option = $j('<option />').appendTo($notaField);
@@ -1259,12 +1262,12 @@ function _notaField(matriculaId, componenteCurricularId, klass, id, value, areaC
   }
   else {
     var $notaField = $j('<input />').addClass(klass)
-                                    .attr('id', id)
-                                    .attr('maxlength', maxLength)
-                                    .attr('size', maxLength)
-                                    .val(value)
-                                    .data('matricula_id', matriculaId)
-                                    .data('componente_curricular_id', componenteCurricularId);
+      .attr('id', id)
+      .attr('maxlength', maxLength)
+      .attr('size', maxLength)
+      .val(value)
+      .data('matricula_id', matriculaId)
+      .data('componente_curricular_id', componenteCurricularId);
   }
 
   $notaField.data('old_value', value);
@@ -1280,11 +1283,11 @@ function _mediaField(matriculaId, componenteCurricularId, klass, id, value, area
 
   if(regra.tipo_nota == 'conceitual' || notaConceitual) {
     var $notaField = $j('<select />')
-                     .addClass(klass)
-                     .addClass(areaConhecimentoId)
-                     .attr('id', id)
-                     .data('matricula_id', matriculaId)
-                     .data('componente_curricular_id', componenteCurricularId);
+      .addClass(klass)
+      .addClass(areaConhecimentoId)
+      .attr('id', id)
+      .data('matricula_id', matriculaId)
+      .data('componente_curricular_id', componenteCurricularId);
 
     // adiciona opcoes notas ao select
     var $option = $j('<option />').appendTo($notaField);
@@ -1305,12 +1308,12 @@ function _mediaField(matriculaId, componenteCurricularId, klass, id, value, area
   }
   else {
     var $notaField = $j('<input />').addClass(klass)
-                                    .attr('id', id)
-                                    .attr('maxlength', maxLength)
-                                    .attr('size', maxLength)
-                                    .val(value)
-                                    .data('matricula_id', matriculaId)
-                                    .data('componente_curricular_id', componenteCurricularId);
+      .attr('id', id)
+      .attr('maxlength', maxLength)
+      .attr('size', maxLength)
+      .val(value)
+      .data('matricula_id', matriculaId)
+      .data('componente_curricular_id', componenteCurricularId);
   }
 
   $notaField.data('old_value', value);
@@ -1321,37 +1324,37 @@ function _mediaField(matriculaId, componenteCurricularId, klass, id, value, area
 
 function notaField(matriculaId, componenteCurricularId, value, areaConhecimentoId, maxLength, tipoNota, regra) {
   return _notaField(matriculaId,
-                    componenteCurricularId,
-                    'nota-matricula-cc',
-                    'nota-matricula-' + matriculaId + '-cc-' + componenteCurricularId,
-                    value,
-                    'area-id-' + areaConhecimentoId,
-                    maxLength,
-                    tipoNota,
-                    regra);
+    componenteCurricularId,
+    'nota-matricula-cc',
+    'nota-matricula-' + matriculaId + '-cc-' + componenteCurricularId,
+    value,
+    'area-id-' + areaConhecimentoId,
+    maxLength,
+    tipoNota,
+    regra);
 }
 
 
 function notaExameField(matriculaId, componenteCurricularId, value, maxLength, tipoNota, regra) {
   return _notaField(matriculaId,
-                    componenteCurricularId,
-                    'nota_exame-matricula-cc',
-                    'nota_exame-matricula-' + matriculaId + '-cc-' + componenteCurricularId,
-                    value,
-                    null,
-                    maxLength,
-                    tipoNota,
-                    regra);
+    componenteCurricularId,
+    'nota_exame-matricula-cc',
+    'nota_exame-matricula-' + matriculaId + '-cc-' + componenteCurricularId,
+    value,
+    null,
+    maxLength,
+    tipoNota,
+    regra);
 }
 
 function notaGeralEtapaField(matriculaId, componenteCurricularId, value, maxLength){
   var $notaField = $j('<input />').addClass('nota-geral-etapa')
-                                    .attr('id', 'nota-geral-etapa-' + matriculaId)
-                                    .attr('maxlength', maxLength)
-                                    .attr('size', maxLength)
-                                    .val(value)
-                                    .data('matricula_id', matriculaId)
-                                    .data('componente_curricular_id', componenteCurricularId);
+    .attr('id', 'nota-geral-etapa-' + matriculaId)
+    .attr('maxlength', maxLength)
+    .attr('size', maxLength)
+    .val(value)
+    .data('matricula_id', matriculaId)
+    .data('componente_curricular_id', componenteCurricularId);
 
   $notaField.data('old_value', value);
 
@@ -1363,9 +1366,9 @@ function notaGeralEtapaField(matriculaId, componenteCurricularId, value, maxLeng
 function notaNecessariaField(matriculaId, componenteCurricularId, value){
   if (value=='' || value==undefined) value = '-';
   var $notaNecessariaField = $j('<span />').addClass('nn-matricula-cc')
-                                   .addClass('nn-matricula-' + matriculaId + '-cc')
-                                   .attr('id', 'nn-matricula-' + matriculaId + '-cc-' + componenteCurricularId)
-                                   .text(value);
+    .addClass('nn-matricula-' + matriculaId + '-cc')
+    .attr('id', 'nn-matricula-' + matriculaId + '-cc-' + componenteCurricularId)
+    .text(value);
   setNextTabIndex($notaNecessariaField);
   return $j('<td />').html($notaNecessariaField).addClass('center');
 }
@@ -1373,30 +1376,45 @@ function notaNecessariaField(matriculaId, componenteCurricularId, value){
 
 function faltaField(matriculaId, componenteCurricularId, value) {
   var $faltaField = $j('<input />').addClass('falta-matricula-cc')
-                                   .addClass('falta-matricula-' + matriculaId + '-cc')
-                                   .attr('id', 'falta-matricula-' + matriculaId + '-cc-' + componenteCurricularId)
-                                   .attr('maxlength', '4')
-                                   .attr('size', '4')
-                                   .val(value)
-                                   .data('old_value', value)
-                                   .data('matricula_id', matriculaId)
-                                   .data('componente_curricular_id', componenteCurricularId);
+    .addClass('falta-matricula-' + matriculaId + '-cc')
+    .attr('id', 'falta-matricula-' + matriculaId + '-cc-' + componenteCurricularId)
+    .attr('maxlength', '4')
+    .attr('size', '4')
+    .val(value)
+    .data('old_value', value)
+    .data('matricula_id', matriculaId)
+    .data('componente_curricular_id', componenteCurricularId);
 
   setNextTabIndex($faltaField);
   return $j('<td />').html($faltaField).addClass('center');
 }
 
+function mediaAtualField(matriculaId, componenteCurricularId, value) {
+  var $mediaAtualField = $j('<input />').addClass('media-atual-matricula-cc')
+    .addClass('media-atual-matricula-' + matriculaId + '-cc')
+    .attr('id', 'media-atual-matricula-' + matriculaId + '-cc-' + componenteCurricularId)
+    .attr('maxlength', '4')
+    .attr('size', '4')
+    .val(value)
+    .data('old_value', value)
+    .data('matricula_id', matriculaId)
+    .data('componente_curricular_id', componenteCurricularId);
+
+  setNextTabIndex($mediaAtualField);
+  return $j('<td />').html($mediaAtualField).addClass('center');
+}
+
 function parecerField(matriculaId, componenteCurricularId, value) {
   var $parecerField = $j('<textarea />').attr('cols', '40')
-                                        .attr('rows', '5')
-                                        .addClass('parecer-matricula-cc')
-                                        .addClass('parecer-matricula-cc-summernote')
-                                        .addClass('parecer-matricula-' + matriculaId + '-cc')
-                                        .attr('id', 'parecer-matricula-' + matriculaId + '-cc-' + componenteCurricularId)
-                                        .val(value)
-                                        .data('old_value', value)
-                                        .data('matricula_id', matriculaId)
-                                        .data('componente_curricular_id', componenteCurricularId);
+    .attr('rows', '5')
+    .addClass('parecer-matricula-cc')
+    .addClass('parecer-matricula-cc-summernote')
+    .addClass('parecer-matricula-' + matriculaId + '-cc')
+    .attr('id', 'parecer-matricula-' + matriculaId + '-cc-' + componenteCurricularId)
+    .val(value)
+    .data('old_value', value)
+    .data('matricula_id', matriculaId)
+    .data('componente_curricular_id', componenteCurricularId);
 
   setNextTabIndex($parecerField);
   return $j('<td />').html($parecerField);
@@ -1404,38 +1422,38 @@ function parecerField(matriculaId, componenteCurricularId, value) {
 
 function notaRecuperacaoParalelaField(matriculaId, componenteCurricularId, value, areaConhecimentoId, maxLength, regra) {
   return _notaField(matriculaId,
-                    componenteCurricularId,
-                    'nota-recuperacao-paralela-cc',
-                    'nota_recuperacao_paralela-matricula-' + matriculaId + '-cc-' + componenteCurricularId,
-                    value,
-                    'area-id-' + areaConhecimentoId,
-                    maxLength,
-                    undefined,
-                    regra);
+    componenteCurricularId,
+    'nota-recuperacao-paralela-cc',
+    'nota_recuperacao_paralela-matricula-' + matriculaId + '-cc-' + componenteCurricularId,
+    value,
+    'area-id-' + areaConhecimentoId,
+    maxLength,
+    undefined,
+    regra);
 }
 
 function notaRecuperacaoEspecificaField(matriculaId, componenteCurricularId, value, areaConhecimentoId, maxLength, tipoNota, regra) {
   return _notaField(matriculaId,
-                    componenteCurricularId,
-                    'nota-recuperacao-especifica-matricula-cc',
-                    'nota_recuperacao_especifica-matricula-' + matriculaId + '-cc-' + componenteCurricularId,
-                    value,
-                    'area-id-' + areaConhecimentoId,
-                    maxLength,
-                    tipoNota,
-                    regra);
+    componenteCurricularId,
+    'nota-recuperacao-especifica-matricula-cc',
+    'nota_recuperacao_especifica-matricula-' + matriculaId + '-cc-' + componenteCurricularId,
+    value,
+    'area-id-' + areaConhecimentoId,
+    maxLength,
+    tipoNota,
+    regra);
 }
 
 function mediaField(matriculaId, componenteCurricularId, value, maxLength, tipoNota, regra){
   return _mediaField(matriculaId,
-                    componenteCurricularId,
-                    'media-cc',
-                    'media-matricula-' + matriculaId + '-cc-' + componenteCurricularId,
-                    value,
-                    0,
-                    maxLength,
-                    tipoNota,
-                    regra);
+    componenteCurricularId,
+    'media-cc',
+    'media-matricula-' + matriculaId + '-cc-' + componenteCurricularId,
+    value,
+    0,
+    maxLength,
+    tipoNota,
+    regra);
 }
 
 function getNotaGeralMaxLength(regra){
@@ -1469,13 +1487,13 @@ function updateComponenteCurricular($targetElement, matriculaId, cc, regra) {
   var $emptyTd = $j('<td/>').addClass('center');
 
   var $situacaoTd = $j('<td />').addClass('situacao-matricula-cc')
-                                .attr('id', 'situacao-matricula-' + matriculaId + '-cc-' + cc.id)
-                                .data('matricula_id', matriculaId)
-                                .data('componente_curricular_id', cc.id)
-                                .data('media_bloqueada', mediaBloqueada)
-                                .addClass('center')
-                                .html(cc.situacao)
-                                .appendTo($targetElement);
+    .attr('id', 'situacao-matricula-' + matriculaId + '-cc-' + cc.id)
+    .data('matricula_id', matriculaId)
+    .data('componente_curricular_id', cc.id)
+    .data('media_bloqueada', mediaBloqueada)
+    .addClass('center')
+    .html(cc.situacao)
+    .appendTo($targetElement);
 
   colorizeSituacaoTd($situacaoTd, cc.situacao);
 
@@ -1496,9 +1514,9 @@ function updateComponenteCurricular($targetElement, matriculaId, cc, regra) {
     $notaRecuperacaoParalelaField.appendTo($targetElement);
 
     shouldShowNotaRecuperacaoParalela = (((hasNotaRecuperacaoParalela) ||
-                                         (cc.nota_original < mediaRecuperacaoParalela) ||
-                                         (!hasMediaRecuperacaoParalela)) &&
-                                         (hasNotaAtual));
+        (cc.nota_original < mediaRecuperacaoParalela) ||
+        (!hasMediaRecuperacaoParalela)) &&
+      (hasNotaAtual));
 
     if(!shouldShowNotaRecuperacaoParalela){
       $notaRecuperacaoParalelaField.children().hide();
@@ -1577,6 +1595,7 @@ function updateComponenteCurricular($targetElement, matriculaId, cc, regra) {
     $emptyTd.clone().appendTo($targetElement);
   }
 
+  mediaAtualField(matriculaId, cc.id, cc.media).appendTo($targetElement);
   faltaField(matriculaId, cc.id, cc.falta_atual).appendTo($targetElement);
 
   if (useParecer){
@@ -1644,6 +1663,7 @@ function updateComponenteCurricularHeaders($targetElement, $tagElement) {
   if(hUsaNotaGeralPorEtapa){
     $tagElement.clone().addClass('center').html('Nota geral da etapa').appendTo($targetElement);
   }
+  $tagElement.clone().addClass('center').html('Média Atual').appendTo($targetElement);
   $tagElement.clone().addClass('center').html('Falta').appendTo($targetElement);
 
   if (hUseParecer)
@@ -1679,7 +1699,7 @@ function updateComponenteCurriculares($targetElement, matriculaId, componentesCu
       //por fim adicionando primeiro a área depois o heade
       $areaRow.appendTo($targetElement);
       $ccHeader.appendTo($targetElement);
-     }
+    }
 
     var $ccRow = $j('<tr />').addClass('tr-componente-curricular').data('areaid', cc.area_id);
     $ccRow.data('regra', regra);
@@ -1728,6 +1748,7 @@ function updateResourceRow(dataResponse) {
   var $fieldNotaEspecifica = $j('#nota_recuperacao_especifica-matricula-' + matriculaId + '-cc-' + ccId);
   var $fieldNN = $j('#nn-matricula-' + matriculaId + '-cc-' + ccId);
   var $fieldMedia = $j('#media-matricula-' + matriculaId + '-cc-' + ccId);
+  var $fieldMediaAtual = $j('#media-atual-matricula-' + matriculaId + '-cc-' + ccId);
 
   var regra = $situacaoField.closest('tr').data('regra');
 
@@ -1765,28 +1786,35 @@ function updateResourceRow(dataResponse) {
       $fieldNotaEspecifica.hide();
   }
   changeMediaValue($fieldMedia.attr('id'), dataResponse.media, dataResponse.media_arredondada, regra);
+  changeMediaAtualValue($fieldMediaAtual.attr('id'), dataResponse.media);
 }
 
 function changeMediaValue(elementId, nota, notaArredondada, regra){
 
   if(nota != undefined){
     if(regra.tipo_nota == 'conceitual'){
-        var valorSelecionado = 0;
-        var opcoesNotas = regra.opcoes_notas;
-        for(var i = 0 ; i < opcoesNotas.length; i++){
+      var valorSelecionado = 0;
+      var opcoesNotas = regra.opcoes_notas;
+      for(var i = 0 ; i < opcoesNotas.length; i++){
 
-          valorMinimo = parseFloat(opcoesNotas[i].valor_minimo);
-          valorMaximo = parseFloat(opcoesNotas[i].valor_maximo);
+        valorMinimo = parseFloat(opcoesNotas[i].valor_minimo);
+        valorMaximo = parseFloat(opcoesNotas[i].valor_maximo);
 
-          if (nota >= valorMinimo && nota <= valorMaximo) {
-            valorSelecionado = valorMaximo;
-          }
-        };
-        $j('#' + elementId).val(valorSelecionado);
+        if (nota >= valorMinimo && nota <= valorMaximo) {
+          valorSelecionado = valorMaximo;
+        }
+      };
+      $j('#' + elementId).val(valorSelecionado);
 
     }else{
       $j('#' + elementId).val(notaArredondada);
     }
+  }
+}
+
+function changeMediaAtualValue(elementId, media) {
+  if(media != undefined){
+    $j('#' + elementId).val(media);
   }
 }
 
@@ -1898,55 +1926,55 @@ function showNextSelectionButton() {
 
   if ($ccField.val() != '') {
     $j("<a href='#'>Pr&#243;ximo componente curricular</a>").bind('click', nextComponenteCurricular)
-                                .attr('style', 'text-decoration: underline')
-                                .appendTo($navActions);
+      .attr('style', 'text-decoration: underline')
+      .appendTo($navActions);
   }
 
   if ($matriculaField.val() != '') {
     $j("<a href='#'>Pr&#243;xima matr&#237;cula</a>").bind('click', nextMatricula)
-                                .attr('style', 'text-decoration: underline')
-                                .appendTo($navActions);
+      .attr('style', 'text-decoration: underline')
+      .appendTo($navActions);
   }
 
   if ($etapaField.val() != '') {
     $j("<a href='#'>Próxima etapa</a>").bind('click', nextEtapa)
-                                .attr('style', 'text-decoration: underline')
-                                .appendTo($navActions);
+      .attr('style', 'text-decoration: underline')
+      .appendTo($navActions);
   }
 }
 
 function navegacaoTab(sentido){
-    //se for no sentido vertical
-    if(sentido=="2"){
-        i = 1;
+  //se for no sentido vertical
+  if(sentido=="2"){
+    i = 1;
 
-      $j(document).find('.nota-matricula-cc').each(function(){
-        $j(this).attr('tabindex', i);
-        i++;
-      });
-      $j(document).find('.nota-recuperacao-paralela-cc').each(function(){
-        $j(this).attr('tabindex', i);
-        i++;
-      });
-      $j(document).find('.nota_exame-matricula-cc').each(function(){
-        $j(this).attr('tabindex', i);
-        i++;
-      });
-      $j(document).find('.nn-matricula-cc').each(function(){
-        $j(this).attr('tabindex', i);
-        i++;
-      });
-      $j(document).find('.falta-matricula-cc').each(function(){
-        $j(this).attr('tabindex', i);
-        i++;
-      });
-      $j(document).find('.parecer-matricula-cc').each(function(){
-        $j(this).attr('tabindex', i);
-        i++;
-      });
-    }
+    $j(document).find('.nota-matricula-cc').each(function(){
+      $j(this).attr('tabindex', i);
+      i++;
+    });
+    $j(document).find('.nota-recuperacao-paralela-cc').each(function(){
+      $j(this).attr('tabindex', i);
+      i++;
+    });
+    $j(document).find('.nota_exame-matricula-cc').each(function(){
+      $j(this).attr('tabindex', i);
+      i++;
+    });
+    $j(document).find('.nn-matricula-cc').each(function(){
+      $j(this).attr('tabindex', i);
+      i++;
+    });
+    $j(document).find('.falta-matricula-cc').each(function(){
+      $j(this).attr('tabindex', i);
+      i++;
+    });
+    $j(document).find('.parecer-matricula-cc').each(function(){
+      $j(this).attr('tabindex', i);
+      i++;
+    });
+  }
 
-    sentidoTab = sentido;
+  sentidoTab = sentido;
 }
 
 function criaBotaoReplicarNotasPorArea(componentesCurriculares){
@@ -1960,12 +1988,12 @@ function criaBotaoReplicarNotasPorArea(componentesCurriculares){
   $j.each(uniqueAreaConhecimento, function(index, value) {
 
     $j('<button/>').html('Replicar a todos')
-                   .attr('type','button')
-                   .attr('id','replicar-todas-notas-' + value)
-                   .addClass('submit')
-                   .appendTo($j('<p/>').insertAfter($j('.area-id-' + value)
-                                       .first()))
-                   .unbind();
+      .attr('type','button')
+      .attr('id','replicar-todas-notas-' + value)
+      .addClass('submit')
+      .appendTo($j('<p/>').insertAfter($j('.area-id-' + value)
+        .first()))
+      .unbind();
     $j('#replicar-todas-notas-' + value).on('click', function(){
       if(confirm(safeUtf8Decode("Você deseja realmente modificar todos os conceitos desta área de conhecimento?"))){
         var notaPadrao = $j('.area-id-' + value).first().val();
@@ -1982,22 +2010,22 @@ function criaBotaoReplicarNotasPorArea(componentesCurriculares){
 function criaBotaoReplicarNotas(){
   if($j('.nota-matricula-cc').length > 1){
     $j('<button/>').html('Replicar a todos')
-                   .attr('type','button')
-                   .attr('id','replicar-todas-notas')
-                   .addClass('submit')
-                   .appendTo($j('<p/>').insertAfter($j('.nota-matricula-cc')
-                                       .first()))
-                   .unbind();
+      .attr('type','button')
+      .attr('id','replicar-todas-notas')
+      .addClass('submit')
+      .appendTo($j('<p/>').insertAfter($j('.nota-matricula-cc')
+        .first()))
+      .unbind();
     $j('#replicar-todas-notas').on('click', function(){
       if(confirm(safeUtf8Decode("Você deseja realmente modificar todos os conceitos desta área de conhecimento?"))){
-          var notaPadrao = $j('.nota-matricula-cc').first().val();
-          $j('.nota-matricula-cc').each(function(){
-            var regra = $j(this).closest('tr').data('regra');
-            if(regra.id != regraDiferenciadaId){
-              $j(this).val(notaPadrao).trigger('change');
-            }
-          });
-        }
+        var notaPadrao = $j('.nota-matricula-cc').first().val();
+        $j('.nota-matricula-cc').each(function(){
+          var regra = $j(this).closest('tr').data('regra');
+          if(regra.id != regraDiferenciadaId){
+            $j(this).val(notaPadrao).trigger('change');
+          }
+        });
+      }
     });
   }
 }
@@ -2067,110 +2095,110 @@ function initSummernote(sElement) {
 
 (function($) {
   var sR = {
-      defaults: {
-          slideSpeed: 400,
-          easing: false,
-          callback: false
-      },
-      thisCallArgs: {
-          slideSpeed: 400,
-          easing: false,
-          callback: false
-      },
-      methods: {
-          up: function (arg1,arg2,arg3) {
-              if(typeof arg1 == 'object') {
-                  for(p in arg1) {
-                      sR.thisCallArgs.eval(p) = arg1[p];
-                  }
-              }else if(typeof arg1 != 'undefined' && (typeof arg1 == 'number' || arg1 == 'slow' || arg1 == 'fast')) {
-                  sR.thisCallArgs.slideSpeed = arg1;
-              }else{
-                  sR.thisCallArgs.slideSpeed = sR.defaults.slideSpeed;
-              }
-
-              if(typeof arg2 == 'string'){
-                  sR.thisCallArgs.easing = arg2;
-              }else if(typeof arg2 == 'function'){
-                  sR.thisCallArgs.callback = arg2;
-              }else if(typeof arg2 == 'undefined') {
-                  sR.thisCallArgs.easing = sR.defaults.easing;
-              }
-              if(typeof arg3 == 'function') {
-                  sR.thisCallArgs.callback = arg3;
-              }else if(typeof arg3 == 'undefined' && typeof arg2 != 'function'){
-                  sR.thisCallArgs.callback = sR.defaults.callback;
-              }
-              var $cells = $(this).find('td');
-              $cells.wrapInner('<div class="slideRowUp" />');
-              var currentPadding = $cells.css('padding');
-              $cellContentWrappers = $(this).find('.slideRowUp');
-              $cellContentWrappers.slideUp(sR.thisCallArgs.slideSpeed,sR.thisCallArgs.easing).parent().animate({
-                                                                                                                  paddingTop: '0px',
-                                                                                                                  paddingBottom: '0px'},{
-                                                                                                                  complete: function () {
-                                                                                                                      $(this).children('.slideRowUp').replaceWith($(this).children('.slideRowUp').contents());
-                                                                                                                      $(this).parent().css({'display':'none'});
-                                                                                                                      $(this).css({'padding': currentPadding});
-                                                                                                                  }});
-              var wait = setInterval(function () {
-                  if($cellContentWrappers.is(':animated') === false) {
-                      clearInterval(wait);
-                      if(typeof sR.thisCallArgs.callback == 'function') {
-                          sR.thisCallArgs.callback.call(this);
-                      }
-                  }
-              }, 100);
-              return $(this);
-          },
-          down: function (arg1,arg2,arg3) {
-              if(typeof arg1 == 'object') {
-                  for(p in arg1) {
-                      sR.thisCallArgs.eval(p) = arg1[p];
-                  }
-              }else if(typeof arg1 != 'undefined' && (typeof arg1 == 'number' || arg1 == 'slow' || arg1 == 'fast')) {
-                  sR.thisCallArgs.slideSpeed = arg1;
-              }else{
-                  sR.thisCallArgs.slideSpeed = sR.defaults.slideSpeed;
-              }
-
-              if(typeof arg2 == 'string'){
-                  sR.thisCallArgs.easing = arg2;
-              }else if(typeof arg2 == 'function'){
-                  sR.thisCallArgs.callback = arg2;
-              }else if(typeof arg2 == 'undefined') {
-                  sR.thisCallArgs.easing = sR.defaults.easing;
-              }
-              if(typeof arg3 == 'function') {
-                  sR.thisCallArgs.callback = arg3;
-              }else if(typeof arg3 == 'undefined' && typeof arg2 != 'function'){
-                  sR.thisCallArgs.callback = sR.defaults.callback;
-              }
-              var $cells = $(this).find('td');
-              $cells.wrapInner('<div class="slideRowDown" style="display:none;" />');
-              $cellContentWrappers = $cells.find('.slideRowDown');
-              $(this).show();
-              $cellContentWrappers.slideDown(sR.thisCallArgs.slideSpeed, sR.thisCallArgs.easing, function() { $(this).replaceWith( $(this).contents()); });
-
-              var wait = setInterval(function () {
-                  if($cellContentWrappers.is(':animated') === false) {
-                      clearInterval(wait);
-                      if(typeof sR.thisCallArgs.callback == 'function') {
-                          sR.thisCallArgs.callback.call(this);
-                      }
-                  }
-              }, 100);
-              return $(this);
+    defaults: {
+      slideSpeed: 400,
+      easing: false,
+      callback: false
+    },
+    thisCallArgs: {
+      slideSpeed: 400,
+      easing: false,
+      callback: false
+    },
+    methods: {
+      up: function (arg1,arg2,arg3) {
+        if(typeof arg1 == 'object') {
+          for(p in arg1) {
+            sR.thisCallArgs.eval(p) = arg1[p];
           }
+        }else if(typeof arg1 != 'undefined' && (typeof arg1 == 'number' || arg1 == 'slow' || arg1 == 'fast')) {
+          sR.thisCallArgs.slideSpeed = arg1;
+        }else{
+          sR.thisCallArgs.slideSpeed = sR.defaults.slideSpeed;
+        }
+
+        if(typeof arg2 == 'string'){
+          sR.thisCallArgs.easing = arg2;
+        }else if(typeof arg2 == 'function'){
+          sR.thisCallArgs.callback = arg2;
+        }else if(typeof arg2 == 'undefined') {
+          sR.thisCallArgs.easing = sR.defaults.easing;
+        }
+        if(typeof arg3 == 'function') {
+          sR.thisCallArgs.callback = arg3;
+        }else if(typeof arg3 == 'undefined' && typeof arg2 != 'function'){
+          sR.thisCallArgs.callback = sR.defaults.callback;
+        }
+        var $cells = $(this).find('td');
+        $cells.wrapInner('<div class="slideRowUp" />');
+        var currentPadding = $cells.css('padding');
+        $cellContentWrappers = $(this).find('.slideRowUp');
+        $cellContentWrappers.slideUp(sR.thisCallArgs.slideSpeed,sR.thisCallArgs.easing).parent().animate({
+          paddingTop: '0px',
+          paddingBottom: '0px'},{
+          complete: function () {
+            $(this).children('.slideRowUp').replaceWith($(this).children('.slideRowUp').contents());
+            $(this).parent().css({'display':'none'});
+            $(this).css({'padding': currentPadding});
+          }});
+        var wait = setInterval(function () {
+          if($cellContentWrappers.is(':animated') === false) {
+            clearInterval(wait);
+            if(typeof sR.thisCallArgs.callback == 'function') {
+              sR.thisCallArgs.callback.call(this);
+            }
+          }
+        }, 100);
+        return $(this);
+      },
+      down: function (arg1,arg2,arg3) {
+        if(typeof arg1 == 'object') {
+          for(p in arg1) {
+            sR.thisCallArgs.eval(p) = arg1[p];
+          }
+        }else if(typeof arg1 != 'undefined' && (typeof arg1 == 'number' || arg1 == 'slow' || arg1 == 'fast')) {
+          sR.thisCallArgs.slideSpeed = arg1;
+        }else{
+          sR.thisCallArgs.slideSpeed = sR.defaults.slideSpeed;
+        }
+
+        if(typeof arg2 == 'string'){
+          sR.thisCallArgs.easing = arg2;
+        }else if(typeof arg2 == 'function'){
+          sR.thisCallArgs.callback = arg2;
+        }else if(typeof arg2 == 'undefined') {
+          sR.thisCallArgs.easing = sR.defaults.easing;
+        }
+        if(typeof arg3 == 'function') {
+          sR.thisCallArgs.callback = arg3;
+        }else if(typeof arg3 == 'undefined' && typeof arg2 != 'function'){
+          sR.thisCallArgs.callback = sR.defaults.callback;
+        }
+        var $cells = $(this).find('td');
+        $cells.wrapInner('<div class="slideRowDown" style="display:none;" />');
+        $cellContentWrappers = $cells.find('.slideRowDown');
+        $(this).show();
+        $cellContentWrappers.slideDown(sR.thisCallArgs.slideSpeed, sR.thisCallArgs.easing, function() { $(this).replaceWith( $(this).contents()); });
+
+        var wait = setInterval(function () {
+          if($cellContentWrappers.is(':animated') === false) {
+            clearInterval(wait);
+            if(typeof sR.thisCallArgs.callback == 'function') {
+              sR.thisCallArgs.callback.call(this);
+            }
+          }
+        }, 100);
+        return $(this);
       }
+    }
   };
 
   $.fn.slideRow = function(method,arg1,arg2,arg3) {
-      if(typeof method != 'undefined') {
-          if(sR.methods[method]) {
-              return sR.methods[method].apply(this, Array.prototype.slice.call(arguments,1));
-          }
+    if(typeof method != 'undefined') {
+      if(sR.methods[method]) {
+        return sR.methods[method].apply(this, Array.prototype.slice.call(arguments,1));
       }
+    }
   };
 })(jQuery);
 
