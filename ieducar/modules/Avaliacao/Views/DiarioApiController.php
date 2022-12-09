@@ -12,7 +12,6 @@ use App\Models\SerieTurma;
 use App\Models\RegraAvaliacaoSerieAno;
 use App\Models\RegraAvaliacaoRecuperacao;
 use App\Models\RegraAvaliacao;
-use App\Models\SerieTurma;
 use App\Process;
 use App\Services\ReleasePeriodService;
 use App\Services\RemoveHtmlTagsStringService;
