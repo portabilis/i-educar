@@ -629,7 +629,7 @@ class DiarioApiController extends ApiCoreController
                 $substitui_menor_nota = $regra2->substitui_menor_nota;
             }
         }
-        if($substitui_menor_nota){
+        if($substitui_menor_nota=='true'){
             $nota_alunos = LegacyDisciplineScoreStudent::where('matricula_id', $this->getRequest()->matricula_id)->get();
             foreach($nota_alunos as $nota_aluno) {
            
