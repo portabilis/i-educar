@@ -620,7 +620,7 @@ class DiarioApiController extends ApiCoreController
             $serie_id = $id->ref_ref_cod_serie;
            
         }
-        $substitui_menor_nota = false;
+        $substitui_menor_nota = 0;
         $regra_avaliacao = RegraAvaliacaoSerieAno::where('serie_id', $serie_id)->where('ano_letivo', $this->getRequest()->ano_escolar)->get();
         foreach($regra_avaliacao as $regra) {
             
