@@ -682,7 +682,45 @@ class DiarioApiController extends ApiCoreController
             ]);
         }
         }else{
-            echo "<script>alert('deu');</script>";
+            $nota_alunos = LegacyDisciplineScoreStudent::where('matricula_id', $this->getRequest()->matricula_id)->get();
+            foreach($nota_alunos as $nota_aluno) {
+           
+            $contador_media =0;
+            $soma_notas =0;
+            $soma_media = 0;
+            $soma_notas_arredondadas =0;
+            $nota_componente_curricular = LegacyDisciplineScore::whereNotNull('nota_recuperacao_especifica')->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->where('nota_aluno_id', $nota_aluno->id)->get();
+            foreach($nota_componente_curricular as $list) {
+
+                $nota1 = 0;
+                $nota2 = 0;
+                $contador_media++;
+
+                $nota1 = $list->nota_arredondada;
+                $notaRecuperacao = $list->nota_recuperacao_especifica;
+                $etapa_anterior = $list->etapa-1;
+                $nota_componente_curricular_anterior = LegacyDisciplineScore::whereNotNull('nota')->where('nota_aluno_id', $nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->where('etapa', $etapa_anterior)->get();
+                foreach($nota_componente_curricular_anterior as $list2) {
+                    $nota2 = $list2->nota_arredondada;
+                }
+              
+
+               
+                $soma_notas = $soma_notas + ($nota1 + $nota2)/2;
+                $soma_media = $soma_media + ($soma_notas+ $notaRecuperacao)/2;
+                $soma_notas_arredondadas = $soma_notas_arredondadas + $list->nota_arredondada;   
+            }
+            $media = $soma_media / $contador_media;
+            $media = round($media , 2);
+            $media_arredondada = $soma_notas_arredondadas / $contador;
+
+            LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->update([
+                'media' => $media,
+                'media_arredondada' => $media
+               
+            ]);
+        }
+
         }
 
         // Se está sendo lançada nota de recuperação, obviamente o campo deve ser visível
