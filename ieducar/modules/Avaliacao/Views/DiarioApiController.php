@@ -606,7 +606,87 @@ class DiarioApiController extends ApiCoreController
             $this->serviceBoletim()->addNota($nota);
             $this->trySaveServiceBoletim();
             $this->messenger->append('Nota de recuperação da matrícula ' . $this->getRequest()->matricula_id . ' alterada com sucesso.', 'success');
+            $schoolClass = LegacySchoolClass::query()
+            ->with([
+                'enrollments' => function ($query) {
+                    /** @var Builder $query */
+                    $query->when($this->getRequest()->matricula_id, function ($query) {
+                        $query->where('ref_cod_matricula', $this->getRequest()->matricula_id);
+                    });
+                    $query->where(function ($query) {
+                        $relocationDate = $this->getRelocationDate();
 
+                        /** @var Builder $query */
+                        $query->where('ativo', 1);
+                        $query->when($relocationDate, function ($query) use ($relocationDate) {
+                            /** @var Builder $query */
+                            $query->orWhere(function ($query) use ($relocationDate) {
+                                /** @var Builder $query */
+                                $query->where('data_exclusao', '>', $relocationDate);
+                                $query->where(function ($query) {
+                                    /** @var Builder $query */
+                                    $query->orWhere('transferido', true);
+                                    $query->orWhere('remanejado', true);
+                                    $query->orWhere('reclassificado', true);
+                                    $query->orWhere('abandono', true);
+                                    $query->orWhere('falecido', true);
+                                });
+                            });
+                        });
+                    });
+                    $query->with([
+                        'registration' => function ($query) {
+                            $query->with([
+                                'student' => function ($query) {
+                                    $query->with([
+                                        'person' => function ($query) {
+                                            $query->withCount('considerableDeficiencies');
+                                        }
+                                    ]);
+                                }
+                            ]);
+                            $query->with('dependencies');
+                        }
+                    ]);
+
+                    // Pega a última enturmação na turma
+
+                    $query->whereRaw(
+                        '
+                        sequencial = (
+                            SELECT max(sequencial)
+                            FROM pmieducar.matricula_turma mt
+                            WHERE mt.ref_cod_turma = matricula_turma.ref_cod_turma
+                            AND mt.ref_cod_matricula = matricula_turma.ref_cod_matricula
+                        )
+                        '
+                    );
+
+                    $query->whereHas('registration', function ($query) {
+                        $query->whereHas('student', function ($query) {
+                            $query->where('ativo', 1);
+                        });
+                    });
+
+                    $query->where('ativo', 1);
+                },
+            ])
+            ->whereKey($this->getRequest()->turma_id)
+            ->firstOrFail();
+
+       
+
+        // Pega a regra de avaliação da turma e busca no banco de dados
+       
+
+        $evaluationRule = $schoolClass->getEvaluationRule();
+        
+        $regra_avaliacao = RegraAvaliacaoRecuperacao::where('regra_avaliacao_id', $evaluationRule->id)->get();
+        foreach($regra_avaliacao as $regra) {
+            $substitui_menor_nota = $regra->substitui_menor_nota;
+        
+        }
+        if($substitui_menor_nota==true){
             $nota_alunos = LegacyDisciplineScoreStudent::where('matricula_id', $this->getRequest()->matricula_id)->get();
             foreach($nota_alunos as $nota_aluno) {
            
@@ -621,7 +701,7 @@ class DiarioApiController extends ApiCoreController
                 $nota1 = $list->nota_arredondada;
                 $notaRecuperacao = $list->nota_recuperacao_especifica;
                 $etapa_anterior = $list->etapa-1;
-                $nota_componente_curricular_anterior = LegacyDisciplineScore::where('nota_aluno_id', $nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->where('etapa', $etapa_anterior)->get();
+                $nota_componente_curricular_anterior = LegacyDisciplineScore::whereNotNull('nota')->where('nota_aluno_id', $nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->where('etapa', $etapa_anterior)->get();
                 foreach($nota_componente_curricular_anterior as $list2) {
                     $contador++;
                     $nota2 = $list2->nota_arredondada;
@@ -657,7 +737,16 @@ class DiarioApiController extends ApiCoreController
                 'media_arredondada' => $media
                
             ]);
+        }else{
+            echo "<script>alert('deu certo');</script>";
         }
+            
+
+
+        }
+
+
+            
 
     }
 
