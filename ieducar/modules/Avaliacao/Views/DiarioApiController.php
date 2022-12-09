@@ -591,7 +591,6 @@ class DiarioApiController extends ApiCoreController
     protected function postNotaRecuperacaoEspecifica()
     {
         if ($this->canPostNota()) {
-
             $notaOriginal = $this->getNotaOriginal();
             $notaRecuperacaoParalela = urldecode($this->getRequest()->att_value);
           
@@ -607,15 +606,7 @@ class DiarioApiController extends ApiCoreController
    
 
     
-              // Se está sendo lançada nota de recuperação, obviamente o campo deve ser visível
-        $this->appendResponse('should_show_recuperacao_especifica', true);
-        $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
-        $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
-        $this->appendResponse('situacao', $this->getSituacaoComponente());
-        $this->appendResponse('nota_necessaria_exame', $notaNecessariaExame = $this->getNotaNecessariaExame($this->getRequest()->componente_curricular_id));
-        $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
-        $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
-        
+
 
         if (!empty($notaNecessariaExame) && in_array($this->getSituacaoComponente(), ['Em exame', 'Aprovado após exame', 'Retido'])) {
             $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $notaNecessariaExame);
@@ -629,14 +620,13 @@ class DiarioApiController extends ApiCoreController
             $serie_id = $id->serie_id;
         
         }
-        $substitui_menor_nota = false;
+        
         $regra_avaliacao = RegraAvaliacaoSerieAno::where('serie_id', $serie_id)->where('ano_letivo', $this->getRequest()->ano_escolar)->get();
         foreach($regra_avaliacao as $regra) {
 
             $regra_avaliacao2 = RegraAvaliacaoRecuperacao::where('regra_avaliacao_id', $regra->regra_avaliacao_id)->get();
             foreach($regra_avaliacao2 as $regra2) {
                 $substitui_menor_nota = $regra2->substitui_menor_nota;
-                echo "<script>alert('teste');</script>";
             }
         }
         if($substitui_menor_nota==true){
@@ -733,7 +723,15 @@ class DiarioApiController extends ApiCoreController
 
         }
 
-      
+        // Se está sendo lançada nota de recuperação, obviamente o campo deve ser visível
+        $this->appendResponse('should_show_recuperacao_especifica', true);
+        $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
+        $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
+        $this->appendResponse('situacao', $this->getSituacaoComponente());
+        $this->appendResponse('nota_necessaria_exame', $notaNecessariaExame = $this->getNotaNecessariaExame($this->getRequest()->componente_curricular_id));
+        $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
+        $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
+        
  
  
  
