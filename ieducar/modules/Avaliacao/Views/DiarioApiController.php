@@ -602,6 +602,10 @@ class DiarioApiController extends ApiCoreController
             'notaOriginal' => $notaOriginal
             ]);
 
+        $this->serviceBoletim()->addNota($nota);
+        $this->trySaveServiceBoletim();
+        $this->messenger->append('Nota de recuperação da matrícula ' . $this->getRequest()->matricula_id . ' alterada com sucesso.', 'success');
+        }
         // Se está sendo lançada nota de recuperação, obviamente o campo deve ser visível
         $this->appendResponse('should_show_recuperacao_especifica', true);
         $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
@@ -737,7 +741,7 @@ class DiarioApiController extends ApiCoreController
  
  
  
-    }
+    
 }
 
     // TODO mover validacao para canPostFalta
