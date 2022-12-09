@@ -591,6 +591,7 @@ class DiarioApiController extends ApiCoreController
     protected function postNotaRecuperacaoEspecifica()
     {
         if ($this->canPostNota()) {
+
             $notaOriginal = $this->getNotaOriginal();
             $notaRecuperacaoParalela = urldecode($this->getRequest()->att_value);
           
@@ -635,10 +636,10 @@ class DiarioApiController extends ApiCoreController
             $regra_avaliacao2 = RegraAvaliacaoRecuperacao::where('regra_avaliacao_id', $regra->regra_avaliacao_id)->get();
             foreach($regra_avaliacao2 as $regra2) {
                 $substitui_menor_nota = $regra2->substitui_menor_nota;
-                echo "<script>alert('". $substitui_menor_nota."');</script>";
+                echo "<script>alert('teste');</script>";
             }
         }
-        if($substitui_menor_nota=='true'){
+        if($substitui_menor_nota==true){
             $nota_alunos = LegacyDisciplineScoreStudent::where('matricula_id', $this->getRequest()->matricula_id)->get();
             foreach($nota_alunos as $nota_aluno) {
            
