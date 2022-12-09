@@ -593,7 +593,6 @@ class DiarioApiController extends ApiCoreController
         if ($this->canPostNota()) {
             $notaOriginal = $this->getNotaOriginal();
             $notaRecuperacaoParalela = urldecode($this->getRequest()->att_value);
-          
 
             $nota = new Avaliacao_Model_NotaComponente([
             'componenteCurricular' => $this->getRequest()->componente_curricular_id,
@@ -603,10 +602,14 @@ class DiarioApiController extends ApiCoreController
             'notaOriginal' => $notaOriginal
             ]);
 
-   
-
-    
-
+        // Se está sendo lançada nota de recuperação, obviamente o campo deve ser visível
+        $this->appendResponse('should_show_recuperacao_especifica', true);
+        $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
+        $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
+        $this->appendResponse('situacao', $this->getSituacaoComponente());
+        $this->appendResponse('nota_necessaria_exame', $notaNecessariaExame = $this->getNotaNecessariaExame($this->getRequest()->componente_curricular_id));
+        $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
+        $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
 
         if (!empty($notaNecessariaExame) && in_array($this->getSituacaoComponente(), ['Em exame', 'Aprovado após exame', 'Retido'])) {
             $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $notaNecessariaExame);
@@ -632,14 +635,16 @@ class DiarioApiController extends ApiCoreController
         }
 
         if($substitui_menor_nota==1){
+
             $nota_alunos = LegacyDisciplineScoreStudent::where('matricula_id', $this->getRequest()->matricula_id)->get();
             foreach($nota_alunos as $nota_aluno) {
-           
+          
             $contador =0;
             $soma_notas =0;
             $soma_notas_arredondadas =0;
             $nota_componente_curricular = LegacyDisciplineScore::whereNotNull('nota_recuperacao_especifica')->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->where('nota_aluno_id', $nota_aluno->id)->get();
             foreach($nota_componente_curricular as $list) {
+               
                 $nota1 = 0;
                 $nota2 = 0;
                 $contador++;
@@ -676,13 +681,12 @@ class DiarioApiController extends ApiCoreController
             $media = $soma_notas / $contador;
             $media = round($media , 2);
             $media_arredondada = $soma_notas_arredondadas / $contador;
-
             LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->update([
                 'media' => $media,
                 'media_arredondada' => $media
                
             ]);
-        }
+             }
         }else{
             $nota_alunos = LegacyDisciplineScoreStudent::where('matricula_id', $this->getRequest()->matricula_id)->get();
             foreach($nota_alunos as $nota_aluno) {
@@ -725,14 +729,7 @@ class DiarioApiController extends ApiCoreController
 
         }
 
-        // Se está sendo lançada nota de recuperação, obviamente o campo deve ser visível
-        $this->appendResponse('should_show_recuperacao_especifica', true);
-        $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
-        $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
-        $this->appendResponse('situacao', $this->getSituacaoComponente());
-        $this->appendResponse('nota_necessaria_exame', $notaNecessariaExame = $this->getNotaNecessariaExame($this->getRequest()->componente_curricular_id));
-        $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
-        $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
+       
         
  
  
