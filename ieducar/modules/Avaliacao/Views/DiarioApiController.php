@@ -603,17 +603,22 @@ class DiarioApiController extends ApiCoreController
 
             
 
-            $this->serviceBoletim()->addNota($nota);
-            $this->trySaveServiceBoletim();
-            $this->messenger->append('Nota de recuperação da matrícula ' . $this->getRequest()->matricula_id . ' alterada com sucesso.', 'success');
            
+       
 
-        $evaluationRule = getEvaluationRule();
+        $serie = SerieTurma::where('turma_id', $this->getRequest()->turma_id)->get();
+        foreach($serie as $id) {
+            $serie_id = $id->serie_id;
         
-        $regra_avaliacao = RegraAvaliacaoRecuperacao::where('regra_avaliacao_id', $evaluationRule->id)->get();
+        }
+        
+        $regra_avaliacao = RegraAvaliacaoSerieAno::where('serie_id', $serie_id)->where('ano_letivo', $this->getRequest()->ano_escolar)->get();
         foreach($regra_avaliacao as $regra) {
-            $substitui_menor_nota = $regra->substitui_menor_nota;
-        
+
+            $regra_avaliacao2 = RegraAvaliacaoRecuperacao::where('regra_avaliacao_id', $regra->regra_avaliacao_id)->get();
+            foreach($regra_avaliacao2 as $regra2) {
+                $substitui_menor_nota = $regra2->substitui_menor_nota;
+            }
         }
         if($substitui_menor_nota==true){
             $nota_alunos = LegacyDisciplineScoreStudent::where('matricula_id', $this->getRequest()->matricula_id)->get();
@@ -666,8 +671,8 @@ class DiarioApiController extends ApiCoreController
                 'media_arredondada' => $media
                
             ]);
-        }}else{
-            echo "<script>alert('deu certo');</script>";
+        }else{
+            echo "<script>alert('deu');</script>";
         }
             
 
