@@ -614,7 +614,7 @@ class DiarioApiController extends ApiCoreController
             $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
         }
         
-        
+        $serie_id = '';
         $serie = SerieTurma::where('cod_turma', $this->getRequest()->turma_id)->get();
         foreach($serie as $id) {
             $serie_id = $id->ref_ref_cod_serie;
@@ -623,14 +623,15 @@ class DiarioApiController extends ApiCoreController
         $substitui_menor_nota = false;
         $regra_avaliacao = RegraAvaliacaoSerieAno::where('serie_id', $serie_id)->where('ano_letivo', $this->getRequest()->ano_escolar)->get();
         foreach($regra_avaliacao as $regra) {
-
+            
             $regra_avaliacao2 = RegraAvaliacaoRecuperacao::where('regra_avaliacao_id', $regra->regra_avaliacao_id)->get();
             foreach($regra_avaliacao2 as $regra2) {
+               
                 $substitui_menor_nota = $regra2->substitui_menor_nota;
             }
         }
 
-        if($substitui_menor_nota==true){
+        if($substitui_menor_nota==1){
             $nota_alunos = LegacyDisciplineScoreStudent::where('matricula_id', $this->getRequest()->matricula_id)->get();
             foreach($nota_alunos as $nota_aluno) {
            
