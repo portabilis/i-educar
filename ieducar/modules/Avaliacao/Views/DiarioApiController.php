@@ -8,6 +8,7 @@ use App\Models\LegacySchoolClass;
 use App\Models\LegacyDisciplineScore;
 use App\Models\LegacyDisciplineScoreAverage;
 use App\Models\LegacyDisciplineScoreStudent;
+use App\Models\SerieTurma;
 use App\Process;
 use App\Services\ReleasePeriodService;
 use App\Services\RemoveHtmlTagsStringService;
