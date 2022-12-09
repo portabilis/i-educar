@@ -635,6 +635,7 @@ class DiarioApiController extends ApiCoreController
             $regra_avaliacao2 = RegraAvaliacaoRecuperacao::where('regra_avaliacao_id', $regra->regra_avaliacao_id)->get();
             foreach($regra_avaliacao2 as $regra2) {
                 $substitui_menor_nota = $regra2->substitui_menor_nota;
+                echo "<script>alert('". $substitui_menor_nota."');</script>";
             }
         }
         if($substitui_menor_nota=='true'){
