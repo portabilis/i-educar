@@ -737,7 +737,7 @@ class DiarioApiController extends ApiCoreController
                 'media_arredondada' => $media
                
             ]);
-        }else{
+        }}else{
             echo "<script>alert('deu certo');</script>";
         }
             
