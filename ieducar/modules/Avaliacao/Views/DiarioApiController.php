@@ -591,21 +591,26 @@ class DiarioApiController extends ApiCoreController
             $notaRecuperacaoParalela = urldecode($this->getRequest()->att_value);
           
 
-                    $nota = new Avaliacao_Model_NotaComponente([
-                    'componenteCurricular' => $this->getRequest()->componente_curricular_id,
-                    'etapa' => $this->getRequest()->etapa,
-                    'nota' => $notaOriginal,
-                    'notaRecuperacaoEspecifica' => $notaRecuperacaoParalela,
-                    'notaOriginal' => $notaOriginal
-                ]);
+            $nota = new Avaliacao_Model_NotaComponente([
+            'componenteCurricular' => $this->getRequest()->componente_curricular_id,
+            'etapa' => $this->getRequest()->etapa,
+            'nota' => $notaOriginal,
+            'notaRecuperacaoEspecifica' => $notaRecuperacaoParalela,
+            'notaOriginal' => $notaOriginal
+            ]);
 
-            
+   
 
-            
+    
 
-           
-       
 
+        if (!empty($notaNecessariaExame) && in_array($this->getSituacaoComponente(), ['Em exame', 'Aprovado após exame', 'Retido'])) {
+            $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $notaNecessariaExame);
+        } else {
+            $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
+        }
+ 
+ 
         $serie = SerieTurma::where('turma_id', $this->getRequest()->turma_id)->get();
         foreach($serie as $id) {
             $serie_id = $id->serie_id;
@@ -671,18 +676,10 @@ class DiarioApiController extends ApiCoreController
                 'media_arredondada' => $media
                
             ]);
+        }
         }else{
             echo "<script>alert('deu');</script>";
         }
-            
-
-
-        }
-
-
-            
-
-    }
 
         // Se está sendo lançada nota de recuperação, obviamente o campo deve ser visível
         $this->appendResponse('should_show_recuperacao_especifica', true);
@@ -692,13 +689,15 @@ class DiarioApiController extends ApiCoreController
         $this->appendResponse('nota_necessaria_exame', $notaNecessariaExame = $this->getNotaNecessariaExame($this->getRequest()->componente_curricular_id));
         $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
         $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
-
-        if (!empty($notaNecessariaExame) && in_array($this->getSituacaoComponente(), ['Em exame', 'Aprovado após exame', 'Retido'])) {
-            $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $notaNecessariaExame);
-        } else {
-            $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
-        }
+        
+ 
+ 
+ 
+ 
+ 
+ 
     }
+}
 
     // TODO mover validacao para canPostFalta
     protected function postFalta()
