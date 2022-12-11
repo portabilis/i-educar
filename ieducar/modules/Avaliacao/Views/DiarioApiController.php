@@ -701,7 +701,7 @@ class DiarioApiController extends ApiCoreController
             $soma_notas_arredondadas =0;
             $nota_componente_curricular = LegacyDisciplineScore::whereNotNull('nota_recuperacao_especifica')->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->where('nota_aluno_id', $nota_aluno->id)->get();
             foreach($nota_componente_curricular as $list) {
-
+                $soma_notas = 0;
                 $nota1 = 0;
                 $nota2 = 0;
                 $contador_media++;
@@ -717,7 +717,7 @@ class DiarioApiController extends ApiCoreController
 
                
                 $soma_notas = $soma_notas + ($nota1 + $nota2)/2;
-                $soma_media = $soma_media + ($soma_notas+ $notaRecuperacao)/2;
+                $soma_media = $soma_media + ($soma_notas + $notaRecuperacao)/2;
                 $soma_notas_arredondadas = $soma_notas_arredondadas + $list->nota_arredondada;   
             }
             $media = $soma_media / $contador_media;
