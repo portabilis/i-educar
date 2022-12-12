@@ -535,6 +535,8 @@ class DiarioApiController extends ApiCoreController
                     foreach($nota_componente_curricular_anterior as $list2) {
                         $nota2 = $list2->nota_arredondada;
                     }
+                    $soma_notas_avulsas = $soma_notas_avulsas - $nota2;
+                    $contador = $contador -1;
                     $contador_media ++;
                     $soma_notas = $soma_notas + ($nota1 + $nota2)/2;
                     $soma_media = $soma_media + ($soma_notas + $notaRecuperacao)/2;
