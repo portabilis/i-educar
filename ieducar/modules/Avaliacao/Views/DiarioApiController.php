@@ -550,7 +550,7 @@ class DiarioApiController extends ApiCoreController
                 $media_notas_avulsas = $soma_notas_avulsas/$contador;
                 $media =  ($media+ $media_notas_avulsas)/2;
             }
-            echo"<script>alert('atendeu ".$media."');</script>";
+            echo"<script>alert('atendeu ".$media_notas_avulsas."');</script>";
             $media = round($media , 2);
             LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->update([
                 'media' => $media,
