@@ -61,7 +61,7 @@ class clsPmieducarTurma extends Model
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}turma";
 
-        $this->_campos_lista = $this->_todos_campos = 't.cod_turma, t.ref_usuario_exc, t.ref_usuario_cad, t.ref_ref_cod_serie, t.ref_ref_cod_escola, t.ref_cod_infra_predio_comodo, t.nm_turma, t.sgl_turma, t.max_aluno, t.multiseriada, t.data_cadastro, t.data_exclusao, t.ativo, t.ref_cod_turma_tipo, t.hora_inicial, t.hora_final, t.hora_inicio_intervalo, t.hora_fim_intervalo, t.ref_cod_regente, t.ref_cod_instituicao_regente,t.ref_cod_instituicao, t.ref_cod_curso, t.ref_ref_cod_serie_mult, t.ref_ref_cod_escola_mult, t.visivel, t.turma_turno_id, t.tipo_boletim, t.tipo_boletim_diferenciado, t.ano,
+        $this->_campos_lista = $this->_todos_campos = 't.cod_turma, t.ref_usuario_exc, t.ref_usuario_cad, t.ref_ref_cod_serie, t.ref_ref_cod_escola, t.nm_turma, t.sgl_turma, t.max_aluno, t.multiseriada, t.data_cadastro, t.data_exclusao, t.ativo, t.ref_cod_turma_tipo, t.hora_inicial, t.hora_final, t.hora_inicio_intervalo, t.hora_fim_intervalo, t.ref_cod_regente, t.ref_cod_instituicao_regente,t.ref_cod_instituicao, t.ref_cod_curso, t.ref_ref_cod_serie_mult, t.ref_ref_cod_escola_mult, t.visivel, t.turma_turno_id, t.tipo_boletim, t.tipo_boletim_diferenciado, t.ano,
         t.tipo_atendimento, t.cod_curso_profissional, t.etapa_educacenso, t.ref_cod_disciplina_dispensada, t.parecer_1_etapa, t.parecer_2_etapa,
         t.parecer_3_etapa, t.parecer_4_etapa, t.nao_informar_educacenso, t.tipo_mediacao_didatico_pedagogico, t.dias_semana, t.atividades_complementares, t.atividades_aee, t.local_funcionamento_diferenciado, t.estrutura_curricular, t.formas_organizacao_turma, t.unidade_curricular';
 
@@ -71,9 +71,6 @@ class clsPmieducarTurma extends Model
         if (is_numeric($ref_ref_cod_escola) && is_numeric($ref_ref_cod_serie)) {
             $this->ref_ref_cod_escola = $ref_ref_cod_escola;
             $this->ref_ref_cod_serie = $ref_ref_cod_serie;
-        }
-        if (is_numeric($ref_cod_infra_predio_comodo)) {
-            $this->ref_cod_infra_predio_comodo = $ref_cod_infra_predio_comodo;
         }
         if (is_numeric($ref_usuario_cad)) {
             $this->ref_usuario_cad = $ref_usuario_cad;
@@ -182,11 +179,6 @@ class clsPmieducarTurma extends Model
             if (is_numeric($this->ref_ref_cod_escola)) {
                 $campos .= "{$gruda}ref_ref_cod_escola";
                 $valores .= "{$gruda}'{$this->ref_ref_cod_escola}'";
-                $gruda = ', ';
-            }
-            if (is_numeric($this->ref_cod_infra_predio_comodo)) {
-                $campos .= "{$gruda}ref_cod_infra_predio_comodo";
-                $valores .= "{$gruda}'{$this->ref_cod_infra_predio_comodo}'";
                 $gruda = ', ';
             }
             if (is_string($this->nm_turma)) {
@@ -407,13 +399,6 @@ class clsPmieducarTurma extends Model
             }
             if (is_numeric($this->ref_ref_cod_escola)) {
                 $set .= "{$gruda}ref_ref_cod_escola = '{$this->ref_ref_cod_escola}'";
-                $gruda = ', ';
-            }
-            if (is_numeric($this->ref_cod_infra_predio_comodo)) {
-                $set .= "{$gruda}ref_cod_infra_predio_comodo = '{$this->ref_cod_infra_predio_comodo}'";
-                $gruda = ', ';
-            } elseif (is_null($this->ref_cod_infra_predio_comodo)) {
-                $set .= "{$gruda}ref_cod_infra_predio_comodo = NULL";
                 $gruda = ', ';
             }
             if (is_string($this->nm_turma)) {
@@ -952,10 +937,6 @@ class clsPmieducarTurma extends Model
             $filtros .= "{$whereAnd} ( t.ref_ref_cod_escola = '{$int_ref_ref_cod_escola}' )";
             $whereAnd = ' AND ';
         }
-        if (is_numeric($int_ref_cod_infra_predio_comodo)) {
-            $filtros .= "{$whereAnd} t.ref_cod_infra_predio_comodo = '{$int_ref_cod_infra_predio_comodo}'";
-            $whereAnd = ' AND ';
-        }
         if (is_string($str_nm_turma)) {
             $nm_turma = $db->escapeString($str_nm_turma);
             $filtros .= "{$whereAnd} exists(select 1 from pmieducar.turma where unaccent(nm_turma) ILIKE unaccent('%{$nm_turma}%'))";
@@ -1167,10 +1148,6 @@ class clsPmieducarTurma extends Model
                                                                                   AND escola_usuario.ref_cod_usuario = '{$this->codUsuario}')";
             $whereAnd = ' AND ';
         }
-        if (is_numeric($int_ref_cod_infra_predio_comodo)) {
-            $filtros .= "{$whereAnd} t.ref_cod_infra_predio_comodo = '{$int_ref_cod_infra_predio_comodo}'";
-            $whereAnd = ' AND ';
-        }
         if (is_string($str_nm_turma)) {
             $nm_turma = $db->escapeString($str_nm_turma);
             $filtros .= "{$whereAnd} EXISTS (SELECT 1 FROM pmieducar.turma WHERE unaccent(t.nm_turma) ILIKE unaccent('%{$nm_turma}%'))";
@@ -1372,10 +1349,6 @@ class clsPmieducarTurma extends Model
                                                FROM pmieducar.escola_usuario
                                                                                 WHERE escola_usuario.ref_cod_escola = t.ref_ref_cod_escola
                                                                                   AND escola_usuario.ref_cod_usuario = '{$this->codUsuario}')";
-            $whereAnd = ' AND ';
-        }
-        if (is_numeric($int_ref_cod_infra_predio_comodo)) {
-            $filtros .= "{$whereAnd} t.ref_cod_infra_predio_comodo = '{$int_ref_cod_infra_predio_comodo}'";
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_turma)) {
@@ -1678,7 +1651,6 @@ class clsPmieducarTurma extends Model
                 t.ref_usuario_cad,
                 t.ref_ref_cod_serie,
                 t.ref_ref_cod_escola,
-                t.ref_cod_infra_predio_comodo,
                 t.nm_turma,
                 t.sgl_turma,
                 t.max_aluno,
