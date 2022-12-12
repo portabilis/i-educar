@@ -579,6 +579,43 @@ class DiarioApiController extends ApiCoreController
 
                     }
         
+    }elseif($tipo_recuperacao_paralela==1){
+
+        $nota_alunos = LegacyDisciplineScoreStudent::where('matricula_id', $this->getRequest()->matricula_id)->get();
+        foreach($nota_alunos as $nota_aluno) {
+    
+        $contador =0;
+        $soma_notas =0;
+        $soma_notas_arredondadas =0;
+        $nota_componente_curricular = LegacyDisciplineScore::where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->where('nota_aluno_id', $nota_aluno->id)->get();
+        foreach($nota_componente_curricular as $list) {
+        
+            $nota1 = 0;
+            $nota2 = 0;
+            $contador++;
+            $nota1 = $list->nota_arredondada;
+            $notaRecuperacao = $list->nota_recuperacao_especifica;
+            $etapa_anterior = $list->etapa-1;
+            if(!empty($notaRecuperacao)){
+            
+                $nota1 = ($nota1+$notaRecuperacao)/2;
+            }
+
+        
+            $soma_notas = $soma_notas + $nota1;
+            $soma_notas_arredondadas = $soma_notas_arredondadas + $list->nota_arredondada;   
+        }
+        $media = $soma_notas / $contador;
+        $media = round($media , 2);
+        $media_arredondada = $soma_notas_arredondadas / $contador;
+        LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->update([
+            'media' => $media,
+            'media_arredondada' => $media
+        
+        ]);
+        }
+
+
     }else{
 
             $nota_alunos = LegacyDisciplineScoreStudent::where('matricula_id', $this->getRequest()->matricula_id)->get();
@@ -733,6 +770,7 @@ class DiarioApiController extends ApiCoreController
         } else {
             $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
         }
+        $this->updateMedia();
     }
 
     protected function postNotaRecuperacaoEspecifica()
