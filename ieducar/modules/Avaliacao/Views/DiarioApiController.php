@@ -456,12 +456,13 @@ class DiarioApiController extends ApiCoreController
                 $substitui_menor_nota = $regra2->substitui_menor_nota;
             }
         }
-        $tipo_recuperacao_paralela = 0;
-        $regra_avaliacao = RegraAvaliacao::where('id', $regra_avaliacao_id)->get();
+        $tipo_recuperacao_paralela = -1;
+        $regra_avaliacoes = RegraAvaliacao::where('id', $regra_avaliacao_id)->get();
         foreach($regra_avaliacoes as $regra_av) {
              $tipo_recuperacao_paralela = $regra_av->tipo_recuperacao_paralela;
         }
-        if($tipo_recuperacao_paralela==1){
+       
+        if($tipo_recuperacao_paralela==2){
                         
                     if($substitui_menor_nota==1){
 
