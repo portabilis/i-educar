@@ -674,7 +674,7 @@ class DiarioApiController extends ApiCoreController
             $componenteCurricular = $this->getRequest()->componente_curricular_id;
             $etapa = $this->getRequest()->etapa;
 
-            $this->serviceBoletim()->updateMediaComponente($mediaLancada, $componenteCurricular, $etapa, true);
+            $this->updateMedia();
             $this->messenger->append('Média da matrícula ' . $this->getRequest()->matricula_id . ' alterada com sucesso.', 'success');
             $this->appendResponse('situacao', $this->getSituacaoComponente($this->getRequest()->componente_curricular_id));
             $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
@@ -707,7 +707,8 @@ class DiarioApiController extends ApiCoreController
             if (empty($media) && !is_numeric($media)) {
                 $this->messenger->append('Média matrícula ' . $this->getRequest()->matricula_id . ' inexistente ou já removida.', 'notice');
             } else {
-                $this->serviceBoletim()->updateMediaComponente(0, $this->getRequest()->componente_curricular_id, $this->getRequest()->etapa);
+               
+                $this->updateMedia();
                 $this->messenger->append('Média matrícula ' . $this->getRequest()->matricula_id . ' removida com sucesso.', 'success');
             }
         }

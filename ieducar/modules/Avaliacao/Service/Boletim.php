@@ -2647,6 +2647,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             $media = $this->getRegraAvaliacaoFormulaMedia()->execFormulaMedia($values);
         }
 
+
+
+        
         return $media;
     }
 
