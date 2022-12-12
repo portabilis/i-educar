@@ -424,7 +424,19 @@ class DiarioApiController extends ApiCoreController
             $this->messenger->append('Nota matrícula ' . $this->getRequest()->matricula_id . ' alterada com sucesso.', 'success');
         }
 
-      
+        $this->appendResponse('should_show_recuperacao_especifica', $this->shouldShowRecuperacaoEspecifica());
+        $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
+        $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
+        $this->appendResponse('situacao', $this->getSituacaoComponente());
+        $this->appendResponse('nota_necessaria_exame', $notaNecessariaExame = $this->getNotaNecessariaExame($this->getRequest()->componente_curricular_id));
+        $this->appendResponse('media', round($this->getMediaAtual($this->getRequest()->componente_curricular_id), 3));
+        $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
+
+        if (!empty($notaNecessariaExame) && in_array($this->getSituacaoComponente(), ['Em exame', 'Aprovado após exame', 'Retido'])) {
+            $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $notaNecessariaExame);
+        } else {
+            $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
+        }
 
                 
         $serie_id = '';
@@ -585,19 +597,6 @@ class DiarioApiController extends ApiCoreController
 
         }
 
-        $this->appendResponse('should_show_recuperacao_especifica', $this->shouldShowRecuperacaoEspecifica());
-        $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
-        $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
-        $this->appendResponse('situacao', $this->getSituacaoComponente());
-        $this->appendResponse('nota_necessaria_exame', $notaNecessariaExame = $this->getNotaNecessariaExame($this->getRequest()->componente_curricular_id));
-        $this->appendResponse('media', round($this->getMediaAtual($this->getRequest()->componente_curricular_id), 3));
-        $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
-
-        if (!empty($notaNecessariaExame) && in_array($this->getSituacaoComponente(), ['Em exame', 'Aprovado após exame', 'Retido'])) {
-            $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $notaNecessariaExame);
-        } else {
-            $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
-        }
      
     }
 
