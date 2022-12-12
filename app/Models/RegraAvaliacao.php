@@ -23,9 +23,10 @@ class RegraAvaliacao extends Model
      * @var array
      */
     protected $fillable = [
-        'serie_id',
-        'ano_letivo',
-        'regra_avaliacao_id'
+        'id',
+        'media',
+        'nome',
+        'tipo_recuperacao_paralela'
     ];
 
     /**
