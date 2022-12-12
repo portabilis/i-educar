@@ -531,25 +531,26 @@ class DiarioApiController extends ApiCoreController
                 $notaRecuperacao = $list->nota_recuperacao_especifica;
                 $etapa_anterior = $list->etapa-1;
                 if(!empty($notaRecuperacao)){
-                $nota_componente_curricular_anterior = LegacyDisciplineScore::whereNotNull('nota')->where('nota_aluno_id', $nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->where('etapa', $etapa_anterior)->get();
-                foreach($nota_componente_curricular_anterior as $list2) {
-                    $nota2 = $list2->nota_arredondada;
-                }
-                $contador_media  = $contador_media +1;
-                $soma_notas = $soma_notas + ($nota1 + $nota2)/2;
-                $soma_media = $soma_media + ($soma_notas + $notaRecuperacao)/2;
-            }else{
+                    $nota_componente_curricular_anterior = LegacyDisciplineScore::whereNotNull('nota')->where('nota_aluno_id', $nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->where('etapa', $etapa_anterior)->get();
+                    foreach($nota_componente_curricular_anterior as $list2) {
+                        $nota2 = $list2->nota_arredondada;
+                    }
+                    $contador_media ++;
+                    $soma_notas = $soma_notas + ($nota1 + $nota2)/2;
+                    $soma_media = $soma_media + ($soma_notas + $notaRecuperacao)/2;
+                }else{
                 $contador++;
                 $soma_notas_avulsas = $soma_notas_avulsas + $nota1;
             }
                
-                $soma_notas_arredondadas = $soma_notas_arredondadas + $list->nota_arredondada;   
+                   
             }
             $media = $soma_media / $contador_media;
             if($soma_notas_avulsas>0){
                 $media_notas_avulsas = $soma_notas_avulsas/$contador;
                 $media =  ($media+ $media_notas_avulsas)/2;
             }
+            echo"<script>alert('atendeu ".$media."');</script>";
             $media = round($media , 2);
             LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->update([
                 'media' => $media,
@@ -574,7 +575,8 @@ class DiarioApiController extends ApiCoreController
             }
             $media = $soma_notas / $contador;
             $media = round($media , 2);
-           
+            echo"<script>alert(' não atendeu ".$media."');</script>";
+
 
             LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->update([
                 'media' => $media,
