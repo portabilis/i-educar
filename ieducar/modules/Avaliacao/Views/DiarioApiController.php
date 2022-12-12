@@ -1141,7 +1141,7 @@ class DiarioApiController extends ApiCoreController
         $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
         $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
         $this->appendResponse('situacao', $this->getSituacaoComponente());
-        $this->updateMedia();
+         $this->updateMedia();
     }
 
     // get
@@ -2221,10 +2221,6 @@ class DiarioApiController extends ApiCoreController
             $this->postFalta();
         } elseif ($this->isRequestFor('post', 'parecer')) {
             $this->postParecer();
-        } elseif ($this->isRequestFor('post', 'nota_geral')) {
-            $this->postNotaGeral();
-        } elseif ($this->isRequestFor('post', 'media')) {
-            $this->postMedia();
         } elseif ($this->isRequestFor('post', 'media_desbloqueia')) {
             $this->postMediaDesbloqueia();
         } elseif ($this->isRequestFor('delete', 'media')) {
