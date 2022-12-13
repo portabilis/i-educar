@@ -409,7 +409,7 @@ class DiarioApiController extends ApiCoreController
                 'componenteCurricular' => $this->getRequest()->componente_curricular_id,
                 'nota' => $nota,
                 'etapa' => $etapa,
-                'notaOriginal' => $notaOriginal,
+                'notaOriginal' => $nota,
             ];
 
             if ($_notaAntiga = $this->serviceBoletim()->getNotaComponente($this->getRequest()->componente_curricular_id, $this->getRequest()->etapa)) {

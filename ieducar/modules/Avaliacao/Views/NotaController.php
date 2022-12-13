@@ -100,7 +100,7 @@ class NotaController extends Core_Controller_Page_EditController
      */
     protected function _initEditar()
     {
-        
+        $this->_nota    = $this->_service->getNotaComponente($this->_componenteCurricular, $this->_etapa);
         $this->_falta   = $this->_service->getFalta($this->_etapa, $this->_componenteCurricular);
         $this->_parecer = $this->_service->getParecerDescritivo($this->_etapa, $this->_componenteCurricular);
 
