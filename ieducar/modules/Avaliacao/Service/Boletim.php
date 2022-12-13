@@ -2707,9 +2707,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             }
         }
 
-        // Atualiza as médias
-        $this->_updateNotaComponenteMedia();
-
+        
         return $this;
     }
 
@@ -2739,7 +2737,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         if ($updateAverage) {
             // Atualiza as médias
-            $this->_updateNotaComponenteMedia();
+           
         }
 
         return $this;
@@ -3010,154 +3008,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      */
     protected function _updateNotaComponenteMedia()
     {
-        $this->_loadNotas(false);
-
-        $etapa = 1;
-
-        if ($this->getRegraAvaliacaoNotaGeralPorEtapa() == '1') {
-            $notasGerais = ['Se' => 0, 'Et' => $this->getOption('etapas')];
-
-            foreach ($this->getNotasGerais() as $id => $notaGeral) {
-                $etapasNotas = CoreExt_Entity::entityFilterAttr($notaGeral, 'etapa', 'nota');
-
-                // Cria o array formatado para o cálculo da fórmula da média
-                foreach ($etapasNotas as $etapa => $nota) {
-                    if (is_numeric($etapa)) {
-                        $notasGerais['E' . $etapa] = $nota;
-                        $notasGerais['Se'] += $nota;
-                        continue;
-                    }
-                    $notasGerais[$etapa] = $nota;
-                }
-            }
-
-            //Calcula a média geral
-            $mediaGeral = $this->_calculaMedia($notasGerais);
-
-            // Cria uma nova instância de média, já com a nota arredondada e a etapa
-            $mediaGeralEtapa = new Avaliacao_Model_MediaGeral([
-                'notaAluno' => $this->_getNotaAluno()->id,
-                'media' => $mediaGeral,
-                'mediaArredondada' => $this->arredondaMedia($mediaGeral),
-                'etapa' => $etapa
-            ]);
-
-            try {
-                // Se existir, marca como "old" para possibilitar a atualização
-                $this->getMediaGeralDataMapper()->find([
-                    $mediaGeralEtapa->get('notaAluno')
-                ]);
-
-                $mediaGeralEtapa->markOld();
-            } catch (Exception $e) {
-                // Prossegue, sem problemas.
-            }
-
-            // Salva a média
-            $this->getMediaGeralDataMapper()->save($mediaGeralEtapa);
-        } else {
-            $turmaId = $this->getOption('ref_cod_turma');
-            $infosMatricula = $this->getOption('matriculaData');
-            $matriculaId = $infosMatricula['cod_matricula'];
-            $serieId = $infosMatricula['ref_ref_cod_serie'];
-            $escolaId = $infosMatricula['ref_ref_cod_escola'];
-            $notaAlunoId = $this->_getNotaAluno()->id;
-
-            foreach ($this->getNotasComponentes() as $id => $notasComponentes) {
-                //busca última nota lançada e somente atualiza a média e situação da nota do mesmo componente curricular
-                //pois atualizar todas as médias de todos os componentes pode deixar o sistema com perda de performance e excesso de processamento
-
-                $currentComponenteCurricular = $this->getCurrentComponenteCurricular();
-
-                if (!isset($currentComponenteCurricular) || $currentComponenteCurricular == $id || (in_array($id, $this->codigoDisciplinasAglutinadas()) && in_array($currentComponenteCurricular, $this->codigoDisciplinasAglutinadas()))) {
-                    // Cria um array onde o índice é a etapa
-                    $etapasNotas = $this->calculaEtapaNotasAglutinada($id, $this->getNotasComponentes());
-
-                    $qtdeEtapas = $this->getOption('etapas');
-
-                    if ($this->getRegraAvaliacaoDefinirComponentePorEtapa() == '1') {
-                        $qtdeEtapaEspecifica = App_Model_IedFinder::getQtdeEtapasComponente($turmaId, $id, $infosMatricula['ref_cod_aluno']);
-
-                        $qtdeEtapas = ($qtdeEtapaEspecifica ? $qtdeEtapaEspecifica : $qtdeEtapas);
-                    }
-
-                    $verificaDispensa = App_Model_IedFinder::validaDispensaPorMatricula($matriculaId, $serieId, $escolaId, $id);
-                    $consideraEtapas = [];
-
-                    for ($i = 1; $i <= $qtdeEtapas; $i++) {
-                        $consideraEtapas['C' . $i] = in_array($i, $verificaDispensa) ? 0 : 1;
-
-                        if (in_array($i, $verificaDispensa)) {
-                            $consideraEtapas['E' . $i] = 0;
-                        }
-                    }
-
-                    if ($verificaDispensa) {
-                        $qtdeEtapas = $qtdeEtapas - count($verificaDispensa);
-                    }
-
-                    $notas = array_merge(['Se' => 0, 'Et' => $qtdeEtapas], $consideraEtapas);
-
-                    // Cria o array formatado para o cálculo da fórmula da média
-                    foreach ($etapasNotas as $etapa => $nota) {
-                        if (is_numeric($etapa)) {
-                            $notas['E' . $etapa] = $nota;
-                            $notas['Se'] += $nota;
-                            continue;
-                        }
-                        $notas[$etapa] = $nota;
-                    }
-
-                    $notas = $this->_calculateNotasRecuperacoesEspecificas($id, $notas);
-
-                    // Calcula a média por componente curricular
-                    $media = $this->_calculaMedia($notas);
-                    $locked = false;
-
-                    try {
-                        $notaComponenteCurricularMedia = $this->getNotaComponenteMediaDataMapper()->find([
-                            'notaAluno' => $this->_getNotaAluno()->id,
-                            'componenteCurricular' => $id,
-                        ]);
-
-                        $locked = (bool) $notaComponenteCurricularMedia->bloqueada;
-
-                        // A média pode estar bloqueada caso tenha sido alterada manualmente.
-                        // Neste caso não acontece a atualização da mesma por aqui e é necessário
-                        // desbloqueá-la antes.
-                        if (!$locked) {
-                            $notaComponenteCurricularMedia->media = $media;
-                            $notaComponenteCurricularMedia->mediaArredondada = $this->arredondaMedia($media);
-                        }
-
-                        $notaComponenteCurricularMedia->etapa = $etapa;
-                        $notaComponenteCurricularMedia->situacao = null;
-
-                        $notaComponenteCurricularMedia->markOld();
-                    } catch (Exception $e) {
-                        $notaComponenteCurricularMedia = new Avaliacao_Model_NotaComponenteMedia([
-                            'notaAluno' => $this->_getNotaAluno()->id,
-                            'componenteCurricular' => $id,
-                            'media' => $media,
-                            'mediaArredondada' => $this->arredondaMedia($media),
-                            'etapa' => $etapa,
-                            'bloqueada' => 'f',
-                        ]);
-                    }
-
-                    // Salva a média
-                    $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
-
-                    //Atualiza a situação de acordo com o que foi inserido na média anteriormente
-                    $notaComponenteCurricularMedia->markOld();
-                    $notaComponenteCurricularMedia->situacao = $this->getSituacaoComponentesCurriculares()->componentesCurriculares[$id]->situacao;
-
-                    $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
-                }
-            }
-
-            $this->deleteNotaComponenteCurricularMediaWithoutNotas($notaAlunoId);
-        }
+        
     }
 
     /**
