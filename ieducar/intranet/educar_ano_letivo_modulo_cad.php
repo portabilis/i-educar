@@ -150,6 +150,13 @@ return new class extends clsCadastro {
             disabled: true
         );
 
+        $this->campoCheck(
+            nome: 'migra_coisa_do_professor',
+            campo: 'Migra dados dos professor',
+            valor: true,
+            disable: true
+        );
+
         $opcoesCampoModulo = [];
 
         $objTemp = new clsPmieducarModulo();
@@ -248,7 +255,11 @@ return new class extends clsCadastro {
         }
 
         if ($this->ref_cod_modulo && $this->data_inicio && $this->data_fim) {
-            $this->copiarTurmasUltimoAno(escolaId: $this->ref_ref_cod_escola, anoDestino: $this->ref_ano);
+            $this->copiarTurmasUltimoAno(
+                escolaId: $this->ref_ref_cod_escola,
+                anoDestino: $this->ref_ano,
+                copiaDadosProfessor: $this->migra_coisa_do_professor
+            );
             Portabilis_Utils_Database::selectField("SELECT pmieducar.copiaAnosLetivos({$this->ref_ano}::smallint, {$this->ref_ref_cod_escola});");
 
             $obj = new clsPmieducarEscolaAnoLetivo(
@@ -422,7 +433,7 @@ return new class extends clsCadastro {
         return false;
     }
 
-    public function copiarTurmasUltimoAno($escolaId, $anoDestino)
+    public function copiarTurmasUltimoAno($escolaId, $anoDestino, $copiaDadosProfessor = false)
     {
         $sql = 'select ano from pmieducar.escola_ano_letivo where ref_cod_escola = $1 ' .
             'and ativo = 1 and ano in (select max(ano) from pmieducar.escola_ano_letivo where ' .
@@ -432,16 +443,20 @@ return new class extends clsCadastro {
         $turmasEscola = (new clsPmieducarTurma())->lista(
             int_ref_ref_cod_escola: $escolaId,
             int_ativo: 1,
-            tipo_boletim: null,
             ano: $ultimoAnoLetivo['ano']
         );
 
         foreach ($turmasEscola as $turma) {
-            $this->copiarTurma(turmaOrigem: $turma, anoOrigem: $ultimoAnoLetivo['ano'], anoDestino: $anoDestino);
+            $this->copiarTurma(
+                turmaOrigem: $turma,
+                anoOrigem: $ultimoAnoLetivo['ano'],
+                anoDestino: $anoDestino,
+                copiaDadosProfessor: $copiaDadosProfessor
+            );
         }
     }
 
-    public function copiarTurma($turmaOrigem, $anoOrigem, $anoDestino)
+    public function copiarTurma($turmaOrigem, $anoOrigem, $anoDestino, $copiaDadosProfessor)
     {
         $sql = 'select 1 from turma where ativo = 1 and visivel = true
             and ref_ref_cod_escola = $1 and nm_turma = $2 and ref_ref_cod_serie = $3 and ano = $4 limit 1';
