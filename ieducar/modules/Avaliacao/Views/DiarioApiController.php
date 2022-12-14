@@ -533,7 +533,7 @@ class DiarioApiController extends ApiCoreController
                            
                             $nota_exame = $nota_ex->nota_exame;
                         }
-                        echo'<script>alert('".$nota_exame."');</script>';
+                        echo"<script>alert('".$nota_exame."');</script>";
                         if(!empty($nota_exame)){
                             $media = ($media + $nota_exame)/2;   
                         }
@@ -597,7 +597,7 @@ class DiarioApiController extends ApiCoreController
                            
                             $nota_exame = $nota_ex->nota_exame;
                         }
-                        echo'<script>alert('".$nota_exame."');</script>';
+                        echo"<script>alert('".$nota_exame."');</script>";
                         if(!empty($nota_exame)){
                             $media = ($media + $nota_exame)/2;   
                         }
