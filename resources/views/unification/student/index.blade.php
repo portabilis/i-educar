@@ -47,16 +47,28 @@
         @forelse($unifications as $unification)
             <tr>
                 <td>
-                    <a href="{{ route('student-log-unification.show', ['unification' => $unification->id]) }}">{{ $unification->getMainName()  }}</a>
+                    <a href="{{ $show = route('student-log-unification.show', ['unification' => $unification->id, 'ref_cod_instituicao' => request('ref_cod_instituicao'), 'ref_cod_escola' => request('ref_cod_escola'), 'page' => request('page')]) }}">
+                        {{ $unification->getMainName()  }}
+                    </a>
                 </td>
                 <td>
-                    <a href="{{ route('student-log-unification.show', ['unification' => $unification->id]) }}">{{ implode(', ', $unification->getDuplicatesName()) }}</a>
+                    <a href="{{ $show }}">
+                        {{ implode(', ', $unification->getDuplicatesName()) }}
+                    </a>
                 </td>
                 <td>
-                    <a href="{{ route('student-log-unification.show', ['unification' => $unification->id]) }}">{{ $unification->created_at->format('d/m/Y')  }}</a>
+                    <a href="{{ $show }}">
+                        {{ $unification->created_at->format('d/m/Y')  }}
+                    </a>
                 </td>
                 <td>
-                    <a href="{{ route('student-log-unification.show', ['unification' => $unification->id]) }}">@if($unification->active) Ativa @else Inativa @endif</a>
+                    <a href="{{ $show }}">
+                        @if($unification->active)
+                            Ativa
+                        @else
+                            Inativa
+                        @endif
+                    </a>
                 </td>
             </tr>
         @empty
