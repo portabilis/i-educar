@@ -570,9 +570,30 @@ return new class extends clsCadastro {
             $schoolClassTeacherId = $schoolClassTeacher->getKey();
             $newSchoolClassTeacherId = $newSchoolClassTeacher->getKey();
 
+            $this->copySchoolClassTeacherDiscipline($schoolClassTeacherId, $newSchoolClassTeacherId);
         }
 
     }
+
+    private function copySchoolClassTeacherDiscipline($schoolClassTeacherId, $newSchoolClassTeacherId)
+    {
+        $schoolClassTeacherDisciplines = LegacySchoolClassTeacherDiscipline::query()->where('professor_turma_id', $schoolClassTeacherId)->get();
+
+        /** @var LegacySchoolClassTeacherDiscipline $schoolClassTeacherDiscipline */
+        foreach ($schoolClassTeacherDisciplines as $schoolClassTeacherDiscipline) {
+            $exist = LegacySchoolClassTeacherDiscipline::query()->where([
+                'professor_turma_id'=> $newSchoolClassTeacherId,
+                'componente_curricular_id' => $schoolClassTeacherDiscipline->componente_curricular_id
+            ]);
+
+            if ($exist === true) {
+                continue;
+            }
+
+            $newSchoolClassTeacherDisciplines = $schoolClassTeacherDiscipline->replicate();
+            $newSchoolClassTeacherId->professor_turma_id = $newSchoolClassTeacherId;
+
+            $newSchoolClassTeacherId->save();
         }
     }
 
