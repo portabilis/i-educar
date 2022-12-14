@@ -422,6 +422,7 @@ class DiarioApiController extends ApiCoreController
             $this->serviceBoletim()->addNota($nota);
             $this->trySaveServiceBoletim();
             $this->inserirAuditoriaNotas($_notaAntiga, $nota);
+            $this->updateMedia();
             $this->messenger->append('Nota matrícula ' . $this->getRequest()->matricula_id . ' alterada com sucesso.', 'success');
         }
 
@@ -432,7 +433,6 @@ class DiarioApiController extends ApiCoreController
         $this->appendResponse('media', round($this->getMediaAtual($this->getRequest()->componente_curricular_id), 3));
         $this->appendResponse('nota_necessaria_exame', $notaNecessariaExame = $this->getNotaNecessariaExame($this->getRequest()->componente_curricular_id));
         $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
-        $this->updateMedia();
 
         if (!empty($notaNecessariaExame) && in_array($this->getSituacaoComponente(), ['Em exame', 'Aprovado após exame', 'Retido'])) {
             $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $notaNecessariaExame);
@@ -539,12 +539,33 @@ class DiarioApiController extends ApiCoreController
                         }
                         $media = round($media , 2);
                         $media_arredondada = $soma_notas_arredondadas / $contador;
+
+                        $existe_media = 0;
+                        $existe = LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->get();
+                        foreach($existe as $sim){
+                            $existe_media = 1;    
+                        }
+                        if($existe_media == 1){
                         LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->update([
                             'media' => $media,
-                            'media_arredondada' => $media
+                            'media_arredondada' => $media,
+                            'etapa' => $this->getRequest()->etapa
+
                         
                         ]);
-                        }
+                            }else{
+                                LegacyDisciplineScoreAverage::create( [
+                                    'media' => $media,
+                                    'media_arredondada' => $media,
+                                    'componente_curricular_id' => $this->getRequest()->componente_curricular_id,
+                                    'nota_aluno_id' => $nota_aluno->id,
+                                    'situacao' => 3,
+                                    'etapa' => $this->getRequest()->etapa,
+                                    'bloqueada' => false
+                                  ]);
+                            }
+                    }
+
                     }elseif($substitui_menor_nota==0){
                         $nota_alunos = LegacyDisciplineScoreStudent::where('matricula_id', $this->getRequest()->matricula_id)->get();
                         foreach($nota_alunos as $nota_aluno) {
@@ -602,11 +623,30 @@ class DiarioApiController extends ApiCoreController
                             $media = ($media + $nota_exame)/2;   
                         }
                         $media = round($media , 2);
+                        $existe_media = 0;
+                        $existe = LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->get();
+                        foreach($existe as $sim){
+                            $existe_media = 1;    
+                        }
+                        if($existe_media == 1){
                         LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->update([
                             'media' => $media,
-                            'media_arredondada' => $media
+                            'media_arredondada' => $media,
+                            'etapa' => $this->getRequest()->etapa
+
                         
                         ]);
+                            }else{
+                                LegacyDisciplineScoreAverage::create( [
+                                    'media' => $media,
+                                    'media_arredondada' => $media,
+                                    'componente_curricular_id' => $this->getRequest()->componente_curricular_id,
+                                    'nota_aluno_id' => $nota_aluno->id,
+                                    'situacao' => 3,
+                                    'etapa' => $this->getRequest()->etapa,
+                                    'bloqueada' => false
+                                  ]);
+                            }
                     }
 
                     }
@@ -650,11 +690,30 @@ class DiarioApiController extends ApiCoreController
         }
         $media = round($media , 2);
         $media_arredondada = $soma_notas_arredondadas / $contador;
+        $existe_media = 0;
+        $existe = LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->get();
+        foreach($existe as $sim){
+            $existe_media = 1;    
+        }
+        if($existe_media == 1){
         LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->update([
             'media' => $media,
-            'media_arredondada' => $media
+            'media_arredondada' => $media,
+            'etapa' => $this->getRequest()->etapa
+
         
         ]);
+            }else{
+                LegacyDisciplineScoreAverage::create( [
+                    'media' => $media,
+                    'media_arredondada' => $media,
+                    'componente_curricular_id' => $this->getRequest()->componente_curricular_id,
+                    'nota_aluno_id' => $nota_aluno->id,
+                    'situacao' => 3,
+                    'etapa' => $this->getRequest()->etapa,
+                    'bloqueada' => false
+                    ]);
+            }
         }
 
 
@@ -686,11 +745,30 @@ class DiarioApiController extends ApiCoreController
             $media = round($media , 2);
          
 
+            $existe_media = 0;
+            $existe = LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->get();
+            foreach($existe as $sim){
+                $existe_media = 1;    
+            }
+            if($existe_media == 1){
             LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->update([
                 'media' => $media,
-                'media_arredondada' => $media
-               
+                'media_arredondada' => $media,
+                'etapa' => $this->getRequest()->etapa
+
+            
             ]);
+                }else{
+                    LegacyDisciplineScoreAverage::create( [
+                        'media' => $media,
+                        'media_arredondada' => $media,
+                        'componente_curricular_id' => $this->getRequest()->componente_curricular_id,
+                        'nota_aluno_id' => $nota_aluno->id,
+                        'situacao' => 3,
+                        'etapa' => $this->getRequest()->etapa,
+                        'bloqueada' => false
+                        ]);
+                }
         }
 
         }
