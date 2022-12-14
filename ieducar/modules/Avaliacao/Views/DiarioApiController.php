@@ -623,11 +623,13 @@ class DiarioApiController extends ApiCoreController
                             $media = ($media + $nota_exame)/2;   
                         }
                         $media = round($media , 2);
+
                         $existe_media_ = 0;
                         $existe = LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->get();
                         foreach($existe as $sim){
                             $existe_media_ = 1;    
                         }
+                        echo "<script>alert('atendeu".$existe_media_."')</script>";
                         if($existe_media_ == 1){
                         LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->update([
                             'media' => $media,
