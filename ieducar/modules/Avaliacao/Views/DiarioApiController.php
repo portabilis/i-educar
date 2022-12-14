@@ -522,10 +522,9 @@ class DiarioApiController extends ApiCoreController
                             $soma_notas_arredondadas = $soma_notas_arredondadas + $list->nota_arredondada;   
                         }
                         $media = $soma_notas / $contador;
-
-                        $nota_exame = NotaExame::where('ref_cod_matricula', $this->getRequest()->matricula_id)->('ref_cod_componente_curricular', $this->getRequest()->componente_curricular_id)->get();
                         $nota_exame = 0;
-                        foreach($nota_exame as $nota_ex) {
+                        $nota_exames = NotaExame::where('ref_cod_matricula', $this->getRequest()->matricula_id)->('ref_cod_componente_curricular', $this->getRequest()->componente_curricular_id)->get();
+                        foreach($nota_exames as $nota_ex) {
                            
                             $nota_exame = $nota_ex->nota_exame;
                         }
@@ -586,9 +585,9 @@ class DiarioApiController extends ApiCoreController
                             $media_notas_avulsas = $soma_notas_avulsas/$contador;
                             $media =  ($media+ $media_notas_avulsas)/2;
                         }
-                        $nota_exame = NotaExame::where('ref_cod_matricula', $this->getRequest()->matricula_id)->('ref_cod_componente_curricular', $this->getRequest()->componente_curricular_id)->get();
                         $nota_exame = 0;
-                        foreach($nota_exame as $nota_ex) {
+                        $nota_exames = NotaExame::where('ref_cod_matricula', $this->getRequest()->matricula_id)->('ref_cod_componente_curricular', $this->getRequest()->componente_curricular_id)->get();
+                        foreach($nota_exames as $nota_ex) {
                            
                             $nota_exame = $nota_ex->nota_exame;
                         }
@@ -632,10 +631,10 @@ class DiarioApiController extends ApiCoreController
             $soma_notas_arredondadas = $soma_notas_arredondadas + $list->nota_arredondada;   
         }
         $media = $soma_notas / $contador;
-        $nota_exame = NotaExame::where('ref_cod_matricula', $this->getRequest()->matricula_id)->('ref_cod_componente_curricular', $this->getRequest()->componente_curricular_id)->get();
         $nota_exame = 0;
-        foreach($nota_exame as $nota_ex) {
-            
+        $nota_exames = NotaExame::where('ref_cod_matricula', $this->getRequest()->matricula_id)->('ref_cod_componente_curricular', $this->getRequest()->componente_curricular_id)->get();
+        foreach($nota_exames as $nota_ex) {
+           
             $nota_exame = $nota_ex->nota_exame;
         }
         if(!empty($nota_exame)){
@@ -666,15 +665,15 @@ class DiarioApiController extends ApiCoreController
                   
             }
             $media = $soma_notas / $contador;
-            $nota_exame = NotaExame::where('ref_cod_matricula', $this->getRequest()->matricula_id)->('ref_cod_componente_curricular', $this->getRequest()->componente_curricular_id)->get();
-                        $nota_exame = 0;
-                        foreach($nota_exame as $nota_ex) {
-                           
-                            $nota_exame = $nota_ex->nota_exame;
-                        }
-                        if(!empty($nota_exame)){
-                            $media = ($media + $nota_exame)/2;   
-                        }
+            $nota_exame = 0;
+            $nota_exames = NotaExame::where('ref_cod_matricula', $this->getRequest()->matricula_id)->('ref_cod_componente_curricular', $this->getRequest()->componente_curricular_id)->get();
+            foreach($nota_exames as $nota_ex) {
+               
+                $nota_exame = $nota_ex->nota_exame;
+            }
+            if(!empty($nota_exame)){
+                $media = ($media + $nota_exame)/2;   
+            }
             $media = round($media , 2);
          
 
