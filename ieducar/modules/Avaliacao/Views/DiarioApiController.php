@@ -528,7 +528,7 @@ class DiarioApiController extends ApiCoreController
                            
                             $nota_exame = $nota_ex->nota_exame;
                         }
-                        echo "<script>alert('aqui: ".$nota_exame." ');</script>";
+                        echo "<script>alert('aqui: ".$this->getRequest()->matricula_id." ');</script>";
                         if(!empty($nota_exame)){
                             $media = ($media + $nota_exame)/2;   
                         }
@@ -592,7 +592,7 @@ class DiarioApiController extends ApiCoreController
                            
                             $nota_exame = $nota_ex->nota_exame;
                         }
-                        echo "<script>alert('aqui: ".$nota_exame." ');</script>";
+                        echo "<script>alert('aqui: ".$this->getRequest()->matricula_id." ');</script>";
                         if(!empty($nota_exame)){
                             $media = ($media + $nota_exame)/2;   
                         }
@@ -639,7 +639,7 @@ class DiarioApiController extends ApiCoreController
             
             $nota_exame = $nota_ex->nota_exame;
         }
-        echo "<script>alert('aqui: ".$nota_exame." ');</script>";
+        echo "<script>alert('aqui: ".$this->getRequest()->matricula_id." ');</script>";
         if(!empty($nota_exame)){
             $media = ($media + $nota_exame)/2;   
         }
@@ -674,7 +674,7 @@ class DiarioApiController extends ApiCoreController
                 
                 $nota_exame = $nota_ex->nota_exame;
             }
-            echo "<script>alert('aqui: ".$nota_exame." ');</script>";
+            echo "<script>alert('aqui: ".$this->getRequest()->matricula_id." ');</script>";
             if(!empty($nota_exame)){
                 $media = ($media + $nota_exame)/2;   
             }
