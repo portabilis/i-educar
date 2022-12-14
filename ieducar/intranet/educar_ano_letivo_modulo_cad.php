@@ -530,6 +530,17 @@ return new class extends clsCadastro {
             if ($turmaOrigem['multiseriada'] === 1) {
                 $this->criarTurmaMultisseriada(turmaOrigem: $turmaOrigem, turmaDestinoId: $turmaDestinoId);
             }
+
+            if ($copiaDadosProfessor === true) {
+                $this->copySchoolClassTeacher(
+                    turmaOrigem: $turmaOrigem,
+                    turmaDestinoId: $turmaDestinoId,
+                    anoOrigem: $anoOrigem,
+                    anoDestino: $anoDestino
+                );
+            }
+        }
+    }
         }
     }
 
