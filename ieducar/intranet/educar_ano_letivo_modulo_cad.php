@@ -541,6 +541,38 @@ return new class extends clsCadastro {
             }
         }
     }
+
+    private function copySchoolClassTeacher($turmaOrigem, $turmaDestinoId, $anoOrigem, $anoDestino)
+    {
+        $schoolClassTeachers = LegacySchoolClassTeacher::query()
+            ->where(['ano' => $anoOrigem, 'turma_id' => $turmaOrigem])
+            ->get();
+
+        /** @var LegacySchoolClassTeacher $schoolClassTeacher */
+        foreach ($schoolClassTeachers as $schoolClassTeacher) {
+            $exist = LegacySchoolClassTeacher::query()->where(
+                [
+                    'ano' => $anoDestino,
+                    'turma_id' => $turmaDestinoId,
+                    'servidor_id' => $schoolClassTeacher->servidor_id
+                ]
+            )->exists();
+
+            if ($exist === true) {
+                continue;
+            }
+
+            $newSchoolClassTeacher = $schoolClassTeacher->replicate();
+            $newSchoolClassTeacher->ano = $anoDestino;
+
+            $newSchoolClassTeacher->save();
+
+            $schoolClassTeacherId = $schoolClassTeacher->getKey();
+            $newSchoolClassTeacherId = $newSchoolClassTeacher->getKey();
+
+        }
+
+    }
         }
     }
 
