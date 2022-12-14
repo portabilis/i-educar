@@ -567,7 +567,7 @@ class DiarioApiController extends ApiCoreController
                     }
 
                     }elseif($substitui_menor_nota==0){
-
+                        
                         $nota_alunos = LegacyDisciplineScoreStudent::where('matricula_id', $this->getRequest()->matricula_id)->get();
                         foreach($nota_alunos as $nota_aluno) {
                     
@@ -595,6 +595,7 @@ class DiarioApiController extends ApiCoreController
                                 $contador = $contador -1;
                                 $contador_media ++;
                                 $soma_notas = $soma_notas + ($nota1 + $nota2)/2;
+
                                 if($notaRecuperacao >= $soma_notas){
                                     $soma_media = $soma_media + ($soma_notas + $notaRecuperacao)/2;
                                 }else{
@@ -610,8 +611,14 @@ class DiarioApiController extends ApiCoreController
                         }
                         $media = $soma_media / $contador_media;
                         if($soma_notas_avulsas>0){
-                            $media_notas_avulsas = $soma_notas_avulsas/$contador;
-                            $media =  ($media+ $media_notas_avulsas)/2;
+                            if($contador>0 and is_nan($media)){
+                                $media = $soma_notas_avulsas/$contador;
+                            }else{
+                                $media_notas_avulsas = $soma_notas_avulsas/$contador;
+                                $media =  ($media+ $media_notas_avulsas)/2;
+                            }
+
+                           
                         }
                         $nota_exame = 0;
                         $nota_exames = LegacyDisciplineScore::where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->where('nota_aluno_id', $nota_aluno->id)->where('etapa', 'like', "Rc")->get();
@@ -623,7 +630,6 @@ class DiarioApiController extends ApiCoreController
                         if(!empty($nota_exame)){
                             $media = ($media + $nota_exame)/2;   
                         }
-                        echo "<script>alert('existe ".$existe_media_." media ".$media."')</script>";
                         $media = round($media , 2);
 
                         $existe_media_ = 0;
@@ -631,7 +637,7 @@ class DiarioApiController extends ApiCoreController
                         foreach($existe as $sim){
                             $existe_media_ = 1;    
                         }
-                       
+                        echo "<script>alert('existe ".$existe_media_." media ".$media."')</script>";
                         if($existe_media_ == 1){
                         LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->update([
                             'media' => $media,
