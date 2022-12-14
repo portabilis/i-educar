@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\LegacySchoolClassGrade;
+use App\Models\LegacySchoolClassTeacher;
+use App\Models\LegacySchoolClassTeacherDiscipline;
 use App\Services\iDiarioService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
