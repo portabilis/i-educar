@@ -637,7 +637,6 @@ class DiarioApiController extends ApiCoreController
                         foreach($existe as $sim){
                             $existe_media_ = 1;    
                         }
-                        echo "<script>alert('existe ".$existe_media_." media ".$media."')</script>";
                         if($existe_media_ == 1){
                         LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->update([
                             'media' => $media,
