@@ -68,6 +68,9 @@ return new class extends clsCadastro {
 
         try {
             $pessoas = json_decode($this->pessoas, true, 512, JSON_THROW_ON_ERROR);
+        } catch (TypeError $exception) {
+            $this->mensagem = 'Informações inválidas para unificação';
+            return false;
         } catch (Exception $exception) {
             $this->mensagem = 'Informações inválidas para unificação';
             return false;
