@@ -639,8 +639,8 @@ class DiarioApiController extends ApiCoreController
                             //atualiza a nota que falta no exame final
                               $nota_exame = 10 - $media;
                              
-                                  $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $nota_exame);
-                                  $this->appendResponse('nota_necessaria_exame', $nota_exame);
+                                  //$this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $nota_exame);
+                                  $this->appendResponse('nota_necessaria_exame', null);
                               } else {
                                   $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
                               
