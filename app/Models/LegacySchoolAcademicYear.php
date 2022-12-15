@@ -58,6 +58,8 @@ class LegacySchoolAcademicYear extends LegacyModel
         'data_exclusao',
         'ativo',
         'turmas_por_ano',
+        'copia_dados_professor',
+        'copia_dados_demais_servidores'
     ];
 
     protected function year(): Attribute
