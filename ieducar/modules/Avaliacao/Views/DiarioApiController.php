@@ -411,7 +411,7 @@ class DiarioApiController extends ApiCoreController
                 'nota' => $nota,
                 'etapa' => $etapa,
                 'notaOriginal' => $nota,
-            ];
+            ]; 
 
             if ($_notaAntiga = $this->serviceBoletim()->getNotaComponente($this->getRequest()->componente_curricular_id, $this->getRequest()->etapa)) {
                 $array_nota['notaRecuperacaoParalela'] = $_notaAntiga->notaRecuperacaoParalela;
@@ -435,7 +435,6 @@ class DiarioApiController extends ApiCoreController
         $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
 
         if (!empty($notaNecessariaExame) && in_array($this->getSituacaoComponente(), ['Em exame', 'Aprovado após exame', 'Retido'])) {
-            $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $notaNecessariaExame);
             $this->updateMedia();
         } else {
             $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
