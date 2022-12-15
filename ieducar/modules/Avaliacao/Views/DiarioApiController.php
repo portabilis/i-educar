@@ -1592,7 +1592,18 @@ class DiarioApiController extends ApiCoreController
             $componente['ultima_etapa'] = App_Model_IedFinder::getUltimaEtapaComponente($turmaId, $componenteId);
             $gravaNotaExame = ($componente['situacao'] == 'Em exame' || $componente['situacao'] == 'Aprovado após exame' || $componente['situacao'] == 'Retido');
 
-            $componente['nota_necessaria_exame'] = ($gravaNotaExame ? $this->getNotaNecessariaExame($componente['id']) : null);
+
+
+            $falta_exame = 0;
+            
+           $notas_exame = NotaExame::::where('ref_cod_matricula',$matriculaId)->where('ref_cod_componente_curricular', $componenteId)->get();
+            foreach($notas_exame as $nota_exame){
+              $falta_exame =   $nota_exame->nota_exame;
+            }
+            if($falta_exame>0){
+                $componente['nota_necessaria_exame'] = $falta_exame;
+            }
+            
             $componente['ordenamento'] = $_componente->get('ordenamento');
             $componente['nota_recuperacao_paralela'] = $this->getNotaRecuperacaoParalelaAtual($etapa, $componente['id']);
             $componente['nota_recuperacao_especifica'] = $this->getNotaRecuperacaoEspecificaAtual($etapa, $componente['id']);
@@ -1603,11 +1614,7 @@ class DiarioApiController extends ApiCoreController
             $componente['media_arredondada'] = $this->getMediaArredondadaAtual($componente['id']);
             $componente['media_bloqueada'] = $this->getMediaBloqueada($componente['id']);
 
-            if (!empty($componente['nota_necessaria_exame'])) {
-                $this->createOrUpdateNotaExame($matriculaId, $componente['id'], $componente['nota_necessaria_exame']);
-            } else {
-                $this->deleteNotaExame($matriculaId, $componente['id']);
-            }
+           
 
             //buscando pela área do conhecimento
             $area = $this->getAreaConhecimento($componente['id']);
