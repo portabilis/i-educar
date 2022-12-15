@@ -1596,7 +1596,7 @@ class DiarioApiController extends ApiCoreController
 
             $falta_exame = 0;
             
-           $notas_exame = NotaExame::::where('ref_cod_matricula',$matriculaId)->where('ref_cod_componente_curricular', $componenteId)->get();
+           $notas_exame = NotaExame::where('ref_cod_matricula',$matriculaId)->where('ref_cod_componente_curricular', $componenteId)->get();
             foreach($notas_exame as $nota_exame){
               $falta_exame =   $nota_exame->nota_exame;
             }
