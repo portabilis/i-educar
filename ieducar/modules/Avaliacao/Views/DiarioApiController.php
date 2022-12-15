@@ -411,7 +411,7 @@ class DiarioApiController extends ApiCoreController
                 'nota' => $nota,
                 'etapa' => $etapa,
                 'notaOriginal' => $nota,
-            ]; 
+            ];
 
             if ($_notaAntiga = $this->serviceBoletim()->getNotaComponente($this->getRequest()->componente_curricular_id, $this->getRequest()->etapa)) {
                 $array_nota['notaRecuperacaoParalela'] = $_notaAntiga->notaRecuperacaoParalela;
@@ -431,16 +431,10 @@ class DiarioApiController extends ApiCoreController
         $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
         $this->appendResponse('situacao', $this->getSituacaoComponente());
         $this->appendResponse('media', round($this->getMediaAtual($this->getRequest()->componente_curricular_id), 3));
-        $this->appendResponse('nota_necessaria_exame', $notaNecessariaExame = $this->getNotaNecessariaExame($this->getRequest()->componente_curricular_id));
+       
         $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
 
-        if (!empty($notaNecessariaExame) && in_array($this->getSituacaoComponente(), ['Em exame', 'Aprovado após exame', 'Retido'])) {
-            $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $notaNecessariaExame);
-            $this->updateMedia();
-        } else {
-            $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
-        }
-
+       
                 
         
 
@@ -540,9 +534,15 @@ class DiarioApiController extends ApiCoreController
                         $media = round($media , 2);
                           //atualiza a nota que falta no exame final
                         $nota_exame = 10 - $media;
-                        NotaExame::where('ref_cod_matricula',$this->getRequest()->matricula_id)->where('ref_cod_componente_curricular', $this->getRequest()->componente_curricular_id)->update([
-                                    'nota_exame' =>  $nota_exame
-                                    ]);
+
+                        $notaNecessariaExame = $this->getNotaNecessariaExame($this->getRequest()->componente_curricular_id);
+                        if (!empty($notaNecessariaExame) && in_array($this->getSituacaoComponente(), ['Em exame', 'Aprovado após exame', 'Retido'])) {
+                            $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $nota_exame);
+                            $this->appendResponse('nota_necessaria_exame', $nota_exame);
+                        } else {
+                            $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
+                        }
+
                         $media_arredondada = $soma_notas_arredondadas / $contador;
 
                         $existe_media = 0;
@@ -636,11 +636,16 @@ class DiarioApiController extends ApiCoreController
                             $media = ($media + $nota_exame)/2;   
                         }
                         $media = round($media , 2);
-                          //atualiza a nota que falta no exame final
+                           //atualiza a nota que falta no exame final
                         $nota_exame = 10 - $media;
-                        NotaExame::where('ref_cod_matricula',$this->getRequest()->matricula_id)->where('ref_cod_componente_curricular', $this->getRequest()->componente_curricular_id)->update([
-                                    'nota_exame' =>  $nota_exame
-                                    ]);
+
+                        $notaNecessariaExame = $this->getNotaNecessariaExame($this->getRequest()->componente_curricular_id);
+                        if (!empty($notaNecessariaExame) && in_array($this->getSituacaoComponente(), ['Em exame', 'Aprovado após exame', 'Retido'])) {
+                            $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $nota_exame);
+                            $this->appendResponse('nota_necessaria_exame', $nota_exame);
+                        } else {
+                            $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
+                        }
 
                         $existe_media_ = 0;
                         $existe = LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->get();
@@ -709,11 +714,16 @@ class DiarioApiController extends ApiCoreController
             }
             $media = round($media , 2);
 
-            //atualiza a nota que falta no exame final
-            $nota_exame = 10 - $media;
-            NotaExame::where('ref_cod_matricula',$this->getRequest()->matricula_id)->where('ref_cod_componente_curricular', $this->getRequest()->componente_curricular_id)->update([
-                        'nota_exame' =>  $nota_exame
-                        ]);
+              //atualiza a nota que falta no exame final
+              $nota_exame = 10 - $media;
+
+              $notaNecessariaExame = $this->getNotaNecessariaExame($this->getRequest()->componente_curricular_id);
+              if (!empty($notaNecessariaExame) && in_array($this->getSituacaoComponente(), ['Em exame', 'Aprovado após exame', 'Retido'])) {
+                  $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $nota_exame);
+                  $this->appendResponse('nota_necessaria_exame', $nota_exame);
+              } else {
+                  $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
+              }
 
             $media_arredondada = $soma_notas_arredondadas / $contador;
             $existe_media_1 = 0;
@@ -769,11 +779,16 @@ class DiarioApiController extends ApiCoreController
                     $media = ($media + $nota_exame)/2;   
                 }
                 $media = round($media , 2);
-                //atualiza a nota que falta no exame final
-                $nota_exame = 10 - $media;
-                NotaExame::where('ref_cod_matricula',$this->getRequest()->matricula_id)->where('ref_cod_componente_curricular', $this->getRequest()->componente_curricular_id)->update([
-                        'nota_exame' =>  $nota_exame
-                        ]);
+                  //atualiza a nota que falta no exame final
+                  $nota_exame = 10 - $media;
+
+                  $notaNecessariaExame = $this->getNotaNecessariaExame($this->getRequest()->componente_curricular_id);
+                  if (!empty($notaNecessariaExame) && in_array($this->getSituacaoComponente(), ['Em exame', 'Aprovado após exame', 'Retido'])) {
+                      $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $nota_exame);
+                      $this->appendResponse('nota_necessaria_exame', $nota_exame);
+                  } else {
+                      $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
+                  }
             
 
                 $existe_media_2 = 0;
@@ -1686,10 +1701,7 @@ class DiarioApiController extends ApiCoreController
     {
         $obj = new clsModulesNotaExame($matriculaId, $componenteCurricularId, $notaExame);
 
-        if(!$obj->existe()){
-            return ($obj->cadastra());
-        }
-        
+        return ($obj->existe() ? $obj->edita() : $obj->cadastra());
     }
 
     protected function deleteNotaExame($matriculaId, $componenteCurricularId)
