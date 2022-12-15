@@ -1600,8 +1600,12 @@ class DiarioApiController extends ApiCoreController
             foreach($notas_exame as $nota_exame){
               $falta_exame =   $nota_exame->nota_exame;
             }
+            $falta_exame = round($falta_exame , 2);
             if($falta_exame>0){
                 $componente['nota_necessaria_exame'] = $falta_exame;
+            }
+            else{
+                $componente['nota_necessaria_exame'] = null;
             }
             
             $componente['ordenamento'] = $_componente->get('ordenamento');
