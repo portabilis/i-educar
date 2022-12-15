@@ -538,6 +538,11 @@ class DiarioApiController extends ApiCoreController
                             $media = ($media + $nota_exame)/2;   
                         }
                         $media = round($media , 2);
+                          //atualiza a nota que falta no exame final
+                        $nota_exame = 10 - $media;
+                        NotaExame::::where('ref_cod_matricula',$this->getRequest()->matricula_id)->where('ref_cod_componente_curricular', $this->getRequest()->componente_curricular_id)->update([
+                                    'nota_exame' =>  $nota_exame
+                                    ]);
                         $media_arredondada = $soma_notas_arredondadas / $contador;
 
                         $existe_media = 0;
@@ -631,6 +636,11 @@ class DiarioApiController extends ApiCoreController
                             $media = ($media + $nota_exame)/2;   
                         }
                         $media = round($media , 2);
+                          //atualiza a nota que falta no exame final
+                        $nota_exame = 10 - $media;
+                        NotaExame::::where('ref_cod_matricula',$this->getRequest()->matricula_id)->where('ref_cod_componente_curricular', $this->getRequest()->componente_curricular_id)->update([
+                                    'nota_exame' =>  $nota_exame
+                                    ]);
 
                         $existe_media_ = 0;
                         $existe = LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->get();
@@ -698,6 +708,13 @@ class DiarioApiController extends ApiCoreController
             $media = ($media + $nota_exame)/2;   
         }
         $media = round($media , 2);
+
+        //atualiza a nota que falta no exame final
+        $nota_exame = 10 - $media;
+        NotaExame::::where('ref_cod_matricula',$this->getRequest()->matricula_id)->where('ref_cod_componente_curricular', $this->getRequest()->componente_curricular_id)->update([
+                    'nota_exame' =>  $nota_exame
+                    ]);
+
         $media_arredondada = $soma_notas_arredondadas / $contador;
         $existe_media_1 = 0;
         $existe = LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->get();
@@ -752,6 +769,11 @@ class DiarioApiController extends ApiCoreController
                 $media = ($media + $nota_exame)/2;   
             }
             $media = round($media , 2);
+             //atualiza a nota que falta no exame final
+            $nota_exame = 10 - $media;
+            NotaExame::::where('ref_cod_matricula',$this->getRequest()->matricula_id)->where('ref_cod_componente_curricular', $this->getRequest()->componente_curricular_id)->update([
+                    'nota_exame' =>  $nota_exame
+                    ]);
          
 
             $existe_media_2 = 0;
