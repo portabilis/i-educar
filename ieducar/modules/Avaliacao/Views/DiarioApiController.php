@@ -435,6 +435,7 @@ class DiarioApiController extends ApiCoreController
         $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
 
         if (!empty($notaNecessariaExame) && in_array($this->getSituacaoComponente(), ['Em exame', 'Aprovado após exame', 'Retido'])) {
+            $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $notaNecessariaExame);
             $this->updateMedia();
         } else {
             $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
@@ -1685,7 +1686,10 @@ class DiarioApiController extends ApiCoreController
     {
         $obj = new clsModulesNotaExame($matriculaId, $componenteCurricularId, $notaExame);
 
-        return ($obj->existe() ? $obj->edita() : $obj->cadastra());
+        if(!$obj->existe()){
+            return ($obj->cadastra());
+        }
+        
     }
 
     protected function deleteNotaExame($matriculaId, $componenteCurricularId)
