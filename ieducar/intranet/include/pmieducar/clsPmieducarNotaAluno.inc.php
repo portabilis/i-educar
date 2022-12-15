@@ -1,5 +1,5 @@
 <?php
-
+ 
 use iEducar\Legacy\Model;
 
 class clsPmieducarNotaAluno extends Model
