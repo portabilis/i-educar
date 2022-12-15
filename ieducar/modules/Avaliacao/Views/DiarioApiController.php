@@ -540,7 +540,7 @@ class DiarioApiController extends ApiCoreController
                             $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $nota_exame);
                             $this->appendResponse('nota_necessaria_exame', $nota_exame);
                         } else {
-                            $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
+                           
                         }
 
                         $media_arredondada = $soma_notas_arredondadas / $contador;
@@ -644,7 +644,7 @@ class DiarioApiController extends ApiCoreController
                             $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $nota_exame);
                             $this->appendResponse('nota_necessaria_exame', $nota_exame);
                         } else {
-                            $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
+                           
                         }
 
                         $existe_media_ = 0;
@@ -722,7 +722,7 @@ class DiarioApiController extends ApiCoreController
                   $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $nota_exame);
                   $this->appendResponse('nota_necessaria_exame', $nota_exame);
               } else {
-                  $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
+                 
               }
 
             $media_arredondada = $soma_notas_arredondadas / $contador;
@@ -787,7 +787,7 @@ class DiarioApiController extends ApiCoreController
                       $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $nota_exame);
                       $this->appendResponse('nota_necessaria_exame', $nota_exame);
                   } else {
-                      $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
+                     
                   }
             
 
@@ -947,7 +947,7 @@ class DiarioApiController extends ApiCoreController
         if (!empty($notaNecessariaExame) && in_array($this->getSituacaoComponente(), ['Em exame', 'Aprovado após exame', 'Retido'])) {
             $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $notaNecessariaExame);
         } else {
-            $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
+           
         }
         $this->updateMedia();
     }
@@ -983,7 +983,7 @@ class DiarioApiController extends ApiCoreController
         if (!empty($notaNecessariaExame) && in_array($this->getSituacaoComponente(), ['Em exame', 'Aprovado após exame', 'Retido'])) {
             $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $notaNecessariaExame);
         } else {
-            $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
+           
         }
         
         
