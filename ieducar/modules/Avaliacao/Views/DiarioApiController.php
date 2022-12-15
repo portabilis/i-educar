@@ -540,7 +540,7 @@ class DiarioApiController extends ApiCoreController
                         $media = round($media , 2);
                           //atualiza a nota que falta no exame final
                         $nota_exame = 10 - $media;
-                        NotaExame::::where('ref_cod_matricula',$this->getRequest()->matricula_id)->where('ref_cod_componente_curricular', $this->getRequest()->componente_curricular_id)->update([
+                        NotaExame::where('ref_cod_matricula',$this->getRequest()->matricula_id)->where('ref_cod_componente_curricular', $this->getRequest()->componente_curricular_id)->update([
                                     'nota_exame' =>  $nota_exame
                                     ]);
                         $media_arredondada = $soma_notas_arredondadas / $contador;
@@ -638,7 +638,7 @@ class DiarioApiController extends ApiCoreController
                         $media = round($media , 2);
                           //atualiza a nota que falta no exame final
                         $nota_exame = 10 - $media;
-                        NotaExame::::where('ref_cod_matricula',$this->getRequest()->matricula_id)->where('ref_cod_componente_curricular', $this->getRequest()->componente_curricular_id)->update([
+                        NotaExame::where('ref_cod_matricula',$this->getRequest()->matricula_id)->where('ref_cod_componente_curricular', $this->getRequest()->componente_curricular_id)->update([
                                     'nota_exame' =>  $nota_exame
                                     ]);
 
@@ -670,92 +670,31 @@ class DiarioApiController extends ApiCoreController
 
                     }
         
-    }elseif($tipo_recuperacao_paralela==1){
-
-        $nota_alunos = LegacyDisciplineScoreStudent::where('matricula_id', $this->getRequest()->matricula_id)->get();
-        foreach($nota_alunos as $nota_aluno) {
-    
-        $contador =0;
-        $soma_notas =0;
-        $soma_notas_arredondadas =0;
-        $nota_componente_curricular = LegacyDisciplineScore::where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->where('nota_aluno_id', $nota_aluno->id)->where('etapa', 'not like', 'Rc')->get();
-        foreach($nota_componente_curricular as $list) {
-        
-            $nota1 = 0;
-            $nota2 = 0;
-            $contador++;
-            $nota1 = $list->nota_arredondada;
-            $notaRecuperacao = $list->nota_recuperacao_especifica;
-            $etapa_anterior = $list->etapa-1;
-            if(!empty($notaRecuperacao)){
-            
-                $nota1 = ($nota1+$notaRecuperacao)/2;
-            }
-
-        
-            $soma_notas = $soma_notas + $nota1;
-            $soma_notas_arredondadas = $soma_notas_arredondadas + $list->nota_arredondada;   
-        }
-        $media = $soma_notas / $contador;
-        $nota_exame = 0;
-        $nota_exames = LegacyDisciplineScore::where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->where('nota_aluno_id', $nota_aluno->id)->where('etapa', '=', 'Rc')->get();
-        foreach($nota_exames as $nota_ex) {
-            
-            $nota_exame = $nota_ex->nota_arredondada;
-        }
-       
-        if(!empty($nota_exame)){
-            $media = ($media + $nota_exame)/2;   
-        }
-        $media = round($media , 2);
-
-        //atualiza a nota que falta no exame final
-        $nota_exame = 10 - $media;
-        NotaExame::::where('ref_cod_matricula',$this->getRequest()->matricula_id)->where('ref_cod_componente_curricular', $this->getRequest()->componente_curricular_id)->update([
-                    'nota_exame' =>  $nota_exame
-                    ]);
-
-        $media_arredondada = $soma_notas_arredondadas / $contador;
-        $existe_media_1 = 0;
-        $existe = LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->get();
-        foreach($existe as $sim){
-            $existe_media_1 = 1;    
-        }
-        if($existe_media_1 == 1){
-        LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->update([
-            'media' => $media,
-            'media_arredondada' => $media,
-            'etapa' => $this->getRequest()->etapa
-
-        
-        ]);
-            }else{
-                LegacyDisciplineScoreAverage::create( [
-                    'media' => $media,
-                    'media_arredondada' => $media,
-                    'componente_curricular_id' => $this->getRequest()->componente_curricular_id,
-                    'nota_aluno_id' => $nota_aluno->id,
-                    'situacao' => 3,
-                    'etapa' => $this->getRequest()->etapa,
-                    'bloqueada' => false
-                    ]);
-            }
-        }
-
-
-    }else{
+        }elseif($tipo_recuperacao_paralela==1){
 
             $nota_alunos = LegacyDisciplineScoreStudent::where('matricula_id', $this->getRequest()->matricula_id)->get();
             foreach($nota_alunos as $nota_aluno) {
-           
+        
             $contador =0;
             $soma_notas =0;
+            $soma_notas_arredondadas =0;
             $nota_componente_curricular = LegacyDisciplineScore::where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->where('nota_aluno_id', $nota_aluno->id)->where('etapa', 'not like', 'Rc')->get();
             foreach($nota_componente_curricular as $list) {
+            
+                $nota1 = 0;
+                $nota2 = 0;
                 $contador++;
-                $nota = $list->nota;
-                $soma_notas = $soma_notas + $nota;
-                  
+                $nota1 = $list->nota_arredondada;
+                $notaRecuperacao = $list->nota_recuperacao_especifica;
+                $etapa_anterior = $list->etapa-1;
+                if(!empty($notaRecuperacao)){
+                
+                    $nota1 = ($nota1+$notaRecuperacao)/2;
+                }
+
+            
+                $soma_notas = $soma_notas + $nota1;
+                $soma_notas_arredondadas = $soma_notas_arredondadas + $list->nota_arredondada;   
             }
             $media = $soma_notas / $contador;
             $nota_exame = 0;
@@ -764,24 +703,25 @@ class DiarioApiController extends ApiCoreController
                 
                 $nota_exame = $nota_ex->nota_arredondada;
             }
-           
+        
             if(!empty($nota_exame)){
                 $media = ($media + $nota_exame)/2;   
             }
             $media = round($media , 2);
-             //atualiza a nota que falta no exame final
-            $nota_exame = 10 - $media;
-            NotaExame::::where('ref_cod_matricula',$this->getRequest()->matricula_id)->where('ref_cod_componente_curricular', $this->getRequest()->componente_curricular_id)->update([
-                    'nota_exame' =>  $nota_exame
-                    ]);
-         
 
-            $existe_media_2 = 0;
+            //atualiza a nota que falta no exame final
+            $nota_exame = 10 - $media;
+            NotaExame::where('ref_cod_matricula',$this->getRequest()->matricula_id)->where('ref_cod_componente_curricular', $this->getRequest()->componente_curricular_id)->update([
+                        'nota_exame' =>  $nota_exame
+                        ]);
+
+            $media_arredondada = $soma_notas_arredondadas / $contador;
+            $existe_media_1 = 0;
             $existe = LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->get();
             foreach($existe as $sim){
-                $existe_media_2 = 1;    
+                $existe_media_1 = 1;    
             }
-            if($existe_media_2 == 1){
+            if($existe_media_1 == 1){
             LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->update([
                 'media' => $media,
                 'media_arredondada' => $media,
@@ -800,9 +740,69 @@ class DiarioApiController extends ApiCoreController
                         'bloqueada' => false
                         ]);
                 }
-        }
+            }
 
-        }
+
+        }else{
+
+                $nota_alunos = LegacyDisciplineScoreStudent::where('matricula_id', $this->getRequest()->matricula_id)->get();
+                foreach($nota_alunos as $nota_aluno) {
+            
+                $contador =0;
+                $soma_notas =0;
+                $nota_componente_curricular = LegacyDisciplineScore::where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->where('nota_aluno_id', $nota_aluno->id)->where('etapa', 'not like', 'Rc')->get();
+                foreach($nota_componente_curricular as $list) {
+                    $contador++;
+                    $nota = $list->nota;
+                    $soma_notas = $soma_notas + $nota;
+                    
+                }
+                $media = $soma_notas / $contador;
+                $nota_exame = 0;
+                $nota_exames = LegacyDisciplineScore::where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->where('nota_aluno_id', $nota_aluno->id)->where('etapa', '=', 'Rc')->get();
+                foreach($nota_exames as $nota_ex) {
+                    
+                    $nota_exame = $nota_ex->nota_arredondada;
+                }
+            
+                if(!empty($nota_exame)){
+                    $media = ($media + $nota_exame)/2;   
+                }
+                $media = round($media , 2);
+                //atualiza a nota que falta no exame final
+                $nota_exame = 10 - $media;
+                NotaExame::where('ref_cod_matricula',$this->getRequest()->matricula_id)->where('ref_cod_componente_curricular', $this->getRequest()->componente_curricular_id)->update([
+                        'nota_exame' =>  $nota_exame
+                        ]);
+            
+
+                $existe_media_2 = 0;
+                $existe = LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->get();
+                foreach($existe as $sim){
+                    $existe_media_2 = 1;    
+                }
+                if($existe_media_2 == 1){
+                LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->update([
+                    'media' => $media,
+                    'media_arredondada' => $media,
+                    'etapa' => $this->getRequest()->etapa
+
+                
+                ]);
+                    }else{
+                        LegacyDisciplineScoreAverage::create( [
+                            'media' => $media,
+                            'media_arredondada' => $media,
+                            'componente_curricular_id' => $this->getRequest()->componente_curricular_id,
+                            'nota_aluno_id' => $nota_aluno->id,
+                            'situacao' => 3,
+                            'etapa' => $this->getRequest()->etapa,
+                            'bloqueada' => false
+                            ]);
+                    }
+            }
+
+            }
 
 
     }
