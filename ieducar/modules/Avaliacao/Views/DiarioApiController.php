@@ -535,12 +535,12 @@ class DiarioApiController extends ApiCoreController
                         if($this->getRequest()->etapa==4 and $media<5){
                             //atualiza a nota que falta no exame final
                               $nota_exame = 10 - $media;
-                              if (in_array($this->getSituacaoComponente(), ['Em exame', 'Aprovado após exame', 'Retido'])) {
+                            
                                   $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $nota_exame);
                                   $this->appendResponse('nota_necessaria_exame', $nota_exame);
                               } else {
                                   $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
-                              }
+                              
                           }
                         $media_arredondada = $soma_notas_arredondadas / $contador;
 
@@ -638,12 +638,12 @@ class DiarioApiController extends ApiCoreController
                         if($this->getRequest()->etapa==4 and $media<5){
                             //atualiza a nota que falta no exame final
                               $nota_exame = 10 - $media;
-                              if (in_array($this->getSituacaoComponente(), ['Em exame', 'Aprovado após exame', 'Retido'])) {
+                             
                                   $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $nota_exame);
                                   $this->appendResponse('nota_necessaria_exame', $nota_exame);
                               } else {
                                   $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
-                              }
+                              
                           }
                         $existe_media_ = 0;
                         $existe = LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->get();
@@ -715,12 +715,12 @@ class DiarioApiController extends ApiCoreController
             if($this->getRequest()->etapa==4 and $media<5){
                 //atualiza a nota que falta no exame final
                   $nota_exame = 10 - $media;
-                  if (in_array($this->getSituacaoComponente(), ['Em exame', 'Aprovado após exame', 'Retido'])) {
+              
                       $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $nota_exame);
                       $this->appendResponse('nota_necessaria_exame', $nota_exame);
                   } else {
                       $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
-                  }
+                  
               }
 
             $media_arredondada = $soma_notas_arredondadas / $contador;
@@ -780,13 +780,13 @@ class DiarioApiController extends ApiCoreController
                 if($this->getRequest()->etapa==4 and $media<5){
                   //atualiza a nota que falta no exame final
                     $nota_exame = 10 - $media;
-                    if (in_array($this->getSituacaoComponente(), ['Em exame', 'Aprovado após exame', 'Retido'])) {
+                   
                         $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $nota_exame);
                         $this->appendResponse('nota_necessaria_exame', $nota_exame);
-                    } else {
+                 }else {
                         $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
-                    }
-                }
+                  
+                     }
 
                 $existe_media_2 = 0;
                 $existe = LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->get();
