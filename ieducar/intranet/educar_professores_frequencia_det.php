@@ -267,7 +267,6 @@ return new class extends clsDetalhe {
         foreach ($alunos as $aluno) {
             $qtdFaltasGravadas = $objFrequencia->getTotalFaltas($aluno['matricula'], $ref_componente_curricular);
 
-
              $checked = !$aluno['presenca'] ? "checked='true'" : '';
 
              $this->tabela .= "  <tr><td class='formlttd'><p>{$aluno['nome']}</p></td>";
