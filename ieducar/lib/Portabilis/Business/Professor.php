@@ -264,8 +264,7 @@ class Portabilis_Business_Professor
                 SELECT
                     cc.id, cc.nome,
                     ac.nome as area_conhecimento,
-                    ac.secao as secao_area_conhecimento,
-                    qhh.ref_servidor
+                    ac.secao as secao_area_conhecimento
                 FROM pmieducar.quadro_horario qh
                 INNER JOIN pmieducar.quadro_horario_horarios qhh
                 ON (qh.cod_quadro_horario = qhh.ref_cod_quadro_horario)
