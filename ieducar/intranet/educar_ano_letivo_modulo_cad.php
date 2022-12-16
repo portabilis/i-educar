@@ -722,6 +722,8 @@ return new class extends clsCadastro {
                 subject: $moduloOrigem['data_fim']
             );
 
+            $moduloDestino->dias_letivos = $moduloOrigem['dias_letivos'];
+
             if (Portabilis_Date_Utils::checkDateBissexto($moduloDestino->data_inicio)) {
                 $moduloDestino->data_inicio = str_replace(search: 29, replace: 28, subject: $moduloDestino->data_inicio);
             }
