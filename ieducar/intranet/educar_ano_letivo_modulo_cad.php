@@ -153,20 +153,6 @@ return new class extends clsCadastro {
             disabled: true
         );
 
-        $this->campoCheck(
-            nome: 'copiar_alocacoes_e_vinculos_professores',
-            campo: 'Copiar alocações e vínculos dos professores',
-            valor: $this->copiar_alocacoes_e_vinculos_professores,
-            disable: true
-        );
-
-        $this->campoCheck(
-            nome: 'copiar_alocacoes_demais_servidores',
-            campo: 'Copiar alocações dos demais servidores',
-            valor: $this->copiar_alocacoes_demais_servidores,
-            disable: true
-        );
-
         $opcoesCampoModulo = [];
 
         $objTemp = new clsPmieducarModulo();
@@ -236,12 +222,61 @@ return new class extends clsCadastro {
             $this->campoNumero(nome: 'dias_letivos', campo: 'Dias Letivos', valor: $this->dias_letivos, tamanhovisivel: 6, tamanhomaximo: 3, obrigatorio: false);
 
             $this->campoTabelaFim();
+
+            $this->campoQuebra();
+
+            $this->campoRotulo(
+                nome: 'titulo-alocacoes-vinculos',
+                campo: 'Alocações e vínculos',
+                separador: null
+            );
+
+            $this->campoRotulo(
+                nome: 'informativo1-alocacoes-vinculos',
+                campo: '
+                    Ao definir um novo ano letivo, o i-Educar copia automaticamente as turmas do ano anterior. <br>
+                    Gostaria de compiar também as alocações e vínculos?
+                ',
+                separador: null
+            );
+
+            $checkedProfessores = ($this->copiar_alocacoes_e_vinculos_professores || $this->tipoacao == 'Novo') ? 'checked' : '';
+            $checkedDemaisServidores = ($this->copiar_alocacoes_demais_servidores || $this->tipoacao == 'Novo') ? 'checked' : '';
+
+            $this->campoRotulo(
+                nome: 'copiar_alocacoes_e_vinculos_professores_',
+                campo: '
+                    <input type ="checkbox" '.$checkedProfessores.' id="copiar_alocacoes_e_vinculos_professores" name ="copiar_alocacoes_e_vinculos_professores">
+                    <label for = "subscribeNews">Copiar alocações e vínculos dos professores</ label>
+                ',
+                separador: null
+            );
+
+            $this->campoRotulo(
+                nome: 'copiar_alocacoes_demais_servidores_',
+                campo: '
+                    <input type="checkbox" '.$checkedDemaisServidores.' id="copiar_alocacoes_demais_servidores" name="copiar_alocacoes_demais_servidores">
+                    <label for = "subscribeNews">Copiar alocações dos demais servidores</ label>
+                ',
+                separador: null
+            );
+
+            $this->campoRotulo(
+                nome: 'informativo2-alocacoes-vinculos',
+                campo: 'As alocações e vínculos podem depois ser editadas e excluídas, caso necessário',
+                separador: null
+            );
         }
 
         Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: [
             '/vendor/legacy/Portabilis/Assets/Javascripts/Validator.js',
             '/intranet/scripts/etapas.js'
         ]);
+
+        $styles = ['/vendor/legacy/Cadastro/Assets/Stylesheets/EscolaAnosLetivos.css'];
+
+        Portabilis_View_Helper_Application::loadStylesheet($this,
+            ['/vendor/legacy/Cadastro/Assets/Stylesheets/AnoLetivoModulo.css']);
     }
 
     public function Novo()
@@ -263,6 +298,9 @@ return new class extends clsCadastro {
             $this->mensagem = $e->getMessage();
             return false;
         }
+
+        $this->copiar_alocacoes_e_vinculos_professores = !is_null($this->copiar_alocacoes_e_vinculos_professores);
+        $this->copiar_alocacoes_demais_servidores = !is_null($this->copiar_alocacoes_demais_servidores);
 
         if ($this->ref_cod_modulo && $this->data_inicio && $this->data_fim) {
             $this->copiarTurmasUltimoAno(
