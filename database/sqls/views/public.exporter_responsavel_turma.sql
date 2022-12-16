@@ -199,7 +199,7 @@ SELECT p.id,
      LEFT JOIN cadastro.fisica f ON f.idpes = guardian_id
      LEFT JOIN cadastro.pessoa pr ON pr.idpes = guardian_id
      LEFT JOIN cadastro.documento d ON d.idpes = guardian_id
-     LEFT JOIN cadastro.org_exp_rg org ON  org.idorg_rg  = d.idorg_exp_rg
+     LEFT JOIN cadastro.orgao_emissor_rg org ON  org.idorg_rg  = d.idorg_exp_rg
      LEFT JOIN cadastro.estado_civil es ON es.ideciv = f.ideciv
      LEFT JOIN cadastro.fone_pessoa fon ON fon.idpes = guardian_id
      LEFT JOIN cadastro.profissao pfs ON pfs.cod_profissao::varchar = f.ref_cod_profissao::varchar
@@ -211,7 +211,7 @@ SELECT p.id,
      LEFT JOIN cadastro.fisica fpai ON fpai.idpes = father_id
      LEFT JOIN cadastro.pessoa prpai ON prpai.idpes = father_id
      LEFT JOIN cadastro.documento dpai ON dpai.idpes = father_id
-     LEFT JOIN cadastro.org_exp_rg orgpai ON  orgpai.idorg_rg  = dpai.idorg_exp_rg
+     LEFT JOIN cadastro.orgao_emissor_rg orgpai ON  orgpai.idorg_rg  = dpai.idorg_exp_rg
      LEFT JOIN cadastro.estado_civil espai ON espai.ideciv = fpai.ideciv
      LEFT JOIN cadastro.fone_pessoa fonpai ON fonpai.idpes = father_id
      LEFT JOIN cadastro.profissao pfspai ON pfspai.cod_profissao::varchar = fpai.ref_cod_profissao::varchar
@@ -223,7 +223,7 @@ SELECT p.id,
      LEFT JOIN cadastro.fisica fmae ON fmae.idpes = mother_id
      LEFT JOIN cadastro.pessoa prmae ON prmae.idpes = mother_id
      LEFT JOIN cadastro.documento dmae ON dmae.idpes = mother_id
-     LEFT JOIN cadastro.org_exp_rg orgmae ON  orgmae.idorg_rg  = dmae.idorg_exp_rg
+     LEFT JOIN cadastro.orgao_emissor_rg orgmae ON  orgmae.idorg_rg  = dmae.idorg_exp_rg
      LEFT JOIN cadastro.estado_civil esmae ON esmae.ideciv = fmae.ideciv
      LEFT JOIN cadastro.fone_pessoa fonmae ON fonmae.idpes = mother_id
      LEFT JOIN cadastro.profissao pfsmae ON pfsmae.cod_profissao::varchar = fmae.ref_cod_profissao::varchar
