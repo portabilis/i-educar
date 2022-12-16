@@ -33,4 +33,4 @@ class ResponsavelTurmaController extends Controller
         return Excel::download($export, 'responsaveis_turma.xlsx');
     }
 }
- 
+  

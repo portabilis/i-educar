@@ -46,6 +46,7 @@ SELECT p.id,
           f.nome_social AS social_name,
           f.cpf AS cpf,
           d.rg AS rg,
+          org.sigla AS orgao_exp_rg,
           pl.address AS endereco,
           pl.number AS numero_casa,
           pl.neighborhood AS bairro,
@@ -91,6 +92,7 @@ SELECT p.id,
           fpai.nome_social AS social_name_pai,
           fpai.cpf AS cpf_pai,
           dpai.rg AS rg_pai,
+          orgpai.sigla AS orgao_exp_rg_pai,
           plpai.address AS endereco_pai,
           plpai.number AS numero_casa_pai,
           plpai.neighborhood AS bairro_pai,
@@ -137,6 +139,7 @@ SELECT p.id,
           fmae.nome_social AS social_name_mae,
           fmae.cpf AS cpf_mae,
           dmae.rg AS rg_mae,
+          orgmae.sigla AS orgao_exp_rg_mae,
           plmae.address AS endereco_mae,
           plmae.number AS numero_casa_mae,
           plmae.neighborhood AS bairro_mae,
@@ -196,6 +199,7 @@ SELECT p.id,
      LEFT JOIN cadastro.fisica f ON f.idpes = guardian_id
      LEFT JOIN cadastro.pessoa pr ON pr.idpes = guardian_id
      LEFT JOIN cadastro.documento d ON d.idpes = guardian_id
+     LEFT JOIN cadastro.org_exp_rg org ON  org.idorg_rg  = d.idorg_exp_rg
      LEFT JOIN cadastro.estado_civil es ON es.ideciv = f.ideciv
      LEFT JOIN cadastro.fone_pessoa fon ON fon.idpes = guardian_id
      LEFT JOIN cadastro.profissao pfs ON pfs.cod_profissao::varchar = f.ref_cod_profissao::varchar
@@ -207,6 +211,7 @@ SELECT p.id,
      LEFT JOIN cadastro.fisica fpai ON fpai.idpes = father_id
      LEFT JOIN cadastro.pessoa prpai ON prpai.idpes = father_id
      LEFT JOIN cadastro.documento dpai ON dpai.idpes = father_id
+     LEFT JOIN cadastro.org_exp_rg orgpai ON  orgpai.idorg_rg  = dpai.idorg_exp_rg
      LEFT JOIN cadastro.estado_civil espai ON espai.ideciv = fpai.ideciv
      LEFT JOIN cadastro.fone_pessoa fonpai ON fonpai.idpes = father_id
      LEFT JOIN cadastro.profissao pfspai ON pfspai.cod_profissao::varchar = fpai.ref_cod_profissao::varchar
@@ -218,6 +223,7 @@ SELECT p.id,
      LEFT JOIN cadastro.fisica fmae ON fmae.idpes = mother_id
      LEFT JOIN cadastro.pessoa prmae ON prmae.idpes = mother_id
      LEFT JOIN cadastro.documento dmae ON dmae.idpes = mother_id
+     LEFT JOIN cadastro.org_exp_rg orgmae ON  orgmae.idorg_rg  = dmae.idorg_exp_rg
      LEFT JOIN cadastro.estado_civil esmae ON esmae.ideciv = fmae.ideciv
      LEFT JOIN cadastro.fone_pessoa fonmae ON fonmae.idpes = mother_id
      LEFT JOIN cadastro.profissao pfsmae ON pfsmae.cod_profissao::varchar = fmae.ref_cod_profissao::varchar
