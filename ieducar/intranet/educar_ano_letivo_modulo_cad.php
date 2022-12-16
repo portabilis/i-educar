@@ -468,6 +468,10 @@ return new class extends clsCadastro {
                 copiaDadosProfessor: $copiaDadosProfessor
             );
         }
+
+        if ($copiaDadosProfessor === true) {
+            $this->copyEmployeeAllocations($this->ref_ref_cod_escola, $this->ref_ano, true);
+        }
     }
 
     public function copiarTurma($turmaOrigem, $anoOrigem, $anoDestino, $copiaDadosProfessor)
@@ -611,6 +615,43 @@ return new class extends clsCadastro {
         }
     }
 
+    public function copyEmployeeAllocations($refCodEscola, $anoDestino, $onlyTeacher = false)
+    {
+        $sql = 'select ano from pmieducar.escola_ano_letivo where ref_cod_escola = $1 ' .
+            'and ativo = 1 and ano in (select max(ano) from pmieducar.escola_ano_letivo where ' .
+            'ref_cod_escola = $1 and ativo = 1)';
+
+        $ultimoAnoLetivo = Portabilis_Utils_Database::selectRow(sql: $sql, paramsOrOptions: $refCodEscola);
+
+        $employeeAllocations = EmployeeAllocation::query()
+            ->whereHas('employee', fn($q) => ($q->professor($onlyTeacher)) )
+            ->where(
+            [
+                'ano' => $ultimoAnoLetivo['ano'],
+                'ref_cod_escola' => $refCodEscola
+            ]
+        )->get();
+
+        /** @var EmployeeAllocation $employeeAllocation */
+        foreach ($employeeAllocations as $employeeAllocation) {
+
+            $exist = EmployeeAllocation::query()->where(
+                [
+                    'ano' => $anoDestino,
+                    'ref_cod_escola' => $refCodEscola,
+                    'ref_cod_servidor' => $employeeAllocation->ref_cod_servidor,
+                    'ref_cod_servidor_funcao' => $employeeAllocation->ref_cod_servidor_funcao
+                ]
+            )->exists();
+
+            if ($exist === true) {
+                continue;
+            }
+
+            $newEmployeeAllocation = $employeeAllocation->replicate();
+            $newEmployeeAllocation->ano = $anoDestino;
+
+            $newEmployeeAllocation->save();
         }
     }
 
