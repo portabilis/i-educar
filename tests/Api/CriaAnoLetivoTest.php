@@ -183,10 +183,19 @@ class CriaAnoLetivoTest extends TestCase
             ]
         );
 
+        $newSchoolClass = LegacySchoolClass::query()->where([
+                'ref_ref_cod_escola' => $schoolGrade->school_id,
+                'ref_ref_cod_serie' => $schoolGrade->grade_id,
+                'ref_cod_curso' => $course->getKey(),
+                'ref_cod_instituicao' => $school->ref_cod_instituicao,
+                'ano' => $nextYear
+            ]
+        )->first();
+
         $this->assertDatabaseHas($legacySchoolClassTeacher,
             [
                 'servidor_id' => $employee->getKey(),
-                'turma_id' => $schoolClass->getKey(),
+                'turma_id' => $newSchoolClass->getKey(),
                 'turno_id' => $period->getKey(),
                 'ano' => $nextYear
             ]
