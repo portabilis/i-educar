@@ -1,7 +1,9 @@
 <?php
 
+use App\Models\LegacySchoolAcademicYear;
 use App\Models\LegacySchoolClassGrade;
 use App\Models\LegacySchoolClassTeacher;
+use App\Models\EmployeeAllocation;
 use App\Models\LegacySchoolClassTeacherDiscipline;
 use App\Services\iDiarioService;
 use Carbon\Carbon;
@@ -9,26 +11,18 @@ use Illuminate\Support\Facades\DB;
 
 return new class extends clsCadastro {
     public $pessoa_logada;
-
     public $ref_cod_instituicao;
-
     public $ref_ano;
-
     public $ref_ref_cod_escola;
-
     public $sequencial;
-
     public $ref_cod_modulo;
-
     public $data_inicio;
-
     public $data_fim;
-
     public $ano_letivo_modulo;
-
     public $modulos = [];
-
     public $etapas = [];
+    public $copiar_alocacoes_e_vinculos_professores;
+    public $copiar_alocacoes_demais_servidores;
 
     public function Inicializar()
     {
@@ -48,13 +42,20 @@ return new class extends clsCadastro {
         );
 
         if (is_numeric($this->ref_ano) && is_numeric($this->ref_ref_cod_escola)) {
-            $obj = new clsPmieducarEscolaAnoLetivo(ref_cod_escola: $this->ref_ref_cod_escola, ano: $this->ref_ano);
-            $registro = $obj->detalhe();
+            $schoolAcademicYear = LegacySchoolAcademicYear::query()->where(
+                [
+                    'ref_cod_escola' => $this->ref_ref_cod_escola,
+                    'ano' => $this->ref_ano
+                ]
+            )->first();
 
-            if ($registro) {
+            if ($schoolAcademicYear instanceof LegacySchoolAcademicYear) {
                 if ($obj_permissoes->permissao_excluir(int_processo_ap: 561, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
                     $this->fexcluir = true;
                 }
+
+                $this->copiar_alocacoes_demais_servidores = dbBool($schoolAcademicYear->copia_dados_professor);
+                $this->copiar_alocacoes_e_vinculos_professores = dbBool($schoolAcademicYear->copia_dados_demais_servidores);
 
                 $retorno = 'Editar';
 
@@ -153,9 +154,16 @@ return new class extends clsCadastro {
         );
 
         $this->campoCheck(
-            nome: 'migra_coisa_do_professor',
-            campo: 'Migra dados dos professor',
-            valor: true,
+            nome: 'copiar_alocacoes_e_vinculos_professores',
+            campo: 'Copiar alocações e vínculos dos professores',
+            valor: $this->copiar_alocacoes_e_vinculos_professores,
+            disable: true
+        );
+
+        $this->campoCheck(
+            nome: 'copiar_alocacoes_demais_servidores',
+            campo: 'Copiar alocações dos demais servidores',
+            valor: $this->copiar_alocacoes_demais_servidores,
             disable: true
         );
 
@@ -260,22 +268,27 @@ return new class extends clsCadastro {
             $this->copiarTurmasUltimoAno(
                 escolaId: $this->ref_ref_cod_escola,
                 anoDestino: $this->ref_ano,
-                copiaDadosProfessor: $this->migra_coisa_do_professor
+                copiaDadosProfessor: $this->copiar_alocacoes_e_vinculos_professores
             );
+
+            if ($this->copiar_alocacoes_demais_servidores === true) {
+                $this->copyEmployeeAllocations($this->ref_ref_cod_escola, $this->ref_ano);
+            }
+
             Portabilis_Utils_Database::selectField("SELECT pmieducar.copiaAnosLetivos({$this->ref_ano}::smallint, {$this->ref_ref_cod_escola});");
 
-            $obj = new clsPmieducarEscolaAnoLetivo(
-                ref_cod_escola: $this->ref_ref_cod_escola,
-                ano: $this->ref_ano,
-                ref_usuario_cad: $this->pessoa_logada,
-                andamento: 0,
-                ativo: 1,
-                turmas_por_ano: 1
-            );
+            $schoolAcademicYear = new LegacySchoolAcademicYear();
 
-            $cadastrou = $obj->cadastra();
+            $schoolAcademicYear->ref_cod_escola = $this->ref_ref_cod_escola;
+            $schoolAcademicYear->ano = $this->ref_ano;
+            $schoolAcademicYear->ref_usuario_cad = $this->pessoa_logada;
+            $schoolAcademicYear->andamento = 0;
+            $schoolAcademicYear->ativo = 1;
+            $schoolAcademicYear->turmas_por_ano = 1;
+            $schoolAcademicYear->copia_dados_professor = $this->copiar_alocacoes_e_vinculos_professores;
+            $schoolAcademicYear->copia_dados_demais_servidores = $this->copiar_alocacoes_demais_servidores;
 
-            if ($cadastrou) {
+            if ($schoolAcademicYear->save()) {
                 foreach ($this->data_inicio as $key => $campo) {
                     $this->data_inicio[$key] = dataToBanco($this->data_inicio[$key]);
                     $this->data_fim[$key] = dataToBanco($this->data_fim[$key]);
@@ -403,20 +416,19 @@ return new class extends clsCadastro {
             str_pagina_redirecionar: 'educar_escola_lst.php'
         );
 
-        $obj = new clsPmieducarEscolaAnoLetivo(
-            ref_cod_escola: $this->ref_ref_cod_escola,
-            ano: $this->ref_ano,
-            ref_usuario_cad: null,
-            ref_usuario_exc: $this->pessoa_logada,
-            andamento: null,
-            data_cadastro: null,
-            data_exclusao: null,
-            ativo: 0
-        );
+        $schoolAcademicYear = LegacySchoolAcademicYear::query()
+            ->where(
+                [
+                    'ref_cod_escola' => $this->ref_ref_cod_escola,
+                     'ano'=> $this->ref_ano
+                ]
+            )->first();
 
-        $excluiu = $obj->excluir();
+        $schoolAcademicYear->ref_usuario_cad = $this->pessoa_logada;
+        $schoolAcademicYear->andamento = 2;
+        $schoolAcademicYear->ativo = 0;
 
-        if ($excluiu) {
+        if ($schoolAcademicYear->save()) {
             $obj = new clsPmieducarAnoLetivoModulo(ref_ano: $this->ref_ano, ref_ref_cod_escola: $this->ref_ref_cod_escola);
             $excluiu1 = $obj->excluirTodos();
 
@@ -435,7 +447,7 @@ return new class extends clsCadastro {
         return false;
     }
 
-    public function copiarTurmasUltimoAno($escolaId, $anoDestino, $copiaDadosProfessor = false)
+    public function copiarTurmasUltimoAno($escolaId, $anoDestino, $copiaDadosProfessor = true)
     {
         $sql = 'select ano from pmieducar.escola_ano_letivo where ref_cod_escola = $1 ' .
             'and ativo = 1 and ano in (select max(ano) from pmieducar.escola_ano_letivo where ' .
@@ -593,9 +605,12 @@ return new class extends clsCadastro {
             }
 
             $newSchoolClassTeacherDisciplines = $schoolClassTeacherDiscipline->replicate();
-            $newSchoolClassTeacherId->professor_turma_id = $newSchoolClassTeacherId;
+            $newSchoolClassTeacherDisciplines->professor_turma_id = $newSchoolClassTeacherId;
 
-            $newSchoolClassTeacherId->save();
+            $newSchoolClassTeacherDisciplines->save();
+        }
+    }
+
         }
     }
 
