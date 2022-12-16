@@ -40,7 +40,7 @@ SELECT p.id,
             WHEN 2 THEN 'Off-line'::character varying
             ELSE 'Presencial'::character varying
         END AS modalidade_ensino,
-
+ 
           pr.idpes AS id_resp,
           pr.nome AS name,
           f.nome_social AS social_name,

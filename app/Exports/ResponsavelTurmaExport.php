@@ -229,7 +229,7 @@ class ResponsavelTurmaExport implements FromCollection, ShouldAutoSize, WithColu
             }
               
 
-        }
+        } 
         
  
         return $row;
