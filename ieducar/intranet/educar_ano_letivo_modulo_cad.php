@@ -620,6 +620,7 @@ return new class extends clsCadastro {
 
             $newSchoolClassTeacher = $schoolClassTeacher->replicate();
             $newSchoolClassTeacher->ano = $anoDestino;
+            $newSchoolClassTeacher->turma_id = $turmaDestinoId;
 
             $newSchoolClassTeacher->save();
 
