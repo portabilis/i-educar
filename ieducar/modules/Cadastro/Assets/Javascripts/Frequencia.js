@@ -187,111 +187,116 @@
 
 
     addBtnEnviarMensagem();
-  });
-})(jQuery);
 
-document.getElementById('data').disabled = document.getElementById('ref_cod_turma').value != '';
+    document.getElementById('data').disabled = document.getElementById('ref_cod_turma').value != '';
 
-const maxCaracteresObservacao = 256;
+    const maxCaracteresObservacao = 256;
 
-var rebuildAllChosenAnosLetivos = undefined;
+    var rebuildAllChosenAnosLetivos = undefined;
 
-function existeComponente(){
-    if ($j('input[name^="disciplinas["]:checked').length <= 0) {
-        alert('É necessário adicionar pelo menos um componente curricular.');
-        return false;
-    }
-    return true;
-}
-
-document.getElementById('data').onchange = function () {
-  const ano = document.getElementById('data').value.split('/')[2];
-  const anoElement = document.getElementById('ano');
-  anoElement.value = ano;
-
-  var evt = document.createEvent('HTMLEvents');
-  evt.initEvent('change', false, true);
-  anoElement.dispatchEvent(evt);
-};
-
-function getAluno(xml_aluno) {
-  var campoAlunos = document.getElementById('alunos');
-  var DOM_array = xml_aluno.getElementsByTagName("aluno");
-
-  let qtdAulas = 0;
-
-  for (let i = 1; i <= 5; i++) {
-    if (document.getElementById("ordens_aulas" + i).checked) {
-      qtdAulas += 1;
-    }
-  }
-
-  var conteudo = '';
-
-  if (DOM_array.length) {
-    conteudo += '<td class="tableDetalheLinhaSeparador" colspan="3"></td><tr><td><div class="scroll"><table class="tableDetalhe tableDetalheMobile" width="100%"><tr class="tableHeader">';
-    conteudo += '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' + "Nome" + '</span></th>';
-    conteudo += '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' + "FA" + '</span></th>';
-
-    if (qtdAulas == 0) {
-      conteudo += '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' + "Presença" + '</span></th>';
-    } else {
-      for (let qtd = 1; qtd <= qtdAulas; qtd++) {
-        conteudo += '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' + "Aula " + qtd + '</span></th>';
-      }
+    function existeComponente(){
+        if ($j('input[name^="disciplinas["]:checked').length <= 0) {
+            alert('É necessário adicionar pelo menos um componente curricular.');
+            return false;
+        }
+        return true;
     }
 
-    conteudo += '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' + "Justificativa" + '</span></th>';
-    conteudo += '</tr>';
-    conteudo += '<tr><td class="tableDetalheLinhaSeparador" colspan="3"></td></tr>';
+    document.getElementById('data').onchange = function () {
+      const ano = document.getElementById('data').value.split('/')[2];
+      const anoElement = document.getElementById('ano');
+      anoElement.value = ano;
 
-    for (var i = 0; i < DOM_array.length; i++) {
-      id = DOM_array[i].getAttribute("cod_aluno");
-      qtd_faltas = DOM_array[i].getAttribute("qtd_faltas");
-      conteudo += ' <td class="sizeFont colorFont"><p>' + DOM_array[i].firstChild.data + '</p></td>';
-      conteudo += ' <td class="sizeFont colorFont"><p>' + qtd_faltas + '</p></td>';
+      var evt = document.createEvent('HTMLEvents');
+      evt.initEvent('change', false, true);
+      anoElement.dispatchEvent(evt);
+    };
 
-      if (qtdAulas == 0) {
-        conteudo += ` <td class="sizeFont colorFont" > \
-                            <input type="checkbox" onchange="presencaMudou(this)" id="alunos[]" name="alunos[]" value="${id}" Checked>
-                          </td>`;
-      } else {
-        for (let qtd = 1; qtd <= qtdAulas; qtd++) {
-          conteudo += ` <td class="sizeFont colorFont" > \
-                            <input type="checkbox" onchange="presencaMudou(this)" id="alunos[]" name='alunos[]' data-aulaid="${qtd}" value="${id}" Checked>
-                          </td>`;
+    function getAluno(xml_aluno) {
+      var campoAlunos = document.getElementById('alunos');
+      var DOM_array = xml_aluno.getElementsByTagName("aluno");
+
+      let qtdAulas = 0;
+
+      for (let i = 1; i <= 5; i++) {
+        if (document.getElementById("ordens_aulas" + i).checked) {
+          qtdAulas += 1;
         }
       }
 
-      conteudo += ` <td><input type='text' name='justificativa[${id}][]' style="display: flex;" maxlength=${maxCaracteresObservacao} disabled></td>`;
-      conteudo += ` <td><input type='hidden' name='justificativa[${id}][qtd]' style="display: flex;" value="0" readonly></td>`;
-      conteudo += ` <td><input type='hidden' name='justificativa[${id}][aulas]' style="display: flex;" readonly></td>`;
-      conteudo += ' </tr>';
+      var conteudo = '';
+
+      if (DOM_array.length) {
+        conteudo += '<td class="tableDetalheLinhaSeparador" colspan="3"></td><tr><td><div class="scroll"><table class="tableDetalhe tableDetalheMobile" width="100%"><tr class="tableHeader">';
+        conteudo += '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' + "Nome" + '</span></th>';
+        conteudo += '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' + "FA" + '</span></th>';
+
+        if (qtdAulas == 0) {
+          conteudo += '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' + "Presença" + '</span></th>';
+        } else {
+          for (let qtd = 1; qtd <= qtdAulas; qtd++) {
+            conteudo += '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' + "Aula " + qtd + '</span></th>';
+          }
+        }
+
+        conteudo += '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' + "Justificativa" + '</span></th>';
+        conteudo += '</tr>';
+        conteudo += '<tr><td class="tableDetalheLinhaSeparador" colspan="3"></td></tr>';
+
+        if (componenteCurricularRegistrioDiario != '' && componenteCurricularRegistrioDiario != undefined) {
+          qtdAulas = 1;
+        }
+
+        for (var i = 0; i < DOM_array.length; i++) {
+          id = DOM_array[i].getAttribute("cod_aluno");
+          qtd_faltas = DOM_array[i].getAttribute("qtd_faltas");
+          conteudo += ' <td class="sizeFont colorFont"><p>' + DOM_array[i].firstChild.data + '</p></td>';
+          conteudo += ' <td class="sizeFont colorFont"><p>' + qtd_faltas + '</p></td>';
+
+          if (qtdAulas == 0) {
+            conteudo += ` <td class="sizeFont colorFont" > \
+                                <input type="checkbox" onchange="presencaMudou(this)" id="alunos[]" name="alunos[]" value="${id}" Checked>
+                              </td>`;
+          } else {
+            for (let qtd = 1; qtd <= qtdAulas; qtd++) {
+              conteudo += ` <td class="sizeFont colorFont" > \
+                                <input type="checkbox" onchange="presencaMudou(this)" id="alunos[]" name='alunos[]' data-aulaid="${qtd}" value="${id}" Checked>
+                              </td>`;
+            }
+          }
+
+          conteudo += ` <td><input type='text' name='justificativa[${id}][]' style="display: flex;" maxlength=${maxCaracteresObservacao} disabled></td>`;
+          conteudo += ` <td><input type='hidden' name='justificativa[${id}][qtd]' style="display: flex;" value="0" readonly></td>`;
+          conteudo += ` <td><input type='hidden' name='justificativa[${id}][aulas]' style="display: flex;" readonly></td>`;
+          conteudo += ' </tr>';
+        }
+      } else {
+        campoAlunos.innerHTML = 'Faltam informações obrigatórias.';
+      }
+
+      if (conteudo) {
+        campoAlunos.innerHTML = '<table cellspacing="0" cellpadding="0" border="0">';
+        campoAlunos.innerHTML += '<tr align="left"><td><p>' + conteudo + '</p></td></tr>';
+        campoAlunos.innerHTML += '</table>';
+      }
     }
-  } else {
-    campoAlunos.innerHTML = 'Faltam informações obrigatórias.';
-  }
 
-  if (conteudo) {
-    campoAlunos.innerHTML = '<table cellspacing="0" cellpadding="0" border="0">';
-    campoAlunos.innerHTML += '<tr align="left"><td><p>' + conteudo + '</p></td></tr>';
-    campoAlunos.innerHTML += '</table>';
-  }
-}
+    function carregarAlunos(componenteCurricularRegistrioDiario = null) {
+        var campoTurma = document.getElementById('ref_cod_turma').value;
+        var campoComponenteCurricular = document.getElementById('ref_cod_componente_curricular').value;
+        var campoData = document.getElementById('data').value;
 
-function carregarAlunos(componenteCurricularRegistrioDiario = null) {
-    var campoTurma = document.getElementById('ref_cod_turma').value;
-    var campoComponenteCurricular = document.getElementById('ref_cod_componente_curricular').value;
-    var campoData = document.getElementById('data').value;
+        var campoAlunos = document.getElementById('alunos');
+        campoAlunos.innerHTML = "Carregando alunos...";
 
-    var campoAlunos = document.getElementById('alunos');
-    campoAlunos.innerHTML = "Carregando alunos...";
+        let ccur = campoComponenteCurricular != '' ? campoComponenteCurricular : componenteCurricularRegistrioDiario;
 
-    let ccur = campoComponenteCurricular != '' ? campoComponenteCurricular : componenteCurricularRegistrioDiario;
+        var xml_disciplina = new ajax(getAluno);
+        xml_disciplina.envia("educar_aluno_xml.php?tur=" + campoTurma + "&ccur=" + ccur + "&data=" + campoData);
+    }
 
-    var xml_disciplina = new ajax(getAluno);
-    xml_disciplina.envia("educar_aluno_xml.php?tur=" + campoTurma + "&ccur=" + ccur + "&data=" + campoData);
-}
+  });
+})(jQuery);
 
 function presencaMudou (presenca) {
   let elementJustificativa = document.getElementsByName("justificativa[" + presenca.value + "][]")[0];
@@ -310,7 +315,7 @@ function presencaMudou (presenca) {
     aulasValue = elementJustificativaAulas.value;
   }
 
-  if (presenca.checked) {
+  if (presenca.checked && elementJustificativaQtd != undefined) {
     elementJustificativaQtd.value = parseInt(elementJustificativaQtd.value) - 1;
 
     if (aulasValue != undefined && aulasValue.indexOf(aula_id + ',') > -1) {
@@ -319,16 +324,18 @@ function presencaMudou (presenca) {
 
   } else if (qtdValue != '' || parseInt(qtdValue) >= 0) {
     elementJustificativaQtd.value = parseInt(qtdValue) + 1;
+
     if (aulasValue != undefined) {
       elementJustificativaAulas.value = aulasValue + aula_id + ',';
     }
 
   }
 
-  if (presenca.checked && parseInt(qtdValue) > 0){
-    elementJustificativa.disabled = !presenca.checked;
+
+  if (presenca.checked && parseInt(qtdValue) >= 0){
+    elementJustificativa.disabled = true;
   } else {
-    elementJustificativa.disabled = presenca.checked;
+    elementJustificativa.disabled = false;
   }
 }
 
