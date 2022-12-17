@@ -28,6 +28,7 @@ return new class extends clsCadastro {
     public $conteudos;
     public $planejamento_aula_ids;
     public $componente_curricular_registro_individual;
+    public $registra_diario_individual;
 
     public function Inicializar () {
         $this->titulo = 'Frequência - Cadastro';
@@ -234,6 +235,7 @@ return new class extends clsCadastro {
 
 
             $objFrequencia = new clsModulesFrequencia();
+
             foreach ($this->alunos as $key => $aluno) {
                 $id = $aluno['matricula'];
 
@@ -246,7 +248,22 @@ return new class extends clsCadastro {
                 $conteudo .= '  <tr>';
                 $conteudo .= '  <td class="sizeFont colorFont"><p>' . $aluno['nome'] . '</p></td>';
                 $conteudo .= '  <td class="sizeFont colorFont"><p>' . $qtdFaltasGravadas . '</p></td>';
-                if ($tipo_presenca == 1) {
+
+                if($tipo_presenca == 1 && !$this->registra_diario_individual) {
+                    $conteudo .= "  <td class='sizeFont colorFont'>
+                                    <input
+                                        type='checkbox'
+                                        onchange='presencaMudou(this)'
+                                        id='alunos[]'
+                                        name={$name}
+                                        value={$id}
+                                        {$checked}
+                                        autocomplete='off'
+                                    >
+                                    </td>";
+                }
+
+                if ($tipo_presenca == 1 && $this->registra_diario_individual) {
                     $aulasFaltou = '';
                     $qtdFaltas = 0;
 
@@ -566,7 +583,8 @@ return new class extends clsCadastro {
             $this->fase_etapa,
             $this->justificativa,
             $servidor_id,
-            $this->ordens_aulas
+            $this->ordens_aulas,
+            (!empty($this->componente_curricular_registro_individual) ? true : null)
         );
 
         $existe = $obj->existe();
@@ -612,7 +630,6 @@ return new class extends clsCadastro {
         $turmaDetalhes = $obj->lista($this->ref_cod_turma)[0];
         $serie = $turmaDetalhes['ref_ref_cod_serie'];
 
-
         $obj = new clsModulesFrequencia(
             $this->id,
             null,
@@ -628,9 +645,12 @@ return new class extends clsCadastro {
             null,
             $this->fase_etapa,
             $this->justificativa,
+            null,
+            null,
+            $this->registra_diario_individual
         );
 
-        $editou = $obj->edita($this->ref_cod_componente_curricular);
+        $editou = $obj->edita();
 
         $obj = new clsModulesComponenteMinistrado();
         $componenteMinistrado = $obj->lista(
