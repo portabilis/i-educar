@@ -656,17 +656,17 @@ return new class extends clsCadastro {
 
     public function copyEmployeeAllocations($refCodEscola, $anoDestino, $onlyTeacher = false)
     {
-        $sql = 'select ano from pmieducar.escola_ano_letivo where ref_cod_escola = $1 ' .
-            'and ativo = 1 and ano in (select max(ano) from pmieducar.escola_ano_letivo where ' .
-            'ref_cod_escola = $1 and ativo = 1)';
-
-        $ultimoAnoLetivo = Portabilis_Utils_Database::selectRow(sql: $sql, paramsOrOptions: $refCodEscola);
+        $lastSchoolAcademicYear = LegacySchoolAcademicYear::query()
+            ->whereSchool($refCodEscola)
+            ->active()
+            ->max('ano')
+        ;
 
         $employeeAllocations = EmployeeAllocation::query()
             ->whereHas('employee', fn($q) => ($q->professor($onlyTeacher)) )
             ->where(
             [
-                'ano' => $ultimoAnoLetivo['ano'],
+                'ano' => $lastSchoolAcademicYear,
                 'ref_cod_escola' => $refCodEscola
             ]
         )->get();
