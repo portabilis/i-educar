@@ -54,8 +54,8 @@ return new class extends clsCadastro {
                     $this->fexcluir = true;
                 }
 
-                $this->copiar_alocacoes_demais_servidores = dbBool($schoolAcademicYear->copia_dados_professor);
-                $this->copiar_alocacoes_e_vinculos_professores = dbBool($schoolAcademicYear->copia_dados_demais_servidores);
+                $this->copiar_alocacoes_demais_servidores = $schoolAcademicYear->copia_dados_professor;
+                $this->copiar_alocacoes_e_vinculos_professores = $schoolAcademicYear->copia_dados_demais_servidores;
 
                 $retorno = 'Editar';
 
