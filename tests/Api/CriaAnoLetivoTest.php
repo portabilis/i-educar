@@ -12,14 +12,12 @@ use App\Models\LegacySchoolClassTeacher;
 use App\Models\LegacySchoolClassTeacherDiscipline;
 use Database\Factories\EmployeeAllocationFactory;
 use Database\Factories\EmployeeFactory;
-use Database\Factories\LegacyAcademicYearStageFactory;
 use Database\Factories\LegacyCourseFactory;
 use Database\Factories\LegacyDisciplineAcademicYearFactory;
 use Database\Factories\LegacyDisciplineFactory;
 use Database\Factories\LegacyDisciplineSchoolClassFactory;
 use Database\Factories\LegacyEmployeeRoleFactory;
 use Database\Factories\LegacyGradeFactory;
-use Database\Factories\LegacyInstitutionFactory;
 use Database\Factories\LegacyPeriodFactory;
 use Database\Factories\LegacyRoleFactory;
 use Database\Factories\LegacySchoolAcademicYearFactory;
@@ -37,7 +35,8 @@ use Tests\TestCase;
 
 class CriaAnoLetivoTest extends TestCase
 {
-    use DatabaseTransactions, LoginFirstUser;
+    use DatabaseTransactions;
+    use LoginFirstUser;
 
     public function testCreateNewSchoolAcademicYear()
     {
@@ -163,7 +162,8 @@ class CriaAnoLetivoTest extends TestCase
             'ref_cod_escola'=> $school->getKey()
         ]);
 
-        $this->assertDatabaseHas($schoolClass,
+        $this->assertDatabaseHas(
+            $schoolClass,
             [
                 'ref_ref_cod_escola' => $schoolGrade->school_id,
                 'ref_ref_cod_serie' => $schoolGrade->grade_id,
@@ -173,7 +173,8 @@ class CriaAnoLetivoTest extends TestCase
             ]
         );
 
-        $this->assertDatabaseHas(LegacyAcademicYearStage::class,
+        $this->assertDatabaseHas(
+            LegacyAcademicYearStage::class,
             [
                 'ref_ref_cod_escola' => $schoolGrade->school_id,
                 'ref_cod_modulo' => $stageType->getKey(),
@@ -183,7 +184,8 @@ class CriaAnoLetivoTest extends TestCase
             ]
         );
 
-        $newSchoolClass = LegacySchoolClass::query()->where([
+        $newSchoolClass = LegacySchoolClass::query()->where(
+            [
                 'ref_ref_cod_escola' => $schoolGrade->school_id,
                 'ref_ref_cod_serie' => $schoolGrade->grade_id,
                 'ref_cod_curso' => $course->getKey(),
@@ -192,7 +194,8 @@ class CriaAnoLetivoTest extends TestCase
             ]
         )->first();
 
-        $this->assertDatabaseHas($legacySchoolClassTeacher,
+        $this->assertDatabaseHas(
+            $legacySchoolClassTeacher,
             [
                 'servidor_id' => $employee->getKey(),
                 'turma_id' => $newSchoolClass->getKey(),
@@ -201,7 +204,8 @@ class CriaAnoLetivoTest extends TestCase
             ]
         );
 
-        $this->assertDatabaseHas(EmployeeAllocation::class,
+        $this->assertDatabaseHas(
+            EmployeeAllocation::class,
             [
                 'ref_ref_cod_instituicao' => $school->ref_cod_instituicao,
                 'ref_cod_escola' => $school->getKey(),
@@ -219,7 +223,7 @@ class CriaAnoLetivoTest extends TestCase
         )->get();
 
         $this->assertCount(1, $professorTurma);
-        $this->assertDatabaseHas(LegacySchoolClassTeacherDiscipline::class,[
+        $this->assertDatabaseHas(LegacySchoolClassTeacherDiscipline::class, [
             'professor_turma_id' => $professorTurma->first()->getKey(),
             'componente_curricular_id' => $discipline->getKey()
         ]);
@@ -387,7 +391,8 @@ class CriaAnoLetivoTest extends TestCase
             'ref_cod_escola'=> $school->getKey()
         ]);
 
-        $this->assertDatabaseHas($schoolClass,
+        $this->assertDatabaseHas(
+            $schoolClass,
             [
                 'ref_ref_cod_escola' => $schoolGrade->school_id,
                 'ref_ref_cod_serie' => $schoolGrade->grade_id,
@@ -397,7 +402,8 @@ class CriaAnoLetivoTest extends TestCase
             ]
         );
 
-        $newSchoolClass = LegacySchoolClass::query()->where([
+        $newSchoolClass = LegacySchoolClass::query()->where(
+            [
                 'ref_ref_cod_escola' => $schoolGrade->school_id,
                 'ref_ref_cod_serie' => $schoolGrade->grade_id,
                 'ref_cod_curso' => $course->getKey(),

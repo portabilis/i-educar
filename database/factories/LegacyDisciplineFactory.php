@@ -22,7 +22,7 @@ class LegacyDisciplineFactory extends Factory
     public function definition(): array
     {
         return [
-            'institution_id' => fn() => LegacyInstitutionFactory::new()->unique()->make(),
+            'institution_id' => fn () => LegacyInstitutionFactory::new()->unique()->make(),
             'knowledge_area_id' => LegacyKnowledgeAreaFactory::new()->unique()->make(),
             'name' => $this->faker->colorName,
             'abbreviation' => $this->faker->hexColor,

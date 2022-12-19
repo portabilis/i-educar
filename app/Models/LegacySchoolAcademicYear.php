@@ -10,7 +10,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * LegacySchoolAcademicYear
+ *
  * @property int $ano
+ *
  * @method static LegacySchoolAcademicYearBuilder query()
  */
 class LegacySchoolAcademicYear extends LegacyModel
