@@ -641,7 +641,7 @@ return new class extends clsCadastro {
             $exist = LegacySchoolClassTeacherDiscipline::query()->where([
                 'professor_turma_id'=> $newSchoolClassTeacherId,
                 'componente_curricular_id' => $schoolClassTeacherDiscipline->componente_curricular_id
-            ]);
+            ])->exists();
 
             if ($exist === true) {
                 continue;
