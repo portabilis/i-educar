@@ -3,6 +3,7 @@
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassGrade;
 use App\Models\LegacySchoolClassType;
+use App\Models\LegacySchoolGradeDiscipline;
 use Illuminate\Support\Facades\DB;
 
 return new class extends clsDetalhe {
@@ -405,24 +406,26 @@ return new class extends clsDetalhe {
         }
 
         $this->tabela3 = '';
+        $componentes = collect($lista)->map(function ($disciplina) {
+            return [
+                'id' => $disciplina->id,
+                'name' => $disciplina->nome,
+                'workload' => $disciplina->cargaHoraria !== null || $disciplina->cargaHoraria !== 0 ? $disciplina->cargaHoraria : null
+            ];
+        })->sortByDesc('workload');
 
-        if (is_array($lista) && count($lista)) {
+        if ($componentes->isNotEmpty()) {
             $disciplinas = '<table id="table-disciplines">';
             $disciplinas .= '<tr>';
             $disciplinas .= '<td><b>Nome</b></td>';
             $disciplinas .= '<td><b>Carga horária(h)</b></td>';
             $disciplinas .= '</tr>';
-            foreach ($lista as $registro) {
-                if (!is_null($componentes[$registro->id]->cargaHoraria) || 0 != $componentes[$registro->id]->cargaHoraria) {
-                    $registro->cargaHoraria = $componentes[$registro->id]->cargaHoraria;
-                }
 
+            foreach ($componentes as $componente) {
                 $disciplinas .= '<tr>';
-                $disciplinas .= "<td>{$registro}</td>";
-                $disciplinas .= "<td style='text-align: center'>{$registro->cargaHoraria}</td>";
+                $disciplinas .= "<td>{$componente['name']}</td>";
+                $disciplinas .= "<td style='text-align: center'>{$componente['workload']}</td>";
                 $disciplinas .= '</tr>';
-
-                $registro->cargaHoraria = '';
             }
             $disciplinas .= '</table>';
         } else {
@@ -468,10 +471,19 @@ return new class extends clsDetalhe {
         return file_get_contents(__DIR__ . '/scripts/extra/educar-turma-det.js');
     }
 
+    public function getComponentesTurma() {
+
+        return LegacySchoolGradeDiscipline::whereGrade($this->ref_ref_cod_serie)
+            ->whereSchool($this->ref_ref_cod_escola)
+            ->whereYearEq($this->ano)
+            ->active()
+            ->get();
+    }
+
     public function getComponentesTurmaMulti($turmaId)
     {
         return DB::table('pmieducar.turma as t')
-            ->selectRaw("cc.id, cc.nome as name, coalesce(esd.carga_horaria, ccae.carga_horaria)::int AS workload, STRING_AGG(s.nm_serie, ', ' order by nm_serie) as grade")
+            ->selectRaw("cc.id, cc.nome as name,coalesce(esd.carga_horaria, ccae.carga_horaria)::int AS workload,STRING_AGG(s.nm_serie, ', ' order by nm_serie) as grade")
             ->join('pmieducar.turma_serie as ts', 'ts.turma_id', '=', 't.cod_turma')
             ->leftJoin('pmieducar.serie as s', 's.cod_serie', 'ts.serie_id')
             ->join('pmieducar.escola_serie as es', function ($join) {
@@ -491,7 +503,7 @@ return new class extends clsDetalhe {
             ->whereRaw('t.ano = ANY(esd.anos_letivos)')
             ->where('t.multiseriada', 1)
             ->groupBy(['cc.id','workload','name'])
-            ->orderBy('name')
+            ->orderByRaw('SUM(coalesce(esd.carga_horaria, ccae.carga_horaria)::int) DESC')
             ->get();
     }
 
