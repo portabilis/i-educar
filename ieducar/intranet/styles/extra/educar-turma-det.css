@@ -1,0 +1,9 @@
+#table-disciplines {
+  border: 1px solid #CCC;
+  border-collapse: collapse;
+}
+
+#table-disciplines td{
+  border: 1px solid #CCC;
+  padding: 2px;
+}
