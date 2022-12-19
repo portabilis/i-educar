@@ -589,27 +589,27 @@ return new class extends clsCadastro {
 
             if ($copiaDadosProfessor === true) {
                 $this->copySchoolClassTeacher(
-                    turmaOrigem: $turmaOrigem,
-                    turmaDestinoId: $turmaDestinoId,
-                    anoOrigem: $anoOrigem,
-                    anoDestino: $anoDestino
+                    originSchoolClassId: $turmaOrigem,
+                    destinationSchoolClassId: $turmaDestinoId,
+                    originYear: $anoOrigem,
+                    destinationYear: $anoDestino
                 );
             }
         }
     }
 
-    private function copySchoolClassTeacher($turmaOrigem, $turmaDestinoId, $anoOrigem, $anoDestino)
+    private function copySchoolClassTeacher($originSchoolClassId, $destinationSchoolClassId, $originYear, $destinationYear)
     {
         $schoolClassTeachers = LegacySchoolClassTeacher::query()
-            ->where(['ano' => $anoOrigem, 'turma_id' => $turmaOrigem])
+            ->where(['ano' => $originYear, 'turma_id' => $originSchoolClassId])
             ->get();
 
         /** @var LegacySchoolClassTeacher $schoolClassTeacher */
         foreach ($schoolClassTeachers as $schoolClassTeacher) {
             $exist = LegacySchoolClassTeacher::query()->where(
                 [
-                    'ano' => $anoDestino,
-                    'turma_id' => $turmaDestinoId,
+                    'ano' => $destinationYear,
+                    'turma_id' => $destinationSchoolClassId,
                     'servidor_id' => $schoolClassTeacher->servidor_id
                 ]
             )->exists();
@@ -619,8 +619,8 @@ return new class extends clsCadastro {
             }
 
             $newSchoolClassTeacher = $schoolClassTeacher->replicate();
-            $newSchoolClassTeacher->ano = $anoDestino;
-            $newSchoolClassTeacher->turma_id = $turmaDestinoId;
+            $newSchoolClassTeacher->ano = $destinationYear;
+            $newSchoolClassTeacher->turma_id = $destinationSchoolClassId;
 
             $newSchoolClassTeacher->save();
 
