@@ -624,22 +624,23 @@ return new class extends clsCadastro {
 
             $newSchoolClassTeacher->save();
 
-            $schoolClassTeacherId = $schoolClassTeacher->getKey();
-            $newSchoolClassTeacherId = $newSchoolClassTeacher->getKey();
-
-            $this->copySchoolClassTeacherDiscipline($schoolClassTeacherId, $newSchoolClassTeacherId);
+            $this->copySchoolClassTeacherDiscipline($schoolClassTeacher, $newSchoolClassTeacher);
         }
-
     }
 
-    private function copySchoolClassTeacherDiscipline($schoolClassTeacherId, $newSchoolClassTeacherId)
-    {
-        $schoolClassTeacherDisciplines = LegacySchoolClassTeacherDiscipline::query()->where('professor_turma_id', $schoolClassTeacherId)->get();
+    private function copySchoolClassTeacherDiscipline(
+        LegacySchoolClassTeacher $schoolClassTeacher,
+        LegacySchoolClassTeacher $newSchoolClassTeacher
+    ) {
+        $schoolClassTeacherDisciplines = LegacySchoolClassTeacherDiscipline::query()
+            ->where('professor_turma_id', $schoolClassTeacher->getKey())
+            ->get()
+        ;
 
         /** @var LegacySchoolClassTeacherDiscipline $schoolClassTeacherDiscipline */
         foreach ($schoolClassTeacherDisciplines as $schoolClassTeacherDiscipline) {
             $exist = LegacySchoolClassTeacherDiscipline::query()->where([
-                'professor_turma_id'=> $newSchoolClassTeacherId,
+                'professor_turma_id'=> $newSchoolClassTeacher->getKey(),
                 'componente_curricular_id' => $schoolClassTeacherDiscipline->componente_curricular_id
             ])->exists();
 
@@ -648,7 +649,7 @@ return new class extends clsCadastro {
             }
 
             $newSchoolClassTeacherDisciplines = $schoolClassTeacherDiscipline->replicate();
-            $newSchoolClassTeacherDisciplines->professor_turma_id = $newSchoolClassTeacherId;
+            $newSchoolClassTeacherDisciplines->professor_turma_id = $newSchoolClassTeacher->getKey();
 
             $newSchoolClassTeacherDisciplines->save();
         }
