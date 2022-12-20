@@ -487,21 +487,22 @@ return new class extends clsCadastro {
 
     public function copiarTurmasUltimoAno($escolaId, $anoDestino, $copiaDadosProfessor = true)
     {
-        $sql = 'select ano from pmieducar.escola_ano_letivo where ref_cod_escola = $1 ' .
-            'and ativo = 1 and ano in (select max(ano) from pmieducar.escola_ano_letivo where ' .
-            'ref_cod_escola = $1 and ativo = 1)';
+        $lastSchoolAcademicYear = LegacySchoolAcademicYear::query()
+            ->whereSchool($escolaId)
+            ->active()
+            ->max('ano')
+        ;
 
-        $ultimoAnoLetivo = Portabilis_Utils_Database::selectRow(sql: $sql, paramsOrOptions: $escolaId);
         $turmasEscola = (new clsPmieducarTurma())->lista(
             int_ref_ref_cod_escola: $escolaId,
             int_ativo: 1,
-            ano: $ultimoAnoLetivo['ano']
+            ano: $lastSchoolAcademicYear
         );
 
         foreach ($turmasEscola as $turma) {
             $this->copiarTurma(
                 turmaOrigem: $turma,
-                anoOrigem: $ultimoAnoLetivo['ano'],
+                anoOrigem: $lastSchoolAcademicYear,
                 anoDestino: $anoDestino,
                 copiaDadosProfessor: $copiaDadosProfessor
             );
