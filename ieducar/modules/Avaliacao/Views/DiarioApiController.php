@@ -534,10 +534,10 @@ class DiarioApiController extends ApiCoreController
                         $media = round($media , 2);
                         if($this->getRequest()->etapa==4 and $media<5){
                             //atualiza a nota que falta no exame final
-                              $nota_exame = 10 - $media;
+                              $nota_falta_exame = 10 - $media;
                             
-                                  $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $nota_exame);
-                                  $this->appendResponse('nota_necessaria_exame', $nota_exame);
+                                  $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $nota_falta_exame);
+                                  $this->appendResponse('nota_necessaria_exame', $nota_falta_exame);
                               } else {
                                   $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
                               
@@ -637,10 +637,10 @@ class DiarioApiController extends ApiCoreController
                         $media = round($media , 2);
                         if($this->getRequest()->etapa==4 and $media<5){
                             //atualiza a nota que falta no exame final
-                              $nota_exame = 10 - $media;
+                              $nota_falta_exame = 10 - $media;
                              
-                                  //$this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $nota_exame);
-                                  $this->appendResponse('nota_necessaria_exame', null);
+                                  $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $nota_falta_exame);
+                                  $this->appendResponse('nota_necessaria_exame', $nota_falta_exame);
                               } else {
                                   $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
                               
@@ -714,10 +714,10 @@ class DiarioApiController extends ApiCoreController
 
             if($this->getRequest()->etapa==4 and $media<5){
                 //atualiza a nota que falta no exame final
-                  $nota_exame = 10 - $media;
+                  $nota_falta_exame = 10 - $media;
               
-                      $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $nota_exame);
-                      $this->appendResponse('nota_necessaria_exame', $nota_exame);
+                      $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $nota_falta_exame);
+                      $this->appendResponse('nota_necessaria_exame', $nota_falta_exame);
                   } else {
                       $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
                   
@@ -779,10 +779,10 @@ class DiarioApiController extends ApiCoreController
                 $media = round($media , 2);
                 if($this->getRequest()->etapa==4 and $media<5){
                   //atualiza a nota que falta no exame final
-                    $nota_exame = 10 - $media;
+                    $nota_falta_exame = 10 - $media;
                    
-                        $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $nota_exame);
-                        $this->appendResponse('nota_necessaria_exame', $nota_exame);
+                        $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $nota_falta_exame);
+                        $this->appendResponse('nota_necessaria_exame', $nota_falta_exame);
                  }else {
                         $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
                   
