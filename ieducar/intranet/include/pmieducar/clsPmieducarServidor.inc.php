@@ -11,7 +11,6 @@ class clsPmieducarServidor extends Model
     public $data_exclusao;
     public $ativo;
     public $ref_cod_instituicao;
-    public $ref_cod_subnivel;
     public $pos_graduacao;
     public $curso_formacao_continuada;
     public $complementacao_pedagogica;
@@ -29,14 +28,13 @@ class clsPmieducarServidor extends Model
         $data_exclusao = null,
         $ativo = null,
         $ref_cod_instituicao = null,
-        $ref_cod_subnivel = null
     ) {
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'servidor';
-        $this->_campos_lista = $this->_todos_campos = 'cod_servidor, ref_idesco, carga_horaria, data_cadastro, data_exclusao, ativo, ref_cod_instituicao,ref_cod_subnivel,
+        $this->_campos_lista = $this->_todos_campos = 'cod_servidor, ref_idesco, carga_horaria, data_cadastro, data_exclusao, ativo, ref_cod_instituicao,
     pos_graduacao, curso_formacao_continuada, multi_seriado, tipo_ensino_medio_cursado, complementacao_pedagogica
     ';
-        $this->_campos_lista2 = $this->_todos_campos2 = 's.cod_servidor, s.ref_idesco, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.ref_cod_instituicao,s.ref_cod_subnivel,
+        $this->_campos_lista2 = $this->_todos_campos2 = 's.cod_servidor, s.ref_idesco, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.ref_cod_instituicao,
     s.pos_graduacao, s.curso_formacao_continuada, s.multi_seriado, s.tipo_ensino_medio_cursado, complementacao_pedagogica,
     (SELECT replace(textcat_all(matricula),\' <br>\',\',\')
           FROM pmieducar.servidor_funcao sf
@@ -65,9 +63,6 @@ class clsPmieducarServidor extends Model
         if (is_numeric($ref_cod_instituicao)) {
             $this->ref_cod_instituicao = $ref_cod_instituicao;
         }
-        if (is_numeric($ref_cod_subnivel)) {
-            $this->ref_cod_subnivel = $ref_cod_subnivel;
-        }
     }
 
     /**
@@ -92,11 +87,6 @@ class clsPmieducarServidor extends Model
             if (is_numeric($this->carga_horaria)) {
                 $campos .= "{$gruda}carga_horaria";
                 $valores .= "{$gruda}'{$this->carga_horaria}'";
-                $gruda = ', ';
-            }
-            if (is_numeric($this->ref_cod_subnivel)) {
-                $campos .= "{$gruda}ref_cod_subnivel";
-                $valores .= "{$gruda}'{$this->ref_cod_subnivel}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->ref_idesco)) {
@@ -184,10 +174,6 @@ class clsPmieducarServidor extends Model
             $gruda = ', ';
             if (is_numeric($this->ativo)) {
                 $set .= "{$gruda}ativo = '{$this->ativo}'";
-                $gruda = ', ';
-            }
-            if (is_numeric($this->ref_cod_subnivel)) {
-                $set .= "{$gruda}ref_cod_subnivel = '{$this->ref_cod_subnivel}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->tipo_ensino_medio_cursado)) {
@@ -282,7 +268,6 @@ class clsPmieducarServidor extends Model
      * @param int        $int_ref_cod_disciplina      Código da disciplina que o professor deve ser habilitado (subquery).
      *                                                Somente verifica quando o curso passado por $int_ref_cod_curso não
      *                                                possui sistema de falta globalizada
-     * @param int        $int_ref_cod_subnivel        Código de subnível que o servidor deve possuir
      *
      * @return array|bool Array com os resultados da query SELECT ou FALSE caso
      *                    nenhum registro tenha sido encontrado
@@ -548,7 +533,9 @@ class clsPmieducarServidor extends Model
           FROM pmieducar.servidor_alocacao a
           WHERE $where
           AND a.periodo = 1
-          AND a.ano = $ano_alocacao
+          AND a.periodo = 1".
+        ($ano_alocacao ? " AND a.ano = {$ano_alocacao}" : '')
+        ."AND (a.data_saida > now() or a.data_saida is null)
           AND (a.data_saida > now() or a.data_saida is null)
           AND a.carga_horaria >= COALESCE(
           (SELECT SUM(qhh.hora_final - qhh.hora_inicial)
@@ -785,10 +772,6 @@ class clsPmieducarServidor extends Model
                 $filtros .= "AND qhh.ref_servidor NOT IN ({$lst_matriculas})";
             }
             $filtros .= ' ) OR s.multi_seriado) ';
-            $whereAnd = ' AND ';
-        }
-        if (is_numeric($int_ref_cod_subnivel)) {
-            $filtros .= "{$whereAnd} s.ref_cod_subnivel = '{$int_ref_cod_subnivel}'";
             $whereAnd = ' AND ';
         }
         $countCampos = count(explode(',', $this->_campos_lista));

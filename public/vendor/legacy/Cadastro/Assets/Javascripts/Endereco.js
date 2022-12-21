@@ -5,17 +5,6 @@ function checkCepFields(cep) {
     return valid;
 }
 
-function permiteEditarEndereco(){
-
-  var options = {
-    url      : getResourceUrlBuilder.buildUrl('/module/Api/endereco', 'permissao_editar'),
-    dataType : 'json',
-    data     : {},
-    success  : handleGetPermissaoEditar
-  };
-  getResource(options);
-}
-
 var handleGetPermissaoEditar = function(dataResponse) {
   if (dataResponse.permite_editar == 0) {
     $j('#span-busca-logradouro').hide();

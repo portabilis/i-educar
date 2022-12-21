@@ -41,10 +41,20 @@ class LegacySchoolClassFactory extends Factory
             'ref_cod_curso' => $schoolGrade->grade->course_id,
             'ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()->unique()->make(),
             'dias_semana' => [2, 3, 4, 5, 6],
+            'multiseriada' => false,
             'ano' => now()->year,
             'visivel' => true,
             'ativo' => 1
         ];
+    }
+
+    public function multiplesGrades(): self
+    {
+        return $this->state(function (array $attributes) {
+            return array_merge($attributes, [
+                'multiseriada' => true
+            ]);
+        });
     }
 
     public function morning(): self

@@ -263,8 +263,6 @@ $j(document).ready(function() {
   $submitButton.removeAttr('onclick');
   $submitButton.click(submitForm);
 
-  permiteEditarEndereco();
-
   function verificaObrigatoriedadeRg() {
     $j('#data_emissao_rg').makeUnrequired();
     $j('#orgao_emissao_rg').makeUnrequired();

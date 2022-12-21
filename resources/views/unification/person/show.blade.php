@@ -34,7 +34,7 @@
     <div class="separator"></div>
 
     <div style="text-align: center">
-        <a href="{{ route('person-log-unification.index') }}"><button class="btn" type="button">Voltar</button></a>
+        <a href="{{ route('person-log-unification.index', request()->only(['name', 'cpf', 'page'])) }}"><button class="btn" type="button">Voltar</button></a>
     </div>
 
     </form>

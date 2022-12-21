@@ -83,6 +83,11 @@ class LegacySchool extends Model
         'qtd_orientador_comunitario',
         'latitude',
         'longitude',
+        'predio_compartilhado_outra_escola',
+        'educacao_indigena',
+        'compartilha_espacos_atividades_integracao',
+        'usa_espacos_equipamentos_atividades_regulares',
+        'exame_selecao_ingresso',
     ];
 
     protected function id(): Attribute
@@ -196,5 +201,16 @@ class LegacySchool extends Model
     public function stages(): HasMany
     {
         return $this->hasMany(LegacyAcademicYearStage::class, 'ref_ref_cod_escola');
+    }
+
+    public function address(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Place::class,
+            'person_has_place',
+            'person_id',
+            'place_id',
+            'ref_idpes',
+        );
     }
 }

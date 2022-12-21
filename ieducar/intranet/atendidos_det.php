@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyIndividual;
+use App\Models\LegacyRace;
 use App\Services\FileService;
 use App\Services\UrlPresigner;
 
@@ -66,11 +67,12 @@ return new class extends clsDetalhe {
         $raca = new clsCadastroFisicaRaca($cod_pessoa);
         $raca = $raca->detalhe();
         if (is_array($raca)) {
-            $raca = new clsCadastroRaca($raca['ref_cod_raca']);
-            $raca = $raca->detalhe();
+            $nameRace = LegacyRace::query()
+                ->whereKey($raca['ref_cod_raca'])
+                ->value('nm_raca');
 
-            if (is_array($raca)) {
-                $this->addDetalhe(['Raça', $raca['nm_raca']]);
+            if ($nameRace) {
+                $this->addDetalhe(['Raça', $nameRace]);
             }
         }
 

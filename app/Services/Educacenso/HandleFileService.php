@@ -72,7 +72,7 @@ class HandleFileService
         $import->finished = false;
         $import->save();
 
-        $school = array_map('utf8_encode', $school);
+        array_walk_recursive($school, static fn (&$item) => $item = mb_convert_encoding($item, 'HTML-ENTITIES', 'UTF-8'));
 
         $this->jobs[] = new EducacensoImportJob($import, $school, DB::getDefaultConnection(), $this->yearImportService->registrationDate);
     }

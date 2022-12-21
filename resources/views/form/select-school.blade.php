@@ -15,6 +15,7 @@
             (function($){
                 $(document).ready(function() {
                     $j('#ref_cod_escola').val({{old('ref_cod_escola', Request::get('ref_cod_escola'))}})
+                    $j('#ref_cod_escola').trigger("chosen:updated");
                 });
             })(jQuery);
         </script>

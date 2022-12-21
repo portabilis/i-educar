@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * LegacySchoolClass
@@ -76,7 +77,6 @@ class LegacySchoolClass extends Model
         'ref_usuario_cad',
         'ref_ref_cod_serie',
         'ref_ref_cod_escola',
-        'ref_cod_infra_predio_comodo',
         'nm_turma',
         'sgl_turma',
         'max_aluno',
@@ -331,7 +331,10 @@ class LegacySchoolClass extends Model
     public function getDiasSemanaAttribute($value)
     {
         if (is_string($value)) {
-            $value = explode(',', str_replace(['{', '}'], '', $value));
+            $value = explode(',', str_replace([
+                '{',
+                '}'
+            ], '', $value));
         }
 
         return $value;
@@ -362,7 +365,11 @@ class LegacySchoolClass extends Model
                 'registration' => function ($query) {
                     /** @var Builder $query */
                     $query->where('ano', $this->year);
-                    $query->whereIn('aprovado', [1, 2, 3]);
+                    $query->whereIn('aprovado', [
+                        1,
+                        2,
+                        3
+                    ]);
                     $query->with('student.person');
                 }
             ])
@@ -510,5 +517,10 @@ class LegacySchoolClass extends Model
     public function period(): BelongsTo
     {
         return $this->belongsTo(LegacyPeriod::class, 'turma_turno_id');
+    }
+
+    public function inep(): HasOne
+    {
+        return $this->hasOne(SchoolClassInep::class, 'cod_turma');
     }
 }

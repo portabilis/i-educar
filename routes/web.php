@@ -11,8 +11,24 @@ Auth::routes(['register' => false]);
 
 Route::redirect('/', '/web');
 
+Route::view('/docs-api', 'docs/api/index');
+
 Route::redirect('intranet/index.php', '/web')
     ->name('home');
+
+Route::redirect('intranet/public_pais_lst.php', '/web/enderecamento/pais');
+Route::redirect('intranet/public_uf_lst.php', '/web/enderecamento/estado');
+Route::redirect('intranet/public_municipio_lst.php', '/web/enderecamento/municipio');
+Route::redirect('intranet/public_distrito_lst.php', '/web/enderecamento/distrito');
+Route::redirect('intranet/public_pais_det.php', '/web/enderecamento/pais');
+Route::redirect('intranet/public_uf_det.php', '/web/enderecamento/estado');
+Route::redirect('intranet/public_municipio_det.php', '/web/enderecamento/municipio');
+Route::redirect('intranet/public_distrito_det.php', '/web/enderecamento/distrito');
+
+Route::redirect('intranet/public_pais_cad.php', '/web/enderecamento/pais/novo');
+Route::redirect('intranet/public_uf_cad.php', '/web/enderecamento/estado/novo');
+Route::redirect('intranet/public_municipio_cad.php', '/web/enderecamento/municipio/novo');
+Route::redirect('intranet/public_distrito_cad.php', '/web/enderecamento/distrito/novo');
 
 Route::any('module/Api/{uri}', 'LegacyController@api')->where('uri', '.*');
 
@@ -30,6 +46,7 @@ Route::group(['middleware' => ['auth']], function () {
 Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.xssbypass', 'ieducar.suspended', 'auth', 'ieducar.checkresetpassword']], function () {
     Route::get('/config', [WebController::class, 'config']);
     Route::get('/user', [WebController::class, 'user']);
+    Route::get('/institution', [WebController::class, 'institution']);
     Route::get('/menus', [WebController::class, 'menus']);
 
     Route::get('/intranet/educar_matricula_turma_lst.php', 'LegacyController@intranet')
@@ -41,12 +58,13 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
         ->name('enrollments.enroll');
     Route::get('/enrollment-history/{id}', 'EnrollmentHistoryController@show')
         ->name('enrollments.enrollment-history');
-    Route::get('/enrollment-formative-itinerary-list/{id}', 'EnrollmentFormativeItineraryController@list')
-        ->name('enrollments.enrollment-formative-itinerary-list');
-    Route::get('/enrollment-formative-itinerary/{id}', 'EnrollmentFormativeItineraryController@viewFormativeItinerary')
-        ->name('enrollments.enrollment-formative-itinerary');
-    Route::post('/enrollment-formative-itinerary/{id}', 'EnrollmentFormativeItineraryController@storeFormativeItinerary')
-        ->name('enrollments.enrollment-formative-itinerary-store');
+
+    Route::get('registration/{registration}/formative-itinerary', 'EnrollmentFormativeItineraryController@index')
+        ->name('registration.formative-itinerary.index');
+    Route::get('registration/{registration}/formative-itinerary/{enrollment}/edit', 'EnrollmentFormativeItineraryController@edit')
+        ->name('registration.formative-itinerary.edit');
+    Route::put('registration/{registration}/formative-itinerary/{enrollment}', 'EnrollmentFormativeItineraryController@update')
+        ->name('registration.formative-itinerary.update');
 
     Route::get('/educacenso/consulta', 'EducacensoController@consult')
         ->name('educacenso.consult');
@@ -149,8 +167,4 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
         ->name('schoolclass.store');
     Route::delete('/turma', [SchoolClassController::class, 'delete'])
         ->name('schoolclass.delete');
-});
-
-Route::group(['namespace' => 'Exports', 'prefix' => 'exports'], function () {
-    Route::get('students', 'StudentsController@export');
 });
