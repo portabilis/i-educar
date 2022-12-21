@@ -482,7 +482,7 @@ return new class extends clsDetalhe {
 
     public function getComponentesTurmaMulti($turmaId)
     {
-        return DB::table('pmieducar.turma as t')
+        $componentes = DB::table('pmieducar.turma as t')
             ->selectRaw("cc.id, cc.nome as name,coalesce(esd.carga_horaria, ccae.carga_horaria)::int AS workload,STRING_AGG(s.nm_serie, ', ' order by nm_serie) as grade")
             ->join('pmieducar.turma_serie as ts', 'ts.turma_id', '=', 't.cod_turma')
             ->leftJoin('pmieducar.serie as s', 's.cod_serie', 'ts.serie_id')
@@ -502,9 +502,21 @@ return new class extends clsDetalhe {
             ->where('t.cod_turma', $turmaId)
             ->whereRaw('t.ano = ANY(esd.anos_letivos)')
             ->where('t.multiseriada', 1)
-            ->groupBy(['cc.id','workload','name'])
-            ->orderByRaw('SUM(coalesce(esd.carga_horaria, ccae.carga_horaria)::int) DESC')
+            ->groupBy([
+                'cc.id',
+                'workload',
+                'name'
+            ])
+            ->orderBy('workload','desc')
             ->get();
+
+        return $componentes->each(function ($item) use ($componentes) {
+            $item->order = $componentes->where('id', $item->id)->max('workload');
+        })->sortBy([
+            ['order', 'desc' ],
+            ['id', 'asc'],
+            ['name', 'asc']
+        ]);
     }
 
     public function Formular()
