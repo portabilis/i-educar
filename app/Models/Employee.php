@@ -143,11 +143,11 @@ class Employee extends LegacyModel
         return $query->where('servidor.ativo', 1);
     }
 
-    public function scopeProfessor(Builder $query): Builder
+    public function scopeProfessor(Builder $query, $onlyTeacher = true): Builder
     {
         return $query->join('pmieducar.servidor_funcao', 'servidor_funcao.ref_cod_servidor', '=', 'servidor.cod_servidor')
             ->join('pmieducar.funcao', 'funcao.cod_funcao', '=', 'servidor_funcao.ref_cod_funcao')
-            ->where('funcao.professor', 1);
+            ->where('funcao.professor', (int) $onlyTeacher);
     }
 
     public function scopeLastYear(Builder $query): Builder
