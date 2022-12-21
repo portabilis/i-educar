@@ -82,7 +82,10 @@ class Controller extends BaseController
             ]);
         }
 
-        View::share(['menu' => $menu, 'root' => $topmenu->root()->getKey()]);
+        View::share([
+            'menu' => $menu,
+            'root' => $topmenu->root()->getKey()
+        ]);
         View::share('title', $this->getPageTitle());
 
         return $this;
