@@ -22,16 +22,16 @@ return new class extends clsCadastro {
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(
-            639,
-            $this->pessoa_logada,
-            7,
-            'educar_reserva_vaga_lst.php'
+            int_processo_ap: 639,
+            int_idpes_usuario: $this->pessoa_logada,
+            int_soma_nivel_acesso: 7,
+            str_pagina_redirecionar: 'educar_reserva_vaga_lst.php'
         );
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
-        $this->breadcrumb($nomeMenu . ' reserva de vaga', [
-        url('intranet/educar_index.php') => 'Escola',
+        $this->breadcrumb(currentPage: $nomeMenu . ' reserva de vaga', breadcrumbs: [
+        url(path: 'intranet/educar_index.php') => 'Escola',
     ]);
 
         return $retorno;
@@ -42,21 +42,12 @@ return new class extends clsCadastro {
         if ($this->ref_cod_aluno) {
             $obj_reserva_vaga = new clsPmieducarReservaVaga();
             $lst_reserva_vaga = $obj_reserva_vaga->lista(
-                null,
-                null,
-                null,
-                null,
-                null,
-                $this->ref_cod_aluno,
-                null,
-                null,
-                null,
-                null,
-                1
+                int_ref_cod_aluno: $this->ref_cod_aluno,
+                int_ativo: 1
             );
 
             // Verifica se o aluno já possui reserva alguma reserva ativa no sistema
-            if (is_array($lst_reserva_vaga)) {
+            if (is_array(value: $lst_reserva_vaga)) {
                 echo '
           <script type=\'text/javascript\'>
             alert(\'Aluno já possui reserva de vaga!\\nNão é possivel realizar a reserva.\');
@@ -71,42 +62,36 @@ return new class extends clsCadastro {
         </script>';
         }
 
-        $this->campoOculto('ref_cod_serie', $this->ref_cod_serie);
-        $this->campoOculto('ref_cod_escola', $this->ref_cod_escola);
+        $this->campoOculto(nome: 'ref_cod_serie', valor: $this->ref_cod_serie);
+        $this->campoOculto(nome: 'ref_cod_escola', valor: $this->ref_cod_escola);
 
         $this->nm_aluno = $this->nm_aluno_;
 
         $this->campoTexto(
-            'nm_aluno',
-            'Aluno',
-            $this->nm_aluno,
-            30,
-            255,
-            false,
-            false,
-            false,
-            '',
-            "<img border=\"0\" onclick=\"pesquisa_aluno();\" id=\"ref_cod_aluno_lupa\" name=\"ref_cod_aluno_lupa\" src=\"imagens/lupa.png\"\/><span style='padding-left:20px;'><input type='button' value='Aluno externo' onclick='showAlunoExt(true);' class='botaolistagem'></span>",
-            '',
-            '',
-            true
+            nome: 'nm_aluno',
+            campo: 'Aluno',
+            valor: $this->nm_aluno,
+            tamanhovisivel: 30,
+            tamanhomaximo: 255,
+            descricao2: "<img border=\"0\" onclick=\"pesquisa_aluno();\" id=\"ref_cod_aluno_lupa\" name=\"ref_cod_aluno_lupa\" src=\"imagens/lupa.png\"\/><span style='padding-left:20px;'><input type='button' value='Aluno externo' onclick='showAlunoExt(true);' class='botaolistagem'></span>",
+            evento: '',
+            disabled: true
         );
 
-        $this->campoOculto('nm_aluno_', $this->nm_aluno_);
-        $this->campoOculto('ref_cod_aluno', $this->ref_cod_aluno);
+        $this->campoOculto(nome: 'nm_aluno_', valor: $this->nm_aluno_);
+        $this->campoOculto(nome: 'ref_cod_aluno', valor: $this->ref_cod_aluno);
 
-        $this->campoOculto('tipo_aluno', 'i');
+        $this->campoOculto(nome: 'tipo_aluno', valor: 'i');
 
-        $this->campoTexto('nm_aluno_ext', 'Nome aluno', $this->nm_aluno_ext, 50, 255, false);
+        $this->campoTexto(nome: 'nm_aluno_ext', campo: 'Nome aluno', valor: $this->nm_aluno_ext, tamanhovisivel: 50, tamanhomaximo: 255);
         $this->campoCpf(
-            'cpf_responsavel',
-            'CPF responsável',
-            $this->cpf_responsavel,
-            false,
-            '<span style=\'padding-left:20px;\'><input type=\'button\' value=\'Aluno interno\' onclick=\'showAlunoExt(false);\' class=\'botaolistagem\'></span>'
+            nome: 'cpf_responsavel',
+            campo: 'CPF responsável',
+            valor: $this->cpf_responsavel,
+            descricao: '<span style=\'padding-left:20px;\'><input type=\'button\' value=\'Aluno interno\' onclick=\'showAlunoExt(false);\' class=\'botaolistagem\'></span>'
         );
 
-        $this->campoOculto('passo', 1);
+        $this->campoOculto(nome: 'passo', valor: 1);
 
         $this->acao_enviar = 'acao2()';
 
@@ -121,24 +106,24 @@ return new class extends clsCadastro {
         }
 
         $obj_reserva_vaga = new clsPmieducarReservaVaga(
-            null,
-            $this->ref_cod_escola,
-            $this->ref_cod_serie,
-            null,
-            $this->pessoa_logada,
-            $this->ref_cod_aluno,
-            null,
-            null,
-            1,
-            $this->nm_aluno_ext,
-            idFederal2int($this->cpf_responsavel)
+            cod_reserva_vaga: null,
+            ref_ref_cod_escola: $this->ref_cod_escola,
+            ref_ref_cod_serie: $this->ref_cod_serie,
+            ref_usuario_exc: null,
+            ref_usuario_cad: $this->pessoa_logada,
+            ref_cod_aluno: $this->ref_cod_aluno,
+            data_cadastro: null,
+            data_exclusao: null,
+            ativo: 1,
+            nm_aluno: $this->nm_aluno_ext,
+            cpf_responsavel: idFederal2int(str: $this->cpf_responsavel)
         );
 
         $cadastrou = $obj_reserva_vaga->cadastra();
 
         if ($cadastrou) {
             $this->mensagem .= 'Reserva de Vaga efetuada com sucesso.<br>';
-            $this->simpleRedirect('educar_reservada_vaga_det.php?cod_reserva_vaga=' . $cadastrou);
+            $this->simpleRedirect(url: 'educar_reservada_vaga_det.php?cod_reserva_vaga=' . $cadastrou);
         }
 
         $this->mensagem = 'Reserva de Vaga não realizada.<br>';
@@ -148,7 +133,7 @@ return new class extends clsCadastro {
 
     public function makeExtra()
     {
-        return file_get_contents(__DIR__ . '/scripts/extra/educar-reserva-vaga-cad.js');
+        return file_get_contents(filename: __DIR__ . '/scripts/extra/educar-reserva-vaga-cad.js');
     }
 
     public function Formular()
