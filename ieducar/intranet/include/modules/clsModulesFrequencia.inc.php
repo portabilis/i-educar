@@ -440,7 +440,7 @@ class clsModulesFrequencia extends Model {
                             }
 
                             if (!empty($setQtd)) {
-                               $db->Consulta("
+                                $db->Consulta("
                                     UPDATE
                                         {$from}
                                     SET
@@ -495,13 +495,12 @@ class clsModulesFrequencia extends Model {
                     $qtdFaltas = $info['qtd'];
                     $aulasFaltou = (isset($info['aulas']) && !empty($info['aulas']) ? substr($info['aulas'], 0, -1) : '');
 
-;
                     if ($tipo_presenca == 2 && (empty($qtdFaltas) || empty($aulasFaltou))) {
                         continue;
                     }
 
                     // Inserir
-                       $db->Consulta("
+                    $db->Consulta("
                         INSERT INTO
                             modules.frequencia_aluno
 
@@ -510,9 +509,9 @@ class clsModulesFrequencia extends Model {
                             ('{$this->id}', '{$matricula_id}', '{$db->escapeString($justificativa)}', '{$db->escapeString($aulasFaltou)}')
                     ");
 
-                       // #########################################################################################
+                    // #########################################################################################
 
-                       $db->Consulta("
+                    $db->Consulta("
                             INSERT INTO
                                 modules.falta_aluno (matricula_id, tipo_falta)
                                 SELECT
@@ -592,21 +591,21 @@ class clsModulesFrequencia extends Model {
      * @return array
      */
     public function lista (
-            $int_ano = null,
-            $int_ref_cod_ins = null,
-            $int_ref_cod_escola = null,
-            $int_ref_cod_curso = null,
-            $int_ref_cod_serie = null,
-            $int_ref_cod_turma = null,
-            $int_ref_cod_componente_curricular = null,
-            $int_ref_cod_turno = null,
-            $time_data_inicial = null,
-            $time_data_final = null,
-            $int_etapa = null,
-            $int_servidor_id = null,
-            $arrayEscolasUsuario = null,
-            $bool_validado = null
-        ) {
+        $int_ano = null,
+        $int_ref_cod_ins = null,
+        $int_ref_cod_escola = null,
+        $int_ref_cod_curso = null,
+        $int_ref_cod_serie = null,
+        $int_ref_cod_turma = null,
+        $int_ref_cod_componente_curricular = null,
+        $int_ref_cod_turno = null,
+        $time_data_inicial = null,
+        $time_data_final = null,
+        $int_etapa = null,
+        $int_servidor_id = null,
+        $arrayEscolasUsuario = null,
+        $bool_validado = null
+    ) {
         $sql = "
                 SELECT DISTINCT
                     {$this->_campos_lista}
@@ -1055,7 +1054,7 @@ class clsModulesFrequencia extends Model {
             $matriculas[] = $db->Tupla();
         }
 
-       return $matriculas;
+        return $matriculas;
     }
 
     public function updateValidacao($bool_validacao, $ref_validacao_user_id = null, $data_validacao  = null) {
@@ -1113,7 +1112,7 @@ class clsModulesFrequencia extends Model {
 
         $db = new clsBanco();
 
-        if (!empty($geral_falta_aluno_id) && !empty($componente_curricular_id)) {
+        if (!empty($geral_falta_aluno_id)) {
             $db->Consulta("
                 SELECT
                     *
@@ -1135,11 +1134,11 @@ class clsModulesFrequencia extends Model {
             }
         }
 
-       $componente_falta_aluno_id = $this->getFaltasAlunoId($matricula_id, 2);
+        $componente_falta_aluno_id = $this->getFaltasAlunoId($matricula_id, 2);
 
 
-       if (!empty($componente_falta_aluno_id)) {
-           $sql = "
+        if (!empty($componente_falta_aluno_id)) {
+            $sql = "
                SELECT
                     *
                FROM
@@ -1147,24 +1146,24 @@ class clsModulesFrequencia extends Model {
                WHERE falta_aluno_id IN ('{$componente_falta_aluno_id}')
             ";
 
-           if (!empty($componente_curricular_id)) {
-               $sql .= " AND componente_curricular_id = '{$componente_curricular_id}'";
-           }
+            if (!empty($componente_curricular_id)) {
+                $sql .= " AND componente_curricular_id = '{$componente_curricular_id}'";
+            }
 
-           $db->Consulta($sql);
+            $db->Consulta($sql);
 
-           $faltasComponentes = [];
+            $faltasComponentes = [];
 
-           while($db->ProximoRegistro()) {
-               $faltasComponentes[] = $db->Tupla();
-           }
+            while($db->ProximoRegistro()) {
+                $faltasComponentes[] = $db->Tupla();
+            }
 
-           if (!empty($faltasComponentes)) {
-               foreach ($faltasComponentes as $falta) {
-                   $qtdFaltas += $falta['quantidade'];
-               }
-           }
-       }
+            if (!empty($faltasComponentes)) {
+                foreach ($faltasComponentes as $falta) {
+                    $qtdFaltas += $falta['quantidade'];
+                }
+            }
+        }
 
         return $qtdFaltas;
     }
