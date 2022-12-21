@@ -27,22 +27,22 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
 
         $obj_permissoes->permissao_cadastra(
-            635,
-            $this->pessoa_logada,
-            7,
-            'educar_servidor_lst.php'
+            int_processo_ap: 635,
+            int_idpes_usuario: $this->pessoa_logada,
+            int_soma_nivel_acesso: 7,
+            str_pagina_redirecionar: 'educar_servidor_lst.php'
         );
 
         if (is_numeric($this->cod_servidor) && is_numeric($this->ref_cod_instituicao)) {
             $obj = new clsPmieducarServidor(
-                $this->cod_servidor,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                $this->ref_cod_instituicao
+                cod_servidor: $this->cod_servidor,
+                ref_cod_deficiencia: null,
+                ref_idesco: null,
+                carga_horaria: null,
+                data_cadastro: null,
+                data_exclusao: null,
+                ativo: null,
+                ref_cod_instituicao: $this->ref_cod_instituicao
             );
 
             $registro = $obj->detalhe();
@@ -51,7 +51,7 @@ return new class extends clsCadastro {
             }
         }
 
-        $funcoes = Session::get("servant:{$this->cod_servidor}", []);
+        $funcoes = Session::get(key: "servant:{$this->cod_servidor}", default: []);
         $funcoes = $funcoes[$this->ref_cod_funcao] ?? [];
 
         foreach ($funcoes as $curso => $disciplinas) {
@@ -76,37 +76,37 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
-        $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
+        $this->campoOculto(nome: 'ref_cod_instituicao', valor: $this->ref_cod_instituicao);
         $opcoes = $opcoes_curso = ['' => 'Selecione'];
 
         $obj_cursos = new clsPmieducarCurso();
         $obj_cursos->setOrderby('nm_curso');
         $lst_cursos = $obj_cursos->lista(
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            null,
-            $this->ref_cod_instituicao
+            int_cod_curso: null,
+            int_ref_usuario_cad: null,
+            int_ref_cod_tipo_regime: null,
+            int_ref_cod_nivel_ensino: null,
+            int_ref_cod_tipo_ensino: null,
+            int_ref_cod_tipo_avaliacao: null,
+            str_nm_curso: null,
+            str_sgl_curso: null,
+            int_qtd_etapas: null,
+            int_frequencia_minima: null,
+            int_media: null,
+            int_media_exame: null,
+            int_falta_ch_globalizada: null,
+            int_carga_horaria: null,
+            str_ato_poder_publico: null,
+            int_edicao_final: null,
+            str_objetivo_curso: null,
+            str_publico_alvo: null,
+            date_data_cadastro_ini: null,
+            date_data_cadastro_fim: null,
+            date_data_exclusao_ini: null,
+            date_data_exclusao_fim: null,
+            int_ativo: 1,
+            int_ref_usuario_exc: null,
+            int_ref_cod_instituicao: $this->ref_cod_instituicao
         );
 
         if ($lst_cursos) {
@@ -135,7 +135,7 @@ return new class extends clsCadastro {
             $cursosDifferente = array_unique($this->ref_cod_curso);
             foreach ($cursosDifferente as $curso) {
                 $obj_componentes = new clsModulesComponenteCurricular;
-                $componentes = $obj_componentes->listaComponentesPorCurso($this->ref_cod_instituicao, $curso);
+                $componentes = $obj_componentes->listaComponentesPorCurso(instituicao_id: $this->ref_cod_instituicao, curso: $curso);
                 $opcoes_disc = [];
                 $opcoes_disc['todas_disciplinas'] = 'Todas as disciplinas';
 
@@ -151,36 +151,36 @@ return new class extends clsCadastro {
         }
 
         $this->campoTabelaInicio(
-            'funcao',
-            'Componentes Curriculares',
-            ['Curso', 'Componente Curricular'],
-            $arr_valores,
-            '',
-            $lst_opcoes
+            nome: 'funcao',
+            titulo: 'Componentes Curriculares',
+            arr_campos: ['Curso', 'Componente Curricular'],
+            arr_valores: $arr_valores,
+            largura: '',
+            array_valores_lista: $lst_opcoes
         );
 
         // Cursos
         $this->campoLista(
-            'ref_cod_curso',
-            'Curso',
-            $opcoes_curso,
-            $this->ref_cod_curso,
-            'trocaCurso(this)',
-            '',
-            '',
-            ''
+            nome: 'ref_cod_curso',
+            campo: 'Curso',
+            valor: $opcoes_curso,
+            default: $this->ref_cod_curso,
+            acao: 'trocaCurso(this)',
+            duplo: '',
+            descricao: '',
+            complemento: ''
         );
 
         // Disciplinas
         $this->campoLista(
-            'ref_cod_disciplina',
-            'Componente Curricular',
-            $opcoes,
-            $this->ref_cod_disciplina,
-            '',
-            '',
-            '',
-            ''
+            nome: 'ref_cod_disciplina',
+            campo: 'Componente Curricular',
+            valor: $opcoes,
+            default: $this->ref_cod_disciplina,
+            acao: '',
+            duplo: '',
+            descricao: '',
+            complemento: ''
         );
 
         $this->campoTabelaFim();
@@ -191,7 +191,7 @@ return new class extends clsCadastro {
         $cod_servidor = $this->getQueryString('ref_cod_servidor');
         $cod_funcao = $this->getQueryString('cod_funcao');
 
-        $funcoes = Session::get("servant:{$cod_servidor}", []);
+        $funcoes = Session::get(key: "servant:{$cod_servidor}", default: []);
 
         unset($funcoes[$cod_funcao]);
 
@@ -210,7 +210,7 @@ return new class extends clsCadastro {
             }
         }
 
-        Session::put("servant:{$cod_servidor}", $funcoes);
+        Session::put(key: "servant:{$cod_servidor}", value: $funcoes);
         Session::save();
         Session::start();
 
