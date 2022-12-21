@@ -112,7 +112,7 @@
             "@composer plug-and-play:install",
             "@set-permissions",
             "@php artisan key:generate --ansi",
-            "@php artisan legacy:link --ansi",
+            "@php artisan storage:link --ansi",
             "@php artisan migrate --force --ansi",
             "@npm"
         ],
@@ -120,7 +120,7 @@
             "@composer update",
             "@composer plug-and-play:update",
             "@set-permissions",
-            "@php artisan legacy:link --ansi",
+            "@php artisan storage:link --ansi",
             "@php artisan migrate --force --ansi",
             "@npm"
         ],
