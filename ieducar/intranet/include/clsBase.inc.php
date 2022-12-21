@@ -121,7 +121,7 @@ class clsBase
             ->where('process', $this->processoAp)
             ->first();
 
-        $ancestors = Menu::getMenuAncestors($topmenu);
+        $ancestors = $topmenu === null ? [] : Menu::getMenuAncestors($topmenu);
 
         if ($topmenu) {
             View::share([
@@ -133,7 +133,7 @@ class clsBase
 
         View::share([
             'menu' => $menu,
-            'root' => $topmenu->root()->getKey()
+            'root' => $topmenu?->root()->getKey()
         ]);
         View::share('title', $this->getPageTitle());
 

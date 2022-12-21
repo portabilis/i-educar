@@ -72,7 +72,7 @@ class Controller extends BaseController
             ->where('process', $process)
             ->first();
 
-        $ancestors = Menu::getMenuAncestors($topmenu);
+        $ancestors = $topmenu === null ? [] : Menu::getMenuAncestors($topmenu);
 
         if ($topmenu) {
             View::share([
@@ -84,7 +84,7 @@ class Controller extends BaseController
 
         View::share([
             'menu' => $menu,
-            'root' => $topmenu->root()->getKey()
+            'root' => $topmenu?->root()->getKey()
         ]);
         View::share('title', $this->getPageTitle());
 
