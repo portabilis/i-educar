@@ -331,8 +331,7 @@ function presencaMudou (presenca) {
 
   }
 
-
-  if (presenca.checked && parseInt(qtdValue) >= 0){
+  if (presenca.checked && (parseInt(qtdValue) >= 0 || !qtdValue)){
     elementJustificativa.disabled = true;
   } else {
     elementJustificativa.disabled = false;
