@@ -105,15 +105,6 @@ return new class extends clsDetalhe {
 
         $obj_escola = new clsPmieducarEscola(
             cod_escola: $this->ref_cod_escola,
-            ref_usuario_cad: null,
-            ref_usuario_exc: null,
-            ref_cod_instituicao: null,
-            zona_localizacao: null,
-            ref_idpes: null,
-            sigla: null,
-            data_cadastro: null,
-            data_exclusao: null,
-            ativo: null,
             bloquear_lancamento_diario_anos_letivos_encerrados: 1
         );
         $obj_escola->detalhe();

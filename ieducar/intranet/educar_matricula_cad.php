@@ -224,25 +224,15 @@ return new class extends clsCadastro {
         $datahora = date(format: 'Y-m-d H:i:s');
 
         $obj = new clsPmieducarMatricula(
-            cod_matricula: null,
-            ref_cod_reserva_vaga: null,
             ref_ref_cod_escola: $escola,
             ref_ref_cod_serie: $serie,
-            ref_usuario_exc: null,
             ref_usuario_cad: $this->pessoa_logada,
             ref_cod_aluno: $aluno,
             aprovado: 3,
-            data_cadastro: null,
-            data_exclusao: null,
             ativo: 1,
             ano: $ano,
             ultima_matricula: 1,
-            modulo: null,
-            formando: null,
-            descricao_reclassificacao: null,
-            matricula_reclassificacao: null,
             ref_cod_curso: $curso,
-            matricula_transferencia: null,
             semestre: 1,
             data_matricula: $datahora
         );
@@ -744,29 +734,18 @@ return new class extends clsCadastro {
             $this->data_matricula = Portabilis_Date_Utils::brToPgSQL(date: $this->data_matricula);
 
             $obj = new clsPmieducarMatricula(
-                cod_matricula: null,
                 ref_cod_reserva_vaga: $this->ref_cod_reserva_vaga,
                 ref_ref_cod_escola: $this->ref_cod_escola,
                 ref_ref_cod_serie: $this->ref_cod_serie,
-                ref_usuario_exc: null,
                 ref_usuario_cad: $this->pessoa_logada,
                 ref_cod_aluno: $this->ref_cod_aluno,
                 aprovado: 3,
-                data_cadastro: null,
-                data_exclusao: null,
                 ativo: 1,
                 ano: $this->ano,
                 ultima_matricula: 1,
-                modulo: null,
-                formando: null,
-                descricao_reclassificacao: null,
-                matricula_reclassificacao: null,
                 ref_cod_curso: $this->ref_cod_curso,
-                matricula_transferencia: null,
                 semestre: $this->semestre,
                 data_matricula: $this->data_matricula,
-                data_cancel: null,
-                ref_cod_abandono: null,
                 observacoes: $this->observacoes
             );
 
@@ -1002,11 +981,7 @@ return new class extends clsCadastro {
                     ref_cod_matricula: $matriculaId,
                     ref_cod_turma: $enturmacao['ref_cod_turma'],
                     ref_usuario_exc: $this->pessoa_logada,
-                    ref_usuario_cad: null,
-                    data_cadastro: null,
-                    data_exclusao: null,
                     ativo: 0,
-                    ref_cod_turma_transf: null,
                     sequencial: $enturmacao['sequencial']
                 );
 
@@ -1075,17 +1050,8 @@ return new class extends clsCadastro {
 
                 $obj = new clsPmieducarMatricula(
                     cod_matricula: $ref_cod_matricula,
-                    ref_cod_reserva_vaga: null,
-                    ref_ref_cod_escola: null,
-                    ref_ref_cod_serie: null,
                     ref_usuario_exc: $this->pessoa_logada,
-                    ref_usuario_cad: null,
-                    ref_cod_aluno: null,
-                    aprovado: null,
-                    data_cadastro: null,
-                    data_exclusao: null,
                     ativo: 1,
-                    ano: null,
                     ultima_matricula: 1
                 );
 
@@ -1101,15 +1067,7 @@ return new class extends clsCadastro {
 
         $obj = new clsPmieducarMatricula(
             cod_matricula: $this->cod_matricula,
-            ref_cod_reserva_vaga: null,
-            ref_ref_cod_escola: null,
-            ref_ref_cod_serie: null,
             ref_usuario_exc: $this->pessoa_logada,
-            ref_usuario_cad: null,
-            ref_cod_aluno: null,
-            aprovado: null,
-            data_cadastro: null,
-            data_exclusao: null,
             ativo: 0
         );
 
@@ -1142,17 +1100,9 @@ return new class extends clsCadastro {
             if (!$matricula['aprovado'] == 3) {
                 $matricula = new clsPmieducarMatricula(
                     cod_matricula: $matricula['cod_matricula'],
-                    ref_cod_reserva_vaga: null,
-                    ref_ref_cod_escola: null,
-                    ref_ref_cod_serie: null,
                     ref_usuario_exc: $this->pessoa_logada,
-                    ref_usuario_cad: null,
                     ref_cod_aluno: $alunoId,
-                    aprovado: null,
-                    data_cadastro: null,
-                    data_exclusao: null,
                     ativo: 1,
-                    ano: null,
                     ultima_matricula: 0
                 );
 
@@ -1185,8 +1135,6 @@ return new class extends clsCadastro {
                 ref_cod_turma: $turmaDestinoId,
                 ref_usuario_exc: $this->pessoa_logada,
                 ref_usuario_cad: $this->pessoa_logada,
-                data_cadastro: null,
-                data_exclusao: null,
                 ativo: 1
             );
 
@@ -1242,44 +1190,10 @@ return new class extends clsCadastro {
         $det_t = $obj_t->detalhe();
 
         $lista_t = $obj_t->lista(
-            int_cod_turma: $int_cod_turma = null,
-            int_ref_usuario_exc: $int_ref_usuario_exc = null,
-            int_ref_usuario_cad: $int_ref_usuario_cad = null,
-            int_ref_ref_cod_serie: $int_ref_ref_cod_serie = $this->ref_cod_serie,
-            int_ref_ref_cod_escola: $int_ref_ref_cod_escola = $this->ref_cod_escola,
-            int_ref_cod_infra_predio_comodo: $int_ref_cod_infra_predio_comodo = null,
-            str_nm_turma: $str_nm_turma = null,
-            str_sgl_turma: $str_sgl_turma = null,
-            int_max_aluno: $int_max_aluno = null,
-            int_multiseriada: $int_multiseriada = null,
-            date_data_cadastro_ini: $date_data_cadastro_ini = null,
-            date_data_cadastro_fim: $date_data_cadastro_fim = null,
-            date_data_exclusao_ini: $date_data_exclusao_ini = null,
-            date_data_exclusao_fim: $date_data_exclusao_fim = null,
-            int_ativo: $int_ativo = null,
-            int_ref_cod_turma_tipo: $int_ref_cod_turma_tipo = null,
-            time_hora_inicial_ini: $time_hora_inicial_ini = null,
-            time_hora_inicial_fim: $time_hora_inicial_fim = null,
-            time_hora_final_ini: $time_hora_final_ini = null,
-            time_hora_final_fim: $time_hora_final_fim = null,
-            time_hora_inicio_intervalo_ini: $time_hora_inicio_intervalo_ini = null,
-            time_hora_inicio_intervalo_fim: $time_hora_inicio_intervalo_fim = null,
-            time_hora_fim_intervalo_ini: $time_hora_fim_intervalo_ini = null,
-            time_hora_fim_intervalo_fim: $time_hora_fim_intervalo_fim = null,
-            int_ref_cod_curso: $int_ref_cod_curso = null,
-            int_ref_cod_instituicao: $int_ref_cod_instituicao = null,
-            int_ref_cod_regente: $int_ref_cod_regente = null,
-            int_ref_cod_instituicao_regente: $int_ref_cod_instituicao_regente = null,
-            int_ref_ref_cod_escola_mult: $int_ref_ref_cod_escola_mult = null,
-            int_ref_ref_cod_serie_mult: $int_ref_ref_cod_serie_mult = null,
-            int_qtd_min_alunos_matriculados: $int_qtd_min_alunos_matriculados = null,
-            bool_verifica_serie_multiseriada: $bool_verifica_serie_multiseriada = true,
-            bool_tem_alunos_aguardando_nota: $bool_tem_alunos_aguardando_nota = null,
-            visivel: $visivel = null,
-            turma_turno_id: $turma_turno_id = $det_t['turma_turno_id'],
-            tipo_boletim: $tipo_boletim = null,
-            ano: $ano = $this->ano,
-            somenteAnoLetivoEmAndamento: $somenteAnoLetivoEmAndamento = false
+            int_ref_ref_cod_serie: $this->ref_cod_serie,
+            int_ref_ref_cod_escola: $this->ref_cod_escola,
+            turma_turno_id: $det_t['turma_turno_id'],
+            ano: $this->ano
         );
 
         $max_aluno_turmas = 0;
@@ -1315,41 +1229,13 @@ return new class extends clsCadastro {
         $obj_mt = new clsPmieducarMatriculaTurma();
 
         $obj_mt->lista(
-            int_ref_cod_matricula: $int_ref_cod_matricula = null,
-            int_ref_cod_turma: $int_ref_cod_turma = null,
-            int_ref_usuario_exc: $int_ref_usuario_exc = null,
-            int_ref_usuario_cad: $int_ref_usuario_cad = null,
-            date_data_cadastro_ini: $date_data_cadastro_ini = null,
-            date_data_cadastro_fim: $date_data_cadastro_fim = null,
-            date_data_exclusao_ini: $date_data_exclusao_ini = null,
-            date_data_exclusao_fim: $date_data_exclusao_fim = null,
-            int_ativo: $int_ativo = 1,
-            int_ref_cod_serie: $int_ref_cod_serie = $this->ref_cod_serie,
-            int_ref_cod_curso: $int_ref_cod_curso = $this->ref_cod_curso,
-            int_ref_cod_escola: $int_ref_cod_escola = $this->ref_cod_escola,
-            int_ref_cod_instituicao: $int_ref_cod_instituicao = null,
-            int_ref_cod_aluno: $int_ref_cod_aluno = null,
-            mes: $mes = null,
-            aprovado: $aprovado = null,
-            mes_menor_que: $mes_menor_que = null,
-            int_sequencial: $int_sequencial = null,
-            int_ano_matricula: $int_ano_matricula = null,
-            tem_avaliacao: $tem_avaliacao = null,
-            bool_get_nome_aluno: $bool_get_nome_aluno = false,
-            bool_aprovados_reprovados: $bool_aprovados_reprovados = null,
-            int_ultima_matricula: $int_ultima_matricula = null,
-            bool_matricula_ativo: $bool_matricula_ativo = null,
-            bool_escola_andamento: $bool_escola_andamento = false,
-            mes_matricula_inicial: $mes_matricula_inicial = false,
-            get_serie_mult: $get_serie_mult = false,
-            int_ref_cod_serie_mult: $int_ref_cod_serie_mult = null,
-            int_semestre: $int_semestre = null,
-            pegar_ano_em_andamento: $pegar_ano_em_andamento = false,
-            parar: $parar = null,
-            diario: $diario = false,
-            int_turma_turno_id: $int_turma_turno_id = $det_t['turma_turno_id'],
-            int_ano_turma: $int_ano_turma = $det_t['ano'],
-            dependencia: $dependencia = 'f'
+            int_ativo: 1,
+            int_ref_cod_serie: $this->ref_cod_serie,
+            int_ref_cod_curso: $this->ref_cod_curso,
+            int_ref_cod_escola: $this->ref_cod_escola,
+            int_turma_turno_id:  $det_t['turma_turno_id'],
+            int_ano_turma:  $det_t['ano'],
+            dependencia:  'f'
         );
 
         return $obj_mt->_total;

@@ -207,11 +207,8 @@ return new class extends clsCadastro {
             ref_cod_matricula: $matriculaId,
             ref_cod_turma: $turmaId,
             ref_usuario_exc: $this->pessoa_logada,
-            ref_usuario_cad: null,
-            data_cadastro: null,
             data_exclusao: $this->data_enturmacao,
             ativo: 0,
-            ref_cod_turma_transf: null,
             sequencial: $sequencialEnturmacao
         );
         $detEnturmacao = $enturmacao->detalhe();
@@ -276,14 +273,9 @@ return new class extends clsCadastro {
                 ref_cod_turma: $ultima_turma,
                 ref_usuario_exc: $this->pessoa_logada,
                 ref_usuario_cad: $this->pessoa_logada,
-                data_cadastro: null,
                 data_exclusao: $data_exclusao,
                 ativo: $ativo,
-                ref_cod_turma_transf: null,
                 sequencial: $sequencial,
-                data_enturmacao: null,
-                removerSequencial: null,
-                reabrirMatricula: null,
                 remanejado: $remanejado
             );
 

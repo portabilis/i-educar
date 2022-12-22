@@ -196,28 +196,13 @@ return new class extends clsCadastro {
 
                 $matricula_get = new clsPmieducarMatricula(
                     cod_matricula: $this->ref_cod_matricula,
-                    ref_cod_reserva_vaga: null,
-                    ref_ref_cod_escola: null,
-                    ref_ref_cod_serie: null,
-                    ref_usuario_exc: null,
                     ref_usuario_cad: $matricula['ref_usuario_cad'],
                     ref_cod_aluno: $matricula['ref_cod_aluno'],
                     aprovado: $matricula['aprovado'],
-                    data_cadastro: null,
-                    data_exclusao: null,
-                    ativo: null,
                     ano: $matricula['ano'],
                     ultima_matricula: $matricula['ultima_matricula'],
-                    modulo: null,
-                    formando: null,
-                    descricao_reclassificacao: null,
-                    matricula_reclassificacao: null,
                     ref_cod_curso: $matricula['ref_cod_curso'],
-                    matricula_transferencia: null,
-                    semestre: null,
-                    data_matricula: null,
                     data_cancel: $dataSaidaMatricula,
-                    ref_cod_abandono: null
                 );
                 $matricula_get->edita();
             }

@@ -106,11 +106,8 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarMotivoAfastamento(
             cod_motivo_afastamento: $this->cod_motivo_afastamento,
             ref_usuario_exc: $this->pessoa_logada,
-            ref_usuario_cad: null,
             nm_motivo: $this->nm_motivo,
             descricao: $this->descricao,
-            data_cadastro: null,
-            data_exclusao: null,
             ativo: 1,
             ref_cod_instituicao: $this->ref_cod_instituicao
         );
@@ -134,11 +131,8 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarMotivoAfastamento(
             cod_motivo_afastamento: $this->cod_motivo_afastamento,
             ref_usuario_exc: $this->pessoa_logada,
-            ref_usuario_cad: null,
             nm_motivo: $this->nm_motivo,
             descricao: $this->descricao,
-            data_cadastro: null,
-            data_exclusao: null,
             ativo: 0,
             ref_cod_instituicao: $this->ref_cod_instituicao
         );
