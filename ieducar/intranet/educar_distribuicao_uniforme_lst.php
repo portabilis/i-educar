@@ -1,34 +1,10 @@
 <?php
 
 return new class extends clsListagem {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
     public $pessoa_logada;
-
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
     public $titulo;
-
-    /**
-     * Quantidade de registros a ser apresentada em cada pagina
-     *
-     * @var int
-     */
     public $limite;
-
-    /**
-     * Inicio dos registros a serem exibidos (limit)
-     *
-     * @var int
-     */
     public $offset;
-
     public $cod_distribuicao_uniforme;
     public $ref_cod_aluno;
     public $ano;
@@ -42,7 +18,7 @@ return new class extends clsListagem {
             $this->$var = $val;
         }
 
-        $this->campoOculto('ref_cod_aluno', $this->ref_cod_aluno);
+        $this->campoOculto(nome: 'ref_cod_aluno', valor: $this->ref_cod_aluno);
 
         if (!$this->ref_cod_aluno) {
             $this->simpleRedirect('educar_aluno_lst.php');
@@ -54,17 +30,17 @@ return new class extends clsListagem {
         $obj_permissao->nivel_acesso($this->pessoa_logada);
 
         $obj_aluno = new clsPmieducarAluno();
-        $lst_aluno = $obj_aluno->lista($this->ref_cod_aluno, null, null, null, null, null, null, null, null, null, 1);
+        $lst_aluno = $obj_aluno->lista(int_cod_aluno: $this->ref_cod_aluno, int_ref_cod_aluno_beneficio: null, int_ref_cod_religiao: null, int_ref_usuario_exc: null, int_ref_usuario_cad: null, int_ref_idpes: null, date_data_cadastro_ini: null, date_data_cadastro_fim: null, date_data_exclusao_ini: null, date_data_exclusao_fim: null, int_ativo: 1);
         if (is_array($lst_aluno)) {
             $det_aluno = array_shift($lst_aluno);
             $nm_aluno = $det_aluno['nome_aluno'];
         }
 
         if ($nm_aluno) {
-            $this->campoRotulo('nm_aluno', 'Aluno', "{$nm_aluno}");
+            $this->campoRotulo(nome: 'nm_aluno', campo: 'Aluno', valor: "{$nm_aluno}");
         }
 
-        $this->campoNumero('ano', 'Ano', $this->ano, 4, 4, false);
+        $this->campoNumero(nome: 'ano', campo: 'Ano', valor: $this->ano, tamanhovisivel: 4, tamanhomaximo: 4, obrigatorio: false);
 
         // Paginador
         $this->limite = 20;
@@ -72,11 +48,11 @@ return new class extends clsListagem {
 
         $obj = new clsPmieducarDistribuicaoUniforme();
         $obj->setOrderby('ano ASC');
-        $obj->setLimite($this->limite, $this->offset);
+        $obj->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
 
         $lista = $obj->lista(
-            $this->ref_cod_aluno,
-            $this->ano
+            ref_cod_aluno: $this->ref_cod_aluno,
+            ano: $this->ano
         );
 
         $total = $obj->_total;
@@ -95,9 +71,9 @@ return new class extends clsListagem {
                 $this->addLinhas($lista_busca);
             }
         }
-        $this->addPaginador2('educar_distribuicao_uniforme_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $this->addPaginador2(strUrl: 'educar_distribuicao_uniforme_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $this->limite);
         $obj_permissoes = new clsPermissoes();
-        if ($obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7)) {
+        if ($obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->acao = "go(\"educar_distribuicao_uniforme_cad.php?ref_cod_aluno={$this->ref_cod_aluno}\")";
             $this->nome_acao = 'Novo';
         }
@@ -106,7 +82,7 @@ return new class extends clsListagem {
 
         $this->largura = '100%';
 
-        $this->breadcrumb('Distribuições de uniforme escolar', [
+        $this->breadcrumb(currentPage: 'Distribuições de uniforme escolar', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
         ]);
     }

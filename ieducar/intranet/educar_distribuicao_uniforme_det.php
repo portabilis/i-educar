@@ -1,15 +1,8 @@
 <?php
 
 return new class extends clsDetalhe {
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
     public $titulo;
-
     public $cod_distribuicao_uniforme;
-
     public $ref_cod_aluno;
 
     public function Gerar()
@@ -26,7 +19,7 @@ return new class extends clsDetalhe {
         }
 
         $obj_aluno = new clsPmieducarAluno();
-        $lst_aluno = $obj_aluno->lista($registro['ref_cod_aluno'], null, null, null, null, null, null, null, null, null, 1);
+        $lst_aluno = $obj_aluno->lista(int_cod_aluno: $registro['ref_cod_aluno'], int_ref_cod_aluno_beneficio: null, int_ref_cod_religiao: null, int_ref_usuario_exc: null, int_ref_usuario_cad: null, int_ref_idpes: null, date_data_cadastro_ini: null, date_data_cadastro_fim: null, date_data_exclusao_ini: null, date_data_exclusao_fim: null, int_ativo: 1);
 
         if (is_array($lst_aluno)) {
             $det_aluno = array_shift($lst_aluno);
@@ -74,7 +67,7 @@ return new class extends clsDetalhe {
 
         $obj_permissoes = new clsPermissoes();
 
-        if ($obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7)) {
+        if ($obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->url_novo = "educar_distribuicao_uniforme_cad.php?ref_cod_aluno={$registro['ref_cod_aluno']}";
             $this->url_editar = "educar_distribuicao_uniforme_cad.php?ref_cod_aluno={$registro['ref_cod_aluno']}&cod_distribuicao_uniforme={$registro['cod_distribuicao_uniforme']}";
         }
@@ -82,7 +75,7 @@ return new class extends clsDetalhe {
         $this->url_cancelar = "educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$registro['ref_cod_aluno']}";
         $this->largura = '100%';
 
-        $this->breadcrumb('Distribuições de uniforme escolar', [
+        $this->breadcrumb(currentPage: 'Distribuições de uniforme escolar', breadcrumbs: [
             'educar_index.php' => 'Escola'
         ]);
     }
