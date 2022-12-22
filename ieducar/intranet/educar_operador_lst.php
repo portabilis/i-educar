@@ -47,7 +47,7 @@ return new class extends clsListagem {
             $this->$var = ($val === '') ? null: $val;
         }
 
-        $this->addCabecalhos([
+        $this->addCabecalhos(coluna: [
             'Nome',
             'Valor',
             'Fim Sentenca'
@@ -56,63 +56,59 @@ return new class extends clsListagem {
         // Filtros de Foreign Keys
 
         // outros Filtros
-        $this->campoTexto('nome', 'Nome', $this->nome, 30, 255, false);
-        $this->campoTexto('valor', 'Valor', $this->valor, 30, 255, false);
+        $this->campoTexto(nome: 'nome', campo: 'Nome', valor: $this->nome, tamanhovisivel: 30, tamanhomaximo: 255);
+        $this->campoTexto(nome: 'valor', campo: 'Valor', valor: $this->valor, tamanhovisivel: 30, tamanhomaximo: 255);
         $opcoes = [ 'Não', 'Sim' ];
-        $this->campoLista('fim_sentenca', 'Fim Sentenca', $opcoes, $this->fim_sentenca, '', false, '', '', false, false);
+        $this->campoLista(nome: 'fim_sentenca', campo: 'Fim Sentenca', valor: $opcoes, default: $this->fim_sentenca, obrigatorio: false);
 
         // Paginador
         $this->limite = 20;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
         $obj_operador = new clsPmieducarOperador();
-        $obj_operador->setOrderby('nome ASC');
-        $obj_operador->setLimite($this->limite, $this->offset);
+        $obj_operador->setOrderby(strNomeCampo: 'nome ASC');
+        $obj_operador->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
 
         $lista = $obj_operador->lista(
-            $this->cod_operador,
-            null,
-            null,
-            $this->nome,
-            $this->valor,
-            $this->fim_sentenca,
-            null,
-            null,
-            1
+            int_cod_operador: $this->cod_operador,
+            str_nome: $this->nome,
+            str_valor: $this->valor,
+            int_fim_sentenca: $this->fim_sentenca,
+            date_data_exclusao_ini: 1
         );
 
         $total = $obj_operador->_total;
 
         // monta a lista
-        if (is_array($lista) && count($lista)) {
+        if (is_array(value: $lista) && count(value: $lista)) {
             foreach ($lista as $registro) {
                 // muda os campos data
-                $registro['data_cadastro_time'] = strtotime(substr($registro['data_cadastro'], 0, 16));
-                $registro['data_cadastro_br'] = date('d/m/Y H:i', $registro['data_cadastro_time']);
+                $registro['data_cadastro_time'] = strtotime(datetime: substr(string: $registro['data_cadastro'], offset: 0, length: 16));
+                $registro['data_cadastro_br'] = date(format: 'd/m/Y H:i', timestamp: $registro['data_cadastro_time']);
 
-                $registro['data_exclusao_time'] = strtotime(substr($registro['data_exclusao'], 0, 16));
-                $registro['data_exclusao_br'] = date('d/m/Y H:i', $registro['data_exclusao_time']);
+                $registro['data_exclusao_time'] = strtotime(datetime: substr(string: $registro['data_exclusao'], offset: 0, length: 16));
+                $registro['data_exclusao_br'] = date(format: 'd/m/Y H:i', timestamp: $registro['data_exclusao_time']);
 
-                $obj_ref_usuario_exc = new clsPmieducarUsuario($registro['ref_usuario_exc']);
+                $obj_ref_usuario_exc = new clsPmieducarUsuario(cod_usuario: $registro['ref_usuario_exc']);
                 $det_ref_usuario_exc = $obj_ref_usuario_exc->detalhe();
                 $registro['ref_usuario_exc'] = $det_ref_usuario_exc['data_cadastro'];
 
-                $obj_ref_usuario_cad = new clsPmieducarUsuario($registro['ref_usuario_cad']);
+                $obj_ref_usuario_cad = new clsPmieducarUsuario(cod_usuario: $registro['ref_usuario_cad']);
                 $det_ref_usuario_cad = $obj_ref_usuario_cad->detalhe();
                 $registro['ref_usuario_cad'] = $det_ref_usuario_cad['data_cadastro'];
 
                 $registro['fim_sentenca'] = ($registro['fim_sentenca']) ? 'Sim': 'Não';
 
-                $this->addLinhas([
+                $this->addLinhas(linha: [
                     "<a href=\"educar_operador_det.php?cod_operador={$registro['cod_operador']}\">{$registro['nome']}</a>",
                     "<a href=\"educar_operador_det.php?cod_operador={$registro['cod_operador']}\">{$registro['valor']}</a>",
                     "<a href=\"educar_operador_det.php?cod_operador={$registro['cod_operador']}\">{$registro['fim_sentenca']}</a>"
                 ]);
             }
         }
-        $this->addPaginador2('educar_operador_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $this->addPaginador2(strUrl: 'educar_operador_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $this->limite);
         $obj_permissoes = new clsPermissoes();
-        if ($obj_permissoes->permissao_cadastra(589, $this->pessoa_logada, 0, null, true)) {
+        if ($obj_permissoes->permissao_cadastra(int_processo_ap: 589, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 0, super_usuario: true)) {
             $this->acao = 'go("educar_operador_cad.php")';
             $this->nome_acao = 'Novo';
         }

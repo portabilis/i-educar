@@ -24,37 +24,37 @@ return new class extends clsDetalhe {
 
         $this->cod_operador=$_GET['cod_operador'];
 
-        $tmp_obj = new clsPmieducarOperador($this->cod_operador);
+        $tmp_obj = new clsPmieducarOperador(cod_operador: $this->cod_operador);
         $registro = $tmp_obj->detalhe();
 
         if (! $registro) {
-            $this->simpleRedirect('educar_operador_lst.php');
+            $this->simpleRedirect(url: 'educar_operador_lst.php');
         }
 
-        $obj_ref_usuario_exc = new clsPmieducarUsuario($registro['ref_usuario_exc']);
+        $obj_ref_usuario_exc = new clsPmieducarUsuario(cod_usuario: $registro['ref_usuario_exc']);
         $det_ref_usuario_exc = $obj_ref_usuario_exc->detalhe();
         $registro['ref_usuario_exc'] = $det_ref_usuario_exc['data_cadastro'];
 
-        $obj_ref_usuario_cad = new clsPmieducarUsuario($registro['ref_usuario_cad']);
+        $obj_ref_usuario_cad = new clsPmieducarUsuario(cod_usuario: $registro['ref_usuario_cad']);
         $det_ref_usuario_cad = $obj_ref_usuario_cad->detalhe();
         $registro['ref_usuario_cad'] = $det_ref_usuario_cad['data_cadastro'];
 
         if ($registro['cod_operador']) {
-            $this->addDetalhe([ 'Operador', "{$registro['cod_operador']}"]);
+            $this->addDetalhe(detalhe: [ 'Operador', "{$registro['cod_operador']}"]);
         }
         if ($registro['nome']) {
-            $this->addDetalhe([ 'Nome', "{$registro['nome']}"]);
+            $this->addDetalhe(detalhe: [ 'Nome', "{$registro['nome']}"]);
         }
         if ($registro['valor']) {
-            $this->addDetalhe([ 'Valor', "{$registro['valor']}"]);
+            $this->addDetalhe(detalhe: [ 'Valor', "{$registro['valor']}"]);
         }
-        if (! is_null($registro['fim_sentenca'])) {
+        if (! is_null(value: $registro['fim_sentenca'])) {
             $registro['fim_sentenca'] = ($registro['fim_sentenca']) ? 'Sim': 'Não';
-            $this->addDetalhe([ 'Fim Sentenca', "{$registro['fim_sentenca']}"]);
+            $this->addDetalhe(detalhe: [ 'Fim Sentenca', "{$registro['fim_sentenca']}"]);
         }
 
         $obj_permissoes = new clsPermissoes();
-        if ($obj_permissoes->permissao_cadastra(589, $this->pessoa_logada, 0, null, true)) {
+        if ($obj_permissoes->permissao_cadastra(int_processo_ap: 589, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 0, super_usuario: true)) {
             $this->url_novo = 'educar_operador_cad.php';
             $this->url_editar = "educar_operador_cad.php?cod_operador={$registro['cod_operador']}";
         }

@@ -25,7 +25,7 @@ return new class extends clsCadastro {
         $this->cod_operador=$_GET['cod_operador'];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(589, $this->pessoa_logada, 0, 'educar_operador_lst.php', true);
+        $obj_permissoes->permissao_cadastra(int_processo_ap: 589, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 0, str_pagina_redirecionar: 'educar_operador_lst.php', super_usuario: true);
 
         $this->script_cancelar = 'window.parent.fechaExpansivel("div_dinamico_"+(parent.DOM_divs.length-1));';
         $this->nome_url_cancelar = 'Cancelar';
@@ -35,19 +35,19 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
-        $this->campoOculto('cod_operador', $this->cod_operador);
-        $this->campoTexto('nome', 'Nome', $this->nome, 30, 255, true);
-        $this->campoMemo('valor', 'Valor', $this->valor, 60, 10, true);
+        $this->campoOculto(nome: 'cod_operador', valor: $this->cod_operador);
+        $this->campoTexto(nome: 'nome', campo: 'Nome', valor: $this->nome, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
+        $this->campoMemo(nome: 'valor', campo: 'Valor', valor: $this->valor, colunas: 60, linhas: 10, obrigatorio: true);
         $opcoes = [ 'Não', 'Sim' ];
-        $this->campoLista('fim_sentenca', 'Fim Sentenca', $opcoes, $this->fim_sentenca);
+        $this->campoLista(nome: 'fim_sentenca', campo: 'Fim Sentenca', valor: $opcoes, default: $this->fim_sentenca);
     }
 
     public function Novo()
     {
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(589, $this->pessoa_logada, 0, 'educar_operador_lst.php', true);
+        $obj_permissoes->permissao_cadastra(int_processo_ap: 589, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 0, str_pagina_redirecionar: 'educar_operador_lst.php', super_usuario: true);
 
-        $obj = new clsPmieducarOperador($this->cod_operador, $this->pessoa_logada, $this->pessoa_logada, $this->nome, $this->valor, $this->fim_sentenca, $this->data_cadastro, $this->data_exclusao, $this->ativo);
+        $obj = new clsPmieducarOperador(cod_operador: $this->cod_operador, ref_usuario_exc: $this->pessoa_logada, ref_usuario_cad: $this->pessoa_logada, nome: $this->nome, valor: $this->valor, fim_sentenca: $this->fim_sentenca, data_cadastro: $this->data_cadastro, data_exclusao: $this->data_exclusao, ativo: $this->ativo);
         $cadastrou = $obj->cadastra();
         if ($cadastrou) {
             echo "<script>
