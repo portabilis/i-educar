@@ -174,13 +174,7 @@ return new class extends clsDetalhe {
     {
         $obj = new clsPmieducarReservaVaga(
             cod_reserva_vaga: $this->cod_reserva_vaga,
-            ref_ref_cod_escola: null,
-            ref_ref_cod_serie: null,
             ref_usuario_exc: $this->pessoa_logada,
-            ref_usuario_cad: null,
-            ref_cod_aluno: null,
-            data_cadastro: null,
-            data_exclusao: null,
             ativo: 0
         );
         $excluiu = $obj->excluir();

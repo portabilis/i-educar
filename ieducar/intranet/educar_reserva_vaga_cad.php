@@ -106,14 +106,10 @@ return new class extends clsCadastro {
         }
 
         $obj_reserva_vaga = new clsPmieducarReservaVaga(
-            cod_reserva_vaga: null,
             ref_ref_cod_escola: $this->ref_cod_escola,
             ref_ref_cod_serie: $this->ref_cod_serie,
-            ref_usuario_exc: null,
             ref_usuario_cad: $this->pessoa_logada,
             ref_cod_aluno: $this->ref_cod_aluno,
-            data_cadastro: null,
-            data_exclusao: null,
             ativo: 1,
             nm_aluno: $this->nm_aluno_ext,
             cpf_responsavel: idFederal2int(str: $this->cpf_responsavel)

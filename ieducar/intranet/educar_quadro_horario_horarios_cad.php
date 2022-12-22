@@ -584,15 +584,10 @@ return new class extends clsCadastro {
                     ref_ref_cod_serie: $registro['ref_ref_cod_serie_'],
                     ref_ref_cod_escola: $registro['ref_ref_cod_escola_'],
                     ref_ref_cod_disciplina: $registro['ref_ref_cod_disciplina_'],
-                    sequencial: null,
-                    ref_cod_instituicao_substituto: null,
                     ref_cod_instituicao_servidor: $registro['ref_cod_instituicao_servidor_'],
-                    ref_servidor_substituto: null,
                     ref_servidor: $registro['ref_servidor_'],
                     hora_inicial: $registro['hora_inicial_'],
                     hora_final: $registro['hora_final_'],
-                    data_cadastro: null,
-                    data_exclusao: null,
                     ativo: 1,
                     dia_semana: $registro['dia_semana_']
                 );
@@ -671,15 +666,10 @@ return new class extends clsCadastro {
                     ref_ref_cod_serie: $this->ref_ref_cod_serie,
                     ref_ref_cod_escola: $this->ref_cod_escola,
                     ref_ref_cod_disciplina: $displina,
-                    sequencial: null,
-                    ref_cod_instituicao_substituto: null,
                     ref_cod_instituicao_servidor: $this->ref_cod_instituicao,
-                    ref_servidor_substituto: null,
                     ref_servidor: $this->ref_servidor,
                     hora_inicial: $this->hora_inicial,
                     hora_final: $this->hora_final,
-                    data_cadastro: null,
-                    data_exclusao: null,
                     ativo: 1,
                     dia_semana: $this->dia_semana
                 );
@@ -703,16 +693,9 @@ return new class extends clsCadastro {
                     ref_ref_cod_escola: $registro['ref_ref_cod_escola_'],
                     ref_ref_cod_disciplina: $registro['ref_ref_cod_disciplina_'],
                     sequencial: $registro['sequencial_'],
-                    ref_cod_instituicao_substituto: null,
                     ref_cod_instituicao_servidor: $registro['ref_cod_instituicao_servidor_'],
-                    ref_servidor_substituto: null,
                     ref_servidor: $registro['ref_servidor_'],
-                    hora_inicial: null,
-                    hora_final: null,
-                    data_cadastro: null,
-                    data_exclusao: null,
                     ativo: $registro['ativo_'],
-                    dia_semana: null
                 );
 
                 if ($obj_horario->detalhe()) {
@@ -722,14 +705,10 @@ return new class extends clsCadastro {
                         ref_ref_cod_escola: $registro['ref_ref_cod_escola_'],
                         ref_ref_cod_disciplina: $registro['ref_ref_cod_disciplina_'],
                         sequencial: $registro['sequencial_'],
-                        ref_cod_instituicao_substituto: null,
                         ref_cod_instituicao_servidor: $registro['ref_cod_instituicao_servidor_'],
-                        ref_servidor_substituto: null,
                         ref_servidor: $registro['ref_servidor_'],
                         hora_inicial: $registro['hora_inicial_'],
                         hora_final: $registro['hora_final_'],
-                        data_cadastro: null,
-                        data_exclusao: null,
                         ativo: $registro['ativo_'],
                         dia_semana: $registro['dia_semana_']
                     );
@@ -749,15 +728,10 @@ return new class extends clsCadastro {
                         ref_ref_cod_serie: $registro['ref_ref_cod_serie_'],
                         ref_ref_cod_escola: $registro['ref_ref_cod_escola_'],
                         ref_ref_cod_disciplina: $registro['ref_ref_cod_disciplina_'],
-                        sequencial: null,
-                        ref_cod_instituicao_substituto: null,
                         ref_cod_instituicao_servidor: $registro['ref_cod_instituicao_servidor_'],
-                        ref_servidor_substituto: null,
                         ref_servidor: $registro['ref_servidor_'],
                         hora_inicial: $registro['hora_inicial_'],
                         hora_final: $registro['hora_final_'],
-                        data_cadastro: null,
-                        data_exclusao: null,
                         ativo: $registro['ativo_'],
                         dia_semana: $registro['dia_semana_']
                     );

@@ -96,12 +96,7 @@ return new class {
                 $det_turma = $obj_turma->detalhe();
 
                 $obj_quadro = new clsPmieducarQuadroHorario(
-                    cod_quadro_horario: null,
-                    ref_usuario_exc: null,
-                    ref_usuario_cad: null,
                     ref_cod_turma: $this->ref_cod_turma,
-                    data_cadastro: null,
-                    data_exclusao: null,
                     ativo: 1
                 );
                 $det_quadro = $obj_quadro->detalhe();

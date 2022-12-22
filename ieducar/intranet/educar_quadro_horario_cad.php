@@ -99,12 +99,8 @@ return new class extends clsCadastro {
         }
 
         $obj = new clsPmieducarQuadroHorario(
-            cod_quadro_horario: null,
-            ref_usuario_exc: null,
             ref_usuario_cad: $this->pessoa_logada,
             ref_cod_turma: $this->ref_cod_turma,
-            data_cadastro: null,
-            data_exclusao: null,
             ativo: 1,
             ano: $this->ano
         );
@@ -138,19 +134,6 @@ return new class extends clsCadastro {
         if (is_numeric(value: $this->cod_quadro_horario)) {
             $obj_horarios = new clsPmieducarQuadroHorarioHorarios(
                 ref_cod_quadro_horario: $this->cod_quadro_horario,
-                ref_ref_cod_serie: null,
-                ref_ref_cod_escola: null,
-                ref_ref_cod_disciplina: null,
-                sequencial: null,
-                ref_cod_instituicao_substituto: null,
-                ref_cod_instituicao_servidor: null,
-                ref_servidor_substituto: null,
-                ref_servidor: null,
-                hora_inicial: null,
-                hora_final: null,
-                data_cadastro: null,
-                data_exclusao: null,
-                ativo: null,
                 dia_semana: 1
             );
 
