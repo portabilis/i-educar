@@ -238,7 +238,8 @@ return new class extends clsCadastro {
         $turma = new clsPmieducarTurma($this->ref_cod_turma);
         $turma = $turma->detalhe();
 
-        if (in_array($turma['etapa_educacenso'], [14, 15, 16, 17, 18, 24, 69])) {
+
+        if (in_array($turma['etapa_educacenso'], [14, 15, 16, 17, 18, 24, 69, 22])) {
             $this->registra_diario_individual = isset($this->registra_diario_individual) ? 1 : 0;
 
             $this->campoCheck(
@@ -247,6 +248,7 @@ return new class extends clsCadastro {
                 $this->registra_diario_individual
             );
         }
+
 
         $this->campoOculto('identificador', $this->identificador);
 
