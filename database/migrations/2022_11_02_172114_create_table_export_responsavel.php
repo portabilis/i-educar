@@ -13,7 +13,8 @@ class CreateTableExportResponsavel extends Migration
      */
     public function up()
     {
-       
+        $this->dropView('public.exporter_responsaveis_turma');
+
 
         $this->executeSqlFile(
             __DIR__ . '/../sqls/views/public.exporter_responsavel.sql'
