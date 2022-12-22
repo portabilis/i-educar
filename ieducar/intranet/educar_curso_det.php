@@ -8,7 +8,6 @@ use App\Models\LegacyRegimeType;
 
 return new class extends clsDetalhe {
     public $titulo;
-
     public $cod_curso;
     public $ref_usuario_cad;
     public $ref_cod_tipo_regime;
@@ -49,19 +48,19 @@ return new class extends clsDetalhe {
 
         $nm_tipo = LegacyRegimeType::query()
             ->select('nm_tipo')
-            ->where('cod_tipo_regime', $registro['ref_cod_tipo_regime'])
+            ->where(column: 'cod_tipo_regime', operator: $registro['ref_cod_tipo_regime'])
             ->first()?->nm_tipo;
         $registro['ref_cod_tipo_regime'] = $nm_tipo;
 
         $nm_nivel = LegacyEducationLevel::query()
             ->select('nm_nivel')
-            ->where('cod_nivel_ensino', $registro['ref_cod_nivel_ensino'])
+            ->where(column: 'cod_nivel_ensino', operator: $registro['ref_cod_nivel_ensino'])
             ->first()?->nm_nivel;
         $registro['ref_cod_nivel_ensino'] = $nm_nivel;
 
         $nm_tipo = LegacyEducationType::query()
             ->select('nm_tipo')
-            ->where('cod_tipo_ensino', $registro['ref_cod_tipo_ensino'])
+            ->where(column: 'cod_tipo_ensino', operator: $registro['ref_cod_tipo_ensino'])
             ->first()?->nm_tipo;
         $registro['ref_cod_tipo_ensino'] = $nm_tipo;
 
@@ -99,12 +98,12 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['hora_falta']) {
-            $registro['hora_falta'] = number_format($registro['hora_falta'], 2, ',', '.');
+            $registro['hora_falta'] = number_format(num: $registro['hora_falta'], decimals: 2, decimal_separator: ',', thousands_separator: '.');
             $this->addDetalhe(['Hora/Falta', $registro['hora_falta']]);
         }
 
         if ($registro['carga_horaria']) {
-            $registro['carga_horaria'] = number_format($registro['carga_horaria'], 2, ',', '.');
+            $registro['carga_horaria'] = number_format(num: $registro['carga_horaria'], decimals: 2, decimal_separator: ',', thousands_separator: '.');
             $this->addDetalhe(['Carga Horária', $registro['carga_horaria']]);
         }
 
@@ -162,7 +161,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe(['P&uacute;blico Alvo', $registro['publico_alvo']]);
         }
 
-        if ($obj_permissoes->permissao_cadastra(566, $this->pessoa_logada, 3)) {
+        if ($obj_permissoes->permissao_cadastra(int_processo_ap: 566, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3)) {
             $this->url_novo = 'educar_curso_cad.php';
             $this->url_editar = "educar_curso_cad.php?cod_curso={$registro['cod_curso']}";
         }
@@ -170,7 +169,7 @@ return new class extends clsDetalhe {
         $this->url_cancelar = 'educar_curso_lst.php';
         $this->largura = '100%';
 
-        $this->breadcrumb('Detalhe do curso', [
+        $this->breadcrumb(currentPage: 'Detalhe do curso', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
         ]);
     }
