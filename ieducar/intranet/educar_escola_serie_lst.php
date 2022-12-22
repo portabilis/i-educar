@@ -61,10 +61,10 @@ return new class extends clsListagem {
         }
 
         $this->campoLista(
-            'ref_cod_serie',
-            'Série',
-            $opcoes_serie,
-            $this->ref_cod_serie,
+            nome: 'ref_cod_serie',
+            campo: 'Série',
+            valor: $opcoes_serie,
+            default: $this->ref_cod_serie,
             obrigatorio: false
         );
 
@@ -76,32 +76,18 @@ return new class extends clsListagem {
 
         $obj_escola_serie = new clsPmieducarEscolaSerie();
         $obj_escola_serie->setOrderby('nm_serie ASC');
-        $obj_escola_serie->setLimite($this->limite, $this->offset);
+        $obj_escola_serie->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
 
         if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
             $obj_escola_serie->codUsuario = $this->pessoa_logada;
         }
 
         $lista = $obj_escola_serie->lista(
-            $this->ref_cod_escola,
-            $this->ref_cod_serie,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            null,
-            null,
-            null,
-            null,
-            $this->ref_cod_instituicao,
-            $this->ref_cod_curso
+            int_ref_cod_escola: $this->ref_cod_escola,
+            int_ref_cod_serie: $this->ref_cod_serie,
+            int_ativo: 1,
+            int_ref_cod_instituicao: $this->ref_cod_instituicao,
+            int_ref_cod_curso: $this->ref_cod_curso
         );
 
         $total = $obj_escola_serie->_total;
@@ -138,22 +124,22 @@ return new class extends clsListagem {
         }
 
         $this->addPaginador2(
-            'educar_escola_serie_lst.php',
-            $total,
-            $_GET,
-            $this->nome,
-            $this->limite
+            strUrl: 'educar_escola_serie_lst.php',
+            intTotalRegistros: $total,
+            mixVariaveisMantidas: $_GET,
+            nome: $this->nome,
+            intResultadosPorPagina: $this->limite
         );
 
         $obj_permissao = new clsPermissoes();
-        if ($obj_permissao->permissao_cadastra(585, $this->pessoa_logada, 7)) {
+        if ($obj_permissao->permissao_cadastra(int_processo_ap: 585, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->acao = 'go("educar_escola_serie_cad.php")';
             $this->nome_acao = 'Novo';
         }
 
         $this->largura = '100%';
 
-        $this->breadcrumb('Séries da escola', [
+        $this->breadcrumb(currentPage: 'Séries da escola', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
         ]);
     }
