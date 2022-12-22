@@ -12,13 +12,8 @@ class CreateTableExportResponsavel extends Migration
      * @return void
      */
     public function up()
-    {
-       
-
-        $this->executeSqlFile(
-            __DIR__ . '/../sqls/views/public.exporter_responsavel.sql'
-        );
-       
+    { 
+      
         
         
     }
