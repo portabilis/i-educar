@@ -15,7 +15,8 @@ class UniformDistribution extends Model
     protected $table = 'public.uniform_distributions';
 
     protected $casts = [
-        'complete_kit' => 'boolean'
+        'complete_kit' => 'boolean',
+        'distribution_date' => 'date:d/m/Y',
     ];
 
     protected $dates = [
@@ -66,7 +67,7 @@ class UniformDistribution extends Model
     protected function distributionDate(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => Carbon::createFromFormat('d/m/Y', $value)
+            set: fn ($value) => Carbon::createFromFormat('d/m/Y', $value),
         );
     }
 }
