@@ -70,6 +70,7 @@ class LegacyActiveLooking extends LegacyModel
     public function toArray()
     {
         return [
+            'id' => $this->getKey(),
             'ref_cod_matricula' => $this->ref_cod_matricula,
             'data_inicio' => $this->getStartDate(),
             'data_fim' => $this->getEndDate(),
