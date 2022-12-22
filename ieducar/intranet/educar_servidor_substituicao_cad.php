@@ -37,12 +37,6 @@ return new class extends clsCadastro {
 
             $obj_servidor = new clsPmieducarServidor(
                 cod_servidor: $this->ref_cod_servidor,
-                ref_cod_deficiencia: null,
-                ref_idesco: null,
-                carga_horaria: null,
-                data_cadastro: null,
-                data_exclusao: null,
-                ativo: null,
                 ref_cod_instituicao: $this->ref_ref_cod_instituicao
             );
             $det_servidor = $obj_servidor->detalhe();
@@ -58,7 +52,6 @@ return new class extends clsCadastro {
             $lista  = $obj->lista(
                 int_ref_ref_cod_instituicao: $this->ref_ref_cod_instituicao,
                 int_ref_cod_servidor: $this->ref_cod_servidor,
-                bool_busca_nome: null,
                 ano: 1
             );
 
@@ -178,9 +171,6 @@ return new class extends clsCadastro {
                     ref_usuario_cad: $this->pessoa_logada,
                     ref_cod_escola: $alocacao['ref_cod_escola'],
                     ref_cod_servidor: $this->ref_cod_servidor,
-                    data_cadastro: null,
-                    data_exclusao: null,
-                    ativo: null,
                     carga_horaria: $alocacao['carga_horaria'],
                     periodo: $alocacao['periodo']
                 );
@@ -206,22 +196,9 @@ return new class extends clsCadastro {
             // Substituição do servidor no quadro de horários (caso seja professor)
             if ('true' == $professor) {
                 $quadroHorarios = new clsPmieducarQuadroHorarioHorarios(
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    $this->ref_ref_cod_instituicao,
-                    null,
-                    $this->ref_cod_servidor,
-                    null,
-                    null,
-                    null,
-                    null,
-                    1,
-                    null,
-                    null
+                    ref_cod_instituicao_servidor: $this->ref_ref_cod_instituicao,
+                    ref_servidor: $this->ref_cod_servidor,
+                    ativo: 1,
                 );
                 $quadroHorarios->substituir_servidor(int_ref_cod_servidor_substituto: $substituto);
             }

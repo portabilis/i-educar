@@ -42,21 +42,14 @@ return new class extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: $backUrl);
 
-        if (is_string(value: $this->passo) && $this->passo == 1) {
+        if (is_string($this->passo) && $this->passo == 1) {
             $retorno = 'Novo';
         }
 
-        if (is_numeric(value: $this->cod_formacao)) {
+        if (is_numeric($this->cod_formacao)) {
             $obj = new clsPmieducarServidorFormacao(
                 cod_formacao: $this->cod_formacao,
-                ref_usuario_exc: null,
-                ref_usuario_cad: null,
                 ref_cod_servidor: $this->ref_cod_servidor,
-                nm_formacao: null,
-                tipo: null,
-                descricao: null,
-                data_cadastro: null,
-                data_exclusao: null,
                 ativo: 1,
                 ref_ref_cod_instituicao: $this->ref_cod_instituicao
             );
@@ -71,15 +64,15 @@ return new class extends clsCadastro {
                 if ($this->tipo == 'C') {
                     $obj_curso                = new clsPmieducarServidorCurso(cod_servidor_curso: null, ref_cod_formacao: $this->cod_formacao);
                     $det_curso                = $obj_curso->detalhe();
-                    $this->data_conclusao     = dataFromPgToBr(data_original: $det_curso['data_conclusao']);
-                    $this->data_registro      = dataFromPgToBr(data_original: $det_curso['data_registro']);
+                    $this->data_conclusao     = dataFromPgToBr($det_curso['data_conclusao']);
+                    $this->data_registro      = dataFromPgToBr($det_curso['data_registro']);
                     $this->diplomas_registros = $det_curso['diplomas_registros'];
                     $this->cod_servidor_curso = $det_curso['cod_servidor_curso'];
                 } else {
                     $obj_outros = new clsPmieducarServidorTituloConcurso(cod_servidor_titulo: null, ref_cod_formacao: $this->cod_formacao);
                     $det_outros = $obj_outros->detalhe();
-                    $this->data_vigencia_homolog = dataFromPgToBr(data_original: $det_outros['data_vigencia_homolog']);
-                    $this->data_publicacao       = dataFromPgToBr(data_original: $det_outros['data_publicacao']);
+                    $this->data_vigencia_homolog = dataFromPgToBr($det_outros['data_vigencia_homolog']);
+                    $this->data_publicacao       = dataFromPgToBr($det_outros['data_publicacao']);
                     $this->cod_servidor_titulo   = $det_outros['cod_servidor_titulo'];
                 }
 
@@ -104,7 +97,7 @@ return new class extends clsCadastro {
 
     public function Gerar()
     {
-        if (! is_numeric(value: $this->passo)) {
+        if (! is_numeric($this->passo)) {
             $this->passo = 1;
             $this->campoOculto(nome: 'passo', valor: $this->passo);
 
@@ -129,7 +122,7 @@ return new class extends clsCadastro {
                 $this->ref_cod_servidor,
                 $this->ref_cod_instituicao
             );
-        } elseif (is_numeric(value: $this->passo) && $this->passo == 1) {
+        } elseif (is_numeric($this->passo) && $this->passo == 1) {
             if ($this->tipo == 'C') {
                 // Primary keys
                 $this->campoOculto(nome: 'cod_formacao', valor: $this->cod_formacao);
@@ -148,11 +141,11 @@ return new class extends clsCadastro {
 
                 // Foreign keys
                 $nm_servidor = '';
-                $objTemp    = new clsFuncionario(int_idpes: $this->ref_cod_servidor);
+                $objTemp    = new clsFuncionario($this->ref_cod_servidor);
                 $detalhe    = $objTemp->detalhe();
 
                 if ($detalhe) {
-                    $objTmp = new clsPessoa_(int_idpes: $detalhe['ref_cod_pessoa_fj']);
+                    $objTmp = new clsPessoa_($detalhe['ref_cod_pessoa_fj']);
                     $det    = $objTmp->detalhe();
 
                     if ($det) {
@@ -193,11 +186,11 @@ return new class extends clsCadastro {
 
                 // Foreign keys
                 $nm_servidor = '';
-                $objTemp     = new clsFuncionario(int_idpes: $this->ref_cod_servidor);
+                $objTemp     = new clsFuncionario($this->ref_cod_servidor);
                 $detalhe     = $objTemp->detalhe();
 
                 if ($detalhe) {
-                    $objTmp = new clsPessoa_(int_idpes: $detalhe['ref_cod_pessoa_fj']);
+                    $objTmp = new clsPessoa_($detalhe['ref_cod_pessoa_fj']);
                     $det    = $objTmp->detalhe();
 
                     if ($det) {
@@ -230,11 +223,11 @@ return new class extends clsCadastro {
 
                 // Foreign keys
                 $nm_servidor = '';
-                $objTemp     = new clsFuncionario(int_idpes: $this->ref_cod_servidor);
+                $objTemp     = new clsFuncionario($this->ref_cod_servidor);
                 $detalhe     = $objTemp->detalhe();
 
                 if ($detalhe) {
-                    $objTmp = new clsPessoa_(int_idpes: $detalhe['ref_cod_pessoa_fj']);
+                    $objTmp = new clsPessoa_($detalhe['ref_cod_pessoa_fj']);
                     $det    = $objTmp->detalhe();
 
                     if ($det) {
@@ -264,15 +257,11 @@ return new class extends clsCadastro {
         $obj_permissoes->permissao_cadastra(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: $backUrl);
 
         $obj = new clsPmieducarServidorFormacao(
-            cod_formacao: null,
-            ref_usuario_exc: null,
             ref_usuario_cad: $this->pessoa_logada,
             ref_cod_servidor: $this->ref_cod_servidor,
             nm_formacao: $this->nm_formacao,
             tipo: $this->tipo,
             descricao: $this->descricao,
-            data_cadastro: null,
-            data_exclusao: null,
             ativo: $this->ativo,
             ref_ref_cod_instituicao: $this->ref_cod_instituicao
         );
@@ -281,28 +270,26 @@ return new class extends clsCadastro {
         if ($cadastrou) {
             if ($this->tipo == 'C') {
                 $obj = new clsPmieducarServidorCurso(
-                    cod_servidor_curso: null,
                     ref_cod_formacao: $cadastrou,
-                    data_conclusao: dataToBanco(data_original: $this->data_conclusao),
-                    data_registro: dataToBanco(data_original: $this->data_registro),
+                    data_conclusao: dataToBanco($this->data_conclusao),
+                    data_registro: dataToBanco($this->data_registro),
                     diplomas_registros: $this->diplomas_registros
                 );
 
                 if ($obj->cadastra()) {
                     $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-                    $this->simpleRedirect(url: $backUrl);
+                    $this->simpleRedirect($backUrl);
                 }
             } elseif ($this->tipo == 'T' || $this->tipo == 'O') {
                 $obj = new clsPmieducarServidorTituloConcurso(
-                    cod_servidor_titulo: null,
                     ref_cod_formacao: $cadastrou,
-                    data_vigencia_homolog: dataToBanco(data_original: $this->data_vigencia_homolog),
-                    data_publicacao: dataToBanco(data_original: $this->data_publicacao)
+                    data_vigencia_homolog: dataToBanco($this->data_vigencia_homolog),
+                    data_publicacao: dataToBanco($this->data_publicacao)
                 );
 
                 if ($obj->cadastra()) {
                     $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-                    $this->simpleRedirect(url: $backUrl);
+                    $this->simpleRedirect($backUrl);
                 }
             }
         }
@@ -326,13 +313,10 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarServidorFormacao(
             cod_formacao: $this->cod_formacao,
             ref_usuario_exc: $this->pessoa_logada,
-            ref_usuario_cad: null,
             ref_cod_servidor: $this->ref_cod_servidor,
             nm_formacao: $this->nm_formacao,
             tipo: $this->tipo,
             descricao: $this->descricao,
-            data_cadastro: null,
-            data_exclusao: null,
             ativo: 1
         );
 
@@ -343,8 +327,8 @@ return new class extends clsCadastro {
                 $obj_curso  = new clsPmieducarServidorCurso(
                     cod_servidor_curso: $this->cod_servidor_curso,
                     ref_cod_formacao: $this->cod_formacao,
-                    data_conclusao: dataToBanco(data_original: $this->data_conclusao),
-                    data_registro: dataToBanco(data_original: $this->data_registro),
+                    data_conclusao: dataToBanco($this->data_conclusao),
+                    data_registro: dataToBanco($this->data_registro),
                     diplomas_registros: $this->diplomas_registros
                 );
 
@@ -352,21 +336,21 @@ return new class extends clsCadastro {
 
                 if ($editou_cur) {
                     $this->mensagem .= 'Edição efetuada com sucesso.<br>';
-                    $this->simpleRedirect(url: $backUrl);
+                    $this->simpleRedirect($backUrl);
                 }
             } else {
                 $obj_titulo = new clsPmieducarServidorTituloConcurso(
                     cod_servidor_titulo: $this->cod_servidor_titulo,
                     ref_cod_formacao: $this->cod_formacao,
-                    data_vigencia_homolog: dataToBanco(data_original: $this->data_vigencia_homolog),
-                    data_publicacao: dataToBanco(data_original: $this->data_publicacao)
+                    data_vigencia_homolog: dataToBanco($this->data_vigencia_homolog),
+                    data_publicacao: dataToBanco($this->data_publicacao)
                 );
 
                 $editou_tit = $obj_titulo->edita();
 
                 if ($editou_tit) {
                     $this->mensagem .= 'Edição efetuada com sucesso.<br>';
-                    $this->simpleRedirect(url: $backUrl);
+                    $this->simpleRedirect($backUrl);
                 }
             }
         }
@@ -390,13 +374,10 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarServidorFormacao(
             cod_formacao: $this->cod_formacao,
             ref_usuario_exc: $this->pessoa_logada,
-            ref_usuario_cad: null,
             ref_cod_servidor: $this->ref_cod_servidor,
             nm_formacao: $this->nm_formacao,
             tipo: $this->tipo,
             descricao: $this->descricao,
-            data_cadastro: null,
-            data_exclusao: null,
             ativo: 0,
             ref_ref_cod_instituicao: $this->ref_cod_instituicao
         );
@@ -405,7 +386,7 @@ return new class extends clsCadastro {
 
         if ($excluiu) {
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
-            $this->simpleRedirect(url: $backUrl);
+            $this->simpleRedirect($backUrl);
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';

@@ -29,11 +29,6 @@ return new class extends clsDetalhe {
 
         $obj_ref_cod_servidor = new clsPmieducarServidor(
             cod_servidor: $registro['ref_cod_servidor'],
-            ref_cod_deficiencia: null,
-            ref_idesco: null,
-            carga_horaria: null,
-            data_cadastro: null,
-            data_exclusao: null,
             ativo: 1,
             ref_cod_instituicao: $registro['ref_ref_cod_instituicao']
         );

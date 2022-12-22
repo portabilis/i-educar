@@ -20,9 +20,9 @@ return new class extends clsCadastro {
     {
         $retorno = 'Novo';
 
-        $this->cod_servidor = $this->getQueryString('ref_cod_servidor');
-        $this->ref_cod_instituicao = $this->getQueryString('ref_cod_instituicao');
-        $this->ref_cod_funcao = $this->getQueryString('cod_funcao');
+        $this->cod_servidor = $this->getQueryString(name: 'ref_cod_servidor');
+        $this->ref_cod_instituicao = $this->getQueryString(name: 'ref_cod_instituicao');
+        $this->ref_cod_funcao = $this->getQueryString(name: 'cod_funcao');
 
         $obj_permissoes = new clsPermissoes();
 
@@ -33,15 +33,9 @@ return new class extends clsCadastro {
             str_pagina_redirecionar: 'educar_servidor_lst.php'
         );
 
-        if (is_numeric($this->cod_servidor) && is_numeric($this->ref_cod_instituicao)) {
+        if (is_numeric(value: $this->cod_servidor) && is_numeric(value: $this->ref_cod_instituicao)) {
             $obj = new clsPmieducarServidor(
                 cod_servidor: $this->cod_servidor,
-                ref_cod_deficiencia: null,
-                ref_idesco: null,
-                carga_horaria: null,
-                data_cadastro: null,
-                data_exclusao: null,
-                ativo: null,
                 ref_cod_instituicao: $this->ref_cod_instituicao
             );
 
@@ -80,32 +74,9 @@ return new class extends clsCadastro {
         $opcoes = $opcoes_curso = ['' => 'Selecione'];
 
         $obj_cursos = new clsPmieducarCurso();
-        $obj_cursos->setOrderby('nm_curso');
+        $obj_cursos->setOrderby(strNomeCampo: 'nm_curso');
         $lst_cursos = $obj_cursos->lista(
-            int_cod_curso: null,
-            int_ref_usuario_cad: null,
-            int_ref_cod_tipo_regime: null,
-            int_ref_cod_nivel_ensino: null,
-            int_ref_cod_tipo_ensino: null,
-            int_ref_cod_tipo_avaliacao: null,
-            str_nm_curso: null,
-            str_sgl_curso: null,
-            int_qtd_etapas: null,
-            int_frequencia_minima: null,
-            int_media: null,
-            int_media_exame: null,
-            int_falta_ch_globalizada: null,
-            int_carga_horaria: null,
-            str_ato_poder_publico: null,
-            int_edicao_final: null,
-            str_objetivo_curso: null,
-            str_publico_alvo: null,
-            date_data_cadastro_ini: null,
-            date_data_cadastro_fim: null,
-            date_data_exclusao_ini: null,
-            date_data_exclusao_fim: null,
             int_ativo: 1,
-            int_ref_usuario_exc: null,
             int_ref_cod_instituicao: $this->ref_cod_instituicao
         );
 
@@ -132,14 +103,14 @@ return new class extends clsCadastro {
         }
 
         if ($this->ref_cod_curso) {
-            $cursosDifferente = array_unique($this->ref_cod_curso);
+            $cursosDifferente = array_unique(array: $this->ref_cod_curso);
             foreach ($cursosDifferente as $curso) {
                 $obj_componentes = new clsModulesComponenteCurricular;
                 $componentes = $obj_componentes->listaComponentesPorCurso(instituicao_id: $this->ref_cod_instituicao, curso: $curso);
                 $opcoes_disc = [];
                 $opcoes_disc['todas_disciplinas'] = 'Todas as disciplinas';
 
-                $total_componentes = count($componentes);
+                $total_componentes = count(value: $componentes);
                 for ($i = 0; $i < $total_componentes; $i++) {
                     $opcoes_disc[$componentes[$i]['id']] = $componentes[$i]['nome'];
                 }
@@ -155,7 +126,6 @@ return new class extends clsCadastro {
             titulo: 'Componentes Curriculares',
             arr_campos: ['Curso', 'Componente Curricular'],
             arr_valores: $arr_valores,
-            largura: '',
             array_valores_lista: $lst_opcoes
         );
 
@@ -166,9 +136,7 @@ return new class extends clsCadastro {
             valor: $opcoes_curso,
             default: $this->ref_cod_curso,
             acao: 'trocaCurso(this)',
-            duplo: '',
-            descricao: '',
-            complemento: ''
+            duplo: ''
         );
 
         // Disciplinas
@@ -177,10 +145,7 @@ return new class extends clsCadastro {
             campo: 'Componente Curricular',
             valor: $opcoes,
             default: $this->ref_cod_disciplina,
-            acao: '',
-            duplo: '',
-            descricao: '',
-            complemento: ''
+            duplo: ''
         );
 
         $this->campoTabelaFim();
@@ -188,18 +153,18 @@ return new class extends clsCadastro {
 
     public function Novo()
     {
-        $cod_servidor = $this->getQueryString('ref_cod_servidor');
-        $cod_funcao = $this->getQueryString('cod_funcao');
+        $cod_servidor = $this->getQueryString(name: 'ref_cod_servidor');
+        $cod_funcao = $this->getQueryString(name: 'cod_funcao');
 
         $funcoes = Session::get(key: "servant:{$cod_servidor}", default: []);
 
         unset($funcoes[$cod_funcao]);
 
         if ($this->ref_cod_curso) {
-            for ($i = 0, $loop = count($this->ref_cod_curso); $i < $loop; $i++) {
+            for ($i = 0, $loop = count(value: $this->ref_cod_curso); $i < $loop; $i++) {
                 if ($this->ref_cod_disciplina[$i] === 'todas_disciplinas') {
                     $componenteAnoDataMapper = new ComponenteCurricular_Model_AnoEscolarDataMapper();
-                    $componentes = $componenteAnoDataMapper->findComponentePorCurso($this->ref_cod_curso[$i]);
+                    $componentes = $componenteAnoDataMapper->findComponentePorCurso(cursoId: $this->ref_cod_curso[$i]);
 
                     foreach ($componentes as $componente) {
                         $funcoes[$cod_funcao][$this->ref_cod_curso[$i]][] = $componente->id;
@@ -230,7 +195,7 @@ return new class extends clsCadastro {
 
     public function makeExtra()
     {
-        return file_get_contents(__DIR__ . '/scripts/extra/educar-servidor-disciplina-lst.js');
+        return file_get_contents(filename: __DIR__ . '/scripts/extra/educar-servidor-disciplina-lst.js');
     }
 
     public function Formular()
