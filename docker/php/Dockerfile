@@ -3,6 +3,7 @@ FROM php:8.1-fpm-alpine
 LABEL maintainer="Portabilis <contato@portabilis.com.br>"
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
+ENV COMPOSER_PROCESS_TIMEOUT 900
 ENV COMPOSER_DISABLE_XDEBUG_WARN=1
 
 ENV XDEBUG_IDEKEY xdebug
