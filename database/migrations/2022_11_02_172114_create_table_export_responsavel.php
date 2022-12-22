@@ -12,7 +12,7 @@ class CreateTableExportResponsavel extends Migration
      * @return void
      */
     public function up()
-    {
+    { 
         $this->dropView('public.exporter_responsaveis_turma');
 
 
