@@ -77,7 +77,6 @@ class LegacySchoolClass extends Model
         'ref_usuario_cad',
         'ref_ref_cod_serie',
         'ref_ref_cod_escola',
-        'ref_cod_infra_predio_comodo',
         'nm_turma',
         'sgl_turma',
         'max_aluno',

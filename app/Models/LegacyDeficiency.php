@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Builders\LegacyDeficiencyBuilder;
+
 class LegacyDeficiency extends LegacyModel
 {
     /**
@@ -19,6 +21,8 @@ class LegacyDeficiency extends LegacyModel
      */
     public $timestamps = false;
 
+    public string $builder = LegacyDeficiencyBuilder::class;
+
     protected $fillable = [
         'nm_deficiencia',
         'deficiencia_educacenso',
@@ -29,7 +33,7 @@ class LegacyDeficiency extends LegacyModel
     public array $legacy = [
         'id' => 'cod_deficiencia',
         'name' => 'nm_deficiencia',
-        'educacenso' => 'deficiencia_educacenso',
+        'educacenso' =>'deficiencia_educacenso',
         'disregards_different_rule' => 'desconsidera_regra_diferenciada',
         'require_medical_report' => 'exigir_laudo_medico'
     ];

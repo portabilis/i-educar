@@ -196,7 +196,7 @@ return new class extends clsListagem {
             $sql = "
                 SELECT
                   t.cod_turma, t.ref_usuario_exc, t.ref_usuario_cad, t.ref_ref_cod_serie,
-                  t.ref_ref_cod_escola, t.ref_cod_infra_predio_comodo, t.nm_turma, t.sgl_turma,
+                  t.ref_ref_cod_escola, t.nm_turma, t.sgl_turma,
                   t.max_aluno, t.multiseriada, t.data_cadastro, t.data_exclusao, t.ativo,
                   t.ref_cod_turma_tipo, t.hora_inicial, t.hora_final, t.hora_inicio_intervalo,
                   t.hora_fim_intervalo, t.ref_cod_regente, t.ref_cod_instituicao_regente,

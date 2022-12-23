@@ -13,7 +13,6 @@ return new class extends clsListagem {
     public $ref_usuario_cad;
     public $ref_ref_cod_serie;
     public $ref_ref_cod_escola;
-    public $ref_cod_infra_predio_comodo;
     public $nm_turma;
     public $sgl_turma;
     public $max_aluno;

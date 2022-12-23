@@ -6,6 +6,7 @@ use App\Exceptions\Educacenso\NotImplementedYear;
 use App\Services\Educacenso\Version2019\ImportService as ImportService2019;
 use App\Services\Educacenso\Version2020\ImportService as ImportService2020;
 use App\Services\Educacenso\Version2021\ImportService as ImportService2021;
+use App\Services\Educacenso\Version2022\ImportService as ImportService2022;
 use DateTime;
 
 class ImportServiceFactory
@@ -42,6 +43,7 @@ class ImportServiceFactory
             2019 => ImportService2019::class,
             2020 => ImportService2020::class,
             2021 => ImportService2021::class,
+            2022 => ImportService2022::class,
         ];
 
         if (isset($imports[$year])) {
