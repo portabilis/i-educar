@@ -925,8 +925,6 @@ class clsModulesFrequencia extends Model {
                 $falta_aluno_id = $this->faltaAlunoExiste($matricula['ref_cod_matricula'], $tipo_presenca);
 
                 if (is_numeric($falta_aluno_id)) {
-                    $from = '';
-                    $where = '';
 
                     if ($tipo_presenca == 1){
                         $from = 'modules.falta_geral';
@@ -952,6 +950,15 @@ class clsModulesFrequencia extends Model {
                         WHERE
                             {$where}
                     ");
+
+
+                    $db->Consulta("
+                            DELETE FROM
+                                modules.frequencia_aluno
+                            WHERE
+                                ref_frequencia = '{$this->id}' AND ref_cod_matricula = '{$matricula['ref_cod_matricula']}'
+                    ");
+
                 }
             }
 
@@ -1112,7 +1119,7 @@ class clsModulesFrequencia extends Model {
 
         $db = new clsBanco();
 
-        if (!empty($geral_falta_aluno_id)) {
+        if (!empty($geral_falta_aluno_id) && empty($componente_curricular_id)) {
             $db->Consulta("
                 SELECT
                     *
@@ -1137,8 +1144,8 @@ class clsModulesFrequencia extends Model {
         $componente_falta_aluno_id = $this->getFaltasAlunoId($matricula_id, 2);
 
 
-        if (!empty($componente_falta_aluno_id)) {
-            $sql = "
+       if (!empty($componente_falta_aluno_id) && !empty($componente_curricular_id)) {
+           $sql = "
                SELECT
                     *
                FROM
