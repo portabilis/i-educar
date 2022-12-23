@@ -79,7 +79,7 @@
                         <small class="text-muted">dd/mm/aaaa</small>
                     </td>
                     <td>
-                        <input type="hidden" name="cod_turma_origem" value="{{ $cod_turma_origem}} ">
+                        <input type="hidden" name="cod_turma_origem" value="{{ $cod_turma_origem ?? '' }} ">
                         <input name="enrollment_date" value="{{ old('enrollment_date') }}" onkeypress="formataData(this, event);" class="form-input {{ $errors->has('enrollment_date') ? 'error' : '' }}" type="text" maxlength="10">
                     </td>
                 </tr>
