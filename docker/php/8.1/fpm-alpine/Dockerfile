@@ -12,6 +12,7 @@ ENV XDEBUG_CLIENT_PORT 9003
 ENV XDEBUG_MODE off
 ENV XDEBUG_START_WITH_REQUEST off
 
+COPY locale /etc/default/locale
 COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
 RUN apk add --update \
@@ -50,4 +51,5 @@ RUN apk del .phpize_deps
 
 RUN ln -s /var/www/ieducar/artisan /usr/local/bin/artisan
 
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+ENV COMPOSER_VERSION=2.5.1
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --version="$COMPOSER_VERSION"

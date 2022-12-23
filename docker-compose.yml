@@ -2,44 +2,60 @@ version: '3'
 
 services:
 
+  postgres:
+    image: postgres:14-alpine
+    container_name: ieducar-postgres
+    restart: unless-stopped
+    environment:
+      - SERVICE_TAGS=dev
+      - SERVICE_NAME=postgres
+      - POSTGRES_DB=ieducar
+      - POSTGRES_USER=ieducar
+      - POSTGRES_PASSWORD=ieducar
+    ports:
+      - "5432"
+    volumes:
+      - ./database/postgresql/data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:alpine
+    container_name: ieducar-redis
+    restart: unless-stopped
+    environment:
+      - SERVICE_TAGS=dev
+      - SERVICE_NAME=redis
+    ports:
+      - "6379"
+    volumes:
+      - ./database/redis/data/redis:/data
+
   nginx:
-    container_name: ieducar-nginx
     build: docker/nginx
+    container_name: ieducar-nginx
+    ports:
+      - "80"
+      - "443"
+    working_dir: /var/www/ieducar
     links:
       - php
-    ports:
-      - 80
-    working_dir: /var/www/ieducar
     volumes:
       - ./:/var/www/ieducar
 
   php:
+    build: ./docker/php/8.1/fpm-alpine
     container_name: ieducar-php
-    build: docker/php
+    ports:
+      - "9000"
+      - "9003"
+    environment:
+      - SERVICE_TAGS=dev
+      - SERVICE_NAME=php
+      - PGPASSWORD=ieducar
+      - PHP_IDE_CONFIG=serverName=i-Educar
+      - XDEBUG_CONFIG=remote_host=127.0.0.1'
+    working_dir: /var/www/ieducar
     links:
       - postgres
       - redis
-    environment:
-      PGPASSWORD: ieducar
-    working_dir: /var/www/ieducar
     volumes:
       - ./:/var/www/ieducar
-
-  postgres:
-    container_name: ieducar-postgres
-    image: postgres:14-alpine
-    environment:
-      POSTGRES_DB: ieducar
-      POSTGRES_USER: ieducar
-      POSTGRES_PASSWORD: ieducar
-    ports:
-      - 5432
-    volumes:
-      - ./database/data:/var/lib/postgresql/data
-
-  redis:
-    container_name: ieducar-redis
-    image: redis:alpine
-    restart: always
-    ports:
-      - 6379
