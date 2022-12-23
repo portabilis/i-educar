@@ -111,58 +111,45 @@ class EnrollmentController extends Controller
         DB::beginTransaction();
         $date = Carbon::createFromFormat('d/m/Y', $request->input('enrollment_date'));
 
-        $dataUltimoAtendimento = DB::table('modules.conteudo_ministrado_aee')
-        ->where([['ref_cod_matricula', '=', $registration['cod_matricula']]])->orderBy('data', 'desc')->get(['data'])->take(1);
-
-        $data_solicitacao = dataToBanco($request->input('enrollment_date'));
-
-        if (($data_solicitacao <= $dataUltimaFrequencia[0]->data) || ($data_solicitacao <= $dataUltimoAtendimento[0]->data)) {
-            return redirect()->back()->with('error', 'Não é possível realizar a operação, existem frequências registradas no período');
-            die();
-        } else {
-            DB::beginTransaction();
-            $date = Carbon::createFromFormat('d/m/Y', $request->input('enrollment_date'));
-
-            if ($request->input('is_relocation') || $request->input('is_cancellation')) {
-                $enrollmentFromId = $request->input('enrollment_from_id');
-                $enrollment = $registration->enrollments()->whereKey($enrollmentFromId)->firstOrFail();
-
-                try {
-                    $enrollmentService->cancelEnrollment($enrollment, $date);
-                } catch (Throwable $throwable) {
-                    DB::rollback();
-
-                    return redirect()->back()->with('error', $throwable->getMessage());
-                }
-            }
-
-            if ($request->input('is_cancellation')) {
-                DB::commit();
-
-                return redirect('/intranet/educar_matricula_det.php?cod_matricula='.$registration->id)->with('success', 'Enturmação feita com sucesso.');
-            }
-
-            $previousEnrollment = $enrollmentService->getPreviousEnrollmentAccordingToRelocationDate($registration);
-
-            // Se for um remanejamento e a matrícula anterior tiver data de saída antes da data base (ou não houver data base)
-            // marca a matrícula como "remanejada" e reordena o sequencial da turma de origem
-            if ($request->input('is_relocation') && $previousEnrollment) {
-                $enrollmentService->markAsRelocated($previousEnrollment);
-                $enrollmentService->reorderSchoolClassAccordingToRelocationDate($previousEnrollment);
-            }
+        if ($request->input('is_relocation') || $request->input('is_cancellation')) {
+            $enrollmentFromId = $request->input('enrollment_from_id');
+            $enrollment = $registration->enrollments()->whereKey($enrollmentFromId)->firstOrFail();
 
             try {
-                $enrollmentService->enroll($registration, $schoolClass, $date);
+                $enrollmentService->cancelEnrollment($enrollment, $date);
             } catch (Throwable $throwable) {
                 DB::rollback();
 
                 return redirect()->back()->with('error', $throwable->getMessage());
             }
+        }
 
+        if ($request->input('is_cancellation')) {
             DB::commit();
 
-            return redirect('/intranet/educar_matricula_det.php?cod_matricula='.$registration->id)->with('success', 'Enturmação feita com sucesso.');
+            return redirect('/intranet/educar_matricula_det.php?cod_matricula=' . $registration->id)->with('success', 'Enturmação feita com sucesso.');
         }
+
+        $previousEnrollment = $enrollmentService->getPreviousEnrollmentAccordingToRelocationDate($registration);
+
+        // Se for um remanejamento e a matrícula anterior tiver data de saída antes da data base (ou não houver data base)
+        // marca a matrícula como "remanejada" e reordena o sequencial da turma de origem
+        if ($request->input('is_relocation') && $previousEnrollment) {
+            $enrollmentService->markAsRelocated($previousEnrollment);
+            $enrollmentService->reorderSchoolClassAccordingToRelocationDate($previousEnrollment);
+        }
+
+        try {
+            $enrollmentService->enroll($registration, $schoolClass, $date);
+        } catch (Throwable $throwable) {
+            DB::rollback();
+
+            return redirect()->back()->with('error', $throwable->getMessage());
+        }
+
+        DB::commit();
+
+        return redirect('/intranet/educar_matricula_det.php?cod_matricula=' . $registration->id)->with('success', 'Enturmação feita com sucesso.');
     }
 
      /**
