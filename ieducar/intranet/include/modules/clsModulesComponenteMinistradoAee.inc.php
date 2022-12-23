@@ -255,7 +255,7 @@ class clsModulesComponenteMinistradoAee extends Model
         // }
 
         if (is_numeric($int_ref_cod_turma)) {
-            $filtros .= "{$whereAnd} t.cod_turma = '{$int_ref_cod_turma}'";
+            $filtros .= "{$whereAnd} mt.ref_cod_turma = '{$int_ref_cod_turma}'";
             $whereAnd = ' AND ';
         }
 
