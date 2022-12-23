@@ -76,7 +76,7 @@ class EnrollmentController extends Controller
         LegacyRegistration $registration,
         LegacySchoolClass $schoolClass
     ) {
-
+        if(!empty($request->input('cod_turma_origem'))){
         $tipoTurma = DB::table('pmieducar.turma')
             ->select(DB::raw('CASE WHEN tipo_atendimento = 5 THEN 1
                      ELSE 0 END'))
@@ -107,6 +107,7 @@ class EnrollmentController extends Controller
                 die();
             }
         }
+    }
 
         DB::beginTransaction();
         $date = Carbon::createFromFormat('d/m/Y', $request->input('enrollment_date'));
@@ -161,7 +162,7 @@ class EnrollmentController extends Controller
         LegacyRegistration $registration,
         LegacySchoolClass $schoolClass
     ) {
-
+        
         $tipoTurma = DB::table('pmieducar.turma')
             ->select(DB::raw('CASE WHEN tipo_atendimento = 5 THEN 1
                      ELSE 0 END'))
