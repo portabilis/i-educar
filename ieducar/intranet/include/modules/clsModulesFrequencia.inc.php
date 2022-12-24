@@ -907,6 +907,12 @@ class clsModulesFrequencia extends Model {
             $obj = new clsPmieducarSerie();
             $tipo_presenca = $obj->tipoPresencaRegraAvaliacao($this->ref_cod_serie);
 
+            $frequencia = $this->detalhe();
+
+            if ($frequencia['detalhes']['registra_diario_individual']) {
+                $tipo_presenca = 2;
+            }
+
             $matriculas = $this->getMatriculasByFrequenciaId($this->id);
 
             $db = new clsBanco();
