@@ -412,14 +412,14 @@ return new class extends clsCadastro {
         }
 
            // Componente Curricular.
-
+ 
       
-           $this->campoTexto('carga_horaria_componente', 'CARGA HORÁRIA DO COMPONENTE', $this->habilidade, '50', '255', false);
-           $this->campoTexto('total_aulas_realizadas', 'TOTAL DE AULAS REALIZADAS', $this->habilidade, '50', '255', false);
-           $this->campoTexto('total_aulas_realizar', 'TOTAL DE AULAS A REALIZAR', $this->habilidade, '50', '255', false);
-           $this->campoTexto('total_dias_letivos', 'TOTAL DE DIAS LETIVOS', $this->habilidade, '50', '255', false);
-           $this->campoTexto('total_dias_realizados', 'TOTAL DE DIAS REALIZADOS', $this->habilidade, '50', '255', false);
-           $this->campoTexto('total_dias_realizar', 'TOTAL DE DIAS A REALIZAR', $this->habilidade, '50', '255', false);
+           $this->campoTexto('carga_horaria_componente', 'Carga Horária do Componente', $this->habilidade, '50', '255', false);
+           $this->campoTexto('total_aulas_realizadas', 'Total de aulas realizadas', $this->habilidade, '50', '255', false);
+           $this->campoTexto('total_aulas_realizar', 'Total de aulas a realizar', $this->habilidade, '50', '255', false);
+           $this->campoTexto('total_dias_letivos', 'Total de dias letivos', $this->habilidade, '50', '255', false);
+           $this->campoTexto('total_dias_realizados', 'Total de dias realizados', $this->habilidade, '50', '255', false);
+           $this->campoTexto('total_dias_realizar', 'Total de dias a realizar', $this->habilidade, '50', '255', false);
           
            //end componente
   
