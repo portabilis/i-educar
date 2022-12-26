@@ -18,6 +18,7 @@ class clsModulesFrequencia extends Model {
     public $etapa_sequencial;
     public $alunos;
     public $ordens_aulas;
+    public $registra_diario_individual;
 
     public function __construct(
         $id = null,
@@ -35,7 +36,8 @@ class clsModulesFrequencia extends Model {
         $etapa_sequencial = null,
         $alunos = null,
         $servidor_id = null,
-        $ordens_aulas = null
+        $ordens_aulas = null,
+        $registra_diario_individual = null
     ) {
         $db = new clsBanco();
         $this->_schema = 'modules.';
@@ -83,6 +85,7 @@ class clsModulesFrequencia extends Model {
             f.fl_validado,
             f.ref_cod_turma,
             f.servidor_id AS cod_professor_registro,
+            f.registra_diario_individual,
             i.nm_instituicao AS instituicao,
             j.fantasia AS escola,
             c.nm_curso AS curso,
@@ -146,6 +149,9 @@ class clsModulesFrequencia extends Model {
         if(is_array($ordens_aulas)) {
             $this->ordens_aulas = $ordens_aulas;
         }
+        if (is_bool($registra_diario_individual)) {
+            $this->registra_diario_individual = $registra_diario_individual;
+        }
     }
 
     /**
@@ -179,6 +185,12 @@ class clsModulesFrequencia extends Model {
                 $gruda = ', ';
             }
 
+            if (dbBool($this->registra_diario_individual)) {
+                $campos .= "{$gruda}registra_diario_individual";
+                $valores .= "{$gruda} true ";
+                $gruda = ', ';
+            }
+
             $campos .= "{$gruda}etapa_sequencial";
             $valores .= "{$gruda}'{$this->etapa_sequencial}'";
             $gruda = ', ';
@@ -199,8 +211,14 @@ class clsModulesFrequencia extends Model {
 
             $id = $db->InsertId("{$this->_tabela}_id_seq");
 
-            if ($this->alunos) {
+            $obj = new clsPmieducarSerie();
+            $tipo_presenca = $obj->tipoPresencaRegraAvaliacao($this->ref_cod_serie);
 
+            if (dbBool($this->registra_diario_individual)) {
+                $tipo_presenca = 2;
+            }
+
+            if ($this->alunos) {
                 $campos = '';
                 $valores = '';
                 $gruda = '';
@@ -212,18 +230,28 @@ class clsModulesFrequencia extends Model {
 
                 $campos .= "{$gruda}justificativa";
 
-                $campos .= "{$gruda}aulas_faltou";
+                if ($tipo_presenca == 2) {
+                    $campos .= "{$gruda}aulas_faltou";
+                }
 
                 $gruda = '';
 
                 $insertFreqAluno = false;
+
                 foreach ($this->alunos as $key => $aluno) {
                     if (isset($aluno["qtd"]) && $aluno["qtd"] > 0) {
                         $insertFreqAluno = true;
-                        $valores .= $gruda . "(" . "'" . $id . "'" . ", " . "'" . $key . "'" . ", " . "'" . $db->escapeString($aluno[0]) . "'" . ", " . "'" . $db->escapeString(substr($aluno["aulas"], 0, -1)) . "'" . ")";
+                        $valores .= $gruda . "(" . "'" . $id . "'" . ", " . "'" . $key . "'" . ", " . "'" . $db->escapeString($aluno[0]);
+
+                        if ($tipo_presenca == 2) {
+                            $valores .= "'" . ", " . "'" . $db->escapeString(substr($aluno["aulas"], 0, -1));
+                        }
+
+                        $valores .= "'" . ")";
                         $gruda = ', ';
                     }
                 }
+
 
                 if ($insertFreqAluno) {
                     $db->Consulta("INSERT INTO modules.frequencia_aluno ( $campos ) VALUES $valores");
@@ -231,13 +259,6 @@ class clsModulesFrequencia extends Model {
 
 
                 // ###########################################################################################################
-
-                $obj = new clsPmieducarSerie();
-                $tipo_presenca = $obj->tipoPresencaRegraAvaliacao($this->ref_cod_serie);
-
-                if ($tipo_presenca == 1 && !empty($componenteCurricularRegistrioDiario)) {
-                    $tipo_presenca = 2;
-                }
 
                 foreach ($this->alunos as $key => $aluno) {
                     if (isset($aluno["qtd"]) && $aluno["qtd"] > 0) {
@@ -259,7 +280,7 @@ class clsModulesFrequencia extends Model {
 
                         $falta_aluno_id = $this->faltaAlunoExiste($matricula_id, $tipo_presenca);
 
-                        if ($tipo_presenca == 1 && empty($componenteCurricularRegistrioDiario)) {
+                        if ($tipo_presenca == 1) {
                             $db->Consulta("
                             WITH update_falta_geral AS (
                                 UPDATE
@@ -280,7 +301,7 @@ class clsModulesFrequencia extends Model {
                                             modules.falta_geral
                                         WHERE falta_aluno_id = '{$falta_aluno_id}' AND etapa = '{$this->etapa_sequencial}')
                         ");
-                        } else if ($tipo_presenca == 2 || !empty($componenteCurricularRegistrioDiario)) {
+                        } else if ($tipo_presenca == 2) {
                             $db->Consulta("
                             WITH update_falta_componente_curricular AS (
                                 UPDATE
@@ -321,16 +342,15 @@ class clsModulesFrequencia extends Model {
      *
      * @return bool
      */
-    public function edita($componenteCurricularRegistrioDiario = null) {
+    public function edita() {
         if (is_numeric($this->id) && is_numeric($this->etapa_sequencial)) {
-            if (!empty($componenteCurricularRegistrioDiario)) {
-                $this->ref_cod_componente_curricular = $componenteCurricularRegistrioDiario;
-            }
+
+            $frequencia = $this->detalhe();
 
             $obj = new clsPmieducarSerie();
             $tipo_presenca = $obj->tipoPresencaRegraAvaliacao($this->ref_cod_serie);
 
-            if ($tipo_presenca == 1 && !empty($componenteCurricularRegistrioDiario)) {
+            if ($frequencia['detalhes']['registra_diario_individual']) {
                 $tipo_presenca = 2;
             }
 
@@ -350,7 +370,6 @@ class clsModulesFrequencia extends Model {
             }
 
             $set .= "{$gruda}data_atualizacao = (NOW() - INTERVAL '3 HOURS')";
-            $gruda = ', ';
 
             if ($set) {
                 $db->Consulta("
@@ -373,26 +392,29 @@ class clsModulesFrequencia extends Model {
                     if ($matriculas_novas[$matricula_antiga]) {
                         $matricula = array_search($matriculas_novas[$matricula_antiga], $matriculas_novas);
                         $justificativa = $matriculas_novas[$matricula_antiga][0];
-                        $qtdFaltasFreqAntiga = $matriculas_novas[$matricula_antiga]['qtdFaltasFreqAntiga'];
-                        $qtdFaltasFreqEditar = $matriculas_novas[$matricula_antiga]['qtd'];
-                        $aulasFaltou = $matriculas_novas[$matricula_antiga]['aulas'];
                         $setQtd = '';
 
-
-                        // Atualizar
-                        $db->Consulta("
-                            UPDATE
+                        $setFrequenciaAluno = "UPDATE
                                 modules.frequencia_aluno
                             SET
-                                justificativa = '{$db->escapeString($justificativa)}',
-                                aulas_faltou = '{$db->escapeString(substr($aulasFaltou, 0, -1))}'
-                            WHERE
-                                ref_frequencia = '{$this->id}' AND ref_cod_matricula = '{$matricula}'
-                        ");
+                                justificativa = '{$db->escapeString($justificativa)}'";
 
-                        $falta_aluno_id = $this->faltaAlunoExiste($matricula, $tipo_presenca);
+                        if ($tipo_presenca == 2) {
+                            $aulasFaltou = $matriculas_novas[$matricula_antiga]['aulas'];
+                            $setFrequenciaAluno .= ", aulas_faltou = '{$db->escapeString(substr($aulasFaltou, 0, -1))}'";
+                        }
 
-                        if ($tipo_presenca == 2 || !empty($componenteCurricularRegistrioDiario)) {
+                        $setFrequenciaAluno .= " WHERE ref_frequencia = '{$this->id}' AND ref_cod_matricula = '{$matricula}'";
+
+                        // Atualizar
+                        $db->Consulta($setFrequenciaAluno);
+
+                        if ($tipo_presenca == 2) {
+                            $falta_aluno_id = $this->faltaAlunoExiste($matricula, $tipo_presenca);
+
+                            $qtdFaltasFreqAntiga = $matriculas_novas[$matricula_antiga]['qtdFaltasFreqAntiga'];
+                            $qtdFaltasFreqEditar = $matriculas_novas[$matricula_antiga]['qtd'];
+
                             $from = 'modules.falta_componente_curricular';
                             $where = "falta_aluno_id = '{$falta_aluno_id}'
                                         AND componente_curricular_id = '{$this->ref_cod_componente_curricular}'
@@ -418,7 +440,7 @@ class clsModulesFrequencia extends Model {
                             }
 
                             if (!empty($setQtd)) {
-                               $db->Consulta("
+                                $db->Consulta("
                                     UPDATE
                                         {$from}
                                     SET
@@ -427,25 +449,12 @@ class clsModulesFrequencia extends Model {
                                         {$where}
                                 ");
                             }
-                        } else {
-                            $from = 'modules.falta_geral';
-                            $where = "falta_aluno_id = '{$falta_aluno_id}' AND etapa = '{$this->etapa_sequencial}'";
-
-                            $db->Consulta("
-                                UPDATE
-                                    {$from}
-                                SET
-                                    quantidade = quantidade + 1
-                                WHERE
-                                    {$where}
-                            ");
                         }
 
                         unset($matriculas_novas[$matricula_antiga]);
 
                     } else {
                         // Excluir
-
                         $db->Consulta("
                             DELETE FROM
                                 modules.frequencia_aluno
@@ -457,11 +466,10 @@ class clsModulesFrequencia extends Model {
 
                         $falta_aluno_id = $this->faltaAlunoExiste($matricula_antiga, $tipo_presenca);
 
-                        if ($tipo_presenca == 1 && empty($componenteCurricularRegistrioDiario)){
+                        if ($tipo_presenca == 1){
                             $from = 'modules.falta_geral';
                             $where = "falta_aluno_id = '{$falta_aluno_id}' AND etapa = '{$this->etapa_sequencial}'";
-                            $qtdFaltasUpdate = 1;
-                        } else if ($tipo_presenca == 2 || !empty($componenteCurricularRegistrioDiario)) {
+                        } else if ($tipo_presenca == 2) {
                             $from = 'modules.falta_componente_curricular';
                             $where = "falta_aluno_id = '{$falta_aluno_id}'
                                         AND componente_curricular_id = '{$this->ref_cod_componente_curricular}'
@@ -492,7 +500,7 @@ class clsModulesFrequencia extends Model {
                     }
 
                     // Inserir
-                       $db->Consulta("
+                    $db->Consulta("
                         INSERT INTO
                             modules.frequencia_aluno
 
@@ -501,9 +509,9 @@ class clsModulesFrequencia extends Model {
                             ('{$this->id}', '{$matricula_id}', '{$db->escapeString($justificativa)}', '{$db->escapeString($aulasFaltou)}')
                     ");
 
-                       // #########################################################################################
+                    // #########################################################################################
 
-                       $db->Consulta("
+                    $db->Consulta("
                             INSERT INTO
                                 modules.falta_aluno (matricula_id, tipo_falta)
                                 SELECT
@@ -519,7 +527,7 @@ class clsModulesFrequencia extends Model {
 
                     $falta_aluno_id = $this->faltaAlunoExiste($matricula_id, $tipo_presenca);
 
-                    if ($tipo_presenca == 1 && empty($componenteCurricularRegistrioDiario)) {
+                    if ($tipo_presenca == 1) {
                         $db->Consulta("
                             WITH update_falta_geral AS (
                                 UPDATE
@@ -540,7 +548,7 @@ class clsModulesFrequencia extends Model {
                                             modules.falta_geral
                                         WHERE falta_aluno_id = '{$falta_aluno_id}' AND etapa = '{$this->etapa_sequencial}')
                         ");
-                    } else if ($tipo_presenca == 2 || !empty($componenteCurricularRegistrioDiario)) {
+                    } else if ($tipo_presenca == 2) {
                         $db->Consulta("
                             WITH update_falta_componente_curricular AS (
                                 UPDATE
@@ -583,21 +591,21 @@ class clsModulesFrequencia extends Model {
      * @return array
      */
     public function lista (
-            $int_ano = null,
-            $int_ref_cod_ins = null,
-            $int_ref_cod_escola = null,
-            $int_ref_cod_curso = null,
-            $int_ref_cod_serie = null,
-            $int_ref_cod_turma = null,
-            $int_ref_cod_componente_curricular = null,
-            $int_ref_cod_turno = null,
-            $time_data_inicial = null,
-            $time_data_final = null,
-            $int_etapa = null,
-            $int_servidor_id = null,
-            $arrayEscolasUsuario = null,
-            $bool_validado = null
-        ) {
+        $int_ano = null,
+        $int_ref_cod_ins = null,
+        $int_ref_cod_escola = null,
+        $int_ref_cod_curso = null,
+        $int_ref_cod_serie = null,
+        $int_ref_cod_turma = null,
+        $int_ref_cod_componente_curricular = null,
+        $int_ref_cod_turno = null,
+        $time_data_inicial = null,
+        $time_data_final = null,
+        $int_etapa = null,
+        $int_servidor_id = null,
+        $arrayEscolasUsuario = null,
+        $bool_validado = null
+    ) {
         $sql = "
                 SELECT DISTINCT
                     {$this->_campos_lista}
@@ -899,6 +907,12 @@ class clsModulesFrequencia extends Model {
             $obj = new clsPmieducarSerie();
             $tipo_presenca = $obj->tipoPresencaRegraAvaliacao($this->ref_cod_serie);
 
+            $frequencia = $this->detalhe();
+
+            if ($frequencia['detalhes']['registra_diario_individual']) {
+                $tipo_presenca = 2;
+            }
+
             $matriculas = $this->getMatriculasByFrequenciaId($this->id);
 
             $db = new clsBanco();
@@ -917,8 +931,6 @@ class clsModulesFrequencia extends Model {
                 $falta_aluno_id = $this->faltaAlunoExiste($matricula['ref_cod_matricula'], $tipo_presenca);
 
                 if (is_numeric($falta_aluno_id)) {
-                    $from = '';
-                    $where = '';
 
                     if ($tipo_presenca == 1){
                         $from = 'modules.falta_geral';
@@ -944,6 +956,15 @@ class clsModulesFrequencia extends Model {
                         WHERE
                             {$where}
                     ");
+
+
+                    $db->Consulta("
+                            DELETE FROM
+                                modules.frequencia_aluno
+                            WHERE
+                                ref_frequencia = '{$this->id}' AND ref_cod_matricula = '{$matricula['ref_cod_matricula']}'
+                    ");
+
                 }
             }
 
@@ -1046,7 +1067,7 @@ class clsModulesFrequencia extends Model {
             $matriculas[] = $db->Tupla();
         }
 
-       return $matriculas;
+        return $matriculas;
     }
 
     public function updateValidacao($bool_validacao, $ref_validacao_user_id = null, $data_validacao  = null) {
@@ -1104,7 +1125,7 @@ class clsModulesFrequencia extends Model {
 
         $db = new clsBanco();
 
-        if (!empty($geral_falta_aluno_id)) {
+        if (!empty($geral_falta_aluno_id) && empty($componente_curricular_id)) {
             $db->Consulta("
                 SELECT
                     *
@@ -1126,10 +1147,10 @@ class clsModulesFrequencia extends Model {
             }
         }
 
-       $componente_falta_aluno_id = $this->getFaltasAlunoId($matricula_id, 2);
+        $componente_falta_aluno_id = $this->getFaltasAlunoId($matricula_id, 2);
 
 
-       if (!empty($componente_falta_aluno_id)) {
+       if (!empty($componente_falta_aluno_id) && !empty($componente_curricular_id)) {
            $sql = "
                SELECT
                     *
@@ -1138,24 +1159,24 @@ class clsModulesFrequencia extends Model {
                WHERE falta_aluno_id IN ('{$componente_falta_aluno_id}')
             ";
 
-           if (!empty($componente_curricular_id)) {
-               $sql .= " AND componente_curricular_id = '{$componente_curricular_id}'";
-           }
+            if (!empty($componente_curricular_id)) {
+                $sql .= " AND componente_curricular_id = '{$componente_curricular_id}'";
+            }
 
-           $db->Consulta($sql);
+            $db->Consulta($sql);
 
-           $faltasComponentes = [];
+            $faltasComponentes = [];
 
-           while($db->ProximoRegistro()) {
-               $faltasComponentes[] = $db->Tupla();
-           }
+            while($db->ProximoRegistro()) {
+                $faltasComponentes[] = $db->Tupla();
+            }
 
-           if (!empty($faltasComponentes)) {
-               foreach ($faltasComponentes as $falta) {
-                   $qtdFaltas += $falta['quantidade'];
-               }
-           }
-       }
+            if (!empty($faltasComponentes)) {
+                foreach ($faltasComponentes as $falta) {
+                    $qtdFaltas += $falta['quantidade'];
+                }
+            }
+        }
 
         return $qtdFaltas;
     }
