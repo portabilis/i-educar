@@ -397,20 +397,12 @@ return new class extends clsCadastro {
          // Componente Curricular.
 
       
-         $selectOptionsComponente = [];
-
-       
-       
-     
-         
-             $selectOptionsComponente[1] = ' 3 dias letivos  ';
-         
-        
-        
- 
-         $selectOptionsComponente = Portabilis_Array_Utils::sortByValue($selectOptionsComponente);
-         $selectOptionsComponente = array_replace([null => '3 dias letivos'], $selectOptionsComponente);
-         $this->campoLista('componente_curricular_id', 'TOTAL DE DIAS LETIVOS ', $selectOptionsComponente, $this->componente_curricular_id, '', false, '', '', '', '');
+         $this->campoTexto('carga_horaria_componente', 'CARGA HORÁRIA DO COMPONENTE', $this->habilidade, '50', '255', false);
+         $this->campoTexto('total_aulas_realizadas', 'TOTAL DE AULAS REALIZADAS', $this->habilidade, '50', '255', false);
+         $this->campoTexto('total_aulas_realizar', 'TOTAL DE AULAS A REALIZAR', $this->habilidade, '50', '255', false);
+         $this->campoTexto('total_dias_letivos', 'TOTAL DE DIAS LETIVOS', $this->habilidade, '50', '255', false);
+         $this->campoTexto('total_dias_realizados', 'TOTAL DE DIAS REALIZADOS', $this->habilidade, '50', '255', false);
+         $this->campoTexto('total_dias_realizar', 'TOTAL DE DIAS A REALIZAR', $this->habilidade, '50', '255', false);
         
          //end componente
 
