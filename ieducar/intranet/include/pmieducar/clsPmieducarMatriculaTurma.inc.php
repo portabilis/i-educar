@@ -1343,15 +1343,6 @@ class clsPmieducarMatriculaTurma extends Model
         return false;
     }
 
-    public function getAnoMatricula()
-    {
-        if (is_numeric($this->ref_cod_matricula)) {
-            $db = new clsBanco();
-
-            return $db->CampoUnico("SELECT ano FROM pmieducar.matricula WHERE cod_matricula = {$this->ref_cod_matricula}");
-        }
-    }
-
     public function enturmacoesSemDependencia($turmaId)
     {
         $sql = "SELECT COUNT(1) FROM {$this->_tabela} mt
